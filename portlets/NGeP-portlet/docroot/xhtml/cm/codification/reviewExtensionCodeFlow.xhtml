@@ -21,11 +21,26 @@
 					value="#{unspscCodeBackingBean.managedBean.action}">
 					<ui:param name="lblBpmBtn" value="lbl.bpm.action.#{action}" />
 					<p:commandButton value="#{lbl[lblBpmBtn]}"
-						rendered="#{bpmTasklistBackingBean.managedBean.claim}"
+						rendered="#{bpmTasklistBackingBean.managedBean.claim and action=='SUBMIT'}"
 						oncomplete="extensionConfirmation.show()"
 						update=":form:extensionConfirmationId"
 						action="#{unspscCodeBackingBean.checkRecomendOrSubmit()}"></p:commandButton>
+						
+					<p:commandButton value="#{lbl['lbl.bpm.action.RECOMMEND_TO_SUPPLIER']}"
+						action="#{unspscCodeBackingBean.bpmTesting('RECOMMEND_TO_SUPPLIER')}"  
+						rendered="#{bpmTasklistBackingBean.managedBean.claim and action == 'RECOMMEND_TO_SUPPLIER'}" 
+						disabled="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() !=1}" 
+						update="@form">
+					</p:commandButton>
+					
+					<p:commandButton value="#{lbl['lbl.bpm.action.REJECT']}"
+						action="#{unspscCodeBackingBean.bpmTesting('REJECT')}"  
+						rendered="#{bpmTasklistBackingBean.managedBean.claim and action == 'REJECT'}" 
+						update="@form">
+					</p:commandButton>
+				
 				</ui:repeat>
+				
 				<p:commandButton value="#{lbl['lbl.bpm.btn.claim']}"
 					action="#{bpmTasklistBackingBean.claimTaskInDetailPage}"
 					rendered="#{!bpmTasklistBackingBean.managedBean.claim}"
@@ -40,15 +55,11 @@
 				<table style="width: 100%;">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.rpt.unspscCode']}"></p:outputLabel></td>
-						<td><p:inputText
-								value="#{unspscCodeBackingBean.managedBean.reviewExtCodeList[0].tempCode}"
-								size="40" disabled="true" />
-								<ui:remove>
-								<p:commandLink style="margin-left: 10px;"  action="#{unspscCodeBackingBean.managedBean.toggleShowRecommend()}" 
+						<td><p:inputText value="#{unspscCodeBackingBean.managedBean.reviewExtCodeList[0].tempCode}" size="40" disabled="true" />
+								<p:commandLink disabled ="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1}" style="margin-left: 10px;"  action="#{unspscCodeBackingBean.managedBean.toggleShowRecommend()}" 
 									update="recommendPanelId">
 									<p:graphicImage value="/css/images/design/search.png" />
 								</p:commandLink>
-								</ui:remove>
 						</td>
 						<td><p:outputLabel value="#{lbl['lbl.rpt.unspscTitle']}"></p:outputLabel></td>
 						<td><p:inputText
@@ -176,6 +187,48 @@
 
 
 		</h:panelGroup>
+		<h:panelGroup id="recommendPanelId">
+					<p:panel header="#{lbl['lbl.cm.search.recommend']}" toggleable="true"  rendered="#{unspscCodeBackingBean.managedBean.isShowRecommend()}">
+				<p:dataTable id="recomemendUnspscId" rowIndexVar="rowIndex"
+					value="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes}"
+					var="unspscObj" width="100%">
+					<p:column>
+						<f:facet name="header">
+					#{lbl['lbl.cm.recommended.item.code']}
+				</f:facet>
+						#{unspscObj.unspscCode}
+				</p:column>
+					<p:column>
+						<f:facet name="header">
+					#{lbl['lbl.cm.recommended.item.name']}
+				</f:facet>
+				#{unspscObj.unspscTitle}
+			</p:column>
+					<p:column rendered="#{unspscCodeBackingBean.catalogueAdmin}">
+						<f:facet name="header">
+							#{lbl['lbl.cm.action']}
+						</f:facet>
+						<p:commandLink
+							action="#{unspscCodeBackingBean.removeRecommendCode(rowIndex)}"
+							update="@form">
+							<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+				<div style="text-align: right;">
+					<p:commandButton value="#{lbl['lbl.cm.item.code.search.title']}" update="@form"
+						disabled="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1}"
+						action="#{unspscCodeBackingBean.navigateToSearch}"
+						rendered="#{unspscCodeBackingBean.catalogueAdmin}"></p:commandButton>
+				</div>
+			</p:panel>
+		</h:panelGroup>
+		<h:panelGroup>
+			<p:panel id="reviewUnspscCodeRemark" header="#{lbl['lbl.cm.remarks']}" toggleable="true">
+				<ui:include src="codiRemarks.xhtml"/> 
+			</p:panel>
+		</h:panelGroup>
+
 	</ui:define>
 
 </ui:composition>
