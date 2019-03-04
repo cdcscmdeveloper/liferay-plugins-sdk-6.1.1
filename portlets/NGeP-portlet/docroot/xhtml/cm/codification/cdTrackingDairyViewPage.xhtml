@@ -190,7 +190,7 @@
 
 						</p:column>
 
-						<p:column width="10%">
+						<p:column rendered="#{review.reviewedTypeNameII}!=null"  width="10%">
 							<f:facet name="header">
 						#{lbl['lbl.cm.endorse.by']}
 					</f:facet>
@@ -222,7 +222,7 @@
 
 						</p:column>
 
-						<p:column>
+						<p:column rendered="#{review.reviewedTypeNameII}!=null" >
 							<f:facet name="header">
 						#{lbl['lbl.txt.remarks']}
 					</f:facet>
@@ -489,8 +489,32 @@
 				</p:dataTable>
 			</p:panel>
 
+			<p:panel id="reviewUnspscCodeRemark" header="#{lbl['lbl.cm.remarks']}" toggleable="true">
+			<p:dataGrid value="#{cdTrackingDiaryBackingBean.managedBean.selectedRemarks}" 
+			var="remarkVar" rowIndexVar="remarkIndex" columns="1" emptyMessage="#{lbl['lbl.pp.no.record.found']}" >
+			<table class="ppRmkTable">
+				<tr>
+					<td rowspan="2" valign="top" style="width:15%;">
+						<h:graphicImage styleClass="smallUserImage"  value="#{cdTrackingDiaryBackingBean.userImagePathWithDefaultImage(remarkVar.userId)}"  />
+					</td>
+					<td  style="width:85%;white-space:normal;">
+						<h:outputText value="#{remarkVar.createdUsername}"></h:outputText>
+						<h:outputText rendered="#{!remarkVar.brandNew}" id="remarkDate" value="#{remarkVar.changedDate}">
+							<f:convertDateTime pattern="#{', '.concat(CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS))}" />
+						</h:outputText>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p:inputTextarea cols="40" maxlength="1000" value="#{remarkVar.remark}" rendered="#{remarkVar.brandNew}" onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);" /> 
+						<h:outputText value="#{remarkVar.remark}" rendered="#{!remarkVar.brandNew}" 
+							style="display: inline-block; width:220px;word-wrap: break-word;" />
+					</td>
+				</tr>
+			</table>
+		</p:dataGrid>
+			</p:panel>
 		</h:panelGroup>
-
 
 
 
