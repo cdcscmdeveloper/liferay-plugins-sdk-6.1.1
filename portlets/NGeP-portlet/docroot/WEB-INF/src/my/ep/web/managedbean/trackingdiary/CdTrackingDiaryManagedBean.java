@@ -12,6 +12,7 @@ import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
+import my.ep.persistence.entity.cm.catalog.CmRemark;
 import my.ep.persistence.entity.cm.catalog.CmRequestCode;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.backingbean.cm.codification.UnspscCodeBackingBean;
@@ -44,6 +45,7 @@ public class CdTrackingDiaryManagedBean extends BaseManagedBean {
 	private boolean unspscInd = true;
 	private boolean unspscRecommendInd = false;
 	private String docType;
+	private List<CmRemark> selectedRemarks;
 	
 	private IPagingDataModel<Object[]> cdDocumentDataModel 	= new SearchPagingDataModel();
 
@@ -318,6 +320,14 @@ public class CdTrackingDiaryManagedBean extends BaseManagedBean {
 	 */
 	public void setDocType(String docType) {
 		this.docType = docType;
+	}
+
+	public List<CmRemark> getSelectedRemarks() {
+		return selectedRemarks;
+	}
+
+	public void setSelectedRemarks(List<CmRemark> selectedRemarks) {
+		this.selectedRemarks = selectedRemarks;
 	}
 	
 	
