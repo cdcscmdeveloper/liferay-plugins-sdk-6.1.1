@@ -5,7 +5,8 @@ import java.io.Serializable;
 public class SmReportConst implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	// Param
+	// Param 
+	//recommit
 	public static final String PARAM_DATE_TO = "PTODATE";
 	public static final String PARAM_DATE_FROM = "PFROMDATE";
 	public static final String PARAM_DATE_EXP_TO = "PEXTODATE";
