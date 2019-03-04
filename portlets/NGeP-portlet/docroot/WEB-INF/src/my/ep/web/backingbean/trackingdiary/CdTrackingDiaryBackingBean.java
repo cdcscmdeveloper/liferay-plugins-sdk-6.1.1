@@ -1,6 +1,10 @@
 package my.ep.web.backingbean.trackingdiary;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -11,10 +15,15 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
+import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.cm.codification.IRequestCodeSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
+import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.constant.MessageConst;
+import my.ep.constant.pm.ProfileManagementConst;
+import my.ep.dto.cm.codification.CodificationReqDTO;
+import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.cm.codification.RequestCodeReqDTO;
 import my.ep.dto.cm.codification.RequestCodeResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -22,6 +31,7 @@ import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.entity.cm.catalog.CmRemark;
 import my.ep.persistence.entity.cm.catalog.CmRequestCode;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
 import my.ep.type.aut.SearchOperator;
@@ -33,6 +43,7 @@ import my.ep.web.managedbean.trackingdiary.CdTrackingDiaryManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 @ManagedBean(name = "cdTrackingDiaryBackingBean")
@@ -99,6 +110,45 @@ public class CdTrackingDiaryBackingBean extends BaseBackingBean<CdTrackingDiaryM
 			return resDTO.getResultBean();
 		}
 	}
+	public boolean isCatalogueAdmin() {
+		FacesScopes fs = new FacesScopes();
+		return fs.hasRoleUser("CM_ADMIN");
+	}
+
+	public boolean isSupplierUser() {
+		FacesScopes fs = new FacesScopes();
+		return fs.hasRoleUser("SUPPLIER_USER");
+	}
+
+	public boolean isSupplierAdmin() {
+		FacesScopes fs = new FacesScopes();
+		return fs.hasRoleUser("SUPPLIER_ADMIN");
+	}
+
+	public boolean isCodeAdmin() {
+		FacesScopes fs = new FacesScopes();
+		return fs.hasRoleUser("CD_OFFICER");
+	}
+
+	public boolean isRequisitioner() {
+		FacesScopes fs = new FacesScopes();
+		return fs.hasRoleUser("REQUISITIONER");
+	}
+
+	public boolean isCdCommittee() { 
+		FacesScopes fs = new FacesScopes();
+		return fs.hasRoleUser("CD_COMMITTEE");
+	}
+	public String userImagePathWithDefaultImage(String loginId){
+		log.info("userImagePathWithDefaultImage");
+		String imagePath = "";
+	
+		imagePath = userImagePath(loginId);	
+		if(StringUtils.isBlank(imagePath)){
+			imagePath = ProfileManagementConst.DEFAULT_PORTRAIT;
+		}
+		return imagePath;
+	}
 
 	public String goToTrackingDiarySearch(Object[] unspscObj) {
 
@@ -106,7 +156,9 @@ public class CdTrackingDiaryBackingBean extends BaseBackingBean<CdTrackingDiaryM
 		
 		BigDecimal tempDocId = (BigDecimal) unspscObj[5];
 		Long docId = tempDocId.longValue();
-		log.info("unspscObj[1]:" + unspscObj[1] + "--unspscObj[5]:" + unspscObj[5]);
+		for(int i = 0; i<unspscObj.length;i++){
+			log.info("unspscObj:" + unspscObj[i]);
+		}
 		this.getManagedBean().setDocId(docId);
 		this.getManagedBean().setDocNo((String) unspscObj[1]);
 		BigDecimal tempStatusId = (BigDecimal) unspscObj[7];
@@ -162,7 +214,7 @@ public class CdTrackingDiaryBackingBean extends BaseBackingBean<CdTrackingDiaryM
 						if (!code.isRequestMeasurement()){
 							meaRecommend = true;
 						}
-
+						this.getManagedBean().setRequestCode(code);
 						if(colorRecommend && brandRecommend && typeRecommend && meaRecommend) {
 							this.getManagedBean().getRecommendExtCodeList().add(code);
 							this.getManagedBean().getProceedExtCodeList().add(code);						
@@ -177,6 +229,37 @@ public class CdTrackingDiaryBackingBean extends BaseBackingBean<CdTrackingDiaryM
 						if(this.getManagedBean().getReviewExtCodeList().get(0).getCmRecommendCodes()!=null 
 								&& this.getManagedBean().getReviewExtCodeList().get(0).getCmRecommendCodes().size() >0){
 							this.getManagedBean().setUnspscRecommendInd(true);
+						}
+					}
+					List<CmRemark> remarkList = new ArrayList<CmRemark>();
+					this.getManagedBean().setSelectedRemarks(remarkList);
+					ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
+							.getInstance().getServiceObject("cm", ICodificationSO.class);
+					CodificationReqDTO remarkReqDTO = new CodificationReqDTO();
+					remarkReqDTO.setRequestCode(this.getManagedBean().getRequestCode());
+					CodificationResDTO remarkResDTO = codificationSO.getCodificationRemarks(remarkReqDTO);
+					List<Long> lastStatus = new ArrayList<Long>();
+					lastStatus.add(Long.valueOf(15017));
+					lastStatus.add(Long.valueOf(15009));
+//					lastStatus.add(Long.valueOf(15002));
+//					lastStatus.add(Long.valueOf(15003));
+//					lastStatus.add(Long.valueOf(15005));
+//					lastStatus.add(Long.valueOf(15012));
+
+					if( remarkResDTO.getRemarkList()!=null &&  remarkResDTO.getRemarkList().size()>0){
+						log.info("Last status with remark: " + remarkResDTO.getRemarkList().get(0).getCmWorkflowStatus().getPmStatus().getStatusId());
+						log.info("Last status on workflow: " + statusId);
+
+						for(Long status: lastStatus){						
+							if(statusId.equals(status) && (isSupplierUser() || isSupplierAdmin()) ){
+								this.getManagedBean().getSelectedRemarks().add(remarkResDTO.getRemarkList().get(0));
+								break;
+							}
+						}			
+						if((isCatalogueAdmin() || isCodeAdmin() ||  isCdCommittee()) && this.getManagedBean().getSelectedRemarks().size()<1){
+							for(CmRemark remark:remarkResDTO.getRemarkList()){
+								this.getManagedBean().getSelectedRemarks().add(remark);
+							}
 						}
 					}
 				}

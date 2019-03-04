@@ -72,7 +72,7 @@
 						<div style="width:100%; ">
 										<p:inputText value="#{review.typeName}"
 											disabled="#{!review.requestType}"></p:inputText>
-										<p:selectOneMenu rendered="#{review.requestType}"
+										<p:selectOneMenu rendered="#{review.requestType and !unspscCodeBackingBean.managedBean.isCodeExtension() }"
 											style="width: 128px;" value="#{review.typeNameDD}">
 											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 											<f:selectItems
@@ -84,7 +84,7 @@
 						<div style="width:100%; ">
 										<p:inputText value="#{review.brandName}"
 											disabled="#{!review.requestBrand}"></p:inputText>
-										<p:selectOneMenu rendered="#{review.requestBrand}"
+										<p:selectOneMenu rendered="#{review.requestBrand and !unspscCodeBackingBean.managedBean.isCodeExtension() }"
 											style="width: 128px;" value="#{review.brandNameDD}">
 											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 											<f:selectItems
@@ -94,9 +94,9 @@
 										</p:selectOneMenu>
 							</div>
 							<div style="width:100%; ">
-										<p:inputText value="#{review.measurementName}"
+										<p:inputText value="#{review.measurementName  }"
 											disabled="#{!review.requestMeasurement}"></p:inputText>
-										<p:selectOneMenu rendered="#{review.requestMeasurement}"
+										<p:selectOneMenu rendered="#{review.requestMeasurement and !unspscCodeBackingBean.managedBean.isCodeExtension()}"
 											style="width: 128px;" value="#{review.measurementNameDD}">
 											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 											<f:selectItems
@@ -106,9 +106,9 @@
 										</p:selectOneMenu>
 							</div>
 							<div style="width:100%; ">
-										<p:inputText value="#{review.colorName}"
+										<p:inputText value="#{review.colorName }"
 											disabled="#{!review.requestColor}"></p:inputText>
-										<p:selectOneMenu rendered="#{review.requestColor}"
+										<p:selectOneMenu rendered="#{review.requestColor  and !unspscCodeBackingBean.managedBean.isCodeExtension()}"
 											style="width: 128px;" value="#{review.colorNameDD}">
 											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 											<f:selectItems
