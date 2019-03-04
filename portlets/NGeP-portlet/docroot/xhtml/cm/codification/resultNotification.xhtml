@@ -74,20 +74,18 @@
 									</p:tooltip>
 						</f:facet>
 
-						<div style="width: 100%;">
-							<p:inputText value="#{review.reviewedTypeNameII}" disabled="true" />
+								<div style="width: 100%;">
+							<p:inputText value="#{review.reviewedTypeName !=null ? review.reviewedTypeName : review.typeName}" disabled="true" />
 						</div>
 						<div style="width: 100%;">
-							<p:inputText value="#{review.reviewedBrandNameII}"
+							<p:inputText value="#{review.reviewedBrandName != null ? review.reviewedBrandName : review.brandName}" disabled="true" />
+						</div>
+						<div style="width: 100%;">
+							<p:inputText value="#{review.reviewedMeasurementName !=null ? review.reviewedMeasurementName : review.measurementName }"
 								disabled="true" />
 						</div>
 						<div style="width: 100%;">
-							<p:inputText value="#{review.reviewedMeasurementNameII}"
-								disabled="true" />
-						</div>
-						<div style="width: 100%;">
-							<p:inputText value="#{review.reviewedColorNameII}"
-								disabled="true" />
+							<p:inputText value="#{review.reviewedColorName !=null ? review.reviewedColorName : review.colorName}" disabled="true" />
 						</div>
 
 					</p:column>
