@@ -10,6 +10,7 @@ import my.ep.persistence.entity.cm.catalog.CmBrand;
 import my.ep.persistence.entity.cm.catalog.CmColor;
 import my.ep.persistence.entity.cm.catalog.CmMeasurement;
 import my.ep.persistence.entity.cm.catalog.CmRecommendCode;
+import my.ep.persistence.entity.cm.catalog.CmRemark;
 import my.ep.persistence.entity.cm.catalog.CmRequestCode;
 import my.ep.persistence.entity.cm.catalog.CmType;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
@@ -54,11 +55,13 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	private List<CmColor> colorList;
 	private List<CmType> typeList;
 	private List<CmMeasurement> measurementList;
+	private List<CmRemark> selectedRemarks;
 
 	private String typeName;
 	private String colorName;
 	private String measurementName;
 	private String brandName;
+	
 	private boolean typeRedundancy;
 	private boolean barndRedundancy;
 	private boolean measurRedundancy;
@@ -116,6 +119,13 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	
 	private boolean showRecommend = false;
 	private boolean recommendExtension = false;
+	
+	private boolean disableLovSegment = false;
+	private boolean disableLovFamily = false;
+	private boolean disableLovClass = false;
+	private boolean disableLovCommodity = false;
+	
+	private boolean disableRevise = false;
 	
 	public boolean isRecommendExtension(){
 		return this.recommendExtension;
@@ -756,8 +766,41 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	public void setEditModeIndex(int editModeIndex) {
 		this.editModeIndex = editModeIndex;
 	}
-	
-	
-	
+	public List<CmRemark> getSelectedRemarks() {
+		return selectedRemarks;
+	}
+	public void setSelectedRemarks(List<CmRemark> selectedRemarks) {
+		this.selectedRemarks = selectedRemarks;
+	}
+	public boolean isDisableLovSegment() {
+		return disableLovSegment;
+	}
+	public void setDisableLovSegment(boolean disableLovSegment) {
+		this.disableLovSegment = disableLovSegment;
+	}
+	public boolean isDisableLovFamily() {
+		return disableLovFamily;
+	}
+	public void setDisableLovFamily(boolean disableLovFamily) {
+		this.disableLovFamily = disableLovFamily;
+	}
+	public boolean isDisableLovClass() {
+		return disableLovClass;
+	}
+	public void setDisableLovClass(boolean disableLovClass) {
+		this.disableLovClass = disableLovClass;
+	}
+	public boolean isDisableLovCommodity() {
+		return disableLovCommodity;
+	}
+	public void setDisableLovCommodity(boolean disableLovCommodity) {
+		this.disableLovCommodity = disableLovCommodity;
+	}
+	public boolean isDisableRevise() {
+		return disableRevise;
+	}
+	public void setDisableRevise(boolean disableRevise) {
+		this.disableRevise = disableRevise;
+	}
 
 }
