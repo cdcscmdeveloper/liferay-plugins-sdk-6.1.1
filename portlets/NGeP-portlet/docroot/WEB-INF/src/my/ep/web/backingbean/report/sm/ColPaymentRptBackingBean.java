@@ -16,7 +16,7 @@ import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.ColPaymentRptManagedBean;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-
+//recommit
 @ManagedBean(name = "colPaymentRptBB")
 @ViewScoped
 public class ColPaymentRptBackingBean extends SmReportBackingBean<ColPaymentRptManagedBean>{
