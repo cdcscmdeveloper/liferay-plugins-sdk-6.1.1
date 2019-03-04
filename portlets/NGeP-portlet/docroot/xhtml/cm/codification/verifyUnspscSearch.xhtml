@@ -19,10 +19,10 @@
 
 			<p:panel header="#{lbl['lbl.cm.request.info']}" toggleable="true">
 
-				<table style="width: 100%; margin-bottom: 4px;">
+									<table style="width: 100%; margin-bottom: 4px;">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.cm.item.table.type']}"></p:outputLabel></td>
-						<td><p:selectOneMenu disabled="true"
+						<td><p:selectOneMenu disabled="#{!unspscCodeBackingBean.managedBean.isCodeExtension()}"
 								value="#{unspscCodeBackingBean.managedBean.requestCode.itemType}"
 								style="width:228px;">
 								<f:selectItem itemValue="P" itemLabel="#{lbl['lbl.txt.product']}" />
@@ -31,17 +31,21 @@
 						<td></td>
 						<td></td>
 					</tr>
-
-
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.cm.item.name']}"></p:outputLabel></td>
-						<td><p:inputText
-								value="#{unspscCodeBackingBean.managedBean.requestCode.itemName}"
-								disabled="true" size="40"></p:inputText></td>
-						<td><p:outputLabel value="#{lbl['lbl.cm.item.details']}"></p:outputLabel></td>
-						<td><p:inputText
-								value="#{unspscCodeBackingBean.managedBean.requestCode.itemDetail}"
-								disabled="true" size="40"></p:inputText></td>
+					<tr>					
+					<c:choose>
+						<c:when test="#{unspscCodeBackingBean.managedBean.isCodeExtension()}">
+							<td><p:outputLabel value="#{lbl['lbl.rpt.unspscCode']}"></p:outputLabel></td>
+							<td><p:inputText value="#{unspscCodeBackingBean.managedBean.reviewExtCodeList[0].tempCode}" size="40" disabled="true" /></td>
+							<td><p:outputLabel value="#{lbl['lbl.rpt.unspscTitle']}"></p:outputLabel></td>
+							<td><p:inputText value="#{unspscCodeBackingBean.managedBean.reviewExtCodeList[0].tempTitle}" size="40" disabled="true" /></td>
+						</c:when>
+						<c:otherwise>
+							<td><p:outputLabel value="#{lbl['lbl.cm.item.name']}"></p:outputLabel></td>
+							<td><p:inputText value="#{unspscCodeBackingBean.managedBean.requestCode.itemName}" disabled="true" size="40"></p:inputText></td>
+							<td><p:outputLabel value="#{lbl['lbl.cm.item.details']}"></p:outputLabel></td>
+							<td><p:inputText value="#{unspscCodeBackingBean.managedBean.requestCode.itemDetail}" disabled="true" size="40"></p:inputText></td>
+						</c:otherwise>
+					</c:choose>
 					</tr>
 					<h:panelGroup id="extensionFiledsId"
 						rendered="#{unspscCodeBackingBean.managedBean.requestCode.itemType != 'S'}">
@@ -68,7 +72,6 @@
 						</tr>
 					</h:panelGroup>
 				</table>
-
 			</p:panel>
 
 			<p:panel header="#{lbl['lbl.cm.define.search']}" toggleable="true">

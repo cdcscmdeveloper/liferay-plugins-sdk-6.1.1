@@ -23,22 +23,17 @@
 					value="#{unspscCodeBackingBean.managedBean.action}">
 
 					<ui:param name="buttonLabel"
-						value="lbl.btn.#{fn:toLowerCase(action)}" />
-					<p:commandButton value="#{lbl[buttonLabel]}"
+						value="lbl.bpm.action.#{action}" />
+						<p:commandButton value="#{'Endorse and Publish'}"
 						rendered="#{bpmTasklistBackingBean.managedBean.claim and action == 'SUBMIT'}"
-						action="#{unspscCodeBackingBean.submitToReviewExt(action)}"
+						action="#{unspscCodeBackingBean.submitToReviewExt('PUBLISH')}"
 						update="@form"></p:commandButton>
-						
-					<ui:remove>		
-						<p:commandButton value="#{lbl['lbl.bpm.action.RECOMMEND_TO_SUPPLIER']}"
-							action="#{unspscCodeBackingBean.bpmTesting('RECOMMEND_TO_SUPPLIER')}"  
-							rendered="#{bpmTasklistBackingBean.managedBean.claim and action == 'RECOMMEND_TO_SUPPLIER'}" 
-							disabled="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() !=1}" 
+						<p:commandButton value="#{lbl[buttonLabel]}"
+							action="#{unspscCodeBackingBean.bpmTesting(action)}"  
+							rendered="#{bpmTasklistBackingBean.managedBean.claim and (action == 'RECOMMEND_TO_SUPPLIER' or action == 'REVISE')}" 
+							disabled="#{action == 'RECOMMEND_TO_SUPPLIER' and unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() !=1}" 
 							update="@form">
 						</p:commandButton>
-					</ui:remove>
-			
-						
 				</ui:repeat>
 				
 				<p:commandButton value="#{lbl['lbl.bpm.btn.claim']}"
@@ -59,12 +54,10 @@
 						<td><p:inputText
 								value="#{unspscCodeBackingBean.managedBean.reviewExtCodeList[0].tempCode}"
 								size="40" disabled="true" />
-								<ui:remove>
 									<p:commandLink disabled ="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1}" style="margin-left: 10px;"  action="#{unspscCodeBackingBean.managedBean.toggleShowRecommend()}" 
 									update="recommendPanelId">
 									<p:graphicImage value="/css/images/design/search.png" />
 									</p:commandLink>
-								</ui:remove>							
 								</td>
 						<td><p:outputLabel value="#{lbl['lbl.rpt.unspscTitle']}"></p:outputLabel></td>
 						<td><p:inputText
@@ -250,7 +243,6 @@
 
 
 		</h:panelGroup>
-		<ui-remove>
 			<h:panelGroup id="recommendPanelId">
 					<p:panel header="#{lbl['lbl.cm.search.recommend']}" toggleable="true"  rendered="#{unspscCodeBackingBean.managedBean.isShowRecommend()}">
 				<p:dataTable id="recomemendUnspscId" rowIndexVar="rowIndex"
@@ -286,7 +278,11 @@
 				</div>
 			</p:panel>
 		</h:panelGroup>
-		</ui-remove>
+		<h:panelGroup>
+			<p:panel id="reviewUnspscCodeRemark" header="#{lbl['lbl.cm.remarks']}" toggleable="true">
+				<ui:include src="codiRemarks.xhtml"/> 
+			</p:panel>
+		</h:panelGroup>
 	</ui:define>
 
 </ui:composition>
