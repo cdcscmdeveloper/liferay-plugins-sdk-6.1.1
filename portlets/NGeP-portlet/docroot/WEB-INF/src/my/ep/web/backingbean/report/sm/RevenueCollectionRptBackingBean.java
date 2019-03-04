@@ -15,7 +15,7 @@ import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.RevenueCollectionRptManagedBean;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-
+//recommit
 @ManagedBean(name="revenueCollectionRptBB")
 @ViewScoped
 public class RevenueCollectionRptBackingBean extends SmReportBackingBean<RevenueCollectionRptManagedBean>{
