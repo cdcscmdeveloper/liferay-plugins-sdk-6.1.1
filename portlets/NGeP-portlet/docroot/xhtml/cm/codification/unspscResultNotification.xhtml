@@ -49,8 +49,9 @@
 						<td></td>
 						<td></td>
 					</tr>
-					<ui:remove>
-						<tr>
+					<tr>
+						<c:choose>
+    						<c:when test="#{unspscCodeBackingBean.managedBean.isCodeExtension()}">
 							<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
 							<td><p:inputText
 									value="#{unspscCodeBackingBean.managedBean.requestCode.tempCode}"
@@ -59,18 +60,20 @@
 							<td><p:inputText
 									value="#{unspscCodeBackingBean.managedBean.requestCode.tempTitle}"
 									size="40" disabled="true" /></td>
-						</tr>
-					</ui:remove>
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.cm.item.name']}"></p:outputLabel></td>
-						<td><p:inputText
+    						</c:when>
+    						
+    						<c:otherwise>
+								<td><p:outputLabel value="#{lbl['lbl.cm.item.name']}"></p:outputLabel></td>
+								<td><p:inputText
 								value="#{unspscCodeBackingBean.managedBean.requestCode.itemName}"
 								disabled="true" size="40"></p:inputText></td>
-						<td><p:outputLabel value="#{lbl['lbl.cm.item.details']}"></p:outputLabel></td>
-						<td><p:inputText
+								<td><p:outputLabel value="#{lbl['lbl.cm.item.details']}"></p:outputLabel></td>
+								<td><p:inputText
 								value="#{unspscCodeBackingBean.managedBean.requestCode.itemDetail}"
 								disabled="true" size="40"></p:inputText></td>
-					</tr>
+    						</c:otherwise>
+						</c:choose>		
+					</tr>			
 					<h:panelGroup id="extensionFiledsId"
 						rendered="#{unspscCodeBackingBean.managedBean.requestCode.itemType != 'S'}">
 						<tr>
