@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
  */
 public class ReportConst implements Serializable{
 	
+	//recommit
 	private static final long serialVersionUID = 1L;
 	// public static final String MOD_SC_TTL = "lbl.module.supplierSelection";
 	public static final String MALAY_LANGUAGE_CODE = "ms";
