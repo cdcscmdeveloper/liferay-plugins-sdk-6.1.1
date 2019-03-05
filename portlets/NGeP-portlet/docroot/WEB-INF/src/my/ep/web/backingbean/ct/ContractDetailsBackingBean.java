@@ -186,10 +186,12 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				&& (getManagedBean().getSearchContractStatus() == 0 && !isSupplierRole())
 				&& getManagedBean().getSearchMinistryProfile() == null
 				&& getManagedBean().getSearchPtjGroupProfile() == null
+				&& getManagedBean().getCreatedBy() == null 
 				&& getManagedBean().getSearchPtjProfile() == null) {
 			throw new EpException(MessageConst.ERROR_100060);
 		} else {
 			getManagedBean().getContractDataModel().reloadData();
+
 		}
 	}
 
@@ -243,6 +245,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
+
 
 		if (taskId == null) {
 			if (getManagedBean().getWarningPercentage() != null) {
@@ -507,9 +510,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				ctBB.getManagedBean().setFrequencySchedule(ContractConst.PROGRESSIVE_SCHEDULE);
 			}
 			retrieveFulfilmentDetails();
-
-			ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
-			ctBB.initializeRemarkAndAttachement(resDTO.getCtContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
+					
+			ctBB = new ContractBackingBean(getFacesScopes().getUserSessionBean().getUserId().toString());
+			ctBB.equals(resDTO.getCtContractVer().getCreatedBy()); 
 
 			ctBB.getManagedBean().setDisableContractAmount(true);
 			
@@ -1758,6 +1761,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @return the navigate URL 
 	 */
 	public String gotoAmendPage(Long contractId) {
+		
 		ContractReqDTO reqDTO = new ContractReqDTO();
 		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 		reqDTO.setContractId(contractId);
@@ -1860,7 +1864,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
 			ctBB.chkServiceTaxAlert();
 			getManagedBean().setExternalPageUrl(null);
-			getManagedBean().setSelectedTabIndex(0);	     
+			getManagedBean().setSelectedTabIndex(0);	
 			return CONTRACT_PAGE;
 		} finally {
 			contractSO = null;
@@ -1908,7 +1912,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		
 		
 		trBB.retrieveContractVerOfAgreement();
-		trBB.getManagedBean().setTerminationList(contractSO.retrieveTerminationHistoryList(ctReqDTO).getTerminationHistoryList());		
+		trBB.getManagedBean().setTerminationList(contractSO.retrieveTerminationHistoryList(ctReqDTO).getTerminationHistoryList());	
 		return TERMINATE_HISTORY_PAGE;
 	}
 
@@ -2139,8 +2143,20 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
+
 		return items;
 	}
+			
+
+			
+		
+
+	public String isContractUserAdmin() {
+		
+		String userAdmin = getFacesScopes().getUserSessionBean().getUserId().toString();
+		return userAdmin;
+
+}
 
 	/**
 	 * The method used to retrieve the contract status of the contract.
