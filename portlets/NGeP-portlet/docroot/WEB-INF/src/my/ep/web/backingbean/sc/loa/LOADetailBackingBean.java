@@ -81,6 +81,7 @@ import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
@@ -2706,7 +2707,7 @@ public class LOADetailBackingBean extends
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
 			reqDTO.setScLoa(scLoa);
 			reqDTO.setOutcome(outcome);
-			reqDTO.setRoleCode(getUserRoleCode());
+			reqDTO.setRoleCode(getUserRoleCode(scLoa.getScLoiLoa().getDocType()));
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
@@ -2770,7 +2771,7 @@ public class LOADetailBackingBean extends
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
 			reqDTO.setOutcome(outcome);
 			reqDTO.setSourceId(getManagedBean().getSourceId());
-			reqDTO.setRoleCode(getUserRoleCode());
+			reqDTO.setRoleCode(getUserRoleCode(scLoa.getScLoiLoa().getDocType()));
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
@@ -2882,7 +2883,7 @@ public class LOADetailBackingBean extends
 			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setDigiSignData(digiSign);
-			reqDTO.setRoleCode(getUserRoleCode());
+			reqDTO.setRoleCode(getUserRoleCode(scLoa.getScLoiLoa().getDocType()));
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			reqDTO.setScQt(this.getManagedBean().getScQt());
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
@@ -6424,6 +6425,76 @@ public class LOADetailBackingBean extends
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale) });
 			}
 		}
+	}
+	
+	
+	/**
+	 * To get userRole Code
+	 * 
+	 * @return String roleCode
+	 */
+	private String getUserRoleCode(String docType) {
+		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+		reqDTO.setLanguageCode(CommonConstants.DEFAULT_LANGUAGE_CODE);
+		UserResDTO userResDTO = userSO.retrieveUserRoleDescListByUserId(reqDTO);
+		List<PmRoleDesc> roleDesc = userResDTO.getRoleDescList();
+		List<String> roleCodes = new ArrayList<String>();
+		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST
+				.equalsIgnoreCase(docType)) {
+		roleCodes.add(RoleCode.GOVT_SELLER.value());
+		roleCodes.add(RoleCode.G2G_SUPPLIER_USER.value());
+		roleCodes.add(RoleCode.G2G_SUPPLIER_ADMIN.value());
+		roleCodes.add(RoleCode.MOF_SUPPLIER_ADMIN.value());
+		roleCodes.add(RoleCode.MOF_SUPPLIER_USER.value());
+		roleCodes.add(RoleCode.BASIC_SUPPLIER_ADMIN.value());
+		roleCodes.add(RoleCode.BASIC_SUPPLIER_USER.value());
+		roleCodes.add(RoleCode.REQUISITIONER.value());
+		roleCodes.add(RoleCode.RN_APPROVER.value());
+		roleCodes.add(RoleCode.CT_APPROVER.value());
+		roleCodes.add(RoleCode.BPK_APPROVER.value());
+		roleCodes.add(RoleCode.DESK_OFFICER.value());
+		roleCodes.add(RoleCode.SC_SECRETARY.value());
+		roleCodes.add(RoleCode.SC_MEMBER.value());
+		roleCodes.add(RoleCode.SC_CHAIRPERSON.value());
+		}else if(ParameterConst.DOCTYPE_QUOTATION.equals(docType) || ParameterConst.DOCTYPE_DIRECT_NEGO.equals(docType)) {
+			roleCodes.add(RoleCode.DESK_OFFICER.value());
+			roleCodes.add(RoleCode.SC_SECRETARY.value());
+			roleCodes.add(RoleCode.SC_MEMBER.value());
+			roleCodes.add(RoleCode.SC_CHAIRPERSON.value());
+			roleCodes.add(RoleCode.MOF_SUPPLIER_ADMIN.value());
+			roleCodes.add(RoleCode.MOF_SUPPLIER_USER.value());
+			roleCodes.add(RoleCode.BASIC_SUPPLIER_ADMIN.value());
+			roleCodes.add(RoleCode.BASIC_SUPPLIER_USER.value());
+			roleCodes.add(RoleCode.GOVT_SELLER.value());
+			roleCodes.add(RoleCode.G2G_SUPPLIER_USER.value());
+			roleCodes.add(RoleCode.G2G_SUPPLIER_ADMIN.value());
+			roleCodes.add(RoleCode.REQUISITIONER.value());
+			roleCodes.add(RoleCode.RN_APPROVER.value());
+			roleCodes.add(RoleCode.CT_APPROVER.value());
+			roleCodes.add(RoleCode.BPK_APPROVER.value());
+			
+		}
+		
+		String roleCode = null;
+
+		List<String> pmRoleCodes = new ArrayList<String>();
+
+		if (null != roleDesc) {
+			for (PmRoleDesc pmRoleDesc : roleDesc) {
+				pmRoleCodes.add(pmRoleDesc.getPmRole().getRoleCode());
+			}
+
+			for (String role : roleCodes) {
+				if (pmRoleCodes.contains(role)) {
+					roleCode = role;
+					break;
+				}
+			}
+		}
+		return roleCode;
 	}
 
 }
