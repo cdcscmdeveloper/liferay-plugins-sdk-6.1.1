@@ -53,90 +53,19 @@
 			</table>
 			<br />
 		</c:if>
-		<!-- #25243 -->
-		<c:choose>
-		    <c:when test="#{backingBean.managedBean.smAppl.applType == 'B'}">
-				<table style="width: 100%">
-						<tr>
-							<td><h:outputText styleClass="instruction"
-								value="#{lbl['lbl.sm.suppDoc.online.notes']}" escape="false" /></td>
-						</tr>
-						<tr>
-							<td><h:outputText styleClass="instruction"
-								value="#{lbl['lbl.sm.suppDoc.instruction.attachment']}" escape="false" /></td>
-						</tr>
-				</table>
-			</c:when>
-			<c:otherwise>
-				<table style="width: 100%;">
-					<tr>
-						<td>
-							<h:outputText style="float:left"
-								value="#{lbl['lbl.sm.suppDoc.offline.note1']}" /> <br /> 
-							<h:outputText style="float:left"
-								value="#{lbl['lbl.sm.suppDoc.offline.note3']}" /> <br />
-						</td>
-						<td>
-							<div align="right">
-								<p:commandLink action="#{backingBean.printDocCheckList}" update="@form"
-								   onstart="blockWidget.show()" oncomplete="blockWidget.hide()" process="@this">
-									<p:graphicImage value="/css/images/design/print.png"
-												style="margin-right:2px;" title="#{lbl['lbl.sm.printList']}"/>
-								</p:commandLink>
-							</div>
-						</td>
-					</tr>
-				</table>
-				<p:spacer height="10px" />
-				<table style="width: 100%;">
-					<tr>
-						<td style="width: 33%">
-							<table>
-								<tr>
-									<td><h:outputText style="float:left"
-											value="#{lbl['lbl.sm.suppDoc.offline.peninAddr1']}"
-											escape="false" /></td>
-								</tr>
-								<tr>
-									<td style="padding-top: 10px;"><h:outputText
-											style="float:left"
-											value="#{lbl['lbl.sm.suppDoc.offline.peninAddr2']}"
-											escape="false" /></td>
-								</tr>
-							</table>
-						</td>
-	
-						<td style="width: 33%"><table>
-								<tr>
-									<td><h:outputText style="float:left"
-											value="#{lbl['lbl.sm.suppDoc.offline.sabahAddr1']}"
-											escape="false" /></td>
-								</tr>
-								<tr>
-									<td style="padding-top: 10px;"><h:outputText
-											style="float:left"
-											value="#{lbl['lbl.sm.suppDoc.offline.sabahAddr2']}"
-											escape="false" /></td>
-								</tr>
-							</table></td>
-						<td style="width: 33%"><table>
-								<tr>
-									<td><h:outputText style="float:left"
-											value="#{lbl['lbl.sm.suppDoc.offline.sarawakAddr1']}"
-											escape="false" /></td>
-								</tr>
-								<tr>
-									<td style="padding-top: 10px;"><h:outputText
-											style="float:left"
-											value="#{lbl['lbl.sm.suppDoc.offline.sarawakAddr2']}"
-											escape="false" /></td>
-								</tr>
-							</table></td>
-					</tr>
-				</table>
-			</c:otherwise>
-		</c:choose>
-				
+
+		<table style="width: 100%">
+
+			<tr>
+				<td><h:outputText styleClass="instruction"
+						value="#{lbl['lbl.sm.suppDoc.online.notes']}" escape="false" /></td>
+
+			</tr>
+			<tr>
+				<td><h:outputText styleClass="instruction"
+						value="#{lbl['lbl.sm.suppDoc.instruction.attachment']}" escape="false" /></td>
+			</tr>
+		</table>
 		<p:spacer height="10px" />
 		
 		<ac:smSupplierOnlineSuppDoc tableId="mandatoryTableId" uploadDialogId="mandatoryUploadId"
