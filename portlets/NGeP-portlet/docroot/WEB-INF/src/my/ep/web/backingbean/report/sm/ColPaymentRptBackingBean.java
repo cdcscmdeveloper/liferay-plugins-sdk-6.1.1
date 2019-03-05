@@ -25,6 +25,8 @@ public class ColPaymentRptBackingBean extends SmReportBackingBean<ColPaymentRptM
 	
 	public ColPaymentRptBackingBean(){
 		getManagedBean().setPaymentTypeMethodLs(getPaymentTypeMethodList());
+		getManagedBean().setCdcCollector(isRole(ReportConst.ROLE_CODE_COLLECTOR_CDC));
+		getManagedBean().setSoftCert(SmReportConst.PAYMENT_SOFTC_CERT);
 	}
 	
 	public void generateReport() {
