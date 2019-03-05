@@ -22,6 +22,11 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 public class ColReceiptTransDtRptBackingBean extends SmReportBackingBean<ColReceiptTransDtRptManagedBean>{
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(ColReceiptTransDtRptBackingBean.class);
+		
+	public ColReceiptTransDtRptBackingBean() {
+		getManagedBean().setCdcCollector(isRole(ReportConst.ROLE_CODE_COLLECTOR_CDC));
+		getManagedBean().setSoftCert(SmReportConst.PAYMENT_SOFTC_CERT);
+	}
 	
 	public void generateReport(){
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
