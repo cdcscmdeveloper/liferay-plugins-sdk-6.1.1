@@ -5342,6 +5342,44 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				reqDTO.setTrackingStatus(true);
 				reqDTO.setSupplierId(csi.getSupplierId());
 
+				//end date before start date
+				if(csi.getCmStandardPricing().getStartDate().after(csi.getCmStandardPricing().getEndDate())){
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+									MessageUtils.getMessage(MessageConst.ERROR_715011,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+					return naviToMaintenancePage(false);
+				}
+
+				//end date already passed
+				if(csi.getCmStandardPricing().getEndDate().before(new Date())){
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+									MessageUtils.getMessage(MessageConst.ERROR_715021,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+					return naviToMaintenancePage(false);
+				}
+
+				//promotion date is outside normal date
+				if(csi.getCmPromotionPricing().getStartDate()!=null && csi.getCmPromotionPricing().getEndDate()!=null){
+					if(csi.getCmPromotionPricing().getEndDate().after(csi.getCmStandardPricing().getEndDate())||
+							csi.getCmPromotionPricing().getStartDate().after(csi.getCmStandardPricing().getEndDate())||
+							csi.getCmPromotionPricing().getEndDate().before(csi.getCmStandardPricing().getStartDate())||
+							csi.getCmPromotionPricing().getStartDate().before(csi.getCmStandardPricing().getStartDate())){
+						FacesContext.getCurrentInstance().addMessage(
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+										MessageUtils.getMessage(MessageConst.ERROR_715018,
+												MessageUtils.BUNDLE_COMMON_MESSAGES,
+												new FacesScopes().getUserLocale())));
+						return naviToMaintenancePage(false);
+					}
+				}
+
 				String actionDesc ="Item "+csi.getCmItem().getItemName()+" telah diiklankan oleh "+(pmUser.getUserName()!=null?pmUser.getUserName():"SYS");
 				reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(csi,actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
 			}			
