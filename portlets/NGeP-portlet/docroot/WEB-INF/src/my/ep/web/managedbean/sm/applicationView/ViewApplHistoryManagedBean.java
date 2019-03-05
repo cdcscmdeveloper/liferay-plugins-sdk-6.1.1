@@ -1,5 +1,7 @@
 package my.ep.web.managedbean.sm.applicationView;
 
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
@@ -7,9 +9,13 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.constant.sm.SupplierManagementConst;
+import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
+import my.ep.dto.sm.bulkApplication.SmBulkApplicationVO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmAttachment;
+import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.web.backingbean.trackingdiary.PmTrackingDiaryBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -31,6 +37,9 @@ public class ViewApplHistoryManagedBean extends
 	private boolean claimTask;
 	private IPagingDataModel<Object[]> smSupplierDataModel = new SmSupplierPagingDataModel();
 	private PmTrackingDiaryBackingBean trackingDiary;
+	private List<SmBulkApplOverlapCatVO> overlapCategoryVOList;
+	private List<SmBulkApplicationVO> smBulkApplicationVO;
+	private SmAttachment cancellationAttachment;
 
 	public ViewApplHistoryManagedBean() {
 
@@ -157,6 +166,30 @@ public class ViewApplHistoryManagedBean extends
 
 	public void setTrackingDiary(PmTrackingDiaryBackingBean trackingDiary) {
 		this.trackingDiary = trackingDiary;
+	}
+
+	public List<SmBulkApplOverlapCatVO> getOverlapCategoryVOList() {
+		return overlapCategoryVOList;
+	}
+
+	public void setOverlapCategoryVOList(List<SmBulkApplOverlapCatVO> overlapCategoryVOList) {
+		this.overlapCategoryVOList = overlapCategoryVOList;
+	}
+
+	public List<SmBulkApplicationVO> getSmBulkApplicationVO() {
+		return smBulkApplicationVO;
+	}
+
+	public void setSmBulkApplicationVO(List<SmBulkApplicationVO> smBulkApplicationVO) {
+		this.smBulkApplicationVO = smBulkApplicationVO;
+	}
+
+	public SmAttachment getCancellationAttachment() {
+		return cancellationAttachment;
+	}
+
+	public void setCancellationAttachment(SmAttachment cancellationAttachment) {
+		this.cancellationAttachment = cancellationAttachment;
 	}
 
 }
