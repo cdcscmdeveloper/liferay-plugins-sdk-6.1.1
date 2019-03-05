@@ -31,6 +31,7 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.persistence.entity.ct.CtAttachment;
+import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.VCtContract;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -101,6 +102,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	private IPagingDataModel<VCtContract> contractDataModel = new ContractPagingDataModel();
 	public boolean backPageAmendment;
 	private Long contractId;
+	private CtContract createdBy;
 
 	public int deductionIndex =99;
 	public int scheduleIndex =99;
@@ -748,12 +750,28 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	public PmOrgProfile getSearchPtjProfile() {
 		return searchPtjProfile;
 	}
+	
 
 	/**
 	 * @param searchPtjProfile the searchPtjProfile to set
 	 */
 	public void setSearchPtjProfile(PmOrgProfile searchPtjProfile) {
 		this.searchPtjProfile = searchPtjProfile;
+	}
+	
+	/**
+	 * @return the searchCreatedBy
+	 */
+	public CtContract getCreatedBy() {
+		return createdBy;
+	}
+	
+	
+	/**
+	 * @param searchCreatedBy the searchCreatedBy to set
+	 */
+	public void setCreatedBy(CtContract createdBy) {
+		this.createdBy = createdBy;
 	}
 
 	public boolean isBackPageAmendment() {
@@ -912,8 +930,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 				if (getSearchPtjProfile() != null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("PTJ_ORG_ID", SearchOperator.OPERATOR_EQUALS.value(),
 							getSearchPtjProfile().getOrgProfileId()));
-
-				} else if (getSearchPtjGroupProfile() != null) {
+				}else if (getSearchPtjGroupProfile() != null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("PTJ_GROUP_ORG_ID", SearchOperator.OPERATOR_EQUALS.value(),
 							getSearchPtjGroupProfile().getOrgProfileId()));
 				} else if (getSearchMinistryProfile() != null) {
@@ -926,6 +943,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);				
 				}
+				
 				if (StringUtils.isNotBlank(getSearchCircularName())) {
 					SearchFilterBean filterBean = new SearchFilterBean("CIRCULAR_NAME",SearchOperator.OPERATOR_LIKE.value(),
 							getSearchCircularName());
