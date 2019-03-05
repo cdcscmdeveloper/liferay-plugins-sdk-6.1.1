@@ -29,7 +29,6 @@
 				<tr>
 					<td>
 						<h:outputText value="#{lbl['lbl.sm.suppDoc.online.bumi.only']}" escape="false" />
-						<p:inputText value="#{backingBean.managedBean.smAppl.supportingDocMode}" id="suppDocOffline" type="hidden" />
 					</td>
 				</tr>
 			</c:when>
@@ -37,7 +36,8 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.submissionType']}" /></td>
 					<td>
-						<p:selectOneRadio id="offLnSuppDocs" value="#{backingBean.managedBean.smAppl.supportingDocMode}">
+						<p:selectOneRadio id="offLnSuppDocs" value="#{backingBean.managedBean.smAppl.supportingDocMode}"
+							required="true" >
 							<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.offline']}"
 								itemValue="H" />
 							<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.online']}"
