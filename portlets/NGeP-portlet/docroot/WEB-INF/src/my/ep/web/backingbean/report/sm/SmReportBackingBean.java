@@ -10,10 +10,15 @@ import java.util.regex.Pattern;
 
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.biz.service.rpt.IRPTRequestSO;
 import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.constants.CommonConstants;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
@@ -23,6 +28,7 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
+import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -50,13 +56,11 @@ import org.primefaces.context.RequestContext;
 public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		extends ReportBaseBackingBean<T> {
 	private static final long serialVersionUID = 1L;
-	private static final Logger log = EpLogger
-			.getLogger(SmReportBackingBean.class);
+	private static final Logger log = EpLogger.getLogger(SmReportBackingBean.class);
 
 	public void generateSmReport(LinkedHashMap<String, String> params) {
 		IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-						IRPTRequestSO.class);
+				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IRPTRequestSO.class);
 		params.put(SmReportConst.PARAM_KEY_REPORT, getManagedBean()
 				.getReportName());
 		params.put(SmReportConst.PARAM_REPORT_CODE, getManagedBean()
@@ -65,15 +69,14 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 				.getUserSessionBean().getUserId().toString());
 
 		RPTRequestReqDTO reqDTO = new RPTRequestReqDTO();
-		reqDTO.setDefaultOutputType(this.getManagedBean()
-				.getDefaultOutputType());
+		reqDTO.setDefaultOutputType(this.getManagedBean().getDefaultOutputType());
 		reqDTO.setTempAccess(this.getManagedBean().isTempAccess());
 		reqDTO.setParametersMap(params);
+		
 		try {
 			RPTRequestResDTO resDTO = rptRequestSO.generateReport(reqDTO);
 			getPopUpMsg(String.valueOf(resDTO.getRequestId()));
-			RequestContext.getCurrentInstance().execute(
-					"rptConfirmationDlg.show()");
+			RequestContext.getCurrentInstance().execute("rptConfirmationDlg.show()");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -398,19 +401,22 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	}
 
 	public void addSelectedPaymentTypeParam(LinkedHashMap<String, String> params) {
-		if (getManagedBean().getSelectedPaymentTypes().size() > 0) {
-			for (String paymentType : getManagedBean()
-					.getSelectedPaymentTypes()) {
+		if (getManagedBean().getSelectedPaymentTypes() != null && getManagedBean().getSelectedPaymentTypes().size() > 0) {
+			for (String paymentType : getManagedBean().getSelectedPaymentTypes()) {				
+				
 				if (paymentType.equalsIgnoreCase(SmReportConst.PAYMENT_MOF)) {
 					params.put(SmReportConst.PARAM_PAYMENT_TYPE1, paymentType);
-				} else if (paymentType
-						.equalsIgnoreCase(SmReportConst.PAYMENT_PROCESSING)) {
+				} else if (paymentType.equalsIgnoreCase(SmReportConst.PAYMENT_PROCESSING)) {
 					params.put(SmReportConst.PARAM_PAYMENT_TYPE2, paymentType);
-				} else if (paymentType
-						.equalsIgnoreCase(SmReportConst.PAYMENT_SOFTC_CERT)) {
+				} else if (paymentType.equalsIgnoreCase(SmReportConst.PAYMENT_SOFTC_CERT)) {
 					params.put(SmReportConst.PARAM_PAYMENT_TYPE3, paymentType);
 				}
 			}
+			//Enhancement #19245 - role cdc collector may view soft cert only	
+		} else if (getManagedBean().getSoftCert() != null) { 
+				log.info(":::addSelectedPaymentTypeParam() getManagedBean().getSoftCert(): "+ getManagedBean().getSoftCert());
+				params.put(SmReportConst.PARAM_PAYMENT_TYPE3, getManagedBean().getSoftCert());
+			//end of Enhancement #19245 
 		}
 	}
 
@@ -649,4 +655,37 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			}
 		}
 	}
+	
+	//Enhancement #19245
+	/**
+	 * To check user role 
+	 * 
+	 * @param roleCode
+	 * @return boolean flag
+	 */
+	public boolean isRole(String roleCode) {
+		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+		reqDTO.setLanguageCode(CommonConstants.DEFAULT_LANGUAGE_CODE);
+		
+		UserResDTO userResDTO = userSO.retrieveUserRoleDescListByUserId(reqDTO);
+		List<PmRoleDesc> roleDesc = userResDTO.getRoleDescList();
+
+		if (null != roleDesc) {
+			for (PmRoleDesc pmRoleDesc : roleDesc) {
+				if (roleCode.equalsIgnoreCase(pmRoleDesc.getPmRole().getRoleCode())) {
+					return true;
+				}
+			}
+		} else {
+			throw new EpException("User does not exist with the role " + roleCode);
+		}
+		
+		return false;
+	}
+	//end of Enhancement #19245 
+	
 }
