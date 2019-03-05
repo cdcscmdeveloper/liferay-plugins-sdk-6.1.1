@@ -25,6 +25,8 @@ public class RevenueCollectionRptBackingBean extends SmReportBackingBean<Revenue
 	public RevenueCollectionRptBackingBean(){
 		getManagedBean().setSelectedPaymentTypes(new ArrayList<String>());
 		setDefaultDateFromAndDateTo();
+		getManagedBean().setCdcCollector(isRole(ReportConst.ROLE_CODE_COLLECTOR_CDC));
+		getManagedBean().setSoftCert(SmReportConst.PAYMENT_SOFTC_CERT);
 	}
 	
 	public void generateReport(){

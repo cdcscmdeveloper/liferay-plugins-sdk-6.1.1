@@ -29,6 +29,7 @@ public class DailyReceivedRptBackingBean extends
 
 	public DailyReceivedRptBackingBean() {
 		setDefaultDateFromAndDateTo();
+		getManagedBean().setCdcCollector(isRole(ReportConst.ROLE_CODE_COLLECTOR_CDC));
 	}
 
 	public void generateReport() {
