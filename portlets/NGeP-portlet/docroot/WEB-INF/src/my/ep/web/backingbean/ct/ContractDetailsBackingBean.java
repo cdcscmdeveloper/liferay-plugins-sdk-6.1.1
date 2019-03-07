@@ -510,9 +510,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				ctBB.getManagedBean().setFrequencySchedule(ContractConst.PROGRESSIVE_SCHEDULE);
 			}
 			retrieveFulfilmentDetails();
-					
-			ctBB = new ContractBackingBean(getFacesScopes().getUserSessionBean().getUserId().toString());
-			ctBB.equals(resDTO.getCtContractVer().getCreatedBy()); 
+			
+			ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
+			ctBB.initializeRemarkAndAttachement(resDTO.getCtContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 
 			ctBB.getManagedBean().setDisableContractAmount(true);
 			
@@ -1760,8 +1760,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * 
 	 * @return the navigate URL 
 	 */
-	public String gotoAmendPage(Long contractId) {
-		
+	public String gotoAmendPage(Long contractId) {		
 		ContractReqDTO reqDTO = new ContractReqDTO();
 		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 		reqDTO.setContractId(contractId);
