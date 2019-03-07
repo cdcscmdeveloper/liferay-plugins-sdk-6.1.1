@@ -162,14 +162,21 @@ public class SmReportConst implements Serializable {
 	public static final String CLASSIFICATION_CODE_2 = "L1121107";														
 	public static final String SOFTCERT_ISSUED_DATE = "I";
 	public static final String SOFTCERT_REVOCATION_DATE = "K";
+	public static final String SOFTCERT_REQUEST_DATE = "R";
+	public static final String SOFTCERT_EXPIRY_DATE = "E";
 	//public static final String SOFTCERT_RENEW_DATE = "N";
 	
-	public static final String CERT_APP_NEW = "N";
-	public static final String CERT_APP_RENEW = "R";
+	private final String CERT_APP_NEW = "N";
+	private final String CERT_APP_RENEW = "R";
+	private final String CERT_APP_REAPPLY = "A";
+	private final String CERT_APP_REVOKE = "K";
 	
-	public static final int CERT_STATUS_PENDING = 3;
-	public static final int CERT_STATUS_ISSUED = 1;
-	public static final int CERT_STATUS_REJECTED = 6;
+	private final int CERT_STATUS_PENDING_REQUEST = 4;
+	private final int CERT_STATUS_PENDING_PAYMENT = 2;
+	private final int CERT_STATUS_PENDING_ISSUANCE = 3;
+	private final int CERT_STATUS_RENEWAL_READY = 7;
+	private final int CERT_STATUS_ISSUED = 1;
+	private final int CERT_STATUS_REJECTED = 6;
 	
 	public static final String PROVIDER_TRUST_GATE = "T";
 	public static final String PROVIDER_DIGI_CERT = "D";
@@ -543,6 +550,14 @@ public class SmReportConst implements Serializable {
 	public String getCertAppRenew() {
 		return CERT_APP_RENEW;
 	}
+	
+	public String getCertAppRevoke() {
+		return CERT_APP_REVOKE;
+	}
+
+	public String getCertAppReapply() {
+		return CERT_APP_REAPPLY;
+	}
 
 	public String getSoftcertIssuedDate() {
 		return SOFTCERT_ISSUED_DATE;
@@ -550,6 +565,14 @@ public class SmReportConst implements Serializable {
 
 	public String getSoftcertRevocationDate() {
 		return SOFTCERT_REVOCATION_DATE;
+	}
+	
+	public String getSoftcertExpiryDate() {
+		return SOFTCERT_EXPIRY_DATE;
+	}
+
+	public String getSoftcertRequestDate() {
+		return SOFTCERT_REQUEST_DATE;
 	}
 
 	public String getProviderTrustGate() {
@@ -560,8 +583,20 @@ public class SmReportConst implements Serializable {
 		return PROVIDER_DIGI_CERT;
 	}
 
-	public int getCertStatusPending() {
-		return CERT_STATUS_PENDING;
+	public int getCertStatusPendingRequest() {
+		return CERT_STATUS_PENDING_REQUEST;
+	}
+
+	public int getCertStatusPendingPayment() {
+		return CERT_STATUS_PENDING_PAYMENT;
+	}
+
+	public int getCertStatusPendingIssuance() {
+		return CERT_STATUS_PENDING_ISSUANCE;
+	}
+
+	public int getCertStatusRenewalReady() {
+		return CERT_STATUS_RENEWAL_READY;
 	}
 
 	public int getCertStatusIssued() {
