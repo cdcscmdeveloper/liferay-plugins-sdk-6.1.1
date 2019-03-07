@@ -122,23 +122,29 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	private Long selectedZoneId;
 	private Long sstSupplierId;
 	private String addressName;
+	private long stateId;
+	private long divisionId;
+	private long districtId;
+	private long cityId;
 	private PmState state = new PmState();
 	private PmDivision division = new PmDivision();
 	private PmDistrict district = new PmDistrict();
 	private PmCity city = new PmCity();
-	private String recievingAddressName;
-	
 	private int resetTablerow;
-	private PmAddressType recevingAddress;
+	
+	
+	private List<PmState> stateList;
+	private List<PmDistrict> districtList;
+	private List<PmCity> cityList;
+	private List<PmDivision> divisionList;
+	private boolean displayDivision=true;
+	
+	
 
 	public OrganisationManagedBean() {
 
 		pmAddressType = new PmAddressType();
 		deliveryAddress = new PmAddressType();
-		
-		recevingAddress =new PmAddressType();
-		
-		
 		officeContactPerson = new PmContact();
 		orgProfile = new PmOrgProfile();
 		pmAddressType.setPmAddress(new PmAddress());
@@ -1002,20 +1008,43 @@ public class OrganisationManagedBean extends BaseManagedBean{
 //		this.stateId = stateId;
 //	}
 
+	public long getStateId() {
+		return stateId;
+	}
+
+	public void setStateId(long stateId) {
+		this.stateId = stateId;
+	}
+
+	public long getDivisionId() {
+		return divisionId;
+	}
+
+	public void setDivisionId(long divisionId) {
+		this.divisionId = divisionId;
+	}
+
+	public long getDistrictId() {
+		return districtId;
+	}
+
+	public void setDistrictId(long districtId) {
+		this.districtId = districtId;
+	}
+
+	public long getCityId() {
+		return cityId;
+	}
+
+	public void setCityId(long cityId) {
+		this.cityId = cityId;
+	}
 	public int getResetTablerow() {
 		return resetTablerow;
 	}
 
 	public void setResetTablerow(int resetTablerow) {
 		this.resetTablerow = resetTablerow;
-	}
-
-	public PmAddressType getRecevingAddress() {
-		return recevingAddress;
-	}
-
-	public void setRecevingAddress(PmAddressType recevingAddress) {
-		this.recevingAddress = recevingAddress;
 	}
 
 	public PmState getState() {
@@ -1050,14 +1079,45 @@ public class OrganisationManagedBean extends BaseManagedBean{
 		this.city = city;
 	}
 
-	public String getRecievingAddressName() {
-		return recievingAddressName;
+	
+	public boolean isDisplayDivision() {
+		return displayDivision;
 	}
 
-	public void setRecievingAddressName(String recievingAddressName) {
-		this.recievingAddressName = recievingAddressName;
+	public void setDisplayDivision(boolean displayDivision) {
+		this.displayDivision = displayDivision;
 	}
-	
-	
+
+	public List<PmState> getStateList() {
+		return stateList;
+	}
+
+	public void setStateList(List<PmState> stateList) {
+		this.stateList = stateList;
+	}
+
+	public List<PmDistrict> getDistrictList() {
+		return districtList;
+	}
+
+	public void setDistrictList(List<PmDistrict> districtList) {
+		this.districtList = districtList;
+	}
+
+	public List<PmCity> getCityList() {
+		return cityList;
+	}
+
+	public void setCityList(List<PmCity> cityList) {
+		this.cityList = cityList;
+	}
+
+	public List<PmDivision> getDivisionList() {
+		return divisionList;
+	}
+
+	public void setDivisionList(List<PmDivision> divisionList) {
+		this.divisionList = divisionList;
+	}
 	
 }

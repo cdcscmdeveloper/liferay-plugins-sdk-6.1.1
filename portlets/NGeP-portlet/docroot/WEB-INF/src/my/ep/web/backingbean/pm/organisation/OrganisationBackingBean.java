@@ -11,6 +11,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
@@ -24,6 +25,7 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
+import my.ep.biz.service.pm.common.division.IDivisionSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
@@ -45,6 +47,8 @@ import my.ep.dto.pm.common.city.CityReqDTO;
 import my.ep.dto.pm.common.city.CityResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
+import my.ep.dto.pm.common.division.DivisionReqDTO;
+import my.ep.dto.pm.common.division.DivisionResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -220,6 +224,22 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 		log.info("..............redirectToOrganisation.......id=" + id);
 		resetInitialOrg();
 		retrieveFinancialOrgList();
+		
+		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance().getServiceObject("pm", IStateSO.class);
+		try{
+			System.out.println("OrganisationBackingBean.redirectToOrganisation() ------------------------------ 1");
+			StateReqDTO reqStateDTO = new StateReqDTO();
+			reqStateDTO.setCountryCode("MY");
+			StateResDTO resStateDTO = stateSO.retriveStatesListByCountryCode(reqStateDTO);
+			System.out.println("OrganisationBackingBean.redirectToOrganisation() ------------------------------ 2");
+
+			this.getManagedBean().setStateList(resStateDTO.getStateList());
+			System.out.println("OrganisationBackingBean.redirectToOrganisation() ------------------------------ 3");
+			System.out.println("getStateList().size() :: " + this.getManagedBean().getStateList().size());
+		}finally {
+			stateSO = null;
+		}
+		
        
 
 		this.getManagedBean().getDeliveryAddress().setPmAddress(PmCommonUtil.getNewPmAddress());
@@ -243,7 +263,9 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 		}
 		getManagedBean().setShowParentMsg(true);
 		RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
+		resetAddressType();
 		return NAV_TO_MAINTAIN;
+		
 	}
 
 	private String refreshOrganisation(PmOrgProfile orgProfile) throws Exception {
@@ -1374,7 +1396,7 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 		setSelectedAddrForEdit(address.getPmAddress().getAddressId());
 		boolean addrExist = false;
 		if (address != null) {
-			log.info("test editDeliveryAddress NOT null");
+			log.info("test editDeliveryAddress NOT null+++++pencil");
 
 			if (address.getAddressType().equalsIgnoreCase(AddressType.DELIVERY_ADDRESS.value())) {
 				if (address.getPmAddress().getPmState() != null
@@ -1432,6 +1454,9 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 			address.setEditable(true);
 		}
 	}
+	
+	
+	
 
 	/**
 	 * 
@@ -1994,6 +2019,22 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 	 * @param districtId
 	 * @return List<PmCity>
 	 */
+//	public List<PmCity> getCityList(long districtId) {
+//		log.info("getCityList");
+//		System.out.println("districtId :" +districtId);
+//		if (getManagedBean().getStateId() > 0) {
+//			return PmCommonUtil.retrievePmCityList(districtId);
+//		} else {
+//			return null;
+//		}
+//	}
+	
+	/**
+	 * get city list by district id
+	 * 
+	 * @param districtId
+	 * @return List<PmCity>
+	 */
 	public List<PmCity> getCityList(Long districtId) {
 		log.info("getCityList");
 		return PmCommonUtil.retrievePmCityList(districtId);
@@ -2021,7 +2062,7 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 	}
 
 	public void retrieveDeliveryPmState(PmState pmState) {
-		log.info("retrievePmState");
+		log.info("***************************** retrievePmState");
 		if (pmState != null) {
 			if (pmState.getStateId() != null) {
 				log.info("pmState.getStateId() " + pmState.getStateId());
@@ -2878,129 +2919,77 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 		//log.info("=====searchPmAddressType====");
 		IAddressSO addressSO;
 		AddressResDTO resDto;
-		System.out.println("--------------------------- OrganisationBackingBean.searchAddressType()");
-		System.out.println("getAddressName :" + getManagedBean().getRecievingAddressName());
-		System.out.println("getDistrictId 2 :::::" + getManagedBean().getDistrict().getDistrictId());
-		System.out.println("getCityId 3 :::::" + getManagedBean().getCity().getCityId());
+		System.out.println(">>>>>>>>>>>>>>>>>> OrganisationBackingBean.searchAddressType()");
+		System.out.println("getAddressName :" + getManagedBean().getAddressName());
+//		System.out.println("getDivisionId 1 :::::" + getManagedBean().getDivisionId());
+//		System.out.println("getDistrictId 2 :::::" + getManagedBean().getDistrictId());
+//		System.out.println("getCityId 3 :::::" + getManagedBean().getCityId());
 		try{
 			ISearchBean<PmAddressType> searchBean=new SearchBean<PmAddressType>();
 			AddressReqDTO addressReqDTO = new AddressReqDTO();
 			//log.info("pageChangeListenercalledeverytime");
 		
-			if (getManagedBean().getState().getStateId() > 0) {
-				System.out.println("____________________ in state");
+			if (getManagedBean().getStateId() > 0) {
 				SearchFilterBean stateSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 				stateSearchBean.setSearchField("pmAddress.pmState.stateId");
-				stateSearchBean.setSearchValue(getManagedBean().getState().getStateId());
+				stateSearchBean.setSearchValue(getManagedBean().getStateId());
 				searchBean.getDataFilterBeans().add(stateSearchBean);
 			}
 			
-			//if (getManagedBean().getDivision() != null && getManagedBean().getDivision().getDivisionId() > 0) {
-			if (null != getManagedBean().getDivision()) {
-				System.out.println("____________________ in Divison");
+			if (getManagedBean().getDivisionId() > 0) {;
 				
 				SearchFilterBean districtSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 				districtSearchBean.setSearchField("pmAddress.pmDivision.divisionId");
-				districtSearchBean.setSearchValue(getManagedBean().getDivision().getDivisionId());
+				districtSearchBean.setSearchValue(getManagedBean().getDivisionId());
 				searchBean.getDataFilterBeans().add(districtSearchBean);
 			
 				
 			}
-			if(getManagedBean().getDistrict().getDistrictId()>0){
-				System.out.println("____________________ in District");
+			if(getManagedBean().getDistrictId()>0){
 				SearchFilterBean districtSearchBean = new SearchFilterBean(
 						SearchOperator.OPERATOR_EQUALS.value());
 				districtSearchBean
 						.setSearchField("pmAddress.pmDistrict.districtId");
-				districtSearchBean.setSearchValue(getManagedBean().getDistrict().getDistrictId());
+				districtSearchBean.setSearchValue(getManagedBean().getDistrictId());
 				searchBean.getDataFilterBeans().add(districtSearchBean);
 				
 				
-			}
-			
-			
-			
-			if(getManagedBean().getCity().getCityId()>0){
-				System.out.println("____________________ in City");
+			}			
+			if(getManagedBean().getCityId()>0){
 				SearchFilterBean districtSearchBean = new SearchFilterBean(
 						SearchOperator.OPERATOR_EQUALS.value());
 				districtSearchBean
-						.setSearchField("pmCity.cityId");
-				districtSearchBean.setSearchValue(getManagedBean().getCity().getCityId());
+						.setSearchField("pmAddress.pmCity.cityId");
+				districtSearchBean.setSearchValue(getManagedBean().getCityId());
 				searchBean.getDataFilterBeans().add(districtSearchBean);
 				
 			}
-			
-		/*PmState state=getManagedBean().getDeliveryAddress().getPmAddress().getPmState();
-		if(null!=state && StringUtils.isNotBlank(state.getStateCode()) && StringUtils.isNotEmpty(state.getStateCode())){
-			//log.info("StateNameAndID"+state.getStateName()+"StateID"+state.getStateId());
-			
-			SearchFilterBean stateSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_EQUALS.value());
-			stateSearchBean
-					.setSearchField("pmAddress.pmState.stateCode");
-			stateSearchBean.setSearchValue(state.getStateCode());
-			searchBean.getDataFilterBeans().add(stateSearchBean);
-		}
-		PmDivision divison=getManagedBean().getDeliveryAddress().getPmAddress().getPmDivision();
-		if(null!=divison  && StringUtils.isNotBlank(divison.getDivisionCode()) && StringUtils.isNotEmpty(divison.getDivisionCode())){
-			//log.info("divisonNameAndID"+divison.getDivisionName()+"dicisionIdID"+divison.getDivisionId());
-			SearchFilterBean districtSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_EQUALS.value());
-			districtSearchBean
-					.setSearchField("pmAddress.pmDivision.divisionCode");
-			districtSearchBean.setSearchValue(divison.getDivisionCode());
-			searchBean.getDataFilterBeans().add(districtSearchBean);
-		}
-		PmDistrict district=getManagedBean().getDeliveryAddress().getPmAddress().getPmDistrict();
-		if(null!=district && StringUtils.isNotBlank(district.getDistrictCode()) && StringUtils.isNotEmpty(district.getDistrictCode())){
-			//log.info("districtNameAndID"+district.getDistrictName()+"districtID"+district.getDistrictId());
-			SearchFilterBean districtSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_EQUALS.value());
-			districtSearchBean
-					.setSearchField("pmAddress.pmDistrict.districtCode");
-			districtSearchBean.setSearchValue(district.getDistrictCode());
-			searchBean.getDataFilterBeans().add(districtSearchBean);
-		}
-		
-		PmCity city=getManagedBean().getDeliveryAddress().getPmAddress().getPmCity();
-		if(null!=city && StringUtils.isNotBlank(city.getCityCode()) && StringUtils.isNotEmpty(city.getCityCode())){
-		//	log.info("cityNameAndID"+city.getCityName()+"cityID"+city.getCityId());
-			SearchFilterBean districtSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_EQUALS.value());
-			districtSearchBean
-					.setSearchField("pmAddress.pmCity.cityCode");
-			districtSearchBean.setSearchValue(city.getCityCode());
-			searchBean.getDataFilterBeans().add(districtSearchBean);
-		}*/
-		
-		String addRessName = getManagedBean().getRecievingAddressName();
-	 log.info("addRessName"+addRessName);
-	 if(StringUtils.isNotBlank(addRessName) && StringUtils.isNotEmpty(addRessName)){
-		// log.info("addRessName"+addRessName);
-		 SearchFilterBean addreessNameSearch = new SearchFilterBean(
-					SearchOperator.OPERATOR_LIKE.value(),true);
-		 addreessNameSearch.setSearchField("pmAddress.addressName");
-		 addreessNameSearch.setSearchValue(addRessName);
-		 addreessNameSearch.setCaseInsensitive(true);
-		 //addreessNameSearch.setSearchValue(addRessName.toUpperCase());
-			searchBean.getDataFilterBeans().add(addreessNameSearch);
-	 }
-	 if (null != getManagedBean().getOrgProfile()) {
-			SearchFilterBean ptjSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_EQUALS.value());
-			ptjSearchBean.setSearchField("pmOrgProfile.orgProfileId");
-			ptjSearchBean.setSearchValue(getManagedBean().getOrgProfile().getOrgProfileId());
-			searchBean.getDataFilterBeans().add(ptjSearchBean);
-		}
+
+			String addRessName = getManagedBean().getAddressName();
+			log.info("addRessName" + addRessName);
+			if (StringUtils.isNotBlank(addRessName) && StringUtils.isNotEmpty(addRessName)) {
+				// log.info("addRessName"+addRessName);
+				SearchFilterBean addreessNameSearch = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value(), true);
+				addreessNameSearch.setSearchField("pmAddress.addressName");
+				addreessNameSearch.setSearchValue(addRessName);
+				addreessNameSearch.setCaseInsensitive(true);
+				// addreessNameSearch.setSearchValue(addRessName.toUpperCase());
+				searchBean.getDataFilterBeans().add(addreessNameSearch);
+			}
+			if (null != getManagedBean().getOrgProfile()) {
+				SearchFilterBean ptjSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+				ptjSearchBean.setSearchField("pmOrgProfile.orgProfileId");
+				ptjSearchBean.setSearchValue(getManagedBean().getOrgProfile().getOrgProfileId());
+				searchBean.getDataFilterBeans().add(ptjSearchBean);
+			}
 
 	   addressReqDTO.setSearchAddressBean(searchBean);
 
 		addressSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
-		log.info("BeforeSearch");
+		//log.info("BeforeSearch");
 		resDto = addressSO.searchDeliveryAddress(addressReqDTO);
-		log.info("AfterSearch");
+		//log.info("AfterSearch");
 		getManagedBean().setAddressTypesList(new ArrayList<PmAddressType>());
 		if (resDto != null
 				&& !resDto.getSearchAddressResultBean().getResultList()
@@ -3093,7 +3082,7 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 					return true;	 
 				}
 				
-			if(null==city || null==city.getCityId() || 1==city.getCityId()){
+			if(null==city || null==city.getCityId()){
 				
 					return true;	 
 				}
@@ -3107,25 +3096,24 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 	   return false;
 	}	
 	
-	public void resetAddressType(){
-		 log.info("restworking sucessfully");
-		
+	public void resetAddressType() {
+		log.info("restworking sucessfully");
 		if(getManagedBean().getDeliveryAddress().getPmAddress().getPmState().getAdoptDivision()){
 			getManagedBean().getDeliveryAddress().getPmAddress().setPmDivision(new PmDivision());	
 		}
-		getManagedBean().getState().setStateId(null);
-//		getManagedBean().getDeliveryAddress().getPmAddress().setPmState(new PmState());
-		getManagedBean().getDeliveryAddress().getPmAddress().setPmDistrict(new PmDistrict());
-		getManagedBean().getDeliveryAddress().getPmAddress().setPmCity(new PmCity());
-	//	getManagedBean().setRecievingAddressName(null);
-		getManagedBean().setRecievingAddressName(StringUtils.EMPTY);
-	//	getManagedBean().setAddressName(StringUtils.EMPTY);
-		PmOrgProfile orgProfile = PmCommonUtil.retrieveOrgProfileDtlById(getManagedBean().getOrgProfile().getOrgProfileId());
-//		getManagedBean().getDeliveryAddress().getPmAddress().setAddressName(StringUtils.EMPTY);
-		maintainOrganisation(orgProfile);	
+		getManagedBean().setAddressName(StringUtils.EMPTY);
+		getManagedBean().setStateId(0);
+		getManagedBean().setDivisionList(null);
+		getManagedBean().setDistrictList(null);
+		getManagedBean().setDistrictId(0);
+		getManagedBean().setCityList(null);
+		getManagedBean().setCityId(0);
+	 
+		PmOrgProfile orgProfile = PmCommonUtil.retrieveOrgProfileDtlById(getManagedBean().getOrgProfile()
+				.getOrgProfileId());
+		maintainOrganisation(orgProfile);
 		getManagedBean().setResetTablerow(0);
-//		getManagedBean().setAddressTypesList(new ArrayList<PmAddressType>());
-		
+
 	}
 	
 	public Long getSelectedAddrForEdit() {
@@ -3136,79 +3124,71 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 		this.selectedAddrForEdit = selectedAddrForEdit;
 	}
 	
-    public void retrieveDeliveryState(PmState pmState) {
-		log.info("retrieveState");
-		if (pmState != null) {
-			if (pmState.getStateId() != null) {
-				log.info("pmState.getStateId() " + pmState.getStateId());
-			    pmState = PmCommonUtil.retrievePmStateByStateId(pmState.getStateId());
-				getManagedBean().setState(pmState);
-				getManagedBean().setDistrict(new PmDistrict());
-				getManagedBean().setCity(new PmCity());
-				if (pmState.getAdoptDivision()) {
-					getManagedBean().setDivision(new PmDivision());
-				}else{
-					getManagedBean().setDivision(null);	
-				}
-			} else {
-				pmState.setStateCode(null);
-			}
-		}
-	}
-	
-	public void retrieveDivision(PmDivision pmDivision) {
-		if (pmDivision != null && pmDivision.getDivisionId() != null) {
-			PmDivision tempDivision = PmCommonUtil.retrievePmDivisionById(pmDivision.getDivisionId());
-			getManagedBean().setDivision(tempDivision);
-		}
-		getManagedBean().setDistrict(new PmDistrict());
-		getManagedBean().setCity(new PmCity());
-	}
-	
-	public void retrieveDeliveryDistrict(PmDistrict pmDistrict) {
-		if (pmDistrict != null && pmDistrict.getDistrictId() != null) {
-			PmDistrict tempDistrict = PmCommonUtil.retrievePmDistById(pmDistrict.getDistrictId());
-			getManagedBean().setDistrict(tempDistrict);
-		}
-		getManagedBean().setCity(new PmCity());
-
-	}
-	
-	public void retrieveDeliveryCity(PmCity pmCity) {
-		if (pmCity != null && pmCity.getCityId() != null) {
-			PmCity tempCity = PmCommonUtil.retrievePmCityById(pmCity.getCityId());
-			getManagedBean().setCity(tempCity);
-		}
-	}
-	
-	public List<PmDistrict> getRecievingDistrictList(PmState state, PmDivision pmDivision) {
+	public List<PmDistrict> getDistrictList(long stateId, long divisionId) {
 		log.info("getDistrictList");
-		if (pmDivision != null && pmDivision.getDivisionId() != null) {
-			return PmCommonUtil.retrievePmDistrictListByDivisionId(pmDivision.getDivisionId());
+		if (divisionId > 0) {
+			return PmCommonUtil.retrievePmDistrictListByDivisionId(divisionId);
 		} else {
 			// return null for SARAWAK
-			if (state != null && state.getAdoptDivision()) {
-			return null;
-			} else {
-				if (state != null && state.getStateId() != null) {
-					return PmCommonUtil.retrievePmDistrictList(state.getStateId());
-				} else {
-					return null;
-				}
+			if (stateId > 0) {
+			return PmCommonUtil.retrievePmDistrictList(stateId);
+			} else{
+				return null;
 			}
 
 		}
+	}
 
+	
+	/**
+	 * Retrieve the division list from PM service object
+	 */
+	public void retrieveDivisionList(AjaxBehaviorEvent e) {
+		Long stateId = this.getManagedBean().getStateId();
+		DivisionReqDTO reqDTO= new DivisionReqDTO();
+		reqDTO.setStateId(stateId);
+		IDivisionSO reqSO = (IDivisionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDivisionSO.class);
+		DivisionResDTO resDTO = reqSO.retriveDivisionListByState(reqDTO);
+		System.out.println("getDivisionName : " + resDTO.getDivisionName());
+		getManagedBean().setDivisionList(resDTO.getDivisionList());
+		System.out.println("getDivisionList().size() : " + resDTO.getDivisionList().size());
+		getManagedBean().setDisplayDivision(true);
+		if(resDTO.getDivisionList().size()==0) {
+			DistrictReqDTO districtReqDTO = new DistrictReqDTO();
+			districtReqDTO.setStateId(stateId);
+			IDistrictSO districtSO = (IDistrictSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class);
+			DistrictResDTO districtResDTO = districtSO.retriveDistrictListByStateID(districtReqDTO);
+			getManagedBean().setDistrictList(districtResDTO.getDistrictList());			
+		} else {
+			getManagedBean().setDisplayDivision(false);
+		}
 	}
 	
-	public void retrieveDeliveryPmDistrict(Long pmDistrictId) {
-		if (pmDistrictId != null) {
-			PmDistrict tempDistrict = PmCommonUtil.retrievePmDistById(pmDistrictId);
-			getManagedBean().setDistrict(tempDistrict);
-		}
-		getManagedBean().setCity(new PmCity());
-
+		
+	/**
+	 * Retrieve the district list from PM service object
+	 */
+	public void retrieveDistrictList(AjaxBehaviorEvent e) {
+		Long divisionId = this.getManagedBean().getDivisionId();
+		DistrictReqDTO reqDTO = new DistrictReqDTO();
+		reqDTO.setDivisionId(divisionId);
+		IDistrictSO reqSO = (IDistrictSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class);
+		DistrictResDTO resDTO = reqSO.retriveDistrictListByDivision(reqDTO);
+		getManagedBean().setDistrictList(resDTO.getDistrictList());
 	}
-
-
+	
+	/**
+	 * Retrieve the city list from PM service object
+	 */
+	public void retrieveCityList(AjaxBehaviorEvent e) {
+//		Long districtId = (Long) e.getComponent().getAttributes().get("value");
+		Long districtId = this.getManagedBean().getDistrictId();
+		CityReqDTO reqDTO = new CityReqDTO();
+		reqDTO.setDistrictId(districtId);
+		ICitySO reqSO = (ICitySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICitySO.class);
+		CityResDTO resDTO = reqSO.retriveCityListByDistrictId(reqDTO);
+		this.getManagedBean().setCityList(resDTO.getCityList());
+	}
+	
 }
