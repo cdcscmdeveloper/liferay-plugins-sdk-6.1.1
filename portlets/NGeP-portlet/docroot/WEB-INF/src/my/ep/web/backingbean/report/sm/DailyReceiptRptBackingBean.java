@@ -37,9 +37,17 @@ public class DailyReceiptRptBackingBean extends SmReportBackingBean<DailyReceipt
 		}
 		
 		if(getManagedBean().getDocumentType() == null){
-			params.put(ReportConst.ENHANCED_SPREAD_SHEET, getManagedBean().getDefaultOutputType());
+			if(getManagedBean().getDefaultOutputType().equals("P")){
+				params.put(ReportConst.PARAM_REPORT_OUTPUT_FORMAT, "pdf");
+			}else{
+				params.put(ReportConst.PARAM_REPORT_OUTPUT_FORMAT, "enhancedspreadsheet");
+			}	
 		}else{
-			params.put(ReportConst.ENHANCED_SPREAD_SHEET, getManagedBean().getDocumentType());
+			if(getManagedBean().getDocumentType().equals("P")){
+				params.put(ReportConst.PARAM_REPORT_OUTPUT_FORMAT, "pdf");
+			}else{
+				params.put(ReportConst.PARAM_REPORT_OUTPUT_FORMAT, "enhancedspreadsheet");
+			}			
 			getManagedBean().setDefaultOutputType(getManagedBean().getDocumentType());
 		}
 		
