@@ -238,7 +238,7 @@
 				
 				<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="white-space:normal;text-align:center">
 					<p:inputText value="#{item.unitPrice}" size="5" id="unitPrice" label="#{lbl['lbl.fl.unit.price']}"
-						disabled="#{contractRequestBackingBean.managedBean.flRequest.procurementTypeCategory.parameterCode ne ParameterConst.procurementTypeCodeService}"
+						disabled="#{item.itemType.parameterCode ne ParameterConst.itemTypeService}"
 						maxlength="#{item.scRequestItem.uom.decimalScale == 0 ? 13 : 14}" style="text-align:right" styleClass="colFloatLeft" 
 						onkeypress="if (event.keyCode == 13) { return false; }">
 						<f:converter converterId="dynamicNumberConverter" />
