@@ -18,7 +18,7 @@ import java.text.SimpleDateFormat;
  */
 public class ReportConst implements Serializable{
 	
-	//recommit
+
 	private static final long serialVersionUID = 1L;
 	// public static final String MOD_SC_TTL = "lbl.module.supplierSelection";
 	public static final String MALAY_LANGUAGE_CODE = "ms";
@@ -962,7 +962,6 @@ public class ReportConst implements Serializable{
 	public static final String PARAM_REMARK = "PREMARK";
 	public static final String PARAM_RECOM = "PRECOM";
 	public static final String PARAM_REPORT_OUTPUT_FORMAT = "desformat";
-	public static final String ENHANCED_SPREAD_SHEET = "enhancedspreadsheet";
 	
 
 	// Report parameter key for s1 market research report

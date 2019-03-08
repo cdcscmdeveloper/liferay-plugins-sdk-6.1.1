@@ -14,7 +14,7 @@ import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.ColClassificationCodeManagedBean;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-//recommit
+
 @ManagedBean (name="colClassificationCodeBB")
 @ViewScoped
 public class ColClassificationCodeBackingBean extends SmReportBackingBean<ColClassificationCodeManagedBean>{
