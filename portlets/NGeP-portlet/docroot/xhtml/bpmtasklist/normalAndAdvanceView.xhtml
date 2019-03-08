@@ -123,7 +123,8 @@
 			<f:facet name="header">
 					#{lbl['lbl.bpm.description']}
 				</f:facet>
-			<p:commandLink action="#{bpmTasklistBackingBean.navigateToURL}">
+			<p:commandLink action="#{bpmTasklistBackingBean.navigateToURL}" onclick="blockWidget.show();"
+					oncomplete="blockWidget.hide();">
 				<f:param name="taskId" value="#{tasks.taskId}" />
 				<f:param name="process" value="#{tasks.process}" />
 				<f:param name="taskName" value="#{tasks.taskName}" />
@@ -174,7 +175,7 @@
 		
 				<p:outputPanel rendered="#{tasks.taskType eq 'My'}">
 					<p:commandButton value="#{lbl['lbl.bpm.btn.release']}"
-						onclick="this.disabled=true;"
+						onclick="this.disabled=true;" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 						action="#{bpmTasklistBackingBean.releaseTaskCombined}" update="@form"
 						rendered="#{tasks.claimed}">	
 
@@ -183,14 +184,14 @@
 		    	</p:outputPanel>
 				<p:outputPanel rendered="#{tasks.taskType eq 'Group'}">
 					<p:commandButton value="#{lbl['lbl.bpm.btn.release']}"
-						onclick="this.disabled=true;"
+						onclick="this.disabled=true;" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 						action="#{bpmTasklistBackingBean.releaseTaskCombined}" update="@form"
 						rendered="#{tasks.claimed and bpmTasklistBackingBean.managedBean.loginIc eq tasks.acquiredBy}">	
 
 						<f:param name="taskId" value="#{tasks.taskId}" />
 					</p:commandButton>
 					<p:commandButton value="#{lbl['lbl.bpm.btn.claim']}"
-						onclick="this.disabled=true;"
+						onclick="this.disabled=true;" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 						action="#{bpmTasklistBackingBean.claimTaskCombined}" update="@form"
 						rendered="#{!tasks.claimed}">	
 
