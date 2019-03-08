@@ -6,7 +6,7 @@ public class SmReportConst implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	// Param 
-	//recommit
+
 	public static final String PARAM_DATE_TO = "PTODATE";
 	public static final String PARAM_DATE_FROM = "PFROMDATE";
 	public static final String PARAM_DATE_EXP_TO = "PEXTODATE";
@@ -566,7 +566,7 @@ public class SmReportConst implements Serializable {
 	public String getSoftcertRevocationDate() {
 		return SOFTCERT_REVOCATION_DATE;
 	}
-	
+
 	public String getSoftcertExpiryDate() {
 		return SOFTCERT_EXPIRY_DATE;
 	}
