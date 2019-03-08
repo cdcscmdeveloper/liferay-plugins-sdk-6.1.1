@@ -171,7 +171,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	//start added for #24353
 	private String ptjCodeNameNew;
 	private String ptjCodeNameSearchValuesNew;
-	private String chargeOrgProfileNewValue;
+	private String selectedPtjValue;
 	private String districtCode;
 	private Long stateId;
 	private List<PmDistrict> searchDistrictList;
@@ -2919,13 +2919,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.ptjCodeNameSearchValuesNew = ptjCodeNameSearchValuesNew;
 	}
 
-	public String getChargeOrgProfileNewValue() {
-		return chargeOrgProfileNewValue;
-	}
-
-	public void setChargeOrgProfileNewValue(String chargeOrgProfileNewValue) {
-		this.chargeOrgProfileNewValue = chargeOrgProfileNewValue;
-	}
 
 	public String getDistrictCode() {
 		return districtCode;
@@ -2957,6 +2950,14 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 
 	public void setSelectedPtjOption(String selectedPtjOption) {
 		this.selectedPtjOption = selectedPtjOption;
+	}
+
+	public String getSelectedPtjValue() {
+		return selectedPtjValue;
+	}
+
+	public void setSelectedPtjValue(String selectedPtjValue) {
+		this.selectedPtjValue = selectedPtjValue;
 	}
 	
 	//end added for #24353
