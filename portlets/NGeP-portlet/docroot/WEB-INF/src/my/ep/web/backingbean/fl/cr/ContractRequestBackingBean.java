@@ -387,9 +387,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				log.info("Record saved successfully for doc no. "+ flRequest.getDocNo());
 				String messageId = MessageConst.INFO_700005;
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
-					if(getManagedBean().getFlRequest().getProcurementTypeCategory().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_TYPE_CODE_SERVICE)){
+					if(flRequest.getDocNo()!= null){
 						validateUnitPrice(flRequest); //#21489
-						}
+					}
 					messageId = MessageConst.INFO_700004;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 					messageId = MessageConst.INFO_745004;
@@ -399,7 +399,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					messageId = MessageConst.INFO_700008;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 					messageId = MessageConst.INFO_700010;
-				}				
+				}
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(messageId, 
 								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_CONTRACT_REQUEST), resDTO.getFlFulfilmentRequest().getDocNo()}, 
@@ -1125,10 +1125,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 			
 			//#21489
-			if(getManagedBean().getFlRequest().getProcurementTypeCategory().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_TYPE_CODE_SERVICE)){
-				validateUnitPrice(getManagedBean().getFlRequest());
-				}
-			
+			validateUnitPrice(getManagedBean().getFlRequest());
 			
 				
 		}else if(contractId != null){
@@ -1741,13 +1738,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				}
 				
 				unitPriceKeyIn = itemAddr.getUnitPrice();
-				
-				if(unitPriceKeyIn.doubleValue() >  ctResDTO.getItemPrice().doubleValue()){
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO , null,
-							MessageUtils.getMessage(MessageConst.INFO_745086, 
-									new String[]{itemAddr.getScRequestItem().getItemName()}, 
-									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-					
+
+				if (ParameterConst.ITEM_TYPE_SERVICE.equals(itemAddr.getItemType().getParameterCode())) {
+					if (unitPriceKeyIn.doubleValue() > ctResDTO.getItemPrice().doubleValue()) {
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO , null,
+								MessageUtils.getMessage(MessageConst.INFO_745086, 
+										new String[]{itemAddr.getScRequestItem().getItemName()}, 
+										MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					}
 				}
 			}
 			
@@ -4402,7 +4400,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				}
 				
 				//#21489
-				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) && getManagedBean().getFlRequest().getProcurementTypeCategory().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_TYPE_CODE_SERVICE)){
+				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
 					validateUnitPrice(flRequest);
 					}
 				
