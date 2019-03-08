@@ -11,7 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.web.managedbean.report.ReportBaseManagedBean;
 import my.ep.web.vo.CategoryRptVO;
-//recommit
+
 public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	private static final long serialVersionUID = 1L;
 
