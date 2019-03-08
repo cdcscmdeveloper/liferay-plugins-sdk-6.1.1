@@ -958,9 +958,9 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		
 			claimBpmTask();
 			
-			//this.getManagedBean().getTaskListBothDataModel().reloadData();
-			this.getManagedBean().getTaskListGroupDataModel().reloadData();
-			this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
+			this.getManagedBean().getTaskListBothDataModel().reloadData();
+			//this.getManagedBean().getTaskListGroupDataModel().reloadData();
+			//this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
 		
 		return "taskListCombined?faces-redirect=true";
 
