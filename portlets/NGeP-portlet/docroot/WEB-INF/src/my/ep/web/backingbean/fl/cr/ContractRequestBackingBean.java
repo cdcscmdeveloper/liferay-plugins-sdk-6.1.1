@@ -293,13 +293,13 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 			
 			if(getManagedBean().getFlManualAddress().getReceivingGrp().getPmOrgProfile() == null){			
-				getManagedBean().setChargeOrgProfileNewValue("");
+				getManagedBean().setSelectedPtjValue("");
 			}else{
-				getManagedBean().setChargeOrgProfileNewValue(getManagedBean().getFlManualAddress().getReceivingGrp().getPmOrgProfile().getPmOrgValidity().getOrgCode() 
+				getManagedBean().setSelectedPtjValue(getManagedBean().getFlManualAddress().getReceivingGrp().getPmOrgProfile().getPmOrgValidity().getOrgCode() 
 						+ " " + getManagedBean().getFlManualAddress().getReceivingGrp().getPmOrgProfile().getPmOrgValidity().getOrgName());
 			}
-		}else{			
-			getManagedBean().setChargeOrgProfileNewValue(getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgCode()
+		}else{
+			getManagedBean().setSelectedPtjValue(getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgCode()
 					+ " " + getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgName());
 		}
 	}
@@ -634,6 +634,11 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 * loads states list based malaysia country.
 	 */
 	public void flManualDeliveryAddr() {
+		//start added for #24353 
+		getManagedBean().setSelectedPtjOption("1");
+		getManagedBean().setSelectedPtjValue(getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgCode()
+				+ " " + getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgName());
+		//end added for #24353 
 		getManagedBean().setEmailValidate(false);
 		retrieveCountryList();
 		getManagedBean().setFlManualAddress(new FlDeliveryAddress());
@@ -1710,6 +1715,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	}
 	
 	
+	
+	
 	//#21489
 	/**
 	 * check item unit price has exceed or not exceed.
@@ -2293,6 +2300,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 * @param flDelAddress
 	 */
 	public void editManualAddress(FlDeliveryAddress flDelAddress){
+		//start added for #24353 
+		getManagedBean().setSelectedPtjOption(flDelAddress.getSelectedPtjCodeRadioBox());
+		getManagedBean().setSelectedPtjValue(flDelAddress.getSelectedPtjCodeNameValue());
+		//start added for #24353
 		getManagedBean().setEmailValidate(false);
 		getManagedBean().setFlManualAddress(flDelAddress);
 		if(getManagedBean().getFlManualAddress().getFlAddress().getPmDivision()==null) {
@@ -5220,8 +5231,11 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			addressReqDTO
 					.setSearchAddressBean(new SearchBean<PmAddressType>());
 			
-			//String districtCode = getManagedBean().getFlManualAddress().getFlAddress().getPmDistrict().getDistrictCode();
-			String districtCode = getManagedBean().getDistrictCode();
+			// Filter By - parameterType
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("pmOrgProfile.orgTypeCode.pmParameterType.parameterType",SearchOperator.OPERATOR_EQUALS.value(),ParameterTypeConst.ORGANISATION_TYPES));
+			
+			// Filter By - Org Type
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("pmOrgProfile.orgTypeCode.parameterCode",SearchOperator.OPERATOR_EQUALS.value(),OrganizationType.DIVISION.value()));
 			
 			Long ministryProfileId = getManagedBean().getMinistryProfileId();
 			if (ministryProfileId == null) {
@@ -5232,6 +5246,31 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("pmOrgProfile.parentOrgProfile.parentOrgProfile.parentOrgProfile.orgProfileId",SearchOperator.OPERATOR_EQUALS.value(),ministryProfileId));
 			
+			Date currentDate = DateUtils.getCurrentDateWithoutTime();
+			// Filter By - Org effDate
+			searchBean.getDataFilterBeans()
+					.add(new SearchFilterBean("pmOrgProfile.pmOrgValidity.effDate",SearchOperator.OPERATOR_LESS_EQUAL.value(), currentDate));
+
+			// Filter By - Org expDate
+			searchBean.getDataFilterBeans().add(
+					new SearchMultiFilterBean(new SearchFilterBean(
+							"pmOrgProfile.pmOrgValidity.expDate",
+							SearchOperator.OPERATOR_GREATER_EQUAL.value(),
+							currentDate), new SearchFilterBean(
+							"pmOrgProfile.pmOrgValidity.expDate",
+							SearchOperator.OPERATOR_IS_NULL.value(), null,
+							SearchCondition.CONDITION_OR.value())));
+			
+			Long stateId = getManagedBean().getStateId();
+			if (stateId!=null) {
+				SearchFilterBean ptjSearchBean = new SearchFilterBean(
+						SearchOperator.OPERATOR_EQUALS.value());
+				ptjSearchBean.setSearchField("pmAddress.pmDistrict.pmState.stateId");
+				ptjSearchBean.setSearchValue(stateId);
+				searchBean.getDataFilterBeans().add(ptjSearchBean);
+			}
+			
+			String districtCode = getManagedBean().getDistrictCode();
 			if (districtCode!=null) {
 				SearchFilterBean ptjSearchBean = new SearchFilterBean(
 						SearchOperator.OPERATOR_EQUALS.value());
@@ -5299,7 +5338,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	//start added for #24353 
 	public void addChargedPmAddressType() {
 		getManagedBean().getFlManualAddress().setReceivingGrp(selectedPmAddressType);
-		getManagedBean().setChargeOrgProfileNewValue(getManagedBean().getFlManualAddress().getReceivingGrp().getPmOrgProfile().getPmOrgValidity().getOrgCode() 
+		getManagedBean().getSelectedDelAddr().setSelectedPtjCodeRadioBox(getManagedBean().getSelectedPtjOption());
+		getManagedBean().getSelectedDelAddr().setSelectedPtjCodeNameValue(getManagedBean().getSelectedPtjValue());
+		getManagedBean().setSelectedPtjValue(getManagedBean().getFlManualAddress().getReceivingGrp().getPmOrgProfile().getPmOrgValidity().getOrgCode() 
 				+ " " + getManagedBean().getFlManualAddress().getReceivingGrp().getPmOrgProfile().getPmOrgValidity().getOrgName());
 		selectedPmAddressType = null;
 	}
@@ -5322,6 +5363,11 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		//added for #24353
 		if (getManagedBean().getSelectedPtjOption() == null) {
 			getManagedBean().setSelectedPtjOption("1");
+		}
+		
+		if(getManagedBean().getSelectedPtjValue() == null){
+			getManagedBean().setSelectedPtjValue(getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgCode()
+					+ " " + getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgName());	
 		}
 		
 		log.info("========init value for selectedPtjOption====="
@@ -5391,11 +5437,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			IConfigGeneralSO configGeneralSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IConfigGeneralSO.class);
 			ConfigGeneralResDTO configGeneralResDTO = configGeneralSO.getConfigGeneral(null);
 			getManagedBean().setFeeVoteFund(configGeneralResDTO.getPmConfigGeneral().getPmVotFund());
-		}
-		
-		if(getManagedBean().getChargeOrgProfileNewValue() == null){
-			getManagedBean().setChargeOrgProfileNewValue(getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgCode()
-					+ " " + getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgName());	
 		}
 	}
 	
