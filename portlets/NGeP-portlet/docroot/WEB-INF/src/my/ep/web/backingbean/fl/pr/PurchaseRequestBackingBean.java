@@ -456,7 +456,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		getManagedBean().setMinistryProfileId(retrieveMinistryOrgProfile(
 				getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getOrgProfileId()).getOrgProfileId());
 		String gfmasEnable = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.GFMAS_ENABLED);
+
+/*		gfmasEnable="false";
+		log.info("gfmasEnable is : " +gfmasEnable);*/
 		if(!gfmasEnable.equalsIgnoreCase("true")){
+
 			getManagedBean().setEspkb(true);
 		}
 	}
@@ -965,6 +969,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 						flItemAddr.setGstAmount(new BigDecimal(0));
 						flItemAddr.setGstUnitPrice(new BigDecimal(0));
 					}
+
 					flItemAddr.setScSupplierItemPrice(purResDTO.getSupplierItemPrice());
 					
 				}else{//zonal & zonal tier & zonal promo & zonal tier promo
@@ -972,6 +977,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					flItemAddr.setGstAmount(new BigDecimal(0));
 					flItemAddr.setGstUnitPrice(new BigDecimal(0));
 					flItemAddr.setScSupplierItemPrice(null);
+
+					flItemAddr.setScSupplierItemPrice(purResDTO.getSupplierItemPrice());
+					
 				}
 				flItemAddr.setOrderedQty(new BigDecimal(0));
 				flItemAddr.setOrderedAmt(new BigDecimal(0));
@@ -981,7 +989,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					flItemAddr.setItemCode(purchaseItem.getRequestItem().getCmItem().getExtensionCode());
 				} else {
 					flItemAddr.setItemCode(purchaseItem.getRequestItem().getTempUnspscCode());
+
 				}
+
+				flItemAddr.setOrderedQty(new BigDecimal(0));
+				flItemAddr.setOrderedAmt(new BigDecimal(0));
 				allItemsList.add(flItemAddr);
 			}
 		}
@@ -2471,7 +2483,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		getManagedBean().setCurrentPtjGroupId(orgId);
 		if(getManagedBean().getCurrentPtjGroupId() != null){
 			reqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getOrgProfileId());
-			if(profileSO.retrieveJabatanByOrgProfileId(reqDTO).getPmOrgProfile().getOrgProfileId().longValue() != getManagedBean().getCurrentPtjGroupId().longValue()){
+			if(profileSO.retrieveJabatanByOrgProfileId(reqDTO).getPmOrgProfile().getOrgProfileId() != getManagedBean().getCurrentPtjGroupId()){
 				if(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses() != null && !getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().isEmpty()){
 					for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 						for(FlFulfilmentItemAddr itemAddr : flDeliveryAddress.getFlFulfilmentItemAddr()){
@@ -3197,6 +3209,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			reqDTO.setApproverMap(getManagedBean().getApproverMap());
 			reqDTO.setSelectedApprover(getManagedBean().getSelectedApprover());
+
 			//Bug #25244
 			if(!(BpmOutcomeConst.BPM_REJECT.equals(outcome) || BpmOutcomeConst.BPM_CANCEL.equals(outcome))){
 				if(getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId() != null) {
@@ -3204,6 +3217,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				}
 			}
 			
+
 			reqDTO.setApproverLimit(calculatesTotalOrderedAmt());
 			reqDTO.setPmOrgProfile(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile());
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
@@ -4255,4 +4269,39 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		}
 		return oldGstRateFlg;
 	}
+	
+	/**
+	 * #17087
+	 * Ya - true - delivery start date remain the same
+	 * Tidak - false - delivery start date will get from approve 1GFMAS
+	 */
+	
+	public void upDateStartDateFromBpm(){
+		FlFulfilmentRequest request = getManagedBean().getFulfilmentRequest();
+		String uomCode = "";
+		uomCode = getManagedBean().getFulfilmentRequest().getPmUom().getParameterCode();
+		log.info("uom code is : "+uomCode);
+		if (request.getAgApprovedDate() != null){			
+			if(request.getProcurementType()!= null){
+				if(!request.getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
+					if(request.getAgApprovedDate().after(request.getStartDate())){
+						request.setStartDate(request.getAgApprovedDate());
+						if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_DAYS)){
+							getManagedBean().setMaxDate(DateUtils.getEndDate(request.getStartDate(), request.getDeliveryTerm(),ParameterConst.DELIVERY_TERM_DAYS));
+							getManagedBean().getFulfilmentRequest().setEndDate(DateUtils.getEndDate(request.getStartDate(), request.getDeliveryTerm(),ParameterConst.DELIVERY_TERM_DAYS));
+						}else if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_MONTHS)){
+							getManagedBean().setMaxDate(DateUtils.getEndDate(request.getStartDate(), request.getDeliveryTerm(),ParameterConst.DELIVERY_TERM_MONTHS));
+							getManagedBean().getFulfilmentRequest().setEndDate(DateUtils.getEndDate(request.getStartDate(), request.getDeliveryTerm(),ParameterConst.DELIVERY_TERM_MONTHS));
+						}	
+					}
+					
+					for(FlDeliveryAddress flDeliveryAddress : request.getFlDeliveryAddresses()) {
+						flDeliveryAddress.setStartDate(request.getStartDate());
+						flDeliveryAddress.setEndDate(request.getEndDate());
+					}
+				}
+			}
+		}	
+	}
+	
 }
