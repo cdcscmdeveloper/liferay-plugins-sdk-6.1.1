@@ -168,7 +168,9 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private String tempLogin; //TODO: temp and to be removed
 	private String espkbCommitmentNo;
 	private String ptjCodeName;
+
 	//start added for #24353
+	private String chargeOrgProfileNewValue;
 	private String ptjCodeNameNew;
 	private String ptjCodeNameSearchValuesNew;
 	private String selectedPtjValue;
@@ -177,6 +179,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private List<PmDistrict> searchDistrictList;
 	private String selectedPtjOption;
 	//end added for #24353
+
 	private String ptjCodeNameSearchValues;
 	private String itemDesc;
 	private String gstRegistrationNo;
@@ -292,6 +295,8 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private boolean espkb;
 	private boolean showCommitmentNo;
 	private boolean oldGstRateFlg = false;
+	//17087 -- radio button
+	private boolean radioCheckDeliveryDate;
 	
 	/** The active contract list document data model. */
 	private IPagingDataModel<VCtActiveContract> activeContractDataModel = new ActiveContractPagingDataModel();
@@ -2901,6 +2906,18 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	public void setOldGstRateFlg(boolean oldGstRateFlg) {
 		this.oldGstRateFlg = oldGstRateFlg;
 	}
+
+	
+
+	public String getChargeOrgProfileNewValue() {
+		return chargeOrgProfileNewValue;
+	}
+
+	public void setChargeOrgProfileNewValue(String chargeOrgProfileNewValue) {
+		this.chargeOrgProfileNewValue = chargeOrgProfileNewValue;
+	}
+
+
 	
 	//start added for #24353
 	public String getPtjCodeNameNew() {
@@ -2962,4 +2979,16 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	
 	//end added for #24353
 
+	
+	//end added for #24353
+
+	public boolean isRadioCheckDeliveryDate() {
+		return radioCheckDeliveryDate;
+	}
+
+	public void setRadioCheckDeliveryDate(boolean radioCheckDeliveryDate) {
+		this.radioCheckDeliveryDate = radioCheckDeliveryDate;
+	}
+
+	
 }
