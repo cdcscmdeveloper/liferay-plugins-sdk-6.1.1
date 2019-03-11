@@ -138,6 +138,7 @@
 								<p:inputText size="12" style="text-align:right;"
 									disabled="true"
 									value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.deliveryTerm}" />
+								<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.delivery.service.period']}" />							
 							</td>
 							<ui:remove>
 							<td style="width: 208px;"><p:outputLabel styleClass="outputLabel-view"
@@ -155,9 +156,36 @@
 				</p:inputText>
 				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.pr.submission.date']}" rendered="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.submissionDate != null}"/></td>
 			</tr>
+			<!--#17087 icon tooltip -->
+           	<tr>
+           		<td colspan="5">
+           		    <p:outputLabel style="float:left !important; color:red" value="#{lbl['lbl.fl.flag']}" />
+           			<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.flag']}" />
+           		</td>
+			</tr>
+			<!--#17087 radio select -->
+			<tr>
+				<td>
+          			<p:outputLabel  value="*" styleClass="mandatory" />
+          		</td>
+				<td>
+					<p:selectOneRadio id="prGeneralRadio" required="true" value="#{purchaseRequestBackingBean.managedBean.radioCheckDeliveryDate}">
+						<f:selectItem itemLabel="#{lbl['lbl.btn.yes']}" itemValue="true" />
+						<f:selectItem itemLabel="#{lbl['lbl.btn.no']}" itemValue="false" />
+						<p:ajax event="change"
+							listener="#{purchaseRequestBackingBean.upDateStartDateFromBpm}" 
+							update="delStartDate"/>                   
+           			</p:selectOneRadio>
+           		</td>
+           	</tr>
+			<tr>
+				<td style="width: 142px;">
+				</td>
+			</tr>
+			<!--#17087 calendar -->
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.start']}" /></td>
-				<td><p:calendar mode="popup" readonlyInput="true"
+				<td><p:calendar id="delStartDate" mode="popup" readonlyInput="true"
 						showOn="button"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
