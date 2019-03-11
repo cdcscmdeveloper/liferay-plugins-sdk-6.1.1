@@ -49,7 +49,7 @@
             	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.delivery.term']}"/>
             </f:facet>
              <p:treeNode type="zone">
-             	<h:panelGrid columns="2" style="width:30%;" styleClass="zone-tree-node">
+             	<h:panelGrid columns="3" style="width:30%;" styleClass="zone-tree-node">
 	                <p:inputText value="#{zoneTree.deliveryTerm}"  rendered="#{zoneTree.zone != null}"  required="true" maxlength="4"
 	                     style="width:40px;" styleClass="ppRightBtn"  label="#{lbl['lbl.ct.delivery.term']}"
 	                     disabled="#{ctBackingBean.managedBean.viewContract or 
@@ -57,6 +57,8 @@
 	                     <p:ajax event="change" update="@this" listener="#{ctBackingBean.onChangeDeliveryTerm(zoneTree)}"/>
 	                </p:inputText>
 	                <h:outputText rendered="#{zoneTree.zone != null}" value="#{lbl['lbl.ct.days']}" ></h:outputText>
+             	    <!--#17087 icon tooltip -->
+             	    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.delivery.service.period']}" />
              	</h:panelGrid>
              </p:treeNode>
         </p:column>
