@@ -29,6 +29,12 @@
 						<f:setPropertyActionListener target="#{profilePersonalizationBackingBean.managedBean.selectedTabIndex}" 
 							value="#{profilePersonalizationBackingBean.tabChangePassword}" />
 					</p:menuitem>
+					<!-- Authorization personnel -->
+					<p:menuitem value="#{lbl['lbl.pm.profiles.tab.name.ap']}" update="@form">
+						<f:param name="disableValidation" value="true" />     
+						<f:setPropertyActionListener target="#{profilePersonalizationBackingBean.managedBean.selectedTabIndex}" 
+							value="#{profilePersonalizationBackingBean.tabAuthPersonnel}" />
+					</p:menuitem>
 					<ui:remove>
 					<!-- Change Challenge Question -->
 					<p:menuitem value="#{lbl['lbl.pm.profiles.tab.name.ccq']}" update="@form">
@@ -52,6 +58,11 @@
 				<p:outputPanel rendered="#{profilePersonalizationBackingBean.managedBean.selectedTabIndex == profilePersonalizationBackingBean.tabChangePassword}">
 					<ui:include src="/xhtml/pm/profilePersonalization/userDetails/userChangePassword.xhtml" />
 				</p:outputPanel>
+				<!-- Authorization Personnel --> 	
+				<p:outputPanel rendered="#{profilePersonalizationBackingBean.managedBean.selectedTabIndex == profilePersonalizationBackingBean.tabAuthPersonnel}">
+					<ui:include src="/xhtml/pm/profilePersonalization/userDetails/authorizationPersonnel.xhtml" />
+				</p:outputPanel>
+				
 				
 				<ui:remove>
 				<!-- Change Challenge Question -->	
