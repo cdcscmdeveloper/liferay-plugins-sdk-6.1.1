@@ -33,7 +33,9 @@ public class DeativateUserRoleRest {
 		log.info("Before success calling retrieve rest api....");
 		try {
 			UserReqDTO reqDTOFinal = new UserReqDTO();
-			UserResDTO resDTO = SmServiceLookup.getUserSO().retrieveUserInDeactivationPeriod();
+			int UsersdeactivationPerioidNotLogging = SmServiceLookup.getUserSO().validityPeriodOfUsersNotLogged();
+			int UsersdeactivationPerioid = SmServiceLookup.getUserSO().validityPeriodOfUsersAlreadyLogged();
+			UserResDTO resDTO = SmServiceLookup.getUserSO().retrieveUserInDeactivationPeriod(UsersdeactivationPerioidNotLogging, UsersdeactivationPerioid);
 			for (BigDecimal userId : resDTO.getUserListId()) {
 				UserReqDTO reqDTO = new UserReqDTO();
 				reqDTO.setUserId(userId.longValue());
