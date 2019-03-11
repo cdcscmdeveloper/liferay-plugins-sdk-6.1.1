@@ -8,6 +8,30 @@
 	<p:panel id="delAddrPanel" header="#{lbl['lbl.fl.delivery.address']}"
 		toggleable="true">
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.add.address']}" escape="false"/>
+		<!--#17087 icon tooltip and select radio -->
+		<table style="width: 100%">
+			 <tr>
+           		<td colspan="5">
+           		    <p:outputLabel style="float:left !important; color:red" value="#{lbl['lbl.fl.flag']}"/>
+           			<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.flag']}"/>
+           		</td>
+           	</tr>
+           	<tr>
+           		<td>
+          			<p:outputLabel value="*" styleClass="mandatory" />
+          		</td>
+           		<td>
+           			<p:selectOneRadio id="crItemRadio" required="true" value="#{contractRequestBackingBean.managedBean.radioCheckDeliveryDate}">
+						<f:selectItem itemLabel="#{lbl['lbl.btn.yes']}" itemValue="true" />
+						<f:selectItem itemLabel="#{lbl['lbl.btn.no']}" itemValue="false" />
+						<p:ajax event="change"
+							listener="#{contractRequestBackingBean.upDateStartDateFromBpm}" 
+							update="addressDataTable:calStartDate"/>                   
+           			</p:selectOneRadio>
+            	</td>
+			</tr>
+
+		</table>		
 		<p:dataTable id="addressDataTable" var="address"
 			value="#{contractRequestBackingBean.managedBean.flRequest.flDeliveryAddresses}"
 			rowIndexVar="index"
@@ -47,7 +71,8 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.fl.delivery.start']}"  style="white-space:normal;text-align:center">
-				<p:calendar value="#{address.startDate}" id="calStartDate" style="float:right;"  
+				<!--#17087 calendarStartDate -->
+				<p:calendar id="calStartDate" value="#{address.startDate}" style="float:right;"  
 					readonlyInput="true"
 					rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}"
 					size="8" 
@@ -72,6 +97,7 @@
 					size="8"
 					maxdate="#{contractRequestBackingBean.managedBean.maxDate}"
 					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				
 				<h:outputText value="#{address.endDate}" style="float:right;" rendered="#{!contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing or contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
@@ -238,7 +264,7 @@
 				
 				<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="white-space:normal;text-align:center">
 					<p:inputText value="#{item.unitPrice}" size="5" id="unitPrice" label="#{lbl['lbl.fl.unit.price']}"
-						disabled="#{item.itemType.parameterCode ne ParameterConst.itemTypeService}"
+						disabled="#{contractRequestBackingBean.managedBean.flRequest.procurementTypeCategory.parameterCode ne ParameterConst.procurementTypeCodeService}"
 						maxlength="#{item.scRequestItem.uom.decimalScale == 0 ? 13 : 14}" style="text-align:right" styleClass="colFloatLeft" 
 						onkeypress="if (event.keyCode == 13) { return false; }">
 						<f:converter converterId="dynamicNumberConverter" />
@@ -476,7 +502,7 @@
        				<!-- start added for #24353 -->
 					<td><p:outputLabel value="#{lbl['lbl.fl.manual.add.delivery.add.new']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" />
-						<!-- <ac:iconTooltip value="#{lbl['lbl.fl.tooltip.delivery.address.new']}"/> -->
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.delivery.address.new']}"/>
 					</td>
 					<td>
 						<p:selectOneRadio id="ptjRadio"
@@ -485,9 +511,24 @@
 							<f:selectItem itemLabel="#{lbl['lbl.btn.ptj.others']}" itemValue="2"/>
 							<p:ajax listener="#{contractRequestBackingBean.viewSelectedPTJRadio}"
 								update="chargeOrgProfileNew,searchPtjNew" process="@this" />
-						</p:selectOneRadio>	
+						</p:selectOneRadio>
+						<p:inputTextarea id="chargeOrgProfileNew" rows="2" cols="63" disabled="#{contractRequestBackingBean.managedBean.selectedPtjOption==1}" readonly="#{contractRequestBackingBean.managedBean.selectedPtjOption==1}" autoResize="false" style="resize:none;" 
+						required="#{contractRequestBackingBean.managedBean.required}"
+						label="#{lbl['lbl.fl.manual.add.delivery.add.new']}"
+						value="#{contractRequestBackingBean.managedBean.chargeOrgProfileNewValue}" />
 					</td>
-					<td></td>
+					<td>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj.new']}" />
+						<p:commandLink id="searchPtjNew"
+						oncomplete="dlgChargedPtjNew.show();" immediate="true"
+						action="#{contractRequestBackingBean.resetPMAddressTypeDetails}"
+						update=":form:chargeOrgProfileNew,chargeResultPanelNew2,dialogChargedPtjNew"
+						disabled="#{contractRequestBackingBean.managedBean.selectedPtjOption==1}"
+						style="padding-left:10px">
+						<p:graphicImage value="/css/images/design/search.png" />
+						</p:commandLink>
+						<p:message for="chargeOrgProfileNew" display="icon" />
+					</td>
 					<!-- end added for #24353 -->
 				</tr>
 				<tr>
@@ -501,33 +542,6 @@
 						required="#{contractRequestBackingBean.managedBean.required}"/>
 						</td>
 					<td></td>
-					<!-- start added for #24353 -->
-					<td><p:outputLabel value="" /></td>
-					<td><p:inputTextarea cols="35" rows="4" id="chargeOrgProfileNew"
-						onkeyup="limitTextArea(this,500);"
-						onkeydown="limitTextArea(this,500);"
-						autoResize="false"
-						style=" margin-bottom:5px;"
-						disabled="#{contractRequestBackingBean.managedBean.selectedPtjOption==1}"
-						required="#{contractRequestBackingBean.managedBean.required}"
-						label="#{lbl['lbl.fl.manual.add.delivery.add.new']}"
-						readonly="true"
-						value="#{contractRequestBackingBean.managedBean.selectedPtjValue}"> 
-						</p:inputTextarea>
-					</td>
-					<td>
-						<p:commandLink id="searchPtjNew"
-						oncomplete="dlgChargedPtjNew.show();" immediate="true"
-						action="#{contractRequestBackingBean.resetPMAddressTypeDetails}"
-						update=":form:chargeOrgProfileNew,chargeResultPanelNew2,dialogChargedPtjNew"
-						disabled="#{contractRequestBackingBean.managedBean.selectedPtjOption==1}"
-						style="padding-left:10px">
-						<p:graphicImage value="/css/images/design/search.png" />
-						</p:commandLink>
-						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.delivery.address.new']}"/>
-						<p:message for="chargeOrgProfileNew" display="icon" />
-					</td>
-					<!-- end added for #24353 -->
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.faxno']}" /></td>
@@ -800,12 +814,13 @@
 				width="100%" 
 				selection="#{contractRequestBackingBean.managedBean.selectedContractedItemList}">
 				<ac:paginator for="itemListResultDt" />
-				<p:column selectionMode="multiple" styleClass="td-check-box-spacing" />
+				<p:column selectionMode="multiple" styleClass="td-check-box-spacing" ></p:column>
 				<p:ajax event="rowSelectCheckbox" update=":form:itemAddButton"></p:ajax>
 				<p:ajax event="rowUnselectCheckbox" update=":form:itemAddButton"></p:ajax>
 				<p:ajax event="rowSelect" update=":form:itemAddButton" ></p:ajax>
 				<p:ajax event="rowUnselect" update=":form:itemAddButton" ></p:ajax>
 				<p:ajax event="toggleSelect" update=":form:itemAddButton"></p:ajax>
+				
 				<p:column
 					headerText="#{lbl['lbl.fl.item.type']}">
 					<h:outputText
