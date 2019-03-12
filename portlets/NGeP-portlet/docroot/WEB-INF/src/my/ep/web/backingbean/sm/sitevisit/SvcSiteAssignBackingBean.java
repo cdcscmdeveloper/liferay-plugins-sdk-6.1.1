@@ -159,6 +159,7 @@ public class SvcSiteAssignBackingBean extends
 			}
 		
 			reqDTO.setLogKey(new LogKey(pmUser.getUserId()));
+			reqDTO.setChangedBy(pmUser.getUserId());
 			SiteAssignResDTO resDTO = reqSO.submitBPMTaskAssignment(reqDTO);
 			
 			if (resDTO.isSuccessful()) {
