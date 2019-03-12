@@ -20,6 +20,7 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -151,6 +152,7 @@ import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
@@ -5311,6 +5313,22 @@ public class SmCommonUtil {
 		}
 
 		return retVal;
+	}
+	
+	/**
+	 * To set user Details.
+	 * 
+	 * @param baseObject
+	 */
+	public void setUserDetails(BaseEntity baseObject) {
+		PmUser user = new FacesScopes().getUserSessionBean();
+
+		if (baseObject.isBrandNew()) {
+			baseObject.setCreatedBy(user.getUserId());
+			baseObject
+					.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		}
+		baseObject.setChangedBy(user.getUserId());
 	}
 
 	public SmCancelMofRemarksVO getCancelMofRemarksVO(SmAppl appl) {

@@ -305,6 +305,7 @@ public class SmBulkApplicationBackingBean extends
 		revReqDTO.setPortalBaseUrl(basePortalUrl);
 		revReqDTO.setOnlineDoc(bulkVO.isOnlineDoc());
 		revReqDTO.setRejectionReasons(bulkVO.getReasonDesc());
+		revReqDTO.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
 		if (bulkVO.getAppl().getCreatedBy() != null) {
 			UserReqDTO userReqDTO = new UserReqDTO();
 			userReqDTO.setUserId(bulkVO.getAppl().getCreatedBy());
