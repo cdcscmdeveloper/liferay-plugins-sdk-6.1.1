@@ -20,7 +20,6 @@ import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.web.bean.pm.ChallengeQAList;
-import my.ep.web.bean.pm.UserProfilesSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -56,7 +55,6 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	private Date mofExpDate;
 	private int roleTableScrollHeight;
 	private boolean isLazy = false;
-	private UserProfilesSearchBean userProfileSearchBean= new UserProfilesSearchBean();
 	private List<AdminResDTO> adminDetReceivedList = new ArrayList<AdminResDTO>();
 	
 	public ProfilePersonalizationManagedBean(){}
@@ -345,15 +343,7 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 		this.isLazy = isLazy;
 	}
 
-	public UserProfilesSearchBean getUserProfileSearchBean() {
-		return userProfileSearchBean;
-	}
-
-	public void setUserProfileSearchBean(UserProfilesSearchBean userProfileSearchBean) {
-		this.userProfileSearchBean = userProfileSearchBean;
-	}
-
-	public List<AdminResDTO> getAdminDetReceivedList() {
+    public List<AdminResDTO> getAdminDetReceivedList() {
 		return adminDetReceivedList;
 	}
 
