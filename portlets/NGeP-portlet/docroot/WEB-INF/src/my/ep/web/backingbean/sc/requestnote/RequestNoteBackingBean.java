@@ -914,19 +914,25 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						if (requestNoteDtl.getRequestItem().getCmItem() != null) {
 							Long itemId = requestNoteDtl.getRequestItem().getCmItem()
 									.getItemId();
+							String extensionCode = requestNoteDtl.getRequestItem().getCmItem().getExtensionCode();
 							flReqDTO.setItemId(itemId);
 							debugLogger("RequestNoteBackingBean >> validateRequestNote : RequestNoteDtl ID = " + requestNoteDtl.getRequestNoteDtlId());
 							debugLogger("RequestNoteBackingBean >> validateRequestNote : Item Id : " + itemId);
+							debugLogger("RequestNoteBackingBean >> validateRequestNote : Extension Code : " + extensionCode);
 							flReqDTO.setYear(Calendar.getInstance().get(Calendar.YEAR));
 							Long supplierId = requestNoteDtl.getScRequestSupplierItem().getSupplierId();
 							flReqDTO.setOrgProfileId(requestNote.getPmOrgProfile()
 									.getOrgProfileId());
 							flReqDTO.setSupplierId(supplierId);
+							flReqDTO.setExtensionCode(extensionCode);
 							debugLogger("RequestNoteBackingBean >> validateRequestNote : Supplier Id : " + supplierId);
 							IFlItemSummarySO itemSummarySO = (IFlItemSummarySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
 
+//							BigDecimal totalAmt = itemSummarySO
+//									.retrieveAccumulatedAmount(flReqDTO);
+							//changes to calculate per ptj per item per year using 8 digit 
 							BigDecimal totalAmt = itemSummarySO
-									.retrieveAccumulatedAmount(flReqDTO);
+									.retrieveAccumulatedAmountByItemExtensionCode(flReqDTO);
 							debugLogger("RequestNoteBackingBean >> validateRequestNote : totalAmt = " + totalAmt);
 							IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
 									ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
@@ -4057,6 +4063,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						isFullFillMentTypeOneOff = Boolean.TRUE;
 					} if (selectedReqDtl.getFulfilmentType().getParameterCode().
 							equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+						isFullFillMentTypePeriodic = Boolean.TRUE;
+					}if (selectedReqDtl.getFulfilmentType().getParameterCode().
+							equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)) {
 						isFullFillMentTypePeriodic = Boolean.TRUE;
 					}
 					selectedRequestNoteDtls.add(selectedReqDtl);
