@@ -1,6 +1,8 @@
 package my.ep.web.backingbean.pm.profilepersonalization;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -12,6 +14,10 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.constant.MessageConst;
@@ -19,8 +25,12 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
+import my.ep.dto.pm.authorization.role.AdminDetailsDTO;
+import my.ep.dto.pm.authorization.role.AdminReqDTO;
+import my.ep.dto.pm.authorization.role.AdminResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.authorization.userorg.UserOrgResDTO;
 import my.ep.dto.pm.common.PmTrackingDairyVO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
@@ -41,10 +51,15 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmMofAccount;
+import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.bean.pm.UserProfilesSearchBean;
 import my.ep.web.managedbean.pm.profilepersonalization.ProfilePersonalizationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -63,16 +78,120 @@ import org.primefaces.model.UploadedFile;
  */
 @ManagedBean(name = "profilePersonalizationBackingBean")
 @RequestScoped
-public class ProfilePersonalizationBackingBean extends
-		BaseBackingBean<ProfilePersonalizationManagedBean> {
+public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePersonalizationManagedBean> {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger logger = EpLogger
-			.getLogger(ProfilePersonalizationBackingBean.class);
+	private static final Logger logger = EpLogger.getLogger(ProfilePersonalizationBackingBean.class);
+
+	public ProfilePersonalizationBackingBean() {
+
+		adminUserRoleMap.put("AUDITOR_GENERAL", Arrays.asList(""));
+		adminUserRoleMap.put("AUDITOR_INTERNAL", Arrays.asList("MINISTRY_ADMIN"));
+		adminUserRoleMap.put("BPK_ADMIN", Arrays.asList("MINISTRY_ADMIN"));
+		adminUserRoleMap.put("BPK_APPROVER", Arrays.asList("MINISTRY_ADMIN"));
+		adminUserRoleMap.put("BPK_CCA", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("BPK_PCA", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("UPS_ADMIN", Arrays.asList("MINISTRY_ADMIN", "UPS_ADMIN"));
+		adminUserRoleMap.put("UPS_APPROVER", Arrays.asList("UPS_ADMIN"));
+		adminUserRoleMap.put("BPK_TEMPL_ADMIN", Arrays.asList("BPK_TEMPL_ADMIN", "PTJ_ADMIN"));
+		adminUserRoleMap.put("BIZ_OWNER", Arrays.asList("BIZ_OWNER", "PTJ_ADMIN"));
+		adminUserRoleMap.put("CM_ADMIN", Arrays.asList("CM_ADMIN", "SUPPORT_ADMIN"));
+		adminUserRoleMap.put("CM_USER", Arrays.asList("EP_ADMIN_2"));
+		adminUserRoleMap.put("CD_OFFICER", Arrays.asList("SUPPORT_ADMIN"));
+		adminUserRoleMap.put("CD_COMMITTEE", Arrays.asList("SUPPORT_ADMIN"));
+		adminUserRoleMap.put("COMMITTEE_APPROVER", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("COMMON_USER", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("CT_APPROVER", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("CONTRACT_SIGNER", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("DESK_OFFICER", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("DESK_ASSISTANT", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("DISC_SECRETARY", Arrays.asList("UPS_ADMIN"));
+		adminUserRoleMap.put("EP_ADMIN", Arrays.asList("EP_ADMIN"));
+		adminUserRoleMap.put("EC_CHAIRPERSON", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("EC_MEMBER", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("EC_SECRETARY", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("FACTORING_USER", Arrays.asList("EP_ADMIN_2"));
+		adminUserRoleMap.put("FPB_CHAIRPERSON", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("FPB_MEMBER", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("FPB_SECRETARY", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("FEC_CHAIRPERSON", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("FEC_MEMBER", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("FEC_SECRETARY", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("FL_APPROVER", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("GOVT_SELLER", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("JABATAN_ADMIN", Arrays.asList("JABATAN_ADMIN", "MINISTRY_ADMIN"));
+		adminUserRoleMap.put("MINISTRY_ADMIN", Arrays.asList("MINISTRY_ADMIN", "EP_ADMIN_2"));
+		adminUserRoleMap.put("MIN_CONTRACT_ADMIN", Arrays.asList("MIN_CONTRACT_ADMIN", "PTJ_ADMIN"));
+		adminUserRoleMap.put("MSC_SECRETARY", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("MIN_TEMPL_ADMIN", Arrays.asList("MIN_TEMPL_ADMIN", "PTJ_ADMIN"));
+		adminUserRoleMap.put("OC_CHAIRPERSON", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("OC_MEMBER", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("OC_SECRETARY", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("PAY_OFFICER", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("PLAN_APPROVER", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("UPS_PO", Arrays.asList("UPS_ADMIN"));
+		adminUserRoleMap.put("PBA_CHAIRPERSON", Arrays.asList("PTJ_ADMIN", "BPK_ADMIN"));
+		adminUserRoleMap.put("PBA_MEMBER", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("PBA_SECRETARY", Arrays.asList("PTJ_ADMIN", "BPK_ADMIN"));
+		adminUserRoleMap.put("PBB_CHAIRPERSON", Arrays.asList("PTJ_ADMIN", "BPK_ADMIN"));
+		adminUserRoleMap.put("PBB_MEMBER", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("PBB_SECRETARY", Arrays.asList("BPK_ADMIN", "PTJ_ADMIN"));
+		adminUserRoleMap.put("PTJ_ADMIN", Arrays.asList("MINISTRY_ADMIN", "PTJ_ADMIN", "JABATAN_ADMIN"));
+		adminUserRoleMap.put("PUBLICATION_APPROVER", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("QCA_CHAIRPERSON", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("QCA_MEMBER", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("QCA_SECRETARY", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("QCB_CHAIRPERSON", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("QCB_MEMBER", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("QCB_SECRETARY", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("RECEIVING_OFFICER", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("RN_APPROVER", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("REQUISITIONER", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("UPS_SVC", Arrays.asList("UPS_ADMIN"));
+		adminUserRoleMap.put("UPS_SVO", Arrays.asList("UPS_ADMIN"));
+		adminUserRoleMap.put("SC_CHAIRPERSON", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("SC_MEMBER", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("SC_SECRETARY", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("BASIC_SUPPLIER_ADMIN", Arrays.asList("BASIC_SUPPLIER_ADMIN"));
+		adminUserRoleMap.put("MOF_SUPPLIER_ADMIN", Arrays.asList("MOF_SUPPLIER_ADMIN"));
+		adminUserRoleMap.put("BASIC_SUPPLIER_USER", Arrays.asList("BASIC_SUPPLIER_ADMIN"));
+		adminUserRoleMap.put("MOF_SUPPLIER_USER", Arrays.asList("MOF_SUPPLIER_ADMIN"));
+		adminUserRoleMap.put("SUPPORT_ADMIN", Arrays.asList("SUPPORT_ADMIN", "EP_ADMIN_2"));
+		adminUserRoleMap.put("UPS_SDO", Arrays.asList("UPS_ADMIN"));
+		adminUserRoleMap.put("TEC_CHAIRPERSON", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("TEC_MEMBER", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("TEC_SECRETARY", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("PLAN_VERF_OFFICER", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("BI_USER", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("EP_COMMITTEE", Arrays.asList("BPK_ADMIN"));
+		adminUserRoleMap.put("SUPPORT_USER", Arrays.asList("SUPPORT_ADMIN"));
+		adminUserRoleMap.put("BPK_OFFICER", Arrays.asList("BPK_ADMIN"));
+		adminUserRoleMap.put("BPK_CQ_APPROVER", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("BPK_PQ_APPROVER", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("SUPPORT_AUTH_USER", Arrays.asList("SUPPORT_ADMIN"));
+		adminUserRoleMap.put("SUPPLIER_TEMP", Arrays.asList(""));
+		adminUserRoleMap.put("MARKET_RESEARCH", Arrays.asList("BPK_ADMIN", "PTJ_ADMIN"));
+		adminUserRoleMap.put("BPK_AUDITOR", Arrays.asList("BPK_ADMIN"));
+		adminUserRoleMap.put("BPK_CC_APPROVER", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("EP_TEMPL_ADMIN", Arrays.asList("EP_TEMPL_ADMIN", "BPK_ADMIN"));
+		adminUserRoleMap.put("FL_USER", Arrays.asList("EP_ADMIN_2"));
+		adminUserRoleMap.put("G2G_ADMIN", Arrays.asList("EP_ADMIN_2", "G2G_ADMIN"));
+		adminUserRoleMap.put("G2G_USER", Arrays.asList("G2G_ADMIN"));
+		adminUserRoleMap.put("SUPPORT_TECHNICAL", Arrays.asList("SUPPORT_ADMIN"));
+		adminUserRoleMap.put("PLAN_OFFICER", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("ACKNOWLEDGE_OFFICER", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("EP_ADMIN_1", Arrays.asList("EP_ADMIN_1"));
+		adminUserRoleMap.put("EP_ADMIN_2", Arrays.asList("EP_ADMIN_2"));
+		adminUserRoleMap.put("COLLECTOR_CDC", Arrays.asList("SUPPORT_ADMIN"));
+		adminUserRoleMap.put("COLLECTOR_GOV", Arrays.asList("BPK_ADMIN"));
+		adminUserRoleMap.put("PTJ_APPROVER", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("SUPPORT_APPL", Arrays.asList("SUPPORT_ADMIN"));
+
+	}
 
 	// Navigation Details
 	public static final String NAV_TO_MYACCOUNT = "/xhtml/pm/profilePersonalization/userDetails/profileManagementMaintain.xhtml";
@@ -87,6 +206,12 @@ public class ProfilePersonalizationBackingBean extends
 	public static final int TAB_PERSONALIZATION = 1;
 	public static final int TAB_CHANGE_PASSWORD = 2;
 	public static final int TAB_CHANGE_CHALLENGE_QUESTION = 3;
+	public static final int TAB_AUTH_PERSONNEL = 4;
+
+	// AdminRoles
+	public static final Map<String, List<String>> adminUserRoleMap = new HashMap<String, List<String>>();
+
+	public static PmUser authUserDetails;
 
 	/**
 	 * @return the tabUserProfile
@@ -107,6 +232,10 @@ public class ProfilePersonalizationBackingBean extends
 	 */
 	public int getTabChangePassword() {
 		return TAB_CHANGE_PASSWORD;
+	}
+
+	public int getTabAuthPersonnel() {
+		return TAB_AUTH_PERSONNEL;
 	}
 
 	/**
@@ -148,17 +277,15 @@ public class ProfilePersonalizationBackingBean extends
 		loadUserProfile(sUsers.getUserId());
 
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, NAV_TO_MYACCOUNT);
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_MYACCOUNT);
 	}
-	
-	
+
 	public void preLoadingUserCommonDetails() {
 		logger.info("preLoadingUserCommonDetails");
 		renewSesionObject();
 		FacesScopes facesScopes = new FacesScopes();
 		FacesContext fc = FacesContext.getCurrentInstance();
-		try{
+		try {
 			PmUser sUsers = facesScopes.getUserSessionBean();
 			if (sUsers == null) {
 				throw new EpException(MessageConst.ERROR_770045);
@@ -166,33 +293,25 @@ public class ProfilePersonalizationBackingBean extends
 			loadUserCommonDetails(sUsers.getUserId());
 			constructRoles();
 			retrieveMofExpDate(getManagedBean().getCurrentProfile());
-		    retrieveSoftCertExpDate(getManagedBean().getSelectedUser());
-		    
-		    
-			fc.getApplication().getNavigationHandler()
-					.handleNavigation(fc, null, NAV_TO_COMMON_DETAILS);
-		}catch(Exception e){
+			retrieveSoftCertExpDate(getManagedBean().getSelectedUser());
+
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_COMMON_DETAILS);
+		} catch (Exception e) {
 			fc.addMessage(
 					null,
-					new FacesMessage(
-							FacesMessage.SEVERITY_ERROR,
-							MessageConst.ERROR_770045,
-							PmCommonUtil.getMsgFromMsgUtils(MessageConst.ERROR_770045,null)
-					));
-			PmCommonUtil.redirectToPage(
-					ERROR_PAGE,
-					null,null);
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, MessageConst.ERROR_770045, PmCommonUtil
+							.getMsgFromMsgUtils(MessageConst.ERROR_770045, null)));
+			PmCommonUtil.redirectToPage(ERROR_PAGE, null, null);
 		}
-	  
+
 	}
-	
 
 	public void preLoadingUserCommonDetailsR() {
 		logger.info("preLoadingUserCommonDetailsR");
 		renewSesionObject();
 		FacesScopes facesScopes = new FacesScopes();
 		FacesContext fc = FacesContext.getCurrentInstance();
-		try{
+		try {
 			PmUser sUsers = facesScopes.getUserSessionBean();
 			if (sUsers == null) {
 				throw new EpException(MessageConst.ERROR_770045);
@@ -200,90 +319,48 @@ public class ProfilePersonalizationBackingBean extends
 			loadUserCommonDetails(sUsers.getUserId());
 			constructRoles();
 			retrieveMofExpDate(getManagedBean().getCurrentProfile());
-		    retrieveSoftCertExpDate(getManagedBean().getSelectedUser());
-		    
-		    
-			fc.getApplication().getNavigationHandler()
-					.handleNavigation(fc, null, NAV_TO_COMMON_DETAILS_R);
-		}catch(Exception e){
+			retrieveSoftCertExpDate(getManagedBean().getSelectedUser());
+
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_COMMON_DETAILS_R);
+		} catch (Exception e) {
 			fc.addMessage(
 					null,
-					new FacesMessage(
-							FacesMessage.SEVERITY_ERROR,
-							MessageConst.ERROR_770045,
-							PmCommonUtil.getMsgFromMsgUtils(MessageConst.ERROR_770045,null)
-					));
-			PmCommonUtil.redirectToPage(
-					ERROR_PAGE,
-					null,null);
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, MessageConst.ERROR_770045, PmCommonUtil
+							.getMsgFromMsgUtils(MessageConst.ERROR_770045, null)));
+			PmCommonUtil.redirectToPage(ERROR_PAGE, null, null);
 		}
-	  
+
 	}
-	
-	public void saluationChanged(ValueChangeEvent event){
-		 System.out.println("...........saluationChanged............");
-		this.getManagedBean().getSelectedUser().setModified(true);	
+
+	public void saluationChanged(ValueChangeEvent event) {
+		System.out.println("...........saluationChanged............");
+		this.getManagedBean().getSelectedUser().setModified(true);
 	}
-	
-	public void notifyChangeListener(ValueChangeEvent event){
-		 System.out.println("...........notifyChangeListener............");
-		this.getManagedBean().getSelectedUser().setModified(true);	
+
+	public void notifyChangeListener(ValueChangeEvent event) {
+		System.out.println("...........notifyChangeListener............");
+		this.getManagedBean().getSelectedUser().setModified(true);
 	}
-	public void languageChangeListener(ValueChangeEvent event){
-		 System.out.println("...........languageChangeListener............");
-		this.getManagedBean().getSelectedUser().setModified(true);	
+
+	public void languageChangeListener(ValueChangeEvent event) {
+		System.out.println("...........languageChangeListener............");
+		this.getManagedBean().getSelectedUser().setModified(true);
 	}
-	
-	public void notifySmsChangeListener(){
-		 System.out.println("...........notifySmsChangeListener............");
-		 if(getManagedBean().getSelectedUser().isNotifyBySms() 
-				 && StringUtils.isBlank(getManagedBean().getSelectedUser().getMobileNo())){
-			 getManagedBean().getSelectedUser().setNotifyBySms(false); 
-			 throw new EpException(MessageConst.ERROR_770090);
-		 }
-		 if(getManagedBean().getSelectedUser().isNotifyBySms() 
-				 && getManagedBean().getSelectedUser().getMobileTelcoId() == null){
-			 getManagedBean().getSelectedUser().setNotifyBySms(false); 
-			 throw new EpException(MessageConst.ERROR_770250);
-		 }
-		this.getManagedBean().getSelectedUser().setModified(true);	
+
+	public void notifySmsChangeListener() {
+		System.out.println("...........notifySmsChangeListener............");
+		if (getManagedBean().getSelectedUser().isNotifyBySms()
+				&& StringUtils.isBlank(getManagedBean().getSelectedUser().getMobileNo())) {
+			getManagedBean().getSelectedUser().setNotifyBySms(false);
+			throw new EpException(MessageConst.ERROR_770090);
+		}
+		if (getManagedBean().getSelectedUser().isNotifyBySms()
+				&& getManagedBean().getSelectedUser().getMobileTelcoId() == null) {
+			getManagedBean().getSelectedUser().setNotifyBySms(false);
+			throw new EpException(MessageConst.ERROR_770250);
+		}
+		this.getManagedBean().getSelectedUser().setModified(true);
 	}
-	
-	// /**
-	// * initial new pmUser object
-	// */
-	// private void initialUserProfile(){
-	// logger.info("initialUserProfile");
-	// //load user attributes
-	// PmCountry defaultCountry =
-	// PmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
-	// PmUser pmUser = new PmUser();
-	// pmUser.setSalutationCode(new PmSalutation());
-	// pmUser.setPmCountry(defaultCountry);
-	// pmUser.setIdentificationCode(new PmParameter());
-	// pmUser.setSalutationCode(new PmSalutation());
-	// pmUser.setPMP(false);
-	// pmUser.setPmUserOrgs(new ArrayList<PmUserOrg>());
-	// pmUser.setOrgTypeCode(new PmParameter());
-	//
-	// pmUser.setNotifyByEmail(true);
-	//
-	// //initial preference
-	// PmCommonUtil.loadPmUserPreference(pmUser);
-	//
-	// //initial address
-	// this.getManagedBean().setUserAddress(PmCommonUtil.getNewPmAddress());
-	//
-	// //load password
-	// pmUser.setPassword(null);
-	// // pmUser.setOldPassword(null);
-	// pmUser.setConfirmPassword(null);
-	// this.getManagedBean().setDeletePortrait(false);
-	// this.getManagedBean().setSelectedUser(pmUser);
-	// System.out.println("login " +
-	// this.getManagedBean().getSelectedUser().getLoginId());
-	// }
-	//
 
 	/**
 	 * load pm user object by id
@@ -300,32 +377,24 @@ public class ProfilePersonalizationBackingBean extends
 
 			// load user
 			PmUser pmUser = PmCommonUtil.retrieveUserWithoutOrgInfoById(id);
+			authUserDetails = pmUser;
 			pmUser.setPMP(pmUser.isPMP() ? true : false);
-			pmUser.setIdentificationCode(pmUser.getIdentificationCode() == null ? new PmParameter()
-					: pmUser.getIdentificationCode());
-			pmUser.setSalutationCode(pmUser.getSalutationCode() == null ? new PmSalutation()
-					: pmUser.getSalutationCode());
-			pmUser.setOrgTypeCode(pmUser.getOrgTypeCode() == null ? new PmParameter()
-					: pmUser.getOrgTypeCode());
+			pmUser.setIdentificationCode(pmUser.getIdentificationCode() == null ? new PmParameter() : pmUser
+					.getIdentificationCode());
+			pmUser.setSalutationCode(pmUser.getSalutationCode() == null ? new PmSalutation() : pmUser
+					.getSalutationCode());
+			pmUser.setOrgTypeCode(pmUser.getOrgTypeCode() == null ? new PmParameter() : pmUser.getOrgTypeCode());
 
-			// load address
-			// populateUserAddress(pmUser); 19Nov2014
-
-			// initial preference
 			PmCommonUtil.loadPmUserPreference(pmUser);
 
 			// retrieve current active org
 			List<PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(id);
-			this.getManagedBean().setCurrentProfile(
-					pmUserOrgs != null ? pmUserOrgs.get(0).getPmOrgProfile()
-							: null);
-			this.getManagedBean().setCurrentUserOrg(
-					pmUserOrgs != null ? pmUserOrgs.get(0) : null);
+			this.getManagedBean().setCurrentProfile(pmUserOrgs != null ? pmUserOrgs.get(0).getPmOrgProfile() : null);
+			this.getManagedBean().setCurrentUserOrg(pmUserOrgs != null ? pmUserOrgs.get(0) : null);
 			this.getManagedBean().setUserActiveRoles(new ArrayList<PmUserRole>());
 			if (this.getManagedBean().getCurrentUserOrg() != null) {
-				for (PmUserRole userRole : this.getManagedBean()
-						.getCurrentUserOrg().getPmUserRoles()) {
-					if(userRole.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE){
+				for (PmUserRole userRole : this.getManagedBean().getCurrentUserOrg().getPmUserRoles()) {
+					if (userRole.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 						this.getManagedBean().getUserActiveRoles().add(userRole);
 					}
 
@@ -338,27 +407,18 @@ public class ProfilePersonalizationBackingBean extends
 			this.getManagedBean().setDeletePortrait(false);
 			this.getManagedBean().setSelectedUser(pmUser);
 
-			// update address entered flag
-			// addressEntered(); 19Nov2014
-			
-//			//load challengeQA
-//			clearChallengeQuestions();
-//			
-//			//load challengeQADropDownList
-//			getManagedBean().setChallengeQADDList(PmCommonUtil.retrieveChallengeQAList(pmUser));
-			
-			//clear password policy
 			getManagedBean().setPasswordPolicy(null);
 			generatePasswordPolicy();
-			
+
+			// Load admin profile details of current user
+			searchAdminProfile();
+
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new EpException(MessageConst.ERROR_770016,
-					new String[] { e.getMessage() });
+			throw new EpException(MessageConst.ERROR_770016, new String[] { e.getMessage() });
 		}
 	}
-	
-	
+
 	private void loadUserCommonDetails(Long id) {
 		logger.info("loadUserCommonDetails");
 		try {
@@ -371,16 +431,12 @@ public class ProfilePersonalizationBackingBean extends
 			this.getManagedBean().setSelectedUser(pmUser);
 			// retrieve current active org
 			List<PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(id);
-			this.getManagedBean().setCurrentProfile(
-					pmUserOrgs != null ? pmUserOrgs.get(0).getPmOrgProfile()
-							: null);
-			this.getManagedBean().setCurrentUserOrg(
-					pmUserOrgs != null ? pmUserOrgs.get(0) : null);
+			this.getManagedBean().setCurrentProfile(pmUserOrgs != null ? pmUserOrgs.get(0).getPmOrgProfile() : null);
+			this.getManagedBean().setCurrentUserOrg(pmUserOrgs != null ? pmUserOrgs.get(0) : null);
 			this.getManagedBean().setUserActiveRoles(new ArrayList<PmUserRole>());
 			if (this.getManagedBean().getCurrentUserOrg() != null) {
-				for (PmUserRole userRole : this.getManagedBean()
-						.getCurrentUserOrg().getPmUserRoles()) {
-					if(userRole.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE){
+				for (PmUserRole userRole : this.getManagedBean().getCurrentUserOrg().getPmUserRoles()) {
+					if (userRole.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 						this.getManagedBean().getUserActiveRoles().add(userRole);
 					}
 
@@ -388,11 +444,9 @@ public class ProfilePersonalizationBackingBean extends
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new EpException(MessageConst.ERROR_770016,
-					new String[] { e.getMessage() });
+			throw new EpException(MessageConst.ERROR_770016, new String[] { e.getMessage() });
 		}
 	}
-	
 
 	/**
 	 * Get Role description by role code.
@@ -434,8 +488,7 @@ public class ProfilePersonalizationBackingBean extends
 			List<PmAddressType> addressTypes = pmUser.getPmAddressTypes();
 			PmAddressType userAddress = null;
 			for (PmAddressType addressType : addressTypes) {
-				if (ProfileManagementConst.ADDRESS_USER
-						.equalsIgnoreCase(addressType.getAddressType())) {
+				if (ProfileManagementConst.ADDRESS_USER.equalsIgnoreCase(addressType.getAddressType())) {
 					userAddress = addressType;
 					break;
 				}
@@ -443,13 +496,10 @@ public class ProfilePersonalizationBackingBean extends
 			}
 
 			if (userAddress != null) {
-				this.getManagedBean()
-						.setUserAddress(userAddress.getPmAddress());
+				this.getManagedBean().setUserAddress(userAddress.getPmAddress());
 			} else {
-				this.getManagedBean().setUserAddress(
-						PmCommonUtil.getNewPmAddress());
-				this.getManagedBean().getUserAddress()
-						.setPmCountry(new PmCountry());
+				this.getManagedBean().setUserAddress(PmCommonUtil.getNewPmAddress());
+				this.getManagedBean().getUserAddress().setPmCountry(new PmCountry());
 			}
 
 			// List<PmAddressType> addressTypes =
@@ -461,8 +511,7 @@ public class ProfilePersonalizationBackingBean extends
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new EpException(MessageConst.ERROR_770017,
-					new String[] { e.getMessage() });
+			throw new EpException(MessageConst.ERROR_770017, new String[] { e.getMessage() });
 		}
 	}
 
@@ -558,8 +607,7 @@ public class ProfilePersonalizationBackingBean extends
 		if (stateId != null) {
 			PmState pmState = PmCommonUtil.retrievePmStateByStateId(stateId);
 			this.getManagedBean().setDivisionFlagC(
-					(pmState != null && ParameterConst.SARAK_SK_CODE
-							.equals(pmState.getStateCode())) ? true : false);
+					(pmState != null && ParameterConst.SARAK_SK_CODE.equals(pmState.getStateCode())) ? true : false);
 		}
 		updateAddress(1);
 	}
@@ -574,16 +622,12 @@ public class ProfilePersonalizationBackingBean extends
 		logger.info("address: " + address);
 		if (0 == address) { // country
 			this.getManagedBean().getUserAddress().setPmState(new PmState());
-			this.getManagedBean().getUserAddress()
-					.setPmDivision(new PmDivision());
-			this.getManagedBean().getUserAddress()
-					.setPmDistrict(new PmDistrict());
+			this.getManagedBean().getUserAddress().setPmDivision(new PmDivision());
+			this.getManagedBean().getUserAddress().setPmDistrict(new PmDistrict());
 			this.getManagedBean().getUserAddress().setPmCity(new PmCity());
 		} else if (1 == address) { // state
-			this.getManagedBean().getUserAddress()
-					.setPmDivision(new PmDivision());
-			this.getManagedBean().getUserAddress()
-					.setPmDistrict(new PmDistrict());
+			this.getManagedBean().getUserAddress().setPmDivision(new PmDivision());
+			this.getManagedBean().getUserAddress().setPmDistrict(new PmDistrict());
 			this.getManagedBean().getUserAddress().setPmCity(new PmCity());
 		} else if (2 == address) { // district);
 			this.getManagedBean().getUserAddress().setPmCity(new PmCity());
@@ -605,13 +649,12 @@ public class ProfilePersonalizationBackingBean extends
 	 * retrieve all identity type into mapper
 	 */
 	protected void retrieveIdentityTypeMap() {
-		List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
-				.getParameterDescList(ParameterTypeConst.IDENTIFICATION_TYPES);
+		List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescList(
+				ParameterTypeConst.IDENTIFICATION_TYPES);
 
 		identityTypeMapper = new HashMap<Long, Object>();
 		for (PmParameterDesc pmDesc : parameterDescs) {
-			identityTypeMapper.put(pmDesc.getPmParameter().getParameterId(),
-					pmDesc.getPmParameter());
+			identityTypeMapper.put(pmDesc.getPmParameter().getParameterId(), pmDesc.getPmParameter());
 		}
 	}
 
@@ -667,10 +710,8 @@ public class ProfilePersonalizationBackingBean extends
 	public void addressEntered() {
 		PmAddress pmAddress = this.getManagedBean().getUserAddress();
 		// address is optional
-		if (pmAddress.getPmCountry().getCountryId() != null
-				|| !StringUtils.isBlank(pmAddress.getAddress1())
-				|| !StringUtils.isBlank(pmAddress.getPostcode())
-				|| pmAddress.getPmState().getStateId() != null
+		if (pmAddress.getPmCountry().getCountryId() != null || !StringUtils.isBlank(pmAddress.getAddress1())
+				|| !StringUtils.isBlank(pmAddress.getPostcode()) || pmAddress.getPmState().getStateId() != null
 				|| pmAddress.getPmDistrict().getDistrictId() != null
 				|| pmAddress.getPmDivision().getDivisionId() != null) {
 			this.getManagedBean().setAddressEntered(true);
@@ -689,10 +730,8 @@ public class ProfilePersonalizationBackingBean extends
 		boolean addressEntered = false;
 
 		// address is optional
-		if (pmAddress.getPmCountry().getCountryId() != null
-				|| !StringUtils.isBlank(pmAddress.getAddress1())
-				|| !StringUtils.isBlank(pmAddress.getPostcode())
-				|| pmAddress.getPmState().getStateId() != null
+		if (pmAddress.getPmCountry().getCountryId() != null || !StringUtils.isBlank(pmAddress.getAddress1())
+				|| !StringUtils.isBlank(pmAddress.getPostcode()) || pmAddress.getPmState().getStateId() != null
 				|| pmAddress.getPmDistrict().getDistrictId() != null
 				|| pmAddress.getPmDivision().getDivisionId() != null) {
 			addressEntered = true;
@@ -739,21 +778,19 @@ public class ProfilePersonalizationBackingBean extends
 			if (StringUtils.isBlank(pmUser.getPreferredLanguage())) {
 				throw new EpException(MessageConst.ERROR_770046);
 			}
-			
-			 if(pmUser.isNotifyBySms() 
-					 && StringUtils.isBlank(pmUser.getMobileNo())){
-				 throw new EpException(MessageConst.ERROR_770090);
-			 }
-			 
-			 if(pmUser.isNotifyBySms() 
-					 && (pmUser.getMobileTelcoId()  == null)){
-				 throw new EpException(MessageConst.ERROR_770250);
-			 }
-			
-//			if (pmUser.getNotifyRemovalDay() == null
-//					|| pmUser.getNotifyRemovalDay() <= 0) {
-//				throw new EpException(MessageConst.ERROR_770047);
-//			}
+
+			if (pmUser.isNotifyBySms() && StringUtils.isBlank(pmUser.getMobileNo())) {
+				throw new EpException(MessageConst.ERROR_770090);
+			}
+
+			if (pmUser.isNotifyBySms() && (pmUser.getMobileTelcoId() == null)) {
+				throw new EpException(MessageConst.ERROR_770250);
+			}
+
+			// if (pmUser.getNotifyRemovalDay() == null
+			// || pmUser.getNotifyRemovalDay() <= 0) {
+			// throw new EpException(MessageConst.ERROR_770047);
+			// }
 		}
 	}
 
@@ -767,28 +804,21 @@ public class ProfilePersonalizationBackingBean extends
 		logger.info("loadUserAddress");
 
 		// update contact address
-		if (user.getPmAddressTypes() != null
-				&& !user.getPmAddressTypes().isEmpty()) {
+		if (user.getPmAddressTypes() != null && !user.getPmAddressTypes().isEmpty()) {
 			boolean isUserAddressExist = false;
 			for (PmAddressType addressTypeObj : user.getPmAddressTypes()) {
-				if (DbValueConst.RECORD_STATUS_ACTIVE == addressTypeObj
-						.getRecordStatusFlg()) {
-					if (ProfileManagementConst.ADDRESS_USER
-							.equalsIgnoreCase(addressTypeObj.getAddressType())) {
+				if (DbValueConst.RECORD_STATUS_ACTIVE == addressTypeObj.getRecordStatusFlg()) {
+					if (ProfileManagementConst.ADDRESS_USER.equalsIgnoreCase(addressTypeObj.getAddressType())) {
 						// update address
 						if (isAddressExist) {
-							addressTypeObj.setPmAddress(this.getManagedBean()
-									.getUserAddress());
+							addressTypeObj.setPmAddress(this.getManagedBean().getUserAddress());
 							if (addressTypeObj.getPmAddress().getPmDivision() != null
-									&& addressTypeObj.getPmAddress()
-											.getPmDivision().getDivisionId() == null) {
-								addressTypeObj.getPmAddress().setPmDivision(
-										null);
+									&& addressTypeObj.getPmAddress().getPmDivision().getDivisionId() == null) {
+								addressTypeObj.getPmAddress().setPmDivision(null);
 							}
 						} else {
 							// remove address
-							addressTypeObj
-									.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+							addressTypeObj.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 						}
 						isUserAddressExist = true;
 						break;
@@ -799,13 +829,10 @@ public class ProfilePersonalizationBackingBean extends
 			if (!isUserAddressExist) {
 				// add address
 				PmAddressType pmAddressType = new PmAddressType();
-				pmAddressType
-						.setAddressType(ProfileManagementConst.ADDRESS_USER);
-				pmAddressType.setPmAddress(this.getManagedBean()
-						.getUserAddress());
+				pmAddressType.setAddressType(ProfileManagementConst.ADDRESS_USER);
+				pmAddressType.setPmAddress(this.getManagedBean().getUserAddress());
 				if (pmAddressType.getPmAddress().getPmDivision() != null
-						&& pmAddressType.getPmAddress().getPmDivision()
-								.getDivisionId() == null) {
+						&& pmAddressType.getPmAddress().getPmDivision().getDivisionId() == null) {
 					pmAddressType.getPmAddress().setPmDivision(null);
 				}
 				pmAddressType.setPmOrgProfile(null);
@@ -818,13 +845,10 @@ public class ProfilePersonalizationBackingBean extends
 					user.setPmAddressTypes(new ArrayList<PmAddressType>());
 				}
 				PmAddressType pmAddressType = new PmAddressType();
-				pmAddressType
-						.setAddressType(ProfileManagementConst.ADDRESS_USER);
-				pmAddressType.setPmAddress(this.getManagedBean()
-						.getUserAddress());
+				pmAddressType.setAddressType(ProfileManagementConst.ADDRESS_USER);
+				pmAddressType.setPmAddress(this.getManagedBean().getUserAddress());
 				if (pmAddressType.getPmAddress().getPmDivision() != null
-						&& pmAddressType.getPmAddress().getPmDivision()
-								.getDivisionId() == null) {
+						&& pmAddressType.getPmAddress().getPmDivision().getDivisionId() == null) {
 					pmAddressType.getPmAddress().setPmDivision(null);
 				}
 				pmAddressType.setPmOrgProfile(null);
@@ -853,23 +877,22 @@ public class ProfilePersonalizationBackingBean extends
 
 		IUserSO userSO = null;
 		try {
-			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IUserSO.class);
 			UserReqDTO reqDTO = new UserReqDTO();
 			reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());
-			if(!user.isBrandNew()){
-				//track changes for tracking Diary
-				if(user.isModified()){
-					
-				logger.info("Tracking diary for my profile :saveUserProfile");
-				String messageId = MessageConst.TD_80014;
-				String[] msgParam = new String[] {user.getUserName()};
-				reqDTO.setTrackingStatus(true);
-				reqDTO.getTrackDairyVOs().add(
-						PmCommonUtil.assignTrackingDairyValues(user,
-								getActionDesc(messageId, msgParam),user.getRecordStatusFlg()
-								.longValue()));
-				
+			if (!user.isBrandNew()) {
+				// track changes for tracking Diary
+				if (user.isModified()) {
+
+					logger.info("Tracking diary for my profile :saveUserProfile");
+					String messageId = MessageConst.TD_80014;
+					String[] msgParam = new String[] { user.getUserName() };
+					reqDTO.setTrackingStatus(true);
+					reqDTO.getTrackDairyVOs().add(
+							PmCommonUtil.assignTrackingDairyValues(user, getActionDesc(messageId, msgParam), user
+									.getRecordStatusFlg().longValue()));
+
 				}
 			}
 			reqDTO.setPmUser(user);
@@ -884,13 +907,9 @@ public class ProfilePersonalizationBackingBean extends
 				loadUserProfile(user.getUserId());
 				FacesContext.getCurrentInstance().addMessage(
 						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-								MessageUtils.getMessage(
-										MessageConst.INFO_770051,
-										new String[] { resDTO.getPmUser()
-												.getUserName() },
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+								MessageConst.INFO_770051, new String[] { resDTO.getPmUser().getUserName() },
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 
 			}
 		} catch (Exception e) {
@@ -902,11 +921,12 @@ public class ProfilePersonalizationBackingBean extends
 			userSO = null;
 		}
 	}
+
 	private String getActionDesc(String messageId, String[] params) {
 		Locale myLocale = new Locale("ms", "MY");
-		return MessageUtils.getMessage(messageId, params,
-				MessageUtils.BUNDLE_COMMON_MESSAGES, myLocale);
+		return MessageUtils.getMessage(messageId, params, MessageUtils.BUNDLE_COMMON_MESSAGES, myLocale);
 	}
+
 	/**
 	 * get record status options //TODO: to load dynamically
 	 * 
@@ -920,11 +940,8 @@ public class ProfilePersonalizationBackingBean extends
 	 * login id = identification no.
 	 */
 	public void updateLoginId() {
-		this.getManagedBean()
-				.getSelectedUser()
-				.setLoginId(
-						this.getManagedBean().getSelectedUser()
-								.getIdentificationNo());
+		this.getManagedBean().getSelectedUser()
+				.setLoginId(this.getManagedBean().getSelectedUser().getIdentificationNo());
 	}
 
 	/**
@@ -943,39 +960,25 @@ public class ProfilePersonalizationBackingBean extends
 				throw new EpException(MessageConst.ERROR_770119);
 			}
 
-			reqDTO.setPortrait(this.getManagedBean().getSelectedUser()
-					.getPortrait());
-			reqDTO.setLoginId(this.getManagedBean().getSelectedUser()
-					.getLoginId());
+			reqDTO.setPortrait(this.getManagedBean().getSelectedUser().getPortrait());
+			reqDTO.setLoginId(this.getManagedBean().getSelectedUser().getLoginId());
 
-			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IUserSO.class);
 			resDTO = userSO.updatePortrait(reqDTO);
 
 			if (resDTO != null && resDTO.isSuccessful()) {
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_INFO,
-										null,
-										MessageUtils
-												.getMessage(
-														MessageConst.INFO_770122,
-														new String[] { this
-																.getManagedBean()
-																.getSelectedUser()
-																.getLoginId() },
-														MessageUtils.BUNDLE_COMMON_MESSAGES,
-														new FacesScopes()
-																.getUserLocale())));
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+								MessageConst.INFO_770122, new String[] { this.getManagedBean().getSelectedUser()
+										.getLoginId() }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new EpException(MessageConst.ERROR_770120,
-					new String[] { e.getMessage() });
+			throw new EpException(MessageConst.ERROR_770120, new String[] { e.getMessage() });
 		} finally {
 			userSO = null;
 		}
@@ -994,39 +997,26 @@ public class ProfilePersonalizationBackingBean extends
 		UserResDTO resDTO = new UserResDTO();
 		try {
 
-			reqDTO.setLoginId(this.getManagedBean().getSelectedUser()
-					.getLoginId());
+			reqDTO.setLoginId(this.getManagedBean().getSelectedUser().getLoginId());
 
-			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IUserSO.class);
 
 			resDTO = userSO.deletePortrait(reqDTO);
 
 			if (resDTO != null && resDTO.isSuccessful()) {
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_INFO,
-										null,
-										MessageUtils
-												.getMessage(
-														MessageConst.INFO_770123,
-														new String[] { this
-																.getManagedBean()
-																.getSelectedUser()
-																.getLoginId() },
-														MessageUtils.BUNDLE_COMMON_MESSAGES,
-														new FacesScopes()
-																.getUserLocale())));
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+								MessageConst.INFO_770123, new String[] { this.getManagedBean().getSelectedUser()
+										.getLoginId() }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
 
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new EpException(MessageConst.ERROR_770121,
-					new String[] { e.getMessage() });
+			throw new EpException(MessageConst.ERROR_770121, new String[] { e.getMessage() });
 		} finally {
 			userSO = null;
 		}
@@ -1082,225 +1072,206 @@ public class ProfilePersonalizationBackingBean extends
 		UserResDTO resDTO = new UserResDTO();
 		try {
 
-			if (StringUtils.isBlank(this.getManagedBean().getSelectedUser()
-					.getLoginId())) {
+			if (StringUtils.isBlank(this.getManagedBean().getSelectedUser().getLoginId())) {
 				throw new EpException(MessageConst.ERROR_770125);
 			}
-			
-			if (StringUtils.isBlank(this.getManagedBean().getSelectedUser()
-					.getOldPassword())) {
+
+			if (StringUtils.isBlank(this.getManagedBean().getSelectedUser().getOldPassword())) {
 				throw new EpException(MessageConst.ERROR_770124);
 			}
 
-			if (StringUtils.isBlank(this.getManagedBean().getSelectedUser()
-					.getPassword())) {
+			if (StringUtils.isBlank(this.getManagedBean().getSelectedUser().getPassword())) {
 				throw new EpException(MessageConst.ERROR_770126);
 			}
 
-			if (StringUtils.isBlank(this.getManagedBean().getSelectedUser()
-					.getConfirmPassword())) {
+			if (StringUtils.isBlank(this.getManagedBean().getSelectedUser().getConfirmPassword())) {
 				throw new EpException(MessageConst.ERROR_770127);
 			}
 
 			reqDTO.setPmUser(this.getManagedBean().getSelectedUser());
 			PmUser user = this.getManagedBean().getSelectedUser();
-            reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());
-        	IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
-					.getServiceObject("pm", IStatusSO.class);
-			
+			reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());
+			IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject("pm", IStatusSO.class);
+
 			logger.info("Tracking diary for my profile: change password :changePassword");
 			String messageId = MessageConst.TD_80015;
-			String[] msgParam = new String[] {user.getUserName()};
+			String[] msgParam = new String[] { user.getUserName() };
 			reqDTO.setTrackingStatus(true);
 			reqDTO.getTrackDairyVOs().add(
-						PmCommonUtil.assignTrackingDairyValues(user,
-								getActionDesc(messageId, msgParam),user.getRecordStatusFlg()
-								.longValue()));
+					PmCommonUtil.assignTrackingDairyValues(user, getActionDesc(messageId, msgParam), user
+							.getRecordStatusFlg().longValue()));
 			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
-			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IUserSO.class);
 
 			resDTO = userSO.changePassword(reqDTO);
 
 			if (resDTO != null && resDTO.isSuccessful()) {
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_INFO,
-										null,
-										MessageUtils
-												.getMessage(
-														MessageConst.INFO_770125,
-														new String[] { this
-																.getManagedBean()
-																.getSelectedUser()
-																.getLoginId() },
-														MessageUtils.BUNDLE_COMMON_MESSAGES,
-														new FacesScopes()
-																.getUserLocale())));
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+								MessageConst.INFO_770125, new String[] { this.getManagedBean().getSelectedUser()
+										.getLoginId() }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
 				clearPassword();
 
 			}
 
 		} catch (Exception e) {
-			throw new EpException(MessageConst.ERROR_770128,
-					new String[] { e.getMessage() });
+			throw new EpException(MessageConst.ERROR_770128, new String[] { e.getMessage() });
 		} finally {
 			userSO = null;
 		}
 		logger.info("changePassword - END");
 	}
-	
-//	public SelectItem[] getChallengeQAList(){
-//		PmUser pmUser = getFacesScopes().getUserSessionBean();			
-//		return PmCommonUtil.retrieveChallengeQAList(pmUser);
-//	}
-//	
-//	public String getChallengeQuestionsLabel(Long index){
-//		index = index + 1;
-//		return ResourceBundleUtils.getMessage(
-//				"lbl.pm.profiles.ccq.q"+index,
-//				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-//				new FacesScopes().getUserLocale());
-//	}
-//	
-//	public String getChallengeAnswersLabel(Long index){
-//		index = index + 1;
-//		return ResourceBundleUtils.getMessage(
-//				"lbl.pm.profiles.ccq.a"+index,
-//				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-//				new FacesScopes().getUserLocale());
-//	}
-//	
-//	
-//	/**
-//	 * Change password
-//	 * 
-//	 * @throws Exception
-//	 */
-//	public void changeChallengeQuestions() throws Exception {
-//		logger.info("changeChallengeQuestions - START");
-//		IUserSO userSO = null;
-//		UserReqDTO reqDTO = new UserReqDTO();
-//		UserResDTO resDTO = new UserResDTO();
-//		try {
-//			if (StringUtils.isBlank(this.getManagedBean().getSelectedUser()
-//					.getLoginId())) {
-//				throw new EpException(MessageConst.ERROR_770125);
-//			}
-//			if (StringUtils.isBlank(this.getManagedBean().getCurrentPassword())) {
-//				throw new EpException(MessageConst.ERROR_770124);
-//			}
-//			Set<String> questionsSet = new HashSet<String>();
-//			Set<String> answersSet = new HashSet<String>();
-//			List<String> questionList = new ArrayList<String>();
-//			List<String> answerList = new ArrayList<String>();
-//			int counter = 1;
-//			for(ChallengeQAList qa : getManagedBean().getChallengeQAList()){
-//				if(!StringUtils.isBlank(qa.getQuestion())){
-//					questionsSet.add(qa.getQuestion());
-//					questionList.add(qa.getQuestion());
-//				}else{
-//					throw new EpException("Please Select Question " + counter);
-//				}
-//				
-//				if(!StringUtils.isBlank(qa.getAnswer())){
-//					answersSet.add(qa.getAnswer());
-//					answerList.add(qa.getAnswer());
-//				}else{
-//					throw new EpException("Please Insert Answer " + counter);
-//				}
-//				counter ++;
-//			}
-//			
-//			
-//			if(questionsSet.size() != getManagedBean().getChallengeQAList().size()){
-//				throw new EpException("Duplicate Questions are selected");
-//			}
-//			
-//			if(answersSet.size() != getManagedBean().getChallengeQAList().size()){
-//				throw new EpException("Duplicate Answers are inserted");
-//			}
-//			
-//			 userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
-//			 ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-//			 reqDTO = new UserReqDTO();
-//			 reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());
-//			 PmUser user = getManagedBean().getSelectedUser();
-//				IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
-//						.getServiceObject("pm", IStatusSO.class);
-//				StatusReqDTO statusReqDTO = new StatusReqDTO();
-//				statusReqDTO.setStatusId(user.getRecordStatusFlg()
-//						.longValue());
-//				StatusResDTO statusResDTO = statusSO
-//						.retrieveStatusByStatusId(statusReqDTO);
-//				logger.info("Tracking diary for my profile: change challenge Questions :changeChallengeQuestions");
-//				String messageId = MessageConst.TD_80016;
-//				String[] msgParam = new String[] {user.getUserName()};
-//				reqDTO.setTrackingStatus(true);
-//				reqDTO.getTrackDairyVOs().add(
-//							PmCommonUtil.assignTrackingDairyValues(user,
-//									getActionDesc(messageId, msgParam), statusResDTO.getPmStatus() != null ? statusResDTO
-//											.getPmStatus() : new PmStatus()));
-//			 reqDTO.setLoginId(getManagedBean().getSelectedUser()
-//					.getLoginId());
-//			 reqDTO.setUserOimPassword(getManagedBean().getCurrentPassword());
-//			 reqDTO.setChallangeQuestions(questionList);
-//			 reqDTO.setChallangeAnswers(answerList);
-//			 resDTO = userSO.setOimChallengeQA(reqDTO);
-//			 if (resDTO != null && resDTO.isSuccessful()) {
-//					FacesContext
-//							.getCurrentInstance()
-//							.addMessage(
-//									null,
-//									new FacesMessage(
-//											FacesMessage.SEVERITY_INFO,
-//											null,
-//											MessageUtils
-//													.getMessage(
-//															MessageConst.INFO_770171,
-//															new String[] { this
-//																	.getManagedBean()
-//																	.getSelectedUser()
-//																	.getLoginId() },
-//															MessageUtils.BUNDLE_COMMON_MESSAGES,
-//															new FacesScopes()
-//																	.getUserLocale())));
-//					clearChallengeQuestions();
-//
-//				}
-//
-//		} catch (Exception e) {
-//			throw new EpException(MessageConst.ERROR_770171,
-//					new String[] { e.getMessage() });
-//		} finally {
-//			userSO = null;
-//		}
-//		logger.info("changeChallengeQuestions - END");
-//	}
-	
-	
-//	/**
-//	 * reset challenge questions ui
-//	 */
-//	public void clearChallengeQuestions() {
-//		logger.info("clearChallengeQuestions");
-//		this.getManagedBean().setCurrentPassword(null);
-//		//load challengeQA
-//		List<ChallengeQAList> challengeQAList = new ArrayList<ChallengeQAList>();
-//		challengeQAList.add(new ChallengeQAList(null,null));
-//		challengeQAList.add(new ChallengeQAList(null,null));
-//		challengeQAList.add(new ChallengeQAList(null,null));			
-//		getManagedBean().setChallengeQAList(challengeQAList);
-//	}
-	
-	
+
+	// public SelectItem[] getChallengeQAList(){
+	// PmUser pmUser = getFacesScopes().getUserSessionBean();
+	// return PmCommonUtil.retrieveChallengeQAList(pmUser);
+	// }
+	//
+	// public String getChallengeQuestionsLabel(Long index){
+	// index = index + 1;
+	// return ResourceBundleUtils.getMessage(
+	// "lbl.pm.profiles.ccq.q"+index,
+	// ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+	// new FacesScopes().getUserLocale());
+	// }
+	//
+	// public String getChallengeAnswersLabel(Long index){
+	// index = index + 1;
+	// return ResourceBundleUtils.getMessage(
+	// "lbl.pm.profiles.ccq.a"+index,
+	// ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+	// new FacesScopes().getUserLocale());
+	// }
+	//
+	//
+	// /**
+	// * Change password
+	// *
+	// * @throws Exception
+	// */
+	// public void changeChallengeQuestions() throws Exception {
+	// logger.info("changeChallengeQuestions - START");
+	// IUserSO userSO = null;
+	// UserReqDTO reqDTO = new UserReqDTO();
+	// UserResDTO resDTO = new UserResDTO();
+	// try {
+	// if (StringUtils.isBlank(this.getManagedBean().getSelectedUser()
+	// .getLoginId())) {
+	// throw new EpException(MessageConst.ERROR_770125);
+	// }
+	// if (StringUtils.isBlank(this.getManagedBean().getCurrentPassword())) {
+	// throw new EpException(MessageConst.ERROR_770124);
+	// }
+	// Set<String> questionsSet = new HashSet<String>();
+	// Set<String> answersSet = new HashSet<String>();
+	// List<String> questionList = new ArrayList<String>();
+	// List<String> answerList = new ArrayList<String>();
+	// int counter = 1;
+	// for(ChallengeQAList qa : getManagedBean().getChallengeQAList()){
+	// if(!StringUtils.isBlank(qa.getQuestion())){
+	// questionsSet.add(qa.getQuestion());
+	// questionList.add(qa.getQuestion());
+	// }else{
+	// throw new EpException("Please Select Question " + counter);
+	// }
+	//
+	// if(!StringUtils.isBlank(qa.getAnswer())){
+	// answersSet.add(qa.getAnswer());
+	// answerList.add(qa.getAnswer());
+	// }else{
+	// throw new EpException("Please Insert Answer " + counter);
+	// }
+	// counter ++;
+	// }
+	//
+	//
+	// if(questionsSet.size() != getManagedBean().getChallengeQAList().size()){
+	// throw new EpException("Duplicate Questions are selected");
+	// }
+	//
+	// if(answersSet.size() != getManagedBean().getChallengeQAList().size()){
+	// throw new EpException("Duplicate Answers are inserted");
+	// }
+	//
+	// userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+	// ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+	// reqDTO = new UserReqDTO();
+	// reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());
+	// PmUser user = getManagedBean().getSelectedUser();
+	// IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
+	// .getServiceObject("pm", IStatusSO.class);
+	// StatusReqDTO statusReqDTO = new StatusReqDTO();
+	// statusReqDTO.setStatusId(user.getRecordStatusFlg()
+	// .longValue());
+	// StatusResDTO statusResDTO = statusSO
+	// .retrieveStatusByStatusId(statusReqDTO);
+	// logger.info("Tracking diary for my profile: change challenge Questions :changeChallengeQuestions");
+	// String messageId = MessageConst.TD_80016;
+	// String[] msgParam = new String[] {user.getUserName()};
+	// reqDTO.setTrackingStatus(true);
+	// reqDTO.getTrackDairyVOs().add(
+	// PmCommonUtil.assignTrackingDairyValues(user,
+	// getActionDesc(messageId, msgParam), statusResDTO.getPmStatus() != null ?
+	// statusResDTO
+	// .getPmStatus() : new PmStatus()));
+	// reqDTO.setLoginId(getManagedBean().getSelectedUser()
+	// .getLoginId());
+	// reqDTO.setUserOimPassword(getManagedBean().getCurrentPassword());
+	// reqDTO.setChallangeQuestions(questionList);
+	// reqDTO.setChallangeAnswers(answerList);
+	// resDTO = userSO.setOimChallengeQA(reqDTO);
+	// if (resDTO != null && resDTO.isSuccessful()) {
+	// FacesContext
+	// .getCurrentInstance()
+	// .addMessage(
+	// null,
+	// new FacesMessage(
+	// FacesMessage.SEVERITY_INFO,
+	// null,
+	// MessageUtils
+	// .getMessage(
+	// MessageConst.INFO_770171,
+	// new String[] { this
+	// .getManagedBean()
+	// .getSelectedUser()
+	// .getLoginId() },
+	// MessageUtils.BUNDLE_COMMON_MESSAGES,
+	// new FacesScopes()
+	// .getUserLocale())));
+	// clearChallengeQuestions();
+	//
+	// }
+	//
+	// } catch (Exception e) {
+	// throw new EpException(MessageConst.ERROR_770171,
+	// new String[] { e.getMessage() });
+	// } finally {
+	// userSO = null;
+	// }
+	// logger.info("changeChallengeQuestions - END");
+	// }
+
+	// /**
+	// * reset challenge questions ui
+	// */
+	// public void clearChallengeQuestions() {
+	// logger.info("clearChallengeQuestions");
+	// this.getManagedBean().setCurrentPassword(null);
+	// //load challengeQA
+	// List<ChallengeQAList> challengeQAList = new ArrayList<ChallengeQAList>();
+	// challengeQAList.add(new ChallengeQAList(null,null));
+	// challengeQAList.add(new ChallengeQAList(null,null));
+	// challengeQAList.add(new ChallengeQAList(null,null));
+	// getManagedBean().setChallengeQAList(challengeQAList);
+	// }
+
 	private void fillUserOrgInfoFromUser(PmUser user) {
-		for(PmUserOrg activeOrg: user.getPmUserOrgs()){
-			if(DbValueConst.RECORD_STATUS_ACTIVE == activeOrg.getRecordStatusFlg()){
-				activeOrg.setEmail(user.getEmail());			
+		for (PmUserOrg activeOrg : user.getPmUserOrgs()) {
+			if (DbValueConst.RECORD_STATUS_ACTIVE == activeOrg.getRecordStatusFlg()) {
+				activeOrg.setEmail(user.getEmail());
 				activeOrg.setPhoneNo(user.getPhoneNo());
 				activeOrg.setPhoneArea(user.getPhoneArea());
 				activeOrg.setPhoneCountry(user.getPhoneCountry());
@@ -1315,25 +1286,23 @@ public class ProfilePersonalizationBackingBean extends
 			}
 		}
 	}
-	
-	public void generatePasswordPolicy(){	
+
+	public void generatePasswordPolicy() {
 		IUserSO userSO = null;
-		if(StringUtils.isBlank(getManagedBean().getPasswordPolicy())){
+		if (StringUtils.isBlank(getManagedBean().getPasswordPolicy())) {
 			try {
-				userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+				userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IUserSO.class);
 				UserReqDTO reqDTO = new UserReqDTO();
-				reqDTO.setLoginId(getManagedBean().getSelectedUser().getLoginId());	
+				reqDTO.setLoginId(getManagedBean().getSelectedUser().getLoginId());
 				reqDTO.setUserLocale(getFacesScopes().getUserLocale());
-//				reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
+				// reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
 				UserResDTO resDTO = userSO.getPasswordPolicyInfo(reqDTO);
-				if(resDTO.isSuccessful() && resDTO.getPolicyInfos() != null){
-					StringBuilder sb = new StringBuilder();					
+				if (resDTO.isSuccessful() && resDTO.getPolicyInfos() != null) {
+					StringBuilder sb = new StringBuilder();
 					sb.append("<b>");
-					sb.append(ResourceBundleUtils.getMessage(
-							"lbl.pm.profiles.cp.tooltip",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale()));
+					sb.append(ResourceBundleUtils.getMessage("lbl.pm.profiles.cp.tooltip",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 					sb.append("</b><br/>");
 					for (String policy : resDTO.getPolicyInfos()) {
 						sb.append("&#160;&#8226;&#160; ");
@@ -1341,13 +1310,11 @@ public class ProfilePersonalizationBackingBean extends
 						sb.append("<br/>");
 					}
 					getManagedBean().setPasswordPolicy(sb.toString());
-				} else if(!resDTO.isSuccessful()){
-					StringBuilder sb = new StringBuilder();					
+				} else if (!resDTO.isSuccessful()) {
+					StringBuilder sb = new StringBuilder();
 					sb.append("<b>");
-					sb.append(ResourceBundleUtils.getMessage(
-							"lbl.pm.profiles.cp.tooltip",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale()));
+					sb.append(ResourceBundleUtils.getMessage("lbl.pm.profiles.cp.tooltip",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 					sb.append("</b><br/>");
 					for (String policy : resDTO.getPolicyInfos()) {
 						sb.append("&#160;&#8226;&#160; ");
@@ -1355,108 +1322,136 @@ public class ProfilePersonalizationBackingBean extends
 						sb.append("<br/>");
 					}
 					getManagedBean().setPasswordPolicy(sb.toString());
-//					
+					//
 					FacesContext.getCurrentInstance().addMessage(
 							null,
-							new FacesMessage(FacesMessage.SEVERITY_WARN, null,ResourceBundleUtils.getMessage(
-													"lbl.pm.profiles.pass.policy.tooltip.err", 
-													ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-													new FacesScopes().getUserLocale())));
-					
-//					throw new EpException(ResourceBundleUtils.getMessage(
-//							"lbl.pm.profiles.pass.policy.tooltip.err", 
-//							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-//							new FacesScopes().getUserLocale()));
+							new FacesMessage(FacesMessage.SEVERITY_WARN, null, ResourceBundleUtils.getMessage(
+									"lbl.pm.profiles.pass.policy.tooltip.err",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+
+					// throw new EpException(ResourceBundleUtils.getMessage(
+					// "lbl.pm.profiles.pass.policy.tooltip.err",
+					// ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					// new FacesScopes().getUserLocale()));
 				}
-			}finally{
-					userSO = null;
+			} finally {
+				userSO = null;
 			}
 		}
-		
+
 	}
-	
-	private void retrieveMofExpDate(PmOrgProfile orgProfile){
-		if(isMofExpiryShown()){
-			if(orgProfile.getSmSupplier() != null 
-					&& orgProfile.getSmSupplier().getSmMofAccounts() != null 
+
+	private void retrieveMofExpDate(PmOrgProfile orgProfile) {
+		if (isMofExpiryShown()) {
+			if (orgProfile.getSmSupplier() != null && orgProfile.getSmSupplier().getSmMofAccounts() != null
 					&& !orgProfile.getSmSupplier().getSmMofAccounts().isEmpty())
-				for(SmMofAccount account : orgProfile.getSmSupplier().getSmMofAccounts()){
-					if(DbValueConst.RECORD_STATUS_ACTIVE == account.getRecordStatusFlg()){
+				for (SmMofAccount account : orgProfile.getSmSupplier().getSmMofAccounts()) {
+					if (DbValueConst.RECORD_STATUS_ACTIVE == account.getRecordStatusFlg()) {
 						getManagedBean().setMofExpDate(account.getExpDate());
 						break;
 					}
 				}
 		}
 	}
-	
-	private void retrieveSoftCertExpDate(PmUser user){
-		if(isSoftCertExpiryShown()){
-			if(user.getPmUserDigiCert() != null && user.getPmUserDigiCert().getPmDigiCert() != null){
+
+	private void retrieveSoftCertExpDate(PmUser user) {
+		if (isSoftCertExpiryShown()) {
+			if (user.getPmUserDigiCert() != null && user.getPmUserDigiCert().getPmDigiCert() != null) {
 				getManagedBean().setSoftCertExpDate(user.getPmUserDigiCert().getPmDigiCert().getValidTo());
 			}
 		}
 
 	}
-	
-	public boolean isMofExpiryShown(){
-		if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) 
+
+	public boolean isMofExpiryShown() {
+		if (getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.FL_USER.value())){
+				|| getFacesScopes().hasRoleUser(RoleCode.FL_USER.value())) {
 			return true;
 		}
 		return false;
 	}
-	
-	public boolean isVirtualCertShown(){
-		if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) 
-				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())){
+
+	public boolean isVirtualCertShown() {
+		if (getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
 			return true;
 		}
 		return false;
 	}
-	
-	public boolean isSoftCertExpiryShown(){
-		if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) 
+
+	public boolean isSoftCertExpiryShown() {
+		if (getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.FL_USER.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())){
+				|| getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())) {
 			return true;
 		}
 		return false;
 	}
-	
-	
-	
-	private void constructRoles(){
-		List<String> rolesList=new ArrayList<String>();
+
+	private void constructRoles() {
+		List<String> rolesList = new ArrayList<String>();
 		int i = 0;
-		for(PmUserRole userRole : getManagedBean().getUserActiveRoles()){
-			rolesList.add(RoleHelper.getInstance().getRoleDescByCode(userRole.getPmRole().getRoleCode()).getRoleName());	
+		for (PmUserRole userRole : getManagedBean().getUserActiveRoles()) {
+			rolesList.add(RoleHelper.getInstance().getRoleDescByCode(userRole.getPmRole().getRoleCode()).getRoleName());
 			i++;
 		}
 		getManagedBean().setRoleTableScrollHeight(i > 2 ? 66 : (i * 22));
 		getManagedBean().setRolesList(rolesList);
 	}
-	
+
 	public int numberOfLines(String string, int cols) {
 		int rvalue = 1;
-		if(StringUtils.isNotBlank(string)){
-		    for (String strTmp : string.split("\n")) {
-		          rvalue ++;
-		          rvalue += strTmp.length() >= cols ? strTmp.length() / cols : 0;
-		    }
-		}else{
+		if (StringUtils.isNotBlank(string)) {
+			for (String strTmp : string.split("\n")) {
+				rvalue++;
+				rvalue += strTmp.length() >= cols ? strTmp.length() / cols : 0;
+			}
+		} else {
 			rvalue = 1;
 		}
-    
-        return rvalue;
-    }
-	
-	public boolean isTempSupplierRole(){
+
+		return rvalue;
+	}
+
+	public boolean isTempSupplierRole() {
 		return getFacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value()) ? true : false;
+	}
+
+	/** admin Search & Paging - Start */
+
+	/**
+	 * search admin profiles
+	 */
+	public void searchAdminProfile() {
+		logger.info("searchAdminProfile - start");
+		IUserSO userSO = null;
+		getManagedBean().setLazy(true);
+		try {
+			AdminReqDTO adminReqDTO = new AdminReqDTO();
+			if (authUserDetails.getPmUserOrgs() != null) {
+				adminReqDTO.setParameterCode(authUserDetails.getOrgTypeCode().getParameterCode());
+				adminReqDTO.setOrgTypeId(authUserDetails.getOrgTypeCode().getParameterId());
+				adminReqDTO.setOrgCode(getManagedBean().getCurrentProfile().getOrgValidity().getOrgCode());
+				for (PmUserOrg role : authUserDetails.getPmUserOrgs()) {
+					for (PmUserRole roleCode : role.getPmUserRoles()) {
+						adminReqDTO.setUserRoles(adminUserRoleMap.get(roleCode.getPmRole().getRoleCode()));
+					}
+				}
+			}
+			userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			if (adminReqDTO.getOrgCode() != null && adminReqDTO.getOrgTypeId() > 0
+					&& adminReqDTO.getUserRoles() != null) {
+				getManagedBean().setAdminDetReceivedList(userSO.searchAdminProfilesByOrgDetails(adminReqDTO));
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+
 	}
 
 	// //TODO: testing
