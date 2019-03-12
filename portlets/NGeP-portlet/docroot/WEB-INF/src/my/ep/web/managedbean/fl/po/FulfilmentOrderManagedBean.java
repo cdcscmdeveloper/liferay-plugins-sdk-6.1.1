@@ -6,7 +6,9 @@ package my.ep.web.managedbean.fl.po;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -14,15 +16,21 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
 import org.apache.log4j.Logger;
+import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.DualListModel;
+import org.primefaces.model.TreeNode;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
+import my.ep.persistence.entity.ct.VCtActiveContract;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
@@ -68,9 +76,12 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	private Long flOrderId;
 	private Long stopRequestId;
 	private String docNo;
+	private String delOrdNo;
+	private String delOrdSupNo;
 	private String title;
 	private PmOrgProfile selectedOrgProfile;
 	private SelectItem[] docStatusList;
+	private SelectItem[] docDeliveryOrderStatusList;
 	private Date fromDate;
 	private Date toDate;
 	
@@ -110,8 +121,9 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	private String contactPerson;
 	private String contactPhoneNo;
 	
-	//for termdays
+	private TreeNode deliveryLineItemRoot ;
 	
+	//for termdays
 	private String termDays;
 	private boolean removeFactoring;
 	private int selectedTabIndex;
@@ -140,6 +152,7 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	private String gfmasErrorDesc;
 	
 	private Long docStatusId;
+	private Long delOrdStatusId;
 	private List<Long> statusIds;
 	private BigDecimal totalPendingFl;
 	private BigDecimal totalPendingPartialFl;
@@ -227,9 +240,29 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 					reqDTO.setOrgProfileId(getSelectedOrgProfile().getOrgProfileId());
 				}
 				
+				if(getDelOrdNo() != null){
+					reqDTO.setFlDelOrdNo(getDelOrdNo());
+				}
+				
+				if(getDelOrdSupNo() != null){
+					reqDTO.setFlDelOrdSupNo(getDelOrdSupNo());
+				}
+
+				if(getDelOrdStatusId() != null){
+					reqDTO.setDelStatusId(delOrdStatusId);
+				}
+				
+				FlDeliveryOrder deliveryReqDTO = new FlDeliveryOrder();
+				
 				IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+				IDeliveryOrderSO deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
+				
 				FulfilmentResDTO resDTO = orderSO.searchPendingDoList(reqDTO);
 				if(resDTO.isSuccessful()) {
+					
+					for(FlFulfilmentOrder flFulfilmentPurchaseOrder : resDTO.getPendingDoResultBean().getResultList()) {
+							flFulfilmentPurchaseOrder.setFlDeliveryOrders(deliveryOrderSO.getDeliveryOrderByFulfilmentOrderId(flFulfilmentPurchaseOrder.getFulfilmentOrderId()).getDeliveryOrdersList());
+					}
 					return resDTO.getPendingDoResultBean();
 				}
 			} catch (Exception e) {
@@ -290,7 +323,7 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 			return null;
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see my.ep.web.managedbean.BaseManagedBean#getTaskName()
 	 */
@@ -1249,6 +1282,23 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 		this.docStatusId = docStatusId;
 	}
 
+	public Long getDelOrdStatusId() {
+		return delOrdStatusId;
+	}
+
+	public void setDelOrdStatusId(Long delOrdStatusId) {
+		this.delOrdStatusId = delOrdStatusId;
+	}
+
+	public SelectItem[] getDocDeliveryOrderStatusList() {
+		return docDeliveryOrderStatusList;
+	}
+
+	public void setDocDeliveryOrderStatusList(
+			SelectItem[] docDeliveryOrderStatusList) {
+		this.docDeliveryOrderStatusList = docDeliveryOrderStatusList;
+	}
+	
 	public String getGfmasErrorDesc() {
 		return gfmasErrorDesc;
 	}
@@ -1328,7 +1378,31 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	public void setDocNo(String docNo) {
 		this.docNo = docNo;
 	}
+	
+	public String getDelOrdNo() {
+		return delOrdNo;
+	}
 
+	public void setDelOrdNo(String delOrdNo) {
+		this.delOrdNo = delOrdNo;
+	}
+
+	public String getDelOrdSupNo() {
+		return delOrdSupNo;
+	}
+
+	public void setDelOrdSupNo(String delOrdSupNo) {
+		this.delOrdSupNo = delOrdSupNo;
+	}
+
+	public TreeNode getDeliveryLineItemRoot() {
+		return deliveryLineItemRoot;
+	}
+
+	public void setDeliveryLineItemRoot(TreeNode deliveryLineItemRoot) {
+		this.deliveryLineItemRoot = deliveryLineItemRoot;
+	}
+	
 	public String getTitle() {
 		return title;
 	}
