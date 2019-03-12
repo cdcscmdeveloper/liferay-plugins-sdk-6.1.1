@@ -237,7 +237,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			//reqDTO.setSmRemark(smRmk);
 			this.getManagedBean().getSmApplInquiry().setSmAppl(this.getManagedBean().getSmAppl());
 			reqDTO.setSmApplInquiry(this.getManagedBean().getSmApplInquiry());
-
+			reqDTO.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
 
 			SdoReviewResDTO resDTO = reqSO.submitBPMSdoReview(reqDTO);
 
