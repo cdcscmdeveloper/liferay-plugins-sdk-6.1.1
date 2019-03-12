@@ -3,6 +3,7 @@
  */
 package my.ep.web.managedbean.pm.profilepersonalization;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -10,6 +11,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import my.ep.dto.pm.authorization.role.AdminDetailsDTO;
+import my.ep.dto.pm.authorization.role.AdminResDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -17,6 +20,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.web.bean.pm.ChallengeQAList;
+import my.ep.web.bean.pm.UserProfilesSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -51,7 +55,9 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	private Date softCertExpDate;
 	private Date mofExpDate;
 	private int roleTableScrollHeight;
-
+	private boolean isLazy = false;
+	private UserProfilesSearchBean userProfileSearchBean= new UserProfilesSearchBean();
+	private List<AdminResDTO> adminDetReceivedList = new ArrayList<AdminResDTO>();
 	
 	public ProfilePersonalizationManagedBean(){}
 	
@@ -329,6 +335,30 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setRoleTableScrollHeight(int roleTableScrollHeight) {
 		this.roleTableScrollHeight = roleTableScrollHeight;
+	}
+
+	public boolean isLazy() {
+		return isLazy;
+	}
+
+	public void setLazy(boolean isLazy) {
+		this.isLazy = isLazy;
+	}
+
+	public UserProfilesSearchBean getUserProfileSearchBean() {
+		return userProfileSearchBean;
+	}
+
+	public void setUserProfileSearchBean(UserProfilesSearchBean userProfileSearchBean) {
+		this.userProfileSearchBean = userProfileSearchBean;
+	}
+
+	public List<AdminResDTO> getAdminDetReceivedList() {
+		return adminDetReceivedList;
+	}
+
+	public void setAdminDetReceivedList(List<AdminResDTO> list) {
+		this.adminDetReceivedList = list;
 	}
 
 }
