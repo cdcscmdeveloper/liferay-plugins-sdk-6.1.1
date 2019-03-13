@@ -326,6 +326,8 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	
     /** The Clone and Re-Quote btn. */
     private boolean cloneReQuote = Boolean.FALSE;	
+    	
+	private boolean cancel = Boolean.FALSE;
 	
     /**
      * Instantiates a new request note managed bean.
@@ -1912,5 +1914,13 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setCloneReQuote(boolean cloneReQuote) {
 		this.cloneReQuote = cloneReQuote;
+	}
+
+	public boolean isCancel() {
+		return cancel;
+	}
+
+	public void setCancel(boolean cancel) {
+		this.cancel = cancel;
 	}
 }
