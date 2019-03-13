@@ -83,9 +83,34 @@ import org.springframework.util.CollectionUtils;
 @ManagedBean(name = "directPurchaseBackingBean")
 @RequestScoped
 public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPurchaseManagedBean> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private IPagingDataModel<PmTrackingDiary> searchTrackingDiaryDataModel 	= new SearchTrackingDiaryPagingDataModel();
 	/** The direct purchase search page nav. */
 	private String DIRECT_PURCHASE_SEARCH_PAGE_NAV = "directPurchaseSearch";
+	private String DIRECT_PURCHASE_MAINTENANCE_PAGE_NAV = "directPurchaseMaintenance";
+	
+	public void preRenderDirectPurchaseMaintenance() {
+		debugLogger("preRenderDirectPurchaseMaintenance");
+		FacesContext fc = FacesContext.getCurrentInstance();
+		// reset search info
+		reset();
+
+		if (isGovernment()) {
+			getDocumentTypes(Boolean.TRUE, Boolean.TRUE);
+			getManagedBean().setGovernment(Boolean.TRUE);
+
+			// show default Ministry, Kumpulan PTJ and PTJ
+			getDefaultPtjAndMinistryValues();
+
+		} else if (isSupplier()) {
+			getDocumentTypes(Boolean.FALSE, Boolean.TRUE);
+			getManagedBean().setGovernment(Boolean.FALSE);
+		}
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, DIRECT_PURCHASE_MAINTENANCE_PAGE_NAV);
+	}
 
 	/**
 	 * Pre render direct purchase search.
@@ -97,14 +122,14 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		reset();
 		
 		if(isGovernment()){
-			getDocumentTypes(Boolean.TRUE);
+			getDocumentTypes(Boolean.TRUE, Boolean.FALSE);
 			getManagedBean().setGovernment(Boolean.TRUE);
 			
 			// show default Ministry, Kumpulan PTJ and PTJ
 			getDefaultPtjAndMinistryValues();
 
 		} else if(isSupplier()){
-			getDocumentTypes(Boolean.FALSE);
+			getDocumentTypes(Boolean.FALSE, Boolean.FALSE);
 			getManagedBean().setGovernment(Boolean.FALSE);
 		}
 		fc.getApplication()
@@ -139,7 +164,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	 * @param isGovernament the is governament
 	 * @return the document types
 	 */
-	private void getDocumentTypes(boolean isGovernament) {
+	private void getDocumentTypes(boolean isGovernament, boolean isMaintenance) {
 		List<SelectItem> items = null;
 		List<String> docTypeList = null;
 		try {
@@ -150,19 +175,22 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					getFacesScopes().getUserLocale())));
 
-			docTypeList.add(ParameterConst.DOCTYPE_SIMPLE_QUOTE);
-			docTypeList.add(ParameterConst.DOCTYPE_PURCHASE_INQUIRY);
-			if(isGovernament){
-				docTypeList.add(ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT);
-			}
-			
-			//Redmine 20311: remove RN search for Supplier
-			if(isGovernment()){
+			if (isMaintenance) {
 				docTypeList.add(ParameterConst.DOCTYPE_REQUEST_NOTE);
-			}
-			
-			docTypeList.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
+			} else {
+				docTypeList.add(ParameterConst.DOCTYPE_SIMPLE_QUOTE);
+				docTypeList.add(ParameterConst.DOCTYPE_PURCHASE_INQUIRY);
+				if (isGovernament) {
+					docTypeList.add(ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT);
+				}
 
+				// Redmine 20311: remove RN search for Supplier
+				if (isGovernment()) {
+					docTypeList.add(ParameterConst.DOCTYPE_REQUEST_NOTE);
+				}
+
+				docTypeList.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
+			}
 			for (String docType : docTypeList) {
 				items.add(new SelectItem(docType, ResourceBundleUtils.getMessage(
 						getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, docType), ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -317,6 +345,49 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	 *
 	 * @param dpObj the dp obj
 	 */
+	public void viewMaintenance(Object[] dpObj, boolean isCancel) {
+		log.info("viewMaintenance");
+		long docId = (long) dpObj[0];
+		String docNo = (String) dpObj[1];
+		String docType = (String) dpObj[3];
+		long statusId = (long) dpObj[4];
+
+		TrackingDiarySearchBackingBean diarySearchBackingBean = new TrackingDiarySearchBackingBean();
+		diarySearchBackingBean.getManagedBean().setDocNo(docNo);
+		diarySearchBackingBean.getManagedBean().setDocType(docType);
+		diarySearchBackingBean.getManagedBean().setStatusId(statusId);
+
+		if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_REQUEST_NOTE)) {
+			RequestNoteBackingBean rnBackingBean = new RequestNoteBackingBean();
+			rnBackingBean.viewRequestNote(docId);
+			rnBackingBean.getManagedBean().setDpObj(dpObj);
+			rnBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
+			rnBackingBean.getManagedBean().setCancel(isCancel);
+		} else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_INQUIRY)) {
+			PurchaseInquiryBackingBean prInqBackingBean = new PurchaseInquiryBackingBean();
+			prInqBackingBean.viewPurchaseInquiry(docId);
+			prInqBackingBean.getManagedBean().setDpObj(dpObj);
+			prInqBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
+		} else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT)) {
+			PurchaseInDefaultBackingBean pidBackingBean = new PurchaseInDefaultBackingBean();
+			pidBackingBean.viewPurchaseInDefault(docId);
+			pidBackingBean.getManagedBean().setDpObj(dpObj);
+			pidBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
+
+		} else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_SIMPLE_QUOTE)) {
+			SimpleQuoteBackingBean sqBackingBean = new SimpleQuoteBackingBean();
+			sqBackingBean.viewQuote(docId);
+			sqBackingBean.getManagedBean().setDpObj(dpObj);
+			sqBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
+
+		} else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_LETTER_OF_AWARD)) {
+			LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
+			loaDetailBackingBean.viewLOA(docId);
+			loaDetailBackingBean.getManagedBean().setDpObj(dpObj);
+			loaDetailBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
+		}
+	}
+
 	public void viewDoc(Object[] dpObj){
 		debugLogger("viewDoc");
 		long docId = (long) dpObj[0];

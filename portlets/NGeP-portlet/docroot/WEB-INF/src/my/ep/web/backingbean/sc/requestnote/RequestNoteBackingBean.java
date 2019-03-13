@@ -3233,6 +3233,30 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return "catalogueSearch";
 	}
 
+	public void cancelPendingItemCodification() {
+		ScRequestNote requestNote = getManagedBean().getRequestNote();
+
+		log.info("cancelPendingItemCodification");
+		FacesScopes facesScopes = new FacesScopes();
+		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+		requestNoteReqDTO.setRoleCode(RoleCode.RN_APPROVER.value());
+		requestNoteReqDTO.setPmUser(facesScopes.getUserSessionBean());
+		requestNoteReqDTO.setOutcome(BpmOutcomeConst.BPM_CANCEL);
+		requestNoteReqDTO.setUserLocale(facesScopes.getUserLocale());
+		requestNoteReqDTO.setRequestNote(requestNote);
+		requestNoteReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
+
+		RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().cancelPendingItemCodification(requestNoteReqDTO);
+		if (requestNoteResDTO.isSuccessful()) {
+			ScRequestNote scRequestNote = requestNoteResDTO.getRequestNoteDetail();
+			successMessage(MessageConst.INFO_700010, ParameterTypeConst.DOCUMENT_TYPES,
+					ParameterConst.DOCTYPE_REQUEST_NOTE, scRequestNote.getRequestNoteNo(), Boolean.TRUE);
+			super.renewSesionObject();
+		} else {
+			throw new EpException(MessageConst.ERROR_700020);
+		}
+	}
+
 	/**
 	 * Cancel item detail popup.
 	 */
