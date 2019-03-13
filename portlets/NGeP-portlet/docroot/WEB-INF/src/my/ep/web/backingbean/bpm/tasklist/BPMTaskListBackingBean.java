@@ -28,7 +28,6 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
-import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -106,6 +105,8 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_INQUIRY);
 			temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME,
 					SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT);
+			temp.put(SCProcessNameConst.START_PURCHASE_INQUIRY_CREATION + SCProcessNameConst.START_PURCHASE_INQUIRY,
+					SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_INQUIRY);
 
 			temp.put(SCProcessNameConst.START_SIMPLE_QUOTE_CREATION,
 					SourcingConstants.NAV_PAGE_REVIEW_SIMPLE_QUOTE);
@@ -644,14 +645,11 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 				.getServiceObject(IBpmSO.class);
 
-		String taskId = FacesContext.getCurrentInstance().getExternalContext()
-				.getRequestParameterMap().get("taskId");
-		String process = FacesContext.getCurrentInstance().getExternalContext()
-				.getRequestParameterMap().get("process");
-		String taskName = FacesContext.getCurrentInstance()
-				.getExternalContext().getRequestParameterMap().get("taskName");
-		String docType = FacesContext.getCurrentInstance().getExternalContext()
-				.getRequestParameterMap().get("docType");
+		String taskId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("taskId");
+		String process = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("process");
+		String taskName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
+				.get("taskName");
+		String docType = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docType");
 
 		String claim = FacesContext.getCurrentInstance().getExternalContext()
 				.getRequestParameterMap().get("isClaim");
@@ -673,17 +671,14 @@ BaseBackingBean<BPMTaskListManagedBean> {
 
 			String url = "";
 
-			if (!this.getManagedBean().getBpmMap().isEmpty()
-					&& this.getManagedBean().getBpmMap().size() > 0) {
+			if (!this.getManagedBean().getBpmMap().isEmpty() && this.getManagedBean().getBpmMap().size() > 0) {
 
 				url = (String) this.getManagedBean().getBpmMap().get(process);
 				if (url == null || url.isEmpty()) {
-					url = (String) this.getManagedBean().getBpmMap()
-							.get(process + taskName);
+					url = (String) this.getManagedBean().getBpmMap().get(process + taskName);
 				}
 				if (url == null || url.isEmpty()) {
-					url = (String) this.getManagedBean().getBpmMap()
-							.get(process + docType);
+					url = (String) this.getManagedBean().getBpmMap().get(process + docType);
 				}
 			}
 			log.info("url:" + url);
