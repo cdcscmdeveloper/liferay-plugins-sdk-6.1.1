@@ -315,7 +315,9 @@
 		</p:panel>
 		
 		<p:panel header="#{lbl['lbl.sm.addtnl.catCodes.panHdr']}" toggleable="true">
-			<h:outputText value="#{lbl['lbl.sm.addtnl.catCodes.spl.info']}" escape="false" />
+			<p:outputPanel rendered="#{backingBean.managedBean.smAppl.supplierType ne 'J'}">
+				<h:outputText value="#{lbl['lbl.sm.addtnl.catCodes.spl.info']}" escape="false" />
+			</p:outputPanel>
 			<c:choose>
 				<c:when
 					test="#{!backingBean.managedBean.poUser and !backingBean.managedBean.approverUser  and backingBean.managedBean.smAppl.supplierType ne 'J'}">
