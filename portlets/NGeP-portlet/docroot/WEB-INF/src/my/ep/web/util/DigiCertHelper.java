@@ -142,6 +142,17 @@ public class DigiCertHelper {
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setUserId(pmUser.getUserId());
 			PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelByUserId(reqDTO);
+			log.info("getPersonnelId: " + resDTO.getSmPersonnel().getPersonnelId());
+
+			if (resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ
+					|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING
+					|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED
+					|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REQ_FAILED) {
+				throw new EpException(MessageConst.ERROR_DIGICERT_776063);
+
+			} else if (resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PENDING_REQ) {
+				throw new EpException(MessageConst.ERROR_DIGICERT_776064);
+			}
 
 			switch (res.getStatusCode()) {
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
@@ -149,19 +160,10 @@ public class DigiCertHelper {
 						.get(IKMCAPIResponse.GetChallengeQuestionResonse.CHALLENGE_RESPONSES);
 
 				if (retVal.size() == 0) {
-					if (resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ
-							|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING
-							|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED
-							|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REQ_FAILED) {
-						throw new EpException(MessageConst.ERROR_DIGICERT_776063);
-					}
-
-					if (resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PENDING_REQ) {
-						throw new EpException(MessageConst.ERROR_DIGICERT_776064);
-					}
-					break;
+					throw new EpException(MessageConst.ERROR_DIGICERT_776051);
 				}
-				
+				break;
+
 			default:
 				throw new EpException(MessageConst.ERROR_DIGICERT_776062);
 			}
