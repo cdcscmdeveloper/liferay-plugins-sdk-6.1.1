@@ -54,7 +54,7 @@
 			<p:column headerText="#{lbl['lbl.fl.delivery.address']}" style="white-space:normal;text-align:center">
 				<p:commandLink oncomplete="addManualDeliveryAddr.show();"
 					action="#{contractRequestBackingBean.editManualAddress(address)}"
-					update=":form:addManualDelAddrDialog,@(.orderSummaryChange)"
+					update=":form:ptjRadio,:form:chargeOrgProfileNew,:form:chargeOrgProfileNewHidden,:form:addManualDelAddrDialog,@(.orderSummaryChange)"
 					disabled="#{contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
 					style="padding-right:5px" rendered="#{address.receivingGrp!=null}">
 					<p:graphicImage value="/css/images/design/ico-view-edit.png" />
@@ -502,33 +502,17 @@
        				<!-- start added for #24353 -->
 					<td><p:outputLabel value="#{lbl['lbl.fl.manual.add.delivery.add.new']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" />
-						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.delivery.address.new']}"/>
 					</td>
 					<td>
 						<p:selectOneRadio id="ptjRadio"
-							value="#{contractRequestBackingBean.managedBean.selectedPtjOption}">
+							value="#{contractRequestBackingBean.managedBean.flManualAddress.flAddress.selectedPtjCodeRadioBox}">
 							<f:selectItem itemLabel="#{lbl['lbl.btn.ptj.issued']}" itemValue="1"/>
 							<f:selectItem itemLabel="#{lbl['lbl.btn.ptj.others']}" itemValue="2"/>
 							<p:ajax listener="#{contractRequestBackingBean.viewSelectedPTJRadio}"
-								update="chargeOrgProfileNew,searchPtjNew" process="@this" />
-						</p:selectOneRadio>
-						<p:inputTextarea id="chargeOrgProfileNew" rows="2" cols="63" disabled="#{contractRequestBackingBean.managedBean.selectedPtjOption==1}" readonly="#{contractRequestBackingBean.managedBean.selectedPtjOption==1}" autoResize="false" style="resize:none;" 
-						required="#{contractRequestBackingBean.managedBean.required}"
-						label="#{lbl['lbl.fl.manual.add.delivery.add.new']}"
-						value="#{contractRequestBackingBean.managedBean.chargeOrgProfileNewValue}" />
+								update="chargeOrgProfileNew,searchPtjNew,chargeOrgProfileNewHidden" process="@this" />
+						</p:selectOneRadio>	
 					</td>
-					<td>
-						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj.new']}" />
-						<p:commandLink id="searchPtjNew"
-						oncomplete="dlgChargedPtjNew.show();" immediate="true"
-						action="#{contractRequestBackingBean.resetPMAddressTypeDetails}"
-						update=":form:chargeOrgProfileNew,chargeResultPanelNew2,dialogChargedPtjNew"
-						disabled="#{contractRequestBackingBean.managedBean.selectedPtjOption==1}"
-						style="padding-left:10px">
-						<p:graphicImage value="/css/images/design/search.png" />
-						</p:commandLink>
-						<p:message for="chargeOrgProfileNew" display="icon" />
-					</td>
+					<td></td>
 					<!-- end added for #24353 -->
 				</tr>
 				<tr>
@@ -542,6 +526,34 @@
 						required="#{contractRequestBackingBean.managedBean.required}"/>
 						</td>
 					<td></td>
+										<!-- start added for #24353 -->
+					<td><p:outputLabel value="" /></td>
+					<td>
+ 						<p:inputTextarea cols="35" rows="4" id="chargeOrgProfileNew"
+						required="#{contractRequestBackingBean.managedBean.required}"
+						onkeyup="limitTextArea(this,500);"
+						onkeydown="limitTextArea(this,500);"
+						autoResize="false"
+						style=" margin-bottom:5px;"
+						disabled="#{contractRequestBackingBean.managedBean.flManualAddress.flAddress.selectedPtjCodeRadioBox==1}"
+						label="#{lbl['lbl.fl.manual.add.delivery.add.new']}"
+						readonly="true"
+						value="#{contractRequestBackingBean.managedBean.flManualAddress.flAddress.selectedPtjCodeNameValue}"> 
+						</p:inputTextarea>
+					</td>
+					<td>
+						<p:commandLink id="searchPtjNew"
+						oncomplete="dlgChargedPtjNew.show();" immediate="true"
+						action="#{contractRequestBackingBean.resetPMAddressTypeDetails}"
+						update=":form:chargeOrgProfileNew,chargeResultPanelNew2,dialogChargedPtjNew,chargeOrgProfileNewHidden"
+						disabled="#{contractRequestBackingBean.managedBean.flManualAddress.flAddress.selectedPtjCodeRadioBox==1}"
+						style="padding-left:10px">
+						<p:graphicImage value="/css/images/design/search.png" />
+						</p:commandLink>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.delivery.address.new']}"/>
+						<p:message for="chargeOrgProfileNewHidden" display="icon" />
+					</td>
+					<!-- end added for #24353 -->
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.faxno']}" /></td>
@@ -562,6 +574,13 @@
 							number="#{contractRequestBackingBean.managedBean.flManualAddress.flAddress.contactMobileNo}"
 							validatorMessage="#{lbl['lbl.fl.mobile']} - #{lbl['lbl.fl.invalidNo']}" /></td>
 					<td></td>
+					<td></td>
+					<td><p:inputText type="hidden" id="chargeOrgProfileNewHidden"
+							required="#{contractRequestBackingBean.managedBean.required}"
+							label="#{lbl['lbl.fl.manual.add.delivery.add.new']}" maxlength="85"
+							value="#{contractRequestBackingBean.managedBean.flManualAddress.flAddress.selectedPtjCodeNameValue}"
+							size="34"></p:inputText>
+					</td>
 				</tr>
 			</table>
 		</p:panel>
@@ -964,7 +983,7 @@
 			 </p:panel> 
 			 <!-- panel chargeResultPanelNew2 end added for #24353 -->          
            			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.select']}" process="@this"  update="chargeOrgProfileNew" id="chargePtjSelectBtnNew2"
+				<p:commandButton value="#{lbl['lbl.btn.select']}" process="@this"  update="chargeOrgProfileNew,chargeOrgProfileNewHidden" id="chargePtjSelectBtnNew2"
 					disabled="#{fn:length(contractRequestBackingBean.pmAddressTypeDataModel.list) == 0 }"
 				    action="#{contractRequestBackingBean.addChargedPmAddressType()}" onclick="dlgChargedPtjNew.hide();" immediate="true" />
 				    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="dlgChargedPtjNew.hide();" />
