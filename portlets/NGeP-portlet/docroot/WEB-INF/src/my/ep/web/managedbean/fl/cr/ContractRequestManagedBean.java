@@ -168,18 +168,13 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private String tempLogin; //TODO: temp and to be removed
 	private String espkbCommitmentNo;
 	private String ptjCodeName;
-
 	//start added for #24353
-	private String chargeOrgProfileNewValue;
 	private String ptjCodeNameNew;
 	private String ptjCodeNameSearchValuesNew;
-	private String selectedPtjValue;
 	private String districtCode;
 	private Long stateId;
 	private List<PmDistrict> searchDistrictList;
-	private String selectedPtjOption;
 	//end added for #24353
-
 	private String ptjCodeNameSearchValues;
 	private String itemDesc;
 	private String gstRegistrationNo;
@@ -2906,18 +2901,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	public void setOldGstRateFlg(boolean oldGstRateFlg) {
 		this.oldGstRateFlg = oldGstRateFlg;
 	}
-
-	
-
-	public String getChargeOrgProfileNewValue() {
-		return chargeOrgProfileNewValue;
-	}
-
-	public void setChargeOrgProfileNewValue(String chargeOrgProfileNewValue) {
-		this.chargeOrgProfileNewValue = chargeOrgProfileNewValue;
-	}
-
-
 	
 	//start added for #24353
 	public String getPtjCodeNameNew() {
@@ -2960,26 +2943,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	public void setSearchDistrictList(List<PmDistrict> searchDistrictList) {
 		this.searchDistrictList = searchDistrictList;
 	}
-
-	public String getSelectedPtjOption() {
-		return selectedPtjOption;
-	}
-
-	public void setSelectedPtjOption(String selectedPtjOption) {
-		this.selectedPtjOption = selectedPtjOption;
-	}
-
-	public String getSelectedPtjValue() {
-		return selectedPtjValue;
-	}
-
-	public void setSelectedPtjValue(String selectedPtjValue) {
-		this.selectedPtjValue = selectedPtjValue;
-	}
-	
-	//end added for #24353
-
-	
 	//end added for #24353
 
 	public boolean isRadioCheckDeliveryDate() {
