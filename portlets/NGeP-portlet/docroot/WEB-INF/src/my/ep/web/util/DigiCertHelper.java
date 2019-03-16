@@ -142,16 +142,20 @@ public class DigiCertHelper {
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setUserId(pmUser.getUserId());
 			PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelByUserId(reqDTO);
-			log.info("getPersonnelId: " + resDTO.getSmPersonnel().getPersonnelId());
+			log.info("getPersonnelId:: " + resDTO.getSmPersonnel().getPersonnelId());
+			log.info("getSoftcertFlg:: " + resDTO.getSmPersonnel().getSoftcertFlg());
 
-			if (resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ
-					|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING
-					|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED
-					|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REQ_FAILED) {
-				throw new EpException(MessageConst.ERROR_DIGICERT_776063);
-
-			} else if (resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PENDING_REQ) {
-				throw new EpException(MessageConst.ERROR_DIGICERT_776064);
+			if (!(resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_ISSUED)
+					&& !(resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL)) {
+				if (resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ
+						|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING
+						|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PENDING_REQ) {
+					log.info("getSoftcertFlg|776063 1 :: " + resDTO.getSmPersonnel().getSoftcertFlg());
+					throw new EpException(MessageConst.ERROR_DIGICERT_776063);
+				} else {
+					log.info("getSoftcertFlg|776064 2 :: " + resDTO.getSmPersonnel().getSoftcertFlg());
+					throw new EpException(MessageConst.ERROR_DIGICERT_776064);
+				}
 			}
 
 			switch (res.getStatusCode()) {
