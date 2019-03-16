@@ -149,7 +149,50 @@ public class CdTrackingDiaryBackingBean extends BaseBackingBean<CdTrackingDiaryM
 		}
 		return imagePath;
 	}
+	public boolean isAllSupplier() {
 
+		FacesScopes fs = new FacesScopes();
+		return fs.hasRoleUser("SUPPLIER_ADMIN")
+				|| fs.hasRoleUser("SUPPLIER_USER")
+				|| fs.hasRoleUser("MOF_SUPPLIER_USER")
+				|| fs.hasRoleUser("MOF_SUPPLIER_ADMIN")
+				|| fs.hasRoleUser("BASIC_SUPPLIER_USER")
+				|| fs.hasRoleUser("BASIC_SUPPLIER_ADMIN")
+				|| fs.hasRoleUser("SUPPLIER_TEMP")
+				|| fs.hasRoleUser("G2G_USER")
+				|| fs.hasRoleUser("G2G_ADMIN")
+				|| fs.hasRoleUser("GOVT_SELLER")
+				|| fs.hasRoleUser("CM_USER");
+	}
+	private void loadRemark(){
+		FacesScopes fs = new FacesScopes();
+		List<CmRemark> cmRemarkList = new ArrayList<CmRemark>();
+		
+		if(!isAllSupplier()){
+			ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
+					.getInstance().getServiceObject("cm", ICodificationSO.class);
+			CodificationReqDTO remarkReqDTO = new CodificationReqDTO();
+			remarkReqDTO.setRequestCode(this.getManagedBean().getRequestCode());
+			CodificationResDTO remarkResDTO = codificationSO.getCodificationRemarks(remarkReqDTO);
+			
+			if( remarkResDTO.getRemarkList()!=null &&  remarkResDTO.getRemarkList().size()>0){
+				for(CmRemark remark: remarkResDTO.getRemarkList()){
+					remark.setBrandNew(false);
+					cmRemarkList.add(remark);
+				}
+			}
+		}else{
+			List<CmRemark> remarkList = getLastRemarkBeforeCompletion(this.getManagedBean().getRequestCode());
+			if(remarkList!=null && remarkList.size() > 0){
+				for(CmRemark remark: remarkList){
+					remark.setBrandNew(false);
+					cmRemarkList.add(remark);
+				}
+			}
+		}
+		this.getManagedBean().setSelectedRemarks(cmRemarkList);
+	}
+	
 	public String goToTrackingDiarySearch(Object[] unspscObj) {
 
 		getManagedBean().setObject(unspscObj);
@@ -231,41 +274,10 @@ public class CdTrackingDiaryBackingBean extends BaseBackingBean<CdTrackingDiaryM
 							this.getManagedBean().setUnspscRecommendInd(true);
 						}
 					}
-					List<CmRemark> remarkList = new ArrayList<CmRemark>();
-					this.getManagedBean().setSelectedRemarks(remarkList);
-					ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
-							.getInstance().getServiceObject("cm", ICodificationSO.class);
-					CodificationReqDTO remarkReqDTO = new CodificationReqDTO();
-					remarkReqDTO.setRequestCode(this.getManagedBean().getRequestCode());
-					CodificationResDTO remarkResDTO = codificationSO.getCodificationRemarks(remarkReqDTO);
-					List<Long> lastStatus = new ArrayList<Long>();
-					lastStatus.add(Long.valueOf(15017));
-					lastStatus.add(Long.valueOf(15009));
-//					lastStatus.add(Long.valueOf(15002));
-//					lastStatus.add(Long.valueOf(15003));
-//					lastStatus.add(Long.valueOf(15005));
-//					lastStatus.add(Long.valueOf(15012));
-
-					if( remarkResDTO.getRemarkList()!=null &&  remarkResDTO.getRemarkList().size()>0){
-						log.info("Last status with remark: " + remarkResDTO.getRemarkList().get(0).getCmWorkflowStatus().getPmStatus().getStatusId());
-						log.info("Last status on workflow: " + statusId);
-
-						for(Long status: lastStatus){						
-							if(statusId.equals(status) && (isSupplierUser() || isSupplierAdmin()) ){
-								this.getManagedBean().getSelectedRemarks().add(remarkResDTO.getRemarkList().get(0));
-								break;
-							}
-						}			
-						if((isCatalogueAdmin() || isCodeAdmin() ||  isCdCommittee()) && this.getManagedBean().getSelectedRemarks().size()<1){
-							for(CmRemark remark:remarkResDTO.getRemarkList()){
-								this.getManagedBean().getSelectedRemarks().add(remark);
-							}
-						}
-					}
 				}
 			}
 		}
-
+		loadRemark();
 		return NAV_TO_CODIFICATION_DETAIL_SEARCH + "?faces-redirect=true";
 	}
 
@@ -330,5 +342,19 @@ public class CdTrackingDiaryBackingBean extends BaseBackingBean<CdTrackingDiaryM
 		sb.append(String.format("[docId=%s]", docId));
 		searchBean.setDescription("searchTrackingDiary" + sb.toString() + "[Caller:CdTrackingDiaryBackingBean.SearchTrackingDiaryPagingDataModel]");
 	}
+	
+	public List<CmRemark> getLastRemarkBeforeCompletion(CmRequestCode requestCode){
+		log.info("Passed request : " +requestCode.getDocNo());
+		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
+				.getInstance().getServiceObject("cm", ICodificationSO.class);
+		CodificationReqDTO reqDTO = new CodificationReqDTO();
+		reqDTO.setRequestCode(requestCode);
+		CodificationResDTO resDTO = codificationSO.getLastRemarkBeforeCompletion(reqDTO);
+		return resDTO.getRemarkList();
+	}
+	
+
+
+
 }
 
