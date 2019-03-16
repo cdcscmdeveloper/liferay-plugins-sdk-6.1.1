@@ -24,7 +24,8 @@
 						rendered="#{bpmTasklistBackingBean.managedBean.claim and action=='SUBMIT'}"
 						oncomplete="extensionConfirmation.show()"
 						update=":form:extensionConfirmationId"
-						action="#{unspscCodeBackingBean.checkRecomendOrSubmit()}"></p:commandButton>
+						action="#{unspscCodeBackingBean.checkRecomendOrSubmit()}"
+						disabled="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1}"></p:commandButton>
 						
 					<p:commandButton value="#{lbl['lbl.bpm.action.RECOMMEND_TO_SUPPLIER']}"
 						action="#{unspscCodeBackingBean.bpmTesting('RECOMMEND_TO_SUPPLIER')}"  
@@ -56,7 +57,7 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.rpt.unspscCode']}"></p:outputLabel></td>
 						<td><p:inputText value="#{unspscCodeBackingBean.managedBean.reviewExtCodeList[0].tempCode}" size="40" disabled="true" />
-								<p:commandLink disabled ="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1}" style="margin-left: 10px;"  action="#{unspscCodeBackingBean.managedBean.toggleShowRecommend()}" 
+								<p:commandLink disabled ="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1 and unspscCodeBackingBean.managedBean.renderV2 }" style="margin-left: 10px;"  action="#{unspscCodeBackingBean.managedBean.toggleShowRecommend()}" 
 									update="recommendPanelId">
 									<p:graphicImage value="/css/images/design/search.png" />
 								</p:commandLink>
@@ -188,7 +189,7 @@
 
 		</h:panelGroup>
 		<h:panelGroup id="recommendPanelId">
-					<p:panel header="#{lbl['lbl.cm.search.recommend']}" toggleable="true"  rendered="#{unspscCodeBackingBean.managedBean.isShowRecommend()}">
+					<p:panel header="#{lbl['lbl.cm.search.recommend']}" toggleable="true"  rendered="#{unspscCodeBackingBean.managedBean.isShowRecommend() and unspscCodeBackingBean.managedBean.renderV2 }">
 				<p:dataTable id="recomemendUnspscId" rowIndexVar="rowIndex"
 					value="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes}"
 					var="unspscObj" width="100%">
