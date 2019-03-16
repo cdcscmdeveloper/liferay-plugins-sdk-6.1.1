@@ -789,7 +789,25 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 					commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc()
 					.getUnspscTitle());
 		}
-
+		Collections.sort(resDTO.getCommodityObj().getCmBrand(), new Comparator<CmBrand>() {
+		    @Override
+		    public int compare(CmBrand t1, CmBrand t2) {
+		        return compareFirstChoice(t1.getBrandCode(), t2.getBrandCode(), t1.getBrandName().trim().compareToIgnoreCase(t2.getBrandName().trim()));
+		    }
+		});
+		Collections.sort(resDTO.getCommodityObj().getCmType(), new Comparator<CmType>() {
+		    @Override
+		    public int compare(CmType t1, CmType t2) {
+		        return compareFirstChoice(t1.getTypeCode(), t2.getTypeCode(), t1.getTypeName().trim().compareToIgnoreCase(t2.getTypeName().trim()));
+		    }
+		});
+		Collections.sort(resDTO.getCommodityObj().getCmMeasurement(), new Comparator<CmMeasurement>() {
+		    @Override
+		    public int compare(CmMeasurement t1, CmMeasurement t2) {
+		        return compareFirstChoice(t1.getMeasurementCode(), t2.getMeasurementCode(), t1.getMeasurementName().trim().compareToIgnoreCase(t2.getMeasurementName().trim()));
+		    }
+		});
+		
 		for (CmBrand brand : resDTO.getCommodityObj().getCmBrand()) {
 			if (!StringUtils.isBlank(brand.getBrandName()) && brand.getRecordStatusFlg() ==1) {
 				this.getManagedBean()
@@ -819,7 +837,12 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		}
 
 		resDTO = unspscSO.searchColor(reqDTO);
-
+		Collections.sort(resDTO.getColorList(), new Comparator<CmColor>() {
+		    @Override
+		    public int compare(CmColor t1, CmColor t2) {
+		        return compareFirstChoice(t1.getColorCode(), t2.getColorCode(), t1.getColorName().trim().compareToIgnoreCase(t2.getColorName().trim()));
+		    }
+		});
 		for (CmColor color : resDTO.getColorList()) {
 			if (!StringUtils.isBlank(color.getColorName()) && color.getRecordStatusFlg()==1) {
 				this.getManagedBean()
@@ -2569,40 +2592,32 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		reqDTO.setToken(token);
 		reqDTO.setTaskId(unspscBB.getManagedBean().getTaskId());
 
-		// if (unspscBB.isCatalogueAdmin()) {
-		//
-		// log.info("***catalogue admin*** REQUEST EXTENSION");
-		// reqDTO.setOutCome("REQUEST EXTENSION");
-		// } else if (unspscBB.isCodeAdmin()) {
-		//
-		// log.info("***code admin*** SUBMIT");
-		// reqDTO.setOutCome("SUBMIT");
-		// }
-
-		if (this.getManagedBean().getCurrentTaskName() != null
-				&& (this.getManagedBean()
-				.getCurrentTaskName()
-				.equalsIgnoreCase( my.ep.constant.cm.CmConst.TASK_CREATE_TEMP_CODE) || 
-//					this.getManagedBean().getCurrentTaskName().equalsIgnoreCase( my.ep.constant.cm.CmConst.TASK_REVIEW_EXT_CODE) ||
-						this.getManagedBean().getCurrentTaskName().equalsIgnoreCase( my.ep.constant.cm.CmConst.TASK_REVISE_TEMP_CODE))){
-			log.info("***code admin*** SUBMIT");
+		if (this.getManagedBean().getCurrentTaskName() != null && (
+				this.getManagedBean() .getCurrentTaskName().equalsIgnoreCase( my.ep.constant.cm.CmConst.TASK_CREATE_TEMP_CODE) || 
+					this.getManagedBean().getCurrentTaskName().equalsIgnoreCase( my.ep.constant.cm.CmConst.TASK_REVIEW_EXT_CODE) ||
+						this.getManagedBean().getCurrentTaskName().equalsIgnoreCase( my.ep.constant.cm.CmConst.TASK_REVISE_TEMP_CODE) ||
+						this.getManagedBean().getCurrentTaskName().equalsIgnoreCase( my.ep.constant.cm.CmConst.TASK_APPROVE_AND_PUBLISH_EXT_CODE))){
+			log.info("***code admin*** SUBMIT - PSEUDO_REQUEST_EXTENSION");
 			reqDTO.setOutCome("SUBMIT");
 		} else {
-			log.info("***catalogue admin*** REQUEST EXTENSION");
+			log.info("***catalogue admin*** REQUEST_EXTENSION");
 			reqDTO.setOutCome("REQUEST_EXTENSION");
-
 		}
 		IStatusSO statusSO = (IStatusSO) BusinessDelegate
 				.getInstance()
 				.getServiceObject("pm", IStatusSO.class);
+		
+		boolean requestAndPublish = this.getManagedBean().getCurrentTaskName().equalsIgnoreCase( my.ep.constant.cm.CmConst.TASK_APPROVE_AND_PUBLISH_EXT_CODE);
+		
 		StatusReqDTO statusReqDTO = new StatusReqDTO();
-		statusReqDTO.setStatusId(15004L);
+		statusReqDTO.setStatusId(requestAndPublish ? 15015L: 15004L);
 		StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 //		if(reqDTO.getOutCome().equalsIgnoreCase("REQUEST_EXTENSION") || 
 //				this.getManagedBean().getCurrentTaskName().equalsIgnoreCase( my.ep.constant.cm.CmConst.TASK_REVIEW_EXT_CODE) || 
 //					this.getManagedBean().getCurrentTaskName().equalsIgnoreCase( my.ep.constant.cm.CmConst.TASK_APPROVE_EXT_CODE)){
 			reqDTO.setTrackingStatus(true);			
-			String actionDesc = "Kod Item "+ unspscBB.getManagedBean().getReviewExtCodeList().get(0).getDocNo() +" telah diserah kepada Jawatankuasa Kodifikasi (CDC) untuk kelulusan." ;
+			String actionDesc = requestAndPublish ?  "Kod Item "+ unspscBB.getManagedBean().getReviewExtCodeList().get(0).getDocNo() +" telah disyorkan dan diiklankan oleh Jawatankuasa Kodifikasi (CDC)." : 
+				"Kod Item "+ unspscBB.getManagedBean().getReviewExtCodeList().get(0).getDocNo() +" telah diserah kepada Jawatankuasa Kodifikasi (CDC) untuk kelulusan." ;
 			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus(),"CU"));
 //		}
 		
@@ -2615,25 +2630,49 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 							MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale()));
 		}
-		if(unspscBB.getManagedBean().getRequestCode().isRequestBrand()){
-			unspscBB.getManagedBean().getRequestCode().setBrandName(this.getManagedBean().getTempBrandName());
+		
+		if(requestAndPublish){
+			if(unspscBB.getManagedBean().getRequestCode().isRequestBrand()){
+				unspscBB.getManagedBean().getRequestCode().setReviewedBrandName(this.getManagedBean().getTempBrandName());
+			}else{
+				unspscBB.getManagedBean().getRequestCode().setReviewedBrandName(prevBrandName);
+			}
+			if(unspscBB.getManagedBean().getRequestCode().isRequestType()){
+				unspscBB.getManagedBean().getRequestCode().setReviewedTypeName(this.getManagedBean().getTempTypeName());
+			}else{
+				unspscBB.getManagedBean().getRequestCode().setReviewedTypeName(prevTypeName);
+			}
+			if(unspscBB.getManagedBean().getRequestCode().isRequestMeasurement()){
+				unspscBB.getManagedBean().getRequestCode().setReviewedMeasurementName(this.getManagedBean().getTempMeasurementName());
+			}else{
+				unspscBB.getManagedBean().getRequestCode().setReviewedMeasurementName(prevMeasurementName);
+			}
+			if(unspscBB.getManagedBean().getRequestCode().isRequestColor()){
+				unspscBB.getManagedBean().getRequestCode().setReviewedColorName(this.getManagedBean().getTempColorName());
+			}else{
+				unspscBB.getManagedBean().getRequestCode().setReviewedColorName(prevColorName);
+			}
 		}else{
-			unspscBB.getManagedBean().getRequestCode().setBrandName(prevBrandName);
-		}
-		if(unspscBB.getManagedBean().getRequestCode().isRequestType()){
-			unspscBB.getManagedBean().getRequestCode().setTypeName(this.getManagedBean().getTempTypeName());
-		}else{
-			unspscBB.getManagedBean().getRequestCode().setTypeName(prevTypeName);
-		}
-		if(unspscBB.getManagedBean().getRequestCode().isRequestMeasurement()){
-			unspscBB.getManagedBean().getRequestCode().setMeasurementName(this.getManagedBean().getTempMeasurementName());
-		}else{
-			unspscBB.getManagedBean().getRequestCode().setMeasurementName(prevMeasurementName);
-		}
-		if(unspscBB.getManagedBean().getRequestCode().isRequestColor()){
-			unspscBB.getManagedBean().getRequestCode().setColorName(this.getManagedBean().getTempColorName());
-		}else{
-			unspscBB.getManagedBean().getRequestCode().setColorName(prevColorName);
+			if(unspscBB.getManagedBean().getRequestCode().isRequestBrand()){
+				unspscBB.getManagedBean().getRequestCode().setBrandName(this.getManagedBean().getTempBrandName());
+			}else{
+				unspscBB.getManagedBean().getRequestCode().setBrandName(prevBrandName);
+			}
+			if(unspscBB.getManagedBean().getRequestCode().isRequestType()){
+				unspscBB.getManagedBean().getRequestCode().setTypeName(this.getManagedBean().getTempTypeName());
+			}else{
+				unspscBB.getManagedBean().getRequestCode().setTypeName(prevTypeName);
+			}
+			if(unspscBB.getManagedBean().getRequestCode().isRequestMeasurement()){
+				unspscBB.getManagedBean().getRequestCode().setMeasurementName(this.getManagedBean().getTempMeasurementName());
+			}else{
+				unspscBB.getManagedBean().getRequestCode().setMeasurementName(prevMeasurementName);
+			}
+			if(unspscBB.getManagedBean().getRequestCode().isRequestColor()){
+				unspscBB.getManagedBean().getRequestCode().setColorName(this.getManagedBean().getTempColorName());
+			}else{
+				unspscBB.getManagedBean().getRequestCode().setColorName(prevColorName);
+			}
 		}
 		reqDTO.getRequestExtList().add(
 				unspscBB.getManagedBean().getRequestCode());
@@ -2650,8 +2689,11 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				reqDTO.getCdcList().add(user.getLoginId());
 			}
 		}
-
-		resDTO = unspscSO.updateExtensionRequest(reqDTO);
+		if(requestAndPublish){
+			resDTO = unspscSO.publishCodificationRequest(reqDTO);
+		}else{
+			resDTO = unspscSO.updateExtensionRequest(reqDTO);
+		}
 		
 		
 		
