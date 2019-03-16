@@ -13,12 +13,7 @@
 		<p:messages id="tempCodeReviewMsgId" showDetail="true"
 			autoUpdate="true" closable="true" showSummary="false" />
 
-		<ac:lovPopup>
-			<ui:remove>
-				<p:ajax event="popUpClosed" listener="#{unspscCodeBackingBean.checkIfLovEditable(unspscCodeBackingBean.managedBean.selectedLovUnspscfamily)}"/>
-				<p:ajax event="doubleClickSelect" listener="#{unspscCodeBackingBean.checkIfLovEditable(unspscCodeBackingBean.managedBean.selectedLovUnspscfamily)}"/>			
-			</ui:remove>
-		</ac:lovPopup>
+		<ac:lovPopup />
 
 		<h:panelGroup id="cmReviewUnspsc">
 			<div style="text-align: right;">
@@ -27,15 +22,17 @@
 					<ui:param name="lblBpmBtn" value="lbl.bpm.action.#{action}" />
 					
 					<p:commandButton value="#{'Endorse and Publish'}"
-						rendered="#{bpmTasklistBackingBean.managedBean.claim and action=='SUBMIT' and unspscCodeBackingBean.managedBean.requestCode.itemType=='S' }"
-						oncomplete="extensionConfirmation.show()"
+						rendered="#{bpmTasklistBackingBean.managedBean.claim and action=='SUBMIT' and unspscCodeBackingBean.managedBean.requestCode.itemType=='S' and unspscCodeBackingBean.managedBean.renderV2 }"
+						oncomplete="extensionConfirmation.show()" 
+						disabled ="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1}"
 						update="@form" />
 			
 					<p:commandButton
-						disabled="#{(action == 'RECOMMEND_TO_SUPPLIER' and !(unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1))}"
+						disabled="#{(action == 'RECOMMEND_TO_SUPPLIER' and !(unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1)) or (action == 'SUBMIT' and unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1)}"
 						value="#{lbl[lblBpmBtn]}"
 						rendered="#{(bpmTasklistBackingBean.managedBean.claim and action == 'RECOMMEND_TO_SUPPLIER') or 
-						(bpmTasklistBackingBean.managedBean.claim and action == 'SUBMIT' and unspscCodeBackingBean.managedBean.requestCode.itemType=='P' )}"
+						(bpmTasklistBackingBean.managedBean.claim and action == 'SUBMIT' and 
+						((unspscCodeBackingBean.managedBean.requestCode.itemType=='P' and unspscCodeBackingBean.managedBean.renderV2) or !unspscCodeBackingBean.managedBean.renderV2))}"
 						action="#{unspscCodeBackingBean.savetempCode(action)}"
 						update="@form" />
 						
@@ -369,11 +366,11 @@
 				<ui:include src="codiRemarks.xhtml"/> 
 			</p:panel>
 			
-			<p:confirmDialog id="publishConfirmationId" message="#{lbl['lbl.cm.dialog.cofirm.publish.msg']}" header="#{lbl['lbl.cm.dialog.cofirm.header']}" widgetVar="extensionConfirmation">
+			<p:confirmDialog rendered ="#{unspscCodeBackingBean.managedBean.renderV2}" id="publishConfirmationId" message="#{lbl['lbl.cm.dialog.cofirm.publish.msg']}" header="#{lbl['lbl.cm.dialog.cofirm.header']}" widgetVar="extensionConfirmation">
 				<div align="right">
 					<p:commandButton id="confirmID"
 						value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
-						action="#{unspscCodeBackingBean.savetempCode('PUBLISH')}" />
+						action="#{unspscCodeBackingBean.savetempCode('SUBMIT')}" />
 					<p:commandButton id="declineID"
 						value="#{lbl['lbl.cm.dialog.cofirm.no']}"
 						onclick="extensionConfirmation.hide()" />

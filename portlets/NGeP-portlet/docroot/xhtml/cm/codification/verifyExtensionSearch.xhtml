@@ -14,9 +14,8 @@
 		<p:messages showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 
 		<div style="text-align: right;">
-			<p:commandButton value="#{lbl['lbl.cm.request.extension.code']}"
-				action="#{codificationBackingBean.requestExtensionWithUNSPSC()}" 
-				rendered="#{!unspscCodeBackingBean.isCdCommittee()}" />
+			<p:commandButton value="#{!unspscCodeBackingBean.isCdCommittee() ? lbl['lbl.cm.request.extension.code'] : lbl['lbl.cm.request.create.extension.code']}"
+				action="#{codificationBackingBean.requestExtensionWithUNSPSC()}" />
 		</div>
 
 		<ui:include src="DocumentHeader.xhtml"></ui:include>
@@ -37,7 +36,7 @@
 				</tr>
 					<tr>					
 					<c:choose>
-						<c:when test="#{unspscCodeBackingBean.managedBean.isCodeExtension()}">
+						<c:when test="#{unspscCodeBackingBean.managedBean.isCodeExtension() || unspscCodeBackingBean.managedBean.renderV2}">
 							<td><p:outputLabel value="#{lbl['lbl.rpt.unspscCode']}"></p:outputLabel></td>
 							<td><p:inputText value="#{unspscCodeBackingBean.managedBean.reviewExtCodeList[0].tempCode}" size="40" disabled="true" /></td>
 							<td><p:outputLabel value="#{lbl['lbl.rpt.unspscTitle']}"></p:outputLabel></td>
@@ -55,21 +54,21 @@
 					<td><p:outputLabel value="#{lbl['lbl.cm.type']}"></p:outputLabel></td>
 					<td><p:inputText id="inputRequestType"
 							value="#{codificationBackingBean.getManagedBean().tempTypeName}"
-							disabled="#{codificationBackingBean.typeFilterBean.searchValue != null}" size="40"></p:inputText></td>
+							disabled="#{codificationBackingBean.typeFilterBean.searchValue != null || !unspscCodeBackingBean.managedBean.renderV2}" size="40"></p:inputText></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.brand']}"></p:outputLabel></td>
 					<td><p:inputText  id="inputRequestBrand"
 							value="#{codificationBackingBean.getManagedBean().tempBrandName}"
-							disabled="#{codificationBackingBean.brandFilterBean.searchValue != null}" size="40"></p:inputText></td>
+							disabled="#{codificationBackingBean.brandFilterBean.searchValue != null || !unspscCodeBackingBean.managedBean.renderV2}" size="40"></p:inputText></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.cm.measurement']}"></p:outputLabel></td>
 					<td><p:inputText  id="inputRequestMeasurement"
 							value="#{codificationBackingBean.getManagedBean().tempMeasurementName}"
-							disabled="#{codificationBackingBean.measurementFilterBean.searchValue != null}" size="40"></p:inputText></td>
+							disabled="#{codificationBackingBean.measurementFilterBean.searchValue != null || !unspscCodeBackingBean.managedBean.renderV2}" size="40"></p:inputText></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.color']}"></p:outputLabel></td>
 					<td><p:inputText  id="inputRequestColor"
 							value="#{codificationBackingBean.getManagedBean().tempColorName}"
-							disabled="#{codificationBackingBean.colorFilterBean.searchValue != null}" size="40"></p:inputText></td>
+							disabled="#{codificationBackingBean.colorFilterBean.searchValue != null || !unspscCodeBackingBean.managedBean.renderV2}" size="40"></p:inputText></td>
 				</tr>
 			</table>
 		</p:panel>
