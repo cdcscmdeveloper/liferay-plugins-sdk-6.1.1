@@ -126,7 +126,8 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	private boolean disableLovCommodity = false;
 	
 	private boolean disableRevise = false;
-	
+	private boolean renderV2 = false;
+
 	public boolean isRecommendExtension(){
 		return this.recommendExtension;
 	};
@@ -801,6 +802,15 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	}
 	public void setDisableRevise(boolean disableRevise) {
 		this.disableRevise = disableRevise;
+	}
+	public boolean isRenderV2() {
+		return renderV2;
+	}
+	public void setRenderV2(boolean renderV2) {
+		this.renderV2 = renderV2;
+	}
+	public void setShowRecommend(boolean showRecommend) {
+		this.showRecommend = showRecommend;
 	}
 
 }
