@@ -4777,6 +4777,9 @@ public class LOADetailBackingBean extends
 
 		boolean isBondReq = isPerformanceBondRequired(overallContractAmtOrLoaAmt, qtCategories);
 		
+		System.out.println("____ checkPerformanceBondMandatory docId: "+loa.getScLoiLoa().getDocId()
+				+" docType: " +loa.getScLoiLoa().getDocType() +" isBondReq: "+isBondReq+" overallContractAmtOrLoaAmt: "+overallContractAmtOrLoaAmt);
+		
 		//To enable Performance Bond for Direct Purchase - Enhancement #25144- Starte.
 		checkDpIsElisibleForPB(loa, true);
 		//To enable Performance Bond for Direct Purchase - Enhancement #25144 - End.
