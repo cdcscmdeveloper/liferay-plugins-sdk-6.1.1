@@ -101,7 +101,7 @@
 		</p:dataTable>
 	</p:panel>
 	
-	<p:outputPanel layout="block">
+	<p:outputPanel layout="block" rendered="#{not empty viewSmApplBackingBean.managedBean.smAppl.smCategoryOverlapDocs}">
 		<ui:include src="overlapCategorySuppDocViewOnly.xhtml"></ui:include>
 	</p:outputPanel>
 </ui:composition>
