@@ -40,7 +40,12 @@ public class UserSoftcertReqRptBackingBean extends
 		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
 		retrieveReportValueFromDb();
 
-		addCompanyNameParam(params);
+		// #25511. Unable to generate report because of lazy loading, so need to re-initialize supplier
+		if (getManagedBean().isSupplierUser()) {
+			params.put(SmReportConst.PARAM_COMPANY_NAME, SmApplicationUtil.getCurrentSupplier().getCompanyName());
+		} else {
+			addCompanyNameParam(params);
+		}
 
 		if (StringUtils.isNotBlank(getManagedBean().getUserName())) {
 			params.put(SmReportConst.PARAM_USER_NAME, getManagedBean()
@@ -89,7 +94,7 @@ public class UserSoftcertReqRptBackingBean extends
 	}
 
 	public void resetSearch() {
-		if(getManagedBean().isSupplierUser()){
+		if(!getManagedBean().isSupplierUser()){
 			getManagedBean().setUserName(null);
 			getManagedBean().setMofNo(null);
 			getManagedBean().setRegNo(null);
