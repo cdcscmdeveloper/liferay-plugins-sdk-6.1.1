@@ -346,13 +346,15 @@
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td>
 						<ac:phone id="basPhnNum" isMobile="false" label="#{lbl['lbl.sm.phoneno']}"
 						countryCode="#{backingBean.managedBean.smAppl.smCompanyBasic.phoneCountry}" 
 						areaCode="#{backingBean.managedBean.smAppl.smCompanyBasic.phoneArea}" 
 						number="#{backingBean.managedBean.smAppl.smCompanyBasic.phoneNo}"  
-						validatorMessage="#{lbl['lbl.sm.phoneno']} - #{lbl['lbl.sm.invalidNo']}" />
+						validatorMessage="#{lbl['lbl.sm.phoneno']} - #{lbl['lbl.sm.invalidNo']}" 
+						required="true" />
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges}"
 							oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.phoneNo}" 

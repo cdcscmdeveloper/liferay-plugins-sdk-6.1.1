@@ -1271,6 +1271,49 @@ public class SmApplicationUtil {
 		}
 	}
 
+	/**
+	 * Check if each registered branch already assigned to bank account type
+	 * payment
+	 * 
+	 * @param SmApplicationManagedBean
+	 *            bean
+	 * @param int currentTab
+	 * @param boolean validSave
+	 */
+	public static void validateCompanyInformation(
+			SmApplicationManagedBean bean, int currentTab, boolean validSave) {
+		if (!SmCommonUtil.isCollectionEmpty(bean.getSmAppl()
+				.getSmSupplierBranches())) {
+			for (SmSupplierBranch brAppl : bean.getSmAppl()
+					.getSmSupplierBranches()) {
+				if (!isBranchAssignToBank(bean.getSmAppl(), brAppl)) {
+					validSave = false;
+					throw new EpException(MessageConst.ERROR_722622,
+							new String[] { brAppl.getBranchName() });
+				}
+			}
+		}
+		validatePremiseInformation(bean.getSmAppl().getSmFacilities());
+	}
+
+	public static void validatePremiseInformation(List<SmFacility> facilities) {
+		if (EntityHelper.isCollectionEmpty(facilities)) {
+			throw new EpException(MessageConst.ERROR_722673);
+		} else {
+			boolean isPremiseExist = false;
+			for (SmFacility fac : facilities) {
+				if (fac.getFacilityType().equals("B")
+						|| fac.getFacilityType().equals("H")) {
+					isPremiseExist = true;
+					break;
+				}
+			}
+			if (!isPremiseExist) {
+				throw new EpException(MessageConst.ERROR_722673);
+			}
+		}
+	}
+
 	public static boolean isBranchAssignToBank(SmAppl appl,
 			SmSupplierBranch paramBranch) {
 		boolean retVal = false;
@@ -2752,7 +2795,7 @@ public class SmApplicationUtil {
 			SmStaffTotal stf3 = new SmStaffTotal();
 			staffList.add(setDefaultStaffValues(stf3, app,
 					SupplierManagementConst.STAFF_TYPE_CLERICAL));
-		}else{
+		} else {
 			SmStaffTotal stf = new SmStaffTotal();
 			staffList.add(setDefaultStaffValues(stf, app,
 					SupplierManagementConst.STAFF_TYPE_CONTRACTOR));

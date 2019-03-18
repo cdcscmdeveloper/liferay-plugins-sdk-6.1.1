@@ -311,7 +311,8 @@ public class SmApplicationBackingBean extends
 		RequestContext.getCurrentInstance().execute(
 				"confirmDeleteHqDialog.show();");
 	}
-	//harris
+
+	// harris
 	public void onDeleteSupDocFileAttachment(SmApplSupportDoc doc) {
 		getManagedBean().setSupportDoc(doc);
 		RequestContext.getCurrentInstance().execute(
@@ -853,13 +854,13 @@ public class SmApplicationBackingBean extends
 					throw new EpException(MessageConst.ERROR_722628);
 				}
 
-				String currSuppType = currSupp.getSmAppl()
-						.getSupplierType();
-				
-				if(StringUtils.isBlank(currSuppType) || currSuppType.equals("B")){
+				String currSuppType = currSupp.getSmAppl().getSupplierType();
+
+				if (StringUtils.isBlank(currSuppType)
+						|| currSuppType.equals("B")) {
 					currSuppType = "K";
 				}
-						
+
 				if (getManagedBean().getNewSupplierType() == null
 						|| StringUtils.isBlank(getManagedBean()
 								.getNewSupplierType())) {
@@ -988,7 +989,7 @@ public class SmApplicationBackingBean extends
 		} else {
 			log.info("******** My Company Basic is null ********");
 		}
-		
+
 		SmCommonUtil.getInstance().setUserDetails(smAppl);
 		getManagedBean().setSmAppl(smAppl);
 
@@ -2725,6 +2726,10 @@ public class SmApplicationBackingBean extends
 		// validate equity company amount
 		SmApplicationUtil.validateEquityCompanyAmount(getManagedBean(), -1);
 
+		// validate company basic info
+		SmApplicationUtil
+				.validateCompanyInformation(getManagedBean(), -1, true);
+
 		// validate paid up capital amount
 		SmApplicationUtil.validatePaidCaptialAmt(false, getManagedBean(),
 				currentTab);
@@ -3273,9 +3278,9 @@ public class SmApplicationBackingBean extends
 		SmApplicationUtil.validateBranchGstInformation(getManagedBean()
 				.getSelectedBranch(), getManagedBean().getSelectedBranch()
 				.getGst(), getManagedBean().getCompanyBasicGst());
-		
-		SmCommonUtil.getInstance().setUserDetails(getManagedBean()
-				.getSelectedBranch());
+
+		SmCommonUtil.getInstance().setUserDetails(
+				getManagedBean().getSelectedBranch());
 		EntityHelper.addOrUpdateEntityToList(getManagedBean()
 				.getSelectedBranch(), getManagedBean().getSmAppl()
 				.getSmSupplierBranches());
@@ -3409,8 +3414,8 @@ public class SmApplicationBackingBean extends
 	 * of the application.
 	 */
 	public void addOrUpdateAssocToSmAppl() {
-		SmCommonUtil.getInstance().setUserDetails(getManagedBean()
-				.getSelectedAssocCompany());
+		SmCommonUtil.getInstance().setUserDetails(
+				getManagedBean().getSelectedAssocCompany());
 		EntityHelper.addOrUpdateEntityToList(getManagedBean()
 				.getSelectedAssocCompany(), getManagedBean().getSmAppl()
 				.getSmAssociateCompanies());
@@ -3538,8 +3543,8 @@ public class SmApplicationBackingBean extends
 										.getCertEndDate()) >= 0) {
 			throw new EpException(MessageConst.ERROR_722530);
 		}
-		SmCommonUtil.getInstance().setUserDetails(getManagedBean()
-				.getSelectedCert());
+		SmCommonUtil.getInstance().setUserDetails(
+				getManagedBean().getSelectedCert());
 		EntityHelper.addOrUpdateEntityToList(
 				getManagedBean().getSelectedCert(), getManagedBean()
 						.getSmAppl().getSmSupplierCerts());
@@ -3756,8 +3761,8 @@ public class SmApplicationBackingBean extends
 						.compareTo(new BigDecimal(20000)) >= 1)) {
 			throw new EpException(MessageConst.ERROR_722550);
 		}
-		SmCommonUtil.getInstance().setUserDetails(getManagedBean()
-				.getSelectedCompanyExperience());
+		SmCommonUtil.getInstance().setUserDetails(
+				getManagedBean().getSelectedCompanyExperience());
 		EntityHelper.addOrUpdateEntityToList(getManagedBean()
 				.getSelectedCompanyExperience(), getManagedBean().getSmAppl()
 				.getSmCompanyExperiences());
@@ -4013,8 +4018,8 @@ public class SmApplicationBackingBean extends
 	 * of the application.
 	 */
 	public void addOrUpdateEquityCompanyToSmAppl() {
-		SmCommonUtil.getInstance().setUserDetails(getManagedBean()
-				.getSelectedEquityCompany());
+		SmCommonUtil.getInstance().setUserDetails(
+				getManagedBean().getSelectedEquityCompany());
 		EntityHelper.addOrUpdateEntityToList(getManagedBean()
 				.getSelectedEquityCompany(), getManagedBean().getSmAppl()
 				.getSmEquityCompanies());
@@ -5631,7 +5636,7 @@ public class SmApplicationBackingBean extends
 					}
 				}
 			}
-			
+
 			SmCommonUtil.getInstance().setUserDetails(
 					getManagedBean().getSelectedShareHolder());
 			EntityHelper.addOrUpdateEntityToList(getManagedBean()
@@ -6552,9 +6557,9 @@ public class SmApplicationBackingBean extends
 			// validate HQ
 			SmApplicationUtil.validateBankLimitForHq(getManagedBean()
 					.getSmAppl(), getManagedBean().getSelectedBank());
-			
-			SmCommonUtil.getInstance().setUserDetails(getManagedBean()
-					.getSelectedBank());
+
+			SmCommonUtil.getInstance().setUserDetails(
+					getManagedBean().getSelectedBank());
 			EntityHelper.addOrUpdateEntityToList(getManagedBean()
 					.getSelectedBank(), getManagedBean().getSmAppl()
 					.getSmSupplierBanks());
@@ -7204,7 +7209,8 @@ public class SmApplicationBackingBean extends
 							.getApplId());
 
 			reqDTO.setSmWorkflowStatus(sts);
-			reqDTO.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
+			reqDTO.setChangedBy(new FacesScopes().getUserSessionBean()
+					.getUserId());
 			regSo.initiateSmDelPendingApplicationTask(reqDTO);
 			String msg = "";
 
@@ -8445,7 +8451,8 @@ public class SmApplicationBackingBean extends
 											.getApplCategoryType());
 					reqDTO.setApproverLoginIds(approverLoginIds);
 				}
-				reqDTO.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
+				reqDTO.setChangedBy(new FacesScopes().getUserSessionBean()
+						.getUserId());
 				reqSO.submitPOorApproverReviewToBPM(reqDTO);
 
 				FacesContext.getCurrentInstance().addMessage(
@@ -9185,13 +9192,15 @@ public class SmApplicationBackingBean extends
 		}
 
 	}
-	//harris
-		public void deleteSupDocFileAttachment(){
 
-			SmApplSupportDoc mainDoc = getManagedBean().getSupportDoc();
-			mainDoc.getSmApplDocFiles().get(0).setFileName(StringUtils.EMPTY);
-			mainDoc.getSmApplDocFiles().get(0).setFilePath(StringUtils.EMPTY);
-		}
+	// harris
+	public void deleteSupDocFileAttachment() {
+
+		SmApplSupportDoc mainDoc = getManagedBean().getSupportDoc();
+		mainDoc.getSmApplDocFiles().get(0).setFileName(StringUtils.EMPTY);
+		mainDoc.getSmApplDocFiles().get(0).setFilePath(StringUtils.EMPTY);
+	}
+
 	/**
 	 * Handle and save file attachment for cancel mof registration.
 	 * 
@@ -9218,13 +9227,11 @@ public class SmApplicationBackingBean extends
 
 		}
 	}
-	
-	//harris
+
+	// harris
 	public void deleteCancelMofRegFileAttachment() {
 		this.getManagedBean().getCancellationAttachment().setFileName(null);
 	}
-	
-	
 
 	/**
 	 * Clone sm application draft from the stable or prev approved application.
