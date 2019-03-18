@@ -89,13 +89,9 @@ public class UserSoftcertReqRptBackingBean extends
 	}
 
 	public void resetSearch() {
-		getManagedBean().setUserName(null);
-		getManagedBean().setMofNo(null);
-		getManagedBean().setRegNo(null);
 		getManagedBean().setDateFrom(null);
 		getManagedBean().setDateTo(null);
 		getManagedBean().setSoftcertDateType(null);
-		getManagedBean().setIdentificationNo(null);
 		getManagedBean().setCertApplicationType(null);
 		getManagedBean().setCertStatus(null);
 		getManagedBean().setCertProvider(null);
