@@ -89,6 +89,12 @@ public class UserSoftcertReqRptBackingBean extends
 	}
 
 	public void resetSearch() {
+		if(getManagedBean().isSupplierUser()){
+			getManagedBean().setUserName(null);
+			getManagedBean().setMofNo(null);
+			getManagedBean().setRegNo(null);
+			getManagedBean().setIdentificationNo(null);
+		}
 		getManagedBean().setDateFrom(null);
 		getManagedBean().setDateTo(null);
 		getManagedBean().setSoftcertDateType(null);
