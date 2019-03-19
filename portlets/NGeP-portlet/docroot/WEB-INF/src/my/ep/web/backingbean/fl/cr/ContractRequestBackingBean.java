@@ -283,24 +283,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		log.info("========For #24353 view PTJ Radio content started====="
 				+ getManagedBean().getFlManualAddress().getFlAddress().getSelectedPtjCodeRadioBox());
 		if(getManagedBean().getFlManualAddress().getFlAddress().getSelectedPtjCodeRadioBox().equalsIgnoreCase("2")){
-/*			if(getManagedBean().getFlManualAddress().getReceivingGrp() == null){
-				if(selectedPmAddressType==null){
-					getManagedBean().getFlManualAddress().setReceivingGrp(new PmAddressType());
-				}else{
-					getManagedBean().getFlManualAddress().setReceivingGrp(selectedPmAddressType);
-				}
-			}
-			
-			if(getManagedBean().getFlManualAddress().getReceivingGrp().getPmOrgProfile() == null){			
-				getManagedBean().getFlManualAddress().getFlAddress().setSelectedPtjCodeNameValue("");
-			}else{;
-				getManagedBean().getFlManualAddress().getFlAddress().setSelectedPtjCodeNameValue(getManagedBean().getFlManualAddress().getReceivingGrp().getPmOrgProfile().getPmOrgValidity().getOrgCode() 
-						+ " " + getManagedBean().getFlManualAddress().getReceivingGrp().getPmOrgProfile().getPmOrgValidity().getOrgName());
-			}*/
-			
+
 			if(getManagedBean().getFlManualAddress().getReceivingGrp() == null){
 				getManagedBean().getFlManualAddress().getFlAddress().setSelectedPtjCodeNameValue(null);
 			}else{
+				if(getManagedBean().getFlManualAddress().isNewRecord() == false){
+					getManagedBean().getFlManualAddress().setReceivingGrp(new PmAddressType());
+				}
+				
 				if(getManagedBean().getFlManualAddress().getReceivingGrp().getPmOrgProfile() == null){
 					getManagedBean().getFlManualAddress().getFlAddress().setSelectedPtjCodeNameValue(null);
 				}else{
@@ -2369,6 +2359,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		
 		//start added for #24353 
 	    //initialization for existing record
+		
 		if (getManagedBean().getFlManualAddress().getFlAddress().getSelectedPtjCodeRadioBox() == null) {
 			getManagedBean().getFlManualAddress().getFlAddress().setSelectedPtjCodeRadioBox("1");
 		}
@@ -5352,6 +5343,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().getFlManualAddress().setReceivingGrp(selectedPmAddressType);
 		getManagedBean().getFlManualAddress().getFlAddress().setSelectedPtjCodeNameValue(getManagedBean().getFlManualAddress().getReceivingGrp().getPmOrgProfile().getPmOrgValidity().getOrgCode() 
 				+ " " + getManagedBean().getFlManualAddress().getReceivingGrp().getPmOrgProfile().getPmOrgValidity().getOrgName());
+		getManagedBean().getFlManualAddress().setNewRecord(true);
 		selectedPmAddressType = null;
 	}
 	//end added for #24353
