@@ -181,7 +181,7 @@
 							
 						<p:menuitem id="viewBtnIconSimpleQuote" value="#{lbl['lbl.btn.view']}"
 							icon="ui-icon-view"
-							rendered="#{directPurchaseBackingBean.isSupplier() ? directPurchaseBackingBean.managedBean.searchDocumentType eq ParameterConst.doctypeSimpleQuote : true}"
+							rendered="#{directPurchaseBackingBean.isSupplier() ? directPurchaseBackingBean.managedBean.searchDocumentType eq ParameterConst.doctypeSimpleQuote : false}"
 							action="#{directPurchaseBackingBean.viewDocSupplierSQ(Obj)}" />
 
 					</p:menuButton>
