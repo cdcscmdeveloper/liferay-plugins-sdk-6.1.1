@@ -447,7 +447,7 @@
 								<p:column headerText="#{lbl['lbl.cm.action']}"
 									rendered="#{unspscCodeBackingBean.requisitioner}">
 
-									<p:menuButton value="" disabled="#{!supplierItem.atcRequired}">
+									<p:menuButton value="" disabled="#{!supplierItem.atcRequired or supplierItem.contractTerminated}">
 										<p:menuitem value="#{lbl['lbl.cm.add.to.cr']}"
 											actionListener="#{catalogueBackingBean.addToList(supplierItem,1)}"
 											update="@form" icon="ui-icon-plus"
