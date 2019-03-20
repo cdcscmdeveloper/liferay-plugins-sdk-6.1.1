@@ -9,7 +9,7 @@
 	<table>
 		<!-- #25243 -->
 		<c:choose>
-			<c:when test="#{backingBean.managedBean.smAppl.applType == 'B'}">
+			<c:when test="#{backingBean.managedBean.wasBumiApplication or backingBean.managedBean.smAppl.applType == 'B'}">
 				<tr>
 					<td>
 						<h:outputText value="#{lbl['lbl.sm.suppDoc.online.bumi.only']}" escape="false" />
@@ -53,7 +53,6 @@
 			</table>
 			<br />
 		</c:if>
-
 		<table style="width: 100%">
 
 			<tr>
