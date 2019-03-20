@@ -23,6 +23,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -193,6 +195,7 @@ public class SmApplicationBackingBean extends
 	private int outputTab;
 	private String buttonType = "";
 	private StreamedContent file;
+		
 	NumberFormat formatter = new DecimalFormat("#0.00");
 	SmRuleHelper ruleHelper = new SmRuleHelper();
 
@@ -805,7 +808,7 @@ public class SmApplicationBackingBean extends
 				cannotProceedAlertMsg = SmApplicationUtil
 						.checkActiveCancelSmApplForSupp(currSupp);
 				if (cannotProceedAlertMsg) {
-					throw new EpException(MessageConst.ERROR_722542);
+					//throw new EpException(MessageConst.ERROR_722542);
 				}
 
 				boolean hasActiveTransactions = SmApplicationUtil
@@ -830,7 +833,7 @@ public class SmApplicationBackingBean extends
 				cannotProceedAlertMsg = SmApplicationUtil
 						.checkActiveSmApplForSupp(currSupp);
 				if (cannotProceedAlertMsg) {
-					throw new EpException(MessageConst.ERROR_722542);
+					//throw new EpException(MessageConst.ERROR_722542);
 				}
 			}
 
@@ -1626,7 +1629,7 @@ public class SmApplicationBackingBean extends
 			}
 			if (SmApplicationUtil.checkActiveSmApplForSupp(getManagedBean()
 					.getSmSupplier())) {
-				throw new EpException(MessageConst.ERROR_722542);
+				//throw new EpException(MessageConst.ERROR_722542);
 			}
 			RequestContext.getCurrentInstance().execute(
 					"saveDraftConfirmDialog.show();");
@@ -2584,6 +2587,7 @@ public class SmApplicationBackingBean extends
 	private Boolean validateBeforeSave(String applType, String currentPageType) {
 		log.info("******* Page Type ********" + currentPageType);
 		boolean validSave = true;
+		checkIfPastBumiApplication();
 		switch (currentPageType) {
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC:
 			if (!getManagedBean().getSmAppl().getApplType()
@@ -2620,6 +2624,7 @@ public class SmApplicationBackingBean extends
 					currentTab, getManagedBean());
 			break;
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS:
+			
 			if ((getManagedBean().isPoUser() || getManagedBean()
 					.isApproverUser()) && currentTab < outputTab) {
 				validSave = SmApplicationUtil.checkSupportDocsValidity(
@@ -7545,7 +7550,7 @@ public class SmApplicationBackingBean extends
 						.checkActiveSmApplForSupp(getManagedBean()
 								.getSmSupplier());
 				if (cannotProceedAlertMsg) {
-					throw new EpException(MessageConst.ERROR_722542);
+					//throw new EpException(MessageConst.ERROR_722542);
 				}
 
 				resDTO = regSo.saveNewDraftApplication(reqDTO);
@@ -11731,6 +11736,68 @@ public class SmApplicationBackingBean extends
 
 	public void viewMyIdentityRespond() {
 		RequestContext.getCurrentInstance().execute("myIdentityDialog.show();");
+	}
+	
+	// #25470
+	private boolean checkIfPastBumiApplication() {
+		
+		getManagedBean().setWasBumiApplication(false);
+		
+		String datePoint = "08-Mar-2019 12:00 AM";
+		
+		String dateList[] = {getManagedBean().getApplStatusInfo().getCreatedByAndDate(),
+							 getManagedBean().getApplStatusInfo().getModifiedByAndDate()};
+		
+		HashMap<String, String> dates = new HashMap<String, String>();
+		
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy hh:mm a");
+		simpleDateFormat.setLenient(false);
+		
+		List<String> allDateOccurences = new ArrayList<String>();
+		Pattern pattern = Pattern.compile("\\((.*?)\\)");
+		
+		for (String date : dateList) {
+			Matcher matcher = pattern.matcher(date);
+			while (matcher.find()) {
+				allDateOccurences.add(matcher.group(1));
+			}
+		}
+			
+		String elapsedDays = null;
+		int count;
+		
+		for (count = allDateOccurences.size() - 1; count >= 0; count--) {
+			try {
+				Date date = simpleDateFormat.parse(allDateOccurences.get(count));
+				Date featureReleaseDate = simpleDateFormat.parse(datePoint);
+				
+				double millisDiff = date.getTime() - featureReleaseDate.getTime();
+				
+				// Checks if createdDate and modifiedDate is before 08-Mar-2019
+				if (millisDiff < 0) {
+					double daysDiff = Double.valueOf((millisDiff / (1000 * 60 * 60 * 24)));
+					elapsedDays = String.format("%.5f", daysDiff);
+					String[] days = allDateOccurences.get(count).split("\\-");
+					String day = days[0];
+					dates.put(day, allDateOccurences.get(count));
+				}
+			} catch (ParseException e) {
+				e.printStackTrace();
+				allDateOccurences.remove(count);
+			}
+		}
+		
+		log.info("Filtered dates: "+allDateOccurences);
+		log.info("dates: "+dates);
+		
+		if ( !dates.isEmpty() &&
+			((getManagedBean().getSmAppl().getSupportingDocMode() == "H") &&
+			 (getManagedBean().getSmAppl().getApplType() == "B")) ) {
+			getManagedBean().setWasBumiApplication(true);
+		}
+		
+		log.info("wasBumiApplication "+getManagedBean().isWasBumiApplication());
+		return getManagedBean().isWasBumiApplication();
 	}
 
 }
