@@ -482,6 +482,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean showPoApprovedOrRecommendButton;
 	private boolean showNewChanges;
 	private boolean updatePersonnelPage;
+	private boolean wasBumiApplication;
 
 	private String businessTypeParamCode;
 	private String physicalConsulting;
@@ -4026,5 +4027,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setPoUserName(String poUserName) {
 		this.poUserName = poUserName;
+	}
+	
+	// #25470
+	public boolean isWasBumiApplication() {
+		return wasBumiApplication;
+	}
+	
+	public void setWasBumiApplication(boolean wasBumiApplication) {
+		this.wasBumiApplication = wasBumiApplication;
 	}
 }

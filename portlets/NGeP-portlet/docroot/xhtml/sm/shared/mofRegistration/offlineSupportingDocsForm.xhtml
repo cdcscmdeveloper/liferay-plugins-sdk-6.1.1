@@ -25,7 +25,7 @@
 	<table>
 		<!-- #25243 -->
 		<c:choose>
-			<c:when test="#{backingBean.managedBean.smAppl.applType == 'B'}">
+			<c:when test="#{backingBean.managedBean.wasBumiApplication or backingBean.managedBean.smAppl.applType == 'B'}">
 				<tr>
 					<td>
 						<h:outputText value="#{lbl['lbl.sm.suppDoc.online.bumi.only']}" escape="false" />
@@ -55,7 +55,7 @@
 			<f:facet name="header">
 				<!-- #25243 -->
 				<c:choose>
-				    <c:when test="#{backingBean.managedBean.smAppl.applType == 'B'}">
+				    <c:when test="#{backingBean.managedBean.wasBumiApplication or backingBean.managedBean.smAppl.applType == 'B'}">
 				       <h:outputText
 							value="#{lbl['lbl.sm.suppDoc.online.checklist.application.no']}" />
 				    </c:when>
@@ -81,7 +81,7 @@
 			</c:if>
 			<!-- #25243 -->
 			<c:choose>
-			    <c:when test="#{backingBean.managedBean.smAppl.applType != 'B'}">
+			    <c:when test="#{backingBean.managedBean.wasBumiApplication or backingBean.managedBean.smAppl.applType != 'B'}">
 					<table style="width: 100%;">
 						<tr>
 							<td>
