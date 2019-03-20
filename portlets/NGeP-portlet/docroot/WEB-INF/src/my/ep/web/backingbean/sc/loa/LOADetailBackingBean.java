@@ -4795,19 +4795,21 @@ public class LOADetailBackingBean extends
 	 * @param loa
 	 */
 	private void checkDpIsElisibleForPB(ScLoa loa, boolean userIdRequired) {
+		log.info("Entered " + this.getClass().getName() + ".checkPerformanceBondMandatory(): loaNo is: " + loa.getLoaNo() + "Doc Type is: " + loa.getScLoiLoa());
 		if(loa.getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_PURCHASE_REQUEST)) {
-			log.debug(this.getClass().getName() + ".checkPerformanceBondMandatory(): loaNo is: " + loa.getLoaNo());
-			log.debug(this.getClass().getName() + ".checkPerformanceBondMandatory(): DocType is: " + ParameterConst.DOCTYPE_PURCHASE_REQUEST);
+			log.info(this.getClass().getName() + ".checkPerformanceBondMandatory(): loaNo is: " + loa.getLoaNo());
+			log.info(this.getClass().getName() + ".checkPerformanceBondMandatory(): DocType is: " + ParameterConst.DOCTYPE_PURCHASE_REQUEST);
 			DpLOABackingBean dpLOABackingBean = new DpLOABackingBean();
 			dpLOABackingBean.retrieveLOAList(getManagedBean().getSourceId(), userIdRequired);
 			if (null != dpLOABackingBean.getManagedBean() && null != dpLOABackingBean.getManagedBean().getPurchaseRequestList()
 					&& dpLOABackingBean.getManagedBean().getPurchaseRequestList().size() > 0 &&
 					null != dpLOABackingBean.getManagedBean().getPurchaseRequestList().get(0).getRequestNoteDtls()
 					&& dpLOABackingBean.getManagedBean().getPurchaseRequestList().get(0).getRequestNoteDtls().size() > 0) {
+				log.info(this.getClass().getName() + ".checkPerformanceBondMandatory(): results found ");
 				String procurementType = getParameterDesc(dpLOABackingBean.getManagedBean().getPurchaseRequestList().get(0).getRequestNoteDtls().get(0).getProcurementType());
 				String fulfilmentType = getParameterDesc(dpLOABackingBean.getManagedBean().getPurchaseRequestList().get(0).getRequestNoteDtls().get(0).getFulfilmentType());
-				log.debug(this.getClass().getName() + ".checkPerformanceBondMandatory(): procurementType is: " + procurementType);
-				log.debug(this.getClass().getName() + ".checkPerformanceBondMandatory(): fulfilmentType is: " + fulfilmentType);
+				log.info(this.getClass().getName() + ".checkPerformanceBondMandatory(): procurementType is: " + procurementType);
+				log.info(this.getClass().getName() + ".checkPerformanceBondMandatory(): fulfilmentType is: " + fulfilmentType);
 				if (StringUtils.isNotEmpty(procurementType) && PROCUREMENT_TYPE.equals(procurementType) && StringUtils.isNotEmpty(fulfilmentType)
 						&& fulfilmentType.contains(FULFILMENT_TYPE)) {
 					getManagedBean().setEnablePBForDP(true);
@@ -4815,6 +4817,7 @@ public class LOADetailBackingBean extends
 				}
 			}
 		}
+		log.info("Exit " + this.getClass().getName() + ".checkPerformanceBondMandatory(): loaNo is: " + loa.getLoaNo());
 	}
 
 	/**
