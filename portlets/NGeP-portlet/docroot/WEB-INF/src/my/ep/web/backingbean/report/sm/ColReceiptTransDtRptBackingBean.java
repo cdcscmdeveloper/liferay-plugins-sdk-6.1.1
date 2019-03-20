@@ -73,6 +73,8 @@ public class ColReceiptTransDtRptBackingBean extends SmReportBackingBean<ColRece
 		getManagedBean().setReportType(null);
 		getManagedBean().setSelectedOrgProfile(null);
 		getManagedBean().setSelectedPaymentTypes(new ArrayList<String>());
+		getManagedBean().setDateFrom(null);
+		getManagedBean().setDateTo(null);
 	}
 	
 	/**

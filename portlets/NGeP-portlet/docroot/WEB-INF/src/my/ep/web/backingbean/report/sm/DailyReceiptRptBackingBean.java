@@ -7,15 +7,14 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-
 import my.ep.constants.CommonConstants;
-import my.ep.web.backingbean.pm.financialorg.FinancialOrgBackingBean;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.DailyReceiptRptManagedBean;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 
 @ManagedBean(name="dailyReceiptRptBB")
 @ViewScoped
@@ -61,6 +60,8 @@ public class DailyReceiptRptBackingBean extends SmReportBackingBean<DailyReceipt
 		getManagedBean().setYear(null);
 		getManagedBean().setYearTo(null);
 		getManagedBean().setReceiptNo(null);
+		getManagedBean().setDateFrom(null);
+		getManagedBean().setDateTo(null);
 	}
 	
 	/**
