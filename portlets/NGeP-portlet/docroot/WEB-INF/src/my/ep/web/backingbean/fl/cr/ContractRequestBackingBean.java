@@ -3316,10 +3316,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		if(getManagedBean().getFlRequest().getPmUom()==null) {
 			getManagedBean().getFlRequest().setPmUom(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getDeliveryTermUom());
 		}
-		if(getManagedBean().getFlRequest().getDeliveryTerm()==null) {
-			getManagedBean().getFlRequest().setDeliveryTerm(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getDeliveryTerm());
-		}
-
+		
+		getManagedBean().getFlRequest().setDeliveryTerm(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getDeliveryTerm());
 		//update delivery address
 		for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()) {
 			flDeliveryAddress.setStartDate(getManagedBean().getFlRequest().getStartDate());
