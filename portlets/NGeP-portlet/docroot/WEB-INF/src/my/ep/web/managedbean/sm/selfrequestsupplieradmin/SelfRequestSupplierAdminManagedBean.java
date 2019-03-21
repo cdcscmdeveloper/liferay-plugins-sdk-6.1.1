@@ -7,6 +7,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -31,6 +32,7 @@ public class SelfRequestSupplierAdminManagedBean extends BaseManagedBean {
 	private SmSupplier supplier;
 	private SmPersonnel selectedAdmin;
 	private SmPersonnelAddress selectedAdminPermAddr;
+	private SmAddress smPermenantAdd;
 	private boolean agreeTC;
 	private String page;
 	private Date currDate;
@@ -156,5 +158,14 @@ public class SelfRequestSupplierAdminManagedBean extends BaseManagedBean {
 	public void setDisabledNextBtn(boolean disabledNextBtn) {
 		this.disabledNextBtn = disabledNextBtn;
 	}
+
+	public SmAddress getSmPermenantAdd() {
+		return smPermenantAdd;
+	}
+
+	public void setSmPermenantAdd(SmAddress smPermenantAdd) {
+		this.smPermenantAdd = smPermenantAdd;
+	}
+
 
 }
