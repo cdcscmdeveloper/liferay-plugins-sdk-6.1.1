@@ -11745,8 +11745,8 @@ public class SmApplicationBackingBean extends
 		
 		String datePoint = "08-Mar-2019 12:00 AM";
 		
-		String dateList[] = {getManagedBean().getApplStatusInfo().getCreatedByAndDate(),
-							 getManagedBean().getApplStatusInfo().getModifiedByAndDate()};
+		String dateList[] = {this.getManagedBean().getApplStatusInfo().getCreatedByAndDate(),
+							 this.getManagedBean().getApplStatusInfo().getModifiedByAndDate()};
 		
 		HashMap<String, String> dates = new HashMap<String, String>();
 		
@@ -11790,14 +11790,43 @@ public class SmApplicationBackingBean extends
 		log.info("Filtered dates: "+allDateOccurences);
 		log.info("dates: "+dates);
 		
-		if ( !dates.isEmpty() &&
-			((getManagedBean().getSmAppl().getSupportingDocMode() == "H") &&
-			 (getManagedBean().getSmAppl().getApplType() == "B")) ) {
-			getManagedBean().setWasBumiApplication(true);
+		checkRejectedBumi();
+		
+		if ( (!checkRejectedBumi() || checkRejectedBumi()) &&
+			 (!dates.isEmpty() &&
+				(this.getManagedBean().getSmAppl().getApplType() == "B") &&
+				(this.getManagedBean().getSmAppl().getSupportingDocMode() == "H")) ) {
+			this.getManagedBean().setWasBumiApplication(true);
 		}
 		
-		log.info("wasBumiApplication "+getManagedBean().isWasBumiApplication());
+		log.info("wasBumiApplication: "+getManagedBean().isWasBumiApplication());
 		return getManagedBean().isWasBumiApplication();
+	}
+	
+	private boolean checkRejectedBumi() {
+		
+		IMofRegistrationSO regSo = null;
+		
+		Long appId = this.getManagedBean().getSmAppl().getApplId();
+		
+		regSo = (IMofRegistrationSO) BusinessDelegate.getInstance()
+				.getServiceObject("sm", IMofRegistrationSO.class);
+		
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setSupplierId(this.getManagedBean().getSmSupplier().getSupplierId());
+		reqDTO.setAppType(this.getManagedBean().getSmAppl().getApplType());
+		
+		SmWorkflowStatus sts = SmCommonUtil.getCurrentActiveWokFlowStatus(appId);
+		reqDTO.setSmWorkflowStatus(sts);
+		
+		Long applId = regSo.retrieveLastRejectedApplIdByApplType(reqDTO).getApplId();
+		//Long applId = SmServiceLookup.getMofRegistrationSO().retrieveLastRejectedApplIdByApplType(reqDTO).getApplId();
+		
+		if (applId == null) {
+			log.info("The application "+appId+" has never been rejected before");
+			return false;
+		}
+		return true;
 	}
 
 }
