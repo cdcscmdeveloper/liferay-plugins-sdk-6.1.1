@@ -13,8 +13,17 @@
 						<p:panel id="PermanentAddressInfo" style="border: none;">
 							<table style="width: 100%;">
 							<tr>
-								<td><u><b><h:outputText
-											value="#{lbl['lbl.sm.person.permAddr']} " /></b></u></td>
+								<td>
+								<c:choose>
+									<c:when
+										test="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.identificationType.parameterCode == SupplierManagementConst.NEW_IC}">
+										<u><b><h:outputText value="#{lbl['lbl.sm.person.asIcAddr']}" /></b></u>
+									</c:when>
+									<c:otherwise>
+										<u><b><h:outputText value="#{lbl['lbl.sm.person.permAddr']}" /></b></u>
+									</c:otherwise>
+								</c:choose>
+								</td>
 							</tr>
 							<tr>
 								<td><p:outputLabel
