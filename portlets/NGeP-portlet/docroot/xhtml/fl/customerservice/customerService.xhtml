@@ -60,7 +60,8 @@
 			</h:panelGroup>
 			<table>
 			<tr>
-				<td style="width: 190px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.order.type']}" /></td>
+				<td style="width: 190px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.order.type']}" /><p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu
 						value="#{flCustomerServiceBackingBean.managedBean.searchOrderType}"
 						style="width: 314px;">
@@ -72,7 +73,8 @@
 				
 			</tr>
 			<tr>
-			<td style="width: 190px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.doc.type']}"	/></td>
+			<td style="width: 190px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.doc.type']}"	/><p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 			<td><p:selectOneMenu id="searchDocTypeDD" style="width: 314px;"
 						value="#{flCustomerServiceBackingBean.managedBean.searchDocType}">
 						<f:selectItems

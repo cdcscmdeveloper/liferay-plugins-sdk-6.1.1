@@ -83,6 +83,15 @@ public class FlCustomerServiceBackingBean extends FulfilmentBaseBackingBean<FlCu
 					new String[] {ResourceBundleUtils.getMessage("lbl.fl.ptj.code", 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		}
+		
+		//Document type become mandatory
+		if (null == getManagedBean().getSearchOrderType()|| null == getManagedBean().getSearchDocType()) {
+			throw new EpException(MessageConst.ERROR_740023);
+		} else if ((null == getManagedBean().getSearchDocType()&& "".equalsIgnoreCase(getManagedBean().getSearchOrderNo()) && "".equalsIgnoreCase(getManagedBean().getSearchDocNo()))) {
+			throw new EpException(MessageConst.ERROR_740039, new String[] {
+					ResourceBundleUtils.getMessage("lbl.fl.doc.maintain.doc.type",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),
+					ResourceBundleUtils.getMessage("lbl.fl.do.poco.no",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()) });
+		}
 		getManagedBean().getFlDocumentDataModel().reloadData();
 	}
 	
