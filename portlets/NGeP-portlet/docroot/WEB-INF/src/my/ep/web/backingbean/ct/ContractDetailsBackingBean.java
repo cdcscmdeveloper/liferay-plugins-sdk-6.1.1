@@ -776,10 +776,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	public void validateCtContractVer(String action) throws EpException {
 		getManagedBean().setAutoUpdate(true);
 
-		/*Validation for delivery term main page*/
+		/* #17087 Validation for delivery term to allow zero days*/
 		if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) &&
 				!ctBB.getManagedBean().getContractVer().getCtContract().isZonalPricing()){
-			if(ctBB.getManagedBean().getContractVer().getCtContractValue().getDeliveryTerm() <= 0){
+			if(ctBB.getManagedBean().getContractVer().getCtContractValue().getDeliveryTerm() < 0){
 				getManagedBean().setSelectedTabIndex(0);
 				throw new EpException(MessageConst.ERROR_100062);
 			}
@@ -888,12 +888,12 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 		}
 
-		// Validation for zone
+		/* #17087 Validation for zone to allow zero days */
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 			ctBB.getZoneObjDetails();
 			if (ctBB.getManagedBean().getContractVer().getCtContractZones() != null) {
 				for (CtContractZone contractZone : ctBB.getManagedBean().getContractVer().getCtContractZones()) {
-					if (contractZone.getDeliveryTerm() <= 0) {
+					if (contractZone.getDeliveryTerm() < 0) {
 						getManagedBean().setSelectedTabIndex(1);
 						throw new EpException(MessageConst.ERROR_750004, new String[]{contractZone.getZoneName()});
 					}
