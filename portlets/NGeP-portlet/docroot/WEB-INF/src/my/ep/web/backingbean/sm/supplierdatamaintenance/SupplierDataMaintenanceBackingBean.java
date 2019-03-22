@@ -1,6 +1,8 @@
 package my.ep.web.backingbean.sm.supplierdatamaintenance;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -13,6 +15,7 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceException;
 
+import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -41,10 +44,13 @@ import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.sm.applicationView.BaseReviewApplicationBackingBean;
+import my.ep.web.backingbean.sm.commonappl.CommonApplBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
@@ -64,7 +70,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	 * 
 	 */
 	private static final long serialVersionUID = 3781591594455061750L;
-
+	
 	/**
 	 * Pre-render and redirect to Search Page
 	 */
@@ -115,6 +121,8 @@ public class SupplierDataMaintenanceBackingBean extends
 		setLoginUserAllowedToDoMaintenance();
 		checkIfSupplierHasActiveTransaction(false);
 		initPOApproverOverlapCategoryRemarkInfo();
+		approvalHistoryRemarklist();
+		initApproverRemarkInfo();
 		
 		//Redmine #18959
 		if(getManagedBean().isHasActiveTransaction()) {
@@ -181,7 +189,6 @@ public class SupplierDataMaintenanceBackingBean extends
 		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
 		SupplierDataMaintenanceResDTO resDTO = new SupplierDataMaintenanceResDTO();
 		List<SmTrackingDairyVO> listSmTrackingDiary = new ArrayList<SmTrackingDairyVO>();
-
 		//reset value
 		getManagedBean().setHasRegStatusChanged(false);
 		getManagedBean().setHasMofExpiryDateChanged(false);
@@ -213,6 +220,8 @@ public class SupplierDataMaintenanceBackingBean extends
 			reqDTO.setPortalBaseUrl(SmCommonUtil.getEpBaseUrl());
 			reqDTO.setOverlapCategoryRemarkDocType(ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY_APPROVER);
 			reqDTO.setRemarkId(getManagedBean().getRemarkId());
+			reqDTO.setApproverRemark(getManagedBean().getApproverRemark());
+		
 
 			if (getManagedBean().isEditDisciplinaryAction()) {
 				reqDTO.setSmDisciplinaryAction(getManagedBean()
@@ -221,7 +230,6 @@ public class SupplierDataMaintenanceBackingBean extends
 			
 			String oriPoApprOverlappedRemark = getManagedBean().getOriPoApprOverlappedRemark();
 			String poApprOverlappedRemark = getManagedBean().getPoApprOverlappedRemark();
-			
 			//Redmine #16927
 			//to check if overlap remark changed 
 			if(oriPoApprOverlappedRemark != null) {
@@ -1143,11 +1151,27 @@ public class SupplierDataMaintenanceBackingBean extends
 		
 		SmRemaksResDTO resDTO = SmServiceLookup.getSmRemarksSO().retrieveSmRemarksByDocument(
 				reqDTO);
-		
 		if(resDTO.getRemarksList() != null && resDTO.getRemarksList().size() > 0) {
 			SmRemark remark = resDTO.getRemarksList().get(0);
 			getManagedBean().setPoApprOverlappedRemark(remark.getRemark());
 			getManagedBean().setOriPoApprOverlappedRemark(remark.getRemark());
+			getManagedBean().setRemarkId(remark.getRemarkId());
+		}
+		
+		
+	}
+	
+	private void initApproverRemarkInfo(){
+		SmRemarksReqDTO reqDTO = new SmRemarksReqDTO();
+		reqDTO.setDocType(ParameterConst.SM_DATA_MAINTENANCE_RMRK_DECISION_APPROVE);
+		reqDTO.setDocId(getManagedBean().getSmAppl().getApplId());
+		
+		SmRemaksResDTO resDTO = SmServiceLookup.getSmRemarksSO().retrieveSmRemarksByDocument(
+				reqDTO);
+		
+		if(resDTO.getRemarksList() != null && resDTO.getRemarksList().size() > 0) {
+			SmRemark remark = resDTO.getRemarksList().get(0);
+			getManagedBean().setApproverRemark(remark.getRemark());
 			getManagedBean().setRemarkId(remark.getRemarkId());
 		}
 	}
@@ -1360,6 +1384,22 @@ public class SupplierDataMaintenanceBackingBean extends
 			retVal = resDTO.getPmStatus().getPmRegStatus();
 		}
 		return retVal;
+	}
+	
+	public void onViewApprRemarkHistoryList() {
+		RequestContext.getCurrentInstance().execute("approverRemarkDialog.show();");
+	}
+
+	private void approvalHistoryRemarklist() {
+		SmRemaksResDTO resDTO = SmApplicationUtil.getRemarksByDoc(
+				ParameterConst.SM_DATA_MAINTENANCE_RMRK_DECISION_APPROVE, getManagedBean().getSmAppl().getApplId());
+		resDTO.getRemarksList();
+		getManagedBean().setApproverRemarkList(resDTO.getRemarksList());
+	}
+
+	public String getUserNameByUserId(Long userId) {
+		return PmCommonUtil.retriveUserName(userId);
+
 	}
 
 }
