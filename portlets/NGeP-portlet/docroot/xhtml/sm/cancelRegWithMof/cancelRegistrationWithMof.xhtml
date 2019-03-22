@@ -83,15 +83,21 @@
 				cancelLabel="#{lbl['lbl.btn.cancel']}"
 				multiple="false" showButtons="false" />
 		</p:dialog>
-<!-- 		harris -->
-	<p:dialog widgetVar="DeleteDlg" id="DeleteDlg" modal="true" height="100" width="500">
-   			 #{lbl['lbl.sm.upload.delete.confirm']}
-   			<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.delete']}" oncomplete="DeleteDlg.hide()"
-				action="#{backingBean.deleteCancelMofRegFileAttachment()}" update="@form"></p:commandButton>
-			<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="DeleteDlg.hide();"></p:commandButton>
-		</div>
-	</p:dialog>
+
+		<!-- harris -->
+		<p:confirmDialog id="DeleteDlg" widgetVar="DeleteDlg" closable="true"
+			message="#{lbl['lbl.sm.upload.delete.message']}"
+			header="#{lbl['lbl.sm.upload.delete.confirm.header']}"
+			severity="alert">
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.delete']}"
+					oncomplete="DeleteDlg.hide()"
+					action="#{backingBean.deleteCancelMofRegFileAttachment()}"
+					update="@form"></p:commandButton>
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="DeleteDlg.hide();"></p:commandButton>
+			</div>
+		</p:confirmDialog>
 		<p:message id="uploadMsg" for="upload" display="icon" />
 	</ui:define>
 </ui:composition>
