@@ -909,7 +909,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 					SearchFilterBean filterBean = new SearchFilterBean("PARAMETER_CODE",SearchOperator.OPERATOR_LIKE.value(),
 							ParameterConst.CONTRACT_TYPE_MINISTRY);
 					filterBean.setCaseInsensitive(true);
-					searchBean.getDataFilterBeans().add(filterBean);				
+					searchBean.getDataFilterBeans().add(filterBean);
 				}else if(fc.hasRoleUser(RoleCode.BPK_CCA.value()) && !fc.hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())){
 					SearchFilterBean filterBean = new SearchFilterBean("PARAMETER_CODE",SearchOperator.OPERATOR_LIKE.value(),
 							ParameterConst.CONTRACT_TYPE_CENTRAL);
@@ -923,20 +923,33 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 				} else if(!fc.hasRoleUser(RoleCode.CT_APPROVER.value()) && fc.hasRoleUser(RoleCode.BPK_CC_APPROVER.value())){
 					SearchFilterBean filterBean = new SearchFilterBean("PARAMETER_CODE",SearchOperator.OPERATOR_LIKE.value(),
 							ParameterConst.CONTRACT_TYPE_CENTRAL);
-					filterBean.setCaseInsensitive(true);
-					searchBean.getDataFilterBeans().add(filterBean);		
+					searchBean.getDataFilterBeans().add(filterBean);
 				}
+					if (getSearchPtjProfile() != null) {
+						SearchFilterBean filterBean = new SearchFilterBean("PTJ_ORG_ID",SearchOperator.OPERATOR_EQUALS.value(),
+						getSearchPtjProfile().getOrgProfileId());
+						
+						SearchFilterBean filterBeans = new SearchFilterBean("NEW_ORG_PROFILE_ID",SearchOperator.OPERATOR_EQUALS.value(),
+						getSearchPtjProfile().getOrgProfileId());
+						
+				filterBean.setCaseInsensitive(true);
+				filterBean.setAndOr(SearchCondition.CONDITION_OR.value());
+				filterBeans.setCaseInsensitive(true);
+				filterBeans.setAndOr(SearchCondition.CONDITION_OR.value());
+				
+				SearchMultiFilterBean filterBeann = new SearchMultiFilterBean(filterBean,filterBeans);
 
-				if (getSearchPtjProfile() != null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("PTJ_ORG_ID", SearchOperator.OPERATOR_EQUALS.value(),
-							getSearchPtjProfile().getOrgProfileId()));
-				}else if (getSearchPtjGroupProfile() != null) {
+				searchBean.getDataFilterBeans().add(filterBeann);
+				}else  if (getSearchPtjGroupProfile() != null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("PTJ_GROUP_ORG_ID", SearchOperator.OPERATOR_EQUALS.value(),
 							getSearchPtjGroupProfile().getOrgProfileId()));
 				} else if (getSearchMinistryProfile() != null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("MINISTRY_ORG_ID", SearchOperator.OPERATOR_EQUALS.value(),
 							getSearchMinistryProfile().getOrgProfileId()));
 				}
+				
+
+				
 				if (StringUtils.isNotBlank(getSearchCircularNo())) {
 					SearchFilterBean filterBean = new SearchFilterBean("CIRCULAR_NO",SearchOperator.OPERATOR_LIKE.value(),
 							getSearchCircularNo());
