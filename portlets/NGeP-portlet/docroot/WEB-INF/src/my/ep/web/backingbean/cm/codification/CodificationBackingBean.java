@@ -1872,11 +1872,15 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 
 		String currentTaskName = fs.getParameter("currentTaskName");
 
-		if (currentTaskName != null && currentTaskName.equals(my.ep.constant.cm.CmConst.TASK_CREATE_TEMP_CODE)) {
+		if (currentTaskName != null && currentTaskName.equals(my.ep.constant.cm.CmConst.TASK_CREATE_TEMP_CODE) || 
+				currentTaskName != null && currentTaskName.equals(my.ep.constant.cm.CmConst.TASK_REVISE_TEMP_CODE)) {
 			return "reviewBeforeCreateTempCode?faces-redirect=true";
-		}else if (currentTaskName != null && currentTaskName.equals(my.ep.constant.cm.CmConst.TASK_REVIEW_EXT_CODE)) {
+		}else if (currentTaskName != null && currentTaskName.equals(my.ep.constant.cm.CmConst.TASK_APPROVE_AND_PUBLISH_EXT_CODE)) {
+			return "reviewApproveExtensionCode?faces-redirect=true";
+		}else if (currentTaskName != null && currentTaskName.equals(my.ep.constant.cm.CmConst.TASK_REVIEW_EXT_CODE) ||
+				currentTaskName != null && currentTaskName.equals(my.ep.constant.cm.CmConst.TASK_REVISE_EXT_CODE)) {
 			return "reviewExtensionCodeFlow?faces-redirect=true";
-		}  else {
+		}else {
 			return "reviewUnspscCode?faces-redirect=true";
 		}
 
@@ -2465,7 +2469,49 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 
 		return "searchExtensionToAssignItem.xhtml";
 	}
-
+	public void checkExistingExtension(String input, boolean isSelectFromList, String attr) {
+		if (StringUtils.isNotBlank(input)) {
+			List<SelectItem> sl = null;
+			String label = null;
+			if(attr.equalsIgnoreCase("type")){
+				sl =  this.getManagedBean().getTypeCriteria();
+				label = "lbl.cm.type";
+			}else	if(attr.equalsIgnoreCase("brand")){
+				sl =  this.getManagedBean().getBrandCriteria();
+				label = "lbl.cm.brand";
+			}else	if(attr.equalsIgnoreCase("measurement")){
+				sl =  this.getManagedBean().getMeasurementCriteria();
+				label = "lbl.cm.measurement";
+			}else	if(attr.equalsIgnoreCase("color")){
+				sl =  this.getManagedBean().getColorCriteria();
+				label = "lbl.cm.color";
+			}
+			if(sl!=null && sl.size()>0){
+				for (SelectItem ext : sl) {
+					if (!StringUtils.isBlank(input)) {
+						if (input.toLowerCase().trim().equals(ext.getLabel().toString().toLowerCase().trim())) {
+							if(isSelectFromList){
+								throw new EpException(MessageUtils
+										.getMessage(MessageConst.ERROR_715068, new String[] { ""
+												+ input },
+												MessageUtils.BUNDLE_COMMON_MESSAGES,
+												new FacesScopes().getUserLocale()));
+							}
+							throw new EpException(
+									MessageConst.ERROR_716009,
+									new String[] { ResourceBundleUtils
+											.getMessage(
+													label,
+													ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+													new FacesScopes()
+													.getUserLocale()) });
+						}
+					}
+				}
+			}
+		}
+	}
+	
 	public String requestExtensionWithUNSPSC() {
 
 		UnspscCodeBackingBean unspscBB = new UnspscCodeBackingBean();
@@ -2482,7 +2528,8 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		String prevTypeName = null;
 		String prevBrandName = null;
 		String prevMeasurementName = null;
-
+		
+		
 		//check for empty extension request and extension selection
 		if((StringUtils.isBlank((String) measurementFilterBean
 				.getSearchValue()) && StringUtils.isBlank(this.getManagedBean().getTempMeasurementName())) || 
@@ -2512,7 +2559,8 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			.setColorId(resDTO.getColorList().get(0).getColorId());
 			unspscBB.getManagedBean().getRequestCode().setRequestColor(false);
 		} else {
-			unspscBB.checkingColorRedundency(this.getManagedBean().getTempColorName(), true);
+			//unspscBB.checkingColorRedundency(this.getManagedBean().getTempColorName(), true);
+			checkExistingExtension(this.getManagedBean().getTempColorName(), true, "color");
 			unspscBB.getManagedBean().getRequestCode().setColorId(null);
 			unspscBB.getManagedBean().getRequestCode().setRequestColor(true);
 		}
@@ -2530,7 +2578,8 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			.setTypeId(resDTO.getTypeList().get(0).getTypeId());
 			unspscBB.getManagedBean().getRequestCode().setRequestType(false);
 		} else {
-			unspscBB.checkingTypeRedundency(this.getManagedBean().getTempTypeName(), true);
+		//	unspscBB.checkingTypeRedundency(this.getManagedBean().getTempTypeName(), true);
+			checkExistingExtension(this.getManagedBean().getTempTypeName(), true, "type");
 			unspscBB.getManagedBean().getRequestCode().setTypeId(null);
 			unspscBB.getManagedBean().getRequestCode().setRequestType(true);
 		}
@@ -2549,7 +2598,8 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			unspscBB.getManagedBean().getRequestCode().setRequestBrand(false);
 
 		} else {
-			unspscBB.checkingBrandRedundency(this.getManagedBean().getTempBrandName(),true);
+			//unspscBB.checkingBrandRedundency(this.getManagedBean().getTempBrandName(),true);
+			checkExistingExtension(this.getManagedBean().getTempBrandName(), true, "brand");
 			unspscBB.getManagedBean().getRequestCode().setBrandId(null);
 			unspscBB.getManagedBean().getRequestCode().setRequestBrand(true);
 		}
@@ -2573,7 +2623,8 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			unspscBB.getManagedBean().getRequestCode()
 			.setRequestMeasurement(false);
 		} else {
-			unspscBB.checkingMeasurmentRedundency(this.getManagedBean().getTempMeasurementName(), true);
+			//unspscBB.checkingMeasurmentRedundency(this.getManagedBean().getTempMeasurementName(), true);
+			checkExistingExtension(this.getManagedBean().getTempMeasurementName(), true, "measurement");
 			unspscBB.getManagedBean().getRequestCode().setMeasurementId(null);
 			unspscBB.getManagedBean().getRequestCode().setRequestMeasurement(true);
 		}
@@ -2689,6 +2740,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				reqDTO.getCdcList().add(user.getLoginId());
 			}
 		}
+		reqDTO.setRemark(unspscBB.getManagedBean().getSelectedRemarks().get(0));
 		if(requestAndPublish){
 			resDTO = unspscSO.publishCodificationRequest(reqDTO);
 		}else{
