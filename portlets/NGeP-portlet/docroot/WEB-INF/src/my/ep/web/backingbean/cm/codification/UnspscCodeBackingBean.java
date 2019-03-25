@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -616,7 +617,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 			PmTrackingDiary previousRecord = getLatestDiaryRecord(reqDTO, list);
 
-			statusReqDTO.setStatusId(previousRecord != null ? 15016L: 15011L);
+			statusReqDTO.setStatusId(previousRecord != null ? 15016L: this.getManagedBean().isCodeExtension() ? 15008L: 15018L);
 			String actioner = previousRecord != null ? "Pentadbir Kodifikasi" : "Pentadbir Katalog";
 
 			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
@@ -2959,8 +2960,25 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		return last;
 	}; 
 	
+	private void arrangeOutcomeButton(){
+		String[] actions=this.getManagedBean().getAction();
+		if(this.getManagedBean().getAction()!=null){
+			for(int i = 0;i<actions.length;i++){
+				String temp;
+				if(actions[i].equalsIgnoreCase("SUBMIT")){
+					temp = actions[0];
+					actions[0]= actions[i];
+					actions[i]=temp;
+				}else	if(actions[i].equalsIgnoreCase("RECOMMEND_TO_SUPPLIER")){
+					temp = actions[1];
+					actions[1]= actions[i];
+					actions[i]=temp;
+				}
+			}
+		}
+		this.getManagedBean().setAction(actions);
+	}
 	public void preRenderExtensionView() {
-
 		log.info("**********preRenderExtensionView**************");
 
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
@@ -3117,7 +3135,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		this.getManagedBean().setAction(res.getAction());
 		this.getManagedBean().setTaskId(taskId);
 		this.getManagedBean().setTaskName(res.getTaskName());
-		
+		arrangeOutcomeButton();
+
 		Collections.sort(this.getManagedBean().getTypeList(), new Comparator<CmType>() {
 		    @Override
 		    public int compare(CmType t1, CmType t2) {
@@ -3263,8 +3282,6 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			navigateTo(0, "reviewBeforeCreateExtCode");
 		} else if (taskName.equalsIgnoreCase("Select Recommended")){
 			navigateTo(0, "selectRecommendUnspscCode");
-		}else if (taskName.equalsIgnoreCase("Publish Result Notification")){
-			navigateTo(0, "reviewApproveExtensionCodeII");
 		}else  if (taskName.equalsIgnoreCase("Review Request")){
 			navigateTo(4, "reviewUnspscCode");
 		}else  if (taskName.equalsIgnoreCase("Revise Request")){
@@ -3278,15 +3295,15 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		} else if (taskName.equalsIgnoreCase("Publish Extension Code")) {
 			navigateTo(0, "reviewApproveExtensionCodeII");
 		} else if (taskName.equalsIgnoreCase("Publish Result Notification")) {
-			if(processGroup.equalsIgnoreCase("Review Extension Code")){
-				if (((CDRequestDataType)obj).isPublished()) {
+//			if(processGroup.equalsIgnoreCase("Review Extension Code")){
+//				if (((CDRequestDataType)obj).isPublished()) {
 					navigateTo(0, "resultNotification.xhtml");
-				} else {
-					navigateTo(0, "reviewExtensionCodeFlow2");
-				}
-			}else{
-				navigateTo(0, "reviewApproveExtensionCodeII.xhtml");
-			}
+//				} else {
+//					navigateTo(0, "reviewExtensionCodeFlow2");
+//				}
+//			}else{
+//				navigateTo(0, "reviewApproveExtensionCodeII.xhtml");
+//			}
 		}else if(taskName.equalsIgnoreCase("Recommend Result Notification")){
 			if(processGroup.equalsIgnoreCase("Review Extension Code")){
 				if(this.getManagedBean().getRequestCode().getCmRecommendCodes().size()>0){
@@ -3448,6 +3465,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		this.getManagedBean().setTaskName(res.getTaskName());
 		this.getManagedBean().setTaskId(taskId);
 		this.getManagedBean().setAction(res.getAction());
+		arrangeOutcomeButton();
 
 		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", IStatusSO.class);
