@@ -197,9 +197,11 @@ public class LOADetailBackingBean extends
 
 	private static final String MALAY_NA = "T/B";
 
-	private static final String PROCUREMENT_TYPE = "Special Item / PK7";
+	private static final Long PROCUREMENT_TYPE_ID = new Long(228);
 	
-	private static final String FULFILMENT_TYPE = "Periodic";
+	private static final Long FULFIL_PERIODIC_SCHEDULE_ID= new Long(149);
+	
+	private static final Long FULFIL_PERIODIC_AS_AND_WHEN_ID= new Long(150);
 	
 	/**
 	 * Instantiates a new LOA detail backing bean.
@@ -4806,14 +4808,23 @@ public class LOADetailBackingBean extends
 					null != dpLOABackingBean.getManagedBean().getPurchaseRequestList().get(0).getRequestNoteDtls()
 					&& dpLOABackingBean.getManagedBean().getPurchaseRequestList().get(0).getRequestNoteDtls().size() > 0) {
 				log.info(this.getClass().getName() + ".checkPerformanceBondMandatory(): results found ");
-				String procurementType = getParameterDesc(dpLOABackingBean.getManagedBean().getPurchaseRequestList().get(0).getRequestNoteDtls().get(0).getProcurementType());
-				String fulfilmentType = getParameterDesc(dpLOABackingBean.getManagedBean().getPurchaseRequestList().get(0).getRequestNoteDtls().get(0).getFulfilmentType());
-				log.info(this.getClass().getName() + ".checkPerformanceBondMandatory(): procurementType is: " + procurementType);
-				log.info(this.getClass().getName() + ".checkPerformanceBondMandatory(): fulfilmentType is: " + fulfilmentType);
-				if (StringUtils.isNotEmpty(procurementType) && PROCUREMENT_TYPE.equals(procurementType) && StringUtils.isNotEmpty(fulfilmentType)
-						&& fulfilmentType.contains(FULFILMENT_TYPE)) {
-					getManagedBean().setEnablePBForDP(true);
-					log.info(this.getClass().getName() + ".checkPerformanceBondMandatory(): Enabled Performance Bond for loaNo is: " + loa.getLoaNo());
+				PmParameterDesc procurementType = getParameterDescByParamTypeAndParamCode(dpLOABackingBean.getManagedBean().getPurchaseRequestList().get(0).getRequestNoteDtls().get(0).getProcurementType());
+				PmParameterDesc fulfilmentType = getParameterDescByParamTypeAndParamCode(dpLOABackingBean.getManagedBean().getPurchaseRequestList().get(0).getRequestNoteDtls().get(0).getFulfilmentType());
+				if (null != procurementType 
+						&& null != procurementType.getPmParameter() 
+						&& null != procurementType.getPmParameter().getParameterId()
+						&& null != fulfilmentType 
+						&& null != fulfilmentType.getPmParameter() 
+						&& null != fulfilmentType.getPmParameter().getParameterId()
+						) {
+						log.info(this.getClass().getName() + ".checkPerformanceBondMandatory(): procurementType ID is: " + procurementType.getPmParameter().getParameterId());
+						log.info(this.getClass().getName() + ".checkPerformanceBondMandatory(): fulfilmentType ID is: " + fulfilmentType.getPmParameter().getParameterId());
+						if (procurementType.getPmParameter().getParameterId().equals(PROCUREMENT_TYPE_ID) &&
+								(fulfilmentType.getPmParameter().getParameterId().equals(FULFIL_PERIODIC_SCHEDULE_ID)
+								|| fulfilmentType.getPmParameter().getParameterId().equals(FULFIL_PERIODIC_AS_AND_WHEN_ID))) {
+							getManagedBean().setEnablePBForDP(true);
+							log.info(this.getClass().getName() + ".checkPerformanceBondMandatory(): Enabled Performance Bond for loaNo is: " + loa.getLoaNo());
+						}
 				}
 			}
 		}
