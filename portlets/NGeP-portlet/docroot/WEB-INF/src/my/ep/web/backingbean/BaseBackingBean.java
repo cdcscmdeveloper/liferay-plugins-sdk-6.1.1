@@ -2275,4 +2275,20 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		
 	return uomCodeDesc;	
 	}
+	
+	/**
+	 * Get Parameter Desc By Param Type And Param Code.
+	 * 
+	 * @param parameter
+	 * @return
+	 */
+	public PmParameterDesc getParameterDescByParamTypeAndParamCode(PmParameter parameter) {
+		if (parameter != null
+				&& StringUtils.isNotBlank(parameter.getParameterType())) {
+			return ParameterHelper.getInstance().getParameterDescByParamTypeAndParamCode(
+					parameter.getParameterType(), parameter.getParameterCode());
+		} else {
+			return null;
+		}
+	}
 }
