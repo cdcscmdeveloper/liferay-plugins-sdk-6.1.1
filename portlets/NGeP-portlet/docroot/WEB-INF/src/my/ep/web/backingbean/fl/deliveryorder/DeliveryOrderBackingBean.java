@@ -21,6 +21,12 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+
+import com.liferay.portal.util.PortalUtil;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -55,7 +61,6 @@ import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.maintenace.cancel.dofulfillment.FLDOFulfillmentCancelReqType;
 import my.ep.jaxb.fl.maintenace.modification.dofulfillment.FLDOFulfillmentModificationReqType;
-import my.ep.persistence.entity.fl.FlActor;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.order.FlDelOrderItem;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
@@ -89,12 +94,6 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-
-import org.apache.commons.lang.builder.CompareToBuilder;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-
-import com.liferay.portal.util.PortalUtil;
 
 /**
  * Backing Bean for Create Delivery Order.
@@ -307,6 +306,11 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			}
 			else{
 				resDTO = deliveryOrderSO.saveDeliveryOrder(reqDTO);
+				if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+					reqDTO.setTriggerBPM(true);
+					reqDTO.setFulfilmentOrder(resDTO.getFlOrder());
+					resDTO = deliveryOrderSO.saveDeliveryOrder(reqDTO);
+				}
 			}
 			if(resDTO.isSuccessful()) {
 				String messageId = MessageConst.INFO_700043;
