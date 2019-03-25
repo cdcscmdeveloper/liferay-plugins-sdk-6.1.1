@@ -261,6 +261,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	private Long disPmPrjSetia;
 	private Long disPmPrgActivity;
 	private boolean selectAllCheckbox;
+	Boolean flag = false;
 	
 	/**
 	 * Instantiates a new fulfilment backing bean.
@@ -1372,6 +1373,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		
 		List<FlFulfilmentItemAddr> itemsList = new ArrayList<FlFulfilmentItemAddr>();
 
+		IFulfilmentSO iFulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);//#21489
 		for (FlFulfilmentItemAddr newItem : getManagedBean().getItemAddrList()) {
 			boolean existed = false;
 			if (getManagedBean().getSelectedDelAddr() != null && getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr() != null) {
@@ -1395,6 +1397,20 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 						newItem.setOrderedAmt(BigDecimal.ZERO);
 					}
 				}else{
+					
+					//#21489
+					BigDecimal unitPrice = BigDecimal.ZERO;
+					Long reqId = getManagedBean().getFlRequest().getFulfilmentReqId();
+					String itemCode = newItem.getItemCode();
+
+					if (!flag) {
+						unitPrice = iFulfilmentSO.getUnitPriceByReqId(reqId,itemCode);
+						if (newItem.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
+							newItem.setUnitPrice(unitPrice);
+						}
+						flag = true;
+					}//end #21489
+
 					newItem.setOrderedQty(BigDecimal.ZERO);
 					newItem.setOrderedAmt(BigDecimal.ZERO);
 				}
@@ -4411,7 +4427,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				
 				
 				//#21489
-				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) && getManagedBean().getFlRequest().getProcurementTypeCategory().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_TYPE_CODE_SERVICE)){
+				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
 					validateUnitPrice(flRequest);
 					}
 				
@@ -6072,7 +6088,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 		}
 	}
+	
+	
 
-	
-	
 }
+	
+
