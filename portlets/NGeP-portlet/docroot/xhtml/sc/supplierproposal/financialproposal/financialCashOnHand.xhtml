@@ -126,8 +126,8 @@
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 				<p:inputText id="cashAmount" value="#{cashonhand.cashAmount}"
-					size="20" style="text-align:right" required="true" maxlength="14"
-					label="#{lbl['lbl.sc.amount']}" style="width : 85%"
+					size="20" style="width : 85%;text-align:right" required="true" maxlength="14"
+					label="#{lbl['lbl.sc.amount']}" 
 					rendered="#{isProposal}">
 					<p:ajax event="blur" process="@this"
 						listener="#{supplierProposalDetailBackingBean.totalCashOnHandSum}"
