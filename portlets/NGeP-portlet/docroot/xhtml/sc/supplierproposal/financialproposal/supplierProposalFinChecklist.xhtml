@@ -87,16 +87,16 @@
 						rendered="#{(!empty financeList.scQtCheckList.scQtCheckListAttachment) and (empty financeList.scQtProposalChecklistAttachment)}" />
 					<br />
 					<ac:scSingleFileUploadButton id="fcUploadBtn"
-						popupWidgetVar="checklistUploadDlg"
+						popupWidgetVar="financialproposalchecklistUploadDlg"
 						attachment="#{financeList.scQtProposalChecklistAttachment}"
 						encrypted="true"
 						encryptionKey="#{supplierProposalDetailBackingBean.encryptionKey}"
 						readonly="#{supplierProposalDetailBackingBean.managedBean.readOnly or (financeList.submitted and financeList.scQtProposalChecklistAttachment eq null)}"
 						rowIndex="#{rowIndex}"
-						deleteFileUploadListener="supplierProposalDetailBackingBean.deleteProposalChecklistAttachmentAction">
+						deleteFileUploadListener="supplierProposalDetailBackingBean.deleteProposalChecklistAttachmentFinancialAction">
 						<f:setPropertyActionListener for="actionEvent"
 							value="#{financeList}"
-							target="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist}" />
+							target="#{supplierProposalDetailBackingBean.managedBean.financialQtProposalChecklist}" />
 					</ac:scSingleFileUploadButton>
 				</ui:fragment>
 
