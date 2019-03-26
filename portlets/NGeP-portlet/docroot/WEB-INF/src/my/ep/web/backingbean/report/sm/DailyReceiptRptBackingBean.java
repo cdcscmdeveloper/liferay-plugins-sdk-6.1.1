@@ -22,6 +22,10 @@ public class DailyReceiptRptBackingBean extends SmReportBackingBean<DailyReceipt
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(DailyReceiptRptBackingBean.class);
 	
+	public DailyReceiptRptBackingBean() {
+		setDefaultDateFromAndDateTo();
+	}
+	
 	public void generateReport(){
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 		LinkedHashMap<String,String> params = new LinkedHashMap<String,String>();
@@ -60,8 +64,8 @@ public class DailyReceiptRptBackingBean extends SmReportBackingBean<DailyReceipt
 		getManagedBean().setYear(null);
 		getManagedBean().setYearTo(null);
 		getManagedBean().setReceiptNo(null);
-		getManagedBean().setDateFrom(null);
-		getManagedBean().setDateTo(null);
+		
+		setDefaultDateFromAndDateTo();
 	}
 	
 	/**
