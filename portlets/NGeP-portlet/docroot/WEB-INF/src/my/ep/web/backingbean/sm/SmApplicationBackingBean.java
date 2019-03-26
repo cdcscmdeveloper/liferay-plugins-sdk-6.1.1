@@ -97,7 +97,6 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
-import my.ep.persistence.entity.sm.SmApplDocFile;
 import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmApplRejectReason;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
@@ -133,7 +132,6 @@ import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.entity.sm.SmSupplierSystem;
 import my.ep.persistence.entity.sm.SmSvTask;
-import my.ep.persistence.entity.sm.SmSvTemplate;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
@@ -195,7 +193,6 @@ public class SmApplicationBackingBean extends
 	private int outputTab;
 	private String buttonType = "";
 	private StreamedContent file;
-		
 	NumberFormat formatter = new DecimalFormat("#0.00");
 	SmRuleHelper ruleHelper = new SmRuleHelper();
 
@@ -808,7 +805,7 @@ public class SmApplicationBackingBean extends
 				cannotProceedAlertMsg = SmApplicationUtil
 						.checkActiveCancelSmApplForSupp(currSupp);
 				if (cannotProceedAlertMsg) {
-					//throw new EpException(MessageConst.ERROR_722542);
+					throw new EpException(MessageConst.ERROR_722542);
 				}
 
 				boolean hasActiveTransactions = SmApplicationUtil
@@ -833,7 +830,7 @@ public class SmApplicationBackingBean extends
 				cannotProceedAlertMsg = SmApplicationUtil
 						.checkActiveSmApplForSupp(currSupp);
 				if (cannotProceedAlertMsg) {
-					//throw new EpException(MessageConst.ERROR_722542);
+					throw new EpException(MessageConst.ERROR_722542);
 				}
 			}
 
@@ -1629,7 +1626,7 @@ public class SmApplicationBackingBean extends
 			}
 			if (SmApplicationUtil.checkActiveSmApplForSupp(getManagedBean()
 					.getSmSupplier())) {
-				//throw new EpException(MessageConst.ERROR_722542);
+				throw new EpException(MessageConst.ERROR_722542);
 			}
 			RequestContext.getCurrentInstance().execute(
 					"saveDraftConfirmDialog.show();");
@@ -7550,7 +7547,7 @@ public class SmApplicationBackingBean extends
 						.checkActiveSmApplForSupp(getManagedBean()
 								.getSmSupplier());
 				if (cannotProceedAlertMsg) {
-					//throw new EpException(MessageConst.ERROR_722542);
+					throw new EpException(MessageConst.ERROR_722542);
 				}
 
 				resDTO = regSo.saveNewDraftApplication(reqDTO);
