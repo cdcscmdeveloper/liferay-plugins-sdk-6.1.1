@@ -199,6 +199,8 @@ public class SPDetailBackingBean extends
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.debug(message);
+		}else{
+			log.info(message);	
 		}
 	}
 
@@ -211,7 +213,7 @@ public class SPDetailBackingBean extends
 	 */
 	public void retrieveProposalChecklistDtls(Long qtID, Long userId,
 			boolean isReadonly) {
-		debugLogger("retrieveProposalChecklistDtls");
+		debugLogger("retrieveProposalChecklistDtls qtId:::"+qtID+"::::UserId::::"+userId);
 		ProposalReqDTO reqDTO = new ProposalReqDTO();
 		IQTProposalSO proposalSO;
 		try {
@@ -381,7 +383,7 @@ public class SPDetailBackingBean extends
 	 * Details
 	 */
 	public void retrieveQTDocumentDetails() {
-		debugLogger("retrieveTechnicalProposalList");
+		debugLogger("retrieveTechnicalProposalList supplierId::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		this.getManagedBean().setPrepareActiveIndex(0);
 	}
 
@@ -389,7 +391,7 @@ public class SPDetailBackingBean extends
 	 * Listener method for tab change to retrieve Technical Proposal List
 	 */
 	public void retrieveTechnicalProposalList() {
-		debugLogger("retrieveTechnicalProposalList");
+		debugLogger("retrieveTechnicalProposalList supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		this.getManagedBean().setPrepareActiveIndex(1);
 	}
 
@@ -397,7 +399,7 @@ public class SPDetailBackingBean extends
 	 * Listener method for tab change to retrieve Financial Proposal List
 	 */
 	public void retrieveFinancialProposalList() {
-		debugLogger("retrieveFinancialProposalList");
+		debugLogger("retrieveFinancialProposalList supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		this.getManagedBean().setPrepareActiveIndex(2);
 	}
 
@@ -407,7 +409,7 @@ public class SPDetailBackingBean extends
 	 * @throws Exception
 	 */
 	public void retrieveDeclarationList() throws Exception {
-		debugLogger("retrieveDeclarationList");
+		debugLogger("retrieveDeclarationList supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		VelocityContext context = new VelocityContext();
 		try{
 			this.getManagedBean().setPrepareActiveIndex(3);
@@ -437,7 +439,7 @@ public class SPDetailBackingBean extends
 	 */
 
 	public void retrieveIntegrityDetails() throws Exception {
-		debugLogger("retrieveIntegrityDetails");
+		debugLogger("retrieveIntegrityDetails supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		this.getManagedBean().setPrepareActiveIndex(4);
 		generateDeclarationFromVelocity(getManagedBean().getQt());
 	}
@@ -447,7 +449,7 @@ public class SPDetailBackingBean extends
 	 * Details
 	 */
 	public void retrieveGeneralInfo() {
-		debugLogger("retrieveGeneralInfo");
+		debugLogger("retrieveGeneralInfo supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		this.getManagedBean().setPrepareActiveIndex(5);
 
 		if (getManagedBean().getSmAppl() == null
@@ -472,7 +474,7 @@ public class SPDetailBackingBean extends
 	 * @throws Exception
 	 */
 	public void downloadProposalReport() throws Exception {
-		debugLogger("downloadProposalReport");
+		debugLogger("downloadProposalReport supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		String reportName = null;
 		ScQt scQt = getManagedBean().getQt();
 		ScAttachment reportAttachment = new ScQtProposalReportAttachment();
@@ -517,7 +519,7 @@ public class SPDetailBackingBean extends
 	 * @return the proposal ProposalReqDTO
 	 */
 	private ProposalReqDTO populateProposalDetailsTosave() {
-
+		debugLogger("populateProposalDetailsTosave supplierId::::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		ProposalReqDTO reqDTO = null;
 		FacesScopes facesScopes = new FacesScopes();
 		try{
@@ -561,7 +563,7 @@ public class SPDetailBackingBean extends
 	 *            the digi sign
 	 */
 	public void submitSupplierProposal(PmDigiSign digiSign) {
-		debugLogger("submitSupplierProposal");
+		debugLogger("submitSupplierProposal supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		validateProposalCloseTime(this.getManagedBean().getQt());
 		if (getManagedBean().getSmSupplier() == null
 				|| getManagedBean().getSmAppl() == null) {
@@ -629,6 +631,7 @@ public class SPDetailBackingBean extends
 	 * @return the string
 	 */
 	private String prepareOriginalText(SmSupplier smSupplier) {
+		debugLogger("prepareOriginalText supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		FacesScopes facesScopes = new FacesScopes();
 		StringBuilder sb = new StringBuilder();
 		String countryCode = "";
@@ -698,10 +701,10 @@ public class SPDetailBackingBean extends
 	 * @return navigation path
 	 */
 	public String saveFinancialNonGovCompanyExpAction(boolean isCompleted) {
-		debugLogger("saveFinancialNonGovCompanyExpAction");
+		debugLogger("saveFinancialNonGovCompanyExpAction supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		validateProposalCloseTime(this.getManagedBean().getQt());
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
-				.getQtProposalChecklist();
+				.getFinancialQtProposalChecklist();
 		List<ScQtPRPExperience> experiences = this.getManagedBean()
 				.getScQtPRPExperiences();
 		List<List<EncryptDataBean>> encryptExpriencList = new ArrayList<List<EncryptDataBean>>();
@@ -763,7 +766,7 @@ public class SPDetailBackingBean extends
 			}
 
 			ScQtProposal proposal = this.getManagedBean()
-					.getQtProposalChecklist().getScQtProposal();
+					.getFinancialQtProposalChecklist().getScQtProposal();
 			proposal.setScQtProposalExperiences(experiences);
 			scQtProposalChecklist.setProposalScore(proposalScores);
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
@@ -794,7 +797,7 @@ public class SPDetailBackingBean extends
 
 				getManagedBean().getFinanceCheckDetailsList().set(index,
 						resDTO.getProposalChecklist());
-				this.getManagedBean().setQtProposalChecklist(
+				this.getManagedBean().setFinancialQtProposalChecklist(
 						resDTO.getProposalChecklist());
 				if (!this.getManagedBean().isFinanicialOnlyCheckList()) {
 					updateQtFinNdTechProposalCheckList(
@@ -903,10 +906,10 @@ public class SPDetailBackingBean extends
 	 * @return navigation path
 	 */
 	public String saveTechnicalSpecificationAction(boolean isCompleted) {
-		log.info("saveTechnicalSpecificationAction");
+		log.info("saveTechnicalSpecificationAction supplierId::::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		validateProposalCloseTime(this.getManagedBean().getQt());
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
-				.getQtProposalChecklist();
+				.getTechnicalQtProposalChecklist();
 
 		scQtProposalChecklist.setSubmitted(isCompleted);
 
@@ -927,10 +930,10 @@ public class SPDetailBackingBean extends
 	 * @return navigation path
 	 */
 	public String saveFinancialSpecificationAction(boolean isCompleted) {
-		debugLogger("saveFinancialSpecificationAction");
+		debugLogger("saveFinancialSpecificationAction supplierId::::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		validateProposalCloseTime(this.getManagedBean().getQt());
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
-				.getQtProposalChecklist();
+				.getFinancialQtProposalChecklist();
 		ScQtProposalChecklist completedFinSpec = null;
 		for (ScQtProposalChecklist finProposalChecklist : getManagedBean().getFinanceCheckDetailsList()) {
 			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
@@ -960,13 +963,13 @@ public class SPDetailBackingBean extends
 	 * @return the proposal res DTO
 	 */
 	private ProposalResDTO saveTemplateSpecDtls(ScQtProposalChecklist completedFinSpec, boolean isCompleted) {
-		log.info("saveTempleateSpecDtls.completedFinSpec: " + completedFinSpec);
+		log.info("saveTempleateSpecDtls.completedFinSpec: " + completedFinSpec +":::supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		validateProposalCloseTime(this.getManagedBean().getQt());
 		IQTProposalSO proposalSO = null;
 		ProposalReqDTO proposalReqDTO = new ProposalReqDTO();
 		ProposalResDTO proposalResDTO;
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
-				.getQtProposalChecklist();
+				.getFinancialQtProposalChecklist();
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
@@ -1112,12 +1115,12 @@ public class SPDetailBackingBean extends
 	 * @return the proposal res DTO
 	 */
 	private ProposalResDTO saveTechTemplateSpecDtls(boolean isCompleted) {
-		debugLogger("saveTempleateSpecDtls");
+		debugLogger("saveTempleateSpecDtls supplierId::::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		validateProposalCloseTime(this.getManagedBean().getQt());
 		IQTProposalSO proposalSO = null;
 		ProposalReqDTO proposalReqDTO = new ProposalReqDTO();
 		ProposalResDTO proposalResDTO = new ProposalResDTO();
-		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean().getQtProposalChecklist();
+		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean().getTechnicalQtProposalChecklist();
 
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -1170,11 +1173,11 @@ public class SPDetailBackingBean extends
 	 * @return navigation path
 	 */
 	public String saveFinancialCreditFacilityAction(boolean isCompleted) {
-		debugLogger("saveFinancialCreditFacilityAction");
+		debugLogger("saveFinancialCreditFacilityAction supplierId::::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		validateProposalCloseTime(this.getManagedBean().getQt());
 		IQTProposalSO proposalSO = null;
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
-				.getQtProposalChecklist();
+				.getFinancialQtProposalChecklist();
 		List<ScQtPRPCreditFacility> creditFacilitiesList = this
 				.getManagedBean().getScQtPRPCreditFacilities();
 		List<List<EncryptDataBean>> encryptCrditFacilitesList = new ArrayList<List<EncryptDataBean>>();
@@ -1335,10 +1338,10 @@ public class SPDetailBackingBean extends
 	 * @return navigation path
 	 */
 	public String saveFinancialCashOnHandAction(boolean isCompleted) {
-		debugLogger("saveFinancialCashOnHandAction");
+		debugLogger("saveFinancialCashOnHandAction supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		validateProposalCloseTime(this.getManagedBean().getQt());
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
-				.getQtProposalChecklist();
+				.getFinancialQtProposalChecklist();
 		List<ScQtPRPCashOnHand> qtPRPCashOnHandList = this.getManagedBean()
 				.getScQtPRPCashOnHand();
 		List<EncryptDataBean> cashOnHandList = new ArrayList<EncryptDataBean>();
@@ -1412,10 +1415,10 @@ public class SPDetailBackingBean extends
 	 * @return navigation path
 	 */
 	public String saveBankStatementAction(boolean isCompleted) {
-		debugLogger("saveBankStatementAction");
+		debugLogger("saveBankStatementAction supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		validateProposalCloseTime(this.getManagedBean().getQt());
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
-				.getQtProposalChecklist();
+				.getFinancialQtProposalChecklist();
 		List<ScQtPRPBankStmt> prpBankStmts = this.getManagedBean()
 				.getScQtPRPBankStmts();
 		List<EncryptDataBean> encryptBankStmtList = new ArrayList<EncryptDataBean>();
@@ -1483,13 +1486,13 @@ public class SPDetailBackingBean extends
 	 * @return navigation path
 	 */
 	public String saveTechEmployeesDtlAction(boolean isCompleted) {
-		debugLogger("saveTechEmployessDtlAction");
+		debugLogger("saveTechEmployessDtlAction supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		validateProposalCloseTime(this.getManagedBean().getQt());
 		IQTProposalSO proposalSO = null;
 		List<EncryptDataBean> encEmployeeList = null;
 		ScQtPRPEmployee prpEmployee = getManagedBean().getScQtPRPEmployee();
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
-				.getQtProposalChecklist();
+				.getTechnicalQtProposalChecklist();
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
@@ -1552,13 +1555,13 @@ public class SPDetailBackingBean extends
 	 * @return navigation path
 	 */
 	public String saveTechNonGovCompanyExpAction(boolean isCompleted) {
-		debugLogger("saveTechNonGovCompanyExpAction");
+		debugLogger("saveTechNonGovCompanyExpAction supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		validateProposalCloseTime(this.getManagedBean().getQt());
 		validateContractNo();
 		List<ScQtPRPExperience> experiencesTosave = new ArrayList<ScQtPRPExperience>();
 		List<List<EncryptDataBean>> encryptExpriencList = new ArrayList<List<EncryptDataBean>>();
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
-				.getQtProposalChecklist();
+				.getTechnicalQtProposalChecklist();
 		IQTProposalSO proposalSO = null;
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
@@ -1621,7 +1624,7 @@ public class SPDetailBackingBean extends
 			reqDTO.setTobeRemovedExperience(getManagedBean()
 					.getDeletedPRPExperiences());
 			ScQtProposal qtProposal = this.getManagedBean()
-					.getQtProposalChecklist().getScQtProposal();
+					.getTechnicalQtProposalChecklist().getScQtProposal();
 			qtProposal.setScQtProposalExperiences(experiencesTosave);
 			reqDTO.setScQtProposal(qtProposal);
 			ScQtProposalChecklist finProposalChecklist = findProposalChecklistByDocDefKey(
@@ -1644,7 +1647,7 @@ public class SPDetailBackingBean extends
 						SourcingConstants.DOC_DEF_KEY_FIN_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV);
 				getManagedBean().getTecCheckDetailsList().set(index,
 						resDTO.getProposalChecklist());
-				getManagedBean().setQtProposalChecklist(
+				getManagedBean().setTechnicalQtProposalChecklist(
 						resDTO.getProposalChecklist());
 				if (isCompleted == true) {
 					loadDataFromCache();
@@ -1674,10 +1677,10 @@ public class SPDetailBackingBean extends
 	 * @return navigation path
 	 */
 	public String saveAssetLiabilityAction(boolean isCompleted) {
-		debugLogger("saveAssetLiabilityAction");
+		debugLogger("saveAssetLiabilityAction supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		validateProposalCloseTime(this.getManagedBean().getQt());
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
-				.getQtProposalChecklist();
+				.getFinancialQtProposalChecklist();
 		List<EncryptDataBean> prpAssetLiabilityList = new ArrayList<EncryptDataBean>();
 		ScQtPRPAssetLiability scQtPRPAssetLiability = this.getManagedBean()
 				.getScQtPRPAssetLiability();
@@ -1759,7 +1762,7 @@ public class SPDetailBackingBean extends
 	 * @return navigation path
 	 */
 	public String saveFinancialPaidUpCapitalAction(boolean isCompleted) {
-		debugLogger("saveFinancialPaidUpCapitalAction");
+		debugLogger("saveFinancialPaidUpCapitalAction supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		validateProposalCloseTime(this.getManagedBean().getQt());
 		IQTProposalSO proposalSO = null;
 		try {
@@ -1768,7 +1771,7 @@ public class SPDetailBackingBean extends
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 
 			ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
-					.getQtProposalChecklist();
+					.getFinancialQtProposalChecklist();
 
 			CriteriaValue cashOnHandVal = new CriteriaValue(
 					SourcingConstants.CRITERIA_TYPE_TOTAL_CASH_ON_HAND, this
@@ -1801,14 +1804,60 @@ public class SPDetailBackingBean extends
 	 * @param entity
 	 *            the deleted attachment
 	 */
-	public void deleteProposalChecklistAttachmentAction(BaseEntity deletedEntity) {
+	public void deleteProposalChecklistAttachmentTechnicalAction(BaseEntity deletedEntity) {
 		IQTProposalSO proposalSO = null;
+		debugLogger("deleteProposalChecklistAttachmentTechnicalAction supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 
-			ScQtProposalChecklist scQtProposalChecklist = getManagedBean()
-					.getQtProposalChecklist();
+			
+			ScQtProposalChecklist scQtProposalChecklist=this.getManagedBean().getTechnicalQtProposalChecklist();
+			
+			
+			//log.info("deleteProposalChecklistAttachmentTechnicalActiondocCategoryValue"+scQtProposalChecklist.getScQtCheckList().getDocCategory());
+
+			ProposalReqDTO reqDTO = new ProposalReqDTO();
+			scQtProposalChecklist.setSubmitted(false);
+			scQtProposalChecklist.setScQtProposalChecklistAttachment(null);
+
+			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
+			reqDTO.setScQt(this.getManagedBean().getQt());
+
+			List<ScQtProposalChecklistAttachment> attachments = new ArrayList<ScQtProposalChecklistAttachment>();
+			attachments.add((ScQtProposalChecklistAttachment) deletedEntity);
+			reqDTO.setTobeRemovedProposalChecklistAttachments(attachments);
+			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
+
+			if (resDTO.isSuccessful()) {
+				updateQtProposalCheckList(scQtProposalChecklist,
+						resDTO.getProposalChecklist());
+			}
+
+		} finally {
+			proposalSO = null;
+		}
+	}
+	
+	
+	/**
+	 * Method to delete Financial Attachment Action
+	 * 
+	 * @param entity
+	 *            the deleted attachment
+	 */
+	public void deleteProposalChecklistAttachmentFinancialAction(BaseEntity deletedEntity) {
+		IQTProposalSO proposalSO = null;
+		debugLogger("deleteProposalChecklistAttachmentFinancialAction supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
+		try {
+			proposalSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+
+			
+			ScQtProposalChecklist scQtProposalChecklist=this.getManagedBean().getFinancialQtProposalChecklist();
+			
+			
+			//log.info("deleteProposalChecklistAttachmentFinancialActionDocCategoryValue"+scQtProposalChecklist.getScQtCheckList().getDocCategory());
 
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			scQtProposalChecklist.setSubmitted(false);
@@ -1840,12 +1889,18 @@ public class SPDetailBackingBean extends
 	 * @throws IOException
 	 */
 
-	public void handleFileUpload(FileUploadEvent event)
+	public void technicalhandleFileUpload(FileUploadEvent event)
 			throws FileNotFoundException, IOException {
-		debugLogger("handleFileUpload");
+		debugLogger("technicalhandleFileUpload supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		if (event.getFile() != null) {
 			IQTProposalSO proposalSO = null;
-			ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean().getQtProposalChecklist();
+			
+		
+			ScQtProposalChecklist scQtProposalChecklist=this.getManagedBean().getTechnicalQtProposalChecklist();
+			
+			
+			
+			//log.info("technicalhandleFileUploadDoccategoryValue"+scQtProposalChecklist.getScQtCheckList().getDocCategory());
 			try {
 				proposalSO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -1873,8 +1928,7 @@ public class SPDetailBackingBean extends
 				ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
 
 				if (resDTO.isSuccessful()) {
-					updateQtProposalCheckList(getManagedBean()
-							.getQtProposalChecklist(),
+					updateQtProposalCheckList(scQtProposalChecklist,
 							resDTO.getProposalChecklist());
 					// RequestContext.getCurrentInstance().execute("checklistUploadDlg.hide();");
 				}
@@ -1888,6 +1942,66 @@ public class SPDetailBackingBean extends
 		}
 	}
 
+	
+	/**
+	 * Method to handle file upload events
+	 * 
+	 * @param event
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+
+	public void financialhandleFileUpload(FileUploadEvent event)
+			throws FileNotFoundException, IOException {
+		debugLogger("financialhandleFileUpload supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
+		if (event.getFile() != null) {
+			IQTProposalSO proposalSO = null;
+		
+			ScQtProposalChecklist scQtProposalChecklist=this.getManagedBean().getFinancialQtProposalChecklist();
+			
+			//log.info("financialhandleFileUploadDoccategoryValue"+scQtProposalChecklist.getScQtCheckList().getDocCategory());
+			try {
+				proposalSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IQTProposalSO.class);
+
+				ProposalReqDTO reqDTO = new ProposalReqDTO();
+				ScQtProposalChecklistAttachment attachment = scQtProposalChecklist
+						.getScQtProposalChecklistAttachment();
+				if (null == attachment) {
+					attachment = new ScQtProposalChecklistAttachment();
+					attachment.setScQtProposalChecklist(scQtProposalChecklist);
+				}
+				attachment.setDocNo(getManagedBean().getQt().getQtNo());
+				attachment.setPrefixFileName(getManagedBean().getQtProposal()
+						.getProposalNo());
+
+				uploadAttachmentWithEncryption(getEncryptionKey(),
+						event.getFile(), attachment);
+
+				scQtProposalChecklist.setScQtProposalChecklistAttachment(attachment);
+				scQtProposalChecklist.setSubmitted(true);
+
+				reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
+				reqDTO.setScQt(this.getManagedBean().getQt());
+				ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
+
+				if (resDTO.isSuccessful()) {
+					updateQtProposalCheckList(scQtProposalChecklist,
+							resDTO.getProposalChecklist());
+					// RequestContext.getCurrentInstance().execute("checklistUploadDlg.hide();");
+				}
+
+			} catch (Exception e) {
+				scQtProposalChecklist.setSubmitted(false);
+				throw e;
+			} finally {
+				proposalSO = null;
+			} 
+		}
+	}
+	
+	
 	/**
 	 * Method to handle file upload events with encryption
 	 * 
@@ -1899,6 +2013,7 @@ public class SPDetailBackingBean extends
 	private void uploadAttachmentWithEncryption(String encryptionKey,
 			UploadedFile file, ScAttachment attachment)
 			throws FileNotFoundException, IOException {
+		debugLogger("uploadAttachmentWithEncryption supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		FileInputStream fis = null;
 		FileOutputStream fos = null;
 		try{
@@ -1944,6 +2059,7 @@ public class SPDetailBackingBean extends
 	 * @return the encryption key
 	 */
 	public String getEncryptionKey() {
+		debugLogger("getEncryptionKey supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		String encryptionKey = getManagedBean().getEncryptionKey();
 
 		if (StringUtils.isBlank(encryptionKey)) {
@@ -1984,12 +2100,12 @@ public class SPDetailBackingBean extends
 	 * @return navigation path
 	 */
 	public String prepareTechnicalAction(ScQtProposalChecklist scQtProposalChecklist) {
-		debugLogger("prepareTechnicalAction");
+		debugLogger("prepareTechnicalAction supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		String pageUrl = null;
 		String definationType = scQtProposalChecklist.getScQtCheckList().getDefinationType().getParameterCode();
 		this.getManagedBean().setDocDefinitionKey(definationType);
-		this.getManagedBean().setQtProposalChecklist(scQtProposalChecklist);
-		this.getManagedBean().setScQtCheckList(scQtProposalChecklist.getScQtCheckList());
+		this.getManagedBean().setTechnicalQtProposalChecklist(scQtProposalChecklist);
+		this.getManagedBean().setTechnicalQtChecklist(scQtProposalChecklist.getScQtCheckList());
 		
 		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION.equalsIgnoreCase(definationType)) {
 
@@ -2045,6 +2161,7 @@ public class SPDetailBackingBean extends
 	 */
 	private String retrieveTemplateSpecDtls(
 			ScQtProposalChecklist scQtProposalChecklist) {
+		debugLogger("retrieveTechnicalTemplateSpecDtls:::SupplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		ScQtDoc scQtDoc = scQtProposalChecklist.getScQtCheckList().getScQtDoc();
 		this.getManagedBean().setScQtDoc(
 				scQtProposalChecklist.getScQtCheckList().getScQtDoc());
@@ -2077,7 +2194,7 @@ public class SPDetailBackingBean extends
 	 */
 	public String retrieveTecNonGovCompanyExpDtls(
 			ScQtProposalChecklist scQtProposalChecklist) {
-
+       debugLogger("retrieveTecNonGovCompanyExpDtls::::::SupplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		getManagedBean().setYear(
 				scQtProposalChecklist.getScQtCheckList()
 						.getScQtCheckListValue().getYear());
@@ -2127,6 +2244,7 @@ public class SPDetailBackingBean extends
 	 */
 	public String retrieveEmployeeDtls(
 			ScQtProposalChecklist scQtProposalChecklist) {
+		debugLogger("retrieveEmployeeDtls::::::SupplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		IQTProposalSO proposalSO = null;
 		try {
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
@@ -2180,6 +2298,7 @@ public class SPDetailBackingBean extends
 	 */
 	private String retrieveSampleDetails(
 			ScQtProposalChecklist scQtProposalChecklist) {
+		debugLogger("retrieveSampleDetails::::::SupplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		IQTProposalSO proposalSO = null;
 		try {
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
@@ -2219,6 +2338,7 @@ public class SPDetailBackingBean extends
 	 */
 	public String retriveTechnicalStaffDtls(
 			ScQtProposalChecklist scQtProposalChecklist) {
+		 debugLogger("retriveTechnicalStaffDtls::::::SupplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		List<TechnicalStaffBean> smPersonnelsList = new ArrayList<TechnicalStaffBean>();
 		retrieveSupplierDtls();
 		Map<Long, PmParameterDesc> qualificationMap = new HashMap<Long, PmParameterDesc>();
@@ -2266,7 +2386,7 @@ public class SPDetailBackingBean extends
 	 */
 	public String retrieveTecCompanyExpDtls(
 			ScQtProposalChecklist scQtProposalChecklist) {
-
+debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		getManagedBean().setYear(
 				scQtProposalChecklist.getScQtCheckList()
 						.getScQtCheckListValue().getYear());
@@ -2323,13 +2443,13 @@ public class SPDetailBackingBean extends
 	 */
 	public String prepareFinancialAction(
 			ScQtProposalChecklist scQtProposalChecklist) {
-		debugLogger("prepareFinancialAction");
+		debugLogger("prepareFinancialAction:::supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		String pageUrl = null;
 		String definationType = scQtProposalChecklist.getScQtCheckList()
 				.getDefinationType().getParameterCode();
 		this.getManagedBean().setDocDefinitionKey(definationType);
-		this.getManagedBean().setQtProposalChecklist(scQtProposalChecklist);
-		this.getManagedBean().setScQtCheckList(
+		this.getManagedBean().setFinancialQtProposalChecklist(scQtProposalChecklist);
+		this.getManagedBean().setFinancialQtChecklist(
 				scQtProposalChecklist.getScQtCheckList());
 
 		// to check financial check list is for
@@ -2405,8 +2525,9 @@ public class SPDetailBackingBean extends
 	 */
 	private String retrieveFinancialSpecDtls(
 			ScQtProposalChecklist scQtProposalChecklist) {
+		debugLogger("retrieveFinancialSpecDtls::::supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		this.getManagedBean().setActiveIndex(0);
-		this.getManagedBean().setQtProposalChecklist(scQtProposalChecklist);
+		this.getManagedBean().setFinancialQtProposalChecklist(scQtProposalChecklist);
 		IQTProposalSO proposalSO = null;
 
 		try {
@@ -2453,9 +2574,9 @@ public class SPDetailBackingBean extends
 	 * Retrieve template specification bean.
 	 */
 	private void retrieveTemplateSpecBean() {
-
+        debugLogger("retrieveTemplateSpecBean supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		ScQtProposalChecklist qtProposalChecklist = getManagedBean()
-				.getQtProposalChecklist();
+				.getFinancialQtProposalChecklist();
 		ScQtDoc scQtDoc = qtProposalChecklist.getScQtCheckList().getScQtDoc();
 		this.getManagedBean().setScQtDoc(scQtDoc);
 
@@ -2542,6 +2663,7 @@ public class SPDetailBackingBean extends
 	 */
 	public String retrieveFinNonGovCompanyExpDtls(
 			ScQtProposalChecklist scQtProposalChecklist) {
+		debugLogger("retrieveFinNonGovCompanyExpDtls:::supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 
 		getManagedBean().setYear(
 				scQtProposalChecklist.getScQtCheckList()
@@ -2643,6 +2765,7 @@ public class SPDetailBackingBean extends
 	 */
 	public String retrieveCreditFacilitiesDtls(
 			ScQtProposalChecklist scQtProposalChecklist) {
+		debugLogger("retrieveCreditFacilitiesDtls;;;supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		IQTProposalSO proposalSO = null;
 		try {
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
@@ -2677,6 +2800,7 @@ public class SPDetailBackingBean extends
 	 */
 	public String retrieveCashOnHandDtls(
 			ScQtProposalChecklist scQtProposalChecklist) {
+		debugLogger("retrieveCashOnHandDtls:;;;supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		IQTProposalSO proposalSO = null;
 		try {
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
@@ -2713,6 +2837,7 @@ public class SPDetailBackingBean extends
 	 */
 	public String retrieveBankStmtDtls(
 			ScQtProposalChecklist scQtProposalChecklist) {
+		debugLogger("retrieveBankStmtDtls::::supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		IQTProposalSO proposalSO = null;
 		try {
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
@@ -2761,6 +2886,7 @@ public class SPDetailBackingBean extends
 
 	public String retrieveAssetLiabilityDtls(
 			ScQtProposalChecklist scQtProposalChecklist) {
+		debugLogger("retrieveAssetLiabilityDtls::::supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		IQTProposalSO proposalSO = null;
 		try {
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
@@ -2810,7 +2936,7 @@ public class SPDetailBackingBean extends
 	 * @return navigation path
 	 */
 	public String retrievePaidUpCapitalNdDeclarationDtls() {
-		debugLogger("*****retrievePaidUpCapitalNdDeclarationDtls*****");
+		debugLogger("*****retrievePaidUpCapitalNdDeclarationDtls*****"+getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		long supplierId = getManagedBean().getSupplierId();
 		debugLogger("Supplier Id : " + supplierId);
 
@@ -2843,7 +2969,7 @@ public class SPDetailBackingBean extends
 	 */
 	public String retrieveFinCompanyExpDtls(
 			ScQtProposalChecklist scQtProposalChecklist) {
-
+        debugLogger("retrieveFinCompanyExpDtls::::supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		getManagedBean().setYear(
 				scQtProposalChecklist.getScQtCheckList()
 						.getScQtCheckListValue().getYear());
@@ -2887,7 +3013,7 @@ public class SPDetailBackingBean extends
 
 	public String retrieveSupplierDtls() {
 		Long supplierId = getManagedBean().getSupplierId();
-		debugLogger("Supplier Id : " + supplierId);
+		debugLogger("retrieveSupplierDtlsSupplier Id ::: " + supplierId+"QTID:::"+this.getManagedBean().getQt().getQtId());
 
 		IQTProposalSO proposalSO = null;
 		try {
@@ -3024,7 +3150,7 @@ public class SPDetailBackingBean extends
 	 * Method to calculate total amounts from all Credit Facilities
 	 */
 	public void totalCreditFacilitiesSum() {
-		debugLogger("totalCreditFacilitiesSum");
+		debugLogger("totalCreditFacilitiesSum supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 
 		BigDecimal totalCredit = null;
 		BigDecimal totalPaid = null;
@@ -3070,7 +3196,7 @@ public class SPDetailBackingBean extends
 	 * Method to calculate total cash on hand.
 	 */
 	public void totalCashOnHandSum() {
-		debugLogger("totalAmtPaidSum");
+		debugLogger("totalAmtPaidSum supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 
 		BigDecimal totalCashOnHand = null;
 		List<ScQtPRPCashOnHand> cashOnHandList = this.getManagedBean()
@@ -3096,7 +3222,7 @@ public class SPDetailBackingBean extends
 	 * list
 	 */
 	public void totalAmountSum() {
-		debugLogger("totalAmountSum");
+		debugLogger("totalAmountSum supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 
 		BigDecimal totalAmount = null;
 		BigDecimal avgAmount = null;
@@ -3252,11 +3378,18 @@ public class SPDetailBackingBean extends
 	 * Method to add Non Federal Government Experience to the list
 	 */
 
-	public void addNonFederalGovtExperience() {
-		debugLogger("addNonFederalGovtExperience");
+	public void addNonFederalGovtExperience(String type) {
+		debugLogger("addNonFederalGovtExperience supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		ScQtPRPExperience prpExperience = new ScQtPRPExperience();
 
 		try {
+			ScQtProposalChecklist proposalChecklist=null;
+			if("1".equalsIgnoreCase(type)){
+				proposalChecklist=getManagedBean().getTechnicalQtProposalChecklist();	
+			}
+			else if("2".equalsIgnoreCase(type)){
+				proposalChecklist=getManagedBean().getFinancialQtProposalChecklist();	
+			}
 			List<ScQtPRPExperience> experienceList = this.getManagedBean()
 					.getScQtPRPExperiences();
 			if (null == experienceList) {
@@ -3266,8 +3399,7 @@ public class SPDetailBackingBean extends
 				scQtPRPExperience.setBrandNew(false);
 			}
 
-			prpExperience.setScQtProposal(this.getManagedBean()
-					.getQtProposalChecklist().getScQtProposal());
+			prpExperience.setScQtProposal(proposalChecklist.getScQtProposal());
 			prpExperience.setContractAmt(new BigDecimal(0));
 			experienceList.add(prpExperience);
 			this.getManagedBean().setScQtPRPExperiences(experienceList);
@@ -3282,7 +3414,7 @@ public class SPDetailBackingBean extends
 	 * Listener method to delete Non Federal Government Experience from the list
 	 */
 	public void deleteNonFederalGovtExperience() {
-		debugLogger("deleteNonFederalGovtExperience");
+		debugLogger("deleteNonFederalGovtExperience supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		List<ScQtPRPExperience> experienceList = this.getManagedBean()
 				.getScQtPRPExperiences();
 
@@ -3327,7 +3459,7 @@ public class SPDetailBackingBean extends
 	 * Method to add Credit Facility to the list
 	 */
 	public void addCreditFacilities() {
-		debugLogger("addCreditFacilities");
+		debugLogger("addCreditFacilities supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		ScQtPRPCreditFacility creditFacility = new ScQtPRPCreditFacility();
 		try {
 			List<ScQtPRPCreditFacility> creditFacilitiesList = this
@@ -3338,7 +3470,7 @@ public class SPDetailBackingBean extends
 			creditFacility.setCreditType(new PmParameter());
 			creditFacility.setBrandNew(true);
 			creditFacility.setScQtProposalChecklist(this.getManagedBean()
-					.getQtProposalChecklist());
+					.getFinancialQtProposalChecklist());
 			for (ScQtPRPCreditFacility scQtPRPCreditFacility : creditFacilitiesList) {
 				scQtPRPCreditFacility.setBrandNew(false);
 			}
@@ -3355,7 +3487,7 @@ public class SPDetailBackingBean extends
 	 * Method to delete Credit Facility from the list
 	 */
 	public void deleteCreditFacilities() {
-		debugLogger("deleteCreditFacilities");
+		debugLogger("deleteCreditFacilities supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		List<ScQtPRPCreditFacility> creditFacilitiesList = getManagedBean()
 				.getScQtPRPCreditFacilities();
 
@@ -3394,7 +3526,7 @@ public class SPDetailBackingBean extends
 	 * Method to add cash on hand to the list
 	 */
 	public void addCashOnHand() {
-		debugLogger("addCashOnHand");
+		debugLogger("addCashOnHand supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		ScQtPRPCashOnHand cashOnHand = new ScQtPRPCashOnHand();
 		List<ScQtPRPCashOnHand> cashOnHandList = this.getManagedBean()
 				.getScQtPRPCashOnHand();
@@ -3403,7 +3535,7 @@ public class SPDetailBackingBean extends
 		}
 		cashOnHand.setAccountType(new PmParameter());
 		cashOnHand.setScQtProposalChecklist(this.getManagedBean()
-				.getQtProposalChecklist());
+				.getFinancialQtProposalChecklist());
 		for (ScQtPRPCashOnHand hand : cashOnHandList) {
 			hand.setBrandNew(false);
 		}
@@ -3415,7 +3547,7 @@ public class SPDetailBackingBean extends
 	 * Method to delete cash on hand from the list
 	 */
 	public void deleteCashOnHand() {
-		debugLogger("deleteCashOnHand");
+		debugLogger("deleteCashOnHand supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		List<ScQtPRPCashOnHand> cashOnHandList = this.getManagedBean()
 				.getScQtPRPCashOnHand();
 		List<ScQtPRPCashOnHand> selectedCashOnHandList = this.getManagedBean()
@@ -3507,7 +3639,7 @@ public class SPDetailBackingBean extends
 	 * Method to calculate maximum proposals allowed
 	 */
 	public void displayProposalDtls() {
-		debugLogger("displayProposalDtls");
+		debugLogger("displayProposalDtls supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		List<ScQtProposal> list = this.getManagedBean().getQtProposalsList();
 
 		list = new ArrayList<ScQtProposal>();
@@ -3552,6 +3684,7 @@ public class SPDetailBackingBean extends
 	 * Method to redirect Supplier Proposal Screen..
 	 */
 	public void preRenderView() {
+		debugLogger("SpdetailBackingBeanpreRenderView");
 		try {
 			HttpServletRequest servletRequest = PortalUtil
 					.getHttpServletRequest(new FacesScopes().getRequest());
@@ -3620,7 +3753,7 @@ public class SPDetailBackingBean extends
 	public String retriveSupplierProposalDtl(Long qtId, String previousPageUrl,
 			boolean isReadonly) {
 		super.renewSesionObject();
-
+        debugLogger("retriveSupplierProposalDtl:::"+qtId+":::previousPageUrl:::"+previousPageUrl);
 		retrieveProposalChecklistDtls(qtId, new FacesScopes()
 				.getUserSessionBean().getUserId(), isReadonly);
 
@@ -3968,7 +4101,7 @@ public class SPDetailBackingBean extends
 			getManagedBean().getTecCheckDetailsList().set(index,
 					newProposalChecklist);
 		}
-		getManagedBean().setQtProposalChecklist(newProposalChecklist);
+		getManagedBean().setTechnicalQtProposalChecklist(newProposalChecklist);
 	}
 
 	/**
@@ -3991,6 +4124,7 @@ public class SPDetailBackingBean extends
 				getManagedBean().getFinanceCheckDetailsList().set(index,
 						newProposalChecklist);
 			}
+			getManagedBean().setFinancialQtProposalChecklist(newProposalChecklist);
 		}
 		if (finOrTech == SourcingConstants.DOC_DEF_KEY_TEC_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV) {
 			int index = getManagedBean().getTecCheckDetailsList().indexOf(
@@ -3999,8 +4133,9 @@ public class SPDetailBackingBean extends
 				getManagedBean().getTecCheckDetailsList().set(index,
 						newProposalChecklist);
 			}
+			getManagedBean().setTechnicalQtProposalChecklist(newProposalChecklist);
 		}
-		getManagedBean().setQtProposalChecklist(newProposalChecklist);
+		//getManagedBean().setQtProposalChecklist(newProposalChecklist);
 	}
 
 	/**
@@ -4448,6 +4583,7 @@ public class SPDetailBackingBean extends
 	 * Action method for Spki sign.
 	 */
 	public void spkiSignAction() {
+		debugLogger("spkiSignAction supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		validateProposalCloseTime(this.getManagedBean().getQt());
 		retrievePaidUpCapitalNdDeclarationDtls();
 		IQTProposalSO proposalSO = null;
@@ -4479,6 +4615,7 @@ public class SPDetailBackingBean extends
 	 * @return the SmMofAccount instance
 	 */
 	public SmMofAccount getSmMofAccountByMofNo(String mofNo) {
+		debugLogger("getSmMofAccountByMofNo"+this.getManagedBean().getSupplierId());
 		SmMofAccount mofAccount = null;
 
 		if (StringUtils.isNotBlank(mofNo)) {
@@ -4568,6 +4705,7 @@ public class SPDetailBackingBean extends
 	 * Method to update scQTProposal to allow resubmit.
 	 */
 	public void updateProposal() {
+		debugLogger("updateProposal supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		getManagedBean().setReadOnly(false);
 		ScQtProposal proposal = this.getManagedBean().getQtProposal();
 		proposal.setSubmitted(false);
@@ -4600,7 +4738,7 @@ public class SPDetailBackingBean extends
 	 * @return navigation path
 	 */
 	public String getTecCompanyExpDtls(ScQtProposalChecklist scQtProposalChecklist) { 
-
+       debugLogger("getTecGovCompanyExpDtls::::::SupplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		getManagedBean().setYear(
 				scQtProposalChecklist.getScQtCheckList().getScQtCheckListValue().getYear());
 
@@ -4640,7 +4778,7 @@ public class SPDetailBackingBean extends
 	 * @return navigation path
 	 */
 	public String getFinCompanyExpDtls(ScQtProposalChecklist scQtProposalChecklist) { 
-
+        debugLogger("getFinCompanyExpDtls::::supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		getManagedBean().setYear(
 				scQtProposalChecklist.getScQtCheckList().getScQtCheckListValue().getYear());
 
