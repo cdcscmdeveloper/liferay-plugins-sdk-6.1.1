@@ -20,6 +20,8 @@
 			<ui:include src="technicalchecklistbuttons.xhtml"></ui:include>
 		</div>
 		<p:spacer height="4"></p:spacer>
+		<ui:param name="scQtCheckList"
+					value="#{supplierProposalDetailBackingBean.managedBean.technicalQtChecklist}"></ui:param>
 		<ui:include src="/xhtml/sc/supplierproposal/proposalcommon/checklistHeader.xhtml" />
 		<p:spacer height="4"></p:spacer>
 		<ui:include
