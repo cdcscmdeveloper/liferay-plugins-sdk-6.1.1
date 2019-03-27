@@ -926,20 +926,12 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 					searchBean.getDataFilterBeans().add(filterBean);
 				}
 					if (getSearchPtjProfile() != null) {
-						SearchFilterBean filterBean = new SearchFilterBean("PTJ_ORG_ID",SearchOperator.OPERATOR_EQUALS.value(),
-						getSearchPtjProfile().getOrgProfileId());
 						
-						SearchFilterBean filterBeans = new SearchFilterBean("NEW_ORG_PROFILE_ID",SearchOperator.OPERATOR_EQUALS.value(),
+						SearchFilterBean filterBean = new SearchFilterBean("NEW_ORG_PROFILE_ID",SearchOperator.OPERATOR_EQUALS.value(),
 						getSearchPtjProfile().getOrgProfileId());
-						
-				filterBean.setCaseInsensitive(true);
-				filterBean.setAndOr(SearchCondition.CONDITION_OR.value());
-				filterBeans.setCaseInsensitive(true);
-				filterBeans.setAndOr(SearchCondition.CONDITION_OR.value());
-				
-				SearchMultiFilterBean filterBeann = new SearchMultiFilterBean(filterBean,filterBeans);
 
-				searchBean.getDataFilterBeans().add(filterBeann);
+				filterBean.setCaseInsensitive(true);
+				searchBean.getDataFilterBeans().add(filterBean);
 				}else  if (getSearchPtjGroupProfile() != null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("PTJ_GROUP_ORG_ID", SearchOperator.OPERATOR_EQUALS.value(),
 							getSearchPtjGroupProfile().getOrgProfileId()));
