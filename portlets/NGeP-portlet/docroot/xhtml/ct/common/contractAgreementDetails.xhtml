@@ -44,14 +44,6 @@
 							title="#{agreement.fileName}"
 							value="#{agreement.fileName}"
 							action="#{ctBackingBean.commonDownload(agreement.filePath, agreement.fileName)}" /><br />
-						<h:outputText value="#{lbl['lbl.ct.agreement.front.page.attachment']} : " />
-						<f:metadata>
-     					 <ui:param name="agreementContents" value="#{ctBackingBean.getCoverPage(agreement)}" />
-    					</f:metadata>
-						<h:commandLink styleClass="blue_font"
-							title="#{agreementContents.getFileName()}"
-							value="#{agreementContents.getTitle()}"
-							action="#{ctBackingBean.commonDownload(agreementContents.getFilePath(),agreementContents.getFileName())}" /><br />
 						<h:outputText value="#{lbl['lbl.ct.agreement.signing.page.attachment']} : " />		
 						<h:commandLink styleClass="blue_font"
 							title="#{agreement.signedPageName}"
