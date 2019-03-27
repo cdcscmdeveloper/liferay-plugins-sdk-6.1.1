@@ -1403,7 +1403,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					Long reqId = getManagedBean().getFlRequest().getFulfilmentReqId();
 					String itemCode = newItem.getItemCode();
 
-					if (!flag) {
+					if (!flag && !getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr().isEmpty()) {
 						unitPrice = iFulfilmentSO.getUnitPriceByReqId(reqId,itemCode);
 						if (newItem.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
 							newItem.setUnitPrice(unitPrice);
@@ -2516,7 +2516,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	}
 	//end added for #24353
 
-	
+    
 	/**
 	 * Retrieve the district list from profile management service object
 	 */
