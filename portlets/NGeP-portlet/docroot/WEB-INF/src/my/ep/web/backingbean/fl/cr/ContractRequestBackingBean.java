@@ -6048,64 +6048,42 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 */
 	
 	public void upDateStartDateFromBpm() {
-		IContractZoneSO contractZoneSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractZoneSO.class);
 		FlFulfilmentRequest request = getManagedBean().getFlRequest();
-		ContractZoneResDTO zoneResDTO = null;
+		IContractZoneSO contractZoneSO = (IContractZoneSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractZoneSO.class);
 
-		if (request.getCtContract() != null) {
-			for (FlDeliveryAddress flDeliveryAddress : request.getFlDeliveryAddresses()) {
-
-				ContractZoneReqDTO zoneReqDTO = new ContractZoneReqDTO();
-				zoneReqDTO.setFlAddress(flDeliveryAddress.getFlAddress());
-				zoneReqDTO.setCtContract(request.getCtContract());
-				zoneResDTO = contractZoneSO.getDeliveryTermByAddress(zoneReqDTO);
-				flDeliveryAddress.setEndDate(DateUtils.getEndDate(flDeliveryAddress.getStartDate(),
-						zoneResDTO.getDeliveryTerm(), ParameterConst.DELIVERY_TERM_DAYS));
-			}
-		}
-
+		
 		String uomCode = "";
-		uomCode = zoneResDTO.getDeliveryTermUom().getParameterCode();
-		log.info("uom code is : " + uomCode);
+		uomCode = getManagedBean().getFlRequest().getPmUom().getParameterCode();
+		log.info("uom code is : "+uomCode);
 
-		if (request.getAgApprovedDate() != null) {
-			if (request.getAgApprovedDate() != null && request.getAgApprovedDate().after(request.getStartDate())) {
-				if (request.getCtContract() != null) {
-					if (!request.getCtContract().isZonalPricing()) {
-						if (request.getAgApprovedDate().after(request.getStartDate())) {
+		if(request.getAgApprovedDate() != null) {
+			if(request.getAgApprovedDate() != null && request.getAgApprovedDate().after(request.getStartDate())){
+				if(request.getCtContract() != null){
+					if(!request.getCtContract().isZonalPricing()){
+						if(request.getAgApprovedDate().after(request.getStartDate())){
 							request.setStartDate(request.getAgApprovedDate());
-							if (uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_DAYS)) {
-								getManagedBean().setMaxDate(
-										DateUtils.getEndDate(request.getStartDate(), request.getDeliveryTerm(),
-												ParameterConst.DELIVERY_TERM_DAYS));
-								getManagedBean().getFlRequest().setEndDate(
-										DateUtils.getEndDate(request.getStartDate(), request.getDeliveryTerm(),
-												ParameterConst.DELIVERY_TERM_DAYS));
-							} else if (uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_MONTHS)) {
-								getManagedBean().setMaxDate(
-										DateUtils.getEndDate(request.getStartDate(), request.getDeliveryTerm(),
-												ParameterConst.DELIVERY_TERM_MONTHS));
-								getManagedBean().getFlRequest().setEndDate(
-										DateUtils.getEndDate(request.getStartDate(), request.getDeliveryTerm(),
-												ParameterConst.DELIVERY_TERM_MONTHS));
-							}
+							if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_DAYS)){
+								getManagedBean().setMaxDate(DateUtils.getEndDate(request.getStartDate(), request.getDeliveryTerm(),ParameterConst.DELIVERY_TERM_DAYS));
+								getManagedBean().getFlRequest().setEndDate(DateUtils.getEndDate(request.getStartDate(), request.getDeliveryTerm(),ParameterConst.DELIVERY_TERM_DAYS));
+							}else if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_MONTHS)){
+								getManagedBean().setMaxDate(DateUtils.getEndDate(request.getStartDate(), request.getDeliveryTerm(),ParameterConst.DELIVERY_TERM_MONTHS));
+								getManagedBean().getFlRequest().setEndDate(DateUtils.getEndDate(request.getStartDate(), request.getDeliveryTerm(),ParameterConst.DELIVERY_TERM_MONTHS));
+							}					
 						}
-						for (FlDeliveryAddress flDeliveryAddress : request.getFlDeliveryAddresses()) {
+						for(FlDeliveryAddress flDeliveryAddress : request.getFlDeliveryAddresses()) {
 							flDeliveryAddress.setStartDate(request.getStartDate());
 							flDeliveryAddress.setEndDate(request.getEndDate());
 						}
-					} else if (request.getCtContract().isZonalPricing()) {
-						for (FlDeliveryAddress flDeliveryAddress : request.getFlDeliveryAddresses()) {
-							if (request.getAgApprovedDate().after(flDeliveryAddress.getStartDate())) {
+					}else if(request.getCtContract().isZonalPricing()){
+						for(FlDeliveryAddress flDeliveryAddress : request.getFlDeliveryAddresses()) {
+							if(request.getAgApprovedDate().after(flDeliveryAddress.getStartDate())){
 								flDeliveryAddress.setStartDate(request.getAgApprovedDate());
 								ContractZoneReqDTO zoneReqDTO = new ContractZoneReqDTO();
 								zoneReqDTO.setFlAddress(flDeliveryAddress.getFlAddress());
 								zoneReqDTO.setCtContract(request.getCtContract());
 								ContractZoneResDTO zoneResDTOO = contractZoneSO.getDeliveryTermByAddress(zoneReqDTO);
-								flDeliveryAddress.setEndDate(DateUtils.getEndDate(flDeliveryAddress.getStartDate(),
-										zoneResDTOO.getDeliveryTerm(), ParameterConst.DELIVERY_TERM_DAYS));
-
+								flDeliveryAddress.setEndDate(DateUtils.getEndDate(flDeliveryAddress.getStartDate(), zoneResDTOO.getDeliveryTerm(),ParameterConst.DELIVERY_TERM_DAYS));
+								
 							}
 						}
 					}
@@ -6113,8 +6091,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 		}
 	}
-	
-	
 
 }
 	
