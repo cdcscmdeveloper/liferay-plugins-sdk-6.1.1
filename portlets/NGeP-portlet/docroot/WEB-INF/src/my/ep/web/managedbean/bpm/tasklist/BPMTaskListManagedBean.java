@@ -820,24 +820,24 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
 				reqDTO.setState("ASSIGNED"); // TODO : ADD filter for state and set do variable
 				
-				reqDTO.setDocType(getDocTypeGroup());
+				reqDTO.setDocType(getDocType());
 
-				if(getTaskDescGroup()!=null && getTaskDescGroup().trim().length()>0){
-					reqDTO.setTaskTitle(getTaskDescGroup());
+				if(getTaskDesc()!=null && getTaskDesc().trim().length()>0){
+					reqDTO.setTaskTitle(getTaskDesc());
 				}
 				
-				System.out.println("getDocNoGroup():"+getDocNoGroup());
+				System.out.println("getDocNoGroup():"+getDocNo());
 				
-				if(getDocNoGroup()!= null && getDocNoGroup().trim().length() > 0){
-					reqDTO.setDocNumber(getDocNoGroup());
+				if(getDocNo()!= null && getDocNo().trim().length() > 0){
+					reqDTO.setDocNumber(getDocNo());
 				}
 			
-				if(getDocStatusGroup() > 0){
-					System.out.println("getDocStatusGroup"+getDocStatusGroup());
-					reqDTO.setStatus(getDocStatusGroup());
+				if(getDocStatus() > 0){
+					System.out.println("getDocStatus"+getDocStatus());
+					reqDTO.setStatus(getDocStatus());
 				}
 				
-				reqDTO.setViewBy(getViewByGroup());
+				reqDTO.setViewBy(getViewBy());
 					
 				reqDTO.setAssignment(BpmConstants.ASSIGNMENT_MY_AND_GROUP);
 				//reqDTO.setIsClaimed(false);
