@@ -906,8 +906,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			this.getManagedBean().setDocType("");
 		}
 		
-		this.getManagedBean().getTaskListGroupDataModel().reloadData();
-		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
+		this.getManagedBean().getTaskListBothDataModel().reloadData();
 		
 		getManagedBean().setSdoWithMultipleRoles(sdoWithMultipleRole());
 		
