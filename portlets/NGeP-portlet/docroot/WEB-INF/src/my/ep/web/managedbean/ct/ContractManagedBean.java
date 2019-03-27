@@ -19,6 +19,7 @@ import my.ep.persistence.entity.ct.CtAddress;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
+import my.ep.persistence.entity.ct.agreement.CtAgreement;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
@@ -65,6 +66,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	private boolean gstCheckingGUI;
 	private boolean staxCheckingGUI;
 	private String branchInfoFilePath;
+	private List<CtAgreement> ctAgreementList;
 
 	/*Schedule start*/
 	private String frequencySchedule;
@@ -1148,6 +1150,20 @@ public class ContractManagedBean extends BaseManagedBean {
 
 	public void setContractExpired(boolean contractExpired) {
 		this.contractExpired = contractExpired;
+	}
+
+	/**
+	 * @return the ctAgreementList
+	 */
+	public List<CtAgreement> getCtAgreementList() {
+		return ctAgreementList;
+	}
+
+	/**
+	 * @param ctAgreementList the ctAgreementList to set
+	 */
+	public void setCtAgreementList(List<CtAgreement> ctAgreementList) {
+		this.ctAgreementList = ctAgreementList;
 	}
 
 }
