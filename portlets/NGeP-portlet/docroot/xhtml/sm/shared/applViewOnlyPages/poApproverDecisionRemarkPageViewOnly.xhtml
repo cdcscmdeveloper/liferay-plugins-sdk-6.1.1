@@ -112,33 +112,14 @@
 			<tr>
 				<td><p:outputLabel styleClass="outputLabel-view-label"
 						value="#{lbl['lbl.sm.dateSubmitted']}" /></td>
-				<td>					
-					<c:choose>
-						<c:when test="#{fn:containsIgnoreCase(viewSmApplBackingBean.managedBean.currentStatus, 'PENDING REVIEW APPLICATION')}">
-							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}"/>
-						</c:when>
-						<c:otherwise>
-							<ac:labelDate styleClass="outputLabel-view"
-								value="#{viewSmApplBackingBean.managedBean.smAppl.applSubmitDate}" />
-						</c:otherwise>
-					</c:choose>
-				</td>
+				<td><ac:labelDateTime 
+						value="#{viewSmApplBackingBean.managedBean.smAppl.applSubmitDate}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel styleClass="outputLabel-view-label"
 						value="#{lbl['lbl.sm.reason.supplier']}" /></td>
-				<td>
-					<c:choose>
-						<c:when test="#{fn:containsIgnoreCase(viewSmApplBackingBean.managedBean.currentStatus, 'PENDING REVIEW APPLICATION')}">
-							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}"/>
-						</c:when>
-						<c:when test="#{empty viewSmApplBackingBean.managedBean.supplierRemarks}">
-							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}"/>
-						</c:when>
-						<c:otherwise>
-							<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.supplierRemarks}"/>
-						</c:otherwise>
-					</c:choose>
+				<td><p:outputLabel styleClass="outputLabel-view"
+						value="#{viewSmApplBackingBean.managedBean.supplierRemarks}" />					
 				</td>
 			</tr>
 			<tr>
