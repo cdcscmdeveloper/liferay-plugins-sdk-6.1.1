@@ -21,6 +21,7 @@ import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.ct.agreement.IAgreementSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.fl.itemsummary.IFlItemSummarySO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -35,10 +36,11 @@ import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.ct.agreement.ContractAgreementReqDTO;
+import my.ep.dto.ct.agreement.ContractAgreementResDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.dto.fl.itemsummary.FlItemSummaryReqDTO;
-import my.ep.dto.fl.itemsummary.FlItemSummaryResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
@@ -306,6 +308,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	public void setValidateContractField(ContractReqDTO reqDTO) {
 		IContractSO contractSO = null;
 		ContractResDTO resDTO = null;
+		IAgreementSO agreementSO = null;
+		ContractAgreementResDTO ctAgreementResDTO = null;
+		ContractAgreementReqDTO ctAgreementReqDTO = null;
 		ctBB = new ContractBackingBean();
 		if(ctBB.getManagedBean().getDeleteAttachmentList() != null ){
 			ctBB.getManagedBean().getDeleteAttachmentList().clear();
@@ -314,7 +319,14 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 			resDTO = contractSO.retrieveContractVerDtls(reqDTO);
 			ctBB.getManagedBean().setContractVer(resDTO.getCtContractVer());
-
+			
+			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IAgreementSO.class);
+			ctAgreementReqDTO = new ContractAgreementReqDTO();
+			ctAgreementReqDTO.setContractId(resDTO.getCtContractVer().getCtContract().getContractId());
+			//ctAgreementResDTO = agreementSO.retrieveAgreementsByContract(ctAgreementReqDTO);
+			ctAgreementResDTO = agreementSO.retrieveAgreementsWithContentsByContract(ctAgreementReqDTO);
+			
+			ctBB.getManagedBean().setCtAgreementList(ctAgreementResDTO.getAgreementList());
 			//CT_CHANGE_LOG
 			ctBB.getManagedBean().setNewAgencyMap(resDTO.getNewAgencyMap());
 			ctBB.getManagedBean().setUpdateAgencyMap(resDTO.getUpdateAgencyMap());
@@ -575,12 +587,17 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 			}
 			chkBondWaivedAttachment();
+			
 		} catch(Exception e){
 			e.printStackTrace();
 		} finally {
 			resDTO = null;
 			contractSO = null;
 		}
+	}	
+	
+	public void downloadFile(String filePath, String fileName) throws IOException {
+		commonDownload(filePath, fileName);
 	}
 	
 	private void chkBondWaivedAttachment() {
