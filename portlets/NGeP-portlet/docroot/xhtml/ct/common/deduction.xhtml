@@ -34,7 +34,7 @@
 			               </p:selectBooleanCheckbox>
 		            </p:column>
 		           
-		            <p:column style="width:650px;" id="updateColumn"  styleClass="column-align-center">
+		            <p:column style="width:200px;" id="updateColumn"  styleClass="column-align-center">
 		        	     <f:facet name="header">
 			                  <h:outputText value="#{lbl['lbl.ct.deduction.type']}" styleClass="required"/>
 	               		      <ac:iconTooltip id="index" value="#{lbl['lbl.ct.tooltip.deduction.type']}"/>
@@ -49,26 +49,30 @@
 			                         process="@this"  partialSubmit="true"
 			                         listener="#{ctBackingBean.validateDeductionType(datas)}"></p:ajax>
 			              </p:selectOneMenu>
+			              </p:column> 
 			              
-			              <h:outputText  rendered="#{ctBackingBean.managedBean.viewContract and 
+			           <p:column  headerText="#{lbl['lbl.ct.deduction.description']}" style="width:400px;text-align:center;">
+			           <h:outputText  rendered="#{ctBackingBean.managedBean.viewContract and 
 			      		          datas.deductionType.parameterCode != ParameterConst.deductionTypeAdvancePayment}" 
 			                     value="#{ctBackingBean.getParameterDesc(datas.deductionType)}" style="float:left;" />
 			            
 			              <h:outputText rendered="#{datas.deductionType.parameterCode == ParameterConst.deductionTypeAdvancePayment}" 
 			                 value="#{ctBackingBean.getParameterDesc(datas.deductionType)}" style="float:left;" />
 			                 <p:spacer width="15"/>
-			                   <p:inputText  value="#{datas.deductionDesc}"  style="width:400px;float:left;" maxlength="250"
+			                   <p:inputText  value="#{datas.deductionDesc}"  style="width:400px;float:left;" maxlength="255"
 		                           disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
 		                           rendered="#{!ctBackingBean.managedBean.viewContract and 
 		                              (ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeOthers
-		                           or ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeFixed)}">
+		                           or ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeFixed
+		                           or ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeNonFixed)}">
 			                 </p:inputText>  
 			                 
 			                  <h:outputText rendered="#{ctBackingBean.managedBean.viewContract and 
 		                              (ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeOthers
-		                           or ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeFixed)}"
+		                           or ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeFixed
+		                           or ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeNonFixed)}"
 			                 value=", #{datas.deductionDesc}" style="float:left;" />
-			              </p:column> 
+			           </p:column> 
 		       
 		              <p:column  headerText="#{lbl['lbl.ct.amount']}" style="width:150px;text-align:right;">
 	                       <h:outputText value="#{datas.amount}" 
