@@ -3583,17 +3583,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		return newCtAgreementList;
 	}
 	
-	public CtAgreementContent getCoverPage(CtAgreement ctAgreement) {
-		
-		for(CtAgreementContent ctAgreementContent: ctAgreement.getAgreementContents())
-		{  
-			if(ctAgreementContent.getTitle().equalsIgnoreCase(ContractConst.TEMPLATE_AGREEMENT_COVER_PAGE))
-				return ctAgreementContent;
-		}
-		
-		return null;
-	}
-	
 	public String getAgreementLoaPhysicalNo(CtAgreement ctAgreement) {
 		IContractSO contractSO = null;
 		ContractReqDTO reqDTO = new ContractReqDTO();
