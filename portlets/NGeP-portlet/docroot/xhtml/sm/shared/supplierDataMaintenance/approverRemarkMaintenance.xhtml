@@ -22,7 +22,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel styleClass="outputLabel-view-label"
-						value="#{lbl['lbl.sm.catcodes.approver.remark']}" /></td>
+						value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
 				<td><p:inputTextarea autoResize="true" cols="41"
 						id="approveRemark" maxlength="2500"
 						label="#{lbl['lbl.sm.sectionApprRmrk']}"
@@ -40,9 +40,7 @@
 
 		<p:dataTable id="approvalHistoryRemarklist" var="smRemark"
 			value="#{supplierDataMaintenanceBackingBean.managedBean.approverRemarkList}"
-			rowKey="#{smRemark}" rowIndexVar="index"
-			sortBy="#{smRemark.createdDate}" sortOrder="ASCENDING">
-
+			rowKey="#{smRemark}" rowIndexVar="index">
 			<p:column headerText="#{lbl['lbl.sm.approvremark.no']}">
 				<h:outputText value="#{index +1}" />
 			</p:column>
