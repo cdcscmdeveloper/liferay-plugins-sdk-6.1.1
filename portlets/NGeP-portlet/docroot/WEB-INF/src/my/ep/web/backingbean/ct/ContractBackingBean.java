@@ -91,6 +91,8 @@ import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.CtWorkflowStatus;
+import my.ep.persistence.entity.ct.agreement.CtAgreement;
+import my.ep.persistence.entity.ct.agreement.CtAgreementContent;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
 import my.ep.persistence.entity.ct.dtl.CtContractAmount;
@@ -3551,5 +3553,56 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			return true;
 		}
 		return false;
+	}
+	
+	public List<CtAgreement> filterAgreementList() {
+		List<CtAgreement> newCtAgreementList = new ArrayList<CtAgreement>();
+		List<CtAgreement> currentCtAgreementList = getManagedBean().getCtAgreementList();
+		CtAgreement tempCtAgreement = null;
+		int index = 0;
+
+		if(currentCtAgreementList != null && !currentCtAgreementList.isEmpty())
+		{
+			for(index = 0; index < currentCtAgreementList.size(); index++)
+			{
+				tempCtAgreement = currentCtAgreementList.get(index);
+				if(tempCtAgreement.getAgreementId() == getManagedBean().getCtContractAmount().getCtAgreement().getAgreementId())
+				{
+					while(index >= 0)
+					{
+						newCtAgreementList.add(0, currentCtAgreementList.get(index));
+						index--;
+					}
+
+					break;
+				}
+			}
+	
+		}
+
+		return newCtAgreementList;
+	}
+	
+	public CtAgreementContent getCoverPage(CtAgreement ctAgreement) {
+		
+		for(CtAgreementContent ctAgreementContent: ctAgreement.getAgreementContents())
+		{  
+			if(ctAgreementContent.getTitle().equalsIgnoreCase(ContractConst.TEMPLATE_AGREEMENT_COVER_PAGE))
+				return ctAgreementContent;
+		}
+		
+		return null;
+	}
+	
+	public String getAgreementLoaPhysicalNo(CtAgreement ctAgreement) {
+		IContractSO contractSO = null;
+		ContractReqDTO reqDTO = new ContractReqDTO();
+		ContractResDTO resDTO = null; 
+		
+		reqDTO.setCtAgreement(ctAgreement);
+		contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
+		resDTO = contractSO.retrieveContractVerByAgreement(reqDTO);
+		
+		return resDTO.getCtContractVer().getCtContractValue().getLoaPhysicalNo();
 	}
 }  
