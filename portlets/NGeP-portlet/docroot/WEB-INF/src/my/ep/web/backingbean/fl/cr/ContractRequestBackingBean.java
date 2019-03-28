@@ -1403,6 +1403,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					Long reqId = getManagedBean().getFlRequest().getFulfilmentReqId();
 					String itemCode = newItem.getItemCode();
 
+					if(getManagedBean().getFlRequest().getDocNo()!= null){
 					if (!flag) {
 						unitPrice = iFulfilmentSO.getUnitPriceByReqId(reqId,itemCode);
 						if (newItem.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE) && unitPrice.compareTo(BigDecimal.ZERO) > 0 ) {
@@ -1410,6 +1411,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 							flag = true;
 						}
 					}//end #21489
+					}
 
 					newItem.setOrderedQty(BigDecimal.ZERO);
 					newItem.setOrderedAmt(BigDecimal.ZERO);
