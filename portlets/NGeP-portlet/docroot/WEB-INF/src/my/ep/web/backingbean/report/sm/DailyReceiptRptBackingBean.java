@@ -23,7 +23,7 @@ public class DailyReceiptRptBackingBean extends SmReportBackingBean<DailyReceipt
 	private static Logger log = Logger.getLogger(DailyReceiptRptBackingBean.class);
 	
 	public DailyReceiptRptBackingBean() {
-		setDefaultDateFromAndDateTo();
+		setDateFromAndDateTo();
 	}
 	
 	public void generateReport(){
@@ -65,7 +65,7 @@ public class DailyReceiptRptBackingBean extends SmReportBackingBean<DailyReceipt
 		getManagedBean().setYearTo(null);
 		getManagedBean().setReceiptNo(null);
 		
-		setDefaultDateFromAndDateTo();
+		setDateFromAndDateTo();
 	}
 	
 	/**
