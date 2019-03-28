@@ -41,17 +41,17 @@
 						<h:outputText value="#{lbl['lbl.ct.agreement.doc']} : " />
 						<h:commandLink styleClass="blue_font"
 							title="#{agreement.fileName}"
-							value="#{agreement.fileName}"
+							value="#{ctBackingBean.getShortFileName(agreement.fileName)}"
 							action="#{ctBackingBean.commonDownload(agreement.filePath, agreement.fileName)}" /><br />
 						<h:outputText value="#{lbl['lbl.ct.agreement.signing.page.attachment']} : " />		
 						<h:commandLink styleClass="blue_font"
 							title="#{agreement.signedPageName}"
-							value="#{agreement.signedPageName}"
+							value="#{ctBackingBean.getShortFileName(agreement.signedPageName)}"
 							action="#{ctBackingBean.commonDownload(agreement.signedPagePath, agreement.signedPageName)}" /><br />		
 						<h:outputText value="#{lbl['lbl.ct.agreement.stamping.page.attachment']} : " />
 						<h:commandLink styleClass="blue_font"
 							title="#{agreement.stampedPageName}"
-							value="#{agreement.stampedPageName}"
+							value="#{ctBackingBean.getShortFileName(agreement.stampedPageName)}"
 							action="#{ctBackingBean.commonDownload(agreement.stampedPagePath, agreement.stampedPageName)}" />	
 				</p:column>
 				</p:dataTable>
