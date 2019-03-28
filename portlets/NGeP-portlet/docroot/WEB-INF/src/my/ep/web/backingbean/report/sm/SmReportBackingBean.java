@@ -686,6 +686,13 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		
 		return false;
 	}
+
+	public void setDateFromAndDateTo() {
+		Calendar fromDate = Calendar.getInstance();
+		fromDate.set(fromDate.get(Calendar.YEAR), 00, 01, 0, 00, 0);
+		getManagedBean().setDateFrom(fromDate.getTime());
+		getManagedBean().setDateTo(new Date());
+	}
 	//end of Enhancement #19245 
 	
 }
