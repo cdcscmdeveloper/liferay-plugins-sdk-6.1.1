@@ -100,11 +100,16 @@
 						value="#{lbl['lbl.sm.approver.decision.cancelMofAccount']}" /></td>
 				<td>
 					<c:choose>
-						<c:when test="#{fn:containsIgnoreCase(viewSmApplBackingBean.managedBean.currentStatus, 'PENDING REVIEW APPLICATION')}">
-							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}"/>
+						<c:when test="#{fn:containsIgnoreCase(viewSmApplBackingBean.managedBean.currentStatus, 'REGISTERED')
+						and viewSmApplBackingBean.managedBean.smAppl.applType eq 'C'}">
+							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.approved']}"/>
+						</c:when>
+						<c:when test="#{fn:containsIgnoreCase(viewSmApplBackingBean.managedBean.currentStatus, 'REJECTED')
+						and viewSmApplBackingBean.managedBean.smAppl.applType eq 'C'}">
+							<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.currentStatus}"/>
 						</c:when>
 						<c:otherwise>
-							<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.currentStatus}"/>
+							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}"/>
 						</c:otherwise>
 					</c:choose>
 				</td>
@@ -112,34 +117,59 @@
 			<tr>
 				<td><p:outputLabel styleClass="outputLabel-view-label"
 						value="#{lbl['lbl.sm.dateSubmitted']}" /></td>
-				<td><ac:labelDateTime 
-						value="#{viewSmApplBackingBean.managedBean.smAppl.applSubmitDate}" /></td>
+				<td>
+					<c:choose>
+						<c:when test="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'C'}">
+							<ac:labelDateTime 
+								value="#{viewSmApplBackingBean.managedBean.smAppl.applSubmitDate}" />
+						</c:when>
+						<c:otherwise>
+							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}"/>
+						</c:otherwise>
+					</c:choose>
+				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel styleClass="outputLabel-view-label"
 						value="#{lbl['lbl.sm.reason.supplier']}" /></td>
-				<td><p:outputLabel styleClass="outputLabel-view"
-						value="#{viewSmApplBackingBean.managedBean.supplierRemarks}" />					
+				<td>
+					<c:choose>
+						<c:when test="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'C'}">
+							<p:outputLabel styleClass="outputLabel-view"
+								value="#{viewSmApplBackingBean.managedBean.supplierRemarks}" />	
+						</c:when>
+						<c:otherwise>
+							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}"/>
+						</c:otherwise>	
+					</c:choose>								
 				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sm.supportingdoc.panel.supportingdoc']}"
 						styleClass="outputLabel-view-label" /></td>
-				<td>					
-					<p:commandButton value="#{lbl['lbl.btn.download']}" style="float: left;" ajax="false">
-						<p:fileDownload value="#{viewSmApplBackingBean.commonDownload(viewSmApplBackingBean.managedBean.cancelRemarkVO.attch.filePath,
-							viewSmApplBackingBean.managedBean.cancelRemarkVO.attch.fileName,viewSmApplBackingBean.managedBean.cancelRemarkVO.attch.fileName)}" />
-					</p:commandButton> 
+				<td>
+					<c:choose>
+						<c:when test="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'C'}">					
+							<p:commandButton value="#{lbl['lbl.btn.download']}" style="float: left;" ajax="false">
+								<p:fileDownload value="#{viewSmApplBackingBean.commonDownload(viewSmApplBackingBean.managedBean.cancelRemarkVO.attch.filePath,
+									viewSmApplBackingBean.managedBean.cancelRemarkVO.attch.fileName,viewSmApplBackingBean.managedBean.cancelRemarkVO.attch.fileName)}" />
+							</p:commandButton> 
 					
-					<p:outputLabel
-						value="#{viewSmApplBackingBean.managedBean.cancelRemarkVO.attch.fileName}"
-						style="float: left;padding: 12px 0px 0px 10px;font-weight: normal !important;"
-						rendered="#{viewSmApplBackingBean.managedBean.cancelRemarkVO.attch.fileName ne null}" />
-						
-					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}" 
-						style="float: left;padding: 12px 0px 0px 10px;font-weight: normal !important;"
-						rendered="#{empty viewSmApplBackingBean.managedBean.cancelRemarkVO.attch.fileName}"/>
+							<p:outputLabel
+								value="#{viewSmApplBackingBean.managedBean.cancelRemarkVO.attch.fileName}"
+								style="float: left;padding: 12px 0px 0px 10px;font-weight: normal !important;"
+								rendered="#{viewSmApplBackingBean.managedBean.cancelRemarkVO.attch.fileName ne null}" />
+								
+							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}" 
+								style="float: left;padding: 12px 0px 0px 10px;font-weight: normal !important;"
+								rendered="#{empty viewSmApplBackingBean.managedBean.cancelRemarkVO.attch.fileName}"/>
+					
+						</c:when>
+						<c:otherwise>
+							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}"/>
+						</c:otherwise>	
+					</c:choose>
 				</td>
 			</tr>
 		</table>
