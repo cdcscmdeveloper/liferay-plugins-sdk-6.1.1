@@ -97,6 +97,7 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	private SmSupplier supplier;
 	private PmUser loginUser;
 	private String certIssuer;
+	public static Logger log = Logger.getLogger(SpkiBackingBean.class);
 
 	public SpkiBackingBean() {
 	}
@@ -114,10 +115,12 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	public void getChallengeQuestions() {
 		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
 			if (getCertIssuer().equals(SupplierManagementConst.CERT_TRUSTGATE)) {
+				log.info("getChallengeQuestions | getCertIssuer-TG : " + getCertIssuer());
 				challs = TrustGateHelper.getInstance().getChallengeQuestion(
 						getLoginUser().getIdentificationNo(),
 						getSupplier().getEpNo(), challengeQues1);
 			} else {
+				log.info("getChallengeQuestions | getCertIssuer-DG : " + getCertIssuer());
 				challs = DigiCertHelper.getInstance().getChallengeQuestion(
 						getLoginUser().getIdentificationNo());
 			}
@@ -129,10 +132,12 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	public void getChallengeQuestions(String identificationNo) {
 		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
 			if (getCertIssuer(identificationNo).equals(SupplierManagementConst.CERT_TRUSTGATE)) {
+				log.info("getChallengeQuestions(icNo) || getCertIssuer-TG : " + getCertIssuer());
 				challs = TrustGateHelper.getInstance().getChallengeQuestion(
 						identificationNo, getSupplier().getEpNo(),
 						challengeQues1);
 			} else {
+				log.info("getChallengeQuestions(icNo) || getCertIssuer-TG : " + getCertIssuer());
 				challs = DigiCertHelper.getInstance().getChallengeQuestion(
 						identificationNo);
 			}
