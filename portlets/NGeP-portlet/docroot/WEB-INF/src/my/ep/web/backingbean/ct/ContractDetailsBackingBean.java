@@ -320,11 +320,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			resDTO = contractSO.retrieveContractVerDtls(reqDTO);
 			ctBB.getManagedBean().setContractVer(resDTO.getCtContractVer());
 			
+			//Retrieve agreement list
 			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IAgreementSO.class);
 			ctAgreementReqDTO = new ContractAgreementReqDTO();
 			ctAgreementReqDTO.setContractId(resDTO.getCtContractVer().getCtContract().getContractId());
-			//ctAgreementResDTO = agreementSO.retrieveAgreementsByContract(ctAgreementReqDTO);
-			ctAgreementResDTO = agreementSO.retrieveAgreementsWithContentsByContract(ctAgreementReqDTO);
+			ctAgreementResDTO = agreementSO.retrieveContractAgreements(ctAgreementReqDTO);
 			
 			ctBB.getManagedBean().setCtAgreementList(ctAgreementResDTO.getAgreementList());
 			//CT_CHANGE_LOG
@@ -593,6 +593,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		} finally {
 			resDTO = null;
 			contractSO = null;
+			agreementSO = null;
+			ctAgreementResDTO = null;
+			ctAgreementReqDTO = null;
 		}
 	}	
 	
