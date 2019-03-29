@@ -6,42 +6,58 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<table width="100%">
+	<table width="1100px">
 		<tr>
 			<th width="20%"><p:outputLabel
 					value="#{lbl['lbl.pm.profiles.userdetails.idno']}" /></th>
-			<td><p:inputText size="38" disabled="true" maxlength="15"
+
+			<td style="width: 165px;"><p:inputText size="40" disabled="true"
+					maxlength="15"
 					value="#{custServiceBackingBean.managedBean.selectedUserOrg.pmUser.identificationNo}" /></td>
+			<td style="width: 86px;"><p:outputLabel
+					value="#{lbl['lbl.pm.profiles.userdetails.loginid']}" /></td>
+			<td style="width: 165px;"><p:inputText size="40" disabled="true"
+					value="#{custServiceBackingBean.managedBean.selectedUserOrg.pmUser.loginId}" /></td>
 			<th>&#160;</th>
 			<td>&#160;</td>
 		</tr>
 		<tr>
-			<th><p:outputLabel
-					value="#{lbl['lbl.pm.profiles.search.name']}" /></th>
-			<td><p:inputText size="103" disabled="true"
+			<td><p:outputLabel value="#{lbl['lbl.pm.profiles.search.name']}" /></td>
+			<td colspan="3"><p:inputText size="111" disabled="true"
 					value="#{custServiceBackingBean.managedBean.selectedUserOrg.pmUser.userName}"
-					maxlength="80" /></td>
+					maxlength="70" /></td>
 			<th>&#160;</th>
 			<td>&#160;</td>
 		</tr>
 		<tr>
-			<th style="vertical-align:top;"><p:outputLabel
+			<th style="vertical-align: top;"><p:outputLabel
 					value="#{lbl['lbl.pm.ucd.organization']}" /></th>
-			<td><p:inputTextarea id="orgName" disabled="true"
+			<td colspan="3"><p:inputTextarea id="orgName" disabled="true"
 					label="#{lbl['lbl.pm.ucd.organization']}"
 					value="#{custServiceBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmOrgValidity.orgName}"
-					rows="3" cols="105" maxlength="255" /></td>
+					rows="3" cols="113" maxlength="255" /></td>
 			<th>&#160;</th>
 			<td>&#160;</td>
 		</tr>
 		<tr>
-			<th width="20%"><p:outputLabel
-					value="#{lbl['lbl.pm.profiles.userdetails.designation']}" /></th>
-			<td><p:inputText size="103" disabled="true"
+			<td><p:outputLabel
+					value="#{lbl['lbl.pm.profiles.userdetails.designation']}" /></td>
+			<td colspan="3"><p:inputText size="111" disabled="true"
+					style="margin-top: 5px;"
 					value="#{custServiceBackingBean.managedBean.selectedUserOrg.pmUser.designation}"
 					maxlength="80" /></td>
 			<th>&#160;</th>
 			<td>&#160;</td>
+		</tr>
+
+		<tr>
+			<td><p:outputLabel
+					value="#{lbl['lbl.pm.profiles.userdetails.email']}"
+					rendered="#{custServiceBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterCode =='SUP'}" /></td>
+			<td colspan="3"><p:inputText size="111"
+					value="#{custServiceBackingBean.managedBean.selectedUserOrg.pmUser.email}"
+					rendered="#{custServiceBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterCode =='SUP'}"
+					maxlength="80" /></td>
 		</tr>
 		<tr>
 			<th width="20%"><p:outputLabel
@@ -60,13 +76,12 @@
 			<td><p:selectBooleanCheckbox style="float:left;"
 					id="rnApproverBcb" disabled="true"
 					value="#{empty custServiceBackingBean.managedBean.rnUserGroups ? 'false':'true'}" />
-			    <p:outputLabel
+				<p:outputLabel
 					style="float:left;margin-left:10px;font-weight:normal !important;"
 					value="#{custServiceBackingBean.getRoleDescByRoleCode(ProfileManagementConst.rnApprover)}" /></td>
 			<th>&#160;</th>
 			<td>&#160;</td>
 		</tr>
-		
 		<tr>
 			<th width="20%"><p:outputLabel
 					value="#{lbl['lbl.pm.profiles.search.user.status']}" /></th>
@@ -75,8 +90,6 @@
 			<th>&#160;</th>
 			<td>&#160;</td>
 		</tr>
-
 	</table>
-	<br/>
-
+	<br />
 </ui:composition>
