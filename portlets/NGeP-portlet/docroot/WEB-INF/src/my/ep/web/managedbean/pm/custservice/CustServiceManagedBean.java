@@ -3,12 +3,16 @@
  */
 package my.ep.web.managedbean.pm.custservice;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
@@ -37,7 +41,13 @@ public class CustServiceManagedBean extends BaseManagedBean {
 	private List<PmUserGroup> flUserGroups;
 	private List<PmUserGroup> rnUserGroups;
 	private Integer tabActiveIndex;
-	
+	private PmUser selectedUser;
+	private boolean isPmUserExist = false;
+	private Map<String, BigDecimal> roleCodeToApprovalLimitMap = new HashMap<String, BigDecimal>();
+	private boolean isActiveUser;
+	private Map<String, String> roleCodeToLetterNoMap = new HashMap<String, String>();
+	private PmUser pmUserOriginal;
+	private PmUserOrg pmUserOrgOriginal;
 
 	public CustServiceManagedBean() {
 	}
@@ -168,8 +178,104 @@ public class CustServiceManagedBean extends BaseManagedBean {
 		this.rnUserGroups = rnUserGroups;
 	}
 
-	
+	/**
+	 * @return the selectedUser
+	 */
+	public PmUser getSelectedUser() {
+		return selectedUser;
+	}
 
-	
+	/**
+	 * @param selectedUser the selectedUser to set
+	 */
+	public void setSelectedUser(PmUser selectedUser) {
+		this.selectedUser = selectedUser;
+	}
 
+	/**
+	 * @return the isPmUserExist
+	 */
+	public boolean isPmUserExist() {
+		return isPmUserExist;
+	}
+
+	/**
+	 * @param isPmUserExist the isPmUserExist to set
+	 */
+	public void setPmUserExist(boolean isPmUserExist) {
+		this.isPmUserExist = isPmUserExist;
+	}
+
+	/**
+	 * @return the roleCodeToApprovalLimitMap
+	 */
+	public Map<String, BigDecimal> getRoleCodeToApprovalLimitMap() {
+		return roleCodeToApprovalLimitMap;
+	}
+
+	/**
+	 * @param roleCodeToApprovalLimitMap the roleCodeToApprovalLimitMap to set
+	 */
+	public void setRoleCodeToApprovalLimitMap(
+			Map<String, BigDecimal> roleCodeToApprovalLimitMap) {
+		this.roleCodeToApprovalLimitMap = roleCodeToApprovalLimitMap;
+	}
+
+	/**
+	 * @return the isActiveUser
+	 */
+	public boolean isActiveUser() {
+		return isActiveUser;
+	}
+
+	/**
+	 * @param isActiveUser the isActiveUser to set
+	 */
+	public void setActiveUser(boolean isActiveUser) {
+		this.isActiveUser = isActiveUser;
+	}
+
+	/**
+	 * @return the roleCodeToLetterNoMap
+	 */
+	public Map<String, String> getRoleCodeToLetterNoMap() {
+		return roleCodeToLetterNoMap;
+	}
+
+	/**
+	 * @param roleCodeToLetterNoMap the roleCodeToLetterNoMap to set
+	 */
+	public void setRoleCodeToLetterNoMap(Map<String, String> roleCodeToLetterNoMap) {
+		this.roleCodeToLetterNoMap = roleCodeToLetterNoMap;
+	}
+
+	/**
+	 * @return the pmUserOriginal
+	 */
+	public PmUser getPmUserOriginal() {
+		return pmUserOriginal;
+	}
+
+	/**
+	 * @param pmUserOriginal the pmUserOriginal to set
+	 */
+	public void setPmUserOriginal(PmUser pmUserOriginal) {
+		this.pmUserOriginal = pmUserOriginal;
+	}
+
+	/**
+	 * @return the pmUserOrgOriginal
+	 */
+	public PmUserOrg getPmUserOrgOriginal() {
+		return pmUserOrgOriginal;
+	}
+
+	/**
+	 * @param pmUserOrgOriginal the pmUserOrgOriginal to set
+	 */
+	public void setPmUserOrgOriginal(PmUserOrg pmUserOrgOriginal) {
+		this.pmUserOrgOriginal = pmUserOrgOriginal;
+	}	
+	
+	
 }
