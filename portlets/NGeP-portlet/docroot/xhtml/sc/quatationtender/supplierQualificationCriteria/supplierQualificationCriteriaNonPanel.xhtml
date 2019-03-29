@@ -52,6 +52,26 @@
 			</p:column>
 
 		</p:dataTable>
+		
+		<p:outputPanel rendered="#{not empty qTSupplierQulCriteriaBackingBean.managedBean.qtCategoryList}">
+		
+		  <table align="left" style="margin-top:10px !important;">
+		     <tr>
+			     <td>
+	                <p:outputLabel value="#{lbl['lbl.sc.open.for']}" /><p:outputLabel
+						value="*" styleClass="mandatory" rendered="#{!scQt.panel}" />               
+	             </td>
+	              <td>
+			     	<p:selectOneRadio required="true" label="#{lbl['lbl.sc.open.for']}" value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.openFor}">
+					 <f:selectItems value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.scOpenFor)}" />
+						<p:ajax event="change" process="@this" partialSubmit="true" update="@form" listener="#{createQtBB.openForChange}"></p:ajax>				
+				    </p:selectOneRadio>	    
+				  </td>
+			  </tr>
+		 </table>
+               
+	    </p:outputPanel>
+	    
 		<c:if test="#{!categoryCodeReadonly and !specCommitteeReadOnly}">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.add']}"
@@ -75,7 +95,7 @@
 				update="@([id$=openCategoryCodesPanel])" />
 			<ac:categoryCodePopup
 				okAction="qTSupplierQulCriteriaBackingBean.addNewCategoryAction"
-				update="@([id$=openPnlId])" />
+				update="@form" />
 		</c:if>
 	</p:panel>
 
