@@ -23,12 +23,14 @@ public class ColReceiptTransDtRptBackingBean extends SmReportBackingBean<ColRece
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(ColReceiptTransDtRptBackingBean.class);
 		
+	//Enhancement #19245
 	public ColReceiptTransDtRptBackingBean() {
 		getManagedBean().setCdcCollector(isRole(ReportConst.ROLE_CODE_COLLECTOR_CDC));
 		getManagedBean().setSoftCert(SmReportConst.PAYMENT_SOFTC_CERT);
-		
-		setDefaultDateFromAndDateTo();
+
+		setDateFromAndDateTo();
 	}
+	//end of Enhancement #19245
 	
 	public void generateReport(){
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
@@ -76,7 +78,9 @@ public class ColReceiptTransDtRptBackingBean extends SmReportBackingBean<ColRece
 		getManagedBean().setSelectedOrgProfile(null);
 		getManagedBean().setSelectedPaymentTypes(new ArrayList<String>());
 		
-		setDefaultDateFromAndDateTo();
+		//Enhancement #19245		
+		setDateFromAndDateTo();
+		//end of Enhancement #19245
 	}
 	
 	/**
