@@ -484,7 +484,9 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			}else{
 				throw new EpException("User no found!");
 			}
-			reqDTO.setRemark(this.getManagedBean().getSelectedRemarks().get(0));
+			if(!this.isAllSupplier()){
+				reqDTO.setRemark(this.getManagedBean().getSelectedRemarks().get(0));
+			}
 			resDTO = unspscSO.addCodificationRequest(reqDTO);
 
 			FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -506,7 +508,9 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			reqDTO.setTrackingStatus(true);
 			UNSPSCCodeRequestReviewByUser(reqDTO,face,action,statusSO,statusReqDTO);					
 			}
-			reqDTO.setRemark(this.getManagedBean().getSelectedRemarks().get(0));
+			if(!this.isAllSupplier()){
+				reqDTO.setRemark(this.getManagedBean().getSelectedRemarks().get(0));
+			}			
 			resDTO = unspscSO.updateCodificationRequest(reqDTO);
 		}
 
@@ -1692,7 +1696,9 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				}
 			}
 
-			reqDTO.setRemark(this.getManagedBean().getSelectedRemarks().get(0));
+			if(!this.isAllSupplier()){
+				reqDTO.setRemark(this.getManagedBean().getSelectedRemarks().get(0));
+			}			
 			if(reqDTO.isService() && this.getManagedBean().isRenderV2()){
 				log.info("Send for publishing.");
 				reqDTO.setPojo(this.getManagedBean().getPayLoad());
@@ -1750,7 +1756,9 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			String actionDesc = "Kod Item "+reqDTO.getRequestCode().getDocNo()+" telah disyorkan oleh "+(pmUser.getUserName()!=null?pmUser.getUserName():"SYS");
 			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus(),CmConst.CU_DocType));	
 			
-			reqDTO.setRemark(this.getManagedBean().getSelectedRemarks().get(0));
+			if(!this.isAllSupplier()){
+				reqDTO.setRemark(this.getManagedBean().getSelectedRemarks().get(0));
+			}			
 			resDTO = unspscSO.updateCodificationRequest(reqDTO);
 
 		}
@@ -2664,7 +2672,9 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 		StatusReqDTO statusReqDTO = new StatusReqDTO();
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
-		reqDTO.setRemark(this.getManagedBean().getSelectedRemarks().get(0));
+		if(!this.isAllSupplier()){
+			reqDTO.setRemark(this.getManagedBean().getSelectedRemarks().get(0));
+		}
 
 		if (action.equalsIgnoreCase("PUBLISH")) {
 
@@ -2746,33 +2756,36 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				} else {
 					log.info("******else********");
 					// //////checking for redundant values
-					if (code.isRequestType() && !isDDTypeSelected && code.getReviewedTypeName()!=null) {
-						checkingTypeRedundency(code.getReviewedTypeName().trim(), true);
-					}
-					if (code.isRequestBrand()  &&  !isDDBrandSelected && code.getReviewedBrandName()!=null) {
-						checkingBrandRedundency(code.getReviewedBrandName().trim(), true);
-					}
-					if (code.isRequestMeasurement() && !isDDMeasurementSelected && code.getReviewedMeasurementName()!=null) {
-						checkingMeasurmentRedundency(code.getReviewedMeasurementName().trim(), true);
-					}
-					if (code.isRequestColor()  && !isDDColorSelected && code.getReviewedColorName()!=null) {
-						checkingColorRedundency(code.getReviewedColorName().trim(), true);
-					}
-
-					if( !isDDMeasurementSelected || !isDDColorSelected || !isDDBrandSelected || !isDDTypeSelected){
-						if ((code.getTypeRemark() != null && code.getTypeRemark()
-								.trim().length() > 0)
-								|| (code.getBrandRemark() != null && code
-								.getBrandRemark().trim().length() > 0 )
-								|| (code.getMeasurementRemark() != null && code
-								.getMeasurementRemark().trim().length() > 0  )
-								|| (code.getColorRemark() != null && code
-								.getColorRemark().trim().length() > 0) ) {
-							log.info("remark added!!");
-							code.setRemarkRequired(false);
+					if(!action.equalsIgnoreCase(CmConst.ACTIONSTATUS)){
+						if (code.isRequestType() && !isDDTypeSelected && code.getReviewedTypeName()!=null) {
+							checkingTypeRedundency(code.getReviewedTypeName().trim(), true);
 						}
-					}
+						if (code.isRequestBrand()  &&  !isDDBrandSelected && code.getReviewedBrandName()!=null) {
+							checkingBrandRedundency(code.getReviewedBrandName().trim(), true);
+						}
+						if (code.isRequestMeasurement() && !isDDMeasurementSelected && code.getReviewedMeasurementName()!=null) {
+							checkingMeasurmentRedundency(code.getReviewedMeasurementName().trim(), true);
+						}
+						if (code.isRequestColor()  && !isDDColorSelected && code.getReviewedColorName()!=null) {
+							checkingColorRedundency(code.getReviewedColorName().trim(), true);
+						}
 
+						if( !isDDMeasurementSelected || !isDDColorSelected || !isDDBrandSelected || !isDDTypeSelected){
+							if ((code.getTypeRemark() != null && code.getTypeRemark()
+									.trim().length() > 0)
+									|| (code.getBrandRemark() != null && code
+									.getBrandRemark().trim().length() > 0 )
+									|| (code.getMeasurementRemark() != null && code
+									.getMeasurementRemark().trim().length() > 0  )
+									|| (code.getColorRemark() != null && code
+									.getColorRemark().trim().length() > 0) ) {
+								log.info("remark added!!");
+								code.setRemarkRequired(false);
+							}
+						}
+					}else{
+						code.setRemarkRequired(false);
+					}
 
 					if (code.isRemarkRequired() ) {
 						log.info("remark  error invoked");
@@ -2809,7 +2822,6 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 				resDTO = unspscSO.publishCodificationRequest(reqDTO);
 			}else{
-				log.info("Remark sentence : " + this.getManagedBean().getSelectedRemarks().get(0).getRemark());
 				resDTO = unspscSO.updateExtensionRequest(reqDTO);
 			}
 		}
