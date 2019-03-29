@@ -303,6 +303,17 @@ public class QTSupplierQulCriteriaBackingBean extends
 				pmCategoryL3.getCategoryName());
 		
 		qtCategoryList.add(category);
+		
+		/*
+		 * Condition if select PRINTING or PERCETAKAN radiobutton default to Bumiputra 
+		 */
+		this.getManagedBean().getQt().setOpenFor(ParameterConst.OPEN_FOR_ALL);
+		for(ScQtCategory cat: this.getManagedBean().getQtCategoryList()){
+			if(getParameterDesc(cat.getPmCategoryL3().getCategoryTypeCode()).equalsIgnoreCase("PRINTING") || cat.getPmCategoryL2Name().substring(0,10).equalsIgnoreCase("PERCETAKAN")){
+				this.getManagedBean().getQt().setOpenFor(ParameterConst.OPEN_FOR_BUMI);
+				break;
+			}
+		}
 	}
 
 	
@@ -334,6 +345,17 @@ public class QTSupplierQulCriteriaBackingBean extends
 		.setSelectedCategoryList(null);
 		this.getManagedBean().getQt().setScQtCategorys(openList);
 		this.getManagedBean().setTobeRemoveCategoryCodes(removeList);
+		
+		/*
+		 * Condition if select PRINTING or PERCETAKAN radiobutton default to Bumiputra 
+		 */
+		this.getManagedBean().getQt().setOpenFor(ParameterConst.OPEN_FOR_ALL);
+		for(ScQtCategory cat: this.getManagedBean().getQtCategoryList()){
+			if(getParameterDesc(cat.getPmCategoryL3().getCategoryTypeCode()).equalsIgnoreCase("PRINTING") || cat.getPmCategoryL2Name().substring(0,10).equalsIgnoreCase("PERCETAKAN")){
+				this.getManagedBean().getQt().setOpenFor(ParameterConst.OPEN_FOR_BUMI);
+				break;
+			}
+		}
 	}
 	
 	/**

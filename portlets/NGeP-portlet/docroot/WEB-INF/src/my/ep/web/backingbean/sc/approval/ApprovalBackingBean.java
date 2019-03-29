@@ -148,8 +148,17 @@ public class ApprovalBackingBean extends
 		List<String> appCatList = new ArrayList<String>();
 		if (null != this.getManagedBean().getTabList()) {
 			for (TabBean tabBean : this.getManagedBean().getTabList()) {
-				appCatList.add(tabBean.getScQtApproval().getApprovalCategory()
-						.getParameterCode());
+				if(this.getManagedBean().getQt().getOpenFor().equalsIgnoreCase(ParameterConst.OPEN_FOR_BUMI) && tabBean.getScQtApproval().getApprovalCategory().getParameterCode().equalsIgnoreCase(ParameterConst.APPROVAL_CATEGORY_BPK) )
+				{  
+					appCatList.remove(tabBean.getScQtApproval().getApprovalCategory()
+							.getParameterCode());		
+				
+				}
+				else
+				{
+					appCatList.add(tabBean.getScQtApproval().getApprovalCategory()
+							.getParameterCode());	
+				}
 			}
 		}
 		return appCatList;
