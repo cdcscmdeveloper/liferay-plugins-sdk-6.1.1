@@ -2712,36 +2712,40 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 						+ code.getReviewedBrandNameII());
 				if (code.getReviewedBrandNameII() != null 	&& code.getReviewedBrandNameII().trim().length() > 0) {
 					// //////checking for redundant values
-					if (!isCodeAdmin()) {
-						if (code.isRequestType()) {
-							checkingTypeRedundency(code.getReviewedTypeNameII(), false);
+					if(!action.equalsIgnoreCase(CmConst.ACTIONSTATUS)){
+						if (!isCodeAdmin()) {
+							if (code.isRequestType()) {
+								checkingTypeRedundency(code.getReviewedTypeNameII(), false);
+							}
+							if (code.isRequestBrand()) {
+								checkingBrandRedundency(code
+										.getReviewedBrandNameII(), false);
+							}
+							if (code.isRequestMeasurement()) {
+								checkingMeasurmentRedundency(code
+										.getReviewedMeasurementNameII(), false);
+							}
+							if (code.isRequestColor()) {
+								checkingColorRedundency(code
+										.getReviewedColorNameII(), false);
+							}
 						}
-						if (code.isRequestBrand()) {
-							checkingBrandRedundency(code
-									.getReviewedBrandNameII(), false);
+						// //////////////////////////////////
+						if ((code.getTypeRemarkII() != null && code
+								.getTypeRemarkII().trim().length() > 0)
+								|| (code.getBrandRemarkII() != null && code
+								.getBrandRemarkII().trim().length() > 0)
+								|| (code.getMeasurementRemarkII() != null && code
+								.getMeasurementRemarkII().trim().length() > 0)
+								|| (code.getColorRemarkII() != null && code
+								.getColorRemarkII().trim().length() > 0)) {
+							log.info("remark added!!");
+							code.setRemarkRequiredII(false);
 						}
-						if (code.isRequestMeasurement()) {
-							checkingMeasurmentRedundency(code
-									.getReviewedMeasurementNameII(), false);
-						}
-						if (code.isRequestColor()) {
-							checkingColorRedundency(code
-									.getReviewedColorNameII(), false);
-						}
-					}
-					// //////////////////////////////////
-					if ((code.getTypeRemarkII() != null && code
-							.getTypeRemarkII().trim().length() > 0)
-							|| (code.getBrandRemarkII() != null && code
-							.getBrandRemarkII().trim().length() > 0)
-							|| (code.getMeasurementRemarkII() != null && code
-							.getMeasurementRemarkII().trim().length() > 0)
-							|| (code.getColorRemarkII() != null && code
-							.getColorRemarkII().trim().length() > 0)) {
-						log.info("remark added!!");
+					}else{
 						code.setRemarkRequiredII(false);
-
 					}
+					
 
 					if (code.isRemarkRequiredII()) {
 
