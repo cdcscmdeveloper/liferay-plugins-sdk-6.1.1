@@ -97,33 +97,47 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	private SmSupplier supplier;
 	private PmUser loginUser;
 	private String certIssuer;
-	public static Logger log = Logger.getLogger(SpkiBackingBean.class);
+	private static final Logger logger = EpLogger.getLogger(SpkiBackingBean.class);
 
 	public SpkiBackingBean() {
-	}
-
-	private static final Logger logger = EpLogger
-			.getLogger(SpkiBackingBean.class);
+	}	
 
 	public String getSpkiEnabledProperty() {
 		EpPropertiesUtils prop = EpPropertiesUtils.getInstance();
 		System.out.println("getSpkiEnabledProperty :"
 				+ prop.getProperty("spki.enabled"));
+		System.out.println("getSpkiEnabledProperty :" + prop.getProperty("spki.enabled"));
+		System.out.println("getSpkiEnabledProperty :" + prop.getProperty("spki.enabled").toString());
 		return prop.getProperty("spki.enabled");
 	}
 
 	public void getChallengeQuestions() {
 		logger.info("::: #25061 getChallengeQuestions :::");
-		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
-			logger.info("::: #25061 getSpkiEnabledProperty true :::");
-			logger.info("::: #25061 getCertIssuer " + getCertIssuer());
+		if (getSpkiEnabledProperty().toString().equalsIgnoreCase("true")) {
+			logger.info("getSpkiEnabledProperty == true");
 			if (getCertIssuer().equals(SupplierManagementConst.CERT_TRUSTGATE)) {
-				log.info("getChallengeQuestions | getCertIssuer-TG : " + getCertIssuer());
+				logger.info("***** getChallengeQuestions | getCertIssuer-TG : " + getCertIssuer());
 				challs = TrustGateHelper.getInstance().getChallengeQuestion(
 						getLoginUser().getIdentificationNo(),
 						getSupplier().getEpNo(), challengeQues1);
 			} else {
-				log.info("getChallengeQuestions | getCertIssuer-DG : " + getCertIssuer());
+				logger.info("***** getChallengeQuestions | getCertIssuer-DG : " + getCertIssuer());
+				challs = DigiCertHelper.getInstance().getChallengeQuestion(
+						getLoginUser().getIdentificationNo());
+			}
+		} else {
+			logger.info("else | getSpkiEnabledProperty != true");
+		}
+		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
+			logger.info("::: #25061 getSpkiEnabledProperty true :::");
+			logger.info("::: #25061 getCertIssuer " + getCertIssuer());
+			if (getCertIssuer().equals(SupplierManagementConst.CERT_TRUSTGATE)) {
+				logger.info("getChallengeQuestions | getCertIssuer-TG : " + getCertIssuer());
+				challs = TrustGateHelper.getInstance().getChallengeQuestion(
+						getLoginUser().getIdentificationNo(),
+						getSupplier().getEpNo(), challengeQues1);
+			} else {
+				logger.info("getChallengeQuestions | getCertIssuer-DG : " + getCertIssuer());
 				challs = DigiCertHelper.getInstance().getChallengeQuestion(
 						getLoginUser().getIdentificationNo());
 			}
@@ -136,12 +150,12 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	public void getChallengeQuestions(String identificationNo) {
 		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
 			if (getCertIssuer(identificationNo).equals(SupplierManagementConst.CERT_TRUSTGATE)) {
-				log.info("getChallengeQuestions(icNo) || getCertIssuer-TG : " + getCertIssuer());
+				logger.info("getChallengeQuestions(icNo) || getCertIssuer-TG : " + getCertIssuer());
 				challs = TrustGateHelper.getInstance().getChallengeQuestion(
 						identificationNo, getSupplier().getEpNo(),
 						challengeQues1);
 			} else {
-				log.info("getChallengeQuestions(icNo) || getCertIssuer-TG : " + getCertIssuer());
+				logger.info("getChallengeQuestions(icNo) || getCertIssuer-TG : " + getCertIssuer());
 				challs = DigiCertHelper.getInstance().getChallengeQuestion(
 						identificationNo);
 			}
