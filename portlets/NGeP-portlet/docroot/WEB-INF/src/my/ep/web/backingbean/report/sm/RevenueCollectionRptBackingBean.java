@@ -24,9 +24,13 @@ public class RevenueCollectionRptBackingBean extends SmReportBackingBean<Revenue
 	
 	public RevenueCollectionRptBackingBean(){
 		getManagedBean().setSelectedPaymentTypes(new ArrayList<String>());
-		setDefaultDateFromAndDateTo();
+		
+		//Enhancement #19245
 		getManagedBean().setCdcCollector(isRole(ReportConst.ROLE_CODE_COLLECTOR_CDC));
 		getManagedBean().setSoftCert(SmReportConst.PAYMENT_SOFTC_CERT);
+		
+		setDateFromAndDateTo();
+		//end of Enhancement #19245
 	}
 	
 	public void generateReport(){
@@ -67,7 +71,10 @@ public class RevenueCollectionRptBackingBean extends SmReportBackingBean<Revenue
 	
 	public void resetSearch(){
 		getManagedBean().setSelectedPaymentTypes(new ArrayList<String>());
-		setDefaultDateFromAndDateTo();
+		
+		//Enhancement #19245
+		setDateFromAndDateTo();
+		//end of Enhancement #19245
 	}
 	
 	/**

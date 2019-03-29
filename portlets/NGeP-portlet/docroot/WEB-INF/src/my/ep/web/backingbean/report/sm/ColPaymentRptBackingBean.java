@@ -25,10 +25,13 @@ public class ColPaymentRptBackingBean extends SmReportBackingBean<ColPaymentRptM
 	
 	public ColPaymentRptBackingBean(){
 		getManagedBean().setPaymentTypeMethodLs(getPaymentTypeMethodList());
+		
+		//Enhancement #19245
 		getManagedBean().setCdcCollector(isRole(ReportConst.ROLE_CODE_COLLECTOR_CDC));
 		getManagedBean().setSoftCert(SmReportConst.PAYMENT_SOFTC_CERT);
 		
-		setDefaultDateFromAndDateTo();
+		setDateFromAndDateTo();
+		//end of Enhancement #19245
 	}
 	
 	public void generateReport() {
@@ -81,7 +84,9 @@ public class ColPaymentRptBackingBean extends SmReportBackingBean<ColPaymentRptM
 		getManagedBean().setSelectedPaymentTypes(new ArrayList<String>());
 		getManagedBean().setSelectedOrgProfile(null);
 		
-		setDefaultDateFromAndDateTo();
+		//Enhancement #19245
+		setDateFromAndDateTo();
+		//end of Enhancement #19245
 	}
 	
 	public static SelectItem[] getDocumentTypeOptions() {
