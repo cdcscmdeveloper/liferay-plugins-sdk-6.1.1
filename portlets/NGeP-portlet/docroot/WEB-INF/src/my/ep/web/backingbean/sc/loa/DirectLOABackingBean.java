@@ -8292,7 +8292,7 @@ public class DirectLOABackingBean extends
 			this.getManagedBean().setAutoUpdate(false);			
 			
 			String rejectMsg = getMessage("lbl.sc.loiloa.supplier.confirm.button.reject", new String[] { loa.trim(), procurementMode.trim() });
-
+ 
 			this.getManagedBean().setSuppConfirmMsgReject(rejectMsg.toString().trim());
 			RequestContext.getCurrentInstance().execute("confmRejectDlg.show()"); 
 		}
@@ -8304,6 +8304,7 @@ public class DirectLOABackingBean extends
 		
 		// spki
 		getManagedBean().getSpkiBackingBean().getChallengeQuestions();
+		log.info("::: #25061 before spki_dlg.show ");
 		RequestContext.getCurrentInstance().execute("spki_dlg.show();");
 	}
 	
