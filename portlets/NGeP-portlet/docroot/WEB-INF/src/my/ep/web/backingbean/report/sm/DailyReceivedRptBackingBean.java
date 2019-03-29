@@ -27,9 +27,12 @@ public class DailyReceivedRptBackingBean extends
 	private static final long serialVersionUID = 8499640157757275310L;
 	private static Logger log = Logger.getLogger(RevenueCollectionRptBackingBean.class);
 
-	public DailyReceivedRptBackingBean() {
-		setDefaultDateFromAndDateTo();
+	public DailyReceivedRptBackingBean() {	
+		//Enhancement #19245
+		setDateFromAndDateTo();
+		
 		getManagedBean().setCdcCollector(isRole(ReportConst.ROLE_CODE_COLLECTOR_CDC));
+		//end of Enhancement #19245
 	}
 
 	public void generateReport() {
@@ -63,7 +66,10 @@ public class DailyReceivedRptBackingBean extends
 
 	public void resetSearch() {
 		getManagedBean().setPaymentType(StringUtils.EMPTY);
-		setDefaultDateFromAndDateTo();
+		
+		//Enhancement #19245
+		setDateFromAndDateTo();
+		//end of Enhancement #19245
 	}
 
 	/**
