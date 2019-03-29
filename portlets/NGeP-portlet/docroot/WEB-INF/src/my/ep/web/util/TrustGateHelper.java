@@ -86,6 +86,7 @@ public class TrustGateHelper {
 
 			switch (res.getStatusCode()) {
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
+				log.info("#25061 OPERATION_SUCCESSFUL");
 				retVal = getChallQuest(selectedQuest, res.CHALLENGE_RESPONSES);
 
 				if (retVal.size() == 0) {
@@ -108,8 +109,11 @@ public class TrustGateHelper {
 
 	private List<String> getChallQuest(String selectedQuest,
 			List<String> questions) {
+		log.info("#25061 getChallQuest");
+		log.info("#25061 selectedQuest " + selectedQuest);
 		List<String> retVal = new ArrayList<String>();
 		for (String quest : questions) {
+			log.info("#25061 quest " + quest);
 			if (!quest.equals(selectedQuest)) {
 				retVal.add(quest);
 				break;
