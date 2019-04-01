@@ -113,6 +113,8 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 
 	public void getChallengeQuestions() {
 		logger.info("::: #25061 getChallengeQuestions :::");
+		logger.info(getSpkiEnabledProperty());
+		logger.info(getSpkiEnabledProperty().toString());
 		if (getSpkiEnabledProperty().toString().equalsIgnoreCase("true")) {
 			logger.info("getSpkiEnabledProperty == true");
 			if (getCertIssuer().equals(SupplierManagementConst.CERT_TRUSTGATE)) {
