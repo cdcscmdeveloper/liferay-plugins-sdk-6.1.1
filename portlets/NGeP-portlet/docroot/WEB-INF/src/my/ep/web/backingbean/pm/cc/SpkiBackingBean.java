@@ -100,38 +100,18 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	private static final Logger logger = EpLogger.getLogger(SpkiBackingBean.class);
 
 	public SpkiBackingBean() {
-	}	
+	}
 
 	public String getSpkiEnabledProperty() {
 		EpPropertiesUtils prop = EpPropertiesUtils.getInstance();
 		System.out.println("getSpkiEnabledProperty :"
 				+ prop.getProperty("spki.enabled"));
-		System.out.println("getSpkiEnabledProperty :" + prop.getProperty("spki.enabled"));
-		System.out.println("getSpkiEnabledProperty :" + prop.getProperty("spki.enabled").toString());
-		return prop.getProperty("spki.enabled");
+		return prop.getProperty("spki.enabled").trim();
 	}
 
 	public void getChallengeQuestions() {
-		logger.info("::: #25061 getChallengeQuestions :::");
-		logger.info(getSpkiEnabledProperty());
-		logger.info(getSpkiEnabledProperty().toString());
-		if (getSpkiEnabledProperty().toString().equalsIgnoreCase("true")) {
-			logger.info("getSpkiEnabledProperty == true");
-			if (getCertIssuer().equals(SupplierManagementConst.CERT_TRUSTGATE)) {
-				logger.info("***** getChallengeQuestions | getCertIssuer-TG : " + getCertIssuer());
-				challs = TrustGateHelper.getInstance().getChallengeQuestion(
-						getLoginUser().getIdentificationNo(),
-						getSupplier().getEpNo(), challengeQues1);
-			} else {
-				logger.info("***** getChallengeQuestions | getCertIssuer-DG : " + getCertIssuer());
-				challs = DigiCertHelper.getInstance().getChallengeQuestion(
-						getLoginUser().getIdentificationNo());
-			}
-		} else {
-			logger.info("else | getSpkiEnabledProperty != true");
-		}
+		logger.info("::: #25061 getChallengeQuestions :::" + getSpkiEnabledProperty());
 		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
-			logger.info("::: #25061 getSpkiEnabledProperty true :::");
 			logger.info("::: #25061 getCertIssuer " + getCertIssuer());
 			if (getCertIssuer().equals(SupplierManagementConst.CERT_TRUSTGATE)) {
 				logger.info("getChallengeQuestions | getCertIssuer-TG : " + getCertIssuer());
