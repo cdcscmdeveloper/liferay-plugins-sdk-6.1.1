@@ -28,8 +28,6 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
-import my.ep.dto.sm.attachment.SmAttachmentReqDTO;
-import my.ep.dto.sm.attachment.SmAttachmentResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
@@ -58,7 +56,6 @@ import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmAssociationBody;
-import my.ep.persistence.entity.sm.SmAttachment;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
@@ -98,7 +95,6 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
-import my.ep.web.vo.SmCancelMofRemarksVO;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -501,9 +497,13 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			if (getManagedBean().getSmMofAccount() != null
 					&& !EntityHelper.isCollectionEmpty(getManagedBean()
 							.getSmMofAccount().getSmMofCerts())) {
-				getManagedBean().setSmMofCert(
-						getManagedBean().getSmMofAccount().getSmMofCerts()
-								.get(0));
+				for (SmMofCert cert : getManagedBean().getSmMofAccount()
+						.getSmMofCerts()) {
+					if (cert.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+						getManagedBean().setSmMofCert(cert);
+						break;
+					}
+				}
 			}
 		}
 
@@ -2164,8 +2164,10 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						.setDocType(ParameterConst.SM_APPLN_RMRK_DECISION_REJECT);
 				SmRemaksResDTO remarkResDTO = SmServiceLookup.getSmRemarksSO()
 						.retrieveSmRemarksByDocument(remarkReqDTO);
-				if(!EntityHelper.isCollectionEmpty(remarkResDTO.getRemarksList())){
-					rejectReasons = remarkResDTO.getRemarksList().get(0).getRemark();
+				if (!EntityHelper.isCollectionEmpty(remarkResDTO
+						.getRemarksList())) {
+					rejectReasons = remarkResDTO.getRemarksList().get(0)
+							.getRemark();
 				}
 			} else {
 				rejectReasons = SmCommonUtil
