@@ -21,7 +21,7 @@
 					value="#{unspscCodeBackingBean.managedBean.action}">
 					<ui:param name="lblBpmBtn" value="lbl.bpm.action.#{action}" />
 					
-					<p:commandButton value="#{'Endorse and Publish'}"
+					<p:commandButton value="#{lbl['lbl.cm.endorseandpublish']}"
 						rendered="#{bpmTasklistBackingBean.managedBean.claim and action=='SUBMIT' and unspscCodeBackingBean.managedBean.requestCode.itemType=='S' and unspscCodeBackingBean.managedBean.renderV2 }"
 						oncomplete="extensionConfirmation.show()" 
 						disabled ="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1}"
