@@ -100,11 +100,13 @@
 						value="#{lbl['lbl.sm.approver.decision.cancelMofAccount']}" /></td>
 				<td>
 					<c:choose>
-						<c:when test="#{fn:containsIgnoreCase(viewSmApplBackingBean.managedBean.currentStatus, 'REGISTERED')
+						<c:when test="#{(fn:containsIgnoreCase(viewSmApplBackingBean.managedBean.currentStatus, 'REGISTERED')
+						or fn:containsIgnoreCase(viewSmApplBackingBean.managedBean.currentStatus, 'BERDAFTAR'))
 						and viewSmApplBackingBean.managedBean.smAppl.applType eq 'C'}">
 							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.approved']}"/>
 						</c:when>
-						<c:when test="#{fn:containsIgnoreCase(viewSmApplBackingBean.managedBean.currentStatus, 'REJECTED')
+						<c:when test="#{(fn:containsIgnoreCase(viewSmApplBackingBean.managedBean.currentStatus, 'REJECTED')
+						or fn:containsIgnoreCase(viewSmApplBackingBean.managedBean.currentStatus, 'DITOLAK'))
 						and viewSmApplBackingBean.managedBean.smAppl.applType eq 'C'}">
 							<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.currentStatus}"/>
 						</c:when>
