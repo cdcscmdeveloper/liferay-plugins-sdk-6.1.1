@@ -853,6 +853,13 @@ public class SmApplicationBackingBean extends
 								.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER)) {
 					throw new EpException(MessageConst.ERROR_722628);
 				}
+				
+				//checked whether supplier already MOF, should not allowed to proceed if already MOF (#25601)
+				MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+				reqDTO.setSupplierId(currSupp.getSupplierId());
+				if(SmServiceLookup.getMofRegistrationSO().alreadyMof(reqDTO).isValid()){
+					throw new EpException(MessageConst.ERROR_722674);
+				}
 
 				String currSuppType = currSupp.getSmAppl().getSupplierType();
 
