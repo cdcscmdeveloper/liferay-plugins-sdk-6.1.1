@@ -235,7 +235,7 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	private String tempZoneName;
 	private int index;
 	
-	  /** The ministry condition field. */
+    /** The ministry condition field. */
     private String ministryConditionField;
 
 	/** The total suppliers spec loc. */
@@ -294,7 +294,14 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	private Long contractTypeId;
 	
 	private String suppConfirmMsgAccept;
+	
 	private String suppConfirmMsgReject;
+	
+	private String bondReqSelectedVal;
+	
+	private String agreemetSelectedVal;
+	
+	private SelectItem[] pk7Reasons;
 	
 	/**
 	 * Gets the spki backing bean.
@@ -1768,7 +1775,7 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	public void setContractTypeId(Long contractTypeId) {
 		this.contractTypeId = contractTypeId;
 	}
-
+	
 	/**
 	 * @return the suppConfirmMsgAccept
 	 */
@@ -1795,6 +1802,48 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	 */
 	public void setSuppConfirmMsgReject(String suppConfirmMsgReject) {
 		this.suppConfirmMsgReject = suppConfirmMsgReject;
+	}
+
+	/**
+	 * @return the bondReqSelectedVal
+	 */
+	public String getBondReqSelectedVal() {
+		return bondReqSelectedVal;
+	}
+
+	/**
+	 * @param bondReqSelectedVal the bondReqSelectedVal to set
+	 */
+	public void setBondReqSelectedVal(String bondReqSelectedVal) {
+		this.bondReqSelectedVal = bondReqSelectedVal;
+	}
+
+	/**
+	 * @return the agreemetSelectedVal
+	 */
+	public String getAgreemetSelectedVal() {
+		return agreemetSelectedVal;
+	}
+
+	/**
+	 * @param agreemetSelectedVal the agreemetSelectedVal to set
+	 */
+	public void setAgreemetSelectedVal(String agreemetSelectedVal) {
+		this.agreemetSelectedVal = agreemetSelectedVal;
+	}
+
+	/**
+	 * @return the pk7Reasons
+	 */
+	public SelectItem[] getPk7Reasons() {
+		return pk7Reasons;
+	}
+
+	/**
+	 * @param pk7Reasons the pk7Reasons to set
+	 */
+	public void setPk7Reasons(SelectItem[] pk7Reasons) {
+		this.pk7Reasons = pk7Reasons;
 	}
 	
 }

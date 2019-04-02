@@ -97,6 +97,7 @@ import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
@@ -141,6 +142,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.PTJLocalityCode;
+import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.ApprovalAction;
 import my.ep.util.EpPropertiesUtils;
@@ -1157,22 +1159,22 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			
 			//Bug #24061
 			if(scLoa.getScLoiLoa() != null){
-				if(ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode())){
-					if (scLoa.getScQtProgPayments() != null
-							&& scLoa.getScQtProgPayments().size() > 0) {
-						for (ScQtProgressivePayment progressivePayment : scLoa
-								.getScQtProgPayments()) {
-							progressivePayValidation(progressivePayment);
-						}
-					}
-		
-					if (scLoa.getScQtSchedules() != null
-							&& scLoa.getScQtSchedules().size() > 0) {
-						for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
-							freqScheduleValidation(scQtSchedule);
-						}
+			if(ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode())){
+				if (scLoa.getScQtProgPayments() != null
+						&& scLoa.getScQtProgPayments().size() > 0) {
+					for (ScQtProgressivePayment progressivePayment : scLoa
+							.getScQtProgPayments()) {
+						progressivePayValidation(progressivePayment);
 					}
 				}
+	
+				if (scLoa.getScQtSchedules() != null
+						&& scLoa.getScQtSchedules().size() > 0) {
+					for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
+						freqScheduleValidation(scQtSchedule);
+					}
+				}
+			}
 			}
 
 			// validate deduction payamment for Others
@@ -1221,7 +1223,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			throw new EpException(MessageConst.ERROR_760400,
 					new String[] { ResourceBundleUtils.getMessage("lbl.sc.address", 
 				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
-		}
+		}		
 	}
 	
 	/**
@@ -1437,13 +1439,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			constructScheduleDetails();
 			//Bug #24061
 			if(scLoa.getScLoiLoa() != null){
-				if(ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode())){	
-					if (CollectionUtils.isNotEmpty(scLoa.getScQtSchedules())) {
-						for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
-							freqScheduleValidation(scQtSchedule);
-						}
+			if(ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode())){	
+				if (CollectionUtils.isNotEmpty(scLoa.getScQtSchedules())) {
+					for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
+						freqScheduleValidation(scQtSchedule);
 					}
 				}
+			}
 			}
 			
 			producSpecMaster.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT);
@@ -1514,20 +1516,21 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		debugLogger("contractTypeChanged");
 
 		ScLoa scLoa = getManagedBean().getScLoa();
+
 		IParameterSO parameterSO = null;
 		try {
 			parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IParameterSO.class);
 			ParameterReqDTO reqDTO = new ParameterReqDTO();
-			if (scLoa.getContractType() != null) {
+			if(scLoa.getContractType() !=null){
 				reqDTO.setParameterId(scLoa.getContractType().getParameterId());
 				ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 				scLoa.setContractType(resDTO.getPmParameter());
-			}
-
+			} 
+			
 			// to reset Contract Admin User
-			if (getManagedBean().getContractTypeId() != null) {
-				if (!scLoa.getContractType().getParameterId().equals(getManagedBean().getContractTypeId())) {
+			if(getManagedBean().getContractTypeId() != null) {
+				if (!scLoa.getContractType().getParameterId().equals(getManagedBean().getContractTypeId())){
 					scLoa.setContractAdmin(new PmUser());
 				}
 				getManagedBean().setContractTypeId(scLoa.getContractType().getParameterId());
@@ -1546,8 +1549,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			scLoa.getScQt().setFulfilmentType(
 					getParameterByTypeAndCode(ParameterTypeConst.FULFILMENT_TYPE,
 							ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN));
+			}	
 		}
-	}
 
 	/**
 	 * Contract agency changed. shows Contract Administrator based on agency
@@ -4634,7 +4637,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					getManagedBean().getScLoa().getScLoaWitnesses().remove(
 							this.getManagedBean().getLoaSupplierWitness());					
 					this.getManagedBean().setLoaSupplierWitness(null);
-				}
+			}
 			}
 
 			// spki
@@ -5300,7 +5303,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			gstRegFlag = "true";
 		}
 		context.put("gstRegFlag", gstRegFlag);
-		
+
 		//Enhancement #24259 #24269
 		setSstInfoForAgreementLetter(context, scLoa, amountDF, myLocale);
 //		setGstInfoForAgreementLetter(context, scLoa, amountDF, myLocale);
@@ -5396,7 +5399,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			offerPriceWording = WordUtils.capitalizeFully(NumberWordUtil
 					.convert(loaAmount.toString()));
 		}
-		
 		context.put("offerPrice", offerPrice);
 		context.put("offerPriceWording", offerPriceWording);
 
@@ -6303,7 +6305,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				RequestContext.getCurrentInstance().execute("sstSignerConfirmPopupWin.show()");
 			}
 		}
-	}	
+	}
 
 //	/**
 //	 * Checks if is GST reg active.
@@ -8121,7 +8123,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		return ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(fullfillmentTypeParamCode)
 				|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equals(fullfillmentTypeParamCode);
 	}
-
+	
 	/**
 	 * Validate Contract Admin
 	 * 
@@ -8130,7 +8132,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 */	
 	private void validateContractDetails(ScLoa scLoa) {
 		Locale locale = new FacesScopes().getUserLocale();
-		
+
 		if (StringUtils.isBlank(
 				scLoa.getContractAdmin().getUserName())) {
 			throw new EpException(MessageConst.ERROR_760400,
@@ -8215,15 +8217,15 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			String acceptMsg = getMessage("lbl.sc.loa.supplier.confirm.button.accept", new String[] { loa.trim() , procurementMode.trim() });
 			
 			this.getManagedBean().setSuppConfirmMsgAccept(acceptMsg.toString().trim());
-			RequestContext.getCurrentInstance().execute("confmAcceptDlg.show()"); 		
+			RequestContext.getCurrentInstance().execute("confmAcceptDlg.show()"); 			
 		} else if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {			
-			this.getManagedBean().setAutoUpdate(false);			
+			this.getManagedBean().setAutoUpdate(false);
 			
 			String rejectMsg = getMessage("lbl.sc.loiloa.supplier.confirm.button.reject", new String[] { loa.trim(), procurementMode.trim() });
  
 			this.getManagedBean().setSuppConfirmMsgReject(rejectMsg.toString().trim());
-			RequestContext.getCurrentInstance().execute("confmRejectDlg.show()"); 
-		}
+			RequestContext.getCurrentInstance().execute("confmRejectDlg.show()"); 						
+		} 
 	}
 	
 	public void confirmSupplierAccept() {
@@ -8233,7 +8235,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		// spki
 		getManagedBean().getSpkiBackingBean().getChallengeQuestions();
 		log.info("::: #25061 before spki_dlg.show ");
-		RequestContext.getCurrentInstance().execute("spki_dlg.show();");
+		RequestContext.getCurrentInstance().execute("spki_dlg.show();");		
 	}
 	
 	public void confirmSupplierReject() {
@@ -8244,118 +8246,218 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	//END Enhancement #21573
 	
 	//Bug #24713
-	/**
-	 * Validate supplier and LOA details
-	 * 
-	 * @param scLoa
-	 *          the scLoa,  ScLoaWitness the scLoaWitness, String outcome
-	 */	
-	private void validateSupplierWitnessDetails(ScLoa scLoa, ScLoaWitness scLoaWitness, String outcome) {
-		Locale locale = new FacesScopes().getUserLocale();
+		/**
+		 * Validate supplier and LOA details
+		 * 
+		 * @param scLoa
+		 *          the scLoa,  ScLoaWitness the scLoaWitness, String outcome
+		 */	
+		private void validateSupplierWitnessDetails(ScLoa scLoa, ScLoaWitness scLoaWitness, String outcome) {
+			Locale locale = new FacesScopes().getUserLocale();
+			
+			if (!BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
+				if (scLoa.getSupplierSignDate() == null) {
+					throw new EpException(MessageConst.ERROR_760400,
+							new String[] { ResourceBundleUtils.getMessage("lbl.sc.loiloa.loa.supplier.sign.date", 
+							 		ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+				}
+				if (StringUtils.isBlank(
+						scLoa.getBankAccNo())) {
+					throw new EpException(MessageConst.ERROR_760400,
+							new String[] { ResourceBundleUtils.getMessage("lbl.sc.account.no", 
+						 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+				}
+				if (scLoa.getAckBy().getUserId() == null) {
+					throw new EpException(MessageConst.ERROR_760400,
+							new String[] { ResourceBundleUtils.getMessage("lbl.sc.loiloa.signer.full.name", 
+						 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+				}
+				if (StringUtils.isBlank(
+						scLoa.getAckBy().getIdentificationNo())) {
+					throw new EpException(MessageConst.ERROR_760400,
+							new String[] { ResourceBundleUtils.getMessage("lbl.sc.identification.no", 
+						 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+				}
+				if (StringUtils.isBlank(
+						scLoaWitness.getWitnessName())) {
+					throw new EpException(MessageConst.ERROR_760400,
+							new String[] { ResourceBundleUtils.getMessage("lbl.sc.loiloa.witness.full.name", 
+						 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+				}
+				if (StringUtils.isBlank(
+						scLoaWitness.getIdentificationNo())) {
+					throw new EpException(MessageConst.ERROR_760400,
+							new String[] { ResourceBundleUtils.getMessage("lbl.sc.identification.no", 
+						 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+				}
+				if (StringUtils.isBlank(scLoaWitness.getDesignation())) {
+					throw new EpException(MessageConst.ERROR_760400,
+							new String[] { ResourceBundleUtils.getMessage("lbl.sc.designation", 
+						 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+				}
+				if (StringUtils.isBlank(scLoaWitness.getAddress())) {
+					throw new EpException(MessageConst.ERROR_760400,
+							new String[] { ResourceBundleUtils.getMessage("lbl.sc.address", 
+						 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+				}
+				if (StringUtils.isBlank(scLoaWitness.getPhoneNo())) {
+					throw new EpException(MessageConst.ERROR_760400,
+							new String[] { ResourceBundleUtils.getMessage("lbl.sc.tel.no", 
+						 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+				}
+				if (StringUtils.isBlank(scLoaWitness.getFaxNo())) {
+					throw new EpException(MessageConst.ERROR_760400,
+							new String[] { ResourceBundleUtils.getMessage("lbl.sc.fax.no", 
+						 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+				}
+			}
+		}
 		
-		if (!BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
-			if (scLoa.getSupplierSignDate() == null) {
-				throw new EpException(MessageConst.ERROR_760400,
-						new String[] { ResourceBundleUtils.getMessage("lbl.sc.loiloa.loa.supplier.sign.date", 
-						 		ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+		private void validateDuplicateItems(ScQtDoc productScQtDoc,ScQtDoc serviceScQtDoc){
+		log.info("validateDuplicateItems");	
+			List<TplSpecMaster> productServiceDocs=new ArrayList<TplSpecMaster>();
+			if(null!=productScQtDoc){
+				if(null!=productScQtDoc.getTplSpecMaster()){
+				productServiceDocs.add(productScQtDoc.getTplSpecMaster());	
+				}
 			}
-			if (StringUtils.isBlank(
-					scLoa.getBankAccNo())) {
-				throw new EpException(MessageConst.ERROR_760400,
-						new String[] { ResourceBundleUtils.getMessage("lbl.sc.account.no", 
-					 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+			if(null!=serviceScQtDoc){
+				if(null!=serviceScQtDoc.getTplSpecMaster()){
+					productServiceDocs.add(serviceScQtDoc.getTplSpecMaster());	
+					}
 			}
-			if (scLoa.getAckBy().getUserId() == null) {
-				throw new EpException(MessageConst.ERROR_760400,
-						new String[] { ResourceBundleUtils.getMessage("lbl.sc.loiloa.signer.full.name", 
-					 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+			if (CollectionUtils.isNotEmpty(productServiceDocs)) {
+				List<TplSpecQuestion> FinancialUiSpecQuestions = new ArrayList<TplSpecQuestion>();
+				for(TplSpecMaster itemProdSerSpecMaster: productServiceDocs){
+					
+				if(CollectionUtils.isNotEmpty(itemProdSerSpecMaster.getTplSpecQuestions())){
+				for (TplSpecQuestion specQuestion : itemProdSerSpecMaster
+						.getTplSpecQuestions()) {
+					if (TemplateSpecConst.QUESTION_TYPE_ITEM
+							.equalsIgnoreCase(specQuestion.getQuestionType())) {
+						if (FinancialUiSpecQuestions.isEmpty()) {
+							FinancialUiSpecQuestions.add(specQuestion);
+						} else {
+							for (TplSpecQuestion uiQuestions : FinancialUiSpecQuestions) {
+								if (uiQuestions
+										.getClItem()
+										.trim()
+										.replaceAll("\\s", "")
+										.equalsIgnoreCase(
+												specQuestion.getClItem().trim()
+														.replaceAll("\\s", ""))) {
+									throw new EpException(
+											MessageConst.ERROR_760340,
+											new String[] { specQuestion.getClItem() });
+								}
+							}
+							FinancialUiSpecQuestions.add(specQuestion);
+						}
+					}
+					
+				}
+				}
+		}
 			}
-			if (StringUtils.isBlank(
-					scLoa.getAckBy().getIdentificationNo())) {
-				throw new EpException(MessageConst.ERROR_760400,
-						new String[] { ResourceBundleUtils.getMessage("lbl.sc.identification.no", 
-					 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+	}
+	/**
+	 * To display Performance Bond dropdown when QT Type is <b>Special Item / Item In PK 7</b> 
+	 * and Fulfilment Type is <b>One Off</b>.
+	 * 
+	 * @return
+	 */
+	public boolean isPbDropDown() {
+		Long qtType = getManagedBean().getScLoa().getQtType().getParameterId(); 
+		Long fulfilmentType = getManagedBean().getScLoa().getScQt().getFulfilmentType().getParameterId(); 
+		Long contractType = getManagedBean().getScLoa().getContractType().getParameterId();
+		if (null != qtType && null != fulfilmentType && qtType == 194 && fulfilmentType == 148) {
+			if (null == getManagedBean().getBondReqSelectedVal()) {
+				getManagedBean().getScLoa().setBondReq(false);
 			}
-			if (StringUtils.isBlank(
-					scLoaWitness.getWitnessName())) {
-				throw new EpException(MessageConst.ERROR_760400,
-						new String[] { ResourceBundleUtils.getMessage("lbl.sc.loiloa.witness.full.name", 
-					 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+			if (null == getManagedBean().getScLoa().getJustificationType()) {
+				getManagedBean().getScLoa().setJustificationType(new PmReason());
 			}
-			if (StringUtils.isBlank(
-					scLoaWitness.getIdentificationNo())) {
-				throw new EpException(MessageConst.ERROR_760400,
-						new String[] { ResourceBundleUtils.getMessage("lbl.sc.identification.no", 
-					 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+			
+			// If Contract Type is selected and its not 'Ministry', then return false.
+			if (null != contractType && contractType != 146) {
+				return false;
 			}
-			if (StringUtils.isBlank(scLoaWitness.getDesignation())) {
-				throw new EpException(MessageConst.ERROR_760400,
-						new String[] { ResourceBundleUtils.getMessage("lbl.sc.designation", 
-					 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+			return true;
+		} else {
+			if (!getManagedBean().getScLoa().isBondReq()) {
+				setOverallCtAmount(getManagedBean().getScLoa().getLoaAmt());
 			}
-			if (StringUtils.isBlank(scLoaWitness.getAddress())) {
-				throw new EpException(MessageConst.ERROR_760400,
-						new String[] { ResourceBundleUtils.getMessage("lbl.sc.address", 
-					 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
-			}
-			if (StringUtils.isBlank(scLoaWitness.getPhoneNo())) {
-				throw new EpException(MessageConst.ERROR_760400,
-						new String[] { ResourceBundleUtils.getMessage("lbl.sc.tel.no", 
-					 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
-			}
-			if (StringUtils.isBlank(scLoaWitness.getFaxNo())) {
-				throw new EpException(MessageConst.ERROR_760400,
-						new String[] { ResourceBundleUtils.getMessage("lbl.sc.fax.no", 
-					 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
-			}
+			
+			getManagedBean().getScLoa().setJustificationType(null);
+		}
+		
+		if (getManagedBean().getPk7Reasons() == null) {
+			setPk7DropDownValues();
+		}
+		//RequestContext.getCurrentInstance().execute("reasonPG.hide()");
+		return false;
+	}
+	
+	/**
+	 * Set Performance Bond value opted by user.
+	 * @param bondReqVal
+	 */
+	public void performanceBondChanged(String bondReqVal) {
+		if ("207".equalsIgnoreCase(bondReqVal)) { 
+			getManagedBean().getScLoa().setBondReq(true);
+		} else {
+			getManagedBean().getScLoa().setBondReq(false);
 		}
 	}
 	
-	private void validateDuplicateItems(ScQtDoc productScQtDoc,ScQtDoc serviceScQtDoc){
-	log.info("validateDuplicateItems");	
-		List<TplSpecMaster> productServiceDocs=new ArrayList<TplSpecMaster>();
-		if(null!=productScQtDoc){
-			if(null!=productScQtDoc.getTplSpecMaster()){
-			productServiceDocs.add(productScQtDoc.getTplSpecMaster());	
+	/**
+	 * To display Agreement dropdown when QT Type is <b>Special Item / Item In PK 7</b> 
+	 * and Fulfilment Type is <b>One Off</b>.
+	 * 
+	 * @return
+	 */
+	public boolean isAgreementDropDown() {
+		Long qtType = getManagedBean().getScLoa().getQtType().getParameterId(); 
+		Long fulfilmentType = getManagedBean().getScLoa().getScQt().getFulfilmentType().getParameterId(); 
+		Long contractType = getManagedBean().getScLoa().getContractType().getParameterId();
+		if (null != qtType && null != fulfilmentType && qtType == 194 && fulfilmentType == 148) {
+			getManagedBean().getScLoa().setAgreementReq(false);
+			
+			// If Contract Type is selected and its not 'Ministry', then return false.
+			if (null != contractType && contractType != 146) {
+				return false;
+			}
+			return true;
+		} else {
+			if (!getManagedBean().getScLoa().isAgreementReq()) {
+				setOverallCtAmount(getManagedBean().getScLoa().getLoaAmt());
 			}
 		}
-		if(null!=serviceScQtDoc){
-			if(null!=serviceScQtDoc.getTplSpecMaster()){
-				productServiceDocs.add(serviceScQtDoc.getTplSpecMaster());	
-				}
-		}
-		if (CollectionUtils.isNotEmpty(productServiceDocs)) {
-			List<TplSpecQuestion> FinancialUiSpecQuestions = new ArrayList<TplSpecQuestion>();
-			for(TplSpecMaster itemProdSerSpecMaster: productServiceDocs){
-				
-			if(CollectionUtils.isNotEmpty(itemProdSerSpecMaster.getTplSpecQuestions())){
-			for (TplSpecQuestion specQuestion : itemProdSerSpecMaster
-					.getTplSpecQuestions()) {
-				if (TemplateSpecConst.QUESTION_TYPE_ITEM
-						.equalsIgnoreCase(specQuestion.getQuestionType())) {
-					if (FinancialUiSpecQuestions.isEmpty()) {
-						FinancialUiSpecQuestions.add(specQuestion);
-					} else {
-						for (TplSpecQuestion uiQuestions : FinancialUiSpecQuestions) {
-							if (uiQuestions
-									.getClItem()
-									.trim()
-									.replaceAll("\\s", "")
-									.equalsIgnoreCase(
-											specQuestion.getClItem().trim()
-													.replaceAll("\\s", ""))) {
-								throw new EpException(
-										MessageConst.ERROR_760340,
-										new String[] { specQuestion.getClItem() });
-							}
-						}
-						FinancialUiSpecQuestions.add(specQuestion);
-					}
-				}
-				
-			}
-			}
+		return false;
 	}
+	
+	/**
+	 * Set Performance Bond value opted by user.
+	 * @param bondReqVal
+	 */
+	public void agreementChanged(String agreeReqVal) {
+		if ("207".equalsIgnoreCase(agreeReqVal)) { 
+			getManagedBean().getScLoa().setAgreementReq(true);
+		} else {
+			getManagedBean().getScLoa().setAgreementReq(false);
 		}
 	}
+	
+	/**
+	 * 
+	 */
+	public void setPk7DropDownValues() {
+	    getManagedBean().setPk7Reasons(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7.value()));
+	}
+	
+	public void reasonChanged(String reasonCode) {
+		getManagedBean().getScLoa().setJustificationType(getReasonByCategoryAndCode(
+				ReasonCategory.JUSTIFICATION_PK7.value(), reasonCode));
+	}
+	
 }
