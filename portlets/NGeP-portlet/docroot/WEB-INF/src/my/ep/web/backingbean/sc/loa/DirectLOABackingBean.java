@@ -148,7 +148,6 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.ct.amendment.JadualHargaBean;
-import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.sc.common.ItemBean;
 import my.ep.web.bean.sc.common.JadualHargaItemBean;
@@ -171,7 +170,6 @@ import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.log4j.Logger;
@@ -198,8 +196,7 @@ import org.primefaces.model.TreeNode;
  */
 @ManagedBean(name = "directLOABackingBean")
 @RequestScoped
-public class DirectLOABackingBean extends
-		SourcingBaseBackingBean<DirectLOAManagedBean> {
+public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBean> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -233,11 +230,11 @@ public class DirectLOABackingBean extends
 	 * save the LOA details. save - save data into database and initiate task
 	 * for LOA details. page navigate to loa details page.
 	 */
-	public void saveAction() {
+	public void saveAction(boolean supplier) {
 		debugLogger("saveAction");
 		DirectAwardReqDTO reqDTO = new DirectAwardReqDTO();
 		try {
-           String outcome = BpmOutcomeConst.BPM_SAVE;
+			String outcome = BpmOutcomeConst.BPM_SAVE;
 			ScLoa scLoa = this.getManagedBean().getScLoa();
 			ScLoaWitness loaSupplierWitness = this.getManagedBean().getLoaSupplierWitness();
 			Long statusId = scLoa.getPmStatus().getStatusId().longValue();
@@ -252,8 +249,12 @@ public class DirectLOABackingBean extends
 			validateDeductionPaymentDtls(scLoa);
 			validateLOAReportAttachments(scLoa);
 			validateContractNGovtSignDate(scLoa);
+			if (!supplier) {
+				updateContractDetails(scLoa);
+			}
 			validateContractDetails(scLoa);
-			validateDuplicateItems(this.getManagedBean().getProdscQtDoc(),this.getManagedBean().getServicescQtDoc());			
+			validateDuplicateItems(this.getManagedBean().getProdscQtDoc(), this.getManagedBean().getServicescQtDoc());
+
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setScLoa(scLoa);
 			reqDTO.setScQtDoc(this.getManagedBean().getProdscQtDoc());
@@ -301,6 +302,7 @@ public class DirectLOABackingBean extends
 					retriveLoaDetails(scLoa.getLoaId(), null, false);
 
 					contractTypeChanged();
+					viewOrgTypeId(scLoa);
 				}
 				if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
 						.equals(scLoa.getPmStatus().getStatusId())) {
@@ -400,6 +402,9 @@ public class DirectLOABackingBean extends
 
 			validateContractAmount(scLoa.getLoaAmt(), outcome);
 			validateContractNGovtSignDate(scLoa);
+			updateContractDetails(scLoa);
+			validateContractDetails(scLoa);
+
 			log.info("submitAction loop executed");
 			validateDuplicateItems(this.getManagedBean().getProdscQtDoc(),this.getManagedBean().getServicescQtDoc());
 			scLoa.setScLoaWorkFlowStatuses(null);
@@ -1509,21 +1514,20 @@ public class DirectLOABackingBean extends
 		debugLogger("contractTypeChanged");
 
 		ScLoa scLoa = getManagedBean().getScLoa();
-
 		IParameterSO parameterSO = null;
 		try {
-			parameterSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IParameterSO.class);
 			ParameterReqDTO reqDTO = new ParameterReqDTO();
-			if(scLoa.getContractType() !=null){
+			if (scLoa.getContractType() != null) {
 				reqDTO.setParameterId(scLoa.getContractType().getParameterId());
 				ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 				scLoa.setContractType(resDTO.getPmParameter());
-			} 
-			
+			}
+
 			// to reset Contract Admin User
-			if(getManagedBean().getContractTypeId() != null) {
-				if (!scLoa.getContractType().getParameterId().equals(getManagedBean().getContractTypeId())){
+			if (getManagedBean().getContractTypeId() != null) {
+				if (!scLoa.getContractType().getParameterId().equals(getManagedBean().getContractTypeId())) {
 					scLoa.setContractAdmin(new PmUser());
 				}
 				getManagedBean().setContractTypeId(scLoa.getContractType().getParameterId());
@@ -1537,54 +1541,12 @@ public class DirectLOABackingBean extends
 
 		String contractType = scLoa.getContractType().getParameterCode();
 
-		if (ParameterConst.CONTRACT_TYPE_MINISTRY.equals(contractType)) {
-			// ministry condtion field for LOV 
-			getMinistryConditionField(scLoa);
-
-			//if(null == scLoa.getContractAgency()){
-			scLoa.setContractAgency(scLoa.getScLoiLoa().getPmOrgProfile());
-			//}
-
-		} else if (ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType)) {
-
-			Long userId = new FacesScopes().getUserSessionBean().getUserId();
-			
-			if (userId != null) {
-				IUserSO userSO = null;
-				try {
-					UserReqDTO reqDTO = new UserReqDTO();
-					reqDTO.setUserId(userId);
-					userSO = BusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-					UserResDTO resDTO = userSO
-							.retrieveUserOrgListByUserId(reqDTO);
-
-					if (resDTO.getUserOrgList() != null
-							&& resDTO.getUserOrgList().size() > 0) {
-						for (PmUserOrg pmUserOrg : resDTO.getUserOrgList()) {
-							if (pmUserOrg.getPmOrgProfile() != null) {
-								Boolean isBPK = pmUserOrg.getPmOrgProfile().getBpk();
-								if (BooleanUtils.isTrue(isBPK)) {
-									scLoa.getScLoiLoa().setPmOrgProfile(
-											pmUserOrg.getPmOrgProfile());
-									scLoa.setContractAgency(scLoa
-											.getScLoiLoa().getPmOrgProfile());
-									break;
-								}
-							}
-						}
-					}
-				} finally {
-					userSO = null;
-				}
-			}	
-			// set fulfillment type as default as "As and When" for Central Contract
-			scLoa.getScQt().setFulfilmentType(getParameterByTypeAndCode(
-					ParameterTypeConst.FULFILMENT_TYPE, ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN));
+		if (ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType)) {
+			scLoa.getScLoiLoa().setPmOrgProfile(scLoa.getContractAgency());
+			scLoa.getScQt().setFulfilmentType(
+					getParameterByTypeAndCode(ParameterTypeConst.FULFILMENT_TYPE,
+							ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN));
 		}
-
-		contractAgencyChanged();
-		// checkAgreementMandatory();
 	}
 
 	/**
@@ -4213,6 +4175,7 @@ public class DirectLOABackingBean extends
 			String redirectUrl = retriveLoaDetails(awardSupplierDataType.getAwardId(), null, false);
 	
 			contractTypeChanged();
+			viewContractDetails(this.getManagedBean().getScLoa());
 			this.getManagedBean().setPayLoad(awardSupplierDataType);
 			if(getManagedBean().getCurrentStatusId() != null){
 				if(QTStatusConst.LOA_PENDING_VERIFICATION.equals(getManagedBean().getCurrentStatusId())){
@@ -8158,42 +8121,7 @@ public class DirectLOABackingBean extends
 		return ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(fullfillmentTypeParamCode)
 				|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equals(fullfillmentTypeParamCode);
 	}
-	
-	public String constructContractAdminConditionFields() {
-		log.info("constructContractAdminConditionFields");
-		StringBuilder sb = new StringBuilder();
-		ScLoa scLoa = getManagedBean().getScLoa();		
-		String contractType = scLoa.getContractType().getParameterCode();
-		String roleCode = null;
-		Long userProfileId = null;
 
-		if (ParameterConst.CONTRACT_TYPE_MINISTRY.equals(contractType)) {
-			roleCode = RoleCode.MIN_CONTRACT_ADMIN.value();
-		} else if(ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType)) {
-			roleCode = RoleCode.BPK_CCA.value();
-		}
-		
-		if (scLoa.getContractAgency().getOrgProfileId() != null){
-			userProfileId = scLoa.getContractAgency().getOrgProfileId();
-		} else {
-			userProfileId = scLoa.getScLoiLoa().getPmOrgProfile().getOrgProfileId();
-		}
-
-		sb.append("pmUserOrgs.pmOrgProfile."
-				+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()));
-		sb.append("^");
-		sb.append(retrieveMinistryOrgProfile(userProfileId).getOrgProfileId());
-		sb.append("^1");
-
-		if(roleCode != null) {
-			sb.append("|pmUserOrgs.pmUserRoles.pmRole.roleCode^");
-			sb.append(roleCode);
-			sb.append("^9");
-		}		
-			
-		return sb.toString();
-	}
-	
 	/**
 	 * Validate Contract Admin
 	 * 

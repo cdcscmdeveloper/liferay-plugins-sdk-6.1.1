@@ -36,7 +36,6 @@ import my.ep.type.pm.PTJLocalityCode;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
-import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.TreeNode;
 
@@ -49,7 +48,7 @@ import org.primefaces.model.TreeNode;
  */
 @ManagedBean(name = "directLOAManagedBean")
 @SessionScoped
-public class DirectLOAManagedBean extends BaseManagedBean {
+public class DirectLOAManagedBean extends LOABaseManagedBean {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;

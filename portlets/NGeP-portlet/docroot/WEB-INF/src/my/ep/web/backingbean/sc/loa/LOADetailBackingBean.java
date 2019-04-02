@@ -131,10 +131,8 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
-import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
 import my.ep.web.backingbean.ct.amendment.JadualHargaBean;
-import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.common.ItemBean;
 import my.ep.web.bean.sc.common.JadualHargaItemBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
@@ -177,8 +175,7 @@ import org.primefaces.model.StreamedContent;
  */
 @ManagedBean(name = "lOADetailBackingBean")
 @RequestScoped
-public class LOADetailBackingBean extends
-		SourcingBaseBackingBean<LOADetailManagedBean> {
+public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBean> {
 	private static final long serialVersionUID = 1L;
 
 	/** The log. */
@@ -202,7 +199,7 @@ public class LOADetailBackingBean extends
 	private static final Long FULFIL_PERIODIC_SCHEDULE_ID= new Long(149);
 	
 	private static final Long FULFIL_PERIODIC_AS_AND_WHEN_ID= new Long(150);
-	
+
 	/**
 	 * Instantiates a new LOA detail backing bean.
 	 */
@@ -299,8 +296,10 @@ public class LOADetailBackingBean extends
 			if(scLoa.isBrandNew()) {
 				setUserDetails(scLoa);
 				scLoa.setContractAgency(null);
-				resDTO.setScLoa(scLoa);
+			} else {
+				viewContractDetails(scLoa);
 			}
+			resDTO.setScLoa(scLoa);
 
 			populateLOADetails(resDTO);
 			getManagedBean().setEditFlag(Boolean.TRUE);
@@ -2053,7 +2052,7 @@ public class LOADetailBackingBean extends
 		ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
 		PmOrgProfile pmOrgProfile = scLoiLoa.getPmOrgProfile();
 		VelocityContext context = new VelocityContext();
-		String procurementMode = null;
+		String procurementMode = "";
 		String ptjName=" ";
 		String qtNo = "&#60;Quotation/Tender No.&#62;";	
 		
@@ -2090,7 +2089,7 @@ public class LOADetailBackingBean extends
 				}
 			}
 		}
-		String title = procurementMode != null ? procurementMode + " " + 
+		String title = procurementMode != "" ? procurementMode + " " + 
 				scLoiLoa.getTitle().toUpperCase() : scLoiLoa.getTitle().toUpperCase();
 				if (title == null) {
 					title = "";
@@ -2688,7 +2687,7 @@ public class LOADetailBackingBean extends
 	 * save - save data into database and initiate task for LOA details.
 	 * page navigate to loa details page.
 	 */
-	public void saveAction() {
+	public void saveAction(boolean supplier) {
 		debugLogger("saveAction");
 
 		try {
@@ -2704,6 +2703,9 @@ public class LOADetailBackingBean extends
 			parseLOADetails(scLoa, outcome);
 			validateLOADetails(scLoa, outcome);
 			validateContractDetails(scLoa);
+			if (!supplier) {
+				updateContractDetails(scLoa);
+			}
 
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
@@ -2756,6 +2758,8 @@ public class LOADetailBackingBean extends
 
 			parseLOADetails(scLoa, outcome);
 			validateLOADetails(scLoa, outcome);
+			updateContractDetails(scLoa);
+			validateContractDetails(scLoa);
 
 			scLoa.setScLoaWorkFlowStatuses(null);
 			// To avoid insert workflow status when direct submit without save.
@@ -6264,42 +6268,7 @@ public class LOADetailBackingBean extends
 		scLoa.setLoaSignerDesig(contractSignerUser.getDesignation());
 
 	}
-	
-	public String constructContractAdminConditionFields() {
-		debugLogger("constructContractAdminConditionFields");
-		ScLoa scLoa = getManagedBean().getScLoa();
-		String contractType = scLoa.getContractType().getParameterCode();
-		String roleCode = null;
-		Long userProfileId = null;
 
-		if (ParameterConst.CONTRACT_TYPE_MINISTRY.equals(contractType)) {
-			roleCode = RoleCode.MIN_CONTRACT_ADMIN.value();
-		} else if(ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType)) {
-			roleCode = RoleCode.BPK_CCA.value();
-		}
-		
-		if (scLoa.getContractAgency().getOrgProfileId() != null){
-			userProfileId = scLoa.getContractAgency().getOrgProfileId();
-		} else {
-			userProfileId = scLoa.getScLoiLoa().getPmOrgProfile().getOrgProfileId();
-		}
-
-		StringBuilder sb = new StringBuilder();
-		sb.append("pmUserOrgs.pmOrgProfile."
-				+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()));
-		sb.append("^");
-		sb.append(retrieveMinistryOrgProfile(userProfileId).getOrgProfileId());
-		sb.append("^1");
-
-		if(roleCode != null) {
-			sb.append("|pmUserOrgs.pmUserRoles.pmRole.roleCode^");
-			sb.append(roleCode);
-			sb.append("^9");
-		}
-
-		return sb.toString();
-	}
-	
 	/**
 	 * Validate Contract Admin
 	 * 
@@ -6308,7 +6277,7 @@ public class LOADetailBackingBean extends
 	 */	
 	private void validateContractDetails(ScLoa scLoa) {
 		Locale locale = new FacesScopes().getUserLocale();
-		
+
 		if (StringUtils.isBlank(
 				scLoa.getContractAdmin().getUserName())) {
 			throw new EpException(MessageConst.ERROR_760400,
@@ -6513,5 +6482,4 @@ public class LOADetailBackingBean extends
 		}
 		return roleCode;
 	}
-
 }
