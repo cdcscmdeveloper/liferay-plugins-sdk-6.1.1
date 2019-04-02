@@ -28,7 +28,7 @@
 			<ui:define name="outComeSection">
 				<h:panelGroup id="loaButtonsId">
 					<p:commandButton value="#{lbl['lbl.btn.save']}"
-						action="#{directLOABackingBean.saveAction}" process="@form"
+						action="#{directLOABackingBean.saveAction(false)}" process="@form"
 						update="@form" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();"
 						rendered="#{!directLOABackingBean.managedBean.readOnly}" />
