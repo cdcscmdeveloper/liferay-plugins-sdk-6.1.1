@@ -634,23 +634,33 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @return String userName
 	 */
 	public String retriveUserName(Long userId) {
-		IUserSO userSo = null;
 		String userName = "";
+		PmUser user = retrivePmUser(userId);
+		if (user != null) {
+			userName = user.getUserName();
+		}
+
+		return userName;
+	}
+
+	public PmUser retrivePmUser(Long userId) {
+		PmUser user = null;
 		try {
-			userSo = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO reqDTo = new UserReqDTO();
 			reqDTo.setUserId(userId);
-			UserResDTO resDTO = userSo.retrieveUserByUserId(reqDTo);
+			UserResDTO resDTO = getUserSO().retrieveUserByUserId(reqDTo);
 			if (resDTO.isSuccessful() == true) {
-				PmUser user = resDTO.getPmUser();
-				userName = user.getUserName();
+				user = resDTO.getPmUser();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return userName;
+		return user;
+	}
+
+	protected IUserSO getUserSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 	}
 
 	/**
