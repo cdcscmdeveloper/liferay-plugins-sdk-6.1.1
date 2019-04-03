@@ -21,11 +21,11 @@
 						</td>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.mof.startDate']}" /></td>
 						<td>
-							<p:outputPanel rendered="#{not empty viewSmApplBackingBean.managedBean.smMofAccount}">
-								<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smMofAccount.effDate}" />
+							<p:outputPanel rendered="#{not empty viewSmApplBackingBean.managedBean.smMofCert}">
+								<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smMofCert.effDate}" />
 							</p:outputPanel>
 							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.na']}" 
-								rendered="#{empty viewSmApplBackingBean.managedBean.smMofAccount}"/>
+								rendered="#{empty viewSmApplBackingBean.managedBean.smMofCert}"/>
 						</td>
 					</tr>
 					<tr>
@@ -36,9 +36,8 @@
 							<p:outputPanel rendered="#{not empty viewSmApplBackingBean.managedBean.smMofCert}">
 								<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smMofCert.expDate}" />
 							</p:outputPanel>
-							<p:outputPanel rendered="#{empty viewSmApplBackingBean.managedBean.smMofCert}">
-								<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smMofAccount.expDate}" />
-							</p:outputPanel>
+							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.na']}" 
+								rendered="#{empty viewSmApplBackingBean.managedBean.smMofCert}"/>
 						</td>
 					</tr>
 					<tr>
