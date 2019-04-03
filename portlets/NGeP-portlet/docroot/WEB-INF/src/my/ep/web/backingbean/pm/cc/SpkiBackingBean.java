@@ -112,6 +112,7 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	public void getChallengeQuestions() {
 		logger.info("::: #25061 getChallengeQuestions :::" + getSpkiEnabledProperty());
 		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
+			logger.info("::: #25061 getSpkiEnabledProperty true :::");
 			logger.info("::: #25061 getCertIssuer " + getCertIssuer());
 			if (getCertIssuer().equals(SupplierManagementConst.CERT_TRUSTGATE)) {
 				logger.info("getChallengeQuestions | getCertIssuer-TG : " + getCertIssuer());
@@ -408,6 +409,7 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IUserSO.class);
 			UserReqDTO userReqDTO = new UserReqDTO();
+			logger.info("#25061 getUserScreenName : " + new FacesScopes().getUserScreenName());
 			userReqDTO.setLoginId(new FacesScopes().getUserScreenName());
 			UserResDTO resDTO = userSO.retrieveUserByLoginId(userReqDTO);
 			if (resDTO.getPmUser() == null) {
@@ -420,6 +422,7 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 
 	public String getCertIssuer() {
 		if (StringUtils.isBlank(certIssuer)) {
+			logger.info("#25061 getIdentificationNo : " + getLoginUser().getIdentificationNo());
 			certIssuer = getCertIssuer(getLoginUser().getIdentificationNo());
 		}
 		return certIssuer;
