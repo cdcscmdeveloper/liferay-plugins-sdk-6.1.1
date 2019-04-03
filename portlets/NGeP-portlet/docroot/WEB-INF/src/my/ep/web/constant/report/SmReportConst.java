@@ -166,10 +166,10 @@ public class SmReportConst implements Serializable {
 	public static final String SOFTCERT_EXPIRY_DATE = "E";
 	//public static final String SOFTCERT_RENEW_DATE = "N";
 	
-	private final String CERT_APP_NEW = "N";
-	private final String CERT_APP_RENEW = "R";
-	private final String CERT_APP_REAPPLY = "A";
-	private final String CERT_APP_REVOKE = "K";
+	public static final String CERT_APP_NEW = "N";
+	public static final String CERT_APP_RENEW = "R";
+	public static final String CERT_APP_REAPPLY = "A";
+	public static final String CERT_APP_REVOKE = "K";
 	
 	private final int CERT_STATUS_PENDING_REQUEST = 4;
 	private final int CERT_STATUS_PENDING_PAYMENT = 2;

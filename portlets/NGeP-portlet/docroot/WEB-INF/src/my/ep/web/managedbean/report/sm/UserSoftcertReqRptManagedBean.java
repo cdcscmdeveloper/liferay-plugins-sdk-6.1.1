@@ -16,6 +16,8 @@ public class UserSoftcertReqRptManagedBean extends SmReportManagedBean{
 	private String dateRangeType;
 	private String certProvider;
 	private String certStatus;
+	private boolean showCertProvider;
+	private boolean showRevoke;
 
 	public String getSoftcertDateType() {
 		return softcertDateType;
@@ -80,5 +82,21 @@ public class UserSoftcertReqRptManagedBean extends SmReportManagedBean{
 
 	public void setCertStatus(String certStatus) {
 		this.certStatus = certStatus;
+	}
+
+	public boolean isShowCertProvider() {
+		return showCertProvider;
+	}
+
+	public void setShowCertProvider(boolean showCertProvider) {
+		this.showCertProvider = showCertProvider;
+	}
+
+	public boolean isShowRevoke() {
+		return showRevoke;
+	}
+
+	public void setShowRevoke(boolean showRevoke) {
+		this.showRevoke = showRevoke;
 	}
 }

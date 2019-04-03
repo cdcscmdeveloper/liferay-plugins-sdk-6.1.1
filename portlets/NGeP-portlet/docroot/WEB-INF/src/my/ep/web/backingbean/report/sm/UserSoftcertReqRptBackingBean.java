@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.event.AjaxBehaviorEvent;
 
 import my.ep.constants.CommonConstants;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
@@ -31,6 +32,7 @@ public class UserSoftcertReqRptBackingBean extends
 
 	public UserSoftcertReqRptBackingBean() {
 		setDefaultDateFromAndDateTo();
+		getManagedBean().setShowCertProvider(showCertProvider());
 		getManagedBean().setSupplierUser(isSuppUser());
 	}
 
@@ -76,19 +78,18 @@ public class UserSoftcertReqRptBackingBean extends
 						df.format(getManagedBean().getDateTo()));
 			}
 		}
-		
-		if(StringUtils.isNotBlank(getManagedBean().getCertApplicationType())){
+
+		if (StringUtils.isNotBlank(getManagedBean().getCertApplicationType())) {
 			params.put(SmReportConst.PARAM_CERT_APPL_TYPE, getManagedBean().getCertApplicationType());
 		}
-		
-		if(getManagedBean().getCertStatus() != null){
+
+		if (!getManagedBean().isShowRevoke() && getManagedBean().getCertStatus() != null) {
 			params.put(SmReportConst.PARAM_CERT_APPL_STATUS, getManagedBean().getCertStatus());
 		}
-		
-		if(StringUtils.isNotBlank(getManagedBean().getCertProvider())){
+
+		if (StringUtils.isNotBlank(getManagedBean().getCertProvider())) {
 			params.put(SmReportConst.PARAM_CERT_PROVIDER, getManagedBean().getCertProvider());
 		}
-		
 
 		generateSmReport(params);
 	}
@@ -106,6 +107,24 @@ public class UserSoftcertReqRptBackingBean extends
 		getManagedBean().setCertApplicationType(null);
 		getManagedBean().setCertStatus(null);
 		getManagedBean().setCertProvider(null);
+		getManagedBean().setShowRevoke(false);
+	}
+
+	/**
+	 * Cert application type change. Event handle change the type of date
+	 * selectable and hides the application status if revoke is chosen.
+	 * 
+	 * @param event
+	 */
+	public void certAppTypeOnChange(AjaxBehaviorEvent event) {
+		String certAppType = (String) event.getComponent().getAttributes().get("value");
+		if (SmReportConst.CERT_APP_REVOKE.equals(certAppType)) {
+			getManagedBean().setShowRevoke(true);
+			getManagedBean().setCertStatus("");
+		} else {
+			getManagedBean().setShowRevoke(false);
+		}
+
 	}
 
 	private boolean isSuppUser() {
@@ -158,5 +177,19 @@ public class UserSoftcertReqRptBackingBean extends
 			}
 		}
 		return retVal;
+	}
+
+	/**
+	 * Show cert provider only if user is a Supplier Admin.
+	 * 
+	 * @return
+	 */
+	private boolean showCertProvider() {
+
+		FacesScopes sc = new FacesScopes();
+		if (sc.getUserRoleList().size() == 1 && sc.hasRoleUser(SupplierManagementConst.SUPPLIER_ADMIN)) {
+			return false;
+		}
+		return true;
 	}
 }
