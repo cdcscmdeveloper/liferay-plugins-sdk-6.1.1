@@ -142,6 +142,7 @@
 				</p:commandLink>
 				<!-- harris -->
 				<p:commandLink id="deleteSupDocId"
+					rendered="#{!empty table.smApplDocFiles[0].fileName}"
 					style="white-space: normal !important;" partialSubmit="true"
 					process="@this"
 					action="#{backingBean.onDeleteSupDocFileAttachment(table)}"

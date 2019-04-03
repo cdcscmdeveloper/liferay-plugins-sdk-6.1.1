@@ -26,10 +26,12 @@ import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sm.useradddata.SMUserAddDataType;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmGstSupplierDoc;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSoftcertDoc;
 import my.ep.persistence.entity.sm.SmSoftcertDocFile;
@@ -283,11 +285,19 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 
 	}
 	
-	//harris
-	public void deleteSupDocFileAttachment() {
-		this.getManagedBean().getSelectedSuppDoc().getSuppDocList().get(0)
-		.setSmSofcertDocFiles(null);
+	//17003	
+	public void confirmDeleteAttachment(int index) {		
+		this.getManagedBean().setAttachedFileIndex(index);
+	}
+	
+	public void deleteAttachmentAction() {
+		SmSoftcertDocFile attachment =  this.getManagedBean().getAttachmentList().get(this.getManagedBean().getAttachedFileIndex());
+		if(attachment.getSoftcertDocFileId() != null){
+			this.getManagedBean().getDeleteAttachments().add(attachment);
+		}
+		this.getManagedBean().getAttachmentList().remove(this.getManagedBean().getAttachedFileIndex());
 		
+		RequestContext.getCurrentInstance().execute("delFileDlg.hide()");
 	}
 	
 
