@@ -492,14 +492,23 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 		if (!EntityHelper.isCollectionEmpty(smAppl.getSmSupplier()
 				.getSmMofAccounts())) {
-			getManagedBean().setSmMofAccount(
-					smAppl.getSmSupplier().getSmMofAccounts().get(0));
-			if (getManagedBean().getSmMofAccount() != null
-					&& !EntityHelper.isCollectionEmpty(getManagedBean()
-							.getSmMofAccount().getSmMofCerts())) {
-				for (SmMofCert cert : getManagedBean().getSmMofAccount()
-						.getSmMofCerts()) {
-					if (cert.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+
+			for (SmMofAccount acc : smAppl.getSmSupplier().getSmMofAccounts()) {
+				if (acc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+					getManagedBean().setSmMofAccount(acc);
+					break;
+				}
+			}
+
+			VirtualCertReqDTO certReqDTO = new VirtualCertReqDTO();
+			certReqDTO.setApplId(smAppl.getApplId());
+
+			List<SmMofCert> certs = SmServiceLookup.getVirtualCertSO()
+					.retrieveMofCertsByApplId(certReqDTO).getSmMofCerts();
+
+			if (!EntityHelper.isCollectionEmpty(certs)) {
+				for (SmMofCert cert : certs) {
+					if (!cert.isBumiCert()) {
 						getManagedBean().setSmMofCert(cert);
 						break;
 					}
