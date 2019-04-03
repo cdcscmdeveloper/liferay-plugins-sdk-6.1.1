@@ -71,7 +71,7 @@ public class DeativateUserRoleRest {
 										}
 								}
 							} else {
-								if(userRole.getPmRole().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
+								if(userRole.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
 									pmUserOrg.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 									reqDTOFinal.setEligibleForDeactivation(false);
 								}
