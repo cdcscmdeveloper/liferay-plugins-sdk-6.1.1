@@ -191,7 +191,7 @@
 				
 			<p:commandButton id="addPdBtn"  value="#{lbl['lbl.btn.add']}" process="@this" 
 			  rendered="#{!ctBackingBean.managedBean.viewContract
-			  	and ctBackingBean.managedBean.contractVer.docType != ParameterConst.doctypeAmendmentWithoutSupplement
+			  	and ctBackingBean.managedBean.contractVer.docType != ParameterConst.doctypeContractAmendment
 			  	and ctBackingBean.managedBean.ctContractAmount.bondReq}" 
 			     action="#{ctBackingBean.addBondDetails}" update=":form:tableBond" partialSubmit="true"
 			     oncomplete="tableBondWidget.paginator.endLink.click();">
@@ -205,7 +205,7 @@
 		          process="@this" partialSubmit="true" onsuccess="dlgPerformDel.show();"
 		          disabled="#{ctBackingBean.managedBean.buttonHideActive}"
 			      rendered="#{!ctBackingBean.managedBean.viewContract
-			      	and ctBackingBean.managedBean.contractVer.docType != ParameterConst.doctypeAmendmentWithoutSupplement
+			      	and ctBackingBean.managedBean.contractVer.docType != ParameterConst.doctypeContractAmendment
 			      	and ctBackingBean.managedBean.ctContractAmount.bondReq}" >
 				<p:tooltip for="delPdBtn">
 				    <h:outputText value="#{lbl['lbl.ct.tooltip.delete.performance.bond']}" escape="false" />
