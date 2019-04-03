@@ -54,6 +54,7 @@ public class DeativateUserRoleRest {
 								if (pmLoginHistory != null && pmLoginHistory.getLoginDate().compareTo(new Date(userRole.getChangedDate().getTime())) >= 0) {
 									if(new Date(userRole.getChangedDate().getTime()).compareTo(DateUtils.addMonths(new Date(), -UsersdeactivationPerioid)) < 0 ){
 										userRole.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
+										reqDTOFinal.getRemoveRoleList().add(userRole);
 									} else {
 										if(userRole.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
 											pmUserOrg.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
@@ -63,6 +64,7 @@ public class DeativateUserRoleRest {
 								} else {
 										if(new Date(userRole.getChangedDate().getTime()).compareTo(DateUtils.addMonths(new Date(), -UsersdeactivationPerioidNotLogging)) < 0 ){
 											userRole.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
+											reqDTOFinal.getRemoveRoleList().add(userRole);
 										} else {
 											if(userRole.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
 												pmUserOrg.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
