@@ -13,6 +13,7 @@ import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmSoftcertDocFile;
 import my.ep.web.backingbean.pm.cc.SoftCertMaintenanceBackingBean;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
@@ -66,6 +67,10 @@ public class SoftCertManagedBean extends BaseManagedBean {
 	private PmDigiSign digiSign;
 	private String gstPercentageLabel;
 	private SmAppl smAppl;
+	private SmSoftcertDocFile deleteSuppDoc;
+	private int attachedFileIndex;
+	private List<SmSoftcertDocFile> attachmentList;
+	private List<SmSoftcertDocFile> deleteAttachments;
 
 	@ManagedProperty(value = "#{spkiBackingBean}")
 	private SpkiBackingBean spkiBackingBean;
@@ -376,6 +381,64 @@ public class SoftCertManagedBean extends BaseManagedBean {
 
 	public void setRevokePersonnelSelect(SmPersonnel revokePersonnelSelect) {
 		this.revokePersonnelSelect = revokePersonnelSelect;
+	}
+
+	public SmSoftcertDocFile getDeleteSuppDoc() {
+		return deleteSuppDoc;
+	}
+
+	public void setDeleteSuppDoc(SmSoftcertDocFile deleteSuppDoc) {
+		this.deleteSuppDoc = deleteSuppDoc;
+	}
+
+	/**
+	 * Gets the attached file index.
+	 *
+	 * @return the attachedFileIndex
+	 */
+	public int getAttachedFileIndex() {
+		return attachedFileIndex;
+	}
+
+	/**
+	 * Sets the attached file index.
+	 *
+	 * @param attachedFileIndex the attachedFileIndex to set
+	 */
+	public void setAttachedFileIndex(int attachedFileIndex) {
+		this.attachedFileIndex = attachedFileIndex;
+	}
+	
+	/**
+	 * Gets the attachment list.
+	 *
+	 * @return the attachmentList
+	 */
+	public List<SmSoftcertDocFile> getAttachmentList() {
+		if(attachmentList==null) {
+			attachmentList = new ArrayList<SmSoftcertDocFile>();
+		}
+		return attachmentList;
+	}
+
+	/**
+	 * Sets the attachment list.
+	 *
+	 * @param attachmentList the attachmentList to set
+	 */
+	public void setAttachmentList(List<SmSoftcertDocFile> attachmentList) {
+		this.attachmentList = attachmentList;
+	}
+	
+	public List<SmSoftcertDocFile> getDeleteAttachments() {
+		if(deleteAttachments==null) {
+			deleteAttachments = new ArrayList<SmSoftcertDocFile>();
+		}
+		return deleteAttachments;
+	}
+
+	public void setDeleteAttachments(List<SmSoftcertDocFile> deleteAttachments) {
+		this.deleteAttachments = deleteAttachments;
 	}
 
 }
