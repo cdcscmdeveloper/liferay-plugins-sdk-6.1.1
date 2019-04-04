@@ -272,10 +272,10 @@
 				</td>
 			</tr>
 			<tr>
-				<td><p:outputLabel
+				<td width="21%"><p:outputLabel
 						value="#{lbl['lbl.sc.procurment.type.category']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td colspan="3">
+				<td>
 					<c:choose>
 						<c:when test="#{!isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}">
 							<p:selectOneMenu id="procTypeBoCategory" required="true"
