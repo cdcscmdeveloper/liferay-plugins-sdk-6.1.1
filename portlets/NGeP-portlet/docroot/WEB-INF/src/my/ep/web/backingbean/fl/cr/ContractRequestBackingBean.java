@@ -1752,9 +1752,19 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		ctReqDTO.setOrgProfileId(flRequest.getPreparedOrgProfile().getOrgProfileId());
 		BigDecimal unitPriceKeyIn = BigDecimal.ZERO;
 		
+		if(getManagedBean().getSelectedDelAddr() != null){
+			ctReqDTO.setFlAddress(getManagedBean().getSelectedDelAddr().getFlAddress());
+		}
+		
+		if(getManagedBean().getFlRequest().getStartDate()!=null && getManagedBean().getFlRequest().getEndDate()!=null) {
+			long day = (getManagedBean().getFlRequest().getEndDate().getTime() - getManagedBean().getFlRequest().getStartDate().getTime()) / MILLIS_PER_DAY;
+			ctReqDTO.setDeliveryTerm(Long.valueOf(day).intValue());
+		}
+		
 		for(FlDeliveryAddress deliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()){
 			for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()){
 				ctReqDTO.setItemId(itemAddr.getScRequestItem().getRequestNoteItemId());
+				ctReqDTO.setOrderedQty(itemAddr.getOrderedQty());
 				ctResDTO = contractItemSO.getItemPrice(ctReqDTO);
 				if(ctResDTO.getItemPrice().doubleValue() <= 0){
 					break;
