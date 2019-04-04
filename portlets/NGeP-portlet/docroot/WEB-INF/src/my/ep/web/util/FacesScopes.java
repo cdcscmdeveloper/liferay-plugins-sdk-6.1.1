@@ -252,9 +252,11 @@ public class FacesScopes implements Serializable {
 	}
 
 	public String getUserScreenName() {
+		log.info("#25061 getUserScreenName");
 		String screenName = "";
-		log.info("#25061 getRemoteUser : " + this.getRequest().getRemoteUser());
-		if(this.getRequest().getRemoteUser() != null) {
+		String remoteUser = this.getRequest().getRemoteUser();
+		if(remoteUser != null) {
+			log.info("#25061 remoteUser not null");
 			try {
 				User user = UserServiceUtil.getUserById(Long.valueOf(this
 						.getRequest().getRemoteUser()));
