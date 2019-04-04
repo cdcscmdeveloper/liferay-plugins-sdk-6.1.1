@@ -108,13 +108,12 @@
 										rendered="#{not empty suppDoc.smSofcertDocFiles and not empty suppDoc.smSofcertDocFiles[0].fileName}">
 										<p:fileDownload value="#{softCertBackingBean.commonDownload(suppDoc.smSofcertDocFiles[0].filePath,suppDoc.smSofcertDocFiles[0].fileName,suppDoc.smSofcertDocFiles[0].fileName)}" />
 									</p:commandLink>
-									<p:commandLink oncomplete="delFileDlg.show()"
-										action="#{softCertBackingBean.confirmDeleteAttachment(attachFileIndex)}"
-										immediate="true"
-										rendered="#{!empty suppDoc.smSofcertDocFiles[0].fileName}"
-										update="@form">
-										<p:graphicImage value="/css/images/design/trash.png" />
-									</p:commandLink>
+									<p:spacer width="20" />					
+									<p:commandLink rendered="#{!empty suppDoc.smSofcertDocFiles[0].fileName}"										 
+										action="#{softCertBackingBean.assignSelectedSmSoftcertDocFile(suppDoc)}"
+										oncomplete="delFileDlg.show()" process="@this" partialSubmit="true" update=":form" >
+						   				<p:graphicImage value="/css/images/design/trash.png" />
+				   					</p:commandLink>
 							</td>
 							</tr>
 						</ui:repeat>
@@ -217,13 +216,16 @@
 		<p:confirmDialog message="#{lbl['lbl.sm.upload.delete.message']}"
 			severity="alert" id="delFileDlg" widgetVar="delFileDlg" closable="true"
 			appendToBody="true" header="#{lbl['lbl.sm.upload.delete.confirm.header']}">
-			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.delete']}" 
-					partialSubmit="true" immediate="true"
-					update="@form"
-					action="#{softCertBackingBean.deleteAttachmentAction()}"/>
-				<p:commandButton value="#{lbl['lbl.btn.no']}" 
-					onclick="delFileDlg.hide();" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
+					partialSubmit="true"
+					action="#{softCertBackingBean.deleteAttachment()}"
+					oncomplete="delFileDlg.hide();"
+					update="@this"/>
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="delFileDlg.hide();"
+					type="button"
+					process="@this"/>
 			</div>
 		</p:confirmDialog>
 

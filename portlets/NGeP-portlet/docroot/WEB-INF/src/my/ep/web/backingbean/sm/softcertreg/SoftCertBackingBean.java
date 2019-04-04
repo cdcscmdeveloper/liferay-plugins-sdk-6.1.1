@@ -1,5 +1,7 @@
 package my.ep.web.backingbean.sm.softcertreg;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
@@ -28,6 +31,7 @@ import my.ep.jaxb.sm.useradddata.SMUserAddDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmAccessApplDoc;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.sm.SmAppl;
@@ -38,6 +42,7 @@ import my.ep.persistence.entity.sm.SmSoftcertDocFile;
 import my.ep.persistence.entity.sm.SmSoftcertRequest;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.backingbean.sm.payment.PaymentBackingBean;
@@ -55,6 +60,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.StreamedContent;
 
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -285,21 +291,40 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 
 	}
 	
-	//17003	
-	public void confirmDeleteAttachment(int index) {		
-		this.getManagedBean().setAttachedFileIndex(index);
+	//17003		
+	public void assignSelectedSmSoftcertDocFile(SmSoftcertDoc suppDoc) {
+		SmSoftcertDocFile doc = (SmSoftcertDocFile) EntityHelper
+				.getEntityBySinglePropertyFromList(suppDoc.getSoftcertDocId(), suppDoc.getSmSofcertDocFiles(), null);		
+		getManagedBean().setSelectedSmSoftcertDocFile(doc);
+		log.info("assignSelectedSmSoftcertDocFile");
+//		RequestContext.getCurrentInstance().execute("delFileDlg.show()");
 	}
 	
-	public void deleteAttachmentAction() {
-		SmSoftcertDocFile attachment =  this.getManagedBean().getAttachmentList().get(this.getManagedBean().getAttachedFileIndex());
-		if(attachment.getSoftcertDocFileId() != null){
-			this.getManagedBean().getDeleteAttachments().add(attachment);
+	/**
+	 * Delete attachment
+	 * 
+	 * @param attachment
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	public void deleteAttachment() throws FileNotFoundException, IOException {
+		try {
+			if (getManagedBean().getSelectedSmSoftcertDocFile() != null) {
+				for(SmSoftcertDocFile smSoftcertDocFile : getManagedBean().getSmSoftcertDocFileList()){
+					if(smSoftcertDocFile.getSmSoftcertDoc().getSoftcertDocId().equals(getManagedBean().getSelectedSmSoftcertDocFile().getSmSoftcertDoc().getSoftcertDocId())){
+						smSoftcertDocFile.setFileName(StringUtils.EMPTY);
+						smSoftcertDocFile.setFilePath(StringUtils.EMPTY);
+						break;
+					}
+				}	
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(MessageConst.ERROR_770054,
+					new String[] { e.getMessage() });
+
 		}
-		this.getManagedBean().getAttachmentList().remove(this.getManagedBean().getAttachedFileIndex());
-		
-		RequestContext.getCurrentInstance().execute("delFileDlg.hide()");
 	}
-	
 
 	/**
 	 * Update total amount
