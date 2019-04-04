@@ -404,13 +404,15 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	}
 
 	public PmUser getLoginUser() {
+		logger.info("#25061 getLoginUser");
 		if (loginUser == null || loginUser.getLoginId() == null) {
+			logger.info("#25061 getLoginId is null");
 			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IUserSO.class);
 			UserReqDTO userReqDTO = new UserReqDTO();
-			logger.info("#25061 getUserScreenName : " + new FacesScopes().getUserScreenName());
 			userReqDTO.setLoginId(new FacesScopes().getUserScreenName());
+			logger.info("#25061 getLoginId : " + userReqDTO.getLoginId());
 			UserResDTO resDTO = userSO.retrieveUserByLoginId(userReqDTO);
 			if (resDTO.getPmUser() == null) {
 				throw new EpException("PM User is null");
