@@ -97,6 +97,7 @@ public class DeativateUserRoleRest {
 
 			return Response.status(200).entity("success calling process deactivatee user role !!").build();
 		} catch (Exception e) {
+			e.printStackTrace();
 			return Response.status(406).entity(e.getMessage()).build();
 		}
 	}
