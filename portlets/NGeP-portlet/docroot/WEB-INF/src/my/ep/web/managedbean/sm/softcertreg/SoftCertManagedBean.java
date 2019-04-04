@@ -10,6 +10,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.bpm.vo.WorklistItemVO;
+import my.ep.persistence.entity.pm.common.PmAccessApplDoc;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -71,6 +72,8 @@ public class SoftCertManagedBean extends BaseManagedBean {
 	private int attachedFileIndex;
 	private List<SmSoftcertDocFile> attachmentList;
 	private List<SmSoftcertDocFile> deleteAttachments;
+	private SmSoftcertDocFile selectedSmSoftcertDocFile;
+	private List<SmSoftcertDocFile> smSoftcertDocFileList;
 
 	@ManagedProperty(value = "#{spkiBackingBean}")
 	private SpkiBackingBean spkiBackingBean;
@@ -439,6 +442,28 @@ public class SoftCertManagedBean extends BaseManagedBean {
 
 	public void setDeleteAttachments(List<SmSoftcertDocFile> deleteAttachments) {
 		this.deleteAttachments = deleteAttachments;
+	}
+	
+	/**
+	 * @return the selectedPmAccessApplDoc
+	 */
+	public SmSoftcertDocFile getSelectedSmSoftcertDocFile() {
+		return selectedSmSoftcertDocFile;
+	}
+
+	/**
+	 * @param selectedPmAccessApplDoc the selectedPmAccessApplDoc to set
+	 */
+	public void setSelectedSmSoftcertDocFile(SmSoftcertDocFile selectedSmSoftcertDocFile) {
+		this.selectedSmSoftcertDocFile = selectedSmSoftcertDocFile;
+	}
+
+	public List<SmSoftcertDocFile> getSmSoftcertDocFileList() {
+		return smSoftcertDocFileList;
+	}
+
+	public void setSmSoftcertDocFileList(List<SmSoftcertDocFile> smSoftcertDocFileList) {
+		this.smSoftcertDocFileList = smSoftcertDocFileList;
 	}
 
 }
