@@ -35,6 +35,8 @@ public class DeativateUserRoleRest {
 			int UsersdeactivationPerioidNotLogging = SmServiceLookup.getUserSO().validityPeriodOfUsersNotLogged();
 			int UsersdeactivationPerioid = SmServiceLookup.getUserSO().validityPeriodOfUsersAlreadyLogged();
 			UserResDTO resDTO = SmServiceLookup.getUserSO().retrieveUserInDeactivationPeriod( UsersdeactivationPerioidNotLogging, UsersdeactivationPerioid);
+			reqDTOFinal.setNewRoleList(new ArrayList<PmUserRole>());
+			reqDTOFinal.setRemoveRoleList(new ArrayList<PmUserRole>());
 			for (BigDecimal userId : resDTO.getUserListId()) {
 				log.info("USER ID >>>>>> " +userId );
 				UserReqDTO reqDTO = new UserReqDTO();
