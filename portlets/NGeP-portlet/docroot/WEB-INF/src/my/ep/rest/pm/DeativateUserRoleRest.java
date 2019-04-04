@@ -28,7 +28,7 @@ public class DeativateUserRoleRest {
 	@GET
 	@Path("deactivateuserrole")
 	public Response userDeactivation() {
-		log.info("Before success calling retrieve rest api....");
+		log.info("Before success calling retrieve rest api for user role deactivation....");
 		try {
 			UserReqDTO reqDTOFinal = new UserReqDTO();
 			reqDTOFinal.setEligibleForDeactivation(true);
