@@ -451,8 +451,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 		}
 		String gfmasEnable = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.GFMAS_ENABLED);
-		gfmasEnable="false";
-		log.info("gfmasEnable is : " +gfmasEnable);
 		if(!gfmasEnable.equalsIgnoreCase("true")){
 			getManagedBean().setEspkb(true);
 		}
@@ -1274,8 +1272,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId()).getOrgProfileId());
 		
 		String gfmasEnable = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.GFMAS_ENABLED);
-		gfmasEnable="false";
-		log.info("gfmasEnable is : " +gfmasEnable);
 		if(!gfmasEnable.equalsIgnoreCase("true")){
 			getManagedBean().setEspkb(true);
 		}
@@ -1288,8 +1284,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 
 	private void getEspkbCommitmentNo() {
 		String gfmasEnable = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.GFMAS_ENABLED);
-		gfmasEnable="false";
-		log.info("gfmasEnable is : " +gfmasEnable);
 		if(!gfmasEnable.equalsIgnoreCase("true")){//isEspkb
 			if(getManagedBean().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
 					|| getManagedBean().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)
