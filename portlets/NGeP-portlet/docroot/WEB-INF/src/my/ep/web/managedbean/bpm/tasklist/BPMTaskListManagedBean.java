@@ -13,8 +13,11 @@ import org.apache.commons.lang.StringUtils;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
+import my.ep.biz.service.fl.adjustment.IAdjustmentSO;
+import my.ep.biz.service.fl.frn.IReceivedNoteSO;
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
+import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.pm.access.application.IAccessApplSO;
 import my.ep.biz.service.pm.common.kpi.IPmKpiSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
@@ -22,6 +25,8 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
+import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractStatusConst;
 import my.ep.constant.pm.KPICodeConst;
@@ -33,17 +38,26 @@ import my.ep.constants.BpmConstants;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
+import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.access.application.AccessApplReqDTO;
 import my.ep.dto.pm.access.application.AccessApplResDTO;
 import my.ep.dto.pm.common.kpi.KpiReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.exception.EpException;
+import my.ep.jaxb.fl.dandata.FLDanDataType;
+import my.ep.jaxb.fl.frndata.FLFulFillmentReceivedNoteDataType;
+import my.ep.jaxb.fl.maintenace.cancel.dofulfillment.FLDOFulfillmentCancelReqType;
+import my.ep.jaxb.fl.maintenace.modification.dofulfillment.FLDOFulfillmentModificationReqType;
+import my.ep.jaxb.fl.stopfullfillmentdata.FLStopFullfillmentDataType;
+import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
+import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmKPIValue;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -89,7 +103,12 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	Integer loiPreparationDays = null;
 	private boolean sdoWithMultipleRoles;
 	private String loginIc;
-		
+	
+	//start added for #24968
+	private FlFulfilmentRequest fulfilmentRequest;
+	private FlFulfilmentNote fulfilmentNote = new FlFulfilmentNote();
+	//end added for #24968
+
 	public List<WorklistItemVO> getTaskList() {
 		return taskList;
 	}
@@ -538,9 +557,38 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.CREATE_FRN_HT) 
 						    		   || worklistItemVO.getTaskName().equals(FLProcessNameConst.REVISE_FRN_HT)){
 						    	   worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId(),false) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
+							       //start added for #24968
+						    	   retrievePoCoNoForCreateFRN(worklistItemVO,worklistItemVO.getTaskId());
+						    	   //end added for #24968
 						       }
+						       //start added for #24968
+						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.ACK_MODIFIED_DO_HT)){
+							    	   retrievePoCoNoForAckModifyDo(worklistItemVO,worklistItemVO.getTaskId());
+							       }
+						       
+						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.REVIEW_CANCEL_DO_HT)){
+						    	   retrievePoCoNoForReviewCancelDo(worklistItemVO,worklistItemVO.getTaskId());
+						       }
+						       
+						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.REVIEW_DAN_HT)){
+						    	   retrievePoCoNoForReviewDan(worklistItemVO,worklistItemVO.getTaskId());
+						       }
+						       
+						       if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_STOP_FULFILMENT_REQ_HT)
+						    		   || worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_STOP_FULFILMENT_REQ_HT)){
+						    	   retrievePoCoNoForStopFulFilment(worklistItemVO,worklistItemVO.getTaskId());
+						       }
+						       
+						       if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_FAILED_CANCEL_FRN_HT)){
+						    	   retrievePoCoNoForSubmitFailedCancelFRN(worklistItemVO,worklistItemVO.getTaskId());
+						       }
+
+						       //end added for #24968
 						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.APPROVE_FRN_HT)){
 						    	   worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId(),true) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
+							       //start added for #24968
+						    	   retrievePoCoNoForApproveFRN(worklistItemVO,worklistItemVO.getTaskId());
+						    	   //end added for #24968
 						       }
 						       if(worklistItemVO.getTaskName().equals(CTProcessNameConst.REVIEW_CIRCULAR_CANCELLATION_RQUEST_HT_NAME)){
 						    	   if (worklistItemVO.getDocStatus() != null
@@ -974,7 +1022,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	public PagingDataModel<WorklistItemVO> getTaskListBothDataModel() {
 		return taskListBothDataModel;
 	}
-
+	
 	public void setTaskListBothDataModel(
 			PagingDataModel<WorklistItemVO> taskListBothDataModel) {
 		this.taskListBothDataModel = taskListBothDataModel;
@@ -1232,4 +1280,153 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		return deliveryOrderSO.retreiveSupplierDoRefNo(reqDTO).getSupplierDoRefNo();
 	}
 	
+	//start added for #24968
+	public FlFulfilmentRequest getFulfilmentRequest() {
+		return fulfilmentRequest;
+	}
+
+	public void setFulfilmentRequest(FlFulfilmentRequest fulfilmentRequest) {
+		this.fulfilmentRequest = fulfilmentRequest;
+	}
+
+	public FlFulfilmentNote getFulfilmentNote() {
+		return fulfilmentNote;
+	}
+
+	public void setFulfilmentNote(FlFulfilmentNote fulfilmentNote) {
+		this.fulfilmentNote = fulfilmentNote;
+	}
+	
+	public void retrievePoCoNoForCreateFRN(WorklistItemVO worklistItemVO,String taskId) {
+		IDeliveryOrderSO deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		Object obj = getBpmTaskDetails(taskId);
+		FLFulFillmentReceivedNoteDataType fulFillmentRecievedNoteDataType = (FLFulFillmentReceivedNoteDataType)obj;
+		reqDTO.setDeliveryOrderId(fulFillmentRecievedNoteDataType.getDoId());
+		reqDTO.setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+		resDTO = deliveryOrderSO.retrieveDeliveryOrderById(reqDTO);
+		
+		String poCoNumber = resDTO.getFlDeliveryOrder().getFlRequest().getFlFulfilmentOrder().getDocNo();
+		if(poCoNumber != null){
+			worklistItemVO.setPocoNo(poCoNumber);
+		}
+	}
+	
+	public void retrievePoCoNoForAckModifyDo(WorklistItemVO worklistItemVO,String taskId) {
+		
+		IDeliveryOrderSO deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		Object obj = getBpmTaskDetails(taskId);
+		FLDOFulfillmentModificationReqType doModDataType = (FLDOFulfillmentModificationReqType) obj;
+		reqDTO.setDeliveryOrderId(Long.valueOf(doModDataType.getDoId()));
+		reqDTO.setDocType(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+		resDTO = deliveryOrderSO.retrieveDeliveryOrderById(reqDTO);
+		
+		String poCoNumber = resDTO.getFlDeliveryOrder().getFlFulfilmentOrder().getDocNo();
+		if(poCoNumber != null){
+			worklistItemVO.setPocoNo(poCoNumber);
+		}
+	}
+	
+	public void retrievePoCoNoForReviewCancelDo(WorklistItemVO worklistItemVO,String taskId) {
+		
+		IDeliveryOrderSO deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		Object obj = getBpmTaskDetails(taskId);
+		FLDOFulfillmentCancelReqType doCancelDataType = (FLDOFulfillmentCancelReqType) obj;
+		reqDTO.setDeliveryOrderId(Long.valueOf(doCancelDataType.getDoId()));
+		reqDTO.setDocType(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+		resDTO = deliveryOrderSO.retrieveDeliveryOrderById(reqDTO);
+		
+		String poCoNumber = resDTO.getFlDeliveryOrder().getFlFulfilmentOrder().getDocNo();
+		if(poCoNumber != null){
+			worklistItemVO.setPocoNo(poCoNumber);
+		}
+	}
+	
+	public void retrievePoCoNoForApproveFRN(WorklistItemVO worklistItemVO,String taskId) {
+		
+		IReceivedNoteSO receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		Object obj = getBpmTaskDetails(taskId);
+		FLFulFillmentReceivedNoteDataType fulFillmentRecievedNoteDataType = (FLFulFillmentReceivedNoteDataType)obj;
+		reqDTO.setDeliveryOrderId(fulFillmentRecievedNoteDataType.getDoId());
+		resDTO = receivedNoteSO.retrieveReceivedNoteByDeliveryOrderId(reqDTO);
+		
+		String poCoNumber = resDTO.getFulfilmentNote().getFlRequest().getFlFulfilmentOrder().getDocNo();
+		if(poCoNumber != null){
+			worklistItemVO.setPocoNo(poCoNumber);
+		}
+	}
+	
+	public void retrievePoCoNoForReviewDan(WorklistItemVO worklistItemVO,String taskId) {
+		
+		IAdjustmentSO adjustmentSO = (IAdjustmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IAdjustmentSO.class);
+		FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		Object obj = getBpmTaskDetails(taskId);
+		FLDanDataType danObj = (FLDanDataType)obj;
+		flReqDTO.setDanId(danObj.getDanId());
+		resDTO = adjustmentSO.retrieveAdjustmentById(flReqDTO);
+		
+		String poCoNumber = resDTO.getAdjustment().getFlOrder().getDocNo();
+		if(poCoNumber != null){
+			worklistItemVO.setPocoNo(poCoNumber);
+		}
+	}
+	
+	public void retrievePoCoNoForStopFulFilment(WorklistItemVO worklistItemVO,String taskId) {
+		
+		IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+		FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		Object obj = getBpmTaskDetails(taskId);
+		FLStopFullfillmentDataType stopFlData = (FLStopFullfillmentDataType)obj;
+		flReqDTO.setFlOrderId(stopFlData.getOrderId());
+		flReqDTO.setStopRequestId(stopFlData.getStopRequestId().longValue());
+		resDTO = orderSO.retrieveStopInstruction(flReqDTO);
+		
+		String poCoNumber = resDTO.getFlStopInstr().getFlFulfilmentOrder().getDocNo();
+		if(poCoNumber != null){
+			worklistItemVO.setPocoNo(poCoNumber);
+		}
+	}
+	
+	public void retrievePoCoNoForSubmitFailedCancelFRN(WorklistItemVO worklistItemVO,String taskId) {
+		
+		IReceivedNoteSO receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		Object obj = getBpmTaskDetails(taskId);
+		FLDOFulfillmentCancelReqType fulfillmentCancelReqType = (FLDOFulfillmentCancelReqType)obj;
+		reqDTO.setDeliveryOrderId(fulfillmentCancelReqType.getDoId());
+		resDTO = receivedNoteSO.retrieveReceivedNoteByDeliveryOrderId(reqDTO);
+		
+		String poCoNumber = resDTO.getFulfilmentNote().getFlRequest().getFlFulfilmentOrder().getDocNo();
+		if(poCoNumber != null){
+			worklistItemVO.setPocoNo(poCoNumber);
+		}
+	}
+	
+	public Object getBpmTaskDetails(String taskId) {
+		FacesScopes facesScopes = new FacesScopes();
+
+		IBpmSO bpmSO;
+
+		bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+				.getServiceObject(IBpmSO.class);
+
+		BpmRequestDTO reqDTO = new BpmRequestDTO();
+		reqDTO.setCtxToken(facesScopes.getBPMAuthenticationCtxToken());
+		reqDTO.setTaskId(taskId);
+
+		BpmResponseDTO resDTO = bpmSO.getTaskDetails(reqDTO);
+		Object payLoad = resDTO.getPojo();
+		return payLoad;
+	}
+	//end added for #24968
 }
