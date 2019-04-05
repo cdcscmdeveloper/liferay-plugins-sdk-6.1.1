@@ -4297,10 +4297,15 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		if(DPStatusConstants.SQ_PENDING_RN_CREATION.equals(currentStatus)){
 			for (ScRequestNoteDtl scRequestNoteDtl : requestNoteDtls) {
 				
-				ScRequestSupplierItem scRequestSupplierItem = scRequestNoteDtl.getScRequestSupplierItem();
+				List<ScRequestSupplierItem> reqSuppItems = scRequestNoteDtl.getRequestItem().getSupplierItems(); 
+				int count = 0;
+				for (ScRequestSupplierItem reqSuppItem: reqSuppItems){
+					if(!reqSuppItem.isLoaRejected()){
+						count++;
+					}
+				}
 
-				if(scRequestSupplierItem != null 
-						&& scRequestSupplierItem.getSmSupplier().getSupplierId() == null){
+				if(count == 0){
 					isResponse = Boolean.FALSE;
 					break;
 				}
