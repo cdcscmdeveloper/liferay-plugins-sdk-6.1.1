@@ -21,13 +21,14 @@
 		<h:panelGrid columns="2" >
 			<p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.ctContractAmount.bondWaived}"
 				disabled="#{!ctBackingBean.managedBean.ctContractAmount.bondReq or ctBackingBean.managedBean.viewContract}">
-				<p:ajax event="change" update=":form:fileBondWaiver" listener="#{ctBackingBean.chkBondWaiverAction}" process="@this"/> 
+				<p:ajax event="change" update="@all" listener="#{ctBackingBean.chkBondWaiverAction}" process="@all"/> 
+				<!--  update=":form:waiverPanelId" -->
 	  		</p:selectBooleanCheckbox>
 	   		<h:outputFormat id="waiverId" value="#{lbl['lbl.ct.bond.waiver.chkbox']}" styleClass="instruction">
 	   			<f:param value="#{ctBackingBean.managedBean.contractVer.ctContractValue.supplierName}" />
 	 		</h:outputFormat>
 	   	</h:panelGrid>
-	  	<h:panelGroup id="fileBondWaiver">
+	  	<!-- h:panelGroup id="fileBondWaiver">
 	 		<table style="width: 100%">
 			<tr>
 			<td class="TableFieldLeft" width="17%"><h:outputLabel value="#{lbl['lbl.ct.bond.waiver.letter']}"  styleClass="required" /></td>
@@ -39,29 +40,165 @@
 					   or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}" />
 			</td>
 			<td>
-			<p:dataGrid id="dataGridId" value="#{ctBackingBean.managedBean.contractVer.bondWaiverAttachments}"
-				var="attachFile" rowIndexVar="attachFileIndex" columns="1" style="width:100%" emptyMessage="">
-				<table>
-				<tr>
-				<td>
-					<h:commandLink value="#{attachFile.fileName}" 
-						styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
-					<p:commandLink onsuccess="deleteWaiverAttachDlg.show();" action="#{ctBackingBean.setAttachFileIndex(attachFileIndex)}"
-						rendered="#{!ctBackingBean.managedBean.viewContract}" process="@this" partialSubmit="true"
-						disabled="#{(ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)
-							or (ctBackingBean.managedBean.contractVer.ctContract.latestContractVer != null and attachFile.bondWaivedTrue)
-							or !ctBackingBean.managedBean.ctContractAmount.bondReq}">
-		  					<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
-		 			</p:commandLink>
-				</td>
-				</tr>
-				</table>
-			</p:dataGrid>
+			
 			</td>
 			</tr>
 			</table>
-		</h:panelGroup>
-		   	
+		</h:panelGroup-->
+		<!-- START LOG : 13847, by Fahmi 22032019 -->
+		<p:outputPanel id="waiverPanelId" rendered="#{ctBackingBean.managedBean.ctContractAmount.bondWaived}">
+			<table>
+				<tr>
+					<td>
+						<p:outputLabel id="waiverStartDate" value="#{lbl['lbl.ct.pb.waiver.start.date']}" styleClass="required" />
+					</td>
+					<td>
+						<p:calendar id="popupButtonCal5" value="#{ctBackingBean.managedBean.ctAttachmentLatest.ctBondWaiverDetail.waiverStartDate}"  styleClass="calendarDateField" size="9" 
+							showOn="button" readonlyInput="true" navigator="true"
+							mindate="#{ctBackingBean.managedBean.contractVer.ctContractValue.effDate}"
+							maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
+							 <p:ajax event="dateSelect" update="@([id$=bondExpDateCalId])" process="@this" />
+						</p:calendar>
+						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.waiver.performance.bond.start.date']}"/>
+					</td>
+					<td>
+						<p:outputLabel id="waiverEndDate" value="#{lbl['lbl.ct.pb.waiver.end.date']}" styleClass="required" />
+					</td>
+					<td colspan="2">
+						<p:calendar id="popupButtonCal6" value="#{ctBackingBean.managedBean.ctAttachmentLatest.ctBondWaiverDetail.waiverEndDate}" styleClass="calendarDateField" size="9" 
+							showOn="button" readonlyInput="true" navigator="true"
+							mindate="#{ctBackingBean.managedBean.contractVer.ctContractValue.effDate}"
+							maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
+							 <p:ajax event="dateSelect" update="@([id$=bondExpDateCalId])" process="@this" />
+						</p:calendar>
+						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.waiver.performance.bond.end.date']}"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+					<p:outputLabel id="waiverReferenceNo" value="#{lbl['lbl.ct.pb.waiver.reference.no']}" styleClass="required" />
+					</td>
+					<td>
+						<p:inputText for="bondAmount" styleClass=""  maxlength="30" style="width:130px;"
+			  				value="#{ctBackingBean.managedBean.ctAttachmentLatest.ctBondWaiverDetail.referenceNo}">
+						</p:inputText>
+					</td>
+					<td>
+						<h:outputLabel value="#{lbl['lbl.ct.bond.waiver.letter']}"  styleClass="required" />
+					</td>
+					<td>
+						<p:outputPanel id="uploadDocWaiver">
+							<p:commandButton oncomplete="uploadWaiverDlg.show();return false;"
+								update=":form:dataGridId, :form:uploadWaiverDlg" icon=" ui-icon-upload" process="@this" partialSubmit="true"
+								rendered="#{!ctBackingBean.managedBean.viewContract and ctBackingBean.managedBean.ctAttachmentLatest.fileName == null
+									and ctBackingBean.managedBean.ctContractAmount.bondReq}"
+								disabled="#{ctBackingBean.disableBondAttachmentBtn() 
+								   or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}" />
+						</p:outputPanel>
+					</td>
+					<td>
+						
+					<p:dataGrid id="dataGridId" value="#{ctBackingBean.managedBean.ctAttachmentLatest}"
+					var="attachFile" rowIndexVar="attachFileIndex" columns="1" style="width:100%" emptyMessage="">
+					<table>
+					<tr>
+					<td>
+						<h:commandLink value="#{attachFile.fileName}" 
+							styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
+						<p:commandLink onsuccess="deleteWaiverAttachDlg.show();" action="#{ctBackingBean.setAttachFileIndex(attachFileIndex)}"
+							process="@this" partialSubmit="true"
+							disabled="#{(ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)
+								or (ctBackingBean.managedBean.contractVer.ctContract.latestContractVer != null and attachFile.bondWaivedTrue)
+								or !ctBackingBean.managedBean.ctContractAmount.bondReq}"
+								rendered="#{!ctBackingBean.managedBean.viewContract and attachFile.fileName != null
+							and ctBackingBean.managedBean.ctContractAmount.bondReq}">
+			  					<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
+			 			</p:commandLink>
+			 			
+					</td>
+					</tr>
+					</table>
+				</p:dataGrid>
+				</td>
+				<td>
+				<p:commandButton id="addwaiverBtn"  value="#{lbl['lbl.btn.update']}" process="@all"
+						     action="#{ctBackingBean.setBondWaiverToTable()}" update="@all" partialSubmit="true"
+						     rendered="#{!ctBackingBean.managedBean.viewContract
+								and ctBackingBean.managedBean.ctContractAmount.bondReq and ctBackingBean.managedBean.ctAttachmentLatest != null and (ctBackingBean.managedBean.ctAttachmentLatest.attachmentId != null || ctBackingBean.managedBean.attachmentList.size() > 0)}"
+						     oncomplete="tableBondWidget.paginator.endLink.click();">
+					</p:commandButton>
+					</td>
+				</tr>
+			</table>
+			
+			<!-- START TABLE WAIVER -->
+			<p:dataTable id="tableWaiver" var="varWaiver" rowIndexVar="index" widgetVar="tableBondWidget"
+				
+				value="#{ctBackingBean.managedBean.attachmentList}"  rowKey="#{rowKeyObj}">
+				<ac:paginator for="tableBond" />	
+						
+				<p:column style="width:8%;" styleClass="column-align-center">
+					<f:facet name="header">
+					        <h:outputText value="#{lbl['lbl.ct.start.date']}" />
+					        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.waiver.performance.bond.start.date']}"/>
+					</f:facet>
+					
+					<p:calendar id="popupButtonCal7" value="#{varWaiver.ctBondWaiverDetail.waiverStartDate}"  styleClass="calendarDateField" size="9" 
+						showOn="button" readonlyInput="true" navigator="true"
+						mindate="#{ctBackingBean.managedBean.contractVer.ctContractValue.effDate}"
+						maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
+						 <p:ajax event="dateSelect" update="@([id$=bondExpDateCalId])" process="@this" />
+					</p:calendar>
+					</p:column>
+						
+				<p:column style="width:8%;" styleClass="column-align-center">
+					<f:facet name="header">
+					        <h:outputText value="#{lbl['lbl.ct.end.date']}" />
+					        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.waiver.performance.bond.end.date']}"/>
+					</f:facet>
+					<p:calendar id="popupButtonCal8" value="#{varWaiver.ctBondWaiverDetail.waiverEndDate}"  styleClass="calendarDateField" size="9" 
+						showOn="button" readonlyInput="true" navigator="true"
+						mindate="#{ctBackingBean.managedBean.contractVer.ctContractValue.effDate}"
+						maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}" 
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
+						 <p:ajax event="dateSelect" update="@([id$=bondExpDateCalId])" process="@this" />
+					</p:calendar>
+					
+				</p:column>
+				<p:column style="width:30%;white-space:normal;"  styleClass="column-align-center">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.ct.pb.waiver.reference.no']}"  />
+				</f:facet>
+				<p:inputText id="bondRefNoId" value="#{varWaiver.ctBondWaiverDetail.referenceNo}" maxlength="50" style="width:95%;" 
+					disabled="true" 
+					rendered="#{!ctBackingBean.managedBean.viewContract
+					and ctBackingBean.managedBean.ctContractAmount.bondReq}">
+					<p:ajax  process="@this"></p:ajax>
+				</p:inputText>			
+				<h:outputText value="#{varWaiver.createdBy}" 
+				      style="float:left;text-align:left;"  rendered="#{ctBackingBean.managedBean.viewContract
+				      or !ctBackingBean.managedBean.ctContractAmount.bondReq}"/>
+				</p:column>	
+				<p:column styleClass="column-align-center"  headerText="#{lbl['lbl.txt.attachment']}" style="width:15%;">		
+					<h:panelGroup id="uploadBondPg" columns="2">
+						
+						<h:commandLink
+							title="#{varWaiver.fileName}"
+							value="#{ctBackingBean.getShortFileName(varWaiver.fileName)}"						
+							style="float:left;" styleClass="blue_font"
+							action="#{ctBackingBean.commonDownload(varWaiver.filePath, varWaiver.fileName)}" />
+						
+					</h:panelGroup>
+				</p:column>
+			</p:dataTable>
+			<br></br>
+		</p:outputPanel>
+		
+		<!-- END TABLE WAIVER -->
+		<!-- END LOG : 13847, by Fahmi 22032019 -->
 	   	<h:panelGrid columns="2">
 	   		<p:outputLabel id="bondAmount" value="#{lbl['lbl.ct.pb.amount']}" />
 			<p:inputText for="bondAmount" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
@@ -267,7 +404,7 @@
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" widgetVar="uploadWaiverFile"
 			invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
 			label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload.all']}" cancelLabel="#{lbl['lbl.btn.remove.all']}" 
-			update="dataGridId" >
+			update=":form:dataGridId, :form:uploadDocWaiver" >
 		</p:fileUpload>
 		<f:facet name="footer">
 		<div class="ppRightBtn">
@@ -279,8 +416,8 @@
 	<p:confirmDialog id="deleteWaiverAttachDlg" widgetVar="deleteWaiverAttachDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
 		severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
 		<div class="ppRightBtn">
-		<p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
-	 		update=":form:dataGridId" 
+		<p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@form"  partialSubmit="true"
+	 		update=":form:dataGridId,:form:uploadDocWaiver" 
 			action="#{ctBackingBean.deleteBondWaiverAttach()}" oncomplete="deleteWaiverAttachDlg.hide();"/>
 		<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteWaiverAttachDlg.hide();" type="button" />
 		</div>
