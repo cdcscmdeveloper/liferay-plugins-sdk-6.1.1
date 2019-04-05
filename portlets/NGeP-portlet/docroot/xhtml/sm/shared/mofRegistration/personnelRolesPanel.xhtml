@@ -110,7 +110,7 @@
 					<td style="padding-left: 5px;">
 						<table>
 							<tr>
-								<c:if test="#{backingBean.managedBean.validEquityLimit}">
+								<c:if test="#{backingBean.managedBean.validEquityLimit or backingBean.managedBean.smSupplier.businessType eq 'R'}"> <!--  change by fahmi, log : 23858 13/03/2019 -->
 									<td style="width: 20px">
 										<p:selectBooleanCheckbox disabled="#{backingBean.managedBean.currentPageType eq SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY}"
 											value="#{backingBean.managedBean.selectedShareHolder.equityOwner}">
