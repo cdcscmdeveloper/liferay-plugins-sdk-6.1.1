@@ -5,6 +5,7 @@ package my.ep.web.managedbean.ct;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -139,6 +140,13 @@ public class ContractManagedBean extends BaseManagedBean {
 	private List<PmOrgProfile> agencySelected;
 	
 	private boolean contractExpired;
+	//LOG : 13847, by Fahmi 22032019
+	private Date waiverStartDate;
+	private Date waiverEndDate;
+	private String referenceNo;
+	private List<CtAttachment> waiverDetail;
+	private CtAttachment ctAttachment;
+	private CtAttachment ctAttachmentLatest;
 
 	/**
 	 * @return the fileDirectory
@@ -1164,6 +1172,59 @@ public class ContractManagedBean extends BaseManagedBean {
 	 */
 	public void setCtAgreementList(List<CtAgreement> ctAgreementList) {
 		this.ctAgreementList = ctAgreementList;
+	}
+	public Date getWaiverStartDate() {
+		return waiverStartDate;
+	}
+
+	public void setWaiverStartDate(Date waiverStartDate) {
+		this.waiverStartDate = waiverStartDate;
+	}
+
+	public List<CtAttachment> getWaiverDetail() {
+		if(waiverDetail == null){
+			waiverDetail = new ArrayList<CtAttachment>();
+	}
+		return waiverDetail;
+	}
+
+	public void setWaiverDetail(List<CtAttachment> waiverDetail) {
+		this.waiverDetail = waiverDetail;
+	}
+
+	public Date getWaiverEndDate() {
+		return waiverEndDate;
+	}
+
+	public void setWaiverEndDate(Date waiverEndDate) {
+		this.waiverEndDate = waiverEndDate;
+	}
+
+	public String getReferenceNo() {
+		return referenceNo;
+	}
+
+	public void setReferenceNo(String referenceNo) {
+		this.referenceNo = referenceNo;
+	}
+
+	public CtAttachment getCtAttachment() {
+		return ctAttachment;
+	}
+
+	public void setCtAttachment(CtAttachment ctAttachment) {
+		this.ctAttachment = ctAttachment;
+	}
+
+	public CtAttachment getCtAttachmentLatest() {
+		if(ctAttachmentLatest == null){
+			ctAttachmentLatest = new CtAttachment();
+		}
+		return ctAttachmentLatest;
+	}
+
+	public void setCtAttachmentLatest(CtAttachment ctAttachmentLatest) {
+		this.ctAttachmentLatest = ctAttachmentLatest;
 	}
 
 }

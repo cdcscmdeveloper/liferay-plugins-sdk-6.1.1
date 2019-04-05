@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.ct;
 
+
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -48,6 +49,7 @@ import my.ep.jaxb.ct.contract.CTContractDataType;
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtAttachment;
+import my.ep.persistence.entity.ct.CtBondWaiverDetail;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
@@ -87,6 +89,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.RoleHelper;
 
+import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -97,6 +100,8 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
+
+
 /**
  * Backing Bean For Contract Details
  * 
@@ -293,6 +298,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 
 		setValidateContractField(reqDTO);
+		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, 
 				ContractManagementConst.NAV_TO_CONTRACT_DETAILS);
@@ -622,6 +628,28 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 			}
 		}
+		//LOG : 13847, by Fahmi 22032019
+		int i = 0;
+		ctBB.getManagedBean().setAttachmentList(null);
+		for(CtAttachment waivedAttach :ctBB.getManagedBean().getContractVer().getBondWaiverAttachments()){
+			//SET DATA TO LATEST WAIVER
+			if(i == 0){
+				if(waivedAttach.getCtBondWaiverDetail() == null){
+					waivedAttach.setCtBondWaiverDetail(new CtBondWaiverDetail());
+				}
+				ctBB.getManagedBean().setCtAttachmentLatest(waivedAttach);
+				ctBB.getManagedBean().setCtAttachment(SerializationUtils.clone(ctBB.getManagedBean().getCtAttachmentLatest()));
+			}else{//SET DATA TO TABLE WAIVER
+				ctBB.getManagedBean().getAttachmentList().add(waivedAttach);
+			}
+			i++;
+		}
+		if(ctBB.getManagedBean().getContractVer().getBondWaiverAttachments().size() <=0){
+			ctBB.getManagedBean().setCtAttachmentLatest(new CtAttachment());
+			ctBB.getManagedBean().getCtAttachmentLatest().setCtBondWaiverDetail(new CtBondWaiverDetail());
+		}
+		ctBB.getManagedBean().getContractVer().setBondWaiverAttachments(null);
+			
 	}
 
 	/**
@@ -699,7 +727,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					}
 				}
 			}
-
+			//LOG : 13847, by Fahmi 22032019
+			ctContractVer.setWaiverAttachment(ctBB.getManagedBean().getAttachmentList());
+			ctContractVer.setWaiverAttachmentLatest(ctBB.getManagedBean().getCtAttachmentLatest());
+			
 			reqDTO.setCtContractVer(ctContractVer);
 			reqDTO.setAgreementContractVer(ctBB.getManagedBean().getAgreementContractVer());
 			reqDTO.setUserRole(getUserRole());
@@ -714,7 +745,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			reqDTO.setDeleteAgencyMap(ctBB.getManagedBean().getDeleteAgencyMap());
 			reqDTO.setUpdateZoneMap(ctBB.getManagedBean().getUpdateZoneMap());
 			reqDTO.setUpdateItemMap(ctBB.getManagedBean().getUpdateItemMap());
-
+			
+			
+			
 			if (this.getManagedBean().getPmDigiSign() != null) {
 				reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
 			}
@@ -1178,7 +1211,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 			}
 		}
-
+		
 		// Validation for performance bond
 		if (ctBB.getManagedBean().getCtContractAmount().isBondReq() && !ctBB.getManagedBean().isDirectPurchase()
 				&& !ctBB.getManagedBean().getCtContractAmount().isBondExempted()
@@ -1204,7 +1237,38 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					} 
 				}
 			}	
-
+			//LOG : 13847, by Fahmi 22032019
+			if (ctBB.getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverStartDate() == null) {
+				setTabValue("PB");
+				throw new EpException(MessageConst.ERROR_100022,
+						new String[] {ResourceBundleUtils.getMessage("lbl.ct.pb.waiver.start.date", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
+			if (ctBB.getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverEndDate() == null) {
+				setTabValue("PB");
+				throw new EpException(MessageConst.ERROR_100022,
+						new String[] {ResourceBundleUtils.getMessage("lbl.ct.pb.waiver.end.date", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
+			if (ctBB.getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getReferenceNo() == null || "".equalsIgnoreCase(ctBB.getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getReferenceNo())) {
+				setTabValue("PB");
+				throw new EpException(MessageConst.ERROR_100022,
+						new String[] {ResourceBundleUtils.getMessage("lbl.ct.pb.waiver.reference.no", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
+			if (ctBB.getManagedBean().getCtAttachmentLatest().getFileName() == null || "".equalsIgnoreCase(ctBB.getManagedBean().getCtAttachmentLatest().getFileName())) {
+				setTabValue("PB");
+				throw new EpException(MessageConst.ERROR_100022,
+						new String[] {ResourceBundleUtils.getMessage("lbl.ct.bond.waiver.letter", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
+			
+			if (ctBB.getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverStartDate()
+					.compareTo(ctBB.getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverEndDate()) > 0) {
+				// start date large than end date
+				setTabValue("PB");
+				throw new EpException(MessageConst.ERROR_760164);
+			}
 			if (ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds() != null 
 					&& ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds().size() > 0) {
 				double bondAmount = 0.0;

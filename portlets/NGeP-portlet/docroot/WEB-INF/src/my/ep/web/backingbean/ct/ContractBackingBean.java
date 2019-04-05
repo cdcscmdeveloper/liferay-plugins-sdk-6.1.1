@@ -30,6 +30,7 @@ import javax.faces.model.SelectItem;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.SerializationUtils;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -39,6 +40,10 @@ import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
+
+import com.liferay.portal.kernel.util.DateUtil;
+
+import utils.system;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -404,14 +409,19 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * The method used to delete bond waiver attachment from the list.
 	 */
 	public void deleteBondWaiverAttach() {
-		CtAttachment attachment = getManagedBean().getContractVer().getBondWaiverAttachments().get(getManagedBean().getAttachFileIndex());
+		//LOG : 13847, by Fahmi 22032019
+		if(getManagedBean().getCtAttachmentLatest() != null){
+			getManagedBean().getCtAttachmentLatest().setFileName(null);
+		}
+		RequestContext.getCurrentInstance().execute("deleteWaiverAttachDlg.hide()");
+		/*CtAttachment attachment = getManagedBean().getContractVer().getBondWaiverAttachments().get(getManagedBean().getAttachFileIndex());
 		if(attachment.getAttachmentId() != null){
 			getManagedBean().getDeleteAttachmentList().add(attachment);
 		}
 		getManagedBean().getContractVer().getBondWaiverAttachments().remove(getManagedBean().getAttachFileIndex());
 		if(getManagedBean().getContractVer().getCtContract().getLatestContractVer() != null){
 			getManagedBean().setBondWaiver(true);
-		}
+		}*/
 	}
 
 	/**
@@ -2058,15 +2068,90 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			RequestContext.getCurrentInstance().execute("ctSharingAttachDlg.hide()");
 		}
 		else if(event.getComponent().getId().equalsIgnoreCase("uploadWaiver")){
+			//LOG : 13847, by Fahmi 22032019
 			CtAttachment attachment = new CtAttachment();
+			if(getManagedBean().getCtAttachmentLatest() != null){
+				attachment = getManagedBean().getCtAttachmentLatest();
+			}
 			attachment.setFileName(item.getFileName());
 			attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 			attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
 			attachment.setCreatedUser(facesScopes.getUserSessionBean());
 			attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-			getManagedBean().getContractVer().getBondWaiverAttachments().add(attachment);
+			//LOG : 13847, by Fahmi 22032019
+			getManagedBean().setCtAttachmentLatest(attachment);
+			//getManagedBean().getContractVer().getBondWaiverAttachments().add(attachment);
 			RequestContext.getCurrentInstance().execute("uploadWaiverDlg.hide()");
 		}
+	}
+	//LOG : 13847, by Fahmi 22032019
+	/**
+	 * The method used to set waiver detail
+	 * 
+	 * @param  
+	 * @throws 
+	 * @see    
+	 */
+	public void setBondWaiverToTable() throws Exception {
+		if (getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverStartDate() == null) {
+			throw new EpException(MessageConst.ERROR_100022,
+					new String[] {ResourceBundleUtils.getMessage("lbl.ct.pb.waiver.start.date", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+		}
+		if (getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverEndDate() == null) {
+			throw new EpException(MessageConst.ERROR_100022,
+					new String[] {ResourceBundleUtils.getMessage("lbl.ct.pb.waiver.end.date", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+		}
+		if (getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getReferenceNo() == null || "".equalsIgnoreCase(getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getReferenceNo())) {
+			throw new EpException(MessageConst.ERROR_100022,
+					new String[] {ResourceBundleUtils.getMessage("lbl.ct.pb.waiver.reference.no", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+		}
+		if (getManagedBean().getCtAttachmentLatest().getFileName() == null || "".equalsIgnoreCase(getManagedBean().getCtAttachmentLatest().getFileName())) {
+			throw new EpException(MessageConst.ERROR_100022,
+					new String[] {ResourceBundleUtils.getMessage("lbl.ct.bond.waiver.letter", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+		}
+		/*
+		 * the value 0 if the argument Date is equal to this Date;
+		 * a value less than 0 if this Date is before the Date argument; 
+		 * a value greater than 0 if this Date is after the Date argument
+		 *   
+		*/
+		if (getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverStartDate()
+				.compareTo(getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverEndDate()) > 0) {
+			// start date large than end date
+			throw new EpException(MessageConst.ERROR_760164);
+		}
+
+		FacesScopes facesScopes = new FacesScopes();
+		//attachment.setFileName("getManagedBean().getWaiverStartDate()");
+		//attachment.setFilePath("TEST 2");
+		getManagedBean().getCtAttachmentLatest().setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+		getManagedBean().getCtAttachmentLatest().setCreatedUser(facesScopes.getUserSessionBean());
+		getManagedBean().getCtAttachmentLatest().setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		getManagedBean().getCtAttachmentLatest().setBrandNew(true);
+		getManagedBean().getCtAttachmentLatest().setAttachmentId(null);
+		
+		getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().setBondWaiverDetaiId(null);
+		getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+		getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().setBrandNew(true);
+		getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().setCtAttachment(new CtAttachment());
+		
+		getManagedBean().getCtAttachment().setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+		getManagedBean().getCtAttachment().setCreatedUser(facesScopes.getUserSessionBean());
+		getManagedBean().getCtAttachment().setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		getManagedBean().getCtAttachment().getCtBondWaiverDetail().setCtAttachment(getManagedBean().getCtAttachment());
+
+		getManagedBean().getCtAttachment().getCtBondWaiverDetail().setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+		getManagedBean().getCtAttachment().getCtBondWaiverDetail().setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		//getManagedBean().getWaiverDetail().add(attachment);
+		getManagedBean().getAttachmentList().add(getManagedBean().getCtAttachment());
+		getManagedBean().setCtAttachment(SerializationUtils.clone(getManagedBean().getCtAttachmentLatest()));
+		
+		//RequestContext.getCurrentInstance().execute("uploadWaiverDlg.hide()");
 	}
 
 	/**
@@ -2227,6 +2312,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * The method used to set the bond waiver flag value.
 	 */
 	public void chkBondWaiverAction(){
+		getManagedBean().setWaiverStartDate(null);
+		getManagedBean().setWaiverEndDate(null);
+		getManagedBean().setReferenceNo(null);
 		if(!getManagedBean().getCtContractAmount().isBondWaived()){
 			getManagedBean().getCtContractAmount().setBondWaived(false);
 			if(getManagedBean().getContractVer().getCtContract().getLatestContractVer() == null){
