@@ -77,6 +77,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
+import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -137,6 +138,8 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
+import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
+import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
@@ -4274,6 +4277,16 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				contractReqDTO.setContractVerId(flRequest.getCtContract().getLatestContractVer().getContractVerId());
 				contractReqDTO.setAsAtDate(new Date());
 				CtContractAmount ctContractAmount = contractSO.retrieveContractAmount(contractReqDTO).getCtContractAmount();
+
+				//#24927
+				AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+				reqDTO.setLoaId(flRequest.getCtContract().getLoa().getLoaId());
+				AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOADtlByLoaId(reqDTO);
+				String qtType = resDTO.getScLoa().getQtType().getParameterCode();
+				
+				if(!(flRequest.getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)
+						&& qtType.equalsIgnoreCase(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7))){//#24927
+					
 				if(ctContractAmount!=null && ctContractAmount.isBondReq() && !ctContractAmount.isBondExempted()){
 					ContractResDTO contractResp=contractSO.validateBondComplete(contractReqDTO);
 					if(!contractResp.isBondComplete()){
@@ -4285,6 +4298,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 							}
 						}
 					}
+				}
 				}
 				validateSuspensionItems(action);
 				validateChargelineLimit(action);
@@ -6154,7 +6168,16 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 		}
 	}
-
+	
+    /**
+	 * Gets the qt award so.
+	 *
+	 * @return the qt award so
+	 */
+	private IQTAwardSO getQtAwardSO() {//#24927
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+	}
 }
 	
 
