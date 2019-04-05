@@ -54,7 +54,7 @@
 			<p:column headerText="#{lbl['lbl.fl.delivery.address']}" style="white-space:normal;text-align:center">
 				<p:commandLink oncomplete="addManualDeliveryAddr.show();"
 					action="#{contractRequestBackingBean.editManualAddress(address)}"
-					update=":form:ptjRadio,:form:chargeOrgProfileNew,:form:chargeOrgProfileNewHidden,:form:addManualDelAddrDialog,@(.orderSummaryChange)"
+					update=":form:chargeOrgProfileNew,:form:chargeOrgProfileNewHidden,:form:addManualDelAddrDialog,@(.orderSummaryChange)"
 					disabled="#{contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
 					style="padding-right:5px" rendered="#{address.receivingGrp!=null}">
 					<p:graphicImage value="/css/images/design/ico-view-edit.png" />
@@ -357,7 +357,8 @@
 		<p:ajax event="close" listener="#{contractRequestBackingBean.closeListener}" update="addManualDelAddrDialog" />
 		<p:panel id="addManualDelAddrPnl">
 			<p:messages id="manualAddrMessages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
-			<table style="width: 100%">
+				<p:panel header="#{lbl['lbl.fl.delivery.address']}"  toggleable="true" id="delAddrDetails">
+				<table style="width: 100%">
 				<tr>
 					<td width="120"><p:outputLabel value="#{lbl['lbl.fl.country']}" /> <h:outputLabel
 							value="*" styleClass="mandatory" /></td>
@@ -466,16 +467,9 @@
 					<td><p:message for="manCity" display="icon" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.person']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="contactPerson"
-							required="#{contractRequestBackingBean.managedBean.required}"
-							label="#{lbl['lbl.fl.supp.contact.person']}" maxlength="85"
-							value="#{contractRequestBackingBean.managedBean.flManualAddress.flAddress.contactPerson}"
-							validatorMessage="#{lbl['lbl.fl.tel.no.msg']}"
-							size="34"></p:inputText>
-						<ac:iconTooltip value="#{lbl['lbl.fl.supp.contact.person']}"/></td>
-					<td><p:message for="contactPerson" display="icon" /></td>	
+					<td></td>
+					<td></td>
+					<td></td>	
 					<td><p:outputLabel value="#{lbl['lbl.fl.postcode']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText id="postCode"
@@ -487,6 +481,51 @@
 							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText></td>
 					<td><p:message for="postCode" display="icon" /></td>
 				</tr>
+				</table>
+				</p:panel>
+				
+				<p:panel header="#{lbl['lbl.fl.goods.receivingdetails']}"  toggleable="true" id="goodsReceivingDetails">
+				<table style="width: 100%">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.person.name']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:inputText id="contactPerson"
+							required="#{contractRequestBackingBean.managedBean.required}"
+							label="#{lbl['lbl.fl.supp.contact.person.name']}" maxlength="85"
+							value="#{contractRequestBackingBean.managedBean.flManualAddress.flAddress.contactPerson}"
+							validatorMessage="#{lbl['lbl.fl.tel.no.msg']}"
+							size="30"></p:inputText>
+						<ac:iconTooltip value="#{lbl['lbl.fl.supp.contact.person.name']}"/></td>
+					<td width="125"><p:message for="contactPerson" display="icon" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.manual.add.delivery.add.new']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" />
+					</td>
+					<td rowspan="5">
+ 						<p:inputTextarea cols="42" rows="9" id="chargeOrgProfileNew"
+						required="#{contractRequestBackingBean.managedBean.required}"
+						onkeyup="limitTextArea(this,500);"
+						onkeydown="limitTextArea(this,500);"
+						autoResize="false"
+						style=" margin-bottom:5px;"
+						disabled="true"
+						label="#{lbl['lbl.fl.manual.add.delivery.add.new']}"
+						readonly="true"
+						value="#{contractRequestBackingBean.managedBean.flManualAddress.flAddress.selectedPtjCodeNameValue}"> 
+						</p:inputTextarea>
+					</td>
+					<td rowspan="5">
+						<p:commandLink id="searchPtjNew"
+						oncomplete="dlgChargedPtjNew.show();" immediate="true"
+						action="#{contractRequestBackingBean.initPMAddressTypeDetails}"
+						process="@this"
+						update=":form:chargeOrgProfileNew,ptjSearchValue,chargeResultPanelNew2,dialogChargedPtjNew,chargeOrgProfileNewHidden"
+						style="padding-left:10px">
+						<p:graphicImage value="/css/images/design/search.png" />
+						</p:commandLink>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.delivery.address.new']}"/>
+						<p:message for="chargeOrgProfileNewHidden" display="icon" />
+					</td>
+				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.email']}" /> <p:outputLabel value="*"
 							styleClass="mandatory" /></td>
@@ -495,28 +534,16 @@
 							label="#{lbl['lbl.fl.email']}" maxlength="80"
 							value="#{contractRequestBackingBean.managedBean.flManualAddress.flAddress.contactEmail}"
 							validatorMessage="#{lbl['lbl.fl.email.msg']}"
-							size="34" ><f:validateRegex disabled="#{contractRequestBackingBean.managedBean.emailValidate}"
+							size="30" ><f:validateRegex disabled="#{contractRequestBackingBean.managedBean.emailValidate}"
        						pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" 
        						onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }"/>
        					</p:inputText>	
        					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.email']}"/>
        				</td>
        				<td><p:message for="email" display="icon" /></td>
-       				<!-- start added for #24353 -->
-					<td><p:outputLabel value="#{lbl['lbl.fl.manual.add.delivery.add.new']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" />
-					</td>
-					<td>
-						<p:selectOneRadio id="ptjRadio"
-							value="#{contractRequestBackingBean.managedBean.flManualAddress.flAddress.selectedPtjCodeRadioBox}">
-							<f:selectItem itemLabel="#{lbl['lbl.btn.ptj.issued']}" itemValue="1"/>
-							<f:selectItem itemLabel="#{lbl['lbl.btn.ptj.others']}" itemValue="2"/>
-							<p:ajax listener="#{contractRequestBackingBean.viewSelectedPTJRadio}"
-								update="chargeOrgProfileNew,searchPtjNew,chargeOrgProfileNewHidden" process="@this" />
-						</p:selectOneRadio>	
-					</td>
+					<td><p:outputLabel value="" /></td>
 					<td></td>
-					<!-- end added for #24353 -->
+					<td></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.telno']}" /> <p:outputLabel
@@ -529,37 +556,12 @@
 						required="#{contractRequestBackingBean.managedBean.required}"/>
 						</td>
 					<td></td>
-										<!-- start added for #24353 -->
-					<td><p:outputLabel value="" /></td>
-					<td>
- 						<p:inputTextarea cols="35" rows="4" id="chargeOrgProfileNew"
-						required="#{contractRequestBackingBean.managedBean.required}"
-						onkeyup="limitTextArea(this,500);"
-						onkeydown="limitTextArea(this,500);"
-						autoResize="false"
-						style=" margin-bottom:5px;"
-						disabled="#{contractRequestBackingBean.managedBean.flManualAddress.flAddress.selectedPtjCodeRadioBox==1}"
-						label="#{lbl['lbl.fl.manual.add.delivery.add.new']}"
-						readonly="true"
-						value="#{contractRequestBackingBean.managedBean.flManualAddress.flAddress.selectedPtjCodeNameValue}"> 
-						</p:inputTextarea>
-					</td>
-					<td>
-						<p:commandLink id="searchPtjNew"
-						oncomplete="dlgChargedPtjNew.show();" immediate="true"
-						action="#{contractRequestBackingBean.resetPMAddressTypeDetails}"
-						update=":form:chargeOrgProfileNew,chargeResultPanelNew2,dialogChargedPtjNew,chargeOrgProfileNewHidden"
-						disabled="#{contractRequestBackingBean.managedBean.flManualAddress.flAddress.selectedPtjCodeRadioBox==1}"
-						style="padding-left:10px">
-						<p:graphicImage value="/css/images/design/search.png" />
-						</p:commandLink>
-						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.delivery.address.new']}"/>
-						<p:message for="chargeOrgProfileNewHidden" display="icon" />
-					</td>
-					<!-- end added for #24353 -->
+					<td></td>
+					<td></td>
+					<td></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.fl.faxno']}" /></td>
+       				<td><p:outputLabel value="#{lbl['lbl.fl.faxno']}" /></td>
 					<td class="tdContent"><ac:phone id="faxNo" isMobile="false"
 							label="#{lbl['lbl.fl.faxno']}"
 							countryCode="#{contractRequestBackingBean.managedBean.flManualAddress.flAddress.contactFaxCountry}"
@@ -567,6 +569,9 @@
 							number="#{contractRequestBackingBean.managedBean.flManualAddress.flAddress.contactFaxNo}"
 							validatorMessage="#{lbl['lbl.fl.faxno']} - #{lbl['lbl.fl.invalidNo']}" /></td>
 					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>				
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.mobile']}" /></td>
@@ -577,6 +582,12 @@
 							number="#{contractRequestBackingBean.managedBean.flManualAddress.flAddress.contactMobileNo}"
 							validatorMessage="#{lbl['lbl.fl.mobile']} - #{lbl['lbl.fl.invalidNo']}" /></td>
 					<td></td>
+       				<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
 					<td></td>
 					<td><p:inputText type="hidden" id="chargeOrgProfileNewHidden"
 							required="#{contractRequestBackingBean.managedBean.required}"
@@ -584,8 +595,12 @@
 							value="#{contractRequestBackingBean.managedBean.flManualAddress.flAddress.selectedPtjCodeNameValue}"
 							size="34"></p:inputText>
 					</td>
+       				<td></td>
+					<td></td>
+					<td></td>
 				</tr>
-			</table>
+				</table>
+				</p:panel>
 		</p:panel>
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
@@ -951,8 +966,8 @@
             	      <p:ajax process="@this"/>
                  </p:selectOneMenu> 
 				 <p:spacer height="1"/>
-                 <p:inputText id="ptjCodeVaueNew2"  style="width:300px;" 
-                     value="#{contractRequestBackingBean.managedBean.ptjCodeNameSearchValuesNew}" >
+                 <p:inputText id="ptjSearchValue"  style="width:300px;" 
+                     value="#{contractRequestBackingBean.managedBean.ptjCodeNameSearchValuesNew}">
                      <p:ajax process="@this"/></p:inputText>
 			  </h:panelGrid>
 			  </p:panel>
