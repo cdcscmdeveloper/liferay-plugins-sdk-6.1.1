@@ -323,4 +323,25 @@
 				</tr>
 			</table>
 		</p:panel>
+
+	<!-- #24969 -->
+	<p:dialog id="popUpFactoredDlg" widgetVar="popUpFactoredDlg"
+		header="#{lbl['lbl.fl.po.factored.header']}" resizable="false"
+		closable="false" modal="true">
+		<p:panel id="popUpFactoredDlgId">
+			<table>
+				<tr>
+					<td><h:outputText value="#{lbl['lbl.fl.po.factored.details']}"
+							escape="false" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1px" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.close']}" type="button"
+					ajax="false" onclick="popUpFactoredDlg.hide();" />
+			</div>
+		</p:panel>
+	</p:dialog>
+
 </ui:composition>
+
