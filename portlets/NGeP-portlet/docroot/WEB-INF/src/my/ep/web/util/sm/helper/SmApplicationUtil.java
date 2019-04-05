@@ -711,9 +711,9 @@ public class SmApplicationUtil {
 			return true;
 		} else if (businessTypeVal
 				.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT)
-				|| (businessTypeVal
-						.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT) && shrHldrs
-						.size() >= 1)
+				//|| (businessTypeVal
+						//.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT) && shrHldrs
+						//.size() >= 1) change by fahmi, log : 23858 13/03/2019
 				|| (businessTypeVal
 						.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT) && shrHldrs
 						.size() >= 20)) {
@@ -1868,7 +1868,7 @@ public class SmApplicationUtil {
 			SmApplicationManagedBean managedBean, int currentTab,
 			String currentPageType) {
 		boolean validCount = true;
-		if (managedBean.getBusinessTypeVal() != null
+		/*if (managedBean.getBusinessTypeVal() != null
 				&& (managedBean.getBusinessTypeVal()
 						.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT))) {
 			if (EntityHelper.isCollectionEmpty(managedBean
@@ -1881,7 +1881,7 @@ public class SmApplicationUtil {
 				}
 				throw new EpException(MessageConst.ERROR_722507);
 			}
-		} else if (managedBean.getBusinessTypeVal() != null
+		} else  -- change by fahmi, log : 23858 13/03/2019 */ if (managedBean.getBusinessTypeVal() != null
 				&& (managedBean
 						.getBusinessTypeVal()
 						.equalsIgnoreCase(
@@ -10391,7 +10391,7 @@ public class SmApplicationUtil {
 			bean.setValidEquityLimit(SmApplicationUtil.manageEquityLimit(shr,
 					bean.getBusinessTypeVal(), bean.getSmapplShareHolders()));
 			if (!bean.isValidEquityLimit()) {
-				if (bean.getBusinessTypeVal()
+				/*if (bean.getBusinessTypeVal()
 						.equalsIgnoreCase(
 								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT)) {
 					throw new EpException(
@@ -10399,14 +10399,14 @@ public class SmApplicationUtil {
 							new String[] { String.valueOf(SmRuleHelper
 									.getInstance()
 									.getMaxEquityOwnerCountForROBIndividual()) });
-				} else {
+				} else {*/
 					throw new EpException(
 							MessageConst.ERROR_722547,
 							new String[] { String
 									.valueOf(SmRuleHelper
 											.getInstance()
 											.getMaxEquityOwnerCountForOtherThanROBIndividaul()) });
-				}
+				//}change by fahmi, log : 23858 13/03/2019
 
 			}
 			shr.setEquityOwner(true);
@@ -12576,17 +12576,22 @@ public class SmApplicationUtil {
 	public static SmAppl getLatestRejectedApplIdBySuppIdAndApplType(
 			Long supplierId, String applType) {
 		SmAppl smAppl = null;
-		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-		reqDTO.setSupplierId(supplierId);
-		reqDTO.setAppType(applType);
-		Long applId = SmServiceLookup.getMofRegistrationSO()
-				.retrieveLastRejectedApplIdByApplType(reqDTO).getApplId();
-		if (applId != null) {
-			reqDTO = new MofRegistrationReqDTO();
-			reqDTO.setApplId(applId);
-			smAppl = SmServiceLookup.getMofRegistrationSO()
-					.retrieveSmApplicationDetailsById(reqDTO).getSmAppl();
+		try{
+			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+			reqDTO.setSupplierId(supplierId);
+			reqDTO.setAppType(applType);
+			Long applId = SmServiceLookup.getMofRegistrationSO()
+					.retrieveLastRejectedApplIdByApplType(reqDTO).getApplId();
+			if (applId != null) {
+				reqDTO = new MofRegistrationReqDTO();
+				reqDTO.setApplId(applId);
+				smAppl = SmServiceLookup.getMofRegistrationSO()
+						.retrieveSmApplicationDetailsById(reqDTO).getSmAppl();
+			}
+		}catch(Exception e){
+			e.printStackTrace();
 		}
+		
 		return smAppl;
 	}
 
