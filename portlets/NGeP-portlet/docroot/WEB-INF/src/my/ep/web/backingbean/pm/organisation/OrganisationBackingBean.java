@@ -263,7 +263,7 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 		}
 		getManagedBean().setShowParentMsg(true);
 		RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
-		resetAddressType();
+//		resetAddressType();
 		return NAV_TO_MAINTAIN;
 		
 	}
@@ -1023,7 +1023,7 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 		} finally {
 			orgProfileSO = null;
 		}
-		resetAddressType();
+//		resetAddressType();
 	
 		return redirectUrl;
 
