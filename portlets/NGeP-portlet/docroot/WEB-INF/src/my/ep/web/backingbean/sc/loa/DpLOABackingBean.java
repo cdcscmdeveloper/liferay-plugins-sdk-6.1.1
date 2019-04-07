@@ -4,8 +4,11 @@
 package my.ep.web.backingbean.sc.loa;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -23,6 +26,10 @@ import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
+import my.ep.persistence.entity.sc.directpurchase.ScQuote;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
+import my.ep.util.EpPropertiesUtils;
+import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.loa.DpLOAManagedBean;
@@ -44,6 +51,9 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 	private static final long serialVersionUID = 1L;
 	/** The log. */
 	public static Logger log = EpLogger.getLogger(DpLOABackingBean.class);
+	
+	/** The Flag */
+	private boolean sqExpiredMessageFlag = false;
 
 	/**
 	 * Instantiates a new dp loa backing bean.
@@ -82,6 +92,14 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 			retrieveLOAList(sourceId, true);
 
 			// retrieveLOAList(2122L);
+			
+			//Enhancement #12177			
+			addButton();
+			if(sqExpiredMessageFlag){
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+						MessageUtils.getMessage(MessageConst.ERROR_760481, 
+								null,MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			}
 
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
@@ -197,6 +215,12 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 							ParameterConst.DOCTYPE_SIMPLE_QUOTE,
 							getManagedBean().getScRequestNote().getQuote().getQuoteNo(), isAcknowledgeRequired);
 				}
+				//Enhancement #12177
+				if(BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)){
+					successMessage(MessageConst.INFO_700010, ParameterTypeConst.DOCUMENT_TYPES,
+							ParameterConst.DOCTYPE_REQUEST_NOTE,
+							requestNoteNo, Boolean.TRUE);
+				}
 				renewSesionObject();
 			}
 		} finally {
@@ -204,5 +228,55 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 		}
 
 		return null;
+	}
+	
+	/**
+	 * Add/display only cancel/reject button if SQ not valid 
+	 */
+	public void addButton(){
+		Long currentStatusId = getManagedBean().getCurrentStatusId();		
+		//checking if SQ still valid, if not valid thus cancel/reject button will be added
+		if(!isSqStillValid()){										
+			String[] addCancel = new String[]{BpmOutcomeConst.BPM_CANCEL};    		
+			getManagedBean().setOutComes(addCancel);
+			getManagedBean().setShowBPMButtons(true);									
+		}
+											        
+	}
+	
+	/**
+	 * Check either SQ is valid or not (SQ only valid for 60 days after it closing date)
+	 */
+	public boolean isSqStillValid(){		
+		
+		ScRequestNote requestNote = getManagedBean().getScRequestNote();
+		Boolean validDate = true;	
+		Long currentStatusId = getManagedBean().getCurrentStatusId();
+		
+		if(requestNote != null){
+			ScQuote scQuote = requestNote.getQuote();
+			
+			EpPropertiesUtils prop = EpPropertiesUtils.getInstance();
+			Integer sqTimeValidity = Integer.valueOf(prop.getProperty("sqTimeValidity"));
+			
+			if(scQuote != null){
+				
+				Date currentDate = new Date();
+				Date closingDate = scQuote.getEndDate();
+				
+				Calendar cal = Calendar.getInstance();
+				cal.clear(); 
+				cal.setTime(closingDate);
+				cal.add(Calendar.HOUR, sqTimeValidity); //add 60 days to closing/end date
+				
+				if(currentStatusId.equals(QTStatusConst.LOA_PENDING_SUBMISSION)){
+					if(currentDate.compareTo(cal.getTime()) >= 0){
+						validDate = false;
+						sqExpiredMessageFlag = true;
+					}
+				}	
+			}						
+		}	
+		return validDate;
 	}
 }
