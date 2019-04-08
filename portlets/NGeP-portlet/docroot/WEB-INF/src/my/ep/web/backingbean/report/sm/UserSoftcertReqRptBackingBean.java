@@ -187,7 +187,10 @@ public class UserSoftcertReqRptBackingBean extends
 	private boolean showCertProvider() {
 
 		FacesScopes sc = new FacesScopes();
-		if (sc.getUserRoleList().size() == 1 && sc.hasRoleUser(SupplierManagementConst.SUPPLIER_ADMIN)) {
+		if (sc.getUserRoleList().size() == 1
+				&& (sc.hasRoleUser(SupplierManagementConst.SUPPLIER_ADMIN)
+						|| sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_ADMIN) || sc
+							.hasRoleUser(SupplierManagementConst.BASIC_SUPPLIER_ADMIN))) {
 			return false;
 		}
 		return true;
