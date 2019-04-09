@@ -35,6 +35,7 @@ import my.ep.persistence.entity.pm.common.PmAccessApplDoc;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmGstSupplierDoc;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSoftcertDoc;
@@ -54,6 +55,7 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.vo.SmGstBranchVO;
 import my.ep.web.vo.SoftcertUploadSuppDocVO;
 
 import org.apache.commons.lang3.StringUtils;
@@ -292,12 +294,51 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	}
 	
 	//17003		
-	public void assignSelectedSmSoftcertDocFile(SmSoftcertDoc suppDoc) {
-		SmSoftcertDocFile doc = (SmSoftcertDocFile) EntityHelper
-				.getEntityBySinglePropertyFromList(suppDoc.getSoftcertDocId(), suppDoc.getSmSofcertDocFiles(), null);		
-		getManagedBean().setSelectedSmSoftcertDocFile(doc);
-		log.info("assignSelectedSmSoftcertDocFile");
-//		RequestContext.getCurrentInstance().execute("delFileDlg.show()");
+	public void assignSelectedSmSoftcertDocFile(SmPersonnel smPersonnel,SmSoftcertDoc doc, int index) {
+		List<SmSoftcertDoc> softcertDocList = new ArrayList<SmSoftcertDoc>();
+		softcertDocList.add(doc);
+		SoftcertUploadSuppDocVO selectedSuppDoc = new SoftcertUploadSuppDocVO();
+		selectedSuppDoc.setPersonnel(smPersonnel);
+		selectedSuppDoc.setSuppDocList(softcertDocList);
+		this.getManagedBean().setAttachedFileIndex(index);
+		getManagedBean().setSelectedSuppDoc(selectedSuppDoc);
+	}
+	
+	public void deleteSupDocFileAttachment() {
+		if (getManagedBean().getSelectedSuppDoc() != null
+				&& getManagedBean().getSelectedSuppDoc().getSuppDocList() != null
+				&& !getManagedBean().getSelectedSuppDoc().getSuppDocList()
+						.isEmpty()) {
+
+			SoftcertUploadSuppDocVO selectedSuppDocVO = getManagedBean()
+					.getSelectedSuppDoc();
+
+			// construct file path
+			String filePath = Calendar.getInstance().get(Calendar.YEAR)
+					+ "/SM/"
+					+ "SOFTCERT/"
+					+ selectedSuppDocVO.getPersonnel().getPmUser()
+							.getLoginId() + "/";
+
+			// init suppDocFile (currently only default one file)
+			SmSoftcertDocFile docFile = new SmSoftcertDocFile();
+			docFile.setSmSoftcertDoc(null);
+			docFile.setFileName(StringUtils.EMPTY);
+			selectedSuppDocVO
+					.getSuppDocList()
+					.get(0)
+					.setSmSofcertDocFiles(
+							new ArrayList<SmSoftcertDocFile>());
+			selectedSuppDocVO.getSuppDocList().get(0)
+					.getSmSofcertDocFiles().add(docFile);
+
+			// set selected doc to main list
+			setSelectedSuppDocToMainList();
+
+			// set empty value to deleted file			
+			SmCommonUtil.deleteUpload(filePath,
+					docFile.getFileName());
+		}
 	}
 	
 	/**
@@ -314,6 +355,9 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					if(smSoftcertDocFile.getSmSoftcertDoc().getSoftcertDocId().equals(getManagedBean().getSelectedSmSoftcertDocFile().getSmSoftcertDoc().getSoftcertDocId())){
 						smSoftcertDocFile.setFileName(StringUtils.EMPTY);
 						smSoftcertDocFile.setFilePath(StringUtils.EMPTY);
+						deleteselectedList(getManagedBean().getSmSoftcertDocFileList());
+//						deleteFiles(smSoftcertDocFile.getFilePath(),smSoftcertDocFile.getFileName(),smSoftcertDocFile.getFileName());
+											
 						break;
 					}
 				}	

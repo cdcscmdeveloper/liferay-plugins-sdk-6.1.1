@@ -3316,6 +3316,35 @@ public class SmCommonUtil {
 		}
 
 	}
+	
+	public static void deleteUpload(String uploadDir,
+			String fileName) {
+
+		String finalDir = EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+		finalDir += "/" + uploadDir;
+
+		File dir = new File(finalDir);
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
+
+		try {
+			fileName = StringUtils.replace(fileName, " ", "-");
+
+			BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(
+					new FileOutputStream(finalDir + "/" + fileName));
+
+			
+
+			if (bufferedOutputStream != null) {
+				bufferedOutputStream.flush();
+				bufferedOutputStream.close();
+			}
+
+		} catch (Exception e) { }
+
+	}
 
 	public static String getUploadFilePath(String path) {
 		return Calendar.getInstance().get(Calendar.YEAR) + path;
