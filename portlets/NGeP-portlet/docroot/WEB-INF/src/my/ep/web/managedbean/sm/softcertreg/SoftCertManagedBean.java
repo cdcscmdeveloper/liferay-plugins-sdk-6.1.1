@@ -13,13 +13,16 @@ import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.persistence.entity.pm.common.PmAccessApplDoc;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmSoftcertDoc;
 import my.ep.persistence.entity.sm.SmSoftcertDocFile;
 import my.ep.web.backingbean.pm.cc.SoftCertMaintenanceBackingBean;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.vo.SmGstBranchVO;
 import my.ep.web.vo.SoftcertUploadSuppDocVO;
 
 import com.liferay.portal.model.Role;
@@ -68,12 +71,15 @@ public class SoftCertManagedBean extends BaseManagedBean {
 	private PmDigiSign digiSign;
 	private String gstPercentageLabel;
 	private SmAppl smAppl;
+	
 	private SmSoftcertDocFile deleteSuppDoc;
 	private int attachedFileIndex;
 	private List<SmSoftcertDocFile> attachmentList;
 	private List<SmSoftcertDocFile> deleteAttachments;
 	private SmSoftcertDocFile selectedSmSoftcertDocFile;
 	private List<SmSoftcertDocFile> smSoftcertDocFileList;
+	
+	private SmSoftcertDoc supportDoc;
 
 	@ManagedProperty(value = "#{spkiBackingBean}")
 	private SpkiBackingBean spkiBackingBean;
@@ -464,6 +470,14 @@ public class SoftCertManagedBean extends BaseManagedBean {
 
 	public void setSmSoftcertDocFileList(List<SmSoftcertDocFile> smSoftcertDocFileList) {
 		this.smSoftcertDocFileList = smSoftcertDocFileList;
+	}
+
+	public SmSoftcertDoc getSupportDoc() {
+		return supportDoc;
+	}
+
+	public void setSupportDoc(SmSoftcertDoc supportDoc) {
+		this.supportDoc = supportDoc;
 	}
 
 }
