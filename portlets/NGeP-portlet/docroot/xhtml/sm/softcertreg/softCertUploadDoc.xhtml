@@ -95,8 +95,8 @@
 							<p:outputLabel escape="false" value="#{lbl['tt.sm.softcert.upload.suppdoc']}" />
 						</p:tooltip>
 					</f:facet>
-					<table width="100%">
-						<ui:repeat var="suppDoc" rowIndexVar="attachFileIndex" value="#{upload.suppDocList}" varStatus="status">
+					<table width="100%">											
+						<ui:repeat var="suppDoc" rowIndexVar="attachFileIndex" columns="2" value="#{upload.suppDocList}" varStatus="status">
 							<tr>
 								<td style="width: 5% !important;vertical-align: baseline !important;border-style: none !important;">
 									<h:outputText value="#{status.index + 1})"  />
@@ -108,12 +108,15 @@
 										rendered="#{not empty suppDoc.smSofcertDocFiles and not empty suppDoc.smSofcertDocFiles[0].fileName}">
 										<p:fileDownload value="#{softCertBackingBean.commonDownload(suppDoc.smSofcertDocFiles[0].filePath,suppDoc.smSofcertDocFiles[0].fileName,suppDoc.smSofcertDocFiles[0].fileName)}" />
 									</p:commandLink>
-									<p:spacer width="20" />					
-									<p:commandLink rendered="#{!empty suppDoc.smSofcertDocFiles[0].fileName}"										 
-										action="#{softCertBackingBean.assignSelectedSmSoftcertDocFile(suppDoc)}"
-										oncomplete="delFileDlg.show()" process="@this" partialSubmit="true" update=":form" >
-						   				<p:graphicImage value="/css/images/design/trash.png" />
-				   					</p:commandLink>
+									<p:spacer width="20" />	
+									
+									<p:commandLink id="deleteSupDocId"
+										rendered="#{!empty suppDoc.smSofcertDocFiles[0].fileName}"
+										oncomplete="confirmDeleteSupDocDialog.show()" update="@form"
+										action="#{softCertBackingBean.assignSelectedSmSoftcertDocFile(upload.personnel,suppDoc,attachFileIndex)}">
+										&#160;
+										<p:graphicImage value="/css/images/design/trash.png" />
+									</p:commandLink>
 							</td>
 							</tr>
 						</ui:repeat>
@@ -209,23 +212,21 @@
 				uploadLabel="#{lbl['lbl.btn.upload']}"  
 				label="#{lbl['lbl.btn.choose']}" 
 				cancelLabel="#{lbl['lbl.btn.cancel']}"
-				showButtons="false"
+				showButtons="false" 
 				widgetVar="uploadWV" />
 		</p:dialog>
-	
-		<p:confirmDialog message="#{lbl['lbl.sm.upload.delete.message']}"
-			severity="alert" id="delFileDlg" widgetVar="delFileDlg" closable="true"
-			appendToBody="true" header="#{lbl['lbl.sm.upload.delete.confirm.header']}">
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
-					partialSubmit="true"
-					action="#{softCertBackingBean.deleteAttachment()}"
-					oncomplete="delFileDlg.hide();"
-					update="@this"/>
+		
+		<p:confirmDialog id="confirmDeleteSupDocDialog" closable="true"
+			message="#{lbl['lbl.sm.upload.delete.message']}"
+			header="#{lbl['lbl.sm.upload.delete.confirm.header']}"
+			severity="alert" widgetVar="confirmDeleteSupDocDialog">
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.delete']}" 
+					action="#{softCertBackingBean.deleteSupDocFileAttachment}" update="@form"
+					partialSubmit="true" onstart="blockWidget.show()"
+					oncomplete="blockWidget.hide()" process="@this" />
 				<p:commandButton value="#{lbl['lbl.btn.no']}"
-					onclick="delFileDlg.hide();"
-					type="button"
-					process="@this"/>
+					onclick="confirmDeleteSupDocDialog.hide();" />
 			</div>
 		</p:confirmDialog>
 

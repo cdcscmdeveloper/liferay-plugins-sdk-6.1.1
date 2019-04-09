@@ -142,13 +142,14 @@
 				</p:commandLink>
 				<!-- harris -->
 				<p:commandLink id="deleteSupDocId"
-					rendered="#{!empty table.smApplDocFiles[0].fileName}"
+					rendered="#{!empty backingBean.managedBean.getSupportDoc().getSmApplDocFiles().get(0).getFileName()}"
 					style="white-space: normal !important;" partialSubmit="true"
 					process="@this"
 					action="#{backingBean.onDeleteSupDocFileAttachment(table)}"
 					update="@form" onstart="blockWidget.show()"
-					oncomplete="blockWidget.hide()">&#160;
-								<p:graphicImage value="/css/images/design/trash.png" />
+					oncomplete="blockWidget.hide()">
+					&#160;
+							<p:graphicImage value="/css/images/design/trash.png" />
 				</p:commandLink>
 
 			</p:column>
