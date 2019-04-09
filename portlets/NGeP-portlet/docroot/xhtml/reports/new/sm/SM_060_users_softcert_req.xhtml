@@ -144,12 +144,13 @@
 			</td>
 			
 			<td class="tdTitle">
-				<p:outputLabel value="#{lbl['lbl.sm.softcert.provider']}"  />
+				<p:outputLabel value="#{lbl['lbl.sm.softcert.provider']}" 
+				  rendered="#{userSoftcertReqRptBB.managedBean.showCertProvider}" />
 			</td>
 			<td class="tdContent">
 				<p:selectOneMenu id="certProvider"
-					value="#{userSoftcertReqRptBB.managedBean.certProvider}"
-					rendered="#{userSoftcertReqRptBB.managedBean.showCertProvider}">
+				  value="#{userSoftcertReqRptBB.managedBean.certProvider}"
+				  rendered="#{userSoftcertReqRptBB.managedBean.showCertProvider}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="" />
 					<f:selectItem itemLabel="Digi Cert"
 						itemValue="#{SmReportConst.providerDigiCert}" />

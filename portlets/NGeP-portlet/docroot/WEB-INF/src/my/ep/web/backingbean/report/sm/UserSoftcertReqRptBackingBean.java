@@ -112,7 +112,7 @@ public class UserSoftcertReqRptBackingBean extends
 
 	/**
 	 * Cert application type change. Event handle change the type of date
-	 * selectable and hides the application status if revoke is chosen.
+	 * selectable and disables the application status if revoke is chosen.
 	 * 
 	 * @param event
 	 */
