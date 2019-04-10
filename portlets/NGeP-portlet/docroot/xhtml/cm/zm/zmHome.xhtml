@@ -8,7 +8,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
 	<ui:define name="contentSection">
@@ -25,11 +26,38 @@
 
 
 		<h:panelGrid id="zoneTable" width="100%">
+		<p:remoteCommand name="updateSelectAll" update="form:zoneDetailsDataTable"/>
 			<p:dataTable id="zoneDetailsDataTable"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{zoneMaintenanceBackingBean.managedBean.zoneTrees}"
-				var="zoneTree" rowIndexVar="index">
-				<p:column headerText="#{lbl['lbl.cm.zm.details']}">
+				var="zoneTree" rowIndexVar="index" rows="10"
+				widgetVar="wv">
+				<ac:paginator for="zoneDetailsDataTable"></ac:paginator>
+				<p:ajax event="page"></p:ajax>
+					
+				
+			<p:column style="text-align: left;width:2%;">
+				<f:facet name="header">
+					<ui:remove>
+					<p:selectBooleanCheckbox id="selectAllCheckBoxId" disabled="#{!zoneMaintenanceBackingBean.managedBean.allZoneSelectable}"
+						value="#{zoneMaintenanceBackingBean.managedBean.allZoneSelected}">
+						<p:ajax event="change" listener="#{zoneMaintenanceBackingBean.selectAllZone(null)}"
+							update="@(.ui-chkbox[id$=singleCheckBoxID])"></p:ajax>
+					</p:selectBooleanCheckbox>
+					</ui:remove>
+				</f:facet>
+				<p:selectBooleanCheckbox id="singleCheckBoxID" disabled="#{!zoneMaintenanceBackingBean.managedBean.cmSupplierZoneList.get(index).selectable}"
+					value="#{zoneMaintenanceBackingBean.managedBean.cmSupplierZoneList.get(index).selected}">
+					<p:ajax event="change" listener="#{zoneMaintenanceBackingBean.selectSingleZone(index)}"
+						update=":form:deleteBtnId, @(.ui-chkbox[id$=selectAllCheckBoxId])  "></p:ajax>
+				</p:selectBooleanCheckbox>
+				<p:tooltip id="sCBoxTooltipId"  rendered="#{!zoneMaintenanceBackingBean.managedBean.cmSupplierZoneList.get(index).selectable}" for="singleCheckBoxID" value="#{lbl['lbl.cm.zm.unabletodelete']}" position="right"/>
+			</p:column>
+				
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.cm.zm.details']}" />
+					</f:facet>
 					<p:tree id="treeZoneDetails" value="#{zoneTree}" var="zN">
 						<p:treeNode type="cmSupplierZone">
 							<h:outputText value="#{zN.locationName}" />
@@ -45,8 +73,10 @@
 						</p:treeNode>
 					</p:tree>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.cm.action']}">
-
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.cm.action']}" />
+					</f:facet>
 					<p:commandLink
 						actionListener="#{zoneMaintenanceBackingBean.editZone(zoneTree,index)}"
 						process="@this" update=":form:ZL" oncomplete="ZL.show();">
@@ -54,12 +84,12 @@
 							value="/css/images/design/edit.png"
 							title="#{lbl['lbl.cm.zm.edit']}" />
 					</p:commandLink>
-					<p:commandLink process="@this"
-						update="zoneDetailsDataTable, @([id$=zmMsgs])"
-						actionListener="#{zoneMaintenanceBackingBean.deleteTreeNodes(zoneTree)}">
+					<ui:remove>
+						<p:commandLink process="@this" update="zoneDetailsDataTable, @([id$=zmMsgs])" actionListener="#{zoneMaintenanceBackingBean.deleteTreeNodes(zoneTree)}">
 						<p:graphicImage value="/css/images/design/trash.png"
 							title="#{lbl['lbl.btn.delete']}" />
-					</p:commandLink>
+						</p:commandLink>
+					</ui:remove>
 				</p:column>
 			</p:dataTable>
 		</h:panelGrid>
@@ -68,8 +98,23 @@
 			<p:commandButton value="#{lbl['lbl.cm.zm.btn.add']}" process="@this"
 				update=":form:ZL" partialSubmit="true" oncomplete="ZL.show();"
 				actionListener="#{zoneMaintenanceBackingBean.addNewZone}" />
+			<p:commandButton id="deleteBtnId" value="#{lbl['lbl.cm.zm.btn.delete']}" disabled="#{zoneMaintenanceBackingBean.isDeleteListEmpty()}" actionListener="#{zoneMaintenanceBackingBean.deleteSelectedZones()}" update=":form:deleteZoneConfirmationId"/>
 		</div>
-
+		<p:confirmDialog id="deleteZoneConfirmationId" message="#{lbl['lbl.cm.zm.dialog.confirm.delete']}" header="#{lbl['lbl.cm.dialog.cofirm.header']}" widgetVar="deleteConfirmation">
+				<div align="left" style="margin-top:-28px !important; margin-left: 10% !important; position: relative; z-index: 99;">
+					<ul>
+						<ui:repeat value="#{zoneMaintenanceBackingBean.managedBean.getTempDeletedSupplierZoneList()}" var="zone">
+							<li><h:outputText value="#{zone.suppZoneName}"/></li>
+						</ui:repeat>
+					</ul>
+				</div>
+				<div align="right">
+					<p:commandButton id="confirmID" process="@this" update="zoneDetailsDataTable"   actionListener="#{zoneMaintenanceBackingBean.deleteTreeNodes()}" value="#{lbl['lbl.cm.dialog.cofirm.yes']}" />
+					<p:commandButton id="declineID"
+						value="#{lbl['lbl.cm.dialog.cofirm.no']}"
+						onclick="deleteConfirmation.hide()" />
+				</div>
+		</p:confirmDialog>
 		<p:dialog id="ZL" widgetVar="ZL" width="450px"
 			header="#{zoneMaintenanceBackingBean.managedBean.editMode}"
 			modal="true" height="70%" style="position: absolute !important;">
