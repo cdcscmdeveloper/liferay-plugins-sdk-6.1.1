@@ -26,10 +26,10 @@
 			    <h:outputText value="#{adminProfile.identificationNo}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.profiles.authorisation.role']}" style="width :20%;white-space : normal">
-			    <h:outputText value="#{adminProfile.email}" /> 
+			    <h:outputText value="#{profilePersonalizationBackingBean.getRoleDescByRoleCode(adminProfile.role)}" /> 
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.email']}" style="width :10%;white-space : normal">
-				 <h:outputText value="#{adminProfile.role}" />
+				 <h:outputText value="#{adminProfile.email}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.telno']}" style="width :10%;white-space : normal">
 				 <h:outputText value="#{adminProfile.phoneNo}" />
