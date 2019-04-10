@@ -152,7 +152,7 @@
 					<p:graphicImage value="/css/images/design/add.png"></p:graphicImage>
 				</p:commandLink>
 				<p:commandLink title="#{lbl['lbl.btn.delete']}" id="zTDeleteLink"
-					rendered="#{tier.showFlag}"
+					rendered="#{tier.showFlag || catalogueBackingBean.isLastPricingTier(null, null, tier, null, rowIndex)}"
 					action="#{catalogueBackingBean.setZonalRowIndex}"
 					oncomplete="confirmationZonal.show()"
 					update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalTierPricingsId">
