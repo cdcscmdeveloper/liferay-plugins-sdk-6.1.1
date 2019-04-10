@@ -100,6 +100,7 @@ import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
+import my.ep.helper.Paginator;
 import my.ep.persistence.entity.cm.catalog.CmBrand;
 import my.ep.persistence.entity.cm.catalog.CmColor;
 import my.ep.persistence.entity.cm.catalog.CmImage;
@@ -405,10 +406,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				.getInstance().getServiceObject("cm", ICatalogueSO.class);
 		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", ICodificationSO.class);
-
 		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
 				.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
-
 
 		SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
@@ -1275,6 +1274,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			this.getManagedBean().setDisplayCatalogue(true);
 			updateStandardErrorDialog(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing());
 			this.getManagedBean().setPricingTabIndex(0);
+			this.getManagedBean().getSelectedMaintainItem().getCmItemRejectReasons();
+
 
 			//		} catch (Exception e) {
 			//			e.printStackTrace();
@@ -1656,6 +1657,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			for (CmItemRejectReason remark : catResDTO.getSupplierItem().getCmItemRejectReasons()) {
 
 				userReqDTO.setUserId(remark.getChangedBy());
+				log.info("remark.get created at ====> " + remark.getCreatedDate());
 				log.info("remark.getChangedBy()" + remark.getChangedBy());
 				UserResDTO userResDTO = userSO.retrieveUserDetails(userReqDTO);
 				log.info("userResDTO.getPmUser().getUserName():"
@@ -1666,7 +1668,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			this.getManagedBean().setTabActiveIndex(3);
 			this.getManagedBean().setDisplayCatalogue(true);
 			updateStandardErrorDialog(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing());
-
+			getGroupedRejectReasons();
 			/*} catch (Exception e) {
 			e.printStackTrace();*/
 		}finally {
@@ -6255,19 +6257,18 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		log.info("tierList:" + tierList.size());
 
 		for (CmTierPricing cmPricing : tierList) {
-			//log.info("cmPricing.getStand_group_id()" + cmPricing.getStand_group_id());
-			//log.info("tierList.get(this.getManagedBean().getTierRowIndex()) "+ cmPricing.get(this.getManagedBean().getTierRowIndex()));
-			//if (cmPricing.getStand_group_id().compareTo(tierList.get(this.getManagedBean().getTierRowIndex()).getStand_group_id()) == 0) {
-			//	dataList.add(cmPricing);
-			//}
-			if(cmPricing.getStand_group_id()!=null)
-				if (cmPricing.getStand_group_id().compareTo(tierList.get(this.getManagedBean().getTierRowIndex()).getStand_group_id()) == 0) {
-					dataList.add(cmPricing);
+			if(cmPricing.getStand_group_id()!=null){ 
+				if(tierList.get(this.getManagedBean().getTierRowIndex()).isShowFlag()){
+					if (cmPricing.getStand_group_id().compareTo(tierList.get(this.getManagedBean().getTierRowIndex()).getStand_group_id()) == 0) {
+						dataList.add(cmPricing);
+					}
 				}
+			}
 		}
 
-		if(dataList.size()==0)
+		if(dataList.size()==0 && !(tierList.get(this.getManagedBean().getTierRowIndex()).isShowFlag())){
 			dataList.add(tierList.get(this.getManagedBean().getTierRowIndex()));
+		}
 
 		List<CmPromotionTierPricing> promotionTierList = this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings();
 		List<CmPromotionTierPricing> childList = new ArrayList<CmPromotionTierPricing>();
@@ -6290,7 +6291,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			this.getManagedBean().getSelectedMaintainItem().getCmTierPricings()
 			.remove(price);
 		}
-
+		log.info("this.getManagedBean().getSelectedMaintainItem().getCmTierPricings()" + this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().size());
 	}
 
 	/**
@@ -6304,16 +6305,20 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		List<CmPromotionTierPricing> promotionTierList = this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings();
 		List<CmPromotionTierPricing> dataList = new ArrayList<CmPromotionTierPricing>();
 		log.info("tierList:" + promotionTierList.size());
-
+		boolean isShowFlag = promotionTierList.get(index).isShowFlag();
 		for (CmPromotionTierPricing cmPricing : promotionTierList) {
-			if(cmPricing.getPromo_group_id()!=null)
-				if (cmPricing.getPromo_group_id().compareTo(promotionTierList.get(index).getPromo_group_id()) == 0) {
-					dataList.add(cmPricing);
+			if(isShowFlag){
+				if(cmPricing.getPromo_group_id()!=null){
+					if (cmPricing.getPromo_group_id().compareTo(promotionTierList.get(index).getPromo_group_id()) == 0) {
+						dataList.add(cmPricing);
+					}
 				}
+			}
 		}
 
-		if(dataList.size()==0)
+		if(dataList.size()==0 && !isShowFlag){
 			dataList.add(promotionTierList.get(index));
+		}
 
 		List<CmPricing> parentList = new ArrayList<CmPricing>();
 
@@ -6324,17 +6329,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings()
 			.remove(price);
 		}
+		if(isShowFlag){
+			for(CmPricing pricing : this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings()){
+				if(parentList.contains(pricing.getParentPrice())){
+					parentList.remove(pricing.getParentPrice());
+				}
+			}
 
-		for(CmPricing pricing : this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings()){
-			if(parentList.contains(pricing.getParentPrice())){
-				parentList.remove(pricing.getParentPrice());
+			for(CmPricing pricing : parentList){
+				pricing.setStandardDisabled(false);
 			}
 		}
-
-		for(CmPricing pricing : parentList){
-			pricing.setStandardDisabled(false);
-		}
-
 		//		Map<Date, List<CmPromotionTierPricing>> tierMap = groupingDate(this
 		//				.getManagedBean().getSelectedMaintainItem()
 		//				.getCmPromotionTierPricings());
@@ -6385,36 +6390,42 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		List<CmZonalPromotionTierPricing> zonalPromotionTierPricings = this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings();
 		List<CmZonalPromotionTierPricing> dataList = new ArrayList<CmZonalPromotionTierPricing>();
 		log.info("tierList:" + zonalPromotionTierPricings.size());
-
+		boolean isShowFlag = zonalPromotionTierPricings.get(index).isShowFlag();
 		for (CmZonalPromotionTierPricing cmPricing : zonalPromotionTierPricings) {
-			if(cmPricing.getPromo_group_id()!=null)
-				if (cmPricing.getPromo_group_id().compareTo(zonalPromotionTierPricings.get(index).getPromo_group_id()) == 0) {
-					dataList.add(cmPricing);
-				}
+			if(isShowFlag){
+				if(cmPricing.getPromo_group_id()!=null)
+					if (cmPricing.getPromo_group_id().compareTo(zonalPromotionTierPricings.get(index).getPromo_group_id()) == 0) {
+						dataList.add(cmPricing);
+					}
+			}
 		}
 
-		if(dataList.size()==0)
+		if(dataList.size()==0 && !isShowFlag){
 			dataList.add(zonalPromotionTierPricings.get(index));
+		}
 
 		log.info("dataList:" + dataList.size());
 		List<CmPricing> parentList = new ArrayList<CmPricing>();
 
 		for (CmZonalPromotionTierPricing price : dataList) {
-			//			price.getParentPrice().setStandardDisabled(false);
 			parentList.add(price.getParentPrice());
 			this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings()
 			.remove(price);
 		}
-
-		for(CmPricing pricing : this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings()){
-			if(parentList.contains(pricing.getParentPrice())){
-				parentList.remove(pricing.getParentPrice());
+		
+		if(isShowFlag){
+			for(CmPricing pricing : this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings()){
+				if(parentList.contains(pricing.getParentPrice())){
+					parentList.remove(pricing.getParentPrice());
+				}
 			}
+
+			for(CmPricing pricing : parentList){
+				pricing.setStandardDisabled(false);
+			}
+
 		}
 
-		for(CmPricing pricing : parentList){
-			pricing.setStandardDisabled(false);
-		}
 
 		//		Map<Date, List<CmZonalPromotionTierPricing>> tierMap = groupingDate(this
 		//				.getManagedBean().getSelectedMaintainItem()
@@ -6557,13 +6568,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		List<CmZonalTierPricing> tierList = this.getManagedBean()
 				.getSelectedMaintainItem().getCmZonalTierPricings();
 		List<CmZonalTierPricing> dataList = new ArrayList<CmZonalTierPricing>();
+		boolean isShowFlag = tierList.get(this.getManagedBean().getZonalTierRowIndex()).isShowFlag();
 		for (CmZonalTierPricing cmPricing : tierList) {
-
-			if (cmPricing.getStand_group_id().compareTo(
-					tierList.get(this.getManagedBean().getZonalTierRowIndex())
-					.getStand_group_id()) == 0) {
-				dataList.add(cmPricing);
+			if(isShowFlag){
+				if (cmPricing.getStand_group_id().compareTo(tierList.get(this.getManagedBean().getZonalTierRowIndex()).getStand_group_id()) == 0) {
+					dataList.add(cmPricing);
+				}
 			}
+		}
+		
+		if(dataList.size()==0 && !isShowFlag){
+			dataList.add(tierList.get(this.getManagedBean().getZonalTierRowIndex()));
 		}
 
 		List<CmZonalPromotionTierPricing> promotionTierList = this
@@ -7406,9 +7421,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		for(CmPricing cmPricing : pricings){
 			log.info("*******standard********"+cmPricing.getPrice());
 			log.info("*******promotion*******"+pricing.getPrice());
+			int lhsGroupId = pricing.getStand_group_id() !=null ? pricing.getStand_group_id() : pricing.getPromo_group_id();
+			int rhsGroupId = cmPricing.getStand_group_id() !=null ? cmPricing.getStand_group_id() : cmPricing.getPromo_group_id();
 
-
-			if (pricing.getPromo_group_id() == cmPricing.getPromo_group_id() && (cmPricing.getPrice().compareTo(pricing.getPrice()) <= 0)){
+			if (lhsGroupId == rhsGroupId && (cmPricing.getPrice().compareTo(pricing.getPrice()) <= 0)){
 				priceInvalid = true;
 			}
 
@@ -10183,11 +10199,65 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		return naviToMaintenancePage(false);
 	}
 	
+	public boolean isLastPricingTier(CmTierPricing stPrice, CmPromotionTierPricing prPrice, CmZonalTierPricing znstPrice, CmZonalPromotionTierPricing znprPrice, int index){
+		int maxIndexForGroup = 0;
+		int i = 0;
+		int groupCount = 0;
+		if(stPrice!=null){
+			for(CmTierPricing tier: this.getManagedBean().getSelectedMaintainItem().getCmTierPricings()){
+				if( tier.getStand_group_id()  == stPrice.getStand_group_id()){
+					groupCount++;
+					maxIndexForGroup = i;
+				}
+				i++;
+			}
+		}else if(prPrice!=null){
+			for(CmPromotionTierPricing tier: this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings()){
+				if( tier.getPromo_group_id()  == prPrice.getPromo_group_id()){
+					groupCount++;
+					maxIndexForGroup = i;
+				}
+				i++;
+			}
+		}else if(znstPrice!=null){
+			for(CmZonalTierPricing tier: this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings()){
+				if( tier.getStand_group_id()  == znstPrice.getStand_group_id()){
+					groupCount++;
+					maxIndexForGroup = i;
+				}
+				i++;
+			}
+		}else if(znprPrice!=null){
+			for(CmZonalPromotionTierPricing tier: this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings()){
+				if( tier.getPromo_group_id()  == znprPrice.getPromo_group_id()){
+					groupCount++;
+					maxIndexForGroup = i;
+				}
+				i++;
+			}
+		}
+		return index == maxIndexForGroup && groupCount>2 ;
+	}
 	
+	public void getGroupedRejectReasons(){
+		List<List<CmItemRejectReason>> list = new ArrayList<List<CmItemRejectReason>>();
+		List<CmItemRejectReason> innerList = new ArrayList<CmItemRejectReason>();
+		String currentGroup = null;
+		for(CmItemRejectReason reason: this.getManagedBean().getSelectedMaintainItem().getCmItemRejectReasons()){
+			log.info("the group ===> " +  currentGroup) ;
+			if(currentGroup==null || currentGroup.equalsIgnoreCase(reason.getCreatedDate().toString().substring(0,16))){
+				innerList.add(reason);
+			}else{
+				list.add(innerList);
+				innerList = new ArrayList<CmItemRejectReason>();
+				innerList.add(reason);
+			}
+			currentGroup= reason.getCreatedDate().toString().substring(0,16);
+		}
+		if(innerList!=null && innerList.size()>0){
+			list.add(innerList);
+		}//last group
+		this.getManagedBean().setDetachedPaginator(new Paginator(list));
+	}
 
-	
-
-
-	
-	
 }

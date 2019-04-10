@@ -48,6 +48,7 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.helper.Paginator;
 import my.ep.persistence.entity.cm.catalog.CmFavoriteSupplier;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
@@ -501,6 +502,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private List<TreeNode> zoneTrees;
 	
 	private boolean dupplicatedInd = false;
+	
+	private Paginator detachedPaginator;
 	
 	private class ExpiredSearchPagingDataModel extends
 			PagingDataModel<CmSupplierItem> {
@@ -4141,5 +4144,13 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 */
 	public void setDupplicatedInd(boolean dupplicatedInd) {
 		this.dupplicatedInd = dupplicatedInd;
+	}
+
+	public Paginator getDetachedPaginator() {
+		return detachedPaginator;
+	}
+
+	public void setDetachedPaginator(Paginator detachedPaginator) {
+		this.detachedPaginator = detachedPaginator;
 	}
 }

@@ -128,7 +128,7 @@
 				</p:commandLink>
 				<p:commandLink id="deleteLink" title="#{lbl['lbl.btn.delete']}"
 					action="#{catalogueBackingBean.setRowIndex}"
-					rendered="#{price.showFlag}" oncomplete="confirmation.show()"
+					rendered="#{price.showFlag || catalogueBackingBean.isLastPricingTier(price, null, null, null, rowIndex)}" oncomplete="confirmation.show()"
 					disabled="#{!price.displayAction}">
 					<f:param name="index" value="#{rowIndex}"></f:param>
 					<p:graphicImage style="padding-right:10px;"
