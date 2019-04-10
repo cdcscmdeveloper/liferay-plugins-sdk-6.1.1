@@ -411,7 +411,6 @@ public class CustServiceBackingBean extends
 		getManagedBean().setFlUserGroups(retrieveUserGroup(userOrg.getPmUser().getUserId(), RoleCode.FL_APPROVER.value()));
 		getManagedBean().setRnUserGroups(retrieveUserGroup(userOrg.getPmUser().getUserId(), RoleCode.RN_APPROVER.value()));
 		getListOfAssignedRoles(userOrg);
-		System.out.println(userOrg.getPmOrgProfile().getOrgTypeCode().getParameterCode());
 		return NAV_TO_INFO;
 	}
 	
@@ -520,10 +519,7 @@ public class CustServiceBackingBean extends
 		try {
 			userOrg = this.getManagedBean().getSelectedUserOrg();
 			user = userOrg.getPmUser();
-			validateUser(user, userOrg);
-			System.out.println("code "+user.getSalutationCode());
 			if(user.getSalutationCode() != null){
-				System.out.println("id "+user.getSalutationCode().getSalutationId());
 				if(user.getSalutationCode().getSalutationId() == null){
 					user.setSalutationCode(null);
 				}

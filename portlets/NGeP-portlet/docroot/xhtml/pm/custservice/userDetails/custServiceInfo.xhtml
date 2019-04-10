@@ -35,6 +35,12 @@
 			<td colspan="3"><p:inputTextarea id="orgName" disabled="true"
 					label="#{lbl['lbl.pm.ucd.organization']}"
 					value="#{custServiceBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmOrgValidity.orgName}"
+					rendered="#{custServiceBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterCode !='SUP'}"
+					rows="3" cols="113" maxlength="255" />
+			<p:inputTextarea id="orgName1" disabled="true" 
+					label="#{lbl['lbl.pm.ucd.organization']}"
+					value="#{custServiceBackingBean.managedBean.selectedUserOrg.pmOrgProfile.smSupplier.companyName}"
+					rendered="#{custServiceBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterCode =='SUP'}"
 					rows="3" cols="113" maxlength="255" /></td>
 			<th>&#160;</th>
 			<td>&#160;</td>
