@@ -39,7 +39,7 @@
 	</portlet>
 	<!-- Audit - END-->
 	<portlet>
-		<portlet-name>DirectPurchaseMaintenance</portlet-name>
+		<portlet-name>directPurchaseMaintenance</portlet-name>
 		<display-name>Direct Purchase Maintenance</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
