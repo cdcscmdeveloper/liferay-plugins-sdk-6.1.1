@@ -487,20 +487,22 @@
 				<p:panel header="#{lbl['lbl.fl.goods.receivingdetails']}"  toggleable="true" id="goodsReceivingDetails">
 				<table style="width: 100%">
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.person.name']}" /> <p:outputLabel
+					<td width="120"><p:outputLabel value="#{lbl['lbl.fl.supp.contact.person.name']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="contactPerson"
+					<td width="276"><p:inputText id="contactPerson"
 							required="#{contractRequestBackingBean.managedBean.required}"
-							label="#{lbl['lbl.fl.supp.contact.person.name']}" maxlength="85"
+							label="#{lbl['lbl.fl.supp.contact.person.name']}"
+							style="width: 202px;margin-bottom: 5px;"
 							value="#{contractRequestBackingBean.managedBean.flManualAddress.flAddress.contactPerson}"
 							validatorMessage="#{lbl['lbl.fl.tel.no.msg']}"
 							size="30"></p:inputText>
 						<ac:iconTooltip value="#{lbl['lbl.fl.supp.contact.person.name']}"/></td>
-					<td width="125"><p:message for="contactPerson" display="icon" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.manual.add.delivery.add.new']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" />
+					<td width="50"><p:message for="contactPerson" display="icon" /></td>
+					<td width="200" rowspan="5" valign="top">
+						<p:outputLabel value="#{lbl['lbl.fl.manual.add.delivery.add.new']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /> 
 					</td>
-					<td rowspan="5">
+					<td width="210" rowspan="5">
  						<p:inputTextarea cols="42" rows="9" id="chargeOrgProfileNew"
 						required="#{contractRequestBackingBean.managedBean.required}"
 						onkeyup="limitTextArea(this,500);"
@@ -513,7 +515,7 @@
 						value="#{contractRequestBackingBean.managedBean.flManualAddress.flAddress.selectedPtjCodeNameValue}"> 
 						</p:inputTextarea>
 					</td>
-					<td rowspan="5">
+					<td rowspan="2">
 						<p:commandLink id="searchPtjNew"
 						oncomplete="dlgChargedPtjNew.show();" immediate="true"
 						action="#{contractRequestBackingBean.initPMAddressTypeDetails}"
@@ -534,6 +536,7 @@
 							label="#{lbl['lbl.fl.email']}" maxlength="80"
 							value="#{contractRequestBackingBean.managedBean.flManualAddress.flAddress.contactEmail}"
 							validatorMessage="#{lbl['lbl.fl.email.msg']}"
+							style="width: 202px;margin-bottom: 5px;"
 							size="30" ><f:validateRegex disabled="#{contractRequestBackingBean.managedBean.emailValidate}"
        						pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" 
        						onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }"/>
