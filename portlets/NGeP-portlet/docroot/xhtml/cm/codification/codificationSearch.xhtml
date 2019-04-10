@@ -58,14 +58,15 @@
 						value="#{lbl['lbl.cm.search.insturction']}" /></td>		
 				</tr>
 			</table>
+			<p:remoteCommand name="updateAutoComplete" update=":form:autocompleteId"></p:remoteCommand>
 			<table style="width: 100%;">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
-					<td colspan="1"><p:autoComplete size="40"
+					<td colspan="1"><p:autoComplete id="autocompleteId" size="40"
 							title="#{lbl['lbl.cm.eight.digits']}" maxlength="8"
 							value="#{codificationBackingBean.managedBean.autoCompleteUnspscCode.unspscCode}"
 							completeMethod="#{codificationBackingBean.autoCompleteUnspsc}"
-							maxResults="15" dropdown="false" forceSelection="true" />
+							maxResults="15"  dropdown="false" forceSelection="false" />
 						<p:graphicImage id="itemNameID"
 							value="/css/images/design/tooltips.png" /> <p:tooltip
 							for="itemNameID">
