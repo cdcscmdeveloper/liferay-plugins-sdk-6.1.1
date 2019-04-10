@@ -53,7 +53,7 @@ public class DeactivateUserRoleRest {
 						if (userRole.getPmRole() != null) {
 							if (userRole.getPmRole().getRoleCode().equals(RoleCode.COMPANY_PROFILE.value())
 									|| userRole.getPmRole().getRoleCode().equals(RoleCode.MARKET_RESEARCH.value())) {
-								if (pmLoginHistory != null && pmLoginHistory.getLoginDate().compareTo(new Date(userRole.getChangedDate().getTime())) >= 0) {
+								if (pmLoginHistory != null && pmLoginHistory.getLoginDate().compareTo(new Date(userRole.getChangedDate().getTime())) > 0) {
 									log.info("User has login history for user id >>> "+resDTO1.getPmUser().getUserId());
 									if(new Date(userRole.getChangedDate().getTime()).compareTo(DateUtils.addMonths(new Date(), -UsersdeactivationPerioid)) < 0 ){
 										log.info("Deactivate user role  Role_Id >>> "+userRole.getUserRoleId());
