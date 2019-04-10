@@ -26,8 +26,11 @@
 			<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.designation']}" style="width :10%;white-space : normal">
 				#{userOrg.designation}
 			</p:column>			
-			<p:column headerText="#{lbl['lbl.pm.profiles.search.orgname']}" style="width :25%;white-space : normal">			
+			<p:column rendered="#{userOrg.pmOrgProfile.orgTypeCode.parameterCode !='SUP'}" headerText="#{lbl['lbl.pm.profiles.search.orgname']}" style="width :25%;white-space : normal">			
 				#{userOrg.pmOrgProfile.pmOrgValidity.orgName}
+			</p:column>
+			<p:column rendered="#{userOrg.pmOrgProfile.orgTypeCode.parameterCode =='SUP'}" headerText="#{lbl['lbl.pm.profiles.search.orgname']}" style="width :25%;white-space : normal">			
+				#{userOrg.pmOrgProfile.smSupplier.companyName}
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.status']}" style="width:8%;text-align:center;">
 				#{(userOrg.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}
