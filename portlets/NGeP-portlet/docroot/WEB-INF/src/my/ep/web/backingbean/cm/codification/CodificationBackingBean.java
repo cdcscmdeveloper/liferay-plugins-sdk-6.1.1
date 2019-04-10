@@ -563,8 +563,8 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			throw new EpException(MessageConst.ERROR_716006);
 		}
 
-		if (unspscCode != null && !unspscCode.isEmpty()
-				&& unspscCode.length() != 8) {
+		if ((unspscCode != null && !unspscCode.isEmpty())
+				&& (unspscCode.length() != 8 || !StringUtils.isNumeric(unspscCode))){
 			throw new EpException(MessageConst.ERROR_715026);
 		}
 
@@ -1998,7 +1998,10 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	public List<String> autoCompleteUnspsc(String query) {
 
 		log.info("query:::::::::::::::::::::::::::::: " + query);
-
+//		if(!StringUtils.isNumeric(query) && StringUtils.isNotBlank(query)){
+//			//managedBean.autoCompleteUnspscCode.unspscCode
+//			throw new EpException(MessageConst.ERROR_715026);
+//		}
 		// FacesContext facesContext = FacesContext.getCurrentInstance();
 		//
 		// Char firstLetter = query.charAt(0);
