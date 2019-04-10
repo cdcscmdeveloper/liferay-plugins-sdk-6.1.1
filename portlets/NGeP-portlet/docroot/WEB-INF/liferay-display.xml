@@ -172,6 +172,7 @@
 			<portlet id="scQuotationTenderSearchTechSupp" />
 			<portlet id="scSupplierInvitationSq" />
 			<portlet id="scSupplierInvitationQt" />
+			<portlet id="directPurchaseMaintenance" />
 		</category>
 
 		<!-- Fulfilment Start Added by Giri -->
