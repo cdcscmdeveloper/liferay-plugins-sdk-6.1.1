@@ -10243,11 +10243,18 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		List<List<CmItemRejectReason>> list = new ArrayList<List<CmItemRejectReason>>();
 		List<CmItemRejectReason> innerList = new ArrayList<CmItemRejectReason>();
 		String currentGroup = null;
+		Collections.sort(this.getManagedBean().getSelectedMaintainItem().getCmItemRejectReasons(), new Comparator<CmItemRejectReason>() {
+			  public int compare(CmItemRejectReason o1, CmItemRejectReason o2) {
+			      return o1.getCreatedDate().compareTo(o2.getCreatedDate());
+			  }
+		});
+		Collections.reverse(this.getManagedBean().getSelectedMaintainItem().getCmItemRejectReasons());
 		for(CmItemRejectReason reason: this.getManagedBean().getSelectedMaintainItem().getCmItemRejectReasons()){
 			log.info("the group ===> " +  currentGroup) ;
 			if(currentGroup==null || currentGroup.equalsIgnoreCase(reason.getCreatedDate().toString().substring(0,16))){
 				innerList.add(reason);
-			}else{
+			}else{	
+				sortRejectRemark(innerList);
 				list.add(innerList);
 				innerList = new ArrayList<CmItemRejectReason>();
 				innerList.add(reason);
@@ -10255,9 +10262,25 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			currentGroup= reason.getCreatedDate().toString().substring(0,16);
 		}
 		if(innerList!=null && innerList.size()>0){
+			sortRejectRemark(innerList);
 			list.add(innerList);
 		}//last group
 		this.getManagedBean().setDetachedPaginator(new Paginator(list));
 	}
-
+	
+	public void sortRejectRemark(List<CmItemRejectReason> list){
+		Collections.sort(list, new Comparator<CmItemRejectReason>() {
+			  @Override
+		        public int compare(CmItemRejectReason o1, CmItemRejectReason o2) {
+		            if (itemRejectReason(o1.getPmStatus().getStatusId()) != null && itemRejectReason(o1.getPmStatus().getStatusId()).equalsIgnoreCase("Lain-lain")){
+		                return -1;
+		            }
+		            if (itemRejectReason(o2.getPmStatus().getStatusId()) != null && itemRejectReason(o2.getPmStatus().getStatusId()).equalsIgnoreCase("Lain-lain")){
+		                return 1;
+		            }
+				      return o1.getCreatedDate().compareTo(o2.getCreatedDate());
+		        }
+		});
+		Collections.reverse(list);
+	};
 }
