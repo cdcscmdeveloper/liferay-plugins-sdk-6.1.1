@@ -1,0 +1,36 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel>
+		<div align="left" class="header-info">
+			<table>
+				<tr>
+					<td style="width: 245px"><h:outputLabel
+							value="#{lbl['lbl.pm.organisation.orgType']}"></h:outputLabel></td>
+					<td class="header-info">
+							#{organisationBackingBean.managedBean.orgProfile.orgTypeCode.parameterCode}</td>
+					<td style="width: 210px"><h:outputLabel
+							value="#{lbl['lbl.pm.organisation.orgCode']}"></h:outputLabel></td>
+					<td class="header-info-text">
+						#{organisationBackingBean.managedBean.orgProfile.pmOrgValidity.orgCode}
+					</td>
+					<td style="width: 210px"><h:outputLabel
+							value="#{lbl['lbl.pm.organisation.orgName']}"></h:outputLabel></td>
+					<td class="header-info">
+							#{organisationBackingBean.managedBean.orgProfile.pmOrgValidity.orgName}</td>
+					<!-- <td style="width: 210px"><h:outputLabel
+							value="#{lbl['lbl.pm.organisation.status']}"></h:outputLabel></td>
+					<td><p:inputText
+							value="#{organisationBackingBean.managedBean.orgProfile.recordStatusFlg}"
+							size="10" disabled="true" /></td> -->
+
+				</tr>
+			</table>
+		</div>
+	</p:panel>
+
+</ui:composition>

@@ -1,0 +1,35 @@
+<u class="txtBold">Employee</u>
+<br /><br />
+
+<table  class="descTable" width="100%">
+		<tr style="background-color:#99ccff;" align="center">
+			<th width="5%">No.</th>
+			<th width="25%">Specialization</th>
+			<th width="25%">Name</th>
+			<th width="20%">IC No.</th>
+			<th width="25%">Experience</th>
+		</tr>
+		
+		
+		#if($review)
+			#if($workerLs != $null && $workerLs.size() > 0)
+				#foreach($worker in $workerLs)
+				<tr>
+					<td width="5%">$velocityCount</td>
+					<td width="25%">$!worker.expertise</td>
+					<td width="25%">$!worker.name</td>
+					<td width="20%">$!worker.identificationNo</td>
+					<td width="25%">$!worker.workExpYear</td>
+				</tr>
+				#end
+			#else
+				<tr>
+		 			<td colspan="5" align="center">No Record Found</td>
+		 		</tr>
+			#end
+		#else
+		 	<tr>
+		 		<td colspan="5" align="center">No Record Found</td>
+		 	</tr>
+		#end
+</table>

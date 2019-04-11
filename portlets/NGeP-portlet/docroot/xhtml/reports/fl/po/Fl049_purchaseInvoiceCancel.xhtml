@@ -1,0 +1,172 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<table style="width: 100%;">
+		<tr>
+			<td colspan="4">
+				<h:outputText value="#{purInvCancelRptBB.managedBean.reportUrl}" /><br/><br/>
+			</td>
+		</tr>
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.fl.ministry']}" /></td>
+			<td colspan="3">
+					<ac:lov id="searchMinistry" lovId="PM_ORG_PROFILE_MINSTRY" size="131" readonly="true" 
+							headerText="#{lbl['lbl.fl.ministry']}" 
+							disabled="#{purInvCancelRptBB.disableMinistryLov()}"
+							value="#{purInvCancelRptBB.managedBean.ministry.orgName}"
+							postUpdateListener="purInvCancelRptBB.resetPtjGroupProfile()"
+							update=":form:searchPtj,:form,:form:flSupplierName,:form:supplierCompName"
+							saveObject="purInvCancelRptBB.managedBean.ministry"
+							conditionField="#{purInvCancelRptBB.getMinistryCondition()}"
+							>
+						</ac:lov>
+			</td>
+		</tr>
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.fl.jabatan']}"></p:outputLabel></td>
+			<td colspan="3">
+					<ac:lov id="searchJabatan" lovId="PM_ORG_PROFILE_PTJ_GROUP" size="131" readonly="true" 
+							headerText="#{lbl['lbl.fl.jabatan']}" 
+							disabled="#{purInvCancelRptBB.disablePtjGroupLov()}"
+							value="#{purInvCancelRptBB.managedBean.ptjGroup.orgName}"
+							postUpdateListener="purInvCancelRptBB.resetPtjProfile()"
+							update=":form:searchPtj,:form"
+							saveObject="purInvCancelRptBB.managedBean.ptjGroup"
+							conditionField="#{purInvCancelRptBB.constuctConditionFieldsForPTJGroup()}"
+							>
+						</ac:lov>
+			</td>
+
+		</tr>
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.fl.ptj.name']}"></p:outputLabel></td>
+			<td colspan="3">
+					<ac:lov id="searchPtj" lovId="PM_ORG_PROFILE_PTJ" size="131" readonly="true" 
+							headerText="#{lbl['lbl.fl.ptj']}"
+							disabled="#{purInvCancelRptBB.disablePtjLov()}"
+							value="#{purInvCancelRptBB.managedBean.ptj.orgName}"
+							saveObject="purInvCancelRptBB.managedBean.ptj"	
+							conditionField="#{purInvCancelRptBB.getPTJCondition()}"
+							update=":form"
+							>			
+						</ac:lov>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.sistem.panel.name']}" />
+			</td>
+			<td><p:inputText maxlength="30" id="panelNameId"
+					label="#{lbl['lbl.fl.sistem.panel.name']}"
+					value="#{purInvCancelRptBB.managedBean.panelName}"
+					style="margin-top:5px;width:268px;">
+					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+				</p:inputText><ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforcc']}"/>
+				<p:message id="panelNameMsg" for="panelNameId"
+					display="icon" /></td>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.supp.name']}"/>
+			</td>
+			<td>
+				<ac:lov id="flSupplierName" readonly="true"
+					lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" size="44" rendered="#{!purInvCancelRptBB.managedBean.supplier}"
+					headerText="#{lbl['lbl.fl.supp.name']}" update="@form" 
+					value="#{purInvCancelRptBB.managedBean.selectedOrgProfile.smSupplier.companyName}"
+					saveObject="purInvCancelRptBB.managedBean.selectedOrgProfile" />
+				<p:inputText size="51" disabled="true" id="supplierCompName" rendered="#{purInvCancelRptBB.managedBean.supplier}"
+					value="#{purInvCancelRptBB.managedBean.supplierCompName}">
+				</p:inputText>
+			</td>
+		</tr>
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.fl.invoice.no']}"></p:outputLabel> </td>
+			<td><p:inputText value="#{purInvCancelRptBB.managedBean.invNo}">
+			<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" /></p:inputText> </td>
+			<td><p:outputLabel value="#{lbl['lbl.fl.supp.invoice.no']}"></p:outputLabel> </td>
+			<td><p:inputText value="#{purInvCancelRptBB.managedBean.supplierInvNo}">
+			<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" /></p:inputText> </td>
+		</tr>
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.fl.do.poco.no']}"></p:outputLabel> </td>
+			<td><p:inputText value="#{purInvCancelRptBB.managedBean.purchaseOrderNo}">
+			<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" /></p:inputText> </td>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.physical.treasury.circular']}"/>
+			</td>
+			<td>
+			<p:inputText maxlength="20" id="pkpNoId"
+					label="#{lbl['lbl.fl.physical.treasury.circular']}"
+					value="#{purInvCancelRptBB.managedBean.pkpNo}"
+					style="margin-top:5px;width:268px;">
+					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+				</p:inputText><ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforcc']}"/>
+			</td>
+			
+		</tr>
+		
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.rpt.group']}" /></td>
+			<td><p:selectOneMenu value="#{reportBackingBean.flGroupOne}">
+
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
+						itemValue="#{null}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" itemDisabled="#{purInvCancelRptBB.hasSupplierRole()}"
+						itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.treasurycrclr']}"
+						itemValue="#{lbl['lbl.rpt.drpdown.treasurycrclrvalue']}"></f:selectItem>
+					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
+				</p:selectOneMenu></td>
+		</tr>
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.fl.created.date.from']}" /></td>
+			<td colspan="2"><p:calendar showOn="button" navigator="true"
+					display="inline" readonlyInput="true"
+					value="#{purInvCancelRptBB.managedBean.fromDate}" size="9"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+					partialSubmit="true" process="@form" /></td>
+
+		</tr>
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.fl.created.date.to']}" /></td>
+			<td colspan="2"><p:calendar showOn="button" navigator="true"
+					display="inline" readonlyInput="true"
+					value="#{purInvCancelRptBB.managedBean.toDate}" size="9"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+					partialSubmit="true" process="@form">
+				</p:calendar></td>
+		</tr>
+	</table>
+	<div style="text-align: right;">
+		<p:commandButton id="generateBtnId" value="#{lbl['lbl.btn.generate']}"
+			process="@form" update="@form"
+			action="#{purInvCancelRptBB.generateReport()}">
+			<f:setPropertyActionListener target="#{purInvCancelRptBB.managedBean.reportCode}" value="#{flReportBB.managedBean.reportCode}" />
+		</p:commandButton>
+		<p:commandButton id="resetBtnId" value="#{lbl['lbl.btn.reset']}"
+			process="@this" update="@form" action="#{purInvCancelRptBB.resetAction()}">
+		</p:commandButton>
+	</div>
+		<p:dialog id="confirmationId" widgetVar="confirmationId" modal="true"
+			width="500px" resizable="false" styleClass="pop_up_top">
+			<h:outputText escape="false" style="float:left;margin-left:5px;"
+				value="#{purInvCancelRptBB.managedBean.popUpMsg}">
+			</h:outputText>
+			<br />
+			<div style="float:right;">
+				<table style="width:100%">
+					<tr>
+						<td><p:commandButton value="#{lbl['lbl.rpt.btn.generate']}"
+								onclick="confirmationId.hide();" />
+							<p:commandButton value="#{lbl['lbl.rpt.btn.viewreport']}"
+								action="#{purInvCancelRptBB.redirect()}">
+							</p:commandButton></td>
+					</tr>
+				</table>
+			</div>
+		</p:dialog>
+</ui:composition>

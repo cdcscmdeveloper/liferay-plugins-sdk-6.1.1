@@ -1,0 +1,110 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<p:panel header="#{lbl['lbl.sm.financial']}" toggleable="true">
+		<table class="rptTbl">
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.bankDtls.cheSigns']}" /></td>
+				<td><p:inputText disabled="true" value="#{svoSiteVisitBackingBean.managedBean.totalCheqSign}" /> #{lbl['lbl.sm.persons']}</td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.bumi']}" /></td>
+				<td><p:inputText disabled="true" value="#{svoSiteVisitBackingBean.managedBean.cheqBumi}" /></td>
+				<td><p:inputText disabled="true" value="#{svoSiteVisitBackingBean.calculatChequeSignatoryPercentage(svoSiteVisitBackingBean.managedBean.cheqBumi)}" /> %</td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.composition.nonBumi']}" /></td>
+				<td><p:inputText disabled="true" value="#{svoSiteVisitBackingBean.managedBean.cheqNonBumi}" /></td>
+				<td><p:inputText disabled="true" value="#{svoSiteVisitBackingBean.calculatChequeSignatoryPercentage(svoSiteVisitBackingBean.managedBean.cheqNonBumi)}" /> %</td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.composition.Frg']}" /></td>
+				<td><p:inputText disabled="true" value="#{svoSiteVisitBackingBean.managedBean.cheqNonMalaysian}" /></td>
+				<td><p:inputText disabled="true" value="#{svoSiteVisitBackingBean.calculatChequeSignatoryPercentage(svoSiteVisitBackingBean.managedBean.cheqNonMalaysian)}" /> %</td>
+			</tr>
+		</table>
+	</p:panel>
+
+	<p:panel header="#{lbl['lbl.sm.bankDtls.bankDiaHdr']}" toggleable="true">
+		<p:dataTable var="bankInfo"  rowIndexVar="index" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvBankInfos}" 
+		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+		
+			<p:column headerText="#{lbl['lbl.sm.bankDtls.no']}" style="width : 5%;">
+					<p:outputLabel value="#{index + 1}"
+						style="float: left;padding: 0px;" />.						
+		    </p:column>
+			
+			<p:column>
+				<f:facet name="header">#{lbl['lbl.sm.bankDtls.bankName']}</f:facet>
+				#{bankInfo.smSupplierBank.pmFinancialOrg.finOrgName}
+			</p:column>
+
+			<p:column>
+				<f:facet name="header">#{lbl['lbl.sm.bankDtls.acctNo']}</f:facet>
+				#{bankInfo.smSupplierBank.accountNo}
+			</p:column>
+
+			<p:column>
+				<f:facet name="header">#{lbl['lbl.sm.bankDtls.cheSign.name']}</f:facet>
+				<ui:repeat var="cheqSign" varStatus="status" value="#{bankInfo.smSupplierBank.smChequeSignatories}" >
+					#{status.index +1}. #{cheqSign.smPersonnel.name}<br/>
+				</ui:repeat>
+			</p:column>
+
+			<p:column>
+				<f:facet name="header">#{lbl['lbl.sm.termsConditionsLbl']}</f:facet>
+				<p:inputTextarea rows="5" cols="30" autoResize="false" value="#{bankInfo.smSupplierBank.signatureInstruction}" readonly="true"/>
+			</p:column>
+			
+			<p:column>
+				<f:facet name="header">#{lbl['lbl.sm.verifyLbl']}</f:facet>
+				<div align="center">
+				<p:selectBooleanCheckbox value="#{bankInfo.valid}" disabled="#{viewFlag}"></p:selectBooleanCheckbox>
+				</div>
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sm.remark']}">
+				<p:inputTextarea rows="5" cols="35" autoResize="false"  maxlength="500" value="#{bankInfo.remark}" disabled="#{viewFlag}" label="#{lbl['lbl.sm.remark']}">
+					<f:validateLength maximum="500" />
+				</p:inputTextarea>
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+	
+	
+	
+<!-- this.getManagedBean().getSmSvTask().getSmAppl().getSmSupplierBanks().get(0).getPmFinancialOrg().getFinOrgName() -->
+
+
+	<p:panel header="#{lbl['lbl.sm.check.list.header']}" toggleable="true">
+		<p:dataTable var="finLsItem" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvFinChecklists}"
+			rowIndexVar="rowIndex">
+
+			<p:column headerText="#{lbl['lbl.sm.itemsLbl']}" styleClass="colAlignTop">
+				#{svoSiteVisitBackingBean.getParameterDesc(ParameterTypeConst.svoFinChecklist,finLsItem.pmParameter.parameterCode)}
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sm.availableLbl']}" styleClass="colAlignTop">
+				<div align="center">
+				<p:selectBooleanCheckbox value="#{finLsItem.valid}" disabled="#{viewFlag}">
+				</p:selectBooleanCheckbox>
+				</div>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sm.remark']}">
+				<p:inputTextarea rows="5" cols="70" autoResize="false" disabled="#{viewFlag}" maxlength="500" style="width : auto;"
+					value="#{finLsItem.remark}" label="#{lbl['lbl.sm.remark']}">
+					<f:validateLength maximum="500" />
+				</p:inputTextarea>
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+</ui:composition>

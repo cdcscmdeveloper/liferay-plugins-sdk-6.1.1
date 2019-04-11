@@ -1,0 +1,29 @@
+<u class="txtBold">Manufacturing/Assembly Details</u>
+<br /><br />
+
+
+<table class="descTable" width="100%">
+		<tr style="background-color:#99ccff;" align="center">
+			<th width="5%" class="txtBold">No</th>
+			<th width="25%" class="txtBold">Product Type</th>
+			<th width="20%" class="txtBold">Brand</th>
+			<th width="10%" class="txtBold">Production Capacity/Month</th>
+			<th width="10%" class="txtBold">Unit of Measurement</th>
+		</tr>
+		
+		#if($manufacturingLs.size() > 0)
+			#foreach($manufacturing in $manufacturingLs)
+			<tr>
+				<td>$velocityCount</td>
+				<td>$!manufacturing.goodsType</td>
+				<td>$!manufacturing.brand</td>
+				<td>$!manufacturing.productionCapacity</td>
+				<td>$!manufacturing.uom</td>				
+			</tr>
+			#end
+		#else
+			<tr>
+				<td colspan="8" align="center">No Record Found</td>
+			</tr>
+		#end
+</table>

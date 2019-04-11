@@ -1,0 +1,41 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<ui:param name="scQt" value="#{suppFinalMeetingBackingBean.managedBean.scQt}" />
+
+	<div align="left" class="header-info header-spacing">
+		<table style="width:100%;">
+			<tr>
+				<td style="width:10%;">
+					<h:outputLabel value="#{lbl['lbl.sc.qtn.no']}" />
+				</td>
+				<td style="width:27%;" class="header-info-text">
+					<p:commandLink process="@this" partialSubmit="true"
+						action="#{ViewQtDetailsGeneralInfoBB.navigatetoViewQtDetailsGeneralInfo(view.viewId,scQt,true)}">
+				<h:outputText value="#{scQt.qtNo}" escape="false" />
+					</p:commandLink>
+				</td>
+				<td style="width:5%;">
+					<h:outputLabel value="#{lbl['lbl.sc.ptj']}" />
+				</td>
+				<td style="width:32%;" class="header-info-text">
+					#{suppFinalMeetingBackingBean.retrievePTJByOrgProfileId
+(scQt.ownerOrgProfileId,
+suppFinalMeetingBackingBean.isQTStatusPublished(suppFinalMeetingBackingBean.managedBean.currentStatusId)?scQt.publishDate : scQt.createdDate)}
+				</td>
+				<td style="width:5%;">
+					<h:outputLabel value="#{lbl['lbl.sc.status']}" />
+				</td>
+				<td style="width:22%;" class="header-info-text">
+					#{suppFinalMeetingBackingBean.getStatusDescById(suppFinalMeetingBackingBean.managedBean.currentStatusId)}
+				</td>
+			</tr>
+		</table>
+	</div>
+
+</ui:composition>

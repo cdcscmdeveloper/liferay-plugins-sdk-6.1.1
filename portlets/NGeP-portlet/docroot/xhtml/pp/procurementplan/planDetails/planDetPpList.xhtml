@@ -1,0 +1,216 @@
+<ui:composition
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:p="http://primefaces.org/ui"
+xmlns:c="http://java.sun.com/jsp/jstl/core"
+xmlns:ac="http://ac.my/jsf/composite/cc"
+>
+		
+	<script type="text/javascript">
+		/*
+			This is to update grand total at footer without reloading the whole datatable
+			gtEstAmt - the class name of grand total field
+			hiddenGtEstAmt - the class name of calculated value in hidden field
+		*/
+		function updatePpFooter(){
+			document.getElementsByClassName('gtEstAmt')[0].innerHTML = document.getElementsByClassName('hiddenGtEstAmt')[0].value;
+			
+		}
+			
+ 	</script>
+	<p:outputPanel id="opPlanPp">
+		<p:inputText style="display:none" id="hiddenGtEstAmt" styleClass="hiddenGtEstAmt" value="#{pPlanBackingBean.managedBean.ppTotalEst}">
+			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+		</p:inputText>
+
+	   	<p:dataTable id="dtProcurementPlan" styleClass="dtProcurementPlan" emptyMessage="#{lbl['lbl.pp.no.record.found']}" 
+	   		 var="ppItem" value="#{pPlanBackingBean.managedBean.selectedPlan.ppProcurementItems}"
+		     rowIndexVar="index" rowKey="#{ppItem}">
+			<ac:paginator for="dtProcurementPlan" />
+			<p:columnGroup type="header">
+				<p:row>
+				 	<p:column style="width:2%" />
+			 	 	<p:column width="12%">
+					    <f:facet name="header">
+					     	<h:outputText value="* " styleClass="mandatory" />
+					     	<h:outputText value="#{lbl['lbl.pp.procurement.title']}" />
+					    </f:facet>
+				    </p:column>
+				    <p:column width="12%">
+					    <f:facet name="header">
+					     	<h:outputText value="* " styleClass="mandatory" />
+					     	<h:outputText value="#{lbl['lbl.pp.procurement.desc']}" />
+					    </f:facet>
+				    </p:column>
+			     	<p:column width="12%">
+					    <f:facet name="header">
+					     	<h:outputText value="* " styleClass="mandatory" />
+					     	<h:outputText value="#{lbl['lbl.pp.category']}" />
+					    </f:facet>
+				    </p:column>
+			     	<p:column width="12%">
+					    <f:facet name="header">
+					     	<h:outputText value="* " styleClass="mandatory" />
+					     	<h:outputText value="#{lbl['lbl.pp.procurement.method']}" />
+					    </f:facet>
+				    </p:column>
+				    <p:column width="8%">
+					    <f:facet name="header">
+					     	<h:outputText value="* " styleClass="mandatory" />
+					     	<h:outputText value="#{lbl['lbl.pp.invitation.date']}" />
+					     	&#160; <p:graphicImage id="giOthersOrg"
+								value="/css/images/design/tooltips.png" /> 
+					<p:tooltip id="ttOthersOrg" for="giOthersOrg">
+							<h:outputText escape="false" value="#{lbl['lbl.pp.invitation.date.tooltip']}"  />
+					</p:tooltip>&#160;
+					    </f:facet>
+				    </p:column>
+			     	<p:column width="13%">
+					    <f:facet name="header">
+					     	<h:outputText value="* " styleClass="mandatory" />
+					     	<h:outputText value="#{lbl['lbl.pp.estimated.amount']}" />
+					    </f:facet>
+				    </p:column>			      
+			     	<p:column  width="5%" rendered="#{pPlanBackingBean.managedBean.modeReview}">
+					    <f:facet name="header">
+					     	<h:outputText value="#{lbl['lbl.pp.reject.and.reason']}" />
+					    </f:facet>
+				    </p:column>			      	
+				    <p:column width="5%">
+					    <f:facet name="header">
+					     	<h:outputText value="#{lbl['lbl.pp.status']}" />
+					    </f:facet>
+				    </p:column>
+				    <p:column width="5%" rendered="#{!pPlanBackingBean.managedBean.selectedPlan.brandNew}">
+					    <f:facet name="header">
+					     	<h:outputText value="#{lbl['lbl.pp.last.updated']}" />
+					    </f:facet>
+				    </p:column>
+			 	</p:row>
+		 	</p:columnGroup>
+			<p:column>
+				<p:selectBooleanCheckbox disabled="#{!ppItem.brandNew}" value="#{ppItem.deleted}"/>
+			</p:column>
+	        <p:column>	
+        		<p:inputTextarea id="itaPpTitle" value="#{ppItem.procurementTitle}" 
+        			disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable)}"
+					label="#{lbl['lbl.pp.procurement.title']}" autoResize="false" 
+			 		style="width: 95%;" maxlength="200" required="#{!empty param['disableValidation']}">
+			 		<p:ajax event="change" process="@this" />
+		 		</p:inputTextarea>
+		 		<p:message id="itPpTitleMsg" for="itaPpTitle" display="icon" />  
+	        </p:column>	 
+	         <p:column>	
+        		<p:inputTextarea id="itaPpDesc" value="#{ppItem.procurementDesc}" 
+        			disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable)}"
+					label="#{lbl['lbl.pp.procurement.desc']}" autoResize="false" 
+			 		style="width: 95%;" maxlength="1000" required="#{!empty param['disableValidation']}">
+			 		<p:ajax event="change" process="@this" />
+		 		</p:inputTextarea>
+		 		<p:message id="itaPpDescMsg" for="itaPpDesc" display="icon" />  
+	        </p:column>	 
+	        <p:column>
+       			<p:selectOneMenu id="somCategory" style="width:99%"
+       				disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable)}"
+					label="#{lbl['lbl.pp.category']}" value="#{ppItem.procurementCat.parameterId}" required="#{!empty param['disableValidation']}">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
+					<f:selectItems value="#{pPlanBackingBean.getProcurementCategoryOptions()}" var="obj" 
+						itemValue="#{obj.procurementCat.parameterId}" itemLabel="#{pPlanBackingBean.getProcurementCategoryLabels(obj.procurementCat)}"/>
+					<p:ajax event="change" update="somProcurementMethod" listener="#{pPlanBackingBean.onSelectCategory(ppItem.procurementCat.parameterId, index)}"/>
+				</p:selectOneMenu>
+				<p:message id="somCategoryMsg" for="somCategory" display="icon" />
+	        </p:column>
+	        <p:column>
+       			<p:selectOneMenu id="somProcurementMethod" style="width:99%"
+       				disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable) or ppItem.procurementCat.parameterId==null}"
+					label="#{lbl['lbl.pp.procurement.method']}" value="#{ppItem.procurementType.parameterId}" required="#{!empty param['disableValidation']}">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
+					<f:selectItems value="#{pPlanBackingBean.getProcurementTypeOptions(ppItem.procurementCat.parameterId)}"
+						var="obj" itemValue="#{obj.procurementType.parameterId}" itemLabel="#{pPlanBackingBean.getProcurementCategoryLabels(obj.procurementType)}"/>
+					<p:ajax event="change" listener="#{pPlanBackingBean.onSelectCategoryType(ppItem.procurementType.parameterId, index)}" process="@this" />
+				</p:selectOneMenu>
+				<p:message id="somProcurementMethodMsg" for="somProcurementMethod" display="icon" />
+	        </p:column>
+	        <p:column  style="white-space:nowrap;">
+       			<p:calendar styleClass="ppDisplayCalXS" id="effDateId" value="#{ppItem.invitationDate}" 
+	  				disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable)}"
+	  				mindate="#{pPlanBackingBean.minDate}" 
+	  				maxdate="#{pPlanBackingBean.maxDate}"
+			  		required="#{!empty param['disableValidation']}" navigator="true" 
+			  		label="#{lbl['lbl.pp.invitation.date']}" readonlyInput="true" 
+			  		yearRange="c+0:c+0"
+					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+					<p:ajax event="dateSelect" process="@this" />
+				</p:calendar>
+				<p:message id="effDateIdMsg" for="effDateId" display="icon" />
+	        </p:column>
+	        <p:column>
+       			<p:inputText style="width:90%" value="#{ppItem.estimatedAmt}"
+       				disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable)}" 
+		  			id="itEstAmt" styleClass="amountRight" label="#{lbl['lbl.pp.estimated.amount']}"
+		  			required="#{!empty param['disableValidation']}"
+		  			onkeypress="if (event.keyCode == 13) { return false; }">
+		  			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+		  			<f:attribute name="max" value="99999999999"/>		
+					<f:validator validatorId="quantityDoubleRangeValidator" />
+		  			<p:ajax event="change" listener="#{pPlanBackingBean.calculatePpGrandTotal}"
+						update=":form:hiddenGtEstAmt, itEstAmt,itEstAmtMsg" 
+		  				oncomplete="updatePpFooter();"/>
+		  		</p:inputText>
+		  		<p:message id="itEstAmtMsg" for="itEstAmt" display="icon" />
+	        </p:column>
+	       <p:column style="white-space:nowrap;" rendered="#{pPlanBackingBean.managedBean.modeReview}">
+			    <p:selectBooleanCheckbox id="chkRejected" value="#{ppItem.rejected}"  style="float:left;margin-bottom:3px;margin-left:10px;" disabled="#{!pPlanBackingBean.managedBean.modeReviewEditable}">
+			    	<p:ajax event="change" update="clPpReason"/>
+			    </p:selectBooleanCheckbox>			    
+			    <p:commandLink oncomplete="dlRejectReasonWv.show();" action="#{pPlanBackingBean.retrievePpRejectReasons(ppItem)}"
+			    	disabled="#{!ppItem.rejected or !ppItem.editable}" id="clPpReason" update=":form:dlRejectReason" immediate="true">
+					<p:graphicImage value="#{!pPlanBackingBean.managedBean.modeReviewEditable ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"/>
+				</p:commandLink>
+	        </p:column>	      
+	        <p:column>
+	        	<p:selectOneMenu value="#{ppItem.recordStatusFlg}" style="width:99%"
+	        		disabled="#{!(pPlanBackingBean.managedBean.modeEditable) or ppItem.brandNew}">  
+	            	<f:selectItems value="#{pPlanBackingBean.getStatusOptions()}" />
+	          	</p:selectOneMenu> 
+	        </p:column>
+	        <p:column  rendered="#{!pPlanBackingBean.managedBean.selectedPlan.brandNew}">
+	        	<h:outputText value="#{ppItem.changedDate}" >
+					<f:convertDateTime
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+				</h:outputText>
+	        </p:column>
+	        <p:columnGroup type="footer">
+				<p:row>
+					<p:column colspan="6">
+					 	<f:facet name="footer">
+					     	<p:outputLabel value="#{lbl['lbl.pp.grand.total']}" />
+					    </f:facet>
+					</p:column>
+					<p:column>
+					   	<f:facet name="footer">
+					     	<h:outputText id="gtEstAmt" value="#{pPlanBackingBean.managedBean.ppTotalEst}" styleClass="gtEstAmt">
+					     		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					     	</h:outputText>
+					    </f:facet>
+					</p:column>
+					<p:column rendered="#{pPlanBackingBean.managedBean.modeReview}" footerText="&#160;"/>
+					<p:column footerText="&#160;"/>
+					<p:column footerText="&#160;" rendered="#{!pPlanBackingBean.managedBean.selectedPlan.brandNew}" />
+				</p:row>
+			</p:columnGroup>
+		</p:dataTable>
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.add']}" immediate="true" update="dtProcurementPlan" 
+		 		disabled="#{!pPlanBackingBean.managedBean.modeEditable}" partialSubmit="true"
+		 		process="@this" action="#{pPlanBackingBean.addPpItemDet()}"/>
+			
+			<p:commandButton id="cbEpItemDelete" value="#{lbl['lbl.btn.delete']}" update="dtProcurementPlan" 
+				disabled="#{!pPlanBackingBean.managedBean.modeEditable}" action="#{pPlanBackingBean.deletePpItemDet()}"
+				
+			/> 
+		</div>
+	</p:outputPanel>
+</ui:composition>

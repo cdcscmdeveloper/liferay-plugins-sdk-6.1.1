@@ -1,0 +1,78 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:p="http://primefaces.org/ui"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+
+	<p:outputPanel id="priceTierPageID">
+		<p:dataTable id="pricingTierID" rowIndexVar="rowIndex"
+			value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmTariffPricings}"
+			width="100%" var="price">
+
+			<ac:paginator for="pricingTierID"></ac:paginator>
+			
+			<p:column>
+				<f:facet name="header">
+					#{lbl['lbl.cm.from.qty']}
+				</f:facet>
+				<p:inputText id="fromQty" value="#{price.fromQty}" size="5" readonly="true" style="text-align:right">
+                </p:inputText>
+
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					#{lbl['lbl.cm.to.qty']}
+				</f:facet>
+				<p:inputText value="#{price.toQty}" size="5" readonly="true" style="text-align:right">
+				</p:inputText>
+            </p:column>
+			<p:column>
+				<f:facet name="header">
+					#{lbl['lbl.cm.subsequence']}
+				</f:facet>
+				<p:inputText value="#{price.subSequence}" size="5" readonly="true" style="text-align:right">
+				</p:inputText>
+            </p:column>            
+            <p:column>
+				<f:facet name="header">
+					#{lbl['lbl.cm.price.uom']}
+				</f:facet>
+				<p:inputText value="#{price.price}" size="10" readonly="true" style="text-align:right">
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+                </p:inputText>
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					#{lbl['lbl.cm.start.date']}
+				</f:facet>
+				<p:calendar value="#{price.startDate}" showOn="button" mindate="#{catalogueBackingBean.managedBean.currentDate}"
+					disabled="true" readonly="true"
+					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
+				 </p:calendar>
+
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					#{lbl['lbl.cm.end.date']}
+				</f:facet>
+				<p:calendar value="#{price.endDate}" showOn="button"
+					disabled="true" readonly="true"
+					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
+				 </p:calendar>
+			</p:column>
+
+		</p:dataTable>
+
+		<div class="clear"></div>
+
+	</p:outputPanel>
+		
+
+</ui:composition>

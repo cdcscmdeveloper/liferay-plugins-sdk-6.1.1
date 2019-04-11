@@ -1,0 +1,105 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<style type="text/css">
+.ui-state-disabled {
+	opacity: .45 !important;
+}
+
+</style>
+
+	<p:panel id="suppliersReviewPanel"
+		header="#{lbl['lbl.sc.sr.search.location']}" toggleable="false">
+
+		<table class="ppTwoTable">
+			<tr>
+				<td width="18%"><p:outputLabel value=""></p:outputLabel></td>
+				<td style="width: 78.3%;"><p:selectBooleanCheckbox
+						label="#{lbl['lbl.sc.sr.all.states']}"
+						value="#{suppliersReviewBackingBean.managedBean.allStates}">
+						<p:ajax event="change"
+							listener="#{suppliersReviewBackingBean.selectAllStates}"
+							update="@(.ui-selectmanymenu[id$=stateListId])" process="@this" />
+					</p:selectBooleanCheckbox> <h:outputText escape="false"
+						value="#{lbl['lbl.sc.sr.all.states']}"></h:outputText></td>
+			</tr>
+		</table>
+		<table class="ppTwoTable" style="width: 100%; height: 100%">
+			<tr>
+				<th width="18.2%"><p:outputLabel
+						value="#{lbl['lbl.sc.sr.state']}" for="stateListId"></p:outputLabel></th>
+				<td><p:selectManyMenu label="#{lbl['lbl.sc.sr.state']}"
+						id="stateListId"
+						value="#{suppliersReviewBackingBean.managedBean.suppliersReviewSearchBean.dropDownStatesIdList}"
+						style="width: 252px;margin-bottom: 5px;height:113px"
+						showCheckbox="true"
+						disabled="#{suppliersReviewBackingBean.managedBean.disabled}">
+						<f:selectItems var="finState"  styleClass="ui-state-disabled"
+							value="#{suppliersReviewBackingBean.managedBean.suppliersReviewSearchBean.statesList}"
+							itemValue="#{finState.stateId}" itemLabel="#{finState.stateName}">
+						</f:selectItems>
+					</p:selectManyMenu></td>
+				<th>&#160;</th>
+				<td>&#160;</td>
+			</tr>
+		</table>
+		<table class="ppTwoTable">
+			<tr>
+				<td width="18%"><p:outputLabel
+						value="#{lbl['lbl.sc.sr.paid.up.capital']}"></p:outputLabel> </td>
+				<td colspan="3"><p:inputText maxlength="17" id="fromId"
+						label="#{lbl['lbl.sc.sr.paid.up.capital']}"
+						validatorMessage="#{lbl['lbl.sc.paid.up.capital.validator.msg']}"
+						converterMessage="#{lbl['lbl.sc.paid.up.capital.num.msg']}"
+						value="#{suppliersReviewBackingBean.managedBean.suppliersReviewSearchBean.paidUpCapitalAmtFrom}"
+						size="15">
+						<f:validateLength minimum="0" maximum="17" />
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						<p:ajax process="@this" partialSubmit="true" update="@this" />
+					</p:inputText> #{lbl['lbl.sc.sr.paid.up.capital.to']} <p:inputText maxlength="17" style="text-align:left;" id="toId"
+						label="#{lbl['lbl.sc.sr.paid.up.capital']}"
+						validatorMessage="#{lbl['lbl.sc.paid.up.capital.validator.msg']}"
+						converterMessage="#{lbl['lbl.sc.paid.up.capital.num.msg']}"
+						value="#{suppliersReviewBackingBean.managedBean.suppliersReviewSearchBean.paidUpCapitalAmtTo}"
+						size="15">
+						<f:validateLength minimum="0" maximum="17" />
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						<p:ajax process="@this" partialSubmit="true" update="@this" />
+					</p:inputText></td>
+			</tr>
+			</table>
+		<p:spacer width="12px"></p:spacer>
+		<ui:include
+			src="/xhtml/sc/supplierreview/noofsuppliersreview/categoryCodeSelection.xhtml" />
+	</p:panel>
+
+	<!-- <script type="text/javascript">
+		function selectAll() {
+			$(document).ready(function() {
+				if ($('.allStatesChkID').is(':checked')) { // check select status
+					$('.ui-chkbox-box').each(function() { //loop through each checkbox
+						this.checked = true; //select all checkboxes with class "checkbox1"               
+					});
+				} else {
+					$('.ui-chkbox-box').each(function() { //loop through each checkbox
+						this.checked = false; //deselect all checkboxes with class "checkbox1"                       
+					});
+				}
+			});
+
+			/* $(document).ready(function() {
+					$(".ui-chkbox-box").click();
+			}); */
+		}
+	</script> -->
+
+
+
+</ui:composition>

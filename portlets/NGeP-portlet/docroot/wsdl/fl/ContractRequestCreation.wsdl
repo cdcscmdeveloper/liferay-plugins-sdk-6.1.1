@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<wsdl:definitions
+    
+     targetNamespace="http://xmlns.oracle.com/bpmn/bpmnProcess/ContractRequestCreation"
+     xmlns:plnk="http://schemas.xmlsoap.org/ws/2003/05/partner-link/"
+     xmlns:tns6="http://xmlns.oracle.com/bpm/bpmobject/Data/FL_ContractOrder_Data"
+     xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+     xmlns:tns="http://xmlns.oracle.com/bpmn/bpmnProcess/ContractRequestCreation"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+     xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/"
+     xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+     xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+    >
+    <wsdl:documentation>
+        <abstractWSDL>http://NGEPDevAPS01.ngep.com:8001/soa-infra/services/default/Order_Fullfillment!1.0/ContractRequestCreation.wsdl</abstractWSDL>
+    </wsdl:documentation>
+    <plnk:partnerLinkType name="ContractRequestCreationPortTypePartnerLinkType">
+        <plnk:role name="ContractRequestCreationPortTypeProvider">
+            <plnk:portType name="tns:ContractRequestCreationPortType"/>
+        </plnk:role>
+    </plnk:partnerLinkType>
+    <wsdl:types>
+        <xsd:schema targetNamespace="http://xmlns.oracle.com/bpmn/bpmnProcess/ContractRequestCreation">
+            <xsd:import namespace="http://xmlns.oracle.com/bpm/bpmobject/Data/FL_ContractOrder_Data"
+                 schemaLocation="http://ngepdevaps01.ngep.com:8001/soa-infra/services/default/Order_Fullfillment/ContractRequestCreation.service?XSD=businessCatalog/Data/FL_ContractOrder_Data.xsd"/>
+            <xsd:element name="startCR">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element ref="tns6:FL_ContractOrder_Data"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="continueCRCreation">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element ref="tns6:FL_ContractOrder_Data"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="startCR">
+        <wsdl:part name="parameters" element="tns:startCR"/>
+    </wsdl:message>
+    <wsdl:message name="continueCRCreation">
+        <wsdl:part name="parameters" element="tns:continueCRCreation"/>
+    </wsdl:message>
+    <wsdl:portType name="ContractRequestCreationPortType">
+        <wsdl:operation name="startCR">
+            <wsdl:input message="tns:startCR"/>
+        </wsdl:operation>
+        <wsdl:operation name="continueCRCreation">
+            <wsdl:input message="tns:continueCRCreation"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="ContractRequestCreationBinding" type="tns:ContractRequestCreationPortType">
+        <wsdlsoap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="startCR">
+            <wsdlsoap:operation style="document" soapAction="startCR"/>
+            <wsdl:input>
+                <wsdlsoap:body use="literal"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="continueCRCreation">
+            <wsdlsoap:operation style="document" soapAction="continueCRCreation"/>
+            <wsdl:input>
+                <wsdlsoap:body use="literal"/>
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="ContractRequestCreation.service">
+        <wsdl:port name="ContractRequestCreationPort" binding="tns:ContractRequestCreationBinding">
+            <wsdlsoap:address location="http://ngepdevaps01.ngep.com:8001/soa-infra/services/default/Order_Fullfillment/ContractRequestCreation.service"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

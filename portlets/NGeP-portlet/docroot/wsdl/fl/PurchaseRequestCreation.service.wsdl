@@ -1,0 +1,46 @@
+<wsdl:definitions xmlns:plnk="http://schemas.xmlsoap.org/ws/2003/05/partner-link/" xmlns:tns6="http://xmlns.oracle.com/bpm/bpmobject/Data/Order/FL_PurchaseOrder_Data" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://xmlns.oracle.com/bpmn/bpmnProcess/PurchaseRequestCreation" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" targetNamespace="http://xmlns.oracle.com/bpmn/bpmnProcess/PurchaseRequestCreation">
+<wsdl:documentation>
+<abstractWSDL>
+http://NGEPDevAPS01.ngep.com:8001/soa-infra/services/default/Order_Fulfilment!1.0/PurchaseRequestCreation.wsdl
+</abstractWSDL>
+</wsdl:documentation>
+<plnk:partnerLinkType name="PurchaseRequestCreationPortTypePartnerLinkType">
+<plnk:role name="PurchaseRequestCreationPortTypeProvider">
+<plnk:portType name="tns:PurchaseRequestCreationPortType"/>
+</plnk:role>
+</plnk:partnerLinkType>
+<wsdl:types>
+<xsd:schema targetNamespace="http://xmlns.oracle.com/bpmn/bpmnProcess/PurchaseRequestCreation">
+<xsd:import namespace="http://xmlns.oracle.com/bpm/bpmobject/Data/Order/FL_PurchaseOrder_Data" schemaLocation="http://ngepdevaps01.ngep.com:8001/soa-infra/services/default/Order_Fulfilment/PurchaseRequestCreation.service?XSD=businessCatalog/Data/Order/FL_PurchaseOrder_Data.xsd"/>
+<xsd:element name="startPR">
+<xsd:complexType>
+<xsd:sequence>
+<xsd:element ref="tns6:FL_PurchaseOrder_Data"/>
+</xsd:sequence>
+</xsd:complexType>
+</xsd:element>
+</xsd:schema>
+</wsdl:types>
+<wsdl:message name="startPR">
+<wsdl:part name="parameters" element="tns:startPR"/>
+</wsdl:message>
+<wsdl:portType name="PurchaseRequestCreationPortType">
+<wsdl:operation name="startPR">
+<wsdl:input message="tns:startPR"/>
+</wsdl:operation>
+</wsdl:portType>
+<wsdl:binding name="PurchaseRequestCreationBinding" type="tns:PurchaseRequestCreationPortType">
+<wsdlsoap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+<wsdl:operation name="startPR">
+<wsdlsoap:operation style="document" soapAction="startPR"/>
+<wsdl:input>
+<wsdlsoap:body use="literal"/>
+</wsdl:input>
+</wsdl:operation>
+</wsdl:binding>
+<wsdl:service name="PurchaseRequestCreation.service">
+<wsdl:port name="PurchaseRequestCreationPort" binding="tns:PurchaseRequestCreationBinding">
+<wsdlsoap:address location="http://ngepdevaps01.ngep.com:8001/soa-infra/services/default/Order_Fulfilment/PurchaseRequestCreation.service"/>
+</wsdl:port>
+</wsdl:service>
+</wsdl:definitions>

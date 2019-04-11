@@ -1,0 +1,117 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" 
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<ui:define name="resourceSection">
+		<p:outputPanel id="paymentSummaryTitleId">
+			<script>
+				var emptyText = document.createTextNode("");
+				$('#breadcrumbs').find('.last').append(emptyText);
+				if(emptyText.parentNode != null) {
+					emptyText.parentNode.children[0].text = "#{lbl['lbl.sm.payment.summary']}";
+				}
+				
+				$('#portlet_SoftCertPayment_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.payment.summary']}");
+				$('#portlet_MOFApplication_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.payment.summary']}");
+			</script>
+		</p:outputPanel>
+	</ui:define>
+
+	<ui:define name="contentSection">
+	<p:blockUI block=":form" widgetVar="blockWidget">
+		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+	</p:blockUI>
+	
+	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+	
+	<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.payment.how.msg']}" escape="false"/><br /><br />
+	<h:outputText styleClass="warning" value="#{lbl['lbl.sm.payment.reminder.header']}" /><br />
+	<h:outputText styleClass="warning" value="#{lbl['lbl.sm.payment.reminder.msg']}" escape="false"/>
+	
+	<p:outputPanel rendered="#{paymentBackingBean.managedBean.softcertPayment}">
+		<br /><br /><h:outputText styleClass="instruction" value="#{lbl['lbl.sm.gst.disclaimer']}" />
+	</p:outputPanel>
+	
+	<p:panel header="#{paymentBackingBean.managedBean.softcertPayment?lbl['lbl.sm.soft.cert']:lbl['lbl.sm.payment.item']}">
+		<p:dataTable value="#{paymentBackingBean.managedBean.newPyBillDtlLs}" var="itemLs">
+			<p:columnGroup type="header">
+				<p:row>
+					<p:column headerText="#{lbl['lbl.sm.itemsLbl']}" />
+	                <p:column headerText="#{lbl['lbl.sm.price']}" />
+                </p:row>
+			</p:columnGroup>
+			<p:column>
+				<h:outputText value="#{paymentBackingBean.getBillItemDescByLanguage(itemLs.itemCode)}" />
+				<h:outputText rendered="#{itemLs.itemCode.parameterCode eq 'SF'}"  value="- #{paymentBackingBean.retrievePersonnelByPersonnelId(itemLs.billDtlRefId).name}" />
+			</p:column>
+
+			<p:column>
+				<h:outputText value="#{itemLs.itemPrice}">
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+			<p:columnGroup type="footer">
+	            <p:row rendered="#{paymentBackingBean.managedBean.softcertPayment}">
+	                <p:column style="text-align:right" footerText="#{lbl['lbl.sm.gst.total.exclude.gst']} :" />
+	                <p:column footerText="#{paymentBackingBean.managedBean.totalAmountBeforeGst}" style="text-align:left"/>
+	            </p:row>
+	            <p:row rendered="#{paymentBackingBean.managedBean.softcertPayment}">
+	                <p:column style="text-align:right" footerText="#{lbl['lbl.sm.add.gst']} :" />
+	                <p:column footerText="#{paymentBackingBean.managedBean.gstAmount}" style="text-align:left"/>
+	            </p:row>
+	            <p:row>
+	                <p:column style="text-align:right;font-weight: bold !important;" footerText="#{lbl['lbl.sm.payment.total.payable']} :" />
+	                <p:column footerText="#{paymentBackingBean.managedBean.totalAmount}" style="text-align:left;font-weight: bold !important;"/>
+	            </p:row>
+	        </p:columnGroup>
+		</p:dataTable>
+	</p:panel>
+		
+	<table style="width: 100%">
+		<tr>
+			<td><div align="left" style="width: 100%">
+					&#160;
+					<ui:remove>
+						<p:commandButton value="#{lbl['lbl.sm.prev']}" onstart="blockWidget.show()" 
+							oncomplete="blockWidget.hide()" action="#{paymentBackingBean.back}" update=":form"/>
+					</ui:remove>
+				</div>
+			</td>
+			<td>
+				
+				<div align="right" style="width: 100%">
+					<p:outputPanel rendered="#{paymentBackingBean.getPaymentGatewayOnOff() == null or paymentBackingBean.getPaymentGatewayOnOff() != '2'}">
+						<p:commandButton value="#{lbl['lbl.sm.button.proceed']}" id="btnProceed" 
+						rendered="#{paymentBackingBean.getPaymentGatewayOnOff() == null or paymentBackingBean.getPaymentGatewayOnOff() != '1'}"
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								action="#{paymentBackingBean.tempPaymentSuccess}" />
+						<p:commandButton value="#{lbl['lbl.sm.button.proceed.to.pymnt']}" id="btnSubmit" 
+						rendered="#{paymentBackingBean.getPaymentGatewayOnOff() != null and paymentBackingBean.getPaymentGatewayOnOff() == '1'}"
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+							action="#{paymentBackingBean.submitPayment}" />
+					</p:outputPanel>
+				
+					<p:outputPanel rendered="#{paymentBackingBean.getPaymentGatewayOnOff() != null and paymentBackingBean.getPaymentGatewayOnOff() == '2'}">
+						<p:commandButton value="#{lbl['lbl.sm.button.proceed']}" id="btnProceed1" 
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								action="#{paymentBackingBean.tempPaymentSuccess}" />
+						<p:commandButton value="#{lbl['lbl.sm.button.proceed.to.pymnt']}" id="btnSubmit1" 
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+							action="#{paymentBackingBean.submitPayment}" />
+					</p:outputPanel>
+				</div>
+				
+			</td>
+		</tr>
+	</table>
+
+
+
+	</ui:define>
+</ui:composition>

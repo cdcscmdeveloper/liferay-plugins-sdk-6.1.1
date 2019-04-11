@@ -1,0 +1,84 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<p:panel id="bondDetails" header="#{lbl['lbl.ct.panel.performance.bond']}" toggleable="true" toggleSpeed="500">
+		<h:panelGrid columns="2" columnClasses="columnWidth225">
+		  <f:verbatim />
+			  <h:commandLink value="#{lbl['lbl.ct.sample.bond.letter']}" style="float:left;"
+				styleClass="blue_font"
+				action="#{amendmentBackingBean.downloadSampleBondLetter()}">
+			</h:commandLink>
+			<p:outputLabel value="#{lbl['lbl.ct.bond.no.days']}" styleClass="required" />
+			<p:selectOneMenu id="bondSubmissionPeriod" style="width:200px;"
+				value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondSubmissionPeriod}"
+				disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails}">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"></f:selectItem>
+					<f:selectItem itemLabel="14" itemValue="14"></f:selectItem>
+					<f:selectItem itemLabel="30" itemValue="30"></f:selectItem>
+			</p:selectOneMenu>
+			<p:outputLabel value="#{lbl['lbl.ct.bond.due.date']}" styleClass="required" />
+			<h:panelGrid columns="2">
+				<p:inputText style="width:200px;" id="dueDate" disabled="true"
+					value="#{!empty ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondResDueDate
+						? ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondResDueDate
+						: lbl['lbl.txt.na']}" >
+					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</p:inputText>
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.bond.submission.due.date']}" />
+			</h:panelGrid>
+			<p:outputLabel value="#{lbl['lbl.ct.contract.period']}" />
+			<h:panelGrid columns="3">
+				<p:inputText style="width:120px;" disabled="true" 
+				       styleClass="ppRightBtn" value="#{amendmentBackingBean.calculateNewContractPeriod(false)}" />
+				<p:spacer width="2" />
+				<p:outputLabel value="#{lbl['lbl.ct.months']}" />
+			</h:panelGrid>
+			<p:outputLabel value="#{lbl['lbl.ct.new.contract.period']}" />
+			<h:panelGrid columns="3">
+				<p:inputText style="width:120px;" disabled="true" styleClass="ppRightBtn"
+					value="#{(ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend)
+						? amendmentBackingBean.calculateNewContractPeriod(true) : lbl['lbl.txt.na']}" />
+				<p:spacer width="2" />
+				<p:outputLabel value="#{lbl['lbl.ct.months']}" />
+			</h:panelGrid>
+			<p:outputLabel value="#{lbl['lbl.ct.gst.all.amt']}" />
+			<p:inputText disabled="true" style="width:200px;" styleClass="ppRightBtn"
+			    value="#{(ctBackingBean.managedBean.contractVer.ctContractAmount.gstAmount == null )
+			    	? ctBackingBean.managedBean.contractVer.ctContractAmount.contractAmount
+			    		: (ctBackingBean.managedBean.contractVer.ctContractAmount.contractAmount
+			    			+ ctBackingBean.managedBean.contractVer.ctContractAmount.gstAmount 
+			    			+ ctBackingBean.managedBean.contractVer.ctContractAmount.staxAmount)}"  >
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />		
+			</p:inputText>
+			<p:outputLabel value="#{lbl['lbl.ct.new.overall.contract.amt']}" />
+			<p:inputText disabled="true" style="width:200px;" styleClass="ppRightBtn"
+			    value="#{(ctBackingBean.managedBean.contractVer.ctAmendment.valueChange) 
+			    	? amendmentBackingBean.newOverallContractAmount() : lbl['lbl.txt.na']}"  >
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />			
+			</p:inputText>
+			<p:outputLabel value="#{lbl['lbl.ct.pb.percentage']}" />
+			<p:inputText style="width:200px;" disabled="true" styleClass="ppRightBtn"
+				value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondPercentage}">
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+				</p:inputText>
+			<p:outputLabel value="#{lbl['lbl.ct.pb.amount']}" />
+			<p:inputText style="width:200px;" disabled="true"  styleClass="ppRightBtn"
+			  value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondAmt}" >
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />				
+			</p:inputText>
+			<p:outputLabel />
+			<p:inputTextarea autoResize="false" disabled="true" rows="4" 
+				style="width:200px;margin-bottom:5px;"
+			   	value="#{amendmentBackingBean.getBondAmountInText()}" />
+		</h:panelGrid>
+	</p:panel>
+</ui:composition>
+
+
+
+
+

@@ -1,0 +1,70 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<f:param name="userZone" value="#{discActionExecSummaryRptBB.managedBean.getDiscZoneByUser()}"></f:param>
+	<table class="customTbl">
+		<tr>
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.rpt.zone']}" />
+				<p:outputLabel value="*" styleClass="mandatory" />
+			</td>
+
+			<td class="tdContent">
+				<h:outputText value="#{discActionExecSummaryRptBB.managedBean.zone}" />
+			</td>
+		</tr>
+		
+		<tr>
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.rpt.complaint.status']}" />
+				<p:outputLabel value="*" styleClass="mandatory" />
+			</td>
+			<td class="tdContent">
+				<p:selectOneMenu label="#{lbl['lbl.rpt.complaint.status']}" required="true"
+						id="discActStatus" value="#{discActionExecSummaryRptBB.managedBean.discActionStatus}"
+						style="width:300px;">
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="" />
+					<f:selectItems value="#{discActionExecSummaryRptBB.retrieveDiscStatuses()}" var="discAction" 
+					itemLabel="#{discAction.statusName}" itemValue="#{discAction.pmStatus.statusId}" />
+					<p:ajax event="change" process="@this" partialSubmit="true" />
+				</p:selectOneMenu>
+			</td>
+		
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.rpt.supplierType']}" />
+				<p:outputLabel value="*" styleClass="mandatory" />
+			</td>
+			<td class="tdContent">
+				<ac:smReportSupplierType bBean="#{discActionExecSummaryRptBB}" required="true" showAll="false" selectOne="true" />
+			</td>
+		</tr>
+	
+
+		<tr>
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.rpt.complaint.date.from']}" />
+			</td>
+			<td class="tdContent">
+				<ac:smReportDateFromTo bBean="#{discActionExecSummaryRptBB}"  required="false" />
+			</td>
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.rpt.cmpName']}" />
+			</td>
+			<td class="tdContent">
+				<ac:smReportCompanyNameLOV bBean="#{discActionExecSummaryRptBB}" 
+				saveObj="discActionExecSummaryRptBB.managedBean.selectedOrgProfile" />
+			</td>
+		</tr>
+	</table>
+	
+	<ac:smGenerateReport bBean="#{discActionExecSummaryRptBB}" 
+		reportCode="#{smReportBB.managedBean.reportCode}"
+		generateMethod="generateReport" resetMethod="resetSearch">
+	</ac:smGenerateReport>
+		
+</ui:composition>

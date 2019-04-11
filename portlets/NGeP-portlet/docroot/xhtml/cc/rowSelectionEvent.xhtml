@@ -1,0 +1,14 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<p:ajax event="rowSelect" immediate="true" listener="#{dataTableBackingBean.rowSelectEvent}" />
+	<p:ajax event="rowUnselect" immediate="true" listener="#{dataTableBackingBean.rowSelectEvent}" />
+	<p:ajax event="rowSelectCheckbox" immediate="true" listener="#{dataTableBackingBean.rowSelectEvent}" />
+	<p:ajax event="rowUnselectCheckbox" immediate="true" listener="#{dataTableBackingBean.rowSelectEvent}" />
+	<p:ajax event="toggleSelect" immediate="true" listener="#{dataTableBackingBean.rowSelectEvent}" />
+
+</ui:composition>

@@ -1,0 +1,70 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+
+
+	<ui:define name="contentSection">
+<style type="text/css">
+
+
+
+</style>
+
+		<h:panelGroup>
+			<table width="100%" class="BtnSpacing">
+				<tr>
+					<td align="right"><p:commandButton
+							value="#{lbl['lbl.btn.back']}" style="float:left;"
+							action="#{evaluationBackingBean.evaluationBackaction}" /></td>
+				</tr>
+			</table>
+		</h:panelGroup>
+
+		<ui:include src="/xhtml/sc/evaluation/evaluationHeader.xhtml" />
+
+		<p:panel
+			id="evaluationStageFinancialSpceZoneSelectByBussinessOnenerIds"
+			toggleable="true"
+			header="#{lbl['lbl.sc.eva.financial.proposal.evaluation']}">
+			<ui:include src="/xhtml/sc/evaluation/checklistHeader.xhtml" />
+		</p:panel>
+
+	
+		<h:panelGroup>
+			<table style="width: 100%">
+				<tr>
+					<td style="width: 16%;" class="sidemenutd" valign="top"><p:remoteCommand 
+							name="specTabChange" update="@form" partialSubmit="true"
+							process="@form" action="#{evaluationBackingBean.specTabChange}" />
+
+						<p:tabMenu styleClass="sidemenu" id="zonalMenu" 
+							activeIndex="#{evaluationBackingBean.managedBean.specZoneTabIndex}"
+							model="#{evaluationBackingBean.managedBean.evaluationSpecZonalMenuModel}">
+						</p:tabMenu></td>
+					<td style="width: 84%" valign="top"><p:outputPanel id="zoneSpecAnswers">
+							<ui:param name="finSpecsupplierList"
+								value="#{evaluationBackingBean.managedBean.finSpecSupplierListDM}"></ui:param>
+							<ui:param name="finSpecofferPrice"
+								value="#{evaluationBackingBean.managedBean.offerPricePackage}"></ui:param>
+
+
+
+							<ui:include src="finSpecSupplierOfferPriceList.xhtml"></ui:include>
+						</p:outputPanel></td>
+				</tr>
+			</table>
+		</h:panelGroup>
+
+
+
+	</ui:define>
+</ui:composition>

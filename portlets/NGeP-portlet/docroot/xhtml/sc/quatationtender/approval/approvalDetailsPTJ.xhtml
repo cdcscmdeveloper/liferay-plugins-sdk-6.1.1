@@ -1,0 +1,50 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:param name="isPTJApprovalDtlsEditable" value="#{!qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval)}" />
+
+	<p:panel header="#{lbl['lbl.sc.qt.req.dtls']}" toggleable="true">
+		<p:dataTable id="ptjreqdtlsid" var="ptjrequestdetails"
+			value="#{ptjApprovalDtlsList}" rowIndexVar="index" editable="true"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			rowKey="#{ptjrequestdetails}">
+			<p:column headerText="#{lbl['lbl.sc.qt.type.reqdtls']}">
+				<h:outputText
+					value="#{approvalBackingBean.getParameterDesc(ptjrequestdetails.approvalType)}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.from.value']}">
+				<h:outputText value="#{ptjrequestdetails.originalValue}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.to.value']}">
+				<h:outputText value="#{ptjrequestdetails.changedValue}" />
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+
+	<p:panel header="#{lbl['lbl.sc.qt.approver.selection']}" toggleable="true">
+		
+		<div style="width: 100%">
+			<p:pickList id="ptjapproverid" value="#{ptjList}"
+				disabled="#{!isPTJApprovalDtlsEditable}"
+				var="ptjapproverUser" showTargetControls="true"
+				itemLabel="#{ptjapproverUser.pmUser.userName}"
+				itemValue="#{ptjapproverUser}" converter="approverPickListConverter">
+				<f:facet name="sourceCaption">#{lbl['lbl.sc.available']} </f:facet>
+				<f:facet name="targetCaption">#{lbl['lbl.sc.selected']}</f:facet>
+			</p:pickList>
+		</div>
+	</p:panel>
+
+	<ac:scRemarkAndAttachment
+		remarkList="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval.scQtApprovalRemarks}"
+		attachmentList="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval.scQtApprovalAttachments}"
+		readonly="#{!isPTJApprovalDtlsEditable}"
+		updatable="false"
+		fileUploadListener="approvalBackingBean.handleFileUpload" />
+		
+</ui:composition>

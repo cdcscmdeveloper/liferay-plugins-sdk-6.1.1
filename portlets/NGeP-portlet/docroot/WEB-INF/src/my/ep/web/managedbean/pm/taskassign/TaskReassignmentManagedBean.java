@@ -1,0 +1,335 @@
+/*
+ * Copyright © 2014 Archisoft Consulting Sdn Bhd. All rights reserved.
+ */
+package my.ep.web.managedbean.pm.taskassign;
+
+import java.util.List;
+
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+
+import my.ep.bpm.vo.WorklistItemVO;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.web.bean.pm.TaskAssignmentSearchBean;
+import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.vo.PmTaskReassignmentVO;
+
+/**
+ * Managed Bean for Task Reassignment
+ * 
+ * @author Ken
+ * @since 07.09.2016
+ */
+@ManagedBean(name = "taskReassignmentManagedBean")
+@SessionScoped
+public class TaskReassignmentManagedBean extends BaseManagedBean {
+	private static final long serialVersionUID = 1L;
+
+	private TaskAssignmentSearchBean taskAssignmentSearchBean;
+	private PmOrgProfile currentActiveOrg;
+	private boolean orgProfileRequired;
+	private List<String> roleCodes;
+	private PmUser resultUser;
+	private PmOrgProfile resultOrgProfile;
+	private List<PmUser> availableUsers;
+	private WorklistItemVO selectedTask;
+	private PmUser selectedUser;
+	private WorklistItemVO selectedDeleteTask;
+	private String searchUserName;
+	private boolean isTaskLazy;
+	private int taskType;
+	private PmTaskReassignmentVO taskReassignmentVO;
+	private String backURL;
+	private boolean disableForTaskAssignment;
+	private boolean isCommitteeUpdate;
+	private List<Integer> statusIds;
+	private boolean isRemarkRequired;
+	private String remarks;
+	
+	public TaskReassignmentManagedBean(){}
+
+	/**
+	 * @return the taskAssignmentSearchBean
+	 */
+	public TaskAssignmentSearchBean getTaskAssignmentSearchBean() {
+		return taskAssignmentSearchBean;
+	}
+
+	/**
+	 * @param taskAssignmentSearchBean the taskAssignmentSearchBean to set
+	 */
+	public void setTaskAssignmentSearchBean(
+			TaskAssignmentSearchBean taskAssignmentSearchBean) {
+		this.taskAssignmentSearchBean = taskAssignmentSearchBean;
+	}
+
+	/**
+	 * @return the currentActiveOrg
+	 */
+	public PmOrgProfile getCurrentActiveOrg() {
+		return currentActiveOrg;
+	}
+
+	/**
+	 * @param currentActiveOrg the currentActiveOrg to set
+	 */
+	public void setCurrentActiveOrg(PmOrgProfile currentActiveOrg) {
+		this.currentActiveOrg = currentActiveOrg;
+	}
+
+	/**
+	 * @return the orgProfileRequired
+	 */
+	public boolean isOrgProfileRequired() {
+		return orgProfileRequired;
+	}
+
+	/**
+	 * @param orgProfileRequired the orgProfileRequired to set
+	 */
+	public void setOrgProfileRequired(boolean orgProfileRequired) {
+		this.orgProfileRequired = orgProfileRequired;
+	}
+
+	/**
+	 * @return the roleCodes
+	 */
+	public List<String> getRoleCodes() {
+		return roleCodes;
+	}
+
+	/**
+	 * @param roleCodes the roleCodes to set
+	 */
+	public void setRoleCodes(List<String> roleCodes) {
+		this.roleCodes = roleCodes;
+	}
+
+	/**
+	 * @return the resultUser
+	 */
+	public PmUser getResultUser() {
+		return resultUser;
+	}
+
+	/**
+	 * @param resultUser the resultUser to set
+	 */
+	public void setResultUser(PmUser resultUser) {
+		this.resultUser = resultUser;
+	}
+
+	/**
+	 * @return the resultOrgProfile
+	 */
+	public PmOrgProfile getResultOrgProfile() {
+		return resultOrgProfile;
+	}
+
+	/**
+	 * @param resultOrgProfile the resultOrgProfile to set
+	 */
+	public void setResultOrgProfile(PmOrgProfile resultOrgProfile) {
+		this.resultOrgProfile = resultOrgProfile;
+	}
+
+	/**
+	 * @return the availableUsers
+	 */
+	public List<PmUser> getAvailableUsers() {
+		return availableUsers;
+	}
+
+	/**
+	 * @param availableUsers the availableUsers to set
+	 */
+	public void setAvailableUsers(List<PmUser> availableUsers) {
+		this.availableUsers = availableUsers;
+	}
+
+	/**
+	 * @return the selectedTask
+	 */
+	public WorklistItemVO getSelectedTask() {
+		return selectedTask;
+	}
+
+	/**
+	 * @param selectedTask the selectedTask to set
+	 */
+	public void setSelectedTask(WorklistItemVO selectedTask) {
+		this.selectedTask = selectedTask;
+	}
+
+	/**
+	 * @return the selectedUser
+	 */
+	public PmUser getSelectedUser() {
+		return selectedUser;
+	}
+
+	/**
+	 * @param selectedUser the selectedUser to set
+	 */
+	public void setSelectedUser(PmUser selectedUser) {
+		this.selectedUser = selectedUser;
+	}
+
+	/**
+	 * @return the selectedDeleteTask
+	 */
+	public WorklistItemVO getSelectedDeleteTask() {
+		return selectedDeleteTask;
+	}
+
+	/**
+	 * @param selectedDeleteTask the selectedDeleteTask to set
+	 */
+	public void setSelectedDeleteTask(WorklistItemVO selectedDeleteTask) {
+		this.selectedDeleteTask = selectedDeleteTask;
+	}
+
+	/**
+	 * @return the searchUserName
+	 */
+	public String getSearchUserName() {
+		return searchUserName;
+	}
+
+	/**
+	 * @param searchUserName the searchUserName to set
+	 */
+	public void setSearchUserName(String searchUserName) {
+		this.searchUserName = searchUserName;
+	}
+
+	/**
+	 * @return the isTaskLazy
+	 */
+	public boolean isTaskLazy() {
+		return isTaskLazy;
+	}
+
+	/**
+	 * @param isTaskLazy the isTaskLazy to set
+	 */
+	public void setTaskLazy(boolean isTaskLazy) {
+		this.isTaskLazy = isTaskLazy;
+	}
+
+	/**
+	 * @return the taskType
+	 */
+	public int getTaskType() {
+		return taskType;
+	}
+
+	/**
+	 * @param taskType the taskType to set
+	 */
+	public void setTaskType(int taskType) {
+		this.taskType = taskType;
+	}
+
+	/**
+	 * @return the taskReassignmentVO
+	 */
+	public PmTaskReassignmentVO getTaskReassignmentVO() {
+		return taskReassignmentVO;
+	}
+
+	/**
+	 * @param taskReassignmentVO the taskReassignmentVO to set
+	 */
+	public void setTaskReassignmentVO(PmTaskReassignmentVO taskReassignmentVO) {
+		this.taskReassignmentVO = taskReassignmentVO;
+	}
+
+	/**
+	 * @return the backURL
+	 */
+	public String getBackURL() {
+		return backURL;
+	}
+
+	/**
+	 * @param backURL the backURL to set
+	 */
+	public void setBackURL(String backURL) {
+		this.backURL = backURL;
+	}
+
+	/**
+	 * @return the disableForTaskAssignment
+	 */
+	public boolean isDisableForTaskAssignment() {
+		return disableForTaskAssignment;
+	}
+
+	/**
+	 * @param disableForTaskAssignment the disableForTaskAssignment to set
+	 */
+	public void setDisableForTaskAssignment(boolean disableForTaskAssignment) {
+		this.disableForTaskAssignment = disableForTaskAssignment;
+	}
+
+	/**
+	 * @return the statusIds
+	 */
+	public List<Integer> getStatusIds() {
+		return statusIds;
+	}
+
+	/**
+	 * @param statusIds the statusIds to set
+	 */
+	public void setStatusIds(List<Integer> statusIds) {
+		this.statusIds = statusIds;
+	}
+
+	/**
+	 * @return the isRemarkRequired
+	 */
+	public boolean isRemarkRequired() {
+		return isRemarkRequired;
+	}
+
+	/**
+	 * @param isRemarkRequired the isRemarkRequired to set
+	 */
+	public void setRemarkRequired(boolean isRemarkRequired) {
+		this.isRemarkRequired = isRemarkRequired;
+	}
+
+	/**
+	 * @return the remarks
+	 */
+	public String getRemarks() {
+		return remarks;
+	}
+
+	/**
+	 * @param remarks the remarks to set
+	 */
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+
+	/**
+	 * @return the isCommitteeUpdate
+	 */
+	public boolean isCommitteeUpdate() {
+		return isCommitteeUpdate;
+	}
+
+	/**
+	 * @param isCommitteeUpdate the isCommitteeUpdate to set
+	 */
+	public void setCommitteeUpdate(boolean isCommitteeUpdate) {
+		this.isCommitteeUpdate = isCommitteeUpdate;
+	}
+
+	
+	
+}

@@ -1,0 +1,28 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<div align="left" class="header-info">
+	<table class="customTbl">
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.complaint.no']}" /></td>
+				<td class="header-info-text">
+					#{complaintBackingBean.managedBean.smComplaint.complaintNo}
+				</td>
+				
+				<td><p:outputLabel value="#{lbl['lbl.sm.suppname']}" /></td>
+				<td class="header-info-text">
+					#{complaintBackingBean.managedBean.smComplaint.smSupplier.companyName}
+				</td>
+				
+				<td><p:outputLabel value="#{lbl['lbl.sm.status']}" /></td>
+				<td class="header-info-text">
+					#{complaintBackingBean.getStatusDescById(complaintBackingBean.managedBean.smComplaint.pmStatus.statusId)}
+				</td>
+			</tr>
+	</table>
+	</div>
+</ui:composition>

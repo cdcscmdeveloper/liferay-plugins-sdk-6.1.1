@@ -1,0 +1,100 @@
+<ui:composition xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<ui:decorate template="specColumnQuestionViewHeader.xhtml">
+	<ui:define name="otherHeaderSection">
+	<ui:param name="specificationRequired" value="#{isSpecTypeTechnical or isSqSpec or (isSpecTypeFinancial and !isSpecificationReq)}"></ui:param>
+	<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:97px; white-space:normal;">
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.tpl.spec.content.unit.price']}" />
+		</f:facet>
+		</p:column>
+		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:90px;white-space:normal;text-align:right;"
+		rendered="#{isItemTypeService}"
+		headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
+		</p:column>
+		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:115px; text-align:right; white-space:normal;"
+		headerText="#{lbl['lbl.tpl.spec.content.total.amount']}">
+		</p:column>
+	</ui:define>
+	</ui:decorate>
+
+	<ui:decorate template="specColumnQuestionView.xhtml" />
+	
+	<p:column style="width:97px; white-space:normal;">
+		
+		<f:facet name="footer">
+			<h:outputText value="#{lbl['lbl.tpl.spec.specification.total']}"
+				rendered="#{isAllPriceTypesStandard}" />
+		</f:facet>
+
+		<h:panelGroup id="ratePerUomPG">
+			<h:outputText id="ratePerUom"
+				style="min-width:0px !important;width:86px; text-align:right;"
+				value="#{question.tplSpecAnswers[0].ratePerUom}"
+				rendered="#{isQuestionTypeItem and isPriceTypeStandard}"
+				label="#{lbl['lbl.tpl.spec.content.unit.price']}">
+				<ac:validateNumber
+					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"
+					maxIntegerDigits="14" />
+			</h:outputText>
+			<p:commandButton id="ratePerUomBtn" icon="ui-icon-pencil"
+				style="background-color:transparent !important; border:0px none;"
+				action="#{templateSpecBackingBean.zoneTierPricePopupAction(templateSpecBean)}"
+				oncomplete="#{zoneTierPricePopup}.show();" partialSubmit="true"
+				process="@this" update="@([id$=zoneTierPricePopup])"
+				rendered="#{isQuestionTypeItem and !isPriceTypeStandard and !empty question.clPriceTypeCode.parameterCode}">
+				<f:setPropertyActionListener
+					target="#{templateSpecBean.selectedSpecQuestion}"
+					value="#{question}" />
+			</p:commandButton>
+		</h:panelGroup>
+	</p:column>
+
+	<p:column style="width:90px;white-space:normal;text-align:right;"
+		rendered="#{isItemTypeService}">
+		<f:facet name="footer">
+			<h:outputText id="totalAmountPerYr" styleClass="calcAmount" rendered="#{isDurationYear}"
+				value="#{templateSpecBean.specMaster.totalAmountPerYear}">
+				<f:convertNumber
+					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			</h:outputText>
+		</f:facet>
+		<h:panelGroup id="ansYearPG" rendered="#{isDurationYear}">
+			<h:outputText value="#{question.tplSpecAnswers[0].amountPerYear}"
+				rendered="#{isQuestionTypeItem and isPriceTypeStandard}">
+				<f:convertNumber
+					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			</h:outputText>
+		</h:panelGroup>
+		<h:panelGroup rendered="#{!isDurationYear}">
+			<h:outputText value="#{lbl['lbl.txt.na']}"/>
+		</h:panelGroup>
+	</p:column>
+
+	<p:column style="width:115px; text-align:right; white-space:normal;">
+		<f:facet name="footer">
+			<h:outputText id="totalAmount" styleClass="calcAmount"
+				value="#{templateSpecBackingBean.calcGrandTotalAmount(templateSpecBean)}"
+				rendered="#{isAllPriceTypesStandard}">
+				<f:convertNumber
+					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			</h:outputText>
+		</f:facet>
+
+		<h:panelGroup id="ansPG">
+			<h:outputText id="answerNumText"
+				value="#{question.tplSpecAnswers[0].answerNumeric}"
+				rendered="#{isQuestionTypeItem and isPriceTypeStandard}">
+				<f:convertNumber
+					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			</h:outputText>
+		</h:panelGroup>
+	</p:column>
+	
+
+</ui:composition>
