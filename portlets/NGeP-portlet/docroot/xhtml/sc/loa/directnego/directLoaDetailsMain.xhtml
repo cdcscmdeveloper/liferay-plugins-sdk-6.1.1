@@ -32,7 +32,18 @@
 
 		<ui:include src="/xhtml/sc/loa/directnego/directLoaButtons.xhtml" />
 		<ui:include src="/xhtml/sc/loa/directnego/directLoaHeader.xhtml" />
-
+		<!-- 20190405@asyrafhaziq - CR(25062)- Start -->
+		<ui:param name="bpmAction" value="APPROVE" />
+		<ui:param name="committeeApprovalConsentSigner"
+			value="committeeApprovalConsentSigner" />
+		<ac:approvePopup id="#{committeeApprovalConsentSigner}"
+			widget="loaApprovalPopUp"
+			okAction="#{directLOABackingBean.updateBpmTaskAction(bpmAction)}"
+			width="50%" height="100"
+			title="#{lbl['lbl.sc.dialog.confirm.loa.approve.header']}"
+			content="#{lbl['lbl.sc.dialog.confirm.loa.approve.dtls']}"
+			update="@form" />
+		<!-- 20190405@asyrafhaziq - CR(25062)- End -->
 		<ac:gpkiPopup textBeforeSign="#{directLOABackingBean.textBeforeSign}"
 			postSignAction="#{directLOABackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" 
 			enableAutoUpdate="#{directLOABackingBean.enableAutoUpdate()}" />
