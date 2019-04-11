@@ -146,6 +146,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	private String referenceNo;
 	private List<CtAttachment> waiverDetail;
 	private CtAttachment ctAttachment;
+	private CtAttachment ctAttachmentTemp;
 	private CtAttachment ctAttachmentLatest;
 
 	/**
@@ -1225,6 +1226,14 @@ public class ContractManagedBean extends BaseManagedBean {
 
 	public void setCtAttachmentLatest(CtAttachment ctAttachmentLatest) {
 		this.ctAttachmentLatest = ctAttachmentLatest;
+	}
+
+	public CtAttachment getCtAttachmentTemp() {
+		return ctAttachmentTemp;
+	}
+
+	public void setCtAttachmentTemp(CtAttachment ctAttachmentTemp) {
+		this.ctAttachmentTemp = ctAttachmentTemp;
 	}
 
 }

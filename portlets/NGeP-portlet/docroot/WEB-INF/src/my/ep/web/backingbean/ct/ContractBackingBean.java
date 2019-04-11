@@ -92,6 +92,7 @@ import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtAddress;
 import my.ep.persistence.entity.ct.CtAttachment;
+import my.ep.persistence.entity.ct.CtBondWaiverDetail;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.CtWorkflowStatus;
@@ -2079,10 +2080,56 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			//LOG : 13847, by Fahmi 22032019
 			getManagedBean().setCtAttachmentLatest(attachment);
+			if(getManagedBean().getAttachmentList().size() == 0){
+				if(getManagedBean().getCtAttachmentTemp() == null){
+					getManagedBean().setCtAttachmentTemp(new CtAttachment());
+					if(getManagedBean().getCtAttachmentTemp().getCtBondWaiverDetail() == null){
+						getManagedBean().getCtAttachmentTemp().setCtBondWaiverDetail(new CtBondWaiverDetail());
+					}
+				}
+				if(getManagedBean().getCtAttachmentTemp().getFileName() == null || "".equalsIgnoreCase(getManagedBean().getCtAttachmentTemp().getFileName())){
+					getManagedBean().getCtAttachmentTemp().setFileName(item.getFileName());
+					getManagedBean().getCtAttachmentTemp().setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+					getManagedBean().getCtAttachmentTemp().setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+					getManagedBean().getCtAttachmentTemp().setCreatedUser(facesScopes.getUserSessionBean());
+					getManagedBean().getCtAttachmentTemp().setCreatedDate(new Timestamp(System.currentTimeMillis()));
+				}
+				
+			}
 			//getManagedBean().getContractVer().getBondWaiverAttachments().add(attachment);
 			RequestContext.getCurrentInstance().execute("uploadWaiverDlg.hide()");
 		}
 	}
+	//LOG : 13847, by Fahmi 22032019
+		/**
+		 * The method used to set temp first data
+		 * 
+		 * @param  
+		 * @throws 
+		 * @see    
+		 */
+		public void setToTempFirstTime(){
+			String task =  FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("taskId1");
+			String task2 =  FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("taskId2");
+			String task3 =  FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("taskId3");
+			if(getManagedBean().getAttachmentList().size() == 0){
+				if(getManagedBean().getCtAttachmentTemp() == null){
+					getManagedBean().setCtAttachmentTemp(new CtAttachment());
+					if(getManagedBean().getCtAttachmentTemp().getCtBondWaiverDetail() == null){
+						getManagedBean().getCtAttachmentTemp().setCtBondWaiverDetail(new CtBondWaiverDetail());
+					}
+				}
+				if("startDate".equalsIgnoreCase(task) && getManagedBean().getCtAttachmentTemp().getCtBondWaiverDetail().getWaiverStartDate() == null){
+					getManagedBean().getCtAttachmentTemp().getCtBondWaiverDetail().setWaiverStartDate(getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverStartDate());
+				}else if("endDate".equalsIgnoreCase(task2) && getManagedBean().getCtAttachmentTemp().getCtBondWaiverDetail().getWaiverEndDate() == null){
+					getManagedBean().getCtAttachmentTemp().getCtBondWaiverDetail().setWaiverEndDate(getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverEndDate());
+				}else if("referenceNo".equalsIgnoreCase(task3) && (getManagedBean().getCtAttachmentTemp().getCtBondWaiverDetail().getReferenceNo() == null || "".equalsIgnoreCase(getManagedBean().getCtAttachmentTemp().getCtBondWaiverDetail().getReferenceNo()))){
+					getManagedBean().getCtAttachmentTemp().getCtBondWaiverDetail().setReferenceNo(getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getReferenceNo());
+				}
+			}
+			
+			
+		}
 	//LOG : 13847, by Fahmi 22032019
 	/**
 	 * The method used to set waiver detail
@@ -2139,6 +2186,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().setBrandNew(true);
 		getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().setCtAttachment(new CtAttachment());
 		
+		if(getManagedBean().getCtAttachment() == null){
+			getManagedBean().setCtAttachment(new CtAttachment());
+			getManagedBean().setCtAttachment(SerializationUtils.clone(getManagedBean().getCtAttachmentTemp()));
+		}
 		getManagedBean().getCtAttachment().setCreatedBy(facesScopes.getUserSessionBean().getUserId());
 		getManagedBean().getCtAttachment().setCreatedUser(facesScopes.getUserSessionBean());
 		getManagedBean().getCtAttachment().setCreatedDate(new Timestamp(System.currentTimeMillis()));
