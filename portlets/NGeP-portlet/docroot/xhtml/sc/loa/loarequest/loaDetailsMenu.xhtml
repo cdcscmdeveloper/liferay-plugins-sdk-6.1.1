@@ -442,24 +442,6 @@
 				</c:if>
 			</td>
 		</tr>
-		<c:if test="#{isEditableStatus}">
-			<tr>
-				<td>
-					<p:outputLabel value="#{lbl['lbl.pm.organisation.orgType']}" />
-				</td>
-				<td colspan="3">
-					<p:selectOneMenu id="orgtypeId" styleClass="ppDropDownWidthM"
-						disabled="false" label="#{lbl['lbl.pm.organisation.orgType']}"
-						value="#{lOADetailBackingBean.managedBean.orgTypeId}"
-						style="width: 275px;margin-bottom: 5px;">
-						<f:selectItems
-							value="#{lOADetailBackingBean.getDropdownValuesByPtjAndKptj(ParameterTypeConst.organisationTypes)}" />
-						<p:ajax event="change" listener="#{lOADetailBackingBean.clearOrgNameSearchFields()}" 
-							onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@form"/> 
-					</p:selectOneMenu>
-				</td>
-			</tr>
-		</c:if>
 		<tr>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.agency']}" />
@@ -487,7 +469,7 @@
 						<p:commandLink id="ptjSearchCL" partialSubmit="true"
 							disabled="#{lOADetailBackingBean.managedBean.selectedOrgType.parameterId==null}"
 							process="@this" update=":form:orgProfileCcId:ptjPopup"
-							action="#{organisationSearchBackingBean.initPtjPopup}"
+							action="#{organisationSearchBackingBean.initPtjPopupDefaultMinistry(lOADetailBackingBean.managedBean.ministryOrgProfile.orgProfileId)}"
 							oncomplete="ptjPopup.show();" >
 							<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
 						</p:commandLink>

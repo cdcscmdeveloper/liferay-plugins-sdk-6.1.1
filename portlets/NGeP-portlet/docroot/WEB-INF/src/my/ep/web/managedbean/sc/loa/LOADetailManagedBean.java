@@ -265,7 +265,9 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	
 	// Flag to enable Performance Bond for Direct Purchase.
 	private boolean enablePBForDP;
-	
+
+	private PmOrgProfile ministryOrgProfile;
+
     /**
      * Gets the spki backing bean.
      *
@@ -1524,5 +1526,12 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	public void setEnablePBForDP(boolean enablePBForDP) {
 		this.enablePBForDP = enablePBForDP;
 	}
-	
+
+	public PmOrgProfile getMinistryOrgProfile() {
+		return ministryOrgProfile;
+	}
+
+	public void setMinistryOrgProfile(PmOrgProfile ministryOrgProfile) {
+		this.ministryOrgProfile = ministryOrgProfile;
+	}
 }
