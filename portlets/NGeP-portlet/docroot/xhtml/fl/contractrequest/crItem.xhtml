@@ -498,12 +498,12 @@
 							size="30"></p:inputText>
 						<ac:iconTooltip value="#{lbl['lbl.fl.supp.contact.person.name']}"/></td>
 					<td width="50"><p:message for="contactPerson" display="icon" /></td>
-					<td width="200" rowspan="5" valign="top">
+					<td rowspan="5" valign="top">
 						<p:outputLabel value="#{lbl['lbl.fl.manual.add.delivery.add.new']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /> 
 					</td>
-					<td width="210" rowspan="5">
- 						<p:inputTextarea cols="42" rows="9" id="chargeOrgProfileNew"
+					<td rowspan="5">
+ 						<p:inputTextarea cols="28" rows="9" id="chargeOrgProfileNew"
 						required="#{contractRequestBackingBean.managedBean.required}"
 						onkeyup="limitTextArea(this,500);"
 						onkeydown="limitTextArea(this,500);"
@@ -515,7 +515,7 @@
 						value="#{contractRequestBackingBean.managedBean.flManualAddress.flAddress.selectedPtjCodeNameValue}"> 
 						</p:inputTextarea>
 					</td>
-					<td rowspan="2">
+					<td width="52" rowspan="2">
 						<p:commandLink id="searchPtjNew"
 						oncomplete="dlgChargedPtjNew.show();" immediate="true"
 						action="#{contractRequestBackingBean.initPMAddressTypeDetails}"
