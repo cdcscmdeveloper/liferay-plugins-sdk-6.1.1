@@ -276,6 +276,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			DirectAwardResDTO resDTO = getQtDirectAwardSO()
 					.saveDirectAwardDetails(reqDTO);
 			scLoa = resDTO.getLoa();
+
 			if (resDTO.isSuccessful()
 					&& null == this.getManagedBean().getTaskId()) {
 				if (QTStatusConst.LOA_PENDING_SUBMISSION
@@ -299,18 +300,19 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				this.getManagedBean().setOutComes(outComes);
 				this.getManagedBean().setSelectedTabIndex(selectedTabIndx);
 				this.getManagedBean().setPayLoad(awardSupplierDataType);
+
 				if (!QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
 						.equals(scLoa.getPmStatus().getStatusId())) {
 					retriveLoaDetails(scLoa.getLoaId(), null, false);
 
 					contractTypeChanged();
-					viewOrgTypeId(scLoa);
 				}
 				if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
 						.equals(scLoa.getPmStatus().getStatusId())) {
 					getSupplierDeatilsByLoaId(scLoa.getLoaId());
 
 				}
+
 				successMessage(MessageConst.INFO_700025,
 						ParameterTypeConst.DOCUMENT_TYPES,
 						ParameterConst.DOCTYPE_LETTER_OF_AWARD,
@@ -2088,6 +2090,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				.getScLoiLoa()
 				.setPmOrgProfile(
 						pmOrgProfile);
+		initDefaultSelectedOrgType();
 		populateMinistryBasedOnLoginUser();
 		getApprovalUsers();
 		prepareSignerInfo();
@@ -8407,7 +8410,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				setOverallCtAmount(getManagedBean().getScLoa().getLoaAmt());
 			}
 			
-			getManagedBean().getScLoa().setJustificationType(null);
+//			getManagedBean().getScLoa().setJustificationType(null);
 		}
 		
 		if (getManagedBean().getPk7Reasons() == null) {

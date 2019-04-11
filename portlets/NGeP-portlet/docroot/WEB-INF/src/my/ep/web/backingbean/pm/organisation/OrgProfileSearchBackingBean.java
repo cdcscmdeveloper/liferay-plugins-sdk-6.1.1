@@ -1,11 +1,13 @@
 package my.ep.web.backingbean.pm.organisation;
 
 import java.util.List;
+
 import javax.el.MethodExpression;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -29,6 +31,7 @@ import my.ep.web.managedbean.pm.organisation.OrgProfileSearchManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -70,7 +73,15 @@ public class OrgProfileSearchBackingBean extends
 		return PmCommonUtil.getJabatanDropdown(getManagedBean()
 				.getPegaiPengawaProfileId());
 	}
-	
+
+	public void initPtjPopupDefaultMinistry(Long orgProfileId) {
+		initPtjPopup();
+		if (getFacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value())) {
+			getManagedBean().setMinistryProfileId(orgProfileId);
+			getManagedBean().setDisabledMinistry(true);
+		}
+	}
+
 	public void initPtjPopup(){
 		this.renewSesionObject();
 		List<PmUserOrg> userOrgList = PmCommonUtil

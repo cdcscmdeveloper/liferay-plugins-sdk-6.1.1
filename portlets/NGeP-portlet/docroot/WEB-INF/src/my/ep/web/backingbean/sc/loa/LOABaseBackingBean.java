@@ -1,6 +1,5 @@
 package my.ep.web.backingbean.sc.loa;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -12,11 +11,11 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
-import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
@@ -33,60 +32,15 @@ import org.primefaces.context.RequestContext;
 public abstract class LOABaseBackingBean<T extends LOABaseManagedBean> extends SourcingBaseBackingBean<T> {
 	private static final long serialVersionUID = 1L;
 
-	public SelectItem[] getDropdownValuesByPtjAndKptj(String parameterType) {
-		SelectItem[] items = getDropdownValuesBySearchBean(parameterType, searchBeanByPtjAndKptj());
-
-		return items;
-	}
-
-	private ISearchBean<PmParameterDesc> searchBeanByPtjAndKptj() {
-		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
-
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_IN.value(),
-						organizationTypes()));
-		return searchBean;
-	}
-
-	private List<String> organizationTypes() {
-		List<String> organizationTypes = new ArrayList<String>();
-		organizationTypes.add(ParameterConst.ORG_TYPE_JABATAN);
-		organizationTypes.add(ParameterConst.ORG_TYPE_PTJ);
-		return organizationTypes;
-	}
-
-	protected void viewOrgTypeId(ScLoa scLoa) {
-		if (scLoa.getOrganizationType() != null) {
-			this.getManagedBean().setOrgTypeId(scLoa.getOrganizationType().getParameterId());
-		}
-	}
-
 	protected void viewContractDetails(ScLoa scLoa) {
-		this.getManagedBean().setSelectedOrgType(scLoa.getOrganizationType());
+		initDefaultSelectedOrgType();
 		this.getManagedBean().setSelectedPtj(scLoa.getContractAgency());
-		viewOrgTypeId(scLoa);
 	}
 
-	public void clearOrgNameSearchFields() {
-		log.info("clearOrgNameSearchFields");
-		if (this.getManagedBean().getOrgTypeId() != null) {
-			PmParameter pmParameter = retrieveParameterById(this.getManagedBean().getOrgTypeId());
-			this.getManagedBean().setSelectedOrgType(pmParameter);
-			updateSelectedPtj(pmParameter);
-		} else {
-			this.getManagedBean().setSelectedOrgType(null);
-			this.getManagedBean().setSelectedPtj(null);
-		}
-	}
-
-	public void updateSelectedPtj(PmParameter pmParameter) {
-		ScLoa scLoa = this.getManagedBean().getScLoa();
-		PmParameter orgType = scLoa.getOrganizationType();
-		if (orgType != null && (pmParameter.getParameterId().longValue() == orgType.getParameterId().longValue())) {
-			this.getManagedBean().setSelectedPtj(scLoa.getContractAgency());
-		} else {
-			this.getManagedBean().setSelectedPtj(null);
-		}
+	public void initDefaultSelectedOrgType() {
+		PmParameter pmParameter = retrieveParameterByTypeAndCode(ParameterTypeConst.ORGANISATION_TYPES,
+				ParameterConst.ORG_TYPE_PTJ);
+		this.getManagedBean().setSelectedOrgType(pmParameter);
 	}
 
 	public void updateContractAdmin() {
@@ -108,7 +62,7 @@ public abstract class LOABaseBackingBean<T extends LOABaseManagedBean> extends S
 	public SelectItem[] getUsersByAgency() {
 		ISearchBean<PmUser> searchBean = contractAdminSearchBean();
 
-		ISearchResultBean<PmUser> resultBean = getUserSO().retrieveMinistryUserList(searchBean);
+		ISearchResultBean<PmUser> resultBean = getUserSOGlobal().retrieveMinistryUserList(searchBean);
 		List<PmUser> pmUsers = resultBean.getResultList();
 		log.info("Number of Users = " + pmUsers.size());
 
@@ -168,10 +122,6 @@ public abstract class LOABaseBackingBean<T extends LOABaseManagedBean> extends S
 
 	protected void updateContractDetails(ScLoa scLoa) {
 		Locale locale = new FacesScopes().getUserLocale();
-		if (this.getManagedBean().getOrgTypeId() == null) {
-			throw new EpException(MessageConst.ERROR_760400, new String[] { ResourceBundleUtils.getMessage(
-					"lbl.pm.organisation.orgType", ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale) });
-		}
 
 		if (StringUtils.isNotBlank(this.getManagedBean().getSelectedOrgType().getParameterCode())) {
 			if (this.getManagedBean().getSelectedPtj() == null) {
@@ -179,7 +129,6 @@ public abstract class LOABaseBackingBean<T extends LOABaseManagedBean> extends S
 						"lbl.sc.loiloa.loa.agency", ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale) });
 			} else {
 				scLoa.setContractAgency(this.getManagedBean().getSelectedPtj());
-				scLoa.setOrganizationType(this.getManagedBean().getSelectedOrgType());
 			}
 		}
 	}
