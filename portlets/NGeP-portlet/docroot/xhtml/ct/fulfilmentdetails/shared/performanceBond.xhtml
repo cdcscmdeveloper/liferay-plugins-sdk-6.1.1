@@ -53,12 +53,13 @@
 						<p:outputLabel id="waiverStartDate" value="#{lbl['lbl.ct.pb.waiver.start.date']}" styleClass="required" />
 					</td>
 					<td>
-						<p:calendar id="popupButtonCal5" value="#{ctBackingBean.managedBean.ctAttachmentLatest.ctBondWaiverDetail.waiverStartDate}"  styleClass="calendarDateField" size="9" 
+						<p:calendar id="startDate" value="#{ctBackingBean.managedBean.ctAttachmentLatest.ctBondWaiverDetail.waiverStartDate}" styleClass="calendarDateField" size="9" 
 							showOn="button" readonlyInput="true" navigator="true"
 							mindate="#{ctBackingBean.managedBean.contractVer.ctContractValue.effDate}"
 							maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
-							 <p:ajax event="dateSelect" update="@([id$=bondExpDateCalId])" process="@this" />
+							 <p:ajax event="dateSelect" listener="#{ctBackingBean.setToTempFirstTime()}" process="@this"  />
+							 <f:param name="taskId1" value="startDate" />
 						</p:calendar>
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.waiver.performance.bond.start.date']}"/>
 					</td>
@@ -66,12 +67,13 @@
 						<p:outputLabel id="waiverEndDate" value="#{lbl['lbl.ct.pb.waiver.end.date']}" styleClass="required" />
 					</td>
 					<td colspan="2">
-						<p:calendar id="popupButtonCal6" value="#{ctBackingBean.managedBean.ctAttachmentLatest.ctBondWaiverDetail.waiverEndDate}" styleClass="calendarDateField" size="9" 
+						<p:calendar id="endDate" value="#{ctBackingBean.managedBean.ctAttachmentLatest.ctBondWaiverDetail.waiverEndDate}" styleClass="calendarDateField" size="9" 
 							showOn="button" readonlyInput="true" navigator="true"
 							mindate="#{ctBackingBean.managedBean.contractVer.ctContractValue.effDate}"
 							maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
-							 <p:ajax event="dateSelect" update="@([id$=bondExpDateCalId])" process="@this" />
+							 <p:ajax event="dateSelect" listener="#{ctBackingBean.setToTempFirstTime()}"  process="@this" />
+							 <f:param name="taskId2" value="endDate" />
 						</p:calendar>
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.waiver.performance.bond.end.date']}"/>
 					</td>
@@ -81,8 +83,10 @@
 					<p:outputLabel id="waiverReferenceNo" value="#{lbl['lbl.ct.pb.waiver.reference.no']}" styleClass="required" />
 					</td>
 					<td>
-						<p:inputText for="bondAmount" styleClass=""  maxlength="30" style="width:130px;"
+						<p:inputText id="referenceNo" for="referenceNo" styleClass=""  maxlength="20" style="width:130px;"
 			  				value="#{ctBackingBean.managedBean.ctAttachmentLatest.ctBondWaiverDetail.referenceNo}">
+			  				<p:ajax event="change"  listener="#{ctBackingBean.setToTempFirstTime()}"  process="@this" />
+							 <f:param name="taskId3" value="referenceNo" />
 						</p:inputText>
 					</td>
 					<td>
@@ -125,9 +129,7 @@
 				<td>
 				<p:commandButton id="addwaiverBtn"  value="#{lbl['lbl.btn.update']}" process="@all"
 						     action="#{ctBackingBean.setBondWaiverToTable()}" update="@all" partialSubmit="true"
-						     rendered="#{!ctBackingBean.managedBean.viewContract
-								and ctBackingBean.managedBean.ctContractAmount.bondReq and ctBackingBean.managedBean.ctAttachmentLatest != null and (ctBackingBean.managedBean.ctAttachmentLatest.attachmentId != null || ctBackingBean.managedBean.attachmentList.size() > 0)}"
-						     oncomplete="tableBondWidget.paginator.endLink.click();">
+						    oncomplete="tableBondWidget.paginator.endLink.click();">
 					</p:commandButton>
 					</td>
 				</tr>
@@ -139,14 +141,14 @@
 				value="#{ctBackingBean.managedBean.attachmentList}"  rowKey="#{rowKeyObj}">
 				<ac:paginator for="tableBond" />	
 						
-				<p:column style="width:8%;" styleClass="column-align-center">
+				<p:column style="width:20%;" styleClass="column-align-center">
 					<f:facet name="header">
 					        <h:outputText value="#{lbl['lbl.ct.start.date']}" />
 					        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.waiver.performance.bond.start.date']}"/>
 					</f:facet>
 					
 					<p:calendar id="popupButtonCal7" value="#{varWaiver.ctBondWaiverDetail.waiverStartDate}"  styleClass="calendarDateField" size="9" 
-						showOn="button" readonlyInput="true" navigator="true"
+						readonlyInput="true" navigator="true" disabled = "true"
 						mindate="#{ctBackingBean.managedBean.contractVer.ctContractValue.effDate}"
 						maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
@@ -154,13 +156,14 @@
 					</p:calendar>
 					</p:column>
 						
-				<p:column style="width:8%;" styleClass="column-align-center">
+				<p:column style="width:20%;" styleClass="column-align-center">
 					<f:facet name="header">
 					        <h:outputText value="#{lbl['lbl.ct.end.date']}" />
 					        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.waiver.performance.bond.end.date']}"/>
 					</f:facet>
 					<p:calendar id="popupButtonCal8" value="#{varWaiver.ctBondWaiverDetail.waiverEndDate}"  styleClass="calendarDateField" size="9" 
-						showOn="button" readonlyInput="true" navigator="true"
+						readonlyInput="true" navigator="true"
+						disabled = "true"
 						mindate="#{ctBackingBean.managedBean.contractVer.ctContractValue.effDate}"
 						maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}" 
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
@@ -168,11 +171,11 @@
 					</p:calendar>
 					
 				</p:column>
-				<p:column style="width:30%;white-space:normal;"  styleClass="column-align-center">
+				<p:column style="width:20%;white-space:normal;"  styleClass="column-align-center" >
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.ct.pb.waiver.reference.no']}"  />
 				</f:facet>
-				<p:inputText id="bondRefNoId" value="#{varWaiver.ctBondWaiverDetail.referenceNo}" maxlength="50" style="width:95%;" 
+				<p:inputText id="bondRefNoId" value="#{varWaiver.ctBondWaiverDetail.referenceNo}" maxlength="20" 
 					disabled="true" 
 					rendered="#{!ctBackingBean.managedBean.viewContract
 					and ctBackingBean.managedBean.ctContractAmount.bondReq}">
@@ -182,12 +185,12 @@
 				      style="float:left;text-align:left;"  rendered="#{ctBackingBean.managedBean.viewContract
 				      or !ctBackingBean.managedBean.ctContractAmount.bondReq}"/>
 				</p:column>	
-				<p:column styleClass="column-align-center"  headerText="#{lbl['lbl.txt.attachment']}" style="width:15%;">		
+				<p:column styleClass="column-align-center"  headerText="#{lbl['lbl.ct.bond.waiver.letter']}" style="width:35%;">		
 					<h:panelGroup id="uploadBondPg" columns="2">
-						
+						<!--value="#{ctBackingBean.getShortFileName(varWaiver.fileName)}"-->
 						<h:commandLink
 							title="#{varWaiver.fileName}"
-							value="#{ctBackingBean.getShortFileName(varWaiver.fileName)}"						
+							value="#{varWaiver.fileName}"					
 							style="float:left;" styleClass="blue_font"
 							action="#{ctBackingBean.commonDownload(varWaiver.filePath, varWaiver.fileName)}" />
 						
