@@ -1,0 +1,2278 @@
+/**
+ * 
+ */
+package my.ep.web.backingbean;
+
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.regex.Pattern;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.component.UIComponent;
+import javax.faces.context.ExceptionHandler;
+import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
+import javax.faces.validator.ValidatorException;
+import javax.imageio.ImageIO;
+import javax.portlet.PortletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchMultiFilterBean;
+import my.ep.biz.bean.search.SearchOrderBean;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.common.country.ICountrySO;
+import my.ep.biz.service.pm.common.uom.IUomSO;
+import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.EpPropertiesConst;
+import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constants.BpmConstants;
+import my.ep.constants.CommonConstants;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.authorization.role.RoleReqDTO;
+import my.ep.dto.pm.common.country.CountryReqDTO;
+import my.ep.dto.pm.common.uom.UomReqDTO;
+import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
+import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper;
+import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.BaseEntity;
+import my.ep.persistence.entity.ct.CtAddress;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
+import my.ep.persistence.entity.pm.common.PmAddress;
+import my.ep.persistence.entity.pm.common.PmCountry;
+import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmReason;
+import my.ep.persistence.entity.pm.common.PmReasonDesc;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.pm.common.PmUom;
+import my.ep.persistence.entity.pp.procurementplan.PpAddress;
+import my.ep.persistence.entity.sc.common.ScAddress;
+import my.ep.persistence.entity.sm.SmAddress;
+import my.ep.persistence.entity.sm.SmMachineDtl;
+import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.type.aut.SearchCondition;
+import my.ep.type.aut.SearchOperator;
+import my.ep.util.EpPropertiesUtils;
+import my.ep.util.MessageUtils;
+import my.ep.util.ResourceBundleUtils;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
+import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
+import my.ep.web.constant.CommonUIConst;
+import my.ep.web.constant.report.ReportConst;
+import my.ep.web.constant.sm.SupplierManagementConst;
+import my.ep.web.exceptionhandler.EpExceptionHandler;
+import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.AddressUtils;
+import my.ep.web.util.CommonUtils;
+import my.ep.web.util.EpPortletUtil;
+import my.ep.web.util.FacesScopes;
+import my.ep.web.util.SecurityFilterUtil;
+import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.pm.helper.ReasonHelper;
+import my.ep.web.util.pm.helper.StatusHelper;
+import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
+
+import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
+import org.primefaces.model.UploadedFile;
+
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.User;
+import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.PortalUtil;
+
+/**
+ * @author siew mei
+ * 
+ */
+public abstract class BaseBackingBean<T extends BaseManagedBean> implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	private static Logger log = Logger.getLogger(BaseBackingBean.class);
+
+	private Class<T> managedBeanClazz;
+	private String managedBeanName;
+	private T managedBean;
+	private static final String UTF = "UTF-8";
+	@SuppressWarnings("unchecked")
+	public BaseBackingBean() {
+		if (log.isDebugEnabled()) {
+			log.debug("In BaseBackingBean constructor");
+
+		}
+		Class<?> clazz = this.getClass();
+		Type type = clazz.getGenericSuperclass();
+		// while (true) {
+		if (log.isDebugEnabled()) {
+			log.debug("#######Clazz = " + clazz);
+			log.debug("#######type = " + type);
+		}
+
+		/*
+		 * if (clazz == null) { break; }
+		 */
+		if (type != null && type instanceof ParameterizedType) {
+			this.managedBeanClazz = (Class<T>) ((ParameterizedType) type)
+					.getActualTypeArguments()[0];
+			if (null != managedBeanClazz) {
+				ManagedBean managedBeanAnnotation = managedBeanClazz
+						.getAnnotation(ManagedBean.class);
+				if (null != managedBeanAnnotation) {
+					managedBeanName = managedBeanAnnotation.name()/*
+																 * +
+																 * getConcatId()
+																 */;
+				}
+
+				if (StringUtils.isBlank(managedBeanName)) {
+					managedBeanName = StringUtils.uncapitalize(managedBeanClazz
+							.getSimpleName());
+				}
+			}
+		}
+		// }
+
+		if (log.isDebugEnabled()) {
+			log.debug("managedBeanName:" + managedBeanName);
+		}
+
+		// new FacesScopes().extendLiferaySession();
+	}
+
+	/**
+	 * @return the managedBeanClazz
+	 */
+	public Class<T> getManagedBeanClazz() {
+		return managedBeanClazz;
+	}
+
+	/**
+	 * @param managedBeanClazz
+	 *            the managedBeanClazz to set
+	 */
+	public void setManagedBeanClazz(Class<T> managedBeanClazz) {
+		this.managedBeanClazz = managedBeanClazz;
+	}
+
+	public void renewSesionObject() {
+		if (log.isDebugEnabled()) {
+			log.debug("In renewSesionObject");
+		}
+
+		try {
+			FacesScopes facesScopes = new FacesScopes();
+			@SuppressWarnings("unchecked")
+			T tmpBean = (T) facesScopes.removeFromSession(managedBeanName);
+
+			log.info("remove managedBean from session:" + tmpBean);
+
+			managedBean = null;
+		} catch (Exception ex) {
+			log.error("Failed to renew managed bean: " + managedBeanName, ex);
+		}
+
+		// return managedBean;
+	}
+
+	/**
+	 * @return the managedBean
+	 */
+	public T getManagedBean() {
+		if (managedBean == null && null != managedBeanName) {
+			/*
+			 * FacesScopes facesScopes = new FacesScopes();
+			 * 
+			 * @SuppressWarnings("unchecked") T tmpBean =
+			 * (T)facesScopes.getSessionScope(managedBeanName); if(null ==
+			 * tmpBean){ managedBean = createNewSesionObject(); }else{
+			 * managedBean = tmpBean; }
+			 */
+
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			managedBean = facesContext.getApplication().evaluateExpressionGet(
+					facesContext, "#{" + managedBeanName + "}",
+					managedBeanClazz);
+
+			log.info("managedBean:" + managedBean);
+		}
+
+		return managedBean;
+
+	}
+
+	/*
+	 * private String getConcatId(){ String concatId = "";
+	 * 
+	 * 
+	 * FacesScopes facesScope = new FacesScopes();
+	 * 
+	 * String portletId =
+	 * (String)facesScope.getRequestScope(WebKeys.PORTLET_ID);
+	 * 
+	 * String pageId = null; ThemeDisplay themeDisplay =
+	 * (ThemeDisplay)facesScope.getRequestScope(WebKeys.THEME_DISPLAY); if
+	 * (themeDisplay!=null){ pageId = String.valueOf(themeDisplay.getPlid());
+	 * facesScope.setSessionScope("title",
+	 * themeDisplay.getPortletDisplay().getTitle()); }
+	 * 
+	 * if (StringUtils.isNotBlank(portletId) && StringUtils.isNotBlank(pageId)){
+	 * concatId = "_" + portletId + "_" + pageId; }
+	 * 
+	 * return concatId; }
+	 */
+
+	/**
+	 * User image path.
+	 *
+	 * @param userId the user id
+	 * @return the string
+	 */
+	public String userImagePath(String userId) {
+		FacesScopes facesScopes = new FacesScopes();
+		String imagePath = "";
+		if (userId != null) {
+			User user = null;
+			ThemeDisplay themeDisplay = (ThemeDisplay) facesScopes.getRequest()
+					.getAttribute(WebKeys.THEME_DISPLAY);
+			try {
+				user = UserLocalServiceUtil.getUserByScreenName(
+						themeDisplay.getCompanyId(), userId);
+				if (user != null) {
+					imagePath = "/.."
+							+ user.getPortraitURL((ThemeDisplay) facesScopes
+									.getRequest().getAttribute(
+											WebKeys.THEME_DISPLAY));
+				}
+			} catch (Exception ex) {
+				log.error(ex.getMessage(), ex);
+			}
+		}
+
+		return imagePath;
+
+	}
+
+	/**
+	 * Compare user name.
+	 *
+	 * @param username the username
+	 * @return true, if successful
+	 */
+	public boolean compareUserName(String username) {
+		FacesScopes facesScopes = new FacesScopes();
+		if (username != null
+				&& username.equals(facesScopes.getUserScreenName())) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Claim bpm task.
+	 */
+	public void claimBpmTask() {
+
+		String taskId = FacesContext.getCurrentInstance().getExternalContext()
+				.getRequestParameterMap().get("taskId");
+
+		claimTaskByTaskId(taskId);
+
+	}
+
+	/**
+	 * Release bpm task.
+	 */
+	public void releaseBpmTask() {
+		String taskId = FacesContext.getCurrentInstance().getExternalContext()
+				.getRequestParameterMap().get("taskId");
+		releaseTaskByTaskId(taskId);
+	}
+
+	/**
+	 * Claim BPM task by taskId
+	 * 
+	 * @param String
+	 *            taskId
+	 */
+	public void claimTaskByTaskId(String taskId) {
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+				.getServiceObject(IBpmSO.class);
+		FacesScopes face = new FacesScopes();
+		Object token = face.getBPMAuthenticationCtxToken();
+
+		BpmRequestDTO reqDTO = new BpmRequestDTO();
+		reqDTO.setTaskId(taskId);
+		reqDTO.setCtxToken(token);
+		bpmSO.claimTask(reqDTO);
+	}
+
+	/**
+	 * Release BPM task by taskId
+	 * 
+	 * @param String
+	 *            taskId
+	 */
+	public void releaseTaskByTaskId(String taskId) {
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+				.getServiceObject(IBpmSO.class);
+		FacesScopes face = new FacesScopes();
+		Object token = face.getBPMAuthenticationCtxToken();
+
+		BpmRequestDTO reqDTO = new BpmRequestDTO();
+		reqDTO.setTaskId(taskId);
+		reqDTO.setCtxToken(token);
+		bpmSO.releaseTask(reqDTO);
+	}
+
+	/*
+	 * protected <RETURN_CLASS extends BaseEntity> List<RETURN_CLASS>
+	 * toEntityBeans(List<? extends ValueBean<RETURN_CLASS>> valueBeans) {
+	 * List<RETURN_CLASS> list = new ArrayList<RETURN_CLASS>();
+	 * 
+	 * for (ValueBean<RETURN_CLASS> valueBean : valueBeans) {
+	 * list.add(valueBean.getEntity()); }
+	 * 
+	 * return list; }
+	 * 
+	 * public <ENTITY_CLASS extends BaseEntity> void
+	 * addListBySelectedList(List<ENTITY_CLASS> list, List<ENTITY_CLASS>
+	 * selectedList) { for (ENTITY_CLASS entity : selectedList) { if
+	 * (entity.isSelected()) { entity.setSelected(false);
+	 * 
+	 * list.add(entity); } } }
+	 * 
+	 * public <ENTITY_CLASS extends BaseEntity> void
+	 * deleteRowsAction(DataValueBean<ENTITY_CLASS> dataValueBean) {
+	 * List<ENTITY_CLASS> displayedList = dataValueBean.getDisplayedList();
+	 * List<ENTITY_CLASS> removedList = dataValueBean.getRemovedList();
+	 * List<ENTITY_CLASS> listToBeRemoved = new ArrayList<ENTITY_CLASS>();
+	 * 
+	 * for (ENTITY_CLASS entity : displayedList) { if (entity.isSelected()) {
+	 * entity.setDeleted(true);
+	 * 
+	 * listToBeRemoved.add(entity); } }
+	 * 
+	 * // remove from display list. displayedList.removeAll(listToBeRemoved);
+	 * 
+	 * // added into removed list. removedList.addAll(listToBeRemoved); }
+	 * 
+	 * public <ENTITY_CLASS extends BaseEntity> void selectAllAction(boolean
+	 * selectAll, List<ENTITY_CLASS> list) { for (ENTITY_CLASS valueBean : list)
+	 * { valueBean.setSelected(selectAll); } }
+	 */
+
+	/**
+	 * Select all.
+	 *
+	 * @param <ENTITY_CLASS> the generic type
+	 * @param selected the selected
+	 * @param list the list
+	 */
+	public <ENTITY_CLASS extends BaseEntity> void selectAll(boolean selected,
+			List<ENTITY_CLASS> list) {
+		if (list != null) {
+			for (ENTITY_CLASS entity : list) {
+				entity.setSelected(selected);
+			}
+		}
+	}
+
+	/**
+	 * Delete selected rows action.
+	 *
+	 * @param <ENTITY_CLASS> the generic type
+	 * @param list the list
+	 */
+	public <ENTITY_CLASS extends BaseEntity> void deleteSelectedRowsAction(
+			List<ENTITY_CLASS> list) {
+		if (log.isDebugEnabled()) {
+			log.debug("deleteSelectedRowsAction");
+		}
+		try {
+			if (list != null) {
+				List<ENTITY_CLASS> toBeRemovedList = new ArrayList<ENTITY_CLASS>();
+
+				for (ENTITY_CLASS entity : list) {
+					if (entity.isSelected()) {
+						toBeRemovedList.add(entity);
+					}
+				}
+				if (toBeRemovedList.size() == 0) {
+					throw new EpException(MessageConst.ERROR_760146);
+				}
+
+				deleteRowsAction(list, toBeRemovedList);
+			} else {
+				throw new EpException(MessageConst.ERROR_760146);
+			}
+		} finally {
+
+		}
+	}
+
+	/**
+	 * Delete row action.
+	 *
+	 * @param <ENTITY_CLASS> the generic type
+	 * @param list the list
+	 * @param toBeRemoved the to be removed
+	 */
+	public <ENTITY_CLASS> void deleteRowAction(List<ENTITY_CLASS> list,
+			ENTITY_CLASS toBeRemoved) {
+		if (log.isDebugEnabled()) {
+			log.debug("deleteRowAction");
+		}
+
+		if (list != null && toBeRemoved != null) {
+			list.remove(toBeRemoved);
+		}
+	}
+
+	/**
+	 * Delete rows action.
+	 *
+	 * @param <ENTITY_CLASS> the generic type
+	 * @param list the list
+	 * @param toBeRemovedList the to be removed list
+	 */
+	public <ENTITY_CLASS> void deleteRowsAction(List<ENTITY_CLASS> list,
+			List<ENTITY_CLASS> toBeRemovedList) {
+		if (log.isDebugEnabled()) {
+			log.debug("deleteRowAction");
+		}
+
+		if (list != null && toBeRemovedList != null) {
+			list.removeAll(toBeRemovedList);
+		}
+	}
+
+	/**
+	 * Mark delete selected rows action.
+	 *
+	 * @param <ENTITY_CLASS> the generic type
+	 * @param list the list
+	 * @param markDeletedList the mark deleted list
+	 */
+	public <ENTITY_CLASS extends BaseEntity> void markDeleteSelectedRowsAction(
+			List<ENTITY_CLASS> list, List<ENTITY_CLASS> markDeletedList) {
+		if (log.isDebugEnabled()) {
+			log.debug("markDeleteSelectedRowsAction");
+		}
+		try {
+			if (list != null) {
+				if (markDeletedList == null) {
+					markDeletedList = new ArrayList<ENTITY_CLASS>();
+				}
+
+				for (ENTITY_CLASS entity : list) {
+					if (entity.isSelected()) {
+						entity.setDeleted(true);
+						markDeletedList.add(entity);
+					}
+				}
+				if (markDeletedList.size() == 0) {
+					throw new EpException(MessageConst.ERROR_760146);
+				}
+
+				deleteRowsAction(list, markDeletedList);
+			} else {
+				throw new EpException(MessageConst.ERROR_760146);
+			}
+		} finally {
+
+		}
+	}
+
+	/**
+	 * Create search bean.
+	 * 
+	 * @param classz
+	 *            the return class type.
+	 * @param componentId
+	 *            the component id.
+	 * @return ISearchBean instance.
+	 */
+	protected <RETURN_CLASS> ISearchBean<RETURN_CLASS> createSearchBean(
+			Class<RETURN_CLASS> classz, String componentId) {
+		return new SearchBean<RETURN_CLASS>(
+				EpPortletUtil.getLoginUserId(FacesContext.getCurrentInstance()),
+				SecurityFilterUtil.getDataFilterScreenMetadatas(componentId));
+	}
+
+	/**
+	 * Get parameter id select items by parameter type for dropdown.
+	 * 
+	 * @param parameterType
+	 *            the parameter type
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getDropdownValues(String parameterType) {
+		return getDropdownValuesBySearchBean(parameterType, null);
+	}
+
+	/**
+	 * Get parameter id select items by parameter type and search bean for
+	 * dropdown.
+	 * 
+	 * @param parameterType
+	 *            the parameter type
+	 * @param searchBean
+	 *            the search bean instance
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getDropdownObjectValuesBySearchBean(String parameterType,
+			ISearchBean<Object[]> searchBean) {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+		try {
+			List<Object[]> objects = ParameterHelper
+					.getInstance().getParameterDescListDDBySearchBean(
+							parameterType, searchBean);
+
+			items = new SelectItem[objects.size() + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			int i = 1;
+			for (Object[] object : objects) {
+				items[i++] = new SelectItem((Long)object[1],(String)object[0]);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+
+		return items;
+	}
+	
+	/**
+	 * Get parameter id select items by parameter type and search bean for
+	 * dropdown.
+	 * 
+	 * @param parameterType
+	 *            the parameter type
+	 * @param searchBean
+	 *            the search bean instance
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getDropdownValuesBySearchBean(String parameterType,
+			ISearchBean<PmParameterDesc> searchBean) {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+		try {
+			List<PmParameterDesc> parameterDescs = ParameterHelper
+					.getInstance().getParameterDescListBySearchBean(
+							parameterType, searchBean);
+
+			items = new SelectItem[parameterDescs.size() + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			int i = 1;
+			for (PmParameterDesc parameterDesc : parameterDescs) {
+				items[i++] = new SelectItem(parameterDesc.getPmParameter()
+						.getParameterId(), parameterDesc.getCodeName());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+
+		return items;
+	}
+
+
+	/**
+	 * Populate values for Reason Drop down base on reason category code
+	 * 
+	 * @param categoryCode
+	 *            the reason category code
+	 * 
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getReasonCodeDropdownValues(String categoryCode) {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+		try {
+			List<PmReasonDesc> reasonDescs = ReasonHelper.getInstance()
+					.getReasonDescList(categoryCode);
+
+			items = new SelectItem[reasonDescs.size() + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			int i = 1;
+			for (PmReasonDesc reasonDesc : reasonDescs) {
+				items[i++] = new SelectItem(reasonDesc.getPmReason()
+						.getReasonCode(), reasonDesc.getReasonDesc());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+		return items;
+	}
+
+	/**
+	 * Get reason by reason category code and reason code
+	 * 
+	 * @param parameterType
+	 *            the parameter type
+	 * @param parameterCode
+	 *            the parameter code
+	 * @return the PmParameter instance
+	 */
+	public PmReason getReasonByCategoryAndCode(String categoryCode,
+			String reasonCode) {
+		PmParameter reasonCategory = getParameterByTypeAndCode(
+				ParameterTypeConst.REASON_CATEGORY, categoryCode);
+		return ReasonHelper.getInstance().getReasonByCategoryAndCode(
+				reasonCategory.getParameterId(), reasonCode);
+	}
+
+	/**
+	 * Get parameter code select items by parameter type for dropdown.
+	 * 
+	 * @param parameterType
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getDropdownCodeValues(String parameterType) {
+		return getDropdownCodeValuesBySearchBean(parameterType, null);
+	}
+
+	/**
+	 * Get parameter code select items by parameter type and search bean for
+	 * dropdown.
+	 * 
+	 * @param parameterType
+	 *            the parameter type
+	 * @param searchBean
+	 *            the search bean instance
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getDropdownCodeValuesBySearchBean(String parameterType,
+			ISearchBean<PmParameterDesc> searchBean) {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+
+		try {
+			List<PmParameterDesc> parameterDescs = ParameterHelper
+					.getInstance().getParameterDescListBySearchBean(
+							parameterType, searchBean);
+
+			items = new SelectItem[parameterDescs.size() + 1];
+
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			int i = 1;
+			for (PmParameterDesc parameterDesc : parameterDescs) {
+				items[i++] = new SelectItem(parameterDesc.getPmParameter()
+						.getParameterCode(), parameterDesc.getCodeName());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+
+		return items;
+	}
+
+	/**
+	 * Get Parameter description by parameter.
+	 * 
+	 * @param parameter
+	 *            the PmParameter instance.
+	 * @return parameter description
+	 */
+	public String getParameterDesc(PmParameter parameter) {
+		if (parameter != null
+				&& StringUtils.isNotBlank(parameter.getParameterType())) {
+			return ParameterHelper.getInstance().getParameterDesc(
+					parameter.getParameterType(), parameter.getParameterCode());
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Get Parameter description by parameter and Locale.
+	 * 
+	 * @param parameter
+	 *            the PmParameter instance.
+	 * @param locale
+	 *            the Locale instance.
+	 * 
+	 * @return parameter description
+	 */
+	public String getParameterDesc(PmParameter parameter, Locale locale) {
+		if (parameter != null
+				&& StringUtils.isNotBlank(parameter.getParameterType())) {
+			if (locale == null) {
+				locale = new FacesScopes().getUserLocale();
+			}
+			return ParameterHelper.getInstance().getParameterDesc(
+					parameter.getParameterType(), parameter.getParameterCode(),
+					locale);
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Get reason description by reason.
+	 * 
+	 * @param reason
+	 *            the PmReason instance.
+	 * @return reason description
+	 */
+	public String getReasonDesc(PmReason pmReason) {
+		if (pmReason != null) {
+			return ReasonHelper.getInstance().getReasonDescStringById(
+					pmReason.getReasonId());
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Get reason description by reason.
+	 * 
+	 * @param reason
+	 *            the PmReason instance.
+	 * @return reason description
+	 */
+	public PmReasonDesc getReasonDescByReasonId(Long reasonId) {
+		if (reasonId != null) {
+			return ReasonHelper.getInstance().getReasonDescById(reasonId);
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Get Parameter description by type and code.
+	 * 
+	 * @param parameterType
+	 *            the parameter type
+	 * @param parameterCode
+	 *            the parameter code
+	 * @return parameter description
+	 */
+	public String getParameterDesc(String parameterType, String parameterCode) {
+		return ParameterHelper.getInstance().getParameterDesc(parameterType,
+				parameterCode);
+	}
+
+	/**
+	 * Get parameter by parameter type and code.
+	 * 
+	 * @param parameterType
+	 *            the parameter type
+	 * @param parameterCode
+	 *            the parameter code
+	 * @return the PmParameter instance
+	 */
+	public PmParameter getParameterByTypeAndCode(String parameterType,
+			String parameterCode) {
+		return ParameterHelper.getInstance().getParameterByTypeAndCode(
+				parameterType, parameterCode);
+	}
+
+	/**
+	 * Get parameter descs by parameter type and search bean for dropdown.
+	 * 
+	 * @param parameterType
+	 *            the parameter type
+	 * @param searchBean
+	 *            the search bean instance
+	 * @return List<PmParameterDesc>
+	 */
+	public List<PmParameterDesc> getParameterDescsByTypeAndSearchBean(
+			String parameterType, ISearchBean<PmParameterDesc> searchBean) {
+		List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
+				.getParameterDescListBySearchBean(parameterType, searchBean);
+		return parameterDescs;
+	}
+
+	/**
+	 * Get status select items by module and doc type for dropdown.
+	 * 
+	 * @param moduleCode
+	 *            the module code
+	 * @param docType
+	 *            the document type
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getStatusDropdownValues(String moduleCode,
+			String docType) {
+		return getStatusDropdownValuesBySearchBean(moduleCode,
+				docType,
+				null);
+	}
+	
+	/**
+	 * Get status select items by module and doc type for dropdown.
+	 * 
+	 * @param moduleCode
+	 *            the module code
+	 * @param docType
+	 *            the document type
+	 * @param searchBean
+	 *            the SearchBean instance
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getStatusDropdownValuesBySearchBean(String moduleCode,
+			String docType, SearchBean<PmStatusDesc> searchBean) {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+
+		try {
+			List<PmStatusDesc> statusDescs = StatusHelper.getInstance()
+					.getStatusDescList(moduleCode, docType, searchBean);
+
+			items = new SelectItem[statusDescs.size() + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			int i = 1;
+			for (PmStatusDesc statusDesc : statusDescs) {
+				items[i++] = new SelectItem(statusDesc.getPmStatus()
+						.getStatusId(), statusDesc.getStatusName());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+
+		return items;
+	}
+
+	/**
+	 * Get status select items by statusIds.
+	 * [This is a temporary solution, as report is to be revamped.]
+	 * 
+	 * @param statusId
+	 *            the status id.
+	 */
+	
+	public SelectItem[] getStatusDropdownValuesByIds(Long[] statusIds) {
+	
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+
+		try {
+		
+			items = new SelectItem[statusIds.length + 1];
+			
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			
+			for (int i = 1; i <= statusIds.length; i++) {
+			
+				PmStatusDesc statusDesc = StatusHelper.getInstance()
+						.getStatusDescById(statusIds[i - 1]);
+				
+				items[i] = new SelectItem(statusDesc.getPmStatus()
+						.getStatusId(), statusDesc.getStatusName());
+			}
+			
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+
+		return items;
+	}
+	
+	/**
+	 * Get Status description by status id.
+	 * 
+	 * @param statusId
+	 *            the status id.
+	 * @return status description
+	 */
+	public String getStatusDescById(Long statusId) {
+		String statusDesc = null;
+
+		if (statusId != null) {
+			// Get the status description.
+			PmStatusDesc pmStatusDesc = StatusHelper.getInstance()
+					.getStatusDescById(statusId);
+
+			if (pmStatusDesc != null) {
+				statusDesc = pmStatusDesc.getStatusName();
+			}
+		}
+
+		return statusDesc;
+	}
+
+	/**
+	 * Get parameter code select items by parameter type for radio buttons.
+	 * 
+	 * @param parameterType
+	 *            the parameter type
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getRadioButtonCodeValues(String parameterType) {
+		return getRadioButtonCodeValuesBySearchBean(parameterType, null);
+	}
+
+	/**
+	 * Gets the radio button code values by search bean.
+	 *
+	 * @param parameterType the parameter type
+	 * @param searchBean the search bean
+	 * @return the radio button code values by search bean
+	 */
+	public SelectItem[] getRadioButtonCodeValuesBySearchBean(
+			String parameterType, ISearchBean<PmParameterDesc> searchBean) {
+		SelectItem[] items = null;
+		try {
+			List<PmParameterDesc> parameterDescs = ParameterHelper
+					.getInstance().getParameterDescListBySearchBean(
+							parameterType, searchBean);
+
+			items = new SelectItem[parameterDescs.size()];
+			int i = 0;
+			for (PmParameterDesc parameterDesc : parameterDescs) {
+				items[i++] = new SelectItem(parameterDesc.getPmParameter()
+						.getParameterCode(), parameterDesc.getCodeName());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+
+		return items;
+	}
+
+	/**
+	 * Gets the radio button values.
+	 *
+	 * @param parameterType the parameter type
+	 * @return the radio button values
+	 */
+	public SelectItem[] getRadioButtonValues(String parameterType) {
+		SelectItem[] items = null;
+		try {
+			List<PmParameterDesc> parameterDescs = ParameterHelper
+					.getInstance().getParameterDescList(parameterType);
+
+			items = new SelectItem[parameterDescs.size()];
+			int i = 0;
+			for (PmParameterDesc parameterDesc : parameterDescs) {
+				items[i++] = new SelectItem(parameterDesc.getPmParameter()
+						.getParameterId(), parameterDesc.getCodeName());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+
+		return items;
+	}
+
+	/**
+	 * Common upload file.
+	 *
+	 * @param event the event
+	 * @param path the path
+	 */
+	public void commonUploadFile(FileUploadEvent event, String path) {
+
+		// String tempDir = "C://Ngep//doc//"+moduleName+"//";
+		String tempDir = EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+		tempDir += "/" + path;
+
+		// String uploadDir = "";
+
+		UploadedFile file = event.getFile();
+
+		// uploadDir = tempDir + StringUtils.replace(" ", file.getFileName(),
+		// "-");
+
+		// genFile(uploadDir, file.getContents());
+		genFile(tempDir, file);
+
+	}
+
+	/**
+	 * Common download.
+	 *
+	 * @param path the path
+	 * @param displayFileName the display file name
+	 * @return the streamed content
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	public StreamedContent commonDownload(String path, String displayFileName)
+			throws IOException {
+		
+		String filePath = EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+		
+		filePath += "/" + path;
+
+		commonDownloadUtil(filePath, displayFileName);
+		
+		return null;
+	}
+	
+	public void commonDownloadUtil(String filePath, String displayFileName) throws IOException{
+		
+		PortletResponse resp = (PortletResponse) FacesContext
+				.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse response = PortalUtil.getHttpServletResponse(resp);
+
+		response.setHeader("Pragma", "no-cache");
+		response.setDateHeader("Expires", 0);
+		// response.setContentType("application/vnd.ms-excel");
+		// response.setHeader("Content-Transfer-Encoding", "binary");
+		response.setHeader("Content-Disposition", "attachment; filename=\""+ displayFileName + "\"");
+//		response.setContentType("application/octet-stream");
+		response.setContentType(getMimeType(displayFileName));
+		response.flushBuffer();
+
+		InputStream docInputStream = null;
+		try {
+			URLConnection uc = new URL(filePath).openConnection();
+			docInputStream = new BufferedInputStream(uc.getInputStream());
+		} catch (Exception e) {
+			// Cannot open connection, maybe local file
+			docInputStream = new FileInputStream(filePath);
+			
+			log.info("Error found while downloading file "+filePath+" : "+e);
+			//log.error(e);
+//			e.printStackTrace();
+			
+		}
+
+		OutputStream out = null;
+		try {		
+
+			out = response.getOutputStream();
+			byte[] buffer = new byte[4096];
+			int bytesRead;
+			while ((bytesRead = docInputStream.read(buffer)) != -1) {
+				out.write(buffer, 0, bytesRead);
+				buffer = new byte[4096];
+			}
+		} catch(Exception e) {
+			log.error(e);
+		} finally {
+			if (out != null) {
+				out.close();
+			}
+			if (docInputStream != null) {
+				docInputStream.close();	
+			}
+		}
+
+	}
+	
+	private String getMimeType(String fileName) {
+		String fileExt = fileName.substring(fileName.lastIndexOf(".") + 1);
+		
+		String mimeType = (String)CommonConstants.getFileExtMap().get(fileExt);
+		
+		return (mimeType != null) ? mimeType : "octet-stream";
+	}
+	
+	public static void main(String[] args) {
+		String fileName = "abcde.pdf";
+//		fileName.lastIndexOf(".")
+//		fileName.substring(fileName.indexOf("."));
+		System.out.println(fileName.substring(fileName.lastIndexOf(".") + 1));
+	}
+	
+	/**
+	 * Success message.
+	 * 
+	 * @param messageCode
+	 *            the message code
+	 * @param docType
+	 *            the doc type
+	 * @param docTypeCode
+	 *            the doc type code
+	 * @param docNo
+	 *            the doc no
+	 * @param isAcknowledgeRequired
+	 *            the is acknowledge required
+	 */
+	public void successMessage(String messageCode, String docType,
+			String docTypeCode, String docNo, boolean isAcknowledgeRequired) {
+		FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+						.getMessage(
+								messageCode,
+								new String[] {
+										getParameterDesc(docType, docTypeCode),
+										docNo },
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+
+		if (isAcknowledgeRequired) {
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler()
+					.handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
+		}
+	}
+	
+	/**
+	 * Success message.
+	 * 
+	 * @param messageCode
+	 *            the message code
+	 * @param String
+	 *            [] params
+	 */
+	public void successMessage(String messageCode, String [] params) {
+		FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+						.getMessage(
+								messageCode,
+								params,
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+	}
+
+	/**
+	 * Gen file.
+	 *
+	 * @param uploadDir the upload dir
+	 * @param file the file
+	 */
+	public void genFile(String uploadDir, UploadedFile file) {
+
+		File dir = new File(uploadDir);
+		log.info(" dir.exists()" + dir.exists());
+		if (!dir.exists()) {
+			log.info("before make directory");
+			dir.mkdirs();
+			log.info("after make directory");
+		}
+
+		try {
+			String finalFileName = StringUtils.replace(file.getFileName(), " ",
+					"-");
+			log.info("finalFileName: " + finalFileName);
+
+			BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(
+					new FileOutputStream(uploadDir + "/" + finalFileName));
+
+			bufferedOutputStream.write(file.getContents());
+
+			if (bufferedOutputStream != null) {
+				bufferedOutputStream.flush();
+				bufferedOutputStream.close();
+			}
+
+		} catch (Exception e) {
+			log.error(e);
+		}
+
+	}
+
+	/**
+	 * Generate report.
+	 *
+	 * @param reportFile the report file
+	 * @param paramMap the param map
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	protected void generateReport(String reportFile,
+			Map<String, String> paramMap) throws IOException {
+		String reportUrl = generateReportURL(reportFile, paramMap);
+
+		HttpURLConnection urlConnection = null;
+		URL obj = new URL(reportUrl);
+		urlConnection = (HttpURLConnection) obj.openConnection();
+
+		BufferedInputStream buf = new BufferedInputStream(
+				urlConnection.getInputStream());
+
+		PortletResponse portletResponse = (PortletResponse) FacesContext
+				.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse res = PortalUtil
+				.getHttpServletResponse(portletResponse);
+		int position = reportFile.lastIndexOf(".jsp");
+		if (position != -1) {
+			reportFile = reportFile.substring(0, position);
+		}
+
+		if(paramMap.containsKey(ReportConst.DOC_TYPE_RTF)){
+			res.setHeader("Content-Disposition",
+					"attachment; filename=\"" + reportFile + "_"
+							+ ReportConst.REPORT_DATE_TIME.format(new Date())
+							+ ".rtf\"");//
+			res.setContentType("application/octet-stream");
+		}else{
+			res.setHeader("Content-Disposition",
+					"attachment; filename=\"" + reportFile + "_"
+							+ ReportConst.REPORT_DATE_TIME.format(new Date())
+							+ ".pdf\"");//
+			res.setContentType("application/pdf");
+		}
+		
+		res.setHeader("Content-Transfer-Encoding", "binary");
+		
+		res.flushBuffer();
+
+		OutputStream out = res.getOutputStream();
+
+		byte[] b = new byte[128];
+		int size;
+		while ((size = buf.read(b, 0, b.length)) != -1) {
+			out.write(b, 0, size);
+		}
+		buf.close();
+		out.close();
+	}
+
+	/**
+	 * Generate report url.
+	 *
+	 * @param reportFile the report file
+	 * @param paramMap the param map
+	 * @return the string
+	 * @throws IOException 
+	 */
+	protected String generateReportURL(String reportFile,
+			Map<String, String> paramMap) throws IOException {
+		EpPropertiesUtils propertiesUtils = EpPropertiesUtils.getInstance();
+		String excPrevUrl = propertiesUtils
+				.getProperty(EpPropertiesConst.EXC_PREV_URL);
+		String excNextUrl = propertiesUtils
+				.getProperty(EpPropertiesConst.EXC_NEXT_URL);
+		
+		if(paramMap.containsKey(ReportConst.DOC_TYPE_RTF)){
+			excNextUrl = propertiesUtils
+					.getProperty(EpPropertiesConst.EXC_NEXT_URL_RTF);
+		}
+		
+		if (paramMap.containsKey(ReportConst.PARAM_REPORT_OUTPUT_FORMAT)) {
+			int fromIndex = excNextUrl.indexOf(ReportConst.PARAM_REPORT_OUTPUT_FORMAT);
+			int endIndex = excNextUrl.indexOf(ReportConst.PARAM_SEPARATOR, fromIndex);
+			String excEndUrl = "";
+			if (fromIndex >= 0 && endIndex >= 0) {
+				excEndUrl = excNextUrl.substring(endIndex);
+			}
+			excNextUrl = excNextUrl.substring(0, fromIndex-1) + excEndUrl;
+		}
+
+		StringBuilder reportUrl = new StringBuilder(excPrevUrl);
+		reportUrl.append(ReportConst.PARAM_SEPARATOR);
+		reportUrl.append(ReportConst.PARAM_KEY_REPORT);
+		reportUrl.append(ReportConst.VALUE_SEPARATOR);
+		reportUrl.append(reportFile);
+
+		for (Entry<String, String> params : paramMap.entrySet()) {
+			if(!params.getKey().equals(ReportConst.DOC_TYPE_RTF)){
+				reportUrl.append(ReportConst.PARAM_SEPARATOR);
+				reportUrl.append(params.getKey());
+				reportUrl.append(ReportConst.VALUE_SEPARATOR);
+				reportUrl.append(URLEncoder.encode(params.getValue(), UTF));
+			}
+		}
+		reportUrl.append(excNextUrl);
+		log.info("reportUrl: " + reportUrl);
+		if (log.isDebugEnabled()) {
+			log.debug("reportUrl: " + reportUrl);
+		}
+		return reportUrl.toString();
+	}
+
+	/**
+	 * Gets the full address.
+	 *
+	 * @param smAddress the sm address
+	 * @return the full address
+	 */
+	public String getFullAddress(SmAddress smAddress) {
+		return AddressUtils.getFullAddress(smAddress);
+	}
+
+	/**
+	 * Gets the SM full address.
+	 *
+	 * @param smAddress the sm address
+	 * @return the SM full address
+	 */
+	public String getSMFullAddress(SmAddress smAddress) {
+		return AddressUtils.getSmFullFormattedAddress(smAddress);
+	}
+
+	/**
+	 * Gets the full address.
+	 *
+	 * @param pmAddress the pm address
+	 * @return the full address
+	 */
+	public String getFullAddress(PmAddress pmAddress) {
+		return AddressUtils.getFullAddress(pmAddress);
+	}
+
+	/**
+	 * Gets the pp full address.
+	 *
+	 * @param ppAddress the pp address
+	 * @return the pp full address
+	 */
+	public String getPpFullAddress(PpAddress ppAddress) {
+		return AddressUtils.getFullAddress(ppAddress);
+	}
+
+	/**
+	 * Gets the full address.
+	 *
+	 * @param ctAddress the ct address
+	 * @return the full address
+	 */
+	public String getFullAddress(CtAddress ctAddress) {
+		return AddressUtils.getFullAddress(ctAddress);
+	}
+
+	/**
+	 * Gets the full address.
+	 *
+	 * @param scAddress the sc address
+	 * @return the full address
+	 */
+	public String getFullAddress(ScAddress scAddress) {
+		return AddressUtils.getFullAddress(scAddress);
+	}
+	
+	/**
+	 * Gets the full address.
+	 *
+	 * @param scAddress the sc address
+	 * @return the full address
+	 */
+	public String getFullFormattedAddress(ScAddress scAddress) {
+		return AddressUtils.getFullFormattedAddress(scAddress);
+	}
+
+	/**
+	 * Handle exception.
+	 *
+	 * @param exception the exception
+	 */
+	public void handleException(Exception exception) {
+		ExceptionHandler expHandler = FacesContext.getCurrentInstance()
+				.getExceptionHandler();
+		if (expHandler instanceof EpExceptionHandler) {
+			((EpExceptionHandler) expHandler).handleException(exception);
+		}
+	}
+
+	/**
+	 * Escape xhtml.
+	 *
+	 * @param input the input
+	 * @return the string
+	 */
+	public String escapeXhtml(String input) {
+		String output = "";
+		if (input != null) {
+			output = StringUtils.replace(input, "&", "&#38;");
+		}
+		return output;
+	}
+
+	/**
+	 * Gets the short file name.
+	 *
+	 * @param filename the filename
+	 * @return the short file name
+	 */
+	public String getShortFileName(String filename) {
+		if (filename != null && filename.length() > 15) {
+			filename = filename.substring(0, 15);
+			filename += "...";
+		}
+		return filename;
+	}
+
+	/**
+	 * Retrieve jabatan by org profile id.
+	 *
+	 * @param orgProfileId the org profile id
+	 * @return the string
+	 */
+	public String retrieveJabatanByOrgProfileId(Long orgProfileId) {
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfileId);
+		OrgProfileResDTO resDTO = new OrgProfileResDTO();
+		resDTO = profileSO.retrieveJabatanByOrgProfileId(reqDTO);
+		String jabatan = "";
+		if (resDTO.getPmOrgProfile() != null) {
+			jabatan = resDTO.getPmOrgProfile().getOrgName();
+		}
+		return jabatan;
+	}
+
+	/**
+	 * Retrieve jabatan by org profile id.
+	 *
+	 * @param orgProfileId the org profile id
+	 * @param tranDate the tran date
+	 * @return the string
+	 */
+	public String retrieveJabatanByOrgProfileId(Long orgProfileId, Date tranDate) {
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfileId);
+		reqDTO.setCreateDate(tranDate);
+		OrgProfileResDTO resDTO = new OrgProfileResDTO();
+		resDTO = profileSO.retrieveJabatanByOrgProfileId(reqDTO);
+		String jabatan = "";
+		if (resDTO.getPmOrgProfile() != null) {
+			jabatan = resDTO.getPmOrgProfile().getOrgName();
+		}
+		return jabatan;
+	}
+
+	/**
+	 * Retrieve pegawai pengawal by org profile id.
+	 *
+	 * @param orgProfileId the org profile id
+	 * @return the string
+	 */
+	public String retrievePegawaiPengawalByOrgProfileId(Long orgProfileId) {
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfileId);
+		OrgProfileResDTO resDTO = new OrgProfileResDTO();
+		resDTO = profileSO.retrievePegawaiPengawalByOrgProfileId(reqDTO);
+		String pagawaiPengawal = "";
+		if (resDTO.getPmOrgProfile() != null) {
+			pagawaiPengawal = resDTO.getPmOrgProfile().getOrgName();
+		}
+		return pagawaiPengawal;
+	}
+
+	/**
+	 * Retrieve pegawai pengawal by org profile id.
+	 *
+	 * @param orgProfileId the org profile id
+	 * @param tranDate the tran date
+	 * @return the string
+	 */
+	public String retrievePegawaiPengawalByOrgProfileId(Long orgProfileId,
+			Date tranDate) {
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfileId);
+		reqDTO.setCreateDate(tranDate);
+		OrgProfileResDTO resDTO = new OrgProfileResDTO();
+		resDTO = profileSO.retrievePegawaiPengawalByOrgProfileId(reqDTO);
+		String pagawaiPengawal = "";
+		if (resDTO.getPmOrgProfile() != null) {
+			pagawaiPengawal = resDTO.getPmOrgProfile().getOrgName();
+		}
+		return pagawaiPengawal;
+	}
+
+	/**
+	 * Retrieve ministry code by org profile id.
+	 *
+	 * @param orgProfileId the org profile id
+	 * @return the string
+	 */
+	public String retrieveMinistryCodeByOrgProfileId(Long orgProfileId) {
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfileId);
+		return profileSO.retrieveMinistryByOrgProfileId(reqDTO)
+				.getPmOrgProfile().getOrgCode();
+	}
+
+	/**
+	 * Retrieve ministry by org profile id.
+	 *
+	 * @param orgProfileId the org profile id
+	 * @return the string
+	 */
+	public String retrieveMinistryByOrgProfileId(Long orgProfileId) {
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfileId);
+		PmOrgProfile orgProfile = profileSO.retrieveMinistryByOrgProfileId(
+				reqDTO).getPmOrgProfile();
+		if (orgProfile != null) {
+			return orgProfile.getOrgName();
+		} else {
+			log.info("Ministry not found : " + orgProfileId);
+			return "";
+		}
+	}
+
+	/**
+	 * Retrieve ministry by org profile id.
+	 *
+	 * @param orgProfileId the org profile id
+	 * @param tranDate the tran date
+	 * @return the string
+	 */
+	public String retrieveMinistryByOrgProfileId(Long orgProfileId,
+			Date tranDate) {
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfileId);
+		reqDTO.setCreateDate(tranDate);
+		PmOrgProfile orgProfile = profileSO.retrieveMinistryByOrgProfileId(
+				reqDTO).getPmOrgProfile();
+		if (orgProfile != null) {
+			return orgProfile.getOrgName();
+		} else {
+			log.info("Ministry not found : " + orgProfileId);
+			return "";
+		}
+	}
+
+	/**
+	 * Retrieve ministry org profile.
+	 *
+	 * @param orgProfileId the org profile id
+	 * @return the pm org profile
+	 */
+	public PmOrgProfile retrieveMinistryOrgProfile(Long orgProfileId) {
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfileId);
+		return profileSO.retrieveMinistryByOrgProfileId(reqDTO)
+				.getPmOrgProfile();
+	}
+
+	/**
+	 * Retrieve jabatan org profile.
+	 *
+	 * @param orgProfileId the org profile id
+	 * @return the pm org profile
+	 */
+	public PmOrgProfile retrieveJabatanOrgProfile(Long orgProfileId) {
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfileId);
+		PmOrgProfile pmOrgProfile = profileSO.retrieveJabatanByOrgProfileId(
+				reqDTO).getPmOrgProfile();
+		if (pmOrgProfile == null) {
+			pmOrgProfile = new PmOrgProfile();
+			pmOrgProfile.setOrgProfileId(-1L);
+		}
+		return pmOrgProfile;
+	}
+
+	/**
+	 * Retrieve pegawai pegawal org profile.
+	 *
+	 * @param orgProfileId the org profile id
+	 * @return the pm org profile
+	 */
+	public PmOrgProfile retrievePegawaiPegawalOrgProfile(Long orgProfileId) {
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfileId);
+		return profileSO.retrievePegawaiPengawalByOrgProfileId(reqDTO)
+				.getPmOrgProfile();
+	}
+
+	/**
+	 * Retrieve ptj by org profile id.
+	 *
+	 * @param orgProfileId the org profile id
+	 * @param tranDate the tran date
+	 * @return the string
+	 */
+	public String retrievePTJByOrgProfileId(Long orgProfileId, Date tranDate) {
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfileId);
+		reqDTO.setCreateDate(tranDate);
+		PmOrgProfile orgProfile = profileSO.retrieveOrgProfileByProfileId(
+				reqDTO).getPmOrgProfile();
+		if (orgProfile != null) {
+			return orgProfile.getOrgName();
+		} else {
+			log.info("PTJ not found : " + orgProfileId);
+			return "";
+		}
+	}
+
+	/**
+	 * Get eP Role description by role code
+	 * 
+	 * @param String
+	 *            roleCode
+	 * @return String
+	 */
+	public String getEpRoleDescByRoleCode(String roleCode) {
+		String retVal = SmCommonUtil.getMessage("lbl.txt.na", null);
+		RoleReqDTO reqDTO = new RoleReqDTO();
+		reqDTO.setRoleCode(roleCode);
+		reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
+		PmRoleDesc roleDesc = SmServiceLookup.getRoleSO()
+				.retrieveRoleDescByRoleCode(reqDTO).getPmRoleDesc();
+		if (roleDesc != null && StringUtils.isNotBlank(roleDesc.getRoleName())) {
+			retVal = roleDesc.getRoleName();
+		}
+		return retVal;
+	}
+
+	/**
+	 * Get machine category type
+	 * 
+	 * @param SmMachineDtl
+	 *            machine
+	 * @return String
+	 */
+	public String getMachineCategoryType(SmMachineDtl machine) {
+		String retVal = SmCommonUtil.getMessage("lbl.sm.caps.others", null);
+		String language = new FacesScopes().getUserLocale().getLanguage();
+		if (machine.getCategoryType() != null
+				&& !EntityHelper.isCollectionEmpty(machine.getCategoryType()
+						.getPmParameterDescs())) {
+			for (PmParameterDesc desc : machine.getCategoryType()
+					.getPmParameterDescs()) {
+				if (desc.getLanguageCode().equals(language)) {
+					retVal = desc.getCodeName();
+				}
+			}
+		}
+		return retVal;
+	}
+
+	/**
+	 * Populate local authority when on change business type or district
+	 * 
+	 * @param SmSupplier
+	 *            supplier
+	 * @param SmAddress
+	 *            smAddress
+	 */
+	public void populateLocalAuthority(SmSupplier supplier, SmAddress smAddress) {
+		getManagedBean().setLocalAuthorityItems(
+				SmCommonUtil.getLocalAuthorityItems(supplier.getBusinessType(),
+						smAddress));
+		if (!SupplierManagementConst.LOCAL_AUTH_BUSINESS_TYPE.contains(supplier
+				.getBusinessType())
+				|| getManagedBean().getLocalAuthorityItems().size() == 1) {
+			supplier.setLocalAuthorityId((Long) getManagedBean()
+					.getLocalAuthorityItems().get(0).getValue());
+		}
+	}
+
+	/**
+	 * Get list size
+	 * 
+	 * @param Collection
+	 *            <?> value
+	 * @return int
+	 */
+	public int getListSize(Collection<?> value) {
+		return value.size();
+	}
+
+	
+	/**
+	 * Download file.
+	 *
+	 * @param filePath the file path
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	public void downloadFile(String filePath) throws IOException {
+		File file = new File(filePath);
+		log.info("download file>>>>");
+		OutputStream out = null;
+		try {
+			PortletResponse portletResponse = (PortletResponse) FacesContext
+					.getCurrentInstance().getExternalContext().getResponse();
+			HttpServletResponse res = com.liferay.portal.util.PortalUtil
+					.getHttpServletResponse(portletResponse);
+			res.setHeader("Content-Disposition", "attachment; filename=\""
+					+ file.getName() + "\"");//
+			res.setHeader("Content-Transfer-Encoding", "binary");
+			res.setContentType("application/octet-stream");
+			res.flushBuffer();
+			out = res.getOutputStream();
+			if (file.getPath() != null) {
+				log.info("file path not null>>>>");
+				InputStream input = null;
+				try {
+					URLConnection uc = new URL(file.getPath()).openConnection();
+					input = new BufferedInputStream(uc.getInputStream());
+				} catch (Exception e) {
+					log.info("It's Local file>>>>");
+					// Cannot open connection, maybe local file
+					input = new FileInputStream(file.getPath());
+				}
+				byte[] buffer = new byte[4096];
+				int bytesRead;
+				while ((bytesRead = input.read(buffer)) != -1) {
+					out.write(buffer, 0, bytesRead);
+					buffer = new byte[4096];
+				}
+				input.close();
+			} else {
+				// out.write(attachment.getFileByte());
+			}
+
+			FacesContext.getCurrentInstance().responseComplete();
+		} catch (Exception ex) {
+			log.error("download exception>>>>" + ex.getMessage());
+		} finally {
+			out.flush();
+			out.close();
+		}
+	}
+
+	/**
+	 * Gets the captcha text image.
+	 *
+	 * @return the captcha text image
+	 */
+	public StreamedContent getCaptchaTextImage() {
+		StreamedContent graphicText = null;
+		ByteArrayOutputStream os = null;
+		try {
+			BufferedImage bufferedImg = new BufferedImage(100, 25,
+					BufferedImage.TYPE_BYTE_BINARY);
+			Graphics2D g2 = bufferedImg.createGraphics();
+
+			String captchaText = RandomStringUtils.randomAlphanumeric(6);
+			this.getManagedBean().setCaptchaText(captchaText);
+
+			Font font = new Font("Tahoma", Font.ITALIC, 20);
+			g2.setFont(font);
+
+			g2.drawString(captchaText, 15, 20);
+			os = new ByteArrayOutputStream();
+			ImageIO.write(bufferedImg, "png", os);
+			graphicText = new DefaultStreamedContent(new ByteArrayInputStream(
+					os.toByteArray()), "image/png");
+			if (graphicText == null) {
+				log.info(">>>>>>>>>>>>Graphic is null!!!");
+			} else {
+				log.info(">>>>>>>>>>>>Graphic is not null:"
+						+ graphicText.getStream());
+			}
+		} catch (Exception e) {
+			log.error(e);
+		} finally {
+			try {
+				if(os!=null) {
+					os.close();
+				}
+			} catch (IOException e) {
+				log.error(e);
+			}
+		}
+		return graphicText;
+	}
+
+	/**
+	 * Validate captcha.
+	 *
+	 * @param context the context
+	 * @param component the component
+	 * @param value the value
+	 */
+	public void validateCaptcha(FacesContext context, UIComponent component,
+			Object value) {
+		String skipValidator = FacesContext.getCurrentInstance()
+				.getExternalContext().getRequestParameterMap()
+				.get("skipValidator");
+		if (skipValidator == null) {
+			String captchaAnswer = (String) value;
+			if (captchaAnswer == null || captchaAnswer.length() == 0) {
+				log.error("Captcha is null");
+				throw new ValidatorException(new FacesMessage(
+						FacesMessage.SEVERITY_ERROR, null,
+						SmCommonUtil.getOutputMsgBundle(
+								MessageConst.ERROR_721046, null)));
+
+			}
+
+			if (captchaAnswer != null && captchaAnswer.length() > 0) {
+				if (!captchaAnswer.equals(this.getManagedBean()
+						.getCaptchaText())) {
+					log.error("Captcha is wrong");
+					throw new ValidatorException(new FacesMessage(
+							FacesMessage.SEVERITY_ERROR, null,
+							SmCommonUtil.getOutputMsgBundle(
+									MessageConst.ERROR_721047, null)));
+				}
+			}
+		}
+	}
+
+	/**
+	 * To get BpmTask Details.
+	 * 
+	 * @param clazz
+	 * @return Object payLoadInstance
+	 */
+	@SuppressWarnings("unchecked")
+	protected <BPM_DATA_TYPE> BPM_DATA_TYPE getBpmTaskDetails(
+			Class<BPM_DATA_TYPE> clazz, String[] additionalButtons) {
+		FacesScopes facesScopes = new FacesScopes();
+		HttpServletRequest servletRequest = PortalUtil
+				.getHttpServletRequest(facesScopes.getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil
+				.getOriginalServletRequest(servletRequest);
+
+		String taskId = originalServletRequest.getParameter("taskId");
+
+		IBpmSO bpmSO;
+
+		try {
+			bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+					.getServiceObject(IBpmSO.class);
+
+			BpmRequestDTO reqDTO = new BpmRequestDTO();
+			reqDTO.setCtxToken(facesScopes.getBPMAuthenticationCtxToken());
+			reqDTO.setTaskId(taskId);
+
+			BpmResponseDTO resDTO = bpmSO.getTaskDetails(reqDTO);
+
+			this.renewSesionObject();
+
+			boolean isAssignedState = BpmConstants.STATE_ASSIGNED.equals(resDTO
+					.getStatus());
+			Object payLoad = resDTO.getPojo();
+			BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
+
+			if (null != resDTO.isGroupTask() && resDTO.isGroupTask() == true) {
+				log.info("====groupTask not null===" + resDTO.isGroupTask());
+				Boolean claim = resDTO.isClaimed();
+				log.info("claim:" + claim);
+				if (null != claim && claim == false) {
+					this.getManagedBean().setReadOnly(true);
+				} else {
+					this.getManagedBean().setReadOnly(false);
+				}
+				bb.getManagedBean().setClaim(claim);
+				bb.getManagedBean().setTaskId(taskId);
+				bb.getManagedBean().setGroupTask(true);
+			} else {
+				log.info("====groupTask null===" + resDTO.isGroupTask());
+				this.getManagedBean().setReadOnly(false);
+				bb.getManagedBean().setClaim(true);
+				bb.getManagedBean().setGroupTask(false);
+			}
+
+			this.getManagedBean().setTaskId(taskId);
+			this.getManagedBean().setAssignedState(isAssignedState);
+			if (isAssignedState) {
+				String[] outComes = null;
+				if (additionalButtons != null && additionalButtons.length > 0) {
+					int i = 0;
+					outComes = new String[additionalButtons.length
+							+ resDTO.getAction().length];
+
+					for (String additionalButton : additionalButtons) {
+						outComes[i++] = additionalButton;
+					}
+
+					for (String action : resDTO.getAction()) {
+						outComes[i++] = action;
+					}
+				} else {
+					outComes = resDTO.getAction();
+				}
+				this.getManagedBean().setOutComes(sortOutcomes(outComes));
+			}
+			this.getManagedBean().setCurrentStatusId(
+					Long.valueOf(resDTO.getDocStatus()));
+			this.getManagedBean().setTaskName(resDTO.getTaskName());
+			this.getManagedBean().setPayLoad(payLoad);
+			this.getManagedBean().setProcessName(resDTO.getProcessName());
+
+			return (BPM_DATA_TYPE) payLoad;
+
+		} finally {
+			bpmSO = null;
+		}
+	}
+
+	/**
+	 * Sort outcomes.
+	 *
+	 * @param outComes the out comes
+	 * @return the string[]
+	 */
+	private String[] sortOutcomes(String[] outComes) {
+		List<String> bpmActions = new ArrayList<String>(Arrays.asList(outComes));
+
+		// Move 'Cancel' button to the last
+		if (bpmActions.contains(BpmOutcomeConst.BPM_CANCEL)
+				&& !bpmActions.get(bpmActions.size() - 1).equalsIgnoreCase(
+						BpmOutcomeConst.BPM_CANCEL)) {
+			bpmActions.remove(BpmOutcomeConst.BPM_CANCEL);
+			bpmActions.add(BpmOutcomeConst.BPM_CANCEL);
+		}
+
+		outComes = new String[bpmActions.size()];
+		return bpmActions.toArray(outComes);
+	}
+
+	/**
+	 * Get Rule Type Description by rule type
+	 * 
+	 * @param ruleType
+	 *            the rule type
+	 * @return the rule type description.
+	 */
+	public String getRuleTypeDesc(String ruleType) {
+		IRuleSO ruleSO = null;
+		try {
+			ruleSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+
+			RuleReqDTO reqDTO = new RuleReqDTO();
+
+			reqDTO.setRuleType(ruleType);
+			reqDTO.setLanguageCode(new FacesScopes().getUserLocale()
+					.getLanguage());
+
+			return ruleSO.getRuleDescByType(reqDTO);
+
+		} finally {
+			ruleSO = null;
+		}
+	}
+
+	/**
+	 * Get year drop down
+	 * 
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getYearDropDown() {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+
+		try {
+			Calendar now = Calendar.getInstance();
+			int currentYear = now.get(Calendar.YEAR);
+			int yearRange = CommonConstants.YEAR_RANGE;
+			int yearDiff = currentYear - yearRange;
+
+			items = new SelectItem[yearRange + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			int i = 1;
+
+			for (int y = currentYear; y > yearDiff; y--) {
+				items[i++] = new SelectItem(y, String.valueOf(y));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+
+		return items;
+
+	}
+
+	/**
+	 * Return the display text as N/A or T/B if it is null or empty.
+	 * 
+	 * @param text
+	 * @return displayText
+	 */
+	public Object getText(Object text) {
+		FacesScopes face = new FacesScopes();
+		if (text == null
+				|| (text instanceof String && ((String) text).length() == 0)) {
+			return ResourceBundleUtils.getMessage("lbl.txt.na",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale());
+		} else {
+			return text;
+		}
+	}
+
+	/**
+	 * File Upload
+	 * 
+	 * @param String
+	 *            path
+	 * @param String
+	 *            fileName
+	 * @param String
+	 *            displayFileName
+	 * @return
+	 * @throws IOException
+	 */
+	public StreamedContent commonDownload(String path, String fileName,
+			String displayFileName) throws IOException {
+		String finalFilePath = path + "/" + fileName;
+
+		return commonDownload(finalFilePath, displayFileName);
+	}
+
+	/**
+	 * Deleteselected list.
+	 *
+	 * @param <ENTITY_CLASS> the generic type
+	 * @param list the list
+	 * @return true, if successful
+	 */
+	public <ENTITY_CLASS extends BaseEntity> boolean deleteselectedList(
+			List<ENTITY_CLASS> list) {
+		if (list != null) {
+			for (ENTITY_CLASS entity : list) {
+				if (entity.isSelected()) {
+					return false;
+				}
+
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 * Retrieve Unknown Country
+	 * @return pmCountry
+	 */
+	public PmCountry getUnknownCountry(){
+		ICountrySO countrySO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICountrySO.class);
+		CountryReqDTO reqDTO = new CountryReqDTO();
+		reqDTO.setCountryCode(ParameterConst.COUNTRY_UNKNOWN_CODE);
+		
+		PmCountry country = countrySO.retrieveCountryByCode(reqDTO).getPmCountry();
+
+		return country;
+	}
+	
+	/**
+	 * Validation on amount as 1GFMAS accept NUM(11,2)
+	 * @param label
+	 * @param amount
+	 */
+	protected void validateAmount(String label, BigDecimal amount) {
+		if((amount.precision()-amount.scale())>11 || amount.scale()>2) {
+			CommonUtils commonUtils = new CommonUtils();
+			DecimalFormat nf = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+			throw new EpException(MessageConst.ERROR_100039, new String[]{label+" "+nf.format(amount),nf.format(BigDecimal.ZERO),nf.format(new BigDecimal("99999999999.99"))});
+		}
+	}
+	
+	
+	/**
+	 * Convert string.
+	 *
+	 * @param label the label
+	 * @param length the length
+	 * @return the string
+	 */
+	public String convertString(String label, int length){
+		
+		String formattedString = "";
+		if(label.trim().length()>=length){
+			if(label!=null && label.trim().length()>0){
+				formattedString = label.substring(0, length);
+				
+				formattedString = formattedString + "...";
+			}
+		}else{
+			formattedString = label;
+		}
+		
+		
+		return formattedString;
+	}
+	
+	/**
+	 * Validate email format
+	 * 
+	 * @param String
+	 *            email
+	 * @return boolean
+	 */
+	public boolean isValidEmail(String email) {
+		Pattern pattern = Pattern
+				.compile("^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$");
+		return pattern.matcher(email).matches();
+	}
+	
+	/**
+	 * uom autocompletelist.
+	 * 
+	 * 
+	 *@return the list of PmUom instance 		
+	 */
+	public List<PmUom> autoCompleteUom(String searchText) {
+		IUomSO uomSo = null;
+		try {
+			uomSo = (IUomSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUomSO.class);
+			UomReqDTO reqDTO = new UomReqDTO();
+			SearchBean<PmUom> searchBean = new SearchBean<PmUom>();
+			searchBean.setNavigatable(true);
+			searchBean.setNoOfRowsPerPage(50);
+			SearchFilterBean uomNameSFB = new SearchFilterBean(
+					"uomName",
+					SearchOperator.OPERATOR_LIKE.value(),
+					searchText!=null?searchText.toLowerCase():searchText,SearchCondition.CONDITION_OR.value());
+			uomNameSFB.setCaseInsensitive(true);
+			searchBean.getDataFilterBeans().add(
+					new SearchMultiFilterBean(
+							new SearchFilterBean(
+									"uomCode",
+									SearchOperator.OPERATOR_LIKE.value(),
+									searchText,true),
+							uomNameSFB
+							));
+			//Bug #21863
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("recordStatusFlg",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							DbValueConst.RECORD_STATUS_ACTIVE));
+					
+			searchBean.getSortColumns().add(new SearchOrderBean("uomName"));
+			reqDTO.setMeasurementSearchBean(searchBean);
+			return uomSo.retrieveMeasurementBySearch(reqDTO)
+					.getPmUomList();
+		} finally {
+			uomSo = null;
+		}
+	}
+	
+	/**
+	 * getUomCode and description.
+	 * 
+	 * 
+	 *@return uomCodeDesc.		
+	 */
+	public String retriveUomCodeDesc(PmUom pmUom){
+		String uomCodeDesc="";
+		if(null!=pmUom){
+			if(null!=pmUom.getUomCode() && null!=pmUom.getUomName()){
+			uomCodeDesc=pmUom.getUomCode()+" "+" -"+" "+pmUom.getUomName();	
+			}
+		}
+		
+	return uomCodeDesc;	
+	}
+}

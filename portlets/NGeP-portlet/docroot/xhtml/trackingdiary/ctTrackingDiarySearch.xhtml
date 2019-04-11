@@ -1,0 +1,176 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<h:panelGroup id="ctSearchID">
+	<script>
+	$('#portlet_Catalogue_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.cm.catalogue.search']}"); 
+	</script>
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>		
+
+		<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false"></p:messages>
+			
+		<p:panel id="searchPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
+			<table>
+				<tr>
+					<td width="35%">
+						<p:outputLabel value="#{lbl['lbl.td.transaction.type']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</td>
+					<td width="35%">
+						<p:selectOneMenu required="true" label="#{lbl['lbl.td.transaction.type']}" id="transactionType"
+							value="#{ctTrackingDiaryBackingBean.managedBean.searchTransactionType}" style="width: 314px;">
+							<f:selectItems value="#{ctTrackingDiaryBackingBean.getContractType()}" />
+							<p:ajax event="change" update="searchPanel" listener="#{ctTrackingDiaryBackingBean.resetSearchCriteria}" />
+						</p:selectOneMenu>
+					</td>
+				</tr>
+				<h:panelGroup rendered="#{ctTrackingDiaryBackingBean.managedBean.searchTransactionType != null}">
+				<tr>
+					<td width="35%">
+						<p:outputLabel value="#{lbl['lbl.td.doc.no']}" />
+					</td>
+					<td width="35%">
+						<p:inputText size="28" value="#{ctTrackingDiaryBackingBean.managedBean.searchDocNo}" maxlength="17"></p:inputText>
+					</td>
+				</tr>
+				</h:panelGroup>						
+				<h:panelGroup rendered="#{ctTrackingDiaryBackingBean.managedBean.searchTransactionType eq ParameterConst.contractTypeMinistry
+					or ctTrackingDiaryBackingBean.managedBean.searchTransactionType eq ParameterConst.contractTypeCentral}">
+				<tr>
+					<td width="35%">
+						<p:outputLabel value="#{lbl['lbl.td.doc.type']}" />
+					</td>
+					<td width="35%">
+						<p:selectOneMenu  value="#{ctTrackingDiaryBackingBean.managedBean.searchDocType}" style="width: 314px;">
+							<f:selectItems value="#{ctTrackingDiaryBackingBean.getContractDocType()}" />
+						</p:selectOneMenu>
+					</td>
+				</tr>
+				<tr>
+					<td width="35%">
+						<p:outputLabel value="#{lbl['lbl.ct.physical.no']}" />
+					</td>
+					<td width="35%">
+						<p:inputText size="28" value="#{ctTrackingDiaryBackingBean.managedBean.searchPhysicalDocNo}" maxlength="100"></p:inputText>
+						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.physical.contract.no']}"/>
+					</td>
+				</tr>
+				<tr>
+					<td width="35%">
+						<p:outputLabel value="#{lbl['lbl.ct.loa.no']}" />
+					</td>
+					<td width="35%">
+						<p:inputText size="28" value="#{ctTrackingDiaryBackingBean.managedBean.searchLoaNo}" maxlength="20"></p:inputText>
+						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.loa.no']}"/>
+					</td>
+				</tr>
+				<tr>
+					<td width="35%">
+						<p:outputLabel value="#{lbl['lbl.ct.loa.physical.no']}" />
+					</td>
+					<td width="35%">
+						<p:inputText size="28" value="#{ctTrackingDiaryBackingBean.managedBean.searchPhysicalLoaNo}" maxlength="100"></p:inputText>
+						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.loa.physical.no']}"/>
+					</td>
+				</tr>
+				<tr>
+					<td width="35%">
+						<p:outputLabel value="#{lbl['lbl.ct.ministry']}" />
+					</td>
+					<td width="35%">
+						<p:selectOneMenu id="searchMinistry" style="width:314px" disabled="#{ctTrackingDiaryBackingBean.disableMinistrySelection()}"
+			                rendered="#{ctTrackingDiaryBackingBean.managedBean.searchTransactionType != ParameterConst.contractTypeCentral}"
+			                value="#{ctTrackingDiaryBackingBean.managedBean.searchMinistryProfileId}" >
+			      	   		<f:selectItems value="#{ctTrackingDiaryBackingBean.getMinistryDropdown()}"/>
+			      	   		<p:ajax event="change" process="@form" update="@([id$=searchPtj])"  listener="#{ctTrackingDiaryBackingBean.resetPtjProfile}"/>
+			           </p:selectOneMenu>
+			           <p:inputText value="#{lbl['lbl.pm.org.gst.na']}" disabled="true" style="width:314px;" rendered="#{ctTrackingDiaryBackingBean.managedBean.searchTransactionType eq ParameterConst.contractTypeCentral}"/>
+			           
+					</td>
+				</tr>
+				<tr>
+					<td width="35%">
+						<p:outputLabel value="#{lbl['lbl.ct.ptj']}" />
+					</td>
+					<td width="35%">
+						<ac:lov id="searchPtj" lovId="PM_ORG_PROFILE_PTJ" size="46" readonly="true" style="width:314px"
+							disabled="#{ctTrackingDiaryBackingBean.isContractAdmin() or ctTrackingDiaryBackingBean.isApprover() 
+								or ctTrackingDiaryBackingBean.managedBean.searchMinistryProfileId==null}"
+							rendered="#{ctTrackingDiaryBackingBean.managedBean.searchTransactionType != ParameterConst.contractTypeCentral
+								or !ctTrackingDiaryBackingBean.isGeneralAuditor()}"
+							headerText="#{lbl['lbl.ct.ptj']}"
+							value="#{ctTrackingDiaryBackingBean.managedBean.searchPtjProfile.pmOrgValidity.orgName}"
+							saveObject="ctTrackingDiaryBackingBean.managedBean.searchPtjProfile"
+							conditionField="#{ctTrackingDiaryBackingBean.getPTJCondition()}">			
+						</ac:lov>
+						<p:inputText value="#{lbl['lbl.pm.org.gst.na']}" disabled="true" style="width:314px;" rendered="#{ctTrackingDiaryBackingBean.managedBean.searchTransactionType eq ParameterConst.contractTypeCentral
+							and ctTrackingDiaryBackingBean.isGeneralAuditor()}"/>
+					</td>
+				</tr>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{ctTrackingDiaryBackingBean.managedBean.searchTransactionType eq ParameterConst.doctypeCentralContractCircular
+					or ctTrackingDiaryBackingBean.managedBean.searchTransactionType eq ParameterConst.doctypePanelCircular}"> 
+				<tr>
+					<td width="35%">
+						<p:outputLabel value="#{lbl['lbl.ct.physical.circular.no']}" />
+					</td>
+					<td width="35%">
+						<p:inputText size="28" value="#{ctTrackingDiaryBackingBean.managedBean.searchPhysicalDocNo}" maxlength="60"></p:inputText>
+					</td>
+				</tr>
+				</h:panelGroup>
+			</table>
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.search']}" 
+					action="#{ctTrackingDiaryBackingBean.search}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+					update="resultPanel" />
+				<p:commandButton value="#{lbl['lbl.btn.reset']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+					action="#{ctTrackingDiaryBackingBean.reset}" update=":form"  process="@this"/>
+			</div>
+		</p:panel>
+		<p:panel id="resultPanel" header="#{lbl['lbl.fl.result']}" toggleable="true">
+			<p:dataTable id="ctDocListDt"
+				value="#{ctTrackingDiaryBackingBean.managedBean.ctDocumentDataModel}" lazy="true"
+				var="ctDocument" rowIndexVar="rowIndex" rowKey="#{ctDocument.docId}"
+				width="100%" rows="10">
+				<ac:paginator for="ctDocListDt" />
+				<p:column style="width:15%; white-space:normal;">
+					<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.td.doc.no']}"/>
+					</f:facet>
+					#{ctDocument.docNo}
+				</p:column>
+				<p:column style="width:45%; white-space:normal;">
+					<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.td.doc.title']}"/>
+					</f:facet>
+					#{ctDocument.title}
+				</p:column>
+				<p:column style="width:25%; white-space:normal;">
+					<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.td.status']}"/>
+					</f:facet>
+					#{ctTrackingDiaryBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, ctDocument.currentDocType)}
+				</p:column>				
+				<p:column style="width:5%; white-space:normal;">
+					<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.ct.action']}"/>
+					</f:facet>
+					<p:commandLink
+						action="#{ctTrackingDiaryBackingBean.goToTrackingDiarySearch(ctDocument)}">
+							<p:graphicImage value="/css/images/design/document.png" title="#{lbl['lbl.ct.view']}" />
+						</p:commandLink>
+
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+	</h:panelGroup>
+</ui:composition>

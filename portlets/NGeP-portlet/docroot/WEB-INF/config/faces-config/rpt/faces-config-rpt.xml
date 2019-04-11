@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+
+<faces-config version="2.0" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+
+	<managed-bean>
+		<description>Report Constants</description>
+		<managed-bean-name>ReportConst</managed-bean-name>
+		<managed-bean-class>my.ep.web.constant.report.ReportConst</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
+
+	<managed-bean>
+		<description>SM Report Constants</description>
+		<managed-bean-name>SmReportConst</managed-bean-name>
+		<managed-bean-class>my.ep.web.constant.report.SmReportConst</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
+
+	<managed-bean>
+		<description>PM Report Constants</description>
+		<managed-bean-name>PmReportConst</managed-bean-name>
+		<managed-bean-class>my.ep.web.constant.report.PmReportConst</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
+
+
+     <managed-bean>
+		<description>QT Report Constants</description>
+		<managed-bean-name>QtReportConst</managed-bean-name>
+		<managed-bean-class>my.ep.web.constant.report.QtReportConst</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
+	
+	<managed-bean>
+		<description>CT Report Constants</description>
+		<managed-bean-name>CtReportConst</managed-bean-name>
+		<managed-bean-class>my.ep.web.constant.report.CtReportConst</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
+	
+	<managed-bean>
+		<description>Dp Report Constants</description>
+		<managed-bean-name>DpReportConst</managed-bean-name>
+		<managed-bean-class>my.ep.web.constant.report.DpReportConst</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
+	
+		<managed-bean>
+		<description>PP Report Constants</description>
+		<managed-bean-name>PpReportConst</managed-bean-name>
+		<managed-bean-class>my.ep.web.constant.report.PpReportConst</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
+</faces-config>

@@ -1,0 +1,48 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<p:panel header="#{lbl['lbl.td.tracking.diary.details']}" toggleable="true">
+		<p:dataTable id="trackingDiaryTableID" lazy="true" value="#{pmTrackingDiaryBackingBean.managedBean.searchTrackingDiaryDataModel}" var="trackingDiaryObj" width="100%" rows="10">
+
+			<ac:paginator for="trackingDiaryTableID"></ac:paginator>
+
+			<p:column width="15%">
+				<f:facet name="header">
+				#{lbl['lbl.td.view.action.date']}
+				</f:facet>
+				<ac:labelDateTime value="#{trackingDiaryObj.actionedDate}" /> 
+			</p:column>
+			<p:column width="15%">
+				<f:facet name="header">
+				#{lbl['lbl.td.view.action.by']}
+				</f:facet>
+			#{pmTrackingDiaryBackingBean.getUserName(trackingDiaryObj.actionedBy)}
+			</p:column>
+				<p:column width="15%"> 
+			<f:facet name="header">
+			#{lbl['lbl.td.view.role']}
+			</f:facet> 
+		   #{pmTrackingDiaryBackingBean.getRoleDescByRoleCode(trackingDiaryObj.roleCode)}
+            	</p:column> 
+			<p:column style="white-space: normal!important;" width="25%">
+				<f:facet name="header">
+			#{lbl['lbl.td.view.action.desc']}
+				</f:facet>
+			<h:outputText value="#{trackingDiaryObj.actionDesc}" escape="false"/>
+			</p:column>
+			<p:column width="15%">
+				<f:facet name="header">
+				#{lbl['lbl.td.view.status']}
+				</f:facet>
+		  		#{pmTrackingDiaryBackingBean.getStatusDescById(trackingDiaryObj.statusId)}
+			</p:column>
+
+		</p:dataTable>
+	</p:panel>
+
+</ui:composition>

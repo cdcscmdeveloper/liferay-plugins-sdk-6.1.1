@@ -1,0 +1,151 @@
+#parse("templates/sm/sitevisit/shared/header.vm")
+
+<table width='100%'>
+	<tr align='center' style="background-color: #3366ff;">
+	    <td>
+	    	<font style='color:#ffffff;font-weight: bold;'>$templateType - Section B</font>
+	    </td>
+    </tr>
+    <tr><td><br /></td></tr>
+</table>
+
+<table  class="sTable">
+	<tr>
+		<td width="40%" class="txtBold"><u>Financial</u></td>
+		<td></td>
+		
+	</tr>
+	
+	<tr>
+		<td width="40%" class="txtBold">Cheque Signatories</td>
+		<td class="sColTwentyPerc">$totolCheqSignatory person(s)</td>
+		<td class="sColTwentyPerc"><br /></td>
+	</tr>
+	
+	<tr>
+		<td width="40%" class="txtBold">Bumiputera</td>
+		<td class="sColTwentyPerc">$bumiCheqSign person(s)</td>
+		<td class="sColTwentyPerc">$bumiCheqSignPct%</td>
+	</tr>
+	
+	<tr>
+		<td width="40%" class="txtBold">Non-Bumiputera</td>
+		<td class="sColTwentyPerc">$nonBumiCheqSign person(s)</td>
+		<td class="sColTwentyPerc">$nonBumiCheqSignPct%</td>
+	</tr>
+	
+	<tr>
+		<td width="40%" class="txtBold">Non-Malaysian</td>
+		<td class="sColTwentyPerc">$nonMalaysianCheqSign person(s)</td>
+		<td class="sColTwentyPerc">$nonMalaysianCheqSignPct%</td>
+	</tr>
+</table>
+	
+<table  class="sTable">
+	<tr>
+		<td class="txtBold">Bank Information</td>
+	</tr>
+</table>
+
+<table>
+	#foreach($bank in $bankInfo)
+	<tr>
+		<td valign="top">
+		<table>
+			<tr><td>$velocityCount.</td></tr>
+			<tr><td><p style="width: 10px;height: 10px;background: white;border:solid thin black;" /></td></tr>
+		</table>
+		</td>
+		
+		<td valign="top">
+			<table>
+			<tr>
+				<td class="txtBold">Bank Name</td>
+				<td>
+					$bank.smSupplierBank.pmFinancialOrg.finOrgName
+				</td>
+			</tr>
+						
+			<tr>
+				<td class="txtBold">Account No.</td>
+				<td>$bank.smSupplierBank.accountNo<br /></td>
+			</tr>
+						
+			<tr>
+				<td class="txtBold">Cheque Signatory Name</td>
+				<td>
+					#foreach($signatory in $bank.smSupplierBank.smChequeSignatories)
+						$velocityCount. $signatory.smPersonnel.name<br />
+					#end
+				</td>
+			</tr>
+						
+			<tr>
+				<td valign="top" class="txtBold">Terms and Conditions</td>
+				<td valign="top">$!bank.smSupplierBank.signatureInstruction</td>
+			</tr>
+			
+			#*	
+			#if($review)
+				<tr>
+					<td valign="top" class="txtBold">Valid</td>
+					<td valign="top">
+						#if($bank.valid)Yes #else No #end
+					</td>
+				</tr>
+							
+				<tr>
+					<td valign="top" class="txtBold">Remark</td>
+					<td valign="top">$!bank.remark</td>
+				</tr>
+			#end*#
+			
+			</table>
+		</td>
+		
+		<td valign="top">
+		<table>
+			<tr>
+				<td>Remarks:</td>
+				<td><p style="width: 200px;height: 50px;background: white;border:solid thin black;" /></td>
+			</tr>
+		</table></td>
+	</tr>
+	#end
+</table>
+<br /><br />
+
+<table class="sTable">
+	#if($review)
+		<tr>
+			<td class="txtBold" width="40%"><u>Check List</u></td>
+			<td class="txtBold"><u>Avaialble</u></td>
+			<td class="txtBold"><u>Remark</u></td>
+		</tr>
+		#if($financialCheckList.size() > 0)
+			#foreach($finCheckItem in $financialCheckList)
+				<tr>
+			    	<td>$finCheckItem.pmParameter.pmParameterDescs.get(0).codeDesc</td>
+			    	<td>#if($finCheckItem.valid)Yes #else No #end</td>
+			    	<td>$!finCheckItem.remark</td>
+			    </tr>
+			<tr><td><br /></td></tr>
+			#end
+  		#end
+	#else
+		<tr>
+			<td class="txtBold"><u>Check List</u></td>
+		</tr>
+		#if($financialCheckList.size() > 0)
+			#foreach($finCheckItem in $financialCheckList)
+			    <tr>
+			    	<td><p style="width: 10px;height: 10px;background: white;border:solid thin black;" /></td>
+			    	<td>$finCheckItem</td>
+			    	<td valign="bottom"><p style="width: 200px; background: white;border-bottom: 1px solid black;" /></td>
+			    </tr>
+			#end
+  		#end
+	#end
+</table>
+
+#include("templates/sm/sitevisit/shared/footer.vm")

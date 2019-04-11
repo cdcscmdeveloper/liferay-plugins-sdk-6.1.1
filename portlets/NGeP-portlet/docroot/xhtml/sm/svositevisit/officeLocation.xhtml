@@ -1,0 +1,71 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">	
+	
+	<p:panel header="#{lbl['lbl.sm.officeloc']}" toggleable="true">
+		<table>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.officeloc.ownership']}" /></td>
+				<td>
+				<p:outputLabel value="#{lbl['lbl.sm.facility.own']}" 
+				rendered="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.smFacility.ownershipType eq 'O'}" style="float : left"/>
+				<p:outputLabel value="#{lbl['lbl.sm.facility.rent']}" 
+				rendered="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.smFacility.ownershipType eq 'R'}" style="float : left"/>
+				</td>
+			</tr>
+
+			<tr>
+			<p:outputPanel rendered="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.smFacility.ownershipType eq 'O'}">
+				<td><p:outputLabel value="#{lbl['lbl.sm.officeloc.prvt.prchs.price']}" /></td>
+				<td><p:inputText value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.smFacility.purchasePrice}" readonly="true">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText></td>
+			</p:outputPanel> 
+			<p:outputPanel rendered="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.smFacility.ownershipType eq 'R'}">
+				<td><p:outputLabel value="#{lbl['lbl.sm.officeloc.rent.mnthly.rate']}" /></td>
+				<td><p:inputText value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.smFacility.rentalRate}" readonly="true">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText></td>
+			</p:outputPanel>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.officeloc.sign.board']}" /></td>
+				<td>
+					<p:selectBooleanCheckbox value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.signboardValid}" readonly="#{viewFlag}">
+	
+					</p:selectBooleanCheckbox>
+				</td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.officeloc.share.with']}" /></td>
+				<td><p:selectBooleanCheckbox value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.share}" readonly="#{viewFlag}">
+					</p:selectBooleanCheckbox>
+				</td>
+			</tr>
+			
+			<tr>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
+				<td><p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="255" id="txtSignBoardRmk" readonly="#{viewFlag}"
+					value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.signboardRemark}" /></td>
+					
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
+				<td><p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="255" id="txtShareWithRmk" readonly="#{viewFlag}"
+					value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.shareWithRemark}" /></td>
+			</tr>
+			
+			<tr><td>&#160;</td></tr>
+			
+			<tr>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.officeloc.office.arrngmnt']}" /></td>
+				<td>
+				<p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="255" label="#{lbl['lbl.sm.officeloc.office.arrngmnt']}"
+				value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.officeArrangement}">
+					<f:validateLength maximum="255" />
+				</p:inputTextarea>
+				</td>
+			</tr>
+		</table>
+	</p:panel>
+</ui:composition>

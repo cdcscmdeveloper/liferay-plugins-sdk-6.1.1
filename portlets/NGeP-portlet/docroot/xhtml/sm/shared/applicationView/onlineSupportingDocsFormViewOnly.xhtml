@@ -1,0 +1,52 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel
+		header="#{lbl['lbl.sm.suppDoc.online.checklist.application.no']} #{viewSmApplBackingBean.managedBean.smAppl.applNo}"
+		toggleable="true" id="onSupTblPan">
+		
+		<c:if test="#{not empty viewSmApplBackingBean.managedBean.bumiRecommendationNote}">
+			<table style="width: 100%;">
+				<tr>
+					<td><h:outputText value="#{viewSmApplBackingBean.managedBean.bumiRecommendationNote}" 
+							style="color: green;font-weight: bold;float:left;"/></td>
+				</tr>
+			</table>
+		</c:if>
+		
+		<p:spacer height="10px" />
+		<p:dataTable var="table" id="onSdList"
+			value="#{viewSmApplBackingBean.managedBean.smApplSupportDocs}" rowIndexVar="index">
+			<ac:paginator for="onSdList" />
+			
+			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 5%;">
+				<p:outputLabel value="#{index + 1}"
+					style="float: left;white-space: normal;" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" style="width : 65%;">
+				<h:outputText value="#{table.pmDocument.docName}"
+					style="float: left;white-space: normal;" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.pm.document.name']}" style="width : 30%;">
+				<p:dataList value="#{table.smApplDocFiles}" var="fileVar">
+					<p:commandLink rendered="#{not empty fileVar.fileName}" value="#{fileVar.fileName}"
+						action="#{viewSmApplBackingBean.downloadSelectedSuppDoc(fileVar.fileName,fileVar.filePath)}"
+						update=":form" ajax="false">
+						<p:fileDownload value="#{viewSmApplBackingBean.file}" />
+					</p:commandLink>
+					<p:outputLabel value="#{lbl['lbl.sm.suppDoc.online.hardcopy']}"
+						style="float: left;white-space: normal;" rendered="#{empty fileVar.fileName}"/>
+				</p:dataList>
+			</p:column>
+		</p:dataTable>
+
+	</p:panel>
+
+</ui:composition>

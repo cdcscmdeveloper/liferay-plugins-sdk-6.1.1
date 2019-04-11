@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<wsdl:definitions
+    
+     targetNamespace="http://xmlns.oracle.com/bpmn/bpmnProcess/StopFullfillmentRequest"
+     xmlns:plnk="http://schemas.xmlsoap.org/ws/2003/05/partner-link/"
+     xmlns:tns="http://xmlns.oracle.com/bpmn/bpmnProcess/StopFullfillmentRequest"
+     xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+     xmlns:tns6="http://xmlns.oracle.com/bpm/bpmobject/Data/FL_StopFullfillment_Data"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+     xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/"
+     xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+     xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+    >
+    <wsdl:documentation>
+        <abstractWSDL>http://NGEPDevAPS01.ngep.com:8001/soa-infra/services/default/Order_Fullfillment!1.0/StopFullfillmentRequest.wsdl</abstractWSDL>
+    </wsdl:documentation>
+    <plnk:partnerLinkType name="StopFullfillmentRequestPortTypePartnerLinkType">
+        <plnk:role name="StopFullfillmentRequestPortTypeProvider">
+            <plnk:portType name="tns:StopFullfillmentRequestPortType"/>
+        </plnk:role>
+    </plnk:partnerLinkType>
+    <wsdl:types>
+        <xsd:schema targetNamespace="http://xmlns.oracle.com/bpmn/bpmnProcess/StopFullfillmentRequest">
+            <xsd:import namespace="http://xmlns.oracle.com/bpm/bpmobject/Data/FL_StopFullfillment_Data"
+                 schemaLocation="http://192.168.120.17:8001/soa-infra/services/default/Order_Fullfillment/StopFullfillmentRequest.service?XSD=businessCatalog/Data/FL_StopFullfillment_Data.xsd"/>
+            <xsd:element name="stopFullfillment">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element ref="tns6:FL_StopFullfillment_Data"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="stopFullfillment">
+        <wsdl:part name="parameters" element="tns:stopFullfillment"/>
+    </wsdl:message>
+    <wsdl:portType name="StopFullfillmentRequestPortType">
+        <wsdl:operation name="stopFullfillment">
+            <wsdl:input message="tns:stopFullfillment"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="StopFullfillmentRequestBinding" type="tns:StopFullfillmentRequestPortType">
+        <wsdlsoap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="stopFullfillment">
+            <wsdlsoap:operation style="document" soapAction="stopFullfillment"/>
+            <wsdl:input>
+                <wsdlsoap:body use="literal"/>
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="StopFullfillmentRequest.service">
+        <wsdl:port name="StopFullfillmentRequestPort" binding="tns:StopFullfillmentRequestBinding">
+            <wsdlsoap:address location="http://192.168.120.17:8001/soa-infra/services/default/Order_Fullfillment/StopFullfillmentRequest.service"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

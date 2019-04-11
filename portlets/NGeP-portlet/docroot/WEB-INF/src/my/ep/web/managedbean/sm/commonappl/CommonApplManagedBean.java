@@ -1,0 +1,86 @@
+package my.ep.web.managedbean.sm.commonappl;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+
+import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.web.managedbean.BaseManagedBean;
+
+@ManagedBean(name = "commonApplMB")
+@SessionScoped
+public class CommonApplManagedBean extends BaseManagedBean {
+	private static final long serialVersionUID = 1L;
+
+	private String[] bpmAction;
+	private String taskName;
+	private List<SmPersonnel> personnelList;
+	private List<SmPersonnel> selectPersonnelList;
+	private List<Double> payList;
+	private List<Double> finalPayList;
+	private BigDecimal totalAmount;
+	private int pListSize;
+	private String applType;
+
+	public String[] getBpmAction() {
+		return bpmAction;
+	}
+	public void setBpmAction(String[] bpmAction) {
+		this.bpmAction = bpmAction;
+	}
+	public String getTaskName() {
+		return taskName;
+	}
+	public void setTaskName(String taskName) {
+		this.taskName = taskName;
+	}
+	public List<SmPersonnel> getPersonnelList() {
+		return personnelList;
+	}
+	public void setPersonnelList(List<SmPersonnel> personnelList) {
+		this.personnelList = personnelList;
+	}
+	public List<SmPersonnel> getSelectPersonnelList() {
+		return selectPersonnelList;
+	}
+	public void setSelectPersonnelList(List<SmPersonnel> selectPersonnelList) {
+		this.selectPersonnelList = selectPersonnelList;
+	}
+	public List<Double> getPayList() {
+		if(payList == null)
+			payList = new ArrayList<Double>();
+		return payList;
+	}
+	public void setPayList(List<Double> payList) {
+		this.payList = payList;
+	}
+	public List<Double> getFinalPayList() {
+		if(finalPayList == null)
+			finalPayList = new ArrayList<Double>();
+		return finalPayList;
+	}
+	public void setFinalPayList(List<Double> finalPayList) {
+		this.finalPayList = finalPayList;
+	}
+	public BigDecimal getTotalAmount() {
+		return totalAmount;
+	}
+	public void setTotalAmount(BigDecimal totalAmount) {
+		this.totalAmount = totalAmount;
+	}
+	public int getpListSize() {
+		return pListSize;
+	}
+	public void setpListSize(int pListSize) {
+		this.pListSize = pListSize;
+	}
+	public String getApplType() {
+		return applType;
+	}
+	public void setApplType(String applType) {
+		this.applType = applType;
+	}
+}

@@ -1,0 +1,81 @@
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<cc:interface>
+		<cc:attribute name="tableId" required="true" />
+		<cc:attribute name="smApplSupportDocs" required="true" />
+		<cc:attribute name="mandatory" default="false"/>
+	</cc:interface>
+
+	<cc:implementation>
+		<p:dataTable var="suppDoc" value="#{cc.attrs.smApplSupportDocs}" id="#{cc.attrs.tableId}" 
+			rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+					
+			<p:columnGroup type="header">
+				<p:row>
+					<p:column headerText="#{lbl['lbl.sm.mandatory.suppdoc']}" colspan="5" rendered="#{cc.attrs.mandatory}"
+						style="background-color:PeachPuff !important;text-align: center !important;color:black !important"/>
+					<p:column headerText="#{lbl['lbl.sm.nonmandatory.suppdoc']}" colspan="5" rendered="#{!cc.attrs.mandatory}"
+						style="background-color:PaleGreen !important;text-align: center !important;color:black !important"/>
+                </p:row>
+                <p:row>
+                	<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" />
+					<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" />
+					<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}"
+						rendered="#{sdoReviewBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}" />
+					<p:column headerText="#{lbl['lbl.sm.supportingdoc.isreceive']}" />
+					<p:column headerText="#{lbl['lbl.sm.remark']}"/>
+                </p:row>
+			</p:columnGroup>
+			
+			<p:column style="width : 2%;">
+				<p:outputLabel value="#{index + 1}"
+					style="float: center;white-space: normal;" />
+			</p:column>
+			
+			<p:column style="width:65% !important; white-space:normal;overflow: hidden !important;">  
+	            <h:outputText value="#{suppDoc.pmDocument.docName}"  /> 
+	        </p:column>
+		
+			<p:column style="width:15%;white-space:normal;overflow: hidden !important;"
+				rendered="#{sdoReviewBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
+				<ui:remove>
+				<p:commandLink value="#{suppDoc.smApplDocFiles[0].fileName}" rendered="#{not empty suppDoc.smApplDocFiles}"  ajax="false"
+		            action="#{sdoReviewBackingBean.downloadSuppDoc(suppDoc.smApplDocFiles[0].fileName,suppDoc.smApplDocFiles[0].filePath)}">
+		           		<p:fileDownload value="#{sdoReviewBackingBean.file}" />
+		        </p:commandLink>
+		        <br />
+		        </ui:remove>
+		        <h:panelGroup rendered="#{not empty suppDoc.smApplDocFiles}">
+		        	<a href="#{DocumentRepositoryUtils.baseRepo}#{suppDoc.smApplDocFiles[0].filePath}#{suppDoc.smApplDocFiles[0].fileName}">#{suppDoc.smApplDocFiles[0].fileName}</a>
+		        </h:panelGroup>
+		        
+	        </p:column>
+			
+			<p:column style="width:3% !important; white-space:normal;overflow: hidden !important;" >
+				<div align="center">
+				<p:selectBooleanCheckbox value="#{suppDoc.received}" disabled="#{!sdoReviewBackingBean.managedBean.claimTask}">
+					<p:ajax event="change" update=":form:btnInquiryId,:form:btnSubmitId" 
+					listener="#{sdoReviewBackingBean.receiveStatusChange(suppDoc)}" disabled="#{!cc.attrs.mandatory}"/>
+				</p:selectBooleanCheckbox>
+				</div>
+			</p:column>
+			
+			<p:column style="width:15% !important; white-space:normal;overflow: hidden !important;">
+				<p:inputTextarea value="#{suppDoc.sdoRemarks}" id="docRemarkId" label="#{lbl['lbl.sm.remark']}" 
+					autoResize="false" maxlength="100" disabled="#{!sdoReviewBackingBean.managedBean.claimTask}">
+					<f:validateLength maximum="100" />
+				</p:inputTextarea>
+			</p:column>
+
+		</p:dataTable>
+		
+	</cc:implementation>
+</ui:component>

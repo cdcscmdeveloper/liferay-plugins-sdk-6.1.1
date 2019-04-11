@@ -1,0 +1,130 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<table class="customTbl">
+		<tr>
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.rpt.zone']}" />
+				<p:outputLabel value="*" styleClass="mandatory" />
+			</td>
+		
+			<td class="tdContent">
+				<ac:smReportZoneList bBean="#{compSuppTypeRegStatusRptBB}" showItemAll="true" />
+			</td>
+			
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.rpt.supplierType']}" />
+			</td>
+			<td class="tdContent">
+				<ac:smReportSupplierType bBean="#{compSuppTypeRegStatusRptBB}" allValue="" />
+			</td>
+		</tr>
+		<tr>
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.rpt.busComptype']}" />
+			</td>
+		
+			<td class="tdContent">
+				<p:selectOneMenu value="#{compSuppTypeRegStatusRptBB.managedBean.bussType}"
+					style="width:300px;">
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="" />
+					<f:selectItems value="#{compSuppTypeRegStatusRptBB.managedBean.bussTypeList}" />
+					<p:ajax event="change" process="@this"
+						listener="#{compSuppTypeRegStatusRptBB.onChangeBussType}"
+						partialSubmit="true" update="@form" />
+				</p:selectOneMenu>
+			</td>
+			
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.rpt.rgstStatus']}" />
+			</td>
+			<td class="tdContent">
+				<p:selectOneMenu value="#{compSuppTypeRegStatusRptBB.managedBean.regStatus}">
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
+					<f:selectItems value="#{compSuppTypeRegStatusRptBB.managedBean.regStatusLs}"></f:selectItems>
+					<p:ajax event="change" partialSubmit="true" />
+				</p:selectOneMenu>
+			</td>
+		</tr>
+		<tr>
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.rpt.cmpName']}" />
+			</td>
+		
+			<td class="tdContent">
+				<ac:smReportCompanyNameLOV bBean="#{compSuppTypeRegStatusRptBB}" 
+				saveObj="compSuppTypeRegStatusRptBB.managedBean.selectedOrgProfile" />
+			</td>
+			<td colspan="2"></td>
+		</tr>
+		<tr>
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.rpt.mofRegNoFrom']}" />
+				<p:outputLabel value="*" styleClass="mandatory" />
+			</td>
+		
+			<td class="tdContent">
+				<p:inputText maxlength="22" required="true" label="#{lbl['lbl.rpt.mofRegNoFrom']}"
+					value="#{compSuppTypeRegStatusRptBB.managedBean.mofRegNoFrom}" style="width:289px;">
+					<p:ajax event="blur"
+						listener="#{compSuppTypeRegStatusRptBB.validateMofRegNo()}"
+						process="@form" partialSubmit="true" update="@form" />
+				</p:inputText>
+			</td>
+			
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.rpt.dtRangeTo']}" />
+			</td>
+			<td class="tdContent">
+				<p:inputText maxlength="22" required="true" label="#{lbl['lbl.rpt.mofRegNoTo']}"
+					value="#{compSuppTypeRegStatusRptBB.managedBean.mofRegNoTo}" style="width:289px;">
+					<p:ajax event="blur"
+						listener="#{compSuppTypeRegStatusRptBB.validateMofRegNo()}"
+						process="@form" partialSubmit="true" update="@form" />
+				</p:inputText>
+			</td>
+		</tr>
+		<p:outputPanel rendered="#{not empty compSuppTypeRegStatusRptBB.managedBean.capitalLabel}">
+			<tr>
+				<td class="tdTitle">
+					<p:outputLabel value="#{compSuppTypeRegStatusRptBB.managedBean.capitalLabel}" />
+				</td>
+			
+				<td class="tdContent">
+					<p:inputText maxlength="40"
+						value="#{compSuppTypeRegStatusRptBB.managedBean.capitalShareFrom}"
+						style="width:289px;">
+						<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+					</p:inputText>
+				</td>
+				
+				<td class="tdTitle">
+					<p:outputLabel value="#{lbl['lbl.rpt.dtRangeTo']}" />
+				</td>
+				<td class="tdContent">
+					<p:inputText maxlength="40"
+						value="#{compSuppTypeRegStatusRptBB.managedBean.capitalShareTo}"
+						style="width:289px;">
+						<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+					</p:inputText>
+				</td>
+			</tr>
+		</p:outputPanel>
+		<tr>
+			<td colspan="4">
+				<ac:smReportCategory bBean="#{compSuppTypeRegStatusRptBB}" required="true"/>
+			</td>
+		</tr>
+	</table>
+	
+	<ac:smGenerateReport bBean="#{compSuppTypeRegStatusRptBB}" 
+		reportCode="#{smReportBB.managedBean.reportCode}"
+		generateMethod="generateReport" resetMethod="resetSearch">
+	</ac:smGenerateReport>
+		
+</ui:composition>

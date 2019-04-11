@@ -1,0 +1,124 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.sm.equiComp.panHdr']}" toggleable="true">
+		
+		<p:outputPanel id="equiInfPan" layout="block">
+			
+			<p:dataTable var="equiBean" widgetVar="suppEquiCompDtWidVar" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				value="#{viewSmApplBackingBean.managedBean.smEquityCompanies}"
+				rowKey="#{equiBean}" rowIndexVar="index" id="eqiComDt">
+				<ac:paginator for="eqiComDt" />
+
+				<p:column headerText="#{lbl['lbl.sm.equiComp.compName']}">
+					<h:outputText value="#{equiBean.companyName}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sm.equiComp.addr']}">
+					<h:outputText
+						value="#{viewSmApplBackingBean.getFullAddress(equiBean.smAddress)}"
+						style="float : left" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sm.equiComp.shrAmt']}">
+					<ac:labelAmount value="#{equiBean.shareAmt}" styleClass="outputLabel-view"/>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sm.equiComp.shrPerc']}">
+					<ac:labelEquityAmount value="#{equiBean.sharePercentage}" styleClass="outputLabel-view"/>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
+					<p:commandLink update=":form:tt:eqiCompDialog" partialSubmit="true"
+						process="@this" oncomplete="eqiCompDialog.show()"
+						action="#{viewSmApplBackingBean.assignSelEquiCompany(equiBean)}">
+						<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}"
+						style="margin-right:2px;" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+		</p:outputPanel>
+		
+		<ac:smRevisionRemark backingBean="#{viewSmApplBackingBean}" 
+						poRemark="#{viewSmApplBackingBean.managedBean.poSecReview.equityCompRemark}" 
+						approverRemark="#{viewSmApplBackingBean.managedBean.apprvrSecReview.equityCompRemark}" />
+						
+	</p:panel>
+	<p:dialog style="max-height:350px;width:500px"
+		header="#{lbl['lbl.sm.equiComp.dialHdr']}" id="eqiCompDialog"
+		widgetVar="eqiCompDialog" resizable="false" closable="true"
+		showEffect="fade" hideEffect="fade" modal="true">
+		
+		<p:scrollPanel mode="native" style="max-height:300px;width:450px;border:none">
+			<table style="width: 100%;table-layout:fixed">
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.equiComp.compName']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.companyName}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.equiComp.regNo']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.regNo}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.equiComp.shrAmt']}" /></td>
+					<td>
+						<ac:labelAmount styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.shareAmt}" />
+					</td>
+				</tr>
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.equiComp.shrPerc']}" /></td>
+					<td>
+						<ac:labelEquityAmount styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.sharePercentage}" />
+					</td>
+				</tr>
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.equiComp.addr']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.address1}" /></td>
+				</tr>
+	
+				<tr>
+					<td></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.address2}" /></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.address3}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.country']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.pmCountry.countryName}" /></td>
+				</tr>
+	
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.state']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.pmState.stateName}" /></td>
+				</tr>
+	
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.district']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.pmDistrict.districtName}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.towncity']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.pmCity.cityName}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.postcode']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.postcode}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.phoneno']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.phoneFull}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.faxno']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.faxFull}" /></td>
+				</tr>
+	
+			</table>
+		</p:scrollPanel>
+	</p:dialog>
+</ui:composition>

@@ -1,0 +1,150 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:p="http://primefaces.org/ui" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="contentSection">
+		<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true"
+			closable="true" severity="info,error" showSummary="false"></p:messages>
+		<ui:remove>
+			<p:blockUI block=":form" widgetVar="blockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+			</p:blockUI>
+		</ui:remove>
+		<table style="width: 100%;">
+			<tr>
+				<td><p:commandButton value="#{lbl['lbl.btn.back']}"
+						immediate="true" update=":form" process="@this"
+						action="#{categoryBackingBean.backToSearch}" style="float:left;" /></td>
+				
+				<td><p:commandButton value="#{lbl['lbl.btn.update']}"
+						action="#{categoryBackingBean.saveCategory}"
+						rendered="#{!categoryBackingBean.managedBean.newCategory}"
+						update=":form" style="float:right;width: auto;" /> <p:commandButton
+						value="#{lbl['lbl.btn.save']}"
+						action="#{categoryBackingBean.saveCategory}"
+						rendered="#{categoryBackingBean.managedBean.newCategory}"
+						update="@([id$=Msg])" style="float:right;width: auto;" /></td>				
+			</tr>
+            
+		</table>
+			
+		<p:panel header="#{lbl['lbl.pm.category.level']}" toggleable="true"
+			id="catLevel">
+			<table style="width: 100%;">
+				<tr>
+					<td style="width: 10%">
+						<p:outputLabel value="#{lbl['lbl.pm.bn.level']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</td>
+					
+					<td><p:selectOneMenu value="#{categoryBackingBean.managedBean.catLevel}"
+							disabled="true" >
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
+							<f:selectItem itemLabel="#{lbl['lbl.pm.main.category']}"
+								itemValue="1" />
+							<f:selectItem itemLabel="#{lbl['lbl.pm.sub.category']}"
+								itemValue="2" />
+							<f:selectItem itemLabel="#{lbl['lbl.pm.sub.div']}" itemValue="3" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.pm.bn.code']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</td>
+					<td><p:inputText
+					value="#{categoryBackingBean.managedBean.pmCategoryL1.categoryL1Code}"
+					size="15" maxlength="2" disabled="#{!categoryBackingBean.managedBean.newCategory}"/>	
+					</td>
+				</tr>
+				
+				<tr>
+					<td style="vertical-align:top;">
+						<p:outputLabel value="#{lbl['lbl.pm.desc']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</td>
+					<td>
+						<p:inputTextarea 
+							style="text-transform:uppercase;"
+							disabled="#{!categoryBackingBean.managedBean.newCategory}"
+							cols="40" maxlength="255"  
+							value="#{categoryBackingBean.managedBean.pmCategoryL1.categoryName}"							
+						/>
+						
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.pm.status']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</td>
+					<td>
+						<p:selectOneMenu required="true" label="#{lbl['lbl.pm.status']}" disabled="#{categoryBackingBean.managedBean.pmCategoryL1.brandNew}"
+							value="#{categoryBackingBean.managedBean.pmCategoryL1.recordStatusFlg}">
+							<f:selectItems value="#{categoryBackingBean.getRecordStatusList()}"></f:selectItems>
+							<p:ajax event="change" process="@this" partialSubmit="true"
+								update="@form" />
+						</p:selectOneMenu>
+					</td>
+				</tr>
+			</table>
+		</p:panel>
+
+
+		<c:if test="#{!categoryBackingBean.managedBean.newCategory}">
+			<p:panel header="#{lbl['lbl.pm.detail.category']}" toggleable="true"
+				id="catdetails">
+				<p:dataTable id="catdetailsId" rowIndexVar="rowIndex" rows="10"
+					value="#{categoryBackingBean.managedBean.pmCategoryL1.pmCategoryL2s}"
+					width="100%" var="pmCategoryL2">
+
+					<ac:paginator for="catdetailsId"></ac:paginator>
+					<p:column>
+						<f:facet name="header">
+					#{lbl['lbl.pm.bn.level']}
+				</f:facet>
+						<h:outputText value="#{lbl['lbl.pm.sub.category']}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+					#{lbl['lbl.pm.bn.code']}
+				</f:facet>
+						<h:outputText value="#{pmCategoryL2.categoryL2Code}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+					#{lbl['lbl.pm.contact.name']}
+				</f:facet>
+						<h:outputText value="#{pmCategoryL2.categoryName}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+					#{lbl['lbl.pm.status']}
+				</f:facet>
+						<h:outputText value="#{lbl['lbl.pm.status.active']}"
+							rendered="#{pmCategoryL2.recordStatusFlg == 1}" />
+						<h:outputText value="#{lbl['lbl.pm.status.inactive']}"
+							rendered="#{pmCategoryL2.recordStatusFlg == 0}" />
+					</p:column>
+
+				</p:dataTable>
+
+				<ui:remove>
+					<p></p>
+					<div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"
+							action="#{categoryBackingBean.addSubCategory()}" />
+					</div>
+				</ui:remove>
+
+			</p:panel>
+		</c:if>
+
+	</ui:define>
+</ui:composition>

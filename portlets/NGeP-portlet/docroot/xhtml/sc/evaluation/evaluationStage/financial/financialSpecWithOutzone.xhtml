@@ -1,0 +1,51 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+
+
+	<ui:define name="contentSection">
+
+
+		<table width="100%" class="BtnSpacing">
+			<tr>
+				<td align="right"><p:commandButton
+						value="#{lbl['lbl.btn.back']}" style="float:left;"
+						immediate="true"
+						action="#{evaluationBackingBean.evaluationBackaction}" /></td>
+			</tr>
+		</table>
+
+
+		<ui:include src="/xhtml/sc/evaluation/evaluationHeader.xhtml" />
+
+		<p:panel header="#{lbl['lbl.sc.eva.financial.proposal.evaluation']}"
+			toggleable="true"
+			id="evaluationStageFinancialSpecsWithOutzoneItemsSuppliersIds1">
+			<ui:include src="/xhtml/sc/evaluation/checklistHeader.xhtml" />
+		</p:panel>
+
+	
+		<h:panelGroup>
+
+			<ui:param name="finSpecsupplierList"
+				value="#{evaluationBackingBean.managedBean.finSpecSupplierListDM}"></ui:param>
+			<ui:param name="finSpecofferPrice"
+				value="#{evaluationBackingBean.managedBean.offerPricePackage}"></ui:param>
+			<ui:param name="finSpecSupplierId" value="finSpecSupplierWithOutzone"></ui:param>
+
+			<ui:include src="finSpecSupplierOfferPriceList.xhtml"></ui:include>
+
+		</h:panelGroup>
+
+
+
+	</ui:define>
+</ui:composition>
