@@ -312,6 +312,13 @@ public class SupplierApplicationBackingBean extends
 		RequestContext.getCurrentInstance().execute(
 				"confirmDeleteHqDialog.show();");
 	}
+	
+	//harris
+	public void onDeleteSupDocFileAttachment(SmApplSupportDoc doc) {
+		getManagedBean().setSupportDoc(doc);
+		RequestContext.getCurrentInstance().execute(
+				"confirmDeleteSupDocDialog.show();");
+	}
 
 	/**
 	 * On click delete overlap category supporting doc
@@ -848,15 +855,18 @@ public class SupplierApplicationBackingBean extends
 					throw new EpException(MessageConst.ERROR_722628);
 				}
 
-				String currSuppType = StringUtils.isBlank(currSupp.getSmAppl()
-						.getSupplierType()) ? "K" : currSupp.getSmAppl()
+				String currSuppType = currSupp.getSmAppl()
 						.getSupplierType();
+				
+				if(StringUtils.isBlank(currSuppType) || currSuppType.equals("B")){
+					currSuppType = "K";
+				}
+						
 				if (getManagedBean().getNewSupplierType() == null
 						|| StringUtils.isBlank(getManagedBean()
 								.getNewSupplierType())) {
 					getManagedBean().setNewSupplierType(currSuppType);
 				}
-				smAppl.setSupplierType(getManagedBean().getNewSupplierType());
 			}
 			// else if (applicationType.equalsIgnoreCase("B")) {}
 			else if (applicationType
@@ -2202,6 +2212,8 @@ public class SupplierApplicationBackingBean extends
 				valid = SmApplicationUtil.validateCategoryOtherDesc(true,
 						getManagedBean(), currentTab);
 			} else {
+				SmCommonUtil.getInstance().setUserDetails(
+						getManagedBean().getSmAppl());
 				valid = validateBeforeSave(applType, currentPageType);
 			}
 
@@ -2212,6 +2224,8 @@ public class SupplierApplicationBackingBean extends
 			}
 			if (valid) {
 				getManagedBean().setCurrentPageType(outputPageType);
+				SmCommonUtil.getInstance().setUserDetails(
+						getManagedBean().getSmAppl());
 				saveOrUpdateAppl();
 			} else {
 				getManagedBean().setTabActiveIndex(currentTab);
@@ -3268,7 +3282,9 @@ public class SupplierApplicationBackingBean extends
 		SmApplicationUtil.validateBranchGstInformation(getManagedBean()
 				.getSelectedBranch(), getManagedBean().getSelectedBranch()
 				.getGst(), getManagedBean().getCompanyBasicGst());
-
+		
+		SmCommonUtil.getInstance().setUserDetails(getManagedBean()
+				.getSelectedBranch());
 		EntityHelper.addOrUpdateEntityToList(getManagedBean()
 				.getSelectedBranch(), getManagedBean().getSmAppl()
 				.getSmSupplierBranches());
@@ -3402,6 +3418,8 @@ public class SupplierApplicationBackingBean extends
 	 * of the application.
 	 */
 	public void addOrUpdateAssocToSmAppl() {
+		SmCommonUtil.getInstance().setUserDetails(getManagedBean()
+				.getSelectedAssocCompany());
 		EntityHelper.addOrUpdateEntityToList(getManagedBean()
 				.getSelectedAssocCompany(), getManagedBean().getSmAppl()
 				.getSmAssociateCompanies());
@@ -3529,6 +3547,8 @@ public class SupplierApplicationBackingBean extends
 										.getCertEndDate()) >= 0) {
 			throw new EpException(MessageConst.ERROR_722530);
 		}
+		SmCommonUtil.getInstance().setUserDetails(getManagedBean()
+				.getSelectedCert());
 		EntityHelper.addOrUpdateEntityToList(
 				getManagedBean().getSelectedCert(), getManagedBean()
 						.getSmAppl().getSmSupplierCerts());
@@ -3745,6 +3765,8 @@ public class SupplierApplicationBackingBean extends
 						.compareTo(new BigDecimal(20000)) >= 1)) {
 			throw new EpException(MessageConst.ERROR_722550);
 		}
+		SmCommonUtil.getInstance().setUserDetails(getManagedBean()
+				.getSelectedCompanyExperience());
 		EntityHelper.addOrUpdateEntityToList(getManagedBean()
 				.getSelectedCompanyExperience(), getManagedBean().getSmAppl()
 				.getSmCompanyExperiences());
@@ -4000,6 +4022,8 @@ public class SupplierApplicationBackingBean extends
 	 * of the application.
 	 */
 	public void addOrUpdateEquityCompanyToSmAppl() {
+		SmCommonUtil.getInstance().setUserDetails(getManagedBean()
+				.getSelectedEquityCompany());
 		EntityHelper.addOrUpdateEntityToList(getManagedBean()
 				.getSelectedEquityCompany(), getManagedBean().getSmAppl()
 				.getSmEquityCompanies());
@@ -4449,6 +4473,8 @@ public class SupplierApplicationBackingBean extends
 			getManagedBean().getSelectedCategory().setCategoryL3Name(
 					getManagedBean().getSelectedCategory().getPmCategoryL3()
 							.getCategoryName());
+			SmCommonUtil.getInstance().setUserDetails(
+					getManagedBean().getSelectedCategory());
 
 			// check if added category already inside in main list, just set
 			// back to pending activation status
@@ -4514,6 +4540,7 @@ public class SupplierApplicationBackingBean extends
 	 */
 	public void addOrUpdateFactoryToSmAppl() {
 		SmFacility smFac = getManagedBean().getSelectedFactoryFacility();
+		SmCommonUtil.getInstance().setUserDetails(smFac);
 		SmApplicationUtil.addOrUpdateFacilityCategory(getManagedBean(), smFac);
 		EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
 				.getSmAppl().getSmFacilities());
@@ -4628,6 +4655,7 @@ public class SupplierApplicationBackingBean extends
 	 */
 	public void addOrUpdateDockYardToSmAppl() {
 		SmFacility smFac = getManagedBean().getSelectedDockyardFacility();
+		SmCommonUtil.getInstance().setUserDetails(smFac);
 		SmApplicationUtil.addOrUpdateFacilityCategory(getManagedBean(), smFac);
 		EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
 				.getSmAppl().getSmFacilities());
@@ -4741,6 +4769,7 @@ public class SupplierApplicationBackingBean extends
 	 */
 	public void addOrUpdateWorkshopToSmAppl() {
 		SmFacility smFac = getManagedBean().getSelectedWorkShopFacility();
+		SmCommonUtil.getInstance().setUserDetails(smFac);
 		SmApplicationUtil.addOrUpdateFacilityCategory(getManagedBean(), smFac);
 		EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
 				.getSmAppl().getSmFacilities());
@@ -4852,6 +4881,7 @@ public class SupplierApplicationBackingBean extends
 	 */
 	public void addOrUpdateStoreToSmAppl() {
 		SmFacility smFac = getManagedBean().getSelectedStoreFacility();
+		SmCommonUtil.getInstance().setUserDetails(smFac);
 		SmApplicationUtil.addOrUpdateFacilityCategory(getManagedBean(), smFac);
 		EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
 				.getSmAppl().getSmFacilities());
@@ -4970,6 +5000,8 @@ public class SupplierApplicationBackingBean extends
 		 * getManagedBean().getSelectedManufacturer().setPmUom(uom); break; } }
 		 * }
 		 */
+		SmCommonUtil.getInstance().setUserDetails(
+				getManagedBean().getSelectedManufacturer());
 		EntityHelper.addOrUpdateEntityToList(getManagedBean()
 				.getSelectedManufacturer(), getManagedBean().getSmAppl()
 				.getSmManufacturingDtls());
@@ -5608,7 +5640,9 @@ public class SupplierApplicationBackingBean extends
 					}
 				}
 			}
-
+			
+			SmCommonUtil.getInstance().setUserDetails(
+					getManagedBean().getSelectedShareHolder());
 			EntityHelper.addOrUpdateEntityToList(getManagedBean()
 					.getSelectedShareHolder(), getManagedBean().getSmAppl()
 					.getSmPersonnels());
@@ -6521,7 +6555,9 @@ public class SupplierApplicationBackingBean extends
 			// validate HQ
 			SmApplicationUtil.validateBankLimitForHq(getManagedBean()
 					.getSmAppl(), getManagedBean().getSelectedBank());
-
+			
+			SmCommonUtil.getInstance().setUserDetails(getManagedBean()
+					.getSelectedBank());
 			EntityHelper.addOrUpdateEntityToList(getManagedBean()
 					.getSelectedBank(), getManagedBean().getSmAppl()
 					.getSmSupplierBanks());
@@ -6781,6 +6817,7 @@ public class SupplierApplicationBackingBean extends
 	public void initiateSmApplicationTask() {
 		IMofRegistrationSO regSo = null;
 		SmAppl bpmAppl = getManagedBean().getSmAppl();
+		SmCommonUtil.getInstance().setUserDetails(bpmAppl);
 		if (getManagedBean().getSmAppl().isResubmit()) {
 			setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_RE_REVIEW);
 
@@ -9141,6 +9178,14 @@ public class SupplierApplicationBackingBean extends
 		}
 
 	}
+	
+	//harris
+		public void deleteSupDocFileAttachment(){
+
+			SmApplSupportDoc mainDoc = getManagedBean().getSupportDoc();
+			mainDoc.getSmApplDocFiles().get(0).setFileName(StringUtils.EMPTY);
+			mainDoc.getSmApplDocFiles().get(0).setFilePath(StringUtils.EMPTY);
+		}
 
 	/**
 	 * Handle and save file attachment for cancel mof registration.
@@ -9167,6 +9212,11 @@ public class SupplierApplicationBackingBean extends
 			commonUploadFile(event, filePath);
 
 		}
+	}
+	
+	//harris
+	public void deleteCancelMofRegFileAttachment() {
+		this.getManagedBean().getCancellationAttachment().setFileName(null);
 	}
 
 	/**
