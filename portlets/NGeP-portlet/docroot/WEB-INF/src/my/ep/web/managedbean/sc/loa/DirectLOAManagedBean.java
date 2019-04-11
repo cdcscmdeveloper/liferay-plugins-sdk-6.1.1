@@ -14,7 +14,6 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCurrency;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaSupportingDoc;
@@ -71,9 +70,6 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	/** The attachment doc type. */
 	private String attachmentDocType;
 
-	/** The sc loa. */
-	private ScLoa scLoa;
-
 	/** The sc qt. */
 	private ScQt scQt;
 
@@ -119,7 +115,7 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 
 	/** The contract signer list. */
 	private List<PmUser> contractSignerList;
-	
+
 	/** The supplier contract signer list. */
 	private List<PmUser> supplierContractSignerList;
 
@@ -202,7 +198,6 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	/** The servicesc qt doc. */
 	private ScQtDoc servicescQtDoc;
 
-	
 	/** The clauses title. */
 	private String clausesTitle;
 
@@ -234,9 +229,9 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	private String zoneName;
 	private String tempZoneName;
 	private int index;
-	
-    /** The ministry condition field. */
-    private String ministryConditionField;
+
+	/** The ministry condition field. */
+	private String ministryConditionField;
 
 	/** The total suppliers spec loc. */
 	private List<TplSpecLoc> totalSuppliersSpecLoc;
@@ -271,38 +266,38 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	private ScQtZoneCriteria toBedeletedSupplierZone;
 
 	private ScLoaReport branchInfoReport;
-    
+
 	private boolean displayAlert;
-	
-    /** The temp loa no. */
-    private String tempLoaNo;
-    
-    /** The temp file path. */
-    private String tempFilePath;
-    
-    /** The file type pdf. */
-    private String fileTypePdf ="/(\\.|\\/)(pdf)$/i";
-    
-    private String guidelineTooltip;
-    
-    /** The tracking dairy view. */
+
+	/** The temp loa no. */
+	private String tempLoaNo;
+
+	/** The temp file path. */
+	private String tempFilePath;
+
+	/** The file type pdf. */
+	private String fileTypePdf = "/(\\.|\\/)(pdf)$/i";
+
+	private String guidelineTooltip;
+
+	/** The tracking dairy view. */
 	private boolean trackingDairyView;
-	
+
 	private int prodFirst;
 	private int servFirst;
-	
+
 	private Long contractTypeId;
-	
+
 	private String suppConfirmMsgAccept;
-	
+
 	private String suppConfirmMsgReject;
-	
+
 	private String bondReqSelectedVal;
-	
+
 	private String agreemetSelectedVal;
-	
+
 	private SelectItem[] pk7Reasons;
-	
+
 	/**
 	 * Gets the spki backing bean.
 	 * 
@@ -421,25 +416,6 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	 */
 	public void setAttachmentDocType(String attachmentDocType) {
 		this.attachmentDocType = attachmentDocType;
-	}
-
-	/**
-	 * Gets the sc loa.
-	 * 
-	 * @return the scLoa
-	 */
-	public ScLoa getScLoa() {
-		return scLoa;
-	}
-
-	/**
-	 * Sets the sc loa.
-	 * 
-	 * @param scLoa
-	 *            the scLoa to set
-	 */
-	public void setScLoa(ScLoa scLoa) {
-		this.scLoa = scLoa;
 	}
 
 	/**
@@ -609,8 +585,7 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	 * @param selectedDeductionClauses
 	 *            the selectedDeductionClauses to set
 	 */
-	public void setSelectedDeductionClauses(
-			List<ScQtDeductionClause> selectedDeductionClauses) {
+	public void setSelectedDeductionClauses(List<ScQtDeductionClause> selectedDeductionClauses) {
 		this.selectedDeductionClauses = selectedDeductionClauses;
 	}
 
@@ -1184,7 +1159,6 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 		this.suppLoiLoaMap = suppLoiLoaMap;
 	}
 
-	
 	/**
 	 * Gets the clauses title.
 	 * 
@@ -1227,7 +1201,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param displayAlert the displayAlert to set
+	 * @param displayAlert
+	 *            the displayAlert to set
 	 */
 	public void setDisplayAlert(boolean displayAlert) {
 		this.displayAlert = displayAlert;
@@ -1241,7 +1216,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param tempLoaNo the tempLoaNo to set
+	 * @param tempLoaNo
+	 *            the tempLoaNo to set
 	 */
 	public void setTempLoaNo(String tempLoaNo) {
 		this.tempLoaNo = tempLoaNo;
@@ -1255,7 +1231,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param tempFilePath the tempFilePath to set
+	 * @param tempFilePath
+	 *            the tempFilePath to set
 	 */
 	public void setTempFilePath(String tempFilePath) {
 		this.tempFilePath = tempFilePath;
@@ -1269,7 +1246,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param ministryConditionField the ministryConditionField to set
+	 * @param ministryConditionField
+	 *            the ministryConditionField to set
 	 */
 	public void setMinistryConditionField(String ministryConditionField) {
 		this.ministryConditionField = ministryConditionField;
@@ -1283,7 +1261,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param prodscQtDoc the prodscQtDoc to set
+	 * @param prodscQtDoc
+	 *            the prodscQtDoc to set
 	 */
 	public void setProdscQtDoc(ScQtDoc prodscQtDoc) {
 		this.prodscQtDoc = prodscQtDoc;
@@ -1297,7 +1276,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param servicescQtDoc the servicescQtDoc to set
+	 * @param servicescQtDoc
+	 *            the servicescQtDoc to set
 	 */
 	public void setServicescQtDoc(ScQtDoc servicescQtDoc) {
 		this.servicescQtDoc = servicescQtDoc;
@@ -1311,7 +1291,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param prodTemplateSpecBean the prodTemplateSpecBean to set
+	 * @param prodTemplateSpecBean
+	 *            the prodTemplateSpecBean to set
 	 */
 	public void setProdTemplateSpecBean(TemplateSpecBean prodTemplateSpecBean) {
 		this.prodTemplateSpecBean = prodTemplateSpecBean;
@@ -1325,7 +1306,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param specTemplateSpecBean the specTemplateSpecBean to set
+	 * @param specTemplateSpecBean
+	 *            the specTemplateSpecBean to set
 	 */
 	public void setSpecTemplateSpecBean(TemplateSpecBean specTemplateSpecBean) {
 		this.specTemplateSpecBean = specTemplateSpecBean;
@@ -1339,7 +1321,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param locationTreeNodes the locationTreeNodes to set
+	 * @param locationTreeNodes
+	 *            the locationTreeNodes to set
 	 */
 	public void setLocationTreeNodes(List<TreeNode> locationTreeNodes) {
 		this.locationTreeNodes = locationTreeNodes;
@@ -1353,7 +1336,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param rootLocationTree the rootLocationTree to set
+	 * @param rootLocationTree
+	 *            the rootLocationTree to set
 	 */
 	public void setRootLocationTree(TreeNode rootLocationTree) {
 		this.rootLocationTree = rootLocationTree;
@@ -1367,7 +1351,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param localLevelCode the localLevelCode to set
+	 * @param localLevelCode
+	 *            the localLevelCode to set
 	 */
 	public void setLocalLevelCode(String localLevelCode) {
 		LocalLevelCode = localLevelCode;
@@ -1381,7 +1366,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param allStateCode the allStateCode to set
+	 * @param allStateCode
+	 *            the allStateCode to set
 	 */
 	public void setAllStateCode(PTJLocalityCode allStateCode) {
 		this.allStateCode = allStateCode;
@@ -1395,7 +1381,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param required the required to set
+	 * @param required
+	 *            the required to set
 	 */
 	public void setRequired(boolean required) {
 		this.required = required;
@@ -1409,7 +1396,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param zoneLocation the zoneLocation to set
+	 * @param zoneLocation
+	 *            the zoneLocation to set
 	 */
 	public void setZoneLocation(boolean zoneLocation) {
 		this.zoneLocation = zoneLocation;
@@ -1423,7 +1411,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param autoUpdate the autoUpdate to set
+	 * @param autoUpdate
+	 *            the autoUpdate to set
 	 */
 	public void setAutoUpdate(boolean autoUpdate) {
 		this.autoUpdate = autoUpdate;
@@ -1437,7 +1426,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param zoneName the zoneName to set
+	 * @param zoneName
+	 *            the zoneName to set
 	 */
 	public void setZoneName(String zoneName) {
 		this.zoneName = zoneName;
@@ -1451,7 +1441,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param tempZoneName the tempZoneName to set
+	 * @param tempZoneName
+	 *            the tempZoneName to set
 	 */
 	public void setTempZoneName(String tempZoneName) {
 		this.tempZoneName = tempZoneName;
@@ -1465,7 +1456,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param index the index to set
+	 * @param index
+	 *            the index to set
 	 */
 	public void setIndex(int index) {
 		this.index = index;
@@ -1479,7 +1471,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param totalSuppliersSpecLoc the totalSuppliersSpecLoc to set
+	 * @param totalSuppliersSpecLoc
+	 *            the totalSuppliersSpecLoc to set
 	 */
 	public void setTotalSuppliersSpecLoc(List<TplSpecLoc> totalSuppliersSpecLoc) {
 		this.totalSuppliersSpecLoc = totalSuppliersSpecLoc;
@@ -1493,7 +1486,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param rootZoanlTree the rootZoanlTree to set
+	 * @param rootZoanlTree
+	 *            the rootZoanlTree to set
 	 */
 	public void setRootZoanlTree(TreeNode rootZoanlTree) {
 		this.rootZoanlTree = rootZoanlTree;
@@ -1507,7 +1501,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param existingLocationList the existingLocationList to set
+	 * @param existingLocationList
+	 *            the existingLocationList to set
 	 */
 	public void setExistingLocationList(List<ScQtLocCriteria> existingLocationList) {
 		this.existingLocationList = existingLocationList;
@@ -1521,7 +1516,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param selectedNodes the selectedNodes to set
+	 * @param selectedNodes
+	 *            the selectedNodes to set
 	 */
 	public void setSelectedNodes(TreeNode[] selectedNodes) {
 		this.selectedNodes = selectedNodes;
@@ -1535,7 +1531,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param zoneTrees the zoneTrees to set
+	 * @param zoneTrees
+	 *            the zoneTrees to set
 	 */
 	public void setZoneTrees(List<TreeNode> zoneTrees) {
 		this.zoneTrees = zoneTrees;
@@ -1549,7 +1546,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param zoneBeans the zoneBeans to set
+	 * @param zoneBeans
+	 *            the zoneBeans to set
 	 */
 	public void setZoneBeans(List<ZonesBean> zoneBeans) {
 		this.zoneBeans = zoneBeans;
@@ -1563,7 +1561,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param selectedGeneralTreeNodes the selectedGeneralTreeNodes to set
+	 * @param selectedGeneralTreeNodes
+	 *            the selectedGeneralTreeNodes to set
 	 */
 	public void setSelectedGeneralTreeNodes(TreeNode[] selectedGeneralTreeNodes) {
 		this.selectedGeneralTreeNodes = selectedGeneralTreeNodes;
@@ -1577,7 +1576,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param toBeRemoveSchedules the toBeRemoveSchedules to set
+	 * @param toBeRemoveSchedules
+	 *            the toBeRemoveSchedules to set
 	 */
 	public void setToBeRemoveSchedules(List<ScQtSchedule> toBeRemoveSchedules) {
 		this.toBeRemoveSchedules = toBeRemoveSchedules;
@@ -1591,10 +1591,10 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param toBeRemoveProgPayments the toBeRemoveProgPayments to set
+	 * @param toBeRemoveProgPayments
+	 *            the toBeRemoveProgPayments to set
 	 */
-	public void setToBeRemoveProgPayments(
-			List<ScQtProgressivePayment> toBeRemoveProgPayments) {
+	public void setToBeRemoveProgPayments(List<ScQtProgressivePayment> toBeRemoveProgPayments) {
 		this.toBeRemoveProgPayments = toBeRemoveProgPayments;
 	}
 
@@ -1606,7 +1606,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param overallContractAmt the overallContractAmt to set
+	 * @param overallContractAmt
+	 *            the overallContractAmt to set
 	 */
 	public void setOverallContractAmt(BigDecimal overallContractAmt) {
 		this.overallContractAmt = overallContractAmt;
@@ -1620,7 +1621,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param renderRemainder the renderRemainder to set
+	 * @param renderRemainder
+	 *            the renderRemainder to set
 	 */
 	public void setRenderRemainder(boolean renderRemainder) {
 		this.renderRemainder = renderRemainder;
@@ -1634,10 +1636,10 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param selectedScLoaSuppDocs the selectedScLoaSuppDocs to set
+	 * @param selectedScLoaSuppDocs
+	 *            the selectedScLoaSuppDocs to set
 	 */
-	public void setSelectedScLoaSuppDocs(
-			List<ScLoaSupportingDoc> selectedScLoaSuppDocs) {
+	public void setSelectedScLoaSuppDocs(List<ScLoaSupportingDoc> selectedScLoaSuppDocs) {
 		this.selectedScLoaSuppDocs = selectedScLoaSuppDocs;
 	}
 
@@ -1649,7 +1651,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param selectedScLoaSuppDoc the selectedScLoaSuppDoc to set
+	 * @param selectedScLoaSuppDoc
+	 *            the selectedScLoaSuppDoc to set
 	 */
 	public void setSelectedScLoaSuppDoc(ScLoaSupportingDoc selectedScLoaSuppDoc) {
 		this.selectedScLoaSuppDoc = selectedScLoaSuppDoc;
@@ -1663,7 +1666,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param toBedeletedSupplierZone the toBedeletedSupplierZone to set
+	 * @param toBedeletedSupplierZone
+	 *            the toBedeletedSupplierZone to set
 	 */
 	public void setToBedeletedSupplierZone(ScQtZoneCriteria toBedeletedSupplierZone) {
 		this.toBedeletedSupplierZone = toBedeletedSupplierZone;
@@ -1677,7 +1681,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param fileTypePdf the fileTypePdf to set
+	 * @param fileTypePdf
+	 *            the fileTypePdf to set
 	 */
 	public void setFileTypePdf(String fileTypePdf) {
 		this.fileTypePdf = fileTypePdf;
@@ -1691,7 +1696,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param supplierBranchId the supplierBranchId to set
+	 * @param supplierBranchId
+	 *            the supplierBranchId to set
 	 */
 	public void setSupplierBranchId(Long supplierBranchId) {
 		this.supplierBranchId = supplierBranchId;
@@ -1705,7 +1711,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param guidelineTooltip the guidelineTooltip to set
+	 * @param guidelineTooltip
+	 *            the guidelineTooltip to set
 	 */
 	public void setGuidelineTooltip(String guidelineTooltip) {
 		this.guidelineTooltip = guidelineTooltip;
@@ -1719,10 +1726,10 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param supplierContractSignerList the supplierContractSignerList to set
+	 * @param supplierContractSignerList
+	 *            the supplierContractSignerList to set
 	 */
-	public void setSupplierContractSignerList(
-			List<PmUser> supplierContractSignerList) {
+	public void setSupplierContractSignerList(List<PmUser> supplierContractSignerList) {
 		this.supplierContractSignerList = supplierContractSignerList;
 	}
 
@@ -1734,7 +1741,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param trackingDairyView the trackingDairyView to set
+	 * @param trackingDairyView
+	 *            the trackingDairyView to set
 	 */
 	public void setTrackingDairyView(boolean trackingDairyView) {
 		this.trackingDairyView = trackingDairyView;
@@ -1748,7 +1756,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param prodFirst the prodFirst to set
+	 * @param prodFirst
+	 *            the prodFirst to set
 	 */
 	public void setProdFirst(int prodFirst) {
 		this.prodFirst = prodFirst;
@@ -1762,7 +1771,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param servFirst the servFirst to set
+	 * @param servFirst
+	 *            the servFirst to set
 	 */
 	public void setServFirst(int servFirst) {
 		this.servFirst = servFirst;
@@ -1775,7 +1785,7 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	public void setContractTypeId(Long contractTypeId) {
 		this.contractTypeId = contractTypeId;
 	}
-	
+
 	/**
 	 * @return the suppConfirmMsgAccept
 	 */
@@ -1784,7 +1794,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param suppConfirmMsgAccept the suppConfirmMsgAccept to set
+	 * @param suppConfirmMsgAccept
+	 *            the suppConfirmMsgAccept to set
 	 */
 	public void setSuppConfirmMsgAccept(String suppConfirmMsgAccept) {
 		this.suppConfirmMsgAccept = suppConfirmMsgAccept;
@@ -1798,7 +1809,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param suppConfirmMsgReject the suppConfirmMsgReject to set
+	 * @param suppConfirmMsgReject
+	 *            the suppConfirmMsgReject to set
 	 */
 	public void setSuppConfirmMsgReject(String suppConfirmMsgReject) {
 		this.suppConfirmMsgReject = suppConfirmMsgReject;
@@ -1812,7 +1824,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param bondReqSelectedVal the bondReqSelectedVal to set
+	 * @param bondReqSelectedVal
+	 *            the bondReqSelectedVal to set
 	 */
 	public void setBondReqSelectedVal(String bondReqSelectedVal) {
 		this.bondReqSelectedVal = bondReqSelectedVal;
@@ -1826,7 +1839,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param agreemetSelectedVal the agreemetSelectedVal to set
+	 * @param agreemetSelectedVal
+	 *            the agreemetSelectedVal to set
 	 */
 	public void setAgreemetSelectedVal(String agreemetSelectedVal) {
 		this.agreemetSelectedVal = agreemetSelectedVal;
@@ -1840,10 +1854,11 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @param pk7Reasons the pk7Reasons to set
+	 * @param pk7Reasons
+	 *            the pk7Reasons to set
 	 */
 	public void setPk7Reasons(SelectItem[] pk7Reasons) {
 		this.pk7Reasons = pk7Reasons;
 	}
-	
+
 }

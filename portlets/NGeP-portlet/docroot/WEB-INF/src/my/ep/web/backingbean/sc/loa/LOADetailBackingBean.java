@@ -298,9 +298,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			if(scLoa.isBrandNew()) {
 				setUserDetails(scLoa);
 				scLoa.setContractAgency(null);
-			} else {
-				viewContractDetails(scLoa);
 			}
+
+			PmOrgProfile ministryOrgProfile = retrieveMinistryOrgProfile(scLoa);
+			getManagedBean().setMinistryOrgProfile(ministryOrgProfile);
+			viewContractDetails(scLoa);
+
 			resDTO.setScLoa(scLoa);
 
 			populateLOADetails(resDTO);
@@ -490,7 +493,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 			Long sourceId = Long.valueOf(dpDataType.getSourceId());
 			Long loaId = Long.valueOf(dpDataType.getAwardId());
-
 			getManagedBean().setSourceId(sourceId);
 			getManagedBean().setPayLoad(dpDataType);
 
@@ -524,6 +526,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		} finally{
 
 		}
+	}
+
+	public PmOrgProfile retrieveMinistryOrgProfile(ScLoa scLoa) {
+		ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
+
+		OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+		orgProfileReqDTO.setOrgProfileId(scLoiLoa.getPmOrgProfile().getOrgProfileId());
+
+		PmOrgProfile ministryOrgProfile = getOrgProfileSOGlobal().retrieveMinistryByOrgProfileId(orgProfileReqDTO)
+				.getPmOrgProfile();
+		return ministryOrgProfile;
 	}
 
 	/**
@@ -6516,8 +6529,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		ScQuote scQuote = getManagedBean().getScLoa().getScQuote();
 		
 		EpPropertiesUtils prop = EpPropertiesUtils.getInstance();
-		Integer sqTimeValidity = Integer.valueOf(prop.getProperty("sqTimeValidity"));
-		
+//		Integer sqTimeValidity = Integer.valueOf(prop.getProperty("sqTimeValidity"));
+		Integer sqTimeValidity = 60;
+
 		if(scQuote != null){
 			
 			Date currentDate = new Date();

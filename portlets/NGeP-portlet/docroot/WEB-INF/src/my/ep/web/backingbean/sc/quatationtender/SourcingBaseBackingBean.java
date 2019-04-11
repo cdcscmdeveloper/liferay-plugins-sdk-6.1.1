@@ -648,7 +648,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		try {
 			UserReqDTO reqDTo = new UserReqDTO();
 			reqDTo.setUserId(userId);
-			UserResDTO resDTO = getUserSO().retrieveUserByUserId(reqDTo);
+			UserResDTO resDTO = getUserSOGlobal().retrieveUserByUserId(reqDTo);
 			if (resDTO.isSuccessful() == true) {
 				user = resDTO.getPmUser();
 			}
@@ -659,8 +659,17 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return user;
 	}
 
-	protected IUserSO getUserSO() {
+	protected IUserSO getUserSOGlobal() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+	}
+
+	protected IOrgProfileSO getOrgProfileSOGlobal() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+
+	}
+
+	protected IParameterSO getParameterSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 	}
 
 	/**
@@ -2564,6 +2573,23 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	
 	}
 	
+	public PmParameter retrieveParameterByTypeAndCode(String parameterType, String parameterCode) {
+		PmParameter pmParameter = null;
+		try {
+
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterType(parameterType);
+			reqDTO.setParameterCode(parameterCode);
+			ParameterResDTO resDTO = getParameterSO().retrieveParameterByTypeAndCode(reqDTO);
+			if (resDTO != null && resDTO.isSuccessful()) {
+				pmParameter = resDTO.getPmParameter();
+			}
+		} finally {
+		}
+
+		return pmParameter;
+	}
+
 	/**
 	 * Validate deduction payment dtls.
 	 * 
