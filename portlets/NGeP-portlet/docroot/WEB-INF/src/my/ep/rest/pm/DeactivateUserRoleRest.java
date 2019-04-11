@@ -55,6 +55,7 @@ public class DeactivateUserRoleRest {
 									|| userRole.getPmRole().getRoleCode().equals(RoleCode.MARKET_RESEARCH.value())) {
 								if (pmLoginHistory != null && pmLoginHistory.getLoginDate().compareTo(new Date(userRole.getChangedDate().getTime())) > 0) {
 									log.info("User has login history for user id >>> "+resDTO1.getPmUser().getUserId());
+									log.info("User role changed date >>> "+userRole.getChangedDate());
 									if(new Date(userRole.getChangedDate().getTime()+86400000).compareTo(DateUtils.addMonths(new Date(), -UsersdeactivationPerioid)) <= 0 ){
 										log.info("Deactivate user role  Role_Id >>> "+userRole.getUserRoleId());
 										userRole.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
@@ -68,12 +69,13 @@ public class DeactivateUserRoleRest {
 									}
 								} else {
 									log.info("User never log into the system user id >>> "+resDTO1.getPmUser().getUserId());
-										if(new Date(userRole.getChangedDate().getTime()+86400000).compareTo(DateUtils.addMonths(new Date(), -UsersdeactivationPerioidNotLogging)) <= 0 ){
+									log.info("User role changed date >>> "+userRole.getChangedDate());	
+									if(new Date(userRole.getChangedDate().getTime()+86400000).compareTo(DateUtils.addMonths(new Date(), -UsersdeactivationPerioidNotLogging)) <= 0 ){
 											log.info("Deactivate user role  Role_Id >>> "+userRole.getUserRoleId());
 											userRole.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
 											reqDTOFinal.getRemoveRoleList().add(userRole);
-										} else {
-											if(userRole.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
+									} else {	
+										if(userRole.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
 												log.info("No need to deactivate  ORG_ID >>> "+pmUserOrg.getUserOrgId());
 												pmUserOrg.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 												reqDTOFinal.setEligibleForDeactivation(false);
