@@ -9,6 +9,7 @@ import java.math.MathContext;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -31,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import my.ep.biz.bean.sc.EncryptDataBean;
 import my.ep.biz.bean.sc.EncryptDataBean.EncryptColumnName;
 import my.ep.biz.bean.sc.EncryptDataBean.EncryptTableName;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
@@ -44,6 +46,8 @@ import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
@@ -98,11 +102,13 @@ import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecSuppAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.AddressType;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.encrypt.BouncyCastleProvider_AES_CBC;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
+import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
@@ -204,24 +210,35 @@ public class SPDetailBackingBean extends
 		}
 	}
 
+	
 	/**
-	 * Method to retrieve Technical & Financial Proposal CheckList and to set in
-	 * managed bean
 	 * 
 	 * @param qtID
 	 * @param userId
+	 * @param isReadonly
 	 */
 	public void retrieveProposalChecklistDtls(Long qtID, Long userId,
-			boolean isReadonly) {
-		debugLogger("retrieveProposalChecklistDtls qtId:::"+qtID+"::::UserId::::"+userId);
+			boolean isReadonly){
+		retrieveProposalChecklistDtls(qtID, userId, isReadonly, false);
+	}
+	
+	/**
+	 * @param qtOrProposalId  -> set qtID or proposalId if byProposalId is true
+	 * @param userId
+	 */
+	public void retrieveProposalChecklistDtls(Long qtOrProposalId, Long userId,
+			boolean isReadonly, boolean byProposalId) {
+		debugLogger("retrieveProposalChecklistDtls");
 		ProposalReqDTO reqDTO = new ProposalReqDTO();
 		IQTProposalSO proposalSO;
 		try {
-			reqDTO.setQtId(qtID);
 			reqDTO.setUserId(userId);
+			if(!byProposalId)	{reqDTO.setQtId(qtOrProposalId);}
+			else				{reqDTO.setQtProposalId(qtOrProposalId);}			
 			proposalSO = getProposalSO();
-			ProposalResDTO resDTO = proposalSO
-					.retrieveProposalDtlBySupplierId(reqDTO);
+			ProposalResDTO resDTO = null; 
+			if(!byProposalId)	{ resDTO = proposalSO.retrieveProposalDtlBySupplierId(reqDTO);}
+			else				{ resDTO = proposalSO.retrieveProposalDetail(reqDTO);}
 
 			ScQt scQt = resDTO.getScQt();
 
@@ -3739,23 +3756,38 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 				.handleNavigation(fc, null, NAV_TO_PROPOSAL_MAIN_PAGE);
 	}
 
+	
+	public String retriveSupplierProposalDtl(Long qtId, String previousPageUrl,
+			boolean isReadonly){
+		return retriveSupplierProposalDtl(qtId, previousPageUrl, isReadonly, false);
+	}	
+	
 	/**
 	 * Get supplier proposal details.
 	 * 
 	 * @param qtId
-	 *            the quotation / tender id.
+	 *            the quotation / tender id
+	 *            or proposalId if byProposalId is true
+	 *        
 	 * @param previousPageUrl
 	 *            the previous page url.
 	 * @param isReadonly
 	 *            the read only flag
+	 * @param byProposalId -> accept qtId as proposalId if set to true
 	 * @return the supplier proposal page
 	 */
 	public String retriveSupplierProposalDtl(Long qtId, String previousPageUrl,
-			boolean isReadonly) {
+			boolean isReadonly, boolean byProposalId) {
 		super.renewSesionObject();
-        debugLogger("retriveSupplierProposalDtl:::"+qtId+":::previousPageUrl:::"+previousPageUrl);
-		retrieveProposalChecklistDtls(qtId, new FacesScopes()
+
+		if(!byProposalId){
+			retrieveProposalChecklistDtls(qtId, new FacesScopes()
 				.getUserSessionBean().getUserId(), isReadonly);
+		}
+		else{
+			retrieveProposalChecklistDtls(qtId, new FacesScopes()
+			.getUserSessionBean().getUserId(), isReadonly, true);
+		}
 
 		getManagedBean()
 				.setProcCategoryMedicine(
@@ -4815,4 +4847,19 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			proposalSO = null;
 		}
 	}
+	
+	
+	
+	/**
+	 * 
+	 * @return 
+	 */
+	public Boolean canShowSupplierProposal(){
+		
+		SupplierFinalizationBackingBean sfbb = new SupplierFinalizationBackingBean();
+		sfbb.setScQt(this.getManagedBean().getQt());
+		return sfbb.canShowSupplierProposal();
+		
+	}
+	
 }

@@ -39,11 +39,13 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
+import my.ep.biz.bean.search.sc.QTSearchBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.object.IObjectSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+//import my.ep.biz.service.sc.SourcingIntegrationSO.DocSearchBean;
 import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.document.IQTDocumentSO;
@@ -60,6 +62,7 @@ import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
+import my.ep.constant.MapKeyEnum;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -136,6 +139,10 @@ import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
+import my.ep.persistence.entity.sc.loaloi.ScLoaBasic;
+import my.ep.persistence.entity.sc.loaloi.ScLoaForQt;
+import my.ep.persistence.entity.sc.loaloi.ScLoi;
+import my.ep.persistence.entity.sc.loaloi.ScLoiForQt;
 import my.ep.persistence.entity.sc.qtretry.ScQtDisruptionLog;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
@@ -258,16 +265,16 @@ public class QTDetailBackingBean extends
 	 */
 	private void debugLogger(Object message) {
 		
-		ScQt scQt = this.getManagedBean().getQt();
+		/*ScQt scQt = this.getManagedBean().getQt();
 		if(scQt!= null){
 			message += " @qtNo = "+scQt.getQtNo();
-		}
+		}*/
 		if (log.isDebugEnabled()) {
 			log.debug(message);
 		}
-		/*else{
+		/*else{*/
 			log.info(message);
-		}*/
+		/*}*/
 		
 	}
 
@@ -300,15 +307,44 @@ public class QTDetailBackingBean extends
 		return searchQTDataModel;
 	}
 	
+	
+	public IPagingDataModel<ScLoiForQt> getSearchQtLoiDataModel() {
+		IPagingDataModel<ScLoiForQt> searchLoiDataModel = getManagedBean()
+				.getSearchLoiForQtDataModel();
+		if (searchLoiDataModel == null) {
+			searchLoiDataModel = new LOIPagingDataModel("searchQTs", getManagedBean()
+					.getQtnTenderSearchBean());
+			getManagedBean().setSearchLoiForQtDataModel(searchLoiDataModel);
+		}
+		return searchLoiDataModel;
+	}
+	
+	public IPagingDataModel<ScLoaForQt> getSearchLoaForQtDataModel() {
+		IPagingDataModel<ScLoaForQt> searchLoaDataModel = getManagedBean()
+				.getSearchLoaForQtDataModel();
+		if (searchLoaDataModel == null) {
+			searchLoaDataModel = new LOAPagingDataModel("searchQTs", getManagedBean()
+					.getQtnTenderSearchBean());
+			getManagedBean().setSearchLoaForQtDataModel(searchLoaDataModel);
+		}
+		return searchLoaDataModel;
+	}
+	
 	private void renewQTSesionObject() {
 		IPagingDataModel<ScQt> searchQTDataModel = getManagedBean()
 				.getSearchQTDataModel();
+		IPagingDataModel<ScLoaBasic> searchLoaDataModel = getManagedBean()
+				.getSearchLoaDataModel();
+		IPagingDataModel<ScLoiForQt> searchLoiForQtDataModel = getManagedBean()
+				.getSearchLoiForQtDataModel();
 		QtnTenderSearchBean qtnTenderSearchBean = getManagedBean()
 				.getQtnTenderSearchBean();
 		
 		super.renewSesionObject();
 		
 		getManagedBean().setSearchQTDataModel(searchQTDataModel);
+		getManagedBean().setSearchLoaDataModel(searchLoaDataModel);
+		getManagedBean().setSearchLoiForQtDataModel(searchLoiForQtDataModel);
 		getManagedBean().setQtnTenderSearchBean(qtnTenderSearchBean);
 	}
 
@@ -640,7 +676,15 @@ public class QTDetailBackingBean extends
 	 * Method to search the quationtenders based on serach date.
 	 */
 	public void searchQTAction() {
-		getManagedBean().getSearchQTDataModel().reloadData();
+		if(this.getManagedSearchBeanDocumentTypeIsLOA()){
+			getManagedBean().getSearchLoaForQtDataModel().reloadData();
+		}
+		else if(this.getManagedSearchBeanDocumentTypeIsLOI()){
+			getManagedBean().getSearchLoiForQtDataModel().reloadData();			
+		}
+		else{
+			getManagedBean().getSearchQTDataModel().reloadData();
+		}
 	}
 
 	/**
@@ -882,6 +926,53 @@ public class QTDetailBackingBean extends
 		
 		return null;
 	}
+	
+	/**
+	 * 
+	 * @param obj
+	 * 		instance of ScQt/ScLoiForQt/ScLoaForQt
+	 * @param previousPageUrl
+	 * @return
+	 */
+	public String viewSupplierProposalDetailsGen(Object obj, String previousPageUrl) {
+		
+		debugLogger("viewSupplierProposalDetails");
+		String docType = getManagedBean().getQtnTenderSearchBean().getResultDocType();
+		ScQt scQt = null;
+		ScLoiForQt scLoiForQt = null;
+		ScLoaForQt scLoaForQt = null;
+		if(obj instanceof ScQt){
+			scQt = (ScQt)obj;
+			if(	ParameterConst.DOCTYPE_QUOTATION.equalsIgnoreCase(docType)
+				||  ParameterConst.DOCTYPE_SUPPLIER_PROPOSAL.equals(docType)){
+				return new SPDetailBackingBean().retriveSupplierProposalDtl(scQt.getQtId(), previousPageUrl, true);
+			}
+			else if(ParameterConst.DOCTYPE_BIDDING.equals(docType)) {
+				return QTConstants.ONLINE_BIDDING_MAIN_PAGE;
+			}
+		}
+		else if(obj instanceof ScLoiForQt ){
+			scLoiForQt = (ScLoiForQt)obj;
+			if (ParameterConst.DOCTYPE_LETTER_OF_INTENT.equals(docType)) {
+				LOIDetailBackingBean bb = new LOIDetailBackingBean();
+				return bb.retrieveSupplierLOIDtl(
+						scLoiForQt.getScLoiLoa().getScQt().getQtId(), scLoiForQt.getLoiId(), previousPageUrl, true, true);
+			} 
+		}
+		else if(obj instanceof ScLoaForQt){
+			scLoaForQt = (ScLoaForQt)obj;
+			if(ParameterConst.DOCTYPE_LETTER_OF_AWARD.equals(docType)){
+				LOADetailBackingBean bb = new LOADetailBackingBean();
+				return bb.retrieveSupplierLOADtl(scLoaForQt.getScLoiLoa().getScQt().getQtId(), scLoaForQt.getLoaId(), previousPageUrl, true, true);
+			}
+		}
+		else{
+			return null;
+		}
+		
+		return null;
+	}
+	
 	
 	/**
 	 * Find Document Id by document type
@@ -1342,6 +1433,78 @@ public class QTDetailBackingBean extends
 			countrySo = null;
 		}
 		return country;
+	}
+	
+	/*  20190315 */
+	private void populateQTLOISearchCriteria(QuationTenderReqDTO reqDTO,
+			QtnTenderSearchBean qtnTenderSearchBean,
+			ISearchBean<ScLoiForQt> qtSearchBean){
+		
+		if (qtnTenderSearchBean != null) {
+			if (CollectionUtils.isNotEmpty(qtSearchBean
+					.getDataFilterBeans())) {
+				qtSearchBean.getDataFilterBeans().clear();
+			}
+			List<SearchFilterBean> searchFilterBean = new ArrayList<SearchFilterBean>();
+		
+			String docType = qtnTenderSearchBean.getDocType();
+			String docNo = qtnTenderSearchBean.getDocNo();
+			if (StringUtils.isNotEmpty(docType)) {
+				if (ParameterConst.DOCTYPE_LETTER_OF_INTENT.equals(docType)) {
+					if (!StringUtils.isBlank(docNo)) {
+						SearchFilterBean bean = new SearchFilterBean();
+						bean.setSearchField("loiNo");
+						bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+						bean.setSearchValue(docNo);
+						searchFilterBean.add(bean);	
+					}
+				} else {
+					reqDTO.setDocType(docType);
+					reqDTO.setDocNo(docNo);
+				}
+			}
+		
+		
+			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
+			
+			reqDTO.setLoiForQtSearchBean(qtSearchBean);
+		}
+	}
+	
+	
+	private void populateLoaForQtSearchCriteria(QuationTenderReqDTO reqDTO,
+			QtnTenderSearchBean qtnTenderSearchBean,
+			ISearchBean<ScLoaForQt> qtSearchBean){
+		
+		if (qtnTenderSearchBean != null) {
+			if (CollectionUtils.isNotEmpty(qtSearchBean
+					.getDataFilterBeans())) {
+				qtSearchBean.getDataFilterBeans().clear();
+			}
+			List<SearchFilterBean> searchFilterBean = new ArrayList<SearchFilterBean>();
+		
+			String docType = qtnTenderSearchBean.getDocType();
+			String docNo = qtnTenderSearchBean.getDocNo();
+			if (StringUtils.isNotEmpty(docType)) {
+				if (ParameterConst.DOCTYPE_LETTER_OF_AWARD.equals(docType)) {
+					if (!StringUtils.isBlank(docNo)) {
+						SearchFilterBean bean = new SearchFilterBean();
+						bean.setSearchField("loaNo");
+						bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+						bean.setSearchValue(docNo);
+						searchFilterBean.add(bean);	
+					}
+				} else {
+					reqDTO.setDocType(docType);
+					reqDTO.setDocNo(docNo);
+				}
+			}
+		
+		
+			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
+			
+			reqDTO.setLoaForQtSearchBean(qtSearchBean);
+		}
 	}
 
 	/**
@@ -3174,6 +3337,239 @@ public class QTDetailBackingBean extends
 			detailSO = null;
 		}
 	}
+	
+	
+	
+private class LOAPagingDataModel extends PagingDataModel<ScLoaForQt>{
+		
+		/** The Constant serialVersionUID. */
+		private static final long serialVersionUID = 1L;
+
+		/** The qtn tender search bean. */
+		private QtnTenderSearchBean qtnTenderSearchBean;
+		
+		/**
+		 * Instantiates a new Loa paging data model.
+		 * 
+		 * @param componentId
+		 *            the component id
+		 * @param qtnTenderSearchBean
+		 *            the qtn tender search bean
+		 */
+		public LOAPagingDataModel(String componentId,
+				QtnTenderSearchBean qtnTenderSearchBean) {
+			super(componentId, false);
+			this.qtnTenderSearchBean = qtnTenderSearchBean;
+		}
+		
+		
+		/**
+		 * retrieve list of ScLoaForQt by params.
+		 * 
+		 * @param searchBean
+		 *            the search bean
+		 * @return the i search result bean
+		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
+		 */
+		@Override
+		public ISearchResultBean<ScLoaForQt> pageChangeListener(
+				ISearchBean<ScLoaForQt> searchBean) {
+			log.info("LOAPagingDataModel pageChangeListener");
+			IQTDetailSO qtDetailSO;
+			try{
+				qtDetailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQTDetailSO.class);
+				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+				reqDTO.setQtnTenderSearchBean(qtnTenderSearchBean.toQTSearchBean());
+				reqDTO.putToArgs(MapKeyEnum.userID, new FacesScopes().getUserSessionBean().getUserId());
+				reqDTO.putToArgs(MapKeyEnum.isMofSupplier, isMofSupplier());
+				reqDTO.putToArgs(MapKeyEnum.isDeskOfficer, isDeskOfficer());
+				reqDTO.putToArgs(MapKeyEnum.isQtMaintenanceScreen, isQTMaintenanceScreen());
+				
+				if((Boolean)reqDTO.getFromArgs(MapKeyEnum.isMofSupplier)){
+					ISupplierSearchSO supplierSearchSO;
+					try {
+						supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(
+								ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+	
+						SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
+						supplierSearchReqDTO.setUserId((Long)reqDTO.getFromArgs(MapKeyEnum.userID));
+						List<SmSupplier> smSuppliers = supplierSearchSO
+								.retriveSupplierProfiles(supplierSearchReqDTO)
+								.getResultBean().getResultList();
+						
+						if (CollectionUtils.isNotEmpty(smSuppliers)) {
+							List<Long> supplierIds = new ArrayList<Long>();
+							for (SmSupplier smSupplier : smSuppliers) {
+								supplierIds.add(smSupplier.getSupplierId());
+							}
+							reqDTO.setSupplierIds(supplierIds);
+							reqDTO.putToArgs(MapKeyEnum.supplierIds, supplierIds);
+						}
+					}
+					finally{
+						supplierSearchSO = null;
+					}
+				}
+				else{
+					if((Boolean)reqDTO.getFromArgs(MapKeyEnum.isDeskOfficer)){
+						// Filter By - actor user id
+						reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+						
+						// Only DO Actor with edit access right. 
+						// Otherwise (Audit Search), user can view QT based on user roles match with actor.
+						if((Boolean)reqDTO.getFromArgs(MapKeyEnum.isQtMaintenanceScreen)){
+							reqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
+						}
+					}
+				}
+				
+				
+				populateLoaForQtSearchCriteria(reqDTO, qtnTenderSearchBean, searchBean);
+				populateScQtFilter(reqDTO, searchBean,"scLoiLoa.scQt");
+				
+				QuationTenderResDTO resDTO = qtDetailSO
+						.retriveLoaListBySearchCriteria(reqDTO);
+				
+				// set search result doc type for navigate to diff page based on diff doc type selected.
+				qtnTenderSearchBean.setResultDocType(qtnTenderSearchBean.getDocType());
+				
+				return resDTO.getLoaForQtResultBean();
+			}
+			finally{
+				qtDetailSO = null;
+			}
+			
+		}
+	}
+	
+	
+	
+	
+	
+	
+	private class LOIPagingDataModel extends PagingDataModel<ScLoiForQt>{
+		
+		/** The Constant serialVersionUID. */
+		private static final long serialVersionUID = 1L;
+
+		/** The qtn tender search bean. */
+		private QtnTenderSearchBean qtnTenderSearchBean;
+		
+		/**
+		 * Instantiates a new Loi paging data model.
+		 * 
+		 * @param componentId
+		 *            the component id
+		 * @param qtnTenderSearchBean
+		 *            the qtn tender search bean
+		 */
+		public LOIPagingDataModel(String componentId,
+				QtnTenderSearchBean qtnTenderSearchBean) {
+			super(componentId, false);
+			this.qtnTenderSearchBean = qtnTenderSearchBean;
+		}
+		
+		
+		/**
+		 * retrieve list of ScLoi by params.
+		 * 
+		 * @param searchBean
+		 *            the search bean
+		 * @return the i search result bean
+		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
+		 */
+		@Override
+		public ISearchResultBean<ScLoiForQt> pageChangeListener(
+				ISearchBean<ScLoiForQt> searchBean) {
+			log.info("LOIPagingDataModel pageChangeListener");
+			IQTDetailSO detailSO;
+			try {
+				detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQTDetailSO.class);
+				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+				reqDTO.setQtnTenderSearchBean(qtnTenderSearchBean.toQTSearchBean());
+				reqDTO.putToArgs(MapKeyEnum.userID, new FacesScopes().getUserSessionBean().getUserId());
+				reqDTO.putToArgs(MapKeyEnum.isMofSupplier, isMofSupplier());
+				reqDTO.putToArgs(MapKeyEnum.isDeskOfficer, isDeskOfficer());
+				reqDTO.putToArgs(MapKeyEnum.isQtMaintenanceScreen, isQTMaintenanceScreen());
+				if((Boolean)reqDTO.getFromArgs(MapKeyEnum.isMofSupplier)){
+					ISupplierSearchSO supplierSearchSO;
+					try {
+						supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(
+								ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+	
+						SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
+						supplierSearchReqDTO.setUserId((Long)reqDTO.getFromArgs(MapKeyEnum.userID));
+						List<SmSupplier> smSuppliers = supplierSearchSO
+								.retriveSupplierProfiles(supplierSearchReqDTO)
+								.getResultBean().getResultList();
+						
+						if (CollectionUtils.isNotEmpty(smSuppliers)) {
+							List<Long> supplierIds = new ArrayList<Long>();
+							for (SmSupplier smSupplier : smSuppliers) {
+								supplierIds.add(smSupplier.getSupplierId());
+							}
+							reqDTO.setSupplierIds(supplierIds);
+							reqDTO.putToArgs(MapKeyEnum.supplierIds, supplierIds);
+						}
+					}
+					finally{
+						supplierSearchSO = null;
+					}
+				}
+				else{
+					if((Boolean)reqDTO.getFromArgs(MapKeyEnum.isDeskOfficer)){
+						// Filter By - actor user id
+						reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+						
+						// Only DO Actor with edit access right. 
+						// Otherwise (Audit Search), user can view QT based on user roles match with actor.
+						if((Boolean)reqDTO.getFromArgs(MapKeyEnum.isQtMaintenanceScreen)){
+							reqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
+						}
+					}
+				}
+				
+				populateQTLOISearchCriteria(reqDTO, qtnTenderSearchBean, searchBean);
+				populateScQtFilter(reqDTO, searchBean, "scLoiLoa.scQt");
+				
+				QuationTenderResDTO resDTO = detailSO
+						.retriveLoiListBySearchCriteria(reqDTO);
+				
+				// set search result doc type for navigate to diff page based on diff doc type selected.
+				qtnTenderSearchBean.setResultDocType(qtnTenderSearchBean.getDocType());
+				
+				return resDTO.getLoiForQtResultBean();
+			} 
+			catch(Exception ex){
+				ex.printStackTrace();
+				return null;
+			}
+			finally {
+				detailSO = null;
+			}
+		}
+		
+	
+		/*private ISearchResultBean<Object[]> getLoiDocument(DocSearchBean docSearchBean) {
+			if(docSearchBean.getDocNoFilterBean() != null) {
+				docSearchBean.getDocNoFilterBean().setSearchField("loiNo");
+			}
+			if(docSearchBean.getDocStatusFilterBean() != null) {
+				docSearchBean.getDocStatusFilterBean().setSearchField("scLoiWorkFlowStatuses.pmStatus.statusId");
+			}
+			if(docSearchBean.getDocTitleFilterBean() != null) {
+				docSearchBean.getDocTitleFilterBean().setSearchField("scLoiLoa.title");
+			}
+			if(docSearchBean.getDocPublishFilterBean() != null) {
+				docSearchBean.getSearchBean().getDataFilterBeans().remove(docSearchBean.getDocPublishFilterBean());
+			}
+			if(docSearchBean.getDocModuleFilterBean() != null) {
+				docSearchBean.getSearchBean().getDataFilterBeans().remove(docSearchBean.getDocModuleFilterBean());
+			}
+			return getLoiDAO().searchScLoi(docSearchBean.getSearchBean());
+		}*/
+	}
+	
 
 	/**
 	 * The Class QTPagingDataModel.
@@ -5009,6 +5405,237 @@ public class QTDetailBackingBean extends
 		} 
 		return condition.toString();
 	}
+	
+	
+	
+	/**
+	 * populate scQt for right side of the join
+	 * 
+	 * @param searchBean
+	 * @param qtSearchBean
+	 * @param qtAccessPrefix - access prefix to scQt from root class. 
+	 * @param args
+	 */
+	@SuppressWarnings("unchecked")
+	private void populateScQtFilter(QuationTenderReqDTO reqDTO,ISearchBean<?> searchBean, String qtAccessPrefix) {
+		
+		QTSearchBean qtSearchBean = reqDTO.getQtnTenderSearchBean();
+		Map<MapKeyEnum, Object> args = reqDTO.getArgs();
+		
+		
+		//String qtAccessPrefix = "scLoiLoa.scQt.";
+		if(!StringUtils.isEmpty(qtAccessPrefix) && !qtAccessPrefix.endsWith(".")){
+			qtAccessPrefix += ".";
+		}
+		if(StringUtils.isEmpty(qtAccessPrefix)){
+			qtAccessPrefix = null;
+		}
+		
+		// title
+		String qtTitle = qtSearchBean.getQtTitle();
+		if (!StringUtils.isBlank(qtTitle)) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(qtAccessPrefix+"qtTitle",
+							SearchOperator.OPERATOR_LIKE.value(), qtTitle,
+							true));
+		}
+		
+		
+		// procurement mode
+		String procurementMode = qtSearchBean.getProcurementMode();
+		if (!StringUtils.isBlank(procurementMode)) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(qtAccessPrefix+"procurementMode.parameterCode",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							procurementMode));
+		} else {
+			// Filter By - procurementMode
+			List<String> procurementModes = new ArrayList<String>();
+			procurementModes.add(ParameterConst.PROCUREMENT_MODE_QUOTATION);
+			procurementModes.add(ParameterConst.PROCUREMENT_MODE_TENDER);
+			//if (!isQTMaintenanceScreen()) {
+				procurementModes.add(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO);	
+			//}
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(
+							qtAccessPrefix+"procurementMode.parameterCode",
+							SearchOperator.OPERATOR_IN.value(), 
+							procurementModes));
+		}
+
+
+		// qt Created Date
+		Date fromCreatedDate = qtSearchBean.getFromCreatedDate();
+		Date toCreatedDate = qtSearchBean.getToCreatedDate();
+		if (null != fromCreatedDate || toCreatedDate != null) {
+			Calendar c1 = Calendar.getInstance();
+			c1.setTime(fromCreatedDate);
+			Calendar fromDate = Calendar.getInstance();
+			fromDate.set(c1.get(Calendar.YEAR), c1.get(Calendar.MONTH),
+					c1.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+			fromDate.set(Calendar.MILLISECOND, 0);
+			fromCreatedDate = fromDate.getTime();
+			if (toCreatedDate != null) {
+				Calendar c2 = Calendar.getInstance();
+				c2.setTime(toCreatedDate);
+				Calendar toDate = Calendar.getInstance();
+				toDate.set(c2.get(Calendar.YEAR), c2.get(Calendar.MONTH),
+						c2.get(Calendar.DAY_OF_MONTH), 23, 59, 59);
+				toDate.set(Calendar.MILLISECOND, 0);
+				toCreatedDate = toDate.getTime();
+			}
+			SearchFilterBean bean = new SearchFilterBean();
+			bean.setSearchField(qtAccessPrefix+"createdDate");
+			bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
+			SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
+					fromCreatedDate, toCreatedDate);
+			bean.setSearchValue(betweenVal);
+			searchBean.getDataFilterBeans().add(bean);
+		}
+		
+		// publish date
+		Date fromPublishDate = qtSearchBean.getFromPublishDate();
+		Date toPublishDate = qtSearchBean.getToPublishDate();
+		if (null != fromPublishDate || null != toPublishDate) {
+			Calendar c1 = Calendar.getInstance();
+			c1.setTime(fromPublishDate);
+			Calendar fromDate = Calendar.getInstance();
+			fromDate.set(c1.get(Calendar.YEAR), c1.get(Calendar.MONTH),
+					c1.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+			fromDate.set(Calendar.MILLISECOND, 0);
+			fromPublishDate = fromDate.getTime();
+			if (toPublishDate != null) {
+				Calendar c2 = Calendar.getInstance();
+				c2.setTime(toPublishDate);
+				Calendar toDate = Calendar.getInstance();
+				toDate.set(c2.get(Calendar.YEAR), c2.get(Calendar.MONTH),
+						c2.get(Calendar.DAY_OF_MONTH), 23, 59, 59);
+				toDate.set(Calendar.MILLISECOND, 0);
+				toPublishDate = toDate.getTime();
+			}
+			SearchFilterBean bean = new SearchFilterBean();
+			bean.setSearchField(qtAccessPrefix+"publishDate");
+			bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
+			SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
+					fromPublishDate, toPublishDate);
+			bean.setSearchValue(betweenVal);
+			searchBean.getDataFilterBeans().add(bean);
+		}
+		
+		
+		
+		// closingDate
+		Date fromClosingDate = qtSearchBean.getFromClosingDate();
+		Date toClosingDate = qtSearchBean.getToClosingDate();
+		if (null != fromClosingDate || null != toClosingDate) {
+			Calendar c1 = Calendar.getInstance();
+			c1.setTime(fromClosingDate);
+			Calendar fromDate = Calendar.getInstance();
+			fromDate.set(c1.get(Calendar.YEAR), c1.get(Calendar.MONTH),
+					c1.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+			fromDate.set(Calendar.MILLISECOND, 0);
+			fromClosingDate = fromDate.getTime();
+			if (toClosingDate != null) {
+				Calendar c2 = Calendar.getInstance();
+				c2.setTime(toClosingDate);
+				Calendar toDate = Calendar.getInstance();
+				toDate.set(c2.get(Calendar.YEAR), c2.get(Calendar.MONTH),
+						c2.get(Calendar.DAY_OF_MONTH), 23, 59, 59);
+				toDate.set(Calendar.MILLISECOND, 0);
+				toClosingDate = toDate.getTime();
+			}
+			SearchFilterBean bean = new SearchFilterBean();
+			bean.setSearchField(qtAccessPrefix+"closingDate");
+			bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
+			SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
+					fromClosingDate, toClosingDate);
+			bean.setSearchValue(betweenVal);
+			searchBean.getDataFilterBeans().add(bean);
+		}
+		
+		
+		// qtStatus
+		String status = qtSearchBean.getQtStatus();
+		if (!StringUtils.isBlank(status)) {
+			SearchMultiFilterBean statusBean = null;
+			SearchMultiFilterBean statusFilterBean = new SearchMultiFilterBean(
+					new SearchFilterBean(
+							qtAccessPrefix+"scQtStatus.pmStatus.statusId",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							status,
+							JoinType.LEFT), 
+					new SearchFilterBean(
+							qtAccessPrefix+"scQtStatus.current",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							true,
+							JoinType.LEFT));
+			statusBean = statusFilterBean;
+			if(status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION.toString())) {
+				statusBean = new SearchMultiFilterBean(
+						statusFilterBean, 
+						new SearchFilterBean(
+								qtAccessPrefix+"scQtStatus.pmStatus",
+								SearchOperator.OPERATOR_IS_NULL.value(),
+								null,
+								SearchCondition.CONDITION_OR.value(),
+								JoinType.LEFT));
+			}
+			searchBean.getDataFilterBeans().add(statusBean);
+		}
+		
+		if(args != null && args.containsKey(MapKeyEnum.isMofSupplier)){
+			if ((Boolean)args.get(MapKeyEnum.isMofSupplier)) {
+				// Filter By - supplierId
+				if (args.containsKey(MapKeyEnum.supplierIds) 
+						&& CollectionUtils.isNotEmpty((List<Long>)args.get(MapKeyEnum.supplierIds))) {
+					
+					searchBean.getDataFilterBeans().add(new SearchFilterBean(
+							qtAccessPrefix+"scQtSuppliers.smSupplier.supplierId",
+							SearchOperator.OPERATOR_IN.value(), 
+							args.get(MapKeyEnum.supplierIds)));
+					
+				}
+	
+			} else {
+				PmOrgProfile ptjProfiles = qtSearchBean.getPtjProfile();
+				if (ptjProfiles != null && ptjProfiles.getOrgProfileId() != null) {
+					// Filter By - PTJ
+					searchBean.getDataFilterBeans().add(new SearchFilterBean(
+							qtAccessPrefix+"pmOrgProfile." + OrgProfileUtil
+								.getSearchBeanParentString(OrganizationType.DIVISION.value()),
+							SearchOperator.OPERATOR_EQUALS.value(),
+							ptjProfiles.getOrgProfileId()));
+				} else {
+					// Filter By - PTJ Group
+					PmOrgProfile ptjGroupProfile = qtSearchBean.getPtjGroupProfile();
+					if (ptjGroupProfile != null && ptjGroupProfile.getOrgProfileId() != null) {
+						searchBean.getDataFilterBeans().add(new SearchFilterBean(
+								qtAccessPrefix+"pmOrgProfile." + OrgProfileUtil
+									.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()),
+								SearchOperator.OPERATOR_EQUALS.value(),
+								ptjGroupProfile.getOrgProfileId()));
+					} else {
+						// Filter By - Ministry
+						PmOrgProfile ministryProfile = qtSearchBean.getMinistryProfile();
+						if (ministryProfile != null
+								&& ministryProfile.getOrgProfileId() != null) {	
+							searchBean.getDataFilterBeans().add(new SearchFilterBean(
+									qtAccessPrefix+"pmOrgProfile." + OrgProfileUtil
+										.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
+									SearchOperator.OPERATOR_EQUALS.value(),
+									ministryProfile.getOrgProfileId()));
+						}
+					}
+					
+				}
+			}
+		}
+		
+	}
+	
+	
+	
+	
 
 	/**
 	 * The method used set parent profile and reset child profile value
@@ -5656,6 +6283,7 @@ public class QTDetailBackingBean extends
 		return items;
 	}
 	
+	
 	/**
 	 * Remove pmUser if contains loggined in Desk Officer
 	 * 
@@ -5929,5 +6557,32 @@ public class QTDetailBackingBean extends
 		}
 		attachments=null;
 		log.debug("qtDetailhandleFileUpload - END");
+	}
+	
+	
+	public Boolean getManagedSearchBeanDocumentTypeIsLOILOA(){
+		if(	getManagedBean().getQtnTenderSearchBean().getDocType() != null && 
+			(	ParameterConst.DOCTYPE_LETTER_OF_INTENT.equalsIgnoreCase(getManagedBean().getQtnTenderSearchBean().getDocType())
+				||  ParameterConst.DOCTYPE_LETTER_OF_AWARD.equalsIgnoreCase(getManagedBean().getQtnTenderSearchBean().getDocType())
+			)) return true;
+		return false;
+	}
+	
+	public Boolean getManagedSearchBeanDocumentTypeIsLOI(){
+		if(!StringUtils.isEmpty(getManagedBean().getQtnTenderSearchBean().getDocType())
+			&& ParameterConst.DOCTYPE_LETTER_OF_INTENT.equalsIgnoreCase(getManagedBean().getQtnTenderSearchBean().getDocType())
+			) return true;
+		return false;
+	}
+	
+	public Boolean getManagedSearchBeanDocumentTypeIsLOA(){
+		if(!StringUtils.isEmpty(getManagedBean().getQtnTenderSearchBean().getDocType())
+			&& ParameterConst.DOCTYPE_LETTER_OF_AWARD.equalsIgnoreCase(getManagedBean().getQtnTenderSearchBean().getDocType())
+			) return true;
+		return false;
+	}
+	
+	public String getTestLoiResult(){
+		return "LOA/LOI List";
 	}
 }
