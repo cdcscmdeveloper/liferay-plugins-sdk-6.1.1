@@ -715,7 +715,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				if (null == getManagedBean().getFlRequest().getFlDeliveryAddresses()) {
 					getManagedBean().getFlRequest().setFlDeliveryAddresses(new ArrayList<FlDeliveryAddress>());
 				}
-				
+				deliveryAddr.setAddAddress(true);
 				getManagedBean().getFlRequest().getFlDeliveryAddresses().add(deliveryAddr);
 			}else {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
@@ -1339,6 +1339,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		ContractItemReqDTO reqDTO = new ContractItemReqDTO();
 		reqDTO.setFlAddress(getManagedBean().getSelectedDelAddr().getFlAddress());
 		reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
+		boolean isAddAddress = getManagedBean().getSelectedDelAddr().addAddress();
 		
 		List<FlFulfilmentItemAddr> itemsList = new ArrayList<FlFulfilmentItemAddr>();
 
@@ -1372,12 +1373,11 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					Long reqId = getManagedBean().getFlRequest().getFulfilmentReqId();
 					String itemCode = newItem.getItemCode();
 
-					if (getManagedBean().getFlRequest().getDocNo() != null) {
-						if (!flag) {
+					if (getManagedBean().getFlRequest().getDocNo() != null && newItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_STANDARD)) {
+						if (isAddAddress) {
 							unitPrice = iFulfilmentSO.getUnitPriceByReqId(reqId, itemCode);
 							if (newItem.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)	&& unitPrice.compareTo(BigDecimal.ZERO) > 0) {
 								newItem.setUnitPrice(unitPrice);
-								flag = true;
 							}
 						}
 					}// end #21489
@@ -1410,8 +1410,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 							newItem.setGstAmount(BigDecimal.ZERO);
 							newItem.setGstUnitPrice(BigDecimal.ZERO);
 						}else{
-							newItem.setUnitPrice(itemResDTO.getItemPrice());
-						}
+							if(isAddAddress){
+								newItem.setUnitPrice(itemResDTO.getItemPrice());
+							}
+						}	
 					}
 				}
 				/*if(getManagedBean().getFlRequest().getProcurementTypeCategory().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_TYPE_CODE_SERVICE)){
@@ -1430,6 +1432,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 		}
 		getManagedBean().setShowItemAddrList(itemsList);
+		
+		if(isAddAddress){
+			getManagedBean().getSelectedDelAddr().setAddAddress(false);
+		}
 	}
 	
 	/**
@@ -4242,9 +4248,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				if(flRequest.getFulfilmentReqId() == null){
 					haveFlRecord = fulfilmentRequestSO.isContractRequestInUsed(reqDTO);
 				}
+				/* Close for #21489
 				if(haveFlRecord == true){
 					throw new EpException(MessageConst.ERROR_740031, new String[]{ResourceBundleUtils.getMessage("lbl.ct.phase",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+flRequest.getScheduleNo()});
-				}
+				}*/
 			}
 		}
 	}
