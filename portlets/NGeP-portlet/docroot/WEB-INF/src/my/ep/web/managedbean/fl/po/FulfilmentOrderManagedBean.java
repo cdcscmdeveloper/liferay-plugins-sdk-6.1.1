@@ -15,6 +15,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.DualListModel;
@@ -240,11 +241,11 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 					reqDTO.setOrgProfileId(getSelectedOrgProfile().getOrgProfileId());
 				}
 				
-				if(getDelOrdNo() != null){
+				if(getDelOrdNo() != null && StringUtils.isNotBlank(getDelOrdNo())){
 					reqDTO.setFlDelOrdNo(getDelOrdNo());
 				}
 				
-				if(getDelOrdSupNo() != null){
+				if(getDelOrdSupNo() != null && StringUtils.isNotBlank(getDelOrdSupNo())){
 					reqDTO.setFlDelOrdSupNo(getDelOrdSupNo());
 				}
 
