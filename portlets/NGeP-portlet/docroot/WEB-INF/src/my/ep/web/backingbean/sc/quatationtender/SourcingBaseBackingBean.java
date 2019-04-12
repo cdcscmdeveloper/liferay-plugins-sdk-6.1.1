@@ -665,10 +665,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	protected IOrgProfileSO getOrgProfileSOGlobal() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-
 	}
 
-	protected IParameterSO getParameterSO() {
+	protected IParameterSO getParameterSOGlobal() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 	}
 
@@ -2580,7 +2579,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			ParameterReqDTO reqDTO = new ParameterReqDTO();
 			reqDTO.setParameterType(parameterType);
 			reqDTO.setParameterCode(parameterCode);
-			ParameterResDTO resDTO = getParameterSO().retrieveParameterByTypeAndCode(reqDTO);
+			ParameterResDTO resDTO = getParameterSOGlobal().retrieveParameterByTypeAndCode(reqDTO);
 			if (resDTO != null && resDTO.isSuccessful()) {
 				pmParameter = resDTO.getPmParameter();
 			}
