@@ -7,9 +7,17 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:cc="http://java.sun.com/jsf/composite"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-
-
-	<h:panelGroup id="supplierItemViewID">
+	<style>
+			.tree-container{
+				display: inline-block  !important;
+				width: 314px !important;
+			}
+			.tree-container > ul {
+				max-height: 200px !important;
+			}
+		</style>
+	<h:panelGroup  id="supplierItemViewID">
+	
 		<script>
 			$('#portlet_Catalogue_WAR_NGePportlet').find('.portlet-title-text')
 					.html("#{lbl['lbl.cm.catalogue.search']}");
@@ -22,18 +30,14 @@
 			widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
-
-		<table style="width: 100%">
-			<tr>
-				<td><p:panel style="width: 100%;"
-						header="#{lbl['lbl.cm.define.search']}" toggleable="true"
-						id="searchTabId">
-
-						<table style="margin-top: 10px; width: 100%;">
+		<h:panelGroup>
+			<p:panel header="#{lbl['lbl.cm.define.search']}" toggleable="true" id="searchTabId">
+						<h:panelGroup>
+													<table style="margin-top: 10px; width: 100%;">
 							<tr>
 								<td width="15%"><p:outputLabel
 										value="#{lbl['lbl.cm.item.name.keyword']}" /></td>
-								<td width="35%%"><p:inputText size="50"
+								<td width="35%"><p:inputText size="50"
 										value="#{catalogueBackingBean.managedBean.itemNameFilterBean.searchValue}"></p:inputText>
 									<p:graphicImage id="itemNameID"
 										value="/css/images/design/tooltips.png" /> <p:tooltip
@@ -73,9 +77,9 @@
 										<p:outputLabel escape="false"
 											value="#{lbl['lbl.tooltip.business.registration.no']}" />
 									</p:tooltip></td>
-
 							</tr>
 						</table>
+						</h:panelGroup>
 						<h:panelGroup rendered="#{unspscCodeBackingBean.requisitioner}">
 							<table style="width: 100%">
 								<tr>
@@ -165,52 +169,40 @@
 								</tr>
 							</table>
 						</h:panelGroup>
-						<table style="width: 100%">
+						<h:panelGroup>
+											<table style="width: 100%">
 							<tr>
-								<td width="16%"><p:outputLabel
-										value="#{lbl['lbl.sm.state']}" /></td>
-								<td width="15%"><p:selectManyMenu id="stateIdDD"
-										showCheckbox="true" style="height:100px;width: 250px;"
-										value="#{catalogueBackingBean.managedBean.stateId}">
-										<f:selectItems
-											value="#{catalogueBackingBean.managedBean.stateList}"
-											var="state" itemLabel="#{state.stateName}"
-											itemValue="#{state.stateId}"></f:selectItems>
-										<p:ajax listener="#{catalogueBackingBean.findDistrict}"
-											update="@(.ui-selectmanymenu[id$=districtDD])"></p:ajax>
-									</p:selectManyMenu></td>
-								<td width="20%"><p:graphicImage id="stateID"
-										value="/css/images/design/tooltips.png" /> <p:tooltip
-										for="stateID">
-										<p:outputLabel escape="false"
-											value="#{lbl['lbl.tooltip.state']}" />
-									</p:tooltip></td>
 								<td width="15%"><p:outputLabel
-										value="#{lbl['lbl.sm.district']}" /></td>
-								<td width="15%"><p:selectManyMenu id="districtDD"
-										showCheckbox="true" style="height:100px;width: 250px;"
-										value="#{catalogueBackingBean.managedBean.districtId}">
-										<f:selectItems
-											value="#{catalogueBackingBean.managedBean.districtList}"
-											var="district" itemLabel="#{district.districtName}"
-											itemValue="#{district.districtId}"></f:selectItems>
-									</p:selectManyMenu></td>
-								<td width="20%"><p:graphicImage id="districtID"
-										value="/css/images/design/tooltips.png" /> <p:tooltip
-										for="districtID">
-										<p:outputLabel escape="false"
-											value="#{lbl['lbl.tooltip.district']}" />
-									</p:tooltip></td>
-
-							</tr>
-							<tr style="height: 30px">
-								<td><p:outputLabel value="G2G" /></td>
-								<td><p:selectBooleanCheckbox
-										value="#{catalogueBackingBean.managedBean.g2gFlag}" /></td>
+										value="#{lbl['lbl.cm.supplier.coverage']}" /></td>
+								<td width="35%">
+								<p:tree styleClass	="tree-container" id="treeZoneLocationPopup"
+									value="#{catalogueBackingBean.managedBean.stateTree}"
+									var="location"
+									selection="#{catalogueBackingBean.managedBean.selectedNodes}"
+									selectionMode="checkbox">
+									<p:ajax event="select"/>
+									<p:ajax event="unselect"/>
+									<p:treeNode type="state">
+										<h:outputText value="#{location.locationName}" />
+									</p:treeNode>
+									<p:treeNode type="division">
+										<h:outputText value="#{location.locationName}" />
+									</p:treeNode>
+									<p:treeNode type="district">
+										<h:outputText value="#{location.locationName}" />
+									</p:treeNode>
+								</p:tree>
+									<p:graphicImage style="position:relative !important; vertical-align: top !important; margin-top:100px !important;" id="epSuppCoverage"
+											value="/css/images/design/tooltips.png" /> <p:tooltip
+											for="epSuppCoverage">
+											<p:outputLabel escape="false"
+												value="#{lbl['lbl.tooltip.supplier.coverage']}" />
+										</p:tooltip>
+								</td>
+								<td width="15%" style="vertical-align:top;"><p:outputLabel value="G2G" /></td>
+								<td width="35%" style="vertical-align:top;"><p:selectBooleanCheckbox value="#{catalogueBackingBean.managedBean.g2gFlag}" /></td>
 							</tr>
 						</table>
-
-
 						<div style="text-align: right;">
 							<p:commandButton value="#{lbl['lbl.cm.search']}"
 								action="#{catalogueBackingBean.managedBean.searchCatalogue}"
@@ -223,14 +215,9 @@
 								update="supplierItemViewID">
 							</p:commandButton>
 						</div>
-					</p:panel></td>
-			</tr>
-		</table>
-	
-		<table style="width: 100%;">
-			<tr>
-				<td width="70%" style="vertical-align: top;"><p:panel
-						style="width: 100%;" header="#{lbl['lbl.cm.search.result']}"
+						</h:panelGroup>
+					</p:panel>
+					<p:panel header="#{lbl['lbl.cm.search.result']}"
 						toggleable="true">
 						<p:remoteCommand name="updateCatButtons" partialSubmit="true"
 							process="@this" update="btnId,labelId" />
@@ -577,12 +564,8 @@
 
 							</p:dataGrid>
 						</h:panelGroup>
-					</p:panel></td>
-
-			</tr>
-
-		</table>
-
+					</p:panel>
+		</h:panelGroup>
 		<!-- <p:dialog id="wishListDialog" widgetVar="wishListPopUp" width="500px"
 			modal="true">
 
