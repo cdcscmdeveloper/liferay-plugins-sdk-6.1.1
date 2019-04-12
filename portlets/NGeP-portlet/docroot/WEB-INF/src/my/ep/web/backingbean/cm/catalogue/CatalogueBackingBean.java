@@ -133,6 +133,7 @@ import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sm.SmGstSupplier;
@@ -157,6 +158,7 @@ import my.ep.web.managedbean.cm.catalogue.CatalogueManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.cm.helper.CmApplicationUtil;
 import my.ep.web.util.cm.helper.CmSupplierZoneSingleton;
+import my.ep.web.util.cm.helper.CmSupplierZoneStateDistrictDTO;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.vo.AdvanceSearchVO;
@@ -5807,11 +5809,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance().getServiceObject("pm", IStateSO.class);
 		try{
-			StateReqDTO reqStateDTO = new StateReqDTO();
-			reqStateDTO.setCountryCode("MY");
-			StateResDTO resStateDTO = stateSO.retriveStatesListByCountryCode(reqStateDTO);
-
-			this.getManagedBean().setStateList(resStateDTO.getStateList());
+			this.getManagedBean().setStateTree(CmSupplierZoneSingleton.getInstance()
+					.buildCmSupplierZoneTree(new Long("131"), null, null, null));
+		
+			
 		}finally {
 			stateSO = null;
 		}
@@ -9056,11 +9057,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance().getServiceObject("pm", IStateSO.class);
 		try{
-			StateReqDTO reqStateDTO = new StateReqDTO();
-			reqStateDTO.setCountryCode("MY");
-			StateResDTO resStateDTO = stateSO.retriveStatesListByCountryCode(reqStateDTO);
-
-			this.getManagedBean().setStateList(resStateDTO.getStateList());
+			this.getManagedBean().setStateTree(CmSupplierZoneSingleton.getInstance()
+					.buildCmSupplierZoneTree(new Long("131"), null, null, null));
 		}finally {
 			stateSO = null;
 		}
