@@ -96,6 +96,7 @@ import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -2311,5 +2312,27 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		} else {
 			return null;
 		}
+	}
+	
+	
+	protected FacesScopes getFacesScopesGen() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
+	}
+	
+	/**
+	 * Determine if user for current session have role
+	 * 
+	 * @param roleCodes
+	 * @return
+	 */
+	public Boolean userHasRole(RoleCode [] roleCodes){
+		FacesScopes faceScopes = new FacesScopes();
+		if(roleCodes != null && roleCodes.length > 0){
+			for(int i = 0; i< roleCodes.length; i++){
+				if(faceScopes.hasRoleUser(roleCodes[i].value())) return true;
+			}
+		}
+		return false;
 	}
 }
