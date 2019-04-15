@@ -96,7 +96,12 @@ public class DeactivateUserRoleRest {
 				}
 				reqDTOFinal.setPmUser(resDTO1.getPmUser());
 				reqDTOFinal.setUpdateOIM(true);
-				SmServiceLookup.getUserSO().updatePTJUser(reqDTOFinal);
+				try {
+					SmServiceLookup.getUserSO().updatePTJUser(reqDTOFinal);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
 			}
 
 			return Response.status(200).entity("success calling process deactivatee user role !!").build();
