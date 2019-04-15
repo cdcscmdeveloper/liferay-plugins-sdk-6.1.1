@@ -3978,6 +3978,34 @@ public class SmApplicationUtil {
 
 		return resDTO.isHasActiveTransaction();
 	}
+	
+	public static boolean hasActiveTransactionForContractManagement(SmSupplier smSupplier) {
+
+		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+				.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
+
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setSupplierId(smSupplier.getSupplierId());
+
+		MofRegistrationResDTO resDTO = mofRegistrationSO
+				.hasActiveTransactionsForContractManagement(reqDTO);
+
+		return resDTO.isHasActiveTransaction();
+	}
+	
+	public static boolean hasActiveTransactionForFulfilment(SmSupplier smSupplier) {
+
+		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+				.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
+
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setSupplierId(smSupplier.getSupplierId());
+
+		MofRegistrationResDTO resDTO = mofRegistrationSO
+				.hasActiveTransactionsForFulfilment(reqDTO);
+
+		return resDTO.isHasActiveTransaction();
+	}
 
 	public static boolean hasOtherActiveTransactions(SmSupplier smSupplier) {
 
