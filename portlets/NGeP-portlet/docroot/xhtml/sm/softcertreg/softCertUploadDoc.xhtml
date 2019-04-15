@@ -108,13 +108,11 @@
 										rendered="#{not empty suppDoc.smSofcertDocFiles and not empty suppDoc.smSofcertDocFiles[0].fileName}">
 										<p:fileDownload value="#{softCertBackingBean.commonDownload(suppDoc.smSofcertDocFiles[0].filePath,suppDoc.smSofcertDocFiles[0].fileName,suppDoc.smSofcertDocFiles[0].fileName)}" />
 									</p:commandLink>
-									<p:spacer width="20" />	
-									
+									<p:spacer width="20" />										
 									<p:commandLink id="deleteSupDocId"
 										rendered="#{!empty suppDoc.smSofcertDocFiles[0].fileName}"
 										oncomplete="confirmDeleteSupDocDialog.show()" update="@form"
 										action="#{softCertBackingBean.assignSelectedSmSoftcertDocFile(upload.personnel,suppDoc,attachFileIndex)}">
-										&#160;
 										<p:graphicImage value="/css/images/design/trash.png" />
 									</p:commandLink>
 							</td>
