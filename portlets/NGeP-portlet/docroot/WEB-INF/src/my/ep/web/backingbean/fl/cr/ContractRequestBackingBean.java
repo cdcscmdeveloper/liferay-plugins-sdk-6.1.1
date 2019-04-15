@@ -1741,6 +1741,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		ctReqDTO.setContractId(flRequest.getCtContract().getContractId());
 		ctReqDTO.setOrgProfileId(flRequest.getPreparedOrgProfile().getOrgProfileId());
 		BigDecimal unitPriceKeyIn = BigDecimal.ZERO;
+		Boolean standard=false;
 		
 		if(getManagedBean().getSelectedDelAddr() != null){
 			ctReqDTO.setFlAddress(getManagedBean().getSelectedDelAddr().getFlAddress());
@@ -1770,9 +1771,15 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 										MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 					}
 				}
+				if(null !=itemAddr.getPriceType()){
+					if(ParameterConst.PRICE_TYPE_STANDARD.equals(itemAddr.getPriceType().getParameterCode())){
+						standard=true;
+					}
+				}
 			}
-			
-			
+			if(standard){
+				break;
+			}
 		}
 	}
 	
