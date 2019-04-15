@@ -911,7 +911,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		getManagedBean().setSdoWithMultipleRoles(sdoWithMultipleRole());
 		
 		FacesScopes sc = new FacesScopes();
-		getManagedBean().setLoginIc(sc.getUserSessionBean().getIdentificationNo());
+		getManagedBean().setLoginIc(sc.getUserSessionBean().getLoginId());
 
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
