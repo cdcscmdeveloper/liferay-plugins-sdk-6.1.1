@@ -3051,7 +3051,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getEndDate()!=null){
 				Calendar cal = Calendar.getInstance();  
 				cal.setTime(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getStartDate());
-				cal.add(Calendar.YEAR, 1);
+				cal.add(Calendar.YEAR, CmHelper.getInstance().getStandardPricingYear());
 
 				if(cal.getTime().compareTo(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getEndDate())<0){
 					FacesContext.getCurrentInstance().addMessage(
@@ -4853,7 +4853,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				//1 year period between start and end date
 				Calendar cal = Calendar.getInstance();  
 				cal.setTime(catalog.getCmStandardPricing().getStartDate());
-				cal.add(Calendar.YEAR, 1);
+				cal.add(Calendar.YEAR, CmHelper.getInstance().getStandardPricingYear());
 
 				if(cal.getTime().compareTo(catalog.getCmStandardPricing().getEndDate())<0){
 					FacesContext.getCurrentInstance().addMessage(
@@ -7707,12 +7707,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		if(standardPricing.getStartDate() != null && standardPricing.getEndDate()!=null){
 			Calendar cal = Calendar.getInstance();  
 			cal.setTime(standardPricing.getStartDate());
-			cal.add(Calendar.YEAR, 1);
+			cal.add(Calendar.YEAR, CmHelper.getInstance().getStandardPricingYear());
 
-			//log.info("start 1year after "+cal.getTime());
-			//log.info("end date "+standardPricing.getEndDate().getTime());
-			//log.info("start compare to end "+cal.getTime().compareTo(standardPricing.getEndDate()));
-			//log.info("end compare to start "+standardPricing.getEndDate().compareTo(cal.getTime()));
+//			log.info("start 1year after "+cal.getTime());
+//			log.info("end date "+standardPricing.getEndDate().getTime());
+//			log.info("start compare to end "+cal.getTime().compareTo(standardPricing.getEndDate()));
+//			log.info("end compare to start "+standardPricing.getEndDate().compareTo(cal.getTime()));
 
 			if(cal.getTime().compareTo(standardPricing.getEndDate())<0){
 				this.getManagedBean().setError7(true);
@@ -10334,4 +10334,34 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			}
 		}
 	}
+	public Date  getNextTwoYear(Date startDate){
+		Calendar cal = Calendar.getInstance();
+		if(startDate!=null){
+			cal.setTime(startDate);
+			cal.add(Calendar.YEAR, CmHelper.getInstance().getStandardPricingYear());
+		}
+		return cal.getTime();
+	}
+	public void onDateSelectListener(Integer index){
+		Date startDate = index < 0 ? this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getStartDate():
+			this.getManagedBean().getDraftSearchDataModel().getList().get(index).getCmStandardPricing().getStartDate();
+		log.info("start date" + startDate);
+		log.info("start index" + index);
+
+		if(startDate!=null){
+			if(index < 0){
+				log.info("the 2 year date" + getNextTwoYear(startDate));
+				this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().setEndDate(getNextTwoYear(startDate));
+			}else{
+				this.getManagedBean().getDraftSearchDataModel().getList().get(index).getCmStandardPricing().setEndDate(getNextTwoYear(startDate));
+			}
+		}else{
+			if(index == null){
+				this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().setEndDate(null);
+			}else{
+				this.getManagedBean().getDraftSearchDataModel().getList().get(index).getCmStandardPricing().setEndDate(null);
+			}
+		}
+	}
+	
 }
