@@ -268,7 +268,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	private Long disPmPrjSetia;
 	private Long disPmPrgActivity;
 	private boolean selectAllCheckbox;
-	Boolean flag = false;
 	
 	/**
 	 * Instantiates a new fulfilment backing bean.
@@ -790,6 +789,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}
 		deliveryAddr.setReceivingGrp(getManagedBean().getFlManualAddress().getReceivingGrp());
 		
+		deliveryAddr.setAddAddress(true);//#21489
 		getManagedBean().setSelectedDelAddr(deliveryAddr);
 		getManagedBean().getFlRequest().getFlDeliveryAddresses().add(deliveryAddr);
 		selectAddrEvent();
@@ -1339,7 +1339,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		ContractItemReqDTO reqDTO = new ContractItemReqDTO();
 		reqDTO.setFlAddress(getManagedBean().getSelectedDelAddr().getFlAddress());
 		reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
-		boolean isAddAddress = getManagedBean().getSelectedDelAddr().addAddress();
+		boolean isAddAddress = getManagedBean().getSelectedDelAddr().addAddress();//#21489
 		
 		List<FlFulfilmentItemAddr> itemsList = new ArrayList<FlFulfilmentItemAddr>();
 
@@ -1354,6 +1354,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 						contractItemReqDTO.setRequestItemId(selectedItem.getScRequestItem().getRequestNoteItemId());
 						ContractItemResDTO contractItemResDTO = contractItemSO.getContractItemByRequestItem(contractItemReqDTO);
 						selectedItem.setPriceType(contractItemResDTO.getCtContractItem().getPriceType());
+						
+						//#21489
+						if (newItem.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)){
+							selectedItem.setUnitPrice(selectedItem.getUnitPrice());
+							selectedItem.setGst(true);
+							setGstPrice(selectedItem, selectedItem.getUnitPrice().doubleValue());
+						}//end #21489
+						
 						existed = true;
 						itemsList.add(selectedItem);
 						break;
@@ -1410,9 +1418,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 							newItem.setGstAmount(BigDecimal.ZERO);
 							newItem.setGstUnitPrice(BigDecimal.ZERO);
 						}else{
-							if(isAddAddress){
-								newItem.setUnitPrice(itemResDTO.getItemPrice());
-							}
+							newItem.setUnitPrice(itemResDTO.getItemPrice());
 						}	
 					}
 				}
@@ -2288,7 +2294,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 * @param flItemAddr the fulfilment item address
 	 */
 	private void itemsToSelectedAddress(FlFulfilmentItemAddr flItemAddr) {
-		if(null== flItemAddr.getOrderedQty() || flItemAddr.getOrderedQty().doubleValue()==0) {
+		if(null== flItemAddr.getOrderedQty()) {
 			for(FlFulfilmentItemAddr item:getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr()){
 				if(flItemAddr.getScRequestItem().getRequestNoteItemId().longValue()==item.getScRequestItem().getRequestNoteItemId().longValue()){
 					getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr().remove(item);
