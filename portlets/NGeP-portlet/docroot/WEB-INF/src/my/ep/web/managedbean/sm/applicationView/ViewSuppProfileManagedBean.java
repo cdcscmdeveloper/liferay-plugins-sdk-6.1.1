@@ -43,6 +43,7 @@ public class ViewSuppProfileManagedBean extends
 	private boolean hasActiveTransaction;
 	private boolean editDisciplinaryAction;
 	private PmRegStatus existingRegStatus;
+	private Long oldRegStatusId;
 	private Date existingMofExpiryDate;
 	private List<SmSupplierCategory> selectedApprovedCategories;
 	private List<SmSupplierCategory> selectedPendingApprovedCategories;
@@ -293,6 +294,14 @@ public class ViewSuppProfileManagedBean extends
 
 	public void setExistingStatusId(Long existingStatusId) {
 		this.existingStatusId = existingStatusId;
+	}
+
+	public Long getOldRegStatusId() {
+		return oldRegStatusId;
+	}
+
+	public void setOldRegStatusId(Long oldRegStatusId) {
+		this.oldRegStatusId = oldRegStatusId;
 	}
 
 }
