@@ -28,7 +28,7 @@ public class CmHelper {
 	
 	public int getStandardPricingYear(){
 		
-		return 1;
+		return 2;
 	}
 
 	public int getMaxCategoryAllowed() {
