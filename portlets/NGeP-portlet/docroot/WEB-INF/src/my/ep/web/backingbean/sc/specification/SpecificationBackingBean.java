@@ -10424,6 +10424,9 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					}
 				}
 				new CreateQtBackingBean().setProcurementMode(scQt, scQt.getEstimatedAmount());
+				//20190415@asyrafhaziq - 15979 -Start
+				new CreateQtBackingBean().setOpenFor(scQt, scQt.getEstimatedAmount());
+				//20190415@asyrafhaziq - 15979 -End
 			}
 
 		}
@@ -11033,6 +11036,9 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				if (qt.getEstimatedAmount() != null && qt.getEstimatedAmount().intValue()>0 && SourcingConstants.FINANCIAL_DOCTYPE
 						.equalsIgnoreCase(specType)) {
 					new CreateQtBackingBean().setProcurementMode(qt,qt.getEstimatedAmount());
+					//20190415@asyrafhaziq - 15979 -Start
+					new CreateQtBackingBean().setOpenFor(qt, qt.getEstimatedAmount());
+					//20190415@asyrafhaziq - 15979 -End
 				}
 			}
 			List<ScQtCheckList> savedCheckLists = resDTO.getSavedCheckLists();
@@ -11661,6 +11667,9 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				if(qt.getEstimatedAmount() != null  && qt.getEstimatedAmount().intValue()>0 && SourcingConstants.FINANCIAL_DOCTYPE
 						.equalsIgnoreCase(specType)){
 					new CreateQtBackingBean().setProcurementMode(qt, qt.getEstimatedAmount());
+					//20190415@asyrafhaziq - 15979 -Start
+					new CreateQtBackingBean().setOpenFor(qt, qt.getEstimatedAmount());
+					//20190415@asyrafhaziq - 15979 -End
 				}
 			}
 
