@@ -807,7 +807,7 @@ public class SmApplicationBackingBean extends
 				if (cannotProceedAlertMsg) {
 					throw new EpException(MessageConst.ERROR_722542);
 				}
-
+//#17906
 				boolean hasActiveTransactions = SmApplicationUtil
 						.hasActiveTransactions(currSupp);
 				boolean hasOtherActiveTransactions = SmApplicationUtil
@@ -8639,7 +8639,7 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setApprvrSecReview(
 					assignVerificationCount(getManagedBean()
 							.getApprvrSecReview(), isSectionVerified));
-		}
+		}		
 	}
 
 	/**
@@ -11832,5 +11832,51 @@ public class SmApplicationBackingBean extends
 		}
 		return true;
 	}
+	
+	public void transactionCheck() {
+		
+		SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
+		
+		boolean hasActiveTransactionContractManagement = SmApplicationUtil
+				.hasActiveTransactionForContractManagement(currSupp);
+		boolean hasActiveTransactionFulfilment = SmApplicationUtil
+				.hasActiveTransactionForFulfilment(currSupp);
+		String labelNameVal = "";		
+		
+		if (hasActiveTransactionContractManagement) {
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+					SmCommonUtil.getMessage("lbl.sm.bankDtls.is.active.contract.tied",
+							new String[] { labelNameVal })));			
+		} 
+		
+		if (hasActiveTransactionFulfilment) {
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+					SmCommonUtil.getMessage("lbl.sm.bankDtls.is.other.active.contract.tied",
+							new String[] { labelNameVal })));			
+		} 
+	}
+	
+	public void transactionCheckForDelete() {
+		SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
+		
+		boolean hasActiveTransactionContractManagement = SmApplicationUtil
+				.hasActiveTransactionForContractManagement(currSupp);
+		boolean hasActiveTransactionFulfilment = SmApplicationUtil
+				.hasActiveTransactionForFulfilment(currSupp);
+		
+		String labelNameVal = "";
+		
+		if (hasActiveTransactionContractManagement) {
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+					SmCommonUtil.getMessage("lbl.sm.alert.active.transaction",
+							new String[] { labelNameVal })));			
+		} 
+		
+		if (hasActiveTransactionFulfilment) {
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+					SmCommonUtil.getMessage("lbl.sm.alert.other.active.transaction",
+							new String[] { labelNameVal })));			
+		}
+	}	
 
 }
