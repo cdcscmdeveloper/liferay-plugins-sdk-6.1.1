@@ -9,7 +9,6 @@ import java.math.MathContext;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -32,7 +31,6 @@ import javax.servlet.http.HttpServletRequest;
 import my.ep.biz.bean.sc.EncryptDataBean;
 import my.ep.biz.bean.sc.EncryptDataBean.EncryptColumnName;
 import my.ep.biz.bean.sc.EncryptDataBean.EncryptTableName;
-import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
@@ -46,8 +44,6 @@ import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
-import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
@@ -102,7 +98,6 @@ import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecSuppAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.AddressType;
-import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.encrypt.BouncyCastleProvider_AES_CBC;
@@ -145,6 +140,7 @@ import com.liferay.portal.util.PortalUtil;
  * 
  * @author Viswanath
  * @author Venkat Chanumolu
+ * @author saha
  * 
  */
 @ManagedBean(name = "supplierProposalDetailBackingBean")
