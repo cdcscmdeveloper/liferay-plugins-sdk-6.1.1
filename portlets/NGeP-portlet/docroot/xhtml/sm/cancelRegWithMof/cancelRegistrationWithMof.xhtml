@@ -51,11 +51,12 @@
 							onclick="excelDialog.show();return false;">
 							<p:graphicImage value="/css/images/design/upload.png"
 								style="margin-right:2px;" />
-						</p:commandLink> <p:outputLabel styleClass="outputLabel-view"
+						</p:commandLink> 
+						<p:outputLabel styleClass="outputLabel-view"
 							value="#{backingBean.managedBean.cancellationAttachment.fileName}"
 							rendered="#{backingBean.managedBean.cancellationAttachment.fileName ne null}" />
-							<!-- 	harris   -->					
-					<p:commandLink style="float: left;padding-right: 10px;"
+						<p:spacer width="20" />			
+						<p:commandLink style="float: left;padding-right: 10px;"
 							rendered="#{backingBean.managedBean.cancellationAttachment.fileName ne null}"
 							onclick="DeleteDlg.show();return false;">
 							<p:graphicImage value="/css/images/design/trash.png"
