@@ -51,7 +51,7 @@
 			<ui:param name="readOnlyTask" value="#{lOADetailBackingBean.managedBean.readOnly}" />
 			
 			   <p:commandButton value="#{lbl['lbl.btn.save']}"
-					action="#{lOADetailBackingBean.saveAction}"
+					action="#{lOADetailBackingBean.saveAction(false)}"
 					rendered="#{(isPendingApprovalStatus or isPendingRevApprovalStatus or isPendingRevisionStatus) and !isTrackingDairyView}"
 				    process="@form" update="@form"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
