@@ -285,7 +285,10 @@ public class QTSupplierQulCriteriaBackingBean extends
 			qtCategoryList = new ArrayList<ScQtCategory>();
 			this.getManagedBean().setQtCategoryList(qtCategoryList);
 		}
-		validateDuplicateCategoryCode(pmCategoryL3, qtCategoryList);	
+		validateDuplicateCategoryCode(pmCategoryL3, qtCategoryList);
+		//20190416@asyarfhaziq_Enhancement #8197 - Start
+		validateMixCategoryCode(pmCategoryL3, qtCategoryList);
+		//20190416@asyarfhaziq_Enhancement #8197 - End
 		PmCategoryL2 pmCategoryL2 = pmCategoryL3.getPmCategoryL2();
 		if("33".equals(pmCategoryL2.getPmCategoryL1().getCategoryL1Code()) || "34".equals(pmCategoryL2.getPmCategoryL1().getCategoryL1Code())){
 			throw new EpException(MessageConst.ERROR_760474);
