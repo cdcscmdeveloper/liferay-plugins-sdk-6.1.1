@@ -1216,7 +1216,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				}
 			}
 			if (isDuplicate) {
-				throw new EpException(MessageConst.ERROR_760481);
+				throw new EpException(MessageConst.ERROR_760482);
 			}
 		}
 		//20190416@asyarfhaziq_Enhancement #8197 - End
