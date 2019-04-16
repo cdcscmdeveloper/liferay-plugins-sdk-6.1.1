@@ -37,6 +37,7 @@ import my.ep.dto.pm.authorization.userorg.UserOrgResDTO;
 import my.ep.dto.pm.common.PmTrackingDairyVO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -51,6 +52,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
+import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -984,5 +986,42 @@ public class CustServiceBackingBean extends
 		}
 		return false;
 	}
+	
+	public void changeOrgUnit(PmOrgProfile entity) {
+		this.getManagedBean().getSearchBean().getSelectedOrgProfile().setSmSupplier(entity.getSmSupplier());
+		log.info("changeOrgUnit");
+	}
+	public String constructConditionFieldsForCreate() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("orgTypeCode.parameterCode^");
+		sb.append(getManagedBean().getSearchBean().getSelectedOrgProfile().getOrgTypeCode().getParameterCode());
+		sb.append("|orgTypeCode.parameterType^");
+		sb.append(ParameterTypeConst.ORGANISATION_TYPES);
+		sb.append("|recordStatus^1");
+		log.info("....getManagedBean().getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode().getParameterCode()="
+				+ getManagedBean().getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode().getParameterCode());
+		log.info("....this.getManagedBean().getCurrentActiveOrg().getOrgProfileId()="
+				+ this.getManagedBean().getPmUserOrgOriginal().getPmOrgProfile().getOrgProfileId());
+		log.info("....getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()="
+				+ getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()));
+
+		sb.append(OrgProfileUtil.retrieveAuthorizationLovSb(
+				getManagedBean().getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode().getParameterCode(),
+				getManagedBean().getPmUserOrgOriginal().getPmOrgProfile().getOrgProfileId(),
+				getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()),
+				getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value()),
+				getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())));
+		return sb.toString();
+	}
+	
+	public void updateSearchCriteriaForOrgName(BaseEntity entity) {
+		log.info("updateSearchCriteriaForOrgName");
+
+		PmOrgProfile orgProfile = (PmOrgProfile) entity;
+		this.getManagedBean().getSearchBean().getSelectedOrgProfile().setSmSupplier(orgProfile.getSmSupplier());
+
+
+	}
+
 
 }
