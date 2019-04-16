@@ -32,26 +32,14 @@
 				value="#{zoneMaintenanceBackingBean.managedBean.zoneTrees}"
 				var="zoneTree" rowIndexVar="index" rows="10"
 				widgetVar="wv">
-				<ac:paginator for="zoneDetailsDataTable"></ac:paginator>
-				<p:ajax event="page"></p:ajax>
-					
+				<ac:paginator for="zoneDetailsDataTable"></ac:paginator>					
 				
 			<p:column style="text-align: left;width:2%;">
-				<f:facet name="header">
-					<ui:remove>
-					<p:selectBooleanCheckbox id="selectAllCheckBoxId" disabled="#{!zoneMaintenanceBackingBean.managedBean.allZoneSelectable}"
-						value="#{zoneMaintenanceBackingBean.managedBean.allZoneSelected}">
-						<p:ajax event="change" listener="#{zoneMaintenanceBackingBean.selectAllZone(null)}"
-							update="@(.ui-chkbox[id$=singleCheckBoxID])"></p:ajax>
-					</p:selectBooleanCheckbox>
-					</ui:remove>
-				</f:facet>
 				<p:selectBooleanCheckbox id="singleCheckBoxID" disabled="#{!zoneMaintenanceBackingBean.managedBean.cmSupplierZoneList.get(index).selectable}"
-					value="#{zoneMaintenanceBackingBean.managedBean.cmSupplierZoneList.get(index).selected}">
-					<p:ajax event="change" listener="#{zoneMaintenanceBackingBean.selectSingleZone(index)}"
-						update=":form:deleteBtnId, @(.ui-chkbox[id$=selectAllCheckBoxId])  "></p:ajax>
+					value="#{zoneMaintenanceBackingBean.getCurrentZone(zoneTree).selected}">
+					<p:ajax event="change" update=":form:deleteBtnId"></p:ajax>
 				</p:selectBooleanCheckbox>
-				<p:tooltip id="sCBoxTooltipId"  rendered="#{!zoneMaintenanceBackingBean.managedBean.cmSupplierZoneList.get(index).selectable}" for="singleCheckBoxID" value="#{lbl['lbl.cm.zm.unabletodelete']}" position="right"/>
+				<p:tooltip id="sCBoxTooltipId"  rendered="#{!zoneMaintenanceBackingBean.getCurrentZone(zoneTree).selectable}" for="singleCheckBoxID" value="#{lbl['lbl.cm.zm.unabletodelete']}" position="right"/>
 			</p:column>
 				
 				<p:column>
@@ -80,7 +68,7 @@
 					<p:commandLink
 						actionListener="#{zoneMaintenanceBackingBean.editZone(zoneTree,index)}"
 						process="@this" update=":form:ZL" oncomplete="ZL.show();">
-						<p:graphicImage style="padding-right:10px;"
+						<p:graphicImage style="padding-left: 10px;"
 							value="/css/images/design/edit.png"
 							title="#{lbl['lbl.cm.zm.edit']}" />
 					</p:commandLink>
@@ -109,7 +97,7 @@
 					</ul>
 				</div>
 				<div align="right">
-					<p:commandButton id="confirmID" process="@this" update="zoneDetailsDataTable"   actionListener="#{zoneMaintenanceBackingBean.deleteTreeNodes()}" value="#{lbl['lbl.cm.dialog.cofirm.yes']}" />
+					<p:commandButton id="confirmID" process="@this" update="zoneDetailsDataTable, deleteBtnId"   actionListener="#{zoneMaintenanceBackingBean.deleteTreeNodes()}" value="#{lbl['lbl.cm.dialog.cofirm.yes']}" />
 					<p:commandButton id="declineID"
 						value="#{lbl['lbl.cm.dialog.cofirm.no']}"
 						onclick="deleteConfirmation.hide()" />
