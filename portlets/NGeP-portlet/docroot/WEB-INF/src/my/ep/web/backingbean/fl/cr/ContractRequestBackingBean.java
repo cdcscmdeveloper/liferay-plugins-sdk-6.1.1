@@ -1734,6 +1734,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 * @param FlItemSummaryReqDTO reqDTO - contractId, orgProfileId,itemId
 	 */
 	public void validateUnitPrice(FlFulfilmentRequest flRequest){
+		log.info("validateUnitPrice 160419");
 		IContractItemSO contractItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
 
 		ContractItemReqDTO ctReqDTO = new ContractItemReqDTO();
@@ -2301,6 +2302,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 * @param flItemAddr the fulfilment item address
 	 */
 	private void itemsToSelectedAddress(FlFulfilmentItemAddr flItemAddr) {
+		log.info("itemsToSelectedAddress 160419");
 		if(null== flItemAddr.getOrderedQty()) {
 			for(FlFulfilmentItemAddr item:getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr()){
 				if(flItemAddr.getScRequestItem().getRequestNoteItemId().longValue()==item.getScRequestItem().getRequestNoteItemId().longValue()){
