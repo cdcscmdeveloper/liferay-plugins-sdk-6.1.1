@@ -148,9 +148,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> implements Serializable {
 	 *           (TreeNode rootZoneLocation(mandatory))
 	 */
 	public void deleteTreeNodes() {
-		final DataTable d = (DataTable) FacesContext.getCurrentInstance().getViewRoot().findComponent("form:zoneDetailsDataTable");
-
-		log.info("page" + d.getPage());
+		//final DataTable d = (DataTable) FacesContext.getCurrentInstance().getViewRoot().findComponent("form:zoneDetailsDataTable");
 		Iterator<CmSupplierZone> ite = getManagedBean().getCmSupplierZoneList().iterator();
 		List<CmSupplierZone> deleteList = new ArrayList<CmSupplierZone>();
 		if(getManagedBean().getDeletedCmSupplierZoneList() != null && getManagedBean().getDeletedCmSupplierZoneList().size() > 0){
@@ -325,24 +323,21 @@ BaseBackingBean<ZoneMaintenanceManagedBean> implements Serializable {
 		} else {
 			this.getManagedBean().setCmSupplierZoneList(new ArrayList<CmSupplierZone>());
 		}
-		this.getManagedBean().setAllZoneSelectable(true);
-		if(this.getManagedBean().getCmSupplierZoneList()!=null && this.getManagedBean().getCmSupplierZoneList().size()>0){
-			int i = 0;
-			for(CmSupplierZone zone : this.getManagedBean().getCmSupplierZoneList() ){
-				if(zone.getCmPricings() != null && zone.getCmPricings().size() > 0){
-					zone.setSelectable(false);
-					if(this.getManagedBean().isAllZoneSelectable() && i < 10){
-						this.getManagedBean().setAllZoneSelectable(false);
-					}
-				}
-				i++;
-			}
-		}
+	
 		this.getManagedBean().setDeletedCmSupplierZoneList(null);
 		this.getManagedBean().setZoneTrees(CmSupplierZoneSingleton.getInstance().buildZoneSDTree(this.getManagedBean().getCmSupplierZoneList()));
 		this.getManagedBean().setRootZoneTree(
 				CmSupplierZoneSingleton.getInstance().buildCmSupplierZoneTree(getManagedBean().getDefaultCountryId(), null, null, null));
 		this.getManagedBean().setZoneName(null);
+		if(this.getManagedBean().getZoneTrees()!=null && this.getManagedBean().getZoneTrees().size()>0){
+			for(TreeNode tree: this.getManagedBean().getZoneTrees()){
+				CmSupplierZoneStateDistrictDTO zoneDTO =  (CmSupplierZoneStateDistrictDTO)tree.getChildren().get(0).getData();
+				CmSupplierZone zone = zoneDTO.getCmSupplierZone();
+				if(zone.getCmPricings() != null && zone.getCmPricings().size() > 0){
+					zone.setSelectable(false);
+				}
+			}
+		}
 	}
 
 
@@ -786,57 +781,11 @@ BaseBackingBean<ZoneMaintenanceManagedBean> implements Serializable {
 		getManagedBean().setValueReqd(false);
 	}
 	
-//	public void selectAllZone(PageEvent event){
-//		final DataTable d = (DataTable) FacesContext.getCurrentInstance().getViewRoot().findComponent("form:zoneDetailsDataTable");
-//		int currentPage = event == null ? d.getPage(): event.getPage();
-//		if(this.getManagedBean().getCmSupplierZoneList()!=null && this.getManagedBean().getCmSupplierZoneList().size()>0){
-//			int size = this.getManagedBean().getCmSupplierZoneList().size();
-//			int lhs = currentPage * 10;
-//			int rhs = (size - (lhs+10)) < 0 ? size : lhs + 10 ;
-//			boolean check = true;
-//			int i = 0;
-//			for(CmSupplierZone zone: this.getManagedBean().getCmSupplierZoneList()){
-//				if(i >= lhs && i<rhs ){
-//					if(!zone.isSelectable() && check){
-//						check = false;
-//					}
-//					this.getManagedBean().setAllZoneSelectable(check);
-//					zone.setSelected(this.getManagedBean().isAllZoneSelected() ? true: false);
-//				}else{
-//					zone.setSelected(false);
-//				}
-//				i++;
-//			}
-//		}
-//	}
-//	
-//	public void onPageChangeListener(PageEvent event){
-//		selectAllZone(event);
-//	}
-	
-	public void selectSingleZone(int index){
-		if(this.getManagedBean().getCmSupplierZoneList().get(index).isSelected()){
-			final DataTable d = (DataTable) FacesContext.getCurrentInstance().getViewRoot().findComponent("form:zoneDetailsDataTable");
-			int size = this.getManagedBean().getCmSupplierZoneList().size();
-			int lhs = d.getPage() * 10;
-			int rhs = (size - (lhs+10)) < 0 ? size : lhs + 10 ;
-			boolean check =true;
-			for(int a= lhs; a<rhs; a++){
-				CmSupplierZone zone = this.getManagedBean().getCmSupplierZoneList().get(a);
-				if(!zone.isSelected()){
-					check = false;
-					break;
-				}
-			}
-			this.getManagedBean().setAllZoneSelected(check);
-		}else{
-			this.getManagedBean().setAllZoneSelected(false);
-		}
-	}
-	
 	public void deleteSelectedZones() {
 		List<CmSupplierZone> deleteList = new ArrayList<CmSupplierZone>();
-		for(CmSupplierZone zone : this.getManagedBean().getCmSupplierZoneList() ){
+		for(TreeNode tree: this.getManagedBean().getZoneTrees()){
+			CmSupplierZoneStateDistrictDTO zoneDTO =  (CmSupplierZoneStateDistrictDTO)tree.getChildren().get(0).getData();
+			CmSupplierZone zone = zoneDTO.getCmSupplierZone();
 			if(zone.isSelected()){
 				if(zone.getCmPricings() != null && zone.getCmPricings().size() > 0){
 					throw new EpException(MessageConst.ERROR_716005);
@@ -844,18 +793,25 @@ BaseBackingBean<ZoneMaintenanceManagedBean> implements Serializable {
 				deleteList.add(zone);
 			}
 		}
-			getManagedBean().setTempDeletedSupplierZoneList(deleteList);	
+			this.getManagedBean().setTempDeletedSupplierZoneList(deleteList);	
 			RequestContext.getCurrentInstance().execute("deleteConfirmation.show();");
 	}
 	
 	public boolean  isDeleteListEmpty(){
 		boolean check = true;
-		for(CmSupplierZone zone : this.getManagedBean().getCmSupplierZoneList() ){
+		for(TreeNode tree: this.getManagedBean().getZoneTrees()){
+			CmSupplierZoneStateDistrictDTO zoneDTO =  (CmSupplierZoneStateDistrictDTO)tree.getChildren().get(0).getData();
+			CmSupplierZone zone = zoneDTO.getCmSupplierZone();
 			if(zone.isSelected()){
 				check = false;
 				break;
 			}
 		}
 		return check;
+	}
+	
+	public CmSupplierZone getCurrentZone(TreeNode node){
+		CmSupplierZoneStateDistrictDTO zoneDTO =  (CmSupplierZoneStateDistrictDTO)node.getChildren().get(0).getData();
+		return zoneDTO.getCmSupplierZone();
 	}
 }
