@@ -798,10 +798,38 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.CREATE_FRN_HT) 
 						    		   || worklistItemVO.getTaskName().equals(FLProcessNameConst.REVISE_FRN_HT)){
 						    	   worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId(),false) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
+							       //start added for #24968
+						    	   retrievePoCoNoForCreateFRN(worklistItemVO,worklistItemVO.getTaskId());
+						    	   //end added for #24968
 						       }
 						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.APPROVE_FRN_HT)){
 						    	   worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId(),true) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
+							       //start added for #24968
+						    	   retrievePoCoNoForApproveFRN(worklistItemVO,worklistItemVO.getTaskId());
+						    	   //end added for #24968
 						       }
+							   //start added for #24968
+						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.ACK_MODIFIED_DO_HT)){
+							    	   retrievePoCoNoForAckModifyDo(worklistItemVO,worklistItemVO.getTaskId());
+							       }
+						       
+						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.REVIEW_CANCEL_DO_HT)){
+						    	   retrievePoCoNoForReviewCancelDo(worklistItemVO,worklistItemVO.getTaskId());
+						       }
+						       
+						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.REVIEW_DAN_HT)){
+						    	   retrievePoCoNoForReviewDan(worklistItemVO,worklistItemVO.getTaskId());
+						       }
+						       
+						       if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_STOP_FULFILMENT_REQ_HT)
+						    		   || worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_STOP_FULFILMENT_REQ_HT)){
+						    	   retrievePoCoNoForStopFulFilment(worklistItemVO,worklistItemVO.getTaskId());
+						       }
+						       
+						       if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_FAILED_CANCEL_FRN_HT)){
+						    	   retrievePoCoNoForSubmitFailedCancelFRN(worklistItemVO,worklistItemVO.getTaskId());
+						       }
+						       //end added for #24968
 							}catch(Exception ex){
 								worklistItemVO.setTitle("please check");
 								System.out.println("worklistItemVO.setTitle error:"+ex.getMessage());
