@@ -50,9 +50,13 @@
 		<br />
 	</p:panel>
 		
-	<p:outputPanel id="catCodeInfPan" layout="block" rendered="#{backingBean.managedBean.smAppl.applType ne 'B' and backingBean.managedBean.smAppl.applType ne 'U'}">
-		
-		<p:panel header="#{lbl['lbl.sm.addtnl.catCodes.panHdr']}" toggleable="true">
+	<p:outputPanel id="catCodeInfPan" layout="block" >
+		<c:if test="#{backingBean.managedBean.smAppl.applType eq 'B' or backingBean.managedBean.smAppl.applType eq 'U'}">
+		<br />
+				<ui:include src="overlapCategorySuppDoc.xhtml" />
+		</c:if>
+		<c:if test="#{backingBean.managedBean.smAppl.applType ne 'B' and backingBean.managedBean.smAppl.applType ne 'U'}">
+			<p:panel header="#{lbl['lbl.sm.addtnl.catCodes.panHdr']}" toggleable="true">
 			
 			<c:choose>
 				<c:when
@@ -148,6 +152,7 @@
 		<br />
 		
 		<ui:include src="overlapCategorySuppDoc.xhtml" />
+		</c:if>
 	</p:outputPanel>
 	
 	<ac:lookupCategoryCode okAction="backingBean.addNewCategoryAction"

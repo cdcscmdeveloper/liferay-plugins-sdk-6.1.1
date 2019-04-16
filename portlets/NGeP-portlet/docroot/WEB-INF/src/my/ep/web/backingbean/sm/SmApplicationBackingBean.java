@@ -853,11 +853,13 @@ public class SmApplicationBackingBean extends
 								.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER)) {
 					throw new EpException(MessageConst.ERROR_722628);
 				}
-				
-				//checked whether supplier already MOF, should not allowed to proceed if already MOF (#25601)
+
+				// checked whether supplier already MOF, should not allowed to
+				// proceed if already MOF (#25601)
 				MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 				reqDTO.setSupplierId(currSupp.getSupplierId());
-				if(SmServiceLookup.getMofRegistrationSO().alreadyMof(reqDTO).isValid()){
+				if (SmServiceLookup.getMofRegistrationSO().alreadyMof(reqDTO)
+						.isValid()) {
 					throw new EpException(MessageConst.ERROR_722674);
 				}
 
@@ -2302,6 +2304,23 @@ public class SmApplicationBackingBean extends
 					SmApplicationUtil.initOverlapCategoryDocs(getManagedBean()
 							.isOverLappedCategoryExists(), getManagedBean());
 
+					if ((getManagedBean().isPoUser() || getManagedBean()
+							.isApproverUser())
+							&& getManagedBean().isOverLappedCategoryExists()
+							&& EntityHelper.isCollectionEmpty(getManagedBean()
+									.getSmAppl().getSmCategoryOverlapDocs())) {
+						FacesContext fc = FacesContext.getCurrentInstance();
+						fc.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_ERROR,
+										null,
+										SmCommonUtil
+												.getMessage(
+														"lbl.sm.category.overlap.pleaseReject",
+														null)));
+					}
+
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY:
 					if (valid) {
@@ -2628,7 +2647,7 @@ public class SmApplicationBackingBean extends
 					currentTab, getManagedBean());
 			break;
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS:
-			
+
 			if ((getManagedBean().isPoUser() || getManagedBean()
 					.isApproverUser()) && currentTab < outputTab) {
 				validSave = SmApplicationUtil.checkSupportDocsValidity(
@@ -11741,45 +11760,51 @@ public class SmApplicationBackingBean extends
 	public void viewMyIdentityRespond() {
 		RequestContext.getCurrentInstance().execute("myIdentityDialog.show();");
 	}
-	
+
 	// #25470
 	private boolean checkIfPastBumiApplication() {
-		
+
 		getManagedBean().setWasBumiApplication(false);
-		
+
 		String datePoint = "08-Mar-2019 12:00 AM";
-		
-		String dateList[] = {this.getManagedBean().getApplStatusInfo().getCreatedByAndDate(),
-							 this.getManagedBean().getApplStatusInfo().getModifiedByAndDate()};
-		
+
+		String dateList[] = {
+				this.getManagedBean().getApplStatusInfo().getCreatedByAndDate(),
+				this.getManagedBean().getApplStatusInfo()
+						.getModifiedByAndDate() };
+
 		HashMap<String, String> dates = new HashMap<String, String>();
-		
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy hh:mm a");
+
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+				"dd-MMM-yyyy hh:mm a");
 		simpleDateFormat.setLenient(false);
-		
+
 		List<String> allDateOccurences = new ArrayList<String>();
 		Pattern pattern = Pattern.compile("\\((.*?)\\)");
-		
+
 		for (String date : dateList) {
 			Matcher matcher = pattern.matcher(date);
 			while (matcher.find()) {
 				allDateOccurences.add(matcher.group(1));
 			}
 		}
-			
+
 		String elapsedDays = null;
 		int count;
-		
+
 		for (count = allDateOccurences.size() - 1; count >= 0; count--) {
 			try {
-				Date date = simpleDateFormat.parse(allDateOccurences.get(count));
+				Date date = simpleDateFormat
+						.parse(allDateOccurences.get(count));
 				Date featureReleaseDate = simpleDateFormat.parse(datePoint);
-				
-				double millisDiff = date.getTime() - featureReleaseDate.getTime();
-				
+
+				double millisDiff = date.getTime()
+						- featureReleaseDate.getTime();
+
 				// Checks if createdDate and modifiedDate is before 08-Mar-2019
 				if (millisDiff < 0) {
-					double daysDiff = Double.valueOf((millisDiff / (1000 * 60 * 60 * 24)));
+					double daysDiff = Double
+							.valueOf((millisDiff / (1000 * 60 * 60 * 24)));
 					elapsedDays = String.format("%.5f", daysDiff);
 					String[] days = allDateOccurences.get(count).split("\\-");
 					String day = days[0];
@@ -11790,44 +11815,50 @@ public class SmApplicationBackingBean extends
 				allDateOccurences.remove(count);
 			}
 		}
-		
-		log.info("Filtered dates: "+allDateOccurences);
-		log.info("dates: "+dates);
-		
+
+		log.info("Filtered dates: " + allDateOccurences);
+		log.info("dates: " + dates);
+
 		checkRejectedBumi();
-		
-		if ( (!checkRejectedBumi() || checkRejectedBumi()) &&
-			 (!dates.isEmpty() &&
-				(this.getManagedBean().getSmAppl().getApplType() == "B") &&
-				(this.getManagedBean().getSmAppl().getSupportingDocMode() == "H")) ) {
+
+		if ((!checkRejectedBumi() || checkRejectedBumi())
+				&& (!dates.isEmpty()
+						&& (this.getManagedBean().getSmAppl().getApplType() == "B") && (this
+						.getManagedBean().getSmAppl().getSupportingDocMode() == "H"))) {
 			this.getManagedBean().setWasBumiApplication(true);
 		}
-		
-		log.info("wasBumiApplication: "+getManagedBean().isWasBumiApplication());
+
+		log.info("wasBumiApplication: "
+				+ getManagedBean().isWasBumiApplication());
 		return getManagedBean().isWasBumiApplication();
 	}
-	
+
 	private boolean checkRejectedBumi() {
-		
+
 		IMofRegistrationSO regSo = null;
-		
+
 		Long appId = this.getManagedBean().getSmAppl().getApplId();
-		
+
 		regSo = (IMofRegistrationSO) BusinessDelegate.getInstance()
 				.getServiceObject("sm", IMofRegistrationSO.class);
-		
+
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-		reqDTO.setSupplierId(this.getManagedBean().getSmSupplier().getSupplierId());
+		reqDTO.setSupplierId(this.getManagedBean().getSmSupplier()
+				.getSupplierId());
 		reqDTO.setAppType(this.getManagedBean().getSmAppl().getApplType());
-		
-		SmWorkflowStatus sts = SmCommonUtil.getCurrentActiveWokFlowStatus(appId);
+
+		SmWorkflowStatus sts = SmCommonUtil
+				.getCurrentActiveWokFlowStatus(appId);
 		reqDTO.setSmWorkflowStatus(sts);
-		
-		Long applId = regSo.retrieveLastRejectedApplIdByApplType(reqDTO).getApplId();
-		//Long applId = SmServiceLookup.getMofRegistrationSO().retrieveLastRejectedApplIdByApplType(reqDTO).getApplId();
-		
+
+		Long applId = regSo.retrieveLastRejectedApplIdByApplType(reqDTO)
+				.getApplId();
+		// Long applId =
+		// SmServiceLookup.getMofRegistrationSO().retrieveLastRejectedApplIdByApplType(reqDTO).getApplId();
+
 		if (applId == null) {
-			log.info("The application "+appId+" has never been rejected before");
+			log.info("The application " + appId
+					+ " has never been rejected before");
 			return false;
 		}
 		return true;
