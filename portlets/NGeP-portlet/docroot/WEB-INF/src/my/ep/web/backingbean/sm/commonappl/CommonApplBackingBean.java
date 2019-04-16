@@ -891,14 +891,14 @@ public class CommonApplBackingBean extends
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
-							"/xhtml/sm/bumiPuteraApplication/smBumiSideMenu_BasePage.xhtml");
+							"/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
 			// PROCEED_BUMI_APPLN;
 			break;
 		case "U":
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
-							"/xhtml/sm/updateMofDetails/smUpdateMofSideMenu_BasePage.xhtml");
+							"/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
 			// PROCEED_UPDATE_MOF_APPLN;
 			break;
 		case "R":
@@ -952,7 +952,7 @@ public class CommonApplBackingBean extends
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
-							"/xhtml/sm/bumiPuteraApplication/smBumiSideMenu_BasePage.xhtml");
+							"/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
 			// "/xhtml/sm/bumiPuteraApplication/applyBumiStatusBasePage.xhtml");
 			smApplBB.getManagedBean().setHeaderMsg(
 					"Review Bumi Status Application - ");
@@ -961,7 +961,7 @@ public class CommonApplBackingBean extends
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
-							"/xhtml/sm/updateMofDetails/smUpdateMofSideMenu_BasePage.xhtml");
+							"/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
 			// "/xhtml/sm/updateMofDetails/updateMofDetailsBasePage.xhtml");
 			smApplBB.getManagedBean().setHeaderMsg(
 					"Review Update Mof Details Application - ");
