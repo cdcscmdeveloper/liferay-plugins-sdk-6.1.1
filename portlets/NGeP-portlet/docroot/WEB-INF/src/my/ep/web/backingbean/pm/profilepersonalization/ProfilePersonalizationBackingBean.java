@@ -204,8 +204,8 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	public static final int TAB_USER_PROFILE = 0;
 	public static final int TAB_PERSONALIZATION = 1;
 	public static final int TAB_CHANGE_PASSWORD = 2;
-	public static final int TAB_CHANGE_CHALLENGE_QUESTION = 3;
-	public static final int TAB_AUTH_PERSONNEL = 4;
+	//public static final int TAB_CHANGE_CHALLENGE_QUESTION = 3;
+	public static final int TAB_AUTH_PERSONNEL = 3;
 
 	// AdminRoles
 	public static final Map<String, List<String>> adminUserRoleMap = new HashMap<String, List<String>>();
@@ -240,9 +240,9 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	/**
 	 * @return the tabChangeChallengeQuestion
 	 */
-	public int getTabChangeChallengeQuestion() {
-		return TAB_CHANGE_CHALLENGE_QUESTION;
-	}
+//	public int getTabChangeChallengeQuestion() {
+//		return TAB_CHANGE_CHALLENGE_QUESTION;
+//	}
 
 	private void debugLogger(Object message) {
 		if (logger.isDebugEnabled()) {
@@ -1430,6 +1430,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		logger.info("searchAdminProfile - start");
 		IUserSO userSO = null;
 		getManagedBean().setLazy(true);
+		FacesScopes facesScopes = new FacesScopes();
 		try {
 			AdminReqDTO adminReqDTO = new AdminReqDTO();
 			if (authUserDetails.getPmUserOrgs() != null) {
@@ -1445,7 +1446,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			if (adminReqDTO.getOrgCode() != null && adminReqDTO.getOrgTypeId() > 0
 					&& adminReqDTO.getUserRoles() != null) {
-				getManagedBean().setAdminDetReceivedList(userSO.searchAdminProfilesByOrgDetails(adminReqDTO));
+				getManagedBean().setAdminDetReceivedList(userSO.searchAdminProfilesByOrgDetails(adminReqDTO,facesScopes.getUserSessionBean().getUserId()));
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
