@@ -776,7 +776,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			throw new EpException(MessageConst.ERROR_750010);
 		}
 
-		// Contract Approver cannot approve the draft agreement if:-
+	/**	// Contract Approver cannot approve the draft agreement if:-
 		// -FD Creation still in process.
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) 
 				&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_DRAFT_AGREEMENT_HT_NAME)) {			
@@ -786,7 +786,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 						new String[]{ResourceBundleUtils.getMessage(getManagedBean().getCtContract().getContractNo(), 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}		
-		}
+		} **/
 
 		// Contract Admin cannot submit the finalist agreement if:-
 		// -Performance bond not complete
