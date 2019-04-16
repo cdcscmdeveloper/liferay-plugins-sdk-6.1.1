@@ -712,6 +712,7 @@ public class PurchaseInquiryBackingBean extends
 			} else {
 				ScRequestNote requestNote = requestNoteDtl.getScRequestNote();
 				SmSupplier smSupplier = scRequestSupplierItem.getSmSupplier();
+				finalizeRemarks(prInquiry.getRemarks());
 
 				requestNote.setRequestNoteDtls(Arrays.asList(requestNoteDtl));
 				reqDTO.setPmUser(facesScopes.getUserSessionBean());
@@ -733,8 +734,13 @@ public class PurchaseInquiryBackingBean extends
 					successMessage(MessageConst.INFO_700026, ParameterTypeConst.DOCUMENT_TYPES,
 							ParameterConst.DOCTYPE_PURCHASE_INQUIRY, scPrInquiry.getPrInquiryNo(), Boolean.TRUE);
 				} else {
-					successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES,
-							ParameterConst.DOCTYPE_PURCHASE_INQUIRY, scPrInquiry.getPrInquiryNo(), Boolean.TRUE);
+					if (prInquiryNo == null) {
+						successMessage(MessageConst.INFO_700024, ParameterTypeConst.DOCUMENT_TYPES,
+								ParameterConst.DOCTYPE_PURCHASE_INQUIRY, scPrInquiry.getPrInquiryNo(), Boolean.TRUE);
+					} else {
+						successMessage(MessageConst.INFO_700025, ParameterTypeConst.DOCUMENT_TYPES,
+								ParameterConst.DOCTYPE_PURCHASE_INQUIRY, scPrInquiry.getPrInquiryNo(), Boolean.TRUE);
+					}
 				}
 
 				// clear data
@@ -773,7 +779,7 @@ public class PurchaseInquiryBackingBean extends
 		PrInquiryResDTO resDTO = getPrInquirySO().savePrInquiryPrice(reqDTO);
 
 		if (resDTO.isSuccessful()) {
-			successMessage(MessageConst.INFO_721222, ParameterTypeConst.DOCUMENT_TYPES,
+			successMessage(MessageConst.INFO_700025, ParameterTypeConst.DOCUMENT_TYPES,
 					ParameterConst.DOCTYPE_PURCHASE_INQUIRY, resDTO.getPrInquiryDetail().getPrInquiryNo(), Boolean.TRUE);
 
 			super.renewSesionObject();
