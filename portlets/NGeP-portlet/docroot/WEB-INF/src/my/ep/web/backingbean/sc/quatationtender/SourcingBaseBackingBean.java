@@ -1192,7 +1192,34 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 		}
 	}
-
+	//20190416@asyarfhaziq_Enhancement #8197 - Start
+		/**
+		 * Validate Mix Category code.
+		 * 
+		 * @param pmCategoryL3
+		 *            the category l3
+		 * @param categoryList
+		 *            the category list
+		 */
+		public void validateMixCategoryCode(PmCategoryL3 pmCategoryL3,
+				List<ScQtCategory> categoryList) {
+			boolean isDuplicate = false;
+			for (int i = 0; i < categoryList.size(); i++) {
+				ScQtCategory scQtCategory = categoryList.get(i);
+				if (("99".equals(pmCategoryL3.getCategoryL3Code()) && !"99"
+						.equals(scQtCategory.getPmCategoryL3().getCategoryL3Code()))
+						|| (!"99".equals(pmCategoryL3.getCategoryL3Code()) && "99"
+								.equals(scQtCategory.getPmCategoryL3()
+										.getCategoryL3Code()))) {
+					isDuplicate = true;
+					break;
+				}
+			}
+			if (isDuplicate) {
+				throw new EpException(MessageConst.ERROR_760481);
+			}
+		}
+		//20190416@asyarfhaziq_Enhancement #8197 - End
 	/**
 	 * Validate Duplicate Category code.
 	 * 
