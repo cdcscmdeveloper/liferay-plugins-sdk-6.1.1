@@ -63,7 +63,10 @@
 			<td colspan="3"><p:inputText size="111"
 					value="#{custServiceBackingBean.managedBean.selectedUserOrg.pmUser.email}"
 					rendered="#{custServiceBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterCode =='SUP'}"
-					maxlength="80" /></td>
+					maxlength="80" validatorMessage="#{lbl['lbl.pm.profiles.invalidEmail']}">
+					<f:validateRegex disabled="#{empty param['disableValidation']}"
+									pattern="^[_'A-Za-z0-9-\+]+(\.[_'A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+							</p:inputText></td>
 		</tr>
 		<tr>
 			<th width="20%"><p:outputLabel
