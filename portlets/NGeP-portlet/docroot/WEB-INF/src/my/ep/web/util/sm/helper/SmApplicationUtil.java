@@ -753,13 +753,13 @@ public class SmApplicationUtil {
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
-							"/xhtml/sm/bumiPuteraApplication/smBumiSideMenu_BasePage.xhtml");
+							"/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
 			break;
 		case "U":
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
-							"/xhtml/sm/updateMofDetails/smUpdateMofSideMenu_BasePage.xhtml");
+							"/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
 			break;
 		case "R":
 			fc.getApplication()
@@ -2861,12 +2861,7 @@ public class SmApplicationUtil {
 			SmApplicationManagedBean managedBean) {
 		SmOverlapCategoryVO overlapCategoryVO = null;
 
-		if (!managedBean.getSmAppl().getApplType()
-				.equals(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)
-				&& !managedBean.getSmAppl().getApplType()
-						.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
-			overlapCategoryVO = getOverlapCategoryVO(managedBean.getSmAppl());
-		}
+		overlapCategoryVO = getOverlapCategoryVO(managedBean.getSmAppl());
 
 		managedBean.setOverLappedCategoryExists(false);
 		managedBean.setOverLappedCategoryMsg(StringUtils.EMPTY);
@@ -2893,7 +2888,11 @@ public class SmApplicationUtil {
 				|| bean.getSmAppl().getApplType()
 						.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
 				|| bean.getSmAppl().getApplType()
-						.equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
+						.equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)
+				|| bean.getSmAppl().getApplType()
+						.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
+				|| bean.getSmAppl().getApplType()
+						.equals(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
 			checkOverLappingCategories(bean);
 			if (bean.isOverLappedCategoryExists()) {
 				if (bean.isSupplierUser()) {
