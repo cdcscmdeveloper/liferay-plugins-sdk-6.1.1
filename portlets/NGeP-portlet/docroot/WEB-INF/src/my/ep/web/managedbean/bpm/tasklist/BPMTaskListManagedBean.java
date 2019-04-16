@@ -8,8 +8,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
-import org.apache.commons.lang.StringUtils;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
@@ -20,13 +18,12 @@ import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.pm.access.application.IAccessApplSO;
 import my.ep.biz.service.pm.common.kpi.IPmKpiSO;
+import my.ep.biz.service.sc.directpurchase.IPrInquirySO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
-import my.ep.constant.BpmOutcomeConst;
-import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractStatusConst;
 import my.ep.constant.pm.KPICodeConst;
@@ -42,6 +39,7 @@ import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.access.application.AccessApplReqDTO;
 import my.ep.dto.pm.access.application.AccessApplResDTO;
 import my.ep.dto.pm.common.kpi.KpiReqDTO;
+import my.ep.dto.sc.directpurchase.PrInquiryResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.exception.EpException;
@@ -56,8 +54,8 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmKPIValue;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.type.pm.RoleCode;
-import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -65,6 +63,8 @@ import my.ep.web.constant.PagingConst;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+
+import org.apache.commons.lang.StringUtils;
 
 @ManagedBean(name = "bpmTasklistMB")
 @SessionScoped
@@ -386,6 +386,15 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 
 	}
 	
+	private ScPrInquiry retrivePrInquiryByPrInquiryNo(String prInquiryNo) {
+		ScPrInquiry scPrInquiry = getPrInquirySO().retrivePrInquiryByPrInquiryNo(prInquiryNo);
+		return scPrInquiry;
+	}
+
+	private IPrInquirySO getPrInquirySO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPrInquirySO.class);
+	}
+
 	private int calculateFinalOffSet(int currentPage) {
 
 		int offSet = (currentPage - 1) * PagingConst.ROWS_PER_PAGE;
@@ -475,7 +484,16 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 								worklistItemVO.setTitle(worklistItemVO.getTitle().replaceAll("<", "&#60;"))  ;
 							}
 							// s1 module
-							if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
+							if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE_DRAFT)) {
+								System.out.println("Doc number = " + worklistItemVO.getDocNumber());
+								ScPrInquiry scPrInquiry = retrivePrInquiryByPrInquiryNo(worklistItemVO
+										.getDocNumber());
+								if (scPrInquiry != null) {
+									worklistItemVO.setTitle(scPrInquiry.getTitle());
+									System.out.println("prno = " + scPrInquiry.getPrInquiryNo() + "title = "
+											+ scPrInquiry.getTitle());
+								}
+							} else if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
 								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 							} else if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE)) {
 								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.pr.inquiry", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
