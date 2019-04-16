@@ -48,6 +48,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmSalutation;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -104,6 +105,8 @@ public class CustServiceBackingBean extends
 		renewSesionObject();
 		resetUserDataModel();
 		retrieveOrgTypeMap();
+
+		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, NAV_TO_SEARCH);
@@ -186,9 +189,12 @@ public class CustServiceBackingBean extends
 		sb.append("|orgTypeCode.parameterType^");
 		sb.append(ParameterTypeConst.ORGANISATION_TYPES);
 		sb.append("|recordStatus^1");
-
+		getManagedBean().getSearchBean().getSelectedOrgProfile().setSmSupplier(new SmSupplier());
+		
 		return sb.toString();
 	}
+
+
 
 	/**
 	 * get the param code list for customer service org types.
@@ -209,13 +215,14 @@ public class CustServiceBackingBean extends
 	 * To search user with data model
 	 */
 	public void searchUser() {
+		log.info("Invoked searchUser");
 		if(getManagedBean().getSearchBean().getSelectedOrgType() == null &&
 				getManagedBean().getSearchBean().getSelectedOrgProfile() == null &&
 				StringUtils.isBlank(getManagedBean().getSearchBean().getUserName()) &&
 				StringUtils.isBlank(getManagedBean().getSearchBean().getIdentificationNo())){
 			throw new EpException(MessageConst.ERROR_770049);
 		}
-		
+		log.info("test");
 		getManagedBean().setLazy(true);
 		getCustSvcDataModel().reloadData();
 	}
