@@ -26,13 +26,13 @@
 							value="#{custServiceBackingBean.getOrgTypeDropdownValues()}" />
 						<p:ajax event="change"
 							listener="#{custServiceBackingBean.changeOrgType()}"
-							update=":form:orgProfilePG,@this,:form:itOrgName,:form:test1,:form:test2,:form:test3" />
+							update="@form" />
 					</p:selectOneMenu></td>
 				<th>&#160;</th>
 				<td>&#160;</td>
 			</tr>
 			<tr>
-				<td><h:panelGroup id="test1">
+				<td><h:panelGroup id="orgNamePanel1">
 						<p:outputLabel rendered="#{not isSUPOrgType}"
 							value="#{lbl['lbl.pm.organisation.orgCode']}" />
 						<p:outputLabel rendered="#{isSUPOrgType}"
@@ -65,12 +65,13 @@
 									headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 									value="#{custServiceBackingBean.managedBean.searchBean.selectedOrgProfile.pmOrgValidity.orgCode}"
 									saveObject="custServiceBackingBean.managedBean.searchBean.selectedOrgProfile"
-									conditionField="#{custServiceBackingBean.constructConditionFields()}" />
+									conditionField="#{custServiceBackingBean.constructConditionFields()}"
+									readonly="true" />
 							</ui:fragment>
 							<ui:fragment
 								rendered="#{not isPTJOrgType and not isKPTJOrgType and isSUPOrgType}">
 								<ac:lov id="lovSupOrg" lovId="PM_ORG_PROFILE_WITH_SUPPLIER"
-									size="38"
+									size="98"
 									label="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 									update=":form:orgProfilePG,:form:itOrgName"
 									disabled="#{empty custServiceBackingBean.managedBean.searchBean.selectedOrgType}"
@@ -78,7 +79,8 @@
 									value="#{custServiceBackingBean.managedBean.searchBean.selectedOrgProfile.smSupplier.companyName}"
 									postUpdateListener="custServiceBackingBean.updateSearchCriteriaForOrgName"
 									saveObject="custServiceBackingBean.managedBean.searchBean.selectedOrgProfile"
-									conditionField="#{custServiceBackingBean.constructConditionFields()}" />
+									conditionField="#{custServiceBackingBean.constructConditionFields()}"
+									readonly="true" />
 							</ui:fragment>
 						</h:panelGroup>
 					</div>
@@ -87,18 +89,17 @@
 
 			</tr>
 			<tr>
-				<td><h:panelGroup id="test2">
+				<td><h:panelGroup id="orgNamePanel2">
 						<p:outputLabel rendered="#{not isSUPOrgType}"
 							value="#{lbl['lbl.pm.organisation.orgName']}" />
 
 					</h:panelGroup></td>
-				<td><h:panelGroup id="test3">
+				<td><h:panelGroup id="orgNamePanel3">
 						<p:inputText styleClass="ppDisplayTextM" size="103"
 							disabled="true" id="itOrgName"
 							value="#{custServiceBackingBean.managedBean.searchBean.selectedOrgProfile.pmOrgValidity.orgName}"
 							maxlength="80" rendered="#{not isSUPOrgType}" />
 					</h:panelGroup></td>
-
 			</tr>
 
 			<tr>
