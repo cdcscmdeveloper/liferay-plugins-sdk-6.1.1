@@ -216,6 +216,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private String approverRemark;
 	private Date approverRemarkCreatedDate;
 	private Long remarkId;
+	private Long remarkOverlappedId;
 	private List<SmRemark> approverRemarkList;
 	
 	private SmCancelMofRemarksVO cancelRemarkVO;
@@ -1570,6 +1571,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setApproverRemarkList(List<SmRemark> approverRemarkList) {
 		this.approverRemarkList = approverRemarkList;
+	}
+
+	public Long getRemarkOverlappedId() {
+		return remarkOverlappedId;
+	}
+
+	public void setRemarkOverlappedId(Long remarkOverlappedId) {
+		this.remarkOverlappedId = remarkOverlappedId;
 	}
 
 }

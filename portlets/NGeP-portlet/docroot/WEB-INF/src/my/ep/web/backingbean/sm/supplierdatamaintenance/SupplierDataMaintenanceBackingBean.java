@@ -214,6 +214,7 @@ public class SupplierDataMaintenanceBackingBean extends
 			reqDTO.setPortalBaseUrl(SmCommonUtil.getEpBaseUrl());
 			reqDTO.setOverlapCategoryRemarkDocType(ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY_APPROVER);
 			reqDTO.setRemarkId(getManagedBean().getRemarkId());
+			reqDTO.setRemarkOverlappedId(getManagedBean().getRemarkOverlappedId());
 			reqDTO.setApproverRemark(getManagedBean().getApproverRemark());
 		
 
@@ -1150,7 +1151,7 @@ public class SupplierDataMaintenanceBackingBean extends
 			SmRemark remark = resDTO.getRemarksList().get(0);
 			getManagedBean().setPoApprOverlappedRemark(remark.getRemark());
 			getManagedBean().setOriPoApprOverlappedRemark(remark.getRemark());
-			getManagedBean().setRemarkId(remark.getRemarkId());
+			getManagedBean().setRemarkOverlappedId(remark.getRemarkId());
 		}
 		
 		
