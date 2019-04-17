@@ -110,7 +110,7 @@
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
 					action="#{directPurchaseBackingBean.search}" update="resultPanel" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
 				<p:commandButton value="#{lbl['lbl.btn.reset']}"
-					action="#{directPurchaseBackingBean.reset}" update=":form" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
+					action="#{directPurchaseBackingBean.reset(false)}" update=":form" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
 			</div>
 		</p:panel>
 		<p:panel id="resultPanel" header="#{lbl['lbl.sc.result']}"
