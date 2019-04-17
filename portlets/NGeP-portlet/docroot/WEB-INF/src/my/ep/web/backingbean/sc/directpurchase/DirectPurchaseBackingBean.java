@@ -96,7 +96,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		debugLogger("preRenderDirectPurchaseMaintenance");
 		FacesContext fc = FacesContext.getCurrentInstance();
 		// reset search info
-		reset();
+		reset(Boolean.TRUE);
 
 		if (isGovernment()) {
 			getDocumentTypes(Boolean.TRUE, Boolean.TRUE);
@@ -104,12 +104,17 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 
 			// show default Ministry, Kumpulan PTJ and PTJ
 			getDefaultPtjAndMinistryValues();
-
+			getDefaultDocumentValues();
 		} else if (isSupplier()) {
 			getDocumentTypes(Boolean.FALSE, Boolean.TRUE);
 			getManagedBean().setGovernment(Boolean.FALSE);
 		}
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, DIRECT_PURCHASE_MAINTENANCE_PAGE_NAV);
+	}
+
+	private void getDefaultDocumentValues() {
+		getManagedBean().setSearchDocumentType(ParameterConst.DOCTYPE_REQUEST_NOTE);
+		getManagedBean().setSearchStatusId(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION);
 	}
 
 	/**
@@ -119,7 +124,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		debugLogger("preRenderDirectPurchaseSearch");
 		FacesContext fc = FacesContext.getCurrentInstance();
 		// reset search info
-		reset();
+		reset(Boolean.FALSE);
 		
 		if(isGovernment()){
 			getDocumentTypes(Boolean.TRUE, Boolean.FALSE);
@@ -514,16 +519,18 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	/**
 	 * Reset direct purchase search.
 	 */
-	public void reset(){
+	public void reset(boolean isMaintenance){
 		this.getManagedBean().setSearchDocumentNo(null);
 		this.getManagedBean().setSearchDocumentType(null);
 		this.getManagedBean().setSearchStatusId(null);
 		this.getManagedBean().setSearchDocumentTitle(null);
 		this.getManagedBean().setSearchDocumentToDuration(null);
 		this.getManagedBean().setSearchDocumentFromDuration(null);
-		getManagedBean().setSearchMinistryProfile(null);
-		getManagedBean().setSearchPtjGroupProfile(null);
-		getManagedBean().setSearchPtjProfile(null);
+		if (!isMaintenance) {
+			getManagedBean().setSearchMinistryProfile(null);
+			getManagedBean().setSearchPtjGroupProfile(null);
+			getManagedBean().setSearchPtjProfile(null);
+		}
 		this.getManagedBean().resetDocumentDataModel();
 	}
 
