@@ -21,7 +21,7 @@
 				<tr>
 					<td><p:outputLabel id="searchMinistryLbL"
 							value="#{lbl['lbl.sc.ministry']}" /></td>
-					<td colspan="3"><ac:lov id="searchMinistry"
+					<td colspan="3"><ac:lov id="searchMinistry" disabled="true"
 							lovId="PM_ORG_PROFILE_MINSTRY" size="148" readonly="true"
 							headerText="#{lbl['lbl.sc.ministry']}"
 							value="#{directPurchaseBackingBean.managedBean.searchMinistryProfile.orgName}"
@@ -33,7 +33,7 @@
 				<tr>
 					<td><p:outputLabel id="searchPtjGroupLbL"
 							value="#{lbl['lbl.sc.kumpulan.ptj']}" /></td>
-					<td colspan="3"><ac:lov id="searchPtjGroup"
+					<td colspan="3"><ac:lov id="searchPtjGroup" disabled="true"
 							lovId="PM_ORG_PROFILE_PTJ_GROUP" size="148" readonly="true"
 							headerText="#{lbl['lbl.sc.kumpulan.ptj']}"
 							value="#{directPurchaseBackingBean.managedBean.searchPtjGroupProfile.orgName}"
@@ -46,7 +46,7 @@
 				<tr>
 					<td><p:outputLabel id="searchPtjLbL"
 							value="#{lbl['lbl.sc.ptj']}" /></td>
-					<td colspan="3"><ac:lov id="searchPtj"
+					<td colspan="3"><ac:lov id="searchPtj" disabled="true"
 							lovId="PM_ORG_PROFILE_PTJ" size="148" readonly="true"
 							headerText="#{lbl['lbl.sc.ptj']}"
 							value="#{directPurchaseBackingBean.managedBean.searchPtjProfile.orgName}"
@@ -108,7 +108,7 @@
 					action="#{directPurchaseBackingBean.search}" update="resultPanel"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 				<p:commandButton value="#{lbl['lbl.btn.reset']}"
-					action="#{directPurchaseBackingBean.reset}" update=":form"
+					action="#{directPurchaseBackingBean.reset(true)}" update=":form"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 			</div>
 		</p:panel>
@@ -157,14 +157,9 @@
 						<h:outputText value="#{lbl['lbl.sc.action']}" />
 					</f:facet>
 
-					<p:menuButton value="#{lbl['lbl.btn.option']}">
-						<p:menuitem id="viewBtnIcon" value="#{lbl['lbl.btn.view']}"
-							icon="ui-icon-view"
-							rendered="#{!directPurchaseBackingBean.isSupplier() or (directPurchaseBackingBean.isSupplier() and directPurchaseBackingBean.managedBean.searchDocumentType ne ParameterConst.doctypeSimpleQuote)}"
-							action="#{directPurchaseBackingBean.viewMaintenance(Obj, false)}" />
+					<p:menuButton value="#{lbl['lbl.btn.option']}" rendered="#{Obj[4] eq DPStatusConstants.rnPendingItemCodification}">
 						<p:menuitem id="cancelBtnIcon" value="#{lbl['lbl.btn.cancel']}"
 							icon="ui-icon-cancel"
-							rendered="#{Obj[4] eq DPStatusConstants.rnPendingItemCodification}"
 							action="#{directPurchaseBackingBean.viewMaintenance(Obj, true)}" />
 					</p:menuButton>
 				</p:column>
