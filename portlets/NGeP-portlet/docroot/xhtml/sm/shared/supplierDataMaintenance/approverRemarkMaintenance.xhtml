@@ -23,7 +23,7 @@
 			<tr>
 				<td><p:outputLabel styleClass="outputLabel-view-label"
 						value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
-				<td><p:inputTextarea autoResize="true" cols="41"
+				<td><p:inputTextarea autoResize="false" cols="41"
 						id="approveRemark" maxlength="2500"
 						label="#{lbl['lbl.sm.sectionApprRmrk']}"
 						value="#{supplierDataMaintenanceBackingBean.managedBean.approverRemark}" />
@@ -35,30 +35,32 @@
 
 	<p:dialog id="approverRemarkDialog" widgetVar="approverRemarkDialog"
 		header="#{lbl['lbl.sm.approver.remark.viewhistory.remark']}"
-		showEffect="fade" hideEffect="fade" modal="true" width="600px"
-		height="450px" resizable="true">
+		showEffect="fade" hideEffect="fade" modal="true" width="150px"
+		height="500px" resizable="true">
 
 		<p:dataTable id="approvalHistoryRemarklist" var="smRemark"
 			value="#{supplierDataMaintenanceBackingBean.managedBean.approverRemarkList}"
 			rowKey="#{smRemark}" rowIndexVar="index">
-			<p:column headerText="#{lbl['lbl.sm.approvremark.no']}">
+			<p:column headerText="#{lbl['lbl.sm.approvremark.no']}"
+			 style="width:5%;white-space: normal;">
 				<h:outputText value="#{index +1}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sm.approvremark.actiondate']}">
+			<p:column  headerText="#{lbl['lbl.sm.approvremark.actiondate']}"
+			style="width:10%;white-space: normal;">
 				<h:outputText value="#{smRemark.createdDate}">
 
-					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT}" />
 				</h:outputText>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.approvremark.remarknotes']}"
-				style="width:24%;white-space: normal;">
+				style="width:55%;white-space: normal;">
 				<h:outputText value="#{smRemark.remark}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.approvremark.actionby']}"
-				style="width:24%;white-space: normal;">
+				style="width:30%;white-space: normal;">
 				<h:outputText
 					value="#{supplierDataMaintenanceBackingBean.getUserNameByUserId(smRemark.createdBy)}" />
 			</p:column>
