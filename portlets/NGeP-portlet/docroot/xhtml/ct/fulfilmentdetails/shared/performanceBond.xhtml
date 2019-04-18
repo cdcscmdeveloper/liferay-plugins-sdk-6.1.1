@@ -22,6 +22,7 @@
 			<p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.ctContractAmount.bondWaived}"
 				disabled="#{!ctBackingBean.managedBean.ctContractAmount.bondReq or ctBackingBean.managedBean.viewContract}">
 				<p:ajax event="change" update="@all" listener="#{ctBackingBean.chkBondWaiverAction}" process="@all"/> 
+				
 				<!--  update=":form:waiverPanelId" -->
 	  		</p:selectBooleanCheckbox>
 	   		<h:outputFormat id="waiverId" value="#{lbl['lbl.ct.bond.waiver.chkbox']}" styleClass="instruction">
@@ -53,28 +54,50 @@
 						<p:outputLabel id="waiverStartDate" value="#{lbl['lbl.ct.pb.waiver.start.date']}" styleClass="required" />
 					</td>
 					<td>
-						<p:calendar id="startDate" value="#{ctBackingBean.managedBean.ctAttachmentLatest.ctBondWaiverDetail.waiverStartDate}" styleClass="calendarDateField" size="9" 
-							showOn="button" readonlyInput="true" navigator="true"
-							mindate="#{ctBackingBean.managedBean.contractVer.ctContractValue.effDate}"
-							maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}"
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
-							 <p:ajax event="dateSelect" listener="#{ctBackingBean.setToTempFirstTime()}" process="@this"  />
-							 <f:param name="taskId1" value="startDate" />
-						</p:calendar>
+					<c:choose>
+							<c:when test="#{ctBackingBean.managedBean.viewContract}">
+								<p:calendar id="startDate" value="#{ctBackingBean.managedBean.ctAttachmentLatest.ctBondWaiverDetail.waiverStartDate}" styleClass="calendarDateField" size="9" 
+									readonlyInput="true" navigator="true" disabled="true"
+									mindate="#{ctBackingBean.managedBean.contractVer.ctContractValue.effDate}"
+									maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}"
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
+								</p:calendar>
+							</c:when>
+							<c:otherwise test="#{ctBackingBean.managedBean.viewContract}">
+								<p:calendar id="startDate" value="#{ctBackingBean.managedBean.ctAttachmentLatest.ctBondWaiverDetail.waiverStartDate}" styleClass="calendarDateField" size="9" 
+									showOn="button" readonlyInput="true" navigator="true"
+									mindate="#{ctBackingBean.managedBean.contractVer.ctContractValue.effDate}"
+									maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}"
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
+								</p:calendar>
+							</c:otherwise>
+					</c:choose>
+						
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.waiver.performance.bond.start.date']}"/>
 					</td>
 					<td>
 						<p:outputLabel id="waiverEndDate" value="#{lbl['lbl.ct.pb.waiver.end.date']}" styleClass="required" />
 					</td>
 					<td colspan="2">
-						<p:calendar id="endDate" value="#{ctBackingBean.managedBean.ctAttachmentLatest.ctBondWaiverDetail.waiverEndDate}" styleClass="calendarDateField" size="9" 
-							showOn="button" readonlyInput="true" navigator="true"
-							mindate="#{ctBackingBean.managedBean.contractVer.ctContractValue.effDate}"
-							maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}"
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
-							 <p:ajax event="dateSelect" listener="#{ctBackingBean.setToTempFirstTime()}"  process="@this" />
-							 <f:param name="taskId2" value="endDate" />
-						</p:calendar>
+						<c:choose>
+							<c:when test="#{ctBackingBean.managedBean.viewContract}">
+								<p:calendar id="endDate" value="#{ctBackingBean.managedBean.ctAttachmentLatest.ctBondWaiverDetail.waiverEndDate}" styleClass="calendarDateField" size="9" 									
+									readonlyInput="true" navigator="true" disabled="true"
+									mindate="#{ctBackingBean.managedBean.contractVer.ctContractValue.effDate}"
+									maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}"
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >							
+								</p:calendar>
+							</c:when>
+							<c:otherwise>
+								<p:calendar id="endDate" value="#{ctBackingBean.managedBean.ctAttachmentLatest.ctBondWaiverDetail.waiverEndDate}" styleClass="calendarDateField" size="9" 									
+									showOn="button" 
+									readonlyInput="true" navigator="true"
+									mindate="#{ctBackingBean.managedBean.contractVer.ctContractValue.effDate}"
+									maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}"
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >							
+								</p:calendar>
+							</c:otherwise>
+						</c:choose>
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.waiver.performance.bond.end.date']}"/>
 					</td>
 				</tr>
@@ -84,9 +107,8 @@
 					</td>
 					<td>
 						<p:inputText id="referenceNo" for="referenceNo" styleClass=""  maxlength="20" style="width:130px;"
-			  				value="#{ctBackingBean.managedBean.ctAttachmentLatest.ctBondWaiverDetail.referenceNo}">
-			  				<p:ajax event="change"  listener="#{ctBackingBean.setToTempFirstTime()}"  process="@this" />
-							 <f:param name="taskId3" value="referenceNo" />
+			  				value="#{ctBackingBean.managedBean.ctAttachmentLatest.ctBondWaiverDetail.referenceNo}"
+			  				disabled="#{ctBackingBean.managedBean.viewContract}"  >
 						</p:inputText>
 					</td>
 					<td>
@@ -98,8 +120,10 @@
 								update=":form:dataGridId, :form:uploadWaiverDlg" icon=" ui-icon-upload" process="@this" partialSubmit="true"
 								rendered="#{!ctBackingBean.managedBean.viewContract and ctBackingBean.managedBean.ctAttachmentLatest.fileName == null
 									and ctBackingBean.managedBean.ctContractAmount.bondReq}"
-								disabled="#{ctBackingBean.disableBondAttachmentBtn() 
-								   or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}" />
+									disabled="#{ctBackingBean.managedBean.viewContract}" 
+								/>
+								<!-- disabled="#{ctBackingBean.disableBondAttachmentBtn() 
+								   or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}"  -->
 						</p:outputPanel>
 					</td>
 					<td>
@@ -113,9 +137,7 @@
 							styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
 						<p:commandLink onsuccess="deleteWaiverAttachDlg.show();" action="#{ctBackingBean.setAttachFileIndex(attachFileIndex)}"
 							process="@this" partialSubmit="true"
-							disabled="#{(ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)
-								or (ctBackingBean.managedBean.contractVer.ctContract.latestContractVer != null and attachFile.bondWaivedTrue)
-								or !ctBackingBean.managedBean.ctContractAmount.bondReq}"
+							disabled="#{ctBackingBean.managedBean.viewContract}"
 								rendered="#{!ctBackingBean.managedBean.viewContract and attachFile.fileName != null
 							and ctBackingBean.managedBean.ctContractAmount.bondReq}">
 			  					<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
@@ -128,9 +150,13 @@
 				</td>
 				<td>
 				<p:commandButton id="addwaiverBtn"  value="#{lbl['lbl.btn.update']}" process="@all"
+					disabled="#{ctBackingBean.managedBean.viewContract
+								|| (ctBackingBean.managedBean.ctAttachmentLatest != null and
+								(ctBackingBean.managedBean.ctAttachmentLatest.attachmentId == null and ctBackingBean.managedBean.ctAttachmentLatest.tempAttachmentId == null))}"    
 						     action="#{ctBackingBean.setBondWaiverToTable()}" update="@all" partialSubmit="true"
-						    oncomplete="tableBondWidget.paginator.endLink.click();">
-					</p:commandButton>
+						     rendered="#{!ctBackingBean.managedBean.viewContract}"
+						    oncomplete="tableBondWidget.paginator.endLink.click();"/>
+					<!-- and ctBackingBean.managedBean.ctContractAmount.bondReq  -->
 					</td>
 				</tr>
 			</table>
@@ -139,7 +165,7 @@
 			<p:dataTable id="tableWaiver" var="varWaiver" rowIndexVar="index" widgetVar="tableBondWidget"
 				
 				value="#{ctBackingBean.managedBean.attachmentList}"  rowKey="#{rowKeyObj}">
-				<ac:paginator for="tableBond" />	
+				<ac:paginator for="tableWaiver" />	
 						
 				<p:column style="width:20%;" styleClass="column-align-center">
 					<f:facet name="header">

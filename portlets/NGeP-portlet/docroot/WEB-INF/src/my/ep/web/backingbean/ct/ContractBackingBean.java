@@ -2139,38 +2139,60 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @see    
 	 */
 	public void setBondWaiverToTable() throws Exception {
-		if (getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverStartDate() == null) {
-			throw new EpException(MessageConst.ERROR_100022,
-					new String[] {ResourceBundleUtils.getMessage("lbl.ct.pb.waiver.start.date", 
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+		if(getManagedBean().getCtContractAmount().isBondWaived()){
+			if (getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverStartDate() == null) {
+				throw new EpException(MessageConst.ERROR_100022,
+						new String[] {ResourceBundleUtils.getMessage("lbl.ct.pb.waiver.start.date", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
+			if (getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverEndDate() == null) {
+				throw new EpException(MessageConst.ERROR_100022,
+						new String[] {ResourceBundleUtils.getMessage("lbl.ct.pb.waiver.end.date", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
+			if (getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getReferenceNo() == null || "".equalsIgnoreCase(getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getReferenceNo())) {
+				throw new EpException(MessageConst.ERROR_100022,
+						new String[] {ResourceBundleUtils.getMessage("lbl.ct.pb.waiver.reference.no", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
+			if (getManagedBean().getCtAttachmentLatest().getFileName() == null || "".equalsIgnoreCase(getManagedBean().getCtAttachmentLatest().getFileName())) {
+				throw new EpException(MessageConst.ERROR_100022,
+						new String[] {ResourceBundleUtils.getMessage("lbl.ct.bond.waiver.letter", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
+			/*
+			 * the value 0 if the argument Date is equal to this Date;
+			 * a value less than 0 if this Date is before the Date argument; 
+			 * a value greater than 0 if this Date is after the Date argument
+			 *   
+			*/
+			if (getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverStartDate()
+					.compareTo(getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverEndDate()) > 0) {
+				// start date large than end date
+				throw new EpException(MessageConst.ERROR_760164);
+			}
+		}else{//checking this when user untick/tick bond, if one field null, will return, if not copy data to history. only save data will show in history table
+			if(getManagedBean().getCtAttachmentLatest().getAttachmentId() == null){
+				return;
+			}
+			if (getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverStartDate() == null) {
+				return;
+			}
+			if (getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverEndDate() == null) {
+				return;
+			}
+			if (getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getReferenceNo() == null || "".equalsIgnoreCase(getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getReferenceNo())) {
+				return;
+			}
+			if (getManagedBean().getCtAttachmentLatest().getFileName() == null || "".equalsIgnoreCase(getManagedBean().getCtAttachmentLatest().getFileName())) {
+				return;
+			}
+			if(getManagedBean().getCtAttachmentLatest().getAttachmentId() == null || getManagedBean().getCtAttachmentLatest().getAttachmentId() <= 0){
+				return;
+			}
 		}
-		if (getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverEndDate() == null) {
-			throw new EpException(MessageConst.ERROR_100022,
-					new String[] {ResourceBundleUtils.getMessage("lbl.ct.pb.waiver.end.date", 
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-		}
-		if (getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getReferenceNo() == null || "".equalsIgnoreCase(getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getReferenceNo())) {
-			throw new EpException(MessageConst.ERROR_100022,
-					new String[] {ResourceBundleUtils.getMessage("lbl.ct.pb.waiver.reference.no", 
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-		}
-		if (getManagedBean().getCtAttachmentLatest().getFileName() == null || "".equalsIgnoreCase(getManagedBean().getCtAttachmentLatest().getFileName())) {
-			throw new EpException(MessageConst.ERROR_100022,
-					new String[] {ResourceBundleUtils.getMessage("lbl.ct.bond.waiver.letter", 
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-		}
-		/*
-		 * the value 0 if the argument Date is equal to this Date;
-		 * a value less than 0 if this Date is before the Date argument; 
-		 * a value greater than 0 if this Date is after the Date argument
-		 *   
-		*/
-		if (getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverStartDate()
-				.compareTo(getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverEndDate()) > 0) {
-			// start date large than end date
-			throw new EpException(MessageConst.ERROR_760164);
-		}
-
+		
+		
 		FacesScopes facesScopes = new FacesScopes();
 		//attachment.setFileName("getManagedBean().getWaiverStartDate()");
 		//attachment.setFilePath("TEST 2");
@@ -2179,6 +2201,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		getManagedBean().getCtAttachmentLatest().setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		getManagedBean().getCtAttachmentLatest().setBrandNew(true);
 		getManagedBean().getCtAttachmentLatest().setAttachmentId(null);
+		getManagedBean().getCtAttachmentLatest().setTempAttachmentId(null);
 		
 		getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().setBondWaiverDetaiId(null);
 		getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().setCreatedBy(facesScopes.getUserSessionBean().getUserId());
@@ -2362,10 +2385,17 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * The method used to set the bond waiver flag value.
 	 */
 	public void chkBondWaiverAction(){
-		getManagedBean().setWaiverStartDate(null);
-		getManagedBean().setWaiverEndDate(null);
-		getManagedBean().setReferenceNo(null);
+		
+		
 		if(!getManagedBean().getCtContractAmount().isBondWaived()){
+			try {
+				//to copy latest data to history
+				setBondWaiverToTable();
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			getManagedBean().getCtContractAmount().setBondWaived(false);
 			if(getManagedBean().getContractVer().getCtContract().getLatestContractVer() == null){
 				getManagedBean().getContractVer().setBondWaiverAttachments(null);
@@ -2395,6 +2425,12 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				getManagedBean().setBondWaiver(true);
 			}
 		}	
+		///to set value null full tick/untick.
+		getManagedBean().setCtAttachmentLatest(null);
+//		if(getManagedBean().getCtAttachmentLatest() != null){
+//			getManagedBean().getCtAttachmentLatest().setFileName(null);				
+//			getManagedBean().getCtAttachmentLatest().setCtBondWaiverDetail(null);
+//		}
 	}
 	
 	private boolean chkHistoryOfAttachment(CtAttachment attachments){
