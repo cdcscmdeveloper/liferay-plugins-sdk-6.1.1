@@ -59,11 +59,19 @@
 		<tr>
 			<td><p:outputLabel
 					value="#{lbl['lbl.pm.profiles.userdetails.email']}"
-					rendered="#{custServiceBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterCode =='SUP'}" /></td>
+				 /></td>
 			<td colspan="3"><p:inputText size="111"
 					value="#{custServiceBackingBean.managedBean.selectedUserOrg.pmUser.email}"
 					rendered="#{custServiceBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterCode =='SUP'}"
 					maxlength="80" validatorMessage="#{lbl['lbl.pm.profiles.invalidEmail']}">
+					<f:validateRegex disabled="#{empty param['disableValidation']}"
+									pattern="^[_'A-Za-z0-9-\+]+(\.[_'A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+							</p:inputText>
+							<p:inputText size="111"
+					value="#{custServiceBackingBean.managedBean.selectedUserOrg.pmUser.email}"
+					rendered="#{custServiceBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterCode !='SUP'}"
+					maxlength="80" validatorMessage="#{lbl['lbl.pm.profiles.invalidEmail']}"
+					disabled="true">
 					<f:validateRegex disabled="#{empty param['disableValidation']}"
 									pattern="^[_'A-Za-z0-9-\+]+(\.[_'A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
 							</p:inputText></td>
