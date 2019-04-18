@@ -109,7 +109,14 @@
 			<f:facet name="header">
 					#{lbl['lbl.bpm.doc.no']}
 				</f:facet>
-				#{tasks.docNumber}
+			<!-- start updated for #24968 -->
+			<h:panelGroup rendered="#{not empty tasks.pocoNo}">
+				<div >#{tasks.pocoNo}</div>
+			</h:panelGroup>
+			<h:panelGroup>
+				<div >#{tasks.docNumber}</div>
+			</h:panelGroup>
+			<!-- end updated for #24968 -->
 			</p:column>
 		<p:column width="20%;" style="white-space:normal;">
 			<f:facet name="header">
