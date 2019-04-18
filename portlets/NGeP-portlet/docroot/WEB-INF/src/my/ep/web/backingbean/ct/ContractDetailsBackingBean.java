@@ -632,15 +632,20 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		int i = 0;
 		ctBB.getManagedBean().setAttachmentList(null);
 		for(CtAttachment waivedAttach :ctBB.getManagedBean().getContractVer().getBondWaiverAttachments()){
-			//SET DATA TO LATEST WAIVER
+			//SET DATA TO LATEST WAIVER			
 			if(i == 0){
 				if(waivedAttach.getCtBondWaiverDetail() == null){
 					waivedAttach.setCtBondWaiverDetail(new CtBondWaiverDetail());
 				}
-				ctBB.getManagedBean().setCtAttachmentLatest(waivedAttach);
-				ctBB.getManagedBean().setCtAttachment(SerializationUtils.clone(ctBB.getManagedBean().getCtAttachmentLatest()));
+				//this for : if user untick bondwaiver all detail will show in history table
+				if(ctBB.getManagedBean().getCtContractAmount().isBondWaived()){
+					ctBB.getManagedBean().setCtAttachmentLatest(SerializationUtils.clone(waivedAttach));
+					ctBB.getManagedBean().setCtAttachment(SerializationUtils.clone(ctBB.getManagedBean().getCtAttachmentLatest()));
+				}else{
+					ctBB.getManagedBean().getAttachmentList().add(SerializationUtils.clone(waivedAttach));
+				}
 			}else{//SET DATA TO TABLE WAIVER
-				ctBB.getManagedBean().getAttachmentList().add(waivedAttach);
+				ctBB.getManagedBean().getAttachmentList().add(SerializationUtils.clone(waivedAttach));
 			}
 			i++;
 		}
@@ -1223,9 +1228,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					for (CtContractAmount contractAmt : ctBB.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getCtContractAmounts()) {
 						if (getManagedBean().getAsAtDate().getTime() >= contractAmt.getEffDate().getTime() 
 								&& getManagedBean().getAsAtDate().getTime() <= contractAmt.getExpDate().getTime()) {
-							// Bug #25359
-							if (contractAmt.getCtPerformanceBonds().size() <= 0
-							&& (ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds() != null 
+							// Bug #25359 
+							// Fahmi alter condition with putra
+							if (contractAmt.getCtPerformanceBonds().size() > 0
+							&& (ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds() == null 
 							|| ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds().isEmpty())) {
 								setTabValue("PB");
 								throw new EpException(MessageConst.ERROR_100022, 
@@ -1237,40 +1243,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					} 
 				}
 			}	
-			//LOG : 13847, by Fahmi 22032019
-			if(ctBB.getManagedBean().getCtContractAmount().isBondWaived()){
-				if (ctBB.getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverStartDate() == null) {
-					setTabValue("PB");
-					throw new EpException(MessageConst.ERROR_100022,
-							new String[] {ResourceBundleUtils.getMessage("lbl.ct.pb.waiver.start.date", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				}
-				if (ctBB.getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverEndDate() == null) {
-					setTabValue("PB");
-					throw new EpException(MessageConst.ERROR_100022,
-							new String[] {ResourceBundleUtils.getMessage("lbl.ct.pb.waiver.end.date", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				}
-				if (ctBB.getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getReferenceNo() == null || "".equalsIgnoreCase(ctBB.getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getReferenceNo())) {
-					setTabValue("PB");
-					throw new EpException(MessageConst.ERROR_100022,
-							new String[] {ResourceBundleUtils.getMessage("lbl.ct.pb.waiver.reference.no", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				}
-				if (ctBB.getManagedBean().getCtAttachmentLatest().getFileName() == null || "".equalsIgnoreCase(ctBB.getManagedBean().getCtAttachmentLatest().getFileName())) {
-					setTabValue("PB");
-					throw new EpException(MessageConst.ERROR_100022,
-							new String[] {ResourceBundleUtils.getMessage("lbl.ct.bond.waiver.letter", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				}
-				
-				if (ctBB.getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverStartDate()
-						.compareTo(ctBB.getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverEndDate()) > 0) {
-					// start date large than end date
-					setTabValue("PB");
-					throw new EpException(MessageConst.ERROR_760164);
-				}
-			}
+			
 			
 			if (ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds() != null 
 					&& ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds().size() > 0) {
@@ -1352,6 +1325,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 							temp++;
 						}
 					}
+					if (ctBB.getManagedBean().getCtAttachmentLatest().getFileName() == null || "".equalsIgnoreCase(ctBB.getManagedBean().getCtAttachmentLatest().getFileName())) {
+						temp++;
+					}
 					if(temp == 0){
 						setTabValue("PB");
 						throw new EpException(MessageConst.ERROR_750044);
@@ -1359,7 +1335,45 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 			}
 		}
-
+		//LOG : 13847, by Fahmi 22032019
+		if (ctBB.getManagedBean().getCtContractAmount().isBondReq() && !ctBB.getManagedBean().isDirectPurchase()
+				&& !ctBB.getManagedBean().getCtContractAmount().isBondExempted()
+				&& (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) ||  action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT))) {
+			
+			if(ctBB.getManagedBean().getCtContractAmount().isBondWaived()){
+				if (ctBB.getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverStartDate() == null) {
+					setTabValue("PB");
+					throw new EpException(MessageConst.ERROR_100022,
+							new String[] {ResourceBundleUtils.getMessage("lbl.ct.pb.waiver.start.date", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				}
+				if (ctBB.getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverEndDate() == null) {
+					setTabValue("PB");
+					throw new EpException(MessageConst.ERROR_100022,
+							new String[] {ResourceBundleUtils.getMessage("lbl.ct.pb.waiver.end.date", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				}
+				if (ctBB.getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getReferenceNo() == null || "".equalsIgnoreCase(ctBB.getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getReferenceNo())) {
+					setTabValue("PB");
+					throw new EpException(MessageConst.ERROR_100022,
+							new String[] {ResourceBundleUtils.getMessage("lbl.ct.pb.waiver.reference.no", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				}
+				if (ctBB.getManagedBean().getCtAttachmentLatest().getFileName() == null || "".equalsIgnoreCase(ctBB.getManagedBean().getCtAttachmentLatest().getFileName())) {
+					setTabValue("PB");
+					throw new EpException(MessageConst.ERROR_100022,
+							new String[] {ResourceBundleUtils.getMessage("lbl.ct.bond.waiver.letter", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				}
+				
+				if (ctBB.getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverStartDate()
+						.compareTo(ctBB.getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverEndDate()) > 0) {
+					// start date large than end date
+					setTabValue("PB");
+					throw new EpException(MessageConst.ERROR_760164);
+				}
+			}
+		}
 		// Validation for Approver
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && isApproverSetting() 
 				&& getManagedBean().getApproverModel().getTarget().size() == 0) {
@@ -1382,6 +1396,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @throws Exception   if an exception occurred
 	 * @see    Exception
 	 */
+	
 	public String gpkiSignAction(String outcome) throws Exception {
 		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome) || BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
 			validateCtContractVer(outcome);
