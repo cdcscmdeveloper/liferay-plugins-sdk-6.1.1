@@ -8,8 +8,11 @@
 	<ac:lovPopup />
 	<ui:include src="../shared/loaInstructionHeader.xhtml" />
 	
-	<p:panel id="loaSignerId"
-		toggleable="true">
+	    
+	<ui:remove>
+	
+		<p:panel id="loaSignerId"
+		  toggleable="true">
 		
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.sc.loiloa.loa.contract.signer.dtl']}" />
@@ -52,8 +55,11 @@
 						display="icon" /></td>
 			</tr>
 
-		</table>
-	</p:panel>
+		  </table>
+	   </p:panel>
+	   
+	</ui:remove>
+	
 
 	<p:panel header="#{lbl['lbl.sc.loiloa.request.for.approval']}" rendered="#{lOADetailBackingBean.managedBean.scLoa.approvalReq}"
 		toggleable="true">
@@ -62,23 +68,36 @@
 				<td width="23%"><p:outputLabel value="#{lbl['lbl.sc.approver']}" />
 				<p:outputLabel value="*" styleClass="mandatory"/>
 				</td>
-				<td><p:selectOneMenu id="loaApprover"
-						value="#{lOADetailBackingBean.managedBean.approverUser.userId}"
-						disabled="#{!isPendingSubmissionStatus or lOADetailBackingBean.managedBean.readOnly}"
-						required="#{lOADetailBackingBean.managedBean.scLoa.approvalReq}"
-						label="#{lbl['lbl.sc.approver']}"
-						style="width: 276px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-							itemValue="#{null}" />
-						<f:selectItems
-							value="#{lOADetailBackingBean.managedBean.approverList}"
-							var="pmUser" itemLabel="#{pmUser.userName}"
-							itemValue="#{pmUser.userId}" />
-						<p:ajax event="change"
-							listener="#{lOADetailBackingBean.approverChanged()}"
-							partialSubmit="true" process="@this" update="@this" />
-					</p:selectOneMenu><p:message id="loaApproverMsg" for="loaApprover"
-						display="icon" /> </td>
+				<td>
+				
+				  <table>
+				     <tr>
+					   <td>
+							<p:selectOneMenu id="loaApprover"
+									value="#{lOADetailBackingBean.managedBean.approverUser.userId}"
+									disabled="#{!isPendingSubmissionStatus or lOADetailBackingBean.managedBean.readOnly}"
+									required="#{lOADetailBackingBean.managedBean.scLoa.approvalReq}"
+									label="#{lbl['lbl.sc.approver']}"
+									style="width: 276px;margin-bottom: 5px;">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+										itemValue="#{null}" />
+									<f:selectItems
+										value="#{lOADetailBackingBean.managedBean.approverList}"
+										var="pmUser" itemLabel="#{pmUser.userName}"
+										itemValue="#{pmUser.userId}" />
+									<p:ajax event="change"
+										listener="#{lOADetailBackingBean.approverChanged()}"
+										partialSubmit="true" process="@this" update="@this" />
+								</p:selectOneMenu><p:message id="loaApproverMsg" for="loaApprover"
+									display="icon" /> 
+									
+							 </td>
+							<td style="margin-top: -3px">
+											   <ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.req.verification.approval.tooltip']}" />
+							</td>
+						</tr>
+					</table>	
+				</td>
 			</tr>
 		</table>
 	</p:panel>
