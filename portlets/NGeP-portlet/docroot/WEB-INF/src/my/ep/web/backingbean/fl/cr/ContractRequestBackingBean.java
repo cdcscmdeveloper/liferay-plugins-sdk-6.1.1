@@ -4296,18 +4296,27 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				if(!(flRequest.getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)
 						&& qtType.equalsIgnoreCase(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7))){//#24927
 					
-				if(ctContractAmount!=null && ctContractAmount.isBondReq() && !ctContractAmount.isBondExempted()){
-					ContractResDTO contractResp=contractSO.validateBondComplete(contractReqDTO);
-					if(!contractResp.isBondComplete()){
+					if(ctContractAmount!=null && ctContractAmount.isBondReq() && !ctContractAmount.isBondExempted()){
+						ContractResDTO contractResp=contractSO.validateBondComplete(contractReqDTO);
+						ContractResDTO contractBondWaiver=contractSO.validateBondWaiverPeriod(contractReqDTO);//#25296
 						if(!ctContractAmount.isBondWaived()){
-							if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
-								throw new EpException(MessageConst.ERROR_740051);
-							}else{
-								throw new EpException(MessageConst.ERROR_740052);
+							if(!contractResp.isBondComplete()){
+								if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
+									throw new EpException(MessageConst.ERROR_740051);
+								}else{
+									throw new EpException(MessageConst.ERROR_740052);
+								}
 							}
-						}
+						}else{//#25296
+								if(!contractBondWaiver.isBondWaiverPeriod()){
+									if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
+										throw new EpException(MessageConst.ERROR_740051);
+									}else{
+										throw new EpException(MessageConst.ERROR_740052);
+									}
+								}													
+						}// end #25296
 					}
-				}
 				}
 				validateSuspensionItems(action);
 				validateChargelineLimit(action);
