@@ -1377,19 +1377,15 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				}else{
 					
 					//#21489
-					BigDecimal unitPrice = BigDecimal.ZERO;
-					Long reqId = getManagedBean().getFlRequest().getFulfilmentReqId();
-					String itemCode = newItem.getItemCode();
-
-					if (getManagedBean().getFlRequest().getDocNo() != null && newItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_STANDARD)) {
-						if (isAddAddress) {
-							unitPrice = iFulfilmentSO.getUnitPriceByReqId(reqId, itemCode);
-							if (newItem.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)	&& unitPrice.compareTo(BigDecimal.ZERO) > 0) {
-								newItem.setUnitPrice(unitPrice);
-							}
-						}
-					}// end #21489
-
+					if(getManagedBean().getSelectedDelAddr()!=null && getManagedBean().getSelectedDelAddr().getStartDate()!=null && getManagedBean().getSelectedDelAddr().getEndDate()!=null) {
+						long day = (getManagedBean().getSelectedDelAddr().getEndDate().getTime() - getManagedBean().getSelectedDelAddr().getStartDate().getTime()) / MILLIS_PER_DAY;
+						reqDTO.setDeliveryTerm(Long.valueOf(day).intValue());
+					}
+					reqDTO.setItemId(newItem.getScRequestItem().getRequestNoteItemId());
+					reqDTO.setOrderedQty(BigDecimal.ZERO);
+					ContractItemResDTO itemResDTO = contractItemSO.getItemPrice(reqDTO);					
+					newItem.setUnitPrice(itemResDTO.getItemPrice());
+					// end #21489
 					newItem.setOrderedQty(BigDecimal.ZERO);
 					newItem.setOrderedAmt(BigDecimal.ZERO);
 				}
@@ -1742,7 +1738,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		ctReqDTO.setContractId(flRequest.getCtContract().getContractId());
 		ctReqDTO.setOrgProfileId(flRequest.getPreparedOrgProfile().getOrgProfileId());
 		BigDecimal unitPriceKeyIn = BigDecimal.ZERO;
-		Boolean standard=false;
 		
 		if(getManagedBean().getSelectedDelAddr() != null){
 			ctReqDTO.setFlAddress(getManagedBean().getSelectedDelAddr().getFlAddress());
@@ -1772,14 +1767,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 										MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 					}
 				}
-				if(null !=itemAddr.getPriceType()){
-					if(ParameterConst.PRICE_TYPE_STANDARD.equals(itemAddr.getPriceType().getParameterCode())){
-						standard=true;
-					}
-				}
-			}
-			if(standard){
-				break;
 			}
 		}
 	}
