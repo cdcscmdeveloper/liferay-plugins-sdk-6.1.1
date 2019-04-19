@@ -1,0 +1,44 @@
+package my.ep.rest.sm;
+
+import java.util.List;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.core.Response;
+
+import my.ep.dto.sm.pending.PendingPaymentResDTO;
+import my.ep.persistence.entity.sm.SmPendingProcess;
+import my.ep.web.util.sm.helper.SmServiceLookup;
+
+import org.apache.log4j.Logger;
+
+@Path("/sm") 
+public class PendingPaymentRest {
+
+	public static Logger log = Logger.getLogger(PendingPaymentRest.class);
+
+	@GET
+	@Path("smpendingprocess") 
+	public Response retrievePending() {
+		log.info("Before success calling retrieve rest api....");
+		try {
+			PendingPaymentResDTO resDTO = SmServiceLookup.getPendingPaymentSO().retrievePendingProcess();
+			for (SmPendingProcess smPendingProcess : resDTO.getSmPendingProcessLst()) {
+				try {
+					SmServiceLookup.getPendingPaymentSO().completePendingProcess(smPendingProcess);
+				} catch (Exception e) {
+					smPendingProcess.setAttemp(smPendingProcess.getAttemp() + 1);
+					smPendingProcess.setErrorMsg(e.getMessage());
+					try {
+						SmServiceLookup.getPendingPaymentSO().updateFailPending(smPendingProcess);
+					} catch (Exception e2) {
+						log.error(e2);
+					}
+				}
+			}
+			return Response.status(200).entity("success calling process pending payment !!").build();
+		} catch (Exception e) {
+			return Response.status(406).entity(e.getMessage()).build();
+		}
+	}
+}

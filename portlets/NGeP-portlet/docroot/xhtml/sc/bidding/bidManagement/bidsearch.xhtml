@@ -1,0 +1,251 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+	<p:messages id="bidSearchMessages" autoUpdate="#{biddingBB.managedBean.autoUpdate}" showDetail="true"
+		showSummary="false" closable="true" severity="error, info" />
+	<p:panel header="#{lbl['lbl.sc.search']}" id="bidSearchPanel"
+		toggleable="true">
+
+		<div>
+			<table style="width: 100%; align: left;">
+
+				<tr>
+					<td style="width: 20%"><p:outputLabel id="biddingNoLblBS"
+							value="#{lbl['lbl.sc.bidding.no']}" /></td>
+					<td style="width: 20%"><p:inputText id="biddingNoBS"
+							value="#{biddingBB.managedBean.searchBiddingNo}" size="20">
+							<f:validateLength maximum="20" />
+
+						</p:inputText></td>
+					<td style="width: 20%"></td>
+					<td style="width: 20%"></td>
+					<td style="width: 20%"></td>
+
+				</tr>
+
+				<tr>
+					<td style="width: 20%"><p:outputLabel id="docNoLblBS"
+							value="#{lbl['lbl.sc.document.no']}" /></td>
+					<td style="width: 20%"><p:inputText id="docNoBS"
+							value="#{biddingBB.managedBean.searchDocumentNo}" size="20">
+							<f:validateLength maximum="17" />
+						</p:inputText></td>
+					<td style="width: 20%"></td>
+					<td style="width: 20%"></td>
+					<td style="width: 20%"></td>
+
+				</tr>
+
+				<tr>
+
+					<td style="width: 20%"><p:outputLabel
+							value="#{lbl['lbl.sc.document.title']}" /></td>
+					<td style="width: 60%" colspan="3"><p:inputText
+							id="bidTitleBS" value="#{biddingBB.managedBean.searchBidTitle}"
+							size="110">
+							<f:validateLength maximum="1000" />
+						</p:inputText></td>
+					<td style="width: 20%"></td>
+
+				</tr>
+
+				<tr>
+					<td style="width: 20%"><p:outputLabel id="bidFromLbl"
+							value="#{lbl['lbl.sc.bidding.date.from']}" /></td>
+					<td style="width: 20%"><p:calendar size="20"
+							value="#{biddingBB.managedBean.searchBiddingDateFrom}"
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="bidFromDate"
+							showOn="button">
+
+							<p:ajax event="dateSelect"
+								listener="#{biddingBB.startDateSelectListener}"
+								update="bidToDate" />
+						</p:calendar></td>
+					<td style="width: 20%"><p:outputLabel id="bidToDateLbl"
+							value="#{lbl['lbl.sc.bidding.date.to']}" /></td>
+					<td style="width: 20%"><p:calendar
+							widgetVar="searchBiddingDateTo" size="20"
+							mindate="#{biddingBB.managedBean.searchBiddingDateToMinDate}"
+							value="#{biddingBB.managedBean.searchBiddingDateTo}"
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="bidToDate"
+							showOn="button" /></td>
+					<td style="width: 20%"></td>
+
+				</tr>
+				<TR>
+					<td style="width: 20%"><p:outputLabel id="pickedStatusLbl"
+							value="#{lbl['lbl.sc.status']}" /></td>
+					<td style="width: 20%"><p:selectOneMenu id="pickedStatus"
+							value="#{biddingBB.managedBean.selectedStatusDesc}"
+							style="width:60%;margin-bottom: 5px;"
+							label="#{lbl['lbl.sc.status']}">
+							<f:selectItems value="#{biddingBB.managedBean.statusDescs}"
+								var="status" itemLabel="#{status.statusName}"
+								itemValue="#{status.pmStatus.statusId}" />
+							<p:ajax event="change" process="@this" partialSubmit="true" />
+						</p:selectOneMenu></td>
+
+					<td style="width: 20%"></td>
+					<td style="width: 20%"></td>
+					<td style="width: 20%"></td>
+				</TR>
+			</table>
+
+		</div>
+
+
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.search']}" id="bidSearchBtn"
+				styleClass="BtnSpacing"
+				process="@this,biddingNoBS,pickedStatus,docNoBS,bidTitleBS,bidFromDate,bidToDate"
+				partialSubmit="true"
+				action="#{biddingBB.managedBean.searchForScheduledBids}"
+				update="biddingListPanel" />
+
+			<p:commandButton value="#{lbl['lbl.btn.reset']}" id="resetBtn"
+				styleClass="BtnSpacing" action="#{biddingBB.resetSearchFormAction}"
+				process="@this" update="biddingListPanel,bidSearchPanel"
+				partialSubmit="true" />
+		</div>
+
+	</p:panel>
+
+	<p:panel id="biddingListPanel" header="#{lbl['lbl.sc.bidding.list']}"
+		toggleable="true">
+
+		<p:dataTable id="biddingList" rowIndexVar="index"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			value="#{biddingBB.managedBean.searchDataModel}" var="bid"
+			lazy="true" rows="10">
+
+			<ac:paginator for="biddingList"></ac:paginator>
+
+			<p:column headerText="#{lbl['lbl.sc.bidding.no']}">
+				<h:outputText id="bidNoBS" value="#{bid.bidNo}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.document.no']}">
+				<h:outputText id="docNoDTBS" value="#{bid.scBid.docNo}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.document.title']}">
+				<h:outputText style="white-space : normal;" id="docTitleDTBS"
+					value="#{bid.scBid.docTitle}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.bid.start']}">
+				<h:outputText id="bidStartDTBS" value="#{bid.startDate}">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.bid.end']}">
+
+				<h:outputText id="bidEndDTBS" value="#{bid.endDate}">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.created.by']}">
+
+				<h:outputText id="userNameDTBS" value="#{bid.createdUser.userName}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.status']}">
+
+				<h:outputText id="bidStatusDTBS" style="float : left"
+					value="#{biddingBB.getStatusDescById(bid.pmStatus.statusId)}" />
+			</p:column>
+			<p:column style="width :10%; align: center">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.action']}" />
+					<ac:iconTooltip
+						value="#{lbl['lbl.sc.action.bidding.maintenance.tooltip']}" />
+				</f:facet>
+
+				<p:commandLink id="bidManagementNavigationBtn" size="5"
+					action="#{biddingBB.bidManagementAction(bid)}" process="@this">
+
+					<p:graphicImage id="viewBtnImage"
+						value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png"
+						title="#{lbl['lbl.txt.view']}" />
+					<p:spacer width="5"></p:spacer>
+				</p:commandLink>
+
+				<p:commandLink id="pauseButton"
+					rendered="#{bid.pmStatus.statusId eq BidStatusConst.BID_IN_PROGRESS}"
+					process="@this" partialSubmit="true"
+					actionListener="#{biddingBB.bidPausePopUpAction(bid)}"
+					update="@([id$=pauseCancelPopUp])"
+					oncomplete="bidPauseOrCancel.show();" size="5">
+					<p:graphicImage id="pauseBtnImage"
+						value="#{CommonUIConstant.imagePathUptoDesign}/ico-suspend.png"
+						title="#{lbl['lbl.sc.pause.bid']}" />
+					<p:spacer width="5"></p:spacer>
+				</p:commandLink>
+
+				<p:commandLink id="cancelButton" 
+					rendered="#{bid.pmStatus.statusId eq BidStatusConst.BID_PENDING_BIDDING}"
+					process="@this" partialSubmit="true"
+					actionListener="#{biddingBB.bidCancelPopUpAction(bid)}"
+					update="@([id$=pauseCancelPopUp])"
+					oncomplete="bidPauseOrCancel.show();" size="5">
+					<p:graphicImage id="cancelBtnImage"
+						value="#{CommonUIConstant.imagePathUptoDesign}/ico-termination.png"
+						title="#{lbl['lbl.sc.cancel.bid']}" />
+					<p:spacer width="5"></p:spacer>
+				</p:commandLink>
+				<!-- onmouseover="Cancel" -->
+				<p:commandLink id="resumeButton"
+					rendered="#{bid.pmStatus.statusId eq BidStatusConst.BID_PAUSED}"
+					process="@this" partialSubmit="true"
+					actionListener="#{biddingBB.reScheduleOrReBidPopUpAction(bid)}"
+					update="@([id$=rescheduleRebidPopUp])"
+					oncomplete="bidRescheduleOrResume.show();" size="5">
+					<p:graphicImage id="resumeBtnImage"
+						value="#{CommonUIConstant.imagePathUptoDesign}/ico-play.png"
+						title="#{lbl['lbl.sc.resume.bid']}" />
+				</p:commandLink>
+				<p:commandLink id="rescheduleButton"
+					rendered="#{bid.pmStatus.statusId eq BidStatusConst.BID_RESCHEDULE_BIDDING}"
+					process="@this" partialSubmit="true"
+					actionListener="#{biddingBB.reScheduleOrReBidPopUpAction(bid)}"
+					update="@([id$=rescheduleRebidPopUp])"
+					oncomplete="bidRescheduleOrResume.show();" size="5">
+					<p:graphicImage id="resheduleBtnImage"
+						value="#{CommonUIConstant.imagePathUptoDesign}/ico-action.png"
+						title="#{lbl['lbl.sc.reschedule.bid']}" />
+				</p:commandLink>
+
+			</p:column>
+
+		</p:dataTable>
+
+	</p:panel>
+
+	<h:panelGrid id="pauseCancelPopUp">
+
+		<p:dialog
+			header="#{(biddingBB.managedBean.bidAction.actionType eq biddingBB.managedBean.paused) ? lbl['lbl.sc.pause.bid'] : lbl['lbl.sc.cancel.bid']}"
+			widgetVar="bidPauseOrCancel" showEffect="fade" hideEffect="fade" closable="false" closeOnEscape="flase"
+			draggable="false" resizable="false" modal="false" styleClass="pop_up_top"
+			id="bidPauseOrCancel">
+			<ui:include
+				src="/xhtml/sc/bidding/bidManagement/bsPauseOrCancelBidPopup.xhtml"></ui:include>
+		</p:dialog>
+
+	</h:panelGrid>
+	<h:panelGrid id="rescheduleRebidPopUp">
+		<p:dialog header="#{lbl['lbl.sc.re.schedule.bid']}" width="750px"
+			height="340px" draggable="false" resizable="false" closable="false" closeOnEscape="flase"
+			styleClass="pop_up_top" widgetVar="bidRescheduleOrResume"
+			showEffect="fade" hideEffect="fade" modal="false"
+			id="rescheduleOrResumeBid">
+			<ui:include
+				src="/xhtml/sc/bidding/bidManagement/bsReScheduleOrResumeBidPopup.xhtml"></ui:include>
+		</p:dialog>
+	</h:panelGrid>
+	
+</ui:composition>

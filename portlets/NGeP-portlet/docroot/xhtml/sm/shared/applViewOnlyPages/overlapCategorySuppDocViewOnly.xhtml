@@ -1,0 +1,99 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<!-- <c:if test="#{backingBean.managedBean.overLappedCategoryExists}"> -->
+			
+	<script>
+		function blink() {
+		    var e = document.getElementById('blinkId');
+		    setInterval(function() {
+		    	if (e.style.display == 'block' || e.style.display=='') e.style.display = 'none';
+			    else e.style.display = 'block';   
+		    }, 1000);
+		};
+		window.onload = blink;
+	</script>
+			
+		<table style="width: 100%">
+			<tr>
+				<td>
+					<span id="blinkId3">
+						<font color="red">&#x26A0;</font>&#160;
+						<h:outputText styleClass="warning" value="#{lbl['lbl.txt.alert']}" />
+					</span>
+					<span style="opacity: 0.0;">
+						<h:outputText styleClass="instruction" value="#{lbl['lbl.txt.alert']}" />
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.main']}" escape="false"/>&#160;<br />
+					<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.please.click']}" escape="false"/>&#160;
+					<p:commandLink
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						action="#{viewSmApplBackingBean.onViewOverlapCategory(viewSmApplBackingBean.managedBean.smAppl)}"
+						process="@this" partialSubmit="true" update=":form">
+							<h:outputText value="#{lbl['lbl.sm.overlapped.category.msg.here']}" styleClass="warning" escape="false"/>
+					</p:commandLink>
+					<!-- <h:outputText  escape="false"/> -->
+					&#160;<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.to.view.details']}" escape="false"/><br />
+				</td>
+			</tr>
+		</table>
+		
+		<script>
+			$(function(){
+			    // Self-executing recursive animation
+			    (function pulse(){
+			        $('#blinkId3').delay(1000).fadeOut('slow').delay(50).fadeIn('slow',pulse);
+			    })();
+			});
+		</script>
+		
+		<br />
+		
+		<p:dataTable var="overlap" id="overlapCatSuppDocDtId" value="#{viewSmApplBackingBean.managedBean.smAppl.smCategoryOverlapDocs}" 
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" 
+			rowIndexVar="index">
+
+			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
+				style="width : 5%;">
+				<p:outputLabel value="#{index + 1}"
+					style="float: left;white-space: normal;" />
+			</p:column>
+			
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="*" styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.sm.justification']}" />
+				</f:facet>
+				<h:outputText value="#{overlap.overlapReason}"
+					style="float: left;white-space: normal;" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}"
+				style="width : 35%;">
+				<h:outputText value="#{overlap.pmDocument.docName}"
+					style="float: left;white-space: normal;" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.pm.document.name']}"
+				style="width : 20% !important;">
+				<p:commandLink ajax="false" styleClass="blue_font" value="#{overlap.fileName}" rendered="#{not empty overlap.fileName}">
+					<p:fileDownload value="#{viewSmApplBackingBean.downloadSelectedSuppDoc(overlap.fileName,overlap.filePath)}" />
+				</p:commandLink>
+				<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty overlap.fileName}" />
+			</p:column>
+		</p:dataTable><br />
+		
+		<ac:smOverlapCategoryDialog voList="#{viewSmApplBackingBean.managedBean.overlapCategoryVOList}" />
+
+	<!-- </c:if> -->
+	
+</ui:composition>

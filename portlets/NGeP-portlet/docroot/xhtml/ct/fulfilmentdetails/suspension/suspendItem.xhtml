@@ -1,0 +1,152 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<p:panel id="itemId" toggleable="true"  toggleSpeed="500" header="#{lbl['lbl.ct.panel.item']}" collapsed="true" >
+		<h:panelGrid columns="4" style="width:70%" columnClasses="columnWidth10"  >
+			<p:outputLabel value="#{lbl['lbl.ct.item.desc']}" />
+           		<p:inputText id="searchItemString" value="#{suspensionBackingBean.managedBean.searchItemString}" style="width:270px;"/>
+           	</h:panelGrid>	
+           		<!--   <h:panelGrid columns="4" style="width:70%" columnClasses="columnWidth10">
+  		<p:outputLabel value="#{lbl['lbl.ct.item.name']}"/>
+		<p:inputText value="#{circularBackingBean.managedBean.itemname}" style="width:270px;" maxlength="50"></p:inputText>	
+	</h:panelGrid>	-->	
+	
+	<h:panelGrid columns="4" style="width:70%" columnClasses="columnWidth10, columnWidth30, columnWidth5,columnWidth20" >
+	    <p:outputLabel value="#{lbl['lbl.ct.item.type']}"  />
+		<p:selectOneMenu value="#{suspensionBackingBean.managedBean.itemtype}"  style="width:280px;" maxlength="500" >
+					<f:selectItems value="#{contractRequestBackingBean.itemTypeValues}" />
+					<f:selectItem itemLabel="#{lbl['lbl.ct.all']}" itemValue="3" />        	
+		</p:selectOneMenu>
+
+		<p:outputLabel value="#{lbl['lbl.ct.item.code']}" style="float:center-left;"  />
+		<p:inputText value="#{suspensionBackingBean.managedBean.itemcode}" style="width:270px; float:center;"  maxlength="20"  />				
+	</h:panelGrid>	
+	<h:panelGrid columns="4" style="width:70%" columnClasses="columnWidth10, columnWidth30, columnWidth5,columnWidth20">	
+		<p:outputLabel value="#{lbl['lbl.ct.item.status']}"/>
+		<p:selectOneMenu value="#{suspensionBackingBean.managedBean.itemstatus}" style="width:280px;" maxlength="500" >  
+    	<f:selectItem itemLabel="#{lbl['lbl.ct.selectOne']}" itemValue="" />  
+    	<f:selectItem itemLabel="#{lbl['lbl.ct.inactive']}" itemValue="0" />   
+    	<f:selectItem itemLabel="#{lbl['lbl.ct.active']}" itemValue="1" /> 
+    	<f:selectItem itemLabel="#{lbl['lbl.ct.all']}" itemValue="2" />     	            	
+       </p:selectOneMenu> 
+	<p:outputLabel value="#{lbl['lbl.ct.item.skuno']}"/>
+	<p:inputText value="#{suspensionBackingBean.managedBean.skuno}" style="width:270px;" maxlength="50"></p:inputText>	
+  </h:panelGrid>	
+  
+	<h:panelGrid columns="4" style="width:70%" columnClasses="columnWidth10, columnWidth30, columnWidth5,columnWidth20">	
+		<p:outputLabel value="#{lbl['lbl.ct.item.UOM']}"/>
+	<p:inputText value="#{suspensionBackingBean.managedBean.UOM}" style="width:270px;" maxlength="20"></p:inputText>	
+		<p:outputLabel value="#{lbl['lbl.ct.item.typeofgoods']}"  />
+		
+	    	<p:selectOneMenu value="#{suspensionBackingBean.managedBean.typeofgoods}" style="width:280px;" maxlength="500" >  
+            	<f:selectItem itemLabel="#{lbl['lbl.ct.selectOne']}" itemValue="" />  
+            	<f:selectItems value="#{circularBackingBean.getLocalGoodsRadioValues(ParameterTypeConst.itemOrigin)}" />
+            	<f:selectItem itemLabel="#{lbl['lbl.ct.all']}" itemValue="197" />      	
+              </p:selectOneMenu> 
+	       </h:panelGrid>	
+           		
+        
+           		
+           		
+           		<div columns="4" style="width:70%" class="ppRightBtn" >
+           		<p:commandButton onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+					action="#{suspensionBackingBean.searchItemAction}"
+					update="suspensionProdDataModel" value="#{lbl['lbl.btn.search']}" />
+				<p:commandButton onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+					action="#{suspensionBackingBean.resetSearchItemAction}"
+					update=":form" value="#{lbl['lbl.btn.reset']}" />
+			</div>
+			<h:panelGrid columns="4" style="width:70%" columnClasses="columnWidth10, columnWidth30, columnWidth5,columnWidth20"> </h:panelGrid>	
+			
+		<p:dataTable id="suspensionProdDataModel" var="itemData" lazy="true" rows="10"  emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+		    value="#{suspensionBackingBean.managedBean.suspensionProductListingPagingDataModel}" selectionMode="single" selection="#{ctBackingBean.managedBean.selectedItem}" 
+		     rowIndexVar="index" rowKey="#{itemData}"
+                  onExpandStart="" widgetVar="ctItemsTable" >
+			   <ac:paginator for="suspensionProdDataModel" />
+
+			      <p:column headerText="#{lbl['lbl.ct.No']}" styleClass="column-align-center" style="width:8%; white-space:normal;">
+                 <h:outputText value="#{index+1}" />
+	         </p:column>  
+	         
+	          <p:column headerText="#{lbl['lbl.ct.item.code']}" styleClass="column-align-center" style="width:12%; white-space:normal;">
+            <h:outputText value="#{itemData.scRequestItem.cmItem.extensionCode}" style="float:left;"/>
+         </p:column> 
+			   <p:column style="width:10%;" headerText="#{lbl['lbl.ct.item.type']}"  styleClass="column-align-center" >
+				    <h:outputText style="float:left;" value="#{suspensionBackingBean.getParameterDesc(itemData.itemType)}" />
+			   </p:column>
+			
+			   <p:column id="modelColumn" headerText="#{lbl['lbl.ct.item.desc']}"  styleClass="column-align-center" style="width:25%;white-space:normal;"> 
+			        <h:outputText id="serviceNameID"  value="#{itemData.scRequestItem.itemName}" style="float:left; text-align:left;"/>
+			        <p:commandLink id="productSpec" update=":form:itemSpecDlg" action="#{suspensionBackingBean.viewItemSpecDlg(itemData)}">
+						<p:graphicImage value="/css/images/design/ico-viewnedit.png" title="#{lbl['lbl.ct.specification']}" style="float:left; padding-left: 5px;"  />
+					</p:commandLink>
+			   </p:column>
+			
+			  <p:column headerText="#{lbl['lbl.ct.skuno']}" styleClass="column-align-center" style="width:12%; white-space:normal;">
+	              <h:outputText value="#{itemData.sku}" style="float:left;"/>
+	         </p:column>
+			
+			
+			
+			   <p:column style="width:12%;" styleClass="column-align-center" >
+			      <f:facet name="header">
+						<h:outputText value="#{lbl['lbl.ct.effective.date']}"/>
+						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.effective.date']}"/>
+			   	  </f:facet>
+			      <p:calendar id="effDateActive" value="#{itemData.effDate}" readonlyInput="true"  style="float:left"
+			         disabled="#{(itemData.recordStatusFlg == 1 ? true : false) or (suspensionBackingBean.managedBean.viewOnly)}" styleClass="calanderWidth"  showOn="button"  navigator="true"
+			         mindate="#{DateUtils.getCurrentDateWithoutTime()}"  maxdate="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.expDate}"
+			         pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+			         <p:ajax event="dateSelect" process="@this" update="expDateActive"
+			          onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+			    </p:calendar>
+			  </p:column>
+			
+		       <p:column style="width:10%;" styleClass="column-align-center" >
+			      <f:facet name="header">
+						<h:outputText value="#{lbl['lbl.ct.expiry.date']}"/>
+						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.expiry.date']}"/>
+			   	  </f:facet>
+			      <p:calendar id="expDateActive" value="#{itemData.expDate}"  styleClass="calanderWidth" style="float:left"
+			          showOn="button" disabled="#{(itemData.recordStatusFlg == 1 ? true : false) or (suspensionBackingBean.managedBean.viewOnly)}" readonlyInput="true" navigator="true"
+			          mindate="#{itemData.effDate}" maxdate="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.expDate}"
+			          pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+			          <f:attribute name="startDate" value="#{itemData.effDate}" />
+                      <f:validator validatorId="primeDateRangeValidator" />
+			      </p:calendar>
+			  </p:column>
+		   	  
+		   	  <p:column style="width:10%;" styleClass="column-align-center" >
+		   	  	   <f:facet name="header">
+						<h:outputText value="#{lbl['lbl.ct.status']}"/>
+						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.status']}"/>
+			   	   </f:facet>
+			       <p:selectOneMenu value="#{itemData.recordStatusFlg}" style="width:85px;" disabled="#{suspensionBackingBean.managedBean.viewOnly}">
+				         <f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />
+				         <f:selectItem itemValue="1" itemLabel="#{lbl['lbl.ct.active']}" />
+				         <p:ajax event="change" process="@this" update="effDateActive, expDateActive"
+				 	        listener="#{suspensionBackingBean.setSuspensionStatusValue(itemData)}" />
+			       </p:selectOneMenu>
+			   </p:column>
+		
+		</p:dataTable>
+	</p:panel>
+	<p:dialog id="itemSpecDlg" widgetVar="itemSpecDlg" header="#{lbl['lbl.ct.specification']}" 
+   		styleClass="pop_up_top" modal="true" width="500" height="150" resizable="false">
+   		<h:panelGrid columns="1">
+    		<p:outputLabel value="#{lbl['lbl.ct.item.desc']}" >: #{suspensionBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemName}</p:outputLabel>
+     	</h:panelGrid>
+ 		<p:inputTextarea value="#{suspensionBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemDesc == null ? lbl['lbl.ct.item.tooltip.desc'] : suspensionBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemDesc}"
+   			rows="5" style="width:99%; resize:none;" autoResize="false" disabled="true">
+		</p:inputTextarea>
+     	<f:facet name="footer">
+		<div class="ppRightBtn">
+		    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="itemSpecDlg.hide();" />
+  		</div>
+   		</f:facet>
+  	</p:dialog>	
+</ui:composition>

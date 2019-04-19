@@ -1,0 +1,40 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<div align="left" class="header-info">
+		<table style="width: 100%">
+			<tr>
+				<td style="width: 15%">
+					<h:outputLabel value="#{lbl['lbl.ct.loa.no']}" />
+				</td>
+				<td style="width: 10%" class="header-info-text">					
+					<p:commandLink value="#{ctBackingBean.managedBean.contractVer.ctContractValue.loaNo}" 
+				       process="@this" partialSubmit="true" styleClass="blue_font"
+				       action="#{ctBackingBean.goToLoaView(ctBackingBean.managedBean.contractVer.ctContract.loa)}"/>
+				</td>
+				<td style="width: 10%">
+					<h:outputLabel value="#{lbl['lbl.ct.contract.no']}" />
+				</td>
+				<td style="width: 10%" class="header-info-text">
+					#{ctBackingBean.managedBean.contractVer.ctContract.contractNo}
+				</td>
+				<td style="width: 10%">
+					<h:outputLabel value="#{lbl['lbl.ct.ptj.name']}" />
+				</td>
+				<td style="width: 25%" class="header-info-text">
+					#{ctBackingBean.managedBean.contractVer.ctContract.ownerOrgProfile.orgName}
+				</td>
+				<td style="width: 5%">
+					<h:outputLabel value="#{lbl['lbl.ct.fulfilment.details.status']}" />
+				</td>
+				<td style="width: 15%" class="header-info-text">
+					#{ctBackingBean.getStatusDescById(ctBackingBean.managedBean.contractVer.status.statusId)}
+				</td>
+			</tr>
+		</table>
+	</div>
+	<br/>
+</ui:composition>

@@ -1,0 +1,50 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="contentSection">
+	<!-- Validation Message -->
+		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" escape="false"/>
+		<div class="header-spacing">
+			<table style="width: 100%;">
+				<tr>
+					<td><p:commandButton id="custServBackBtnId"
+							value="#{lbl['lbl.btn.back']}" immediate="true" update=":form"
+							process="@this" action="#{custServiceBackingBean.backToSearch()}"
+							style="float:left;" /></td>
+					<td> 
+						<p:commandButton id="orgCreateBtnId"
+							value="#{lbl['lbl.btn.reset.password']}"
+							action="#{custServiceBackingBean.resendNotification}"
+							style="float:right;" rendered="#{custServiceBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterCode =='SUP'}">
+						</p:commandButton>
+						<p:commandButton id="orgCreateBtnIdee"
+							value="#{lbl['lbl.btn.save']}"
+							action="#{custServiceBackingBean.saveUserProfile}"
+							update="@([id$=Msg])" style="float:right;"
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()" rendered="#{custServiceBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterCode =='SUP'}">
+							<f:param name="disableValidation" value="true" />
+						</p:commandButton>
+						</td>
+				</tr>
+			</table>
+		</div>
+		<p:panel id="userInfoPanel"
+			header="#{lbl['lbl.pm.custsvc.user.info']}" toggleable="true">
+			<!-- Info -->
+			<ui:include src="custServiceInfo.xhtml" />
+
+			<!-- Tabs -->
+			<ui:include src="custServiceTabView.xhtml" />
+
+		</p:panel>
+
+
+	</ui:define>
+
+</ui:composition>

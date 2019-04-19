@@ -1,0 +1,5015 @@
+/**
+ * Copyright © 2013 Archisoft. All rights reserved.
+ */
+package my.ep.web.backingbean.ct.amendment;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpServletRequest;
+
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchOrderBean;
+import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.ct.agreement.IAgreementSO;
+import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.document.IDocumentSO;
+import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.sc.committe.ICommitteSO;
+import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.EpPropertiesConst;
+import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.ct.ContractConst;
+import my.ep.constant.ct.ContractStatusConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.SourcingConstants;
+import my.ep.constants.CTProcessNameConst;
+import my.ep.constants.CommonConstants;
+import my.ep.dto.ct.ContractReqDTO;
+import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.ct.agreement.ContractAgreementReqDTO;
+import my.ep.dto.ct.agreement.ContractAgreementResDTO;
+import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
+import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.document.DocumentReqDTO;
+import my.ep.dto.pm.common.document.DocumentResDTO;
+import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
+import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.sc.committe.CommitteReqDTO;
+import my.ep.exception.EpException;
+import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
+import my.ep.persistence.entity.ct.CtActor;
+import my.ep.persistence.entity.ct.CtAttachment;
+import my.ep.persistence.entity.ct.CtContractVer;
+import my.ep.persistence.entity.ct.CtRemark;
+import my.ep.persistence.entity.ct.amend.CtAmendment;
+import my.ep.persistence.entity.ct.amend.CtCommitteeMember;
+import my.ep.persistence.entity.ct.dtl.CtAgency;
+import my.ep.persistence.entity.ct.dtl.CtContractAmount;
+import my.ep.persistence.entity.ct.dtl.CtMeeting;
+import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
+import my.ep.persistence.entity.ct.dtl.CtPidReason;
+import my.ep.persistence.entity.ct.dtl.CtProgressivePayment;
+import my.ep.persistence.entity.ct.dtl.CtSchedule;
+import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
+import my.ep.persistence.entity.ct.dtl.deduction.CtDeductionClause;
+import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
+import my.ep.persistence.entity.ct.dtl.item.CtItemCeilingQty;
+import my.ep.persistence.entity.ct.dtl.item.CtItemMaxQty;
+import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
+import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.pm.common.PmDocument;
+import my.ep.persistence.entity.pm.common.PmFinancialOrg;
+import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.sc.loaloi.ScLoa;
+import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
+import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
+import my.ep.persistence.entity.sm.SmCompanyAddress;
+import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.AddressType;
+import my.ep.type.pm.RoleCode;
+import my.ep.type.sc.MemberRole;
+import my.ep.util.EpPropertiesUtils;
+import my.ep.util.MessageUtils;
+import my.ep.util.ResourceBundleUtils;
+import my.ep.util.ct.CtAddressUtil;
+import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
+import my.ep.web.backingbean.ct.ContractBackingBean;
+import my.ep.web.backingbean.ct.ContractBaseBackingBean;
+import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
+import my.ep.web.bean.ct.CtLetterOfAcceptance;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.constant.CommonUIConst;
+import my.ep.web.format.AttachmentDateFormat;
+import my.ep.web.format.AttachmentFormat;
+import my.ep.web.managedbean.ct.amendment.AmendmentManagedBean;
+import my.ep.web.util.CommonUtils;
+import my.ep.web.util.DateUtils;
+import my.ep.web.util.DocumentRepositoryUtils;
+import my.ep.web.util.FacesScopes;
+import my.ep.web.util.NumberWordUtil;
+import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.pm.helper.RoleHelper;
+import my.ep.web.util.template.DocumentGenerator;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.velocity.VelocityContext;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DualListModel;
+import org.primefaces.model.UploadedFile;
+
+import com.liferay.portal.util.PortalUtil;
+
+/**
+ * Backing Bean For Contract Amendment Details
+ * 
+ * @author Alam
+ * @since 1/13/2014
+ */
+@ManagedBean (name = "amendmentBackingBean")
+@ViewScoped
+public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManagedBean> {
+
+	private static final long serialVersionUID = 1L;
+	private static Logger log = Logger.getLogger(AmendmentBackingBean.class);
+	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
+	private static final String CONTRACT_COMMON_PAGE = "/xhtml/ct/viewcontract/fulfilmentTab.xhtml?faces-redirect=true";
+	private ContractBackingBean ctBackingBean = null;
+	private CtMeeting[] selectedMeetingUser;
+	private CtPerformanceBond[] selectedBondList;
+	private List<SelectItem> populateBankAccountList;
+	private IPagingDataModel<PmUser> committeDataModel = new CommittePagingDataModel();	
+
+	/**
+	 * The constructor used for initializing the variable.
+	 * This method will initialize the button and approver list.
+	 */
+	public AmendmentBackingBean() {
+		/* Initialization of button */
+		if(ctBackingBean == null){
+			ctBackingBean = new ContractBackingBean();
+		}
+		if (this.getManagedBean().getOutComes() == null) {
+			this.getManagedBean().setOutComes(new String[] {BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
+			ctBackingBean.getManagedBean().setContractVer(new CtContractVer());
+		}
+		if (getManagedBean().getUserMap().size() == 0) {
+			initializeApproverList();
+		}
+	}
+
+	/**
+	 * This  method used to initialize approver list.
+	 */
+	private void initializeApproverList() {
+		if (getManagedBean().getApproverModel() == null) {
+			getManagedBean().setApproverModel(new DualListModel<PmUser>(new ArrayList<PmUser>(), new ArrayList<PmUser>()));
+		}
+	}
+
+	/**
+	 * @return the selectedMeetingUser
+	 */
+	public CtMeeting[] getSelectedMeetingUser() {
+		return selectedMeetingUser;
+	}
+
+	/**
+	 * @param selectedMeetingUser the selectedMeetingUser to set
+	 */
+	public void setSelectedMeetingUser(CtMeeting[] selectedMeetingUser) {
+		this.selectedMeetingUser = selectedMeetingUser;
+	}
+
+	/**
+	 * @return the selectedBondList
+	 */
+	public CtPerformanceBond[] getSelectedBondList() {
+		return selectedBondList;
+	}
+
+	/**
+	 * @param selectedBondList the selectedBondList to set
+	 */
+	public void setSelectedBondList(CtPerformanceBond[] selectedBondList) {
+		this.selectedBondList = selectedBondList;
+	}
+
+	/**
+	 * @return the committeDataModel
+	 */
+	public IPagingDataModel<PmUser> getCommitteDataModel() {
+		return committeDataModel;
+	}
+
+	/**
+	 * @param committeDataModel the committeDataModel to set
+	 */
+	public void setCommitteDataModel(IPagingDataModel<PmUser> committeDataModel) {
+		this.committeDataModel = committeDataModel;
+	}
+
+	/**
+	 * Pagination for available committee search list
+	 */
+	private class CommittePagingDataModel extends PagingDataModel<PmUser> {
+		private static final long serialVersionUID = 1L;
+
+		public CommittePagingDataModel() {
+			super("newCommitteTable");
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep
+		 * .biz.bean.search.ISearchBean)
+		 */
+		@Override
+		public ISearchResultBean<PmUser> pageChangeListener(ISearchBean<PmUser> searchBean) {
+			CommitteReqDTO committeReqDTO = null;
+			ICommitteSO committeSO = null;
+			try {
+				committeReqDTO = new CommitteReqDTO();
+				if (getManagedBean().getCommitteeName() != null && !"".equalsIgnoreCase(getManagedBean().getCommitteeName())) {
+					SearchFilterBean filterBean = new SearchFilterBean("userName", SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getCommitteeName());
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);
+				}
+				if (getManagedBean().getIdentificationType() != null && !"".equalsIgnoreCase(getManagedBean().getIdentificationType())){
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("identificationCode.parameterCode", SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getIdentificationType()));
+				}
+				if (getManagedBean().getIdentificationNo() != null && !"".equalsIgnoreCase(getManagedBean().getIdentificationNo())){
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("identificationNo", SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getIdentificationNo()));
+				}
+				// Sort by user name
+				searchBean.getSortColumns().add(new SearchOrderBean("userName"));
+
+				committeSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+				committeReqDTO.setUserSearchBean(searchBean);
+
+				return committeSO.retrieveUserListByCommType(committeReqDTO)
+						.getUserResultBean();
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				committeReqDTO = null;
+				committeSO = null;
+			}
+			return null;
+		}
+	}
+
+	/**
+	 * The method used for searching the available committee member.
+	 */
+	public void searchExistingCommitteMember() {
+		try { 
+			committeDataModel.reloadData();
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), "contract search failed."));
+		}
+	}
+
+	/**
+	 * The method used to reset the search criteria for committee member.
+	 */
+	public void searchExistingCommitteMemberReset() {
+		this.getManagedBean().setCommitteeName(null);
+		this.getManagedBean().setIdentificationType(null);	
+		this.getManagedBean().setIdentificationNo(null);	
+		committeDataModel.resetData();
+	}
+
+	/**
+	 * The method used to retrieve the information and render it on screen.
+	 */
+	public void preRenderView() throws UnsupportedEncodingException {
+
+		IContractAmendmentSO contractAmendmentSO = null;
+		ContractReqDTO ctReqDTO = null;
+		ContractResDTO resDTO = null;
+		try{
+			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+			String taskId = originalServletRequest.getParameter("taskId");
+
+			if (taskId == null) {
+				ConstructTabSideMenu();
+
+				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
+						&& ctBackingBean.getManagedBean().isServiceTaxAlertFlg()) {
+					FacesContext.getCurrentInstance().addMessage(null,
+							new FacesMessage(FacesMessage.SEVERITY_WARN, null, 
+									MessageUtils.getMessage(MessageConst.INFO_755004,
+											MessageUtils.BUNDLE_COMMON_MESSAGES, 
+											new FacesScopes().getUserLocale())));
+					ctBackingBean.getManagedBean().setServiceTaxAlertFlg(false);				
+				}
+
+				// During supplier claim the task
+				if (getManagedBean().getAckFA() != null && getManagedBean().getAckFA().equals(ContractConst.SUPPLIER_ACK_LOA)) {
+					BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
+					getManagedBean().setReadOnly(!bb.getManagedBean().getClaim());
+					// Default the supplier signer to claimant
+					if (!getManagedBean().isReadOnly()
+							&& (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy() == null
+							|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getUserId() == null)) {
+						ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setAckBy(
+								getFacesScopes().getUserSessionBean());
+					}
+				}					
+				return;
+			}
+
+			/*Retrieve bpm details*/
+			getManagedBean().setSelectedTabIndex(0);
+			CTContractAmendmentDataType dataType =  super.getBpmTaskDetails(CTContractAmendmentDataType.class, null);		
+
+			/* Setting save button as per requirement*/
+			String[] outcome = new String[getManagedBean().getOutComes().length];
+			int i = 0; 
+			if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_FA_HT_NAME) 
+					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_FA_HT_NAME)
+					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FA_HT_NAME) 
+					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FA_HT_NAME) 
+					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)
+					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME) 
+					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_MOF_RESULT_HT_NAME) 
+					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) 
+					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME) 
+					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME)) {
+				outcome = new String[getManagedBean().getOutComes().length+1];
+				outcome[i++] = BpmOutcomeConst.BPM_SAVE;
+			}
+			for (String action : getManagedBean().getOutComes()) {
+				outcome[i++] = action;
+			}
+			getManagedBean().setOutComes(outcome);
+
+			/*Retrieve contract amendment details*/
+			ctReqDTO = new ContractReqDTO();
+			ctReqDTO.setUpdateAction(false);
+			ctReqDTO.setContractId(new Long(dataType.getContractId()));
+			ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
+			ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
+			ctReqDTO.setTaskName(getManagedBean().getTaskName());
+			setAmendmentContractVer(ctReqDTO);
+
+			/*Define boolean value to control gui details*/
+			getManagedBean().setSelectedItem(null);
+			getManagedBean().setSelectedServiceItem(null);
+			getManagedBean().setMemberSignOff(false);  
+			getManagedBean().setPbConfirmMeeting(false);
+			getManagedBean().setSignUpdateDecision(false);
+			getManagedBean().setLetterOfAcceptance(false);
+			getManagedBean().setPrepareLOA(false);
+			getManagedBean().setDecisionPbQcLOA(false);
+			getManagedBean().setSignOffDecision(false);
+
+			contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class); 
+			if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)
+					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)) {
+				getManagedBean().setPbConfirmMeeting(true);
+				if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)) {
+					getManagedBean().setSignUpdateDecision(true);
+					if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbQcApprovedFlag() == null) {
+						getManagedBean().setPbQcApproved("");
+					} else if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbQcApprovedFlag() == 1) {
+						getManagedBean().setPbQcApproved("A");
+					} else if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbQcApprovedFlag() == 0) {
+						getManagedBean().setPbQcApproved("R");
+					}
+				}
+			} 
+			else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_MOF_RESULT_HT_NAME)) {
+				getManagedBean().setSignUpdateDecision(true);  
+				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofApprovedFlag() == null) {
+					getManagedBean().setMofApproved("");
+				} else if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofApprovedFlag() == 1) {
+					getManagedBean().setMofApproved("A");
+				} else if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofApprovedFlag() == 0) {
+					getManagedBean().setMofApproved("R");
+				}
+			}
+			else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)
+					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)
+					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME)) {
+				getManagedBean().setLetterOfAcceptance(true);
+				getManagedBean().setPrepareLOA(true);
+				getManagedBean().setPbQcApproved(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isPbQcApproved() ? "A" : "R");
+				getManagedBean().setMofApproved(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isMofApproved() ? "A" : "R");
+
+				//retrieve approver from CtActor
+				String roleCode = null;
+				if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+						ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+					roleCode = RoleCode.CT_APPROVER.value();
+				} else if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+						ParameterConst.CONTRACT_TYPE_CENTRAL)) {
+					roleCode = RoleCode.BPK_CC_APPROVER.value();
+				}
+				CtActor approverActor = retrieveContractActor(
+						ctBackingBean.getManagedBean().getContractVer().getContractVerId(),
+						ctBackingBean.getManagedBean().getContractVer().getDocType(),
+						roleCode);
+				if (approverActor != null) {	  
+					getManagedBean().setApproverName(approverActor.getUserName());
+				}
+				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isPbqcAuthorityReq()
+						|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isMofAuthorityReq()) {
+					getManagedBean().setDecisionPbQcLOA(true);
+
+				} if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa() == null) {
+					ctReqDTO = new ContractReqDTO();
+					ctReqDTO.setCtContractVer(ctBackingBean.getManagedBean().getContractVer());
+					resDTO = contractAmendmentSO.setScLoa(ctReqDTO);
+					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentLoa(resDTO.getAmendmentScLoa());
+					if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractAdmin() == null) {
+						ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setContractAdmin(getFacesScopes().getUserSessionBean());
+					}
+				}if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)){
+					getManagedBean().setDisableLoaLetter(true);
+				}
+			} else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VIEW_FA_DETAILS_HT_NAME)) {
+				this.getManagedBean().setMemberSignOff(true);
+				this.getManagedBean().setPbConfirmMeeting(true);
+				this.getManagedBean().setSignUpdateDecision(false);
+			} else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
+				this.getManagedBean().setAckFA(ContractConst.SUPPLIER_ACK_LOA);
+				changeAccountActionListener();
+
+			} else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME) 
+					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CHAIR_PERSON_SIGN_OFF_HT_NAME)) {
+				this.getManagedBean().setSignOffDecision(true);
+				getManagedBean().setPbQcApproved(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isPbQcApproved() ? "A" : "R");
+			}
+
+			if (this.getManagedBean().isLetterOfAcceptance()) {
+				getLoaDocumentList();
+			}
+
+			ConstructTabSideMenu();
+		}catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		} finally {
+			contractAmendmentSO = null;
+			resDTO = null;
+		}
+	}
+
+	/**
+	 * The method used to navigate to contract maintenance screen.
+	 * 
+	 * @return the navigate URL 
+	 */
+	public String backAction() {
+		this.getManagedBean().setSecretaryList(null);
+		return CONTRACT_MAINT_PAGE;
+	}
+
+	/**
+	 * The method used to set the contract amendment information while
+	 * rendering the screen.
+	 * 
+	 * @param resDTO  the response data transfer object for contract
+	 */
+	public void setAmendmentContractVer(ContractReqDTO reqDTO) {	
+		IContractAmendmentSO contractAmendmentSO = null;
+		ContractResDTO resDTO = null;
+		Date currentDate = DateUtils.getCurrentDateWithoutTime();
+		IAgreementSO agreementSO = null;
+		ContractAgreementResDTO ctAgreementResDTO = null;
+		ContractAgreementReqDTO ctAgreementReqDTO = null;
+		if(ctBackingBean.getManagedBean().getDeleteAttachmentList() != null ){
+			ctBackingBean.getManagedBean().getDeleteAttachmentList().clear();
+		}
+		try {
+			contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
+			resDTO = contractAmendmentSO.retrieveContractAmendVerDtls(reqDTO);
+			ctBackingBean.getManagedBean().setContractVer(resDTO.getCtContractVer());	
+			
+			//retrieve agreement list
+			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IAgreementSO.class);
+			ctAgreementReqDTO = new ContractAgreementReqDTO();
+			ctAgreementReqDTO.setContractId(resDTO.getCtContractVer().getCtContract().getContractId());
+			ctAgreementResDTO = agreementSO.retrieveContractAgreements(ctAgreementReqDTO);
+			ctBackingBean.getManagedBean().setCtAgreementList(ctAgreementResDTO.getAgreementList());
+			
+			//Retrieve agreement contract version for physical no & signed date
+			retrieveContractVerOfAgreement();
+
+			//CT_CHANGE_LOG
+			ctBackingBean.getManagedBean().setNewAgencyMap(resDTO.getNewAgencyMap());
+			ctBackingBean.getManagedBean().setUpdateAgencyMap(resDTO.getUpdateAgencyMap());
+			ctBackingBean.getManagedBean().setDeleteAgencyMap(resDTO.getDeleteAgencyMap());
+			ctBackingBean.getManagedBean().setUpdateZoneMap(resDTO.getUpdateZoneMap());
+			ctBackingBean.getManagedBean().setUpdateItemMap(resDTO.getUpdateItemMap());
+			
+			reqDTO = new ContractReqDTO();
+			reqDTO.setContractVerId(ctBackingBean.getManagedBean().getContractVer().getContractVerId());
+			reqDTO.setContractId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractId());
+			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
+
+			/*Setting extension history list for amendment*/
+			getManagedBean().setAmendHistoryList(contractAmendmentSO.retrieveExtensionHistory(reqDTO).getExtensionHistoryList());
+			getManagedBean().setNewAmendmentEffDate(retrieveNewEffDate());
+
+			// Initialize new amendment details
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment() == null) {
+				ctBackingBean.getManagedBean().getContractVer().setCtAmendment(new CtAmendment());
+				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setFileRefNo("");
+				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setTitle(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractName());
+				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setDescription(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractName());
+				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(getManagedBean().getNewAmendmentEffDate());
+				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(BigDecimal.ZERO);
+				if (ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null) {
+					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewGstAmount(ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getGstAmount());	
+				} else {
+					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewGstAmount(BigDecimal.ZERO);	
+				}
+				
+				if ( ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getStaxAmount() != null) {
+					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewStaxAmount(ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getStaxAmount());
+				} else {	
+					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewStaxAmount(BigDecimal.ZERO);
+				}
+				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendPeriod(0);
+				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendStartDate(null);
+				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendEndDate(null);
+			}
+
+			if (getManagedBean().getTaskName() != null 
+					&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
+				PmUser supplierSigner = new PmUser();
+				if (!getManagedBean().isReadOnly()) {
+					supplierSigner = getFacesScopes().getUserSessionBean();
+				}
+				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setAckBy(supplierSigner);
+			}
+
+			getManagedBean().setSecretaryId(null);
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary() != null) {
+				getManagedBean().setSecretaryId(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary().getUserId());
+			}
+
+
+			// Retrieve agencies
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAgencies() != null 
+					&& this.ctBackingBean.getManagedBean().getContractVer().getCtAgencies().size() > 0 ) {
+				ctBackingBean.getManagedBean().setSelectedAgency(null);
+				ctBackingBean.getManagedBean().setMinistryProfileId(retrieveMinistryOrgProfile(
+						ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId());
+				for (CtAgency ctAgency : ctBackingBean.getManagedBean().getContractVer().getCtAgencies()) {
+					// If effective date is after current date, status is still display old status
+					ctBackingBean.checkAgencyStatus(ctAgency);
+					if (ctBackingBean.getManagedBean().getMinistryProfileId().equals(ctAgency.getOrgProfile().getMinstryId())) {
+						ctAgency.setAp178(false);
+					} else {
+						ctAgency.setAp178(true);
+					}
+				}
+			}
+			
+			// Retrieve Items
+			ctBackingBean.getManagedBean().getCtItemList().clear();
+			ctBackingBean.getManagedBean().getCtItemServiceList().clear();
+			getManagedBean().setItemProductExist(false);
+			getManagedBean().setItemServiceExist(false);
+			ctBackingBean.getManagedBean().setShowItem(null);
+			ctBackingBean.getManagedBean().setShowServiceItem(null);
+			getManagedBean().setSelectedItem(null);
+			getManagedBean().setSelectedServiceItem(null);
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContractItems() != null 
+					&& ctBackingBean.getManagedBean().getContractVer().getCtContractItems().size() > 0) {				
+				for (CtContractItem item : ctBackingBean.getManagedBean().getContractVer().getCtContractItems()) {
+					// If effective date is after current date, status is still display old status
+					if (item.getRecordStatusFlg() == 0) {				       		
+						if (item.getEffDate().after(currentDate)) {
+							item.setChkStatus(true);
+						} else {
+							item.setChkStatus(false);
+						}
+					} else {
+						if (item.getEffDate().after(currentDate)) {
+							item.setChkStatus(false);
+						} else {
+							item.setChkStatus(true);		        		   
+						}
+					}
+					
+					if (item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
+						getManagedBean().setItemProductExist(true);
+						Collections.sort(item.getCtItemPrices(), new CtItemPrice());
+						Collections.sort(item.getCtItemPrices(), new CtItemPrice());
+						ctBackingBean.getManagedBean().getCtItemList().add(item);
+					} else if (item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
+						getManagedBean().setItemServiceExist(true);
+						Collections.sort(item.getCtItemPrices(), new CtItemPrice());
+						ctBackingBean.getManagedBean().getCtItemServiceList().add(item);
+					}					
+				}
+			}
+			// Retrieve Zone
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContractZones() != null 
+					&& ctBackingBean.getManagedBean().getContractVer().getCtContractZones().size() > 0) {
+				Collections.sort(ctBackingBean.getManagedBean().getContractVer().getCtContractZones(), new CtContractZone());
+				ctBackingBean.retriveZonesByContractVer();
+			}
+
+			// Retrieve Deduction Clauses
+			if (ctBackingBean.getManagedBean().getContractVer().getCtDeductions().size() > 0) {
+				ctBackingBean.getManagedBean().setSelectedDeduction(null);
+				for (CtDeduction deduct : ctBackingBean.getManagedBean().getContractVer().getCtDeductions()) {
+					if (deduct.getDeductionType().getParameterCode().equalsIgnoreCase(ContractConst.AP_DEDUCTION_TYPE)) {
+						ctBackingBean.getManagedBean().setFlgPaymentTracking(true);
+						ctBackingBean.getManagedBean().setAdvancePaymentAmt(deduct.getAmount());	    			
+					}
+				}
+			}
+
+			// Retrieve Schedules
+			if (ctBackingBean.getManagedBean().getContractVer().getCtSchedules() != null 
+					&& !ctBackingBean.getManagedBean().getContractVer().getCtSchedules().isEmpty()) {
+				ctBackingBean.getManagedBean().setChkSchedule(true);
+				Collections.sort(ctBackingBean.getManagedBean().getContractVer().getCtSchedules(), new CtSchedule());
+				for (CtSchedule ctSchedule : ctBackingBean.getManagedBean().getContractVer().getCtSchedules()) {
+					if (ctSchedule.isUseInFulfilment()) {
+						ctBackingBean.getManagedBean().setDisableScheduleRadio(true);
+						break;
+					}
+				}
+				ctBackingBean.scheduleDate();
+			}
+
+			if (ctBackingBean.getManagedBean().getContractVer().getCtProgressivePayments() != null 
+					&& !ctBackingBean.getManagedBean().getContractVer().getCtProgressivePayments().isEmpty()) {
+				Collections.sort(ctBackingBean.getManagedBean().getContractVer().getCtProgressivePayments(), new CtProgressivePayment());
+				for (CtProgressivePayment ctProgressivePayment : ctBackingBean.getManagedBean().getContractVer().getCtProgressivePayments()) {
+					if (ctProgressivePayment.isUseInFulfilment()) {
+						ctBackingBean.getManagedBean().setDisableScheduleRadio(true);
+						break;
+					}
+				}
+				ctBackingBean.progressiveDate();
+			}
+
+			if (getManagedBean().getUserMap().size() == 0) {
+				initializeApproverList();
+			}
+			// Retrieve approver list
+			if (isApproverSetting()) {
+				getManagedBean().getApproverModel().setSource(
+						getAvailableApproverList(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode(),
+								getManagedBean().getUserMap()));
+				if (resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0) {
+					getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
+					List<PmUser> invalidApproverList = new ArrayList<PmUser>();
+					for (PmUser approverUser : resDTO.getApproverList())  {
+						Iterator<PmUser> sourceIt = getManagedBean().getApproverModel().getSource().iterator();				
+						boolean isValidApprover = false;
+						while (sourceIt.hasNext()) {
+							PmUser user = sourceIt.next();
+							if (user.getUserId().longValue() == approverUser.getUserId().longValue()) {
+								sourceIt.remove();
+								isValidApprover = true;
+								break;
+							}
+						}
+						if (!isValidApprover) {
+							invalidApproverList.add(approverUser);
+						}
+					}
+					if (invalidApproverList.size() > 0) {
+						getManagedBean().getApproverModel().getTarget().removeAll(invalidApproverList);
+					}
+				} else {
+					getManagedBean().getApproverModel().setTarget(new ArrayList<PmUser>());
+				} 
+			}
+
+			if ((getManagedBean().getTaskName() != null && (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) 
+					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)
+					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)
+					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME)))
+					&& (getManagedBean().getCtLetterOfAcceptance() == null || getManagedBean().getCtLetterOfAcceptance().isEmpty())) {
+				for (int j =0; j < 2; j++) {
+					CtLetterOfAcceptance ctloa = new CtLetterOfAcceptance();
+					if (j == 0) {
+						ctloa.setContentTypeDesc(ResourceBundleUtils.getMessage("lbl.ct.amend.loa.sst", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+						ctloa.setDocDefinitionKey(ParameterConst.DOCUMENT_DEFINITION_KEY_LETTER_OF_ACCEPTANCE);
+
+						if (ctBackingBean.getManagedBean().getContractVer().getLoaFileAttachments().size() > 0
+								&& ctBackingBean.getManagedBean().getContractVer().getLoaFileAttachments().get(j).getSectionId() == ContractConst.ATTACHMENT_LOA_LETTER_SST
+								&& ctBackingBean.getManagedBean().getContractVer().getLoaFileAttachments().get(j).getFilePath() != null) {
+							ctloa.setLoaAttachments(ctBackingBean.getManagedBean().getContractVer().getLoaFileAttachments().get(j));
+						} else {
+							CtAttachment attach = new CtAttachment();
+							ctloa.setLoaAttachments(attach);
+						}
+					} else {
+						ctloa.setContentTypeDesc(ResourceBundleUtils.getMessage("lbl.ct.amend.loa.receipt", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+						ctloa.setDocDefinitionKey(ParameterConst.DOCUMENT_DEFINITION_KEY_ACK_OF_LOA_RECEIPT);
+
+						if (ctBackingBean.getManagedBean().getContractVer().getLoaFileAttachments().size() > 1
+								&&  ctBackingBean.getManagedBean().getContractVer().getLoaFileAttachments().get(j).getSectionId() == ContractConst.ATTACHMENT_LOA_LETTER_RECEIPT
+								&& ctBackingBean.getManagedBean().getContractVer().getLoaFileAttachments().get(j).getFilePath() != null ){
+							ctloa.setLoaAttachments(ctBackingBean.getManagedBean().getContractVer().getLoaFileAttachments().get(j));
+						} else {
+							CtAttachment attach = new CtAttachment();
+							ctloa.setLoaAttachments(attach);
+						}
+					}
+					getManagedBean().getCtLetterOfAcceptance().add(ctloa);
+				}
+				ctBackingBean.getManagedBean().getContractVer().getLoaFileAttachments().clear();
+			}
+
+			initializeRemarks();
+			getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(
+					ModuleCodeConst.CONTRACT_MANAGEMENT, ctBackingBean.getManagedBean().getContractVer().getDocType(), ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo()));
+
+			getManagedBean().setRemarkList(resDTO.getCtRemarks());
+			getManagedBean().setAttachmentList(resDTO.getCtAttachments());	
+			ctBackingBean.getManagedBean().setCtContractAmount(ctBackingBean.getManagedBean().getContractVer().getCtContractAmount());
+			if (ctBackingBean.getManagedBean().getCtContractAmount() != null
+					&& ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount() != null
+					&& ctBackingBean.getManagedBean().getCtContractAmount().getStaxAmount() != null) {
+				ctBackingBean.getManagedBean()
+						.setGstTotalAmount(
+								ctBackingBean
+										.getManagedBean()
+										.getCtContractAmount()
+										.getStaxAmount()
+										.add(ctBackingBean
+												.getManagedBean()
+												.getCtContractAmount()
+												.getGstAmount()
+												.add(ctBackingBean.getManagedBean().getCtContractAmount()
+														.getContractAmount())));    
+			}else{
+				ctBackingBean.getManagedBean().setGstTotalAmount(ctBackingBean.getManagedBean().getCtContractAmount().getContractAmount());
+			}
+			ctBackingBean = new ContractBackingBean(this.getManagedBean().getFileDirectory());
+			ctBackingBean.getManagedBean().setViewContract(false);
+			ctBackingBean.getManagedBean().setUpdateCompanyName(false);
+			ctBackingBean.getManagedBean().setUpdateSupplierAddress(false);
+			ctBackingBean.getManagedBean().setCtAddress(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
+			ctBackingBean.getManagedBean().setSupplierAddress(getFullAddress(ctBackingBean.getManagedBean().getCtAddress()));
+			ctBackingBean.getManagedBean().setSupplierCompanyName(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
+			ctBackingBean.getManagedBean().setSupplierBranchName(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierBranch());
+			ctBackingBean.getManagedBean().setSupplierRegNo(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierRegNo());
+			ctBackingBean.getManagedBean().setSupplierMofNo(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierMofNo());
+			ctBackingBean.retrieveBranchInfo();
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()) {
+				ctBackingBean.renderUpdateCheckbox(ctBackingBean.getManagedBean().getContractVer());
+			}			    
+			ctBackingBean.initializeRemarkAndAttachement(ctBackingBean.getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isFrequencySchedule()) {
+				ctBackingBean.getManagedBean().setFrequencySchedule(ContractConst.FREQENCY_SCHEDULE);
+			} else {
+				ctBackingBean.getManagedBean().setFrequencySchedule(ContractConst.PROGRESSIVE_SCHEDULE);
+			}
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+				ctBackingBean.getManagedBean().setDisableScheduleRadio(true);
+				ctBackingBean.getManagedBean().setFrequencySchedule(ContractConst.FREQENCY_SCHEDULE);
+			} else if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getScQtSchedules()!= null  && !ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getScQtSchedules().isEmpty()) {
+				ctBackingBean.getManagedBean().setDisableScheduleRadio(true);
+				ctBackingBean.getManagedBean().setFrequencySchedule(ContractConst.FREQENCY_SCHEDULE);
+			}  else if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getScQtProgPayments() != null && !ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getScQtProgPayments().isEmpty()) {
+				ctBackingBean.getManagedBean().setDisableScheduleRadio(true);
+				ctBackingBean.getManagedBean().setFrequencySchedule(ContractConst.PROGRESSIVE_SCHEDULE);
+			}
+
+			// Enable or Disable GST field
+			if (!ctBackingBean.isLoaContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getGstEffDate())
+					&& !ctBackingBean.isLoaContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
+				ctBackingBean.getManagedBean().setGstCheckingGUI(false); // Display N/A
+			} else {
+				if (ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount() == null) {
+					ctBackingBean.getManagedBean().getCtContractAmount().setGstAmount(BigDecimal.ZERO);
+				}
+				ctBackingBean.getManagedBean().setGstCheckingGUI(true);
+				// If original contract is fulfilled imposed service tax rule
+				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
+						&& ctBackingBean.isBeforeGstReliefDueDate()
+						&& ctBackingBean.imposedServiceTaxCondition()
+						&& !ctBackingBean.getManagedBean().getContractVer().getCtContractValue().isServiceTax()
+						&& ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() <= ctBackingBean.getGstReliefDueDate().getTime()) {
+					ctBackingBean.getManagedBean().setDisableGstAmount(true);
+				}
+			}
+			
+			// Enable or Disable STAX field
+			if (ctBackingBean.getManagedBean().getCtContractAmount().getStaxAmount() == null) {
+				ctBackingBean.getManagedBean().getCtContractAmount().setStaxAmount(BigDecimal.ZERO);				
+			}
+			ctBackingBean.getManagedBean().setStaxCheckingGUI(true);
+			
+			// Enable or Disable New GST field
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount() == null) {
+				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewGstAmount(BigDecimal.ZERO);			
+			}
+			
+			
+			// Enable or Disable NewSTAX field
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount() == null) {
+				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewStaxAmount(BigDecimal.ZERO);				
+			}
+
+			
+			// Amendment process	  
+			// Redmine 19600 - Amendment with Supplement
+			if(ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount().longValue() >= 20000L){
+				getManagedBean().setCommitteeType(retrieveCommitteeType());
+			}
+			ctBackingBean.getManagedBean().setDisableAmendDetails(false);
+			if (getManagedBean().getTaskName() != null
+					&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) 
+							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)
+							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CHAIR_PERSON_SIGN_OFF_HT_NAME)
+							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)
+							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)
+							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME)
+							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)
+							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VIEW_FA_DETAILS_HT_NAME)
+							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_MOF_RESULT_HT_NAME))) {
+				ctBackingBean.getManagedBean().setDisableAmendDetails(true);
+			}
+			if (getManagedBean().getTaskName() != null 
+					&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME)) {
+				getManagedBean().setDisableEndorseAmendDetails(true);
+			}
+			if (getManagedBean().getTaskName() != null 
+					&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)
+							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME))) {
+				getManagedBean().setDisableFinalAmendDetails(true);
+			}
+			if (getManagedBean().getTaskName() != null 
+					&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VIEW_FA_DETAILS_HT_NAME)) {
+				getManagedBean().setDisableMeetingDetails(true);
+				ctBackingBean.getManagedBean().setViewContract(true);
+			}
+			
+			// reset
+			ctBackingBean.getManagedBean().setContractExpired(false);
+			
+			if(ctBackingBean.getManagedBean().getContractVer().getCtContract().getRecordStatusFlg() == 3) { 
+				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setContractExtend(true);
+				ctBackingBean.getManagedBean().setContractExpired(true);
+			}
+			
+		} finally {
+			contractAmendmentSO = null;
+			reqDTO = null;
+			resDTO = null;
+			agreementSO = null;
+			ctAgreementResDTO = null;
+			ctAgreementReqDTO = null;
+		}
+	}
+
+	/**
+	 * The method used to save the contract amendment.
+	 * This method will navigate to acknowledgment page with a 
+	 * confirmation message once submit successfully. 
+	 *
+	 * @param  action  the user action on this contract
+	 * @return the navigate URL 
+	 * @throws Exception  if an exception occurred
+	 * @see    Exception
+	 */
+	public String saveContractAmendment(String outcome) throws Exception {
+		IContractAmendmentSO contractAmendmentSO = null;
+		ContractReqDTO reqDTO = null;
+		try {
+			/*Validation for login user's org profile before initiate contract task*/
+			if (!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)
+					&& ctBackingBean.getManagedBean().getContractVer().getStatus() != null
+					&& ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FA_PENDING_SUBMISSION.longValue()) {
+				validateOwnerOrgProfile(
+						ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+			}
+			
+			setSecretary();
+			if(!ctBackingBean.getManagedBean().getContractVer().getCtContractValue().isPid()){
+				ctBackingBean.getManagedBean().getContractVer().setCtPidReasons(null);
+			}
+			validateContractAmendment(outcome);
+
+			// Generate Supplier Acknowledgement Receipt
+			if (getManagedBean().getTaskName() != null 
+					&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)
+					&& outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
+
+				String filePath = getAcknowledgmentReceiptContent(true);
+				CtAttachment attachment = new CtAttachment();
+				attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+				attachment.setFileName("PengakuanPenerimaanSuratBerkaitanKontrakTambahan.pdf");
+				attachment.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+				attachment.setCreatedUser(getFacesScopes().getUserSessionBean());
+				attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+				attachment.setSectionId(ContractConst.ATTACHMENT_LOA_LETTER_RECEIPT);
+				getManagedBean().getCtLetterOfAcceptance().get(1).setLoaAttachments(attachment);
+			}
+			for(CtLetterOfAcceptance loaLetters : getManagedBean().getCtLetterOfAcceptance()){
+				if(loaLetters.getLoaAttachments().getFilePath() != null ){
+					ctBackingBean.getManagedBean().getContractVer().getLoaFileAttachments().add(loaLetters.getLoaAttachments());
+				}
+			}
+			reqDTO = new ContractReqDTO();
+			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
+			reqDTO.setOutcome(outcome);
+			reqDTO.setTaskId(getManagedBean().getTaskId());
+
+			contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
+			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContractItems().size() > 0) {
+				ctBackingBean.getManagedBean().getContractVer().getCtContractItems().clear();
+			}
+			ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(ctBackingBean.getManagedBean().getCtItemList());
+			ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(ctBackingBean.getManagedBean().getCtItemServiceList());
+			ctBackingBean.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
+
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend() 
+					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate() == null) {
+				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(
+						ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendStartDate());
+			}
+
+			if(ctBackingBean.getManagedBean().getContractVer().getCtSchedules() != null){
+				for(CtSchedule schedules : ctBackingBean.getManagedBean().getContractVer().getCtSchedules()){
+					PmParameter parameter =  new PmParameter();
+					parameter.setParameterId(schedules.getFulfilmentTypeId());
+					schedules.setScheduleType(parameter);
+				}
+			}
+
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()) {
+				ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setSupplierName(ctBackingBean.getManagedBean().getSupplierCompanyName());
+				ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setSupplierBranch(ctBackingBean.getManagedBean().getSupplierBranchName());
+				ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setSupplierRegNo(ctBackingBean.getManagedBean().getSupplierRegNo());
+				ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setSupplierMofNo(ctBackingBean.getManagedBean().getSupplierMofNo());
+				if (ctBackingBean.getManagedBean().getCtAddress() != null) {
+					ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setSupplierAddress(ctBackingBean.getManagedBean().getCtAddress());
+				}
+			}
+
+			if (getManagedBean().isPrepareLOA()) {
+				int contractDuration = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() 
+						+ ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getContractPeriod();
+				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setContractDuration(new BigDecimal(contractDuration));
+
+				getSupplierListForLoaAck();
+				reqDTO.setSupplierList(getManagedBean().getSupplierList());
+			}
+
+			// Retrieve the proper committee role during sign off process and set the sign off flag to true
+			if (getManagedBean().getTaskName() != null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)
+					&& outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
+				String role = null;
+				for(CtCommitteeMember committeeMember : ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
+					if (committeeMember.getPmUser().getUserId().equals(getFacesScopes().getUserSessionBean().getUserId())) {
+						committeeMember.setSignedOff(true);
+						if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) 
+								|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) { 
+							role = "FPB_" + MemberRole.getDisplayName(committeeMember.getMemberRole().getParameterCode());
+						} else {
+							role = getManagedBean().getCommitteeType() + "_" + MemberRole.getDisplayName(committeeMember.getMemberRole().getParameterCode());
+						}
+						reqDTO.setUserRole(role);
+						break;
+					}
+				}	     		
+			} else {
+				reqDTO.setUserRole(getUserRole());
+			}
+			reqDTO.setTaskName(getManagedBean().getTaskName());
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+				ctBackingBean.scheduleProgressiveDate();
+			}
+			reqDTO.setCtContract(ctBackingBean.getManagedBean().getContractVer().getCtContract());
+			reqDTO.setCtContractVer(ctBackingBean.getManagedBean().getContractVer());
+			reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
+			reqDTO.setAttachments(getManagedBean().getAttachmentList());
+			reqDTO.setDeleteAttachments(ctBackingBean.getManagedBean().getDeleteAttachmentList());
+			reqDTO.setUserMap(getManagedBean().getUserMap());
+			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
+			reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
+			reqDTO.setNewAgencyMap(ctBackingBean.getManagedBean().getNewAgencyMap());
+			reqDTO.setUpdateAgencyMap(ctBackingBean.getManagedBean().getUpdateAgencyMap());
+			reqDTO.setDeleteAgencyMap(ctBackingBean.getManagedBean().getDeleteAgencyMap());
+			reqDTO.setUpdateZoneMap(ctBackingBean.getManagedBean().getUpdateZoneMap());
+			reqDTO.setUpdateItemMap(ctBackingBean.getManagedBean().getUpdateItemMap());
+
+			if (getManagedBean().getPmDigiSign() != null) {
+				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
+			}
+			ContractResDTO resDTO = contractAmendmentSO.saveContractAmendmentVerDtls(reqDTO);
+			if (resDTO.isSuccessful()) {
+				log.debug("Record saved successfully");
+				String messageId = MessageConst.INFO_700005;
+				String[] params = new String[] { getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,
+						this.ctBackingBean.getManagedBean().getContractVer().getDocType()),
+						this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo()};
+
+				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+					messageId = MessageConst.INFO_700025;
+				} else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+					messageId = MessageConst.INFO_700009;
+				} else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+					if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME)) {
+						messageId = MessageConst.INFO_700061;
+					} else {
+						if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isPbqcAuthorityReq()) {
+							messageId = MessageConst.INFO_700051;
+						} else if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isMofAuthorityReq()) {
+							messageId = MessageConst.INFO_700007;
+						} else {
+							messageId = MessageConst.INFO_700007;
+						}
+					}
+				} else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+					messageId = MessageConst.INFO_700008;
+				} else if( outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
+					if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)) {
+						messageId = MessageConst.INFO_700001;
+					} else {
+						messageId = MessageConst.INFO_700011;
+					}
+				} else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+					if (getManagedBean().getTaskName() == null
+							|| (getManagedBean().getTaskName() != null
+							&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_FA_HT_NAME)
+									|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FA_HT_NAME)))) {
+						messageId = MessageConst.INFO_700021;
+						if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+								ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+							params = new String[] { getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,
+									this.ctBackingBean.getManagedBean().getContractVer().getDocType()),
+									this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo(),
+									RoleHelper.getInstance().getRoleDescByCode(RoleCode.CT_APPROVER.value()).getRoleName()};
+						} else { // Central Contract
+							params = new String[] { getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,
+									this.ctBackingBean.getManagedBean().getContractVer().getDocType()),
+									this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo(),
+									RoleHelper.getInstance().getRoleDescByCode(RoleCode.BPK_CC_APPROVER.value()).getRoleName()};
+						}
+					}
+
+					if (getManagedBean().getTaskName() != null) {
+						if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)) {
+							messageId = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isApprovalReq()
+									? MessageConst.INFO_700046 : MessageConst.INFO_700043;
+
+						} else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)) {
+							messageId = MessageConst.INFO_758002;
+							params = new String[] { this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo()};
+						} else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)) {
+							messageId = MessageConst.INFO_758003;
+							params = new String[] { this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo()};
+						} else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_MOF_RESULT_HT_NAME)) {
+							messageId = MessageConst.INFO_758004;
+							params = new String[] { this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo()};
+						}
+					}
+				} else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+					messageId = MessageConst.INFO_700010;
+				}
+
+				//SIR#14189: Replace the doc type in acknowledge message for Supplemental Contract Letter process
+				if (getManagedBean().getTaskName() != null
+						&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)
+								|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME)
+								|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)
+								|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME))) {
+					params[0] = ResourceBundleUtils.getMessage("lbl.ct.amend.loa.sst", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+				}
+				successMessage(messageId, params);
+
+				if (!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) 
+						|| (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId() == null)) {
+					renewSesionObject();
+					return CommonUIConst.ACKNOWLEDGE_PAGE;
+				} else {
+					ContractReqDTO ctReqDTO = new ContractReqDTO();
+					ctReqDTO.setContractVerId(resDTO.getCtContractVer().getContractVerId());
+					ctReqDTO.setDocType(resDTO.getCtContractVer().getDocType());
+					setAmendmentContractVer(ctReqDTO);
+					ConstructTabSideMenu();
+				}
+			} else {
+				throw new EpException(MessageConst.ERROR_700020);
+			}
+		} finally {
+			contractAmendmentSO = null;
+		}
+		return null;		
+	}
+
+	/**
+	 * The method used for validating the contract amendment information.
+	 * A warning or error message will display on screen when the validation
+	 * is failed. User required to modify the information accordingly
+	 * to proceed.
+	 *
+	 * @param  action	the user action on this contract. The validation 
+	 * 					will invoke base on the action
+	 */
+	public void validateContractAmendment(String action) throws EpException {
+		getManagedBean().setAutoUpdate(true);	
+		// Validation for remark
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+			String remark = getManagedBean().getRemarkList().get(0).getRemark();
+			String itemRemark = ctBackingBean.getManagedBean().getContractVer().getItemRemarks().get(0).getRemark();
+			String supplierRemark = ctBackingBean.getManagedBean().getContractVer().getSupplierRemarks().get(0).getRemark();
+
+			if ((remark == null || remark.length() == 0) && (itemRemark == null || itemRemark.length() == 0) 
+					&& (supplierRemark == null || supplierRemark.length() == 0)) {
+				setTabValue("AD");
+				throw new EpException(MessageConst.ERROR_100022, 
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
+		}/*Remark validation end*/
+
+		/*validation for other  selection*/
+		if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()) {
+			// Validation for mandatory attachments
+		/*	if(getManagedBean().getAttachmentList() == null || getManagedBean().getAttachmentList().isEmpty()) {
+				setTabValue("AD");
+				throw new EpException(MessageConst.ERROR_750033);
+			} */
+			// Validation for delivery term 
+			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) &&
+					!ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()){
+				if(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getDeliveryTerm() <= 0){
+					setTabValue("FD");
+					throw new EpException(MessageConst.ERROR_100062);
+				}
+			}
+			//Validation for PID
+			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && 
+					ctBackingBean.getManagedBean().getContractVer().getCtContractValue().isPid() && 
+					(ctBackingBean.getManagedBean().getContractVer().getCtPidReasons() == null || ctBackingBean.getManagedBean().getContractVer().getCtPidReasons().size() == 0)) {
+				setTabValue("FD");
+				throw new EpException(MessageConst.ERROR_100022, 
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
+			// Validation for PID Reason
+			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+				if(ctBackingBean.getManagedBean().getContractVer().getCtPidReasons() != null 
+						&& ctBackingBean.getManagedBean().getContractVer().getCtPidReasons().size() > 0 ){
+					for(CtPidReason reason : ctBackingBean.getManagedBean().getContractVer().getCtPidReasons()){
+						if(reason.getPmReason() == null || reason.getPmReason().getReasonId() == null){
+							setTabValue("FD");
+							throw new EpException(MessageConst.ERROR_100022, 
+									new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", 
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						}
+						ctBackingBean.validatePidReason(reason.getPmReason().getReasonId());
+						if(ctBackingBean.PidPurchaseTypeOther(reason.getPmReason().getReasonId())){
+							if(reason.getReasonDesc().isEmpty()){
+								setTabValue("FD");
+								throw new EpException(MessageConst.ERROR_100022, 
+										new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason.desc", 
+												ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+							}
+						}
+					}
+				}
+			}
+			// Validation for GST amount before GST Relief Due Date
+			if (ctBackingBean.isBeforeGstReliefDueDate()
+					&& ctBackingBean.imposedServiceTaxCondition()
+					&& ctBackingBean.isLoaContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())
+					&& ctBackingBean.getManagedBean().getContractVer().getCtContractValue().isServiceTax()) {
+				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount() == null
+						|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount().doubleValue() == 0) {
+					setTabValue("AD");
+					throw new EpException(MessageConst.ERROR_100022, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.new.gst.amt", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				}
+				
+				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount() == null
+						|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount()
+								.doubleValue() == 0) {
+					setTabValue("AD");
+					throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+							"lbl.ct.new.stax.amt", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()) });
+				}
+			}
+
+			// Validation for zone
+			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+				ctBackingBean.getZoneObjDetails();
+				if (ctBackingBean.getManagedBean().getContractVer().getCtContractZones() != null) {
+					for (CtContractZone contractZone : ctBackingBean.getManagedBean().getContractVer().getCtContractZones()) {
+						if (contractZone.getDeliveryTerm() <= 0) {
+							setTabValue("ZO");
+							throw new EpException(MessageConst.ERROR_750004, new String[]{contractZone.getZoneName()});
+						}
+					}
+				}
+			}		
+			// Validation for agency
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY) 
+					&& ctBackingBean.getManagedBean().getContractVer().getCtAgencies().size() == 0 && action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+				setTabValue("AG");
+				throw new EpException(MessageConst.ERROR_750006); // At least one row should be in Agency section.
+			}
+
+			// Validation for AP178 agency
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAgencies().size()>0) {
+				double ceilingAmt = 0.0;
+				DecimalFormat df = new DecimalFormat("#.00");
+				for (CtAgency ctAgency : ctBackingBean.getManagedBean().getContractVer().getCtAgencies()) {
+					ceilingAmt = ceilingAmt + ctAgency.getCeilingAmount().doubleValue();
+				}
+				ceilingAmt = Double.valueOf(df.format(ceilingAmt));
+
+				double overallContractAmount = 0.0;
+				for (CtContractAmount contractAmt : ctBackingBean.getManagedBean().getContractVer().getCtContractAmounts()){
+					if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() >= contractAmt.getEffDate().getTime() 
+							&& ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() <= contractAmt.getExpDate().getTime()){
+						overallContractAmount = contractAmt.getContractAmount().doubleValue();
+						if (contractAmt.getGstAmount() != null) {
+							overallContractAmount += contractAmt.getGstAmount().doubleValue();
+						}
+						if (contractAmt.getStaxAmount() != null ) {
+							overallContractAmount  += contractAmt.getStaxAmount().doubleValue();
+						}
+						if (contractAmt.getGstAmount() != null && contractAmt.getStaxAmount() != null) {
+							overallContractAmount += contractAmt.getGstAmount().doubleValue() + contractAmt.getStaxAmount().doubleValue();
+						}
+						overallContractAmount = Double.valueOf(df.format(overallContractAmount));
+						break;
+					}
+				}
+				if (ceilingAmt >  overallContractAmount) {
+					CommonUtils commonUtils = new CommonUtils();
+					DecimalFormat nf = new DecimalFormat(commonUtils.getDisplayNumberFormat(
+							CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+					setTabValue("AG");
+					throw new EpException(MessageConst.ERROR_750007, 
+							new String[] {nf.format(overallContractAmount)}); // Total ceiling value exceeded contract value. Please check your ceiling amount.
+				}
+
+				if(!ctBackingBean.getManagedBean().isOwnerOrgProfile()){
+					if(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getAp178RefNo() == null
+							|| ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getAp178RefNo().isEmpty()){
+						setTabValue("AG");
+						throw new EpException(MessageConst.ERROR_750045);
+					}else if(ctBackingBean.getManagedBean().getContractVer().getAgencyContractSharingAttachements() == null ||
+							ctBackingBean.getManagedBean().getContractVer().getAgencyContractSharingAttachements().getFilePath() == null){
+						setTabValue("AG");
+						throw new EpException(MessageConst.ERROR_750046);
+					}
+				}
+			}
+
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContractItems() != null) {
+				for (CtContractItem item : ctBackingBean.getManagedBean().getContractVer().getCtContractItems()) {
+					// Validation for minimum order quantity
+					if (item.getMinimumOrderQty() <= 0) {
+						item.setMinimumOrderQty(1);
+						setTabValue("IT");
+						throw new EpException(MessageConst.ERROR_100033,
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					}
+					// Validation for ceiling quantity
+					double totalCeilingQuantity = 0.0;
+					if (item.getCtItemMaxQties().size() != 0) {						
+						for (CtItemCeilingQty ctItemCeilingQty : item.getCtItemCeilingQties()) {
+							totalCeilingQuantity = totalCeilingQuantity + ctItemCeilingQty.getCeilingQuantity().doubleValue();
+						}
+						if (item.getTotalMaxQuantity().doubleValue() < totalCeilingQuantity) {
+							setTabValue("IT");
+							throw new EpException(MessageConst.ERROR_750009, new String[]{item.getScRequestItem().getItemName()});
+						}
+					}
+				}
+			}
+
+			// Validation for Deduction
+			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && 
+					ctBackingBean.getManagedBean().getContractVer().getCtDeductions() != null 
+					&& ctBackingBean.getManagedBean().getContractVer().getCtDeductions().size() > 0){
+				for(CtDeduction deduction : ctBackingBean.getManagedBean().getContractVer().getCtDeductions()){
+					if(deduction.getDeductionType() == null ||deduction.getDeductionType().getParameterId() == null ){
+						setTabValue("DE");
+						throw new EpException(MessageConst.ERROR_100022, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.deduction.type", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					}
+					ctBackingBean.validateDeductionType(deduction);
+					if(deduction.getCtDeductionClauses() != null && deduction.getCtDeductionClauses().size() > 0){
+						for(CtDeductionClause ctDeductionClauses : deduction.getCtDeductionClauses()){
+							if(ctDeductionClauses.getClauseDescription().isEmpty()){
+								setTabValue("DE");
+								throw new EpException(MessageConst.ERROR_100022, 
+										new String[]{ResourceBundleUtils.getMessage("lbl.ct.deduction.clause.desc", 
+												ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+							}
+						}
+					}
+				}  
+			}
+
+			// Validation for schedule
+			if(ctBackingBean.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+				if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isFrequencySchedule()) {
+					ctBackingBean.getManagedBean().getContractVer().setCtProgressivePayments(null);
+				} else {
+					ctBackingBean.getManagedBean().getContractVer().setCtSchedules(null);  	
+				}
+				List<String> schedulePhaseNoList = new ArrayList<String>();
+				if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isFrequencySchedule()) {
+					if (ctBackingBean.getManagedBean().getContractVer().getCtSchedules() == null || ctBackingBean.getManagedBean().getContractVer().getCtSchedules().size() < 2 
+							&& (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))) {
+						setTabValue("SC");
+						throw new EpException(MessageConst.ERROR_750022);
+					}
+					for (CtSchedule schedules : ctBackingBean.getManagedBean().getContractVer().getCtSchedules()) {
+						if (schedules.getScheduleNo() == null) {
+							setTabValue("SC");
+							throw new EpException(MessageConst.ERROR_100022,
+									new String[] {ResourceBundleUtils.getMessage("lbl.ct.schedule.no", 
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						}
+						if (schedulePhaseNoList.contains(schedules.getScheduleNo().toString())) {
+							setTabValue("SC");
+							throw new EpException(MessageConst.ERROR_100046, 
+									new String[] {ResourceBundleUtils.getMessage("lbl.ct.schedule.no", 
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						} else {
+							schedulePhaseNoList.add(schedules.getScheduleNo().toString());
+						}
+						if (schedules.getStartMonth() == null) {
+							setTabValue("SC");
+							throw new EpException(MessageConst.ERROR_100022,
+									new String[] {ResourceBundleUtils.getMessage("lbl.ct.frequency.schedule", 
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())
+											+ " " + ResourceBundleUtils.getMessage("lbl.ct.start.period", 
+													ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						}
+						if (schedules.getEndMonth() == null) {
+							setTabValue("SC");
+							throw new EpException(MessageConst.ERROR_100022,
+									new String[] {ResourceBundleUtils.getMessage("lbl.ct.frequency.schedule", 
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) 
+											+ " " + ResourceBundleUtils.getMessage("lbl.ct.end.period", 
+													ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						}
+						if (schedules.getFulfilmentTypeId() == null) {
+							setTabValue("SC");
+							throw new EpException(MessageConst.ERROR_100022, 
+									new String[] {ResourceBundleUtils.getMessage("lbl.ct.schedule.type", 
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						}
+					}     	
+				} else if (ctBackingBean.getManagedBean().getContractVer().getCtProgressivePayments() == null || ctBackingBean.getManagedBean().getContractVer().getCtProgressivePayments().size() < 2 
+						&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().isFrequencySchedule()
+						&& (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))) {
+					setTabValue("SC");
+					throw new EpException(MessageConst.ERROR_750022);
+				}
+				if (ctBackingBean.getManagedBean().getContractVer().getCtProgressivePayments() != null && !ctBackingBean.getManagedBean().getContractVer().getCtProgressivePayments().isEmpty() 
+						&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().isFrequencySchedule()) {
+					BigDecimal percentage = BigDecimal.ZERO;
+					for (CtProgressivePayment progressivePayment : ctBackingBean.getManagedBean().getContractVer().getCtProgressivePayments()) {
+						if (progressivePayment.getPhaseNo()== null) {
+							setTabValue("SC");
+							throw new EpException(MessageConst.ERROR_100022,
+									new String[] {ResourceBundleUtils.getMessage("lbl.ct.progressive.schedule", 
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())
+											+ " " + ResourceBundleUtils.getMessage("lbl.ct.phase", 
+													ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						}
+						if (schedulePhaseNoList.contains(progressivePayment.getPhaseNo().toString())) {
+							setTabValue("SC");
+							throw new EpException(MessageConst.ERROR_100046, 
+									new String[] {ResourceBundleUtils.getMessage("lbl.ct.phase", 
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						} else {
+							schedulePhaseNoList.add(progressivePayment.getPhaseNo().toString());
+						}
+						if (progressivePayment.getPhaseDesc() == null ||progressivePayment.getPhaseDesc() == "" ) {
+							setTabValue("SC");
+							throw new EpException(MessageConst.ERROR_100022,
+									new String[] {ResourceBundleUtils.getMessage("lbl.ct.progressive.schedule", 
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())
+											+ " " + ResourceBundleUtils.getMessage("lbl.ct.description", 
+													ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						}
+						if (progressivePayment.getStartMonth() == null) {
+							setTabValue("SC");
+							throw new EpException(MessageConst.ERROR_100022, 
+									new String[] {ResourceBundleUtils.getMessage("lbl.ct.progressive.schedule", 
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())
+											+ " " + ResourceBundleUtils.getMessage("lbl.ct.start.period", 
+													ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						}
+						if (progressivePayment.getEndMonth() == null) {
+							setTabValue("SC");
+							throw new EpException(MessageConst.ERROR_100022, 
+									new String[] {ResourceBundleUtils.getMessage("lbl.ct.progressive.schedule", 
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())
+											+ " " + ResourceBundleUtils.getMessage("lbl.ct.end.period", 
+													ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						}     	
+						if(progressivePayment.getPercentage()!=null) {
+							percentage = percentage.add(progressivePayment.getPercentage());
+						} else {
+							setTabValue("SC");
+							throw new EpException(MessageConst.ERROR_100022,
+									new String[] {ResourceBundleUtils.getMessage("lbl.ct.progressive.schedule", 
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())
+											+ " " + ResourceBundleUtils.getMessage("lbl.ct.percentage", 
+													ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});							
+						}						
+					}
+					int value = percentage.compareTo(new BigDecimal(100));
+					if (value != 0 && (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
+							|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))) {
+						setTabValue("SC");
+						throw new EpException(MessageConst.ERROR_100022, 
+								new String[] {ResourceBundleUtils.getMessage("lbl.ct.percentage.progressive", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					}
+				}
+			}
+		}
+		if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)  && !action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+			// Validation for amendment type
+			if (!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend() 
+					&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange() 
+					&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
+					&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange() 
+					&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isClauseChange()
+					&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst() 
+					&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByStax()
+					&&  !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()) {
+				setTabValue("AD");
+				throw new EpException(MessageConst.ERROR_100022, 
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.amendment.type", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
+			// Validation for reference no
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getFileRefNo() == null 
+					|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getFileRefNo() == "") {
+				setTabValue("AD");
+				throw new EpException(MessageConst.ERROR_100061, 
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.file.ref.no", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
+			// Validation for amendment title
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getTitle() == null
+					|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getTitle() == "") {
+				setTabValue("AD");
+				throw new EpException(MessageConst.ERROR_100022, 
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.amendment.title", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
+			// Validation for amendment description
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getDescription() == null
+					|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getDescription() == "") {
+				setTabValue("AD");
+				throw new EpException(MessageConst.ERROR_100022, 
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.amendment.desc", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
+			
+			// Validation for amendment extension period for expired contract
+			if (ctBackingBean.getManagedBean().isContractExpired() 
+					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() == 0) {
+				setTabValue("AD");
+				throw new EpException(MessageConst.ERROR_750048);
+			}
+			
+			// Validation for amendment effective date
+			if (!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()
+					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate() != null
+					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate().getTime() > ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime()) {
+				setTabValue("AD");
+				throw new EpException(MessageConst.ERROR_750035);
+			}
+			/* Validation mandatory for approving authority */
+			if (!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isMofAuthorityReq() 
+					&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isPbqcAuthorityReq()
+					&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isApproverAuthorityReq()) {
+				setTabValue("AD");
+				throw new EpException(MessageConst.ERROR_750038);
+			}
+			// Validation mandatory for secretary if pbqc authority is required
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isPbqcAuthorityReq()) {
+				//Validation for committee
+				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary() == null) {
+					setTabValue("AD");
+					throw new EpException(MessageConst.ERROR_100022, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.secretary.committee", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				}
+			}
+			// Validation mandatory for approval letter if approver authority is required
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isApproverAuthorityReq() && (!isContractAmountAmend() && 
+					!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isClauseChange())) {
+				//Validation for approval letter
+				if (ctBackingBean.getManagedBean().getContractVer().getApprovalLetterAttachement() == null
+						|| ctBackingBean.getManagedBean().getContractVer().getApprovalLetterAttachement().getFilePath() == null) {						
+					setTabValue("AD");
+					throw new EpException(MessageConst.ERROR_100022, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.approval.letter", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				}
+			}
+		}
+
+		if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+			if (getManagedBean().getTaskName() != null
+					&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)
+							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME))){
+
+				// Validation for File Reference No
+				if (StringUtils.isEmpty(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoiLoa().getFileNo())){
+					setTabValue("LOD");
+					throw new EpException(MessageConst.ERROR_100022, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.loa.physical.no", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				}
+				// Validation for contract signer
+				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractSigner() == null 
+						|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractSigner().getUserId() == null) {
+					setTabValue("LOD");
+					throw new EpException(MessageConst.ERROR_100022, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.loa.signer", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				}
+				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getLoaSignerDesig() == null) {
+					setTabValue("LOD");
+					throw new EpException(MessageConst.ERROR_100022, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.signer.designation", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				}
+				// Validation for Supplemental Contract Letter Date
+				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getGovtSignDate() ==  null){
+					setTabValue("CNT");
+					throw new EpException(MessageConst.ERROR_100022, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.supplemental.contract.letter.date", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				}
+				// Validation for Respond Period
+				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getLoaResponsePeriod() ==  null){
+					setTabValue("CNT");
+					throw new EpException(MessageConst.ERROR_100022, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.scl.response.period", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				}
+				// Validation for Supplemental Contract Letter
+				if (getManagedBean().getCtLetterOfAcceptance().get(0).getLoaAttachments() != null
+						&& getManagedBean().getCtLetterOfAcceptance().get(0).getLoaAttachments().getFilePath() == null ) {						
+					setTabValue("CNT");
+					throw new EpException(ResourceBundleUtils.getMessage("lbl.ct.loa.content.file.name", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+				}
+				// Validation for bond setting
+				if ((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isBondReq()
+						&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
+						&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+								ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))) {
+					if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondSubmissionPeriod() ==  null) {
+						setTabValue("PB");
+						throw new EpException(MessageConst.ERROR_100022, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.bond.no.days", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					}
+				}
+			} 
+		}
+
+		if (getManagedBean().getTaskName() != null 
+				&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)
+				&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
+			// Validation for bank account number
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getBankAccountNo() == null) {
+				setTabValue("LOD");
+				throw new EpException(MessageConst.ERROR_100022, 
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.bank.account.name", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
+			// Validation for term and condition
+			if (!getManagedBean().isTermAndConditionFlg()) {
+				setTabValue("SDEC");
+				throw new EpException(MessageConst.ERROR_750002);
+			}		
+		}
+		if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+			// Check all the member role must be selected
+			if (getManagedBean().getTaskName() != null 
+					&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME) 
+					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers() != null) {
+				validateCommiteeMemberDetails();
+			}
+			// Validation for meeting and committee
+			if (getManagedBean().getTaskName() != null
+					&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)
+							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME))) {
+				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtMeetings().size() == 0) {
+					setTabValue("MET");
+					throw new EpException(MessageConst.ERROR_100023, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.menu.meeting",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				} else {
+					int counter = 0;
+					for (CtMeeting ctMeeting : ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtMeetings()) {
+						if (ctMeeting.getMeetingDate() == null) {
+							setTabValue("MET");
+							throw new EpException(MessageConst.ERROR_100022, 
+									new String[]{ResourceBundleUtils.getMessage("lbl.ct.date.of.meeting", 
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						} 
+						if (ctMeeting.getMeetingLocation() == null || ctMeeting.getMeetingLocation().isEmpty()) {
+							setTabValue("MET");
+							throw new EpException(MessageConst.ERROR_100022, 
+									new String[]{ResourceBundleUtils.getMessage("lbl.ct.location.of.meeting", 
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						} 
+						if (ctMeeting.getMeetingStatusId() == null) {
+							setTabValue("MET");
+							throw new EpException(MessageConst.ERROR_100022, 
+									new String[]{ResourceBundleUtils.getMessage("lbl.ct.meeting.status", 
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						}
+						if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)) {
+							if (ctMeeting.getMeetingStatusId().equals(ContractStatusConst.FA_MEETING_PENDING)) {
+								setTabValue("MET");
+								throw new EpException(MessageConst.ERROR_750027);
+							}
+						}
+						if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)) {
+							if (ctMeeting.getMeetingStatusId().equals(ContractStatusConst.FA_MEETING_APPROVE)) {
+								counter++;
+							}
+						}
+					}
+					if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)) {
+						if (counter == 0) {
+							setTabValue("MET");
+							throw new EpException(MessageConst.ERROR_750028);
+						}
+					}
+				}
+
+				if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)
+						&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers() != null) {
+					int chairPersonCount = 0;
+					Long chairPersonId = getParameterByTypeAndCode(ParameterTypeConst.COMMITTEE_ROLE, ParameterConst.COMMITTEE_ROLE_CHAIRPERSON).getParameterId();
+					for (CtCommitteeMember committeMember : ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
+						if (committeMember.getMemberRoleId().longValue() == chairPersonId.longValue()) {
+							chairPersonCount++;
+							if (chairPersonCount > 1) {
+								setTabValue("MET");
+								throw new EpException(MessageConst.ERROR_750026);
+							}
+						}
+					}
+				}
+				if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)) {
+					if (getManagedBean().getPbQcApproved() == null || getManagedBean().getPbQcApproved().equalsIgnoreCase("")) {
+						setTabValue("DCN");
+						throw new EpException(MessageConst.ERROR_100022, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.decision", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					}
+					if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcJustification() == null
+							|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcJustification().equalsIgnoreCase("")) {
+						setTabValue("DCN");
+						throw new EpException(MessageConst.ERROR_100022, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					}
+					if (ctBackingBean.getManagedBean().getContractVer().getPbqcDecisionLetterAttachment() == null
+							|| ctBackingBean.getManagedBean().getContractVer().getPbqcDecisionLetterAttachment().getFilePath() == null) {
+						setTabValue("DCN");
+						throw new EpException(MessageConst.ERROR_100022, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.decision.letter", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					}
+				}
+			}
+			if (getManagedBean().getTaskName() != null
+					&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_MOF_RESULT_HT_NAME)) {
+				if (getManagedBean().getMofApproved() == null || getManagedBean().getMofApproved().equalsIgnoreCase("")) {
+					setTabValue("DCN");
+					throw new EpException(MessageConst.ERROR_100022, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.decision", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				}
+				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofJustification() == null
+						|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofJustification().equalsIgnoreCase("")) {
+					setTabValue("DCN");
+					throw new EpException(MessageConst.ERROR_100022, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				}
+				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofMeetingDate() == null) {
+					setTabValue("DCN");
+					throw new EpException(MessageConst.ERROR_100022, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.approval.letter.date", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				}
+				if (ctBackingBean.getManagedBean().getContractVer().getMofDecisionLetterAttachment() == null
+						|| ctBackingBean.getManagedBean().getContractVer().getMofDecisionLetterAttachment().getFilePath() == null) {
+					setTabValue("DCN");
+					throw new EpException(MessageConst.ERROR_100022, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.approval.letter", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				}
+			}
+		}
+		// Validation for committee member
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && 
+				(getManagedBean().getTaskName() != null &&
+				(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)
+						|| getManagedBean().isSignOffDecision()))
+						&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers() != null
+						&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().size() > 0) {
+			validateMeetingDetails();
+		}
+		// Validation for approver
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && isApproverSetting() 
+				&& getManagedBean().getApproverModel().getTarget().size() == 0) {
+			setTabValue("SE");
+			throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
+		}
+		// Validation for valid supplier for acknowledge loa task assignment
+		if (getManagedBean().isPrepareLOA() 
+				&& (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
+						|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))) {
+			getSupplierListForLoaAck();
+			if (getManagedBean().getSupplierList() == null 
+					|| getManagedBean().getSupplierList().isEmpty()) {
+				throw new EpException(MessageConst.ERROR_750039);
+			}
+		}
+
+		if ((action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) 
+				|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))
+				|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT))) {
+			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
+			StringBuilder sb = new StringBuilder();
+			sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo());
+			sb.append(ContractConst.SEPRATE_LINE);
+			sb.append(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
+			sb.append(ContractConst.SEPRATE_LINE);
+			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()){
+				sb.append(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendStartDate());
+				sb.append(ContractConst.SEPRATE_LINE);
+				sb.append(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendEndDate());
+			}else {
+				sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getEffDate());
+				sb.append(ContractConst.SEPRATE_LINE);
+				sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+			}
+			sb.append(ContractConst.SEPRATE_LINE);
+			sb.append(newOverallContractAmount());
+			sb.append(ContractConst.SEPRATE_LINE);
+			sb.append(action);		
+			getManagedBean().setTextBeforeSign(sb.toString());	
+			getManagedBean().setButtonAction(action);
+		} 
+	}
+
+	/**
+	 * The method used to authenticate user during submit the contract amendment.
+	 * This method will invoke a confirmation dialog for user authentication.
+	 * This method will call save contract amendment method once authentication success.
+	 * 
+	 * @param  outcome  the user action on this contract
+	 * @return result of the saveContractAmendment process
+	 * @throws Exception   if an exception occurred
+	 * @see    Exception
+	 */
+	public String gpkiSignAction(String outcome) throws Exception {
+		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome)
+				|| (BpmOutcomeConst.BPM_REJECT.equals(outcome) && !isSupplierRole())) {
+			setSecretary();
+			validateContractAmendment(outcome);
+			// Temp setTextBeforeSign : DocNo+Type
+			StringBuilder sb = new StringBuilder();
+			sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo());
+			sb.append(ContractConst.SEPRATE_LINE);
+			sb.append(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
+			sb.append(ContractConst.SEPRATE_LINE);
+			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()){
+				sb.append(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendStartDate());
+				sb.append(ContractConst.SEPRATE_LINE);
+				sb.append(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendEndDate());
+			}else {
+				sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getEffDate());
+				sb.append(ContractConst.SEPRATE_LINE);
+				sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+			}
+			sb.append(ContractConst.SEPRATE_LINE);
+			sb.append(newOverallContractAmount());
+			sb.append(ContractConst.SEPRATE_LINE);
+			sb.append(outcome);		
+			sb.append(new FacesScopes().getUserSessionBean().getIdentificationNo());	
+			sb.append(outcome);
+			getManagedBean().setTextBeforeSign(sb.toString());
+			// set action
+			getManagedBean().setButtonAction(outcome);
+			getManagedBean().setAutoUpdate(Boolean.FALSE);
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			return null;
+		} else if ((BpmOutcomeConst.BPM_ACKNOWLEDGE.equals(outcome) || BpmOutcomeConst.BPM_REJECT.equals(outcome))
+				&& isSupplierRole()
+				&& !getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)) {
+			validateContractAmendment(outcome);	
+			getManagedBean().setButtonAction(outcome);
+			getManagedBean().setAutoUpdate(Boolean.FALSE);
+			if(hasGovtSellerRole()) {
+				getManagedBean().setTextBeforeSign(prepareSupplierOriginalText());
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			} else {
+				getManagedBean().getSpkiBackingBean().getChallengeQuestions();
+				RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+			}
+			return null;
+		}
+		else if (BpmOutcomeConst.BPM_CANCEL.equals(outcome)) {
+			RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
+			return null;
+		} else {
+			return saveContractAmendment(outcome);
+		}
+	}
+
+	/**
+	 * The method used to set value for security check
+	 * before save the contract amendment.
+	 * 
+	 * @param  pmDigiSign  an object of digital sign
+	 * @return result of the saveContractAmendment process
+	 * @throws Exception   if an exception occurred
+	 * @see    Exception
+	 */
+	public String preSubmitContractAmendment(PmDigiSign pmDigiSign) throws Exception {
+		if (pmDigiSign != null && isSupplierRole() && !hasGovtSellerRole()) {
+			FacesScopes facesScope = new FacesScopes();
+			pmDigiSign.setCreatedBy(facesScope.getUserSessionBean().getUserId());
+			pmDigiSign.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			pmDigiSign.setOriginalData(prepareSupplierOriginalText());
+			pmDigiSign.setSpkiSignedData(getManagedBean().getSpkiBackingBean().spkiSignTransaction(pmDigiSign.getOriginalData()));
+			getManagedBean().setPmDigiSign(pmDigiSign);			
+		} else if (pmDigiSign != null) {
+			this.getManagedBean().setPmDigiSign(pmDigiSign);
+		}
+		return saveContractAmendment(getManagedBean().getButtonAction());
+	}
+
+	/**
+	 * The method used to retrieve the supplier information for security check.
+	 * 
+	 * @return orginalText the supplier information
+	 */
+	private String prepareSupplierOriginalText() {
+		FacesScopes facesScopes = new FacesScopes();
+		StringBuilder sb = new StringBuilder();
+		String countryCode ="";
+		String orginalText = "";
+
+		if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier() != null) {
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses() != null 
+					&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().size() > 0) {
+				List<SmCompanyAddress> companyAddress = ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses();
+
+				for (SmCompanyAddress compaAddress : companyAddress) {
+					if (compaAddress.getAddressType().equalsIgnoreCase(AddressType.CONTACT_ADDRESS.value())) {
+						countryCode = compaAddress.getSmAddress().getPmCountry().getCountryCode();
+						break;
+					}
+				}
+			}
+		}		
+		sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo())
+		.append("|")
+		.append(facesScopes.getUserSessionBean().getIdentificationNo())
+		.append("|")
+		.append(ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier().getRegNo())
+		.append("|")
+		.append(countryCode);
+		orginalText  = sb.toString();
+		return orginalText;
+	}
+
+	/**
+	 * The method used to construct 
+	 * the tab menu for contract amendment.
+	 */
+	public void ConstructTabSideMenu() {
+		AmendTabSideMenus sideMenu = new AmendTabSideMenus();
+		getManagedBean().setFinalListOfSideMenu(new ArrayList<String>());
+		getManagedBean().setConfirmMeeting(false);
+
+		if (getManagedBean().getAckFA() == null) {
+			getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendFulfilment);
+
+			if (ctBackingBean.getManagedBean().getContractVer() != null 
+					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment() != null
+					&& (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
+							|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange() 
+							|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange())) {
+
+				if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
+					getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithZone);
+
+				} if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
+						&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)){
+					getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAgency);
+				}
+				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithItem);
+			}
+
+			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
+					&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)){
+				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuDeduction);
+			}
+			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange() && 
+					ctBackingBean.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
+					&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)){
+				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuSchedule);
+			}
+			if (getManagedBean().isPrepareLOA()) {
+				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareLoa);					 
+				if ((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isBondReq()
+						&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
+						&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+								ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))) {
+					getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareBond);
+				}
+				if (getManagedBean().isDecisionPbQcLOA()) {
+					getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithDecision);	    
+				}
+			}
+			if (getManagedBean().isPbConfirmMeeting()) {
+				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithMeetings);
+			}
+			if (getManagedBean().isSignUpdateDecision()) {
+				getManagedBean().setConfirmMeeting(true);
+				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithDecision);
+			}
+			if (getManagedBean().isSignOffDecision()) {
+				getManagedBean().setConfirmMeeting(true);
+				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithDecision);
+			}
+			if (isApproverSetting() && !getManagedBean().isPrepareLOA()) {
+				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendSetting);
+			}
+		} else if (getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)) {
+			getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendSupplier);
+			if ((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isBondReq()
+					&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
+					&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+							ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))) {
+				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareBond);
+			}
+			getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithDeclaration);
+		}
+	}
+
+	/**
+	 * The method used for controlling the tab menu
+	 * of contract amendment dynamically.
+	 * 
+	 * @param  outputTab   current selected tab constant
+	 */
+	public void setTabValue(String outputValue) {
+		getManagedBean().setConfirmMeeting(false);
+		if (getManagedBean().getAckFA() == null) {
+			int index = 1;
+			if (outputValue.equalsIgnoreCase("FD")) {
+				getManagedBean().setSelectedTabIndex(0);
+			}
+			if (outputValue.equalsIgnoreCase("AD")) {
+				getManagedBean().setSelectedTabIndex(1);
+			}
+
+			if(!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange() || 
+					ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)){
+
+				if(ctBackingBean.getManagedBean().getContractVer() != null && ctBackingBean.getManagedBean().getContractVer().getCtAmendment() != null
+						&& (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
+								|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange() || ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange())) {
+					index = 2;
+					if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
+						index = 3;
+						if (outputValue.equalsIgnoreCase("ZO")) {
+							getManagedBean().setSelectedTabIndex(2);
+						}
+						if (outputValue.equalsIgnoreCase("IT")) {
+							getManagedBean().setSelectedTabIndex(3);
+						}
+					} else if(outputValue.equalsIgnoreCase("IT")) {
+						getManagedBean().setSelectedTabIndex(2);
+					}
+				}
+				if (getManagedBean().isPrepareLOA()) {
+					if (outputValue.equalsIgnoreCase("LOD")) {
+						getManagedBean().setSelectedTabIndex(index + 1);
+					}
+					if (outputValue.equalsIgnoreCase("CNT")) {
+						getManagedBean().setSelectedTabIndex(index + 2);
+					}
+					if ((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isBondReq() && outputValue.equalsIgnoreCase("PB")
+							&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
+							&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+									ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))) {
+						getManagedBean().setSelectedTabIndex(index + 3);
+					}
+					if (getManagedBean().isDecisionPbQcLOA() && outputValue.equalsIgnoreCase("DCN")) {
+						if ((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isBondReq()
+								&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
+								&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+										ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))) {
+							getManagedBean().setSelectedTabIndex(index + 4);
+						} else {
+							getManagedBean().setSelectedTabIndex(index+3);
+						}
+					}
+				}
+				if (getManagedBean().isPbConfirmMeeting() && outputValue.equalsIgnoreCase("MET")) {
+					getManagedBean().setSelectedTabIndex(index + 1);
+				}
+				if ((getManagedBean().isSignUpdateDecision() || getManagedBean().isSignOffDecision()) 
+						&& outputValue.equalsIgnoreCase("DCN")) {
+					getManagedBean().setConfirmMeeting(true);
+					if (getManagedBean().isPbConfirmMeeting()) {
+						getManagedBean().setSelectedTabIndex(index + 2);
+					} else {
+						getManagedBean().setSelectedTabIndex(index + 1);
+					}
+				}
+				if (isApproverSetting() && !getManagedBean().isPrepareLOA() && outputValue.equalsIgnoreCase("SE")) {
+					getManagedBean().setSelectedTabIndex(index + 1);
+				}
+			} 
+			/*Menu for other started*/
+			else if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
+					&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY) ){
+				if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
+					if (outputValue.equalsIgnoreCase("ZO")) {
+						getManagedBean().setSelectedTabIndex(2);
+					} else if (outputValue.equalsIgnoreCase("AG")) {
+						getManagedBean().setSelectedTabIndex(3);
+					} else if (outputValue.equalsIgnoreCase("IT")) {
+						getManagedBean().setSelectedTabIndex(4);
+					}
+				} else {
+					if (outputValue.equalsIgnoreCase("AG")) {
+						getManagedBean().setSelectedTabIndex(2);
+					}else if(outputValue.equalsIgnoreCase("IT")) {
+						getManagedBean().setSelectedTabIndex(3);
+					}
+				}
+				if (outputValue.equalsIgnoreCase(ContractConst.DEDUCTION_DETAIL)) {
+					if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
+						getManagedBean().setSelectedTabIndex(5);
+					} else {
+						getManagedBean().setSelectedTabIndex(4);
+					}
+				} 
+				if (outputValue.equalsIgnoreCase(ContractConst.SCHEDULE_DETAIL) 
+						&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(
+								ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+					if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {  
+						getManagedBean().setSelectedTabIndex(6);
+					} else {
+						getManagedBean().setSelectedTabIndex(5);
+					}
+				} 
+				if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()){
+					if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(
+							ParameterConst.FULFILMENT_TYPE_SCHEDULED)){
+						index = 6;
+					} else {
+						index = 5;
+					}
+				} else if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(
+						ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+					index = 5;
+				} else {
+					index = 4;
+				}
+				if (getManagedBean().isPrepareLOA()) {
+					if (outputValue.equalsIgnoreCase("LOD")) {
+						getManagedBean().setSelectedTabIndex(index + 1);
+					}
+					if (outputValue.equalsIgnoreCase("CNT")) {
+						getManagedBean().setSelectedTabIndex(index + 2);
+					}
+					if ((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isBondReq() && outputValue.equalsIgnoreCase("PB")
+							&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
+							&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+									ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))) {
+						getManagedBean().setSelectedTabIndex(index + 3);
+					}
+					if (getManagedBean().isDecisionPbQcLOA() && outputValue.equalsIgnoreCase("DCN")) {
+						if ((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isBondReq()
+								&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
+								&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+										ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))) {
+							getManagedBean().setSelectedTabIndex(index + 4);
+						} else {
+							getManagedBean().setSelectedTabIndex(index+3);
+						}
+					}
+				}
+				if (getManagedBean().isPbConfirmMeeting() && outputValue.equalsIgnoreCase("MET")) {
+					getManagedBean().setSelectedTabIndex(index + 1);
+				}
+				if ((getManagedBean().isSignUpdateDecision() || getManagedBean().isSignOffDecision()) 
+						&& outputValue.equalsIgnoreCase("DCN")) {
+					getManagedBean().setConfirmMeeting(true);
+					if (getManagedBean().isPbConfirmMeeting()) {
+						getManagedBean().setSelectedTabIndex(index + 2);
+					} else {
+						getManagedBean().setSelectedTabIndex(index + 1);
+					}
+				}
+				if (isApproverSetting() && !getManagedBean().isPrepareLOA() && outputValue.equalsIgnoreCase("SE")) {
+					getManagedBean().setSelectedTabIndex(index + 1);
+				}
+			} 
+		} else if(getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)){
+			if (outputValue.equalsIgnoreCase("LOD")) {
+				getManagedBean().setSelectedTabIndex(0);
+			}
+			if (outputValue.equalsIgnoreCase("CNT")) {
+				getManagedBean().setSelectedTabIndex(1);
+			}
+			if (outputValue.equalsIgnoreCase("SLOA")) {
+				getManagedBean().setSelectedTabIndex(2);
+			}
+			if ((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isBondReq()
+					&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
+					&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+							ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))) {
+				if (outputValue.equalsIgnoreCase("PB")) {
+					getManagedBean().setSelectedTabIndex(3);
+				}
+				if (outputValue.equalsIgnoreCase("SDEC")) {
+					getManagedBean().setSelectedTabIndex(4);
+				}
+			} else {
+				if (outputValue.equalsIgnoreCase("SDEC")) {
+					getManagedBean().setSelectedTabIndex(3);
+				}
+			}
+		}
+	}
+
+	/**
+	 * The method used for retrieving the contract version 
+	 * for agreement or non-agreement contract.
+	 * If it's original agreement, return the first contract version.
+	 * If it's supplementary agreement, return the amended contract version.
+	 */
+	private void retrieveContractVerOfAgreement() {
+		IContractSO contractSO = null;
+		IContractAmendmentSO amendmentSO = null;
+		ContractResDTO resDTO = null;
+		ContractAmendmentResDTO amendmentResDTO = null;
+		try {
+			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+			amendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
+			ContractReqDTO reqDTO = new ContractReqDTO();
+			ContractAmendmentReqDTO amendmentReqDTO = new ContractAmendmentReqDTO();
+
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isAgreement()) {
+				//Retrieve amendment
+				amendmentReqDTO.setContractId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractId());
+				amendmentReqDTO.setAmendmentEffectiveDate(ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getEffDate());
+				amendmentResDTO = amendmentSO.getCtAmendmentByAmendmentEffDate(amendmentReqDTO);
+
+				if (amendmentResDTO.getCtAmendment() != null) {
+					ctBackingBean.getManagedBean().setAgreementContractVer(amendmentResDTO.getCtAmendment().getCtContractVer());
+				} else {
+					reqDTO.setContractId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractId());
+					reqDTO.setParamCode(ParameterConst.DOCTYPE_CONTRACT_CREATION);
+
+					resDTO = contractSO.retrieveContractVerByIdAndDocType(reqDTO);
+					ctBackingBean.getManagedBean().setAgreementContractVer(resDTO.getCtContractVer());
+				}				
+			} else {
+				ctBackingBean.getManagedBean().setAgreementContractVer(ctBackingBean.getManagedBean().getContractVer());
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		} finally {
+			contractSO = null;
+			amendmentSO = null;
+		}
+	}
+
+	/**
+	 * The method used for retrieving the committee type
+	 * base on loa amount and procurement type
+	 */
+	private String retrieveCommitteeType() {	    
+
+		IContractAmendmentSO contractAmendmentSO = null;
+		contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
+		String committeeType = contractAmendmentSO.getCommitteeType(ctBackingBean.getManagedBean().getContractVer()); 
+		if(committeeType == null) {
+			throw new EpException(MessageConst.ERROR_750017);
+		}
+		return committeeType;
+	}
+
+	/**
+	 * The method used to set the
+	 *  secretary for different committee type.
+	 */
+	private void setSecretary() {
+		PmUser pmUser = null;
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isPbqcAuthorityReq()) {				
+			UserReqDTO userReqDTO = new UserReqDTO();
+			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			if (getManagedBean().getSecretaryId() != null) {
+				userReqDTO.setUserId(getManagedBean().getSecretaryId());
+				pmUser = userSO.retrieveUserProfileByUserId(userReqDTO).getPmUser();
+			}				
+		}
+		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setSecretary(pmUser);
+	}
+
+	/**
+	 * The method used to retrieve the 
+	 * supplier list for LOA acknowledgment.
+	 */
+	private void getSupplierListForLoaAck() {		
+		IContractAmendmentSO amendSO = null;
+		try{
+			if (getManagedBean().getSupplierList() == null) {
+				getManagedBean().setSupplierList(new ArrayList<SmPersonnel>());
+				amendSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
+				ContractAmendmentReqDTO amendReqDTO = new ContractAmendmentReqDTO();
+				amendReqDTO.setSupplierId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier().getSupplierId());
+				amendReqDTO.setContractSigner(true);
+				getManagedBean().setSupplierList(amendSO.retrieveSupplierListById(amendReqDTO).getSupplierList());
+			}
+		} finally {
+			amendSO = null;
+		}
+	}
+
+	/**
+	 * The method used for retrieving the list of loa documents
+	 * during loa preparation for contract amendment.
+	 */
+	private void getLoaDocumentList() {
+		IDocumentSO documentSO = null;
+		DocumentReqDTO reqDTO = null;
+		DocumentResDTO resDTO = null;
+
+		try {
+
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports() == null) {
+				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setScLoaReports(new ArrayList<ScLoaReport>());
+				reqDTO = new DocumentReqDTO();
+				documentSO = (IDocumentSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDocumentSO.class);
+				reqDTO.setDocCategoryCode(ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_CONTRACT_AMENDMENT);
+				resDTO = documentSO.retrieveDocumentCheckList(reqDTO);
+
+				for (PmDocument document : resDTO.getDocumentList()) {
+					ScLoaReport reports = new ScLoaReport();
+					reports.setPmDocument(document);
+					reports.setTitle(document.getDocName());
+					reports.setDefinationType(document.getDocDefinitionTypeCode());
+					reports.setDocCategory(ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_CONTRACT_AMENDMENT);
+					reports.setScLoa( this.ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa());
+					this.ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports().add(reports);	
+				}
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		} finally {
+			documentSO = null;
+			reqDTO = null;
+			resDTO = null;
+		}		
+	}
+
+	/**
+	 * The method used for rendering the related information for
+	 * different amendment type.
+	 * 
+	 * @param value
+	 */
+	public boolean getAmendValue(int value) {		
+		if (value == 1 && (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange())) {
+			return true;
+		}		
+		if (value == 2  && !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()
+				&& (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange() 
+						|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange() 
+						|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange()
+						|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isClauseChange()
+						|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst()
+						|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByStax()
+						|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange())) {
+			return true;
+		}		
+		if (value == 3  && (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()
+				|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange() 
+				|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange() 
+				|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange()
+				|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isClauseChange()
+				|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst()
+				|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByStax()
+				|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange())) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * The method used to retrieve the new amendment effective date.
+	 * The new amendment effective date will not lesser than the previous
+	 * amendment effective date.
+	 * 
+	 * @return amendment effective date.
+	 */
+	private Date retrieveNewEffDate() {
+		Date currentDate = DateUtils.getCurrentDateWithoutTime();
+		IContractAmendmentSO amendSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
+		ContractAmendmentResDTO resAmendDto = amendSO.getCtAmendmentByContractId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractId());
+		if (resAmendDto.getAmendmentList() != null && !resAmendDto.getAmendmentList().isEmpty()) {
+			int index = resAmendDto.getAmendmentList().size() - 1;
+			CtAmendment ctAmendment = resAmendDto.getAmendmentList().get(index);
+			if (ctAmendment.getAmendmentEffDate().getTime() < currentDate.getTime()) {
+				return currentDate;
+			} else {	
+				return DateUtils.addDays(ctAmendment.getAmendmentEffDate(), 1);
+			}
+		} else {
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getEffDate().equals(currentDate)) {
+				return DateUtils.addDays(currentDate, 1);
+			} else {
+				return currentDate;
+			}
+		}
+	}
+
+	/**
+	 * The method used to retrieve the new contract amount
+	 * with addition of old contract amount and additional amount.
+	 * 
+	 * @return new contract amount
+	 */
+	public BigDecimal newContractAmt() {
+		return ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount().add(
+				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount());
+	}
+
+	/**
+	 * The method used to retrieve the new overall contract amount
+	 * with addition of new contract amount and new gst amount amount.
+	 * 
+	 * @return new overall contract amount
+	 */
+	public BigDecimal newOverallContractAmt() {
+		BigDecimal contractAmt = newContractAmt();
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount() != null )  {
+			contractAmt = newContractAmt().add(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount());
+		
+		}
+		return contractAmt;
+	}
+	
+	public BigDecimal newOverallContractAmount() {
+		BigDecimal contractAmount = newOverallContractAmt();
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount() != null )  {
+			contractAmount = newOverallContractAmt().add(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount());
+		
+		}
+		return contractAmount;
+	}
+
+	/**
+	 * The method used to retrieve the new contract period
+	 * with addition of old contract period and extended period.
+	 * 
+	 * @return new contract period
+	 */
+	public String calculateNewContractPeriod(boolean isCalculateNew) {
+		if (isCalculateNew) {
+			return String.valueOf(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getContractPeriod()
+					+ ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod());
+		} else {
+			return String.valueOf(ctBackingBean.getManagedBean().getContractVer().getCtContract()
+					.getLatestContractVer().getCtContractValue().getContractPeriod());
+		}
+	}
+
+	/**
+	 * The method used to retrieve the new bond amount
+	 * in text format.
+	 * 
+	 * @return new bond amount in text format.
+	 */
+	public String getBondAmountInText() {
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt() == null
+				|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt().doubleValue() == 0) {
+			return "";
+		}
+		DecimalFormat df = new DecimalFormat("#.00");		
+		return NumberWordUtil.convert(df.format(
+				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt()));
+	}
+
+	/**
+	 * The method used to indicate the label 
+	 * flag for new price of product or service item.
+	 * 
+	 * @param ctContractItem	the object of contract item
+	 */
+	private void newItemPrice(CtContractItem ctContractItem) {
+		if (ctContractItem != null && !ctContractItem.getCtItemPrices().isEmpty()
+				&& (ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(
+						ParameterConst.PRICE_TYPE_ZONAL_STANDARD)
+						|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(
+								ParameterConst.PRICE_TYPE_ZONAL_TIER)
+								|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(
+										ParameterConst.PRICE_TYPE_ZONAL_TARIFF))) {
+			for (CtItemPrice zonelOfItem : ctContractItem.getCtItemPrices()) {
+				zonelOfItem.setChangeZoneLabel(false);
+			}
+			for (int temp = 0; temp<ctContractItem.getCtItemPrices().size(); temp++) {
+				Date date = ctContractItem.getCtItemPrices().get(temp).getEffDate();
+				int counter = 0;
+				int index = 0;
+				int countRow = 0;
+				for (CtItemPrice itemPrice1 : ctContractItem.getCtItemPrices()) {
+					countRow++;
+					if (ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)
+							|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
+							|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TARIFF)
+							|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
+						if (ctContractItem.getCtItemPrices().get(temp).getFromQty().equals(itemPrice1.getFromQty())
+								&& ctContractItem.getCtItemPrices().get(temp).getToQty().equals(itemPrice1.getToQty())
+								&& ctContractItem.getCtItemPrices().get(temp).getCtContractZone().getZoneName().equalsIgnoreCase(itemPrice1.getCtContractZone().getZoneName())) {
+							counter++;
+							if (counter >= 2) {
+								if (date.before(itemPrice1.getEffDate())) {
+									index = countRow;
+									date = itemPrice1.getEffDate();
+								}
+							}
+						}
+					} else if (ctContractItem.getCtItemPrices().get(temp).getCtContractZone().getZoneName().equalsIgnoreCase(itemPrice1.getCtContractZone().getZoneName())) {
+						counter++;
+						if (counter >= 2) {
+							if (date.before(itemPrice1.getEffDate())) {
+								index = countRow;
+								date = itemPrice1.getEffDate();
+							}
+						}
+					}
+				}
+				if (index > 0) {
+					CtItemPrice priceOfItem = ctContractItem.getCtItemPrices().get(index - 1);
+					priceOfItem.setChangeZoneLabel(true);
+					ctContractItem.getCtItemPrices().remove(index - 1);
+					ctContractItem.getCtItemPrices().add(index - 1, priceOfItem);
+				}
+			}
+		}			
+	}
+
+	/**
+	 * The method used to edit the product item price.
+	 * This method will creating a new records in the item price list
+	 * with the new effective date and expiry date.
+	 * Meanwhile, previous old record will have new corresponding expiry date.
+	 * User allow to enter the new item price for the product item.
+	 */
+	public void editItemPriceOnIndexs() {
+		List<CtItemPrice> ctItemPriceList = new ArrayList<CtItemPrice>();
+		CtItemPrice addDupObj = new CtItemPrice();
+
+		Calendar previousDate = Calendar.getInstance();
+		previousDate.setTime(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+		previousDate.add(Calendar.DATE, -1);
+
+		for (CtItemPrice ctItemPrice : this.getManagedBean().getSelectedItem().getCtItemPrices()) {
+			ctItemPriceList.add(ctItemPrice);
+			if (!ctItemPrice.isChangePrice() && !ctItemPrice.isChkIndexOfRow()) {
+				if (ctItemPrice.equals(this.getManagedBean().getCtItemPrices())) {
+					addDupObj.setFromQty(ctItemPrice.getFromQty());
+					addDupObj.setToQty(ctItemPrice.getToQty());
+					addDupObj.setSubSequence(ctItemPrice.getSubSequence());
+					addDupObj.setUnitPrice(ctItemPrice.getUnitPrice());
+					addDupObj.setEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+					if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()) {
+						addDupObj.setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendEndDate());
+					} else {
+						addDupObj.setExpDate(ctItemPrice.getExpDate());
+					}
+					if (ctItemPrice.getCtContractZone() != null) {
+						addDupObj.setCtContractZone(ctItemPrice.getCtContractZone());
+					}
+					if (ctItemPrice.getCtContractItem() != null) {
+						addDupObj.setCtContractItem(ctItemPrice.getCtContractItem());
+					}
+					addDupObj.setChangePrice(true);
+					addDupObj.setAssociateCtItemPrice(ctItemPrice);
+					ctItemPrice.setChkIndexOfRow(true);
+					ctItemPrice.setExpDate(previousDate.getTime());
+					ctItemPriceList.add(addDupObj);
+				}
+			}
+		}
+		this.getManagedBean().getSelectedItem().getCtItemPrices().clear();
+		this.getManagedBean().getSelectedItem().getCtItemPrices().addAll(ctItemPriceList);
+		newItemPrice(getManagedBean().getSelectedItem());
+		ctItemPriceList.clear();
+
+		//CT_CHANGE_LOG
+		ctBackingBean.getManagedBean().getUpdateItemMap().put(getManagedBean().getSelectedItem().getScRequestItem().getRequestNoteItemId(), getManagedBean().getSelectedItem());
+	}
+
+	/**
+	 * The method used to edit the service item price.
+	 * This method will creating a new records in the item price list
+	 * with the new effective date and expiry date.
+	 * Meanwhile, previous old record will have new corresponding expiry date.
+	 * User allow to enter the new item price for the service item.
+	 */	
+	public void editServiceItemPriceOnIndexs() {
+		List<CtItemPrice> ctItemPriceList = new ArrayList<CtItemPrice>();
+		CtItemPrice addDupObj = new CtItemPrice();
+
+		Calendar previousDate = Calendar.getInstance();
+		previousDate.setTime(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+		previousDate.add(Calendar.DATE, -1);
+
+		for (CtItemPrice ctItemPrice : this.getManagedBean().getSelectedServiceItem().getCtItemPrices()) {
+			ctItemPriceList.add(ctItemPrice);
+			if (!ctItemPrice.isChangePrice() && !ctItemPrice.isChkIndexOfRow()) {
+				if (ctItemPrice.equals(this.getManagedBean().getCtServiceItemPrices())) {
+					addDupObj.setFromQty(ctItemPrice.getFromQty());
+					addDupObj.setToQty(ctItemPrice.getToQty());
+					addDupObj.setSubSequence(ctItemPrice.getSubSequence());
+					addDupObj.setUnitPrice(ctItemPrice.getUnitPrice());
+					addDupObj.setEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+					if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()) {
+						addDupObj.setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendEndDate());
+					} else {
+						addDupObj.setExpDate(ctItemPrice.getExpDate());
+					}
+					if (ctItemPrice.getCtContractZone() != null) {
+						addDupObj.setCtContractZone(ctItemPrice.getCtContractZone());
+					}
+					if (ctItemPrice.getCtContractItem() != null) {
+						addDupObj.setCtContractItem(ctItemPrice.getCtContractItem());
+					}
+					addDupObj.setChangePrice(true);
+					addDupObj.setAssociateCtItemPrice(ctItemPrice);
+					ctItemPrice.setChkIndexOfRow(true);
+					ctItemPrice.setExpDate(previousDate.getTime());
+					ctItemPriceList.add(addDupObj);
+				}
+			}
+		}
+		this.getManagedBean().getSelectedServiceItem().getCtItemPrices().clear();
+		this.getManagedBean().getSelectedServiceItem().getCtItemPrices().addAll(ctItemPriceList);
+		newItemPrice(getManagedBean().getSelectedServiceItem());
+		ctItemPriceList.clear();
+
+		//CT_CHANGE_LOG
+		ctBackingBean.getManagedBean().getUpdateItemMap().put(getManagedBean().getSelectedItem().getScRequestItem().getRequestNoteItemId(), getManagedBean().getSelectedItem());
+	}
+
+	/**
+	 * The method used to delete the 
+	 * newly added product item price.
+	 */
+	public void deleteItemPriceOnIndexs() {
+		CtItemPrice ctItemPrice = getManagedBean().getCtItemPrices().getAssociateCtItemPrice();
+		ctItemPrice.setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+		ctItemPrice.setChkIndexOfRow(false);
+		getManagedBean().getSelectedItem().getCtItemPrices().remove(getManagedBean().getCtItemPrices());
+		newItemPrice(getManagedBean().getSelectedItem());
+	}
+
+	/**
+	 * The method used to delete 
+	 * the newly added service item price.
+	 */
+	public void deleteServiceItemPriceOnIndexs() {
+		CtItemPrice ctItemPrice = getManagedBean().getCtServiceItemPrices().getAssociateCtItemPrice();
+		ctItemPrice.setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+		ctItemPrice.setChkIndexOfRow(false);
+		this.getManagedBean().getSelectedServiceItem().getCtItemPrices().remove(getManagedBean().getCtServiceItemPrices());
+		newItemPrice(getManagedBean().getSelectedServiceItem());
+	}
+
+	/**
+	 * The method used to edit the ceiling quantity of product item.
+	 * This method will creating a new records in the ceiling quantity list
+	 * with the new effective date and expiry date.
+	 * Meanwhile, previous old record will have new corresponding expiry date.
+	 * User allow to enter the new ceiling quantity for the product item.
+	 */	
+	public void editCeilingQuantityOnIndexs() {
+		List<CtItemCeilingQty> ctItemCeilingQtys = new ArrayList<CtItemCeilingQty>();
+		CtItemCeilingQty addDupObj = new CtItemCeilingQty();
+
+		Calendar previousDate = Calendar.getInstance();
+		previousDate.setTime(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+		previousDate.add(Calendar.DATE, -1);
+
+		for (CtItemCeilingQty ceilingQty : this.getManagedBean().getSelectedItem().getCtItemCeilingQties()) {
+			ctItemCeilingQtys.add(ceilingQty);
+			if (!ceilingQty.isChangeCeilQuantity() && !ceilingQty.isChkIndexOfRow()) {
+				if (ceilingQty.equals(this.getManagedBean().getCtItemCeilingQtys())) {
+					addDupObj.setCeilingQuantity(ceilingQty.getCeilingQuantity());
+					addDupObj.setEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+					if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()) {
+						addDupObj.setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendEndDate());
+					} else {
+						addDupObj.setExpDate(ceilingQty.getExpDate());
+					}
+					if (ceilingQty.getCtAgency() != null) {
+						addDupObj.setCtAgency(ceilingQty.getCtAgency());
+					}
+					if (ceilingQty.getCtContractItem() != null) {
+						addDupObj.setCtContractItem(ceilingQty.getCtContractItem());
+					}
+					addDupObj.setChangeCeilQuantity(true);
+					addDupObj.setAssociateCtItemCeilingQty(ceilingQty);
+					ceilingQty.setChkIndexOfRow(true);
+					ceilingQty.setExpDate(previousDate.getTime());
+					ctItemCeilingQtys.add(addDupObj);
+				}
+			}
+		}
+		this.getManagedBean().getSelectedItem().getCtItemCeilingQties().clear();
+		this.getManagedBean().getSelectedItem().getCtItemCeilingQties().addAll(ctItemCeilingQtys);
+		ctItemCeilingQtys.clear();
+	}
+
+	/**
+	 * The method used to delete
+	 *  the newly added ceiling quantity.
+	 */
+	public void deleteCeilingQuantityOnIndexs() {
+		CtItemCeilingQty ctItemCeilingQty = getManagedBean().getCtItemCeilingQtys().getAssociateCtItemCeilingQty();
+		ctItemCeilingQty.setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+		ctItemCeilingQty.setChkIndexOfRow(false);
+		this.getManagedBean().getSelectedItem().getCtItemCeilingQties().remove(getManagedBean().getCtItemCeilingQtys());		
+	}
+
+	/**
+	 * The method used to edit the maximum quantity of product item.
+	 * This method will creating a new records in the maximum quantity list
+	 * with the new effective date and expiry date.
+	 * Meanwhile, previous old record will have new corresponding expiry date.
+	 * User allow to enter the new maximum quantity for the product item.
+	 */
+	public void editItemMaxQtyOnIndexs() {
+		List<CtItemMaxQty> ctItemMaxQtyList = new ArrayList<CtItemMaxQty>();
+		CtItemMaxQty addDupObj = new CtItemMaxQty();
+
+		Calendar previousDate = Calendar.getInstance();
+		previousDate.setTime(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+		previousDate.add(Calendar.DATE, -1);
+
+		for (CtItemMaxQty ctItemMaxQty : getManagedBean().getSelectedItem().getCtItemMaxQties()) {
+			ctItemMaxQtyList.add(ctItemMaxQty);
+			if (!ctItemMaxQty.isChangeQuantity() && !ctItemMaxQty.isChkIndexOfRow()) {
+				if (ctItemMaxQty.equals(getManagedBean().getCtItemMaxQty())) {
+					addDupObj.setMaxQuantity(ctItemMaxQty.getMaxQuantity());
+					addDupObj.setEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+					if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()) {
+						addDupObj.setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendEndDate());
+					} else {
+						addDupObj.setExpDate(ctItemMaxQty.getExpDate());
+					}
+					if (ctItemMaxQty.getCtContractZone() != null) {
+						addDupObj.setCtContractZone(ctItemMaxQty.getCtContractZone());
+					}
+					if (ctItemMaxQty.getCtContractItem() != null) {
+						addDupObj.setCtContractItem(ctItemMaxQty.getCtContractItem());
+					}
+					addDupObj.setChangeQuantity(true);
+					addDupObj.setAssociateCtItemMaxQty(ctItemMaxQty);
+					ctItemMaxQty.setExpDate(previousDate.getTime());
+					ctItemMaxQty.setChkIndexOfRow(true);
+					ctItemMaxQtyList.add(addDupObj);
+				}
+			}
+		}
+		getManagedBean().getSelectedItem().getCtItemMaxQties().clear();
+		getManagedBean().getSelectedItem().getCtItemMaxQties().addAll(ctItemMaxQtyList);
+		newItemMaxQty(getManagedBean().getSelectedItem());
+		ctItemMaxQtyList.clear();
+
+		//CT_CHANGE_LOG
+		ctBackingBean.getManagedBean().getUpdateItemMap().put(getManagedBean().getSelectedItem().getScRequestItem().getRequestNoteItemId(), getManagedBean().getSelectedItem());
+	}
+
+	/**
+	 * The method used to delete 
+	 * the newly added maximum quantity.
+	 */
+	public void deleteItemMaxQtyOnIndexs() {
+		CtItemMaxQty ctItemMaxQty = getManagedBean().getCtItemMaxQty().getAssociateCtItemMaxQty();
+		ctItemMaxQty.setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+		ctItemMaxQty.setChkIndexOfRow(false);
+		getManagedBean().getSelectedItem().getCtItemMaxQties().remove(getManagedBean().getCtItemMaxQty());
+		newItemMaxQty(getManagedBean().getSelectedItem());
+	}
+
+	/**
+	 * The method used to indicate the label 
+	 * flag for new max order quantity of product item.
+	 */
+	private void newItemMaxQty(CtContractItem ctContractItem) {
+		if (ctContractItem != null && !ctContractItem.getCtItemMaxQties().isEmpty()
+				&& (ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(
+						ParameterConst.PRICE_TYPE_ZONAL_STANDARD)
+						|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(
+								ParameterConst.PRICE_TYPE_ZONAL_TIER)
+								|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(
+										ParameterConst.PRICE_TYPE_ZONAL_TARIFF))) {
+			for (CtItemMaxQty zonelOfItem : ctContractItem.getCtItemMaxQties()) {
+				zonelOfItem.setChangeZoneLabel(false);
+			}
+			for (int temp = 0; temp < ctContractItem.getCtItemMaxQties().size(); temp++) {
+				Date date = ctContractItem.getCtItemMaxQties().get(temp).getEffDate();
+				int counter =0;
+				int index = 0;
+				int countRow =0;
+				for (CtItemMaxQty itemMaxQty1 : ctContractItem.getCtItemMaxQties()) {
+					countRow++;
+					if (ctContractItem.getCtItemMaxQties().get(temp).getCtContractZone() != null
+							&& ctContractItem.getCtItemMaxQties().get(temp).getCtContractZone().getZoneName().equalsIgnoreCase(
+									itemMaxQty1.getCtContractZone().getZoneName())) {
+						counter++;
+						if (counter >= 2) {
+							if (date.before(itemMaxQty1.getEffDate())) {
+								index = countRow;
+								date = itemMaxQty1.getEffDate();
+							}
+						}
+					}
+				}
+				if (index > 0) {
+					CtItemMaxQty maxQtyOfItem = ctContractItem.getCtItemMaxQties().get(index-1);
+					maxQtyOfItem.setChangeZoneLabel(true);
+					ctContractItem.getCtItemMaxQties().remove(index-1);
+					ctContractItem.getCtItemMaxQties().add(index-1, maxQtyOfItem);
+				}
+			}
+		}			
+	}
+
+	/**
+	 * The method used to retrieve the item ceiling quantity which in active status
+	 * to be displayed on screen.
+	 * 
+	 * @return activeList  the list of active ceiling quantity to be displayed 
+	 */
+	public List<CtItemCeilingQty> getActiveItemCeilingQty() {
+		List<CtItemCeilingQty> activeList = new ArrayList<CtItemCeilingQty>();
+		if (getManagedBean().getSelectedItem() != null) {
+			for (CtItemCeilingQty ctItemCeilingQty : getManagedBean().getSelectedItem().getCtItemCeilingQties()) {
+				if (ctItemCeilingQty.getCtAgency().isChkStatus()) {
+					activeList.add(ctItemCeilingQty);
+				}
+			}
+		}
+		return activeList;
+	}
+
+	/**
+	 * The method used for rendering the item price or ceiling quantity
+	 * of selected product item that to be displayed on screen.
+	 */
+	public void onSelectProductItem() {
+		if (getManagedBean().getSelectedItem() != null) {
+			if (ctBackingBean.getManagedBean().getShowItem() != null 
+					&& ctBackingBean.getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
+				ctBackingBean.getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
+
+			} else if (ctBackingBean.getManagedBean().getShowItem() != null 
+					&& ctBackingBean.getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)) {
+				ctBackingBean.getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY);
+			} else if (ctBackingBean.getManagedBean().getShowItem() != null 
+					&& ctBackingBean.getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY)) {
+				ctBackingBean.getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY);				
+			} else {
+				ctBackingBean.getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
+			}
+
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()) {
+				newItemPrice(getManagedBean().getSelectedItem());
+				changeSelectedItemPriceAmendDate(getManagedBean().getSelectedItem());
+			}
+
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()) {
+				newItemMaxQty(getManagedBean().getSelectedItem());
+				changeSelectedItemMaxQtyAmendDate(getManagedBean().getSelectedItem());
+			}
+		}
+	}
+
+	/**
+	 * The method used to assign the amendment period for new
+	 * item price and old item price.
+	 * 
+	 * @param selectedItem  the selected item instance
+	 */
+	private void changeSelectedItemPriceAmendDate(CtContractItem selectedItem) {
+		if (selectedItem != null && selectedItem.getCtItemPrices() != null && selectedItem.getCtItemPrices().size() > 0) {
+			List<CtItemPrice> itemPriceList = selectedItem.getCtItemPrices();
+			for (int i = 0; i < itemPriceList.size(); i++) {
+				if (itemPriceList.get(i).isChangePrice()) {
+					itemPriceList.get(i - 1).setExpDate(getPreviousDate().getTime());
+					itemPriceList.get(i).setEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+					if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()) {
+						itemPriceList.get(i).setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendEndDate());
+					} else {
+						itemPriceList.get(i).setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * The method used to assign the amendment period for new
+	 * item max order quantity and old item max order quantity.
+	 * 
+	 * @param selectedItem  the selected item instance
+	 */
+	private void changeSelectedItemMaxQtyAmendDate(CtContractItem selectedItem) {
+		if (selectedItem != null && selectedItem.getCtItemMaxQties() != null && selectedItem.getCtItemMaxQties().size() > 0) {
+			List<CtItemMaxQty> itemMaxQtyList = selectedItem.getCtItemMaxQties();
+			for (int i = 0; i < itemMaxQtyList.size(); i++) {
+				if (itemMaxQtyList.get(i).isChangeQuantity()) {
+					itemMaxQtyList.get(i - 1).setExpDate(getPreviousDate().getTime());
+					itemMaxQtyList.get(i).setEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+					if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()) {
+						itemMaxQtyList.get(i).setExpDate(this.ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendEndDate());
+					} else {
+						itemMaxQtyList.get(i).setExpDate(this.ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * The method used for rendering the item price
+	 * of selected service item that to be displayed on screen.
+	 */
+	public void onSelectServiceItem() {
+		if (getManagedBean().getSelectedServiceItem() != null) {
+			if (ctBackingBean.getManagedBean().getShowServiceItem() != null
+					&& ctBackingBean.getManagedBean().getShowServiceItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
+				ctBackingBean.getManagedBean().setShowServiceItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
+			} else if (ctBackingBean.getManagedBean().getShowServiceItem() != null
+					&& ctBackingBean.getManagedBean().getShowServiceItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_QTY)) {
+				ctBackingBean.getManagedBean().setShowServiceItem(ParameterConst.ITEM_DISPLAY_TYPE_QTY);
+			} else {
+				ctBackingBean.getManagedBean().setShowServiceItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
+			}
+
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()) {
+				newItemPrice(getManagedBean().getSelectedServiceItem());
+				changeSelectedItemPriceAmendDate(getManagedBean().getSelectedServiceItem());
+			}
+		}
+
+	}
+
+	/**
+	 * The method used to add a new meeting record.
+	 * This method will generate a new record in meeting
+	 * list, user allow to enter the meeting details. 
+	 */
+	public void addPbQccMeetingDetails() {
+		CtMeeting ctMeeting = new CtMeeting();
+		ctMeeting.setCtAmendment(this.ctBackingBean.getManagedBean().getContractVer().getCtAmendment());
+		this.ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtMeetings().add(ctMeeting);
+	}
+
+	/**
+	 * The method used to remove the selected meeting detail(s).
+	 */
+	public void delPbQccMeetingDetails() {
+		for (int i = 0; i <selectedMeetingUser.length; i++) {
+			CtMeeting meeting = selectedMeetingUser[i];
+			this.ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtMeetings().remove(meeting);
+		}
+		selectedMeetingUser = null;
+		ctBackingBean.getManagedBean().setButtonHideActive(true);
+	}
+
+	/**
+	 * The method used to invoke and initiate the search committee 
+	 * member dialog.
+	 */
+	public void fetchCommitteMembers() {
+		getManagedBean().setCommitteeName(null);
+		getManagedBean().setIdentificationNo(null);
+		getManagedBean().setIdentificationType(null);
+		getCommitteDataModel().resetData();
+		RequestContext.getCurrentInstance().execute("dlg2.show()");
+	}
+
+	/**
+	 * The method used to add the selected existing committee
+	 * member as the meeting committee.
+	 * This method will generate new record(s) in meeting
+	 * committee list.
+	 */
+	public void addSelectedCommitteMembers() {			
+		Map<Long, CtCommitteeMember> duplicatePmUserMap = new HashMap<Long, CtCommitteeMember>();
+		List<CtCommitteeMember> memberList = new ArrayList<CtCommitteeMember>();
+
+		Iterator<PmUser> pmUserItr = getCommitteDataModel().getList().iterator();
+		while(pmUserItr.hasNext()) {
+			PmUser users = pmUserItr.next();
+			if(users.isSelectedCheckBox()) {
+				CtCommitteeMember committeeMember = new CtCommitteeMember();
+				committeeMember.setCtAmendment(this.ctBackingBean.getManagedBean().getContractVer().getCtAmendment());
+				committeeMember.setPmUser(users);
+				committeeMember.setMemberRole(new PmParameter());
+				committeeMember.setMemberRoleId(null);
+				committeeMember.setMemberName(users.getUserName());
+				committeeMember.setIcPassport(users.getIdentificationNo());
+				committeeMember.setGrade(users.getGrade());
+				committeeMember.setPnp(users.isPMP());
+				committeeMember.setDesignation(users.getDesignation());
+				committeeMember.setEmail(users.getEmail());
+
+				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().size() == 0) {
+					memberList.add(committeeMember);
+				} else {
+					duplicatePmUserMap.put(users.getUserId(), committeeMember);
+				}
+			}
+		}
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().size() == 0) {
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().addAll(memberList);
+		} else {
+			List<CtCommitteeMember> committeMember = new ArrayList<CtCommitteeMember>();
+			for (Map.Entry<Long, CtCommitteeMember> entry : duplicatePmUserMap.entrySet()) {
+				boolean chkDataDuplication = false;
+				for (CtCommitteeMember ctMember : ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
+					if (entry.getKey().equals(ctMember.getPmUser().getUserId())) {
+						chkDataDuplication = true;
+					}
+				}
+				if (!chkDataDuplication) {
+					committeMember.add(entry.getValue());
+				}	    
+			}
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().addAll(committeMember);
+		} 
+		//Collections.sort(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers());  
+	}
+
+	/**
+	 * The method used to select all added meeting committee(s).
+	 */
+	public void selectAllCommittees() {
+
+		if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers() != null 
+				&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().size() > 0){
+
+			for (CtCommitteeMember  ctCommiteMember : ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
+				if (getManagedBean().isSelectAll()) {
+					if (ctCommiteMember.getMemberRole() != null && ctCommiteMember.getMemberRole().getParameterCode() != null
+							&& ctCommiteMember.getMemberRole().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
+						continue;
+					} else {
+						ctCommiteMember.setSelectedCheckBox(true);
+						if(ctBackingBean.getManagedBean().isButtonHideActive()){
+							ctBackingBean.getManagedBean().setButtonHideActive(false);
+						}
+					}
+				} else {
+					ctCommiteMember.setSelectedCheckBox(false);
+					if(!ctBackingBean.getManagedBean().isButtonHideActive()){
+						ctBackingBean.getManagedBean().setButtonHideActive(true);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * The method used to delete the selected meeting committee(s).
+	 */
+	public void removeCommitteeMembers(){
+		try {
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers() != null) {
+				Iterator<CtCommitteeMember> committeeMembers = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().iterator();
+				while (committeeMembers.hasNext()) {
+					CtCommitteeMember  members = committeeMembers.next();
+					if (members.isSelectedCheckBox()) {
+						committeeMembers.remove();
+					}
+				}
+				ctBackingBean.getManagedBean().setButtonHideActive(true);
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		} finally{
+
+		}
+	}	
+
+	/**
+	 * The method used to get the parameter description by parameter.
+	 * with additional setting for secretary role.
+	 * Attendance is compulsory for secretary.
+	 * 
+	 * @param   index      the current record index
+	 * @param   parameter  the PmParameter instance
+	 * @return  parameter description
+	 */
+	public String getParameterDesc(int index,  PmParameter parameter) {
+		CtCommitteeMember ctCommitteeMember = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().get(index);
+		if (parameter != null && parameter.getParameterCode() != null 
+				&& parameter.getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
+			ctCommitteeMember.setAttended(true);
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().remove(index);
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().add(index, ctCommitteeMember);	
+		}
+		return getParameterDesc(parameter);
+	}
+
+	/**
+	 * The method used for rendering the representative type
+	 * selection.
+	 * 
+	 * @param   parameterId  the parameter id for member role
+	 * @param   pnp  		 the pnp flag
+	 * @return  true   if the committee has member role and is not pnp
+	 * 			false  if the committee has not member role and is pnp
+	 */
+	public boolean chkBooleanRepresentType(Long parameterId, boolean pnp) {		
+		if ((parameterId == null || parameterId == 0) && !pnp) {
+			return true;
+		}
+		if (parameterId != null && parameterId != 0
+				&& ParameterHelper.getInstance().getPmParameterById(parameterId).getParameterCode().equalsIgnoreCase(
+						ParameterConst.COMMITTEE_ROLE_MEMBER)) {
+			return true;
+		} 
+		return false;
+	}
+
+	/**
+	 * The method used to set the meeting decision. 
+	 */
+	public void setPbQcDecisionValue() {
+		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setPbQcApprovedFlag(0);
+		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setPbQcApproved(false);
+		if (getManagedBean().getPbQcApproved()!=null && getManagedBean().getPbQcApproved().equalsIgnoreCase("A")) {
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setPbQcApprovedFlag(1);
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setPbQcApproved(true);
+		}
+	}
+
+	/**
+	 * The method used to set the MOF meeting decision. 
+	 */
+	public void setMofDecisionValue() {
+		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setMofApprovedFlag(0);
+		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setMofApproved(false);
+		if (getManagedBean().getMofApproved()!=null && getManagedBean().getMofApproved().equalsIgnoreCase("A")) {
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setMofApprovedFlag(1);
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setMofApproved(true);
+		}
+	}
+
+	/**
+	 * The method used to set the amendment information
+	 * when user wish to amend the contract period.
+	 */
+	public void onContractExtensionChecked() {
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()) {
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendPeriod(1); // default to 1 month
+			Calendar c = Calendar.getInstance();
+			c.setTime(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+			c.add(Calendar.DATE, 1);
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendStartDate(c.getTime());
+
+			c.setTime(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+			c.add(Calendar.MONTH, 1);
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendEndDate(c.getTime());
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendStartDate());
+		}
+		else {
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendPeriod(0);
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendStartDate(null);
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendEndDate(null);
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(getManagedBean().getNewAmendmentEffDate());
+		}
+		changeAmendmentEffDate();
+	}
+
+	/**
+	 * The method used to set the related amendment information
+	 * when user wish to amend the item price.
+	 */
+	public void onItemPriceChecked() {
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()) {
+			// contract type: central and followLoaAmount: false, disallow to change contract value
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL) 
+					&& !ctBackingBean.getManagedBean().getContractVer().getCtContractValue().isFollowLoaAmt()) {
+				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
+			} else {
+				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(true);				
+			}
+		} else if(!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange() 
+				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
+				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst()
+				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByStax()) {
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
+			onChangeValueChecked();
+		}
+		ConstructTabSideMenu();
+	}
+
+	/**
+	 * The method used to set the related amendment information
+	 * when user wish to amend the item quantity.
+	 */
+	public void onQuantityChecked() {
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()) {
+			// contract type: central and followLoaAmount: false, disallow to change contract value
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL) 
+					&& !ctBackingBean.getManagedBean().getContractVer().getCtContractValue().isFollowLoaAmt()) {
+				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
+			} else {
+				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(true);				
+			}
+		} else if(!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange() 
+				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
+				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst()
+				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByStax()) {
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
+			onChangeValueChecked();
+		}
+		ConstructTabSideMenu();
+	}
+
+	/**
+	 * The method used to set the amendment information
+	 * when user wish to amend the contract value.
+	 */
+	public void onChangeValueChecked() {
+		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(BigDecimal.ZERO);
+	}
+
+	/**
+	 * The method used to set the amendment information
+	 * when user wish to amend the contract value caused by gst.
+	 */
+	public void onChangeValueByGstChecked() {
+		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(BigDecimal.ZERO);
+		if (ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null) {
+			ctBackingBean
+					.getManagedBean()
+					.getContractVer()
+					.getCtAmendment()
+					.setNewGstAmount(
+							ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getGstAmount());
+		} else {
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewGstAmount(BigDecimal.ZERO);
+		}
+		
+		if (ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getStaxAmount() != null) {
+			ctBackingBean
+					.getManagedBean()
+					.getContractVer()
+					.getCtAmendment()
+					.setNewStaxAmount(
+							ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getStaxAmount());
+		} else {
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewStaxAmount(BigDecimal.ZERO);
+			
+		}
+		
+		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setApproverAuthorityReq(false);
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst() || ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByStax()) {
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(true);
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setApproverAuthorityReq(true);
+		} else if (!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()
+				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
+				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst()
+				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByStax()) {
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
+		}
+	}
+
+	/**
+	 * The method used to set the related amendment information
+	 * when user extended the contract period.
+	 */
+	public void onExtensionPeriodChanged() {
+		Calendar c = Calendar.getInstance();
+		c.setTime(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+		c.add(Calendar.DATE, 1);
+		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendStartDate(c.getTime());
+
+		c.setTime(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+		c.add(Calendar.MONTH, ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod());
+		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendEndDate(c.getTime());
+		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendStartDate());
+		changeAmendmentEffDate();
+	}
+
+	/**
+	 * The method used to set default value of additional contract amount
+	 * when is additional contract amount is null
+	 */
+	public void changeAdditionalValue() {
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount() == null) {
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(BigDecimal.ZERO);
+		}
+	}
+
+	/**
+	 * The method used to set the related amendment information
+	 * when user changed the amendment effective date.
+	 */
+	public void changeAmendmentEffDate() {
+		if (this.getManagedBean().getSelectedServiceItem() != null) {
+			changeSelectedItemPriceAmendDate(this.getManagedBean().getSelectedServiceItem());
+		}
+		if (this.getManagedBean().getSelectedItem() != null ){
+			if (this.getManagedBean().getSelectedItem().getCtItemPrices() != null 
+					&& this.getManagedBean().getSelectedItem().getCtItemPrices().size() > 0) {
+				changeSelectedItemPriceAmendDate(this.getManagedBean().getSelectedItem());				  
+			}
+			if (this.getManagedBean().getSelectedItem().getCtItemCeilingQties() != null 
+					&& this.getManagedBean().getSelectedItem().getCtItemCeilingQties().size() > 0) {
+				List <CtItemCeilingQty> ceilingQtyList = this.getManagedBean().getSelectedItem().getCtItemCeilingQties();
+				for (int i = 0; i < ceilingQtyList.size(); i++) {
+					if (ceilingQtyList.get(i).isChangeCeilQuantity()) {						   
+						ceilingQtyList.get(i - 1).setExpDate(getPreviousDate().getTime());
+						ceilingQtyList.get(i).setEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+						if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()) {
+							ceilingQtyList.get(i).setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendEndDate());
+						} else {
+							ceilingQtyList.get(i).setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+						}
+					}
+				}
+			}
+			if (this.getManagedBean().getSelectedItem().getCtItemMaxQties() != null 
+					&& this.getManagedBean().getSelectedItem().getCtItemMaxQties().size() > 0) {
+				changeSelectedItemMaxQtyAmendDate(this.getManagedBean().getSelectedItem());				  
+			}
+		}
+	}
+	
+	/**
+	 * To construct contract signer condition fields for opUserLov
+	 * 
+	 * @return String
+	 */
+	public String constructSignerConditionFields() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("pmUserOrgs.pmUserRoles.pmRole.roleCode^");
+		sb.append(RoleCode.CONTRACT_SIGNER.value());
+		sb.append("|pmUserOrgs.pmUserRoles.pmRole.isLimitRequired^");
+		sb.append(Boolean.TRUE);
+		sb.append("|pmUserOrgs.pmUserRoles.approvalLimit^");
+		sb.append(newOverallContractAmount());
+		sb.append("^");
+		sb.append(SearchOperator.OPERATOR_GREATER_EQUAL.value());
+		sb.append("|pmUserOrgs.pmUserRoles.recordStatus^1");
+		return sb.toString();
+	}
+
+	/**
+	 * The method used to set the contract signer information
+	 * when user select a signer from the selection list.
+	 */
+	public void contractSignerChange() {
+		try {
+			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			Long contractSignerId = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractSigner().getUserId();
+			if (contractSignerId != null) {
+				UserReqDTO reqDTO = new UserReqDTO();
+				reqDTO.setUserId(contractSignerId);			   	
+				UserResDTO resDTO = userSO.retrieveUserByUserId(reqDTO);
+				PmUser pmUser = resDTO.getPmUser();
+				if (pmUser != null) {
+					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setContractSigner(pmUser);
+					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setLoaSignerDesig(pmUser.getDesignation());
+				}
+			} else {
+				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setLoaSignerDesig(null);
+			}
+		} catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+	}
+
+	/**
+	 * The method used to set the bank and account information
+	 * when user select a bank from the selection list.
+	 */
+	public void changeAccountActionListener() {
+		if (this.ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getBankAccountNo() != null) {
+			for (SmSupplierBank supplierBank : this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks()) {
+				if (supplierBank.getAccountNo().equalsIgnoreCase(
+						this.ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getBankAccountNo())) {
+					this.ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setBankName(supplierBank.getPmFinancialOrg().getFinOrgName());
+					this.ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setBankBranch(supplierBank.getBankBranch());
+					if (supplierBank.getSmAddress() != null) {
+						this.ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setBankAddress(CtAddressUtil.convertSmAddressToCtAddress(supplierBank.getSmAddress()));
+					} else {
+						this.ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setBankAddress(null);
+					}
+				}
+			}
+		} else {
+			this.ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setBankName(null);  
+			this.ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setBankBranch(null);
+			this.ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setBankAddress(null);
+		}
+	}
+
+	/**
+	 * The method used for validating the duplicate chairperson.
+	 * A warning message will display on screen when more than one chairperson
+	 * is added as committee.
+	 * 
+	 * @throws Exception  if an exception occurred
+	 * @see    Exception
+	 */
+	public void validateDuplicateChairperson(Long parameterId) throws Exception {
+		if (parameterId == null || parameterId.intValue() == 0) {
+			return;
+		}
+		int counter = 0;
+		String parametercode = ParameterHelper.getInstance().getPmParameterById(parameterId).getParameterCode();
+		if (parametercode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
+			for (CtCommitteeMember committeMember : ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {  
+				if (committeMember.getMemberRole() != null && committeMember.getMemberRole().getParameterId() != null
+						&& committeMember.getMemberRoleId().longValue() == parameterId.longValue()) {
+					counter++;
+					if (counter == 2) {
+						throw new EpException(MessageConst.ERROR_750008);
+					}
+				}
+			}
+		}	
+	}
+
+	/**
+	 * The method used for validating the meeting attendance.
+	 * A warning message will display on screen when the required
+	 * committee doesn't not attended the meeting.
+	 */
+	private void validateMeetingDetails() {
+		boolean secretaryRole = true;
+		boolean chairpersonRole = true;
+		boolean memberRole = true;
+		boolean representativeJKR = true;
+		boolean representativeBPK = true;
+		boolean representativeSecretary = true;
+		boolean representativeOfficer = true;
+		boolean representativeDirector = true;
+
+		for (CtCommitteeMember committeObj : ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
+			if (committeObj.isAttended() && committeObj.getMemberRole().getParameterCode().equalsIgnoreCase(
+					ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
+				chairpersonRole = false;
+			} else if(committeObj.isAttended() && committeObj.getMemberRole().getParameterCode().equalsIgnoreCase(
+					ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
+				secretaryRole = false;
+			} else if (committeObj.isAttended() && committeObj.getMemberRole().getParameterCode().equalsIgnoreCase(
+					ParameterConst.COMMITTEE_ROLE_MEMBER)){
+				memberRole = false;
+			}
+
+			if (committeObj.getRepresentativeType() != null && committeObj.getRepresentativeType().getParameterCode() != null) {
+				if (getManagedBean().getCommitteeType().equalsIgnoreCase(
+						ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)) {
+					if (committeObj.isAttended() && committeObj.getRepresentativeType().getParameterCode().equalsIgnoreCase(
+							ParameterConst.COMMITTEE_REPRESENT_JKR)) {
+						representativeJKR = false;
+					} else if (committeObj.isAttended() && committeObj.getRepresentativeType().getParameterCode().equalsIgnoreCase(
+							ParameterConst.COMMITTEE_REPRESENT_SECRETARY_HEAD_DEPARTMENT)) {
+						representativeSecretary = false;
+					} 
+				}
+				if (getManagedBean().getCommitteeType().equalsIgnoreCase(
+						ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)) {
+					if (committeObj.isAttended() && committeObj.getRepresentativeType().getParameterCode().equalsIgnoreCase(
+							ParameterConst.COMMITTEE_REPRESENT_JKR)) {
+						representativeJKR = false;  
+					} else if (committeObj.isAttended() && committeObj.getRepresentativeType().getParameterCode().equalsIgnoreCase(
+							ParameterConst.COMMITTEE_REPRESENT_BPK)) {
+						representativeBPK = false;  
+					}
+				}
+				if (getManagedBean().getCommitteeType().equalsIgnoreCase(
+						ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)) {
+					if (committeObj.isAttended() && committeObj.getRepresentativeType().getParameterCode().equalsIgnoreCase(
+							ParameterConst.COMMITTEE_REPRESENT_STATE_DEV_OFFICER_SBH)) {
+						representativeOfficer = false;  
+					} else if (committeObj.isAttended() && committeObj.getRepresentativeType().getParameterCode().equalsIgnoreCase(
+							ParameterConst.COMMITTEE_REPRESENT_ASSISTANT_DIRECTOR_SBH)) {
+						representativeDirector = false;  
+					} else if(committeObj.isAttended() && committeObj.getRepresentativeType().getParameterCode().equalsIgnoreCase(
+							ParameterConst.COMMITTEE_REPRESENT_FEDERAL_SECRETARY_SBH)) {
+						representativeSecretary = false;  
+					}
+				}
+				if (getManagedBean().getCommitteeType().equalsIgnoreCase(
+						ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
+					if(committeObj.isAttended() && committeObj.getRepresentativeType().getParameterCode().equalsIgnoreCase(
+							ParameterConst. COMMITTEE_REPRESENT_FEDERAL_SECRETARY_SWK)) {
+						representativeSecretary = false;  
+					} else if (committeObj.isAttended() && committeObj.getRepresentativeType().getParameterCode().equalsIgnoreCase(
+							ParameterConst.COMMITTEE_REPRESENT_STATE_DEV_OFFICER_SWK )) {
+						representativeOfficer = false;  
+					} else if (committeObj.isAttended() &&committeObj.getRepresentativeType().getParameterCode().equalsIgnoreCase(
+							ParameterConst.COMMITTEE_REPRESENT_JKR_DIRECTOR_SWK)) {
+						representativeDirector = false;  
+					}
+				}
+			}
+		}    
+		if (chairpersonRole) {
+			setTabValue("DCN");
+			throw new EpException(MessageConst.ERROR_100022, 
+					new String[]{ResourceBundleUtils.getMessage("lbl.ct.chairperson.attendance", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+		}
+		if (secretaryRole){
+			setTabValue("DCN");
+			throw new EpException(MessageConst.ERROR_100022, 
+					new String[]{ResourceBundleUtils.getMessage("lbl.ct.secretary.attendance", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+
+		}
+		if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)
+				|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)) {
+			if (memberRole) {
+				setTabValue("DCN");
+				throw new EpException(MessageConst.ERROR_100022, 
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.member.attendance", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
+		}
+		if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)) {
+			if (representativeJKR) {
+				setTabValue("DCN");
+				throw new EpException(MessageConst.ERROR_100022, 
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.attendance.jkr", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			} else if (representativeSecretary) {
+				setTabValue("DCN");
+				throw new EpException(MessageConst.ERROR_100022, 
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.attendance.secretary", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
+		} else if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)) {
+			if (representativeJKR) {
+				setTabValue("DCN");
+				throw new EpException(MessageConst.ERROR_100022, 
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.attendance.jkr", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			} else if (representativeBPK) {
+				setTabValue("DCN");
+				throw new EpException(MessageConst.ERROR_100022, 
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.attendance.bpk", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
+		} else if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)) {
+			if (representativeOfficer) {
+				setTabValue("DCN");
+				throw new EpException(MessageConst.ERROR_100022, 
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.attendance.officer.sabah", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			} else if (representativeDirector) {
+				throw new EpException(MessageConst.ERROR_100022, 
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.attendance.director.sabah", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			} else if (representativeSecretary) {
+				setTabValue("DCN");
+				throw new EpException(MessageConst.ERROR_100022, 
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.attendance.secretary.sabah", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
+		} else if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
+			if (representativeSecretary) {
+				setTabValue("DCN");
+				throw new EpException(MessageConst.ERROR_100022, 
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.attendance.secretary.sarawak", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			} else if (representativeOfficer) {
+				setTabValue("DCN");
+				throw new EpException(MessageConst.ERROR_100022, 
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.attendance.officer.sarawak", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			} else if(representativeDirector) {
+				setTabValue("DCN");
+				throw new EpException(MessageConst.ERROR_100022, 
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.attendance.director.sarawak", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
+		}
+	}
+
+	/**
+	 * The method used for validating the committee member details.
+	 * A warning message will display on screen when the required
+	 * committee doesn't not included in the meeting.
+	 */
+	private void validateCommiteeMemberDetails() {
+		boolean secretaryRole = true;
+		boolean chairpersonRole = true;
+		boolean memberRole = true;
+		boolean representativeJKR = true;
+		boolean representativeBPK = true;
+		boolean representativeSecretary = true;
+		boolean representativeOfficer = true;
+		boolean representativeDirector = true;
+
+		for (CtCommitteeMember committeMember : ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
+			if (committeMember.getMemberRole() != null && committeMember.getMemberRoleId() != null) {
+				String representativeCode = "";
+				String parameterCode = ParameterHelper.getInstance().getPmParameterById(committeMember.getMemberRoleId()).getParameterCode();
+
+				if (parameterCode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
+					chairpersonRole = false;
+				} else if (parameterCode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
+					secretaryRole = false;
+				} else if (parameterCode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_MEMBER)) {
+					memberRole = false;
+					if (!getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B) 
+							&& !getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)) {
+						if (committeMember.getRepresentativeType() == null 
+								|| committeMember.getRepresentativeType().getParameterId() == null) {
+							setTabValue("MET");
+							throw new EpException(MessageConst.ERROR_100022, 
+									new String[]{ResourceBundleUtils.getMessage("lbl.ct.represent.type", 
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						} else {
+							representativeCode = ParameterHelper.getInstance().getPmParameterById(
+									committeMember.getRepresentativeType().getParameterId()).getParameterCode();
+						}
+					}
+				}
+				if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)) {
+					if (representativeCode.equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_JKR)) {
+						representativeJKR = false;
+					} else if (representativeCode.equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_SECRETARY_HEAD_DEPARTMENT)) {
+						representativeSecretary = false;
+					} 
+				}
+				if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)) {
+					if (representativeCode.equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_JKR)) {
+						representativeJKR = false;  
+					} else if (representativeCode.equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_BPK)) {
+						representativeBPK = false;  
+					}
+				}
+				if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)) {
+					if (representativeCode.equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_STATE_DEV_OFFICER_SBH)) {
+						representativeOfficer = false;  
+					} else if (representativeCode.equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_ASSISTANT_DIRECTOR_SBH)) {
+						representativeDirector = false;  
+					} else if (representativeCode.equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_FEDERAL_SECRETARY_SBH)) {
+						representativeSecretary = false;  
+					}
+				}
+				if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
+					if (representativeCode.equalsIgnoreCase(ParameterConst. COMMITTEE_REPRESENT_FEDERAL_SECRETARY_SWK)) {
+						representativeSecretary = false;  
+					} else if (representativeCode.equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_STATE_DEV_OFFICER_SWK )) {
+						representativeOfficer = false;  
+					} else if (representativeCode.equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_JKR_DIRECTOR_SWK)) {
+						representativeDirector = false;  
+					}
+				}
+			} else if (committeMember.getMemberRole() == null || committeMember.getMemberRoleId() == null) {
+				setTabValue("MET");
+				new EpException(MessageConst.ERROR_750025);
+			}
+		}
+
+		if (chairpersonRole) {
+			setTabValue("MET");
+			throw new EpException(MessageConst.ERROR_100022, 
+					new String[]{ResourceBundleUtils.getMessage("lbl.ct.chairperson", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+		}
+		if (secretaryRole) {
+			setTabValue("MET");
+			throw new EpException(MessageConst.ERROR_100022, 
+					new String[]{ResourceBundleUtils.getMessage("lbl.ct.secretary", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+		}
+		if(memberRole) {
+			setTabValue("MET");
+			throw new EpException(MessageConst.ERROR_100022,
+					new String[]{ResourceBundleUtils.getMessage("lbl.ct.member", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+		}
+
+		if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)) {
+			if (representativeJKR) {
+				setTabValue("MET");
+				throw new EpException(MessageConst.ERROR_100022,
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.representative.jkr", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			} else if (representativeSecretary) {
+				setTabValue("MET");
+				throw new EpException(MessageConst.ERROR_100022,
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.representative.secretary", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
+		} else if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)) {
+			if (representativeJKR) {
+				setTabValue("MET");
+				throw new EpException(MessageConst.ERROR_100022,
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.representative.jkr", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			} else if (representativeBPK) {
+				setTabValue("MET");
+				throw new EpException(MessageConst.ERROR_100022,
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.representative.bpk", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
+		} else if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)) {
+			if (representativeOfficer) {
+				setTabValue("MET");
+				throw new EpException(MessageConst.ERROR_100022,
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.representative.officer.sabah", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			} else if (representativeDirector) {
+				setTabValue("MET");
+				throw new EpException(MessageConst.ERROR_100022,
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.representative.director.sabah", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}else if(representativeSecretary){
+				throw new EpException(MessageConst.ERROR_100022,
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.representative.secretary.sabah", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
+		} else if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
+			if (representativeSecretary) {
+				setTabValue("MET");
+				throw new EpException(MessageConst.ERROR_100022,
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.representative.secretary.sarawak", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			} else if (representativeOfficer) {
+				setTabValue("MET");
+				throw new EpException(MessageConst.ERROR_100022,
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.representative.officer.sarawak", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			} else if (representativeDirector) {
+				setTabValue("MET");
+				throw new EpException(MessageConst.ERROR_100022,
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.representative.director.sarawak", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
+		}
+	}
+
+	/**
+	 * The method used for generating a list of available bank and account
+	 * for supplier as selection.
+	 * 
+	 * @return populateBankAccountList  the selection list of bank and account
+	 */
+	public List<SelectItem> getPopulateBankAccountList() {
+		if (populateBankAccountList == null) {
+			if (this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks()!= null
+					&& this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks().size() > 0) {
+				populateBankAccountList = new ArrayList<SelectItem>();
+				if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks().size() == 1) {
+					ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setBankAccountNo(
+							ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks().get(0).getAccountNo());
+					changeAccountActionListener();
+				}
+				for (SmSupplierBank obj : ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks()) {
+					String account = obj.getAccountNo();
+					if (obj.getPmFinancialOrg() != null) {
+						account = account + " / " + obj.getPmFinancialOrg().getFinOrgName();
+					}
+					populateBankAccountList.add(new SelectItem(obj.getAccountNo(),account));
+				}     
+			}
+		}
+		return populateBankAccountList;
+	}
+
+	/**
+	 * The method used for generating a list of available display type
+	 * of product or service item as selection.
+	 * 
+	 * @param itemType	product or service item
+	 * @return the selection list of display type
+	 */
+	public SelectItem[] getItemDisplayTypeDropdownList(String itemType) {
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		List<String> itemDisplayTypeList = new ArrayList<String> ();
+
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
+				|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()) {
+			itemDisplayTypeList.add(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
+		}
+
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
+				|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()) {
+			if (itemType.equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
+				if (ctBackingBean.getManagedBean().getContractVer().getCtAgencies() != null
+						&& ctBackingBean.getManagedBean().getContractVer().getCtAgencies().size() > 1) {
+					itemDisplayTypeList.add(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY);
+				}
+				itemDisplayTypeList.add(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY);
+			} else if (itemType.equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
+				itemDisplayTypeList.add(ParameterConst.ITEM_DISPLAY_TYPE_QTY);				
+			}
+		}
+
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmParameter.parameterCode",
+						SearchOperator.OPERATOR_IN.value(),
+						itemDisplayTypeList));
+
+		return super.getDropdownCodeValuesBySearchBean(ParameterTypeConst.ITEM_DISPLAY_TYPE, searchBean);
+	}
+
+	/**
+	 * The method used for generating a list of available secretary 
+	 * as selection.
+	 * 
+	 * @return the selection list of secretary
+	 */
+	public SelectItem[]  getSecretaryDropdownList() {
+		if (getManagedBean().getSecretaryList() == null ) {
+			SelectItem[] items = null;
+			ICommitteSO committeSO = null;
+			ISearchResultBean<PmUser> userResultList = null;
+			try {
+
+				int i = 1;
+				committeSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+				CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+				committeReqDTO.setDocId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId());
+				committeReqDTO.setDocType(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode());
+				//Bug #25326
+				committeReqDTO.setOrgProfileId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+				//end Bug #25326
+								
+				if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) 
+						|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
+					committeReqDTO.setRoleCode(RoleCode.FPB_SECRETARY.value());
+				} else {
+					committeReqDTO.setRoleCode(getManagedBean().getCommitteeType()+"_SECRETARY");
+				}
+				userResultList = committeSO.retrieveUserListByCommType(committeReqDTO).getUserResultBean();			
+
+				if (userResultList != null && userResultList.getResultList() != null) {
+					items = new SelectItem[userResultList.getResultList().size() + 1];
+					items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+
+					for (PmUser user : userResultList.getResultList()) {
+						items[i++] = new SelectItem(user.getUserId(), user.getUserName());
+					}
+					// Default the secretary if selection list only have one secretary
+					if (items != null && items.length == 2) {
+						getManagedBean().setSecretaryId((Long)items[1].getValue());
+					}
+					getManagedBean().setSecretaryList(items);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			}
+		}
+		return getManagedBean().getSecretaryList();
+	}	
+
+	/**
+	 * The method used for generating a list of available financial institution
+	 * for performance bond as selection.
+	 * 
+	 * @return the selection list of financial institution
+	 */
+	public SelectItem[] retrieveFinancialOrgList() {
+		SelectItem[] items = null; 
+		IFinancialOrgSO financialOrgSO = null;
+		FinancialOrgReqDTO reqDTO = null;
+		FinancialOrgResDTO resDTO = null;
+
+		try {
+			int i = 1;
+			financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFinancialOrgSO.class);
+			reqDTO = new FinancialOrgReqDTO();
+			reqDTO.setServiceType(ParameterConst.BANK_SERVICES_PERFORMANCE_BOND);
+			resDTO = financialOrgSO.retrieveFinancialOrgListByServiceType(reqDTO);
+
+			items = new SelectItem[resDTO.getFinancialOrgList().size() + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+
+			for (PmFinancialOrg pmFinancialOrg : resDTO.getFinancialOrgList()) {
+				items[i++] = new SelectItem(pmFinancialOrg.getFinancialOrgId(), pmFinancialOrg.getFinOrgName());   
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}   	
+		return items;
+	}
+
+	/**
+	 * The method used for generating a list of available meeting status
+	 * as selection.
+	 * 
+	 * @return the selection list of meeting status
+	 */
+	public SelectItem[] getMeetingStatusDropdown() {
+		SelectItem[] items = null;     
+		IStatusSO statusSO = null;
+		StatusResDTO resDTO = null;
+		StatusReqDTO reqDTO = null;
+		try {
+			int i = 1;
+			statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+			reqDTO = new StatusReqDTO();
+			reqDTO.setModuleCode("SC");
+			reqDTO.setDocType("MS");
+			reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+			resDTO = statusSO.retrieveStatusDescList(reqDTO);
+			items = new SelectItem[resDTO.getStatusDescList().size() + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+
+			for (PmStatusDesc statusDesc : resDTO.getStatusDescList()) {
+				items[i++] = new SelectItem(statusDesc.getPmStatus().getStatusId(), statusDesc.getStatusName());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}finally{
+			resDTO = null;
+			statusSO = null;
+		}
+		return items;
+	}
+
+	/**
+	 * The method used for generating a list of available representative role
+	 * as selection.
+	 * 
+	 * @return the selection list of representative role
+	 */
+	public SelectItem[] getRepresentativeDropdown() {		
+		for (CtCommitteeMember committeeMember : ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
+			if (committeeMember.getRepresentativeType() == null) {
+				committeeMember.setRepresentativeType(new PmParameter());
+			}
+		} 
+		String representativeRole ="";
+		if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD)) {
+			representativeRole = ParameterTypeConst.REPRESENTATIVE_TYPE_PPR;
+		} else if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)) {
+			representativeRole = ParameterTypeConst.REPRESENTATIVE_TYPE_FPBH;
+		} else if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
+			representativeRole = ParameterTypeConst.REPRESENTATIVE_TYPE_FPBK;
+		} 
+		return getDropdownValues(representativeRole);
+	}
+
+	/**
+	 * The method used for generating a list of available role type
+	 * as selection.
+	 * 
+	 * @return the selection list of role type
+	 */
+	public SelectItem[] getRoleTypeDropdown(CtCommitteeMember committeeMember) {
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		List<String> committeRole = new ArrayList<String>();
+		if (committeeMember.isPnp() && allowChairpersonRole(committeeMember)) {
+			committeRole.add(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
+		}
+		committeRole.add(ParameterConst.COMMITTEE_ROLE_MEMBER);
+		searchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_IN.value(), committeRole));
+		return getDropdownValuesBySearchBean(ParameterTypeConst.COMMITTEE_ROLE, searchBean);
+	}
+
+	/**
+	 * The method used for identifying whether the committee user
+	 * is allow to be chairperson
+	 * 
+	 * @return the flag to allow chairperson role
+	 */
+	private boolean allowChairpersonRole(CtCommitteeMember committeeMember) {
+		boolean allowChairpersonRole = false;
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setUserId(committeeMember.getPmUser().getUserId());
+		
+		UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);		
+		PmOrgProfile orgProfile = null;
+
+		if (userResDTO.getUserOrgList() != null && userResDTO.getUserOrgList().size() > 0) {
+			orgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
+			
+			//Bug #19918 Unable to assign Chairperson QCA/QCB from other PTJ within same ministry
+			Long orgProfileId = orgProfile.getOrgProfileId();
+			Long ctOwnerOrgProfileId = ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId();
+			PmOrgProfile contractMinistry = retrieveMinistryOrgProfile(ctOwnerOrgProfileId);
+			PmOrgProfile committeeMinistry = retrieveMinistryOrgProfile(orgProfileId);
+			
+			log.info(":::allowChairpersonRole() orgProfileId: "+ orgProfileId);
+			
+			if (contractMinistry != null && committeeMinistry != null
+					&& contractMinistry.getOrgProfileId().longValue() == committeeMinistry.getOrgProfileId().longValue()) {	
+				log.info(":::allowChairpersonRole() "+ orgProfileId +". contract ministryOrgProfileId: "+ contractMinistry.getOrgProfileId());
+				log.info(":::allowChairpersonRole() "+ orgProfileId +". committee ministryOrgProfileId: "+ committeeMinistry.getOrgProfileId());
+				
+				allowChairpersonRole = true;
+			}
+			
+			log.info(":::allowChairpersonRole() "+ orgProfileId +". committee type: "+ getManagedBean().getCommitteeType());
+
+			// QCA/QCB, need to be same PTJ
+			if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)
+					|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)) {
+				log.info(":::allowChairpersonRole() "+ orgProfileId +". contract ownerOrgProfileId: "+ ctOwnerOrgProfileId);
+				
+				if (orgProfileId.longValue() == ctOwnerOrgProfileId.longValue()) {
+					allowChairpersonRole = true;
+				}
+			}
+//			} else {	// Others same Ministry
+//				PmOrgProfile contractMinistry = retrieveMinistryOrgProfile(
+//						ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+//				PmOrgProfile committeeMinistry = retrieveMinistryOrgProfile(orgProfile.getOrgProfileId());
+//				if (contractMinistry != null && committeeMinistry != null
+//						&& contractMinistry.getOrgProfileId() == committeeMinistry.getOrgProfileId()) {
+//					allowChairpersonRole = true;
+//				}
+//			}
+			//end of Bug #19918
+		}
+		
+		return allowChairpersonRole;
+	}
+
+	/**
+	 * The method used for initializing the remarks of contract amendment.
+	 */
+	public void initializeRemarks() {
+		initiateRemark(ctBackingBean.getManagedBean().getContractVer().getSupplierRemarks());
+		initiateRemark(ctBackingBean.getManagedBean().getContractVer().getAgencyRemarks());
+		initiateRemark(ctBackingBean.getManagedBean().getContractVer().getZoneRemarks());
+		initiateRemark(ctBackingBean.getManagedBean().getContractVer().getItemRemarks());
+		initiateRemark(ctBackingBean.getManagedBean().getContractVer().getDeductionRemarks());
+		initiateRemark(ctBackingBean.getManagedBean().getContractVer().getScheduleRemarks());
+		initiateRemark(ctBackingBean.getManagedBean().getContractVer().getSettingRemarks());
+	}
+
+	/**
+	 * The method used for initializing the remarks of contract amendment.
+	 * This method will create new remark object for every single new 
+	 * process, else will display all remarks.
+	 * 
+	 * @param remarkList  the list of remarks to display. If the remarkList is null, 
+	 *                    initiate a new remark
+	 */
+	private void initiateRemark(List<CtRemark> remarks) {
+
+		boolean ctWorkflowStatusMatch = false;
+		if (ctBackingBean.getManagedBean().getContractVer().getCtWorkflowStatus() != null) {
+			if (remarks.size()>0 && remarks.get(0).getCtWorkflowStatus() != null) {
+				if (ctBackingBean.getManagedBean().getContractVer().getCtWorkflowStatus().getWorkflowStatusId() 
+						== remarks.get(0).getCtWorkflowStatus().getWorkflowStatusId().longValue()) {
+					ctWorkflowStatusMatch = true;
+				}
+			}
+		} else { // both also null
+			ctWorkflowStatusMatch = true;
+		}		
+
+		if (remarks.size() == 0 || !ctWorkflowStatusMatch) {
+			CtRemark remark = new CtRemark();
+			remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			remark.setChangedBy(remark.getCreatedBy());
+			remark.setChangedDate(remark.getCreatedDate());
+			remark.setCreatedUser(getFacesScopes().getUserSessionBean());
+			remarks.add(0, remark);
+		}
+	}
+
+	/**
+	 * The method used to get the Surat Pengesahan Setuju Terima Pembekal
+	 * that to be displayed on screen.
+	 * 
+	 * @throws FileNotFoundException  if an file cannot be found
+	 * @throws Exception  if an exception occurred
+	 * @see    FileNotFoundException, Exception
+	 */	
+	public String getLoaStreamFilePath() throws FileNotFoundException, Exception {
+
+		String filePath = null;
+		if(getManagedBean().getCtLetterOfAcceptance() != null){
+			filePath = getManagedBean().getCtLetterOfAcceptance().get(0).getLoaAttachments().getFilePath();
+		}
+		if (filePath != null) {
+			filePath = DocumentRepositoryUtils.getBaseDir()+filePath;
+		}
+		return filePath;
+	}
+
+	/**
+	 * The method used to set the file index of attachment list.
+	 * 
+	 * @param index  file index of attachment list
+	 */
+	public void setAttachFileIndex(int index) {
+		this.getManagedBean().setAttachFileIndex(index);
+	}
+
+	/**
+	 * The method used to delete the meeting decision attachment from the list.
+	 * 
+	 * @param index  file index of attachment list
+	 */
+	public void deleteCommitteAttachmentAction(int index) {
+		CtAttachment attachment = ctBackingBean.getManagedBean().getContractVer().getCommitteDecisionAttachements().get(index);
+		if(attachment.getAttachmentId() != null){
+			ctBackingBean.getManagedBean().getDeleteAttachmentList().add(attachment);
+		}
+		ctBackingBean.getManagedBean().getContractVer().getCommitteDecisionAttachements().remove(index);
+	}
+
+	/**
+	 * The method used to upload loa content file.
+	 * 
+	 * @param  event      the upload event for file upload from screen
+	 * @throws Exception  if an exception occurred
+	 * @see    Exception
+	 */	
+	public void UploadLetterOfAcceptance(FileUploadEvent event) throws Exception {
+		FacesScopes facesScopes = new FacesScopes();
+		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
+
+		UploadedFile item = event.getFile();
+		String filePath = getManagedBean().getFileDirectory();
+		File file = new File(filePath);
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+
+		String fileFormat= attachmentFormat.format(item.getFileName(), null);
+		filePath = filePath + "/" + fileFormat;
+		CtAttachment attachment = new CtAttachment();
+		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
+		fileOuputStream.write(item.getContents());
+		fileOuputStream.close();
+		attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+		attachment.setFileName(item.getFileName());
+		
+		attachment.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+		attachment.setCreatedUser(facesScopes.getUserSessionBean());
+		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		if(getManagedBean().getTaskName() != null
+				&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)
+						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME))){
+			attachment.setSectionId(ContractConst.ATTACHMENT_LOA_LETTER_SST);
+			getManagedBean().getCtLetterOfAcceptance().get(0).setLoaAttachments(attachment);
+		} else if(getManagedBean().getAckFA() != null
+				&& getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)){
+			attachment.setSectionId(ContractConst.ATTACHMENT_LOA_LETTER_RECEIPT);
+			getManagedBean().getCtLetterOfAcceptance().get(1).setLoaAttachments(attachment);
+		}
+	}
+
+	/**
+	 * The method used to delete loa attachment from the datatable list.
+	 * 
+	 * @param index  file index of attachment list
+	 */
+	public void deleteLoaAttachment(int index) {
+		CtAttachment attachment = getManagedBean().getCtLetterOfAcceptance().get(index).getLoaAttachments();
+		if(attachment.getAttachmentId() != null){
+			ctBackingBean.getManagedBean().getDeleteAttachmentList().add(attachment);
+		}
+		getManagedBean().getCtLetterOfAcceptance().get(index).setLoaAttachments(new CtAttachment());
+	}
+
+	/**
+	 * The method used to upload meeting decision file.
+	 * 
+	 * @param  event      the upload event for file upload from screen
+	 * @throws Exception  if an exception occurred
+	 * @see    Exception
+	 */
+	public void committeeFileUpload(FileUploadEvent event) throws Exception {
+		FacesScopes facesScopes = new FacesScopes();
+		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
+
+		UploadedFile item = event.getFile();
+
+		String filePath = getManagedBean().getFileDirectory();
+		File file = new File(filePath);
+		file.mkdirs();
+		filePath = filePath + "/" + attachmentFormat.format(item.getFileName(), null);
+
+		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
+		fileOuputStream.write(item.getContents());
+		fileOuputStream.close();
+
+		CtAttachment attachment = new CtAttachment();
+		attachment.setFileName(item.getFileName());
+		attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+		attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+		attachment.setCreatedUser(facesScopes.getUserSessionBean());
+		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		ctBackingBean.getManagedBean().getContractVer().getCommitteDecisionAttachements().add(attachment);
+	}
+
+	/**
+	 * The method used to download the sample bond letter
+	 * as pdf file.
+	 */
+	public void downloadSampleBondLetter() {
+		FileOutputStream fileOutputStream = null;
+		
+		try {
+			String filePath = getManagedBean().getFileDirectory();		      
+			File file = new File(filePath);
+			file.mkdirs();
+
+			String fileName = "Sample Bond Letter.pdf";
+			filePath = getManagedBean().getFileDirectory() +  "/" + fileName;
+
+			File pdfFile = new File(filePath);
+			if (!pdfFile.exists()) {
+				VelocityContext context = new VelocityContext();
+				int type = 0;				
+				context.put("type", type);
+				context.put("contractNo", "...........................");
+				context.put("supplierName", "...........................");
+				context.put("sourcingTitle", "...........................");
+				context.put("bondAmount", "..............................");
+				context.put("bondAmountWord", "..................................................");
+				context.put("expiryPeriod", "..........................");	
+
+				fileOutputStream = new FileOutputStream(filePath);
+				DocumentGenerator.getInstance().generatePdfFromVelocity(
+						SourcingConstants.LOA_BOND_LETTER, context,
+						fileOutputStream);
+			}			
+			commonDownload(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				if (fileOutputStream != null) {
+					fileOutputStream.close();
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
+	/**
+	 * The method used to download the sample of LOA content file
+	 */
+	public void downloadLOAContentFile(String docDefinitionKey) throws Exception {
+
+		AttachmentFormat attachmentFormat = null;
+		FileOutputStream fileOutputStream = null;
+		try {
+			String fileName = (docDefinitionKey.equalsIgnoreCase(ParameterConst.DOCUMENT_DEFINITION_KEY_LETTER_OF_ACCEPTANCE))
+					? "SuratBerkaitanKontrakTambahan.docx" : "PengakuanPenerimaanSuratBerkaitanKontrakTambahan.pdf";
+			String content = null;
+			String filePath = getManagedBean().getFileDirectory();
+			File file = new File(filePath);
+			file.mkdirs();
+
+			attachmentFormat = new AttachmentDateFormat();
+			filePath = filePath + attachmentFormat.format(fileName, null);
+
+			content = getContent(docDefinitionKey);
+			if (content != null) {
+				if (docDefinitionKey.equalsIgnoreCase(ParameterConst.DOCUMENT_DEFINITION_KEY_LETTER_OF_ACCEPTANCE)) {
+					//DocumentGenerator.getInstance().generateDocxtoHtml(filePath, content);					
+					// Download orginal template in doc format
+					StringBuilder templateFilePath = new StringBuilder();
+					
+					templateFilePath.append(EpPropertiesUtils.getInstance().getProperty(
+							EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_DIR));
+					templateFilePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+					templateFilePath.append(ModuleCodeConst.CONTRACT_MANAGEMENT.toUpperCase());
+					templateFilePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+					templateFilePath.append(ContractConst.DOCNAME_SUPPLEMENTAL_CONTRACT_LETTER);
+
+					commonDownload(templateFilePath.toString(), ContractConst.DOCNAME_SUPPLEMENTAL_CONTRACT_LETTER);
+				} else {
+					fileOutputStream = new FileOutputStream(filePath);
+					DocumentGenerator.getInstance().generatePdf(fileOutputStream, content);
+					commonDownload(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
+				}			
+			}
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
+		} finally {
+			attachmentFormat = null;
+			if (fileOutputStream != null) {
+				fileOutputStream.close();
+			}
+		}
+	}
+
+	/**
+	 * The method used to download the uploaded Supplemental Contract Letter
+	 */
+	public void downloadSupplementalLetter(CtAttachment ctAttchment) {
+		try {
+			commonDownload(ctAttchment.getFilePath(), ctAttchment.getFileName());
+
+			// Supplier only allow to acknowledge after letter is downloaded 
+			if (getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)) {
+				BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
+				if (bb.getManagedBean().getClaim()) {
+					getManagedBean().setAllowAcknowledge(true);
+				} else {
+					getManagedBean().setAllowAcknowledge(false);
+				}
+			} else {
+				getManagedBean().setAllowAcknowledge(false);
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * The method used to retrieve the Acknowledgment Receipt content
+	 */
+	public String getAcknowledgmentReceiptContent(boolean isCompleted) throws Exception {
+		String filePath = getManagedBean().getFileDirectory();		      
+		File file = new File(filePath);
+		file.mkdirs();
+		FileOutputStream fileOutputStream = null;
+		String fileName = "PengakuanPenerimaanSuratBerkaitanKontrakTambahan.pdf";
+		try {
+			if (isCompleted) {
+				AttachmentDateFormat attachmentFormat = new AttachmentDateFormat();
+				filePath = getManagedBean().getFileDirectory() +  "/" + attachmentFormat.format(fileName, null);
+			} else {
+				filePath = getManagedBean().getFileDirectory() +  "/" + fileName;
+			}
+			String content = null;	
+			content = getContent(ParameterConst.DOCUMENT_DEFINITION_KEY_ACK_OF_LOA_RECEIPT);
+			if (content != null) {
+				fileOutputStream = new FileOutputStream(filePath);
+				DocumentGenerator.getInstance().generatePdf(
+						fileOutputStream, content);
+			}
+		} finally {
+			if (fileOutputStream != null) {
+				fileOutputStream.close();
+			}
+		}
+		return filePath;
+	}
+
+	/**
+	 * The method used for generating the content of loa reports
+	 * that defined from template.
+	 * 
+	 * @param docDefinitionKey  the defination key for different report. Different key will have different template.
+	 * @return the complete content of the template
+	 * @throws Exception        if an exception occurred
+	 * @see    Exception
+	 */	
+	private String getContent(String docDefinitionKey) throws Exception {
+		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+		VelocityContext context = null;
+		String vmFile = null;
+		String content = null;
+		CommonUtils commonUtils = new CommonUtils();
+		SimpleDateFormat dateSDF = new SimpleDateFormat(commonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
+		DecimalFormat percentageDF = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE));
+		DecimalFormat amountDF = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+		DecimalFormat amountNoCommaDF = new DecimalFormat("#.00");
+
+		// Supplemental Contract Letter
+		if (ParameterConst.DOCUMENT_DEFINITION_KEY_LETTER_OF_ACCEPTANCE.equalsIgnoreCase(docDefinitionKey)) {
+			FacesScopes fs = new FacesScopes();
+			String hostUrl = fs.getRequest().getServerName() +":" + fs.getRequest().getServerPort();
+			vmFile = ContractConst.DOCPATH_CT_LOA_AGREEMENT_LETTER;
+			ScLoa scLoa = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa();
+			ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
+			context = new VelocityContext();
+			PmOrgProfile pmOrgProfile = ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile();
+
+			context.put("ptjName", pmOrgProfile.getOrgName());
+			String jabtanName = retrieveJabatanByOrgProfileId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+			StringBuffer  ministryJabatan = new StringBuffer();
+			if(!jabtanName.isEmpty()) {
+				ministryJabatan.append(jabtanName);
+				ministryJabatan.append(" / ");
+			}
+
+			PmOrgProfile ministryOrgProfile = retrieveMinistryOrgProfile(ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+			if(ministryOrgProfile!=null) {
+				ministryJabatan.append(ministryOrgProfile.getOrgName());
+			}				
+			context.put("ministryJabatanName", ministryJabatan );
+
+			context.put("hostUrl", hostUrl);
+			String ptjAddress = "";
+			String phoneNo = "";
+			String faxNo = "";
+			if (ctBackingBean.getManagedBean().getContractVer().getOwnerOrgAddress() != null) {
+				ptjAddress = getFullAddress(ctBackingBean.getManagedBean().getContractVer().getOwnerOrgAddress());
+				ptjAddress = ptjAddress.replaceAll("\r\n", "<br />");
+				ptjAddress = ptjAddress.replaceAll("&", "&#38;");
+				phoneNo = ctBackingBean.getManagedBean().getContractVer().getOwnerOrgAddress().getPhoneNoFull();
+				faxNo = ctBackingBean.getManagedBean().getContractVer().getOwnerOrgAddress().getFaxNoFull();
+			}
+			context.put("ptjAddress", ptjAddress);
+			context.put("phoneNo", phoneNo);
+			context.put("faxNo", faxNo);
+			context.put("fileNo", scLoiLoa.getFileNo() + "-" + scLoa.getFileExtNo());
+			context.put("loaNo", scLoa.getLoaNo());
+
+			String issueDate = "";
+			if (scLoa.getIssueDate() != null) {
+				issueDate = dateSDF.format(scLoa.getIssueDate());
+			}
+			context.put("issueDate", issueDate);
+			context.put("supplierName", scLoiLoa.getSupplierName());
+
+
+			String supplierAddress = "";
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress() != null) {
+				supplierAddress = getFullAddress(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
+				supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
+				supplierAddress = supplierAddress.replaceAll("&", "&#38;");
+			}
+			context.put("supplierAddress", supplierAddress);			
+			context.put("contractNo",ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo());
+			context.put("contractName", ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractName());
+
+			String procurementMode = getParameterDesc(ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode());
+			context.put("procurementMode", procurementMode);
+
+			if (scLoa.getBondAmt() != null && scLoa.isBondReq()
+					&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
+					&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+							ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+				context.put("bondAmt200k", true);
+
+				String bondAmt = "";
+				if (scLoa.getBondAmt() != null) {
+					bondAmt = amountDF.format(scLoa.getBondAmt());
+				}
+				context.put("bondAmt", bondAmt);
+				context.put("bondAmtText", scLoa.getBondAmt() != null && scLoa.getBondAmt().doubleValue()!=0 ? NumberWordUtil.convert(amountNoCommaDF.format(scLoa.getBondAmt()) ) : ""); 
+
+				String bondPercentage = "";
+				if (scLoa.getBondPercentage() != null) {
+					bondPercentage = percentageDF.format(scLoa.getBondPercentage());
+				}
+				context.put("bondPercentage", bondPercentage);
+				Date bondExpDate = ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate();
+				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendEndDate() != null) {
+					bondExpDate = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendEndDate();
+				}
+				Calendar bondDate = Calendar.getInstance();
+				bondDate.setTime(bondExpDate);
+				bondDate.add(Calendar.YEAR, 1);
+				context.put("bondExpDate", dateSDF.format(bondDate.getTime())); 
+
+				//TODO #3271: the government want this to be configured; hence this need to be set in PM but at the moment default this to 30
+				String bondResDueDays = "30";
+				context.put("bondResDueDays", bondResDueDays);
+			} else {
+				context.put("bondAmt200k", false);
+			}
+
+			context.put("contractWithGst", ctBackingBean.isLoaContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstEffDate()));
+			String gstRegNo = "TB";
+			String gstEffDate = "TB";
+			String gstDeclareDate = "TB";
+			BigDecimal overallAmt = scLoa.getLoaAmt();
+
+			if (ctBackingBean.isLoaContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
+				context.put("contractAmt", amountDF.format(overallAmt));
+				context.put("contractAmtTxt", (scLoa.getLoaAmt() != null && scLoa.getLoaAmt().doubleValue() != 0) ? NumberWordUtil.convert(amountNoCommaDF.format(overallAmt)) : ""); 
+
+				if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstRegNo() != null)
+					gstRegNo = ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstRegNo();
+				if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstEffDate() != null)
+					gstEffDate = df.format(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstEffDate());
+				if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstDeclaredDate() != null)
+					gstDeclareDate = df.format(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstDeclaredDate());
+
+				if (scLoa.getGstAmt() != null) {
+					context.put("gstAmt", amountDF.format(scLoa.getGstAmt()));
+					context.put("gstAmtTxt", scLoa.getGstAmt().doubleValue() != 0 ? NumberWordUtil.convert(amountNoCommaDF.format(scLoa.getGstAmt())) : ""); 
+					overallAmt = scLoa.getLoaAmt().add(scLoa.getGstAmt());
+				} else {
+					context.put("gstAmt", "TB");
+					context.put("gstAmtTxt", "TB");
+				}
+			}
+
+			context.put("gstRegNo", gstRegNo);
+			context.put("gstEffDate", gstEffDate);
+			context.put("gstDeclareDate", gstDeclareDate);
+			context.put("overallContractValue", amountDF.format(overallAmt));
+			context.put("overallContractValueTxt", (scLoa.getLoaAmt() != null && scLoa.getLoaAmt().doubleValue() != 0) ? NumberWordUtil.convert(amountNoCommaDF.format(overallAmt)) : ""); 
+
+
+			String contractEffDate = "";
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate() != null) {
+				contractEffDate = dateSDF.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+			}
+			context.put("contractEffDate", contractEffDate);
+			if (scLoa.getContractSigner() != null) {
+				context.put("contractSigner", scLoa.getContractSigner().getUserName());
+				String loaSignerDesig = scLoa.getLoaSignerDesig();
+				if(StringUtils.isNotEmpty(loaSignerDesig) && loaSignerDesig.length()>86){
+					loaSignerDesig = splitLongLengthString(loaSignerDesig, 86);
+				}
+				context.put("contractSignerDesignation", loaSignerDesig);
+			}
+
+			String ackDate = "";
+			String bankAccNo = "";
+			String bankName = "";
+			String bankBranch = "";
+			String bankAddress = "";				
+			String supplierUserName = "";
+			String supplierUserID = "";
+			String supplierUserDesignation = "";
+			String supplierTelNo = "";
+			String supplierFaxNo = "";
+			String supplierMobileNo = "";
+			String supplierEmail = "";
+			String supplierCompName = "";
+			String supplierCompAddress = "";
+
+			if (ContractStatusConst.FA_PENDING_LOA_ACKNOWLEDGEMENT.equals(
+					ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())) {
+				ackDate = dateSDF.format(new Date());	
+				// Bank account details.
+				bankAccNo = ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getBankAccountNo();
+				if (bankAccNo == null) {
+					bankAccNo = "";
+				}
+				bankName = ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getBankName();
+				if (bankName == null) {
+					bankName = "";
+				}
+				bankBranch = ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getBankBranch();
+				if (bankBranch == null) {
+					bankBranch = "";
+				}
+				if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getBankAddress() != null) {
+					bankAddress = getFullAddress(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getBankAddress());
+					bankAddress = bankAddress.replaceAll("\r\n", "<br />");
+					bankAddress = bankAddress.replaceAll("&", "&#38;");
+				}
+				// Supplier User
+				supplierUserName = getFacesScopes().getUserSessionBean().getUserName();
+				supplierUserID = getFacesScopes().getUserSessionBean().getIdentificationNo();
+				supplierUserDesignation = getFacesScopes().getUserSessionBean().getDesignation() != null
+						? getFacesScopes().getUserSessionBean().getDesignation(): "";
+						supplierTelNo = getFacesScopes().getUserSessionBean().getPhoneNo() != null 
+								? getFacesScopes().getUserSessionBean().getPhoneNo() : ""; //TODO: Full Phone No
+								supplierFaxNo = getFacesScopes().getUserSessionBean().getFaxNo() != null
+										? getFacesScopes().getUserSessionBean().getFaxNo() : "";
+										supplierMobileNo = getFacesScopes().getUserSessionBean().getMobileNo() != null
+												? getFacesScopes().getUserSessionBean().getMobileNo() : "";
+												supplierEmail = getFacesScopes().getUserSessionBean().getEmail() != null
+														? getFacesScopes().getUserSessionBean().getEmail() : "";
+														supplierCompName = scLoiLoa.getSupplierName();
+														supplierCompAddress = supplierAddress;
+			} else if (ContractStatusConst.FA_PENDING_VERIFICATION.equals(
+					ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())) {
+				ackDate = dateSDF.format(scLoa.getAckDate());
+				// Bank account details.
+				bankAccNo = ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getBankAccountNo();
+				if (bankAccNo == null) {
+					bankAccNo = "";
+				}
+				bankName = ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getBankName();
+				if (bankName == null) {
+					bankName = "";
+				}
+				bankBranch = ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getBankBranch();
+				if (bankBranch == null) {
+					bankBranch = "";
+				}
+				if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getBankAddress() != null) {
+					bankAddress = getFullAddress(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getBankAddress());
+					bankAddress = bankAddress.replaceAll("\r\n", "<br />");
+					bankAddress = bankAddress.replaceAll("&", "&#38;");
+				}
+				// Supplier User
+				supplierUserName = scLoa.getAckBy().getUserName();
+				supplierUserID = scLoa.getAckBy().getIdentificationNo();
+				supplierUserDesignation = scLoa.getAckBy().getDesignation() != null ? scLoa.getAckBy().getDesignation() : "";
+				supplierTelNo = scLoa.getAckBy().getPhoneNo() != null ? scLoa.getAckBy().getPhoneNo() : "";
+				supplierFaxNo = scLoa.getAckBy().getFaxNo() != null ? scLoa.getAckBy().getFaxNo() : "";
+				supplierMobileNo = scLoa.getAckBy().getMobileNo() != null ? scLoa.getAckBy().getMobileNo() : "";
+				supplierEmail = scLoa.getAckBy().getEmail() != null ? scLoa.getAckBy().getEmail() : "";
+				supplierCompName = scLoiLoa.getSupplierName();
+				supplierCompAddress = supplierAddress;					
+
+			}
+			context.put("ackDate", ackDate);
+			context.put("bankAccNo", bankAccNo);
+			context.put("bankName", bankName.replaceAll("&", "&#38;"));
+			context.put("bankBranch", bankBranch);
+			context.put("bankAddress", bankAddress);
+			// Supplier User
+			context.put("supplierUserName", supplierUserName);
+			context.put("supplierUserID", supplierUserID);
+			context.put("supplierUserDesignation", supplierUserDesignation);
+			context.put("supplierTelNo", supplierTelNo);
+			context.put("supplierFaxNo", supplierFaxNo);
+			context.put("supplierMobileNo", supplierMobileNo);
+			context.put("supplierEmail", supplierEmail);
+			context.put("supplierCompName", supplierCompName);
+			context.put("supplierCompAddress", supplierCompAddress);
+			// Witness
+			context.put("witnessName", "");
+			context.put("witnessID", "");
+			context.put("witnessDesignation", "");
+			context.put("witnessAddress", "");
+			context.put("witnessTelNo", "");
+			context.put("witnessFaxNo", "");
+			context.put("witnessMobileNo", "");
+			context.put("witnessEmail", "");
+
+		}
+		// Acknowledgment Receipt of the Supplemental Contract Letter
+		else if (ParameterConst.DOCUMENT_DEFINITION_KEY_ACK_OF_LOA_RECEIPT.equalsIgnoreCase(docDefinitionKey)) {
+			context = new VelocityContext();	
+			vmFile = ContractConst.DOCPATH_CT_LOA_RECEIPT;
+			context.put("supplierName", "");
+			context.put("supplierIcNo", "");
+			context.put("supplierAckDate", "");
+			if (getManagedBean().getTaskName() != null) {
+				if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)
+						&&  !getManagedBean().isReadOnly()) {
+					context.put("supplierName", getFacesScopes().getUserSessionBean().getUserName());
+					context.put("supplierIcNo", getFacesScopes().getUserSessionBean().getIdentificationNo());
+					context.put("supplierAckDate", dateSDF.format(new Date()));
+				} else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)) {
+					context.put("supplierName", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getUserName());
+					context.put("supplierIcNo", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getIdentificationNo());
+					context.put("supplierAckDate", dateSDF.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckDate()));
+				}
+			}
+			context.put("companyName", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
+			String supplierAddress = "";
+
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress() != null) {
+				supplierAddress = getFullAddress(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
+				supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
+				supplierAddress = supplierAddress.replaceAll("&", "&#38;");
+			}
+			context.put("supplierAddress", supplierAddress);
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getGovtSignDate() != null) {
+				context.put("govSignDate", dateSDF.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getGovtSignDate()));
+			} else {
+				context.put("govSignDate", "_______________");
+			}
+			if (!StringUtils.isEmpty(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoiLoa().getFileNo())) {
+				context.put("agencyRefNo", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoiLoa().getFileNo());
+			} else {
+				context.put("agencyRefNo", "_______________");
+			}			
+		}
+
+		if (vmFile != null && context != null) {
+			content = DocumentGenerator.getInstance().getHtmlFromVelocity(vmFile, context);
+		}
+		return content;
+	}
+
+	private static String splitLongLengthString(String text, int split){
+		StringBuilder sb = new StringBuilder();
+		String[] array = text.split("(?<=\\G.{" + split + "})");
+		int counter=1;
+		for (String string : array) {
+			sb.append(string);
+			if(array.length != counter){
+				sb.append("<br />");
+				++counter;
+			}
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * The method used to retrieve proper portal name from property file.
+	 * 
+	 * @return portletTitle  the name of the portal
+	 */
+	public String getPortletTitle() {
+		String portletTitle = ResourceBundleUtils.getMessage("lbl.ct.contract.amendment", 
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		return portletTitle;
+	}
+
+	/**
+	 * The method used to retrieve yesterday date from system.
+	 *  
+	 * @return  yesterday date
+	 */
+	private Calendar getPreviousDate() {
+		Calendar previousDate = Calendar.getInstance();
+		previousDate.setTime(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+		previousDate.add(Calendar.DATE, -1);
+		return previousDate;
+	}
+
+	/**
+	 * The method to used auto update of request.
+	 */
+	public void enableAutoUpdate() {
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
+		RequestContext.getCurrentInstance().update("@form");
+	}
+
+	/**
+	 * The Method used to set user role as per user login.
+	 * This user role is required to identify the task.
+	 * 
+	 * @return the role of login user
+	 */
+	private String getUserRole() {
+		String userRole = null;	
+		if (getManagedBean().getTaskName() == null
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_FA_HT_NAME)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_FA_HT_NAME)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_MOF_RESULT_HT_NAME)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FA_HT_NAME)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)) {
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_MINISTRY)
+					&& getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) {
+				userRole = RoleCode.MIN_CONTRACT_ADMIN.value();
+			} else if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_CENTRAL)
+					&& getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) {
+				userRole = RoleCode.BPK_CCA.value();			
+			}
+		} else {
+			if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FA_HT_NAME)
+					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME)) {
+				if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+						ParameterConst.CONTRACT_TYPE_MINISTRY)
+						&& getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())) {
+					userRole = RoleCode.CT_APPROVER.value();
+				} else if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+						ParameterConst.CONTRACT_TYPE_CENTRAL)
+						&& getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())) {
+					userRole = RoleCode.BPK_CC_APPROVER.value();
+				}
+			} else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
+				if (getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+					userRole = RoleCode.MOF_SUPPLIER_USER.value();
+				} else if (getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
+					userRole = RoleCode.MOF_SUPPLIER_ADMIN.value();
+				} else if (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
+					userRole = RoleCode.BASIC_SUPPLIER_USER.value();
+				} else if (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
+					userRole = RoleCode.BASIC_SUPPLIER_ADMIN.value();
+				}
+			} else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)
+					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)) {
+				if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) 
+						|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
+					if (getFacesScopes().hasRoleUser(RoleCode.FPB_SECRETARY.value())) {
+						userRole = RoleCode.FPB_SECRETARY.value();
+					}
+				} else {
+					String roleCode = getManagedBean().getCommitteeType() + "_SECRETARY";
+					if (getFacesScopes().hasRoleUser(roleCode)) {
+						userRole = roleCode;
+					}
+				}
+			} else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CHAIR_PERSON_SIGN_OFF_HT_NAME)) {
+				if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) 
+						|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
+					if (getFacesScopes().hasRoleUser(RoleCode.FPB_CHAIRPERSON.value())) {
+						userRole = RoleCode.FPB_CHAIRPERSON.value();
+					}
+				} else {
+					String roleCode = getManagedBean().getCommitteeType() + "_CHAIRPERSON";
+					if (getFacesScopes().hasRoleUser(roleCode)) {
+						userRole = roleCode;
+					}
+				}
+			} else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)) {
+				if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) 
+						|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
+					if (getFacesScopes().hasRoleUser(RoleCode.FPB_MEMBER.value())) {
+						userRole = RoleCode.FPB_MEMBER.value();
+					}
+				} else {
+					String roleCode = getManagedBean().getCommitteeType() + "_MEMBER";
+					if (getFacesScopes().hasRoleUser(roleCode)) {
+						userRole = roleCode;
+					}
+				}
+			}
+		}
+
+		if (userRole == null) {
+			throw new EpException(MessageConst.ERROR_750040);
+		} else {
+			return userRole;
+		}
+	}
+
+	/**
+	 * The method used to check whether approver setting tab menu is required to display.
+	 * 
+	 * @return true, if approver setting tab menu is required to display
+	 *         false, if approver setting tab menu is not required
+	 */
+	public boolean isApproverSetting() {
+		if (isContractAdmin() && (getManagedBean().getTaskName() == null
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_FA_HT_NAME)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_FA_HT_NAME)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FA_HT_NAME))) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * The method used to verify the login user is central contract 
+	 * administrator or ministry administrator.
+	 * 
+	 * @return true, if login user is central contract administrator or ministry administrator
+	 *         false, if login user is not central contract administrator or ministry administrator
+	 */
+	public boolean isContractAdmin() {
+		return (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) 
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()));
+	}
+
+	/**
+	 * The method used to check the accessibility of factoring tab menu.
+	 * 
+	 * @return true, if factoring tab menu is accessible
+	 *         false, if factoring tab menu is not accessible
+	 */
+	public boolean checkFactoringExpiryDate() {
+		if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getCtFactoring() != null 
+				&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getCtFactoring().getStatus() != null
+				&& (ctBackingBean.getManagedBean().getContractVer().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.RF_COMPLETE.longValue()
+				|| ctBackingBean.getManagedBean().getContractVer().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.XF_PENDING_ACKNOWLEDGEMENT.longValue()
+				|| ctBackingBean.getManagedBean().getContractVer().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.XF_PENDING_ENDORSEMENT.longValue())) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * The method used to check base on service contract rules
+	 * when Others is selected/not selected
+	 */
+	public void onChangeOther() {
+		if (ctBackingBean.isBeforeGstReliefDueDate() && ctBackingBean.imposedServiceTaxCondition()) {
+			ctBackingBean.onChangeServiceTax();
+		}
+		ctBackingBean.renderUpdateCheckbox(ctBackingBean.getManagedBean().getContractVer());
+	}
+
+	/**
+	 * Function to check / uncheck single checkbox into committee member datatable
+	 * 
+	 * @param pass ajax event type
+	 * */
+	public void selectAllComitMemCheckBox(AjaxBehaviorEvent e) {
+		getManagedBean().setSelectAll(false);
+		for (PmUser pmUsers : getCommitteDataModel().getList()) {
+			if (pmUsers.isSelectedCheckBox()) {
+				ctBackingBean.getManagedBean().setButtonHideActive(false);
+				return;
+			}
+		}
+		if ((boolean) e.getComponent().getAttributes().get("value")) {
+			ctBackingBean.getManagedBean().setButtonHideActive(false);
+		} else {
+			ctBackingBean.getManagedBean().setButtonHideActive(true);
+		}	
+	}
+
+	/**
+	 * Function to check / uncheck single checkbox into committee member datatable.
+	 * 
+	 * @param pass ajax event type
+	 * */
+	public void selectAllComitMem(AjaxBehaviorEvent e) {
+
+		for (PmUser pmUsers : getCommitteDataModel().getList()) {
+			if (getManagedBean().isSelectAll()) {
+				pmUsers.setSelectedCheckBox(true);
+			} else {
+				pmUsers.setSelectedCheckBox(false);
+			}
+		}
+
+		if ((boolean) e.getComponent().getAttributes().get("value")) {
+			ctBackingBean.getManagedBean().setButtonHideActive(false);
+		} else {
+			ctBackingBean.getManagedBean().setButtonHideActive(true);
+		}
+	}
+
+	/**
+	 * The method used to navigate to contract details screen
+	 * for view purpose.
+	 * This method is used by fulfillment module.
+	 * 
+	 * @return the navigate URL 
+	 */
+	public String gotoCommonViewPage(Long contractId) {	
+		ContractDetailsBackingBean ctDT = null;
+		try {
+			ctDT =  new ContractDetailsBackingBean();
+			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+			ContractReqDTO reqDTO = new ContractReqDTO();
+			reqDTO.setContractId(contractId);
+			reqDTO.setContractVerId( contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId());
+			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE); // View purpose, FU or FW also fine
+			reqDTO.setViewOnly(true); 
+			reqDTO.setCommonView(true);
+			ctBackingBean.getManagedBean().setViewContract(true);
+			ctDT.getManagedBean().setTaskId(getManagedBean().getTaskId());
+			ctDT.setValidateContractField(reqDTO);
+			getManagedBean().setSelectedTabIndex(0); 
+			ctDT.getManagedBean().setBackPageAmendment(true);
+			ctDT.getManagedBean().setAsAtDate(DateUtils.getCurrentDateWithoutTime());
+			reqDTO.setCtContractVer(ctBackingBean.getManagedBean().getContractVer());
+			ctDT.getManagedBean().setWarningPercentage(contractSO.checkAdvancedPaymentProgress(reqDTO).getPercentage());
+			FacesContext fc = FacesContext.getCurrentInstance();
+			ctDT.getManagedBean().setGotoPreviewPage(fc.getViewRoot().getViewId()+"?faces-redirect=true");
+			ctDT.getManagedBean().setBackPageAmendment(true);
+			return CONTRACT_COMMON_PAGE;
+		} finally {
+			ctDT = null;
+		}
+	}
+
+	/**
+	 * The method used to check whether exist previous extension history
+	 * and the extend start date is already started.
+	 * 
+	 * @return true, if valid to perform contract extension
+	 *         false, if not valid to perform contract extension
+	 */
+	public boolean validExtensionDate() {
+		List<CtContractVer> extensionHistoryList = getManagedBean().getAmendHistoryList();
+		if (extensionHistoryList != null && extensionHistoryList.size() > 0) {
+			CtContractVer latestExtensionVer = extensionHistoryList.get(extensionHistoryList.size() - 1);
+			if (latestExtensionVer.getCtAmendment().getExtendStartDate().after(DateUtils.getCurrentDateWithoutTime())) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * The method used to retrieve the supplemental contract letter
+	 * response due date base on the selected sign date and response period.
+	 * 
+	 * @return response due date
+	 */
+	public String retrieveResponseDueDate() {
+		String dueDate = ResourceBundleUtils.getMessage("lbl.txt.na", 
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getGovtSignDate() != null
+				&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getLoaResponsePeriod() != null) {
+
+			Date ackDueDate = DateUtils.addDays(
+					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getGovtSignDate(),
+					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getLoaResponsePeriod());
+
+			CommonUtils commonUtils = new CommonUtils();
+			SimpleDateFormat dateSDF = new SimpleDateFormat(commonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
+			dueDate = dateSDF.format(ackDueDate);
+
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setAckDueDate(ackDueDate);
+		} else {
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setAckDueDate(null);
+		}
+		return dueDate;
+	}
+	
+	// Redmine 19600 - Amendment with Supplement
+	/**
+	 * to validate contract amount below 20k
+	 * 
+	 * @return
+	 */
+	public boolean isContractAmountAmend() {
+		boolean isContractAmountAmend = false;
+		if(ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount().longValue() < 20000L){
+			isContractAmountAmend = true;
+		}		
+		
+		return isContractAmountAmend;
+	}
+}

@@ -1,0 +1,114 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<p:panel header="#{lbl['lbl.sm.sitevisit.licenseinsurance']}"> 
+		<p:dataTable id="dtFinanceDoc" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+		value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.financialDocLs}" var="finDoc">
+			<p:column>
+					<f:facet name="header">
+						#{lbl['lbl.sm.financial.doc']}
+					</f:facet>
+					<h:outputText value="#{svoSiteVisitBackingBean.getParameterDesc(finDoc.pmParameter)}"></h:outputText>
+			</p:column>
+			
+			<p:column>
+					<f:facet name="header">
+						#{lbl['lbl.sm.financial.reference']}
+					</f:facet>
+					
+					<p:inputText value="#{finDoc.docRef}" disabled="#{viewFlag}" maxlength="80"/>
+					
+			</p:column>
+			
+			<p:column>
+					<f:facet name="header">
+						#{lbl['lbl.sm.financial.date.issued']}
+					</f:facet>
+					<p:calendar id="dateIssuedCalId" disabled="#{viewFlag}"
+						navigator="true" label="#{lbl['lbl.sm.financial.date.issued']}"
+						value="#{finDoc.docDate}"
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
+						readonlyInput="true" size="30" showOn="button" />
+			</p:column>
+			
+			<p:column>
+					<f:facet name="header">
+						#{lbl['lbl.sm.financial.note']}
+					</f:facet>
+					<p:inputTextarea rows="3" cols="35" autoResize="false" value="#{finDoc.remark}" disabled="#{viewFlag}" maxlength="500"
+						label="#{lbl['lbl.sm.financial.note']}">
+					 	<f:validateLength maximum="500" />
+					</p:inputTextarea>
+			</p:column>
+			</p:dataTable>
+	</p:panel>
+	
+	<p:panel header="#{lbl['lbl.sm.financial.add.docs']}" id="pnlAddFinancialDoc">
+		<p:dataTable id="dtAddFinDocId" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.additionalDocLs}"
+			var="addFinDoc" selection="#{svoSiteVisitBackingBean.managedBean.selectedAddFinancialDoc}" rowKey="#{addFinDoc}">
+
+			<p:column selectionMode="multiple" style="width:2%" rendered="#{!viewFlag}"/>
+			<p:column>
+				<f:facet name="header">
+						<h:outputText value="*" styleClass="mandatory" />
+						#{lbl['lbl.sm.financial.doc']}
+					</f:facet>
+				<p:inputText value="#{addFinDoc.docName}" maxlength="100" disabled="#{viewFlag}" label="#{lbl['lbl.sm.financial.doc']}" required="#{empty param['disabledValidation']}"></p:inputText>
+			</p:column>
+
+			<p:column>
+				<f:facet name="header">
+						<h:outputText value="*" styleClass="mandatory" />
+						#{lbl['lbl.sm.financial.reference']}
+					</f:facet>
+				<p:inputText value="#{addFinDoc.docRef}" maxlength="80" disabled="#{viewFlag}" required="#{empty param['disabledValidation']}" label="#{lbl['lbl.sm.financial.reference']}" />
+			</p:column>
+
+			<p:column>
+				<f:facet name="header">
+						<h:outputText value="*" styleClass="mandatory" />
+						#{lbl['lbl.sm.financial.date.issued']}
+					</f:facet>
+				<p:calendar id="dateIssuedCalId" navigator="true" disabled="#{viewFlag}" required="#{empty param['disabledValidation']}"
+					label="#{lbl['lbl.sm.financial.date.issued']}" value="#{addFinDoc.docDate}"
+					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
+					readonlyInput="true" size="15" showOn="button" />
+			</p:column>
+
+			<p:column>
+				<f:facet name="header">
+						#{lbl['lbl.sm.financial.note']}
+					</f:facet>
+				<p:inputTextarea rows="3" cols="35" autoResize="false" disabled="#{viewFlag}" maxlength="500"
+					value="#{addFinDoc.remark}" label="#{lbl['lbl.sm.financial.note']}">
+					<f:validateLength maximum="500" />
+				</p:inputTextarea>
+			</p:column>
+		</p:dataTable>
+
+		<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.add']}" rendered="#{!viewFlag}"
+					action="#{svoSiteVisitBackingBean.addFinancialDoc}"
+					update="dtAddFinDocId" />
+				<p:commandButton value="#{lbl['lbl.btn.delete']}" rendered="#{!viewFlag}"
+					oncomplete="financialDocDeletePopUp.show();"
+					update="dtAddFinDocId">
+					<f:param name="disabledValidation" value="true" />
+				</p:commandButton>
+			</div>
+	</p:panel>
+	
+	<ac:confirmationPopup id="financialDocDeletePopUpId"
+		widget="financialDocDeletePopUp"
+		okAction="svoSiteVisitBackingBean.removeFinancialDoc()"
+		width="400" height="100"
+		title="#{lbl['lbl.msg.confirm.delete.header']}"
+		content="#{lbl['lbl.msg.confirm.delete']}" 
+		update=":#{p:component('dtAddFinDocId')}"/>
+</ui:composition>

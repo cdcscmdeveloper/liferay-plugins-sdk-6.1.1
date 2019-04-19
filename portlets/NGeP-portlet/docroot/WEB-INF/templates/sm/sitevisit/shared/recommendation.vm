@@ -1,0 +1,164 @@
+<table width='100%'>
+	<tr>
+		<td class="txtBold"><u>Office Location</u></td>
+	</tr>
+
+	<tr>
+		<td  class="txtBold" width="25%">Office Ownership</td>
+		<td  width="25%">
+		#if($review)
+			#if($officeOwnership == "O")
+				Owned
+			#elseif($officeOwnership == "R")
+				Rented
+			#end
+		#end
+		</td>
+		
+		#if($officeOwnership == "O")
+			<td width="25%" class="txtBold">Private, Purchasing Price (RM)</td>
+			<td width="25%">#if($review) $!officePrice #end</td>
+		#elseif($officeOwnership == "R")
+			<td class="txtBold" width="25%">Rent, Monthly Rate (RM)</td>
+			<td width="25%">#if($review) $!officeRentalRate #end</td>
+		#end
+	</tr>
+	
+	<tr>
+		<td></td>
+		<td></td>
+		<td class="txtBold">Share With</td>
+		<td>#if($review) #if($!svTask.smSvOffice.share)Yes #else No #end #end</td>
+	</tr>
+	
+	#if($review)
+	<tr>
+		<td></td>
+		<td></td>
+		<td class="txtBold" valign="top">Remark</td>
+		<td> $!svTask.smSvOffice.shareWithRemark</td>
+	</tr>
+	<br />
+	 #end
+	
+	<tr>
+		<td></td>
+		<td></td>
+		<td class="txtBold">Sign Board</td>
+		<td>#if($review) #if($svTask.smSvOffice.signboardValid)Yes #else No #end #end</td>
+	</tr>
+	
+	#if($review)
+	<tr>
+		<td></td>
+		<td></td>
+		<td class="txtBold" valign="top">Remark</td>
+		<td>#if($review) $!svTask.smSvOffice.signboardRemark #end</td>
+	</tr>
+	#end
+	
+	<tr>
+		<td class="txtBold">Office Arrangement</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td colspan="2">#if($review) $!svTask.smSvOffice.officeArrangement #end</td>
+	</tr>
+</table>
+<br /><br /><br /><br /><br /><br />
+
+
+#if($templateCode == "M")
+<table>
+	<tr><td class="txtBold"><u>Comments</u></td></tr>
+	<tr><td class="txtBold">Operation Stage</td></tr>
+	#if($review) 
+		<tr><td>$!svTask.smSvTemplate.smSvComment.operationStage</td></tr>
+		<br />
+	#else
+	<tr><br /><br /><br /><br /><br /></tr>
+	#end
+			
+	<tr><td class="txtBold">Production Capability</td></tr>
+	#if($review) 
+		<tr><td>$!svTask.smSvTemplate.smSvComment.productionCapacity</td></tr>
+		<br />
+	#else
+		<tr><br /><br /><br /><br /><br /></tr>
+	#end
+	
+	<tr><td class="txtBold">Factory/Machine Ownership and Ownership Method</td></tr>
+	#if($review) 
+		<tr><td>$!svTask.smSvTemplate.smSvComment.fmOwnershipMethod</td></tr>
+		<br />
+	#end
+</table>
+#else
+<table>
+	<tr><td class="txtBold"><u>Comments</u></td></tr>
+	#if($review)
+		<tr><td>$!svTask.officerComment</td></tr>
+		<br />
+	#else
+		<tr><br /><br /><br /><br /><br /></tr>
+	#end
+</table>
+#end
+
+<table>
+	<tr><td class="txtBold"><u>Company Information Update(If any changes)</u></td></tr>
+	
+	#if($review)
+		<tr><td>$!svTask.companyInfoUpdate</td></tr>
+		<br />
+	#else
+		<tr><br /><br /><br /><br /><br /></tr>
+	#end
+</table>
+
+
+<table>
+	<tr><td class="txtBold"><u>Recommendation/ Declaration</u></td></tr>
+	
+	#if($review)
+		#if($templateCode == "M")
+		<tr><td>$!svTask.officerComment</td></tr>
+		#else
+			#if($svTask.recommended)
+				<tr><td>Approve</td></tr>
+			#else
+				<tr><td>Reject</td></tr>
+			#end
+		#end
+		<br /><br /><br />
+	#else
+		<tr><br /><br /><br /><br /><br /></tr>
+	#end
+</table>
+
+<table class="sTable">
+#if($review)
+		#if($svTask.smSvOfficers.size() > 0)
+			<tr>
+			#foreach($svOfficer in $svTask.smSvOfficers)
+				<td>
+				<table>
+					<tr><td class="txtBold">Name</td>
+						<td>$svOfficer.pmUser.userName</td>
+					</tr>
+					<tr><td class="txtBold">Date</td>
+						<td></td>
+					</tr>
+				</table>
+				</td>
+			#end
+			</tr>
+		#else
+			<tr><td class="txtBold">Name</td><td class="txtBold">Name</td></tr>
+			<tr><td class="txtBold">Date</td><td class="txtBold">Date</td></tr>
+		#end
+#else
+		<tr><td class="txtBold">Name</td><td class="txtBold">Name</td></tr>
+		<tr><td class="txtBold">Date</td><td class="txtBold">Date</td></tr>
+#end
+</table>

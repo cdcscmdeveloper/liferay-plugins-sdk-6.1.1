@@ -1,0 +1,227 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<p:panel header="#{lbl['lbl.sm.branch.panHdr']}" toggleable="true" id="branchGstInfoPanelId" rendered="#{not empty smUpdateGstInfoBackingBean.managedBean.branches}">
+		<p:dataTable var="br" id="branchDt" 
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" 
+			value="#{smUpdateGstInfoBackingBean.managedBean.branches}"
+			rowIndexVar="index">
+
+			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
+				style="width : 5%;">
+				<p:outputLabel value="#{index + 1}"
+					style="float: left;white-space: normal;" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sm.branch']}">
+			
+				<table style="width: 50%;table-layout:fixed">
+					<tr>
+						<td style="border-style: none !important;"><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.branch.branchName']}" /></td>
+						<td style="border-style: none !important;"><p:outputLabel styleClass="outputLabel-view" value="#{br.branch.branchName}" /></td>
+					</tr>
+					<tr>
+						<td style="border-style: none !important;"><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.companyaddress']}" /></td>
+						<td style="border-style: none !important;white-space: normal;"><p:outputLabel styleClass="outputLabel-view" value="#{smUpdateGstInfoBackingBean.getFullAddress(br.branch.smAddress)}" /></td>
+					</tr>
+				 </table>
+				 <br />
+				 
+				 <p:outputPanel rendered="#{not empty br.gst and br.gst.isCurrent}">
+					 <table style="width: 50%;table-layout:fixed">
+						<tr>
+							<td style="border-style: none !important;float: right !important;">
+								<p:selectBooleanCheckbox value="#{br.sameWithHq}">
+									<p:ajax update="@([id$=branchGstInfoPanelId])" event="change"
+										process="@this" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+										listener="#{smUpdateGstInfoBackingBean.copyHqGstToBranch(br)}" />
+								</p:selectBooleanCheckbox>
+							</td>
+							<td valign="top" style="border-style: none !important;">
+								<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.brnch.gstSame']}" style="white-space: normal !important;"/>
+							</td>
+						</tr>
+					</table>
+				  </p:outputPanel>
+				 
+				 <p:outputPanel rendered="#{!br.sameWithHq}">
+				 	<p:outputPanel id="branchGstNotEmptyPanelId" rendered="#{not empty br.gst and br.gst.isCurrent}">
+						<table style="width: 50%;table-layout:fixed">
+							<tr>
+								<td style="border-style: none !important;">
+									<p:outputLabel value="#{lbl['lbl.sm.gst.regno']}" />
+									<p:outputLabel value="*" styleClass="mandatory" />
+								</td>
+								<td style="border-style: none !important;"><p:inputText id="branchGstRegNo"  maxlength="12" 
+									value="#{br.gst.gstRegNo}" required="true"
+									size="35" label="#{lbl['lbl.sm.gst.regno']} (#{br.branch.branchName})" 
+									validatorMessage="#{lbl['lbl.sm.gstNo']} - #{lbl['lbl.sm.invalidNo']}">
+									<p:ajax event="blur" process="@this" update="@form"/>
+									<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+									</p:inputText>
+									<p:message id="branchGstRegNoMsg"
+										for="branchGstRegNo" showSummary="true" showDetail="false"
+										display="icon" />
+								</td>
+							</tr>
+							<tr>
+								<td style="border-style: none !important;">
+									<p:outputLabel value="#{lbl['lbl.sm.gst.effdate']}" />
+									<p:outputLabel value="*" styleClass="mandatory" />
+								</td>
+								<td style="border-style: none !important;"><p:calendar id="branchGstRegDateCalId"
+										navigator="true" 
+										required="#{not empty br.gst.gstRegNo}" 
+										label="#{lbl['lbl.sm.gst.effdate']} (#{br.branch.branchName})"
+										value="#{br.gst.gstEffDate}"
+										pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
+										readonlyInput="true" size="30" showOn="button" yearRange="-99:+0" 
+										mindate="#{CommonConstants.GST_LAUNCH_DATE}">
+										<p:ajax event="dateSelect"  update="@form" process="@this"/>
+									</p:calendar>
+									<p:message id="branchGstRegDateCalIdMsg"
+										for="branchGstRegDateCalId" showSummary="true" showDetail="false"
+										display="icon" />
+								</td>
+							</tr>
+							<tr>
+								<td style="border-style: none !important;"><p:outputLabel value="#{lbl['lbl.sm.gst.eff.end.date']}" /></td>
+								<td style="border-style: none !important;"><p:calendar id="branchGstEffEndDateCalId"
+										navigator="true" 
+										label="#{lbl['lbl.sm.gst.eff.end.date']} (#{br.branch.branchName})"
+										value="#{br.gst.gstEndDate}" mindate="#{CommonConstants.GST_LAUNCH_DATE}"
+										pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
+										readonlyInput="true" size="30" showOn="button" yearRange="-99:+10" >
+										<p:ajax event="dateSelect"  update="branchGstNotEmptyPanelId" process="@this"/>
+									</p:calendar>
+									<p:message id="branchGstEffEndDateCalIdMsg"
+										for="branchGstEffEndDateCalId" showSummary="true" showDetail="false"
+										display="icon" />
+								</td>
+							</tr>
+						</table>
+				  	</p:outputPanel>
+				  	<p:outputPanel id="branchGstEmptyPanelId" rendered="#{empty br.gst or !br.gst.isCurrent}">
+				  		<table style="width: 50%;table-layout:fixed">
+					  		<tr>
+								<td style="border-style: none !important;"><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.gst.regno']}" /></td>
+								<td style="border-style: none !important;"><p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}" /></td>
+							</tr>
+							<tr>
+								<td style="border-style: none !important;"><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.gst.effdate']}" /></td>
+								<td style="border-style: none !important;"><p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}" /></td>
+							</tr>
+							<tr>
+								<td style="border-style: none !important;"><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.gst.eff.end.date']}" /></td>
+								<td style="border-style: none !important;"><p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}" /></td>
+							</tr>
+						</table>
+				  	</p:outputPanel>
+				 </p:outputPanel>
+				 
+				 <p:outputPanel rendered="#{br.sameWithHq}">
+				 	<ui:include src="/xhtml/sm/shared/gstInformation/gstDisableFields.xhtml" />
+				 </p:outputPanel>
+				
+				 <br />
+				 <p:dataTable var="table" id="hqSuppDocDtId"
+					value="#{br.gst.smGstSupplierDocs}" rendered="#{not empty br.gst and br.gst.isCurrent and !br.sameWithHq}"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					rowIndexVar="index">
+		
+					<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
+						style="width : 5%;">
+						<p:outputLabel value="#{index + 1}"
+							style="float: left;white-space: normal;" />
+					</p:column>
+		
+					<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}"
+						style="width : 55%;">
+						<h:outputText value="#{table.pmDocument.docName}"
+							style="float: left;white-space: normal;" />
+					</p:column>
+		
+					<p:column headerText="#{lbl['lbl.btn.upload.doc']}"
+						style="width : 20%;">
+						<p:outputPanel rendered="#{not empty br.gst.gstRegNo and not empty br.gst.gstEffDate and !table.pmDocument.hardCopyReq}">
+							<p:commandLink oncomplete="branchUploadDialog.show();return false;"
+								update="@([id$=branchUploadDialog])"
+								action="#{smUpdateGstInfoBackingBean.assignSelectedBranchSupportDoc(br,table)}">
+								<p:graphicImage value="/css/images/design/upload.png"
+									style="margin-right:2px;" />
+							</p:commandLink>
+						</p:outputPanel>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.pm.document.name']}"
+						style="width : 20%;">
+						<p:commandLink ajax="false" value="#{table.fileName}" rendered="#{not empty table.fileName}">
+							<p:fileDownload value="#{smUpdateGstInfoBackingBean.commonDownload(table.filePath,table.fileName,table.fileName)}" />
+						</p:commandLink>
+						<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty table.fileName}" />
+						<p:commandLink id="deleteBrAttId" style="white-space: normal !important;"
+							partialSubmit="true" rendered="#{not empty table.fileName}"
+							process="@this" action="#{smUpdateGstInfoBackingBean.onDeleteBrAttachment(br.branch,table)}"
+							update="@form" onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()">
+							&#160;
+							<p:graphicImage value="/css/images/design/icon_trash.png" 
+								title="#{lbl['lbl.sm.gst.delete.attachment']}" />
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+				
+				 <div align="right">
+					<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						partialSubmit="true" process="@this" 
+						disabled="#{smUpdateGstInfoBackingBean.managedBean.gstEmpty or (not empty br.gst and br.gst.isCurrent) 
+							or br.sameWithHq}"
+						update="@([id$=branchGstInfoPanelId])" action="#{smUpdateGstInfoBackingBean.addBranchGst(br)}">
+					</p:commandButton>
+					<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
+						partialSubmit="true" process="@this" 
+						disabled="#{empty br.gst or !br.gst.isCurrent}"
+						action="#{smUpdateGstInfoBackingBean.deleteBranchGst(br)}"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						update="@form">
+					</p:commandButton>
+				</div>
+				
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+	
+	<p:dialog id="branchUploadDialog" widgetVar="branchUploadDialog" modal="true"
+		dynamic="true" resizable="false" width="700px" height="200"
+		styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}" 
+		onShow="singleUploadListener(uploadWB);">
+		<p:fileUpload allowTypes="/(\.|\/)(pdf|doc|docx)$/"
+			sizeLimit="1000000" widgetVar="uploadWB"
+			invalidFileMessage="#{lbl['lbl.sm.upload.format.errmsg']}"
+			invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed1Mb']}"
+			fileUploadListener="#{smUpdateGstInfoBackingBean.handleBranchSupDocFileAttachment}"
+			update="@form" oncomplete="branchUploadDialog.hide();" 
+			uploadLabel="#{lbl['lbl.btn.upload']}"  
+			label="#{lbl['lbl.btn.choose']}" 
+			cancelLabel="#{lbl['lbl.btn.cancel']}" 
+			multiple="false" showButtons="false"/>
+	</p:dialog>
+	
+	<p:confirmDialog id="confirmDeleteBrDialog" closable="true"
+		message="#{lbl['lbl.sm.gst.delete.attachment.confirm.msg']}"
+		header="#{lbl['lbl.sm.gst.delete.attachment.header']}" severity="alert"
+		widgetVar="confirmDeleteBrDialog">
+		
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDeleteBrDialog.hide();" 
+				action="#{smUpdateGstInfoBackingBean.deleteBrAttachment}" update="@form" partialSubmit="true"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" process="@this"/>
+			<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmDeleteBrDialog.hide();" />
+		</div>
+	</p:confirmDialog>
+</ui:composition>

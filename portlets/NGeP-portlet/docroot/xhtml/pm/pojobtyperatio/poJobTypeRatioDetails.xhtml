@@ -1,0 +1,125 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="contentSection">
+		<p:messages id="messages" showDetail="true" showSummary="false"
+			autoUpdate="true" closable="true" severity="error,info"></p:messages>
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		<p:panel header="#{poJobTypeRatioBackingBean.managedBean.poJobTypeRatio.brandNew? lbl['lbl.pm.po.jobtyperatio.create'] : lbl['lbl.pm.po.jobtyperatio.upd']}"
+			id="jobTypeRatioCrtPnlId" toggleable="true">
+			<div class="header-spacing">
+				<table style="width: 100%;">
+					<tr>
+						<td><p:commandButton id="backBtnId"
+								value="#{lbl['lbl.btn.back']}" immediate="true" update=":form"
+								process="@this" action="#{poJobTypeRatioBackingBean.backToMain()}"
+								style="float:left;" /></td>
+						<td><p:commandButton id="saveBtnId"
+								value="#{poJobTypeRatioBackingBean.managedBean.poJobTypeRatio.brandNew? lbl['lbl.btn.save'] : lbl['lbl.btn.update']}"
+								action="#{poJobTypeRatioBackingBean.savePoJobRatio()}"
+								update="@([id$=Msg])" style="float:right;"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
+								<f:param name="disableValidation" value="true" />
+							</p:commandButton></td>
+					</tr>
+				</table>
+			</div>
+			<p:outputPanel id="jobTypeRatioCrtOpId">
+				<table width="100%">
+					<tr>
+						<td width="20%"><p:outputLabel
+								value="#{lbl['lbl.pm.poworkload.supptype']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td width="70%"><p:selectOneMenu id="suppTypeList"
+								label="#{lbl['lbl.pm.poworkload.supptype']}"
+								value="#{poJobTypeRatioBackingBean.managedBean.poJobTypeRatio.supplierType}"
+								disabled="#{not poJobTypeRatioBackingBean.managedBean.poJobTypeRatio.brandNew}"
+								required="#{!empty param['disableValidation']}">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+									itemValue="#{null}" />
+								<f:selectItem itemLabel="#{lbl['lbl.sm.contractor']}"
+									itemValue="#{SupplierManagementConst.SUPP_TYPE_CONTRACTOR}" />
+								<f:selectItem itemLabel="#{lbl['lbl.sm.consultant']}"
+									itemValue="#{SupplierManagementConst.SUPP_TYPE_CONSULTANT}" />
+								<p:ajax event="change"
+									update="@this,:form:appTypeList,:form:catTypeList"
+									process="@this"
+									listener="#{poJobTypeRatioBackingBean.changeSuppType()}" />
+							</p:selectOneMenu></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel
+								value="#{lbl['lbl.pm.poworkload.appltype']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:selectOneMenu id="appTypeList"
+								label="#{lbl['lbl.pm.poworkload.appltype']}"
+								disabled="#{poJobTypeRatioBackingBean.managedBean.applDisabled or not poJobTypeRatioBackingBean.managedBean.poJobTypeRatio.brandNew}"
+								value="#{poJobTypeRatioBackingBean.managedBean.poJobTypeRatio.applType}"
+								required="#{!empty param['disableValidation']}">
+								<f:selectItems
+									value="#{poJobTypeRatioBackingBean.applicationTypeOptions()}" />
+								<p:ajax event="change" update="@this,:form:catTypeList"
+									process="@this"
+									listener="#{poJobTypeRatioBackingBean.changeAppType()}" />
+							</p:selectOneMenu></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel
+								value="#{lbl['lbl.pm.poworkload.catType']}" /> </td>
+						<td><p:selectOneMenu id="catTypeList"
+								label="#{lbl['lbl.pm.poworkload.catType']}"
+								disabled="#{poJobTypeRatioBackingBean.managedBean.categoryDisabled or not poJobTypeRatioBackingBean.managedBean.poJobTypeRatio.brandNew}"
+								value="#{poJobTypeRatioBackingBean.managedBean.poJobTypeRatio.categoryType}">
+								<f:selectItems
+									value="#{poJobTypeRatioBackingBean.catTypeOptions()}" />
+								<p:ajax event="change" update="@this" process="@this"
+									partialSubmit="true" />
+							</p:selectOneMenu></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel
+								value="#{lbl['lbl.pm.po.jobtyperatio.weightcat']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:selectOneMenu id="jobWeightTypeList"
+								label="#{lbl['lbl.pm.po.jobtyperatio.weightcat']}"
+								value="#{poJobTypeRatioBackingBean.managedBean.poJobTypeRatio.poJobWeight.poJobWeightId}"
+								required="#{!empty param['disableValidation']}">
+								<f:selectItems
+									value="#{poJobTypeRatioBackingBean.jobWeightTypeOptions()}" />
+								<p:ajax event="change" update="@this" process="@this"
+									partialSubmit="true" />
+							</p:selectOneMenu></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel
+								value="#{lbl['lbl.pm.status']}" /> <p:outputLabel value="*"
+								styleClass="mandatory" /></td>
+						<td>
+							<p:selectOneMenu id="somStatus"
+								label="#{lbl['lbl.pm.status']}"
+								value="#{poJobTypeRatioBackingBean.managedBean.poJobTypeRatio.recordStatusFlg}"
+								required="#{!empty param['disableValidation']}"
+								disabled="#{poJobTypeRatioBackingBean.managedBean.poJobTypeRatio.brandNew}">
+								<f:selectItems
+									value="#{poJobTypeRatioBackingBean.getStatusOptions()}" />
+								<p:ajax event="change" update="@this" process="@this"
+									partialSubmit="true" />
+							</p:selectOneMenu>	
+						</td>
+					</tr>
+				</table>
+			</p:outputPanel>
+		</p:panel>
+
+
+	</ui:define>
+</ui:composition>

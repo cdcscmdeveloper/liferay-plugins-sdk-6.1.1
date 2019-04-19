@@ -1,0 +1,101 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<ui:param name="isQTStatusPendingQtSubmission" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_QT_SUBMISSION}" />
+	<ui:param name="isQTStatusPendingScheduleAndBefore" value="#{qTDetailBB.isQTStatusLessThanOrEquals(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
+			
+		<table width="100%">
+		<tr>
+		<td style="vertical-align: bottom;" align="right"><p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
+					style="float:right;"
+					action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeQuotation, qTDetailBB.managedBean.qt.qtId)}"
+					immediate="true" rendered="#{qTDetailBB.managedBean.maintanceFlow}"/></td>
+		</tr>
+		<tr>
+		<td align="right">
+			<c:if test="#{qTDetailBB.managedBean.taskId eq null and qTDetailBB.managedBean.maintanceFlow}">
+				<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
+					action="#{qTDetailBB.gotoQtSearchPage}"
+					partialSubmit="true"
+					process="@this"
+					update="@this" />
+			</c:if>
+				
+			<c:if test="#{!qTDetailBB.managedBean.readOnly}">
+				<p:commandButton value="#{lbl['lbl.btn.save']}"
+					action="#{qTDetailBB.saveQtDetailsAction}" process="@form" partialSubmit="true"
+					onclick="blockWidget.show();"
+					oncomplete="blockWidget.hide();"
+					update="@form"
+					rendered="#{isQTStatusPendingScheduleAndBefore or !qTDetailBB.managedBean.maintanceFlow}" 
+					disabled="#{!qTDetailBB.managedBean.ptjPresent}"/>
+
+				<c:choose>
+					<c:when test="#{qTDetailBB.managedBean.taskId ne null}">
+						<ui:repeat var="bpmAction"
+							value="#{qTDetailBB.managedBean.outComes}">
+							<ui:param name="buttonLabel"
+								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+							<p:commandButton value="#{lbl[buttonLabel]}"
+								styleClass="ui-button"
+								onclick="blockWidget.show();"
+								oncomplete="blockWidget.hide();"
+								action="#{qTDetailBB.updateBpmTask(bpmAction)}" />
+						</ui:repeat>
+					</c:when>
+					<c:when test="#{qTDetailBB.managedBean.createQt or isQTStatusPendingQtSubmission}">
+						<p:commandButton value="#{lbl['lbl.btn.submit']}"
+							action="#{qTDetailBB.submitQTDetailsAction}" process="@form"
+							update="@all"
+							onclick="blockWidget.show();"
+							oncomplete="blockWidget.hide();" disabled="#{!qTDetailBB.managedBean.ptjPresent}"/>
+					</c:when>
+					<c:otherwise>
+							<p:commandButton value="#{lbl['lbl.btn.submit']}"
+								styleClass="amendButton"
+								action="#{qTDetailBB.submitQtDetailsFormMaintanace}"
+								process="@form" update="@all" onclick="blockWidget.show();"
+								oncomplete="blockWidget.hide();"
+								rendered="#{qTDetailBB.isQTStatusInBetween(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_PB_APPROVAL, QTStatusConst.QT_PENDING_LOA)}"
+								disabled="#{qTDetailBB.isQTStatusPublished(qTDetailBB.managedBean.qt.qtStatus.statusId) and 
+								(empty qTDetailBB.managedBean.amendMentBean or !qTDetailBB.managedBean.amendMentBean.brandNew) and !qTDetailBB.managedBean.changesOnQTMaintenance}" />
+						</c:otherwise>
+				</c:choose>
+				
+				<c:if test="#{qTDetailBB.isQTStatusInBetween(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_QT_SUBMISSION, QTStatusConst.QT_PENDING_LOA)}">
+					<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
+						style="float:right;margin-right: 12px;" 
+						action="#{qTDetailBB.checkIsQTAllowCancel}" disabled="#{qTDetailBB.managedBean.qt.brandNew}"/>
+				</c:if>
+			</c:if>
+					
+			</td>
+		</tr>
+		</table>
+			
+		<p:dialog id="cancelQTDlg" widgetVar="cancelQTDlg"
+			header="#{lbl['lbl.sc.cancel.confirm']}" resizable="false"
+			width="30%" height="100" closable="false">
+			<table>
+				<tr>
+					<td align="center"><p:outputLabel
+							value="#{lbl['lbl.sc.dialog.confirm.cancel']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
+					oncomplete="cancelQTDlg.hide();" partialSubmit="true" process="@this"
+					action="#{qTDetailBB.cancelQtDetails}" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" 
+					onclick="cancelQTDlg.hide();" type="button" partialSubmit="true"  process="@this"/>
+			</div>
+		</p:dialog>
+	
+</ui:composition>

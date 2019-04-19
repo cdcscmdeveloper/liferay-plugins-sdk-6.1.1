@@ -1,0 +1,80 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:p="http://primefaces.org/ui"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+
+
+
+
+
+
+
+	<p:panelGrid styleClass="tablePanel" style="width:100%;">
+		<f:facet name="header">
+			<p:row>
+				<p:column>
+				#{lbl['lbl.cm.pricing.type']}
+						</p:column>
+				<p:column>
+							#{lbl['lbl.cm.price']}
+						</p:column>
+				<p:column>
+							#{lbl['lbl.cm.start.date']}
+						</p:column>
+				<p:column>
+							#{lbl['lbl.cm.end.date']}
+						</p:column>
+				
+			</p:row>
+
+		</f:facet>
+
+
+		<p:row>
+			<p:column>
+				<p:outputLabel value="#{lbl['lbl.cm.promotion']}" />
+			</p:column>
+			<p:column>
+				<p:inputText readonly="true"
+					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.price}" maxlength="18" style="text-align:right">
+					
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText>
+			</p:column>
+			<p:column>
+				<p:calendar readonly="true"
+					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.startDate}" mindate="#{catalogueBackingBean.managedBean.currentDate}"
+					showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
+					
+					</p:calendar>
+
+			</p:column>
+			<p:column>
+				<p:calendar readonly="true"
+					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.endDate}" mindate="#{catalogueBackingBean.managedBean.currentDate}"
+					showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
+					
+					</p:calendar>
+
+			</p:column>
+
+		</p:row>
+
+
+
+	</p:panelGrid>
+
+
+
+
+
+
+
+</ui:composition>

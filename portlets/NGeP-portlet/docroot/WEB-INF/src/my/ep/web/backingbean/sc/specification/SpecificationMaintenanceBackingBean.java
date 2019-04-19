@@ -1,0 +1,525 @@
+/* 
+ ***************************************************   
+ * Product nextgen
+ *                ePerolehan 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
+ */
+package my.ep.web.backingbean.sc.specification;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBetweenValue;
+import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.sc.QTStatusConst;
+import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
+import my.ep.dto.sc.quationtender.QuationTenderResDTO;
+import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
+import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.OrganizationType;
+import my.ep.type.pm.RoleCode;
+import my.ep.util.pm.OrgProfileUtil;
+import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
+import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
+import my.ep.web.constant.sc.QTConstants;
+import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
+import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
+/**
+ * The Class SpecificationBackingBean.
+ * 
+ * @author:Garikapati Mangaiah.
+ */
+@ManagedBean(name = "specMaintenanceBB")
+@ViewScoped
+public class SpecificationMaintenanceBackingBean extends
+SourcingBaseBackingBean<QTDetailManagedBean> implements Serializable{
+
+private static final long serialVersionUID = 1L;
+
+private static Logger log = Logger
+.getLogger(SpecificationMaintenanceBackingBean.class);
+
+//private IPagingDataModel<ScQt> specMaintenanceDataModel = new SpecMaintenanceSearchQtDataModel();
+
+
+public SpecificationMaintenanceBackingBean(){
+	
+}
+
+@PostConstruct
+public void  init(){
+	
+}
+
+/**
+ * The Class SpecMaintenancePagingDataModel.spec maintenance paging data
+ * model.
+ */
+private class SpecMaintenanceSearchQtDataModel extends
+		PagingDataModel<ScQt> {
+
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Instantiates a new SpecMaintenance paging data model.
+	 */
+	public SpecMaintenanceSearchQtDataModel() {
+
+		super("specMaintenancesearchQTs",false);
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep
+	 * .biz.bean.search.ISearchBean)
+	 */
+	public ISearchResultBean<ScQt> pageChangeListener(
+			ISearchBean<ScQt> searchBean) {
+		
+		IQTDetailSO detailSO;
+		try {
+			detailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			populateQTSearchCriteria(reqDTO, getManagedBean().getQtnTenderSearchBean(), searchBean);
+			QuationTenderResDTO resDTO = detailSO
+					.retriveQuationTenderDetailsBySearchCriteria(reqDTO);
+			
+			
+			// set search result doc type for navigate to diff page based on diff doc type selected.
+			getManagedBean().getQtnTenderSearchBean().setResultDocType(getManagedBean().getQtnTenderSearchBean().getDocType());
+			if(resDTO.isSuccessful()){
+			return resDTO.getQtResultBean();
+			}
+		} finally {
+			detailSO = null;
+		}
+		return null;
+
+	}
+}
+
+/**
+ * Method to prepare qt search criteria.
+ * 
+ * @param qtnTenderSearchBean
+ *            the qt search criteria bean
+ * @param qtSearchBean
+ *            the qt search filter bean
+ */
+private void populateQTSearchCriteria(QuationTenderReqDTO reqDTO,
+		QtnTenderSearchBean qtnTenderSearchBean,
+		ISearchBean<ScQt> qtSearchBean) {
+	if (qtnTenderSearchBean != null) {
+		if (CollectionUtils.isNotEmpty(qtSearchBean
+				.getDataFilterBeans())) {
+			qtSearchBean.getDataFilterBeans().clear();
+		}
+		List<SearchFilterBean> searchFilterBean = new ArrayList<SearchFilterBean>();
+		String qtTitle = qtnTenderSearchBean.getQtTitle();
+		if (StringUtils.isNotEmpty(qtTitle) && StringUtils.isNotEmpty(qtTitle)) {
+			searchFilterBean.add(
+					new SearchFilterBean(QTConstants.QT_TITILE,
+							SearchOperator.OPERATOR_LIKE.value(), qtTitle,
+							true));
+		}
+		
+		// docType & docNo
+		String docType = qtnTenderSearchBean.getDocType();
+		String docNo = qtnTenderSearchBean.getDocNo();
+		if (StringUtils.isNotEmpty(docType)) {
+			if (ParameterConst.DOCTYPE_QUOTATION.equals(docType)) {
+				if (!StringUtils.isBlank(docNo)) {
+					SearchFilterBean bean = new SearchFilterBean();
+					bean.setSearchField(QTConstants.QT_NUMBER);
+					bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+					bean.setSearchValue(docNo);
+					searchFilterBean.add(bean);	
+				}
+			} else {
+				reqDTO.setDocType(docType);
+				reqDTO.setDocNo(docNo);
+			}
+		}
+		String procurementMode = qtnTenderSearchBean.getProcurementMode();
+		if (StringUtils.isNotBlank(procurementMode) && StringUtils.isNotEmpty(procurementMode)) {
+			searchFilterBean.add(
+					new SearchFilterBean("procurementMode.parameterCode",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							procurementMode));
+		} else {
+			// Filter By - procurementMode
+			List<String> procurementModes = new ArrayList<String>();
+			procurementModes.add(ParameterConst.PROCUREMENT_MODE_QUOTATION);
+			procurementModes.add(ParameterConst.PROCUREMENT_MODE_TENDER);
+			searchFilterBean.add(
+					new SearchFilterBean(
+							"procurementMode.parameterCode",
+							SearchOperator.OPERATOR_IN.value(), 
+							procurementModes));
+		}
+		
+		Date fromCreatedDate = qtnTenderSearchBean.getFromCreatedDate();
+		Date toCreatedDate = qtnTenderSearchBean.getToCreatedDate();
+		if (null != fromCreatedDate || toCreatedDate != null) {
+			Calendar c1 = Calendar.getInstance();
+			c1.setTime(fromCreatedDate);
+			Calendar fromDate = Calendar.getInstance();
+			fromDate.set(c1.get(Calendar.YEAR), c1.get(Calendar.MONTH),
+					c1.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+			fromDate.set(Calendar.MILLISECOND, 0);
+			fromCreatedDate = fromDate.getTime();
+			if (toCreatedDate != null) {
+				Calendar c2 = Calendar.getInstance();
+				c2.setTime(toCreatedDate);
+				Calendar toDate = Calendar.getInstance();
+				toDate.set(c2.get(Calendar.YEAR), c2.get(Calendar.MONTH),
+						c2.get(Calendar.DAY_OF_MONTH), 23, 59, 59);
+				toDate.set(Calendar.MILLISECOND, 0);
+				toCreatedDate = toDate.getTime();
+			}
+			SearchFilterBean bean = new SearchFilterBean();
+			bean.setSearchField(QTConstants.CREATED_DATE);
+			bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
+			SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
+					fromCreatedDate, toCreatedDate);
+			bean.setSearchValue(betweenVal);
+			searchFilterBean.add(bean);
+		}
+		Date fromPublishDate = qtnTenderSearchBean.getFromPublishDate();
+		Date toPublishDate = qtnTenderSearchBean.getToPublishDate();
+		if (null != fromPublishDate || null != toPublishDate) {
+			Calendar c1 = Calendar.getInstance();
+			c1.setTime(fromPublishDate);
+			Calendar fromDate = Calendar.getInstance();
+			fromDate.set(c1.get(Calendar.YEAR), c1.get(Calendar.MONTH),
+					c1.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+			fromDate.set(Calendar.MILLISECOND, 0);
+			fromPublishDate = fromDate.getTime();
+			if (toPublishDate != null) {
+				Calendar c2 = Calendar.getInstance();
+				c2.setTime(toPublishDate);
+				Calendar toDate = Calendar.getInstance();
+				toDate.set(c2.get(Calendar.YEAR), c2.get(Calendar.MONTH),
+						c2.get(Calendar.DAY_OF_MONTH), 23, 59, 59);
+				toDate.set(Calendar.MILLISECOND, 0);
+				toPublishDate = toDate.getTime();
+			}
+			SearchFilterBean bean = new SearchFilterBean();
+			bean.setSearchField(QTConstants.PUBLISH_DATE);
+			bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
+			SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
+					fromPublishDate, toPublishDate);
+			bean.setSearchValue(betweenVal);
+			searchFilterBean.add(bean);
+		}
+		Date fromClosingDate = qtnTenderSearchBean.getFromClosingDate();
+		Date toClosingDate = qtnTenderSearchBean.getToClosingDate();
+		if (null != fromClosingDate || null != toClosingDate) {
+			SearchFilterBean bean = new SearchFilterBean();
+			bean.setSearchField(QTConstants.CLOSED_DATE);
+			bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
+			SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
+					fromClosingDate, toClosingDate);
+			bean.setSearchValue(betweenVal);
+			searchFilterBean.add(bean);
+		}
+		
+		String status = qtnTenderSearchBean.getQtStatus();
+		if (!StringUtils.isBlank(status)) {
+			searchFilterBean.add(new SearchFilterBean(
+							"scQtStatus.pmStatus.statusId",
+							SearchOperator.OPERATOR_EQUALS.value(), status));
+			searchFilterBean.add(
+					new SearchFilterBean("scQtStatus.current",
+							SearchOperator.OPERATOR_EQUALS.value(), true));
+		} else {
+			searchFilterBean.add(new SearchFilterBean(
+					"scQtStatus.pmStatus.statusId",
+					SearchOperator.OPERATOR_NOT_IN.value(),nonRecommendedStatusesForSpecMaint()));
+		}
+			
+
+                 searchFilterBean.add(
+		new SearchFilterBean("scQtStatus.current",
+				SearchOperator.OPERATOR_EQUALS.value(), true));
+            reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			 if(isSpecCommitteeSecretary()){
+				reqDTO.setRoleCode(RoleCode.SC_SECRETARY.value());
+			}
+			PmOrgProfile ptjProfiles = qtnTenderSearchBean.getPtjProfile();
+			if (ptjProfiles != null && ptjProfiles.getOrgProfileId() != null) {
+				// Filter By - PTJ
+				searchFilterBean.add(new SearchFilterBean(
+						"pmOrgProfile." + OrgProfileUtil
+							.getSearchBeanParentString(OrganizationType.DIVISION.value()),
+						SearchOperator.OPERATOR_EQUALS.value(),
+						ptjProfiles.getOrgProfileId()));
+			} else {
+				// Filter By - PTJ Group
+				PmOrgProfile ptjGroupProfile = qtnTenderSearchBean.getPtjGroupProfile();
+				if (ptjGroupProfile != null && ptjGroupProfile.getOrgProfileId() != null) {
+					searchFilterBean.add(new SearchFilterBean(
+							"pmOrgProfile." + OrgProfileUtil
+								.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()),
+							SearchOperator.OPERATOR_EQUALS.value(),
+							ptjGroupProfile.getOrgProfileId()));
+				} else {
+					// Filter By - Ministry
+					PmOrgProfile ministryProfile = qtnTenderSearchBean.getMinistryProfile();
+					if (ministryProfile != null
+							&& ministryProfile.getOrgProfileId() != null) {	
+						searchFilterBean.add(new SearchFilterBean(
+								"pmOrgProfile." + OrgProfileUtil
+									.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
+								SearchOperator.OPERATOR_EQUALS.value(),
+								ministryProfile.getOrgProfileId()));
+					}
+				}
+				
+			}
+		
+
+		// Adding search filterbeans to searchbean.
+		qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
+		
+		reqDTO.setQtSearchBean(qtSearchBean);
+	}
+}
+
+/**
+ * Method to search the quationtenders based on serach date.
+ */
+public void searchSpeMaintenanceQTAction() {
+	this.getManagedBean().getSearchQTDataModel().reloadData();
+}
+
+/**
+ * specCommittee maintenance data rest.
+ */
+public void specCommitteeMaintenancereset() {
+	QTDetailBackingBean detailBackingBean=new QTDetailBackingBean();
+	detailBackingBean.reset();
+	this.getManagedBean().getSearchQTDataModel().resetData();
+}
+
+/**
+ * The method  used to get the specificationMaintenance edit details.
+ * @param ScQt scQt.
+ * @param Boolean true/false.
+ */
+public void editSpecificationMaintenance(ScQt scQt,boolean isEditable){
+	
+	QtnTenderSearchBean qtTnderBean=this.getManagedBean().getQtnTenderSearchBean();
+	IPagingDataModel<ScQt> qtdataModel=this.getManagedBean().getSearchQTDataModel();
+	renewSesionObject();
+	log.debug("start editSpecificationMaintenance");
+	this.getManagedBean().setQtnTenderSearchBean(qtTnderBean);
+	this.getManagedBean().setSearchQTDataModel(qtdataModel);
+	this.getManagedBean().setMaintanceFlow(true);
+	 FacesContext fc = FacesContext.getCurrentInstance();
+     boolean specCommitteeSecreatry=isSpecCommitteeSecretary();
+     //specCommitteeSecreatry=true;
+    this.getManagedBean().setAssignedState(Boolean.FALSE);
+   
+ /* boolean isStatusPublish=  isQTStatusPublished(scQt
+			.getQtStatus().getStatusId());*/
+     log.debug("status Publish");
+		if (specCommitteeSecreatry) {
+			if (isEditable) {
+				
+				ScWorkFlowStatus workFlowStatus = retrieveStatusByTypeAndId(
+						ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT,scQt.getQtId());
+				this.getManagedBean().setSpecMaintenanceWorkFlowStatus(workFlowStatus);
+				if (null == workFlowStatus
+						|| QTStatusConst.SE_PENDING_SUBMISSION
+								.equals(workFlowStatus.getPmStatus().getStatusId())
+						|| QTStatusConst.SE_COMPLETED.equals(workFlowStatus.getPmStatus().getStatusId())) {
+					this.getManagedBean().setReadOnly(Boolean.FALSE);
+					this.getManagedBean().setSpecMaintenance(Boolean.TRUE);
+				} else {
+					this.getManagedBean().setReadOnly(Boolean.TRUE);
+					this.getManagedBean().setSpecMaintenance(Boolean.FALSE);
+				}
+			} else {
+				log.debug("status not true");
+				this.getManagedBean().setReadOnly(Boolean.TRUE);
+				this.getManagedBean().setSpecMaintenance(Boolean.FALSE);
+			}
+		} else {
+			log.debug("otherthan secretary else value workFlowStatus");
+			this.getManagedBean().setReadOnly(Boolean.TRUE);
+		}
+	
+		SpecificationBackingBean specBB = new SpecificationBackingBean();
+		specBB.retriveSpecdetails(scQt.getQtId().longValue());
+		ScQt scQt_ = this.getManagedBean().getQt();
+		if (null == scQt_.getContractType()) {
+			scQt_.setContractType(new PmParameter());
+		}
+
+		if (null != scQt_.getFulfilmentType()) {
+			this.getManagedBean().setFulfilmentType(scQt_.getFulfilmentType()
+							.getParameterCode());
+		}
+		this.getManagedBean().setCurrentStatusId(scQt.getQtStatus().getStatusId());
+		this.getManagedBean().setSpecMaintenanceScreen(QTConstants.SPEC_MAINTENANCE);
+		this.getManagedBean().setLoginRoleType("SC");
+		ScWorkFlowStatus specMainworkflow = this.getManagedBean().getSpecMaintenanceWorkFlowStatus();
+		if (null != specMainworkflow) {
+			Long currentSpecStatusId = specMainworkflow.getPmStatus().getStatusId();
+			log.debug("Workflow status not null == "+ currentSpecStatusId);
+			if(QTStatusConst.SE_COMPLETED.equals(currentSpecStatusId)){
+				currentSpecStatusId = scQt_.getQtStatus().getStatusId();
+			} 
+			this.getManagedBean().setCurrentStatusId(currentSpecStatusId);
+		}
+		
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null,
+						QTConstants.SPECIFICICATON_COMM_PREPARATION);
+		
+	log.debug("end editSpecificationMaintenance");
+}
+
+/**
+ * Get status select items by module and doc type for dropdown.
+ * 
+ *@param parameterType
+ *            the parameter type
+ * @param searchBean
+ *            the search bean instance
+ * @return List<PmParameterDesc>
+ * 
+ */
+/*public SelectItem[] getStatusDropdownValuesSpecCommittee(String moduleCode,
+		String docType) {
+	SelectItem[] items = null;
+	FacesScopes face = new FacesScopes();
+	List<PmStatusDesc> localstatusDescs=new ArrayList<PmStatusDesc>();
+	try {
+		List<PmStatusDesc> statusDescs = StatusHelper.getInstance()
+				.getStatusDescList(moduleCode, docType);
+		for (PmStatusDesc statusDesc : statusDescs) {
+			if(statusDesc.getPmStatus().getStatusId()>=QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT){
+				localstatusDescs.add(statusDesc);
+			}
+		}
+		items = new SelectItem[localstatusDescs.size() + 1];
+		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+				"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				face.getUserLocale()));
+		int i = 1;
+		for (PmStatusDesc statusDesc : localstatusDescs) {
+			items[i++] = new SelectItem(statusDesc.getPmStatus()
+					.getStatusId(), statusDesc.getStatusName());
+			}
+		
+	} catch (Exception e) {
+		e.printStackTrace();
+		FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+						e.getMessage()));
+	}
+
+	return items;
+}*/
+
+/**
+ * Goto specMaintenance search page.
+ * 
+ * @return the string
+ */
+public String gotoSpecMaintenanceSearchPage(){
+//renewSesionObject();
+return QTConstants.SPEC_MAINTENANCE_SEARCH_PAGE;	
+}
+
+private boolean isSpecCommitteeSecretary() {
+	FacesScopes facesScopes = new FacesScopes();
+	return facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value());
+}
+
+/**
+ * @return the specMaintenanceDataModel
+ */
+public IPagingDataModel<ScQt> getSpecMaintenanceDataModel() {
+	IPagingDataModel<ScQt> searchQTDataModel = getManagedBean()
+			.getSearchQTDataModel();
+	if (searchQTDataModel == null) {
+		searchQTDataModel = new SpecMaintenanceSearchQtDataModel();
+		getManagedBean().setSearchQTDataModel(searchQTDataModel);
+	}
+	return searchQTDataModel;
+}
+
+private ScWorkFlowStatus retrieveStatusByTypeAndId(String docType, Long docId) {
+	log.debug("Start retrieveStatusByTypeAndId");
+	IScWorkFlowStatusSO workFlowStatusSO;
+	try {
+		workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+		ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+		reqDTO.setDocType(docType);
+		reqDTO.setDocId(docId);
+		
+		return workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+	} finally {
+		workFlowStatusSO = null;
+	}
+}
+
+public boolean renderIcon(Long currentStatusId) {
+
+	boolean isRenderIcon = false;
+	if (currentStatusId != null) {
+		isRenderIcon = checkStatus(currentStatusId);
+	}
+	return isRenderIcon;
+}
+
+private boolean checkStatus(Long statusId){
+	
+	return isQTStatusInBetween(statusId,
+			QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT,
+			QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION);
+	
+}
+	
+}

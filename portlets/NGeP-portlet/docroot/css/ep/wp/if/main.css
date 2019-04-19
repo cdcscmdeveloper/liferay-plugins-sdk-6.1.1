@@ -1,0 +1,9 @@
+#infoTab .ui-tabs {
+	
+	background-color: #EBEDEC;
+}
+
+#infoTab .ui-tabs .ui-tabs-nav {
+    background-color: #EBEDEC !important;
+    background-image: none !important;
+}

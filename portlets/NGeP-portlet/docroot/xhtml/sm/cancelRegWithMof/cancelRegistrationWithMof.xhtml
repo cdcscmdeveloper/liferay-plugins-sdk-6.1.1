@@ -1,0 +1,106 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<ui:define name="resourceSection">
+		<script>
+			var emptyText = document.createTextNode("");
+			$('#breadcrumbs').find('.last').append(emptyText);
+			if(emptyText.parentNode != null) {
+				emptyText.parentNode.children[0].text = "#{lbl['lbl.sm.cancel.mof.application']}";
+			}
+			
+			$('#portlet_smCancelMofReg_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.cancel.mof.application']}");
+		</script>
+	</ui:define>
+
+	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		<p:messages id="messages" showDetail="true" showSummary="false"
+			autoUpdate="true" closable="true" escape="false" />
+		<p:panel id="cancelMofPanelId"
+			header="#{lbl['lbl.sm.mof.reg.cancel']} - #{backingBean.managedBean.smAppl.applNo}">
+			<br />
+			<table style="width: 100%; float: center">
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sm.mof.reg.reason.delete']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:inputTextarea cols="60" style="margin-bottom:8px;"
+							id="cancelReson" label="#{lbl['lbl.sm.mof.reg.reason.delete']}"
+							validatorMessage="#{lbl['lbl.sm.mof.reg.reason.delete']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit']}"
+							value="#{backingBean.managedBean.supplierRemarks}"
+							maxlength="2500">
+							<p:ajax event="blur" process="@this"
+								update="cancelReson,@([id$=Msg])" />
+							<f:validateLength maximum="2500" />
+						</p:inputTextarea> <p:message id="cancelResonMsg" for="cancelReson" display="icon" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.suppdoc.attach']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><p:commandLink style="float: left;padding-right: 10px;"
+							onclick="excelDialog.show();return false;">
+							<p:graphicImage value="/css/images/design/upload.png"
+								style="margin-right:2px;" />
+						</p:commandLink>							
+						<p:commandLink style="float: left;padding-right: 10px;" ajax="false" value="#{backingBean.managedBean.cancellationAttachment.fileName}" 
+							rendered="#{backingBean.managedBean.cancellationAttachment.fileName ne null}">
+							<p:fileDownload value="#{backingBean.commonDownload(backingBean.managedBean.cancellationAttachment.filePath,backingBean.managedBean.cancellationAttachment.fileName,backingBean.managedBean.cancellationAttachment.fileName)}" />
+						</p:commandLink>
+						<p:spacer width="20" />			
+						<p:commandLink style="float: left;padding-right: 10px;"
+							rendered="#{backingBean.managedBean.cancellationAttachment.fileName ne null}"
+							onclick="DeleteDlg.show();return false;">
+							<p:graphicImage value="/css/images/design/trash.png"
+								style="margin-right:2px;" />
+						</p:commandLink></td>
+				</tr>
+			</table>
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.submit']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+					action="#{backingBean.onDisplayConfirmCanceMofRegistration}" update="@([id$=Msg])" id="submitBtnId"/>
+			</div>
+		</p:panel>
+		<p:dialog id="excelDialog" widgetVar="excelDialog" modal="true"
+			dynamic="true" resizable="false" width="700px" height="200"
+			styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}"
+			onShow="singleUploadListener(uploadWV);">
+			<p:fileUpload widgetVar="uploadWV" allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|pdf|doc|docx)$/"
+				invalidFileMessage="Only JPG, GIF, PNG, BMP, PDF, DOC files are accepted"
+				id="upload"
+				sizeLimit="#{SupplierManagementConst.SM_SUPPORTDOCS_FILE_SIZE_LIMIT}"
+				fileUploadListener="#{backingBean.handleCancelMofRegFileAttachment}"
+				invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed20Mb']}"
+				update="@form" oncomplete="excelDialog.hide();" 
+				uploadLabel="#{lbl['lbl.btn.upload']}"  
+				label="#{lbl['lbl.btn.choose']}" 
+				cancelLabel="#{lbl['lbl.btn.cancel']}"
+				multiple="false" showButtons="false" />
+		</p:dialog>
+
+		<!-- harris -->
+		<p:confirmDialog id="DeleteDlg" widgetVar="DeleteDlg" closable="true"
+			message="#{lbl['lbl.sm.upload.delete.message']}"
+			header="#{lbl['lbl.sm.upload.delete.confirm.header']}"
+			severity="alert">
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.delete']}"
+					oncomplete="DeleteDlg.hide()"
+					action="#{backingBean.deleteCancelMofRegFileAttachment()}"
+					update="@form"></p:commandButton>
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="DeleteDlg.hide();"></p:commandButton>
+			</div>
+		</p:confirmDialog>
+		<p:message id="uploadMsg" for="upload" display="icon" />
+	</ui:define>
+</ui:composition>

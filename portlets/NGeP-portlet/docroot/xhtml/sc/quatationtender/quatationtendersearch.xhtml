@@ -1,0 +1,199 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<ui:define name="contentSection">
+		<p:blockUI block="qtList" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>
+		
+		<p:messages id="qtSearchMsg" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="false" severity="error, info" />
+			
+			
+	
+	<p:panel header="#{lbl['lbl.sc.search']}" toggleable="true"
+			id="qtsearchid">		
+		<ui:param name="screenName" value="QT"></ui:param>
+		<ui:include src="searchQuotationTenderDetails.xhtml"></ui:include>
+
+              <div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.search']}"
+					action="#{qTDetailBB.searchQTAction}" update="searchQTs"
+					process="@this, qtsearchid" />
+				<p:commandButton value="#{lbl['lbl.btn.reset']}"
+					action="#{qTDetailBB.reset}" update="qtsearchid"
+					resetValues="true" partialSubmit="true"
+					process="@this" />
+			</div>
+	</p:panel>
+	
+		<c:choose>
+			<c:when test="#{qTDetailBB.managedSearchBeanDocumentTypeIsLOA}">
+				<c:set var="tableHeader" value="#{lbl['lbl.sc.loiloa.loalist']}" scope="view" />
+				<c:set var="itemNoHeader" value="#{lbl['lbl.sc.loiloa.loa.no']}" scope="view" />
+				<c:set var="listType" value="loaList" scope="view" />
+				<c:set var="dataModel" value="#{qTDetailBB.searchLoaForQtDataModel}" scope="view" />
+			</c:when>
+			<c:when test="#{qTDetailBB.managedSearchBeanDocumentTypeIsLOI}">
+				<c:set var="tableHeader" value="#{lbl['lbl.sc.loiloa.loilist']}" scope="view" />
+				<c:set var="itemNoHeader" value="#{lbl['lbl.sc.loiloa.loi.no']}" scope="view" />
+				<c:set var="listType" value="loiList" scope="view" /> 
+				<c:set var="dataModel" value="#{qTDetailBB.searchQtLoiDataModel}" scope="view" />
+			</c:when>
+			<c:otherwise>
+				<c:set var="tableHeader" value="#{lbl['lbl.sc.qtn.list']}" scope="view" />
+				<c:set var="listType" value="default" scope="view" /> 
+				<c:set var="dataModel" value="#{qTDetailBB.searchQTDataModel}" scope="view" />
+			</c:otherwise>
+		</c:choose>	
+		
+		
+		<p:panel id="qtList" header="#{tableHeader}" toggleable="true">
+			<h:panelGroup id="table-wrapper" style="width:100%;">
+				<p:dataTable id="searchQTs"
+					value="#{dataModel}" var="listItem"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					rowIndexVar="index" lazy="true" rows="10">
+					
+					<ac:paginator for="searchQTs" />
+
+					<c:choose>
+						<c:when test="#{listType eq 'loaList' or listType eq 'loiList'}">
+							<ui:param name="scQt" value="#{listItem.scLoiLoa.scQt}" />
+							<p:column headerText="#{itemNoHeader}" style="width:50px;">
+								<h:outputText value="#{listItem.docNo}" />
+							</p:column>
+							<p:column headerText="#{lbl['lbl.sc.qtn.no']}" style="width:50px;">
+								<p:commandLink id="editQTIcon" rendered="#{not empty scQt}" action="#{qTDetailBB.editQuationTenderDetails(scQt, true)}"
+									style="margin-right:20px;" partialSubmit="true" process="@this">
+									<h:outputText value="#{scQt.qtNo}" />	
+								</p:commandLink>						
+							</p:column>
+						</c:when>
+						<c:otherwise>
+							<ui:param name="scQt" value="#{listItem}" />
+							<p:column headerText="#{lbl['lbl.sc.qtn.no']}" style="width:100px;">
+								<h:outputText value="#{scQt.qtNo}" />
+							</p:column>
+						</c:otherwise>
+					</c:choose>
+
+					<p:column headerText="#{lbl['lbl.sc.title']}">
+						<h:outputText value="#{scQt.qtTitle}" 
+							style="white-space: normal;word-wrap: break-word;"/>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.procurement.mode']}"
+						style="width:100px;">
+						<h:outputText
+							value="#{qTDetailBB.getParameterDesc(scQt.procurementMode)}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.created.date']}" style="width:80px;">
+						<h:outputText value="#{scQt.createdDate}">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.published.date']}" style="width:80px;">
+						<h:outputText value="#{scQt.publishDate}">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.closing.date']}" style="width:80px;">
+						<h:outputText value="#{scQt.closingDate}">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.status']}" style="width:200px;">
+						<h:outputText value="#{qTDetailBB.getStatusDescById(scQt.qtStatus.statusId)}"/>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:6%;text-align: center;">
+						<c:choose>
+						<c:when test="#{listType eq 'loiList'}">
+							<p:commandLink action="#{qTDetailBB.viewSupplierProposalDetailsGen(listItem, view.viewId)}"
+								style="margin-right:20px;"  partialSubmit="true" process="@this">
+								<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" styleClass="tasklist_title1"
+									title="#{lbl['lbl.sc.qt.search.view.tooltip']}" />
+							</p:commandLink>
+						</c:when>
+						<c:when test="#{listType eq 'loaList'}">
+							<p:commandLink action="#{qTDetailBB.viewSupplierProposalDetailsGen(listItem, view.viewId)}"
+								style="margin-right:20px;"  partialSubmit="true" process="@this">
+								<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" styleClass="tasklist_title1"
+									title="#{lbl['lbl.sc.qt.search.view.tooltip']}" />
+							</p:commandLink>
+						</c:when>
+						<c:otherwise>
+							<p:commandLink id="editQTIcon" action="#{qTDetailBB.editQuationTenderDetails(scQt, true)}"
+								style="margin-right:20px;" partialSubmit="true" process="@this">
+								<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/edit.png" styleClass="tasklist_title1"
+									title="#{lbl['lbl.sc.qt.search.edit.tooltip']}" />
+							</p:commandLink>
+							<p:commandLink id="viewQTIcon" action="#{qTDetailBB.editQuationTenderDetails(scQt, false)}"
+								style="margin-right:20px;" partialSubmit="true" process="@this"
+								rendered="#{scQt.procurementMode.parameterCode != ParameterConst.procurementModeDirectNego}">
+								<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" styleClass="tasklist_title1"
+									title="#{lbl['lbl.sc.qt.search.view.tooltip']}" />
+							</p:commandLink>
+							<p:commandLink id="viewDNIcon" action="#{qTDetailBB.viewDirectLOADetails(scQt, view.viewId)}"
+								style="margin-right:20px;" partialSubmit="true" process="@this"
+								rendered="#{scQt.procurementMode.parameterCode == ParameterConst.procurementModeDirectNego}">
+								<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" styleClass="tasklist_title1"
+									title="#{lbl['lbl.sc.qt.search.view.tooltip']}" />
+							</p:commandLink>
+							<p:commandLink id="viewSupplierQTIcon" action="#{qTDetailBB.viewSupplierProposalDetails(scQt, view.viewId)}"
+								style="margin-right:20px;" partialSubmit="true" process="@this"
+								rendered="#{qTDetailBB.managedSearchBeanDocumentTypeIsLOILOA}">
+								<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" styleClass="tasklist_title1"
+									title="#{lbl['lbl.sc.qt.search.view.tooltip']}" />
+							</p:commandLink>
+							<p:commandLink id="viewSupplierBidIcon" action="#{qTDetailBB.viewSupplierProposalDetails(scQt, view.viewId)}"
+								style="margin-right:20px;" partialSubmit="true" process="@this"
+								rendered="#{qTDetailBB.managedBean.qtnTenderSearchBean.resultDocType == ParameterConst.doctypeBidding}">
+								<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" styleClass="tasklist_title1"
+									title="#{lbl['lbl.sc.qt.search.view.tooltip']}" />
+								<f:param name="bidScheduleId" value="#{qTDetailBB.findDocIdByDocType(scQt.qtId, null)}"  />
+								<f:param name="previousPageUrl" value="#{view.viewId}" />
+							</p:commandLink>
+							<p:commandLink id="publishQTIcon" action="#{qTDetailBB.publishQT(scQt)}"
+								style="margin-right:20px;" 
+								partialSubmit="true" process="@this"
+								onstart="blockWidget.show();"
+								oncomplete="blockWidget.hide();"
+								update="searchQTs"
+								rendered="#{qTDetailBB.isAllowQTPublishBtn(scQt)}">
+								<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-play.png" styleClass="tasklist_title1"
+									title="Click here to Publish QT" />
+							</p:commandLink>
+							<p:commandLink id="closeQTIcon" action="#{qTDetailBB.closeProposal(scQt)}"
+								style="margin-right:20px;" 
+								partialSubmit="true" process="@this"
+								onstart="blockWidget.show();"
+								oncomplete="blockWidget.hide();"
+								update="searchQTs"
+								rendered="#{qTDetailBB.isAllowQTClosedBtn(scQt)}">
+								<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-termination.png" styleClass="tasklist_title1"
+									title="Click here to Close QT" />
+							</p:commandLink>
+						</c:otherwise>
+						</c:choose>
+					</p:column>
+				</p:dataTable>
+			</h:panelGroup>
+		</p:panel>
+		<ac:lovPopup />
+	</ui:define>
+</ui:composition>

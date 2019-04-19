@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+
+<faces-config version="2.0" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+
+	<!-- <lifecycle> <phase-listener>com.liferay.faces.util.lifecycle.DebugPhaseListener</phase-listener> 
+		</lifecycle> -->
+
+     <navigation-rule>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>acknowledge</from-outcome>
+			<to-view-id>/xhtml/common/acknowledge.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+	<lifecycle>
+		<phase-listener>my.ep.web.phaselistener.EpPhaseListener</phase-listener>
+		<phase-listener>my.ep.web.phaselistener.EpSecurityPhaseListener</phase-listener>
+	</lifecycle>
+	<factory>
+		<exception-handler-factory>my.ep.web.factory.EpExceptionHandlerFactory</exception-handler-factory>
+	</factory>
+
+	<application>
+		<view-handler>my.ep.web.handler.EpViewHandlerWrapper</view-handler>
+		<resource-bundle>
+			<base-name>messageprovider-config.bundles.labels.labels</base-name>
+			<var>lbl</var>
+		</resource-bundle>
+		<message-bundle>messageprovider-config.bundles.message-validation.message-validation</message-bundle>
+	</application>
+
+	<managed-bean>
+		<description>SupplierManagement Constants</description>
+		<managed-bean-name>SupplierManagementConst</managed-bean-name>
+		<managed-bean-class>my.ep.web.constant.sm.SupplierManagementConst</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<description>Common Constants</description>
+		<managed-bean-name>CommonConstants</managed-bean-name>
+		<managed-bean-class>my.ep.constants.CommonConstants</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<description>Record Status Constants</description>
+		<managed-bean-name>DbValueConst</managed-bean-name>
+		<managed-bean-class>my.ep.persistence.constant.DbValueConst</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
+		
+ 	<managed-bean>
+		  <description>Common Utils Class</description>
+		  <managed-bean-name>CommonUtils</managed-bean-name>
+		  <managed-bean-class>my.ep.web.util.CommonUtils</managed-bean-class>
+		  <managed-bean-scope>application</managed-bean-scope>
+ 	</managed-bean>
+
+	<managed-bean>
+		<description>Portal Util class</description>
+		<managed-bean-name>EpPortletUtil</managed-bean-name>
+		<managed-bean-class>my.ep.web.util.EpPortletUtil</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
+
+	<managed-bean>
+		<description>Document Repository Util class</description>
+		<managed-bean-name>DocumentRepositoryUtils</managed-bean-name>
+		<managed-bean-class>my.ep.web.util.DocumentRepositoryUtils </managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
+	
+	<managed-bean>
+		<description>Date Util class</description>
+		<managed-bean-name>DateUtils</managed-bean-name>
+		<managed-bean-class>my.ep.web.util.DateUtils</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
+	
+	<managed-bean>
+		<description>Common UI Constants</description>
+		<managed-bean-name>CommonUIConstant</managed-bean-name>
+		<managed-bean-class>my.ep.web.constant.CommonUIConst</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
+
+	<managed-bean>
+		<description>Module Code Constants</description>
+		<managed-bean-name>ModuleCodeConstant</managed-bean-name>
+		<managed-bean-class>my.ep.constant.ModuleCodeConst</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
+	
+	<managed-bean>
+		<description>BPM Outcome Constants</description>
+		<managed-bean-name>BpmOutcomeConstant</managed-bean-name>
+		<managed-bean-class>my.ep.constant.BpmOutcomeConst</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
+	
+	<render-kit>
+		<renderer>
+			<component-family>org.primefaces.component</component-family>
+			<renderer-type>my.ep.web.util.taglib.DirectPurchaseDataTableRender</renderer-type>
+			<renderer-class>my.ep.web.util.taglib.DirectPurchaseDataTableRender</renderer-class>
+		</renderer>
+	</render-kit>
+</faces-config>

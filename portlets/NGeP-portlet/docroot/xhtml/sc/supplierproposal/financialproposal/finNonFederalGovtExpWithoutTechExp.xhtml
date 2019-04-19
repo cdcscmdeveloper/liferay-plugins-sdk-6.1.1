@@ -1,0 +1,239 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel id="nonFedExpPanel"
+		header="#{lbl['lbl.sc.spec.company.exp.fed.private']}"
+		toggleable="true">
+
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.sp.btn.complete.instruction']}" escape="false"
+			rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly}" />
+
+		<table>
+			<tr>
+				<td><p:outputLabel style="font-weight: bold;"
+						value="#{supplierProposalDetailBackingBean.managedBean.year}" />
+					<p:outputLabel
+						value="#{lbl['lbl.sc.spec.company.exp.since.year']} " /></td>
+			</tr>
+		</table>
+		<p:dataTable id="technongovtid" var="technongovt"
+			value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPExperiences}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			rowKey="#{technongovt}" rowIndexVar="rowIndex" rows="10">
+			<ac:paginator for="technongovtid" />
+			<p:column style="width:2% ;" rendered="#{!statusHide}">
+
+				<f:facet name="header">
+					<p:selectBooleanCheckbox
+						value="#{supplierProposalDetailBackingBean.managedBean.selectedAll}">
+						<p:ajax partialSubmit="true" process="@this"
+							update="@([id$=nonFedExpPanel])"
+							listener="#{supplierProposalDetailBackingBean.selectAll(supplierProposalDetailBackingBean.managedBean.selectedAll,supplierProposalDetailBackingBean.managedBean.scQtPRPExperiences)}" />
+					</p:selectBooleanCheckbox>
+				</f:facet>
+				<p:selectBooleanCheckbox value="#{technongovt.selected}">
+					<p:ajax partialSubmit="true" process="@this"
+						update="@([id$=nonFedExpPanel])" />
+				</p:selectBooleanCheckbox>
+
+			</p:column>
+			<p:column id="clientNameColId"
+				style="white-space : normal; width : 18%; ">
+				<f:facet name="header">
+					<ui:fragment rendered="#{!statusHide}">
+						<h:outputText value="* " styleClass="mandatory" />
+					</ui:fragment>
+					<h:outputText value="#{lbl['lbl.sc.spec.customer.name']}" />
+				</f:facet>
+				<h:outputText value="#{technongovt.clientName}"
+					rendered="#{technongovt.brandNew eq false}" />
+				<p:inputTextarea id="clientName" value="#{technongovt.clientName}"
+					style="width : 90%;" rows="3" cols="17" maxlength="50"
+					onkeyup="limitTextArea(this,50);" onkeydown="limitTextArea(this,50);" onmouseout="limitTextArea(this,50);"
+					required="true" label="#{lbl['lbl.sc.spec.customer.name']}"
+					rendered="#{technongovt.brandNew eq true}">
+					<p:ajax process="@this" partialSubmit="true"
+						update="@this,clientNameMsg" />
+				</p:inputTextarea>
+				<p:message id="clientNameMsg" for="clientName" display="icon" />
+			</p:column>
+
+			<p:column style="white-space : normal; width : 18%;">
+				<f:facet name="header">
+					<ui:fragment rendered="#{!statusHide}">
+						<h:outputText value="* " styleClass="mandatory" />
+					</ui:fragment>
+					<h:outputText value="#{lbl['lbl.sc.spec.contract.title']}" />
+				</f:facet>
+				<h:outputText value="#{technongovt.contractTitle}"
+					rendered="#{technongovt.brandNew eq false}" />
+				<p:inputTextarea id="contractTitle"
+					value="#{technongovt.contractTitle}" rows="3" cols="22"
+					style="width : 90%;" maxlength="1000" required="true"
+					onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);" onmouseout="limitTextArea(this,1000);"
+					label="#{lbl['lbl.sc.spec.contract.title']}"
+					rendered="#{technongovt.brandNew eq true}">
+					<p:ajax process="@this" partialSubmit="true"
+						update="@this,contractTitleMsg" />
+				</p:inputTextarea>
+				<p:message id="contractTitleMsg" for="contractTitle" display="icon" />
+			</p:column>
+
+			<p:column style="width : 10%;">
+				<f:facet name="header">
+					<ui:fragment rendered="#{!statusHide}">
+						<h:outputText value="* " styleClass="mandatory" />
+					</ui:fragment>
+					<h:outputText value="#{lbl['lbl.sc.spec.loa.no']}" />
+				</f:facet>
+				<h:outputText value="#{technongovt.contractNo}"
+					rendered="#{technongovt.brandNew eq false}" />
+				<p:inputText id="contractNo" value="#{technongovt.contractNo}"
+					style="width : 90%;" size="17" maxlength="30" required="true"
+					label="#{lbl['lbl.sc.spec.loa.no']}"
+					rendered="#{technongovt.brandNew eq true}">
+					<p:ajax process="@this" partialSubmit="true"
+						update="@this,contractNoMsg" />
+				</p:inputText>
+				<p:message id="contractNoMsg" for="contractNo" display="icon" />
+			</p:column>
+
+			<p:column style="width : 10%;">
+				<f:facet name="header">
+					<ui:fragment rendered="#{!statusHide}">
+						<h:outputText value="* " styleClass="mandatory" />
+					</ui:fragment>
+					<h:outputText value="#{lbl['lbl.sc.effective.date']}" />
+				</f:facet>
+				<h:outputText value="#{technongovt.effectiveDate}"
+					rendered="#{technongovt.brandNew eq false}">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</h:outputText>
+				<p:calendar id="effectiveDate" value="#{technongovt.effectiveDate}"
+					readonlyInput="true" showOn="button" navigator="true" size="7"
+					style="width : 76%;"
+					mindate="#{supplierProposalDetailBackingBean.managedBean.nonFedEffMinDate}"
+					maxdate="#{supplierProposalDetailBackingBean.managedBean.nonFedEffMaxDate}"
+					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" required="true"
+					label="#{lbl['lbl.sc.effective.date']}"
+					rendered="#{technongovt.brandNew eq true}">
+					<p:ajax event="dateSelect" process="@this" partialSubmit="true"
+						update="@this,effectiveDateMsg,@([id$=expDatePanelGroupID])"
+						listener="#{supplierProposalDetailBackingBean.effectiveDateSelectListener(technongovt)}" />
+				</p:calendar>
+				<p:message id="effectiveDateMsg" for="effectiveDate" display="icon"
+					showSummary="true" showDetail="false" />
+			</p:column>
+			<p:column style="width : 10%;">
+				<f:facet name="header">
+					<ui:fragment rendered="#{!statusHide}">
+						<h:outputText value="* " styleClass="mandatory" />
+					</ui:fragment>
+					<h:outputText value="#{lbl['lbl.sc.exp.date']}" />
+				</f:facet>
+				<h:panelGroup id="expDatePanelGroupID">
+					<h:outputText value="#{technongovt.expiryDate}"
+						rendered="#{technongovt.brandNew eq false}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
+					<p:calendar id="expiryDate" value="#{technongovt.expiryDate}"
+						readonlyInput="true" showOn="button" navigator="true" size="7"
+						style="width : 76%;"
+						mindate="#{supplierProposalDetailBackingBean.managedBean.nonFedMinDate}"
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" required="true"
+						label="#{lbl['lbl.sc.exp.date']}"
+						rendered="#{technongovt.brandNew eq true}">
+						<p:ajax event="dateSelect"
+							listener="#{supplierProposalDetailBackingBean.expiryDateSelectListener(technongovt)}"
+							update="@this,expiryDateMsg,@([id$=totalcontractyrs],[id$=contractPeriodPanelGropID])"
+							process="@this" partialSubmit="true" />
+					</p:calendar>
+					<p:message id="expiryDateMsg" for="expiryDate" display="icon"
+						showSummary="true" showDetail="false" />
+				</h:panelGroup>
+			</p:column>
+			<p:column style="width : 10%;"
+				headerText="#{lbl['lbl.sc.spec.contarct.period']}">
+
+				<h:panelGroup id="contractPeriodPanelGropID">
+					<h:outputText style="float:right"
+						value="#{technongovt.contractPeriod}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+					</h:outputText>
+				</h:panelGroup>
+
+			</p:column>
+			<p:column style=" width : 10%;">
+				<f:facet name="header">
+					<ui:fragment rendered="#{!statusHide}">
+						<h:outputText value="* " styleClass="mandatory" />
+					</ui:fragment>
+					<h:outputText value="#{lbl['lbl.sc.spec.contarct.amount']}" />
+				</f:facet>
+
+				<h:outputText value="#{technongovt.contractAmt}"
+					rendered="#{technongovt.brandNew eq false}" />
+				<p:inputText id="contractAmt" value="#{technongovt.contractAmt}"
+					size="15" style="text-align: right;" disabled="#{statusHide}"
+					maxlength="14" required="true"
+					rendered="#{technongovt.brandNew eq true}"
+					label="#{lbl['lbl.sc.spec.contarct.amount']}">
+					<f:validateLongRange minimum="1" maximum="99999999999999" />
+					<p:ajax event="blur" process="@this"
+						listener="#{supplierProposalDetailBackingBean.totalContractAmount}"
+						update="@this,contractAmtMsg, :form:totalcontractamt" />
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText>
+				<p:message id="contractAmtMsg" for="contractAmt" display="icon" />
+			</p:column>
+			<p:column style="width : 12%;white-space : normal;"
+				headerText="#{lbl['lbl.sc.remarks']}">
+				<h:outputText value="#{technongovt.remark}"
+					rendered="#{technongovt.brandNew eq false}" />
+				<p:inputTextarea value="#{technongovt.remark}" rows="3" cols="17"
+					style="width : 96%;" maxlength="300"
+					onkeyup="limitTextArea(this,300);" onkeydown="limitTextArea(this,300);" onmouseout="limitTextArea(this,300);"
+					rendered="#{technongovt.brandNew eq true}">
+					<p:ajax process="@this" partialSubmit="true" update="@this" />
+				</p:inputTextarea>
+			</p:column>
+		</p:dataTable>
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.add']}" partialSubmit="true"
+				process="@all" styleClass="BtnSpacing"
+				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.readOnly}"
+				action="#{supplierProposalDetailBackingBean.addNonFederalGovtExperience(2)}"
+				update="@([id$=nonFedExpPanel])" />
+
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+			disabled="#{supplierProposalDetailBackingBean.deleteselectedList(supplierProposalDetailBackingBean.managedBean.scQtPRPExperiences)}"
+				partialSubmit="true" process="@this" styleClass="BtnSpacing"
+				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.readOnly}"
+				oncomplete="techNonFedDelete.show();"
+				update=":form:totalcontractamt,@([id$=nonFedExpPanel])" />
+
+			<ui:param name="techNonFedDeleteId" value="techNonFedDeleteId"></ui:param>
+
+			<ac:confirmationPopup id="#{techNonFedDeleteId}"
+				widget="techNonFedDelete" width="400" height="200"
+				okAction="supplierProposalDetailBackingBean.deleteNonFederalGovtExperience"
+				title="#{lbl['lbl.sc.spec.company.exp.fed.private']}"
+				content="#{lbl['lbl.sc.dialog.confirm.message']}"
+				update="@([id$=nonFedExpPanel])" />
+
+		</div>
+
+		<p:spacer height="10"></p:spacer>
+
+	</p:panel>
+</ui:composition>

@@ -1,0 +1,40 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<ac:gpkiPopup
+		textBeforeSign="#{contractDetailsBackingBean.managedBean.textBeforeSign}"
+		postSignAction="#{contractDetailsBackingBean.preSubmitContract(gpkiBackingBean.pmDigiSign)}"
+		enableAutoUpdate="#{contractDetailsBackingBean.enableAutoUpdate()}" />
+	<table style="width: 100%;">
+		<tr>
+			<td><p:commandButton value="#{lbl['lbl.btn.back']}"
+					immediate="true"
+					rendered="#{contractDetailsBackingBean.managedBean.taskId==null}"
+					action="#{contractDetailsBackingBean.backAction}"
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" /></td>
+			<td class="ppRightBtn"><c:if
+					test="#{!ctBackingBean.managedBean.viewContract}">
+					<ui:repeat var="action"
+						value="#{contractDetailsBackingBean.managedBean.outComes}">
+						<ui:param name="buttonLabel"
+							value="lbl.btn.#{fn:toLowerCase(action)}" />
+						<p:commandButton value="#{lbl[buttonLabel]}" process="@form"
+							update="@form" styleClass="ui-button" onkeypress="if (event.keyCode == 13) { return false; }"
+							action="#{contractDetailsBackingBean.gpkiSignAction(action)}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+					</ui:repeat>
+				</c:if></td>
+			<c:if test='#{ctBackingBean.managedBean.viewContract}'>
+				<td style="text-align: right">
+					<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}" immediate="true"
+						action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode,
+						ctBackingBean.managedBean.contractVer.ctContract.contractId)}"  />
+				</td>
+			</c:if>				
+		</tr>
+	</table>
+</ui:composition>

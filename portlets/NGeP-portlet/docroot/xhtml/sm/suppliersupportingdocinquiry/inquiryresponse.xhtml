@@ -1,0 +1,91 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<ui:define name="resourceSection">
+		<script>
+			$('#portlet_MOFApplication_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.supportingdoc.inquiry.response']}");
+		</script>
+	</ui:define>
+
+	<ui:define name="contentSection">
+		<ui:param name="supplierName" value="#{supportingDocInquiryBackingBean.managedBean.smApplInquiry.smAppl.smSupplier.companyName}" />
+		<ui:param name="applNo" value="#{supportingDocInquiryBackingBean.managedBean.smApplInquiry.smAppl.applNo}" />
+		<ui:param name="applType" value="#{supportingDocInquiryBackingBean.getsupplierApplTypeDesc(supportingDocInquiryBackingBean.managedBean.smApplInquiry.smAppl.applType)}" />
+		<ui:include src="/xhtml/sm/shared/common/commonHeader.xhtml" />
+		
+		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.sm.supportingdoc.submit.response']}" onclick="submissionConfirmDlg.show();" />
+		</div>
+
+		<p:dialog widgetVar="submissionConfirmDlg" modal="true" height="100" 
+			width="500">
+   			 #{lbl['lbl.sm.supportingdoc.want.proceed.qmark']}	
+   		<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					action="#{supportingDocInquiryBackingBean.submitInquiryResponse}"></p:commandButton>
+				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="submissionDlg.hide();"></p:commandButton>
+			</div>
+		</p:dialog>
+
+		<table class="customTbl">
+			<tr>
+				<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.supportingdoc.inquiry.start.date']}" /></td>
+				<td class="tdContent"><h:outputText value="#{DateUtils.dateToString(CommonConstants.DEFAULT_DATE_FORMAT,supportingDocInquiryBackingBean.managedBean.inquiryStartDate)}" /></td>
+				<td>&#160;</td>
+				<td>&#160;</td>
+			</tr>
+			<tr>
+				<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.supportingdoc.inquiry.end.date']}" /></td>
+				<td class="tdContent"><h:outputText value="#{DateUtils.dateToString(CommonConstants.DEFAULT_DATE_FORMAT,supportingDocInquiryBackingBean.managedBean.inquiryEndDate)}" /></td>
+				<td>&#160;</td>
+				<td>&#160;</td>
+			</tr>
+		</table>
+		<br />
+		
+		<p:panel header="#{lbl['lbl.sm.supportingdoc.panel.supportingdocinquiry']}">
+			<table style="width: 100%;">
+				<tr>
+					<td style="width:15%;" valign="top"><p:outputLabel value="#{lbl['lbl.sm.supportingdoc.sdo.remark']}" /></td>
+					<td><p:inputText size="50" disabled="true"
+							value="#{supportingDocInquiryBackingBean.managedBean.smApplInquiry.inquirySubject}" /></td>
+							
+					<td><p:outputLabel value="#{lbl['lbl.sm.supportingdoc.inquirydate']}" /></td>
+					<td>
+						<p:inputText disabled="true" value="#{supportingDocInquiryBackingBean.managedBean.smApplInquiry.inquiryDate}">
+							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</p:inputText>
+					</td>
+				</tr>
+				
+				<tr>
+					<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.supportingdoc.supporting.doc']}" /></td>
+					<td colspan="3"><p:inputTextarea id="inquiryDetailId" rows="20" cols="150" style="width:85%;"
+							disabled="true" autoResize="false"
+							value="#{supportingDocInquiryBackingBean.managedBean.smApplInquiry.inquiryText}" /></td>
+				</tr>
+			</table>
+		</p:panel>
+
+		<p:panel header="#{lbl['lbl.sm.supportingdoc.panel.response']}">
+			<table style="width: 100%;">
+				<tr>
+					<td style="width:15%;" valign="top"><p:outputLabel value="#{lbl['lbl.sm.supportingdoc.panel.response']}" /></td>
+					<td><p:inputTextarea id="inquiryResId" rows="10" cols="100" maxlength="1000" style="width:85%;"
+							value="#{supportingDocInquiryBackingBean.managedBean.smApplInquiry.responseText}"
+							autoResize="false" label="#{lbl['lbl.sm.supportingdoc.panel.response']}">
+							<f:validateLength maximum="1000" />
+						</p:inputTextarea>
+						</td>
+				</tr>
+			</table>
+		</p:panel>
+	</ui:define>
+</ui:composition>

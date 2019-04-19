@@ -1,0 +1,19 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<p:panel header="#{lbl['lbl.sm.facilityStepLbl']}" toggleable="true"
+		rendered="#{!backingBean.managedBean.showFactoryPanel and !backingBean.managedBean.showDockyardPanel 
+					and !backingBean.managedBean.showWorkShopPanel and !backingBean.managedBean.showStorePanel}">
+		<table style="width: 100%">
+			<tr>
+				<td><h:outputText style="float:left"
+						value="#{lbl['lbl.sm.facility.notApplicable']}" /></td>
+			</tr>
+		</table>
+	</p:panel>
+</ui:composition>
