@@ -11,6 +11,7 @@
 package my.ep.web.managedbean.cm.catalogue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -1527,21 +1528,24 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				.isNotBlank((String) bizRegNoFilterBean.getSearchValue())) {
 			hasSearchValue = true;
 		}
+		this.setDistrictId(new long[0]);
+		this.setStateId(new long[0]);//safe check
 		if (this.getSelectedNodes() != null && this.getSelectedNodes().length > 0) {
 			List<Long> stateList = new ArrayList<Long>();
 			List<Long> districtList = new ArrayList<Long>();
 			for(int i = 0; i < this.getSelectedNodes().length;i++){
 				TreeNode node = this.getSelectedNodes()[i];
 				 CmSupplierZoneStateDistrictDTO dto = (CmSupplierZoneStateDistrictDTO) node.getData();
-				 if(node.getType().equalsIgnoreCase("state")){
-					 PmState state = dto.getState();
-					 log.info("State Name" + dto.getState().getStateName());
-					 stateList.add(state.getStateId());
-				 }else if(node.getType().equalsIgnoreCase("district")){
+				 if(node.getType().equalsIgnoreCase("district")){
 					 PmDistrict district = dto.getDistrict();
 					 log.info("district Name" + district.getDistrictName());
 					 districtList.add(district.getDistrictId());
-				 };
+					 Long stateId = district.getPmState().getStateId();
+					 if(!stateList.contains(stateId)){
+						 stateList.add(stateId);
+						 System.out.println("state == >" +Arrays.toString(stateList.toArray()));
+						 }
+					 }
 			}
 			if(districtList!=null && districtList.size()>0){
 				long arr[]  = new long[districtList.size()];
@@ -1557,9 +1561,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				}
 				this.setStateId(arr);
 			}
-		}else{
-			this.setDistrictId(new long[0]);
-			this.setStateId(new long[0]);//safe check
 		}
 
 		if (this.getDistrictId() != null && this.getDistrictId().length > 0) {
