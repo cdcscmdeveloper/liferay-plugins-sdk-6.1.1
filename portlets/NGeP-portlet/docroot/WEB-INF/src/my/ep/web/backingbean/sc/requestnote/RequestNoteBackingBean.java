@@ -715,9 +715,25 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 		return null;
 	}
-	
-	
+	//20190417@asyrafhaziq_12095 - Start
+	/**
+	 * cancel or reject Action request note, it shows the prompt(dialogue),
+	 * 
+	 */
+	public void cancelRejectAction(String outcome) {
+		debugLogger("cancelRejectAction");
 
+		if (outcome.equals(BpmOutcomeConst.BPM_CANCEL)) {
+			RequestContext.getCurrentInstance().execute(
+					"cancelRN.show()");
+		} else if (outcome.equals(BpmOutcomeConst.BPM_REJECT)) {
+			RequestContext.getCurrentInstance().execute(
+					"rejectRN.show()");
+		} else {
+			submitAction(outcome);
+		}
+	}
+   //20190417@asyrafhaziq_12095 - End
 	/**
 	 * submit Action. before submit / Approve request note, 
 	 * it shows the prompt(dialogue) that If system checking the different of delivery period, 
