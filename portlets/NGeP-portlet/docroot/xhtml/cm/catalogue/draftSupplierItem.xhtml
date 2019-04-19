@@ -169,7 +169,7 @@
 					navigator="true" showOn="button" size="10"
 					mindate="#{catalogueBackingBean.managedBean.currentDate}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
-					<p:ajax event="dateSelect" listener="#{catalogueBackingBean.onDateSelectListener(rowIndex)}" update="standardEndDateId"/>
+					<p:ajax event="dateSelect" listener="#{catalogueBackingBean.onDateSelectListener(selectedSuppCat.cmStandardPricing)}" update="standardEndDateId"/>
 				</p:calendar>
 	
 			</p:column>
