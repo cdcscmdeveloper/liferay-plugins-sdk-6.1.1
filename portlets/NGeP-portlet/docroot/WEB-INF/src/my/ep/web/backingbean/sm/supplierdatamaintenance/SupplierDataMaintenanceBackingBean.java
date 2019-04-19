@@ -143,9 +143,9 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setDeleteApprovedCategories(new ArrayList<SmSupplierCategory>());
 		getManagedBean().setSelectedApprovedCategories(new ArrayList<SmSupplierCategory>());
 		getManagedBean().setSelectedPendingApprovedCategories(new ArrayList<SmSupplierCategory>());
-		
+	
 		this.getManagedBean().setApproverRemark(null);
-		this.getManagedBean().setPoApprOverlappedRemark(null);
+		
 		
 	}
 
@@ -218,6 +218,7 @@ public class SupplierDataMaintenanceBackingBean extends
 			reqDTO.setPortalBaseUrl(SmCommonUtil.getEpBaseUrl());
 			reqDTO.setOverlapCategoryRemarkDocType(ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY_APPROVER);
 			reqDTO.setRemarkId(getManagedBean().getRemarkId());
+			reqDTO.setRemarkOverlappedId(getManagedBean().getRemarkOverlappedId());
 			reqDTO.setApproverRemark(getManagedBean().getApproverRemark());
 		
 
@@ -234,7 +235,7 @@ public class SupplierDataMaintenanceBackingBean extends
 			if(oriPoApprOverlappedRemark != null) {
 				if(poApprOverlappedRemark != null && !poApprOverlappedRemark.trim().equals(oriPoApprOverlappedRemark.trim())) {
 					isOverlapCategoryRemarkChanged = true;
-				//reqDTO.setUpdatedOverlapCategoryRemark(poApprOverlappedRemark);
+				reqDTO.setUpdatedOverlapCategoryRemark(poApprOverlappedRemark);
 				}
 			} else {
 				if(poApprOverlappedRemark != null && poApprOverlappedRemark.trim().length() > 0) {
