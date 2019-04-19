@@ -12,6 +12,9 @@ package my.ep.web.backingbean.cm.catalogue;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -48,6 +51,7 @@ import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.entity.cm.catalog.CmItemRejectReason;
 import my.ep.persistence.entity.cm.catalog.CmSupplierZone;
 import my.ep.persistence.entity.cm.catalog.CmSupplierZoneDTL;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -286,6 +290,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> implements Serializable {
 		int i = zoneIndex;
 		this.getManagedBean().setZoneIndex(i);
 		getManagedBean().setZoneTrees(CmSupplierZoneSingleton.getInstance().buildZoneSDTree(this.getManagedBean().getCmSupplierZoneList()));
+		disableSelectedDistrict(districts);
 		for(CmSupplierZone suppZone : getManagedBean().getCmSupplierZoneList()){
 			if((zone.getSuppZoneId() != 0 && (zone.getSuppZoneId() == suppZone.getSuppZoneId())) || zone.getSuppZoneName().equalsIgnoreCase(suppZone.getSuppZoneName())){
 				getManagedBean().setSelectedSupplierZone(suppZone);
@@ -306,6 +311,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> implements Serializable {
 		getManagedBean().getSelectedSupplierZone().setSuppZoneName(null);
 		getManagedBean().setRootZoneTree(
 				CmSupplierZoneSingleton.getInstance().buildCmSupplierZoneTree(getManagedBean().getDefaultCountryId(), null, null, null));
+		disableSelectedDistrict(null);
 	}
 
 	/**
@@ -323,12 +329,20 @@ BaseBackingBean<ZoneMaintenanceManagedBean> implements Serializable {
 		} else {
 			this.getManagedBean().setCmSupplierZoneList(new ArrayList<CmSupplierZone>());
 		}
+		
+		Collections.sort(this.getManagedBean().getCmSupplierZoneList(), new Comparator<CmSupplierZone>() {
+			  @Override
+		        public int compare(CmSupplierZone o1, CmSupplierZone o2) {
+				      return o1.getSuppZoneName().compareToIgnoreCase(o2.getSuppZoneName());
+		        }
+		});
 	
 		this.getManagedBean().setDeletedCmSupplierZoneList(null);
 		this.getManagedBean().setZoneTrees(CmSupplierZoneSingleton.getInstance().buildZoneSDTree(this.getManagedBean().getCmSupplierZoneList()));
-		this.getManagedBean().setRootZoneTree(
-				CmSupplierZoneSingleton.getInstance().buildCmSupplierZoneTree(getManagedBean().getDefaultCountryId(), null, null, null));
-		this.getManagedBean().setZoneName(null);
+		this.getManagedBean().setRootZoneTree(CmSupplierZoneSingleton.getInstance().buildCmSupplierZoneTree(getManagedBean().getDefaultCountryId(), null, null, null));
+		
+		disableSelectedDistrict(null);
+		
 		if(this.getManagedBean().getZoneTrees()!=null && this.getManagedBean().getZoneTrees().size()>0){
 			for(TreeNode tree: this.getManagedBean().getZoneTrees()){
 				CmSupplierZoneStateDistrictDTO zoneDTO =  (CmSupplierZoneStateDistrictDTO)tree.getChildren().get(0).getData();
@@ -813,5 +827,69 @@ BaseBackingBean<ZoneMaintenanceManagedBean> implements Serializable {
 	public CmSupplierZone getCurrentZone(TreeNode node){
 		CmSupplierZoneStateDistrictDTO zoneDTO =  (CmSupplierZoneStateDistrictDTO)node.getChildren().get(0).getData();
 		return zoneDTO.getCmSupplierZone();
+	}
+	public List<Long> getListOfDisableDistrict(List<Long> currentlySelectedIds){
+		List<Long> disabledDistrictList = new ArrayList<Long>();
+		for(CmSupplierZone zone: this.getManagedBean().getCmSupplierZoneList()){
+			for(CmSupplierZoneDTL zoneDtl : zone.getCmSupplierZoneDtls()){
+				if(zoneDtl.getPmDistrict() != null){
+					Long id = zoneDtl.getPmDistrict().getDistrictId();
+					if(!currentlySelectedIds.contains(id)){
+						disabledDistrictList.add(id);
+					}
+				}
+			}
+		}
+		return disabledDistrictList;
+	}
+	public void disableSelectedDistrict(List<PmDistrict> currentlySelectedDistricts){
+		List <Long> currentlySelectedId = new ArrayList<Long>();
+		if(currentlySelectedDistricts!=null && currentlySelectedDistricts.size()>0){
+			for(PmDistrict dist: currentlySelectedDistricts){
+				currentlySelectedId.add(dist.getDistrictId());
+			}
+		}
+		this.getManagedBean().setDisabledDistrictId(this.getListOfDisableDistrict(currentlySelectedId));
+	
+		for(TreeNode node: this.getManagedBean().getRootZoneTree().getChildren()){ //state
+			int count = 0;
+			int size = 0;
+			for(TreeNode disOrDiv: node.getChildren()){// division or district
+				if(disOrDiv.getType().equalsIgnoreCase("division")){
+					size = disOrDiv.getChildren().size();
+					for(TreeNode dis: disOrDiv.getChildren()){
+						CmSupplierZoneStateDistrictDTO dto = (CmSupplierZoneStateDistrictDTO)dis.getData();
+						dto.getDistrict().setSelectable(true);
+						if(this.getManagedBean().getDisabledDistrictId().contains(dto.getDistrict().getDistrictId())){
+							dto.getDistrict().setSelectable(false);
+							dis.setSelectable(false);
+							count++;
+						}					
+					}
+					CmSupplierZoneStateDistrictDTO dto = (CmSupplierZoneStateDistrictDTO)disOrDiv.getData();
+					dto.getDivision().setSelectable(true);
+					if(count>=size){
+						dto.getDivision().setSelectable(false);
+						disOrDiv.setSelectable(false);
+					}
+				}else{
+					size = node.getChildren().size();
+					CmSupplierZoneStateDistrictDTO dto = (CmSupplierZoneStateDistrictDTO)disOrDiv.getData();
+					dto.getDistrict().setSelectable(true);
+					if(this.getManagedBean().getDisabledDistrictId().contains(dto.getDistrict().getDistrictId())){
+						dto.getDistrict().setSelectable(false);
+						disOrDiv.setSelectable(false);
+						count++;
+					}
+				}
+			}
+			CmSupplierZoneStateDistrictDTO dto = (CmSupplierZoneStateDistrictDTO)node.getData();
+			dto.getState().setSelectable(true);
+			if(count>=size){
+				dto.getState().setSelectable(false);
+				node.setSelectable(false);
+			}
+		}
+		RequestContext.getCurrentInstance().update(":form:treeZoneLocationPopup");
 	}
 }
