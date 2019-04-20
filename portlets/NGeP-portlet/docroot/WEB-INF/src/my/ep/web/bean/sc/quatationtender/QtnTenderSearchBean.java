@@ -14,7 +14,6 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
-import my.ep.biz.bean.search.sc.QTSearchBean;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -425,31 +424,6 @@ public class QtnTenderSearchBean implements Serializable {
 		}else{
 			return date;
 		}
-	}
-	
-	
-	public QTSearchBean toQTSearchBean(){
-		QTSearchBean t = new QTSearchBean();
-		t.setCommitteeType(committeeType);
-		t.setDocNo(docNo);
-		t.setDocType(docType);
-		t.setFromClosingDate(fromClosingDate);
-		t.setFromCreatedDate(fromCreatedDate);
-		t.setFromPublishDate(fromPublishDate);
-		t.setMinistryProfile(ministryProfile);
-		t.setProcurementMode(procurementMode);
-		t.setPtjGroupProfile(ptjGroupProfile);
-		t.setPtjProfile(ptjProfile);
-		t.setQtNo(qtNo);
-		t.setQtStatus(qtStatus);
-		t.setQtTitle(qtTitle);
-		t.setRecordStatus(recordStatus);
-		t.setResultDocType(resultDocType);
-		t.setScQt(scQt);
-		t.setToClosingDate(toClosingDate);
-		t.setToCreatedDate(toCreatedDate);
-		t.setToPublishDate(toPublishDate);
-		return t;
 	}
 	
 }

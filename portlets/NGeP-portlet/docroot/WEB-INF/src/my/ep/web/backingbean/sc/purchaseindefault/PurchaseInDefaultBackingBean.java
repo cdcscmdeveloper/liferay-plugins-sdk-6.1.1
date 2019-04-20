@@ -648,25 +648,7 @@ public class PurchaseInDefaultBackingBean extends
 
 		return resDTO;
 	}
-	// 20190417@asyrafhaziq_12095 - Start 
-	/**
-	 * Before approve purchase to check reject 
-	 * to return pop up message
-	 * 
-	 * @param outcome
-	 *            
-	 */
-	public void beforeApproverAction(String outcome) {
-		debugLogger("approverAction");
-		
-		if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
-				RequestContext.getCurrentInstance().execute("rejectPID.show()");
-		} else {
-			approverAction(outcome);
-		}
-	}
-	// 20190417@asyrafhaziq_12095 - End 	
-	
+
 	/**
 	 * Approve purchase in default Update data into database and BPM process
 	 * will route to the next respective user

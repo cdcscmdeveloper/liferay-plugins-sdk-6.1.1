@@ -3,8 +3,6 @@
  */
 package my.ep.web.constant.sc;
 
-import my.ep.web.backingbean.sc.supplierproposal.SPDetailBackingBean;
-
 /**
  * QTConstants for constants for sourcing.
  * 
@@ -75,7 +73,6 @@ public interface QTConstants {
 	public static final String PENDING_RESPONSE_DP_QT = "/xhtml/sc/pendingresponsefordpandqt/prerenderresponsedpqtmain.xhtml";
 	public static final String ONLINE_BIDDING_STATUS_COUNT = "/xhtml/sc/bidding/onlinebiddingstatus/onlinebiddingstatusmain.xhtml";
 	public static final String VIEW_QTDETAILS_GENERAL_INFO = "/xhtml/sc/viewqtdetailsgeneralinfo/viewQtDetailsGeneralInfoMain.xhtml";
-	public static final String NAV_TO_PROPOSAL_MAIN_PAGE = "/xhtml/sc/supplierproposal/proposalcommon/supplierProposalMain.xhtml";
 
 	public static final String SC_LOI_TAB = "LOI";
 	public static final String SC_AWARD_TAB = "Award Details";

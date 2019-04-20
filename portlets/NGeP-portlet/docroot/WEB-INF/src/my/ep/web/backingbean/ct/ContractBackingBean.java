@@ -3051,17 +3051,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		} 
 		getManagedBean().getUpdateItemMap().put(ctContractItem.getScRequestItem().getRequestNoteItemId(), ctContractItem);
-		
-		ContractItemReqDTO reqDTO =  new ContractItemReqDTO();
-		reqDTO.setCtContactItem(ctContractItem);
-		
-		
-		IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractItemSO.class);
-		
-		contractItemSO.updateItemSearchService(reqDTO);
-		
-	
-		
 	}
 
 	/**
@@ -3791,4 +3780,5 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		
 		return resDTO.getCtContractVer().getSignedDate();
 	}
+	
 }  

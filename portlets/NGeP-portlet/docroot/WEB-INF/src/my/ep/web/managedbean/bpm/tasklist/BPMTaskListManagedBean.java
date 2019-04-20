@@ -39,10 +39,10 @@ import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.access.application.AccessApplReqDTO;
 import my.ep.dto.pm.access.application.AccessApplResDTO;
 import my.ep.dto.pm.common.kpi.KpiReqDTO;
+import my.ep.dto.sc.directpurchase.PrInquiryResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.exception.EpException;
-import my.ep.factory.EpLogger;
 import my.ep.jaxb.fl.dandata.FLDanDataType;
 import my.ep.jaxb.fl.frndata.FLFulFillmentReceivedNoteDataType;
 import my.ep.jaxb.fl.maintenace.cancel.dofulfillment.FLDOFulfillmentCancelReqType;
@@ -65,7 +65,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 
 @ManagedBean(name = "bpmTasklistMB")
 @SessionScoped
@@ -414,7 +413,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	private class taskPagingMyTaskDataModel extends PagingDataModel<WorklistItemVO> {
 
 		private static final long serialVersionUID = 1L;
-		private final Logger log = EpLogger.getLogger(taskPagingMyTaskDataModel.class);
 
 		public taskPagingMyTaskDataModel() {
 			super("taskListMyTaskId");
@@ -435,12 +433,12 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				FacesScopes face = new FacesScopes();
 				Object token = face.getBPMAuthenticationCtxToken();
 
-				log.info("testing BPM auth******" + token);
+			   System.out.println("testing BPM auth******" + token);
 				BpmRequestDTO reqDTO = new BpmRequestDTO();
 				reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
 				reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
 				reqDTO.setState("ASSIGNED"); // TODO : ADD filter for state and set do variable
-				log.info("getDocType()"+getDocType());
+				System.out.println("getDocType()"+getDocType());
 				reqDTO.setDocType(getDocType());
 
 												
@@ -457,22 +455,28 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				/*if(getSelectedOrgProfile()!=null){
 					System.out.println("getSelectedOrgProfile()"+getSelectedOrgProfile().getOrgProfileId());
 				}*/
-				log.info("getDocStatus()"+getDocStatus());
+				System.out.println("getDocStatus()"+getDocStatus());
 				if(getDocStatus()>0){
 					reqDTO.setStatus(getDocStatus());
 				}
-
+				
+				
 				reqDTO.setAssignment(BpmConstants.ASSIGNMENT_MY);
 				reqDTO.setCtxToken(token);
 				BpmResponseDTO responseDTO = bpmSO.getWorklistItems(reqDTO);
 				SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
 				
 				if (responseDTO.getWorklistVO() != null) {
-					log.info("testing BPM******size=" + responseDTO.getWorklistVO().getWorklistItem().size());
-					log.info("testing BPM******total=" + responseDTO.getWorklistVO().getTotal());
+					System.out.println("testing BPM******size="
+							+ responseDTO.getWorklistVO().getWorklistItem()
+									.size());
+					System.out.println("testing BPM******total="
+							+ responseDTO.getWorklistVO().getTotal());
 
+					
 					if(responseDTO.getWorklistVO().getWorklistItem()!=null) {
-
+						
+						
 						boolean viewGlpFlag = viewGlpFlag();
 						for(WorklistItemVO worklistItemVO : responseDTO.getWorklistVO().getWorklistItem()) {
 							try{
@@ -481,12 +485,12 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							}
 							// s1 module
 							if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE_DRAFT)) {
-								log.info("Doc number = " + worklistItemVO.getDocNumber());
+								System.out.println("Doc number = " + worklistItemVO.getDocNumber());
 								ScPrInquiry scPrInquiry = retrivePrInquiryByPrInquiryNo(worklistItemVO
 										.getDocNumber());
 								if (scPrInquiry != null) {
 									worklistItemVO.setTitle(scPrInquiry.getTitle());
-									log.info("prno = " + scPrInquiry.getPrInquiryNo() + "title = "
+									System.out.println("prno = " + scPrInquiry.getPrInquiryNo() + "title = "
 											+ scPrInquiry.getTitle());
 								}
 							} else if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
@@ -500,7 +504,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 								//worklistItemVO.setTitle(SmCommonUtil.getSmBpmTaskTitle(worklistItemVO.getTitle(),worklistItemVO.getProcess()));
 								//sm module
 								MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
-								log.info("***** The document Id for the workflow is ****** "+ worklistItemVO.getDocId());
+								System.out.println("***** The document Id for the workflow is ****** "+ worklistItemVO.getDocId());
 								mofResDto = retriveCompanyNameByApplicationId(worklistItemVO.getDocId());
 						    	   StringBuilder sb = new StringBuilder();
 						    	   sb.append(ResourceBundleUtils.getMessage(worklistItemVO.getTitle(), ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
@@ -619,11 +623,15 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						       }
 							}catch(Exception ex){
 								worklistItemVO.setTitle("Please check");
-								log.info("worklistItemVO.setTitle error:"+ex.getMessage());
+								System.out.println("worklistItemVO.setTitle error:"+ex.getMessage());
 							}
 						}
+						
+						
+					
+						
 					}
-
+					
 					resultBean.setTotalRecord(responseDTO.getWorklistVO()
 							.getTotal());
 					resultBean.setResultList(responseDTO.getWorklistVO()
@@ -648,7 +656,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 			PagingDataModel<WorklistItemVO> taskListMyTaskDataModel) {
 		this.taskListMyTaskDataModel = taskListMyTaskDataModel;
 	}
-
+	
+	
+	
 	private class taskPagingGroupDataModel extends PagingDataModel<WorklistItemVO> {
 
 		private static final long serialVersionUID = 1L;
@@ -843,8 +853,12 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 								System.out.println("worklistItemVO.setTitle error:"+ex.getMessage());
 							}
 						}
+						
+						
+						
+						
 					}
-
+					
 					resultBean.setTotalRecord(responseDTO.getWorklistVO()
 							.getTotal());
 					resultBean.setResultList(responseDTO.getWorklistVO()
@@ -858,6 +872,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				bpmSO = null;
 			}
 		}
+
 	}
 
 	public PagingDataModel<WorklistItemVO> getTaskListGroupDataModel() {
@@ -975,7 +990,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						    	   
 						        worklistItemVO.setTitle(sb.toString());
 						       }
-
+						       
+						       
 						       if(worklistItemVO.getTitle().startsWith("lbl.cd")) {
 						    	
 						    	   StringBuilder sb = new StringBuilder();
@@ -1182,7 +1198,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	public static void setBpmMap(Map bpmMap) {
 		BPMTaskListManagedBean.bpmMap = bpmMap;
 	}
-
+	
+	
 	private AccessApplResDTO retrieveAccessApplByDocNo(String docNo){
 		IAccessApplSO accessApplSO = null;
 		try{

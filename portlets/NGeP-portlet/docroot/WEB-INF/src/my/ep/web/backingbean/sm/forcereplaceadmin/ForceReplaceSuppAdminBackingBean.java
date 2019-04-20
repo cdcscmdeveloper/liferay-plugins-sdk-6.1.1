@@ -170,7 +170,6 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * Replace admin with existing personnel and redirect to success page
 	 */
 	public void replaceWithExistingUser() {
-		validateMyIdentity();
 		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO()
 				.reassignSupplierAdmin(getReqDTO());
 		redirectToSuccessPage(resDto);

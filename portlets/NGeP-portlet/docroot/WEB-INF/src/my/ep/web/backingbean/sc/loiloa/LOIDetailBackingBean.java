@@ -42,7 +42,6 @@ import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.constant.BpmOutcomeConst;
-import my.ep.constant.MapKeyEnum;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -197,11 +196,6 @@ public class LOIDetailBackingBean extends
 	/** The flag. */
 	private boolean flag;
 	
-	
-	
-	
-	private List<ScLoi> loiList;
-	
 	/**
 	 * Instantiates a new LOI detail backing bean.
 	 */
@@ -348,69 +342,18 @@ public class LOIDetailBackingBean extends
 	 * 		the previous page url.
 	 * @param isReadonly
 	 * 		the readonly flag
-	 * @return the supplier loi page
-	 */
-	public String retrieveSupplierLOIDtl(Long sourceId, Long loiId, String previousPageUrl, boolean isReadonly){
-		return retrieveSupplierLOIDtlPriv(sourceId, loiId, previousPageUrl, isReadonly, null);
-	}
-	
-	/**
-	 * Edits the supplier loi action.
-	 * 
-	 * @param sourceId 
-	 * 		the source id (qt id / rn id
-	 * @param loiId 
-	 * 		the loi id
-	 * @param previousPageUrl
-	 * 		the previous page url.
-	 * @param isReadonly
-	 * 		the readonly flag
-	 * @param enableDownloadAllDocuments
-	 * 		either user can download all attachments/documents or not
 	 * 
 	 * @return the supplier loi page
 	 */
-	public String retrieveSupplierLOIDtl(Long sourceId, Long loiId, String previousPageUrl, boolean isReadonly, boolean enableDownloadAllDocuments){
-		Map<MapKeyEnum, Object> otherArgs = new HashMap<MapKeyEnum, Object>();
-		otherArgs.put(MapKeyEnum.enableDownloadAllDocuments, Boolean.valueOf(enableDownloadAllDocuments));
-		return retrieveSupplierLOIDtlPriv(sourceId, loiId, previousPageUrl, isReadonly, otherArgs);
-	}
-	
-	/**
-	 * Edits the supplier loi action.
-	 * 
-	 * @param sourceId 
-	 * 		the source id (qt id / rn id
-	 * @param loiId 
-	 * 		the loi id
-	 * @param previousPageUrl
-	 * 		the previous page url.
-	 * @param isReadonly
-	 * 		the readonly flag
-	 * @param otherArgs
-	 * 		enableDownloadAllDocuments - java.lang.Boolean
-	 * 		either user can download all attachments/documents or not
-	 * 
-	 * @return the supplier loi page
-	 */
-	private String retrieveSupplierLOIDtlPriv(Long sourceId, Long loiId, String previousPageUrl, boolean isReadonly, Map<MapKeyEnum, Object> otherArgs) {
+	public String retrieveSupplierLOIDtl(Long sourceId, Long loiId, String previousPageUrl, boolean isReadonly) {
 		ScQt scQt = null;
 		
 		try { 
-			//to avoid otherArgs is null checking next time
-			if(otherArgs == null){
-				otherArgs = new HashMap<MapKeyEnum, Object>();
-			}
-			if(otherArgs.containsKey(MapKeyEnum.enableDownloadAllDocuments) && otherArgs.get(MapKeyEnum.enableDownloadAllDocuments) instanceof Boolean){
-				Object o = otherArgs.get(MapKeyEnum.enableDownloadAllDocuments);
-				if(o instanceof Boolean){	getManagedBean().setEnableDownloadAllDocuments((Boolean)o);	}
-			}
 			getManagedBean().setSourceId(sourceId);
 			if (previousPageUrl != null) {
 				getManagedBean().setBackToPreviousPage(previousPageUrl);	
 			}
 			getManagedBean().setReadOnly(isReadonly);
-			
 
 			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
 			awardSupplierReqDTO.setLoiId(loiId);
@@ -5876,15 +5819,5 @@ public class LOIDetailBackingBean extends
 		updateBPMTask(BpmOutcomeConst.BPM_REJECT, null);
 	}
 	//end Enhancement #21573
-
-	
-	public void setLoiList(List<ScLoi> loiList) {
-		this.loiList = loiList;
-		
-	}
-
-	public List<ScLoi> getLoiList() {
-		return loiList;
-	}
 	
 }

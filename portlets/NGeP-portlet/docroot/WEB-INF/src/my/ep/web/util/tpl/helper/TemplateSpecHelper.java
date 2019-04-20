@@ -16,8 +16,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
@@ -55,7 +53,6 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.persistence.exceptions.ValidationException;
 
 /**
  * Singleton Helper For Template Spec.
@@ -741,24 +738,6 @@ public class TemplateSpecHelper {
 					totalPrice = totalPrice.multiply(uomPerMonth);
 				}
 				
-				TemplateSpecReqDTO templateSpecReqDTO;
-				ITemplateSpecSO	templateSpecSo;
-				TemplateSpecResDTO resDTO;
-				try{
-					if(null == specQuestion.getClFulfilmentTypeCode()){}
-				}
-				catch(ValidationException ex){
-					templateSpecReqDTO = new TemplateSpecReqDTO();
-					templateSpecReqDTO.setSpecQuestionId(specQuestion.getSpecQuestionId());
-					
-					templateSpecSo = BusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
-					
-					resDTO = templateSpecSo.fetchSpecQuestion(templateSpecReqDTO);
-					if(resDTO.isSuccessful()){
-						specQuestion = resDTO.getSpecQuestionList().get(0);
-					}
-				}
 				if (!specQuestion.getClFulfilmentTypeCode().getParameterCode()
 						.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)) {
 					if (itemDurationMonth != null) {

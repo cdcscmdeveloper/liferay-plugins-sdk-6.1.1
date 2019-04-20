@@ -71,8 +71,7 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 	 * page navigation to QT Loa List
 	 */
 	public void preRenderView() {
-		//debugLogger("preRenderView");
-		log.info("preRenderView");
+		debugLogger("preRenderView");
 		try {
 			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class, null);
 
@@ -102,8 +101,6 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
 			.handleNavigation(fc, null, QTConstants.QT_LOA_LIST_PAGE);
-			
-			
 		} catch (Exception e) {
 			handleException(e);
 		}

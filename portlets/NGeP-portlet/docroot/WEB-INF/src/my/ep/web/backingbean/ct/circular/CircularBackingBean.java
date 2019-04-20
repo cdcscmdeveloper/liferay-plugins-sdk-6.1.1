@@ -5,8 +5,7 @@ package my.ep.web.backingbean.ct.circular;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.log4j.Logger;
-import javax.enterprise.context.RequestScoped;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -39,20 +38,18 @@ import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
 import my.ep.web.managedbean.ct.circular.CircularManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.pm.helper.ParameterHelper;
-import my.ep.factory.EpLogger;
+
 /**
  * Backing Bean for Circular
  * 
  * @author kieyun
  * @since 23/12/2014
  */
-@ManagedBean( name="circularBackingBean")
-@RequestScoped 
+@ManagedBean
+@ViewScoped
 public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 	
 	private static final long serialVersionUID = 1L;
-	private static Logger log = EpLogger.getLogger(CircularBackingBean.class);
 
 	/**
 	 * The method used for searching the circular list.
@@ -156,19 +153,10 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 		getManagedBean().setSearchStatusId(null);
 		getManagedBean().setSearchStatus(null);
 		getManagedBean().setSearchCircularStatus(0);
-		getManagedBean().setItemcode(null);
-		getManagedBean().setItemname(null);
-		getManagedBean().setItemstatus(null);
-		getManagedBean().setItemtype(null);
-		getManagedBean().setUOM(null);
-		getManagedBean().setSkuno(null);
-		getManagedBean().setTypeofgoods(null);
 		if(getManagedBean().isReadOnly()) {
 			getManagedBean().getCircularListingPagingDataModel().reloadData();
-			getManagedBean().getServiceListingPagingDataModel().reloadData();
 		} else {
 			getManagedBean().resetCircularListingPagingDataModel();
-			getManagedBean().resetServiceListingPagingDataModel();
 		}
 	}
 
@@ -310,61 +298,20 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 	 */
 	public void searchCircular() throws Exception {
 		try {
-		
-				 
-					if( getManagedBean().getItemcode().equals("") && 
-							getManagedBean().getItemname().equals("") &&
-							getManagedBean().getItemstatus() == null &&
-							getManagedBean().getItemtype()== null &&
-							getManagedBean().getUOM().equals("") &&	
-							getManagedBean().getSkuno().equals("") &&
-							getManagedBean().getTypeofgoods()== null  )
-				{
-					
-					throw new EpException(MessageConst.ERROR_750049);
-					
-				}else if(getManagedBean().getItemtype()!=null)
-				{
-				 
-					if(getManagedBean().getItemtype().equals(ParameterConst.ITEM_TYPE_PRODUCT))
-					{
-						getManagedBean().getServiceListingPagingDataModel().resetData();
-						getManagedBean().getCircularListingPagingDataModel().reloadData();
-						
-					}else if(getManagedBean().getItemtype().equals(ParameterConst.ITEM_TYPE_SERVICE))
-					{
-						  getManagedBean().getCircularListingPagingDataModel().resetData();
-						  getManagedBean().getServiceListingPagingDataModel().reloadData();
-						 
-					}else if(getManagedBean().getItemtype().equals(ParameterConst.ITEM_TYPE_PRODUCT_AND_SERVICE))
-					{
-						  getManagedBean().getCircularListingPagingDataModel().reloadData();
-						  getManagedBean().getServiceListingPagingDataModel().reloadData(); 
-					}
-				}else if(getManagedBean().getItemtype()== null)
-				{
-					throw new EpException(MessageConst.ERROR_750051);
-				}
-				
-			   
-			//System.out.println("*****************searchCircular************-->5"+getManagedBean().get);
-			/*if (getManagedBean().getSearchCircularDocType() == null) {
-				
-		
+			if (getManagedBean().getSearchCircularDocType() == null) {
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_100022,
 								new String[]{ResourceBundleUtils.getMessage("lbl.ct.circular.type", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())},
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			}
 			else {
-				
 				getManagedBean().getCircularListingPagingDataModel().reloadData();
-			}*/
-		} finally{
-			    // Do nothing
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "circular search failed."));
+		}			
 	}
-
 
 	/**
 	 * User need to make decision on circular maintenance page
@@ -454,48 +401,5 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 	public boolean isAuditor() {
 		return new FacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value()) ||  
 				new FacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value());
-	}
-	
-	/**
-	* Gets the local goods radio values.
-	* 
-	* @param itemType
-	* the item type
-	* @return the local goods radio values
-	*/
-	public SelectItem[] getLocalGoodsRadioValues(String itemType) {
-	List<String> types = new ArrayList<String>();
-	types.add(ParameterConst.LOCAL_GOODS);
-	types.add(ParameterConst.IMPORTED_GOODS);
-	SelectItem[] items = null;
-	try {
-	items = new SelectItem[types.size()];
-	int i = 0;
-	for (String location : types) {
-	List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(itemType);
-	for (PmParameterDesc paramDesc : localParamDesc) {
-	if (paramDesc.getPmParameter().getParameterCode()
-	.equals(location)) {
-	items[i++] = new SelectItem(paramDesc.getPmParameter()
-	.getParameterId(), paramDesc.getCodeName());
-	}
-	}
-	}
-	} finally {
-
-	}
-	return items;
-	}
-	
-	/**
-	 * Retrieve parameter desc by type.
-	 * 
-	 * @param type
-	 *            (String type)
-	 * @returnList<PmParameterDesc>
-	 */
-	public List<PmParameterDesc> retrieveParameterDescByType(String type) {
-		return ParameterHelper.getInstance().getParameterDescList(type);
-
 	}
 }

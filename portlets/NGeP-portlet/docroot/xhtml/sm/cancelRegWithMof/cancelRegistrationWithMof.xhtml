@@ -51,11 +51,10 @@
 							onclick="excelDialog.show();return false;">
 							<p:graphicImage value="/css/images/design/upload.png"
 								style="margin-right:2px;" />
-						</p:commandLink>							
-						<p:commandLink style="float: left;padding-right: 10px;" ajax="false" value="#{backingBean.managedBean.cancellationAttachment.fileName}" 
-							rendered="#{backingBean.managedBean.cancellationAttachment.fileName ne null}">
-							<p:fileDownload value="#{backingBean.commonDownload(backingBean.managedBean.cancellationAttachment.filePath,backingBean.managedBean.cancellationAttachment.fileName,backingBean.managedBean.cancellationAttachment.fileName)}" />
-						</p:commandLink>
+						</p:commandLink> 
+						<p:outputLabel styleClass="outputLabel-view"
+							value="#{backingBean.managedBean.cancellationAttachment.fileName}"
+							rendered="#{backingBean.managedBean.cancellationAttachment.fileName ne null}" />
 						<p:spacer width="20" />			
 						<p:commandLink style="float: left;padding-right: 10px;"
 							rendered="#{backingBean.managedBean.cancellationAttachment.fileName ne null}"

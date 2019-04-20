@@ -24,16 +24,6 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 
-		<!-- 20190417@asyrafhaziq_12095 - Start -->
-		<ui:param name="reject" value="REJECT" />
-		<ui:param name="rejectPID" value="rejectPID" />
-		<ac:cancelRejectPopup id="#{rejectPID}" widget="rejectPID" width="30%"
-			height="100"
-			okAction="#{purchaseInDefaultBackingBean.approverAction(reject)}"
-			title="#{lbl['lbl.reject.details']}"
-			content="#{lbl['lbl.reject.dialog.confirm.message']}" update="@this" />
-		<!-- 20190417@asyrafhaziq_12095 - End -->
-
 		<ac:gpkiPopup
 			textBeforeSign="#{purchaseInDefaultBackingBean.textBeforeSign}"
 			postSignAction="#{purchaseInDefaultBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" 
@@ -85,10 +75,10 @@
 							<ui:param name="isReject" value="${bpmAction == 'REJECT'}" />
 
 							<p:commandButton value="#{lbl[buttonLabel]}" process="@all"
-							    onstart="#{isReject ? '' : 'blockWidget.show();'}" oncomplete="#{isReject ? '' : 'blockWidget.hide();'}" 
+								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								styleClass="ui-button" update="#{isReject ? '@form' : ''}"
 								partialSubmit="true"
-								actionListener="#{purchaseInDefaultBackingBean.beforeApproverAction(bpmAction)}" />
+								actionListener="#{purchaseInDefaultBackingBean.approverAction(bpmAction)}" />
 
 						</ui:repeat></td>
 				</tr>

@@ -3939,13 +3939,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 		} 
 		String representativeRole ="";
-		if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD)) {
-			representativeRole = ParameterTypeConst.REPRESENTATIVE_TYPE_PPR;
+		if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)) {
+			representativeRole =ParameterTypeConst.REPRESENTATIVE_TYPE_PBB;
+		} else if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)) {
+			representativeRole = ParameterTypeConst.REPRESENTATIVE_TYPE_PBA;
 		} else if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)) {
 			representativeRole = ParameterTypeConst.REPRESENTATIVE_TYPE_FPBH;
 		} else if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
 			representativeRole = ParameterTypeConst.REPRESENTATIVE_TYPE_FPBK;
-		} 
+		}
 		return getDropdownValues(representativeRole);
 	}
 

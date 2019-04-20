@@ -53,10 +53,6 @@ import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
-import my.ep.persistence.entity.sc.loaloi.ScLoaBasic;
-import my.ep.persistence.entity.sc.loaloi.ScLoaForQt;
-import my.ep.persistence.entity.sc.loaloi.ScLoi;
-import my.ep.persistence.entity.sc.loaloi.ScLoiForQt;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -1575,14 +1571,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	private ScQtApprovalRequest scQtApprovalDtls;
-
-	private IPagingDataModel<ScLoi> searchLoiDataModel;
-	
-	private IPagingDataModel<ScLoiForQt> searchLoiForQtDataModel;
-	
-	private IPagingDataModel<ScLoaBasic> searchLoaDataModel;
-	
-	private IPagingDataModel<ScLoaForQt> searchLoaForQtDataModel;
 
 	/**
 	 * Instantiates a new QT detail managed bean.
@@ -4242,7 +4230,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public IPagingDataModel<ScQt> getCloneSearchQTDataModel() {
 		return cloneSearchQTDataModel;
 	}
-	
+
 	/**
 	 * Sets the clone search qt data model.
 	 * 
@@ -4253,7 +4241,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			IPagingDataModel<ScQt> cloneSearchQTDataModel) {
 		this.cloneSearchQTDataModel = cloneSearchQTDataModel;
 	}
-	
+
 	/**
 	 * Gets the selected loc nodes.
 	 * 
@@ -9856,42 +9844,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setBsvDBStateId(Long bsvDBStateId) {
 		this.bsvDBStateId = bsvDBStateId;
 	}
-
-	public IPagingDataModel<ScLoi> getSearchLoiDataModel() {
-		return searchLoiDataModel;
-	}
-
-	public void setSearchLoiDataModel(IPagingDataModel<ScLoi> searchLoiDataModel) {
-		this.searchLoiDataModel = searchLoiDataModel;
-	}
-
-	public IPagingDataModel<ScLoiForQt> getSearchLoiForQtDataModel() {
-		return searchLoiForQtDataModel;
-	}
-
-	public void setSearchLoiForQtDataModel(IPagingDataModel<ScLoiForQt> searchLoiForQtDataModel) {
-		this.searchLoiForQtDataModel = searchLoiForQtDataModel;
-	}
-
-	public IPagingDataModel<ScLoaBasic> getSearchLoaDataModel() {
-		return searchLoaDataModel;
-	}
-
-	public void setSearchLoaDataModel(IPagingDataModel<ScLoaBasic> searchLoaDataModel) {
-		this.searchLoaDataModel = searchLoaDataModel;
-	}
-
-	public IPagingDataModel<ScLoaForQt> getSearchLoaForQtDataModel() {
-		return searchLoaForQtDataModel;
-	}
-	
-	public void setSearchLoaForQtDataModel(IPagingDataModel<ScLoaForQt> searchLoaForQtDataModel) {
-		this.searchLoaForQtDataModel = searchLoaForQtDataModel; 
-	}
-	
-
-	
-	
 
 	
 	

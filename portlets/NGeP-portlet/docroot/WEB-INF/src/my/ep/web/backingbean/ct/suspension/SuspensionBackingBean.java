@@ -692,53 +692,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	 * The method used to search for the item.
 	 */
 	public void searchItemAction() {
-
-		
-	/*	log.info("****getItemcode*******"+getManagedBean().getItemcode());
-		log.info("****getSearchItemString*******"+getManagedBean().getSearchItemString());
-		log.info("****getItemstatus*******"+getManagedBean().getItemstatus());
-		log.info("****getItemtype*******"+getManagedBean().getItemtype());
-		log.info("****getUOM*******"+getManagedBean().getUOM());
-		log.info("****getSkuno*******"+getManagedBean().getSkuno());
-		log.info("****getTypeofgoods*******"+getManagedBean().getTypeofgoods());*/
-		
-		if( getManagedBean().getItemcode().equals("") && 
-				getManagedBean().getSearchItemString().equals("") &&
-				getManagedBean().getItemstatus() == null &&
-				getManagedBean().getItemtype()== null &&
-				getManagedBean().getUOM().equals("") &&	
-				getManagedBean().getSkuno().equals("") &&
-				getManagedBean().getTypeofgoods()== null  )
-	{
-		
-		
-		throw new EpException(MessageConst.ERROR_750049);
-		
-	} 
-	else if(getManagedBean().getItemtype()!=null)	
-	{
-		if(getManagedBean().getItemtype().equals(ParameterConst.ITEM_TYPE_PRODUCT))
-		{
-			getManagedBean().getSuspensionProductListingPagingDataModel().reloadData();
-		
-		}
-		if(getManagedBean().getItemtype().equals(ParameterConst.ITEM_TYPE_SERVICE))
-		{
-			  getManagedBean().getSuspensionProductListingPagingDataModel().reloadData();
-	
-		}
-		if(getManagedBean().getItemtype().equals(ParameterConst.ITEM_TYPE_PRODUCT_AND_SERVICE))
-		{
-			 getManagedBean().getSuspensionProductListingPagingDataModel().reloadData();
-	
-		}
-	}else if(getManagedBean().getItemtype()==null) {
-		
-		getManagedBean().getSuspensionProductListingPagingDataModel().reloadData();
-		
-	}
-
-		/*if (getManagedBean().getSearchItemString() != null &
+		if (getManagedBean().getSearchItemString() != null &&
 				!getManagedBean().getSearchItemString().trim().isEmpty()) {
 			getManagedBean().getContractItemList().clear();
 			for (CtContractItem ctContractItem : getManagedBean().getContractVer().getCtContractItems()) {
@@ -747,32 +701,17 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 					getManagedBean().getContractItemList().add(ctContractItem);
 				}
 			}
-		}*/
+		}
 	}
 	
 	/**
 	 * The method used to reset the search criteria for item.
 	 */
 	public void resetSearchItemAction() {
-		//getManagedBean().getContractItemList().clear();
 		getManagedBean().setSearchItemString("");
-		getManagedBean().setItemcode("");
-		getManagedBean().setItemstatus(null);
-		getManagedBean().setItemtype(null);
-		getManagedBean().setUOM("");
-		getManagedBean().setSkuno("");
-		getManagedBean().setTypeofgoods(null);
-		if(getManagedBean().isReadOnly()) {
-			getManagedBean().getSuspensionProductListingPagingDataModel().reloadData();
-			//getManagedBean().getSuspensionProductListingPagingDataModel().reloadData();
-		} else {
-			getManagedBean().resetSuspensionProductListingPagingDataModel();
-			
-		}
-
-		/*getManagedBean().getContractItemList().clear();
+		getManagedBean().getContractItemList().clear();
 		for (CtContractItem ctContractItem : getManagedBean().getContractVer().getCtContractItems()) {
 			getManagedBean().getContractItemList().add(ctContractItem);
-		}*/
+		}
 	}
 }

@@ -103,7 +103,6 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.encrypt.BouncyCastleProvider_AES_CBC;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
-import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
@@ -140,7 +139,6 @@ import com.liferay.portal.util.PortalUtil;
  * 
  * @author Viswanath
  * @author Venkat Chanumolu
- * @author saha
  * 
  */
 @ManagedBean(name = "supplierProposalDetailBackingBean")
@@ -206,35 +204,24 @@ public class SPDetailBackingBean extends
 		}
 	}
 
-	
 	/**
+	 * Method to retrieve Technical & Financial Proposal CheckList and to set in
+	 * managed bean
 	 * 
 	 * @param qtID
 	 * @param userId
-	 * @param isReadonly
 	 */
 	public void retrieveProposalChecklistDtls(Long qtID, Long userId,
-			boolean isReadonly){
-		retrieveProposalChecklistDtls(qtID, userId, isReadonly, false);
-	}
-	
-	/**
-	 * @param qtOrProposalId  -> set qtID or proposalId if byProposalId is true
-	 * @param userId
-	 */
-	public void retrieveProposalChecklistDtls(Long qtOrProposalId, Long userId,
-			boolean isReadonly, boolean byProposalId) {
-		debugLogger("retrieveProposalChecklistDtls");
+			boolean isReadonly) {
+		debugLogger("retrieveProposalChecklistDtls qtId:::"+qtID+"::::UserId::::"+userId);
 		ProposalReqDTO reqDTO = new ProposalReqDTO();
 		IQTProposalSO proposalSO;
 		try {
+			reqDTO.setQtId(qtID);
 			reqDTO.setUserId(userId);
-			if(!byProposalId)	{reqDTO.setQtId(qtOrProposalId);}
-			else				{reqDTO.setQtProposalId(qtOrProposalId);}			
 			proposalSO = getProposalSO();
-			ProposalResDTO resDTO = null; 
-			if(!byProposalId)	{ resDTO = proposalSO.retrieveProposalDtlBySupplierId(reqDTO);}
-			else				{ resDTO = proposalSO.retrieveProposalDetail(reqDTO);}
+			ProposalResDTO resDTO = proposalSO
+					.retrieveProposalDtlBySupplierId(reqDTO);
 
 			ScQt scQt = resDTO.getScQt();
 
@@ -3752,38 +3739,23 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 				.handleNavigation(fc, null, NAV_TO_PROPOSAL_MAIN_PAGE);
 	}
 
-	
-	public String retriveSupplierProposalDtl(Long qtId, String previousPageUrl,
-			boolean isReadonly){
-		return retriveSupplierProposalDtl(qtId, previousPageUrl, isReadonly, false);
-	}	
-	
 	/**
 	 * Get supplier proposal details.
 	 * 
 	 * @param qtId
-	 *            the quotation / tender id
-	 *            or proposalId if byProposalId is true
-	 *        
+	 *            the quotation / tender id.
 	 * @param previousPageUrl
 	 *            the previous page url.
 	 * @param isReadonly
 	 *            the read only flag
-	 * @param byProposalId -> accept qtId as proposalId if set to true
 	 * @return the supplier proposal page
 	 */
 	public String retriveSupplierProposalDtl(Long qtId, String previousPageUrl,
-			boolean isReadonly, boolean byProposalId) {
+			boolean isReadonly) {
 		super.renewSesionObject();
-
-		if(!byProposalId){
-			retrieveProposalChecklistDtls(qtId, new FacesScopes()
+        debugLogger("retriveSupplierProposalDtl:::"+qtId+":::previousPageUrl:::"+previousPageUrl);
+		retrieveProposalChecklistDtls(qtId, new FacesScopes()
 				.getUserSessionBean().getUserId(), isReadonly);
-		}
-		else{
-			retrieveProposalChecklistDtls(qtId, new FacesScopes()
-			.getUserSessionBean().getUserId(), isReadonly, true);
-		}
 
 		getManagedBean()
 				.setProcCategoryMedicine(
@@ -4843,19 +4815,4 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			proposalSO = null;
 		}
 	}
-	
-	
-	
-	/**
-	 * 
-	 * @return 
-	 */
-	public Boolean canShowSupplierProposal(){
-		
-		SupplierFinalizationBackingBean sfbb = new SupplierFinalizationBackingBean();
-		sfbb.setScQt(this.getManagedBean().getQt());
-		return sfbb.canShowSupplierProposal();
-		
-	}
-	
 }

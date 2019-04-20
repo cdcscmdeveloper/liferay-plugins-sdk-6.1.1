@@ -8,9 +8,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 <ui:define name="contentSection">
-	<p:blockUI block=":form" widgetVar="blockWidget">
-			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
-		</p:blockUI>
+	
 		
 		<p:dataTable id="scSuppInviteTblId"
 			value="#{scSupplirInvitationdBB.supplierInvitationModel}" lazy="true"
@@ -30,7 +28,7 @@
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.title']}" style="text-align:center">
-			<p:commandLink onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+			<p:commandLink
 					action="#{scSupplirInvitationdBB.getNavigationUrl(statusId,supplierInviteList[0])}">
 				<h:outputText value="#{supplierInviteList[1]}" style="float:left;white-space:normal;text-align:left;"/>
 			</p:commandLink>

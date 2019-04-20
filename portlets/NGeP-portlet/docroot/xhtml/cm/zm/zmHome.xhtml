@@ -10,28 +10,9 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
 	<ui:define name="contentSection">
-	<style>
-		.tree-node-disabled .ui-treenode-label{
-			cursor: pointer !important;
-			opacity: 0.4 !important;
-		}
-		.tree-node-disabled .ui-treenode-content > span:nth-child(2){
-			height: 15px !important;
-    		width: 15px !important;
-    		border: 1px solid #dddddd !important;
-   			background: rgb(255, 255, 255) !important;
-    		border-color: #bcbec0 !important;
-   			display: inline-block !important;
-   			border-radius: 0px !important;
-    		opacity: 0.4 !important;
-    		margin-right: 5px !important;
-		}/*not baked to the component ep next gen*/
-	
-		.tree-no-display{
-			display: none !important;
-		}
-	</style>
 
 		<p:messages id="zmMsgs" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false"></p:messages>
@@ -100,6 +81,7 @@
 				</p:column>
 			</p:dataTable>
 		</h:panelGrid>
+
 		<div align="right" style="width: 100%">
 			<p:commandButton value="#{lbl['lbl.cm.zm.btn.add']}" process="@this"
 				update=":form:ZL" partialSubmit="true" oncomplete="ZL.show();"
@@ -149,24 +131,21 @@
 							<div style="height: 340px; overflow-y: scroll;">
 								<p:tree id="treeZoneLocationPopup"
 									value="#{zoneMaintenanceBackingBean.managedBean.rootZoneTree}"
-									var="location" 
+									var="location"
 									selection="#{zoneMaintenanceBackingBean.managedBean.selectedNodes}"
 									selectionMode="checkbox">
 									<p:ajax event="select" update=":form:zoneAddButton"/>
 									<p:ajax event="unselect" update=":form:zoneAddButton" />
 
-									<p:treeNode  styleClass="#{!location.getState().selectable ? 'tree-node-disabled':''}" type="state">
-										<h:outputText id="stateNodeId" value="#{location.locationName}" />
-										<p:tooltip for="stateNodeId" rendered="#{!location.getState().selectable}" value="#{lbl['lbl.cm.zm.unabletoselect']}" position="top"></p:tooltip>					
+									<p:treeNode type="state">
+										<h:outputText value="#{location.locationName}" />
 									</p:treeNode>
-									<p:treeNode  styleClass="#{!location.getDivision().selectable ? 'tree-node-disabled':''}" type="division">
-										<h:outputText id="divisionNodeId" value="#{location.locationName}" />
-										<p:tooltip for="divisionNodeId" rendered="#{!location.getDivision().selectable}" value="#{lbl['lbl.cm.zm.unabletoselect']}" position="top"></p:tooltip>
+									<p:treeNode type="division">
+										<h:outputText value="#{location.locationName}" />
 									</p:treeNode>
-										 <p:treeNode  styleClass="#{!location.getDistrict().selectable ? 'tree-node-disabled':''}" type="district">
-											<h:outputText id="districtNodeId" value="#{location.locationName}" />
-											<p:tooltip for="districtNodeId" rendered="#{!location.getDistrict().selectable}" value="#{lbl['lbl.cm.zm.unabletoselect']}" position="top"></p:tooltip>
-										</p:treeNode>
+									<p:treeNode type="district">
+										<h:outputText value="#{location.locationName}" />
+									</p:treeNode>
 								</p:tree>
 							</div>
 						</TD>
@@ -179,7 +158,8 @@
 					style="float:right;" immediate="true" oncomplete="ZL.hide();"></p:commandButton>
 				&#160;&#160;
 
-				<p:commandButton id="zoneAddButton" value="#{lbl['lbl.cm.zm.btn.ok']}" 
+				<p:commandButton id="zoneAddButton"
+					value="#{lbl['lbl.cm.zm.btn.ok']}"
 					disabled="#{zoneMaintenanceBackingBean.managedBean.selectedSupplierZone.suppZoneName eq null or zoneMaintenanceBackingBean.managedBean.selectedSupplierZone.suppZoneName.length() eq 0 or fn:length(zoneMaintenanceBackingBean.managedBean.selectedNodes)&lt;1}"
 					style="float:right;" oncomplete="ZL.hide();"
 					process="@all ,zoneNameId" update="@this, zonePopupPanel"
