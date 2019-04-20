@@ -1849,11 +1849,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			scLoa.setBondReq(PerformanceBondUtil.isPerformanceBondRequired(overallCtAmount, null));
 		}
 		
-		System.out.println("____ calcBondAmountWithSST "+scLoa.getScLoiLoa().getDocId()+": "+scLoa.getScLoiLoa().getDocId() +"overallAmount: "+overallCtAmount+" scLoa.isBondReq():"+scLoa.isBondReq());
-		
+		if (scLoa.getScLoiLoa() != null) {
+			log.info("____ calcBondAmountWithSST scloiloa_docid: "+scLoa.getScLoiLoa().getDocId() +"overallAmount: "+overallCtAmount+" scLoa.isBondReq():"+scLoa.isBondReq());
+		}
+	
 		if (scLoa.isBondReq()) {
 			if (scLoa.getLoaAmt() != null && scLoa.getContractDuration() != null) {
-				System.out.println("____ calcBondAmountWithSST LoaAmt: "+scLoa.getLoaAmt()+" Contract Duration: "+scLoa.getContractDuration());
+				log.info("____ calcBondAmountWithSST LoaAmt: "+scLoa.getLoaAmt()+" Contract Duration: "+scLoa.getContractDuration());
 				BigDecimal contractPeriod = scLoa.getContractDuration();
 
 				PerformanceBondUtil.calculatePerformanceBondAmt(overallCtAmount, contractPeriod, scLoa);

@@ -13,7 +13,9 @@
 				<p:outputLabel value="*" styleClass="mandatory" />
 			</td>
 			<td class="tdContent">
-				<p:selectOneMenu
+				<!-- Enhancement #19245 -->
+				<c:if test="#{!dailyReceivedRptBB.managedBean.isCdcCollector()}">
+				<p:selectOneMenu 
 					label="#{lbl['lbl.rpt.paymentType']}" id="paymentType"
 					value="#{dailyReceivedRptBB.managedBean.paymentType}" required="true"
 					style="width:300px;">
@@ -23,6 +25,17 @@
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.softcertificate']}" itemValue="S" />
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu>
+				</c:if>
+				<c:if test="#{dailyReceivedRptBB.managedBean.isCdcCollector()}">
+				<p:selectOneMenu rendered="#{dailyReceivedRptBB.managedBean.isCdcCollector()}"
+					label="#{lbl['lbl.rpt.paymentType']}" id="paymentType" style="width:300px;"
+					value="#{dailyReceivedRptBB.managedBean.paymentType}" required="true">
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="" />
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.softcertificate']}" itemValue="S" />
+					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
+				</p:selectOneMenu>
+				</c:if>
+				<!-- end of Enhancement #19245 -->
 			</td>
 			<td class="tdTitle">
 				<p:outputLabel value="#{lbl['lbl.rpt.paymentdate']}" /> 
