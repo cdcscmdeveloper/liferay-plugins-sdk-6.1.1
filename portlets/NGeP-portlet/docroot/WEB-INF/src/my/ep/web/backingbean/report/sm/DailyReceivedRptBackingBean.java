@@ -7,8 +7,10 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import my.ep.constants.CommonConstants;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.DailyReceivedRptManagedBean;
 
@@ -21,9 +23,14 @@ public class DailyReceivedRptBackingBean extends
 	 * 
 	 */
 	private static final long serialVersionUID = 8499640157757275310L;
+	private static Logger log = Logger.getLogger(RevenueCollectionRptBackingBean.class);
 
-	public DailyReceivedRptBackingBean() {
-		setDefaultDateFromAndDateTo();
+	public DailyReceivedRptBackingBean() {	
+		//Enhancement #19245
+		setDateFromAndDateTo();
+		
+		getManagedBean().setCdcCollector(isRole(ReportConst.ROLE_CODE_COLLECTOR_CDC));
+		//end of Enhancement #19245
 	}
 
 	public void generateReport() {
@@ -42,7 +49,10 @@ public class DailyReceivedRptBackingBean extends
 
 	public void resetSearch() {
 		getManagedBean().setPaymentType(StringUtils.EMPTY);
-		setDefaultDateFromAndDateTo();
+		
+		//Enhancement #19245
+		setDateFromAndDateTo();
+		//end of Enhancement #19245
 	}
 
 }

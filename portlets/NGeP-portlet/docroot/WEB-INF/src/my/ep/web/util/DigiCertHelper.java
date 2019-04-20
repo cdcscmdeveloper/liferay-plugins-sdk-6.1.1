@@ -13,15 +13,10 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
 import my.ep.constant.MessageConst;
-import my.ep.constant.sm.SupplierManagementConst;
-import my.ep.dto.sm.personnel.PersonnelReqDTO;
-import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.exception.EpException;
-import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.constant.SPKIConst;
-import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SpkiVO;
 
 import org.apache.commons.lang3.StringUtils;
@@ -137,29 +132,9 @@ public class DigiCertHelper {
 			KMCClient client = getClient();
 			IKMCAPIResponse res = client.requestService(KMCRequestBuilder
 					.getChallengeQuestions(identificationNo, 1));
-			
-			PmUser pmUser = new FacesScopes().getUserSessionBean();
-			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-			reqDTO.setUserId(pmUser.getUserId());
-			PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelByUserId(reqDTO);
-			log.info("getPersonnelId:: " + resDTO.getSmPersonnel().getPersonnelId());
-			log.info("getSoftcertFlg:: " + resDTO.getSmPersonnel().getSoftcertFlg());
-
-			if (!(resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_ISSUED)) {
-				log.info("#25061 getSoftcertFlg:: if log 1");
-				if (resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ
-						|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING) {
-					log.info("getSoftcertFlg|776063 1 :: " + resDTO.getSmPersonnel().getSoftcertFlg());
-					throw new EpException(MessageConst.ERROR_DIGICERT_776063);
-				} else {
-					log.info("getSoftcertFlg|776064 2 :: " + resDTO.getSmPersonnel().getSoftcertFlg());
-					throw new EpException(MessageConst.ERROR_DIGICERT_776064);
-				}
-			}
 
 			switch (res.getStatusCode()) {
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
-				log.info("#25061 OPERATION_SUCCESSFUL");
 				retVal = (List<String>) res
 						.get(IKMCAPIResponse.GetChallengeQuestionResonse.CHALLENGE_RESPONSES);
 

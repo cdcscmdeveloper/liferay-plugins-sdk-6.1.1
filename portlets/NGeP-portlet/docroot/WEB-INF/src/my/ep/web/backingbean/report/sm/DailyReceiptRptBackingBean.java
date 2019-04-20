@@ -9,13 +9,22 @@ import javax.faces.bean.ViewScoped;
 import org.apache.commons.lang3.StringUtils;
 
 import my.ep.constants.CommonConstants;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.DailyReceiptRptManagedBean;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 
 @ManagedBean(name="dailyReceiptRptBB")
 @ViewScoped
 public class DailyReceiptRptBackingBean extends SmReportBackingBean<DailyReceiptRptManagedBean>{
 	private static final long serialVersionUID = 1L;
+	private static Logger log = Logger.getLogger(DailyReceiptRptBackingBean.class);
+	
+	public DailyReceiptRptBackingBean() {
+		setDateFromAndDateTo();
+	}
 	
 	public void generateReport(){
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
@@ -40,5 +49,7 @@ public class DailyReceiptRptBackingBean extends SmReportBackingBean<DailyReceipt
 		getManagedBean().setYear(null);
 		getManagedBean().setYearTo(null);
 		getManagedBean().setReceiptNo(null);
+		
+		setDateFromAndDateTo();
 	}
 }

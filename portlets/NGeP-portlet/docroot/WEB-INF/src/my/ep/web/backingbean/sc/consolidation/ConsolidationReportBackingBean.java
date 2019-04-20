@@ -495,14 +495,8 @@ public class ConsolidationReportBackingBean extends
 				.getParameterCode();
 		String docDefinitionKey = scQtFinalizationReport.getPmDocument()
 				.getDocDefinitionKey();
-
+       //codes fixed related to 25619 issue.
 		if (reportAttachment == null
-				|| this.getManagedBean().getScQtFinalization()
-						.isReEvaluateCompReq()
-				|| this.getManagedBean().getScQtFinalization()
-						.isReEvaluateTechReq()
-				|| this.getManagedBean().getScQtFinalization()
-						.isReEvaluateFinReq()
 				|| (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED
 						.equals(definitionType) && SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT
 						.equals(docDefinitionKey))) {

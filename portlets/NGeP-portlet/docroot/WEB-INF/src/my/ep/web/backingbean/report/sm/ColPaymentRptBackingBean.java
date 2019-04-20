@@ -10,6 +10,7 @@ import javax.faces.bean.ViewScoped;
 import org.apache.commons.lang3.StringUtils;
 
 import my.ep.constants.CommonConstants;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.ColPaymentRptManagedBean;
 
@@ -20,6 +21,13 @@ public class ColPaymentRptBackingBean extends SmReportBackingBean<ColPaymentRptM
 	
 	public ColPaymentRptBackingBean(){
 		getManagedBean().setPaymentTypeMethodLs(getPaymentTypeMethodList());
+		
+		//Enhancement #19245
+		getManagedBean().setCdcCollector(isRole(ReportConst.ROLE_CODE_COLLECTOR_CDC));
+		getManagedBean().setSoftCert(SmReportConst.PAYMENT_SOFTC_CERT);
+		
+		setDateFromAndDateTo();
+		//end of Enhancement #19245
 	}
 	
 	public void generateReport() {
@@ -52,11 +60,13 @@ public class ColPaymentRptBackingBean extends SmReportBackingBean<ColPaymentRptM
 	}
 	
 	public void resetSearch(){
-		getManagedBean().setDateFrom(null);
-		getManagedBean().setDateTo(null);
 		getManagedBean().setReportType(null);
 		getManagedBean().setPaymentMethod(null);
 		getManagedBean().setSelectedPaymentTypes(new ArrayList<String>());
 		getManagedBean().setSelectedOrgProfile(null);
+		
+		//Enhancement #19245
+		setDateFromAndDateTo();
+		//end of Enhancement #19245
 	}
 }

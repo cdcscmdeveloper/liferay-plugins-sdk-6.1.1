@@ -2629,6 +2629,7 @@ public class SmApplicationUtil {
 		addr.setPmCountry(cntry);
 		addr.setPmState(new PmState());
 		addr.setPmDistrict(new PmDistrict());
+		SmCommonUtil.getInstance().setUserDetails(addr);
 		return addr;
 	}
 

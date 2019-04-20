@@ -980,7 +980,8 @@ public class SmApplicationBackingBean extends
 		} else {
 			log.info("******** My Company Basic is null ********");
 		}
-
+		
+		SmCommonUtil.getInstance().setUserDetails(smAppl);
 		getManagedBean().setSmAppl(smAppl);
 
 		if (fromBpm) {
@@ -2206,6 +2207,8 @@ public class SmApplicationBackingBean extends
 			}
 			if (valid) {
 				getManagedBean().setCurrentPageType(outputPageType);
+				SmCommonUtil.getInstance().setUserDetails(
+						getManagedBean().getSmAppl());
 				saveOrUpdateAppl();
 			} else {
 				getManagedBean().setTabActiveIndex(currentTab);
@@ -3262,7 +3265,9 @@ public class SmApplicationBackingBean extends
 		SmApplicationUtil.validateBranchGstInformation(getManagedBean()
 				.getSelectedBranch(), getManagedBean().getSelectedBranch()
 				.getGst(), getManagedBean().getCompanyBasicGst());
-
+		
+		SmCommonUtil.getInstance().setUserDetails(getManagedBean()
+				.getSelectedBranch());
 		EntityHelper.addOrUpdateEntityToList(getManagedBean()
 				.getSelectedBranch(), getManagedBean().getSmAppl()
 				.getSmSupplierBranches());
@@ -3396,6 +3401,8 @@ public class SmApplicationBackingBean extends
 	 * of the application.
 	 */
 	public void addOrUpdateAssocToSmAppl() {
+		SmCommonUtil.getInstance().setUserDetails(getManagedBean()
+				.getSelectedAssocCompany());
 		EntityHelper.addOrUpdateEntityToList(getManagedBean()
 				.getSelectedAssocCompany(), getManagedBean().getSmAppl()
 				.getSmAssociateCompanies());
@@ -3523,6 +3530,8 @@ public class SmApplicationBackingBean extends
 										.getCertEndDate()) >= 0) {
 			throw new EpException(MessageConst.ERROR_722530);
 		}
+		SmCommonUtil.getInstance().setUserDetails(getManagedBean()
+				.getSelectedCert());
 		EntityHelper.addOrUpdateEntityToList(
 				getManagedBean().getSelectedCert(), getManagedBean()
 						.getSmAppl().getSmSupplierCerts());
@@ -3739,6 +3748,8 @@ public class SmApplicationBackingBean extends
 						.compareTo(new BigDecimal(20000)) >= 1)) {
 			throw new EpException(MessageConst.ERROR_722550);
 		}
+		SmCommonUtil.getInstance().setUserDetails(getManagedBean()
+				.getSelectedCompanyExperience());
 		EntityHelper.addOrUpdateEntityToList(getManagedBean()
 				.getSelectedCompanyExperience(), getManagedBean().getSmAppl()
 				.getSmCompanyExperiences());
@@ -3994,6 +4005,8 @@ public class SmApplicationBackingBean extends
 	 * of the application.
 	 */
 	public void addOrUpdateEquityCompanyToSmAppl() {
+		SmCommonUtil.getInstance().setUserDetails(getManagedBean()
+				.getSelectedEquityCompany());
 		EntityHelper.addOrUpdateEntityToList(getManagedBean()
 				.getSelectedEquityCompany(), getManagedBean().getSmAppl()
 				.getSmEquityCompanies());
@@ -4443,6 +4456,8 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSelectedCategory().setCategoryL3Name(
 					getManagedBean().getSelectedCategory().getPmCategoryL3()
 							.getCategoryName());
+			SmCommonUtil.getInstance().setUserDetails(
+					getManagedBean().getSelectedCategory());
 
 			// check if added category already inside in main list, just set
 			// back to pending activation status
@@ -4508,6 +4523,7 @@ public class SmApplicationBackingBean extends
 	 */
 	public void addOrUpdateFactoryToSmAppl() {
 		SmFacility smFac = getManagedBean().getSelectedFactoryFacility();
+		SmCommonUtil.getInstance().setUserDetails(smFac);
 		SmApplicationUtil.addOrUpdateFacilityCategory(getManagedBean(), smFac);
 		EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
 				.getSmAppl().getSmFacilities());
@@ -4622,6 +4638,7 @@ public class SmApplicationBackingBean extends
 	 */
 	public void addOrUpdateDockYardToSmAppl() {
 		SmFacility smFac = getManagedBean().getSelectedDockyardFacility();
+		SmCommonUtil.getInstance().setUserDetails(smFac);
 		SmApplicationUtil.addOrUpdateFacilityCategory(getManagedBean(), smFac);
 		EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
 				.getSmAppl().getSmFacilities());
@@ -4735,6 +4752,7 @@ public class SmApplicationBackingBean extends
 	 */
 	public void addOrUpdateWorkshopToSmAppl() {
 		SmFacility smFac = getManagedBean().getSelectedWorkShopFacility();
+		SmCommonUtil.getInstance().setUserDetails(smFac);
 		SmApplicationUtil.addOrUpdateFacilityCategory(getManagedBean(), smFac);
 		EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
 				.getSmAppl().getSmFacilities());
@@ -4846,6 +4864,7 @@ public class SmApplicationBackingBean extends
 	 */
 	public void addOrUpdateStoreToSmAppl() {
 		SmFacility smFac = getManagedBean().getSelectedStoreFacility();
+		SmCommonUtil.getInstance().setUserDetails(smFac);
 		SmApplicationUtil.addOrUpdateFacilityCategory(getManagedBean(), smFac);
 		EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
 				.getSmAppl().getSmFacilities());
@@ -4964,6 +4983,8 @@ public class SmApplicationBackingBean extends
 		 * getManagedBean().getSelectedManufacturer().setPmUom(uom); break; } }
 		 * }
 		 */
+		SmCommonUtil.getInstance().setUserDetails(
+				getManagedBean().getSelectedManufacturer());
 		EntityHelper.addOrUpdateEntityToList(getManagedBean()
 				.getSelectedManufacturer(), getManagedBean().getSmAppl()
 				.getSmManufacturingDtls());
@@ -5602,7 +5623,9 @@ public class SmApplicationBackingBean extends
 					}
 				}
 			}
-
+			
+			SmCommonUtil.getInstance().setUserDetails(
+					getManagedBean().getSelectedShareHolder());
 			EntityHelper.addOrUpdateEntityToList(getManagedBean()
 					.getSelectedShareHolder(), getManagedBean().getSmAppl()
 					.getSmPersonnels());
@@ -6318,6 +6341,7 @@ public class SmApplicationBackingBean extends
 	 *            - SmSupplierBranch object
 	 */
 	public void assignPersonForBranch(SmSupplierBranch brn) {
+		SmCommonUtil.getInstance().setUserDetails(brn);
 		SmSupplierBranch br = new SmSupplierBranch();
 		for (int i = 0; i < getManagedBean().getSmAppl()
 				.getSmSupplierBranches().size(); i++) {
@@ -6515,7 +6539,9 @@ public class SmApplicationBackingBean extends
 			// validate HQ
 			SmApplicationUtil.validateBankLimitForHq(getManagedBean()
 					.getSmAppl(), getManagedBean().getSelectedBank());
-
+			
+			SmCommonUtil.getInstance().setUserDetails(getManagedBean()
+					.getSelectedBank());
 			EntityHelper.addOrUpdateEntityToList(getManagedBean()
 					.getSelectedBank(), getManagedBean().getSmAppl()
 					.getSmSupplierBanks());
@@ -6775,6 +6801,7 @@ public class SmApplicationBackingBean extends
 	public void initiateSmApplicationTask() {
 		IMofRegistrationSO regSo = null;
 		SmAppl bpmAppl = getManagedBean().getSmAppl();
+		SmCommonUtil.getInstance().setUserDetails(bpmAppl);
 		if (getManagedBean().getSmAppl().isResubmit()) {
 			setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_RE_REVIEW);
 
@@ -6889,6 +6916,7 @@ public class SmApplicationBackingBean extends
 		log.info("supplier declare submit bpmTask for applNo:"
 				+ getManagedBean().getSmAppl().getApplNo() + " taskId:"
 				+ getManagedBean().getTaskId());
+		reqDTO.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
 		resDTO = regSo.initiateSmApplicationTask(reqDTO);
 		regSo = null;
 		retriveLatestApplAfterUpdate("", "");
@@ -7055,6 +7083,7 @@ public class SmApplicationBackingBean extends
 			remark.setDocId(getManagedBean().getSmAppl().getApplId());
 			remark.setDocType(ParameterConst.NEW_SM_APPLN_FOR_CANCEL);
 			remark.setRemark(getManagedBean().getSupplierRemarks());
+			SmCommonUtil.getInstance().setUserDetails(remark);
 			saveSmRemarks(remark);
 			saveSmCancellationAttachment(getManagedBean()
 					.getCancellationAttachment());
@@ -7093,6 +7122,7 @@ public class SmApplicationBackingBean extends
 	 * @return the string
 	 */
 	public String submitDeletePendingMofApplToBpm() {
+		SmCommonUtil.getInstance().setUserDetails(getManagedBean().getSmAppl());
 		IMofRegistrationSO regSo = null;
 		try {
 			StringBuilder sb = new StringBuilder();
@@ -7129,7 +7159,7 @@ public class SmApplicationBackingBean extends
 			if (remark.getRemark().length() > 2500) {
 				remark.setRemark(remark.getRemark().substring(0, 2500));
 			}
-
+			SmCommonUtil.getInstance().setUserDetails(remark);
 			saveSmRemarks(remark);
 			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 			reqDTO.setSmAppl(getManagedBean().getSmAppl());
@@ -7161,6 +7191,7 @@ public class SmApplicationBackingBean extends
 							.getApplId());
 
 			reqDTO.setSmWorkflowStatus(sts);
+			reqDTO.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
 			regSo.initiateSmDelPendingApplicationTask(reqDTO);
 			String msg = "";
 
@@ -7486,6 +7517,7 @@ public class SmApplicationBackingBean extends
 			reqDTO.setSameAsHq(getManagedBean().getSelectedBranch()
 					.isSameAsHq());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			reqDTO.setChangedBy(loginUser.getUserId());
 			if (reqDTO.getSmAppl().isActiveAppl()) {
 				resDTO = regSo.initiateSmApplSaveAsDraftTask(reqDTO);
 				valid = resDTO.isBpmSuccess();
@@ -7537,6 +7569,7 @@ public class SmApplicationBackingBean extends
 			PmUser loginUser = new FacesScopes().getUserSessionBean();
 			useList.add(loginUser.getLoginId());
 			reqDTO.setUserList(useList);
+			reqDTO.setChangedBy(loginUser.getUserId());
 			MofRegistrationResDTO resDTO = new MofRegistrationResDTO();
 			regSo = (IMofRegistrationSO) BusinessDelegate.getInstance()
 					.getServiceObject("sm", IMofRegistrationSO.class);
@@ -7943,6 +7976,7 @@ public class SmApplicationBackingBean extends
 		reqDTO.setSmAppl(getManagedBean().getSmAppl());
 		reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
 		reqDTO.setBpmPojo(getManagedBean().getPayLoad());
+		reqDTO.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
 		reqSO.approveOrRejectPendingApplicationCancellation(reqDTO);
 
 		res = res.equals("REJECT") ? SmCommonUtil.getMessage(
@@ -8369,6 +8403,8 @@ public class SmApplicationBackingBean extends
 							MessageConst.INFO_700017, new String[] { applNo });
 				}
 				reqDTO.setPoOrApproverDecision(res);
+				SmCommonUtil.getInstance().setUserDetails(
+						this.getManagedBean().getSmAppl());
 				reqDTO.setSmAppl(this.getManagedBean().getSmAppl());
 				reqDTO.setPoRole(getManagedBean().isPoUser());
 				reqDTO.setApproverRole(getManagedBean().isApproverUser());
@@ -8396,7 +8432,7 @@ public class SmApplicationBackingBean extends
 											.getApplCategoryType());
 					reqDTO.setApproverLoginIds(approverLoginIds);
 				}
-
+				reqDTO.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
 				reqSO.submitPOorApproverReviewToBPM(reqDTO);
 
 				FacesContext.getCurrentInstance().addMessage(

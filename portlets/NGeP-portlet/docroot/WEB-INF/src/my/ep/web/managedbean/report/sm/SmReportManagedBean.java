@@ -45,7 +45,13 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	private String capitalLabel;
 	private String capitalShareFrom;
 	private String capitalShareTo;
+	private String currYear;
+	private String softCert;
+	
 	private Long regStatus;
+
+	private boolean isCdcCollector;
+	
 	private List<SelectItem> regStatusLs;
 
 	private List<SelectItem> applStatusList;
@@ -57,8 +63,6 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	private List<String> selectedPaymentTypes;
 	private List<CategoryRptVO> categoryLs;
 	private List<CategoryRptVO> selectedCategoryLs;
-
-	private String currYear;
 
 	public Date getDateFrom() {
 		return dateFrom;
@@ -386,5 +390,21 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 
 	public void setRegStatusLs(List<SelectItem> regStatusLs) {
 		this.regStatusLs = regStatusLs;
+	}
+
+	public String getSoftCert() {
+		return softCert;
+	}
+
+	public void setSoftCert(String softCert) {
+		this.softCert = softCert;
+	}
+
+	public boolean isCdcCollector() {
+		return isCdcCollector;
+	}
+
+	public void setCdcCollector(boolean isCdcCollector) {
+		this.isCdcCollector = isCdcCollector;
 	}
 }

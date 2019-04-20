@@ -97,35 +97,31 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	private SmSupplier supplier;
 	private PmUser loginUser;
 	private String certIssuer;
-	private static final Logger logger = EpLogger.getLogger(SpkiBackingBean.class);
 
 	public SpkiBackingBean() {
 	}
+
+	private static final Logger logger = EpLogger
+			.getLogger(SpkiBackingBean.class);
 
 	public String getSpkiEnabledProperty() {
 		EpPropertiesUtils prop = EpPropertiesUtils.getInstance();
 		System.out.println("getSpkiEnabledProperty :"
 				+ prop.getProperty("spki.enabled"));
-		return prop.getProperty("spki.enabled").trim();
+		return prop.getProperty("spki.enabled");
 	}
 
 	public void getChallengeQuestions() {
-		logger.info("::: #25061 getChallengeQuestions :::" + getSpkiEnabledProperty());
 		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
-			logger.info("::: #25061 getSpkiEnabledProperty true :::");
-			logger.info("::: #25061 getCertIssuer " + getCertIssuer());
 			if (getCertIssuer().equals(SupplierManagementConst.CERT_TRUSTGATE)) {
-				logger.info("getChallengeQuestions | getCertIssuer-TG : " + getCertIssuer());
 				challs = TrustGateHelper.getInstance().getChallengeQuestion(
 						getLoginUser().getIdentificationNo(),
 						getSupplier().getEpNo(), challengeQues1);
 			} else {
-				logger.info("getChallengeQuestions | getCertIssuer-DG : " + getCertIssuer());
 				challs = DigiCertHelper.getInstance().getChallengeQuestion(
 						getLoginUser().getIdentificationNo());
 			}
 			setChallengeQues1(challs.get(0));
-			logger.info("::: #25061 before spki_dlg.show");
 			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 		}
 	}
@@ -133,12 +129,10 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	public void getChallengeQuestions(String identificationNo) {
 		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
 			if (getCertIssuer(identificationNo).equals(SupplierManagementConst.CERT_TRUSTGATE)) {
-				logger.info("getChallengeQuestions(icNo) || getCertIssuer-TG : " + getCertIssuer());
 				challs = TrustGateHelper.getInstance().getChallengeQuestion(
 						identificationNo, getSupplier().getEpNo(),
 						challengeQues1);
 			} else {
-				logger.info("getChallengeQuestions(icNo) || getCertIssuer-TG : " + getCertIssuer());
 				challs = DigiCertHelper.getInstance().getChallengeQuestion(
 						identificationNo);
 			}
@@ -404,15 +398,12 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	}
 
 	public PmUser getLoginUser() {
-		logger.info("#25061 getLoginUser");
 		if (loginUser == null || loginUser.getLoginId() == null) {
-			logger.info("#25061 getLoginId is null");
 			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IUserSO.class);
 			UserReqDTO userReqDTO = new UserReqDTO();
 			userReqDTO.setLoginId(new FacesScopes().getUserScreenName());
-			logger.info("#25061 getLoginId : " + userReqDTO.getLoginId());
 			UserResDTO resDTO = userSO.retrieveUserByLoginId(userReqDTO);
 			if (resDTO.getPmUser() == null) {
 				throw new EpException("PM User is null");
@@ -424,7 +415,6 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 
 	public String getCertIssuer() {
 		if (StringUtils.isBlank(certIssuer)) {
-			logger.info("#25061 getIdentificationNo : " + getLoginUser().getIdentificationNo());
 			certIssuer = getCertIssuer(getLoginUser().getIdentificationNo());
 		}
 		return certIssuer;

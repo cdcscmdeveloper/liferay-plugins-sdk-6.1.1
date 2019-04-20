@@ -10,6 +10,7 @@ import javax.faces.bean.ViewScoped;
 import org.apache.commons.lang3.StringUtils;
 
 import my.ep.constants.CommonConstants;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.ColReceiptTransDtRptManagedBean;
 
@@ -17,6 +18,15 @@ import my.ep.web.managedbean.report.sm.ColReceiptTransDtRptManagedBean;
 @ViewScoped
 public class ColReceiptTransDtRptBackingBean extends SmReportBackingBean<ColReceiptTransDtRptManagedBean>{
 	private static final long serialVersionUID = 1L;
+		
+	//Enhancement #19245
+	public ColReceiptTransDtRptBackingBean() {
+		getManagedBean().setCdcCollector(isRole(ReportConst.ROLE_CODE_COLLECTOR_CDC));
+		getManagedBean().setSoftCert(SmReportConst.PAYMENT_SOFTC_CERT);
+
+		setDateFromAndDateTo();
+	}
+	//end of Enhancement #19245
 	
 	public void generateReport(){
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
@@ -44,5 +54,9 @@ public class ColReceiptTransDtRptBackingBean extends SmReportBackingBean<ColRece
 		getManagedBean().setReportType(null);
 		getManagedBean().setSelectedOrgProfile(null);
 		getManagedBean().setSelectedPaymentTypes(new ArrayList<String>());
+	
+		//Enhancement #19245		
+		setDateFromAndDateTo();
+		//end of Enhancement #19245
 	}
 }

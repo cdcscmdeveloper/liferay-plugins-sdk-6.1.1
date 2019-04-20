@@ -621,7 +621,38 @@ public class CreateQtBackingBean extends
 				searchBean);
 	}
 
-
+	//20190415@asyrafhaziq - 15979 -Start
+	/**
+	 * Sets the Open for .based on Estimated price
+	 * Mode(Quotation/Tender).
+	 * 
+	 * @param scQt
+	 *            (ScQt scQt)
+	 */
+	public void setOpenFor(ScQt scQt, BigDecimal amount) {
+		debugLogger("setOpenFor,@qtNo = " + scQt.getQtNo());
+	
+			boolean isQuotationThresHold = isQuotationThresHold(amount);
+			boolean isPanel = scQt.isPanel();
+	
+		
+			if (amount != null) {
+				// QT Type
+				scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
+				// Open For
+				if (isPanel) {
+					scQt.setOpenFor(null);
+				} else {
+					if (isQuotationThresHold && isOpenForBumiputraThresHold(amount)) {
+						scQt.setOpenFor(ParameterConst.OPEN_FOR_BUMI);
+					} else {
+						scQt.setOpenFor(ParameterConst.OPEN_FOR_ALL);
+					}	
+				}
+			} 
+	}
+	//20190415@asyrafhaziq - 15979 -End
+	
 	/**
 	 * Sets the procurement mode.based on Estimated price set Procuremnt
 	 * Mode(Quotation/Tender).
