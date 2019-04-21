@@ -11,6 +11,17 @@
 		textBeforeSign="#{purchaseInquiryBackingBean.textBeforeSign}"
 		postSignAction="#{purchaseInquiryBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}"
 		enableAutoUpdate="#{purchaseInquiryBackingBean.enableAutoUpdate()}" />
+		
+		<!-- 20190417@asyrafhaziq_12095 - Start -->
+	<ui:param name="cancelPI" value="cancelPI" />
+	<ac:cancelRejectPopup id="#{cancelPI}" widget="cancelPI" width="30%"
+		height="100"
+		okAction="#{purchaseInquiryBackingBean.requisitionerAction('CANCEL')}"
+		title="#{lbl['lbl.cancel.details']}"
+		content="#{lbl['lbl.cancel.dialog.confirm.message']}" update="@this" />
+		
+     <!-- 20190417@asyrafhaziq_12095 - End -->
+		
 
 	<div>
 		<!-- view back button -->
@@ -64,8 +75,8 @@
 
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 						style="float:right;" partialSubmit="true" process="@form"
-						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-						action="#{purchaseInquiryBackingBean.requisitionerAction('CANCEL')}" />
+						onstart="cancelPI.show();"
+						 />
 
 				</c:if>
 				<ui:repeat var="bpmAction"

@@ -94,7 +94,6 @@ public abstract class ReportBaseBackingBean<T extends ReportBaseManagedBean> ext
 					}
 				}		
 			} catch (Exception e) {
-				log.info(e.getMessage(), e);
 				throw new EpException(e.getMessage());
 			} finally {
 				reportSO = null;

@@ -140,6 +140,8 @@ public class ZoneMaintenanceManagedBean extends BaseManagedBean {
 	
 	private List<CmSupplierZone> tempDeletedSupplierZoneList;
 
+	private List<Long> disabledDistrictId;
+
 	/**
 	 * Instantiates a new zone maintenance managed bean.
 	 */
@@ -967,6 +969,14 @@ public class ZoneMaintenanceManagedBean extends BaseManagedBean {
 	public void setTempDeletedSupplierZoneList(
 			List<CmSupplierZone> tempDeletedSupplierZoneList) {
 		this.tempDeletedSupplierZoneList = tempDeletedSupplierZoneList;
+	}
+
+	public List<Long> getDisabledDistrictId() {
+		return disabledDistrictId;
+	}
+
+	public void setDisabledDistrictId(List<Long> disabledDistrictId) {
+		this.disabledDistrictId = disabledDistrictId;
 	}
 
 }
