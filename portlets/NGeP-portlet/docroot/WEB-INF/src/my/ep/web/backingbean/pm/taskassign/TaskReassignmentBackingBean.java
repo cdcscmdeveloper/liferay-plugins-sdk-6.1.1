@@ -1837,6 +1837,18 @@ public class TaskReassignmentBackingBean extends
 						SearchOperator.OPERATOR_LIKE.value(),
 						getManagedBean().getSearchUserName(),true));
 		}
+			//admin from task reassignment
+			List<String> filteredAdminRoles = new ArrayList<String>();
+			filteredAdminRoles.add("JABATAN_ADMIN");
+			filteredAdminRoles.add("MINISTRY_ADMIN");
+			filteredAdminRoles.add("PTJ_ADMIN");
+			filteredAdminRoles.add("UPS_ADMIN");
+
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(
+							"pmUserOrgs.pmUserRoles.pmRole.roleCode",
+							SearchOperator.OPERATOR_NOT_IN.value(), filteredAdminRoles));
+			
 		if(roleList.isEmpty()){
 			roleList = vo.getRoleList();
 		}	
