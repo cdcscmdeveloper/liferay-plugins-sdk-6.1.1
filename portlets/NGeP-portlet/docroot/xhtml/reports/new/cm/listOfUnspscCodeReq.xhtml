@@ -35,12 +35,13 @@
 
 					</p:selectOneMenu></td>
 				<td width="15%"><p:outputLabel value="#{lbl['lbl.cm.company.name']}" /></td>
-				<td width="35%"><ac:lov id="cmCompanyName" readonly="true"
+				<td width="35%">
+				<ac:lov id="cmCompanyName" readonly="true"
 						style="width:262px;" lovId="PM_ORG_PROFILE_WITH_COMPANY_REPORT"
 						size="40" update="@form"
 						headerText="#{lbl['lbl.cm.company.name']}"
 						value="#{cmReportsBackingBean.managedBean.selectedOrgProfile.smSupplier.companyName}"
-						saveObject="cmReportsBackingBean.managedBean.selectedOrgProfile" /></td>
+						saveObject="cmReportsBackingBean.managedBean.selectedOrgProfile" /> <ac:lovPopup /></td>
 			</tr>
 
 
