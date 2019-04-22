@@ -3791,4 +3791,26 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		
 		return resDTO.getCtContractVer().getSignedDate();
 	}
+	
+	public String newProcurement(){
+		String procur = null;
+		if(getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().getRequestNote() != null){
+			procur = getParameterDesc(getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().
+					getRequestNote().getRequestNoteDtls().get(0).getProcurementType());
+			return procur;
+		}
+		return null;
+	}
+	
+	public String newJustification(){
+		String justifi = null;
+		if(getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().getRequestNote() != null){
+			justifi = getReasonDesc(getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().
+					getRequestNote().getRequestNoteDtls().get(0).getJustificationType());
+
+			return justifi;
+		}
+		return null;
+	}
+
 }  
