@@ -230,7 +230,7 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 				if(getTitle() != null && getTitle().length() > 0){
 					reqDTO.setTitle(getTitle());
 				}
-				if(getDocNo() != null){
+				if(getDocNo() != null && StringUtils.isNotBlank(getDocNo())){
 					reqDTO.setFlDocNo(getDocNo());
 				}
 				if(getFromDate() != null){
