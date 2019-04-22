@@ -451,7 +451,18 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			} else {
 				ctBB.getManagedBean().setDirectPurchase(false);
 			}
+			
+			if (ctBB.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+					ParameterConst.PROC_TYPE_PK7) && ctBB.getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().
+					getRequestNote().getRequestNoteDtls().get(0).getProcurementType().getParameterType().equalsIgnoreCase(
+					ParameterTypeConst.PROCUREMENT_TYPE)) {
+				ctBB.getManagedBean().setNewPk7(true);
 
+			} else {
+				ctBB.getManagedBean().setNewPk7(true);
+			}
+			
+			
 			if (getManagedBean().getUserMap().size() == 0) {
 				initializeApproverList();
 			}

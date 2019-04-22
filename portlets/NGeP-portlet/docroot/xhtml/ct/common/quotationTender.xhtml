@@ -107,6 +107,42 @@
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 							</p:inputText></td>	
 					</tr>
+					
+					<!-- PUTRA #24916 -->
+					<tr >
+						<h:panelGroup
+							rendered="#{ctBackingBean.managedBean.newPk7 
+							and ctBackingBean.newProcurement()!= null }">
+							<td><p:outputLabel value="#{lbl['lbl.ct.proc.type']}" />
+							</td>
+							<td><p:inputText style="width:170px;" disabled="true"
+							value="#{ctBackingBean.newProcurement()}" />			
+							</td>
+						</h:panelGroup>	
+					</tr>			
+					<tr>
+						<h:panelGroup
+							rendered="#{ctBackingBean.managedBean.newPk7 
+							and ctBackingBean.newJustification()!= null}">
+							<td><p:outputLabel value="#{lbl['lbl.ct.proc.Justification']}" />
+							</td>
+							<td><p:inputText style="width:450px;" disabled="true"
+									value="#{ctBackingBean.newJustification()}" />
+							</td>
+						</h:panelGroup>					
+					</tr> 
+					<tr>
+						<h:panelGroup
+							rendered="#{!ctBackingBean.managedBean.directPurchase and (!ctBackingBean.managedBean.commonView or 
+						              ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode != ParameterConst.contractTypeCentral)}">
+							<td><p:outputLabel value="#{lbl['lbl.ct.proc.Justification']}" />
+							</td>
+							<td><p:inputText style="width:450px;" disabled="true"
+									value="#{ctBackingBean.getReasonDesc(ctBackingBean.managedBean.contractVer.ctContract.loa.justificationType)}" />
+							</td>
+						</h:panelGroup>					
+					</tr> 
+													
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.ct.gst.service']}"
 								styleClass="required"

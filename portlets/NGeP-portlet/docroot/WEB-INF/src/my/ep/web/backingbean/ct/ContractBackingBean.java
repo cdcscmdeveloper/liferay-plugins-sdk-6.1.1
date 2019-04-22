@@ -3051,6 +3051,17 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		} 
 		getManagedBean().getUpdateItemMap().put(ctContractItem.getScRequestItem().getRequestNoteItemId(), ctContractItem);
+		
+		ContractItemReqDTO reqDTO =  new ContractItemReqDTO();
+		reqDTO.setCtContactItem(ctContractItem);
+		
+		
+		IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractItemSO.class);
+		
+		contractItemSO.updateItemSearchService(reqDTO);
+		
+	
+		
 	}
 
 	/**
@@ -3781,4 +3792,25 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		return resDTO.getCtContractVer().getSignedDate();
 	}
 	
+	public String newProcurement(){
+		String procur = null;
+		if(getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().getRequestNote() != null){
+			procur = getParameterDesc(getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().
+					getRequestNote().getRequestNoteDtls().get(0).getProcurementType());
+			return procur;
+		}
+		return null;
+	}
+	
+	public String newJustification(){
+		String justifi = null;
+		if(getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().getRequestNote() != null){
+			justifi = getReasonDesc(getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().
+					getRequestNote().getRequestNoteDtls().get(0).getJustificationType());
+
+			return justifi;
+		}
+		return null;
+	}
+
 }  
