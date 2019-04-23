@@ -104,6 +104,11 @@
 					test="#{PmReportConst.pmBpkAdminProfileRptVal eq pmReportsBackingBean.managedBean.reportCode}">
 					<ui:include src="/xhtml/reports/new/pm/bpkAdminProfileReport.xhtml"></ui:include>
 				</c:when>
+				<!-- PM_010 -->
+				<c:when
+					test="#{PmReportConst.pmNoOfCpAndMrAccessApplicationRptVal eq pmReportsBackingBean.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/new/pm/noOfCPandMRAccsApplicationReport.xhtml"></ui:include>
+				</c:when>
 				<c:otherwise>
         			#{lbl['lbl.rpt.search.REPORTS_NOT_AVAILABLE_BY_MODULE']}    				
 				</c:otherwise>
