@@ -1837,12 +1837,11 @@ public class TaskReassignmentBackingBean extends
 						SearchOperator.OPERATOR_LIKE.value(),
 						getManagedBean().getSearchUserName(),true));
 		}
-			//admin from task reassignment
+			//admin list to be filtered from task reassignment
 			List<String> filteredAdminRoles = new ArrayList<String>();
 			filteredAdminRoles.add("JABATAN_ADMIN");
 			filteredAdminRoles.add("MINISTRY_ADMIN");
 			filteredAdminRoles.add("PTJ_ADMIN");
-			filteredAdminRoles.add("UPS_ADMIN");
 
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean(

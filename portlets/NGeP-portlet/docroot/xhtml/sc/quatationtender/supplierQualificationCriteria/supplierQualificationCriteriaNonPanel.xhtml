@@ -147,7 +147,7 @@
 								<p:selectOneMenu id="locLevels"
 									label="#{lbl['lbl.sc.location.level']}"
 									value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.locationLevel.parameterId}"
-									style="width: 220px;" required="true">
+									style="width: 220px;" >
 									<f:selectItems
 										value="#{qTSupplierQulCriteriaBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
 									<p:ajax event="change" update="zoneLocationDataTable"
