@@ -158,9 +158,50 @@
 				</p:inputText>
 				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.pr.submission.date']}" rendered="#{contractRequestBackingBean.managedBean.flRequest.submissionDate != null}"/></td>
 			</tr>
+			
+			
+						<!--#17087 icon tooltip -->
+						<!-- #17087 zonal flag check -->
+			<c:if test="#{contractRequestBackingBean.zonalTest eq false}">
+           	<tr>
+           		<td colspan="5">
+           		    <p:outputLabel style="float:left !important; color:red" value="#{lbl['lbl.fl.flag']}" />
+           			<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.flag']}" />
+           		</td>
+			</tr>
+			<!--#17087 radio select -->
+			
+			<tr>
+			
+				<td>
+          			<p:outputLabel  value="*" styleClass="mandatory" />
+          		</td>
+          								
+								
+				<td>
+				<!-- <h:outputText value="#{contractRequestBackingBean.zonalTest}"/> -->
+				
+					<p:selectOneRadio id="crGeneralRadio" required="true" value="#{contractRequestBackingBean.managedBean.flRequest.radioCheckDeliveryDate}">
+						<f:selectItem itemLabel="#{lbl['lbl.btn.yes']}" itemValue="true" />
+						<f:selectItem itemLabel="#{lbl['lbl.btn.no']}" itemValue="false" />
+						<p:ajax event="change"
+							listener="#{contractRequestBackingBean.upDateStartDateFromBpm}" 
+							update="delStartDate"/>                   
+           			</p:selectOneRadio>
+           			  
+           		</td>
+           	</tr>
+           	 </c:if>
+			
+			
+			
+			
+			
+			
+			
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.start']}" rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing =='false'}"/></td>
-				<td><p:calendar mode="popup" showOn="button" 
+				<td><p:calendar id="delStartDate" mode="popup" showOn="button" 
 						disabled="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing or contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or !bpmTasklistBackingBean.managedBean.claim}" 
 						readonlyInput="true"
 						rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing =='false'}"
