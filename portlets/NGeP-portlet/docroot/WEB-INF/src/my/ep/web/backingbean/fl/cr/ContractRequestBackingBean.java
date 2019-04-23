@@ -138,6 +138,8 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
+import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
+import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
@@ -268,6 +270,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	private Long disPmPrjSetia;
 	private Long disPmPrgActivity;
 	private boolean selectAllCheckbox;
+	/*#17087 zonal flag*/
+	private boolean zonalTest;
 	
 	/**
 	 * Instantiates a new fulfilment backing bean.
@@ -1048,6 +1052,13 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 			if(!getManagedBean().getFlRequest().getCtContract().isZonalPricing()){
 				updateDeliveryDate();
+				/*#17087 Get Zonal flag*/
+				getzonalTest();
+			}
+			if(getManagedBean().getFlRequest().getCtContract().isZonalPricing()){
+				/*#17087 Get Zonal flag*/
+				getzonalTest();
+				
 			}
 			if(coObj.getOrderDetails().getErrorId() != null && coObj.getOrderDetails().getErrorId() > 0){
 				getManagedBean().setAutoUpdate(Boolean.FALSE);
@@ -1139,6 +1150,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			if(!getManagedBean().getFlRequest().getCtContract().isZonalPricing()){
 				getManagedBean().getFlRequest().setStartDate(new Timestamp(System.currentTimeMillis()));
 				updateDeliveryDate();
+				/*#17087 Get Zonal flag*/
+				getzonalTest();
 			}
 			StatusReqDTO statusReqDTO = new StatusReqDTO();
 			statusReqDTO.setStatusId(FulfilmentStatusConst.CR_PENDING_SUBMISSION);
@@ -3324,6 +3337,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			flDeliveryAddress.setEndDate(getManagedBean().getFlRequest().getEndDate());
 			flDeliveryAddress.setDeliveryTerm(deliveryTerm);
 		}
+	}
+	
+	/*#17087 Get current zonal state flag */
+	public boolean getzonalTest(){
+		boolean zonalCheck = getManagedBean().getFlRequest().getCtContract().isZonalPricing();
+		setzonalTest(zonalCheck);
+		return zonalTest;
+		
 	}
 	
 	/**
@@ -6136,57 +6157,28 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	//end added for #24353
 
 
-	/**
+	/*
 	 * #17087
 	 * Ya - true - delivery start date remain the same
 	 * Tidak - false - delivery start date will get from approve 1GFMAS
 	 */
 	
 	public void upDateStartDateFromBpm() {
-		FlFulfilmentRequest request = getManagedBean().getFlRequest();
-		IContractZoneSO contractZoneSO = (IContractZoneSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractZoneSO.class);
+	
+		boolean radioCheck = getManagedBean().getFlRequest().isRadioCheckDeliveryDate();
+		if(radioCheck==false){
+			getManagedBean().getFlRequest().setRadioCheckDeliveryDate(false);
+		}else{
+			getManagedBean().getFlRequest().setRadioCheckDeliveryDate(true);
+		}
 
 		
-		String uomCode = "";
-		uomCode = getManagedBean().getFlRequest().getPmUom().getParameterCode();
-		log.info("uom code is : "+uomCode);
-
-		if(request.getAgApprovedDate() != null) {
-			if(request.getAgApprovedDate() != null && request.getAgApprovedDate().after(request.getStartDate())){
-				if(request.getCtContract() != null){
-					if(!request.getCtContract().isZonalPricing()){
-						if(request.getAgApprovedDate().after(request.getStartDate())){
-							request.setStartDate(request.getAgApprovedDate());
-							if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_DAYS)){
-								getManagedBean().setMaxDate(DateUtils.getEndDate(request.getStartDate(), request.getDeliveryTerm(),ParameterConst.DELIVERY_TERM_DAYS));
-								getManagedBean().getFlRequest().setEndDate(DateUtils.getEndDate(request.getStartDate(), request.getDeliveryTerm(),ParameterConst.DELIVERY_TERM_DAYS));
-							}else if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_MONTHS)){
-								getManagedBean().setMaxDate(DateUtils.getEndDate(request.getStartDate(), request.getDeliveryTerm(),ParameterConst.DELIVERY_TERM_MONTHS));
-								getManagedBean().getFlRequest().setEndDate(DateUtils.getEndDate(request.getStartDate(), request.getDeliveryTerm(),ParameterConst.DELIVERY_TERM_MONTHS));
-							}					
-						}
-						for(FlDeliveryAddress flDeliveryAddress : request.getFlDeliveryAddresses()) {
-							flDeliveryAddress.setStartDate(request.getStartDate());
-							flDeliveryAddress.setEndDate(request.getEndDate());
-						}
-					}else if(request.getCtContract().isZonalPricing()){
-						for(FlDeliveryAddress flDeliveryAddress : request.getFlDeliveryAddresses()) {
-							if(request.getAgApprovedDate().after(flDeliveryAddress.getStartDate())){
-								flDeliveryAddress.setStartDate(request.getAgApprovedDate());
-								ContractZoneReqDTO zoneReqDTO = new ContractZoneReqDTO();
-								zoneReqDTO.setFlAddress(flDeliveryAddress.getFlAddress());
-								zoneReqDTO.setCtContract(request.getCtContract());
-								ContractZoneResDTO zoneResDTOO = contractZoneSO.getDeliveryTermByAddress(zoneReqDTO);
-								flDeliveryAddress.setEndDate(DateUtils.getEndDate(flDeliveryAddress.getStartDate(), zoneResDTOO.getDeliveryTerm(),ParameterConst.DELIVERY_TERM_DAYS));
-								
-							}
-						}
-					}
-				}
-			}
-		}
 	}
-	
+
+	/*#17087 zonal set*/
+	public void setzonalTest(boolean zonalCheck) {
+		this.zonalTest = zonalCheck;
+	}	
     /**
 	 * Gets the qt award so.
 	 *
