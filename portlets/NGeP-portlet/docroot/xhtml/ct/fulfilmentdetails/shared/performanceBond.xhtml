@@ -155,15 +155,15 @@
 								(ctBackingBean.managedBean.ctAttachmentLatest.attachmentId == null and ctBackingBean.managedBean.ctAttachmentLatest.tempAttachmentId == null))}"    
 						     action="#{ctBackingBean.setBondWaiverToTable()}" update="@all" partialSubmit="true"
 						     rendered="#{!ctBackingBean.managedBean.viewContract}"
-						    oncomplete="tableBondWidget.paginator.endLink.click();"/>
+						    />
 					<!-- and ctBackingBean.managedBean.ctContractAmount.bondReq  -->
 					</td>
 				</tr>
 			</table>
 			
 			<!-- START TABLE WAIVER -->
-			<p:dataTable id="tableWaiver" var="varWaiver" rowIndexVar="index" widgetVar="tableBondWidget"
-				
+			<p:dataTable id="tableWaiver" var="varWaiver" rowIndexVar="index" widgetVar="tableWaiverWidget" 
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{ctBackingBean.managedBean.attachmentList}"  rowKey="#{rowKeyObj}">
 				<ac:paginator for="tableWaiver" />	
 						
@@ -207,7 +207,7 @@
 					and ctBackingBean.managedBean.ctContractAmount.bondReq}">
 					<p:ajax  process="@this"></p:ajax>
 				</p:inputText>			
-				<h:outputText value="#{varWaiver.createdBy}" 
+				<h:outputText value="#{varWaiver.ctBondWaiverDetail.referenceNo}" 
 				      style="float:left;text-align:left;"  rendered="#{ctBackingBean.managedBean.viewContract
 				      or !ctBackingBean.managedBean.ctContractAmount.bondReq}"/>
 				</p:column>	
