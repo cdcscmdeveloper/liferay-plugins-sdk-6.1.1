@@ -9,6 +9,8 @@
 		toggleable="true">
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.add.address']}" escape="false"/>
 		<!--#17087 icon tooltip and select radio -->
+		<!-- #17087 zonal flag check -->
+		<c:if test="#{contractRequestBackingBean.zonalTest eq true}">
 		<table style="width: 100%">
 			 <tr>
            		<td colspan="5">
@@ -21,15 +23,18 @@
           			<p:outputLabel value="*" styleClass="mandatory" />
           		</td>
            		<td>
-           			<p:selectOneRadio id="crItemRadio" required="true" value="#{contractRequestBackingBean.managedBean.radioCheckDeliveryDate}">
+           			<p:selectOneRadio id="crGeneralRadio" required="true" value="#{contractRequestBackingBean.managedBean.flRequest.radioCheckDeliveryDate}">
 						<f:selectItem itemLabel="#{lbl['lbl.btn.yes']}" itemValue="true" />
 						<f:selectItem itemLabel="#{lbl['lbl.btn.no']}" itemValue="false" />
 						<p:ajax event="change"
 							listener="#{contractRequestBackingBean.upDateStartDateFromBpm}" 
-							update="addressDataTable:calStartDate"/>                   
+							update="delStartDate"/>                   
            			</p:selectOneRadio>
             	</td>
 			</tr>
+
+		</table>
+		 </c:if>		
 
 		</table>		
 		<p:dataTable id="addressDataTable" var="address"
