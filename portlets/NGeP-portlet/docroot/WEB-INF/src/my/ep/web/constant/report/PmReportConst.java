@@ -33,6 +33,11 @@ public class PmReportConst implements Serializable {
 	public static final String PARAM_PM_USERNAME = "PUSERNAME";
 	public static final String PARAM_PM_IDENTIFICATION_NO = "PIDENNO";
 	public static final String PARAM_PM_ROLE_CODE = "PROLECODE";
+	public static final String PARAM_PM_APPLICANT_NAME = "PAPPLICANTNAME";
+	public static final String PARAM_PM_ACCESS_TYPE_CP = "PACCESSTYPECP";
+	public static final String PARAM_PM_ACCESS_TYPE_MR = "PACCESSTYPEMR";
+	public static final String PARAM_PM_APPLICATION_STATUS = "PAPPLICATIONSTATUS";
+	
 
 	// PM Report Code
 	public static final String PM_LIST_OF_FINACIAL_INSTITUTIONS_RPT_VAL = "PM_001";
@@ -44,10 +49,12 @@ public class PmReportConst implements Serializable {
 	public static final String PM_LIST_OF_EXEMPTED_CONTRACTED_ITEMS_RPT_VAL = "PM_007";
 	public static final String PM_BPK_USER_PROFILE_RPT_VAL = "PM_008";
 	public static final String PM_BPK_ADMIN_PROFILE_RPT_VAL = "PM_009";
+	public static final String PM_NO_OF_CP_AND_MR_ACCESS_APPLICATION_RPT_VAL = "PM_010";
 
 	// Org Category values
 	public static final int ORG_CAT_FEDERAL_GOVT = 0;
 	public static final int ORG_CAT_OTHERS = 1;
+	public static final int ORG_CAT_CP_MR = 2;
 	
 	public PmReportConst() {
 	}
@@ -117,6 +124,13 @@ public class PmReportConst implements Serializable {
 	}
 
 	/**
+	 * @return the pmListOfCompanyProfileAndMarketResearchAccessApplicationRptVal
+	 */
+	public String getPmNoOfCpAndMrAccessApplicationRptVal() {
+		return PM_NO_OF_CP_AND_MR_ACCESS_APPLICATION_RPT_VAL;
+	}
+
+	/**
 	 * @return the orgCatFederalGovt
 	 */
 	public int getOrgCatFederalGovt() {
@@ -128,6 +142,13 @@ public class PmReportConst implements Serializable {
 	 */
 	public int getOrgCatOthers() {
 		return ORG_CAT_OTHERS;
+	}
+
+	/**
+	 * @return the orgCatCpMr
+	 */
+	public static int getOrgCatCpMr() {
+		return ORG_CAT_CP_MR;
 	}
 
 }
