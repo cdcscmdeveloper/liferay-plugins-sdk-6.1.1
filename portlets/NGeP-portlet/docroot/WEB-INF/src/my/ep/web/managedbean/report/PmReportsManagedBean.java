@@ -57,6 +57,9 @@ public class PmReportsManagedBean extends ReportBaseManagedBean {
 	private String userRoleNameSearch;
 	private String selectedRoleCode;
 	private PmUser selectedPmUser;
+	private String applicantName;
+	private String selectedAccessType;
+	private Long selectedApplicationStatus;
 	
 	public PmReportsManagedBean(){}
 
@@ -257,6 +260,20 @@ public class PmReportsManagedBean extends ReportBaseManagedBean {
 	}
 
 	/**
+	 * @return the applicantName
+	 */
+	public String getApplicantName() {
+		return applicantName;
+	}
+
+	/**
+	 * @param applicantName the applicantName to set
+	 */
+	public void setApplicantName(String applicantName) {
+		this.applicantName = applicantName;
+	}
+
+	/**
 	 * @return the serviceType
 	 */
 	public String getServiceType() {
@@ -430,7 +447,32 @@ public class PmReportsManagedBean extends ReportBaseManagedBean {
 		this.selectedPmUser = selectedPmUser;
 	}
 
-	
-	
+	/**
+	 * @return the selectedAccessType
+	 */
+	public String getSelectedAccessType() {
+		return selectedAccessType;
+	}
+
+	/**
+	 * @param selectedAccessType the selectedAccessType to set
+	 */
+	public void setSelectedAccessType(String selectedAccessType) {
+		this.selectedAccessType = selectedAccessType;
+	}
+
+	/**
+	 * @return the selectedApplicationStatus
+	 */
+	public Long getSelectedApplicationStatus() {
+		return selectedApplicationStatus;
+	}
+
+	/**
+	 * @param selectedApplicationStatus the selectedApplicationStatus to set
+	 */
+	public void setSelectedApplicationStatus(Long selectedApplicationStatus) {
+		this.selectedApplicationStatus = selectedApplicationStatus;
+	}
 	
 }
