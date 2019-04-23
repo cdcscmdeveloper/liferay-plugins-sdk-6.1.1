@@ -1302,6 +1302,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				List<Long> statusIds = new ArrayList<Long>();
 				statusIds.add(FulfilmentStatusConst.PO_PENDING_PARTIAL_FL);
 				statusIds.add(FulfilmentStatusConst.PO_PENDING_FULFILMENT);
+				statusIds.add(FulfilmentStatusConst.PO_PENDING_BOTH);
 				
 				Map<String, Long> statusMap = new HashMap<String, Long>();
 				for(Long statusId : statusIds){
@@ -1312,7 +1313,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				}
 				items = new SelectItem[statusDescs.size() + 1];
 				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
-						"lbl.txt.both", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						face.getUserLocale()));
 				int i = 1;
 				for (String statusDesc : statusDescs) {
