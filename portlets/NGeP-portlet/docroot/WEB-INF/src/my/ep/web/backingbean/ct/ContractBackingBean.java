@@ -2376,9 +2376,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		getManagedBean().getCtContractAmount().setBondReq(resDTO.isBondReq());
 		if (resDTO.isBondReq()) {				 
 			getManagedBean().getCtContractAmount().setTotalBondAmt(resDTO.getBondAmount());
-		}// else {
-			//			 getManagedBean().getCtContractAmount().setTotalBondAmt(null);
-		//		 }
+		} else {
+			getManagedBean().getCtContractAmount().setTotalBondAmt(null);
+		}
 	}
 
 	/**
