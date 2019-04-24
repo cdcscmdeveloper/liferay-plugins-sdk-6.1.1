@@ -15,22 +15,26 @@
 		.tree-node-disabled .ui-treenode-label{
 			cursor: pointer !important;
 			opacity: 0.4 !important;
+			margin-bottom: 1px !important;
+			margin-top: 1px !important
 		}
-		.tree-node-disabled .ui-treenode-content > span:nth-child(2){
+		.tree-node-disabled .cus-label-container, 
+		.tree-node-disabled .cus-disabled-checkbox{
+			vertical-align: middle !important;
+			pointer-events: none !important;
+		}
+		.tree-node-disabled .cus-disabled-checkbox{
 			height: 15px !important;
-    		width: 15px !important;
-    		border: 1px solid #dddddd !important;
-   			background: rgb(255, 255, 255) !important;
-    		border-color: #bcbec0 !important;
-   			display: inline-block !important;
-   			border-radius: 0px !important;
-    		opacity: 0.4 !important;
-    		margin-right: 5px !important;
+			width: 15px !important;
+			border: 1px solid #dddddd !important;
+			background: rgb(255, 255, 255) !important;
+			border-color: #bcbec0 !important;
+			display: inline-block !important;
+			border-radius: 0px !important;
+			margin-right: 11px !important;
+			margin-left: 2px !important;
 		}/*not baked to the component ep next gen*/
 	
-		.tree-no-display{
-			display: none !important;
-		}
 	</style>
 
 		<p:messages id="zmMsgs" showDetail="true" autoUpdate="true"
@@ -156,16 +160,25 @@
 									<p:ajax event="unselect" update=":form:zoneAddButton" />
 
 									<p:treeNode  styleClass="#{!location.getState().selectable ? 'tree-node-disabled':''}" type="state">
-										<h:outputText id="stateNodeId" value="#{location.locationName}" />
-										<p:tooltip for="stateNodeId" rendered="#{!location.getState().selectable}" value="#{lbl['lbl.cm.zm.unabletoselect']}" position="top"></p:tooltip>					
+											<p:outputPanel id="stateNodeId" >
+												<p:outputPanel styleClass="cus-disabled-checkbox" rendered="#{!location.getState().selectable}" ></p:outputPanel>
+												<p:outputPanel styleClass="cus-label-container"><h:outputText value="#{location.locationName}" /></p:outputPanel>
+											</p:outputPanel>										
+											<p:tooltip  style="z-index: 999;"   for="stateNodeId" rendered="#{!location.getState().selectable}" value="#{lbl['lbl.cm.zm.unabletoselect']}" position="top"></p:tooltip>					
 									</p:treeNode>
 									<p:treeNode  styleClass="#{!location.getDivision().selectable ? 'tree-node-disabled':''}" type="division">
-										<h:outputText id="divisionNodeId" value="#{location.locationName}" />
-										<p:tooltip for="divisionNodeId" rendered="#{!location.getDivision().selectable}" value="#{lbl['lbl.cm.zm.unabletoselect']}" position="top"></p:tooltip>
+											<p:outputPanel id="divisionNodeId" >
+												<p:outputPanel styleClass="cus-disabled-checkbox" rendered="#{!location.getDivision().selectable}" ></p:outputPanel>
+												<p:outputPanel styleClass="cus-label-container"><h:outputText value="#{location.locationName}" /></p:outputPanel>
+											</p:outputPanel>											
+											<p:tooltip  style="z-index: 999;"  for="divisionNodeId" rendered="#{!location.getDivision().selectable}" value="#{lbl['lbl.cm.zm.unabletoselect']}" position="top"></p:tooltip>
 									</p:treeNode>
 										 <p:treeNode  styleClass="#{!location.getDistrict().selectable ? 'tree-node-disabled':''}" type="district">
-											<h:outputText id="districtNodeId" value="#{location.locationName}" />
-											<p:tooltip for="districtNodeId" rendered="#{!location.getDistrict().selectable}" value="#{lbl['lbl.cm.zm.unabletoselect']}" position="top"></p:tooltip>
+											<p:outputPanel id="districtNodeId" >
+												<p:outputPanel styleClass="cus-disabled-checkbox" rendered="#{!location.getDistrict().selectable}" ></p:outputPanel>
+												<p:outputPanel styleClass="cus-label-container"><h:outputText value="#{location.locationName}" /></p:outputPanel>
+											</p:outputPanel>
+											<p:tooltip style="z-index: 999;" for="districtNodeId"  rendered="#{!location.getDistrict().selectable}" value="#{lbl['lbl.cm.zm.unabletoselect']}" position="top"></p:tooltip>										 
 										</p:treeNode>
 								</p:tree>
 							</div>
