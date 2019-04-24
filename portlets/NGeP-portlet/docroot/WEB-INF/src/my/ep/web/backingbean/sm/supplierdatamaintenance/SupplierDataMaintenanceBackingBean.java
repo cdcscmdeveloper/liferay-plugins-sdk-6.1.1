@@ -313,7 +313,7 @@ public class SupplierDataMaintenanceBackingBean extends
 			throw new EpException(nex.getMessage());
 		} catch (RuntimeException re) {
 			throw new EpException(re.getMessage());
-		}
+				}
 
 		reqDTO = null;
 		getManagedBean().setDisplaySearchPage(true);
@@ -1252,6 +1252,11 @@ public class SupplierDataMaintenanceBackingBean extends
 					throw new EpException(MessageConst.ERROR_722538);
 				}
 			}
+		}
+		
+		if (StringUtils.isNotEmpty(this.getManagedBean().getApproverRemark())
+				&& this.getManagedBean().getApproverRemark().length() > 2500) {
+			throw new EpException(MessageConst.ERROR_71025, new String[] {String.valueOf(this.getManagedBean().getApproverRemark().length())});
 		}
 	}
 
