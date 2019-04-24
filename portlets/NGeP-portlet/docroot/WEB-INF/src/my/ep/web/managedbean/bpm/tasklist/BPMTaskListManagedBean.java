@@ -46,7 +46,9 @@ import my.ep.factory.EpLogger;
 import my.ep.jaxb.fl.dandata.FLDanDataType;
 import my.ep.jaxb.fl.frndata.FLFulFillmentReceivedNoteDataType;
 import my.ep.jaxb.fl.maintenace.cancel.dofulfillment.FLDOFulfillmentCancelReqType;
+import my.ep.jaxb.fl.maintenace.cancel.invoice.FLInvoiceCancelReqType;
 import my.ep.jaxb.fl.maintenace.modification.dofulfillment.FLDOFulfillmentModificationReqType;
+import my.ep.jaxb.fl.maintenace.modification.invoice.FLInvoiceModificationReqType;
 import my.ep.jaxb.fl.stopfullfillmentdata.FLStopFullfillmentDataType;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
@@ -596,6 +598,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						       if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_FAILED_CANCEL_FRN_HT)){
 						    	   retrievePoCoNoForSubmitFailedCancelFRN(worklistItemVO,worklistItemVO.getTaskId());
 						       }
+						       
+						       if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.ACK_MODIFIED_INVOICE_HT)){
+						    	   retrievePoCoNoForAckModifiedInvoice(worklistItemVO,worklistItemVO.getTaskId());
+						       }
+						       
+						       if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_CANCEL_INVOICE_HT)){
+						    	   retrievePoCoNoForCancelInvoice(worklistItemVO,worklistItemVO.getTaskId());
+						       }
 
 						       //end added for #24968
 						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.APPROVE_FRN_HT)){
@@ -837,6 +847,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						       if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_FAILED_CANCEL_FRN_HT)){
 						    	   retrievePoCoNoForSubmitFailedCancelFRN(worklistItemVO,worklistItemVO.getTaskId());
 						       }
+						       
+						       if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.ACK_MODIFIED_INVOICE_HT)){
+						    	   retrievePoCoNoForAckModifiedInvoice(worklistItemVO,worklistItemVO.getTaskId());
+						       }
+						       
+						       if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_CANCEL_INVOICE_HT)){
+						    	   retrievePoCoNoForCancelInvoice(worklistItemVO,worklistItemVO.getTaskId());
+						       }
 						       //end added for #24968
 							}catch(Exception ex){
 								worklistItemVO.setTitle("please check");
@@ -1047,6 +1065,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						       
 						       if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_FAILED_CANCEL_FRN_HT)){
 						    	   retrievePoCoNoForSubmitFailedCancelFRN(worklistItemVO,worklistItemVO.getTaskId());
+						       }
+						       
+						       if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.ACK_MODIFIED_INVOICE_HT)){
+						    	   retrievePoCoNoForAckModifiedInvoice(worklistItemVO,worklistItemVO.getTaskId());
+						       }
+						       
+						       if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_CANCEL_INVOICE_HT)){
+						    	   retrievePoCoNoForCancelInvoice(worklistItemVO,worklistItemVO.getTaskId());
 						       }
 						       //end added for #24968
 						       // Identify if it is a group or individual task
@@ -1467,6 +1493,37 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		if(poCoNumber != null){
 			worklistItemVO.setPocoNo(poCoNumber);
 		}
+	}
+	
+	public void retrievePoCoNoForAckModifiedInvoice(WorklistItemVO worklistItemVO,String taskId) {
+		IInvoiceSO invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		Object obj = getBpmTaskDetails(taskId);
+		FLInvoiceModificationReqType invModObj = (FLInvoiceModificationReqType) obj;
+		reqDTO.setInvoiceId(Long.valueOf(invModObj.getInvoiceId()));
+		resDTO = invoiceSO.retrieveInvoiceByInvoiceId(reqDTO);
+		
+		String poCoNumber = resDTO.getInvoice().getFlFulfilmentOrder().getDocNo();
+		if(poCoNumber != null){
+			worklistItemVO.setPocoNo(poCoNumber);
+		}		
+	}
+	
+	public void retrievePoCoNoForCancelInvoice(WorklistItemVO worklistItemVO,String taskId) {
+		
+		IInvoiceSO invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		Object obj = getBpmTaskDetails(taskId);
+		FLInvoiceCancelReqType invCanObj = (FLInvoiceCancelReqType) obj;
+		reqDTO.setInvoiceId(Long.valueOf(invCanObj.getInvoiceId()));
+		resDTO = invoiceSO.retrieveInvoiceByInvoiceId(reqDTO);
+		
+		String poCoNumber = resDTO.getInvoice().getFlFulfilmentOrder().getDocNo();
+		if(poCoNumber != null){
+			worklistItemVO.setPocoNo(poCoNumber);
+		}		
 	}
 	
 	public Object getBpmTaskDetails(String taskId) {
