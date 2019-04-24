@@ -3,12 +3,16 @@
  */
 package my.ep.web.backingbean.report;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -23,16 +27,23 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.role.IRoleSO;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.rpt.IRPTRequestSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.pm.ProfileManagementStatusConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.role.RoleReqDTO;
 import my.ep.dto.pm.authorization.role.RoleResDTO;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.BaseEntity;
@@ -41,9 +52,11 @@ import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.constant.report.PmReportConst;
@@ -63,7 +76,7 @@ public class PmReportsBackingBean extends
 	private static final String NAV_TO_PMREPORT = "/xhtml/reports/new/pm/pmreportsmain.xhtml";
 
 	private static Map<Long, Object> orgTypeMapper;
-
+	
 	/** The Constant log. */
 	private static final Logger log = EpLogger
 			.getLogger(PmReportsBackingBean.class);
@@ -107,28 +120,36 @@ public class PmReportsBackingBean extends
 			this.getManagedBean().setSearchOrgCategory(PmReportConst.ORG_CAT_FEDERAL_GOVT);
 			retrieveOrgTypeAndOrgName();
 		}
+		else if(PmReportConst.PM_NO_OF_CP_AND_MR_ACCESS_APPLICATION_RPT_VAL.equals(
+				getManagedBean().getReportCode())) {
+			retrieveOrgTypeMap();
+			this.getManagedBean().setSearchOrgCategory(PmReportConst.ORG_CAT_CP_MR);
+		}
 		
 	}
 
 	public void generatePmReport() {
 		IRPTRequestSO rptRequestSO = null;
 		try {
+			LinkedHashMap<String, String> map = constructParamMap();
 			rptRequestSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IRPTRequestSO.class);
 			RPTRequestReqDTO reqDTO = new RPTRequestReqDTO();
-			reqDTO.setParametersMap(constructParamMap());
+			reqDTO.setParametersMap(map);
 			reqDTO.setDefaultOutputType(getManagedBean().getDefaultOutputType());
 			reqDTO.setTempAccess(getManagedBean().isTempAccess());
 			RPTRequestResDTO resDTO = rptRequestSO.generateReport(reqDTO);
 			getPopUpMsg(resDTO.getRequestId() != null ? resDTO.getRequestId()
 					.toString() : "");
 			RequestContext.getCurrentInstance()
-					.execute("confirmationId.show()");
+			.execute("confirmationId.show()");
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new EpException(e.getMessage());
 		} finally {
 			rptRequestSO = null;
+			map = null;
 		}
 
 	}
@@ -180,6 +201,9 @@ public class PmReportsBackingBean extends
 		case PmReportConst.PM_BPK_ADMIN_PROFILE_RPT_VAL:
 			ignoreAtLeastOne = true;
 			constructPm009Map(map);
+			break;
+		case PmReportConst.PM_NO_OF_CP_AND_MR_ACCESS_APPLICATION_RPT_VAL:
+			constructPm010Map(map);
 			break;
 		default:
 			throw new EpException("Report not found.");
@@ -366,6 +390,101 @@ public class PmReportsBackingBean extends
 		}
 	}
 
+	//No of Company Profile and Market Research Access Application
+	private void constructPm010Map(LinkedHashMap<String, String> map) {
+		if (getManagedBean().getSelectedOrgType() != null && 
+				getManagedBean().getSelectedOrgType().getParameterId() != null) {
+			map.put(PmReportConst.PARAM_PM_ORG_TYPE_PARAM_ID, getManagedBean()
+					.getSelectedOrgType().getParameterId().toString());
+		}
+
+		if (getManagedBean().getSelectedOrgProfile() != null) {
+			map.put(PmReportConst.PARAM_PM_ORG_NAME, getManagedBean()
+					.getSelectedOrgProfile().getPmOrgValidity().getOrgName());
+		}
+		
+		if (StringUtils.isNotBlank(getManagedBean().getApplicantName())) {
+			map.put(PmReportConst.PARAM_PM_APPLICANT_NAME, getManagedBean().getApplicantName());
+		}
+		
+		if (StringUtils.isNotBlank(getManagedBean().getSelectedAccessType())) {
+			String accessType = getManagedBean().getSelectedAccessType();
+			if(ParameterConst.DOCTYPE_COMPANY_PROFILE.equalsIgnoreCase(accessType))
+			{
+				map.put(PmReportConst.PARAM_PM_ACCESS_TYPE_CP, "1");
+				map.put(PmReportConst.PARAM_PM_ACCESS_TYPE_MR, "0");
+			}
+			else if(ParameterConst.DOCTYPE_MARKET_RESEARCH.equalsIgnoreCase(accessType))
+			{
+				map.put(PmReportConst.PARAM_PM_ACCESS_TYPE_MR, "1");
+				map.put(PmReportConst.PARAM_PM_ACCESS_TYPE_CP, "0");				
+			}
+			else if((ParameterConst.DOCTYPE_COMPANY_PROFILE + " _ " + ParameterConst.DOCTYPE_MARKET_RESEARCH).equalsIgnoreCase(accessType))
+			{
+				map.put(PmReportConst.PARAM_PM_ACCESS_TYPE_CP, "1");
+				map.put(PmReportConst.PARAM_PM_ACCESS_TYPE_MR, "1");
+			}
+		}
+		
+		if(getManagedBean().getSelectedApplicationStatus() != null){
+			
+			if(getManagedBean().getSelectedApplicationStatus().longValue() == 
+					ProfileManagementStatusConst.PENDING_MARKET_RESEARCH_ACCESS_APPROVAL.longValue()) {			
+				if(("1".equals(map.get(PmReportConst.PARAM_PM_ACCESS_TYPE_CP)) && 
+						"1".equals(map.get(PmReportConst.PARAM_PM_ACCESS_TYPE_MR))) || 
+						StringUtils.isBlank(getManagedBean().getSelectedAccessType())) {
+					map.put(PmReportConst.PARAM_PM_APPLICATION_STATUS, 
+							String.valueOf(getManagedBean().getSelectedApplicationStatus()) 
+							+ "_" + String.valueOf(ProfileManagementStatusConst.PENDING_COMPANY_ACCESS_APPROVAL));
+					
+				} else if("1".equals(map.get(PmReportConst.PARAM_PM_ACCESS_TYPE_CP)) && 
+						"0".equals(map.get(PmReportConst.PARAM_PM_ACCESS_TYPE_MR))) {
+					map.put(PmReportConst.PARAM_PM_APPLICATION_STATUS, 
+							String.valueOf(ProfileManagementStatusConst.PENDING_COMPANY_ACCESS_APPROVAL));
+				} else {
+					map.put(PmReportConst.PARAM_PM_APPLICATION_STATUS, 
+							String.valueOf(getManagedBean().getSelectedApplicationStatus()));
+				}
+			} else {				
+				map.put(PmReportConst.PARAM_PM_APPLICATION_STATUS, 
+						String.valueOf(getManagedBean().getSelectedApplicationStatus()));
+			}
+				
+		
+		}
+		
+		if(getManagedBean().getFromDate() != null && getManagedBean().getToDate() != null) {
+			dateValidation(getManagedBean().getFromDate(), getManagedBean().getToDate());
+			map.put(PmReportConst.PARAM_PM_FROM_DATE, DateUtils.dateToString(
+					CommonConstants.DEFAULT_DATE_FORMAT, getManagedBean()
+					.getFromDate()));
+			map.put(PmReportConst.PARAM_PM_TO_DATE, DateUtils.dateToString(
+					CommonConstants.DEFAULT_DATE_FORMAT, getManagedBean()
+					.getToDate()));
+		} else if(getManagedBean().getFromDate() != null && getManagedBean().getToDate() == null) {
+			throw new EpException(MessageConst.ERROR_REPORT_780055);
+		} else if(getManagedBean().getFromDate() == null && getManagedBean().getToDate() != null) {
+			throw new EpException(MessageConst.ERROR_REPORT_780054);
+		}
+		
+		if(!map.isEmpty()) {
+			if (getManagedBean().getFromDate() == null && getManagedBean().getToDate() == null) {	
+				Calendar now = Calendar.getInstance();
+				Calendar calendar = new GregorianCalendar(now.get(Calendar.YEAR),0,1);	
+				map.put(PmReportConst.PARAM_PM_FROM_DATE, DateUtils.dateToString(
+						CommonConstants.DEFAULT_DATE_FORMAT, calendar.getTime()));
+
+				map.put(PmReportConst.PARAM_PM_TO_DATE, DateUtils.dateToString(
+						CommonConstants.DEFAULT_DATE_FORMAT, new Date()));
+			} 
+		}
+		
+		
+		
+		log.info("Mapping: " + map.toString());
+	}
+	
+	
 	// Item Code, Date From, Date To
 	private void constructExemptionCommonFieldsToMap(
 			LinkedHashMap<String, String> map) {
@@ -406,12 +525,18 @@ public class PmReportsBackingBean extends
 		getManagedBean().setSelectedOrgProfile(null);
 		getManagedBean().setServiceType(null);
 		getManagedBean().setNotFirstRun(false);
-		getManagedBean().setSearchOrgCategory(0);
+		if(getManagedBean().getSearchOrgCategory() == PmReportConst.ORG_CAT_CP_MR)
+			getManagedBean().setSearchOrgCategory(PmReportConst.ORG_CAT_CP_MR);
+		else
+			getManagedBean().setSearchOrgCategory(0);
 		getManagedBean().setSelectedOrgType(null);
 		getManagedBean().setSelectedPmUser(null);
 		getManagedBean().setRoleDescResults(null);
 		getManagedBean().setSelectedRoleDesc(null);
 		getManagedBean().setCurrentActiveOrg(null);
+		getManagedBean().setSelectedAccessType(null);
+		getManagedBean().setApplicantName(null);
+		getManagedBean().setSelectedApplicationStatus(null);
 
 	}
 
@@ -442,17 +567,41 @@ public class PmReportsBackingBean extends
 			searchBean = getOrgTypeSearchBean("orgTypeFederalList");
 		} else if (getManagedBean().getSearchOrgCategory() == PmReportConst.ORG_CAT_OTHERS) {
 			searchBean = getOrgTypeSearchBean("orgTypeOthersList");
+		} else if(getManagedBean().getSearchOrgCategory() == PmReportConst.ORG_CAT_CP_MR) {
+			searchBean = getOrgTypeSearchBean("orgTypeForCPandMR");
 		}
-		SelectItem[] items = null;
+		SelectItem[] items = null, filteredItems = null;
 		if (searchBean != null) {
 			searchBean.getSortColumns();
 			items = getDropdownValuesBySearchBean(
 					ParameterTypeConst.ORGANISATION_TYPES, searchBean);
+			
+			if(getManagedBean().getSearchOrgCategory() == PmReportConst.ORG_CAT_CP_MR) {
+				int index = 1;
+				filteredItems = new SelectItem[6];
+				filteredItems[0] = items[0];
+				for(int i = 1; i < items.length; i++) {
+					IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+					ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+					parameterReqDTO.setParameterId((Long)items[i].getValue());
+					ParameterResDTO parameterResDTO = parameterSO.retrieveParameterById(parameterReqDTO);
+					PmParameter pmParameter = parameterResDTO.getPmParameter();
+					if(pmParameter.getParameterCode().equalsIgnoreCase(ParameterConst.ORG_TYPE_GLC)||
+							pmParameter.getParameterCode().equalsIgnoreCase(ParameterConst.ORG_TYPE_STATUTORY_BODY)||
+							pmParameter.getParameterCode().equalsIgnoreCase(ParameterConst.ORG_TYPE_STATE_STATUTORY_BODY)||
+							pmParameter.getParameterCode().equalsIgnoreCase(ParameterConst.ORG_TYPE_LOCAL_AUTHORITY)||
+							pmParameter.getParameterCode().equalsIgnoreCase(ParameterConst.ORG_TYPE_STATE_GOVT)) {
+						filteredItems[index++] = items[i];
+					}
+				}
+				return filteredItems;
+			}
 		}
 
 		return items;
 	}
-
+	
 	private ISearchBean<PmParameterDesc> getOrgTypeSearchBean(String componentId) {
 		ISearchBean<PmParameterDesc> orgTypeSearchBean = super
 				.createSearchBean(PmParameterDesc.class, componentId);
@@ -517,6 +666,31 @@ public class PmReportsBackingBean extends
 									RoleCode.AUDITOR_INTERNAL.value()), getFacesScopes()
 							.hasRoleUser(RoleCode.JABATAN_ADMIN.value()),
 					getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())));
+		} else if (PmReportConst.PM_NO_OF_CP_AND_MR_ACCESS_APPLICATION_RPT_VAL
+				.equals(getManagedBean().getReportCode())) {
+			
+				if(getManagedBean().getSelectedOrgType()
+						.getParameterId() != null) {
+					
+					sb.append("|orgTypeCode.parameterId^");
+					sb.append(getManagedBean().getSelectedOrgType()
+							.getParameterId());
+				}
+				else {
+					sb.append("|orgTypeCode.parameterCode^");
+					sb.append(OrganizationType.GOVERNMENT_LINK_COMPANIES.value());
+					sb.append(",");
+					sb.append(OrganizationType.STATUTORY_BODIES.value());
+					sb.append(",");
+					sb.append(OrganizationType.STATUTORY_BODIES_STATE.value());
+					sb.append(",");
+					sb.append(OrganizationType.LOCAL_AUTHORITY.value());
+					sb.append(",");
+					sb.append(OrganizationType.STATE_GOVERNMENT.value());
+					sb.append("^");
+					sb.append(SearchOperator.OPERATOR_IN.value());
+				}
+	
 		}
 
 		return sb.toString();
@@ -759,7 +933,7 @@ public class PmReportsBackingBean extends
 	}
 	
 	private void dateValidation(Date dateFrom, Date dateTo){
-
+		
 		if (dateFrom == null || dateTo == null) {
 			throw new EpException(MessageConst.ERROR_715050);
 		}
@@ -775,5 +949,60 @@ public class PmReportsBackingBean extends
 			}
 		}
 
+	}
+	
+	/**
+	 * The method used for generating a list of available meeting status
+	 * as selection.
+	 * 
+	 * @return the selection list of meeting status
+	 */
+	public SelectItem[] getApplicationStatusDropdown() {
+		SelectItem[] items = null;     
+		IStatusSO statusSO = null;
+		StatusResDTO resDTO = null;
+		StatusReqDTO reqDTO = null;
+		List<PmStatusDesc> newStatusDescList = new ArrayList<PmStatusDesc>();
+		try {
+			int i = 1;
+			statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+			reqDTO = new StatusReqDTO();
+			reqDTO.setModuleCode(ModuleCodeConst.PROFILE_MANAGEMENT);
+			reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+			resDTO = statusSO.retrieveStatusDescListByModule(reqDTO);
+			
+			for(PmStatusDesc pmStatusDesc: resDTO.getStatusDescList())
+			{
+				//PENDING_MARKET_RESEARCH_ACCESS_APPROVAL(75000) has the same description with PENDING_COMPANY_ACCESS_APPROVAL
+				//For display purpose, by default it uses PENDING_MARKET_RESEARCH_ACCESS_APPROVAL
+				if(pmStatusDesc.getPmStatus().getStatusId().longValue() == ProfileManagementStatusConst.PENDING_MARKET_RESEARCH_ACCESS_APPROVAL.longValue() 
+						|| pmStatusDesc.getPmStatus().getStatusId().longValue() == ProfileManagementStatusConst.ACCESS_COMPLETED.longValue() 
+						|| pmStatusDesc.getPmStatus().getStatusId().longValue() == ProfileManagementStatusConst.ACCESS_REJECTED.longValue() 
+						|| pmStatusDesc.getPmStatus().getStatusId().longValue() == ProfileManagementStatusConst.PENDING_ACTIVATION.longValue() 
+						|| pmStatusDesc.getPmStatus().getStatusId().longValue() == ProfileManagementStatusConst.ACCESS_APPROVED.longValue() 
+						|| pmStatusDesc.getPmStatus().getStatusId().longValue() == ProfileManagementStatusConst.ACCESS_CANCELLED.longValue())
+				{
+					newStatusDescList.add(pmStatusDesc);
+					if(newStatusDescList.size() == 5)
+						break;
+				}
+			}
+			
+			items = new SelectItem[newStatusDescList.size() + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+
+			for (PmStatusDesc statusDesc : newStatusDescList) {
+				items[i++] = new SelectItem(statusDesc.getPmStatus().getStatusId(), statusDesc.getStatusName());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}finally{
+			resDTO = null;
+			reqDTO = null;
+			statusSO = null;
+		}
+		return items;
 	}
 }
