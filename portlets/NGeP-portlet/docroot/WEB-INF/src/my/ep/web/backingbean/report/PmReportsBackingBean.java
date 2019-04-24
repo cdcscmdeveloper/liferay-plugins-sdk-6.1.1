@@ -149,7 +149,6 @@ public class PmReportsBackingBean extends
 			throw new EpException(e.getMessage());
 		} finally {
 			rptRequestSO = null;
-			map = null;
 		}
 
 	}
