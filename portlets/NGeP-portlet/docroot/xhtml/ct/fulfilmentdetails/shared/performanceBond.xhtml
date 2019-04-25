@@ -154,16 +154,19 @@
 								|| (ctBackingBean.managedBean.ctAttachmentLatest != null and
 								(ctBackingBean.managedBean.ctAttachmentLatest.attachmentId == null and ctBackingBean.managedBean.ctAttachmentLatest.tempAttachmentId == null))}"    
 						     action="#{ctBackingBean.setBondWaiverToTable()}" update="@all" partialSubmit="true"
+						     oncomplete="tableWaiverWidget.paginator.endLink.click();"
 						     rendered="#{!ctBackingBean.managedBean.viewContract}"
 						    />
 					<!-- and ctBackingBean.managedBean.ctContractAmount.bondReq  -->
 					</td>
 				</tr>
 			</table>
-			
+			</p:outputPanel>
+			<br></br>
 			<!-- START TABLE WAIVER -->
 			<p:dataTable id="tableWaiver" var="varWaiver" rowIndexVar="index" widgetVar="tableWaiverWidget" 
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				render="#{ctBackingBean.managedBean.attachmentList.size >0}"
 				value="#{ctBackingBean.managedBean.attachmentList}"  rowKey="#{rowKeyObj}">
 				<ac:paginator for="tableWaiver" />	
 						
@@ -224,7 +227,7 @@
 				</p:column>
 			</p:dataTable>
 			<br></br>
-		</p:outputPanel>
+		
 		
 		<!-- END TABLE WAIVER -->
 		<!-- END LOG : 13847, by Fahmi 22032019 -->
