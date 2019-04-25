@@ -607,7 +607,7 @@ public class BSVAttendanceBackingBean extends
 		this.getManagedBean().setScQtBriefingAttendance(null);
 		ScQtBsvRegistration briefingRegistration = (ScQtBsvRegistration) event
 				.getObject();
-this.getManagedBean().setSelectedbriefRegistrationEnableDisable(briefingRegistration);
+		this.getManagedBean().setSelectedbriefRegistrationEnableDisable(briefingRegistration);
 		getAttandanceDtlsBySelectedRegistartion(briefingRegistration);
 		setSlectedHeaderName(briefingRegistration.getSupplier()
 				.getCompanyName().concat("  ").concat(">"));
@@ -800,7 +800,20 @@ this.getManagedBean().setSelectedbriefRegistrationEnableDisable(briefingRegistra
 						
 					}
 				}
+				
+				
+				/*calculate attendance
+				 * 
+				 */
+				int count = 0;
+				
+				for (ScQtBsvRegistration registration : briefRegList) {
 
+					List<ScQtBsvAttendance> bsvAttandance = registration
+							.getBsvAttendance();	
+					
+					count = count + getAttandanceCount(bsvAttandance);
+				}
 				/*
 				 * List<ScQtBsvRegistration> registrationList = new
 				 * ArrayList<ScQtBsvRegistration>(); for (ScQtBsvRegistration
@@ -808,8 +821,10 @@ this.getManagedBean().setSelectedbriefRegistrationEnableDisable(briefingRegistra
 				 * scqtbriefReg.setSmMofAccount(new SmMofAccount());
 				 * registrationList.add(scqtbriefReg); }
 				 */
+				this.getManagedBean().setAttandance_count(count);
 				this.getManagedBean().setBriefingRegistrationList(briefRegList);
-
+				
+				log.info("attandanceCount = "+count);
 			}
 
 		} finally {
