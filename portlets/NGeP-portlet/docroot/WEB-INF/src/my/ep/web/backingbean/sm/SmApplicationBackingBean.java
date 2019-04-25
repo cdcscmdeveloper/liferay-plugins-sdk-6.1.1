@@ -313,7 +313,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	// harris
-	public void onDeleteSupDocFileAttachment(SmApplSupportDoc doc) {
+	public void onDeleteSupDocFileAttachment(SmApplSupportDoc doc, int index) {
+		this.getManagedBean().setAttachedFileIndex(index);
 		getManagedBean().setSupportDoc(doc);
 		RequestContext.getCurrentInstance().execute(
 				"confirmDeleteSupDocDialog.show();");
@@ -9146,6 +9147,11 @@ public class SmApplicationBackingBean extends
 		log.info("****** Assign Supporting Doc *******");
 		getManagedBean().setSupportDoc(doc);
 	}
+	
+	public void assignSelectedSupportDocIndex(SmApplSupportDoc doc, int index) {
+		this.getManagedBean().setAttachedFileIndex(index);
+		getManagedBean().setSupportDoc(doc);
+	}
 
 	/**
 	 * Handle and save file attachment for resubmit supproting doc file(s).
@@ -11908,6 +11914,6 @@ public class SmApplicationBackingBean extends
 					SmCommonUtil.getMessage("lbl.sm.alert.other.active.transaction",
 							new String[] { labelNameVal })));			
 		}
-	}	
+	}
 
 }
