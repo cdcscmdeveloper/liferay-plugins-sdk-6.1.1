@@ -640,11 +640,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 		}
 		//LOG : 13847, by Fahmi 22032019
-		int i = 0;
 		ctBB.getManagedBean().setAttachmentList(null);
 		for(CtAttachment waivedAttach :ctBB.getManagedBean().getContractVer().getBondWaiverAttachments()){
 			//SET DATA TO LATEST WAIVER			
-			if(i == 0){
+			if(waivedAttach.isRecordStatus()){
 				if(waivedAttach.getCtBondWaiverDetail() == null){
 					waivedAttach.setCtBondWaiverDetail(new CtBondWaiverDetail());
 				}
@@ -658,7 +657,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}else{//SET DATA TO TABLE WAIVER
 				ctBB.getManagedBean().getAttachmentList().add(SerializationUtils.clone(waivedAttach));
 			}
-			i++;
 		}
 		if(ctBB.getManagedBean().getContractVer().getBondWaiverAttachments().size() <=0){
 			ctBB.getManagedBean().setCtAttachmentLatest(new CtAttachment());
