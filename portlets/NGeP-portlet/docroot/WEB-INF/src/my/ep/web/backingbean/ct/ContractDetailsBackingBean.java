@@ -1167,10 +1167,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					for (CtContractAmount contractAmt : ctBB.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getCtContractAmounts()) {
 						if (getManagedBean().getAsAtDate().getTime() >= contractAmt.getEffDate().getTime() 
 								&& getManagedBean().getAsAtDate().getTime() <= contractAmt.getExpDate().getTime()) {
-							// Bug #25359
-							if (contractAmt.getCtPerformanceBonds().size() <= 0
-							&& (ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds() != null 
-							|| ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds().isEmpty())) {
+							if (contractAmt.getCtPerformanceBonds().size() > 0 
+									&& (ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds() == null 
+									|| ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds().isEmpty())) {
 								setTabValue("PB");
 								throw new EpException(MessageConst.ERROR_100022, 
 										new String[]{ResourceBundleUtils.getMessage("lbl.ct.menu.performance.bond", 
