@@ -4,7 +4,6 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 	<p:blockUI block=":form" widgetVar="blockWidget">
 		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
@@ -55,16 +54,6 @@
 			</div>
 		</p:panel>
 	</p:dialog>
-
-<!-- 20190417@asyrafhaziq_12095 - Start -->
-	<ui:param name="cancel" value="CANCEL" />
-	<ui:param name="cancelSQ" value="cancelSQ" />
-	<ac:cancelRejectPopup id="#{cancelSQ}" widget="cancelSQ" width="30%"
-		height="100"
-		okAction="#{simpleQuoteBackingBean.submitSimpleQuote(cancel)}"
-		title="#{lbl['lbl.cancel.details']}"
-		content="#{lbl['lbl.cancel.dialog.confirm.message']}" update="@this" />
-<!-- 20190417@asyrafhaziq_12095 - End -->
 
 	<table style="width: 100%">
 		<tr>
@@ -128,7 +117,7 @@
 			<p:commandButton value="#{lbl['lbl.btn.save']}"
 				onclick="blockWidget.show();" oncomplete="blockWidget.hide();"
 				action="#{simpleQuoteBackingBean.saveSimpleQuote('Save')}"
-				rendered="#{!isPidExpired}" update="@form" process="@all" />
+				rendered="#{!isPidExpired}" update="@form" process="@all" immediate="true" />
 
 			<ui:repeat var="bpmAction"
 				value="#{simpleQuoteBackingBean.managedBean.outComes}">
@@ -148,8 +137,9 @@
 				</h:panelGroup>
 				<h:panelGroup rendered="#{bpmAction eq 'CANCEL'}">
 					<p:commandButton value="#{lbl[buttonLabel]}" process="@this"
-						update="@this" styleClass="ui-button" onclick="cancelSQ.show();"
-						/>
+						update="@this" styleClass="ui-button"
+						onclick="blockWidget.show();" oncomplete="blockWidget.hide();"
+						actionListener="#{simpleQuoteBackingBean.submitSimpleQuote(bpmAction)}" />
 				</h:panelGroup>
 			</ui:repeat>
 
