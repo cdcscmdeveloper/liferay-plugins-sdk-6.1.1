@@ -794,6 +794,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		deliveryAddr.setReceivingGrp(getManagedBean().getFlManualAddress().getReceivingGrp());
 		
 		deliveryAddr.setAddAddress(true);//#21489
+		deliveryAddr.setSelectedPtjCodeNameValue(getManagedBean().getFlManualAddress().getSelectedPtjCodeNameValue());//#24353
 		getManagedBean().setSelectedDelAddr(deliveryAddr);
 		getManagedBean().getFlRequest().getFlDeliveryAddresses().add(deliveryAddr);
 		selectAddrEvent();
@@ -5470,7 +5471,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	//start added for #24353 
 	public void addChargedPmAddressType() {
 		getManagedBean().getFlManualAddress().setReceivingGrp(selectedPmAddressType);
-		getManagedBean().getFlManualAddress().getFlAddress().setSelectedPtjCodeNameValue(getManagedBean().getFlManualAddress().getReceivingGrp().getPmOrgProfile().getPmOrgValidity().getOrgCode() 
+		getManagedBean().getFlManualAddress().setSelectedPtjCodeNameValue(getManagedBean().getFlManualAddress().getReceivingGrp().getPmOrgProfile().getPmOrgValidity().getOrgCode() 
 				+ " " + getManagedBean().getFlManualAddress().getReceivingGrp().getPmOrgProfile().getPmOrgValidity().getOrgName()
 				+ "\n\n" + getManagedBean().getFlManualAddress().getReceivingGrp().getPtjAddress());
 		getManagedBean().getFlManualAddress().setNewRecord(true);
