@@ -456,7 +456,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				break;
 			}
 		}
-		String gfmasEnable = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.GFMAS_ENABLED);
+//		String gfmasEnable = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.GFMAS_ENABLED);
+//		log.info("gfmasEnable="+gfmasEnable);
+		String gfmasEnable="true";
 		if(!gfmasEnable.equalsIgnoreCase("true")){
 			getManagedBean().setEspkb(true);
 		}
@@ -1288,7 +1290,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().setMinistryProfileId(retrieveMinistryOrgProfile(
 				getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId()).getOrgProfileId());
 		
-		String gfmasEnable = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.GFMAS_ENABLED);
+//		String gfmasEnable = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.GFMAS_ENABLED);
+		String gfmasEnable="true";
 		if(!gfmasEnable.equalsIgnoreCase("true")){
 			getManagedBean().setEspkb(true);
 		}
@@ -1300,7 +1303,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	}
 
 	private void getEspkbCommitmentNo() {
-		String gfmasEnable = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.GFMAS_ENABLED);
+//		String gfmasEnable = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.GFMAS_ENABLED);
+		String gfmasEnable="true";
 		if(!gfmasEnable.equalsIgnoreCase("true")){//isEspkb
 			if(getManagedBean().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
 					|| getManagedBean().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)
@@ -3905,6 +3909,21 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 			reqDTO.setContractItemSearchBean(searchBean);
 			resDTO = contractItemSO.searchContractItem(reqDTO);
+			
+			PmParameter Pricetype = contractItemSO.searchContractItemPriceType(reqDTO);
+			
+			if(ParameterConst.PRICE_TYPE_STANDARD.equals(Pricetype.getParameterCode())){
+				getManagedBean().setStandardPrice(true);
+				
+			}else if(ParameterConst.PRICE_TYPE_ZONAL_STANDARD.equals(Pricetype.getParameterCode())){
+				getManagedBean().setZonalPrice(true);
+			}else if(ParameterConst.PRICE_TYPE_ZONAL_TIER.equals(Pricetype.getParameterCode()) || ParameterConst.PRICE_TYPE_ZONAL_TARIFF.equals(Pricetype.getParameterCode())){
+				getManagedBean().setZonalTierPrice(true);
+				getManagedBean().setZonalPrice(false);
+			}
+			if(ParameterConst.PRICE_TYPE_TARIFF.equals(Pricetype.getParameterCode()) || ParameterConst.PRICE_TYPE_ZONAL_TARIFF.equals(Pricetype.getParameterCode())) {
+				getManagedBean().setTariffPrice(true);
+			}
 
 			return resDTO.getContractItemResultBean();
 		}
@@ -3987,6 +4006,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				flItemAddr.setScRequestItem(flTempItem.getScRequestItem());
 				flItemAddr.setCmItem(flTempItem.getScRequestItem().getCmItem());
 				flItemAddr.setPmUomId(flTempItem.getScRequestItem().getUom().getUomId());
+				flItemAddr.setItemSku(contractItemResDTO.getCtContractItem().getSku());  /*#16344  */
 				if(flTempItem.getScRequestItem().getCmItem()!=null) {
 					flItemAddr.setItemCode(flTempItem.getScRequestItem().getCmItem().getExtensionCode());
 				} else {
@@ -5776,7 +5796,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				}
 			}
 		}
-		String gfmasEnable = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.GFMAS_ENABLED);
+//		String gfmasEnable = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.GFMAS_ENABLED);
+		String gfmasEnable="true";
 		if(gfmasEnable.equalsIgnoreCase("true")){
 			if(countChargelineLimit > FulfilmentConst.GFMAS_CHARGELINE_LIMIT){
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
@@ -6189,6 +6210,95 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 	}
+	
+	
+	/*#16344 To retrive zonal tree, value & item price when search & expand while pop up*/
+	/*START*/
+	public BigDecimal searchunitprice( List<CtItemPrice> ctItemPrices ){
+		if (ctItemPrices != null && ctItemPrices.size() > 0 ){
+			return ctItemPrices.get(0).getUnitPrice();
+		}
+		else {
+			return new BigDecimal(0);
+		}
+	}
+	
+	//public void SetSelectedZone(List<CtContractZone> ctContractZones,ScRequestItem item){
+	public void SetSelectedZone(CtContractItem contractItem){	
+		ContractItemReqDTO reqDTO = new ContractItemReqDTO();
+		ContractItemResDTO ciItemResDTO = null;
+		reqDTO.setContractId(contractItem.getCtContractVer().getCtContract().getContractId());
+		reqDTO.setItemId(contractItem.getScRequestItem().getRequestNoteItemId());
+		reqDTO.setContractVerId(contractItem.getCtContractVer().getCtContract().getLatestContractVer().getContractVerId());
+		IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,	IContractItemSO.class);
+		
+		if(ParameterConst.ITEM_TYPE_SERVICE.equals(contractItem.getItemType().getParameterCode())){
+			getManagedBean().setServiceItem(true);
+			reqDTO.setFetchMaxQty(true);
+			if(contractItem.getScRequestItem().getTplSpecQuestion()!=null) {
+				getManagedBean().setUomFrequency(contractItem.getScRequestItem().getTplSpecQuestion().getClUomFrequency());
+				getManagedBean().setUomPerYear(contractItem.getScRequestItem().getTplSpecQuestion().getClUomPerYear());
+				getManagedBean().setUomPerMonth(contractItem.getScRequestItem().getTplSpecQuestion().getClUomPerMonth());
+				getManagedBean().setUomPerDay(contractItem.getScRequestItem().getTplSpecQuestion().getClUomPerDay());
+			}
+			if(ParameterConst.PRICE_TYPE_STANDARD.equals(contractItem.getPriceType().getParameterCode())){
+				ciItemResDTO = contractItemSO.getPricePerUom(reqDTO);
+				getManagedBean().setPricePerUom(ciItemResDTO.getItemPrice());
+				getManagedBean().setMinOrderQuantity(contractItemSO.getItemMaxQuantity(reqDTO).getCtItemMaxQuantity().getMaxQuantity().doubleValue());
+			}
+			getManagedBean().setUomName(contractItem.getScRequestItem().getUom() != null ? contractItem.getScRequestItem().getUom().getUomName() : "");
+			
+		} else {
+			// Try to get agency ceiling quantity for Item
+			reqDTO.setFetchMaxQty(true);
+			reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
+			ciItemResDTO = contractItemSO.getItemCeilingQuantity(reqDTO);
+			
+			if(ciItemResDTO.getItemCeilingQuantity()!=null && ciItemResDTO.getItemCeilingQuantity().doubleValue()>0) {
+				getManagedBean().setCeilingQuantity(ciItemResDTO.getItemCeilingQuantity());
+			} else { // have to set Item Ceiling Quantity
+				getManagedBean().setCeilingQuantity(BigDecimal.ZERO);
+			}
+			reqDTO.setContractVerId(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getContractVerId());
+			reqDTO.setFetchQuantityOnly(true);
+			ciItemResDTO = contractItemSO.getItemMaxQuantity(reqDTO);
+			getManagedBean().setMaxOrderQuantity(ciItemResDTO.getItemCeilingQuantity());
+		}
+		
+		if(ParameterConst.PRICE_TYPE_STANDARD.equals(contractItem.getPriceType().getParameterCode())){
+			getManagedBean().setStandardPrice(true);
+			
+		}else if(ParameterConst.PRICE_TYPE_ZONAL_STANDARD.equals(contractItem.getPriceType().getParameterCode())){
+			getManagedBean().setZonalPrice(true);
+		}else if(ParameterConst.PRICE_TYPE_ZONAL_TIER.equals(contractItem.getPriceType().getParameterCode()) || ParameterConst.PRICE_TYPE_ZONAL_TARIFF.equals(contractItem.getPriceType().getParameterCode())){
+			getManagedBean().setZonalTierPrice(true);
+			getManagedBean().setZonalPrice(false);
+		}
+		if(ParameterConst.PRICE_TYPE_TARIFF.equals(contractItem.getPriceType().getParameterCode()) || ParameterConst.PRICE_TYPE_ZONAL_TARIFF.equals(contractItem.getPriceType().getParameterCode())) {
+			getManagedBean().setTariffPrice(true);
+		}
+		ciItemResDTO = contractItemSO.retrieveItemPriceAndZone(reqDTO);
+		getManagedBean().setReqItemInfoList(ciItemResDTO.getCtItemPriceList());
+		List<FLCtSupplierItemVO> supplierItems=new ArrayList<FLCtSupplierItemVO>();
+		if(ciItemResDTO.getCtItemPriceList() != null && ciItemResDTO.getCtItemPriceList().size() >0){
+			for (CtItemPrice contractItemPrice : ciItemResDTO.getCtItemPriceList() ) {
+				if(null != contractItemPrice.getCtContractZone()){
+					CtContractZone ctContractZone = contractItemPrice.getCtContractZone();
+					if(ctContractZone.getCtContractZoneDtls() != null && ctContractZone.getCtContractZoneDtls().size()>0){
+						FLCtSupplierItemVO itemPriceVO=new FLCtSupplierItemVO();
+						itemPriceVO.setSupplierItemPrice(contractItemPrice);
+						itemPriceVO.setItemZoneTree(LocationSingleton.getInstance().constuctContractTreeNode(ctContractZone));
+						supplierItems.add(itemPriceVO);
+					}
+				} else {
+					FLCtSupplierItemVO itemPriceVO=new FLCtSupplierItemVO();
+					itemPriceVO.setSupplierItemPrice(contractItemPrice);
+					supplierItems.add(itemPriceVO);
+				}
+			}
+			getManagedBean().setSupplierItemPriceList(supplierItems);
+		}
+	} /*END*/
 }
 	
 
