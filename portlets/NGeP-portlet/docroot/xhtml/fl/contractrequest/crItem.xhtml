@@ -36,7 +36,7 @@
 		</table>
 		 </c:if>		
 
-		</table>		
+		</p:panel>		
 		<p:dataTable id="addressDataTable" var="address"
 			value="#{contractRequestBackingBean.managedBean.flRequest.flDeliveryAddresses}"
 			rowIndexVar="index"
@@ -354,7 +354,6 @@
 					onclick="delItemDlg.hide()" type="button" />
 			</div>
 		</p:confirmDialog>		
-	</p:panel>
 	<p:dialog id="addManualDelAddrDialog" header="#{lbl['lbl.fl.btn.other.address']}"
 		widgetVar="addManualDeliveryAddr" showEffect="fade" hideEffect="fade"
 		 modal="true" width="900px" resizable="false" position="top">
@@ -517,7 +516,7 @@
 						disabled="true"
 						label="#{lbl['lbl.fl.manual.add.delivery.add.new']}"
 						readonly="true"
-						value="#{contractRequestBackingBean.managedBean.flManualAddress.flAddress.selectedPtjCodeNameValue}"> 
+						value="#{contractRequestBackingBean.managedBean.flManualAddress.selectedPtjCodeNameValue}"> 
 						</p:inputTextarea>
 					</td>
 					<td width="52" rowspan="2">
@@ -600,7 +599,7 @@
 					<td><p:inputText type="hidden" id="chargeOrgProfileNewHidden"
 							required="#{contractRequestBackingBean.managedBean.required}"
 							label="#{lbl['lbl.fl.manual.add.delivery.add.new']}" maxlength="85"
-							value="#{contractRequestBackingBean.managedBean.flManualAddress.flAddress.selectedPtjCodeNameValue}"
+							value="#{contractRequestBackingBean.managedBean.flManualAddress.selectedPtjCodeNameValue}"
 							size="34"></p:inputText>
 					</td>
        				<td></td>
