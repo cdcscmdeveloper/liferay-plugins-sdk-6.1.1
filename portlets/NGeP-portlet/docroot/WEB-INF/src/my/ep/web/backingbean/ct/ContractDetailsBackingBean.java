@@ -1334,7 +1334,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 							temp++;
 						}
 					}
-					if (ctBB.getManagedBean().getCtAttachmentLatest().getFileName() == null || "".equalsIgnoreCase(ctBB.getManagedBean().getCtAttachmentLatest().getFileName())) {
+					if (ctBB.getManagedBean().getCtAttachmentLatest().getFileName() != null || !"".equalsIgnoreCase(ctBB.getManagedBean().getCtAttachmentLatest().getFileName())) {
 						temp++;
 					}
 					if(temp == 0){
