@@ -3097,7 +3097,7 @@ public class SmCommonUtil {
 	public static SmMofAccount getMofAccountBySuppIdAndSuppType(
 			Long supplierId, String suppType) {
 		SmMofAccount mofAcc = null;
-		if (supplierId != null && StringUtils.isNotBlank(suppType)) {
+		if (supplierId != null) {
 			MofAccountReqDTO reqDTO = new MofAccountReqDTO();
 			reqDTO.setSupplierType(suppType);
 			reqDTO.setSupplierId(supplierId);
