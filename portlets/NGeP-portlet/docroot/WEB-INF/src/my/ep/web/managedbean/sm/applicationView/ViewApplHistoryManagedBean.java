@@ -8,14 +8,13 @@ import javax.faces.bean.SessionScoped;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
-import my.ep.constant.sm.SupplierManagementConst;
 import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
 import my.ep.dto.sm.bulkApplication.SmBulkApplicationVO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmAttachment;
-import my.ep.persistence.entity.sm.SmMofCert;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.web.backingbean.trackingdiary.PmTrackingDiaryBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -40,6 +39,7 @@ public class ViewApplHistoryManagedBean extends
 	private List<SmBulkApplOverlapCatVO> overlapCategoryVOList;
 	private List<SmBulkApplicationVO> smBulkApplicationVO;
 	private SmAttachment cancellationAttachment;
+	private SmMofAccount currMof;
 
 	public ViewApplHistoryManagedBean() {
 
@@ -97,13 +97,17 @@ public class ViewApplHistoryManagedBean extends
 					.retrieveApplicationHistoryUsingNativeQuery(reqDTO)
 					.getObjectArrResultBean();
 
-//			int i = 0;
-//			for (Object[] obj : retVal.getResultList()) {
-//				obj[6] = getWorkflowStatus(Long.parseLong(obj[10] + ""), obj[6]
-//						+ "");
-//				retVal.getResultList().set(i, obj);
-//				i++;
-//			}
+			if (getCurrMof() == null) {
+				setCurrMof(SmCommonUtil.getMofAccountBySuppIdAndSuppType(reqDTO
+						.getSmSupplier().getSupplierId(), null));
+			}
+			// int i = 0;
+			// for (Object[] obj : retVal.getResultList()) {
+			// obj[6] = getWorkflowStatus(Long.parseLong(obj[10] + ""), obj[6]
+			// + "");
+			// retVal.getResultList().set(i, obj);
+			// i++;
+			// }
 			return retVal;
 		}
 	}
@@ -112,8 +116,7 @@ public class ViewApplHistoryManagedBean extends
 		SmWorkflowStatus st = SmCommonUtil
 				.getCurrentActiveWokFlowStatus(applId);
 		String retVal = statusOri;
-		if (st.getPmStatus() != null
-				&& st.getPmStatus().getStatusId() != null) {
+		if (st.getPmStatus() != null && st.getPmStatus().getStatusId() != null) {
 			PmStatusDesc sd = SmCommonUtil.getStatusDescByStatusId(st
 					.getPmStatus().getStatusId());
 			if (sd != null) {
@@ -172,7 +175,8 @@ public class ViewApplHistoryManagedBean extends
 		return overlapCategoryVOList;
 	}
 
-	public void setOverlapCategoryVOList(List<SmBulkApplOverlapCatVO> overlapCategoryVOList) {
+	public void setOverlapCategoryVOList(
+			List<SmBulkApplOverlapCatVO> overlapCategoryVOList) {
 		this.overlapCategoryVOList = overlapCategoryVOList;
 	}
 
@@ -180,7 +184,8 @@ public class ViewApplHistoryManagedBean extends
 		return smBulkApplicationVO;
 	}
 
-	public void setSmBulkApplicationVO(List<SmBulkApplicationVO> smBulkApplicationVO) {
+	public void setSmBulkApplicationVO(
+			List<SmBulkApplicationVO> smBulkApplicationVO) {
 		this.smBulkApplicationVO = smBulkApplicationVO;
 	}
 
@@ -190,6 +195,14 @@ public class ViewApplHistoryManagedBean extends
 
 	public void setCancellationAttachment(SmAttachment cancellationAttachment) {
 		this.cancellationAttachment = cancellationAttachment;
+	}
+
+	public SmMofAccount getCurrMof() {
+		return currMof;
+	}
+
+	public void setCurrMof(SmMofAccount currMof) {
+		this.currMof = currMof;
 	}
 
 }
