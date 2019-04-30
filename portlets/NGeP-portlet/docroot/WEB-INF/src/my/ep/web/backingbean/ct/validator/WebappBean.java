@@ -322,6 +322,20 @@ public class WebappBean {
 					FacesMessage.SEVERITY_ERROR, "", errMsg));
 		}
 	}
+	//Bug #25631
+	public void validateInteger(FacesContext ctx, UIComponent fieldName,
+			Object obj) {
+		Integer inputValue = (Integer) obj;
+
+		if(inputValue <= 0) {
+			String errMsg = ResourceBundleUtils.getMessage(
+					"lbl.sc.validation.delivery.period", new Object[]{inputValue},
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, 
+					new FacesScopes().getUserLocale());
+				throw new ValidatorException(new FacesMessage(
+						FacesMessage.SEVERITY_ERROR, "", errMsg));
+		}
+	}
 
 	protected void addInfo(String message) {
 		addMessage(FacesMessage.SEVERITY_INFO, "Information:", message);
