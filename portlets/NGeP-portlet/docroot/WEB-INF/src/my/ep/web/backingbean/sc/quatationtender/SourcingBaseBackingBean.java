@@ -2822,7 +2822,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_QC);
 		}
 		  else if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD.equalsIgnoreCase(committeeType)) {
-			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_PBA);
+			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_PPR);
 		}
 		  else if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B.equalsIgnoreCase(committeeType)) {
 			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_PBB);
