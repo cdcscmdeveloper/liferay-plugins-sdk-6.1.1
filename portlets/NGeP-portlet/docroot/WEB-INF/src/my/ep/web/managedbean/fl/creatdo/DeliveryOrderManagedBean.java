@@ -113,6 +113,7 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
     
     /** The back to previous. */
 	private String backToPrevious;
+	private boolean isPendingDelivery;
 	private List<FlRemark> previousRemarkList;
 	private List<FlAttachment> previousAttachmentList;	
 	
@@ -1093,6 +1094,21 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 		this.backToPrevious = backToPrevious;
 	}
 
+	/**
+	 * @return back to Pending Delivery
+	 */
+	public boolean isPendingDelivery() {
+		return isPendingDelivery;
+	}
+
+	/**
+	 * @param isPendingDelivery to set
+	 */
+	public void setPendingDelivery(boolean isPendingDelivery) {
+		this.isPendingDelivery = isPendingDelivery;
+	}
+	
+	
 	/**
 	 * @return the hyperLinkPage
 	 */

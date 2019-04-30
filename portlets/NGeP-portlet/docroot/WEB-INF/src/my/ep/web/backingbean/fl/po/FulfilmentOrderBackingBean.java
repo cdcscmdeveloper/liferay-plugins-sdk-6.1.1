@@ -1244,10 +1244,55 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			renewSesionObject();
 			getManagedBean().getPendingDoDataModel().reloadData();
 			getDocStatusList();
+			getDocDeliveryOrderStatusList();
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "doPendingTable.xhtml");
 		}
 	
+
+		public void getDocDeliveryOrderStatusList() {
+			SelectItem[] items = null;
+			FacesScopes face = new FacesScopes();
+			
+			try{
+				
+				List<String> deliveryStatusDescs = new ArrayList<String>();
+				List<Long> deliveryStatusIds = new ArrayList<Long>();
+				deliveryStatusIds.add(FulfilmentStatusConst.DO_PENDING_ACKNOWLEDGEMENT);
+				deliveryStatusIds.add(FulfilmentStatusConst.DO_ACKNOWLEDGED);
+				deliveryStatusIds.add(FulfilmentStatusConst.DO_PENDING_MODIFICATION_APRROVAL);
+				deliveryStatusIds.add(FulfilmentStatusConst.DO_PENDING_CANCELLATION_APPROVAL);
+				deliveryStatusIds.add(FulfilmentStatusConst.DO_PENDING_CANCELLATION_SUBMISSION);
+				deliveryStatusIds.add(FulfilmentStatusConst.DO_CLOSED_DUE_TO_AP59);
+				
+				Map<String, Long> deliveryStatusMap = new HashMap<String, Long>();
+				for(Long deliveryStatusId : deliveryStatusIds){
+					if(deliveryStatusMap.get(deliveryStatusId) == null){
+						deliveryStatusMap.put(getStatusDescById(deliveryStatusId),deliveryStatusId);
+						deliveryStatusDescs.add(getStatusDescById(deliveryStatusId));
+					}
+				}
+				
+				items = new SelectItem[deliveryStatusDescs.size() + 1];
+				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+						"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						face.getUserLocale()));
+				int i = 1;
+				for (String deliveryStatusDesc : deliveryStatusDescs) {
+					items[i++] = new SelectItem(deliveryStatusMap.get(deliveryStatusDesc),deliveryStatusDesc);
+				}
+				
+			}catch (Exception e) {
+				e.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+								e.getMessage()));
+			}
+			
+			getManagedBean().setDocDeliveryOrderStatusList(items);
+		}
+		
 		public void getDocStatusList() {
 			SelectItem[] items = null;
 			FacesScopes face = new FacesScopes();
@@ -1257,6 +1302,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				List<Long> statusIds = new ArrayList<Long>();
 				statusIds.add(FulfilmentStatusConst.PO_PENDING_PARTIAL_FL);
 				statusIds.add(FulfilmentStatusConst.PO_PENDING_FULFILMENT);
+				//statusIds.add(FulfilmentStatusConst.PO_PENDING_BOTH);
 				
 				Map<String, Long> statusMap = new HashMap<String, Long>();
 				for(Long statusId : statusIds){
@@ -1649,6 +1695,9 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		if(getManagedBean().getFromDate() == null && getManagedBean().getToDate() != null){
 			throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.created.date.from",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 		}
+		if(getManagedBean().getDocStatusId() == null){
+			getManagedBean().setDocStatusId(FulfilmentStatusConst.PO_PENDING_BOTH);
+		}
 		
 		getManagedBean().getPendingDoDataModel().reloadData();
 	}
@@ -1663,6 +1712,9 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		getManagedBean().setToDate(null);
 		getManagedBean().setSelectedOrgProfile(null);
 		getManagedBean().setDocStatusId(null);
+		getManagedBean().setDelOrdNo(null);
+		getManagedBean().setDelOrdSupNo(null);
+		getManagedBean().setDelOrdStatusId(null);
 		getManagedBean().getPendingDoDataModel().reloadData();
 	}
 	
