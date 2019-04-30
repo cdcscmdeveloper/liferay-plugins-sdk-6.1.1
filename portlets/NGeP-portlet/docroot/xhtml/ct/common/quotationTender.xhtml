@@ -126,18 +126,18 @@
 							and ctBackingBean.newJustification()!= null}">
 							<td><p:outputLabel value="#{lbl['lbl.ct.proc.Justification']}" />
 							</td>
-							<td><p:inputText style="width:450px;" disabled="true"
+							<td><p:inputText style="width:600px;" disabled="true"
 									value="#{ctBackingBean.newJustification()}" />
 							</td>
 						</h:panelGroup>					
 					</tr> 
 					<tr>
 						<h:panelGroup
-							rendered="#{!ctBackingBean.managedBean.directPurchase and (!ctBackingBean.managedBean.commonView or 
+							rendered="#{!ctBackingBean.managedBean.directPurchase and ctBackingBean.managedBean.newPk7 and (!ctBackingBean.managedBean.commonView or 
 						              ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode != ParameterConst.contractTypeCentral)}">
 							<td><p:outputLabel value="#{lbl['lbl.ct.proc.Justification']}" />
 							</td>
-							<td><p:inputText style="width:450px;" disabled="true"
+							<td><p:inputText style="width:600px;" disabled="true"
 									value="#{ctBackingBean.getReasonDesc(ctBackingBean.managedBean.contractVer.ctContract.loa.justificationType)}" />
 							</td>
 						</h:panelGroup>					
