@@ -8,7 +8,7 @@
 		<p:panel id="fd2" toggleable="true" toggleSpeed="500" rendered="#{ctBackingBean.managedBean.ctContractAmount.agreement}">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.ct.agreement.detail']}" />
-			<ac:iconTooltip value="#{lbl['lbl.ct.agreement.detail']}" />
+			<ac:iconTooltip value="#{lbl['lbl.ct.agreement.detail.tooltip']}" />
 		</f:facet>
 				<p:dataTable id="contractAgreementTableID" lazy="false"
 					value="#{ctBackingBean.filterAgreementList()}"
