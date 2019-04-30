@@ -237,7 +237,7 @@
 						size="6" maxlength="4"
 						disabled="#{(requestNoteDtl.requestItem.quote ne null and requestNoteDtl.prodAndServiceFlag or isViewOnly) or requestNoteDtl.showPurchaseInquiry}"
 						id="deliveryTerm" value="#{requestNoteDtl.deliverTerm}"
-						required="#{!requestNoteDtl.selected}">
+						required="#{!requestNoteDtl.selected}" validator="#{webappBean.validateInteger}">
 						<p:ajax partialSubmit="true" process="@this" update="@this" />
 					</p:inputText> #{lbl['lbl.sc.days']}
 					<p:message id="deliveryTermMsg" for="deliveryTerm" display="icon" />
