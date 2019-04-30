@@ -1302,7 +1302,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				List<Long> statusIds = new ArrayList<Long>();
 				statusIds.add(FulfilmentStatusConst.PO_PENDING_PARTIAL_FL);
 				statusIds.add(FulfilmentStatusConst.PO_PENDING_FULFILMENT);
-				statusIds.add(FulfilmentStatusConst.PO_PENDING_BOTH);
+				//statusIds.add(FulfilmentStatusConst.PO_PENDING_BOTH);
 				
 				Map<String, Long> statusMap = new HashMap<String, Long>();
 				for(Long statusId : statusIds){
