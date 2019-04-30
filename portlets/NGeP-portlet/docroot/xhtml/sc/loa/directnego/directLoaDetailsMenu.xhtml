@@ -638,15 +638,6 @@
 									partialSubmit="true" process="@this"
 									update="@form" />
 									
-								<p:ajax event="change"
-									listener="#{directLOABackingBean.isPbDropDown()}"
-									partialSubmit="true" 
-									update="bondReqPG, reasonPG, reasonDescPG" />
-							
-								<p:ajax event="change"
-											listener="#{directLOABackingBean.isAgreementDropDown}"
-											partialSubmit="true" 
-											update="agreementReqPG" />
 							</p:selectOneMenu>
 							<p:message id="contractTypeMsg" for="contractType" display="icon" />
 						</c:when>
