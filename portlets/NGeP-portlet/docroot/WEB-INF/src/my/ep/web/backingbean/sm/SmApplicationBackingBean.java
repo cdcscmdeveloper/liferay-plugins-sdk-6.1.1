@@ -2717,6 +2717,10 @@ public class SmApplicationBackingBean extends
 		// validate equity company amount
 		SmApplicationUtil.validateEquityCompanyAmount(getManagedBean(), -1);
 
+		// validate company basic info
+		SmApplicationUtil
+				.validateCompanyInformation(getManagedBean(), -1, true);
+
 		// validate paid up capital amount
 		SmApplicationUtil.validatePaidCaptialAmt(false, getManagedBean(),
 				currentTab);
