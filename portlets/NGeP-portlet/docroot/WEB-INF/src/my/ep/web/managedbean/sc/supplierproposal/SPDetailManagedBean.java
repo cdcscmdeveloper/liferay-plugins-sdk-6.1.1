@@ -72,13 +72,12 @@ public class SPDetailManagedBean extends BaseManagedBean {
 
 	private ScQt qt;
 	private ScQtProposal qtProposal;
-	private ScQtProposalChecklist qtProposalChecklist;
 	private String message;
 	private List<ScQtProposalChecklist> tecCheckDetailsList;
 	private List<ScQtProposalChecklist> financeCheckDetailsList;
 	private List<ScQtProposalChecklist> selectedCheckDetails;
 
-	private ScQtCheckList scQtCheckList;
+	
 	private String closingTime = "";
 	private int activeIndex;
 	private int proposalIndex;
@@ -210,6 +209,11 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private boolean isProcCategoryMedicine;
 	private boolean qtClosed = false;
 	private Date lastSubmittedDate;
+	private ScQtProposalChecklist technicalQtProposalChecklist;
+	private ScQtCheckList technicalQtChecklist;
+	private ScQtProposalChecklist financialQtProposalChecklist;
+	private ScQtCheckList financialQtChecklist;
+	
 	
 	/** report download filename. */
 	private String reportDownloadFileName = "NGeP-QT-Supplier-Proposal-Report";
@@ -716,20 +720,7 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		this.qtProposal = qtProposal;
 	}
 
-	/**
-	 * @return the qtProposalChecklist
-	 */
-	public ScQtProposalChecklist getQtProposalChecklist() {
-		return qtProposalChecklist;
-	}
-
-	/**
-	 * @param qtProposalChecklist
-	 *            the qtProposalChecklist to set
-	 */
-	public void setQtProposalChecklist(ScQtProposalChecklist qtProposalChecklist) {
-		this.qtProposalChecklist = qtProposalChecklist;
-	}
+	
 
 	/**
 	 * @return the tecCheckDetailsList
@@ -779,20 +770,7 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		this.selectedCheckDetails = selectedCheckDetails;
 	}
 
-	/**
-	 * @return the scQtCheckList
-	 */
-	public ScQtCheckList getScQtCheckList() {
-		return scQtCheckList;
-	}
-
-	/**
-	 * @param scQtCheckList
-	 *            the scQtCheckList to set
-	 */
-	public void setScQtCheckList(ScQtCheckList scQtCheckList) {
-		this.scQtCheckList = scQtCheckList;
-	}
+	
 
 	/**
 	 * @return the activeIndex
@@ -1860,5 +1838,65 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	public void setSuppExpSize(int suppExpSize) {
 		this.suppExpSize = suppExpSize;
 	}
+
+	/**
+	 * @return the technicalQtProposalChecklist
+	 */
+	public ScQtProposalChecklist getTechnicalQtProposalChecklist() {
+		return technicalQtProposalChecklist;
+	}
+
+	/**
+	 * @param technicalQtProposalChecklist the technicalQtProposalChecklist to set
+	 */
+	public void setTechnicalQtProposalChecklist(
+			ScQtProposalChecklist technicalQtProposalChecklist) {
+		this.technicalQtProposalChecklist = technicalQtProposalChecklist;
+	}
+
+	/**
+	 * @return the technicalQtChecklist
+	 */
+	public ScQtCheckList getTechnicalQtChecklist() {
+		return technicalQtChecklist;
+	}
+
+	/**
+	 * @param technicalQtChecklist the technicalQtChecklist to set
+	 */
+	public void setTechnicalQtChecklist(ScQtCheckList technicalQtChecklist) {
+		this.technicalQtChecklist = technicalQtChecklist;
+	}
+
+	/**
+	 * @return the financialQtProposalChecklist
+	 */
+	public ScQtProposalChecklist getFinancialQtProposalChecklist() {
+		return financialQtProposalChecklist;
+	}
+
+	/**
+	 * @param financialQtProposalChecklist the financialQtProposalChecklist to set
+	 */
+	public void setFinancialQtProposalChecklist(
+			ScQtProposalChecklist financialQtProposalChecklist) {
+		this.financialQtProposalChecklist = financialQtProposalChecklist;
+	}
+
+	/**
+	 * @return the financialQtChecklist
+	 */
+	public ScQtCheckList getFinancialQtChecklist() {
+		return financialQtChecklist;
+	}
+
+	/**
+	 * @param financialQtChecklist the financialQtChecklist to set
+	 */
+	public void setFinancialQtChecklist(ScQtCheckList financialQtChecklist) {
+		this.financialQtChecklist = financialQtChecklist;
+	}
+
+	
 
 }
