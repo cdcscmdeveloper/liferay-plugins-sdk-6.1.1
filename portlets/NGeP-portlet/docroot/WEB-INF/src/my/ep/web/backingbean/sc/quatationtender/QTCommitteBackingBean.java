@@ -206,7 +206,7 @@ public class QTCommitteBackingBean extends
 
 				populateUserSearchCriteria(userCommitteeSearchBean, searchBean);
 				committeReqDTO.setUserSearchBean(searchBean);
-
+				committeReqDTO.setPtjMinistryAdmin(Boolean.TRUE);
 				return committeSO.retrieveUserListByCommType(committeReqDTO)
 						.getUserResultBean();
 			} finally {
