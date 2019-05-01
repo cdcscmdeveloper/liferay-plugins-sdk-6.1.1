@@ -57,6 +57,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.id.Hex;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -2018,12 +2019,10 @@ public class SmCommonUtil {
 	 * Set MDC user_id value to be used in BaseEntity for auditing purposes.
 	 */
 	public static void setMDCUserId() {
-		Long userId = 1L;
-		PmUser user = new FacesScopes().getUserSessionBean();
-		if (user != null) {
-			userId = user.getUserId() != null ? user.getUserId() : 1L;
+		if (MDC.get(LogKey.USER_ID) == null) {
+			MDC.put(LogKey.USER_ID, new FacesScopes().getUserSessionBean()
+					.getUserId());
 		}
-		new LogKey(userId);
 	}
 
 	/**
