@@ -704,12 +704,14 @@ public class SmApplicationUtil {
 	 * @return true, if successful
 	 */
 	public static boolean manageEquityLimit(SmPersonnel personnel,
-			String businessTypeVal, List<SmPersonnel> shrHldrs) {
+			String businessTypeVal, List<SmPersonnel> shrHldrs,SmSupplier smSupplier) {//change by fahmi, log : 23858 13/03/2019 : add smSupplier
 		if (personnel.isEquityOwner()
 				&& !businessTypeVal
 						.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT)) {
 			return true;
-		} else if (businessTypeVal
+		} else if(smSupplier != null && smSupplier.getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_PROFESSIONAL_BODY)){//change by fahmi, log : 23858 13/03/2019
+			return true;
+		}else if (businessTypeVal
 				.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT)
 				|| (businessTypeVal
 						.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT) && shrHldrs
@@ -1868,9 +1870,10 @@ public class SmApplicationUtil {
 			SmApplicationManagedBean managedBean, int currentTab,
 			String currentPageType) {
 		boolean validCount = true;
+		// change by fahmi, log : 23858 13/03/2019 
 		if (managedBean.getBusinessTypeVal() != null
 				&& (managedBean.getBusinessTypeVal()
-						.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT))) {
+						.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT)) && (managedBean.getSmSupplier() != null && !SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_PROFESSIONAL_BODY.equalsIgnoreCase(managedBean.getSmSupplier().getBusinessType()))) {
 			if (EntityHelper.isCollectionEmpty(managedBean
 					.getSmapplShareHolders())
 					|| (managedBean.getSmapplShareHolders().size() != 1)) {
@@ -1881,7 +1884,7 @@ public class SmApplicationUtil {
 				}
 				throw new EpException(MessageConst.ERROR_722507);
 			}
-		} else if (managedBean.getBusinessTypeVal() != null
+		} else  if (managedBean.getBusinessTypeVal() != null
 				&& (managedBean
 						.getBusinessTypeVal()
 						.equalsIgnoreCase(
@@ -10388,11 +10391,11 @@ public class SmApplicationUtil {
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
 			validatePaidCaptialAmt(false, bean, currTab);
 			bean.setValidEquityLimit(SmApplicationUtil.manageEquityLimit(shr,
-					bean.getBusinessTypeVal(), bean.getSmapplShareHolders()));
+					bean.getBusinessTypeVal(), bean.getSmapplShareHolders(),bean.getSmSupplier()));//change by fahmi, log : 23858 13/03/2019 : add smSupplier
 			if (!bean.isValidEquityLimit()) {
 				if (bean.getBusinessTypeVal()
 						.equalsIgnoreCase(
-								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT)) {
+								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT) && (bean.getSmSupplier() != null && !SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_PROFESSIONAL_BODY.equalsIgnoreCase(bean.getSmSupplier().getBusinessType()))) {
 					throw new EpException(
 							MessageConst.ERROR_722547,
 							new String[] { String.valueOf(SmRuleHelper
@@ -10405,7 +10408,7 @@ public class SmApplicationUtil {
 									.valueOf(SmRuleHelper
 											.getInstance()
 											.getMaxEquityOwnerCountForOtherThanROBIndividaul()) });
-				}
+				}//change by fahmi, log : 23858 13/03/2019
 
 			}
 			shr.setEquityOwner(true);
@@ -10414,7 +10417,7 @@ public class SmApplicationUtil {
 		} else if (bean.getCurrentPageType().equalsIgnoreCase(
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)) {
 			bean.setValidEquityLimit(SmApplicationUtil.manageEquityLimit(shr,
-					bean.getBusinessTypeVal(), bean.getSmapplShareHolders()));
+					bean.getBusinessTypeVal(), bean.getSmapplShareHolders(),bean.getSmSupplier()));//change by fahmi, log : 23858 13/03/2019 : add smsupplier
 			bean.setPersonnelInfoHeader(SmCommonUtil.getMessage(
 					"lbl.sm.person.panHdr", null));
 		}
@@ -11212,7 +11215,7 @@ public class SmApplicationUtil {
 		managePersonnelRoles(bean, "Y");
 		bean.setValidEquityLimit(SmApplicationUtil.manageEquityLimit(
 				bean.getSelectedShareHolder(), bean.getBusinessTypeVal(),
-				bean.getSmapplShareHolders()));
+				bean.getSmapplShareHolders(),bean.getSmSupplier()));//change by fahmi, log : 23858 13/03/2019 : add smSupplier
 		if (bean.getSelectedShareHolder().getIdentificationTypeId() != null) {
 			bean.getSelectedShareHolder().setIdentificationType(
 					SmApplicationUtil
