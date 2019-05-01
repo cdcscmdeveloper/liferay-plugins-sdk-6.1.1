@@ -414,9 +414,11 @@ public class SmApplicationUtil {
 			if (doc.getPmDocument() != null
 					&& doc.getPmDocument().isMandatory()
 					&& !doc.getPmDocument().isHardCopyReq()
-					&& (doc.getSmApplDocFiles().get(0).getFileName()
-							.equalsIgnoreCase(" ") || doc.getSmApplDocFiles()
-							.get(0).getFilePath().equalsIgnoreCase(" "))) {
+					&& (EntityHelper.isCollectionEmpty(doc.getSmApplDocFiles())
+							|| doc.getSmApplDocFiles().get(0).getFileName()
+									.equalsIgnoreCase(" ") || doc
+							.getSmApplDocFiles().get(0).getFilePath()
+							.equalsIgnoreCase(" "))) {
 				sb.append(++i + ".)");
 				sb.append(doc.getPmDocument().getDocName());
 				// sb.append(",  ");
