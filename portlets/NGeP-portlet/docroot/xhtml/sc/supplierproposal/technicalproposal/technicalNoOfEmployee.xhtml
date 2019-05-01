@@ -10,16 +10,16 @@
 		toggleable="true">
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.sp.btn.complete.instruction']}" escape="false"
-			rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly and !supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}" />
+			rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly and !supplierProposalDetailBackingBean.managedBean.technicalQtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}" />
 
 		<p:spacer height="2"></p:spacer>
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
 				<td><h:outputText
-						rendered="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}"
+						rendered="#{supplierProposalDetailBackingBean.managedBean.technicalQtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}"
 						value="#{lbl['lbl.sc.spec.total.num.employees.for.all.employees']}" />
 					<h:outputText
-						rendered="#{!supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}"
+						rendered="#{!supplierProposalDetailBackingBean.managedBean.technicalQtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}"
 						value="#{lbl['lbl.sc.spec.total.num.employees.for.this.project']}" /></td>
 			</tr>
 		</table>
@@ -29,16 +29,16 @@
 				<td width="120px"><p:outputLabel
 						value="#{lbl['lbl.sc.total.employees']}" /> <p:outputLabel
 						value="* " styleClass="mandatory"
-						rendered="#{!supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee and !statusHide}" />
+						rendered="#{!supplierProposalDetailBackingBean.managedBean.technicalQtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee and !statusHide}" />
 				</td>
 				<td><h:panelGroup id="totalNoOfEmployeesInvolved">
 						<p:inputText id="totalEmployees"
 							style="text-align:right;margin-bottom:5px;"
-							rendered="#{!supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}"
+							rendered="#{!supplierProposalDetailBackingBean.managedBean.technicalQtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}"
 							size="20" required="true" maxlength="6"
 							label="#{lbl['lbl.sc.total.employees']}"
 							value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPEmployee.totalEmployees}"
-							disabled="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee or statusHide}">
+							disabled="#{supplierProposalDetailBackingBean.managedBean.technicalQtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee or statusHide}">
 							<f:validateLongRange minimum="1" maximum="99999999999" />
 							<p:ajax process="@this" partialSubmit="true"
 								update="@this,totalEmployeesMsg"></p:ajax>
@@ -47,7 +47,7 @@
 							display="icon" />
 						<p:inputText disabled="true"
 							style="text-align:right;margin-bottom:5px;" size="20"
-							rendered="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}"
+							rendered="#{supplierProposalDetailBackingBean.managedBean.technicalQtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}"
 							value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPEmployee.totalEmployees}"></p:inputText>
 					</h:panelGroup></td>
 			</tr>

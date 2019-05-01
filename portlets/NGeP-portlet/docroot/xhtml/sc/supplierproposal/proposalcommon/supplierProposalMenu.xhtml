@@ -63,8 +63,14 @@
 		</tr>
 	</table>
 
-	<ac:scSingleFileUploadPopup widgetVar="checklistUploadDlg"
-		fileUploadListener="supplierProposalDetailBackingBean.handleFileUpload"
+	<ac:scSingleFileUploadPopup widgetVar="financialproposalchecklistUploadDlg"
+		fileUploadListener="supplierProposalDetailBackingBean.financialhandleFileUpload"
+		update="@([id$=proposalMenuContent])"
+		readonly="#{supplierProposalDetailBackingBean.managedBean.readOnly}"
+		autoUpdateValue="#{supplierProposalDetailBackingBean.managedBean.autoUpdate}" />
+		
+		<ac:scSingleFileUploadPopup widgetVar="technicalproposalchecklistUploadDlg"
+		fileUploadListener="supplierProposalDetailBackingBean.technicalhandleFileUpload"
 		update="@([id$=proposalMenuContent])"
 		readonly="#{supplierProposalDetailBackingBean.managedBean.readOnly}"
 		autoUpdateValue="#{supplierProposalDetailBackingBean.managedBean.autoUpdate}" />

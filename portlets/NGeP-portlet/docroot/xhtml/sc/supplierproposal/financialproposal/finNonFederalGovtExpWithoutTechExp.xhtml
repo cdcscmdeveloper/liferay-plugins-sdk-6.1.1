@@ -212,7 +212,7 @@
 			<p:commandButton value="#{lbl['lbl.btn.add']}" partialSubmit="true"
 				process="@all" styleClass="BtnSpacing"
 				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.readOnly}"
-				action="#{supplierProposalDetailBackingBean.addNonFederalGovtExperience}"
+				action="#{supplierProposalDetailBackingBean.addNonFederalGovtExperience(2)}"
 				update="@([id$=nonFedExpPanel])" />
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"

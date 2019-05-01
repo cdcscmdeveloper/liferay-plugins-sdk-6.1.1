@@ -189,7 +189,7 @@
 			<p:commandButton value="#{lbl['lbl.btn.add']}" partialSubmit="true"
 				process="@all" styleClass="BtnSpacing"
 				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.readOnly}"
-				action="#{supplierProposalDetailBackingBean.addNonFederalGovtExperience}"
+				action="#{supplierProposalDetailBackingBean.addNonFederalGovtExperience(1)}"
 				update="@([id$=technongovtid])" />
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"

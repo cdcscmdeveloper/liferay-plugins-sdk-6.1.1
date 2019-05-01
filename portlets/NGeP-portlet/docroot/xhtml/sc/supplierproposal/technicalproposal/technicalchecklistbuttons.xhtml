@@ -49,13 +49,13 @@
 					update="@all" onstart="blockWidget.show()"
 					oncomplete="blockWidget.hide()"
 					action="#{supplierProposalDetailBackingBean.saveTechEmployeesDtlAction(false)}"
-					rendered="#{!supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}" />
+					rendered="#{!supplierProposalDetailBackingBean.managedBean.technicalQtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}" />
 
 				<p:commandButton value="#{lbl['lbl.btn.complete']}" process="@all"
 					partialSubmit="true" update="@all" styleClass="BtnSpacing"
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 					action="#{supplierProposalDetailBackingBean.saveTechEmployeesDtlAction(true)}"
-					rendered="#{!supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}" />
+					rendered="#{!supplierProposalDetailBackingBean.managedBean.technicalQtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}" />
 			</c:if>
 		</c:if>
 	</c:if>
