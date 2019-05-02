@@ -27,40 +27,6 @@
 			    })();
 			});
 		</script>
-		
-	<c:choose>
-    <c:when test="#{(backingBean.managedBean.poUser or backingBean.managedBean.approverUser) and 
-    (backingBean.managedBean.smAppl.applType eq 'B' or backingBean.managedBean.smAppl.applType eq 'U') }">
-        <table style="width: 100%">
-			<tr>
-				<td>
-					<span id="blinkId3">
-						<font color="red">&#x26A0;</font>&#160;
-						<h:outputText styleClass="warning" value="#{lbl['lbl.txt.alert']}" />
-					</span>
-					<span style="opacity: 0.0;">
-						<h:outputText styleClass="instruction" value="#{lbl['lbl.txt.alert']}" />
-					</span>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<h:outputText styleClass="warning" value="#{lbl['lbl.sm.category.overlap.samePersonalExist']}" escape="false"/>&#160;
-					<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.please.click']}" escape="false"/>&#160;
-					<p:commandLink onstart="blockWidget.show()"
-						oncomplete="blockWidget.hide()"
-						action="#{backingBean.onViewOverlapCategory()}"
-						process="@this"
-						partialSubmit="true" update=":form">
-							<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.here']}" escape="false"/>
-					</p:commandLink>
-					&#160;<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.to.view.details']}" escape="false"/>
-				</td>
-			</tr>
-		</table>
-    </c:when>
- 
-    <c:otherwise>
 		<table style="width: 100%">
 			<tr>
 				<td>
@@ -75,7 +41,15 @@
 			</tr>
 			<tr>
 				<td>
-					<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.main']}" escape="false"/>&#160;
+					<c:choose>
+						<c:when test="#{(backingBean.managedBean.poUser or backingBean.managedBean.approverUser) and 
+						    (backingBean.managedBean.smAppl.applType eq 'B' or backingBean.managedBean.smAppl.applType eq 'U') }">
+						    <h:outputText styleClass="warning" value="#{lbl['lbl.sm.category.overlap.samePersonalExist']}" escape="false"/>&#160;
+						</c:when>
+						<c:otherwise>
+							<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.main']}" escape="false"/>&#160;
+						</c:otherwise>
+					</c:choose>
 					<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.please.click']}" escape="false"/>&#160;
 					<p:commandLink onstart="blockWidget.show()"
 						oncomplete="blockWidget.hide()"
@@ -91,16 +65,17 @@
 						and (backingBean.managedBean.smAppl.applType ne 'B' and backingBean.managedBean.smAppl.applType ne 'U')}">
 							<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.justifyLetter']}" escape="false" />
 						</c:when>
+						<c:when test="#{(backingBean.managedBean.poUser or backingBean.managedBean.approverUser) and 
+						    (backingBean.managedBean.smAppl.applType eq 'B' or backingBean.managedBean.smAppl.applType eq 'U') }">
+						    &#160;
+						</c:when>
 						<c:otherwise>
 							<h:outputText styleClass="warning" value="#{lbl['lbl.sm.category.overlap.upload.doc']}" escape="false" />
 						</c:otherwise>
 					</c:choose>
 				</td>
 			</tr>
-		</table>
-		
-		
-		
+		</table>	
 		<br />
 		<p:dataTable var="overlap" id="overlapCatSuppDocDtId" value="#{backingBean.managedBean.overlapDocs}" 
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" 
@@ -162,8 +137,6 @@
 				</p:commandLink>
 			</p:column>
 		</p:dataTable><br />
-		</c:otherwise>
-		</c:choose>
 		</c:if>
 		<p:dialog id="overlapCatUploadDialog" widgetVar="overlapCatUploadDialog" modal="true"
 			dynamic="true" resizable="false" width="700px" height="200"
