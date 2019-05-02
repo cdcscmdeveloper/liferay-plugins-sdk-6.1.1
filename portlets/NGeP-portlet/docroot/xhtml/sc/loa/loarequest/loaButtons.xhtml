@@ -64,12 +64,13 @@
 							<ui:param name="buttonLabel"
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 							<ui:param name="isReject" value="#{bpmAction == 'REJECT'}" />
-
+                            <!-- 20190405@asyrafhaziq - CR(25062)- Start -->
+							<!-- changes the calling action   -->
 							<p:commandButton value="#{lbl[buttonLabel]}"
 								styleClass="ui-button" onstart="blockWidget.show();"
 								rendered="#{!isPendingVerification}"
 								oncomplete="blockWidget.hide();"
-								action="#{lOADetailBackingBean.updateBpmTaskAction(bpmAction)}"
+								action="#{lOADetailBackingBean.approveBeforeupdateBpmTaskAction(bpmAction)}"
 								partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
 								update="#{isReject ? '@this' : '@form'}" />
 
@@ -78,9 +79,12 @@
 								rendered="#{isPendingVerification}"
 								oncomplete="blockWidget.hide();"
 								disabled="#{lOADetailBackingBean.managedBean.verifyBtnFlag}"
-								action="#{lOADetailBackingBean.updateBpmTaskAction(bpmAction)}"
+								action="#{lOADetailBackingBean.approveBeforeupdateBpmTaskAction(bpmAction)}"
 								partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
 								update="#{isReject ? '@this' : '@form'}" />
+							 <!-- 20190405@asyrafhaziq - CR(25062)- End -->
+								
+							
 
 						</ui:repeat>
 					</ui:define>
