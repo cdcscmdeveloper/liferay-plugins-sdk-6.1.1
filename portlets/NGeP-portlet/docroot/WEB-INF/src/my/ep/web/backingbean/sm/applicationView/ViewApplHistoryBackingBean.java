@@ -544,29 +544,31 @@ public class ViewApplHistoryBackingBean extends
 		}
 		return svoSiteVisitBackingBean;
 	}
-	
-	public void selectedOverlapCategory(SmSupplierCategory supplierCategory){
-		getManagedBean().getSmAppl().setApplId(supplierCategory.getSmAppl().getApplId());
-		
+
+	public void selectedOverlapCategory(SmSupplierCategory supplierCategory) {
+		getManagedBean().getSmAppl().setApplId(
+				supplierCategory.getSmAppl().getApplId());
+
 		RequestContext.getCurrentInstance().update("@form");
 	}
-	
-	/*test*/
-	
+
+	/* test */
+
 	public StreamedContent commonDownload(String path, String displayFileName)
 			throws IOException {
-		
+
 		String filePath = EpPropertiesUtils.getInstance().getProperty(
 				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
-		
+
 		filePath += "/" + path;
 
 		commonDownloadUtil(filePath, displayFileName);
 		return null;
 	}
-	
-	public void commonDownloadUtil(String filePath, String displayFileName) throws IOException{
-		
+
+	public void commonDownloadUtil(String filePath, String displayFileName)
+			throws IOException {
+
 		PortletResponse resp = (PortletResponse) FacesContext
 				.getCurrentInstance().getExternalContext().getResponse();
 		HttpServletResponse response = PortalUtil.getHttpServletResponse(resp);
@@ -575,8 +577,9 @@ public class ViewApplHistoryBackingBean extends
 		response.setDateHeader("Expires", 0);
 		// response.setContentType("application/vnd.ms-excel");
 		// response.setHeader("Content-Transfer-Encoding", "binary");
-		response.setHeader("Content-Disposition", "attachment; filename=\""+ displayFileName + "\"");
-		//response.setContentType("application/octet-stream");
+		response.setHeader("Content-Disposition", "attachment; filename=\""
+				+ displayFileName + "\"");
+		// response.setContentType("application/octet-stream");
 		response.setContentType(getMimeType(displayFileName));
 		response.flushBuffer();
 
@@ -587,15 +590,16 @@ public class ViewApplHistoryBackingBean extends
 		} catch (Exception e) {
 			// Cannot open connection, maybe local file
 			docInputStream = new FileInputStream(filePath);
-			
-			log.info("Error found while downloading file "+filePath+" : "+e);
-			//log.error(e);
-			//			e.printStackTrace();
-			
+
+			log.info("Error found while downloading file " + filePath + " : "
+					+ e);
+			// log.error(e);
+			// e.printStackTrace();
+
 		}
 
 		OutputStream out = null;
-		try {		
+		try {
 
 			out = response.getOutputStream();
 			byte[] buffer = new byte[4096];
@@ -604,27 +608,27 @@ public class ViewApplHistoryBackingBean extends
 				out.write(buffer, 0, bytesRead);
 				buffer = new byte[4096];
 			}
-		} catch(Exception e) {
+		} catch (Exception e) {
 			log.error(e);
 		} finally {
 			if (out != null) {
 				out.close();
 			}
 			if (docInputStream != null) {
-				docInputStream.close();	
+				docInputStream.close();
 			}
 		}
 
 	}
-	
+
 	private String getMimeType(String fileName) {
 		String fileExt = fileName.substring(fileName.lastIndexOf(".") + 1);
-		
-		String mimeType = (String)CommonConstants.getFileExtMap().get(fileExt);
-		
+
+		String mimeType = (String) CommonConstants.getFileExtMap().get(fileExt);
+
 		return (mimeType != null) ? mimeType : "octet-stream";
 	}
-	
+
 	public void onViewOverlapCategory(SmAppl smAppl) {
 		SmBulkApplicationVO vo = new SmBulkApplicationVO();
 		SmOverlapCategoryVO overlapCategoryVO = getOverlapCategoryVO(smAppl);
@@ -635,12 +639,12 @@ public class ViewApplHistoryBackingBean extends
 			vo.setOverlapCategoryVOList(overlapCategoryVO
 					.getOverlapCategoryVOList());
 		}
-		getManagedBean().setOverlapCategoryVOList(
-				vo.getOverlapCategoryVOList());
+		getManagedBean()
+				.setOverlapCategoryVOList(vo.getOverlapCategoryVOList());
 		RequestContext.getCurrentInstance().execute(
 				"overlapCategoryDialog.show();");
 	}
-	
+
 	private SmOverlapCategoryVO getOverlapCategoryVO(SmAppl smAppl) {
 		SmOverlapCategoryVO retVal = null;
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
@@ -654,16 +658,14 @@ public class ViewApplHistoryBackingBean extends
 			retVal = new SmOverlapCategoryVO();
 			retVal.setOverLappedCategoryExist(true);
 			retVal.setOverLappedCategoryMsg(SmCommonUtil.getMessage(
-					"lbl.sm.category.overlappingMsg", null)
-					+ "<br />");
+					"lbl.sm.category.overlappingMsg", null) + "<br />");
 			Locale loc = new Locale("ms", "MY");
 			ResourceBundleUtils.getMessage("lbl.sm.category.overlappingMsg",
 					null, ResourceBundleUtils.BUNDLE_COMMON_LABELS, loc);
 			retVal.setOverLappedCategoryRemarks(ResourceBundleUtils.getMessage(
 					"lbl.sm.category.overlappingMsg", null,
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, loc)
-					+ System.lineSeparator()
-					+ System.lineSeparator());
+					+ System.lineSeparator() + System.lineSeparator());
 			retVal.setOverlapCategoryVOList(getOverlapCategoryVOList(
 					resultList, smAppl.getSupplierType()));
 		}
@@ -864,7 +866,7 @@ public class ViewApplHistoryBackingBean extends
 					"lbl.sm.mof.reg.reason.delete",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
 			sb.append(" is mandatory </br>");
-			
+
 		}
 		if (getManagedBean().getCancellationAttachment().getFileName() == null
 				|| getManagedBean().getCancellationAttachment().getFileName()
@@ -872,7 +874,7 @@ public class ViewApplHistoryBackingBean extends
 			sb.append(ResourceBundleUtils.getMessage("lbl.sm.suppdoc.attach",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
 			sb.append(" is mandatory ");
-			
+
 		}
 		return page;
 	}

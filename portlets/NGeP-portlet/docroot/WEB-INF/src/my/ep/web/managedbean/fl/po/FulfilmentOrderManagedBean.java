@@ -28,6 +28,7 @@ import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
@@ -222,6 +223,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 				reqDTO.setPendingDoSearchBean(searchBean);
 				if(getDocStatusId() != null){
 					reqDTO.setStatusId(docStatusId);
+				}else{
+					reqDTO.setStatusId(FulfilmentStatusConst.PO_PENDING_BOTH);
 				}
 				if(!getStatusIds().isEmpty()){
 					reqDTO.setStatusIds(getStatusIds());

@@ -1695,10 +1695,6 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		if(getManagedBean().getFromDate() == null && getManagedBean().getToDate() != null){
 			throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.created.date.from",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 		}
-		if(getManagedBean().getDocStatusId() == null){
-			getManagedBean().setDocStatusId(FulfilmentStatusConst.PO_PENDING_BOTH);
-		}
-		
 		getManagedBean().getPendingDoDataModel().reloadData();
 	}
 	
