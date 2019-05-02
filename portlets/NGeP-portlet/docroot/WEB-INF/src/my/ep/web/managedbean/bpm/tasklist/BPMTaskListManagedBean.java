@@ -481,6 +481,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							if (worklistItemVO.getTitle().contains("<")) {
 								worklistItemVO.setTitle(worklistItemVO.getTitle().replaceAll("<", "&#60;"))  ;
 							}
+							
+							log.info("test H worklistItemVO.getTitle():" + worklistItemVO.getTitle());
 							// s1 module
 							if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE_DRAFT)) {
 								log.info("Doc number = " + worklistItemVO.getDocNumber());
@@ -490,6 +492,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 									worklistItemVO.setTitle(scPrInquiry.getTitle());
 									log.info("prno = " + scPrInquiry.getPrInquiryNo() + "title = "
 											+ scPrInquiry.getTitle());
+								} else {
+									log.info("test H scPrInquiry == null");
 								}
 							} else if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
 								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
@@ -891,6 +895,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	private class taskPagingBothDataModel extends PagingDataModel<WorklistItemVO> {
 
 		private static final long serialVersionUID = 1L;
+		private final Logger log = EpLogger.getLogger(taskPagingBothDataModel.class);
 
 		public taskPagingBothDataModel() {
 			super("taskListBothTaskId"); // Datatables ID
@@ -911,7 +916,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				FacesScopes face = new FacesScopes();
 				Object token = face.getBPMAuthenticationCtxToken();
 
-			    System.out.println("testing BPM auth******" + token);
+				log.info("testing BPM auth******" + token);
 				BpmRequestDTO reqDTO = new BpmRequestDTO();
 				reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
 				reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
@@ -923,14 +928,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 					reqDTO.setTaskTitle(getTaskDesc());
 				}
 				
-				System.out.println("getDocNoGroup():"+getDocNo());
+				log.info("getDocNoGroup():"+getDocNo());
 				
 				if(getDocNo()!= null && getDocNo().trim().length() > 0){
 					reqDTO.setDocNumber(getDocNo());
 				}
 			
 				if(getDocStatus() > 0){
-					System.out.println("getDocStatus"+getDocStatus());
+					log.info("getDocStatus"+getDocStatus());
 					reqDTO.setStatus(getDocStatus());
 				}
 				
@@ -946,10 +951,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
 				
 				if (responseDTO.getWorklistVO() != null) {
-					System.out.println("testing BPM******size="
+					log.info("testing BPM******size="
 							+ responseDTO.getWorklistVO().getWorklistItem()
 									.size());
-					System.out.println("testing BPM******total="
+					log.info("testing BPM******total="
 							+ responseDTO.getWorklistVO().getTotal());
 
 					if(responseDTO.getWorklistVO().getWorklistItem()!= null) {
@@ -978,7 +983,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							//sm module
 						       if(worklistItemVO.getTitle().startsWith("lbl.sm")) {
 						    		MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
-						    		System.out.println("***** The document Id for the workflow is ****** "+worklistItemVO.getDocId());
+						    		log.info("***** The document Id for the workflow is ****** "+worklistItemVO.getDocId());
 									mofResDto = retriveCompanyNameByApplicationId(worklistItemVO.getDocId());
 						    	   StringBuilder sb = new StringBuilder();
 						    	   sb.append(ResourceBundleUtils.getMessage(worklistItemVO.getTitle(), ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
@@ -1076,12 +1081,12 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						       }
 						       //end added for #24968
 						       // Identify if it is a group or individual task
-						       System.out.println("getTaskType: "+worklistItemVO.getTaskType());
+						       log.info("getTaskType: "+worklistItemVO.getTaskType());
 						       worklistItemVO.getTaskType();
 						       
 							} catch(Exception ex) {
 								worklistItemVO.setTitle("please check");
-								System.out.println("worklistItemVO.setTitle error:"+ex.getMessage());
+								log.info("worklistItemVO.setTitle error:"+ex.getMessage());
 							}
 						}
 						
