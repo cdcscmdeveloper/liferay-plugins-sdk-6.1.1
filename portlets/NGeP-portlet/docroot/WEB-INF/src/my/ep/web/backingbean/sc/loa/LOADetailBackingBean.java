@@ -3116,6 +3116,27 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 	}
 
+	
+	//20190405@asyrafhaziq - CR25062 - Start 
+	/**
+	 * Approve before date bpm task action. Approve - Will show notification
+	 * If yes it will go to authenticating gpki
+	 * 
+	 * @param outcome
+	 *            the outcome
+	 */
+	public void approveBeforeupdateBpmTaskAction(String outcome) {
+		debugLogger("approveBeforeupdateBpmTaskAction");
+		this.getManagedBean().setAction(outcome);
+		 		
+		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
+				RequestContext.getCurrentInstance().execute("loaApprovalPopUp.show()");
+		} 
+		else {
+			updateBpmTaskAction(outcome);
+		}
+	}
+	//20190405@asyrafhaziq - CR25062 - End
 	/**
 	 * Update bpm task action.
 	 * update bpm - save data into database and BPM process will route to the next respective user.
