@@ -5410,39 +5410,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			SearchFilterBean filterBean = new SearchFilterBean("pmOrgProfile.pmOrgValidity.orgCode", SearchOperator.OPERATOR_LIKE.value(), orgCode);
 			filterBean.setCaseInsensitive(true);
 		    searchBean.getDataFilterBeans().add(filterBean);
-			
-			
-/*			Long stateId = getManagedBean().getStateId();
-			if (stateId!=null) {
-				SearchFilterBean ptjSearchBean = new SearchFilterBean(
-						SearchOperator.OPERATOR_EQUALS.value());
-				ptjSearchBean.setSearchField("pmAddress.pmDistrict.pmState.stateId");
-				ptjSearchBean.setSearchValue(stateId);
-				searchBean.getDataFilterBeans().add(ptjSearchBean);
-			}
-			
-			String districtCode = getManagedBean().getDistrictCode();
-			if (districtCode!=null) {
-				SearchFilterBean ptjSearchBean = new SearchFilterBean(
-						SearchOperator.OPERATOR_EQUALS.value());
-				ptjSearchBean.setSearchField("pmAddress.pmDistrict.districtCode");
-				ptjSearchBean.setSearchValue(districtCode);
-				searchBean.getDataFilterBeans().add(ptjSearchBean);
-			}*/
-			
-/*			if (getManagedBean().getPtjCodeNameNew() != null
-					&& (getManagedBean().getPtjCodeNameSearchValuesNew() != null && !getManagedBean().getPtjCodeNameSearchValuesNew().equalsIgnoreCase(""))) {
-				if (getManagedBean().getPtjCodeNameNew().equalsIgnoreCase(ContractConst.PTJ_CODE_NEW)) {
-					SearchFilterBean filterBean = new SearchFilterBean("pmOrgProfile.pmOrgValidity.orgCode", SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getPtjCodeNameSearchValuesNew());
-					filterBean.setCaseInsensitive(true);
-				    searchBean.getDataFilterBeans().add(filterBean);
-				
-				} else if (getManagedBean().getPtjCodeNameNew().equalsIgnoreCase(ContractConst.PTJ_NAME_NEW)) {
-					SearchFilterBean filterBean = new SearchFilterBean("pmOrgProfile.pmOrgValidity.orgName", SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getPtjCodeNameSearchValuesNew());
-					filterBean.setCaseInsensitive(true);
-				    searchBean.getDataFilterBeans().add(filterBean);
-				}
-			}*/
 
 			addressReqDTO.setSearchAddressBean(searchBean);
 
