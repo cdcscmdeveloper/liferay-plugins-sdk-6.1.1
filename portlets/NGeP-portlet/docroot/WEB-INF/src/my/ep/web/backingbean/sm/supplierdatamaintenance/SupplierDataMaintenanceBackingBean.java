@@ -184,6 +184,8 @@ public class SupplierDataMaintenanceBackingBean extends
 	 * Submit supplier maintenance
 	 */
 	public void submitSupplierDataMaintenance() {
+		
+		PmUser user = new FacesScopes().getUserSessionBean();
 		validateDisciplinaryAction();
 		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
 		SupplierDataMaintenanceResDTO resDTO = new SupplierDataMaintenanceResDTO();
@@ -219,8 +221,12 @@ public class SupplierDataMaintenanceBackingBean extends
 			reqDTO.setOverlapCategoryRemarkDocType(ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY_APPROVER);
 			reqDTO.setRemarkId(getManagedBean().getRemarkId());
 			reqDTO.setRemarkOverlappedId(getManagedBean().getRemarkOverlappedId());
-			reqDTO.setApproverRemark(getManagedBean().getApproverRemark());
-		
+			
+			if (getManagedBean().getApproverRemark() != null) {
+				reqDTO.setApproverRemark(getManagedBean().getApproverRemark());
+				log.info("User ID="+user.getUserId());
+				reqDTO.setPmUser(user);
+			}
 
 			if (getManagedBean().isEditDisciplinaryAction()) {
 				reqDTO.setSmDisciplinaryAction(getManagedBean()
