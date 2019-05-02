@@ -146,7 +146,7 @@ public class DigiCertHelper {
 			log.info("getSoftcertFlg:: " + resDTO.getSmPersonnel().getSoftcertFlg());
 			
 			if (!(resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_ISSUED)
-					|| !(resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL)) {
+					&& !(resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL)) {
 				log.info("#25061 getSoftcertFlg:: if log 1");
 				if (resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ
 						|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING
