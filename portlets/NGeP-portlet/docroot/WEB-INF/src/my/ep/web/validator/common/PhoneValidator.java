@@ -33,21 +33,24 @@ public class PhoneValidator implements Validator {
 				"labelName");
 		String areaCodeVal = (areaCodeInput != null && areaCodeInput.getValue() != null) ? areaCodeInput
 				.getValue().toString() : "";
+		areaCodeVal = replaceSpace(areaCodeVal);
 		String phoneNoVal = value != null ? value.toString() : "";
+		phoneNoVal = replaceSpace(phoneNoVal);
 		String countryCodeVal = (countryCodeInput != null && countryCodeInput
 				.getValue() != null) ? countryCodeInput.getValue().toString()
 				: "";
+		countryCodeVal = replaceSpace(countryCodeVal);
 
-		if (StringUtils.isBlank(countryCodeVal)
+		if ((StringUtils.isBlank(countryCodeVal) || countryCodeVal.equals("-"))
 				&& (StringUtils.isNotBlank(phoneNoVal) || StringUtils
 						.isNotBlank(areaCodeVal))) {
 			throwErrorMsg(labelNameVal,
 					SmCommonUtil.getMessage("lbl.sm.country.code", null));
-		} else if (StringUtils.isBlank(areaCodeVal)
+		} else if ((StringUtils.isBlank(areaCodeVal) || areaCodeVal.equals("-"))
 				&& StringUtils.isNotBlank(phoneNoVal)) {
 			throwErrorMsg(labelNameVal,
 					SmCommonUtil.getMessage("lbl.sm.area.code", null));
-		} else if (StringUtils.isBlank(phoneNoVal)
+		} else if ((StringUtils.isBlank(phoneNoVal) || phoneNoVal.equals("-"))
 				&& StringUtils.isNotBlank(areaCodeVal)) {
 			throw new ValidatorException(new FacesMessage(
 					FacesMessage.SEVERITY_ERROR, "Phone No Error",
@@ -86,6 +89,11 @@ public class PhoneValidator implements Validator {
 				FacesMessage.SEVERITY_ERROR, "Phone No Error",
 				SmCommonUtil.getMessage("lbl.sm.is.required",
 						new String[] { phoneType + " - " + phoneComponent })));
+	}
+
+	private String replaceSpace(String str) {
+		String lineWithoutSpaces = str.replaceAll("\\s+", "-");
+		return lineWithoutSpaces;
 	}
 
 }
