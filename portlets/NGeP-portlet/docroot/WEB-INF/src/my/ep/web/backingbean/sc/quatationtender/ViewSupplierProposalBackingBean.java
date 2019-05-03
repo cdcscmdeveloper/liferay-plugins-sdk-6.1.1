@@ -74,3 +74,8 @@ public class ViewSupplierProposalBackingBean{
 		return qtBackingBean.getManagedBean().getViewOriginalUrl();
 	}
 }
+
+
+
+
+// ***25201

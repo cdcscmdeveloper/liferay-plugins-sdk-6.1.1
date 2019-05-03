@@ -1577,3 +1577,7 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 		this.ministryOrgProfile = ministryOrgProfile;
 	}
 }
+
+
+
+// ***25201

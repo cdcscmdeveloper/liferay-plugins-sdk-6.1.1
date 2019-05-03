@@ -2335,4 +2335,14 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 		return false;
 	}
+	
+	public boolean isNull(Object o){
+		if(o == null){
+			return true;
+		}
+		return false;
+	}
 }
+
+
+// ***25201

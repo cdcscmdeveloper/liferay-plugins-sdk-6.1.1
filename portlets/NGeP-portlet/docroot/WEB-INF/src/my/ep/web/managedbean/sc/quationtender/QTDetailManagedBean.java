@@ -9897,3 +9897,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 
 }
+
+
+
+// ***25201
