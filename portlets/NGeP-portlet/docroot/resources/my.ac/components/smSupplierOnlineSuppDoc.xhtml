@@ -133,15 +133,17 @@
 						style="margin-right:2px;" />
 				</p:commandLink>
 			</p:column>
+			
 			<p:column style="width : 20%;overflow: hidden !important;">
 				<h:outputText rendered="#{table.pmDocument.hardCopyReq}"
 					value="#{lbl['lbl.sm.suppDoc.document.hdrCpyRmrks']}"
-					style="float: left;white-space: normal;" />					
-				<p:commandLink ajax="false" value="#{table.smApplDocFiles[0].fileName}" 
-				rendered="#{not empty table.smApplDocFiles and !table.pmDocument.hardCopyReq}">
-						<p:fileDownload value="#{backingBean.commonDownload(table.smApplDocFiles[0].filePath,table.smApplDocFiles[0].fileName,table.smApplDocFiles[0].fileName)}" />
-				</p:commandLink>
-				<p:spacer width="20" />
+					style="float: left;white-space: normal;" />										
+				<h:commandLink id="file" value="#{backingBean.getShortFileName(table.smApplDocFiles[0].fileName)}" rendered="#{not empty table.smApplDocFiles and !table.pmDocument.hardCopyReq}">
+            		<p:fileDownload value="#{backingBean.commonDownload(table.smApplDocFiles[0].filePath,table.smApplDocFiles[0].fileName,table.smApplDocFiles[0].fileName)}" />
+        		</h:commandLink>
+			    <p:tooltip for="file" value="#{table.smApplDocFiles[0].fileName}" position="top"/>
+				
+				<p:spacer width="10" />
 				<p:commandLink 
 					rendered="#{fn:length(table.smApplDocFiles[0].fileName) > 1}"				
 					action="#{backingBean.onDeleteSupDocFileAttachment(table,index)}" update="@form">
