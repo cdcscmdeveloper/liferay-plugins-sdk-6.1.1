@@ -6,7 +6,6 @@ package my.ep.web.managedbean.ct.circular;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import org.apache.log4j.Logger;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -16,26 +15,19 @@ import my.ep.factory.EpLogger;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
-import my.ep.dto.ct.circular.CircularReqDTO;
-import my.ep.dto.ct.circular.CircularResDTO;
 import my.ep.dto.ct.dtl.ContractItemReqDTO;
 import my.ep.dto.ct.dtl.ContractItemResDTO;
-import my.ep.factory.EpLogger;
-import my.ep.persistence.entity.ct.CtContract;
-import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.ct.ContractBackingBean;
-import my.ep.web.backingbean.ct.circular.CircularBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.persistence.entity.ct.CtContract;
+
 /**
  * Circular Managed Bean
  * 
@@ -80,7 +72,9 @@ public class CircularManagedBean extends BaseManagedBean {
 		public ServiceListingPagingDataModel() {
 			super("itemServiceTable", isReadOnly());
 		}
-      
+		public ServiceListingPagingDataModel(String table) {
+			super(table, false);
+		}
 		@Override
 		public ISearchResultBean<CtContractItem> pageChangeListener(ISearchBean<CtContractItem> searchBean) {
 			try {		
@@ -88,26 +82,37 @@ public class CircularManagedBean extends BaseManagedBean {
 				//private String contractId = null;
 				ContractBackingBean contractBb=new ContractBackingBean();
 				Long contId=contractBb.getManagedBean().getContractVer().getCtContract().getContractId();
+				Long contractVerId=contractBb.getManagedBean().getContractVer().getContractVerId();
 				
 				
-			  if(contId!=null ) {
+			  if(contId!=null ){
 					
 					SearchFilterBean filterBean = new SearchFilterBean("ctContractVer.ctContract.contractId", SearchOperator.OPERATOR_EQUALS.value(),contId);
 					searchBean.getDataFilterBeans().add(filterBean);
 				}
-				
+			  if(contractVerId!=null ) 
+				{
+					
+					SearchFilterBean filterBean = new SearchFilterBean("ctContractVer.contractVerId", SearchOperator.OPERATOR_EQUALS.value(),contractVerId);
+					searchBean.getDataFilterBeans().add(filterBean);
+				}
 				if(getItemname()!=null && getItemname().length()>0) {
 					
 					SearchFilterBean filterBean = new SearchFilterBean("scRequestItem.itemName", SearchOperator.OPERATOR_LIKE.value(),getItemname());
 					searchBean.getDataFilterBeans().add(filterBean);
 				}
-				if(getItemtype()!=null && getItemtype().length()>0 )
+				
+				SearchFilterBean filterBean1 = new SearchFilterBean("itemType.parameterCode", SearchOperator.OPERATOR_LIKE.value(),ParameterConst.ITEM_TYPE_SERVICE);
+				filterBean1.setCaseInsensitive(true);
+				searchBean.getDataFilterBeans().add(filterBean1);
+				
+		/*		if(getItemtype()!=null && getItemtype().length()>0 )
 				{
-					if(getItemtype().equals(ParameterConst.ITEM_TYPE_PRODUCT) || getItemtype().equals(ParameterConst.ITEM_TYPE_SERVICE))
+					if(getItemtype().equals(ParameterConst.ITEM_TYPE_SERVICE))
 					{
-						SearchFilterBean filterBean = new SearchFilterBean("itemType.parameterCode", SearchOperator.OPERATOR_LIKE.value(),getItemtype());
-						filterBean.setCaseInsensitive(true);
-						searchBean.getDataFilterBeans().add(filterBean);
+						SearchFilterBean filterBean1 = new SearchFilterBean("itemType.parameterCode", SearchOperator.OPERATOR_LIKE.value(),getItemtype());
+						filterBean1.setCaseInsensitive(true);
+						searchBean.getDataFilterBeans().add(filterBean1);
 					}
 					if(getItemtype().equals(ParameterConst.ITEM_TYPE_PRODUCT_AND_SERVICE))
 					{
@@ -118,7 +123,7 @@ public class CircularManagedBean extends BaseManagedBean {
 						//filterBean.setCaseInsensitive(true);
 						searchBean.getDataFilterBeans().add(filterBean);
 					}
-				}
+				}*/
 				if(getItemcode()!=null && getItemcode().length()>0 ) {
 					
 					SearchFilterBean filterBean = new SearchFilterBean("scRequestItem.cmItem.extensionCode",	SearchOperator.OPERATOR_EQUALS.value(),getItemcode());
@@ -225,7 +230,9 @@ public class CircularManagedBean extends BaseManagedBean {
 		public CircularListingPagingDataModel() {
 			super("itemTable", isReadOnly());
 		}
-
+		public CircularListingPagingDataModel(String table) {
+			super("itemTable", false);
+		}
 		@Override
 		public ISearchResultBean<CtContractItem> pageChangeListener(ISearchBean<CtContractItem> searchBean) {
 			try {		
@@ -233,21 +240,34 @@ public class CircularManagedBean extends BaseManagedBean {
 				//private String contractId = null;
 				ContractBackingBean contractBb=new ContractBackingBean();
 				Long contId=contractBb.getManagedBean().getContractVer().getCtContract().getContractId();
-				  if(contId!=null ) 
-				  {
+				Long contractVerId=contractBb.getManagedBean().getContractVer().getContractVerId();
+				
+				if(contId!=null ) 
+				  	{
 						SearchFilterBean filterBean = new SearchFilterBean("ctContractVer.ctContract.contractId", SearchOperator.OPERATOR_EQUALS.value(),contId);
 						searchBean.getDataFilterBeans().add(filterBean);
 					}
-					if(getItemname()!=null && getItemname().length()>0) {
+				if(contractVerId!=null ) 
+				{
+					
+					SearchFilterBean filterBean = new SearchFilterBean("ctContractVer.contractVerId", SearchOperator.OPERATOR_EQUALS.value(),contractVerId);
+					searchBean.getDataFilterBeans().add(filterBean);
+				}
+				if(getItemname()!=null && getItemname().length()>0) {
 						
 						SearchFilterBean filterBean = new SearchFilterBean("scRequestItem.itemName", SearchOperator.OPERATOR_LIKE.value(),getItemname());
 						searchBean.getDataFilterBeans().add(filterBean);
 					}
-				if(getItemtype()!=null && getItemtype().length()>0 ) {
+				
+				SearchFilterBean filterBean1 = new SearchFilterBean("itemType.parameterCode", SearchOperator.OPERATOR_LIKE.value(),ParameterConst.ITEM_TYPE_PRODUCT);
+				filterBean1.setCaseInsensitive(true);
+				searchBean.getDataFilterBeans().add(filterBean1);
+				
+				/*if(getItemtype()!=null && getItemtype().length()>0 ) {
 
-					if(getItemtype().equals(ParameterConst.ITEM_TYPE_PRODUCT) || getItemtype().equals(ParameterConst.ITEM_TYPE_SERVICE))
+					if(getItemtype().equals(ParameterConst.ITEM_TYPE_PRODUCT) )
 					{
-						SearchFilterBean filterBean = new SearchFilterBean("itemType.parameterCode", SearchOperator.OPERATOR_LIKE.value(),getItemtype());
+						SearchFilterBean filterBean = new SearchFilterBean("itemType.parameterCode", SearchOperator.OPERATOR_LIKE.value(),ParameterConst.ITEM_TYPE_PRODUCT);
 						filterBean.setCaseInsensitive(true);
 						searchBean.getDataFilterBeans().add(filterBean);
 					}
@@ -262,7 +282,7 @@ public class CircularManagedBean extends BaseManagedBean {
 						//getServiceListingPagingDataModel().reloadData();
 					}
 				
-				}
+				}*/
 				if(getItemcode()!=null && getItemcode().length()>0 ) {
 					
 					SearchFilterBean filterBean = new SearchFilterBean("scRequestItem.cmItem.extensionCode",	SearchOperator.OPERATOR_EQUALS.value(),getItemcode());
@@ -689,4 +709,6 @@ public class CircularManagedBean extends BaseManagedBean {
 	public void setServiceListingPagingDataModel(IPagingDataModel<CtContractItem> serviceListingPagingDataModel) {
 		ServiceListingPagingDataModel = serviceListingPagingDataModel;
 	}	
+	
+	
 }

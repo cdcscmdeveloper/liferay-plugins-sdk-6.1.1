@@ -42,6 +42,7 @@ import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
@@ -687,6 +688,30 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		getManagedBean().setSelectedItemForSpec(ctContractItem);
 		RequestContext.getCurrentInstance().execute("itemSpecDlg.show()");
 	}
+	
+	/**
+	 * The method used to concat both Item code and Item Name.
+	 */
+	public String contactItem(CtContractItem ctItem) {
+		//String result=new String();
+		
+		String itemcode=ctItem.getScRequestItem().getCmItem().getExtensionCode();
+		String itemName=ctItem.getScRequestItem().getItemName();
+		if(itemcode==null)
+		{
+			itemcode=ParameterConst.ITEM_CODE;
+		}
+		if(itemName==null)
+		{
+			itemName=ParameterConst.ITEM_NAME;
+		}
+		String result = itemName +","+ itemcode;
+	
+		return result;
+	     
+	}
+	
+	
 	
 	/**
 	 * The method used to search for the item.

@@ -20,26 +20,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
+import my.ep.factory.EpLogger;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang3.SerializationUtils;
-import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
-import org.primefaces.context.RequestContext;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.event.SelectEvent;
-import org.primefaces.event.ToggleSelectEvent;
-import org.primefaces.event.UnselectEvent;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
-import org.primefaces.model.UploadedFile;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -68,7 +55,6 @@ import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
-//import my.ep.biz.service.ct.dtl.ContractItemSO;
 import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.ct.circular.CircularResDTO;
 import my.ep.dto.ct.dtl.ContractItemReqDTO;
@@ -150,6 +136,21 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.SerializationUtils;
+import org.apache.log4j.Logger;
+import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.ToggleSelectEvent;
+import org.primefaces.event.UnselectEvent;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
+import org.primefaces.model.UploadedFile;
+//import my.ep.biz.service.ct.dtl.ContractItemSO;
+
 /**
  * Backing Bean For Contract
  * 
@@ -159,6 +160,8 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 @ManagedBean(name="ctBackingBean")
 @ViewScoped
 public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
+
+	private static Logger log = EpLogger.getLogger(ContractBackingBean.class);
 
 	private static final long serialVersionUID = 1L;
 	private CtSchedule[] selectedSchedule;
@@ -2863,27 +2866,36 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * of the selected product item.
 	 */
 	public void onSelectProductItem() {
-		if (getManagedBean().getSelectedItem() != null) {
-			if (getManagedBean().getShowItem() != null
-					&& getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
-				getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
-			} else if (getManagedBean().getShowItem() != null
-					&& getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)) {
-				getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY);
-				refreshAgencyCeilingQuantityList();
-			}  else if (getManagedBean().getShowItem() != null
-					&& getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY)) {
-				getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY);
-			} else {
-				getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
+		try{
+			
+			log.info("Selected Item ***"+getManagedBean().getSelectedItem());
+			log.info("Show Item ****"+getManagedBean().getShowItem());
+			if (getManagedBean().getSelectedItem() != null) {
+				if (getManagedBean().getShowItem() != null
+						&& getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
+					getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
+				} else if (getManagedBean().getShowItem() != null
+						&& getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)) {
+					getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY);
+					refreshAgencyCeilingQuantityList();
+				}  else if (getManagedBean().getShowItem() != null
+						&& getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY)) {
+					getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY);
+				} else {
+					getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
+				}
+				// retrieve zone label for new price
+				if (getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)
+						|| getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
+						|| getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
+					itemPriceZoneLabelList(getManagedBean().getSelectedItem());
+					itemMaxQtyZoneLabelList(getManagedBean().getSelectedItem());
+				}
 			}
-			// retrieve zone label for new price
-			if (getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)
-					|| getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
-					|| getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
-				itemPriceZoneLabelList(getManagedBean().getSelectedItem());
-				itemMaxQtyZoneLabelList(getManagedBean().getSelectedItem());
-			}
+		}
+		catch(Exception ex )
+		{
+			ex.printStackTrace();
 		}
 	}
 
@@ -2901,6 +2913,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				CtItemCeilingQty ctItemCeilingQty = new CtItemCeilingQty();
 				ctItemCeilingQty.setCtAgency(ctAgency);
 				ctItemCeilingQty.setCtContractItem(getManagedBean().getSelectedItem());
+				
 				ctItemCeilingQty.setCeilingQuantity(new BigDecimal(0));
 				ctItemCeilingQty.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
 				ctItemCeilingQty.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
@@ -2912,7 +2925,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * The method used to indicate the label flag for new price of contract item.
+	 * The method used to indicate the label flag for new price of contract item.  
 	 */
 	private void itemPriceZoneLabelList(CtContractItem ctContractItem) {
 		if (!ctContractItem.getCtItemPrices().isEmpty()) {
@@ -3003,10 +3016,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public void changeShowItem() {
 		try {
-			if (getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)) {
+			
+			if (getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_QTY)) {
 				refreshAgencyCeilingQuantityList();
-			}
-		} catch (Exception e) {}
+			}else if (getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY)) {
+				refreshAgencyCeilingQuantityList();
+			}	
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -3018,11 +3036,13 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	public List<CtItemCeilingQty> getActiveItemCeilingQty() {
 		List<CtItemCeilingQty> activeList = new ArrayList<CtItemCeilingQty>();
 		if (getManagedBean().getSelectedItem() != null) {
-			for (CtItemCeilingQty ctItemCeilingQty : getManagedBean().getSelectedItem().getCtItemCeilingQties()) {
+			if(getManagedBean().getSelectedItem().getCtItemCeilingQties().size()>0){
+			  for (CtItemCeilingQty ctItemCeilingQty : getManagedBean().getSelectedItem().getCtItemCeilingQties()) {
 				if (ctItemCeilingQty.getCtAgency().isChkStatus()) {
 					activeList.add(ctItemCeilingQty);
 				}
-			}
+			  }
+			}	  
 		}
 		return activeList;
 	}
@@ -3576,8 +3596,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 
 		List<String> itemDisplayTypeList = new ArrayList<String> ();
-		itemDisplayTypeList.add(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);			
-
+			itemDisplayTypeList.add(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);	
+			//itemDisplayTypeList.add(ParameterConst.ITEM_DISPLAY_TYPE_QTY);
+		
+		
+		
 		if (itemType.equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
 			if (this.getManagedBean().getContractVer().getCtAgencies() != null
 					&& this.getManagedBean().getContractVer().getCtAgencies().size() > 1) {
