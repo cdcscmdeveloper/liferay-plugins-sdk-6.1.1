@@ -1890,7 +1890,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	public ScLoa calcBondAmountWithSST(ScLoa scLoa, boolean isDirectLoa) {
 		BigDecimal overallCtAmount = overallCtAmountWithSST(scLoa.getLoaAmt(), scLoa.getSstAmt());
 		
-		if(isDirectLoa) {
+		if(isDirectLoa && scLoa.isBondReq()) {
 			scLoa.setBondReq(PerformanceBondUtil.isPerformanceBondRequired(overallCtAmount, null));
 		}
 		
