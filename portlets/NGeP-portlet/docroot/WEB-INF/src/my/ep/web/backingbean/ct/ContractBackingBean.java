@@ -1849,8 +1849,14 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}
 
 			}
+			
+			if(this.getManagedBean().getContractVer().getCtAgencies() == null  || this.getManagedBean().getContractVer().getCtAgencies().isEmpty() ){
+				getManagedBean().setDisableAgent(true);
+			}
+			
 			this.getManagedBean().setSelectedAgency(null);
 			getManagedBean().setButtonHideActive(true);
+			
 
 			Long minstryId = retrieveMinistryOrgProfile(
 					getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId();
@@ -1858,6 +1864,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			for(CtAgency agencies : getManagedBean().getContractVer().getCtAgencies()){
 				if(!minstryId.equals(agencies.getOrgProfile().getMinstryId())){
 					getManagedBean().setOwnerOrgProfile(false);
+					getManagedBean().setDisableAgent(false);
 					break;
 				}
 			}
@@ -1898,6 +1905,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		getManagedBean().setOwnerOrgProfile(true);
 		Long ministryId = retrieveMinistryOrgProfile(
 				getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId();
+		
 		if (getManagedBean().getAgencySelected() != null && getManagedBean().getAgencySelected().size() >0 && selectedOnly) {
 			ctAgencyList = new ArrayList<CtAgency>();
 			for(PmOrgProfile pmOrgProfiles : getManagedBean().getAgencySelected()) {		
@@ -1925,6 +1933,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				ctAgency.setCommitmentNo("K"+str.toString());
 				if (!pmOrgProfiles.getMinstryId().equals(ministryId)) {
 					ctAgency.setAp178(true);
+					getManagedBean().setDisableAgent(false);
+	
 				}		  	
 				ctAgency.setCtContractVer(this.getManagedBean().getContractVer());
 				ctAgencyList.add(ctAgency);
@@ -1972,6 +1982,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				ctAgency.setCommitmentNo("K"+str.toString());
 				if(!ctAgency.getOrgProfile().getMinstryId().equals(ministryId)){
 					ctAgency.setAp178(true);
+					getManagedBean().setDisableAgent(false);
 				}
 				if(contractSharing){
 					ctAgency.setContractSharing(contractSharing);

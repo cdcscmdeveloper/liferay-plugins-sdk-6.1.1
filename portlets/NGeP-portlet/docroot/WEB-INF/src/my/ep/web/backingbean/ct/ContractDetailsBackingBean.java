@@ -350,8 +350,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						ctBB.checkAgencyStatus(ctAgency);
 						if (ctBB.getManagedBean().getMinistryProfileId().equals(ctAgency.getOrgProfile().getMinstryId())) {
 							ctAgency.setAp178(false);
+							ctBB.getManagedBean().setDisableAgent(true);
 						} else {
 							ctAgency.setAp178(true);
+							ctBB.getManagedBean().setDisableAgent(false);
 						}
 					}
 				}
