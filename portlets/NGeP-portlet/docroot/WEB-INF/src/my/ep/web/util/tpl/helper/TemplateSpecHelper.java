@@ -741,6 +741,8 @@ public class TemplateSpecHelper {
 					totalPrice = totalPrice.multiply(uomPerMonth);
 				}
 				
+				
+				// ***25201
 				TemplateSpecReqDTO templateSpecReqDTO;
 				ITemplateSpecSO	templateSpecSo;
 				TemplateSpecResDTO resDTO;

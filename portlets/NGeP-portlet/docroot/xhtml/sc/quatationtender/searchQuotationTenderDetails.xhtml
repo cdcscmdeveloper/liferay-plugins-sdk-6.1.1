@@ -168,13 +168,33 @@
 				</tr>
 				<tr>
 					<td><h:outputLabel   value="#{lbl['lbl.sc.status']}" /></td>
-					<td><p:selectOneMenu 
+					<td>
+						<ui:param name="loaStatusSelectItems" value="#{qTDetailBB.getQTStatusDropdownValues(ParameterConst.reqNoteMethodCode, ParameterConst.doctypeLetterOfAward,screenName)}"/>
+						<ui:param name="loiStatusSelectItems" value="#{qTDetailBB.getQTStatusDropdownValues(ParameterConst.reqNoteMethodCode, ParameterConst.doctypeLetterOfIntent,screenName)}" />
+						<ui:param name="qtStatusSelectItems" value="#{qTDetailBB.getQTStatusDropdownValues(ParameterConst.reqNoteMethodCode, ParameterConst.doctypeQuotation,screenName)}" />
+						<ui:param name="sfStatusSelectItems" value="#{qTDetailBB.getQTStatusDropdownValues(ParameterConst.reqNoteMethodCode, ParameterConst.doctypeSupplierFinalization,screenName)}" />
+						<c:choose>
+							<c:when test="#{qTDetailBB.managedSearchBeanDocumentTypeIsLOA}">
+								<c:set var="statusList" value="#{loaStatusSelectItems}" scope="view" />
+							</c:when>
+							<c:when test="#{qTDetailBB.managedSearchBeanDocumentTypeIsLOI}">
+								<c:set var="statusList" value="#{loiStatusSelectItems}" scope="view" />
+							</c:when>
+							<c:when test="#{qTDetailBB.managedSearchBeanDocumentTypeIsSuppFinal}">
+								<c:set var="statusList" value="#{sfStatusSelectItems}" scope="view" />
+							</c:when>
+							<c:otherwise>
+								<c:set var="statusList" value="#{qtStatusSelectItems}" scope="view" />
+							</c:otherwise>
+						</c:choose>	
+						
+						<p:selectOneMenu 
 							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.qtStatus}"
 							style="width: 297px;margin-bottom: 5px;">
 							<f:selectItems
-								value="#{qTDetailBB.getQTStatusDropdownValues(ParameterConst.reqNoteMethodCode, ParameterConst.doctypeQuotation,screenName)}" />
+								value="#{statusList}" />
 						</p:selectOneMenu>
-						</td>
+					</td>
 				</tr>
 			</table>
 			
@@ -182,3 +202,8 @@
 	
 	</ui:composition>
 	
+	
+	
+	
+	<!-- ***25201  -->
+	 

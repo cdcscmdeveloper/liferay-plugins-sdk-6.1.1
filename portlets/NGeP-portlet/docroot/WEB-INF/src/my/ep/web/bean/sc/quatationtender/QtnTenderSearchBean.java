@@ -84,6 +84,12 @@ public class QtnTenderSearchBean implements Serializable {
 	private ScQt scQt;
 	
 	/**
+	 * flag to indicate if the qtStatus is to filter ScQt by status
+	 * default to true 
+	 */
+	private boolean qtStatusForQt = true;
+	
+	/**
 	 * Instantiates a new qtn tender search bean.
 	 */
 	public QtnTenderSearchBean() {
@@ -313,6 +319,7 @@ public class QtnTenderSearchBean implements Serializable {
 	 */
 	public void setDocType(String docType) {
 		this.docType = docType;
+		this.setQtStatusForQt(ParameterConst.DOCTYPE_QUOTATION.equals(this.docType));
 	}
 
 	/**
@@ -427,7 +434,7 @@ public class QtnTenderSearchBean implements Serializable {
 		}
 	}
 	
-	
+	// ***25201
 	public QTSearchBean toQTSearchBean(){
 		QTSearchBean t = new QTSearchBean();
 		t.setCommitteeType(committeeType);
@@ -449,7 +456,18 @@ public class QtnTenderSearchBean implements Serializable {
 		t.setToClosingDate(toClosingDate);
 		t.setToCreatedDate(toCreatedDate);
 		t.setToPublishDate(toPublishDate);
+		t.setQtStatusForQt(qtStatusForQt);
 		return t;
 	}
+
+	public boolean isQtStatusForQt() {
+		return qtStatusForQt;
+	}
+
+	public void setQtStatusForQt(boolean qtStatusForQt) {
+		this.qtStatusForQt = qtStatusForQt;
+	}
+	
+	
 	
 }

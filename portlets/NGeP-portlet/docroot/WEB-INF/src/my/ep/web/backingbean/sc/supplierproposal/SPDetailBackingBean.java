@@ -140,7 +140,7 @@ import com.liferay.portal.util.PortalUtil;
  * 
  * @author Viswanath
  * @author Venkat Chanumolu
- * @author saha
+ * 
  * 
  */
 @ManagedBean(name = "supplierProposalDetailBackingBean")
@@ -3761,7 +3761,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 	/**
 	 * Get supplier proposal details.
 	 * 
-	 * @param qtId
+	 * @param qtOrProposalId
 	 *            the quotation / tender id
 	 *            or proposalId if byProposalId is true
 	 *        
@@ -3772,16 +3772,16 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 	 * @param byProposalId -> accept qtId as proposalId if set to true
 	 * @return the supplier proposal page
 	 */
-	public String retriveSupplierProposalDtl(Long qtId, String previousPageUrl,
+	public String retriveSupplierProposalDtl(Long qtOrProposalId, String previousPageUrl,
 			boolean isReadonly, boolean byProposalId) {
 		super.renewSesionObject();
-
+		// ***25201	
 		if(!byProposalId){
-			retrieveProposalChecklistDtls(qtId, new FacesScopes()
+			retrieveProposalChecklistDtls(qtOrProposalId, new FacesScopes()
 				.getUserSessionBean().getUserId(), isReadonly);
 		}
 		else{
-			retrieveProposalChecklistDtls(qtId, new FacesScopes()
+			retrieveProposalChecklistDtls(qtOrProposalId, new FacesScopes()
 			.getUserSessionBean().getUserId(), isReadonly, true);
 		}
 
