@@ -918,7 +918,12 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			return getManagedBean().getBackToPrevious();
 		}
 		else{
-			return "flDocSearch";
+			if(this.getManagedBean().isPendingDelivery()){
+				return "doPending";
+			}else{
+				return "flDocSearch";
+			}
+			
 		}
 	}
 	
