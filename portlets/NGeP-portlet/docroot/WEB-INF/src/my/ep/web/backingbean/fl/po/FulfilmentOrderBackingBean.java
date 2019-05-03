@@ -514,7 +514,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		if(taskId != null){
 			Object obj = super.getBpmTaskDetails(Object.class, null);
 			if(null==this.getManagedBean().getProcessName() || this.getManagedBean().getProcessName().equalsIgnoreCase("")){
-				System.out.println("Process name is NUll");
+				log.info("Process name is NUll");
 			} else if (FLProcessNameConst.STOP_FULFILMENT_REQUEST_PROCESS_NAME.equalsIgnoreCase(this.getManagedBean().getProcessName())) {
 				FLStopFullfillmentDataType stopFlData = (FLStopFullfillmentDataType)obj;
 				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
@@ -610,6 +610,12 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		String id = (String) e.getComponent().getAttributes().get("value");
 		getManagedBean().setFactoringCheck(id);
 		getFactoringCompanyDtl();
+		
+		//#24969
+		Long status = getManagedBean().getFulfilmentOrder().getStatus().getStatusId();
+		if(getManagedBean().getFactoringCheck().equalsIgnoreCase("true") && status.equals(FulfilmentStatusConst.PO_PENDING_SUPPLIER_ACKNOWLEDGEMENT)) {
+			RequestContext.getCurrentInstance().execute("popUpFactoredDlg.show()");
+		}
 	}
 	
 	/**
