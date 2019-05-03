@@ -8479,7 +8479,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		
 		if (null != qtType && null != fulfilmentType && qtType == 194 && fulfilmentType == 148) {
-			getManagedBean().getScLoa().setAgreementReq(false);
+			if (null == getManagedBean().getBondReqSelectedVal()) {
+				getManagedBean().getScLoa().setAgreementReq(false);
+			} else if ("208".equals(getManagedBean().getBondReqSelectedVal())) {
+				getManagedBean().getScLoa().setAgreementReq(false);
+			}
 			
 			// If Contract Type is selected and its not 'Ministry', then return false.
 			if (null != contractType && contractType != 146) {
