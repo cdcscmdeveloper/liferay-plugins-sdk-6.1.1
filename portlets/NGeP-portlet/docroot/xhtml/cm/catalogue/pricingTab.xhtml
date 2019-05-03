@@ -46,12 +46,14 @@
 				<p:calendar disabled="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"
 					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate}" mindate="#{catalogueBackingBean.managedBean.currentDate}" readonlyInput="true"
 					showOn="button" navigator="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
+					<p:ajax event="dateSelect" listener="#{catalogueBackingBean.onDateSelectListener(catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing)}" update="standardEndDateId"/>
 				</p:calendar>
 
 			</p:column>
 			<p:column>
-				<p:calendar disabled="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"
-					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate}" mindate="#{catalogueBackingBean.managedBean.currentDate}" readonlyInput="true"
+				<p:calendar id="standardEndDateId" disabled="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue or catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate==null}"
+					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate}" mindate="#{catalogueBackingBean.managedBean.currentDate}" readonlyInput="true" 
+					maxdate="#{catalogueBackingBean.getNextTwoYear(catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate)}"
 					showOn="button" navigator="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 				</p:calendar>
 
