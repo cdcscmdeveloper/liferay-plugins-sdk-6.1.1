@@ -134,6 +134,14 @@ public class ZoneMaintenanceManagedBean extends BaseManagedBean {
 	/** The edit mode. */
 	private boolean editMode;
 	
+	private boolean allZoneSelected;
+
+	private boolean allZoneSelectable;
+	
+	private List<CmSupplierZone> tempDeletedSupplierZoneList;
+
+	private List<Long> disabledDistrictId;
+
 	/**
 	 * Instantiates a new zone maintenance managed bean.
 	 */
@@ -936,6 +944,39 @@ public class ZoneMaintenanceManagedBean extends BaseManagedBean {
 	 */
 	public void setEditMode(boolean editMode) {
 		this.editMode = editMode;
+	}
+
+	public boolean isAllZoneSelected() {
+		return allZoneSelected;
+	}
+
+	public void setAllZoneSelected(boolean allZoneSelected) {
+		this.allZoneSelected = allZoneSelected;
+	}
+
+	public boolean isAllZoneSelectable() {
+		return allZoneSelectable;
+	}
+
+	public void setAllZoneSelectable(boolean allZoneSelectable) {
+		this.allZoneSelectable = allZoneSelectable;
+	}
+
+	public List<CmSupplierZone> getTempDeletedSupplierZoneList() {
+		return tempDeletedSupplierZoneList;
+	}
+
+	public void setTempDeletedSupplierZoneList(
+			List<CmSupplierZone> tempDeletedSupplierZoneList) {
+		this.tempDeletedSupplierZoneList = tempDeletedSupplierZoneList;
+	}
+
+	public List<Long> getDisabledDistrictId() {
+		return disabledDistrictId;
+	}
+
+	public void setDisabledDistrictId(List<Long> disabledDistrictId) {
+		this.disabledDistrictId = disabledDistrictId;
 	}
 
 }
