@@ -543,11 +543,11 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			doBB.getManagedBean().getFulfilmentOrder().setStatus(deliveryOrderSO.retrieveDelOrderStatus(reqDTO).getPmStatus());
 			doBB.getManagedBean().setBackToPrevious(null);
 			
-//			String isPendingDelivery = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("isPendingDelivery");
-//			
-//			if(isPendingDelivery.equals(ParameterConst.IS_PENDING_DELIVERY_ACTION)){
-//				doBB.getManagedBean().setPendingDelivery(true);
-//			}
+			String isPendingDelivery = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("isPendingDelivery");
+			
+			if(isPendingDelivery.equals(ParameterConst.IS_PENDING_DELIVERY_ACTION)){
+				doBB.getManagedBean().setPendingDelivery(true);
+			}
 			
 			doBB.getManagedBean().setSupplierUserName(getUsername(resDTO.getFlDeliveryOrder().getCreatedBy()));
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
