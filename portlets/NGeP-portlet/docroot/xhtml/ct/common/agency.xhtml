@@ -155,10 +155,11 @@
 							</td>
 				   </tr>
 				   <tr><td class="TableFieldLeft" width="15%"> <p:outputLabel value="#{lbl['lbl.ct.agency.ap178.attachment']}"/>     </td>
-				           <td> <p:commandButton id="uploadSharingDoc" oncomplete="ctSharingAttachDlg.show();return false;" update="ctSharingAttachDlg"
+				           <td> <p:outputPanel id="uploadSharingDoc">  <p:commandButton  oncomplete="ctSharingAttachDlg.show();return false;" update="ctSharingAttachDlg"
 				                      rendered="#{ctBackingBean.managedBean.contractVer.agencyContractSharingAttachements.filePath == null}"
-					    		    icon="ui-icon-upload"  disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails}" process="@this" partialSubmit="true"/>
-
+					    		    icon="ui-icon-upload"  disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails
+					    		    or ctBackingBean.managedBean.disableAgent}" process="@this" partialSubmit="true"/>
+								</p:outputPanel>
 		     					 <h:commandLink
 										value="#{ctBackingBean.getShortFileName(ctBackingBean.managedBean.contractVer.agencyContractSharingAttachements.fileName)}"						
 										style="float:left;margin-top:10px;" styleClass="blue_font"
@@ -310,10 +311,10 @@
                     <p:column headerText="#{lbl['lbl.ct.ptj.name']}" >
                       	#{pmVar.orgName}
 					</p:column>
-			 </p:dataTable>           
+			 </p:dataTable>     
 			<div class="ppRightBtn">
 				<p:commandButton id="agySlectBtnId"  value="#{lbl['lbl.btn.select']}" process="@form" 
-					update=":form:tableAgencyDetails,:form:itemId,:form:messages,:form:agencyRemarksAttachmentPnl" 
+					update=":form:tableAgencyDetails,:form:uploadSharingDoc,:form:itemId,:form:messages,:form:agencyRemarksAttachmentPnl" 
 				    action="#{ctBackingBean.addAgencyDetails('true')}" onclick="dlgAgency.hide();"
 				    disabled="#{ctBackingBean.managedBean.agencySelected eq null or empty ctBackingBean.managedBean.agencySelected}" 
 				     onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
