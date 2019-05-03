@@ -1527,29 +1527,38 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		IFlItemSummarySO itemSummarySO = (IFlItemSummarySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFlItemSummarySO.class);
 		
 		FlItemSummaryReqDTO reqDTO = new FlItemSummaryReqDTO();
+		reqDTO.setFlRequestId(flRequest.getFulfilmentReqId());
+		reqDTO.setOrgProfileId(flRequest.getPreparedOrgProfile().getOrgProfileId());
+		reqDTO.setContractId(flRequest.getCtContract().getContractId());
+		
 		ContractItemReqDTO ctReqDTO = new ContractItemReqDTO();
 		ContractItemResDTO ctResDTO = new ContractItemResDTO();
 		ctReqDTO.setContractId(flRequest.getCtContract().getContractId());
 		ctReqDTO.setOrgProfileId(flRequest.getPreparedOrgProfile().getOrgProfileId());
-		BigDecimal sumOrderedQty = BigDecimal.ZERO;
-		BigDecimal checkCeilingQty = BigDecimal.ZERO;
+		
+		Map<ScRequestItem, BigDecimal> itemOrderedQtyMap = new HashMap<ScRequestItem, BigDecimal>();
 		for(FlDeliveryAddress deliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()){
 			for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()){
-				ctReqDTO.setItemId(itemAddr.getScRequestItem().getRequestNoteItemId());
-				ctResDTO = contractItemSO.getItemCeilingQuantity(ctReqDTO);
-				if(ctResDTO.getItemCeilingQuantity().doubleValue() <= 0){
-					break;
+				if(itemOrderedQtyMap.containsKey(itemAddr.getScRequestItem())) {
+					itemOrderedQtyMap.put(itemAddr.getScRequestItem(), itemOrderedQtyMap.get(itemAddr.getScRequestItem()).add(itemAddr.getOrderedQty()));
+				} else {
+					itemOrderedQtyMap.put(itemAddr.getScRequestItem(), itemAddr.getOrderedQty());
 				}
-				sumOrderedQty = sumOrderedQty.add(itemAddr.getOrderedQty());
-				reqDTO.setFlRequestId(flRequest.getFulfilmentReqId());
-				reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
-				reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
-				reqDTO.setItemId(itemAddr.getScRequestItem().getRequestNoteItemId());
-				BigDecimal prevSumQty = itemSummarySO.retrieveContractAgencyAccumulatedQty(reqDTO);
-				checkCeilingQty = prevSumQty.add(sumOrderedQty);
-				if(checkCeilingQty.doubleValue() >  ctResDTO.getItemCeilingQuantity().doubleValue()){
-					throw new EpException(MessageConst.ERROR_740033,new String[]{itemAddr.getScRequestItem().getItemName()});
-				}
+			}
+		}
+		
+		BigDecimal checkCeilingQty = BigDecimal.ZERO;
+		for(ScRequestItem requestItem : itemOrderedQtyMap.keySet()) {
+			ctReqDTO.setItemId(requestItem.getRequestNoteItemId());
+			ctResDTO = contractItemSO.getItemCeilingQuantity(ctReqDTO);
+			if(ctResDTO.getItemCeilingQuantity().doubleValue() <= 0){
+				break;
+			}
+			reqDTO.setItemId(requestItem.getRequestNoteItemId());
+			BigDecimal prevSumQty = itemSummarySO.retrieveContractAgencyAccumulatedQty(reqDTO);
+			checkCeilingQty = prevSumQty.add(itemOrderedQtyMap.get(requestItem));
+			if(checkCeilingQty.doubleValue() >  ctResDTO.getItemCeilingQuantity().doubleValue()){
+				throw new EpException(MessageConst.ERROR_740033,new String[]{requestItem.getItemName()});
 			}
 		}
 	}
