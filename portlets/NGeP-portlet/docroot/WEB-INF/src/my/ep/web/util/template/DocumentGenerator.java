@@ -104,33 +104,13 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 		log.info("velocityTemplate: " + velocityTemplate);
 		log.info("context: " + context);
         
-		VelocityEngine dve = null;
-		
         final String templatePath = "templates" + velocityTemplate;
         InputStream input = this.getClass().getClassLoader().getResourceAsStream(templatePath);
         if (input == null) {
-        	System.err.println();
-        	System.err.print("Template file doesn't exist.");
-        	/* for development purpose 001 */
-        	String myTemplatePath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/WEB-INF/templates");
-        	VelocityEngine ve = new VelocityEngine();
-        	ve.setProperty(RuntimeConstants.FILE_RESOURCE_LOADER_PATH, myTemplatePath);
-        	ve.init();
-        	dve = ve;
-        	if(dve!=null){
-        		System.err.print(" VE for development purpose.");
-        	}
-        	System.err.println();
-        	/* for development purpose 001 end */
+            System.err.println("Template file doesn't exist");
         }
 		
-    	Template template;
-    	if(dve!=null){
-    		template = dve.getTemplate(velocityTemplate);
-    	}
-    	else{
-    		template = getVelocityEngine().getTemplate("templates" + velocityTemplate);
-    	}
+    	Template template = getVelocityEngine().getTemplate("templates" + velocityTemplate);
     	log.info("template: " + template);
     	
     	StringWriter output = null;
@@ -554,3 +534,6 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
         }
     }
 }
+
+
+// ***25201

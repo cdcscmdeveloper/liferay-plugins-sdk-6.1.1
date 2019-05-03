@@ -11,6 +11,7 @@ import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -46,6 +47,7 @@ import my.ep.biz.service.sm.virtualcert.IVirtualCertSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
+import my.ep.constant.MapKeyEnum;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -319,6 +321,28 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 		return QTConstants.LOA_PAGE;
 	}
+	
+	/**
+	 * Get the supplier loa details.
+	 * 
+	 * @param sourceId 
+	 * 		the source id (qt id / rn id
+	 * @param loaId 
+	 * 		the loa id
+	 * @param previousPageUrl
+	 * 		the previous page url.
+	 * @param isReadonly
+	 * 		the readonly flag
+	 * @param enableDownloadAllDocuments
+	 * 		either user can download documents
+	 * 
+	 * @return the supplier loa page
+	 */
+	public String retrieveSupplierLOADtl(Long sourceId, Long loaId, String previousPageUrl, boolean isReadonly, boolean enableDownloadAllDocuments) {
+		Map<MapKeyEnum, Object> otherArgs = new HashMap<MapKeyEnum, Object>();
+		otherArgs.put(MapKeyEnum.enableDownloadAllDocuments, Boolean.valueOf(enableDownloadAllDocuments));
+		return retrieveSupplierLOADtlPriv(sourceId, loaId, previousPageUrl, isReadonly, otherArgs);
+	}
 
 
 	/**
@@ -336,11 +360,41 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * @return the supplier loa page
 	 */
 	public String retrieveSupplierLOADtl(Long sourceId, Long loaId, String previousPageUrl, boolean isReadonly) {
+		return retrieveSupplierLOADtlPriv(sourceId, loaId, previousPageUrl, isReadonly, null);
+	}
+	
+	
+	/**
+	 * Get the supplier loa details.
+	 * 
+	 * @param sourceId 
+	 * 		the source id (qt id / rn id
+	 * @param loaId 
+	 * 		the loa id
+	 * @param previousPageUrl
+	 * 		the previous page url.
+	 * @param isReadonly
+	 * 		the readonly flag
+	 * @param otherArgs
+	 * 		enableDownloadAllDocuments - java.lang.Boolean
+	 * 		either user can download all attachments/documents or not
+	 * 
+	 * @return the supplier loa page
+	 */
+	private String retrieveSupplierLOADtlPriv(Long sourceId, Long loaId, String previousPageUrl, boolean isReadonly, Map<MapKeyEnum, Object> otherArgs) {
 		debugLogger("retrieveSupplierLOADtl");
 		try {
+			//to avoid otherArgs is null checking next time
+			if(otherArgs == null){
+				otherArgs = new HashMap<MapKeyEnum, Object>();
+			}
 			getManagedBean().setSourceId(sourceId);
 			getManagedBean().setBackToPreviousPage(previousPageUrl);
 			getManagedBean().setReadOnly(isReadonly);
+			if(otherArgs.containsKey(MapKeyEnum.enableDownloadAllDocuments) && otherArgs.get(MapKeyEnum.enableDownloadAllDocuments) instanceof Boolean){
+				Object o = otherArgs.get(MapKeyEnum.enableDownloadAllDocuments);
+				if(o instanceof Boolean){	getManagedBean().setEnableDownloadAllDocuments((Boolean)o);	}
+			}
 
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setLoaId(loaId);
@@ -818,6 +872,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			getManagedBean().setBondAmountWord(
 					NumberWordUtil.convert(scLoa.getBondAmt().toString()));
 		}
+		
+		
+		//awarded supplier and proposal
+		if(resDTO.getSupplierProposal()!= null){
+			getManagedBean().setScQtProposal(resDTO.getSupplierProposal());
+		}
 
 		// clauses title
 		getClausesTitle(null);
@@ -1239,7 +1299,18 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					SourcingConstants.REG_EXP_WHITE_SPACE, "");
 			scLoaReportAttachmentGenerated.setTempFileName(prefixName);
 		}
-		downloadFile(scLoaReportAttachmentGenerated);
+		try{
+			downloadFile(scLoaReportAttachmentGenerated);
+		}
+		catch(IOException ex){
+			if(ex instanceof FileNotFoundException){
+				handleException(new EpException(MessageConst.ERROR_760411, new String[]{scLoaReport.getTitle()}));
+			}
+			
+		}
+		catch(EpException ex){
+			handleException(ex);
+		}
 	}
 
 	/**
@@ -1265,7 +1336,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						.getDocDefinitionKey();
 				Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 
-				if (scLoaReportAttachment == null) {
+				//development purpose - enable create document when the document doesn't exist
+				/* if(scLoaReportAttachment == null || getManagedBean().getEnableDownloadAllDocuments()) {*/
+				if (scLoaReportAttachment == null ) {
 					StringBuilder filename = new StringBuilder();
 					//replace white space due to firefox 
 					filename.append(scLoaReport.getTitle().replaceAll("\\s",""));
@@ -6541,6 +6614,68 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		return roleCode;
 	}
 	
+	
+	public Boolean canShowSupplierProposal(){
+		IUserSO userSO = null;
+		try{
+			userSO = BusinessDelegate.getInstance()
+					.getServiceObject(IUserSO.class);
+			
+			
+			
+			/**
+			 * 	1. find qt pm_org_profile
+			 *  2. find user pm_org_profile
+			 *  3. give permission to user within same organization with the role accesibility  
+			 *  (cancel)4. by state group (sabah, sarawak, peninsular) within same PTJ
+			 */
+			
+			//1			
+			ScQt scQt = getManagedBean().getScQt();
+			PmOrgProfile qtOrgProfile =  scQt.getPmOrgProfile();
+						
+			//2 & 3
+			Long userId = getFacesScopes().getUserSessionBean().getUserId();
+			debugLogger(getFacesScopes().getUserRoleList());
+			UserReqDTO reqDTO = new UserReqDTO();
+			reqDTO.setUserId(userId);
+			reqDTO.setOrgProfileId(qtOrgProfile.getOrgProfileId());
+			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
+			reqDTO.setRoleCodes(Arrays.asList(
+					RoleCode.DESK_OFFICER.value(),
+					RoleCode.FPB_SECRETARY.value(),
+					RoleCode.QCA_SECRETARY.value(),
+					RoleCode.QCB_SECRETARY.value(),
+					RoleCode.PBA_SECRETARY.value(),
+					RoleCode.PBB_SECRETARY.value()
+					));
+			reqDTO.setForceGetAllUserOrgList(false);
+			UserResDTO resDTO = userSO.checkAndGetUserInOrgProfile(reqDTO);
+			/*reqDTO.setForceGetAllUserOrgList(true);
+			UserResDTO allUserOrgResDTO = userSO.checkAndGetUserInOrgProfile(reqDTO);
+			reqDTO.setForceGetAllUserOrgList(false);*/
+			
+			
+			if(resDTO.isSuccessful()){
+				debugLogger("checkUserInOrgProfile Successful");
+				if(!CollectionUtils.isEmpty(resDTO.getUserOrgList())){
+					return true;
+				}
+			}
+			return false;
+			
+		}
+		finally{
+			userSO = null;
+		}
+	}
+	
+	
+	private FacesScopes getFacesScopes(){
+		FacesScopes fs = new FacesScopes();
+		return fs;
+	}
+	
 	/**
 	 * Add/display only cancel/reject button if SQ not valid 
 	 */
@@ -6586,3 +6721,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		return validDate;	
 	}
 }
+
+
+
+
+//  ***25201

@@ -157,6 +157,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private ScQtEvaluationResultDtl recommendedSupplierByItem;
 	private ScQtEvaluationResultDtl prevRecommendedSupplierByItem;
 	
+	private String previousPageUrl;	
+	
 //	private List<ScQtEvaluationResultDtl> qualifiedSuppliersByEvalStage;
 	
 	/** Qualified suppliers by evaluation stage */
@@ -2113,4 +2115,26 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.outcome = outcome;
 	}
 
+	public String getPreviousPageUrl() {
+		return previousPageUrl;
+	}
+
+	public void setPreviousPageUrl(String previousPageUrl) {
+		this.previousPageUrl = previousPageUrl;
+	}
+	
+	
+
 }
+
+
+
+
+
+
+
+
+
+
+
+// ***25201
