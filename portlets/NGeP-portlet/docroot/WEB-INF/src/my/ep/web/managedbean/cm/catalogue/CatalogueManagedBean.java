@@ -11,6 +11,7 @@
 package my.ep.web.managedbean.cm.catalogue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -48,6 +49,7 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.helper.Paginator;
 import my.ep.persistence.entity.cm.catalog.CmFavoriteSupplier;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
@@ -75,10 +77,12 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.cm.helper.CmSupplierZoneStateDistrictDTO;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.AdvanceSearchVO;
 import my.ep.web.vo.PricingVO;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -502,6 +506,12 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	
 	private boolean dupplicatedInd = false;
 	
+	private Paginator detachedPaginator;
+	
+	private TreeNode stateTree;
+	
+	private TreeNode[] selectedNodes;
+
 	private class ExpiredSearchPagingDataModel extends
 			PagingDataModel<CmSupplierItem> {
 
@@ -1517,6 +1527,40 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		if (StringUtils
 				.isNotBlank((String) bizRegNoFilterBean.getSearchValue())) {
 			hasSearchValue = true;
+		}
+		this.setDistrictId(new long[0]);
+		this.setStateId(new long[0]);//safe check
+		if (this.getSelectedNodes() != null && this.getSelectedNodes().length > 0) {
+			List<Long> stateList = new ArrayList<Long>();
+			List<Long> districtList = new ArrayList<Long>();
+			for(int i = 0; i < this.getSelectedNodes().length;i++){
+				TreeNode node = this.getSelectedNodes()[i];
+				 CmSupplierZoneStateDistrictDTO dto = (CmSupplierZoneStateDistrictDTO) node.getData();
+				 if(node.getType().equalsIgnoreCase("district")){
+					 PmDistrict district = dto.getDistrict();
+					 log.info("district Name" + district.getDistrictName());
+					 districtList.add(district.getDistrictId());
+					 Long stateId = district.getPmState().getStateId();
+					 if(!stateList.contains(stateId)){
+						 stateList.add(stateId);
+						 System.out.println("state == >" +Arrays.toString(stateList.toArray()));
+						 }
+					 }
+			}
+			if(districtList!=null && districtList.size()>0){
+				long arr[]  = new long[districtList.size()];
+				for(int i=0; i<arr.length; i++){
+					arr[i] = districtList.get(i).longValue();
+				}
+				this.setDistrictId(arr);
+			}
+			if(stateList!=null && stateList.size()>0){
+				long arr[]  = new long[stateList.size()];
+				for(int i=0; i<arr.length; i++){
+					arr[i] = stateList.get(i).longValue();
+				}
+				this.setStateId(arr);
+			}
 		}
 
 		if (this.getDistrictId() != null && this.getDistrictId().length > 0) {
@@ -4141,5 +4185,29 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 */
 	public void setDupplicatedInd(boolean dupplicatedInd) {
 		this.dupplicatedInd = dupplicatedInd;
+	}
+
+	public Paginator getDetachedPaginator() {
+		return detachedPaginator;
+	}
+
+	public void setDetachedPaginator(Paginator detachedPaginator) {
+		this.detachedPaginator = detachedPaginator;
+	}
+
+	public TreeNode getStateTree() {
+		return stateTree;
+	}
+
+	public void setStateTree(TreeNode stateTree) {
+		this.stateTree = stateTree;
+	}
+
+	public TreeNode[] getSelectedNodes() {
+		return selectedNodes;
+	}
+
+	public void setSelectedNodes(TreeNode[] selectedNodes) {
+		this.selectedNodes = selectedNodes;
 	}
 }

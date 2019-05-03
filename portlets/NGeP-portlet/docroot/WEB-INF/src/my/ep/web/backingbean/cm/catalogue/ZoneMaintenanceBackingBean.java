@@ -12,6 +12,9 @@ package my.ep.web.backingbean.cm.catalogue;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -23,6 +26,9 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
+import org.primefaces.component.datatable.DataTable;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.data.PageEvent;
 import org.primefaces.model.TreeNode;
 
 import my.ep.biz.service.cm.catalogue.IZoneMaintenanceSO;
@@ -45,6 +51,7 @@ import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.entity.cm.catalog.CmItemRejectReason;
 import my.ep.persistence.entity.cm.catalog.CmSupplierZone;
 import my.ep.persistence.entity.cm.catalog.CmSupplierZoneDTL;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -88,9 +95,10 @@ BaseBackingBean<ZoneMaintenanceManagedBean> implements Serializable {
 	 * Pre render zone view.
 	 */
 	public void preRenderZoneView(){
-		log.debug("********************ZoneMaintenanceBackingBean PreRender***************");
+		log.info("********************ZoneMaintenanceBackingBean PreRender***************");
 		getManagedBean().setCurrentSupplier(getCurrentUserSupplier());
 		showZonePopup();
+		this.getManagedBean().setAllZoneSelected(false);
 		getManagedBean().setSelectedSupplierZone(null);
 		CountryReqDTO reqDTO = new CountryReqDTO();
 		reqDTO.setCountryCode("MY");
@@ -143,29 +151,31 @@ BaseBackingBean<ZoneMaintenanceManagedBean> implements Serializable {
 	 * @param rootZoneLocation
 	 *           (TreeNode rootZoneLocation(mandatory))
 	 */
-	public void deleteTreeNodes(TreeNode rootZoneLocation) {
-		CmSupplierZone zone = getZone(rootZoneLocation);
+	public void deleteTreeNodes() {
+		//final DataTable d = (DataTable) FacesContext.getCurrentInstance().getViewRoot().findComponent("form:zoneDetailsDataTable");
+		Iterator<CmSupplierZone> ite = getManagedBean().getCmSupplierZoneList().iterator();
 		List<CmSupplierZone> deleteList = new ArrayList<CmSupplierZone>();
 		if(getManagedBean().getDeletedCmSupplierZoneList() != null && getManagedBean().getDeletedCmSupplierZoneList().size() > 0){
 			deleteList = getManagedBean().getDeletedCmSupplierZoneList();
 		}
-		Iterator<CmSupplierZone> ite = getManagedBean().getCmSupplierZoneList().iterator();
-		log.debug("Checking for Delete");
 		while(ite.hasNext()){
 			CmSupplierZone cmZone = ite.next(); 
-			if(cmZone.getSuppZoneName().equalsIgnoreCase(zone.getSuppZoneName())){
-				log.debug("Found it");
-				if(cmZone.getCmPricings() != null && cmZone.getCmPricings().size() > 0){
-					throw new EpException(MessageConst.ERROR_716005);
+			for(CmSupplierZone zone: this.getManagedBean().getTempDeletedSupplierZoneList()){
+				if(cmZone.getSuppZoneName().equalsIgnoreCase(zone.getSuppZoneName())){
+					if(cmZone.getCmPricings() != null && cmZone.getCmPricings().size() > 0){
+						throw new EpException(MessageConst.ERROR_716005);
+					}
+					deleteList.add(cmZone);
+					ite.remove();
+					break;
 				}
-				log.info("Size Before:" + getManagedBean().getCmSupplierZoneList().size());
-				deleteList.add(cmZone);
-				ite.remove();
-				log.info("Size After:" + getManagedBean().getCmSupplierZoneList().size());
 			}
 		}
+	
 		getManagedBean().setDeletedCmSupplierZoneList(deleteList);	
+		//log.info("the delete list ===> " + this.getManagedBean().getDeletedCmSupplierZoneList().size());
 		getManagedBean().setZoneTrees(CmSupplierZoneSingleton.getInstance().buildZoneSDTree(this.getManagedBean().getCmSupplierZoneList()));
+		RequestContext.getCurrentInstance().execute("deleteConfirmation.hide();");
 	}
 
 	/**
@@ -280,6 +290,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> implements Serializable {
 		int i = zoneIndex;
 		this.getManagedBean().setZoneIndex(i);
 		getManagedBean().setZoneTrees(CmSupplierZoneSingleton.getInstance().buildZoneSDTree(this.getManagedBean().getCmSupplierZoneList()));
+		disableSelectedDistrict(districts);
 		for(CmSupplierZone suppZone : getManagedBean().getCmSupplierZoneList()){
 			if((zone.getSuppZoneId() != 0 && (zone.getSuppZoneId() == suppZone.getSuppZoneId())) || zone.getSuppZoneName().equalsIgnoreCase(suppZone.getSuppZoneName())){
 				getManagedBean().setSelectedSupplierZone(suppZone);
@@ -300,6 +311,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> implements Serializable {
 		getManagedBean().getSelectedSupplierZone().setSuppZoneName(null);
 		getManagedBean().setRootZoneTree(
 				CmSupplierZoneSingleton.getInstance().buildCmSupplierZoneTree(getManagedBean().getDefaultCountryId(), null, null, null));
+		disableSelectedDistrict(null);
 	}
 
 	/**
@@ -317,11 +329,29 @@ BaseBackingBean<ZoneMaintenanceManagedBean> implements Serializable {
 		} else {
 			this.getManagedBean().setCmSupplierZoneList(new ArrayList<CmSupplierZone>());
 		}
+		
+		Collections.sort(this.getManagedBean().getCmSupplierZoneList(), new Comparator<CmSupplierZone>() {
+			  @Override
+		        public int compare(CmSupplierZone o1, CmSupplierZone o2) {
+				      return o1.getSuppZoneName().compareToIgnoreCase(o2.getSuppZoneName());
+		        }
+		});
+	
 		this.getManagedBean().setDeletedCmSupplierZoneList(null);
 		this.getManagedBean().setZoneTrees(CmSupplierZoneSingleton.getInstance().buildZoneSDTree(this.getManagedBean().getCmSupplierZoneList()));
-		this.getManagedBean().setRootZoneTree(
-				CmSupplierZoneSingleton.getInstance().buildCmSupplierZoneTree(getManagedBean().getDefaultCountryId(), null, null, null));
-		this.getManagedBean().setZoneName(null);
+		this.getManagedBean().setRootZoneTree(CmSupplierZoneSingleton.getInstance().buildCmSupplierZoneTree(getManagedBean().getDefaultCountryId(), null, null, null));
+		
+		disableSelectedDistrict(null);
+		
+		if(this.getManagedBean().getZoneTrees()!=null && this.getManagedBean().getZoneTrees().size()>0){
+			for(TreeNode tree: this.getManagedBean().getZoneTrees()){
+				CmSupplierZoneStateDistrictDTO zoneDTO =  (CmSupplierZoneStateDistrictDTO)tree.getChildren().get(0).getData();
+				CmSupplierZone zone = zoneDTO.getCmSupplierZone();
+				if(zone.getCmPricings() != null && zone.getCmPricings().size() > 0){
+					zone.setSelectable(false);
+				}
+			}
+		}
 	}
 
 
@@ -764,5 +794,102 @@ BaseBackingBean<ZoneMaintenanceManagedBean> implements Serializable {
 		getManagedBean().setShowParentMsg(true);
 		getManagedBean().setValueReqd(false);
 	}
-
+	
+	public void deleteSelectedZones() {
+		List<CmSupplierZone> deleteList = new ArrayList<CmSupplierZone>();
+		for(TreeNode tree: this.getManagedBean().getZoneTrees()){
+			CmSupplierZoneStateDistrictDTO zoneDTO =  (CmSupplierZoneStateDistrictDTO)tree.getChildren().get(0).getData();
+			CmSupplierZone zone = zoneDTO.getCmSupplierZone();
+			if(zone.isSelected()){
+				if(zone.getCmPricings() != null && zone.getCmPricings().size() > 0){
+					throw new EpException(MessageConst.ERROR_716005);
+				}
+				deleteList.add(zone);
+			}
+		}
+			this.getManagedBean().setTempDeletedSupplierZoneList(deleteList);	
+			RequestContext.getCurrentInstance().execute("deleteConfirmation.show();");
+	}
+	
+	public boolean  isDeleteListEmpty(){
+		boolean check = true;
+		for(TreeNode tree: this.getManagedBean().getZoneTrees()){
+			CmSupplierZoneStateDistrictDTO zoneDTO =  (CmSupplierZoneStateDistrictDTO)tree.getChildren().get(0).getData();
+			CmSupplierZone zone = zoneDTO.getCmSupplierZone();
+			if(zone.isSelected()){
+				check = false;
+				break;
+			}
+		}
+		return check;
+	}
+	
+	public CmSupplierZone getCurrentZone(TreeNode node){
+		CmSupplierZoneStateDistrictDTO zoneDTO =  (CmSupplierZoneStateDistrictDTO)node.getChildren().get(0).getData();
+		return zoneDTO.getCmSupplierZone();
+	}
+	public List<Long> getListOfDisableDistrict(List<Long> currentlySelectedIds){
+		List<Long> disabledDistrictList = new ArrayList<Long>();
+		for(CmSupplierZone zone: this.getManagedBean().getCmSupplierZoneList()){
+			for(CmSupplierZoneDTL zoneDtl : zone.getCmSupplierZoneDtls()){
+				if(zoneDtl.getPmDistrict() != null){
+					Long id = zoneDtl.getPmDistrict().getDistrictId();
+					if(!currentlySelectedIds.contains(id)){
+						disabledDistrictList.add(id);
+					}
+				}
+			}
+		}
+		return disabledDistrictList;
+	}
+	public void disableSelectedDistrict(List<PmDistrict> currentlySelectedDistricts){
+		List <Long> currentlySelectedId = new ArrayList<Long>();
+		if(currentlySelectedDistricts!=null && currentlySelectedDistricts.size()>0){
+			for(PmDistrict dist: currentlySelectedDistricts){
+				currentlySelectedId.add(dist.getDistrictId());
+			}
+		}
+		this.getManagedBean().setDisabledDistrictId(this.getListOfDisableDistrict(currentlySelectedId));
+	
+		for(TreeNode node: this.getManagedBean().getRootZoneTree().getChildren()){ //state
+			int count = 0;
+			int size = 0;
+			for(TreeNode disOrDiv: node.getChildren()){// division or district
+				if(disOrDiv.getType().equalsIgnoreCase("division")){
+					size = disOrDiv.getChildren().size();
+					for(TreeNode dis: disOrDiv.getChildren()){
+						CmSupplierZoneStateDistrictDTO dto = (CmSupplierZoneStateDistrictDTO)dis.getData();
+						dto.getDistrict().setSelectable(true);
+						if(this.getManagedBean().getDisabledDistrictId().contains(dto.getDistrict().getDistrictId())){
+							dto.getDistrict().setSelectable(false);
+							dis.setSelectable(false);
+							count++;
+						}					
+					}
+					CmSupplierZoneStateDistrictDTO dto = (CmSupplierZoneStateDistrictDTO)disOrDiv.getData();
+					dto.getDivision().setSelectable(true);
+					if(count>=size){
+						dto.getDivision().setSelectable(false);
+						disOrDiv.setSelectable(false);
+					}
+				}else{
+					size = node.getChildren().size();
+					CmSupplierZoneStateDistrictDTO dto = (CmSupplierZoneStateDistrictDTO)disOrDiv.getData();
+					dto.getDistrict().setSelectable(true);
+					if(this.getManagedBean().getDisabledDistrictId().contains(dto.getDistrict().getDistrictId())){
+						dto.getDistrict().setSelectable(false);
+						disOrDiv.setSelectable(false);
+						count++;
+					}
+				}
+			}
+			CmSupplierZoneStateDistrictDTO dto = (CmSupplierZoneStateDistrictDTO)node.getData();
+			dto.getState().setSelectable(true);
+			if(count>=size){
+				dto.getState().setSelectable(false);
+				node.setSelectable(false);
+			}
+		}
+		RequestContext.getCurrentInstance().update(":form:treeZoneLocationPopup");
+	}
 }
