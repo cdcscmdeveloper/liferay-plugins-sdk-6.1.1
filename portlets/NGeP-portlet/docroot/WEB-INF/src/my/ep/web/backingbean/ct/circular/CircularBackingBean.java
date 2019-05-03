@@ -12,7 +12,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-
+import my.ep.web.managedbean.ct.circular.CircularManagedBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -27,16 +27,15 @@ import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
-import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.circular.cc.CentralContractBackingBean;
 import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
-import my.ep.web.managedbean.ct.circular.CircularManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -145,9 +144,10 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 	 * The method used to reset the search criteria for circular.
 	 */
 	public void searchReset(){
+		
 		getManagedBean().setSearchCircularDocType(null);
 		getManagedBean().setSearchPhysicalCircularNo(null);
-		getManagedBean().setSearchCircularNo(null);
+	    getManagedBean().setSearchCircularNo(null);
 		getManagedBean().setSearchCircularName(null);
 		getManagedBean().setSearchSupplierName(null);
 		getManagedBean().setSearchItemName(null);
@@ -164,13 +164,20 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 		getManagedBean().setSkuno(null);
 		getManagedBean().setTypeofgoods(null);
 		if(getManagedBean().isReadOnly()) {
+			
 			getManagedBean().getCircularListingPagingDataModel().reloadData();
 			getManagedBean().getServiceListingPagingDataModel().reloadData();
 		} else {
-			getManagedBean().resetCircularListingPagingDataModel();
+			
+			
+			getManagedBean().getCircularListingPagingDataModel().resetData();
+			getManagedBean().getServiceListingPagingDataModel().resetData();
 			getManagedBean().resetServiceListingPagingDataModel();
+			getManagedBean().resetCircularListingPagingDataModel();
+			
 		}
 	}
+
 
 	/**
 	 * The method used to navigate to circular details screen.
@@ -184,9 +191,7 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 		CircularReqDTO reqDTO = new CircularReqDTO();
 		reqDTO.setCircularVerId(circularVerId);
 		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR)) {
-			PanelBackingBean ppBB = new PanelBackingBean();
-			ppBB.getManagedBean().setSelectionOfZone(false);
-			ppBB.getManagedBean().setSelectedPanelItems(null);
+			PanelBackingBean ppBB = new PanelBackingBean(); 
 			ppBB.getManagedBean().setSelectedPanelZone(null);
 			ppBB.getManagedBean().setSelectedTabIndex(0);
 			ppBB.getManagedBean().setAction("view");
@@ -365,7 +370,61 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 			}
 	}
 
+	/** to concat Itemcode and Item Name */
 
+	public String contactItem(CtContractItem ctItem) {
+		
+		String itemcode=ctItem.getScRequestItem().getCmItem().getExtensionCode();
+		String itemName=ctItem.getScRequestItem().getItemName();
+		if(itemcode==null)
+		{
+			itemcode=ParameterConst.ITEM_CODE;
+		}
+		if(itemName==null)
+		{
+			itemName=ParameterConst.ITEM_NAME;
+		}
+		String result = itemName +","+ itemcode;
+
+		/*result.append(itemcode);
+		result.append(",");
+		result.append(itemName);
+		*/
+		System.out.println("Result  :"+result);	
+		return result;
+	     
+	}
+	
+	public String contactItemProd(CtContractItem ctItem) {
+		//String result=new String();
+		
+		String itemcode=ctItem.getScRequestItem().getCmItem().getExtensionCode();
+		String itemName=ctItem.getScRequestItem().getItemName();
+		String sKuNo=ctItem.getSku();
+		if(itemcode==null)
+		{
+			itemcode=ParameterConst.ITEM_CODE;
+		}
+		if(itemName==null)
+		{
+			itemName=ParameterConst.ITEM_NAME;
+		}
+		if(sKuNo==null)
+		{
+			sKuNo=ParameterConst.SKUNO;
+		}
+		String result = itemName +","+ itemcode+","+sKuNo;
+
+		/*result.append(itemcode);
+		result.append(",");
+		result.append(itemName);
+		*/
+		System.out.println("Result  :"+result);	
+		return result;
+	     
+	}
+	
+	
 	/**
 	 * User need to make decision on circular maintenance page
 	 * Navigate to circular page as per user selection for update or view
