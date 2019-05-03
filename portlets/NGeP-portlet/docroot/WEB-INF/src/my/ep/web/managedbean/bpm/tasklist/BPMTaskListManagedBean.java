@@ -214,8 +214,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	public void setLoginIc(String loginIc) {
 		this.loginIc = loginIc;
 	}
-	
-	
+
 	private PagingDataModel<WorklistItemVO> taskListDataModel = new taskPagingDataModel();
 	
 	private PagingDataModel<WorklistItemVO> taskListMyTaskDataModel = new taskPagingMyTaskDataModel();
@@ -224,8 +223,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	
 	// #24714
 	private PagingDataModel<WorklistItemVO> taskListBothDataModel = new taskPagingBothDataModel();
-	
-	
 
 	public PagingDataModel<WorklistItemVO> getTaskListDataModel() {
 		return taskListDataModel;
@@ -239,7 +236,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	private class taskPagingDataModel extends PagingDataModel<WorklistItemVO> {
 
 		private static final long serialVersionUID = 1L;
-
+		private final Logger log = EpLogger.getLogger(taskPagingDataModel.class);
+		
 		public taskPagingDataModel() {
 			super("taskListId");
 			// TODO Auto-generated constructor stub
@@ -248,14 +246,12 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		@Override
 		protected ISearchResultBean<WorklistItemVO> pageChangeListener(
 				ISearchBean<WorklistItemVO> searchBean) {
-			System.out
-					.println(">>>>>>>>>>>>>>>>>>>pageChangeListener<<<<<<<<<<<<<<<<<<<");
+			log.info(">>>>>>>>>>>>>>>>>>>pageChangeListener<<<<<<<<<<<<<<<<<<<");
 			IBpmSO bpmSO = null;
 			try {
-				System.out.println(">>>>>>>>>>>>>>>>>>getAssignment()="
-						+ getAssignment());
-				System.out.println(">>>>>>>.pageNo()="+getPageNo());
-				System.out.println(">>>>>>>.pageSize()="+getPageSize());
+				log.info(">>>>>>>>>>>>>>>>>>getAssignment()=" + getAssignment());
+				log.info(">>>>>>>.pageNo()=" + getPageNo());
+				log.info(">>>>>>>.pageSize()=" + getPageSize());
 				bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 						.getServiceObject(IBpmSO.class);
 
@@ -263,7 +259,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				FacesScopes face = new FacesScopes();
 				Object token = face.getBPMAuthenticationCtxToken();
 
-			   System.out.println("testing BPM auth******" + token);
+				log.info("testing BPM auth******" + token);
 				BpmRequestDTO reqDTO = new BpmRequestDTO();
 				reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
 				reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
@@ -279,22 +275,26 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
 				
 				if (responseDTO.getWorklistVO() != null) {
-					System.out.println("testing BPM******size="
-							+ responseDTO.getWorklistVO().getWorklistItem()
-									.size());
-					System.out.println("testing BPM******total="
-							+ responseDTO.getWorklistVO().getTotal());
+					log.info("testing BPM******size=" + responseDTO.getWorklistVO().getWorklistItem().size());
+					log.info("testing BPM******total=" + responseDTO.getWorklistVO().getTotal());
 
 					// setTaskList(responseDTO.getWorklistVO().getWorklistItem());
 
 					if(responseDTO.getWorklistVO().getWorklistItem()!=null) {
 						for(WorklistItemVO worklistItemVO : responseDTO.getWorklistVO().getWorklistItem()) {
-							
 							if (worklistItemVO.getTitle().matches("<")) {
 								worklistItemVO.setTitle(worklistItemVO.getTitle().replaceAll("<", "&#60;"));
 							}
 							// s1 module
-							if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
+							if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE_DRAFT)) {
+								log.info("Doc number = " + worklistItemVO.getDocNumber());
+								ScPrInquiry scPrInquiry = retrivePrInquiryByPrInquiryNo(worklistItemVO.getDocNumber());
+								if (scPrInquiry != null) {
+									worklistItemVO.setTitle(scPrInquiry.getTitle());
+									log.info("prno = " + scPrInquiry.getPrInquiryNo() + "title = "
+											+ scPrInquiry.getTitle());
+								}
+							} else if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
 								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 							} else if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE)) {
 								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.pr.inquiry", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
@@ -305,8 +305,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 								// worklistItemVO.setTitle(SmCommonUtil.getSmBpmTaskTitle(worklistItemVO.getTitle(),worklistItemVO.getProcess()));
 								// sm module
 								MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
-								System.out.println("***** The document Id for the workflow is ****** "
-												+ worklistItemVO.getDocId());
+								log.info("***** The document Id for the workflow is ****** "
+										+ worklistItemVO.getDocId());
 								mofResDto = retriveCompanyNameByApplicationId(worklistItemVO.getDocId());
 								StringBuilder sb = new StringBuilder();
 								sb.append(ResourceBundleUtils.getMessage(
@@ -386,7 +386,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		} finally {
 			mofRegistrationSO = null;
 		}
-
 	}
 	
 	private ScPrInquiry retrivePrInquiryByPrInquiryNo(String prInquiryNo) {
@@ -429,9 +428,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		
 			IBpmSO bpmSO = null;
 			try {
-
-				bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-						.getServiceObject(IBpmSO.class);
+				bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 
 				// String token = bpmSO.authenticate("roslan", "welcome1");
 				FacesScopes face = new FacesScopes();
@@ -444,10 +441,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				reqDTO.setState("ASSIGNED"); // TODO : ADD filter for state and set do variable
 				log.info("getDocType()"+getDocType());
 				reqDTO.setDocType(getDocType());
-
-												
+	
 				reqDTO.setViewBy(getViewBy());
-				
+
 				if(getDocNo()!=null && getDocNo().trim().length()>0){
 					reqDTO.setDocNumber(getDocNo());
 				}
@@ -459,7 +455,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				/*if(getSelectedOrgProfile()!=null){
 					System.out.println("getSelectedOrgProfile()"+getSelectedOrgProfile().getOrgProfileId());
 				}*/
-				log.info("getDocStatus()"+getDocStatus());
+				log.info("getDocStatus()" + getDocStatus());
 				if(getDocStatus()>0){
 					reqDTO.setStatus(getDocStatus());
 				}
@@ -478,11 +474,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						boolean viewGlpFlag = viewGlpFlag();
 						for(WorklistItemVO worklistItemVO : responseDTO.getWorklistVO().getWorklistItem()) {
 							try{
-							if (worklistItemVO.getTitle().contains("<")) {
-								worklistItemVO.setTitle(worklistItemVO.getTitle().replaceAll("<", "&#60;"))  ;
-							}
-							
-							log.info("test H worklistItemVO.getTitle():" + worklistItemVO.getTitle());
+								if (worklistItemVO.getTitle().contains("<")) {
+									worklistItemVO.setTitle(worklistItemVO.getTitle().replaceAll("<", "&#60;"));
+								}
+
 							// s1 module
 							if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE_DRAFT)) {
 								log.info("Doc number = " + worklistItemVO.getDocNumber());
@@ -492,8 +487,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 									worklistItemVO.setTitle(scPrInquiry.getTitle());
 									log.info("prno = " + scPrInquiry.getPrInquiryNo() + "title = "
 											+ scPrInquiry.getTitle());
-								} else {
-									log.info("test H scPrInquiry == null");
 								}
 							} else if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
 								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
@@ -633,7 +626,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						       }
 							}catch(Exception ex){
 								worklistItemVO.setTitle("Please check");
-								log.info("worklistItemVO.setTitle error:"+ex.getMessage());
+								log.info("worklistItemVO.setTitle error:" + ex.getMessage());
 							}
 						}
 					}
@@ -666,6 +659,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	private class taskPagingGroupDataModel extends PagingDataModel<WorklistItemVO> {
 
 		private static final long serialVersionUID = 1L;
+		private final Logger log = EpLogger.getLogger(taskPagingGroupDataModel.class);
 
 		public taskPagingGroupDataModel() {
 			super("taskListGroupId");
@@ -686,7 +680,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				FacesScopes face = new FacesScopes();
 				Object token = face.getBPMAuthenticationCtxToken();
 
-			   System.out.println("testing BPM auth******" + token);
+				log.info("testing BPM auth******" + token);
 				BpmRequestDTO reqDTO = new BpmRequestDTO();
 				reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
 				reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
@@ -698,7 +692,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 					reqDTO.setTaskTitle(getTaskDescGroup());
 				}
 				
-				System.out.println("getDocNoGroup():"+getDocNoGroup());
+				log.info("getDocNoGroup():" + getDocNoGroup());
 				if(getDocNoGroup()!=null && getDocNoGroup().trim().length()>0){
 					reqDTO.setDocNumber(getDocNoGroup());
 				}
@@ -708,7 +702,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				}*/
 				
 				if(getDocStatusGroup()>0){
-					System.out.println("getDocStatusGroup"+getDocStatusGroup());
+					log.info("getDocStatusGroup" + getDocStatusGroup());
 					reqDTO.setStatus(getDocStatusGroup());
 				}
 				
@@ -728,24 +722,27 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
 				
 				if (responseDTO.getWorklistVO() != null) {
-					System.out.println("testing BPM******size="
-							+ responseDTO.getWorklistVO().getWorklistItem()
-									.size());
-					System.out.println("testing BPM******total="
-							+ responseDTO.getWorklistVO().getTotal());
+					log.info("testing BPM******size=" + responseDTO.getWorklistVO().getWorklistItem().size());
+					log.info("testing BPM******total=" + responseDTO.getWorklistVO().getTotal());
 
-					
 					if(responseDTO.getWorklistVO().getWorklistItem()!=null) {
 						boolean viewGlpFlag = viewGlpFlag();
-						
-						
-						
-						
 						for(WorklistItemVO worklistItemVO : responseDTO.getWorklistVO().getWorklistItem()) {
-							try{
-							if (worklistItemVO.getTitle().matches("<")) {
-								worklistItemVO.setTitle(worklistItemVO.getTitle().replaceAll("<", "&#60;"));
-							}
+							try {
+								if (worklistItemVO.getTitle().matches("<")) {
+									worklistItemVO.setTitle(worklistItemVO.getTitle().replaceAll("<", "&#60;"));
+								}
+
+								if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE_DRAFT)) {
+									log.info("Doc number = " + worklistItemVO.getDocNumber());
+									ScPrInquiry scPrInquiry = retrivePrInquiryByPrInquiryNo(worklistItemVO
+											.getDocNumber());
+									if (scPrInquiry != null) {
+										worklistItemVO.setTitle(scPrInquiry.getTitle());
+										log.info("prno = " + scPrInquiry.getPrInquiryNo() + "title = "
+												+ scPrInquiry.getTitle());
+									}
+								}
 							// s1 module
 							if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
 								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
@@ -762,7 +759,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							//sm module
 						       if(worklistItemVO.getTitle().startsWith("lbl.sm")) {
 						    		MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
-						    		System.out.println("***** The document Id for the workflow is ****** "+worklistItemVO.getDocId());
+									log.info("***** The document Id for the workflow is ****** "
+											+ worklistItemVO.getDocId());
 									mofResDto = retriveCompanyNameByApplicationId(worklistItemVO.getDocId());
 						    	   StringBuilder sb = new StringBuilder();
 						    	   sb.append(ResourceBundleUtils.getMessage(worklistItemVO.getTitle(), ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
@@ -809,8 +807,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							    		   worklistItemVO.setTitle(sb.toString());
 							    	   }
 						    	   }
-						    	   
-						    	   
 						       }
 						       
 						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.PERFORM_PAYMNET_MATCH_HT)){
@@ -860,9 +856,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						    	   retrievePoCoNoForCancelInvoice(worklistItemVO,worklistItemVO.getTaskId());
 						       }
 						       //end added for #24968
-							}catch(Exception ex){
+							} catch (Exception ex) {
 								worklistItemVO.setTitle("please check");
-								System.out.println("worklistItemVO.setTitle error:"+ex.getMessage());
+								log.info("worklistItemVO.setTitle error:" + ex.getMessage());
 							}
 						}
 					}
@@ -905,12 +901,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		@Override
 		protected ISearchResultBean<WorklistItemVO> pageChangeListener(
 				ISearchBean<WorklistItemVO> searchBean) {
-		
 			IBpmSO bpmSO = null;
 			try {
-
-				bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-						.getServiceObject(IBpmSO.class);
+				bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 
 				// String token = bpmSO.authenticate("roslan", "welcome1");
 				FacesScopes face = new FacesScopes();
@@ -951,22 +944,27 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
 				
 				if (responseDTO.getWorklistVO() != null) {
-					log.info("testing BPM******size="
-							+ responseDTO.getWorklistVO().getWorklistItem()
-									.size());
-					log.info("testing BPM******total="
-							+ responseDTO.getWorklistVO().getTotal());
+					log.info("testing BPM******size=" + responseDTO.getWorklistVO().getWorklistItem().size());
+					log.info("testing BPM******total=" + responseDTO.getWorklistVO().getTotal());
 
 					if(responseDTO.getWorklistVO().getWorklistItem()!= null) {
-						
 						boolean viewGlpFlag = viewGlpFlag();
 						
 						for( WorklistItemVO worklistItemVO : responseDTO.getWorklistVO().getWorklistItem()) {
-							
 							try {
-							if (worklistItemVO.getTitle().matches("<")) {
-								worklistItemVO.setTitle(worklistItemVO.getTitle().replaceAll("<", "&#60;"));
-							}
+								if (worklistItemVO.getTitle().matches("<")) {
+									worklistItemVO.setTitle(worklistItemVO.getTitle().replaceAll("<", "&#60;"));
+								}
+								if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE_DRAFT)) {
+									log.info("Doc number = " + worklistItemVO.getDocNumber());
+									ScPrInquiry scPrInquiry = retrivePrInquiryByPrInquiryNo(worklistItemVO
+											.getDocNumber());
+									if (scPrInquiry != null) {
+										worklistItemVO.setTitle(scPrInquiry.getTitle());
+										log.info("prno = " + scPrInquiry.getPrInquiryNo() + "title = "
+												+ scPrInquiry.getTitle());
+									}
+								}
 							// s1 module
 							if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
 								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
@@ -1029,8 +1027,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							    		   worklistItemVO.setTitle(sb.toString());
 							    	   }
 						    	   }
-						    	   
-						    	   
 						       }
 						       
 						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.PERFORM_PAYMNET_MATCH_HT)){
@@ -1081,15 +1077,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						       }
 						       //end added for #24968
 						       // Identify if it is a group or individual task
-						       log.info("getTaskType: "+worklistItemVO.getTaskType());
+								log.info("getTaskType: " + worklistItemVO.getTaskType());
 						       worklistItemVO.getTaskType();
 						       
 							} catch(Exception ex) {
 								worklistItemVO.setTitle("please check");
-								log.info("worklistItemVO.setTitle error:"+ex.getMessage());
+								log.info("worklistItemVO.setTitle error:" + ex.getMessage());
 							}
 						}
-						
 					}
 					
 					resultBean.setTotalRecord(responseDTO.getWorklistVO()
