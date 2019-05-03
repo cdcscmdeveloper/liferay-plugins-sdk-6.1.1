@@ -180,6 +180,7 @@ import com.liferay.portal.kernel.util.StringUtil;
 public class SmApplicationBackingBean extends
 		BaseBackingBean<SmApplicationManagedBean> {
 
+	
 	/**
 	 * 
 	 */
