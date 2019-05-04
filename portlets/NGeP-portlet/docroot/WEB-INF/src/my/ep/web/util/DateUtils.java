@@ -561,6 +561,7 @@ public class DateUtils {
 	public static Date getEndDate(Date startDate, int term,String periodType){
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(startDate);
+		log.info("term is : " +term);
 		if(periodType.equals(ParameterConst.DELIVERY_TERM_DAYS)){
 			calendar.add(Calendar.DATE, term);
 		}if(periodType.equals(ParameterConst.DELIVERY_TERM_MONTHS)){
@@ -568,9 +569,7 @@ public class DateUtils {
 		}if(periodType.equals(ParameterConst.DELIVERY_TERM_YEARS)){
 			calendar.add(Calendar.YEAR, term);
 		}
-		
-		calendar.add(Calendar.DATE, -1);
-		
+
 		return calendar.getTime();
 		
 	}
