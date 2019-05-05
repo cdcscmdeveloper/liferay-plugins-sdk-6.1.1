@@ -187,7 +187,7 @@
 				
 				<!-- Loa/Loi Data Table -->
 				<div id="searchQTLoaLoiDiv" style="display:none">
-				<p:dataTable id="searchQTLoaLois" rendered ="#{qTDetailBB.managedSearchBeanDocumentTypeIsLOA or qTDetailBB.managedSearchBeanDocumentTypeIsLOI}"
+				<p:dataTable id="searchQTLoaLois"
 					value="#{dataModelLoiLoa}" var="listItem"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					rowIndexVar="index" lazy="true" rows="10" >
@@ -273,30 +273,28 @@
 				</div>
 			</h:panelGroup>
 			
-			<c:choose>
-			<c:when test = "#{listType eq 'loaList' or listType eq 'loiList'}" >
-				<h:outputScript target="body">
-					document.getElementById('searchQTDiv').style.display = 'none';
-					document.getElementById('searchQTLoaLoiDiv').style.display = 'block';
-				</h:outputScript>
-			</c:when>
-			<c:otherwise>
-				<h:outputScript target="body">
-					document.getElementById('searchQTLoaLoiDiv').style.display = 'none';
-					document.getElementById('searchQTDiv').style.display = 'block';
-				</h:outputScript>
-			</c:otherwise>
-			</c:choose>
+			
 		</p:panel>
 		
 		
-		
+		<h:outputScript target="body">
+			function toggleView(v){
+				console.log(v);
+				if(v == '#{ParameterConst.doctypeLetterOfAward}' || v == '#{ParameterConst.doctypeLetterOfIntent}'){
+					document.getElementById('searchQTDiv').style.display = 'none';
+					document.getElementById('searchQTLoaLoiDiv').style.display = 'block';
+				}
+				else{
+					document.getElementById('searchQTLoaLoiDiv').style.display = 'none';
+					document.getElementById('searchQTDiv').style.display = 'block';
+				}
+			}
+		</h:outputScript>
 		
 		
 					
 		<ac:lovPopup />
 	</ui:define>
-	
 	
 </ui:composition>
 
