@@ -223,6 +223,7 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
+import org.primefaces.util.Constants;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -314,6 +315,7 @@ public class QTDetailBackingBean extends
 					.getQtnTenderSearchBean());
 			getManagedBean().setSearchQTDataModel(searchQTDataModel);
 		}
+		toggleView();
 		return searchQTDataModel;
 	}
 	
@@ -326,6 +328,7 @@ public class QTDetailBackingBean extends
 					.getQtnTenderSearchBean());
 			getManagedBean().setSearchLoiForQtDataModel(searchLoiDataModel);
 		}
+		toggleView();
 		return searchLoiDataModel;
 	}
 	
@@ -337,7 +340,21 @@ public class QTDetailBackingBean extends
 					.getQtnTenderSearchBean());
 			getManagedBean().setSearchLoaForQtDataModel(searchLoaDataModel);
 		}
+		toggleView();
 		return searchLoaDataModel;
+	}
+	
+	public String toggleView(){
+		RequestContext rc = ((RequestContext) FacesContext.getCurrentInstance().getAttributes().get(Constants.REQUEST_CONTEXT_ATTR));
+		if(getManagedSearchBeanDocumentTypeIsLOA()||getManagedSearchBeanDocumentTypeIsLOI()){
+			if(rc!=null)rc.execute("toggleView('"+ParameterConst.DOCTYPE_LETTER_OF_AWARD+"');");
+			return ParameterConst.DOCTYPE_LETTER_OF_AWARD;
+		}
+		else{
+			if(rc!=null)rc.execute("toggleView('"+ParameterConst.DOCTYPE_QUOTATION+"');");
+			return ParameterConst.DOCTYPE_QUOTATION;
+		}
+		
 	}
 	
 	private void renewQTSesionObject() {
