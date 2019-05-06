@@ -4608,25 +4608,26 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		Integer sqTimeValidity = Integer.valueOf(prop.getProperty("sqTimeValidity"));
 		
 		if(scQuote != null){
-
-			Date currentDate = new Date();
-			Date closingDate = scQuote.getEndDate();
-			
-			Calendar cal = Calendar.getInstance();
-			cal.clear(); 
-			cal.setTime(closingDate);
-			cal.add(Calendar.HOUR, sqTimeValidity); //add 60 days to closing/end date
-			
-			if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)
-			  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL) 
-			  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION) 
-			  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL) 
-			  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION) ){
-				if(currentDate.compareTo(cal.getTime()) >= 0){
-					validDate = false;
-					sqExpiredMessageFlag = true;
+			if(getManagedBean().getFulfilmentRequest().getScPurchaseInDefault() == null){
+				Date currentDate = new Date();
+				Date closingDate = scQuote.getEndDate();
+				
+				Calendar cal = Calendar.getInstance();
+				cal.clear(); 
+				cal.setTime(closingDate);
+				cal.add(Calendar.HOUR, sqTimeValidity); //add 1440 hours(60days) to closing/end date
+				
+				if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)
+				  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL) 
+				  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION) 
+				  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL) 
+				  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION) ){
+					if(currentDate.compareTo(cal.getTime()) >= 0){
+						validDate = false;
+						sqExpiredMessageFlag = true;
+					}
 				}
-			}	
+			}				
 		}	
 		return validDate;	
 	}

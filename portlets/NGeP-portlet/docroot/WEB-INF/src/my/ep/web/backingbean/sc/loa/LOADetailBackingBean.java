@@ -572,6 +572,14 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 			// QT Proposal validity expired
 			getQtProposalValidExpiredMessage(getManagedBean().getScQt());
+			
+			//Enhancement #12177
+			addButton();
+			if(sqExpiredMessageFlag){
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+					MessageUtils.getMessage(MessageConst.ERROR_760481, 
+						null,MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			}
 
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
@@ -6696,10 +6704,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		Boolean validDate = true;	
 		Long currentStatusId = getManagedBean().getCurrentStatusId();
 		ScQuote scQuote = getManagedBean().getScLoa().getScQuote();
-		
+
 		EpPropertiesUtils prop = EpPropertiesUtils.getInstance();
-//		Integer sqTimeValidity = Integer.valueOf(prop.getProperty("sqTimeValidity"));
-		Integer sqTimeValidity = 60;
+		Integer sqTimeValidity = Integer.valueOf(prop.getProperty("sqTimeValidity"));
 
 		if(scQuote != null){
 			
@@ -6709,9 +6716,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			Calendar cal = Calendar.getInstance();
 			cal.clear(); 
 			cal.setTime(closingDate);
-			cal.add(Calendar.HOUR, sqTimeValidity); //add 60 days to closing/end date
+			cal.add(Calendar.HOUR, sqTimeValidity); //add 1440 hours(60days) to closing/end date
 			
-			if(currentStatusId.equals(QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT) ){
+			if(currentStatusId.equals(QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT) 
+				|| currentStatusId.equals(QTStatusConst.LOA_PENDING_APPROVAL) ){
 				if(currentDate.compareTo(cal.getTime()) >= 0){
 					validDate = false;
 					sqExpiredMessageFlag = true;
