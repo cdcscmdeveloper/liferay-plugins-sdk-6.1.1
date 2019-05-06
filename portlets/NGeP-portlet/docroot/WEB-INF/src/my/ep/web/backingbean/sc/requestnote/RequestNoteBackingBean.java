@@ -1040,7 +1040,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		SCDirectPurchaseDataType directPurchaseDataType = super.getBpmTaskDetails(SCDirectPurchaseDataType.class, null);
 		Long dpId = null;
 		boolean zoneFlag = Boolean.FALSE;
-		ScRequestNote	requestNote = null;
+		ScRequestNote requestNote = null; 
 
 		if(directPurchaseDataType.getRnId() == null){
 			dpId = Long.valueOf(directPurchaseDataType.getDpId());
@@ -4411,24 +4411,25 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		Integer sqTimeValidity = Integer.valueOf(prop.getProperty("sqTimeValidity"));
 		
 		if(scQuote != null){
-			
-			Date currentDate = new Date();
-			Date closingDate = scQuote.getEndDate();
-			
-			Calendar cal = Calendar.getInstance();
-			cal.clear(); 
-			cal.setTime(closingDate);
-			cal.add(Calendar.HOUR, sqTimeValidity); //add 60 days to closing/end date
-			
-			if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION) 
-			   || currentStatusId.equals(DPStatusConstants.RN_PENDING_APPROVAL)
-			   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION) 
-			   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL) ){
-				if(currentDate.compareTo(cal.getTime()) >= 0){
-					validDate = false;
-					sqExpiredMessageFlag = true;
-				}
-			}	
+			if(getManagedBean().getPurchaseInDefaultId() == null){
+				Date currentDate = new Date();
+				Date closingDate = scQuote.getEndDate();
+				
+				Calendar cal = Calendar.getInstance();
+				cal.clear(); 
+				cal.setTime(closingDate);
+				cal.add(Calendar.HOUR, sqTimeValidity); //add 1440 hours(60days) to closing/end date
+				
+				if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION) 
+				   || currentStatusId.equals(DPStatusConstants.RN_PENDING_APPROVAL)
+				   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION) 
+				   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL) ){
+					if(currentDate.compareTo(cal.getTime()) >= 0){
+						validDate = false;
+						sqExpiredMessageFlag = true;
+					}
+				}					
+			}				
 		}			
 		return validDate;	
 	}

@@ -55,10 +55,11 @@
 						<p:commandButton id="conf" value="#{lbl['lbl.cm.dialog.cofirm.yes']}"						 
 						action="#{bsvAttendanceBackingBean.saveBriefingRegAttendance('complete')}"
 						process="@form" update="@form"
-							oncomplete="confirmSubmit.hide();" />
+							oncomplete="confirmSubmit.hide();" style="float:right;"/>
 						<p:commandButton id="decline"
 							value="#{lbl['lbl.cm.dialog.cofirm.no']}"
-							onclick="confirmSubmit.hide();"/>
+							
+							onclick="confirmSubmit.hide();" style="float:right;"/>
 			
 					</p:confirmDialog>
 				</p:column>
