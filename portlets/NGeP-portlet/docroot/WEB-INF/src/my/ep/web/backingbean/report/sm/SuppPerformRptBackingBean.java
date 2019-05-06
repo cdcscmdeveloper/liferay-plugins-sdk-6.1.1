@@ -85,12 +85,6 @@ public class SuppPerformRptBackingBean extends
 				throw new EpException(MessageConst.ERROR_REPORT_780008);
 			}
 		}
-		if ((dateFrom != null) && (dateTo != null)) {
-			if (dateTo.after(dateFrom)) {
-				checkOneYearDifferent(dateFrom,dateTo);
-			}
-		}
-
 	}
 
 	public void resetSearch() {
