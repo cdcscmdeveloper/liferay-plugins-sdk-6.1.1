@@ -46,16 +46,16 @@
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox value="#{stageTwofunctional.selected}"
-					disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()}"
+					disabled="#{(specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()) or specificationBackingBean.checkIsTender(stageTwofunctional)==true}"
 					rendered="#{stageTwofunctional.manditory !='true' and stageTwofunctional.definationType.parameterCode ne 'TS'}">
-					<p:ajax partialSubmit="true" process="@this" update="@this,@([id$=deleteFinancialChecklist])"
+					<p:ajax partialSubmit="true" process="@this" update="@this,@([id$=deleteFinancialChecklist],[id$=financeProposaltwo])"
 						listener="#{specificationBackingBean.updateSelectedCheckListIndx(stageTwofunctional,index)}" />
 				</p:selectBooleanCheckbox>
 
 				<p:selectBooleanCheckbox value="#{stageTwofunctional.selected}"
 					disabled="true"
 					rendered="#{stageTwofunctional.manditory ==true and stageTwofunctional.definationType.parameterCode ne 'TS' }">
-					<p:ajax partialSubmit="true" process="@this" update="@this,@([id$=deleteFinancialChecklist])"
+					<p:ajax partialSubmit="true" process="@this" update="@this,@([id$=deleteFinancialChecklist],[id$=financeProposaltwo])"
 						listener="#{specificationBackingBean.updateSelectedCheckListIndx(stageTwofunctional,index)}" />
 				</p:selectBooleanCheckbox>
 
@@ -63,7 +63,7 @@
 					disabled="true"
 					rendered="#{stageTwofunctional.manditory !=true and stageTwofunctional.definationType.parameterCode eq 'TS'}">
 
-					<p:ajax partialSubmit="true" process="@this" update="@this,@([id$=deleteFinancialChecklist])"
+					<p:ajax partialSubmit="true" process="@this" update="@this,@([id$=deleteFinancialChecklist],[id$=financeProposaltwo])"
 						listener="#{specificationBackingBean.updateSelectedCheckListIndx(stageTwofunctional,index)}" />
 				</p:selectBooleanCheckbox>
 			</p:column>
