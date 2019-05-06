@@ -2164,6 +2164,14 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					.getRejectReasons();
 			rejectReasons = SmCommonUtil
 					.getHtmlApplicationRejectReasons(rejectReasonList);
+			
+			if (StringUtils.isBlank(rejectReasons)) {
+				rejectReasons = SmApplicationUtil
+						.getSmRemarksByDocTypeAndId(
+								ParameterConst.SM_APPLN_RMRK_DECISION_REJECT,
+								getManagedBean().getSmAppl().getOriginalAppl().getApplId());
+			}
+			
 		} else {
 			if (getManagedBean().getSmAppl().getApplType()
 					.equals(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
@@ -2182,6 +2190,13 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				rejectReasons = SmCommonUtil
 						.getHtmlApplicationRejectReasons(getManagedBean()
 								.getSmAppl().getSmApplRejectReasons());
+				
+				if (StringUtils.isBlank(rejectReasons)) {
+					rejectReasons = SmApplicationUtil
+							.getSmRemarksByDocTypeAndId(
+									ParameterConst.SM_APPLN_RMRK_DECISION_REJECT,
+									getManagedBean().getSmAppl().getApplId());
+				}
 			}
 		}
 		log.info("HTML REJECT REASON:" + rejectReasons);
