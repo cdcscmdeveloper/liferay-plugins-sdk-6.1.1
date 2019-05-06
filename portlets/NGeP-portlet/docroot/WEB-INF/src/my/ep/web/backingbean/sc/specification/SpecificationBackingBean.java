@@ -12001,13 +12001,35 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	 *            the check list
 	 * @param index
 	 *            the index
+	 * @throws Exception 
 	 */
-	public void updateSelectedCheckListIndx(ScQtCheckList checkList, int index) {
+	public void updateSelectedCheckListIndx(ScQtCheckList checkList, int index) throws Exception {			
 		if (checkList.isSelected()) {
 			checkList.setIndex(index);
 		} else {
 			checkList.setIndex(-1);
 		}
+		int count = 0;
+		if(checkList.getPmDocument() !=null){
+			if(checkList.getPmDocument().getDocGroupId() !=null){
+				for (ScQtCheckList scQtCheckList : this.getManagedBean().getScQtCheckSt2financeProposalList()) {
+					if(scQtCheckList.getPmDocument() !=null && index != count){
+						if(checkList.getPmDocument().getDocGroupId() == scQtCheckList.getPmDocument().getDocGroupId()){
+							if(this.getManagedBean().getScQtCheckSt2financeProposalList().get(count).isSelected()){
+								//scQtCheckList.setSelected(false);
+								this.getManagedBean().getScQtCheckSt2financeProposalList().get(count).setSelected(false);
+								this.getManagedBean().getScQtCheckSt2financeProposalList().get(count).setIndex(-1);
+							}else{
+								//scQtCheckList.setSelected(true);
+								this.getManagedBean().getScQtCheckSt2financeProposalList().get(count).setSelected(true);
+								this.getManagedBean().getScQtCheckSt2financeProposalList().get(count).setIndex(count);
+							}
+						}
+					}
+					count++;
+				}
+			}
+		}	
 	}
 
 	/**
@@ -14606,4 +14628,52 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			}
 		return moreThanOne;
 	}
+	
+	/**
+	 * The method used to check pairing document.
+	 * @param specCommitteeFinacialDocumentStandardChecklist 
+	 */
+	public void CheckboxPairing(int docGroupId, boolean selected) throws Exception {
+    	List<PmDocument> financialDocumentList=this.getManagedBean().getStageTwoFinComplianceList();
+	    this.getManagedBean().setStageTwoFinComplianceList( new ArrayList<PmDocument>());
+	    for(PmDocument document:financialDocumentList){	    		
+	    	if(document.getDocGroupId()!=null){
+	    		if(document.getDocGroupId() ==docGroupId){
+	    			if (selected) {
+	    				document.setSelected(true);
+	    			}
+	    			else {
+	    				document.setSelected(false);
+	    			}
+				}
+	    	}				
+			this.getManagedBean().getStageTwoFinComplianceList().add(document);
+			}	    	
+	    }
+	
+	/**
+	 * check mode = tender
+	 * 
+	 * @param tendermode
+	 * @return (boolean true/false).
+	 */
+	public boolean checkIsTender(ScQtCheckList checkList) {
+		boolean isTender = false;
+		ScQt scQt = this.getManagedBean().getQt();
+		if (ParameterConst.PROCUREMENT_MODE_TENDER.equals(scQt.getProcurementMode().getParameterCode())) {
+			if(checkList.getPmDocument() !=null){
+				if(checkList.getPmDocument().getDocGroupId() !=null){
+					for (ScQtCheckList scQtCheckList : this.getManagedBean().getScQtCheckSt2financeProposalList()) {
+						if(scQtCheckList.getPmDocument() !=null){
+							if(checkList.getPmDocument().getDocGroupId() == scQtCheckList.getPmDocument().getDocGroupId()){
+									isTender = true;	
+							}
+						}
+					}
+				}
+			}
+		}
+		return isTender;
+	}
+
 }
