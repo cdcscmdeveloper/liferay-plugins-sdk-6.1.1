@@ -1,11 +1,8 @@
 package my.ep.web.backingbean.report.sm;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -13,8 +10,10 @@ import javax.faces.bean.ViewScoped;
 import my.ep.constant.MessageConst;
 import my.ep.constants.CommonConstants;
 import my.ep.exception.EpException;
+import my.ep.web.constant.report.PmReportConst;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.SuppPerformRptManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.commons.lang.StringUtils;
@@ -30,20 +29,25 @@ public class SuppPerformRptBackingBean extends
 	private static final long serialVersionUID = -7400800649761552705L;
 
 	public SuppPerformRptBackingBean() {
-		getManagedBean().setYearList(getYearList());
+		//getManagedBean().setYearList(getYearList());
 		setDefaultDateFromAndDateTo();
 		onChangeRegType();
 	}
 
 	public void generateReport() {
 		
-		if (getManagedBean().getSelectedOrgProfile() == null) {
-			throw new EpException(MessageConst.ERROR_REPORT_780044);
+		if (getManagedBean().getSelectedOrgProfile() == null && getManagedBean().getMofNo().isEmpty() && getManagedBean().getEpNo().isEmpty() ) {
+				throw new EpException(MessageConst.ERROR_REPORT_780044);		
 		} 
-		checkTwoYearsFieldDefference(getManagedBean().getYear(),
-				getManagedBean().getYearTo());
-		SimpleDateFormat df = new SimpleDateFormat(
-				CommonConstants.DEFAULT_DATE_FORMAT);
+		if(getManagedBean().getDateFrom() != null && getManagedBean().getDateTo() != null) {
+			dateValidation(getManagedBean().getDateFrom(), getManagedBean().getDateTo());
+			
+		} else if(getManagedBean().getDateFrom() != null && getManagedBean().getDateTo() == null) {
+			throw new EpException(MessageConst.ERROR_REPORT_780055);
+		} else if(getManagedBean().getDateFrom() == null && getManagedBean().getDateTo() != null) {
+			throw new EpException(MessageConst.ERROR_REPORT_780054);
+		}
+		
 		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
 		retrieveReportValueFromDb();
 		if (getManagedBean().getSelectedOrgProfile() != null) {
@@ -59,11 +63,34 @@ public class SuppPerformRptBackingBean extends
 					.getRegType());
 		}
 		params.put(SmReportConst.PARAM_EP_NO, getManagedBean().getEpNo());
-		params.put(SmReportConst.PARAM_YEAR_FROM, getManagedBean().getYear());
-		params.put(SmReportConst.PARAM_YEAR_TO, getManagedBean().getYearTo());
+		params.put(PmReportConst.PARAM_PM_FROM_DATE, DateUtils.dateToString(
+				CommonConstants.DEFAULT_DATE_FORMAT, getManagedBean()
+				.getDateFrom()));
+		params.put(PmReportConst.PARAM_PM_TO_DATE, DateUtils.dateToString(
+				CommonConstants.DEFAULT_DATE_FORMAT, getManagedBean()
+				.getDateTo()));
 		params.put(SmReportConst.PARAM_YEAR,
 				Calendar.getInstance().get(Calendar.YEAR) + "");
 		generateSmReport(params);
+	}
+
+		private void dateValidation(Date dateFrom, Date dateTo){
+		
+		if (dateFrom == null || dateTo == null) {
+			throw new EpException(MessageConst.ERROR_715050);
+		}
+
+		if ((dateFrom != null) && (dateTo != null)) {
+			if (dateFrom.after(dateTo)) {
+				throw new EpException(MessageConst.ERROR_REPORT_780008);
+			}
+		}
+		if ((dateFrom != null) && (dateTo != null)) {
+			if (dateTo.after(dateFrom)) {
+				checkOneYearDifferent(dateFrom,dateTo);
+			}
+		}
+
 	}
 
 	public void resetSearch() {
@@ -91,26 +118,6 @@ public class SuppPerformRptBackingBean extends
 			label = SmCommonUtil.getMessage("lbl.rpt.registereddatefrom", null);
 		}
 		getManagedBean().setRegDateLabel(label);
-	}
-
-	private List<String> getYearList() {
-		List<String> years = new ArrayList<String>();
-		SimpleDateFormat outputDateFormat = new SimpleDateFormat(
-				CommonConstants.DEFAULT_DATE_FORMAT);
-
-		Date currentDate = new Date();
-		Integer year = null;
-		String yearFrom = outputDateFormat.format(currentDate).substring(6, 10);
-		if (yearFrom != null) {
-			year = Integer.parseInt(yearFrom);
-		}
-		if (year != null) {
-			while (year >= 2018) {
-				years.add(Integer.toString(year));
-				year--;
-			}
-		}
-		return years;
 	}
 
 }
