@@ -257,27 +257,26 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 			ScQuote scQuote = requestNote.getQuote();
 			
 			EpPropertiesUtils prop = EpPropertiesUtils.getInstance();
-//			Integer sqTimeValidity = Integer.valueOf(prop.getProperty("sqTimeValidity"));
-			Integer sqTimeValidity = 60;
+			Integer sqTimeValidity = Integer.valueOf(prop.getProperty("sqTimeValidity"));
 
 			if(scQuote != null){
 				
 				Date currentDate = new Date();
 				Date closingDate = scQuote.getEndDate();
-				
+					
 				Calendar cal = Calendar.getInstance();
 				cal.clear(); 
 				cal.setTime(closingDate);
-				cal.add(Calendar.HOUR, sqTimeValidity); //add 60 days to closing/end date
-				
+				cal.add(Calendar.HOUR, sqTimeValidity); //add 1440 hours(60days) to closing/end date
+					
 				if(currentStatusId.equals(QTStatusConst.LOA_PENDING_SUBMISSION)){
 					if(currentDate.compareTo(cal.getTime()) >= 0){
 						validDate = false;
 						sqExpiredMessageFlag = true;
 					}
-				}	
-			}						
-		}	
+				}
+			}					
+		}									
 		return validDate;
 	}
 }
