@@ -6374,6 +6374,7 @@ private class LOAPagingDataModel extends PagingDataModel<ScLoaForQt>{
 		
 		//filter document type search by role.
 		if (isPbbSecretary()){
+			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION);
 		}else{
@@ -6381,7 +6382,9 @@ private class LOAPagingDataModel extends PagingDataModel<ScLoaForQt>{
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_QUOTATION);
-			
+			if(isDeskOfficer()){
+				qtLoaDoctypes.add(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION);
+			}			
 			if (isMofSupplier()) {
 				qtLoaDoctypes.add(ParameterConst.DOCTYPE_SUPPLIER_PROPOSAL);
 			}	
@@ -6757,3 +6760,4 @@ private class LOAPagingDataModel extends PagingDataModel<ScLoaForQt>{
 }
 		
 // ***25201
+// ***19336
