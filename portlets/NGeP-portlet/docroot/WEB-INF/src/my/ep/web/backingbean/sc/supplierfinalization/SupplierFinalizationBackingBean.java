@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -31,6 +32,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
@@ -49,6 +51,8 @@ import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
@@ -67,12 +71,18 @@ import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.pm.authorization.PmUserRole;
+import my.ep.persistence.entity.pm.authorization.PmUserRole_;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
+import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
@@ -104,6 +114,8 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.AddressType;
+import my.ep.type.pm.PTJLocalityCode;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -118,6 +130,7 @@ import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.key.sc.supplierfinalization.MapKey;
 import my.ep.web.managedbean.sc.supplierfinalization.SupplierFinalizationManagedBean;
 import my.ep.web.util.CommonUtils;
+import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -126,6 +139,7 @@ import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.ListUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.BooleanUtils;
@@ -176,11 +190,15 @@ public class SupplierFinalizationBackingBean extends
 	private static final Long DEFAULT_ZONE = 0L;
 	private static final String JUSTIFICATION_OTHERS = "OTHERS";
 	
+	private ScQt scQt;
+	
+	
+	
 	/**
 	 * Default constructor
 	 */
 	public SupplierFinalizationBackingBean() {
-
+		log.info("default constructor for SupplierFinalizationBackingBean");
 	}
 
 	/**
@@ -215,6 +233,30 @@ public class SupplierFinalizationBackingBean extends
 		}
 	}
 
+
+	/**
+	 * Initialize the data required when the page is initially rendered (based
+	 * on the qtid of the selected quotation/tender) and sets the data in
+	 * managed bean associated with the current user session
+	 * @return 
+	 */
+	public String preRenderViewMaintenance(ScQt scQt, String previousPageUrl) {
+		log.info("preRenderViewMaintenance");
+		if(isQTMaintenanceScreen()){
+			getManagedBean().setActiveIndex(0);
+		}
+		getManagedBean().setScQt(scQt);
+		getManagedBean().setPreviousPageUrl(previousPageUrl);
+		
+		Long loggedInUserId = getFacesScopes().getUserSessionBean()
+								.getUserId();
+		getManagedBean().setLoggedInUserId(loggedInUserId);
+
+		loadInitialDataMaintenance(scQt.getQtId());
+
+		return QTConstants.FC_SUPPLIER_FINALIZATION_PAGE;
+	}
+	
 	/**
 	 * To fetch initial data
 	 * @param qtId
@@ -266,6 +308,61 @@ public class SupplierFinalizationBackingBean extends
 		
 		// Dynamically creating main tab menu
 		createMainMenuModel();
+	}
+	
+	/**
+	 * To fetch initial data
+	 * @param qtId
+	 */
+	private void loadInitialDataMaintenance(Long qtId) {
+		log.info("loadInitialDataMaintenance");
+		ScQt scQt = getManagedBean().getScQt();
+		
+		retrieveQTDetails(qtId);
+		retrieveStatusQTMaintenance(qtId);
+		loadSupplierFinalizationTabDetails();
+		
+		if (getManagedBean().getScQtFinalization().isHigherAuthReq()) {
+			PmParameter higherCommittee = scQt.getFinalization().getHigherCommitte();
+					
+			if (higherCommittee == null) {
+				getManagedBean().setCommitteeType(StringUtils.EMPTY);
+				getManagedBean().setInitialDecisionFwdToBPK(true);
+			} else if (higherCommittee != null && 
+							StringUtils.isNotBlank(higherCommittee.getParameterCode())) {
+				getManagedBean().setInitialDecisionFwdHighAuth(true);
+			}
+		}
+		
+		String committeeType = getManagedBean().getCommitteeType();
+		if (StringUtils.isNotBlank(committeeType) && 
+				!StringUtils.equalsIgnoreCase(committeeType, "null")) {
+			loadPreparationTabDetails();
+			checkIfLoggedinUserIsSecretary();
+		}
+		
+		retrieveBriefingPaper();
+		
+		int tabIndex = 0;
+		if (getManagedBean().isInitialDecisionFwdToBPK()) {
+			getManagedBean().getScQtFinalization()
+					.setLoiLoaBy(ParameterConst.LOILOA_PREPARED_BY_DO);
+			getManagedBean().setPreparationTabIndex(-1);
+			getManagedBean().setReportTabIndex(tabIndex++);
+			getManagedBean().setFinalizationTabIndex(tabIndex++);
+			getManagedBean().setEndorsementReportActiveIndex(-1);
+			getManagedBean().setCommEndorsementTabIndex(-1);
+		} else {
+			getManagedBean().setPreparationTabIndex(tabIndex++);
+			getManagedBean().setReportTabIndex(tabIndex++);
+			getManagedBean().setFinalizationTabIndex(tabIndex++);
+			getManagedBean().setCommEndorsementTabIndex(tabIndex++);	
+			getManagedBean().setEndorsementReportActiveIndex(tabIndex);
+		}
+		
+		// Dynamically creating main tab menu
+		createMainMenuModel();
+		
 	}
 	
 	/**
@@ -1792,6 +1889,17 @@ public class SupplierFinalizationBackingBean extends
 		}
 	}
 	
+	/**
+	 * Method to navigate back to previous page
+	 * 
+	 * @return the previous page
+	 */
+	public String backAction() {
+		String t = getManagedBean().getPreviousPageUrl();
+		getManagedBean().setPreviousPageUrl(null);
+		return t;
+	}
+	
 	private SuppFinalizationReqDTO preSubmitValidation() {
 		log.info("preSubmitValidation");
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
@@ -2167,7 +2275,9 @@ public class SupplierFinalizationBackingBean extends
 					sortEndorsementReports(endorsementReports);
 				} else {
 					sortEndorsementReports(endorsementReports);
-					this.getManagedBean().setEndorsementReport(endorsementReports.get(0));
+					if(!CollectionUtils.isEmpty(endorsementReports)){
+						this.getManagedBean().setEndorsementReport(endorsementReports.get(0));
+					}
 				}
 				this.getManagedBean().setEndorsementReports(endorsementReports);
 			}
@@ -2930,7 +3040,14 @@ public class SupplierFinalizationBackingBean extends
 			if (scQtFinalization != null) {
 				this.getManagedBean().setScQtFinalization(scQtFinalization);
 				
-				List<String> rejectedRecommendDtlIds = getRejectedRecommendDtlIds();
+				//TODO - Maintenance Screen
+				List<String> rejectedRecommendDtlIds;
+				if(isQTMaintenanceScreen()){
+					rejectedRecommendDtlIds = null;
+				}else{
+					rejectedRecommendDtlIds = getRejectedRecommendDtlIds();
+				}
+				
 				if (CollectionUtils.isNotEmpty(rejectedRecommendDtlIds)) {
 					SuppFinalizationReqDTO _reqDTO = new SuppFinalizationReqDTO();
 					_reqDTO.setRecommendDtlIds(rejectedRecommendDtlIds);
@@ -3247,6 +3364,31 @@ public class SupplierFinalizationBackingBean extends
 		
 		return 0;
 	}
+	
+	private void retrieveStatusQTMaintenance(Long qtId) {
+		IScWorkFlowStatusSO scWorkFlowStatusSO = null;
+		
+		try {
+			scWorkFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+			ScWorkFlowStatusReqDTO tenderReqDTO = new ScWorkFlowStatusReqDTO();
+			tenderReqDTO.setDocId(qtId);	
+			tenderReqDTO.setDocType(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION);
+			
+			List<ScWorkFlowStatus> statusList = scWorkFlowStatusSO
+							.retrieveWorkFlowStatus(tenderReqDTO)
+							.getWorkFlowStatusList();
+			if (statusList != null) {
+				for(ScWorkFlowStatus statusTempList : statusList){
+					if(statusTempList.isCurrent() == true){
+						getManagedBean().setCurrentStatusId(statusTempList.getPmStatus().getStatusId());
+					}
+				}
+			} 
+		} finally {
+			scWorkFlowStatusSO = null;
+		}	
+	}
 
 	private List<String> getRejectedRecommendDtlIds() {
 		List<String> rejectedRecommendDtlIds = null;
@@ -3263,7 +3405,9 @@ public class SupplierFinalizationBackingBean extends
 				}
 			}
 		}
-		log.info("getRejectedRecommendDtlIds size is : "+ rejectedRecommendDtlIds.size());
+		if(!CollectionUtils.isEmpty(rejectedRecommendDtlIds)){
+			log.info("getRejectedRecommendDtlIds size is : "+ rejectedRecommendDtlIds.size());
+		}
 		return rejectedRecommendDtlIds;
 	}
 
@@ -4249,6 +4393,7 @@ public class SupplierFinalizationBackingBean extends
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 								new FacesScopes().getUserLocale()));
 			menuItem.setStyle("width:15%;");
+			//menuItem.setDisabled(isQTMaintenanceScreen());
 			menuItem.setTransient(true);
 			menuItem.setPartialSubmit(true);
 			menuItem.setProcess("@form");
@@ -4282,6 +4427,7 @@ public class SupplierFinalizationBackingBean extends
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale()));
 		menuItem.setStyle("width:20%;");
+		//menuItem.setDisabled(isQTMaintenanceScreen());
 		menuItem.setTransient(true);
 		menuItem.setPartialSubmit(true);
 		menuItem.setProcess("@form");
@@ -4299,6 +4445,7 @@ public class SupplierFinalizationBackingBean extends
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale()));
 			menuItem.setStyle("width:15%;");
+			//menuItem.setDisabled(isQTMaintenanceScreen());
 			menuItem.setTransient(true);
 			menuItem.setPartialSubmit(true);
 			menuItem.setOncomplete(tabMenuChangeCommonAction
@@ -5690,8 +5837,11 @@ public class SupplierFinalizationBackingBean extends
 		}
 		if (log.isDebugEnabled()) {
 			log.debug(msg);
-		}		
-		log.info(msg);
+		}
+		else if(log.isInfoEnabled()){
+			log.info(msg);
+		}
+		else;
 	}
 
 	/**
@@ -6702,4 +6852,80 @@ public class SupplierFinalizationBackingBean extends
 		this.getManagedBean().getScQtFinalization().setBriefingPaperUploaded(false);
 				
 	}
+	
+	/**
+	 * 
+	 * @return 
+	 */
+	public Boolean canShowSupplierProposal(){
+		
+		IUserSO userSO = null;
+		try{
+			userSO = BusinessDelegate.getInstance()
+					.getServiceObject(IUserSO.class);		
+			/**
+			 * 	1. find qt pm_org_profile
+			 *  2. find user pm_org_profile
+			 *  3. give permission to user within same organization with the role accesibility  
+			 *  (cancel)4. by state group (sabah, sarawak, peninsular) within same PTJ
+			 */
+			
+			//1
+			ScQt scQt = this.scQt!=null?this.scQt:getManagedBean().getScQt();
+			PmOrgProfile qtOrgProfile =  scQt.getPmOrgProfile();
+						
+			//2 & 3
+			Long userId = getFacesScopes().getUserSessionBean().getUserId();
+			debugLogger(getFacesScopes().getUserRoleList());
+			UserReqDTO reqDTO = new UserReqDTO();
+			reqDTO.setUserId(userId);
+			reqDTO.setOrgProfileId(qtOrgProfile.getOrgProfileId());
+			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
+			reqDTO.setRoleCodes(Arrays.asList(
+					RoleCode.DESK_OFFICER.value(),
+					RoleCode.FPB_SECRETARY.value(),
+					RoleCode.QCA_SECRETARY.value(),
+					RoleCode.QCB_SECRETARY.value(),
+					RoleCode.PBA_SECRETARY.value(),
+					RoleCode.PBB_SECRETARY.value()
+					));
+			reqDTO.setForceGetAllUserOrgList(false);
+			UserResDTO resDTO = userSO.checkAndGetUserInOrgProfile(reqDTO);
+			/*reqDTO.setForceGetAllUserOrgList(true);
+			UserResDTO allUserOrgResDTO = userSO.checkAndGetUserInOrgProfile(reqDTO);
+			reqDTO.setForceGetAllUserOrgList(false);*/
+			
+			
+			if(resDTO.isSuccessful()){
+				debugLogger("checkUserInOrgProfile Successful");
+				if(!CollectionUtils.isEmpty(resDTO.getUserOrgList())){
+					return true;
+				}
+			}
+			return false;
+			
+		}
+		finally{
+			userSO = null;
+		}
+		
+	}
+
+	public ScQt getScQt() {
+		return scQt;
+	}
+
+	public void setScQt(ScQt scQt) {
+		this.scQt = scQt;
+	}
+
+	// ***25201
+	public boolean isQTMaintenanceScreen() {
+		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+	}
+	
 }
+
+
+
+// ***19336
