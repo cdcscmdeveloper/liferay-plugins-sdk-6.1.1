@@ -11,12 +11,11 @@
 		<c:if
 			test="#{(backingBean.managedBean.approverUser or backingBean.managedBean.poUser) and backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'I'}">
 			<p:outputLabel style="float : left" styleClass="ui-panel-title"
-				value="#{lbl['lbl.sm.person.myIdResp']} - " />
+				value="#{lbl['lbl.sm.person.myIdResp']} -" />
 			<p:outputLabel style="float : left" styleClass="ui-panel-title"
-				rendered="#{backingBean.managedBean.selectedShareHolder.identityResponseCode ne '70018' || backingBean.managedBean.selectedShareHolder.identityResponseCode ne '70019'}"
-				value="#{backingBean.getMyIdentityStatusDescription(backingBean.managedBean.selectedShareHolder.identityResponseCode)}"
-				escape="false" />
-			<p:outputLabel style="float : left" styleClass="ui-panel-title"
+				value="#{backingBean.getMyIdentityStatusDescription(backingBean.managedBean.selectedShareHolder.identityResponseCode)}" />
+			<p:outputLabel style="float : left; padding-right: 0px"
+				styleClass="ui-panel-title"
 				rendered="#{backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70018' || backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70019'}"
 				value="#{lbl['lbl.sm.person.myIdResp.please.click']}" escape="false" />
 			<p:commandLink value="#{lbl['lbl.sm.person.myIdResp.here']}"
@@ -24,13 +23,14 @@
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 				action="#{backingBean.viewMyIdentityRespond()}" process="@this"
 				partialSubmit="true" update=":form" styleClass="ui-panel-title"
-				style="font-weight: bold;float: left;text-decoration: underline; padding-right:0px">
+				style="font-weight: bold; float: left; text-decoration: underline; padding-right: 0px">
 			</p:commandLink>
-			<p:outputLabel style="float : left" styleClass="ui-panel-title"
+			<p:outputLabel style="float : left; padding-right:-3px"
+				styleClass="ui-panel-title"
 				rendered="#{backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70018' || backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70019'}"
 				value="#{lbl['lbl.sm.person.myIdResp.jpn.info']}" />
-
 		</c:if>
+		<br />
 		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.name']}" /> <p:outputLabel
@@ -1381,36 +1381,8 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.address']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.address1}" /></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.address2}"/></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.address3}"/></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.country']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmCountry.countryName}"/></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.state']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmState.stateName}"/></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.district']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmDistrict.districtName}"/></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.towncity']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmCity.cityName}"/></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.postcode']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.postcode}"/></td>
-				</tr>				
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{backingBean.getSMFullAddress(backingBean.managedBean.shareHolderPermAddr.smAddress)}" escape="false" /></td>
+				</tr>			
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label"
 							value="#{lbl['lbl.sm.person.record.status']}" /></td>
