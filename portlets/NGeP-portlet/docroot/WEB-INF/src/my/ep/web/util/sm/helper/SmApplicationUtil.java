@@ -2390,16 +2390,16 @@ public class SmApplicationUtil {
 					log.debug(" *** Perm Addr Post Code ****" + postCode);
 				}
 			}
-
-			String myIdentityRespCode = null;
+			
+			String myIdentityRespCode;
 			if (pers.isEquityOwner() || pers.isDirector()) {
-				SmCommonUtil.getInstance().verifyOwnerWithMyIdentity(pers.getName(), pers.getIdentificationNo(), postCode,
-						my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_ONLINE, null);
+				SmCommonUtil.getInstance().verifyPersonnelWithMyIdentity(pers, postCode, my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_ONLINE, null);
 			} else {
-				SmCommonUtil.getInstance().verifyWithMyIdentity(pers.getName(), pers.getIdentificationNo(), postCode,
+				myIdentityRespCode = SmCommonUtil.getInstance().verifyWithMyIdentity(pers.getName(), pers.getIdentificationNo(), postCode,
 						my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_ONLINE);
+				pers.setIdentityResponseCode(myIdentityRespCode);
 			}
-			pers.setIdentityResponseCode(myIdentityRespCode);
+			
 		}
 		if (!pers.isEquityOwner() && !pers.isDirector()
 				&& !pers.isHigherManagement() && !pers.isManagement()
