@@ -906,6 +906,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	 * @return the string
 	 */
 	public String backAction() {
+		log.info("****back Action isPendingDelivery value****"+this.getManagedBean().isPendingDelivery());
 		if(this.getManagedBean().getBackToPrevious() !=null){
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.getManagedBean().setRemarkList(getManagedBean().getPreviousRemarkList());
