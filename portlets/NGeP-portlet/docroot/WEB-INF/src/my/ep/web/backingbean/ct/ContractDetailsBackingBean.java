@@ -651,16 +651,18 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 		//LOG : 13847, by Fahmi 22032019
 		ctBB.getManagedBean().setAttachmentList(null);
+		boolean addLatestData = false;
 		for(CtAttachment waivedAttach :ctBB.getManagedBean().getContractVer().getBondWaiverAttachments()){
 			//SET DATA TO LATEST WAIVER			
-			if(waivedAttach.isRecordStatus()){
+			if(waivedAttach.isRecordStatus() && !addLatestData){
+				addLatestData= true;
 				if(waivedAttach.getCtBondWaiverDetail() == null){
 					waivedAttach.setCtBondWaiverDetail(new CtBondWaiverDetail());
 				}
 				//this for : if user untick bondwaiver all detail will show in history table
 				if(ctBB.getManagedBean().getCtContractAmount().isBondWaived()){
-					ctBB.getManagedBean().setCtAttachmentLatest(SerializationUtils.clone(waivedAttach));
-					ctBB.getManagedBean().setCtAttachment(SerializationUtils.clone(ctBB.getManagedBean().getCtAttachmentLatest()));
+					ctBB.getManagedBean().setCtAttachment(waivedAttach);
+					ctBB.getManagedBean().setCtAttachmentLatest((CtAttachment)waivedAttach.cloneEntity());
 				}else{
 					ctBB.getManagedBean().getAttachmentList().add(SerializationUtils.clone(waivedAttach));
 				}

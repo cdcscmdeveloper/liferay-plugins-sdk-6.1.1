@@ -172,6 +172,7 @@ import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.log4j.Logger;
@@ -8435,6 +8436,14 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			if (null != contractType && contractType != 146) {
 				return false;
 			}
+			
+			if (!getManagedBean().isDisableFields()) {
+				String loaStatus = getStatusDescById(this.getManagedBean().getScLoa().getPmStatus().getStatusId());
+				if (StringEscapeUtils.unescapeJava(SourcingConstants.LOA_PENDING_VERIFICATION_STATUS).equals(loaStatus)) {
+					getManagedBean().setDisableFields(true);
+				}
+			}
+			
 			return true;
 		} else {
 			if (!getManagedBean().getScLoa().isBondReq()) {

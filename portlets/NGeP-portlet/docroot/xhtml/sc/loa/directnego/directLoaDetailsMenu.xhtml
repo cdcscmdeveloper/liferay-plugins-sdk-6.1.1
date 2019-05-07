@@ -219,7 +219,8 @@
 							<p:selectOneMenu id="procMode" required="true"
 								value="#{directLOABackingBean.managedBean.scLoa.procurementMode.parameterId}"
 								style="margin-bottom:5px;width:246px;"
-								label="#{lbl['lbl.sc.procurement.mode']}">
+								label="#{lbl['lbl.sc.procurement.mode']}"
+								disabled="#{directLOABackingBean.managedBean.disableFields}">
 								<f:selectItems value="#{directLOABackingBean.getProcurementModeDropdownValues()}" />
 								<p:ajax event="change" 
 									process="@this" partialSubmit="true" update="qtType"
@@ -244,7 +245,8 @@
 							<p:selectOneMenu id="qtType" required="true"
 								value="#{directLOABackingBean.managedBean.scLoa.qtType.parameterId}"
 								style="margin-bottom:5px;width:206px;"
-								label="#{lbl['lbl.sc.qttentype']}">
+								label="#{lbl['lbl.sc.qttentype']}"
+								disabled="#{directLOABackingBean.managedBean.disableFields}">
 								<f:selectItems value="#{directLOABackingBean.getQTTypesDropdownValues()}" />
 								<p:ajax event="change" 
 									process="@this" partialSubmit="true" 
@@ -281,7 +283,8 @@
 							<p:selectOneMenu id="procTypeBoCategory" required="true"
 								value="#{directLOABackingBean.managedBean.scLoa.procurementTypeCatId.parameterId}"
 								style="margin-bottom:5px;width:246px;"
-								label="#{lbl['lbl.sc.procurment.type.category']}">
+								label="#{lbl['lbl.sc.procurment.type.category']}"
+								disabled="#{directLOABackingBean.managedBean.disableFields}">
 								<f:selectItems
 									value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.procurementTypeCategory)}" />
 								 <p:ajax event="change" 
@@ -317,7 +320,8 @@
 										panelStyle="overflow-y: scroll; width:400px; height:200px;"
 										label="#{lbl['lbl.sc.reason']}"
 										required="true"
-										value="#{directLOABackingBean.managedBean.scLoa.justificationType.reasonCode}">
+										value="#{directLOABackingBean.managedBean.scLoa.justificationType.reasonCode}"
+										disabled="#{directLOABackingBean.managedBean.disableFields}">
 										<f:selectItems
 											value="#{directLOABackingBean.managedBean.pk7Reasons}" />
 									
@@ -533,7 +537,8 @@
 													<p:selectOneMenu id="performanceBondValId" required="true"
 														style="margin-bottom:5px;width:175px;"
 														value="#{directLOABackingBean.managedBean.bondReqSelectedVal}"
-														label="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}">
+														label="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}"
+														disabled="#{directLOABackingBean.managedBean.disableFields}">
 														<f:selectItems
 															value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.yesNoFlag)}" />
 															
@@ -792,7 +797,8 @@
 													<p:selectOneMenu id="agreementValId" required="true"
 														style="margin-bottom:5px;width:246px;"
 														value="#{directLOABackingBean.managedBean.agreemetSelectedVal}"
-														label="#{lbl['lbl.sc.loiloa.loa.req.agree']}">
+														label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
+														disabled="#{directLOABackingBean.managedBean.disableFields}">
 														<f:selectItems
 															value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.yesNoFlag)}" />
 															
