@@ -30,15 +30,15 @@
 			</tr>
 			<tr>
 				<td width="10%"><h:outputLabel
-						value="#{lbl['lbl.sc.document.no']}" /></td>
+						value="#{isDocTypeQuotation or isDocTypeDirectNego?lbl['lbl.rpt.qtNo']:lbl['lbl.sc.document.no']}" /></td>
 				<td class="header-info-text">
-						<p:commandLink rendered="#{isDocTypeQuotation}" process="@this" partialSubmit="true"
+						<p:commandLink rendered="#{isDocTypeQuotation or isDocTypeDirectNego}" process="@this" partialSubmit="true"
 						action="#{ViewQtDetailsGeneralInfoBB.navigatetoViewQtDetailsGeneralInfo(view.viewId,lOADetailBackingBean.managedBean.scQt,false)}">
-				<h:outputText value="#{lOADetailBackingBean.managedBean.scQt !=null ?lOADetailBackingBean.managedBean.scQt.qtNo : ' '}" rendered="#{isDocTypeQuotation}" escape="false" />
+				<h:outputText value="#{null != lOADetailBackingBean.managedBean.scQt ?lOADetailBackingBean.managedBean.scQt.qtNo : ' '}" rendered="#{isDocTypeQuotation || isDocTypeDirectNego}" escape="false" />
 					</p:commandLink>
 						<h:outputText
 						value="#{lOADetailBackingBean.managedBean.scLoa.scQuote.quoteNo}"
-						rendered="#{!isDocTypeQuotation}" />
+						rendered="#{!(isDocTypeQuotation || isDocTypeDirectNego)}" />
 				</td>
 				<td width="10%"><h:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.title']}" /></td>
@@ -48,3 +48,6 @@
 		</table>
 	</div>
 </ui:composition>
+
+
+<!-- ***19336 -->

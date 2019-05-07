@@ -243,7 +243,7 @@ public class SupplierFinalizationBackingBean extends
 	public String preRenderViewMaintenance(ScQt scQt, String previousPageUrl) {
 		log.info("preRenderViewMaintenance");
 		if(isQTMaintenanceScreen()){
-			getManagedBean().setActiveIndex(1);
+			getManagedBean().setActiveIndex(0);
 		}
 		getManagedBean().setScQt(scQt);
 		getManagedBean().setPreviousPageUrl(previousPageUrl);
@@ -4393,7 +4393,7 @@ public class SupplierFinalizationBackingBean extends
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 								new FacesScopes().getUserLocale()));
 			menuItem.setStyle("width:15%;");
-			menuItem.setDisabled(isQTMaintenanceScreen());
+			//menuItem.setDisabled(isQTMaintenanceScreen());
 			menuItem.setTransient(true);
 			menuItem.setPartialSubmit(true);
 			menuItem.setProcess("@form");
@@ -4427,7 +4427,7 @@ public class SupplierFinalizationBackingBean extends
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale()));
 		menuItem.setStyle("width:20%;");
-		menuItem.setDisabled(isQTMaintenanceScreen());
+		//menuItem.setDisabled(isQTMaintenanceScreen());
 		menuItem.setTransient(true);
 		menuItem.setPartialSubmit(true);
 		menuItem.setProcess("@form");
@@ -4445,7 +4445,7 @@ public class SupplierFinalizationBackingBean extends
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale()));
 			menuItem.setStyle("width:15%;");
-			menuItem.setDisabled(isQTMaintenanceScreen());
+			//menuItem.setDisabled(isQTMaintenanceScreen());
 			menuItem.setTransient(true);
 			menuItem.setPartialSubmit(true);
 			menuItem.setOncomplete(tabMenuChangeCommonAction
@@ -6925,3 +6925,7 @@ public class SupplierFinalizationBackingBean extends
 	}
 	
 }
+
+
+
+// ***19336
