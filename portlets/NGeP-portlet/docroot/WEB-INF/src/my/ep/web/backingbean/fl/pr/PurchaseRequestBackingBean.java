@@ -674,8 +674,10 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			return false;
 		}
 		for(FlDeliveryAddress flDelAddress:flDeliveryAddresses){
+			if (flDelAddress.getReceivingGrp() == null ){
 			if(addrType.getPmAddress().getAddressId().longValue()==flDelAddress.getPmAddressId().longValue()){
 				isContains=true;
+				}
 			}
 		}
 		return isContains;
