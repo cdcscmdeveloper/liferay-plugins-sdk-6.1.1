@@ -121,7 +121,7 @@
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{ctBackingBean.isPerformanceBond()}"
 			actionListener="#{contractDetailsBackingBean.setTabValue('PB')}" update=":form" 
-			disabled="#{!directLOABackingBean.managedBean.scLoa.bondReq}"/>
+			disabled="#{!ctBackingBean.managedBean.contractVer.ctContract.loa.bondReq}"/>
 		
 		<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.factoring']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
