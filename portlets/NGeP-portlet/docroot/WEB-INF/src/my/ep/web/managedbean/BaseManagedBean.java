@@ -38,7 +38,8 @@ public abstract class BaseManagedBean implements Serializable {
 
 	// For sub title displayed in screen.
 	private String title;
-
+	
+	private boolean disableFields;
 	/**
 	 * @return the token
 	 */
@@ -261,6 +262,20 @@ public abstract class BaseManagedBean implements Serializable {
 
 	public void setEnableDownloadAllDocuments(Boolean enableDownloadAllDocuments) {
 		this.enableDownloadAllDocuments = enableDownloadAllDocuments;
+	}
+	
+	/**
+	 * @return the disableFields
+	 */
+	public boolean isDisableFields() {
+		return disableFields;
+	}
+
+	/**
+	 * @param disableFields the disableFields to set
+	 */
+	public void setDisableFields(boolean disableFields) {
+		this.disableFields = disableFields;
 	}
 
 }
