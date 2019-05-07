@@ -53,50 +53,68 @@
 
 		</p:dataTable>
 		
-		<p:outputPanel rendered="#{not empty qTSupplierQulCriteriaBackingBean.managedBean.qtCategoryList}">
-		
-		  <table align="left" style="margin-top:10px !important;">
-		     <tr>
-			     <td>
-	                <p:outputLabel value="#{lbl['lbl.sc.open.for']}" /><p:outputLabel
-						value="*" styleClass="mandatory" rendered="#{!scQt.panel}" />               
-	             </td>
-	              <td>
-			     	<p:selectOneRadio required="true" label="#{lbl['lbl.sc.open.for']}" value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.openFor}">
-					 <f:selectItems value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.scOpenFor)}" />
-						<p:ajax event="change" process="@this" partialSubmit="true" update="@form" listener="#{createQtBB.openForChange}"></p:ajax>				
-				    </p:selectOneRadio>	    
-				  </td>
-			  </tr>
-		 </table>
-               
-	    </p:outputPanel>
-	    
-		<c:if test="#{!categoryCodeReadonly and !specCommitteeReadOnly}">
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.add']}"
-					styleClass="BtnSpacing" process="@this, openPnlId"
-					partialSubmit="true" update="@([id$=catCodePopup])"
-					oncomplete="catCodePopup.show();"
-					action="#{categoryCodeSearchBackingBean.renewSesionObject}" />
-				<p:commandButton value="#{lbl['lbl.btn.delete']}" id="supplierQualificationCriteriaNonpanelDeleteCategoryBtnId"
-					styleClass="BtnSpacing" process="@this, openPnlId"
-					partialSubmit="true" disabled="#{empty qTSupplierQulCriteriaBackingBean.managedBean.selectedCategoryList}"
-					oncomplete="supplierOpencategoryDeletePopUp.show();"
-					update="@([id$=#{supplierOpencategoryDeleteId}])" />
-			</div>
-			<ui:param name="supplierOpencategoryDeleteId"
-				value="supplierOpencategoryDeleteId" />
-			<ac:confirmationPopup id="#{supplierOpencategoryDeleteId}"
-				widget="supplierOpencategoryDeletePopUp"
-				okAction="qTSupplierQulCriteriaBackingBean.deleteCategoryCodes"
-				width="33%" height="100" title="#{lbl['lbl.sc.category.code']}"
-				content="#{lbl['lbl.sc.dialog.confirm.category.codes']}"
-				update="@([id$=openCategoryCodesPanel])" />
-			<ac:categoryCodePopup
-				okAction="qTSupplierQulCriteriaBackingBean.addNewCategoryAction"
-				update="@form" />
-		</c:if>
+		<table width="100%">
+		  <tr>
+		     <td>  
+					<p:outputPanel rendered="#{not empty qTSupplierQulCriteriaBackingBean.managedBean.qtCategoryList}">
+					
+					  <table  style="margin-top:10px !important;">
+					     <tr>
+						     <td>
+				                <p:outputLabel value="#{lbl['lbl.sc.open.for']}" /><p:outputLabel
+									value="*" styleClass="mandatory" rendered="#{!scQt.panel}" />               
+				             </td>
+				              <td>
+						     	<p:selectOneRadio required="true" label="#{lbl['lbl.sc.open.for']}" value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.openFor}">
+								 <f:selectItems value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.scOpenFor)}" />
+									<p:ajax event="change" process="@this" partialSubmit="true" update="@form" listener="#{createQtBB.openForChange}"></p:ajax>				
+							    </p:selectOneRadio>	    
+							  </td>
+						  </tr>
+					 </table>
+					 
+				    </p:outputPanel>
+				    
+			</td>
+		    <td>  
+		          <table width="100%">
+			         <tr>
+				       <td> 
+			    
+							<c:if test="#{!categoryCodeReadonly and !specCommitteeReadOnly}">
+								<div class="ppRightBtn">
+									<p:commandButton value="#{lbl['lbl.btn.add']}"
+										styleClass="BtnSpacing" process="@this, openPnlId"
+										partialSubmit="true" update="@([id$=catCodePopup])"
+										oncomplete="catCodePopup.show();"
+										action="#{categoryCodeSearchBackingBean.renewSesionObject}" />
+									<p:commandButton value="#{lbl['lbl.btn.delete']}" id="supplierQualificationCriteriaNonpanelDeleteCategoryBtnId"
+										styleClass="BtnSpacing" process="@this, openPnlId"
+										partialSubmit="true" disabled="#{empty qTSupplierQulCriteriaBackingBean.managedBean.selectedCategoryList}"
+										oncomplete="supplierOpencategoryDeletePopUp.show();"
+										update="@([id$=#{supplierOpencategoryDeleteId}])" />
+								</div>
+								<ui:param name="supplierOpencategoryDeleteId"
+									value="supplierOpencategoryDeleteId" />
+								<ac:confirmationPopup id="#{supplierOpencategoryDeleteId}"
+									widget="supplierOpencategoryDeletePopUp"
+									okAction="qTSupplierQulCriteriaBackingBean.deleteCategoryCodes"
+									width="33%" height="100" title="#{lbl['lbl.sc.category.code']}"
+									content="#{lbl['lbl.sc.dialog.confirm.category.codes']}"
+									update="@([id$=openCategoryCodesPanel])" />
+								<ac:categoryCodePopup
+									okAction="qTSupplierQulCriteriaBackingBean.addNewCategoryAction"
+									update="@form" />
+							</c:if>
+							
+					    </td>
+				  </tr>
+			    </table>
+		   </td>
+		  </tr>
+		</table>
+							
+							
 	</p:panel>
 
 	<ui:param name="isQuotationThresHold"

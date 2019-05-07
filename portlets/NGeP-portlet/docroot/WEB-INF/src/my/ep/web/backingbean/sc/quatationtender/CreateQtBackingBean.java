@@ -647,6 +647,18 @@ public class CreateQtBackingBean extends
 						scQt.setOpenFor(ParameterConst.OPEN_FOR_BUMI);
 					} else {
 						scQt.setOpenFor(ParameterConst.OPEN_FOR_ALL);
+						
+                        //20190507@hatta - 22240 - Start	
+						List<ScQtCategory> qtCategoryList = scQt.getScQtCategorys();	
+						
+						for(ScQtCategory cat: qtCategoryList)
+					    {  
+						    if(getParameterDesc(cat.getPmCategoryL3().getCategoryTypeCode()).equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_PRINTING) || cat.getPmCategoryL2Name().substring(0,10).equalsIgnoreCase("PERCETAKAN")){ 
+							   scQt.setOpenFor(ParameterConst.OPEN_FOR_BUMI);
+							   break;
+							}		
+						}
+						//20190507@hatta - 22240 - End
 					}	
 				}
 			} 
