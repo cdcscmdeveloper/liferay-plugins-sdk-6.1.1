@@ -44,8 +44,11 @@
 				<p:outputLabel value="*" styleClass="mandatory" />
 			</td>
 
-			<td class="tdContent">
-				<p:calendar showOn="button" navigator="true"
+			<td >
+			<table style="width: 100%;">
+			<tr>
+			<td class="columnDateFromClass">
+			<p:calendar showOn="button" navigator="true"
 					display="inline" readonlyInput="true"
 					value="#{suppPerformRptBB.managedBean.dateFrom}" size="9"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
@@ -54,13 +57,12 @@
 					<p:ajax event="change" partialSubmit="true" process="@this"
 						update="@this" />
 				</p:calendar>
-			</td>
-			
-			<td class="tdTitle">
+				
+			</td><td class="columnDateToClass">
 				<p:outputLabel value="#{lbl['lbl.rpt.dtRangeTo']}" />
 				<p:outputLabel value="*" styleClass="mandatory" />
 			</td>
-			<td class="tdContent">
+			<td >
 				<p:calendar showOn="button" navigator="true"
 					display="inline" readonlyInput="true"
 					value="#{suppPerformRptBB.managedBean.dateTo}" size="9"
@@ -71,6 +73,15 @@
 						update="@this" />
 				</p:calendar>
 			</td>
+			
+			</tr>
+			</table>
+			
+			
+				
+			</td>
+			
+			
 		</tr>
 	</table>
 	
