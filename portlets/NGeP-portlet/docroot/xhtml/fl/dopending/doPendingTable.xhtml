@@ -238,27 +238,27 @@
 			
 			<p:rowExpansion>
 			
-			<p:dataTable id="delSubListTree" var="deliveryExpansion" styleClass="borderless" rowIndexVar="index"
+			<p:dataTable id="delSubListTree" var="deliveryExpansion" styleClass="borderless" rowIndexVar="index" width="100%"
 					value="#{pending.flDeliveryOrders}"  resizableColumns="true">
 					
-					<p:column headerText="#{lbl['lbl.fl.delivery.order.index']}" style="text-align:center;width:25px">
+					<p:column headerText="#{lbl['lbl.fl.delivery.order.index']}" style="text-align:center" width="10%">
 						<h:outputText value="#{index + 1}" >
 						</h:outputText>
 					</p:column>
 					
-					<p:column headerText="#{lbl['lbl.fl.delivery.order.number']}" style="text-align:center">
+					<p:column headerText="#{lbl['lbl.fl.delivery.order.number']}" style="text-align:center" width="20%">
 						<p:commandLink value="#{deliveryExpansion.deliveryOrderNo}"
 							onclick="goToDetail([{name:'docType', value:'DO'}, {name:'docId', value:'#{deliveryExpansion.deliveryOrderId}'},{name:'buttonVal', value:'VIEW'}, {name:'isPendingDelivery', value:'true'} , {name:'statusDesc', value:'#{deliveryExpansion.status.statusId}'}])" style="text-align:center">
 						</p:commandLink>				
 					</p:column>
 					
-					<p:column headerText="#{lbl['lbl.fl.delivery.order.number.supplier']}" style="text-align:center">
-						<h:outputText value="#{deliveryExpansion.supplierDoRef}" >
+					<p:column headerText="#{lbl['lbl.fl.delivery.order.number.supplier']}" style="text-align:center;width:300px" width="50%" >
+						<h:outputText value="#{deliveryExpansion.supplierDoRef}"  style="float:left;">
 						</h:outputText>
 					</p:column>
 					
-					<p:column headerText="#{lbl['lbl.fl.delivery.order.status']}" style="text-align:center">
-						<h:outputText value="#{flOrderBB.getStatusDescById(deliveryExpansion.status.statusId)}" style="text-align:center" />
+					<p:column headerText="#{lbl['lbl.fl.delivery.order.status']}" style="text-align:center" width="20%">
+						<h:outputText value="#{flOrderBB.getStatusDescById(deliveryExpansion.status.statusId)}" style="float:left;"/>
 					</p:column>
 					
 			</p:dataTable>
