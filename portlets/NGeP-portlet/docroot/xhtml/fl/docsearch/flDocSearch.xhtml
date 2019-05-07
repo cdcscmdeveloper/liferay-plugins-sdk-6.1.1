@@ -311,7 +311,7 @@
 										onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							        	rendered="#{flDocument.isViewAction()}"
 							        	icon="ui-icon-view"
-							        	onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'isPendingDelivery', value:'true'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmView}'}, {name:'statusDesc', value:'#{flDocument.statusId}'}])"/>
+							        	onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'isPendingDelivery', value:'fasle'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmView}'}, {name:'statusDesc', value:'#{flDocument.statusId}'}])"/>
 									<p:menuitem value="#{lbl['lbl.btn.print']}" ajax="false"
 										rendered="#{!(	flDocument.docType==ParameterConst.doctypePurchaseRequest || 
 														flDocument.docType==ParameterConst.doctypeContractRequest || 
@@ -329,22 +329,22 @@
 							        	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							        	rendered="#{flDocument.isUpdateAction()}"
 							        	icon="ui-icon-update"
-							        	onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'isPendingDelivery', value:'true'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmUpdate}'}, {name:'statusDesc', value:'#{flDocument.statusId}'}])"/>
+							        	onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'isPendingDelivery', value:'fasle'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmUpdate}'}, {name:'statusDesc', value:'#{flDocument.statusId}'}])"/>
 							        <p:menuitem value="#{lbl['lbl.fl.doc.maintain.action.cancel']}" 
 							        	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							        	rendered="#{flDocument.isCancelAction()}"
 							        	icon="ui-icon-fl-cancel"
-										onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'isPendingDelivery', value:'true'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmCancel}'}, {name:'statusDesc', value:'#{flDocument.statusId}'}])"/>
+										onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'isPendingDelivery', value:'fasle'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmCancel}'}, {name:'statusDesc', value:'#{flDocument.statusId}'}])"/>
 							        <p:menuitem value="#{lbl['lbl.fl.doc.maintain.action.stop.fulfilment']}"  
 							        	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							        	rendered="#{flDocument.isStopFulfilmentAction()}"
 							        	icon="ui-icon-stop"
-							        	onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'isPendingDelivery', value:'true'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmStopFulfilment}'}, {name:'statusDesc', value:'#{flDocument.statusId}'}])"/>
+							        	onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'isPendingDelivery', value:'fasle'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmStopFulfilment}'}, {name:'statusDesc', value:'#{flDocument.statusId}'}])"/>
 							        <p:menuitem value="#{lbl['lbl.fl.doc.maintain.action.factory.comp.removal']}"  
 							        	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							        	rendered="#{flDocument.isRemoveFactoringAction()}"
 							        	icon="ui-icon-termination"
-							        	onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'isPendingDelivery', value:'true'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmRemoveFactoring}'}, {name:'statusDesc', value:'#{flDocument.statusId}'}])"/>
+							        	onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'isPendingDelivery', value:'fasle'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmRemoveFactoring}'}, {name:'statusDesc', value:'#{flDocument.statusId}'}])"/>
 					</p:menuButton>
 				</p:column>
 			</p:dataTable>
