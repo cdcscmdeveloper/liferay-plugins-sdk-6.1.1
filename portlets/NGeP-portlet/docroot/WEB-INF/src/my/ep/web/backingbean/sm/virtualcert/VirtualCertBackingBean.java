@@ -21,11 +21,10 @@ import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
-import my.ep.util.ServiceUtils;
+import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sm.questionnaire.QuestionnaireBackingBean;
 import my.ep.web.managedbean.sm.virtualcert.VirtualCertManagedBean;
-import my.ep.web.util.CommonUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
@@ -70,13 +69,12 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null,XHTML_QUESTIONNAIRE);
 			}else{
 				retrieveCertInfo(supp.getSupplierId());
-				ServiceUtils.getInstance().logSLAInfo(
+				SLAUtils.getInstance().logSLAInfo("SM","SR",
 						"VirtualCertBackingBean.viewVirtualCert", startTime);
-				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, XHTML_VIRTUAL_DET);
 			}
 		}else{
 			retrieveCertInfo(supp.getSupplierId());
-			ServiceUtils.getInstance().logSLAInfo(
+			SLAUtils.getInstance().logSLAInfo("SM","SR",
 					"VirtualCertBackingBean.viewVirtualCert", startTime);
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, XHTML_VIRTUAL_DET);
 		}
