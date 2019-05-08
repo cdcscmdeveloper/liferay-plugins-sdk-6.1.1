@@ -145,6 +145,7 @@ import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoaBasic;
 import my.ep.persistence.entity.sc.loaloi.ScLoaForQt;
+import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiForQt;
 import my.ep.persistence.entity.sc.qtretry.ScQtDisruptionLog;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
@@ -997,9 +998,11 @@ public class QTDetailBackingBean extends
 			scLoiForQt = (ScLoiForQt)obj;
 			if (ParameterConst.DOCTYPE_LETTER_OF_INTENT.equals(docType)) {
 				LOIDetailBackingBean bb = new LOIDetailBackingBean();
-				return bb.retrieveSupplierLOIDtl(
-						scLoiForQt.getScLoiLoa().getScQt().getQtId(), scLoiForQt.getLoiId(), previousPageUrl, true, true);
-			} 
+				//return bb.retrieveSupplierLOIDtl(
+						//scLoiForQt.getScLoiLoa().getScQt().getQtId(), scLoiForQt.getLoiId(), previousPageUrl, true, true);
+				bb.preRenderViewForQtMaintenenceScreen(scLoiForQt.getLoiId(), previousPageUrl);
+				return null;
+			}
 		}
 		else if(obj instanceof ScLoaForQt){
 			scLoaForQt = (ScLoaForQt)obj;
