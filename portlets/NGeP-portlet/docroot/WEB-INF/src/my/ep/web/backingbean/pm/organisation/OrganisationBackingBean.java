@@ -141,7 +141,10 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 	private boolean gmapDisabled;
 	
 	private Long selectedAddrForEdit;
-
+	
+	private Long selectedAddrStateId;
+	
+	private String selectedAddrStateName;
 	/**
 	 * The constructor used for save user logging.
 	 * 
@@ -1371,6 +1374,7 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 						&& address.getAddressId().equals(manualAddr.getAddressId())) {
 					getManagedBean().getAddressTypesList().set(i, adressType);
 					deliveryAddr.setPmAddress(manualAddr);
+					break;
 				} else if (address.getAddressName() != null
 						&& address.getAddressName().equals(manualAddr.getAddressName())) {
 					getManagedBean().getAddressTypesList().set(i, adressType);
@@ -1395,6 +1399,8 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 	 **/
 	public void editDeliveryAddress(PmAddressType address) {
 		setSelectedAddrForEdit(address.getPmAddress().getAddressId());
+		setSelectedAddrStateId(address.getPmAddress().getPmState().getStateId());
+		setSelectedAddrStateName(address.getPmAddress().getPmState().getStateName());
 		boolean addrExist = false;
 		if (address != null) {
 			log.info("test editDeliveryAddress NOT null+++++pencil");
@@ -2064,6 +2070,18 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 
 	public void retrieveDeliveryPmState(PmState pmState) {
 		log.info("***************************** retrievePmState");
+		
+		if (null != this.getManagedBean().getAddressTypesList() && this.getManagedBean().getAddressTypesList().size() > 0) {
+			for(PmAddressType addrType : this.getManagedBean().getAddressTypesList()) {
+				PmAddress pmAddress = addrType.getPmAddress();
+				if (null != pmAddress && getSelectedAddrForEdit() != pmAddress.getAddressId() 
+						&& null != pmAddress.getPmState() && StringUtils.isNotEmpty(pmAddress.getPmState().getStateName())
+						&& getSelectedAddrStateName().equals(pmAddress.getPmState().getStateName())) {
+					addrType.getPmAddress().getPmState().setStateId(getSelectedAddrStateId());
+				}
+			}
+		}
+		
 		if (pmState != null) {
 			if (pmState.getStateId() != null) {
 				log.info("pmState.getStateId() " + pmState.getStateId());
@@ -3206,6 +3224,34 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 		ICitySO reqSO = (ICitySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICitySO.class);
 		CityResDTO resDTO = reqSO.retriveCityListByDistrictId(reqDTO);
 		this.getManagedBean().setCityList(resDTO.getCityList());
+	}
+
+	/**
+	 * @return the selectedAddrStateId
+	 */
+	public Long getSelectedAddrStateId() {
+		return selectedAddrStateId;
+	}
+
+	/**
+	 * @param selectedAddrStateId the selectedAddrStateId to set
+	 */
+	public void setSelectedAddrStateId(Long selectedAddrStateId) {
+		this.selectedAddrStateId = selectedAddrStateId;
+	}
+
+	/**
+	 * @return the selectedAddrStateName
+	 */
+	public String getSelectedAddrStateName() {
+		return selectedAddrStateName;
+	}
+
+	/**
+	 * @param selectedAddrStateName the selectedAddrStateName to set
+	 */
+	public void setSelectedAddrStateName(String selectedAddrStateName) {
+		this.selectedAddrStateName = selectedAddrStateName;
 	}
 	
 }
