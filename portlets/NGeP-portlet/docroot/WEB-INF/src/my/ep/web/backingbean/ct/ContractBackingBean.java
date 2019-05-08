@@ -15,6 +15,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -2239,7 +2240,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		getManagedBean().getCtAttachment().getCtBondWaiverDetail().setCreatedBy(facesScopes.getUserSessionBean().getUserId());
 		getManagedBean().getCtAttachment().getCtBondWaiverDetail().setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		//getManagedBean().getWaiverDetail().add(attachment);
+		//getManagedBean().getAttachmentList().add(getManagedBean().getCtAttachment());
+		//reverse list to insert new data at first row
+		Collections.reverse(getManagedBean().getAttachmentList());
 		getManagedBean().getAttachmentList().add(getManagedBean().getCtAttachment());
+		Collections.reverse(getManagedBean().getAttachmentList());
 		getManagedBean().setCtAttachment(SerializationUtils.clone(getManagedBean().getCtAttachmentLatest()));
 		
 		//RequestContext.getCurrentInstance().execute("uploadWaiverDlg.hide()");

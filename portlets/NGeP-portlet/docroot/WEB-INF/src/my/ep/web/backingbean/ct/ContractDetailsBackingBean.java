@@ -661,8 +661,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 				//this for : if user untick bondwaiver all detail will show in history table
 				if(ctBB.getManagedBean().getCtContractAmount().isBondWaived()){
-					ctBB.getManagedBean().setCtAttachment(waivedAttach);
-					ctBB.getManagedBean().setCtAttachmentLatest((CtAttachment)waivedAttach.cloneEntity());
+					ctBB.getManagedBean().setCtAttachment(SerializationUtils.clone(waivedAttach));
+					ctBB.getManagedBean().setCtAttachmentLatest(SerializationUtils.clone(waivedAttach));
 				}else{
 					ctBB.getManagedBean().getAttachmentList().add(SerializationUtils.clone(waivedAttach));
 				}
