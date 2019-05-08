@@ -906,7 +906,6 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	 * @return the string
 	 */
 	public String backAction() {
-		log.info("****back Action isPendingDelivery value****"+this.getManagedBean().isPendingDelivery());
 		if(this.getManagedBean().getBackToPrevious() !=null){
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.getManagedBean().setRemarkList(getManagedBean().getPreviousRemarkList());
@@ -920,8 +919,10 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		}
 		else{
 			if(this.getManagedBean().isPendingDelivery()){
+				log.info("****back Action isPendingDelivery value doPending****"+this.getManagedBean().isPendingDelivery());
 				return "doPending";
 			}else{
+				log.info("****back Action isPendingDelivery value flDocSearch****"+this.getManagedBean().isPendingDelivery());
 				return "flDocSearch";
 			}
 			
