@@ -724,18 +724,18 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				flBB.getManagedBean().setHideRemarks(false);
 			}
 			reqDTO.setFulfilmentOrderId(getManagedBean().getFulfilmentOrder().getFulfilmentOrderId());
-//			FulfilmentResDTO siResDTO = fulfilmentOrderSO.retrieveStopInstructionByOrder(reqDTO);
-//			if(siResDTO.getFlStopInstr()!=null) {
-//				String messageId = MessageConst.INFO_745081;
-//				if(siResDTO.getFlStopInstr().getFlWorkflowStatus().getPmStatus().getStatusId().longValue()==FulfilmentStatusConst.SD_PENDING_SUBMISSION.longValue()){
-//					getManagedBean().setOrderDisabledForSdCheck(true);
-//					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,	null,
-//							MessageUtils.getMessage(messageId, 
-//									new String[]{getManagedBean().getFulfilmentOrder().getDocType(),reqDTO.getPmUser().getUserName()}, 
-//									MessageUtils.BUNDLE_COMMON_MESSAGES, 
-//									new FacesScopes().getUserLocale())));
-//				}
-//			}
+			FulfilmentResDTO siResDTO = fulfilmentOrderSO.retrieveStopInstructionByOrder(reqDTO);
+			if(siResDTO.getFlStopInstr()!=null) {
+				String messageId = MessageConst.INFO_745081;
+				if(siResDTO.getFlStopInstr().getFlWorkflowStatus().getPmStatus().getStatusId().longValue()==FulfilmentStatusConst.SD_PENDING_SUBMISSION.longValue()){
+					getManagedBean().setOrderDisabledForSdCheck(true);
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,	null,
+							MessageUtils.getMessage(messageId, 
+									new String[]{getManagedBean().getFulfilmentOrder().getDocType(),reqDTO.getPmUser().getUserName()}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, 
+									new FacesScopes().getUserLocale())));
+				}
+			}
 		}
 		
 		if(getManagedBean().isGstAmtChanged()) {
@@ -920,10 +920,10 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		else{
 			if(this.getManagedBean().isPendingDelivery()){
 				log.info("****back Action isPendingDelivery value doPending****"+this.getManagedBean().isPendingDelivery());
-				return "doPending";
+				return "/xhtml/fl/dopending/doPendingTable.xhtml?faces-redirect=true";
 			}else{
 				log.info("****back Action isPendingDelivery value flDocSearch****"+this.getManagedBean().isPendingDelivery());
-				return "flDocSearch";
+				return "/xhtml/fl/docsearch/flDocSearch.xhtml?faces-redirect=true";
 			}
 			
 		}
