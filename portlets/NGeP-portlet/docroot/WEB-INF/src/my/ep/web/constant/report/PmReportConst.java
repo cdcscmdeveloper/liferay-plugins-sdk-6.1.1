@@ -34,8 +34,7 @@ public class PmReportConst implements Serializable {
 	public static final String PARAM_PM_IDENTIFICATION_NO = "PIDENNO";
 	public static final String PARAM_PM_ROLE_CODE = "PROLECODE";
 	public static final String PARAM_PM_APPLICANT_NAME = "PAPPLICANTNAME";
-	public static final String PARAM_PM_ACCESS_TYPE_CP = "PACCESSTYPECP";
-	public static final String PARAM_PM_ACCESS_TYPE_MR = "PACCESSTYPEMR";
+	public static final String PARAM_PM_ACCESS_TYPE = "PACCESSTYPE";
 	public static final String PARAM_PM_APPLICATION_STATUS = "PAPPLICATIONSTATUS";
 	
 
