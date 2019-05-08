@@ -408,36 +408,25 @@ public class PmReportsBackingBean extends
 		
 		if (StringUtils.isNotBlank(getManagedBean().getSelectedAccessType())) {
 			String accessType = getManagedBean().getSelectedAccessType();
-			if(ParameterConst.DOCTYPE_COMPANY_PROFILE.equalsIgnoreCase(accessType))
-			{
-				map.put(PmReportConst.PARAM_PM_ACCESS_TYPE_CP, "1");
-				map.put(PmReportConst.PARAM_PM_ACCESS_TYPE_MR, "0");
-			}
-			else if(ParameterConst.DOCTYPE_MARKET_RESEARCH.equalsIgnoreCase(accessType))
-			{
-				map.put(PmReportConst.PARAM_PM_ACCESS_TYPE_MR, "1");
-				map.put(PmReportConst.PARAM_PM_ACCESS_TYPE_CP, "0");				
-			}
-			else if((ParameterConst.DOCTYPE_COMPANY_PROFILE + " _ " + ParameterConst.DOCTYPE_MARKET_RESEARCH).equalsIgnoreCase(accessType))
-			{
-				map.put(PmReportConst.PARAM_PM_ACCESS_TYPE_CP, "1");
-				map.put(PmReportConst.PARAM_PM_ACCESS_TYPE_MR, "1");
+			
+			if((ParameterConst.DOCTYPE_COMPANY_PROFILE + " _ " + 
+			ParameterConst.DOCTYPE_MARKET_RESEARCH).equalsIgnoreCase(accessType)){
+				map.put(PmReportConst.PARAM_PM_ACCESS_TYPE, null);
+			} else {
+				map.put(PmReportConst.PARAM_PM_ACCESS_TYPE, accessType);
 			}
 		}
 		
-		if(getManagedBean().getSelectedApplicationStatus() != null){
-			
+		if(getManagedBean().getSelectedApplicationStatus() != null){			
 			if(getManagedBean().getSelectedApplicationStatus().longValue() == 
 					ProfileManagementStatusConst.PENDING_MARKET_RESEARCH_ACCESS_APPROVAL.longValue()) {			
-				if(("1".equals(map.get(PmReportConst.PARAM_PM_ACCESS_TYPE_CP)) && 
-						"1".equals(map.get(PmReportConst.PARAM_PM_ACCESS_TYPE_MR))) || 
+				if(map.get(PmReportConst.PARAM_PM_ACCESS_TYPE) == null || 
 						StringUtils.isBlank(getManagedBean().getSelectedAccessType())) {
 					map.put(PmReportConst.PARAM_PM_APPLICATION_STATUS, 
 							String.valueOf(getManagedBean().getSelectedApplicationStatus()) 
 							+ "_" + String.valueOf(ProfileManagementStatusConst.PENDING_COMPANY_ACCESS_APPROVAL));
 					
-				} else if("1".equals(map.get(PmReportConst.PARAM_PM_ACCESS_TYPE_CP)) && 
-						"0".equals(map.get(PmReportConst.PARAM_PM_ACCESS_TYPE_MR))) {
+				} else if(map.get(PmReportConst.PARAM_PM_ACCESS_TYPE).equalsIgnoreCase(ParameterConst.DOCTYPE_COMPANY_PROFILE)) {
 					map.put(PmReportConst.PARAM_PM_APPLICATION_STATUS, 
 							String.valueOf(ProfileManagementStatusConst.PENDING_COMPANY_ACCESS_APPROVAL));
 				} else {
