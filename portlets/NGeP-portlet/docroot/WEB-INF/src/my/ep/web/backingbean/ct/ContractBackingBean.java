@@ -2226,10 +2226,14 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		if(getManagedBean().getCtAttachment() == null){
 			getManagedBean().setCtAttachment(new CtAttachment());
 			getManagedBean().setCtAttachment(SerializationUtils.clone(getManagedBean().getCtAttachmentTemp()));
+			getManagedBean().getCtAttachment().setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+			getManagedBean().getCtAttachment().setCreatedUser(facesScopes.getUserSessionBean());
+			getManagedBean().getCtAttachment().setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		}else{
+			getManagedBean().getCtAttachment().setChangedBy(facesScopes.getUserSessionBean().getUserId());
+			//getManagedBean().getCtAttachment().setChangedDate(new Timestamp(System.currentTimeMillis()));
 		}
-		getManagedBean().getCtAttachment().setCreatedBy(facesScopes.getUserSessionBean().getUserId());
-		getManagedBean().getCtAttachment().setCreatedUser(facesScopes.getUserSessionBean());
-		getManagedBean().getCtAttachment().setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		
 		getManagedBean().getCtAttachment().getCtBondWaiverDetail().setCtAttachment(getManagedBean().getCtAttachment());
 
 		getManagedBean().getCtAttachment().getCtBondWaiverDetail().setCreatedBy(facesScopes.getUserSessionBean().getUserId());
