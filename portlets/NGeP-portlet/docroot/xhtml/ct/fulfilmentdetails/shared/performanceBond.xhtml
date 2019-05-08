@@ -153,8 +153,7 @@
 					disabled="#{ctBackingBean.managedBean.viewContract
 								|| (ctBackingBean.managedBean.ctAttachmentLatest != null and
 								(ctBackingBean.managedBean.ctAttachmentLatest.attachmentId == null and ctBackingBean.managedBean.ctAttachmentLatest.tempAttachmentId == null))}"    
-						     action="#{ctBackingBean.setBondWaiverToTable()}" update="@all" partialSubmit="true"
-						     oncomplete="tableWaiverWidget.paginator.endLink.click();"
+						     action="#{ctBackingBean.setBondWaiverToTable()}" update="@all" partialSubmit="true"						    
 						     rendered="#{!ctBackingBean.managedBean.viewContract}"
 						    />
 					<!-- and ctBackingBean.managedBean.ctContractAmount.bondReq  -->

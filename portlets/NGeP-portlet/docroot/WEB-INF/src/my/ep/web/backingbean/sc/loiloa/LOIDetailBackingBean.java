@@ -42,6 +42,7 @@ import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.MapKeyEnum;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -133,6 +134,7 @@ import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.loiloa.LOIDetailManagedBean;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
+import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.template.DocumentGenerator;
@@ -195,6 +197,11 @@ public class LOIDetailBackingBean extends
 
 	/** The flag. */
 	private boolean flag;
+	
+	
+	
+	
+	private List<ScLoi> loiList;
 	
 	/**
 	 * Instantiates a new LOI detail backing bean.
@@ -277,20 +284,66 @@ public class LOIDetailBackingBean extends
 	 */
 	public void preRenderView() {
 		debugLogger("preRenderView");
+		preRenderViewPriv(null, null);
+	}
+	
+	/**
+	 * 
+	 * @param loiId
+	 */
+	public void preRenderViewForQtMaintenenceScreen(Long loiId, String prevPageURL){
+		Map<MapKeyEnum, Object> otherArgs = new HashMap<MapKeyEnum, Object>();
+		otherArgs.put(MapKeyEnum.prevPageURL, prevPageURL);
+		otherArgs.put(MapKeyEnum.isQtMaintenanceScreen, Boolean.TRUE);
+		otherArgs.put(MapKeyEnum.isReadOnly, Boolean.TRUE);
+		otherArgs.put(MapKeyEnum.enableDownloadAllDocuments, Boolean.TRUE);
+		preRenderViewPriv(loiId, otherArgs);
+	}
+	
+	
+	/**
+	 * 
+	 *  
+	 * @param loiId - set null if provided by SCAwardSupplierDataType 
+	 * @param otherArgs - set null if provided by SCAwardSupplierDataType
+	 *		isQtMaintenanceScreen - Boolean
+	 *		isReadOnly - Boolean
+	 *		prevPageUrl - String
+	 *		
+	 */
+	private void preRenderViewPriv(Long loiId, Map<MapKeyEnum, Object> otherArgs){
+		//boolean isQtMaintenanceScreen = otherArgs != null && otherArgs.containsKey(MapKeyEnum.isQtMaintenanceScreen) && (Boolean)otherArgs.get(MapKeyEnum.isQtMaintenanceScreen)!=null?((Boolean)otherArgs.get(MapKeyEnum.isQtMaintenanceScreen)).booleanValue():false;
+		boolean isQtMaintenanceScreen = isQTMaintenanceScreen();
 		try {
-			SCAwardSupplierDataType awardDataType = getBpmTaskDetails(SCAwardSupplierDataType.class, null);
-
-			Long sourceId = Long.valueOf(awardDataType.getSourceId());
-
-			getManagedBean()
-					.setRecommendDtlIds(awardDataType.getGroupkeyList());
-
+			SCAwardSupplierDataType awardDataType = null;
+			Long sourceId = null;
+			Boolean isEditFlag = null;
+			String prevPageUrl = null;
+			if(isQtMaintenanceScreen){
+				prevPageUrl = new MapKeyEnum.ValueRetriever<String>().getValue(otherArgs, MapKeyEnum.prevPageURL);
+				Boolean readOnly = new MapKeyEnum.ValueRetriever<Boolean>().getValue(otherArgs, MapKeyEnum.isReadOnly); 
+				isEditFlag = readOnly!=null?!readOnly:Boolean.FALSE;
+				getManagedBean().setEnableDownloadAllDocuments(new MapKeyEnum.ValueRetriever<Boolean>().getValue(otherArgs, MapKeyEnum.enableDownloadAllDocuments));
+			}
+			else{
+				awardDataType = getBpmTaskDetails(SCAwardSupplierDataType.class, null);
+				sourceId = Long.valueOf(awardDataType.getSourceId());
+				getManagedBean().setRecommendDtlIds(awardDataType.getGroupkeyList());
+				loiId = Long.valueOf(awardDataType.getAwardId());
+				isEditFlag = Boolean.TRUE;
+				
+			}
+			
 			Long currentStatusId = getManagedBean().getCurrentStatusId();
 
-			getManagedBean().setDocType(getPmStatusByStatusId(currentStatusId).getDocType());
-
-			Long loiId = Long.valueOf(awardDataType.getAwardId());
-			getManagedBean().setSourceId(sourceId);
+			if(currentStatusId != null){
+				getManagedBean().setDocType(getPmStatusByStatusId(currentStatusId).getDocType());
+				getManagedBean().setSourceId(sourceId);
+			}
+			
+			if(prevPageUrl != null){
+				getManagedBean().setBackToPreviousPage(prevPageUrl);
+			}
 
 			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
 			awardSupplierReqDTO.setLoiId(loiId);
@@ -298,7 +351,7 @@ public class LOIDetailBackingBean extends
 					.retrieveLOIDtlByLoiId(awardSupplierReqDTO);
 			if (awardSupplierResDTO.getScLoi() != null) {
 				ScLoi scLoi = awardSupplierResDTO.getScLoi();
-				editLOI(scLoi, Boolean.TRUE);
+				editLOI(scLoi, isEditFlag);
 			}
 			getManagedBean().setEditFlag(Boolean.FALSE);
 			
@@ -331,6 +384,8 @@ public class LOIDetailBackingBean extends
 		}
 	}
 	
+	
+	// ***25201
 	/**
 	 * Edits the supplier loi action.
 	 * 
@@ -342,18 +397,69 @@ public class LOIDetailBackingBean extends
 	 * 		the previous page url.
 	 * @param isReadonly
 	 * 		the readonly flag
+	 * @return the supplier loi page
+	 */
+	public String retrieveSupplierLOIDtl(Long sourceId, Long loiId, String previousPageUrl, boolean isReadonly){
+		return retrieveSupplierLOIDtlPriv(sourceId, loiId, previousPageUrl, isReadonly, null);
+	}
+	
+	/**
+	 * Edits the supplier loi action.
+	 * 
+	 * @param sourceId 
+	 * 		the source id (qt id / rn id
+	 * @param loiId 
+	 * 		the loi id
+	 * @param previousPageUrl
+	 * 		the previous page url.
+	 * @param isReadonly
+	 * 		the readonly flag
+	 * @param enableDownloadAllDocuments
+	 * 		either user can download all attachments/documents or not
 	 * 
 	 * @return the supplier loi page
 	 */
-	public String retrieveSupplierLOIDtl(Long sourceId, Long loiId, String previousPageUrl, boolean isReadonly) {
+	public String retrieveSupplierLOIDtl(Long sourceId, Long loiId, String previousPageUrl, boolean isReadonly, boolean enableDownloadAllDocuments){
+		Map<MapKeyEnum, Object> otherArgs = new HashMap<MapKeyEnum, Object>();
+		otherArgs.put(MapKeyEnum.enableDownloadAllDocuments, Boolean.valueOf(enableDownloadAllDocuments));
+		return retrieveSupplierLOIDtlPriv(sourceId, loiId, previousPageUrl, isReadonly, otherArgs);
+	}
+	
+	/**
+	 * Edits the supplier loi action.
+	 * 
+	 * @param sourceId 
+	 * 		the source id (qt id / rn id
+	 * @param loiId 
+	 * 		the loi id
+	 * @param previousPageUrl
+	 * 		the previous page url.
+	 * @param isReadonly
+	 * 		the readonly flag
+	 * @param otherArgs
+	 * 		enableDownloadAllDocuments - java.lang.Boolean
+	 * 		either user can download all attachments/documents or not
+	 * 
+	 * @return the supplier loi page
+	 */
+	private String retrieveSupplierLOIDtlPriv(Long sourceId, Long loiId, String previousPageUrl, boolean isReadonly, Map<MapKeyEnum, Object> otherArgs) {
 		ScQt scQt = null;
 		
 		try { 
+			//to avoid otherArgs is null checking next time
+			if(otherArgs == null){
+				otherArgs = new HashMap<MapKeyEnum, Object>();
+			}
+			if(otherArgs.containsKey(MapKeyEnum.enableDownloadAllDocuments) && otherArgs.get(MapKeyEnum.enableDownloadAllDocuments) instanceof Boolean){
+				Object o = otherArgs.get(MapKeyEnum.enableDownloadAllDocuments);
+				if(o instanceof Boolean){	getManagedBean().setEnableDownloadAllDocuments((Boolean)o);	}
+			}
 			getManagedBean().setSourceId(sourceId);
 			if (previousPageUrl != null) {
 				getManagedBean().setBackToPreviousPage(previousPageUrl);	
 			}
 			getManagedBean().setReadOnly(isReadonly);
+			
 
 			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
 			awardSupplierReqDTO.setLoiId(loiId);
@@ -1289,9 +1395,12 @@ public class LOIDetailBackingBean extends
 	 */
 	public void backToPrevious() {
 		debugLogger("backToPrevious");
-		retrieveLOIList(getManagedBean().getSourceId());
+		if(!isQTMaintenanceScreen() || getManagedBean().getSourceId() != null){
+			retrieveLOIList(getManagedBean().getSourceId());
+		}
 		getManagedBean().setEditFlag(false);
 		getManagedBean().setButtonFlag(false);
+		
 		FacesContext fc = FacesContext.getCurrentInstance();
 
 		fc.getApplication()
@@ -3432,6 +3541,7 @@ public class LOIDetailBackingBean extends
 		boolean buttonFlag = getManagedBean().isButtonFlag();
 		int selectedTabIndex = getManagedBean().getSelectedTabIndex();
 		boolean isSecretaryUser = getManagedBean().isSecretaryUser();
+		boolean enableDownloadAllDocuments = getManagedBean().getEnableDownloadAllDocuments();
 
 		this.renewSesionObject();
 
@@ -3461,6 +3571,7 @@ public class LOIDetailBackingBean extends
 		getManagedBean().setRecSupplierList(recSupplierList);
 		getManagedBean().setSelectedTabIndex(selectedTabIndex);
 		getManagedBean().setSecretaryUser(isSecretaryUser);
+		getManagedBean().setEnableDownloadAllDocuments(enableDownloadAllDocuments);
 		if(null!=scQtFinalization){
 		this.getManagedBean().setScQt(scQtFinalization.getScQt());
 		}
@@ -5819,5 +5930,31 @@ public class LOIDetailBackingBean extends
 		updateBPMTask(BpmOutcomeConst.BPM_REJECT, null);
 	}
 	//end Enhancement #21573
+
 	
+	public void setLoiList(List<ScLoi> loiList) {
+		this.loiList = loiList;
+		
+	}
+
+	public List<ScLoi> getLoiList() {
+		return loiList;
+	}
+	
+	private boolean isDeskOfficer() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value());
+	}
+	
+	private boolean isQTMaintenanceScreen() {
+		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+	}
+	
+	public boolean getIsDeskOfficer(){
+		return isDeskOfficer();
+	}
+	
+	public boolean getIsQtMaintenanceScreen(){
+		return isQTMaintenanceScreen();
+	}
 }

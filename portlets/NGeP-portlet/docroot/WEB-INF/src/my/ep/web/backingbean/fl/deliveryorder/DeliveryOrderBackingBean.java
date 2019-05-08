@@ -920,10 +920,10 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		else{
 			if(this.getManagedBean().isPendingDelivery()){
 				log.info("****back Action isPendingDelivery value doPending****"+this.getManagedBean().isPendingDelivery());
-				return "doPending";
+				return "/xhtml/fl/dopending/doPendingTable.xhtml?faces-redirect=true";
 			}else{
 				log.info("****back Action isPendingDelivery value flDocSearch****"+this.getManagedBean().isPendingDelivery());
-				return "flDocSearch";
+				return "/xhtml/fl/docsearch/flDocSearch.xhtml?faces-redirect=true";
 			}
 			
 		}

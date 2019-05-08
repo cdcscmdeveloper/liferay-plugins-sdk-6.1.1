@@ -40,15 +40,20 @@
 			textBeforeSign="#{suppFinalizationBackingBean.textBeforeSign}"
 			postSignAction="#{suppFinalizationBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" 
 			enableAutoUpdate="#{suppFinalizationBackingBean.enableAutoUpdate()}" />
-
-		<div align="right" class="BtnSpacing">
+		<div class="BtnSpacing" style="display: inline-block; width: 30%">
+			<p:commandButton value="#{lbl['lbl.btn.back']}"
+						immediate="true"
+						action="#{suppFinalizationBackingBean.backAction}"
+						rendered="#{!empty suppFinalizationBackingBean.managedBean.previousPageUrl}" />
+		</div>
+		<div align="right" class="BtnSpacing" style="display: inline-block; width: 100%">
 			<ui:decorate
 				template="/WEB-INF/facelets/templates/claim_template.xhtml">
 				<ui:define name="outComeSection">
 					<p:commandButton value="#{lbl['lbl.btn.save']}" process="@all"
 						partialSubmit="true" update="@form"
 						action="#{suppFinalizationBackingBean.saveSupplierFinalization}"
-						rendered="#{isSecretaryUser or isBPKTaskAndClaimed}"
+						rendered="#{(isSecretaryUser or isBPKTaskAndClaimed) and !suppFinalizationBackingBean.isQTMaintenanceScreen()}"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 
 					<ui:repeat var="bpmAction"
@@ -62,7 +67,7 @@
 							actionListener="#{suppFinalizationBackingBean.managedBean.setOutcome(bpmAction)}"
 							partialSubmit="true" process="@form" update="@form"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							rendered="#{validityDaysExpiredQt}" />
+							rendered="#{validityDaysExpiredQt and !suppFinalizationBackingBean.isQTMaintenanceScreen()}" />
 					</ui:repeat>
 				</ui:define>
 			</ui:decorate>
@@ -142,3 +147,6 @@
 	</ui:define>
 
 </ui:composition>
+
+
+<!-- ***25201 -->

@@ -145,6 +145,7 @@ import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoaBasic;
 import my.ep.persistence.entity.sc.loaloi.ScLoaForQt;
+import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiForQt;
 import my.ep.persistence.entity.sc.qtretry.ScQtDisruptionLog;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
@@ -997,9 +998,11 @@ public class QTDetailBackingBean extends
 			scLoiForQt = (ScLoiForQt)obj;
 			if (ParameterConst.DOCTYPE_LETTER_OF_INTENT.equals(docType)) {
 				LOIDetailBackingBean bb = new LOIDetailBackingBean();
-				return bb.retrieveSupplierLOIDtl(
-						scLoiForQt.getScLoiLoa().getScQt().getQtId(), scLoiForQt.getLoiId(), previousPageUrl, true, true);
-			} 
+				//return bb.retrieveSupplierLOIDtl(
+						//scLoiForQt.getScLoiLoa().getScQt().getQtId(), scLoiForQt.getLoiId(), previousPageUrl, true, true);
+				bb.preRenderViewForQtMaintenenceScreen(scLoiForQt.getLoiId(), previousPageUrl);
+				return null;
+			}
 		}
 		else if(obj instanceof ScLoaForQt){
 			scLoaForQt = (ScLoaForQt)obj;
@@ -1743,7 +1746,7 @@ public class QTDetailBackingBean extends
 				}
 				qtSearchBean.getDataFilterBeans().add(statusBean);
 			}
-			
+			//one
 			if (isMofSupplier()) {
 				// Filter By - supplierId
 				ISupplierSearchSO supplierSearchSO = null;
@@ -5681,55 +5684,52 @@ private class LOAPagingDataModel extends PagingDataModel<ScLoaForQt>{
 			}
 			searchBean.getDataFilterBeans().add(statusBean);
 		}
-		
-		if(args != null && args.containsKey(MapKeyEnum.isMofSupplier)){
-			if ((Boolean)args.get(MapKeyEnum.isMofSupplier)) {
-				// Filter By - supplierId
-				if (args.containsKey(MapKeyEnum.supplierIds) 
-						&& CollectionUtils.isNotEmpty((List<Long>)args.get(MapKeyEnum.supplierIds))) {
-					
-					searchBean.getDataFilterBeans().add(new SearchFilterBean(
-							qtAccessPrefix+"scQtSuppliers.smSupplier.supplierId",
-							SearchOperator.OPERATOR_IN.value(), 
-							args.get(MapKeyEnum.supplierIds)));
-					
-				}
-	
+		//two
+		if (args!=null && new MapKeyEnum.ValueRetriever<Boolean>().getValue(args, MapKeyEnum.isMofSupplier, Boolean.FALSE)) {
+			// Filter By - supplierId
+			if (args.containsKey(MapKeyEnum.supplierIds) 
+					&& CollectionUtils.isNotEmpty((List<Long>)args.get(MapKeyEnum.supplierIds))) {
+				
+				searchBean.getDataFilterBeans().add(new SearchFilterBean(
+						qtAccessPrefix+"scQtSuppliers.smSupplier.supplierId",
+						SearchOperator.OPERATOR_IN.value(), 
+						args.get(MapKeyEnum.supplierIds)));
+				
+			}
+
+		} else {
+			PmOrgProfile ptjProfiles = qtSearchBean.getPtjProfile();
+			if (ptjProfiles != null && ptjProfiles.getOrgProfileId() != null) {
+				// Filter By - PTJ
+				searchBean.getDataFilterBeans().add(new SearchFilterBean(
+						qtAccessPrefix+"pmOrgProfile." + OrgProfileUtil
+							.getSearchBeanParentString(OrganizationType.DIVISION.value()),
+						SearchOperator.OPERATOR_EQUALS.value(),
+						ptjProfiles.getOrgProfileId()));
 			} else {
-				PmOrgProfile ptjProfiles = qtSearchBean.getPtjProfile();
-				if (ptjProfiles != null && ptjProfiles.getOrgProfileId() != null) {
-					// Filter By - PTJ
+				// Filter By - PTJ Group
+				PmOrgProfile ptjGroupProfile = qtSearchBean.getPtjGroupProfile();
+				if (ptjGroupProfile != null && ptjGroupProfile.getOrgProfileId() != null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean(
 							qtAccessPrefix+"pmOrgProfile." + OrgProfileUtil
-								.getSearchBeanParentString(OrganizationType.DIVISION.value()),
+								.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()),
 							SearchOperator.OPERATOR_EQUALS.value(),
-							ptjProfiles.getOrgProfileId()));
+							ptjGroupProfile.getOrgProfileId()));
 				} else {
-					// Filter By - PTJ Group
-					PmOrgProfile ptjGroupProfile = qtSearchBean.getPtjGroupProfile();
-					if (ptjGroupProfile != null && ptjGroupProfile.getOrgProfileId() != null) {
+					// Filter By - Ministry
+					PmOrgProfile ministryProfile = qtSearchBean.getMinistryProfile();
+					if (ministryProfile != null
+							&& ministryProfile.getOrgProfileId() != null) {	
 						searchBean.getDataFilterBeans().add(new SearchFilterBean(
 								qtAccessPrefix+"pmOrgProfile." + OrgProfileUtil
-									.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()),
+									.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
 								SearchOperator.OPERATOR_EQUALS.value(),
-								ptjGroupProfile.getOrgProfileId()));
-					} else {
-						// Filter By - Ministry
-						PmOrgProfile ministryProfile = qtSearchBean.getMinistryProfile();
-						if (ministryProfile != null
-								&& ministryProfile.getOrgProfileId() != null) {	
-							searchBean.getDataFilterBeans().add(new SearchFilterBean(
-									qtAccessPrefix+"pmOrgProfile." + OrgProfileUtil
-										.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
-									SearchOperator.OPERATOR_EQUALS.value(),
-									ministryProfile.getOrgProfileId()));
-						}
+								ministryProfile.getOrgProfileId()));
 					}
-					
 				}
+				
 			}
 		}
-		
 	}
 	
 	
