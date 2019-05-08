@@ -68,10 +68,12 @@
 					</p:selectOneMenu>
 		</td>
 	</tr>
-	<tr>
+	</table>
+	<table style="width: 100%;">
+		<tr>
 			<td><p:outputLabel
 					value="#{lbl['lbl.pm.access.app.date.from']}" /></td>
-			<td colspan="3"><p:calendar id="dateFrom" showOn="button" navigator="true"
+			<td><p:calendar id="dateFrom" showOn="button" navigator="true"
 					display="inline" readonlyInput="true" size="9"
 					value="#{pmReportsBackingBean.managedBean.fromDate}"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
@@ -81,10 +83,10 @@
 					<p:ajax event="change" partialSubmit="true" process="@this"
 						update="@this,:form:dateTo" />
 				</p:calendar>
-			<p:outputLabel
-					value="#{lbl['lbl.pm.access.app.date.to']}" 
-					style="float:initial;position:relative;margin-left:10px;"/>
-			<p:calendar id="dateTo" showOn="button" navigator="true"
+				</td>
+			<td><p:outputLabel
+					value="#{lbl['lbl.pm.access.app.date.to']}" /></td>
+			<td><p:calendar id="dateTo" showOn="button" navigator="true"
 					display="inline" readonlyInput="true"
 					value="#{pmReportsBackingBean.managedBean.toDate}" size="9"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
@@ -93,7 +95,8 @@
 						update="@this,:form:dateFrom" />
 					<p:ajax event="change" partialSubmit="true" process="@this"
 						update="@this,:form:dateFrom" />
-				</p:calendar></td>
+				</p:calendar></td>		
+				<td width="452"/>	
 		</tr>
 	</table>
 </ui:composition>

@@ -982,7 +982,7 @@ public class PmReportsBackingBean extends
 						|| pmStatusDesc.getPmStatus().getStatusId().longValue() == ProfileManagementStatusConst.ACCESS_CANCELLED.longValue())
 				{
 					newStatusDescList.add(pmStatusDesc);
-					if(newStatusDescList.size() == 5)
+					if(newStatusDescList.size() == 6)
 						break;
 				}
 			}
