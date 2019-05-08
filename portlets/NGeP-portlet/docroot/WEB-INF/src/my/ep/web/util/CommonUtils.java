@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constants.CommonConstants;
@@ -17,9 +19,6 @@ import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-
 /**
  * @author Kenny
  * @since 10.04.2014
@@ -27,21 +26,6 @@ import org.apache.log4j.Logger;
  */
 public class CommonUtils {
 	private static Map<String, Integer> uomMap = new HashMap<String, Integer>();
-	public static final SimpleDateFormat SLA_DATE_DF = new SimpleDateFormat("yyyyMMdd");
-	private static Logger log = Logger.getLogger(CommonUtils.class);
-	private static CommonUtils instance;
-	
-	/**
-	 * Get singleton of ServiceUtils
-	 * 
-	 * @return ServiceUtils singleton
-	 */
-	public static CommonUtils getInstance(){
-		if (instance == null){
-			instance = new CommonUtils();
-		}
-		return instance;
-	}
 	
 	/**
 	 * Get the display date time format pattern by date format type.
@@ -188,25 +172,6 @@ public class CommonUtils {
 			formattedDate = dateSDF.format(actualDate);
 		}
 		return formattedDate;
-	}
-	
-	/**
-	 * Log SLA info
-	 * 
-	 * @param serviceName
-	 * 		the service name
-	 * @param startTime
-	 * 		the service start execution time
-	 */
-	public void logSLAInfo(String serviceName, long startTime) {
-		log.info(new StringBuilder()
-			.append("SLA|")
-			.append(SLA_DATE_DF.format(new Date()))
-			.append("|")
-			.append(serviceName)
-	    	.append(".executedTime=")
-	    	.append(System.currentTimeMillis() - startTime)
-			.toString());	
 	}
 	
 }
