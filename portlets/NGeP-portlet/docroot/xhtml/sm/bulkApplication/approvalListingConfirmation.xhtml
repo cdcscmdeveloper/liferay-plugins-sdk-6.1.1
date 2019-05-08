@@ -60,6 +60,9 @@
 							</td>
 							<td style="text-align: right;border-style: none !important;">
 								<b><h:outputText value="#{lbl['lbl.rpt.rgstStatus']}" />&#160;:</b>
+								&#160;&#160;<h:outputText value="#{tasks.currentRegStatus}" />
+								<br /><br />
+								<b><h:outputText value="#{lbl['lbl.rpt.rgstStatus']}" />&#160;:</b>
 								&#160;&#160;<h:outputText value="#{tasks.poRecommendStatus}" />
 							</td>
 						</tr>
@@ -87,17 +90,34 @@
 							#{lbl['lbl.sm.rmrkLength.thsndCharLimit']}" />
 						<br /><br />
 					</p:outputPanel>
-					
-					<p:outputPanel rendered="#{not empty tasks.pendingApproveCategories}">
-						<ui:include src="appliedCategoryTable.xhtml" />
+					<p:outputPanel rendered="#{tasks.applType eq 'R'}">
+						<ui:include src="renewedMOFCategoryTable.xhtml">
+							<ui:param name="tableName" value="#{lbl['lbl.sm.catCodes.existing.panHdr']}" />
+							<ui:param name="tableContent" value="#{tasks.approvedPaginator}" />
+						</ui:include>
+						<br /><br />
+						<ui:include src="renewedMOFCategoryTable.xhtml">
+							<ui:param name="tableName" value="#{lbl['lbl.sm.addtnl.catCodes.panHdr']}" />
+							<ui:param name="tableContent" value="#{tasks.appliedPaginator}" />
+						</ui:include>
 					</p:outputPanel>
-					<p:outputPanel rendered="#{empty tasks.pendingApproveCategories}">
-						<ui:include src="approvedCategoryTable.xhtml" />
+					<p:outputPanel rendered="#{tasks.applType ne 'R'}">
+						<p:outputPanel rendered="#{not empty tasks.pendingApproveCategories}">
+							<ui:include src="approvedCategoryTable.xhtml" />
+							<br /><br />
+							<ui:include src="appliedCategoryTable.xhtml" />
+						</p:outputPanel>
+						<p:outputPanel rendered="#{empty tasks.pendingApproveCategories}">
+							<ui:include src="approvedCategoryTable.xhtml" />
+						</p:outputPanel>
 					</p:outputPanel>
 					
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.po.recommend']}" style="white-space: normal;">
 					<h:outputText value="#{tasks.poRecommendation}" />
+					<br />
+					
+					<h:outputText value="#{tasks.poRemarks}" />
 				</p:column>
 			</p:dataTable>
 
