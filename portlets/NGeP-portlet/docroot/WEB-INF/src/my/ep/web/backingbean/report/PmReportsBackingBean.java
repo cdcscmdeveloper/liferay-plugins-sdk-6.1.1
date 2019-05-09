@@ -456,6 +456,10 @@ public class PmReportsBackingBean extends
 		}
 		
 		if(!map.isEmpty()) {
+			//need to remove to indicate both CP and MR access type required by the report
+			if(map.get(PmReportConst.PARAM_PM_ACCESS_TYPE) == null)
+				map.remove(PmReportConst.PARAM_PM_ACCESS_TYPE);
+			
 			if (getManagedBean().getFromDate() == null && getManagedBean().getToDate() == null) {	
 				Calendar now = Calendar.getInstance();
 				Calendar calendar = new GregorianCalendar(now.get(Calendar.YEAR),0,1);	
