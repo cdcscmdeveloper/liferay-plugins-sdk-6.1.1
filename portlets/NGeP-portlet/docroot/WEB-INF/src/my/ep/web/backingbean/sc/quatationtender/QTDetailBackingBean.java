@@ -3454,7 +3454,6 @@ private class LOAPagingDataModel extends PagingDataModel<ScLoaForQt>{
 				
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 				reqDTO.setQtnTenderSearchBean(qtnTenderSearchBean.toQTSearchBean());
-				reqDTO.putToArgs(MapKeyEnum.userID, new FacesScopes().getUserSessionBean().getUserId());
 				reqDTO.putToArgs(MapKeyEnum.isMofSupplier, isMofSupplier());
 				reqDTO.putToArgs(MapKeyEnum.isDeskOfficer, isDeskOfficer());
 				reqDTO.putToArgs(MapKeyEnum.isQtMaintenanceScreen, isQTMaintenanceScreen());
@@ -3466,7 +3465,7 @@ private class LOAPagingDataModel extends PagingDataModel<ScLoaForQt>{
 								ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
 	
 						SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
-						supplierSearchReqDTO.setUserId((Long)reqDTO.getFromArgs(MapKeyEnum.userID));
+						supplierSearchReqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
 						List<SmSupplier> smSuppliers = supplierSearchSO
 								.retriveSupplierProfiles(supplierSearchReqDTO)
 								.getResultBean().getResultList();
@@ -3488,6 +3487,7 @@ private class LOAPagingDataModel extends PagingDataModel<ScLoaForQt>{
 					if((Boolean)reqDTO.getFromArgs(MapKeyEnum.isDeskOfficer)){
 						// Filter By - actor user id
 						reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+						reqDTO.putToArgs(MapKeyEnum.userID, new FacesScopes().getUserSessionBean().getUserId());
 						
 						// Only DO Actor with edit access right. 
 						// Otherwise (Audit Search), user can view QT based on user roles match with actor.
@@ -3568,7 +3568,6 @@ private class LOAPagingDataModel extends PagingDataModel<ScLoaForQt>{
 				
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 				reqDTO.setQtnTenderSearchBean(qtnTenderSearchBean.toQTSearchBean());
-				reqDTO.putToArgs(MapKeyEnum.userID, new FacesScopes().getUserSessionBean().getUserId());
 				reqDTO.putToArgs(MapKeyEnum.isMofSupplier, isMofSupplier());
 				reqDTO.putToArgs(MapKeyEnum.isDeskOfficer, isDeskOfficer());
 				reqDTO.putToArgs(MapKeyEnum.isQtMaintenanceScreen, isQTMaintenanceScreen());
@@ -3579,7 +3578,7 @@ private class LOAPagingDataModel extends PagingDataModel<ScLoaForQt>{
 								ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
 	
 						SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
-						supplierSearchReqDTO.setUserId((Long)reqDTO.getFromArgs(MapKeyEnum.userID));
+						supplierSearchReqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
 						List<SmSupplier> smSuppliers = supplierSearchSO
 								.retriveSupplierProfiles(supplierSearchReqDTO)
 								.getResultBean().getResultList();
@@ -3601,6 +3600,7 @@ private class LOAPagingDataModel extends PagingDataModel<ScLoaForQt>{
 					if((Boolean)reqDTO.getFromArgs(MapKeyEnum.isDeskOfficer)){
 						// Filter By - actor user id
 						reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+						reqDTO.putToArgs(MapKeyEnum.userID, new FacesScopes().getUserSessionBean().getUserId());
 						
 						// Only DO Actor with edit access right. 
 						// Otherwise (Audit Search), user can view QT based on user roles match with actor.
@@ -6382,7 +6382,7 @@ private class LOAPagingDataModel extends PagingDataModel<ScLoaForQt>{
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_QUOTATION);
-			if(isDeskOfficer()){
+			if(isDeskOfficer() || isAuditor()){
 				qtLoaDoctypes.add(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION);
 			}			
 			if (isMofSupplier()) {
@@ -6761,3 +6761,4 @@ private class LOAPagingDataModel extends PagingDataModel<ScLoaForQt>{
 		
 // ***25201
 // ***19336
+// ***17376
