@@ -69,7 +69,11 @@ public class CircularManagedBean extends BaseManagedBean {
 	private IPagingDataModel<CtContractItem> ServiceListingPagingDataModel = new ServiceListingPagingDataModel();
 	private CircularBackingBean circularBb=new CircularBackingBean();
 	
-
+	public void reassignValue(boolean value) 
+	{
+		readOnly = value;	
+		
+	}
 	public class ServiceListingPagingDataModel extends PagingDataModel<CtContractItem> {
 		
 		private static final long serialVersionUID = 1L;
