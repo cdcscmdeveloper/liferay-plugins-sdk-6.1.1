@@ -354,7 +354,7 @@
 								value="#{lOADetailBackingBean.managedBean.scLoa.bondReq}"
 								required="true"
 								label="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}"
-								disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.performanceBondMandatory or lOADetailBackingBean.managedBean.readOnly}">
+								disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.performanceBondMandatory or lOADetailBackingBean.managedBean.readOnly or lOADetailBackingBean.managedBean.disablePerformanceBondForDP}">
 								<f:selectItems value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 								<p:ajax partialSubmit="true" process="@this" update="menuTab" />
 							</p:selectOneRadio>

@@ -4914,6 +4914,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		
 		//To enable Performance Bond for Direct Purchase - Enhancement #25144- Starte.
 		checkDpIsElisibleForPB(loa, true);
+		if (getManagedBean().isEnablePBForDP() && !isBondReq) {
+			getManagedBean().setDisablePerformanceBondForDP(true);
+		}
 		//To enable Performance Bond for Direct Purchase - Enhancement #25144 - End.
 		
 		if(loa.isBrandNew()){
