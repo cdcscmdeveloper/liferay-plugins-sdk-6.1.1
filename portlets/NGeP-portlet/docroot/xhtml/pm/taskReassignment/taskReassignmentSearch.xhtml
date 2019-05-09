@@ -88,8 +88,7 @@
 			</tr>
 			<tr>
 				<th width="15%"><p:outputLabel
-						value="#{lbl['lbl.pm.ta.username']}" /> <p:outputLabel value="*"
-						styleClass="mandatory" /></th>
+						value="#{lbl['lbl.pm.ta.username']}" /> </th>
 				<td width="60%">
 						<p:outputPanel id="opUserLov">
 						<ac:lov id="lovUser" lovId="PM_USER_ID"
@@ -156,6 +155,7 @@
 				<tr>
 				<th width="15%">
 					<p:outputLabel value="#{lbl['lbl.pm.ta.doc.no']}"/>
+					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td width="60%">
 					<p:inputText id="docNo"  styleClass="ppDisplayTextL"
@@ -175,20 +175,23 @@
 			<tr>
 				<td colspan="4">
 					<div class="ppRightBtn">
-						<p:commandButton value="#{lbl['lbl.btn.search']}" 
-							id="cbSearchTask" widgetVar="cbSearchTask"
-							process="pTaskAssignSearch" action="#{taskReassignmentBackingBean.searchTaskAssign}"
-							update=":form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult" 
+					   <p:commandButton 
+						    value="#{lbl['lbl.btn.search']}" 
+							id="cbSearchTask" 
+							widgetVar="cbSearchTask"
+							process="pTaskAssignSearch" 
+							action="#{taskReassignmentBackingBean.searchTaskAssignee}"
+							update=":form:dtTaskAssigneeResult"
 							onclick="cbSearchTask.disable();cbResetTask.disable()"  
-			  				oncomplete="cbSearchTask.enable();cbResetTask.enable()"
-							/>
+			  				oncomplete="cbSearchTask.enable();cbResetTask.enable();pUserTaskReassignUserResult.show()"
+						/>
 						<p:commandButton id="cbResetTask" widgetVar="cbResetTask"
 							onclick="cbSearchTask.disable();cbResetTask.disable()"  
-			  				oncomplete="cbSearchTask.enable();cbResetTask.enable()"
+			  				oncomplete="cbSearchTask.enable();cbResetTask.enable();pUserTaskReassignUserResult.hide()"
 							value="#{lbl['lbl.btn.reset']}" 
 							action="#{taskReassignmentBackingBean.resetTaskAssignSearchBean}"
 							update="pTaskAssignSearch,:form:userTaskListID,:form:groupTaskListID,:form:othersTaskListID," 
-							/> 
+							/>
 					</div>
 				</td>
 			</tr>

@@ -5,7 +5,33 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-
+	<p:panel id="pUserTaskReassignUserResult" 
+			 header="#{lbl['lbl.pm.ta.user.lov']}"
+			 widgetVar="pUserTaskReassignUserResult"
+			 toggleable="true"
+			 style="display:block;">
+		<h:panelGroup layout="block" id="taskAssigneeListID">
+			<p:dataTable value="#{taskReassignmentBackingBean.userTaskListBothDataModel}"
+				 id="dtTaskAssigneeResult"
+				 widgetVar="dtTaskAssigneeResult"
+				 lazy="true"
+				 style="width:100%;">
+				<ac:paginator for="dtTaskAssigneeResult"></ac:paginator>
+				<p:column headerText="#{lbl['lbl.pm.ta.username']}" width="50%;">
+					<h:selectManyListbox id="assigneeList" size="15" style="width:40%;">
+                		<f:selectItems id="assigneeItem"
+                				   value="#{taskReassignmentBackingBean.userTaskListBothDataModel}"
+               					   itemLabel="#{taskReassignmentBackingBean.managedBean.displayReassignees}" 
+                               	   itemValue="#{taskReassignmentBackingBean.managedBean.displayReassignees}" /> 
+                        <f:ajax event="change"
+           						listener="#{taskReassignmentBackingBean.searchTaskAssign}"
+           						render="@form"
+           						rendered=":pUserTaskReassignUserResult.show()"/>
+            		</h:selectManyListbox>
+				</p:column>
+			</p:dataTable>	
+		</h:panelGroup>	 
+	</p:panel>
 	<p:panel id="pUserTaskAssignResult" header="#{lbl['lbl.pm.ta.user.task']}"
 		toggleable="true">
 		<div class="clear"></div>
@@ -14,7 +40,7 @@
 				lazy="true" rowIndexVar="userRowIndex" rowKey="#{userTasks.taskId}" rows="10" id="dtTaskAssignResult"
 				style="width:100%;" var="userTasks" widgetVar="taskListTableWidget">
 				<ac:paginator for="dtTaskAssignResult"></ac:paginator>
-
+				
 				<p:column headerText="#{lbl['lbl.pm.ta.created.date']}" width="13%;">
 					<h:outputText value="#{userTasks.createDate.time}">
 						<f:convertDateTime
@@ -22,7 +48,7 @@
 					</h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.pm.ta.document.type']}"
-					width="13%;">  
+					width="13%;">
 	            #{taskReassignmentBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, userTasks.docType)}
 	        </p:column>
 				<p:column headerText="#{lbl['lbl.pm.ta.document.no']}" width="30%;">  
