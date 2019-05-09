@@ -77,12 +77,15 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
+import my.ep.web.backingbean.ct.circular.CircularBackingBean;
 import my.ep.web.backingbean.ct.supplier.SupplierBackingBean;
 import my.ep.web.backingbean.ct.suspension.SuspensionBackingBean;
 import my.ep.web.backingbean.ct.termination.TerminationBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.ct.ContractManagementConst;
 import my.ep.web.managedbean.ct.ContractDetailsManagedBean;
+import my.ep.web.managedbean.ct.circular.CircularManagedBean;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.DocumentRepositoryUtils;
@@ -101,6 +104,9 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
+import my.ep.web.managedbean.ct.circular.CircularManagedBean.CircularListingPagingDataModel;
+import my.ep.web.managedbean.ct.circular.CircularManagedBean.ServiceListingPagingDataModel;
+import my.ep.web.managedbean.ct.circular.CircularManagedBean.CircularListingPagingDataModel;
 
 
 /**
@@ -1740,6 +1746,12 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			if (outputTab.equalsIgnoreCase(ContractConst.ITEM_DETAIL)) {
 				getManagedBean().setSelectedTabIndex(2);
 				getManagedBean().setItemIndex(2);
+			
+				CircularBackingBean circularBkbean= new CircularBackingBean();
+				circularBkbean.getManagedBean().reassignValue(true);
+				circularBkbean.getManagedBean().getCircularListingPagingDataModel().reloadData();
+				circularBkbean.getManagedBean().getServiceListingPagingDataModel().reloadData();
+				
 			}
 			if (outputTab.equalsIgnoreCase(ContractConst.DEDUCTION_DETAIL)) {
 				getManagedBean().setSelectedTabIndex(3);
