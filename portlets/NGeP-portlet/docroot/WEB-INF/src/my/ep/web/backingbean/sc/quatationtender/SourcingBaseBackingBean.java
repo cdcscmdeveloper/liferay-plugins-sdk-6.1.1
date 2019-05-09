@@ -1891,7 +1891,22 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		BigDecimal overallCtAmount = overallCtAmountWithSST(scLoa.getLoaAmt(), scLoa.getSstAmt());
 		
 		if(isDirectLoa) {
-			scLoa.setBondReq(PerformanceBondUtil.isPerformanceBondRequired(overallCtAmount, null));
+			boolean notPbDropDown = true;
+			if (null != scLoa.getQtType() 
+					&& null != scLoa.getQtType().getParameterId() 
+					&& scLoa.getQtType().getParameterId() == 194 
+					&& null != scLoa.getScQt() 
+					&& null != scLoa.getScQt().getFulfilmentType()
+					&& null != scLoa.getScQt().getFulfilmentType().getParameterId()
+					&& scLoa.getScQt().getFulfilmentType().getParameterId() == 148
+					&& null != scLoa.getContractType() 
+					&& null != scLoa.getContractType().getParameterId()
+					&& scLoa.getContractType().getParameterId() == 146) {
+				notPbDropDown = false;
+			}
+			if (notPbDropDown) {
+				scLoa.setBondReq(PerformanceBondUtil.isPerformanceBondRequired(overallCtAmount, null));
+			}
 		}
 		
 		System.out.println("____ calcBondAmountWithSST "+scLoa.getScLoiLoa().getDocId()+": "+scLoa.getScLoiLoa().getDocId() +"overallAmount: "+overallCtAmount+" scLoa.isBondReq():"+scLoa.isBondReq());
