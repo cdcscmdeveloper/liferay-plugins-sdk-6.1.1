@@ -609,6 +609,7 @@ public class CommitteBackingBean extends
 		committeeTypes.add(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A);
 		committeeTypes.add(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B);
 		committeeTypes.add(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A);
+		committeeTypes.add(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD);
 		committeeTypes.add(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH);
 		committeeTypes.add(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK);
 		
@@ -1128,7 +1129,7 @@ public class CommitteBackingBean extends
 			super(componentId);
 			this.cloneQtnTenderSearchBean = cloneQtnTenderSearchBean;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
 		 */
@@ -1159,7 +1160,7 @@ public class CommitteBackingBean extends
 		}
 
 	}
-
+	
 	/**
 	 * Populate clone qt search criteria.
 	 *
