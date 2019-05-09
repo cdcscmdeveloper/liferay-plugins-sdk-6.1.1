@@ -115,6 +115,8 @@ public class SupplierDataMaintenanceBackingBean extends
 		setLoginUserAllowedToDoMaintenance();
 		checkIfSupplierHasActiveTransaction(false);
 		initPOApproverOverlapCategoryRemarkInfo();
+		approvalHistoryRemarklist();
+		initApproverRemarkInfo();
 		
 		//Redmine #18959
 		if(getManagedBean().isHasActiveTransaction()) {
@@ -134,12 +136,13 @@ public class SupplierDataMaintenanceBackingBean extends
 		if (getManagedBean().getSmAppl().getPmRegStatus() == null) {
 			getManagedBean().getSmAppl().setPmRegStatus(new PmRegStatus());
 		}
-		getManagedBean().setDeleteApprovedCategories(
-				new ArrayList<SmSupplierCategory>());
-		getManagedBean().setSelectedApprovedCategories(
-				new ArrayList<SmSupplierCategory>());
-		getManagedBean().setSelectedPendingApprovedCategories(
-				new ArrayList<SmSupplierCategory>());
+		getManagedBean().setDeleteApprovedCategories(new ArrayList<SmSupplierCategory>());
+		getManagedBean().setSelectedApprovedCategories(new ArrayList<SmSupplierCategory>());
+		getManagedBean().setSelectedPendingApprovedCategories(new ArrayList<SmSupplierCategory>());
+	
+		this.getManagedBean().setApproverRemark(null);
+		
+		
 	}
 
 	/**
@@ -177,11 +180,12 @@ public class SupplierDataMaintenanceBackingBean extends
 	 * Submit supplier maintenance
 	 */
 	public void submitSupplierDataMaintenance() {
+		
+		PmUser user = new FacesScopes().getUserSessionBean();
 		validateDisciplinaryAction();
 		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
 		SupplierDataMaintenanceResDTO resDTO = new SupplierDataMaintenanceResDTO();
 		List<SmTrackingDairyVO> listSmTrackingDiary = new ArrayList<SmTrackingDairyVO>();
-
 		//reset value
 		getManagedBean().setHasRegStatusChanged(false);
 		getManagedBean().setHasMofExpiryDateChanged(false);
@@ -213,6 +217,12 @@ public class SupplierDataMaintenanceBackingBean extends
 			reqDTO.setPortalBaseUrl(SmCommonUtil.getEpBaseUrl());
 			reqDTO.setOverlapCategoryRemarkDocType(ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY_APPROVER);
 			reqDTO.setRemarkId(getManagedBean().getRemarkId());
+			
+			if (getManagedBean().getApproverRemark() != null) {
+				reqDTO.setApproverRemark(getManagedBean().getApproverRemark());
+				log.info("User ID="+user.getUserId());
+				reqDTO.setPmUser(user);
+			}
 
 			if (getManagedBean().isEditDisciplinaryAction()) {
 				reqDTO.setSmDisciplinaryAction(getManagedBean()
@@ -305,7 +315,7 @@ public class SupplierDataMaintenanceBackingBean extends
 			throw new EpException(nex.getMessage());
 		} catch (RuntimeException re) {
 			throw new EpException(re.getMessage());
-		}
+				}
 
 		reqDTO = null;
 		getManagedBean().setDisplaySearchPage(true);
@@ -1228,6 +1238,11 @@ public class SupplierDataMaintenanceBackingBean extends
 					throw new EpException(MessageConst.ERROR_722538);
 				}
 			}
+		}
+		
+		if (StringUtils.isNotEmpty(this.getManagedBean().getApproverRemark())
+				&& this.getManagedBean().getApproverRemark().length() > 2500) {
+			throw new EpException(MessageConst.ERROR_71025, new String[] {String.valueOf(this.getManagedBean().getApproverRemark().length())});
 		}
 	}
 
