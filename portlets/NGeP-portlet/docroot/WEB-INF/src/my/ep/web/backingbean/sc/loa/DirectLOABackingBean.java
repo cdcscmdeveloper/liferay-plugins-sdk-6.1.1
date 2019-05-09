@@ -8390,9 +8390,18 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * @return
 	 */
 	public boolean isPbDropDown() {
-		Long qtType = getManagedBean().getScLoa().getQtType().getParameterId(); 
-		Long fulfilmentType = getManagedBean().getScLoa().getScQt().getFulfilmentType().getParameterId(); 
-		Long contractType = getManagedBean().getScLoa().getContractType().getParameterId();
+		Long qtType = null;
+		Long fulfilmentType = null;
+		Long contractType = null;
+		if (null != getManagedBean().getScLoa().getQtType()) {
+			qtType = getManagedBean().getScLoa().getQtType().getParameterId(); 
+		}
+		if (null != getManagedBean().getScLoa().getScQt() && null != getManagedBean().getScLoa().getScQt().getFulfilmentType()) {
+			fulfilmentType = getManagedBean().getScLoa().getScQt().getFulfilmentType().getParameterId(); 
+		}
+		if (null != getManagedBean().getScLoa().getContractType()) {
+			contractType = getManagedBean().getScLoa().getContractType().getParameterId();
+		}
 		
 		if (getManagedBean().getPk7Reasons() == null) {
 			setPk7DropDownValues();
@@ -8411,14 +8420,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				getManagedBean().setBondReqSelectedVal("207");
 			} else if (getManagedBean().getScLoa().getLoaNo() != null) {
 				getManagedBean().setBondReqSelectedVal("208");
-			}
-		}
-		
-		if (StringUtils.isEmpty(getManagedBean().getAgreemetSelectedVal())) {
-			if (getManagedBean().getScLoa().isAgreementReq()) { 
-				getManagedBean().setAgreemetSelectedVal("207");
-			} else if (getManagedBean().getScLoa().getLoaNo() != null) {
-				getManagedBean().setAgreemetSelectedVal("208");
 			}
 		}
 		
@@ -8443,7 +8444,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					getManagedBean().setDisableFields(true);
 				}
 			}
-			
 			return true;
 		} else {
 			if (!getManagedBean().getScLoa().isBondReq()) {
@@ -8476,9 +8476,18 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * @return
 	 */
 	public boolean isAgreementDropDown() {
-		Long qtType = getManagedBean().getScLoa().getQtType().getParameterId(); 
-		Long fulfilmentType = getManagedBean().getScLoa().getScQt().getFulfilmentType().getParameterId(); 
-		Long contractType = getManagedBean().getScLoa().getContractType().getParameterId();
+		Long qtType = null;
+		Long fulfilmentType = null;
+		Long contractType = null;
+		if (null != getManagedBean().getScLoa().getQtType()) {
+			qtType = getManagedBean().getScLoa().getQtType().getParameterId();
+		}
+		if (null != getManagedBean().getScLoa().getScQt() && null != getManagedBean().getScLoa().getScQt().getFulfilmentType()) {
+			fulfilmentType = getManagedBean().getScLoa().getScQt().getFulfilmentType().getParameterId(); 
+		}
+		if (null != getManagedBean().getScLoa().getContractType()) {
+			contractType = getManagedBean().getScLoa().getContractType().getParameterId();
+		}
 		
 		if (null != getManagedBean().getScLoa() 
 				&& null != getManagedBean().getScLoa().getContractType()
@@ -8487,10 +8496,18 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			return false;
 		}
 		
+		if (StringUtils.isEmpty(getManagedBean().getAgreemetSelectedVal())) {
+			if (getManagedBean().getScLoa().isAgreementReq()) { 
+				getManagedBean().setAgreemetSelectedVal("207");
+			} else if (getManagedBean().getScLoa().getLoaNo() != null) {
+				getManagedBean().setAgreemetSelectedVal("208");
+			}
+		}
+		
 		if (null != qtType && null != fulfilmentType && qtType == 194 && fulfilmentType == 148) {
-			if (null == getManagedBean().getBondReqSelectedVal()) {
+			if (null == getManagedBean().getAgreemetSelectedVal()) {
 				getManagedBean().getScLoa().setAgreementReq(false);
-			} else if ("208".equals(getManagedBean().getBondReqSelectedVal())) {
+			} else if ("208".equals(getManagedBean().getAgreemetSelectedVal())) {
 				getManagedBean().getScLoa().setAgreementReq(false);
 			}
 			
