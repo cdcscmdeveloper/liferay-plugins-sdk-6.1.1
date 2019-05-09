@@ -187,6 +187,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		
 		PmUser user = new FacesScopes().getUserSessionBean();
 		validateDisciplinaryAction();
+		validateAddedCategory(getManagedBean().getActiveCategoryList());
 		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
 		SupplierDataMaintenanceResDTO resDTO = new SupplierDataMaintenanceResDTO();
 		List<SmTrackingDairyVO> listSmTrackingDiary = new ArrayList<SmTrackingDairyVO>();
@@ -1263,6 +1264,18 @@ public class SupplierDataMaintenanceBackingBean extends
 		if (StringUtils.isNotEmpty(this.getManagedBean().getApproverRemark())
 				&& this.getManagedBean().getApproverRemark().length() > 2500) {
 			throw new EpException(MessageConst.ERROR_71025, new String[] {String.valueOf(this.getManagedBean().getApproverRemark().length())});
+		}
+	}
+	
+	private void validateAddedCategory(List<SmSupplierCategory> activeCategories) {
+		SmApplicationUtil
+				.validateRenewalApplTypeForSpecialCategory(getManagedBean()
+						.getSmAppl());
+		String errOtherDesc = SmApplicationUtil
+				.getCategoryOtherDescErrMsg(activeCategories);
+		if (!StringUtils.isBlank(errOtherDesc)) {
+			throw new EpException(MessageConst.ERROR_722514,
+					new String[] { errOtherDesc });
 		}
 	}
 
