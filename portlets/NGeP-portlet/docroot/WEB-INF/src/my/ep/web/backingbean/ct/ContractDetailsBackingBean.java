@@ -104,7 +104,6 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
-import my.ep.web.managedbean.ct.circular.CircularManagedBean.CircularListingPagingDataModel;
 import my.ep.web.managedbean.ct.circular.CircularManagedBean.ServiceListingPagingDataModel;
 import my.ep.web.managedbean.ct.circular.CircularManagedBean.CircularListingPagingDataModel;
 
@@ -1672,6 +1671,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			if (outputTab.equalsIgnoreCase(ContractConst.ITEM_DETAIL)) {
 				getManagedBean().setSelectedTabIndex(3);
 				getManagedBean().setItemIndex(3);
+				CircularManagedBean circularBb=new CircularManagedBean();
+				circularBb.reassignValue(true);
+				circularBb.getCircularListingPagingDataModel().reloadData();
+				circularBb.getServiceListingPagingDataModel().reloadData();
 			}
 			if (outputTab.equalsIgnoreCase(ContractConst.DEDUCTION_DETAIL)) {
 				getManagedBean().setSelectedTabIndex(4);
