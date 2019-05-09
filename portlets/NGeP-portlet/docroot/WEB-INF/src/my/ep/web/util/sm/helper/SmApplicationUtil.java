@@ -1370,7 +1370,8 @@ public class SmApplicationUtil {
 				if (category.getPmCategoryL3().getOtherDescReq() != null
 						&& category.getPmCategoryL3().getOtherDescReq()
 								.equals(new Integer(1))
-						&& category.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
+						&& category.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE
+						&& category.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
 					if (StringUtils.isEmpty(category.getOtherDesc())) {
 						sb.append("<br/>")
 								.append(++i)
