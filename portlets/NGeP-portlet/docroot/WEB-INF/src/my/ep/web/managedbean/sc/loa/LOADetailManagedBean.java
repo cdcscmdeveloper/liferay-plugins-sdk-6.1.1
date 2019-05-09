@@ -275,7 +275,8 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	
 	// Flag to enable Performance Bond for Direct Purchase.
 	private boolean enablePBForDP;
-
+	private boolean disablePerformanceBondForDP;
+	
 	private PmOrgProfile ministryOrgProfile;
 
     /**
@@ -1575,6 +1576,20 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 
 	public void setMinistryOrgProfile(PmOrgProfile ministryOrgProfile) {
 		this.ministryOrgProfile = ministryOrgProfile;
+	}
+
+	/**
+	 * @return the disablePerformanceBondForDP
+	 */
+	public boolean isDisablePerformanceBondForDP() {
+		return disablePerformanceBondForDP;
+	}
+
+	/**
+	 * @param disablePerformanceBondForDP the disablePerformanceBondForDP to set
+	 */
+	public void setDisablePerformanceBondForDP(boolean disablePerformanceBondForDP) {
+		this.disablePerformanceBondForDP = disablePerformanceBondForDP;
 	}
 }
 
