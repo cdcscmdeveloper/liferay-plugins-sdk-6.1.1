@@ -1160,7 +1160,7 @@ public class SupplierDataMaintenanceBackingBean extends
 			SmRemark remark = resDTO.getRemarksList().get(0);
 			getManagedBean().setPoApprOverlappedRemark(remark.getRemark());
 			getManagedBean().setOriPoApprOverlappedRemark(remark.getRemark());
-			getManagedBean().setRemarkOverlappedId(remark.getRemarkId());
+			getManagedBean().setRemarkId(remark.getRemarkId());
 		}
 		
 		
@@ -1177,7 +1177,6 @@ public class SupplierDataMaintenanceBackingBean extends
 		if(resDTO.getRemarksList() != null && resDTO.getRemarksList().size() > 0) {
 			SmRemark remark = resDTO.getRemarksList().get(0);
 			getManagedBean().setApproverRemark(remark.getRemark());
-			getManagedBean().setRemarkId(remark.getRemarkId());
 		}
 	}
 
