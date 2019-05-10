@@ -115,12 +115,13 @@ public class SuppPerformRptBackingBean extends
 	}
 
 	public void resetSearch() {
-		if (getManagedBean().getSelectedOrgProfile() != null) {
+/*		if (getManagedBean().getSelectedOrgProfile() != null) {
 			if (getManagedBean().getSelectedOrgProfile().getSmSupplier() != null) {
 				getManagedBean().getSelectedOrgProfile().getSmSupplier()
 						.setCompanyName(StringUtils.EMPTY);
 			}
-		}
+		}*/
+		getManagedBean().setSelectedOrgProfile(null);//24635
 		getManagedBean().setMofNo(StringUtils.EMPTY);
 		getManagedBean().setRegType(StringUtils.EMPTY);
 		getManagedBean().setEpNo(StringUtils.EMPTY);
