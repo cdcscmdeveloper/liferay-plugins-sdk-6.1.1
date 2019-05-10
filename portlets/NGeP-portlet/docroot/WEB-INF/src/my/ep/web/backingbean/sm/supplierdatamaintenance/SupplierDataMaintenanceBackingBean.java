@@ -13,6 +13,7 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceException;
 
+import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -45,6 +46,7 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
@@ -1158,6 +1160,23 @@ public class SupplierDataMaintenanceBackingBean extends
 			SmRemark remark = resDTO.getRemarksList().get(0);
 			getManagedBean().setPoApprOverlappedRemark(remark.getRemark());
 			getManagedBean().setOriPoApprOverlappedRemark(remark.getRemark());
+			getManagedBean().setRemarkOverlappedId(remark.getRemarkId());
+		}
+		
+		
+	}
+	
+	private void initApproverRemarkInfo(){
+		SmRemarksReqDTO reqDTO = new SmRemarksReqDTO();
+		reqDTO.setDocType(ParameterConst.SM_DATA_MAINTENANCE_RMRK_DECISION_APPROVE);
+		reqDTO.setDocId(getManagedBean().getSmAppl().getApplId());
+		
+		SmRemaksResDTO resDTO = SmServiceLookup.getSmRemarksSO().retrieveSmRemarksByDocument(
+				reqDTO);
+		
+		if(resDTO.getRemarksList() != null && resDTO.getRemarksList().size() > 0) {
+			SmRemark remark = resDTO.getRemarksList().get(0);
+			getManagedBean().setApproverRemark(remark.getRemark());
 			getManagedBean().setRemarkId(remark.getRemarkId());
 		}
 	}
@@ -1375,6 +1394,22 @@ public class SupplierDataMaintenanceBackingBean extends
 			retVal = resDTO.getPmStatus().getPmRegStatus();
 		}
 		return retVal;
+	}
+	
+	public void onViewApprRemarkHistoryList() {
+		RequestContext.getCurrentInstance().execute("approverRemarkDialog.show();");
+	}
+
+	private void approvalHistoryRemarklist() {
+		SmRemaksResDTO resDTO = SmApplicationUtil.getRemarksByDoc(
+				ParameterConst.SM_DATA_MAINTENANCE_RMRK_DECISION_APPROVE, getManagedBean().getSmAppl().getApplId());
+		resDTO.getRemarksList();
+		getManagedBean().setApproverRemarkList(resDTO.getRemarksList());
+	}
+
+	public String getUserNameByUserId(Long userId) {
+		return PmCommonUtil.retriveUserName(userId);
+
 	}
 
 }
