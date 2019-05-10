@@ -71,15 +71,16 @@ public class SoftCertManagedBean extends BaseManagedBean {
 	private PmDigiSign digiSign;
 	private String gstPercentageLabel;
 	private SmAppl smAppl;
-	
+
 	private SmSoftcertDocFile deleteSuppDoc;
 	private int attachedFileIndex;
 	private List<SmSoftcertDocFile> attachmentList;
 	private List<SmSoftcertDocFile> deleteAttachments;
 	private SmSoftcertDocFile selectedSmSoftcertDocFile;
 	private List<SmSoftcertDocFile> smSoftcertDocFileList;
-	
+
 	private SmSoftcertDoc supportDoc;
+	private String revokeMessage;
 
 	@ManagedProperty(value = "#{spkiBackingBean}")
 	private SpkiBackingBean spkiBackingBean;
@@ -480,4 +481,11 @@ public class SoftCertManagedBean extends BaseManagedBean {
 		this.supportDoc = supportDoc;
 	}
 
+	public String getRevokeMessage() {
+		return revokeMessage;
+	}
+
+	public void setRevokeMessage(String revokeMessage) {
+		this.revokeMessage = revokeMessage;
+	}
 }

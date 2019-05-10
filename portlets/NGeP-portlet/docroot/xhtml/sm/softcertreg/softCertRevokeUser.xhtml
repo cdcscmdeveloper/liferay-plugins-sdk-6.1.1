@@ -33,7 +33,7 @@
 		</p:outputPanel>
 		
 		<p:panel header="#{lbl['lbl.sm.softcert.authpersonnel.panheader']}" toggleable="true" id="revokePersonnelPanelId">
-			<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.softcert.revoke.instruction']}" 
+			<h:outputText escape="false" styleClass="instruction" value="#{softCertBackingBean.managedBean.revokeMessage}" 
 				rendered="#{softCertBackingBean.managedBean.renderRevokeButton}"/>
 			
 			<h:outputText styleClass="warning" value="#{lbl['lbl.sm.softcert.revoke.notallowed.warning']}" 
