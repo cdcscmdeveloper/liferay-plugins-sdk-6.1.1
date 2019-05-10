@@ -1,20 +1,23 @@
 package my.ep.web.backingbean.report.sm;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.web.constant.report.PmReportConst;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.SuppPerformRptManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -47,31 +50,55 @@ public class SuppPerformRptBackingBean extends
 		} else if(getManagedBean().getDateFrom() == null && getManagedBean().getDateTo() != null) {
 			throw new EpException(MessageConst.ERROR_REPORT_780054);
 		}
+		SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
 		
 		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
 		retrieveReportValueFromDb();
 		if (getManagedBean().getSelectedOrgProfile() != null) {
 			if (getManagedBean().getSelectedOrgProfile().getSmSupplier() != null) {
 				params.put(SmReportConst.PARAM_COMPANY_NAME, getManagedBean()
-						.getSelectedOrgProfile().getSmSupplier()
-						.getCompanyName());
+						.getSelectedOrgProfile().getSmSupplier().getCompanyName());
+				supplierSearchReqDTO.setCompanyName(getManagedBean()
+						.getSelectedOrgProfile().getSmSupplier().getCompanyName());
 			}
+		}else{
+			if(getManagedBean().getMofNo() != null){
+				supplierSearchReqDTO.setMofAccountNo(getManagedBean().getMofNo());
+			}
+			if(getManagedBean().getEpNo() != null){
+				supplierSearchReqDTO.setEpNo(getManagedBean().getEpNo());
+			}
+			SupplierSearchResDTO suResDTO = ValidateSupplier(supplierSearchReqDTO);
+			supplierSearchReqDTO.setCompanyName(suResDTO.getSmSupplier().getCompanyName());
+			params.put(SmReportConst.PARAM_COMPANY_NAME, suResDTO.getSmSupplier().getCompanyName());
 		}
+		
 		params.put(SmReportConst.PARAM_MOF_NO, getManagedBean().getMofNo());
+		
+		
 		if (!StringUtils.isBlank(getManagedBean().getRegType())) {
 			params.put(SmReportConst.PARAM_REG_TYPE, getManagedBean()
 					.getRegType());
 		}
 		params.put(SmReportConst.PARAM_EP_NO, getManagedBean().getEpNo());
 		params.put(PmReportConst.PARAM_PM_FROM_DATE, DateUtils.dateToString(
-				CommonConstants.DEFAULT_DATE_FORMAT, getManagedBean()
+				CommonConstants.DEFAULT_DATE_FORMAT_WITH_MONTH_NAME_NEW, getManagedBean()
 				.getDateFrom()));
 		params.put(PmReportConst.PARAM_PM_TO_DATE, DateUtils.dateToString(
-				CommonConstants.DEFAULT_DATE_FORMAT, getManagedBean()
+				CommonConstants.DEFAULT_DATE_FORMAT_WITH_MONTH_NAME_NEW, getManagedBean()
 				.getDateTo()));
-		params.put(SmReportConst.PARAM_YEAR,
-				Calendar.getInstance().get(Calendar.YEAR) + "");
 		generateSmReport(params);
+	}
+	
+	public SupplierSearchResDTO ValidateSupplier(SupplierSearchReqDTO supplierSearchReqDTO ){
+
+		ISupplierSearchSO supplierSearchSO = SmServiceLookup.getSupplierSearchSO();
+			SupplierSearchResDTO smResDTO =supplierSearchSO.retriveSupplierProfilesAsCriteria(supplierSearchReqDTO);
+			
+			if(smResDTO.getSmSupplier() == null){
+				throw new EpException(MessageConst.ERROR_REPORT_780056);
+			}		
+		return smResDTO;
 	}
 
 		private void dateValidation(Date dateFrom, Date dateTo){
