@@ -2902,7 +2902,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 		String fileName = item.getFileName();
 	    if (fileName != null) {
-	    	fileName = FilenameUtils.getName(fileName).replaceAll("[:\\\\/*?|<>&]", "_");
+	    	String ts = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date());
+	    	fileName = ts.concat(FilenameUtils.getName(fileName).replaceAll("[:\\\\/*?|<>&~!@#$%^]", "_"));
 	    }
 		log.info("Sanitized file name : "+fileName.replace(' ', '_'));
 
