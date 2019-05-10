@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -257,4 +258,33 @@ public class SyncProcBoardFromPMRest {
 		return secretaryList;
 	}
 	
+	@GET
+	@Path("/user/{loginId}")
+	public Response syncLiferayAndOIMFromPMRoleByLoginId(@PathParam("loginId") String loginId) {
+		UserReqDTO reqDTO = null;
+		UserResDTO resDTO = null;
+		Long userId = null;
+		try {
+			log.info("#25278 Before Sync By Login Id");
+			reqDTO = new UserReqDTO();
+			reqDTO.setLoginId(loginId);
+			resDTO = SmServiceLookup.getUserSO().retrieveUserByLoginId(reqDTO);
+			if(resDTO.isSuccessful())
+			{
+				userId = resDTO.getPmUser().getUserId();
+				reqDTO = new UserReqDTO();
+				reqDTO.setLoginId(loginId);
+				reqDTO.setUserId(userId);
+				reqDTO.setSupplierUser(false);
+				resDTO = SmServiceLookup.getUserSO().syncLiferayAndOimRoleFromPm(reqDTO);
+				log.info("Sync user by login Id: " + resDTO.isSuccessful());
+			}
+			
+			log.info("#25278 Finished Sync By Login Id");			
+			return Response.status(200).entity("Success sync Procurement Board users !!").build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(406).entity(e.getMessage()).build();
+		}
+	}
 }
