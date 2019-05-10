@@ -142,9 +142,6 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 	
 	private Long selectedAddrForEdit;
 	
-	private Long selectedAddrStateId;
-	
-	private String selectedAddrStateName;
 	/**
 	 * The constructor used for save user logging.
 	 * 
@@ -1399,8 +1396,29 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 	 **/
 	public void editDeliveryAddress(PmAddressType address) {
 		setSelectedAddrForEdit(address.getPmAddress().getAddressId());
-		setSelectedAddrStateId(address.getPmAddress().getPmState().getStateId());
-		setSelectedAddrStateName(address.getPmAddress().getPmState().getStateName());
+		
+		if (null != address && null != address.getPmAddress()) {
+			if (null != address.getPmAddress().getPmState()) {
+				getManagedBean().setSelectedAddrStateId(address.getPmAddress().getPmState().getStateId());
+				getManagedBean().setSelectedAddrStateName(address.getPmAddress().getPmState().getStateName());
+			}
+			
+			if (null != address.getPmAddress().getPmDivision()) {
+				getManagedBean().setSelectedAddrDivisionId(address.getPmAddress().getPmDivision().getDivisionId());
+				getManagedBean().setSelectedAddrDivisionName(address.getPmAddress().getPmDivision().getDivisionName());
+			}
+			
+			if (null != address.getPmAddress().getPmDistrict()) {
+				getManagedBean().setSelectedAddrDistrictId(address.getPmAddress().getPmDistrict().getDistrictId());
+				getManagedBean().setSelectedAddrDistrictName(address.getPmAddress().getPmDistrict().getDistrictName());
+			}
+			
+			if (null != address.getPmAddress().getPmCity()) {
+				getManagedBean().setSelectedAddrCityId(address.getPmAddress().getPmCity().getCityId());
+				getManagedBean().setSelectedAddrCityName(address.getPmAddress().getPmCity().getCityName());
+			}
+		}
+		
 		boolean addrExist = false;
 		if (address != null) {
 			log.info("test editDeliveryAddress NOT null+++++pencil");
@@ -2070,22 +2088,26 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 
 	public void retrieveDeliveryPmState(PmState pmState) {
 		log.info("***************************** retrievePmState");
-		
+		Long newStateId = null;
+		if (null != pmState) {
+			newStateId = pmState.getStateId();
+		}
 		if (null != this.getManagedBean().getAddressTypesList() && this.getManagedBean().getAddressTypesList().size() > 0) {
 			for(PmAddressType addrType : this.getManagedBean().getAddressTypesList()) {
 				PmAddress pmAddress = addrType.getPmAddress();
 				if (null != pmAddress && getSelectedAddrForEdit() != pmAddress.getAddressId() 
 						&& null != pmAddress.getPmState() && StringUtils.isNotEmpty(pmAddress.getPmState().getStateName())
-						&& getSelectedAddrStateName().equals(pmAddress.getPmState().getStateName())) {
-					addrType.getPmAddress().getPmState().setStateId(getSelectedAddrStateId());
+						&& StringUtils.isNotEmpty(getManagedBean().getSelectedAddrStateName()) && null != getManagedBean().getSelectedAddrStateId()
+						&& getManagedBean().getSelectedAddrStateName().equals(pmAddress.getPmState().getStateName())) {
+					addrType.getPmAddress().getPmState().setStateId(getManagedBean().getSelectedAddrStateId());
 				}
 			}
 		}
 		
 		if (pmState != null) {
-			if (pmState.getStateId() != null) {
-				log.info("pmState.getStateId() " + pmState.getStateId());
-				pmState = PmCommonUtil.retrievePmStateByStateId(pmState.getStateId());
+			if (newStateId != null) {
+				log.info("newStateId " + newStateId);
+				pmState = PmCommonUtil.retrievePmStateByStateId(newStateId);
 				getManagedBean().getDeliveryAddress().getPmAddress().setPmState(pmState);
 				getManagedBean().getDeliveryAddress().getPmAddress().setPmDistrict(new PmDistrict());
 				getManagedBean().getDeliveryAddress().getPmAddress().setPmCity(new PmCity());
@@ -2579,6 +2601,19 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 	}
 
 	public void retrieveDeliveryPmDistrict(PmDistrict pmDistrict) {
+		
+		if (null != this.getManagedBean().getAddressTypesList() && this.getManagedBean().getAddressTypesList().size() > 0) {
+			for(PmAddressType addrType : this.getManagedBean().getAddressTypesList()) {
+				PmAddress pmAddress = addrType.getPmAddress();
+				if (null != pmAddress && getSelectedAddrForEdit() != pmAddress.getAddressId() 
+						&& null != pmAddress.getPmDistrict() && StringUtils.isNotEmpty(pmAddress.getPmDistrict().getDistrictName())
+						&& StringUtils.isNotEmpty(getManagedBean().getSelectedAddrDistrictName()) && null != getManagedBean().getSelectedAddrDistrictId()
+						&& getManagedBean().getSelectedAddrDistrictName().equals(pmAddress.getPmDistrict().getDistrictName())) {
+					addrType.getPmAddress().getPmDistrict().setDistrictId(getManagedBean().getSelectedAddrDistrictId());
+				}
+			}
+		}
+		
 		if (pmDistrict != null && pmDistrict.getDistrictId() != null) {
 			PmDistrict tempDistrict = PmCommonUtil.retrievePmDistById(pmDistrict.getDistrictId());
 			getManagedBean().getDeliveryAddress().getPmAddress().setPmDistrict(tempDistrict);
@@ -2588,6 +2623,17 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 	}
 
 	public void retrieveDeliveryPmDivision(PmDivision pmDivision) {
+		if (null != this.getManagedBean().getAddressTypesList() && this.getManagedBean().getAddressTypesList().size() > 0) {
+			for(PmAddressType addrType : this.getManagedBean().getAddressTypesList()) {
+				PmAddress pmAddress = addrType.getPmAddress();
+				if (null != pmAddress && getSelectedAddrForEdit() != pmAddress.getAddressId() 
+						&& null != pmAddress.getPmDivision() && StringUtils.isNotEmpty(pmAddress.getPmDivision().getDivisionName())
+						&& StringUtils.isNotEmpty(getManagedBean().getSelectedAddrDivisionName()) && null != getManagedBean().getSelectedAddrDivisionId()
+						&& getManagedBean().getSelectedAddrDivisionName().equals(pmAddress.getPmDivision().getDivisionName())) {
+					addrType.getPmAddress().getPmDivision().setDivisionId(getManagedBean().getSelectedAddrDivisionId());
+				}
+			}
+		}
 		if (pmDivision != null && pmDivision.getDivisionId() != null) {
 			PmDivision tempDivision = PmCommonUtil.retrievePmDivisionById(pmDivision.getDivisionId());
 			getManagedBean().getDeliveryAddress().getPmAddress().setPmDivision(tempDivision);
@@ -2597,6 +2643,17 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 	}
 
 	public void retrieveDeliveryPmCity(PmCity pmCity) {
+		if (null != this.getManagedBean().getAddressTypesList() && this.getManagedBean().getAddressTypesList().size() > 0) {
+			for(PmAddressType addrType : this.getManagedBean().getAddressTypesList()) {
+				PmAddress pmAddress = addrType.getPmAddress();
+				if (null != pmAddress && getSelectedAddrForEdit() != pmAddress.getAddressId() 
+						&& null != pmAddress.getPmCity() && StringUtils.isNotEmpty(pmAddress.getPmCity().getCityName())
+						&& StringUtils.isNotEmpty(getManagedBean().getSelectedAddrCityName()) && null != getManagedBean().getSelectedAddrCityId()
+						&& getManagedBean().getSelectedAddrCityName().equals(pmAddress.getPmCity().getCityName())) {
+					addrType.getPmAddress().getPmCity().setCityId(getManagedBean().getSelectedAddrCityId());
+				}
+			}
+		}
 		if (pmCity != null && pmCity.getCityId() != null) {
 			PmCity tempCity = PmCommonUtil.retrievePmCityById(pmCity.getCityId());
 			getManagedBean().getDeliveryAddress().getPmAddress().setPmCity(tempCity);
@@ -3226,32 +3283,4 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 		this.getManagedBean().setCityList(resDTO.getCityList());
 	}
 
-	/**
-	 * @return the selectedAddrStateId
-	 */
-	public Long getSelectedAddrStateId() {
-		return selectedAddrStateId;
-	}
-
-	/**
-	 * @param selectedAddrStateId the selectedAddrStateId to set
-	 */
-	public void setSelectedAddrStateId(Long selectedAddrStateId) {
-		this.selectedAddrStateId = selectedAddrStateId;
-	}
-
-	/**
-	 * @return the selectedAddrStateName
-	 */
-	public String getSelectedAddrStateName() {
-		return selectedAddrStateName;
-	}
-
-	/**
-	 * @param selectedAddrStateName the selectedAddrStateName to set
-	 */
-	public void setSelectedAddrStateName(String selectedAddrStateName) {
-		this.selectedAddrStateName = selectedAddrStateName;
-	}
-	
 }
