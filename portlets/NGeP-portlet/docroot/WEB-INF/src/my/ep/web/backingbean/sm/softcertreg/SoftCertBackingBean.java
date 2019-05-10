@@ -10,6 +10,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -20,8 +21,9 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.bpm.dto.BpmResponseDTO;
-import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
@@ -29,40 +31,33 @@ import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sm.useradddata.SMUserAddDataType;
 import my.ep.persistence.constant.DbValueConst;
-import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmAccessApplDoc;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.sm.SmAppl;
-import my.ep.persistence.entity.sm.SmApplSupportDoc;
-import my.ep.persistence.entity.sm.SmGstSupplierDoc;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSoftcertDoc;
 import my.ep.persistence.entity.sm.SmSoftcertDocFile;
 import my.ep.persistence.entity.sm.SmSoftcertRequest;
-import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
-import my.ep.util.EpPropertiesUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.backingbean.sm.payment.PaymentBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.softcertreg.SoftCertManagedBean;
 import my.ep.web.util.DateUtils;
+import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
-import my.ep.web.vo.SmGstBranchVO;
 import my.ep.web.vo.SoftcertUploadSuppDocVO;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.StreamedContent;
 
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -102,6 +97,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		getManagedBean().setSoftcertDocNo(
 				SmCommonUtil.getSoftcertDocNo(getManagedBean()
 						.getLoginUserPersonnelInfo().getSmAppl()));
+		getManagedBean().setRevokeMessage(retrieveRevokeMessage());
 		SmCommonUtil.redirectToPage("softCertBasePage.xhtml", "", null, null);
 	}
 
@@ -1109,6 +1105,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		if (!EntityHelper.isCollectionEmpty(getManagedBean()
 				.getSoftcertUploadSuppDocList())) {
 			SmSoftcertDoc softcertDoc = null;
+			Locale userLocale = new FacesScopes().getUserLocale();
 			for (SoftcertUploadSuppDocVO softcertUploadSuppDocVO : getManagedBean()
 					.getSoftcertUploadSuppDocList()) {
 				if (EntityHelper.isCollectionEmpty(softcertUploadSuppDocVO
@@ -1116,7 +1113,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					softcertUploadSuppDocVO
 							.setSuppDocList(new ArrayList<SmSoftcertDoc>());
 					reqDTO = new DocumentReqDTO();
-					reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+					reqDTO.setUserLocale(userLocale);
 					reqDTO.setBasicAccount(basic);
 					reqDTO.setCompanyTypeCode(businessType);
 					reqDTO.setOwner(softcertUploadSuppDocVO.getPersonnel()
@@ -1135,6 +1132,20 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 							.getDocumentList();
 					for (PmDocument softcertSuppDoc : softcertSuppDocList) {
 						softcertDoc = new SmSoftcertDoc();
+						
+						if (ParameterConst.DOCUMENT_DEFINITION_KEY_AUTHORIZATION_LETTER.equals(softcertSuppDoc
+								.getDocDefinitionKey())
+								|| ParameterConst.DOCUMENT_DEFINITION_KEY_OFFICIAL_ACCEPTANCE_LETTER
+										.equals(softcertSuppDoc.getDocDefinitionKey())) {
+							String letterUrl = "<a href=\""
+									+ DocumentRepositoryUtils.getBaseDir()
+									+ "shared/SM/"
+									+ (CommonConstants.LANGUAGE_CODE_MALAY.equals(userLocale.getLanguage()) ? 
+											"Permohonan_Sijil_Digital.docx\">Sini"
+											: "Application_For_Digital_Certificate.docx\">Here") 
+									+ "</a>";
+							softcertSuppDoc.setDocName(softcertSuppDoc.getDocName().replace("<here>", letterUrl));
+						}
 						softcertDoc.setPmDocument(softcertSuppDoc);
 						softcertDoc.setPmUser(softcertUploadSuppDocVO
 								.getPersonnel().getPmUser());
@@ -1464,5 +1475,19 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		softCertPeriod = -softCertPeriod;
 
 		return softCertPeriod;
+	}
+
+	/**
+	 * Retrieve Soft cert revoke message
+	 * 
+	 * @return docUrl
+	 */
+	private String retrieveRevokeMessage() {
+		String url = "\"" + DocumentRepositoryUtils.getBaseDir()
+				+ "shared/SM/"
+				+ (CommonConstants.LANGUAGE_CODE_MALAY.equals(new FacesScopes().getUserLocale().getLanguage()) ? "Surat_Kebenaran_Pembatalan.docx"
+						: "Revocation_Authorization_Letter.docx")
+				+ "\"";
+		return SmCommonUtil.getMessage("lbl.sm.softcert.revoke.instruction", new String[] { url });
 	}
 }
