@@ -1362,9 +1362,32 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 		}
 		//LOG : 13847, by Fahmi 22032019
-		if (ctBB.getManagedBean().getCtContractAmount().isBondReq() && !ctBB.getManagedBean().isDirectPurchase()
+		validationPerformanceBond(action);
+		
+		// Validation for Approver
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && isApproverSetting() 
+				&& getManagedBean().getApproverModel().getTarget().size() == 0) {
+			if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+				setTabValue("SE");
+			}else{
+				setTabCentralValue("SE");
+			}
+			throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
+		}
+	}
+	//LOG : 13847, by Fahmi 22032019
+	/**
+	 * The method used to validate performance bond.
+	 * 
+	 * @param  outcome  the user action on this contract
+	 * @return result of the validation, has exception or not
+	 * @throws Exception   if an exception occurred
+	 * @see    Exception
+	 */
+	public void validationPerformanceBond(String action){
+		if (ctBB.getManagedBean().getCtContractAmount().isBondReq()// && !ctBB.getManagedBean().isDirectPurchase() - REMOVE THIS CZ DP ALSO CAN HUGE AMOUNT
 				&& !ctBB.getManagedBean().getCtContractAmount().isBondExempted()
-				&& (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) ||  action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT))) {
+				&& (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) ||  action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) ||  action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))) {
 			
 			if(ctBB.getManagedBean().getCtContractAmount().isBondWaived()){
 				if (ctBB.getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverStartDate() == null) {
@@ -1400,18 +1423,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 			}
 		}
-		// Validation for Approver
-		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && isApproverSetting() 
-				&& getManagedBean().getApproverModel().getTarget().size() == 0) {
-			if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-				setTabValue("SE");
-			}else{
-				setTabCentralValue("SE");
-			}
-			throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
-		}
 	}
-
 	/**
 	 * The method used to authenticate user during submit the contract.
 	 * This method will invoke a confirmation dialog for user authentication.
@@ -1424,6 +1436,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 */
 	
 	public String gpkiSignAction(String outcome) throws Exception {
+		//LOG : 13847, by Fahmi 22032019
+		//need to validate bond
+		validationPerformanceBond(outcome);
 		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome) || BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
 			validateCtContractVer(outcome);
 			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
