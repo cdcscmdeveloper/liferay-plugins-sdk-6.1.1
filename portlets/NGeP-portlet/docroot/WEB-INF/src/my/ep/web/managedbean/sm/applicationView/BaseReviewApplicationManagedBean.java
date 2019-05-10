@@ -38,6 +38,7 @@ import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmRelatedCompany;
+import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmStaffExperience;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -215,6 +216,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private String approverRemark;
 	private Date approverRemarkCreatedDate;
 	private Long remarkId;
+	private List<SmRemark> approverRemarkList;
 	
 	private SmCancelMofRemarksVO cancelRemarkVO;
 
@@ -1560,6 +1562,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setCancelRemarkVO(SmCancelMofRemarksVO cancelRemarkVO) {
 		this.cancelRemarkVO = cancelRemarkVO;
+	}
+
+	public List<SmRemark> getApproverRemarkList() {
+		return approverRemarkList;
+	}
+
+	public void setApproverRemarkList(List<SmRemark> approverRemarkList) {
+		this.approverRemarkList = approverRemarkList;
 	}
 
 }
