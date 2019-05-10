@@ -4587,8 +4587,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		if(!isSqStillValid()){
 				if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL) || 
 				   currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL) ){
-					String[] addReject = new String[]{BpmOutcomeConst.BPM_REJECT};    		
-					getManagedBean().setOutComes(addReject);						
+					String[] addReject = new String[]{BpmOutcomeConst.BPM_REJECT,BpmOutcomeConst.BPM_CANCEL};    		
+					getManagedBean().setOutComes(addReject);	
+					
 				}else{
 					String[] addCancel = new String[]{BpmOutcomeConst.BPM_CANCEL};    		
 					getManagedBean().setOutComes(addCancel);
