@@ -139,7 +139,14 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	private List<PmDivision> divisionList;
 	private boolean displayDivision=true;
 	
-	
+	private Long selectedAddrStateId;
+	private String selectedAddrStateName;
+	private Long selectedAddrDivisionId;
+	private String selectedAddrDivisionName;
+	private Long selectedAddrDistrictId;
+	private String selectedAddrDistrictName;
+	private Long selectedAddrCityId;
+	private String selectedAddrCityName;
 
 	public OrganisationManagedBean() {
 
@@ -1118,6 +1125,118 @@ public class OrganisationManagedBean extends BaseManagedBean{
 
 	public void setDivisionList(List<PmDivision> divisionList) {
 		this.divisionList = divisionList;
+	}
+
+	/**
+	 * @return the selectedAddrStateId
+	 */
+	public Long getSelectedAddrStateId() {
+		return selectedAddrStateId;
+	}
+
+	/**
+	 * @param selectedAddrStateId the selectedAddrStateId to set
+	 */
+	public void setSelectedAddrStateId(Long selectedAddrStateId) {
+		this.selectedAddrStateId = selectedAddrStateId;
+	}
+
+	/**
+	 * @return the selectedAddrStateName
+	 */
+	public String getSelectedAddrStateName() {
+		return selectedAddrStateName;
+	}
+
+	/**
+	 * @param selectedAddrStateName the selectedAddrStateName to set
+	 */
+	public void setSelectedAddrStateName(String selectedAddrStateName) {
+		this.selectedAddrStateName = selectedAddrStateName;
+	}
+
+	/**
+	 * @return the selectedAddrDivisionId
+	 */
+	public Long getSelectedAddrDivisionId() {
+		return selectedAddrDivisionId;
+	}
+
+	/**
+	 * @param selectedAddrDivisionId the selectedAddrDivisionId to set
+	 */
+	public void setSelectedAddrDivisionId(Long selectedAddrDivisionId) {
+		this.selectedAddrDivisionId = selectedAddrDivisionId;
+	}
+
+	/**
+	 * @return the selectedAddrDivisionName
+	 */
+	public String getSelectedAddrDivisionName() {
+		return selectedAddrDivisionName;
+	}
+
+	/**
+	 * @param selectedAddrDivisionName the selectedAddrDivisionName to set
+	 */
+	public void setSelectedAddrDivisionName(String selectedAddrDivisionName) {
+		this.selectedAddrDivisionName = selectedAddrDivisionName;
+	}
+
+	/**
+	 * @return the selectedAddrDistrictId
+	 */
+	public Long getSelectedAddrDistrictId() {
+		return selectedAddrDistrictId;
+	}
+
+	/**
+	 * @param selectedAddrDistrictId the selectedAddrDistrictId to set
+	 */
+	public void setSelectedAddrDistrictId(Long selectedAddrDistrictId) {
+		this.selectedAddrDistrictId = selectedAddrDistrictId;
+	}
+
+	/**
+	 * @return the selectedAddrDistrictName
+	 */
+	public String getSelectedAddrDistrictName() {
+		return selectedAddrDistrictName;
+	}
+
+	/**
+	 * @param selectedAddrDistrictName the selectedAddrDistrictName to set
+	 */
+	public void setSelectedAddrDistrictName(String selectedAddrDistrictName) {
+		this.selectedAddrDistrictName = selectedAddrDistrictName;
+	}
+
+	/**
+	 * @return the selectedAddrCityId
+	 */
+	public Long getSelectedAddrCityId() {
+		return selectedAddrCityId;
+	}
+
+	/**
+	 * @param selectedAddrCityId the selectedAddrCityId to set
+	 */
+	public void setSelectedAddrCityId(Long selectedAddrCityId) {
+		this.selectedAddrCityId = selectedAddrCityId;
+	}
+
+	/**
+	 * @return the selectedAddrCityName
+	 */
+	public String getSelectedAddrCityName() {
+		return selectedAddrCityName;
+	}
+
+	/**
+	 * @param selectedAddrCityName the selectedAddrCityName to set
+	 */
+	public void setSelectedAddrCityName(String selectedAddrCityName) {
+		this.selectedAddrCityName = selectedAddrCityName;
 	}
 	
 }
