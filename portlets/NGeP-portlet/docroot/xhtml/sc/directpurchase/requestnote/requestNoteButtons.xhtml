@@ -3,6 +3,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc" 
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
@@ -45,6 +46,24 @@
 			</div>
 		</p:panel>
 	</p:dialog>
+	
+	<!-- 20190417@asyrafhaziq_12095 - Start -->
+	<ui:param name="cancel" value="CANCEL" />
+	<ui:param name="cancelRN" value="cancelRN" />
+	<ac:cancelRejectPopup id="#{cancelRN}" widget="cancelRN" width="30%"
+		height="100"
+		okAction="#{requestNoteBackingBean.submitAction(cancel)}"
+		title="#{lbl['lbl.cancel.details']}"
+		content="#{lbl['lbl.cancel.dialog.confirm.message']}" update="@this" />
+		
+	<ui:param name="reject" value="REJECT" />
+	<ui:param name="rejectRN" value="rejectRN" />
+	<ac:cancelRejectPopup id="#{rejectRN}" widget="rejectRN" width="30%"
+		height="100"
+		okAction="#{requestNoteBackingBean.submitAction(reject)}"
+		title="#{lbl['lbl.reject.details']}"
+		content="#{lbl['lbl.reject.dialog.confirm.message']}" update="@this" />	
+     <!-- 20190417@asyrafhaziq_12095 - End -->
 
 	<div>
 		<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
