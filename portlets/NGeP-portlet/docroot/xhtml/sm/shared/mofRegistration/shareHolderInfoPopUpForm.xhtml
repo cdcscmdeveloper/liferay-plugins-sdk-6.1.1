@@ -10,12 +10,13 @@
 		id="equiPerDtlPan">
 		<c:if
 			test="#{(backingBean.managedBean.approverUser or backingBean.managedBean.poUser) and backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'I'}">
-			<p:outputLabel style="float : left" styleClass="ui-panel-title"
-				value="#{lbl['lbl.sm.person.myIdResp']} -" />
-			<p:outputLabel style="float : left" styleClass="ui-panel-title"
-				value="#{backingBean.getMyIdentityStatusDescription(backingBean.managedBean.selectedShareHolder.identityResponseCode)}" />
-			<p:outputLabel style="float : left; padding-right: 0px"
-				styleClass="ui-panel-title"
+			<p:outputLabel style="float : left; font-weight: bold; padding-right:3px"
+				value="#{lbl['lbl.sm.person.myIdResp']} :" />
+			<p:outputLabel style="float : left; font-weight: bold; padding-right:3px"
+				value=" #{lbl['lbl.sm.myIdentityCode.active']}" rendered="#{backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70018'}" />
+			<p:outputLabel style="float : left; font-weight: bold; color: red; padding-right:3px"
+				value=" #{lbl['lbl.sm.myIdentityCode.passed.away']}" rendered="#{backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70019'}" />
+			<p:outputLabel style="float : left; font-weight: bold; padding-right:3px"
 				rendered="#{backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70018' || backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70019'}"
 				value="#{lbl['lbl.sm.person.myIdResp.please.click']}" escape="false" />
 			<p:commandLink value="#{lbl['lbl.sm.person.myIdResp.here']}"
@@ -23,10 +24,9 @@
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 				action="#{backingBean.viewMyIdentityRespond()}" process="@this"
 				partialSubmit="true" update=":form" styleClass="ui-panel-title"
-				style="font-weight: bold; float: left; text-decoration: underline; padding-right: 0px">
+				style="float: left; font-weight: bold; text-decoration: underline; padding-right:3px">
 			</p:commandLink>
-			<p:outputLabel style="float : left; padding-right:-3px"
-				styleClass="ui-panel-title"
+			<p:outputLabel style="float : left; font-weight: bold; padding-right:3px"
 				rendered="#{backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70018' || backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70019'}"
 				value="#{lbl['lbl.sm.person.myIdResp.jpn.info']}" />
 		</c:if>
@@ -1376,11 +1376,11 @@
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{backingBean.managedBean.selectedShareHolder.name}" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.icNum']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.icNo']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{backingBean.managedBean.selectedShareHolder.identificationNo}" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.address']}" /></td>
+					<td style="vertical-align: baseline;"><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.address']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{backingBean.getSMFullAddress(backingBean.managedBean.shareHolderPermAddr.smAddress)}" escape="false" /></td>
 				</tr>			
 				<tr>
@@ -1401,7 +1401,7 @@
 							value="#{lbl['lbl.sm.person.citizen']}"
 							rendered="#{backingBean.managedBean.selectedShareHolder.identityResidentStatus eq 'B' || backingBean.managedBean.selectedShareHolder.identityResidentStatus eq 'C'}" />
 						<p:outputLabel styleClass="outputLabel-view"
-							value="#{lbl['lbl.sm.person.residential.permenant']}"
+							value="#{lbl['lbl.sm.person.residential.permanent']}"
 							rendered="#{backingBean.managedBean.selectedShareHolder.identityResidentStatus eq 'M' || backingBean.managedBean.selectedShareHolder.identityResidentStatus eq 'P'}" />
 						<p:outputLabel styleClass="outputLabel-view"
 							value="#{lbl['lbl.sm.person.non.residential.non.citizen']}"
