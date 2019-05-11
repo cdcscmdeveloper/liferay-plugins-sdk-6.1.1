@@ -46,6 +46,7 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	private List<Integer> statusIds;
 	private boolean isRemarkRequired;
 	private String remarks;
+	private String displayReassignees;
 	
 	public TaskReassignmentManagedBean(){}
 
@@ -329,7 +330,19 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	public void setCommitteeUpdate(boolean isCommitteeUpdate) {
 		this.isCommitteeUpdate = isCommitteeUpdate;
 	}
-
 	
+	/**
+	 * @return the displayReassignees
+	 */
+	public String getDisplayReassignees() {
+		return displayReassignees;
+	}
+
+	/**
+	 * @param remarks the displayReassignees to set
+	 */
+	public void setDisplayReassignees(String displayReassignees) {
+		this.displayReassignees = displayReassignees;
+	}
 	
 }
