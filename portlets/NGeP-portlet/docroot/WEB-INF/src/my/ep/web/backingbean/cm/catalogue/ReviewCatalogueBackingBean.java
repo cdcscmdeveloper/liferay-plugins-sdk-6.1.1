@@ -13,6 +13,7 @@ package my.ep.web.backingbean.cm.catalogue;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import my.ep.web.util.cm.helper.CmApplicationUtil;
@@ -200,8 +201,30 @@ BaseBackingBean<ReviewCatalogueManagedBean> implements Serializable {
 		log.info("start of approveCatalogueItem ");
 		CatalogueBackingBean bb = new CatalogueBackingBean();
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+		
+		// [SIR#24977] Khirul added on 2019-05-06 - Start
+		String itemStat = "P"; // Item status pending
+		Date currDt = new Date();
+		Date stdStartDt = bb.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getStartDate();
+		Date stdEndDt = bb.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getEndDate();		
+		
+		log.info("Standard price Current date is: " + currDt.toString());
+		log.info("Standard price Start date is: " + stdStartDt.toString());
+		log.info("Standard price End date is: " + stdEndDt.toString());				
+		
+		if(currDt.equals(stdStartDt) || (currDt.after(stdStartDt) && currDt.before(stdEndDt))) {
+			log.info("Date range for standard price is valid for Published...");
+			itemStat = "U"; // Item status published
+		} else {
+			log.info("Date range for standard price is not valid for Published...");
+			itemStat = "A"; // Item status approved
+		}
+		// [SIR#24977] Khirul added on 2019-05-06 - End
 
-		bb.getManagedBean().getSelectedMaintainItem().setItemStatus("A");
+		// [SIR#24977] Khirul modified on 2019-05-06 - Start
+		//bb.getManagedBean().getSelectedMaintainItem().setItemStatus("A");
+		bb.getManagedBean().getSelectedMaintainItem().setItemStatus(itemStat);
+		// [SIR#24977] Khirul modified on 2019-05-06 - End
 
 		bb.getManagedBean().getSelectedMaintainItem().setReviewRequired(false);
 
@@ -215,17 +238,25 @@ BaseBackingBean<ReviewCatalogueManagedBean> implements Serializable {
 		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 
 		StatusReqDTO statusReqDTO = new StatusReqDTO();
-
-		statusReqDTO.setStatusId(CmConst.APPROVED);
+		
+		// [SIR#24977] Khirul modified on 2019-05-08 - Start
+		//statusReqDTO.setStatusId(CmConst.APPROVED);
+		statusReqDTO.setStatusId(itemStat.equals("U") ? CmConst.PUBLISHED : CmConst.APPROVED);
+		// [SIR#24977] Khirul modified on 2019-05-08 - End
 
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 
 		StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
-		String actionDesc ="Item "+bb.getManagedBean().getSelectedMaintainItem().getCmItem().getItemName()+" telah diluluskan oleh "+(pmUser.getUserName()!=null?pmUser.getUserName():"SYS");
+		// [SIR#24977] Khirul modified on 2019-05-08 - Start
+		//String actionDesc ="Item "+bb.getManagedBean().getSelectedMaintainItem().getCmItem().getItemName()+" telah diluluskan oleh "+(pmUser.getUserName()!=null?pmUser.getUserName():"SYS");
+		String actionDesc ="Item "+bb.getManagedBean().getSelectedMaintainItem().getCmItem().getItemName()+" telah " + (itemStat.equals("U") ? "diiklankan" : "diluluskan") + " oleh " + (pmUser.getUserName()!=null?pmUser.getUserName():"SYS");
+		// [SIR#24977] Khirul modified on 2019-05-08 - End
 		reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(
 				bb.getManagedBean().getSelectedMaintainItem(),actionDesc,statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
 
 		try {
+			
+			log.info("Invoking updateSupplierItem...");
 			catalogueSO.updateSupplierItem(reqDTO);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
