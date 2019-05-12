@@ -90,11 +90,11 @@
 				<p:commandLink onstart="blockWidget.show()"
 					oncomplete="blockWidget.hide()"
 					action="#{backingBean.viewMyIdentityResponse(person)}"
-					process="@this" rendered="#{empty person.identityResponseCode}"
+					process="@this" rendered="#{not empty person.identityResponseCode}"
 					partialSubmit="true" update=":form" style="padding-right:5px;" >
 						<p:graphicImage value="/css/images/design/icon_alert.png" title="#{lbl['lbl.sm.view.myidentity.response']}" />
 				</p:commandLink>
-				<h:outputText value="#{lbl['lbl.txt.na']}" rendered="#{not empty person.identityResponseCode}"/>
+				<h:outputText value="#{lbl['lbl.txt.na']}" rendered="#{empty person.identityResponseCode}"/>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;"
 				disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
