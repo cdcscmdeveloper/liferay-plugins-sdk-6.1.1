@@ -420,17 +420,13 @@ public class PmReportsBackingBean extends
 		if(getManagedBean().getSelectedApplicationStatus() != null){			
 			if(getManagedBean().getSelectedApplicationStatus().longValue() == 
 					ProfileManagementStatusConst.PENDING_MARKET_RESEARCH_ACCESS_APPROVAL.longValue()) {			
-				if(map.get(PmReportConst.PARAM_PM_ACCESS_TYPE) == null || 
-						StringUtils.isBlank(getManagedBean().getSelectedAccessType())) {
-					map.put(PmReportConst.PARAM_PM_APPLICATION_STATUS, 
-							String.valueOf(getManagedBean().getSelectedApplicationStatus()) 
-							+ "_" + String.valueOf(ProfileManagementStatusConst.PENDING_COMPANY_ACCESS_APPROVAL));
-					
-				} else if(map.get(PmReportConst.PARAM_PM_ACCESS_TYPE).equalsIgnoreCase(ParameterConst.DOCTYPE_COMPANY_PROFILE)) {
-					map.put(PmReportConst.PARAM_PM_APPLICATION_STATUS, 
+				if(map.get(PmReportConst.PARAM_PM_ACCESS_TYPE) != null && 
+						StringUtils.isNotBlank(map.get(PmReportConst.PARAM_PM_ACCESS_TYPE)) && 
+						map.get(PmReportConst.PARAM_PM_ACCESS_TYPE).equalsIgnoreCase(ParameterConst.DOCTYPE_COMPANY_PROFILE)) {
+					map.put(PmReportConst.PARAM_PM_APPLICATION_STATUS_1, 
 							String.valueOf(ProfileManagementStatusConst.PENDING_COMPANY_ACCESS_APPROVAL));
 				} else {
-					map.put(PmReportConst.PARAM_PM_APPLICATION_STATUS, 
+					map.put(PmReportConst.PARAM_PM_APPLICATION_STATUS_1, 
 							String.valueOf(getManagedBean().getSelectedApplicationStatus()));
 				}
 			} else {				
