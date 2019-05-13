@@ -263,7 +263,7 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 		}
 		getManagedBean().setShowParentMsg(true);
 		RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
-//		resetAddressType();
+		resetAddressType();
 		return NAV_TO_MAINTAIN;
 		
 	}
@@ -1023,7 +1023,7 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 		} finally {
 			orgProfileSO = null;
 		}
-//		resetAddressType();
+    	//resetAddressType();
 	
 		return redirectUrl;
 
@@ -2091,13 +2091,19 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 		Long newStateId = null;
 		if (null != pmState) {
 			newStateId = pmState.getStateId();
+			if (null == newStateId) {
+				getManagedBean().getDeliveryAddress().getPmAddress().setPmState(pmState);
+				getManagedBean().getDeliveryAddress().getPmAddress().setPmDistrict(new PmDistrict());
+				getManagedBean().getDeliveryAddress().getPmAddress().setPmCity(new PmCity());
+				getManagedBean().getDeliveryAddress().getPmAddress().setPmDivision(new PmDivision());
+			}
 		}
 		if (null != this.getManagedBean().getAddressTypesList() && this.getManagedBean().getAddressTypesList().size() > 0) {
 			for(PmAddressType addrType : this.getManagedBean().getAddressTypesList()) {
 				PmAddress pmAddress = addrType.getPmAddress();
 				if (null != pmAddress && getSelectedAddrForEdit() != pmAddress.getAddressId() 
 						&& null != pmAddress.getPmState() && StringUtils.isNotEmpty(pmAddress.getPmState().getStateName())
-						&& StringUtils.isNotEmpty(getManagedBean().getSelectedAddrStateName()) && null != getManagedBean().getSelectedAddrStateId()
+						&& StringUtils.isNotEmpty(getManagedBean().getSelectedAddrStateName())
 						&& getManagedBean().getSelectedAddrStateName().equals(pmAddress.getPmState().getStateName())) {
 					addrType.getPmAddress().getPmState().setStateId(getManagedBean().getSelectedAddrStateId());
 				}
@@ -2607,7 +2613,7 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 				PmAddress pmAddress = addrType.getPmAddress();
 				if (null != pmAddress && getSelectedAddrForEdit() != pmAddress.getAddressId() 
 						&& null != pmAddress.getPmDistrict() && StringUtils.isNotEmpty(pmAddress.getPmDistrict().getDistrictName())
-						&& StringUtils.isNotEmpty(getManagedBean().getSelectedAddrDistrictName()) && null != getManagedBean().getSelectedAddrDistrictId()
+						&& StringUtils.isNotEmpty(getManagedBean().getSelectedAddrDistrictName()) 
 						&& getManagedBean().getSelectedAddrDistrictName().equals(pmAddress.getPmDistrict().getDistrictName())) {
 					addrType.getPmAddress().getPmDistrict().setDistrictId(getManagedBean().getSelectedAddrDistrictId());
 				}
@@ -2628,7 +2634,7 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 				PmAddress pmAddress = addrType.getPmAddress();
 				if (null != pmAddress && getSelectedAddrForEdit() != pmAddress.getAddressId() 
 						&& null != pmAddress.getPmDivision() && StringUtils.isNotEmpty(pmAddress.getPmDivision().getDivisionName())
-						&& StringUtils.isNotEmpty(getManagedBean().getSelectedAddrDivisionName()) && null != getManagedBean().getSelectedAddrDivisionId()
+						&& StringUtils.isNotEmpty(getManagedBean().getSelectedAddrDivisionName()) 
 						&& getManagedBean().getSelectedAddrDivisionName().equals(pmAddress.getPmDivision().getDivisionName())) {
 					addrType.getPmAddress().getPmDivision().setDivisionId(getManagedBean().getSelectedAddrDivisionId());
 				}
@@ -2648,7 +2654,7 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 				PmAddress pmAddress = addrType.getPmAddress();
 				if (null != pmAddress && getSelectedAddrForEdit() != pmAddress.getAddressId() 
 						&& null != pmAddress.getPmCity() && StringUtils.isNotEmpty(pmAddress.getPmCity().getCityName())
-						&& StringUtils.isNotEmpty(getManagedBean().getSelectedAddrCityName()) && null != getManagedBean().getSelectedAddrCityId()
+						&& StringUtils.isNotEmpty(getManagedBean().getSelectedAddrCityName()) 
 						&& getManagedBean().getSelectedAddrCityName().equals(pmAddress.getPmCity().getCityName())) {
 					addrType.getPmAddress().getPmCity().setCityId(getManagedBean().getSelectedAddrCityId());
 				}
