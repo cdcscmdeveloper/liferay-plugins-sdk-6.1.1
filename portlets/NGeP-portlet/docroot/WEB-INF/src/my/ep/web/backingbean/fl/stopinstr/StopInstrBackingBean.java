@@ -33,6 +33,7 @@ import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.general.settings.designatedarea.IDesignatedAreaSO;
@@ -51,6 +52,8 @@ import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
 import my.ep.dto.ct.supplier.ContractSupplierResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.authorization.usergroup.UserGroupReqDTO;
 import my.ep.dto.pm.authorization.usergroup.UserGroupResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
@@ -75,6 +78,7 @@ import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
@@ -124,6 +128,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		IFulfilmentOrderSO orderSO = null;
 		try {
 			orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
+			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlStopInstr flStopInstr = getManagedBean().getStopInstr();
@@ -140,6 +145,21 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 
 			FulfilmentResDTO resDTO = null;
 			reqDTO.setApprover(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()));
+			if(reqDTO.isApprover() && hasSupplierRole()) {
+				// Check login user's org is it same with supplier id
+				UserReqDTO userReqDTO = new UserReqDTO();
+				userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+				UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+				if(userResDTO.isSuccessful() && !userResDTO.getUserOrgList().isEmpty()) {
+					for(PmUserOrg userOrg : userResDTO.getUserOrgList()) {
+						if(userOrg.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE && 
+							userOrg.getPmOrgProfile().getOrgProfileId().longValue()==flStopInstr.getFlRequest().getSmSupplier().getSupplierId().longValue()) {
+							reqDTO.setApprover(false);
+							break;
+						}
+					}
+				}
+			}
 
 			if(getManagedBean().getPmDigiSign() != null){
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
