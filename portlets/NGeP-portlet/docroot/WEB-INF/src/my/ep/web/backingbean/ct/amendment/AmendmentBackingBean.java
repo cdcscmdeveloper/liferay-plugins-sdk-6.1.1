@@ -1966,8 +1966,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithItem);
 			}
 
-			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
-					&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)){
+			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()){
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuDeduction);
 			}
 			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange() && 
@@ -2045,8 +2044,18 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						if (outputValue.equalsIgnoreCase("IT")) {
 							getManagedBean().setSelectedTabIndex(3);
 						}
+						if(outputValue.equalsIgnoreCase(ContractConst.DEDUCTION_DETAIL)){
+							getManagedBean().setSelectedTabIndex(4);
+						}
 					} else if(outputValue.equalsIgnoreCase("IT")) {
 						getManagedBean().setSelectedTabIndex(2);
+					}else if(outputValue.equalsIgnoreCase(ContractConst.DEDUCTION_DETAIL)){
+						getManagedBean().setSelectedTabIndex(3);
+					}
+					
+					
+					if(isApproverSetting() && !getManagedBean().isPrepareLOA() && outputValue.equalsIgnoreCase("SE")){
+						getManagedBean().setSelectedTabIndex(index + 2);
 					}
 				}
 				if (getManagedBean().isPrepareLOA()) {
@@ -2085,7 +2094,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						getManagedBean().setSelectedTabIndex(index + 1);
 					}
 				}
-				if (isApproverSetting() && !getManagedBean().isPrepareLOA() && outputValue.equalsIgnoreCase("SE")) {
+				if (isApproverSetting() && !getManagedBean().isPrepareLOA() && outputValue.equalsIgnoreCase("SE") 
+						&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()) {
 					getManagedBean().setSelectedTabIndex(index + 1);
 				}
 			} 
