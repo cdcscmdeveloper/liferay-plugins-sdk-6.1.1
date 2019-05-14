@@ -2019,10 +2019,12 @@ public class SmCommonUtil {
 	 * Set MDC user_id value to be used in BaseEntity for auditing purposes.
 	 */
 	public static void setMDCUserId() {
-		if (MDC.get(LogKey.USER_ID) == null) {
-			MDC.put(LogKey.USER_ID, new FacesScopes().getUserSessionBean()
-					.getUserId());
+		Long userId = 1L;
+		PmUser user = new FacesScopes().getUserSessionBean();
+		if (user != null) {
+			userId = user.getUserId() != null ? user.getUserId() : 1L;
 		}
+		new LogKey(userId);
 	}
 
 	/**
@@ -5319,14 +5321,7 @@ public class SmCommonUtil {
 	 * @param baseObject
 	 */
 	public void setUserDetails(BaseEntity baseObject) {
-		PmUser user = new FacesScopes().getUserSessionBean();
-
-		if (baseObject.isBrandNew()) {
-			baseObject.setCreatedBy(user.getUserId());
-			baseObject
-					.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		}
-		baseObject.setChangedBy(user.getUserId());
+		
 	}
 
 	public SmCancelMofRemarksVO getCancelMofRemarksVO(SmAppl appl) {
