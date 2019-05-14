@@ -601,7 +601,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					ScRequestItem requestItem = scRequestNoteDtl.getRequestItem();
 					
 					
-					if(requestItem.getPurchaseInDefault().getPurchaseInDefaultId() != null){
+					if(requestItem.getPurchaseInDefault() != null){
 						// selected ptj id for non contract item for pid
 						purchaseInDefaultReqDTO.setOrgProfileId(requestNote.getPmOrgProfile().getOrgProfileId());
 						purchaseInDefaultReqDTO.setPurchaseInDefaultId(requestItem.getPurchaseInDefault().getPurchaseInDefaultId());
