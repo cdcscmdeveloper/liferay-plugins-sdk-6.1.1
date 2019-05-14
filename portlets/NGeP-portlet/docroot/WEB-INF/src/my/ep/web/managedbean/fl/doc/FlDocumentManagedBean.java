@@ -35,9 +35,7 @@ import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
-import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.fl.VFlDocument;
-import my.ep.persistence.entity.fl.order.FlReliefOrder;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -501,7 +499,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 		        	if(null != resDTO.getFlOrder().getStatus()){
 		        		if(null !=resDTO.getFlOrder().getStatus().getStatusId()){
 		        			orderInfo.setOrderStatusId(resDTO.getFlOrder().getStatus().getStatusId());
-		        			if(isFlFulfilmentApprover()){
+		        			if(isFlFulfilmentApprover() && getSearchFunctionType().equalsIgnoreCase(ParameterConst.ORG_TYPE_PTJ)){
 		        				orderInfo.setRole(RoleCode.FL_APPROVER.value());
 		        			}else if(isFlFulfilmentSupplier()){
 		        				orderInfo.setRole(RoleCode.BASIC_SUPPLIER_USER.value());
