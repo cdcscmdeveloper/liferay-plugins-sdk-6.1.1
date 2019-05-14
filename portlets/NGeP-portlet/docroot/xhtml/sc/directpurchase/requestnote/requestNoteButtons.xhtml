@@ -136,12 +136,16 @@
 						<ui:param name="buttonLabel"
 							value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 						<ui:param name="isCancel" value="${bpmAction == 'CANCEL'}" />
-
+						<!-- 20190417@asyrafhaziq_12095 - Start -->
+						<ui:param name="isReject" value="${bpmAction == 'REJECT'}" />
+						<ui:param name="isCancelReject" value="${ isCancel || isReject}" />
+						<!-- 20190417@asyrafhaziq_12095 - End -->
+						
 						<p:commandButton value="#{lbl[buttonLabel]}" partialSubmit="true"
-							onclick="blockWidget.show();" oncomplete="blockWidget.hide();"
+							onstart="#{isCancelReject ? '' : 'blockWidget.show();'}" oncomplete="#{isCancelReject ? '' : 'blockWidget.hide();'}" 
 							process="#{isCancel ? '@this,  @([id$= remark])' : '@form'}"
 							update="#{isCancel ? '@this,  @([id$= remark])' : '@form'}"
-							actionListener="#{requestNoteBackingBean.submitAction(bpmAction)}" />
+							actionListener="#{requestNoteBackingBean.cancelRejectAction(bpmAction)}" />	
 					</ui:repeat>
 				</div>
 			</c:if>
