@@ -600,18 +600,21 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					ScRequestSupplierItem requestSupplierItem = scRequestNoteDtl.getScRequestSupplierItem();
 					ScRequestItem requestItem = scRequestNoteDtl.getRequestItem();
 					
-					// selected ptj id for non contract item for pid
-					purchaseInDefaultReqDTO.setOrgProfileId(requestNote.getPmOrgProfile().getOrgProfileId());
-					purchaseInDefaultReqDTO.setPurchaseInDefaultId(requestItem.getPurchaseInDefault().getPurchaseInDefaultId());
-					PurchaseInDefaultResDTO defaultResDTO = purchaseInDefaultSO.getPurchaseInDefaultByPidNo(purchaseInDefaultReqDTO);
+					
+					if(requestItem.getPurchaseInDefault() != null){
+						// selected ptj id for non contract item for pid
+						purchaseInDefaultReqDTO.setOrgProfileId(requestNote.getPmOrgProfile().getOrgProfileId());
+						purchaseInDefaultReqDTO.setPurchaseInDefaultId(requestItem.getPurchaseInDefault().getPurchaseInDefaultId());
+						PurchaseInDefaultResDTO defaultResDTO = purchaseInDefaultSO.getPurchaseInDefaultByPidNo(purchaseInDefaultReqDTO);
 
-					// pid to request note
-					if(defaultResDTO.getPurchaseInDefaultDtl() != null){
-						ScPurchaseInDefault  purchaseInDefault = defaultResDTO.getPurchaseInDefaultDtl();
-						requestItem.setPurchaseInDefault(purchaseInDefault);
-						pidValidityBoolean(purchaseInDefault, requestNote);
-					} else {
-						requestItem.setPurchaseInDefault(null);
+						// pid to request note
+						if(defaultResDTO.getPurchaseInDefaultDtl() != null){
+							ScPurchaseInDefault  purchaseInDefault = defaultResDTO.getPurchaseInDefaultDtl();
+							requestItem.setPurchaseInDefault(purchaseInDefault);
+							pidValidityBoolean(purchaseInDefault, requestNote);
+						} else {
+							requestItem.setPurchaseInDefault(null);
+						}
 					}
 					
 				}

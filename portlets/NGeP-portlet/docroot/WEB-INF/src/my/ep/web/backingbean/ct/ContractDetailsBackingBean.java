@@ -655,7 +655,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 		}
 		//LOG : 13847, by Fahmi 22032019
-		ctBB.getManagedBean().setAttachmentList(null);
+		//ctBB.getManagedBean().setAttachmentList(null);
+		ctBB.getManagedBean().setWaiverDetail(null);
 		boolean addLatestData = false;
 		for(CtAttachment waivedAttach :ctBB.getManagedBean().getContractVer().getBondWaiverAttachments()){
 			//SET DATA TO LATEST WAIVER			
@@ -669,10 +670,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					ctBB.getManagedBean().setCtAttachment(SerializationUtils.clone(waivedAttach));
 					ctBB.getManagedBean().setCtAttachmentLatest(SerializationUtils.clone(waivedAttach));
 				}else{
-					ctBB.getManagedBean().getAttachmentList().add(SerializationUtils.clone(waivedAttach));
+					ctBB.getManagedBean().getWaiverDetail().add(SerializationUtils.clone(waivedAttach));
 				}
 			}else{//SET DATA TO TABLE WAIVER
-				ctBB.getManagedBean().getAttachmentList().add(SerializationUtils.clone(waivedAttach));
+				ctBB.getManagedBean().getWaiverDetail().add(SerializationUtils.clone(waivedAttach));
 			}
 		}
 		if(ctBB.getManagedBean().getContractVer().getBondWaiverAttachments().size() <=0){
@@ -759,7 +760,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 			}
 			//LOG : 13847, by Fahmi 22032019
-			ctContractVer.setWaiverAttachment(ctBB.getManagedBean().getAttachmentList());
+			ctContractVer.setWaiverAttachment(ctBB.getManagedBean().getWaiverDetail());
 			ctContractVer.setWaiverAttachmentLatest(ctBB.getManagedBean().getCtAttachmentLatest());
 			
 			reqDTO.setCtContractVer(ctContractVer);
@@ -1493,6 +1494,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 */
 	public void setTabCentralValue(String outputTab) {		
 		getManagedBean().setItemIndex(11);
+		getManagedBean().setDeductionIndex(11);
 		getManagedBean().setFactoring(11);
 		getManagedBean().setSettingIndex(11);		
 		getManagedBean().setPaymentTracking(11);
@@ -1537,29 +1539,88 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				getManagedBean().setSelectedTabIndex(2);
 				getManagedBean().setItemIndex(2);
 
-			} else if(bondRequired && outputTab.equalsIgnoreCase(ContractConst.BOND_DETAIL)){
+			} else if (outputTab.equalsIgnoreCase(ContractConst.DEDUCTION_DETAIL)) {
 				getManagedBean().setSelectedTabIndex(3);
-				getManagedBean().setBondIndex(3);
+				getManagedBean().setDeductionIndex(3);
+				
+			}else if(bondRequired && outputTab.equalsIgnoreCase(ContractConst.BOND_DETAIL)){
+				getManagedBean().setSelectedTabIndex(4);
+				getManagedBean().setBondIndex(4);
+				
 			} else if (typeFactoring && outputTab.equalsIgnoreCase(ContractConst.FACTORING_DETAIL)) {
 				if(bondRequired){
-					getManagedBean().setSelectedTabIndex(4);
+					getManagedBean().setSelectedTabIndex(5);
 				} else {
-					getManagedBean().setSelectedTabIndex(3);
+					getManagedBean().setSelectedTabIndex(4);
 				}
 				getManagedBean().setFactoring(getManagedBean().getSelectedTabIndex());
 
 			} else  if (typeLoaAmt && outputTab.equalsIgnoreCase(ContractConst.PAYMENT_DETAIL)) {
 				if(typeFactoring && bondRequired){
-					getManagedBean().setSelectedTabIndex(5);
+					getManagedBean().setSelectedTabIndex(6);
 				} else if(typeFactoring || bondRequired){
-					getManagedBean().setSelectedTabIndex(4);
+					getManagedBean().setSelectedTabIndex(5);
 				}else {
-					getManagedBean().setSelectedTabIndex(3);
+					getManagedBean().setSelectedTabIndex(4);
 				}
 				getManagedBean().setPaymentTracking(getManagedBean().getSelectedTabIndex());
 
 			} else if (outputTab.equalsIgnoreCase(ContractConst.SETTING_DETAIL)) {
 
+				if(bondRequired){
+					getManagedBean().setSelectedTabIndex(5);
+					if (typeFactoring && typeLoaAmt) {
+						getManagedBean().setSelectedTabIndex(7);
+					}else if(typeLoaAmt || typeFactoring){
+						getManagedBean().setSelectedTabIndex(6);
+					}
+				}else if(typeFactoring){
+					getManagedBean().setSelectedTabIndex(5);
+					if(typeLoaAmt){
+						getManagedBean().setSelectedTabIndex(6);
+					}
+				} else if(typeLoaAmt){
+					getManagedBean().setSelectedTabIndex(5);
+				}else {
+					getManagedBean().setSelectedTabIndex(4);
+				}
+				getManagedBean().setSettingIndex(getManagedBean().getSelectedTabIndex());
+			}	  
+
+			/*Set tab value if contract is not zonal*/	 
+		} else {
+
+			if (outputTab.equalsIgnoreCase(ContractConst.ITEM_DETAIL)) {
+				getManagedBean().setSelectedTabIndex(1);
+				getManagedBean().setItemIndex(1);
+
+			} else if (outputTab.equalsIgnoreCase(ContractConst.DEDUCTION_DETAIL)) {
+				getManagedBean().setSelectedTabIndex(2);
+				getManagedBean().setDeductionIndex(2);
+				
+			}else if(bondRequired && outputTab.equalsIgnoreCase(ContractConst.BOND_DETAIL)){
+				getManagedBean().setSelectedTabIndex(3);
+				getManagedBean().setBondIndex(3);
+
+			} else if (typeFactoring && outputTab.equalsIgnoreCase(ContractConst.FACTORING_DETAIL)) {
+				if(bondRequired){
+					getManagedBean().setSelectedTabIndex(4);
+				}else{
+					getManagedBean().setSelectedTabIndex(3);
+				}
+				getManagedBean().setFactoring( getManagedBean().getSelectedTabIndex());
+
+			} else  if (typeLoaAmt && outputTab.equalsIgnoreCase(ContractConst.PAYMENT_DETAIL)) {
+				if(bondRequired && typeFactoring){
+					getManagedBean().setSelectedTabIndex(5);
+				} else if(bondRequired || typeFactoring){
+					getManagedBean().setSelectedTabIndex(4);
+				} else {
+					getManagedBean().setSelectedTabIndex(3);
+				}
+				getManagedBean().setPaymentTracking( getManagedBean().getSelectedTabIndex());
+
+			} else if (outputTab.equalsIgnoreCase(ContractConst.SETTING_DETAIL)) {
 				if(bondRequired){
 					getManagedBean().setSelectedTabIndex(4);
 					if (typeFactoring && typeLoaAmt) {
@@ -1576,56 +1637,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					getManagedBean().setSelectedTabIndex(4);
 				}else {
 					getManagedBean().setSelectedTabIndex(3);
-				}
-				getManagedBean().setSettingIndex(getManagedBean().getSelectedTabIndex());
-			}	  
-
-			/*Set tab value if contract is not zonal*/	 
-		} else {
-
-			if (outputTab.equalsIgnoreCase(ContractConst.ITEM_DETAIL)) {
-				getManagedBean().setSelectedTabIndex(1);
-				getManagedBean().setItemIndex(1);
-
-			} else if(bondRequired && outputTab.equalsIgnoreCase(ContractConst.BOND_DETAIL)){
-				getManagedBean().setSelectedTabIndex(2);
-				getManagedBean().setBondIndex(2);
-
-			} else if (typeFactoring && outputTab.equalsIgnoreCase(ContractConst.FACTORING_DETAIL)) {
-				if(bondRequired){
-					getManagedBean().setSelectedTabIndex(3);
-				}else{
-					getManagedBean().setSelectedTabIndex(2);
-				}
-				getManagedBean().setFactoring( getManagedBean().getSelectedTabIndex());
-
-			} else  if (typeLoaAmt && outputTab.equalsIgnoreCase(ContractConst.PAYMENT_DETAIL)) {
-				if(bondRequired && typeFactoring){
-					getManagedBean().setSelectedTabIndex(4);
-				} else if(bondRequired || typeFactoring){
-					getManagedBean().setSelectedTabIndex(3);
-				} else {
-					getManagedBean().setSelectedTabIndex(2);
-				}
-				getManagedBean().setPaymentTracking( getManagedBean().getSelectedTabIndex());
-
-			} else if (outputTab.equalsIgnoreCase(ContractConst.SETTING_DETAIL)) {
-				if(bondRequired){
-					getManagedBean().setSelectedTabIndex(3);
-					if (typeFactoring && typeLoaAmt) {
-						getManagedBean().setSelectedTabIndex(5);
-					}else if(typeLoaAmt || typeFactoring){
-						getManagedBean().setSelectedTabIndex(4);
-					}
-				}else if(typeFactoring){
-					getManagedBean().setSelectedTabIndex(3);
-					if(typeLoaAmt){
-						getManagedBean().setSelectedTabIndex(4);
-					}
-				} else if(typeLoaAmt){
-					getManagedBean().setSelectedTabIndex(3);
-				}else {
-					getManagedBean().setSelectedTabIndex(2);
 				}
 				getManagedBean().setSettingIndex(getManagedBean().getSelectedTabIndex());
 			}

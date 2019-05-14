@@ -2095,7 +2095,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			//LOG : 13847, by Fahmi 22032019
 			getManagedBean().setCtAttachmentLatest(attachment);
-			if(getManagedBean().getAttachmentList().size() == 0){
+			if(getManagedBean().getWaiverDetail().size() == 0){
 				if(getManagedBean().getCtAttachmentTemp() == null){
 					getManagedBean().setCtAttachmentTemp(new CtAttachment());
 					if(getManagedBean().getCtAttachmentTemp().getCtBondWaiverDetail() == null){
@@ -2127,7 +2127,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			String task =  FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("taskId1");
 			String task2 =  FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("taskId2");
 			String task3 =  FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("taskId3");
-			if(getManagedBean().getAttachmentList().size() == 0){
+			if(getManagedBean().getWaiverDetail().size() == 0){
 				if(getManagedBean().getCtAttachmentTemp() == null){
 					getManagedBean().setCtAttachmentTemp(new CtAttachment());
 					if(getManagedBean().getCtAttachmentTemp().getCtBondWaiverDetail() == null){
@@ -2242,9 +2242,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		//getManagedBean().getWaiverDetail().add(attachment);
 		//getManagedBean().getAttachmentList().add(getManagedBean().getCtAttachment());
 		//reverse list to insert new data at first row
-		Collections.reverse(getManagedBean().getAttachmentList());
-		getManagedBean().getAttachmentList().add(getManagedBean().getCtAttachment());
-		Collections.reverse(getManagedBean().getAttachmentList());
+		Collections.reverse(getManagedBean().getWaiverDetail());
+		getManagedBean().getWaiverDetail().add(getManagedBean().getCtAttachment());
+		Collections.reverse(getManagedBean().getWaiverDetail());
 		getManagedBean().setCtAttachment(SerializationUtils.clone(getManagedBean().getCtAttachmentLatest()));
 		
 		//RequestContext.getCurrentInstance().execute("uploadWaiverDlg.hide()");
