@@ -2167,7 +2167,11 @@ public class SupplierFinalizationBackingBean extends
 					sortEndorsementReports(endorsementReports);
 				} else {
 					sortEndorsementReports(endorsementReports);
-					this.getManagedBean().setEndorsementReport(endorsementReports.get(0));
+					
+					//Bug #25829
+					if(!CollectionUtils.isEmpty(endorsementReports)){
+						this.getManagedBean().setEndorsementReport(endorsementReports.get(0));
+					}
 				}
 				this.getManagedBean().setEndorsementReports(endorsementReports);
 			}
