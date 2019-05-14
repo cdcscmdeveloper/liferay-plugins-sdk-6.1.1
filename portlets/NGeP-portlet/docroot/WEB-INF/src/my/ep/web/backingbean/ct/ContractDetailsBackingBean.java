@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -572,6 +573,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 			}
 			chkBondWaivedAttachment();
+			sortDeductions();
+			
 		} catch(Exception e){
 			e.printStackTrace();
 		} finally {
@@ -2662,5 +2665,19 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		contractSO.proceedForFulfilment(reqDTO);
 		getManagedBean().getContractDataModel().reloadData();
 
+	}
+	
+	private void sortDeductions() {
+		// sort created date asc
+		Collections.sort(ctBB.getManagedBean().getContractVer().getCtDeductions(),
+				new Comparator<CtDeduction>() {
+					public int compare(CtDeduction o1, CtDeduction o2) {
+						if (o2.getCreatedDate() == null
+								|| o1.getCreatedDate() == null)
+							return 0;
+						return o1.getCreatedDate().compareTo(
+								o2.getCreatedDate());
+					}
+				});
 	}
 }
