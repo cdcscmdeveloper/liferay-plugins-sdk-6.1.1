@@ -225,6 +225,7 @@ public class SmCommonUtil {
 	private static SmCommonUtil instance;
 	private static final BigDecimal percent = new BigDecimal(100);
 
+	
 	/**
 	 * Hash string.
 	 * 
