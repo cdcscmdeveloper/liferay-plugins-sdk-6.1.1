@@ -525,6 +525,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	
 	private int attachedFileIndex;
 	private SoftcertUploadSuppDocVO selectedSuppDoc;
+	private boolean activeTransaction;
+	private boolean pendingTransaction;
 
 	private class RejectReasonPagingDataModel extends
 			PagingDataModel<PmReasonDesc> {
@@ -4055,5 +4057,21 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setSelectedSuppDoc(SoftcertUploadSuppDocVO selectedSuppDoc) {
 		this.selectedSuppDoc = selectedSuppDoc;
+	}
+
+	public boolean isActiveTransaction() {
+		return activeTransaction;
+	}
+
+	public void setActiveTransaction(boolean activeTransaction) {
+		this.activeTransaction = activeTransaction;
+	}
+
+	public boolean isPendingTransaction() {
+		return pendingTransaction;
+	}
+
+	public void setPendingTransaction(boolean pendingTransaction) {
+		this.pendingTransaction = pendingTransaction;
 	}
 }

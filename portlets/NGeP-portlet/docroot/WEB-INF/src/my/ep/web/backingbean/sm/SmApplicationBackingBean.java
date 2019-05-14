@@ -6463,6 +6463,10 @@ public class SmApplicationBackingBean extends
 				.getAccountNo())) {
 			throw new EpException(MessageConst.ERROR_722616);
 		}
+		
+		if (getManagedBean().isPendingTransaction()){
+			getManagedBean().setPendingTransaction(false);			
+		} 
 
 		if (SmApplicationUtil.checkValidBank(
 				getManagedBean().getSelectedBank(), getManagedBean()
@@ -6624,6 +6628,7 @@ public class SmApplicationBackingBean extends
 	 */
 	public void cancelSmBankFunctions() {
 		assignValReqdToFalse();
+		getManagedBean().setPendingTransaction(false);
 		RequestContext.getCurrentInstance().reset(":form:tt:bankDialog");
 		RequestContext.getCurrentInstance().execute("bankDialog.hide()");
 	}
@@ -11880,16 +11885,32 @@ public class SmApplicationBackingBean extends
 				.hasActiveTransactionForFulfilment(currSupp);
 		String labelNameVal = "";		
 		
+		Long selectedBankName = getManagedBean().getSelectedBank().getPmFinancialOrg().getFinancialOrgId();
+		Long latestBankName = getManagedBean().getLatestBank().getPmFinancialOrg().getFinancialOrgId();
+		
+		String selectedAccountNo = getManagedBean().getSelectedBank().getAccountNo();
+		String latestAccountNo = getManagedBean().getLatestBank().getAccountNo();
+		
 		if (hasActiveTransactionContractManagement) {
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-					SmCommonUtil.getMessage("lbl.sm.bankDtls.is.active.contract.tied",
-							new String[] { labelNameVal })));			
+			if(!selectedBankName.equals(latestBankName) || !selectedAccountNo.equals(latestAccountNo)){
+				getManagedBean().setPendingTransaction(true);
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+						SmCommonUtil.getMessage("lbl.sm.bankDtls.is.active.contract.tied",
+								new String[] { labelNameVal })));
+			} else {
+				getManagedBean().setPendingTransaction(false);
+			}						
 		} 
 		
 		if (hasActiveTransactionFulfilment) {
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-					SmCommonUtil.getMessage("lbl.sm.bankDtls.is.other.active.contract.tied",
-							new String[] { labelNameVal })));			
+			if(!selectedBankName.equals(latestBankName) || !selectedAccountNo.equals(latestAccountNo)){
+				getManagedBean().setPendingTransaction(true);
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+						SmCommonUtil.getMessage("lbl.sm.bankDtls.is.other.active.contract.tied",
+								new String[] { labelNameVal })));
+			} else {
+				getManagedBean().setPendingTransaction(false);
+			}						
 		} 
 	}
 	
@@ -11904,15 +11925,45 @@ public class SmApplicationBackingBean extends
 		String labelNameVal = "";
 		
 		if (hasActiveTransactionContractManagement) {
+			getManagedBean().setActiveTransaction(true);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 					SmCommonUtil.getMessage("lbl.sm.alert.active.transaction",
-							new String[] { labelNameVal })));			
+							new String[] { labelNameVal })));
 		} 
 		
 		if (hasActiveTransactionFulfilment) {
+			getManagedBean().setActiveTransaction(true);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-					SmCommonUtil.getMessage("lbl.sm.alert.other.active.transaction",
-							new String[] { labelNameVal })));			
+				SmCommonUtil.getMessage("lbl.sm.alert.other.active.transaction",
+						new String[] { labelNameVal })));
+		}
+	}
+	
+	public void checkActiveTransaction(){
+		SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
+		
+		boolean hasActiveTransactionContractManagement = SmApplicationUtil
+				.hasActiveTransactionForContractManagement(currSupp);
+		boolean hasActiveTransactionFulfilment = SmApplicationUtil
+				.hasActiveTransactionForFulfilment(currSupp);
+		
+		if (hasActiveTransactionContractManagement || hasActiveTransactionFulfilment) {
+			getManagedBean().setActiveTransaction(true);	
+		} else {
+			getManagedBean().setActiveTransaction(false);
+		}
+	}
+	
+	public void checkPendingTransaction(){
+		SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
+		
+		boolean hasActiveTransactionContractManagement = SmApplicationUtil
+				.hasActiveTransactionForContractManagement(currSupp);
+		boolean hasActiveTransactionFulfilment = SmApplicationUtil
+				.hasActiveTransactionForFulfilment(currSupp);
+		
+		if (hasActiveTransactionContractManagement || hasActiveTransactionFulfilment) {
+			getManagedBean().setPendingTransaction(true);	
 		}
 	}
 
