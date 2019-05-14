@@ -165,8 +165,8 @@
 			<!-- START TABLE WAIVER -->
 			<p:dataTable id="tableWaiver" var="varWaiver" rowIndexVar="index" widgetVar="tableWaiverWidget" 
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-				render="#{ctBackingBean.managedBean.attachmentList.size >0}"
-				value="#{ctBackingBean.managedBean.attachmentList}"  rowKey="#{rowKeyObj}">
+				render="#{ctBackingBean.managedBean.waiverDetail.size >0}"
+				value="#{ctBackingBean.managedBean.waiverDetail}"  rowKey="#{rowKeyObj}">
 				<ac:paginator for="tableWaiver" />	
 						
 				<p:column style="width:20%;" styleClass="column-align-center">
