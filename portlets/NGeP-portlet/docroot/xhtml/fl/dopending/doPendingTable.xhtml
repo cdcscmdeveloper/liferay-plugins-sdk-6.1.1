@@ -241,14 +241,14 @@
 			<p:dataTable id="delSubListTree" var="deliveryExpansion"  rowIndexVar="index" width="100%"
 					value="#{pending.flDeliveryOrders}"  resizableColumns="true">
 					
-					<p:column headerText="#{lbl['lbl.fl.delivery.order.index']}" style="text-align:center" width="8%">
+					<p:column headerText="#{lbl['lbl.fl.delivery.order.index']}" style="text-align:center" width="3%">
 						<h:outputText value="#{index + 1}" >
 						</h:outputText>
 					</p:column>
 					
-					<p:column headerText="#{lbl['lbl.fl.delivery.order.number']}" style="text-align:center" width="22%">
+					<p:column headerText="#{lbl['lbl.fl.delivery.order.number']}" style="text-align:center" width="27%">
 						<p:commandLink value="#{deliveryExpansion.deliveryOrderNo}"
-							onclick="goToDetail([{name:'docType', value:'DO'}, {name:'docId', value:'#{deliveryExpansion.deliveryOrderId}'},{name:'buttonVal', value:'VIEW'}, {name:'isPendingDelivery', value:'true'} , {name:'statusDesc', value:'#{deliveryExpansion.status.statusId}'}])" style="text-align:center">
+							onclick="goToDetail([{name:'docType', value:'DO'}, {name:'docId', value:'#{deliveryExpansion.deliveryOrderId}'},{name:'buttonVal', value:'VIEW'}, {name:'isPendingDelivery', value:'true'} , {name:'statusDesc', value:'#{deliveryExpansion.status.statusId}'}])" style="float:left;">
 						</p:commandLink>				
 					</p:column>
 					
