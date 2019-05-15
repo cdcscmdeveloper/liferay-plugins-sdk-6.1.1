@@ -185,7 +185,7 @@
 									<h:outputText value="#{status.index + 1})"  />
 								</td>
 								<td width="40%" style="border-style: none !important;">
-									<h:outputText value="#{suppDoc.pmDocument.docName}" style="float: left;white-space: normal;" />
+									<h:outputText escape="false" value="#{suppDoc.pmDocument.docName}" style="float: left;white-space: normal;" />
 								</td>
 							</tr>
 						</ui:repeat>
