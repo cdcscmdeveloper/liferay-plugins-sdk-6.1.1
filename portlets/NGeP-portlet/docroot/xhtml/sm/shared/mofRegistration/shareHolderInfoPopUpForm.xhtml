@@ -10,25 +10,33 @@
 		id="equiPerDtlPan">
 		<c:if
 			test="#{(backingBean.managedBean.approverUser or backingBean.managedBean.poUser) and backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'I'}">
-			<p:outputLabel style="float : left; font-weight: bold; padding-right:3px"
+			<h:outputText
+				style="float : left; font-size: 12px; font-weight: bold; padding-right:3px"
 				value="#{lbl['lbl.sm.person.myIdResp']} :" />
-			<p:outputLabel style="float : left; font-weight: bold; padding-right:3px"
-				value=" #{lbl['lbl.sm.myIdentityCode.active']}" rendered="#{backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70018'}" />
-			<p:outputLabel style="float : left; font-weight: bold; color: red; padding-right:3px"
-				value=" #{lbl['lbl.sm.myIdentityCode.passed.away']}" rendered="#{backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70019'}" />
-			<p:outputLabel style="float : left; font-weight: bold; padding-right:3px"
+			<h:outputText
+				style="float : left; font-size: 12px; font-weight: bold; padding-right:3px"
+				value=" #{lbl['lbl.sm.myIdentityCode.active']}"
+				rendered="#{backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70018'}" />
+			<h:outputText
+				style="float : left; font-size: 12px; font-weight: bold; color: #FF0000; padding-right:3px"
+				value=" #{lbl['lbl.sm.myIdentityCode.passed.away']}"
+				rendered="#{backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70019'}" />
+			<h:outputText
+				style="float : left; font-size: 12px; font-weight: bold; padding-right:3px"
+				value="#{lbl['lbl.sm.person.myIdResp.please.click']}"
 				rendered="#{backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70018' || backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70019'}"
-				value="#{lbl['lbl.sm.person.myIdResp.please.click']}" escape="false" />
+				escape="false" />
 			<p:commandLink value="#{lbl['lbl.sm.person.myIdResp.here']}"
 				rendered="#{backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70018' || backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70019'}"
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 				action="#{backingBean.viewMyIdentityRespond()}" process="@this"
-				partialSubmit="true" update=":form" styleClass="ui-panel-title"
-				style="float: left; font-weight: bold; text-decoration: underline; padding-right:3px">
+				partialSubmit="true" update=":form" 
+				style="float: left; font-size: 12px; font-weight: bold; color: #000000; text-decoration: underline; padding-right:3px">
 			</p:commandLink>
-			<p:outputLabel style="float : left; font-weight: bold; padding-right:3px"
-				rendered="#{backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70018' || backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70019'}"
-				value="#{lbl['lbl.sm.person.myIdResp.jpn.info']}" />
+			<h:outputText
+				style="float : left; font-size: 12px; font-weight: bold; padding-right:3px"
+				value="#{lbl['lbl.sm.person.myIdResp.jpn.info']}"
+				rendered="#{backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70018' || backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70019'}" />
 		</c:if>
 		<br />
 		<table style="width: 100%">
