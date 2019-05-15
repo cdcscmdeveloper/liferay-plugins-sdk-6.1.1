@@ -39,6 +39,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
+import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
@@ -60,6 +61,7 @@ import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
+import my.ep.constant.MapKeyEnum;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -103,6 +105,7 @@ import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.quationtender.SpecificationReqDTO;
 import my.ep.dto.sc.quationtender.SpecificationResDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
+import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
@@ -136,6 +139,8 @@ import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
+import my.ep.persistence.entity.sc.loaloi.ScLoaForQt;
+import my.ep.persistence.entity.sc.loaloi.ScLoiForQt;
 import my.ep.persistence.entity.sc.qtretry.ScQtDisruptionLog;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
@@ -183,6 +188,7 @@ import my.ep.web.backingbean.sc.loa.DirectLOABackingBean;
 import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
 import my.ep.web.backingbean.sc.loa.QtLOABackingBean;
 import my.ep.web.backingbean.sc.loiloa.LOIDetailBackingBean;
+import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean;
 import my.ep.web.backingbean.sc.supplierproposal.SPDetailBackingBean;
 import my.ep.web.backingbean.tpl.doc.TemplateDocBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
@@ -853,6 +859,22 @@ public class QTDetailBackingBean extends
 	public void viewLoiListDetails(ScQt scQt, String previousPageUrl){
 		Long qtId = scQt.getQtId();
 		new LOIDetailBackingBean().preRenderLoiListView(qtId, previousPageUrl);
+	}
+	
+	
+	/**
+	 * Method to view Finalization Supplier Details.
+	 * 
+	 * @param scQt
+	 *            the ScQt instance
+	 * @param previousPageUrl
+	 * 				the previous page url.
+	 * @return the navigation page
+	 */
+	public String viewFinalizationSupplierDetails(ScQt scQt, String previousPageUrl) {
+		debugLogger("viewFinalizationSupplierDetails");
+		
+		return new SupplierFinalizationBackingBean().preRenderViewMaintenance(scQt, previousPageUrl);
 	}
 	
 	/**
@@ -3241,6 +3263,7 @@ public class QTDetailBackingBean extends
 		}
 	}
 
+
 	/**
 	 * The Class QTPagingDataModel.
 	 */
@@ -3281,21 +3304,41 @@ public class QTDetailBackingBean extends
 				log.debug("pageChangeListener");
 			}
 			IQTDetailSO detailSO;
+			IQTSuppFinalizationSO sfDetailSO;
 			try {
 				detailSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+				sfDetailSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+				reqDTO.setQtnTenderSearchBean(qtnTenderSearchBean.toQTSearchBean());
 				populateQTSearchCriteria(reqDTO, qtnTenderSearchBean, searchBean);
 				QuationTenderResDTO resDTO = detailSO
 						.retriveQuationTenderDetailsBySearchCriteria(reqDTO);
+				
+				if(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION.equals(qtnTenderSearchBean.getDocType())){
+					if(resDTO.isSuccessful() && resDTO.getQtResultBean() != null && !CollectionUtils.isEmpty(resDTO.getQtResultBean().getResultList())){
+						SearchResultBean<ScQt> qtResultBean = (SearchResultBean<ScQt>)resDTO.getQtResultBean();
+						SuppFinalizationResDTO sfResDTO = sfDetailSO.setQtFinalizationCurrentStatus(qtResultBean.getResultList());
+						if(sfResDTO.isSuccessful()){
+							qtResultBean.setResultList(sfResDTO.getQtList());
+							//log.info("update status successful");
+						}
+					}
+				}
 				
 				// set search result doc type for navigate to diff page based on diff doc type selected.
 				qtnTenderSearchBean.setResultDocType(qtnTenderSearchBean.getDocType());
 				
 				return resDTO.getQtResultBean();
-			} finally {
+			}catch(Exception e){
+				handleException(new EpException(MessageConst.ERROR_000001));
+			}			
+			finally {
 				detailSO = null;
+				sfDetailSO = null;
 			}
+			return null;
 		}
 	}
 
@@ -6012,6 +6055,26 @@ public class QTDetailBackingBean extends
 		}
 		attachments=null;
 		log.debug("qtDetailhandleFileUpload - END");
+	}
+	
+	/**
+	 * is Allow QT View Supplier Finalization
+	 * 
+	 * @param scQt
+	 * 		the ScQt instance
+	 * 
+	 * @return
+	 */
+	public boolean isAllowQTViewSupplierFinalization(ScQt scQt) {
+		boolean isAllowQTViewSupplierFinalization = false;
+		String docType = getManagedBean().getQtnTenderSearchBean().getResultDocType();
+		if (scQt != null && scQt.getQtStatus() != null && scQt.getQtStatus().getStatusId() != null &&
+				ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION.equals(docType) &&
+				isQTMaintenanceScreen() && isPbbSecretary()) {
+			isAllowQTViewSupplierFinalization = true;
+		}		
+		
+		return isAllowQTViewSupplierFinalization;
 	}
 	
 	public Boolean getManagedSearchBeanDocumentTypeIsLOILOA(){
