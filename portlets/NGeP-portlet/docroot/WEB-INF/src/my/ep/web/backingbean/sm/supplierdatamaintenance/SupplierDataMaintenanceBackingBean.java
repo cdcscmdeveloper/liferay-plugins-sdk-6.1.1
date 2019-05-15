@@ -1,6 +1,8 @@
 package my.ep.web.backingbean.sm.supplierdatamaintenance;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -42,10 +44,12 @@ import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.sm.applicationView.BaseReviewApplicationBackingBean;
+import my.ep.web.backingbean.sm.commonappl.CommonApplBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
@@ -66,7 +70,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	 * 
 	 */
 	private static final long serialVersionUID = 3781591594455061750L;
-
+	
 	/**
 	 * Pre-render and redirect to Search Page
 	 */
@@ -97,9 +101,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	public void navigateToMaintenance(SmAppl selectedSmAppl) {
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setApplNo(selectedSmAppl.getApplNo());
-		getManagedBean().setSmAppl(
-				SmServiceLookup.getMofRegistrationSO()
-						.retrieveSmApplWithChildByApplNo(reqDTO).getSmAppl());
+		getManagedBean().setSmAppl(SmServiceLookup.getMofRegistrationSO().retrieveSmApplWithChildByApplNo(reqDTO).getSmAppl());
 		initStep0BaseInfo(getManagedBean().getSmAppl());
 		initStep1CompanyInfo();
 		initStep6RegisterCategoryCode();
@@ -128,8 +130,8 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setExistingStatusId(getManagedBean().getSmAppl().getPmStatus().getStatusId());
 		
 		initPhysicalConsultingCatcode();
-		getManagedBean().setExistingRegStatus(
-				getManagedBean().getSmAppl().getPmRegStatus());
+		getManagedBean().setExistingRegStatus(getManagedBean().getSmAppl().getPmRegStatus());
+		getManagedBean().setOldRegStatusId(getManagedBean().getSmAppl().getPmRegStatus().getPmStatus().getStatusId());
 		getManagedBean().setSmMofAccount(getSingleSmMofAccount());
 		if (getManagedBean().getSmMofAccount() != null) {
 			getManagedBean().setExistingMofExpiryDate(
@@ -201,16 +203,15 @@ public class SupplierDataMaintenanceBackingBean extends
 
 			// set registration status and expiry date
 			reqDTO.setOldRegStatus(getManagedBean().getExistingRegStatus());
-			reqDTO.setOldMofExpiryDate(getManagedBean()
-					.getExistingMofExpiryDate());
-
+			reqDTO.setOldRegStatusId(getManagedBean().getOldRegStatusId());
+			reqDTO.setOldMofExpiryDate(getManagedBean().getExistingMofExpiryDate());
+			
 			// set active status for newly added category
 			setActiveStatusForNewAddedCategories();
-
+			reqDTO.setListRegCategories(getManagedBean().getSmAppl().getSmSupplierCategories());
 			reqDTO.setActiveAppl(activeAppl);
 			reqDTO.setSmAppl(getManagedBean().getSmAppl());
-			reqDTO.setNewlyAddedCategories(getManagedBean()
-					.getActiveCategoryList());
+			reqDTO.setNewlyAddedCategories(getManagedBean().getActiveCategoryList());
 			reqDTO.setDeletedCategories(getManagedBean()
 					.getDeleteApprovedCategories());
 			reqDTO.setSmMofAccount(getManagedBean().getSmMofAccount());
@@ -219,6 +220,7 @@ public class SupplierDataMaintenanceBackingBean extends
 			reqDTO.setPortalBaseUrl(SmCommonUtil.getEpBaseUrl());
 			reqDTO.setOverlapCategoryRemarkDocType(ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY_APPROVER);
 			reqDTO.setRemarkId(getManagedBean().getRemarkId());
+			reqDTO.setRemarkOverlappedId(getManagedBean().getRemarkOverlappedId());
 			
 			if (getManagedBean().getApproverRemark() != null) {
 				reqDTO.setApproverRemark(getManagedBean().getApproverRemark());
@@ -232,14 +234,14 @@ public class SupplierDataMaintenanceBackingBean extends
 			}
 			
 			String oriPoApprOverlappedRemark = getManagedBean().getOriPoApprOverlappedRemark();
+			reqDTO.setCurrentOverlapCategoryRemark(oriPoApprOverlappedRemark);
 			String poApprOverlappedRemark = getManagedBean().getPoApprOverlappedRemark();
-			
 			//Redmine #16927
 			//to check if overlap remark changed 
 			if(oriPoApprOverlappedRemark != null) {
 				if(poApprOverlappedRemark != null && !poApprOverlappedRemark.trim().equals(oriPoApprOverlappedRemark.trim())) {
 					isOverlapCategoryRemarkChanged = true;
-					reqDTO.setUpdatedOverlapCategoryRemark(poApprOverlappedRemark);
+				reqDTO.setUpdatedOverlapCategoryRemark(poApprOverlappedRemark);
 				}
 			} else {
 				if(poApprOverlappedRemark != null && poApprOverlappedRemark.trim().length() > 0) {
@@ -1155,12 +1157,11 @@ public class SupplierDataMaintenanceBackingBean extends
 		
 		SmRemaksResDTO resDTO = SmServiceLookup.getSmRemarksSO().retrieveSmRemarksByDocument(
 				reqDTO);
-		
 		if(resDTO.getRemarksList() != null && resDTO.getRemarksList().size() > 0) {
 			SmRemark remark = resDTO.getRemarksList().get(0);
 			getManagedBean().setPoApprOverlappedRemark(remark.getRemark());
 			getManagedBean().setOriPoApprOverlappedRemark(remark.getRemark());
-			getManagedBean().setRemarkId(remark.getRemarkId());
+			getManagedBean().setRemarkOverlappedId(remark.getRemarkId());
 		}
 		
 		
@@ -1177,6 +1178,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		if(resDTO.getRemarksList() != null && resDTO.getRemarksList().size() > 0) {
 			SmRemark remark = resDTO.getRemarksList().get(0);
 			getManagedBean().setApproverRemark(remark.getRemark());
+			getManagedBean().setRemarkId(remark.getRemarkId());
 		}
 	}
 
