@@ -11,13 +11,17 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 		
+		 <p:commandButton immediate="true" value="#{lbl['lbl.btn.back']}"
+				rendered="#{!empty lOIDetailBackingBean.managedBean.backToPreviousPage}"
+				style="float:left;" action="#{lOIDetailBackingBean.backToPrevious}" />
+		
 		<p:commandButton value="#{lbl['lbl.btn.save']}"
 			action="#{lOIDetailBackingBean.savetLoiListAction}" process="@form" 
 			partialSubmit="true"
 			update="@form"
 			onstart="blockWidget.show();"
 			oncomplete="blockWidget.hide();"
-			rendered="#{!isMultipleLoi}" />
+			rendered="#{!isMultipleLoi and !readOnly}" />
 		
 		<p:commandButton value="#{lbl['lbl.btn.submit']}"
 			action="#{lOIDetailBackingBean.submitLoiListAction}" process="@form"
@@ -25,6 +29,6 @@
 			update="@form"
 			onstart="blockWidget.show();"
 			oncomplete="blockWidget.hide();"
-			rendered="#{!isMultipleLoi and lOIDetailBackingBean.managedBean.loiRequired}" />
+			rendered="#{!readOnly and (!isMultipleLoi and lOIDetailBackingBean.managedBean.loiRequired)}" />
 	</div>
 </ui:composition>

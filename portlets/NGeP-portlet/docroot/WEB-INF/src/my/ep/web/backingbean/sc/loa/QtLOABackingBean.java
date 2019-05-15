@@ -6,12 +6,14 @@ package my.ep.web.backingbean.sc.loa;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
+import my.ep.constant.MapKeyEnum;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.SourcingConstants;
@@ -23,6 +25,7 @@ import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
+import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.sc.loiloa.LOIDetailBackingBean;
@@ -63,6 +66,77 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.debug(message);
+		}
+	}
+	
+	public void preRenderViewForQtMaintenance(ScQt scQt, String prevPageUrl, Map<MapKeyEnum, Object> otherArgs){
+		preRenderViewPriv(scQt, prevPageUrl, otherArgs);
+	}
+	
+	private void preRenderViewPriv(ScQt scQt, String prevPageUrl, Map<MapKeyEnum, Object> otherArgs){
+		debugLogger("preRenderView");
+		try {
+			
+			getManagedBean().setReadOnly(true);
+			getManagedBean().setBackToPreviousPage(prevPageUrl); 
+			
+			boolean fromBpmTaskList = false;
+			Long sourceId = Long.valueOf(scQt.getQtId());
+
+			//Long sourceId = 146L;//LOA record Existed
+			//Long sourceId = 3762L; // no LOA record
+
+			LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
+			LOIDetailBackingBean lOIDetailBackingBean = new LOIDetailBackingBean();
+			loaDetailBackingBean.renewSesionObject();
+			lOIDetailBackingBean.renewSesionObject();
+			
+			retrieveLOAList(sourceId);
+			
+			SCAwardSupplierDataType dpDataType = new SCAwardSupplierDataType();
+			
+			if(!fromBpmTaskList && !CollectionUtils.isEmpty(getManagedBean().getScLoiLoaList())){
+				for(ScLoiLoa ll: getManagedBean().getScLoiLoaList()){
+					if(!CollectionUtils.isEmpty(ll.getScLois())){
+						for(ScLoi l: ll.getScLois()){
+							AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
+							awardSupplierReqDTO.setLoiId(l.getLoiId());
+							AwardSupplierResDTO awardSupplierResDTO = getQtAwardSO()
+							.retrieveLOIDtlByLoiId(awardSupplierReqDTO);
+							if(awardSupplierResDTO.isSuccessful()){
+								dpDataType.setAwardType(awardSupplierResDTO.getScLoi().getRecommendBy().getParameterCode());
+							}														
+						}
+					}
+				}
+			}
+			
+			if(getManagedBean().getQt()!=null) {dpDataType.setTitle(getManagedBean().getQt().getQtTitle());}
+			
+			
+			if(getManagedBean().getSuppLoiLoaMap() != null && getManagedBean().getSuppLoiLoaMap().size()>0){
+				loaDetailBackingBean.getManagedBean().setSuppLoiLoaMap(getManagedBean().getSuppLoiLoaMap());
+			}
+			
+			loaDetailBackingBean.getManagedBean().setSourceId(sourceId);
+			loaDetailBackingBean.getManagedBean().setPayLoad(dpDataType);
+
+			lOIDetailBackingBean.getManagedBean().setSourceId(sourceId);
+			lOIDetailBackingBean.getManagedBean().setPayLoad(dpDataType);
+
+			generateSuppLoiLoaList();
+			
+			
+
+			
+			
+			
+			
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler()
+			.handleNavigation(fc, null, QTConstants.QT_LOA_LIST_PAGE);
+		} catch (Exception e) {
+			handleException(e);
 		}
 	}
 
@@ -336,9 +410,33 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 			qtAwardSO = null;
 		}
 	}
+	
+	
+	/**
+	 * Gets the qt award so.
+	 * 
+	 * @return the qt award so
+	 */
+	private IQTAwardSO getQtAwardSO() {
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+	}
+	
+	/**
+	 * Page navigation from qt loa screen to qtLoaManagedBean.backToPreviousPage
+	 */
+	public void backToPrevious() {
+		debugLogger("backToPrevious");
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication()
+				.getNavigationHandler()
+				.handleNavigation(fc, null,
+						getManagedBean().getBackToPreviousPage());
+	}
 }
 
 
 
 
 // ***25201
+// ***19366#40

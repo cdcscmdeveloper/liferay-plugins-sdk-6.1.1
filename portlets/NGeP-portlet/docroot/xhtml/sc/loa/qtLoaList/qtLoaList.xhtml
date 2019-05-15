@@ -9,6 +9,7 @@
 	<ui:define name="contentSection">
 		<p:messages id="qtloaMsg" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" />
+		<ui:include src="qtLoaListButton.xhtml" />
 		<ui:include src="qtLoaListHeader.xhtml" />
 		<p:panel id="suppListPanel" toggleable="true" toggleSpeed="500">
 			<f:facet name="header">
@@ -121,3 +122,6 @@
 	</ui:define>
 
 </ui:composition>
+
+
+<!-- ***19366#40 -->

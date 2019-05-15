@@ -212,6 +212,108 @@ public class LOIDetailBackingBean extends
 		// initializeRemarks(new ScLoi());
 		// getApproverNames();
 	}
+	
+	/**
+	 * 
+	 *  
+	 * @param qtId - set null if provided by SCAwardSupplierDataType 
+	 * @param otherArgs - set null if provided by SCAwardSupplierDataType
+	 *		isQtMaintenanceScreen - Boolean
+	 *		isReadOnly - Boolean
+	 *		prevPageUrl - String
+	 *		
+	 */
+	private void preRenderLoiListViewPriv(Long qtId, Map<MapKeyEnum, Object> otherArgs){
+		try {
+			
+			boolean fromBpmTaskList = false;
+			SCAwardSupplierDataType awardDataType = null;
+			Long sourceId = null;
+			String letterCreator = null;
+			String currentUser = new FacesScopes().getUserSessionBean().getLoginId();
+			if(qtId == null){
+				fromBpmTaskList = true;
+				awardDataType = getBpmTaskDetails(SCAwardSupplierDataType.class, null);
+				sourceId = Long.valueOf(awardDataType.getSourceId()); 
+				letterCreator = awardDataType.getLetterCreator();
+				if(StringUtils.isBlank(letterCreator)) {
+					if (new FacesScopes()
+					.hasRoleUser(RoleCode.DESK_OFFICER.value())) {
+						awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER);
+						awardDataType.setDeskOfficer(currentUser);
+					} else {
+						awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_REQUISITIONER);
+						awardDataType.setSecretary(currentUser);
+					}
+				} else {
+					if(letterCreator.equals(SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER)) {
+						awardDataType.setDeskOfficer(currentUser);
+					} else {
+						awardDataType.setSecretary(currentUser);
+					}
+				} 
+				getManagedBean()
+				.setRecommendDtlIds(awardDataType.getGroupkeyList());
+		
+				String finalizationMethod = getFinalizationMethodByAwardType(awardDataType.getAwardType());
+				getManagedBean().setDocType(finalizationMethod);
+			}
+			else{
+				this.getManagedBean().setReadOnly(true);
+				fromBpmTaskList = false;
+				sourceId = qtId;
+				//letterCreator
+				//finalizationMethod
+			}
+
+			
+			  
+			
+			 
+			
+			
+			
+			getManagedBean().setSourceId(sourceId);
+			
+			
+			retrieveLOIList(sourceId);
+			
+			if(!fromBpmTaskList && !CollectionUtils.isEmpty(getManagedBean().getLoiLoas())){
+				for(ScLoiLoa ll: getManagedBean().getLoiLoas()){
+					if(!CollectionUtils.isEmpty(ll.getScLois())){
+						for(ScLoi l: ll.getScLois()){
+							AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
+							awardSupplierReqDTO.setLoiId(l.getLoiId());
+							AwardSupplierResDTO awardSupplierResDTO = getQtAwardSO()
+							.retrieveLOIDtlByLoiId(awardSupplierReqDTO);
+							String finalizationMethod = null;
+							if(awardSupplierResDTO.isSuccessful()){
+								finalizationMethod = getFinalizationMethodByAwardType(awardSupplierResDTO.getScLoi().getRecommendBy().getParameterCode());
+								getManagedBean().setDocType(finalizationMethod);
+							}														
+						}
+					}
+				}
+			}
+
+			// QT Proposal validity expired
+			getQtProposalValidExpiredMessage(getManagedBean().getScQt());
+			
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler()
+					.handleNavigation(fc, null, QTConstants.LOI_LIST_PAGE);
+		} catch (Exception e) {
+			handleException(e);
+		} 
+	}
+	
+	
+	public void preRenderLoiListView(Long qtId, String previousPageUrl){
+		if(!StringUtils.isBlank(previousPageUrl)){
+			this.getManagedBean().setBackToPreviousPage(previousPageUrl);
+		}
+		preRenderLoiListViewPriv(qtId, null);
+	}
 
 	/**
 	 * Pre render page navigation to loi list view page based on task id
@@ -5956,5 +6058,9 @@ public class LOIDetailBackingBean extends
 	
 	public boolean getIsQtMaintenanceScreen(){
 		return isQTMaintenanceScreen();
+	}
+	
+	public boolean getManagedBeanIsReadOnly(){
+		return this.getManagedBean().isReadOnly();
 	}
 }
