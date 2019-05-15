@@ -25,7 +25,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
 import javax.servlet.http.HttpServletRequest;
 
@@ -161,9 +160,6 @@ import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
-
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.model.User;
 
 // TODO: Auto-generated Javadoc
 
@@ -1554,7 +1550,7 @@ public class SimpleQuoteBackingBean extends
 			
 			QuoteResDTO quoteResDTO = null;
 			if (outcome.isEmpty()) {
-				quoteResDTO = getQuoteSO().saveQuoteDtl(reqDTO);
+				quoteResDTO = getQuoteSO().saveQuoteDtlAndInvokeBpm(reqDTO);
 			} else if (BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)) {
 				quoteResDTO = getQuoteSO().updateSimpleQuote(reqDTO);
 				renewSesionObject();
@@ -2220,7 +2216,7 @@ public class SimpleQuoteBackingBean extends
 			QuoteResDTO quoteResDTO = null;
 			if (outcome.isEmpty()) {
 				reqDTO.setSubmit(Boolean.TRUE);
-				quoteResDTO = getQuoteSO().saveQuoteDtl(reqDTO);
+				quoteResDTO = getQuoteSO().saveQuoteDtlAndInvokeBpm(reqDTO);
 			} else if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)
 					|| BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)) {
 				reqDTO.setOutcome(outcome);
