@@ -165,6 +165,7 @@ import my.ep.web.vo.AdvanceSearchVO;
 import my.ep.web.vo.ExtensionCodeVO;
 import my.ep.web.vo.PricingVO;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -2899,12 +2900,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}else{
 			catImage.setImage(item.getContents());
 		}
-		log.info("************"+item.getFileName().replace(' ', '_'));
+		String fileName = item.getFileName();
+	    if (fileName != null) {
+	    	String ts = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date());
+	    	fileName = ts.concat(FilenameUtils.getName(fileName).replaceAll("[:\\\\/*?|<>&~!@#$%^]", "_"));
+	    }
+		log.info("Sanitized file name : "+fileName.replace(' ', '_'));
 
-		catImage.setImageName(item.getFileName().replace(' ', '_'));
-		catImage.setImageDesc(item.getFileName().replace(' ', '_'));
+		catImage.setImageName(fileName.replace(' ', '_'));
+		catImage.setImageDesc(fileName.replace(' ', '_'));
 		catImage.setImageType("jpg");
-		catImage.setImagePath(item.getFileName().replace(' ', '_'));
+		catImage.setImagePath(fileName.replace(' ', '_'));
 		catImage.setTempPath(uploadDir.toString());
 		log.info("catImage.TempPath()" + catImage.getTempPath());
 
