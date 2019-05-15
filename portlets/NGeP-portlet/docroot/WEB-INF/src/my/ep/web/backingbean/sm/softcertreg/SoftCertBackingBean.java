@@ -1132,20 +1132,28 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 							.getDocumentList();
 					for (PmDocument softcertSuppDoc : softcertSuppDocList) {
 						softcertDoc = new SmSoftcertDoc();
-						
+
 						if (ParameterConst.DOCUMENT_DEFINITION_KEY_AUTHORIZATION_LETTER.equals(softcertSuppDoc
 								.getDocDefinitionKey())
 								|| ParameterConst.DOCUMENT_DEFINITION_KEY_OFFICIAL_ACCEPTANCE_LETTER
 										.equals(softcertSuppDoc.getDocDefinitionKey())) {
-							String letterUrl = "<a href=\""
-									+ DocumentRepositoryUtils.getBaseDir()
-									+ "shared/SM/"
-									+ (CommonConstants.LANGUAGE_CODE_MALAY.equals(userLocale.getLanguage()) ? 
-											"Permohonan_Sijil_Digital.docx\">Sini"
-											: "Application_For_Digital_Certificate.docx\">Here") 
-									+ "</a>";
-							softcertSuppDoc.setDocName(softcertSuppDoc.getDocName().replace("<here>", letterUrl));
+							String letterUrl = "";
+							if (CommonConstants.LANGUAGE_CODE_MALAY.equals(userLocale.getLanguage())) {
+								letterUrl = "(Klik <a href=\"" + DocumentRepositoryUtils.getBaseDir() + "shared/SM/"
+										+ "Permohonan_Sijil_Digital.docx\">Sini"
+										+ "</a> untuk muat turun contoh surat)";
+							} else {
+								letterUrl = "(Click <a href=\"" + DocumentRepositoryUtils.getBaseDir() + "shared/SM/"
+										+ "Application_For_Digital_Certificate.docx\">Here"
+										+ "</a> to download sample of letter)";
+							}
+							String docName = softcertSuppDoc.getDocName();
+							softcertSuppDoc.setDocName(docName.replace("<here>", ""));
+							softcertSuppDoc.setDocNameWithUrl(docName.replace("<here>", letterUrl));
+						} else {
+							softcertSuppDoc.setDocNameWithUrl(softcertSuppDoc.getDocName());
 						}
+
 						softcertDoc.setPmDocument(softcertSuppDoc);
 						softcertDoc.setPmUser(softcertUploadSuppDocVO
 								.getPersonnel().getPmUser());
