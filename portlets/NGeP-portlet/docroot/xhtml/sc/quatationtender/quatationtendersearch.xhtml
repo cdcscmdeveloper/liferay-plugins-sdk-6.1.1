@@ -122,6 +122,12 @@
 							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" styleClass="tasklist_title1"
 								title="#{lbl['lbl.sc.qt.search.view.tooltip']}" />
 						</p:commandLink>
+						<p:commandLink id="showSuppFin" action="#{qTDetailBB.viewFinalizationSupplierDetails(scQt, view.viewId)}"
+							style="margin-right:20px;" partialSubmit="true" process="@this"
+							rendered="#{scQt.procurementMode.parameterCode ne ParameterConst.procurementModeDirectNego and qTDetailBB.isAllowQTViewSupplierFinalization(scQt)}">
+							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" styleClass="tasklist_title1"
+								title="#{lbl['lbl.sc.qt.search.view.tooltip']}" />
+						</p:commandLink>
 						<p:commandLink id="publishQTIcon" action="#{qTDetailBB.publishQT(scQt)}"
 							style="margin-right:20px;" 
 							partialSubmit="true" process="@this"
