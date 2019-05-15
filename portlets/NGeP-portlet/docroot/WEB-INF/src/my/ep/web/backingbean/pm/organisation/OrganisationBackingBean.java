@@ -826,6 +826,7 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 		IOrgProfileSO orgProfileSO = null;
 		String redirectUrl = null;
 		
+		log.info("OrgType is: " + this.getManagedBean().getOrgType());		
 
 		try {
 
@@ -2222,18 +2223,24 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 			}
 
 		}
-		if (this.getManagedBean().getSmPersonnels() == null) {
-			throw new EpException(MessageConst.ERROR_775102);
-		} else {
-			// filter list for active records and check again
-			List<SmPersonnel> tempPersonnelList = new ArrayList<SmPersonnel>();
-			for (SmPersonnel personnel : this.getManagedBean().getSmPersonnels()) {
-				if (personnel.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
-					tempPersonnelList.add(personnel);
-				}
-			}
-			if (tempPersonnelList.isEmpty()) {
+		
+		// [BUG#25843] Khirul added on 2019-05-14 - Start
+		if (ParameterConst.ORG_TYPE_PTJ.equals(this.getManagedBean().getOrgType())) {
+		// [BUG#25843] Khirul added on 2019-05-14 - End
+			
+			if (this.getManagedBean().getSmPersonnels() == null) {				
 				throw new EpException(MessageConst.ERROR_775102);
+			} else {				
+				// filter list for active records and check again
+				List<SmPersonnel> tempPersonnelList = new ArrayList<SmPersonnel>();
+				for (SmPersonnel personnel : this.getManagedBean().getSmPersonnels()) {
+					if (personnel.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
+						tempPersonnelList.add(personnel);
+					}
+				}
+				if (tempPersonnelList.isEmpty()) {
+					throw new EpException(MessageConst.ERROR_775102);
+				}
 			}
 		}
 
