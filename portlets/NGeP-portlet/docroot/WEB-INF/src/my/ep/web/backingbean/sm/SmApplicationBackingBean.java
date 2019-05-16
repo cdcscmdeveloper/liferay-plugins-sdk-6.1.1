@@ -398,6 +398,12 @@ public class SmApplicationBackingBean extends
 				MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
 				mofResDto = SmApplicationUtil.retriveApplicationById(Integer
 						.parseInt(applId));
+				if (my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_BUMI
+						.equals(mofResDto.getSmAppl().getApplType())
+						&& SupplierManagementConst.SUPPORTING_DOC_OFFLINE.equals(mofResDto.getSmAppl()
+								.getSupportingDocMode())) {
+					mofResDto.getSmAppl().setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
+				}
 				rejAppl = mofResDto.getSmAppl();
 				supplierProfile = mofResDto.getSmSupplier();
 			}
