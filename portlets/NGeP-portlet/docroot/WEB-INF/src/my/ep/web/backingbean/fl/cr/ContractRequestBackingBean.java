@@ -77,6 +77,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
+import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
@@ -4329,11 +4330,23 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				contractReqDTO.setAsAtDate(new Date());
 				CtContractAmount ctContractAmount = contractSO.retrieveContractAmount(contractReqDTO).getCtContractAmount();
 
-				//#24927
+				//# start 24927
 				AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 				reqDTO.setLoaId(flRequest.getCtContract().getLoa().getLoaId());
 				AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOADtlByLoaId(reqDTO);
-				String qtType = resDTO.getScLoa().getQtType().getParameterCode();
+				String qtType="";			
+				
+				if(resDTO.getScLoa().getQtType() != null){
+					qtType = resDTO.getScLoa().getQtType().getParameterCode();
+				}else{
+					ParameterReqDTO paramReqDTO = new ParameterReqDTO();
+					paramReqDTO.setParameterId(getProcType().longValue());
+					IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+					PmParameter procType = parameterSO.retrieveParameterById(paramReqDTO).getPmParameter();
+					
+					qtType = procType.getParameterCode();
+				}
+				//# end 24927
 				
 				if(!(flRequest.getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)
 						&& qtType.equalsIgnoreCase(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7))){//#24927
@@ -6266,6 +6279,17 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			getManagedBean().setSupplierItemPriceList(supplierItems);
 		}
 	} /*END*/
+	
+	//#24927 - To get Procurement Type for Direct Purchase
+	public Integer getProcType(){
+		IRequestNoteSO requestNoteSO = (IRequestNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,	IRequestNoteSO.class);
+		Integer proType = null;
+		RequestNoteResDTO proc = requestNoteSO.getProcTypeDP(getManagedBean().getFlRequest().getCtContract().getContractId());
+		if(proc != null){
+			proType = proc.getProcurementType();
+		}
+		return proType;
+	}
 }
 	
 
