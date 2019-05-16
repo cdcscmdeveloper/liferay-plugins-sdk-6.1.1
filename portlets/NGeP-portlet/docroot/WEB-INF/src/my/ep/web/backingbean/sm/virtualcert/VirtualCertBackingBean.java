@@ -21,6 +21,7 @@ import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sm.questionnaire.QuestionnaireBackingBean;
 import my.ep.web.managedbean.sm.virtualcert.VirtualCertManagedBean;
@@ -40,6 +41,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 	private final static String XHTML_QUESTIONNAIRE = "/xhtml/sm/questionnaire/questionnaireView.xhtml";
 	
 	public void viewVirtualCert(){
+		long startTime = System.currentTimeMillis();
 		renewSesionObject();
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -67,10 +69,13 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null,XHTML_QUESTIONNAIRE);
 			}else{
 				retrieveCertInfo(supp.getSupplierId());
-				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, XHTML_VIRTUAL_DET);
+				SLAUtils.getInstance().logSLAInfo("SM","SR",
+						"VirtualCertBackingBean.viewVirtualCert", startTime);
 			}
 		}else{
 			retrieveCertInfo(supp.getSupplierId());
+			SLAUtils.getInstance().logSLAInfo("SM","SR",
+					"VirtualCertBackingBean.viewVirtualCert", startTime);
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, XHTML_VIRTUAL_DET);
 		}
 	}
