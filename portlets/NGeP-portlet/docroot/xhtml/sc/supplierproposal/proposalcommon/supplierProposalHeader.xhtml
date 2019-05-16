@@ -49,7 +49,8 @@
 					
 					<td width="8%"><h:outputLabel value="#{lbl['lbl.sc.remaining.time']}" /></td>
 					<td class="header-info-text; lastUpdated">
-						#{supplierProposalDetailBackingBean.managedBean.closingTime} </td>
+						<h:outputText value="#{supplierProposalDetailBackingBean.managedBean.closingTime}" id="remainTimeId" />  
+						<p:poll interval="60" update="remainTimeId" listener="#{supplierProposalDetailBackingBean.showQtClosingTime}" /> </td>
 				</tr>
 			</table>
 		</div>
