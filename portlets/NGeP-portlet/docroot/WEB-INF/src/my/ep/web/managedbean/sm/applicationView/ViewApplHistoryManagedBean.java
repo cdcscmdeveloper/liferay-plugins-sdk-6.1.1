@@ -11,17 +11,17 @@ import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
 import my.ep.dto.sm.bulkApplication.SmBulkApplicationVO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
-import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmAttachment;
 import my.ep.persistence.entity.sm.SmMofAccount;
-import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.web.backingbean.trackingdiary.PmTrackingDiaryBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+
+import org.apache.commons.lang3.StringUtils;
 
 @ManagedBean(name = "viewApplHistoryMB")
 @SessionScoped
@@ -97,33 +97,27 @@ public class ViewApplHistoryManagedBean extends
 					.retrieveApplicationHistoryUsingNativeQuery(reqDTO)
 					.getObjectArrResultBean();
 
-			if (getCurrMof() == null) {
-				setCurrMof(SmCommonUtil.getMofAccountBySuppIdAndSuppType(reqDTO
-						.getSmSupplier().getSupplierId(), null));
+			int i = 0;
+			for (Object[] obj : retVal.getResultList()) {
+				obj[8] = getMofNo(Long.parseLong(obj[11].toString()),
+						obj[8]==null?StringUtils.EMPTY: obj[8].toString());
+				retVal.getResultList().set(i, obj);
+				i++;
 			}
-			// int i = 0;
-			// for (Object[] obj : retVal.getResultList()) {
-			// obj[6] = getWorkflowStatus(Long.parseLong(obj[10] + ""), obj[6]
-			// + "");
-			// retVal.getResultList().set(i, obj);
-			// i++;
-			// }
 			return retVal;
 		}
 	}
 
-	private String getWorkflowStatus(Long applId, String statusOri) {
-		SmWorkflowStatus st = SmCommonUtil
-				.getCurrentActiveWokFlowStatus(applId);
-		String retVal = statusOri;
-		if (st.getPmStatus() != null && st.getPmStatus().getStatusId() != null) {
-			PmStatusDesc sd = SmCommonUtil.getStatusDescByStatusId(st
-					.getPmStatus().getStatusId());
-			if (sd != null) {
-				retVal = sd.getStatusName();
+	private String getMofNo(Long supplierId, String mofNo) {
+		if (StringUtils.isBlank(mofNo)) {
+			SmMofAccount acc = SmCommonUtil.getMofAccountBySuppIdAndSuppType(
+					supplierId, null);
+			if (acc != null) {
+				mofNo = acc.getMofNo();
 			}
 		}
-		return retVal;
+		return StringUtils.isBlank(mofNo) ? SmCommonUtil.getMessage(
+				"lbl.sm.no.available", null) : mofNo;
 	}
 
 	/**
