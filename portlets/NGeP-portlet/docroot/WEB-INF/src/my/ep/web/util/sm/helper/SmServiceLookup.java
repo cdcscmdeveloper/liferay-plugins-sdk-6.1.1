@@ -31,6 +31,7 @@ import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.payment.IPaymentSO;
+import my.ep.biz.service.sm.pending.IPendingPaymentSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.personnelauthorization.IPersonnelAuthorizationSO;
 import my.ep.biz.service.sm.questionnaire.IQuestionnaireSO;
@@ -89,6 +90,11 @@ public class SmServiceLookup {
 	public static IPaymentSO getPaymentSO() {
 		return (IPaymentSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_MANAGEMENT, IPaymentSO.class);
+	}
+	
+	public static IPendingPaymentSO getPendingPaymentSO() {
+		return (IPendingPaymentSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, IPendingPaymentSO.class);
 	}
 
 	/**
