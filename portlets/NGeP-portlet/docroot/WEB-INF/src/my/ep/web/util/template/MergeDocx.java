@@ -73,8 +73,8 @@ public class MergeDocx {
 				
 				obj.setSectionContent(obj.getSectionContent().trim().replace("Apple-tab-span", "Apple-converted-space"));
 				
-				if(obj.getSectionContent().trim().startsWith("<p>") && obj.getSectionContent().trim().endsWith("</p>")){
-					obj.setSectionContent(obj.getSectionContent().trim().replaceFirst("<p>", "<span>"));
+				if(obj.getSectionContent().trim().startsWith("<p") && obj.getSectionContent().trim().endsWith("</p>")){
+					obj.setSectionContent(obj.getSectionContent().trim().replaceFirst("<p", "<span>"));
 					obj.setSectionContent(obj.getSectionContent().trim().substring(0,obj.getSectionContent().trim().length()-4)+ "</span>");
 				}
 				text += obj.getSectionContent();
