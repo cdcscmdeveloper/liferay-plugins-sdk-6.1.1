@@ -4516,6 +4516,14 @@ public class SmApplicationBackingBean extends
 							.getSmSupplierCategories(), "pmCategoryL3");
 			if (cat != null) {
 				cat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
+				cat.setPoDecFlg(null);
+				cat.setApprvrDecFlg(null);
+				cat.setApprovedDate(null);
+				cat.setCategoryEffDate(null);
+				cat.setPrevPoRemarks(null);
+				cat.setPoRemarks(null);
+				cat.setPrevApproverRemarks(null);
+				cat.setApproverRemarks(null);
 			} else {
 				getManagedBean().getSmAppl().getSmSupplierCategories()
 						.add(getManagedBean().getSelectedCategory());
