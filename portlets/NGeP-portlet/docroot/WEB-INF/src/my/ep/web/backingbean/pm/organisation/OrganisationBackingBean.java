@@ -256,6 +256,18 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 				this.getManagedBean().setServtaxregno(this.getManagedBean().getSstSupplier().getServtaxregno());
 				this.getManagedBean().setServtaxregDate(this.getManagedBean().getSstSupplier().getServtaxregDate());
 //				this.getManagedBean().setServtaxregEndDate(this.getManagedBean().getSstSupplier().getServtaxregEndDate());
+				
+				if(getManagedBean().getDeliveryAddress().getPmAddress().getPmState().getAdoptDivision()){
+					getManagedBean().getDeliveryAddress().getPmAddress().setPmDivision(new PmDivision());	
+				}
+				getManagedBean().setAddressName(StringUtils.EMPTY);
+				getManagedBean().setStateId(0);
+				getManagedBean().setDivisionList(null);
+				getManagedBean().setDistrictList(null);
+				getManagedBean().setDistrictId(0);
+				getManagedBean().setCityList(null);
+				getManagedBean().setCityId(0);
+				getManagedBean().setResetTablerow(0);
 			}
 		} else {
 			initialOrganisation();
@@ -263,7 +275,6 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 		}
 		getManagedBean().setShowParentMsg(true);
 		RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
-		resetAddressType();
 		return NAV_TO_MAINTAIN;
 		
 	}
@@ -1024,7 +1035,8 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 		} finally {
 			orgProfileSO = null;
 		}
-    	//resetAddressType();
+
+		resetAddressType();
 	
 		return redirectUrl;
 
@@ -3214,9 +3226,7 @@ public class OrganisationBackingBean extends BaseBackingBean<OrganisationManaged
 		getManagedBean().setCityList(null);
 		getManagedBean().setCityId(0);
 	 
-		PmOrgProfile orgProfile = PmCommonUtil.retrieveOrgProfileDtlById(getManagedBean().getOrgProfile()
-				.getOrgProfileId());
-		maintainOrganisation(orgProfile);
+		searchAddressType();
 		getManagedBean().setResetTablerow(0);
 
 	}
