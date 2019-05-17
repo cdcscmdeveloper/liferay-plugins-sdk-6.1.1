@@ -2099,7 +2099,7 @@ public class QTDocumentsBackingBean extends
 	private void generateSpesifikasiPdfFromVelocity(ScAttachment attachment,
 			ScQt qt) throws Exception {
 		populateAttachmentDetails(attachment);
-
+		log.debug("start generateSpesifikasiPdfFromVelocity" );
 		VelocityContext context = new VelocityContext();
 		List<TplSpecMaster> masters = new ArrayList<TplSpecMaster>();
 		IQTSpecSO specSO;
@@ -2133,6 +2133,27 @@ public class QTDocumentsBackingBean extends
 						question.setClItem("");
 					}else{
 					    String clItem = question.getClItem();
+                    //20190513@asyrafhaziq - 25812 - Start
+					// add a condition to filter the character (character after space and before space) length for data 'ITEM'.
+					    String[] words = clItem.split(" "); //get array of words
+					    StringBuilder sb = new StringBuilder();
+					    StringBuilder subSb = new StringBuilder();//this is for perfomance
+					    for(String word : words) //affect each word in string
+					    {
+					      int length = word.length();
+					      if ( length >= 20)
+					    	{
+					    	  String subWord;
+					            for (int i = 0; i < length; i += 20) {
+					            	subWord = word.substring(i, Math.min(length, i + 20));
+					            	subSb.append(subWord).append(TemplateDocConst.PARAM_SPACE);
+					            }
+					    		word = subSb.toString();	
+					    	}
+					        sb.append(word).append(TemplateDocConst.PARAM_SPACE);
+					    }
+					    clItem =  sb.toString();
+					    //20190513@asyrafhaziq - 25812 - End
 						clItem=clItem.replaceAll(QTConstants.NEW_LINE_CHARACTER,TemplateDocConst.PARAM_SPACE);
 						clItem=clItem.replaceAll(QTConstants.AMBRA_SENT,TemplateDocConst.PARAM_SPACE);
 						clItem=clItem.replaceAll(QTConstants.LESS_THEN,TemplateDocConst.PARAM_SPACE);
