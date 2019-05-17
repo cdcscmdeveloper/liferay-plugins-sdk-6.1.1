@@ -5,10 +5,7 @@ package my.ep.web.backingbean.sc.supplierintivitation;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -20,8 +17,6 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.supplierintivitation.ISCSupplierInvitationSO;
 import my.ep.constant.ModuleCodeConst;
@@ -35,7 +30,6 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.supplierintivitation.ScSupplierInvitationReqDTO;
 import my.ep.dto.sc.supplierintivitation.ScSupplierInvitationResDTO;
 import my.ep.persistence.entity.pm.common.PmParameter;
-import my.ep.type.aut.SearchOperator;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -145,37 +139,39 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 				reqDTO.setParameterId(parameter != null?parameter.getParameterId():null);
 			} else if(SourcingConstants.SIT_SIMPLE_QUOTE.equals(invitationType)){
 				// Simple Quote
-				
-				List<Long> sqStatusIds = new ArrayList<Long>();
-				sqStatusIds.add(DPStatusConstants.SQ_PENDING_SUPPLIER_RESPONSE);
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("sqStatus.STATUS_ID",
-								SearchOperator.OPERATOR_IN.value(), sqStatusIds));
-				
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("quote.END_DATE",
-								SearchOperator.OPERATOR_GREATER_EQUAL.value(),new Date()));
-				
-				searchBean.getSortColumns().add(
-						new SearchOrderBean(
-								"to_char(quote.CREATED_DATE,'yyyy-MM-dd')", false));
+				reqDTO.setStatusId(DPStatusConstants.SQ_PENDING_SUPPLIER_RESPONSE);
+				// move code to ScSupplierInvitationDAO to sync.
+//				List<Long> sqStatusIds = new ArrayList<Long>();
+//				sqStatusIds.add(DPStatusConstants.SQ_PENDING_SUPPLIER_RESPONSE);
+//				searchBean.getDataFilterBeans().add(
+//						new SearchFilterBean("sqStatus.STATUS_ID",
+//								SearchOperator.OPERATOR_IN.value(), sqStatusIds));
+//				
+//				searchBean.getDataFilterBeans().add(
+//						new SearchFilterBean("quote.END_DATE",
+//								SearchOperator.OPERATOR_GREATER_EQUAL.value(),new Date()));
+//				
+//				searchBean.getSortColumns().add(
+//						new SearchOrderBean(
+//								"to_char(quote.CREATED_DATE,'yyyy-MM-dd')", false));
 				
 			} else if(SourcingConstants.SIT_BIDDING.equals(invitationType)){
 				// Bidding
-				
-				List<Long> bidStatusIds = new ArrayList<Long>();
-				bidStatusIds.add(QTStatusConst.SF_PENDING_BIDDING);
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("bidStatus.STATUS_ID",
-								SearchOperator.OPERATOR_IN.value(), bidStatusIds));
-				
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("bidschedule.END_DATE",
-								SearchOperator.OPERATOR_GREATER_EQUAL.value(),new Date()));
-								
-				searchBean.getSortColumns().add(
-						new SearchOrderBean(
-								"to_char(bidschedule.START_DATE,'yyyy-MM-dd')", false));
+				reqDTO.setStatusId(QTStatusConst.SF_PENDING_BIDDING);
+				// move code to ScSupplierInvitationDAO to sync.
+//				List<Long> bidStatusIds = new ArrayList<Long>();
+//				bidStatusIds.add(QTStatusConst.SF_PENDING_BIDDING);
+//				searchBean.getDataFilterBeans().add(
+//						new SearchFilterBean("bidStatus.STATUS_ID",
+//								SearchOperator.OPERATOR_IN.value(), bidStatusIds));
+//				
+//				searchBean.getDataFilterBeans().add(
+//						new SearchFilterBean("bidschedule.END_DATE",
+//								SearchOperator.OPERATOR_GREATER_EQUAL.value(),new Date()));
+//								
+//				searchBean.getSortColumns().add(
+//						new SearchOrderBean(
+//								"to_char(bidschedule.START_DATE,'yyyy-MM-dd')", false));
 				
 			}
 			
