@@ -3,7 +3,9 @@
  */
 package my.ep.web.managedbean.pm.taskassign;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -46,7 +48,7 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	private List<Integer> statusIds;
 	private boolean isRemarkRequired;
 	private String remarks;
-	private String displayReassignees;
+	private Map<String,String> reassigneeList = new LinkedHashMap<String,String>();
 	
 	public TaskReassignmentManagedBean(){}
 
@@ -332,17 +334,10 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	}
 	
 	/**
-	 * @return the displayReassignees
+	 *  @return the reassigneeList
 	 */
-	public String getDisplayReassignees() {
-		return displayReassignees;
-	}
-
-	/**
-	 * @param remarks the displayReassignees to set
-	 */
-	public void setDisplayReassignees(String displayReassignees) {
-		this.displayReassignees = displayReassignees;
+	public Map<String,String> getReassigneeList() {
+		return reassigneeList;
 	}
 	
 }
