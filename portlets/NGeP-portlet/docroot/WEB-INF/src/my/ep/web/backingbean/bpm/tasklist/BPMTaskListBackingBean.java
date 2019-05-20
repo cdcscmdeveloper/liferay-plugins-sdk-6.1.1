@@ -37,6 +37,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.pm.helper.StatusHelper;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
 
 import org.apache.log4j.Logger;
 
@@ -875,7 +876,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 		.handleNavigation(fc, null, "taskListView");
-
+	
 	}
 	
 	// #24714
@@ -1112,5 +1113,13 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		return false;
 
 	}
+	
+	public String poKpiByCompanyState(int docId, int statusId) {
 
+		String retVal = SmApplicationUtil.getInstance()
+				.calculatePoKpiByCompanyState(docId, statusId);
+
+		return retVal;
+
+	}
 }

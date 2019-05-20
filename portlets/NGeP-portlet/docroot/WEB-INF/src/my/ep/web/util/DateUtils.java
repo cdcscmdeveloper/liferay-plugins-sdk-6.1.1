@@ -591,4 +591,15 @@ public class DateUtils {
 		calendar.add(Calendar.DATE, 1);
 		return calendar.getTime();
 	}
+	
+	public static boolean isDateWeekend(Calendar dateCal) {
+		boolean retVal = false;
+
+		if (dateCal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY
+				|| dateCal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+			retVal = true;
+		}
+
+		return retVal;
+	}
 }

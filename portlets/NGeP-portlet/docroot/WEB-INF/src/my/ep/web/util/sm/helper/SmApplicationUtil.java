@@ -6,15 +6,18 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -27,6 +30,7 @@ import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.educationfield.IEducationFieldSO;
+import my.ep.biz.service.pm.common.kpi.IPmKpiSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.race.IRaceSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
@@ -64,6 +68,7 @@ import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.educationfield.EducationFieldReqDTO;
 import my.ep.dto.pm.common.educationfield.EducationFieldResDTO;
+import my.ep.dto.pm.common.kpi.KpiReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.race.RaceResDTO;
@@ -114,6 +119,7 @@ import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmEduField;
+import my.ep.persistence.entity.pm.common.PmKPIValue;
 import my.ep.persistence.entity.pm.common.PmMachine;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -12709,6 +12715,162 @@ public class SmApplicationUtil {
 		}
 		
 		return smAppl;
+	}
+	
+	public String calculatePoKpiByCompanyState(int docId, int statusId) {
+		String retVal = StringUtils.EMPTY;
+		MofRegistrationReqDTO reqApplId = new MofRegistrationReqDTO();
+		reqApplId.setApplId(docId);
+		// reqApplId.setNotNeedInitialize(true);
+		MofRegistrationResDTO resApplId = SmServiceLookup
+				.getMofRegistrationSO().retrieveSmApplicationDetailsById(
+						reqApplId);
+		SmAppl smAppl = resApplId.getSmAppl();
+
+		IPmKpiSO pmKpiSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IPmKpiSO.class);
+		KpiReqDTO reqDTO = new KpiReqDTO();
+		reqDTO.setModuleCode(StringUtils
+				.upperCase(ModuleCodeConst.SUPPLIER_MANAGEMENT));
+		reqDTO.setKpiCode("SM018");
+		reqDTO.setSupplierType(smAppl.getSupplierType());
+		reqDTO.setApplTypeCategory(smAppl.getApplType()
+				+ smAppl.getApplCategoryType());
+		reqDTO.setZoneArea(smAppl.getSmCompanyBasic().getSmCompanyAddresses()
+				.get(0).getSmAddress().getPmState().getZoneArea());
+		Long stateId = smAppl.getSmCompanyBasic().getSmCompanyAddresses().get(0)
+				.getSmAddress().getPmState().getStateId();
+		PmKPIValue pmKPIValue = pmKpiSO.retrieveKpiValueByModuleCodeAndKpiCode(
+				reqDTO).getKpiValue();
+
+		if (pmKPIValue != null) {
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY HH:mm");
+			int numDays = pmKPIValue.getKpiValue();
+			Map.Entry<Integer, Date> startDateMap = getPoKpiStartDate(
+					new Long(docId), stateId).entrySet().iterator().next();
+			Date startDate = startDateMap.getValue();
+			Integer pauseDays = startDateMap.getKey();
+			Map.Entry<Integer, Date> entry = getPoKpiEndDateByCompanyState(
+					startDate, numDays, pauseDays, stateId).entrySet()
+					.iterator().next();
+			Date endDate = entry.getValue();
+			Integer daysLeft = entry.getKey();
+
+			retVal = sdf.format(endDate)
+					+ "<br />"
+					+ "( <span class='blink_text'><font color='red'>"
+					+ daysLeft
+					+ " " 
+					+ (SmCommonUtil.getMessage("lbl.sm.po.days",
+							null)) + " </font></span>) ";
+		}
+
+		return retVal;
+	}
+	
+	private Map<Integer, Date> getPoKpiStartDate(Long docId, Long stateId) {
+		int pauseDays = 0;
+		Date startDate = new Date();
+		Map<Integer, Date> mapDate = new HashMap();
+		SmWorkFlowStatusReqDTO swReqDTO = new SmWorkFlowStatusReqDTO();
+		swReqDTO.setStatusIds(Arrays
+				.asList(new Long[] {
+						my.ep.constant.sm.SupplierManagementConst.PM_STATUS_PENDING_REVIEW_APPLICATION,
+						my.ep.constant.sm.SupplierManagementConst.PM_STATUS_PO_INQUIRY }));
+		swReqDTO.setApplId(docId);
+		List<SmWorkflowStatus> workFlowList = SmServiceLookup
+				.getSmWorkFlowStatusSO()
+				.retrieveWorkflowByDocIdAndMultipleStatus(swReqDTO)
+				.getWorkFlowStatusLs();
+		sortCreatedDateAsc(workFlowList);
+
+		List<SmWorkflowStatus> inquiryTmpList = new ArrayList<SmWorkflowStatus>();
+
+		if (workFlowList != null) {
+			startDate = workFlowList.get(0).getCreatedDate();
+			if (workFlowList.size() > 1) {
+				Iterator<SmWorkflowStatus> wfIter = workFlowList.iterator();
+				SmWorkflowStatus wfStart = wfIter.next();
+				int i = 0;
+				while (wfIter.hasNext()) {
+					i++;
+
+					if (i != 1) {
+						SmWorkflowStatus wf = wfIter.next();
+						if (wf.getPmStatus()
+								.getStatusId()
+								.compareTo(
+										my.ep.constant.sm.SupplierManagementConst.PM_STATUS_PO_INQUIRY) == 0) {
+							inquiryTmpList.add(wf);
+						} else if (wf
+								.getPmStatus()
+								.getStatusId()
+								.compareTo(
+										my.ep.constant.sm.SupplierManagementConst.PM_STATUS_PENDING_REVIEW_APPLICATION) == 0) {
+
+							if (inquiryTmpList.size() == 1) {
+								SmWorkflowStatus wfInquiry = inquiryTmpList
+										.get(0);
+								pauseDays = pauseDays
+										+ SmCommonUtil
+												.getInstance()
+												.getDaysDiffMinusHolidayByState(
+														wfInquiry
+																.getCreatedDate(),
+														wf.getCreatedDate(),
+														stateId);
+								inquiryTmpList.clear();
+							}
+						}
+					}
+
+				}
+			}
+
+		}
+		mapDate.put(pauseDays, startDate);
+		return mapDate;
+
+	}
+	
+	private void sortCreatedDateAsc(List<SmWorkflowStatus> wfStatusList) {
+		// sort created date asc
+		Collections.sort(wfStatusList, new Comparator<SmWorkflowStatus>() {
+			public int compare(SmWorkflowStatus o1, SmWorkflowStatus o2) {
+				if (o2.getCreatedDate() == null || o1.getCreatedDate() == null)
+					return 0;
+				return o1.getCreatedDate().compareTo(o2.getCreatedDate());
+			}
+		});
+	}
+	
+	public Map<Integer, Date> getPoKpiEndDateByCompanyState(Date startDate,
+			int numDays, int pauseDays, Long stateId) {
+		int daysLeft = numDays;
+		Map<Integer, Date> mapDate = new HashMap();
+		Calendar dateCal = Calendar.getInstance();
+		dateCal.setTime(startDate);
+
+		calcEndDate(numDays, dateCal, stateId);
+
+		if (pauseDays != 0) {
+			calcEndDate(pauseDays, dateCal, stateId);
+		}
+
+		daysLeft = SmCommonUtil.getInstance().getDaysDiffMinusHolidayByState(
+				new Date(), dateCal.getTime(), stateId);
+
+		mapDate.put(daysLeft, dateCal.getTime());
+		return mapDate;
+	}
+
+	private void calcEndDate(int numDays, Calendar dateCal, Long stateId) {
+		for (int i = numDays - 1; i >= 0; i--) {
+			dateCal.add(dateCal.DATE, 1);
+			if (SmCommonUtil.getInstance().isDateHoliday(dateCal, stateId)) {
+				i = i + 1;
+			}
+		}
 	}
 
 }
