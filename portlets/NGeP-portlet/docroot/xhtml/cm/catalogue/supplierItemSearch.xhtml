@@ -459,7 +459,7 @@
 									<p:commandButton value="#{lbl['lbl.sc.purchase.in.default']}"
 										id="pidId"
 										action="#{purchaseInDefaultBackingBean.pidAction(supplierItem)}"
-										disabled="#{!supplierItem.pidRequired}"
+										disabled="#{!supplierItem.pidRequired or supplierItem.contractTerminated}"
 										rendered="#{supplierItem.contractNo ne null or supplierItem.circularNo ne null }"
 										onstart="blockWidget.show();" process="@this"
 										partialSubmit="true" oncomplete="blockWidget.hide();"
