@@ -58,7 +58,7 @@
 
 		<p:tabMenu id="tab"
 			activeIndex="#{consolidationReportBackingBean.managedBean.activeIndex}">
-			<p:menuitem value="#{lbl['lbl.sc.briefing.paper.preparation']}"
+			<p:menuitem value="#{lbl['lbl.sc.evaluation.report']}"
 				actionListener="#{consolidationReportBackingBean.onTabMenuChangeAction(0)}"
 				process="@form" update="@form" partialSubmit="true"
 				style="width:150px;">
@@ -70,6 +70,11 @@
 			</p:menuitem>
 			<p:menuitem value="#{lbl['lbl.sc.consolidation.report.itemized']}"
 				actionListener="#{consolidationReportBackingBean.onTabMenuChangeAction(2)}"
+				process="@form" update="@form" partialSubmit="true"
+				style="width:150px;">
+			</p:menuitem>
+			<p:menuitem value="#{lbl['lbl.sc.briefing.paper.preparation']}"
+				actionListener="#{consolidationReportBackingBean.onTabMenuChangeAction(3)}"
 				process="@form" update="@form" partialSubmit="true"
 				style="width:150px;">
 			</p:menuitem>
@@ -89,6 +94,12 @@
 								consolidationReportBackingBean.getITEMIZED_TYPE_TAB_INDEX()}">
 				<ui:include
 					src="#{consolidationReportFolderPath}/supplierRecommendation/supplierRecommendation.xhtml" />
+			</c:if>
+			<c:if
+				test="#{consolidationReportBackingBean.managedBean.activeIndex eq 
+								consolidationReportBackingBean.getEvaluationReportTabIndex()}">
+				<ui:include
+					src="#{consolidationReportFolderPath}/evaluationReport/evaluationReport.xhtml" />
 			</c:if>
 		</p:panel>
 		<ui:include
