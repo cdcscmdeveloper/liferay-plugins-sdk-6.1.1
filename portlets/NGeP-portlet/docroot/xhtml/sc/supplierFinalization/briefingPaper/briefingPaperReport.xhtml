@@ -73,11 +73,7 @@
 					</ac:scSingleFileUploadButton>
 				</ui:fragment> -->
 
-		<div class="ppRightBtn BtnSpacing">
-			<p:commandButton value="#{lbl['lbl.btn.download.all']}"
-				action="#{suppFinalizationBackingBean.downloadAllReports}"
-				ajax="false" immediate="true" rendered="#{!readOnlyTask}" />
-		</div>
+		<ui:include src="/xhtml/sc/supplierFinalization/briefingPaper/briefingPaperEvaluationSfReport.xhtml" />
 	</p:panel>
 
 </ui:composition>
