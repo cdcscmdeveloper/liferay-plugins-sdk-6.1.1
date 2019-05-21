@@ -1893,7 +1893,10 @@ public class SupplierFinalizationBackingBean extends
 	 */
 	public void submitAction() {
 		this.checkIfLoggedinUserIsSecretary();
-		if (this.getManagedBean().isSecretaryUser()) {
+		if (this.getManagedBean().isSecretaryUser() && null != this.getManagedBean().getScQtFinalization()
+				&& null != this.getManagedBean().getScQtFinalization().getDecision()
+				&& null != this.getManagedBean().getScQtFinalization().getDecision().getParameterId()
+				&& this.getManagedBean().getScQtFinalization().getDecision().getParameterId() == 359) {
 			RequestContext.getCurrentInstance().execute("submissionPopup.show()");
 		} else {
 			this.submitSuppFinalization();
