@@ -154,16 +154,6 @@
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.status']}" />
 					</td>
 					</h:panelGroup>
-					<td class="columnWidth150">
-						<p:outputLabel id="signBy" value="#{lbl['lbl.ct.signed.date']}" />
-					</td> 
-					<td>
-						<p:inputText for="signBy" disabled="true" style="width:80px;"
-							value="#{ctBackingBean.managedBean.agreementContractVer.signedDate}">
-			   				<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-						</p:inputText>
-						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.signed.date']}" />
-					</td>
 				</tr>
 				</h:panelGroup>
 				<tr rowspan="4">

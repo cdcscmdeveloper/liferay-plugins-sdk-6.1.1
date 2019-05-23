@@ -81,7 +81,6 @@ import my.ep.web.backingbean.ct.circular.CircularBackingBean;
 import my.ep.web.backingbean.ct.supplier.SupplierBackingBean;
 import my.ep.web.backingbean.ct.suspension.SuspensionBackingBean;
 import my.ep.web.backingbean.ct.termination.TerminationBackingBean;
-import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.ct.ContractManagementConst;
 import my.ep.web.managedbean.ct.ContractDetailsManagedBean;
@@ -104,8 +103,6 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
-import my.ep.web.managedbean.ct.circular.CircularManagedBean.ServiceListingPagingDataModel;
-import my.ep.web.managedbean.ct.circular.CircularManagedBean.CircularListingPagingDataModel;
 
 
 /**
@@ -302,7 +299,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			reqDTO.setContractVerId(new Long(dataType.getDocId()));
 			reqDTO.setDocType(dataType.getDocType());
 		}
-
 		setValidateContractField(reqDTO);
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -1953,12 +1949,21 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 		ContractReqDTO reqDTO = new ContractReqDTO();
 		reqDTO.setContractId(contractId);
-		CtContractVer  latestContractVer = contractSO.getLatestContractVer(reqDTO).getCtContractVer();
-		if (latestContractVer != null) {
-			reqDTO.setContractVerId(latestContractVer.getContractVerId());
+		
+		ContractResDTO resDTO = contractSO.retrieveLoaContractVerByContractId(reqDTO);
+		Long defaultContractVerId = null;
+		if(resDTO.getList() != null && !resDTO.getList().isEmpty())
+		{
+			int size = resDTO.getList().size();
+			defaultContractVerId = Long.parseLong(resDTO.getList().get(size - 1)[0].toString());
+		}
+	
+		if(defaultContractVerId != null) {
+			reqDTO.setContractVerId(defaultContractVerId);
 		} else {
 			reqDTO.setContractVerId(contractVerId);
 		}
+		
 		reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE); // View purpose, FU or FW also fine
 		reqDTO.setViewOnly(true);
 		ctBB.getManagedBean().setViewContract(true);
@@ -1966,7 +1971,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		setValidateContractField(reqDTO);
 		getManagedBean().setSelectedTabIndex(0);
 		getManagedBean().setExternalPageUrl(null);
-		getManagedBean().setLoaContractVerId( ctBB.getManagedBean().getContractVer().getContractVerId());
+		getManagedBean().setLoaContractVerId(ctBB.getManagedBean().getContractVer().getContractVerId());
 		reqDTO.setCtContractVer( ctBB.getManagedBean().getContractVer());
 		getManagedBean().setWarningPercentage(contractSO.checkAdvancedPaymentProgress(reqDTO).getPercentage());
 		return CONTRACT_PAGE;
