@@ -47,6 +47,7 @@ public class FlReportConst implements Serializable {
 	public static final String FL_031_INVOICE_CANCELLATION = "FL_031";
 	public static final String FL_051_STOP_INST_BY_PTJ = "FL_051";
 	public static final String FL_054_STOP_INST_BY_SUPPLIER = "FL_054";
+	public static final String FL_066_DEDUCTION = "FL_066";
 	
 	// Purchase Order Const
 	
@@ -141,6 +142,9 @@ public class FlReportConst implements Serializable {
 	
 	public String getFl011Deduction(){
 		return FL_011_DEDUCTION;
+	}
+	public String getFl066Deduction(){
+		return FL_066_DEDUCTION;
 	}
 	
 	public String getFl012ContractRequestRejection(){
@@ -282,7 +286,7 @@ public class FlReportConst implements Serializable {
 	public String getFl055PurchaseStopInstrSupp() {
 		return FL_055_PURCHASE_STOP_INSTR_SUPP;
 	}
-
+	
 	public String getFl033Summary() {
 		return FL_033_SUMMARY;
 	}
