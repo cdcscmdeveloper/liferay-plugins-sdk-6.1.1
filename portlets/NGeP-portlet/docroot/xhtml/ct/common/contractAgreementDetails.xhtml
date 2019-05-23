@@ -38,11 +38,28 @@
 						<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.ct.agreement.attachment.doc']}" />
 						</f:facet>
-						<h:outputText value="#{lbl['lbl.ct.agreement.doc']} : " />
-						<h:commandLink styleClass="blue_font"
-							title="#{agreement.fileName}"
-							value="#{ctBackingBean.getShortFileName(agreement.fileName)}"
-							action="#{ctBackingBean.commonDownload(agreement.filePath, agreement.fileName)}" /><br />
+						<h:outputText value="#{lbl['lbl.ct.agreement.doc']} : " 
+						rendered="#{agreement.status.statusId == CtStatusConst.acComplete}"/>
+						<h:outputText value="#{lbl['lbl.ct.agreement.supplemental.doc']} : " 
+						rendered="#{agreement.status.statusId == CtStatusConst.saComplete}"/>
+						<ui:repeat value="#{agreement.contractDocumentAttachments}" var="attachment" varStatus="attStatus">
+							<h:commandLink styleClass="blue_font"
+							title="#{attachment.fileName}"
+							value="#{ctBackingBean.getShortFileName(attachment.fileName)}"
+							action="#{ctBackingBean.commonDownload(attachment.filePath, attachment.fileName)}" 
+							rendered="#{attStatus.index == 0}" />
+							<h:commandLink styleClass="blue_font"
+							title="#{attachment.fileName}"
+							value="#{ctBackingBean.getShortFileName(attachment.fileName)}"
+							action="#{ctBackingBean.commonDownload(attachment.filePath, attachment.fileName)}" 
+							rendered="#{attStatus.index > 0 and agreement.status.statusId == CtStatusConst.acComplete}" style="margin-left:182px;" />
+							<h:commandLink styleClass="blue_font"
+							title="#{attachment.fileName}"
+							value="#{ctBackingBean.getShortFileName(attachment.fileName)}"
+							action="#{ctBackingBean.commonDownload(attachment.filePath, attachment.fileName)}" 
+							rendered="#{attStatus.index > 0 and agreement.status.statusId == CtStatusConst.saComplete}" style="margin-left:258px;" />
+							<br />
+						</ui:repeat>										
 						<h:outputText value="#{lbl['lbl.ct.agreement.signing.page.attachment']} : " />		
 						<h:commandLink styleClass="blue_font"
 							title="#{agreement.signedPageName}"
