@@ -28,7 +28,6 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
-import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -644,14 +643,11 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 				.getServiceObject(IBpmSO.class);
 
-		String taskId = FacesContext.getCurrentInstance().getExternalContext()
-				.getRequestParameterMap().get("taskId");
-		String process = FacesContext.getCurrentInstance().getExternalContext()
-				.getRequestParameterMap().get("process");
-		String taskName = FacesContext.getCurrentInstance()
-				.getExternalContext().getRequestParameterMap().get("taskName");
-		String docType = FacesContext.getCurrentInstance().getExternalContext()
-				.getRequestParameterMap().get("docType");
+		String taskId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("taskId");
+		String process = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("process");
+		String taskName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
+				.get("taskName");
+		String docType = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docType");
 
 		String claim = FacesContext.getCurrentInstance().getExternalContext()
 				.getRequestParameterMap().get("isClaim");
@@ -673,17 +669,14 @@ BaseBackingBean<BPMTaskListManagedBean> {
 
 			String url = "";
 
-			if (!this.getManagedBean().getBpmMap().isEmpty()
-					&& this.getManagedBean().getBpmMap().size() > 0) {
+			if (!this.getManagedBean().getBpmMap().isEmpty() && this.getManagedBean().getBpmMap().size() > 0) {
 
 				url = (String) this.getManagedBean().getBpmMap().get(process);
 				if (url == null || url.isEmpty()) {
-					url = (String) this.getManagedBean().getBpmMap()
-							.get(process + taskName);
+					url = (String) this.getManagedBean().getBpmMap().get(process + taskName);
 				}
 				if (url == null || url.isEmpty()) {
-					url = (String) this.getManagedBean().getBpmMap()
-							.get(process + docType);
+					url = (String) this.getManagedBean().getBpmMap().get(process + docType);
 				}
 			}
 			log.info("url:" + url);
@@ -781,11 +774,15 @@ BaseBackingBean<BPMTaskListManagedBean> {
 	}
 
 
-
-
 	public void refreshNormalTaskList(){
 
 		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
+	}
+	
+	//Enhancement #24714
+	public void refreshBothTaskList(){
+
+		this.getManagedBean().getTaskListBothDataModel().reloadData();
 	}
 
 	public String goToMyTasks() {
@@ -872,15 +869,53 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
 		
 		getManagedBean().setSdoWithMultipleRoles(sdoWithMultipleRole());
-
+		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 		.handleNavigation(fc, null, "taskListView");
 
 	}
+	
+	// #24714
+	public void preRenderTaskViewCombined() {
+		log.info("......................preRenderTaskView (Combined)");
 
+		this.getManagedBean().setViewBy("");
+		this.getManagedBean().setViewByGroup("");
+		this.getManagedBean().setDocNo("");
+		this.getManagedBean().setDocNoGroup("");
+		this.getManagedBean().setTaskDesc("");
+		this.getManagedBean().setTaskDescGroup("");
+		this.getManagedBean().setSelectedStatusDesc(new PmStatusDesc());
+		this.getManagedBean().setSelectedStatusDescAdvance(new PmStatusDesc());
+		this.getManagedBean().setDocStatusGroup(0);
+		this.getManagedBean().setDocTypeGroup("");
 
+		HttpServletRequest servletRequest = PortalUtil
+				.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil
+				.getOriginalServletRequest(servletRequest);
+		String docTypeId = originalServletRequest.getParameter("docTypeId");
 
+		if (docTypeId != null && !docTypeId.isEmpty()) {
+			this.getManagedBean().setDocType(docTypeId);
+			originalServletRequest.getParameterMap().remove("docTypeId");
+		} else {
+			this.getManagedBean().setDocType("");
+		}
+		
+		this.getManagedBean().getTaskListBothDataModel().reloadData();
+		
+		getManagedBean().setSdoWithMultipleRoles(sdoWithMultipleRole());
+		
+		FacesScopes sc = new FacesScopes();
+		getManagedBean().setLoginIc(sc.getUserSessionBean().getLoginId());
+
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+		.handleNavigation(fc, null, "taskListCombined");
+
+	}
 
 
 	public String claimTask()  {
@@ -888,30 +923,51 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		log.info("**********claimTask");
 		
 			claimBpmTask();
+			
 			this.getManagedBean().getTaskListGroupDataModel().reloadData();
 			this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
-		
 
 		return "taskListView?faces-redirect=true";
 
-
 	}
-
 
 
 	public String releaseTask()  {
 		log.info("**********releaseTask");
 		
 		releaseBpmTask();
+		
 		this.getManagedBean().getTaskListGroupDataModel().reloadData();
 		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
-		
 
 		return "taskListView?faces-redirect=true";
+	}
+	
+	
+	public String claimTaskCombined()  {
 
+		log.info("**********claimTaskCombined");
+		
+			claimBpmTask();
+			
+			this.getManagedBean().getTaskListBothDataModel().reloadData();
+			//this.getManagedBean().getTaskListGroupDataModel().reloadData();
+			//this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
+		
+		return "taskListCombined?faces-redirect=true";
 
 	}
+	
+	public String releaseTaskCombined()  {
+		log.info("**********releaseTaskCombined");
+		
+		releaseBpmTask();
+		
+		this.getManagedBean().getTaskListBothDataModel().reloadData();
 
+		return "taskListCombined?faces-redirect=true";
+
+	}
 
 
 	public void claimTaskInDetailPage()  {
