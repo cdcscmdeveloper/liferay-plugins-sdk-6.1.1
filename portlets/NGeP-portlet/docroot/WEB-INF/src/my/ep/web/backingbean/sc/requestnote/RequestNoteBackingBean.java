@@ -980,8 +980,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 									+ requestNoteDtl.getRequestNoteDtlId());
 							debugLogger("RequestNoteBackingBean >> validateRequestNote : Extension Code : "
 									+ extensionCode);
+							
+							Calendar cal = Calendar.getInstance();
+							
+							cal.setTimeInMillis(requestNoteDtl.getCreatedDate().getTime());
+							
 							flReqDTO.setOrgProfileId(requestNote.getPmOrgProfile().getOrgProfileId());
 							flReqDTO.setExtensionCode(extensionCode);
+							flReqDTO.setYear(cal.get(Calendar.YEAR));
 							IFlItemSummarySO itemSummarySO = (IFlItemSummarySO) BusinessDelegate.getInstance()
 									.getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
 							// BigDecimal totalAmt = itemSummarySO
