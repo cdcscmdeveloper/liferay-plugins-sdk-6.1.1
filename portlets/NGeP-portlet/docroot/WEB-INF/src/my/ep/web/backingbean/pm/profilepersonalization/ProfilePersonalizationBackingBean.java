@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Iterator;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -18,13 +19,17 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
+import my.ep.biz.service.pm.admin.adminmatrix.IAdminMatrixSO;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.role.AdminDetailsDTO;
 import my.ep.dto.pm.authorization.role.AdminReqDTO;
 import my.ep.dto.pm.authorization.role.AdminResDTO;
@@ -32,10 +37,13 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.authorization.userorg.UserOrgResDTO;
 import my.ep.dto.pm.common.PmTrackingDairyVO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.admin.PmAdminMatrix;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
@@ -70,6 +78,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
+
 
 /**
  * @author DK, RAIN POH
@@ -1429,29 +1438,48 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	public void searchAdminProfile() {
 		logger.info("searchAdminProfile - start");
 		IUserSO userSO = null;
+		IParameterSO parameterSO = null;
+		IAdminMatrixSO adminMatrixSO = null;
 		getManagedBean().setLazy(true);
 		FacesScopes facesScopes = new FacesScopes();
+		userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+		adminMatrixSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAdminMatrixSO.class);
 		try {
 			AdminReqDTO adminReqDTO = new AdminReqDTO();
 			if (authUserDetails.getPmUserOrgs() != null) {
-				adminReqDTO.setParameterCode(authUserDetails.getOrgTypeCode().getParameterCode());
-				adminReqDTO.setOrgTypeId(authUserDetails.getOrgTypeCode().getParameterId());
-				adminReqDTO.setOrgCode(getManagedBean().getCurrentProfile().getOrgValidity().getOrgCode());
-				for (PmUserOrg role : authUserDetails.getPmUserOrgs()) {
-					for (PmUserRole roleCode : role.getPmUserRoles()) {
-						adminReqDTO.setUserRoles(adminUserRoleMap.get(roleCode.getPmRole().getRoleCode()));
+
+				ParameterResDTO resDTO = parameterSO.retrieveOrgTypeByTypeByUserId(facesScopes.getUserSessionBean().getUserId());
+
+				Object[] obj = resDTO.getParamterType();
+			
+				Long parameterId = Long.parseLong(obj[0].toString());
+				Long orgProfileId = Long.parseLong(obj[1].toString());
+				
+				
+				List<PmRole> pmRole = userSO.retrieveUserRolesByUserId(facesScopes.getUserSessionBean().getUserId());
+				
+				List<PmAdminMatrix> pmAdminMatrix = adminMatrixSO.retrieveCorrespondingAdminRoleByOrgType(parameterId, pmRole);
+				
+				if(pmAdminMatrix.size()>0){
+					
+					Iterator<PmAdminMatrix> iterator = pmAdminMatrix.iterator();
+					List<String> roleNames = new ArrayList<String>();
+					while (iterator.hasNext()) {
+						PmAdminMatrix pmAdminMatrixRole = iterator.next();
+						roleNames.add(pmAdminMatrixRole.getAdminRoleCode());
 					}
+					adminReqDTO.setOrgProfileId(orgProfileId);
+					adminReqDTO.setUserRoles(roleNames);
 				}
 			}
-			userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			if (adminReqDTO.getOrgCode() != null && adminReqDTO.getOrgTypeId() > 0
-					&& adminReqDTO.getUserRoles() != null) {
+			
+			if (adminReqDTO.getOrgProfileId() > 0 && adminReqDTO.getUserRoles() != null) {
 				getManagedBean().setAdminDetReceivedList(userSO.searchAdminProfilesByOrgDetails(adminReqDTO,facesScopes.getUserSessionBean().getUserId()));
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
-
 	}
 
 	// //TODO: testing
