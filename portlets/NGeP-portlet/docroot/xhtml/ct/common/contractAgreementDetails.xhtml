@@ -5,6 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<ui:param name="language" value="#{ctBackingBean.getLanguage()}"></ui:param>
 		<p:panel id="fd2" toggleable="true" toggleSpeed="500" rendered="#{ctBackingBean.managedBean.ctContractAmount.agreement}">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.ct.agreement.detail']}" />
@@ -45,19 +46,29 @@
 						<ui:repeat value="#{agreement.contractDocumentAttachments}" var="attachment" varStatus="attStatus">
 							<h:commandLink styleClass="blue_font"
 							title="#{attachment.fileName}"
-							value="#{ctBackingBean.getShortFileName(attachment.fileName)}"
+							value="#{attachment.fileName}"
 							action="#{ctBackingBean.commonDownload(attachment.filePath, attachment.fileName)}" 
 							rendered="#{attStatus.index == 0}" />
 							<h:commandLink styleClass="blue_font"
 							title="#{attachment.fileName}"
-							value="#{ctBackingBean.getShortFileName(attachment.fileName)}"
+							value="#{attachment.fileName}"
 							action="#{ctBackingBean.commonDownload(attachment.filePath, attachment.fileName)}" 
-							rendered="#{attStatus.index > 0 and agreement.status.statusId == CtStatusConst.acComplete}" style="margin-left:182px;" />
+							rendered="#{attStatus.index > 0 and agreement.status.statusId == CtStatusConst.acComplete and language eq 'en'}" style="margin-left:182px;" />
 							<h:commandLink styleClass="blue_font"
 							title="#{attachment.fileName}"
-							value="#{ctBackingBean.getShortFileName(attachment.fileName)}"
+							value="#{attachment.fileName}"
 							action="#{ctBackingBean.commonDownload(attachment.filePath, attachment.fileName)}" 
-							rendered="#{attStatus.index > 0 and agreement.status.statusId == CtStatusConst.saComplete}" style="margin-left:258px;" />
+							rendered="#{attStatus.index > 0 and agreement.status.statusId == CtStatusConst.saComplete and language eq 'en'}" style="margin-left:259px;" />
+							<h:commandLink styleClass="blue_font"
+							title="#{attachment.fileName}"
+							value="#{attachment.fileName}"
+							action="#{ctBackingBean.commonDownload(attachment.filePath, attachment.fileName)}" 
+							rendered="#{attStatus.index > 0 and agreement.status.statusId == CtStatusConst.acComplete and language eq 'ms'}" style="margin-left:164px;" />
+							<h:commandLink styleClass="blue_font"
+							title="#{attachment.fileName}"
+							value="#{attachment.fileName}"
+							action="#{ctBackingBean.commonDownload(attachment.filePath, attachment.fileName)}" 
+							rendered="#{attStatus.index > 0 and agreement.status.statusId == CtStatusConst.saComplete and language eq 'ms'}" style="margin-left:224px;" />
 							<br />
 						</ui:repeat>										
 						<h:outputText value="#{lbl['lbl.ct.agreement.signing.page.attachment']} : " />		
