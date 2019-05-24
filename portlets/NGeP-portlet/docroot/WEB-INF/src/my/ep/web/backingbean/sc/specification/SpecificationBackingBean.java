@@ -14662,30 +14662,66 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			}	    	
 	    }
 	
-	/**
-	 * check mode = tender
+	/** #13955
+	 * check mode = tender - checkIsDisable=true
+	 * check mode = quotation - checkIsDisable=false to PROCUREMENT_GROUP_ASSET and PROCUREMENT_GROUP_OVERDRAF
 	 * 
-	 * @param tendermode
+	 * @param isDisable
 	 * @return (boolean true/false).
 	 */
-	public boolean checkIsTender(ScQtCheckList checkList) {
-		boolean isTender = false;
+	public boolean checkIsDisable(ScQtCheckList checkList) {
+		boolean isDisable = false;
 		ScQt scQt = this.getManagedBean().getQt();
+		
+		//if tender
 		if (ParameterConst.PROCUREMENT_MODE_TENDER.equals(scQt.getProcurementMode().getParameterCode())) {
 			if(checkList.getPmDocument() !=null){
 				if(checkList.getPmDocument().getDocGroupId() !=null){
 					for (ScQtCheckList scQtCheckList : this.getManagedBean().getScQtCheckSt2financeProposalList()) {
 						if(scQtCheckList.getPmDocument() !=null){
 							if(checkList.getPmDocument().getDocGroupId() == scQtCheckList.getPmDocument().getDocGroupId()){
-									isTender = true;	
+									isDisable = true;	
 							}
 						}
 					}
 				}
+				else {
+					isDisable = true;
+				}
+			}
+			else {
+				isDisable = true;
 			}
 		}
-		return isTender;
+
+		// if quotation
+		if (ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(scQt.getProcurementMode().getParameterCode())) {
+			if(checkList.getPmDocument() !=null){
+				if(checkList.getPmDocument().getDocGroupId() !=null){
+					for (ScQtCheckList scQtCheckList : this.getManagedBean().getScQtCheckSt2financeProposalList()) {
+						if(scQtCheckList.getPmDocument() !=null){
+							if(checkList.getPmDocument().getDocGroupId() == scQtCheckList.getPmDocument().getDocGroupId()) {
+								if (checkList.getPmDocument().getDocGroupId() == ParameterConst.PROCUREMENT_GROUP_ASSET || checkList.getPmDocument().getDocGroupId() == ParameterConst.PROCUREMENT_GROUP_OVERDRAF)  {
+									isDisable = false;
+								}
+								else {
+									isDisable = true;
+								}
+							}
+						}
+					}
+				}
+				else {
+					isDisable = true;
+				}
+			}
+			else {
+				isDisable = true;
+			}
+		}		
+		return isDisable;
 	}
+	
 private void resetTechnicalWeightage(ScQtScoreSetting technicalScoreSetting){
 	if(null!=technicalScoreSetting && !technicalScoreSetting.isWeightageReq()){
 		log.info("====resetTechnicalWeightage===="+technicalScoreSetting.getSettingType());
