@@ -398,11 +398,11 @@
 				<p:panel header="#{lbl['lbl.fl.goods.receivingdetails']}"  toggleable="true" id="goodsReceivingDetails">
 				<table style="width: 100%">
 				<tr>
-					<td width="120"><p:outputLabel value="#{lbl['lbl.fl.supp.contact.person.name']}" /> <p:outputLabel
+					<td width="120"><p:outputLabel value="#{lbl['lbl.pm.contact.name']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td width="276"><p:inputText id="contactPerson" 
 							required="#{purchaseRequestBackingBean.managedBean.required}"
-							label="#{lbl['lbl.fl.supp.contact.person.name']}" maxlength="85" size="34"
+							label="#{lbl['lbl.pm.contact.name']}" maxlength="85" size="34"
 							value="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.contactPerson}"
 							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }"></p:inputText>
 						<ac:iconTooltip value="#{lbl['lbl.fl.supp.contact.person.name']}"/>
