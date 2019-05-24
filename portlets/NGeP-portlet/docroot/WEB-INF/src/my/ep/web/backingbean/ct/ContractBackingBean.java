@@ -3857,4 +3857,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		return null;
 	}
 
+	public String getLanguage() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.getUserLocale().getLanguage();
+	}
 }  
