@@ -509,11 +509,11 @@
 				<p:panel header="#{lbl['lbl.fl.goods.receivingdetails']}"  toggleable="true" id="goodsReceivingDetails">
 				<table style="width: 100%">
 				<tr>
-					<td width="120"><p:outputLabel value="#{lbl['lbl.fl.supp.contact.person.name']}" /> <p:outputLabel
+					<td width="120"><p:outputLabel value="#{lbl['lbl.pm.contact.name']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td width="276"><p:inputText id="contactPerson"
 							required="#{contractRequestBackingBean.managedBean.required}"
-							label="#{lbl['lbl.fl.supp.contact.person.name']}"
+							label="#{lbl['lbl.pm.contact.name']}"
 							style="width: 202px;margin-bottom: 5px;"
 							value="#{contractRequestBackingBean.managedBean.flManualAddress.flAddress.contactPerson}"
 							validatorMessage="#{lbl['lbl.fl.tel.no.msg']}"
@@ -832,7 +832,7 @@
 	</p:dialog>
 	<p:dialog id="addContractedItemDialog" header="#{lbl['lbl.fl.item.list']}" 
 		widgetVar="addItems" showEffect="fade" hideEffect="fade" modal="true"
-		width="600" resizable="false">
+		width="600" resizable="false" height="600" style="overflow:scroll">
 		<p:messages id="messages2" showSummary="false" showDetail="true" autoUpdate="#{contractRequestBackingBean.managedBean.itemAutoUpdate}" closable="true" severity="error,info,warn"  />
 		<p:panel id="searchPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.search.criteria']}" escape="false"/>
