@@ -91,6 +91,9 @@ public class PmReportsBackingBean extends
 				.handleNavigation(fc, null, NAV_TO_PMREPORT);
 	}
 
+	public String getLanguage() {
+		return getFacesScopes().getUserLocale().getLanguage();
+	}
 	private FacesScopes getFacesScopes() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
