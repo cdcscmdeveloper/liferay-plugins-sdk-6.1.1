@@ -4587,7 +4587,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		if(!isSqStillValid()){
 				if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL) || 
 				   currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL) ){
-					String[] addReject = new String[]{BpmOutcomeConst.BPM_REJECT,BpmOutcomeConst.BPM_CANCEL};    		
+					String[] addReject = new String[]{BpmOutcomeConst.BPM_REJECT};    		
 					getManagedBean().setOutComes(addReject);	
 					
 				}else{
@@ -4595,7 +4595,12 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					getManagedBean().setOutComes(addCancel);
 				}
 						
-		}							        
+		}		
+		
+		if(getManagedBean().isPidValidityExpired()){
+			String[] addCancel = new String[]{BpmOutcomeConst.BPM_REJECT};    		
+			getManagedBean().setOutComes(addCancel);
+		}
 	}
 	
 	/**
