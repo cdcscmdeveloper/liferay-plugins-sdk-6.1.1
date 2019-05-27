@@ -74,12 +74,12 @@
 						<h:outputText value="#{lbl['lbl.ct.agreement.signing.page.attachment']} : " />		
 						<h:commandLink styleClass="blue_font"
 							title="#{agreement.signedPageName}"
-							value="#{ctBackingBean.getShortFileName(agreement.signedPageName)}"
+							value="#{agreement.signedPageName}"
 							action="#{ctBackingBean.commonDownload(agreement.signedPagePath, agreement.signedPageName)}" /><br />		
 						<h:outputText value="#{lbl['lbl.ct.agreement.stamping.page.attachment']} : " />
 						<h:commandLink styleClass="blue_font"
 							title="#{agreement.stampedPageName}"
-							value="#{ctBackingBean.getShortFileName(agreement.stampedPageName)}"
+							value="#{agreement.stampedPageName}"
 							action="#{ctBackingBean.commonDownload(agreement.stampedPagePath, agreement.stampedPageName)}" />	
 				</p:column>
 				</p:dataTable>
