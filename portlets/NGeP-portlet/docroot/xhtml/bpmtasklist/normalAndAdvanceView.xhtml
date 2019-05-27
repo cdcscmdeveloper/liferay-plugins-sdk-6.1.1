@@ -136,7 +136,7 @@
 				<f:param name="process" value="#{tasks.process}" />
 				<f:param name="taskName" value="#{tasks.taskName}" />
 				<f:param name="docType" value="#{tasks.docType}" />
-				<f:param name="isClaim" value="true" />
+				<f:param name="isClaim" value="#{tasks.claimed}" />
 				<h:outputText value="#{tasks.title}" escape="false" />
 			</p:commandLink>
 
