@@ -162,6 +162,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	/** The flag. */
 	private boolean flag;
 	private boolean sqExpiredMessageFlag = false;
+	private boolean pidExpiredFlag = false;
 	
 	/** The Constant ZONE_SEPARATOR. */
 	public static final String ZONE_SEPARATOR = "_";
@@ -611,7 +612,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						if(defaultResDTO.getPurchaseInDefaultDtl() != null){
 							ScPurchaseInDefault  purchaseInDefault = defaultResDTO.getPurchaseInDefaultDtl();
 							requestItem.setPurchaseInDefault(purchaseInDefault);
-							pidValidityBoolean(purchaseInDefault, requestNote);
+							pidExpiredFlag = pidValidityBoolean(purchaseInDefault, requestNote);
 						} else {
 							requestItem.setPurchaseInDefault(null);
 						}
@@ -622,17 +623,21 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			this.getManagedBean().setRequestNoteDtls(requestNoteDtls);
 			getManagedBean().getRequestNote().setRequestNoteDtls(requestNoteDtls);
 			getManagedBean().getRequestNote().setRequestNoteItems(requestNoteItems);
-			
+		
 		
 		
 		
 		
 		} finally {
-			purchaseInDefaultSO = null;
-			// title checker
+//			purchaseInDefaultSO = null;
+//			// title checker
 			getManagedBean().setRequestNote(requestNote);
 			getManagedBean().setRequestNoteDtls(requestNoteDtlList);
+			//getManagedBean().setTitleChecker(Boolean.FALSE);
+			
 			getManagedBean().setTitleChecker(Boolean.FALSE);
+			
+			
 		}
 	}
 	
@@ -1164,10 +1169,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				getRequestNoteDtlForCodificationBySupplier(requestNoteReqDTO);
 		reloadRequestNoteForCodification(requestNoteResDTO);
 		
+		if(!pidExpiredFlag){
+			getPurchaseInDefaultExpiredMessageCodification(getManagedBean().getRequestNoteStatus().getStatusId());
+			
+		}
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		// page nav. to request note codification page
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, REQUEST_NOTE_CODIFICARION_PAGE);
+		
+		
 	}
 	
 
@@ -3426,17 +3437,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	private boolean pidValidityBoolean(ScPurchaseInDefault purchaseInDefault, ScRequestNote scRequestNote) {
 		Date today  = DateUtils.getCurrentDateWithoutTime();
 		Date ExpDate = DateUtils.addDays(scRequestNote.getCreatedDate(), purchaseInDefault.getPidValidDays());
-		boolean valid = false;
+		boolean valid = true;
 		if(ExpDate.before(today)){
 			valid = false;
 			getManagedBean().getRequestNoteStatus().setStatusId(DPStatusConstants.PID_EXPIRED);
-//			throw new EpException(
-//					MessageConst.ERROR_760355,
-//					new String[] {purchaseInDefault.getPurchaseInDefaultNo()});
-		} else{
-			valid = true;
+			//throw new EpException(
+			//		MessageConst.ERROR_760355,
+			//		new String[] {purchaseInDefault.getPurchaseInDefaultNo()});
 		}
-		
 		return valid;
 	}
 
@@ -4142,6 +4150,26 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 	
+	
+	/**
+	 * Gets the purchase in default expired message.
+	 *
+	 * @param statusId the status id
+	 * @return the purchase in default expired message
+	 */
+	private void getPurchaseInDefaultExpiredMessageCodification(Long statusId){
+		if(DPStatusConstants.PID_EXPIRED.equals(statusId)){
+			Locale locale = new FacesScopes().getUserLocale();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+							.getMessage(
+									ResourceBundleUtils.getMessage("lbl.sc.purchase.in.default.exp.msg2",
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale),
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+		}
+	}
 	/**
 	 * Update work flow and remarks.
 	 *
@@ -4459,8 +4487,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 */
 	public void addButton(){
 		Long currentStatusId = getManagedBean().getCurrentStatusId();
+		//check if pid expired ovewrite sq
 		//checking if SQ still valid, if not valid thus cancel/reject button will be added
-		if(!isSqStillValid()){
+		
+		
+		
+			if(!isSqStillValid()){
 				if(currentStatusId.equals(DPStatusConstants.RN_PENDING_APPROVAL)
 				   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL) ){
 					String[] addReject = new String[]{BpmOutcomeConst.BPM_REJECT};    		
@@ -4470,7 +4502,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					String[] addCancel = new String[]{BpmOutcomeConst.BPM_CANCEL};    		
 					getManagedBean().setOutComes(addCancel);
 				}						
-		}							        
+		}
+		
 	}
 	
 	/**
