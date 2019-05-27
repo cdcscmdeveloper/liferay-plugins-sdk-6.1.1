@@ -703,10 +703,17 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 */
 	private void itemEditableMode(PpPlan ppPlan){
 		log.info("itemEditableMode");
-		if(ProcurementPlanConst.PPE_PENDING_REVISION.equals(ppPlan.getStatus().getStatusId())
-				|| ProcurementPlanConst.PPP_PENDING_REVISION.equals(ppPlan.getStatus().getStatusId())){
+//		if(ProcurementPlanConst.PPE_PENDING_REVISION.equals(ppPlan.getStatus().getStatusId())
+//				|| ProcurementPlanConst.PPP_PENDING_REVISION.equals(ppPlan.getStatus().getStatusId())){
+		
+		//[SIR#12802] - start
+		if(!ProcurementPlanConst.PPE_APPROVED.equals(ppPlan.getStatus().getStatusId())
+				|| !ProcurementPlanConst.PPP_APPROVED.equals(ppPlan.getStatus().getStatusId())){
+		//[SIR#12802] - end
+
 			this.getManagedBean().getSelectedPlan().setRejected(true);
 			if(ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())){
+				
 				for(PpExpenditureItem epItem: ppPlan.getPpExpenditureItems()){
 					if(DbValueConst.RECORD_STATUS_ACTIVE == epItem.getRecordStatusFlg() && epItem.isRejected()){
 						epItem.setEditable(true);
@@ -725,15 +732,17 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					}
 				}
 			}else if(ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())){
-				for(PpProcurementItem ppItem: ppPlan.getPpProcurementItems()){
-					if(DbValueConst.RECORD_STATUS_ACTIVE == ppItem.getRecordStatusFlg() && ppItem.isRejected()){
+
+				for(PpProcurementItem ppItem: ppPlan.getPpProcurementItems()){					
+					if(DbValueConst.RECORD_STATUS_ACTIVE == ppItem.getRecordStatusFlg() && ppItem.isRejected()){						
 						ppItem.setEditable(true);
 						this.getManagedBean().getSelectedPlan().setRejected(false);
 					}
 				}
+				
 				if(this.getManagedBean().getSelectedPlan().isRejected()){
 					for(PpProcurementItem ppItem: ppPlan.getPpProcurementItems()){
-						if(DbValueConst.RECORD_STATUS_ACTIVE == ppItem.getRecordStatusFlg()){
+						if(DbValueConst.RECORD_STATUS_ACTIVE == ppItem.getRecordStatusFlg()){							
 							ppItem.setEditable(true);
 						}else{
 							ppItem.setEditable(false);
