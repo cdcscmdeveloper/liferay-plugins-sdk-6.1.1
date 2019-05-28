@@ -245,8 +245,12 @@ public class CreateQtBackingBean extends
 						"panelApprovalDlgs.show()");
 			} else {
 				circularListSelect(new CtCircularVer());
+				scQt.setZonal(true);
 				setDataNull();
 			}
+			zoneRadioChange(scQt);
+			
+			
 		}
 
 	}
@@ -449,6 +453,7 @@ public class CreateQtBackingBean extends
 	 *            (boolean zoneLocationlevel).
 	 */
 	public void zoneRadioChange(ScQt scQt) {
+
 		Boolean isZonal = scQt.isZonal();
 		ScQtSupplierCriteria supplierCriteria = scQt.getScQtSupplierCriteria();
 		
