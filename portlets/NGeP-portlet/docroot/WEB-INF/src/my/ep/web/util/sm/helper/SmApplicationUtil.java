@@ -12758,11 +12758,13 @@ public class SmApplicationUtil {
 
 			retVal = sdf.format(endDate)
 					+ "<br />"
+					+ "<center>"
 					+ "( <span class='blink_text'><font color='red'>"
-					+ daysLeft
+					+ daysLeft 
 					+ " " 
 					+ (SmCommonUtil.getMessage("lbl.sm.po.days",
-							null)) + " </font></span>) ";
+							null)) + " </font></span>) "
+					+ "</center>";
 		}
 
 		return retVal;

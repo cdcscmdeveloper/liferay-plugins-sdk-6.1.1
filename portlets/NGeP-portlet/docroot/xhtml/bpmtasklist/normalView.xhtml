@@ -159,7 +159,6 @@
 			</h:outputText>
 			<p:outputPanel rendered="#{tasks.docStatus eq SupplierManagementConst.PM_STATUS_PO_REVIEW}">
 				<h:outputText value="#{bpmTasklistBackingBean.poKpiByCompanyState(tasks.docId, tasks.docStatus)}" escape="false"/>
-				<p:graphicImage id="banti" value="/css/images/design/hourglass.png" />
 			</p:outputPanel>
 		</p:column>
 		<p:column width="18%;" style="white-space:normal;">
