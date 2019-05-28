@@ -204,52 +204,89 @@ public class SPDetailBackingBean extends
 		}
 	}
 
+	
 	/**
-	 * Method to retrieve Technical & Financial Proposal CheckList and to set in
-	 * managed bean
 	 * 
 	 * @param qtID
 	 * @param userId
+	 * @param isReadonly
 	 */
 	public void retrieveProposalChecklistDtls(Long qtID, Long userId,
-			boolean isReadonly) {
-		debugLogger("retrieveProposalChecklistDtls qtId:::"+qtID+"::::UserId::::"+userId);
+			boolean isReadonly){
+		retrieveProposalChecklistDtls(qtID, userId, isReadonly, false);
+	}
+	
+	/**
+	 * @param qtOrProposalId  -> set qtID or proposalId if byProposalId is true
+	 * @param userId
+	 */
+	public void retrieveProposalChecklistDtls(Long qtOrProposalId, Long userId,
+			boolean isReadonly, boolean byProposalId) {
+		debugLogger("retrieveProposalChecklistDtls");
 		ProposalReqDTO reqDTO = new ProposalReqDTO();
 		IQTProposalSO proposalSO;
 		try {
-			reqDTO.setQtId(qtID);
 			reqDTO.setUserId(userId);
+			if(!byProposalId)	{reqDTO.setQtId(qtOrProposalId);}
+			else				{reqDTO.setQtProposalId(qtOrProposalId);}			
 			proposalSO = getProposalSO();
-			ProposalResDTO resDTO = proposalSO
-					.retrieveProposalDtlBySupplierId(reqDTO);
+			ProposalResDTO resDTO = null; 
+			if(!byProposalId)	{ resDTO = proposalSO.retrieveProposalDtlBySupplierId(reqDTO);}
+			else				{ resDTO = proposalSO.retrieveProposalDetail(reqDTO);}
 
 			ScQt scQt = resDTO.getScQt();
-
+			 ScQtProposal scQtProposal=resDTO.getScQtProposal();
 			getManagedBean().setQt(resDTO.getScQt());
 
 			getManagedBean().setScQtDocReports(resDTO.getScQtDocReports());
-
-			getManagedBean().setQtProposal(resDTO.getScQtProposal());
-			getManagedBean().setLastSubmittedDate(resDTO.getScQtProposal().getLastSubmitDate());
+			 
+			getManagedBean().setQtProposal(scQtProposal);
+			getManagedBean().setLastSubmittedDate(scQtProposal.getLastSubmitDate());
 			getManagedBean().setSupplierId(resDTO.getSupplierId());
-
 			// Technical Check List
-			if (resDTO.getTechnicalCheckLists() != null) {
+						if (resDTO.getTechnicalCheckLists() != null) {
+							getManagedBean().setTecCheckDetailsList(
+									resDTO.getTechnicalCheckLists());
+							checklistSorting(getManagedBean().getTecCheckDetailsList());
+							debugLogger("Technical Check list: "
+									+ resDTO.getTechnicalCheckLists().size());
+						}
+
+						// Financial Check List
+						if (resDTO.getFinancialCheckLists() != null) {
+							getManagedBean().setFinanceCheckDetailsList(
+									resDTO.getFinancialCheckLists());
+							checklistSorting(getManagedBean().getFinanceCheckDetailsList());
+							debugLogger("Financial Check list: "
+									+ resDTO.getFinancialCheckLists().size());
+						}
+			if(resDTO.getTechnicalCheckLists().size()==0 || resDTO.getFinancialCheckLists().size()==0){
+				//log.info("BackingBeanResDTO"+resDTO.getTechnicalCheckLists());
+				reqDTO = new ProposalReqDTO();
+				reqDTO.setTechnicalCount(resDTO.getTechnicalCheckLists().size());
+				reqDTO.setFinancialCount(resDTO.getFinancialCheckLists().size());
+				reqDTO.setQtId(scQt.getQtId());
+				reqDTO.setSupplierId(resDTO.getSupplierId());
+				reqDTO.setScQt(scQt);
+				reqDTO.setScQtProposal(scQtProposal);
+			ProposalResDTO	checklist = proposalSO.retrieveProposalChecklistDcoumentDtls(reqDTO);
+			if(resDTO.getTechnicalCheckLists().size()==0 && checklist.getTechnicalCheckLists()!=null ){
 				getManagedBean().setTecCheckDetailsList(
-						resDTO.getTechnicalCheckLists());
+						checklist.getTechnicalCheckLists());
 				checklistSorting(getManagedBean().getTecCheckDetailsList());
-				debugLogger("Technical Check list: "
-						+ resDTO.getTechnicalCheckLists().size());
+				debugLogger("TechnicalChecklistretrieveProposalChecklistDcoumentDtls: "
+						+ checklist.getTechnicalCheckLists().size());
+			}
+			if(resDTO.getFinancialCheckLists().size()==0 && checklist.getFinancialCheckLists()!=null ){
+				getManagedBean().setFinanceCheckDetailsList(
+						checklist.getFinancialCheckLists());
+				checklistSorting(getManagedBean().getFinanceCheckDetailsList());
+				debugLogger("FinancialChecklistretrieveProposalChecklistDcoumentDtls: "
+						+ checklist.getFinancialCheckLists().size());
+			}
 			}
 
-			// Financial Check List
-			if (resDTO.getFinancialCheckLists() != null) {
-				getManagedBean().setFinanceCheckDetailsList(
-						resDTO.getFinancialCheckLists());
-				checklistSorting(getManagedBean().getFinanceCheckDetailsList());
-				debugLogger("Financial Check list: "
-						+ resDTO.getFinancialCheckLists().size());
-			}
+			
 
 			if (null != scQt.getClosingDate()) {
 				Date closingDate = scQt.getClosingDate();
@@ -261,7 +298,7 @@ public class SPDetailBackingBean extends
 					getManagedBean().setQtClosed(true);
 					getManagedBean().setClosingTime("0");
 				} else {
-					if (resDTO.getScQtProposal().isSubmitted()) {
+					if (scQtProposal.isSubmitted()) {
 						getManagedBean().setReadOnly(true);
 					} else {
 						getManagedBean().setReadOnly(isReadonly);
@@ -300,7 +337,7 @@ public class SPDetailBackingBean extends
 
 			if (!isReadonly) {
 				// checking for proposal validity
-				reqDTO.setScQt(resDTO.getScQt());
+				reqDTO.setScQt(scQt);
 				getProposalSO().validateSupplierProposal(reqDTO);
 			}
 
