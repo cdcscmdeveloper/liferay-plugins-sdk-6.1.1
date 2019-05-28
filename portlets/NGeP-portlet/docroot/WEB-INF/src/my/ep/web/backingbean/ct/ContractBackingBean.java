@@ -1838,6 +1838,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}
 
 			}
+			
+			if(this.getManagedBean().getContractVer().getCtAgencies() == null  || this.getManagedBean().getContractVer().getCtAgencies().isEmpty() ){
+				getManagedBean().setDisableAgent(true);
+			}
+			
 			this.getManagedBean().setSelectedAgency(null);
 			getManagedBean().setButtonHideActive(true);
 
@@ -1847,6 +1852,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			for(CtAgency agencies : getManagedBean().getContractVer().getCtAgencies()){
 				if(!minstryId.equals(agencies.getOrgProfile().getMinstryId())){
 					getManagedBean().setOwnerOrgProfile(false);
+					getManagedBean().setDisableAgent(false);
 					break;
 				}
 			}
@@ -1914,6 +1920,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				ctAgency.setCommitmentNo("K"+str.toString());
 				if (!pmOrgProfiles.getMinstryId().equals(ministryId)) {
 					ctAgency.setAp178(true);
+					getManagedBean().setDisableAgent(false);
+	
 				}		  	
 				ctAgency.setCtContractVer(this.getManagedBean().getContractVer());
 				ctAgencyList.add(ctAgency);
@@ -1961,6 +1969,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				ctAgency.setCommitmentNo("K"+str.toString());
 				if(!ctAgency.getOrgProfile().getMinstryId().equals(ministryId)){
 					ctAgency.setAp178(true);
+					getManagedBean().setDisableAgent(false);
 				}
 				if(contractSharing){
 					ctAgency.setContractSharing(contractSharing);
