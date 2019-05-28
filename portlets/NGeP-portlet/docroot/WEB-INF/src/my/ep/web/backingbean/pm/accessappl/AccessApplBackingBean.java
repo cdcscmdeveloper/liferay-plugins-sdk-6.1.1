@@ -998,6 +998,8 @@ public class AccessApplBackingBean extends
 			return RoleCode.UPS_APPROVER.value();
 		} else if (sc.hasRoleUser(RoleCode.EP_ADMIN_2.value())) {
 			return RoleCode.EP_ADMIN_2.value();
+		} else if (sc.hasRoleUser(RoleCode.BPK_ADMIN.value())) { //Enhancement #10927
+			return RoleCode.BPK_ADMIN.value();
 		} 
 		return null;
 	}
