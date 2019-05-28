@@ -63,6 +63,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.common.ScAttachment;
+import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListValue;
@@ -81,6 +82,8 @@ import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPEmployee;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperience;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalReportAttachment;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalScore;
+import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleItem;
+import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleLable;
 import my.ep.persistence.entity.sc.supplierproposal.ScSlAttachment;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
@@ -204,89 +207,52 @@ public class SPDetailBackingBean extends
 		}
 	}
 
-	
 	/**
+	 * Method to retrieve Technical & Financial Proposal CheckList and to set in
+	 * managed bean
 	 * 
 	 * @param qtID
 	 * @param userId
-	 * @param isReadonly
 	 */
 	public void retrieveProposalChecklistDtls(Long qtID, Long userId,
-			boolean isReadonly){
-		retrieveProposalChecklistDtls(qtID, userId, isReadonly, false);
-	}
-	
-	/**
-	 * @param qtOrProposalId  -> set qtID or proposalId if byProposalId is true
-	 * @param userId
-	 */
-	public void retrieveProposalChecklistDtls(Long qtOrProposalId, Long userId,
-			boolean isReadonly, boolean byProposalId) {
-		debugLogger("retrieveProposalChecklistDtls");
+			boolean isReadonly) {
+		debugLogger("retrieveProposalChecklistDtls qtId:::"+qtID+"::::UserId::::"+userId);
 		ProposalReqDTO reqDTO = new ProposalReqDTO();
 		IQTProposalSO proposalSO;
 		try {
+			reqDTO.setQtId(qtID);
 			reqDTO.setUserId(userId);
-			if(!byProposalId)	{reqDTO.setQtId(qtOrProposalId);}
-			else				{reqDTO.setQtProposalId(qtOrProposalId);}			
 			proposalSO = getProposalSO();
-			ProposalResDTO resDTO = null; 
-			if(!byProposalId)	{ resDTO = proposalSO.retrieveProposalDtlBySupplierId(reqDTO);}
-			else				{ resDTO = proposalSO.retrieveProposalDetail(reqDTO);}
+			ProposalResDTO resDTO = proposalSO
+					.retrieveProposalDtlBySupplierId(reqDTO);
 
 			ScQt scQt = resDTO.getScQt();
-			 ScQtProposal scQtProposal=resDTO.getScQtProposal();
+
 			getManagedBean().setQt(resDTO.getScQt());
 
 			getManagedBean().setScQtDocReports(resDTO.getScQtDocReports());
-			 
-			getManagedBean().setQtProposal(scQtProposal);
-			getManagedBean().setLastSubmittedDate(scQtProposal.getLastSubmitDate());
+
+			getManagedBean().setQtProposal(resDTO.getScQtProposal());
+			getManagedBean().setLastSubmittedDate(resDTO.getScQtProposal().getLastSubmitDate());
 			getManagedBean().setSupplierId(resDTO.getSupplierId());
+
 			// Technical Check List
-						if (resDTO.getTechnicalCheckLists() != null) {
-							getManagedBean().setTecCheckDetailsList(
-									resDTO.getTechnicalCheckLists());
-							checklistSorting(getManagedBean().getTecCheckDetailsList());
-							debugLogger("Technical Check list: "
-									+ resDTO.getTechnicalCheckLists().size());
-						}
-
-						// Financial Check List
-						if (resDTO.getFinancialCheckLists() != null) {
-							getManagedBean().setFinanceCheckDetailsList(
-									resDTO.getFinancialCheckLists());
-							checklistSorting(getManagedBean().getFinanceCheckDetailsList());
-							debugLogger("Financial Check list: "
-									+ resDTO.getFinancialCheckLists().size());
-						}
-			if(resDTO.getTechnicalCheckLists().size()==0 || resDTO.getFinancialCheckLists().size()==0){
-				//log.info("BackingBeanResDTO"+resDTO.getTechnicalCheckLists());
-				reqDTO = new ProposalReqDTO();
-				reqDTO.setTechnicalCount(resDTO.getTechnicalCheckLists().size());
-				reqDTO.setFinancialCount(resDTO.getFinancialCheckLists().size());
-				reqDTO.setQtId(scQt.getQtId());
-				reqDTO.setSupplierId(resDTO.getSupplierId());
-				reqDTO.setScQt(scQt);
-				reqDTO.setScQtProposal(scQtProposal);
-			ProposalResDTO	checklist = proposalSO.retrieveProposalChecklistDcoumentDtls(reqDTO);
-			if(resDTO.getTechnicalCheckLists().size()==0 && checklist.getTechnicalCheckLists()!=null ){
+			if (resDTO.getTechnicalCheckLists() != null) {
 				getManagedBean().setTecCheckDetailsList(
-						checklist.getTechnicalCheckLists());
+						resDTO.getTechnicalCheckLists());
 				checklistSorting(getManagedBean().getTecCheckDetailsList());
-				debugLogger("TechnicalChecklistretrieveProposalChecklistDcoumentDtls: "
-						+ checklist.getTechnicalCheckLists().size());
-			}
-			if(resDTO.getFinancialCheckLists().size()==0 && checklist.getFinancialCheckLists()!=null ){
-				getManagedBean().setFinanceCheckDetailsList(
-						checklist.getFinancialCheckLists());
-				checklistSorting(getManagedBean().getFinanceCheckDetailsList());
-				debugLogger("FinancialChecklistretrieveProposalChecklistDcoumentDtls: "
-						+ checklist.getFinancialCheckLists().size());
-			}
+				debugLogger("Technical Check list: "
+						+ resDTO.getTechnicalCheckLists().size());
 			}
 
-			
+			// Financial Check List
+			if (resDTO.getFinancialCheckLists() != null) {
+				getManagedBean().setFinanceCheckDetailsList(
+						resDTO.getFinancialCheckLists());
+				checklistSorting(getManagedBean().getFinanceCheckDetailsList());
+				debugLogger("Financial Check list: "
+						+ resDTO.getFinancialCheckLists().size());
+			}
 
 			if (null != scQt.getClosingDate()) {
 				Date closingDate = scQt.getClosingDate();
@@ -298,7 +264,7 @@ public class SPDetailBackingBean extends
 					getManagedBean().setQtClosed(true);
 					getManagedBean().setClosingTime("0");
 				} else {
-					if (scQtProposal.isSubmitted()) {
+					if (resDTO.getScQtProposal().isSubmitted()) {
 						getManagedBean().setReadOnly(true);
 					} else {
 						getManagedBean().setReadOnly(isReadonly);
@@ -337,7 +303,7 @@ public class SPDetailBackingBean extends
 
 			if (!isReadonly) {
 				// checking for proposal validity
-				reqDTO.setScQt(scQt);
+				reqDTO.setScQt(resDTO.getScQt());
 				getProposalSO().validateSupplierProposal(reqDTO);
 			}
 
@@ -4507,9 +4473,30 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		String ptjName = retrievePTJByOrgProfileId(scQt.getPmOrgProfile()
 				.getOrgProfileId(), date);
 		debugLogger("=======ptjName=====" + ptjName);
-
-		context.put("sampleItems", getManagedBean().getScQtSampleLable()
-				.getSampleItems());
+		//20190524@ Bug #25860 - Start
+		List<ScQtSampleItem> scQtSampleItems=  new ArrayList<ScQtSampleItem>();
+		ScQtSampleLable sampleLable = getManagedBean().getScQtSampleLable();
+		ScQtSampleItem sampleItem ;
+		ScRequestItem scRequestItem ;
+	    for (ScQtSampleItem subSampleItem : sampleLable.getSampleItems() )
+		  { sampleItem = new ScQtSampleItem();
+		    scRequestItem = new ScRequestItem();
+			String itemName = subSampleItem.getScRequestItem().getItemName();
+			if (itemName == null) {
+				itemName = "";
+			}
+			itemName = itemName.replaceAll("<", "&#60;");
+			itemName = itemName.replaceAll(">", "&#62;");
+			itemName = itemName.replaceAll("\u2264", "&#60;=");//symbol less then equal
+			itemName = itemName.replaceAll("\u2265", "&#62;=");//symbol greater then equal
+			itemName = itemName.replaceAll("\r\n", "<br/>");
+			scRequestItem.setItemName(itemName);
+			sampleItem.setScRequestItem(scRequestItem);
+			sampleItem.setSubLableNo(subSampleItem.getSubLableNo());
+			scQtSampleItems.add(sampleItem);
+		  }
+		context.put("sampleItems",scQtSampleItems);
+		//20190524@ Bug #25860 - End
 		context.put("lableNo", getManagedBean().getScQtSampleLable()
 				.getLableNo());
 		context.put("PTJCode", scQt.getPmOrgProfile().getPmOrgValidity()
@@ -4520,10 +4507,10 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		if (title == null) {
 			title = "";
 		}
-		title = title.replaceAll("\r\n", "<br />");
 		title = title.replaceAll("&", "&#38;");
 		title = title.replaceAll("<", "&#60;");
 		title = title.replaceAll(">", "&#62;");
+		title = title.replaceAll("\r\n", "<br />");
 		context.put("QTTitle", title);
 
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
