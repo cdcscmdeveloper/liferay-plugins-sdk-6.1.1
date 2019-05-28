@@ -64,6 +64,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	private boolean directPurchase;
 	private boolean gstCheckingGUI;
 	private boolean staxCheckingGUI;
+	private boolean disableAgent = false;
 	private String branchInfoFilePath;
 
 	/*Schedule start*/
@@ -338,6 +339,20 @@ public class ContractManagedBean extends BaseManagedBean {
 	 */
 	public void setDirectPurchase(boolean directPurchase) {
 		this.directPurchase = directPurchase;
+	}
+	
+	/**
+	 * @return the disableAgent button
+	 */
+	public boolean isDisableAgent() {
+		return disableAgent;
+	}
+
+	/**
+	 * @param disableAgent the disableAgent button to set
+	 */
+	public void setDisableAgent(boolean disableAgent) {
+		this.disableAgent = disableAgent;
 	}
 
 	/**
