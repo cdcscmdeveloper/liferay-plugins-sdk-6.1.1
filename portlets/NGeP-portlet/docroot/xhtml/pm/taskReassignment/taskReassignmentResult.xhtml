@@ -26,8 +26,9 @@
            						listener="#{taskReassignmentBackingBean.searchTaskAssign}"
            						render="@form" />
             		</h:selectManyListbox>
+            		<ac:iconTooltip value="#{lbl['lbl.pm.ta.reassignee.tooltips']}" />
 				</p:column>
-			</p:dataTable>	
+			</p:dataTable>
 		</h:panelGroup>	 
 	</p:panel>
 	<p:panel id="pUserTaskAssignResult" header="#{lbl['lbl.pm.ta.user.task']}"
