@@ -3886,50 +3886,65 @@ public class SmApplicationUtil {
 			List<SmMofAccount> accounts = smSupplier.getSmMofAccounts();
 			for (SmMofAccount account : accounts) {
 				if (account.getSupplierType().equalsIgnoreCase(
-						smSupplier.getSmAppl().getSupplierType())
-						&& account.getRecordStatusFlg().compareTo(
-								DbValueConst.RECORD_STATUS_ACTIVE) == 0) {
-					Timestamp currentDate = new Timestamp(
-							System.currentTimeMillis());
-					long diff = account.getExpDate().getTime()
-							- currentDate.getTime();
-					long diffDays = diff / (24 * 60 * 60 * 1000);
-					if (!applicationType
-							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
-						Date today = new Date();
-						if (!(today.compareTo(account.getExpDate()) < 0)) {
-							result = true;
-							throw new EpException(MessageConst.ERROR_722564);
+						smSupplier.getSmAppl().getSupplierType())) {
+					
+					if(account.getRecordStatusFlg().compareTo(
+								DbValueConst.RECORD_STATUS_ACTIVE) == 0){
+						Timestamp currentDate = new Timestamp(
+								System.currentTimeMillis());
+						long diff = account.getExpDate().getTime()
+								- currentDate.getTime();
+						long diffDays = diff / (24 * 60 * 60 * 1000);
+						if (!applicationType
+								.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
+							Date today = new Date();
+							if (!(today.compareTo(account.getExpDate()) < 0)) {
+								result = true;
+								throw new EpException(MessageConst.ERROR_722564);
+							}
 						}
-					}
-					if (applicationType
-							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
-						if (diffDays > 90) {
+						if (applicationType
+								.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
+							if (diffDays > 90) {
+								result = true;
+								throw new EpException(MessageConst.ERROR_722501);
+							} else if (diffDays < -365) {
+								result = true;
+								throw new EpException(MessageConst.ERROR_722502);
+							}
+						} else if (applicationType
+								.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
+								&& (diffDays >= 0 && diffDays < 90)) {
 							result = true;
-							throw new EpException(MessageConst.ERROR_722501);
-						} else if (diffDays < -365) {
+							log.debug("***************MOF Account Expiry near for Ac No.: "
+									+ account.getMofNo()
+									+ "\nExp Date:"
+									+ account.getExpDate()
+									+ "\nDiff Days:"
+									+ diffDays);
+							throw new EpException(MessageConst.ERROR_722503);
+						} else if (applicationType
+								.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
+								&& smSupplier.isBumi()) {
 							result = true;
-							throw new EpException(MessageConst.ERROR_722502);
+							throw new EpException(MessageConst.ERROR_722504);
 						}
-					} else if (applicationType
-							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
-							&& (diffDays >= 0 && diffDays < 90)) {
-						result = true;
-						log.debug("***************MOF Account Expiry near for Ac No.: "
-								+ account.getMofNo()
-								+ "\nExp Date:"
-								+ account.getExpDate()
-								+ "\nDiff Days:"
-								+ diffDays);
-						throw new EpException(MessageConst.ERROR_722503);
-					} else if (applicationType
-							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
-							&& smSupplier.isBumi()) {
-						result = true;
-						throw new EpException(MessageConst.ERROR_722504);
+					}else if(account.getRecordStatusFlg().compareTo(
+								DbValueConst.RECORD_STATUS_DELETED) == 0){
+						throw new EpException(MessageConst.ERROR_722502);
 					}
 				}
 			}
+			// check maximum limit 30 categories per supplier
+			if (applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)) {
+				int maxCatSize = SmRuleHelper.getInstance().getMaxCategoryAllowed();
+				List<SmSupplierCategory> suppCategory = smSupplier.getSmAppl().getSmSupplierCategories();
+				log.info("total category:" + suppCategory.size());
+				if (suppCategory.size() >= maxCatSize) {
+					throw new EpException(MessageConst.ERROR_722675);
+				}
+			}
+
 		}
 		return result;
 	}
