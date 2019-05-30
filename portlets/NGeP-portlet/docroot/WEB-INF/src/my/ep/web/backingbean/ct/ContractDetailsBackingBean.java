@@ -84,7 +84,6 @@ import my.ep.web.backingbean.ct.termination.TerminationBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.ct.ContractManagementConst;
 import my.ep.web.managedbean.ct.ContractDetailsManagedBean;
-import my.ep.web.managedbean.ct.circular.CircularManagedBean;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.DocumentRepositoryUtils;
@@ -103,6 +102,8 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
+
+
 
 
 /**
@@ -1693,10 +1694,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			if (outputTab.equalsIgnoreCase(ContractConst.ITEM_DETAIL)) {
 				getManagedBean().setSelectedTabIndex(3);
 				getManagedBean().setItemIndex(3);
-				CircularManagedBean circularBb=new CircularManagedBean();
-				circularBb.reassignValue(true);
-				circularBb.getCircularListingPagingDataModel().reloadData();
-				circularBb.getServiceListingPagingDataModel().reloadData();
+				CircularBackingBean cmbb=new CircularBackingBean();
+				cmbb.getManagedBean().reassignValue(true);
+				//cmbb.getManagedBean().setResetval(true);
+				cmbb.getManagedBean().getCircularListingPagingDataModel().reloadData();
+				cmbb.getManagedBean().getServiceListingPagingDataModel().reloadData();
 			}
 			if (outputTab.equalsIgnoreCase(ContractConst.DEDUCTION_DETAIL)) {
 				getManagedBean().setSelectedTabIndex(4);
@@ -1774,6 +1776,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			
 				CircularBackingBean circularBkbean= new CircularBackingBean();
 				circularBkbean.getManagedBean().reassignValue(true);
+				//circularBkbean.getManagedBean().getServiceListingPagingDataModel().resetData();
+				//circularBkbean.getManagedBean().getCircularListingPagingDataModel().resetData();
 				circularBkbean.getManagedBean().getCircularListingPagingDataModel().reloadData();
 				circularBkbean.getManagedBean().getServiceListingPagingDataModel().reloadData();
 				
@@ -2221,6 +2225,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	public String backAction() {
 		ctBB.getManagedBean().setViewContract(false);
 		getManagedBean().setLoaContractVerList(null);
+		CircularBackingBean  circularBB= new CircularBackingBean();
+		circularBB.getManagedBean().setItemcode(null);
+		circularBB.getManagedBean().setItemname(null);
+		circularBB.getManagedBean().setItemstatus(null);
+		circularBB.getManagedBean().setItemtype(null);
+		circularBB.getManagedBean().setUOM(null);
+		circularBB.getManagedBean().setSkuno(null);
+		circularBB.getManagedBean().setTypeofgoods(null);
+		//log.info("******>>>>>>>>>>>>Circular Search reset called *********>>>>>>>>");
 		return (getManagedBean().getExternalPageUrl() != null) ? getManagedBean().getExternalPageUrl() : CONTRACT_MAINT_PAGE;
 	}
 

@@ -10,12 +10,9 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-
 import org.primefaces.model.TreeNode;
-
 import my.ep.persistence.entity.ct.CtAddress;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContractVer;
@@ -120,6 +117,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	private CtPerformanceBond ctPerformanceBond;
 
 	private CtContractItem selectedItem;
+	private CtContractItem serviceselectedItem;
 	private String showItem;
 	private String showServiceItem;
 	private List<CtContractItem> ctItemServiceList;
@@ -150,6 +148,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	private CtAttachment ctAttachment;
 	private CtAttachment ctAttachmentTemp;
 	private CtAttachment ctAttachmentLatest;
+	
 
 	/**
 	 * @return the fileDirectory
@@ -1267,6 +1266,16 @@ public class ContractManagedBean extends BaseManagedBean {
 
 	public void setCtAttachmentTemp(CtAttachment ctAttachmentTemp) {
 		this.ctAttachmentTemp = ctAttachmentTemp;
+	}
+
+
+
+	public CtContractItem getServiceselectedItem() {
+		return serviceselectedItem;
+	}
+
+	public void setServiceselectedItem(CtContractItem serviceselectedItem) {
+		this.serviceselectedItem = serviceselectedItem;
 	}
 
 }
