@@ -276,20 +276,32 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean implements Seria
 				for (ScDisruptionLog selectedRetryQT : selectedRetryQTs) {
 					reqDTO.setScDisruptionLog(selectedRetryQT);
 					reqDTO.setDisruptionStage(selectedRetryQT.getDisruptionStage());
-					qtRetrySO.retryScService(reqDTO);
+					String errorMessage = qtRetrySO.retryScService(reqDTO)
+							.getErrorMessage();
 					
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(
-									FacesMessage.SEVERITY_INFO,
-									null,
-									MessageUtils.getMessage(
-											MessageConst.INFO_700005,
-											new String[] { 
-													getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, selectedRetryQT.getDocType()),
-													selectedRetryQT.getDocNo() },
-											MessageUtils.BUNDLE_COMMON_MESSAGES,
-											new FacesScopes().getUserLocale())));	
+					if (StringUtils.isNotBlank(errorMessage)) {
+						FacesContext.getCurrentInstance().addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_ERROR,
+										null,
+										getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, selectedRetryQT.getDocType()) + " " +
+										selectedRetryQT.getDocNo() + ": " + 
+										errorMessage));	
+					} else {
+						FacesContext.getCurrentInstance().addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_INFO,
+										null,
+										MessageUtils.getMessage(
+												MessageConst.INFO_700005,
+												new String[] { 
+														getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, selectedRetryQT.getDocType()),
+														selectedRetryQT.getDocNo() },
+												MessageUtils.BUNDLE_COMMON_MESSAGES,
+												new FacesScopes().getUserLocale())));	
+					}
 				}
 			} finally {
 				qtRetrySO = null;
