@@ -2225,6 +2225,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	public String backAction() {
 		ctBB.getManagedBean().setViewContract(false);
 		getManagedBean().setLoaContractVerList(null);
+		CircularBackingBean  circularBB= new CircularBackingBean();
+		circularBB.getManagedBean().setItemcode(null);
+		circularBB.getManagedBean().setItemname(null);
+		circularBB.getManagedBean().setItemstatus(null);
+		circularBB.getManagedBean().setItemtype(null);
+		circularBB.getManagedBean().setUOM(null);
+		circularBB.getManagedBean().setSkuno(null);
+		circularBB.getManagedBean().setTypeofgoods(null);
+		//log.info("******>>>>>>>>>>>>Circular Search reset called *********>>>>>>>>");
 		return (getManagedBean().getExternalPageUrl() != null) ? getManagedBean().getExternalPageUrl() : CONTRACT_MAINT_PAGE;
 	}
 
