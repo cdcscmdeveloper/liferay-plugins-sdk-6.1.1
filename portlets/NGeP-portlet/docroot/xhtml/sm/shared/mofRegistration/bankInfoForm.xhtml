@@ -54,10 +54,17 @@
 				rowKey="#{bankBean}" rowIndexVar="index" id="bankDt"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">				
 								
-				<p:ajax event="rowSelectCheckbox" listener="#{backingBean.transactionCheckForDelete}" update=":form:tt:bankInfPan,:form:tt:bankDt,@([id$=msg])"/>
-				
+				<p:ajax event="rowSelectCheckbox"
+					listener="#{backingBean.itemRowSelectCheckbox}" 					 
+					update=":form:tt:bankDelBtnId"
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
+				<p:ajax event="rowUnselectCheckbox"
+					listener="#{backingBean.itemRowUnselectCheckbox}"
+					update=":form:tt:bankDelBtnId"
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+					
 				<ac:paginator for="bankDt" />
-				<p:column selectionMode="multiple" width="1%" action="#{backingBean.checkActiveTransaction}" rendered="#{not empty backingBean.managedBean.smAppl.smSupplierBanks}"/>
+				<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.smAppl.smSupplierBanks}"/>
 				
 				<p:column headerText="#{lbl['lbl.sm.bankDtls.acctNo']}">
 					<h:outputText value="#{bankBean.accountNo}" />
@@ -83,13 +90,13 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
-					<p:commandLink partialSubmit="true" process="@this"
-						action="#{backingBean.assignSelBank(bankBean)}"
+					<p:commandLink partialSubmit="true" process="@this" id="edit"
+						action="#{backingBean.assignSelBankWithPendingTransaction(bankBean)}"
 						update=":form:tt:bankDialog" style="padding-right :5px;" 
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" >
 						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
 					</p:commandLink>
-					<ac:smFieldChangeTableAlert object="#{bankBean}" />
+					<ac:smFieldChangeTableAlert object="#{bankBean}" listener="#{backingBean.assignSelBankWithPendingTransaction(bankBean)}" update=":form:tt:bankDialog"/>
 				</p:column>
 			</p:dataTable>
 			<p:spacer height="2px;" />
@@ -107,7 +114,7 @@
 					update=":form:tt:bankDialog" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
-					disabled="#{empty backingBean.managedBean.smAppl.smSupplierBanks or (backingBean.managedBean.activeTransaction eq 'true')}"
+					disabled="#{backingBean.managedBean.itemDeleteButtonShow}"
 					id="bankDelBtnId" partialSubmit="true"
 					process="bankInfPan" update=":form:tt:bankDt ,sfieldset" 
 					oncomplete="bankDeletePopUp.show()" />
@@ -189,8 +196,9 @@
 		resizable="false" showEffect="fade" closable="true" hideEffect="fade"
 		modal="true" id="bankDialog">
 		<p:outputPanel id="bankDetailsPanel" layout="block">
-		<p:messages id="msg" showSummary="false" redisplay="false"
-				showDetail="true" autoUpdate="true" closable="true" />			
+		<p:messages id="msg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" />
+		<p:messages for="contract" showSummary="false" showDetail="true" autoUpdate="true" closable="true"/>
+		<p:messages for="fulfilment" showSummary="false" showDetail="true" autoUpdate="true" closable="true"/>
 			<table style="width: 100%">
 				<tr>
 					<td><p:outputLabel
@@ -226,19 +234,16 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.bankDtls.bankName']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu
+							disabled="#{backingBean.managedBean.pendingTransaction}"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.bankDtls.bankName']}" id="smBankNameVal"
-							value="#{backingBean.managedBean.selectedBank.pmFinancialOrg.financialOrgId}"
-							action="#{backingBean.checkPendingTransaction}" update="@([id$=save])"
+							value="#{backingBean.managedBean.selectedBank.pmFinancialOrg.financialOrgId}" update="@([id$=save])"
 							style="width: 207px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="finOrg"								
 								value="#{backingBean.managedBean.finOrgLs}"
 								itemValue="#{finOrg.financialOrgId}"
 								itemLabel="#{finOrg.finOrgName}" />
-						<p:ajax event="change" update="@([id$=msg])" listener="#{backingBean.transactionCheck}"
-							process="@this" partialSubmit="true" />
-						<f:ajax ></f:ajax>
 						</p:selectOneMenu> 
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges
@@ -271,14 +276,12 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.bankDtls.acctNo']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:inputText maxlength="18" action="#{backingBean.checkPendingTransaction}"
+					<td><p:inputText maxlength="18"
+							disabled="#{backingBean.managedBean.pendingTransaction}"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.bankDtls.acctNo']}" id="smBankAcctNo"
 							value="#{backingBean.managedBean.selectedBank.accountNo}"
 							size="35">
-						<p:ajax event="keyup" update="@([id$=msg])" listener="#{backingBean.transactionCheck}"
-							process="@this" partialSubmit="true" />
-						<f:ajax ></f:ajax>
 						</p:inputText> 
 						&#160;
 						<p:graphicImage id="banti" value="/css/images/design/tooltips.png" />
@@ -579,7 +582,6 @@
 		</p:outputPanel>
 		<div align="right">
 			<p:commandButton id="save" value="#{lbl['lbl.sm.button.save']}"
-				disabled="#{backingBean.managedBean.pendingTransaction eq 'true'}"
 				partialSubmit="true" process=":form:tt:bankDialog"
 				action="#{backingBean.addOrUpdateBankInfoToSmAppl}"
 				onclick="bankDetailsPanelWidget.show();" oncomplete="bankDetailsPanelWidget.hide();"
