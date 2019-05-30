@@ -29,9 +29,11 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.sc.EncryptDataBean;
+import my.ep.biz.bean.sc.SupplierQualificationBean;
 import my.ep.biz.bean.sc.EncryptDataBean.EncryptColumnName;
 import my.ep.biz.bean.sc.EncryptDataBean.EncryptTableName;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
@@ -46,6 +48,8 @@ import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
+import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.ProposalResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
@@ -4677,6 +4681,8 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+			//for Bug #25537	
+			checkSupplierQualificationStatus();
 			proposalSO
 					.validateProposalDetailsBeforeSPkiSign(populateProposalDetailsTosave());
 			this.getManagedBean().getSpkiBackingBean().getChallengeQuestions();
@@ -4686,7 +4692,47 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		this.getManagedBean().setAutoUpdate(false);
 		RequestContext.getCurrentInstance().execute("spki_dlg.show();");
 	}
-
+	//2010529@#25537 - Start
+	/**
+	 * Verify whether Mofno is valid or not.
+	 */
+	public void checkSupplierQualificationStatus() {
+		
+		String mofNo = this.getManagedBean().getQtProposal().getMofNo();
+		IQTNoticeBoardSO boardSO = null;
+		if (null == mofNo || "".equalsIgnoreCase(mofNo)) {
+			throw new EpException(MessageConst.ERROR_760297);
+		}
+		ScQt scQt = this.getManagedBean().getQt();
+		final Long qtId = scQt.getQtId();
+		try {
+			boardSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTNoticeBoardSO.class);
+			NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
+			reqDTO.setMofNo(mofNo);
+			reqDTO.setQtId(qtId);
+			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			NoticeBoardResDTO resDTO = boardSO
+					.checkSupplierQualificationStatus(reqDTO);
+			if (null != resDTO.getQualificationBean()) {
+				for (SupplierQualificationBean qualificationBean : resDTO
+						.getQualificationBean()) {
+					if ((!SourcingConstants.SUPPLIER_CRITERIA_TYPE_SOFT_CERTIFICATE
+							.equalsIgnoreCase(qualificationBean
+									.getCriteria()))
+							&& !qualificationBean.isSupplierStatus()) {
+						String formattedDate = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT).format(DateUtils.getCurrentDate().getTime());	
+						throw new EpException(MessageConst.ERROR_760484, 
+								 new String[]{formattedDate});
+					}
+				}
+			}
+		} finally {
+			boardSO = null;
+		} 
+	}
+	//2010529@#25537 - End
 	/**
 	 * The method to used auto update of request.
 	 */
