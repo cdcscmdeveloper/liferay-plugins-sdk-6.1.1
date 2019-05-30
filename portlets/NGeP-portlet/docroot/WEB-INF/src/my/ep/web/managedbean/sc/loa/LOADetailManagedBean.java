@@ -278,6 +278,8 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private boolean disablePerformanceBondForDP;
 	
 	private PmOrgProfile ministryOrgProfile;
+	
+	private Boolean flowamt=null;
 
     /**
      * Gets the spki backing bean.
@@ -1590,6 +1592,14 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	 */
 	public void setDisablePerformanceBondForDP(boolean disablePerformanceBondForDP) {
 		this.disablePerformanceBondForDP = disablePerformanceBondForDP;
+	}
+
+	public Boolean getFlowamt() {
+		return flowamt;
+	}
+
+	public void setFlowamt(Boolean flowamt) {
+		this.flowamt = flowamt;
 	}
 }
 
