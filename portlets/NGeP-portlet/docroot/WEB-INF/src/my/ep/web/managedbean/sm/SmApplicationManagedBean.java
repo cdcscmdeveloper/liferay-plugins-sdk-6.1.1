@@ -20,6 +20,7 @@ import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
+import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -527,6 +528,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SoftcertUploadSuppDocVO selectedSuppDoc;
 	private boolean activeTransaction;
 	private boolean pendingTransaction;
+	private boolean itemDeleteButtonShow;
 
 	private class RejectReasonPagingDataModel extends
 			PagingDataModel<PmReasonDesc> {
@@ -4073,5 +4075,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setPendingTransaction(boolean pendingTransaction) {
 		this.pendingTransaction = pendingTransaction;
+	}
+
+	public boolean isItemDeleteButtonShow() {
+		return itemDeleteButtonShow;
+	}
+
+	public void setItemDeleteButtonShow(boolean itemDeleteButtonShow) {
+		this.itemDeleteButtonShow = itemDeleteButtonShow;
 	}
 }
