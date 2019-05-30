@@ -1395,6 +1395,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			getSupplierGst(getManagedBean().getFulfilmentRequest(), getManagedBean().isGstRateChange());
 			
 			// in case of PID
+			log.info("Begin PID validity process");
 			if(getManagedBean().getFulfilmentRequest().getScPurchaseInDefault()!=null) {
 				int pidValidDays = getManagedBean().getFulfilmentRequest().getScPurchaseInDefault().getPidValidDays();
 				Date pidExpiredDate = new Date(); 
@@ -1416,6 +1417,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				}
 			}
 		}
+		log.info("End PID validity process");
 		initializePRBeans();
 		updateDeliveryDate();
 		/*#17087 Get Zonal flag*/
