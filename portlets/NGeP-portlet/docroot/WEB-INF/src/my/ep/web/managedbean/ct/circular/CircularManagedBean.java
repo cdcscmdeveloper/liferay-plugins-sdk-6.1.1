@@ -40,7 +40,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 public class CircularManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
-
+	private boolean resetval=true;
 	private  boolean readOnly = true;
 	private boolean trackingDiarySearch;
 	private String searchCircularNo;
@@ -69,12 +69,34 @@ public class CircularManagedBean extends BaseManagedBean {
 	private IPagingDataModel<CtContractItem> ServiceListingPagingDataModel = new ServiceListingPagingDataModel();
 	private CircularBackingBean circularBb=new CircularBackingBean();
 	
+	
 	public void reassignValue(boolean value) 
 	{
 		readOnly = value;	
+		resetval= value;
+		servicecollapse=value;
+		prodcollapse=value;
 		
 	}
-	public class ServiceListingPagingDataModel extends PagingDataModel<CtContractItem> {
+	public void prodValue(boolean value) 
+	{
+		servicecollapse=false;
+		prodcollapse=value;
+		
+	}
+	public void serviceValue(boolean value) 
+	{
+		servicecollapse=value;
+		prodcollapse=false;
+		
+	}
+	public void allValue(boolean value) 
+	{
+		servicecollapse=value;
+		prodcollapse=value;
+		
+	}
+	private class ServiceListingPagingDataModel extends PagingDataModel<CtContractItem> {
 		
 		private static final long serialVersionUID = 1L;
 		
@@ -97,8 +119,7 @@ public class CircularManagedBean extends BaseManagedBean {
 				Long contId=contractBb.getManagedBean().getContractVer().getCtContract().getContractId();
 				Long contractVerId=contractBb.getManagedBean().getContractVer().getContractVerId();
 				//contractBb.getManagedBean().setReadOnly(true);
-				//log.info("**********readOnly Service 1*********"+circularBb.getManagedBean().isReadOnly());
-				//log.info("**********Service collapse 1*********"+circularBb.getManagedBean().isServicecollapse());
+				
 				
 			  if(contId!=null ){
 					
@@ -121,7 +142,7 @@ public class CircularManagedBean extends BaseManagedBean {
 				filterBean1.setCaseInsensitive(true);
 				searchBean.getDataFilterBeans().add(filterBean1);
 				
-		/*		if(getItemtype()!=null && getItemtype().length()>0 )
+				/*if(getItemtype()!=null && getItemtype().length()>0 )
 				{
 					if(getItemtype().equals(ParameterConst.ITEM_TYPE_SERVICE))
 					{
@@ -220,29 +241,33 @@ public class CircularManagedBean extends BaseManagedBean {
 				if(getSearchStartDate()==null && getSearchEndDate()!=null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("endDate",SearchOperator.OPERATOR_EQUALS.value(), getSearchEndDate()));	
 				}*/
-				servicecollapse=true;
+				//servicecollapse=true;
 				ContractItemReqDTO reqDTO=new ContractItemReqDTO();
 				reqDTO.setContractItemSearchBean(searchBean);
-			
-
-				IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractItemSO.class);
 				ContractItemResDTO resDTO = null;
-				resDTO=contractItemSO.retrieveProductServiceContractItemDtls(reqDTO);
-			    resDTO.getContractItemResultBean();
-			    circularBb.getManagedBean().setServicecollapse(true);
-			    if(resDTO.getContractItemResultBean().getResultList().size()>0)
-			    {
-			    	//log.info("**********servicecollapse*********"+resDTO.getContractItemResultBean().getResultList().size());
-					//servicecollapse=false;
-					circularBb.getManagedBean().setServicecollapse(false);
-					readOnly=false;
-					//contractBb.getManagedBean().setReadOnly(false);contractBb.getManagedBean().isReadOnly()
 				
-					//log.info("**********ReadOnly Service 2*********"+circularBb.getManagedBean().isReadOnly());
-			    }
-			   // log.info("**********Service collapse 2*********"+circularBb.getManagedBean().isServicecollapse());
-				return resDTO.getContractItemResultBean();
-				
+				if(isResetval())
+                {
+					if(isServicecollapse())
+					{
+						IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractItemSO.class);
+						
+						
+						resDTO=contractItemSO.retrieveProductServiceContractItemDtls(reqDTO);
+					    resDTO.getContractItemResultBean();
+					    //contractBb.getManagedBean().setServicecollapse(true);
+					    if(resDTO.getContractItemResultBean().getResultList().size()>0)
+					    {
+							//servicecollapse=false;
+					    	//contractBb.getManagedBean().setServicecollapse(false);
+							readOnly=false;
+							//contractBb.getManagedBean().setReadOnly(false);contractBb.getManagedBean().isReadOnly()
+
+					    }
+					  
+						return resDTO.getContractItemResultBean();
+	                }
+                }
 			} catch (Exception e) {
 				e.printStackTrace();
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -252,7 +277,7 @@ public class CircularManagedBean extends BaseManagedBean {
 
 	}
 
-	public class CircularListingPagingDataModel extends PagingDataModel<CtContractItem> {
+  private class CircularListingPagingDataModel extends PagingDataModel<CtContractItem> {
 		private static final long serialVersionUID = 1L;
 		
 		private Logger log = EpLogger.getLogger(CircularListingPagingDataModel.class);
@@ -270,9 +295,7 @@ public class CircularManagedBean extends BaseManagedBean {
 				ContractBackingBean contractBb=new ContractBackingBean();
 				Long contId=contractBb.getManagedBean().getContractVer().getCtContract().getContractId();
 				Long contractVerId=contractBb.getManagedBean().getContractVer().getContractVerId();
-				
-				//log.info("**********readOnlyProd 1*********"+contractBb.getManagedBean().isReadOnly());
-				//log.info("**********Product collapse 1*********"+circularBb.getManagedBean().isProdcollapse());
+
 				if(contId!=null ) 
 				  	{
 						SearchFilterBean filterBean = new SearchFilterBean("ctContractVer.ctContract.contractId", SearchOperator.OPERATOR_EQUALS.value(),contId);
@@ -290,9 +313,10 @@ public class CircularManagedBean extends BaseManagedBean {
 						searchBean.getDataFilterBeans().add(filterBean);
 					}
 				
-				SearchFilterBean filterBean1 = new SearchFilterBean("itemType.parameterCode", SearchOperator.OPERATOR_LIKE.value(),ParameterConst.ITEM_TYPE_PRODUCT);
-				filterBean1.setCaseInsensitive(true);
-				searchBean.getDataFilterBeans().add(filterBean1);
+				 SearchFilterBean filterBean1 = new SearchFilterBean("itemType.parameterCode", SearchOperator.OPERATOR_LIKE.value(),ParameterConst.ITEM_TYPE_PRODUCT);
+				 filterBean1.setCaseInsensitive(true);
+				 searchBean.getDataFilterBeans().add(filterBean1);
+				
 				
 				/*if(getItemtype()!=null && getItemtype().length()>0 ) {
 
@@ -403,25 +427,25 @@ public class CircularManagedBean extends BaseManagedBean {
 				
 				ContractItemReqDTO reqDTO=new ContractItemReqDTO();
 				reqDTO.setContractItemSearchBean(searchBean);
-			
-
-				IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractItemSO.class);
 				ContractItemResDTO resDTO = null;
-				resDTO=contractItemSO.retrieveProductServiceContractItemDtls(reqDTO);
-				circularBb.getManagedBean().setProdcollapse(true);
-				if(resDTO.getContractItemResultBean().getResultList().size()>0)
-			    {
-					//log.info("**********prodcollapse*********"+resDTO.getContractItemResultBean().getResultList().size());
-					circularBb.getManagedBean().setProdcollapse(false);
-			    	 readOnly=false;
-			    	//contractBb.getManagedBean().setReadOnly(false);
-			    	
-			    	//log.info("**********ReadOnly prod 2*********"+contractBb.getManagedBean().isReadOnly());
-			    }
-				 //log.info("**********Product collapse 2*********"+circularBb.getManagedBean().isProdcollapse());
 				
-				return resDTO.getContractItemResultBean();
-				
+                if(isResetval())
+                {
+                	if(isProdcollapse())
+					{
+					
+					IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractItemSO.class);
+					
+					resDTO=contractItemSO.retrieveProductServiceContractItemDtls(reqDTO);
+					//contractBb.getManagedBean().setProdcollapse(true);
+					if(resDTO.getContractItemResultBean().getResultList().size()>0)
+				    {
+						//contractBb.getManagedBean().setProdcollapse(false);
+				    	 readOnly=false;
+				    }
+					return resDTO.getContractItemResultBean();
+				}
+              }
 			} catch (Exception e) {
 				e.printStackTrace();
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -774,7 +798,14 @@ public class CircularManagedBean extends BaseManagedBean {
 	}
 
 
+	public boolean isResetval() {
+		return resetval;
+	}
 
+	public void setResetval(boolean resetval) {
+		this.resetval = resetval;
+	}
+	
 
 	
 	
