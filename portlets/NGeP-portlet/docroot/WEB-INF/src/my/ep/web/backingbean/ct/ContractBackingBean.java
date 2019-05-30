@@ -2879,7 +2879,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			
 			log.info("Selected Item ***"+getManagedBean().getSelectedItem());
 			log.info("Show Item ****"+getManagedBean().getShowItem());
-			if (getManagedBean().getSelectedItem() != null) {
+			if (getManagedBean().getSelectedItem() != null || getManagedBean().getServiceselectedItem()!=null) {
 				if (getManagedBean().getShowItem() != null
 						&& getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
 					getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
@@ -2890,6 +2890,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}  else if (getManagedBean().getShowItem() != null
 						&& getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY)) {
 					getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY);
+					//refreshAgencyCeilingQuantityServiceList();
 				} else {
 					getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
 				}
@@ -2907,32 +2908,108 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			ex.printStackTrace();
 		}
 	}
+	
+	/**
+	 * The method used to render the ceiling quantity information
+	 * of the selected product item.
+	 */
+	public void onSelectServiceItem() {
+		try{
+			
+			log.info("Selected Item onSelectServiceItem ***"+getManagedBean().getServiceselectedItem());
+			log.info("Show Item  onSelectServiceItem ****"+getManagedBean().getShowItem());
+			if (getManagedBean().getSelectedItem() != null || getManagedBean().getServiceselectedItem()!=null) {
+				if (getManagedBean().getShowServiceItem() != null
+						&& getManagedBean().getShowServiceItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
+					getManagedBean().setShowServiceItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
+				} else if (getManagedBean().getShowServiceItem() != null
+						&& getManagedBean().getShowServiceItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)) {
+					getManagedBean().setShowServiceItem(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY);
+					refreshAgencyCeilingQuantityServiceList();
+				}  else if (getManagedBean().getShowServiceItem() != null
+						&& getManagedBean().getShowServiceItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY)) {
+					getManagedBean().setShowServiceItem(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY);
+					refreshAgencyCeilingQuantityServiceList();
+				} else {
+					getManagedBean().setShowServiceItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
+				}
+				// retrieve zone label for new price
+				if (getManagedBean().getServiceselectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)
+						|| getManagedBean().getServiceselectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
+						|| getManagedBean().getServiceselectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
+					itemPriceZoneLabelList(getManagedBean().getServiceselectedItem());
+					itemMaxQtyZoneLabelList(getManagedBean().getServiceselectedItem());
+				}
+			}
+		}
+		catch(Exception ex )
+		{
+			ex.printStackTrace();
+		}
+	}
+
 
 	/**
-	 * The method used to refresh the ceiling quantity information.
+	 * The method used to refresh the ceiling quantity information of Product details listing in UI.
 	 */
 	private void refreshAgencyCeilingQuantityList() {
 		Map<Long, CtItemCeilingQty> itemCeilingQtyMap = new HashMap<Long, CtItemCeilingQty>();
 		for (CtItemCeilingQty ctItemCeilingQty : getManagedBean().getSelectedItem().getCtItemCeilingQties()) {
 			itemCeilingQtyMap.put(ctItemCeilingQty.getCtAgency().getOrgProfile().getOrgProfileId(), ctItemCeilingQty);
 		}
+		
 		getManagedBean().getSelectedItem().getCtItemCeilingQties().clear();
+		//getManagedBean().getServiceselectedItem().getCtItemCeilingQties().clear();
 		for (CtAgency ctAgency : getManagedBean().getContractVer().getCtAgencies()) {
 			if (!itemCeilingQtyMap.containsKey(ctAgency.getOrgProfile().getOrgProfileId())) {
 				CtItemCeilingQty ctItemCeilingQty = new CtItemCeilingQty();
 				ctItemCeilingQty.setCtAgency(ctAgency);
 				ctItemCeilingQty.setCtContractItem(getManagedBean().getSelectedItem());
 				
+				
 				ctItemCeilingQty.setCeilingQuantity(new BigDecimal(0));
 				ctItemCeilingQty.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
 				ctItemCeilingQty.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
 				getManagedBean().getSelectedItem().getCtItemCeilingQties().add(ctItemCeilingQty);
+				
 			} else {
 				getManagedBean().getSelectedItem().getCtItemCeilingQties().add(itemCeilingQtyMap.get(ctAgency.getOrgProfile().getOrgProfileId()));
+				
 			}
 		}
 	}
-
+	/**
+	 * The method used to refresh the ceiling quantity information of Service Details listing in UI.
+	 */
+	private void refreshAgencyCeilingQuantityServiceList() {
+		Map<Long, CtItemCeilingQty> itemCeilingQtyMap = new HashMap<Long, CtItemCeilingQty>();
+		
+		for (CtItemCeilingQty ctItemCeilingQty : getManagedBean().getServiceselectedItem().getCtItemCeilingQties()) {
+			itemCeilingQtyMap.put(ctItemCeilingQty.getCtAgency().getOrgProfile().getOrgProfileId(), ctItemCeilingQty);
+		}
+		
+		getManagedBean().getServiceselectedItem().getCtItemCeilingQties().clear();
+		//getManagedBean().getSelectedItem().getCtItemCeilingQties().clear();
+		for (CtAgency ctAgency : getManagedBean().getContractVer().getCtAgencies()) {
+			if (!itemCeilingQtyMap.containsKey(ctAgency.getOrgProfile().getOrgProfileId())) {
+				CtItemCeilingQty ctItemCeilingQty = new CtItemCeilingQty();
+				ctItemCeilingQty.setCtAgency(ctAgency);
+				
+				ctItemCeilingQty.setCtContractItem(getManagedBean().getServiceselectedItem());
+				
+				ctItemCeilingQty.setCeilingQuantity(new BigDecimal(0));
+				ctItemCeilingQty.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
+				ctItemCeilingQty.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
+				
+				getManagedBean().getServiceselectedItem().getCtItemCeilingQties().add(ctItemCeilingQty);
+			} else {
+		
+				getManagedBean().getServiceselectedItem().getCtItemCeilingQties().add(itemCeilingQtyMap.get(ctAgency.getOrgProfile().getOrgProfileId()));
+			}
+		}
+	}
+	
+	
 	/**
 	 * The method used to indicate the label flag for new price of contract item.  
 	 */
@@ -3025,11 +3102,32 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public void changeShowItem() {
 		try {
+				if(getManagedBean().getShowItem()!=null)
+				{
+					if (getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_QTY)) {
+						refreshAgencyCeilingQuantityList();
+					}else if (getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY)) {
+						refreshAgencyCeilingQuantityList();
+					}	
+				}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * The method used to render the selected service item information.
+	 */
+	public void changeServiceShowItem() {
+		try {
 			
-			if (getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_QTY)) {
-				refreshAgencyCeilingQuantityList();
-			}else if (getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY)) {
-				refreshAgencyCeilingQuantityList();
+			if(getManagedBean().getShowServiceItem()!=null)
+			{
+				if (getManagedBean().getShowServiceItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_QTY)) {
+					refreshAgencyCeilingQuantityServiceList();
+				}else if (getManagedBean().getShowServiceItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY)) {
+					refreshAgencyCeilingQuantityServiceList();
+				}	
 			}	
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -3118,29 +3216,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 	}	
 
-	/**
-	 * The method used to indicate the label flag for new price of service item.
-	 */
-	public void onSelectServiceItem() {
-		if (getManagedBean().getSelectedServiceItem() != null) {
-			if (getManagedBean().getShowServiceItem() != null
-					&& getManagedBean().getShowServiceItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
-				getManagedBean().setShowServiceItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
-			} else if (getManagedBean().getShowServiceItem() != null
-					&& getManagedBean().getShowServiceItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_QTY)) {
-				getManagedBean().setShowServiceItem(ParameterConst.ITEM_DISPLAY_TYPE_QTY);
-			} else {
-				getManagedBean().setShowServiceItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
-			}
-			// retrieve zone label for new price
-			if (getManagedBean().getSelectedServiceItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)
-					|| getManagedBean().getSelectedServiceItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
-					|| getManagedBean().getSelectedServiceItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
-				itemPriceZoneLabelList(getManagedBean().getSelectedServiceItem());
-				itemMaxQtyZoneLabelList(getManagedBean().getSelectedServiceItem());
-			}
-		}
-	}
+
 
 	/**
 	 * The method used to set the date of frequency sSchedule.
@@ -3623,7 +3699,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("pmParameter.parameterCode",
 						SearchOperator.OPERATOR_IN.value(),itemDisplayTypeList));
-
+		 //log.info("itemDisplayTypeList ****"+itemDisplayTypeList.size());
 		return super.getDropdownCodeValuesBySearchBean(ParameterTypeConst.ITEM_DISPLAY_TYPE, searchBean);
 	}
 
@@ -3856,6 +3932,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 		return null;
 	}
+
+
 
 	public String getLanguage() {
 		FacesScopes facesScopes = new FacesScopes();
