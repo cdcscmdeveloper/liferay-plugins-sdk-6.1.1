@@ -26,12 +26,19 @@
 					onstart="blockWidget.show();"
 					oncomplete="blockWidget.hide();"
 					disabled="#{empty qtRetryBackingBean.selectedRetryQTs}" /> 
+				<p:commandButton id="addRetryBtn"
+					value="#{lbl['lbl.btn.add']}"
+					partialSubmit="true"
+					process="@this"
+					update="addDisruptionPopUp"
+					oncomplete="addDisruptionPopUp.show();">
+				</p:commandButton>
 				<p:commandButton id="deleteRetryBtn"
 					value="#{lbl['lbl.btn.delete']}"
 					partialSubmit="true"
 					process="@this"
-					update="inactivePopUp"
-					oncomplete="inactivePopUp.show();"
+					update="deleteDisruptionPopUp"
+					oncomplete="deleteDisruptionPopUp.show();"
 					disabled="#{empty qtRetryBackingBean.selectedRetryQTs}" />
 				<p:commandButton
 					value="#{lbl['lbl.sc.btn.refresh']}"
@@ -58,26 +65,26 @@
 			
 			<p:column selectionMode="multiple" style="width:2%;text-align:center"/>
 
-			<p:column headerText="#{lbl['lbl.sc.qtn.no']}" style="width:100px;">
-				<h:outputText value="#{scQtDisruptionLog.scQt.qtNo}" />
+			<p:column headerText="#{lbl['lbl.sc.document.no']}" style="width:100px;">
+				<h:outputText value="#{scQtDisruptionLog.docNo}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.title']}">
-				<h:outputText value="#{scQtDisruptionLog.scQt.qtTitle}"
+			<p:column headerText="#{lbl['lbl.sc.document.title']}">
+				<h:outputText value="#{scQtDisruptionLog.docTitle}"
 					style="white-space: normal;word-wrap: break-word;" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.published.date']}"
+			<p:column headerText="#{lbl['lbl.sc.start.date']}"
 				style="width:80px;">
-				<h:outputText value="#{scQtDisruptionLog.scQt.publishDate}">
+				<h:outputText value="#{scQtDisruptionLog.startDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.closing.date']}"
+			<p:column headerText="#{lbl['lbl.sc.end.date']}"
 				style="width:80px;">
-				<h:outputText value="#{scQtDisruptionLog.scQt.closingDate}">
+				<h:outputText value="#{scQtDisruptionLog.endDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
@@ -106,9 +113,11 @@
 			<h:outputText value="#{qtRetryBackingBean.selectedRetryQT.errorMsg}" escape="false" />
 		</p:dialog>
 		
-		<p:dialog id="inactivePopUp" widgetVar="inactivePopUp"
+		<p:dialog id="deleteDisruptionPopUp" widgetVar="deleteDisruptionPopUp"
 			header="#{lbl['lbl.btn.dialog.cofirm.delete.msg']}" styleClass="screen-title"
 			resizable="false" modal="true" width="600" height="200">
+			<p:messages id="delErrMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+			
 			<table width="100%" border="0" cellpadding="0" cellspacing="0">
 			<tr>
 				<td>
@@ -118,7 +127,7 @@
 			<tr>
 				<td>
 					<p:inputTextarea id="reasonTxt" 
-						required="#{param[p:component('OkBtn')]!=null}" 
+						required="#{param[p:component('delDisOkBtn')]!=null}" 
 						rows="9" cols="50" 
 						value="#{qtRetryBackingBean.reason}"
 						label="#{lbl['lbl.txt.remarks']}" />
@@ -126,23 +135,110 @@
 			</tr>
 			<tr>
 				<td style="text-align:right;">
-					<p:commandButton id="OkBtn"
+					<p:commandButton id="delDisOkBtn"
 						value="#{lbl['lbl.btn.ok']}"
-						action="#{qtRetryBackingBean.inactiveQTRetryAction}"
+						action="#{qtRetryBackingBean.deleteScRetryAction}"
 						partialSubmit="true"
 						process="@this, reasonTxt"
-						update="qtRetryTbl"
+						update="qtRetryTbl, @([id$=submitRetryBtn],[id$=deleteRetryBtn])"
 						onstart="blockWidget.show();"
-						oncomplete="inactivePopUp.hide();blockWidget.hide();" /> 
-					<p:commandButton id="CancelBtn"
+						oncomplete="blockWidget.hide();" /> 
+					<p:commandButton id="delDisCancelBtn"
 						value="#{lbl['lbl.btn.cancel']}"
 						partialSubmit="true"
 						process="@this"
 						update="qtRetryTbl, @([id$=submitRetryBtn],[id$=deleteRetryBtn])"
-						oncomplete="inactivePopUp.hide();">
+						oncomplete="deleteDisruptionPopUp.hide();">
 						<f:setPropertyActionListener value="#{null}" target="#{qtRetryBackingBean.reason}" />
 						<f:setPropertyActionListener value="#{null}" target="#{qtRetryBackingBean.selectedRetryQTs}" />
 					</p:commandButton> 
+				</td>
+			</tr>
+			</table>
+		</p:dialog>
+		
+		<p:dialog id="addDisruptionPopUp" widgetVar="addDisruptionPopUp"
+			header="#{lbl['lbl.sc.add']}" styleClass="screen-title"
+			resizable="false" modal="true" width="600" height="330">
+			<p:messages id="addErrMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+			<table width="100%" border="0" cellpadding="0" cellspacing="0">
+			<tr>
+				<td>
+					<h:outputText value="#{lbl['lbl.sc.document.type']}" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p:selectOneMenu id="docType"
+						required="#{param[p:component('addDisOkBtn')]!=null}" 
+						value="#{qtRetryBackingBean.docType}"
+						style="width: 297px;margin-bottom: 5px;"
+						label="#{lbl['lbl.sc.document.type']}">
+						<f:selectItems value="#{qtRetryBackingBean.getScRetryDocTypeDropdownValues()}" />
+					</p:selectOneMenu>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<h:outputText value="#{lbl['lbl.sc.document.no']}" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p:inputText id="docNo"
+						required="#{param[p:component('addDisOkBtn')]!=null}" 
+						value="#{qtRetryBackingBean.docNo}"
+						maxlength="21" style="width:288px;"
+						label="#{lbl['lbl.sc.document.no']}" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<h:outputText value="#{lbl['lbl.sc.disruption.stage']}" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p:selectOneMenu id="disruptionStage"
+						required="#{param[p:component('addDisOkBtn')]!=null}" 
+						value="#{qtRetryBackingBean.disruptionStage}"
+						style="width: 297px;margin-bottom: 5px;"
+						label="#{lbl['lbl.sc.disruption.stage']}">
+						<f:selectItems value="#{qtRetryBackingBean.getDropdownCodeValues(ParameterTypeConst.qtDisruptionStage)}" />
+					</p:selectOneMenu>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<h:outputText value="#{lbl['lbl.txt.remarks']}" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p:inputTextarea id="remarkTxt" 
+						required="#{param[p:component('addDisOkBtn')]!=null}" 
+						rows="9" cols="50" 
+						value="#{qtRetryBackingBean.reason}"
+						label="#{lbl['lbl.txt.remarks']}" />
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align:right;">
+					<p:commandButton id="addDisOkBtn"
+						value="#{lbl['lbl.btn.ok']}"
+						action="#{qtRetryBackingBean.addScRetryAction}"
+						partialSubmit="true"
+						process="@this, docType, docNo, disruptionStage, remarkTxt"
+						update="qtRetryTbl"
+						onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();" /> 
+					<p:commandButton id="addDisCancelBtn"
+						value="#{lbl['lbl.btn.cancel']}"
+						partialSubmit="true"
+						process="@this"
+						update="@this"
+						oncomplete="addDisruptionPopUp.hide();">
+					</p:commandButton>
 				</td>
 			</tr>
 			</table>
