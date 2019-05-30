@@ -1043,9 +1043,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					}
 
 					// pid validity
+					log.info("pID validity begin");
 					if(requestNoteDtl.getRequestItem() != null && requestNoteDtl.getRequestItem().getPurchaseInDefault() != null){
 						pidValidity(requestNoteDtl.getRequestItem().getPurchaseInDefault(), requestNote);
 					}
+					log.info("pID validity end");
 
 					// validate price type
 					if(null == requestNoteDtl.getPriceType() || null == requestNoteDtl.getPriceType().getParameterId()){
@@ -3420,12 +3422,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	private void pidValidity(ScPurchaseInDefault purchaseInDefault, ScRequestNote scRequestNote) {
 		Date today  = DateUtils.getCurrentDateWithoutTime();
 		Date ExpDate = DateUtils.addDays(scRequestNote.getCreatedDate(), purchaseInDefault.getPidValidDays());
+		log.info("pID validity begin");
 		if(ExpDate.before(today)){
 
 			throw new EpException(
 					MessageConst.ERROR_760355,
 					new String[] {purchaseInDefault.getPurchaseInDefaultNo()});
 		}  
+		log.info("pID validity end");
 	}
 	
 	/**
@@ -3438,6 +3442,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		Date today  = DateUtils.getCurrentDateWithoutTime();
 		Date ExpDate = DateUtils.addDays(scRequestNote.getCreatedDate(), purchaseInDefault.getPidValidDays());
 		boolean valid = true;
+		log.info("pID validity begin");
 		if(ExpDate.before(today)){
 			valid = false;
 			getManagedBean().getRequestNoteStatus().setStatusId(DPStatusConstants.PID_EXPIRED);
@@ -3445,6 +3450,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			//		MessageConst.ERROR_760355,
 			//		new String[] {purchaseInDefault.getPurchaseInDefaultNo()});
 		}
+		log.info("pID validity end");
 		return valid;
 	}
 
