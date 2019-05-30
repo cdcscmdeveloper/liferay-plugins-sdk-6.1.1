@@ -253,6 +253,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			scLoa.setSameSupplierLoiLoaList(supplierLoiLoas);
 			AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOADtl(reqDTO);
 			scLoa = resDTO.getScLoa();
+			getManagedBean().setFlowamt(scLoa.isFollowLoaAmt());
 			this.getManagedBean().setScQt(resDTO.getScQt());
 			String currentUser = new FacesScopes().getUserSessionBean().getLoginId();
 			if (awardDataType != null){
@@ -565,7 +566,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						}
 					}
 				}
-
+				
 				editLOAAction(scLoa);
 			}
 			getManagedBean().setEditFlag(Boolean.FALSE);
@@ -2798,6 +2799,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		try {
 			String outcome = BpmOutcomeConst.BPM_SAVE;
 			ScLoa scLoa = this.getManagedBean().getScLoa();
+			scLoa.setFollowLoaAmt(this.getManagedBean().getFlowamt());
 			ScLoaWitness loaSupplierWitness = this.getManagedBean().getLoaSupplierWitness();
 			Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 
@@ -2860,7 +2862,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		try {
 			String outcome = BpmOutcomeConst.BPM_SUBMIT;
 			ScLoa scLoa = this.getManagedBean().getScLoa();
-
+			scLoa.setFollowLoaAmt(this.getManagedBean().getFlowamt());
 			parseLOADetails(scLoa, outcome);
 			validateLOADetails(scLoa, outcome);
 			updateContractDetails(scLoa);
