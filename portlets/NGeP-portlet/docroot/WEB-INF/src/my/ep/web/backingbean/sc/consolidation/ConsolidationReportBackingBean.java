@@ -106,9 +106,10 @@ public class ConsolidationReportBackingBean extends
 	private static final Logger log = EpLogger
 			.getLogger(ConsolidationReportBackingBean.class);
 
-	private final static int BRIEFING_PAPER_TAB_INDEX = 0;
+	private final static int BRIEFING_PAPER_TAB_INDEX = 3;
 	private final static int PACKAGE_TYPE_TAB_INDEX = 1;
 	private final static int ITEMIZED_TYPE_TAB_INDEX = 2;
+	private final static int EVALUATION_REPORT_TAB_INDEX = 0;
 
 	private final static Long DEFAULT_ITEM = 0L;
 	private final static Long DEFAULT_ZONE = 0L;
@@ -154,13 +155,16 @@ public class ConsolidationReportBackingBean extends
 	public void onTabMenuChangeAction(int tabIndex) {
 		switch (tabIndex) {
 		case 0:
-			navigateToBriefingPaperTab();
+			navigateToEvaluationReport();
 			break;
 		case 1:
 			navigateToPackagewiseTab();
 			break;
 		case 2:
 			navigateToItemizedTab();
+			break;
+		case 3:
+			navigateToBriefingPaperTab();
 			break;
 		}
 		onTabMenuChangeAction(tabIndex, true);
@@ -180,13 +184,16 @@ public class ConsolidationReportBackingBean extends
 		}
 		switch (tabIndex) {
 		case 0:
-			navigateToBriefingPaperTab();
+			navigateToEvaluationReport();
 			break;
 		case 1:
 			navigateToPackagewiseTab();
 			break;
 		case 2:
 			navigateToItemizedTab();
+			break;
+		case 3: 
+			navigateToBriefingPaperTab();
 			break;
 		}
 	}
@@ -537,7 +544,7 @@ public class ConsolidationReportBackingBean extends
 			downloadAllFiles("NGeP-Finalization-Report", scAttachments);
 		}
 	}
-
+	
 	/**
 	 * save consolidationReport Details.
 	 * 
@@ -554,7 +561,7 @@ public class ConsolidationReportBackingBean extends
 							IQTSuppFinalizationSO.class);
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 					.saveConsolidationReport(reqDTO);
-
+			saveEvaluationReportsDetaills();
 			if (resDTO.isSuccessful()) {
 				renewSessionAndRetrieve(getManagedBean().getActiveIndex());
 
@@ -571,6 +578,7 @@ public class ConsolidationReportBackingBean extends
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 			}
+			validateEvaluationReports();
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
@@ -828,9 +836,11 @@ public class ConsolidationReportBackingBean extends
 			scQtFinalization.setScQtFinalizationReports(finalizationReports);
 
 			if (finalizationReports != null) {
-				this.getManagedBean().setFinalizationReports(
-						finalizationReports);
+				populateEvolutionReports(finalizationReports, getManagedBean().getScQt());
+				this.getManagedBean().setFinalizationReports(finalizationReports);
 			}
+			
+			retrieveReportTabDtl(getManagedBean().getScQt(), "EC", SourcingConstants.CONSOLIDATION_TASK);
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
@@ -1804,4 +1814,14 @@ public class ConsolidationReportBackingBean extends
 		}
 	}
 
+	/**
+	 * @return the evaluationReportTabIndex
+	 */
+	public static int getEvaluationReportTabIndex() {
+		return EVALUATION_REPORT_TAB_INDEX;
+	}
+	
+	private void navigateToEvaluationReport() {
+		getManagedBean().setActiveIndex(EVALUATION_REPORT_TAB_INDEX);
+	}
 }

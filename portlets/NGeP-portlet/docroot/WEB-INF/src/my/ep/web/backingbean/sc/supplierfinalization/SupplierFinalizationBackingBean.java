@@ -294,12 +294,14 @@ public class SupplierFinalizationBackingBean extends
 			getManagedBean().getScQtFinalization()
 					.setLoiLoaBy(ParameterConst.LOILOA_PREPARED_BY_DO);
 			getManagedBean().setPreparationTabIndex(-1);
+			getManagedBean().setEvaluationReportIndex(tabIndex++);
 			getManagedBean().setReportTabIndex(tabIndex++);
 			getManagedBean().setFinalizationTabIndex(tabIndex++);
 			getManagedBean().setEndorsementReportActiveIndex(-1);
 			getManagedBean().setCommEndorsementTabIndex(-1);
 		} else {
 			getManagedBean().setPreparationTabIndex(tabIndex++);
+			getManagedBean().setEvaluationReportIndex(tabIndex++);
 			getManagedBean().setReportTabIndex(tabIndex++);
 			getManagedBean().setFinalizationTabIndex(tabIndex++);
 			getManagedBean().setCommEndorsementTabIndex(tabIndex++);	
@@ -427,15 +429,18 @@ public class SupplierFinalizationBackingBean extends
 				navigateToPreparationTab();
 				break;
 			case 1:
-				navigateToBriefingPaperTab();
+				navigateToEvaluationReportTab();
 				break;
 			case 2:
-				navigateToSupplierFinalizationTab();
+				navigateToBriefingPaperTab();
 				break;
 			case 3:
-				navigateToCommitteeEndorsementStatusTab();
+				navigateToSupplierFinalizationTab();
 				break;
 			case 4:
+				navigateToCommitteeEndorsementStatusTab();
+				break;
+			case 5:
 				navigateToEndorsementReportTab();	
 				break;
 		}
@@ -462,6 +467,12 @@ public class SupplierFinalizationBackingBean extends
 		log.info("navigateToBriefingPaperTab");
 		this.getManagedBean().setActiveIndex(
 				this.getManagedBean().getReportTabIndex());
+	}
+	
+	private void navigateToEvaluationReportTab() {
+		log.info("navigateToBriefingPaperTab");
+		this.getManagedBean().setActiveIndex(
+				this.getManagedBean().getEvaluationReportIndex());
 	}
 
 	private void navigateToSupplierFinalizationTab() {
@@ -1123,7 +1134,7 @@ public class SupplierFinalizationBackingBean extends
 			reqDTO.setRefinalize(isQTRefinalized());
 			
 			saveAndReloadFinalizationDetails(qtSuppFinalizationSO, reqDTO);
-
+			saveEvaluationReportsDetaills();
 			String qtNo = getManagedBean().getScQt().getQtNo().toString();
 			String desc = ResourceBundleUtils.getMessage(
 					"lbl.sc.sf.supplier.finalization", 
@@ -1882,7 +1893,10 @@ public class SupplierFinalizationBackingBean extends
 	 */
 	public void submitAction() {
 		this.checkIfLoggedinUserIsSecretary();
-		if (this.getManagedBean().isSecretaryUser()) {
+		if (this.getManagedBean().isSecretaryUser() && null != this.getManagedBean().getScQtFinalization()
+				&& null != this.getManagedBean().getScQtFinalization().getDecision()
+				&& null != this.getManagedBean().getScQtFinalization().getDecision().getParameterId()
+				&& this.getManagedBean().getScQtFinalization().getDecision().getParameterId() == 359) {
 			RequestContext.getCurrentInstance().execute("submissionPopup.show()");
 		} else {
 			this.submitSuppFinalization();
@@ -2286,13 +2300,17 @@ public class SupplierFinalizationBackingBean extends
 			
 			if (finalizationReports != null) {
 				//sortReports(finalizationReports);
+				
+				populateEvolutionReports(finalizationReports, getManagedBean().getScQt());
+				
 				getManagedBean().setDocumentList(finalizationReports);
 			}
-			
+			retrieveReportTabDtl(getManagedBean().getScQt(), "EC", SourcingConstants.SUPPLIER_FINALIZATION_TASK);
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
 	}
+
 	
 	/**
 	 * Add ScQtFinalizationReport
@@ -4405,6 +4423,20 @@ public class SupplierFinalizationBackingBean extends
 			mainMenuModel.addMenuItem(menuItem);
 		}
 		
+		// Evaluation Report 
+		menuItem = new MenuItem();
+		menuItem.setValue(ResourceBundleUtils.getMessage(
+							"lbl.sc.evaluation.report",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()));
+		menuItem.setStyle("width:15%;");
+		menuItem.setTransient(true);
+		menuItem.setPartialSubmit(true);
+		menuItem.setProcess("@form");
+		menuItem.setUpdate("@form");
+		menuItem.setOncomplete(tabMenuChangeCommonAction
+				+ (isBPKUser ? 1 : (tabIndex++)) + "}]); ");
+		mainMenuModel.addMenuItem(menuItem);
 		
 		// Briefing Paper Menu Item
 		menuItem = new MenuItem();
@@ -4425,7 +4457,7 @@ public class SupplierFinalizationBackingBean extends
 		// Supplier Finalization Menu Item
 		menuItem = new MenuItem();
 		menuItem.setValue(ResourceBundleUtils.getMessage(
-							"lbl.sc.supplier.finalization",
+							"lbl.sc.meeting.decision",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale()));
 		menuItem.setStyle("width:20%;");

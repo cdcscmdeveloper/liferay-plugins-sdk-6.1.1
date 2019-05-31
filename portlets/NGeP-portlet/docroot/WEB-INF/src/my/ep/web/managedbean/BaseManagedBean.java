@@ -8,6 +8,11 @@ import java.util.List;
 
 import javax.faces.model.SelectItem;
 
+import my.ep.persistence.entity.sc.common.ScAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationReport;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
+import my.ep.web.bean.tpl.TemplateSpecBean;
+
 /**
  * @author siew mei
  * 
@@ -35,7 +40,15 @@ public abstract class BaseManagedBean implements Serializable {
 	private List<SelectItem> localAuthorityItems;
 	private String captchaText;
 	private String captchaAnswer;
-
+	private String reportDownloadFileName;
+	private ScAttachment scAttachment;
+	private List<ScQtEvaluationReport> scQtEvaluationReportList;
+	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
+	private List<ScQtEvaluationReport> selectedScQtEvaluationReports;
+	private ScQtEvaluationReport selectedReport;
+	private List<ScQtFinalizationReport> evaluationReportList;
+	private List<ScQtEvaluationReport> reportsToBeRemovedList;
+	
 	// For sub title displayed in screen.
 	private String title;
 	
@@ -254,6 +267,126 @@ public abstract class BaseManagedBean implements Serializable {
 	 */
 	public void setCaptchaAnswer(String captchaAnswer) {
 		this.captchaAnswer = captchaAnswer;
+	}
+
+	/**
+	 * @return the reportDownloadFileName
+	 */
+	public String getReportDownloadFileName() {
+		return reportDownloadFileName;
+	}
+
+	/**
+	 * @param reportDownloadFileName the reportDownloadFileName to set
+	 */
+	public void setReportDownloadFileName(String reportDownloadFileName) {
+		this.reportDownloadFileName = reportDownloadFileName;
+	}
+
+	/**
+	 * @return the scAttachment
+	 */
+	public ScAttachment getScAttachment() {
+		return scAttachment;
+	}
+
+	/**
+	 * @param scAttachment the scAttachment to set
+	 */
+	public void setScAttachment(ScAttachment scAttachment) {
+		this.scAttachment = scAttachment;
+	}
+
+	/**
+	 * @return the scQtEvaluationReportList
+	 */
+	public List<ScQtEvaluationReport> getScQtEvaluationReportList() {
+		return scQtEvaluationReportList;
+	}
+
+	/**
+	 * @param scQtEvaluationReportList the scQtEvaluationReportList to set
+	 */
+	public void setScQtEvaluationReportList(List<ScQtEvaluationReport> scQtEvaluationReportList) {
+		this.scQtEvaluationReportList = scQtEvaluationReportList;
+	}
+
+	/**
+	 * @return the templateSpecBean
+	 */
+	public TemplateSpecBean getTemplateSpecBean() {
+		return templateSpecBean;
+	}
+
+	/**
+	 * @param templateSpecBean the templateSpecBean to set
+	 */
+	public void setTemplateSpecBean(TemplateSpecBean templateSpecBean) {
+		this.templateSpecBean = templateSpecBean;
+	}
+
+	/**
+	 * @return the selectedScQtEvaluationReports
+	 */
+	public List<ScQtEvaluationReport> getSelectedScQtEvaluationReports() {
+		return selectedScQtEvaluationReports;
+	}
+
+	/**
+	 * @param selectedScQtEvaluationReports the selectedScQtEvaluationReports to set
+	 */
+	public void setSelectedScQtEvaluationReports(List<ScQtEvaluationReport> selectedScQtEvaluationReports) {
+		this.selectedScQtEvaluationReports = selectedScQtEvaluationReports;
+	}
+
+	/**
+	 * @return the selectedReport
+	 */
+	public ScQtEvaluationReport getSelectedReport() {
+		/*if (null != selectedReport && StringUtils.isNotEmpty(selectedReport.getReportContent())) {
+			List<ScQtEvaluationReport> evaluationReportList = this.getScQtEvaluationReportList();
+			for (ScQtEvaluationReport evaluationReport : evaluationReportList) {
+				if (evaluationReport.getQtReportId() == selectedReport.getQtReportId())
+				evaluationReport.setReportContent(selectedReport.getReportContent());
+				break;
+			}
+		}*/
+		return selectedReport;
+	}
+
+	/**
+	 * @param selectedReport the selectedReport to set
+	 */
+	public void setSelectedReport(ScQtEvaluationReport selectedReport) {
+		this.selectedReport = selectedReport;
+	}
+
+	/**
+	 * @return the evaluationReportList
+	 */
+	public List<ScQtFinalizationReport> getEvaluationReportList() {
+		return evaluationReportList;
+	}
+
+	/**
+	 * @param evaluationReportList the evaluationReportList to set
+	 */
+	public void setEvaluationReportList(List<ScQtFinalizationReport> evaluationReportList) {
+		this.evaluationReportList = evaluationReportList;
+	}
+
+	/**
+	 * @return the reportsToBeRemovedList
+	 */
+	public List<ScQtEvaluationReport> getReportsToBeRemovedList() {
+		return reportsToBeRemovedList;
+	}
+
+	/**
+	 * @param reportsToBeRemovedList the reportsToBeRemovedList to set
+	 */
+	public void setReportsToBeRemovedList(List<ScQtEvaluationReport> reportsToBeRemovedList) {
+		this.reportsToBeRemovedList = reportsToBeRemovedList;
 	}
 
 	public Boolean getEnableDownloadAllDocuments() {
