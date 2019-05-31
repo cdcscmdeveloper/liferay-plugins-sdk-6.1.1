@@ -50,7 +50,8 @@
 			<portlet id="pmDigiSign"></portlet>	
 			<portlet id="pmProfessionalCertifiedBody"></portlet>
 			<portlet id="pmAuthorizedSignatory"></portlet>	
-			<portlet id="pmSalutation"></portlet>	
+			<portlet id="pmSalutation"></portlet>
+			<portlet id="pmSupplierCriteria"></portlet>	
 			<portlet id="pmLocation"></portlet>	
 			<portlet id="pmFinancialOrg"></portlet>	
 			<portlet id="pmOrganisation"></portlet>	
@@ -86,6 +87,8 @@
            	<portlet id="pmPoJobTypeRatio"></portlet>
            	<portlet id="poRoleTaskWeightage"></portlet>
 			<portlet id="softCertProvider"></portlet>
+			<portlet  id="pmSystemConfiguration"></portlet>
+			
 		</category>
 		<!-- Profile Management - END -->		
 
