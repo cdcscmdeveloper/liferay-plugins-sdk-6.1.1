@@ -6842,6 +6842,7 @@ public class SmApplicationBackingBean extends
 	 * Add or create a new SmSupplier bank object
 	 */
 	public void assignNewBank() {
+		getManagedBean().setPendingTransaction(false);
 		getManagedBean().setChequeSingPerId(null);
 		getManagedBean().setSelBankBranchId(null);
 		getManagedBean().setSelectedBankBranchIds(null);
@@ -11936,14 +11937,14 @@ public class SmApplicationBackingBean extends
 		String labelNameVal = "";
 		if (hasActiveTransactionContractManagement) {
 			getManagedBean().setPendingTransaction(true);
-			FacesContext.getCurrentInstance().addMessage("contract", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+			FacesContext.getCurrentInstance().addMessage("activecontract", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 					SmCommonUtil.getMessage("lbl.sm.bankDtls.is.active.contract.tied",
 							new String[] { labelNameVal })));
 		} 
 		
 		if (hasActiveTransactionFulfilment) {
 			getManagedBean().setPendingTransaction(true);
-			FacesContext.getCurrentInstance().addMessage("fulfilment", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+			FacesContext.getCurrentInstance().addMessage("pendingtransaction", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 				SmCommonUtil.getMessage("lbl.sm.bankDtls.is.other.active.contract.tied",
 						new String[] { labelNameVal })));
 		}
