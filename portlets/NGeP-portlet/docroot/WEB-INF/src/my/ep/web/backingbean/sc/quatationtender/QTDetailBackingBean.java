@@ -48,6 +48,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.document.IQTDocumentSO;
+import my.ep.biz.service.sc.qtretry.IQTRetrySO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
@@ -55,21 +56,21 @@ import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
-import my.ep.biz.service.sc.scretry.IScRetrySO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
+import my.ep.constant.MapKeyEnum;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.BidStatusConst;
+import my.ep.constant.sc.QTDisruptionConst;
 import my.ep.constant.sc.QTFieldConst;
 import my.ep.constant.sc.QTStatusConst;
-import my.ep.constant.sc.ScDisruptionConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
@@ -90,6 +91,8 @@ import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.document.QTDocumentReqDTO;
 import my.ep.dto.sc.document.QTDocumentResDTO;
+import my.ep.dto.sc.qtretry.QTRetryReqDTO;
+import my.ep.dto.sc.qtretry.QTRetryResDTO;
 import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.dto.sc.quationtender.MeetingReqDTO;
@@ -103,8 +106,6 @@ import my.ep.dto.sc.quationtender.SpecificationReqDTO;
 import my.ep.dto.sc.quationtender.SpecificationResDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
-import my.ep.dto.sc.scretry.ScRetryReqDTO;
-import my.ep.dto.sc.scretry.ScRetryResDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
@@ -138,6 +139,9 @@ import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
+import my.ep.persistence.entity.sc.loaloi.ScLoaForQt;
+import my.ep.persistence.entity.sc.loaloi.ScLoiForQt;
+import my.ep.persistence.entity.sc.qtretry.ScQtDisruptionLog;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -166,7 +170,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
-import my.ep.persistence.entity.sc.scretry.ScQtDisruptionLog;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
@@ -5656,8 +5659,8 @@ public class QTDetailBackingBean extends
 		log.info("closeProposal-->loginId: " + new FacesScopes().getUserSessionBean().getLoginId());
 		log.info("##### Proposal Close started @"+DateUtils.getCurrentDate());
 		
-		ScRetryResDTO resDTO = saveAndSubmitQTDisruption(scQt, 
-				ScDisruptionConst.QT_CLOSE_WORK_FLOW_DISRUPTION, 
+		QTRetryResDTO resDTO = saveAndSubmitQTDisruption(scQt, 
+				QTDisruptionConst.QT_CLOSE_WORK_FLOW_DISRUPTION, 
 				"Manual Close QT (" + System.getProperty("jboss.node.name") + ").");
 		
 		if (resDTO.isSuccessful()) {
@@ -5694,7 +5697,7 @@ public class QTDetailBackingBean extends
 	
 	public void publishQT(ScQt scQt) {
 		String errorMessage = saveAndSubmitQTDisruption(scQt, 
-				ScDisruptionConst.QT_PUBLISH_WORK_FLOW_DISRUPTION, 
+				QTDisruptionConst.QT_PUBLISH_WORK_FLOW_DISRUPTION, 
 				"Manual Publish QT (" + System.getProperty("jboss.node.name") + ").")
 				.getErrorMessage();
 		
@@ -5707,17 +5710,17 @@ public class QTDetailBackingBean extends
 						));
 	}
 	
-	private ScRetryResDTO saveAndSubmitQTDisruption(ScQt scQt, Integer disruptionStage, String errorMsg) {
-		IScRetrySO qtRetrySO;
+	private QTRetryResDTO saveAndSubmitQTDisruption(ScQt scQt, Integer disruptionStage, String errorMsg) {
+		IQTRetrySO qtRetrySO;
 		try {
-			qtRetrySO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IScRetrySO.class);
+			qtRetrySO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTRetrySO.class);
 			
 			PmUser user = new FacesScopes().getUserSessionBean();
 			if (user.getUserId() == null) {
 				user.setUserId(1L);
 			}
 			
-			ScRetryReqDTO reqDTO = new ScRetryReqDTO();
+			QTRetryReqDTO reqDTO = new QTRetryReqDTO();
 			
 			// Save QT Disruption
 			ScQtDisruptionLog qtDisruptionLog = new ScQtDisruptionLog();
@@ -5727,15 +5730,15 @@ public class QTDetailBackingBean extends
 			qtDisruptionLog.setCreatedBy(user.getUserId());
 			qtDisruptionLog.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			qtDisruptionLog.setChangedBy(user.getUserId());
-			reqDTO.setScDisruptionLog(qtDisruptionLog);
-			qtDisruptionLog = (ScQtDisruptionLog)qtRetrySO.saveScDisruption(reqDTO)
-				.getScDisruptionLog();
+			reqDTO.setScQtDisruptionLog(qtDisruptionLog);
+			qtDisruptionLog = qtRetrySO.saveQTDisruption(reqDTO)
+				.getScQtDisruptionLog();
 			
 			// Perform QT Retry
-			reqDTO.setScDisruptionLog(qtDisruptionLog);
+			reqDTO.setScQtDisruptionLog(qtDisruptionLog);
 			reqDTO.setDisruptionStage(qtDisruptionLog.getDisruptionStage());
 			reqDTO.setPmUser(user);
-			return qtRetrySO.retryScService(reqDTO);
+			return qtRetrySO.retryQTService(reqDTO);
 		
 		} finally {
 			qtRetrySO = null;
