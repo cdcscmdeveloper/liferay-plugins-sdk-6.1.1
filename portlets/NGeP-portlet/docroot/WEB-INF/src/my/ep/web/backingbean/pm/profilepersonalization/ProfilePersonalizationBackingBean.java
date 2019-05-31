@@ -29,6 +29,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.role.AdminDetailsDTO;
 import my.ep.dto.pm.authorization.role.AdminReqDTO;
@@ -1435,6 +1436,26 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	/**
 	 * search admin profiles
 	 */
+	
+	private List<Long> getParentProfiles(OrgProfileReqDTO reqDTO,List<Long> orgProfileIds,int startLevel){
+
+		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+		OrgProfileResDTO orgResDTO = orgProfileSO.retrieveOrgDetailsByOrgId(reqDTO);
+		
+		if (orgResDTO.getPmOrgProfile().getParentOrgProfile() != null) {
+			
+			orgProfileIds.set(startLevel,orgResDTO.getPmOrgProfile().getParentOrgProfile().getOrgProfileId());
+			
+			reqDTO.setOrgProfileId(orgResDTO.getPmOrgProfile().getParentOrgProfile().getOrgProfileId());
+			startLevel++;
+			getParentProfiles(reqDTO,orgProfileIds,startLevel);
+		}
+		
+		return orgProfileIds;
+		
+	}
+	
+	
 	public void searchAdminProfile() {
 		logger.info("searchAdminProfile - start");
 		IUserSO userSO = null;
@@ -1446,8 +1467,13 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 		adminMatrixSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAdminMatrixSO.class);
 		try {
-			AdminReqDTO adminReqDTO = new AdminReqDTO();
-			if (authUserDetails.getPmUserOrgs() != null) {
+			
+			if(facesScopes.getUserSessionBean().getLoginId().equals(RoleCode.SYS_ADMIN.value())){
+				getManagedBean().setAdminDetReceivedList(null);
+			}else{
+			
+				AdminReqDTO adminReqDTO = new AdminReqDTO();
+				if (authUserDetails.getPmUserOrgs() != null) {
 
 				ParameterResDTO resDTO = parameterSO.retrieveOrgTypeByTypeByUserId(facesScopes.getUserSessionBean().getUserId());
 
@@ -1455,11 +1481,29 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			
 				Long parameterId = Long.parseLong(obj[0].toString());
 				Long orgProfileId = Long.parseLong(obj[1].toString());
+				String parameterCode = obj[2].toString();
+				
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				reqDTO.setOrgProfileId(orgProfileId);
+				List<Long> orgProfileIds = new ArrayList<Long>();
+				orgProfileIds.add(orgProfileId);
 				
 				
+				int maxNumberOfLevel = 3;
+				int startLevel = 1;
+				for(int i=0; i<maxNumberOfLevel; i++){
+					if(i == maxNumberOfLevel-1){
+						orgProfileIds.add(1l);
+					}else{
+						orgProfileIds.add(0l);
+					}	
+				}
+				
+				orgProfileIds = getParentProfiles(reqDTO,orgProfileIds,startLevel);
+			
 				List<PmRole> pmRole = userSO.retrieveUserRolesByUserId(facesScopes.getUserSessionBean().getUserId());
 				
-				List<PmAdminMatrix> pmAdminMatrix = adminMatrixSO.retrieveCorrespondingAdminRoleByOrgType(parameterId, pmRole);
+				List<PmAdminMatrix> pmAdminMatrix = adminMatrixSO.retrieveCorrespondingAdminRoleByOrgType(parameterId, pmRole, parameterCode);
 				
 				if(pmAdminMatrix.size()>0){
 					
@@ -1469,13 +1513,14 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 						PmAdminMatrix pmAdminMatrixRole = iterator.next();
 						roleNames.add(pmAdminMatrixRole.getAdminRoleCode());
 					}
-					adminReqDTO.setOrgProfileId(orgProfileId);
+					adminReqDTO.setOrgProfileIds(orgProfileIds);
 					adminReqDTO.setUserRoles(roleNames);
 				}
-			}
+				}
 			
-			if (adminReqDTO.getOrgProfileId() > 0 && adminReqDTO.getUserRoles() != null) {
-				getManagedBean().setAdminDetReceivedList(userSO.searchAdminProfilesByOrgDetails(adminReqDTO,facesScopes.getUserSessionBean().getUserId()));
+				if (adminReqDTO.getOrgProfileIds() !=null && adminReqDTO.getUserRoles() != null) {
+					getManagedBean().setAdminDetReceivedList(userSO.searchAdminProfilesByOrgDetails(adminReqDTO,facesScopes.getUserSessionBean().getUserId()));
+				}
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
