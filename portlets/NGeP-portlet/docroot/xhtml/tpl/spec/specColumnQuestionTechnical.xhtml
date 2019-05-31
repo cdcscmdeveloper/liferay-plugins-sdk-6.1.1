@@ -205,7 +205,7 @@
 		<p:inputText id="deliveryTerm"
 			style="min-width:0px !important;width:calc(100% - 40px); text-align:right;"
 			value="#{question.clDeliveryTerm}" rendered="#{isQuestionTypeItem}"
-			required="#{isValidationReq}" maxlength="4"
+			required="#{isValidationReq}" maxlength="4" validator="#{webappBean.validateInteger}"
 			label="#{lbl['lbl.tpl.spec.content.delivery.term']}">
 			<p:ajax partialSubmit="true" process="@this"
 				update="@this, deliveryTermMsg" />
