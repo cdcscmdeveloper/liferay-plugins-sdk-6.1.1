@@ -6930,7 +6930,7 @@ public class SupplierFinalizationBackingBean extends
 			reqDTO.setForceGetAllUserOrgList(false);*/
 			
 			
-			if(resDTO.isSuccessful()){
+			if(null != resDTO && resDTO.isSuccessful()){
 				debugLogger("checkUserInOrgProfile Successful");
 				if(!CollectionUtils.isEmpty(resDTO.getUserOrgList())){
 					return true;
