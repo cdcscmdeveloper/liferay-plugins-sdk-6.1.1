@@ -49,6 +49,10 @@ import org.docx4j.wml.RPr;
 import org.docx4j.wml.STFldCharType;
 import org.docx4j.wml.SectPr;
 import org.docx4j.wml.Text;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import my.ep.factory.EpLogger;
@@ -164,21 +168,42 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 		debugLogger("generatePdf");
 		
 		ITextRenderer render = new ITextRenderer();
+		Document doc = null;
+		Elements elements = null;
 		try{
-			 if (html != null) {
-		        	html = html.replaceAll("&amp;nbsp;", "");
-		        	html = html.replaceAll("&amp;", "&amp;amp;")
-		        			   .replaceAll("&", "&amp;");
-		        	html = html.replaceAll("&amp;#62", "&#62");
-		          	html = html.replaceAll("&amp;#60", "&#60");
-		        	 
-		            render.setDocumentFromString(html);
-		            render.layout();
-		            render.createPDF(os);
-		        }
-		        
-		        os.flush();
+			
+			if (html != null) {
+				html = html.replaceAll("&amp;nbsp;", " ");
+				html = html.replaceAll("&amp;", "&amp;amp;")
+						.replaceAll("&", "&amp;");
+				html = html.replaceAll("&amp;#62", "&#62");
+				html = html.replaceAll("&amp;#60", "&#60");         
+				doc = Jsoup.parse(html);
+
+				for(int i = 1; i<=6; i++) {
+					elements = doc.getElementsByTag("h" + i);
+					for(Element element: elements) {
+						element.clearAttributes();
+					};
+				}
+
+
+				html = doc.toString();
+
+				html = html.replaceAll("<br>", "<br/>");
+				html = html.replaceAll("&amp;nbsp;", " ");
+				html = html.replaceAll("&amp;amp;", "&");
+				html = html.replaceAll("&amp;lt", "&#60");
+				html = html.replaceAll("&amp;gt", "&#62");
+				render.setDocumentFromString(html);
+				render.layout();
+				render.createPDF(os);
+			}
+
+			os.flush();
 		}finally{
+			doc = null;
+			elements = null;
 			render = null;
 			os.close();
 		}
@@ -534,3 +559,6 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
         }
     }
 }
+
+
+// ***25201
