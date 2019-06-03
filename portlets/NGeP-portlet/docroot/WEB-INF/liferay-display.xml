@@ -129,8 +129,9 @@
 			<portlet id="scBidding" />
 			<portlet id="scTemplateMaint" />
 			<portlet id="scScheduleBidding" />
-			<portlet id="scOnlineBidding" />						
+			<portlet id="scOnlineBidding" />
 			<portlet id="scQTMaintenance"/>
+			<portlet id="applProposalValidPeriodExtension" />
 			<portlet id="scQTReview"/>
 			<portlet id="scQTPrepareSpec"/>
 			<portlet id="scQTSiteVisit"/>

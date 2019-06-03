@@ -71,6 +71,27 @@
 			immediate="true" action="#{requestNoteBackingBean.backToPrevious}"
 			rendered="#{isViewOnly}" />
 
+		<c:if test="#{isViewOnly}">
+			<c:if test="#{isPendingItemCodificationStatus}">
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+					onclick="cd.show()" style="float:right;"
+					rendered="#{requestNoteBackingBean.managedBean.cancel}" />
+				<p:confirmDialog
+					message="#{lbl['lbl.sc.note.request.dialog.confirm.message']}"
+					header="#{lbl['lbl.sc.note.request.dialog.confirm.cancel']}"
+					severity="alert" widgetVar="cd">
+					<div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.btn.yes']}"
+							actionListener="#{requestNoteBackingBean.cancelPendingItemCodification}"
+							oncomplete="cd.hide();" id="cancelPendingItemCodification"
+							partialSubmit="true" process="@this" immediate="true" />
+						<p:commandButton value="#{lbl['lbl.btn.no']}"
+							oncomplete="cd.hide();" />
+					</div>
+				</p:confirmDialog>
+			</c:if>
+		</c:if>
+
 		<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
 			style="float:right;"
 			action="#{pmTrackingDiaryBackingBean.redirectToSupplierTrackingDiary(ParameterConst.doctypeRequestNote, requestNoteBackingBean.managedBean.requestNote.requestNoteId, requestNoteBackingBean.isSupplier())}"
