@@ -54,17 +54,32 @@
 				<table>
 					<tr>
 						<td>
-							<p:selectOneMenu id="decisionType" required="true" label="#{lbl['lbl.sc.sf.meeting.decision']}"
-								value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.decision.parameterCode}"
-								disabled="#{!(isBPKTaskAndClaimed or 
-												isSecretaryUser)
-												or suppFinalizationBackingBean.isQTMaintenanceScreen()}"
-								style="width:333px;">
-								<f:selectItems value="#{suppFinalizationBackingBean.getDecisionDropDown()}" />
-								<p:ajax event="change" update="@([id$=recommendSupplierPanel],[id$=reEvaluatePanel],
-															     [id$=rePublishPanel],[id$=itemSupplierPanel])" 
-									listener="#{suppFinalizationBackingBean.decisionEvent}" process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
-				   			</p:selectOneMenu>
+							<c:if test="#{validityDaysExpiredQt}">
+								<p:selectOneMenu id="decisionType" required="true" label="#{lbl['lbl.sc.sf.meeting.decision']}"
+									value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.decision.parameterCode}"
+									disabled="#{!(isBPKTaskAndClaimed or 
+													isSecretaryUser)
+													or suppFinalizationBackingBean.isQTMaintenanceScreen()}"
+									style="width:333px;">
+									<f:selectItems value="#{suppFinalizationBackingBean.getDecisionDropDown()}" />
+									<p:ajax event="change" update="@([id$=recommendSupplierPanel],[id$=reEvaluatePanel],
+																     [id$=rePublishPanel],[id$=itemSupplierPanel])" 
+										listener="#{suppFinalizationBackingBean.decisionEvent}" process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
+					   			</p:selectOneMenu>
+					   		</c:if>
+							<c:if test="#{!validityDaysExpiredQt}">
+								<p:selectOneMenu id="decisionType" required="true" label="#{lbl['lbl.sc.sf.meeting.decision']}"
+									value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.decision.parameterCode}"
+									disabled="#{!(isBPKTaskAndClaimed or 
+													isSecretaryUser)
+													or suppFinalizationBackingBean.isQTMaintenanceScreen()}"
+									style="width:333px;">
+									<f:selectItems value="#{suppFinalizationBackingBean.getDecisionDropDownExpiredProposal()}" />
+									<p:ajax event="change" update="@([id$=recommendSupplierPanel],[id$=reEvaluatePanel],
+																     [id$=rePublishPanel],[id$=itemSupplierPanel])" 
+										listener="#{suppFinalizationBackingBean.decisionEvent}" process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
+					   			</p:selectOneMenu>
+							</c:if>
 						</td>
 						<td style="margin-top: -3px;">
 							<ac:iconTooltip value="#{lbl['lbl.sc.sf.meeting.decision.tooltip']}" />

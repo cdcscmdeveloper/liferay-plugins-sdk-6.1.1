@@ -225,8 +225,8 @@ import org.primefaces.model.TreeNode;
  */
 @ManagedBean(name = "qTDetailBB")
 @RequestScoped
-public class QTDetailBackingBean extends
-		SourcingBaseBackingBean<QTDetailManagedBean> {
+public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManagedBean> {
+	private static final long serialVersionUID = 1L;
 
 	/** The Constant log. */
 	private static final Logger log = EpLogger
@@ -6102,9 +6102,11 @@ public class QTDetailBackingBean extends
 				) return true;
 			return false;
 	}
-	
-	
-	
+
+	public Timestamp getExtensionResponseDueDate(Long qtId) {
+		Timestamp extensionRespDate = getQTDetailSO().getExtensionResponseDueDate(qtId);
+		return extensionRespDate;
+	}
 }
 
 
