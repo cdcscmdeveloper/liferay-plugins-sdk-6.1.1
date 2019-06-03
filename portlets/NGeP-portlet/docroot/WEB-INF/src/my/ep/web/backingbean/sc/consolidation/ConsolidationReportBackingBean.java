@@ -561,6 +561,7 @@ public class ConsolidationReportBackingBean extends
 							IQTSuppFinalizationSO.class);
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 					.saveConsolidationReport(reqDTO);
+			validateEvaluationReports(SourcingConstants.CONSOLIDATION_TASK);
 			saveEvaluationReportsDetaills();
 			if (resDTO.isSuccessful()) {
 				renewSessionAndRetrieve(getManagedBean().getActiveIndex());
@@ -578,7 +579,6 @@ public class ConsolidationReportBackingBean extends
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 			}
-			validateEvaluationReports();
 		} finally {
 			qtSuppFinalizationSO = null;
 		}

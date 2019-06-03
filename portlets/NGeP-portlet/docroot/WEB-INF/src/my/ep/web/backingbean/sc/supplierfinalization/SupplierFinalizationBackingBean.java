@@ -1101,7 +1101,8 @@ public class SupplierFinalizationBackingBean extends
 				reqDTO = validateInfo(2);
 			}
 			validateFinalizationReports(reqDTO);
-			
+			validateEvaluationReports(SourcingConstants.SUPPLIER_FINALIZATION_TASK);
+			saveEvaluationReportsDetaills();
 			if (this.getManagedBean().getEndorsementReportActiveIndex() == activeIndex) {
 				if (this.getManagedBean().getFinalizationMethod() != null
 						&& (this.getManagedBean().getFinalizationMethod()
@@ -1134,7 +1135,6 @@ public class SupplierFinalizationBackingBean extends
 			reqDTO.setRefinalize(isQTRefinalized());
 			
 			saveAndReloadFinalizationDetails(qtSuppFinalizationSO, reqDTO);
-			saveEvaluationReportsDetaills();
 			String qtNo = getManagedBean().getScQt().getQtNo().toString();
 			String desc = ResourceBundleUtils.getMessage(
 					"lbl.sc.sf.supplier.finalization", 
