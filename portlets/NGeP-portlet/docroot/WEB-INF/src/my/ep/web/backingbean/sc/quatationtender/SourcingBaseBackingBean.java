@@ -3265,7 +3265,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				if (taskType.equals(SourcingConstants.SUPPLIER_FINALIZATION_TASK)) {
 					while (iterator.hasNext()) {
 						ScQtEvaluationReport report = iterator.next(); 
-						if (!SourcingConstants.UDPUPBM_REPORT.equals(report.getTitle())) {
+						if (SourcingConstants.PERAKUAN_REPORT.equals(report.getTitle())
+								|| SourcingConstants.LATAR_BELAKANG_REPORT.equals(report.getTitle())
+								|| SourcingConstants.UDPUP_REPORT.equals(report.getTitle())
+								|| SourcingConstants.METODOLOGI_PENILAIAN_REPORT.equals(report.getTitle())
+								|| SourcingConstants.TUJUAN_REPORT.equals(report.getTitle())) {
 							iterator.remove(); 
 						}
 					}
@@ -3551,21 +3555,42 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 	
 	/**
+	 * @param taskType 
 	 * 
 	 */
-	public void validateEvaluationReports(){
+	public void validateEvaluationReports(String taskType){
 		List<ScQtEvaluationReport> evaluationReportList=this.getManagedBean().getScQtEvaluationReportList();
 		if (null != evaluationReportList && evaluationReportList.size() > 0) {
 			String reportNames = "";
 			for (ScQtEvaluationReport evaluationReport : evaluationReportList) {
-				if (StringUtils.isEmpty(evaluationReport.getReportContent())) {
-					if (StringUtils.isEmpty(reportNames)) {
-						reportNames = reportNames + evaluationReport.getTitle();
-					} else {
-						reportNames = reportNames + ", " + evaluationReport.getTitle();
+				
+				if (taskType.equals(SourcingConstants.CONSOLIDATION_TASK)) {
+						if (SourcingConstants.LATAR_BELAKANG_REPORT.equals(evaluationReport.getTitle())
+								|| SourcingConstants.TUJUAN_REPORT.equals(evaluationReport.getTitle())
+								|| SourcingConstants.METODOLOGI_PENILAIAN_REPORT.equals(evaluationReport.getTitle())
+								|| SourcingConstants.UDPUP_REPORT.equals(evaluationReport.getTitle())) {
+							
+							if (StringUtils.isEmpty(evaluationReport.getReportContent())) {
+								if (StringUtils.isEmpty(reportNames)) {
+									reportNames = reportNames + evaluationReport.getTitle();
+								} else {
+									reportNames = reportNames + ", " + evaluationReport.getTitle();
+								}
+							}
+						}
+					} else if (taskType.equals(SourcingConstants.SUPPLIER_FINALIZATION_TASK)) {
+						if (SourcingConstants.UDPUPBM_REPORT.equals(evaluationReport.getTitle())) {
+							if (StringUtils.isEmpty(evaluationReport.getReportContent())) {
+								if (StringUtils.isEmpty(reportNames)) {
+									reportNames = reportNames + evaluationReport.getTitle();
+								} else {
+									reportNames = reportNames + ", " + evaluationReport.getTitle();
+								}
+							}
+						}
 					}
-				}
-			}
+			} 
+				
 			if (StringUtils.isNotEmpty(reportNames)) {
 				throw new EpException(MessageConst.ERROR_775149, new String[] { reportNames });
 			}
