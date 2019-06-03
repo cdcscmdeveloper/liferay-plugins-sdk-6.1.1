@@ -48,6 +48,7 @@ public abstract class BaseManagedBean implements Serializable {
 	private ScQtEvaluationReport selectedReport;
 	private List<ScQtFinalizationReport> evaluationReportList;
 	private List<ScQtEvaluationReport> reportsToBeRemovedList;
+	private boolean autoUpdate = Boolean.TRUE;
 	
 	// For sub title displayed in screen.
 	private String title;
@@ -410,7 +411,20 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setDisableFields(boolean disableFields) {
 		this.disableFields = disableFields;
 	}
+	
+	/**
+	 * @return the autoUpdate
+	 */
+	public boolean isAutoUpdate() {
+		return autoUpdate;
+	}
 
+	/**
+	 * @param autoUpdate the autoUpdate to set
+	 */
+	public void setAutoUpdate(boolean autoUpdate) {
+		this.autoUpdate = autoUpdate;
+	}
 }
 
 
