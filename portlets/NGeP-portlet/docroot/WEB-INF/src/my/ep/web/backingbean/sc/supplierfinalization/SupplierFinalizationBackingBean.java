@@ -1887,8 +1887,8 @@ public class SupplierFinalizationBackingBean extends
 		this.checkIfLoggedinUserIsSecretary();
 		if (this.getManagedBean().isSecretaryUser() && null != this.getManagedBean().getScQtFinalization()
 				&& null != this.getManagedBean().getScQtFinalization().getDecision()
-				&& null != this.getManagedBean().getScQtFinalization().getDecision().getParameterId()
-				&& this.getManagedBean().getScQtFinalization().getDecision().getParameterId() == 359) {
+				&& "FDT".equals(this.getManagedBean().getScQtFinalization().getDecision().getParameterType())
+				&& "RS".equals(this.getManagedBean().getScQtFinalization().getDecision().getParameterCode())){
 			RequestContext.getCurrentInstance().execute("submissionPopup.show()");
 		} else {
 			this.submitSuppFinalization();
