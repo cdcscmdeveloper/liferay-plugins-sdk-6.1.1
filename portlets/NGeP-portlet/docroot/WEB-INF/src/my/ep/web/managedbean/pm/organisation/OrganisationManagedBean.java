@@ -131,6 +131,8 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	private PmDistrict district = new PmDistrict();
 	private PmCity city = new PmCity();
 	private int resetTablerow;
+	private Long status;
+
 	
 	
 	private List<PmState> stateList;
@@ -1238,5 +1240,15 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	public void setSelectedAddrCityName(String selectedAddrCityName) {
 		this.selectedAddrCityName = selectedAddrCityName;
 	}
+
+	public Long getStatus() {
+		return status;
+	}
+
+	public void setStatus(Long status) {
+		this.status = status;
+	}
+
+	
 	
 }
