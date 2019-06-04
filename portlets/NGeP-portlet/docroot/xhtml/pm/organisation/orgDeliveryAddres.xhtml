@@ -84,7 +84,19 @@
 							value="#{organisationBackingBean.managedBean.cityList}"
 							itemLabel="#{city.cityName}" itemValue="#{city.cityId}"></f:selectItems>
 					</p:selectOneMenu></td>
-			</tr>					 
+			</tr>
+			<!-- Status -->
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.rpt.status']}" /></td>	
+				<td><p:selectOneMenu
+						value="#{organisationBackingBean.managedBean.status}"
+						style="width: 225px;">
+						
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"/>
+						<f:selectItem itemLabel="#{lbl['lbl.pm.status.active']}" itemValue="1" />
+						<f:selectItem itemLabel="#{lbl['lbl.pm.status.inactive']}" itemValue="0" />
+					</p:selectOneMenu></td>
+			</tr>
 		</table>
 
 		<p:spacer height="7"></p:spacer>
