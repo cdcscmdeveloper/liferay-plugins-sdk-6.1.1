@@ -43,7 +43,7 @@
 											!suppFinalizationBackingBean.managedBean.getDirectdownloaddocdefkeys()
 												.contains(report.pmDocument.docDefinitionKey)) or report.pmDocument eq null}">
 					<ac:scSingleFileUploadButton id="briefingReportUploadBtn"
-						popupWidgetVar="briefingReportAttWidget"
+						popupWidgetVar="sfBriefingReportAttWidget"
 						attachment="#{report.scQtFinalizationReportAttachment}"
 						readonly="#{!(isSecretaryUser and report.selected)}"
 						rowIndex="#{rowIndex}">
