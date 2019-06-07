@@ -109,6 +109,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	/** The view only. */
 	private boolean viewOnly;
 	
+	private boolean disProcTyp = Boolean.FALSE;
+	
 	/** The sc pi zone. */
 	private ScPIZone scPIZone = new ScPIZone(); 
 	
@@ -757,5 +759,12 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	public void setDisabledRemark(boolean disabledRemark) {
 		this.disabledRemark = disabledRemark;
 	}
-	
+
+	public boolean isDisProcTyp() {
+		return disProcTyp;
+	}
+
+	public void setDisProcTyp(boolean disProcTyp) {
+		this.disProcTyp = disProcTyp;
+	}
 }

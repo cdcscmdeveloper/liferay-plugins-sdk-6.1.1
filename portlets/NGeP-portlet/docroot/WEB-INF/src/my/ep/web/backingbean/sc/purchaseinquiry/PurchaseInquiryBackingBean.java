@@ -733,18 +733,18 @@ public class PurchaseInquiryBackingBean extends
 				if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
 					successMessage(MessageConst.INFO_700026, ParameterTypeConst.DOCUMENT_TYPES,
 							ParameterConst.DOCTYPE_PURCHASE_INQUIRY, scPrInquiry.getPrInquiryNo(), Boolean.TRUE);
+					// clear data
+					super.renewSesionObject();
 				} else {
 					if (prInquiryNo == null) {
 						successMessage(MessageConst.INFO_700024, ParameterTypeConst.DOCUMENT_TYPES,
 								ParameterConst.DOCTYPE_PURCHASE_INQUIRY, scPrInquiry.getPrInquiryNo(), Boolean.TRUE);
+						super.renewSesionObject();
 					} else {
 						successMessage(MessageConst.INFO_700025, ParameterTypeConst.DOCUMENT_TYPES,
-								ParameterConst.DOCTYPE_PURCHASE_INQUIRY, scPrInquiry.getPrInquiryNo(), Boolean.TRUE);
+								ParameterConst.DOCTYPE_PURCHASE_INQUIRY, scPrInquiry.getPrInquiryNo(), Boolean.FALSE);
 					}
 				}
-
-				// clear data
-				super.renewSesionObject();
 			} else {
 				throw new EpException(MessageConst.ERROR_700020);
 			}
@@ -1466,9 +1466,11 @@ public class PurchaseInquiryBackingBean extends
 			checkProcTypeOption();
 			validatePk7(procurementType);
 			getManagedBean().setViewOnly(Boolean.FALSE);
+			getManagedBean().setDisProcTyp(Boolean.TRUE);
 		} else {
 			getManagedBean().setPriceType(getParameterDesc(prInquiry.getPriceType()));
 			getManagedBean().setViewOnly(Boolean.TRUE);
+			getManagedBean().setDisProcTyp(Boolean.FALSE);
 		}
 	}
 
