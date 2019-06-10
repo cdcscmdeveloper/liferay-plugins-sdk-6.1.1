@@ -3953,7 +3953,12 @@ public class SmApplicationUtil {
 			// check maximum limit 30 categories per supplier
 			if (applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)) {
 				int maxCatSize = SmRuleHelper.getInstance().getMaxCategoryAllowed();
-				List<SmSupplierCategory> suppCategory = smSupplier.getSmAppl().getSmSupplierCategories();
+				List<SmSupplierCategory> suppCategory = new ArrayList<>();
+				for (SmSupplierCategory cat : smSupplier.getSmAppl().getSmSupplierCategories()) {
+					if (DbValueConst.RECORD_STATUS_ACTIVE == cat.getRecordStatusFlg()) {
+						suppCategory.add(cat);
+					}
+				}
 				log.info("total category:" + suppCategory.size());
 				if (suppCategory.size() >= maxCatSize) {
 					throw new EpException(MessageConst.ERROR_722675);
