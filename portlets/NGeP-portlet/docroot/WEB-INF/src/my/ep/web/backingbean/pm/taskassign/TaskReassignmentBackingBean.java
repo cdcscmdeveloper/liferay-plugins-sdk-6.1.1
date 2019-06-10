@@ -714,14 +714,15 @@ public class TaskReassignmentBackingBean extends
 		
 		log.info("Start querying for users associated with the specified docNo..");
 		
-		PmUser reassignee;
+		PmUser reassignee = null;
+		List<Integer> statusIds = new ArrayList<Integer>();
 		
 		// Ensure the users' SelectItem list is always cleared
 		if (this.getManagedBean().getReassigneeList().size() > 0) {
 			this.getManagedBean().getReassigneeList().clear();
 			this.getManagedBean().getStatusIds().clear();
-			this.getManagedBean().setResultUser(null);
-			this.getManagedBean().setStatusIds(null);
+			this.getManagedBean().setResultUser(reassignee);
+			this.getManagedBean().setStatusIds(statusIds);
 		}
 		if (this.getManagedBean().getStatusIds().isEmpty()) {
 			List<PmUser> reassignees = reassigneesInfo(this.getManagedBean().
