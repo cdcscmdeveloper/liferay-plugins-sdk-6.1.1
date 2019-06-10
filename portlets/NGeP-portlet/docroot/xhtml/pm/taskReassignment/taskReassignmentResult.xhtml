@@ -17,7 +17,12 @@
 				 style="width:100%;">
 				<ac:paginator for="dtTaskAssigneeResult"></ac:paginator>
 				<p:column headerText="#{lbl['lbl.pm.ta.username']}" width="50%;">
-					<h:selectManyListbox size="15" style="width:40%;">
+					<h:selectManyListbox 
+						style="overflow-y: scroll; 
+						height:100px; 
+						width:470px;
+						border: 1px solid #DDD;
+						margin-bottom: 5px;">
                 		<f:selectItems value="#{taskReassignmentBackingBean.managedBean.reassigneeList.entrySet()}"
                 					   var="reassignee" 
     								   itemValue="#{reassignee.key}" 
@@ -29,7 +34,7 @@
             		<ac:iconTooltip value="#{lbl['lbl.pm.ta.reassignee.tooltips']}" />
 				</p:column>
 			</p:dataTable>
-		</h:panelGroup>	 
+		</h:panelGroup>
 	</p:panel>
 	<p:panel id="pUserTaskAssignResult" header="#{lbl['lbl.pm.ta.user.task']}"
 		toggleable="true">
