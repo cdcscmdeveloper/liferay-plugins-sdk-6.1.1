@@ -145,7 +145,7 @@
           
           <p:panel id="itemId1" toggleable="true" rendered="#{ctBackingBean.managedBean.ctItemList.size()>0}"  toggleSpeed="500">
           <p:outputPanel id="changeField1">
-          	<h:panelGroup rendered="#{ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
+          	<h:panelGroup rendered="#{ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry || ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral}">
 		        <p:spacer height="20"/>
 		        <h:panelGrid columns="2" style="height:50px;text-align:bottom;" 
 			         rendered="#{ctBackingBean.managedBean.selectedItem != null}">
@@ -665,7 +665,7 @@
       
        <p:panel id="itemId3" toggleable="true" rendered="#{ctBackingBean.managedBean.ctItemList.size() > 0}"  toggleSpeed="500">
           <p:outputPanel id="changeField">
-          	<h:panelGroup rendered="#{ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
+          	<h:panelGroup rendered="#{ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry || ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral}">
 		        <p:spacer height="20"/>
 		        <h:panelGrid columns="2" style="height:50px;text-align:bottom;" 
 			         rendered="#{ctBackingBean.managedBean.serviceselectedItem != null}">
