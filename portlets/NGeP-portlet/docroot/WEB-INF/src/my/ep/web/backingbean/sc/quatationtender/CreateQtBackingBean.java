@@ -292,7 +292,8 @@ public class CreateQtBackingBean extends
 			FacesContext fc = FacesContext.getCurrentInstance();
 			ScQt scQt = new ScQt();
 			scQt.setCircularVer(new CtCircularVer());
-			scQt.setPanel(this.getManagedBean().getPanel());
+			scQt.setPanel(false);
+			this.getManagedBean().setPanel(null);
 			PmOrgProfile pmOrgProfile = getPTJOrgProfileByLoginUser();
 			if (pmOrgProfile != null) {
 				scQt.setPmOrgProfile(pmOrgProfile);
@@ -305,7 +306,7 @@ public class CreateQtBackingBean extends
 				if (ptjSpecialApproval != null) {
 					scQt.setCircularVer(null);
 					this.getManagedBean().setPanel(null);
-					scQt.setPanel(false);
+					
 					this.getManagedBean().setPtjSpecialApproval(ptjSpecialApproval);
 					scQt.setObtainSpecialApproval(false);
 				}
