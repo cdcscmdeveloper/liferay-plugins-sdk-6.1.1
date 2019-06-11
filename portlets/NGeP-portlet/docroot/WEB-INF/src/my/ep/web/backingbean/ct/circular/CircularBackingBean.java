@@ -184,21 +184,27 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 			//getManagedBean().getServiceListingPagingDataModel().reloadData();
 			//getManagedBean().resetServiceListingPagingDataModel();
 			//getManagedBean().resetCircularListingPagingDataModel();
-			getManagedBean().setResetval(false);
-			getManagedBean().setReadOnly(true);
+        		getManagedBean().setResetval(false);
+			    getManagedBean().setReadOnly(true);
+			//getManagedBean().allValue(true);
 			
 		} else {
 			getManagedBean().getCircularListingPagingDataModel().resetData();
 			getManagedBean().getServiceListingPagingDataModel().resetData();
 			//getManagedBean().resetServiceListingPagingDataModel();
 			//getManagedBean().resetCircularListingPagingDataModel();
-			getManagedBean().setResetval(false);
-			getManagedBean().setReadOnly(true);
-			
+        		getManagedBean().setResetval(false);
+			    getManagedBean().setReadOnly(true);
+			//getManagedBean().allValue(true);
 		}
+		
+		
 	}
 
 
+
+	
+	
 	/**
 	 * The method used to navigate to circular details screen.
 	 * 
@@ -351,17 +357,20 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 				}else if(getManagedBean().getItemtype()!=null)
 				{
 					getManagedBean().setResetval(true);
+					ContractBackingBean ccBB = new ContractBackingBean();
+					ccBB.getManagedBean().setSelectedItem(null);
+					ccBB.getManagedBean().setServiceselectedItem(null);
 					if(getManagedBean().getItemtype().equals(ParameterConst.ITEM_TYPE_PRODUCT))
 					{
-						//getManagedBean().getServiceListingPagingDataModel().resetData();
-						getManagedBean().resetServiceListingPagingDataModel();
+						getManagedBean().getServiceListingPagingDataModel().resetData();
+						//getManagedBean().resetServiceListingPagingDataModel();
 						getManagedBean().getCircularListingPagingDataModel().reloadData();
 						getManagedBean().prodValue(true);
 						//log.info("Search function executed Prodcut"+ParameterConst.ITEM_TYPE_PRODUCT+"  "+getManagedBean().getItemtype()); 						
 					}else if(getManagedBean().getItemtype().equals(ParameterConst.ITEM_TYPE_SERVICE))
 					{
-						  //getManagedBean().getCircularListingPagingDataModel().resetData();
-						  getManagedBean().resetCircularListingPagingDataModel();
+						  getManagedBean().getCircularListingPagingDataModel().resetData();
+						 // getManagedBean().resetCircularListingPagingDataModel();
 						  getManagedBean().getServiceListingPagingDataModel().reloadData();
 						  getManagedBean().serviceValue(true);
 							
@@ -374,6 +383,9 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 						 
 						  //log.info("Search function executed Product and Service"+ParameterConst.ITEM_TYPE_PRODUCT_AND_SERVICE+"  "+getManagedBean().getItemtype()); 
 					}
+			
+					
+				
 				}else if(getManagedBean().getItemtype()== null)
 				{
 					throw new EpException(MessageConst.ERROR_750051);
