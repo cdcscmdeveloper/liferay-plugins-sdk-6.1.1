@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -591,6 +592,34 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						}
 					}
 					
+					//[SIR#12802] - start
+					//Remove item from list for status: 9 - Deleted
+					if(ParameterConst.PLAN_TYPE_EXPENDITURE.equalsIgnoreCase(ppPlan.getPlanType().getParameterCode())){
+						//log.info("[SIR#12802] - Plan 'E': item list size BEFORE: " + ppPlan.getPpExpenditureItems().size());
+						Iterator<PpExpenditureItem> itr = ppPlan.getPpExpenditureItems().iterator(); 
+				        while (itr.hasNext()) { 
+				        	PpExpenditureItem expenditureItem = (PpExpenditureItem)itr.next(); 
+				            if (ParameterConst.RECORD_STATUS_DELETED.equals(expenditureItem.getRecordStatusFlg().toString())) { 
+				            	//log.info("[SIR#12802] - item status is 9, remove from list!");
+				                itr.remove(); 
+				            }
+				        }
+						//log.info("[SIR#12802] - Plan 'E': item list size AFTER: " + ppPlan.getPpExpenditureItems().size());
+					}
+					else if(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(ppPlan.getPlanType().getParameterCode())){
+						//log.info("[SIR#12802] - Plan 'B': item list size BEFORE: " + ppPlan.getPpProcurementItems().size());
+						Iterator<PpProcurementItem> itr = ppPlan.getPpProcurementItems().iterator(); 
+				        while (itr.hasNext()) { 
+				        	PpProcurementItem procurementItem = (PpProcurementItem)itr.next(); 
+				            if (ParameterConst.RECORD_STATUS_DELETED.equals(procurementItem.getRecordStatusFlg().toString())) { 
+				            	//log.info("[SIR#12802] - item status is 9, remove from list!");
+				                itr.remove(); 
+				            }
+				        }
+						//log.info("[SIR#12802] - Plan 'B': item list size AFTER: " + ppPlan.getPpProcurementItems().size());						
+					}
+					//[SIR#12802] - end
+
 					this.getManagedBean().setSelectedPlan(ppPlan);
 					if(fromList){
 						generatePageMode();
@@ -1962,6 +1991,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				getAllEpItem(ppPlan);
 			}
 			
+			//[SIR#12802]- Get final item list
+			log.info("Call method getFinalItemList...");
+			getFinalItemList(ppPlan);			
 			
 			//Get All Values
 			updatePlanActors(ppPlan);
@@ -2005,10 +2037,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			}	
 			reqDTO.setDocTitle(PpCommonUtil.getDocTitle(ppPlan));
-			reqSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROCUREMENT_PLAN, IProcurementPlanSO.class);	
+			reqSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROCUREMENT_PLAN, IProcurementPlanSO.class);
 			resDTO = reqSO.savePlan(reqDTO);
+			//resDTO.setSuccessful(false); // for testing only...	
 			docType = retrievePlanDocType(ppPlan);
-					
+				
 			if (resDTO.isSuccessful()) {
 				log.info("Record saved successfully"); 
 				if(this.getManagedBean().getTaskId()!=null){
@@ -2411,39 +2444,195 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	public void deleteEpItemDet(String paramCode){
 		log.info("deleteEpItemDet");
 		int count = 0;
-		List<PpExpenditureItem> deletedItems = new ArrayList<PpExpenditureItem>();
+		//List<PpExpenditureItem> deletedItems = new ArrayList<PpExpenditureItem>();
 		List <PpExpenditureItem> epItems = new ArrayList<PpExpenditureItem>();
-		//B
+		
+		//VOT-B
 		if(ParameterConst.VOT_MENGURUS.equals(paramCode)){
 			epItems = this.getManagedBean().getEpItemsB();
-		}else if(ParameterConst.VOT_TANGGUNGAN.equals(paramCode)){
-		//T
-			epItems = this.getManagedBean().getEpItemsT();
-		}else if(ParameterConst.VOT_PEMBANGUNAN.equals(paramCode)){
-		//P
-			epItems = this.getManagedBean().getEpItemsP();
-		}else if(ParameterConst.VOT_SETIA.equals(paramCode)){
-		//S
-			epItems = this.getManagedBean().getEpItemsS();
-		}else if(ParameterConst.VOT_AMANAH.equals(paramCode)){
-		//H
-			epItems = this.getManagedBean().getEpItemsH();
-		}
-		//add deleted item to list
-		for(PpExpenditureItem expenditureItem: epItems){
-			if(expenditureItem.isBrandNew() && expenditureItem.isDeleted()){
-				deletedItems.add(expenditureItem);
-				count++;
+			
+			if(this.getManagedBean().getDeleteEpItemsB()==null){
+				this.getManagedBean().setDeleteEpItemsB(new ArrayList<PpExpenditureItem>());
+			}
+			
+			//add deleted item to list
+			for(PpExpenditureItem expenditureItem: epItems){
+				//log.info("[SIR#12802] - VOT-B: Expenditure item delete status:" + expenditureItem.isDeleted());
+				//if(expenditureItem.isBrandNew() && expenditureItem.isDeleted()){
+				//[SIR#12802] - start
+				if(expenditureItem.isDeleted()){
+				//[SIR#12802] - end	
+					//Set to status 9 - Deleted
+					//log.info("[SIR#12802] - Set item status to 9");
+					expenditureItem.setRecordStatusFlg(Integer.valueOf(ParameterConst.RECORD_STATUS_DELETED));		
+					
+					this.getManagedBean().getDeleteEpItemsB().add(expenditureItem);
+					count++;
+				}
+			}
+			
+			//remove deleted item from list
+			if(count > 0) {
+				//log.info("[SIR#12802] - Remove deleted item from expenditureItem");
+				for(PpExpenditureItem expenditureItem: this.getManagedBean().getDeleteEpItemsB()){
+					epItems.remove(expenditureItem);
+				}
 			}
 		}
+		//VOT-T
+		else if(ParameterConst.VOT_TANGGUNGAN.equals(paramCode)){
+			epItems = this.getManagedBean().getEpItemsT();
+			
+			if(this.getManagedBean().getDeleteEpItemsT()==null){
+				this.getManagedBean().setDeleteEpItemsT(new ArrayList<PpExpenditureItem>());
+			}
+			
+			//add deleted item to list
+			for(PpExpenditureItem expenditureItem: epItems){
+				//log.info("[SIR#12802] - VOT-T: Expenditure item delete status:" + expenditureItem.isDeleted());
+				//if(expenditureItem.isBrandNew() && expenditureItem.isDeleted()){
+				//[SIR#12802] - start
+				if(expenditureItem.isDeleted()){
+				//[SIR#12802] - end	
+					//Set to status 9 - Deleted
+					//log.info("[SIR#12802] - Set item status to 9");
+					expenditureItem.setRecordStatusFlg(Integer.valueOf(ParameterConst.RECORD_STATUS_DELETED));		
+					
+					this.getManagedBean().getDeleteEpItemsT().add(expenditureItem);
+					count++;
+				}
+			}
+			
+			//remove deleted item from list
+			if(count > 0) {
+				//log.info("[SIR#12802] - Remove deleted item from expenditureItem");
+				for(PpExpenditureItem expenditureItem: this.getManagedBean().getDeleteEpItemsT()){
+					epItems.remove(expenditureItem);
+				}
+			}
+		}
+		//VOT-P
+		else if(ParameterConst.VOT_PEMBANGUNAN.equals(paramCode)){
+			epItems = this.getManagedBean().getEpItemsP();
+			
+			if(this.getManagedBean().getDeleteEpItemsP()==null){
+				this.getManagedBean().setDeleteEpItemsP(new ArrayList<PpExpenditureItem>());
+			}
+			
+			//add deleted item to list
+			for(PpExpenditureItem expenditureItem: epItems){
+				//log.info("[SIR#12802] - VOT-P: Expenditure item delete status:" + expenditureItem.isDeleted());
+				//if(expenditureItem.isBrandNew() && expenditureItem.isDeleted()){
+				//[SIR#12802] - start
+				if(expenditureItem.isDeleted()){
+				//[SIR#12802] - end	
+					//Set to status 9 - Deleted
+					//log.info("[SIR#12802] - Set item status to 9");
+					expenditureItem.setRecordStatusFlg(Integer.valueOf(ParameterConst.RECORD_STATUS_DELETED));		
+					
+					this.getManagedBean().getDeleteEpItemsP().add(expenditureItem);
+					count++;
+				}
+			}
+			
+			//remove deleted item from list
+			if(count > 0) {
+				//log.info("[SIR#12802] - Remove deleted item from expenditureItem");
+				for(PpExpenditureItem expenditureItem: this.getManagedBean().getDeleteEpItemsP()){
+					epItems.remove(expenditureItem);
+				}
+			}
+		}
+		//VOT-S
+		else if(ParameterConst.VOT_SETIA.equals(paramCode)){
+			epItems = this.getManagedBean().getEpItemsS();
+			
+			if(this.getManagedBean().getDeleteEpItemsS()==null){
+				this.getManagedBean().setDeleteEpItemsS(new ArrayList<PpExpenditureItem>());
+			}
+			
+			//add deleted item to list
+			for(PpExpenditureItem expenditureItem: epItems){
+				//log.info("[SIR#12802] - VOT-S: Expenditure item delete status:" + expenditureItem.isDeleted());
+				//if(expenditureItem.isBrandNew() && expenditureItem.isDeleted()){
+				//[SIR#12802] - start
+				if(expenditureItem.isDeleted()){
+				//[SIR#12802] - end	
+					//Set to status 9 - Deleted
+					//log.info("[SIR#12802] - Set item status to 9");
+					expenditureItem.setRecordStatusFlg(Integer.valueOf(ParameterConst.RECORD_STATUS_DELETED));		
+					
+					this.getManagedBean().getDeleteEpItemsS().add(expenditureItem);
+					count++;
+				}
+			}
+			
+			//remove deleted item from list
+			if(count > 0) {
+				//log.info("[SIR#12802] - Remove deleted item from expenditureItem");
+				for(PpExpenditureItem expenditureItem: this.getManagedBean().getDeleteEpItemsS()){
+					epItems.remove(expenditureItem);
+				}
+			}
+		}
+		//VOT-H
+		else if(ParameterConst.VOT_AMANAH.equals(paramCode)){
+			epItems = this.getManagedBean().getEpItemsH();
+			
+			if(this.getManagedBean().getDeleteEpItemsH()==null){
+				this.getManagedBean().setDeleteEpItemsH(new ArrayList<PpExpenditureItem>());
+			}
+			
+			//add deleted item to list
+			for(PpExpenditureItem expenditureItem: epItems){
+				//log.info("[SIR#12802] - VOT-H: Expenditure item delete status:" + expenditureItem.isDeleted());
+				//if(expenditureItem.isBrandNew() && expenditureItem.isDeleted()){
+				//[SIR#12802] - start
+				if(expenditureItem.isDeleted()){
+				//[SIR#12802] - end	
+					//Set to status 9 - Deleted
+					//log.info("[SIR#12802] - Set item status to 9");
+					expenditureItem.setRecordStatusFlg(Integer.valueOf(ParameterConst.RECORD_STATUS_DELETED));		
+					
+					this.getManagedBean().getDeleteEpItemsH().add(expenditureItem);
+					count++;
+				}
+			}
+			
+			//remove deleted item from list
+			if(count > 0) {
+				//log.info("[SIR#12802] - Remove deleted item from expenditureItem");
+				for(PpExpenditureItem expenditureItem: this.getManagedBean().getDeleteEpItemsH()){
+					epItems.remove(expenditureItem);
+				}
+			}
+		}
+
+		log.info("Number of item(s) to be deleted:" + count);
 		if(count==0){
 			throw new EpException(MessageConst.ERROR_730009);
 		}
-		
-		//remove deleted item from list
-		for(PpExpenditureItem expenditureItem: deletedItems){
-			epItems.remove(expenditureItem);
+
+		//[SIR#12802] - start
+		//update new item list after deletion
+		log.info("Set new item list...");
+		//VOT-B
+		if(ParameterConst.VOT_MENGURUS.equals(paramCode)){
+			this.getManagedBean().setEpItemsB(epItems);
+		}else if(ParameterConst.VOT_TANGGUNGAN.equals(paramCode)){
+		//VOT-T
+			this.getManagedBean().setEpItemsT(epItems);
+		}else if(ParameterConst.VOT_PEMBANGUNAN.equals(paramCode)){
+		//VOT-P
+			this.getManagedBean().setEpItemsP(epItems);
+		}else if(ParameterConst.VOT_SETIA.equals(paramCode)){
+		//VOT-S
+			this.getManagedBean().setEpItemsS(epItems);
+		}else if(ParameterConst.VOT_AMANAH.equals(paramCode)){
+		//VOT-H
+			this.getManagedBean().setEpItemsH(epItems);
 		}
+		//[SIR#12802] - end		
 		
 		calculateEpGrandTotal(paramCode);
 	}
@@ -2808,7 +2997,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		if(this.getManagedBean().getSelectedPlan().getPpProcurementItems()==null){
 			this.getManagedBean().getSelectedPlan().setPpProcurementItems(new ArrayList<PpProcurementItem>());
 		}
+
 		validatePpItem(); // disabled this if no validation required at this stage
+		
 		PpProcurementItem ppItem = new PpProcurementItem();
 		ppItem.setProcurementCat(new PmParameter());
 		ppItem.setProcurementType(new PmParameter());
@@ -2918,16 +3109,25 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 		//add deleted item to list
 		for(PpProcurementItem procurementItem: this.getManagedBean().getSelectedPlan().getPpProcurementItems()){
-			if(procurementItem.isBrandNew() && procurementItem.isDeleted()){
+			//log.info("[SIR#12802] - Procument item delete status:" + procurementItem.isDeleted());
+			//if(procurementItem.isBrandNew() && procurementItem.isDeleted()){
+			//[SIR#12802] - start
+			if(procurementItem.isDeleted()){
+			//[SIR#12802] - end
+				//Set to status 9 - Deleted
+				//log.info("[SIR#12802] - Set item status to 9");
+				procurementItem.setRecordStatusFlg(Integer.valueOf(ParameterConst.RECORD_STATUS_DELETED));				
+				
+				//Add deleted item
 				this.getManagedBean().getDeletePpItems().add(procurementItem);
 				count++;
 			}
 		}
-		
+		log.info("Number of item(s) to be deleted:" + count);
 		if(count==0){
 			throw new EpException(MessageConst.ERROR_730015);
 		}
-		
+
 		//remove deleted item from list
 		for(PpProcurementItem procurementItem: this.getManagedBean().getDeletePpItems()){
 			this.getManagedBean().getSelectedPlan().getPpProcurementItems().remove(procurementItem);			
@@ -2950,9 +3150,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 //			throw new EpException(MessageConst.ERROR_730015);
 //		}
 	}
-	
-	
-	
+
 	/**
 	 * retrieve pp reject reason
 	 * @param ppItem
@@ -4215,5 +4413,170 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			isApproved = true;
 		}
 		return isApproved;
+	}
+	
+	private void getFinalItemList(PpPlan pplan){
+		log.info("inside getFinalItemList");
+		
+		if(ParameterConst.PLAN_TYPE_EXPENDITURE.equalsIgnoreCase(pplan.getPlanType().getParameterCode())){			
+
+			//Add existing item to list for status: 9 - Deleted
+			//log.info("[SIR#12802] - item list is for plan type 'E'");
+			
+			//create new list for all deleted item
+			if(this.getManagedBean().getDeleteEpItemsAll()==null){
+				this.getManagedBean().setDeleteEpItemsAll(new ArrayList<PpExpenditureItem>());
+			}
+			
+			//create new list for expenditure item
+			if(pplan.getPpExpenditureItems()==null){
+				pplan.setPpExpenditureItems(new ArrayList<PpExpenditureItem>());
+			}
+			
+			//get deleted item for VOT-B (for existing record only)
+			if(this.getManagedBean().getDeleteEpItemsB()!=null 
+					&& !this.getManagedBean().getDeleteEpItemsB().isEmpty()){
+				//log.info("[SIR#12802] - VOT B: list size for all deleted item BEFORE: " + this.getManagedBean().getDeleteEpItemsAll().size());
+				List <PpExpenditureItem> delExpenditureItem = this.getManagedBean().getDeleteEpItemsB();				
+				
+					Iterator<PpExpenditureItem> itr = delExpenditureItem.iterator(); 
+			        while(itr.hasNext()) { 
+			        	PpExpenditureItem expenditureItem = (PpExpenditureItem)itr.next(); 
+			            if(!expenditureItem.isBrandNew()) { 
+			            	//log.info("[SIR#12802] - item is not new but status is 9, add to all deleted list!");
+			            	this.getManagedBean().getDeleteEpItemsAll().add(expenditureItem);
+			            }
+			        }				
+
+				//log.info("[SIR#12802] - VOT B: list size for all deleted item AFTER: " + this.getManagedBean().getDeleteEpItemsAll().size());
+			}
+			
+			//get deleted item for VOT-T (for existing record only)
+			if(this.getManagedBean().getDeleteEpItemsT()!=null 
+					&& !this.getManagedBean().getDeleteEpItemsT().isEmpty()){
+				//log.info("[SIR#12802] - VOT T: list size for all deleted item BEFORE: " + this.getManagedBean().getDeleteEpItemsAll().size());
+				List <PpExpenditureItem> delExpenditureItem = this.getManagedBean().getDeleteEpItemsT();				
+				
+					Iterator<PpExpenditureItem> itr = delExpenditureItem.iterator(); 
+			        while(itr.hasNext()) { 
+			        	PpExpenditureItem expenditureItem = (PpExpenditureItem)itr.next(); 
+			            if(!expenditureItem.isBrandNew()) { 
+			            	//log.info("[SIR#12802] - item is not new but status is 9, add to all deleted list!");
+			            	this.getManagedBean().getDeleteEpItemsAll().add(expenditureItem);
+			            }
+			        }				
+
+				//log.info("[SIR#12802] - VOT T: list size for all deleted item AFTER: " + this.getManagedBean().getDeleteEpItemsAll().size());
+			}
+			
+			//get deleted item for VOT-P (for existing record only)
+			if(this.getManagedBean().getDeleteEpItemsP()!=null 
+					&& !this.getManagedBean().getDeleteEpItemsP().isEmpty()){
+				//log.info("[SIR#12802] - VOT P: list size for all deleted item BEFORE: " + this.getManagedBean().getDeleteEpItemsAll().size());
+				List <PpExpenditureItem> delExpenditureItem = this.getManagedBean().getDeleteEpItemsP();				
+				
+					Iterator<PpExpenditureItem> itr = delExpenditureItem.iterator(); 
+			        while(itr.hasNext()) { 
+			        	PpExpenditureItem expenditureItem = (PpExpenditureItem)itr.next(); 
+			            if(!expenditureItem.isBrandNew()) { 
+			            	//log.info("[SIR#12802] - item is not new but status is 9, add to all deleted list!");
+			            	this.getManagedBean().getDeleteEpItemsAll().add(expenditureItem);
+			            }
+			        }				
+
+				//log.info("[SIR#12802] - VOT P: list size for all deleted item AFTER: " + this.getManagedBean().getDeleteEpItemsAll().size());
+			}
+			
+			//get deleted item for VOT-S (for existing record only)
+			if(this.getManagedBean().getDeleteEpItemsS()!=null 
+					&& !this.getManagedBean().getDeleteEpItemsS().isEmpty()){
+				//log.info("[SIR#12802] - VOT S: list size for all deleted item BEFORE: " + this.getManagedBean().getDeleteEpItemsAll().size());
+				List <PpExpenditureItem> delExpenditureItem = this.getManagedBean().getDeleteEpItemsS();				
+				
+					Iterator<PpExpenditureItem> itr = delExpenditureItem.iterator(); 
+			        while(itr.hasNext()) { 
+			        	PpExpenditureItem expenditureItem = (PpExpenditureItem)itr.next(); 
+			            if(!expenditureItem.isBrandNew()) { 
+			            	//log.info("[SIR#12802] - item is not new but status is 9, add to all deleted list!");
+			            	this.getManagedBean().getDeleteEpItemsAll().add(expenditureItem);
+			            }
+			        }				
+
+				//log.info("[SIR#12802] - VOT S: list size for all deleted item AFTER: " + this.getManagedBean().getDeleteEpItemsAll().size());
+			}
+			
+			//get deleted item for VOT-H (for existing record only)
+			if(this.getManagedBean().getDeleteEpItemsH()!=null 
+					&& !this.getManagedBean().getDeleteEpItemsH().isEmpty()){
+				//log.info("[SIR#12802] - VOT H: list size for all deleted item BEFORE: " + this.getManagedBean().getDeleteEpItemsAll().size());
+				List <PpExpenditureItem> delExpenditureItem = this.getManagedBean().getDeleteEpItemsH();				
+				
+					Iterator<PpExpenditureItem> itr = delExpenditureItem.iterator(); 
+			        while(itr.hasNext()) { 
+			        	PpExpenditureItem expenditureItem = (PpExpenditureItem)itr.next(); 
+			            if(!expenditureItem.isBrandNew()) { 
+			            	//log.info("[SIR#12802] - item is not new but status is 9, add to all deleted list!");
+			            	this.getManagedBean().getDeleteEpItemsAll().add(expenditureItem);
+			            }
+			        }				
+
+				//log.info("[SIR#12802] - VOT H: list size for all deleted item AFTER: " + this.getManagedBean().getDeleteEpItemsAll().size());
+			}
+			
+			//update list in expenditure item (for existing record only)
+			//log.info("[SIR#12802] - Updating list in expenditure item");
+			if(this.getManagedBean().getDeleteEpItemsAll()!=null 
+					&& !this.getManagedBean().getDeleteEpItemsAll().isEmpty()){
+				//log.info("[SIR#12802] - Comparing record between deleted item and expenditure item");
+				List <PpExpenditureItem> delExpenditureItemAll = this.getManagedBean().getDeleteEpItemsAll();
+				long expItemId,votTypeId = 0L;				
+				Iterator<PpExpenditureItem> itr = delExpenditureItemAll.iterator();					
+				
+				//iterate through all deleted item list.
+		        while(itr.hasNext()) { 
+		        	PpExpenditureItem delExpenditureItem = (PpExpenditureItem)itr.next(); 
+		        	
+		        	expItemId = delExpenditureItem.getExpenditureItemId().longValue();
+		        	votTypeId = delExpenditureItem.getVotFundType().getParameterId().longValue();
+		        	
+		        	for(PpExpenditureItem ppExpenditureItem : pplan.getPpExpenditureItems()) {   		
+			        	if((ppExpenditureItem.getExpenditureItemId() != null) && 
+			        			(ppExpenditureItem.getExpenditureItemId().longValue() == expItemId && 
+			        			ppExpenditureItem.getVotFundType().getParameterId().longValue() == votTypeId)) {
+			        		//log.info("[SIR#12802] - Found match!!");
+			        		//log.info("[SIR#12802] - Update status for matched expenditure item");
+			        		ppExpenditureItem.setRecordStatusFlg(delExpenditureItem.getRecordStatusFlg());
+			        		break;
+			        	}
+			        }
+		        }
+		        //reset or clear list in all deleted item list after finished.
+		        this.getManagedBean().getDeleteEpItemsAll().clear();
+		        //log.info("[SIR#12802] - All Expenditure Deleted item list size after compare:" + this.getManagedBean().getDeleteEpItemsAll().size());
+		        //log.info("[SIR#12802] - Expenditure item list size after compare:" + pplan.getPpExpenditureItems().size());
+			}			
+		}
+		
+		else if(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(pplan.getPlanType().getParameterCode())){			
+
+			//Add existing item to list for status: 9 - Deleted
+			//log.info("[SIR#12802] - item list is for plan type 'P'");
+			if(pplan.getPpProcurementItems()!=null && !pplan.getPpProcurementItems().isEmpty()){
+				//log.info("[SIR#12802] - item list size BEFORE: " + pplan.getPpProcurementItems().size());
+				List <PpProcurementItem> delProcurementItem = this.getManagedBean().getDeletePpItems();
+				
+				if(delProcurementItem!=null && !delProcurementItem.isEmpty()) {
+					Iterator<PpProcurementItem> itr = delProcurementItem.iterator(); 
+			        while(itr.hasNext()) { 
+			        	PpProcurementItem procurementItem = (PpProcurementItem)itr.next(); 
+			            if(!procurementItem.isBrandNew()) { 
+			            	//log.info("[SIR#12802] - item is not new but status is 9, add to list!");
+			            	pplan.getPpProcurementItems().add(procurementItem);
+			            }
+			        }
+				}
+				//log.info("[SIR#12802] - item list size AFTER: " + pplan.getPpProcurementItems().size());
+			}
+		}
 	}
 }
