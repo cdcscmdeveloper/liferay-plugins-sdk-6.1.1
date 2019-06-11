@@ -77,6 +77,8 @@ public class CircularManagedBean extends BaseManagedBean {
 		servicecollapse=value;
 		prodcollapse=value;
 		
+		
+		
 	}
 	public void prodValue(boolean value) 
 	{
@@ -112,14 +114,15 @@ public class CircularManagedBean extends BaseManagedBean {
 		@Override
 		public ISearchResultBean<CtContractItem> pageChangeListener(ISearchBean<CtContractItem> searchBean) {
 			try {		
-				
+				//log.info("*****ServiceListingPagingDataModel******"+"servicecollapse--->"+servicecollapse+"prodcollapse"+prodcollapse);
+				//log.info("*****ServiceListingPagingDataModel******"+"isServicecollapse--->"+isServicecollapse()+"isProdcollapse"+isProdcollapse());
 				//private String contractId = null;
 				ContractBackingBean contractBb=new ContractBackingBean();
 				
 				Long contId=contractBb.getManagedBean().getContractVer().getCtContract().getContractId();
 				Long contractVerId=contractBb.getManagedBean().getContractVer().getContractVerId();
 				//contractBb.getManagedBean().setReadOnly(true);
-				
+				//log.info("*****ServiceListingPagingDataModel******"+"contId--->"+contId+"contractVerId"+contractVerId);
 				
 			  if(contId!=null ){
 					
@@ -245,9 +248,26 @@ public class CircularManagedBean extends BaseManagedBean {
 				ContractItemReqDTO reqDTO=new ContractItemReqDTO();
 				reqDTO.setContractItemSearchBean(searchBean);
 				ContractItemResDTO resDTO = null;
-				
+				CircularBackingBean cbb=new CircularBackingBean();
+				//log.info("*****ServiceListingPagingDataModel Resetval()******"+isResetval());
+				//log.info("*****ServiceListingPagingDataModel Resetval()******"+cbb.getManagedBean().isResetval());
 				if(isResetval())
                 {
+					//log.info("*****ServiceListingPagingDataModel ParameterCode *** "+contractBb.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode());
+					if(contractBb.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_CENTRAL))
+                	{
+						if(getItemtype()!=null && getItemtype().length()>0)
+                		{
+	                		if(getItemtype().equals(ParameterConst.ITEM_TYPE_SERVICE))
+	                		{
+								setServicecollapse(isResetval());
+		                		//log.info("*****ServiceListingPagingDataModel *** isServicecollapse()******"+isServicecollapse());
+	                		}
+                		}else{
+                			setServicecollapse(isResetval());
+                		}
+                	}
+					
 					if(isServicecollapse())
 					{
 						IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractItemSO.class);
@@ -256,6 +276,7 @@ public class CircularManagedBean extends BaseManagedBean {
 						resDTO=contractItemSO.retrieveProductServiceContractItemDtls(reqDTO);
 					    resDTO.getContractItemResultBean();
 					    //contractBb.getManagedBean().setServicecollapse(true);
+					    //log.info("*****ServiceListingPagingDataModel getContractItemResultBean().getResultList().size()******"+resDTO.getContractItemResultBean().getResultList().size());
 					    if(resDTO.getContractItemResultBean().getResultList().size()>0)
 					    {
 							//servicecollapse=false;
@@ -290,11 +311,13 @@ public class CircularManagedBean extends BaseManagedBean {
 		@Override
 		public ISearchResultBean<CtContractItem> pageChangeListener(ISearchBean<CtContractItem> searchBean) {
 			try {		
-
+				//log.info("*****CircularListingPagingDataModel******"+"servicecollapse--->"+servicecollapse+"prodcollapse"+prodcollapse);
+				//log.info("*****ServiceListingPagingDataModel******"+"isServicecollapse--->" +isServicecollapse()+"isProdcollapse" +isProdcollapse());
 				//private String contractId = null;
 				ContractBackingBean contractBb=new ContractBackingBean();
 				Long contId=contractBb.getManagedBean().getContractVer().getCtContract().getContractId();
 				Long contractVerId=contractBb.getManagedBean().getContractVer().getContractVerId();
+				//log.info("*****CircularListingPagingDataModel******"+"contId--->"+contId+"contractVerId"+contractVerId);
 
 				if(contId!=null ) 
 				  	{
@@ -428,9 +451,28 @@ public class CircularManagedBean extends BaseManagedBean {
 				ContractItemReqDTO reqDTO=new ContractItemReqDTO();
 				reqDTO.setContractItemSearchBean(searchBean);
 				ContractItemResDTO resDTO = null;
+				CircularBackingBean cbb=new CircularBackingBean();
+				//setResetval(isProdcollapse());
 				
+				//log.info("*****CircularListingPagingDataModel Resetval()******"+isResetval());
+				//log.info("*****CircularListingPagingDataModel Resetval()******"+cbb.getManagedBean().isResetval());
                 if(isResetval())
                 {
+                	log.info("*****CircularListingPagingDataModel ParameterCode *** "+contractBb.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode());
+                	if(contractBb.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_CENTRAL))
+                	{
+                		if(getItemtype()!=null && getItemtype().length()>0)
+                		{
+	                		if(getItemtype().equals(ParameterConst.ITEM_TYPE_PRODUCT))
+	                		{
+		                		setProdcollapse(isResetval());
+		                		//log.info("*****CircularListingPagingDataModel ***Prodcollapse()******"+isProdcollapse());
+	                		}	
+                		}else{
+                			setProdcollapse(isResetval());
+                		}
+                	}
+                	
                 	if(isProdcollapse())
 					{
 					
@@ -438,6 +480,7 @@ public class CircularManagedBean extends BaseManagedBean {
 					
 					resDTO=contractItemSO.retrieveProductServiceContractItemDtls(reqDTO);
 					//contractBb.getManagedBean().setProdcollapse(true);
+					//log.info("*****CircularListingPagingDataModel getContractItemResultBean().getResultList().size()******"+resDTO.getContractItemResultBean().getResultList().size());
 					if(resDTO.getContractItemResultBean().getResultList().size()>0)
 				    {
 						//contractBb.getManagedBean().setProdcollapse(false);
