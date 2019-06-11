@@ -90,6 +90,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				    </p:column>
 			 	</p:row>
 		 	</p:columnGroup>
+
 			<p:column>
 				<!-- [SIR#12802] - start -->				
 				<p:selectBooleanCheckbox 
@@ -97,6 +98,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					value="#{ppItem.deleted}"/>
 				<!-- [SIR#12802] - end -->
 			</p:column>
+			
 	        <p:column>	
         		<p:inputTextarea id="itaPpTitle" value="#{ppItem.procurementTitle}" 
         			disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable)}"
@@ -105,7 +107,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			 		<p:ajax event="change" process="@this" />
 		 		</p:inputTextarea>
 		 		<p:message id="itPpTitleMsg" for="itaPpTitle" display="icon" />  
-	        </p:column>	 
+	        </p:column>
+
 	         <p:column>	
         		<p:inputTextarea id="itaPpDesc" value="#{ppItem.procurementDesc}" 
         			disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable)}"
@@ -114,7 +117,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			 		<p:ajax event="change" process="@this" />
 		 		</p:inputTextarea>
 		 		<p:message id="itaPpDescMsg" for="itaPpDesc" display="icon" />  
-	        </p:column>	 
+	        </p:column>
+
 	        <p:column>
        			<p:selectOneMenu id="somCategory" style="width:99%"
        				disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable)}"
@@ -126,6 +130,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</p:selectOneMenu>
 				<p:message id="somCategoryMsg" for="somCategory" display="icon" />
 	        </p:column>
+	        
 	        <p:column>
        			<p:selectOneMenu id="somProcurementMethod" style="width:99%"
        				disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable) or ppItem.procurementCat.parameterId==null}"
@@ -137,6 +142,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</p:selectOneMenu>
 				<p:message id="somProcurementMethodMsg" for="somProcurementMethod" display="icon" />
 	        </p:column>
+
 	        <p:column  style="white-space:nowrap;">
        			<p:calendar styleClass="ppDisplayCalXS" id="effDateId" value="#{ppItem.invitationDate}" 
 	  				disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable)}"
@@ -150,6 +156,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</p:calendar>
 				<p:message id="effDateIdMsg" for="effDateId" display="icon" />
 	        </p:column>
+	        
 	        <p:column>
        			<p:inputText style="width:90%" value="#{ppItem.estimatedAmt}"
        				disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable)}" 
@@ -165,6 +172,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		  		</p:inputText>
 		  		<p:message id="itEstAmtMsg" for="itEstAmt" display="icon" />
 	        </p:column>
+
 	       <p:column style="white-space:nowrap;" rendered="#{pPlanBackingBean.managedBean.modeReview}">
 			    <p:selectBooleanCheckbox id="chkRejected" value="#{ppItem.rejected}"  style="float:left;margin-bottom:3px;margin-left:10px;" disabled="#{!pPlanBackingBean.managedBean.modeReviewEditable}">
 			    	<p:ajax event="change" update="clPpReason"/>
@@ -173,19 +181,22 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			    	disabled="#{!ppItem.rejected or !ppItem.editable}" id="clPpReason" update=":form:dlRejectReason" immediate="true">
 					<p:graphicImage value="#{!pPlanBackingBean.managedBean.modeReviewEditable ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"/>
 				</p:commandLink>
-	        </p:column>	      
+	        </p:column>
+
 	        <p:column>
 	        	<p:selectOneMenu value="#{ppItem.recordStatusFlg}" style="width:99%"
 	        		disabled="#{!(pPlanBackingBean.managedBean.modeEditable) or ppItem.brandNew}">  
 	            	<f:selectItems value="#{pPlanBackingBean.getStatusOptions()}" />
 	          	</p:selectOneMenu> 
 	        </p:column>
+
 	        <p:column  rendered="#{!pPlanBackingBean.managedBean.selectedPlan.brandNew}">
 	        	<h:outputText value="#{ppItem.changedDate}" >
 					<f:convertDateTime
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 				</h:outputText>
 	        </p:column>
+
 	        <p:columnGroup type="footer">
 				<p:row>
 					<p:column colspan="6">
