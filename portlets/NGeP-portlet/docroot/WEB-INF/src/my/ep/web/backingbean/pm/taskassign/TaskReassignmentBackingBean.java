@@ -674,11 +674,7 @@ public class TaskReassignmentBackingBean extends
 		this.getManagedBean().setResultOrgProfile(
 				this.getManagedBean().getTaskAssignmentSearchBean()
 						.getOrgProfile());
-		if (this.getManagedBean().getResultUser() == null) {
-			this.getManagedBean().setResultUser(
-					this.getManagedBean().getTaskAssignmentSearchBean().getUser());
-			this.getManagedBean().setStatusIds(retrieveAvailableStatusId());
-		}
+		
 		//Ensures at least User Name or DocNo is specified
 		if (this.getManagedBean().getTaskAssignmentSearchBean().getDocNo().isEmpty() &&
 			 !(this.getManagedBean().getTaskAssignmentSearchBean().getUser() != null
@@ -698,13 +694,23 @@ public class TaskReassignmentBackingBean extends
 	public void searchTaskAssign() {
 		log.info("searchDocument - Start");
 		
+		if (this.getManagedBean().getResultUser() == null) {
+			if (this.getManagedBean().getTaskAssignmentSearchBean().getUser() != null) {
+				this.getManagedBean().setResultUser(this.getManagedBean().getTaskAssignmentSearchBean().getUser());
+				this.getManagedBean().setStatusIds(retrieveAvailableStatusId());
+			}
+		}
 		this.getManagedBean().getTaskAssignmentSearchBean().setSearched(true);
 		this.getManagedBean().setTaskLazy(true);
 		
 		reloadAllTaskList();
 		
 		if (!(this.getManagedBean().getTaskAssignmentSearchBean().getDocNo().isEmpty())) {
-			RequestContext.getCurrentInstance().execute("pUserTaskReassigneeResult.show()");
+			if (!this.getManagedBean().getReassigneeList().isEmpty()) {
+				RequestContext.getCurrentInstance().execute("pUserTaskReassigneeResult.show()");
+			} else {
+				RequestContext.getCurrentInstance().execute("noReassignees.show()");
+			}
 		}
 		log.info("searchDocument - End");
 
@@ -722,9 +728,10 @@ public class TaskReassignmentBackingBean extends
 			this.getManagedBean().getReassigneeList().clear();
 			this.getManagedBean().getStatusIds().clear();
 			this.getManagedBean().setResultUser(reassignee);
-			this.getManagedBean().setStatusIds(statusIds);
 		}
-		if (this.getManagedBean().getStatusIds().isEmpty()) {
+		this.getManagedBean().setStatusIds(statusIds);
+		
+		if (this.getManagedBean().getTaskAssignmentSearchBean().getUser() == null) {
 			List<PmUser> reassignees = reassigneesInfo(this.getManagedBean().
 					getTaskAssignmentSearchBean().getDocNo());
 			log.info("reassigneeList: "+reassignees);
@@ -738,8 +745,16 @@ public class TaskReassignmentBackingBean extends
 				setReassigneeRoleList(reassignee.getUserId());
 				getManagedBean().setStatusIds(retrieveAvailableStatusId());
 			}
+		} else {
+			this.getManagedBean().setResultUser(this.getManagedBean().getTaskAssignmentSearchBean().getUser());
+			this.getManagedBean().setStatusIds(retrieveAvailableStatusId());
 		}
-		RequestContext.getCurrentInstance().execute("pUserTaskReassigneeResult.show()");		
+
+		if (this.getManagedBean().getReassigneeList().size() > 0) {
+			RequestContext.getCurrentInstance().execute("pUserTaskReassigneeResult.show()");
+		} else {
+			RequestContext.getCurrentInstance().execute("noReassignees.show()");
+		}
 		log.info("Displaying users..");
 		
 	}
