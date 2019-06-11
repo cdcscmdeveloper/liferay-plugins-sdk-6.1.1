@@ -19,7 +19,14 @@
 				toggleable="true"
 				rendered="#{isDocTypePurchaseRequest or (isDocTypeQuotation and lOADetailBackingBean.managedBean.scQt.scheduleType == ParameterConst.periodicScheduleTypeFrequencySchedule)}">
 
-				<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50">
+				<h:outputText styleClass="instruction"
+					value="#{lbl['lbl.sc.spec.instruction']}" escape="false" />
+				<br />
+				<h:outputText styleClass="instruction"
+					value="#{lbl['lbl.sc.spec.instruction.delete']}" escape="false" />
+
+				<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50"
+					rendered="#{!isDocTypePurchaseRequest or (isDocTypeQuotation and lOADetailBackingBean.managedBean.scQt.scheduleType == ParameterConst.periodicScheduleTypeFrequencySchedule)}">
 					<h:column>
 						<h:outputLabel value="#{lbl['lbl.sc.spec.total.frequency']}"></h:outputLabel>
 					</h:column>
@@ -37,13 +44,42 @@
 					</h:column>
 				</h:panelGrid>
 				<p:dataTable id="frequencySchedule" var="frequency"
-					rowIndexVar="index"
+					rowIndexVar="index" widgetVar="freqScheduleWidget"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{lOADetailBackingBean.managedBean.scLoa.scQtSchedules}">
 					<ac:paginator for="frequencySchedule" />
+					<p:column style="width:2%;">
+						<f:facet name="header">
+							<p:selectBooleanCheckbox
+								value="#{lOADetailBackingBean.managedBean.selectAll}">
+								<p:ajax partialSubmit="true" process="@this"
+									update=":form:frequencySchedule,:form:deleteButtonId"
+									listener="#{lOADetailBackingBean.selectAllSchedule}" />
+							</p:selectBooleanCheckbox>
+						</f:facet>
 
-					<p:column headerText="#{lbl['lbl.sc.spec.schedule.no']}" style="width:10%; text-align: right;">
-						#{frequency.scheduleNo}
+						<p:selectBooleanCheckbox
+							value="#{frequency.selected}"
+							styleClass="myCustomChekBox">
+							<p:ajax event="change"
+								update=":form:frequencySchedule,:form:deleteButtonId"
+								listener="#{lOADetailBackingBean.selectOneScheCheckboxSelect}"></p:ajax>
+						</p:selectBooleanCheckbox>
+					</p:column> 
+
+					<p:column style="width:8%">
+
+						<f:facet name="header">
+							<h:outputText value="* " styleClass="mandatory" />
+							<h:outputText value="#{lbl['lbl.sc.spec.schedule.no']}" />
+						</f:facet>
+						<p:inputText value="#{frequency.scheduleNo}" required="true" styleClass="ppRightBtn"
+							maxlength="3" label="#{lbl['lbl.sc.spec.schedule.no']}" size="5"
+							id="scheduleNum" >
+							<p:ajax process="@form" partialSubmit="true"
+								update=":form:frequencySchedule, :form:addButtonId"/>
+							<ac:validateNumber integerOnly="true" maxIntegerDigits="3"></ac:validateNumber>
+						</p:inputText>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.start.month']}"
 						style="width:15%">
@@ -51,7 +87,8 @@
 						    required="true" disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}"
 							value="#{frequency.startMonth}" label="#{lbl['lbl.sc.start.month']}">
 							<f:selectItems value="#{lOADetailBackingBean.yearDetails}"></f:selectItems>
-							<p:ajax process="@this" event="change" partialSubmit="true" update="frequencySchedule" 
+							<p:ajax process="@form" event="change" partialSubmit="true" update=":form:frequencySchedule, :form:addButtonId"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								listener="#{lOADetailBackingBean.calculateScheduleMonths(frequency,'true')}" />						
 						</p:selectOneMenu>
 					</p:column>
@@ -62,7 +99,8 @@
 						    required="true"
 							style="width:100px;" label="#{lbl['lbl.sc.start.year']}">
 							<f:selectItems value="#{lOADetailBackingBean.yearsDisplayDtls}"></f:selectItems>
-							<p:ajax process="@this" event="change" partialSubmit="true" update="frequencySchedule"
+							<p:ajax process="@form" event="change" partialSubmit="true" update=":form:frequencySchedule, :form:addButtonId"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								listener="#{lOADetailBackingBean.calculateScheduleMonths(frequency,'true')}" />
 						</p:selectOneMenu>
 					</p:column>
@@ -73,8 +111,8 @@
 							value="#{frequency.endMonth}" label="#{lbl['lbl.sc.end.month']}">
 
 							<f:selectItems value="#{lOADetailBackingBean.yearDetails}"></f:selectItems>
-							<p:ajax event="change" update="scheduleDetails"
-								partialSubmit="true"
+							<p:ajax process="@form" event="change" partialSubmit="true" update=":form:frequencySchedule, :form:addButtonId"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								listener="#{lOADetailBackingBean.calculateScheduleMonths(frequency,'false')}"></p:ajax>
 						</p:selectOneMenu>
 
@@ -85,8 +123,8 @@
 						     required="true" style="width:100px;" disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}"
 							 label="#{lbl['lbl.sc.end.year']}">
 							<f:selectItems value="#{lOADetailBackingBean.yearsDisplayDtls}"></f:selectItems>
-							<p:ajax event="change" update="scheduleDetails"
-								partialSubmit="true"
+							<p:ajax process="@form" event="change" partialSubmit="true" update=":form:frequencySchedule, :form:addButtonId"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								listener="#{lOADetailBackingBean.calculateScheduleMonths(frequency,'false')}"></p:ajax>
 						</p:selectOneMenu>
 					</p:column>
@@ -104,9 +142,46 @@
 							<h:outputText value="#{lbl['lbl.sc.schedule.type']}" />
 							<ac:iconTooltip value="#{lbl['lbl.sc.schedule.type.tooltip']}" />
 						</f:facet>
-						#{lOADetailBackingBean.getParameterDesc(frequency.scheduleType)}
+						<p:selectOneMenu style="width:180px;" required="true"
+							id="scheduledTypeId" label="#{lbl['lbl.sc.schedule.type']}"
+							value="#{frequency.scheduleType.parameterId}" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}">
+
+							<f:selectItems
+								value="#{lOADetailBackingBean.getDropdownValues(ParameterTypeConst.scheduleType)}" />
+							<p:message id="freqScheduledTypeId" for="scheduledTypeId"
+								display="icon"></p:message>
+
+						</p:selectOneMenu>
+						<!-- #{lOADetailBackingBean.getParameterDesc(frequency.scheduleType)} -->
 					</p:column>
 				</p:dataTable>
+				<div class="ppRightBtn">
+					<p:commandButton id="addButtonId" value="#{lbl['lbl.btn.add']}"
+						partialSubmit="true" process="@this" update="frequencySchedule"
+						action="#{lOADetailBackingBean.addScheduleDetails}"
+						oncomplete="freqScheduleWidget.paginator.endLink.click();">
+					</p:commandButton>
+					<p:spacer width="2" />
+					<p:commandButton id="deleteButtonId"
+						value="#{lbl['lbl.ct.delete']}" partialSubmit="true"
+						disable= "#{lOADetailBackingBean.managedBean.buttonHideSchActive}"
+						process="@this" onsuccess="freqScheduleObj.show()">
+					</p:commandButton>
+				</div>
+				<p:confirmDialog id="freqScheduleObj" widgetVar="freqScheduleObj"
+					message="#{lbl['lbl.msg.confirm.delete']}" severity="alert"
+					closable="true" appendToBody="true"
+					header="#{lbl['lbl.msg.confirm.delete.header']}">
+					<div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@this"
+							partialSubmit="true" oncomplete="freqScheduleObj.hide();"
+							update=":form:frequencySchedule,:form:deleteButtonId"
+							action="#{lOADetailBackingBean.deleteFreqScheduleDetails}">
+						</p:commandButton>
+						<p:commandButton value="#{lbl['lbl.btn.no']}"
+							onclick="freqScheduleObj.hide();" type="button" />
+					</div>
+				</p:confirmDialog>
 				<p:spacer height="20"></p:spacer>
 			</p:panel>
 		</h:panelGroup>
@@ -117,7 +192,14 @@
 				toggleable="true"
 				rendered="#{isDocTypeQuotation and lOADetailBackingBean.managedBean.scQt.scheduleType == ParameterConst.periodicScheduleTypeProgressivePayment}">
 
-				<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50">
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sc.spec.instruction']}" escape="false" />
+			<br />
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sc.spec.instruction.delete']}" escape="false" />
+				
+			<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50"
+				rendered="#{!isDocTypeQuotation and lOADetailBackingBean.managedBean.scQt.scheduleType == ParameterConst.periodicScheduleTypeProgressivePayment}">
 					<h:column>
 						<h:outputLabel value="#{lbl['lbl.sc.spec.total.phase']}"></h:outputLabel>
 					</h:column>
@@ -132,15 +214,47 @@
 						<ac:iconTooltip value="#{lbl['lbl.sc.spec.total.phase.tooltip']}" />
 					</h:column>
 				</h:panelGrid>
+				
 				<p:dataTable id="progressivePayment" var="payment"
-					rowIndexVar="index"
+					rowIndexVar="index" rows="10" widgetVar="progPaymentWidget"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{lOADetailBackingBean.managedBean.progressivePaymentList}">
 					<ac:paginator for="progressivePayment" />
+					<p:column style="width:2%;">
+						<f:facet name="header">
+							<p:selectBooleanCheckbox
+								value="#{lOADetailBackingBean.managedBean.selectAll}">
+								<p:ajax partialSubmit="true" process="@this"
+									update=":form:progressivePayment,:form:progPayDeleteButtonId"
+									listener="#{lOADetailBackingBean.selectAllSchedule}" />
+							</p:selectBooleanCheckbox>
+						</f:facet>
 
-					<p:column style="width:6%; text-align: right;" headerText="#{lbl['lbl.sc.spec.phase']}">		
-						#{payment.phaseNo}
-					</p:column>
+						<p:selectBooleanCheckbox
+							value="#{payment.selected}"
+							styleClass="myCustomChekBox">
+							<p:ajax event="change"
+								update=":form:progressivePayment,:form:progPayDeleteButtonId"
+								listener="#{lOADetailBackingBean.selectOneScheCheckboxSelect}"></p:ajax>
+						</p:selectBooleanCheckbox>
+					</p:column> 
+
+					<p:column style="width:10%">
+					<f:facet name="header">
+						<h:outputText value="* " styleClass="mandatory" />
+						<h:outputText value="#{lbl['lbl.sc.spec.phase']}" />
+					</f:facet>
+					<p:inputText value="#{payment.phaseNo}" required="true"
+						label="#{lbl['lbl.sc.spec.phase']}" id="progressivePhase"
+						maxlength="3" size="5" disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}">
+
+						<p:ajax event="change" update=":form:progressivePayment, :form:progPayAddButtonId" process="@form" 
+			                    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
+						<ac:validateNumber integerOnly="true" maxIntegerDigits="3"></ac:validateNumber>
+					</p:inputText>
+					<ac:iconTooltip value="#{lbl['lbl.sc.spec.phase.tooltip']}" />
+					<p:message id="phaseNumId" for="progressivePhase" display="icon"></p:message>
+				</p:column>
 					<p:column style="width:10%;">
 						<f:facet name="header">
 							<h:outputText value="* " styleClass="mandatory" />
@@ -150,7 +264,8 @@
 						disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 						    label="#{lbl['lbl.sc.description']}"
 							required="true" id="progressivePhasedesc" style="width:160px;"> 
-							<p:ajax event="blur" partialSubmit="true" process="@this" />
+							<p:ajax event="change" update=":form:progressivePayment, :form:progPayAddButtonId" process="@form" 
+			                    onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 						</p:inputText>
 						<p:message id="phaseDescId" for="progressivePhasedesc"
 							display="icon"></p:message>
@@ -163,7 +278,9 @@
 						    required="true" label="#{lbl['lbl.sc.from']}"
 							value="#{payment.startMonth}">
 							<f:selectItems value="#{lOADetailBackingBean.yearDetails}"></f:selectItems>
-							<p:ajax process="@this" event="change" partialSubmit="true"/>
+							<p:ajax event="change" update=":form:progressivePayment, :form:progPayAddButtonId" process="@form" 
+			                    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+			                    listener="#{lOADetailBackingBean.calculateProgressiveStartMonth(payment)}"></p:ajax>
 						</p:selectOneMenu>
 
 					</p:column>
@@ -177,7 +294,9 @@
 						    style="width:100px;">
 							<f:selectItems
 								value="#{lOADetailBackingBean.yearsDisplayDtls}"></f:selectItems>
-								<p:ajax process="@this" event="change" partialSubmit="true"/>
+								<p:ajax event="change" update=":form:progressivePayment, :form:progPayAddButtonId" process="@form" 
+			                    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							listener="#{lOADetailBackingBean.calculateProgressiveStartMonth(payment)}"></p:ajax>
 						</p:selectOneMenu>
 
 
@@ -189,7 +308,8 @@
 						  label="#{lbl['lbl.sc.to']}" value="#{payment.endMonth}">
 							<f:selectItems value="#{lOADetailBackingBean.yearDetails}">
 							</f:selectItems>
-							<p:ajax process="@this" event="change" partialSubmit="true"/>
+							<p:ajax event="change" update=":form:progressivePayment, :form:progPayAddButtonId" process="@form" 
+			                    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
 						</p:selectOneMenu>
 
 					</p:column>
@@ -200,7 +320,8 @@
 						  label="#{lbl['lbl.sc.end.year']}" style="width:100px;">
 							<f:selectItems
 								value="#{lOADetailBackingBean.yearsDisplayDtls}"></f:selectItems>
-								<p:ajax process="@this" event="change" partialSubmit="true"/>
+								<p:ajax event="change" update=":form:progressivePayment, :form:progPayAddButtonId" process="@form" 
+			                    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
 						</p:selectOneMenu>
 
 					</p:column>
@@ -221,6 +342,27 @@
 							display="icon"></p:message>
 					</p:column>
 				</p:dataTable>
+				<div class="ppRightBtn">
+					<p:commandButton id="progPayAddButtonId" value="#{lbl['lbl.btn.add']}"
+					partialSubmit="true" process="@this"  
+					update="progressivePayment" action="#{lOADetailBackingBean.addProgressiveDetails}"
+					 oncomplete="progPaymentWidget.paginator.endLink.click();">
+					</p:commandButton>
+					<p:spacer width="2" />
+					<p:commandButton id="progPayDeleteButtonId" value="#{lbl['lbl.ct.delete']}" partialSubmit="true" 
+					disable= "#{lOADetailBackingBean.managedBean.buttonHideSchActive}"
+					process="@this"  onsuccess="progPayObj.show()">
+					</p:commandButton>
+				</div>
+				<p:confirmDialog id="progPayObj" widgetVar="progPayObj" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                           severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                    <div class="ppRightBtn">
+			               <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this" partialSubmit="true"  oncomplete="progPayObj.hide();"
+			                   update=":form:progressivePayment,:form:deleteButtonId" action="#{lOADetailBackingBean.deleteProgPaymentDetails}" >
+			               </p:commandButton>
+				           <p:commandButton value="#{lbl['lbl.btn.no']}" onclick="progPayObj.hide();" type="button" />
+		            </div>
+               </p:confirmDialog>
 				<p:spacer height="20"></p:spacer>
 			</p:panel>
 	</h:panelGroup>
