@@ -63,7 +63,7 @@
 					oncomplete="reportContentPopupDlg.show(); return false;">
 					<f:setPropertyActionListener value="#{scQtEvaluationReport}"
 						target="#{consolidationReportBackingBean.managedBean.selectedReport}" />
-					<h:graphicImage value="/css/images/design/edit.png" style="padding-left: 70px;"
+					<h:graphicImage value="/css/images/design/edit.png" 
 						rendered="#{scQtEvaluationReport.definationType.parameterCode eq 'UI'}" />
 				</p:commandLink>
 				<p:commandLink
@@ -76,7 +76,7 @@
 						value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png"
 						rendered="#{scQtEvaluationReport.definationType.parameterCode eq 'UI'}" />
 				</p:commandLink>
-				<p:outputLabel style="padding-right: 81px;" value="*" styleClass="mandatory" />
+				<p:outputLabel style="padding-right: 81px; margin-left: -70px;" value="*" styleClass="mandatory" />
 				</ui:fragment>
 				<ui:fragment
 						rendered="#{scQtEvaluationReport.definationType.parameterCode eq 'UP'}">
