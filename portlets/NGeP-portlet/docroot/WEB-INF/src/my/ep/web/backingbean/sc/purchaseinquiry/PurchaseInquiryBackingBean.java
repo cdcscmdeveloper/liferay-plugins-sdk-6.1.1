@@ -574,8 +574,8 @@ public class PurchaseInquiryBackingBean extends
 				&& scRequestSupplierItem.getSupplierItemPrices() != null) {
 
 			List<ScSupplierItemPrice> supplierItemPrices = scRequestSupplierItem.getSupplierItemPrices();
-
-			if (supplierItemPrices != null && supplierItemPrices.size() > 0) {
+			
+			if (supplierItemPrices != null) {
 				for (ScSupplierItemPrice scSupplierItemPrice : supplierItemPrices) {
 					if (scSupplierItemPrice.getPriceType() != null) {
 						if(prInquiry.getPriceType() != null){
@@ -583,12 +583,13 @@ public class PurchaseInquiryBackingBean extends
 							if (scSupplierItemPrice.getPriceType()
 									.getParameterCode()
 									.equals(prInquiry.getPriceType().getParameterCode())) {
-								
-								if (DPStatusConstants.PRI_PENDING_SUPPLIER_RESPONSE
-										.equals(getManagedBean().getPriStatus()
-												.getStatusId())) {
+								Integer stockAvailable = getManagedBean().getStockAvailable();
+
+								if (stockAvailable != ParameterConst.PI_STOCK_AVAILABILITY
+										&& DPStatusConstants.PRI_PENDING_SUPPLIER_RESPONSE.equals(getManagedBean()
+												.getPriStatus().getStatusId())) {
 									scSupplierItemPrice.setItemPrice(null);
-								} 
+								}
 								priceList.add(scSupplierItemPrice);
 							}
 						}
@@ -733,18 +734,18 @@ public class PurchaseInquiryBackingBean extends
 				if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
 					successMessage(MessageConst.INFO_700026, ParameterTypeConst.DOCUMENT_TYPES,
 							ParameterConst.DOCTYPE_PURCHASE_INQUIRY, scPrInquiry.getPrInquiryNo(), Boolean.TRUE);
+					// clear data
+					super.renewSesionObject();
 				} else {
 					if (prInquiryNo == null) {
 						successMessage(MessageConst.INFO_700024, ParameterTypeConst.DOCUMENT_TYPES,
 								ParameterConst.DOCTYPE_PURCHASE_INQUIRY, scPrInquiry.getPrInquiryNo(), Boolean.TRUE);
+						super.renewSesionObject();
 					} else {
 						successMessage(MessageConst.INFO_700025, ParameterTypeConst.DOCUMENT_TYPES,
-								ParameterConst.DOCTYPE_PURCHASE_INQUIRY, scPrInquiry.getPrInquiryNo(), Boolean.TRUE);
+								ParameterConst.DOCTYPE_PURCHASE_INQUIRY, scPrInquiry.getPrInquiryNo(), Boolean.FALSE);
 					}
 				}
-
-				// clear data
-				super.renewSesionObject();
 			} else {
 				throw new EpException(MessageConst.ERROR_700020);
 			}
@@ -756,6 +757,9 @@ public class PurchaseInquiryBackingBean extends
 
 	public String supplierSave() {
 		debugLogger("supplierSave");
+		Integer stockAvailable = getManagedBean().getStockAvailable();
+		validateSupplierSave(stockAvailable);
+
 		ScPrInquiry prInquiry = getManagedBean().getScPrInquiry();
 		finalizeRemarks(prInquiry.getRemarks());
 
@@ -765,8 +769,9 @@ public class PurchaseInquiryBackingBean extends
 		if (scRequestSupplierItem != null) {
 			prInquiry.setScRequestSupplierItems(Arrays.asList(scRequestSupplierItem));
 		}
-		prInquiry.setIsStockAvailable(getManagedBean().getStockAvailable());
-		
+
+		prInquiry.setIsStockAvailable(stockAvailable);
+
 		PrInquiryReqDTO reqDTO = new PrInquiryReqDTO();
 		reqDTO.setPrInquiryDetail(prInquiry);
 
@@ -787,6 +792,26 @@ public class PurchaseInquiryBackingBean extends
 			throw new EpException(MessageConst.ERROR_700020);
 		}
 		return null;
+	}
+
+	public void validateSupplierSave(Integer stockAvailable) {
+		if (stockAvailable == null) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.sc.price.inquiry.stock.avail", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()) });
+		} else if (stockAvailable == ParameterConst.PI_STOCK_AVAILABILITY) {
+			List<ScSupplierItemPrice> scSupplierItemPrices = getManagedBean().getSupplierItemPrices();
+
+			if (scSupplierItemPrices != null) {
+				for (ScSupplierItemPrice scSupplierItemPrice : scSupplierItemPrices) {
+					if (scSupplierItemPrice.getItemPrice() == null) {
+						throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+								"lbl.sc.price.inquiry.price.offered", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale()) });
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -868,7 +893,7 @@ public class PurchaseInquiryBackingBean extends
 	
 	private void updatePricing(ScRequestSupplierItem scRequestSupplierItem){
 		List<ScSupplierItemPrice> result = getManagedBean().getSupplierItemPrices();
-		if(result != null && result.size()>0){
+		if (result != null) {
 			for (ScSupplierItemPrice scSupplierItemPrice : result) {
 				int index =  scRequestSupplierItem.getSupplierItemPrices().indexOf(scSupplierItemPrice);
 				scRequestSupplierItem.getSupplierItemPrices().set(index, scSupplierItemPrice);
@@ -1466,9 +1491,11 @@ public class PurchaseInquiryBackingBean extends
 			checkProcTypeOption();
 			validatePk7(procurementType);
 			getManagedBean().setViewOnly(Boolean.FALSE);
+			getManagedBean().setDisProcTyp(Boolean.TRUE);
 		} else {
 			getManagedBean().setPriceType(getParameterDesc(prInquiry.getPriceType()));
 			getManagedBean().setViewOnly(Boolean.TRUE);
+			getManagedBean().setDisProcTyp(Boolean.FALSE);
 		}
 	}
 
@@ -1626,8 +1653,8 @@ public class PurchaseInquiryBackingBean extends
 			} else {
 				getManagedBean().setStockAvailabilityFlag(Boolean.FALSE);
 			}
-
 		}
+		priceTypeChangeListener();
 	}
 	
 

@@ -47,20 +47,43 @@
 							process="@this"
 							action="#{purchaseInquiryBackingBean.backToPrevious}" />
 					</td>
-					<td style="float: right;">
-						<p:commandButton
-							value="#{lbl['lbl.btn.save']}" onclick="blockWidget.show();"
-							oncomplete="blockWidget.hide();"
-							action="#{purchaseInquiryBackingBean.submitPrInquiryDtl('')}"
-							process="@all" update="@form" /> 
-
+					<td style="float:right;">
 						<p:commandButton
 							value="#{lbl['lbl.btn.submit']}" partialSubmit="true"
 							process="@form"
 							action="#{purchaseInquiryBackingBean.submitPrInquiryDtl('SUBMIT')}"
-							style="float:right;" onstart="blockWidget.show();"
+							onstart="blockWidget.show();"
 							oncomplete="blockWidget.hide();" update="@form" />
 					</td>
+					<c:if test="#{purchaseInquiryBackingBean.managedBean.disProcTyp}" >
+						<td style="float:right;">
+							<p:commandButton
+								value="#{lbl['lbl.btn.save']}" onclick="blockWidget.show();"
+								oncomplete="blockWidget.hide();"
+								action="#{purchaseInquiryBackingBean.submitPrInquiryDtl('')}"
+								process="@all" update="@form" /> 
+						</td>
+					</c:if>
+					<c:if test="#{!purchaseInquiryBackingBean.managedBean.disProcTyp}" >
+						<td style="float:right;">
+							<p:commandButton value="#{lbl['lbl.btn.save']}"
+								onclick="cd.show()" />
+
+							<p:confirmDialog
+								message="#{lbl['lbl.sc.dialog.confirm.message.save']}"
+								header="#{lbl['lbl.sc.dialog.confirm.header.save']}"
+								severity="alert" widgetVar="cd">
+								<div class="ppRightBtn">
+									<p:commandButton value="#{lbl['lbl.btn.yes']}"
+										actionListener="#{purchaseInquiryBackingBean.submitPrInquiryDtl('')}"
+										onclick="cd.hide();" id="saveId"
+										partialSubmit="true" process="@all" immediate="true" update="@form"/>
+									<p:commandButton value="#{lbl['lbl.btn.no']}"
+										onclick="cd.hide();" />
+								</div>
+							</p:confirmDialog>
+						</td>
+					</c:if>
 				</tr>
 			</table>
 		</c:if>

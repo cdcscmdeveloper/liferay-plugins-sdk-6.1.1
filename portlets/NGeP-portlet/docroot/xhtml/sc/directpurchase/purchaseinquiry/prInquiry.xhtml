@@ -200,7 +200,8 @@
 											<td><p:selectOneRadio styleClass="commonLabel"
 													style="margin-bottom: 5px;" id="procType" required="true"
 													label="#{lbl['lbl.sc.procurement.type']}"
-													value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode}">
+													value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode}"
+													disabled="#{purchaseInquiryBackingBean.managedBean.disProcTyp}">
 													<f:selectItems
 														value="#{purchaseInquiryBackingBean.managedBean.procurementTypes}" />
 													<p:ajax event="change" update="justiId"
@@ -226,7 +227,8 @@
 											panelStyle="overflow-y: scroll; width:400px; height:200px;"
 											id="justificationId" label="#{lbl['lbl.sc.reason']}"
 											required="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode eq 'A'}"
-											value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.justificationType.reasonCode}">
+											value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.justificationType.reasonCode}"
+											disabled="#{purchaseInquiryBackingBean.managedBean.disProcTyp}">
 											<f:selectItems
 												value="#{purchaseInquiryBackingBean.managedBean.justDropdown}" />
 											<p:ajax event="change" update="justiId" process="@this" />
@@ -247,7 +249,8 @@
 											label="#{lbl['lbl.sc.price.inquiry.just.rmks']}"
 											maxlength="100"
 											required="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode eq 'A'}"
-											rows="3" cols="122" style="margin-bottom: 5px; width: 325px;" />
+											rows="3" cols="122" style="margin-bottom: 5px; width: 325px;" 
+											disabled="#{purchaseInquiryBackingBean.managedBean.disProcTyp}"/>
 										<p:message id="justRmksMsg" for="justificationRmk"
 											display="icon" /></td>
 								</ui:fragment>
@@ -258,7 +261,7 @@
 		</table>
 	</p:panel>
 	<p:panel header="#{lbl['lbl.sc.price.inquiry.header.response.detail']}"
-		toggleable="true">
+		toggleable="true" id="resDetailId">
 		<table>
 			<tr>
 				<td style="width: 220px;"><p:outputLabel
@@ -282,10 +285,11 @@
 						display="icon" /></td>
 			</tr>
 		</table>
+
 		<p:dataTable id="respDtl" var="supplierItemPrice"
-		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{purchaseInquiryBackingBean.managedBean.supplierItemPrices}"
-			rowKey="#{supplierItemPrice.pricing.pricingId}" rowIndexVar="index">
+			rowKey="#{supplierItemPrice.pricing.pricingId}" rowIndexVar="index" preserveDataModel="true">
 			<p:column headerText="#{lbl['lbl.sc.price.inquiry.zone']}"
 				sortBy="#{supplierItemPrice.tplSpecZone.zoneName}" style="width:25%">
 					#{supplierItemPrice.tplSpecZone.zoneName}
@@ -318,7 +322,7 @@
 					<h:outputText value="#{lbl['lbl.sc.price.inquiry.price.offered']}" />
 				</f:facet>
 				<ui:fragment rendered="#{!supplierItemPrice.brandNew}">
-					<p:inputText value="#{supplierItemPrice.itemPrice}"
+					<h:inputText value="#{supplierItemPrice.itemPrice}"
 						style="text-align:right;"
 						label="#{lbl['lbl.sc.price.inquiry.price.offered']}"
 						maxlength="23" size="30" id="itemPrice"
@@ -326,7 +330,8 @@
 						required="#{isStockAvailable}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</p:inputText>
+						<p:ajax process="@this" update=":#{p:component('resDetailId')}" />
+					</h:inputText>
 					<p:message id="itemPriceMsg" for="itemPrice" display="icon" />
 				</ui:fragment>
 			</p:column>
