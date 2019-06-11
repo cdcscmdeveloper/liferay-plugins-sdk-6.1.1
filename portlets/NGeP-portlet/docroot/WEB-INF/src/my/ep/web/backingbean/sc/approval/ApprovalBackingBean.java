@@ -78,6 +78,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.util.MessageUtils;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.QTDocumentsBackingBean;
@@ -102,8 +103,8 @@ import org.primefaces.event.FileUploadEvent;
  */
 @ManagedBean(name = "approvalBackingBean")
 @RequestScoped
-public class ApprovalBackingBean extends
-		SourcingBaseBackingBean<QTDetailManagedBean> {
+public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManagedBean> {
+	private static final long serialVersionUID = 1L;
 
 	/** The Constant logger. */
 	private static final Logger logger = EpLogger.getLogger(ApprovalBackingBean.class);
@@ -328,6 +329,20 @@ public class ApprovalBackingBean extends
 	 * preRenderView(). user click on task list it will Render Approvals screens
 	 * for(Committee/BPK/Finalization/Publication).
 	 */
+	public void prepareTrackingDiary(ScQt scQt, Long decessionType) {
+		QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+		FacesScopes facesScope = new FacesScopes();
+		qtReqDTO.setToken(facesScope.getBPMAuthenticationCtxToken());
+		qtReqDTO.setTaskId(this.getManagedBean().getTaskId());
+		qtReqDTO.setStatusId(this.getManagedBean().getCurrentStatusId());
+		qtReqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+		qtReqDTO.setDeskOfficer(facesScope.getUserSessionBean());
+		qtReqDTO.setQtdetail(scQt);
+		qtReqDTO.setPmUser(facesScope.getUserSessionBean());
+
+		getQTDetailSO().prepareTrackingDiaryByDecessionType(qtReqDTO, decessionType);
+	}
+
 	public void preRenderView() {
 		Object obj = getBpmTaskDetails(Object.class, null);
 		String taskName = getManagedBean().getTaskName();
@@ -414,8 +429,9 @@ public class ApprovalBackingBean extends
 			currentStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_PCB_APPROVAL,
 					getManagedBean().getQt().getQtId());
 
-			this.getManagedBean().setApprovalType(approvalCategoryCode);
+			setFCApproveQTChangeValues(approvalRequests);
 
+			this.getManagedBean().setApprovalType(approvalCategoryCode);
 		} else if (SCProcessNameConst.SUPPLIER_ACCEPT_QT_CHANGE
 						.equalsIgnoreCase(taskName)) {
 			SCQuotationTenderDataType dataType = (SCQuotationTenderDataType)obj;
@@ -570,20 +586,35 @@ public class ApprovalBackingBean extends
 		// this.getManagedBean().setScQtApproval(this.getManagedBean().getScQtApproval());
 		this.getManagedBean().setScQtApprovalRequestList(approvalRequests);
 		FacesContext context = FacesContext.getCurrentInstance();
-		if (SCProcessNameConst.SUPPLIER_ACCEPT_QT_CHANGE
-				.equalsIgnoreCase(taskName)) {
-			context.getApplication()
-					.getNavigationHandler()
-					.handleNavigation(context, null,
-							"/xhtml/sc/quatationtender/Approver/supplierAccepetance.xhtml");
-		} else {
-			context.getApplication()
-					.getNavigationHandler()
-					.handleNavigation(context, null,
-							"/xhtml/sc/quatationtender/Approver/approverMain.xhtml");
+
+		String page = "/xhtml/sc/quatationtender/Approver/approverMain.xhtml";
+		if (SCProcessNameConst.SUPPLIER_ACCEPT_QT_CHANGE.equalsIgnoreCase(taskName)) {
+			page = "/xhtml/sc/quatationtender/Approver/supplierAccepetance.xhtml";
+		} else if (SCProcessNameConst.FC_APPROVE_QT_CHANGE.equalsIgnoreCase(taskName)) {
+			page = "/xhtml/sc/quatationtender/Approver/applProposalValidPeriodExtension.xhtml";
+		}
+		context.getApplication().getNavigationHandler().handleNavigation(context, null, page);
+	}
+
+	private void setFCApproveQTChangeValues(List<ScQtApprovalRequest> approvalRequests) {
+
+		if (CollectionUtils.isNotEmpty(approvalRequests)) {
+			for (ScQtApprovalRequest approvalRequest : approvalRequests) {
+				PmParameter pmParameter = new PmParameter();
+				if (approvalRequest.getDecessionType() == null) {
+					approvalRequest.setDecessionType(pmParameter);
+				}
+
+				ScQt scQt = getManagedBean().getQt();
+				if (scQt.getMofDate() != null) {
+					if (approvalRequest.getDecisionCertPBM() == null) {
+						approvalRequest.setDecisionCertPBM(pmParameter);
+					}
+				}
+			}
 		}
 	}
-	
+
 	private ScWorkFlowStatus retrieveStatusByTypeAndId(String docType, Long docId) {
 		IScWorkFlowStatusSO workFlowStatusSO;
 		try {
@@ -599,6 +630,111 @@ public class ApprovalBackingBean extends
 		}
 	}
 
+	public void saveAction() {
+		log.info("Save proposal validity Period (Days) extension");
+		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+		ScQt scQt = this.getManagedBean().getQt();
+
+		reqDTO.setQtdetail(scQt);
+		reqDTO.setApprovalRequests(this.getManagedBean().getScQtApprovalRequestList());
+		checkValidProposalPeriodExtension(reqDTO);
+		QuationTenderResDTO resDTO = getQTDetailSO().saveActionApprovalReq(reqDTO);
+
+		if (resDTO.isSuccessful()) {
+			ScQt scQtDetail = resDTO.getQtDetail();
+			successMessage(MessageConst.INFO_700025, ParameterTypeConst.DOCUMENT_TYPES,
+					ParameterConst.DOCTYPE_QUOTATION, scQtDetail.getQtNo(), Boolean.TRUE);
+		}
+	}
+
+	private void checkValidProposalPeriodExtension(QuationTenderReqDTO reqDTO) {
+		ScQt scQt = reqDTO.getQtdetail();
+		boolean enableDateMOF = scQt.isApprovalPBM();
+
+		if (scQt.getChmnFinalizationDate() == null) {
+			if (enableDateMOF) {
+				mandatoryByMessage("lbl.sc.qt.proposal.acknowledgement.chairperson.finalization");
+			} else {
+				mandatoryByMessage("lbl.sc.qt.proposal.approval.date.chairperson.finalization");
+			}
+		}
+
+		if (enableDateMOF) {
+			if (scQt.getMofDate() == null) {
+				mandatoryByMessage("lbl.sc.qt.proposal.approval.date.mof");
+			}
+		}
+
+		List<ScQtApprovalRequest> approvalRequests = reqDTO.getApprovalRequests();
+		for (ScQtApprovalRequest approvalRequest : approvalRequests) {
+			if (approvalRequest.getDecessionType().getParameterId() == null) {
+				if (enableDateMOF) {
+					mandatoryByMessage("lbl.sc.qt.proposal.decision.mof");
+				} else {
+					mandatoryByMessage("lbl.sc.qt.proposal.decision.chairperson.finalization");
+				}
+			}
+
+			if (enableDateMOF) {
+				if (approvalRequest.getDecisionCertPBM().getParameterId() == null) {
+					mandatoryByMessage("lbl.sc.qt.proposal.extension.mof");
+				}
+			}
+		}
+	}
+
+	private void mandatoryByMessage(String message) {
+		throw new EpException(MessageConst.ERROR_770086, new String[] { ResourceBundleUtils.getMessage(message,
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
+	}
+
+	public void submitAction() {
+		log.info("Submit proposal validity Period (Days) extension");
+
+		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+		ScQt scQt = this.getManagedBean().getQt();
+
+		reqDTO.setQtdetail(scQt);
+		reqDTO.setApprovalRequests(this.getManagedBean().getScQtApprovalRequestList());
+
+		checkValidProposalPeriodExtension(reqDTO);
+
+		boolean enableDateMOF = scQt.isApprovalPBM();
+		if (!enableDateMOF) {
+			scQt.setMofDate(null);
+		}
+		this.getManagedBean().setQt(scQt);
+
+		List<ScQtApprovalRequest> scQtApprovalRequests = new ArrayList<ScQtApprovalRequest>();
+		for (ScQtApprovalRequest approvalRequest : this.getManagedBean().getScQtApprovalRequestList()) {
+			PmParameter pmParameter = getQTDetailSO().getPmParameterByTypeAndCode(
+					ParameterTypeConst.APPROVAL_DECISION_TYPE, approvalRequest.getDecessionType().getParameterCode());
+			approvalRequest.setApproverAction(pmParameter);
+
+			if (!enableDateMOF) {
+				approvalRequest.setDecisionCertPBM(null);
+			}
+
+			scQtApprovalRequests.add(approvalRequest);
+		}
+
+		this.getManagedBean().setScQtApprovalRequestList(scQtApprovalRequests);
+		for (ScQtApprovalRequest approvalRequest : this.getManagedBean().getScQtApprovalRequestList()) {
+
+			Long decessionType = approvalRequest.getDecessionType().getParameterId();
+
+			if (QTStatusConst.PCB_RQ1_APPROVED.longValue() == decessionType.longValue()
+					|| QTStatusConst.PCB_RQ3_APPROVED.longValue() == decessionType.longValue()) {
+				approvalBpmTask(BpmOutcomeConst.BPM_APPROVE);
+			} else if (QTStatusConst.PCB_RQ1_REJECTED.longValue() == decessionType.longValue()
+					|| QTStatusConst.PCB_RQ3_REJECTED.longValue() == decessionType.longValue()) {
+				approvalBpmTask(BpmOutcomeConst.BPM_REJECT);
+			}
+
+			prepareTrackingDiary(this.getManagedBean().getQt(), decessionType);
+		}
+	}
+	
 	/**
 	 * Submit Approval Details. Event handle to submit data for bpm.
 	 * 
@@ -1311,6 +1447,30 @@ public class ApprovalBackingBean extends
 		}
 	}
 
+	public void updateDecisionType(ScQtApprovalRequest requestdetails) {
+		if (null != requestdetails) {
+			IParameterSO parameterSO = getParameterSOGlobal();
+			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+			parameterReqDTO.setLanguageCode("en");
+			if (requestdetails.getDecessionType().getParameterId() != null) {
+				parameterReqDTO.setParameterId(requestdetails.getDecessionType().getParameterId());
+				requestdetails.setDecessionType((parameterSO.retrieveParameterById(parameterReqDTO)).getPmParameter());
+			}
+		}
+	}
+
+	public void updateDecisionCertPBM(ScQtApprovalRequest requestdetails) {
+		if (null != requestdetails) {
+			IParameterSO parameterSO = getParameterSOGlobal();
+			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+			parameterReqDTO.setLanguageCode("en");
+			if (requestdetails.getDecisionCertPBM().getParameterId() != null) {
+				parameterReqDTO.setParameterId(requestdetails.getDecisionCertPBM().getParameterId());
+				requestdetails
+						.setDecisionCertPBM((parameterSO.retrieveParameterById(parameterReqDTO)).getPmParameter());
+			}
+		}
+	}
 	/**
 	 * Gets the Status Details.
 	 * 
@@ -1424,28 +1584,29 @@ public class ApprovalBackingBean extends
 		
 		return approvalTypes;
 	}
-private ScQt checkProcuremntCategoryMedicine(ScQt scQt){
-	IQTSpecSO qtSpecSO =null;
-try{
-	 qtSpecSO = BusinessDelegate.getInstance()
-			.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+
+	private ScQt checkProcuremntCategoryMedicine(ScQt scQt) {
+		IQTSpecSO qtSpecSO = null;
+		try {
+			qtSpecSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 					IQTSpecSO.class);
-	SpecificationReqDTO specReqDTO=new SpecificationReqDTO();
-	specReqDTO.setScQt(scQt);
-	SpecificationResDTO specResDTO=qtSpecSO.retriveSpecItemCount(specReqDTO);
-	log.info("QTID:"+scQt.getQtId()+"itemCount"+specResDTO.getItemCount());
-	boolean isMedicine=isMultipleProposalCategory(scQt, null);
-	log.info("QTID:"+scQt.getQtId()+"isMedicine"+isMedicine);
-	if(isMedicine || specResDTO.getItemCount()<=1){
-		scQt.setEvaluateBy(SourcingConstants.EVALUATE_BY__ITEM);	
-	}else{
-		scQt.setEvaluateBy(SourcingConstants.EVALUATE_BY_BOTH_PACKAGE_ITEM);
+			SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
+			specReqDTO.setScQt(scQt);
+			SpecificationResDTO specResDTO = qtSpecSO.retriveSpecItemCount(specReqDTO);
+			log.info("QTID:" + scQt.getQtId() + "itemCount" + specResDTO.getItemCount());
+			boolean isMedicine = isMultipleProposalCategory(scQt, null);
+			log.info("QTID:" + scQt.getQtId() + "isMedicine" + isMedicine);
+			if (isMedicine || specResDTO.getItemCount() <= 1) {
+				scQt.setEvaluateBy(SourcingConstants.EVALUATE_BY__ITEM);
+			} else {
+				scQt.setEvaluateBy(SourcingConstants.EVALUATE_BY_BOTH_PACKAGE_ITEM);
+			}
+		} finally {
+			qtSpecSO = null;
+		}
+		return scQt;
 	}
-}finally{
-	qtSpecSO =null;
-}
-return scQt;
-}
+
 	private void revertToOldValues(ScQt scQt, List<ScQtApprovalRequest> approvalRequests) {
 		if (CollectionUtils.isNotEmpty(approvalRequests)) {
 			for (int i = 0; i < approvalRequests.size(); i++) {
@@ -1719,41 +1880,35 @@ return scQt;
 		}
 		
 	}
-	
-	
-/**
- * Prepare original text.
- * 
- * @param smSupplier
- *            the sm supplier
- * @return the string
- */
-private String prepareOriginalText(SmSupplier smSupplier) {
-	FacesScopes facesScopes = new FacesScopes();
-	StringBuilder sb = new StringBuilder();
-	String countryCode = "";
-	String orginalText = "";
 
-	if (smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses() != null
-			&& smSupplier.getSmAppl().getSmCompanyBasic()
-					.getSmCompanyAddresses().size() > 0) {
-		List<SmCompanyAddress> companyAddress = smSupplier.getSmAppl()
-				.getSmCompanyBasic().getSmCompanyAddresses();
+	/**
+	 * Prepare original text.
+	 * 
+	 * @param smSupplier
+	 *            the sm supplier
+	 * @return the string
+	 */
+	private String prepareOriginalText(SmSupplier smSupplier) {
+		FacesScopes facesScopes = new FacesScopes();
+		StringBuilder sb = new StringBuilder();
+		String countryCode = "";
+		String orginalText = "";
 
-		for (SmCompanyAddress compaAddress : companyAddress) {
-			if (compaAddress.getAddressType().equalsIgnoreCase(
-					AddressType.CONTACT_ADDRESS.value())) {
-				countryCode = compaAddress.getSmAddress().getPmCountry()
-						.getCountryCode();
-				break;
+		if (smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses() != null
+				&& smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().size() > 0) {
+			List<SmCompanyAddress> companyAddress = smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses();
+
+			for (SmCompanyAddress compaAddress : companyAddress) {
+				if (compaAddress.getAddressType().equalsIgnoreCase(AddressType.CONTACT_ADDRESS.value())) {
+					countryCode = compaAddress.getSmAddress().getPmCountry().getCountryCode();
+					break;
+				}
 			}
 		}
+		sb.append(getManagedBean().getQt().getQtNo()).append("|")
+				.append(facesScopes.getUserSessionBean().getIdentificationNo()).append("|")
+				.append(smSupplier.getRegNo()).append("|").append(countryCode);
+		orginalText = sb.toString();
+		return orginalText;
 	}
-	sb.append(getManagedBean().getQt().getQtNo()).append("|")
-			.append(facesScopes.getUserSessionBean().getIdentificationNo())
-			.append("|").append(smSupplier.getRegNo()).append("|")
-			.append(countryCode);
-	orginalText = sb.toString();
-	return orginalText;
-}
 }
