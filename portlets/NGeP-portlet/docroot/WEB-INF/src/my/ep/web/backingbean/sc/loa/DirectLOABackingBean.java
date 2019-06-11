@@ -1739,7 +1739,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		IParameterSO parameterSo = null;
 		try {
 
-			removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
+			removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE,false);
 
 			List<ScQtSchedule> scheduleList = this.getManagedBean().getScLoa()
 					.getScQtSchedules();
@@ -1753,16 +1753,14 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					.setParameterCode(ParameterConst.SCHEDULE_TYPE_PERIODIC);
 			ParameterResDTO docDefTypeResDTO = parameterSo
 					.retrieveParameterByTypeAndCode(docDefTypeReqDTO);
-			for (int j = 0; j < this.getManagedBean().getTotalFrequency(); j++) {
 
-				ScQtSchedule schedule = new ScQtSchedule();
-				schedule.setScQt(this.getManagedBean().getScQt());
-				schedule.setScLoa(this.getManagedBean().getScLoa());
+			ScQtSchedule schedule = new ScQtSchedule();
+			schedule.setScQt(this.getManagedBean().getScQt());
+			schedule.setScLoa(this.getManagedBean().getScLoa());
 
-				schedule.setScheduleType(docDefTypeResDTO.getPmParameter());
+			schedule.setScheduleType(docDefTypeResDTO.getPmParameter());
 
-				scheduleList.add(schedule);
-			}
+			scheduleList.add(schedule);
 
 			this.getManagedBean().getScLoa().setScQtSchedules(scheduleList);
 		}
@@ -1968,11 +1966,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 */
 	public void addProgressiveDetails() {
 
-		removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT);
+		removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT,false);
 		List<ScQtProgressivePayment> payments = this.getManagedBean()
 				.getScLoa().getScQtProgPayments();
 
-		for (int j = 0; j < this.getManagedBean().getTotalProgressivePayment(); j++) {
+//		for (int j = 0; j < this.getManagedBean().getTotalProgressivePayment(); j++) {
 
 			ScQtProgressivePayment payment = new ScQtProgressivePayment();
 
@@ -1982,7 +1980,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			payment.setScLoa(this.getManagedBean().getScLoa());
 			payments.add(payment);
 
-		}
+//		}
 		this.getManagedBean().getScQt()
 				.setScheduleType(ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT);
 		this.getManagedBean().getScLoa().setScQtProgPayments(payments);
@@ -1991,7 +1989,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 	/**
 	 * Save progressive paymnt list.
-	 */
+//	 */
 	private void saveProgressivePaymntList() {
 		List<ScQtProgressivePayment> progressivePayemnt = this.getManagedBean()
 				.getScLoa().getScQtProgPayments();
@@ -3486,8 +3484,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		calculateServiceTemplate();
 		this.getManagedBean().getScQt().setScQtSchedules(null);
 		this.getManagedBean().getScQt().setScQtProgressivePayments(null);
-		removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT);
-		removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
+		removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT,true);
+		removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE,true);
 		getLoaReports();
 		checkAgreementMandatory();
 
@@ -3704,20 +3702,23 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			this.getManagedBean().setTotalFrequency(0);
 		}
 		this.getManagedBean().getScQt().setScheduleType(scheduleType);
-		removefullfillmentDetails(toBeRemoveType);
+		removefullfillmentDetails(toBeRemoveType,true);
 
 	}
 
-	private void removefullfillmentDetails(String scheduleType) {
+	private void removefullfillmentDetails(String scheduleType,
+			boolean resetList) {
 
-		if (ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE.equalsIgnoreCase(scheduleType)) {
+		if (ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE
+				.equalsIgnoreCase(scheduleType)) {
 			List<ScQtSchedule> scheduleList = this.getManagedBean().getScLoa()
 					.getScQtSchedules();
 
 			if (CollectionUtils.isNotEmpty(scheduleList)) {
-				List<ScQtSchedule> toBeRemoveList = getManagedBean().getToBeRemoveSchedules();
+				List<ScQtSchedule> toBeRemoveList = getManagedBean()
+						.getToBeRemoveSchedules();
 				if (toBeRemoveList == null) {
-					toBeRemoveList = new ArrayList<ScQtSchedule>();	
+					toBeRemoveList = new ArrayList<ScQtSchedule>();
 				}
 
 				for (ScQtSchedule qtSchedule : scheduleList) {
@@ -3729,17 +3730,20 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				this.getManagedBean().setToBeRemoveSchedules(toBeRemoveList);
 				this.getManagedBean().getScQt().setScQtSchedules(null);
 			}
-			this.getManagedBean().getScLoa()
-					.setScQtSchedules(new ArrayList<ScQtSchedule>());
+			if (resetList) {
+				this.getManagedBean().getScLoa()
+						.setScQtSchedules(new ArrayList<ScQtSchedule>());
+			}
 		} else if (ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT
 				.equalsIgnoreCase(scheduleType)) {
 			List<ScQtProgressivePayment> payments = this.getManagedBean()
 					.getScLoa().getScQtProgPayments();
 
 			if (CollectionUtils.isNotEmpty(payments)) {
-				List<ScQtProgressivePayment> toBeRemoveList = getManagedBean().getToBeRemoveProgPayments();
+				List<ScQtProgressivePayment> toBeRemoveList = getManagedBean()
+						.getToBeRemoveProgPayments();
 				if (toBeRemoveList == null) {
-					toBeRemoveList = new ArrayList<ScQtProgressivePayment>();	
+					toBeRemoveList = new ArrayList<ScQtProgressivePayment>();
 				}
 
 				for (ScQtProgressivePayment payment : payments) {
@@ -3752,10 +3756,12 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				this.getManagedBean().getScQt()
 						.setScQtProgressivePayments(null);
 			}
-			this.getManagedBean()
-					.getScLoa()
-					.setScQtProgPayments(
-							new ArrayList<ScQtProgressivePayment>());
+			if (resetList) {
+				this.getManagedBean()
+						.getScLoa()
+						.setScQtProgPayments(
+								new ArrayList<ScQtProgressivePayment>());
+			}
 		}
 
 	}
@@ -8548,4 +8554,106 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				ReasonCategory.JUSTIFICATION_PK7.value(), reasonCode));
 	}
 	
+	/**
+	 * @param e
+	 */
+	public void selectAllSchedule(AjaxBehaviorEvent e) {
+
+		for (ScQtSchedule ScQtSchedule : getManagedBean().getScLoa()
+				.getScQtSchedules()) {
+			if (getManagedBean().isSelectAll()) {
+				ScQtSchedule.setSelected(true);
+				if (getManagedBean().isButtonHideSchActive()) {
+					getManagedBean().setButtonHideSchActive(false);
+				}
+			} else {
+				ScQtSchedule.setSelected(false);
+				if (!getManagedBean().isButtonHideSchActive()) {
+					getManagedBean().setButtonHideSchActive(true);
+				}
+			}
+		}
+		for (ScQtProgressivePayment ScQtProgressivePayment : getManagedBean()
+				.getScLoa().getScQtProgPayments()) {
+			if (getManagedBean().isSelectAll()) {
+				ScQtProgressivePayment.setSelected(true);
+				if (getManagedBean().isButtonHideSchActive()) {
+					getManagedBean().setButtonHideSchActive(false);
+				}
+			} else {
+				ScQtProgressivePayment.setSelected(false);
+				if (!getManagedBean().isButtonHideSchActive()) {
+					getManagedBean().setButtonHideSchActive(true);
+				}
+			}
+		}
+	}
+
+	public void selectOneScheCheckboxSelect(AjaxBehaviorEvent e) {
+		getManagedBean().setSelectAll(false);
+		for (ScQtSchedule ScQtSchedule : getManagedBean().getScLoa()
+				.getScQtSchedules()) {
+			if (ScQtSchedule.isSelected()) {
+				getManagedBean().setButtonHideSchActive(false);
+				return;
+			}
+		}
+		for (ScQtProgressivePayment ScQtProgressivePayment : getManagedBean()
+				.getScLoa().getScQtProgPayments()) {
+			if (ScQtProgressivePayment.isSelected()) {
+				getManagedBean().setButtonHideSchActive(false);
+				return;
+			}
+		}
+		if ((boolean) e.getComponent().getAttributes().get("value")) {
+			getManagedBean().setButtonHideSchActive(false);
+		} else {
+			getManagedBean().setButtonHideSchActive(true);
+		}
+	}
+
+	public void deleteFreqScheduleDetails() {
+		try {
+			Iterator<ScQtSchedule> scQtSchIterator = getManagedBean()
+					.getScLoa().getScQtSchedules().iterator();
+
+			while (scQtSchIterator.hasNext()) {
+				ScQtSchedule ScQtSchedule = scQtSchIterator.next();
+				if (ScQtSchedule.isSelected()) {
+					scQtSchIterator.remove();
+				}
+			}
+			
+			getManagedBean().setSelectAll(false);
+			getManagedBean().setButtonHideSchActive(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+	}
+	public void deleteProgPaymentDetails() {
+		try {
+			Iterator<ScQtProgressivePayment> scQtProgPayIterator = getManagedBean()
+					.getScLoa().getScQtProgPayments().iterator();
+
+			while (scQtProgPayIterator.hasNext()) {
+				ScQtProgressivePayment ScQtProgressivePayment = scQtProgPayIterator
+						.next();
+				if (ScQtProgressivePayment.isSelected()) {
+					scQtProgPayIterator.remove();
+				}
+			}
+			getManagedBean().setSelectAll(false);
+			getManagedBean().setButtonHideSchActive(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+	}
 }

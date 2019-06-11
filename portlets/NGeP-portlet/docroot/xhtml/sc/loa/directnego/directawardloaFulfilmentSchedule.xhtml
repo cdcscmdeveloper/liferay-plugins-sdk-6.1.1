@@ -23,7 +23,7 @@
 									value="#{directLOABackingBean.managedBean.scQt.scheduleType}" >
 									<f:selectItems value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.periodicScheduleType)}" />
 									<p:ajax event="change" update="progressive,schedule"
-										partialSubmit="true"
+										partialSubmit="true" process="@this"
 										listener="#{directLOABackingBean.scheduleTypeChange}"></p:ajax>
 								</p:selectOneRadio>
 							</c:when>
@@ -47,29 +47,52 @@
 				rendered="#{directLOABackingBean.managedBean.scQt.scheduleType eq ParameterConst.periodicScheduleTypeFrequencySchedule}">
 
 				<h:outputText styleClass="instruction"
-					value="#{lbl['lbl.sc.spec.freq.schedule.instruction']}"
+					value="#{lbl['lbl.sc.spec.instruction']}"
 					escape="false" />
-				<table>
+					<br/>
+				<h:outputText styleClass="instruction"
+					value="#{lbl['lbl.sc.spec.instruction.delete']}"
+					escape="false" />
+			<table>
 					<tr>
-						<h:panelGroup>
-							<td><h:outputLabel
-									value="#{lbl['lbl.sc.spec.total.frequency']}"></h:outputLabel></td>
+						<h:panelGroup
+						rendered="#{!directLOABackingBean.managedBean.scQt.scheduleType eq ParameterConst.periodicScheduleTypeFrequencySchedule}">
+							 <td><h:outputLabel
+									value="#{lbl['lbl.sc.spec.total.frequency']}"></h:outputLabel></td> 
 							<td><p:inputText style="text-align:right;" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 									value="#{directLOABackingBean.managedBean.totalFrequency}">
 									<p:ajax event="blur" update="frequencySchedule"
 										partialSubmit="true" process="@this"
-										listener="#{directLOABackingBean.addScheduleDetails}" />
-								</p:inputText> <ac:iconTooltip
-									value="#{lbl['lbl.sc.spec.total.frequency.tooltip']}" /></td>
-						</h:panelGroup>
+										listener="#{directLOABackingBean.addScheduleDetails}" /> 
+								</p:inputText><ac:iconTooltip
+									value="#{lbl['lbl.sc.spec.total.frequency.tooltip']}" /></td> 
+						</h:panelGroup> 
 					</tr>
-				</table>
+				</table>  
 
 				<p:dataTable id="frequencySchedule" var="frequency" rows="10"
-					rowIndexVar="index"
+					rowIndexVar="index" widgetVar="freqScheduleWidget"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{directLOABackingBean.managedBean.scLoa.scQtSchedules}">
 					<ac:paginator for="frequencySchedule" />
+					 <p:column style="width:2%;">
+						<f:facet name="header">
+							<p:selectBooleanCheckbox
+								value="#{directLOABackingBean.managedBean.selectAll}">
+								<p:ajax partialSubmit="true" process="@this"
+									update=":form:frequencySchedule,:form:deleteButtonId"
+									listener="#{directLOABackingBean.selectAllSchedule}" />
+							</p:selectBooleanCheckbox>
+						</f:facet>
+
+						<p:selectBooleanCheckbox
+							value="#{frequency.selected}"
+							styleClass="myCustomChekBox">
+							<p:ajax event="change"
+								update=":form:frequencySchedule,:form:deleteButtonId"
+								listener="#{directLOABackingBean.selectOneScheCheckboxSelect}"></p:ajax>
+						</p:selectBooleanCheckbox>
+					</p:column> 
 
 					<p:column style="width:8%">
 
@@ -80,8 +103,7 @@
 						<p:inputText value="#{frequency.scheduleNo}" required="true" styleClass="ppRightBtn"
 							maxlength="3" label="#{lbl['lbl.sc.spec.schedule.no']}" size="5"
 							id="scheduleNum" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}">
-							<p:ajax process="@this" partialSubmit="true"
-								update="@this,frequencySchedule" />
+							<p:ajax partialSubmit="true" update=":form:frequencySchedule, :form:addButtonId" process="@form"  />
 							<ac:validateNumber integerOnly="true" maxIntegerDigits="3"></ac:validateNumber>
 						</p:inputText>
 						<p:message id="freqScheduledid" for="scheduleNum" display="icon"></p:message>
@@ -92,8 +114,9 @@
 							value="#{frequency.startMonth}">
 
 							<f:selectItems value="#{directLOABackingBean.yearDetails}"></f:selectItems>
-							<p:ajax event="change" process="@this" partialSubmit="true"
-								update="frequencySchedule"
+							<p:ajax event="change" update=":form:frequencySchedule, :form:addButtonId" process="@form" 
+			                    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+			                    partialSubmit="true"
 								listener="#{directLOABackingBean.calculateScheduleMonths(frequency,'true')}"></p:ajax>
 						</p:selectOneMenu>
 						<!-- <p:calendar value="#{frequency.fromDate}" showOn="button"
@@ -104,8 +127,9 @@
 						<p:selectOneMenu value="#{frequency.startYear}" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 							style="width:100px;">
 							<f:selectItems value="#{directLOABackingBean.yearsDisplayDtls}"></f:selectItems>
-							<p:ajax event="change" process="@this" partialSubmit="true"
-								update="frequencySchedule"
+							<p:ajax event="change" update=":form:frequencySchedule, :form:addButtonId" process="@form" 
+			                    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+			                    partialSubmit="true"
 								listener="#{directLOABackingBean.calculateScheduleMonths(frequency,'true')}"></p:ajax>
 						</p:selectOneMenu>
 
@@ -117,8 +141,8 @@
 							value="#{frequency.endMonth}">
 
 							<f:selectItems value="#{directLOABackingBean.yearDetails}"></f:selectItems>
-							<p:ajax event="change" update="scheduleDetails" process="@this"
-								partialSubmit="true"
+							<p:ajax event="change" update=":form:frequencySchedule, :form:addButtonId" process="@form" 
+			                    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								listener="#{directLOABackingBean.calculateScheduleMonths(frequency,'false')}"></p:ajax>
 						</p:selectOneMenu>
 
@@ -126,8 +150,8 @@
 					<p:column headerText="#{lbl['lbl.sc.end.year']}" style="width:10%">
 						<p:selectOneMenu value="#{frequency.endYear}"  disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" style="width:100px;">
 							<f:selectItems value="#{directLOABackingBean.yearsDisplayDtls}"></f:selectItems>
-							<p:ajax event="change" update="scheduleDetails" process="@this"
-								partialSubmit="true"
+							<p:ajax event="change" update=":form:frequencySchedule, :form:addButtonId" process="@form" 
+			                    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								listener="#{directLOABackingBean.calculateScheduleMonths(frequency,'false')}"></p:ajax>
 						</p:selectOneMenu>
 
@@ -162,10 +186,36 @@
 					</p:column>
 
 				</p:dataTable>
-
+				<div class="ppRightBtn">
+					<p:commandButton id="addButtonId" value="#{lbl['lbl.btn.add']}"
+						partialSubmit="true" process="@this" update="frequencySchedule"
+						action="#{directLOABackingBean.addScheduleDetails}"
+						oncomplete="freqScheduleWidget.paginator.endLink.click();">
+					</p:commandButton>
+					<p:spacer width="2" />
+					<p:commandButton id="deleteButtonId"
+						value="#{lbl['lbl.ct.delete']}" partialSubmit="true"
+						disable= "#{directLOABackingBean.managedBean.buttonHideSchActive}"
+						process="@this" onsuccess="freqScheduleObj.show()">
+					</p:commandButton>
+				</div>
+				<p:confirmDialog id="freqScheduleObj" widgetVar="freqScheduleObj"
+					message="#{lbl['lbl.msg.confirm.delete']}" severity="alert"
+					closable="true" appendToBody="true"
+					header="#{lbl['lbl.msg.confirm.delete.header']}">
+					<div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@this"
+							partialSubmit="true" oncomplete="freqScheduleObj.hide();"
+							update=":form:frequencySchedule,:form:deleteButtonId"
+							action="#{directLOABackingBean.deleteFreqScheduleDetails}">
+						</p:commandButton>
+						<p:commandButton value="#{lbl['lbl.btn.no']}"
+							onclick="freqScheduleObj.hide();" type="button" />
+					</div>
+				</p:confirmDialog>
 				<h:outputText styleClass="instruction"
-					value="#{lbl['lbl.sc.spec.freq.schedule.loa.instruction']}"
-					escape="false" />
+							value="#{lbl['lbl.sc.spec.freq.schedule.loa.instruction']}"
+							escape="false" />
 			</p:panel>
 		</h:panelGroup>
 
@@ -178,29 +228,52 @@
 			rendered="#{directLOABackingBean.managedBean.scQt.scheduleType eq ParameterConst.periodicScheduleTypeProgressivePayment}">
 
 			<h:outputText styleClass="instruction"
-				value="#{lbl['lbl.sc.spec.progressive.payment.instruction']}"
-				escape="false" />
+				value="#{lbl['lbl.sc.spec.instruction']}" escape="false" />
+				<br/>
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sc.spec.instruction.delete']}" escape="false" />
 
 			<table>
 				<tr>
-					<td><h:outputLabel value="#{lbl['lbl.sc.spec.total.phase']}"></h:outputLabel>
+				<h:panelGroup
+				rendered="#{!directLOABackingBean.managedBean.scQt.scheduleType eq ParameterConst.periodicScheduleTypeProgressivePayment}">
+					<td><h:outputLabel value="#{lbl['lbl.sc.spec.total.phase']}"></h:outputLabel> 
 					</td>
 					<td><p:inputText style="text-align:right;" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 							value="#{directLOABackingBean.managedBean.totalProgressivePayment}">
 							<p:ajax event="blur" update="progressivePayment"
 								partialSubmit="true" process="@this"
 								listener="#{directLOABackingBean.addProgressiveDetails}" />
-						</p:inputText> <ac:iconTooltip value="#{lbl['lbl.sc.spec.total.phase.tooltip']}" /></td>
+						</p:inputText><ac:iconTooltip value="#{lbl['lbl.sc.spec.total.phase.tooltip']}" /> </td> 
+						</h:panelGroup>
 				</tr>
 
-			</table>
+			</table> 
 
 
 			<p:dataTable id="progressivePayment" var="payment"
-				rowIndexVar="index" rows="10"
+				rowIndexVar="index" rows="10" widgetVar="progPaymentWidget"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{directLOABackingBean.managedBean.scLoa.scQtProgPayments}">
 				<ac:paginator for="progressivePayment" />
+				<p:column style="width:2%;">
+						<f:facet name="header">
+							<p:selectBooleanCheckbox
+								value="#{directLOABackingBean.managedBean.selectAll}">
+								<p:ajax partialSubmit="true" process="@this"
+									update=":form:progressivePayment,:form:progPayDeleteButtonId"
+									listener="#{directLOABackingBean.selectAllSchedule}" />
+							</p:selectBooleanCheckbox>
+						</f:facet>
+
+						<p:selectBooleanCheckbox
+							value="#{payment.selected}"
+							styleClass="myCustomChekBox">
+							<p:ajax event="change"
+								update=":form:progressivePayment,:form:progPayDeleteButtonId"
+								listener="#{directLOABackingBean.selectOneScheCheckboxSelect}"></p:ajax>
+						</p:selectBooleanCheckbox>
+					</p:column> 
 
 				<p:column style="width:10%">
 					<f:facet name="header">
@@ -211,8 +284,8 @@
 						label="#{lbl['lbl.sc.spec.phase']}" id="progressivePhase"
 						maxlength="3" size="5" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}">
 
-						<p:ajax process="@this" partialSubmit="true"
-							update="@this,progressivePayment" />
+						<p:ajax event="change" update=":form:progressivePayment, :form:progPayAddButtonId" process="@form" 
+			                    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
 						<ac:validateNumber integerOnly="true" maxIntegerDigits="3"></ac:validateNumber>
 					</p:inputText>
 					<ac:iconTooltip value="#{lbl['lbl.sc.spec.phase.tooltip']}" />
@@ -226,8 +299,8 @@
 					<p:inputText value="#{payment.phaseDesc}" maxlength="50"
 						required="true" id="progressivePhasedesc" style="width:100px;"
 						label="#{lbl['lbl.sc.description']}" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}">
-						<p:ajax process="@this" partialSubmit="true"
-							update="@this,progressivePayment" />
+						<p:ajax event="change" update=":form:progressivePayment, :form:progPayAddButtonId" process="@form" 
+			                    onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 					</p:inputText>
 					<p:message id="phaseDescId" for="progressivePhasedesc"
 						display="icon"></p:message>
@@ -238,8 +311,8 @@
 					<p:selectOneMenu style="width:100px;" value="#{payment.startMonth}" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}">
 
 						<f:selectItems value="#{directLOABackingBean.yearDetails}"></f:selectItems>
-						<p:ajax event="change" process="@this" partialSubmit="true"
-							update="paymentEndMonth"
+						<p:ajax event="change" update=":form:progressivePayment, :form:progPayAddButtonId" process="@form" 
+			                    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							listener="#{directLOABackingBean.calculateProgressiveStartMonth(payment)}"></p:ajax>
 					</p:selectOneMenu>
 
@@ -248,7 +321,8 @@
 
 					<p:selectOneMenu value="#{payment.startYear}" style="width:100px;" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}">
 						<f:selectItems value="#{directLOABackingBean.yearsDisplayDtls}"></f:selectItems>
-						<p:ajax event="change" process="@this" partialSubmit="true"
+						<p:ajax event="change" update=":form:progressivePayment, :form:progPayAddButtonId" process="@form" 
+			                    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							listener="#{directLOABackingBean.calculateProgressiveStartMonth(payment)}"></p:ajax>
 					</p:selectOneMenu>
 
@@ -262,14 +336,16 @@
 
 						<f:selectItems value="#{directLOABackingBean.yearDetails}">
 						</f:selectItems>
-						<p:ajax event="change" process="@this" partialSubmit="true"
+						<p:ajax event="change" update=":form:progressivePayment, :form:progPayAddButtonId" process="@form" 
+			                    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							listener="#{directLOABackingBean.calculateProgressivepayment(payment)}"></p:ajax>
 					</p:selectOneMenu>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.end.year']}" style="width:15%">
 					<p:selectOneMenu value="#{payment.endYear}" style="width:100px;" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}">
 						<f:selectItems value="#{directLOABackingBean.yearsDisplayDtls}"></f:selectItems>
-						<p:ajax event="change" process="@this" partialSubmit="true"
+						<p:ajax event="change" update=":form:progressivePayment, :form:progPayAddButtonId" process="@form" 
+			                    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							listener="#{directLOABackingBean.calculateProgressivepayment(payment)}"></p:ajax>
 					</p:selectOneMenu>
 
@@ -283,15 +359,35 @@
 					<p:inputText value="#{payment.percentage}" required="true" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 						id="progressivePercentage" style="width:100px;"
 						label="#{lbl['lbl.sc.percentage']}" maxlength="18">
-						<p:ajax process="@this" partialSubmit="true"
-							update="@this,progressivePayment" />
+						<p:ajax event="change" update=":form:progressivePayment, :form:progPayAddButtonId" process="@form" 
+			                    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
 						<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
 					</p:inputText>
 					<p:message id="pahsePercentage" for="progressivePercentage"
 						display="icon"></p:message>
 				</p:column>
 			</p:dataTable>
-
+				<div class="ppRightBtn">
+					<p:commandButton id="progPayAddButtonId" value="#{lbl['lbl.btn.add']}"
+					partialSubmit="true" process="@this"  
+					update="progressivePayment" action="#{directLOABackingBean.addProgressiveDetails}"
+					 oncomplete="progPaymentWidget.paginator.endLink.click();">
+					</p:commandButton>
+					<p:spacer width="2" />
+					<p:commandButton id="progPayDeleteButtonId" value="#{lbl['lbl.ct.delete']}" partialSubmit="true" 
+					disable= "#{directLOABackingBean.managedBean.buttonHideSchActive}"
+					process="@this"  onsuccess="progPayObj.show()">
+					</p:commandButton>
+				</div>
+				<p:confirmDialog id="progPayObj" widgetVar="progPayObj" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                           severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                    <div class="ppRightBtn">
+			               <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this" partialSubmit="true"  oncomplete="progPayObj.hide();"
+			                   update=":form:progressivePayment,:form:deleteButtonId" action="#{directLOABackingBean.deleteProgPaymentDetails}" >
+			               </p:commandButton>
+				           <p:commandButton value="#{lbl['lbl.btn.no']}" onclick="progPayObj.hide();" type="button" />
+		            </div>
+               </p:confirmDialog>
 			<h:outputText styleClass="instruction"
 				value="#{lbl['lbl.sc.spec.progressive.payment.loa.instruction']}"
 				escape="false" />

@@ -257,7 +257,8 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 			ScQuote scQuote = requestNote.getQuote();
 			
 			EpPropertiesUtils prop = EpPropertiesUtils.getInstance();
-			Integer sqTimeValidity = Integer.valueOf(prop.getProperty("sqTimeValidity"));
+//			Integer sqTimeValidity = Integer.valueOf(prop.getProperty("sqTimeValidity"));
+			Integer sqTimeValidity = 60;
 
 			if(scQuote != null){
 				
