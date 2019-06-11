@@ -53,6 +53,10 @@ import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
+import my.ep.persistence.entity.sc.loaloi.ScLoaBasic;
+import my.ep.persistence.entity.sc.loaloi.ScLoaForQt;
+import my.ep.persistence.entity.sc.loaloi.ScLoi;
+import my.ep.persistence.entity.sc.loaloi.ScLoiForQt;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -1559,6 +1563,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
     
     private List<ScQtContactPerson> toBeRemovalContactPersonList;
     private Long bsvDBStateId;
+    
+    private boolean selectAll;
+	private boolean ButtonHideActive = true;
+	private boolean buttonHideDedActive = true;
+	private boolean buttonHideSchActive = true;
    
 	/**
 	 * Sets the panel suppliers.
@@ -1571,6 +1580,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	private ScQtApprovalRequest scQtApprovalDtls;
+
+	private IPagingDataModel<ScLoi> searchLoiDataModel;
+	
+	private IPagingDataModel<ScLoiForQt> searchLoiForQtDataModel;
+	
+	private IPagingDataModel<ScLoaBasic> searchLoaDataModel;
+	
+	private IPagingDataModel<ScLoaForQt> searchLoaForQtDataModel;
 
 	/**
 	 * Instantiates a new QT detail managed bean.
@@ -4230,7 +4247,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public IPagingDataModel<ScQt> getCloneSearchQTDataModel() {
 		return cloneSearchQTDataModel;
 	}
-
+	
 	/**
 	 * Sets the clone search qt data model.
 	 * 
@@ -4241,7 +4258,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			IPagingDataModel<ScQt> cloneSearchQTDataModel) {
 		this.cloneSearchQTDataModel = cloneSearchQTDataModel;
 	}
-
+	
 	/**
 	 * Gets the selected loc nodes.
 	 * 
@@ -9845,7 +9862,79 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.bsvDBStateId = bsvDBStateId;
 	}
 
+	public IPagingDataModel<ScLoi> getSearchLoiDataModel() {
+		return searchLoiDataModel;
+	}
+
+	public void setSearchLoiDataModel(IPagingDataModel<ScLoi> searchLoiDataModel) {
+		this.searchLoiDataModel = searchLoiDataModel;
+	}
+
+	public IPagingDataModel<ScLoiForQt> getSearchLoiForQtDataModel() {
+		return searchLoiForQtDataModel;
+	}
+
+	public void setSearchLoiForQtDataModel(IPagingDataModel<ScLoiForQt> searchLoiForQtDataModel) {
+		this.searchLoiForQtDataModel = searchLoiForQtDataModel;
+	}
+
+	public IPagingDataModel<ScLoaBasic> getSearchLoaDataModel() {
+		return searchLoaDataModel;
+	}
+
+	public void setSearchLoaDataModel(IPagingDataModel<ScLoaBasic> searchLoaDataModel) {
+		this.searchLoaDataModel = searchLoaDataModel;
+	}
+
+	public IPagingDataModel<ScLoaForQt> getSearchLoaForQtDataModel() {
+		return searchLoaForQtDataModel;
+	}
+	
+	public void setSearchLoaForQtDataModel(IPagingDataModel<ScLoaForQt> searchLoaForQtDataModel) {
+		this.searchLoaForQtDataModel = searchLoaForQtDataModel; 
+	}
+
+	public boolean isSelectAll() {
+		return selectAll;
+	}
+
+	public void setSelectAll(boolean selectAll) {
+		this.selectAll = selectAll;
+	}
+
+	public boolean isButtonHideActive() {
+		return ButtonHideActive;
+	}
+
+	public void setButtonHideActive(boolean buttonHideActive) {
+		ButtonHideActive = buttonHideActive;
+	}
+
+	public boolean isButtonHideDedActive() {
+		return buttonHideDedActive;
+	}
+
+	public void setButtonHideDedActive(boolean buttonHideDedActive) {
+		this.buttonHideDedActive = buttonHideDedActive;
+	}
+
+	public boolean isButtonHideSchActive() {
+		return buttonHideSchActive;
+	}
+
+	public void setButtonHideSchActive(boolean buttonHideSchActive) {
+		this.buttonHideSchActive = buttonHideSchActive;
+	}
+	
+
+	
+	
+
 	
 	
 
 }
+
+
+
+// ***25201
