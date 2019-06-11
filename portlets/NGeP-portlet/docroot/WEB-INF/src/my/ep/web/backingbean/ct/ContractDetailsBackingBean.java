@@ -1535,7 +1535,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			} else if (outputTab.equalsIgnoreCase(ContractConst.ITEM_DETAIL)) {
 				getManagedBean().setSelectedTabIndex(2);
 				getManagedBean().setItemIndex(2);
-
+				CircularBackingBean cmbb=new CircularBackingBean();
+				cmbb.getManagedBean().reassignValue(true);
+				
+				//cmbb.getManagedBean().allValue(true);
+				//cmbb.getManagedBean().setResetval(true);
+				cmbb.getManagedBean().getCircularListingPagingDataModel().reloadData();
+				cmbb.getManagedBean().getServiceListingPagingDataModel().reloadData();
+				cmbb.getManagedBean().allValue(true);
+				log.info("Value from the Cental Tab ********>>>>>>>>>>>>>>>>>>>>>>>>>>>>>..");
 			} else if (outputTab.equalsIgnoreCase(ContractConst.DEDUCTION_DETAIL)) {
 				getManagedBean().setSelectedTabIndex(3);
 				getManagedBean().setDeductionIndex(3);
@@ -1695,10 +1703,14 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				getManagedBean().setSelectedTabIndex(3);
 				getManagedBean().setItemIndex(3);
 				CircularBackingBean cmbb=new CircularBackingBean();
+				ContractBackingBean ccBB = new ContractBackingBean();
 				cmbb.getManagedBean().reassignValue(true);
-				//cmbb.getManagedBean().setResetval(true);
+				
+				//cmbb.getManagedBean().allValue(true);
+				
 				cmbb.getManagedBean().getCircularListingPagingDataModel().reloadData();
 				cmbb.getManagedBean().getServiceListingPagingDataModel().reloadData();
+				//cmbb.getManagedBean().allValue(true);
 			}
 			if (outputTab.equalsIgnoreCase(ContractConst.DEDUCTION_DETAIL)) {
 				getManagedBean().setSelectedTabIndex(4);
@@ -2233,6 +2245,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		circularBB.getManagedBean().setUOM(null);
 		circularBB.getManagedBean().setSkuno(null);
 		circularBB.getManagedBean().setTypeofgoods(null);
+		
+		
+		ContractBackingBean ccBB = new ContractBackingBean();
+		ctBB.getManagedBean().setSelectedItem(null);
+		ctBB.getManagedBean().setServiceselectedItem(null);
+		
+		circularBB.getManagedBean().getCircularListingPagingDataModel().resetData();
+		circularBB.getManagedBean().getServiceListingPagingDataModel().resetData();
+		circularBB.getManagedBean().setResetval(true);
 		//log.info("******>>>>>>>>>>>>Circular Search reset called *********>>>>>>>>");
 		return (getManagedBean().getExternalPageUrl() != null) ? getManagedBean().getExternalPageUrl() : CONTRACT_MAINT_PAGE;
 	}
