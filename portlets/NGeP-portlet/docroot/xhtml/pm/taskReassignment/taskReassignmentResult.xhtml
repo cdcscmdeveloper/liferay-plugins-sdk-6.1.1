@@ -36,6 +36,12 @@
 			</p:dataTable>
 		</h:panelGroup>
 	</p:panel>
+	<p:panel id="noReassignees" 
+			 widgetVar="noReassignees"
+			 header="#{lbl['lbl.pm.ta.user.lov']}"
+			 style="display:none;">
+		#{lbl['lbl.datatable.msg.no.records.found']}
+	</p:panel>
 	<p:panel id="pUserTaskAssignResult" header="#{lbl['lbl.pm.ta.user.task']}"
 		toggleable="true">
 		<div class="clear"></div>
