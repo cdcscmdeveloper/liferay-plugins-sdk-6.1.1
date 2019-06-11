@@ -38,24 +38,6 @@
 						ajax="false" immediate="true"
 						action="#{consolidationReportBackingBean.downloadReport(report)}" />
 				</ui:fragment>
-				<ui:fragment
-					rendered="#{(report.pmDocument ne null and
-											!consolidationReportBackingBean.managedBean.getDirectdownloaddocdefkeys()
-												.contains(report.pmDocument.docDefinitionKey)) or report.pmDocument eq null}">
-					<ac:scSingleFileUploadButton id="briefingReportUploadBtn"
-						popupWidgetVar="fileUploadButtonWidget"
-						attachment="#{report.scQtFinalizationReportAttachment}"
-						readonly="#{!(isSecretaryUser and report.selected)}"
-						rowIndex="#{rowIndex}">
-
-						<f:setPropertyActionListener for="actionEvent" value="#{report}"
-							target="#{consolidationReportBackingBean.managedBean.selectedFinalizationReport}" />
-
-						<f:setPropertyActionListener for="actionEvent" value="KTR"
-							target="#{consolidationReportBackingBean.managedBean.attachmentDocType}" />
-
-					</ac:scSingleFileUploadButton>
-				</ui:fragment>
 			</p:column>
 		</p:dataTable>
 		
