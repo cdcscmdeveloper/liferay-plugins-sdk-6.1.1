@@ -21,7 +21,8 @@
 	<ui:param name="isReadOnly" value="#{createQtBB.managedBean.readOnly}" />
 	<ui:param name="amountsShowHide"
 		value="#{qTDetailBB.managedBean.showAndHideAmounts}" />
-		
+	<ui:param name="qtExtensionResponseDueDate"
+		value="#{qTDetailBB.getExtensionResponseDueDate(scQt.qtId)}" />
 	<ac:lovPopup />
 
 	<p:panel id="qtdetailsid" header="#{lbl['lbl.sc.general.info']}"
@@ -191,7 +192,7 @@
 						<f:ajax></f:ajax>
 					</p:inputTextarea> <p:message id="title1Msg" for="title1" display="icon" /></td>
 			</tr>
-			<c:if test="#{!scQt.brandNew}">						
+			<c:if test="#{!scQt.brandNew}">
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.sc.prepare.for.ptj']}" /></td>
 				<td colspan="3">
@@ -199,7 +200,7 @@
 					disabled="true" readonly="true" style="width:653px;" />
 				</td>
 			</tr>
-			</c:if>			
+			</c:if>
 			<c:if test="#{scQt.brandNew}">
 				<tr>
 					<td valign="top"><p:outputLabel value="#{lbl['lbl.sc.prepare.for.ptj']}" />
@@ -265,8 +266,6 @@
 								</tr>
 							</table></td>
 
-
-
 						<td><p:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" />
 							<p:outputLabel value="*" styleClass="mandatory"
 								rendered="#{createQtBB.managedBean.procMethodDropdownPresent}" /></td>
@@ -315,7 +314,6 @@
 												value="#{lbl['lbl.sc.spec.expected.intended.price.tooltip']}" /></td>
 									</tr>
 								</table></td>
-
 
 						</tr>
 					</c:if>
@@ -654,6 +652,32 @@
 										value="#{lbl['lbl.sc.qt.proposal.validity.tooltip']}" /></td>
 							</tr>
 						</table>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.sc.qt.response.period']}" /> 
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</td>
+					<td>
+						<table>
+							<tr>
+								<td>
+									<p:inputText id="responsePeriod" value="#{CommonConstants.DEFAULT_RESPONSE_PERIOD}" style="width:200px;" disabled="true" />
+								</td>
+								<td colspan="2">
+									<ac:iconTooltip value="#{lbl['lbl.sc.qt.response.period.tooltip']}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.sc.qt.proposal.validity.extension.response.due.date']}" />
+					</td>
+					<td>
+						<p:inputText value="#{qtExtensionResponseDueDate}" style="width:200px;" disabled="true" >
+							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+						</p:inputText>
 					</td>
 				</tr>
 			</c:if>
