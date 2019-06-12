@@ -10,12 +10,12 @@
 		<tr>
 			<td class="tdTitle">
 				<p:outputLabel value="#{lbl['lbl.rpt.cmpName']}" />
-				<p:outputLabel value="*" styleClass="mandatory" />
+		<!-- 		 <p:outputLabel value="*" styleClass="mandatory" />  -->
 			</td>
 		
 			<td class="tdContent">
 				<ac:smReportCompanyNameLOV bBean="#{suppPerformRptBB}" 
-				saveObj="suppPerformRptBB.managedBean.selectedOrgProfile" />
+				saveObj="suppPerformRptBB.managedBean.selectedOrgProfile" update=":form:OrgMofNO"/>
 			</td>
 			
 			<td class="tdTitle">
@@ -23,7 +23,7 @@
 			</td>
 			<td class="tdContent">
 				<p:inputText maxlength="20" value="#{suppPerformRptBB.managedBean.mofNo}" 
-				style="width:290px;" label="#{lbl['lbl.rpt.mofRegNo']}"/>
+				style="width:290px;" label="#{lbl['lbl.rpt.mofRegNo']}" id="OrgMofNO"/>
 			</td>
 		</tr>
 		<tr>
@@ -41,34 +41,47 @@
 		<tr>
 			<td class="tdTitle">
 				<p:outputLabel value="#{lbl['lbl.rpt.thresholdyearfrom']}" />
+				<p:outputLabel value="*" styleClass="mandatory" />
 			</td>
-			<td class="tdContent">
-				<p:selectOneMenu label="#{lbl['lbl.rpt.thresholdyearfrom']}"
-					id="yearFrom" value="#{suppPerformRptBB.managedBean.year}" required="true"
-					style="width:294px;">
-					<f:selectItems
-						value="#{suppPerformRptBB.managedBean.yearList}"></f:selectItems>
-					<p:ajax event="change" partialSubmit="true"
-						update="@([id$=Msg])" />
-				</p:selectOneMenu>
-				<p:message id="yearFromMsg"
-					for="yearFrom" display="icon" showDetail="false" />
-			</td>
-			<td class="tdTitle">
+
+			<td >
+			<table style="width: 100%;">
+			<tr>
+			<td class="columnDateFromClass">
+			<p:calendar showOn="button" navigator="true"
+					display="inline" readonlyInput="true"
+					value="#{suppPerformRptBB.managedBean.dateFrom}" size="9"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+					<p:ajax event="dateSelect" partialSubmit="true" process="@this"
+						update="@this" />
+					<p:ajax event="change" partialSubmit="true" process="@this"
+						update="@this" />
+				</p:calendar>
+				
+			</td><td class="columnDateToClass">
 				<p:outputLabel value="#{lbl['lbl.rpt.dtRangeTo']}" />
+				<p:outputLabel value="*" styleClass="mandatory" />
 			</td>
-			<td class="tdContent">
-				<p:selectOneMenu label="#{lbl['lbl.rpt.dtRangeTo']}"
-					id="yearTo"
-					value="#{suppPerformRptBB.managedBean.yearTo}" required="true"
-					style="width:294px;">
-					<f:selectItems
-						value="#{suppPerformRptBB.managedBean.yearList}"></f:selectItems>
-					<p:ajax event="change" partialSubmit="true"
-						update="@([id$=Msg])" />
-				</p:selectOneMenu>
-				<p:message id="yearToMsg" for="yearTo" display="icon" showDetail="false" />
+			<td >
+				<p:calendar showOn="button" navigator="true"
+					display="inline" readonlyInput="true"
+					value="#{suppPerformRptBB.managedBean.dateTo}" size="9"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+					<p:ajax event="dateSelect" partialSubmit="true" process="@this"
+						update="@this" />
+					<p:ajax event="change" partialSubmit="true" process="@this"
+						update="@this" />
+				</p:calendar>
 			</td>
+			
+			</tr>
+			</table>
+			
+			
+				
+			</td>
+			
+			
 		</tr>
 	</table>
 	

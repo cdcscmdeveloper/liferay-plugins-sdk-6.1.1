@@ -1,21 +1,23 @@
 package my.ep.web.backingbean.report.sm;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
+import my.ep.web.constant.report.PmReportConst;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.SuppPerformRptManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -30,49 +32,96 @@ public class SuppPerformRptBackingBean extends
 	private static final long serialVersionUID = -7400800649761552705L;
 
 	public SuppPerformRptBackingBean() {
-		getManagedBean().setYearList(getYearList());
+		//getManagedBean().setYearList(getYearList());
 		setDefaultDateFromAndDateTo();
 		onChangeRegType();
 	}
 
 	public void generateReport() {
 		
-		if (getManagedBean().getSelectedOrgProfile() == null) {
-			throw new EpException(MessageConst.ERROR_REPORT_780044);
+		if (getManagedBean().getSelectedOrgProfile() == null && getManagedBean().getMofNo().isEmpty() && getManagedBean().getEpNo().isEmpty() ) {
+				throw new EpException(MessageConst.ERROR_REPORT_780044);		
 		} 
-		checkTwoYearsFieldDefference(getManagedBean().getYear(),
-				getManagedBean().getYearTo());
-		SimpleDateFormat df = new SimpleDateFormat(
-				CommonConstants.DEFAULT_DATE_FORMAT);
+		if(getManagedBean().getDateFrom() != null && getManagedBean().getDateTo() != null) {
+			dateValidation(getManagedBean().getDateFrom(), getManagedBean().getDateTo());
+			
+		} else if(getManagedBean().getDateFrom() != null && getManagedBean().getDateTo() == null) {
+			throw new EpException(MessageConst.ERROR_REPORT_780055);
+		} else if(getManagedBean().getDateFrom() == null && getManagedBean().getDateTo() != null) {
+			throw new EpException(MessageConst.ERROR_REPORT_780054);
+		}
+		SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
+		
 		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
 		retrieveReportValueFromDb();
 		if (getManagedBean().getSelectedOrgProfile() != null) {
 			if (getManagedBean().getSelectedOrgProfile().getSmSupplier() != null) {
 				params.put(SmReportConst.PARAM_COMPANY_NAME, getManagedBean()
-						.getSelectedOrgProfile().getSmSupplier()
-						.getCompanyName());
+						.getSelectedOrgProfile().getSmSupplier().getCompanyName());
+				supplierSearchReqDTO.setCompanyName(getManagedBean()
+						.getSelectedOrgProfile().getSmSupplier().getCompanyName());
 			}
+		}else{
+			if(getManagedBean().getMofNo() != null){
+				supplierSearchReqDTO.setMofAccountNo(getManagedBean().getMofNo());
+			}
+			if(getManagedBean().getEpNo() != null){
+				supplierSearchReqDTO.setEpNo(getManagedBean().getEpNo());
+			}
+			SupplierSearchResDTO suResDTO = ValidateSupplier(supplierSearchReqDTO);
+			supplierSearchReqDTO.setCompanyName(suResDTO.getSmSupplier().getCompanyName());
+			params.put(SmReportConst.PARAM_COMPANY_NAME, suResDTO.getSmSupplier().getCompanyName());
 		}
+		
 		params.put(SmReportConst.PARAM_MOF_NO, getManagedBean().getMofNo());
+		
+		
 		if (!StringUtils.isBlank(getManagedBean().getRegType())) {
 			params.put(SmReportConst.PARAM_REG_TYPE, getManagedBean()
 					.getRegType());
 		}
 		params.put(SmReportConst.PARAM_EP_NO, getManagedBean().getEpNo());
-		params.put(SmReportConst.PARAM_YEAR_FROM, getManagedBean().getYear());
-		params.put(SmReportConst.PARAM_YEAR_TO, getManagedBean().getYearTo());
-		params.put(SmReportConst.PARAM_YEAR,
-				Calendar.getInstance().get(Calendar.YEAR) + "");
+		params.put(PmReportConst.PARAM_PM_FROM_DATE, DateUtils.dateToString(
+				CommonConstants.DEFAULT_DATE_FORMAT_WITH_MONTH_NAME_NEW, getManagedBean()
+				.getDateFrom()));
+		params.put(PmReportConst.PARAM_PM_TO_DATE, DateUtils.dateToString(
+				CommonConstants.DEFAULT_DATE_FORMAT_WITH_MONTH_NAME_NEW, getManagedBean()
+				.getDateTo()));
 		generateSmReport(params);
+	}
+	
+	public SupplierSearchResDTO ValidateSupplier(SupplierSearchReqDTO supplierSearchReqDTO ){
+
+		ISupplierSearchSO supplierSearchSO = SmServiceLookup.getSupplierSearchSO();
+			SupplierSearchResDTO smResDTO =supplierSearchSO.retriveSupplierProfilesAsCriteria(supplierSearchReqDTO);
+			
+			if(smResDTO.getSmSupplier() == null){
+				throw new EpException(MessageConst.ERROR_REPORT_780056);
+			}		
+		return smResDTO;
+	}
+
+		private void dateValidation(Date dateFrom, Date dateTo){
+		
+		if (dateFrom == null || dateTo == null) {
+			throw new EpException(MessageConst.ERROR_715050);
+		}
+
+		if ((dateFrom != null) && (dateTo != null)) {
+			if (dateFrom.after(dateTo)) {
+				throw new EpException(MessageConst.ERROR_REPORT_780008);
+			}
+		}
 	}
 
 	public void resetSearch() {
-		if (getManagedBean().getSelectedOrgProfile() != null) {
+/*		if (getManagedBean().getSelectedOrgProfile() != null) {
 			if (getManagedBean().getSelectedOrgProfile().getSmSupplier() != null) {
 				getManagedBean().getSelectedOrgProfile().getSmSupplier()
 						.setCompanyName(StringUtils.EMPTY);
 			}
-		}
+		}*/
+		getManagedBean().setSelectedOrgProfile(null);//24635
 		getManagedBean().setMofNo(StringUtils.EMPTY);
 		getManagedBean().setRegType(StringUtils.EMPTY);
 		getManagedBean().setEpNo(StringUtils.EMPTY);
@@ -91,26 +140,6 @@ public class SuppPerformRptBackingBean extends
 			label = SmCommonUtil.getMessage("lbl.rpt.registereddatefrom", null);
 		}
 		getManagedBean().setRegDateLabel(label);
-	}
-
-	private List<String> getYearList() {
-		List<String> years = new ArrayList<String>();
-		SimpleDateFormat outputDateFormat = new SimpleDateFormat(
-				CommonConstants.DEFAULT_DATE_FORMAT);
-
-		Date currentDate = new Date();
-		Integer year = null;
-		String yearFrom = outputDateFormat.format(currentDate).substring(6, 10);
-		if (yearFrom != null) {
-			year = Integer.parseInt(yearFrom);
-		}
-		if (year != null) {
-			while (year >= 2018) {
-				years.add(Integer.toString(year));
-				year--;
-			}
-		}
-		return years;
 	}
 
 }
