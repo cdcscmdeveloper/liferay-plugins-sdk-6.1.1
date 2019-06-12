@@ -58,6 +58,8 @@ import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.cm.catalog.CmWishlist;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemSpec;
+import my.ep.persistence.entity.ct.dtl.CtSchedule;
+import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -363,6 +365,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	/** The ct request list. */
 	private List<VCmSupplierItem> ctRequestList;
+	
+	private List<CtSchedule> scheduleNos;
 
 	/** The simple quote flag. */
 	private boolean simpleQuoteFlag = true; // enable or disable simple quote in
@@ -494,7 +498,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private int zonalRowIndex;
 	private SmGstSupplier smGstSupplier;
 	private List<String> availableNoList;
-	private String scheduleNo;
+	/*13984 schedule Information*/
+	private static String scheduleNo;
 	
 	private String expiryAlert;
 	
@@ -505,6 +510,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private List<TreeNode> zoneTrees;
 	
 	private boolean dupplicatedInd = false;
+	private FlFulfilmentRequest flRequest;
 	
 	private Paginator detachedPaginator;
 	
@@ -3441,6 +3447,9 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public List<VCmSupplierItem> getCtRequestList() {
 		if (ctRequestList == null)
 			ctRequestList = new ArrayList<VCmSupplierItem>();
+		
+		
+        System.out.println("ctRequestList is "+ctRequestList);
 		return ctRequestList;
 	}
 
@@ -3451,7 +3460,19 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 *            the new ct request list
 	 */
 	public void setCtRequestList(List<VCmSupplierItem> ctRequestList) {
+		
 		this.ctRequestList = ctRequestList;
+	}
+	/*13984 scheduleNo list instances for table*/
+	public List<CtSchedule> getScheduleNos() {
+		if (scheduleNos == null)
+			scheduleNos = new ArrayList<CtSchedule>();
+		return scheduleNos;
+	}
+	
+
+	public void setScheduleNos(List<CtSchedule> scheduleNos) {
+		this.scheduleNos = scheduleNos;
 	}
 
 	/**
@@ -4210,4 +4231,14 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public void setSelectedNodes(TreeNode[] selectedNodes) {
 		this.selectedNodes = selectedNodes;
 	}
+
+	public FlFulfilmentRequest getFlRequest() {
+		return flRequest;
+	}
+
+	public void setFlRequest(FlFulfilmentRequest flRequest) {
+		this.flRequest = flRequest;
+	}
+
+
 }
