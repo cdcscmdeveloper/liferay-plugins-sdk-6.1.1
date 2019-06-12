@@ -32,6 +32,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -57,6 +58,8 @@ import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.circular.ICircularDetailSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
+import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
+import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
@@ -86,6 +89,8 @@ import my.ep.dto.ct.circular.CircularDetailReqDTO;
 import my.ep.dto.ct.circular.CircularDetailResDTO;
 import my.ep.dto.ct.dtl.ContractItemReqDTO;
 import my.ep.dto.ct.dtl.ContractItemResDTO;
+import my.ep.dto.fl.FulfilmentReqDTO;
+import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
@@ -131,6 +136,8 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelItemSpec;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
+import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
+import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmState;
@@ -178,6 +185,7 @@ import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFDataFormat;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
@@ -204,6 +212,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	private static final long serialVersionUID = 1L;
 
+	/*13984 Schedule/ Phase Information*/
+    private static List<ScheduleInfo> schInfo;
+
 	/** The log. */
 	private static Logger log = Logger.getLogger(CatalogueBackingBean.class);
 
@@ -228,15 +239,77 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	/** The status filter bean. */
 	private SearchFilterBean statusFilterBean = new SearchFilterBean(
 			SearchOperator.OPERATOR_EQUALS.value());
+	
+	/*13984 schNo for table*/
+	private String schno;
 
-	/**
-	 * Instantiates a new CatalogueBackingBean.
-	 */
+	
 	public CatalogueBackingBean() {
+		initSchPhaseTable();
+		
+
+	}
+	
+	/* 13984 Construct phase/ schedule table */
+	public List<ScheduleInfo> initSchPhaseTable(){
+		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+		IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+
+		if (this.getManagedBean().getCtRequestList() != null && this.getManagedBean().getCtRequestList().size() > 0) {
+
+			VCmSupplierItem supplierItemView = this.getManagedBean().getCtRequestList().get(0);
+			ContractReqDTO reqDTO = new ContractReqDTO();
+			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+
+			flReqDTO.setContractId(supplierItemView.getContractId());
+			reqDTO.setContractId(supplierItemView.getContractId());
+
+			ContractResDTO resDTO;
+			FulfilmentResDTO resfDTO;
+			
+
+
+			resfDTO = requestSO.retrieveFulfilmentRequestDocNosByContractId(flReqDTO);
+			resDTO = contractSO.retrieveAvailableSchedulePhaseNo(reqDTO);
+
+			if (resDTO.getAvailableNoList() != null) {
+				getManagedBean().setAvailableNoList(resDTO.getAvailableNoList());
+			}
+			schInfo = new ArrayList<ScheduleInfo>();
+
+			for (int i = 0; i < resDTO.getAvailableNoList().size(); i++) {
+				int j = i + 1;
+				if (j > resfDTO.getDocNos().size()) {
+
+					resfDTO.getDocNos().add("");
+				}
+				if (j > resfDTO.getFlOrderDocNos().size()) {
+
+					resfDTO.getFlOrderDocNos().add("");
+				}
+				if (j > resfDTO.getFlOrderDocNoStatus().size()) {
+
+					resfDTO.getFlOrderDocNoStatus().add("");
+				}
+				if (j > resfDTO.getDocNoStatus().size()) {
+
+					resfDTO.getDocNoStatus().add("");
+				}
+
+				schInfo.add(new ScheduleInfo(resDTO.getAvailableNoList().get(i), resfDTO.getDocNos().get(i), resfDTO
+						.getDocNoStatus().get(i), resfDTO.getFlOrderDocNos().get(i), resfDTO.getFlOrderDocNoStatus()
+						.get(i)));
+			}
+		}
 
 		if (MDC.get(LogKey.USER_ID) == null) {
 			MDC.put(LogKey.USER_ID, 1L);
 		}
+		
+		return schInfo;
+
 	}
 
 	/**
@@ -5778,8 +5851,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 */
 	public void preRenderSupplierCatalogue() {
 
-
-
 		/*		this.getManagedBean().setItemNameFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value()));
 		this.getManagedBean().setItemCodeFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value()));
 		this.getManagedBean().setSupplierNameFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value()));
@@ -8821,7 +8892,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		this.getManagedBean().setTempSupplierList(null);
 		this.getManagedBean().getTempSupplierList().add(supplierItem);
-
+		
 		String contractNo = "";
 		boolean flag = false;
 
@@ -8959,7 +9030,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			if(resDTO.getAvailableNoList() != null){
 				getManagedBean().setAvailableNoList(resDTO.getAvailableNoList());
 			}
-
+           
 		}
 
 		return "contractRequestView";
@@ -8989,6 +9060,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	/**
 	 * navigate To CR.
+	 * @return 
+	 * @return 
 	 * 
 	 * @throws PortalException
 	 *             the portal exception
@@ -9011,7 +9084,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		externalContext.getApplicationMap().put(facesScope.getUserSessionBean().getUserId().toString()+getManagedBean().getCtRequestList().get(0)
 				.getContractId().toString(), getManagedBean().getCtRequestList());
 		String url = "contract-request-from-catalogue";
-
+		
+		/*13984 Schedule No. Information for table*/
+		schno = getManagedBean().getScheduleNo();
+		getschno();
+		
+	
 		try {
 			if(getManagedBean().getScheduleNo() != null){
 				externalContext.redirect(commonUrl
@@ -9035,8 +9113,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
 	}
-
 	/**
 	 * back To Public Catalogue.
 	 * 
@@ -10358,4 +10436,35 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 	}
 	
+	
+	/*13984 Schedule info instance variables*/	
+	public List<ScheduleInfo> getSchInfo() {
+		if (schInfo == null)
+			schInfo = new ArrayList<ScheduleInfo>();
+		
+        log.info("schInfo is : "+schInfo);
+		return schInfo;
+	}
+
+	public void setSchInfo(List<ScheduleInfo> schInfo) {
+		this.schInfo = schInfo;
+	}
+	/*13984 Schedule No. instance variables for table*/
+	public String getschno() {
+		
+		String schNoSelected= getManagedBean().getScheduleNo();
+		
+		log.info("schNoSelected in getSchno() is " +schNoSelected);
+
+		setschno(schNoSelected);
+		return schno;
+	}
+
+
+	public void setschno(String schNo) {
+		log.info("schno in setSchno(String schno) is : " +schno);
+		this.schno = schNo;
+		
+		
+	}
 }
