@@ -15,9 +15,12 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
 import my.ep.constant.MessageConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sm.selfrequestsupplieradmin.SelfRequestSupplierAdminReqDTO;
+import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -28,6 +31,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.selfrequestsupplieradmin.SelfRequestSupplierAdminManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
@@ -181,6 +185,9 @@ public class SelfRequestSupplierAdminBackingBean extends
 	}
 
 	public void submit() {
+		
+		validateMyIdentity();
+
 		SmPersonnelAddress permAddr = (SmPersonnelAddress) EntityHelper
 				.getEntityBySinglePropertyFromList(
 						SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM,
@@ -239,8 +246,34 @@ public class SelfRequestSupplierAdminBackingBean extends
 				SmApplicationUtil.getApplicationErrorPage(),
 				MessageConst.INFO_721227, new String[] { getManagedBean()
 						.getSupplier().getCompanyName() }, null);
-	}
 
+	}
+	
+	/**
+	 * Validate my identity
+	 * 
+	 * @param SmPersonnel
+	 *            personnel
+	 */
+	private void validateMyIdentity() {
+		if (getManagedBean().getSelectedAdmin()!= null
+				&& getManagedBean().getSelectedAdmin().getName()!= null
+				&& getManagedBean().getSelectedAdmin().getIdentificationNo()!= null
+				&& getManagedBean().getSelectedAdminPermAddr().getSmAddress()!= null){
+			PmParameter idType = SmApplicationUtil
+					.retrievePmParameterById(getManagedBean().getSelectedAdmin().getIdentificationTypeId());
+
+			if (idType.getParameterCode()
+					.equals(SupplierManagementConst.NEW_IC)) {
+				SmCommonUtil.getInstance().verifyWithMyIdentity(
+						getManagedBean().getSelectedAdmin().getName(),
+						getManagedBean().getSelectedAdmin().getIdentificationNo(),
+						getManagedBean().getSelectedAdminPermAddr().getSmAddress()
+								.getPostcode(), null);
+			}
+		}
+	}
+	
 	public List<SmPersonnel> autoCompletePersonnels(String query) {
 		return SmCommonUtil.getFilteredPersonnelsInSession(query);
 	}
@@ -544,6 +577,25 @@ public class SelfRequestSupplierAdminBackingBean extends
 			}
 		}
 		return retVal;
+	}
+
+	/**
+	 * Validate ID format
+	 * 
+	 * @param identNo
+	 * @param identType
+	 */
+	public void validateIDFormat(String identNo, String identType) {
+		if (identType.equals(SupplierManagementConst.BASIC_IND_IDENT_TYPE)) {
+			if (identNo.length() != 12) {
+				throw new EpException(MessageConst.ERROR_721013);
+			}
+
+			if (!identNo.matches("[0-9]+")) {
+				throw new EpException(MessageConst.ERROR_721013);
+			}
+
+		}
 	}
 
 }
