@@ -987,8 +987,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 									+ extensionCode);
 							
 							Calendar cal = Calendar.getInstance();
-							
-							cal.setTimeInMillis(requestNoteDtl.getCreatedDate().getTime());
+							if(requestNoteDtl.getCreatedDate()!=null){
+								cal.setTimeInMillis(requestNoteDtl.getCreatedDate().getTime());
+							}
+							else{
+								cal.setTimeInMillis(System.currentTimeMillis());
+							}
 							
 							flReqDTO.setOrgProfileId(requestNote.getPmOrgProfile().getOrgProfileId());
 							flReqDTO.setExtensionCode(extensionCode);
