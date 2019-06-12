@@ -10,14 +10,19 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.bpm.vo.WorklistItemVO;
+import my.ep.persistence.entity.pm.common.PmAccessApplDoc;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmSoftcertDoc;
+import my.ep.persistence.entity.sm.SmSoftcertDocFile;
 import my.ep.web.backingbean.pm.cc.SoftCertMaintenanceBackingBean;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.vo.SmGstBranchVO;
 import my.ep.web.vo.SoftcertUploadSuppDocVO;
 
 import com.liferay.portal.model.Role;
@@ -66,6 +71,8 @@ public class SoftCertManagedBean extends BaseManagedBean {
 	private PmDigiSign digiSign;
 	private String gstPercentageLabel;
 	private SmAppl smAppl;
+	
+	private String revokeMessage;
 
 	@ManagedProperty(value = "#{spkiBackingBean}")
 	private SpkiBackingBean spkiBackingBean;
@@ -378,4 +385,11 @@ public class SoftCertManagedBean extends BaseManagedBean {
 		this.revokePersonnelSelect = revokePersonnelSelect;
 	}
 
+	public String getRevokeMessage() {
+		return revokeMessage;
+	}
+
+	public void setRevokeMessage(String revokeMessage) {
+		this.revokeMessage = revokeMessage;
+	}
 }
