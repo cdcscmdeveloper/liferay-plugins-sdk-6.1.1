@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -18,17 +19,21 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.fl.FulfilmentReqDTO;
+import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.VCtActiveContract;
+import my.ep.persistence.entity.ct.VCtContract;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.fl.FlAttachment;
@@ -107,6 +112,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private CtContract selectedContract;
 	private CtContract ctContract = new CtContract();
 	private GlAccountSearchBean glAccountSearchBean;
+	private FlFulfilmentRequest fulfilmentRequest;
 	
 	private List<FlRemark> previousRemarkList;
 	private List<FlAttachment> previousAttachmentList;	
@@ -427,11 +433,48 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 				contractReqDTO.setOrgProfileId(orgProfileId);
 				ContractResDTO resDTO = contractSO.retrieveActiveContractList(contractReqDTO);
 				
+				IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+				FulfilmentResDTO resfDTO;
 				if(resDTO.isSuccessful()) {
 					for(VCtActiveContract vCtActiveContract : resDTO.getActiveContractResultBean().getResultList()) {
 						if(vCtActiveContract.getFulfilmentType().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+							/*13984 Schedule/ Phase info List BEGINNING*/
 							contractReqDTO.setContractId(vCtActiveContract.getContractId());
-							vCtActiveContract.setActiveContractSubList(contractSO.retrieveScheduleInfoForContract(contractReqDTO).getActiveContractList());
+							flReqDTO.setContractId(vCtActiveContract.getContractId());
+							resfDTO = requestSO.retrieveFulfilmentRequestDocNosByContractId(flReqDTO);
+
+							List<VCtActiveContract> InfoActiveContractList = contractSO
+									.retrieveScheduleInfoForContract(contractReqDTO).getActiveContractList();
+
+							for (int i = 0; i < resfDTO.getDocNos().size(); i++) {
+
+								int j = i + 1;
+								if (j > resfDTO.getDocNos().size()) {
+
+									resfDTO.getDocNos().add("");
+								}
+								if (j > resfDTO.getFlOrderDocNos().size()) {
+
+									resfDTO.getFlOrderDocNos().add("");
+								}
+								if (j > resfDTO.getFlOrderDocNoStatus().size()) {
+
+									resfDTO.getFlOrderDocNoStatus().add("");
+								}
+								if (j > resfDTO.getDocNoStatus().size()) {
+
+									resfDTO.getDocNoStatus().add("");
+								}
+
+								InfoActiveContractList.get(i).setCrNo(resfDTO.getDocNos().get(i));
+								InfoActiveContractList.get(i).setCrNoStatus(resfDTO.getDocNoStatus().get(i));
+								InfoActiveContractList.get(i).setCoNo(resfDTO.getFlOrderDocNos().get(i));
+								InfoActiveContractList.get(i).setCoNoStatus(resfDTO.getFlOrderDocNoStatus().get(i));
+							}
+							vCtActiveContract.setActiveContractSubList(InfoActiveContractList);
+							/*13984 Schedule/ Phase info List ENDING*/
 						}
 					}
 					return resDTO.getActiveContractResultBean();
@@ -2951,6 +2994,14 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 
 	public void setRadioCheckDeliveryDate(boolean radioCheckDeliveryDate) {
 		this.radioCheckDeliveryDate = radioCheckDeliveryDate;
+	}
+
+	public FlFulfilmentRequest getFulfilmentRequest() {
+		return fulfilmentRequest;
+	}
+
+	public void setFulfilmentRequest(FlFulfilmentRequest fulfilmentRequest) {
+		this.fulfilmentRequest = fulfilmentRequest;
 	}
 
 	
