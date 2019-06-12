@@ -37,6 +37,7 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.forcereplaceadmin.ForceReplaceSuppAdminManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmRuleHelper;
@@ -136,6 +137,15 @@ public class ForceReplaceSuppAdminBackingBean extends
 		} else {
 			validate();
 			executeDecision();
+			// redirectToNonExistNewAdminPage();
+		}
+	}
+
+	public void declare() {
+		if (getManagedBean().isExistingUser()) {
+			replaceWithExistingUser();
+		} else {
+			replaceWithNewUser();
 		}
 	}
 
@@ -143,11 +153,13 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * Replace admin with new personnel and redirect to success page
 	 */
 	public void replaceWithNewUser() {
+
 		getManagedBean().getNewAdmin().setSoftcertFlg(
 				SupplierManagementConst.SOFT_CERT_PENDING_REQ);
 		SmCommonUtil.setNewPersonnelPermAndMailAddress(getManagedBean()
 				.getNewAdmin(), getManagedBean().getMailAddr(),
 				getManagedBean().getPermAddr());
+
 		validateMyIdentity();
 		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO()
 				.replaceAdminWithNewPersonnel(getReqDTO());
@@ -158,6 +170,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * Replace admin with existing personnel and redirect to success page
 	 */
 	public void replaceWithExistingUser() {
+		validateMyIdentity();
 		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO()
 				.reassignSupplierAdmin(getReqDTO());
 		redirectToSuccessPage(resDto);
@@ -401,9 +414,10 @@ public class ForceReplaceSuppAdminBackingBean extends
 		// replace with existing personnel
 		else {
 			setShowOrHideEmail();
+			initDefaultNewAdmin();
 			SmCommonUtil.redirectToPage(
-					"/xhtml/sm/forcereplaceadmin/addExistingAdminInfo.xhtml",
-					"", null, null);
+					"/xhtml/sm/forcereplaceadmin/addNewAdminInfo.xhtml", "",
+					null, null);
 		}
 	}
 
@@ -411,6 +425,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * Redirect to non exist new admin page
 	 */
 	public void redirectToNonExistNewAdminPage() {
+
 		initDefaultNewAdmin();
 		SmCommonUtil.redirectToPage(
 				"/xhtml/sm/forcereplaceadmin/addNewAdminInfo.xhtml", "", null,
@@ -442,10 +457,12 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 */
 	private void validateMyIdentity() {
 		if (getManagedBean().getNewAdmin() != null
-				&& getManagedBean().getNewAdmin().getIdentificationType() != null) {
+				&& getManagedBean().getReactivateBasic() != null
+				&& getManagedBean().getReactivateBasic()
+						.getNewIdentificationType() != null) {
 			PmParameter idType = SmApplicationUtil
-					.retrievePmParameterById(getManagedBean().getNewAdmin()
-							.getIdentificationTypeId());
+					.retrievePmParameterById(getManagedBean()
+							.getReactivateBasic().getNewIdentificationType());
 
 			if (idType.getParameterCode()
 					.equals(SupplierManagementConst.NEW_IC)) {
@@ -459,13 +476,38 @@ public class ForceReplaceSuppAdminBackingBean extends
 	}
 
 	/**
+	 * Validate ID format
+	 * 
+	 * @param identNo
+	 * @param identType
+	 */
+	public void validateIDFormat(String identNo, String identType) {
+		if (identType.equals(SupplierManagementConst.BASIC_IND_IDENT_TYPE)) {
+			if (identNo.length() != 12) {
+				throw new EpException(MessageConst.ERROR_721013);
+			}
+
+			if (!identNo.matches("[0-9]+")) {
+				throw new EpException(MessageConst.ERROR_721013);
+			}
+
+		}
+	}
+
+	/**
 	 * Initialize new admin values
 	 */
 	private void initDefaultNewAdmin() {
-		if (getManagedBean().getNewAdmin() == null) {
-			getManagedBean().setNewAdmin(new SmPersonnel());
+		if (!getManagedBean().isExistingUser()) {
+			if (getManagedBean().getNewAdmin() == null) {
+				getManagedBean().setNewAdmin(new SmPersonnel());
+			}
+			setDefaultNewAdminPersonnelValues();
+		} else {
+			if (getManagedBean().getNewAdmin().getTitle() == null) {
+				getManagedBean().getNewAdmin().setTitle(new PmSalutation());
+			}
 		}
-		setDefaultNewAdminPersonnelValues();
 		setDefaultNewAdminAddress();
 	}
 
@@ -588,29 +630,40 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * Set default permanent and mail address to Malaysia
 	 */
 	private void setDefaultNewAdminAddress() {
+
 		PmCountry countryMy = SmCommonUtil
 				.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
-
+		getManagedBean().getNewAdmin().setPmCountry(countryMy);
 		SmPersonnelAddress perm = null;
 		if (getManagedBean().getNewAdmin() != null
-				&& getManagedBean().getNewAdmin().getSmPersonnelAddresses() != null) {
+				&& !EntityHelper.isCollectionEmpty(getManagedBean()
+						.getNewAdmin().getSmPersonnelAddresses())) {
 			perm = (SmPersonnelAddress) EntityHelper
 					.getEntityBySinglePropertyFromList(
 							SupplierManagementConst.PERM_ADD, getManagedBean()
 									.getNewAdmin().getSmPersonnelAddresses(),
 							"addressType");
+
 		}
 		if (perm == null) {
 			perm = new SmPersonnelAddress();
+			perm.setAddressType(SupplierManagementConst.PERM_ADD);
+			perm.setSmAddress(SmApplicationUtil.setDefaultAddr(countryMy));
+			perm.setSmPersonnel(getManagedBean().getNewAdmin());
+			perm.setSameAsPerm(false);
+		} else {
+			getManagedBean().setPermDistricts(
+					SmCommonUtil.getDistrictList(perm.getSmAddress()
+							.getPmState().getStateId()));
+			getManagedBean().setPermCities(
+					SmCommonUtil.getCityList(perm.getSmAddress()
+							.getPmDistrict().getDistrictId()));
 		}
-		perm.setAddressType(SupplierManagementConst.PERM_ADD);
-		perm.setSmAddress(SmApplicationUtil.setDefaultAddr(countryMy));
-		perm.setSmPersonnel(getManagedBean().getNewAdmin());
-		perm.setSameAsPerm(false);
 
 		SmPersonnelAddress mail = null;
 		if (getManagedBean().getNewAdmin() != null
-				&& getManagedBean().getNewAdmin().getSmPersonnelAddresses() != null) {
+				&& !EntityHelper.isCollectionEmpty(getManagedBean()
+						.getNewAdmin().getSmPersonnelAddresses())) {
 			mail = (SmPersonnelAddress) EntityHelper
 					.getEntityBySinglePropertyFromList(
 							SupplierManagementConst.MAIL_ADD, getManagedBean()
@@ -619,14 +672,22 @@ public class ForceReplaceSuppAdminBackingBean extends
 		}
 		if (mail == null) {
 			mail = new SmPersonnelAddress();
+			mail.setAddressType(SupplierManagementConst.MAIL_ADD);
+			mail.setSmAddress(SmApplicationUtil.setDefaultAddr(countryMy));
+			mail.setSmPersonnel(getManagedBean().getNewAdmin());
+			mail.setSameAsPerm(false);
+		} else {
+			getManagedBean().setMailDistricts(
+					SmCommonUtil.getDistrictList(mail.getSmAddress()
+							.getPmState().getStateId()));
+			getManagedBean().setMailCities(
+					SmCommonUtil.getCityList(mail.getSmAddress()
+							.getPmDistrict().getDistrictId()));
 		}
-		mail.setAddressType(SupplierManagementConst.MAIL_ADD);
-		mail.setSmAddress(SmApplicationUtil.setDefaultAddr(countryMy));
-		mail.setSmPersonnel(getManagedBean().getNewAdmin());
-		mail.setSameAsPerm(false);
 
 		getManagedBean().setPermAddr(perm);
 		getManagedBean().setMailAddr(mail);
+		
 	}
 
 	/**
@@ -636,6 +697,9 @@ public class ForceReplaceSuppAdminBackingBean extends
 		getManagedBean().getNewAdmin().setIdentificationTypeId(
 				getManagedBean().getReactivateBasic()
 						.getNewIdentificationType());
+		getManagedBean().getNewAdmin().setIdentificationType(
+				SmCommonUtil.retrieveParameterById(getManagedBean()
+						.getNewAdmin().getIdentificationTypeId()));
 		getManagedBean().getNewAdmin().setIdentificationNo(
 				getManagedBean().getReactivateBasic().getNewIdentificationNo());
 		getManagedBean().getNewAdmin().setTitle(new PmSalutation());
