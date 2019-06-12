@@ -174,6 +174,7 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.GlAccountSearchBean;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.converter.pm.PmUserConverter;
 import my.ep.web.managedbean.fl.pr.PurchaseRequestManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
@@ -3690,7 +3691,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			summReq.setSupplierId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
 			summReq.setYear(getManagedBean().getFulfilmentRequest().getFinancialYear());
 			summReq.setItemId(requestItemMap.get(map.getKey()).getCmItem().getItemId());
-			summReq.setExtensionCode(requestItemMap.get(map.getKey()).getCmItem().getExtensionCode());
+			summReq.setExtensionCode(requestItemMap.get(map.getKey()).getCmItem().getExtensionCode().substring(0, 8));
 			//BigDecimal sumAmt = itemSummSO.retrievePerItemPerPtjPerYear(summReq);
 			BigDecimal sumAmt = itemSummSO.retrievePerItemPerPtjPerYearByExtensionCode(summReq);
 			sumAmt = map.getValue().add(sumAmt);
@@ -4586,7 +4587,21 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	public void addButton(){
 		Long currentStatusId = getManagedBean().getCurrentStatusId();
 		//checking if SQ still valid, if not valid thus cancel/reject button will be added
-		if(!isSqStillValid()){
+		
+		
+		if(getManagedBean().isPidValidityExpired()){
+			if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL) || 
+					   currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)){
+						String[] addReject = new String[]{BpmOutcomeConst.BPM_REJECT};    		
+						getManagedBean().setOutComes(addReject);	
+						
+					}else if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION) || 
+							   currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION)){
+						String[] addCancel = new String[]{BpmOutcomeConst.BPM_CANCEL};    		
+						getManagedBean().setOutComes(addCancel);
+					}
+		}else{
+			if(!isSqStillValid()){
 				if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL) || 
 				   currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL) ){
 					String[] addReject = new String[]{BpmOutcomeConst.BPM_REJECT};    		
@@ -4598,10 +4613,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				}
 						
 		}		
-		
-		if(getManagedBean().isPidValidityExpired()){
-			String[] addCancel = new String[]{BpmOutcomeConst.BPM_REJECT};    		
-			getManagedBean().setOutComes(addCancel);
 		}
 	}
 	
