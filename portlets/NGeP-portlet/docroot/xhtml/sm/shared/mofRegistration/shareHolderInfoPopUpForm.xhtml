@@ -10,11 +10,35 @@
 		id="equiPerDtlPan">
 		<c:if
 			test="#{(backingBean.managedBean.approverUser or backingBean.managedBean.poUser) and backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'I'}">
-			<p:outputLabel style="float : left" styleClass="ui-panel-title"
-				value="#{lbl['lbl.sm.person.myIdResp']} - " />
-			<p:outputLabel style="float : left" styleClass="ui-panel-title"
-				value="#{backingBean.getMyIdentityStatusDescription(backingBean.managedBean.selectedShareHolder.identityResponseCode)}" />
+			<h:outputText
+				style="float : left; font-size: 12px; font-weight: bold; padding-right:3px"
+				value="#{lbl['lbl.sm.person.myIdResp']} :" />
+			<h:outputText
+				style="float : left; font-size: 12px; font-weight: bold; padding-right:3px"
+				value=" #{lbl['lbl.sm.myIdentityCode.active']}"
+				rendered="#{backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70018'}" />
+			<h:outputText
+				style="float : left; font-size: 12px; font-weight: bold; color: #FF0000; padding-right:3px"
+				value=" #{lbl['lbl.sm.myIdentityCode.passed.away']}"
+				rendered="#{backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70019'}" />
+			<h:outputText
+				style="float : left; font-size: 12px; font-weight: bold; padding-right:3px"
+				value="#{lbl['lbl.sm.person.myIdResp.please.click']}"
+				rendered="#{backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70018' || backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70019'}"
+				escape="false" />
+			<p:commandLink value="#{lbl['lbl.sm.person.myIdResp.here']}"
+				rendered="#{backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70018' || backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70019'}"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				action="#{backingBean.viewMyIdentityRespond()}" process="@this"
+				partialSubmit="true" update=":form" 
+				style="float: left; font-size: 12px; font-weight: bold; color: #000000; text-decoration: underline; padding-right:3px">
+			</p:commandLink>
+			<h:outputText
+				style="float : left; font-size: 12px; font-weight: bold; padding-right:3px"
+				value="#{lbl['lbl.sm.person.myIdResp.jpn.info']}"
+				rendered="#{backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70018' || backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70019'}" />
 		</c:if>
+		<br />
 		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.name']}" /> <p:outputLabel
@@ -1346,6 +1370,57 @@
 			</div>
 		</p:outputPanel>
 	</p:dialog>
+
+	<p:dialog id="myIdentityDialog"
+		header="#{lbl['lbl.sm.person.myIdResp']}"
+		style="max-height:450px;width:500px" widgetVar="myIdentityDialog"
+		showEffect="fade" hideEffect="fade" modal="true" resizable="true">
+
+		<p:scrollPanel mode="native"
+			style="max-height:400px;width:450px;border:none">
+			<table style="width: 100%; table-layout: auto">
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.name']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{backingBean.managedBean.selectedShareHolder.name}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.icNo']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{backingBean.managedBean.selectedShareHolder.identificationNo}" /></td>
+				</tr>
+				<tr>
+					<td style="vertical-align: baseline;"><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.address']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{backingBean.getSMFullAddress(backingBean.managedBean.shareHolderPermAddr.smAddress)}" escape="false" /></td>
+				</tr>			
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label"
+							value="#{lbl['lbl.sm.person.record.status']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view"
+							value="#{lbl['lbl.sm.person.active']}"
+							rendered="#{backingBean.managedBean.selectedShareHolder.identityResponseCode ne '70019'}" />
+						<p:outputLabel styleClass="outputLabel-view"
+							value="#{lbl['lbl.sm.person.status.dead']}"
+							rendered="#{backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70019'}" />	
+					</td>					
+				</tr>
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label"
+							value="#{lbl['lbl.sm.person.residential.status']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view"
+							value="#{lbl['lbl.sm.person.citizen']}"
+							rendered="#{backingBean.managedBean.selectedShareHolder.identityResidentStatus eq 'B' || backingBean.managedBean.selectedShareHolder.identityResidentStatus eq 'C'}" />
+						<p:outputLabel styleClass="outputLabel-view"
+							value="#{lbl['lbl.sm.person.residential.permanent']}"
+							rendered="#{backingBean.managedBean.selectedShareHolder.identityResidentStatus eq 'M' || backingBean.managedBean.selectedShareHolder.identityResidentStatus eq 'P'}" />
+						<p:outputLabel styleClass="outputLabel-view"
+							value="#{lbl['lbl.sm.person.non.residential.non.citizen']}"
+							rendered="#{backingBean.managedBean.selectedShareHolder.identityResidentStatus eq 'H' || backingBean.managedBean.selectedShareHolder.identityResidentStatus eq 'Q'
+					 || backingBean.managedBean.selectedShareHolder.identityResidentStatus eq 'X' || empty backingBean.managedBean.selectedShareHolder.identityResidentStatus}" />
+					</td>
+				</tr>
+			</table>
+		</p:scrollPanel>
+	</p:dialog>
+
 
 
 </ui:composition>
