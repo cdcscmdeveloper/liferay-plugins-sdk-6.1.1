@@ -121,16 +121,16 @@
 			var="address" rowIndexVar="index" rowKey="#{address}" selection="#{organisationBackingBean.managedBean.selectedAddressTypes}">
 			<ac:paginator for="deliveryAddressId" />
 			<p:ajax event="rowSelect" partialSubmit="true" process="@this"
-				update=":form:addressTabs:delAddressBtnId,:form:addressTabs:deliveryAddressId"  
+				update=":form:addressTabs:delAddressBtnId"  
 				listener="#{organisationBackingBean.onSelectDelAddressRow()}"/>
 			<p:ajax event="rowUnselect" partialSubmit="true" process="@this"
-				update=":form:addressTabs:delAddressBtnId,:form:addressTabs:deliveryAddressId"  
+				update=":form:addressTabs:delAddressBtnId"  
 				listener="#{organisationBackingBean.onSelectDelAddressRow()}"/>
 			<p:ajax event="rowSelectCheckbox" process="@this"
-				update=":form:addressTabs:delAddressBtnId,:form:addressTabs:deliveryAddressId"  
+				update=":form:addressTabs:delAddressBtnId"  
 				listener="#{organisationBackingBean.onSelectDelAddressRow()}" />
 			<p:ajax event="rowUnselectCheckbox" process="@this"
-				update=":form:addressTabs:delAddressBtnId,:form:addressTabs:deliveryAddressId"  
+				update=":form:addressTabs:delAddressBtnId"  
 				listener="#{organisationBackingBean.onSelectDelAddressRow()}" />				
 			<p:column selectionMode="multiple" disabledSelection="#{!address.brandNew}"
 				 style="width:2%" />
@@ -142,7 +142,7 @@
 				<p:selectOneMenu label="#{lbl['lbl.pm.financialorg.status']}" id="deliveryAddressStatusId" 
 					disabled="#{address.brandNew}" style="width:135px;"	value="#{address.recordStatusFlg}" required="true">
 					<p:ajax event="change" listener="#{organisationBackingBean.onChangeAddressStatus(address, index)}"
-						update="deliveryAddressStatusId" partialSubmit="true" process="@this"/>
+						update="deliveryAddressId" partialSubmit="true" process="@this"/>
 					<f:selectItems value="#{organisationBackingBean.getStatusOptions()}" />
 				</p:selectOneMenu>				
 				<p:message for="deliveryAddressStatusId" id="deliveryAddressStatusIdMsg" display="icon" />
