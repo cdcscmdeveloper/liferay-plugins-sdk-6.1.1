@@ -66,8 +66,10 @@
 					</c:if>
 					<c:if test="#{!purchaseInquiryBackingBean.managedBean.disProcTyp}" >
 						<td style="float:right;">
-							<p:commandButton value="#{lbl['lbl.btn.save']}"
-								onclick="cd.show()" />
+
+							<p:commandButton value="#{lbl['lbl.btn.save']}" partialSubmit="true"
+								process="@form" onstart="blockWidget.show();" update="@form"
+								oncomplete="blockWidget.hide(); if (args &amp;&amp; !args.validationFailed) cd.show();" />
 
 							<p:confirmDialog
 								message="#{lbl['lbl.sc.dialog.confirm.message.save']}"
