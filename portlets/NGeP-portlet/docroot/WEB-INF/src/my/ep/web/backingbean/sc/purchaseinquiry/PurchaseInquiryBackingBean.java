@@ -785,9 +785,7 @@ public class PurchaseInquiryBackingBean extends
 
 		if (resDTO.isSuccessful()) {
 			successMessage(MessageConst.INFO_700025, ParameterTypeConst.DOCUMENT_TYPES,
-					ParameterConst.DOCTYPE_PURCHASE_INQUIRY, resDTO.getPrInquiryDetail().getPrInquiryNo(), Boolean.TRUE);
-
-			super.renewSesionObject();
+					ParameterConst.DOCTYPE_PURCHASE_INQUIRY, resDTO.getPrInquiryDetail().getPrInquiryNo(), Boolean.FALSE);
 		} else {
 			throw new EpException(MessageConst.ERROR_700020);
 		}
