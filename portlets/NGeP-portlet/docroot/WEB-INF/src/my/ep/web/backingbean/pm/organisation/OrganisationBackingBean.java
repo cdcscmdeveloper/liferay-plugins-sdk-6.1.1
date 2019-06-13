@@ -3446,7 +3446,7 @@ public class OrganisationBackingBean extends
 		return resDTO;
 	}
 
-	public void onChangeAddressStatus(PmAddressType addressType) {
+	public void onChangeAddressStatus(PmAddressType addressType,int index) {
 		if (addressType != null) {
 			Long roSize = addressType.getReceivingOfficerNum();
 
