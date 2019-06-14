@@ -35,6 +35,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.ct.agreement.IAgreementSO;
 import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.ct.dtl.IContractZoneSO;
@@ -56,6 +57,8 @@ import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.ct.agreement.ContractAgreementReqDTO;
+import my.ep.dto.ct.agreement.ContractAgreementResDTO;
 import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.ct.circular.CircularResDTO;
 import my.ep.dto.ct.dtl.ContractItemReqDTO;
@@ -3943,5 +3946,22 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	public String getLanguage() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.getUserLocale().getLanguage();
+	}
+	
+	public CtAttachment getSupplementalContractLetter(CtAgreement ctAgreement) {
+		CtAttachment ctAttachment = null;
+		IAgreementSO agreementSO = null;
+		List<CtAttachment> ctAttachments = null;
+		agreementSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IAgreementSO.class);
+		ContractAgreementReqDTO reqDTO = new ContractAgreementReqDTO();
+		ContractAgreementResDTO resDTO = null;
+		if(ctAgreement.getCtAmendment() != null)
+			reqDTO.setContractVerId(ctAgreement.getCtAmendment().getCtContractVer().getContractVerId());
+		resDTO = agreementSO.retrieveSupplementalContractLetterAttachment(reqDTO);
+		ctAttachments = resDTO.getCtAttachments();
+				
+		if(ctAttachments != null && !ctAttachments.isEmpty())
+			ctAttachment = resDTO.getCtAttachments().get(0);
+		return ctAttachment;
 	}
 }  
