@@ -197,6 +197,7 @@
 				</p:dataTable>
 				<div class="ppRightBtn">
 					<p:commandButton id="addButtonId" value="#{lbl['lbl.btn.add']}"
+					disabled="#{specificationBackingBean.managedBean.readOnly}"
 						partialSubmit="true" process="@this" update="frequencySchedule"
 						action="#{specificationBackingBean.addScheduleDetails}"
 						oncomplete="freqScheduleWidget.paginator.endLink.click();">
@@ -204,7 +205,7 @@
 					<p:spacer width="2" />
 					<p:commandButton id="deleteButtonId"
 						value="#{lbl['lbl.ct.delete']}" partialSubmit="true"
-						disable= "#{specificationBackingBean.managedBean.buttonHideSchActive}"
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						process="@this" onsuccess="freqScheduleObj.show()">
 					</p:commandButton>
 				</div>
@@ -395,13 +396,13 @@
 				</p:dataTable>
 				<div class="ppRightBtn">
 					<p:commandButton id="progPayAddButtonId" value="#{lbl['lbl.btn.add']}"
-					partialSubmit="true" process="@this"  
+					partialSubmit="true" process="@this"  disabled="#{specificationBackingBean.managedBean.readOnly}"
 					update="progressivePayment" action="#{specificationBackingBean.addProgressiveDetails}"
 					 oncomplete="progPaymentWidget.paginator.endLink.click();">
 					</p:commandButton>
 					<p:spacer width="2" />
 					<p:commandButton id="progPayDeleteButtonId" value="#{lbl['lbl.ct.delete']}" partialSubmit="true" 
-					disable= "#{specificationBackingBean.managedBean.buttonHideSchActive}"
+					disabled="#{specificationBackingBean.managedBean.readOnly}"
 					process="@this"  onsuccess="progPayObj.show()">
 					</p:commandButton>
 				</div>

@@ -188,6 +188,7 @@
 				</p:dataTable>
 				<div class="ppRightBtn">
 					<p:commandButton id="addButtonId" value="#{lbl['lbl.btn.add']}"
+					disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 						partialSubmit="true" process="@this" update="frequencySchedule"
 						action="#{directLOABackingBean.addScheduleDetails}"
 						oncomplete="freqScheduleWidget.paginator.endLink.click();">
@@ -195,7 +196,7 @@
 					<p:spacer width="2" />
 					<p:commandButton id="deleteButtonId"
 						value="#{lbl['lbl.ct.delete']}" partialSubmit="true"
-						disable= "#{directLOABackingBean.managedBean.buttonHideSchActive}"
+						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 						process="@this" onsuccess="freqScheduleObj.show()">
 					</p:commandButton>
 				</div>
@@ -258,22 +259,23 @@
 				<ac:paginator for="progressivePayment" />
 				<p:column style="width:2%;">
 						<f:facet name="header">
-							<p:selectBooleanCheckbox
-								value="#{directLOABackingBean.managedBean.selectAll}">
-								<p:ajax partialSubmit="true" process="@this"
-									update=":form:progressivePayment,:form:progPayDeleteButtonId"
-									listener="#{directLOABackingBean.selectAllSchedule}" />
-							</p:selectBooleanCheckbox>
-						</f:facet>
-
-						<p:selectBooleanCheckbox
-							value="#{payment.selected}"
-							styleClass="myCustomChekBox">
-							<p:ajax event="change"
+						<p:selectBooleanCheckbox required="true"
+							value="#{directLOABackingBean.managedBean.selectAll}"
+							disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}">
+							<p:ajax partialSubmit="true" process="@this"
 								update=":form:progressivePayment,:form:progPayDeleteButtonId"
-								listener="#{directLOABackingBean.selectOneScheCheckboxSelect}"></p:ajax>
+								listener="#{directLOABackingBean.selectAllSchedule}" />
 						</p:selectBooleanCheckbox>
-					</p:column> 
+					</f:facet>
+
+					<p:selectBooleanCheckbox required="true"
+						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
+						value="#{payment.selected}" styleClass="myCustomChekBox">
+						<p:ajax event="change"
+							update=":form:progressivePayment,:form:progPayDeleteButtonId"
+							listener="#{directLOABackingBean.selectOneScheCheckboxSelect}"></p:ajax>
+					</p:selectBooleanCheckbox>
+				</p:column> 
 
 				<p:column style="width:10%">
 					<f:facet name="header">
