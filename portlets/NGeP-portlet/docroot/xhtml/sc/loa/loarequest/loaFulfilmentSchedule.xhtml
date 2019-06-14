@@ -43,7 +43,7 @@
 						<ac:iconTooltip value="#{lbl['lbl.sc.spec.total.frequency.tooltip']}" />
 					</h:column>
 				</h:panelGrid>
-				<p:dataTable id="frequencySchedule" var="frequency"
+				<p:dataTable id="frequencySchedule" var="frequency" 
 					rowIndexVar="index" widgetVar="freqScheduleWidget"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{lOADetailBackingBean.managedBean.scLoa.scQtSchedules}">
@@ -51,15 +51,17 @@
 					<p:column style="width:2%;">
 						<f:facet name="header">
 							<p:selectBooleanCheckbox
-								value="#{lOADetailBackingBean.managedBean.selectAll}">
+								value="#{lOADetailBackingBean.managedBean.selectAll}" required="true"
+								disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}">
 								<p:ajax partialSubmit="true" process="@this"
 									update=":form:frequencySchedule,:form:deleteButtonId"
 									listener="#{lOADetailBackingBean.selectAllSchedule}" />
 							</p:selectBooleanCheckbox>
 						</f:facet>
 
-						<p:selectBooleanCheckbox
-							value="#{frequency.selected}"
+						<p:selectBooleanCheckbox value="#{frequency.selected}"
+							required="true"
+							disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}"
 							styleClass="myCustomChekBox">
 							<p:ajax event="change"
 								update=":form:frequencySchedule,:form:deleteButtonId"
@@ -73,11 +75,13 @@
 							<h:outputText value="* " styleClass="mandatory" />
 							<h:outputText value="#{lbl['lbl.sc.spec.schedule.no']}" />
 						</f:facet>
-						<p:inputText value="#{frequency.scheduleNo}" required="true" styleClass="ppRightBtn"
+						<p:inputText value="#{frequency.scheduleNo}" required="true"
+							styleClass="ppRightBtn"
+							disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}"
 							maxlength="3" label="#{lbl['lbl.sc.spec.schedule.no']}" size="5"
-							id="scheduleNum" >
+							id="scheduleNum">
 							<p:ajax process="@form" partialSubmit="true"
-								update=":form:frequencySchedule, :form:addButtonId"/>
+								update=":form:frequencySchedule, :form:addButtonId" />
 							<ac:validateNumber integerOnly="true" maxIntegerDigits="3"></ac:validateNumber>
 						</p:inputText>
 					</p:column>
@@ -157,14 +161,16 @@
 				</p:dataTable>
 				<div class="ppRightBtn">
 					<p:commandButton id="addButtonId" value="#{lbl['lbl.btn.add']}"
+						disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}"
 						partialSubmit="true" process="@this" update="frequencySchedule"
 						action="#{lOADetailBackingBean.addScheduleDetails}"
 						oncomplete="freqScheduleWidget.paginator.endLink.click();">
 					</p:commandButton>
 					<p:spacer width="2" />
 					<p:commandButton id="deleteButtonId"
+					 disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}"
 						value="#{lbl['lbl.ct.delete']}" partialSubmit="true"
-						disable= "#{lOADetailBackingBean.managedBean.buttonHideSchActive}"
+						disable="#{lOADetailBackingBean.managedBean.buttonHideSchActive}"
 						process="@this" onsuccess="freqScheduleObj.show()">
 					</p:commandButton>
 				</div>
@@ -222,22 +228,23 @@
 					<ac:paginator for="progressivePayment" />
 					<p:column style="width:2%;">
 						<f:facet name="header">
-							<p:selectBooleanCheckbox
-								value="#{lOADetailBackingBean.managedBean.selectAll}">
-								<p:ajax partialSubmit="true" process="@this"
-									update=":form:progressivePayment,:form:progPayDeleteButtonId"
-									listener="#{lOADetailBackingBean.selectAllSchedule}" />
-							</p:selectBooleanCheckbox>
-						</f:facet>
-
-						<p:selectBooleanCheckbox
-							value="#{payment.selected}"
-							styleClass="myCustomChekBox">
-							<p:ajax event="change"
+						<p:selectBooleanCheckbox required="true"
+							disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}"
+							value="#{lOADetailBackingBean.managedBean.selectAll}">
+							<p:ajax partialSubmit="true" process="@this"
 								update=":form:progressivePayment,:form:progPayDeleteButtonId"
-								listener="#{lOADetailBackingBean.selectOneScheCheckboxSelect}"></p:ajax>
+								listener="#{lOADetailBackingBean.selectAllSchedule}" />
 						</p:selectBooleanCheckbox>
-					</p:column> 
+					</f:facet>
+
+					<p:selectBooleanCheckbox required="true"
+						disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}"
+						value="#{payment.selected}" styleClass="myCustomChekBox">
+						<p:ajax event="change"
+							update=":form:progressivePayment,:form:progPayDeleteButtonId"
+							listener="#{lOADetailBackingBean.selectOneScheCheckboxSelect}"></p:ajax>
+					</p:selectBooleanCheckbox>
+				</p:column> 
 
 					<p:column style="width:10%">
 					<f:facet name="header">
@@ -343,27 +350,37 @@
 					</p:column>
 				</p:dataTable>
 				<div class="ppRightBtn">
-					<p:commandButton id="progPayAddButtonId" value="#{lbl['lbl.btn.add']}"
-					partialSubmit="true" process="@this"  
-					update="progressivePayment" action="#{lOADetailBackingBean.addProgressiveDetails}"
-					 oncomplete="progPaymentWidget.paginator.endLink.click();">
+				<p:commandButton id="progPayAddButtonId"
+					value="#{lbl['lbl.btn.add']}" partialSubmit="true" process="@this"
+					disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}"
+					update="progressivePayment"
+					action="#{lOADetailBackingBean.addProgressiveDetails}"
+					oncomplete="progPaymentWidget.paginator.endLink.click();">
+				</p:commandButton>
+				<p:spacer width="2" />
+				<p:commandButton id="progPayDeleteButtonId"
+					value="#{lbl['lbl.ct.delete']}"
+					disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}"
+					partialSubmit="true"
+					disable="#{lOADetailBackingBean.managedBean.buttonHideSchActive}"
+					process="@this" onsuccess="progPayObj.show()">
+				</p:commandButton>
+			</div>
+			<p:confirmDialog id="progPayObj" widgetVar="progPayObj"
+				message="#{lbl['lbl.msg.confirm.delete']}" severity="alert"
+				closable="true" appendToBody="true"
+				header="#{lbl['lbl.msg.confirm.delete.header']}">
+				<div class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@this"
+						partialSubmit="true" oncomplete="progPayObj.hide();"
+						update=":form:progressivePayment,:form:deleteButtonId"
+						action="#{lOADetailBackingBean.deleteProgPaymentDetails}">
 					</p:commandButton>
-					<p:spacer width="2" />
-					<p:commandButton id="progPayDeleteButtonId" value="#{lbl['lbl.ct.delete']}" partialSubmit="true" 
-					disable= "#{lOADetailBackingBean.managedBean.buttonHideSchActive}"
-					process="@this"  onsuccess="progPayObj.show()">
-					</p:commandButton>
+					<p:commandButton value="#{lbl['lbl.btn.no']}"
+						onclick="progPayObj.hide();" type="button" />
 				</div>
-				<p:confirmDialog id="progPayObj" widgetVar="progPayObj" message="#{lbl['lbl.msg.confirm.delete']}" 	
-                           severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
-                    <div class="ppRightBtn">
-			               <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this" partialSubmit="true"  oncomplete="progPayObj.hide();"
-			                   update=":form:progressivePayment,:form:deleteButtonId" action="#{lOADetailBackingBean.deleteProgPaymentDetails}" >
-			               </p:commandButton>
-				           <p:commandButton value="#{lbl['lbl.btn.no']}" onclick="progPayObj.hide();" type="button" />
-		            </div>
-               </p:confirmDialog>
-				<p:spacer height="20"></p:spacer>
+			</p:confirmDialog>
+			<p:spacer height="20"></p:spacer>
 			</p:panel>
 	</h:panelGroup>
 </ui:composition>
