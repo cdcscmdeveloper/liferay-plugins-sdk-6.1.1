@@ -8,22 +8,129 @@
 	        width:135px;
 	     }
 	</style>
+	<p:panel id="searchReceivingAddressDtls">
+
+
+		<table>
+			<tr>
+				<!-- Address Name -->
+				<td><p:outputLabel value="#{lbl['lbl.pm.address.name']}" /></td>
+				<td><p:inputText
+						value="#{organisationBackingBean.managedBean.addressName}"
+						style="width:225px" /></td>
+			</tr>
+			
+			<!-- State -->
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.pm.state']}" /></td>
+				<td><p:selectOneMenu id="searchState"
+						style="width: 225px;"
+						value="#{organisationBackingBean.managedBean.stateId}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
+						<f:selectItems var="state"
+							value="#{organisationBackingBean.managedBean.stateList}"
+							itemLabel="#{state.stateName}" itemValue="#{state.stateId}"></f:selectItems>
+						<p:ajax event="change"
+							listener="#{organisationBackingBean.retrieveDivisionList}"
+							update="searchDivison,searchDistrict,searchCity"></p:ajax>
+					</p:selectOneMenu></td>
+
+			</tr>
+			<!-- Division -->
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.pm.division']}" /></td>
+				<td><p:selectOneMenu id="searchDivison"
+						style="width: 225px;"
+						value="#{organisationBackingBean.managedBean.divisionId}"
+						disabled="#{organisationBackingBean.managedBean.displayDivision}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
+						<f:selectItems var="division"
+							value="#{organisationBackingBean.managedBean.divisionList}"
+							itemLabel="#{division.divisionName}"
+							itemValue="#{division.divisionId}"></f:selectItems>
+						<p:ajax event="change"
+							listener="#{organisationBackingBean.retrieveDistrictList}"
+							update="searchDistrict,searchCity" />
+					</p:selectOneMenu></td>
+
+			</tr>
+			<!-- District -->
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.pm.district']}" /></td>
+				<td><p:selectOneMenu id="searchDistrict"
+						style="width: 225px;"
+						value="#{organisationBackingBean.managedBean.districtId}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
+						<f:selectItems var="district"
+							value="#{organisationBackingBean.managedBean.districtList}"
+							itemLabel="#{district.districtName}"
+							itemValue="#{district.districtId}"></f:selectItems>
+						<p:ajax event="change"
+							listener="#{organisationBackingBean.retrieveCityList}"
+							update="searchCity"></p:ajax>
+					</p:selectOneMenu></td>
+			</tr>
+			<!-- City -->
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.pm.city']}" /></td>
+				<td><p:selectOneMenu id="searchCity"
+						style="width: 225px;"
+						value="#{organisationBackingBean.managedBean.cityId}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
+						<f:selectItems var="city"
+							value="#{organisationBackingBean.managedBean.cityList}"
+							itemLabel="#{city.cityName}" itemValue="#{city.cityId}"></f:selectItems>
+					</p:selectOneMenu></td>
+			</tr>
+			<!-- Status -->
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.rpt.status']}" /></td>	
+				<td><p:selectOneMenu
+						value="#{organisationBackingBean.managedBean.status}"
+						style="width: 225px;">
+						
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"/>
+						<f:selectItem itemLabel="#{lbl['lbl.pm.status.active']}" itemValue="1" />
+						<f:selectItem itemLabel="#{lbl['lbl.pm.status.inactive']}" itemValue="0" />
+					</p:selectOneMenu></td>
+			</tr>
+		</table>
+
+		<p:spacer height="7"></p:spacer>
+		
+		<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.search']}"
+					styleClass="BtnSpacing" process="@this,searchReceivingAddressDtls" partialSubmit="true" update="deliveryAddressId"
+					action="#{organisationBackingBean.searchAddressType}" />
+				<p:commandButton value="#{lbl['lbl.btn.reset']}" resetValues="true"
+				    first="#{organisationBackingBean.managedBean.resetTablerow}" onstart="deliveryAddres.getPaginator().setPage(0)"
+					partialSubmit="true" process="@this" update="deliveryAddressId,searchReceivingAddressDtls"
+					styleClass="BtnSpacing" action="#{organisationBackingBean.resetAddressType}"
+					 />
+			</div>
+			
+			</p:panel>
+	
 	<p:panel>
+	
 		<p:dataTable id="deliveryAddressId"
-			value="#{organisationBackingBean.managedBean.addressTypesList}" widgetVar="deliveryAddres"
+			value="#{organisationBackingBean.managedBean.addressTypesList}" widgetVar="deliveryAddres" rows="10"
 			var="address" rowIndexVar="index" rowKey="#{address}" selection="#{organisationBackingBean.managedBean.selectedAddressTypes}">
 			<ac:paginator for="deliveryAddressId" />
 			<p:ajax event="rowSelect" partialSubmit="true" process="@this"
-				update=":form:addressTabs:delAddressBtnId,:form:addressTabs:deliveryAddressId"  
+				update=":form:addressTabs:delAddressBtnId"  
 				listener="#{organisationBackingBean.onSelectDelAddressRow()}"/>
 			<p:ajax event="rowUnselect" partialSubmit="true" process="@this"
-				update=":form:addressTabs:delAddressBtnId,:form:addressTabs:deliveryAddressId"  
+				update=":form:addressTabs:delAddressBtnId"  
 				listener="#{organisationBackingBean.onSelectDelAddressRow()}"/>
 			<p:ajax event="rowSelectCheckbox" process="@this"
-				update=":form:addressTabs:delAddressBtnId,:form:addressTabs:deliveryAddressId"  
+				update=":form:addressTabs:delAddressBtnId"  
 				listener="#{organisationBackingBean.onSelectDelAddressRow()}" />
 			<p:ajax event="rowUnselectCheckbox" process="@this"
-				update=":form:addressTabs:delAddressBtnId,:form:addressTabs:deliveryAddressId"  
+				update=":form:addressTabs:delAddressBtnId"  
 				listener="#{organisationBackingBean.onSelectDelAddressRow()}" />				
 			<p:column selectionMode="multiple" disabledSelection="#{!address.brandNew}"
 				 style="width:2%" />
@@ -35,7 +142,7 @@
 				<p:selectOneMenu label="#{lbl['lbl.pm.financialorg.status']}" id="deliveryAddressStatusId" 
 					disabled="#{address.brandNew}" style="width:135px;"	value="#{address.recordStatusFlg}" required="true">
 					<p:ajax event="change" listener="#{organisationBackingBean.onChangeAddressStatus(address, index)}"
-						update="deliveryAddressStatusId" partialSubmit="true" process="@this"/>
+						update="deliveryAddressId" partialSubmit="true" process="@this"/>
 					<f:selectItems value="#{organisationBackingBean.getStatusOptions()}" />
 				</p:selectOneMenu>				
 				<p:message for="deliveryAddressStatusId" id="deliveryAddressStatusIdMsg" display="icon" />
@@ -65,6 +172,9 @@
 					update="@([id$=deliveryAddressDialog])"	>
 					<p:graphicImage value="/css/images/design/edit.png" />
 					<p:resetInput target=":form:addressTabs:deliveryAddressPanel" />
+				</p:commandLink>
+				<p:commandLink rendered="#{organisationBackingBean.showTerminationIcon(address)}">
+				<p:graphicImage value="/css/images/design/ico-termination.png" styleClass="ui-icon-termination"/>
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
@@ -98,20 +208,26 @@
 		<p:outputPanel id="deliveryAddressPanel">
 			<p:messages id="deliveryAddressMessages" showDetail="true"
 				autoUpdate="true" closable="true" showSummary="false" />
-			<table style="width: 100%">
+					<table style="width: 100%">
+			<!-- addressnameTermination -->
 			<tr>
 					<td style="width:15%;"><p:outputLabel value="#{lbl['lbl.pm.address.name']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
-					<td style="width:35%;"><p:inputText id="addressname"
+							value="*" styleClass="mandatory" />
+							</td>
+					<td style="width:35%;">
+					
+					<p:inputText id="addressname"
 							required="#{!empty param['dialogValidation']}"
 							label="#{lbl['lbl.pm.address.name']}" maxlength="100"
 							value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.addressName}"
 							size="43" /></td>
-					<td style="width:15%;"><p:message for="addressname" id="addressnameMsg"
-							display="icon" /></td>
+					<td style="width:15%;"><p:message for="addressname" id="addressnameMsg" display="icon" />
+					</td>
 
 					<td style="width:35%;"></td>
 				</tr>
+				
+				<!-- country -->
 			<tr>
 				<td>
 					<p:outputLabel
@@ -128,12 +244,15 @@
 						<f:selectItems value="#{organisationBackingBean.getCountryList()}"
 							var="country" itemLabel="#{country.countryName}" itemValue="#{country.countryId}" />
 					</p:selectOneMenu><p:message for="dCountry" id="dCountryMsg" display="icon" />
-				</td>				
+				</td>	
+				
+					<!-- stateTermination -->		
 				<td>
 					<p:outputLabel
 						value="#{lbl['lbl.pm.address.state']}" /> 
 					<p:outputLabel
 						value="*" styleClass="mandatory" />
+
 				</td>
 				<td>
 					<p:selectOneMenu id="dState" required="#{!empty param['dialogValidation']}"
@@ -148,19 +267,25 @@
 						  itemValue="#{state.stateId}"/>
 						<p:ajax event="change" update="olDelDivisionMandatory,dDistrict, dDivision, dCity" 
 						 	listener="#{organisationBackingBean.retrieveDeliveryPmState(organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmState)}"/>
-					</p:selectOneMenu><p:message for="dState" id="dStateMsg" display="icon" /></td>			
+					</p:selectOneMenu><p:message for="dState" id="dStateMsg" display="icon" />
+					</td>			
 			</tr>
+			<!-- AddressTermination -->
 			<tr>
 				<td>
 					<p:outputLabel
 						value="#{lbl['lbl.pm.address.address']}" /> 
 					<p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText id="daddress1" 
+				<td>
+				<p:inputText id="daddress1" 
 						label="#{lbl['lbl.pm.address.address']}" maxlength="100"
 						required="#{!empty param['dialogValidation']}"
 						value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.address1}"
-						size="43" /><p:message for="daddress1" id="daddress1Msg" display="icon" /></td>				
+						size="43" /><p:message for="daddress1" id="daddress1Msg" display="icon" />
+						</td>
+						
+						<!-- Division -->				
 				<td>
 					<p:outputLabel value="#{lbl['lbl.pm.address.division']}" /> 
 					<p:outputPanel id="olDelDivisionMandatory">
@@ -191,6 +316,9 @@
 				<td><p:inputText
 						value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.address2}"
 						size="43" maxlength="100" /></td>
+						
+						<!-- DistrictTermination -->
+						
 				<td><p:outputLabel value="#{lbl['lbl.pm.address.district']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td>
@@ -204,18 +332,24 @@
 							value="#{organisationBackingBean.getDistrictList(organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmState,organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmDivision)}"
 							var="district" itemLabel="#{district.districtName}"
 							itemValue="#{district.districtId}"/>
-						<p:ajax event="change" update="dDistrict,dCity" listener="#{organisationBackingBean.retrieveDeliveryPmDistrict(organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmDistrict)}" />
+						<p:ajax event="change" update="dCity" listener="#{organisationBackingBean.retrieveDeliveryPmDistrict(organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmDistrict)}" />
 					</p:selectOneMenu><p:message for="dDistrict" id="dDistrictMsg"
-						display="icon" /></td>
+						display="icon" />
+												
+						</td>
 			</tr>
 			<tr>
-				<td></td>
+				<td></td>	
 				<td><p:inputText maxlength="100"
 						value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.address3}"
-						size="43" /></td>				
+						size="43" /></td>	
+						
+						<!-- cityTermination -->
+									
 				<td><p:outputLabel value="#{lbl['lbl.pm.address.city']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu id="dCity" required="#{!empty param['dialogValidation']}"
+				<td>
+				<p:selectOneMenu id="dCity" required="#{!empty param['dialogValidation']}"
 						style="width: 225px;"
 						label="#{lbl['lbl.pm.address.city']}"
 						value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmCity.cityId}">
@@ -223,27 +357,36 @@
 							itemValue="#{null}" />
 						<f:selectItems 
 							value="#{organisationBackingBean.getCityList(organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmDistrict.districtId)}"
-							var="city" itemLabel="#{city.cityName}"
+							var="city" itemLabel="#{city.cityName}"           
 							itemValue="#{city.cityId}"/>
-						<p:ajax event="change" update="dCity" listener="#{organisationBackingBean.retrieveDeliveryPmCity(organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmCity)}" />
-					</p:selectOneMenu><p:message id="dCityMsg" for="dCity" display="icon" /></td>
+						<p:ajax event="change"  listener="#{organisationBackingBean.retrieveDeliveryPmCity(organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmCity)}" />
+					</p:selectOneMenu><p:message id="dCityMsg" for="dCity" display="icon" />
+					</td>
 			</tr>
+			
+			<!-- postcodeTermination -->
 			<tr>
 				<td></td>
 				<td></td>				
 				<td><p:outputLabel value="#{lbl['lbl.pm.address.postcode']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:inputText id="dpostCode" required="#{!empty param['dialogValidation']}"
+				<td>
+				<p:inputText id="dpostCode" required="#{!empty param['dialogValidation']}"
 						label="#{lbl['lbl.pm.address.postcode']}" maxlength="5" size="10"
 						value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.postcode}" 
 						validatorMessage="#{lbl['lbl.pm.address.postcode']} - #{lbl['lbl.pm.profiles.invalidNo']}" >
 						<f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText>
-						<p:message for="dpostCode" id="dpostCodeMsg" display="icon" /></td>
+						<p:message for="dpostCode" id="dpostCodeMsg" display="icon" />
+						</td>
 			</tr>
+			
+			<!-- telTermination -->
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.pm.address.tel']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td colspan="3"><ac:phone id="dtelNo" required="#{!empty param['dialogValidation']}" isMobile="false"
+						value="*" styleClass="mandatory" />				
+						</td>
+				<td colspan="3">
+				<ac:phone id="dtelNo" required="#{!empty param['dialogValidation']}" isMobile="false"
 						label="#{lbl['lbl.pm.address.tel']}" 
 						countryCode="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.phoneCountry}"
 						areaCode="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.phoneArea}"
@@ -252,15 +395,19 @@
 						<p:message for="dtelNo" id="dtelNoMsg" display="icon" />
 				</td>
 			</tr>
+			
+			<!-- faxTermination -->
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.pm.address.fax']}" /></td>
-				<td colspan="3"><ac:phone id="dfaxNo" isMobile="false"
+				<td><p:outputLabel value="#{lbl['lbl.pm.address.fax']}" />			
+				</td>
+				<td colspan="3">
+
+				<ac:phone id="dfaxNo" isMobile="false"
 						label="#{lbl['lbl.pm.address.fax']}"
 						countryCode="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.faxCountry}"
 						areaCode="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.faxArea}"
 						number="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.faxNo}"
 						validatorMessage="#{lbl['lbl.pm.address.fax']} - #{lbl['lbl.pm.profiles.invalidNo']}" />
-						<p:message for="dfaxNo" id="dfaxNoMsg" display="icon" />
 				</td>
 			</tr>
 			</table>
