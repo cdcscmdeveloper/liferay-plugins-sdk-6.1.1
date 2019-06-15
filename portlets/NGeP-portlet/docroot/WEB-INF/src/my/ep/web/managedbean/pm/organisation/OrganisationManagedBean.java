@@ -16,9 +16,13 @@ import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
+import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmContact;
+import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
+import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -117,6 +121,34 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	private boolean notFirstRun;
 	private Long selectedZoneId;
 	private Long sstSupplierId;
+	private String addressName;
+	private long stateId;
+	private long divisionId;
+	private long districtId;
+	private long cityId;
+	private PmState state = new PmState();
+	private PmDivision division = new PmDivision();
+	private PmDistrict district = new PmDistrict();
+	private PmCity city = new PmCity();
+	private int resetTablerow;
+	private Long status;
+
+	
+	
+	private List<PmState> stateList;
+	private List<PmDistrict> districtList;
+	private List<PmCity> cityList;
+	private List<PmDivision> divisionList;
+	private boolean displayDivision=true;
+	
+	private Long selectedAddrStateId;
+	private String selectedAddrStateName;
+	private Long selectedAddrDivisionId;
+	private String selectedAddrDivisionName;
+	private Long selectedAddrDistrictId;
+	private String selectedAddrDistrictName;
+	private Long selectedAddrCityId;
+	private String selectedAddrCityName;
 
 	public OrganisationManagedBean() {
 
@@ -427,6 +459,7 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	 */
 	public List<PmAddressType> getAddressTypesList() {
 		return addressTypesList;
+		
 	}
 
 	/**
@@ -967,4 +1000,255 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	public void setServtaxregEndDate(Date servtaxregEndDate) {
 		this.servtaxregEndDate = servtaxregEndDate;
 	}
+
+	public String getAddressName() {
+		return addressName;
+	}
+
+	public void setAddressName(String addressName) {
+		this.addressName = addressName;
+	}
+//
+//	public Long getStateId() {
+//		return stateId;
+//	}
+//
+//	public void setStateId(Long stateId) {
+//		this.stateId = stateId;
+//	}
+
+	public long getStateId() {
+		return stateId;
+	}
+
+	public void setStateId(long stateId) {
+		this.stateId = stateId;
+	}
+
+	public long getDivisionId() {
+		return divisionId;
+	}
+
+	public void setDivisionId(long divisionId) {
+		this.divisionId = divisionId;
+	}
+
+	public long getDistrictId() {
+		return districtId;
+	}
+
+	public void setDistrictId(long districtId) {
+		this.districtId = districtId;
+	}
+
+	public long getCityId() {
+		return cityId;
+	}
+
+	public void setCityId(long cityId) {
+		this.cityId = cityId;
+	}
+	public int getResetTablerow() {
+		return resetTablerow;
+	}
+
+	public void setResetTablerow(int resetTablerow) {
+		this.resetTablerow = resetTablerow;
+	}
+
+	public PmState getState() {
+		return state;
+	}
+
+	public void setState(PmState state) {
+		this.state = state;
+	}
+
+	public PmDivision getDivision() {
+		return division;
+	}
+
+	public void setDivision(PmDivision division) {
+		this.division = division;
+	}
+
+	public PmDistrict getDistrict() {
+		return district;
+	}
+
+	public void setDistrict(PmDistrict district) {
+		this.district = district;
+	}
+
+	public PmCity getCity() {
+		return city;
+	}
+
+	public void setCity(PmCity city) {
+		this.city = city;
+	}
+
+	
+	public boolean isDisplayDivision() {
+		return displayDivision;
+	}
+
+	public void setDisplayDivision(boolean displayDivision) {
+		this.displayDivision = displayDivision;
+	}
+
+	public List<PmState> getStateList() {
+		return stateList;
+	}
+
+	public void setStateList(List<PmState> stateList) {
+		this.stateList = stateList;
+	}
+
+	public List<PmDistrict> getDistrictList() {
+		return districtList;
+	}
+
+	public void setDistrictList(List<PmDistrict> districtList) {
+		this.districtList = districtList;
+	}
+
+	public List<PmCity> getCityList() {
+		return cityList;
+	}
+
+	public void setCityList(List<PmCity> cityList) {
+		this.cityList = cityList;
+	}
+
+	public List<PmDivision> getDivisionList() {
+		return divisionList;
+	}
+
+	public void setDivisionList(List<PmDivision> divisionList) {
+		this.divisionList = divisionList;
+	}
+
+	/**
+	 * @return the selectedAddrStateId
+	 */
+	public Long getSelectedAddrStateId() {
+		return selectedAddrStateId;
+	}
+
+	/**
+	 * @param selectedAddrStateId the selectedAddrStateId to set
+	 */
+	public void setSelectedAddrStateId(Long selectedAddrStateId) {
+		this.selectedAddrStateId = selectedAddrStateId;
+	}
+
+	/**
+	 * @return the selectedAddrStateName
+	 */
+	public String getSelectedAddrStateName() {
+		return selectedAddrStateName;
+	}
+
+	/**
+	 * @param selectedAddrStateName the selectedAddrStateName to set
+	 */
+	public void setSelectedAddrStateName(String selectedAddrStateName) {
+		this.selectedAddrStateName = selectedAddrStateName;
+	}
+
+	/**
+	 * @return the selectedAddrDivisionId
+	 */
+	public Long getSelectedAddrDivisionId() {
+		return selectedAddrDivisionId;
+	}
+
+	/**
+	 * @param selectedAddrDivisionId the selectedAddrDivisionId to set
+	 */
+	public void setSelectedAddrDivisionId(Long selectedAddrDivisionId) {
+		this.selectedAddrDivisionId = selectedAddrDivisionId;
+	}
+
+	/**
+	 * @return the selectedAddrDivisionName
+	 */
+	public String getSelectedAddrDivisionName() {
+		return selectedAddrDivisionName;
+	}
+
+	/**
+	 * @param selectedAddrDivisionName the selectedAddrDivisionName to set
+	 */
+	public void setSelectedAddrDivisionName(String selectedAddrDivisionName) {
+		this.selectedAddrDivisionName = selectedAddrDivisionName;
+	}
+
+	/**
+	 * @return the selectedAddrDistrictId
+	 */
+	public Long getSelectedAddrDistrictId() {
+		return selectedAddrDistrictId;
+	}
+
+	/**
+	 * @param selectedAddrDistrictId the selectedAddrDistrictId to set
+	 */
+	public void setSelectedAddrDistrictId(Long selectedAddrDistrictId) {
+		this.selectedAddrDistrictId = selectedAddrDistrictId;
+	}
+
+	/**
+	 * @return the selectedAddrDistrictName
+	 */
+	public String getSelectedAddrDistrictName() {
+		return selectedAddrDistrictName;
+	}
+
+	/**
+	 * @param selectedAddrDistrictName the selectedAddrDistrictName to set
+	 */
+	public void setSelectedAddrDistrictName(String selectedAddrDistrictName) {
+		this.selectedAddrDistrictName = selectedAddrDistrictName;
+	}
+
+	/**
+	 * @return the selectedAddrCityId
+	 */
+	public Long getSelectedAddrCityId() {
+		return selectedAddrCityId;
+	}
+
+	/**
+	 * @param selectedAddrCityId the selectedAddrCityId to set
+	 */
+	public void setSelectedAddrCityId(Long selectedAddrCityId) {
+		this.selectedAddrCityId = selectedAddrCityId;
+	}
+
+	/**
+	 * @return the selectedAddrCityName
+	 */
+	public String getSelectedAddrCityName() {
+		return selectedAddrCityName;
+	}
+
+	/**
+	 * @param selectedAddrCityName the selectedAddrCityName to set
+	 */
+	public void setSelectedAddrCityName(String selectedAddrCityName) {
+		this.selectedAddrCityName = selectedAddrCityName;
+	}
+
+	public Long getStatus() {
+		return status;
+	}
+
+	public void setStatus(Long status) {
+		this.status = status;
+	}
+
+	
+	
 }
