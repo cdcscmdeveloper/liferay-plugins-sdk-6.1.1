@@ -49,6 +49,7 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	private boolean isRemarkRequired;
 	private String remarks;
 	private Map<String,String> reassigneeList = new LinkedHashMap<String,String>();
+	private List<String> selectedReassignee;
 	
 	public TaskReassignmentManagedBean(){}
 
@@ -339,5 +340,20 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	public Map<String,String> getReassigneeList() {
 		return reassigneeList;
 	}
+	
+	/**
+	 * @param selectedReassignee the selectedReassignee to set
+	 */
+	public void setSelectedReassignee(List<String> selectedReassignee) {
+		this.selectedReassignee = selectedReassignee;
+	}
+	
+	/**
+	 * @return the selectedReassignee
+	 */
+	public List<String> getSelectedReassignee() {
+		return selectedReassignee;
+	}
+	
 	
 }

@@ -17,7 +17,8 @@
 				 style="width:100%;">
 				<ac:paginator for="dtTaskAssigneeResult"></ac:paginator>
 				<p:column headerText="#{lbl['lbl.pm.ta.username']}" width="50%;">
-					<h:selectManyListbox 
+					<h:selectManyListbox
+						value="#{taskReassignmentBackingBean.managedBean.selectedReassignee}"
 						style="overflow-y: scroll; 
 						height:100px; 
 						width:470px;
@@ -28,7 +29,7 @@
     								   itemValue="#{reassignee.key}" 
     								   itemLabel="#{reassignee.key} #{reassignee.value}" />
                         <f:ajax event="change"
-           						listener="#{taskReassignmentBackingBean.searchTaskAssign}"
+           						listener="#{taskReassignmentBackingBean.selectReassignee}"
            						render="@form" />
             		</h:selectManyListbox>
             		<ac:iconTooltip value="#{lbl['lbl.pm.ta.reassignee.tooltips']}" />
