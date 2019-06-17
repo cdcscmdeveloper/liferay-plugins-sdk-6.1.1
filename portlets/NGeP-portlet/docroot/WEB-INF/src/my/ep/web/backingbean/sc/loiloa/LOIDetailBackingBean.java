@@ -4879,7 +4879,7 @@ public class LOIDetailBackingBean extends
 							recommendDtl.getLoiAwarded())) {
 						Long recommendedSupplierId = recommendDtl.getSupplier()
 								.getSupplierId();
-						if (awardedSupplierId == recommendedSupplierId) {
+						if (awardedSupplierId.equals(recommendedSupplierId)) { // suspect this the issue for Bug #25951
 							recommendDtl.setRecordStatus(true);
 							recommendDtl.setRecordStatusFlg(
 									DbValueConst.RECORD_STATUS_ACTIVE);
