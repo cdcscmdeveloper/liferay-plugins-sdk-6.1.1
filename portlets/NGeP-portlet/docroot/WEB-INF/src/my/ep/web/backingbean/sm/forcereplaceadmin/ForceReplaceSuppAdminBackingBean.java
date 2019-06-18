@@ -37,7 +37,6 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.forcereplaceadmin.ForceReplaceSuppAdminManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.pm.helper.ParameterHelper;
-import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmRuleHelper;
@@ -92,6 +91,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 				.getEstablishDate());
 		reqDTO.setCompanyName(getManagedBean().getReactivateBasic()
 				.getAgencyName());
+		reqDTO.setSuppType(getManagedBean().getReactivateBasic().getSuppType());
 
 		if (getManagedBean().getAccType().equals(
 				SupplierManagementConst.ACC_GOVT_SELLER)) {
@@ -687,7 +687,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 
 		getManagedBean().setPermAddr(perm);
 		getManagedBean().setMailAddr(mail);
-		
+
 	}
 
 	/**

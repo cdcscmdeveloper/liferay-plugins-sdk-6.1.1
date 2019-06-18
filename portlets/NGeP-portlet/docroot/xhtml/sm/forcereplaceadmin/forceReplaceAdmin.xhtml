@@ -49,6 +49,20 @@
 				</tr>
 			</p:outputPanel>
 			
+			<p:outputPanel rendered="#{forceReplaceSuppAdminBackingBean.managedBean.accType eq SupplierManagementConst.ACC_MOF}" >
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.rpt.supplierType']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><p:selectOneMenu required="true" id="suppTypeId" label="#{lbl['lbl.rpt.supplierType']}"
+							value="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.suppType}" >
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItem itemLabel="#{lbl['lbl.sm.contractor']}" itemValue="K" />
+							<f:selectItem itemLabel="#{lbl['lbl.sm.consultant']}" itemValue="J"/>
+						</p:selectOneMenu>
+						<p:message id="suppTypeIdMsg" for="suppTypeId" display="icon" />
+					</td>
+				</tr>
+			</p:outputPanel>
+			
 			<p:outputPanel rendered="#{forceReplaceSuppAdminBackingBean.managedBean.accType eq SupplierManagementConst.ACC_BASIC or  
 				forceReplaceSuppAdminBackingBean.managedBean.accType eq SupplierManagementConst.ACC_MOF}">
 				<tr>
