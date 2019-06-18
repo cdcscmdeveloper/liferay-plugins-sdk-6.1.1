@@ -94,7 +94,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			<p:column>
 				<!-- [SIR#12802] - start -->				
 				<p:selectBooleanCheckbox 
-					disabled="#{!(ppItem.brandNew ? 'true' : (pPlanBackingBean.managedBean.selectedPlan.status.statusId eq ProcurementPlanConst.pppApproved ? 'false' : pPlanBackingBean.managedBean.modeEditable))}" 
+					disabled="#{!(ppItem.brandNew ? ppItem.brandNew : ppItem.selectable)}" 
 					value="#{ppItem.deleted}"/>
 				<!-- [SIR#12802] - end -->
 			</p:column>
