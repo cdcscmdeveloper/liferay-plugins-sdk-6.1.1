@@ -4164,8 +4164,9 @@ public class SmCommonUtil {
 					.equalsIgnoreCase(
 							my.ep.constant.sm.SupplierManagementConst.MYIDENTITY_SEVERITY_SUCC)) {
 				switch (resDTO.getStatusCode()) {
-				case "70019":
-					throw new EpException(MessageConst.ERROR_MYIDENTITY_70019);
+				// #21946: MyIdentity bypass
+				// case "70019":
+				// throw new EpException(MessageConst.ERROR_MYIDENTITY_70019);
 				case "70020":
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70020);
 				case "70031":
@@ -4225,6 +4226,77 @@ public class SmCommonUtil {
 			}
 		}
 	}
+	
+	// #21946: MyIdentity bypass start
+	public void verifyPersonnelWithMyIdentity(SmPersonnel pers, String postCode, String type, String supplierType) {
+		MyIdentityReqDTO reqDTO = new MyIdentityReqDTO();
+		IMyIdentitySO reqSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IMyIdentitySO.class);
+
+		if (type != null && type.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN)) {
+			reqDTO.setType(my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN);
+		} else {
+			reqDTO.setType(my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_ONLINE);
+		}
+		reqDTO.setNewIcNo(pers.getIdentificationNo());
+		reqDTO.setPostCode(postCode);
+		reqDTO.setName(pers.getName().trim());
+
+		try {
+			MyIdentityResDTO resDTO = reqSO.myIdentityVerification(reqDTO);
+			log.info("verifyPersonnelWithMyIdentity >>>>" + resDTO.getSeverity() + ">>code>>" + resDTO.getStatusCode());
+			log.info("resDTO.getStatusCode() >>>>>>>>>>>" + resDTO.getStatusCode());
+			log.info("resDTO.getResidentStatus() >>>>>>>" + resDTO.getResidentStatus());
+
+			if (!StringUtils.isBlank(resDTO.getStatusCode())) {
+				pers.setIdentityResponseCode(resDTO.getStatusCode());
+				pers.setIdentityResidentStatus(resDTO.getResidentStatus());
+			}
+			log.info("**** My identiy output is *****" + resDTO.getStatusCode());
+			if (!resDTO.getSeverity().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.MYIDENTITY_SEVERITY_SUCC)) {
+				switch (resDTO.getStatusCode()) {
+				case "70020":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70020);
+				case "70031":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70031);
+				case "70032":
+					if (supplierType != null && supplierType.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
+						throw new EpException(MessageConst.ERROR_MYIDENTITY_70032_G2G);
+					} else {
+						throw new EpException(MessageConst.ERROR_MYIDENTITY_70032);
+					}
+				case "70004":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70004);
+				case "70005":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70004);
+				case "70039":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70039);
+				case "70040":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70040);
+				}
+			} else {
+				if (resDTO.getStatusCode().equals("70018")) {
+					if (StringUtils.isNotBlank(resDTO.getResidentStatus())
+							&& !resDTO.getResidentStatus().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_WARGA_1)
+							&& !resDTO.getResidentStatus().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_WARGA_2)) {
+						if (supplierType != null && supplierType.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
+							throw new EpException(MessageConst.ERROR_MYIDENTITY_70032_G2G);
+						} else {
+							throw new EpException(MessageConst.ERROR_MYIDENTITY_70032);
+						}
+					}
+				}
+			}
+		} catch (Exception ex) {
+
+			String message = MessageUtils.getMessage(ex.getMessage(), MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
+			if (message != null) {
+				throw new EpException(message + "(" + ex.getMessage().toString() + ")");
+			} else {
+				throw new EpException(ex.getMessage() + "(ERR-729999)");
+			}
+		}
+	}
+	// #21946: MyIdentity bypass end
 
 	/**
 	 * Set default personnel identification type based on selected nationality
