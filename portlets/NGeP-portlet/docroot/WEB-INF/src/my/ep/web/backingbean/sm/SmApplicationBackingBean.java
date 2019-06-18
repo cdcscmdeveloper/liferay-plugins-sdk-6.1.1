@@ -7535,7 +7535,7 @@ public class SmApplicationBackingBean extends
 				}
 			}
 		} finally {
-
+			initNonMandatoryAndMandatoryDocs();
 		}
 	}
 
