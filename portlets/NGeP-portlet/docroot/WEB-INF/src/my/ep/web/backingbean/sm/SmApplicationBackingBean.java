@@ -7535,7 +7535,7 @@ public class SmApplicationBackingBean extends
 				}
 			}
 		} finally {
-
+			initNonMandatoryAndMandatoryDocs();
 		}
 	}
 
@@ -9254,6 +9254,8 @@ public class SmApplicationBackingBean extends
 		SmApplSupportDoc mainDoc = getManagedBean().getSupportDoc();
 		mainDoc.getSmApplDocFiles().get(0).setFileName(StringUtils.EMPTY);
 		mainDoc.getSmApplDocFiles().get(0).setFilePath(StringUtils.EMPTY);
+		mainDoc.setSmApplDocFiles(null);
+		
 	}
 
 	/**
