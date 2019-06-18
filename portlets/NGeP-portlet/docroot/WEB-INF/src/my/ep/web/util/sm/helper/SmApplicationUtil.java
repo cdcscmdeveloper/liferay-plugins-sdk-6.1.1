@@ -3941,6 +3941,22 @@ public class SmApplicationUtil {
 					}
 				}
 			}
+			// 11231: start - check maximum limit 30 categories per supplier
+			if (applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)) {
+				int maxCatSize = SmRuleHelper.getInstance().getMaxCategoryAllowed();
+				List<SmSupplierCategory> suppCategory = new ArrayList<>();
+				for (SmSupplierCategory cat : smSupplier.getSmAppl().getSmSupplierCategories()) {
+					if (DbValueConst.RECORD_STATUS_ACTIVE == cat.getRecordStatusFlg()) {
+						suppCategory.add(cat);
+					}
+				}
+				log.info("total category:" + suppCategory.size());
+				if (suppCategory.size() >= maxCatSize) {
+					throw new EpException(MessageConst.ERROR_722675);
+				}
+			}
+			// 11231: end
+
 		}
 		return result;
 	}
