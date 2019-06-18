@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -583,24 +584,43 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							this.getManagedBean().setPpWorkflowStatus(ppWorkflowStatus);
 						}
 						*/
-					}else{
+					} else {
 						this.getManagedBean().setPpWorkflowStatus(ppPlan.getCurrentStatus());
-						//check ppWorkflowStatus contains approved
+						//check ppWorkflowStatus contains approved status
 						List <PpWorkflowStatus> ppWorkflowStatuses = retrievePpApprovedStatus(ppPlan);
 						if(ppWorkflowStatuses!=null && !ppWorkflowStatuses.isEmpty()){
 							this.getManagedBean().setApprovedPlan(true);
+							
+							log.info("[#12802] Retrieve plan status history for approval - Start");
+							log.info("[#12802] workflowStatusList size: " + ppWorkflowStatuses.size());
+							
+							List<Timestamp> approvedDtLst = null;
+							
+							if(ppWorkflowStatuses.size() == 1) {
+								ppPlan.setLastApprovedDt(ppWorkflowStatuses.get(0).getCreatedDate());
+							} else {
+								approvedDtLst = new ArrayList<Timestamp>();
+								for(PpWorkflowStatus ppworkflowstatus : ppWorkflowStatuses) {
+									//log.info("WorkflowstatusId: " + ppworkflowstatus.getWorkflowStatusId() + ", created on: " + ppworkflowstatus.getCreatedDate());
+									approvedDtLst.add(ppworkflowstatus.getCreatedDate());
+								}
+								//get the last approved date
+								ppPlan.setLastApprovedDt(Collections.max(approvedDtLst));
+							}
+							log.info("[#12802] last approved date was: " + ppPlan.getLastApprovedDt());
+							log.info("[#12802] Retrieve plan status history for approval - End");
 						}
 					}
 					
 					//[SIR#12802] - start
-					//Remove item from list for status: 9 - Deleted
+					//Remove item from list for status: 2 - Cancelled
 					if(ParameterConst.PLAN_TYPE_EXPENDITURE.equalsIgnoreCase(ppPlan.getPlanType().getParameterCode())){
 						//log.info("[SIR#12802] - Plan 'E': item list size BEFORE: " + ppPlan.getPpExpenditureItems().size());
 						Iterator<PpExpenditureItem> itr = ppPlan.getPpExpenditureItems().iterator(); 
 				        while (itr.hasNext()) { 
 				        	PpExpenditureItem expenditureItem = (PpExpenditureItem)itr.next(); 
-				            if (ParameterConst.RECORD_STATUS_DELETED.equals(expenditureItem.getRecordStatusFlg().toString())) { 
-				            	//log.info("[SIR#12802] - item status is 9, remove from list!");
+				            if (ParameterConst.RECORD_STATUS_CANCLED.equals(expenditureItem.getRecordStatusFlg().toString())) { 
+				            	//log.info("[SIR#12802] - item status is 2, remove from list!");
 				                itr.remove(); 
 				            }
 				        }
@@ -611,8 +631,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						Iterator<PpProcurementItem> itr = ppPlan.getPpProcurementItems().iterator(); 
 				        while (itr.hasNext()) { 
 				        	PpProcurementItem procurementItem = (PpProcurementItem)itr.next(); 
-				            if (ParameterConst.RECORD_STATUS_DELETED.equals(procurementItem.getRecordStatusFlg().toString())) { 
-				            	//log.info("[SIR#12802] - item status is 9, remove from list!");
+				            if (ParameterConst.RECORD_STATUS_CANCLED.equals(procurementItem.getRecordStatusFlg().toString())) { 
+				            	//log.info("[SIR#12802] - item status is 2, remove from list!");
 				                itr.remove(); 
 				            }
 				        }
@@ -751,6 +771,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						epItem.setEditable(false);
 					}
 				}
+				
 				if(this.getManagedBean().getSelectedPlan().isRejected()){
 					for(PpExpenditureItem epItem: ppPlan.getPpExpenditureItems()){
 						if(DbValueConst.RECORD_STATUS_ACTIVE == epItem.getRecordStatusFlg()){
@@ -760,7 +781,27 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						}
 					}
 				}
-			}else if(ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())){
+				
+				//[SIR#12802] - disabled item to be deleted if the item has an approved history				
+				if(ppPlan.getLastApprovedDt() != null) {
+					log.info("[SIR#12802] - Check item for approved status - Start");
+					log.info("[SIR#12802] - plan last approved date: " + ppPlan.getLastApprovedDt());
+					for(PpExpenditureItem epItem: ppPlan.getPpExpenditureItems()){
+						log.info("[SIR#12802] - item ID: " + epItem.getExpenditureItemId());
+						log.info("[SIR#12802] - item created date: " + epItem.getCreatedDate());
+						if(ppPlan.getLastApprovedDt().equals(epItem.getCreatedDate()) 
+								|| ppPlan.getLastApprovedDt().after(epItem.getCreatedDate())){
+							log.info("[SIR#12802] - item has an approval history");
+							epItem.setSelectable(false); //disabled checkbox							
+						} else {
+							log.info("[SIR#12802] - item pending for approval");
+							epItem.setSelectable(true); //enabled checkbox
+						}
+					}
+					log.info("[SIR#12802] - Check item for approved status - End");
+				}
+				
+			} else if(ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())){
 
 				for(PpProcurementItem ppItem: ppPlan.getPpProcurementItems()){					
 					if(DbValueConst.RECORD_STATUS_ACTIVE == ppItem.getRecordStatusFlg() && ppItem.isRejected()){						
@@ -778,8 +819,27 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						}
 					}
 				}
+				
+				//[SIR#12802] - disabled item to be deleted if the item has an approved history
+				if(ppPlan.getLastApprovedDt() != null) {
+					log.info("[SIR#12802] - Check item for approved status - Start");
+					log.info("[SIR#12802] - plan last approved date: " + ppPlan.getLastApprovedDt());
+					for(PpProcurementItem ppItem: ppPlan.getPpProcurementItems()){
+						log.info("[SIR#12802] - item ID: " + ppItem.getProcurementItemId());
+						log.info("[SIR#12802] - item created date: " + ppItem.getCreatedDate());
+						if(ppPlan.getLastApprovedDt().equals(ppItem.getCreatedDate()) 
+								|| ppPlan.getLastApprovedDt().after(ppItem.getCreatedDate())){
+							log.info("[SIR#12802] - item has an approval history");
+							ppItem.setSelectable(false); //disabled checkbox							
+						} else {
+							log.info("[SIR#12802] - item pending for approval");
+							ppItem.setSelectable(true); //enabled checkbox
+						}
+					}
+					log.info("[SIR#12802] - Check item for approved status - End");
+				}				
 			}
-		}else{
+		} else {
 			if(ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())){
 				for(PpExpenditureItem epItem: ppPlan.getPpExpenditureItems()){
 					if(DbValueConst.RECORD_STATUS_ACTIVE == epItem.getRecordStatusFlg()){
@@ -788,7 +848,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						epItem.setEditable(false);
 					}
 				}
-			}else if(ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())){
+			} else if(ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())){
 				for(PpProcurementItem ppItem: ppPlan.getPpProcurementItems()){
 					if(DbValueConst.RECORD_STATUS_ACTIVE == ppItem.getRecordStatusFlg()){
 						ppItem.setEditable(true);
@@ -2038,6 +2098,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			}	
 			reqDTO.setDocTitle(PpCommonUtil.getDocTitle(ppPlan));
 			reqSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROCUREMENT_PLAN, IProcurementPlanSO.class);
+			//SAVE Plan to DB
 			resDTO = reqSO.savePlan(reqDTO);
 			//resDTO.setSuccessful(false); // for testing only...	
 			docType = retrievePlanDocType(ppPlan);
@@ -2462,9 +2523,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				//[SIR#12802] - start
 				if(expenditureItem.isDeleted()){
 				//[SIR#12802] - end	
-					//Set to status 9 - Deleted
-					//log.info("[SIR#12802] - Set item status to 9");
-					expenditureItem.setRecordStatusFlg(Integer.valueOf(ParameterConst.RECORD_STATUS_DELETED));		
+					//Set to status 2 - Cancelled
+					//log.info("[SIR#12802] - Set item status to 2");
+					expenditureItem.setRecordStatusFlg(Integer.valueOf(DbValueConst.RECORD_STATUS_CANCELLED));		
 					
 					this.getManagedBean().getDeleteEpItemsB().add(expenditureItem);
 					count++;
@@ -2494,9 +2555,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				//[SIR#12802] - start
 				if(expenditureItem.isDeleted()){
 				//[SIR#12802] - end	
-					//Set to status 9 - Deleted
-					//log.info("[SIR#12802] - Set item status to 9");
-					expenditureItem.setRecordStatusFlg(Integer.valueOf(ParameterConst.RECORD_STATUS_DELETED));		
+					//Set to status 2 - Cancelled
+					//log.info("[SIR#12802] - Set item status to 2");
+					expenditureItem.setRecordStatusFlg(Integer.valueOf(DbValueConst.RECORD_STATUS_CANCELLED));		
 					
 					this.getManagedBean().getDeleteEpItemsT().add(expenditureItem);
 					count++;
@@ -2526,9 +2587,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				//[SIR#12802] - start
 				if(expenditureItem.isDeleted()){
 				//[SIR#12802] - end	
-					//Set to status 9 - Deleted
-					//log.info("[SIR#12802] - Set item status to 9");
-					expenditureItem.setRecordStatusFlg(Integer.valueOf(ParameterConst.RECORD_STATUS_DELETED));		
+					//Set to status 2 - Cancelled
+					//log.info("[SIR#12802] - Set item status to 2");
+					expenditureItem.setRecordStatusFlg(Integer.valueOf(DbValueConst.RECORD_STATUS_CANCELLED));		
 					
 					this.getManagedBean().getDeleteEpItemsP().add(expenditureItem);
 					count++;
@@ -2558,9 +2619,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				//[SIR#12802] - start
 				if(expenditureItem.isDeleted()){
 				//[SIR#12802] - end	
-					//Set to status 9 - Deleted
-					//log.info("[SIR#12802] - Set item status to 9");
-					expenditureItem.setRecordStatusFlg(Integer.valueOf(ParameterConst.RECORD_STATUS_DELETED));		
+					//Set to status 2 - Cancelled
+					//log.info("[SIR#12802] - Set item status to 2");
+					expenditureItem.setRecordStatusFlg(Integer.valueOf(DbValueConst.RECORD_STATUS_CANCELLED));		
 					
 					this.getManagedBean().getDeleteEpItemsS().add(expenditureItem);
 					count++;
@@ -2590,9 +2651,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				//[SIR#12802] - start
 				if(expenditureItem.isDeleted()){
 				//[SIR#12802] - end	
-					//Set to status 9 - Deleted
-					//log.info("[SIR#12802] - Set item status to 9");
-					expenditureItem.setRecordStatusFlg(Integer.valueOf(ParameterConst.RECORD_STATUS_DELETED));		
+					//Set to status 2 - Cancelled
+					//log.info("[SIR#12802] - Set item status to 2");
+					expenditureItem.setRecordStatusFlg(Integer.valueOf(DbValueConst.RECORD_STATUS_CANCELLED));		
 					
 					this.getManagedBean().getDeleteEpItemsH().add(expenditureItem);
 					count++;
@@ -3109,14 +3170,14 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 		//add deleted item to list
 		for(PpProcurementItem procurementItem: this.getManagedBean().getSelectedPlan().getPpProcurementItems()){
-			//log.info("[SIR#12802] - Procument item delete status:" + procurementItem.isDeleted());
+			//log.info("[SIR#12802] - Procurement item delete status:" + procurementItem.isDeleted());
 			//if(procurementItem.isBrandNew() && procurementItem.isDeleted()){
 			//[SIR#12802] - start
 			if(procurementItem.isDeleted()){
 			//[SIR#12802] - end
-				//Set to status 9 - Deleted
-				//log.info("[SIR#12802] - Set item status to 9");
-				procurementItem.setRecordStatusFlg(Integer.valueOf(ParameterConst.RECORD_STATUS_DELETED));				
+				//Set to status 2 - Cancelled
+				//log.info("[SIR#12802] - Set item status to 2");
+				procurementItem.setRecordStatusFlg(Integer.valueOf(DbValueConst.RECORD_STATUS_CANCELLED));				
 				
 				//Add deleted item
 				this.getManagedBean().getDeletePpItems().add(procurementItem);
@@ -4420,7 +4481,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		
 		if(ParameterConst.PLAN_TYPE_EXPENDITURE.equalsIgnoreCase(pplan.getPlanType().getParameterCode())){			
 
-			//Add existing item to list for status: 9 - Deleted
+			//Add existing item to list for status: 2 - Cancelled
 			//log.info("[SIR#12802] - item list is for plan type 'E'");
 			
 			//create new list for all deleted item
@@ -4443,7 +4504,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			        while(itr.hasNext()) { 
 			        	PpExpenditureItem expenditureItem = (PpExpenditureItem)itr.next(); 
 			            if(!expenditureItem.isBrandNew()) { 
-			            	//log.info("[SIR#12802] - item is not new but status is 9, add to all deleted list!");
+			            	//log.info("[SIR#12802] - item is not new but status is 2, add to all deleted list!");
 			            	this.getManagedBean().getDeleteEpItemsAll().add(expenditureItem);
 			            }
 			        }				
@@ -4461,7 +4522,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			        while(itr.hasNext()) { 
 			        	PpExpenditureItem expenditureItem = (PpExpenditureItem)itr.next(); 
 			            if(!expenditureItem.isBrandNew()) { 
-			            	//log.info("[SIR#12802] - item is not new but status is 9, add to all deleted list!");
+			            	//log.info("[SIR#12802] - item is not new but status is 2, add to all deleted list!");
 			            	this.getManagedBean().getDeleteEpItemsAll().add(expenditureItem);
 			            }
 			        }				
@@ -4479,7 +4540,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			        while(itr.hasNext()) { 
 			        	PpExpenditureItem expenditureItem = (PpExpenditureItem)itr.next(); 
 			            if(!expenditureItem.isBrandNew()) { 
-			            	//log.info("[SIR#12802] - item is not new but status is 9, add to all deleted list!");
+			            	//log.info("[SIR#12802] - item is not new but status is 2, add to all deleted list!");
 			            	this.getManagedBean().getDeleteEpItemsAll().add(expenditureItem);
 			            }
 			        }				
@@ -4497,7 +4558,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			        while(itr.hasNext()) { 
 			        	PpExpenditureItem expenditureItem = (PpExpenditureItem)itr.next(); 
 			            if(!expenditureItem.isBrandNew()) { 
-			            	//log.info("[SIR#12802] - item is not new but status is 9, add to all deleted list!");
+			            	//log.info("[SIR#12802] - item is not new but status is 2, add to all deleted list!");
 			            	this.getManagedBean().getDeleteEpItemsAll().add(expenditureItem);
 			            }
 			        }				
@@ -4515,7 +4576,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			        while(itr.hasNext()) { 
 			        	PpExpenditureItem expenditureItem = (PpExpenditureItem)itr.next(); 
 			            if(!expenditureItem.isBrandNew()) { 
-			            	//log.info("[SIR#12802] - item is not new but status is 9, add to all deleted list!");
+			            	//log.info("[SIR#12802] - item is not new but status is 2, add to all deleted list!");
 			            	this.getManagedBean().getDeleteEpItemsAll().add(expenditureItem);
 			            }
 			        }				
@@ -4559,7 +4620,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		
 		else if(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(pplan.getPlanType().getParameterCode())){			
 
-			//Add existing item to list for status: 9 - Deleted
+			//Add existing item to list for status: 2 - Cancelled
 			//log.info("[SIR#12802] - item list is for plan type 'P'");
 			if(pplan.getPpProcurementItems()!=null && !pplan.getPpProcurementItems().isEmpty()){
 				//log.info("[SIR#12802] - item list size BEFORE: " + pplan.getPpProcurementItems().size());
@@ -4570,7 +4631,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			        while(itr.hasNext()) { 
 			        	PpProcurementItem procurementItem = (PpProcurementItem)itr.next(); 
 			            if(!procurementItem.isBrandNew()) { 
-			            	//log.info("[SIR#12802] - item is not new but status is 9, add to list!");
+			            	//log.info("[SIR#12802] - item is not new but status is 2, add to list!");
 			            	pplan.getPpProcurementItems().add(procurementItem);
 			            }
 			        }
