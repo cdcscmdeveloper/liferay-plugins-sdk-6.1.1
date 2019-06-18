@@ -204,6 +204,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String expiryDate;
 	private List<SmPersonnel> selectedPersonnels;
 	private SmPersonnel selectedPersonnel;
+	private SmPersonnel selectedPersonnelDtl; // #21946
 	private SmPersonnel addrUpdatePersonnel;
 	private List<SmStaffExperience> selectedPersJobFunctions;
 	private List<SmAssociationBody> selectedPersProfBodies;
@@ -1119,6 +1120,16 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	// public void setPersonnelAcademics(SmStaffAcademic personnelAcademics) {
 	// this.personnelAcademics = personnelAcademics;
 	// }
+	
+	// start #21946
+	public SmPersonnel getSelectedPersonnelDtl() {
+		return selectedPersonnelDtl;
+	}
+
+	public void setSelectedPersonnelDtl(SmPersonnel selectedPersonnelDtl) {
+		this.selectedPersonnelDtl = selectedPersonnelDtl;
+	}
+	// end #21946
 
 	public SmPersonnel getAddrUpdatePersonnel() {
 		return addrUpdatePersonnel;
