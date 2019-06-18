@@ -1705,6 +1705,10 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						getManagedBean().getInvoice().getFlFulfilmentOrder().getFulfilmentOrderId(), getManagedBean().getInvoice().getFlFulfilmentOrder().getDocNo(), 
 						getManagedBean().getTextBeforeSign());
 			}
+			if(getManagedBean().getPmDigiSign().getOriginalData().isEmpty()) {
+				setTextBeforeSign(getManagedBean().getButtonAction());
+				getManagedBean().getPmDigiSign().setOriginalData(getManagedBean().getTextBeforeSign());
+			}
 		}
 		return submitAction(getManagedBean().getButtonAction());
 	}
