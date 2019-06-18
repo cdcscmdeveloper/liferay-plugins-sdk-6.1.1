@@ -2386,15 +2386,18 @@ public class SmApplicationUtil {
 					log.debug(" *** Perm Addr Post Code ****" + postCode);
 				}
 			}
-
-			String myIdentityRespCode = SmCommonUtil
-					.getInstance()
-					.verifyWithMyIdentity(
-							pers.getName(),
-							pers.getIdentificationNo(),
-							postCode,
-							my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_ONLINE);
-			pers.setIdentityResponseCode(myIdentityRespCode);
+			
+			// start #21946
+			String myIdentityRespCode;
+			if (pers.isEquityOwner() || pers.isDirector()) {
+				SmCommonUtil.getInstance().verifyPersonnelWithMyIdentity(pers, postCode, my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_ONLINE, null);
+			} else {
+				myIdentityRespCode = SmCommonUtil.getInstance().verifyWithMyIdentity(pers.getName(), pers.getIdentificationNo(), postCode,
+						my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_ONLINE);
+				pers.setIdentityResponseCode(myIdentityRespCode);
+			}
+			// end #21946
+			
 		}
 		if (!pers.isEquityOwner() && !pers.isDirector()
 				&& !pers.isHigherManagement() && !pers.isManagement()
@@ -2465,6 +2468,9 @@ public class SmApplicationUtil {
 			// StringBuffer sb = new StringBuffer();
 			if (!StringUtils.isBlank(resDTO.getStatusCode())) {
 				per.setIdentityResponseCode(resDTO.getStatusCode());
+				// start #21946
+				per.setIdentityResidentStatus(resDTO.getResidentStatus());
+				// end #21946
 			}
 			log.info("**** My identiy output is *****" + resDTO.getStatusCode());
 		} catch (Exception e) {
