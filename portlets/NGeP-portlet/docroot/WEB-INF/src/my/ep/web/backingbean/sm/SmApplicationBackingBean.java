@@ -5856,6 +5856,13 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setIdentificationTypes(getPmIdTypeDropdownValues());
 		SmApplicationUtil.assignSelShareHolder(shareHolderBean,
 				getManagedBean(), currentTab);
+		// start #21946
+		if (shareHolderBean.getIdentityResponseCode() != null) {
+			if (shareHolderBean.getIdentityResponseCode().equals("70019")) {
+				getManagedBean().setSelectedPersonnelDtl(shareHolderBean);
+			}
+		}
+		// end #21946
 		// set personnel field change value
 		SmFieldChangeUtil.initPersonnelChangeField(getManagedBean());
 
