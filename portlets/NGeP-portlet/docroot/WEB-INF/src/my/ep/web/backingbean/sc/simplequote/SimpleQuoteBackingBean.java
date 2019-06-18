@@ -1296,11 +1296,13 @@ public class SimpleQuoteBackingBean extends
 						|| quote.getStartDate().equals(quote.getEndDate())) {
 					throw new EpException(MessageConst.ERROR_760164);
 				}
-			} else {
-				if (null == quote.getStartDate() ||  null == quote.getEndDate()) {
-					throw new EpException(MessageConst.ERROR_760388);
-				}
-			}
+			} 
+			
+//			else {
+//				if (null == quote.getStartDate() ||  null == quote.getEndDate()) {
+//					throw new EpException(MessageConst.ERROR_760388);
+//				}
+//			}
 			
 			if (quote.getRequestItems() == null) {
 				List<ScRequestItem> requestItems = new ArrayList<ScRequestItem>();
@@ -1373,12 +1375,22 @@ public class SimpleQuoteBackingBean extends
 			// procurement type category
 			if (null != quote.getProcurementTypeCategory()) {
 				ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+				
+				if(quote.getProcurementTypeCategory().getParameterId()!=null){
+				
 				parameterReqDTO.setParameterId(quote
 						.getProcurementTypeCategory().getParameterId());
 				PmParameter procTypeCategory = getParameterSO()
 						.retrieveParameterById(parameterReqDTO)
 						.getPmParameter();
 				quote.setProcurementTypeCategory(procTypeCategory);
+				}
+				else{
+					quote.setProcurementTypeCategory(null);
+				}
+				
+			}else{
+				quote.setProcurementTypeCategory(null);
 			}
 
 			// by business nature
