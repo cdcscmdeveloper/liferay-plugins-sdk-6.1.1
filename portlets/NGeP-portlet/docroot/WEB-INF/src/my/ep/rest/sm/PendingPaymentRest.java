@@ -1,9 +1,9 @@
 package my.ep.rest.sm;
 
-import java.util.List;
-
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
 import my.ep.dto.sm.pending.PendingPaymentResDTO;
@@ -19,8 +19,12 @@ public class PendingPaymentRest {
 
 	@GET
 	@Path("smpendingprocess") 
-	public Response retrievePending() {
+	public Response retrievePending(@Context HttpServletRequest req) {
 		log.info("Before success calling retrieve rest api....");
+		String remoteHost = req.getRemoteHost();
+	    String remoteAddr = req.getRemoteAddr();
+	    int remotePort = req.getRemotePort();
+	    log.info("Remote host:\t" + remoteHost + " (" + remoteAddr + ":" + remotePort + ")");
 		try {
 			PendingPaymentResDTO resDTO = SmServiceLookup.getPendingPaymentSO().retrievePendingProcess();
 			for (SmPendingProcess smPendingProcess : resDTO.getSmPendingProcessLst()) {
