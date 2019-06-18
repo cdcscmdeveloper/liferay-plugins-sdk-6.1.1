@@ -170,6 +170,7 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 		ITextRenderer render = new ITextRenderer();
 		Document doc = null;
 		Elements elements = null;
+		String tempHtml = null;
 		try{
 			
 			if (html != null) {
@@ -187,7 +188,8 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 					};
 				}
 
-
+				elements = doc.getElementsByTag("img");				
+				
 				html = doc.toString();
 
 				html = html.replaceAll("<br>", "<br/>");
@@ -195,6 +197,16 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 				html = html.replaceAll("&amp;amp;", "&");
 				html = html.replaceAll("&amp;lt", "&#60");
 				html = html.replaceAll("&amp;gt", "&#62");
+				
+				//to add end tag for <img>
+				for(Element element: elements) {
+					tempHtml = element.toString();
+					if(html.contains(tempHtml))
+					{
+						html = html.replace(tempHtml, tempHtml + "</img>");
+					}
+				}
+				
 				render.setDocumentFromString(html);
 				render.layout();
 				render.createPDF(os);
@@ -202,6 +214,7 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 
 			os.flush();
 		}finally{
+			tempHtml = null;
 			doc = null;
 			elements = null;
 			render = null;
