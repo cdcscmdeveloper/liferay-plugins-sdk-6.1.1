@@ -171,6 +171,7 @@ public class TaskReassignmentBackingBean extends
 		this.setCurrentActiveOrg();
 		this.getManagedBean().setTaskLazy(false);
 		resetAllTaskList();
+		resetReassigneeList();
 	}
 	
 	/**
@@ -745,7 +746,7 @@ public class TaskReassignmentBackingBean extends
 		}
 		
 		if (this.getManagedBean().getTaskAssignmentSearchBean().getUser() == null) {
-				RequestContext.getCurrentInstance().execute("pUserTaskReassigneeResult.show()");
+				this.getManagedBean().setShowReassigneeList(true);
 		} else {
 			if (this.getManagedBean().getReassigneeList().isEmpty()) {
 				RequestContext.getCurrentInstance().execute("noReassignees.show()");
@@ -772,9 +773,20 @@ public class TaskReassignmentBackingBean extends
 		}
 		
 		if (this.getManagedBean().getSelectedReassignee().size() > 0) {
-			RequestContext.getCurrentInstance().execute("pUserTaskReassigneeResult.show()");
+			this.getManagedBean().setShowReassigneeList(true);
 		}
 		reloadAllTaskList();
+		
+	}
+	
+	public void resetReassigneeList() {
+		
+		if (this.getManagedBean().getReassigneeList().size() > 0) {
+			this.getManagedBean().getReassigneeList().clear();
+		}
+		if (this.getManagedBean().isShowReassigneeList()) {
+			this.getManagedBean().setShowReassigneeList(false);
+		}
 		
 	}
 	
