@@ -20,13 +20,16 @@
 			rowIndexVar="rowIndex"  lazy="true" rows="10" var="adminProfile"
 			value="#{profilePersonalizationBackingBean.managedBean.adminDetReceivedList}">
 			<!--<ac:paginator for="dtAdminResult" />  -->
+			<p:column headerText="#{lbl['lbl.pm.profiles.search.result.no']}" style="width :3%;white-space : normal">			
+				<h:outputText value="#{adminProfile.index}" />
+			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.profiles.search.result.username']}" style="width :25%;white-space : normal">			
 				<h:outputText value="#{adminProfile.userName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.idno']}" style="width :10%;white-space : normal">
 			    <h:outputText value="#{adminProfile.identificationNo}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.pm.profiles.authorisation.role']}" style="width :20%;white-space : normal">
+			<p:column headerText="#{lbl['lbl.pm.profiles.authorisation.role']}" style="width :17%;white-space : normal">
 			    <h:outputText value="#{profilePersonalizationBackingBean.getRoleDescByRoleCode(adminProfile.role)}" /> 
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.email']}" style="width :10%;white-space : normal">

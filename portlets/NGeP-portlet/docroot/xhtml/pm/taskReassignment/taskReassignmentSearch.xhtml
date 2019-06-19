@@ -180,7 +180,7 @@
 							widgetVar="cbSearchTask"
 							process="pTaskAssignSearch" 
 							action="#{taskReassignmentBackingBean.searchTasks}"
-							update=":form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult,:form:pUserTaskReassigneeResult"
+							update=":form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult,showReassigneeList"
 							onclick="cbSearchTask.disable();cbResetTask.disable();"
 			  				oncomplete="cbSearchTask.enable();cbResetTask.enable();"
 						/>
@@ -189,7 +189,7 @@
 			  				oncomplete="cbSearchTask.enable();cbResetTask.enable();"
 							value="#{lbl['lbl.btn.reset']}" 
 							action="#{taskReassignmentBackingBean.resetTaskAssignSearchBean}"
-							update="pTaskAssignSearch,:form:userTaskListID,:form:groupTaskListID,:form:othersTaskListID,:form:pUserTaskReassigneeResult" 
+							update="pTaskAssignSearch,:form:userTaskListID,:form:groupTaskListID,:form:othersTaskListID,showReassigneeList"
 						/>
 					</div>
 				</td>
