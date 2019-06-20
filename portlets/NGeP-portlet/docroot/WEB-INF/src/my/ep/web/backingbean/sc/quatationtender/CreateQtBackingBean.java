@@ -245,12 +245,8 @@ public class CreateQtBackingBean extends
 						"panelApprovalDlgs.show()");
 			} else {
 				circularListSelect(new CtCircularVer());
-				scQt.setZonal(true);
 				setDataNull();
 			}
-			zoneRadioChange(scQt);
-			
-			
 		}
 
 	}
@@ -292,8 +288,7 @@ public class CreateQtBackingBean extends
 			FacesContext fc = FacesContext.getCurrentInstance();
 			ScQt scQt = new ScQt();
 			scQt.setCircularVer(new CtCircularVer());
-			scQt.setPanel(false);
-			this.getManagedBean().setPanel(null);
+			scQt.setPanel(this.getManagedBean().getPanel());
 			PmOrgProfile pmOrgProfile = getPTJOrgProfileByLoginUser();
 			if (pmOrgProfile != null) {
 				scQt.setPmOrgProfile(pmOrgProfile);
@@ -306,7 +301,7 @@ public class CreateQtBackingBean extends
 				if (ptjSpecialApproval != null) {
 					scQt.setCircularVer(null);
 					this.getManagedBean().setPanel(null);
-					
+					scQt.setPanel(false);
 					this.getManagedBean().setPtjSpecialApproval(ptjSpecialApproval);
 					scQt.setObtainSpecialApproval(false);
 				}
@@ -454,7 +449,6 @@ public class CreateQtBackingBean extends
 	 *            (boolean zoneLocationlevel).
 	 */
 	public void zoneRadioChange(ScQt scQt) {
-
 		Boolean isZonal = scQt.isZonal();
 		ScQtSupplierCriteria supplierCriteria = scQt.getScQtSupplierCriteria();
 		
