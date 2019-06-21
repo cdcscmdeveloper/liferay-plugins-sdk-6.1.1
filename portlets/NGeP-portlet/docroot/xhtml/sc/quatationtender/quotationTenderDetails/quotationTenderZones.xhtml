@@ -53,7 +53,7 @@
 					var="zoneTree" style="width:100%" rowIndexVar="index"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					rowKey="#{zoneTree}">
-
+                    <ac:paginator for="zoneGeneralDataTable" />
 					<p:column style="width:250%;">
 						<f:facet name="header">
 							<h:outputText value="* " styleClass="mandatory" />

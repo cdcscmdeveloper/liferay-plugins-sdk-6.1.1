@@ -1461,12 +1461,24 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 			}
 			String procurementMode = qtnTenderSearchBean.getProcurementMode();
-			if (!StringUtils.isBlank(procurementMode)) {
+			if (!StringUtils.isBlank(procurementMode) && !ParameterConst.DOCTYPE_LETTER_OF_AWARD.equals(docType)) {
 				searchFilterBean.add(
 						new SearchFilterBean("procurementMode.parameterCode",
 								SearchOperator.OPERATOR_EQUALS.value(),
 								procurementMode));
-			} else {
+			}else if(ParameterConst.DOCTYPE_LETTER_OF_AWARD.equals(docType) 
+					&& (ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(procurementMode)
+						|| ParameterConst.PROCUREMENT_MODE_TENDER.equals(procurementMode)) 
+							&& !isQTMaintenanceScreen()){
+				List<String> procurementModes = new ArrayList<String>();
+				procurementModes.add(procurementMode);
+				procurementModes.add(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO);	
+				searchFilterBean.add(
+						new SearchFilterBean(
+								"procurementMode.parameterCode",
+								SearchOperator.OPERATOR_IN.value(), 
+								procurementModes));
+			}else {
 				// Filter By - procurementMode
 				List<String> procurementModes = new ArrayList<String>();
 				procurementModes.add(ParameterConst.PROCUREMENT_MODE_QUOTATION);
@@ -6107,6 +6119,21 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		Timestamp extensionRespDate = getQTDetailSO().getExtensionResponseDueDate(qtId);
 		return extensionRespDate;
 	}
+	
+	public String getProcurementMode(ScQt qt){
+		String method = null;
+		if(qt.getLoiLoa()!=null){//check if direct nego
+			if(qt.getLoiLoa().getScloas() != null && qt.getLoiLoa().getScloas().size()>0){
+				method = this.getParameterDesc(qt.getLoiLoa().getScloas().get(0).getProcurementMode());
+			}
+		}else{
+			method = this.getParameterDesc(qt.getProcurementMode());
+		}
+		
+		return method;
+	}
+	
+	
 }
 
 

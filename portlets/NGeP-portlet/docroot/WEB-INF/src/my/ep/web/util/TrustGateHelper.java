@@ -26,6 +26,7 @@ import my.ep.web.vo.SpkiVO;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -223,7 +224,8 @@ public class TrustGateHelper {
 				.getExternalContext();
 		String url4 = getDns() + "/requestRevoke/requestRevoke.jsp?secTkn="
 				+ encodedtoken;
-		externalContext.redirect(url4);
+		RequestContext.getCurrentInstance().execute("window.open('"+url4+"', '_blank')");
+		//externalContext.redirect(url4);
 	}
 
 	public void resetPIN(String identificationNo, String epNo, String email)
