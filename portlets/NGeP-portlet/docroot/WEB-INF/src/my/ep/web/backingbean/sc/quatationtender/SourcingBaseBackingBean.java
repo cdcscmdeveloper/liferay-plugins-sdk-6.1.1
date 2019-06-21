@@ -3261,7 +3261,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						if (SourcingConstants.PERAKUAN_REPORT.equals(report.getTitle())
 								|| SourcingConstants.UDPUPBM_REPORT.equals(report.getTitle())) {
 							iterator.remove();
-							break;
 						}
 					}
 				}
