@@ -584,10 +584,11 @@ public class PurchaseInquiryBackingBean extends
 									.getParameterCode()
 									.equals(prInquiry.getPriceType().getParameterCode())) {
 								Integer stockAvailable = getManagedBean().getStockAvailable();
-
-								if (stockAvailable != ParameterConst.PI_STOCK_AVAILABILITY
-										&& DPStatusConstants.PRI_PENDING_SUPPLIER_RESPONSE.equals(getManagedBean()
-												.getPriStatus().getStatusId())) {
+								Long statusId = getManagedBean().getPriStatus().getStatusId();
+								
+								if (DPStatusConstants.PRI_PENDING_SUBMISSION.equals(statusId)
+										|| (stockAvailable != ParameterConst.PI_STOCK_AVAILABILITY && DPStatusConstants.PRI_PENDING_SUPPLIER_RESPONSE
+												.equals(statusId))) {
 									scSupplierItemPrice.setItemPrice(null);
 								}
 								priceList.add(scSupplierItemPrice);
@@ -744,6 +745,8 @@ public class PurchaseInquiryBackingBean extends
 					} else {
 						successMessage(MessageConst.INFO_700025, ParameterTypeConst.DOCUMENT_TYPES,
 								ParameterConst.DOCTYPE_PURCHASE_INQUIRY, scPrInquiry.getPrInquiryNo(), Boolean.FALSE);
+						getManagedBean().setScPrInquiry(scPrInquiry);
+						getManagedBean().setRequestNoteDtl(prInquiryResDTO.getScRequestNoteDtl());
 					}
 				}
 			} else {
@@ -773,6 +776,7 @@ public class PurchaseInquiryBackingBean extends
 		prInquiry.setIsStockAvailable(stockAvailable);
 
 		PrInquiryReqDTO reqDTO = new PrInquiryReqDTO();
+		reqDTO.setPrInquiryId(prInquiry.getPrInquiryId());
 		reqDTO.setPrInquiryDetail(prInquiry);
 
 		FacesScopes facesScopes = new FacesScopes();
@@ -784,8 +788,13 @@ public class PurchaseInquiryBackingBean extends
 		PrInquiryResDTO resDTO = getPrInquirySO().savePrInquiryPrice(reqDTO);
 
 		if (resDTO.isSuccessful()) {
+			ScPrInquiry scPrInquiry = resDTO.getPrInquiryDetail();
 			successMessage(MessageConst.INFO_700025, ParameterTypeConst.DOCUMENT_TYPES,
-					ParameterConst.DOCTYPE_PURCHASE_INQUIRY, resDTO.getPrInquiryDetail().getPrInquiryNo(), Boolean.FALSE);
+					ParameterConst.DOCTYPE_PURCHASE_INQUIRY, scPrInquiry.getPrInquiryNo(), Boolean.FALSE);
+			getManagedBean().setScPrInquiry(scPrInquiry);
+			getManagedBean().setSupplierItemPrices(resDTO.getSupplierItemPrices());
+			scRequestSupplierItem.setSupplierItemPrices(resDTO.getSupplierItemPrices());
+			getManagedBean().setScRequestSupplierItem(scRequestSupplierItem);
 		} else {
 			throw new EpException(MessageConst.ERROR_700020);
 		}
