@@ -11,7 +11,7 @@
 			<h:outputText value="#{lbl['lbl.ct.agreement.detail']}" />
 			<ac:iconTooltip value="#{lbl['lbl.ct.agreement.detail.tooltip']}" />
 		</f:facet>
-				<p:dataTable id="contractAgreementTableID" lazy="false"
+				<p:dataTable id="contractAgreementTableID" lazy="true"
 					value="#{ctBackingBean.filterAgreementList()}"
 					var="agreement" width="100%" rows="10" rowIndexVar="index">
 
