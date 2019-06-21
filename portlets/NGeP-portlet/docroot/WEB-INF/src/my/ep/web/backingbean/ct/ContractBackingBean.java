@@ -3957,15 +3957,18 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		ContractAgreementReqDTO reqDTO = new ContractAgreementReqDTO();
 		ContractAgreementResDTO resDTO = null;
 		if(ctAgreement.getCtAmendment() != null)
-			reqDTO.setContractVerId(ctAgreement.getCtAmendment().getCtContractVer().getContractVerId());
-		resDTO = agreementSO.retrieveSupplementalContractLetterAttachment(reqDTO);
-		ctAttachments = resDTO.getCtAttachments();
-				
-		if(ctAttachments != null && !ctAttachments.isEmpty())
 		{
-			log.info("#21533 - Has supplemental contract letter attachment");
-			ctAttachment = resDTO.getCtAttachments().get(0);
+			reqDTO.setContractVerId(ctAgreement.getCtAmendment().getCtContractVer().getContractVerId());
+			resDTO = agreementSO.retrieveSupplementalContractLetterAttachment(reqDTO);
+			ctAttachments = resDTO.getCtAttachments();
+			
+			if(ctAttachments != null && !ctAttachments.isEmpty())
+			{
+				log.info("#21533 - Has supplemental contract letter attachment");
+				ctAttachment = resDTO.getCtAttachments().get(0);
+			}
 		}
+				
 		return ctAttachment;
 	}
 }  
