@@ -3949,6 +3949,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 	
 	public CtAttachment getSupplementalContractLetter(CtAgreement ctAgreement) {
+		log.info("#21533 - Get supplemental contract letter");
 		CtAttachment ctAttachment = null;
 		IAgreementSO agreementSO = null;
 		List<CtAttachment> ctAttachments = null;
@@ -3962,6 +3963,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				
 		if(ctAttachments != null && !ctAttachments.isEmpty())
 		{
+			log.info("#21533 - Has supplemental contract letter attachment");
 			ctAttachment = resDTO.getCtAttachments().get(0);
 		}
 		return ctAttachment;
