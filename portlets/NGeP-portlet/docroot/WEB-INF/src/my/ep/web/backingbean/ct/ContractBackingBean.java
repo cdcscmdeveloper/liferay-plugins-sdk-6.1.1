@@ -3953,7 +3953,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		CtAttachment ctAttachment = null;
 		IAgreementSO agreementSO = null;
 		List<CtAttachment> ctAttachments = null;
-		agreementSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IAgreementSO.class);
+		agreementSO = (IAgreementSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IAgreementSO.class);
 		ContractAgreementReqDTO reqDTO = new ContractAgreementReqDTO();
 		ContractAgreementResDTO resDTO = null;
 		if(ctAgreement.getCtAmendment() != null)
