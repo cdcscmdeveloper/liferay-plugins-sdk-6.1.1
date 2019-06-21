@@ -3961,7 +3961,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		ctAttachments = resDTO.getCtAttachments();
 				
 		if(ctAttachments != null && !ctAttachments.isEmpty())
+		{
 			ctAttachment = resDTO.getCtAttachments().get(0);
+		}
 		return ctAttachment;
 	}
 }  
