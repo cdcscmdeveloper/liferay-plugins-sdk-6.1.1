@@ -5,7 +5,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
 		<p:messages id="loaMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
@@ -17,6 +18,7 @@
 				value="#{dpLOABackingBean.managedBean.purchaseRequestList}"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				rows="10" rowIndexVar="rowIndex">
+				<ac:paginator for="dpLoaTbl" />
 
 				<p:column headerText="#{lbl['lbl.sc.supplier.name']}">
 					#{scPurchaseRequest.requestNoteDtls[0].scRequestSupplierItem.smSupplier.companyName}
