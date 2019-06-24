@@ -1716,6 +1716,7 @@ public class TaskReassignmentBackingBean extends
 		} finally {
 			statusSO = null;
 		}
+		statusRoles.add(RoleCode.BPK_ADMIN.value()); // # 10927
 		return statusRoles;
 	}
 
@@ -2034,6 +2035,8 @@ public class TaskReassignmentBackingBean extends
 			filteredAdminRoles.add("JABATAN_ADMIN");
 			filteredAdminRoles.add("MINISTRY_ADMIN");
 			filteredAdminRoles.add("PTJ_ADMIN");
+			//filteredAdminRoles.add("BPK_ADMIN");
+			
 
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean(
@@ -2049,11 +2052,12 @@ public class TaskReassignmentBackingBean extends
 			//1 - Normal Reassignment
 
 			// same org profile id
-			searchBean.getDataFilterBeans().add(
+			//comment because of cross org profile  #10927
+			/*searchBean.getDataFilterBeans().add(
 					new SearchFilterBean(
 							"pmUserOrgs.pmOrgProfile.orgProfileId",
 							SearchOperator.OPERATOR_EQUALS.value(),
-							orgProfileId));
+							orgProfileId));*/
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_S2:
 			// 2: S2/CT Committee Task
