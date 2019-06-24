@@ -228,6 +228,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		PendingPaymentResDTO resDTO = reqSO.checkAlreadyDonePayement(reqDTO);
 				
 		if(resDTO.isFoundCompletePayment()){
+			log.info("<<<< Failure Payment - Bill ID >>>> "+reqDTO.getBillId());
 			throw new EpException(MessageConst.ERROR_721055);
 		}
 			PyBill pyBill = this.getManagedBean().getPyBill();
