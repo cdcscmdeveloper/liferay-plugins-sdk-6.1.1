@@ -444,13 +444,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	
 				reqDTO.setViewBy(getViewBy());
 
-				//start added for #24968 search
 				if(getDocNo()!=null && getDocNo().trim().length()>0){
-					if( getDocNo().startsWith("CO") || getDocNo().startsWith("PO")){
-						reqDTO.setPocoNo(getDocNo());	
-					}else{
-						reqDTO.setDocNumber(getDocNo());
-					}
+					reqDTO.setDocNumber(getDocNo());
 				}
 				
 				if(getTaskDesc()!=null && getTaskDesc().trim().length()>0){
@@ -467,9 +462,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 
 				reqDTO.setAssignment(BpmConstants.ASSIGNMENT_MY);
 				reqDTO.setCtxToken(token);
-				//start edited for #24968 search
-				BpmResponseDTO responseDTO = bpmSO.getWorklistItemsNew(reqDTO);
-				//end edited for #24968 search
+				BpmResponseDTO responseDTO = bpmSO.getWorklistItems(reqDTO);
 				SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
 				
 				if (responseDTO.getWorklistVO() != null) {
@@ -711,16 +704,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 					reqDTO.setTaskTitle(getTaskDescGroup());
 				}
 				
-				//start added for #24968 search
 				log.info("getDocNoGroup():" + getDocNoGroup());
 				if(getDocNoGroup()!=null && getDocNoGroup().trim().length()>0){
-					if( getDocNoGroup().startsWith("CO") || getDocNoGroup().startsWith("PO")){
-						reqDTO.setPocoNo(getDocNoGroup());	
-					}else{
-						reqDTO.setDocNumber(getDocNoGroup());
-					}
+					reqDTO.setDocNumber(getDocNoGroup());
 				}
-				//end added for #24968 search
 			
 				/*if(getSelectedOrgProfileGroup()!=null){
 					System.out.println("getOrgProfileId"+getSelectedOrgProfileGroup().getOrgProfileId());
@@ -743,9 +730,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				
 				//SDO User - filer Search
 				sdoSearchFilter(reqDTO);
-				//start edited for #24968 search
-				BpmResponseDTO responseDTO = bpmSO.getWorklistItemsNew(reqDTO);
-				//end edited for #24968 search
+				BpmResponseDTO responseDTO = bpmSO.getWorklistItems(reqDTO);
 				SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
 				
 				if (responseDTO.getWorklistVO() != null) {
@@ -950,18 +935,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				
 				log.info("getDocNoGroup():"+getDocNo());
 				
-
-				
-				
-				//start added for #24968 search
-				if(getDocNo()!=null && getDocNo().trim().length()>0){
-					if( getDocNo().startsWith("CO") || getDocNo().startsWith("PO")){
-						reqDTO.setPocoNo(getDocNo());	
-					}else{
-						reqDTO.setDocNumber(getDocNo());
-					}
+				if(getDocNo()!= null && getDocNo().trim().length() > 0){
+					reqDTO.setDocNumber(getDocNo());
 				}
-				//end added for #24968 search
 			
 				if(getDocStatus() > 0){
 					log.info("getDocStatus"+getDocStatus());
@@ -976,9 +952,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				
 				//SDO User - filer Search
 				sdoSearchFilter(reqDTO);
-				//start edited for #24968 search
-				BpmResponseDTO responseDTO = bpmSO.getWorklistItemsNew(reqDTO);
-				//end edited for #24968 search
+				BpmResponseDTO responseDTO = bpmSO.getWorklistItems(reqDTO);
 				SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
 				
 				if (responseDTO.getWorklistVO() != null) {
