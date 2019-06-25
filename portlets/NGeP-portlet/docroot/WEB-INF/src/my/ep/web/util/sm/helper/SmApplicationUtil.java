@@ -429,14 +429,21 @@ public class SmApplicationUtil {
 		}
 	}
 
-	public static List<String> getCatCodesNotVerifiedByPo(SmApplicationManagedBean managedBean) {
+	/**
+	 * Retrieve unverified category codes by PO or Approver
+	 * 
+	 * @param managedBean
+	 * @return
+	 */
+	public static List<String> getUnverifiedCatCodes(List<SmSupplierCategory> catList, String applType,
+			boolean isApprover) {
 
 		List<String> applTypes = Arrays.asList(ParameterConst.NEW_SM_APPLN_FOR_MOF,
 				ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES, ParameterConst.NEW_SM_APPLN_FOR_RENEW);
 		List<String> invalidCatCodes = new ArrayList<>();
 
-		if (applTypes.contains(managedBean.getSmAppl().getApplType())) {
-			for (SmSupplierCategory cat : managedBean.getSmAppl().getSmSupplierCategories()) {
+		if (applTypes.contains(applType)) {
+			for (SmSupplierCategory cat : catList) {
 				if (cat.getPoDecFlg() == null) {
 					invalidCatCodes.add(cat.getCategoryL1Name() + cat.getCategoryL1Name() + cat.getCategoryL1Name());
 				}
