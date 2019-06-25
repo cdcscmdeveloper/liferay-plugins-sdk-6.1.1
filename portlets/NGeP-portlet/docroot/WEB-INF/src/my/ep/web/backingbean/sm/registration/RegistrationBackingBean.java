@@ -1677,6 +1677,14 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					getManagedBean().getSmAppl().getSupplierType())) {
 				throw new EpException(MessageConst.ERROR_722634);
 			}
+			//SIR:#26002 - check if already got reg_no with supplier type 'B'
+			if (SmCommonUtil.isRegNoAlreadyExist(getManagedBean().getSmSupp()
+					.getRegNo(),
+					getManagedBean().getSmSupp().getBusinessType(),
+					getManagedBean().getSmSupp().getLocalAuthorityId(),
+					SupplierManagementConst.STYPE_BASIC)) {
+				throw new EpException(MessageConst.ERROR_722634);
+			}
 		}
 	}
 
