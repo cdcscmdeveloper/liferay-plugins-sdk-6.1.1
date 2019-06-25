@@ -3958,22 +3958,27 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		log.info("#21533 - After Get AgreementSO service object");
 		ContractAgreementReqDTO reqDTO = new ContractAgreementReqDTO();
 		ContractAgreementResDTO resDTO = null;
-		if(ctAgreement.getCtAmendment() != null)
+		
+		log.info("Agreement: " + ctAgreement);
+		if(ctAgreement != null) 
 		{
-			log.info("#21533 - Contract has amendment");
-			reqDTO.setContractVerId(ctAgreement.getCtAmendment().getCtContractVer().getContractVerId());
-			log.info("#21533 - Before retrieve supplemental contract letter attachment");
-			resDTO = agreementSO.retrieveSupplementalContractLetterAttachment(reqDTO);
-			log.info("#21533 - After retrieve supplemental contract letter attachment");
-			ctAttachments = resDTO.getCtAttachments();
-			
-			if(ctAttachments != null && !ctAttachments.isEmpty())
+			if(ctAgreement.getCtAmendment() != null)
 			{
-				log.info("#21533 - Has supplemental contract letter attachment");
-				ctAttachment = resDTO.getCtAttachments().get(0);
-			}
-		}
+				log.info("#21533 - Contract has amendment");
+				reqDTO.setContractVerId(ctAgreement.getCtAmendment().getCtContractVer().getContractVerId());
+				log.info("#21533 - Before retrieve supplemental contract letter attachment");
+				resDTO = agreementSO.retrieveSupplementalContractLetterAttachment(reqDTO);
+				log.info("#21533 - After retrieve supplemental contract letter attachment");
+				ctAttachments = resDTO.getCtAttachments();
 				
+				if(ctAttachments != null && !ctAttachments.isEmpty())
+				{
+					log.info("#21533 - Has supplemental contract letter attachment");
+					ctAttachment = resDTO.getCtAttachments().get(0);
+				}
+			}
+		}			
+						
 		return ctAttachment;
 	}
 }  
