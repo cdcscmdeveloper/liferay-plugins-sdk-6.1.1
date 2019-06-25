@@ -83,11 +83,12 @@
 							action="#{ctBackingBean.commonDownload(agreement.stampedPagePath, agreement.stampedPageName)}" /><br />
 						<ui:param name="suppCtLetter" value="#{ctBackingBean.getSupplementalContractLetter(agreement)}"></ui:param>
 						<h:outputText value="#{lbl['lbl.ct.amend.loa.sst']} : " 
-						rendered="#{suppCtLetter != null and agreement.status.statusId == CtStatusConst.saComplete}"/>	
+						rendered="#{not empty suppCtLetter and agreement.status.statusId == CtStatusConst.saComplete}"/>	
 						<h:commandLink styleClass="blue_font"
 							title="#{suppCtLetter.fileName}"
 							value="#{suppCtLetter.fileName}"
-							action="#{ctBackingBean.commonDownload(suppCtLetter.filePath, suppCtLetter.fileName)}" />
+							action="#{ctBackingBean.commonDownload(suppCtLetter.filePath, suppCtLetter.fileName)}" 
+							rendered="#{not empty suppCtLetter and agreement.status.statusId == CtStatusConst.saComplete}"/>
 				</p:column>
 				</p:dataTable>
 				</p:panel>
