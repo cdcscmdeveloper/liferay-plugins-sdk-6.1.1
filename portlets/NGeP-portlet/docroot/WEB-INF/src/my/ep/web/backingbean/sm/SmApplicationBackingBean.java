@@ -9657,6 +9657,17 @@ public class SmApplicationBackingBean extends
 	 * Sets the default review section for approver in the SmAppSectionReview.
 	 */
 	private void setDefaultApproverReviewSection() {
+		List<String> catList = SmApplicationUtil.getUnverifiedCatCodes(getManagedBean().getSmAppl()
+				.getSmSupplierCategories(), getManagedBean().getSmAppl().getApplType(), getManagedBean()
+				.isApproverUser());
+		if (catList.size() != 0) {
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_WARN, null, SmCommonUtil.getMessage(
+							"lbl.sm.appl.catCodes.noPoAppr.action",
+							new String[] { catList.toString().replaceAll("[\\[\\]]", "") })));
+		}
 		boolean containsAppRev = false;
 
 		if (!getManagedBean().getSmAppl().getSmApplSectionReviews().isEmpty()) {
@@ -9684,13 +9695,22 @@ public class SmApplicationBackingBean extends
 	 * Sets the default review section for PO in the SmAppSectionReview.
 	 */
 	private void setDefaultPoReviewSection() {
-
+		List<String> catList = SmApplicationUtil.getUnverifiedCatCodes(getManagedBean().getSmAppl()
+				.getSmSupplierCategories(), getManagedBean().getSmAppl().getApplType(), getManagedBean()
+				.isApproverUser());
+		if (catList.size() != 0) {
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_WARN, null, SmCommonUtil.getMessage(
+							"lbl.sm.appl.catCodes.noPoAppr.action",
+							new String[] { catList.toString().replaceAll("[\\[\\]]", "") })));
+		}
 		boolean containsPORev = false;
 
 		if (!getManagedBean().getSmAppl().getSmApplSectionReviews().isEmpty()) {
 			containsPORev = applSectionRevExist();
-			if (getManagedBean().isReviewSiteVisit()
-					&& !getManagedBean().getPoSecReview().isSitevisitVerified()) {
+			if (getManagedBean().isReviewSiteVisit() && !getManagedBean().getPoSecReview().isSitevisitVerified()) {
 				getManagedBean().getPoSecReview().setVerifiedAll(false);
 			}
 		}
@@ -9699,8 +9719,7 @@ public class SmApplicationBackingBean extends
 			poRev.setSmAppl(getManagedBean().getSmAppl());
 			poRev.setRoleType(SupplierManagementConst.SECTION_REV_ROLE_PO);
 			getManagedBean().setPoSecReview(poRev);
-			getManagedBean().getSmAppl().getSmApplSectionReviews()
-					.add(getManagedBean().getPoSecReview());
+			getManagedBean().getSmAppl().getSmApplSectionReviews().add(getManagedBean().getPoSecReview());
 		}
 
 	}
