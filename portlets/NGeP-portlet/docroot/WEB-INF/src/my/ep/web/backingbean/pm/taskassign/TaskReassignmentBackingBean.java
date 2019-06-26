@@ -495,7 +495,7 @@ public class TaskReassignmentBackingBean extends
 		
 		BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
 		bpmReqDTO.setDocNumber(docNo);
-		bpmReqDTO.setState("ASSIGNED");
+		bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
 		
 		if (SmServiceLookup.getBpmSO().getTasks(bpmReqDTO) == null) {
 			throw new EpException(MessageConst.ERROR_770056);
@@ -676,6 +676,9 @@ public class TaskReassignmentBackingBean extends
 				this.getManagedBean().getTaskAssignmentSearchBean()
 						.getOrgProfile());
 		
+		this.getManagedBean().getTaskAssignmentSearchBean().setSearched(true);
+		this.getManagedBean().setTaskLazy(true);
+
 		//Ensures at least User Name or DocNo is specified
 		if (this.getManagedBean().getTaskAssignmentSearchBean().getDocNo().isEmpty() &&
 			 !(this.getManagedBean().getTaskAssignmentSearchBean().getUser() != null
@@ -687,6 +690,7 @@ public class TaskReassignmentBackingBean extends
 		if (this.getManagedBean().getTaskAssignmentSearchBean().getDocNo().isEmpty()) {
 			searchTaskAssign();
 		} else {
+			resetReassigneeList();
 			searchUsers();
 		}
 		
@@ -697,8 +701,6 @@ public class TaskReassignmentBackingBean extends
 		
 		this.getManagedBean().setResultUser(this.getManagedBean().getTaskAssignmentSearchBean().getUser());
 		this.getManagedBean().setStatusIds(retrieveAvailableStatusId());
-		this.getManagedBean().getTaskAssignmentSearchBean().setSearched(true);
-		this.getManagedBean().setTaskLazy(true);
 		
 		reloadAllTaskList();
 		log.info("searchDocument - End");
@@ -724,15 +726,6 @@ public class TaskReassignmentBackingBean extends
 								this.getManagedBean().getReassigneeList()
 								 .put(this.getManagedBean().getTaskAssignmentSearchBean().getUser().getLoginId(),
 									  this.getManagedBean().getTaskAssignmentSearchBean().getUser().getUserName());
-								this.getManagedBean().setResultUser(this.getManagedBean()
-										.getTaskAssignmentSearchBean().getUser());
-								setReassigneeRoleList(this.getManagedBean()
-										.getTaskAssignmentSearchBean().getUser().getUserId());
-								this.getManagedBean().setStatusIds(retrieveAvailableStatusId());
-								this.getManagedBean().getTaskAssignmentSearchBean().setSearched(true);
-								this.getManagedBean().setTaskLazy(true);
-								
-								reloadAllTaskList();
 								break;
 							}
 						} else {
@@ -741,16 +734,23 @@ public class TaskReassignmentBackingBean extends
 						}
 				  }
 	        } catch (NullPointerException e) {
-		        	log.info("The reassignee list has a NULL reasignee!");
+		        	log.info("There is an empty assignee!");
 		    }
 		}
 		
-		if (this.getManagedBean().getTaskAssignmentSearchBean().getUser() == null) {
-				this.getManagedBean().setShowReassigneeList(true);
+		if (this.getManagedBean().getReassigneeList().isEmpty()) {
+			FacesContext.getCurrentInstance().addMessage("noReassignees", 
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,null, 
+							ResourceBundleUtils.getMessage("lbl.datatable.msg.no.records.found", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale())));
+		}
+		
+		if (this.getManagedBean().getReassigneeList().size() > 1) {
+			this.getManagedBean().setShowReassigneeList(true);
 		} else {
-			if (this.getManagedBean().getReassigneeList().isEmpty()) {
-				RequestContext.getCurrentInstance().execute("noReassignees.show()");
-			}
+			this.getManagedBean().setResultUser(this.getManagedBean().getTaskAssignmentSearchBean().getUser());
+			this.getManagedBean().setStatusIds(retrieveAvailableStatusId());
+			reloadAllTaskList();
 		}
 		log.info("Displaying users: "+this.getManagedBean().getReassigneeList());
 
@@ -764,10 +764,7 @@ public class TaskReassignmentBackingBean extends
 		if (selectedReassignee != null) {
 			this.getManagedBean().setResultUser(selectedReassignee);
 			setReassigneeRoleList(selectedReassignee.getUserId());
-			
 			this.getManagedBean().setStatusIds(retrieveAvailableStatusId());
-			this.getManagedBean().getTaskAssignmentSearchBean().setSearched(true);
-			this.getManagedBean().setTaskLazy(true);
 			
 			log.info("Selected user: "+this.getManagedBean().getSelectedReassignee().get(0));
 		}
@@ -1766,6 +1763,12 @@ public class TaskReassignmentBackingBean extends
 
 		try {
 			TaskAssignmentReqDTO reqDTO = new TaskAssignmentReqDTO();
+			
+			PmUser fromUser = !this.getManagedBean().getSelectedReassignee().isEmpty() ?
+					PmCommonUtil.retrieveUserByLoginId(
+							this.getManagedBean().getSelectedReassignee().get(0)) :
+						getManagedBean().getTaskAssignmentSearchBean().getUser();
+			
 			reqDTO.setTaskId(task.getTaskId());
 			reqDTO.setUser(pmUser);
 			reqDTO.setUserIdList(assigneeUsers);
@@ -1779,8 +1782,7 @@ public class TaskReassignmentBackingBean extends
 			reqDTO.setRoleCode(PmCommonUtil.getUserRoleValue());
 			reqDTO.setActionedByUser(getFacesScopes().getUserSessionBean()
 					.getUserId());
-			reqDTO.setFromUser(getManagedBean().getTaskAssignmentSearchBean()
-					.getUser());
+			reqDTO.setFromUser(fromUser);
 			reqDTO.setCommitteeUpdate(getManagedBean().isCommitteeUpdate());	
 			reqDTO.setUserLocale(getFacesScopes().getUserLocale());
 			reqDTO.setRemark(getManagedBean().getRemarks());
@@ -2013,8 +2015,9 @@ public class TaskReassignmentBackingBean extends
 		Long orgProfileId = getManagedBean()
 						.getTaskAssignmentSearchBean().getOrgProfile()
 						.getOrgProfileId();
-		Long userId = getManagedBean()
-				.getTaskAssignmentSearchBean().getUser().getUserId();
+		Long userId = getManagedBean().getTaskAssignmentSearchBean().getUser() != null ?
+					  getManagedBean().getTaskAssignmentSearchBean().getUser().getUserId() : 
+					  Long.valueOf(this.getManagedBean().getSelectedReassignee().get(0)).longValue();
 		Long actualOrgProfileId = null;
 		Long userGroupId = null;
 		Long addressId = null;
@@ -2324,12 +2327,12 @@ public class TaskReassignmentBackingBean extends
 		List<String> assigneeUsers = task.getAssignees();
 		if (assigneeUsers !=null && !assigneeUsers.isEmpty()) {
 			// remove the current user.
-			if (assigneeUsers.contains(getManagedBean()
-					.getTaskAssignmentSearchBean().getUser().getLoginId())) {
-				assigneeUsers.remove(getManagedBean()
-							.getTaskAssignmentSearchBean().getUser()
-							.getLoginId());
+			String currentUser = getManagedBean().getTaskAssignmentSearchBean().getUser() != null ?
+					  getManagedBean().getTaskAssignmentSearchBean().getUser().getLoginId() : 
+					  this.getManagedBean().getSelectedReassignee().get(0);
 			
+			if (assigneeUsers.contains(currentUser)) {
+				assigneeUsers.remove(currentUser);
 			}
 			if(assigneeUsers != null && assigneeUsers.size() > 1 && ProfileManagementConst.REASSIGN_WORKLIST_TYPE_OTHERS == reassignWorkListType){
 				claimedBy = task.getAcquiredBy();
