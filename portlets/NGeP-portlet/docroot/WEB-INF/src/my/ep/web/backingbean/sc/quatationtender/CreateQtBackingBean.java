@@ -649,7 +649,7 @@ public class CreateQtBackingBean extends
 						scQt.setOpenFor(ParameterConst.OPEN_FOR_ALL);
 						
                         //20190523@hatta - 22240 - Start	
-						if(null != scQt.getOpenFor())
+						if(!scQt.getScQtCategorys().isEmpty())
 						{
 							for(ScQtCategory cat: scQt.getScQtCategorys())
 						    {  
