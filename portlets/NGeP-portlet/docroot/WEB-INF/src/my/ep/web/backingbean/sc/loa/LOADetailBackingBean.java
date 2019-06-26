@@ -2799,7 +2799,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		try {
 			String outcome = BpmOutcomeConst.BPM_SAVE;
 			ScLoa scLoa = this.getManagedBean().getScLoa();
-			scLoa.setFollowLoaAmt(this.getManagedBean().getFlowamt());
+			if(this.getManagedBean().getFlowamt()!=null)
+			{
+				scLoa.setFollowLoaAmt(this.getManagedBean().getFlowamt());
+			}
 			ScLoaWitness loaSupplierWitness = this.getManagedBean().getLoaSupplierWitness();
 			Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 
@@ -2862,7 +2865,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		try {
 			String outcome = BpmOutcomeConst.BPM_SUBMIT;
 			ScLoa scLoa = this.getManagedBean().getScLoa();
-			scLoa.setFollowLoaAmt(this.getManagedBean().getFlowamt());
+			if(this.getManagedBean().getFlowamt()!=null)
+			{
+				scLoa.setFollowLoaAmt(this.getManagedBean().getFlowamt());
+			}
 			parseLOADetails(scLoa, outcome);
 			validateLOADetails(scLoa, outcome);
 			updateContractDetails(scLoa);
@@ -6688,8 +6694,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		ScQuote scQuote = getManagedBean().getScLoa().getScQuote();
 
 		EpPropertiesUtils prop = EpPropertiesUtils.getInstance();
-		Integer sqTimeValidity = Integer.valueOf(prop.getProperty("sqTimeValidity"));
-		//Integer sqTimeValidity = 60;
+//		Integer sqTimeValidity = Integer.valueOf(prop.getProperty("sqTimeValidity"));
+		Integer sqTimeValidity = 60;
 
 		if(scQuote != null){
 			
