@@ -226,7 +226,7 @@
 											style="width: 235px; margin-bottom: 5px;"
 											panelStyle="overflow-y: scroll; width:400px; height:200px;"
 											id="justificationId" label="#{lbl['lbl.sc.reason']}"
-											required="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode eq 'A'}"
+											required="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode eq 'A' or purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode eq 'P'}"
 											value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.justificationType.reasonCode}"
 											disabled="#{purchaseInquiryBackingBean.managedBean.disProcTyp}">
 											<f:selectItems
@@ -248,7 +248,7 @@
 											id="justificationRmk"
 											label="#{lbl['lbl.sc.price.inquiry.just.rmks']}"
 											maxlength="100"
-											required="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode eq 'A'}"
+											required="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode eq 'A' or purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode eq 'P'}"
 											rows="3" cols="122" style="margin-bottom: 5px; width: 325px;" 
 											disabled="#{purchaseInquiryBackingBean.managedBean.disProcTyp}"/>
 										<p:message id="justRmksMsg" for="justificationRmk"
