@@ -133,6 +133,8 @@ public class SmReportConst implements Serializable {
 	public static final String SM_LIST_OF_SOFTCERT_PAYMENT_RPT_VAL = "SM_078";
 	public static final String SM_REJECTED_SOFTCERT_RPT_VAL = "SM_079";
 	public static final String SM_DISC_ACT_EXEC_SUMMARY_RPT_VAL = "SM_083";
+	public static final String SM_APPL_CLIENT_CHARTER_K = "SM_085";
+	public static final String SM_APPL_CLIENT_CHARTER_J = "SM_086";
 
 	// Screen fields constants
 	public static final String SM_ZONE_SEMENANJUNG = "Semenanjung";
@@ -541,6 +543,14 @@ public class SmReportConst implements Serializable {
 
 	public String getSmDiscActExecSummaryRptVal() {
 		return SM_DISC_ACT_EXEC_SUMMARY_RPT_VAL;
+	}
+
+	public static String getSmApplClientCharterK() {
+		return SM_APPL_CLIENT_CHARTER_K;
+	}
+
+	public static String getSmApplClientCharterJ() {
+		return SM_APPL_CLIENT_CHARTER_J;
 	}
 
 	public String getCertAppNew() {
