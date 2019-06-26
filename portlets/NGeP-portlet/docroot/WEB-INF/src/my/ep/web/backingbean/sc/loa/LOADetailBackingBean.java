@@ -6688,8 +6688,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		ScQuote scQuote = getManagedBean().getScLoa().getScQuote();
 
 		EpPropertiesUtils prop = EpPropertiesUtils.getInstance();
-//		Integer sqTimeValidity = Integer.valueOf(prop.getProperty("sqTimeValidity"));
-		Integer sqTimeValidity = 60;
+		Integer sqTimeValidity = Integer.valueOf(prop.getProperty("sqTimeValidity"));
+		//Integer sqTimeValidity = 60;
 
 		if(scQuote != null){
 			
