@@ -2799,7 +2799,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		try {
 			String outcome = BpmOutcomeConst.BPM_SAVE;
 			ScLoa scLoa = this.getManagedBean().getScLoa();
-			if(this.getManagedBean().getFlowamt()!=null)
+			if((scLoa!=null) && (this.getManagedBean().getFlowamt()!=null))
 			{
 				scLoa.setFollowLoaAmt(this.getManagedBean().getFlowamt());
 			}
@@ -2865,7 +2865,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		try {
 			String outcome = BpmOutcomeConst.BPM_SUBMIT;
 			ScLoa scLoa = this.getManagedBean().getScLoa();
-			if(this.getManagedBean().getFlowamt()!=null)
+			if((scLoa!=null) && (this.getManagedBean().getFlowamt()!=null))
 			{
 				scLoa.setFollowLoaAmt(this.getManagedBean().getFlowamt());
 			}
