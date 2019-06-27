@@ -99,7 +99,8 @@ public class ViewApplHistoryManagedBean extends
 
 			int i = 0;
 			for (Object[] obj : retVal.getResultList()) {
-				obj[8] = getMofNo(Long.parseLong(obj[11].toString()),
+				//Bug #25601 : SM SHOWSTOPPER: Duplicate MOF Account for New Supplier Registration
+				obj[8] = getMofNo(Long.parseLong(obj[11].toString()),Long.parseLong(obj[10].toString()),
 						obj[8]==null?StringUtils.EMPTY: obj[8].toString());
 				retVal.getResultList().set(i, obj);
 				i++;
@@ -107,11 +108,11 @@ public class ViewApplHistoryManagedBean extends
 			return retVal;
 		}
 	}
-
-	private String getMofNo(Long supplierId, String mofNo) {
+	//Bug #25601 : SM SHOWSTOPPER: Duplicate MOF Account for New Supplier Registration
+	private String getMofNo(Long supplierId,Long applId, String mofNo) {
 		if (StringUtils.isBlank(mofNo)) {
-			SmMofAccount acc = SmCommonUtil.getMofAccountBySuppIdAndSuppType(
-					supplierId, null);
+			SmMofAccount acc = SmCommonUtil.getPreviousMofAccountBySuppIdAndSuppType(
+					supplierId,applId, null);
 			if (acc != null) {
 				mofNo = acc.getMofNo();
 			}
