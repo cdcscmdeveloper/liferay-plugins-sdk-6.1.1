@@ -53,7 +53,7 @@
 				selection="#{backingBean.managedBean.selectedBanks}"
 				rowKey="#{bankBean}" rowIndexVar="index" id="bankDt"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">				
-								
+					
 				<p:ajax event="rowSelectCheckbox"
 					listener="#{backingBean.itemRowSelectCheckbox}" 					 
 					update=":form:tt:bankDelBtnId"
@@ -64,7 +64,7 @@
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 					
 				<ac:paginator for="bankDt" />
-				<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.smAppl.smSupplierBanks}"/>
+				<p:column selectionMode="multiple" width="1%" action="#{backingBean.assignBankAccountNo(bankBean)}" rendered="#{not empty backingBean.managedBean.smAppl.smSupplierBanks}"/>
 				
 				<p:column headerText="#{lbl['lbl.sm.bankDtls.acctNo']}">
 					<h:outputText value="#{bankBean.accountNo}" />
