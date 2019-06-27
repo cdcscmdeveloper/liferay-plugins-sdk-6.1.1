@@ -396,6 +396,25 @@ public class SmApplicationUtil {
 
 		return addedNewCode;
 	}
+	
+	// 25996 start
+	public static List<String> getCatCodesNotVerifiedByPo(SmApplicationManagedBean managedBean) {
+
+		List<String> applTypes = Arrays.asList(ParameterConst.NEW_SM_APPLN_FOR_MOF,
+				ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES, ParameterConst.NEW_SM_APPLN_FOR_RENEW);
+		List<String> invalidCatCodes = new ArrayList<>();
+
+		if (applTypes.contains(managedBean.getSmAppl().getApplType())) {
+			for (SmSupplierCategory cat : managedBean.getSmAppl().getSmSupplierCategories()) {
+				if (cat.getPoDecFlg() == null) {
+					invalidCatCodes.add(cat.getCategoryL1Name() + cat.getCategoryL1Name() + cat.getCategoryL1Name());
+				}
+			}
+		}
+
+		return invalidCatCodes;
+	}
+	// 25996 end
 
 	/**
 	 * Validate supporting documents.For online application check whether
@@ -3890,6 +3909,9 @@ public class SmApplicationUtil {
 				throw new EpException(MessageConst.ERROR_722566);
 			}
 			List<SmMofAccount> accounts = smSupplier.getSmMofAccounts();
+			// 25996 start
+			int inactiveMofAcc = 0;
+			// 25996 end
 			for (SmMofAccount account : accounts) {
 				if (account.getSupplierType().equalsIgnoreCase(
 						smSupplier.getSmAppl().getSupplierType())) {
@@ -3937,10 +3959,20 @@ public class SmApplicationUtil {
 						}
 					}else if(account.getRecordStatusFlg().compareTo(
 								DbValueConst.RECORD_STATUS_DELETED) == 0){
-						throw new EpException(MessageConst.ERROR_722502);
+						// 25996 start
+						inactiveMofAcc++;
+						// 25996 end
 					}
 				}
 			}
+			
+			// 25996 start
+			// Only throw exception if supplier have no active mof account
+			if (inactiveMofAcc == accounts.size()) {
+				throw new EpException(MessageConst.ERROR_722502);
+			}
+			// 25996 end
+						
 			// 11231: start - check maximum limit 30 categories per supplier
 			if (applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)) {
 				int maxCatSize = SmRuleHelper.getInstance().getMaxCategoryAllowed();
