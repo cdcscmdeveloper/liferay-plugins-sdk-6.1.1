@@ -67,6 +67,7 @@ import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.calendar.ICalendarSO;
 import my.ep.biz.service.sm.common.myidentity.IMyIdentitySO;
+import my.ep.biz.service.sm.common.ssm.ISsmSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
@@ -109,6 +110,8 @@ import my.ep.dto.sm.attachment.SmAttachmentReqDTO;
 import my.ep.dto.sm.attachment.SmAttachmentResDTO;
 import my.ep.dto.sm.common.myidentity.MyIdentityReqDTO;
 import my.ep.dto.sm.common.myidentity.MyIdentityResDTO;
+import my.ep.dto.sm.common.ssm.SsmReqDTO;
+import my.ep.dto.sm.common.ssm.SsmResDto;
 import my.ep.dto.sm.complaint.ComplaintReqDTO;
 import my.ep.dto.sm.complaint.ComplaintResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
@@ -3112,6 +3115,30 @@ public class SmCommonUtil {
 		}
 		return mofAcc;
 	}
+	/**
+	 * Get previous SmMofAccount by Supplier Id and Supplier Type And ApplId
+	 * 
+	 * @param Long
+	 *            supplierId
+	 * @param String
+	 *            suppType
+	 * @return SmMofAccount
+	 */
+	//Bug #25601 : SM SHOWSTOPPER: Duplicate MOF Account for New Supplier Registration
+	public static SmMofAccount getPreviousMofAccountBySuppIdAndSuppType(
+			Long supplierId,Long applId, String suppType) {
+		SmMofAccount mofAcc = null;
+		if (supplierId != null) {
+			MofAccountReqDTO reqDTO = new MofAccountReqDTO();
+			reqDTO.setSupplierType(suppType);
+			reqDTO.setSupplierId(supplierId);
+			reqDTO.setApplId(applId);
+			mofAcc = SmServiceLookup.getMofAccountSO()
+					.retrivePreviousMOFAccountBySupplierIdAndType(reqDTO)
+					.getMofAccount();
+		}
+		return mofAcc;
+	}
 
 	/**
 	 * Get latest revision company basic by application id
@@ -4157,7 +4184,64 @@ public class SmCommonUtil {
 			}
 		}
 	}
+	/*//16052019 - SSM INTEGRATION CR - Fahmi
+	*//**
+	 * Verify regNo no with SSM
+	 * 
+	 * @param regNo
+	 * @param bussinessType
+	 * 
+	 * @return responseCode
+	 *//*
+	public String validateWithSSM(String regNo, String bussinessType,String type) {
+		SsmReqDTO reqDTO = new SsmReqDTO();
+		ISsmSO reqSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISsmSO.class);
 
+		
+		reqDTO.setRegNo(regNo);
+		reqDTO.setBusinessType(bussinessType);
+
+		try {
+			SsmResDto resDTO = reqSO.ssmValidation(reqDTO);
+			
+			if (!resDTO.getStatusCode().equalsIgnoreCase("")){
+				switch (resDTO.getStatusCode()) {
+				case "70019":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70019);
+				case "70020":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70020);
+				case "70031":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70031);
+					
+					 * case "70032": throw new
+					 * EpException(MessageConst.ERROR_MYIDENTITY_70032);
+					 
+				case "70004":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70004);
+				case "70005":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70004);
+				case "70039":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70039);
+				case "70040":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70040);
+				}
+			}
+
+			return resDTO.getStatusCode();
+		} catch (Exception ex) {
+			String message = MessageUtils.getMessage(ex.getMessage(),
+					MessageUtils.BUNDLE_COMMON_MESSAGES,
+					new FacesScopes().getUserLocale());
+			if (message != null) {
+				throw new EpException(message + "(ERR-"
+						+ ex.getMessage().toString() + ")");
+			} else {
+				throw new EpException(ex.getMessage() + "(ERR-729999)");
+			}
+		}
+	}
+*/
 	/**
 	 * verify verify Owner With My Identity
 	 * 
