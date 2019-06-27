@@ -529,6 +529,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean activeTransaction;
 	private boolean pendingTransaction;
 	private boolean itemDeleteButtonShow;
+	private int index;
+	private String accountNo;
 
 	private class RejectReasonPagingDataModel extends
 			PagingDataModel<PmReasonDesc> {
@@ -4084,4 +4086,21 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setItemDeleteButtonShow(boolean itemDeleteButtonShow) {
 		this.itemDeleteButtonShow = itemDeleteButtonShow;
 	}
+
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
+	public String getAccountNo() {
+		return accountNo;
+	}
+
+	public void setAccountNo(String accountNo) {
+		this.accountNo = accountNo;
+	}
+
 }
