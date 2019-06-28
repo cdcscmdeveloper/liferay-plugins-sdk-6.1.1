@@ -20,7 +20,6 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,7 +66,6 @@ import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.calendar.ICalendarSO;
 import my.ep.biz.service.sm.common.myidentity.IMyIdentitySO;
-import my.ep.biz.service.sm.common.ssm.ISsmSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
@@ -110,8 +108,6 @@ import my.ep.dto.sm.attachment.SmAttachmentReqDTO;
 import my.ep.dto.sm.attachment.SmAttachmentResDTO;
 import my.ep.dto.sm.common.myidentity.MyIdentityReqDTO;
 import my.ep.dto.sm.common.myidentity.MyIdentityResDTO;
-import my.ep.dto.sm.common.ssm.SsmReqDTO;
-import my.ep.dto.sm.common.ssm.SsmResDto;
 import my.ep.dto.sm.complaint.ComplaintReqDTO;
 import my.ep.dto.sm.complaint.ComplaintResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
@@ -208,7 +204,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.id.Hex;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.log4j.MDC;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -4184,16 +4179,16 @@ public class SmCommonUtil {
 			}
 		}
 	}
-	/*//16052019 - SSM INTEGRATION CR - Fahmi
-	*//**
+	//16052019 - SSM INTEGRATION CR - Fahmi
+	/**
 	 * Verify regNo no with SSM
 	 * 
 	 * @param regNo
 	 * @param bussinessType
 	 * 
 	 * @return responseCode
-	 *//*
-	public String validateWithSSM(String regNo, String bussinessType,String type) {
+	 */
+	/*public String validateWithSSM(String regNo, String bussinessType,String type) {
 		SsmReqDTO reqDTO = new SsmReqDTO();
 		ISsmSO reqSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISsmSO.class);
@@ -4240,8 +4235,8 @@ public class SmCommonUtil {
 				throw new EpException(ex.getMessage() + "(ERR-729999)");
 			}
 		}
-	}
-*/
+	}*/
+
 	/**
 	 * verify verify Owner With My Identity
 	 * 
