@@ -11,6 +11,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -41,13 +42,20 @@ import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
+import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.bpm.service.IBpmSO;
+import my.ep.bpm.vo.WorklistItemVO;
+import my.ep.comparator.WorklistItemVOComparator;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.constants.BpmConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
@@ -111,9 +119,12 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.web.backingbean.bpm.tasksearch.BPMTaskSearchBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -224,30 +235,6 @@ public class SupplierFinalizationBackingBean extends
 					CommonUIConst.ACKNOWLEDGE_ERROR_PAGE);
 		}
 	}
-
-
-	/**
-	 * Initialize the data required when the page is initially rendered (based
-	 * on the qtid of the selected quotation/tender) and sets the data in
-	 * managed bean associated with the current user session
-	 * @return 
-	 */
-	public String preRenderViewMaintenance(ScQt scQt, String previousPageUrl) {
-		log.info("preRenderViewMaintenance");
-		if(isQTMaintenanceScreen()){
-			getManagedBean().setActiveIndex(0);
-		}
-		getManagedBean().setScQt(scQt);
-		getManagedBean().setPreviousPageUrl(previousPageUrl);
-		
-		Long loggedInUserId = getFacesScopes().getUserSessionBean()
-								.getUserId();
-		getManagedBean().setLoggedInUserId(loggedInUserId);
-
-		loadInitialDataMaintenance(scQt.getQtId());
-
-		return QTConstants.FC_SUPPLIER_FINALIZATION_PAGE;
-	}
 	
 	/**
 	 * To fetch initial data
@@ -342,12 +329,14 @@ public class SupplierFinalizationBackingBean extends
 			getManagedBean().getScQtFinalization()
 					.setLoiLoaBy(ParameterConst.LOILOA_PREPARED_BY_DO);
 			getManagedBean().setPreparationTabIndex(-1);
+			getManagedBean().setEvaluationReportIndex(tabIndex++);
 			getManagedBean().setReportTabIndex(tabIndex++);
 			getManagedBean().setFinalizationTabIndex(tabIndex++);
 			getManagedBean().setEndorsementReportActiveIndex(-1);
 			getManagedBean().setCommEndorsementTabIndex(-1);
 		} else {
 			getManagedBean().setPreparationTabIndex(tabIndex++);
+			getManagedBean().setEvaluationReportIndex(tabIndex++);
 			getManagedBean().setReportTabIndex(tabIndex++);
 			getManagedBean().setFinalizationTabIndex(tabIndex++);
 			getManagedBean().setCommEndorsementTabIndex(tabIndex++);	
@@ -6599,6 +6588,74 @@ public class SupplierFinalizationBackingBean extends
 		}		
 	}
 	
+	
+	// ***25201#35 
+	public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl, boolean editable){
+		/*BPMTaskSearchBackingBean bpmTaskSearchBB = new BPMTaskSearchBackingBean();
+		bpmTaskSearchBB.setDocNumber(scQt.getQtNo());
+		bpmTaskSearchBB.searchAction();
+		List<WorklistItemVO> res = bpmTaskSearchBB.getResultList();
+		if(!CollectionUtils.isEmpty(res)){
+			for(WorklistItemVO r : res){
+				if(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION.equalsIgnoreCase(r.getDocType())){
+					log.info("task id : "+r.getTaskId());
+					log.info("status : "+r.getDocStatus());
+					log.info("version : "+r.getInstanceVersion());
+				}
+			}
+		}*/
+		
+		
+		BpmRequestDTO reqDTO = new BpmRequestDTO();
+
+		String bpmUserLogin = EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.BPM_PRINCIPAL);
+
+		Object token = getBpmSO().authenticate(bpmUserLogin);
+		reqDTO.setUserId(bpmUserLogin);
+		reqDTO.setDocNumber(scQt.getQtNo());
+		reqDTO.setDocType(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION);
+		BpmResponseDTO resDTO = getBpmSO().getTasks(reqDTO);
+		if(resDTO != null && resDTO.getWorklistVO() != null && !CollectionUtils.isEmpty(resDTO.getWorklistVO().getWorklistItem())){
+			List<WorklistItemVO> tl = resDTO.getWorklistVO().getWorklistItem();
+			Collections.sort(tl, new WorklistItemVOComparator.SortByUpdateDateDescComparator());
+			for(WorklistItemVO w: tl){
+				if(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION.equalsIgnoreCase(w.getDocType())){
+					log.info(w.getUpdateDate()!=null?w.getUpdateDate().getTime():w.getUpdateDate());
+					log.info(w.getAssigneesString());
+					log.info(w.getState());
+					log.info(w.toString());
+				}
+			}
+			log.info("worklist item size : "+resDTO.getWorklistVO().getWorklistItem().size());
+			log.info("*********************************************************************");
+			Collections.sort(tl, new WorklistItemVOComparator.SortByUpdateDateAscComparator());
+			for(WorklistItemVO w: tl){
+				if(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION.equalsIgnoreCase(w.getDocType())){
+					log.info(w.getUpdateDate()!=null?w.getUpdateDate().getTime():w.getUpdateDate());
+					log.info(w.getAssigneesString());
+					log.info(w.getState());
+					log.info(w.toString());
+				}
+			}
+		}
+		
+		if(isQTMaintenanceScreen()){
+			getManagedBean().setActiveIndex(0);
+		}
+		getManagedBean().setReadOnly(!editable);
+		getManagedBean().setScQt(scQt);
+		getManagedBean().setPreviousPageUrl(previousPageUrl);
+		
+		Long loggedInUserId = getFacesScopes().getUserSessionBean()
+								.getUserId();
+		getManagedBean().setLoggedInUserId(loggedInUserId);
+
+		loadInitialDataMaintenance(scQt.getQtId());
+		
+		return QTConstants.FC_SUPPLIER_FINALIZATION_PAGE;
+	}
+	
 	/**
 	 * The method to used auto update of request.
 	 */
@@ -6895,6 +6952,11 @@ public class SupplierFinalizationBackingBean extends
 		//set to false whenever KT is deleted, currenly disabled
 		this.getManagedBean().getScQtFinalization().setBriefingPaperUploaded(false);
 				
+	}
+	
+	private IBpmSO getBpmSO() {
+		return (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(
+				IBpmSO.class);
 	}
 	
 	/**

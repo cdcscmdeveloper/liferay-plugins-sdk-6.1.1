@@ -13,15 +13,19 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
+import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.constant.MapKeyEnum;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
+import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
+import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
+import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
@@ -32,6 +36,7 @@ import my.ep.web.backingbean.sc.loiloa.LOIDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.loa.QtLOAManagedBean;
+import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -113,6 +118,19 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 			
 			if(getManagedBean().getQt()!=null) {dpDataType.setTitle(getManagedBean().getQt().getQtTitle());}
 			
+			// ***25201#35 
+			//set status
+			if(isQTMaintenanceScreen() && (getManagedBean().getCurrentStatusId() == null || getManagedBean().getCurrentStatusId().longValue() == 0L)){
+				ScWorkFlowStatusReqDTO wsReqDTO = new ScWorkFlowStatusReqDTO();
+				wsReqDTO.setDocId(scQt.getQtId());
+				wsReqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+				ScWorkFlowStatusResDTO wsResDTO = getScWorkflowStatusSO().retrieveCurrentWorkFlowStatus(wsReqDTO);
+				if(wsResDTO != null && wsResDTO.isSuccessful()){
+					if(!CollectionUtils.isEmpty(wsResDTO.getWorkFlowStatusList())){
+						getManagedBean().setCurrentStatusId(wsResDTO.getWorkFlowStatusList().get(0).getPmStatus().getStatusId());
+					}
+				}
+			}
 			
 			if(getManagedBean().getSuppLoiLoaMap() != null && getManagedBean().getSuppLoiLoaMap().size()>0){
 				loaDetailBackingBean.getManagedBean().setSuppLoiLoaMap(getManagedBean().getSuppLoiLoaMap());
@@ -125,11 +143,6 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 			lOIDetailBackingBean.getManagedBean().setPayLoad(dpDataType);
 
 			generateSuppLoiLoaList();
-			
-			
-
-			
-			
 			
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -422,6 +435,11 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 	}
 	
+	private IScWorkFlowStatusSO getScWorkflowStatusSO(){
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+	}
+	
 	/**
 	 * Page navigation from qt loa screen to qtLoaManagedBean.backToPreviousPage
 	 */
@@ -432,6 +450,10 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 				.getNavigationHandler()
 				.handleNavigation(fc, null,
 						getManagedBean().getBackToPreviousPage());
+	}
+	
+	private boolean isQTMaintenanceScreen() {
+		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 }
 
