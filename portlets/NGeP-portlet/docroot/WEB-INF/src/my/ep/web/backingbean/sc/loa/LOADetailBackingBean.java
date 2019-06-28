@@ -112,6 +112,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
+import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
@@ -343,6 +344,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		Map<MapKeyEnum, Object> otherArgs = new HashMap<MapKeyEnum, Object>();
 		otherArgs.put(MapKeyEnum.enableDownloadAllDocuments, Boolean.valueOf(enableDownloadAllDocuments));
 		return retrieveSupplierLOADtlPriv(sourceId, loaId, previousPageUrl, isReadonly, otherArgs);
+		
 	}
 
 
@@ -363,7 +365,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	public String retrieveSupplierLOADtl(Long sourceId, Long loaId, String previousPageUrl, boolean isReadonly) {
 		return retrieveSupplierLOADtlPriv(sourceId, loaId, previousPageUrl, isReadonly, null);
 	}
-	
 	
 	/**
 	 * Get the supplier loa details.
@@ -414,9 +415,15 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			// Setting OverallContractAmount
 			calculateOverallCtAmtForSupplier();
 			
+			// setting supplier proposal
+			getManagedBean().setScQtProposal(resDTO.getSupplierProposal());
+			
 			//Enhancement #24259 #24269
 //			isGSTRegActive();
 //			isSSTRegActive();
+			
+			
+			
 
 			// Setting BI Report
 			List<ScLoaReport> scLoaReports = scLoa.getScLoaReports();
@@ -6652,7 +6659,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			reqDTO.setForceGetAllUserOrgList(false);*/
 			
 			
-			if(resDTO.isSuccessful()){
+			if(resDTO!=null && resDTO.isSuccessful()){
 				debugLogger("checkUserInOrgProfile Successful");
 				if(!CollectionUtils.isEmpty(resDTO.getUserOrgList())){
 					return true;
@@ -6664,6 +6671,36 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		finally{
 			userSO = null;
 		}
+	}
+	
+	// ***25201#35
+	public Boolean canShowSupplierProposalByLOAStatus(){
+		/*
+		i) Pending Letter of Acceptance Preparation 
+		ii) Pending Letter Of Acceptance Submission 
+		iii) Pending Letter of Acceptance Approval
+		iv) Pending Letter of Acceptance Revision
+		v) Pending Letter of Acceptance Revision Approval
+		vi) Pending Acknowledgement Receipt's Letter Of Acceptance 
+		vii) Pending Verification of Acknowledgement Receipt's Letter Of Acceptance
+		*/
+		Long[] statusList = {
+				QTStatusConst.QT_PENDING_LOA, //i
+				QTStatusConst.LOA_PENDING_SUBMISSION, //ii 
+				QTStatusConst.LOA_PENDING_APPROVAL, //iii
+				QTStatusConst.LOA_PENDING_REVISION, //iv
+				QTStatusConst.LOA_PENDING_REVISION_APPROVAL, //v
+				QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT, //vi
+				QTStatusConst.LOA_PENDING_VERIFICATION //vii
+				};
+		if(getManagedBean()!=null && getManagedBean().getScLoa()!=null && getManagedBean().getScLoa().getPmStatus()!=null && getManagedBean().getScLoa().getPmStatus().getStatusId()!=null){
+			for(Long s : statusList){
+				if(s.longValue() == getManagedBean().getScLoa().getPmStatus().getStatusId().longValue()){
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 	
 	

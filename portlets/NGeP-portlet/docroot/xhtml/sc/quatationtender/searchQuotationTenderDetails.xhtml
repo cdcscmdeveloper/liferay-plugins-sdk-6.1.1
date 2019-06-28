@@ -98,7 +98,9 @@
 					<td style="width:385px">
 						<p:inputText id="docNo"
 							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.docNo}"
-							maxlength="21" style="width:288px;" />
+							maxlength="21" style="width:288px;">
+							<p:ajax update="@form" process="@this"/>
+						</p:inputText>
 					</td>
 							
 					<td style="width:165px"><h:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" /></td>
@@ -174,10 +176,10 @@
 						<ui:param name="qtStatusSelectItems" value="#{qTDetailBB.getQTStatusDropdownValues(ParameterConst.reqNoteMethodCode, ParameterConst.doctypeQuotation,screenName)}" />
 						<ui:param name="sfStatusSelectItems" value="#{qTDetailBB.getQTStatusDropdownValues(ParameterConst.reqNoteMethodCode, ParameterConst.doctypeSupplierFinalization,screenName)}" />
 						<c:choose>
-							<c:when test="#{qTDetailBB.managedSearchBeanDocumentTypeIsLOA}">
+							<c:when test="#{qTDetailBB.managedSearchBeanDocTypeIsLOAAndPrefixLAAndIsDO}">
 								<c:set var="statusList" value="#{loaStatusSelectItems}" scope="view" />
 							</c:when>
-							<c:when test="#{qTDetailBB.managedSearchBeanDocumentTypeIsLOI}">
+							<c:when test="#{qTDetailBB.managedSearchBeanDocTypeIsLOIAndPrefixLIAndIsDO}">
 								<c:set var="statusList" value="#{loiStatusSelectItems}" scope="view" />
 							</c:when>
 							<c:when test="#{qTDetailBB.managedSearchBeanDocumentTypeIsSuppFinal}">

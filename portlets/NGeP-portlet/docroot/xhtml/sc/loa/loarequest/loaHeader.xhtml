@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
-	<ui:param name="canShowSupplierProposal" value="#{lOADetailBackingBean.canShowSupplierProposal()}" />
+	<ui:param name="canShowSupplierProposal" value="#{lOADetailBackingBean.canShowSupplierProposal() and lOADetailBackingBean.canShowSupplierProposalByLOAStatus()}" />
 
 	<div align="left" class="header-info header-spacing"
 		style="width: 100%">
@@ -58,6 +58,7 @@
 				<td class="header-info-text">
 					#{lOADetailBackingBean.showPreparedBy(lOADetailBackingBean.managedBean.scLoa.createdBy)}</td>
 			</tr>
+			<c:if test="#{(not empty lOADetailBackingBean.managedBean.scQtProposal) or (not empty lOADetailBackingBean.managedBean.scLoa.scQuote)}" >
 			<tr>
 				<td width="10%"><h:outputLabel
 						value="#{lbl['lbl.sc.proposal.no']}" /></td>
@@ -74,6 +75,7 @@
 				<td><p:spacer width="1" /></td>
 				<td><p:spacer width="1" /></td>
 			</tr>
+			</c:if>
 		</table>
 	</div>
 </ui:composition>
