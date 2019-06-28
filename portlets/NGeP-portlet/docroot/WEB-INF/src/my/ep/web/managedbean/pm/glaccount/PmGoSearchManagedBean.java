@@ -26,6 +26,7 @@ public class PmGoSearchManagedBean extends BaseManagedBean{
 	private Long kptjId;
 	private boolean accTypeDisabled;
 	private boolean accClassDisabled;
+	private String selectedGoSoObjCode;
 	
 	public PmGoSearchManagedBean(){
 		
@@ -197,6 +198,20 @@ public class PmGoSearchManagedBean extends BaseManagedBean{
 	 */
 	public void setAccClassDisabled(boolean accClassDisabled) {
 		this.accClassDisabled = accClassDisabled;
+	}
+	
+	/**
+	 * @return the selectedGoSoObjCode
+	 */
+	public String getSelectedGoSoObjCode() {
+		return selectedGoSoObjCode;
+	}
+
+	/**
+	 * @param selectedGoSoObjCode the selectedGoSoObjCode to set
+	 */
+	public void setSelectedGoSoObjCode(String selectedGoSoObjCode) {
+		this.selectedGoSoObjCode = selectedGoSoObjCode;
 	}
 	
 	
