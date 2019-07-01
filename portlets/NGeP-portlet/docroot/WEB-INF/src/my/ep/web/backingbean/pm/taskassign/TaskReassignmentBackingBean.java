@@ -1764,7 +1764,7 @@ public class TaskReassignmentBackingBean extends
 		try {
 			TaskAssignmentReqDTO reqDTO = new TaskAssignmentReqDTO();
 			
-			PmUser fromUser = !this.getManagedBean().getSelectedReassignee().isEmpty() ?
+			PmUser fromUser = this.getManagedBean().getSelectedReassignee() != null && !this.getManagedBean().getSelectedReassignee().isEmpty() ?
 					PmCommonUtil.retrieveUserByLoginId(
 							this.getManagedBean().getSelectedReassignee().get(0)) :
 						getManagedBean().getTaskAssignmentSearchBean().getUser();
