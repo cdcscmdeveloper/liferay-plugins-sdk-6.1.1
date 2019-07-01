@@ -1426,7 +1426,7 @@ public class PurchaseInquiryBackingBean extends
 		getManagedBean().setShowButton(Boolean.TRUE);
 
 		// price change lister
-		priceTypeChangeListener();
+		stockAvailabilityEvent();
 		
 		/* comment for Bug #25388
 		try {
