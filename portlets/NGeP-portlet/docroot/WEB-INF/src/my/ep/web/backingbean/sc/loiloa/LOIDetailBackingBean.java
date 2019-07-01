@@ -39,6 +39,7 @@ import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
+import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.constant.BpmOutcomeConst;
@@ -65,6 +66,8 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
+import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
+import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
@@ -208,6 +211,7 @@ public class LOIDetailBackingBean extends
 	 */
 	public LOIDetailBackingBean() {
 		log.info("inside LOIDetailBackingBean constructor");
+		log.info("log.isDebugEnabled() : "+log.isDebugEnabled());
 		// populateUserMinistryList();
 		// initializeRemarks(new ScLoi());
 		// getApproverNames();
@@ -298,6 +302,23 @@ public class LOIDetailBackingBean extends
 
 			// QT Proposal validity expired
 			getQtProposalValidExpiredMessage(getManagedBean().getScQt());
+			
+			//qtMaintenanceScreen
+			if(isQTMaintenanceScreen()){
+				// ***25201#35 
+				//set status
+				if(getManagedBean().getScQt() != null && StringUtils.isBlank(getManagedBean().getStatus())){
+					ScWorkFlowStatusReqDTO wsReqDTO = new ScWorkFlowStatusReqDTO();
+					wsReqDTO.setDocId(getManagedBean().getScQt().getQtId());
+					wsReqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+					ScWorkFlowStatusResDTO wsResDTO = getScWorkflowStatusSO().retrieveCurrentWorkFlowStatus(wsReqDTO);
+					if(wsResDTO != null && wsResDTO.isSuccessful()){
+						if(!CollectionUtils.isEmpty(wsResDTO.getWorkFlowStatusList())){
+							getManagedBean().setStatus(getStatusDescById(wsResDTO.getWorkFlowStatusList().get(0).getPmStatus().getStatusId()));
+						}
+					}
+				}
+			}
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
@@ -1089,7 +1110,11 @@ public class LOIDetailBackingBean extends
 	 *            the event
 	 */
 	public void onRowRecSupplierAction(SelectEvent event) {
+		
 		debugLogger("onRowRecSupplierAction");
+		if(event != null){			
+			debugLogger(" onRowRecSupplierAction : " + event.toString() + "    class : " + event.getClass());
+		}
 		ScLoiLoa scLoiLoa = (ScLoiLoa) event.getObject();
 		try {
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
@@ -1448,6 +1473,11 @@ public class LOIDetailBackingBean extends
 	private IQTAwardSO getQtAwardSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+	}
+	
+	private IScWorkFlowStatusSO getScWorkflowStatusSO(){
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
 	}
 
 	/**
@@ -2986,9 +3016,9 @@ public class LOIDetailBackingBean extends
 	 */
 	private void debugLogger(Object message) {
 		StringBuilder msg = new StringBuilder(message.toString());
-		if (getManagedBean().getScQt() != null) {
+		/*if (getManagedBean().getScQt() != null) {
 			msg.append(" qtId:" + getManagedBean().getScQt().getQtId());
-		}
+		}*/
 		if (log.isDebugEnabled()) {
 			log.debug(msg);
 		}		
