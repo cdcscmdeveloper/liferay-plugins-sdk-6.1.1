@@ -2227,9 +2227,14 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().setBrandNew(true);
 		getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().setCtAttachment(new CtAttachment());
 		
-		if(getManagedBean().getCtAttachment() == null){
-			getManagedBean().setCtAttachment(new CtAttachment());
-			getManagedBean().setCtAttachment(SerializationUtils.clone(getManagedBean().getCtAttachmentTemp()));
+		if(getManagedBean().getCtAttachment() == null || getManagedBean().getWaiverDetail().size() == 0){
+			if(getManagedBean().getCtAttachment() == null){
+				getManagedBean().setCtAttachment(new CtAttachment());
+				if(getManagedBean().getCtAttachmentTemp()!= null){
+					getManagedBean().setCtAttachment(SerializationUtils.clone(getManagedBean().getCtAttachmentTemp()));
+				}
+				getManagedBean().getCtAttachment().setCtBondWaiverDetail(SerializationUtils.clone(getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail()));
+			}
 			getManagedBean().getCtAttachment().setCreatedBy(facesScopes.getUserSessionBean().getUserId());
 			getManagedBean().getCtAttachment().setCreatedUser(facesScopes.getUserSessionBean());
 			getManagedBean().getCtAttachment().setCreatedDate(new Timestamp(System.currentTimeMillis()));
@@ -2246,8 +2251,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		//getManagedBean().getAttachmentList().add(getManagedBean().getCtAttachment());
 		//reverse list to insert new data at first row
 		Collections.reverse(getManagedBean().getWaiverDetail());
-		getManagedBean().getWaiverDetail().add(getManagedBean().getCtAttachment());
+		getManagedBean().getWaiverDetail().add(SerializationUtils.clone(getManagedBean().getCtAttachment()));
 		Collections.reverse(getManagedBean().getWaiverDetail());
+		//store latest value to temp entity, to use at as history
 		getManagedBean().setCtAttachment(SerializationUtils.clone(getManagedBean().getCtAttachmentLatest()));
 		
 		//RequestContext.getCurrentInstance().execute("uploadWaiverDlg.hide()");
