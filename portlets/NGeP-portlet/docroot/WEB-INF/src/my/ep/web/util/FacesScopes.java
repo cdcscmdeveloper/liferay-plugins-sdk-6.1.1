@@ -54,6 +54,8 @@ public class FacesScopes implements Serializable {
 
 	public static final String SESS_USER_SESSION_BEAN = "USER_SESSION_BEAN";
 	private static final String BPM_AUTH_CONTEXT_TOKEN = "BPM_AUTH_CONTEXT_TOKEN";
+	private static final String BPM_AUTH_BYTE_TOKEN = "BPM_AUTH_BYTE_TOKEN";
+	private static final String BPM_AUTH_FLAG = "BPM_AUTH_FLAG";
 
 	FacesContext facesContext = null;
 	Application application = null;
@@ -252,17 +254,17 @@ public class FacesScopes implements Serializable {
 	}
 
 	public String getUserScreenName() {
-		log.info("#25061 getUserScreenName");
+//		log.info("#25061 getUserScreenName");
 		String screenName = "";
 		String remoteUser = this.getRequest().getRemoteUser();
-		log.info("#25061 remoteUser : " + remoteUser);
+//		log.info("#25061 remoteUser : " + remoteUser);
 		if(remoteUser != null) {
-			log.info("#25061 remoteUser not null");
+//			log.info("#25061 remoteUser not null");
 			try {
 				User user = UserServiceUtil.getUserById(Long.valueOf(this
 						.getRequest().getRemoteUser()));
 				screenName = user.getScreenName();
-				log.info("#25061 screenName : " + screenName);
+//				log.info("#25061 screenName : " + screenName);
 			} catch (Exception e) {
 				log.error(e.getMessage());
 			}
@@ -378,6 +380,33 @@ public class FacesScopes implements Serializable {
 			}
 		}
 		return ctxToken;
+	}
+	
+	public byte[] getBPMAuthenticationByteToken() {
+		byte[] ctxToken = (byte[]) getApplicationScope(BPM_AUTH_BYTE_TOKEN);
+		if (null == ctxToken) {
+			String loginId = getUserScreenName();
+			System.out.println("loginId: " + loginId);
+			
+			if (loginId != null) {
+				IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+						.getServiceObject(IBpmSO.class);
+				ctxToken = bpmSO.processAuthenticate(loginId);
+				setApplicationScope(BPM_AUTH_BYTE_TOKEN, ctxToken);
+			}
+		}
+		return ctxToken;
+	}
+	
+	public String needAuthenticate(){
+		String auth = (String) getApplicationScope(BPM_AUTH_FLAG);
+		if(StringUtils.isBlank(auth)){
+			setApplicationScope(BPM_AUTH_FLAG, "true");
+		}else if(auth.equals("true")){
+			auth = "false";
+			setApplicationScope(BPM_AUTH_FLAG, "false");
+		}
+		return auth;
 	}
 	
 	public Object removeBPMAuthenticationCtxToken() {
