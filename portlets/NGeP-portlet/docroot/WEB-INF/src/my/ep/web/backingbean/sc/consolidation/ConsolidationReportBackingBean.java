@@ -514,17 +514,16 @@ public class ConsolidationReportBackingBean extends
 	}
 
 	/**
-	 * To download all reports under Briefing Paper/Kertas Taklimat tab
+	 * To download all reports under Evaluation Report tab.
 	 * 
 	 * @throws Exception
 	 *             the exception that would be thrown in case of any error while
 	 *             downloading the report(s)
 	 */
-	public void downloadAllReports() throws Exception {
-		debugLogger("downloadAllReports");
+	public void downloadAllEvaluationReports() throws Exception {
+		debugLogger("downloadAllEvaluationReports");
 
-		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean()
-				.getScQtFinalization().getScQtFinalizationReports();
+		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean().getEvaluationReportList();
 		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<ScQtFinalizationReportAttachment>();
 
 		for (int i = 0; i < scQtFinalizationReports.size(); i++) {
@@ -541,7 +540,7 @@ public class ConsolidationReportBackingBean extends
 
 		// Generate all the reports before submission
 		if (!getManagedBean().isSubmit()) {
-			downloadAllFiles("NGeP-Finalization-Report", scAttachments);
+			downloadAllFiles("NGeP-Evaluation-Report", scAttachments);
 		}
 	}
 	
