@@ -55,7 +55,7 @@
 			<c:choose>
 			<c:when test="#{purchaseRequestBackingBean.managedBean.isPidValidityExpired()}">
 			<ui:repeat var="bpmAction" value="#{purchaseRequestBackingBean.managedBean.outComes}">
-						<ui:fragment rendered="#{bpmAction eq 'REJECT'}">
+						<ui:fragment rendered="#{(bpmAction eq 'REJECT')or(bpmAction eq 'CANCEL')}">
 						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 						<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
@@ -64,6 +64,7 @@
 								action="#{purchaseRequestBackingBean.gpkiSignAction(bpmAction)}"/>	
 						</ui:fragment>	
 					</ui:repeat>
+			\\
 			</c:when>
 			<c:otherwise>
 			<ui:repeat var="bpmAction" value="#{purchaseRequestBackingBean.managedBean.outComes}">
