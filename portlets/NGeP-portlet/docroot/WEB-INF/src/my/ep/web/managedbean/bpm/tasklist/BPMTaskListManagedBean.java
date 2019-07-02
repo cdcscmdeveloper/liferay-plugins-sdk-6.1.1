@@ -949,6 +949,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				reqDTO.setAssignment(BpmConstants.ASSIGNMENT_MY_AND_GROUP);
 				//reqDTO.setIsClaimed(false);
 				reqDTO.setCtxToken(token);
+				reqDTO.setSortBy(BpmConstants.SORT_BY_CREATEDATE);
 				
 				//SDO User - filer Search
 				sdoSearchFilter(reqDTO);
