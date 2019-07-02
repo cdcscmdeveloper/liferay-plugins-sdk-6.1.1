@@ -7016,6 +7016,36 @@ public class SupplierFinalizationBackingBean extends
 		}
 		
 	}
+	
+	/**
+	 * To download all reports under Evaluation Report tab.
+	 * 
+	 * @throws Exception
+	 *             the exception that would be thrown in case of any error while
+	 *             downloading the report(s)
+	 */
+	public void downloadAllEvaluationReports() throws Exception {
+		debugLogger("downloadAllEvaluationReports");
+
+		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean().getEvaluationReportList();
+		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<ScQtFinalizationReportAttachment>();
+
+		for (int i = 0; i < scQtFinalizationReports.size(); i++) {
+			ScQtFinalizationReportAttachment attachment = scQtFinalizationReports
+					.get(i).getScQtFinalizationReportAttachment();
+			if (attachment == null) {
+				attachment = generateDocumentAttachment(scQtFinalizationReports.get(i), false);
+				scQtFinalizationReports.get(i)
+						.setScQtFinalizationReportAttachment(attachment);
+			}
+			scAttachments.add(attachment);
+		}
+
+		// Generate all the reports before submission
+		if (!getManagedBean().isSubmit()) {
+			downloadAllFiles("NGeP-Evaluation-Report", scAttachments);
+		}
+	}
 
 	public ScQt getScQt() {
 		return scQt;
