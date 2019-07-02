@@ -797,7 +797,26 @@ public class SmApplicationBackingBean extends
 
 		if (!fromBpm) {
 			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
-
+			//16052019 - SSM INTEGRATION CR - Fahmi
+			/*if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
+					|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF) 
+					|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW) 
+					|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)
+					|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)){
+				if(businessTypeTovalidateWithSSM(currSupp.getRegNo(),currSupp.getBusinessType())){
+					this.getManagedBean().setValidateWithSSM(true);
+					
+					
+					// maybe here to put method to check with ssm
+					//SmCommonUtil.getInstance().validateWithSSM(regNo,businessType,"");
+					this.getManagedBean().setCompanyValidWithSSM(true);
+					if(!this.getManagedBean().isCompanyValidWithSSM()){
+//						throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.contractor",null), getManagedBean().getSmSupp().getRegNo()});
+						throw new EpException(MessageConst.ERROR_721070);
+					}
+				}
+			}*/
+			//16052019 - SSM INTEGRATION CR - Fahmi END
 			boolean cannotProceedAlertMsg = false;
 
 			if (applicationType
@@ -2257,8 +2276,9 @@ public class SmApplicationBackingBean extends
 					if (getManagedBean().isSupplierUser()) {
 						assignApplicationSupportingDocs();
 					}
-					if (getManagedBean().isPoUser()
-							|| getManagedBean().isApproverUser() && !valid) {
+					//Bug #25676 : SM Showstopper - No Categories Appear in Processing Officer Screen * avoid double message if already execute saveOrUpdateAppl() previously
+					if ((getManagedBean().isPoUser()
+							|| getManagedBean().isApproverUser()) && !valid) {
 						saveOrUpdateAppl();
 					}
 					initNonMandatoryAndMandatoryDocs();
@@ -2731,6 +2751,8 @@ public class SmApplicationBackingBean extends
 				boolean validNewCatAdded = SmApplicationUtil
 						.valiateNewCategoryAdded(getManagedBean());
 				if (!validNewCatAdded) {
+					//Bug #25676 : SM Showstopper - No Categories Appear in Processing Officer Screen
+					getManagedBean().setShowParentMsg(true);
 					throw new EpException(MessageConst.ERROR_722570);
 				}
 			}
