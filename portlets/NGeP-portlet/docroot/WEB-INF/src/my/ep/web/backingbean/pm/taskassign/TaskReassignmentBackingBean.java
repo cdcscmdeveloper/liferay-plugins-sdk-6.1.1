@@ -748,7 +748,12 @@ public class TaskReassignmentBackingBean extends
 		if (this.getManagedBean().getReassigneeList().size() > 1) {
 			this.getManagedBean().setShowReassigneeList(true);
 		} else {
-			this.getManagedBean().setResultUser(this.getManagedBean().getTaskAssignmentSearchBean().getUser());
+			if (this.getManagedBean().getTaskAssignmentSearchBean().getUser() != null) {
+				this.getManagedBean().setResultUser(this.getManagedBean().getTaskAssignmentSearchBean().getUser());
+			} else {
+				this.getManagedBean().setResultUser(reassignees.get(0));
+				setReassigneeRoleList(reassignees.get(0).getUserId());
+			}
 			this.getManagedBean().setStatusIds(retrieveAvailableStatusId());
 			reloadAllTaskList();
 		}
@@ -817,7 +822,9 @@ public class TaskReassignmentBackingBean extends
 						.getUser().getLoginId() : null;
 				// #20117		
 				if (loginId == null) {
-					loginId = getManagedBean().getResultUser().getLoginId();
+					if (getManagedBean().getResultUser() != null) {
+						loginId = getManagedBean().getResultUser().getLoginId();
+					}
 				} 
 				if (loginId != null && loginId.length() > 0) {
 					if (statusIds != null && !statusIds.isEmpty()) {
@@ -984,7 +991,9 @@ public class TaskReassignmentBackingBean extends
 						.getUser().getLoginId() : null;
 				// #20117		
 				if (loginId == null) {
-					loginId = getManagedBean().getResultUser().getLoginId();
+					if (getManagedBean().getResultUser() != null) {
+						loginId = getManagedBean().getResultUser().getLoginId();
+					}
 				} 
 				if (loginId != null && loginId.length() > 0) {
 					
@@ -1151,7 +1160,9 @@ public class TaskReassignmentBackingBean extends
 						.getUser().getLoginId() : null;
 				// #20117		
 				if (loginId == null) {
-					loginId = getManagedBean().getResultUser().getLoginId();
+					if (getManagedBean().getResultUser() != null) {
+						loginId = getManagedBean().getResultUser().getLoginId();
+					}
 				}
 				if (loginId != null && loginId.length() > 0) {
 					if (statusIds != null && !statusIds.isEmpty()) {
