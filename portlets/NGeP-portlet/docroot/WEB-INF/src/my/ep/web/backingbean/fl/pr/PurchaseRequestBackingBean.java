@@ -4590,6 +4590,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		
 		
 		if(getManagedBean().isPidValidityExpired()){
+			//purchaseRequestBackingBean.managedBean.fulfilmentRequest.status.statusId
+			getManagedBean().getFulfilmentRequest().getStatus().setStatusId(60755L);
 			if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL) || 
 					   currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)){
 						String[] addReject = new String[]{BpmOutcomeConst.BPM_REJECT};    		
