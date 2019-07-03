@@ -649,21 +649,22 @@ public class CreateQtBackingBean extends
 						scQt.setOpenFor(ParameterConst.OPEN_FOR_ALL);
 						
                         //20190523@hatta - 22240 - Start	
-						if(!scQt.getScQtCategorys().isEmpty())
-						{
-							for(ScQtCategory cat: scQt.getScQtCategorys())
-						    {  
-								if(scQt.getOpenFor().equalsIgnoreCase(ParameterConst.OPEN_FOR_ALL) && ( getParameterDesc(cat.getPmCategoryL3().getCategoryTypeCode()).equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_PRINTING) || cat.getPmCategoryL2Name().substring(0,10).equalsIgnoreCase("PERCETAKAN"))){ 
-									   scQt.setOpenFor(ParameterConst.OPEN_FOR_ALL);
-									   break;
-								}
-								if(getParameterDesc(cat.getPmCategoryL3().getCategoryTypeCode()).equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_PRINTING) || cat.getPmCategoryL2Name().substring(0,10).equalsIgnoreCase("PERCETAKAN")){ 
-									   scQt.setOpenFor(ParameterConst.OPEN_FOR_BUMI);
-									   break;
-								}	
-							}
-						}
+//						if(!scQt.getScQtCategorys().isEmpty())
+//						{
+//							for(ScQtCategory cat: scQt.getScQtCategorys())
+//						    {  
+//								if(scQt.getOpenFor().equalsIgnoreCase(ParameterConst.OPEN_FOR_ALL) && ( getParameterDesc(cat.getPmCategoryL3().getCategoryTypeCode()).equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_PRINTING) || cat.getPmCategoryL2Name().substring(0,10).equalsIgnoreCase("PERCETAKAN"))){ 
+//									   scQt.setOpenFor(ParameterConst.OPEN_FOR_ALL);
+//									   break;
+//								}
+//								if(getParameterDesc(cat.getPmCategoryL3().getCategoryTypeCode()).equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_PRINTING) || cat.getPmCategoryL2Name().substring(0,10).equalsIgnoreCase("PERCETAKAN")){ 
+//									   scQt.setOpenFor(ParameterConst.OPEN_FOR_BUMI);
+//									   break;
+//								}	
+//							}
+//						}
 						//20190523@hatta - 22240 - End
+						
 					}	
 				}
 			} 
