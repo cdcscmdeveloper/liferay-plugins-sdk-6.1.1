@@ -96,6 +96,7 @@ import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -1952,13 +1953,32 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	@SuppressWarnings("unchecked")
 	protected <BPM_DATA_TYPE> BPM_DATA_TYPE getBpmTaskDetails(
 			Class<BPM_DATA_TYPE> clazz, String[] additionalButtons) {
+		return getBpmTaskDetails(clazz, additionalButtons, null);
+	}
+	
+	/**
+	 * To get BpmTask Details.
+	 * 
+	 * @param clazz
+	 * @return Object payLoadInstance
+	 */
+	@SuppressWarnings("unchecked")
+	protected <BPM_DATA_TYPE> BPM_DATA_TYPE getBpmTaskDetails(
+			Class<BPM_DATA_TYPE> clazz, String[] additionalButtons, String theTaskId) {
+		String taskId = null;
 		FacesScopes facesScopes = new FacesScopes();
-		HttpServletRequest servletRequest = PortalUtil
-				.getHttpServletRequest(facesScopes.getRequest());
-		HttpServletRequest originalServletRequest = PortalUtil
-				.getOriginalServletRequest(servletRequest);
+		if(StringUtils.isBlank(theTaskId)){			
+			HttpServletRequest servletRequest = PortalUtil
+					.getHttpServletRequest(facesScopes.getRequest());
+			HttpServletRequest originalServletRequest = PortalUtil
+					.getOriginalServletRequest(servletRequest);
+			taskId = originalServletRequest.getParameter("taskId");
+		}
+		else{
+			taskId = theTaskId;
+		}
 
-		String taskId = originalServletRequest.getParameter("taskId");
+		 
 
 		IBpmSO bpmSO;
 
@@ -2031,6 +2051,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			bpmSO = null;
 		}
 	}
+
 
 	/**
 	 * Sort outcomes.
@@ -2312,4 +2333,36 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			return null;
 		}
 	}
+	
+	
+	protected FacesScopes getFacesScopesGen() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
+	}
+	
+	/**
+	 * Determine if user for current session have role
+	 * 
+	 * @param roleCodes
+	 * @return
+	 */
+	public Boolean userHasRole(RoleCode [] roleCodes){
+		FacesScopes faceScopes = new FacesScopes();
+		if(roleCodes != null && roleCodes.length > 0){
+			for(int i = 0; i< roleCodes.length; i++){
+				if(faceScopes.hasRoleUser(roleCodes[i].value())) return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean isNull(Object o){
+		if(o == null){
+			return true;
+		}
+		return false;
+	}
 }
+
+
+// ***25201

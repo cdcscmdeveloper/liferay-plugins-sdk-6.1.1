@@ -1,11 +1,14 @@
 package my.ep.web.managedbean.bpm.tasklist;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
@@ -15,15 +18,19 @@ import my.ep.biz.service.fl.adjustment.IAdjustmentSO;
 import my.ep.biz.service.fl.frn.IReceivedNoteSO;
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
+import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.pm.access.application.IAccessApplSO;
 import my.ep.biz.service.pm.common.kpi.IPmKpiSO;
+import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
+import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sc.directpurchase.IPrInquirySO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractStatusConst;
 import my.ep.constant.pm.KPICodeConst;
@@ -39,6 +46,9 @@ import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.access.application.AccessApplReqDTO;
 import my.ep.dto.pm.access.application.AccessApplResDTO;
 import my.ep.dto.pm.common.kpi.KpiReqDTO;
+import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
+import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
+import my.ep.dto.sc.requestitem.RequestItemResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.exception.EpException;
@@ -56,13 +66,16 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmKPIValue;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.PagingConst;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -613,6 +626,37 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						    		   worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.ct.revise.circular.cancellation", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 						    	   }
 						       }
+						       //pid validity
+						       
+						       if(worklistItemVO.getDocType().equals("RN")){
+						    	   System.out.println("Begin PID validity process");
+						    	   IRequestNoteSO requestSO = (IRequestNoteSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestNoteSO.class);
+						    	   IRequestItemSO requestItemSO = (IRequestItemSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
+						    	   RequestNoteReqDTO reqRNDTO = new RequestNoteReqDTO();
+						    	   RequestNoteResDTO resRNDTO = new RequestNoteResDTO();
+						    	   
+						    	   
+						    	   
+						    	   reqRNDTO.setRequestNoteNo(worklistItemVO.getDocNumber());
+						    	   resRNDTO = requestSO.getRequestNote(reqRNDTO);
+						    	   
+						    	   if(resRNDTO.getRequestNoteDetail().getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault()!=null) {
+										int pidValidDays = resRNDTO.getRequestNoteDetail().getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault().getPidValidDays();
+										Date pidExpiredDate = new Date(); 
+										
+										if(resRNDTO.getRequestNoteDetail().getQuote()!=null) {
+											pidExpiredDate = DateUtils.addDays(resRNDTO.getRequestNoteDetail().getQuote().getCreatedDate(), pidValidDays);
+										} else {
+											pidExpiredDate = DateUtils.addDays(resRNDTO.getRequestNoteDetail().getCreatedDate(), pidValidDays);
+										}
+										if(pidExpiredDate.compareTo(DateUtils.getCurrentDate())<0) {
+											//set overide status here 
+											//taskListMyTaskDataModel.getRowKey(worklistItemVO).
+											worklistItemVO.setDocStatus(60807);
+											//System.out.println("Lets overide the status! here");
+										}
+									}
+						       }
 							}catch(Exception ex){
 								worklistItemVO.setTitle("Please check");
 								log.info("worklistItemVO.setTitle error:" + ex.getMessage());
@@ -949,6 +993,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				reqDTO.setAssignment(BpmConstants.ASSIGNMENT_MY_AND_GROUP);
 				//reqDTO.setIsClaimed(false);
 				reqDTO.setCtxToken(token);
+				reqDTO.setSortBy(BpmConstants.SORT_BY_CREATEDATE);
 				
 				//SDO User - filer Search
 				sdoSearchFilter(reqDTO);

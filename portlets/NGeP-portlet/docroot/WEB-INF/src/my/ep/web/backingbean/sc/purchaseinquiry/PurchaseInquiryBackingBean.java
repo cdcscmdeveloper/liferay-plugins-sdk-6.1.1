@@ -791,9 +791,11 @@ public class PurchaseInquiryBackingBean extends
 			ScPrInquiry scPrInquiry = resDTO.getPrInquiryDetail();
 			successMessage(MessageConst.INFO_700025, ParameterTypeConst.DOCUMENT_TYPES,
 					ParameterConst.DOCTYPE_PURCHASE_INQUIRY, scPrInquiry.getPrInquiryNo(), Boolean.FALSE);
-			getManagedBean().setScPrInquiry(scPrInquiry);
 			getManagedBean().setSupplierItemPrices(resDTO.getSupplierItemPrices());
 			scRequestSupplierItem.setSupplierItemPrices(resDTO.getSupplierItemPrices());
+			scRequestSupplierItem.setRequestNoteItem(resDTO.getScRequestItem());
+			scPrInquiry.setScRequestSupplierItems(Arrays.asList(scRequestSupplierItem));
+			getManagedBean().setScPrInquiry(scPrInquiry);
 			getManagedBean().setScRequestSupplierItem(scRequestSupplierItem);
 		} else {
 			throw new EpException(MessageConst.ERROR_700020);
