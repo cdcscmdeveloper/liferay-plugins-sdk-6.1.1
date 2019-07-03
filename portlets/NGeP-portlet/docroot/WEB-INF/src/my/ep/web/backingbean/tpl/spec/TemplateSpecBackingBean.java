@@ -1910,6 +1910,8 @@ public class TemplateSpecBackingBean extends
 					if (tplSpecAnswer.getRatePerUom() != null && quantity != null) {
 						totalAmount = totalAmount.add(quantity
 								.multiply(tplSpecAnswer.getRatePerUom()));
+						tplSpecAnswer.setAnswerNumeric(quantity
+								.multiply(tplSpecAnswer.getRatePerUom()));
 					}
 
 					tierSpecQuestionId = specQuestion.getSpecQuestionId();
