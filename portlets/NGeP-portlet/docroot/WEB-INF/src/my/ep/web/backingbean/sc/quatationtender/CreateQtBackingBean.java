@@ -63,6 +63,7 @@ import my.ep.dto.sc.quationtender.SpecificationReqDTO;
 import my.ep.dto.sc.quationtender.SpecificationResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
@@ -648,22 +649,30 @@ public class CreateQtBackingBean extends
 					} else {
 						scQt.setOpenFor(ParameterConst.OPEN_FOR_ALL);
 						
-                        //20190523@hatta - 22240 - Start	
-//						if(!scQt.getScQtCategorys().isEmpty())
-//						{
-//							for(ScQtCategory cat: scQt.getScQtCategorys())
-//						    {  
-//								if(scQt.getOpenFor().equalsIgnoreCase(ParameterConst.OPEN_FOR_ALL) && ( getParameterDesc(cat.getPmCategoryL3().getCategoryTypeCode()).equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_PRINTING) || cat.getPmCategoryL2Name().substring(0,10).equalsIgnoreCase("PERCETAKAN"))){ 
-//									   scQt.setOpenFor(ParameterConst.OPEN_FOR_ALL);
-//									   break;
-//								}
-//								if(getParameterDesc(cat.getPmCategoryL3().getCategoryTypeCode()).equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_PRINTING) || cat.getPmCategoryL2Name().substring(0,10).equalsIgnoreCase("PERCETAKAN")){ 
-//									   scQt.setOpenFor(ParameterConst.OPEN_FOR_BUMI);
-//									   break;
-//								}	
-//							}
-//						}
-						//20190523@hatta - 22240 - End
+					// 20190523@hatta - 22240 - Start
+					if (!EntityHelper.isCollectionEmpty(scQt.getScQtCategorys())) {
+						for (ScQtCategory cat : scQt.getScQtCategorys()) {
+							if (!StringUtils.isBlank(scQt.getOpenFor())
+									&& scQt.getOpenFor().equalsIgnoreCase(ParameterConst.OPEN_FOR_ALL)
+									&& ((cat.getPmCategoryL3() != null && getParameterDesc(
+											cat.getPmCategoryL3().getCategoryTypeCode()).equalsIgnoreCase(
+											ParameterConst.CATEGORY_TYPE_PRINTING)) || (!StringUtils.isBlank(cat
+											.getPmCategoryL2Name()) && cat.getPmCategoryL2Name().substring(0, 10)
+											.equalsIgnoreCase("PERCETAKAN")))) {
+								scQt.setOpenFor(ParameterConst.OPEN_FOR_ALL);
+								break;
+							}
+							if (((cat.getPmCategoryL3() != null && getParameterDesc(
+									cat.getPmCategoryL3().getCategoryTypeCode()).equalsIgnoreCase(
+									ParameterConst.CATEGORY_TYPE_PRINTING)) || (!StringUtils.isBlank(cat
+									.getPmCategoryL2Name()) && cat.getPmCategoryL2Name().substring(0, 10)
+									.equalsIgnoreCase("PERCETAKAN")))) {
+								scQt.setOpenFor(ParameterConst.OPEN_FOR_BUMI);
+								break;
+							}
+						}
+					}
+					// 20190523@hatta - 22240 - End
 						
 					}	
 				}
