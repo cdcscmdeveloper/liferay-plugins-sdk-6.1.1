@@ -1953,13 +1953,32 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	@SuppressWarnings("unchecked")
 	protected <BPM_DATA_TYPE> BPM_DATA_TYPE getBpmTaskDetails(
 			Class<BPM_DATA_TYPE> clazz, String[] additionalButtons) {
+		return getBpmTaskDetails(clazz, additionalButtons, null);
+	}
+	
+	/**
+	 * To get BpmTask Details.
+	 * 
+	 * @param clazz
+	 * @return Object payLoadInstance
+	 */
+	@SuppressWarnings("unchecked")
+	protected <BPM_DATA_TYPE> BPM_DATA_TYPE getBpmTaskDetails(
+			Class<BPM_DATA_TYPE> clazz, String[] additionalButtons, String theTaskId) {
+		String taskId = null;
 		FacesScopes facesScopes = new FacesScopes();
-		HttpServletRequest servletRequest = PortalUtil
-				.getHttpServletRequest(facesScopes.getRequest());
-		HttpServletRequest originalServletRequest = PortalUtil
-				.getOriginalServletRequest(servletRequest);
+		if(StringUtils.isBlank(theTaskId)){			
+			HttpServletRequest servletRequest = PortalUtil
+					.getHttpServletRequest(facesScopes.getRequest());
+			HttpServletRequest originalServletRequest = PortalUtil
+					.getOriginalServletRequest(servletRequest);
+			taskId = originalServletRequest.getParameter("taskId");
+		}
+		else{
+			taskId = theTaskId;
+		}
 
-		String taskId = originalServletRequest.getParameter("taskId");
+		 
 
 		IBpmSO bpmSO;
 
@@ -2032,6 +2051,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			bpmSO = null;
 		}
 	}
+
 
 	/**
 	 * Sort outcomes.
