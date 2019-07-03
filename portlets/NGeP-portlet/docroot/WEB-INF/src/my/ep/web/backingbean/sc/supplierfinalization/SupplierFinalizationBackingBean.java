@@ -39,6 +39,7 @@ import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
+import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
@@ -291,62 +292,7 @@ public class SupplierFinalizationBackingBean extends
 		createMainMenuModel();
 	}
 	
-	/**
-	 * To fetch initial data
-	 * @param qtId
-	 */
-	private void loadInitialDataMaintenance(Long qtId) {
-		log.info("loadInitialDataMaintenance");
-		ScQt scQt = getManagedBean().getScQt();
-		
-		retrieveQTDetails(qtId);
-		retrieveStatusQTMaintenance(qtId);
-		loadSupplierFinalizationTabDetails();
-		
-		if (getManagedBean().getScQtFinalization().isHigherAuthReq()) {
-			PmParameter higherCommittee = scQt.getFinalization().getHigherCommitte();
-					
-			if (higherCommittee == null) {
-				getManagedBean().setCommitteeType(StringUtils.EMPTY);
-				getManagedBean().setInitialDecisionFwdToBPK(true);
-			} else if (higherCommittee != null && 
-							StringUtils.isNotBlank(higherCommittee.getParameterCode())) {
-				getManagedBean().setInitialDecisionFwdHighAuth(true);
-			}
-		}
-		
-		String committeeType = getManagedBean().getCommitteeType();
-		if (StringUtils.isNotBlank(committeeType) && 
-				!StringUtils.equalsIgnoreCase(committeeType, "null")) {
-			loadPreparationTabDetails();
-			checkIfLoggedinUserIsSecretary();
-		}
-		
-		retrieveBriefingPaper();
-		
-		int tabIndex = 0;
-		if (getManagedBean().isInitialDecisionFwdToBPK()) {
-			getManagedBean().getScQtFinalization()
-					.setLoiLoaBy(ParameterConst.LOILOA_PREPARED_BY_DO);
-			getManagedBean().setPreparationTabIndex(-1);
-			getManagedBean().setEvaluationReportIndex(tabIndex++);
-			getManagedBean().setReportTabIndex(tabIndex++);
-			getManagedBean().setFinalizationTabIndex(tabIndex++);
-			getManagedBean().setEndorsementReportActiveIndex(-1);
-			getManagedBean().setCommEndorsementTabIndex(-1);
-		} else {
-			getManagedBean().setPreparationTabIndex(tabIndex++);
-			getManagedBean().setEvaluationReportIndex(tabIndex++);
-			getManagedBean().setReportTabIndex(tabIndex++);
-			getManagedBean().setFinalizationTabIndex(tabIndex++);
-			getManagedBean().setCommEndorsementTabIndex(tabIndex++);	
-			getManagedBean().setEndorsementReportActiveIndex(tabIndex);
-		}
-		
-		// Dynamically creating main tab menu
-		createMainMenuModel();
-		
-	}
+	
 	
 	/**
 	 * Loads ScQt details corresponding to the selected quotation/tender and
@@ -6591,57 +6537,47 @@ public class SupplierFinalizationBackingBean extends
 	
 	// ***25201#35 
 	public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl, boolean editable){
-		/*BPMTaskSearchBackingBean bpmTaskSearchBB = new BPMTaskSearchBackingBean();
-		bpmTaskSearchBB.setDocNumber(scQt.getQtNo());
-		bpmTaskSearchBB.searchAction();
-		List<WorklistItemVO> res = bpmTaskSearchBB.getResultList();
-		if(!CollectionUtils.isEmpty(res)){
-			for(WorklistItemVO r : res){
-				if(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION.equalsIgnoreCase(r.getDocType())){
-					log.info("task id : "+r.getTaskId());
-					log.info("status : "+r.getDocStatus());
-					log.info("version : "+r.getInstanceVersion());
-				}
-			}
-		}*/
-		
 		
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
-
 		String bpmUserLogin = EpPropertiesUtils.getInstance().getProperty(
 				EpPropertiesConst.BPM_PRINCIPAL);
-
+		
 		Object token = getBpmSO().authenticate(bpmUserLogin);
-		reqDTO.setUserId(bpmUserLogin);
+		reqDTO.setCtxToken(token);
 		reqDTO.setDocNumber(scQt.getQtNo());
 		reqDTO.setDocType(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION);
-		BpmResponseDTO resDTO = getBpmSO().getTasks(reqDTO);
+		BpmResponseDTO resDTO = getBpmSO().getTasksByDocNumber(reqDTO);
+		
+		String loginId = getFacesScopesGen().getUserSessionBean().getLoginId();
+		
+		String taskId = null;
 		if(resDTO != null && resDTO.getWorklistVO() != null && !CollectionUtils.isEmpty(resDTO.getWorklistVO().getWorklistItem())){
 			List<WorklistItemVO> tl = resDTO.getWorklistVO().getWorklistItem();
-			Collections.sort(tl, new WorklistItemVOComparator.SortByUpdateDateDescComparator());
-			for(WorklistItemVO w: tl){
-				if(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION.equalsIgnoreCase(w.getDocType())){
-					log.info(w.getUpdateDate()!=null?w.getUpdateDate().getTime():w.getUpdateDate());
-					log.info(w.getAssigneesString());
-					log.info(w.getState());
-					log.info(w.toString());
-				}
-			}
-			log.info("worklist item size : "+resDTO.getWorklistVO().getWorklistItem().size());
-			log.info("*********************************************************************");
+			
 			Collections.sort(tl, new WorklistItemVOComparator.SortByUpdateDateAscComparator());
 			for(WorklistItemVO w: tl){
 				if(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION.equalsIgnoreCase(w.getDocType())){
-					log.info(w.getUpdateDate()!=null?w.getUpdateDate().getTime():w.getUpdateDate());
-					log.info(w.getAssigneesString());
-					log.info(w.getState());
-					log.info(w.toString());
+					if(CollectionUtils.containsAny(w.getAssignees(), Arrays.asList(loginId))){
+						taskId = w.getTaskId();
+					}
 				}
-			}
+			}			
 		}
 		
-		if(isQTMaintenanceScreen()){
+		if(isQTMaintenanceScreen() && !StringUtils.isBlank(taskId)){
 			getManagedBean().setActiveIndex(0);
+			
+			
+			//as in preRenderView()
+			SCEvaluationDataType dataType = getBpmTaskDetails(SCEvaluationDataType.class, null, taskId);
+			Long qtId = Long.valueOf(dataType.getQtId());
+			getManagedBean().setPayLoad(dataType);
+			getManagedBean().setActiveIndex(0);
+			
+			Long loggedInUserId = getFacesScopes().getUserSessionBean()
+									.getUserId();
+			getManagedBean().setLoggedInUserId(loggedInUserId);
+			
 		}
 		getManagedBean().setReadOnly(!editable);
 		getManagedBean().setScQt(scQt);
@@ -6651,7 +6587,8 @@ public class SupplierFinalizationBackingBean extends
 								.getUserId();
 		getManagedBean().setLoggedInUserId(loggedInUserId);
 
-		loadInitialDataMaintenance(scQt.getQtId());
+		//loadInitialDataMaintenance(scQt.getQtId());
+		loadInitialData(scQt.getQtId());
 		
 		return QTConstants.FC_SUPPLIER_FINALIZATION_PAGE;
 	}
@@ -6957,6 +6894,10 @@ public class SupplierFinalizationBackingBean extends
 	private IBpmSO getBpmSO() {
 		return (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(
 				IBpmSO.class);
+	}
+	
+	private IQTSuppFinalizationSO getQtSuppFinalizationSO(){
+		return BusinessDelegate.getInstance().getServiceObject(IQTSuppFinalizationSO.class);
 	}
 	
 	/**
