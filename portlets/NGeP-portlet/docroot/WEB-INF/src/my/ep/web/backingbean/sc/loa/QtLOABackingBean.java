@@ -27,6 +27,7 @@ import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
+import my.ep.persistence.entity.sc.loaloi.ScLoaForQt;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -146,8 +147,25 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 			
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication().getNavigationHandler()
-			.handleNavigation(fc, null, QTConstants.QT_LOA_LIST_PAGE);
+			ScLoaForQt loaForQt = new MapKeyEnum.ValueRetriever<ScLoaForQt>().getValue(otherArgs, MapKeyEnum.loiLoaSelected, null);
+			if(isQTMaintenanceScreen() && loaForQt!=null){
+				if(!CollectionUtils.isEmpty(getManagedBean().getSuppLoiLoaList())){
+					for(int i = 0; i<getManagedBean().getSuppLoiLoaList().size();i++){
+						SuppLoiLoaBean llb = getManagedBean().getSuppLoiLoaList().get(i);
+						if(llb.getScLoa()!=null && loaForQt.getLoaId()!=null && loaForQt.getLoaId().longValue() == llb.getScLoa().getLoaId().longValue()){
+							loaDetailBackingBean.getManagedBean().setReadOnly(true);
+							fc.getApplication().getNavigationHandler()
+								.handleNavigation(fc, null, loaDetailBackingBean.goQtEditLoaAction(llb));
+							break;
+						}
+					}
+				}
+				
+			}
+			else{
+				fc.getApplication().getNavigationHandler()
+					.handleNavigation(fc, null, QTConstants.QT_LOA_LIST_PAGE);
+			}
 		} catch (Exception e) {
 			handleException(e);
 		}

@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -1020,8 +1021,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			else if(obj instanceof ScLoaForQt){
 				scLoaForQt = (ScLoaForQt)obj;
 				if(ParameterConst.DOCTYPE_LETTER_OF_AWARD.equals(docType)){
-					LOADetailBackingBean bb = new LOADetailBackingBean();
-					return bb.retrieveSupplierLOADtl(scLoaForQt.getScLoiLoa().getScQt().getQtId(), scLoaForQt.getLoaId(), previousPageUrl, true, true);
+					//LOADetailBackingBean bb = new LOADetailBackingBean();
+					//return bb.retrieveSupplierLOADtl(scLoaForQt.getScLoiLoa().getScQt().getQtId(), scLoaForQt.getLoaId(), previousPageUrl, true, true);
+					Map<MapKeyEnum, Object> otherArgs = new HashMap<MapKeyEnum, Object>();
+					otherArgs.put(MapKeyEnum.loiLoaSelected, scLoaForQt);
+					scQt = scLoaForQt.getScLoiLoa()!=null?scLoaForQt.getScLoiLoa().getScQt():null;
+					QtLOABackingBean bb = new QtLOABackingBean();
+					bb.preRenderViewForQtMaintenance(scQt, previousPageUrl, otherArgs);
 				}
 			}
 			else;
