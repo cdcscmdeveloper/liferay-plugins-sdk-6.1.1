@@ -743,10 +743,6 @@ public class TaskReassignmentBackingBean extends
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,null, 
 							ResourceBundleUtils.getMessage("lbl.datatable.msg.no.records.found", 
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale())));
-		}
-		
-		if (this.getManagedBean().getReassigneeList().size() > 1) {
-			this.getManagedBean().setShowReassigneeList(true);
 		} else {
 			if (this.getManagedBean().getTaskAssignmentSearchBean().getUser() != null) {
 				this.getManagedBean().setResultUser(this.getManagedBean().getTaskAssignmentSearchBean().getUser());
@@ -755,6 +751,7 @@ public class TaskReassignmentBackingBean extends
 				setReassigneeRoleList(reassignees.get(0).getUserId());
 			}
 			this.getManagedBean().setStatusIds(retrieveAvailableStatusId());
+			this.getManagedBean().setShowReassigneeList(true);
 			reloadAllTaskList();
 		}
 		log.info("Displaying users: "+this.getManagedBean().getReassigneeList());
@@ -768,7 +765,6 @@ public class TaskReassignmentBackingBean extends
 		
 		if (selectedReassignee != null) {
 			this.getManagedBean().setResultUser(selectedReassignee);
-			setReassigneeRoleList(selectedReassignee.getUserId());
 			this.getManagedBean().setStatusIds(retrieveAvailableStatusId());
 			
 			log.info("Selected user: "+this.getManagedBean().getSelectedReassignee().get(0));
