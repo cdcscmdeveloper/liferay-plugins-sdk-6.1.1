@@ -1949,8 +1949,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithItem);
 			}
 
-			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
-					&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)){
+			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()){
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuDeduction);
 			}
 			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange() && 
