@@ -6430,7 +6430,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			procurementCategoryCode(this.getManagedBean().getQt());
 			reqDTO.setProcurementCatCode(this.getManagedBean()
 					.getProcuremntCategory());
-			reqDTO.setIsMandatory(false);
+			//#13955 reqDTO.setIsMandatory(false);
 			reqDTO.setDocCategoryCode(ParameterConst.DOCUMENT_CATEGORY_FINANCIAL_CHECKLIST);
 
 			resDTO = documentSo.retrieveDocumentCheckList(reqDTO);
