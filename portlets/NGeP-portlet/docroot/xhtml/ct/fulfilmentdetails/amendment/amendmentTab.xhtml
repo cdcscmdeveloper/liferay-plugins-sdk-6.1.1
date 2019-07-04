@@ -116,8 +116,7 @@
 				
 		<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.deduction']}" 
 		     onstart="blockWidget.show()"   oncomplete="blockWidget.hide()"
-		    rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.otherChange and 
-		    ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode != ParameterConst.contractTypeCentral
+		    rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.otherChange 
 		    and amendmentBackingBean.managedBean.ackFA eq null}"
 			 actionListener="#{amendmentBackingBean.setTabValue('DE')}" update=":form" />
 			

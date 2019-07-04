@@ -2028,8 +2028,18 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						if (outputValue.equalsIgnoreCase("IT")) {
 							getManagedBean().setSelectedTabIndex(3);
 						}
+						if(outputValue.equalsIgnoreCase(ContractConst.DEDUCTION_DETAIL)){
+							getManagedBean().setSelectedTabIndex(4);
+						}
 					} else if(outputValue.equalsIgnoreCase("IT")) {
 						getManagedBean().setSelectedTabIndex(2);
+					}else if(outputValue.equalsIgnoreCase(ContractConst.DEDUCTION_DETAIL)){
+						getManagedBean().setSelectedTabIndex(3);
+					}
+					
+					
+					if(isApproverSetting() && !getManagedBean().isPrepareLOA() && outputValue.equalsIgnoreCase("SE")){
+						getManagedBean().setSelectedTabIndex(index + 2);
 					}
 				}
 				if (getManagedBean().isPrepareLOA()) {
@@ -2063,12 +2073,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						&& outputValue.equalsIgnoreCase("DCN")) {
 					getManagedBean().setConfirmMeeting(true);
 					if (getManagedBean().isPbConfirmMeeting()) {
-						getManagedBean().setSelectedTabIndex(index + 2);
+						getManagedBean().setSelectedTabIndex(index + 3);
 					} else {
-						getManagedBean().setSelectedTabIndex(index + 1);
+						getManagedBean().setSelectedTabIndex(index + 2);
 					}
 				}
-				if (isApproverSetting() && !getManagedBean().isPrepareLOA() && outputValue.equalsIgnoreCase("SE")) {
+				if (isApproverSetting() && !getManagedBean().isPrepareLOA() && outputValue.equalsIgnoreCase("SE") 
+						&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()) {
 					getManagedBean().setSelectedTabIndex(index + 1);
 				}
 			} 
