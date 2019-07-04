@@ -263,6 +263,13 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private Long ministryProfileId;
 	private Long jabatanProfileId;
 	private String ptjCodeName;
+	//start added for #24353
+	private String ptjCodeNameNew;
+	private String ptjCodeNameSearchValuesNew;
+	private String districtCode;
+	private Long stateId;
+	private List<PmDistrict> searchDistrictList;
+	//end added for #24353
 	private String ptjCodeNameSearchValues;
 	
 	private BigDecimal orderSummaryOrderedAmtGrandTotal ;
@@ -3196,5 +3203,48 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	public void setOldGstRateFlg(boolean oldGstRateFlg) {
 		this.oldGstRateFlg = oldGstRateFlg;
 	}
+	
+	//start added for #24353
+	public String getPtjCodeNameNew() {
+		return ptjCodeNameNew;
+	}
+
+	public void setPtjCodeNameNew(String ptjCodeNameNew) {
+		this.ptjCodeNameNew = ptjCodeNameNew;
+	}
+
+	public String getPtjCodeNameSearchValuesNew() {
+		return ptjCodeNameSearchValuesNew;
+	}
+
+	public void setPtjCodeNameSearchValuesNew(String ptjCodeNameSearchValuesNew) {
+		this.ptjCodeNameSearchValuesNew = ptjCodeNameSearchValuesNew;
+	}
+
+
+	public String getDistrictCode() {
+		return districtCode;
+	}
+
+	public void setDistrictCode(String districtCode) {
+		this.districtCode = districtCode;
+	}
+
+	public Long getStateId() {
+		return stateId;
+	}
+
+	public void setStateId(Long stateId) {
+		this.stateId = stateId;
+	}
+
+	public List<PmDistrict> getSearchDistrictList() {
+		return searchDistrictList;
+	}
+
+	public void setSearchDistrictList(List<PmDistrict> searchDistrictList) {
+		this.searchDistrictList = searchDistrictList;
+	}
+	//end added for #24353
 
 }
