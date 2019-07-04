@@ -97,6 +97,7 @@ import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
@@ -141,6 +142,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.PTJLocalityCode;
+import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.ApprovalAction;
 import my.ep.util.EpPropertiesUtils;
@@ -148,7 +150,6 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.ct.amendment.JadualHargaBean;
-import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.sc.common.ItemBean;
 import my.ep.web.bean.sc.common.JadualHargaItemBean;
@@ -171,7 +172,7 @@ import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.log4j.Logger;
@@ -198,8 +199,7 @@ import org.primefaces.model.TreeNode;
  */
 @ManagedBean(name = "directLOABackingBean")
 @RequestScoped
-public class DirectLOABackingBean extends
-		SourcingBaseBackingBean<DirectLOAManagedBean> {
+public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBean> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -233,7 +233,7 @@ public class DirectLOABackingBean extends
 	 * save the LOA details. save - save data into database and initiate task
 	 * for LOA details. page navigate to loa details page.
 	 */
-	public void saveAction() {
+	public void saveAction(boolean supplier) {
 		debugLogger("saveAction");
 		DirectAwardReqDTO reqDTO = new DirectAwardReqDTO();
 		try {
@@ -252,8 +252,12 @@ public class DirectLOABackingBean extends
 			validateDeductionPaymentDtls(scLoa);
 			validateLOAReportAttachments(scLoa);
 			validateContractNGovtSignDate(scLoa);
+			if (!supplier) {
+				updateContractDetails(scLoa);
+			}
 			validateContractDetails(scLoa);
-			validateDuplicateItems(this.getManagedBean().getProdscQtDoc(),this.getManagedBean().getServicescQtDoc());			
+			validateDuplicateItems(this.getManagedBean().getProdscQtDoc(), this.getManagedBean().getServicescQtDoc());
+
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setScLoa(scLoa);
 			reqDTO.setScQtDoc(this.getManagedBean().getProdscQtDoc());
@@ -273,6 +277,7 @@ public class DirectLOABackingBean extends
 			DirectAwardResDTO resDTO = getQtDirectAwardSO()
 					.saveDirectAwardDetails(reqDTO);
 			scLoa = resDTO.getLoa();
+
 			if (resDTO.isSuccessful()
 					&& null == this.getManagedBean().getTaskId()) {
 				if (QTStatusConst.LOA_PENDING_SUBMISSION
@@ -296,6 +301,7 @@ public class DirectLOABackingBean extends
 				this.getManagedBean().setOutComes(outComes);
 				this.getManagedBean().setSelectedTabIndex(selectedTabIndx);
 				this.getManagedBean().setPayLoad(awardSupplierDataType);
+
 				if (!QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
 						.equals(scLoa.getPmStatus().getStatusId())) {
 					retriveLoaDetails(scLoa.getLoaId(), null, false);
@@ -307,6 +313,7 @@ public class DirectLOABackingBean extends
 					getSupplierDeatilsByLoaId(scLoa.getLoaId());
 
 				}
+
 				successMessage(MessageConst.INFO_700025,
 						ParameterTypeConst.DOCUMENT_TYPES,
 						ParameterConst.DOCTYPE_LETTER_OF_AWARD,
@@ -400,6 +407,9 @@ public class DirectLOABackingBean extends
 
 			validateContractAmount(scLoa.getLoaAmt(), outcome);
 			validateContractNGovtSignDate(scLoa);
+			updateContractDetails(scLoa);
+			validateContractDetails(scLoa);
+
 			log.info("submitAction loop executed");
 			validateDuplicateItems(this.getManagedBean().getProdscQtDoc(),this.getManagedBean().getServicescQtDoc());
 			scLoa.setScLoaWorkFlowStatuses(null);
@@ -1169,6 +1179,7 @@ public class DirectLOABackingBean extends
 					}
 				}
 			}
+			}
 
 			// validate deduction payamment for Others
 			validateDeductionPaymentDtls(scLoa);
@@ -1537,55 +1548,13 @@ public class DirectLOABackingBean extends
 
 		String contractType = scLoa.getContractType().getParameterCode();
 
-		if (ParameterConst.CONTRACT_TYPE_MINISTRY.equals(contractType)) {
-			// ministry condtion field for LOV 
-			getMinistryConditionField(scLoa);
-
-			//if(null == scLoa.getContractAgency()){
-			scLoa.setContractAgency(scLoa.getScLoiLoa().getPmOrgProfile());
-			//}
-
-		} else if (ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType)) {
-
-			Long userId = new FacesScopes().getUserSessionBean().getUserId();
-			
-			if (userId != null) {
-				IUserSO userSO = null;
-				try {
-					UserReqDTO reqDTO = new UserReqDTO();
-					reqDTO.setUserId(userId);
-					userSO = BusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-					UserResDTO resDTO = userSO
-							.retrieveUserOrgListByUserId(reqDTO);
-
-					if (resDTO.getUserOrgList() != null
-							&& resDTO.getUserOrgList().size() > 0) {
-						for (PmUserOrg pmUserOrg : resDTO.getUserOrgList()) {
-							if (pmUserOrg.getPmOrgProfile() != null) {
-								Boolean isBPK = pmUserOrg.getPmOrgProfile().getBpk();
-								if (BooleanUtils.isTrue(isBPK)) {
-									scLoa.getScLoiLoa().setPmOrgProfile(
-											pmUserOrg.getPmOrgProfile());
-									scLoa.setContractAgency(scLoa
-											.getScLoiLoa().getPmOrgProfile());
-									break;
-								}
-							}
-						}
-					}
-				} finally {
-					userSO = null;
-				}
+		if (ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType)) {
+			scLoa.getScLoiLoa().setPmOrgProfile(scLoa.getContractAgency());
+			scLoa.getScQt().setFulfilmentType(
+					getParameterByTypeAndCode(ParameterTypeConst.FULFILMENT_TYPE,
+							ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN));
 			}	
-			// set fulfillment type as default as "As and When" for Central Contract
-			scLoa.getScQt().setFulfilmentType(getParameterByTypeAndCode(
-					ParameterTypeConst.FULFILMENT_TYPE, ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN));
 		}
-
-		contractAgencyChanged();
-		// checkAgreementMandatory();
-	}
 
 	/**
 	 * Contract agency changed. shows Contract Administrator based on agency
@@ -2123,6 +2092,7 @@ public class DirectLOABackingBean extends
 				.getScLoiLoa()
 				.setPmOrgProfile(
 						pmOrgProfile);
+		initDefaultSelectedOrgType();
 		populateMinistryBasedOnLoginUser();
 		getApprovalUsers();
 		prepareSignerInfo();
@@ -4213,6 +4183,7 @@ public class DirectLOABackingBean extends
 			String redirectUrl = retriveLoaDetails(awardSupplierDataType.getAwardId(), null, false);
 	
 			contractTypeChanged();
+			viewContractDetails(this.getManagedBean().getScLoa());
 			this.getManagedBean().setPayLoad(awardSupplierDataType);
 			if(getManagedBean().getCurrentStatusId() != null){
 				if(QTStatusConst.LOA_PENDING_VERIFICATION.equals(getManagedBean().getCurrentStatusId())){
@@ -8430,4 +8401,170 @@ public class DirectLOABackingBean extends
 	}
 		}
 	}
+	
+	/**
+	 * To display Performance Bond dropdown when QT Type is <b>Special Item / Item In PK 7</b> 
+	 * and Fulfilment Type is <b>One Off</b>.
+	 * 
+	 * @return
+	 */
+	public boolean isPbDropDown() {
+		Long qtType = null;
+		Long fulfilmentType = null;
+		Long contractType = null;
+		if (null != getManagedBean().getScLoa().getQtType()) {
+			qtType = getManagedBean().getScLoa().getQtType().getParameterId(); 
+		}
+		if (null != getManagedBean().getScLoa().getScQt() && null != getManagedBean().getScLoa().getScQt().getFulfilmentType()) {
+			fulfilmentType = getManagedBean().getScLoa().getScQt().getFulfilmentType().getParameterId(); 
+		}
+		if (null != getManagedBean().getScLoa().getContractType()) {
+			contractType = getManagedBean().getScLoa().getContractType().getParameterId();
+		}
+		
+		if (getManagedBean().getPk7Reasons() == null) {
+			setPk7DropDownValues();
+		}
+		
+		// MC
+		if (null != getManagedBean().getScLoa() 
+				&& null != getManagedBean().getScLoa().getContractType()
+				&& null != getManagedBean().getScLoa().getContractType().getParameterId()
+				&& getManagedBean().getScLoa().getContractType().getParameterId() != 146) {
+			return false;
+		}
+		
+		if (StringUtils.isEmpty(getManagedBean().getBondReqSelectedVal())) {
+			if (getManagedBean().getScLoa().isBondReq()) { 
+				getManagedBean().setBondReqSelectedVal("207");
+			} else if (getManagedBean().getScLoa().getLoaNo() != null) {
+				getManagedBean().setBondReqSelectedVal("208");
+			}
+		}
+		
+		if (null != qtType && null != fulfilmentType && qtType == 194 && fulfilmentType == 148) {
+			if (null == getManagedBean().getBondReqSelectedVal()) {
+				getManagedBean().getScLoa().setBondReq(false);
+			} else if ("208".equals(getManagedBean().getBondReqSelectedVal())) {
+				getManagedBean().getScLoa().setBondReq(false);
+			}
+			if (null == getManagedBean().getScLoa().getJustificationType()) {
+				getManagedBean().getScLoa().setJustificationType(new PmReason());
+			}
+			
+			// If Contract Type is selected and its not 'Ministry', then return false.
+			if (null != contractType && contractType != 146) {
+				return false;
+			}
+			
+			if (!getManagedBean().isDisableFields()) {
+				String loaStatus = getStatusDescById(this.getManagedBean().getScLoa().getPmStatus().getStatusId());
+				if (StringEscapeUtils.unescapeJava(SourcingConstants.LOA_PENDING_VERIFICATION_STATUS).equals(loaStatus)) {
+					getManagedBean().setDisableFields(true);
+				}
+			}
+			return true;
+		} else {
+			if (!getManagedBean().getScLoa().isBondReq()) {
+				setOverallCtAmount(getManagedBean().getScLoa().getLoaAmt());
+			}
+			
+			getManagedBean().getScLoa().setJustificationType(null);
+		}
+		
+		//RequestContext.getCurrentInstance().execute("reasonPG.hide()");
+		return false;
+	}
+	
+	/**
+	 * Set Performance Bond value opted by user.
+	 * @param bondReqVal
+	 */
+	public void performanceBondChanged(String bondReqVal) {
+		if ("207".equalsIgnoreCase(bondReqVal)) { 
+			getManagedBean().getScLoa().setBondReq(true);
+		} else {
+			getManagedBean().getScLoa().setBondReq(false);
+		}
+	}
+	
+	/**
+	 * To display Agreement dropdown when QT Type is <b>Special Item / Item In PK 7</b> 
+	 * and Fulfilment Type is <b>One Off</b>.
+	 * 
+	 * @return
+	 */
+	public boolean isAgreementDropDown() {
+		Long qtType = null;
+		Long fulfilmentType = null;
+		Long contractType = null;
+		if (null != getManagedBean().getScLoa().getQtType()) {
+			qtType = getManagedBean().getScLoa().getQtType().getParameterId();
+		}
+		if (null != getManagedBean().getScLoa().getScQt() && null != getManagedBean().getScLoa().getScQt().getFulfilmentType()) {
+			fulfilmentType = getManagedBean().getScLoa().getScQt().getFulfilmentType().getParameterId(); 
+		}
+		if (null != getManagedBean().getScLoa().getContractType()) {
+			contractType = getManagedBean().getScLoa().getContractType().getParameterId();
+		}
+		
+		if (null != getManagedBean().getScLoa() 
+				&& null != getManagedBean().getScLoa().getContractType()
+				&& null != getManagedBean().getScLoa().getContractType().getParameterId()
+				&& getManagedBean().getScLoa().getContractType().getParameterId() != 146) {
+			return false;
+		}
+		
+		if (StringUtils.isEmpty(getManagedBean().getAgreemetSelectedVal())) {
+			if (getManagedBean().getScLoa().isAgreementReq()) { 
+				getManagedBean().setAgreemetSelectedVal("207");
+			} else if (getManagedBean().getScLoa().getLoaNo() != null) {
+				getManagedBean().setAgreemetSelectedVal("208");
+			}
+		}
+		
+		if (null != qtType && null != fulfilmentType && qtType == 194 && fulfilmentType == 148) {
+			if (null == getManagedBean().getAgreemetSelectedVal()) {
+				getManagedBean().getScLoa().setAgreementReq(false);
+			} else if ("208".equals(getManagedBean().getAgreemetSelectedVal())) {
+				getManagedBean().getScLoa().setAgreementReq(false);
+			}
+			
+			// If Contract Type is selected and its not 'Ministry', then return false.
+			if (null != contractType && contractType != 146) {
+				return false;
+			}
+			return true;
+		} else {
+			if (!getManagedBean().getScLoa().isAgreementReq()) {
+				setOverallCtAmount(getManagedBean().getScLoa().getLoaAmt());
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Set Performance Bond value opted by user.
+	 * @param bondReqVal
+	 */
+	public void agreementChanged(String agreeReqVal) {
+		if ("207".equalsIgnoreCase(agreeReqVal)) { 
+			getManagedBean().getScLoa().setAgreementReq(true);
+		} else {
+			getManagedBean().getScLoa().setAgreementReq(false);
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	public void setPk7DropDownValues() {
+	    getManagedBean().setPk7Reasons(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7.value()));
+	}
+	
+	public void reasonChanged(String reasonCode) {
+		getManagedBean().getScLoa().setJustificationType(getReasonByCategoryAndCode(
+				ReasonCategory.JUSTIFICATION_PK7.value(), reasonCode));
+	}
+	
 }
