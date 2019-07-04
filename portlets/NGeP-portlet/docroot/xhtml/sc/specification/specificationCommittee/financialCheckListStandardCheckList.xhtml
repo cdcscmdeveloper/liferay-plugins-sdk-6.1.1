@@ -33,7 +33,8 @@
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox value="#{compilance.selected}">
-					<p:ajax partialSubmit="true" process="@this" update="@([id$=specCommitteeFinacialDocumentStandardChecklist])" />
+					<f:selectItems value="#{specificationBackingBean.managedBean.stageTwoFinComplianceList}" />
+					<p:ajax listener="#{specificationBackingBean.CheckboxPairing(compilance.docGroupId,compilance.selected)}" partialSubmit="true" process="@this" update="@([id$=specCommitteeFinacialDocumentStandardChecklist],[id$=stageTwoFinPopup])" />
 				</p:selectBooleanCheckbox>
 			</p:column>
 					
