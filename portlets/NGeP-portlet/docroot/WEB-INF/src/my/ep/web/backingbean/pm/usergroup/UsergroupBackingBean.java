@@ -3,6 +3,7 @@ package my.ep.web.backingbean.pm.usergroup;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -480,10 +481,32 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 //
 //			}
 //		}
-//		logger.info("groupUserList  :" + groupUserList.size());
+//		logger.info("groupUserList  :" + groupUserList.size());		
+		
 		this.getManagedBean().setOrgProfileId(orgProfileId);
 		this.getManagedBean().setUserGroup(userGroup);
 		this.getManagedBean().setUserGroups(userGroup.getPmUserGroupUsers());
+		
+		//[#26037] - start		
+		if(this.getManagedBean().getHmGroupUserFlagStatDb() == null) {
+			this.getManagedBean().setHmGroupUserFlagStatDb(new HashMap<Long,Integer>());		
+		}
+		
+		HashMap<Long,Integer> hmGrpUsrStat = this.getManagedBean().getHmGroupUserFlagStatDb();
+		if(!hmGrpUsrStat.isEmpty()) {
+			this.getManagedBean().getHmGroupUserFlagStatDb().clear();
+		}
+		
+		//logger.info("[#26037] Set value to hashmap...");
+		if(this.getManagedBean().getUserGroups() != null) {
+			for (PmUserGroupUser groupUser : this.getManagedBean().getUserGroups()) {
+				hmGrpUsrStat.put(groupUser.getPmUser().getUserId(), groupUser.getRecordStatusFlg());
+			}
+		}
+		//logger.info("[#26037] Hashmap size: " + hmGrpUsrStat.size());
+		this.getManagedBean().setHmGroupUserFlagStatDb(hmGrpUsrStat);		
+		//[#26037] - end		
+		
 		return "/xhtml/pm/usergroupsearch/userGroupMaintenance.xhtml";
 	}
 
@@ -559,10 +582,20 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		userGroupValidationMsg(userGroup);
 
 		List<PmUserGroupUser> pmUserGroupUsers = this.getManagedBean().getUserGroups();
-
-		for (PmUserGroupUser groupUser : pmUserGroupUsers) {
-			setUserDetails(userGroup, groupUser);
+		
+		//logger.info("[#26037] - calling setUserDetails....start");
+		HashMap<Long,Integer> hMap = this.getManagedBean().getHmGroupUserFlagStatDb();
+		for (PmUserGroupUser groupUser : pmUserGroupUsers) {			
+			if(hMap != null && !(hMap.isEmpty())) {
+				if(groupUser.getRecordStatusFlg().intValue() != hMap.get(groupUser.getPmUser().getUserId()).intValue()) {
+					//logger.info("[#26037] User [" + groupUser.getPmUser().getUserId()  + "] status has been changed from " + hMap.get(groupUser.getPmUser().getUserId()) + " to " + groupUser.getRecordStatusFlg());
+					setUserDetails(userGroup, groupUser);
+				}
+			} else {
+				setUserDetails(userGroup, groupUser);
+			}
 		}
+		
 		changeUserGroupStatus(pmUserGroupUsers);
 		userGroup.setPmUserGroupUsers(pmUserGroupUsers);
 		if (userGroup.isBrandNew()) {
@@ -678,6 +711,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 	 * Setting update user
 	 */
 	private void setUserDetails(PmUserGroup userGroup, PmUserGroupUser groupUser) {
+		logger.info("setUserDetails");
 		if (!userGroup.isBrandNew() && DbValueConst.RECORD_STATUS_SUSPENDED == userGroup.getRecordStatusFlg()) {
 			groupUser.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
 		} else if (!userGroup.isBrandNew() && DbValueConst.RECORD_STATUS_ACTIVE == userGroup.getRecordStatusFlg()
@@ -707,8 +741,18 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 			if (isValidOrgProfile && isValidRoleStatus) {
 				groupUser.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 			}
+		} else if (!userGroup.isBrandNew() 
+				&& DbValueConst.RECORD_STATUS_ACTIVE == userGroup.getRecordStatusFlg().intValue()
+				&& DbValueConst.RECORD_STATUS_SUSPENDED == groupUser.getRecordStatusFlg().intValue()) {
+			//logger.info("[#26037] - check any pending task for user: " + groupUser.getPmUser().getUserName());
+			if (isAnyPendingTaskForUser(groupUser.getPmUser().getLoginId())) {
+				//logger.info("[#26037] - user still has pending task in hand...");
+				// revert it to active
+				userGroup.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+				// hit error and exit
+				throw new EpException(MessageConst.ERROR_770228, new String[] { groupUser.getPmUser().getUserName() });
+			}
 		}
-
 	}
 
 	public void changeUserGroupStatus(List<PmUserGroupUser> pmUserGroupUsers) {
@@ -1045,5 +1089,10 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 			fulfilmentSO = null;
 		}
 		return anyPendingTask;
+	}
+	
+	private boolean isAnyPendingTaskForUser(String loginId) {		
+		logger.info("isAnyPendingTaskForUser");
+		return PmCommonUtil.isAnyPendingTask(loginId);
 	}
 }
