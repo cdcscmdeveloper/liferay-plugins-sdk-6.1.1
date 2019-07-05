@@ -14,47 +14,47 @@
 		
   	<h:panelGrid columns="4" style="width:100%" columnClasses="columnWidth10">
   		<p:outputLabel value="#{lbl['lbl.ct.item.name']}"/>
-		<p:inputText value="#{circularBackingBean.managedBean.itemname}" style="width:270px;" maxlength="50"></p:inputText>	
+		<p:inputText value="#{contractItemSearchBackingBean.managedBean.itemname}" style="width:270px;" maxlength="50"></p:inputText>	
 	</h:panelGrid>		
 	
 	<h:panelGrid columns="4" style="width:100%" columnClasses="columnWidth10" >
 	    <p:outputLabel value="#{lbl['lbl.ct.item.type']}"  />
-		<p:selectOneMenu value="#{circularBackingBean.managedBean.itemtype}"  style="width:280px;" maxlength="500" >
+		<p:selectOneMenu value="#{contractItemSearchBackingBean.managedBean.itemtype}"  style="width:280px;" maxlength="500" >
 					<f:selectItems value="#{contractRequestBackingBean.itemTypeValues}" />
 					<f:selectItem itemLabel="#{lbl['lbl.ct.all']}" itemValue="3" />        	
 		</p:selectOneMenu>
 	</h:panelGrid>
     <h:panelGrid columns="4" style="width:100%" columnClasses="columnWidth10" >
 		<p:outputLabel value="#{lbl['lbl.ct.item.code']}" style="float:center-left;"  />
-		<p:inputText value="#{circularBackingBean.managedBean.itemcode}" style="width:270px; float:center;"  maxlength="20"  />				
+		<p:inputText value="#{contractItemSearchBackingBean.managedBean.itemcode}" style="width:270px; float:center;"  maxlength="20"  />				
 	</h:panelGrid>	
 	<h:panelGrid columns="4" style="width:100%" columnClasses="columnWidth10, columnWidth30, columnWidth5,columnWidth20">	
 		<p:outputLabel value="#{lbl['lbl.ct.item.status']}"/>
-		<p:selectOneMenu value="#{circularBackingBean.managedBean.itemstatus}" style="width:280px;" maxlength="500" >  
+		<p:selectOneMenu value="#{contractItemSearchBackingBean.managedBean.itemstatus}" style="width:280px;" maxlength="500" >  
     	<f:selectItem itemLabel="#{lbl['lbl.ct.selectOne']}" itemValue="" />  
     	<f:selectItem itemLabel="#{lbl['lbl.ct.inactive']}" itemValue="0" />   
     	<f:selectItem itemLabel="#{lbl['lbl.ct.active']}" itemValue="1" /> 
     	<f:selectItem itemLabel="#{lbl['lbl.ct.all']}" itemValue="2" />     	            	
        </p:selectOneMenu> 
 	<p:outputLabel value="#{lbl['lbl.ct.item.skuno']}"/>
-	<p:inputText value="#{circularBackingBean.managedBean.skuno}" style="width:270px;" maxlength="50"></p:inputText>	
+	<p:inputText value="#{contractItemSearchBackingBean.managedBean.skuno}" style="width:270px;" maxlength="50"></p:inputText>	
   </h:panelGrid>	
   
 	<h:panelGrid columns="4" style="width:100%" columnClasses="columnWidth10, columnWidth30, columnWidth5,columnWidth20">	
 		<p:outputLabel value="#{lbl['lbl.ct.item.UOM']}"/>
-	<p:inputText value="#{circularBackingBean.managedBean.UOM}" style="width:270px;" maxlength="20"></p:inputText>	
+	<p:inputText value="#{contractItemSearchBackingBean.managedBean.UOM}" style="width:270px;" maxlength="20"></p:inputText>	
 		<p:outputLabel value="#{lbl['lbl.ct.item.typeofgoods']}"  />
 		
-	    	<p:selectOneMenu value="#{circularBackingBean.managedBean.typeofgoods}" style="width:280px;" maxlength="500" >  
+	    	<p:selectOneMenu value="#{contractItemSearchBackingBean.managedBean.typeofgoods}" style="width:280px;" maxlength="500" >  
             	<f:selectItem itemLabel="#{lbl['lbl.ct.selectOne']}" itemValue="" />  
-            	<f:selectItems value="#{circularBackingBean.getLocalGoodsRadioValues(ParameterTypeConst.itemOrigin)}" />
+            	<f:selectItems value="#{contractItemSearchBackingBean.getLocalGoodsRadioValues(ParameterTypeConst.itemOrigin)}" />
             	<f:selectItem itemLabel="#{lbl['lbl.ct.all']}" itemValue="197" />      	
               </p:selectOneMenu> 
 	       </h:panelGrid>	
 			<div class="ppRightBtn" style="width:80%" > 
-				<p:commandButton id="panelSearchIditem" value="#{lbl['lbl.btn.search']}" action="#{circularBackingBean.searchCircular}" process="@this,searchId" partialsubmit="true" 
+				<p:commandButton id="panelSearchIditem" value="#{lbl['lbl.btn.search']}" action="#{contractItemSearchBackingBean.searchCircular}" process="@this,searchId" partialsubmit="true" 
 				    onstart="circularSearchBlk.show();" oncomplete="circularSearchBlk.hide();" update="@form"  />
-				<p:commandButton value="#{lbl['lbl.btn.reset']}" action="#{circularBackingBean.searchReset}"  update="@form" />
+				<p:commandButton value="#{lbl['lbl.btn.reset']}" action="#{contractItemSearchBackingBean.searchReset}"  update="@form" />
 			</div>		  
 	</p:panel><br/>
     <p:panel id="itemId" toggleSpeed="500" header="Toggleable" toggleable="true" collapsed="false" >
@@ -69,7 +69,7 @@
        <h:panelGrid  style="width:100%;">
       
              <p:dataTable id="itemTable" var="ctItemVar" lazy="true" rows="10" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-                 value="#{circularBackingBean.managedBean.circularListingPagingDataModel}"  widgetVar="itemTableObj" 
+                 value="#{contractItemSearchBackingBean.managedBean.contractListingPagingDataModel}"  widgetVar="itemTableObj" 
                  selectionMode="single" selection="#{ctBackingBean.managedBean.selectedItem}" rowIndexVar="index" rowKey="#{ctItemVar}"
                   onExpandStart="">
                  <ac:paginator for="itemTable"/>
@@ -85,7 +85,7 @@
 	 			<f:facet name="header">
 	      			<h:outputText id="productItemDesc" value="#{lbl['lbl.ct.item.desc']}" escape="false"/>
 	     		</f:facet>
-	     		<h:outputText id="itemNameID" value="#{fn:replace(circularBackingBean.contactItemProd(ctItemVar),',','&lt;/br&gt;')}" size="50" escape="false"  style="float:left; text-align:left;"/>
+	     		<h:outputText id="itemNameID" value="#{fn:replace(contractItemSearchBackingBean.contactItemProd(ctItemVar),',','&lt;/br&gt;')}" size="50" escape="false"  style="float:left; text-align:left;"/>
             		 <p:commandLink id="productSpec" update=":form:itemSpecDlg" action="#{ctBackingBean.viewItemSpecDlg(ctItemVar)}">
 						<p:graphicImage value="/css/images/design/ico-viewnedit.png" title="#{lbl['lbl.ct.specification']}" style="float:left; padding-left: 5px;" />
 					</p:commandLink>
@@ -594,7 +594,7 @@
           <h:panelGrid  style="width:100%;">
           
           <p:dataTable id="itemServiceTable" var="srItemVar" lazy="true" rows="10" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-              value="#{circularBackingBean.managedBean.serviceListingPagingDataModel}"  widgetVar="itemServiceTableObj" 
+              value="#{contractItemSearchBackingBean.managedBean.serviceListingPagingDataModel}"  widgetVar="itemServiceTableObj" 
               selectionMode="single" selection="#{ctBackingBean.managedBean.serviceselectedItem}" rowIndexVar="index"  rowKey="#{srItemVar}"
                onExpandStart="">
               <ac:paginator for="itemServiceTable"/>
@@ -610,7 +610,7 @@
 	             <f:facet name="header">
 	                    <h:outputText id="serviceItemDesc" value="#{lbl['lbl.ct.item.desc']}"/>
 	               </f:facet>
-	           <h:outputText id="serviceNameID" value="#{fn:replace(circularBackingBean.contactItem(srItemVar),',','&lt;/br&gt;')}" size="50" escape="false"  style="float:left; text-align:left;"/>
+	           <h:outputText id="serviceNameID" value="#{fn:replace(contractItemSearchBackingBean.contactItem(srItemVar),',','&lt;/br&gt;')}" size="50" escape="false"  style="float:left; text-align:left;"/>
        		 <p:commandLink id="serviceSpec" update=":form:itemSpecDlg" action="#{ctBackingBean.viewItemSpecDlg(srItemVar)}">
        		 <p:graphicImage value="/css/images/design/ico-viewnedit.png" title="#{lbl['lbl.ct.specification']}" style="float:left; padding-left: 5px;" />
 			 </p:commandLink>                        
