@@ -149,6 +149,10 @@
 			</div>
 		</p:dialog>
 		
+		<ac:scSingleFileUploadPopup widgetVar="sfBriefingReportAttWidget"
+			fileUploadListener="consolidationReportBackingBean.handleFileUpload"
+			update="@([id$=reportTbl])" />
+			
 	</ui:define>
 
 </ui:composition>
