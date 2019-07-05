@@ -5,15 +5,15 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	
+
 	<ui:include src="../shared/loaInstructionHeader.xhtml"/>
-	
+
 	<ac:lovPopup />
 	<ui:param name="isContractTypeAsMinistry"
 		value="#{lOADetailBackingBean.managedBean.scLoa.contractType.parameterCode == ParameterConst.contractTypeMinistry}" />
 	<ui:param name="isContractTypeCentral"
-		value="#{lOADetailBackingBean.managedBean.scLoa.contractType.parameterCode eq ParameterConst.contractTypeCentral}" />		
-   
+		value="#{lOADetailBackingBean.managedBean.scLoa.contractType.parameterCode eq ParameterConst.contractTypeCentral}" />
+
 	<p:panel header="#{lbl['lbl.sc.loiloa.supp.details']}" toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
@@ -48,7 +48,7 @@
 					disabled="true" />
 			</td>
 		</tr>
-	
+
 		<tr>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.gst.register.num']}" />
@@ -83,7 +83,7 @@
 					</p:inputText> <ac:iconTooltip value="#{lbl['lbl.sc.gst.declartive.date.tooltip']}"/>
 			</td>
 		</tr>
-	
+
 		<tr>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.branch']}"/>
@@ -183,7 +183,7 @@
 		</tr>
 		</table>
 	</p:panel>
-	
+
 	<p:panel header="#{lbl['lbl.sc.loiloa.loa.details.section']}" toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<h:panelGroup rendered="#{isPendingSubmissionStatus}">
@@ -231,7 +231,7 @@
 					<p:inputText id="qtTypeTxt"
 						value="#{lOADetailBackingBean.getParameterDesc(lOADetailBackingBean.managedBean.scLoa.qtType)}"
 						size="28" disabled="true"
-						rendered="#{isDocTypeQuotation}" />					
+						rendered="#{isDocTypeQuotation}" />
 				</td>
 			</tr>
 
@@ -284,13 +284,13 @@
 						size="35" id="sstAmtId" style="text-align:right;" 
 						disabled="#{(!(isPendingSubmissionStatus or isPendingRevisionStatus)) or lOADetailBackingBean.managedBean.readOnly}" > 
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					<p:ajax event="blur"
+						<p:ajax event="blur"
 						listener="#{lOADetailBackingBean.calculateOverallAmount(lOADetailBackingBean.managedBean.scLoa.sstAmt)}"
-						update="ContractAmtId,agreementReq,@([id$=bondReq]),menuTab"></p:ajax>	
-				</p:inputText>
-			</td>
+							update="ContractAmtId,agreementReq,@([id$=bondReq]),menuTab"></p:ajax>
+					</p:inputText>
+				</td>
 		</tr>
-		
+
 		<tr>
 			<td></td>
 			<td colspan="3">
@@ -312,7 +312,7 @@
 					rendered="#{lOADetailBackingBean.managedBean.renderRemainder}" /> -->
 			</td>
 		</tr>
-		<!-- end Enhncement #24259 #24269 -->		
+		<!-- end Enhncement #24259 #24269 -->
 		<tr>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.gst.overall.contract.amount']}" />
@@ -405,7 +405,7 @@
 		</tr>
 		</table>
 	</p:panel>
-	
+
 	<p:panel header="#{lbl['lbl.sc.loiloa.loa.contract.details']}" toggleable="true" 
 	    id="contractDetailsId">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -431,7 +431,7 @@
 						<p:ajax event="change"
 							listener="#{lOADetailBackingBean.contractTypeChanged()}"
 							partialSubmit="true" process="@this"
-							update="contractDetailsId" />	
+							update="contractDetailsId" />
 					</p:selectOneMenu>
 					<p:message id="contractTypeMsg" for="contractType" display="icon" />
 				</c:if>
@@ -447,8 +447,43 @@
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.agency']}" />
 			</td>
 			<td colspan="3">
-				 <p:inputText id="contractAgency" disabled="true" size="106"
-					value="#{lOADetailBackingBean.managedBean.scLoa.contractAgency.orgName}" />
+				<p:inputText id="contractAgency" disabled="true" size="106"
+					value="#{lOADetailBackingBean.managedBean.scLoa.contractAgency.orgName}"
+					rendered="#{!isEditableStatus}"/>
+
+				<c:if test="#{isEditableStatus}">
+					<p:inputText id="contractAgencyEdit" disabled="true" size="106"
+						value="#{lOADetailBackingBean.managedBean.scLoa.contractAgency.orgName}"
+						rendered="#{lOADetailBackingBean.managedBean.selectedOrgType.parameterCode == null}" />
+
+					<p:outputPanel id="opPtjOrgCode" 
+						rendered="#{ParameterConst.orgTypePtj eq lOADetailBackingBean.managedBean.selectedOrgType.parameterCode or 
+						ParameterConst.orgTypePtjGroup eq lOADetailBackingBean.managedBean.selectedOrgType.parameterCode}">
+						<p:inputText 
+							size="60"
+							id="itSelectedPtj" 
+							value="#{lOADetailBackingBean.managedBean.selectedPtj.orgName}" 
+							readonly="true"
+							/>
+						&#160;
+						<p:commandLink id="ptjSearchCL" partialSubmit="true"
+							disabled="#{lOADetailBackingBean.managedBean.selectedOrgType.parameterId==null}"
+							process="@this" update=":form:orgProfileCcId:ptjPopup"
+							action="#{organisationSearchBackingBean.initPtjPopupDefaultMinistry(lOADetailBackingBean.managedBean.ministryOrgProfile.orgProfileId)}"
+							oncomplete="ptjPopup.show();" >
+							<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
+						</p:commandLink>
+					</p:outputPanel>
+
+					<h:panelGroup rendered="#{lOADetailBackingBean.managedBean.selectedOrgType.parameterCode eq ParameterConst.orgTypePtj
+						or lOADetailBackingBean.managedBean.selectedOrgType.parameterCode eq ParameterConst.orgTypePtjGroup}">
+						<ac:ptjPopup 
+							id="orgProfileCcId"
+							orgTypeParamCode="#{lOADetailBackingBean.managedBean.selectedOrgType.parameterCode}"
+							okAction="lOADetailBackingBean.userListener" update=":form:opPtjOrgCode,:form:itSelectedPtj,:form:contAdminId"/>
+					</h:panelGroup>
+				</c:if>
+				<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.agency.tooltip']}" />
 			</td>
 		</tr>
 		<tr>
@@ -458,18 +493,15 @@
 			</td>
 			<td>
 				<c:if test="#{isEditableStatus}">
-					<p:outputPanel id="opUserLov">
-						<ac:lov id="contractAdmin" lovId="PM_USER_ID_MINISTRY" size="80"
-							disabled="#{lOADetailBackingBean.managedBean.scLoa.contractType.parameterId == null}"
-							update="@form" readonly="true"
-							headerText="#{lbl['lbl.pm.ta.user.lov']}"
-							selectionMode="single"
-							value="#{lOADetailBackingBean.managedBean.scLoa.contractAdmin.userName}"
-							saveObject="lOADetailBackingBean.managedBean.scLoa.contractAdmin"
-							conditionField="#{lOADetailBackingBean.constructContractAdminConditionFields()}"
-							postUpdateListener="lOADetailBackingBean.contractAdminChanged()" required="true" />
-					</p:outputPanel>
-					<p:message id="contractAdminMsg" for="contractAdmin" display="icon" />
+					<p:selectOneMenu id="contAdminId" styleClass="ppDropDownWidthM"
+						disabled="false" label="#{lbl['lbl.sc.loiloa.loa.cont.admin']}"
+						value="#{lOADetailBackingBean.managedBean.scLoa.contractAdmin.userId}"
+						style="width: 275px;margin-bottom: 5px;">
+						<f:selectItems
+							value="#{lOADetailBackingBean.getUsersByAgency()}" />
+						<p:ajax event="change" listener="#{lOADetailBackingBean.updateContractAdmin()}" 
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@form"/>
+					</p:selectOneMenu>
 				</c:if>
 				<c:if test="#{!isEditableStatus}">
 					<p:inputText 
@@ -478,7 +510,7 @@
 				</c:if>
 			</td>
 		</tr>
-		
+
 		<tr>
 			<td>
 				<p:outputLabel value="#{lbl[lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode == ParameterConst.fulfilmentTypeOneOff ? 'lbl.sc.loiloa.loa.comp.period' : 'lbl.sc.loiloa.loa.cont.period']}" />
