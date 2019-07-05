@@ -5,14 +5,13 @@ package my.ep.web.backingbean.ct.circular;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.log4j.Logger;
-import javax.enterprise.context.RequestScoped;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-import my.ep.web.managedbean.ct.circular.CircularManagedBean;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -27,33 +26,30 @@ import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.exception.EpException;
-import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.circular.cc.CentralContractBackingBean;
 import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
+import my.ep.web.managedbean.ct.circular.CircularManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.pm.helper.ParameterHelper;
-import my.ep.factory.EpLogger;
+
 /**
  * Backing Bean for Circular
  * 
  * @author kieyun
  * @since 23/12/2014
  */
-@ManagedBean( name="circularBackingBean")
-@RequestScoped 
+@ManagedBean
+@ViewScoped
 public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 	
 	private static final long serialVersionUID = 1L;
-	
-	private static Logger log = EpLogger.getLogger(CircularBackingBean.class);
 
 	/**
 	 * The method used for searching the circular list.
@@ -146,65 +142,24 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 	 * The method used to reset the search criteria for circular.
 	 */
 	public void searchReset(){
-		
-		ContractBackingBean ccBB = new ContractBackingBean();
-		
-		//getManagedBean().setSearchCircularDocType(null);
-		//getManagedBean().setSearchPhysicalCircularNo(null);
-	    //getManagedBean().setSearchCircularNo(null);
-		//getManagedBean().setSearchCircularName(null);
-		//getManagedBean().setSearchSupplierName(null);g
-		//getManagedBean().setSearchItemName(null);
-		//getManagedBean().setSearchStartDate(null);
-		//getManagedBean().setSearchEndDate(null);
-		//getManagedBean().setSearchStatusId(null);
-		//getManagedBean().setSearchStatus(null);
-		//getManagedBean().setSearchCircularStatus(0);
-		
-		getManagedBean().setItemcode(null);
-		getManagedBean().setItemname(null);
-		getManagedBean().setItemstatus(null);
-		getManagedBean().setItemtype(null);
-		getManagedBean().setUOM(null);
-		getManagedBean().setSkuno(null);
-		getManagedBean().setTypeofgoods(null);
-		//getManagedBean().setServiceListingPagingDataModel(null);
-		//getManagedBean().setCircularListingPagingDataModel(null);
-		//ccBB.getManagedBean().setShowItem(null);
-		//ccBB.getManagedBean().setShowServiceItem(null);
-		//ccBB.getManagedBean().setServiceselectedItem(null);
-		ccBB.getManagedBean().setSelectedItem(null);
-		ccBB.getManagedBean().setServiceselectedItem(null);
-		
-
+		getManagedBean().setSearchCircularDocType(null);
+		getManagedBean().setSearchPhysicalCircularNo(null);
+		getManagedBean().setSearchCircularNo(null);
+		getManagedBean().setSearchCircularName(null);
+		getManagedBean().setSearchSupplierName(null);
+		getManagedBean().setSearchItemName(null);
+		getManagedBean().setSearchStartDate(null);
+		getManagedBean().setSearchEndDate(null);
+		getManagedBean().setSearchStatusId(null);
+		getManagedBean().setSearchStatus(null);
+		getManagedBean().setSearchCircularStatus(0);
 		if(getManagedBean().isReadOnly()) {
-			getManagedBean().getCircularListingPagingDataModel().resetData();
-			getManagedBean().getServiceListingPagingDataModel().resetData();
-			//getManagedBean().getCircularListingPagingDataModel().reloadData();
-			//getManagedBean().getServiceListingPagingDataModel().reloadData();
-			//getManagedBean().resetServiceListingPagingDataModel();
-			//getManagedBean().resetCircularListingPagingDataModel();
-        		getManagedBean().setResetval(false);
-			    getManagedBean().setReadOnly(true);
-			//getManagedBean().allValue(true);
-			
+			getManagedBean().getCircularListingPagingDataModel().reloadData();
 		} else {
-			getManagedBean().getCircularListingPagingDataModel().resetData();
-			getManagedBean().getServiceListingPagingDataModel().resetData();
-			//getManagedBean().resetServiceListingPagingDataModel();
-			//getManagedBean().resetCircularListingPagingDataModel();
-        		getManagedBean().setResetval(false);
-			    getManagedBean().setReadOnly(true);
-			//getManagedBean().allValue(true);
+			getManagedBean().resetCircularListingPagingDataModel();
 		}
-		
-		
 	}
 
-
-
-	
-	
 	/**
 	 * The method used to navigate to circular details screen.
 	 * 
@@ -217,7 +172,9 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 		CircularReqDTO reqDTO = new CircularReqDTO();
 		reqDTO.setCircularVerId(circularVerId);
 		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR)) {
-			PanelBackingBean ppBB = new PanelBackingBean(); 
+			PanelBackingBean ppBB = new PanelBackingBean();
+			ppBB.getManagedBean().setSelectionOfZone(false);
+			ppBB.getManagedBean().setSelectedPanelItems(null);
 			ppBB.getManagedBean().setSelectedPanelZone(null);
 			ppBB.getManagedBean().setSelectedTabIndex(0);
 			ppBB.getManagedBean().setAction("view");
@@ -323,9 +280,9 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 	 * Method used to retrieve the information and render it on screen.
 	 */
 	public void preRenderSearch(boolean trackingDiarySearch) {
-		//searchReset();
-		//getManagedBean().setReadOnly(true);
-		//getManagedBean().resetCircularListingPagingDataModel();
+		searchReset();
+		getManagedBean().setReadOnly(false);
+		getManagedBean().resetCircularListingPagingDataModel();
 		getManagedBean().setTrackingDiarySearch(trackingDiarySearch);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "search.xhtml");
@@ -341,130 +298,21 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 	 */
 	public void searchCircular() throws Exception {
 		try {
-		
-				 
-					if( getManagedBean().getItemcode().equals("") && 
-							getManagedBean().getItemname().equals("") &&
-							getManagedBean().getItemstatus() == null &&
-							getManagedBean().getItemtype()== null &&
-							getManagedBean().getUOM().equals("") &&	
-							getManagedBean().getSkuno().equals("") &&
-							getManagedBean().getTypeofgoods()== null  )
-				{
-					
-					throw new EpException(MessageConst.ERROR_750049);
-					
-				}else if(getManagedBean().getItemtype()!=null)
-				{
-					getManagedBean().setResetval(true);
-					ContractBackingBean ccBB = new ContractBackingBean();
-					ccBB.getManagedBean().setSelectedItem(null);
-					ccBB.getManagedBean().setServiceselectedItem(null);
-					if(getManagedBean().getItemtype().equals(ParameterConst.ITEM_TYPE_PRODUCT))
-					{
-						getManagedBean().getServiceListingPagingDataModel().resetData();
-						//getManagedBean().resetServiceListingPagingDataModel();
-						getManagedBean().getCircularListingPagingDataModel().reloadData();
-						getManagedBean().prodValue(true);
-						//log.info("Search function executed Prodcut"+ParameterConst.ITEM_TYPE_PRODUCT+"  "+getManagedBean().getItemtype()); 						
-					}else if(getManagedBean().getItemtype().equals(ParameterConst.ITEM_TYPE_SERVICE))
-					{
-						  getManagedBean().getCircularListingPagingDataModel().resetData();
-						 // getManagedBean().resetCircularListingPagingDataModel();
-						  getManagedBean().getServiceListingPagingDataModel().reloadData();
-						  getManagedBean().serviceValue(true);
-							
-						//log.info("Search function executed Service"+ParameterConst.ITEM_TYPE_SERVICE+"  "+getManagedBean().getItemtype()); 
-					}else if(getManagedBean().getItemtype().equals(ParameterConst.ITEM_TYPE_PRODUCT_AND_SERVICE))
-					{
-						  getManagedBean().getCircularListingPagingDataModel().reloadData();
-						  getManagedBean().getServiceListingPagingDataModel().reloadData(); 
-						  getManagedBean().allValue(true);
-						 
-						  //log.info("Search function executed Product and Service"+ParameterConst.ITEM_TYPE_PRODUCT_AND_SERVICE+"  "+getManagedBean().getItemtype()); 
-					}
-			
-					
-				
-				}else if(getManagedBean().getItemtype()== null)
-				{
-					throw new EpException(MessageConst.ERROR_750051);
-				}
-				
-			   
-			//System.out.println("*****************searchCircular************-->5"+getManagedBean().get);
-			/*if (getManagedBean().getSearchCircularDocType() == null) {
-				
-		
+			if (getManagedBean().getSearchCircularDocType() == null) {
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_100022,
 								new String[]{ResourceBundleUtils.getMessage("lbl.ct.circular.type", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())},
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			}
 			else {
-				
 				getManagedBean().getCircularListingPagingDataModel().reloadData();
-			}*/
-		} finally{
-			    // Do nothing
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "circular search failed."));
+		}			
 	}
 
-	/** to concat Itemcode and Item Name */
-
-	public String contactItem(CtContractItem ctItem) {
-		
-		String itemcode=ctItem.getScRequestItem().getCmItem().getExtensionCode();
-		String itemName=ctItem.getScRequestItem().getItemName();
-		if(itemcode==null)
-		{
-			itemcode=ParameterConst.ITEM_CODE;
-		}
-		if(itemName==null)
-		{
-			itemName=ParameterConst.ITEM_NAME;
-		}
-		String result = itemName +","+ itemcode;
-
-		/*result.append(itemcode);
-		result.append(",");
-		result.append(itemName);
-		*/
-		
-		return result;
-	     
-	}
-	
-	public String contactItemProd(CtContractItem ctItem) {
-		//String result=new String();
-		
-		String itemcode=ctItem.getScRequestItem().getCmItem().getExtensionCode();
-		String itemName=ctItem.getScRequestItem().getItemName();
-		String sKuNo=ctItem.getSku();
-		if(itemcode==null)
-		{
-			itemcode=ParameterConst.ITEM_CODE;
-		}
-		if(itemName==null)
-		{
-			itemName=ParameterConst.ITEM_NAME;
-		}
-		if(sKuNo==null)
-		{
-			sKuNo=ParameterConst.SKUNO;
-		}
-		String result = itemName +","+ itemcode+","+sKuNo;
-
-		/*result.append(itemcode);
-		result.append(",");
-		result.append(itemName);
-		*/
-	
-		return result;
-	     
-	}
-	
-	
 	/**
 	 * User need to make decision on circular maintenance page
 	 * Navigate to circular page as per user selection for update or view
@@ -554,50 +402,4 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 		return new FacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value()) ||  
 				new FacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value());
 	}
-	
-	/**
-	* Gets the local goods radio values.
-	* 
-	* @param itemType
-	* the item type
-	* @return the local goods radio values
-	*/
-	public SelectItem[] getLocalGoodsRadioValues(String itemType) {
-	List<String> types = new ArrayList<String>();
-	types.add(ParameterConst.LOCAL_GOODS);
-	types.add(ParameterConst.IMPORTED_GOODS);
-	SelectItem[] items = null;
-	try {
-	items = new SelectItem[types.size()];
-	int i = 0;
-	for (String location : types) {
-	List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(itemType);
-	for (PmParameterDesc paramDesc : localParamDesc) {
-	if (paramDesc.getPmParameter().getParameterCode()
-	.equals(location)) {
-	items[i++] = new SelectItem(paramDesc.getPmParameter()
-	.getParameterId(), paramDesc.getCodeName());
-	}
-	}
-	}
-	} finally {
-
-	}
-	return items;
-	}
-	
-	/**
-	 * Retrieve parameter desc by type.
-	 * 
-	 * @param type
-	 *            (String type)
-	 * @returnList<PmParameterDesc>
-	 */
-	public List<PmParameterDesc> retrieveParameterDescByType(String type) {
-		return ParameterHelper.getInstance().getParameterDescList(type);
-
-	}
-
-	
-
 }
