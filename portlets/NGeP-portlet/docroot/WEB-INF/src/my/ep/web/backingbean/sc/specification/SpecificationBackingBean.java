@@ -10940,7 +10940,6 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				          checkFinancialSpecEstimations(this.getManagedBean()
 						.getScQtCheckSt2financeProposalList(),scQtCheckList,getManagedBean().getQt());
 				}
-				checkFinancialparentSpecQuestion(scQtCheckList);
 				}
 			scQtCheckList.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 			scQtCheckList.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
@@ -11594,7 +11593,6 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			if(this.getManagedBean().getSpecMaintenanceScreen().equalsIgnoreCase("SC")){
 				checkFinancialSpecEstimations(this.getManagedBean()
 						.getScQtCheckSt2financeProposalList(),scQtCheckList,scQt);
-				checkFinancialparentSpecQuestion(scQtCheckList);
 				}
 			scQtCheckList.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
 			scQtCheckList.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
@@ -12003,13 +12001,35 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	 *            the check list
 	 * @param index
 	 *            the index
+	 * @throws Exception 
 	 */
-	public void updateSelectedCheckListIndx(ScQtCheckList checkList, int index) {
+	public void updateSelectedCheckListIndx(ScQtCheckList checkList, int index) throws Exception {			
 		if (checkList.isSelected()) {
 			checkList.setIndex(index);
 		} else {
 			checkList.setIndex(-1);
 		}
+		int count = 0;
+		if(checkList.getPmDocument() !=null){
+			if(checkList.getPmDocument().getDocGroupId() !=null){
+				for (ScQtCheckList scQtCheckList : this.getManagedBean().getScQtCheckSt2financeProposalList()) {
+					if(scQtCheckList.getPmDocument() !=null && index != count){
+						if(checkList.getPmDocument().getDocGroupId() == scQtCheckList.getPmDocument().getDocGroupId()){
+							if(this.getManagedBean().getScQtCheckSt2financeProposalList().get(count).isSelected()){
+								//scQtCheckList.setSelected(false);
+								this.getManagedBean().getScQtCheckSt2financeProposalList().get(count).setSelected(false);
+								this.getManagedBean().getScQtCheckSt2financeProposalList().get(count).setIndex(-1);
+							}else{
+								//scQtCheckList.setSelected(true);
+								this.getManagedBean().getScQtCheckSt2financeProposalList().get(count).setSelected(true);
+								this.getManagedBean().getScQtCheckSt2financeProposalList().get(count).setIndex(count);
+							}
+						}
+					}
+					count++;
+				}
+			}
+		}	
 	}
 
 	/**
@@ -14609,17 +14629,86 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		return moreThanOne;
 	}
 	
-	public void checkFinancialparentSpecQuestion(ScQtCheckList financialSpecChecklist){
-		log.info("====checkFinancialparentSpecQuestionExecuted=======");
-		if(CollectionUtils.isNotEmpty(financialSpecChecklist.getScQtDoc().getTplSpecMaster().getTplSpecQuestions())){
-			for(TplSpecQuestion financialQuestion:financialSpecChecklist.getScQtDoc().getTplSpecMaster().getTplSpecQuestions()){
-				log.info("=====financialQuestion.getParentSpecQuestion()===="+financialQuestion.getParentSpecQuestion());
-				if(null==financialQuestion.getParentSpecQuestion() || null==financialQuestion.getParentSpecQuestion().getSpecQuestionId()){
-					throw new EpException(MessageConst.ERROR_760483,
-							new String[] { financialSpecChecklist.getTitle()});
+	/**
+	 * The method used to check pairing document.
+	 * @param specCommitteeFinacialDocumentStandardChecklist 
+	 */
+	public void CheckboxPairing(int docGroupId, boolean selected) throws Exception {
+    	List<PmDocument> financialDocumentList=this.getManagedBean().getStageTwoFinComplianceList();
+	    this.getManagedBean().setStageTwoFinComplianceList( new ArrayList<PmDocument>());
+	    for(PmDocument document:financialDocumentList){	    		
+	    	if(document.getDocGroupId()!=null){
+	    		if(document.getDocGroupId() ==docGroupId){
+	    			if (selected) {
+	    				document.setSelected(true);
+	    			}
+	    			else {
+	    				document.setSelected(false);
+	    			}
 				}
-		
-		     }
+	    	}				
+			this.getManagedBean().getStageTwoFinComplianceList().add(document);
+			}	    	
 	    }
+	
+	/** #13955
+	 * check mode = tender - checkIsDisable=true
+	 * check mode = quotation - checkIsDisable=false to PROCUREMENT_GROUP_ASSET and PROCUREMENT_GROUP_OVERDRAF
+	 * 
+	 * @param isDisable
+	 * @return (boolean true/false).
+	 */
+	public boolean checkIsDisable(ScQtCheckList checkList) {
+		boolean isDisable = false;
+		ScQt scQt = this.getManagedBean().getQt();
+		
+		//if tender
+		if (ParameterConst.PROCUREMENT_MODE_TENDER.equals(scQt.getProcurementMode().getParameterCode())) {
+			if(checkList.getPmDocument() !=null){
+				if(checkList.getPmDocument().getDocGroupId() !=null){
+					for (ScQtCheckList scQtCheckList : this.getManagedBean().getScQtCheckSt2financeProposalList()) {
+						if(scQtCheckList.getPmDocument() !=null){
+							if(checkList.getPmDocument().getDocGroupId() == scQtCheckList.getPmDocument().getDocGroupId()){
+									isDisable = true;	
+							}
+						}
+					}
+				}
+				else {
+					isDisable = true;
+				}
+			}
+			else {
+				isDisable = true;
+			}
+		}
+
+		// if quotation
+		if (ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(scQt.getProcurementMode().getParameterCode())) {
+			if(checkList.getPmDocument() !=null){
+				if(checkList.getPmDocument().getDocGroupId() !=null){
+					for (ScQtCheckList scQtCheckList : this.getManagedBean().getScQtCheckSt2financeProposalList()) {
+						if(scQtCheckList.getPmDocument() !=null){
+							if(checkList.getPmDocument().getDocGroupId() == scQtCheckList.getPmDocument().getDocGroupId()) {
+								if (checkList.getPmDocument().getDocGroupId() == ParameterConst.PROCUREMENT_GROUP_ASSET || checkList.getPmDocument().getDocGroupId() == ParameterConst.PROCUREMENT_GROUP_OVERDRAF)  {
+									isDisable = false;
+								}
+								else {
+									isDisable = true;
+								}
+							}
+						}
+					}
+				}
+				else {
+					isDisable = true;
+				}
+			}
+			else {
+				isDisable = true;
+			}
+		}		
+		return isDisable;
 	}
+
 }
