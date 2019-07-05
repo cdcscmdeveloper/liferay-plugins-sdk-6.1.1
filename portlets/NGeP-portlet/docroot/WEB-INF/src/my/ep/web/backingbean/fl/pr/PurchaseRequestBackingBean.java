@@ -3697,7 +3697,13 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			sumAmt = map.getValue().add(sumAmt);
 			if(sumAmt != null){
 				RuleReqDTO ruleReqDTO = new RuleReqDTO();
-				ruleReqDTO.setRuleType(RuleTypeConst.ITEM_THRESHOLD);
+				//#26047 -- start
+				ScRequestNote requestNote = getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getRequestNote();
+				if(requestNote.getQuote()!=null && requestNote.getQuote().isPanel()) {
+					ruleReqDTO.setRuleType(RuleTypeConst.PANEL_THRESHOLD);
+				} else {
+					ruleReqDTO.setRuleType(RuleTypeConst.ITEM_THRESHOLD);
+				}
 				RuleResDTO roleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
 				if(roleResDTO.isSuccessful() && roleResDTO.getRuleValueList()!=null && roleResDTO.getRuleValueList().size()>0) {
 					thresoldAmt = Double.parseDouble(roleResDTO.getRuleValueList().get(0).getRuleValue());
@@ -3707,8 +3713,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				if(sumAmt.doubleValue() > thresoldAmt){
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 							MessageUtils.getMessage(MessageConst.ERROR_740004, 
-									new String[]{requestItemMap.get(map.getKey()).getItemName(),requestItemMap.get(map.getKey()).getCmItem().getExtensionCode()}, 
+									new String[]{requestItemMap.get(map.getKey()).getItemName(),requestItemMap.get(map.getKey()).getCmItem().getExtensionCode(), String.valueOf(thresoldAmt)}, 
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+									//#26047 -- end
 				}
 			}
 		}
