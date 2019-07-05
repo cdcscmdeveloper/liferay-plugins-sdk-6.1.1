@@ -70,7 +70,15 @@ public class OrgProfileSearchBackingBean extends
 		return PmCommonUtil.getJabatanDropdown(getManagedBean()
 				.getPegaiPengawaProfileId());
 	}
-	
+
+	public void initPtjPopupDefaultMinistry(Long orgProfileId) {
+		initPtjPopup();
+		if (getFacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value())) {
+			getManagedBean().setMinistryProfileId(orgProfileId);
+			getManagedBean().setDisabledMinistry(true);
+		}
+	}
+
 	public void initPtjPopup(){
 		this.renewSesionObject();
 		List<PmUserOrg> userOrgList = PmCommonUtil
