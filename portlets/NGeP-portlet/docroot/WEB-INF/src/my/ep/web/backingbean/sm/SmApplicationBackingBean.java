@@ -2287,6 +2287,23 @@ public class SmApplicationBackingBean extends
 					SmApplicationUtil.initOverlapCategoryDocs(getManagedBean()
 							.isOverLappedCategoryExists(), getManagedBean());
 
+					if ((getManagedBean().isPoUser() || getManagedBean()
+							.isApproverUser())
+							&& getManagedBean().isOverLappedCategoryExists()
+							&& EntityHelper.isCollectionEmpty(getManagedBean()
+									.getSmAppl().getSmCategoryOverlapDocs())) {
+						FacesContext fc = FacesContext.getCurrentInstance();
+						fc.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_ERROR,
+										null,
+										SmCommonUtil
+												.getMessage(
+														"lbl.sm.category.overlap.pleaseReject",
+														null)));
+					}
+
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY:
 					if (valid) {
