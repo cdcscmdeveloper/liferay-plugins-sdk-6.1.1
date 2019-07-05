@@ -42,7 +42,7 @@
 					rendered="#{(report.pmDocument ne null and
 											!suppFinalizationBackingBean.managedBean.getDirectdownloaddocdefkeys()
 												.contains(report.pmDocument.docDefinitionKey)) or report.pmDocument eq null}">
-					<ac:scSingleFileUploadButton id="briefingReportUploadBtn"
+					<ac:scSingleFileUploadButton id="sfBriefingReportUploadBtn"
 						popupWidgetVar="sfBriefingReportAttWidget"
 						attachment="#{report.scQtFinalizationReportAttachment}"
 						readonly="#{!(isSecretaryUser and report.selected)}"
