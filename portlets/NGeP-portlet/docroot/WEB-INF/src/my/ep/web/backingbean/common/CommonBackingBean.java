@@ -4,16 +4,21 @@
 package my.ep.web.backingbean.common;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
+import my.ep.biz.service.sc.bidding.IBiddingSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.common.CommonManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 
@@ -31,7 +36,7 @@ public class CommonBackingBean extends BaseBackingBean<CommonManagedBean> {
 	private static Logger log = Logger.getLogger(CommonBackingBean.class);
 	
 	public void generateReport() {
-		log.debug("generateReport() : "+getManagedBean().getReportDisplayName());
+		log.info("generateReport() : "+getManagedBean().getReportDisplayName());
 		try {
 			generateReport(getManagedBean().getReportName(), getManagedBean().getParamMap());
 		} catch (IOException e) {
@@ -45,7 +50,7 @@ public class CommonBackingBean extends BaseBackingBean<CommonManagedBean> {
 	
 	public void generateReportByOrderNo(){
 		//orderNo=orderNo.substring(1,orderNo.indexOf("_No"));
-		log.debug("generateReport() : "+getManagedBean().getReportDisplayName()+" Order NO:" +orderNo);
+		log.info("generateReport() : "+getManagedBean().getReportDisplayName()+" Order NO:" +orderNo);
 		try {
 			Map<String,String> paramMap=new HashMap<String, String>();
 			paramMap.put(ReportConst.PARAM_DOC_NO,orderNo);
@@ -68,5 +73,15 @@ public class CommonBackingBean extends BaseBackingBean<CommonManagedBean> {
 	 */
 	public void setOrderNo(String orderNo) {
 		this.orderNo = orderNo;
+	}
+
+	public void testPushBiddingSchedule(){
+		IBiddingSO biddingSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
+		List<Long> scheduleIds = new ArrayList<Long>();
+		Long scheduleId = Long.valueOf(this.getManagedBean().getReportName());
+		scheduleIds.add(scheduleId);
+		log.info("The schedule is ==> " + scheduleId);
+		biddingSO.updateBiddingListToCache(scheduleIds);
 	}
 }

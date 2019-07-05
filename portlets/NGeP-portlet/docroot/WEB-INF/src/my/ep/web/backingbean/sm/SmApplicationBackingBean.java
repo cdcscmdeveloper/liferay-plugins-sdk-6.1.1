@@ -9689,17 +9689,22 @@ public class SmApplicationBackingBean extends
 	 * Sets the default review section for approver in the SmAppSectionReview.
 	 */
 	private void setDefaultApproverReviewSection() {
-		List<String> catList = SmApplicationUtil.getUnverifiedCatCodes(getManagedBean().getSmAppl()
-				.getSmSupplierCategories(), getManagedBean().getSmAppl().getApplType(), getManagedBean()
-				.isApproverUser());
-		if (catList.size() != 0) {
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_WARN, null, SmCommonUtil.getMessage(
-							"lbl.sm.appl.catCodes.noPoAppr.action",
-							new String[] { catList.toString().replaceAll("[\\[\\]]", "") })));
+		//#Enhancement #11765
+		if(SupplierManagementConst.SM_APPL_PAGE_TYPE_PO_APPR_DEC.equalsIgnoreCase(getManagedBean().getCurrentPageType())){
+			List<String> catList = SmApplicationUtil.getUnverifiedCatCodes(getManagedBean().getSmAppl()
+					.getSmSupplierCategories(), getManagedBean().getSmAppl().getApplType(), getManagedBean()
+					.isApproverUser());
+			if (catList.size() != 0) {
+				FacesContext fc = FacesContext.getCurrentInstance();
+				//#Enhancement #11765
+				fc.addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, SmCommonUtil.getMessage(
+								"lbl.sm.appl.catCodes.noPoAppr.action",
+								new String[] { catList.toString().replaceAll("[\\[\\]]", "") })));
+			}
 		}
+		
 		boolean containsAppRev = false;
 
 		if (!getManagedBean().getSmAppl().getSmApplSectionReviews().isEmpty()) {
@@ -9727,17 +9732,21 @@ public class SmApplicationBackingBean extends
 	 * Sets the default review section for PO in the SmAppSectionReview.
 	 */
 	private void setDefaultPoReviewSection() {
-		List<String> catList = SmApplicationUtil.getUnverifiedCatCodes(getManagedBean().getSmAppl()
-				.getSmSupplierCategories(), getManagedBean().getSmAppl().getApplType(), getManagedBean()
-				.isApproverUser());
-		if (catList.size() != 0) {
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_WARN, null, SmCommonUtil.getMessage(
-							"lbl.sm.appl.catCodes.noPoAppr.action",
-							new String[] { catList.toString().replaceAll("[\\[\\]]", "") })));
+		//#Enhancement #11765
+		if(SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC.equalsIgnoreCase(getManagedBean().getCurrentPageType())){
+			List<String> catList = SmApplicationUtil.getUnverifiedCatCodes(getManagedBean().getSmAppl()
+					.getSmSupplierCategories(), getManagedBean().getSmAppl().getApplType(), getManagedBean()
+					.isApproverUser());
+			if (catList.size() != 0) {
+				FacesContext fc = FacesContext.getCurrentInstance();				
+				fc.addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, SmCommonUtil.getMessage(
+								"lbl.sm.appl.catCodes.noPoAppr.action",
+								new String[] { catList.toString().replaceAll("[\\[\\]]", "") })));
+			}
 		}
+		
 		boolean containsPORev = false;
 
 		if (!getManagedBean().getSmAppl().getSmApplSectionReviews().isEmpty()) {
