@@ -30,6 +30,8 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -49,10 +51,12 @@ import my.ep.biz.service.ct.circular.IPanelGroupItemSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IPtjSpecialApprovalSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
@@ -75,11 +79,15 @@ import my.ep.dto.pm.authorization.orgprofile.PtjSpecialApprovalReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.PtjSpecialApprovalResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.document.DocumentReqDTO;
+import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
+import my.ep.dto.sc.quationtender.EvaluationReqDTO;
+import my.ep.dto.sc.quationtender.EvaluationResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.SpecificationReqDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
@@ -121,6 +129,8 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
+import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationReport;
+import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportAttachment;
@@ -141,12 +151,14 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.type.sc.EvaluationReport;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.shared.PerformanceBondUtil;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentDefaultFormat;
@@ -178,6 +190,7 @@ import org.docx4j.openpackaging.parts.PartName;
 import org.docx4j.openpackaging.parts.WordprocessingML.AlternativeFormatInputPart;
 import org.docx4j.relationships.Relationship;
 import org.docx4j.wml.CTAltChunk;
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
@@ -634,23 +647,45 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @return String userName
 	 */
 	public String retriveUserName(Long userId) {
-		IUserSO userSo = null;
 		String userName = "";
+		PmUser user = retrivePmUser(userId);
+		if (user != null) {
+			userName = user.getUserName();
+		}
+
+		return userName;
+	}
+
+	public PmUser retrivePmUser(Long userId) {
+		PmUser user = null;
 		try {
-			userSo = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO reqDTo = new UserReqDTO();
 			reqDTo.setUserId(userId);
-			UserResDTO resDTO = userSo.retrieveUserByUserId(reqDTo);
+			UserResDTO resDTO = getUserSOGlobal().retrieveUserByUserId(reqDTo);
 			if (resDTO.isSuccessful() == true) {
-				PmUser user = resDTO.getPmUser();
-				userName = user.getUserName();
+				user = resDTO.getPmUser();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return userName;
+		return user;
+	}
+
+	protected IUserSO getUserSOGlobal() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+	}
+
+	protected IOrgProfileSO getOrgProfileSOGlobal() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+	}
+
+	protected IParameterSO getParameterSOGlobal() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+	}
+
+	protected IQTDetailSO getQTDetailSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 	}
 
 	/**
@@ -1873,16 +1908,29 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		BigDecimal overallCtAmount = overallCtAmountWithSST(scLoa.getLoaAmt(), scLoa.getSstAmt());
 		
 		if(isDirectLoa) {
-			scLoa.setBondReq(PerformanceBondUtil.isPerformanceBondRequired(overallCtAmount, null));
+			boolean notPbDropDown = true;
+			if (null != scLoa.getQtType() 
+					&& null != scLoa.getQtType().getParameterId() 
+					&& scLoa.getQtType().getParameterId() == 194 
+					&& null != scLoa.getScQt() 
+					&& null != scLoa.getScQt().getFulfilmentType()
+					&& null != scLoa.getScQt().getFulfilmentType().getParameterId()
+					&& scLoa.getScQt().getFulfilmentType().getParameterId() == 148
+					&& null != scLoa.getContractType() 
+					&& null != scLoa.getContractType().getParameterId()
+					&& scLoa.getContractType().getParameterId() == 146) {
+				notPbDropDown = false;
+			}
+			if (notPbDropDown) {
+				scLoa.setBondReq(PerformanceBondUtil.isPerformanceBondRequired(overallCtAmount, null));
+			}
 		}
 		
-		if (scLoa.getScLoiLoa() != null) {
-			log.info("____ calcBondAmountWithSST scloiloa_docid: "+scLoa.getScLoiLoa().getDocId() +"overallAmount: "+overallCtAmount+" scLoa.isBondReq():"+scLoa.isBondReq());
-		}
-	
+		System.out.println("____ calcBondAmountWithSST "+scLoa.getScLoiLoa().getDocId()+": "+scLoa.getScLoiLoa().getDocId() +"overallAmount: "+overallCtAmount+" scLoa.isBondReq():"+scLoa.isBondReq());
+		
 		if (scLoa.isBondReq()) {
 			if (scLoa.getLoaAmt() != null && scLoa.getContractDuration() != null) {
-				log.info("____ calcBondAmountWithSST LoaAmt: "+scLoa.getLoaAmt()+" Contract Duration: "+scLoa.getContractDuration());
+				System.out.println("____ calcBondAmountWithSST LoaAmt: "+scLoa.getLoaAmt()+" Contract Duration: "+scLoa.getContractDuration());
 				BigDecimal contractPeriod = scLoa.getContractDuration();
 
 				PerformanceBondUtil.calculatePerformanceBondAmt(overallCtAmount, contractPeriod, scLoa);
@@ -2583,6 +2631,23 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	
 	}
 	
+	public PmParameter retrieveParameterByTypeAndCode(String parameterType, String parameterCode) {
+		PmParameter pmParameter = null;
+		try {
+
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterType(parameterType);
+			reqDTO.setParameterCode(parameterCode);
+			ParameterResDTO resDTO = getParameterSOGlobal().retrieveParameterByTypeAndCode(reqDTO);
+			if (resDTO != null && resDTO.isSuccessful()) {
+				pmParameter = resDTO.getPmParameter();
+			}
+		} finally {
+		}
+
+		return pmParameter;
+	}
+
 	/**
 	 * Validate deduction payment dtls.
 	 * 
