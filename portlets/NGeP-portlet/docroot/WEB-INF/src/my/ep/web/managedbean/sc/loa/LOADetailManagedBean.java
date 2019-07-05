@@ -13,7 +13,6 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCurrency;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
@@ -29,7 +28,6 @@ import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
-import my.ep.web.managedbean.BaseManagedBean;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -41,7 +39,7 @@ import my.ep.web.managedbean.BaseManagedBean;
  */
 @ManagedBean(name = "lOADetailManagedBean")
 @SessionScoped
-public class LOADetailManagedBean extends BaseManagedBean {
+public class LOADetailManagedBean extends LOABaseManagedBean {
 	
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
@@ -60,10 +58,7 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	
 	/** The attachment doc type. */
 	private String attachmentDocType;
-	
-	/** The sc loa. */
-	private ScLoa scLoa;
-	
+
 	/** The sc qt. */
 	private ScQt scQt;
 	
@@ -87,9 +82,7 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	
 	/** The sc loa approval. */
 	private ScLoaApproval scLoaApproval;
-	
-	
-	
+
 	/** The selected sc loa reports. */
 	private List<ScLoaReport> selectedScLoaReports;
 	
@@ -270,6 +263,8 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	private String suppConfirmMsgAccept;
 	private String suppConfirmMsgReject;
 	
+	private PmOrgProfile ministryOrgProfile;
+
     /**
      * Gets the spki backing bean.
      *
@@ -382,24 +377,6 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 */
 	public void setAttachmentDocType(String attachmentDocType) {
 		this.attachmentDocType = attachmentDocType;
-	}
-
-	/**
-	 * Gets the sc loa.
-	 *
-	 * @return the scLoa
-	 */
-	public ScLoa getScLoa() {
-		return scLoa;
-	}
-
-	/**
-	 * Sets the sc loa.
-	 *
-	 * @param scLoa the scLoa to set
-	 */
-	public void setScLoa(ScLoa scLoa) {
-		this.scLoa = scLoa;
 	}
 
 	/**
@@ -1532,5 +1509,12 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	public void setSuppConfirmMsgReject(String suppConfirmMsgReject) {
 		this.suppConfirmMsgReject = suppConfirmMsgReject;
 	}
-	
+
+	public PmOrgProfile getMinistryOrgProfile() {
+		return ministryOrgProfile;
+	}
+
+	public void setMinistryOrgProfile(PmOrgProfile ministryOrgProfile) {
+		this.ministryOrgProfile = ministryOrgProfile;
+	}
 }
