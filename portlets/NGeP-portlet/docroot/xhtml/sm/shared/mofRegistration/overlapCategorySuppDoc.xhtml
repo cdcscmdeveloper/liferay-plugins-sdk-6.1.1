@@ -65,10 +65,6 @@
 						and (backingBean.managedBean.smAppl.applType ne 'B' and backingBean.managedBean.smAppl.applType ne 'U')}">
 							<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.justifyLetter']}" escape="false" />
 						</c:when>
-						<c:when test="#{(backingBean.managedBean.poUser or backingBean.managedBean.approverUser) and 
-						    (backingBean.managedBean.smAppl.applType eq 'B' or backingBean.managedBean.smAppl.applType eq 'U') }">
-						    &#160;
-						</c:when>
 						<c:otherwise>
 							<h:outputText styleClass="warning" value="#{lbl['lbl.sm.category.overlap.upload.doc']}" escape="false" />
 						</c:otherwise>

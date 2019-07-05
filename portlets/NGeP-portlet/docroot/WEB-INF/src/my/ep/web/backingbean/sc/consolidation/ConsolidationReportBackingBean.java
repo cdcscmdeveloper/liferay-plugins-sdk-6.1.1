@@ -1062,14 +1062,15 @@ public class ConsolidationReportBackingBean extends
 		} else {
 			validateDORanking(null, scQtFinalization.getScQtRecommends());
 		}
-		if (!scQtFinalization.isBriefingPaperUploaded()
+		// Commented below code for #18685.
+		/*if (!scQtFinalization.isBriefingPaperUploaded()
 				&& (kertasTaklimatReport != null && kertasTaklimatReport
 						.getScQtFinalizationReportAttachment() == null)) {
 			navigateToBriefingPaperTab();
 			throw new EpException(MessageConst.ERROR_760452);
 		}else{
 			scQtFinalization.setBriefingPaperUploaded(true);
-		}
+		}*/
 	}
 
 	private void validateDORanking(TplSpecZoneDtl specZoneDtl,
