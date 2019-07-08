@@ -446,7 +446,7 @@ public class SmApplicationUtil {
 			for (SmSupplierCategory cat : catList) {
 				if (cat.getPoDecFlg() == null) {
 					//Enhancement #11765
-					invalidCatCodes.add(cat.getSupplierCategoryId().toString());
+					invalidCatCodes.add(cat.getPmCategoryL1().getCategoryL1Code()+cat.getPmCategoryL2().getCategoryL2Code()+cat.getPmCategoryL3().getCategoryL3Code());
 				}
 			}
 		}
