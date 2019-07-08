@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -176,6 +177,7 @@ import my.ep.web.bean.pm.GlAccountSearchBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.converter.pm.PmUserConverter;
 import my.ep.web.managedbean.fl.pr.PurchaseRequestManagedBean;
+import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.fl.helper.LocationSingleton;
@@ -3699,6 +3701,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				RuleReqDTO ruleReqDTO = new RuleReqDTO();
 				//#26047 -- start
 				ScRequestNote requestNote = getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getRequestNote();
+				DecimalFormat amountDF = new DecimalFormat(new CommonUtils().getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER));
 				if(requestNote.getQuote()!=null && requestNote.getQuote().isPanel()) {
 					ruleReqDTO.setRuleType(RuleTypeConst.PANEL_THRESHOLD);
 				} else {
@@ -3713,7 +3716,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				if(sumAmt.doubleValue() > thresoldAmt){
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 							MessageUtils.getMessage(MessageConst.ERROR_740004, 
-									new String[]{requestItemMap.get(map.getKey()).getItemName(),requestItemMap.get(map.getKey()).getCmItem().getExtensionCode(), String.valueOf(thresoldAmt)}, 
+									new String[]{requestItemMap.get(map.getKey()).getItemName(),requestItemMap.get(map.getKey()).getCmItem().getExtensionCode(), amountDF.format(thresoldAmt)}, 
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 									//#26047 -- end
 				}
