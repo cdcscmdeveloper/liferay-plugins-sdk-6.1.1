@@ -1,8 +1,6 @@
 package my.ep.web.backingbean.sm.supplierdatamaintenance;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -15,7 +13,6 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceException;
 
-import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -44,12 +41,10 @@ import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.sm.applicationView.BaseReviewApplicationBackingBean;
-import my.ep.web.backingbean.sm.commonappl.CommonApplBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
-import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
@@ -58,8 +53,6 @@ import my.ep.web.vo.DisciplinaryActionVO;
 
 import org.apache.commons.lang.StringUtils;
 import org.primefaces.context.RequestContext;
-
-import com.liferay.portal.model.Role;
 
 @ManagedBean(name = "supplierDataMaintenanceBackingBean")
 @RequestScoped
@@ -897,7 +890,8 @@ public class SupplierDataMaintenanceBackingBean extends
 
 		while (apprCatIt.hasNext()) {
 			SmSupplierCategory apprCat = apprCatIt.next();
-			if(apprCat.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_ACTIVE) {
+			//#25753 : Supplier Data Maintenance: Special Category Other Description
+			if(apprCat.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_ACTIVE || apprCat.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_PENDING_ACTIVATION) {
 				SmSupplierCategory delCat = (SmSupplierCategory) EntityHelper
 						.getEntityByMultiplePropertiesFromList(apprCat, categories,
 								null, new String[] { "pmCategoryL1",
