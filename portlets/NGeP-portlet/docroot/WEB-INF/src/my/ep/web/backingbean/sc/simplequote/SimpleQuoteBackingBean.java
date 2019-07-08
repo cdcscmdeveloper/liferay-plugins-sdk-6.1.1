@@ -2006,8 +2006,8 @@ public class SimpleQuoteBackingBean extends
 				quote.setSupplierLocationLevel(null);
 			}
 			
-			if(outcome.equals(BpmOutcomeConst.BPM_SUBMIT)){
-				if (null == quote.getProcurementTypeCategory()) {
+			if(outcome.equals(BpmOutcomeConst.BPM_SUBMIT)||outcome.isEmpty()){
+				if (null == quote.getProcurementTypeCategory().getParameterId()) {
 					throw new EpException(
 							MessageConst.ERROR_760315,
 							new String[] {ResourceBundleUtils.getMessage("lbl.sc.procurment.type.category",
