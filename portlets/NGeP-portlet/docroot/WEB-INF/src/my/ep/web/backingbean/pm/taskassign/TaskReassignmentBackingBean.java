@@ -42,6 +42,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
+import my.ep.constant.pm.ProfileManagementStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.BpmConstants;
 import my.ep.constants.FLProcessNameConst;
@@ -2061,13 +2062,16 @@ public class TaskReassignmentBackingBean extends
 		case ProfileManagementConst.REASSIGN_TYPE_COMMON:
 			//1 - Normal Reassignment
 
-			// same org profile id
-			//comment because of cross org profile  #10927
-			/*searchBean.getDataFilterBeans().add(
-					new SearchFilterBean(
-							"pmUserOrgs.pmOrgProfile.orgProfileId",
-							SearchOperator.OPERATOR_EQUALS.value(),
-							orgProfileId));*/
+			//check because to allow cross org profile for market research #10927
+			if(task.getDocStatus().longValue() != ProfileManagementStatusConst.PENDING_MARKET_RESEARCH_ACCESS_APPROVAL.longValue()) {
+				
+				// same org profile id
+				searchBean.getDataFilterBeans().add(
+				new SearchFilterBean(
+						"pmUserOrgs.pmOrgProfile.orgProfileId",
+						SearchOperator.OPERATOR_EQUALS.value(),
+						orgProfileId));
+			}
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_S2:
 			// 2: S2/CT Committee Task
