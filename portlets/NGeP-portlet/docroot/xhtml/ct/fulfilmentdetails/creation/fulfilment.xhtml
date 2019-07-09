@@ -121,7 +121,7 @@
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{ctBackingBean.isPerformanceBond()}"
 			actionListener="#{contractDetailsBackingBean.setTabValue('PB')}" update=":form" 
-			disabled="#{!directLOABackingBean.managedBean.scLoa.bondReq}"/>
+			disabled="#{!ctBackingBean.managedBean.contractVer.ctContract.loa.bondReq}"/>
 		
 		<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.factoring']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
@@ -155,6 +155,10 @@
 		    <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.item']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			actionListener="#{contractDetailsBackingBean.setTabCentralValue('IT')}" update=":form" />
+			
+			<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.deduction']}" 
+			onstart="blockWidget.show()"   oncomplete="blockWidget.hide()"
+			 actionListener="#{contractDetailsBackingBean.setTabCentralValue('DE')}" update=":form" />
 			
 			<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.performance.bond']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
