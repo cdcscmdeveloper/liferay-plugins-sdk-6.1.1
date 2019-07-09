@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import my.ep.helper.EntityHelper;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -307,16 +308,17 @@ public class QTSupplierQulCriteriaBackingBean extends
 		
 		qtCategoryList.add(category);
 		
-		/*
-		 * Condition if select PRINTING or PERCETAKAN radiobutton default to Bumiputra 
-		 */
+		// 20190709@hatta - 22240 - Start
 		this.getManagedBean().getQt().setOpenFor(ParameterConst.OPEN_FOR_ALL);
-		for(ScQtCategory cat: this.getManagedBean().getQtCategoryList()){
-			if(getParameterDesc(cat.getPmCategoryL3().getCategoryTypeCode()).equalsIgnoreCase("PRINTING") || cat.getPmCategoryL2Name().substring(0,10).equalsIgnoreCase("PERCETAKAN")){
-				this.getManagedBean().getQt().setOpenFor(ParameterConst.OPEN_FOR_BUMI);
-				break;
+		if (!EntityHelper.isCollectionEmpty(this.getManagedBean().getQtCategoryList())) {
+			for(ScQtCategory cat: this.getManagedBean().getQtCategoryList()){
+				if( (!StringUtils.isBlank(cat.getPmCategoryL2Name()) && cat.getPmCategoryL2Name().length() > 10 && cat.getPmCategoryL2Name().substring(0,10).equalsIgnoreCase("PERCETAKAN")) ){
+					this.getManagedBean().getQt().setOpenFor(ParameterConst.OPEN_FOR_BUMI);
+					break;
+				}
 			}
 		}
+		// 20190709@hatta - 22240 - End
 	}
 
 	
@@ -349,16 +351,18 @@ public class QTSupplierQulCriteriaBackingBean extends
 		this.getManagedBean().getQt().setScQtCategorys(openList);
 		this.getManagedBean().setTobeRemoveCategoryCodes(removeList);
 		
-		/*
-		 * Condition if select PRINTING or PERCETAKAN radiobutton default to Bumiputra 
-		 */
-		this.getManagedBean().getQt().setOpenFor(ParameterConst.OPEN_FOR_ALL);
-		for(ScQtCategory cat: this.getManagedBean().getQtCategoryList()){
-			if(getParameterDesc(cat.getPmCategoryL3().getCategoryTypeCode()).equalsIgnoreCase("PRINTING") || cat.getPmCategoryL2Name().substring(0,10).equalsIgnoreCase("PERCETAKAN")){
-				this.getManagedBean().getQt().setOpenFor(ParameterConst.OPEN_FOR_BUMI);
-				break;
-			}
-		}
+		// 20190709@hatta - 22240 - Start
+				this.getManagedBean().getQt().setOpenFor(ParameterConst.OPEN_FOR_ALL);
+				if (!EntityHelper.isCollectionEmpty(this.getManagedBean().getQtCategoryList())) {
+					for(ScQtCategory cat: this.getManagedBean().getQtCategoryList()){
+						if( (!StringUtils.isBlank(cat.getPmCategoryL2Name()) && cat.getPmCategoryL2Name().length() > 10 && cat.getPmCategoryL2Name().substring(0,10).equalsIgnoreCase("PERCETAKAN")) ){
+							this.getManagedBean().getQt().setOpenFor(ParameterConst.OPEN_FOR_BUMI);
+							break;
+						}
+					}
+				}
+		// 20190709@hatta - 22240 - End
+				
 	}
 	
 	/**
