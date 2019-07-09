@@ -763,6 +763,9 @@ public class PurchaseInquiryBackingBean extends
 		Integer stockAvailable = getManagedBean().getStockAvailable();
 		validateSupplierSave(stockAvailable);
 
+		ScRequestNote scRequestNote = getManagedBean().getRequestNote();
+		ScRequestNoteDtl scRequestNoteDtl = getManagedBean().getRequestNoteDtl();
+
 		ScPrInquiry prInquiry = getManagedBean().getScPrInquiry();
 		finalizeRemarks(prInquiry.getRemarks());
 
@@ -788,14 +791,23 @@ public class PurchaseInquiryBackingBean extends
 		PrInquiryResDTO resDTO = getPrInquirySO().savePrInquiryPrice(reqDTO);
 
 		if (resDTO.isSuccessful()) {
-			ScPrInquiry scPrInquiry = resDTO.getPrInquiryDetail();
+			ScPrInquiry resPrInquiry = resDTO.getPrInquiryDetail();
 			successMessage(MessageConst.INFO_700025, ParameterTypeConst.DOCUMENT_TYPES,
-					ParameterConst.DOCTYPE_PURCHASE_INQUIRY, scPrInquiry.getPrInquiryNo(), Boolean.FALSE);
+					ParameterConst.DOCTYPE_PURCHASE_INQUIRY, resPrInquiry.getPrInquiryNo(), Boolean.FALSE);
 			getManagedBean().setSupplierItemPrices(resDTO.getSupplierItemPrices());
+
+			ScRequestSupplierItem resRequestSupplierItem = resDTO.getScRequestSupplierItem();
 			scRequestSupplierItem.setSupplierItemPrices(resDTO.getSupplierItemPrices());
 			scRequestSupplierItem.setRequestNoteItem(resDTO.getScRequestItem());
-			scPrInquiry.setScRequestSupplierItems(Arrays.asList(scRequestSupplierItem));
-			getManagedBean().setScPrInquiry(scPrInquiry);
+			scRequestSupplierItem.setChangedDate(resRequestSupplierItem.getChangedDate());
+
+			scRequestNoteDtl.setRequestItem(resDTO.getScRequestItem());
+			scRequestNote.setRequestNoteItems(Arrays.asList(resDTO.getScRequestItem()));
+			scRequestNote.setRequestNoteDtls(Arrays.asList(scRequestNoteDtl));
+			
+			getManagedBean().setRequestNote(scRequestNote);
+			getManagedBean().setRequestNoteDtl(scRequestNoteDtl);
+			getManagedBean().setScPrInquiry(resPrInquiry);
 			getManagedBean().setScRequestSupplierItem(scRequestSupplierItem);
 		} else {
 			throw new EpException(MessageConst.ERROR_700020);
