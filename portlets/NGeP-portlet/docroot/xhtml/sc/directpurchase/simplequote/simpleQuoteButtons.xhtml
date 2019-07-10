@@ -126,7 +126,7 @@
 			</p:commandButton>
 
 			<p:commandButton value="#{lbl['lbl.btn.save']}"
-				onclick="blockWidget.show();alert('hello');" oncomplete="blockWidget.hide();"
+				onclick="blockWidget.show();" oncomplete="blockWidget.hide();"
 				action="#{simpleQuoteBackingBean.saveSimpleQuote('Save')}"
 				rendered="#{!isPidExpired}" update="@form" process="@all" immediate="true">
 				
