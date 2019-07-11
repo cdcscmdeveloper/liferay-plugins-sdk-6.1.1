@@ -7045,7 +7045,7 @@
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>
-	/xhtml/pm/supplierperformanceCriteria/preRenderSupplierperformanceCriteria.xhtml</value>
+	/xhtml/pm/supplierperformanceCriteria/preRenderCriteria.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
