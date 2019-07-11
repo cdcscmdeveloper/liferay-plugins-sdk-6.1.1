@@ -2060,23 +2060,36 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 				if (getManagedBean().isPrepareLOA()) {
 					if (outputValue.equalsIgnoreCase("LOD")) {
-						getManagedBean().setSelectedTabIndex(index + 2);
+						if(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL))
+							getManagedBean().setSelectedTabIndex(index + 2);
+						else
+							getManagedBean().setSelectedTabIndex(index + 1);
 					}
 					if (outputValue.equalsIgnoreCase("CNT")) {
-						getManagedBean().setSelectedTabIndex(index + 3);
+						if(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL))
+							getManagedBean().setSelectedTabIndex(index + 3);
+						else
+							getManagedBean().setSelectedTabIndex(index + 2);
 					}
 					if ((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isBondReq() && outputValue.equalsIgnoreCase("PB")
 							&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
 							&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
 									ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))) {
-						getManagedBean().setSelectedTabIndex(index + 3);
+						if(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL))
+							getManagedBean().setSelectedTabIndex(index + 4);
+						else
+							getManagedBean().setSelectedTabIndex(index + 3);
 					}
 					if (getManagedBean().isDecisionPbQcLOA() && outputValue.equalsIgnoreCase("DCN")) {
 						if ((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isBondReq()
 								&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
 								&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
 										ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))) {
-							getManagedBean().setSelectedTabIndex(index + 5);
+							if(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL))
+								getManagedBean().setSelectedTabIndex(index + 5);
+							else
+								getManagedBean().setSelectedTabIndex(index + 4);
+							
 						} else {
 							getManagedBean().setSelectedTabIndex(index+4);
 						}
