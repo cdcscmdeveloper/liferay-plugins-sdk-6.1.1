@@ -4,6 +4,8 @@
 package my.ep.web.managedbean;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.List;
 
 import javax.faces.model.SelectItem;
@@ -352,6 +354,24 @@ public abstract class BaseManagedBean implements Serializable {
 				break;
 			}
 		}*/
+		
+		//#25142 to display special character after save the content --- tested for Supplier finalization (briefing paper tab)
+		String reportContent = null;
+		try {
+			if(selectedReport != null)
+			{
+				reportContent = selectedReport.getReportContent();
+				
+					reportContent = URLDecoder.decode(reportContent, "UTF-8");
+				
+				selectedReport.setReportContent(reportContent);
+			}
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} finally {
+			reportContent = null;
+		}
+		
 		return selectedReport;
 	}
 
