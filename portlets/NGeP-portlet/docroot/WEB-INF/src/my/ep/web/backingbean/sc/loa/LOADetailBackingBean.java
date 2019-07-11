@@ -254,7 +254,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			scLoa.setSameSupplierLoiLoaList(supplierLoiLoas);
 			AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOADtl(reqDTO);
 			scLoa = resDTO.getScLoa();
-			getManagedBean().setFlowamt(scLoa.isFollowLoaAmt());
+			if(!scLoa.isBrandNew())
+			{
+				getManagedBean().setFlowamt(scLoa.isFollowLoaAmt());
+			}
 			this.getManagedBean().setScQt(resDTO.getScQt());
 			String currentUser = new FacesScopes().getUserSessionBean().getLoginId();
 			if (awardDataType != null){
@@ -556,7 +559,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
             log.info(" Source Id   "+dpDataType.getSourceId());
             log.info(" Award Id    "+dpDataType.getAwardId());
 			Long sourceId = Long.valueOf(dpDataType.getSourceId());
-			Long loaId = Long.valueOf(dpDataType.getAwardId());
+			
+			Long loaId = Long.valueOf(dpDataType.getAwardId()!=null?dpDataType.getAwardId():0);
+			
 			getManagedBean().setSourceId(sourceId);
 			getManagedBean().setPayLoad(dpDataType);
 
