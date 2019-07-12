@@ -50,8 +50,7 @@
 								<p:commandButton value="#{lbl['lbl.btn.save']}" process="@all"
 									partialSubmit="true" update="@form" onstart="blockWidget.show();"
 									oncomplete="blockWidget.hide();"
-									action="#{lOADetailBackingBean.saveAction(true)}" 
-									rendered="#{lOADetailBackingBean.isSqStillValid()}"/>
+									action="#{lOADetailBackingBean.saveAction(true)}" />
 									
 								<ui:repeat var="bpmAction"
 									value="#{lOADetailBackingBean.managedBean.outComes}">
