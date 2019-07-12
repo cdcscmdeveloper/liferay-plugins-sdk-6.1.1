@@ -4500,20 +4500,17 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		//check if pid expired ovewrite sq
 		//checking if SQ still valid, if not valid thus cancel/reject button will be added
 		
-		
-		
-			if(!isSqStillValid()){
-				if(currentStatusId.equals(DPStatusConstants.RN_PENDING_APPROVAL)
-				   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL) ){
-					String[] addReject = new String[]{BpmOutcomeConst.BPM_REJECT};    		
-					getManagedBean().setOutComes(addReject);
-				}
-				else{
-					String[] addCancel = new String[]{BpmOutcomeConst.BPM_CANCEL};    		
-					getManagedBean().setOutComes(addCancel);
-				}						
-		}
-		
+		if(!isSqStillValid()){
+			if(currentStatusId.equals(DPStatusConstants.RN_PENDING_APPROVAL)
+			   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL) ){
+			   String[] addReject = new String[]{BpmOutcomeConst.BPM_REJECT};    		
+			   getManagedBean().setOutComes(addReject);
+			}
+			else{
+			   String[] addCancel = new String[]{BpmOutcomeConst.BPM_CANCEL};    		
+			   getManagedBean().setOutComes(addCancel);
+			}						
+		}	
 	}
 	
 	/**
@@ -4523,10 +4520,21 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		
 		Boolean validDate = true;	
 		Long currentStatusId = getManagedBean().getCurrentStatusId();
+		Integer sqTimeValidity = null;
 		ScQuote scQuote = getManagedBean().getRequestNote().getQuote();
 		
-		EpPropertiesUtils prop = EpPropertiesUtils.getInstance();
-		Integer sqTimeValidity = Integer.valueOf(prop.getProperty("sqTimeValidity"));
+		// by default days
+		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);	
+		RuleReqDTO ruleReqDTO = new RuleReqDTO();
+		ruleReqDTO.setRuleType(ParameterConst.SIMPLE_QUOTE);
+		List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
+		if (ruleValueList != null && ruleValueList.size() > 0) {
+			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
+			sqTimeValidity = Integer.valueOf(configRuleValue.getRuleValue());
+		} else {
+			throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
+		}		
 		
 		if(scQuote != null){
 			if(getManagedBean().getPurchaseInDefaultId() == null){
@@ -4536,7 +4544,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				Calendar cal = Calendar.getInstance();
 				cal.clear(); 
 				cal.setTime(closingDate);
-				cal.add(Calendar.HOUR, sqTimeValidity); //add 1440 hours(60days) to closing/end date
+				cal.add(Calendar.DATE, sqTimeValidity); //add 60days to closing/end date
 				
 				if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION) 
 				   || currentStatusId.equals(DPStatusConstants.RN_PENDING_APPROVAL)
