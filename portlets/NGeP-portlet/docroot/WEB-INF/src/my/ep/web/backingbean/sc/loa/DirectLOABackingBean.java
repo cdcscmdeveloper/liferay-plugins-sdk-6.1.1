@@ -97,7 +97,6 @@ import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
@@ -142,7 +141,6 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.PTJLocalityCode;
-import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.ApprovalAction;
 import my.ep.util.EpPropertiesUtils;
@@ -172,7 +170,6 @@ import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.log4j.Logger;
@@ -237,7 +234,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		debugLogger("saveAction");
 		DirectAwardReqDTO reqDTO = new DirectAwardReqDTO();
 		try {
-           String outcome = BpmOutcomeConst.BPM_SAVE;
+			String outcome = BpmOutcomeConst.BPM_SAVE;
 			ScLoa scLoa = this.getManagedBean().getScLoa();
 			ScLoaWitness loaSupplierWitness = this.getManagedBean().getLoaSupplierWitness();
 			Long statusId = scLoa.getPmStatus().getStatusId().longValue();
@@ -1162,20 +1159,19 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			
 			//Bug #24061
 			if(scLoa.getScLoiLoa() != null){
-				if(ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode())){
-					if (scLoa.getScQtProgPayments() != null
-							&& scLoa.getScQtProgPayments().size() > 0) {
-						for (ScQtProgressivePayment progressivePayment : scLoa
-								.getScQtProgPayments()) {
-							progressivePayValidation(progressivePayment);
-						}
+			if(ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode())){
+				if (scLoa.getScQtProgPayments() != null
+						&& scLoa.getScQtProgPayments().size() > 0) {
+					for (ScQtProgressivePayment progressivePayment : scLoa
+							.getScQtProgPayments()) {
+						progressivePayValidation(progressivePayment);
 					}
-		
-					if (scLoa.getScQtSchedules() != null
-							&& scLoa.getScQtSchedules().size() > 0) {
-						for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
-							freqScheduleValidation(scQtSchedule);
-						}
+				}
+	
+				if (scLoa.getScQtSchedules() != null
+						&& scLoa.getScQtSchedules().size() > 0) {
+					for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
+						freqScheduleValidation(scQtSchedule);
 					}
 				}
 			}
@@ -1227,7 +1223,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			throw new EpException(MessageConst.ERROR_760400,
 					new String[] { ResourceBundleUtils.getMessage("lbl.sc.address", 
 				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
-		}
+		}		
 	}
 	
 	/**
@@ -1443,13 +1439,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			constructScheduleDetails();
 			//Bug #24061
 			if(scLoa.getScLoiLoa() != null){
-				if(ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode())){	
-					if (CollectionUtils.isNotEmpty(scLoa.getScQtSchedules())) {
-						for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
-							freqScheduleValidation(scQtSchedule);
-						}
+			if(ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode())){	
+				if (CollectionUtils.isNotEmpty(scLoa.getScQtSchedules())) {
+					for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
+						freqScheduleValidation(scQtSchedule);
 					}
 				}
+			}
 			}
 			
 			producSpecMaster.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT);
@@ -1523,8 +1519,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 		IParameterSO parameterSO = null;
 		try {
-			parameterSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IParameterSO.class);
 			ParameterReqDTO reqDTO = new ParameterReqDTO();
 			if(scLoa.getContractType() !=null){
 				reqDTO.setParameterId(scLoa.getContractType().getParameterId());
@@ -4546,7 +4542,26 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			getManagedBean().setVerifyBtnFlag(false);
 		}
 	}
-
+	//20190405@asyrafhaziq - CR25062 - Start 
+		/**
+		 * Approve before date bpm task action. Approve - Will show notification
+		 * If yes it will go to authenticating gpki
+		 * 
+		 * @param outcome
+		 *            the outcome
+		 */
+		public void approveBeforeupdateBpmTaskAction(String outcome) {
+			debugLogger("approveBeforeupdateBpmTaskAction");
+			this.getManagedBean().setAction(outcome);
+			 		
+			if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
+					RequestContext.getCurrentInstance().execute("loaApprovalPopUp.show()");
+			} 
+			else {
+				updateBpmTaskAction(outcome);
+			}
+		}
+		//20190405@asyrafhaziq - CR25062 - End
 	/**
 	 * Update bpm task action. update bpm - save data into database and BPM
 	 * process will route to the next respective user. Authenticating gpki
@@ -4642,7 +4657,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					getManagedBean().getScLoa().getScLoaWitnesses().remove(
 							this.getManagedBean().getLoaSupplierWitness());					
 					this.getManagedBean().setLoaSupplierWitness(null);
-				}
+			}
 			}
 
 			// spki
@@ -5308,7 +5323,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			gstRegFlag = "true";
 		}
 		context.put("gstRegFlag", gstRegFlag);
-		
+
 		//Enhancement #24259 #24269
 		setSstInfoForAgreementLetter(context, scLoa, amountDF, myLocale);
 //		setGstInfoForAgreementLetter(context, scLoa, amountDF, myLocale);
@@ -5404,7 +5419,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			offerPriceWording = WordUtils.capitalizeFully(NumberWordUtil
 					.convert(loaAmount.toString()));
 		}
-		
 		context.put("offerPrice", offerPrice);
 		context.put("offerPriceWording", offerPriceWording);
 
@@ -6311,7 +6325,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				RequestContext.getCurrentInstance().execute("sstSignerConfirmPopupWin.show()");
 			}
 		}
-	}	
+	}
 
 //	/**
 //	 * Checks if is GST reg active.
@@ -8130,41 +8144,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equals(fullfillmentTypeParamCode);
 	}
 	
-	public String constructContractAdminConditionFields() {
-		log.info("constructContractAdminConditionFields");
-		StringBuilder sb = new StringBuilder();
-		ScLoa scLoa = getManagedBean().getScLoa();		
-		String contractType = scLoa.getContractType().getParameterCode();
-		String roleCode = null;
-		Long userProfileId = null;
-
-		if (ParameterConst.CONTRACT_TYPE_MINISTRY.equals(contractType)) {
-			roleCode = RoleCode.MIN_CONTRACT_ADMIN.value();
-		} else if(ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType)) {
-			roleCode = RoleCode.BPK_CCA.value();
-		}
-		
-		if (scLoa.getContractAgency().getOrgProfileId() != null){
-			userProfileId = scLoa.getContractAgency().getOrgProfileId();
-		} else {
-			userProfileId = scLoa.getScLoiLoa().getPmOrgProfile().getOrgProfileId();
-		}
-
-		sb.append("pmUserOrgs.pmOrgProfile."
-				+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()));
-		sb.append("^");
-		sb.append(retrieveMinistryOrgProfile(userProfileId).getOrgProfileId());
-		sb.append("^1");
-
-		if(roleCode != null) {
-			sb.append("|pmUserOrgs.pmUserRoles.pmRole.roleCode^");
-			sb.append(roleCode);
-			sb.append("^9");
-		}		
-			
-		return sb.toString();
-	}
-	
 	/**
 	 * Validate Contract Admin
 	 * 
@@ -8173,7 +8152,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 */	
 	private void validateContractDetails(ScLoa scLoa) {
 		Locale locale = new FacesScopes().getUserLocale();
-		
+
 		if (StringUtils.isBlank(
 				scLoa.getContractAdmin().getUserName())) {
 			throw new EpException(MessageConst.ERROR_760400,
@@ -8258,15 +8237,15 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			String acceptMsg = getMessage("lbl.sc.loa.supplier.confirm.button.accept", new String[] { loa.trim() , procurementMode.trim() });
 			
 			this.getManagedBean().setSuppConfirmMsgAccept(acceptMsg.toString().trim());
-			RequestContext.getCurrentInstance().execute("confmAcceptDlg.show()"); 		
+			RequestContext.getCurrentInstance().execute("confmAcceptDlg.show()"); 			
 		} else if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {			
-			this.getManagedBean().setAutoUpdate(false);			
+			this.getManagedBean().setAutoUpdate(false);
 			
 			String rejectMsg = getMessage("lbl.sc.loiloa.supplier.confirm.button.reject", new String[] { loa.trim(), procurementMode.trim() });
  
 			this.getManagedBean().setSuppConfirmMsgReject(rejectMsg.toString().trim());
-			RequestContext.getCurrentInstance().execute("confmRejectDlg.show()"); 
-		}
+			RequestContext.getCurrentInstance().execute("confmRejectDlg.show()"); 						
+		} 
 	}
 	
 	public void confirmSupplierAccept() {
@@ -8276,7 +8255,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		// spki
 		getManagedBean().getSpkiBackingBean().getChallengeQuestions();
 		log.info("::: #25061 before spki_dlg.show ");
-		RequestContext.getCurrentInstance().execute("spki_dlg.show();");
+		RequestContext.getCurrentInstance().execute("spki_dlg.show();");		
 	}
 	
 	public void confirmSupplierReject() {
@@ -8287,284 +8266,119 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	//END Enhancement #21573
 	
 	//Bug #24713
-	/**
-	 * Validate supplier and LOA details
-	 * 
-	 * @param scLoa
-	 *          the scLoa,  ScLoaWitness the scLoaWitness, String outcome
-	 */	
-	private void validateSupplierWitnessDetails(ScLoa scLoa, ScLoaWitness scLoaWitness, String outcome) {
-		Locale locale = new FacesScopes().getUserLocale();
-		
-		if (!BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
-			if (scLoa.getSupplierSignDate() == null) {
-				throw new EpException(MessageConst.ERROR_760400,
-						new String[] { ResourceBundleUtils.getMessage("lbl.sc.loiloa.loa.supplier.sign.date", 
-						 		ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
-			}
-			if (StringUtils.isBlank(
-					scLoa.getBankAccNo())) {
-				throw new EpException(MessageConst.ERROR_760400,
-						new String[] { ResourceBundleUtils.getMessage("lbl.sc.account.no", 
-					 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
-			}
-			if (scLoa.getAckBy().getUserId() == null) {
-				throw new EpException(MessageConst.ERROR_760400,
-						new String[] { ResourceBundleUtils.getMessage("lbl.sc.loiloa.signer.full.name", 
-					 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
-			}
-			if (StringUtils.isBlank(
-					scLoa.getAckBy().getIdentificationNo())) {
-				throw new EpException(MessageConst.ERROR_760400,
-						new String[] { ResourceBundleUtils.getMessage("lbl.sc.identification.no", 
-					 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
-			}
-			if (StringUtils.isBlank(
-					scLoaWitness.getWitnessName())) {
-				throw new EpException(MessageConst.ERROR_760400,
-						new String[] { ResourceBundleUtils.getMessage("lbl.sc.loiloa.witness.full.name", 
-					 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
-			}
-			if (StringUtils.isBlank(
-					scLoaWitness.getIdentificationNo())) {
-				throw new EpException(MessageConst.ERROR_760400,
-						new String[] { ResourceBundleUtils.getMessage("lbl.sc.identification.no", 
-					 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
-			}
-			if (StringUtils.isBlank(scLoaWitness.getDesignation())) {
-				throw new EpException(MessageConst.ERROR_760400,
-						new String[] { ResourceBundleUtils.getMessage("lbl.sc.designation", 
-					 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
-			}
-			if (StringUtils.isBlank(scLoaWitness.getAddress())) {
-				throw new EpException(MessageConst.ERROR_760400,
-						new String[] { ResourceBundleUtils.getMessage("lbl.sc.address", 
-					 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
-			}
-			if (StringUtils.isBlank(scLoaWitness.getPhoneNo())) {
-				throw new EpException(MessageConst.ERROR_760400,
-						new String[] { ResourceBundleUtils.getMessage("lbl.sc.tel.no", 
-					 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
-			}
-			if (StringUtils.isBlank(scLoaWitness.getFaxNo())) {
-				throw new EpException(MessageConst.ERROR_760400,
-						new String[] { ResourceBundleUtils.getMessage("lbl.sc.fax.no", 
-					 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
-			}
-		}
-	}
-	
-	private void validateDuplicateItems(ScQtDoc productScQtDoc,ScQtDoc serviceScQtDoc){
-	log.info("validateDuplicateItems");	
-		List<TplSpecMaster> productServiceDocs=new ArrayList<TplSpecMaster>();
-		if(null!=productScQtDoc){
-			if(null!=productScQtDoc.getTplSpecMaster()){
-			productServiceDocs.add(productScQtDoc.getTplSpecMaster());	
-			}
-		}
-		if(null!=serviceScQtDoc){
-			if(null!=serviceScQtDoc.getTplSpecMaster()){
-				productServiceDocs.add(serviceScQtDoc.getTplSpecMaster());	
+		/**
+		 * Validate supplier and LOA details
+		 * 
+		 * @param scLoa
+		 *          the scLoa,  ScLoaWitness the scLoaWitness, String outcome
+		 */	
+		private void validateSupplierWitnessDetails(ScLoa scLoa, ScLoaWitness scLoaWitness, String outcome) {
+			Locale locale = new FacesScopes().getUserLocale();
+			
+			if (!BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
+				if (scLoa.getSupplierSignDate() == null) {
+					throw new EpException(MessageConst.ERROR_760400,
+							new String[] { ResourceBundleUtils.getMessage("lbl.sc.loiloa.loa.supplier.sign.date", 
+							 		ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
 				}
+				if (StringUtils.isBlank(
+						scLoa.getBankAccNo())) {
+					throw new EpException(MessageConst.ERROR_760400,
+							new String[] { ResourceBundleUtils.getMessage("lbl.sc.account.no", 
+						 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+				}
+				if (scLoa.getAckBy().getUserId() == null) {
+					throw new EpException(MessageConst.ERROR_760400,
+							new String[] { ResourceBundleUtils.getMessage("lbl.sc.loiloa.signer.full.name", 
+						 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+				}
+				if (StringUtils.isBlank(
+						scLoa.getAckBy().getIdentificationNo())) {
+					throw new EpException(MessageConst.ERROR_760400,
+							new String[] { ResourceBundleUtils.getMessage("lbl.sc.identification.no", 
+						 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+				}
+				if (StringUtils.isBlank(
+						scLoaWitness.getWitnessName())) {
+					throw new EpException(MessageConst.ERROR_760400,
+							new String[] { ResourceBundleUtils.getMessage("lbl.sc.loiloa.witness.full.name", 
+						 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+				}
+				if (StringUtils.isBlank(
+						scLoaWitness.getIdentificationNo())) {
+					throw new EpException(MessageConst.ERROR_760400,
+							new String[] { ResourceBundleUtils.getMessage("lbl.sc.identification.no", 
+						 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+				}
+				if (StringUtils.isBlank(scLoaWitness.getDesignation())) {
+					throw new EpException(MessageConst.ERROR_760400,
+							new String[] { ResourceBundleUtils.getMessage("lbl.sc.designation", 
+						 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+				}
+				if (StringUtils.isBlank(scLoaWitness.getAddress())) {
+					throw new EpException(MessageConst.ERROR_760400,
+							new String[] { ResourceBundleUtils.getMessage("lbl.sc.address", 
+						 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+				}
+				if (StringUtils.isBlank(scLoaWitness.getPhoneNo())) {
+					throw new EpException(MessageConst.ERROR_760400,
+							new String[] { ResourceBundleUtils.getMessage("lbl.sc.tel.no", 
+						 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+				}
+				if (StringUtils.isBlank(scLoaWitness.getFaxNo())) {
+					throw new EpException(MessageConst.ERROR_760400,
+							new String[] { ResourceBundleUtils.getMessage("lbl.sc.fax.no", 
+						 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+				}
+			}
 		}
-		if (CollectionUtils.isNotEmpty(productServiceDocs)) {
-			List<TplSpecQuestion> FinancialUiSpecQuestions = new ArrayList<TplSpecQuestion>();
-			for(TplSpecMaster itemProdSerSpecMaster: productServiceDocs){
-				
-			if(CollectionUtils.isNotEmpty(itemProdSerSpecMaster.getTplSpecQuestions())){
-			for (TplSpecQuestion specQuestion : itemProdSerSpecMaster
-					.getTplSpecQuestions()) {
-				if (TemplateSpecConst.QUESTION_TYPE_ITEM
-						.equalsIgnoreCase(specQuestion.getQuestionType())) {
-					if (FinancialUiSpecQuestions.isEmpty()) {
-						FinancialUiSpecQuestions.add(specQuestion);
-					} else {
-						for (TplSpecQuestion uiQuestions : FinancialUiSpecQuestions) {
-							if (uiQuestions
-									.getClItem()
-									.trim()
-									.replaceAll("\\s", "")
-									.equalsIgnoreCase(
-											specQuestion.getClItem().trim()
-													.replaceAll("\\s", ""))) {
-								throw new EpException(
-										MessageConst.ERROR_760340,
-										new String[] { specQuestion.getClItem() });
-							}
-						}
-						FinancialUiSpecQuestions.add(specQuestion);
+		
+		private void validateDuplicateItems(ScQtDoc productScQtDoc,ScQtDoc serviceScQtDoc){
+		log.info("validateDuplicateItems");	
+			List<TplSpecMaster> productServiceDocs=new ArrayList<TplSpecMaster>();
+			if(null!=productScQtDoc){
+				if(null!=productScQtDoc.getTplSpecMaster()){
+				productServiceDocs.add(productScQtDoc.getTplSpecMaster());	
+				}
+			}
+			if(null!=serviceScQtDoc){
+				if(null!=serviceScQtDoc.getTplSpecMaster()){
+					productServiceDocs.add(serviceScQtDoc.getTplSpecMaster());	
 					}
+			}
+			if (CollectionUtils.isNotEmpty(productServiceDocs)) {
+				List<TplSpecQuestion> FinancialUiSpecQuestions = new ArrayList<TplSpecQuestion>();
+				for(TplSpecMaster itemProdSerSpecMaster: productServiceDocs){
+					
+				if(CollectionUtils.isNotEmpty(itemProdSerSpecMaster.getTplSpecQuestions())){
+				for (TplSpecQuestion specQuestion : itemProdSerSpecMaster
+						.getTplSpecQuestions()) {
+					if (TemplateSpecConst.QUESTION_TYPE_ITEM
+							.equalsIgnoreCase(specQuestion.getQuestionType())) {
+						if (FinancialUiSpecQuestions.isEmpty()) {
+							FinancialUiSpecQuestions.add(specQuestion);
+						} else {
+							for (TplSpecQuestion uiQuestions : FinancialUiSpecQuestions) {
+								if (uiQuestions
+										.getClItem()
+										.trim()
+										.replaceAll("\\s", "")
+										.equalsIgnoreCase(
+												specQuestion.getClItem().trim()
+														.replaceAll("\\s", ""))) {
+									throw new EpException(
+											MessageConst.ERROR_760340,
+											new String[] { specQuestion.getClItem() });
+								}
+							}
+							FinancialUiSpecQuestions.add(specQuestion);
+						}
+					}
+					
 				}
-				
-			}
-			}
-	}
-		}
-	}
-	
-	/**
-	 * To display Performance Bond dropdown when QT Type is <b>Special Item / Item In PK 7</b> 
-	 * and Fulfilment Type is <b>One Off</b>.
-	 * 
-	 * @return
-	 */
-	public boolean isPbDropDown() {
-		Long qtType = null;
-		Long fulfilmentType = null;
-		Long contractType = null;
-		if (null != getManagedBean().getScLoa().getQtType()) {
-			qtType = getManagedBean().getScLoa().getQtType().getParameterId(); 
-		}
-		if (null != getManagedBean().getScLoa().getScQt() && null != getManagedBean().getScLoa().getScQt().getFulfilmentType()) {
-			fulfilmentType = getManagedBean().getScLoa().getScQt().getFulfilmentType().getParameterId(); 
-		}
-		if (null != getManagedBean().getScLoa().getContractType()) {
-			contractType = getManagedBean().getScLoa().getContractType().getParameterId();
-		}
-		
-		if (getManagedBean().getPk7Reasons() == null) {
-			setPk7DropDownValues();
-		}
-		
-		// MC
-		if (null != getManagedBean().getScLoa() 
-				&& null != getManagedBean().getScLoa().getContractType()
-				&& null != getManagedBean().getScLoa().getContractType().getParameterId()
-				&& getManagedBean().getScLoa().getContractType().getParameterId() != 146) {
-			return false;
-		}
-		
-		if (StringUtils.isEmpty(getManagedBean().getBondReqSelectedVal())) {
-			if (getManagedBean().getScLoa().isBondReq()) { 
-				getManagedBean().setBondReqSelectedVal("207");
-			} else if (getManagedBean().getScLoa().getLoaNo() != null) {
-				getManagedBean().setBondReqSelectedVal("208");
-			}
-		}
-		
-		if (null != qtType && null != fulfilmentType && qtType == 194 && fulfilmentType == 148) {
-			if (null == getManagedBean().getBondReqSelectedVal()) {
-				getManagedBean().getScLoa().setBondReq(false);
-			} else if ("208".equals(getManagedBean().getBondReqSelectedVal())) {
-				getManagedBean().getScLoa().setBondReq(false);
-			}
-			if (null == getManagedBean().getScLoa().getJustificationType()) {
-				getManagedBean().getScLoa().setJustificationType(new PmReason());
-			}
-			
-			// If Contract Type is selected and its not 'Ministry', then return false.
-			if (null != contractType && contractType != 146) {
-				return false;
-			}
-			
-			if (!getManagedBean().isDisableFields()) {
-				String loaStatus = getStatusDescById(this.getManagedBean().getScLoa().getPmStatus().getStatusId());
-				if (StringEscapeUtils.unescapeJava(SourcingConstants.LOA_PENDING_VERIFICATION_STATUS).equals(loaStatus)) {
-					getManagedBean().setDisableFields(true);
 				}
+		}
 			}
-			return true;
-		} else {
-			if (!getManagedBean().getScLoa().isBondReq()) {
-				setOverallCtAmount(getManagedBean().getScLoa().getLoaAmt());
-			}
-			
-			getManagedBean().getScLoa().setJustificationType(null);
-		}
-		
-		//RequestContext.getCurrentInstance().execute("reasonPG.hide()");
-		return false;
-	}
-	
-	/**
-	 * Set Performance Bond value opted by user.
-	 * @param bondReqVal
-	 */
-	public void performanceBondChanged(String bondReqVal) {
-		if ("207".equalsIgnoreCase(bondReqVal)) { 
-			getManagedBean().getScLoa().setBondReq(true);
-		} else {
-			getManagedBean().getScLoa().setBondReq(false);
-		}
-	}
-	
-	/**
-	 * To display Agreement dropdown when QT Type is <b>Special Item / Item In PK 7</b> 
-	 * and Fulfilment Type is <b>One Off</b>.
-	 * 
-	 * @return
-	 */
-	public boolean isAgreementDropDown() {
-		Long qtType = null;
-		Long fulfilmentType = null;
-		Long contractType = null;
-		if (null != getManagedBean().getScLoa().getQtType()) {
-			qtType = getManagedBean().getScLoa().getQtType().getParameterId();
-		}
-		if (null != getManagedBean().getScLoa().getScQt() && null != getManagedBean().getScLoa().getScQt().getFulfilmentType()) {
-			fulfilmentType = getManagedBean().getScLoa().getScQt().getFulfilmentType().getParameterId(); 
-		}
-		if (null != getManagedBean().getScLoa().getContractType()) {
-			contractType = getManagedBean().getScLoa().getContractType().getParameterId();
-		}
-		
-		if (null != getManagedBean().getScLoa() 
-				&& null != getManagedBean().getScLoa().getContractType()
-				&& null != getManagedBean().getScLoa().getContractType().getParameterId()
-				&& getManagedBean().getScLoa().getContractType().getParameterId() != 146) {
-			return false;
-		}
-		
-		if (StringUtils.isEmpty(getManagedBean().getAgreemetSelectedVal())) {
-			if (getManagedBean().getScLoa().isAgreementReq()) { 
-				getManagedBean().setAgreemetSelectedVal("207");
-			} else if (getManagedBean().getScLoa().getLoaNo() != null) {
-				getManagedBean().setAgreemetSelectedVal("208");
-			}
-		}
-		
-		if (null != qtType && null != fulfilmentType && qtType == 194 && fulfilmentType == 148) {
-			if (null == getManagedBean().getAgreemetSelectedVal()) {
-				getManagedBean().getScLoa().setAgreementReq(false);
-			} else if ("208".equals(getManagedBean().getAgreemetSelectedVal())) {
-				getManagedBean().getScLoa().setAgreementReq(false);
-			}
-			
-			// If Contract Type is selected and its not 'Ministry', then return false.
-			if (null != contractType && contractType != 146) {
-				return false;
-			}
-			return true;
-		} else {
-			if (!getManagedBean().getScLoa().isAgreementReq()) {
-				setOverallCtAmount(getManagedBean().getScLoa().getLoaAmt());
-			}
-		}
-		return false;
-	}
-	
-	/**
-	 * Set Performance Bond value opted by user.
-	 * @param bondReqVal
-	 */
-	public void agreementChanged(String agreeReqVal) {
-		if ("207".equalsIgnoreCase(agreeReqVal)) { 
-			getManagedBean().getScLoa().setAgreementReq(true);
-		} else {
-			getManagedBean().getScLoa().setAgreementReq(false);
-		}
-	}
-	
-	/**
-	 * 
-	 */
-	public void setPk7DropDownValues() {
-	    getManagedBean().setPk7Reasons(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7.value()));
-	}
-	
-	public void reasonChanged(String reasonCode) {
-		getManagedBean().getScLoa().setJustificationType(getReasonByCategoryAndCode(
-				ReasonCategory.JUSTIFICATION_PK7.value(), reasonCode));
 	}
 	
 }

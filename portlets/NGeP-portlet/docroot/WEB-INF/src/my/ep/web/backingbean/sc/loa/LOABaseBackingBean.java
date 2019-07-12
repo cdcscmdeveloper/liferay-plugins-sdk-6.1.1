@@ -76,7 +76,6 @@ public abstract class LOABaseBackingBean<T extends LOABaseManagedBean> extends S
 		PmOrgProfile pmOrgProfile = contractAdminPmOrgProfile();
 		String roleCode = contractAdminRoleCode();
 		
-		if (null != pmOrgProfile.getPmOrgValidity()) {
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("pmUserOrgs.pmOrgProfile.pmOrgValidity.orgCode", SearchOperator.OPERATOR_LIKE
 						.value(), pmOrgProfile.getPmOrgValidity().getOrgCode()));
@@ -86,7 +85,7 @@ public abstract class LOABaseBackingBean<T extends LOABaseManagedBean> extends S
 						+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
 						SearchOperator.OPERATOR_EQUALS.value(), retrieveMinistryOrgProfile(
 								pmOrgProfile.getOrgProfileId()).getOrgProfileId()));
-		}
+		
 		if (roleCode != null) {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("pmUserOrgs.pmUserRoles.pmRole.roleCode", SearchOperator.OPERATOR_EQUALS
