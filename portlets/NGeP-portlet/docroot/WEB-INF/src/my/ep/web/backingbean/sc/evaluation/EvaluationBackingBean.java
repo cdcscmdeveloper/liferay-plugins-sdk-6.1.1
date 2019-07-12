@@ -8300,7 +8300,8 @@ private void retriveCommitteeRemarksList(){
 		if (SCProcessNameConst.FINALISE_EC_EVALUATION
 				.equalsIgnoreCase(taskName)
 				|| SCProcessNameConst.UPDATE_EC_EVALUATION
-						.equalsIgnoreCase(taskName)) {
+						.equalsIgnoreCase(taskName) || SCProcessNameConst.VIEW_EC_EVALUATION
+						.equalsIgnoreCase(taskName) ) {
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
@@ -8308,6 +8309,7 @@ private void retriveCommitteeRemarksList(){
 		} else if (SCProcessNameConst.FINALISE_OC_EVALUATION
 				.equalsIgnoreCase(taskName)
 				|| SCProcessNameConst.UPDATE_OC_EVALUATION
+						.equalsIgnoreCase(taskName) || SCProcessNameConst.VIEW_OC_EVALUATION
 						.equalsIgnoreCase(taskName)) {
 			fc.getApplication()
 					.getNavigationHandler()
@@ -8316,6 +8318,7 @@ private void retriveCommitteeRemarksList(){
 		} else if (SCProcessNameConst.FINALISE_TEC_EVALUATION
 				.equalsIgnoreCase(taskName)
 				|| SCProcessNameConst.UPDATE_TEC_EVALUATION
+						.equalsIgnoreCase(taskName) || SCProcessNameConst.VIEW_TEC_EVALUATION
 						.equalsIgnoreCase(taskName)) {
 			fc.getApplication()
 					.getNavigationHandler()
@@ -8326,6 +8329,7 @@ private void retriveCommitteeRemarksList(){
 		else if (SCProcessNameConst.FINALISE_FEC_EVALUATION
 				.equalsIgnoreCase(taskName)
 				|| SCProcessNameConst.UPDATE_FEC_EVALUATION
+						.equalsIgnoreCase(taskName) || SCProcessNameConst.VIEW_FEC_EVALUATION
 						.equalsIgnoreCase(taskName)) {
 			fc.getApplication()
 					.getNavigationHandler()
