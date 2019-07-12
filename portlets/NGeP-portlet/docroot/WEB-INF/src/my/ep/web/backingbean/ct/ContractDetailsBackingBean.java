@@ -27,6 +27,7 @@ import my.ep.biz.service.ct.agreement.IAgreementSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.fl.itemsummary.IFlItemSummarySO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -45,6 +46,7 @@ import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.dto.fl.itemsummary.FlItemSummaryReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.contract.CTContractDataType;
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
@@ -77,7 +79,6 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
-import my.ep.web.backingbean.ct.circular.CircularBackingBean;
 import my.ep.web.backingbean.ct.supplier.SupplierBackingBean;
 import my.ep.web.backingbean.ct.suspension.SuspensionBackingBean;
 import my.ep.web.backingbean.ct.termination.TerminationBackingBean;
@@ -695,12 +696,26 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		IContractSO contractSO = null;
 		try {
 			/*Validation for login user's org profile before initiate contract task*/
+			CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer();
+			PmStatus pmStatus = ctContractVer.getStatus();
 			if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)
-					&& ctBB.getManagedBean().getContractVer().getStatus() != null
-					&& (ctBB.getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FU_PENDING_SUBMISSION.longValue()
-						|| ctBB.getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FW_PENDING_SUBMISSION.longValue())) {
-				validateOwnerOrgProfile(
-						ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+					&& pmStatus != null
+					&& (pmStatus.getStatusId() == ContractStatusConst.FU_PENDING_SUBMISSION.longValue() || pmStatus
+							.getStatusId() == ContractStatusConst.FW_PENDING_SUBMISSION.longValue())) {
+				validateOwnerOrgProfile(ctContractVer.getCtContract().getOwnerOrgProfile().getOrgProfileId());
+			}
+
+			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
+					|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+				List<CtDeduction> ctDeductions = ctContractVer.getCtDeductions();
+				for (CtDeduction ctDeduction : ctDeductions) {
+					Long parameterId = ctDeduction.getDeductionType().getParameterId();
+					PmParameter pmParameter = retrieveParameterById(parameterId);
+					if (ParameterConst.DEDUCTION_TYPE_FIXED.equalsIgnoreCase(pmParameter.getParameterCode())
+							&& ctDeduction.getAmount() == 0) {
+						throw new EpException(MessageConst.ERROR_740059);
+					}
+				}
 			}
 			
 			ctBB.getZoneObjDetails();
@@ -735,7 +750,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 
 			reqDTO.setCtContract(ctBB.getManagedBean().getContractVer().getCtContract());
-			CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer();
 
 			ctContractVer.getCtContractValue().setSupplierName(ctBB.getManagedBean().getSupplierCompanyName());
 			ctContractVer.getCtContractValue().setSupplierBranch(ctBB.getManagedBean().getSupplierBranchName());
@@ -774,9 +788,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			reqDTO.setDeleteAgencyMap(ctBB.getManagedBean().getDeleteAgencyMap());
 			reqDTO.setUpdateZoneMap(ctBB.getManagedBean().getUpdateZoneMap());
 			reqDTO.setUpdateItemMap(ctBB.getManagedBean().getUpdateItemMap());
-			
-			
-			
+
 			if (this.getManagedBean().getPmDigiSign() != null) {
 				reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
 			}
@@ -846,6 +858,23 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		return null;	
 	}
 
+	private IParameterSO getParameterSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+	}
+	
+	private PmParameter retrieveParameterById(Long parameterId) {
+		if (parameterId == null) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.ct.deduction.type", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()) });
+		}
+
+		ParameterReqDTO paramReqDTO = new ParameterReqDTO();
+		paramReqDTO.setParameterId(parameterId);
+
+		PmParameter pmParameter = getParameterSO().retrieveParameterById(paramReqDTO).getPmParameter();
+		return pmParameter;
+	}
 	/**
 	 * The method used for validating the contract information.
 	 * A warning or error message will display on screen when the validation
@@ -1703,7 +1732,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				getManagedBean().setSelectedTabIndex(3);
 				getManagedBean().setItemIndex(3);
 				ContractItemSearchBackingBean cmbb=new ContractItemSearchBackingBean();
-				ContractBackingBean ccBB = new ContractBackingBean();
+
 				cmbb.getManagedBean().reassignValue(true);
 				cmbb.getManagedBean().getContractListingPagingDataModel().reloadData();
 				cmbb.getManagedBean().getServiceListingPagingDataModel().reloadData();
@@ -2240,8 +2269,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		contractBB.getManagedBean().setUOM(null);
 		contractBB.getManagedBean().setSkuno(null);
 		contractBB.getManagedBean().setTypeofgoods(null);
-	
-		ContractBackingBean ccBB = new ContractBackingBean();
+
 		ctBB.getManagedBean().setSelectedItem(null);
 		ctBB.getManagedBean().setServiceselectedItem(null);
 		
