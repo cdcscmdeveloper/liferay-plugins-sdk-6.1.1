@@ -24,7 +24,7 @@ public class CriteriaManagedBean extends BaseManagedBean {
 	private CriteriaSearchBean criteriaSearchBean;
 	private PmCriteria pmCriteria;
 	private PmCriteria selectedCriteria;
-	private boolean isLazy;
+	private boolean isLazy = false;
 	
 	
 
@@ -68,8 +68,4 @@ public class CriteriaManagedBean extends BaseManagedBean {
 		this.isLazy = isLazy;
 	}
 
-
-	
-
-	
 }

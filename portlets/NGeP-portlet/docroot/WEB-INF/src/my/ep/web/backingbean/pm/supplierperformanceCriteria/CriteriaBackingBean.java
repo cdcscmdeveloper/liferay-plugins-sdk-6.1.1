@@ -3,6 +3,7 @@ package my.ep.web.backingbean.pm.supplierperformanceCriteria;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -103,22 +104,8 @@ public class CriteriaBackingBean extends
 	 * reload to SupplierCriteria search page 
 	 * 
 	 */		
-	/*public String redirectSupCriteriaSearch() {
-		debugLogger("redirectSupCriteriaSearch");
-		//this.getManagedBean().setLazy(true);
-		return NAV_TO_MAIN;
-
-	}*/
 	public String redirectSupCriteriaSearch(){
-		log.info("redirectSupCriteriaSearch - Start");
-		try{
-			
-			
-		}catch (Exception e){
-			e.printStackTrace();
-			
-		}
-		log.info("redirectSupCriteriaSearch - End");
+		//getManagedBean().setCriteriaSearchBean(null);
 		return NAV_TO_MAIN;
 	}
 	
@@ -127,12 +114,11 @@ public class CriteriaBackingBean extends
 	 */
 	public void resetSupCriteriaSearch() {
 		log.info("resetCriteriaSearchBean");
-		//this.getManagedBean().setLazy(false);
-        //this.getManagedBean().getCriteriaSearchBean().setCriteriaCode(new String());
-        //this.getManagedBean().getCriteriaSearchBean().setCriteriaName(new String());
-       // this.getManagedBean().getCriteriaSearchBean().setStatus(null);
-		this.getManagedBean().setCriteriaSearchBean(new CriteriaSearchBean());
-        pmCriteriaDescDataModel = new PmCriteriaPagingDataModel();    
+		getManagedBean().setLazy(false);
+		CriteriaSearchBean searchBean = new CriteriaSearchBean();
+		this.getManagedBean().setCriteriaSearchBean(searchBean);
+        pmCriteriaDescDataModel = new PmCriteriaPagingDataModel(); 
+        getManagedBean().setCriteriaSearchBean(null);
 	}
 	
 	/**
@@ -150,69 +136,54 @@ public class CriteriaBackingBean extends
 		 * on SupplierCriteria codes and names search
 		 */
 		private ISearchBean<PmCriteriaDesc> getSearchBeanData(ISearchBean<PmCriteriaDesc> searchBean){
-			boolean isSearchable = SEARCH_DEFAULT;
-			boolean isEmpty = true;
+			 {
+//				boolean isSearchable = SEARCH_DEFAULT;
+//				boolean isEmpty = true;
 
-			CriteriaSearchBean rSearchBean = this.getManagedBean().getCriteriaSearchBean();
-			if (rSearchBean.getCriteriaCode() != null
-					&& rSearchBean.getCriteriaCode().trim().length() > 0) {
-				log.info("+ criteriaCode " + rSearchBean.getCriteriaCode());
-				SearchFilterBean bean = new SearchFilterBean();
-				bean.setSearchField("pmCriteria.criteriaCode");
-				bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
-				bean.setSearchValue(rSearchBean.getCriteriaCode());
-				bean.setCaseInsensitive(true);
-				searchBean.getDataFilterBeans().add(bean);
-				isEmpty = false;
-			}
-			if(rSearchBean.getCriteriaName()!=null && rSearchBean.getCriteriaName().trim().length()>0){
-				log.info("+ criteriaName "  +rSearchBean.getCriteriaName());
-				SearchFilterBean bean = new SearchFilterBean();
-				bean.setSearchField("criteria");
-				bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
-				bean.setSearchValue(rSearchBean.getCriteriaName());
-				bean.setCaseInsensitive(true);
-				searchBean.getDataFilterBeans().add(bean);
-				isEmpty = false;
-			}
-			if(rSearchBean.getStatus()!=null){
-				log.info("+ status------1.1= "  +rSearchBean.getStatus());
-				SearchFilterBean bean = new SearchFilterBean();
-				bean.setSearchField("pmCriteria.recordStatusFlg");
-				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-				bean.setSearchValue(rSearchBean.getStatus());
-				searchBean.getDataFilterBeans().add(bean);
-				isEmpty = false;
-			}else{
+				CriteriaSearchBean lSearchBean = this.getManagedBean()
+						.getCriteriaSearchBean();
 				
-				List<String> activeAndInActiveStatus = new ArrayList<String>();
-				activeAndInActiveStatus.add(ParameterConst.RECORD_STATUS_INACTIVE);
-				activeAndInActiveStatus.add(ParameterConst.RECORD_STATUS_ACTIVE);
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("recordStatusFlg", SearchOperator.OPERATOR_IN.value(), activeAndInActiveStatus));
-				isSearchable=true;
-			}
- 
-			if (isEmpty && !isSearchable) {
-				log.info("++ status -----1.2=" + null);
-				SearchFilterBean bean = new SearchFilterBean();
-				bean.setSearchField("recordStatusFlg");
-				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-				bean.setSearchValue(null);
-				searchBean.getDataFilterBeans().add(bean);
-			}
+				
 
-			log.info("getSearchBeanData - End");
+				if (lSearchBean.getCriteriaCode() != null
+						&& lSearchBean.getCriteriaCode().trim().length() > 0) {
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("pmCriteria.criteriaCode",
+									SearchOperator.OPERATOR_LIKE.value(),
+									lSearchBean
+											.getCriteriaCode(), true));
+				}
+				if (lSearchBean.getCriteriaName()!= null
+						&& lSearchBean.getCriteriaName().trim().length() > 0) {
 
-			return searchBean;
-		}
-	public void retrieveSupplierCriteria(){
-			debugLogger("retrieveSupplierCriteria");
-			pmCriteriaDescDataModel.reloadData();
-			}
-			
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("criteria",
+									SearchOperator.OPERATOR_LIKE.value(),
+									getManagedBean().getCriteriaSearchBean()
+											.getCriteriaName(), true));
+				}
+
+				if (lSearchBean.getStatus() != null
+						&& lSearchBean.getStatus().trim().length() > 0) {
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("pmCriteria.recordStatusFlg", SearchOperator.OPERATOR_EQUALS
+								.value(), lSearchBean
+								.getStatus()));
+				 }
+					 else{
+							SearchFilterBean codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_IN.value());
+							codesSearchBean	.setSearchField("pmCriteria.recordStatusFlg");
+							codesSearchBean.setSearchValue(new ArrayList<String>(Arrays.asList(ParameterConst.RECORD_STATUS_INACTIVE, ParameterConst.RECORD_STATUS_ACTIVE)));
+							searchBean.getDataFilterBeans().add(codesSearchBean);
+							
+						}
+				return searchBean;
+				 }
+			 }
 
 	 
 	public void searchSupplierCriteria() {
+		this.getManagedBean().setLazy(true);
 		pmCriteriaDescDataModel.reloadData();
 
 	}
@@ -222,8 +193,8 @@ public class CriteriaBackingBean extends
 		private static final long serialVersionUID = 1L;
 
 		public PmCriteriaPagingDataModel() {
-			//super("dtCriteriaResult",getManagedBean().isLazy());
-			super("dtCriteriaResult");
+			super("dtCriteriaResult",getManagedBean().isLazy());
+			//super("dtCriteriaResult");
 		}
 		@Override
 		public ISearchResultBean<PmCriteriaDesc> pageChangeListener(

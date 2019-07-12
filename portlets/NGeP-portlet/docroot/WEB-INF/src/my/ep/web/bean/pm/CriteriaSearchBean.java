@@ -17,7 +17,7 @@ public class CriteriaSearchBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String criteriaCode;
 	private String criteriaName;
-	private Long status;
+	private String status;
 	public CriteriaSearchBean() {
 	}
 
@@ -44,14 +44,18 @@ public class CriteriaSearchBean implements Serializable {
 
 
 
-	public Long getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
 
 
-	public void setStatus(Long status) {
+	public void setStatus(String status) {
 		this.status = status;
-	} 
+	}
+
+
+
+	
 	
 }
