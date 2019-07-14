@@ -443,6 +443,8 @@ public class SmApplicationUtil {
 		List<String> invalidCatCodes = new ArrayList<>();
 
 		if (applTypes.contains(applType)) {
+			//Enhancement #11765
+			sortSupplierCategory(catList);
 			for (SmSupplierCategory cat : catList) {
 				if (cat.getPoDecFlg() == null) {
 					//Enhancement #11765
