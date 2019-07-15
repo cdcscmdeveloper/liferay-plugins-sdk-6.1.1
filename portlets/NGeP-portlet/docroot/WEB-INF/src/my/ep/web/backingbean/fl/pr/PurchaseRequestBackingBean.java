@@ -122,6 +122,7 @@ import my.ep.jaxb.fl.common.user.FLUserDataType;
 import my.ep.jaxb.fl.podata.FLPurchaseOrderDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
+import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.fl.FlAddress;
 import my.ep.persistence.entity.fl.FlSupplierDtl;
@@ -3697,6 +3698,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			summReq.setExtensionCode(requestItemMap.get(map.getKey()).getCmItem().getExtensionCode().substring(0, 8));
 			//BigDecimal sumAmt = itemSummSO.retrievePerItemPerPtjPerYear(summReq);
 			BigDecimal sumAmt = itemSummSO.retrievePerItemPerPtjPerYearByExtensionCode(summReq);
+			
 			sumAmt = map.getValue().add(sumAmt);
 			if(sumAmt != null){
 				RuleReqDTO ruleReqDTO = new RuleReqDTO();
@@ -3714,6 +3716,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				} else {
 					throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
 				}
+				log.info("SumAmt: " + sumAmt);
+				log.info("ThresholdAmt: " + thresoldAmt);
 				if(sumAmt.doubleValue() > thresoldAmt){
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 							MessageUtils.getMessage(MessageConst.ERROR_740004, 
@@ -4677,5 +4681,26 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		return validDate;	
 	}
 	
+	public BigDecimal getPRThresholdPerItem(FlFulfilmentItemAddr item){
+		IFlItemSummarySO itemSummSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
+
+		BigDecimal thresholdAmt = null;
+
+		FlItemSummaryReqDTO summReq = new FlItemSummaryReqDTO();
+		summReq.setFlRequestId(getManagedBean().getFulfilmentRequest().getFulfilmentReqId());
+		summReq.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
+		summReq.setSupplierId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
+		summReq.setYear(getManagedBean().getFulfilmentRequest().getFinancialYear());
+		summReq.setItemId(item.getCmItem().getItemId());
+		summReq.setExtensionCode(item.getCmItem().getExtensionCode().substring(0, 8));
+
+		thresholdAmt = itemSummSO.retrievePerItemPerPtjPerYearByExtensionCode(summReq);
+
+		if(thresholdAmt == null)
+		{
+			thresholdAmt = new BigDecimal(0);
+		}
+		return thresholdAmt;
+	}
 }
 
