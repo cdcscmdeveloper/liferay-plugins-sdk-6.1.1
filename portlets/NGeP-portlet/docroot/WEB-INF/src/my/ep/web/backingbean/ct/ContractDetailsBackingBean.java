@@ -696,18 +696,17 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		IContractSO contractSO = null;
 		try {
 			/*Validation for login user's org profile before initiate contract task*/
-			CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer();
-			PmStatus pmStatus = ctContractVer.getStatus();
 			if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)
-					&& pmStatus != null
-					&& (pmStatus.getStatusId() == ContractStatusConst.FU_PENDING_SUBMISSION.longValue() || pmStatus
-							.getStatusId() == ContractStatusConst.FW_PENDING_SUBMISSION.longValue())) {
-				validateOwnerOrgProfile(ctContractVer.getCtContract().getOwnerOrgProfile().getOrgProfileId());
+					&& ctBB.getManagedBean().getContractVer().getStatus() != null
+					&& (ctBB.getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FU_PENDING_SUBMISSION.longValue()
+						|| ctBB.getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FW_PENDING_SUBMISSION.longValue())) {
+				validateOwnerOrgProfile(
+						ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 			}
 
 			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
 					|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-				List<CtDeduction> ctDeductions = ctContractVer.getCtDeductions();
+				List<CtDeduction> ctDeductions = ctBB.getManagedBean().getContractVer().getCtDeductions();
 				for (CtDeduction ctDeduction : ctDeductions) {
 					Long parameterId = ctDeduction.getDeductionType().getParameterId();
 					PmParameter pmParameter = retrieveParameterById(parameterId);
@@ -750,6 +749,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 
 			reqDTO.setCtContract(ctBB.getManagedBean().getContractVer().getCtContract());
+			CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer();
 
 			ctContractVer.getCtContractValue().setSupplierName(ctBB.getManagedBean().getSupplierCompanyName());
 			ctContractVer.getCtContractValue().setSupplierBranch(ctBB.getManagedBean().getSupplierBranchName());
