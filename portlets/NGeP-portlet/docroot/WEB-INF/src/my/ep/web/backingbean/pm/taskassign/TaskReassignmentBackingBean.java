@@ -735,7 +735,7 @@ public class TaskReassignmentBackingBean extends
 						}
 				  }
 	        } catch (NullPointerException e) {
-		        	log.info("There is an empty assignee!");
+		        	log.info("There is an empty assignee! "+e.getMessage());
 		    }
 		}
 		
@@ -753,7 +753,10 @@ public class TaskReassignmentBackingBean extends
 			}
 			this.getManagedBean().setStatusIds(retrieveAvailableStatusId());
 			this.getManagedBean().setShowReassigneeList(true);
-			reloadAllTaskList();
+			
+			if (this.getManagedBean().getTaskAssignmentSearchBean().getUser() != null) {
+				reloadAllTaskList();
+			}
 		}
 		log.info("Displaying users: "+this.getManagedBean().getReassigneeList());
 
