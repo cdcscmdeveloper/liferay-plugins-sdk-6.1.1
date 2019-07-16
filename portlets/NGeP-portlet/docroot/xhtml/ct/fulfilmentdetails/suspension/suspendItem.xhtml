@@ -10,10 +10,7 @@
 			<p:outputLabel value="#{lbl['lbl.ct.item.desc']}" />
            		<p:inputText id="searchItemString" value="#{suspensionBackingBean.managedBean.searchItemString}" style="width:270px;"/>
            	</h:panelGrid>	
-           		<!--   <h:panelGrid columns="4" style="width:70%" columnClasses="columnWidth10">
-  		<p:outputLabel value="#{lbl['lbl.ct.item.name']}"/>
-		<p:inputText value="#{circularBackingBean.managedBean.itemname}" style="width:270px;" maxlength="50"></p:inputText>	
-	</h:panelGrid>	-->	
+           	
 	
 	<h:panelGrid columns="4" style="width:70%" columnClasses="columnWidth10, columnWidth30, columnWidth5,columnWidth20" >
 	    <p:outputLabel value="#{lbl['lbl.ct.item.type']}"  />
@@ -44,7 +41,7 @@
 		
 	    	<p:selectOneMenu value="#{suspensionBackingBean.managedBean.typeofgoods}" style="width:280px;" maxlength="500" >  
             	<f:selectItem itemLabel="#{lbl['lbl.ct.selectOne']}" itemValue="" />  
-            	<f:selectItems value="#{circularBackingBean.getLocalGoodsRadioValues(ParameterTypeConst.itemOrigin)}" />
+            	<f:selectItems value="#{contractItemSearchBackingBean.getLocalGoodsRadioValues(ParameterTypeConst.itemOrigin)}" />
             	<f:selectItem itemLabel="#{lbl['lbl.ct.all']}" itemValue="197" />      	
               </p:selectOneMenu> 
 	       </h:panelGrid>	
@@ -83,12 +80,7 @@
 					</p:commandLink>
 			   </p:column>
 	         
-	        <!--  <p:column headerText="#{lbl['lbl.ct.item.code']}" styleClass="column-align-center" style="width:12%; white-space:normal;">
-            <h:outputText value="#{itemData.scRequestItem.cmItem.extensionCode}" style="float:left;"/>
-         </p:column>  --> 
-			  
-			
-			   
+
 			
 			  <p:column headerText="#{lbl['lbl.ct.skuno']}" styleClass="column-align-center" style="width:12%; white-space:normal;">
 	              <h:outputText value="#{itemData.sku}" style="float:left;"/>
