@@ -2620,5 +2620,120 @@ public class TemplateSpecBackingBean extends
 		return uomDropDownList;
 	}
 	
+	/** #25039 Begin
+	 * Calculate Grand Total Estimation Amount
+	 * 
+	 * @param templateSpecBean
+	 *            the TemplateSpecBean instance
+	 */
+	public void calcGrandTotalEstAmountNew(TemplateSpecBean templateSpecBean,BigDecimal totalIndicativePrice, long specEstimationId) {
+		BigDecimal totalEstAmount = new BigDecimal(0);
+		TplSpecMaster specMaster = templateSpecBean.getSpecMaster();
+		TplSpecZoneDtl specZoneDtl = templateSpecBean.getTplSpecZoneDtl();
+		List<TplSpecEstimation> specEstimations = new ArrayList<TplSpecEstimation>();
+
+		if (TemplateSpecConst.CONTENT_TYPE_SCORE.equals(templateSpecBean
+				.getContentType())) {
+			List<Long> specQuestionIds = new ArrayList<Long>();
+			
+			for (TplSpecAnswer specAnswer : templateSpecBean
+					.getSpecAnswerList()) {
+				TplSpecQuestion specQuestion = specAnswer.getTplSpecQuestion();
+
+				if (!specQuestionIds.contains(specQuestion.getSpecQuestionId())
+						&& specQuestion.getTplSpecEstimations() != null) {
+
+					if (specZoneDtl != null) {
+						for (TplSpecEstimation specEstimation : specQuestion
+								.getTplSpecEstimations()) {
+							if (specZoneDtl.getSpecZoneId().equals(
+									specEstimation.getTplSpecZoneDtl()
+											.getSpecZoneId())) {
+								specEstimations.add(specEstimation);
+								break;
+							}
+						}
+
+					} else {
+						specEstimations.addAll(specQuestion
+								.getTplSpecEstimations());
+					}
+					specQuestionIds.add(specQuestion.getSpecQuestionId());
+				}
+			}
+		} else {
+			for (TplSpecQuestion specQuestion : specMaster
+					.getTplSpecQuestions()) {
+				if (specQuestion.getTplSpecEstimations() != null) {
+					specEstimations
+							.addAll(specQuestion.getTplSpecEstimations());
+				}
+			}
+		}
+
+		for (TplSpecEstimation specEstimation : specEstimations) {
+			if (specEstimation.getEstimatedCost() != null) {
+				if (specEstimationId == specEstimation.getSpecEstimationId()){
+					specEstimation.setEstimatedCost(totalIndicativePrice); ///update value  Item Total Indicative Price (RM)
+					totalEstAmount = totalEstAmount.add(totalIndicativePrice);
+				}
+				else {
+					totalEstAmount = totalEstAmount.add(specEstimation
+							.getEstimatedCost());
+				}
+			}
+		}
+		specMaster.setTotalEstAmount(totalEstAmount);
+	}
+	// #25039 end
 	
+	/** #25039 Begin
+	 * To calculate Item Total Indicative Unit Price
+	 * 
+	 */
+	public void calcItemTotalIndicateUnitPrice(TemplateSpecBean templateSpecBean, BigDecimal indicativeUnitPrice, BigDecimal clQuantity, BigDecimal clUomFrequency, BigDecimal clUomPerDay, BigDecimal clUomPerMonth, BigDecimal contractDuration, long specEstimationId, Boolean isItemTypeService, Boolean isFulfilmentTypeScheduled) {
+			BigDecimal totalIndicativePrice = new BigDecimal(0);
+			BigDecimal zeroChangeTo1 = new BigDecimal(1);
+			
+			if (clUomFrequency.intValue() == 0 )
+			{ clUomFrequency=clUomFrequency.add(zeroChangeTo1);}
+
+			if (clUomPerDay.intValue() == 0 )
+			{ clUomPerDay=clUomPerDay.add(zeroChangeTo1);}
+			
+			if (clUomPerMonth.intValue() == 0 )
+			{ clUomPerMonth=clUomPerMonth.add(zeroChangeTo1);}
+			
+			if (contractDuration.intValue() == 0 )
+			{ contractDuration=contractDuration.add(zeroChangeTo1);}
+			
+			if (!isItemTypeService)  //Product - input indicative unit price and autocalculate estimated cost
+			{
+				totalIndicativePrice = totalIndicativePrice.add(clQuantity
+						.multiply(indicativeUnitPrice));
+			}
+			else {
+				if (isItemTypeService && !isFulfilmentTypeScheduled) //Service with non periodic Fulfillment Type(OneOff & As and When)  - input indicative unit price and autocalculate estimated cost
+				{		totalIndicativePrice = totalIndicativePrice.add(clQuantity
+						.multiply(clUomFrequency)
+						.multiply(clUomPerDay)
+						.multiply(clUomPerMonth)
+						.multiply(indicativeUnitPrice));
+				}
+				else {
+					if (isItemTypeService && isFulfilmentTypeScheduled) //Service with periodic Fulfillment Type - input indicative unit price and autocalculate estimated cost
+					{
+						totalIndicativePrice = totalIndicativePrice.add(clQuantity
+								.multiply(contractDuration)
+								.multiply(clUomFrequency)
+								.multiply(clUomPerDay)
+								.multiply(clUomPerMonth)
+								.multiply(indicativeUnitPrice)
+								  );
+					}
+				}
+			}
+			calcGrandTotalEstAmountNew(templateSpecBean, totalIndicativePrice, specEstimationId);
+		}
+	// #25039 end
 }
