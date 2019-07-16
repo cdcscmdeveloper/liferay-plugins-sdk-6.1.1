@@ -268,39 +268,16 @@ public class SPDetailBackingBean extends
 					getManagedBean().setQtClosed(true);
 					getManagedBean().setClosingTime("0");
 				} else {
-					if (resDTO.getScQtProposal().isSubmitted()) {
+					if (scQtProposal.isSubmitted()) {
 						getManagedBean().setReadOnly(true);
 					} else {
 						getManagedBean().setReadOnly(isReadonly);
 					}
-					Date today = new Date();
-					long days = DateUtils.getDaysDifference(today,
-							getManagedBean().getQt().getClosingDate());
-					DecimalFormat dF = new DecimalFormat("#00");
-					getManagedBean()
-							.setClosingTime(
-									dF.format(days)
-											+ " "
-											+ ResourceBundleUtils
-													.getMessage(
-															"lbl.sc.days",
-															ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-															new FacesScopes()
-																	.getUserLocale()));
-
-					if (days == 0) {
-						long durationInMills = DateUtils.getDateDiffInMillis(
-								DateUtils.getCurrentDate(), getManagedBean()
-										.getQt().getClosingDate());
-						if (durationInMills > 0) {
-							getManagedBean().setClosingTime(
-									formattedDurationBasedOnLocale(
-											durationInMills,
-											getDisplayLanguage()));
-						} else {
-							getManagedBean().setClosingTime("0");
-						}
-					}
+					
+					//20190516@hatta - 2808 - Start
+					showQtClosingTime();
+					//20190516@hatta - 2808 - End
+					
 				}
 
 			}
@@ -316,6 +293,38 @@ public class SPDetailBackingBean extends
 			reqDTO = null;
 		}
 	}
+	
+	//20190516@hatta - 2808 - Start	
+	public void showQtClosingTime(){
+		Date today = new Date();
+		long days = DateUtils.getDaysDifference(today,getManagedBean().getQt().getClosingDate());
+		
+		DecimalFormat dF = new DecimalFormat("#00");
+	
+		getManagedBean()
+				.setClosingTime(dF.format(days)+" "
+								+ ResourceBundleUtils
+										.getMessage(
+												"lbl.sc.days",
+												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+												new FacesScopes()
+														.getUserLocale()));
+		
+		if (days == 0) {
+			long durationInMills = DateUtils.getDateDiffInMillis(
+					DateUtils.getCurrentDate(), getManagedBean()
+							.getQt().getClosingDate());
+			if (durationInMills > 0) {
+				getManagedBean().setClosingTime(
+						formattedDurationBasedOnLocale(
+								durationInMills,
+								getDisplayLanguage()));
+			} else {
+				getManagedBean().setClosingTime("0");
+			}
+		}
+	}
+	//20190516@hatta - 2808 - End
 
 	/**
 	 * Gets the display language.
