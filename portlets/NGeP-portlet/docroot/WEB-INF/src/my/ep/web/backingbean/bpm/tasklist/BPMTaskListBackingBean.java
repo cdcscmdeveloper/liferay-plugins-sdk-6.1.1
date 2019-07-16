@@ -365,6 +365,9 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					+ SCProcessNameConst.UPDATE_EC_EVALUATION,
 					SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
 			temp.put(SCProcessNameConst.EC_EVALUATION_PROCESS_NAME
+					+ SCProcessNameConst.VIEW_EC_EVALUATION,
+					SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
+			temp.put(SCProcessNameConst.EC_EVALUATION_PROCESS_NAME
 					+ SCProcessNameConst.ENDORSE_EC_EVALUATION,
 					SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
 			temp.put(SCProcessNameConst.EC_EVALUATION_PROCESS_NAME
@@ -375,6 +378,9 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
 			temp.put(SCProcessNameConst.OC_EVALUATION_PROCESS_NAME
 					+ SCProcessNameConst.UPDATE_OC_EVALUATION,
+					SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
+			temp.put(SCProcessNameConst.OC_EVALUATION_PROCESS_NAME
+					+ SCProcessNameConst.VIEW_OC_EVALUATION,
 					SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
 			temp.put(SCProcessNameConst.OC_EVALUATION_PROCESS_NAME
 					+ SCProcessNameConst.ENDORSE_OC_EVALUATION,
@@ -395,6 +401,9 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			temp.put(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME
 					+ SCProcessNameConst.SIGNOFF_TEC_EVALUATION,
 					SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
+			temp.put(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME
+					+ SCProcessNameConst.VIEW_TEC_EVALUATION,
+					SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
 
 			temp.put(SCProcessNameConst.FEC_EVALUATION_PROCESS_NAME
 					+ SCProcessNameConst.FINALISE_FEC_EVALUATION,
@@ -407,6 +416,9 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
 			temp.put(SCProcessNameConst.FEC_EVALUATION_PROCESS_NAME
 					+ SCProcessNameConst.SIGNOFF_FEC_EVALUATION,
+					SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
+			temp.put(SCProcessNameConst.FEC_EVALUATION_PROCESS_NAME
+					+ SCProcessNameConst.VIEW_FEC_EVALUATION,
 					SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
 
 			temp.put(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
@@ -429,7 +441,10 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					SourcingConstants.NAV_PAGE_FC_SUPPLIER_FINALIZATION);
 			temp.put(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
 					+ SCProcessNameConst.SIGNOFF_FC_SELECTION,
-					SourcingConstants.NAV_PAGE_FC_SUPPLIER_FINALIZATION);		
+					SourcingConstants.NAV_PAGE_FC_SUPPLIER_FINALIZATION);
+			temp.put(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
+					+ SCProcessNameConst.VIEW_FC_SELECTION,
+					SourcingConstants.NAV_PAGE_FC_SUPPLIER_FINALIZATION);
 			temp.put(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
 					+ SCProcessNameConst.SIGNOFF_SCORING,
 					SourcingConstants.NAV_PAGE_PREPARE_CHECKLIST_SCORING);
@@ -485,6 +500,9 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					SourcingConstants.NAV_PAGE_ONLINE_BIDDING_ENDORSEMENT);
 			temp.put(SCProcessNameConst.BIDDING_AWARD_PROCESS_NAME
 					+ SCProcessNameConst.FINALISE_FC_SELECTION,
+					SourcingConstants.NAV_PAGE_ONLINE_BIDDING_ENDORSEMENT);
+			temp.put(SCProcessNameConst.BIDDING_AWARD_PROCESS_NAME
+					+ SCProcessNameConst.VIEW_FC_SELECTION,
 					SourcingConstants.NAV_PAGE_ONLINE_BIDDING_ENDORSEMENT);
 			temp.put(SCProcessNameConst.BIDDING_AWARD_PROCESS_NAME
 					+ SCProcessNameConst.ENDORSE_FC_SELECTION,
