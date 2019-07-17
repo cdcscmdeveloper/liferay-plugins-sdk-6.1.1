@@ -288,9 +288,10 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		}
 
 	}
-	
-	//17003		
-	public void assignSelectedSmSoftcertDocFile(SmPersonnel smPersonnel,SmSoftcertDoc doc, int index) {
+
+	// 17003
+	public void assignSelectedSmSoftcertDocFile(SmPersonnel smPersonnel,
+			SmSoftcertDoc doc, int index) {
 		List<SmSoftcertDoc> softcertDocList = new ArrayList<SmSoftcertDoc>();
 		softcertDocList.add(doc);
 		SoftcertUploadSuppDocVO selectedSuppDoc = new SoftcertUploadSuppDocVO();
@@ -299,7 +300,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		this.getManagedBean().setAttachedFileIndex(index);
 		getManagedBean().setSelectedSuppDoc(selectedSuppDoc);
 	}
-	
+
 	public void deleteSupDocFileAttachment() {
 		if (getManagedBean().getSelectedSuppDoc() != null
 				&& getManagedBean().getSelectedSuppDoc().getSuppDocList() != null
@@ -311,32 +312,27 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 
 			// construct file path
 			String filePath = Calendar.getInstance().get(Calendar.YEAR)
-					+ "/SM/"
-					+ "SOFTCERT/"
-					+ selectedSuppDocVO.getPersonnel().getPmUser()
-							.getLoginId() + "/";
+					+ "/SM/" + "SOFTCERT/"
+					+ selectedSuppDocVO.getPersonnel().getPmUser().getLoginId()
+					+ "/";
 
 			// init suppDocFile (currently only default one file)
 			SmSoftcertDocFile docFile = new SmSoftcertDocFile();
 			docFile.setSmSoftcertDoc(null);
 			docFile.setFileName(StringUtils.EMPTY);
-			selectedSuppDocVO
-					.getSuppDocList()
-					.get(0)
-					.setSmSofcertDocFiles(
-							new ArrayList<SmSoftcertDocFile>());
 			selectedSuppDocVO.getSuppDocList().get(0)
-					.getSmSofcertDocFiles().add(docFile);
+					.setSmSofcertDocFiles(new ArrayList<SmSoftcertDocFile>());
+			selectedSuppDocVO.getSuppDocList().get(0).getSmSofcertDocFiles()
+					.add(docFile);
 
 			// set selected doc to main list
 			setSelectedSuppDocToMainList();
 
-			// set empty value to deleted file			
-			SmCommonUtil.deleteUpload(filePath,
-					docFile.getFileName());
+			// set empty value to deleted file
+			SmCommonUtil.deleteUpload(filePath, docFile.getFileName());
 		}
 	}
-	
+
 	/**
 	 * Delete attachment
 	 * 
@@ -347,16 +343,23 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	public void deleteAttachment() throws FileNotFoundException, IOException {
 		try {
 			if (getManagedBean().getSelectedSmSoftcertDocFile() != null) {
-				for(SmSoftcertDocFile smSoftcertDocFile : getManagedBean().getSmSoftcertDocFileList()){
-					if(smSoftcertDocFile.getSmSoftcertDoc().getSoftcertDocId().equals(getManagedBean().getSelectedSmSoftcertDocFile().getSmSoftcertDoc().getSoftcertDocId())){
+				for (SmSoftcertDocFile smSoftcertDocFile : getManagedBean()
+						.getSmSoftcertDocFileList()) {
+					if (smSoftcertDocFile
+							.getSmSoftcertDoc()
+							.getSoftcertDocId()
+							.equals(getManagedBean()
+									.getSelectedSmSoftcertDocFile()
+									.getSmSoftcertDoc().getSoftcertDocId())) {
 						smSoftcertDocFile.setFileName(StringUtils.EMPTY);
 						smSoftcertDocFile.setFilePath(StringUtils.EMPTY);
-						deleteselectedList(getManagedBean().getSmSoftcertDocFileList());
-//						deleteFiles(smSoftcertDocFile.getFilePath(),smSoftcertDocFile.getFileName(),smSoftcertDocFile.getFileName());
-											
+						deleteselectedList(getManagedBean()
+								.getSmSoftcertDocFileList());
+						// deleteFiles(smSoftcertDocFile.getFilePath(),smSoftcertDocFile.getFileName(),smSoftcertDocFile.getFileName());
+
 						break;
 					}
-				}	
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -838,6 +841,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_ISSUED) {
 					getManagedBean().getRevokePersonnelList().add(personnel);
 				}
+
 			}
 			// check for softcert flg that pending request or rejected or failed
 			else {
@@ -1077,6 +1081,20 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 						smPersonnel
 								.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL);
 						smPersonnel.setDisableRowSelection(false);
+						
+						// check if renewal already requested for softcert but still
+						// pending payment
+						if (smPersonnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL) {
+							reqDTO = new PersonnelReqDTO();
+							reqDTO.setPersonnelId(smPersonnel.getPersonnelId());
+
+							int count = SmServiceLookup.getPersonnelSO()
+									.countPersonnelSoftcertBill(reqDTO);
+
+							if (count > 0) {
+								smPersonnel.setDisableRowSelection(true);
+							}
+						}
 					}
 				}
 			}
@@ -1133,25 +1151,34 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					for (PmDocument softcertSuppDoc : softcertSuppDocList) {
 						softcertDoc = new SmSoftcertDoc();
 
-						if (ParameterConst.DOCUMENT_DEFINITION_KEY_AUTHORIZATION_LETTER.equals(softcertSuppDoc
-								.getDocDefinitionKey())
+						if (ParameterConst.DOCUMENT_DEFINITION_KEY_AUTHORIZATION_LETTER
+								.equals(softcertSuppDoc.getDocDefinitionKey())
 								|| ParameterConst.DOCUMENT_DEFINITION_KEY_OFFICIAL_ACCEPTANCE_LETTER
-										.equals(softcertSuppDoc.getDocDefinitionKey())) {
+										.equals(softcertSuppDoc
+												.getDocDefinitionKey())) {
 							String letterUrl = "";
-							if (CommonConstants.LANGUAGE_CODE_MALAY.equals(userLocale.getLanguage())) {
-								letterUrl = "(Klik <a href=\"" + DocumentRepositoryUtils.getBaseDir() + "shared/SM/"
+							if (CommonConstants.LANGUAGE_CODE_MALAY
+									.equals(userLocale.getLanguage())) {
+								letterUrl = "(Klik <a href=\""
+										+ DocumentRepositoryUtils.getBaseDir()
+										+ "shared/SM/"
 										+ "Permohonan_Sijil_Digital.docx\">Sini"
 										+ "</a> untuk muat turun contoh surat)";
 							} else {
-								letterUrl = "(Click <a href=\"" + DocumentRepositoryUtils.getBaseDir() + "shared/SM/"
+								letterUrl = "(Click <a href=\""
+										+ DocumentRepositoryUtils.getBaseDir()
+										+ "shared/SM/"
 										+ "Application_For_Digital_Certificate.docx\">Here"
 										+ "</a> to download sample of letter)";
 							}
 							String docName = softcertSuppDoc.getDocName();
-							softcertSuppDoc.setDocName(docName.replace("<here>", ""));
-							softcertSuppDoc.setDocNameWithUrl(docName.replace("<here>", letterUrl));
+							softcertSuppDoc.setDocName(docName.replace(
+									"<here>", ""));
+							softcertSuppDoc.setDocNameWithUrl(docName.replace(
+									"<here>", letterUrl));
 						} else {
-							softcertSuppDoc.setDocNameWithUrl(softcertSuppDoc.getDocName());
+							softcertSuppDoc.setDocNameWithUrl(softcertSuppDoc
+									.getDocName());
 						}
 
 						softcertDoc.setPmDocument(softcertSuppDoc);
@@ -1491,11 +1518,13 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 * @return docUrl
 	 */
 	private String retrieveRevokeMessage() {
-		String url = "\"" + DocumentRepositoryUtils.getBaseDir()
+		String url = "\""
+				+ DocumentRepositoryUtils.getBaseDir()
 				+ "shared/SM/"
-				+ (CommonConstants.LANGUAGE_CODE_MALAY.equals(new FacesScopes().getUserLocale().getLanguage()) ? "Surat_Kebenaran_Pembatalan.docx"
-						: "Revocation_Authorization_Letter.docx")
-				+ "\"";
-		return SmCommonUtil.getMessage("lbl.sm.softcert.revoke.instruction", new String[] { url });
+				+ (CommonConstants.LANGUAGE_CODE_MALAY.equals(new FacesScopes()
+						.getUserLocale().getLanguage()) ? "Surat_Kebenaran_Pembatalan.docx"
+						: "Revocation_Authorization_Letter.docx") + "\"";
+		return SmCommonUtil.getMessage("lbl.sm.softcert.revoke.instruction",
+				new String[] { url });
 	}
 }
