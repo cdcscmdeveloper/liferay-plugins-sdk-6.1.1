@@ -884,11 +884,6 @@ public class SmApplicationBackingBean extends
 				}
 				
 				// 25157
-				MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
-				reqDto.setSupplierId(currSupp.getSupplierId());
-				resDto = SmServiceLookup.getMofRegistrationSO()
-						.retrieveSupplierProfile(reqDto);
-				
 				SmAppl rejectedAppl = SmApplicationUtil.getLatesRejectedApplicationBySuppIdAndAppType(
 						currSupp.getSupplierId(), applicationType);
 				
