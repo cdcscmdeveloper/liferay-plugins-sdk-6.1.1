@@ -8573,6 +8573,8 @@ public class SmApplicationBackingBean extends
 		} else {
 			retMsg = null;
 		}
+		// #26136
+		RequestContext.getCurrentInstance().execute("submitApprvrDialog.hide()");
 		return retMsg;
 	}
 
