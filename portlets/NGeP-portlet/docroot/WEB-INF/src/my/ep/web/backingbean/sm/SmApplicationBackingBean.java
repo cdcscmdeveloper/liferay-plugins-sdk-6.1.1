@@ -193,6 +193,7 @@ public class SmApplicationBackingBean extends
 	private int outputTab;
 	private String buttonType = "";
 	private StreamedContent file;
+	private boolean alreadyExecute = false;
 	NumberFormat formatter = new DecimalFormat("#0.00");
 	SmRuleHelper ruleHelper = new SmRuleHelper();
 
@@ -759,6 +760,8 @@ public class SmApplicationBackingBean extends
 	 */
 	public String proceedToApplication(String applicationType, boolean fromBpm,
 			SmAppl appl, SmSupplier supp) {
+		//#Enhancement #11765
+		alreadyExecute = false;//avoid duplicate execute function setDefaultApproverReviewSection() && setDefaultPoReviewSection()
 		getManagedBean().setRedirectToPersonPage(false);
 		assignValReqdToFalse();
 		if (!applicationType
@@ -878,6 +881,17 @@ public class SmApplicationBackingBean extends
 								.getBusinessType()
 								.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER)) {
 					throw new EpException(MessageConst.ERROR_722628);
+				}
+				
+				// 25157
+				SmAppl rejectedAppl = SmApplicationUtil.getLatesRejectedApplicationBySuppIdAndAppType(
+						currSupp.getSupplierId(), applicationType);
+				
+				String labelNameVal = "";
+				if (rejectedAppl != null) {
+						FacesContext.getCurrentInstance().addMessage("rejectedExist", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								SmCommonUtil.getMessage("lbl.sm.supplier.promo.rejected",
+										new String[] { labelNameVal })));
 				}
 
 				// checked whether supplier already MOF, should not allowed to
@@ -2419,6 +2433,8 @@ public class SmApplicationBackingBean extends
 	 */
 	private boolean retriveLatestApplAfterUpdate(String currentPageType,
 			String outputPageType) {
+		//#Enhancement #11765
+		//alreadyExecute = false;//avoid duplicate execute function setDefaultApproverReviewSection() && setDefaultPoReviewSection()
 		try {
 
 			MofRegistrationReqDTO finReqDto = new MofRegistrationReqDTO();
@@ -4500,8 +4516,9 @@ public class SmApplicationBackingBean extends
 			if (getManagedBean().getSelectedCategory().getPmCategoryL3()
 					.getCategoryL3Code().equals("99")) {
 				validCat = true;
-			} else if (cat
-					.getPmCategoryL1()
+			}
+			
+			if (cat.getPmCategoryL1()
 					.getCategoryL1Id()
 					.equals(getManagedBean().getSelectedCategory()
 							.getPmCategoryL1().getCategoryL1Id())
@@ -4515,7 +4532,7 @@ public class SmApplicationBackingBean extends
 									.getPmCategoryL3().getCategoryL3Id())) {
 				validCat = false;
 				if (cat.getRecordStatusFlg().compareTo(
-						SupplierManagementConst.DELETED_RECORD_STATUS) == 0) {
+						SupplierManagementConst.DELETED_RECORD_STATUS) == 0 || cat.getCancelledDate() != null) {
 					if (cat.getCancelledDate() != null
 							&& !isValidToAddAfterDeleted(cat.getCancelledDate())) {
 						throw new EpException(MessageConst.ERROR_722563);
@@ -8567,6 +8584,8 @@ public class SmApplicationBackingBean extends
 		} else {
 			retMsg = null;
 		}
+		// #26136
+		RequestContext.getCurrentInstance().execute("submitApprvrDialog.hide()");
 		return retMsg;
 	}
 
@@ -9702,13 +9721,14 @@ public class SmApplicationBackingBean extends
 	 */
 	private void setDefaultApproverReviewSection() {
 		//#Enhancement #11765
-		if(SupplierManagementConst.SM_APPL_PAGE_TYPE_PO_APPR_DEC.equalsIgnoreCase(getManagedBean().getCurrentPageType()) ||(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY.equalsIgnoreCase(getManagedBean().getCurrentPageType()) && this.currentTab==7)){
+		if(!alreadyExecute && (SupplierManagementConst.SM_APPL_PAGE_TYPE_PO_APPR_DEC.equalsIgnoreCase(getManagedBean().getCurrentPageType()) ||(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY.equalsIgnoreCase(getManagedBean().getCurrentPageType()) && this.currentTab==7))){
 			List<String> catList = SmApplicationUtil.getUnverifiedCatCodes(getManagedBean().getSmAppl()
 					.getSmSupplierCategories(), getManagedBean().getSmAppl().getApplType(), getManagedBean()
 					.isApproverUser());
 			if (catList.size() != 0) {
 				FacesContext fc = FacesContext.getCurrentInstance();
 				//#Enhancement #11765
+				alreadyExecute = true;
 				fc.addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, SmCommonUtil.getMessage(
@@ -9745,11 +9765,12 @@ public class SmApplicationBackingBean extends
 	 */
 	private void setDefaultPoReviewSection() {
 		//#Enhancement #11765
-		if(SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC.equalsIgnoreCase(getManagedBean().getCurrentPageType()) ||(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY.equalsIgnoreCase(getManagedBean().getCurrentPageType()) && this.currentTab==7)){
+		if(!alreadyExecute && (SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC.equalsIgnoreCase(getManagedBean().getCurrentPageType()) ||(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY.equalsIgnoreCase(getManagedBean().getCurrentPageType()) && this.currentTab==7))){
 			List<String> catList = SmApplicationUtil.getUnverifiedCatCodes(getManagedBean().getSmAppl()
 					.getSmSupplierCategories(), getManagedBean().getSmAppl().getApplType(), getManagedBean()
 					.isApproverUser());
 			if (catList.size() != 0) {
+				alreadyExecute = true;
 				FacesContext fc = FacesContext.getCurrentInstance();				
 				fc.addMessage(
 						null,

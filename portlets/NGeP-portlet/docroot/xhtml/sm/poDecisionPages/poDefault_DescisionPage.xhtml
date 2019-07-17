@@ -298,7 +298,7 @@
 				src="/xhtml/sm/shared/poDecisionSharedPages/submitToApproverForm.xhtml" />
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.submit']}" update="@([id$=Msg])"
-					onclick="poEscalateBlockWidget.show()" oncomplete="poEscalateBlockWidget.hide();submitApprvrDialog.hide();" 
+					onclick="poEscalateBlockWidget.show()" oncomplete="poEscalateBlockWidget.hide();" 
 					action="#{backingBean.submitPOorApproverReviewToBPM('ESCALATE')}" process="poEscalateBlockPanel"/>
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 					action="#{backingBean.cancelPOEscalationToApprover}" />

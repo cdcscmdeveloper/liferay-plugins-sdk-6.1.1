@@ -10,6 +10,8 @@ import java.util.List;
 
 import javax.faces.model.SelectItem;
 
+import org.apache.commons.lang3.StringUtils;
+
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
@@ -358,11 +360,11 @@ public abstract class BaseManagedBean implements Serializable {
 		//#25142 to display special character after save the content --- tested for Supplier finalization (briefing paper tab)
 		String reportContent = null;
 		try {
-			if(selectedReport != null)
+			if(selectedReport != null && StringUtils.isNotEmpty(selectedReport.getReportContent()))
 			{
 				reportContent = selectedReport.getReportContent();
 				
-					reportContent = URLDecoder.decode(reportContent, "UTF-8");
+				reportContent = URLDecoder.decode(reportContent, "UTF-8");
 				
 				selectedReport.setReportContent(reportContent);
 			}

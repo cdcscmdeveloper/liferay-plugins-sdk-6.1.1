@@ -86,8 +86,9 @@
 						value="#{scQt.qtTitle}" cols="170"
 						rows="3" style=" margin-bottom:5px; width:866px;" disabled="true" /></td>
 			</tr>
+
 			<c:if test="${approvalBackingBean.managedBean.approvalType == ParameterConst.approvalCategoryFinalizationCommittee}">
-				<c:if test="#{approvalBackingBean.managedBean.taskName ne ParameterConst.supplierAcceptQtChange}" >
+				<c:if test="#{approvalBackingBean.managedBean.taskName eq ParameterConst.fcApproveQTChange}" >
 					<tr>
 						<td style="width: 235px;">
 							<p:outputLabel value="#{lbl['lbl.sc.qt.proposal.approval.date.chairperson.finalization']}" /> 
