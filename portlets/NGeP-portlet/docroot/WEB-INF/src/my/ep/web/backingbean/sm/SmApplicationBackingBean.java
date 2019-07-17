@@ -4505,8 +4505,9 @@ public class SmApplicationBackingBean extends
 			if (getManagedBean().getSelectedCategory().getPmCategoryL3()
 					.getCategoryL3Code().equals("99")) {
 				validCat = true;
-			} else if (cat
-					.getPmCategoryL1()
+			}
+			
+			if (cat.getPmCategoryL1()
 					.getCategoryL1Id()
 					.equals(getManagedBean().getSelectedCategory()
 							.getPmCategoryL1().getCategoryL1Id())
@@ -4520,7 +4521,7 @@ public class SmApplicationBackingBean extends
 									.getPmCategoryL3().getCategoryL3Id())) {
 				validCat = false;
 				if (cat.getRecordStatusFlg().compareTo(
-						SupplierManagementConst.DELETED_RECORD_STATUS) == 0) {
+						SupplierManagementConst.DELETED_RECORD_STATUS) == 0 || cat.getCancelledDate() != null) {
 					if (cat.getCancelledDate() != null
 							&& !isValidToAddAfterDeleted(cat.getCancelledDate())) {
 						throw new EpException(MessageConst.ERROR_722563);
