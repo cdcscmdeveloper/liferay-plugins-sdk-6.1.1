@@ -8,7 +8,7 @@
 
 	<p:panel header="#{lbl['lbl.sc.qt.zone.location.info']}" id="quotationTndrorspecCommitteezonesPanel"
 		toggleable="true"
-		rendered="#{(scQt.zonal !='false' and scQt.qtType eq ParameterConst.quotationTenderTypeOpen and !scQt.panel)}">
+		rendered="#{(scQt.zonal !='false' and scQt.qtType eq ParameterConst.quotationTenderTypeOpen and !scQt.panel) || (scQt.zonal eq 'true' and scQt.panel eq 'true')}">
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 270px"><p:outputLabel
@@ -18,24 +18,32 @@
 					<table>
 						<tr>
 							<td>
-								<c:choose>
-									<c:when test="#{!zoneCoverageReadonly and !isReadOnly}">
-										<p:selectOneMenu id="locationLevels" required="true"
-											label="#{lbl['lbl.sc.zone.location.level']}"
-											value="#{scQt.zoneLocationLevel.parameterId}"
-											style="width: 205px;">
-		
-											<f:selectItems
-												value="#{createQtBB.getDropdownLocationValues(ParameterTypeConst.locationLevel,scQt)}" />
-											<p:ajax event="change" update="generalLocationList"
-												listener="#{createQtBB.selectZoneLocationLevel}"></p:ajax>
-										</p:selectOneMenu>
-										<p:message id="withzone" for="locationLevels" display="icon"></p:message>
-									</c:when>
-									<c:otherwise>
-										<p:inputText id="locLvlTxt" value="#{createQtBB.getParameterDesc(scQt.zoneLocationLevel)}" style="width:195px" disabled="true" />
-									</c:otherwise>
-								</c:choose>
+							<c:choose>
+								<c:when test="#{scQt.panel}">
+									<p:inputText id="locLvlTxt" value="#{createQtBB.getParameterDesc(scQt.zoneLocationLevel)}" style="width:195px" disabled="true" />
+								</c:when>
+								<c:otherwise>
+									<c:choose>
+										<c:when test="#{!zoneCoverageReadonly and !isReadOnly}">
+											<p:selectOneMenu id="locationLevels" required="true"
+												label="#{lbl['lbl.sc.zone.location.level']}"
+												value="#{scQt.zoneLocationLevel.parameterId}"
+												style="width: 205px;">
+			
+												<f:selectItems
+													value="#{createQtBB.getDropdownLocationValues(ParameterTypeConst.locationLevel,scQt)}" />
+												<p:ajax event="change" update="generalLocationList"
+													listener="#{createQtBB.selectZoneLocationLevel}"></p:ajax>
+											</p:selectOneMenu>
+											<p:message id="withzone" for="locationLevels" display="icon"></p:message>
+										</c:when>
+										<c:otherwise>
+											<p:inputText id="locLvlTxt" value="#{createQtBB.getParameterDesc(scQt.zoneLocationLevel)}" style="width:195px" disabled="true" />
+										</c:otherwise>
+									</c:choose>
+								</c:otherwise>
+								
+							</c:choose>
 							</td>
 							<td style="margin-top: -3px"><ac:iconTooltip
 									value="#{lbl['lbl.sc.zone.location.level.tooltip']}" /></td>
@@ -83,7 +91,7 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.action']}"
 						style="width:10%;text-align: center;"
-						rendered="#{!isReadOnly and !zoneCoverageReadonly}">
+						rendered="#{!isReadOnly and !zoneCoverageReadonly and !createQtBB.isPanelZone()}">
 						<p:commandLink
 							actionListener="#{createQtBB.editZones(zoneTree,index,false)}"
 							process="@this" update="@([id$=dlgId])"
@@ -104,9 +112,14 @@
 				<p:spacer width="1" />
 				<h:outputText value="#{lbl['lbl.sc.spec.check.all']}"
 					style="float:left;margin-top: 12px;;margin-left: 10px;" />
-				<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this,locationLevels,qtdetailsid"
+				<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this,qtdetailsid" rendered="#{createQtBB.isPanelZone()}"
 					styleClass="BtnSpacing" update="@([id$=zonePopupGeneral])"
-					actionListener="#{createQtBB.showGeneralZonesPopup}" />
+					actionListener="#{createQtBB.showGeneralZonesPopup}"
+					disabled="#{createQtBB.isPanelZone()}" />
+					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this,qtdetailsid" rendered="#{!createQtBB.isPanelZone()}"
+					styleClass="BtnSpacing" update="@([id$=zonePopupGeneral])"
+					actionListener="#{createQtBB.showGeneralZonesPopup}"
+					disabled="#{createQtBB.isPanelZone()}" />
 				<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
 				id="quotationTndrorspecCommitteezonesBtnDeleteId"
 				disabled="#{createQtBB.zoneLocationDeleteBtnDisable()}"
