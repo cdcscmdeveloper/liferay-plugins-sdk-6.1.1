@@ -1019,7 +1019,7 @@ public class EvaluationMeetingBackingBean extends
 		}
 
 		List<ScCommitteeMember> localList = new ArrayList<ScCommitteeMember>();
-
+		ScCommitteeMember memberClone = null;
 		List<String> itemIds = new ArrayList<String>();
 
 		if (committeeMemberList.isEmpty()) {
@@ -1033,7 +1033,12 @@ public class EvaluationMeetingBackingBean extends
 				// .getScQtCommittee());
 				// activity.setScCommitteeMember(scCommitteeMember);
 				// setUserDetails(activity);
-				localList.add(scCommitteeMember);
+				
+				//20190625@ for bug 25986/25988/26017 - Start
+				memberClone = (ScCommitteeMember) scCommitteeMember.cloneEntity();
+				memberClone.setCommitteeMemberId(null);
+				localList.add(memberClone);
+				//20190625@ for bug 25986/25988/26017 - End
 			}
 		} else {
 			for (ScCommitteeMember committee : committeeMemberList) {
@@ -1088,7 +1093,12 @@ public class EvaluationMeetingBackingBean extends
 						}
 						// activity.setScCommitteeMember(committees);
 						// setUserDetails(activity);
-						localList.add(committees);
+						
+						//20190625@ for bug 25986/25988/26017 - Start
+						memberClone = (ScCommitteeMember) committees.cloneEntity();
+						memberClone.setCommitteeMemberId(null);
+						localList.add(memberClone);
+						//20190625@ for bug 25986/25988/26017 - End
 					}
 				}
 			}
