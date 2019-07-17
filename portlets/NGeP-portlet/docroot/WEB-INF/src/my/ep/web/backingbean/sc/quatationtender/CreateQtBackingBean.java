@@ -33,6 +33,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.circular.ICircularDetailSO;
+import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
@@ -51,6 +52,8 @@ import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.circular.CircularDetailReqDTO;
 import my.ep.dto.ct.circular.CircularDetailResDTO;
+import my.ep.dto.ct.supplier.PanelSupplierReqDTO;
+import my.ep.dto.ct.supplier.PanelSupplierResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
@@ -67,6 +70,7 @@ import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmPtjSpecialApproval;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -226,6 +230,7 @@ public class CreateQtBackingBean extends
 	 */
 	public void panelConformation(ScQt scQt) {
 
+		scQt.setZonal(false);
 		Boolean isPanel = this.getManagedBean().getPanel();
 		scQt.setPanel(isPanel);
 		if (!isPanel) {
@@ -2148,14 +2153,146 @@ public class CreateQtBackingBean extends
 	 */
 	public void changePanelGroupItem() {
 		ScQt scQt = getManagedBean().getQt();
-		if(null!=scQt.getItemGroup() && null!=scQt.getItemGroup().getPanelItemGroupId()){
-			if (null != this.getManagedBean().getLoginRoleType()
-					&& !"".equals(this.getManagedBean().getLoginRoleType())
-					&& "SC".equalsIgnoreCase(this.getManagedBean()
-							.getLoginRoleType())){
-				deleteTemplateSpecs(scQt);
+		
+		IPanelSupplierSO panelSupplierSO;
+		ICircularDetailSO circularDetailSO;
+		
+		try{
+			CircularDetailReqDTO reqDTO = new CircularDetailReqDTO();
+			circularDetailSO = (ICircularDetailSO) EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularDetailSO.class);
+	
+			reqDTO.setCircularVerId(scQt.getCircularVer().getCircularVerId());
+			reqDTO.setPanelItemTypeGroup(true);
+			if (null != this.getManagedBean().getQt().getItemGroup()) {
+				reqDTO.setGroupItemId(scQt.getItemGroup().getPanelItemGroupId());
+			}
+			
+			CircularDetailResDTO resDTO = circularDetailSO.getPanelItemsByCircularVerId(reqDTO);
+			this.getManagedBean().setPanelItemList(resDTO.getPanelItemList());
+			
+			PanelSupplierReqDTO reqPanelDTO = new PanelSupplierReqDTO();
+			PanelSupplierResDTO resPanelDTO = new PanelSupplierResDTO();
+			panelSupplierSO = (IPanelSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IPanelSupplierSO.class);
+			for(CtPanelItem panelItem : this.getManagedBean().getPanelItemList()){
+				
+				reqPanelDTO.setPanelItem(panelItem);
+				resPanelDTO = panelSupplierSO.retrievePanelZonesByPanelItem(reqPanelDTO);
+				if(panelItem.getLocationLevelId() != null && panelItem.getLocationLevelId().getParameterId() != null)
+					scQt.setZoneLocationLevel(getPmParameter(panelItem.getLocationLevelId().getParameterId()));
+				break;
+			}
+			
+			ScQtSupplierCriteria supplierCriteria = scQt.getScQtSupplierCriteria();
+			if (null != resDTO && null != resPanelDTO.getCtPanelZones()
+					&& !resPanelDTO.getCtPanelZones().isEmpty()) {
+				scQt.setZonal(true);
+				this.getManagedBean().setPanelZone(true);
+
+				/*to show zone information panel*/
+				if (null == supplierCriteria) {
+					supplierCriteria = new ScQtSupplierCriteria();
 				}
+				
+				ScQtZoneCriteria zoneCriteria = supplierCriteria.getQtZoneCriterias();
+				if (null == zoneCriteria) {
+					zoneCriteria = new ScQtZoneCriteria();
+					zoneCriteria.setScQtSupplierCriteria(supplierCriteria);
+					supplierCriteria.setQtZoneCriterias(zoneCriteria);
+				}
+				supplierCriteria.setScQtLocCriteria(null);
+					
+				if (supplierCriteria.isAllState() == true) {
+					this.getManagedBean().setZoneTrees(null);
+				}
+				
+				if (null != supplierCriteria && supplierCriteria.isBrandNew() == false) {
+					if (null != this.getManagedBean().getLoginRoleType() && !"".equals(this.getManagedBean().getLoginRoleType()) && "SC".equalsIgnoreCase(this.getManagedBean().getLoginRoleType())) {
+						updateTechnicalAndFinacialSpecStatusZoneLocationChange(zoneCriteria);
+					}
+				}
+				scQt.setScQtSupplierCriteria(supplierCriteria);
+				
+				/*set tree zonal information */
+				if (isNotNullOREmpty(resPanelDTO.getCtPanelZones())) {
+					this.getManagedBean().setCtzones(true);
+					getManagedBean().setZoneGeneralTrees(new ArrayList<TreeNode>());
+					if (null != getManagedBean().getZoneGeneralTrees() && getManagedBean().getZoneGeneralTrees().size() == 0) {
+
+						for (CtPanelZone panelZones : resPanelDTO.getCtPanelZones()) {
+
+							TplSpecZoneDtl tplSpecZoneDtl = new TplSpecZoneDtl();
+							tplSpecZoneDtl.setZoneName(panelZones.getName());
+							tplSpecZoneDtl.setPanelZone(panelZones);
+							setUserDetails(tplSpecZoneDtl);
+
+							List<PmState> states = SourcingLocationHelper.getStateFromCtPanelZone(panelZones.getPanelZoneDtls());
+							List<PmDistrict> districts = SourcingLocationHelper.getDistrictFromCtPanelZone(panelZones.getPanelZoneDtls());
+
+							getManagedBean().getZoneGeneralTrees().add(LocationSingleton.getInstance().buildTreeWithDisabledChilds(
+													tplSpecZoneDtl, states,
+													districts, null, null,
+													true, TplSpecZoneLoc.class));
+
+						}
+					}
+				}
+				
+			}else{
+				
+				scQt.setZonal(false);
+
+				this.getManagedBean().setZoneGeneralTrees(null);
+				// supplierCriteria.setQtZoneCriterias(null);
+				if (null == supplierCriteria.getLocationLevel()) {
+					supplierCriteria.setLocationLevel(new PmParameter());
+				}
+
+				this.getManagedBean().setZoneGeneralTrees(null);
+				this.getManagedBean().setBeans(new ArrayList<ZonesBean>());
+				if (null != supplierCriteria
+						&& supplierCriteria.isBrandNew() == false) {
+					if (null != this.getManagedBean().getLoginRoleType()
+							&& !"".equals(this.getManagedBean().getLoginRoleType())
+							&& "SC".equalsIgnoreCase(this.getManagedBean()
+									.getLoginRoleType())) {
+						updateTechnicalAndFinacialSpecStatusZoneLocationChange(null);
+						this.getManagedBean().setDeliveryLocRemoveList(null);
+						this.getManagedBean().setDeliveryLocBean(null);
+						deleteDeliveryAdreesZoneDetails(scQt);
+					}
+				}
+			}
+			
+
+			if (null != scQt.getItemGroup() && null != scQt.getItemGroup().getPanelItemGroupId()) {
+				if (null != this.getManagedBean().getLoginRoleType()
+						&& !"".equals(this.getManagedBean().getLoginRoleType())
+						&& "SC".equalsIgnoreCase(this.getManagedBean()
+								.getLoginRoleType())) {
+					deleteTemplateSpecs(scQt);
+				}
+			}
+		}finally{
+			panelSupplierSO = null;
+			circularDetailSO = null;
 		}
+		
+	}
+
+	private PmParameter getPmParameter(Long parameterId) {
+		IParameterSO parameterSO;
+		
+		try{
+			parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IParameterSO.class);
+			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+			parameterReqDTO.setParameterId(parameterId);
+			return parameterSO.retrieveParameterById(parameterReqDTO)
+					.getPmParameter();
+		}finally{
+			parameterSO = null;
+		}
+		
+
 	}
 	
 	/**
@@ -2336,8 +2473,9 @@ public class CreateQtBackingBean extends
 					oldValue, newValue, false);
 
 		} else if ("publishperiod".equalsIgnoreCase(componentId)) {
-			amendMentBean = putIntoAmendmentValueMap(QTFieldConst.FIELD_QT_PUBLISH_PERIOD,
-					oldValue, newValue, true);
+			amendMentBean = putIntoAmendmentValueMap(
+					QTFieldConst.FIELD_QT_PUBLISH_PERIOD, oldValue, newValue,
+					true);
 		}
 
 		this.getManagedBean().setAmendMentBean(amendMentBean);
@@ -2938,4 +3076,9 @@ public class CreateQtBackingBean extends
 
 	}
 	
+	public boolean isPanelZone(){
+		return this.getManagedBean().isPanelZone();
+	}
+	
+
 }

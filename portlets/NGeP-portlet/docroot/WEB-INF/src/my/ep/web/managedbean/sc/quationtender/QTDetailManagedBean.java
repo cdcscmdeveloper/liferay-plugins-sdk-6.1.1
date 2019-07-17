@@ -1520,6 +1520,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private int checkListYesIndex;
 	private boolean technicalOtherChecklistSubmit;
 	private boolean financialOtherChecklistSubmit;
+	private boolean isPanelZone;
 
 	private List<ScQtSchedule> toBeRemoveSchedules;
 	private List<ScQtProgressivePayment> toBeRemoveProgPayments;
@@ -9926,6 +9927,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.buttonHideSchActive = buttonHideSchActive;
 	}
 	
+	/*basri 19637*/
+	public boolean isPanelZone() {
+		return isPanelZone;
+	}
+
+	public void setPanelZone(boolean isPanelZone) {
+		this.isPanelZone = isPanelZone;
+	}
 
 	
 	
