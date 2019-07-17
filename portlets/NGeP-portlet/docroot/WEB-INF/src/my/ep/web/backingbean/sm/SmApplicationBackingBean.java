@@ -882,6 +882,22 @@ public class SmApplicationBackingBean extends
 								.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER)) {
 					throw new EpException(MessageConst.ERROR_722628);
 				}
+				
+				// 25157
+				MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
+				reqDto.setSupplierId(currSupp.getSupplierId());
+				resDto = SmServiceLookup.getMofRegistrationSO()
+						.retrieveSupplierProfile(reqDto);
+				
+				SmAppl rejectedAppl = SmApplicationUtil.getLatesRejectedApplicationBySuppIdAndAppType(
+						currSupp.getSupplierId(), applicationType);
+				
+				String labelNameVal = "";
+				if (rejectedAppl != null) {
+						FacesContext.getCurrentInstance().addMessage("rejectedExist", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								SmCommonUtil.getMessage("lbl.sm.supplier.promo.rejected",
+										new String[] { labelNameVal })));
+				}
 
 				// checked whether supplier already MOF, should not allowed to
 				// proceed if already MOF (#25601)
