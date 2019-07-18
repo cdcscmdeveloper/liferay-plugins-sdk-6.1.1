@@ -369,17 +369,29 @@
 		</tr>
 		</c:if>
 		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.appr.req']}" />
+			<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.appr.req.field']}" />
 					<p:outputLabel value="*" styleClass="mandatory"
 						rendered="#{isEditableStatus}" /></td>
-			<td><p:selectOneRadio id="approvalReq" styleClass="commonLabel"
-						value="#{lOADetailBackingBean.managedBean.scLoa.approvalReq}"
-						required="true" label="#{lbl['lbl.sc.loiloa.loa.appr.req']}"
-						disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}">
-						<f:selectItems
-							value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-						<p:ajax process="@this" partialSubmit="true" update="@this" />
-					</p:selectOneRadio> <p:message id="approvalReqMsg" for="approvalReq" display="icon" />
+			<td>
+			  <table>
+			     <tr>
+				   <td>
+						<p:selectOneRadio id="approvalReq" styleClass="commonLabel"
+							value="#{lOADetailBackingBean.managedBean.scLoa.approvalReq}"
+							required="true" label="#{lbl['lbl.sc.loiloa.loa.appr.req.field']}"
+							disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}">
+							<f:selectItems
+								value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+							<p:ajax process="@this" partialSubmit="true" update="menuTab" />
+						</p:selectOneRadio>
+						<p:message id="approvalReqMsg" for="approvalReq" display="icon" />
+						
+				    </td>
+					<td style="margin-top: -3px">
+						   <ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.req.verification.approval.tooltip']}" />
+					</td>
+				 </tr>
+			  </table>
 			</td>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.req.sl1m']}" />
