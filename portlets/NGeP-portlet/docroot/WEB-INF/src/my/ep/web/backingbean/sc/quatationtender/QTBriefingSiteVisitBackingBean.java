@@ -1185,9 +1185,11 @@ public class QTBriefingSiteVisitBackingBean extends
 						(scQtBsvDtl.getBsvStatus() == null || !QTStatusConst.BSV_CANCELLED.equals(scQtBsvDtl.getBsvStatus().getStatusId())) && 
 						(latestBsvDate == null || (latestBsvDate != null && bsvDate.after(latestBsvDate)))) {
 					latestBsvDate = bsvDate;
+					//20190718@asyrafhaziq - Bug #26137 - Start
+					scQt.setBsvRequired(true);
+					//20190718@asyrafhaziq - Bug #26137 - End
 				}
 			}
-			scQt.setBsvRequired(true);
 		}
 		
 		return latestBsvDate;
