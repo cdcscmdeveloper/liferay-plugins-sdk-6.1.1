@@ -110,9 +110,7 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	}
 
 	public void getChallengeQuestions() {
-		logger.info("::: #25061 getChallengeQuestions :::" + getSpkiEnabledProperty());
 		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
-			logger.info("::: #25061 getCertIssuer " + getCertIssuer());
 			if (getCertIssuer().equals(SupplierManagementConst.CERT_TRUSTGATE)) {
 				logger.info("getChallengeQuestions | getCertIssuer-TG : " + getCertIssuer());
 				challs = TrustGateHelper.getInstance().getChallengeQuestion(
@@ -124,7 +122,6 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 						getLoginUser().getIdentificationNo());
 			}
 			setChallengeQues1(challs.get(0));
-			logger.info("::: #25061 before spki_dlg.show");
 			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 		}
 	}
