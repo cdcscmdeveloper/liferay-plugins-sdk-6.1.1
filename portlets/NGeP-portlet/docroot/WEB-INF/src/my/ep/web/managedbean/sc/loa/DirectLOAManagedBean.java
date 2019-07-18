@@ -302,6 +302,9 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	private boolean ButtonHideActive = true;
 	private boolean buttonHideDedActive = true;
 	private boolean buttonHideSchActive = true;
+	
+	private Boolean bondReq;
+	private Boolean agreementReq;
 
 	/**
 	 * Gets the spki backing bean.
@@ -1896,6 +1899,40 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 
 	public void setButtonHideSchActive(boolean buttonHideSchActive) {
 		this.buttonHideSchActive = buttonHideSchActive;
+	}
+
+	/**
+	 * @return the bondReq
+	 */
+	public Boolean getBondReq() {
+		return bondReq;
+	}
+
+	/**
+	 * @param bondReq the bondReq to set
+	 */
+	public void setBondReq(Boolean bondReq) {
+		this.bondReq = bondReq;
+		if (null != bondReq) {
+			getScLoa().setBondReq(bondReq);
+		}
+	}
+
+	/**
+	 * @return the agreementReq
+	 */
+	public Boolean getAgreementReq() {
+		return agreementReq;
+	}
+
+	/**
+	 * @param agreementReq the agreementReq to set
+	 */
+	public void setAgreementReq(Boolean agreementReq) {
+		this.agreementReq = agreementReq;
+		if (null != agreementReq) {
+			getScLoa().setAgreementReq(agreementReq);
+		}
 	}
 
 }
