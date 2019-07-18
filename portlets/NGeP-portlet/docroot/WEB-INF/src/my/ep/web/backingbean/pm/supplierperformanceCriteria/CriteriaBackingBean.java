@@ -25,6 +25,7 @@ import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.criteria.CriteriaReqDTO;
 import my.ep.dto.pm.common.criteria.CriteriaResDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.constant.DbValueConst;
@@ -240,28 +241,32 @@ public class CriteriaBackingBean extends
 		log.info("redirectToMaintainCriteria - End");
 		return NAV_TO_MAINTAIN;
 	}
- public String saveSupplierCriteriaDtls(){
-			log.info("saveSupplierCriteriaDtls - Start");
-			String returnPage = null;
-		
-			if(this.getManagedBean().getSelectedCriteria().isBrandNew()){
-				generateCriteriaCode();
-			
-			}
-			
-			if(DbValueConst.RECORD_STATUS_ACTIVE == 
-					getManagedBean().getSelectedCriteria().getRecordStatusFlg().intValue()){
-				validateCriteriaDesc();
-			}
-			
-			if(this.getManagedBean().getSelectedCriteria().isBrandNew()){
-			returnPage = createCriteria(this.getManagedBean().getSelectedCriteria());
-			}else{
-				returnPage = updateCriteria(this.getManagedBean().getSelectedCriteria());
-			}
-			log.info("saveSupplierCriteriaDtls - End");
-			return returnPage;
+
+	public String saveSupplierCriteriaDtls() {
+		log.info("saveSupplierCriteriaDtls - Start");
+		String returnPage = null;
+
+		if (this.getManagedBean().getSelectedCriteria().isBrandNew()) {
+			generateCriteriaCode();
+
 		}
+
+		if (DbValueConst.RECORD_STATUS_ACTIVE == getManagedBean()
+				.getSelectedCriteria().getRecordStatusFlg().intValue()) {
+			validateCriteriaDesc();
+		}
+
+		if (this.getManagedBean().getSelectedCriteria().isBrandNew()) {
+			returnPage = createCriteria(this.getManagedBean()
+					.getSelectedCriteria());
+		} else {
+			returnPage = updateCriteria(this.getManagedBean()
+					.getSelectedCriteria());
+		}
+		log.info("saveSupplierCriteriaDtls - End");
+		return returnPage;
+	}
+	
 	 /**
 		 *  This method used for reset the search bean field and
 		 *  navigate to the search main page. 
@@ -455,10 +460,12 @@ public class CriteriaBackingBean extends
 		}
 
 	private String createCriteria(PmCriteria newCriteria) {
-		log.info("createCriteria" + newCriteria.getCriteriaCode());
+		PmUser user = new FacesScopes().getUserSessionBean();
 		try {
 			CriteriaReqDTO reqDTO = new CriteriaReqDTO();
 			reqDTO.setPmCriteria(newCriteria);
+			reqDTO.setPmUser(user);
+			log.info("******createCriteria=" + newCriteria.getCriteriaCode()+"| UserId="+reqDTO.getPmUser().getUserId());
 			ICriteriaSO criteriaSO = (ICriteriaSO) BusinessDelegate
 					.getInstance().getServiceObject(
 							ModuleCodeConst.PROFILE_MANAGEMENT,
