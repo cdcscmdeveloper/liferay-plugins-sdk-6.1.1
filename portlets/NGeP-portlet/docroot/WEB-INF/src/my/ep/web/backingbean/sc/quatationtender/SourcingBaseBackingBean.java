@@ -1908,7 +1908,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		BigDecimal overallCtAmount = overallCtAmountWithSST(scLoa.getLoaAmt(), scLoa.getSstAmt());
 		
 		if(isDirectLoa) {
-			boolean notPbDropDown = true;
+			boolean setBondReq = true;
 			if (null != scLoa.getQtType() 
 					&& null != scLoa.getQtType().getParameterId() 
 					&& scLoa.getQtType().getParameterId() == 194 
@@ -1919,9 +1919,21 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					&& null != scLoa.getContractType() 
 					&& null != scLoa.getContractType().getParameterId()
 					&& scLoa.getContractType().getParameterId() == 146) {
-				notPbDropDown = false;
+				setBondReq = false;
 			}
-			if (notPbDropDown) {
+			
+			if (null != scLoa.getQtType() 
+					&& null != scLoa.getQtType().getParameterId() 
+					&& scLoa.getQtType().getParameterId() == 194 
+					&& null != scLoa.getScQt() 
+					&& null != scLoa.getScQt().getFulfilmentType()
+					&& null != scLoa.getScQt().getFulfilmentType().getParameterId()
+					&& (scLoa.getScQt().getFulfilmentType().getParameterId() == 149
+					|| scLoa.getScQt().getFulfilmentType().getParameterId() == 150)) {
+				setBondReq = false;
+			}
+			
+			if (setBondReq) {
 				scLoa.setBondReq(PerformanceBondUtil.isPerformanceBondRequired(overallCtAmount, null));
 			}
 		}

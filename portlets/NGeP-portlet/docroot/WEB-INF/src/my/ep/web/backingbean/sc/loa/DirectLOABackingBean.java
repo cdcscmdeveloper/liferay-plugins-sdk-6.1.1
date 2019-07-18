@@ -8452,7 +8452,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 			return true;
 		} else {
-			if (!getManagedBean().getScLoa().isBondReq()) {
+			if (!getManagedBean().getScLoa().isBondReq() && !isPk7Periodic()) {
 				setOverallCtAmount(getManagedBean().getScLoa().getLoaAmt());
 			}
 			
@@ -8655,5 +8655,34 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
 							e.getMessage()));
 		}
+	}
+	
+	public boolean isPk7Periodic() {
+		Long qtType = null;
+		Long fulfilmentType = null;
+		if (null != getManagedBean().getScLoa().getQtType()) {
+			qtType = getManagedBean().getScLoa().getQtType().getParameterId(); 
+		}
+		
+		if (null != getManagedBean().getScLoa().getScQt() && null != getManagedBean().getScLoa().getScQt().getFulfilmentType()) {
+			fulfilmentType = getManagedBean().getScLoa().getScQt().getFulfilmentType().getParameterId(); 
+		}
+		
+		if (null != qtType && null != fulfilmentType && qtType == 194 && (fulfilmentType == 149
+				|| fulfilmentType == 150)) {
+				return true;
+		}
+		return false;
+	}
+	
+	public SelectItem[] getPk7PeriodicRadioButtons(String parameterType) {
+		SelectItem hiddenRadio = new SelectItem("null", "null");
+		hiddenRadio.setNoSelectionOption(true);
+		SelectItem[] radioButtons = new SelectItem[3];
+		radioButtons[0] = hiddenRadio;
+		SelectItem[] yesNoRadio = getRadioButtonCodeValuesBySearchBean(parameterType, null);
+		radioButtons[1] = yesNoRadio[0];
+		radioButtons[2] = yesNoRadio[1];
+		return radioButtons;
 	}
 }
