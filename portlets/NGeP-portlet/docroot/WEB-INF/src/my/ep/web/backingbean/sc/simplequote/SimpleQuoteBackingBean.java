@@ -1857,6 +1857,11 @@ public class SimpleQuoteBackingBean extends
 				&& scQuote.getRequestNotes().size() > 0) {
 			getManagedBean().setRequestNote(scQuote.getRequestNotes().get(0));
 		}
+		
+		// procurement  type category
+				if(null == scQuote.getProcurementTypeCategory()||null==scQuote.getProcurementTypeCategory().getParameterId()){
+					scQuote.setProcurementTypeCategory(new PmParameter());
+				}
 
 		// zone location level by default - district
 		if (scQuote.getZoneLocatonLevel() != null) {
@@ -1939,7 +1944,7 @@ public class SimpleQuoteBackingBean extends
 		// duration calc
 		calculateDuration(scQuote);
 		procurementTypeEvent();
-		
+		//implement here
 	}
 	
 
