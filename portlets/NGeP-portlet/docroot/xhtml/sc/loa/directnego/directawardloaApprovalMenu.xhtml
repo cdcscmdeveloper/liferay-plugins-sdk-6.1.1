@@ -8,48 +8,52 @@
 	<ac:lovPopup />	
 	<ui:include src="../shared/loaInstructionHeader.xhtml" />
 	
-	<p:panel id="loaSignerId" toggleable="true">
-
-		<f:facet name="header">
-			<h:outputText value="#{lbl['lbl.sc.loiloa.loa.contract.signer.dtl']}" />
-			<ac:iconTooltip
-				value="#{lbl['lbl.sc.loiloa.loa.contract.signer.dtl.tooltip']}" />
-		</f:facet>
-
-		<table border="0" cellspacing="0" cellpadding="0" width="100%">
-			<tr>
-				<td width="23%"><p:outputLabel
-						value="#{lbl['lbl.sc.loiloa.loa.contract.signer']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td>
-					<p:outputPanel id="opUserLov">
-					<ac:lov id="lovUser" lovId="PM_USER_ID" size="80"
-						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
-						update="@form" readonly="true"
-						headerText="#{lbl['lbl.pm.ta.user.lov']}"
-						selectionMode="single"
-						value="#{directLOABackingBean.managedBean.scLoa.contractSigner.userName}"
-						saveObject="directLOABackingBean.managedBean.scLoa.contractSigner"
-						conditionField="#{directLOABackingBean.constructUserConditionFields()}"
-						postUpdateListener="directLOABackingBean.signerUserListener(directLOABackingBean.managedBean.scLoa.contractSigner)" />
-					</p:outputPanel>
-				</td>
-			</tr>
-			<tr>
-				<td><p:outputLabel
-						value="#{lbl['lbl.sc.loiloa.loa.signer.desig']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
-				</td>
-				<td><p:inputText id="loaSignerDesigId" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
-						value="#{directLOABackingBean.managedBean.scLoa.loaSignerDesig}"
-						label="#{lbl['lbl.sc.loiloa.loa.signer.desig']}" required="true"
-						size="40">
-					</p:inputText> <p:message id="loaSignerDesigIdIdMsg" for="loaSignerDesigId"
-						display="icon" /></td>
-			</tr>
-
-		</table>
-	</p:panel>
+	<ui:remove>
+	
+			<p:panel id="loaSignerId" toggleable="true">
+		
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.loiloa.loa.contract.signer.dtl']}" />
+					<ac:iconTooltip
+						value="#{lbl['lbl.sc.loiloa.loa.contract.signer.dtl.tooltip']}" />
+				</f:facet>
+		
+				<table border="0" cellspacing="0" cellpadding="0" width="100%">
+					<tr>
+						<td width="23%"><p:outputLabel
+								value="#{lbl['lbl.sc.loiloa.loa.contract.signer']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td>
+							<p:outputPanel id="opUserLov">
+							<ac:lov id="lovUser" lovId="PM_USER_ID" size="80"
+								disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
+								update="@form" readonly="true"
+								headerText="#{lbl['lbl.pm.ta.user.lov']}"
+								selectionMode="single"
+								value="#{directLOABackingBean.managedBean.scLoa.contractSigner.userName}"
+								saveObject="directLOABackingBean.managedBean.scLoa.contractSigner"
+								conditionField="#{directLOABackingBean.constructUserConditionFields()}"
+								postUpdateListener="directLOABackingBean.signerUserListener(directLOABackingBean.managedBean.scLoa.contractSigner)" />
+							</p:outputPanel>
+						</td>
+					</tr>
+					<tr>
+						<td><p:outputLabel
+								value="#{lbl['lbl.sc.loiloa.loa.signer.desig']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
+						</td>
+						<td><p:inputText id="loaSignerDesigId" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
+								value="#{directLOABackingBean.managedBean.scLoa.loaSignerDesig}"
+								label="#{lbl['lbl.sc.loiloa.loa.signer.desig']}" required="true"
+								size="40">
+							</p:inputText> <p:message id="loaSignerDesigIdIdMsg" for="loaSignerDesigId"
+								display="icon" /></td>
+					</tr>
+		
+				</table>
+			</p:panel>
+	
+	</ui:remove>
 
 	<p:panel header="#{lbl['lbl.sc.loiloa.request.for.approval']}"
 		rendered="#{directLOABackingBean.managedBean.scLoa.approvalReq}"
@@ -60,31 +64,44 @@
 						value="#{lbl['lbl.sc.approver']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></td>
 				<td>
-					<c:choose>
-						<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}">
-							<p:selectOneMenu id="loaApprover"
-								value="#{directLOABackingBean.managedBean.approverUser.userId}"
-								required="#{directLOABackingBean.managedBean.scLoa.approvalReq}"
-								label="#{lbl['lbl.sc.approver']}"
-								style="width: 276px;margin-bottom: 5px;">
-								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-									itemValue="#{null}" />
-								<f:selectItems
-									value="#{directLOABackingBean.managedBean.approverList}"
-									var="pmUser" itemLabel="#{pmUser.userName}"
-									itemValue="#{pmUser.userId}" />
-								<p:ajax event="change"
-									listener="#{directLOABackingBean.approverChanged()}"
-									partialSubmit="true" process="@this" update="@this" />
-							</p:selectOneMenu>
-							<p:message id="loaApproverMsg" for="loaApprover" display="icon" />
-						</c:when>
-						<c:otherwise>
-							<p:inputText id="loaApproverTxt"
-								value="#{directLOABackingBean.managedBean.approverUser.userName}"
-								size="40" disabled="true" />
-						</c:otherwise>
-					</c:choose>
+				
+				   <table>
+				     <tr>
+					   <td>
+				
+							<c:choose>
+								<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}">
+									<p:selectOneMenu id="loaApprover"
+										value="#{directLOABackingBean.managedBean.approverUser.userId}"
+										required="#{directLOABackingBean.managedBean.scLoa.approvalReq}"
+										label="#{lbl['lbl.sc.approver']}"
+										style="width: 276px;margin-bottom: 5px;">
+										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+											itemValue="#{null}" />
+										<f:selectItems
+											value="#{directLOABackingBean.managedBean.approverList}"
+											var="pmUser" itemLabel="#{pmUser.userName}"
+											itemValue="#{pmUser.userId}" />
+										<p:ajax event="change"
+											listener="#{directLOABackingBean.approverChanged()}"
+											partialSubmit="true" process="@this" update="@this" />
+									</p:selectOneMenu>
+									<p:message id="loaApproverMsg" for="loaApprover" display="icon" />
+								</c:when>
+								<c:otherwise>
+									<p:inputText id="loaApproverTxt"
+										value="#{directLOABackingBean.managedBean.approverUser.userName}"
+										size="40" disabled="true" />
+								</c:otherwise>
+							</c:choose>
+							
+					    </td>
+						<td style="margin-top: -3px">
+							<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.req.verification.approval.tooltip']}" />
+						</td>
+					</tr>
+				</table>
+					
 				</td>
 			</tr>
 		</table>
