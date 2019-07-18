@@ -10,7 +10,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -22,6 +21,10 @@ import my.ep.biz.service.pm.authorization.role.IRoleSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
+import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.bpm.service.IBpmSO;
+import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -55,6 +58,7 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -65,7 +69,6 @@ import my.ep.web.managedbean.pm.usergroup.UsergroupManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -583,7 +586,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 
 		List<PmUserGroupUser> pmUserGroupUsers = this.getManagedBean().getUserGroups();
 		
-		//logger.info("[#26037] - calling setUserDetails....start");
+		//logger.info("[#26037] - calling setUserDetails...start");
 		HashMap<Long,Integer> hMap = this.getManagedBean().getHmGroupUserFlagStatDb();
 		for (PmUserGroupUser groupUser : pmUserGroupUsers) {			
 			if(hMap != null && !(hMap.isEmpty())) {
@@ -595,6 +598,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 				setUserDetails(userGroup, groupUser);
 			}
 		}
+		//logger.info("[#26037] - calling setUserDetails...end");
 		
 		changeUserGroupStatus(pmUserGroupUsers);
 		userGroup.setPmUserGroupUsers(pmUserGroupUsers);
@@ -745,12 +749,49 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 				&& DbValueConst.RECORD_STATUS_ACTIVE == userGroup.getRecordStatusFlg().intValue()
 				&& DbValueConst.RECORD_STATUS_SUSPENDED == groupUser.getRecordStatusFlg().intValue()) {
 			//logger.info("[#26037] - check any pending task for user: " + groupUser.getPmUser().getUserName());
-			if (isAnyPendingTaskForUser(groupUser.getPmUser().getLoginId())) {
-				//logger.info("[#26037] - user still has pending task in hand...");
-				// revert it to active
-				userGroup.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-				// hit error and exit
-				throw new EpException(MessageConst.ERROR_770228, new String[] { groupUser.getPmUser().getUserName() });
+			//logger.info("[#26037] - group id: " + userGroup.getUserGroupId());
+			//logger.info("[#26037] - group role: " + userGroup.getRoleCode());
+			//logger.info("[#26037] - check any pending task for user if status set to 0");
+			if (userGroup.getUserGroupId() != null 
+					&& groupUser.getRecordStatusFlg().intValue() == 0) {
+				//logger.info("[#26037] - user set to inactive [0]");
+				FulfilmentReqDTO fulfilmentReqDTO = null;
+				SourcingIntegrationReqDTO sourcingReqDTO = null;
+				
+				if (RoleCode.FL_APPROVER.value().equals(getManagedBean().getUserGroup().getRoleCode())) {
+					if (groupUser.getPmUser().getLoginId() != null) {
+						
+						fulfilmentReqDTO = new FulfilmentReqDTO();						
+							
+						fulfilmentReqDTO.setGroupId(userGroup.getUserGroupId());						
+						//logger.info("[#26037] - calling isAnyPendingTaskForUser...");
+						if(isAnyPendingTaskForUser(groupUser.getPmUser().getLoginId(), fulfilmentReqDTO, null)){
+							//logger.info("[#26037] - user still has pending task in hand...");
+							// revert it to active
+							userGroup.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+							
+							// hit error and exit
+							throw new EpException(MessageConst.ERROR_770228, new String[] { groupUser.getPmUser().getUserName() });
+						}						
+					}
+					
+				} else if (RoleCode.RN_APPROVER.value().equals(getManagedBean().getUserGroup().getRoleCode())) {
+					if (groupUser.getPmUser().getLoginId() != null) {									
+						
+						sourcingReqDTO = new SourcingIntegrationReqDTO();
+						
+						sourcingReqDTO.setUserGroupId(userGroup.getUserGroupId());						
+						//logger.info("[#26037] - calling isAnyPendingTaskForUser...");
+						if(isAnyPendingTaskForUser(groupUser.getPmUser().getLoginId(), null, sourcingReqDTO)){
+							//logger.info("[#26037] - user still has pending task in hand...");
+							// revert it to active
+							userGroup.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+							
+							// hit error and exit
+							throw new EpException(MessageConst.ERROR_770228, new String[] { groupUser.getPmUser().getUserName() });
+						}						
+					}
+				}
 			}
 		}
 	}
@@ -1091,8 +1132,108 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		return anyPendingTask;
 	}
 	
-	private boolean isAnyPendingTaskForUser(String loginId) {		
+	/*private boolean isAnyPendingTaskForUser(String loginId) {		
 		logger.info("isAnyPendingTaskForUser");
 		return PmCommonUtil.isAnyPendingTask(loginId);
+	}*/
+	
+	private boolean isAnyPendingTaskForUser(String loginId, FulfilmentReqDTO fulfilmentReqDTO, SourcingIntegrationReqDTO sourcingReqDTO) {
+		logger.info("isAnyPendingTaskForUser");
+		boolean anyPendingTask = false;
+		IBpmSO bpmSO = null;
+		BpmRequestDTO reqDTO = null;
+		BpmResponseDTO responseDTO = null;
+		IFulfilmentSO fulfilmentSO = null;
+		ISourcingIntegrationSO sourcingIntegrationSO = null;
+		FulfilmentResDTO fulfilmentResDTO = null;
+		SourcingIntegrationResDTO sourcingResDTO = null;
+		
+		try {			
+			if (loginId != null && loginId.length() > 0) {
+				
+				bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+						.getServiceObject(IBpmSO.class);
+				
+				reqDTO = new BpmRequestDTO();
+				logger.info("BPM loginId: " + loginId);				
+				reqDTO.setUserId(loginId);
+				
+				if (RoleCode.RN_APPROVER.value().equals(getManagedBean().getUserGroup().getRoleCode())) {
+					reqDTO.setDocType(ParameterConst.DOCTYPE_REQUEST_NOTE );
+				}
+				
+				// Invoke BPM
+				logger.info("Invoke BPM...");
+				responseDTO = bpmSO.getReassignedItems(reqDTO);
+				
+				if (responseDTO.getWorklistVO() != null) {				
+					logger.info("BPM total: " + responseDTO.getWorklistVO().getTotal());
+					if (responseDTO.getWorklistVO().getTotal() > 0) {						
+						
+						if(responseDTO.getWorklistVO().getWorklistItem() != null 
+								&& responseDTO.getWorklistVO().getWorklistItem().size() > 0) {							
+							
+							if(fulfilmentReqDTO != null) {
+								fulfilmentReqDTO.setDocNumberList(new ArrayList<String>());
+							} else if(sourcingReqDTO != null) {
+								sourcingReqDTO.setDocNumberList(new ArrayList<String>());
+							}
+							
+							for(WorklistItemVO item : responseDTO.getWorklistVO().getWorklistItem()){
+							/*	logger.info("#26037 - ******Doc Items From BPM******");
+								logger.info("#26037 - TaskId******" + item.getTaskId());
+								logger.info("#26037 - TaskNo******" + item.getTaskNumber());
+								logger.info("#26037 - TaskName******" + item.getTaskName());
+								logger.info("#26037 - DocId******" + item.getDocId());
+								logger.info("#26037 - DocStatus******" + item.getDocStatus());
+								logger.info("#26037 - DocType******" + item.getDocType());
+								logger.info("#26037 - DocNumber******" + item.getDocNumber());							
+								logger.info("#26037 - TaskType******" + item.getTaskType());
+								logger.info("\n");
+								logger.info("adding to list..."); */								
+								if(fulfilmentReqDTO != null) {
+									fulfilmentReqDTO.getDocNumberList().add(item.getDocNumber());
+								} else if(sourcingReqDTO != null) {
+									sourcingReqDTO.getDocNumberList().add(item.getDocNumber());
+								}
+							}							
+						
+							if (RoleCode.FL_APPROVER.value().equals(getManagedBean().getUserGroup().getRoleCode())) {
+								fulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance()
+										.getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
+								
+								//logger.info("#26037 - call retrieveDocNumberByGroupId to compare list of Doc Number in BPM");
+								//logger.info("#26037 - against list of Doc Number in FL_FULFILMENT_REQUEST");
+								logger.info("#26037 - calling retrieveDocNumberByGroupId...");
+								fulfilmentResDTO = fulfilmentSO.retrieveDocNumberByGroupId(fulfilmentReqDTO);
+								//logger.info("#26037 - Total record match for Doc Number:" + fulfilmentResDTO.getDocNos().size());
+								if(fulfilmentResDTO.getDocNos() != null 
+										&& fulfilmentResDTO.getDocNos().size() > 0) {
+									anyPendingTask = true;
+								}
+							} else if (RoleCode.RN_APPROVER.value().equals(getManagedBean().getUserGroup().getRoleCode())) {
+								sourcingIntegrationSO = (ISourcingIntegrationSO) BusinessDelegate.getInstance()
+										.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+								
+								//logger.info("#26037 - call retrieveDocNumberByGroupId to compare list of Doc Number in BPM");
+								//logger.info("#26037 - against list of Doc Number in SC_REQUEST_NOTE");
+								logger.info("#26037 - calling retrieveDocNumberByGroupId...");
+								sourcingResDTO = sourcingIntegrationSO.retrieveDocNumberByGroupId(sourcingReqDTO);
+								//logger.info("#26037 - Total record match for Doc Number:" + sourcingResDTO.getDocNumberList().size());
+								if(sourcingResDTO.getDocNumberList() != null 
+										&& sourcingResDTO.getDocNumberList().size() > 0) {
+									anyPendingTask = true;
+								}
+							}							
+						}	
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			bpmSO = null;
+		}
+		return anyPendingTask;
 	}
 }
