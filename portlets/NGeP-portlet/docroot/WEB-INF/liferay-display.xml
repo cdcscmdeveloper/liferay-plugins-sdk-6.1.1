@@ -358,6 +358,7 @@
 		<portlet id="rejectionAcknowledgementLetter"></portlet>
 		<portlet id="supplierTaskReassignment"></portlet>
 		<portlet id="smOnScreenSql"></portlet>
+		<portlet id="travellingTicketingSystemMaintenance"></portlet>
 	</category>
 
 	<category name="category.ep.wp">
