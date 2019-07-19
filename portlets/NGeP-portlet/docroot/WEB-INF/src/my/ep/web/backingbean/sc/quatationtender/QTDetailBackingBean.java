@@ -952,9 +952,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 */
 	public String viewFinalizationSupplierDetails(ScQt scQt, String previousPageUrl) {
 		debugLogger("viewFinalizationSupplierDetails");
-		
+		RoleCode[] justAllowRoleCodes = {RoleCode.BPK_AUDITOR};
 		SupplierFinalizationBackingBean sfbb =  new SupplierFinalizationBackingBean();
-		return sfbb.editSupplierFinalizationDetails(scQt, previousPageUrl, false);
+		return sfbb.editSupplierFinalizationDetails(scQt, previousPageUrl, false, justAllowRoleCodes);
 	}
 	
 	/**
