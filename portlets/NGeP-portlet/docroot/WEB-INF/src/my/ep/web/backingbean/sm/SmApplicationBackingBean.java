@@ -140,6 +140,7 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
+import my.ep.web.backingbean.sm.applicationView.ViewApplHistoryBackingBean;
 import my.ep.web.backingbean.sm.outputmsg.SmOutputMsgBackingBean;
 import my.ep.web.backingbean.sm.questionnaire.QuestionnaireBackingBean;
 import my.ep.web.backingbean.sm.sitevisit.SvoSiteVisitBackingBean;
@@ -170,6 +171,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.poi.hssf.record.PageBreakRecord.Break;
+import org.eclipse.jdt.internal.compiler.ast.BreakStatement;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.StreamedContent;
@@ -196,6 +199,7 @@ public class SmApplicationBackingBean extends
 	private boolean alreadyExecute = false;
 	NumberFormat formatter = new DecimalFormat("#0.00");
 	SmRuleHelper ruleHelper = new SmRuleHelper();
+	ViewApplHistoryBackingBean viewApplHistoryBackingBean;
 
 	/**
 	 * Instantiates a new sm application backing bean.
@@ -889,9 +893,11 @@ public class SmApplicationBackingBean extends
 				
 				String labelNameVal = "";
 				if (rejectedAppl != null) {
-						FacesContext.getCurrentInstance().addMessage("rejectedExist", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-								SmCommonUtil.getMessage("lbl.sm.supplier.promo.rejected",
-										new String[] { labelNameVal })));
+					FacesContext.getCurrentInstance().addMessage("rejectedExist", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							SmCommonUtil.getMessage("lbl.sm.supplier.promo.rejected",
+									new String[] { labelNameVal })));
+					SmCommonUtil.redirectToPage(
+							"/xhtml/sm/payment/portletViewMode.xhtml", "", null, null);
 				}
 
 				// checked whether supplier already MOF, should not allowed to
@@ -6772,42 +6778,32 @@ public class SmApplicationBackingBean extends
 	 * application.
 	 */
 	public void deleteSelectedBanks() {
-		SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
-		SmSupplierBank banks = getManagedBean().getSelectedBank();
-		
-		boolean hasActiveTransactionContractManagement = SmApplicationUtil
-				.hasActiveTransactionForContractManagement(currSupp, banks.getAccountNo());
-		boolean hasActiveTransactionFulfilment = SmApplicationUtil
-				.hasActiveTransactionForFulfilment(currSupp, banks.getAccountNo());
-		
-		if(!hasActiveTransactionContractManagement && !hasActiveTransactionFulfilment){
-			if (getManagedBean().getSelectedBanks().size() > 0) {
-				for (SmSupplierBank bank : getManagedBean().getSelectedBanks()) {
-					// remove cheque signatories
-					bank.getSmChequeSignatories().clear();
-	
-					// remove associate branches
-					if (!SmCommonUtil.isCollectionEmpty(bank
-							.getSmSupplierBranchBanks())) {
-						bank.getSmSupplierBranchBanks().clear();
-					}
-	
-					getManagedBean().getSmAppl().getSmSupplierBanks().remove(bank);
+		if (getManagedBean().getSelectedBanks().size() > 0) {
+			for (SmSupplierBank bank : getManagedBean().getSelectedBanks()) {
+				// remove cheque signatories
+				bank.getSmChequeSignatories().clear();
+
+				// remove associate branches
+				if (!SmCommonUtil.isCollectionEmpty(bank
+						.getSmSupplierBranchBanks())) {
+					bank.getSmSupplierBranchBanks().clear();
 				}
-				saveOrUpdateAppl();
-				getManagedBean().setSelectedSignatoryBankAcct(new SmSupplierBank());
-	
-				if (!EntityHelper.isCollectionEmpty(getManagedBean()
-						.getSelectedSignatoryBankAccts())) {
-					getManagedBean().getSelectedSignatoryBankAccts().removeAll(
-							getManagedBean().getSelectedBanks());
-				}
-				getManagedBean().getSelectedBanks().clear();
-			} else {
-				throw new EpException(MessageConst.ERROR_722534,
-						new String[] { SmCommonUtil.getMessage(
-								"lbl.sm.supplier.bank", null) });
+
+				getManagedBean().getSmAppl().getSmSupplierBanks().remove(bank);
 			}
+			saveOrUpdateAppl();
+			getManagedBean().setSelectedSignatoryBankAcct(new SmSupplierBank());
+
+			if (!EntityHelper.isCollectionEmpty(getManagedBean()
+					.getSelectedSignatoryBankAccts())) {
+				getManagedBean().getSelectedSignatoryBankAccts().removeAll(
+						getManagedBean().getSelectedBanks());
+			}
+			getManagedBean().getSelectedBanks().clear();
+		} else {
+			throw new EpException(MessageConst.ERROR_722534,
+					new String[] { SmCommonUtil.getMessage(
+							"lbl.sm.supplier.bank", null) });
 		}
 	}
 
@@ -11147,7 +11143,20 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void prerenderDirectMofRegistration() {
-
+		// 25157
+		SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
+		SmAppl rejectedAppl = SmApplicationUtil.getLatesRejectedApplicationBySuppIdAndAppType(
+				currSupp.getSupplierId(), "N");
+		
+		String labelNameVal = "";
+		if (rejectedAppl != null) {
+			FacesContext.getCurrentInstance().addMessage("rejectedExist", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+					SmCommonUtil.getMessage("lbl.sm.supplier.promo.rejected",
+							new String[] { labelNameVal })));
+			SmCommonUtil.redirectToPage(
+					"/xhtml/sm/NewMofApplication/mofRegSmUser_BaseWizardPage.xhtml", "", null, null);
+		} else {
+		
 		ISupplierSearchSO supplierSearchSO = null;
 		SmSupplier smSupplier = null;
 		try {
@@ -11170,12 +11179,13 @@ public class SmApplicationBackingBean extends
 				smSupplier.getSmAppl().getSupplierType());
 		String prerenderUrl = proceedToApplication("N");
 		log.info("prerenderUrl: " + prerenderUrl);
-
+		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication()
 				.getNavigationHandler()
 				.handleNavigation(fc, null,
 						"/xhtml/sm/NewMofApplication/mofRegSmUser_BaseWizardPage.xhtml");
+		}
 	}
 
 	/**
@@ -11992,26 +12002,34 @@ public class SmApplicationBackingBean extends
 //	17906	
 	public void itemRowSelectCheckbox(AjaxBehaviorEvent e){
 		SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
-		
-		for(SmSupplierBank bank : getManagedBean().getSelectedBanks()){
-			boolean hasActiveTransactionContractManagement = SmApplicationUtil
-					.hasActiveTransactionForContractManagement(currSupp, bank.getAccountNo());
-			boolean hasActiveTransactionFulfilment = SmApplicationUtil
-					.hasActiveTransactionForFulfilment(currSupp, bank.getAccountNo());		
-		
-			String labelNameVal = "";
-			if (hasActiveTransactionContractManagement) {
-				getManagedBean().setItemDeleteButtonShow(true);
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-						SmCommonUtil.getMessage("lbl.sm.alert.active.transaction",
+		if (getManagedBean().getSelectedBanks().size() > 0) {
+			for(SmSupplierBank bank : getManagedBean().getSelectedBanks()){
+				boolean hasActiveTransactionContractManagement = SmApplicationUtil
+						.hasActiveTransactionForContractManagement(currSupp, bank.getAccountNo());
+				boolean hasActiveTransactionFulfilment = SmApplicationUtil
+						.hasActiveTransactionForFulfilment(currSupp, bank.getAccountNo());				
+				
+				String labelNameVal = "";
+				if (hasActiveTransactionContractManagement) {
+					getManagedBean().setItemDeleteButtonShow(true);
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							SmCommonUtil.getMessage("lbl.sm.alert.active.transaction",
+									new String[] { labelNameVal })));
+				} 
+				
+				if (hasActiveTransactionFulfilment) {
+					getManagedBean().setItemDeleteButtonShow(true);
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+						SmCommonUtil.getMessage("lbl.sm.alert.other.active.transaction",
 								new String[] { labelNameVal })));
-			} 
-			if (hasActiveTransactionFulfilment) {
-				getManagedBean().setItemDeleteButtonShow(true);
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-					SmCommonUtil.getMessage("lbl.sm.alert.other.active.transaction",
-							new String[] { labelNameVal })));
+				} 
+				
+				if (!hasActiveTransactionContractManagement && !hasActiveTransactionFulfilment) {
+					getManagedBean().setItemDeleteButtonShow(false);
+				} 
 			}
+		} else {
+			getManagedBean().setItemDeleteButtonShow(false);
 		}
 	}
 	
@@ -12019,7 +12037,39 @@ public class SmApplicationBackingBean extends
 	 * set true item row select check box
 	 */
 	public void itemRowUnselectCheckbox(AjaxBehaviorEvent e){
-		getManagedBean().setItemDeleteButtonShow(false);
+		SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
+		if (getManagedBean().getSelectedBanks().size() > 0) {
+			for(SmSupplierBank bank : getManagedBean().getSelectedBanks()){
+				boolean hasActiveTransactionContractManagement = SmApplicationUtil
+						.hasActiveTransactionForContractManagement(currSupp, bank.getAccountNo());
+				boolean hasActiveTransactionFulfilment = SmApplicationUtil
+						.hasActiveTransactionForFulfilment(currSupp, bank.getAccountNo());
+				
+				if (!SmCommonUtil.isCollectionEmpty(getManagedBean().getSelectedBanks()) && (
+						hasActiveTransactionContractManagement || hasActiveTransactionFulfilment)){			
+
+					String labelNameVal = "";
+					if (hasActiveTransactionContractManagement) {
+						getManagedBean().setItemDeleteButtonShow(true);
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								SmCommonUtil.getMessage("lbl.sm.alert.active.transaction",
+										new String[] { labelNameVal })));
+					} 
+					
+					if (hasActiveTransactionFulfilment) {
+						getManagedBean().setItemDeleteButtonShow(true);
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							SmCommonUtil.getMessage("lbl.sm.alert.other.active.transaction",
+									new String[] { labelNameVal })));
+					} 
+				} else {
+					getManagedBean().setItemDeleteButtonShow(false);
+				}								
+				
+			}
+		} else {
+			getManagedBean().setItemDeleteButtonShow(false);
+		}	
 	}
 	
 	public void assignSelBankWithPendingTransaction(SmSupplierBank shareBankBean) {
