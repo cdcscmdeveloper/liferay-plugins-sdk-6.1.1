@@ -1945,6 +1945,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 
 	/**
+	 * original default
 	 * To get BpmTask Details.
 	 * 
 	 * @param clazz
@@ -1953,18 +1954,25 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	@SuppressWarnings("unchecked")
 	protected <BPM_DATA_TYPE> BPM_DATA_TYPE getBpmTaskDetails(
 			Class<BPM_DATA_TYPE> clazz, String[] additionalButtons) {
-		return getBpmTaskDetails(clazz, additionalButtons, null);
+		return getBpmTaskDetails(clazz, additionalButtons, null, null);
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	protected <BPM_DATA_TYPE> BPM_DATA_TYPE getBpmTaskDetails(
+			Class<BPM_DATA_TYPE> clazz, String[] additionalButtons, String theTaskId) {
+		return getBpmTaskDetails(clazz, additionalButtons, theTaskId, null);
 	}
 	
 	/**
 	 * To get BpmTask Details.
 	 * 
-	 * @param clazz
+	 * @param clazz, additionalButtons(optional), theTaskId(optional), theLoginId(optional)
 	 * @return Object payLoadInstance
 	 */
 	@SuppressWarnings("unchecked")
 	protected <BPM_DATA_TYPE> BPM_DATA_TYPE getBpmTaskDetails(
-			Class<BPM_DATA_TYPE> clazz, String[] additionalButtons, String theTaskId) {
+			Class<BPM_DATA_TYPE> clazz, String[] additionalButtons, String theTaskId, String theLoginId) {
 		String taskId = null;
 		FacesScopes facesScopes = new FacesScopes();
 		if(StringUtils.isBlank(theTaskId)){			
@@ -1987,7 +1995,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					.getServiceObject(IBpmSO.class);
 
 			BpmRequestDTO reqDTO = new BpmRequestDTO();
-			reqDTO.setCtxToken(facesScopes.getBPMAuthenticationCtxToken());
+			if(theLoginId!=null&&!StringUtils.isBlank(theLoginId)){
+				reqDTO.setCtxToken(bpmSO.authenticate(theLoginId));
+			}
+			else{
+				reqDTO.setCtxToken(facesScopes.getBPMAuthenticationCtxToken());
+			}
 			reqDTO.setTaskId(taskId);
 
 			BpmResponseDTO resDTO = bpmSO.getTaskDetails(reqDTO);
