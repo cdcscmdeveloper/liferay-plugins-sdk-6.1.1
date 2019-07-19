@@ -137,6 +137,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		} else {
 			validate();
 			executeDecision();
+			
 			// redirectToNonExistNewAdminPage();
 		}
 	}
@@ -175,6 +176,34 @@ public class ForceReplaceSuppAdminBackingBean extends
 				.reassignSupplierAdmin(getReqDTO());
 		redirectToSuccessPage(resDto);
 	}
+	
+	private void checkingAppl() {
+
+		if (!getManagedBean().getAccType().equals(
+				SupplierManagementConst.ACC_GOVT_SELLER)) {
+
+			if (getManagedBean().getSmSupplier().getRecordStatusFlg()
+					.equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)) {
+				throw new EpException(MessageConst.ERROR_722676);
+			}
+
+			SmPersonnel admin = (SmPersonnel) EntityHelper
+					.getEntityBySinglePropertyFromList(
+							RoleCode.SUPPLIER_TEMP.value(), getManagedBean()
+									.getSmSupplier().getSmAppl()
+									.getSmPersonnels(), "epRole");
+
+			if (admin != null) {
+				if (admin.getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ
+						|| admin.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING) {
+					throw new EpException(MessageConst.ERROR_722676);
+				}
+			}
+
+		}
+
+	}
+	
 
 	/**
 	 * Redirect back to Force Replace Admin first page from add new personnel
@@ -256,6 +285,9 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * Validate before proceed to force replace admin
 	 */
 	private void validate() {
+		
+		//#25969
+		checkingAppl();
 
 		// validate ic length
 		ParameterReqDTO paramReqDTO = new ParameterReqDTO();
@@ -291,15 +323,9 @@ public class ForceReplaceSuppAdminBackingBean extends
 		SmAppl activeAppl = SmServiceLookup.getMofRegistrationSO()
 				.retrieveActiveSmApplBySupp(mofReqDTO).getSmAppl();
 
-		if (activeAppl != null && activeAppl.getSmPersonnels() != null) {
-			for (SmPersonnel per : activeAppl.getSmPersonnels()) {
-				if (per.getIdentificationNo().equals(
-						getManagedBean().getReactivateBasic()
-								.getNewIdentificationNo())) {
-					throw new EpException(MessageConst.ERROR_722669,
-							new String[] { activeAppl.getApplNo() });
-				}
-			}
+		if (activeAppl != null) {
+			throw new EpException(MessageConst.ERROR_722669,
+					new String[] { activeAppl.getApplNo() });
 		}
 
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
