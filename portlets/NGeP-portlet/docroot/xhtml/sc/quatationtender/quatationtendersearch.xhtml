@@ -62,7 +62,7 @@
 				
 				
 				<!-- QT Data Table -->
-				<div id="searchQTDiv" style="display:none">
+				<div id="searchQTDiv" style="display:block">
 				<p:dataTable id="searchQTs"
 					value="#{dataModel}" var="listItem"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -158,7 +158,7 @@
 							style="margin-right:20px;" partialSubmit="true" process="@this"
 							rendered="#{qTDetailBB.managedSearchBeanDocumentTypeIsSuppFinal and scQt.procurementMode.parameterCode ne ParameterConst.procurementModeDirectNego and qTDetailBB.isAllowQTViewSupplierFinalization(scQt)}">
 							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" styleClass="tasklist_title1"
-								title="#{lbl['lbl.sc.qt.search.view.tooltip']}" />
+								title="#{lbl['lbl.sc.qt.search.view.supplier.finalization.tooltip']}" />
 						</p:commandLink>  <!-- ***25201#35 -->
 						<p:commandLink id="publishQTIcon" action="#{qTDetailBB.publishQT(scQt)}"
 							style="margin-right:20px;" 
@@ -257,14 +257,14 @@
 							<p:commandLink action="#{qTDetailBB.viewSupplierProposalDetailsGen(listItem, view.viewId)}"
 								style="margin-right:20px;"  partialSubmit="true" process="@this">
 								<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" styleClass="tasklist_title1"
-									title="#{lbl['lbl.sc.qt.search.view.tooltip']}" />
+									title="#{lbl['lbl.sc.qt.search.view.loi.tooltip']}" />
 							</p:commandLink>
 						</c:when>
 						<c:when test="#{listType eq 'loaList'}">
 							<p:commandLink action="#{qTDetailBB.viewSupplierProposalDetailsGen(listItem, view.viewId)}"
 								style="margin-right:20px;"  partialSubmit="true" process="@this">
 								<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" styleClass="tasklist_title1"
-									title="#{lbl['lbl.sc.qt.search.view.tooltip']}" />
+									title="#{lbl['lbl.sc.qt.search.view.loa.tooltip']}" />
 							</p:commandLink>
 						</c:when>
 						<c:otherwise>
