@@ -542,9 +542,9 @@
 															value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 														<p:ajax partialSubmit="true" process="@this" update="menuTab" />
 													</p:selectOneRadio>
+													<p:message id="bondReqMsg" for="bondReq" display="icon" />
 												</c:otherwise>
 											</c:choose>
-											<p:message id="bondReqMsg" for="bondReq" display="icon" />
 										</c:when>
 										<c:otherwise>
 											<c:choose>
@@ -816,7 +816,8 @@
 												<c:when test="#{directLOABackingBean.isPk7Periodic()}">
 													<p:selectOneRadio id="agreementReqPk7Per" styleClass="commonLabel"
 														value="#{directLOABackingBean.managedBean.agreementReq}"
-														label="#{lbl['lbl.sc.loiloa.loa.req.agree']}">
+														label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
+														required="true">
 														<f:selectItems
 															value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 													</p:selectOneRadio> 
@@ -828,9 +829,9 @@
 														<f:selectItems
 															value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 													</p:selectOneRadio> 
+													<p:message id="agreementReqMsg" for="agreementReq" display="icon" />
 												</c:otherwise>
 											</c:choose>
-										<p:message id="agreementReqMsg" for="agreementReq" display="icon" />
 									</c:when>
 									<c:otherwise>
 										<c:choose>
@@ -839,7 +840,8 @@
 														<c:when test="#{directLOABackingBean.isPk7Periodic()}">
 															<p:selectOneRadio id="agreementReqPk7" styleClass="commonLabel"
 																value="#{directLOABackingBean.managedBean.agreementReq}"
-																label="#{lbl['lbl.sc.loiloa.loa.req.agree']}">
+																label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
+																required="true">
 																<f:selectItems
 																	value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 															</p:selectOneRadio> 
