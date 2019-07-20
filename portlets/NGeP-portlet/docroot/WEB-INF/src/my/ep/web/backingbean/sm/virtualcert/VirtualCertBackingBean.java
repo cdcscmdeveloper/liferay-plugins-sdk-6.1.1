@@ -71,6 +71,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 				retrieveCertInfo(supp.getSupplierId());
 				SLAUtils.getInstance().logSLAInfo("SM","SR",
 						"VirtualCertBackingBean.viewVirtualCert", startTime);
+				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, XHTML_VIRTUAL_DET);
 			}
 		}else{
 			retrieveCertInfo(supp.getSupplierId());
