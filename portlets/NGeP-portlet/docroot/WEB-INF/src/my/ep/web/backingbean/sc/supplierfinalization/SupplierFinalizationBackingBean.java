@@ -11,7 +11,6 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -36,10 +35,10 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
+import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
-import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
@@ -56,7 +55,6 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
-import my.ep.constants.BpmConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
@@ -66,6 +64,8 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.reason.ReasonResDTO;
+import my.ep.dto.sc.actor.ScActorReqDTO;
+import my.ep.dto.sc.actor.ScActorResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.MeetingReqDTO;
@@ -125,7 +125,6 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
-import my.ep.web.backingbean.bpm.tasksearch.BPMTaskSearchBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -6536,40 +6535,129 @@ public class SupplierFinalizationBackingBean extends
 	
 	
 	// ***25201#35 
-	public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl, boolean editable){
+	/**
+	 * 
+	 * @param scQt
+	 * @param previousPageUrl
+	 * @param editable
+	 * @param justAllowTheseRoles - array of RoleCode to allow view the task
+	 * @return
+	 */
+	public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl, boolean editable, RoleCode[] justAllowTheseRoles){
 		
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
 		String bpmUserLogin = EpPropertiesUtils.getInstance().getProperty(
 				EpPropertiesConst.BPM_PRINCIPAL);
-		
+				
 		Object token = getBpmSO().authenticate(bpmUserLogin);
 		reqDTO.setCtxToken(token);
 		reqDTO.setDocNumber(scQt.getQtNo());
 		reqDTO.setDocType(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION);
 		BpmResponseDTO resDTO = getBpmSO().getTasksByDocNumber(reqDTO);
 		
+		List<String> loginIds = new ArrayList<String>();
 		String loginId = getFacesScopesGen().getUserSessionBean().getLoginId();
+		loginIds.add(loginId);
+		
+		long userId = getFacesScopesGen().getUserSessionBean().getUserId();
+				
 		
 		String taskId = null;
+		String latestAssignee = null;
+		String assignee = null;
+		SCEvaluationDataType dataType = null;
 		if(resDTO != null && resDTO.getWorklistVO() != null && !CollectionUtils.isEmpty(resDTO.getWorklistVO().getWorklistItem())){
 			List<WorklistItemVO> tl = resDTO.getWorklistVO().getWorklistItem();
 			
 			Collections.sort(tl, new WorklistItemVOComparator.SortByUpdateDateAscComparator());
+			List<WorklistItemVO> sfl = new ArrayList<WorklistItemVO>();
 			for(WorklistItemVO w: tl){
 				if(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION.equalsIgnoreCase(w.getDocType())){
-					if(CollectionUtils.containsAny(w.getAssignees(), Arrays.asList(loginId))){
+					if(CollectionUtils.containsAny(w.getAssignees(), loginIds)){
 						taskId = w.getTaskId();
+						assignee=loginIds.get(0);
+					}
+					sfl.add(w);
+				}
+			}
+			
+			IScActorSO scActorSO = null;
+			boolean isActor = false;
+			try {
+				scActorSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IScActorSO.class);
+				ScActorReqDTO scActorReqDTO = new ScActorReqDTO();
+				scActorReqDTO.setDocTypes(Arrays.asList(ParameterConst.DOCTYPE_QUOTATION, ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION));
+				scActorReqDTO.setDocId(scQt.getQtId());
+				scActorReqDTO.setUserId(userId);
+				ScActorResDTO scActorResDTO = scActorSO.retreiveActorByDocTypesDocIdUserId(scActorReqDTO);
+				if(scActorResDTO.isSuccessful()){
+					if(scActorResDTO.getScActorList()!=null && !CollectionUtils.isEmpty(scActorResDTO.getScActorList())){
+						isActor = true;
 					}
 				}
-			}			
+				
+
+			} finally {
+				scActorSO = null;
+			}		
+			
+			if( isQTMaintenanceScreen() ){
+				int chk = -1;
+				for(int i = 0; i<2 ; i++){ //2 types of checking
+					//isActor but not in assignee					 
+					if(i==0 && isActor && StringUtils.isBlank(taskId)){
+						chk = i;
+						log.info("chk : "+ chk);
+					}
+					//bpk auditor only. then, pass if login id != assignee
+					if(i==1 && justAllowTheseRoles != null && justAllowTheseRoles.length > 0 
+							&& userHasRole(justAllowTheseRoles) 
+							&& !CollectionUtils.isEmpty(sfl)
+							&& ( (StringUtils.isBlank(taskId) && StringUtils.isBlank(assignee)) || (!StringUtils.isBlank(taskId) && !StringUtils.isBlank(assignee) && !assignee.equalsIgnoreCase(loginId)))
+							){
+						chk = i;
+						log.info("chk : "+chk);
+					}
+					
+					if(chk == i){
+						Collections.sort(sfl, new WorklistItemVOComparator.SortByUpdateDateDescComparator());
+						for(WorklistItemVO w: sfl){
+							if(!CollectionUtils.isEmpty(w.getAssignees())){
+								for(String a : w.getAssignees()){
+									if(!StringUtils.isEmpty(a)){
+										latestAssignee = w.getAssignees().get(0);
+									}
+								}
+								if(latestAssignee != null){
+									taskId = w.getTaskId();
+								}
+								try{
+									dataType = getBpmTaskDetails(SCEvaluationDataType.class, null, taskId, !StringUtils.isBlank(latestAssignee)?latestAssignee:null);
+									break;
+								}catch(ClassCastException ex){
+									continue;
+								}
+							}
+						}
+						if(dataType != null){
+							break;
+						}
+					}	
+				}
+			}		
+			// TODO error flash message if user is not allowed to view
 		}
+		
+		
 		
 		if(isQTMaintenanceScreen() && !StringUtils.isBlank(taskId)){
 			getManagedBean().setActiveIndex(0);
 			
-			
+			if(dataType == null){
+				dataType = getBpmTaskDetails(SCEvaluationDataType.class, null, taskId, !StringUtils.isBlank(latestAssignee)?latestAssignee:null);
+			}
 			//as in preRenderView()
-			SCEvaluationDataType dataType = getBpmTaskDetails(SCEvaluationDataType.class, null, taskId);
 			Long qtId = Long.valueOf(dataType.getQtId());
 			getManagedBean().setPayLoad(dataType);
 			getManagedBean().setActiveIndex(0);

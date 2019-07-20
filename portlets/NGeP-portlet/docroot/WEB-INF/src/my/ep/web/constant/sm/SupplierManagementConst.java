@@ -434,14 +434,12 @@ public class SupplierManagementConst {
 	public static final String PM_STATUS_REJECTED_BY_APPROVER = "20113";
 	public static final String PM_STATUS_APPROVED_BY_APPROVER = "20113";
 	public static final String PM_STATUS_REJECTED_BY_SYSTEM = "20118";
-	public static final String PM_STATUS_REJECTED_BY_SYSTEM_PAYMENT = "20119";
-	public static final String PM_STATUS_REJECTED_BY_SYSTEM_PROCESSING_FEE = "20120";
 	public static final String PM_STATUS_PENDING_PAYMENT_PROCESSING_FEE = "20114";
 	public static final String PM_STATUS_PENDING_CERTIFCATE_GENERATION = "20198";
 	public static final String PM_STATUS_REGISTERED = "20199";
 	public static final String PM_STATUS_PENDING_APPLICATION_REJECTION = "20115";
 	public static final String PM_STATUS_DELETE_COMPANY = "20188";
-	public static final int PM_STATUS_PO_REVIEW = 20104;
+	public static final long PM_STATUS_PO_REVIEW = 20104;
 	public static final long PM_STATUS_PO_ESCALTED_TO_APPROVER = 20108;
 	public static final long PM_STATUS_PO_REJECTED_APPLICATION = 20112;
 	public static final long PM_STATUS_APPROVER_REJECTED_APPLICATION = 20113;
@@ -1153,9 +1151,5 @@ public class SupplierManagementConst {
 
 	public String getSmApplCategoryTypeSpecial() {
 		return SM_APPL_CATEGORY_TYPE_SPECIAL;
-	}
-	
-	public int getPM_STATUS_PO_REVIEW() {
-		return PM_STATUS_PO_REVIEW;
 	}
 }
