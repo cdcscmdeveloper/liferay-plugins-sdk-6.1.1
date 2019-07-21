@@ -1059,8 +1059,9 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		softCertStatus = currentPersonnel.getSoftcertFlg();
 		boolean isG2G = supplier.getBusinessType().
 				equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER) ? true : false;
-		
-		
+		boolean isWithFederal = currentPersonnel.getSmAppl().getSmCompanyBasic().isWithFederal();
+		boolean isMigratedFirstLogin = currentPersonnel.getSmAppl().getSmCompanyBasic().getRevNo() == 2;
+
 		if(!isPublishedCatalogue(supplier.getSupplierId()) && !isG2G){
 			if(getCmSupplierItems(supplier.getSupplierId()).size() > 0){
 				path = CATALOGUE_MAINT;
@@ -1068,6 +1069,12 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				path = CATALOGUE_UPLOAD_PATH;
 			}
 			getManagedBean().setFlowStatus(1);
+			if(validSupplierTemp()){
+				if(softCertStatus == SupplierManagementConst.SOFT_CERT_PENDING_REQ && !isWithFederal && isMigratedFirstLogin){
+					log.info(">>>CHange ROle for SUpplier Temp<<");
+					changeRoleForSupplierTemp(currentPersonnel.getPersonnelId(),supplier);
+				}				
+			}
 		}else{
 			if(checkPendingSoftCertRequest(supplier.getSupplierId())){
 				path = SOFT_CERT_PATH;
