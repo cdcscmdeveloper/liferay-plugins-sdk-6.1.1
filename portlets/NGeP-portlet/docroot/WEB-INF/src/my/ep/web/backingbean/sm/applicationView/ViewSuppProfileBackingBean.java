@@ -31,6 +31,7 @@ public class ViewSuppProfileBackingBean extends
 	public void preRenderViewSupplierProfile() {
 		renewSesionObject();
 		initLogin();
+		initLoginUserZone();
 		getManagedBean().setViewSupplierProfile(true);
 		getManagedBean().setReviewApplicationExist(false);
 		getManagedBean().setViewApplicationHistory(false);
