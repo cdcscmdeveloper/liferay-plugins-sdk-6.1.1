@@ -49,6 +49,7 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.ContractBaseBackingBean;
+import my.ep.web.backingbean.ct.ContractItemSearchBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.ct.suspension.SuspensionManagedBean;
 import my.ep.web.util.DateUtils;
@@ -318,6 +319,19 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public String backAction() throws PortalException, SystemException, IOException {
+		SuspensionBackingBean  supoendBB= new SuspensionBackingBean();
+		supoendBB.getManagedBean().setItemcode(null);
+		supoendBB.getManagedBean().setItemstatus(null);
+		supoendBB.getManagedBean().setItemtype(null);
+		supoendBB.getManagedBean().setUOM(null);
+		supoendBB.getManagedBean().setSkuno(null);
+		supoendBB.getManagedBean().setTypeofgoods(null);
+	
+		ContractBackingBean ccBB = new ContractBackingBean();
+		ctBB.getManagedBean().setSelectedItem(null);
+		ctBB.getManagedBean().setServiceselectedItem(null);
+		
+		supoendBB.getManagedBean().getSuspensionProductListingPagingDataModel().resetData();
 		if (!getManagedBean().isViewOnly()) {
 			return CONTRACT_MAINT_PAGE;
 		} else { // view suspension from notification
@@ -780,6 +794,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	 */
 	public void resetSearchItemAction() {
 		//getManagedBean().getContractItemList().clear();
+		ContractBackingBean ccBB = new ContractBackingBean();
 		getManagedBean().setSearchItemString("");
 		getManagedBean().setItemcode("");
 		getManagedBean().setItemstatus(null);
@@ -787,11 +802,15 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		getManagedBean().setUOM("");
 		getManagedBean().setSkuno("");
 		getManagedBean().setTypeofgoods(null);
+		ccBB.getManagedBean().setSelectedItem(null);
+		ccBB.getManagedBean().setServiceselectedItem(null);
+		ccBB.getManagedBean().setCtItemServiceList(null);
 		if(getManagedBean().isReadOnly()) {
-			getManagedBean().getSuspensionProductListingPagingDataModel().reloadData();
+			getManagedBean().getSuspensionProductListingPagingDataModel().resetData();
 			//getManagedBean().getSuspensionProductListingPagingDataModel().reloadData();
 		} else {
-			getManagedBean().resetSuspensionProductListingPagingDataModel();
+			//getManagedBean().resetSuspensionProductListingPagingDataModel();
+			getManagedBean().getSuspensionProductListingPagingDataModel().resetData();
 			
 		}
 
