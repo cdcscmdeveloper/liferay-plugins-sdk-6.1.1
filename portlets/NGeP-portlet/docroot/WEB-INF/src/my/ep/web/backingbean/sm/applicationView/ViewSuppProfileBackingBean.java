@@ -31,7 +31,6 @@ public class ViewSuppProfileBackingBean extends
 	public void preRenderViewSupplierProfile() {
 		renewSesionObject();
 		initLogin();
-		initLoginUserZone();
 		getManagedBean().setViewSupplierProfile(true);
 		getManagedBean().setReviewApplicationExist(false);
 		getManagedBean().setViewApplicationHistory(false);
@@ -60,6 +59,7 @@ public class ViewSuppProfileBackingBean extends
 			setTabParam();
 			getManagedBean().setRenderedBackButton(false);
 		} else {
+			initLoginUserZone();
 			getManagedBean().setRenderedBackButton(true);
 			String supplierIdParam = getSupplierIdParam();
 			getManagedBean().setRegStatusDescList(
