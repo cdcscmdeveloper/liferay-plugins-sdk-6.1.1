@@ -74,7 +74,7 @@
 						<p:outputLabel value="#{lbl['lbl.sc.qt.proposal.validity.extension.response.due.date']}" />
 					</td>
 					<td>
-						<p:inputText value="#{scQt.closingDate}" style="width:200px;" disabled="true" >
+						<p:inputText value="#{qTDetailBB.getExtensionResponseDueDate(scQt.qtId)}" style="width:200px;" disabled="true" >
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 						</p:inputText>
 					</td>
