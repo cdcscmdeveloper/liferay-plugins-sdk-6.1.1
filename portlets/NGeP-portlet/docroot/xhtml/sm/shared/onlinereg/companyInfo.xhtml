@@ -239,7 +239,7 @@
 					<p:outputLabel value="#{lbl['lbl.sm.estdate']}" />
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
-				<td class="tdContent"><p:calendar id="estDateCalId"
+				<td class="tdContent"><p:calendar disabled="#{isReadOnly}" id="estDateCalId"
 						navigator="true" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.estdate']}"
 						value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.establishDate}"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
@@ -448,7 +448,7 @@
 						locationName="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.companyName}"
 						latitude="#{registrationBackingBean.managedBean.smBusinessAdd.mapLatitude}"
 						longitude="#{registrationBackingBean.managedBean.smBusinessAdd.mapLongitude}"
-						disabled="#{registrationBackingBean.gmapDisabled}" />			
+						disabled="#{registrationBackingBean.gmapDisabled || isReadOnly}" />			
 				</td>
 			</tr>
 						
