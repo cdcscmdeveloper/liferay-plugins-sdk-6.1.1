@@ -54,7 +54,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 public class SuspensionManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
-
+	private  boolean readOnly=true;
 	private String taskName;
 	private String fileDirectory;
 	private String textBeforeSign;
@@ -82,13 +82,14 @@ public class SuspensionManagedBean extends BaseManagedBean {
 	private HashMap<Long, CtContractItem> itemMap;	
 	private DualListModel<PmUser> approverModel;
 	private Map<Long, PmUser> userMap;
-	
+
 private IPagingDataModel<CtContractItem> SuspensionProductListingPagingDataModel = new SuspensionProductListingPagingDataModel();
 
-	
+     
 	private class SuspensionProductListingPagingDataModel extends PagingDataModel<CtContractItem> {
 		
 		private static final long serialVersionUID = 1L;
+		
 		private  Logger log = EpLogger.getLogger(SuspensionProductListingPagingDataModel.class);
 		public SuspensionProductListingPagingDataModel() {
 			super("suspensionProdDataModel", isReadOnly());
@@ -105,7 +106,7 @@ private IPagingDataModel<CtContractItem> SuspensionProductListingPagingDataModel
 				Long contId=contractBb.getManagedBean().getContractVer().getCtContract().getContractId();
 				Long contractVerId=contractBb.getManagedBean().getContractVer().getContractVerId();
 				log.info("**SuspensionProductListingPagingDataModel******ContractID **--> : "+contId);
-				log.info("**SuspensionProductListingPagingDataModel******ContractID **--> : "+contractVerId);
+				log.info("**SuspensionProductListingPagingDataModel******ContractVerID **--> : "+contractVerId);
 				
 			  if(contId!=null ) {
 					//log.info("****In the SuspensionProductListingPagingDataModel IPagingDataModel getItemname******"+contId);
@@ -539,6 +540,13 @@ private IPagingDataModel<CtContractItem> SuspensionProductListingPagingDataModel
 
 	public String getTypeofgoods() {
 		return typeofgoods;
+	}
+	public boolean isReadOnly() {
+		return readOnly;
+	}
+
+	public void setReadOnly(boolean readOnly) {
+		this.readOnly = readOnly;
 	}
 
 	public void setTypeofgoods(String typeofgoods) {
