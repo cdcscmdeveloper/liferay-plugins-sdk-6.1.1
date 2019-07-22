@@ -123,6 +123,7 @@ public class ViewApplHistoryBackingBean extends
 		getManagedBean().setRenderedBackButton(true);
 
 		if (!getManagedBean().isSupplierUser()) {
+			initLoginUserZone();
 			String supplierIdParam = getSupplierIdParam();
 			getManagedBean().setRegStatusDescList(
 					retrieveRegistrationStatusList());

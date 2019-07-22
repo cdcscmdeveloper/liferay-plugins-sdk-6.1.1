@@ -254,6 +254,16 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	private static final int REFORM_OC = 2;
 	private static final int REFORM_TEC = 4;
 	private static final int REFORM_FEC = 8;
+	
+	
+	//25201#52
+	private RoleCode[] deskOfficerRoleCodes = {
+			RoleCode.DESK_OFFICER, 
+			RoleCode.PBB_SECRETARY, 
+			RoleCode.PBA_SECRETARY,
+			RoleCode.QCA_SECRETARY,
+			RoleCode.QCB_SECRETARY,
+			RoleCode.FPB_SECRETARY};
 
 	/**
 	 * Instantiates a new QT detail backing bean.
@@ -6843,7 +6853,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * @return
 	 */
 	public boolean getManagedSearchBeanDocTypeIsLOIAndPrefixLIAndIsDO(){
-		return getManagedSearchBeanDocumentTypeIsLOI() && checkSearchBeanDocTypePrefix(ParameterConst.DOCTYPE_LETTER_OF_INTENT) && isDeskOfficer();
+		return getManagedSearchBeanDocumentTypeIsLOI() && checkSearchBeanDocTypePrefix(ParameterConst.DOCTYPE_LETTER_OF_INTENT) && userHasRole(deskOfficerRoleCodes);
 	}
 	
 	
@@ -6852,7 +6862,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * @return
 	 */
 	public boolean getManagedSearchBeanDocTypeIsLOAAndPrefixLAAndIsDO(){
-		return getManagedSearchBeanDocumentTypeIsLOA() && checkSearchBeanDocTypePrefix(ParameterConst.DOCTYPE_LETTER_OF_AWARD) && isDeskOfficer();
+		return getManagedSearchBeanDocumentTypeIsLOA() && checkSearchBeanDocTypePrefix(ParameterConst.DOCTYPE_LETTER_OF_AWARD) && userHasRole(deskOfficerRoleCodes);
 	}
 	
 	private boolean checkSearchBeanDocTypePrefix(String prefix){

@@ -59,6 +59,7 @@ public class ViewSuppProfileBackingBean extends
 			setTabParam();
 			getManagedBean().setRenderedBackButton(false);
 		} else {
+			initLoginUserZone();
 			getManagedBean().setRenderedBackButton(true);
 			String supplierIdParam = getSupplierIdParam();
 			getManagedBean().setRegStatusDescList(

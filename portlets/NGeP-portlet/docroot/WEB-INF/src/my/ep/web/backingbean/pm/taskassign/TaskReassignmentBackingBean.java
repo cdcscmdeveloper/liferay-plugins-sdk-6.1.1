@@ -287,6 +287,16 @@ public class TaskReassignmentBackingBean extends
 					.setDocType(null);
 			this.getManagedBean().getTaskAssignmentSearchBean()
 				.setSearched(false);
+			this.getManagedBean().getTaskAssignmentSearchBean().setDocNo("");
+			
+			if (this.getManagedBean().getTaskAssignmentSearchBean().getOrgProfile() != null && 
+					this.getManagedBean().getTaskAssignmentSearchBean().getOrgProfile()
+					.getOrgName() != null) {
+				this.getManagedBean().getTaskAssignmentSearchBean().setOrgProfile(new PmOrgProfile());
+				this.getManagedBean().getTaskAssignmentSearchBean().getOrgProfile()
+				.setOrgName("");
+			}
+			
 
 			if (this.getManagedBean().getTaskAssignmentSearchBean()
 					.getOrgType().getParameterId() != null) {
@@ -301,6 +311,7 @@ public class TaskReassignmentBackingBean extends
 			}
 			this.getManagedBean().setTaskLazy(false);
 			resetAllTaskList();
+			resetReassigneeList();
 		}
 	}
 
@@ -503,10 +514,33 @@ public class TaskReassignmentBackingBean extends
 		} else {
 			bpmResDTO = SmServiceLookup.getBpmSO().getTasks(bpmReqDTO);
 			
+			if (!bpmResDTO.isSuccessful()) {
+				throw new EpException(MessageConst.ERROR_770100);
+			}
+			
+			PmUser user = new PmUser();
+			PmTaskReassignmentVO taskDetail = new PmTaskReassignmentVO();
+			
 			if (bpmResDTO.getWorklistVO() != null) {
-				for (WorklistItemVO item : bpmResDTO.getWorklistVO().getWorklistItem()) {
-					for (String itm : item.getAssignees()) {
-						users.add(PmCommonUtil.retrieveUserByLoginId(itm));
+				Long profileId = getManagedBean().getTaskAssignmentSearchBean().getOrgProfile() != null ?
+						getManagedBean().getTaskAssignmentSearchBean().getOrgProfile().getOrgProfileId() :
+							getManagedBean().getCurrentActiveOrg().getOrgProfileId();
+				Integer activeRecordStatusFlg = new Integer(1);
+				
+				for (WorklistItemVO task : bpmResDTO.getWorklistVO().getWorklistItem()) {
+					for (String loginId : task.getAssignees()) {
+						user = PmCommonUtil.retrieveUserByLoginId(loginId);
+						taskDetail = retrieveSourcingTaskReassignmentDetail(task);
+						
+						// Ensures only users within the selected Organization will be listed
+						if (taskDetail != null && taskDetail.getOrgProfileId() != null) {
+							if ( ((user.getRecordStatusFlg().equals(activeRecordStatusFlg)) && 
+									(user.getRecordStatusFlg().equals(this.getManagedBean().getTaskAssignmentSearchBean()
+									.getOrgProfile().getRecordStatusFlg()))) &&
+									(taskDetail.getOrgProfileId().equals(profileId)) ) {
+								users.add(user);
+							}
+						}
 					}
 				}
 			}
@@ -689,6 +723,7 @@ public class TaskReassignmentBackingBean extends
 			throw new EpException(MessageConst.ERROR_770107);
 		}
 		if (this.getManagedBean().getTaskAssignmentSearchBean().getDocNo().isEmpty()) {
+			resetReassigneeList(); //If the Reset button is not clicked when performing the next search
 			searchTaskAssign();
 		} else {
 			resetReassigneeList();
