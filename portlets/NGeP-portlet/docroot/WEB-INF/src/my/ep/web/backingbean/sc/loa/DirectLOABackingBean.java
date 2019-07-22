@@ -1175,7 +1175,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					}
 				}
 			}
-			}
 
 			// validate deduction payamment for Others
 			validateDeductionPaymentDtls(scLoa);
