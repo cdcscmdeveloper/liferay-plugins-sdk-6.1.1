@@ -13,6 +13,10 @@ public abstract class LOABaseManagedBean extends BaseManagedBean {
 	private PmOrgProfile selectedPtj;
 
 	private ScLoa scLoa;
+	
+	private String bondReqSelectedVal;
+	
+	private String agreemetSelectedVal;
 
 	public PmParameter getSelectedOrgType() {
 		if (this.selectedOrgType == null) {
@@ -40,5 +44,35 @@ public abstract class LOABaseManagedBean extends BaseManagedBean {
 	public void setScLoa(ScLoa scLoa) {
 		this.scLoa = scLoa;
 	}
+	
 
+	/**
+	 * @return the bondReqSelectedVal
+	 */
+	public String getBondReqSelectedVal() {
+		return bondReqSelectedVal;
+	}
+
+	/**
+	 * @param bondReqSelectedVal
+	 *            the bondReqSelectedVal to set
+	 */
+	public void setBondReqSelectedVal(String bondReqSelectedVal) {
+		this.bondReqSelectedVal = bondReqSelectedVal;
+	}
+	
+	/**
+	 * @return the agreemetSelectedVal
+	 */
+	public String getAgreemetSelectedVal() {
+		return agreemetSelectedVal;
+	}
+
+	/**
+	 * @param agreemetSelectedVal
+	 *            the agreemetSelectedVal to set
+	 */
+	public void setAgreemetSelectedVal(String agreemetSelectedVal) {
+		this.agreemetSelectedVal = agreemetSelectedVal;
+	}
 }
