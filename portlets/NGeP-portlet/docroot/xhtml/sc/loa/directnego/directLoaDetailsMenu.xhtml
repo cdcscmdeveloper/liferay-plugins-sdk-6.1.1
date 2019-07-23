@@ -310,7 +310,7 @@
 				
 				<td width="160px">
 					<h:panelGroup id="reasonDescPG">
-						<c:if test="#{directLOABackingBean.isPbDropDown()}">
+						<c:if test="#{directLOABackingBean.isPbDropDown() || directLOABackingBean.isPk7Periodic()}">
 								<p:outputLabel value="#{lbl['lbl.sc.reason']}" /> <p:outputLabel value="*"
 								styleClass="mandatory" />
 						</c:if>
@@ -319,7 +319,7 @@
 				
 				<td>
 					<h:panelGroup id="reasonPG">
-						<c:if test="#{directLOABackingBean.isPbDropDown()}">
+						<c:if test="#{directLOABackingBean.isPbDropDown() || directLOABackingBean.isPk7Periodic()}">
 								<p:selectOneMenu
 										style="width: 206px;margin-bottom: 5px;" id="justificationId"
 										panelStyle="overflow-y: scroll; width:400px; height:200px;"
