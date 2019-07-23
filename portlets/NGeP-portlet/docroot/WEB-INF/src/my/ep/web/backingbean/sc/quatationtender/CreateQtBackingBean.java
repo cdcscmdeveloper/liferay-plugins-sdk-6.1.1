@@ -229,7 +229,7 @@ public class CreateQtBackingBean extends
 	 *            (boolean panelType).
 	 */
 	public void panelConformation(ScQt scQt) {
-
+		this.getManagedBean().setPanelZone(false);
 		scQt.setZonal(false);
 		Boolean isPanel = this.getManagedBean().getPanel();
 		scQt.setPanel(isPanel);
