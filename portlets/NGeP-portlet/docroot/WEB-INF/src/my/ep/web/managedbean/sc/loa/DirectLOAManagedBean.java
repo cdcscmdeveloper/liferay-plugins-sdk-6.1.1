@@ -292,10 +292,6 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 
 	private String suppConfirmMsgReject;
 
-	private String bondReqSelectedVal;
-
-	private String agreemetSelectedVal;
-
 	private SelectItem[] pk7Reasons;
 	
 	private boolean selectAll;
@@ -303,9 +299,6 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	private boolean buttonHideDedActive = true;
 	private boolean buttonHideSchActive = true;
 	
-	private Boolean bondReq;
-	private Boolean agreementReq;
-
 	/**
 	 * Gets the spki backing bean.
 	 * 
@@ -1825,36 +1818,6 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	/**
-	 * @return the bondReqSelectedVal
-	 */
-	public String getBondReqSelectedVal() {
-		return bondReqSelectedVal;
-	}
-
-	/**
-	 * @param bondReqSelectedVal
-	 *            the bondReqSelectedVal to set
-	 */
-	public void setBondReqSelectedVal(String bondReqSelectedVal) {
-		this.bondReqSelectedVal = bondReqSelectedVal;
-	}
-
-	/**
-	 * @return the agreemetSelectedVal
-	 */
-	public String getAgreemetSelectedVal() {
-		return agreemetSelectedVal;
-	}
-
-	/**
-	 * @param agreemetSelectedVal
-	 *            the agreemetSelectedVal to set
-	 */
-	public void setAgreemetSelectedVal(String agreemetSelectedVal) {
-		this.agreemetSelectedVal = agreemetSelectedVal;
-	}
-
-	/**
 	 * @return the pk7Reasons
 	 */
 	public SelectItem[] getPk7Reasons() {
@@ -1899,40 +1862,6 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 
 	public void setButtonHideSchActive(boolean buttonHideSchActive) {
 		this.buttonHideSchActive = buttonHideSchActive;
-	}
-
-	/**
-	 * @return the bondReq
-	 */
-	public Boolean getBondReq() {
-		return bondReq;
-	}
-
-	/**
-	 * @param bondReq the bondReq to set
-	 */
-	public void setBondReq(Boolean bondReq) {
-		this.bondReq = bondReq;
-		if (null != bondReq) {
-			getScLoa().setBondReq(bondReq);
-		}
-	}
-
-	/**
-	 * @return the agreementReq
-	 */
-	public Boolean getAgreementReq() {
-		return agreementReq;
-	}
-
-	/**
-	 * @param agreementReq the agreementReq to set
-	 */
-	public void setAgreementReq(Boolean agreementReq) {
-		this.agreementReq = agreementReq;
-		if (null != agreementReq) {
-			getScLoa().setAgreementReq(agreementReq);
-		}
 	}
 
 }
