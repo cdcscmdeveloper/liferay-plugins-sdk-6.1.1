@@ -1041,6 +1041,12 @@ public class LOIDetailBackingBean extends
 		try {
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setQtId(qtId);
+			
+			// ***19336#62
+			if(isQTMaintenanceScreen()){
+				reqDTO.setBySupplierIds(false);
+			}
+			
 			reqDTO.setRecommendDtlIdList(getManagedBean().getRecommendDtlIds());
 			
 			AwardSupplierResDTO resDTO = getQtAwardSO().retrievePendingLoiList(
