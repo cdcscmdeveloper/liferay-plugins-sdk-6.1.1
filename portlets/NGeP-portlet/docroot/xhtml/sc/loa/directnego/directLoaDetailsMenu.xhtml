@@ -522,15 +522,16 @@
 										<c:when test="#{!directLOABackingBean.isPbDropDown() and !directLOABackingBean.isPerformanceBondRequired(directLOABackingBean.managedBean.overallContractAmt, null) and !directLOABackingBean.managedBean.readOnly}">
 											<c:choose>
 												<c:when test="#{directLOABackingBean.isPk7Periodic()}">
-													<p:selectOneRadio id="bondReqPk7Per" styleClass="commonLabel"
-														value="#{directLOABackingBean.managedBean.bondReq}"
-														required="true"
+													<p:selectOneMenu id="bondReqPk7Per" required="true"
+														style="margin-bottom:5px;width:175px;"
+														value="#{directLOABackingBean.managedBean.bondReqSelectedVal}"
 														label="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}">
-								
 														<f:selectItems
-															value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-														<p:ajax partialSubmit="true" process="@this" update="menuTab" />
-													</p:selectOneRadio>
+															value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.yesNoFlag)}" />
+															
+														 <p:ajax partialSubmit="true" process="@this" update="menuTab" 
+														 listener="#{directLOABackingBean.performanceBondChanged(directLOABackingBean.managedBean.bondReqSelectedVal)}"/>
+													</p:selectOneMenu>
 												</c:when>
 												<c:otherwise>
 													<p:selectOneRadio id="bondReq" styleClass="commonLabel"
@@ -551,15 +552,16 @@
 												<c:when test="#{!directLOABackingBean.isPbDropDown()}">
 													<c:choose>
 														<c:when test="#{directLOABackingBean.isPk7Periodic()}">
-															<p:selectOneRadio id="bondReqPk7" styleClass="commonLabel"
-																value="#{directLOABackingBean.managedBean.bondReq}"
-																required="true"
+															<p:selectOneMenu id="bondReqPk7" required="true"
+																style="margin-bottom:5px;width:175px;"
+																value="#{directLOABackingBean.managedBean.bondReqSelectedVal}"
 																label="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}">
-										
 																<f:selectItems
-																	value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-																<p:ajax partialSubmit="true" process="@this" update="menuTab" />
-															</p:selectOneRadio>
+																	value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.yesNoFlag)}" />
+																	
+																 <p:ajax partialSubmit="true" process="@this" update="menuTab" 
+																 listener="#{directLOABackingBean.performanceBondChanged(directLOABackingBean.managedBean.bondReqSelectedVal)}"/>
+															</p:selectOneMenu>
 														</c:when>
 														<c:otherwise>
 															<p:inputText id="bondReqTxt"
@@ -814,13 +816,16 @@
 									<c:when test="#{!directLOABackingBean.isAgreementDropDown() and !directLOABackingBean.checkAgreementMandatory() and !directLOABackingBean.managedBean.readOnly}">
 										<c:choose>
 												<c:when test="#{directLOABackingBean.isPk7Periodic()}">
-													<p:selectOneRadio id="agreementReqPk7Per" styleClass="commonLabel"
-														value="#{directLOABackingBean.managedBean.agreementReq}"
-														label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
-														required="true">
+													<p:selectOneMenu id="agreementReqPk7Per" required="true"
+														style="margin-bottom:5px;width:246px;"
+														value="#{directLOABackingBean.managedBean.agreemetSelectedVal}"
+														label="#{lbl['lbl.sc.loiloa.loa.req.agree']}">
 														<f:selectItems
-															value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-													</p:selectOneRadio> 
+															value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.yesNoFlag)}" />
+															
+														 <p:ajax partialSubmit="true" process="@this" update="menuTab" 
+														 listener="#{directLOABackingBean.agreementChanged(directLOABackingBean.managedBean.agreemetSelectedVal)}"/>
+													</p:selectOneMenu>
 												</c:when>
 												<c:otherwise>
 													<p:selectOneRadio id="agreementReq" styleClass="commonLabel"
@@ -838,13 +843,16 @@
 												<c:when test="#{!directLOABackingBean.isAgreementDropDown()}">
 													<c:choose>
 														<c:when test="#{directLOABackingBean.isPk7Periodic()}">
-															<p:selectOneRadio id="agreementReqPk7" styleClass="commonLabel"
-																value="#{directLOABackingBean.managedBean.agreementReq}"
-																label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
-																required="true">
+															<p:selectOneMenu id="agreementReqPk7" required="true"
+																style="margin-bottom:5px;width:246px;"
+																value="#{directLOABackingBean.managedBean.agreemetSelectedVal}"
+																label="#{lbl['lbl.sc.loiloa.loa.req.agree']}">
 																<f:selectItems
-																	value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-															</p:selectOneRadio> 
+																	value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.yesNoFlag)}" />
+																	
+																 <p:ajax partialSubmit="true" process="@this" update="menuTab" 
+																 listener="#{directLOABackingBean.agreementChanged(directLOABackingBean.managedBean.agreemetSelectedVal)}"/>
+															</p:selectOneMenu>
 														</c:when>
 														<c:otherwise>
 															<p:inputText id="agreementReqTxt"
