@@ -99,6 +99,7 @@ import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
 import my.ep.persistence.entity.sc.directpurchase.ScQuote;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
 import my.ep.persistence.entity.sc.loaloi.ScLoaAttachment;
@@ -5007,29 +5008,42 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				}
 				return;
 			}
+			Map<String,String> params = FacesContext.getCurrentInstance()
+					.getExternalContext().getRequestParameterMap();
+			String requestNoteDtlId = params.get("requestNoteDtlId");
+			log.info(this.getClass().getName() + ".checkDpIsElisibleForPB(): requestNoteDtlId is: " + requestNoteDtlId);
 			dpLOABackingBean.retrieveLOAList(getManagedBean().getSourceId(), userIdRequired);
-			if (null != dpLOABackingBean.getManagedBean() && null != dpLOABackingBean.getManagedBean().getPurchaseRequestList()
-					&& dpLOABackingBean.getManagedBean().getPurchaseRequestList().size() > 0 &&
-					null != dpLOABackingBean.getManagedBean().getPurchaseRequestList().get(0).getRequestNoteDtls()
-					&& dpLOABackingBean.getManagedBean().getPurchaseRequestList().get(0).getRequestNoteDtls().size() > 0) {
-				log.info(this.getClass().getName() + ".checkDpIsElisibleForPB(): results found ");
-				PmParameterDesc procurementType = getParameterDescByParamTypeAndParamCode(dpLOABackingBean.getManagedBean().getPurchaseRequestList().get(0).getRequestNoteDtls().get(0).getProcurementType());
-				PmParameterDesc fulfilmentType = getParameterDescByParamTypeAndParamCode(dpLOABackingBean.getManagedBean().getPurchaseRequestList().get(0).getRequestNoteDtls().get(0).getFulfilmentType());
-				if (null != procurementType 
-						&& null != procurementType.getPmParameter() 
-						&& null != procurementType.getPmParameter().getParameterId()
-						&& null != fulfilmentType 
-						&& null != fulfilmentType.getPmParameter() 
-						&& null != fulfilmentType.getPmParameter().getParameterId()
-						) {
-						log.info(this.getClass().getName() + ".checkDpIsElisibleForPB(): procurementType ID is: " + procurementType.getPmParameter().getParameterId());
-						log.info(this.getClass().getName() + ".checkDpIsElisibleForPB(): fulfilmentType ID is: " + fulfilmentType.getPmParameter().getParameterId());
-						if (procurementType.getPmParameter().getParameterId().equals(PROCUREMENT_TYPE_ID) &&
-								(fulfilmentType.getPmParameter().getParameterId().equals(FULFIL_PERIODIC_SCHEDULE_ID)
-								|| fulfilmentType.getPmParameter().getParameterId().equals(FULFIL_PERIODIC_AS_AND_WHEN_ID))) {
-							getManagedBean().setEnablePBForDP(true);
-							log.info(this.getClass().getName() + ".checkDpIsElisibleForPB(): Enabled Performance Bond for loaNo is: " + loa.getLoaNo());
+			if (StringUtils.isNotEmpty(requestNoteDtlId) && null != dpLOABackingBean.getManagedBean() && null != dpLOABackingBean.getManagedBean().getPurchaseRequestList()
+					&& dpLOABackingBean.getManagedBean().getPurchaseRequestList().size() > 0) {
+					
+				purchaseRequestLoop: for (ScPurchaseRequest scPurchaseRequest : dpLOABackingBean.getManagedBean().getPurchaseRequestList()) {
+					if (null != scPurchaseRequest.getRequestNoteDtls()
+							&& scPurchaseRequest.getRequestNoteDtls().size() > 0) {
+						for (ScRequestNoteDtl scRequestNoteDtl : scPurchaseRequest.getRequestNoteDtls()) {
+							if (scRequestNoteDtl.getRequestNoteDtlId().equals(Long.valueOf(requestNoteDtlId))) {
+								log.info(this.getClass().getName() + ".checkDpIsElisibleForPB(): results found ");
+								PmParameterDesc procurementType = getParameterDescByParamTypeAndParamCode(scRequestNoteDtl.getProcurementType());
+								PmParameterDesc fulfilmentType = getParameterDescByParamTypeAndParamCode(scRequestNoteDtl.getFulfilmentType());
+								if (null != procurementType 
+										&& null != procurementType.getPmParameter() 
+										&& null != procurementType.getPmParameter().getParameterId()
+										&& null != fulfilmentType 
+										&& null != fulfilmentType.getPmParameter() 
+										&& null != fulfilmentType.getPmParameter().getParameterId()
+										) {
+									log.info(this.getClass().getName() + ".checkDpIsElisibleForPB(): procurementType ID is: " + procurementType.getPmParameter().getParameterId());
+									log.info(this.getClass().getName() + ".checkDpIsElisibleForPB(): fulfilmentType ID is: " + fulfilmentType.getPmParameter().getParameterId());
+									if (procurementType.getPmParameter().getParameterId().equals(PROCUREMENT_TYPE_ID) &&
+											(fulfilmentType.getPmParameter().getParameterId().equals(FULFIL_PERIODIC_SCHEDULE_ID)
+													|| fulfilmentType.getPmParameter().getParameterId().equals(FULFIL_PERIODIC_AS_AND_WHEN_ID))) {
+										getManagedBean().setEnablePBForDP(true);
+										log.info(this.getClass().getName() + ".checkDpIsElisibleForPB(): Enabled Performance Bond for loaNo is: " + loa.getLoaNo());
+									}
+								}
+								break purchaseRequestLoop;
+							}
 						}
+					}
 				}
 			}
 		}
