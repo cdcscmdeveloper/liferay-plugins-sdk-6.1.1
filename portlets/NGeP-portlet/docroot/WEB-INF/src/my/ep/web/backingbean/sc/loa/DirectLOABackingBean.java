@@ -7044,7 +7044,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		ScLoa loa = getManagedBean().getScLoa();
 		BigDecimal overallContractAmtOrLoaAmt = getManagedBean().getOverallContractAmt();
 
-		if (null != loa.getScLoiLoa().getFulfilmentTypeCode() && null != overallContractAmtOrLoaAmt ) {
+		if (null != loa.getScLoiLoa().getFulfilmentTypeCode() && null != overallContractAmtOrLoaAmt 
+				&& !isPk7Periodic()) {
 			String fulfilmentType = loa.getScLoiLoa().getFulfilmentTypeCode()
 					.getParameterCode();
 
@@ -8464,18 +8465,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	}
 	
 	/**
-	 * Set Performance Bond value opted by user.
-	 * @param bondReqVal
-	 */
-	public void performanceBondChanged(String bondReqVal) {
-		if ("207".equalsIgnoreCase(bondReqVal)) { 
-			getManagedBean().getScLoa().setBondReq(true);
-		} else {
-			getManagedBean().getScLoa().setBondReq(false);
-		}
-	}
-	
-	/**
 	 * To display Agreement dropdown when QT Type is <b>Special Item / Item In PK 7</b> 
 	 * and Fulfilment Type is <b>One Off</b>.
 	 * 
@@ -8528,18 +8517,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 		}
 		return false;
-	}
-	
-	/**
-	 * Set Performance Bond value opted by user.
-	 * @param bondReqVal
-	 */
-	public void agreementChanged(String agreeReqVal) {
-		if ("207".equalsIgnoreCase(agreeReqVal)) { 
-			getManagedBean().getScLoa().setAgreementReq(true);
-		} else {
-			getManagedBean().getScLoa().setAgreementReq(false);
-		}
 	}
 	
 	/**
