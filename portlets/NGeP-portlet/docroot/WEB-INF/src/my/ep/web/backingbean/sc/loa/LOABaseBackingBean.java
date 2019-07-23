@@ -133,4 +133,28 @@ public abstract class LOABaseBackingBean<T extends LOABaseManagedBean> extends S
 			}
 		}
 	}
+	
+	/**
+	 * Set Performance Bond value opted by user.
+	 * @param bondReqVal
+	 */
+	public void performanceBondChanged(String bondReqVal) {
+		if ("207".equalsIgnoreCase(bondReqVal)) { 
+			getManagedBean().getScLoa().setBondReq(true);
+		} else {
+			getManagedBean().getScLoa().setBondReq(false);
+		}
+	}
+	
+	/**
+	 * Set Performance Bond value opted by user.
+	 * @param bondReqVal
+	 */
+	public void agreementChanged(String agreeReqVal) {
+		if ("207".equalsIgnoreCase(agreeReqVal)) { 
+			getManagedBean().getScLoa().setAgreementReq(true);
+		} else {
+			getManagedBean().getScLoa().setAgreementReq(false);
+		}
+	}
 }
