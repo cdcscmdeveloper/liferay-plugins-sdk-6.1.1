@@ -64,7 +64,7 @@
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 					
 				<ac:paginator for="bankDt" />
-				<p:column selectionMode="multiple" width="1%" action="#{backingBean.assignBankAccountNo(bankBean)}" rendered="#{not empty backingBean.managedBean.smAppl.smSupplierBanks}"/>
+				<p:column selectionMode="multiple" width="1%" action="#{backingBean.checkActiveAndPendingTransaction}" rendered="#{not empty backingBean.managedBean.smAppl.smSupplierBanks}"/>
 				
 				<p:column headerText="#{lbl['lbl.sm.bankDtls.acctNo']}">
 					<h:outputText value="#{bankBean.accountNo}" />
@@ -113,11 +113,10 @@
 					actionListener="#{backingBean.assignNewBank}"
 					update=":form:tt:bankDialog" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
-					disabled="#{backingBean.managedBean.itemDeleteButtonShow}"
+				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"					
 					id="bankDelBtnId" partialSubmit="true"
-					process="bankInfPan" update=":form:tt:bankDt ,sfieldset" 
-					oncomplete="bankDeletePopUp.show()" />
+					process="bankInfPan" update=":form:tt:bankDt ,sfieldset, bankDelBtnId" 
+					action="#{backingBean.checkActiveAndPendingTransaction}"/>
 			</div>
 			
 			<p:outputPanel id="sfieldset">
@@ -193,7 +192,7 @@
 	</p:panel>
 	<p:dialog width="700px" height="600px"
 		header="#{lbl['lbl.sm.bankDtls.bankDiaHdr']}" widgetVar="bankDialog"
-		resizable="false" showEffect="fade" closable="true" hideEffect="fade"
+		resizable="false" showEffect="fade" closable="false" hideEffect="fade"
 		modal="true" id="bankDialog">
 		<p:outputPanel id="bankDetailsPanel" layout="block">
 		<p:messages id="msg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" />				
