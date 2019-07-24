@@ -655,6 +655,17 @@ public class SupplierFinalizationBackingBean extends
 									: scQtCommittee.getCommitteeActivities()) {
 							committeeEndorsementList.add(commActivity);
 						}
+						//25201#63-2
+						if(isQTMaintenanceScreen()){
+							//log.info("pending supplier finalization : "+(getManagedBean().getCurrentStatusId()==
+							//		QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION));
+							if(getManagedBean().getCurrentStatusId()!=QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION){
+								for(ScQtCommitteeActivity commActivity: this.getManagedBean().getCommitteeEndorsementList()){
+									//log.info("commActivity.isSignedOff() : "+commActivity.isSignedOff());
+									commActivity.setSignedOff(true);
+								}
+							}
+						}
 					} else {
 						List<ScQtCommitteeActivity> localList 
 										= new ArrayList<ScQtCommitteeActivity>();
