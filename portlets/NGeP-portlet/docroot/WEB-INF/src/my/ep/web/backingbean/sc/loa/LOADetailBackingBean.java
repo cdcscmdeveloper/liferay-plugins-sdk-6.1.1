@@ -2695,6 +2695,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		 *
 		 * @param scLoa the sc loa
 		 */
+		@SuppressWarnings("unused")
 		public SupplierBankFK(ScLoa scLoa) {
 			this.accountNo = scLoa.getBankAccNo();
 			this.bankName = scLoa.getBankName();
@@ -2814,7 +2815,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		try {
 			Long contractType = getManagedBean().getScLoa().getContractType().getParameterId();
-			if(this.getManagedBean().getFlowamt()==null && contractType == 147)
+			if(this.getManagedBean().getFlowamt()==null && contractType == ParameterConst.CONTRACT_TYPE_CENTRAL_CODE)
 			{
 				throw new EpException(MessageConst.ERROR_760485);
 				
@@ -2889,7 +2890,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		try {
 			
 			Long contractType = getManagedBean().getScLoa().getContractType().getParameterId();
-			if(this.getManagedBean().getFlowamt()==null && contractType == 147)
+			if(this.getManagedBean().getFlowamt()==null && contractType == ParameterConst.CONTRACT_TYPE_CENTRAL_CODE)
 			{
 				throw new EpException(MessageConst.ERROR_760485);	
 			}else{
@@ -4086,6 +4087,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * @param scLoa the sc loa
 	 * @throws Exception the exception
 	 */
+	@SuppressWarnings("unused")
 	private void generateFrequencySchedulePdfFromVelocity(
 			ScAttachment attachment, ScLoa scLoa, ScQt scQt) throws Exception {
 		debugLogger("generateFrequencySchedulePdfFromVelocity");
