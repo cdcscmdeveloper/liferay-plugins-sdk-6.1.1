@@ -2813,8 +2813,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		debugLogger("saveAction");
 
 		try {
-			
-			if(this.getManagedBean().getFlowamt()==null)
+			Long contractType = getManagedBean().getScLoa().getContractType().getParameterId();
+			if(this.getManagedBean().getFlowamt()==null && contractType == 147)
 			{
 				throw new EpException(MessageConst.ERROR_760485);
 				
@@ -2888,7 +2888,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		try {
 			
-			if(this.getManagedBean().getFlowamt()==null)
+			Long contractType = getManagedBean().getScLoa().getContractType().getParameterId();
+			if(this.getManagedBean().getFlowamt()==null && contractType == 147)
 			{
 				throw new EpException(MessageConst.ERROR_760485);	
 			}else{
