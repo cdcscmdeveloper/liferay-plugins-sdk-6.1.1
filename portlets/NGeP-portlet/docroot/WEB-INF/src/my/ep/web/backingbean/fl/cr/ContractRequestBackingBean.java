@@ -4329,27 +4329,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				contractReqDTO.setContractVerId(flRequest.getCtContract().getLatestContractVer().getContractVerId());
 				contractReqDTO.setAsAtDate(new Date());
 				CtContractAmount ctContractAmount = contractSO.retrieveContractAmount(contractReqDTO).getCtContractAmount();
-
-				//# start 24927
-				AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-				reqDTO.setLoaId(flRequest.getCtContract().getLoa().getLoaId());
-				AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOADtlByLoaId(reqDTO);
-				String qtType="";			
-				
-				if(resDTO.getScLoa().getQtType() != null){
-					qtType = resDTO.getScLoa().getQtType().getParameterCode();
-				}else{
-					ParameterReqDTO paramReqDTO = new ParameterReqDTO();
-					paramReqDTO.setParameterId(getProcType().longValue());
-					IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-					PmParameter procType = parameterSO.retrieveParameterById(paramReqDTO).getPmParameter();
-					
-					qtType = procType.getParameterCode();
-				}
-				//# end 24927
-				
-				if(!(flRequest.getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)
-						&& qtType.equalsIgnoreCase(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7))){//#24927
 					
 					if(ctContractAmount!=null && ctContractAmount.isBondReq() && !ctContractAmount.isBondExempted()){
 						ContractResDTO contractResp=contractSO.validateBondComplete(contractReqDTO);
@@ -4372,7 +4351,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 								}													
 						}// end #25296
 					}
-				}
 				validateSuspensionItems(action);
 				validateChargelineLimit(action);
 			}
@@ -6181,16 +6159,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	public void setzonalTest(boolean zonalCheck) {
 		this.zonalTest = zonalCheck;
 	}	
-    /**
-	 * Gets the qt award so.
-	 *
-	 * @return the qt award so
-	 */
-	private IQTAwardSO getQtAwardSO() {//#24927
-		return BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-	}
-	
 	
 	/*#16344 To retrive zonal tree, value & item price when search & expand while pop up*/
 	/*START*/
@@ -6279,17 +6247,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			getManagedBean().setSupplierItemPriceList(supplierItems);
 		}
 	} /*END*/
-	
-	//#24927 - To get Procurement Type for Direct Purchase
-	public Integer getProcType(){
-		IRequestNoteSO requestNoteSO = (IRequestNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,	IRequestNoteSO.class);
-		Integer proType = null;
-		RequestNoteResDTO proc = requestNoteSO.getProcTypeDP(getManagedBean().getFlRequest().getCtContract().getContractId());
-		if(proc != null){
-			proType = proc.getProcurementType();
-		}
-		return proType;
-	}
 }
 	
 
