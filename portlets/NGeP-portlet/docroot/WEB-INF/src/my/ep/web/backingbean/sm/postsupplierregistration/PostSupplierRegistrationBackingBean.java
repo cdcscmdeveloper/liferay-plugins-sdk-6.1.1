@@ -815,6 +815,8 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	public boolean validSupplierTemp(){
 		log.info("*******validBasicSupplierAdmin********");
 		if(new FacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())){ 
+			log.info("*check**this is supplier temp user********");
+
 			return true;
 		}
 		return false;
@@ -1061,8 +1063,13 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER) ? true : false;
 		boolean isWithFederal = currentPersonnel.getSmAppl().getSmCompanyBasic().isWithFederal();
 		boolean isMigratedFirstLogin = currentPersonnel.getSmAppl().getSmCompanyBasic().getRevNo() == 2;
+		log.info("isWithFederal --> " + isWithFederal );
+		log.info("isMigratedFirstLogin --> " + isMigratedFirstLogin );
+		log.info("softCertStatus --> " + softCertStatus );
 
 		if(!isPublishedCatalogue(supplier.getSupplierId()) && !isG2G){
+			log.info("this is basic not g2g");
+
 			if(getCmSupplierItems(supplier.getSupplierId()).size() > 0){
 				path = CATALOGUE_MAINT;
 			}else{
@@ -1076,6 +1083,8 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				}				
 			}
 		}else{
+			log.info("this is basic g2g");
+
 			if(checkPendingSoftCertRequest(supplier.getSupplierId())){
 				path = SOFT_CERT_PATH;
 				getManagedBean().setFlowStatus(2);
