@@ -3882,18 +3882,31 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 		if(currentCtAgreementList != null && !currentCtAgreementList.isEmpty())
 		{
+			//currentCtAgreementList is sorted by created date in descending order
 			for(index = 0; index < currentCtAgreementList.size(); index++)
 			{
 				tempCtAgreement = currentCtAgreementList.get(index);
+				
 				if(tempCtAgreement.getAgreementId() == getManagedBean().getCtContractAmount().getCtAgreement().getAgreementId())
 				{
 					while(index >= 0)
 					{
+						//sort agreementList in ascending order starting from the selected Reference File No.
 						newCtAgreementList.add(0, currentCtAgreementList.get(index));
 						index--;
 					}
 
 					break;
+				}
+			}
+			if(newCtAgreementList.isEmpty())
+			{ 
+				index = currentCtAgreementList.size() - 1;
+				while(index >= 0)
+				{
+					//sort agreementList in ascending order
+					newCtAgreementList.add(0, currentCtAgreementList.get(index));
+					index--;
 				}
 			}
 	
@@ -3954,8 +3967,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		return facesScopes.getUserLocale().getLanguage();
 	}
 	
-	public CtAttachment getSupplementalContractLetter(CtAgreement ctAgreement) {
-		CtAttachment ctAttachment = null;
+	public List<CtAttachment> getSupplementalContractLetter(CtAgreement ctAgreement) {
 		IAgreementSO agreementSO = null;
 		List<CtAttachment> ctAttachments = null;
 		agreementSO = (IAgreementSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IAgreementSO.class);
@@ -3969,14 +3981,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				reqDTO.setContractVerId(ctAgreement.getCtAmendment().getCtContractVer().getContractVerId());
 				resDTO = agreementSO.retrieveSupplementalContractLetterAttachment(reqDTO);
 				ctAttachments = resDTO.getCtAttachments();
-				
-				if(ctAttachments != null && !ctAttachments.isEmpty())
-				{
-					ctAttachment = resDTO.getCtAttachments().get(0);
-				}
 			}
 		}			
 						
-		return ctAttachment;
+		return ctAttachments;
 	}
 }  

@@ -81,14 +81,30 @@
 							title="#{agreement.stampedPageName}"
 							value="#{agreement.stampedPageName}"
 							action="#{ctBackingBean.commonDownload(agreement.stampedPagePath, agreement.stampedPageName)}" /><br />
-						<ui:param name="suppCtLetter" value="#{ctBackingBean.getSupplementalContractLetter(agreement)}"></ui:param>
+						<ui:param name="suppCtLetterList" value="#{ctBackingBean.getSupplementalContractLetter(agreement)}"></ui:param>
 						<h:outputText value="#{lbl['lbl.ct.amend.loa.sst']} : " 
-						rendered="#{not empty suppCtLetter and agreement.status.statusId == CtStatusConst.saComplete}"/>	
+						rendered="#{not empty suppCtLetterList and agreement.status.statusId == CtStatusConst.saComplete}"/>
+						<ui:repeat value="#{suppCtLetterList}" var="suppCtLetter" varStatus="suppLetterStatus">	
 						<h:commandLink styleClass="blue_font"
 							title="#{suppCtLetter.fileName}"
 							value="#{suppCtLetter.fileName}"
 							action="#{ctBackingBean.commonDownload(suppCtLetter.filePath, suppCtLetter.fileName)}" 
-							rendered="#{not empty suppCtLetter and agreement.status.statusId == CtStatusConst.saComplete}"/>
+							rendered="#{suppLetterStatus.index == 0 and not empty suppCtLetter and agreement.status.statusId == CtStatusConst.saComplete}"/>
+						<h:commandLink styleClass="blue_font"
+							title="#{suppCtLetter.fileName}"
+							value="#{suppCtLetter.fileName}"
+							action="#{ctBackingBean.commonDownload(suppCtLetter.filePath, suppCtLetter.fileName)}" 
+							rendered="#{suppLetterStatus.index > 0 and not empty suppCtLetter and agreement.status.statusId == CtStatusConst.saComplete 
+							and language eq 'en'}" 
+							style="margin-left:169px;"/>
+						<h:commandLink styleClass="blue_font"
+							title="#{suppCtLetter.fileName}"
+							value="#{suppCtLetter.fileName}"
+							action="#{ctBackingBean.commonDownload(suppCtLetter.filePath, suppCtLetter.fileName)}" 
+							rendered="#{suppLetterStatus.index > 0 and not empty suppCtLetter and agreement.status.statusId == CtStatusConst.saComplete 
+							and language eq 'ms'}" 
+							style="margin-left:200px;"/><br />					
+						</ui:repeat>
 				</p:column>
 				</p:dataTable>
 				</p:panel>
