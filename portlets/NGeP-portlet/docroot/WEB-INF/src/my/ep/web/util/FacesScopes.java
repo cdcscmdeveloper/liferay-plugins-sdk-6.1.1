@@ -382,22 +382,6 @@ public class FacesScopes implements Serializable {
 		return ctxToken;
 	}
 	
-	public byte[] getBPMAuthenticationByteToken() {
-		byte[] ctxToken = (byte[]) getApplicationScope(BPM_AUTH_BYTE_TOKEN);
-		if (null == ctxToken) {
-			String loginId = getUserScreenName();
-			System.out.println("loginId: " + loginId);
-			
-			if (loginId != null) {
-				IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-						.getServiceObject(IBpmSO.class);
-				ctxToken = bpmSO.processAuthenticate(loginId);
-				setApplicationScope(BPM_AUTH_BYTE_TOKEN, ctxToken);
-			}
-		}
-		return ctxToken;
-	}
-	
 	public String needAuthenticate(){
 		String auth = (String) getApplicationScope(BPM_AUTH_FLAG);
 		if(StringUtils.isBlank(auth)){
