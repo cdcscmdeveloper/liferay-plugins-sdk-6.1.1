@@ -6613,26 +6613,30 @@ public class SupplierFinalizationBackingBean extends
 				scActorSO = null;
 			}		
 			
-			if( isQTMaintenanceScreen() ){
+			if( isQTMaintenanceScreen() && !CollectionUtils.isEmpty(sfl) ){
+				Collections.sort(sfl, new WorklistItemVOComparator.SortByUpdateDateDescComparator());
 				int chk = -1;
-				for(int i = 0; i<2 ; i++){ //2 types of checking
+				for(int i = 0; i<3 ; i++){ //3 types of checking
+					//default. task was ever assigned to the logged in user
+					if(i==0 && !StringUtils.isBlank(taskId) && !StringUtils.isBlank(assignee)){
+						chk = i;
+						log.info("chk : "+ chk);
+					}
 					//isActor but not in assignee					 
-					if(i==0 && isActor && StringUtils.isBlank(taskId)){
+					if(i==1 && isActor && StringUtils.isBlank(taskId)){
 						chk = i;
 						log.info("chk : "+ chk);
 					}
 					//bpk auditor only. then, pass if login id != assignee
-					if(i==1 && justAllowTheseRoles != null && justAllowTheseRoles.length > 0 
+					if(i==2 && justAllowTheseRoles != null && justAllowTheseRoles.length > 0 
 							&& userHasRole(justAllowTheseRoles) 
-							&& !CollectionUtils.isEmpty(sfl)
-							&& ( (StringUtils.isBlank(taskId) && StringUtils.isBlank(assignee)) || (!StringUtils.isBlank(taskId) && !StringUtils.isBlank(assignee) && !assignee.equalsIgnoreCase(loginId)))
+							/*&& ( (StringUtils.isBlank(taskId) && StringUtils.isBlank(assignee)) || (!StringUtils.isBlank(taskId) && !StringUtils.isBlank(assignee) && !assignee.equalsIgnoreCase(loginId)))*/
 							){
 						chk = i;
 						log.info("chk : "+chk);
 					}
 					
-					if(chk == i){
-						Collections.sort(sfl, new WorklistItemVOComparator.SortByUpdateDateDescComparator());
+					if(chk == i){						
 						for(WorklistItemVO w: sfl){
 							if(!CollectionUtils.isEmpty(w.getAssignees())){
 								for(String a : w.getAssignees()){
@@ -6657,7 +6661,7 @@ public class SupplierFinalizationBackingBean extends
 					}	
 				}
 			}		
-			// TODO error flash message if user is not allowed to view
+			// TODO error flash message if user is not allowed to view i.e. never was an assignee/actor
 		}
 		
 		
@@ -6665,9 +6669,9 @@ public class SupplierFinalizationBackingBean extends
 		if(isQTMaintenanceScreen() && !StringUtils.isBlank(taskId)){
 			getManagedBean().setActiveIndex(0);
 			
-			if(dataType == null){
+			/*if(dataType == null){
 				dataType = getBpmTaskDetails(SCEvaluationDataType.class, null, taskId, !StringUtils.isBlank(latestAssignee)?latestAssignee:null);
-			}
+			}*/
 			//as in preRenderView()
 			Long qtId = Long.valueOf(dataType.getQtId());
 			getManagedBean().setPayLoad(dataType);
