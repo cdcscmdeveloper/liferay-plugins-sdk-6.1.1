@@ -139,7 +139,7 @@ public abstract class LOABaseBackingBean<T extends LOABaseManagedBean> extends S
 	 * @param bondReqVal
 	 */
 	public void performanceBondChanged(String bondReqVal) {
-		if ("207".equalsIgnoreCase(bondReqVal)) { 
+		if (getManagedBean().getYesParameterId().equalsIgnoreCase(bondReqVal)) { 
 			getManagedBean().getScLoa().setBondReq(true);
 		} else {
 			getManagedBean().getScLoa().setBondReq(false);
@@ -151,7 +151,7 @@ public abstract class LOABaseBackingBean<T extends LOABaseManagedBean> extends S
 	 * @param bondReqVal
 	 */
 	public void agreementChanged(String agreeReqVal) {
-		if ("207".equalsIgnoreCase(agreeReqVal)) { 
+		if (getManagedBean().getYesParameterId().equalsIgnoreCase(agreeReqVal)) { 
 			getManagedBean().getScLoa().setAgreementReq(true);
 		} else {
 			getManagedBean().getScLoa().setAgreementReq(false);
