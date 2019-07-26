@@ -2811,7 +2811,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			PmParameter contractType = getManagedBean().getScLoa().getContractType();
 			if(this.getManagedBean().getFlowamt()==null && null != contractType 
 					&& ParameterTypeConst.CONTRACT_TYPE.equals(contractType.getParameterType()) 
-					&& !ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType.getParameterCode()))
+					&& ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType.getParameterCode()))
 			{
 				throw new EpException(MessageConst.ERROR_760485);
 				
@@ -2888,7 +2888,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			PmParameter contractType = getManagedBean().getScLoa().getContractType();
 			if(this.getManagedBean().getFlowamt()==null && null != contractType 
 					&& ParameterTypeConst.CONTRACT_TYPE.equals(contractType.getParameterType()) 
-					&& !ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType.getParameterCode()))
+					&& ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType.getParameterCode()))
 			{
 				throw new EpException(MessageConst.ERROR_760485);	
 			}else{
