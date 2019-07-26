@@ -1,16 +1,18 @@
 /**
- *  Copyright © 2013 Archisoft. All rights reserved.
+ *  Copyright Â© 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.util.template;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.util.List;
 
 import javax.faces.context.FacesContext;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -52,6 +54,8 @@ import org.docx4j.wml.Text;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.safety.Cleaner;
+import org.jsoup.safety.Whitelist;
 import org.jsoup.select.Elements;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
@@ -169,10 +173,9 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 		
 		ITextRenderer render = new ITextRenderer();
 		Document doc = null;
-		Elements elements = null;
-		String tempHtml = null;
+		Document cleanDoc = null;
 		try{
-			
+			//#25142, #26180
 			if (html != null) {
 				html = html.replaceAll("&amp;nbsp;", " ");
 				html = html.replaceAll("&amp;", "&amp;amp;")
@@ -180,32 +183,20 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 				html = html.replaceAll("&amp;#62", "&#62");
 				html = html.replaceAll("&amp;#60", "&#60");         
 				doc = Jsoup.parse(html);
-
-				for(int i = 1; i<=6; i++) {
-					elements = doc.getElementsByTag("h" + i);
-					for(Element element: elements) {
-						element.clearAttributes();
-					};
-				}
-
-				elements = doc.getElementsByTag("img");				
+				boolean valid = Jsoup.isValid(doc.html(), Whitelist.relaxed());
+				if(!valid){
+					cleanDoc = new Cleaner(Whitelist.relaxed()).clean(doc);
+					doc = cleanDoc;
+				}					
+				doc.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
+				doc.outputSettings().charset("UTF-8");
+			
+				html = doc.html();
 				
-				html = doc.toString();
-
-				html = html.replaceAll("<br>", "<br/>");
 				html = html.replaceAll("&amp;nbsp;", " ");
 				html = html.replaceAll("&amp;amp;", "&");
 				html = html.replaceAll("&amp;lt", "&#60");
-				html = html.replaceAll("&amp;gt", "&#62");
-				
-				//to add end tag for <img>
-				for(Element element: elements) {
-					tempHtml = element.toString();
-					if(html.contains(tempHtml))
-					{
-						html = html.replace(tempHtml, tempHtml + "</img>");
-					}
-				}
+				html = html.replaceAll("&amp;gt", "&#62");					
 				
 				render.setDocumentFromString(html);
 				render.layout();
@@ -214,11 +205,12 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 
 			os.flush();
 		}finally{
-			tempHtml = null;
+			html = null;
 			doc = null;
-			elements = null;
+			cleanDoc = null;
 			render = null;
 			os.close();
+			os = null;
 		}
 	}
 	
@@ -381,10 +373,10 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 		run.setRPr(rpr);
 
 		Text t1 = factory.createText();
-		t1.setValue("Tandatangan & Cop (Kerajaan)  : …………………………………");
+		t1.setValue("Tandatangan & Cop (Kerajaan)  : â€¦â€¦â€¦â€¦â€¦â€¦â€¦â€¦â€¦â€¦â€¦â€¦â€¦");
 		Br br = factory.createBr(); // this Br element is used break the current and go for next line
 		Text t2 = factory.createText();
-		t2.setValue("\r\n Tandatangan & Cop (Syarikat ) : …………………………………");
+		t2.setValue("\r\n Tandatangan & Cop (Syarikat ) : â€¦â€¦â€¦â€¦â€¦â€¦â€¦â€¦â€¦â€¦â€¦â€¦â€¦");
 		Text t3 = factory.createText();
 
 		t3.setValue("\r\n  Pihak Kerajaan : pegawai yang diberi kuasa oleh Kerajaan di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani Surat ini");
@@ -571,6 +563,43 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
             log.debug(message);
         }
     }
+	
+	public static void main(String[] args) {
+		String html = "<body><div><h1>Test</h1><img alt=\"Smiley face\"><h3 style=\"font-family: \"Trebuchet MS\", Verdana, sans-serif; padding: 2px 10px 1px 0px; margin: 0px 0px 0.1em; color: rgb(85, 85, 85); font-size: 16px;\">Allowed Special Character and Copy paste for QT Document</h3>hahaha<br>hahahaha</div>";
+		String tempHtml = null;
+		Elements elements = null;
+		Document doc = null;
+		
+		boolean valid = Jsoup.isValid(html, Whitelist.relaxed());
+		System.out.println("Is Valid: "+ valid);
+		doc = Jsoup.parse(html);
+		Document cleanDoc = new Cleaner(Whitelist.relaxed()).clean(doc);
+		doc = cleanDoc;
+		//doc.outputSettings().escapeMode(org.jsoup.nodes.Entities.EscapeMode.xhtml);
+		doc.outputSettings().syntax(Document.OutputSettings.Syntax.xml); 
+		doc.outputSettings().charset("UTF-8");
+		elements = doc.getAllElements();
+		System.out.println(doc.html());
+		/*html = elements.html();elements.
+		for(Element element: elements) {
+			if(!element.nodeName().equalsIgnoreCase("br")&&!element.nodeName().equalsIgnoreCase("h1")
+				&&!element.nodeName().equalsIgnoreCase("h2")&&!element.nodeName().equalsIgnoreCase("h3")
+				&&!element.nodeName().equalsIgnoreCase("h4")&&!element.nodeName().equalsIgnoreCase("h5")
+				&&!element.nodeName().equalsIgnoreCase("h6"))
+			{
+				tempHtml = element.toString();
+				if(!tempHtml.contains("</" + element.nodeName() + ">"))
+				{
+					
+					html = html.replace(tempHtml, tempHtml + "</" + element.nodeName() + ">");
+					System.out.println("Print: " + html);
+				}
+			}
+			
+		}*/
+		
+		
+	}
 }
 
 
