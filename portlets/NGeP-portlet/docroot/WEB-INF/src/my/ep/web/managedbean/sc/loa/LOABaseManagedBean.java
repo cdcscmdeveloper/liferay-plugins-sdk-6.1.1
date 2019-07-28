@@ -17,6 +17,14 @@ public abstract class LOABaseManagedBean extends BaseManagedBean {
 	private String bondReqSelectedVal;
 	
 	private String agreemetSelectedVal;
+	
+	private String yesParameterId;
+	
+	private String noParameterId;
+	
+	private Long periodicAsAndWhenParamId;
+	
+	private Long periodicScheduleParamId;
 
 	public PmParameter getSelectedOrgType() {
 		if (this.selectedOrgType == null) {
@@ -74,5 +82,37 @@ public abstract class LOABaseManagedBean extends BaseManagedBean {
 	 */
 	public void setAgreemetSelectedVal(String agreemetSelectedVal) {
 		this.agreemetSelectedVal = agreemetSelectedVal;
+	}
+
+	public String getYesParameterId() {
+		return yesParameterId;
+	}
+
+	public void setYesParameterId(String yesParameterId) {
+		this.yesParameterId = yesParameterId;
+	}
+
+	public String getNoParameterId() {
+		return noParameterId;
+	}
+
+	public void setNoParameterId(String noParameterId) {
+		this.noParameterId = noParameterId;
+	}
+
+	public Long getPeriodicAsAndWhenParamId() {
+		return periodicAsAndWhenParamId;
+	}
+
+	public void setPeriodicAsAndWhenParamId(Long periodicAsAndWhenParamId) {
+		this.periodicAsAndWhenParamId = periodicAsAndWhenParamId;
+	}
+
+	public Long getPeriodicScheduleParamId() {
+		return periodicScheduleParamId;
+	}
+
+	public void setPeriodicScheduleParamId(Long periodicScheduleParamId) {
+		this.periodicScheduleParamId = periodicScheduleParamId;
 	}
 }
