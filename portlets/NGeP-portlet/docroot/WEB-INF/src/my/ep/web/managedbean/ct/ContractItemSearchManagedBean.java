@@ -121,7 +121,8 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 				ContractBackingBean contractBb=new ContractBackingBean();
 				
 				Long contId=contractBb.getManagedBean().getContractVer().getCtContract().getContractId();
-				Long contractVerId=contractBb.getManagedBean().getContractVer().getContractVerId();
+				//Long contractVerId=contractBb.getManagedBean().getContractVer().getContractVerId();
+				Long contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();
 				//contractBb.getManagedBean().setReadOnly(true);
 				log.info("*****ServiceListingPagingDataModel******"+"contId--->"+contId+"contractVerId"+contractVerId);
 				
@@ -291,7 +292,8 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 				//private String contractId = null;
 				ContractBackingBean contractBb=new ContractBackingBean();
 				Long contId=contractBb.getManagedBean().getContractVer().getCtContract().getContractId();
-				Long contractVerId=contractBb.getManagedBean().getContractVer().getContractVerId();
+				//Long contractVerId=contractBb.getManagedBean().getContractVer().getContractVerId();
+				Long contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();
 				log.info("*****ContractListingPagingDataModel******"+"contId--->"+contId+"contractVerId"+contractVerId);
 
 				if(contId!=null ) 
