@@ -20,6 +20,7 @@ import javax.faces.bean.RequestScoped;
 
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -76,25 +77,39 @@ public class SpecGuideLineInstructionsBackingBean extends SourcingBaseBackingBea
 	public StreamedContent getSpecGuideLineStreamContent() throws Exception {
 		if (specGuideLineStreamContent == null) {
 			ScSpecGuideLineAttachment specGuideLineAttachment = new ScSpecGuideLineAttachment();
-			//specGuideLineAttachment.setDocNo(getManagedBean().getScQt().getQtNo());
-			generateSpecGuideLinePdfFromSharedrepository(specGuideLineAttachment,
-					null,null);
+			generateSpecGuideLinePdfFromSharedrepository(specGuideLineAttachment, null,
+					SourcingConstants.DOCNAME_QT_SPEC_ITEM_GUIDELINE);
 			specGuideLineStreamContent = getAttachmentStreamContent(specGuideLineAttachment,
 					CommonConstants.FILE_CONTENT_TYPE_PDF);
 		}
 		return specGuideLineStreamContent;
 	}
-	
-	
-	private void generateSpecGuideLinePdfFromSharedrepository(
-			ScAttachment attachment, ScQt qt, String prefixFileName) throws Exception {
+
+	public StreamedContent getSpecGuideLineStreamContent(String activeIndex) throws Exception {
+		if (specGuideLineStreamContent == null) {
+			ScSpecGuideLineAttachment specGuideLineAttachment = new ScSpecGuideLineAttachment();
+			if (ParameterConst.TAB_FINANCIAL_CHECK_LIST.equals(activeIndex)) {
+				generateSpecGuideLinePdfFromSharedrepository(specGuideLineAttachment, null,
+						SourcingConstants.DOCNAME_QT_SPEC_FINANCIAL_ITEM_GUIDELINE);
+			} else {
+				generateSpecGuideLinePdfFromSharedrepository(specGuideLineAttachment, null,
+						SourcingConstants.DOCNAME_QT_SPEC_ITEM_GUIDELINE);
+			}
+			specGuideLineStreamContent = getAttachmentStreamContent(specGuideLineAttachment,
+					CommonConstants.FILE_CONTENT_TYPE_PDF);
+		}
+		return specGuideLineStreamContent;
+	}
+
+	private void generateSpecGuideLinePdfFromSharedrepository(ScAttachment attachment, String prefixFileName,
+			String constFileName) throws Exception {
 		log.debug("generateSamplesamplesalinankontrakPdfFromVelocity");
-		
+
 		StringBuilder fileName = new StringBuilder();
 		if(prefixFileName != null){
 			fileName.append(prefixFileName).append(SourcingConstants.UNDER_SCORE);
 		}
-		fileName.append(SourcingConstants.DOCNAME_QT_SPEC_ITEM_GUIDELINE);
+		fileName.append(constFileName);
 		attachment.setFileName(fileName.toString());
 
 		Timestamp date = new Timestamp(System.currentTimeMillis());
@@ -117,8 +132,7 @@ public class SpecGuideLineInstructionsBackingBean extends SourcingBaseBackingBea
 		theDir.mkdirs();
 
 		AttachmentFormat scFormat = getAttachFormat(attachment);
-		String formatedFileName = scFormat.format(SourcingConstants.DOCNAME_QT_SPEC_ITEM_GUIDELINE,
-				attachment.getPrefixFileName());
+		String formatedFileName = scFormat.format(constFileName, attachment.getPrefixFileName());
 
 		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
 		filePath.append(formatedFileName);
