@@ -18,6 +18,7 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.ct.suspension.IContractSuspensionSO;
 import my.ep.constant.BpmOutcomeConst;
@@ -31,6 +32,7 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.ct.dtl.ContractItemReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.exception.EpException;
@@ -125,7 +127,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter(ContractConst.TASK_ID);
 		String contractVerId = originalServletRequest.getParameter(ContractConst.PARAMETER_ID);
-
+		
 		/*Start if statement to check login user*/
 		if(contractVerId!=null) {
 			reqDTO = new ContractReqDTO();
@@ -143,6 +145,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 					ParameterConst.CONTRACT_TYPE_CENTRAL)) {
 				roleCode = RoleCode.BPK_CCA.value();
 			}
+			
 			CtActor contractAdminActor = retrieveContractActor(
 					getManagedBean().getContractVer().getContractVerId(),
 					getManagedBean().getContractVer().getDocType(),roleCode);
@@ -311,6 +314,43 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	
 	
 
+	
+	/**
+	 * The method used to validate the entered Effective and Expiary Date of contract item .
+	 * 
+	 * @param ctContractItem   object of contract item
+	 */
+	public void onChangeEffExpDate(CtContractItem ctContractItem) {
+		
+		if (ctContractItem.getEffDate() == null && ctContractItem.getExpDate() == null) {
+			throw new EpException(MessageConst.ERROR_100033);
+		
+		} 
+		
+		
+		log.info("******Before Effecive Date******"+ctContractItem.getEffDate());
+		log.info("******Before Expiry Date******"+ctContractItem.getExpDate());
+		//getManagedBean().getUpdateItemMap().put(ctContractItem.getScRequestItem().getRequestNoteItemId(), ctContractItem);
+		
+		ContractItemReqDTO reqDTO =  new ContractItemReqDTO();
+		reqDTO.setCtContactItem(ctContractItem);
+		
+		IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractItemSO.class);
+		
+		contractItemSO.updateItemSearchService(reqDTO);
+		
+		this.getManagedBean().setSuspensionProductListingPagingDataModel(this.getManagedBean().resetSuspensionProductListingPagingDataModel());
+		log.info("******After Effecive Date******"+ctContractItem.getEffDate());
+		log.info("******After Expiry Date********"+ctContractItem.getExpDate());
+		
+
+		
+	}
+	
+	
+	
+	
+	
 	/**
 	 * This  method used for back button
 	 * @return the string
@@ -485,6 +525,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
 			reqDTO.setUpdateAgencyMap(ctBB.getManagedBean().getUpdateAgencyMap());
 			reqDTO.setUpdateItemMap(ctBB.getManagedBean().getUpdateItemMap());
+			
 
 			if(this.getManagedBean().getPmDigiSign() !=null){
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());

@@ -12,46 +12,77 @@
 		action="#{ctBackingBean.downloadItemSpecGuideline()}"></p:commandLink><br/>
 	<p:panel id="searchId" header="#{lbl['lbl.ct.search']}" toggleable="true" toggleSpeed="500">
 		
-  	<h:panelGrid columns="4" style="width:100%" columnClasses="columnWidth10">
+  	<h:panelGrid columns="6" style="width:100%" columnClasses="columnWidth10">
   		<p:outputLabel value="#{lbl['lbl.ct.item.name']}"/>
 		<p:inputText value="#{contractItemSearchBackingBean.managedBean.itemname}" style="width:270px;" maxlength="50"></p:inputText>	
 	</h:panelGrid>		
 	
-	<h:panelGrid columns="4" style="width:100%" columnClasses="columnWidth10" >
-	    <p:outputLabel value="#{lbl['lbl.ct.item.type']}"  />
-		<p:selectOneMenu value="#{contractItemSearchBackingBean.managedBean.itemtype}"  style="width:280px;" maxlength="500" >
-					<f:selectItems value="#{contractRequestBackingBean.itemTypeValues}" />
-					<f:selectItem itemLabel="#{lbl['lbl.ct.all']}" itemValue="3" />        	
-		</p:selectOneMenu>
-	</h:panelGrid>
-    <h:panelGrid columns="4" style="width:100%" columnClasses="columnWidth10" >
-		<p:outputLabel value="#{lbl['lbl.ct.item.code']}" style="float:center-left;"  />
-		<p:inputText value="#{contractItemSearchBackingBean.managedBean.itemcode}" style="width:270px; float:center;"  maxlength="20"  />				
-	</h:panelGrid>	
-	<h:panelGrid columns="4" style="width:100%" columnClasses="columnWidth10, columnWidth30, columnWidth5,columnWidth20">	
-		<p:outputLabel value="#{lbl['lbl.ct.item.status']}"/>
-		<p:selectOneMenu value="#{contractItemSearchBackingBean.managedBean.itemstatus}" style="width:280px;" maxlength="500" >  
-    	<f:selectItem itemLabel="#{lbl['lbl.ct.selectOne']}" itemValue="" />  
-    	<f:selectItem itemLabel="#{lbl['lbl.ct.inactive']}" itemValue="0" />   
-    	<f:selectItem itemLabel="#{lbl['lbl.ct.active']}" itemValue="1" /> 
-    	<f:selectItem itemLabel="#{lbl['lbl.ct.all']}" itemValue="2" />     	            	
-       </p:selectOneMenu> 
-	<p:outputLabel value="#{lbl['lbl.ct.item.skuno']}"/>
-	<p:inputText value="#{contractItemSearchBackingBean.managedBean.skuno}" style="width:270px;" maxlength="50"></p:inputText>	
-  </h:panelGrid>	
-  
-	<h:panelGrid columns="4" style="width:100%" columnClasses="columnWidth10, columnWidth30, columnWidth5,columnWidth20">	
-		<p:outputLabel value="#{lbl['lbl.ct.item.UOM']}"/>
-	<p:inputText value="#{contractItemSearchBackingBean.managedBean.UOM}" style="width:270px;" maxlength="20"></p:inputText>	
-		<p:outputLabel value="#{lbl['lbl.ct.item.typeofgoods']}"  />
+	<table style="width:100%"  >
+	<tr >
+		   <td colspan="1" rowspan="1">
+		   				<p:outputLabel value="#{lbl['lbl.ct.item.type']}" />
+		   </td>
+			<td colspan="1" rowspan="1">
+				<p:selectOneMenu value="#{contractItemSearchBackingBean.managedBean.itemtype}"  style="width:280px;" maxlength="500" >
+							<f:selectItems value="#{contractRequestBackingBean.itemTypeValues}"></f:selectItems>
+							<f:selectItem itemLabel="#{lbl['lbl.ct.all']}" itemValue="3" >  </f:selectItem>      	
+				</p:selectOneMenu>
+			</td>
+	        <td colspan="1" rowspan="1">
+	            <p:outputLabel value="#{lbl['lbl.ct.item.code']}" style="float:center-left;"  />
+	        </td>
+			<td colspan="1" rowspan="1">
+			   <p:inputText value="#{contractItemSearchBackingBean.managedBean.itemcode}" style="width:270px; float:center;"  maxlength="20"  />
+			</td>
+	</tr>			
+	
+	<tr>
+		 <td colspan="1" rowspan="1">
+		 	<p:outputLabel value="#{lbl['lbl.ct.item.status']}"/>
+		</td>
+		 <td colspan="1" rowspan="1">
+				 <p:selectOneMenu value="#{contractItemSearchBackingBean.managedBean.itemstatus}" style="width:280px;" maxlength="500" >  
+		    	<f:selectItem itemLabel="#{lbl['lbl.ct.selectOne']}" itemValue="" />  
+		    	<f:selectItem itemLabel="#{lbl['lbl.ct.inactive']}" itemValue="0" />   
+		    	<f:selectItem itemLabel="#{lbl['lbl.ct.active']}" itemValue="1" /> 
+		    	<f:selectItem itemLabel="#{lbl['lbl.ct.all']}" itemValue="2" />     	            	
+		       </p:selectOneMenu>  
+       </td>
+	   <td colspan="1" rowspan="1">
+	   			<p:outputLabel value="#{lbl['lbl.ct.item.skuno']}"/> 
+	   </td>
+	  <td colspan="1" rowspan="1">
+	  		<p:inputText value="#{contractItemSearchBackingBean.managedBean.skuno}" style="width:270px;" maxlength="50"></p:inputText>	
+	 </td>
+	</tr> 
+	<tr>
+		<td colspan="1" rowspan="1"></td>
+		<td colspan="1" rowspan="1"></td>
+		<td colspan="1" rowspan="1">
+			<p:outputLabel value="#{lbl['lbl.ct.item.UOM']}"/>
+		</td>
+		<td colspan="1" rowspan="1"> 
+			<p:inputText value="#{contractItemSearchBackingBean.managedBean.UOM}" style="width:270px;" maxlength="20"></p:inputText>
+	  </td>
+	 </tr>
+	
+	<tr >
+		<td colspan="1" rowspan="1"></td>
+		<td colspan="1" rowspan="1"></td>	
+				<td colspan="1" rowspan="1">
+				    <p:outputLabel value="#{lbl['lbl.ct.item.typeofgoods']}"  />
+				 </td>
 		
-	    	<p:selectOneMenu value="#{contractItemSearchBackingBean.managedBean.typeofgoods}" style="width:280px;" maxlength="500" >  
-            	<f:selectItem itemLabel="#{lbl['lbl.ct.selectOne']}" itemValue="" />  
-            	<f:selectItems value="#{contractItemSearchBackingBean.getLocalGoodsRadioValues(ParameterTypeConst.itemOrigin)}" />
-            	<f:selectItem itemLabel="#{lbl['lbl.ct.all']}" itemValue="197" />      	
-              </p:selectOneMenu> 
-	       </h:panelGrid>	
-			<div class="ppRightBtn" style="width:80%" > 
+	    	  <td colspan="1" rowspan="1">
+		    	  <p:selectOneMenu value="#{contractItemSearchBackingBean.managedBean.typeofgoods}" style="width:280px;" maxlength="500" >  
+	            	<f:selectItem itemLabel="#{lbl['lbl.ct.selectOne']}" itemValue="" />  
+	            	<f:selectItems value="#{contractItemSearchBackingBean.getLocalGoodsRadioValues(ParameterTypeConst.itemOrigin)}" />
+	            	<f:selectItem itemLabel="#{lbl['lbl.ct.all']}" itemValue="197" />      	
+	              </p:selectOneMenu> 
+             </td>
+	 </tr>
+	 </table>	
+			<div class="ppRightBtn" style="width:100%" > 
 				<p:commandButton id="panelSearchIditem" value="#{lbl['lbl.btn.search']}" action="#{contractItemSearchBackingBean.searchCircular}" process="@this,searchId" partialsubmit="true" 
 				    onstart="circularSearchBlk.show();" oncomplete="circularSearchBlk.hide();" update="@form"  />
 				<p:commandButton value="#{lbl['lbl.btn.reset']}" action="#{contractItemSearchBackingBean.searchReset}"  update="@form" />
