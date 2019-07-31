@@ -86,7 +86,7 @@ public class SuspensionManagedBean extends BaseManagedBean {
 private IPagingDataModel<CtContractItem> SuspensionProductListingPagingDataModel = new SuspensionProductListingPagingDataModel();
 
      
-	private class SuspensionProductListingPagingDataModel extends PagingDataModel<CtContractItem> {
+	 private class SuspensionProductListingPagingDataModel extends PagingDataModel<CtContractItem> {
 		
 		private static final long serialVersionUID = 1L;
 		
@@ -104,7 +104,7 @@ private IPagingDataModel<CtContractItem> SuspensionProductListingPagingDataModel
 				
 				ContractBackingBean contractBb=new ContractBackingBean();
 				Long contId=contractBb.getManagedBean().getContractVer().getCtContract().getContractId();
-				Long contractVerId=contractBb.getManagedBean().getContractVer().getContractVerId();
+				Long contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();
 				log.info("**SuspensionProductListingPagingDataModel******ContractID **--> : "+contId);
 				log.info("**SuspensionProductListingPagingDataModel******ContractVerID **--> : "+contractVerId);
 				
@@ -563,9 +563,10 @@ private IPagingDataModel<CtContractItem> SuspensionProductListingPagingDataModel
 	}
 	
 	/**
-	 * @param circularListingPagingDataModel the circularListingPagingDataModel to reset
+	 * @param the SuspensionProductListingPagingDataModel to reset
 	 */
-	public void resetSuspensionProductListingPagingDataModel() {
-		this.SuspensionProductListingPagingDataModel = new SuspensionProductListingPagingDataModel();
+	public SuspensionProductListingPagingDataModel  resetSuspensionProductListingPagingDataModel() {
+		return new SuspensionProductListingPagingDataModel();
+		//return SuspensionProductListingPagingDataModel;
 	}
 }
