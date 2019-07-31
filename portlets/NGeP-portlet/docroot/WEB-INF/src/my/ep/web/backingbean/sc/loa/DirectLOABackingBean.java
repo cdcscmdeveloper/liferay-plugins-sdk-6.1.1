@@ -3478,12 +3478,12 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if (null == getManagedBean().getPeriodicScheduleParamId()) {
 			getManagedBean().setPeriodicScheduleParamId(getParameterIdByTypeAndCode(ParameterTypeConst.FULFILMENT_TYPE, ParameterConst.FULFILMENT_TYPE_SCHEDULED.toUpperCase()));
 		}
-		
+		/*
 		if (type == getManagedBean().getPeriodicAsAndWhenParamId().longValue() || type == getManagedBean().getPeriodicScheduleParamId().longValue()) {
 			getManagedBean().setBondReqSelectedVal(null);
 			getManagedBean().setAgreemetSelectedVal(null);
 			getManagedBean().getScLoa().setBondReq(false);
-		}
+		}*/
 		
 		if (ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(this
 				.getManagedBean().getScQt().getFulfilmentType()
@@ -8446,7 +8446,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			getManagedBean().setNoParameterId(String.valueOf(getParameterIdByTypeAndCode(ParameterTypeConst.YES_NO_FLAG, ParameterConst.COMPLIANCE_STATUS_NOT_COMPLIANCE.toUpperCase())));
 		}
 		
-		if (StringUtils.isEmpty(getManagedBean().getBondReqSelectedVal()) && !isPk7Periodic()) {
+		if (StringUtils.isEmpty(getManagedBean().getBondReqSelectedVal())) {
 			if (getManagedBean().getScLoa().isBondReq()) { 
 				getManagedBean().setBondReqSelectedVal(getManagedBean().getYesParameterId());
 			} else if (getManagedBean().getScLoa().getLoaNo() != null) {
@@ -8553,7 +8553,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			getManagedBean().setNoParameterId(String.valueOf(getParameterIdByTypeAndCode(ParameterTypeConst.YES_NO_FLAG, ParameterConst.COMPLIANCE_STATUS_NOT_COMPLIANCE.toUpperCase())));
 		}
 		
-		if (StringUtils.isEmpty(getManagedBean().getAgreemetSelectedVal()) && !isPk7Periodic()) {
+		if (StringUtils.isEmpty(getManagedBean().getAgreemetSelectedVal())) {
 			if (getManagedBean().getScLoa().isAgreementReq()) { 
 				getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());
 			} else if (getManagedBean().getScLoa().getLoaNo() != null) {
