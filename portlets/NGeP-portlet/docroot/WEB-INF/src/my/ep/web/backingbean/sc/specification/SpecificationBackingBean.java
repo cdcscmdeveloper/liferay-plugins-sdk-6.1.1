@@ -13975,6 +13975,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		spReqDTO.setPrepareSpecStatus(this.getManagedBean()
 				.getCurrentStatusId());
 		spReqDTO.setUserLocale(facesScopes.getUserLocale());
+		//Bug #26214
+		spReqDTO.setAllowZeroVariance(true);
 		IQTSpecSO specSO = getSpecSO();
 		try {
 			resDTO = specSO.updateSpecMaintananceDetails(spReqDTO);
