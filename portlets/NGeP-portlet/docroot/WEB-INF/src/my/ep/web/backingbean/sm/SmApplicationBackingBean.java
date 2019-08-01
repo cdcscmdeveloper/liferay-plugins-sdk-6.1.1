@@ -60,6 +60,8 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.zone.ZoneReqDTO;
 import my.ep.dto.sm.attachment.SmAttachmentReqDTO;
+import my.ep.dto.sm.common.ssm.SsmReqDTO;
+import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
@@ -762,6 +764,8 @@ public class SmApplicationBackingBean extends
 	 */
 	public String proceedToApplication(String applicationType, boolean fromBpm,
 			SmAppl appl, SmSupplier supp) {
+		// #16052019 - SSM INTEGRATION CR
+		getManagedBean().setSsmIntegrationActive(SmCommonUtil.getInstance().ssmActive());
 		//#Enhancement #11765
 		alreadyExecute = false;//avoid duplicate execute function setDefaultApproverReviewSection() && setDefaultPoReviewSection()
 		getManagedBean().setRedirectToPersonPage(false);
@@ -799,29 +803,10 @@ public class SmApplicationBackingBean extends
 		SmSupplier smApplSupplier = new SmSupplier();
 
 		MofRegistrationResDTO resDto = new MofRegistrationResDTO();
+		
 
 		if (!fromBpm) {
 			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
-			//16052019 - SSM INTEGRATION CR - Fahmi
-			/*if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
-					|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF) 
-					|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW) 
-					|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)
-					|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)){
-				if(businessTypeTovalidateWithSSM(currSupp.getRegNo(),currSupp.getBusinessType())){
-					this.getManagedBean().setValidateWithSSM(true);
-					
-					
-					// maybe here to put method to check with ssm
-					//SmCommonUtil.getInstance().validateWithSSM(regNo,businessType,"");
-					this.getManagedBean().setCompanyValidWithSSM(true);
-					if(!this.getManagedBean().isCompanyValidWithSSM()){
-//						throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.contractor",null), getManagedBean().getSmSupp().getRegNo()});
-						throw new EpException(MessageConst.ERROR_721070);
-					}
-				}
-			}*/
-			//16052019 - SSM INTEGRATION CR - Fahmi END
 			boolean cannotProceedAlertMsg = false;
 
 			if (applicationType
@@ -1450,10 +1435,90 @@ public class SmApplicationBackingBean extends
 							new String[] { getManagedBean().getApplStatusInfo()
 									.getDaysLeft() }));
 		}
-
+		
+		//16052019 - SSM INTEGRATION CR - Fahmi
+		if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+				||applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
+				|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF) 
+				|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW) 
+				|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)
+				|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)){
+			if(!fromBpm && getManagedBean().isSsmIntegrationActive() && this.getManagedBean().getSmSupplier()!= null){
+				//SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
+				if(businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupplier().getRegNo(),this.getManagedBean().getSmSupplier().getBusinessType())){
+					SsmReqDTO ssmReqDTO = new SsmReqDTO();
+					ssmReqDTO.setRegNo(this.getManagedBean().getSmSupplier().getRegNo());
+					ssmReqDTO.setBusinessType(this.getManagedBean().getSmSupplier().getBusinessType());
+					SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
+					this.getManagedBean().setCompanyValidWithSSM(false);
+					this.getManagedBean().setValidateWithSSM(true);
+					if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
+						this.getManagedBean().setCompanyValidWithSSM(true);
+						//SET COMPANY NAME
+						String[] copyProp = {"companyName","robExpiryDate"};
+						EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(),this.getManagedBean().getSmAppl().getSmCompanyBasic(),copyProp);
+						//SET ADDRESS
+						this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setAddress1(ssmResDTO.getSmAddress().getAddress1());
+						this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setAddress2(ssmResDTO.getSmAddress().getAddress2());
+						this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setAddress3(ssmResDTO.getSmAddress().getAddress3());
+						this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPostcode(ssmResDTO.getSmAddress().getPostcode());
+						this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPmState(ssmResDTO.getSmAddress().getPmState());
+						
+						//set establish date
+						this.getManagedBean().getSmAppl().getSmCompanyBasic().setEstablishDate(ssmResDTO.getSmCompanyBasic().getEstablishDate());
+						
+						//CHECK EQUITY OWNER EXIT IN SSM TO DISABLE CHECKBOX
+						int i = 0;
+						for(SmPersonnel personnel : this.getManagedBean().getSmAppl().getSmPersonnels()){
+							if(EntityHelper
+									.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo") != null){
+								personnel.setSsmData(true);
+								this.getManagedBean().getSmAppl().getSmPersonnels().set(i, personnel);
+							}
+							i++;
+						}
+						//SET EQUITY COMPANY
+						//if(this.getManagedBean().getSmAppl().getSmEquityCompanies()!=null){
+						if(ssmResDTO.getSmEquityCompanys()!=null){
+							this.getManagedBean().setSmEquityCompanyTemp(ssmResDTO.getSmEquityCompanys());
+							/*for(SmEquityCompany equityCompany : ssmResDTO.getSmEquityCompanys()){
+								if(EntityHelper.getEntityBySinglePropertyFromList(equityCompany.getCompanyName(), this.getManagedBean().getSmAppl().getSmEquityCompanies(), "companyName") == null){
+									this.getManagedBean().getSmAppl().getSmEquityCompanies().add(equityCompany);
+								}
+							}*/
+							
+						}
+					}else{
+						this.getManagedBean().setCompanyValidWithSSM(false);
+					}
+					
+					// maybe here to put method to check with ssm
+					//SmCommonUtil.getInstance().validateWithSSM(regNo,businessType,"");
+					
+					if(!this.getManagedBean().isCompanyValidWithSSM()){
+	//					throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.contractor",null), getManagedBean().getSmSupp().getRegNo()});
+						throw new EpException(MessageConst.ERROR_721070);
+					}
+				}
+			}else if(fromBpm && this.getManagedBean().getSmSupplier() != null && getManagedBean().isSsmIntegrationActive() && businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupplier().getRegNo(),this.getManagedBean().getSmSupplier().getBusinessType())){
+				//this will use, when click from tasklist n only to check data is valid with ssm or not
+				SsmReqDTO ssmReqDTO = new SsmReqDTO();
+				ssmReqDTO.setRegNo(this.getManagedBean().getSmSupplier().getRegNo());
+				ssmReqDTO.setBusinessType(this.getManagedBean().getSmSupplier().getBusinessType());
+				ssmReqDTO.setCheckOnly(true);
+				SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
+				getManagedBean().setCompanyValidWithSSM(ssmResDTO.isCompanyValid());
+				getManagedBean().setValidateWithSSM(ssmResDTO.isCompanyValid());
+			}else{
+				getManagedBean().setCompanyValidWithSSM(false);
+				getManagedBean().setValidateWithSSM(false);
+			}
+		}
+		//16052019 - SSM INTEGRATION CR - Fahmi END
+		
 		// set Personnel List Count
 		calcPersonnelListCount();
-
+				
 		return SmApplicationUtil.setNavigationForAppl(applicationType);
 
 	}

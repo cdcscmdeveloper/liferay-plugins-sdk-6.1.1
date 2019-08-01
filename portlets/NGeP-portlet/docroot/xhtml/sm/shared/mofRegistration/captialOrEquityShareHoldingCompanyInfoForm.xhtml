@@ -148,6 +148,7 @@
 							validator="#{backingBean.validateRequiredField}"
 							label="#{lbl['lbl.sm.equiComp.compName']}" id="supEquiCompName"
 							value="#{backingBean.managedBean.selectedEquityCompany.companyName}"
+							disabled ="#{backingBean.managedBean.selectedEquityCompany.ssmData and not empty backingBean.managedBean.selectedEquityCompany.companyName}"
 							size="35" >
 								<p:ajax event="blur" process="@this" update="@this"/>
 								<f:attribute name="labelName" value="#{lbl['lbl.sm.equiComp.compName']}" />
@@ -168,6 +169,7 @@
 							validator="#{backingBean.validateRequiredField}"
 							label="#{lbl['lbl.sm.equiComp.regNo']}" id="suppEquiCompRegNo"
 							value="#{backingBean.managedBean.selectedEquityCompany.regNo}"
+							disabled ="#{backingBean.managedBean.selectedEquityCompany.ssmData and not empty backingBean.managedBean.selectedEquityCompany.regNo}"
 							size="35" > 
 							<f:attribute name="labelName" value="#{lbl['lbl.sm.assocCmpny.regNo']}" />
 							<p:ajax event="blur" process="@this" update="equiCompBlockPanel" partialSubmit="true"
@@ -188,7 +190,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.shrAmt']} " />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td><p:inputText id="equiCompShrAmt"
-							disabled="#{!backingBean.managedBean.valueReqd}"
+							disabled="#{!backingBean.managedBean.valueReqd or backingBean.managedBean.selectedEquityCompany.ssmData}"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.equiComp.shrAmt']}"
 							validatorMessage="#{lbl['lbl.sm.equiComp.shrAmt']} - #{lbl['lbl.sm.minAmt.validMsg']}"
@@ -229,10 +231,11 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.addr']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText maxlength="100"
+					<td>123<p:inputText maxlength="100"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.equiComp.addr']}" id="suppEquiCompAddr"
 							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.address1}"
+							disabled ="#{backingBean.managedBean.selectedEquityCompany.ssmData and not empty backingBean.managedBean.selectedEquityCompany.smAddress.address1}"
 							size="35" /> 
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -248,6 +251,7 @@
 					<td></td>
 					<td><p:inputText maxlength="100"
 							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.address2}"
+							disabled ="#{backingBean.managedBean.selectedEquityCompany.ssmData and not empty backingBean.managedBean.selectedEquityCompany.smAddress.address1}"							
 							size="35" />
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -260,6 +264,7 @@
 					<td></td>
 					<td><p:inputText maxlength="100"
 							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.address3}"
+							disabled ="#{backingBean.managedBean.selectedEquityCompany.ssmData and not empty backingBean.managedBean.selectedEquityCompany.smAddress.address1}"	
 							size="35" />
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -275,6 +280,7 @@
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.country']}" id="suppEquiCompCntry"
 							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.countryId}"
+							disabled ="#{backingBean.managedBean.selectedEquityCompany.ssmData and not empty backingBean.managedBean.selectedEquityCompany.smAddress.countryId}"	
 							style="width: 207px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="equiCountry"

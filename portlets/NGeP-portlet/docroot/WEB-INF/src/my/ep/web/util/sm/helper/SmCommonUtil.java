@@ -20,6 +20,7 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -66,6 +67,7 @@ import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.calendar.ICalendarSO;
 import my.ep.biz.service.sm.common.myidentity.IMyIdentitySO;
+import my.ep.biz.service.sm.common.ssm.ISsmSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
@@ -108,6 +110,8 @@ import my.ep.dto.sm.attachment.SmAttachmentReqDTO;
 import my.ep.dto.sm.attachment.SmAttachmentResDTO;
 import my.ep.dto.sm.common.myidentity.MyIdentityReqDTO;
 import my.ep.dto.sm.common.myidentity.MyIdentityResDTO;
+import my.ep.dto.sm.common.ssm.SsmReqDTO;
+import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.dto.sm.complaint.ComplaintReqDTO;
 import my.ep.dto.sm.complaint.ComplaintResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
@@ -204,6 +208,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.id.Hex;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -516,6 +521,26 @@ public class SmCommonUtil {
 				.getInstance().getServiceObject("pm", IBusinessNatureSO.class);
 		BusinessNatureResDTO resDTO = reqSO
 				.retrieveBusinessNatureDtlById(reqDTO);
+
+		return resDTO.getBusinessNature();
+	}
+	
+	/**
+	 * Retrieve business nature by level code.
+	 * 
+	 * @param level code
+	 *            - String Level code
+	 * @return PmBusinessNature object
+	 */
+	//SSM  : #16052019 - SSM INTEGRATION CR - Fahmi
+	public static PmBusinessNature retrieveBusinessNatureByLevelCode(String levelCode) {
+		BusinessNatureReqDTO reqDTO = new BusinessNatureReqDTO();
+		reqDTO.setLevelCode(levelCode);
+
+		IBusinessNatureSO reqSO = (IBusinessNatureSO) BusinessDelegate
+				.getInstance().getServiceObject("pm", IBusinessNatureSO.class);
+		BusinessNatureResDTO resDTO = reqSO
+				.retrieveBusinessNatureDtlByLevelCode(reqDTO);
 
 		return resDTO.getBusinessNature();
 	}
@@ -4162,7 +4187,11 @@ public class SmCommonUtil {
 				case "70039":
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70039);
 				case "70040":
-					throw new EpException(MessageConst.ERROR_MYIDENTITY_70040);
+					if(type != null && type.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN)){
+						throw new EpException(MessageConst.ERROR_SSM_70062);
+					}else{
+						throw new EpException(MessageConst.ERROR_MYIDENTITY_70040);
+					}
 				}
 			}
 
@@ -4180,6 +4209,25 @@ public class SmCommonUtil {
 		}
 	}
 	//16052019 - SSM INTEGRATION CR - Fahmi
+		/**
+		 * Verify regNo no with SSM
+		 * 
+		 * @param regNo
+		 * @param bussinessType
+		 * 
+		 * @return responseCode
+		 */
+	public boolean ssmActive(){
+		ISsmSO reqSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISsmSO.class);
+		try {
+			return reqSO.ssmActive();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+	}
+	//16052019 - SSM INTEGRATION CR - Fahmi
 	/**
 	 * Verify regNo no with SSM
 	 * 
@@ -4188,42 +4236,43 @@ public class SmCommonUtil {
 	 * 
 	 * @return responseCode
 	 */
-	/*public String validateWithSSM(String regNo, String bussinessType,String type) {
-		SsmReqDTO reqDTO = new SsmReqDTO();
-		ISsmSO reqSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISsmSO.class);
-
-		
-		reqDTO.setRegNo(regNo);
-		reqDTO.setBusinessType(bussinessType);
-
+	public SsmResDTO validateWithSSM(SsmReqDTO ssmReqDTO) {
+		ISsmSO reqSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISsmSO.class);		
 		try {
-			SsmResDto resDTO = reqSO.ssmValidation(reqDTO);
-			
-			if (!resDTO.getStatusCode().equalsIgnoreCase("")){
+			//set default parameter
+			PmParameter identificationType = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_IC);
+			PmParameter passportType = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_PASSPORT);
+			ssmReqDTO.setPmParameter(identificationType);
+			ssmReqDTO.setPmParameterIdTypeP(passportType);
+			String regNo = ssmReqDTO.getRegNo();
+			regNo = regNo.substring(0, regNo.length() - 2);
+			ssmReqDTO.setRegNo(regNo);
+			SsmResDTO resDTO = reqSO.ssmValidation(ssmReqDTO);
+			//only return company valid or not
+			if(ssmReqDTO.isCheckOnly()){
+				return resDTO;
+			}
+			if (!resDTO.getStatusCode().equalsIgnoreCase("") && !"70060".equalsIgnoreCase(resDTO.getStatusCode())){
+				
 				switch (resDTO.getStatusCode()) {
-				case "70019":
-					throw new EpException(MessageConst.ERROR_MYIDENTITY_70019);
-				case "70020":
-					throw new EpException(MessageConst.ERROR_MYIDENTITY_70020);
-				case "70031":
-					throw new EpException(MessageConst.ERROR_MYIDENTITY_70031);
-					
-					 * case "70032": throw new
-					 * EpException(MessageConst.ERROR_MYIDENTITY_70032);
-					 
+				case "70001":
+					throw new EpException(MessageConst.ERROR_SSM_70001);
+				case "70002":
+					throw new EpException(MessageConst.ERROR_SSM_70002);
+				case "70003":
+					throw new EpException(MessageConst.ERROR_SSM_70003);
 				case "70004":
-					throw new EpException(MessageConst.ERROR_MYIDENTITY_70004);
+					throw new EpException(MessageConst.ERROR_SSM_70004);
 				case "70005":
-					throw new EpException(MessageConst.ERROR_MYIDENTITY_70004);
-				case "70039":
-					throw new EpException(MessageConst.ERROR_MYIDENTITY_70039);
-				case "70040":
-					throw new EpException(MessageConst.ERROR_MYIDENTITY_70040);
+					throw new EpException(MessageConst.ERROR_SSM_70005);
+				case "70006":
+					throw new EpException(MessageConst.ERROR_SSM_70006);
+				case "70061":
+					throw new EpException(MessageConst.ERROR_SSM_70001);
 				}
 			}
 
-			return resDTO.getStatusCode();
+			return resDTO;
 		} catch (Exception ex) {
 			String message = MessageUtils.getMessage(ex.getMessage(),
 					MessageUtils.BUNDLE_COMMON_MESSAGES,
@@ -4235,7 +4284,7 @@ public class SmCommonUtil {
 				throw new EpException(ex.getMessage() + "(ERR-729999)");
 			}
 		}
-	}*/
+	}
 
 	/**
 	 * verify verify Owner With My Identity
@@ -5648,5 +5697,22 @@ public class SmCommonUtil {
 		} else {
 			return false;
 		}
+	}
+	/**
+	 * #16052019 - SSM INTEGRATION CR 
+	 * Retrieve PmCountry by country code ssm.
+	 * 
+	 * @param countryId
+	 *            - String country code ssm
+	 * @return PmCountry object
+	 */
+	public static PmCountry retrievePmCountryByCountryCodeSSM(String countryCodeSSM) {
+		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", ICountrySO.class);
+		CountryReqDTO reqDTO = new CountryReqDTO();
+		reqDTO.setCountryCodeSSM(countryCodeSSM);
+		CountryResDTO resDTO = reqSO.retrieveCountryByCodeSSM(reqDTO);
+
+		return resDTO.getPmCountry();
 	}
 }

@@ -145,6 +145,7 @@ import my.ep.persistence.entity.sm.SmAttachment;
 import my.ep.persistence.entity.sm.SmCategoryOverlapDoc;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
+import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmGstSupplier;
@@ -1725,7 +1726,14 @@ public class SmApplicationUtil {
 		int profCount = 0;
 		int semiProfCount = 0;
 		for (SmPersonnel per : appl.getSmPersonnels()) {
-
+			//16052019 - SSM INTEGRATION CR - To check address complete or not
+			/*if(managedBean.isSsmIntegrationActive() && managedBean.isCompanyValidWithSSM()){
+				if(per.getSmPersonnelAddresses()==null || per.getSmPersonnelAddresses().size()<=0){
+					log.info("ini tiada address");
+				}
+			}*/
+			
+			//END Changes SSM
 			if (per.isDirector()) {
 				directorCount = directorCount + 1;
 			}
@@ -12930,6 +12938,27 @@ public class SmApplicationUtil {
 				i = i + 1;
 			}
 		}
+	}
+	public void calcCapitalDistribution(SmPersonnel per,SmCompanyBasic basic){
+		if (per.getShareAmt() == null) {
+			per.setShareAmt(new BigDecimal(0));
+		}
+		basic.setBumiEquity(basic.getBumiEquity()==null?new BigDecimal(0):basic.getBumiEquity());
+		basic.setNonBumiEquity(basic.getNonBumiEquity()==null?new BigDecimal(0):basic.getNonBumiEquity());
+		basic.setForeignerEquity(basic.getForeignerEquity()==null?new BigDecimal(0):basic.getForeignerEquity());
+		basic.setGovtUnitrustEquity(basic.getGovtUnitrustEquity()==null?new BigDecimal(0):basic.getGovtUnitrustEquity());
+		basic.setGovtEquity(basic.getGovtEquity()==null?new BigDecimal(0):basic.getGovtEquity());
+		basic.setForeignCompanyEquity(basic.getForeignCompanyEquity()==null?new BigDecimal(0):basic.getForeignCompanyEquity());
+		basic.setLocalCompanyEquity(basic.getLocalCompanyEquity()==null?new BigDecimal(0):basic.getLocalCompanyEquity());
+
+		if(per.isBumi()){
+			basic.setBumiEquity(basic.getBumiEquity().add(per.getShareAmt()));
+		}else if(!per.isBumi()){
+			basic.setNonBumiEquity(basic.getNonBumiEquity().add(per.getShareAmt()));
+		}else if(per.isAttachHq()){
+			
+		}
+		
 	}
 
 }
