@@ -8,9 +8,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -726,8 +731,13 @@ public class TaskReassignmentBackingBean extends
 			resetReassigneeList(); //If the Reset button is not clicked when performing the next search
 			searchTaskAssign();
 		} else {
-			resetReassigneeList();
-			searchUsers();
+			if (!verifiedDocNumber(this.getManagedBean().
+					getTaskAssignmentSearchBean().getDocNo())) {
+				throw new EpException(MessageConst.ERROR_770206);
+			} else {
+				resetReassigneeList();
+				searchUsers();
+			}
 		}
 		
 	}
@@ -826,6 +836,129 @@ public class TaskReassignmentBackingBean extends
 		}
 		
 	}
+	
+	public boolean verifiedDocNumber(String docNumber) {
+		
+	   Set<String> moduleList = new HashSet<String>();
+	   boolean valid = true;
+		  
+	   if (Pattern.matches("[a-zA-Z]+",docNumber) || 
+       		Pattern.matches("[0-9]+",docNumber)) {
+	 		valid = false; 
+	   }
+	   
+	   if (docNumber.length() < 10) {
+		   valid = false;
+	   } else {	   
+		   Pattern pattern = Pattern.compile("[^a-z0-9 ]", 
+			  		Pattern.CASE_INSENSITIVE);
+		   Matcher matcher = pattern.matcher(docNumber);
+		   int numOfInvalidChars = 0;
+		   
+		   if (!Character.isDigit(docNumber.charAt(docNumber.length()-1))) {
+		 		valid = false; 
+		   }
+		   
+		   while (matcher.find()) {
+			 	if ( "-".indexOf(docNumber.charAt(matcher.start())) != -1 ) {
+			 		 continue;
+			 	}
+			 	numOfInvalidChars = numOfInvalidChars + 1;
+				log.info( "Invalid characters: " + docNumber.charAt(matcher.start()) );
+		   }
+		   
+		   if (numOfInvalidChars > 0) {
+			   valid = false;
+		   }
+		   if (docNumber.matches(".*\\s+.*")) {
+	           valid = false;
+	        }
+	   }
+	   
+	   String module = null;
+	   
+    	//Load all recognized module constants
+	    for (Field field : ParameterConst.class.getDeclaredFields()) {
+	        int fieldModifiers = field.getModifiers();
+	        
+	        if (Modifier.isStatic(fieldModifiers) && 
+	        		Modifier.isFinal(fieldModifiers) ) {
+	        	try {
+	        		module = field.get(null).toString();
+	        		for (char chr : module.toCharArray()) {
+	        	        if (!Character.isDigit(chr) && module.length() == 2) {
+	        	        	moduleList.add(module);
+	        	        }
+	        	    }
+				} catch (IllegalArgumentException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				}
+	        }
+	    }
+	       	
+    	List<String> docNoList = new ArrayList<String>();
+        String value = "";
+        char currKey;
+        
+        for (int i = 0; i < docNumber.length() + 1; i++) {
+        	
+            if (i == 0) {
+            	currKey = docNumber.charAt(0);
+            } else {
+            	currKey = docNumber.charAt(--i);
+            }
+            
+            //Splitting digits and letters off the docNumber
+            if (currKey >= '0' && currKey <= '9') {
+                while (i < docNumber.length() 
+                		&& (docNumber.charAt(i) >= '0' 
+                			&& docNumber.charAt(i) <= '9')) {
+                    value += docNumber.charAt(i++);
+                }
+                docNoList.add(value);
+                value = "";
+            } else {
+                while (i < docNumber.length() &&
+                		!(docNumber.charAt(i) >= '0' 
+                			&& docNumber.charAt(i) <= '9')) {
+                	value += docNumber.charAt(i++);
+                }
+                docNoList.add(value);
+                value = "";
+            }
+        }
+        
+        String docPrefix = docNoList.get(0).toString();
+        log.info("docNoList= "+docNoList+ " docPrefix= "+docPrefix);
+        
+        if (!moduleList.contains(docPrefix)) {
+        	if (docPrefix.contains("-")) {
+        		docPrefix = docPrefix.replace("-", "");
+	        }
+        	if (!docPrefix.isEmpty() && docPrefix.matches("[a-zA-Z]+")) {
+		        if (docPrefix.length() != 2 ) {
+	        		valid = false;
+		    	} else {
+		    		moduleList.add(docPrefix);
+		    	}
+        	}
+        	if (!valid) {
+        		Iterator<String> moduleIterator = moduleList.iterator(); 
+    	       
+    	        while (moduleIterator.hasNext()) {
+    	        	if (moduleIterator.next().equals(docPrefix)) {
+    	        		moduleList.remove(docPrefix);
+    	        		break;
+    	        	}
+    	        }
+        	}
+        }
+        log.info("moduleList size= "+moduleList.size()+" valid= "+valid);
+        return valid;
+	}
+	
 	
 	/**
 	 * User Task List Data Model
