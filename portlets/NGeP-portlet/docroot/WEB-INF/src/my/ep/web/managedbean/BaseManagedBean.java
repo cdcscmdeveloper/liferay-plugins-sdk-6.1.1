@@ -54,6 +54,15 @@ public abstract class BaseManagedBean implements Serializable {
 	private List<ScQtEvaluationReport> reportsToBeRemovedList;
 	private boolean autoUpdate = Boolean.TRUE;
 	
+	//16052019 - SSM INTEGRATION CR - Fahmi
+	private boolean ssmIntegrationActive;
+	private boolean validateWithSSM;
+	private boolean companyValidWithSSM;
+	private boolean errorMessageSSM;
+	private String statusFromSSM;
+	private String statusDescFromSSM;
+		
+	
 	// For sub title displayed in screen.
 	private String title;
 	
@@ -446,6 +455,53 @@ public abstract class BaseManagedBean implements Serializable {
 	 */
 	public void setAutoUpdate(boolean autoUpdate) {
 		this.autoUpdate = autoUpdate;
+	}
+	public boolean isSsmIntegrationActive() {
+		return ssmIntegrationActive;
+	}
+
+	public void setSsmIntegrationActive(boolean ssmIntegrationActive) {
+		this.ssmIntegrationActive = ssmIntegrationActive;
+	}
+
+	public boolean isValidateWithSSM() {
+		return validateWithSSM;
+	}
+
+	public void setValidateWithSSM(boolean validateWithSSM) {
+		this.validateWithSSM = validateWithSSM;
+	}
+
+	public boolean isCompanyValidWithSSM() {
+		return companyValidWithSSM;
+	}
+
+	public void setCompanyValidWithSSM(boolean companyValidWithSSM) {
+		this.companyValidWithSSM = companyValidWithSSM;
+	}
+
+	public boolean isErrorMessageSSM() {
+		return errorMessageSSM;
+	}
+
+	public void setErrorMessageSSM(boolean errorMessageSSM) {
+		this.errorMessageSSM = errorMessageSSM;
+	}
+
+	public String getStatusFromSSM() {
+		return statusFromSSM;
+	}
+
+	public void setStatusFromSSM(String statusFromSSM) {
+		this.statusFromSSM = statusFromSSM;
+	}
+
+	public String getStatusDescFromSSM() {
+		return statusDescFromSSM;
+	}
+
+	public void setStatusDescFromSSM(String statusDescFromSSM) {
+		this.statusDescFromSSM = statusDescFromSSM;
 	}
 }
 

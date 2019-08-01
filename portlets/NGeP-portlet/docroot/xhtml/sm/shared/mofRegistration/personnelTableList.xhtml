@@ -29,7 +29,7 @@
 				update=":#{p:component('persInfPan')},:#{p:component('deletePersonnelBtnId')}"></p:ajax>
 			<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.smAppl.smPersonnels}"
 				disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
-				or person.softcertFlg eq 3 or backingBean.managedBean.disAllowOwnerEdit}" />
+				or person.softcertFlg eq 3 or backingBean.managedBean.disAllowOwnerEdit or person.ssmData }" />
 
 			<p:column headerText="#{lbl['lbl.sm.person.composition.name']}"
 				disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 

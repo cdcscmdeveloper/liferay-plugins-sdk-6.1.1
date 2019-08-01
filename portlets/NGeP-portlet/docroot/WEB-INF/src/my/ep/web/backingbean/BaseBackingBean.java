@@ -2375,6 +2375,54 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 		return false;
 	}
+	
+	//16052019 - SSM INTEGRATION CR - Fahmi
+		public boolean businessTypeTovalidateWithSSM(String regNo,String businessType){
+			//String regNo = this.getManagedBean().getSmSupp().getRegNo();
+			//String businessType = this.getManagedBean().getSmSupp().getBusinessType();
+			if(//businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT)
+					//|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)
+							//|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH)
+								//	|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK)
+											 businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
+													//|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)
+															//|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK)
+																	|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)
+																			|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD)
+																					//|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT)
+																							|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD)){
+				return true;
+			}else{
+				return false;
+			}
+		}
+		//16052019 - SSM INTEGRATION CR
+		public String setStatusMessageFromSSM(String statusCode){
+			if("A".equalsIgnoreCase(statusCode)){
+				return SmCommonUtil.getMessage("lbl.sm.status.active", null);
+			}else if("E".equalsIgnoreCase(statusCode)){
+				return SmCommonUtil.getMessage("lbl.sm.status.existing", null);
+			}else if("L".equalsIgnoreCase(statusCode)){
+				return SmCommonUtil.getMessage("lbl.sm.status.expired", null);
+			}else if("T".equalsIgnoreCase(statusCode)){
+				return SmCommonUtil.getMessage("lbl.sm.status.terminated", null);
+			}else if("B".equalsIgnoreCase(statusCode)){
+				return SmCommonUtil.getMessage("lbl.sm.status.dissolved", null);
+			}else if("W".equalsIgnoreCase(statusCode)){
+				return SmCommonUtil.getMessage("lbl.sm.status.w", null);
+			}else if("D".equalsIgnoreCase(statusCode)){
+				return SmCommonUtil.getMessage("lbl.sm.status.d", null);
+			}else if("R".equalsIgnoreCase(statusCode)){
+				return SmCommonUtil.getMessage("lbl.sm.status.r", null);
+			}else if("C".equalsIgnoreCase(statusCode)){
+				return SmCommonUtil.getMessage("lbl.sm.status.c", null);
+			}else if("X".equalsIgnoreCase(statusCode)){
+				return SmCommonUtil.getMessage("lbl.sm.status.x", null);
+			}else if("Y".equalsIgnoreCase(statusCode)){
+				return SmCommonUtil.getMessage("lbl.sm.status.y", null);
+			}
+			return "";
+		}
 }
 
 

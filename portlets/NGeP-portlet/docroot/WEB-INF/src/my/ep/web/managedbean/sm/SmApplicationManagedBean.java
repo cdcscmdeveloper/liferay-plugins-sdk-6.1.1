@@ -531,7 +531,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean itemDeleteButtonShow;
 	private int index;
 	private String accountNo;
-
+	
+	//#16052019 - SSM INTEGRATION CR
+	private List<SmEquityCompany> smEquityCompanyTemp;
 	private class RejectReasonPagingDataModel extends
 			PagingDataModel<PmReasonDesc> {
 		/**
@@ -4101,6 +4103,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setAccountNo(String accountNo) {
 		this.accountNo = accountNo;
+	}
+
+	public List<SmEquityCompany> getSmEquityCompanyTemp() {
+		return smEquityCompanyTemp;
+	}
+
+	public void setSmEquityCompanyTemp(List<SmEquityCompany> smEquityCompanyTemp) {
+		this.smEquityCompanyTemp = smEquityCompanyTemp;
 	}
 
 }
