@@ -1990,20 +1990,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		ContractReqDTO reqDTO = new ContractReqDTO();
 		reqDTO.setContractId(contractId);
 		
-		ContractResDTO resDTO = contractSO.retrieveLoaContractVerByContractId(reqDTO);
-		Long defaultContractVerId = null;
-		if(resDTO.getList() != null && !resDTO.getList().isEmpty())
-		{
-			int size = resDTO.getList().size();
-			defaultContractVerId = Long.parseLong(resDTO.getList().get(size - 1)[0].toString());
-		}
-	
-		if(defaultContractVerId != null) {
-			reqDTO.setContractVerId(defaultContractVerId);
-		} else {
-			reqDTO.setContractVerId(contractVerId);
-		}
-		
+		reqDTO.setContractVerId(contractVerId);
+			
 		reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE); // View purpose, FU or FW also fine
 		reqDTO.setViewOnly(true);
 		ctBB.getManagedBean().setViewContract(true);
