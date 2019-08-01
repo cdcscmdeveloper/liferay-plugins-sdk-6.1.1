@@ -171,8 +171,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.poi.hssf.record.PageBreakRecord.Break;
-import org.eclipse.jdt.internal.compiler.ast.BreakStatement;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.StreamedContent;
@@ -10761,7 +10759,7 @@ public class SmApplicationBackingBean extends
 
 	private void initMandatoryLicenseInfo(
 			List<SmApplSupportDoc> mandatoryLicenseDocs) {
-		SmSupplierCategory cat = null;
+		//SmSupplierCategory cat = null;
 		getManagedBean().setMandatoryLicenseDocs(
 				new ArrayList<SmLicenseInfoVO>());
 		SmLicenseInfoVO licenseVO = null;
@@ -10769,8 +10767,8 @@ public class SmApplicationBackingBean extends
 		for (SmApplSupportDoc doc : mandatoryLicenseDocs) {
 			count++;
 			licenseVO = new SmLicenseInfoVO();
-			cat = getLicenseCategory(doc.getPmDocument());
-			licenseVO.setL3(cat != null ? cat.getPmCategoryL3() : null);
+			//cat = getLicenseCategory(doc.getPmDocument());
+			//licenseVO.setL3(cat != null ? cat.getPmCategoryL3() : null);
 			licenseVO.setCategoryDesc(getLicenseConcatCategories(doc
 					.getPmDocument()));
 			licenseVO.setLicenseSuppDocs(new ArrayList<SmApplSupportDoc>());
@@ -10780,20 +10778,28 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
-	public SmSupplierCategory getLicenseCategory(PmDocument doc) {
-		SmSupplierCategory retVal = null;
+	public List<SmSupplierCategory> getLicenseCategory(PmDocument doc) {
+		List<SmSupplierCategory> retVal = new ArrayList<SmSupplierCategory>();
 		if (doc != null
 				&& !EntityHelper.isCollectionEmpty(doc.getPmDocumentRestrs())) {
+			List<SmSupplierCategory> activeList = new ArrayList<SmSupplierCategory>();
+			if(getManagedBean().getSmAppl().getSmSupplierCategories()!=null 
+					&& getManagedBean().getSmAppl().getSmSupplierCategories().size()>0 ){
+				for(SmSupplierCategory activeSuppCat: getManagedBean().getSmAppl().getSmSupplierCategories()){
+					if(activeSuppCat.getRecordStatusFlg().compareTo(
+							SupplierManagementConst.DELETED_RECORD_STATUS) < 0){
+						activeList.add(activeSuppCat);
+					}
+				}
+			}
 			for (PmDocumentRestr tmp : doc.getPmDocumentRestrs()) {
 				if (tmp.getPmCategoryL3() != null) {
-					retVal = (SmSupplierCategory) EntityHelper
+					SmSupplierCategory cat = (SmSupplierCategory) EntityHelper
 							.getEntityBySinglePropertyFromList(tmp
-									.getPmCategoryL3().getCategoryL3Id(),
-									getManagedBean().getSmAppl()
-											.getSmSupplierCategories(),
+									.getPmCategoryL3().getCategoryL3Id(),  activeList,
 									"pmCategoryL3");
-					if (retVal != null) {
-						break;
+					if (cat != null) {
+						retVal.add(cat);
 					}
 				}
 			}
@@ -10803,18 +10809,20 @@ public class SmApplicationBackingBean extends
 
 	public String getLicenseConcatCategories(PmDocument doc) {
 		String retVal = SmCommonUtil.getMessage("lbl.txt.na", null);
-		SmSupplierCategory cat = getLicenseCategory(doc);
-		if (cat != null) {
-			StringBuilder sb = new StringBuilder();
-			sb.append(
-					cat.getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
-							+ cat.getPmCategoryL2().getCategoryL2Code()
-							+ cat.getPmCategoryL3().getCategoryL3Code())
-					.append(" (")
-					.append(cat.getPmCategoryL3().getCategoryName())
-					.append(")").append(",");
+		List<SmSupplierCategory> catList = getLicenseCategory(doc);
+		StringBuilder sb = new StringBuilder();
+		if (catList != null && catList.size()>0) {
+			for(SmSupplierCategory cat: catList){
+				sb.append(
+						cat.getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
+								+ cat.getPmCategoryL2().getCategoryL2Code()
+								+ cat.getPmCategoryL3().getCategoryL3Code())
+						.append(" (")
+						.append(cat.getPmCategoryL3().getCategoryName())
+						.append(")").append(", ");
+			}
 			if (sb != null && sb.length() > 0) {
-				retVal = sb.toString();
+				retVal = sb.toString().trim();
 				if (retVal.endsWith(",")) {
 					retVal = retVal.substring(0, retVal.length() - 1);
 				}
