@@ -65,7 +65,7 @@
 							display="inline" required="true" readonlyInput="true"
 							label="#{lbl['lbl.sm.account.rob.expire']}" id="robExpiryDate"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-							yearRange="-99:+0" maxdate="#{backingBean.managedBean.currDate}"
+							yearRange="-99:+0" 
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.robExpiryDate}"
 							rendered="#{(backingBean.managedBean.smSupplier.businessType == 'C' or backingBean.managedBean.smSupplier.businessType == 'F') and (!backingBean.managedBean.companyValidWithSSM || empty backingBean.managedBean.smAppl.smCompanyBasic.robExpiryDate) }"/>	
 							
@@ -73,7 +73,7 @@
 							display="inline" required="true" readonlyInput="true" disabled = "true"
 							label="#{lbl['lbl.sm.account.rob.expire']}" id="robExpiryDateD"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-							yearRange="-99:+0" maxdate="#{backingBean.managedBean.currDate}"
+							yearRange="-99:+0" 
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.robExpiryDate}"
 							rendered="#{(backingBean.managedBean.smSupplier.businessType == 'C' or backingBean.managedBean.smSupplier.businessType == 'F')and (backingBean.managedBean.companyValidWithSSM || !empty backingBean.managedBean.smAppl.smCompanyBasic.robExpiryDate) }"/>	
 							
