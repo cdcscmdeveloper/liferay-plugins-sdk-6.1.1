@@ -2502,22 +2502,34 @@ public class SmApplicationBackingBean extends
 		StringBuilder sb = new StringBuilder();
 		// int count = 0;
 		List<SmApplRejectReason> resList = new ArrayList<SmApplRejectReason>();
-		for (Long resId : getManagedBean().getReasonId()) {
-			for (PmReasonDesc desc : getManagedBean().getReasonDescList()) {
-				if (desc.getPmReason().getReasonId().equals(resId)) {
-					SmApplRejectReason rej = new SmApplRejectReason();
-					rej.setPmReason(desc.getPmReason());
-					rej.setSmAppl(getManagedBean().getSmAppl());
-					resList.add(rej);
-					log.info("Reason Id === " + resId);
-					// sb.append(++count).append(". ");
-					// sb.append(desc.getReasonDesc());
-					// sb.append("\n");
-					sb.append(desc.getPmReason().getReasonId());
-					sb.append("|");
+		if(getManagedBean().getReasonId()!=null && getManagedBean().getReasonId().length>0){
+			for (Long resId : getManagedBean().getReasonId()) {
+				for (PmReasonDesc desc : getManagedBean().getReasonDescList()) {
+					if (desc.getPmReason().getReasonId().equals(resId)) {				
+						if(resId.equals(new Long(345L))){//safe check, not necessarily needed, just in case, reason(others) must be accompanied by a remark
+							if (StringUtils.isBlank(getManagedBean()
+									.getApplnRejectionRemarks())) {
+								throw new EpException("Rejection Remarks is mandatory.");
+							}
+						}
+						
+						SmApplRejectReason rej = new SmApplRejectReason();
+						rej.setPmReason(desc.getPmReason());
+						rej.setSmAppl(getManagedBean().getSmAppl());
+						resList.add(rej);
+						log.info("Reason Id === " + resId);
+						// sb.append(++count).append(". ");
+						// sb.append(desc.getReasonDesc());
+						// sb.append("\n");
+						sb.append(desc.getPmReason().getReasonId());
+						sb.append("|");
+					}
 				}
 			}
-
+		}else{
+			//Just in case
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, "Reject reason in mandatory."));		
 		}
 
 		if (getManagedBean().getSmAppl().getSmApplRejectReasons() != null
@@ -10340,6 +10352,8 @@ public class SmApplicationBackingBean extends
 			}
 			getManagedBean().setReasonId(
 					reasonIdList.toArray(new Long[reasonIdList.size()]));
+		}else{
+			getManagedBean().setReasonId(null);
 		}
 		verifySelectedRejectReasons();
 	}
@@ -10350,7 +10364,8 @@ public class SmApplicationBackingBean extends
 	public void searchRejectedReason() {
 		// reset selected reject reason during search
 		getManagedBean().setSelectedReasonDescs(new ArrayList<PmReasonDesc>());
-
+		// reset remark for other and remove remark required flag during search
+		getManagedBean().setReasonId(null);
 		// reset selected reject reason remarks during search
 		verifySelectedRejectReasons();
 

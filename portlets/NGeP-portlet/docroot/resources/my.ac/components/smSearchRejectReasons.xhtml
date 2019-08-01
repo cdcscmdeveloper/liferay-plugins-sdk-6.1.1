@@ -12,7 +12,14 @@
 	</cc:interface>
 
 	<cc:implementation>
-			
+		<style>
+			.selectRejectReasonTable .ui-chkbox-box{
+      	 	   pointer-events: all;
+			}
+			.selectRejectReasonTable .ui-widget-content{
+    			pointer-events: none;
+			}
+		</style>
 			<p:outputPanel layout="block" id="rejectBlockPanel">
 			
 				<p:messages id="searchRejectMsgId" showDetail="true" autoUpdate="true" closable="true" showSummary="false"/>
@@ -53,7 +60,8 @@
 							editable="false" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 							value="#{backingBean.managedBean.reasonDescList}"
 							selection="#{backingBean.managedBean.selectedReasonDescs}"
-							rowKey="#{reason}" rowIndexVar="index" id="reasonDtId">
+							rowKey="#{reason}" rowIndexVar="index" id="reasonDtId"
+							styleClass="selectRejectReasonTable">
 							
 							<ac:paginator for="reasonDtId" />
 							<p:ajax event="rowSelect" listener="#{backingBean.onTickOrUnTickReason}"
@@ -68,6 +76,9 @@
 								listener="#{backingBean.onTickOrUnTickReason}"
 								update=":#{p:component('rejectBlockPanel')}"></p:ajax>
 							<p:ajax event="rowDblselect"
+								listener="#{backingBean.onTickOrUnTickReason}"
+								update=":#{p:component('rejectBlockPanel')}"></p:ajax>
+							<p:ajax event="toggleSelect"
 								listener="#{backingBean.onTickOrUnTickReason}"
 								update=":#{p:component('rejectBlockPanel')}"></p:ajax>
 							
