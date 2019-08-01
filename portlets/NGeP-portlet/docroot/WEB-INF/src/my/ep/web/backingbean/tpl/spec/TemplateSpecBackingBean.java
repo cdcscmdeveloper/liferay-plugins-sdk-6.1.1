@@ -2631,7 +2631,7 @@ public class TemplateSpecBackingBean extends
 		TplSpecMaster specMaster = templateSpecBean.getSpecMaster();
 		TplSpecZoneDtl specZoneDtl = templateSpecBean.getTplSpecZoneDtl();
 		List<TplSpecEstimation> specEstimations = new ArrayList<TplSpecEstimation>();
-
+		
 		if (TemplateSpecConst.CONTENT_TYPE_SCORE.equals(templateSpecBean
 				.getContentType())) {
 			List<Long> specQuestionIds = new ArrayList<Long>();
@@ -2672,7 +2672,7 @@ public class TemplateSpecBackingBean extends
 		}
 
 		for (TplSpecEstimation specEstimation : specEstimations) {
-			if (specEstimation.getEstimatedCost() != null) {
+			// bugs #26234 if (specEstimation.getEstimatedCost() != null) {
 				if (specEstimationId == specEstimation.getSpecEstimationId()){
 					specEstimation.setEstimatedCost(totalIndicativePrice); ///update value  Item Total Indicative Price (RM)
 					totalEstAmount = totalEstAmount.add(totalIndicativePrice);
@@ -2681,7 +2681,7 @@ public class TemplateSpecBackingBean extends
 					totalEstAmount = totalEstAmount.add(specEstimation
 							.getEstimatedCost());
 				}
-			}
+				// bugs #26234 }
 		}
 		specMaster.setTotalEstAmount(totalEstAmount);
 	}
