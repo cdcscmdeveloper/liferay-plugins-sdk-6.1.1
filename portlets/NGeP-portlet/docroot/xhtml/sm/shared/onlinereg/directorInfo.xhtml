@@ -1,0 +1,73 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.sm.directorinfo']}" id="directorBusiness"
+		toggleable="true">
+
+		<p:dataTable id="tableDirector" var="varDirector" rowIndexVar="index"
+			widgetVar="tableDirectorWidget"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			render="#{registrationBackingBean.managedBean.smPersonnelDirector != null and registrationBackingBean.managedBean.smPersonnelDirector.size() >0}"
+			value="#{registrationBackingBean.managedBean.smPersonnelDirector}"
+			rowKey="#{rowKeyObj}">
+			<ac:paginator for="tableDirector" />
+
+			<p:column style="width:20%;" styleClass="column-align-center">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sm.no']}" />
+				</f:facet>
+				<h:outputText value="#{index + 1}" />
+			</p:column>
+
+			<p:column style="width:20%;" styleClass="column-align-center">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sm.directorname']}" />
+				</f:facet>
+				<c:if test="#{varDirector.name!=''}">	
+					<h:outputText value="#{varDirector.name}" />
+				</c:if>
+				<c:if test="#{varDirector.name==''}">	
+					<p:inputText maxlength="80"  value="#{varDirector.name}" converter="toUpperCaseConverter">								
+					</p:inputText>
+				</c:if>
+				
+			</p:column>
+			
+			<p:column style="width:20%;" styleClass="column-align-center">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sm.identificationtype']}" />
+				</f:facet>
+				<h:outputText value="#{registrationBackingBean.getParamDescriptionByLanguageAndPmParameter(varDirector.identificationType)}" />
+			</p:column>
+			
+			<p:column style="width:20%;" styleClass="column-align-center">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sm.individual.newicno']}" />
+				</f:facet>
+				<c:if test="#{varDirector.name==''}">
+					<p:inputText 
+								maxlength="12"  value="#{varDirector.identificationNo}">								
+					</p:inputText>
+				</c:if>
+				<c:if test="#{varDirector.name!=''}">	
+					<h:outputText value="#{varDirector.identificationNo}" />
+				</c:if>
+				
+				
+			</p:column>
+			
+			<p:column style="width:20%;" styleClass="column-align-center">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sm.person.nationality.origin']}" />
+				</f:facet>
+				<h:outputText value="#{varDirector.pmCountry.countryName}" />
+			</p:column>
+
+		</p:dataTable>
+	</p:panel>
+	</ui:composition>

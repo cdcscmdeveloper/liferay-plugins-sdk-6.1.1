@@ -1,5 +1,6 @@
 package my.ep.web.managedbean.sm.registration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -14,6 +15,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmAssociationBody;
+import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmSstSupplier;
 import my.ep.persistence.entity.sm.SmGstSupplierDoc;
@@ -119,6 +121,18 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private boolean hasActiveTransaction;
 	private boolean viewMode;
 	private boolean deletedNotActivatedSupplier;
+	//#16052019 - SSM INTEGRATION CR - Fahmi
+	private List<SmSupplierOwner> smSuppOwners = new ArrayList();
+	private List<SmPersonnel> smPersonnelDirector = new ArrayList();
+	private List dummy = new ArrayList();
+	private List<SmPersonnel> smPersonnelOwners = new ArrayList();
+	private SmPersonnel smPersonnelSelected= new SmPersonnel();
+	private List<SelectItem> selectItemsSmPersonnelOwners = new ArrayList();
+	private List<SmPersonnel> SmPersonnelAll = new ArrayList();
+	private List<SmEquityCompany> smEquityCompany = new ArrayList();
+	private String headerName = "";
+	private boolean ownerIsEquity=false;
+	private boolean ownerIsDirector=false;
 	
 	public SmSupplier getSmSupp() {
 		return smSupp;
@@ -667,6 +681,94 @@ public class RegistrationManagedBean extends BaseManagedBean {
 
 	public void setSmSstSupplier(SmSstSupplier smSstSupplier) {
 		this.smSstSupplier = smSstSupplier;
+	}
+
+	public List<SmSupplierOwner> getSmSuppOwners() {
+		return smSuppOwners;
+	}
+
+	public void setSmSuppOwners(List<SmSupplierOwner> smSuppOwners) {
+		this.smSuppOwners = smSuppOwners;
+	}
+
+	public List getDummy() {
+		return dummy;
+	}
+
+	public void setDummy(List dummy) {
+		this.dummy = dummy;
+	}
+
+	public List<SmPersonnel> getSmPersonnelOwners() {
+		return smPersonnelOwners;
+	}
+
+	public void setSmPersonnelOwners(List<SmPersonnel> smPersonnelOwners) {
+		this.smPersonnelOwners = smPersonnelOwners;
+	}
+
+	public List<SelectItem> getSelectItemsSmPersonnelOwners() {
+		return selectItemsSmPersonnelOwners;
+	}
+
+	public void setSelectItemsSmPersonnelOwners(List<SelectItem> selectItemsSmPersonnelOwners) {
+		this.selectItemsSmPersonnelOwners = selectItemsSmPersonnelOwners;
+	}
+
+	public SmPersonnel getSmPersonnelSelected() {
+		return smPersonnelSelected;
+	}
+
+	public void setSmPersonnelSelected(SmPersonnel smPersonnelSelected) {
+		this.smPersonnelSelected = smPersonnelSelected;
+	}
+
+	public List<SmPersonnel> getSmPersonnelDirector() {
+		return smPersonnelDirector;
+	}
+
+	public void setSmPersonnelDirector(List<SmPersonnel> smPersonnelDirector) {
+		this.smPersonnelDirector = smPersonnelDirector;
+	}
+
+	public List<SmPersonnel> getSmPersonnelAll() {
+		return SmPersonnelAll;
+	}
+
+	public void setSmPersonnelAll(List<SmPersonnel> smPersonnelAll) {
+		SmPersonnelAll = smPersonnelAll;
+	}
+
+	public String getHeaderName() {
+		return headerName;
+	}
+
+	public void setHeaderName(String headerName) {
+		this.headerName = headerName;
+	}
+
+	public List<SmEquityCompany> getSmEquityCompany() {
+		return smEquityCompany;
+	}
+
+	public void setSmEquityCompany(List<SmEquityCompany> smEquityCompany) {
+		this.smEquityCompany = smEquityCompany;
+	}
+
+	public boolean isOwnerIsEquity() {
+		return ownerIsEquity;
+	}
+
+	public void setOwnerIsEquity(boolean ownerIsEquity) {
+		this.ownerIsEquity = ownerIsEquity;
+	}
+
+	public boolean isOwnerIsDirector() {
+		return ownerIsDirector;
+	}
+
+	public void setOwnerIsDirector(boolean ownerIsDirector) {
+		this.ownerIsDirector = ownerIsDirector;
 	}
 
 }
