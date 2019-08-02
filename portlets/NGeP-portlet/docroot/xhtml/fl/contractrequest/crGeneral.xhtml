@@ -226,8 +226,10 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.fulfilment.SchNo']}" /></td>
 				<td><p:inputText size="25" disabled="true"
-						value="#{catalogueBackingBean.schno}">
-					</p:inputText></td>
+						value="#{contractRequestBackingBean.navi == 'crlist' ? contractRequestBackingBean.schno : catalogueBackingBean.schno}">
+					</p:inputText>
+					
+				</td>
 				<td>
 					<!-- BEGINNING FOR #13984 Dialog Box for schedule and phase --> <h:form
 						id="commands">
@@ -248,12 +250,12 @@
 
 							<p:dataTable
 								emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-								value="#{catalogueBackingBean.schInfo}" id="contractRequestIdd"
+								value="#{contractRequestBackingBean.schInfo=='[]' ? catalogueBackingBean.schInfo : contractRequestBackingBean.schInfo}" id="contractRequestIdd"
 								rowIndexVar="rowIndex" var="contractObjj" width="100%">
 
 								<ac:paginator for="contractRequestIdd"></ac:paginator>
-
-
+				
+				
 								<p:columnGroup type="header">
 									<p:row>
 										<p:column colspan="3"
@@ -283,7 +285,7 @@
 								<p:column>
 									<h:outputText value="#{contractObjj.crNo}"
 										style="display: block; width:100%; text-align:center;" />
-									<h:outputText value="#{contractObjj.crNoStatus}"
+									<h:outputText value="#{contractObjj.crNoStatus=='(null)' ? '' : contractObjj.crNoStatus}"
 										style="display: block; width:100%; text-align:center;white-space: pre-wrap;" />
 
 								</p:column>
@@ -292,7 +294,7 @@
 									<h:outputText value="#{contractObjj.coNo}"
 										style="display: block; width:100%; text-align:center;" />
 
-									<h:outputText value="#{contractObjj.coNoStatus}"
+								<h:outputText value="#{contractObjj.coNoStatus=='(null)' ? '' : contractObjj.coNoStatus}"
 										style="display: block; width:100%; text-align:center;white-space: pre-wrap;" />
 
 								</p:column>
