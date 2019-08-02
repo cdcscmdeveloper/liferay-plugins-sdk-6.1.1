@@ -911,6 +911,21 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 		}
 		
+		/*13984 BEGINNING navigation sets and current schedule number Information*/
+		initSchPhaseTable(contractId);
+		List<ScheduleInfo> schInfoo = getSchInfo();
+		log.info("schInfoo is : "+schInfoo);
+		log.info("schInfo is : "+schInfo);
+	
+		String nav = "crlist";
+		setNavi(nav);
+		
+		String schNoSelected =scheduleNo;
+		setschno(schNoSelected);
+		/*13984 ENDING navigation sets and current schedule number Information*/
+
+		
+		
 		String commonUrl = themeDisplay.getURLCurrent().substring(0, themeDisplay.getURLCurrent().indexOf(themeDisplay.getLayout().getGroup().getFriendlyURL())+themeDisplay.getLayout().getGroup().getFriendlyURL().length());
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 		String url = "contract-request-from-crlist";
