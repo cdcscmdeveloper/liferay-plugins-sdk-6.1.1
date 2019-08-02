@@ -71,6 +71,7 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
+import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.DirectAwardReqDTO;
 import my.ep.dto.sc.quationtender.DirectAwardResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
@@ -82,6 +83,7 @@ import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -1738,11 +1740,14 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 		IParameterSO parameterSo = null;
 		try {
-
-			removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE,false);
-
+			
+			if(this.getManagedBean().getScLoa()
+					.getScQtSchedules()==null){
+				this.getManagedBean().getScLoa().setScQtSchedules(new ArrayList<ScQtSchedule>());
+			}
 			List<ScQtSchedule> scheduleList = this.getManagedBean().getScLoa()
 					.getScQtSchedules();
+
 
 			parameterSo = EpEjbBusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
@@ -1965,12 +1970,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * Adds the progressive details.
 	 */
 	public void addProgressiveDetails() {
-
-		removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT,false);
+		
+		if (this.getManagedBean().getScLoa().getScQtProgPayments() == null) {
+			this.getManagedBean().getScLoa().setScQtProgPayments(
+					new ArrayList<ScQtProgressivePayment>());
+		}
 		List<ScQtProgressivePayment> payments = this.getManagedBean()
 				.getScLoa().getScQtProgPayments();
-
-//		for (int j = 0; j < this.getManagedBean().getTotalProgressivePayment(); j++) {
 
 			ScQtProgressivePayment payment = new ScQtProgressivePayment();
 
@@ -8658,19 +8664,44 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	}
 
 	public void deleteFreqScheduleDetails() {
+		List<ScQtSchedule> result = new ArrayList<ScQtSchedule>();
+		List<ScQtSchedule> brandNewSchedules = new ArrayList<ScQtSchedule>();
+		AwardSupplierResDTO resDTO = null;
+		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+		reqDTO.setScLoa(this.getManagedBean().getScLoa());
 		try {
-			Iterator<ScQtSchedule> scQtSchIterator = getManagedBean()
-					.getScLoa().getScQtSchedules().iterator();
-
-			while (scQtSchIterator.hasNext()) {
-				ScQtSchedule ScQtSchedule = scQtSchIterator.next();
-				if (ScQtSchedule.isSelected()) {
-					scQtSchIterator.remove();
+			if (null != getManagedBean().getScLoa().getScQtSchedules()) {
+				for (ScQtSchedule scQtSchedule : getManagedBean().getScLoa()
+						.getScQtSchedules()) {
+					if (scQtSchedule.isSelected()) {
+						result.add(scQtSchedule);
+					}else{
+						if(scQtSchedule.isBrandNew() || scQtSchedule.getQtScheduleId()==null){
+							brandNewSchedules.add(scQtSchedule);
+						}
+					}
 				}
+				resDTO = getQtAwardSO()
+						.deletetScheduleIdAndPaymentId(reqDTO);
+				if (resDTO.isSuccessful()) {
+					getManagedBean().setSelectAll(false);
+					getManagedBean().setButtonHideSchActive(true);
+					
+					if (!QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
+							.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())) {
+						retriveLoaDetails(resDTO.getScLoa().getLoaId(), null, false);
+
+						contractTypeChanged();
+					}
+					if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
+							.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())) {
+						getSupplierDeatilsByLoaId(resDTO.getScLoa().getLoaId());
+
+					}
+
+				}
+				getManagedBean().getScLoa().getScQtSchedules().addAll(brandNewSchedules);
 			}
-			
-			getManagedBean().setSelectAll(false);
-			getManagedBean().setButtonHideSchActive(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
@@ -8680,19 +8711,44 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 	}
 	public void deleteProgPaymentDetails() {
+		List<ScQtProgressivePayment> result = new ArrayList<ScQtProgressivePayment>();
+		List<ScQtProgressivePayment> brandNewSchedules = new ArrayList<ScQtProgressivePayment>();
+		AwardSupplierResDTO resDTO = null;
+		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+		reqDTO.setScLoa(this.getManagedBean().getScLoa());
 		try {
-			Iterator<ScQtProgressivePayment> scQtProgPayIterator = getManagedBean()
-					.getScLoa().getScQtProgPayments().iterator();
-
-			while (scQtProgPayIterator.hasNext()) {
-				ScQtProgressivePayment ScQtProgressivePayment = scQtProgPayIterator
-						.next();
-				if (ScQtProgressivePayment.isSelected()) {
-					scQtProgPayIterator.remove();
+			if (null != getManagedBean().getScLoa().getScQtProgPayments()) {
+				for (ScQtProgressivePayment ScQtProgressivePayment : getManagedBean().getScLoa()
+						.getScQtProgPayments()) {
+					if (ScQtProgressivePayment.isSelected()) {
+						result.add(ScQtProgressivePayment);
+					}else{
+						if(ScQtProgressivePayment.isBrandNew() || ScQtProgressivePayment.getQtPaymentId()==null){
+							brandNewSchedules.add(ScQtProgressivePayment);
+						}
+					}
 				}
+				resDTO = getQtAwardSO()
+						.deletetScheduleIdAndPaymentId(reqDTO);
+				if (resDTO.isSuccessful()) {
+					getManagedBean().setSelectAll(false);
+					getManagedBean().setButtonHideSchActive(true);
+					
+					if (!QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
+							.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())) {
+						retriveLoaDetails(resDTO.getScLoa().getLoaId(), null, false);
+
+						contractTypeChanged();
+					}
+					if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
+							.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())) {
+						getSupplierDeatilsByLoaId(resDTO.getScLoa().getLoaId());
+
+					}
+
+				}
+				getManagedBean().getScLoa().getScQtProgPayments().addAll(brandNewSchedules);
 			}
-			getManagedBean().setSelectAll(false);
-			getManagedBean().setButtonHideSchActive(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
