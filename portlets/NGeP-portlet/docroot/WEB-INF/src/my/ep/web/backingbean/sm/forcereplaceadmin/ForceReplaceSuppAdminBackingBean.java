@@ -21,6 +21,7 @@ import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.exception.EpException;
+import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmCountry;
@@ -33,10 +34,12 @@ import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.forcereplaceadmin.ForceReplaceSuppAdminManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmRuleHelper;
@@ -44,6 +47,7 @@ import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.ReactivateSupplierVO;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
 @ManagedBean(name = "forceReplaceSuppAdminBackingBean")
@@ -55,6 +59,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * 
 	 */
 	private static final long serialVersionUID = 650929814581089830L;
+	
+	private static final Logger log = EpLogger.getLogger(ForceReplaceSuppAdminBackingBean.class);
 
 	/**
 	 * Pre - render and redirect to Force Replace Supplier Admin page
@@ -86,6 +92,11 @@ public class ForceReplaceSuppAdminBackingBean extends
 	public void submit() {
 		getManagedBean().setExistingUser(false);
 		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
+		/*log.info("Acc.Type:" + getManagedBean().getAccType());
+		log.info("Reg.No:" + getManagedBean().getReactivateBasic().getRegNo());
+		log.info("Est.Date:" + getManagedBean().getReactivateBasic().getEstablishDate());
+		log.info("Agency Name:" + getManagedBean().getReactivateBasic().getAgencyName());
+		log.info("Supplier Type:" + getManagedBean().getReactivateBasic().getSuppType());*/
 		reqDTO.setRegNo(getManagedBean().getReactivateBasic().getRegNo());
 		reqDTO.setEstDate(getManagedBean().getReactivateBasic()
 				.getEstablishDate());
@@ -424,7 +435,15 @@ public class ForceReplaceSuppAdminBackingBean extends
 								.getIdentificationNo() });
 			}
 		}
-
+		
+		// [#26050] check if selected old admin does have any pending task
+		if (getManagedBean().getOldAdmin() != null) {
+			//log.info("[#26050] Old Admin login Id: " + getManagedBean().getOldAdmin().getPmUser().getLoginId());
+			if (StringUtils.isBlank(getManagedBean().getOldAdmin().getPmUser().getLoginId())				
+					&& PmCommonUtil.isAnyPendingTask(getManagedBean().getOldAdmin().getPmUser().getLoginId())) {
+				throw new EpException(MessageConst.ERROR_770167);
+			}				
+		}
 	}
 
 	/**
