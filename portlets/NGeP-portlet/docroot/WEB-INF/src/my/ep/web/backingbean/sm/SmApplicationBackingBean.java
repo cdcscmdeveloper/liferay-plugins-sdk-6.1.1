@@ -845,6 +845,17 @@ public class SmApplicationBackingBean extends
 								.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER)) {
 					throw new EpException(MessageConst.ERROR_722628);
 				}
+				
+				// 25157
+				SmAppl rejectedAppl = SmApplicationUtil.getLatesRejectedApplicationBySuppIdAndAppType(
+						currSupp.getSupplierId(), applicationType);
+				
+				String labelNameVal = "";
+				if (rejectedAppl != null) {
+						FacesContext.getCurrentInstance().addMessage("rejectedExist", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								SmCommonUtil.getMessage("lbl.sm.supplier.promo.rejected",
+										new String[] { labelNameVal })));
+				}
 
 				String currSuppType = currSupp.getSmAppl()
 						.getSupplierType();
