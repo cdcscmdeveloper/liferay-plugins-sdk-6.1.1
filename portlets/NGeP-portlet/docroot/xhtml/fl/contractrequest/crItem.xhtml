@@ -23,12 +23,12 @@
           			<p:outputLabel value="*" styleClass="mandatory" />
           		</td>
            		<td>
-           			<p:selectOneRadio id="crGeneralRadio" required="true" value="#{contractRequestBackingBean.managedBean.flRequest.radioCheckDeliveryDate}">
+           				<p:selectOneRadio id="crGeneralRadio" required="true" value="#{contractRequestBackingBean.managedBean.flRequest.radioCheckDeliveryDate}">
 						<f:selectItem itemLabel="#{lbl['lbl.btn.yes']}" itemValue="true" />
 						<f:selectItem itemLabel="#{lbl['lbl.btn.no']}" itemValue="false" />
 						<p:ajax event="change"
 							listener="#{contractRequestBackingBean.upDateStartDateFromBpm}" 
-							update="delStartDate"/>                   
+							update="delStartDate"/>							          
            			</p:selectOneRadio>
             	</td>
 			</tr>
@@ -933,7 +933,9 @@
 								value="#{contractRequestBackingBean.managedBean.supplierItemPriceList}"
 								rowKey="#{purchasedItem}">
 								<ac:paginator for="reqItemInfoDt2" />
-								<p:column headerText="#{lbl['lbl.fl.zone']}" rendered="#{contractRequestBackingBean.managedBean.zonalTierPrice}">
+<!-- #16344 2/8/2019 START update rendered fix --> 			
+								<p:column headerText="#{lbl['lbl.fl.zone']}" rendered="#{contractRequestBackingBean.managedBean.zonalTierPrice or contractRequestBackingBean.managedBean.zonalPrice}">
+<!--  END  -->
 									<p:tree value="#{reqItemInfoList.itemZoneTree}" var="location">
 										<p:treeNode type="zone">
 											<h:outputText value="#{location.zoneName}" />
@@ -973,9 +975,11 @@
 											value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, flItem.scRequestItem.uom.uomCode)}" />
 									</h:outputText>
 								</p:column>
-								<p:column headerText="#{lbl['lbl.fl.qty']}"
+<!-- #16344 2/8/2019 START update rendered fix --> 
+									<p:column headerText="#{lbl['lbl.fl.qty']}"
 									style="text-align:right"
-									rendered="#{contractRequestBackingBean.managedBean.zonalPrice}">
+									 rendered="#{!contractRequestBackingBean.managedBean.zonalPrice}"> 
+<!--  END  -->
 									<h:outputText
 										value="#{reqItemInfoList.supplierItemPrice.maxQuantity}"
 										styleClass="colFloatRight"
