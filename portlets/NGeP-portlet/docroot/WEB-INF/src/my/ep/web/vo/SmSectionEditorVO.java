@@ -54,6 +54,11 @@ public class SmSectionEditorVO implements Serializable {
 	private boolean poEditSuppDoc;
 	private boolean appEditSuppDoc;
 	private boolean suppEditSuppDoc;
+	
+	// site visit report
+	private boolean poEditSiteVisit;
+	private boolean appEditSiteVisit;
+	private boolean suppEditSiteVisit;
 
 	public boolean isPoEditCompBasic() {
 		return poEditCompBasic;
@@ -277,6 +282,30 @@ public class SmSectionEditorVO implements Serializable {
 
 	public void setHasForeign(boolean hasForeign) {
 		this.hasForeign = hasForeign;
+	}
+
+	public boolean isPoEditSiteVisit() {
+		return poEditSiteVisit;
+	}
+
+	public void setPoEditSiteVisit(boolean poEditSiteVisit) {
+		this.poEditSiteVisit = poEditSiteVisit;
+	}
+
+	public boolean isAppEditSiteVisit() {
+		return appEditSiteVisit;
+	}
+
+	public void setAppEditSiteVisit(boolean appEditSiteVisit) {
+		this.appEditSiteVisit = appEditSiteVisit;
+	}
+
+	public boolean isSuppEditSiteVisit() {
+		return suppEditSiteVisit;
+	}
+
+	public void setSuppEditSiteVisit(boolean suppEditSiteVisit) {
+		this.suppEditSiteVisit = suppEditSiteVisit;
 	}
 
 }
