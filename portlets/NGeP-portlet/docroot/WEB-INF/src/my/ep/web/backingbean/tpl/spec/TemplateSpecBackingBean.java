@@ -2659,6 +2659,7 @@ public class TemplateSpecBackingBean extends
 								.getTplSpecEstimations());
 					}
 					specQuestionIds.add(specQuestion.getSpecQuestionId());
+					
 				}
 			}
 		} else {
@@ -2678,8 +2679,10 @@ public class TemplateSpecBackingBean extends
 					totalEstAmount = totalEstAmount.add(totalIndicativePrice);
 				}
 				else {
-					totalEstAmount = totalEstAmount.add(specEstimation
-							.getEstimatedCost());
+					if (specEstimation.getEstimatedCost() != null) { // bugs #26234 
+						totalEstAmount = totalEstAmount.add(specEstimation
+										.getEstimatedCost());
+					} // bugs #26234 
 				}
 				// bugs #26234 }
 		}
