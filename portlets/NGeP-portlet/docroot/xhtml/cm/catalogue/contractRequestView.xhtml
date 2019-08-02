@@ -71,7 +71,7 @@
 					<p:column>
 						<h:outputText value="#{contractObjj.crNo}"
 							style="display: block; width:100%; text-align:center;" />
-						<h:outputText value="#{contractObjj.crNoStatus}"
+					<h:outputText value="#{contractObjj.crNoStatus=='(null)' ? '' : contractObjj.crNoStatus}"
 							style="display: block; width:100%; text-align:center;white-space: pre-wrap;" />
 
 					</p:column>
@@ -80,7 +80,7 @@
 						<h:outputText value="#{contractObjj.coNo}"
 							style="display: block; width:100%; text-align:center;" />
 
-						<h:outputText value="#{contractObjj.coNoStatus}"
+					<h:outputText value="#{contractObjj.coNoStatus=='(null)' ? '' : contractObjj.coNoStatus}"
 							style="display: block; width:100%; text-align:center;white-space: pre-wrap;" />
 
 					</p:column>
