@@ -111,9 +111,13 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				    </p:column>
 				</p:row>
 			</p:columnGroup>
+			<!-- [SIR#12802] - start -->
 			<p:column>
-				<p:selectBooleanCheckbox disabled="#{!epItem.brandNew}" value="#{epItem.deleted}"/>
+				<p:selectBooleanCheckbox 
+					disabled="#{!(epItem.brandNew ? epItem.brandNew : epItem.selectable)}" 
+					value="#{epItem.deleted}"/>
 			</p:column>
+			<!-- [SIR#12802] - end -->			
 	        <p:column style="white-space:nowrap;">
 	        	<p:inputText 
 						size="10"

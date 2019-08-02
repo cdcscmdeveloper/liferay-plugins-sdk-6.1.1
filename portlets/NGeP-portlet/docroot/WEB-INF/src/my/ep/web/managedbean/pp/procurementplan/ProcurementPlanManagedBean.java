@@ -78,7 +78,7 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	
 	
 	private PpPlan selectedPlan;
-//	private List<PpExpenditureItem> deleteEpItems;
+	private List<PpExpenditureItem> deleteEpItemsAll;
 	private List<PpProcurementItem> deletePpItems;
 	private DualListModel<PmUser> approverModel;
 	private DualListModel<PmUser> verifierModel;
@@ -94,6 +94,11 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private List<PpRemark> selectedJustifications;
 	private List<PpRemark> selectedItemRemarks;
 	private BigDecimal ppTotalEst;
+	private List<PpExpenditureItem> deleteEpItemsB;
+	private List<PpExpenditureItem> deleteEpItemsT;
+	private List<PpExpenditureItem> deleteEpItemsP;
+	private List<PpExpenditureItem> deleteEpItemsS;
+	private List<PpExpenditureItem> deleteEpItemsH;
 
 	private int selectedSearchType;
 	private List<SelectItem> searchOptions;
@@ -1058,6 +1063,54 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	 */
 	public void setOldYearValue(Long oldYearValue) {
 		this.oldYearValue = oldYearValue;
+	}
+
+	public List<PpExpenditureItem> getDeleteEpItemsAll() {
+		return deleteEpItemsAll;
+	}
+
+	public void setDeleteEpItemsAll(List<PpExpenditureItem> deleteEpItemsAll) {
+		this.deleteEpItemsAll = deleteEpItemsAll;
+	}
+
+	public List<PpExpenditureItem> getDeleteEpItemsB() {
+		return deleteEpItemsB;
+	}
+
+	public void setDeleteEpItemsB(List<PpExpenditureItem> deleteEpItemsB) {
+		this.deleteEpItemsB = deleteEpItemsB;
+	}
+
+	public List<PpExpenditureItem> getDeleteEpItemsT() {
+		return deleteEpItemsT;
+	}
+
+	public void setDeleteEpItemsT(List<PpExpenditureItem> deleteEpItemsT) {
+		this.deleteEpItemsT = deleteEpItemsT;
+	}
+
+	public List<PpExpenditureItem> getDeleteEpItemsP() {
+		return deleteEpItemsP;
+	}
+
+	public void setDeleteEpItemsP(List<PpExpenditureItem> deleteEpItemsP) {
+		this.deleteEpItemsP = deleteEpItemsP;
+	}
+
+	public List<PpExpenditureItem> getDeleteEpItemsS() {
+		return deleteEpItemsS;
+	}
+
+	public void setDeleteEpItemsS(List<PpExpenditureItem> deleteEpItemsS) {
+		this.deleteEpItemsS = deleteEpItemsS;
+	}
+
+	public List<PpExpenditureItem> getDeleteEpItemsH() {
+		return deleteEpItemsH;
+	}
+
+	public void setDeleteEpItemsH(List<PpExpenditureItem> deleteEpItemsH) {
+		this.deleteEpItemsH = deleteEpItemsH;
 	}
 
 
