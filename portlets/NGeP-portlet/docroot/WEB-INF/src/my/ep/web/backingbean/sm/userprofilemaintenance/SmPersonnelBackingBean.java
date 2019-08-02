@@ -1655,9 +1655,17 @@ public class SmPersonnelBackingBean extends
 				.getUpdateSmPersonnel().getEpRole()
 				.equals(RoleCode.MOF_SUPPLIER_ADMIN.value()) ? DbValueConst.RECORD_STATUS_ACTIVE
 				: DbValueConst.RECORD_STATUS_DELETED);
-		if (!EntityHelper.isCollectionEmpty(reqDTO.getTaskList())) {
+//		if (!EntityHelper.isCollectionEmpty(reqDTO.getTaskList())) {
+//			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
+//		}
+		// [#26050 - start]
+		if (EntityHelper.isCollectionEmpty(reqDTO.getTaskList())) {
 			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
+		} else {
+			throw new EpException(MessageConst.ERROR_770167);
 		}
+		// [#26050 - end]
+		
 		reqDTO.setActionType(my.ep.constant.sm.SupplierManagementConst.REPLACE_SUPP_ADMIN);
 
 		PersonnelResDTO resDTO = new PersonnelResDTO();
