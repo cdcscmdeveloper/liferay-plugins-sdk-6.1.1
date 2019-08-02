@@ -10466,7 +10466,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				.getToBeRemoveProgPayments());
 		spReqDTO.setToBeRemoveRestrictedSupplierList(this.getManagedBean().getToBeRemoveRestrictedSupplierList());
 		spReqDTO.setOutcome(action); 
-		if (null != this.getManagedBean() && SCProcessNameConst.FINALISE_SCORING.equals(this.getManagedBean().getTaskName())) {
+		if (null != this.getManagedBean() && SCProcessNameConst.FINALISE_SCORING.equals(this.getManagedBean().getTaskName())
+				|| SCProcessNameConst.SPEC_MAINTENANCE_REVISE_SCORING.equals(this.getManagedBean().getTaskName()))) {
 			spReqDTO.setAllowZeroVariance(true);
 		}
 		//spReqDTO.setUserLocale(new FacesScopes().getUserLocale());
@@ -14341,6 +14342,10 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		spReqDTO.setPrepareSpecStatus(this.getManagedBean()
 				.getCurrentStatusId());
 		spReqDTO.setUserLocale(facesScopes.getUserLocale());
+		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)){
+			//Bug #26214
+			spReqDTO.setAllowZeroVariance(true);
+		}
 		IQTSpecSO specSO = getSpecSO();
 		try {
 			resDTO = specSO.updateSpecEndorsmentBPmAction(spReqDTO);
