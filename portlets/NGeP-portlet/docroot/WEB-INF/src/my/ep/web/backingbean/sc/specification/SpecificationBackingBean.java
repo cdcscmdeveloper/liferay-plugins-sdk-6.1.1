@@ -10467,7 +10467,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		spReqDTO.setToBeRemoveRestrictedSupplierList(this.getManagedBean().getToBeRemoveRestrictedSupplierList());
 		spReqDTO.setOutcome(action); 
 		if (null != this.getManagedBean() && SCProcessNameConst.FINALISE_SCORING.equals(this.getManagedBean().getTaskName())
-				|| SCProcessNameConst.SPEC_MAINTENANCE_REVISE_SCORING.equals(this.getManagedBean().getTaskName()))) {
+				|| SCProcessNameConst.SPEC_MAINTENANCE_REVISE_SCORING.equals(this.getManagedBean().getTaskName())) {
 			spReqDTO.setAllowZeroVariance(true);
 		}
 		//spReqDTO.setUserLocale(new FacesScopes().getUserLocale());
