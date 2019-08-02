@@ -14804,6 +14804,10 @@ public class SpecificationBackingBean extends
 		spReqDTO.setPrepareSpecStatus(this.getManagedBean()
 				.getCurrentStatusId());
 		spReqDTO.setUserLocale(facesScopes.getUserLocale());
+		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)){
+			//Bug #26214
+			spReqDTO.setAllowZeroVariance(true);
+		}
 		IQTSpecSO specSO = getSpecSO();
 		try {
 			resDTO = specSO.updateSpecEndorsmentBPmAction(spReqDTO);
