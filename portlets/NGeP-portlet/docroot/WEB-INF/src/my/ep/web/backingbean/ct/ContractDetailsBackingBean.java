@@ -773,7 +773,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			//LOG : 13847, by Fahmi 22032019
 			ctContractVer.setWaiverAttachment(ctBB.getManagedBean().getWaiverDetail());
 			ctContractVer.setWaiverAttachmentLatest(ctBB.getManagedBean().getCtAttachmentLatest());
-			
+			if(ctBB.getManagedBean().getCtAttachmentDelete() != null){
+				ctContractVer.getWaiverAttachment().add(ctBB.getManagedBean().getCtAttachmentDelete());
+				ctBB.getManagedBean().setCtAttachmentDelete(null);
+			}
 			reqDTO.setCtContractVer(ctContractVer);
 			reqDTO.setAgreementContractVer(ctBB.getManagedBean().getAgreementContractVer());
 			reqDTO.setUserRole(getUserRole());
