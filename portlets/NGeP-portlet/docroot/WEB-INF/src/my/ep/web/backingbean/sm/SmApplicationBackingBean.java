@@ -6106,7 +6106,8 @@ public class SmApplicationBackingBean extends
 		}
 
 		if (!shareHolderBean.isDirector()
-				&& !shareHolderBean.isHigherManagement()) {
+				&& !shareHolderBean.isHigherManagement()
+				   && !shareHolderBean.isEquityOwner()) {
 			getManagedBean().getShareHolderOffAddr().setSameAsPerm(true);
 			getManagedBean().getShareHolderResdAddr().setSameAsPerm(true);
 		}
