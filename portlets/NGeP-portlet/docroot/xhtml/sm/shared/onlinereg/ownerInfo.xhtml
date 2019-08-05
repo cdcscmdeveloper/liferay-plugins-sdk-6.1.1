@@ -17,14 +17,14 @@
 			rowKey="#{rowKeyObj}">
 			<ac:paginator for="tableOwner" />
 
-			<p:column style="width:20%;" styleClass="column-align-center">
+			<p:column style="width:3%" styleClass="column-align-center">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.no']}" />
 				</f:facet>
 				<h:outputText value="#{index + 1}" />
 			</p:column>
 
-			<p:column style="width:20%;" styleClass="column-align-center">
+			<p:column styleClass="column-align-center">
 				<f:facet name="header">
 				<c:if test="#{registrationBackingBean.managedBean.smSupp.businessType == 'K'}">
 					<h:outputText value="#{lbl['lbl.sm.directorname']}" />
@@ -40,14 +40,14 @@
 						</p:inputText>		
 			</p:column>
 			
-			<p:column style="width:20%;" styleClass="column-align-center">
+			<p:column  styleClass="column-align-center">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.identificationtype']}" />
 				</f:facet>
 				<h:outputText value="#{registrationBackingBean.getParamDescriptionByLanguageAndPmParameter(varOwner.identificationType)}" />
 			</p:column>
 			
-			<p:column style="width:20%;" styleClass="column-align-center">
+			<p:column styleClass="column-align-center">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.individual.newicno']}" />
 				</f:facet>
@@ -57,14 +57,14 @@
 				</p:inputText>				
 			</p:column>
 			
-			<p:column style="width:20%;" styleClass="column-align-center">
+			<p:column  styleClass="column-align-center">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.person.nationality.origin']}" />
 				</f:facet>
 				<h:outputText value="#{varOwner.nationality.countryName}" />
 			</p:column>
 			
-			<p:column style="width:20%;" styleClass="column-align-center">
+			<p:column  styleClass="column-align-center">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.person.composition.role']}" />
 				</f:facet>
