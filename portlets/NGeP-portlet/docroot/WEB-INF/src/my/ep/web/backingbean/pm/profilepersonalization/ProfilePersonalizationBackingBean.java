@@ -2,12 +2,12 @@ package my.ep.web.backingbean.pm.profilepersonalization;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Iterator;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -15,10 +15,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
-import my.ep.biz.bean.search.ISearchBean;
-import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.admin.adminmatrix.IAdminMatrixSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -31,12 +27,9 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
-import my.ep.dto.pm.authorization.role.AdminDetailsDTO;
 import my.ep.dto.pm.authorization.role.AdminReqDTO;
-import my.ep.dto.pm.authorization.role.AdminResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
-import my.ep.dto.pm.authorization.userorg.UserOrgResDTO;
 import my.ep.dto.pm.common.PmTrackingDairyVO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.exception.EpException;
@@ -60,14 +53,11 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmMofAccount;
-import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.bean.paginator.IPagingDataModel;
-import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.pm.profilepersonalization.ProfilePersonalizationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -303,6 +293,8 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			constructRoles();
 			retrieveMofExpDate(getManagedBean().getCurrentProfile());
 			retrieveSoftCertExpDate(getManagedBean().getSelectedUser());
+			//#16052019 - SSM INTEGRATION CR
+			retrieveRobExpDate(getManagedBean().getCurrentProfile());
 
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_COMMON_DETAILS);
 		} catch (Exception e) {
@@ -1524,6 +1516,25 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
+		}
+	}
+	//#16052019 - SSM INTEGRATION CR
+	private void retrieveRobExpDate(PmOrgProfile orgProfile) {
+		if (orgProfile.getSmSupplier() != null && orgProfile.getSmSupplier().getSmAppl() != null
+				&& orgProfile.getSmSupplier().getSmAppl().getSmCompanyBasic() != null) {
+			if (orgProfile.getSmSupplier().getSmAppl().getSmCompanyBasic().getRobExpiryDate() != null) {
+				getManagedBean().setRobExpDate(
+						orgProfile.getSmSupplier().getSmAppl().getSmCompanyBasic().getRobExpiryDate());
+			}
+			if (orgProfile.getSmSupplier().getBusinessType()
+					.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
+					|| orgProfile
+							.getSmSupplier()
+							.getBusinessType()
+							.equalsIgnoreCase(
+									SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)) {
+				getManagedBean().setShowRobExpiredDate(true);
+			}
 		}
 	}
 
