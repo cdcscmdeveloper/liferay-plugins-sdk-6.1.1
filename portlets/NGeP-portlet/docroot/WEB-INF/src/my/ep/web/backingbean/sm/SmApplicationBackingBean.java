@@ -1455,7 +1455,7 @@ public class SmApplicationBackingBean extends
 					if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
 						this.getManagedBean().setCompanyValidWithSSM(true);
 						//SET COMPANY NAME
-						String[] copyProp = {"companyName","robExpiryDate"};
+						String[] copyProp = {"companyName","robExpiryDate","authorizedCapital","bumiEquity","foreignCompanyEquity","foreignerEquity","govtEquity","govtUnitrustEquity","businessDesc"};
 						EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(),this.getManagedBean().getSmAppl().getSmCompanyBasic(),copyProp);
 						//SET ADDRESS
 						this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setAddress1(ssmResDTO.getSmAddress().getAddress1());
@@ -1481,12 +1481,29 @@ public class SmApplicationBackingBean extends
 						//if(this.getManagedBean().getSmAppl().getSmEquityCompanies()!=null){
 						if(ssmResDTO.getSmEquityCompanys()!=null){
 							this.getManagedBean().setSmEquityCompanyTemp(ssmResDTO.getSmEquityCompanys());
-							/*for(SmEquityCompany equityCompany : ssmResDTO.getSmEquityCompanys()){
+							if(this.getManagedBean().getSmAppl().getSmEquityCompanies()==null){
+								this.getManagedBean().getSmAppl().setSmEquityCompanies(new ArrayList());
+							}
+							
+							for(SmEquityCompany equityCompany : ssmResDTO.getSmEquityCompanys()){
 								if(EntityHelper.getEntityBySinglePropertyFromList(equityCompany.getCompanyName(), this.getManagedBean().getSmAppl().getSmEquityCompanies(), "companyName") == null){
+									equityCompany.setSmAppl(this.getManagedBean().getSmAppl());
 									this.getManagedBean().getSmAppl().getSmEquityCompanies().add(equityCompany);
 								}
-							}*/
+							}
 							
+						}
+						//SET SMPERSONNEL
+						if(ssmResDTO.getSmPersonnelAll()!=null){
+							if(this.getManagedBean().getSmAppl().getSmPersonnels()==null){
+								this.getManagedBean().getSmAppl().setSmPersonnels(new ArrayList());
+							}
+							for(SmPersonnel personnel : ssmResDTO.getSmPersonnelAll()){
+								if(EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), this.getManagedBean().getSmAppl().getSmPersonnels(), "identificationNo") == null){
+									personnel.setSmAppl(this.getManagedBean().getSmAppl());
+									this.getManagedBean().getSmAppl().getSmPersonnels().add(personnel);
+								}
+							}
 						}
 					}else{
 						this.getManagedBean().setCompanyValidWithSSM(false);
