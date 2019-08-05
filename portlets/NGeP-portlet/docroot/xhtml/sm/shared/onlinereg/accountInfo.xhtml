@@ -32,10 +32,11 @@
 						<p:outputLabel value="#{lbl['lbl.sm.mofsuppliertype']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
+					<!-- 16052019 - SSM INTEGRATION CR - Fahmi-->
 					<td class="tdContent"><p:selectOneMenu id="suppTypeId" required="#{!empty param['disableValidation']}"
 							value="#{registrationBackingBean.managedBean.smAppl.supplierType}"
 							label="#{lbl['lbl.sm.mofsuppliertype']}" style="width:200px"
-							disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew}">
+							disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew || registrationBackingBean.managedBean.companyValidWithSSM}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItem itemLabel="#{lbl['lbl.sm.contractor']}"
 								itemValue="#{SupplierManagementConst.STYPE_CONTRACTOR}" />
@@ -60,13 +61,15 @@
 					<p:outputLabel value="#{lbl['lbl.sm.businesscomptype']}" />
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
+				<!-- 16052019 - SSM INTEGRATION CR - Fahmi-->
 				<td style="text-align:left;width:30%;word-wrap: break-word;">
 					<p:selectOneMenu id="busTypeId" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.businesscomptype']}"
 						value="#{registrationBackingBean.managedBean.smSupp.businessType}" 
 						rendered="#{registrationBackingBean.managedBean.smAppl.brandNew or !registrationBackingBean.managedBean.disabledBusinessTypeInMaintenance}" 
-						style="width:310px">
+						style="width:310px"
+						disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew || registrationBackingBean.managedBean.companyValidWithSSM}">
 						<f:selectItems value="#{registrationBackingBean.pmBusinessTypeDropDown()}"/>
-						<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues}" update="outPnlRegForm" process="@form" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew}" ></p:ajax>
+						<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues}" update="outPnlRegForm" process="@form" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew || registrationBackingBean.managedBean.companyValidWithSSM}" ></p:ajax>
 					</p:selectOneMenu>
 					<p:outputLabel styleClass="outputLabel-view" 
 					value="#{registrationBackingBean.getParameterDesc(SupplierManagementConst.supplierBusinessType,registrationBackingBean.managedBean.smSupp.businessType)}" 
@@ -97,6 +100,33 @@
 					</c:otherwise>
 				</c:choose>
 			 </tr>
+			 
+			 <tr>
+				<td class="tdTitle">
+					<p:outputLabel value="#{lbl['lbl.sm.businessregno']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				
+				<td class="tdContent">
+					<p:outputPanel id="regNoPanelId">
+					<!--  #16052019 - SSM INTEGRATION CR - Fahmi  -->
+						<p:inputText id="regNo" required="#{!empty param['disableValidation']}" maxlength="30"
+							value="#{registrationBackingBean.managedBean.smSupp.regNo}" converter="toUpperCaseConverter"
+							disabled="#{!registrationBackingBean.managedBean.smSupp.brandNew || registrationBackingBean.managedBean.companyValidWithSSM}"
+							size="40" label="#{lbl['lbl.sm.businessregno']}" >
+							<p:ajax event="blur" update="regNoPanelId" listener="#{registrationBackingBean.removeRegNoWhiteSpace}" />
+							<f:validator validatorId="busRegNoValidator" />
+							</p:inputText>
+						&#160;
+						<p:graphicImage id="regNoti" value="/css/images/design/tooltips.png" rendered="#{not empty registrationBackingBean.managedBean.smSupp.businessType}"/>
+						<ui:param name="lblRegNoTlTip" value="tt.sm.business.type.#{registrationBackingBean.managedBean.smSupp.businessType}" />
+						<p:tooltip id="regNott" for="regNoti" rendered="#{not empty registrationBackingBean.managedBean.smSupp.businessType}" >
+							<p:outputLabel escape="false" value="#{lbl[lblRegNoTlTip]}"  />
+						</p:tooltip>&#160;
+						<p:message id="regNoMsg" for="regNo" display="icon" />
+					</p:outputPanel>
+				</td>
+			</tr>
 		</table>
 	</p:panel>
 

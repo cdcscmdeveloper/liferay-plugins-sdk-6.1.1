@@ -46,6 +46,7 @@
 				<td><p:inputText id="equiPerNam" maxlength="80"
 						label="#{lbl['lbl.sm.person.name']}" required="true"
 						value="#{backingBean.managedBean.selectedShareHolder.name}"
+						disabled="#{backingBean.managedBean.selectedShareHolder.ssmData}"
 						size="35" /> 
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges 
@@ -174,7 +175,7 @@
 						<p:inputText label="#{lbl['lbl.sm.shrHldrInfo.idNo']}"
 							required="true" id="equiPerIcNum"
 							requiredMessage="#{lbl['lbl.sm.icNo.required']}"
-							disabled="#{backingBean.managedBean.disableIcEmail}"
+							disabled="#{backingBean.managedBean.disableIcEmail || backingBean.managedBean.selectedShareHolder.ssmData}"
 							rendered="#{backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'I'}"
 							value="#{backingBean.managedBean.selectedShareHolder.identificationNo}"
 							size="35" maxlength="12"
@@ -183,7 +184,7 @@
 						</p:inputText>
 						<p:inputText label="#{lbl['lbl.sm.shrHldrInfo.idNo']}"
 							required="true" id="equiPerPasptNum"
-							disabled="#{backingBean.managedBean.disableIcEmail}"
+							disabled="#{backingBean.managedBean.disableIcEmail || backingBean.managedBean.selectedShareHolder.ssmData}"
 							rendered="#{backingBean.managedBean.selectedShareHolder.identificationType.parameterCode ne 'I'}"
 							value="#{backingBean.managedBean.selectedShareHolder.identificationNo}"
 							size="35" maxlength="12">

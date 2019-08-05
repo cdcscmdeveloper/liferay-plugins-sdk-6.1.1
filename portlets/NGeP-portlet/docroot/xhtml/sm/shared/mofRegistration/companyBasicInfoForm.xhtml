@@ -49,7 +49,7 @@
 
 					<td><p:outputLabel value="#{lbl['lbl.sm.companyname']}" /></td>
 					<td><p:inputText
-							disabled="#{backingBean.managedBean.disabledCompanyName}"
+							disabled="#{backingBean.managedBean.disabledCompanyName || backingBean.managedBean.companyValidWithSSM}"
 							readonly="#{backingBean.managedBean.disabledCompanyName}"
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.companyName}"
 							size="50" />
@@ -59,28 +59,30 @@
 							currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.companyName}" 
 							alertValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.companyName}"/>
 					</td>
-					<td colspan="2"></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.account.rob.expire']}" rendered="#{backingBean.managedBean.smSupplier.businessType == 'C' or backingBean.managedBean.smSupplier.businessType == 'F'}" /></td>
+					<td>
+						<p:calendar showOn="button" navigator="true"
+							display="inline" required="true" readonlyInput="true"
+							label="#{lbl['lbl.sm.account.rob.expire']}" id="robExpiryDate"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							yearRange="-99:+0" 
+							value="#{backingBean.managedBean.smAppl.smCompanyBasic.robExpiryDate}"
+							rendered="#{(backingBean.managedBean.smSupplier.businessType == 'C' or backingBean.managedBean.smSupplier.businessType == 'F') and (!backingBean.managedBean.companyValidWithSSM || empty backingBean.managedBean.smAppl.smCompanyBasic.robExpiryDate) }"/>	
+							
+							<p:calendar  navigator="true"
+							display="inline" required="true" readonlyInput="true" disabled = "true"
+							label="#{lbl['lbl.sm.account.rob.expire']}" id="robExpiryDateD"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							yearRange="-99:+0" 
+							value="#{backingBean.managedBean.smAppl.smCompanyBasic.robExpiryDate}"
+							rendered="#{(backingBean.managedBean.smSupplier.businessType == 'C' or backingBean.managedBean.smSupplier.businessType == 'F')and (backingBean.managedBean.companyValidWithSSM || !empty backingBean.managedBean.smAppl.smCompanyBasic.robExpiryDate) }"/>	
+							
+												
+						<p:message id="robExpiryDateMsg" for="robExpiryDate" showSummary="true"
+							showDetail="false" display="icon" />
+					</td>
 				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.regtype']}" /></td>
-					<td style="word-wrap: break-word"><p:outputLabel
-							rendered="#{backingBean.managedBean.disabledBusinessType}"
-							styleClass="outputLabel-view"
-							value="#{backingBean.getParameterDesc(backingBean.managedBean.businessTypeParamCode,backingBean.managedBean.smSupplier.businessType)}" />
-						<p:selectOneMenu id="smBusTypeId" required="true"
-							label="#{lbl['lbl.sm.regtype']}"
-							value="#{backingBean.managedBean.smSupplier.businessType}"
-							rendered="#{!backingBean.managedBean.disabledBusinessType}"
-							style="width:310px">
-							<f:selectItems value="#{backingBean.managedBean.businessTypeLs}" />
-							<p:ajax event="change" process="@this" update="@this" partialSubmit="true" listener="#{backingBean.onChangeBussType}"/>
-						</p:selectOneMenu> <p:message id="smBusTypeIdMsg" for="smBusTypeId"
-							showSummary="true" showDetail="false" display="icon" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.sm.rocNo']}" /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.smSupplier.regNo}"
-							disabled="true" readonly="true" size="35" /></td>
-				</tr>
+				
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.taxRefNo']}" /></td>
 					<td><p:inputText label="#{lbl['lbl.sm.taxRefNo']}"
@@ -97,19 +99,31 @@
 					</td>
 					<td><p:outputLabel value="#{lbl['lbl.sm.estdate']}" /></td>
 					<td>
-						<p:calendar showOn="button" navigator="true"
-							display="inline" required="true" readonlyInput="true"
-							label="#{lbl['lbl.sm.estdate']}" id="establishDate"
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-							yearRange="-99:+0" maxdate="#{backingBean.managedBean.currDate}"
-							value="#{backingBean.managedBean.smAppl.smCompanyBasic.establishDate}" />
-						<ac:smFieldChangeAlert 
-							isShow="#{backingBean.managedBean.showFieldChanges}"
-							oriValue="#{backingBean.managedBean.latestAppl.smSupplier.establishDate}" 
-							currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.establishDate}" 
-							alertValue="#{backingBean.getDateFormat(backingBean.managedBean.latestAppl.smCompanyBasic.establishDate)}"/>
-						<p:message id="establishDateMsg" for="establishDate" showSummary="true"
-							showDetail="false" display="icon" /></td>
+								<p:calendar showOn="button" navigator="true"
+								rendered="#{!backingBean.managedBean.companyValidWithSSM || empty backingBean.managedBean.smAppl.smCompanyBasic.establishDate}" 
+								display="inline" required="true" readonlyInput="true"
+								label="#{lbl['lbl.sm.estdate']}" id="establishDate"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+								yearRange="-99:+0" maxdate="#{backingBean.managedBean.currDate}"
+								value="#{backingBean.managedBean.smAppl.smCompanyBasic.establishDate}" />
+								
+								<p:calendar navigator="true" disabled="true"
+								rendered="#{backingBean.managedBean.companyValidWithSSM and !empty backingBean.managedBean.smAppl.smCompanyBasic.establishDate}" 
+								display="inline" required="true" readonlyInput="true"
+								label="#{lbl['lbl.sm.estdate']}" id="establishDateW"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+								yearRange="-99:+0" maxdate="#{backingBean.managedBean.currDate}"
+								value="#{backingBean.managedBean.smAppl.smCompanyBasic.establishDate}" />
+							<ac:smFieldChangeAlert 
+								isShow="#{backingBean.managedBean.showFieldChanges}"
+								oriValue="#{backingBean.managedBean.latestAppl.smSupplier.establishDate}" 
+								currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.establishDate}" 
+								alertValue="#{backingBean.getDateFormat(backingBean.managedBean.latestAppl.smCompanyBasic.establishDate)}"/>
+							<p:message id="establishDateMsg" for="establishDate" showSummary="true"
+								showDetail="false" display="icon" />
+							
+						
+						</td>
 				</tr>
 				<ui:remove>
 					<tr>
@@ -133,6 +147,7 @@
 							<tr>
 								<td><p:inputText size="35" required="true" id="smSupAddr1"
 										maxlength="100" label="#{lbl['lbl.sm.companyaddress']}"
+										disabled="#{backingBean.managedBean.companyValidWithSSM}"
 										value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}" />
 									<ac:smFieldChangeAlert 
 										isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -144,6 +159,7 @@
 							</tr>
 							<tr>
 								<td><p:inputText size="35" maxlength="100" id="smSupAddr2"
+										disabled="#{backingBean.managedBean.companyValidWithSSM}"
 										value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address2}" />
 									<ac:smFieldChangeAlert 
 										isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -154,6 +170,7 @@
 							</tr>
 							<tr>
 								<td><p:inputText size="35" maxlength="100" id="smSupAddr3"
+										disabled="#{backingBean.managedBean.companyValidWithSSM}"
 										value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address3}" />
 									<ac:smFieldChangeAlert 
 										isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -216,6 +233,7 @@
 								<p:selectOneMenu
 										style="width: 250px;margin-bottom: 5px;" id="basicComState"
 										required="true" label="#{lbl['lbl.sm.state']}"
+										disabled="#{backingBean.managedBean.companyValidWithSSM}"
 										value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.stateId}">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 											itemValue="" />
@@ -299,6 +317,7 @@
 								rendered="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.countryId==backingBean.managedBean.myCountryId}">
 								<p:inputText maxlength="5" required="true"
 									label="#{lbl['lbl.sm.postcode']}" id="smSupPostCodeMy"
+									disabled="#{backingBean.managedBean.companyValidWithSSM}"
 									value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcode}"
 									validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
 									size="35">
@@ -316,6 +335,7 @@
 								rendered="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.countryId!=backingBean.managedBean.myCountryId}">
 								<p:inputText maxlength="10" required="true"
 									label="#{lbl['lbl.sm.postcode']}" id="smSupPostCodeForeign"
+									disabled="#{backingBean.managedBean.companyValidWithSSM}"
 									value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcode}"
 									size="35">
 								</p:inputText>
@@ -334,6 +354,7 @@
 					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 							label="#{lbl['lbl.sm.annualRev']}" required="true"
 							id="smSupAnnRev"
+							disabled="#{backingBean.managedBean.companyValidWithSSM and backingBean.managedBean.smAppl.smCompanyBasic.annualRevenue>0 }"
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.annualRevenue}">
 							<f:selectItems value="#{backingBean.getDropdownValues('SAR')}" />
 						</p:selectOneMenu> 
