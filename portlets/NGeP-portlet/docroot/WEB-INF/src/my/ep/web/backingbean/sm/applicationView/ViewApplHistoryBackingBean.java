@@ -895,7 +895,8 @@ public class ViewApplHistoryBackingBean extends
 		
 		Locale locale = new FacesScopes().getUserLocale();
 		if(suppStatDec.toString().equals("5") && applType.equals("O") && suppType.equals("B")){
-			return "In Progress";
+			return ResourceBundleUtils.getMessage("lbl.sm.in.progress",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);			
 		}else if(StringUtils.isNotBlank((String)appl[6])){
 			return (String)appl[6];
 		}	
