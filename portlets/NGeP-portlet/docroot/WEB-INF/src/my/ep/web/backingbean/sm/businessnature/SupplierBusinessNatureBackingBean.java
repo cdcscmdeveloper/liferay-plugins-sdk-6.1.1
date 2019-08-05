@@ -34,6 +34,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sm.businessnature.SupplierBusinessNatureManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
@@ -44,9 +45,26 @@ import org.primefaces.context.RequestContext;
 @RequestScoped
 public class SupplierBusinessNatureBackingBean extends BaseBackingBean<SupplierBusinessNatureManagedBean>{
 	public static Logger log = Logger.getLogger(SupplierBusinessNatureBackingBean.class);
+	//16052019 - SSM INTEGRATION CR - Fahmi
+	boolean fromtncProceed = false;
 	
 	public SupplierBusinessNatureBackingBean(){
 		
+	}
+	//16052019 - SSM INTEGRATION CR - Fahmi
+	public void goToviewBusinessNature(){
+		fromtncProceed = true;
+		SmSupplier smSupp = SmApplicationUtil.getCurrentSupplier();
+		if(businessTypeTovalidateWithSSM(smSupp.getRegNo(),smSupp.getBusinessType())){
+			this.getManagedBean().setCompanyValidWithSSM(true);
+			// maybe here to put method to check with ssm
+			//SmSupplier smSupp = SmApplicationUtil.getCurrentSupplier();
+			//SmCommonUtil.getInstance().validateWithSSM(regNo,businessType,"");
+			if(!this.getManagedBean().isCompanyValidWithSSM()){
+				throw new EpException(MessageConst.ERROR_721070);
+			}
+		}
+		viewBusinessNature();
 	}
 	
 	public void viewBusinessNature(){
@@ -54,7 +72,13 @@ public class SupplierBusinessNatureBackingBean extends BaseBackingBean<SupplierB
 
 		if(supplier != null){
 			getManagedBean().setSmSupplier(supplier);
-
+			//16052019 - SSM INTEGRATION CR - Fahmi
+			FacesContext fc = FacesContext.getCurrentInstance();
+			//businessTypeTovalidateWithSSM(smSupp.getRegNo(),smSupp.getBusinessType()) &&
+			if(!fromtncProceed){
+				fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/supplierbusinessnature/businessNatureTermAndCond.xhtml");
+				return;
+			}
 			ISupplierBusinessNatureSO businessNatureSO = BusinessDelegate.getInstance().getServiceObject("sm", ISupplierBusinessNatureSO.class);
 			SupplierBusinessNatureReqDTO reqDTO = new SupplierBusinessNatureReqDTO();
 			reqDTO.setSupplierId(supplier.getSupplierId());
@@ -72,7 +96,7 @@ public class SupplierBusinessNatureBackingBean extends BaseBackingBean<SupplierB
 				}
 			}
 
-			FacesContext fc = FacesContext.getCurrentInstance();
+			
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/supplierbusinessnature/businessNatureMaint.xhtml");
 		}
 	}
