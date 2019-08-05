@@ -919,8 +919,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					int months;
 					Date startDate = null;
 					Date endDate = null;
-					String fromdate = dateFormat.format(scQtSchedule.getFromDate());
-					String todate = dateFormat.format(scQtSchedule.getToDate());
+					String fromdate = dateFormat.format(scQtSchedule.getFromDate()==null?new Date():scQtSchedule.getFromDate());
+					String todate = dateFormat.format(scQtSchedule.getToDate()==null?new Date():scQtSchedule.getToDate());
 					String startMonth = fromdate.substring(3, 5);
 					String startYear = fromdate.substring(6, fromdate.length());
 					String fromDay = fromdate.substring(0, 2);
@@ -3819,8 +3819,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	public void addScheduleDetails() {
 		IParameterSO parameterSo = null;
 		try {
-			//Integer totalFrequency = getManagedBean().getTotalFrequency();
-//			int year = Calendar.getInstance().get(Calendar.YEAR);
+			if(this.getManagedBean().getScLoa()
+					.getScQtSchedules()==null){
+				this.getManagedBean().getScLoa().setScQtSchedules(new ArrayList<ScQtSchedule>());
+			}
 			List<ScQtSchedule> freqSchedules = this.getManagedBean().getScLoa()
 					.getScQtSchedules();
 			
@@ -4622,8 +4624,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 */
 	public void addProgressiveDetails() {
 		int year = Calendar.getInstance().get(Calendar.YEAR);
-		Integer totalProgressivePayment = getManagedBean().getTotalProgressivePayment();
 		ScLoa scLoa = getManagedBean().getScLoa();
+		
+		if (this.getManagedBean().getProgressivePaymentList() == null) {
+			this.getManagedBean().setProgressivePaymentList(
+					new ArrayList<ScQtProgressivePayment>());
+		}
 		List<ScQtProgressivePayment> progressivePayList = this.getManagedBean()
 				.getProgressivePaymentList();
 		if(CollectionUtils.isNotEmpty(progressivePayList)){
@@ -5004,10 +5010,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					|| loa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN))
 					&& null != loa.getScQuote() && null != loa.getScQuote().getProcurementType() 
 					&& ParameterTypeConst.PROCUREMENT_TYPE.equals(loa.getScQuote().getProcurementType().getParameterType()) 
-					&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(loa.getScQuote().getProcurementType().getParameterCode())) {
-					log.info(this.getClass().getName() + ".checkDpIsElisibleForPB(): condition satisfied to enable PB."); 
-					getManagedBean().setEnablePBForDP(true);
-				}
+						&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(loa.getScQuote().getProcurementType().getParameterCode())) {
+						log.info(this.getClass().getName() + ".checkDpIsElisibleForPB(): condition satisfied to enable PB."); 
+						getManagedBean().setEnablePBForDP(true);
+						if (StringUtils.isEmpty(getManagedBean().getYesParameterId())) {
+							getManagedBean().setYesParameterId(String.valueOf(getParameterIdByTypeAndCode(ParameterTypeConst.YES_NO_FLAG, ParameterConst.COMPLIANCE_STATUS_COMPLIANCE.toUpperCase())));
+						}
+						
+						if (StringUtils.isEmpty(getManagedBean().getNoParameterId())) {
+							getManagedBean().setNoParameterId(String.valueOf(getParameterIdByTypeAndCode(ParameterTypeConst.YES_NO_FLAG, ParameterConst.COMPLIANCE_STATUS_NOT_COMPLIANCE.toUpperCase())));
+						}
+					}
 				return;
 			}
 			Map<String,String> params = FacesContext.getCurrentInstance()
@@ -5040,6 +5053,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 											&& (fulfilmentType.getPmParameter().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
 													|| fulfilmentType.getPmParameter().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN))) {
 										getManagedBean().setEnablePBForDP(true);
+										if (StringUtils.isEmpty(getManagedBean().getYesParameterId())) {
+											getManagedBean().setYesParameterId(String.valueOf(getParameterIdByTypeAndCode(ParameterTypeConst.YES_NO_FLAG, ParameterConst.COMPLIANCE_STATUS_COMPLIANCE.toUpperCase())));
+										}
+										
+										if (StringUtils.isEmpty(getManagedBean().getNoParameterId())) {
+											getManagedBean().setNoParameterId(String.valueOf(getParameterIdByTypeAndCode(ParameterTypeConst.YES_NO_FLAG, ParameterConst.COMPLIANCE_STATUS_NOT_COMPLIANCE.toUpperCase())));
+										}
 										log.info(this.getClass().getName() + ".checkDpIsElisibleForPB(): Enabled Performance Bond for loaNo is: " + loa.getLoaNo());
 									}
 								}
@@ -6906,19 +6926,35 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 
 	public void deleteFreqScheduleDetails() {
-		try {
-			Iterator<ScQtSchedule> scQtSchIterator = getManagedBean()
-					.getScLoa().getScQtSchedules().iterator();
+		List<ScQtSchedule> brandNewSchedules = new ArrayList<ScQtSchedule>();
+		List<ScQtSchedule> result = new ArrayList<ScQtSchedule>();
+		AwardSupplierResDTO resDTO = null;
+		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+		reqDTO.setScLoa(this.getManagedBean().getScLoa());
 
-			while (scQtSchIterator.hasNext()) {
-				ScQtSchedule ScQtSchedule = scQtSchIterator.next();
-				if (ScQtSchedule.isSelected()) {
-					scQtSchIterator.remove();
+		try {
+			if (null != getManagedBean().getScLoa().getScQtSchedules()) {
+				for (ScQtSchedule scQtSchedule : getManagedBean().getScLoa()
+						.getScQtSchedules()) {
+					if (scQtSchedule.isSelected()) {
+						result.add(scQtSchedule);
+					}else{
+						if(scQtSchedule.isBrandNew()){
+							brandNewSchedules.add(scQtSchedule);
+						}
+					}
+				}
+				
+				resDTO = getQtAwardSO()
+						.deletetScheduleIdAndPaymentId(reqDTO);
+				if (resDTO.isSuccessful()) {
+					getManagedBean().setSelectAll(false);
+					getManagedBean().setButtonHideSchActive(true);
+					editLOAAction(getManagedBean().getScLoa());
 				}
 			}
 			
-			getManagedBean().setSelectAll(false);
-			getManagedBean().setButtonHideSchActive(true);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
@@ -6926,21 +6962,35 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
 							e.getMessage()));
 		}
+
 	}
 	public void deleteProgPaymentDetails() {
+		List<ScQtProgressivePayment> result = new ArrayList<ScQtProgressivePayment>();
+		List<ScQtProgressivePayment> brandNewProgPayments = new ArrayList<ScQtProgressivePayment>();
+		AwardSupplierResDTO resDTO = null;
+		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+		reqDTO.setScLoa(this.getManagedBean().getScLoa());
 		try {
-			Iterator<ScQtProgressivePayment> scQtProgPayIterator = getManagedBean()
-					.getScLoa().getScQtProgPayments().iterator();
-
-			while (scQtProgPayIterator.hasNext()) {
-				ScQtProgressivePayment ScQtProgressivePayment = scQtProgPayIterator
-						.next();
-				if (ScQtProgressivePayment.isSelected()) {
-					scQtProgPayIterator.remove();
+			if (null != getManagedBean().getScLoa().getScQtProgPayments()) {
+				for (ScQtProgressivePayment ScQtProgressivePayment : getManagedBean().getScLoa()
+						.getScQtProgPayments()) {
+					if (ScQtProgressivePayment.isSelected()) {
+						result.add(ScQtProgressivePayment);
+					}else{
+						if(ScQtProgressivePayment.isBrandNew()){
+							brandNewProgPayments.add(ScQtProgressivePayment);
+						}
+					}
+				}
+				
+				resDTO = getQtAwardSO()
+						.deletetScheduleIdAndPaymentId(reqDTO);
+				if (resDTO.isSuccessful()) {
+					getManagedBean().setSelectAll(false);
+					getManagedBean().setButtonHideSchActive(true);
+					editLOAAction(getManagedBean().getScLoa());
 				}
 			}
-			getManagedBean().setSelectAll(false);
-			getManagedBean().setButtonHideSchActive(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
