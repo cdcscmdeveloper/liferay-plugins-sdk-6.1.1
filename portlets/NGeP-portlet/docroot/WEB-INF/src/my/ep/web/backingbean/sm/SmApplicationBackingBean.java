@@ -807,26 +807,6 @@ public class SmApplicationBackingBean extends
 
 		if (!fromBpm) {
 			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
-			//16052019 - SSM INTEGRATION CR - Fahmi
-			/*if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
-					|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF) 
-					|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW) 
-					|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)
-					|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)){
-				if(businessTypeTovalidateWithSSM(currSupp.getRegNo(),currSupp.getBusinessType())){
-					this.getManagedBean().setValidateWithSSM(true);
-					
-					
-					// maybe here to put method to check with ssm
-					//SmCommonUtil.getInstance().validateWithSSM(regNo,businessType,"");
-					this.getManagedBean().setCompanyValidWithSSM(true);
-					if(!this.getManagedBean().isCompanyValidWithSSM()){
-//						throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.contractor",null), getManagedBean().getSmSupp().getRegNo()});
-						throw new EpException(MessageConst.ERROR_721070);
-					}
-				}
-			}*/
-			//16052019 - SSM INTEGRATION CR - Fahmi END
 			boolean cannotProceedAlertMsg = false;
 
 			if (applicationType
@@ -1055,6 +1035,14 @@ public class SmApplicationBackingBean extends
 			SmApplicationUtil.getInstance().setApplAddressTransientValue(
 					getManagedBean().getSmAppl(), false);
 			SmApplicationUtil.checkOverLappingCategories(getManagedBean());
+		
+			//Bug #25979 - to hide message/note for Company that has Overlapping Category
+			if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL))
+			{
+				log.info("#25979 From BPM - Cancel");
+				getManagedBean().setOverLappedCategoryExists(false);
+			}
+			
 			if (!(getManagedBean().isApproverUser() || getManagedBean()
 					.isPoUser())) {
 				boolean updateNeeded = SmApplicationUtil
@@ -6118,7 +6106,8 @@ public class SmApplicationBackingBean extends
 		}
 
 		if (!shareHolderBean.isDirector()
-				&& !shareHolderBean.isHigherManagement()) {
+				&& !shareHolderBean.isHigherManagement()
+				   && !shareHolderBean.isEquityOwner()) {
 			getManagedBean().getShareHolderOffAddr().setSameAsPerm(true);
 			getManagedBean().getShareHolderResdAddr().setSameAsPerm(true);
 		}
@@ -10889,7 +10878,7 @@ public class SmApplicationBackingBean extends
 					&& getManagedBean().getSmAppl().getSmSupplierCategories().size()>0 ){
 				for(SmSupplierCategory activeSuppCat: getManagedBean().getSmAppl().getSmSupplierCategories()){
 					if(activeSuppCat.getRecordStatusFlg().compareTo(
-							SupplierManagementConst.DELETED_RECORD_STATUS) < 0){
+							SupplierManagementConst.PENDING_ACT_STATUS) == 0 ){
 						activeList.add(activeSuppCat);
 					}
 				}
