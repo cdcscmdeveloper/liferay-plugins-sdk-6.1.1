@@ -1522,21 +1522,25 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	}
 	//#16052019 - SSM INTEGRATION CR
 	private void retrieveRobExpDate(PmOrgProfile orgProfile) {
-		if (orgProfile.getSmSupplier() != null && orgProfile.getSmSupplier().getSmAppl() != null
-				&& orgProfile.getSmSupplier().getSmAppl().getSmCompanyBasic() != null) {
-			if (orgProfile.getSmSupplier().getSmAppl().getSmCompanyBasic().getRobExpiryDate() != null) {
-				getManagedBean().setRobExpDate(
-						orgProfile.getSmSupplier().getSmAppl().getSmCompanyBasic().getRobExpiryDate());
+		if (orgProfile.getSmSupplier() != null) {
+			if(orgProfile.getSmSupplier().getSmAppl() != null){
+				if(orgProfile.getSmSupplier().getSmAppl().getSmCompanyBasic() != null){
+					if (orgProfile.getSmSupplier().getSmAppl().getSmCompanyBasic().getRobExpiryDate() != null) {
+						getManagedBean().setRobExpDate(
+								orgProfile.getSmSupplier().getSmAppl().getSmCompanyBasic().getRobExpiryDate());
+					}
+					if (orgProfile.getSmSupplier().getBusinessType()
+							.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
+							|| orgProfile
+									.getSmSupplier()
+									.getBusinessType()
+									.equalsIgnoreCase(
+											SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)) {
+						getManagedBean().setShowRobExpiredDate(true);
+					}
+				}
 			}
-			if (orgProfile.getSmSupplier().getBusinessType()
-					.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
-					|| orgProfile
-							.getSmSupplier()
-							.getBusinessType()
-							.equalsIgnoreCase(
-									SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)) {
-				getManagedBean().setShowRobExpiredDate(true);
-			}
+			
 		}
 	}
 

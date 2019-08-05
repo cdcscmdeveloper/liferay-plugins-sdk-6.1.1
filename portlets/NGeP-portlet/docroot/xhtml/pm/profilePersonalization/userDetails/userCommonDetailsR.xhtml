@@ -187,17 +187,19 @@ textarea {
 							<!-- 16052019 - SSM INTEGRATION CR -->
 							<c:if
 								test="#{profilePersonalizationBackingBean.managedBean.showRobExpiredDate}">
-							<div class="cert">
-								<div class="col1">#{lbl['lbl.sm.account.rob.expire']}</div>
-								<div class="col2"><h:outputText
+								<tr>
+									<td colspan="2" valign="top" class="myProfile-title">#{lbl['lbl.sm.account.rob.expire']}</td>
+								</tr>
+								<tr>
+								<td colspan="2" valign="top" class="myProfile-text"><h:outputText
 										value="#{profilePersonalizationBackingBean.managedBean.robExpDate != null ? '' : '-'}" />
 									<h:outputText
 										value="#{profilePersonalizationBackingBean.managedBean.robExpDate}"
 										rendered="#{profilePersonalizationBackingBean.managedBean.robExpDate != null}">
 										<f:convertDateTime
 											pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-									</h:outputText></div>
-							</div>
+									</h:outputText></td>
+							</tr>	
 							</c:if>
 						</c:if>
 					</div>
