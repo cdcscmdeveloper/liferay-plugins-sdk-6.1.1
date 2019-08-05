@@ -184,6 +184,23 @@ textarea {
 											value="#{lbl['lbl.pm.ucd.soft.cert']}" /></td>
 								</tr>
 							</c:if>
+							<!-- 16052019 - SSM INTEGRATION CR -->
+							<c:if
+								test="#{profilePersonalizationBackingBean.managedBean.showRobExpiredDate}">
+								<tr>
+									<td colspan="2" valign="top" class="myProfile-title">#{lbl['lbl.sm.account.rob.expire']}</td>
+								</tr>
+								<tr>
+								<td colspan="2" valign="top" class="myProfile-text"><h:outputText
+										value="#{profilePersonalizationBackingBean.managedBean.robExpDate != null ? '' : '-'}" />
+									<h:outputText
+										value="#{profilePersonalizationBackingBean.managedBean.robExpDate}"
+										rendered="#{profilePersonalizationBackingBean.managedBean.robExpDate != null}">
+										<f:convertDateTime
+											pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+									</h:outputText></td>
+							</tr>	
+							</c:if>
 						</c:if>
 					</div>
 				</c:if>
