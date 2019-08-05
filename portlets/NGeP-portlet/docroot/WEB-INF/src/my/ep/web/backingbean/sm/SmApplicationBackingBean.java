@@ -10869,7 +10869,7 @@ public class SmApplicationBackingBean extends
 					&& getManagedBean().getSmAppl().getSmSupplierCategories().size()>0 ){
 				for(SmSupplierCategory activeSuppCat: getManagedBean().getSmAppl().getSmSupplierCategories()){
 					if(activeSuppCat.getRecordStatusFlg().compareTo(
-							SupplierManagementConst.DELETED_RECORD_STATUS) < 0){
+							SupplierManagementConst.PENDING_ACT_STATUS) == 0 ){
 						activeList.add(activeSuppCat);
 					}
 				}
