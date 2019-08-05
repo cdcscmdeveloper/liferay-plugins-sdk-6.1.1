@@ -1035,6 +1035,14 @@ public class SmApplicationBackingBean extends
 			SmApplicationUtil.getInstance().setApplAddressTransientValue(
 					getManagedBean().getSmAppl(), false);
 			SmApplicationUtil.checkOverLappingCategories(getManagedBean());
+		
+			//Bug #25979 - to hide message/note for Company that has Overlapping Category
+			if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL))
+			{
+				log.info("#25979 From BPM - Cancel");
+				getManagedBean().setOverLappedCategoryExists(false);
+			}
+			
 			if (!(getManagedBean().isApproverUser() || getManagedBean()
 					.isPoUser())) {
 				boolean updateNeeded = SmApplicationUtil
