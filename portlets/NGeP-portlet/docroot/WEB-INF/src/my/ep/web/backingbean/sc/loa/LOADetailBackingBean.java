@@ -5010,10 +5010,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					|| loa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN))
 					&& null != loa.getScQuote() && null != loa.getScQuote().getProcurementType() 
 					&& ParameterTypeConst.PROCUREMENT_TYPE.equals(loa.getScQuote().getProcurementType().getParameterType()) 
-					&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(loa.getScQuote().getProcurementType().getParameterCode())) {
-					log.info(this.getClass().getName() + ".checkDpIsElisibleForPB(): condition satisfied to enable PB."); 
-					getManagedBean().setEnablePBForDP(true);
-				}
+						&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(loa.getScQuote().getProcurementType().getParameterCode())) {
+						log.info(this.getClass().getName() + ".checkDpIsElisibleForPB(): condition satisfied to enable PB."); 
+						getManagedBean().setEnablePBForDP(true);
+						if (StringUtils.isEmpty(getManagedBean().getYesParameterId())) {
+							getManagedBean().setYesParameterId(String.valueOf(getParameterIdByTypeAndCode(ParameterTypeConst.YES_NO_FLAG, ParameterConst.COMPLIANCE_STATUS_COMPLIANCE.toUpperCase())));
+						}
+						
+						if (StringUtils.isEmpty(getManagedBean().getNoParameterId())) {
+							getManagedBean().setNoParameterId(String.valueOf(getParameterIdByTypeAndCode(ParameterTypeConst.YES_NO_FLAG, ParameterConst.COMPLIANCE_STATUS_NOT_COMPLIANCE.toUpperCase())));
+						}
+					}
 				return;
 			}
 			Map<String,String> params = FacesContext.getCurrentInstance()
@@ -5046,6 +5053,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 											&& (fulfilmentType.getPmParameter().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
 													|| fulfilmentType.getPmParameter().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN))) {
 										getManagedBean().setEnablePBForDP(true);
+										if (StringUtils.isEmpty(getManagedBean().getYesParameterId())) {
+											getManagedBean().setYesParameterId(String.valueOf(getParameterIdByTypeAndCode(ParameterTypeConst.YES_NO_FLAG, ParameterConst.COMPLIANCE_STATUS_COMPLIANCE.toUpperCase())));
+										}
+										
+										if (StringUtils.isEmpty(getManagedBean().getNoParameterId())) {
+											getManagedBean().setNoParameterId(String.valueOf(getParameterIdByTypeAndCode(ParameterTypeConst.YES_NO_FLAG, ParameterConst.COMPLIANCE_STATUS_NOT_COMPLIANCE.toUpperCase())));
+										}
 										log.info(this.getClass().getName() + ".checkDpIsElisibleForPB(): Enabled Performance Bond for loaNo is: " + loa.getLoaNo());
 									}
 								}
