@@ -56,6 +56,9 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	private int roleTableScrollHeight;
 	private boolean isLazy = false;
 	private List<AdminResDTO> adminDetReceivedList = new ArrayList<AdminResDTO>();
+	//#16052019 - SSM INTEGRATION CR 
+	private Date robExpDate;
+	private boolean showRobExpiredDate = false;
 	
 	public ProfilePersonalizationManagedBean(){}
 	
@@ -349,6 +352,22 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 
 	public void setAdminDetReceivedList(List<AdminResDTO> list) {
 		this.adminDetReceivedList = list;
+	}
+
+	public Date getRobExpDate() {
+		return robExpDate;
+	}
+
+	public void setRobExpDate(Date robExpDate) {
+		this.robExpDate = robExpDate;
+	}
+
+	public boolean isShowRobExpiredDate() {
+		return showRobExpiredDate;
+	}
+
+	public void setShowRobExpiredDate(boolean showRobExpiredDate) {
+		this.showRobExpiredDate = showRobExpiredDate;
 	}
 
 }
