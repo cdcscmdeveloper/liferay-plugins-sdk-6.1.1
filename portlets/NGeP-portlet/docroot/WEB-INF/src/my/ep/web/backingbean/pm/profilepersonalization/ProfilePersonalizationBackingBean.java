@@ -321,6 +321,8 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			constructRoles();
 			retrieveMofExpDate(getManagedBean().getCurrentProfile());
 			retrieveSoftCertExpDate(getManagedBean().getSelectedUser());
+			//#16052019 - SSM INTEGRATION CR
+			retrieveRobExpDate(getManagedBean().getCurrentProfile());
 
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_COMMON_DETAILS_R);
 		} catch (Exception e) {
