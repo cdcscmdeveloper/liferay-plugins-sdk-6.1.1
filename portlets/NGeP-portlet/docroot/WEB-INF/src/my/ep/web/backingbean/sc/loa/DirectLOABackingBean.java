@@ -1443,7 +1443,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			saveProgressivePaymntList();
 			constructScheduleDetails();
 			//Bug #24061
-			if(scLoa.getScLoiLoa() != null){
+			if(scLoa.getScLoiLoa() != null && scLoa.getScLoiLoa().getFulfilmentTypeCode() != null){
 			if(ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode())){	
 				if (CollectionUtils.isNotEmpty(scLoa.getScQtSchedules())) {
 					for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
