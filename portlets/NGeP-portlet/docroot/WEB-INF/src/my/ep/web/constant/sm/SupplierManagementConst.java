@@ -354,6 +354,12 @@ public class SupplierManagementConst {
 	public static final String PERSONNEL_TYPE_FRGNR = "NON-MALAYSIAN";
 	public static final String PERSONNEL_TYPE_BUMI = "BUMI";
 	public static final String PERSONNEL_TYPE_NON_BUMI = "NON-BUMI";
+	//16052019 - SSM INTEGRATION CR
+	public static final String CAPITAL_GOV_AGENCY = "CAPITAL_GOV_AGENCY";
+	public static final String CAPITAL_GOV_EQUITY = "CAPITAL_GOV_EQUITY";
+	public static final String CAPITAL_FOREIGN = "CAPITAL_FOREIGN";
+	public static final String CAPITAL_LOCAL = "CAPITAL_LOCAL";
+	
 
 	public static final String PERSONNEL_MANAGEMENT_STAFF_CONTRACTOR_PARAMCODE = "1";
 	public static final String PERSONNEL_NORMAL_STAFF_CONTRACTOR_PARAMCODE = "2";
@@ -1152,4 +1158,11 @@ public class SupplierManagementConst {
 	public String getSmApplCategoryTypeSpecial() {
 		return SM_APPL_CATEGORY_TYPE_SPECIAL;
 	}
+	
+	public long getPM_STATUS_PO_REVIEW() {
+		return PM_STATUS_PO_REVIEW;
+	}
+	
+	
+	
 }
