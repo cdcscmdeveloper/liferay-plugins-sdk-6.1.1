@@ -8505,27 +8505,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	}
 
 	/**
-	 * 
-	 */
-	private Long getParameterIdByTypeAndCode(String paramType, String paramCode) {
-		IParameterSO parameterSO = null;
-		try {
-			parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					IParameterSO.class);
-			ParameterReqDTO reqDTO = new ParameterReqDTO();
-			reqDTO.setParameterType(paramType);
-			reqDTO.setParameterCode(paramCode);
-			ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
-			if (null != resDTO && resDTO.isSuccessful() && null != resDTO.getPmParameter()) {
-				return resDTO.getPmParameter().getParameterId();
-			}
-		} finally {
-			parameterSO = null;
-		}
-		return null;
-	}
-	
-	/**
 	 * To display Agreement dropdown when QT Type is <b>Special Item / Item In PK 7</b> 
 	 * and Fulfilment Type is <b>One Off</b>.
 	 * 
