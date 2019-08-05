@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -316,6 +317,7 @@ public class ViewApplHistoryBackingBean extends
 				.retrieveSmApplicationDetailsById(reqDTO).getSmAppl();
 		if (smAppl.getApplType()
 				.equals(SupplierManagementConst.APPL_TYPE_BASIC)) {
+			registrationBackingBean = null;
 			getRegistrationBackingBean().getManagedBean().setViewMode(true);
 			getRegistrationBackingBean().viewOnlineAccount();
 		} else {
@@ -886,5 +888,19 @@ public class ViewApplHistoryBackingBean extends
 		}
 		return page;
 	}
-
+	public String getStatusDescription(Object[] appl) {
+		BigDecimal suppStatDec =appl[12] != null  ? (BigDecimal)appl[12]: new BigDecimal(0);
+		String applType = appl[1] != null  ? (String)appl[1]: "";
+		String suppType = appl[2] != null  ? (String)appl[2]: "";
+		
+		Locale locale = new FacesScopes().getUserLocale();
+		if(suppStatDec.toString().equals("5") && applType.equals("O") && suppType.equals("B")){
+			return "In Progress";
+		}else if(StringUtils.isNotBlank((String)appl[6])){
+			return (String)appl[6];
+		}	
+		return ResourceBundleUtils.getMessage("lbl.sm.no.available",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+	}
+	
 }
