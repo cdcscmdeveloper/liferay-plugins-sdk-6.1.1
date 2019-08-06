@@ -104,7 +104,15 @@ private IPagingDataModel<CtContractItem> SuspensionProductListingPagingDataModel
 				
 				ContractBackingBean contractBb=new ContractBackingBean();
 				Long contId=contractBb.getManagedBean().getContractVer().getCtContract().getContractId();
-				Long contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();
+				
+				Long contractVerId=null;
+				if(contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer()!=null)
+				{
+					contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();
+				}
+				else {
+					contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId();
+				}
 				log.info("**SuspensionProductListingPagingDataModel******ContractID **--> : "+contId);
 				log.info("**SuspensionProductListingPagingDataModel******ContractVerID **--> : "+contractVerId);
 				
