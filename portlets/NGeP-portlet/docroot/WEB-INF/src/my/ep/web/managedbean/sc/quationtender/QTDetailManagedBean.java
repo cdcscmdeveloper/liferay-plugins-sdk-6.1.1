@@ -1569,6 +1569,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean ButtonHideActive = true;
 	private boolean buttonHideDedActive = true;
 	private boolean buttonHideSchActive = true;
+	
+	private boolean isApprovalScreen = false;
    
 	/**
 	 * Sets the panel suppliers.
@@ -1589,6 +1591,12 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private IPagingDataModel<ScLoaBasic> searchLoaDataModel;
 	
 	private IPagingDataModel<ScLoaForQt> searchLoaForQtDataModel;
+	
+	// ***25692
+	/*
+	 * approval. some part is readOnly, some part is updatable 
+	 */
+	private boolean approvalEditableSection;
 
 	/**
 	 * Instantiates a new QT detail managed bean.
@@ -9926,6 +9934,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setButtonHideSchActive(boolean buttonHideSchActive) {
 		this.buttonHideSchActive = buttonHideSchActive;
 	}
+
+	public boolean isApprovalEditableSection() {
+		return approvalEditableSection;
+	}
+
+	public void setApprovalEditableSection(boolean approvalEditableSection) {
+		this.approvalEditableSection = approvalEditableSection;
+	}
+	
+	
 	
 	/*basri 19637*/
 	public boolean isPanelZone() {
@@ -9935,6 +9953,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setPanelZone(boolean isPanelZone) {
 		this.isPanelZone = isPanelZone;
 	}
+
+	public boolean isApprovalScreen() {
+		return isApprovalScreen;
+	}
+
+	public void setApprovalScreen(boolean isApprovalScreen) {
+		this.isApprovalScreen = isApprovalScreen;
+	}
+	
+	
 
 	
 	
