@@ -20,6 +20,8 @@ import my.ep.dto.pm.common.businessnature.BusinessNatureReqDTO;
 import my.ep.dto.pm.common.businessnature.BusinessNatureResDTO;
 import my.ep.dto.sm.businessnature.SupplierBusinessNatureReqDTO;
 import my.ep.dto.sm.businessnature.SupplierBusinessNatureResDTO;
+import my.ep.dto.sm.common.ssm.SsmReqDTO;
+import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
@@ -59,10 +61,18 @@ public class SupplierBusinessNatureBackingBean extends BaseBackingBean<SupplierB
 			this.getManagedBean().setCompanyValidWithSSM(true);
 			// maybe here to put method to check with ssm
 			//SmSupplier smSupp = SmApplicationUtil.getCurrentSupplier();
-			//SmCommonUtil.getInstance().validateWithSSM(regNo,businessType,"");
-			if(!this.getManagedBean().isCompanyValidWithSSM()){
+			SsmReqDTO ssmReqDTO = new SsmReqDTO();
+			ssmReqDTO.setRegNo(smSupp.getRegNo());
+			// ssmReqDTO.setRegNo("IP0218361-W");
+			ssmReqDTO.setBusinessType(smSupp.getBusinessType());
+			SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
+			if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
+				this.getManagedBean().setCompanyValidWithSSM(true);
+				this.getManagedBean().setSsmResDTO(ssmResDTO);
+			}else{
 				throw new EpException(MessageConst.ERROR_721070);
 			}
+			
 		}
 		viewBusinessNature();
 	}
@@ -74,8 +84,7 @@ public class SupplierBusinessNatureBackingBean extends BaseBackingBean<SupplierB
 			getManagedBean().setSmSupplier(supplier);
 			//16052019 - SSM INTEGRATION CR - Fahmi
 			FacesContext fc = FacesContext.getCurrentInstance();
-			//businessTypeTovalidateWithSSM(smSupp.getRegNo(),smSupp.getBusinessType()) &&
-			if(!fromtncProceed){
+			if(!fromtncProceed && businessTypeTovalidateWithSSM(supplier.getRegNo(),supplier.getBusinessType())){
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/supplierbusinessnature/businessNatureTermAndCond.xhtml");
 				return;
 			}
@@ -89,10 +98,30 @@ public class SupplierBusinessNatureBackingBean extends BaseBackingBean<SupplierB
 			//this.getManagedBean().setBusinessNatureLs(resDTO.getBusinessNatureLs());
 			log.info("BusinessNature>>>>>" + getManagedBean().getSmSupplier().getSmSupplierBusinesses().size());
 			
-			if(getManagedBean().getSmSupplier().getSmSupplierBusinesses().size() > 0){
-				getManagedBean().setSupplierBusinessMap(new HashMap<Long, SmSupplierBusiness>());
-				for(SmSupplierBusiness supplierBusiness : getManagedBean().getSmSupplier().getSmSupplierBusinesses()){
-					getManagedBean().getSupplierBusinessMap().put(supplierBusiness.getPmBusinessNature().getBusinessNatureId(), supplierBusiness);
+			//16052019 - SSM INTEGRATION CR
+			if(this.getManagedBean().getSsmResDTO()!= null){
+				boolean existInOld=false;
+				//compare old data with ssm, if ssm has new data, add data into list
+				if(getManagedBean().getSmSupplier().getSmSupplierBusinesses().size() > 0){
+					for(SmSupplierBusiness smSupplierBusiness:this.getManagedBean().getSsmResDTO().getSmSupplierBusinessList()){
+						if(smSupplierBusiness.getPmBusinessNature()!=null){
+							for(SmSupplierBusiness smSuppBussOld:getManagedBean().getSmSupplier().getSmSupplierBusinesses()){
+								if(smSupplierBusiness.getPmBusinessNature().getLevelCode().equalsIgnoreCase(smSuppBussOld.getPmBusinessNature().getLevelCode())){
+									existInOld=true;
+								}
+							}
+						}
+						if(!existInOld){
+							smSupplierBusiness.setSmSupplier(getManagedBean().getSmSupplier());
+							getManagedBean().getSmSupplier().getSmSupplierBusinesses().add(smSupplierBusiness);
+						}
+					}
+				//if old data not exits,set all data from ssm into list
+				}else if(this.getManagedBean().getSsmResDTO().getSmSupplierBusinessList().size() > 0){
+					getManagedBean().getSmSupplier().setSmSupplierBusinesses(this.getManagedBean().getSsmResDTO().getSmSupplierBusinessList());
+					for(SmSupplierBusiness business :getManagedBean().getSmSupplier().getSmSupplierBusinesses()){
+						business.setSmSupplier(getManagedBean().getSmSupplier());
+					}
 				}
 			}
 
@@ -226,8 +255,7 @@ public class SupplierBusinessNatureBackingBean extends BaseBackingBean<SupplierB
 
 				if(resDTO.isSuccessful()){
 					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_100002,
-							MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));	
-					//RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
+							MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 					renewSesionObject();
 					return "/xhtml/common/acknowledge.xhtml";
 				}
@@ -246,3 +274,6 @@ public class SupplierBusinessNatureBackingBean extends BaseBackingBean<SupplierB
 		super.downloadFile(downloadPath.toString());
 	}
 }
+
+
+
