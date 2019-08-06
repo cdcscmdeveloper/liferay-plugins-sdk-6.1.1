@@ -107,6 +107,7 @@ import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.exceptionhandler.EpExceptionHandler;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.managedbean.UserTasks;
 import my.ep.web.util.AddressUtils;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.EpPortletUtil;
@@ -119,6 +120,7 @@ import my.ep.web.util.pm.helper.StatusHelper;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
@@ -2377,52 +2379,89 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	
 	//16052019 - SSM INTEGRATION CR - Fahmi
-		public boolean businessTypeTovalidateWithSSM(String regNo,String businessType){
-			//String regNo = this.getManagedBean().getSmSupp().getRegNo();
-			//String businessType = this.getManagedBean().getSmSupp().getBusinessType();
-			if(//businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT)
-					//|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)
-							//|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH)
-								//	|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK)
-											 businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
-													//|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)
-															//|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK)
-																	|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)
-																			|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD)
-																					//|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT)
-																							|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD)){
+			public boolean businessTypeTovalidateWithSSM(String regNo,String businessType){
+				//String regNo = this.getManagedBean().getSmSupp().getRegNo();
+				//String businessType = this.getManagedBean().getSmSupp().getBusinessType();
+				if(//businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT)
+						//|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)
+								//|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH)
+									//	|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK)
+												 businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
+														//|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)
+																//|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK)
+																		|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)
+																				|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD)
+																						//|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT)
+																								|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD)){
+					return true;
+				}else{
+					return false;
+				}
+			}
+			//16052019 - SSM INTEGRATION CR
+			public String setStatusMessageFromSSM(String statusCode){
+				if("A".equalsIgnoreCase(statusCode)){
+					return SmCommonUtil.getMessage("lbl.sm.status.active", null);
+				}else if("E".equalsIgnoreCase(statusCode)){
+					return SmCommonUtil.getMessage("lbl.sm.status.existing", null);
+				}else if("L".equalsIgnoreCase(statusCode)){
+					return SmCommonUtil.getMessage("lbl.sm.status.expired", null);
+				}else if("T".equalsIgnoreCase(statusCode)){
+					return SmCommonUtil.getMessage("lbl.sm.status.terminated", null);
+				}else if("B".equalsIgnoreCase(statusCode)){
+					return SmCommonUtil.getMessage("lbl.sm.status.dissolved", null);
+				}else if("W".equalsIgnoreCase(statusCode)){
+					return SmCommonUtil.getMessage("lbl.sm.status.w", null);
+				}else if("D".equalsIgnoreCase(statusCode)){
+					return SmCommonUtil.getMessage("lbl.sm.status.d", null);
+				}else if("R".equalsIgnoreCase(statusCode)){
+					return SmCommonUtil.getMessage("lbl.sm.status.r", null);
+				}else if("C".equalsIgnoreCase(statusCode)){
+					return SmCommonUtil.getMessage("lbl.sm.status.c", null);
+				}else if("X".equalsIgnoreCase(statusCode)){
+					return SmCommonUtil.getMessage("lbl.sm.status.x", null);
+				}else if("Y".equalsIgnoreCase(statusCode)){
+					return SmCommonUtil.getMessage("lbl.sm.status.y", null);
+				}
+				return "";
+			}
+	
+	
+	public Boolean userHasUserTask(UserTasks [] uts){
+		for(int i = 0; i < uts.length; i++){
+			if(userHasUserTask(uts[i])){
 				return true;
-			}else{
-				return false;
 			}
 		}
-		//16052019 - SSM INTEGRATION CR
-		public String setStatusMessageFromSSM(String statusCode){
-			if("A".equalsIgnoreCase(statusCode)){
-				return SmCommonUtil.getMessage("lbl.sm.status.active", null);
-			}else if("E".equalsIgnoreCase(statusCode)){
-				return SmCommonUtil.getMessage("lbl.sm.status.existing", null);
-			}else if("L".equalsIgnoreCase(statusCode)){
-				return SmCommonUtil.getMessage("lbl.sm.status.expired", null);
-			}else if("T".equalsIgnoreCase(statusCode)){
-				return SmCommonUtil.getMessage("lbl.sm.status.terminated", null);
-			}else if("B".equalsIgnoreCase(statusCode)){
-				return SmCommonUtil.getMessage("lbl.sm.status.dissolved", null);
-			}else if("W".equalsIgnoreCase(statusCode)){
-				return SmCommonUtil.getMessage("lbl.sm.status.w", null);
-			}else if("D".equalsIgnoreCase(statusCode)){
-				return SmCommonUtil.getMessage("lbl.sm.status.d", null);
-			}else if("R".equalsIgnoreCase(statusCode)){
-				return SmCommonUtil.getMessage("lbl.sm.status.r", null);
-			}else if("C".equalsIgnoreCase(statusCode)){
-				return SmCommonUtil.getMessage("lbl.sm.status.c", null);
-			}else if("X".equalsIgnoreCase(statusCode)){
-				return SmCommonUtil.getMessage("lbl.sm.status.x", null);
-			}else if("Y".equalsIgnoreCase(statusCode)){
-				return SmCommonUtil.getMessage("lbl.sm.status.y", null);
-			}
-			return "";
+		return false;
+	}
+	
+	/**
+	 * To determine user's UserTasks in getManagedBean()
+	 * 
+	 * @param ut - userTask to be tested
+	 * @return
+	 */
+	public Boolean userHasUserTask(UserTasks ut){
+		if(getManagedBean().getUserTasks()!=null && !CollectionUtils.isEmpty(getManagedBean().getUserTasks())){
+			if(getManagedBean().getUserTasks().contains(ut)){
+				return true;
+			}			
 		}
+		return false;
+	}
+	
+	public Boolean userHasUserTask(String ut){
+		if(getManagedBean().getUserTasks()!=null && !CollectionUtils.isEmpty(getManagedBean().getUserTasks())){
+			Object[] t = getManagedBean().getUserTasks().toArray();
+			for(int i = 0; i<t.length; i++){
+				if(((UserTasks)t[i]).toString().equals(ut)){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 }
 
 

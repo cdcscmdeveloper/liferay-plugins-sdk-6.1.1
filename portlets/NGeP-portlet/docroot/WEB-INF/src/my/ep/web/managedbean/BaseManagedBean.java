@@ -6,9 +6,16 @@ package my.ep.web.managedbean;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.faces.model.SelectItem;
+
+import org.apache.commons.collections.CollectionUtils;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -53,6 +60,8 @@ public abstract class BaseManagedBean implements Serializable {
 	private List<ScQtFinalizationReport> evaluationReportList;
 	private List<ScQtEvaluationReport> reportsToBeRemovedList;
 	private boolean autoUpdate = Boolean.TRUE;
+	private Set<UserTasks> userTasks;
+	private Map<String, List<String>> additionalPages;
 	
 	//16052019 - SSM INTEGRATION CR - Fahmi
 	private boolean ssmIntegrationActive;
@@ -456,54 +465,70 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setAutoUpdate(boolean autoUpdate) {
 		this.autoUpdate = autoUpdate;
 	}
-	public boolean isSsmIntegrationActive() {
-		return ssmIntegrationActive;
+
+	public Set<UserTasks> getUserTasks() {
+		return userTasks;
 	}
 
-	public void setSsmIntegrationActive(boolean ssmIntegrationActive) {
-		this.ssmIntegrationActive = ssmIntegrationActive;
+	public void setUserTasks(Set<UserTasks> userTasks) {
+		this.userTasks = userTasks;
+	}
+	
+	public void addUserTasks(UserTasks userTask){
+		if(this.userTasks == null){
+			userTasks = new HashSet<UserTasks>();
+		}
+		userTasks.add(userTask);
+	}
+	
+	public void removeUserTasks(UserTasks userTask){
+		if(this.userTasks != null && !CollectionUtils.isEmpty(userTasks)){
+			userTasks.remove(userTask);
+		}
 	}
 
-	public boolean isValidateWithSSM() {
-		return validateWithSSM;
+	public Map<String, List<String>> getAdditionalPages() {
+		return additionalPages;
 	}
 
-	public void setValidateWithSSM(boolean validateWithSSM) {
-		this.validateWithSSM = validateWithSSM;
+	public void setAdditionalPages(Map<String, List<String>> additionalPages) {
+		this.additionalPages = additionalPages;
 	}
-
-	public boolean isCompanyValidWithSSM() {
-		return companyValidWithSSM;
+	
+	public void addAdditionalPages(String k, String page){
+		if(this.additionalPages == null){
+			this.additionalPages = new HashMap<String, List<String>>();
+			List<String> t= new ArrayList<String>();
+			this.additionalPages.put(k, t);
+		}
+		if(!this.additionalPages.containsKey(k) || this.additionalPages.get(k)==null){
+			List<String> t= new ArrayList<String>();
+			this.additionalPages.put(k, t);
+		}
+		this.additionalPages.get(k).add(page);
 	}
-
-	public void setCompanyValidWithSSM(boolean companyValidWithSSM) {
-		this.companyValidWithSSM = companyValidWithSSM;
+	
+	/**
+	 * Copy BPM TaskDetails to another instance of BaseManagedBean
+	 * @param bm - another BaseManagedBean instance
+	 */
+	public void copyBPMTaskDetails(BaseManagedBean bm){
+		bm.setToken(this.token);
+		bm.setTaskId(this.taskId);
+		bm.setOutComes(this.outComes);
+		bm.setCurrentStatusId(this.currentStatusId);
+		bm.setTaskName(taskName);
+		bm.setAssignedState(this.isAssignedState);
+		bm.setPayLoad(this.payLoad);
+		bm.setProcessName(this.processName);
+		bm.setGroupTask(this.groupTask);
+		bm.setReadOnly(this.isReadOnly);
 	}
-
-	public boolean isErrorMessageSSM() {
-		return errorMessageSSM;
-	}
-
-	public void setErrorMessageSSM(boolean errorMessageSSM) {
-		this.errorMessageSSM = errorMessageSSM;
-	}
-
-	public String getStatusFromSSM() {
-		return statusFromSSM;
-	}
-
-	public void setStatusFromSSM(String statusFromSSM) {
-		this.statusFromSSM = statusFromSSM;
-	}
-
-	public String getStatusDescFromSSM() {
-		return statusDescFromSSM;
-	}
-
-	public void setStatusDescFromSSM(String statusDescFromSSM) {
-		this.statusDescFromSSM = statusDescFromSSM;
-	}
+	
+	
+	
 }
 
 
 // ***25201
+// ***25692
