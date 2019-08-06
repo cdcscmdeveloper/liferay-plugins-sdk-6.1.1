@@ -269,6 +269,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 		
 	}
+	//16052019 - SSM INTEGRATION CR
 	public void setHeaderName(){
 		if(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN.equalsIgnoreCase(this.getManagedBean().getSmSupp().getBusinessType())){
 			this.getManagedBean().setHeaderName(SmCommonUtil.getMessage("lbl.sm.directorinfo", null));
@@ -2141,6 +2142,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	public String getParamDescByParameterId(Long parameterId){
 		return SmCommonUtil.getParamDescByParameterId(parameterId);
 	}
+	//16052019 - SSM INTEGRATION CR
 	public String getParamDescriptionByLanguageAndPmParameter(PmParameter parameter){
 		return SmCommonUtil.getParamDescriptionByLanguageAndPmParameter(parameter);
 	}
@@ -2349,6 +2351,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				this.getManagedBean().setSabahSarawakType(false);
 				//this.getManagedBean().setBusinessStateLs(stateLs);
 			}
+			showOwnerCB();
 		}
 		//16052019 - SSM INTEGRATION CR - Fahmi
 		setHeaderName();
@@ -3350,6 +3353,41 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			if(this.getManagedBean().getSmPersonnel().getTitle() == null) {
 				this.getManagedBean().getSmPersonnel().setTitle(new PmSalutation());
 			}
+		}
+	}
+	//#16052019 - SSM INTEGRATION CR
+	public void showOwnerCB() {
+		String businessType = this.getManagedBean().getSmSupp().getBusinessType();
+		if (SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP.equalsIgnoreCase(businessType)
+				|| SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD.equalsIgnoreCase(businessType)
+				|| SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD.equalsIgnoreCase(businessType)) {
+			// show all & editable & minimum 1
+			this.getManagedBean().setShowDirector(true);
+			this.getManagedBean().setShowOwner(true);
+			this.getManagedBean().setDisableRole(false);
+		} else if (SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG
+				.equalsIgnoreCase(businessType)
+				|| SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG
+						.equalsIgnoreCase(businessType)
+				|| SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_PROFESSIONAL_BODY.equalsIgnoreCase(businessType)
+				|| SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH
+						.equalsIgnoreCase(businessType)
+				|| SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK
+						.equalsIgnoreCase(businessType)
+				|| SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH
+						.equalsIgnoreCase(businessType)
+				|| SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK
+						.equalsIgnoreCase(businessType)) {
+			// show “Equity Owner” and the checkbox auto-ticked and
+			// non-editable.
+			this.getManagedBean().setShowDirector(false);
+			this.getManagedBean().setShowOwner(true);
+			//this.getManagedBean().setDisableRole(true);
+		} else {
+			// show “Director” and the checkbox auto-ticked and non-editable.
+			this.getManagedBean().setShowDirector(true);
+			this.getManagedBean().setShowOwner(false);
+			//this.getManagedBean().setDisableRole(true);
 		}
 	}
 }

@@ -64,7 +64,7 @@
 				<h:outputText value="#{varOwner.nationality.countryName}" />
 			</p:column>
 			
-			<p:column  styleClass="column-align-center">
+			<p:column  styleClass="column-align-center" rendered="#{registrationBackingBean.managedBean.showOwner || registrationBackingBean.managedBean.showDirector}">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.person.composition.role']}" />
 				</f:facet>
