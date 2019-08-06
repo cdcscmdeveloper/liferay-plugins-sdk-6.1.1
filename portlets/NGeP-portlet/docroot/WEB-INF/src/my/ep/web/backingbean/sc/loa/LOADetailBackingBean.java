@@ -877,11 +877,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				scLoa.getCurrentStatus(),
 				scLoa.getScLoaRemarks(), ScLoaRemark.class));
 
-		// check agreement
-		checkAgreementMandatory();
-
 		// check performance bond
 		checkPerformanceBondMandatory();
+
+		// check agreement
+		if (!getManagedBean().isEnablePBForDP()) {
+			checkAgreementMandatory();
+		}
 		
 		//Enhancement #24259 #24269
 //		scLoa = calcBondAmount(scLoa, false);
@@ -4981,8 +4983,26 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		
 		//To enable Performance Bond for Direct Purchase - Enhancement #25144- Starte.
 		checkDpIsElisibleForPB(loa, true);
-		if (getManagedBean().isEnablePBForDP() && !isBondReq) {
-			getManagedBean().setDisablePerformanceBondForDP(true);
+		if (getManagedBean().isEnablePBForDP()) {
+			if (!isBondReq) {
+				getManagedBean().setDisablePerformanceBondForDP(true);
+			}
+			
+			if (StringUtils.isEmpty(getManagedBean().getBondReqSelectedVal())){
+				if (getManagedBean().getScLoa().isBondReq()) {
+					getManagedBean().setBondReqSelectedVal(getManagedBean().getYesParameterId());
+				} else {
+					getManagedBean().setBondReqSelectedVal(getManagedBean().getNoParameterId());
+				}
+			}
+			
+			if (StringUtils.isEmpty(getManagedBean().getAgreemetSelectedVal())) {
+				if (getManagedBean().getScLoa().isAgreementReq()) {
+					getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());
+				} else {
+					getManagedBean().setAgreemetSelectedVal(getManagedBean().getNoParameterId());
+				}
+			}
 		}
 		//To enable Performance Bond for Direct Purchase - Enhancement #25144 - End.
 		
