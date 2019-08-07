@@ -273,6 +273,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	public void setHeaderName(){
 		if(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN.equalsIgnoreCase(this.getManagedBean().getSmSupp().getBusinessType())){
 			this.getManagedBean().setHeaderName(SmCommonUtil.getMessage("lbl.sm.directorinfo", null));
+		}else if(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP.equalsIgnoreCase(this.getManagedBean().getSmSupp().getBusinessType())){
+			this.getManagedBean().setHeaderName(SmCommonUtil.getMessage("lbl.sm.llp.ownerinfo", null));
+			this.getManagedBean().setShowDirectorInOwner(true);
 		}else{
 			this.getManagedBean().setHeaderName(SmCommonUtil.getMessage("lbl.sm.ownerinfo", null));
 		}
@@ -455,6 +458,27 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			if(this.getManagedBean().getSmSuppOwners().size()>0){
 				suppOwner = this.getManagedBean().getSmSuppOwners().get(0);
 			}
+			//START 16052019 - SSM INTEGRATION CR - Validation for owner name n ident no 
+			if (suppOwner.getOwnerName() == null || "".equalsIgnoreCase(suppOwner.getOwnerName())) {
+				throw new EpException(MessageConst.ERROR_100022,
+						new String[] {ResourceBundleUtils.getMessage("lbl.sm.ownername", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
+			
+			if (suppOwner.getOwnerName() == null || "".equalsIgnoreCase(suppOwner.getOwnerName())) {
+				throw new EpException(MessageConst.ERROR_100022,
+						new String[] {ResourceBundleUtils.getMessage("lbl.sm.individual.newicno", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
+			if(this.getManagedBean().isShowDirector() || this.getManagedBean().isShowOwner()){
+				if (!this.getManagedBean().isOwnerIsDirector() && !this.getManagedBean().isOwnerIsEquity()) {
+					throw new EpException(MessageConst.ERROR_100022,
+							new String[] {ResourceBundleUtils.getMessage("lbl.sm.person.composition.role", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				}
+			}
+			
+			//END 16052019 - SSM INTEGRATION CR - Validation for owner name n ident no 
 			if(SmCommonUtil.isSupplierOwnerIndividualAcc(suppOwner.getIdentificationType().getParameterCode(),suppOwner.getIdentificationNo(),
 					my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL)){
 				throw new EpException(MessageConst.ERROR_721050);
@@ -3358,10 +3382,16 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	//#16052019 - SSM INTEGRATION CR
 	public void showOwnerCB() {
 		String businessType = this.getManagedBean().getSmSupp().getBusinessType();
+		this.getManagedBean().setShowDirectorInOwner(false);
+		this.getManagedBean().setOwnerIsEquity(false);
+		this.getManagedBean().setDisableRole(false);
+		this.getManagedBean().setOwnerIsDirector(false);
 		if (SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP.equalsIgnoreCase(businessType)
 				|| SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD.equalsIgnoreCase(businessType)
 				|| SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD.equalsIgnoreCase(businessType)) {
 			// show all & editable & minimum 1
+			//For ROC and LLP
+			//- Role in company to display "Equity Owner" and "Director" and editable and to select at least one.
 			this.getManagedBean().setShowDirector(true);
 			this.getManagedBean().setShowOwner(true);
 			this.getManagedBean().setDisableRole(false);
@@ -3380,14 +3410,21 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						.equalsIgnoreCase(businessType)) {
 			// show “Equity Owner” and the checkbox auto-ticked and
 			// non-editable.
+			//For ROB, Professional Body, Business Registration Number in Sabah & Sarawak
+			//- Role in company to display “Equity Owner” and the checkbox auto-ticked and non-editable.
 			this.getManagedBean().setShowDirector(false);
 			this.getManagedBean().setShowOwner(true);
-			//this.getManagedBean().setDisableRole(true);
+			this.getManagedBean().setDisableRole(true);
+			this.getManagedBean().setOwnerIsEquity(true);
 		} else {
 			// show “Director” and the checkbox auto-ticked and non-editable.
+			//For Cooperative (Registered with SKM and Others), Society, ROS (Organization registered with JPPM) and Organization (Others)
+			//- Role in company to display “Director” and the checkbox auto-ticked and non-editable.
 			this.getManagedBean().setShowDirector(true);
+			this.getManagedBean().setShowDirectorInOwner(true);
 			this.getManagedBean().setShowOwner(false);
-			//this.getManagedBean().setDisableRole(true);
+			this.getManagedBean().setDisableRole(true);
+			this.getManagedBean().setOwnerIsDirector(true);
 		}
 	}
 }
