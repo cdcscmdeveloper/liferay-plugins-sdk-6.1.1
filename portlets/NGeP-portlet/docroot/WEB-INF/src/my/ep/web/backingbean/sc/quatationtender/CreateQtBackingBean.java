@@ -717,15 +717,16 @@ public class CreateQtBackingBean extends
 									.format(panelThreshold) });
 				}
 			} else {
-				BigDecimal prThreshold = getPRThresholdAmount();
-
-				if (null == amount || (amount.compareTo(prThreshold) <= 0)) {
+				if (null == amount || (amount.compareTo(BigDecimal.ZERO) <= 0)) {
 					throw new EpException(MessageConst.ERROR_760024,
-							new String[] { SourcingConstants.DF_AMOUNT
-									.format(prThreshold) });
+							new String[] { SourcingConstants.DF_AMOUNT.format(BigDecimal.ZERO) });
+				}
+
+				if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this.getManagedBean().getCurrentStatusId())
+						|| this.getManagedBean().isCreateQt()) {
+					scQt.setJustificationProcValue(null);
 				}
 			}
-			
 				// Procurement Mode
 				PmPtjSpecialApproval ptjSpecialApproval = getManagedBean().getPtjSpecialApproval();
 				ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
