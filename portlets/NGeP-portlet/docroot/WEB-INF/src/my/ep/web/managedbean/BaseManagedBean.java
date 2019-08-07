@@ -438,6 +438,54 @@ public abstract class BaseManagedBean implements Serializable {
 		this.enableDownloadAllDocuments = enableDownloadAllDocuments;
 	}
 	
+	public boolean isSsmIntegrationActive() {
+		return ssmIntegrationActive;
+	}
+
+	public void setSsmIntegrationActive(boolean ssmIntegrationActive) {
+		this.ssmIntegrationActive = ssmIntegrationActive;
+	}
+
+	public boolean isValidateWithSSM() {
+		return validateWithSSM;
+	}
+
+	public void setValidateWithSSM(boolean validateWithSSM) {
+		this.validateWithSSM = validateWithSSM;
+	}
+
+	public boolean isCompanyValidWithSSM() {
+		return companyValidWithSSM;
+	}
+
+	public void setCompanyValidWithSSM(boolean companyValidWithSSM) {
+		this.companyValidWithSSM = companyValidWithSSM;
+	}
+
+	public boolean isErrorMessageSSM() {
+		return errorMessageSSM;
+	}
+
+	public void setErrorMessageSSM(boolean errorMessageSSM) {
+		this.errorMessageSSM = errorMessageSSM;
+	}
+
+	public String getStatusFromSSM() {
+		return statusFromSSM;
+	}
+
+	public void setStatusFromSSM(String statusFromSSM) {
+		this.statusFromSSM = statusFromSSM;
+	}
+
+	public String getStatusDescFromSSM() {
+		return statusDescFromSSM;
+	}
+
+	public void setStatusDescFromSSM(String statusDescFromSSM) {
+		this.statusDescFromSSM = statusDescFromSSM;
+	}
+
 	/**
 	 * @return the disableFields
 	 */
