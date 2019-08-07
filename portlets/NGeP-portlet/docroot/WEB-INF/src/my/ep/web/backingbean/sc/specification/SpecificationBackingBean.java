@@ -15068,13 +15068,9 @@ public class SpecificationBackingBean extends
 										.format(panelThreshold) });
 					}
 				} else {
-					BigDecimal prThreshold = getPRThresholdAmount();
-
-					if (null == totalSpecEstimatedAmount
-							|| (totalSpecEstimatedAmount.compareTo(prThreshold) <= 0)) {
+					if (null == totalSpecEstimatedAmount || (totalSpecEstimatedAmount.compareTo(BigDecimal.ZERO) <= 0)) {
 						throw new EpException(MessageConst.ERROR_760024,
-								new String[] { SourcingConstants.DF_AMOUNT
-										.format(prThreshold) });
+								new String[] { SourcingConstants.DF_AMOUNT.format(BigDecimal.ZERO) });
 					}
 				}
 				qt.setEstimatedAmount(totalSpecEstimatedAmount);
