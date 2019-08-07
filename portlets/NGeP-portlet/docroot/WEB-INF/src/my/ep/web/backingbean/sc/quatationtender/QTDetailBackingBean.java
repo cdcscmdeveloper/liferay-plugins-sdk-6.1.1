@@ -6493,7 +6493,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		List<String> qtLoaDoctypes = new ArrayList<String>();	
 		
 		//filter document type search by role.
-		if (isPbbSecretary()){
+		//26259
+		boolean pbbSecretaryOnly = false; 
+		if(isPbbSecretary() && !(isDeskOfficer() || isAuditor() || isMofSupplier())){
+			pbbSecretaryOnly = true;;
+		}
+		
+		if (pbbSecretaryOnly){
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION);
