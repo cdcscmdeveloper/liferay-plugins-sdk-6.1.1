@@ -1708,6 +1708,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 * view supplier basic account
 	 */
 	public void viewOnlineAccount() {
+		//16052019 - SSM INTEGRATION CR - Fahmi
+		if(this.getManagedBean().isViewMode()){
+			fromtncProceed = true;//to set, if from view mode, no need show tnc
+		}
 		log.info("--------------------viewOnlineAccount----------------" + MDC.get(LogKey.USER_ID));
 		FacesContext fc = FacesContext.getCurrentInstance();
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
