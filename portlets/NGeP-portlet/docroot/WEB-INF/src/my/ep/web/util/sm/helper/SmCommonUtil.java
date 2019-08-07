@@ -4262,11 +4262,14 @@ public class SmCommonUtil {
 				case "70003":
 					throw new EpException(MessageConst.ERROR_SSM_70003);
 				case "70004":
-					throw new EpException(MessageConst.ERROR_SSM_70004);
+					//throw new EpException(MessageConst.ERROR_SSM_70004);
+					throw new EpException(MessageConst.ERROR_721071);
 				case "70005":
-					throw new EpException(MessageConst.ERROR_SSM_70005);
+					//throw new EpException(MessageConst.ERROR_SSM_70005);
+					throw new EpException(MessageConst.ERROR_721071);
 				case "70006":
-					throw new EpException(MessageConst.ERROR_SSM_70006);
+//					throw new EpException(MessageConst.ERROR_SSM_70006);
+					throw new EpException(MessageConst.ERROR_721071);
 				case "70061":
 					throw new EpException(MessageConst.ERROR_SSM_70001);
 				}
