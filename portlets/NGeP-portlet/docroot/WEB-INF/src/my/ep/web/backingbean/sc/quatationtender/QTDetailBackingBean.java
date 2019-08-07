@@ -20,6 +20,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -207,6 +208,7 @@ import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
+import my.ep.web.managedbean.UserTasks;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.EpPortletUtil;
@@ -255,6 +257,72 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	private static final int REFORM_TEC = 4;
 	private static final int REFORM_FEC = 8;
 	
+	private static final String menuItemDetails = "MenuItemDetails";
+	private static final String menuItemSuppQualificationCriteria = "MenuItemSuppQualificationCriteria";
+	private static final String menuItemCommitteeAppointment = "MenuItemCommitteeAppointment";
+	private static final String menuItemApproval = "MenuItemApproval";
+	private static final String menuItemBriefSiteVisit = "MenuItemBriefSiteVisit";
+	private static final String menuItemPublishDetail = "MenuItemPublishDetail";
+	private static final String menuItemPaymentDeduction = "MenuItemPaymentDeduction";
+	private static final String menuItemDocuments = "MenuItemDocuments";
+	private static final String menuItemActivities = "MenuItemActivities";
+	private static final String menuItemPublicationApproval = "MenuItemPublicationApproval";
+	private static final String menuItemBPKApproval = "MenuItemBPKApproval";
+	private static final String menuItemCommitteeApproval = "MenuItemCommitteeApproval";
+	private static final String menuItemCommitteeApprovalEcOcTecFec = "MenuItemCommitteeApprovalEcOcTecFec";
+	
+	public String getMenuItemDetails() {
+		return menuItemDetails;
+	}
+
+	public String getMenuItemSuppQualificationCriteria() {
+		return menuItemSuppQualificationCriteria;
+	}
+
+	public String getMenuItemCommitteeAppointment() {
+		return menuItemCommitteeAppointment;
+	}
+
+	public String getMenuItemApproval() {
+		return menuItemApproval;
+	}
+
+	public String getMenuItemBriefSiteVisit() {
+		return menuItemBriefSiteVisit;
+	}
+
+	public String getMenuItemPublishDetail() {
+		return menuItemPublishDetail;
+	}
+
+	public String getMenuItemPaymentDeduction() {
+		return menuItemPaymentDeduction;
+	}
+
+	public String getMenuItemDocuments() {
+		return menuItemDocuments;
+	}
+
+	public String getMenuItemActivities() {
+		return menuItemActivities;
+	}
+
+	public String getMenuItemPublicationApproval() {
+		return menuItemPublicationApproval;
+	}
+
+	public String getMenuItemBPKApproval() {
+		return menuItemBPKApproval;
+	}
+
+	public String getMenuItemCommitteeApproval() {
+		return menuItemCommitteeApproval;
+	}
+	
+	public String getMenuItemCommitteeApprovalEcOcTecFec() {
+		return menuItemCommitteeApprovalEcOcTecFec;
+	}
+	
 	
 	//25201#52
 	private RoleCode[] deskOfficerRoleCodes = {
@@ -264,6 +332,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			RoleCode.QCA_SECRETARY,
 			RoleCode.QCB_SECRETARY,
 			RoleCode.FPB_SECRETARY};
+
+	
 
 	/**
 	 * Instantiates a new QT detail backing bean.
@@ -4827,7 +4897,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					retrievePublicationApprovalTabDtl();
 				}
 				break;
+			case 50: //BPK Approval
+				
 			}
+			
 			this.getManagedBean().setActiveIndex(activeIndex);
 		}
 	}
@@ -6454,7 +6527,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		List<String> qtLoaDoctypes = new ArrayList<String>();	
 		
 		//filter document type search by role.
-		if (isPbbSecretary()){
+		//26259
+		boolean pbbSecretaryOnly = false; 
+		if(isPbbSecretary() && !(isDeskOfficer() || isAuditor() || isMofSupplier())){
+			pbbSecretaryOnly = true;;
+		}
+		
+		if (pbbSecretaryOnly){
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION);
@@ -6904,7 +6983,148 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		return method;
 	}
 	
+	public Boolean getUserTaskIsBPKApproval(){
+		return userHasUserTask(UserTasks.BPKApproval);
+	}
+	
+	public Boolean getUserTaskIsCommitteeAppointmentApproval(){
+		return userHasUserTask(UserTasks.CommitteeAppointmentApproval);
+	}
+	
+	/**
+	 * 25692 - Committee Appointment Approval for EC, OC, TEC, FEC Committee type
+	 * @return
+	 */
+	public Boolean getUserTaskIsCommitteeAppointmentApprovalEcOcTecFec(){
+		return userHasUserTask(UserTasks.CommitteeAppointmentApprovalEcOcTecFec);
+	}
+	
+	public Boolean getUserTaskIsPublicationApproval(){
+		return userHasUserTask(UserTasks.PublicationApproval);
+	}
+	
+	//default page at index 0
+	public String getBPKApprovalPage(){
+		if(getManagedBean().getAdditionalPages()!=null && getManagedBean().getAdditionalPages().containsKey(UserTasks.BPKApproval.toString())){
+			if(!CollectionUtils.isEmpty( getManagedBean().getAdditionalPages().get(UserTasks.BPKApproval.toString()))){
+				String t = getManagedBean().getAdditionalPages().get(UserTasks.BPKApproval.toString()).get(0);
+				return t;
+			}
+		}
+		return null;
+	}
+	
+	public String getCommitteeAppointmentApprovalPage(){
+		if(getManagedBean().getAdditionalPages()!=null && 
+				(	getManagedBean().getAdditionalPages().containsKey(UserTasks.CommitteeAppointmentApproval.toString())
+				||	getManagedBean().getAdditionalPages().containsKey(UserTasks.CommitteeAppointmentApprovalEcOcTecFec.toString())
+				)){
+			if(!(	(CollectionUtils.isEmpty( getManagedBean().getAdditionalPages().get(UserTasks.CommitteeAppointmentApproval.toString())))
+				&& 	(CollectionUtils.isEmpty( getManagedBean().getAdditionalPages().get(UserTasks.CommitteeAppointmentApprovalEcOcTecFec.toString())))
+				)){
+				String t = null;
+				try{
+					t = getManagedBean().getAdditionalPages().get(UserTasks.CommitteeAppointmentApproval.toString()).get(0);
+				}catch(NullPointerException ex){
+					try{
+						t = getManagedBean().getAdditionalPages().get(UserTasks.CommitteeAppointmentApprovalEcOcTecFec.toString()).get(0);
+					}catch(NullPointerException e){}
+				}
+				return t;
+			}
+		}
+		return null;
+	}
+	
+	public String getPublicationApprovalPage(){
+		if(getManagedBean().getAdditionalPages()!=null && getManagedBean().getAdditionalPages().containsKey(UserTasks.PublicationApproval.toString())){
+			if(!CollectionUtils.isEmpty( getManagedBean().getAdditionalPages().get(UserTasks.PublicationApproval.toString()))){
+				String t = getManagedBean().getAdditionalPages().get(UserTasks.PublicationApproval.toString()).get(0);
+				return t;
+			}
+		}
+		return null;
+	}
+	
+	
+	
+	public boolean displayMenuItem(String menuItem){
+		/*List<String> t = new ArrayList<String>();
+		t.addAll(Arrays.asList(
+				getMenuItemDetails(),   //0
+				getMenuItemSuppQualificationCriteria(), //1
+				getMenuItemCommitteeAppointment(), //2
+				getMenuItemApproval(), //3
+				getMenuItemBriefSiteVisit(), //4
+				getMenuItemPublishDetail(), //5
+				getMenuItemPaymentDeduction(), //6
+				getMenuItemDocuments(), //7
+				getMenuItemActivities() //8
+				));
+		if(getUserTaskIsBPKApproval()){
+			t.add(getMenuItemBPKApproval());
+		}
+		else if(getUserTaskIsCommitteeAppointmentApproval()){
+			t.remove(4); //4 from initialized t
+			t.remove(4); //5 from initialized t
+			t.remove(4); //6 from initialized t
+			t.remove(4); //7 from initialized t
+			t.add(getMenuItemCommitteeApproval());
+		}
+		else if(getUserTaskIsCommitteeAppointmentApprovalEcOcTecFec()){
+			t.add(getMenuItemCommitteeApprovalEcOcTecFec());
+		}
+		else if(getUserTaskIsPublicationApproval()){
+			t.add(getMenuItemPublicationApproval());
+		}
+		else;		
+		
+		
+		for(int i = 0; i< t.size(); i++){
+			if(menuItem!=null && menuItem.equalsIgnoreCase(t.get(i))){
+				return true;
+			}
+		}
+		return false; */
+		
+		Set<String> menuSet = new HashSet<String>();
+		menuSet.addAll(
+			Arrays.asList(
+				getMenuItemDetails(),   //0
+				getMenuItemSuppQualificationCriteria(), //1
+				getMenuItemCommitteeAppointment(), //2
+				getMenuItemApproval(), //3
+				getMenuItemBriefSiteVisit(), //4
+				getMenuItemPublishDetail(), //5
+				getMenuItemPaymentDeduction(), //6
+				getMenuItemDocuments(), //7
+				getMenuItemActivities() //8)
+			));
+		if(getUserTaskIsBPKApproval()){
+			menuSet.add(getMenuItemBPKApproval());
+		}
+		else if(getUserTaskIsCommitteeAppointmentApproval()){
+			menuSet.remove(getMenuItemBriefSiteVisit()); //4 from initialized menuSet
+			menuSet.remove(getMenuItemPublishDetail()); //5 from initialized menuSet
+			menuSet.remove(getMenuItemPaymentDeduction()); //6 from initialized menuSet
+			menuSet.remove(getMenuItemDocuments()); //7 from initialized menuSet
+			menuSet.add(getMenuItemCommitteeApproval());
+		}
+		else if(getUserTaskIsCommitteeAppointmentApprovalEcOcTecFec()){
+			menuSet.add(getMenuItemCommitteeApprovalEcOcTecFec());
+		}
+		else if(getUserTaskIsPublicationApproval()){
+			menuSet.add(getMenuItemPublicationApproval());
+		}
+		else;
+		return menuSet.contains(menuItem);
+		
+	}
+
+	
+
 }
 
 
 // ***19336#40
+// ***25692
