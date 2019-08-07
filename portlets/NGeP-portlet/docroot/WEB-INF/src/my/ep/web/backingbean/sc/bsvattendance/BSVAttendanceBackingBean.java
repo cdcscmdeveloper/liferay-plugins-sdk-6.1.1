@@ -587,6 +587,8 @@ public class BSVAttendanceBackingBean extends
 
 		log.debug("** Back Button **");
 		this.getManagedBean().setSelectedbriefRegistrationEnableDisable(null);
+		this.getManagedBean()
+		.setToBeDeletedRegistartions(null);
 		retrieveBriefingSiteVisitList(this.getManagedBean().getScQt().getQtId());
 		return this.getManagedBean().getPreviousPage()
 				+ "?faces-redirect=true";
