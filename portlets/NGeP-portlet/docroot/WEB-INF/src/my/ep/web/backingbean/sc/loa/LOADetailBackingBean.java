@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.ParseException;
@@ -4028,17 +4029,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		List<ScQtSchedule> localScheduleList = new ArrayList<ScQtSchedule>();
 		if (freqschedule != null && !freqschedule.isEmpty()) {
 			for (ScQtSchedule schedule : freqschedule) {
-				//Date currentDate = new Date();
-				SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-				//String localDate = df.format(currentDate);
-				//String day = localDate.substring(0, 2);
-				String fromdate = 01 + "/" + schedule.getStartMonth() + "/"
+				SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+				DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+				String fromdate = 01 + "/"
+						+ getMonth(schedule.getStartMonth()) + "/"
 						+ schedule.getStartYear();
-				String toDate = 01 + "/" + schedule.getEndMonth() + "/"
-						+ schedule.getEndYear();
-
-				schedule.setScheduleNo(schedule.getScheduleNo());
-
+				String toDate = 01 + "/" + getMonth(schedule.getEndMonth())
+						+ "/" + schedule.getEndYear();
 				try {
 					if (df.parse(fromdate).after(df.parse(toDate))) {
 						throw new EpException(MessageConst.ERROR_715011);
@@ -4047,11 +4044,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						schedule.setToDate(df.parse(toDate));
 					}
 				} catch (ParseException e) {
-					e.printStackTrace();
-					throw new EpException(e.toString());
-				}
-				if (schedule.getScLoa() == null) {
-					schedule.setScLoa(this.getManagedBean().getScLoa());
+					debugLogger("Parce Exception");
 				}
 				localScheduleList.add(schedule);
 			}
@@ -4061,6 +4054,22 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 	}
 
+	private String getMonth(String month) {
+
+		if (StringUtils.isEmpty(month)) {
+			throw new EpException("Month should not be empty");
+		}
+		int mon = Integer.parseInt(month);
+		String finalMonth = null;
+		if (mon <= 9) {
+			finalMonth = "0" + mon;
+		} else {
+			return month;
+		}
+		return finalMonth;
+
+	}
+	
 	/**
 	 * Gets the deduction item type dropdown list.
 	 *
