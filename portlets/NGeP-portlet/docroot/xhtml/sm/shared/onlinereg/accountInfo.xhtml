@@ -63,14 +63,29 @@
 				</td>
 				<!-- 16052019 - SSM INTEGRATION CR - Fahmi-->
 				<td style="text-align:left;width:30%;word-wrap: break-word;">
-					<p:selectOneMenu id="busTypeId" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.businesscomptype']}"
-						value="#{registrationBackingBean.managedBean.smSupp.businessType}" 
-						rendered="#{registrationBackingBean.managedBean.smAppl.brandNew or !registrationBackingBean.managedBean.disabledBusinessTypeInMaintenance}" 
-						style="width:310px"
-						disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew || registrationBackingBean.managedBean.companyValidWithSSM}">
-						<f:selectItems value="#{registrationBackingBean.pmBusinessTypeDropDown()}"/>
-						<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues}" update="outPnlRegForm" process="@form" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew || registrationBackingBean.managedBean.companyValidWithSSM}" ></p:ajax>
-					</p:selectOneMenu>
+				<c:choose>
+					<c:when test="#{registrationBackingBean.managedBean.smAppl.brandNew and registrationBackingBean.managedBean.companyValidWithSSM}">
+						<p:selectOneMenu id="busTypeId" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.businesscomptype']}"
+							value="#{registrationBackingBean.managedBean.smSupp.businessType}" 
+							rendered="#{registrationBackingBean.managedBean.smAppl.brandNew or !registrationBackingBean.managedBean.disabledBusinessTypeInMaintenance}" 
+							style="width:310px">
+							<f:selectItems value="#{registrationBackingBean.pmBusinessTypeDropDown()}"/>
+							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues}" update="outPnlRegForm" process="@form" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew || registrationBackingBean.managedBean.companyValidWithSSM}" ></p:ajax>
+						</p:selectOneMenu>
+					</c:when>
+					<c:otherwise>
+						<p:selectOneMenu id="busTypeId" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.businesscomptype']}"
+							value="#{registrationBackingBean.managedBean.smSupp.businessType}" 
+							rendered="#{registrationBackingBean.managedBean.smAppl.brandNew or !registrationBackingBean.managedBean.disabledBusinessTypeInMaintenance}" 
+							style="width:310px"
+							disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew || registrationBackingBean.managedBean.companyValidWithSSM}">
+							<f:selectItems value="#{registrationBackingBean.pmBusinessTypeDropDown()}"/>
+							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues}" update="outPnlRegForm" process="@form" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew || registrationBackingBean.managedBean.companyValidWithSSM}" ></p:ajax>
+						</p:selectOneMenu>
+					</c:otherwise>
+				</c:choose>
+				
+					
 					<p:outputLabel styleClass="outputLabel-view" 
 					value="#{registrationBackingBean.getParameterDesc(SupplierManagementConst.supplierBusinessType,registrationBackingBean.managedBean.smSupp.businessType)}" 
 					rendered="#{registrationBackingBean.managedBean.disabledBusinessTypeInMaintenance}" />
