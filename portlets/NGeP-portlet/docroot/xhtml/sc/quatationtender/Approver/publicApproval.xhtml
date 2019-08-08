@@ -30,7 +30,7 @@
 					<c:choose>
 						<c:when test="#{isStatusPendingPublicationApproval}">
 							<p:calendar label="#{lbl['lbl.sc.publish.date']}"
-								disabled="#{approvalBackingBean.managedBean.readOnly and not approvalBackingBean.inApprovalEditableSection}"
+								disabled="#{approvalBackingBean.managedBean.readOnly}"
 								mindate="#{approvalBackingBean.handlePublishDate()}"
 								value="#{approvalBackingBean.managedBean.qt.newPublishDate}"
 								id="noticePublish" required="true"
@@ -164,7 +164,7 @@
 	<ac:scRemarkAndAttachment
 		remarkList="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalRemarks}"
 		showAttachment="false"
-		readonly="#{approvalBackingBean.managedBean.readOnly and !approvalBackingBean.managedBean.approvalEditableSection}"
+		readonly="#{approvalBackingBean.managedBean.readOnly}"
 		instruction="#{approvalBackingBean.isReviceOrReject() ? lbl['lbl.sc.approval.remarks.instruction'] : ''}"
 		autoUpdateValue="#{approvalBackingBean.managedBean.autoUpdate}" />
 		
