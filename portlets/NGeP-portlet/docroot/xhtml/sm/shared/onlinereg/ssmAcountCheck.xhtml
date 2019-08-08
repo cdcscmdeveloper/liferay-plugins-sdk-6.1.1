@@ -141,28 +141,28 @@
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{rowKeyObj}">
 
-			<p:column style="width:20%;" styleClass="column-align-center">
+			<p:column style="width:3%;" styleClass="column-align-center">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.no']}" />
 				</f:facet>
 				<h:outputText value="#{index + 1}" />
 			</p:column>
 			
-			<p:column style="width:20%;" styleClass="column-align-center">
+			<p:column  styleClass="column-align-center">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.businessregno']}" />
 				</f:facet>
 				<h:outputText value="#{registrationBackingBean.managedBean.smSupp.regNo}" />
 			</p:column>
 			
-			<p:column style="width:20%;" styleClass="column-align-center">
+			<p:column  styleClass="column-align-center">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.companyname']}" />
 				</f:facet>
 				<h:outputText value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.companyName}" />
 			</p:column>
 			
-			<p:column style="width:20%;" styleClass="column-align-center">
+			<p:column styleClass="column-align-center">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.status']}" />
 				</f:facet>

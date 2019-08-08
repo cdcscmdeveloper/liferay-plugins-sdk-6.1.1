@@ -1488,19 +1488,19 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						for(SmSupplier supplier : resDTO.getSmSuppliers()){
 							if(supplier.getSmAppl() == null){
 								if(supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE){
-									throw new EpException(MessageConst.ERROR_721066,new String[]{SmCommonUtil.getMessage("lbl.sm.contractor",null), getManagedBean().getSmSupp().getRegNo()});
+									throw new EpException(MessageConst.ERROR_721066,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
 								}
 								//b)	If registration number exist and account is inactive 
 								else if(supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED){
-									throw new EpException(MessageConst.ERROR_721067,new String[]{SmCommonUtil.getMessage("lbl.sm.contractor",null), getManagedBean().getSmSupp().getRegNo()});
+									throw new EpException(MessageConst.ERROR_721067,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
 								}
 								//c)	If account already created but has not been activated, 
-								else if(supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_IN_PROGRESS){
-									throw new EpException(MessageConst.ERROR_721068,new String[]{SmCommonUtil.getMessage("lbl.sm.contractor",null), getManagedBean().getSmSupp().getRegNo()});
+								else if(supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_IN_PROGRESS || supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION){
+									throw new EpException(MessageConst.ERROR_721068,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
 								}
 								//d)	If registration number exist and MoF Account has been expired
 								else if(supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_EXPIRED){
-									throw new EpException(MessageConst.ERROR_721069,new String[]{SmCommonUtil.getMessage("lbl.sm.contractor",null), getManagedBean().getSmSupp().getRegNo()});
+									throw new EpException(MessageConst.ERROR_721069,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
 								}
 							}
 							if(getManagedBean().getSmAppl().getSupplierType().equals(supplier.getSmAppl().getSupplierType())){
@@ -1511,13 +1511,28 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 								}else{
 									labelText = SmCommonUtil.getMessage("lbl.sm.consultant", null);
 								}
-								
-								throw new EpException(MessageConst.ERROR_721041,new String[]{labelText,getManagedBean().getSmSupp().getRegNo()});
+								if(supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE){
+									throw new EpException(MessageConst.ERROR_721066,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
+								}
+								//b)	If registration number exist and account is inactive 
+								else if(supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED){
+									throw new EpException(MessageConst.ERROR_721067,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
+								}
+								//c)	If account already created but has not been activated, 
+								else if(supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_IN_PROGRESS || supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION){
+									throw new EpException(MessageConst.ERROR_721068,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
+								}
+								//d)	If registration number exist and MoF Account has been expired
+								else if(supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_EXPIRED){
+									throw new EpException(MessageConst.ERROR_721069,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
+								}else{
+									throw new EpException(MessageConst.ERROR_721041,new String[]{labelText,supplier.getRegNo()});
+								}
 							}
 							
 							if(getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
 								if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_BASIC)){
-									throw new EpException(MessageConst.ERROR_721042,new String[]{getManagedBean().getSmSupp().getRegNo()});
+									throw new EpException(MessageConst.ERROR_721066,new String[]{getManagedBean().getSmSupp().getRegNo()});
 								}
 							}
 						}
@@ -1527,19 +1542,19 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						for(SmSupplier supplier : resDTO.getSmSuppliers()){
 							//a)	If registration number exists and account is active 
 							if(supplier.getSmAppl().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE){
-								throw new EpException(MessageConst.ERROR_721066,new String[]{SmCommonUtil.getMessage("lbl.sm.contractor",null), getManagedBean().getSmSupp().getRegNo()});
+								throw new EpException(MessageConst.ERROR_721066,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
 							}
 							//b)	If registration number exist and account is inactive 
 							else if(supplier.getSmAppl().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED){
-								throw new EpException(MessageConst.ERROR_721067,new String[]{SmCommonUtil.getMessage("lbl.sm.contractor",null), getManagedBean().getSmSupp().getRegNo()});
+								throw new EpException(MessageConst.ERROR_721067,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
 							}
 							//c)	If account already created but has not been activated, 
-							else if(supplier.getSmAppl().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_IN_PROGRESS){
-								throw new EpException(MessageConst.ERROR_721068,new String[]{SmCommonUtil.getMessage("lbl.sm.contractor",null), getManagedBean().getSmSupp().getRegNo()});
+							else if(supplier.getSmAppl().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_IN_PROGRESS || supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION){
+								throw new EpException(MessageConst.ERROR_721068,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
 							}
 							//d)	If registration number exist and MoF Account has been expired
 							else if(supplier.getSmAppl().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_EXPIRED){
-								throw new EpException(MessageConst.ERROR_721069,new String[]{SmCommonUtil.getMessage("lbl.sm.contractor",null), getManagedBean().getSmSupp().getRegNo()});
+								throw new EpException(MessageConst.ERROR_721069,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
 							}
 							/*if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
 								throw new EpException(MessageConst.ERROR_721041,new String[]{SmCommonUtil.getMessage("lbl.sm.contractor",null), getManagedBean().getSmSupp().getRegNo()});
@@ -1940,7 +1955,33 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			}
 			return  sabahSarawakBusinessLs.toArray(new SelectItem[sabahSarawakBusinessLs.size()]);
 		}*/
-
+		//SSM INTEGRATION CR
+		//to filter out by company type
+		if(this.getManagedBean().isSsmIntegrationActive() && this.getManagedBean().isCompanyValidWithSSM()){
+			List<SelectItem> itemTemp = new ArrayList<SelectItem>();
+			itemTemp.add(new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					fs.getUserLocale())));
+			for(SelectItem item : items){
+				if(this.getManagedBean().isSsmIntegrationActive() && this.getManagedBean().isCompanyValidWithSSM()){
+					if(item.getValue() == null){
+						continue;
+					}
+					if(businessType.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG) || businessType.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)){
+						if(item.getValue().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG) || item.getValue().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)){
+							itemTemp.add(item);
+						}
+					}else if(businessType.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD) || businessType.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD)){
+						if(item.getValue().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD) || item.getValue().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD)){
+							itemTemp.add(item);
+						}
+					}
+				}
+			}
+			items = null;
+			items =  itemTemp.toArray(new SelectItem[itemTemp.size()]);
+		}
+		
 		return items;
 	}
 	
