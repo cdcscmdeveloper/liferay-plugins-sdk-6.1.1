@@ -1051,7 +1051,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 
 		return path;
 	}
-
+	
 	private String basicAccountFlow(SmSupplier supplier){
 		String path = null;
 		
@@ -1079,14 +1079,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			if(validSupplierTemp()){
 				if(softCertStatus == SupplierManagementConst.SOFT_CERT_PENDING_REQ && !isWithFederal && isMigratedFirstLogin){
 					log.info(">>>CHange ROle for SUpplier Temp<<");
-					
 					changeRoleForSupplierTemp(currentPersonnel.getPersonnelId(),supplier);
-					IPersonnelSO personnelSO =  SmServiceLookup.getPersonnelSO();
-					log.info(">>>Update Current Personnel Softcert Status<<");
-					PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-					currentPersonnel.setSoftcertFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
-					reqDTO.setSmPersonnel(currentPersonnel);
-					personnelSO.updatePersonnelRecord(reqDTO);
 				}				
 			}
 		}else{
