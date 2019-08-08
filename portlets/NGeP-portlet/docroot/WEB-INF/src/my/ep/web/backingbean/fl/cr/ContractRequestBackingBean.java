@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import my.ep.persistence.logging.LogKey;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -35,6 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
@@ -212,6 +214,7 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
+import my.ep.web.backingbean.cm.catalogue.ScheduleInfo;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBaseBackingBean;
@@ -273,6 +276,11 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	private boolean selectAllCheckbox;
 	/*#17087 zonal flag*/
 	private boolean zonalTest;
+	/*13984 Schedule/ Phase Information*/
+    private static List<ScheduleInfo> schInfo;
+    /*13984 navigation & schedule number Information*/
+    private static String navi;
+    private static String schno;
 	
 	/**
 	 * Instantiates a new fulfilment backing bean.
@@ -807,6 +815,83 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().setRequired(Boolean.FALSE);
 	}
 
+	
+
+
+	/* 13984 Construct phase/ schedule table */
+	public List<ScheduleInfo> initSchPhaseTable(Long contractId){
+		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+		IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+
+	
+	
+		
+			ContractReqDTO reqDTO = new ContractReqDTO();
+			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+
+			flReqDTO.setContractId(contractId);
+			reqDTO.setContractId(contractId);
+
+			ContractResDTO resDTO;
+			FulfilmentResDTO resfDTO;
+			
+
+			
+			resfDTO = requestSO.retrieveFulfilmentRequestDocNosByContractId(flReqDTO);
+			resDTO = contractSO.retrieveAvailableSchedulePhaseNo(reqDTO);
+
+		
+			
+			
+			if (resDTO.getAvailableNoList() != null) {
+				getManagedBean().setAvailableNoList(resDTO.getAvailableNoList());
+			}
+			schInfo = new ArrayList<ScheduleInfo>();
+
+			for (int i = 0; i < resDTO.getAvailableNoList().size(); i++) {
+				int j = i + 1;
+				if (j > resfDTO.getDocNos().size()) {
+
+					resfDTO.getDocNos().add("");
+				}
+				if (j > resfDTO.getFlOrderDocNos().size()) {
+
+					resfDTO.getFlOrderDocNos().add("");
+				}
+				if (j > resfDTO.getFlOrderDocNoStatus().size()) {
+
+					resfDTO.getFlOrderDocNoStatus().add("");
+				}
+				if (j > resfDTO.getDocNoStatus().size()) {
+					
+
+					
+					resfDTO.getDocNoStatus().add("");
+				}
+
+				schInfo.add(new ScheduleInfo(resDTO.getAvailableNoList().get(i), resfDTO.getDocNos().get(i), resfDTO
+						.getDocNoStatus().get(i), resfDTO.getFlOrderDocNos().get(i), resfDTO.getFlOrderDocNoStatus()
+						.get(i)));
+			}
+		
+
+		if (MDC.get(LogKey.USER_ID) == null) {
+			MDC.put(LogKey.USER_ID, 1L);
+		}
+	
+		setSchInfo(schInfo);
+		return schInfo;
+
+	}
+
+	
+	
+	
+	
+	
+	
 	/**
 	 * Navigate to CR UI
 	 * 
@@ -825,6 +910,21 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				}
 			}
 		}
+		
+		/*13984 BEGINNING navigation sets and current schedule number Information*/
+		initSchPhaseTable(contractId);
+		List<ScheduleInfo> schInfoo = getSchInfo();
+		log.info("schInfoo is : "+schInfoo);
+		log.info("schInfo is : "+schInfo);
+	
+		String nav = "crlist";
+		setNavi(nav);
+		
+		String schNoSelected =scheduleNo;
+		setschno(schNoSelected);
+		/*13984 ENDING navigation sets and current schedule number Information*/
+
+		
 		
 		String commonUrl = themeDisplay.getURLCurrent().substring(0, themeDisplay.getURLCurrent().indexOf(themeDisplay.getLayout().getGroup().getFriendlyURL())+themeDisplay.getLayout().getGroup().getFriendlyURL().length());
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
@@ -6247,6 +6347,39 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			getManagedBean().setSupplierItemPriceList(supplierItems);
 		}
 	} /*END*/
+	
+
+
+/*13984 Schedule/ Phase Information*/
+	public List<ScheduleInfo> getSchInfo() {
+		if (schInfo == null)
+			schInfo = new ArrayList<ScheduleInfo>();
+		
+        log.info("schInfo is,ln5983 : "+schInfo);
+		return schInfo;
+	}
+	@SuppressWarnings("static-access")
+	public void setSchInfo(List<ScheduleInfo> schInfo) {
+		this.schInfo = schInfo;
+	}
+	/*13984 navigation & scheduleNo Information sets and gets*/
+	public String getNavi() {
+		return navi;
+	}
+	@SuppressWarnings("static-access")
+	public void setNavi(String navi) {
+		this.navi = navi;
+	}
+	
+	public String getschno() {
+		return schno;
+	}
+	@SuppressWarnings("static-access")
+	public void setschno(String schNo) {
+		this.schno = schNo;
+	}
+	
+	
 }
 	
 
