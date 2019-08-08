@@ -298,9 +298,13 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private boolean oldGstRateFlg = false;
 	//17087 -- radio button
 	private boolean radioCheckDeliveryDate;
+	/*13984 Current schedule number Information*/
+	private static String scheduleNo;
 	
 	/** The active contract list document data model. */
 	private IPagingDataModel<VCtActiveContract> activeContractDataModel = new ActiveContractPagingDataModel();
+	//13984
+	private List<String> availableNoList;
 	
 	
 	private class ActiveContractPagingDataModel extends PagingDataModel<VCtActiveContract> {
@@ -3002,6 +3006,31 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 
 	public void setFulfilmentRequest(FlFulfilmentRequest fulfilmentRequest) {
 		this.fulfilmentRequest = fulfilmentRequest;
+	}
+
+	/**
+	 * @return the availableNoList
+	 */
+	public List<String> getAvailableNoList() {
+		return availableNoList;
+	}
+
+	/**
+	 * @param availableNoList the availableNoList to set
+	 */
+	public void setAvailableNoList(List<String> availableNoList) {
+		this.availableNoList = availableNoList;
+	}
+
+	public String getScheduleNo() {
+		return scheduleNo;
+	}
+
+	/**
+	 * @param scheduleNo the scheduleNo to set
+	 */
+	public void setScheduleNo(String scheduleNo) {
+		this.scheduleNo = scheduleNo;
 	}
 
 	
