@@ -96,6 +96,7 @@ import my.ep.web.backingbean.sm.govtsellerregistration.GovtSellerRegistrationBac
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.registration.RegistrationManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -1500,7 +1501,17 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 								}
 								//d)	If registration number exist and MoF Account has been expired
 								else if(supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_EXPIRED){
-									throw new EpException(MessageConst.ERROR_721069,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
+									if(supplier.getSmMofAccount() != null && supplier.getSmMofAccount().getExpDate()!= null){
+										if(DateUtils.getDaysDifference(supplier.getSmMofAccount().getExpDate(), new Date())<=365){
+											throw new EpException(MessageConst.ERROR_721069,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
+										}else{
+											throw new EpException(MessageConst.ERROR_721072,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
+										}
+									}else{
+										throw new EpException(MessageConst.ERROR_721069,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
+									}
+									
+									
 								}
 							}
 							if(getManagedBean().getSmAppl().getSupplierType().equals(supplier.getSmAppl().getSupplierType())){
@@ -1524,7 +1535,16 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 								}
 								//d)	If registration number exist and MoF Account has been expired
 								else if(supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_EXPIRED){
-									throw new EpException(MessageConst.ERROR_721069,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
+									//throw new EpException(MessageConst.ERROR_721069,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
+									if(supplier.getSmMofAccount() != null && supplier.getSmMofAccount().getExpDate()!= null){
+										if(DateUtils.getDaysDifference(supplier.getSmMofAccount().getExpDate(), new Date())<=365){
+											throw new EpException(MessageConst.ERROR_721069,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
+										}else{
+											throw new EpException(MessageConst.ERROR_721072,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
+										}
+									}else{
+										throw new EpException(MessageConst.ERROR_721069,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
+									}
 								}else{
 									throw new EpException(MessageConst.ERROR_721041,new String[]{labelText,supplier.getRegNo()});
 								}
