@@ -652,32 +652,31 @@ public class CreateQtBackingBean extends
 					if (isQuotationThresHold && isOpenForBumiputraThresHold(amount)) {
 						scQt.setOpenFor(ParameterConst.OPEN_FOR_BUMI);
 					} else {
-						scQt.setOpenFor(ParameterConst.OPEN_FOR_ALL);
 						
-					// 20190523@hatta - 22240 - Start
-					if (!EntityHelper.isCollectionEmpty(scQt.getScQtCategorys())) {
-						for (ScQtCategory cat : scQt.getScQtCategorys()) {
-							if (!StringUtils.isBlank(scQt.getOpenFor())
-									&& scQt.getOpenFor().equalsIgnoreCase(ParameterConst.OPEN_FOR_ALL)
-									&& ((cat.getPmCategoryL3() != null && getParameterDesc(
-											cat.getPmCategoryL3().getCategoryTypeCode()).equalsIgnoreCase(
-											ParameterConst.CATEGORY_TYPE_PRINTING)) || (!StringUtils.isBlank(cat
-											.getPmCategoryL2Name()) && cat.getPmCategoryL2Name().substring(0, 10)
-											.equalsIgnoreCase("PERCETAKAN")))) {
-								scQt.setOpenFor(ParameterConst.OPEN_FOR_ALL);
-								break;
+						// 20190523@hatta - 22240 - Start
+					    boolean cetak = false;	
+						if (!EntityHelper.isCollectionEmpty(scQt.getScQtCategorys())) {
+							for (ScQtCategory cat : scQt.getScQtCategorys()) {
+							   if( (!StringUtils.isBlank(cat.getPmCategoryL2Name()) && 
+								       cat.getPmCategoryL2Name().substring(0,10).equalsIgnoreCase("PERCETAKAN")) && 
+										     (getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL) || 
+										      getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) ||
+										      getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)) ){
+									cetak = true;
+							   }	
 							}
-							if (((cat.getPmCategoryL3() != null && getParameterDesc(
-									cat.getPmCategoryL3().getCategoryTypeCode()).equalsIgnoreCase(
-									ParameterConst.CATEGORY_TYPE_PRINTING)) || (!StringUtils.isBlank(cat
-									.getPmCategoryL2Name()) && cat.getPmCategoryL2Name().substring(0, 10)
-									.equalsIgnoreCase("PERCETAKAN")))) {
-								scQt.setOpenFor(ParameterConst.OPEN_FOR_BUMI);
-								break;
-							}
+							
 						}
-					}
-					// 20190523@hatta - 22240 - End
+						
+						if(cetak)
+						{
+							scQt.setOpenFor(ParameterConst.OPEN_FOR_BUMI);
+						}
+						else
+						{
+							scQt.setOpenFor(ParameterConst.OPEN_FOR_ALL);
+						}
+						// 20190523@hatta - 22240 - End
 						
 					}	
 				}
