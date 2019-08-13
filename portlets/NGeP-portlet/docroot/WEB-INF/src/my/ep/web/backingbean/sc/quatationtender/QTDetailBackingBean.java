@@ -5500,8 +5500,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		Long statusId = this.getManagedBean().getCurrentStatusId();
 
 		Boolean isFieldToBeEnabled = enableFieldByStatusNFiledName(fieldName);
-		List<ScQtApproval> approvals = this.getManagedBean().getQt()
-				.getScQtApprovals();
+		List<ScQtApproval> approvals =null;
+		if(null!=this.getManagedBean().getQt()){
+			log.debug("====enableFieldByStatusCheckManga==========");
+			 approvals = this.getManagedBean().getQt()
+					.getScQtApprovals();
+			}
+		
 
 		ScQtApproval approval = null;
 
