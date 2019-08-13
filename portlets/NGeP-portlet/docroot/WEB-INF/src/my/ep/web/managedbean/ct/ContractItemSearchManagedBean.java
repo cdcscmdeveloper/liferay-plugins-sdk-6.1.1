@@ -1,17 +1,12 @@
 package my.ep.web.managedbean.ct;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
-import my.ep.web.managedbean.BaseManagedBean;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import org.apache.log4j.Logger;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import my.ep.factory.EpLogger;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -20,6 +15,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.ct.dtl.ContractItemReqDTO;
 import my.ep.dto.ct.dtl.ContractItemResDTO;
+import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.ct.ContractBackingBean;
@@ -28,6 +24,7 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import org.apache.log4j.Logger;
 
 
 
@@ -118,13 +115,23 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 				//log.info("*****ServiceListingPagingDataModel******"+"servicecollapse--->"+servicecollapse+"prodcollapse"+prodcollapse);
 				//log.info("*****ServiceListingPagingDataModel******"+"isServicecollapse--->"+isServicecollapse()+"isProdcollapse"+isProdcollapse());
 				//private String contractId = null;
+				
 				ContractBackingBean contractBb=new ContractBackingBean();
 				
 				Long contId=contractBb.getManagedBean().getContractVer().getCtContract().getContractId();
 				//Long contractVerId=contractBb.getManagedBean().getContractVer().getContractVerId();
-				Long contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();
-				//contractBb.getManagedBean().setReadOnly(true);
-				log.info("*****ServiceListingPagingDataModel******"+"contId--->"+contId+"contractVerId"+contractVerId);
+				log.info("*****ServiceListingPagingDataModel******"+"Contract Version Id--->"+contractBb.getManagedBean().getContractVer().getContractVerId());
+				Long contractVerId=null;
+				if(contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer()!=null)
+				{
+					contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();
+					log.info("*****ServiceListingPagingDataModel******"+"contId--->"+contId+"contractVerId"+contractVerId);
+					
+				}
+				else {
+					contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId();
+					log.info("*****ServiceListingPagingDataModel******"+"contId--->"+contId+"contractVerId"+contractVerId);
+				}
 				
 			  if(contId!=null ){
 					
@@ -293,9 +300,18 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 				ContractBackingBean contractBb=new ContractBackingBean();
 				Long contId=contractBb.getManagedBean().getContractVer().getCtContract().getContractId();
 				//Long contractVerId=contractBb.getManagedBean().getContractVer().getContractVerId();
-				Long contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();
-				log.info("*****ContractListingPagingDataModel******"+"contId--->"+contId+"contractVerId"+contractVerId);
-
+				log.info("*****ContractListingPagingDataModel******"+"Contract Version Id--->"+contractBb.getManagedBean().getContractVer().getContractVerId());
+				Long contractVerId=null;
+				if(contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer()!=null)
+				{
+					contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();
+					log.info("*****ContractListingPagingDataModel******"+"contId--->"+contId+"contractVerId"+contractVerId);
+					
+				}
+				else {
+					contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId();
+					log.info("*****ContractListingPagingDataModel******"+"contId--->"+contId+"contractVerId"+contractVerId);
+				}
 				if(contId!=null ) 
 				  	{
 						SearchFilterBean filterBean = new SearchFilterBean("ctContractVer.ctContract.contractId", SearchOperator.OPERATOR_EQUALS.value(),contId);
