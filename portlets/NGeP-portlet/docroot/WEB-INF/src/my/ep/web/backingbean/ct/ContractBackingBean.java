@@ -421,7 +421,14 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			getManagedBean().getCtAttachmentLatest().setFileName(null);
 		}
 		RequestContext.getCurrentInstance().execute("deleteWaiverAttachDlg.hide()");
-		
+		/*CtAttachment attachment = getManagedBean().getContractVer().getBondWaiverAttachments().get(getManagedBean().getAttachFileIndex());
+		if(attachment.getAttachmentId() != null){
+			getManagedBean().getDeleteAttachmentList().add(attachment);
+		}
+		getManagedBean().getContractVer().getBondWaiverAttachments().remove(getManagedBean().getAttachFileIndex());
+		if(getManagedBean().getContractVer().getCtContract().getLatestContractVer() != null){
+			getManagedBean().setBondWaiver(true);
+		}*/
 	}
 
 	/**
@@ -2205,15 +2212,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		
 		
 		FacesScopes facesScopes = new FacesScopes();
-		
-		//add to tracking list first
-		//reverse list to insert new data at first row
-		Collections.reverse(getManagedBean().getWaiverDetail());
-		//getManagedBean().getWaiverDetail().add(SerializationUtils.clone(getManagedBean().getCtAttachment()));
-		getManagedBean().getWaiverDetail().add(SerializationUtils.clone(getManagedBean().getCtAttachmentLatest()));
-		Collections.reverse(getManagedBean().getWaiverDetail());
-				
-				
+		//attachment.setFileName("getManagedBean().getWaiverStartDate()");
+		//attachment.setFilePath("TEST 2");
 		getManagedBean().getCtAttachmentLatest().setCreatedBy(facesScopes.getUserSessionBean().getUserId());
 		getManagedBean().getCtAttachmentLatest().setCreatedUser(facesScopes.getUserSessionBean());
 		getManagedBean().getCtAttachmentLatest().setCreatedDate(new Timestamp(System.currentTimeMillis()));
@@ -2227,7 +2227,36 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().setBrandNew(true);
 		getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().setCtAttachment(new CtAttachment());
 		
+		if(getManagedBean().getCtAttachment() == null || getManagedBean().getWaiverDetail().size() == 0){
+			if(getManagedBean().getCtAttachment() == null){
+				getManagedBean().setCtAttachment(new CtAttachment());
+				if(getManagedBean().getCtAttachmentTemp()!= null){
+					getManagedBean().setCtAttachment(SerializationUtils.clone(getManagedBean().getCtAttachmentTemp()));
+				}
+				getManagedBean().getCtAttachment().setCtBondWaiverDetail(SerializationUtils.clone(getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail()));
+			}
+			getManagedBean().getCtAttachment().setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+			getManagedBean().getCtAttachment().setCreatedUser(facesScopes.getUserSessionBean());
+			getManagedBean().getCtAttachment().setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		}else{
+			getManagedBean().getCtAttachment().setChangedBy(facesScopes.getUserSessionBean().getUserId());
+			//getManagedBean().getCtAttachment().setChangedDate(new Timestamp(System.currentTimeMillis()));
+		}
 		
+		getManagedBean().getCtAttachment().getCtBondWaiverDetail().setCtAttachment(getManagedBean().getCtAttachment());
+
+		getManagedBean().getCtAttachment().getCtBondWaiverDetail().setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+		getManagedBean().getCtAttachment().getCtBondWaiverDetail().setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		//getManagedBean().getWaiverDetail().add(attachment);
+		//getManagedBean().getAttachmentList().add(getManagedBean().getCtAttachment());
+		//reverse list to insert new data at first row
+		Collections.reverse(getManagedBean().getWaiverDetail());
+		getManagedBean().getWaiverDetail().add(SerializationUtils.clone(getManagedBean().getCtAttachment()));
+		Collections.reverse(getManagedBean().getWaiverDetail());
+		//store latest value to temp entity, to use at as history
+		getManagedBean().setCtAttachment(SerializationUtils.clone(getManagedBean().getCtAttachmentLatest()));
+		
+		//RequestContext.getCurrentInstance().execute("uploadWaiverDlg.hide()");
 	}
 
 	/**
@@ -2392,18 +2421,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		
 		if(!getManagedBean().getCtContractAmount().isBondWaived()){
 			try {
-				//-- LOG : 13847, by Fahmi 22032019
 				//to copy latest data to history
-				//setBondWaiverToTable();
-				//set to delete data if data already save in database
-				getManagedBean().setCtAttachmentDelete(null);
-				if(getManagedBean().getCtAttachmentLatest()!= null && getManagedBean().getCtAttachmentLatest().getAttachmentId() != null && getManagedBean().getCtAttachmentLatest().getAttachmentId() > 0){
-					getManagedBean().setCtAttachmentDelete(getManagedBean().getCtAttachmentLatest());
-					getManagedBean().setCtAttachmentLatest(SerializationUtils.clone(getManagedBean().getCtAttachmentDelete()));
-					getManagedBean().getCtAttachmentDelete().setDeleted(true);
-					getManagedBean().getCtAttachmentDelete().getCtBondWaiverDetail().setDeleted(true);
-					getManagedBean().getCtAttachmentDelete().setBrandNew(false);
-				}
+				setBondWaiverToTable();
 				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -2438,10 +2457,12 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				getManagedBean().setBondWaiver(true);
 			}
 		}	
-		//-- LOG : 13847, by Fahmi 22032019
 		///to set value null full tick/untick.
 		getManagedBean().setCtAttachmentLatest(null);
-
+//		if(getManagedBean().getCtAttachmentLatest() != null){
+//			getManagedBean().getCtAttachmentLatest().setFileName(null);				
+//			getManagedBean().getCtAttachmentLatest().setCtBondWaiverDetail(null);
+//		}
 	}
 	
 	private boolean chkHistoryOfAttachment(CtAttachment attachments){
@@ -3185,10 +3206,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractItemSO.class);
 		
 		contractItemSO.updateItemSearchService(reqDTO);
-		
+	}		
 	
 		
-	}
+
 
 	/**
 	 * The method used to validate the entered zone delivery term.
@@ -3861,31 +3882,18 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 		if(currentCtAgreementList != null && !currentCtAgreementList.isEmpty())
 		{
-			//currentCtAgreementList is sorted by created date in descending order
 			for(index = 0; index < currentCtAgreementList.size(); index++)
 			{
 				tempCtAgreement = currentCtAgreementList.get(index);
-				
 				if(tempCtAgreement.getAgreementId() == getManagedBean().getCtContractAmount().getCtAgreement().getAgreementId())
 				{
 					while(index >= 0)
 					{
-						//sort agreementList in ascending order starting from the selected Reference File No.
 						newCtAgreementList.add(0, currentCtAgreementList.get(index));
 						index--;
 					}
 
 					break;
-				}
-			}
-			if(newCtAgreementList.isEmpty())
-			{ 
-				index = currentCtAgreementList.size() - 1;
-				while(index >= 0)
-				{
-					//sort agreementList in ascending order
-					newCtAgreementList.add(0, currentCtAgreementList.get(index));
-					index--;
 				}
 			}
 	
@@ -3946,7 +3954,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		return facesScopes.getUserLocale().getLanguage();
 	}
 	
-	public List<CtAttachment> getSupplementalContractLetter(CtAgreement ctAgreement) {
+	public CtAttachment getSupplementalContractLetter(CtAgreement ctAgreement) {
+		CtAttachment ctAttachment = null;
 		IAgreementSO agreementSO = null;
 		List<CtAttachment> ctAttachments = null;
 		agreementSO = (IAgreementSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IAgreementSO.class);
@@ -3960,9 +3969,14 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				reqDTO.setContractVerId(ctAgreement.getCtAmendment().getCtContractVer().getContractVerId());
 				resDTO = agreementSO.retrieveSupplementalContractLetterAttachment(reqDTO);
 				ctAttachments = resDTO.getCtAttachments();
+				
+				if(ctAttachments != null && !ctAttachments.isEmpty())
+				{
+					ctAttachment = resDTO.getCtAttachments().get(0);
+				}
 			}
 		}			
 						
-		return ctAttachments;
+		return ctAttachment;
 	}
 }  
