@@ -149,7 +149,6 @@ public class ContractManagedBean extends BaseManagedBean {
 	private CtAttachment ctAttachment;
 	private CtAttachment ctAttachmentTemp;
 	private CtAttachment ctAttachmentLatest;
-	private CtAttachment ctAttachmentDelete;
 	
 
 	/**
@@ -1299,14 +1298,6 @@ public class ContractManagedBean extends BaseManagedBean {
 
 	public void setServiceselectedItem(CtContractItem serviceselectedItem) {
 		this.serviceselectedItem = serviceselectedItem;
-	}
-
-	public CtAttachment getCtAttachmentDelete() {
-		return ctAttachmentDelete;
-	}
-
-	public void setCtAttachmentDelete(CtAttachment ctAttachmentDelete) {
-		this.ctAttachmentDelete = ctAttachmentDelete;
 	}
 
 }
