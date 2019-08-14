@@ -127,6 +127,8 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter(ContractConst.TASK_ID);
 		String contractVerId = originalServletRequest.getParameter(ContractConst.PARAMETER_ID);
+		log.info("SuspensionManagedBean preRenderView contractVerId*******"+contractVerId);
+		log.info("SuspensionManagedBean preRenderView Task Name*******"+getManagedBean().getTaskName());
 		
 		/*Start if statement to check login user*/
 		if(contractVerId!=null) {
