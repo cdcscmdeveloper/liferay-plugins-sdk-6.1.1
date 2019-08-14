@@ -137,6 +137,7 @@ import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 
@@ -263,6 +264,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 		getManagedBean().setAttachmentList(attachmentList);
 	}	
+	
+	
 
 	/**
 	 * Returns a representative icon filename that can then be displayed
@@ -2356,6 +2359,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				contractAmt = getManagedBean().getCtContractAmount().getContractAmount();
 
 			getManagedBean().setGstTotalAmount(staxAmt.add(gstAmt.add(contractAmt)));
+			
+			
+
 		}
 		// Recalculate the performance bond amount
 		if (!getManagedBean().isDirectPurchase() && !getManagedBean().getCtContractAmount().isBondExempted()) {
@@ -3347,6 +3353,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public void PerformanceBondValue(CtPerformanceBond ctBond){
 		getManagedBean().setCtPerformanceBond(ctBond);
+
 	}
 
 	/**
@@ -3359,6 +3366,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		ctBondAttch.setFileName(null);
 		ctBondAttch.setFilePath(null);
 		getManagedBean().getCtContractAmount().getCtPerformanceBonds().add(getManagedBean().getIndex(), ctBondAttch);
+		
 	}
 
 	/**
@@ -3964,5 +3972,50 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}			
 						
 		return ctAttachments;
+	}
+	
+	/**
+	 * The method used to retrieve the bond amount
+	 * in text format.
+	 * Putra 24333
+	 * @return  bond amount in text format.
+	 */
+	public String getBondAmountInText() {
+		if (getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt() == null
+				|| getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt().doubleValue() == 0) {
+			return "";
+		}
+		DecimalFormat df = new DecimalFormat("#.00");		
+		return NumberWordUtil.convert(df.format(
+				getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt()));
+	}
+	
+	/**
+	 * The method used to retrieve thecontract period
+	 * 
+	 * @return new contract period
+	 */
+	public String calculateBondPeriod() {
+		
+		getManagedBean().getContractVer().getCtContractAmount().isBondReq();
+
+			return String.valueOf(getManagedBean().getContractVer().getCtContract().getLoa().getContractDuration());
+
+	}
+	
+	/**
+	 * Function to check if bond required for contract
+	 * 
+	 * @return true, if performance bond is required
+	 *         false, if performance bond is not required
+	 * */
+	public boolean isContractExtend(){
+		if(getManagedBean().getContractVer().getCtAmendment() != null
+				&& (getManagedBean().getCtContractAmount().isBondReq()
+						|| getManagedBean().getCtContractAmount().getTotalBondAmt() != null)
+								&& getManagedBean().getContractVer().getCtAmendment().isContractExtend()){								
+			return true;
+		}
+		return false;
 	}
 }  
