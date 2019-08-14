@@ -49,7 +49,7 @@
 							value="#{backingBean.getParameterDesc(backingBean.managedBean.businessTypeParamCode,backingBean.managedBean.smSupplier.businessType)}" />
 						<p:selectOneMenu id="smBusTypeId" required="true"
 							label="#{lbl['lbl.sm.regtype']}"
-							disabled="#{backingBean.managedBean.companyValidWithSSM}"
+							
 							value="#{backingBean.managedBean.smSupplier.businessType}"
 							rendered="#{!backingBean.managedBean.disabledBusinessType}"
 							style="width:310px">
