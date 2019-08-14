@@ -1635,7 +1635,8 @@ public class SPDetailBackingBean extends
 
 			for (ScQtPRPExperience prpExperience : experiences) {
 				if (prpExperience.getQtPrpExperienceId() == null
-						|| prpExperience.getQtPrpExperienceId() == 0) {
+						|| prpExperience.getQtPrpExperienceId() == 0 
+						      || (prpExperience.isBrandNew() == false && prpExperience.isEditable() == false) ) {
 					experiencesTosave.add(prpExperience);
 				}
 			}
@@ -3463,6 +3464,37 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		} catch (Exception e) {
 			throw new IllegalArgumentException();
 		}
+	}
+	
+   /**
+	* Listener method to edit by row for list of Non Federal Government Experience
+	*/
+	public void editRowNonFederalGovtExperience(ScQtPRPExperience scQtPRPExperience) {
+		scQtPRPExperience.setEditable(true);		
+	}
+		
+	/**
+	* Method to update Non Federal Government Experience to the list
+	*/
+	public void updateRowNonFederalGovtExperience(ScQtPRPExperience scQtPRPExperience) {
+		List<ScQtPRPExperience> experienceList = this.getManagedBean()
+		         .getScQtPRPExperiences();
+		
+		for(ScQtPRPExperience update :experienceList){
+			  if(update.getQtPrpExperienceId().equals(scQtPRPExperience.getQtPrpExperienceId())){
+			
+					update.setClientName(scQtPRPExperience.getClientName());
+					update.setContractTitle(scQtPRPExperience.getContractTitle());
+					update.setContractNo(scQtPRPExperience.getContractNo());
+					update.setEffectiveDate(scQtPRPExperience.getEffectiveDate());
+					update.setExpiryDate(scQtPRPExperience.getExpiryDate());
+					update.setRemark(scQtPRPExperience.getRemark());
+				
+					update.setBrandNew(false);
+					update.setEditable(false);	
+			  }
+		}
+		this.getManagedBean().setScQtPRPExperiences(experienceList);
 	}
 
 	/**
