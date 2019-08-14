@@ -830,6 +830,14 @@ a.blue_font {
 	text-decoration: none;
 }
 
+a.red_font {
+	font-family: Tahoma, Arial;
+	font-size: 12px;
+	font-weight: bold;
+	color: #f2081b;
+	text-decoration: none;
+}
+
 a:hover.blue_font {
 	font-family: Tahoma, Arial;
 	font-size: 11px;

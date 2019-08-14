@@ -29,6 +29,7 @@ import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmAddressType;
+import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -150,6 +151,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	private CtAttachment ctAttachmentTemp;
 	private CtAttachment ctAttachmentLatest;
 	private CtAttachment ctAttachmentDelete;
+	private List<ScLoa> bondDetail;
 	
 
 	/**
@@ -1307,6 +1309,17 @@ public class ContractManagedBean extends BaseManagedBean {
 
 	public void setCtAttachmentDelete(CtAttachment ctAttachmentDelete) {
 		this.ctAttachmentDelete = ctAttachmentDelete;
+	}
+
+	public List<ScLoa> getBondDetail() {
+		if(bondDetail == null){
+			bondDetail = new ArrayList<ScLoa>();
+	}
+		return bondDetail;
+	}
+
+	public void setBondDetail(List<ScLoa> bondDetail) {
+		this.bondDetail = bondDetail;
 	}
 
 }
