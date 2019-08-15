@@ -80,6 +80,9 @@
 		
 		<p:outputPanel rendered="#{backingBean.managedBean.showFieldChanges}">
 			<br />
+			<!-- #16052019 - SSM INTEGRATION CR -->
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.supplier.alert.ssm']}"/>
+			<br />
 			<p:graphicImage style="vertical-align:top"
 				value="/css/images/design/icon_alert.png" />
 			&#160;&#160;<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.supplier.changed.alert.instruction']}"/>
