@@ -7948,9 +7948,12 @@ public class SmApplicationBackingBean extends
 	 * Cancel po escalation to approver.
 	 */
 	public void cancelPOEscalationToApprover() {
+		assignValReqdToFalse();
+		resetSearchRejectedReason();
+		getManagedBean().setReasonId(null);
+		getManagedBean().setRejectReasonReqd(false);
 		getManagedBean().getPoSecReview().setRecommendation("");
-		RequestContext.getCurrentInstance()
-				.execute("submitApprvrDialog.hide()");
+		RequestContext.getCurrentInstance().execute("submitApprvrDialog.hide()");
 	}
 
 	/**
