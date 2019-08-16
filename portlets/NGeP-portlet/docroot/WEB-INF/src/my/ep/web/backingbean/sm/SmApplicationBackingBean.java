@@ -10349,6 +10349,17 @@ public class SmApplicationBackingBean extends
 										.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)) {
 							businessTypeSelectItems.add(item);
 						}
+						// #16052019 - SSM INTEGRATION CR
+					} else if (bizType
+							.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD)
+							|| bizType
+									.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD)) {
+						if (item.getValue()
+								.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD)
+								|| item.getValue()
+										.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD)) {
+							businessTypeSelectItems.add(item);
+						}
 					}
 				}
 			}
