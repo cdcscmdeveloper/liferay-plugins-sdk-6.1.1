@@ -3,8 +3,6 @@
  */
 package my.ep.web.managedbean.pm.taskassign;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,12 +51,6 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	private Map<String,String> reassigneeList = new LinkedHashMap<String,String>();
 	private List<String> selectedReassignee;
 	private boolean showReassigneeList;
-	private boolean showDeleteTasksButton;
-	private boolean groupCheckedEnabled;
-	//private Map<WorklistItemVO, Boolean> checkGroupTasks = new HashMap<WorklistItemVO, Boolean>();
-	private boolean checkGroupTasks;
-	private List<WorklistItemVO> checkedTasks;
-	private boolean checkAllGroupTasks;
 	
 	public TaskReassignmentManagedBean(){}
 
@@ -370,78 +362,12 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	public boolean isShowReassigneeList() {
 		return showReassigneeList;
 	}
-	
+
 	/**
 	 * @param showReassigneeList the showReassigneeList to set
 	 */
 	public void setShowReassigneeList(boolean showReassigneeList) {
 		this.showReassigneeList = showReassigneeList;
-	}
-	
-	/**
-	 * @return the showDeleteTasksButton
-	 */
-	public boolean isShowDeleteTasksButton() {
-		return showDeleteTasksButton;
-	}
-	
-	/**
-	 * @param showDeleteTasksButton the showDeleteTasksButton to set
-	 */
-	public void setShowDeleteTasksButton(boolean showDeleteTasksButton) {
-		this.showDeleteTasksButton = showDeleteTasksButton;
-	}
-	
-	/**
-	 * @param groupCheckedEnabled the groupCheckedEnabled to set
-	 */
-	public void setGroupCheckedEnabled(boolean groupCheckedEnabled) {
-		this.groupCheckedEnabled = groupCheckedEnabled;
-	}
-	
-	/**
-	 * @return the groupCheckedEnabled
-	 */
-	public boolean isGroupCheckedEnabled() {
-		return groupCheckedEnabled;
-	}
-
-	/**
-	 * @return the checkAllGroupTasks
-	 */
-	public boolean isCheckAllGroupTasks() {
-		return checkAllGroupTasks;
-	}
-
-	/**
-	 * @param checkAllGroupTasks the checkAllGroupTasks to set
-	 */
-	public void setCheckAllGroupTasks(boolean checkAllGroupTasks) {
-		this.checkAllGroupTasks = checkAllGroupTasks;
-	}
-	
-	/*public Map<WorklistItemVO, Boolean> getCheckGroupTasks() {
-	    return checkGroupTasks;
-	}
-	
-	public void setCheckGroupTasks(Map<WorklistItemVO, Boolean> checkGroupTasks) {
-		this.checkGroupTasks =  checkGroupTasks;
-	}*/
-	
-	public boolean isCheckGroupTasks() {
-	    return checkGroupTasks;
-	}
-	
-	public void setCheckGroupTasks(boolean checkGroupTasks) {
-		this.checkGroupTasks =  checkGroupTasks;
-	}
-	
-	public List<WorklistItemVO> getCheckedTasks() {
-	    return checkedTasks;
-	}
-	
-	public void setCheckedTasks(List<WorklistItemVO> checkedTasks) {
-		this.checkedTasks = checkedTasks;
 	}
 	
 }
