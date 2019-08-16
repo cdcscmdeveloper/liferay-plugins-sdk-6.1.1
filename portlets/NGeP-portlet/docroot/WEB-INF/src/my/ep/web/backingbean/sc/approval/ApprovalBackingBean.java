@@ -1905,9 +1905,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							qt.getQtNo(),originalText);
 					digiSign.setSpkiSignedData(signedData);
 				}
-					
 				}
-				
 			}
 			
 			if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)){
@@ -1957,33 +1955,11 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							qt.getQtId(), 
 							QTFieldConst.FIELD_QT_VALIDITY_PERIOD);
 				}
-				
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_INFO,
-										null,
-										MessageUtils
-												.getMessage(
-														getMessgeConstant(outcome),
-														new String[] {
-																getParameterDesc(
-																		ParameterTypeConst.DOCUMENT_TYPES,
-																		ParameterConst.DOCTYPE_QUOTATION),
-																qt.getQtNo() },
-														MessageUtils.BUNDLE_COMMON_MESSAGES,
-														new FacesScopes()
-																.getUserLocale())));
+				successMessage(getMessgeConstant(outcome), ParameterTypeConst.DOCUMENT_TYPES,
+						ParameterConst.DOCTYPE_QUOTATION, qt.getQtNo(), Boolean.TRUE);
 				// clear data
 				super.renewSesionObject();
-				FacesContext fc = FacesContext.getCurrentInstance();
-				fc.getApplication().getNavigationHandler()
-						.handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
-				
 			}
-
 		} finally {
 		}
 		
