@@ -94,7 +94,7 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		if (StringUtils.isNotEmpty(this.getManagedBean().getQuotationNumber())) {
 			specialCharValidation();
 		} else {
-			this.getManagedBean().setQuotationId(null);
+			resetSearchBB();
 		}
 	}
 
@@ -115,8 +115,7 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 			getQuotationNumber();
 
 		} else {
-			this.getManagedBean().setQuotationNumber(null);
-			this.getManagedBean().setQuotationId(null);
+			resetSearchBB();
 			throw new EpException(MessageConst.ERROR_REPORT_780006);
 		}
 	}
@@ -140,19 +139,19 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 			QuationTenderResDTO resDTO = detailSO
 					.retriveQtByQtNumber(tenderReqDTO);
 			ScQt scqt = resDTO.getQtDetail();
+
+			retrieveAgencyByQuotationNumber(scqt);
+
 			if (scqt != null) {
 				if (scqt.getQtId() != null) {
 					// log.info("QtId="+scqt.getQtId());
-					this.getManagedBean().setQuotationId(
-							scqt.getQtId().toString());
+					this.getManagedBean().setQuotationId(scqt.getQtId().toString());
 				} else {
-					this.getManagedBean().setQuotationNumber(null);
-					this.getManagedBean().setQuotationId(null);
+					resetSearchBB();
 					throw new EpException(MessageConst.ERROR_REPORT_780005);
 				}
 			} else {
-				this.getManagedBean().setQuotationNumber(null);
-				this.getManagedBean().setQuotationId(null);
+				resetSearchBB();
 				throw new EpException(MessageConst.ERROR_REPORT_780005);
 			}
 		}
@@ -533,18 +532,20 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 	 * 
 	 * 
 	 */
-	public boolean retriveUserRoles(){
-	log.info("retriveUserRoles"+this.getManagedBean().isDeskOfficerEnable());
-	if(!this.getManagedBean().isDeskOfficerEnable()){
-	List<String> userRoles=	retriveUserrloeByUserId();
-	List<SelectItem> applovalListSize=retrieveApprovarNaikTarafSCS2();
-	if((null!=applovalListSize && applovalListSize.size()>0)||((null!=userRoles)&&userRoles.contains(ReportConst.BPK_APPROVER)||userRoles.contains(ReportConst.COMMITTEE_APPROVER)||userRoles.contains(ReportConst.PUBLICATION_APPROVER))){
-	this.getManagedBean().setDeskOfficerEnable(Boolean.TRUE);	
-	return this.getManagedBean().isDeskOfficerEnable();		
-	}
-	
-	}
-	return this.getManagedBean().isDeskOfficerEnable();	
+	public boolean retriveUserRoles() {
+		log.info("retriveUserRoles" + this.getManagedBean().isDeskOfficerEnable());
+		if (!this.getManagedBean().isDeskOfficerEnable()) {
+			List<String> userRoles = retriveUserrloeByUserId();
+			List<SelectItem> applovalListSize = retrieveApprovarNaikTarafSCS2();
+			if ((null != applovalListSize && applovalListSize.size() > 0)
+					|| ((null != userRoles) && userRoles.contains(ReportConst.BPK_APPROVER)
+							|| userRoles.contains(ReportConst.COMMITTEE_APPROVER) || userRoles
+								.contains(ReportConst.PUBLICATION_APPROVER))) {
+				this.getManagedBean().setDeskOfficerEnable(Boolean.TRUE);
+				return this.getManagedBean().isDeskOfficerEnable();
+			}
+		}
+		return this.getManagedBean().isDeskOfficerEnable();
 	}
 	
 	/**
@@ -622,8 +623,8 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 				this.getManagedBean().setPtjEnable(Boolean.TRUE);
 			}
 		}
-	return this.getManagedBean().isPtjEnable();
-}
+		return this.getManagedBean().isPtjEnable();
+	}
 	
 	/**
 	 * retrieveApprovarNaikTarafSCS2 - Retrieve approvar naik taraf for sc s2,
@@ -650,5 +651,89 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 			}
 		}
 		return approverNayakTarafList;
+	}
+
+	protected void resetSearchBB() {
+		this.getManagedBean().setQuotationNumber(null);
+		this.getManagedBean().setQuotationId(null);
+		ScReportFieldsSearchBean reportFileSearchBean = this.getManagedBean().getScReportSearchBean();
+		String reportCode = this.getManagedBean().getReportCode();
+		if (QtReportConst.SC_PROP_VALID_PERIOD_EXT_RPT_VAL.equals(reportCode) && reportFileSearchBean != null) {
+			reportFileSearchBean.setScPtj(null);
+			reportFileSearchBean.setScPtjName(null);
+			reportFileSearchBean.setScDeskOfficer(null);
+			reportFileSearchBean = getDefaultValuesFromAndToDate(reportFileSearchBean);
+			this.getManagedBean().setScReportSearchBean(reportFileSearchBean);
+		}
+	}
+
+	public void retrieveAgencyByQuotationNumber(ScQt scQt) {
+		String ptjName = "";
+		String ptjCode = "";
+		boolean deskOfficerRoles = retriveUserRoles();
+		String reportCode = this.getManagedBean().getReportCode();
+		if (deskOfficerRoles && QtReportConst.SC_PROP_VALID_PERIOD_EXT_RPT_VAL.equals(reportCode)) {
+			if (scQt != null && scQt.getQtId() != null) {
+				Date date = retriveDatesforOrgProfile(scQt.getPublishDate(), scQt.getCreatedDate());
+
+				log.info("date" + date);
+				ptjCode = scQt.getOrgProfileId().toString();
+				ptjName = retrievePTJByOrgProfileId(scQt.getOrgProfileId(), date);
+			}
+			this.getManagedBean().getScReportSearchBean().setScPtj(ptjCode);
+			this.getManagedBean().getScReportSearchBean().setScPtjName(ptjName);
+		}
+	}
+
+	public List<SelectItem> retrieveDescOfficerByAgency() {
+		List<SelectItem> scDescOfficerList = new ArrayList<SelectItem>();
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			ScQt scQt = findScQtByQuotationNumber();
+
+			Long orgProfileId = null;
+			if (scQt != null) {
+				orgProfileId = scQt.getOrgProfileId();
+			}
+
+			List<Object[]> reqLst = getPMReportSO().retrieveDeskOfficer(
+					new FacesScopes().getUserSessionBean().getUserId(), orgProfileId);
+			if (CollectionUtils.isNotEmpty(reqLst)) {
+				for (Object[] object : reqLst) {
+					SelectItem selectItem = new SelectItem();
+					selectItem.setLabel(object[0].toString());
+					selectItem.setValue(object[1]);
+					scDescOfficerList.add(selectItem);
+				}
+			}
+		}
+		return scDescOfficerList;
+	}
+
+	private Date retriveDatesforOrgProfile(Date publishDate, Date createdDate) {
+		if (publishDate == null) {
+			log.info("===========createdDate=====" + createdDate);
+			return createdDate;
+		}
+		log.info("===========publishDate=====" + publishDate);
+		return publishDate;
+	}
+
+	private ScQt findScQtByQuotationNumber() {
+		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+		if (StringUtils.isNotEmpty(this.getManagedBean().getQuotationNumber())) {
+			tenderReqDTO.setQtTndrNo(this.getManagedBean().getQuotationNumber().toUpperCase());
+
+			QuationTenderResDTO resDTO = getQTDetailSO().retriveQtByQtNumber(tenderReqDTO);
+			return resDTO.getQtDetail();
+		}
+		return null;
+	}
+
+	private IQTDetailSO getQTDetailSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+	}
+
+	private IPMReportSO getPMReportSO() {
+		return EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
 	}
 }

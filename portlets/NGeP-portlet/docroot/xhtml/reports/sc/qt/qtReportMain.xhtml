@@ -35,11 +35,9 @@
 			</tr>
 		</table>
 
-
 		<p:outputPanel id="outputPnlqtReport">
 			<p:panel header="#{qtReportMainBB.managedBean.reportTitle}"
 				rendered="#{!empty qtReportMainBB.managedBean.reportCode}">
-
 
 				<c:if
 					test="#{qtReportMainBB.managedBean.reportCode eq QtReportConst.SC_QUOT_TENDER_OR_RPT_VAL}">
@@ -124,14 +122,14 @@
 					<ui:include src="SC_073_Financial_Evaluation_Committee.xhtml"></ui:include>
 				</c:if>
 
+				<c:if
+					test="#{qtReportMainBB.managedBean.reportCode eq QtReportConst.SC_PROP_VALID_PERIOD_EXT_RPT_VAL}">
+					<ui:include src="SC_076_Prop_Valid_Period_Ext.xhtml"></ui:include>
+				</c:if>
+
 			</p:panel>
 
 		</p:outputPanel>
 
 	</ui:define>
-
-
-
-
-
 </ui:composition>
