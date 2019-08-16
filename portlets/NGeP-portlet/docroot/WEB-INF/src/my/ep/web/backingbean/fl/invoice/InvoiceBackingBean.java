@@ -46,6 +46,7 @@ import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
+import my.ep.biz.service.pm.common.factoring.IFactoringCompaniesSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.fee.settings.IFeeExemptionSO;
@@ -95,6 +96,7 @@ import my.ep.persistence.entity.fl.FlActor;
 import my.ep.persistence.entity.fl.FlAddress;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
+import my.ep.persistence.entity.fl.FlWorkflowStatus;
 import my.ep.persistence.entity.fl.adjust.FlAdjustment;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
@@ -106,6 +108,8 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.pm.common.PmFinancialAcc;
+import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.type.aut.SearchOperator;
@@ -602,6 +606,15 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				reqDTO.setDocType(ParameterConst.DOCTYPE_INVOICE);
 				reqDTO.setFlOrderId(paymentObj.getFlOrderId());
 				resDTO = invoiceSO.retrieveInvoiceByFlOrderId(reqDTO);//if save button are exist
+				//Start  #21229
+				FulfilmentReqDTO reqRemarkDTO = new FulfilmentReqDTO();
+				if(resDTO.getInvoice()!=null && resDTO.getInvoice().getInvoiceId() !=null){
+					reqRemarkDTO.setDocId(resDTO.getInvoice().getInvoiceId());
+					reqRemarkDTO.setDocType(ParameterConst.DOCTYPE_INVOICE);
+					FulfilmentResDTO resRemarkDTO = invoiceSO.retrieveRevisionRemarksInvoice(reqRemarkDTO);
+					initializeRemarkRevision(resDTO.getInvoice().getFlWorkflowStatus(), resRemarkDTO.getRevisionRemarks(),false);
+				}
+				//End  #21229
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 				flBB.getManagedBean().setHideRemarks(false);
 				if(resDTO.getInvoice() == null){
@@ -659,13 +672,14 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 								getManagedBean().getInvoice().getFlFulfilmentOrder().setPmFinancialOrgId(contractSupplierResDTO.getFactoring().getFinancialOrg().getFinancialOrgId());
 								getSelectedFactoringCompDtl(contractSupplierResDTO.getFactoring().getFinancialOrg().getFinancialOrgId());
 							}
+							//Factoring company
 							finOrgReqDTO.setFinancialOrgId(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialOrgId());
 							finOrgResDTO = financialOrgSO.retriveFinAccDtlByFinOrgId(finOrgReqDTO);
 							if(finOrgResDTO.isSuccessful()) {
 								if(finOrgResDTO.getPmAddressType()!=null){
 									getManagedBean().getInvoice().setPaymentBankAddress(convertFinAccAddressToFlAddress(finOrgResDTO.getPmAddressType())); 
 								}
-									
+									//for contract, factoring acc not editable
 								if(finOrgResDTO.getPmFinancialAcc()!=null) {
 									getManagedBean().getInvoice().setAccountNo(finOrgResDTO.getPmFinancialAcc().getAccountNo());
 									getManagedBean().getInvoice().setPaymentBank(finOrgResDTO.getPmFinancialAcc().getPmPaymentBankOrg());
@@ -1263,11 +1277,15 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				//TODO NEW
 				getManagedBean().getInvoice().setPaymentBankAddress(convertFinAccAddressToFlAddress(finOrgResDTO.getPmAddressType()));
 			}
-			if(finOrgResDTO.getPmFinancialAcc()!=null) {
+			
+			/* Start  #21229
+			if(finOrgResDTO.getPmFinancialAcc()!=null) { 				
+				//to set default value
 				getManagedBean().getInvoice().setAccountNo(finOrgResDTO.getPmFinancialAcc().getAccountNo());
 				getManagedBean().getInvoice().setPaymentBank(finOrgResDTO.getPmFinancialAcc().getPmPaymentBankOrg());
 				getManagedBean().getInvoice().setPaymentBankName(getManagedBean().getInvoice().getPaymentBank().getFinOrgName());
 			}
+			end  #21229 */
 		}
 	}
 	
@@ -2299,4 +2317,92 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		getManagedBean().getInvoice().getFlInvoiceItemSummary().removeAll(removeInvSummItemObj);
 	}
 	
+	//Start  #21229
+	/**
+	 * Gets the populate factoring account list based on supplier id.
+	 *
+	 * @return the populate factoring account list
+	 */
+	public List<SelectItem> getFactoringAccountList() {
+		IFinancialOrgSO financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IFinancialOrgSO.class);
+		FinancialOrgReqDTO finOrgReqDTO = new FinancialOrgReqDTO();
+		FinancialOrgResDTO finOrgResDTO = null;
+		List<SelectItem> populateAccountFactoringList = new ArrayList<SelectItem>();
+		
+		//List of Account no.
+		finOrgReqDTO.setFinancialOrgId(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialOrgId());
+		finOrgResDTO = financialOrgSO.retriveFinAccListByFinOrgId(finOrgReqDTO);
+	
+		
+		for (PmFinancialAcc obj : finOrgResDTO.getPmFinancialAccList()) {
+			String account = obj.getAccountNo();
+			obj.getPmPaymentBankOrg().getFinOrgName();
+			obj.getPmPaymentBankOrg();
+			if (obj.getPmPaymentBankOrg() != null){
+				account = account + "  " + obj.getPmPaymentBankOrg().getFinOrgName();
+			}
+			populateAccountFactoringList.add(new SelectItem(obj.getAccountNo(), account));
+			
+			if(!getManagedBean().getFactoringAccountMap().containsKey(obj.getAccountNo())) {
+				getManagedBean().getFactoringAccountMap().put(obj.getAccountNo(), obj.getPmPaymentBankOrg());
+			}
+		}
+
+		return populateAccountFactoringList;
+	}
+	
+	
+	/**
+	 * download file Garis_Panduan_Invoice_Revise.pdf.
+	 */
+	public void downloadFile(String filePath) throws IOException {
+		StringBuilder downloadPath = new StringBuilder();
+		downloadPath.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)).append(filePath);
+		
+		super.downloadFile(downloadPath.toString());
+	}
+	
+	/**
+	 * Initialize remark .
+	 * <p> get remarks lists.
+	 * @param flWorkflowStatus the fl workflow status
+	 * @param remarkList the remark list
+	 */
+	public void initializeRemarkRevision(FlWorkflowStatus flWorkflowStatus ,List<FlRemark> remarkList, boolean isHideRemarks) {
+		FacesScopes facesScopes = new FacesScopes();
+
+		boolean flWorkflowStatusMatch = false;
+		if(flWorkflowStatus!=null) {
+			if(remarkList.size()>0 && remarkList.get(0).getFlWorkflowStatus()!=null) {
+				if(flWorkflowStatus.getWorkflowStatusId().longValue()==remarkList.get(0).getFlWorkflowStatus().getWorkflowStatusId().longValue() ){
+						//&& flWorkflowStatus.getWorkflowStatusId().longValue() == FulfilmentStatusConst.CO_PENDING_REVISION_INVOICE.longValue()
+						//&& flWorkflowStatus.getWorkflowStatusId().longValue() == FulfilmentStatusConst.PO_PENDING_REVISION_INVOICE.longValue()) {
+					flWorkflowStatusMatch = true;
+				}
+			}
+		} 		
+	
+		if (remarkList.size() > 0 || flWorkflowStatusMatch) {			
+			getManagedBean().setRemarkRevise(remarkList);
+		}
+	}
+	
+	
+	/**
+	 * Factoring info action listener.
+	 */
+	public void factoringInfoActionListener() {
+		if(null != getManagedBean().getInvoice().getAccountNo()){
+	
+			PmFinancialOrg factoringBank = getManagedBean().getFactoringAccountMap().get(getManagedBean().getInvoice().getAccountNo());
+			if(factoringBank!=null) {
+				getManagedBean().getInvoice().setPaymentBank(factoringBank);			
+				getManagedBean().getInvoice().setPaymentBankName(factoringBank.getFinOrgName());
+				
+			}
+		}
+
+	}
+	
+	//End  #21229
 }
