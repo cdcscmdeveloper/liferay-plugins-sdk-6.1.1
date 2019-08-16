@@ -5011,7 +5011,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * 
 	 * @return the string
 	 */
-	public String submitQtDetailsFormMaintanace() {
+	public void submitQtDetailsFormMaintanace() {
 		log.debug("submitQtDetailsFormMaintanace");
 		IQTDetailSO detailSO;
 		try {
@@ -5099,34 +5099,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				} else {
 					msgCode = MessageConst.INFO_700004;
 				}
-				
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_INFO,
-										null,
-										MessageUtils
-												.getMessage(
-														msgCode,
-														new String[] {
-																getParameterDesc(
-																		ParameterTypeConst.DOCUMENT_TYPES,
-																		ParameterConst.DOCTYPE_QUOTATION),
-																scQt.getQtNo() },
-														MessageUtils.BUNDLE_COMMON_MESSAGES,
-														new FacesScopes()
-																.getUserLocale())));
-				
-				return CommonUIConst.ACKNOWLEDGE_PAGE;
+				successMessage(msgCode, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION,
+						scQt.getQtNo(), Boolean.TRUE);
 			}
-
 		} finally {
 			detailSO = null;
 		}
-
-		return null;
 	}
 
 	/**
