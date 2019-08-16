@@ -503,9 +503,9 @@ public class TaskReassignmentBackingBean extends
 	}
 	
 	// #20117
-	public List<PmUser> reassigneesInfo(String docNo) {
+	public List<PmUser> searchReassignees(String docNo) {
 		
-		log.info("reassigneesInfo..");
+		log.info("Searching reassignees..");
 		
 		List<PmUser> users = new ArrayList<PmUser>();
 		BpmResponseDTO bpmResDTO = null;
@@ -531,18 +531,25 @@ public class TaskReassignmentBackingBean extends
 						getManagedBean().getTaskAssignmentSearchBean().getOrgProfile().getOrgProfileId() :
 							getManagedBean().getCurrentActiveOrg().getOrgProfileId();
 				Integer activeRecordStatusFlg = new Integer(1);
+				Long taskDetailOrgProfileId = 0L;
 				
 				for (WorklistItemVO task : bpmResDTO.getWorklistVO().getWorklistItem()) {
 					for (String loginId : task.getAssignees()) {
 						user = PmCommonUtil.retrieveUserByLoginId(loginId);
 						taskDetail = retrieveSourcingTaskReassignmentDetail(task);
+						log.info("["+user.getLoginId()+" "+user.getUserName()+"] "+
+								taskDetail.getOrgProfileId()+" : "+profileId+" : "+
+								user.getRecordStatusFlg()+" : "+
+								this.getManagedBean().getTaskAssignmentSearchBean().getOrgProfile().getRecordStatusFlg());
 						
 						// Ensures only users within the selected Organization will be listed
-						if (taskDetail != null && taskDetail.getOrgProfileId() != null) {
+						if (taskDetail != null) {
+							taskDetailOrgProfileId = taskDetail.getOrgProfileId() != null ? 
+											  taskDetail.getOrgProfileId() : profileId;
 							if ( ((user.getRecordStatusFlg().equals(activeRecordStatusFlg)) && 
 									(user.getRecordStatusFlg().equals(this.getManagedBean().getTaskAssignmentSearchBean()
 									.getOrgProfile().getRecordStatusFlg()))) &&
-									(taskDetail.getOrgProfileId().equals(profileId)) ) {
+									(taskDetailOrgProfileId.equals(profileId)) ) {
 								users.add(user);
 							}
 						}
@@ -758,7 +765,7 @@ public class TaskReassignmentBackingBean extends
 		log.info("Start querying for users associated with the specified docNo..");
 		
 		PmUser reassignee = null;
-		List<PmUser> reassignees = reassigneesInfo(this.getManagedBean().
+		List<PmUser> reassignees = searchReassignees(this.getManagedBean().
 				getTaskAssignmentSearchBean().getDocNo());
 		
 		for (int r = 0; r < reassignees.size(); r++) {
@@ -785,10 +792,7 @@ public class TaskReassignmentBackingBean extends
 		}
 		
 		if (this.getManagedBean().getReassigneeList().isEmpty()) {
-			FacesContext.getCurrentInstance().addMessage("noReassignees", 
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,null, 
-							ResourceBundleUtils.getMessage("lbl.datatable.msg.no.records.found", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale())));
+			throw new EpException(MessageConst.ERROR_770207);
 		} else {
 			if (this.getManagedBean().getTaskAssignmentSearchBean().getUser() != null) {
 				this.getManagedBean().setResultUser(this.getManagedBean().getTaskAssignmentSearchBean().getUser());
