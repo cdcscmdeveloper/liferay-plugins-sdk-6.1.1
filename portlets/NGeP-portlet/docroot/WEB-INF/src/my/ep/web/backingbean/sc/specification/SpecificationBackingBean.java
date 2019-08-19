@@ -1307,8 +1307,15 @@ public class SpecificationBackingBean extends
 					&& this.getManagedBean().getQt().getQtType()
 							.equals(ParameterConst.QUOTATION_TENDER_TYPE_OPEN)) {
 				retriveSpecdetails(this.getManagedBean().getQt().getQtId());
-				List<TplSpecZoneDtl> businessOwnerZone = convertTreeNodesToZoneCriteria(
+				/*#19637-basri*/
+				List<TplSpecZoneDtl> businessOwnerZone = null;
+				if(null != this.getManagedBean().getTemplateSpecZoneDtls()){
+					businessOwnerZone = this.getManagedBean().getTemplateSpecZoneDtls();
+				}else{
+					businessOwnerZone = convertTreeNodesToZoneCriteria(
 						this.getManagedBean().getZoneGeneralTrees(), null);
+				}
+				/*end*/
 				ScQtSupplierCriteria supplierCriteria = this.getManagedBean()
 						.getQt().getScQtSupplierCriteria();
 				if (businessOwnerZone != null && !businessOwnerZone.isEmpty()) {
@@ -14024,9 +14031,16 @@ public class SpecificationBackingBean extends
 			 */
 		} else if (scQt.isPanel()) {
 
-			List<TplSpecZoneDtl> businessOwnerZone = convertTreeNodesToZoneCriteria(
+			/*#19637-basri*/
+			List<TplSpecZoneDtl> businessOwnerZone = null;
+			if(null != this.getManagedBean().getTemplateSpecZoneDtls()){
+				businessOwnerZone = this.getManagedBean().getTemplateSpecZoneDtls();
+			}else{
+				businessOwnerZone = convertTreeNodesToZoneCriteria(
 					this.getManagedBean().getZoneGeneralTrees(), null);
-
+			}
+			/*end*/
+			
 			if (businessOwnerZone != null && !businessOwnerZone.isEmpty()) {
 				if (null != scQt.getScQtSupplierCriteria()
 						&& null == scQt.getScQtSupplierCriteria()
