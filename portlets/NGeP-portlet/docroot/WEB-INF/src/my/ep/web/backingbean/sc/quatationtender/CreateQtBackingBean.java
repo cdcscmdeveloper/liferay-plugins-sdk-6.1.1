@@ -660,7 +660,8 @@ public class CreateQtBackingBean extends
 							   if( (!StringUtils.isBlank(cat.getPmCategoryL2Name()) && 
 								       cat.getPmCategoryL2Name().substring(0,10).equalsIgnoreCase("PERCETAKAN")) && 
 										     (getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL) || 
-										      getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) ||
+										      getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT) ||
+										      getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF) ||
 										      getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)) ){
 									cetak = true;
 							   }	
