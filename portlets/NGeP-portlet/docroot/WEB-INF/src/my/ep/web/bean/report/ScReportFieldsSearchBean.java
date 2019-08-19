@@ -38,6 +38,8 @@ public class ScReportFieldsSearchBean implements Serializable {
 	private Date scPublishToDate;
 	private String scDeskOfficer;
 	private String scPtj;
+	private String scPtjName;
+
 	/**
 	 * @return the allCheckboxValue
 	 */
@@ -255,11 +257,12 @@ public class ScReportFieldsSearchBean implements Serializable {
 	public void setScPtj(String scPtj) {
 		this.scPtj = scPtj;
 	}
-	
-	
-	
-	
-	
-	
 
+	public String getScPtjName() {
+		return scPtjName;
+	}
+
+	public void setScPtjName(String scPtjName) {
+		this.scPtjName = scPtjName;
+	}
 }
