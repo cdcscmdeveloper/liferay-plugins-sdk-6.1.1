@@ -14,7 +14,8 @@
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<!-- 16052019 - SSM INTEGRATION CR - Fahmi-->
-					<td class="tdContent"><p:selectOneMenu id="suppTypeId" required="#{!empty param['disableValidation']}"
+					<td class="tdContent">
+							<p:selectOneMenu id="suppTypeId" required="#{!empty param['disableValidation']}"
 							value="#{backingBean.managedBean.smAppl.supplierType}"
 							label="#{lbl['lbl.sm.mofsuppliertype']}" style="width:200px"
 							disabled="true">
@@ -43,15 +44,15 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<!-- 16052019 - SSM INTEGRATION CR - Fahmi-->
-				<td style="word-wrap: break-word"><p:outputLabel
-							rendered="#{backingBean.managedBean.disabledBusinessType}"
+				<td style="word-wrap: break-word">
+					<p:outputLabel
+							rendered="#{empty backingBean.managedBean.businessTypeLs}"
 							styleClass="outputLabel-view"
 							value="#{backingBean.getParameterDesc(backingBean.managedBean.businessTypeParamCode,backingBean.managedBean.smSupplier.businessType)}" />
 						<p:selectOneMenu id="smBusTypeId" required="true"
 							label="#{lbl['lbl.sm.regtype']}"
-							
+							rendered="#{not empty backingBean.managedBean.businessTypeLs}"
 							value="#{backingBean.managedBean.smSupplier.businessType}"
-							rendered="#{!backingBean.managedBean.disabledBusinessType}"
 							style="width:310px">
 							<f:selectItems value="#{backingBean.managedBean.businessTypeLs}" />
 							<p:ajax event="change" process="@this" update="@this" partialSubmit="true" listener="#{backingBean.onChangeBussType}"/>
