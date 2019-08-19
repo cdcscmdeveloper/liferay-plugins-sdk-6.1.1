@@ -10,6 +10,7 @@ import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -304,10 +305,16 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			flReqDTO.setFlOrderId(paymentObj.getFlOrderId());
 			IInvoiceSO invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IInvoiceSO.class);
 			IPaymentMatchSO paymentMatchSO = (IPaymentMatchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IPaymentMatchSO.class);
-			
 			if(FLProcessNameConst.PAYMENT_INSTRUCTION_QUERY_VERIFICATION.equals(this.getManagedBean().getTaskName())){
-			
 				getManagedBean().setButtonVal(BpmOutcomeConst.BPM_REVISE);
+				
+			}else{
+				String[] outcome = new String[this.getManagedBean().getOutComes().length];
+				String[] str_array = this.getManagedBean().getOutComes();
+				List<String> list = new ArrayList<String>(Arrays.asList(str_array));
+				list.remove(BpmOutcomeConst.BPM_REVISE);
+				outcome = list.toArray(new String[0]);
+				this.getManagedBean().setOutComes(outcome);
 			}
 			
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
