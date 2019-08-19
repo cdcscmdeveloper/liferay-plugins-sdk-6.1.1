@@ -113,6 +113,16 @@
 				</f:facet>
 			</p:column>
 			<p:column rowspan="#{specificationrequired ? 2 : 1}"
+				style="width:67px; white-space: normal;"
+				rendered="#{isItemTypeService and isDeliveryTermReq and isSqSpec}">
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.tpl.spec.content.service.term']}" />
+					<ac:iconTooltip id="serviceTerm#{row}TP"
+						value="#{lbl['lbl.sc.service.term.tooltip']}" />
+				</f:facet>
+			</p:column>
+			<p:column rowspan="#{specificationrequired ? 2 : 1}"
 				style="width:125px;" rendered="#{isSpecificationReq and !isSqSpec}">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
@@ -215,6 +225,23 @@
 			value="#{templateSpecBackingBean.getParameterDesc(question.clDeliveryTermTypeCode)}"
 			rendered="#{isQuestionTypeItem}" />
 		<p:message id="deliveryTermMsg" for="deliveryTerm" display="icon" />
+	</p:column>
+	<p:column style="width:67px; white-space: normal;"
+		rendered="#{isItemTypeService and isDeliveryTermReq and isSqSpec}">
+
+		<p:inputText id="serviceTerm"
+			style="min-width:0px !important;width:calc(100% - 40px); text-align:right;"
+			value="#{question.clDeliveryTerm}" rendered="#{isQuestionTypeItem}"
+			required="#{isValidationReq}" maxlength="4" validator="#{webappBean.validateInteger}"
+			label="#{lbl['lbl.tpl.spec.content.service.term']}">
+			<p:ajax partialSubmit="true" process="@this"
+				update="@this, serviceTermMsg" />
+		</p:inputText>
+		<p:spacer width="2px"></p:spacer>
+		<h:outputText
+			value="#{templateSpecBackingBean.getParameterDesc(question.clDeliveryTermTypeCode)}"
+			rendered="#{isQuestionTypeItem}" />
+		<p:message id="serviceTermMsg" for="serviceTerm" display="icon" />
 	</p:column>
 	<p:column style="width:125px;"
 		rendered="#{isSpecificationReq and !isSqSpec}">
