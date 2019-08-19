@@ -300,7 +300,7 @@
 				<p:commandButton value="#{lbl['lbl.btn.submit']}" update="@([id$=Msg])"
 					onclick="poEscalateBlockWidget.show()" oncomplete="poEscalateBlockWidget.hide();" 
 					action="#{backingBean.submitPOorApproverReviewToBPM('ESCALATE')}" process="poEscalateBlockPanel"/>
-				</p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 					action="#{backingBean.cancelPOEscalationToApprover}"
 					partialSubmit="true" process="@this" />
 			</div>
