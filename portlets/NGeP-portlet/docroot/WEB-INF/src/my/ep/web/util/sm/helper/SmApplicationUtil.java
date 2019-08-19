@@ -2947,6 +2947,7 @@ public class SmApplicationUtil {
 						.equals(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
 			checkOverLappingCategories(bean);
 			if (bean.isOverLappedCategoryExists()) {
+				initOverlapCategoryDocs(bean.isOverLappedCategoryExists(), bean);				
 				if (bean.isSupplierUser()) {
 					validateOverlapCategory(bean, currPage);
 				} else {
