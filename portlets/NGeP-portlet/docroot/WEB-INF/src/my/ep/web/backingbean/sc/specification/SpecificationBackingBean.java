@@ -9415,6 +9415,9 @@ public class SpecificationBackingBean extends
 		}
 		retriveSpecdetails(quotationTenderDataType.getQtId().longValue());
 		ScQt scQt = this.getManagedBean().getQt();
+		if(scQt.isZonal()  && scQt.isPanel()){
+			this.getManagedBean().setPanelZone(true);
+		}
 		if (null == this.getManagedBean().getQt().getContractType()) {
 			this.getManagedBean().getQt().setContractType(new PmParameter());
 		}

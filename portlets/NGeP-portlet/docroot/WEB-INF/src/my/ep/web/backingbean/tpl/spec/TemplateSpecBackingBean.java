@@ -2676,12 +2676,12 @@ public class TemplateSpecBackingBean extends
 			// bugs #26234 if (specEstimation.getEstimatedCost() != null) {
 				if (specEstimationId == specEstimation.getSpecEstimationId()){
 					specEstimation.setEstimatedCost(totalIndicativePrice); ///update value  Item Total Indicative Price (RM)
-					totalEstAmount = totalEstAmount.add(totalIndicativePrice);
+					totalEstAmount = totalEstAmount.add(totalIndicativePrice).setScale(2, BigDecimal.ROUND_UP); // bugs #26234 add decimal point
 				}
 				else {
 					if (specEstimation.getEstimatedCost() != null) { // bugs #26234 
 						totalEstAmount = totalEstAmount.add(specEstimation
-										.getEstimatedCost());
+										.getEstimatedCost()).setScale(2, BigDecimal.ROUND_UP); // bugs #26234 add decimal point
 					} // bugs #26234 
 				}
 				// bugs #26234 }
@@ -2713,7 +2713,7 @@ public class TemplateSpecBackingBean extends
 			if (!isItemTypeService)  //Product - input indicative unit price and autocalculate estimated cost
 			{
 				totalIndicativePrice = totalIndicativePrice.add(clQuantity
-						.multiply(indicativeUnitPrice));
+						.multiply(indicativeUnitPrice)).setScale(2, BigDecimal.ROUND_UP); // bugs #26234 add decimal point
 			}
 			else {
 				if (isItemTypeService && !isFulfilmentTypeScheduled) //Service with non periodic Fulfillment Type(OneOff & As and When)  - input indicative unit price and autocalculate estimated cost
@@ -2721,7 +2721,7 @@ public class TemplateSpecBackingBean extends
 						.multiply(clUomFrequency)
 						.multiply(clUomPerDay)
 						.multiply(clUomPerMonth)
-						.multiply(indicativeUnitPrice));
+						.multiply(indicativeUnitPrice)).setScale(2, BigDecimal.ROUND_UP); // bugs #26234 add decimal point
 				}
 				else {
 					if (isItemTypeService && isFulfilmentTypeScheduled) //Service with periodic Fulfillment Type - input indicative unit price and autocalculate estimated cost
@@ -2732,7 +2732,7 @@ public class TemplateSpecBackingBean extends
 								.multiply(clUomPerDay)
 								.multiply(clUomPerMonth)
 								.multiply(indicativeUnitPrice)
-								  );
+								  ).setScale(2, BigDecimal.ROUND_UP); // bugs #26234 add decimal point
 					}
 				}
 			}
