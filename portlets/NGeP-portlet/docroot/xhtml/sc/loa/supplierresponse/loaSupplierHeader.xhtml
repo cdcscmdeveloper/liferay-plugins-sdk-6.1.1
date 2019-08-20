@@ -8,6 +8,7 @@
 	<ui:param name="canShowSupplierProposal" value="#{lOADetailBackingBean.canShowSupplierProposal() and lOADetailBackingBean.canShowSupplierProposalByLOAStatus()}" />
 
 	<div align="left" class="header-info header-spacing">
+		
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
 				<td width="12%"><h:outputLabel
@@ -45,9 +46,9 @@
 				<td width="10%"><h:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.title']}" /></td>
 				<td class="header-info-text" colspan="3">
-					#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.title}</td>
+					#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.title}</td>				
 			</tr>
-			<c:if test="#{(not empty lOADetailBackingBean.managedBean.scQtProposal) or (not empty lOADetailBackingBean.managedBean.scLoa.scQuote)}" >
+			<c:if test="#{((not empty lOADetailBackingBean.managedBean.scQtProposal) or (not empty lOADetailBackingBean.managedBean.scLoa.scQuote)) and lOADetailBackingBean.qtPrefixIsQT()}" >
 			<tr>
 				<td width="10%"><h:outputLabel
 						value="#{lbl['lbl.sc.proposal.no']}" /></td>
