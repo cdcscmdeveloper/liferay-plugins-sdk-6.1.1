@@ -194,6 +194,7 @@ public class SupplierManagementConst {
 	public static final String STYPE_CONSULTANT = "J";
 	public static final String STYPE_CONTRACTOR = "K";
 	public static final String STYPE_BASIC = "B";
+	public static final String STYPE_GOVT_SELLER = "G";
 	public static final String ACC_BASIC = "O";
 	public static final String ACC_MOF = "N";
 	public static final String ACC_GOVT_SELLER = "G";
@@ -354,12 +355,6 @@ public class SupplierManagementConst {
 	public static final String PERSONNEL_TYPE_FRGNR = "NON-MALAYSIAN";
 	public static final String PERSONNEL_TYPE_BUMI = "BUMI";
 	public static final String PERSONNEL_TYPE_NON_BUMI = "NON-BUMI";
-	//16052019 - SSM INTEGRATION CR
-	public static final String CAPITAL_GOV_AGENCY = "CAPITAL_GOV_AGENCY";
-	public static final String CAPITAL_GOV_EQUITY = "CAPITAL_GOV_EQUITY";
-	public static final String CAPITAL_FOREIGN = "CAPITAL_FOREIGN";
-	public static final String CAPITAL_LOCAL = "CAPITAL_LOCAL";
-	
 
 	public static final String PERSONNEL_MANAGEMENT_STAFF_CONTRACTOR_PARAMCODE = "1";
 	public static final String PERSONNEL_NORMAL_STAFF_CONTRACTOR_PARAMCODE = "2";
@@ -440,6 +435,8 @@ public class SupplierManagementConst {
 	public static final String PM_STATUS_REJECTED_BY_APPROVER = "20113";
 	public static final String PM_STATUS_APPROVED_BY_APPROVER = "20113";
 	public static final String PM_STATUS_REJECTED_BY_SYSTEM = "20118";
+	public static final String PM_STATUS_REJECTED_BY_SYSTEM_PAYMENT = "20119";
+	public static final String PM_STATUS_REJECTED_BY_SYSTEM_PROCESSING_FEE = "20120";
 	public static final String PM_STATUS_PENDING_PAYMENT_PROCESSING_FEE = "20114";
 	public static final String PM_STATUS_PENDING_CERTIFCATE_GENERATION = "20198";
 	public static final String PM_STATUS_REGISTERED = "20199";
@@ -636,7 +633,9 @@ public class SupplierManagementConst {
 	// SUPP_SUSPEND_OR_TERMINATED
 	public static String SUSPENDED = my.ep.constant.sm.SupplierManagementConst.SUSPENDED;
 	public static String TERMINATED = my.ep.constant.sm.SupplierManagementConst.TERMINATED;
+	
 
+	
 	// Getters for panel info
 	public String getSUPP_TYPE_CONTRACTOR() {
 		return SUPP_TYPE_CONTRACTOR;
@@ -782,7 +781,13 @@ public class SupplierManagementConst {
 	public String getSTYPE_CONTRACTOR() {
 		return STYPE_CONTRACTOR;
 	}
-
+	public String getSTYPE_BASIC() {
+		return STYPE_BASIC;
+	}
+	public String getSTYPE_GOVT_SELLER() {
+		return STYPE_GOVT_SELLER;
+	}
+	
 	public String getCOUNTRY_MALAYSIA_CODE() {
 		return COUNTRY_MALAYSIA_CODE;
 	}
@@ -1158,11 +1163,4 @@ public class SupplierManagementConst {
 	public String getSmApplCategoryTypeSpecial() {
 		return SM_APPL_CATEGORY_TYPE_SPECIAL;
 	}
-	
-	public long getPM_STATUS_PO_REVIEW() {
-		return PM_STATUS_PO_REVIEW;
-	}
-	
-	
-	
 }
