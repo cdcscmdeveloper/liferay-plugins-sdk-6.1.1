@@ -1073,7 +1073,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					otherArgs.put(MapKeyEnum.loiLoaSelected, scLoaForQt);
 					scQt = scLoaForQt.getScLoiLoa()!=null?scLoaForQt.getScLoiLoa().getScQt():null;
 					QtLOABackingBean bb = new QtLOABackingBean();
-					bb.preRenderViewForQtMaintenance(scQt, previousPageUrl, otherArgs);
+					if(ParameterConst.DOCTYPE_DIRECT_NEGO.equalsIgnoreCase(scLoaForQt.getScLoiLoa().getDocType())){
+						return viewDirectLOADetails(scQt, previousPageUrl);
+					}
+					else{	
+						bb.preRenderViewForQtMaintenance(scQt, previousPageUrl, otherArgs);
+					}
 				}
 			}
 			else;
@@ -3577,12 +3582,18 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				QuationTenderResDTO resDTO = detailSO
 						.retriveQuationTenderDetailsBySearchCriteria(reqDTO);
 				
+				//workflow status is_current for SF
 				if(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION.equals(qtnTenderSearchBean.getDocType())){
 					if(resDTO.isSuccessful() && resDTO.getQtResultBean() != null && !CollectionUtils.isEmpty(resDTO.getQtResultBean().getResultList())){
 						SearchResultBean<ScQt> qtResultBean = (SearchResultBean<ScQt>)resDTO.getQtResultBean();
 						SuppFinalizationResDTO sfResDTO = sfDetailSO.setQtFinalizationCurrentStatus(qtResultBean.getResultList());
 						if(sfResDTO.isSuccessful()){
 							qtResultBean.setResultList(sfResDTO.getQtList());
+							for(int i = 0 ; !CollectionUtils.isEmpty(qtResultBean.getResultList()) && i< qtResultBean.getResultList().size(); i++){
+								//log.info(qtResultBean.getResultList().get(i).getFinalization().getCurrentStatus().getPmStatus().getStatusId());
+								qtResultBean.getResultList().get(i).setStatusDesc(getStatusDescById(sfResDTO.getQtList().get(i).getFinalization().getCurrentStatus().getPmStatus().getStatusId()));
+								//log.info(qtResultBean.getResultList().get(i).getStatusDesc());
+							}
 							//log.info("update status successful");
 						}
 					}
