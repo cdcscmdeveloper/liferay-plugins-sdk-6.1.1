@@ -6563,8 +6563,21 @@ public class SupplierFinalizationBackingBean extends
 		Object token = getBpmSO().authenticate(bpmUserLogin);
 		reqDTO.setCtxToken(token);
 		reqDTO.setDocNumber(scQt.getQtNo());
+		SuppFinalizationReqDTO sfReqDTO = new SuppFinalizationReqDTO();
+		Set<String> fetchSet = new HashSet();
+		fetchSet.add("finalizationCommittee");
+		sfReqDTO.setFetchSet(fetchSet);
+		sfReqDTO.setQtId(scQt.getQtId());
+		SuppFinalizationResDTO sfResDTO = getQtSuppFinalizationSO().retrieveQtById(sfReqDTO);
+		
 		reqDTO.setDocType(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION);
 		BpmResponseDTO resDTO = getBpmSO().getTasksByDocNumber(reqDTO);
+		String qtFinCmt = null;
+		if(sfResDTO.isSuccessful()){
+			if(sfResDTO.getScQt()!=null && sfResDTO.getScQt().getFinalizationCommitte()!=null){
+				qtFinCmt = sfResDTO.getScQt().getFinalizationCommitte().getParameterCode();
+			}
+		}
 		
 		List<String> loginIds = new ArrayList<String>();
 		String loginId = getFacesScopesGen().getUserSessionBean().getLoginId();
@@ -6652,7 +6665,10 @@ public class SupplierFinalizationBackingBean extends
 									break;
 								}catch(ClassCastException ex){
 									continue;
+								}catch(Exception ex){
+									continue;
 								}
+								
 							}
 						}
 						if(dataType != null){
@@ -6662,9 +6678,7 @@ public class SupplierFinalizationBackingBean extends
 				}
 			}		
 			// TODO error flash message if user is not allowed to view i.e. never was an assignee/actor
-		}
-		
-		
+		}		
 		
 		if(isQTMaintenanceScreen() && !StringUtils.isBlank(taskId)){
 			getManagedBean().setActiveIndex(0);
@@ -6673,9 +6687,9 @@ public class SupplierFinalizationBackingBean extends
 				dataType = getBpmTaskDetails(SCEvaluationDataType.class, null, taskId, !StringUtils.isBlank(latestAssignee)?latestAssignee:null);
 			}*/
 			//as in preRenderView()
-			Long qtId = Long.valueOf(dataType.getQtId());
-			getManagedBean().setPayLoad(dataType);
+			Long qtId = scQt.getQtId();
 			getManagedBean().setActiveIndex(0);
+			
 			
 			Long loggedInUserId = getFacesScopes().getUserSessionBean()
 									.getUserId();
@@ -6691,7 +6705,70 @@ public class SupplierFinalizationBackingBean extends
 		getManagedBean().setLoggedInUserId(loggedInUserId);
 
 		//loadInitialDataMaintenance(scQt.getQtId());
+		
+		if(isQTMaintenanceScreen()){
+			if(dataType == null || dataType.getCommitteeType() == null){
+				dataType = new SCEvaluationDataType();
+				CommitteReqDTO cmtReqDTO = new CommitteReqDTO();
+				cmtReqDTO.setQtId(scQt.getQtId());
+				if(qtFinCmt!=null){
+					dataType.setCommitteeType(qtFinCmt);
+				}
+				else{
+					CommitteResDTO cmtResDTO = getCommitteeSO()
+							.retrieveFinalizationCommitteeType(cmtReqDTO);
+		
+					List<PmParameter> finalizationCommTypes = cmtResDTO.getFinalizationSecratry();
+					if(CollectionUtils.isNotEmpty(finalizationCommTypes)){
+						if(1<finalizationCommTypes.size()){
+							log.info("finalizationCommTypes.size() > 1");
+						}					
+						for(PmParameter prm : finalizationCommTypes){
+							log.info(prm.getParameterCode());
+							dataType.setCommitteeType(prm.getParameterCode());
+						}
+					}
+				}
+			}		
+		
+			if(dataType == null || dataType.getFcDecision() == null){
+				IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IQTSuppFinalizationSO.class);
+				
+				sfReqDTO = new SuppFinalizationReqDTO();
+				Set<String> fetches = new HashSet<String>();
+				fetches.add("decision");
+				sfReqDTO.setQtId(scQt.getQtId());
+				sfReqDTO.setFetchSet(fetches);
+				sfResDTO = qtSuppFinalizationSO.retrieveSupplierFinalizationByQtId(sfReqDTO);
+				if(sfResDTO.isSuccessful()){
+					dataType.setFcDecision(sfResDTO.getScQtFinalization().getDecision().getParameterCode());
+				}
+			}
+			
+			getManagedBean().setPayLoad(dataType);
+		}
+		
+		
+		
+		
+		
+		
+		
 		loadInitialData(scQt.getQtId());
+		
+		if(isQTMaintenanceScreen()){
+			if(QTStatusConst.SF_PENDING_SIGN_OFF.equals(getManagedBean().getCurrentStatusId()) || getManagedBean().getCurrentStatusId() == null){
+				IQTSuppFinalizationSO qtSuppFinalizationSO = getQTSuppFinalizationSO();
+				sfReqDTO = new SuppFinalizationReqDTO();
+				sfReqDTO.setQtId(scQt.getQtId());
+				sfResDTO = qtSuppFinalizationSO.retrieveCurrentStatus(sfReqDTO);
+				if(sfResDTO.isSuccessful() && sfResDTO.getCurrentStatus() != null){
+					getManagedBean().setCurrentStatusId(sfResDTO.getCurrentStatus().getPmStatus().getStatusId());
+				}
+			}
+		}
 		
 		return QTConstants.FC_SUPPLIER_FINALIZATION_PAGE;
 	}
@@ -6799,6 +6876,12 @@ public class SupplierFinalizationBackingBean extends
 		return BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTSuppFinalizationSO.class);
+	}
+	
+	private ICommitteSO getCommitteeSO(){
+		return BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						ICommitteSO.class);
 	}
 	
 	/**

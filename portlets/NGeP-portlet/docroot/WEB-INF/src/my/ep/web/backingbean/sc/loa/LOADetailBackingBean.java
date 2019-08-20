@@ -118,7 +118,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
-import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
@@ -7027,6 +7026,20 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
 							e.getMessage()));
 		}
+	}
+	
+	/**
+	 * only if qt no prefix is 'QT'
+	 * @return
+	 */
+	public boolean qtPrefixIsQT(){		
+		if(this.getManagedBean().getScQt()!=null){
+			String qtNo = this.getManagedBean().getScQt().getQtNo();
+			if(!StringUtils.isBlank(qtNo)){
+				return ParameterConst.DOCTYPE_QUOTATION.equalsIgnoreCase(qtNo.trim().substring(0, ParameterConst.DOCTYPE_QUOTATION.length()));
+			}
+		}
+		return false;
 	}
 }
 
