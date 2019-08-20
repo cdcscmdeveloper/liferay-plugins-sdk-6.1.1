@@ -1303,7 +1303,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			context.put("contactPersonDesignation", this.getManagedBean().getContactPerson().getDesignation());
 		}
 		
-		SmAddress svAddress = getSmAddressById(svTask.getSmSvAddress().getSiteRefId());
+		SmAddress svAddress = svTask.getSmSvAddress().getAddress();
 		
 		context.put("smVmUtil", new VmUtil());
 		context.put("hostUrl", getLogoHeaderPath());
