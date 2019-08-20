@@ -9,6 +9,7 @@
 
 	<div align="left" class="header-info header-spacing"
 		style="width: 100%">
+		
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
 				<td width="10%"><h:outputLabel
@@ -58,7 +59,7 @@
 				<td class="header-info-text">
 					#{lOADetailBackingBean.showPreparedBy(lOADetailBackingBean.managedBean.scLoa.createdBy)}</td>
 			</tr>
-			<c:if test="#{(not empty lOADetailBackingBean.managedBean.scQtProposal) or (not empty lOADetailBackingBean.managedBean.scLoa.scQuote)}" >
+			<c:if test="#{((not empty lOADetailBackingBean.managedBean.scQtProposal) or (not empty lOADetailBackingBean.managedBean.scLoa.scQuote)) and lOADetailBackingBean.qtPrefixIsQT()}" >
 			<tr>
 				<td width="10%"><h:outputLabel
 						value="#{lbl['lbl.sc.proposal.no']}" /></td>
