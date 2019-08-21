@@ -954,6 +954,7 @@ public class SupplierDataMaintenanceBackingBean extends
 						.getZoneList());
 
 		// for login user not semenanjung, only can select contractor
+		/*
 		if (getManagedBean().getLoginUserZone() != null
 				&& !getManagedBean()
 						.getLoginUserZone()
@@ -962,6 +963,7 @@ public class SupplierDataMaintenanceBackingBean extends
 			getManagedBean().setSearchSuppType(
 					SupplierManagementConst.SUPP_TYPE_CONTRACTOR);
 		}
+		*/
 	}
 
 	/**
@@ -1040,7 +1042,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	/**
 	 * Initialized login user zone
 	 */
-	private void initLoginUserZone() {
+	/*private void initLoginUserZone() {
 		FacesScopes fs = new FacesScopes();
 		PmUser user = fs.getUserSessionBean();
 		List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(user
@@ -1068,7 +1070,7 @@ public class SupplierDataMaintenanceBackingBean extends
 						SmServiceLookup.getZoneSO().retriveZoneByID(reqDTO)
 								.getPmZone());
 
-	}
+	}*/
 
 	/**
 	 * Set whether the login user is allowed to do data maintenance
