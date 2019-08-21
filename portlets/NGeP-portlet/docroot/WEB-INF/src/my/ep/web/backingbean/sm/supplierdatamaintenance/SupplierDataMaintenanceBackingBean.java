@@ -187,6 +187,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		
 		PmUser user = new FacesScopes().getUserSessionBean();
 		validateDisciplinaryAction();
+		validateAddedCategory(getManagedBean().getActiveCategoryList());
 		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
 		SupplierDataMaintenanceResDTO resDTO = new SupplierDataMaintenanceResDTO();
 		List<SmTrackingDairyVO> listSmTrackingDiary = new ArrayList<SmTrackingDairyVO>();
@@ -896,7 +897,8 @@ public class SupplierDataMaintenanceBackingBean extends
 
 		while (apprCatIt.hasNext()) {
 			SmSupplierCategory apprCat = apprCatIt.next();
-			if(apprCat.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_ACTIVE) {
+			//#25753 : Supplier Data Maintenance: Special Category Other Description
+			if(apprCat.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_ACTIVE || apprCat.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_PENDING_ACTIVATION) {
 				SmSupplierCategory delCat = (SmSupplierCategory) EntityHelper
 						.getEntityByMultiplePropertiesFromList(apprCat, categories,
 								null, new String[] { "pmCategoryL1",
@@ -1265,6 +1267,18 @@ public class SupplierDataMaintenanceBackingBean extends
 		if (StringUtils.isNotEmpty(this.getManagedBean().getApproverRemark())
 				&& this.getManagedBean().getApproverRemark().length() > 2500) {
 			throw new EpException(MessageConst.ERROR_71025, new String[] {String.valueOf(this.getManagedBean().getApproverRemark().length())});
+		}
+	}
+	
+	private void validateAddedCategory(List<SmSupplierCategory> activeCategories) {
+		SmApplicationUtil
+				.validateRenewalApplTypeForSpecialCategory(getManagedBean()
+						.getSmAppl());
+		String errOtherDesc = SmApplicationUtil
+				.getCategoryOtherDescErrMsg(activeCategories);
+		if (!StringUtils.isBlank(errOtherDesc)) {
+			throw new EpException(MessageConst.ERROR_722514,
+					new String[] { errOtherDesc });
 		}
 	}
 
