@@ -1130,7 +1130,16 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 						}
 					}
+				/*#25592-basri*/
+				/*validation error if deduction clause is empty*/
+				}else{
+						setTabValue("DE");
+						throw new EpException(MessageConst.ERROR_100022, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.deduction.clause.desc", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					
 				}
+				/*end*/
 			}  
 		}		
 
