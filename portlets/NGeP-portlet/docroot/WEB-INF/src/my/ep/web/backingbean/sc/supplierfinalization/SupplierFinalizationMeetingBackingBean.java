@@ -968,6 +968,10 @@ public class SupplierFinalizationMeetingBackingBean extends
 				populateUserSearchCriteria(userSearchBean, searchBean);
 				committeReqDTO.setUserSearchBean(searchBean);
 				committeReqDTO.setPtjMinistryAdmin(Boolean.TRUE);
+				
+				//Enhancement #21689
+				committeReqDTO.setScQt(getManagedBean().getScQt());
+				
 				return committeSO.retrieveUserListByCommType(committeReqDTO)
 						.getUserResultBean();
 			} finally {

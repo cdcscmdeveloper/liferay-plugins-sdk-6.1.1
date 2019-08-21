@@ -2823,8 +2823,50 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param scMember
 	 */
 	public void setCommitteeMemberOrgProfile(ScCommitteeMember scMember) {
-		scMember.setPmOrgProfile(getPTJOrgProfileByUserId(scMember.getPmUser()
-				.getUserId()));
+		/*
+		 * Enhancement #21689
+		 * IF BPK DONT SET ORG_PROFILE (PTJ)
+		 */
+		if(scMember.getPmUser()!=null && 
+				scMember.getPmUser().getOrgTypeCode()!=null){
+			if(scMember.getPmUser().getOrgTypeCode().getParameterCode().equalsIgnoreCase("BPK")){
+				scMember.setPmOrgProfile(getBKPOrgProfileByUserId(scMember.getPmUser()
+						.getUserId()));
+			}else{
+				scMember.setPmOrgProfile(getPTJOrgProfileByUserId(scMember.getPmUser()
+						.getUserId()));
+			}			
+		}
+	}
+	
+	/*
+	 * Enhancement #21689
+	 */
+	private PmOrgProfile getBKPOrgProfileByUserId(Long userId) {
+
+		PmOrgProfile pmOrgProfile = null;
+		if (userId != null) {
+			IOrgProfileSO orgProfileSO = null;
+			try {
+				orgProfileSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IOrgProfileSO.class);
+
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				reqDTO.setUserId(userId);
+				reqDTO.setOrgType(OrganizationType.BAHAGIAN_PERBENDAHARAAN_KERAJAAN.value());
+				OrgProfileResDTO resDTO = orgProfileSO
+						.retrieveOrgProfileListByOrgType(reqDTO);
+				List<PmOrgProfile> pmOrgProfiles = resDTO.getOrgProfileList();
+				if (pmOrgProfiles != null && pmOrgProfiles.size() > 0) {
+					pmOrgProfile = pmOrgProfiles.get(0);
+				}
+
+			} finally {
+				orgProfileSO = null;
+			}
+		}
+		return pmOrgProfile;
 	}
 	
 	private PmOrgProfile getPTJOrgProfileByUserId(Long userId) {
