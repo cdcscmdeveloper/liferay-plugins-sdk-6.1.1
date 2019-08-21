@@ -2104,10 +2104,13 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		ZoneReqDTO reqDTO = new ZoneReqDTO();
 		reqDTO.setZoneId(getManagedBean().getSearchPmZoneId());
 
-		getManagedBean()
-				.setLoginUserZone(
-						SmServiceLookup.getZoneSO().retriveZoneByID(reqDTO)
-								.getPmZone());
+		if(getManagedBean().getSearchPmZoneId() != null) {
+			getManagedBean()
+			.setLoginUserZone(
+					SmServiceLookup.getZoneSO().retriveZoneByID(reqDTO)
+							.getPmZone());
+		}
+		
 
 	}
 
