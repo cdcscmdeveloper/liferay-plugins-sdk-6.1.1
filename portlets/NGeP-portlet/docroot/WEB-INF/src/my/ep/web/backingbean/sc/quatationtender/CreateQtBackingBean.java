@@ -653,13 +653,14 @@ public class CreateQtBackingBean extends
 						scQt.setOpenFor(ParameterConst.OPEN_FOR_BUMI);
 					} else {
 						
-						// 20190523@hatta - 22240 - Start
+						// 20190820@hatta - 22240 - Start
 					    boolean cetak = false;	
 						if (!EntityHelper.isCollectionEmpty(scQt.getScQtCategorys())) {
 							for (ScQtCategory cat : scQt.getScQtCategorys()) {
 							   if( (!StringUtils.isBlank(cat.getPmCategoryL2Name()) && 
 								       cat.getPmCategoryL2Name().substring(0,10).equalsIgnoreCase("PERCETAKAN")) && 
-										     (getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL) || 
+										     (getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) ||
+										      getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL) || 
 										      getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT) ||
 										      getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF) ||
 										      getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)) ){
@@ -677,7 +678,7 @@ public class CreateQtBackingBean extends
 						{
 							scQt.setOpenFor(ParameterConst.OPEN_FOR_ALL);
 						}
-						// 20190523@hatta - 22240 - End
+						// 20190820@hatta - 22240 - End
 						
 					}	
 				}
