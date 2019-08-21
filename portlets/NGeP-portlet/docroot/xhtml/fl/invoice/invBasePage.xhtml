@@ -24,13 +24,11 @@
 		<h:panelGroup rendered="#{(invoiceBackingBean.managedBean.taxInvoice=='false' and (invoiceBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView or 
 					  invoiceBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmUpdate or
 					  invoiceBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancel or
-					  invoiceBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmRevise or
 					  invoiceBackingBean.managedBean.isHyperLinkPage()))}">
 		<ac:title value="#{invoiceBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, ParameterConst.doctypeInvoice)}" />
 		</h:panelGroup>
 		<h:panelGroup rendered="#{(invoiceBackingBean.managedBean.taxInvoice=='true' and (invoiceBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView or 
 					  invoiceBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmUpdate or
-					  invoiceBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmRevise or
 					  invoiceBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancel ))}">
 		<ac:title value="#{lbl['lbl.fl.tax.invoice']}" />
 		</h:panelGroup>
@@ -93,15 +91,13 @@
 						</p:commandButton></td>
 				</h:panelGroup>
 				<h:panelGroup
-					rendered="#{invoiceBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancel
-							or invoiceBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmRevise}">	
+					rendered="#{invoiceBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancel}">	
 					<td colspan="4" style="text-align: right"><p:commandButton
 							value="#{lbl['lbl.btn.cancel']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{invoiceBackingBean.signingAction(BpmOutcomeConstant.bpmCancel)}">
 							<f:param name="actionName" value="#{BpmOutcomeConstant.bpmCancel}" />
 						</p:commandButton></td>
 				</h:panelGroup>
-				
 				<c:if
 					test='#{invoiceBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView and !invoiceBackingBean.managedBean.isHyperLinkPage()}'>
 					<td colspan="4" style="text-align: right"><p:commandLink
