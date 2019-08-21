@@ -4463,8 +4463,9 @@ public class SmApplicationBackingBean extends
 			if (getManagedBean().getSelectedCategory().getPmCategoryL3()
 					.getCategoryL3Code().equals("99")) {
 				validCat = true;
-			} else if (cat
-					.getPmCategoryL1()
+			}
+			
+			if (cat.getPmCategoryL1()
 					.getCategoryL1Id()
 					.equals(getManagedBean().getSelectedCategory()
 							.getPmCategoryL1().getCategoryL1Id())
@@ -4478,7 +4479,7 @@ public class SmApplicationBackingBean extends
 									.getPmCategoryL3().getCategoryL3Id())) {
 				validCat = false;
 				if (cat.getRecordStatusFlg().compareTo(
-						SupplierManagementConst.DELETED_RECORD_STATUS) == 0) {
+						SupplierManagementConst.DELETED_RECORD_STATUS) == 0 || cat.getCancelledDate() != null) {
 					if (cat.getCancelledDate() != null
 							&& !isValidToAddAfterDeleted(cat.getCancelledDate())) {
 						throw new EpException(MessageConst.ERROR_722563);
@@ -4513,6 +4514,15 @@ public class SmApplicationBackingBean extends
 							.getSmSupplierCategories(), "pmCategoryL3");
 			if (cat != null) {
 				cat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
+				cat.setPoDecFlg(null);
+				cat.setApprvrDecFlg(null);
+				cat.setApprovedDate(null);
+				cat.setCategoryEffDate(null);
+				cat.setPrevPoRemarks(null);
+				cat.setPoRemarks(null);
+				cat.setPrevApproverRemarks(null);
+				cat.setApproverRemarks(null);
+				cat.setCancelledDate(null);
 			} else {
 				getManagedBean().getSmAppl().getSmSupplierCategories()
 						.add(getManagedBean().getSelectedCategory());
@@ -10637,7 +10647,7 @@ public class SmApplicationBackingBean extends
 
 	private void initMandatoryLicenseInfo(
 			List<SmApplSupportDoc> mandatoryLicenseDocs) {
-		SmSupplierCategory cat = null;
+		//SmSupplierCategory cat = null;
 		getManagedBean().setMandatoryLicenseDocs(
 				new ArrayList<SmLicenseInfoVO>());
 		SmLicenseInfoVO licenseVO = null;
@@ -10645,8 +10655,8 @@ public class SmApplicationBackingBean extends
 		for (SmApplSupportDoc doc : mandatoryLicenseDocs) {
 			count++;
 			licenseVO = new SmLicenseInfoVO();
-			cat = getLicenseCategory(doc.getPmDocument());
-			licenseVO.setL3(cat != null ? cat.getPmCategoryL3() : null);
+			//cat = getLicenseCategory(doc.getPmDocument());
+			//licenseVO.setL3(cat != null ? cat.getPmCategoryL3() : null);
 			licenseVO.setCategoryDesc(getLicenseConcatCategories(doc
 					.getPmDocument()));
 			licenseVO.setLicenseSuppDocs(new ArrayList<SmApplSupportDoc>());
@@ -10656,20 +10666,28 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
-	public SmSupplierCategory getLicenseCategory(PmDocument doc) {
-		SmSupplierCategory retVal = null;
+	public List<SmSupplierCategory> getLicenseCategory(PmDocument doc) {
+		List<SmSupplierCategory> retVal = new ArrayList<SmSupplierCategory>();
 		if (doc != null
 				&& !EntityHelper.isCollectionEmpty(doc.getPmDocumentRestrs())) {
+			List<SmSupplierCategory> activeList = new ArrayList<SmSupplierCategory>();
+			if(getManagedBean().getSmAppl().getSmSupplierCategories()!=null 
+					&& getManagedBean().getSmAppl().getSmSupplierCategories().size()>0 ){
+				for(SmSupplierCategory activeSuppCat: getManagedBean().getSmAppl().getSmSupplierCategories()){
+					if(activeSuppCat.getRecordStatusFlg().compareTo(
+							SupplierManagementConst.PENDING_ACT_STATUS) == 0 ){
+						activeList.add(activeSuppCat);
+					}
+				}
+			}
 			for (PmDocumentRestr tmp : doc.getPmDocumentRestrs()) {
 				if (tmp.getPmCategoryL3() != null) {
-					retVal = (SmSupplierCategory) EntityHelper
+					SmSupplierCategory cat = (SmSupplierCategory) EntityHelper
 							.getEntityBySinglePropertyFromList(tmp
-									.getPmCategoryL3().getCategoryL3Id(),
-									getManagedBean().getSmAppl()
-											.getSmSupplierCategories(),
+									.getPmCategoryL3().getCategoryL3Id(),  activeList,
 									"pmCategoryL3");
-					if (retVal != null) {
-						break;
+					if (cat != null) {
+						retVal.add(cat);
 					}
 				}
 			}
@@ -10679,18 +10697,20 @@ public class SmApplicationBackingBean extends
 
 	public String getLicenseConcatCategories(PmDocument doc) {
 		String retVal = SmCommonUtil.getMessage("lbl.txt.na", null);
-		SmSupplierCategory cat = getLicenseCategory(doc);
-		if (cat != null) {
-			StringBuilder sb = new StringBuilder();
-			sb.append(
-					cat.getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
-							+ cat.getPmCategoryL2().getCategoryL2Code()
-							+ cat.getPmCategoryL3().getCategoryL3Code())
-					.append(" (")
-					.append(cat.getPmCategoryL3().getCategoryName())
-					.append(")").append(",");
+		List<SmSupplierCategory> catList = getLicenseCategory(doc);
+		StringBuilder sb = new StringBuilder();
+		if (catList != null && catList.size()>0) {
+			for(SmSupplierCategory cat: catList){
+				sb.append(
+						cat.getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
+								+ cat.getPmCategoryL2().getCategoryL2Code()
+								+ cat.getPmCategoryL3().getCategoryL3Code())
+						.append(" (")
+						.append(cat.getPmCategoryL3().getCategoryName())
+						.append(")").append(", ");
+			}
 			if (sb != null && sb.length() > 0) {
-				retVal = sb.toString();
+				retVal = sb.toString().trim();
 				if (retVal.endsWith(",")) {
 					retVal = retVal.substring(0, retVal.length() - 1);
 				}
