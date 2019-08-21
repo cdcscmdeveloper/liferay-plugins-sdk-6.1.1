@@ -1091,9 +1091,18 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				return null;
 			}
 			else if(ParameterConst.DOCTYPE_LETTER_OF_AWARD.equalsIgnoreCase(docType)){
-				QtLOABackingBean bb = new QtLOABackingBean();
-				bb.preRenderViewForQtMaintenance(scQt, previousPageUrl, null);
-				return null;
+				// ***19287#42
+				if(ParameterConst.DOCTYPE_DIRECT_NEGO.equalsIgnoreCase(scQt.getLoiLoa().getDocType())){
+					DirectLOABackingBean directLoaBackingBean = new DirectLOABackingBean();
+					directLoaBackingBean.renewSesionObject();
+					
+					return viewDirectLOADetails(scQt, previousPageUrl);
+				}else{	
+					QtLOABackingBean bb = new QtLOABackingBean();
+					bb.preRenderViewForQtMaintenance(scQt, previousPageUrl, null);
+					return null;
+				}
+				
 			}
 			else{
 				return null;
