@@ -265,6 +265,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				smSupplierOwner.setShowTextField(true);
 				this.getManagedBean().getSmSuppOwners().add(smSupplierOwner);
 			}
+
+
 			
 			return accountRegistration;
 		}
@@ -381,6 +383,26 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				this.populateStateByAddType("business", false);
 				this.populateDistrictByAddType("business", false);
 				//this.populateCityByAddType("business", false);
+				
+				//16052019 - SSM INTEGRATION CR 
+				//FIXME: start checking ssm status
+				this.getManagedBean().setStatusDescFromSSM(setStatusMessageFromSSM(ssmResDTO.getStatusFromSSM()));
+				String status = ssmResDTO.getStatusFromSSM().toUpperCase();
+				switch(status){
+					case "L":
+					case "T":
+					case "B":
+					case "W":
+					case "D":
+					case "R":
+					case "C":
+					case "X":
+					case "Y":
+						throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
+					default:
+						break;
+				}
+				//16052019 - SSM INTEGRATION CR FIXME: end
 			}
 			if(!this.getManagedBean().isCompanyValidWithSSM()){
 				throw new EpException(MessageConst.ERROR_721070);
@@ -1736,10 +1758,20 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		SmSupplier smSupp = SmApplicationUtil.getCurrentSupplier();
 		if(businessTypeTovalidateWithSSM(smSupp.getRegNo(),smSupp.getBusinessType())){
 			this.getManagedBean().setCompanyValidWithSSM(true);
-			// maybe here to put method to check with ssm
-			//SmSupplier smSupp = SmApplicationUtil.getCurrentSupplier();
-			//SmCommonUtil.getInstance().validateWithSSM(regNo,businessType,"");
-			if(!this.getManagedBean().isCompanyValidWithSSM()){
+			
+			//16052019 - SSM INTEGRATION CR 
+			//checking with ssm
+			SsmReqDTO ssmReqDTO = new SsmReqDTO();
+			ssmReqDTO.setRegNo(smSupp.getRegNo());
+			ssmReqDTO.setBusinessType(smSupp.getBusinessType());
+			SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
+			if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
+				//check the business/company registration status in ssm
+				this.getManagedBean().setStatusDescFromSSM(setStatusMessageFromSSM(ssmResDTO.getStatusFromSSM()));
+				if(!ssmResDTO.getStatusFromSSM().equalsIgnoreCase("A") && !ssmResDTO.getStatusFromSSM().equalsIgnoreCase("E")){
+					throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
+				}
+			} else{
 				throw new EpException(MessageConst.ERROR_721070);
 			}
 		}
