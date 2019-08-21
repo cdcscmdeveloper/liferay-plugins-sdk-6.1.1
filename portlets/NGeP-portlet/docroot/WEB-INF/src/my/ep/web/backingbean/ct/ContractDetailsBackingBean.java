@@ -22,6 +22,7 @@ import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.ct.agreement.IAgreementSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.fl.itemsummary.IFlItemSummarySO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -36,6 +37,8 @@ import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.ct.agreement.ContractAgreementReqDTO;
+import my.ep.dto.ct.agreement.ContractAgreementResDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.dto.fl.itemsummary.FlItemSummaryReqDTO;
@@ -304,6 +307,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	public void setValidateContractField(ContractReqDTO reqDTO) {
 		IContractSO contractSO = null;
 		ContractResDTO resDTO = null;
+		IAgreementSO agreementSO = null;
+		ContractAgreementResDTO ctAgreementResDTO = null;
+		ContractAgreementReqDTO ctAgreementReqDTO = null;
 		ctBB = new ContractBackingBean();
 		if(ctBB.getManagedBean().getDeleteAttachmentList() != null ){
 			ctBB.getManagedBean().getDeleteAttachmentList().clear();
@@ -312,7 +318,14 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 			resDTO = contractSO.retrieveContractVerDtls(reqDTO);
 			ctBB.getManagedBean().setContractVer(resDTO.getCtContractVer());
-
+			
+			//Retrieve agreement list
+			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IAgreementSO.class);
+			ctAgreementReqDTO = new ContractAgreementReqDTO();
+			ctAgreementReqDTO.setContractId(resDTO.getCtContractVer().getCtContract().getContractId());
+			ctAgreementResDTO = agreementSO.retrieveContractAgreements(ctAgreementReqDTO);
+			
+			ctBB.getManagedBean().setCtAgreementList(ctAgreementResDTO.getAgreementList());
 			//CT_CHANGE_LOG
 			ctBB.getManagedBean().setNewAgencyMap(resDTO.getNewAgencyMap());
 			ctBB.getManagedBean().setUpdateAgencyMap(resDTO.getUpdateAgencyMap());
@@ -582,6 +595,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		} finally {
 			resDTO = null;
 			contractSO = null;
+			agreementSO = null;
+			ctAgreementResDTO = null;
+			ctAgreementReqDTO = null;
 		}
 	}
 	
