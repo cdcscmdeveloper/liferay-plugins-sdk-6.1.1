@@ -783,7 +783,10 @@ public class SupplierManagementConst {
 	public String getSTYPE_CONTRACTOR() {
 		return STYPE_CONTRACTOR;
 	}
-
+	public String getSTYPE_BASIC() {
+		return STYPE_BASIC;
+	}
+	
 	public String getCOUNTRY_MALAYSIA_CODE() {
 		return COUNTRY_MALAYSIA_CODE;
 	}
