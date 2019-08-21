@@ -22,6 +22,7 @@ import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.payment.FlPaymentAdvice;
 import my.ep.persistence.entity.fl.payment.FlPaymentDeduction;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmGlAccount;
@@ -138,6 +139,14 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	private boolean hyperLinkPage = false;
 	private boolean taxInvoice = false;
 	
+	//start 21229
+	private Long ministryProfileId;
+	private Long jabatanProfileId;
+	private String ptjCodeName;
+	private String ptjCodeNameSearchValues;
+	
+	private PmOrgProfile selectedPmOrgProfile;
+	//end 21229
 	/**
 	 * Gets the doc type.
 	 *
@@ -1475,5 +1484,47 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	public void setPopulateSubSetiaList(List<SelectItem> populateSubSetiaList) {
 		this.populateSubSetiaList = populateSubSetiaList;
 	}
+
+	//start 21229
+	public Long getMinistryProfileId() {
+		return ministryProfileId;
+	}
+
+	public void setMinistryProfileId(Long ministryProfileId) {
+		this.ministryProfileId = ministryProfileId;
+	}
+
+	public Long getJabatanProfileId() {
+		return jabatanProfileId;
+	}
+
+	public void setJabatanProfileId(Long jabatanProfileId) {
+		this.jabatanProfileId = jabatanProfileId;
+	}
+
+	public String getPtjCodeName() {
+		return ptjCodeName;
+	}
+
+	public void setPtjCodeName(String ptjCodeName) {
+		this.ptjCodeName = ptjCodeName;
+	}
+
+	public String getPtjCodeNameSearchValues() {
+		return ptjCodeNameSearchValues;
+	}
+
+	public void setPtjCodeNameSearchValues(String ptjCodeNameSearchValues) {
+		this.ptjCodeNameSearchValues = ptjCodeNameSearchValues;
+	}
+
+	public PmOrgProfile getSelectedPmOrgProfile() {
+		return selectedPmOrgProfile;
+	}
+
+	public void setSelectedPmOrgProfile(PmOrgProfile selectedPmOrgProfile) {
+		this.selectedPmOrgProfile = selectedPmOrgProfile;
+	}
+	//end 21229
 
 }
