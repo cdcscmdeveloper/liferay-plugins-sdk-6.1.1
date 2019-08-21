@@ -66,6 +66,7 @@ import my.ep.persistence.entity.sm.SmCompanyExperienceCat;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmGstSupplier;
+import my.ep.persistence.entity.sm.SmMachineCategory;
 import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmManufacturingDtl;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -821,12 +822,34 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					new ArrayList<SmMachineDtl>());
 		} else {
 			List<SmMachineDtl> activeMachineDtls = new ArrayList<SmMachineDtl>();
-			for (SmMachineDtl machineDtl : getManagedBean().getSmAppl()
-					.getSmMachineDtls()) {
-				if (machineDtl.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
-					activeMachineDtls.add(machineDtl);
+			SmMachineDtl machDtlTmp = null;
+
+			for (SmSupplierCategory cat : getManagedBean().getSmAppl().getSmSupplierCategories()) {
+				if (cat.getRecordStatusFlg().compareTo(SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
+					for (SmMachineDtl machineDtl : getManagedBean().getSmAppl().getSmMachineDtls()) {
+						machDtlTmp = (SmMachineDtl) EntityHelper
+								.getEntityBySinglePropertyFromList(machineDtl
+										.getMachineDtlId(), activeMachineDtls, "machineDtlId");
+						if(machineDtl.getSmMachineCategories()!=null && machineDtl.getSmMachineCategories().size()>0){
+							for(SmMachineCategory machCat: machineDtl.getSmMachineCategories()){
+								String macCatCode = machCat.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code().concat(
+										machCat.getPmCategoryL3().getPmCategoryL2().getCategoryL2Code()).concat(
+												machCat.getPmCategoryL3().getCategoryL3Code());
+								String suppCatCode = cat.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code().concat(
+										cat.getPmCategoryL3().getPmCategoryL2().getCategoryL2Code()).concat(
+												cat.getPmCategoryL3().getCategoryL3Code());
+								if (machineDtl.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
+										&& macCatCode.equalsIgnoreCase(suppCatCode)
+											&& machDtlTmp == null) {
+									activeMachineDtls.add(machineDtl);
+									break;
+								}
+							}	
+						}									
+					}
 				}
 			}
+			
 			getManagedBean().getSmAppl().setSmMachineDtls(activeMachineDtls);
 		}
 		// manufacturingOrAssmblyInfoFormViewOnly
