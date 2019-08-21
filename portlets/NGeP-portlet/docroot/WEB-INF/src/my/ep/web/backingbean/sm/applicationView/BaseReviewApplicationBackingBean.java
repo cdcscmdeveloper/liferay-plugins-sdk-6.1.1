@@ -28,6 +28,7 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.pm.common.zone.ZoneReqDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
@@ -40,6 +41,8 @@ import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
@@ -2050,6 +2053,42 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			getManagedBean().getSearchSupplier().setEpNo("");
 			getManagedBean().getSearchSupplier().setRegNo("");
 		}
+	}
+	
+	/**
+	 * Initialized login user zone
+	 */
+	public void initLoginUserZone() {
+		FacesScopes fs = new FacesScopes();
+		PmUser user = fs.getUserSessionBean();
+		List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(user
+				.getUserId());
+		String ePRole = StringUtils.EMPTY;
+		if (!EntityHelper.isCollectionEmpty(userRoles)) {
+			for (PmUserRole userRole : userRoles) {
+				if (userRole.getPmRole().getRoleCode()
+						.equals(RoleCode.UPS_APPROVER.value())
+						|| userRole.getPmRole().getRoleCode()
+								.equals(RoleCode.UPS_PO.value())) {
+					ePRole = userRole.getPmRole().getRoleCode();
+					break;
+				}
+			}
+		}
+		getManagedBean().setSearchPmZoneId(
+				SmCommonUtil.getUserZoneIdByLoginIdAndEpRole(user.getLoginId(),
+						ePRole));
+		ZoneReqDTO reqDTO = new ZoneReqDTO();
+		reqDTO.setZoneId(getManagedBean().getSearchPmZoneId());
+
+		if(getManagedBean().getSearchPmZoneId() != null) {
+			getManagedBean()
+			.setLoginUserZone(
+					SmServiceLookup.getZoneSO().retriveZoneByID(reqDTO)
+							.getPmZone());
+		}
+		
+
 	}
 
 	/**
