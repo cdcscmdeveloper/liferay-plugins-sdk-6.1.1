@@ -46,6 +46,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.ct.agreement.IAgreementSO;
 import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.ct.dtl.IContractZoneSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
@@ -66,6 +67,8 @@ import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.ct.agreement.ContractAgreementReqDTO;
+import my.ep.dto.ct.agreement.ContractAgreementResDTO;
 import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.ct.circular.CircularResDTO;
 import my.ep.dto.ct.dtl.ContractZoneReqDTO;
@@ -91,6 +94,7 @@ import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.CtWorkflowStatus;
+import my.ep.persistence.entity.ct.agreement.CtAgreement;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
 import my.ep.persistence.entity.ct.dtl.CtContractAmount;
@@ -3414,80 +3418,70 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		getManagedBean().setSelectedItemForSpec(ctContractItem);
 		RequestContext.getCurrentInstance().execute("itemSpecDlg.show()");
 	}
+	
+	public List<CtAgreement> filterAgreementList() {
+		List<CtAgreement> newCtAgreementList = new ArrayList<CtAgreement>();
+		List<CtAgreement> currentCtAgreementList = getManagedBean().getCtAgreementList();
+		CtAgreement tempCtAgreement = null;
+		int index = 0;
 
-	/**
-	 * The method used to set  bond 
-	 * exempted file path and file name value is null.
-	 */
-	public void delBondExemptedDoc(){
-		getManagedBean().getContractVer().getCtContractAmount().setBondExemptedFilePath(null);
-		getManagedBean().getContractVer().getCtContractAmount().setBondExemptedFileName(null);
-	}
+		if(currentCtAgreementList != null && !currentCtAgreementList.isEmpty())
+		{
+			//currentCtAgreementList is sorted by created date in descending order
+			for(index = 0; index < currentCtAgreementList.size(); index++)
+			{
+				tempCtAgreement = currentCtAgreementList.get(index);
+				
+				if(tempCtAgreement.getAgreementId() == getManagedBean().getCtContractAmount().getCtAgreement().getAgreementId())
+				{
+					while(index >= 0)
+					{
+						//sort agreementList in ascending order starting from the selected Reference File No.
+						newCtAgreementList.add(0, currentCtAgreementList.get(index));
+						index--;
+					}
 
-	/**
-	 * Function to check / uncheck all checkbox into agency datatable
-	 * 
-	 * @param pass ajax event type
-	 * */
-	public void selectAllMinstryAgency(AjaxBehaviorEvent e) {
-		if (getAgencyDataModel() != null && getAgencyDataModel().getList() != null) {
-			for (PmOrgProfile pmOrgProfiles : getAgencyDataModel().getList()) {
-				if (getManagedBean().isSelectAll()) {
-					pmOrgProfiles.setSelectedCheckBox(true);
-				} else {
-					pmOrgProfiles.setSelectedCheckBox(false);
+					break;
 				}
 			}
-
-			if ((boolean) e.getComponent().getAttributes().get("value")) {
-				getManagedBean().setButtonHideActive(false);
-			} else {
-				getManagedBean().setButtonHideActive(true);
-			}	
-		}
-	}
-
-	/**
-	 * Function to check / uncheck single checkbox into agency datatable
-	 * 
-	 * @param pass ajax event type
-	 * */
-	public void selectOneAgyCheckboxSelect(AjaxBehaviorEvent e) {
-		if (getAgencyDataModel() != null && getAgencyDataModel().getList() != null) {
-			getManagedBean().setSelectAll(false);
-			for (PmOrgProfile pmOrgProfiles : getAgencyDataModel().getList()) {
-				if (pmOrgProfiles.isSelectedCheckBox()) {
-					getManagedBean().setButtonHideActive(false);
-					return;
+			if(newCtAgreementList.isEmpty())
+			{ 
+				index = currentCtAgreementList.size() - 1;
+				while(index >= 0)
+				{
+					//sort agreementList in ascending order
+					newCtAgreementList.add(0, currentCtAgreementList.get(index));
+					index--;
 				}
 			}
-
-			if ((boolean) e.getComponent().getAttributes().get("value")) {
-				getManagedBean().setButtonHideActive(false);
-			} else {
-				getManagedBean().setButtonHideActive(true);
-			}	
+	
 		}
+
+		return newCtAgreementList;
 	}
-
-	/**
-	 * Get Full Delivery Address based on CtAddress
-	 * 
-	 * @param ctAddress   an object of contract address
-	 * @return full delivery address
-	 */
-	public String getFullDeliveryAddress(CtAddress ctAddress) {
-		String separator = ", ";
-		StringBuilder address = new StringBuilder();
-		if (ctAddress != null) {
-			if (StringUtils.isNotBlank(
-					ctAddress.getAddressName())) {
-				address.append(ctAddress.getAddressName());
-				address.append(separator);
-			}
-			address.append(getFullAddress(ctAddress));
-		}
-		return address.toString();
+	
+	public String getAgreementLoaPhysicalNo(CtAgreement ctAgreement) {
+		IContractSO contractSO = null;
+		ContractReqDTO reqDTO = new ContractReqDTO();
+		ContractResDTO resDTO = null; 
+		
+		reqDTO.setCtAgreement(ctAgreement);
+		contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
+		resDTO = contractSO.retrieveContractVerByAgreement(reqDTO);
+		
+		return resDTO.getCtContractVer().getCtContractValue().getLoaPhysicalNo();
+	}
+	
+	public Date getAgreementSignedDate(CtAgreement ctAgreement) {
+		IContractSO contractSO = null;
+		ContractReqDTO reqDTO = new ContractReqDTO();
+		ContractResDTO resDTO = null; 
+		
+		reqDTO.setCtAgreement(ctAgreement);
+		contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
+		resDTO = contractSO.retrieveContractVerByAgreement(reqDTO);
+		
+		return resDTO.getCtContractVer().getSignedDate();
 	}
 
 	/**

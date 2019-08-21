@@ -35,6 +35,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.ct.agreement.IAgreementSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
@@ -54,6 +55,8 @@ import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.ct.agreement.ContractAgreementReqDTO;
+import my.ep.dto.ct.agreement.ContractAgreementResDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -502,13 +505,24 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		IContractAmendmentSO contractAmendmentSO = null;
 		ContractResDTO resDTO = null;
 		Date currentDate = DateUtils.getCurrentDateWithoutTime();
+		IAgreementSO agreementSO = null;
+		ContractAgreementResDTO ctAgreementResDTO = null;
+		ContractAgreementReqDTO ctAgreementReqDTO = null;
 		if(ctBackingBean.getManagedBean().getDeleteAttachmentList() != null ){
 			ctBackingBean.getManagedBean().getDeleteAttachmentList().clear();
 		}
 		try {
 			contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
 			resDTO = contractAmendmentSO.retrieveContractAmendVerDtls(reqDTO);
-			ctBackingBean.getManagedBean().setContractVer(resDTO.getCtContractVer());	 
+			ctBackingBean.getManagedBean().setContractVer(resDTO.getCtContractVer());	
+			
+			//retrieve agreement list
+			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IAgreementSO.class);
+			ctAgreementReqDTO = new ContractAgreementReqDTO();
+			ctAgreementReqDTO.setContractId(resDTO.getCtContractVer().getCtContract().getContractId());
+			ctAgreementResDTO = agreementSO.retrieveContractAgreements(ctAgreementReqDTO);
+			ctBackingBean.getManagedBean().setCtAgreementList(ctAgreementResDTO.getAgreementList());
+			
 			//Retrieve agreement contract version for physical no & signed date
 			retrieveContractVerOfAgreement();
 
@@ -878,6 +892,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			contractAmendmentSO = null;
 			reqDTO = null;
 			resDTO = null;
+			agreementSO = null;
+			ctAgreementResDTO = null;
+			ctAgreementReqDTO = null;
 		}
 	}
 
