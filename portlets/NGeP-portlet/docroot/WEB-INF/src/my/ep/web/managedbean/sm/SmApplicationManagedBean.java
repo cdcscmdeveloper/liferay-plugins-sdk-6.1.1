@@ -93,6 +93,7 @@ import my.ep.web.vo.SmPersonnleCalcVO;
 import my.ep.web.vo.SmSectionEditorVO;
 import my.ep.web.vo.SmSiteVisitFacilityVO;
 import my.ep.web.vo.SmSupplierBasicInfoVO;
+import my.ep.web.vo.SoftcertUploadSuppDocVO;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -520,6 +521,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String searchRejectReason;
 	private String discplinaryActionMsg;
 	private IPagingDataModel<PmReasonDesc> rejectReasonDataModel = new RejectReasonPagingDataModel();
+	
+	private int attachedFileIndex;
+	private SoftcertUploadSuppDocVO selectedSuppDoc;
 
 	private class RejectReasonPagingDataModel extends
 			PagingDataModel<PmReasonDesc> {
@@ -4028,5 +4032,20 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setPoUserName(String poUserName) {
 		this.poUserName = poUserName;
+	}
+	
+	public int getAttachedFileIndex() {
+		return attachedFileIndex;
+	}
+	public void setAttachedFileIndex(int attachedFileIndex) {
+		this.attachedFileIndex = attachedFileIndex;
+	}
+
+	public SoftcertUploadSuppDocVO getSelectedSuppDoc() {
+		return selectedSuppDoc;
+	}
+
+	public void setSelectedSuppDoc(SoftcertUploadSuppDocVO selectedSuppDoc) {
+		this.selectedSuppDoc = selectedSuppDoc;
 	}
 }
