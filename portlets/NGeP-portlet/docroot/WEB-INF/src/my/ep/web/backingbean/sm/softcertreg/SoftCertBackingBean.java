@@ -10,7 +10,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -21,9 +20,8 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
-import my.ep.constant.pm.ParameterConst;
-import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
@@ -31,34 +29,40 @@ import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sm.useradddata.SMUserAddDataType;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmAccessApplDoc;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmApplSupportDoc;
+import my.ep.persistence.entity.sm.SmGstSupplierDoc;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSoftcertDoc;
 import my.ep.persistence.entity.sm.SmSoftcertDocFile;
 import my.ep.persistence.entity.sm.SmSoftcertRequest;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.backingbean.sm.payment.PaymentBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.softcertreg.SoftCertManagedBean;
 import my.ep.web.util.DateUtils;
-import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.vo.SmGstBranchVO;
 import my.ep.web.vo.SoftcertUploadSuppDocVO;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.StreamedContent;
 
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -288,6 +292,83 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			}
 		}
 
+	}
+	
+	//17003		
+	public void assignSelectedSmSoftcertDocFile(SmPersonnel smPersonnel,SmSoftcertDoc doc, int index) {
+		List<SmSoftcertDoc> softcertDocList = new ArrayList<SmSoftcertDoc>();
+		softcertDocList.add(doc);
+		SoftcertUploadSuppDocVO selectedSuppDoc = new SoftcertUploadSuppDocVO();
+		selectedSuppDoc.setPersonnel(smPersonnel);
+		selectedSuppDoc.setSuppDocList(softcertDocList);
+		this.getManagedBean().setAttachedFileIndex(index);
+		getManagedBean().setSelectedSuppDoc(selectedSuppDoc);
+	}
+	
+	public void deleteSupDocFileAttachment() {
+		if (getManagedBean().getSelectedSuppDoc() != null
+				&& getManagedBean().getSelectedSuppDoc().getSuppDocList() != null
+				&& !getManagedBean().getSelectedSuppDoc().getSuppDocList()
+						.isEmpty()) {
+
+			SoftcertUploadSuppDocVO selectedSuppDocVO = getManagedBean()
+					.getSelectedSuppDoc();
+
+			// construct file path
+			String filePath = Calendar.getInstance().get(Calendar.YEAR)
+					+ "/SM/"
+					+ "SOFTCERT/"
+					+ selectedSuppDocVO.getPersonnel().getPmUser()
+							.getLoginId() + "/";
+
+			// init suppDocFile (currently only default one file)
+			SmSoftcertDocFile docFile = new SmSoftcertDocFile();
+			docFile.setSmSoftcertDoc(null);
+			docFile.setFileName(StringUtils.EMPTY);
+			selectedSuppDocVO
+					.getSuppDocList()
+					.get(0)
+					.setSmSofcertDocFiles(
+							new ArrayList<SmSoftcertDocFile>());
+			selectedSuppDocVO.getSuppDocList().get(0)
+					.getSmSofcertDocFiles().add(docFile);
+
+			// set selected doc to main list
+			setSelectedSuppDocToMainList();
+
+			// set empty value to deleted file			
+			SmCommonUtil.deleteUpload(filePath,
+					docFile.getFileName());
+		}
+	}
+	
+	/**
+	 * Delete attachment
+	 * 
+	 * @param attachment
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	public void deleteAttachment() throws FileNotFoundException, IOException {
+		try {
+			if (getManagedBean().getSelectedSmSoftcertDocFile() != null) {
+				for(SmSoftcertDocFile smSoftcertDocFile : getManagedBean().getSmSoftcertDocFileList()){
+					if(smSoftcertDocFile.getSmSoftcertDoc().getSoftcertDocId().equals(getManagedBean().getSelectedSmSoftcertDocFile().getSmSoftcertDoc().getSoftcertDocId())){
+						smSoftcertDocFile.setFileName(StringUtils.EMPTY);
+						smSoftcertDocFile.setFilePath(StringUtils.EMPTY);
+						deleteselectedList(getManagedBean().getSmSoftcertDocFileList());
+//						deleteFiles(smSoftcertDocFile.getFilePath(),smSoftcertDocFile.getFileName(),smSoftcertDocFile.getFileName());
+											
+						break;
+					}
+				}	
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(MessageConst.ERROR_770054,
+					new String[] { e.getMessage() });
+
+		}
 	}
 
 	/**
