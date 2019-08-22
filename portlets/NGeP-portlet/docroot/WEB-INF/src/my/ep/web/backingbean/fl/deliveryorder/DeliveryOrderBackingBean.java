@@ -918,7 +918,14 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			return getManagedBean().getBackToPrevious();
 		}
 		else{
-			return "flDocSearch";
+			if(this.getManagedBean().isPendingDelivery()){
+				log.info("****back Action isPendingDelivery value doPending****"+this.getManagedBean().isPendingDelivery());
+				return "/xhtml/fl/dopending/doPendingTable.xhtml?faces-redirect=true";
+			}else{
+				log.info("****back Action isPendingDelivery value flDocSearch****"+this.getManagedBean().isPendingDelivery());
+				return "/xhtml/fl/docsearch/flDocSearch.xhtml?faces-redirect=true";
+			}
+			
 		}
 	}
 	
