@@ -51,9 +51,18 @@
 							onclick="excelDialog.show();return false;">
 							<p:graphicImage value="/css/images/design/upload.png"
 								style="margin-right:2px;" />
-						</p:commandLink> <p:outputLabel styleClass="outputLabel-view"
-							value="#{backingBean.managedBean.cancellationAttachment.fileName}"
-							rendered="#{backingBean.managedBean.cancellationAttachment.fileName ne null}" /></td>
+						</p:commandLink>							
+						<p:commandLink style="float: left;padding-right: 10px;" ajax="false" value="#{backingBean.managedBean.cancellationAttachment.fileName}" 
+							rendered="#{backingBean.managedBean.cancellationAttachment.fileName ne null}">
+							<p:fileDownload value="#{backingBean.commonDownload(backingBean.managedBean.cancellationAttachment.filePath,backingBean.managedBean.cancellationAttachment.fileName,backingBean.managedBean.cancellationAttachment.fileName)}" />
+						</p:commandLink>
+						<p:spacer width="20" />			
+						<p:commandLink style="float: left;padding-right: 10px;"
+							rendered="#{backingBean.managedBean.cancellationAttachment.fileName ne null}"
+							onclick="DeleteDlg.show();return false;">
+							<p:graphicImage value="/css/images/design/trash.png"
+								style="margin-right:2px;" />
+						</p:commandLink></td>
 				</tr>
 			</table>
 			<div align="right">
@@ -77,6 +86,21 @@
 				cancelLabel="#{lbl['lbl.btn.cancel']}"
 				multiple="false" showButtons="false" />
 		</p:dialog>
+
+		<!-- harris -->
+		<p:confirmDialog id="DeleteDlg" widgetVar="DeleteDlg" closable="true"
+			message="#{lbl['lbl.sm.upload.delete.message']}"
+			header="#{lbl['lbl.sm.upload.delete.confirm.header']}"
+			severity="alert">
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.delete']}"
+					oncomplete="DeleteDlg.hide()"
+					action="#{backingBean.deleteCancelMofRegFileAttachment()}"
+					update="@form"></p:commandButton>
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="DeleteDlg.hide();"></p:commandButton>
+			</div>
+		</p:confirmDialog>
 		<p:message id="uploadMsg" for="upload" display="icon" />
 	</ui:define>
 </ui:composition>
