@@ -192,6 +192,7 @@ public class SmApplicationBackingBean extends
 	private int outputTab;
 	private String buttonType = "";
 	private StreamedContent file;
+	private boolean alreadyExecute = false;
 	NumberFormat formatter = new DecimalFormat("#0.00");
 	SmRuleHelper ruleHelper = new SmRuleHelper();
 
@@ -744,6 +745,8 @@ public class SmApplicationBackingBean extends
 	 */
 	public String proceedToApplication(String applicationType, boolean fromBpm,
 			SmAppl appl, SmSupplier supp) {
+		//#Enhancement #11765
+		alreadyExecute = false;//avoid duplicate execute function setDefaultApproverReviewSection() && setDefaultPoReviewSection()
 		getManagedBean().setRedirectToPersonPage(false);
 		assignValReqdToFalse();
 		if (!applicationType
@@ -2386,6 +2389,8 @@ public class SmApplicationBackingBean extends
 	 */
 	private boolean retriveLatestApplAfterUpdate(String currentPageType,
 			String outputPageType) {
+		//#Enhancement #11765
+		//alreadyExecute = false;//avoid duplicate execute function setDefaultApproverReviewSection() && setDefaultPoReviewSection()
 		try {
 
 			MofRegistrationReqDTO finReqDto = new MofRegistrationReqDTO();
@@ -9632,6 +9637,23 @@ public class SmApplicationBackingBean extends
 	 * Sets the default review section for approver in the SmAppSectionReview.
 	 */
 	private void setDefaultApproverReviewSection() {
+		//#Enhancement #11765
+		if(!alreadyExecute && (SupplierManagementConst.SM_APPL_PAGE_TYPE_PO_APPR_DEC.equalsIgnoreCase(getManagedBean().getCurrentPageType()) ||(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY.equalsIgnoreCase(getManagedBean().getCurrentPageType()) && this.currentTab==7))){
+			List<String> catList = SmApplicationUtil.getUnverifiedCatCodes(getManagedBean().getSmAppl()
+					.getSmSupplierCategories(), getManagedBean().getSmAppl().getApplType(), getManagedBean()
+					.isApproverUser());
+			if (catList.size() != 0) {
+				FacesContext fc = FacesContext.getCurrentInstance();
+				//#Enhancement #11765
+				alreadyExecute = true;
+				fc.addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, SmCommonUtil.getMessage(
+								"lbl.sm.appl.catCodes.noPoAppr.action",
+								new String[] { catList.toString().replaceAll("[\\[\\]]", "") })));
+			}
+		}
+		
 		boolean containsAppRev = false;
 
 		if (!getManagedBean().getSmAppl().getSmApplSectionReviews().isEmpty()) {
@@ -9659,7 +9681,22 @@ public class SmApplicationBackingBean extends
 	 * Sets the default review section for PO in the SmAppSectionReview.
 	 */
 	private void setDefaultPoReviewSection() {
-
+		//#Enhancement #11765
+		if(!alreadyExecute && (SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC.equalsIgnoreCase(getManagedBean().getCurrentPageType()) ||(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY.equalsIgnoreCase(getManagedBean().getCurrentPageType()) && this.currentTab==7))){
+			List<String> catList = SmApplicationUtil.getUnverifiedCatCodes(getManagedBean().getSmAppl()
+					.getSmSupplierCategories(), getManagedBean().getSmAppl().getApplType(), getManagedBean()
+					.isApproverUser());
+			if (catList.size() != 0) {
+				alreadyExecute = true;
+				FacesContext fc = FacesContext.getCurrentInstance();				
+				fc.addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, SmCommonUtil.getMessage(
+								"lbl.sm.appl.catCodes.noPoAppr.action",
+								new String[] { catList.toString().replaceAll("[\\[\\]]", "") })));
+			}
+		}
+		
 		boolean containsPORev = false;
 
 		if (!getManagedBean().getSmAppl().getSmApplSectionReviews().isEmpty()) {

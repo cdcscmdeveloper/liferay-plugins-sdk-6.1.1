@@ -355,6 +355,8 @@ public class CommonApplBackingBean extends
 						+ this.getManagedBean().getTaskName());
 				SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
 				smApplBB.getManagedBean();
+				//#Enhancement #11765
+				smApplBB.getManagedBean().setCurrentPageType("");
 				// TODO get the status from BPM for the header part
 				BPMTaskListBackingBean bpmBean = new BPMTaskListBackingBean();
 				String currentStatus = bpmBean.applicationStatus(resDTO

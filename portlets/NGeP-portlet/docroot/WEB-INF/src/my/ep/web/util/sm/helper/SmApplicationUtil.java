@@ -407,7 +407,8 @@ public class SmApplicationUtil {
 		if (applTypes.contains(managedBean.getSmAppl().getApplType())) {
 			for (SmSupplierCategory cat : managedBean.getSmAppl().getSmSupplierCategories()) {
 				if (cat.getPoDecFlg() == null) {
-					invalidCatCodes.add(cat.getCategoryL1Name() + cat.getCategoryL1Name() + cat.getCategoryL1Name());
+					//Enhancement #11765
+					invalidCatCodes.add(cat.getPmCategoryL1().getCategoryL1Code()+cat.getPmCategoryL2().getCategoryL2Code()+cat.getPmCategoryL3().getCategoryL3Code());
 				}
 			}
 		}
@@ -1452,11 +1453,13 @@ public class SmApplicationUtil {
 		validateOverlapSuppDoc(validSave, managedBean, currentTab);
 
 		if (!managedBean.isSiteVisitAfterApproval()) {
-			validSave = valiateNewCategoryAdded(managedBean);
-			if (!validSave) {
+			//#11765
+			//Need to allow user to move to other categories even if didn't add codes.
+			/*if (!validSave) {
 				setNavigationBackToCurrentPage(currentTab, managedBean);
 				throw new EpException(MessageConst.ERROR_722570);
-			}
+			}*/
+			validateMaxNewCategoryAdded(managedBean);
 		}
 
 		if (!managedBean.isSupplierUser()) {
@@ -1471,29 +1474,17 @@ public class SmApplicationUtil {
 										|| cat.getRecordStatusFlg() == SupplierManagementConst.PENDING_RE_APPROVAL_STATUS || cat
 										.getRecordStatusFlg() == SupplierManagementConst.PENDING_ACT_STATUS)) {
 							if (cat.getPoDecFlg() == null) {
-								validSave = false;
-								setNavigationBackToCurrentPage(currentTab,
-										managedBean);
-								throw new EpException(
-										SmCommonUtil
-												.getMessage(
-														"lbl.sm.required.msg",
-														new String[] { SmCommonUtil
-																.getMessage(
-																		"lbl.sm.catCodes.poAct",
-																		null)
-																+ " "
-																+ SmCommonUtil
-																		.getMessage(
-																				"lbl.sm.catCodes.forCatCode",
-																				null)
-																+ " "
-																+ cat.getPmCategoryL1()
-																		.getCategoryL1Code()
-																+ cat.getPmCategoryL2()
-																		.getCategoryL2Code()
-																+ cat.getPmCategoryL3()
-																		.getCategoryL3Code() }));
+								//#11765
+								/*validSave = false;
+								setNavigationBackToCurrentPage(currentTab, managedBean);
+								throw new EpException(SmCommonUtil.getMessage("lbl.sm.required.msg",
+										new String[] { SmCommonUtil.getMessage("lbl.sm.catCodes.poAct", null) + " "
+												+ SmCommonUtil.getMessage("lbl.sm.catCodes.forCatCode", null) + " "
+												+ cat.getPmCategoryL1().getCategoryL1Code()
+												+ cat.getPmCategoryL2().getCategoryL2Code()
+												+ cat.getPmCategoryL3().getCategoryL3Code() }));
+								*/
+								break;
 							}
 							if (StringUtils.isBlank(cat.getPoRemarks())
 									&& cat.getPoDecFlg() == 0) {
@@ -1565,6 +1556,20 @@ public class SmApplicationUtil {
 						if (managedBean.isPoUser()
 								&& cat.getRecordStatusFlg() == SupplierManagementConst.PENDING_ACT_STATUS) {
 							if (cat.getPoDecFlg() == null) {
+								//#11765
+								/*validSave = false;
+								setNavigationBackToCurrentPage(currentTab,
+										managedBean);
+								throw new EpException(SmCommonUtil.getMessage("lbl.sm.required.msg",
+										new String[] { SmCommonUtil.getMessage("lbl.sm.catCodes.poAct", null) + " "
+												+ SmCommonUtil.getMessage("lbl.sm.catCodes.forCatCode", null) + " "
+												+ cat.getPmCategoryL1().getCategoryL1Code()
+												+ cat.getPmCategoryL2().getCategoryL2Code()
+												+ cat.getPmCategoryL3().getCategoryL3Code() }));*/
+								break;
+							}
+							if (StringUtils.isBlank(cat.getPoRemarks())
+									&& cat.getPoDecFlg() == 0) {
 								validSave = false;
 								setNavigationBackToCurrentPage(currentTab,
 										managedBean);
