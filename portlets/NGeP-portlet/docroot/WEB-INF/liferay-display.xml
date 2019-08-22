@@ -360,6 +360,7 @@
 		<portlet id="supplierTaskReassignment"></portlet>
 		<portlet id="smOnScreenSql"></portlet>
 		<portlet id="travellingTicketingSystemMaintenance"></portlet>
+		<portlet id="profileRobExpire"></portlet>
 	</category>
 
 	<category name="category.ep.wp">
