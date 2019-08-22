@@ -8063,13 +8063,14 @@ public class SpecificationBackingBean extends
 									.getDistrictFromCtPanelZone(panelZones
 											.getPanelZoneDtls());
 
-							getManagedBean()
+							/*#19637 - basri (remove overlapped data during save)*/
+							/*getManagedBean()
 									.getZoneGeneralTrees()
 									.add(LocationSingleton.getInstance()
 											.buildTreeWithDisabledChilds(
 													tplSpecZoneDtl, states,
 													districts, null, null,
-													true, TplSpecZoneLoc.class));
+													true, TplSpecZoneLoc.class));*/
 
 						}
 					}
@@ -9415,9 +9416,11 @@ public class SpecificationBackingBean extends
 		}
 		retriveSpecdetails(quotationTenderDataType.getQtId().longValue());
 		ScQt scQt = this.getManagedBean().getQt();
+		/*#19637-basri*/
 		if(scQt.isZonal()  && scQt.isPanel()){
 			this.getManagedBean().setPanelZone(true);
 		}
+		/*end*/
 		if (null == this.getManagedBean().getQt().getContractType()) {
 			this.getManagedBean().getQt().setContractType(new PmParameter());
 		}
@@ -9456,7 +9459,11 @@ public class SpecificationBackingBean extends
 	private SpecificationReqDTO constructSpecCommitteDtls() {
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 		ScQt scQt = this.getManagedBean().getQt();
-
+		/*#19637-basri*/
+		if(scQt.isZonal()  && scQt.isPanel()){
+			this.getManagedBean().setPanelZone(true);
+		}
+		/*end*/
 		if (null != this.getManagedBean().getFulfilmentType()
 				&& !"".equalsIgnoreCase(this.getManagedBean()
 						.getFulfilmentType())
@@ -14034,15 +14041,10 @@ public class SpecificationBackingBean extends
 			 */
 		} else if (scQt.isPanel()) {
 
-			/*#19637-basri*/
 			List<TplSpecZoneDtl> businessOwnerZone = null;
-			if(null != this.getManagedBean().getTemplateSpecZoneDtls()){
-				businessOwnerZone = this.getManagedBean().getTemplateSpecZoneDtls();
-			}else{
+
 				businessOwnerZone = convertTreeNodesToZoneCriteria(
 					this.getManagedBean().getZoneGeneralTrees(), null);
-			}
-			/*end*/
 			
 			if (businessOwnerZone != null && !businessOwnerZone.isEmpty()) {
 				if (null != scQt.getScQtSupplierCriteria()
@@ -14247,9 +14249,7 @@ public class SpecificationBackingBean extends
 					.setZoneLocationLevel(item.getLocationLevelId());
 			List<ScQtCheckList> technicalCheckList = this.getManagedBean()
 					.getScQtCheckSt2techProposal();
-			if (((this.getManagedBean().getQt().isZonal()
-					&& null != supplierCriteria
-					&& null != supplierCriteria.getQtZoneCriterias() && null == supplierCriteria
+			if (((this.getManagedBean().getQt().isZonal() && null != supplierCriteria && null != supplierCriteria.getQtZoneCriterias() && null == supplierCriteria
 					.getQtZoneCriterias().getSpecZoneId()) || (!isAtleastTechnicalSpec(technicalCheckList)))) {
 				this.getManagedBean().setPanelSpecExistedOrNot(true);
 				retriveZonesOrSuppliersByItem(item);
