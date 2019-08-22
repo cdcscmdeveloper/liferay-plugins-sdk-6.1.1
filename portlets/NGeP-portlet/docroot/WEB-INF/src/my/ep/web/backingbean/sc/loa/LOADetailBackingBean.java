@@ -4991,31 +4991,29 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		
 		//To enable Performance Bond for Direct Purchase - Enhancement #25144- Starte.
 		checkDpIsElisibleForPB(loa, true);
-		if (getManagedBean().isEnablePBForDP()) {
-			if (!isBondReq) {
-				getManagedBean().setDisablePerformanceBondForDP(true);
+		//To enable Performance Bond for Direct Purchase - Enhancement #25144 - End.
+		
+		if(loa.isBrandNew()){
+			if (getManagedBean().isEnablePBForDP()) {
+				getManagedBean().setBondReqSelectedVal(null);
+				getManagedBean().setAgreemetSelectedVal(null);
+			} else {
+				loa.setBondReq(isBondReq);
 			}
-			
-			if (StringUtils.isEmpty(getManagedBean().getBondReqSelectedVal())){
+		} else {
+			if (getManagedBean().isEnablePBForDP()) {
 				if (getManagedBean().getScLoa().isBondReq()) {
 					getManagedBean().setBondReqSelectedVal(getManagedBean().getYesParameterId());
 				} else {
 					getManagedBean().setBondReqSelectedVal(getManagedBean().getNoParameterId());
 				}
-			}
-			
-			if (StringUtils.isEmpty(getManagedBean().getAgreemetSelectedVal())) {
+				
 				if (getManagedBean().getScLoa().isAgreementReq()) {
 					getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());
 				} else {
 					getManagedBean().setAgreemetSelectedVal(getManagedBean().getNoParameterId());
 				}
 			}
-		}
-		//To enable Performance Bond for Direct Purchase - Enhancement #25144 - End.
-		
-		if(loa.isBrandNew() && getManagedBean().isDisablePerformanceBondForDP()){
-			loa.setBondReq(isBondReq);
 		}
 		getManagedBean().setPerformanceBondMandatory(isBondReq);
 	}
