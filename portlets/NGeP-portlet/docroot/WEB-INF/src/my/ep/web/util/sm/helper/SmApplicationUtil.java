@@ -1383,35 +1383,39 @@ public class SmApplicationUtil {
 		validateRenewalApplTypeForSpecialCategory(appl);
 		if (appl.getSmSupplierCategories() != null
 				&& appl.getSmSupplierCategories().size() > 0) {
-			StringBuilder sb = new StringBuilder();
-			int i = 0;
-			for (SmSupplierCategory category : appl.getSmSupplierCategories()) {
-				if (category.getPmCategoryL3().getOtherDescReq() != null
-						&& category.getPmCategoryL3().getOtherDescReq()
-								.equals(new Integer(1))
-						&& category.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE
-						&& category.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
-					if (StringUtils.isEmpty(category.getOtherDesc())) {
-						sb.append("<br/>")
-								.append(++i)
-								.append(".) ")
-								.append(category.getPmCategoryL1()
-										.getCategoryL1Code())
-								.append(category.getPmCategoryL2()
-										.getCategoryL2Code())
-								.append(category.getPmCategoryL3()
-										.getCategoryL3Code());
-						validSave = false;
-					}
-				}
-			}
-			if (!validSave) {
+			String errMsg = getCategoryOtherDescErrMsg(appl.getSmSupplierCategories());
+			if (!StringUtils.isBlank(errMsg)) {
 				setNavigationBackToCurrentPage(currentTab, managedBean);
 				throw new EpException(MessageConst.ERROR_722514,
-						new String[] { sb.toString() });
+						new String[] { errMsg });
 			}
 		}
 		return validSave;
+	}
+	
+	public static String getCategoryOtherDescErrMsg(List<SmSupplierCategory> categoryList){
+		StringBuilder sb = new StringBuilder();
+		int i = 0;
+		for (SmSupplierCategory category : categoryList) {
+			if (category.getPmCategoryL3().getOtherDescReq() != null
+					&& category.getPmCategoryL3().getOtherDescReq()
+							.equals(new Integer(1))
+					&& category.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE
+					&& category.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
+				if (StringUtils.isEmpty(category.getOtherDesc())) {
+					sb.append("<br/>")
+							.append(++i)
+							.append(".) ")
+							.append(category.getPmCategoryL1()
+									.getCategoryL1Code())
+							.append(category.getPmCategoryL2()
+									.getCategoryL2Code())
+							.append(category.getPmCategoryL3()
+									.getCategoryL3Code());
+				}
+			}
+		}
+		return sb.length()>0?sb.toString():StringUtils.EMPTY;
 	}
 
 	public static void validateOverlapSuppDoc(boolean validSave,
@@ -6526,7 +6530,8 @@ public class SmApplicationUtil {
 		if (!bean.isSiteVisitAfterApproval()) {
 			// removePendingApprovedCategoryIfNotValid(bean.getSmAppl(), bean
 			// .getBasicCompanyFacility().getFacilityType());
-			removeFacilitiesNotInTheSameCategoryFacType(bean.getSmAppl());
+			removeFacilitiesNotInTheSameCategoryFacType(bean.getSmAppl(),
+					bean.getLatestAppl());
 			removeTravellingSoftwareIfNotApplicable(bean);
 			removeEquipmentIfNotApplicable(bean);
 			removeOverlapCategoryIfDocNotUploaded(bean);
@@ -6614,8 +6619,24 @@ public class SmApplicationUtil {
 		// if category select items in machinery is empty, dont show machinery
 		// panel
 		if (EntityHelper.isCollectionEmpty(getSelectedCategoryTypeItems(appl))) {
-			appl.setSmMachineDtls(new ArrayList<SmMachineDtl>());
 			bean.setShowMachineryEquipmentPanel(false);
+
+			if (!EntityHelper.isCollectionEmpty(bean.getSmAppl()
+					.getSmMachineDtls())) {
+				boolean canDelete = true;
+				for (SmMachineDtl currMac : bean.getSmAppl().getSmMachineDtls()) {
+					if (bean.getLatestAppl() != null
+							&& isMachineExistInLatest(currMac, bean
+									.getLatestAppl().getSmMachineDtls())) {
+						canDelete = false;
+						break;
+					}
+				}
+				if (canDelete) {
+					appl.setSmMachineDtls(new ArrayList<SmMachineDtl>());
+				}
+			}
+
 		} else {
 			List<String> pendingApproveCatTypeList = new ArrayList<String>();
 			if (appl.getApplCategoryType() != null
@@ -6644,7 +6665,9 @@ public class SmApplicationUtil {
 								&& (EntityHelper
 										.isCollectionEmpty(pendingApproveCatTypeList) || !pendingApproveCatTypeList
 										.contains(mac.getCategoryType()
-												.getParameterCode()))) {
+												.getParameterCode()))
+								&& !isMachineExistInLatest(mac, bean
+										.getLatestAppl().getSmMachineDtls())) {
 							macIt.remove();
 						}
 					}
@@ -6653,13 +6676,31 @@ public class SmApplicationUtil {
 		}
 	}
 
+	private boolean isMachineExistInLatest(SmMachineDtl currMac,
+			List<SmMachineDtl> latestMachines) {
+		boolean retVal = false;
+
+		if (!EntityHelper.isCollectionEmpty(latestMachines)) {
+			if (currMac.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+				for (SmMachineDtl latestMac : latestMachines) {
+					if (!EntityHelper.isObjectDifference(latestMac, currMac,
+							null)) {
+						retVal = true;
+					}
+				}
+			}
+		}
+		return retVal;
+	}
+
 	/**
 	 * Remove facility that dont have selected supplier category facility type
 	 * 
 	 * @param SmAppl
 	 *            appl
 	 */
-	public void removeFacilitiesNotInTheSameCategoryFacType(SmAppl appl) {
+	public void removeFacilitiesNotInTheSameCategoryFacType(SmAppl appl,
+			SmAppl latestAppl) {
 		List<String> catTypeList = new ArrayList<String>();
 		if (!SmCommonUtil.isCollectionEmpty(appl.getSmSupplierCategories())) {
 			for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
@@ -6686,7 +6727,9 @@ public class SmApplicationUtil {
 						&& !fac.getFacilityType()
 								.equals(SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE)
 						&& !fac.getFacilityType()
-								.equals(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
+								.equals(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)
+						&& !isFacilityExistInLatest(fac,
+								latestAppl.getSmFacilities())) {
 					if (SmCommonUtil.isCollectionEmpty(catTypeList)
 							|| !catTypeList.contains(fac.getFacilityType())) {
 						facIt.remove();
@@ -6695,6 +6738,28 @@ public class SmApplicationUtil {
 			}
 		}
 
+	}
+
+	private boolean isFacilityExistInLatest(SmFacility fac,
+			List<SmFacility> latestFacilities) {
+		boolean retVal = false;
+
+		if (!EntityHelper.isCollectionEmpty(latestFacilities)) {
+			if (fac.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+				for (SmFacility latestFac : latestFacilities) {
+					if (!(latestFac
+							.getFacilityType()
+							.equals(SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE) || latestFac
+							.getFacilityType()
+							.equals(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE))
+							&& !EntityHelper.isObjectDifference(latestFac, fac,
+									null)) {
+						retVal = true;
+					}
+				}
+			}
+		}
+		return retVal;
 	}
 
 	/**
@@ -8465,7 +8530,7 @@ public class SmApplicationUtil {
 		return retVal;
 	}
 
-	private static void validateRenewalApplTypeForSpecialCategory(SmAppl smAppl) {
+	public static void validateRenewalApplTypeForSpecialCategory(SmAppl smAppl) {
 		if (!smAppl.getApplCategoryType().equals(
 				ParameterConst.CATEGORY_TYPE_NORMAL)
 				&& smAppl.getApplType().equals(
