@@ -59,6 +59,7 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	//#16052019 - SSM INTEGRATION CR 
 	private Date robExpDate;
 	private boolean showRobExpiredDate = false;
+	private boolean showRobExpiredDateMesej = false;
 	
 	public ProfilePersonalizationManagedBean(){}
 	
@@ -368,6 +369,14 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 
 	public void setShowRobExpiredDate(boolean showRobExpiredDate) {
 		this.showRobExpiredDate = showRobExpiredDate;
+	}
+
+	public boolean isShowRobExpiredDateMesej() {
+		return showRobExpiredDateMesej;
+	}
+
+	public void setShowRobExpiredDateMesej(boolean showRobExpiredDateMesej) {
+		this.showRobExpiredDateMesej = showRobExpiredDateMesej;
 	}
 
 }

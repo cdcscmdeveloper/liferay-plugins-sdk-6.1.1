@@ -2,6 +2,7 @@ package my.ep.web.backingbean.pm.profilepersonalization;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -59,11 +60,13 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.pm.profilepersonalization.ProfilePersonalizationManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.pm.helper.RoleHelper;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -196,6 +199,8 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	public static final String NAV_TO_MYACCOUNT = "/xhtml/pm/profilePersonalization/userDetails/profileManagementMaintain.xhtml";
 	public static final String NAV_TO_COMMON_DETAILS = "/xhtml/pm/profilePersonalization/userDetails/userCommonDetails.xhtml";
 	public static final String NAV_TO_COMMON_DETAILS_R = "/xhtml/pm/profilePersonalization/userDetails/userCommonDetailsR.xhtml";
+	//#16052019 - SSM INTEGRATION CR
+	public static final String NAV_TO_INFO_ROB_EXPIRE = "/xhtml/pm/profilePersonalization/userDetails/infoRobExpire.xhtml";
 	private static final String ERROR_PAGE = "/xhtml/pm/shared/outputMsg.xhtml";
 	// Mapper for DDL object
 	private static Map<Long, Object> identityTypeMapper;
@@ -1543,7 +1548,38 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			
 		}
 	}
+	//#16052019 - SSM INTEGRATION CR
+	public void preLoadingRobExpire() {
+		logger.info("preLoadingRobExpire");
+		renewSesionObject();
+		FacesScopes facesScopes = new FacesScopes();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		try {
+			PmUser sUsers = facesScopes.getUserSessionBean();
+			if (sUsers == null) {
+				throw new EpException(MessageConst.ERROR_770045);
+			}
+			loadUserCommonDetails(sUsers.getUserId());
+			//#16052019 - SSM INTEGRATION CR
+			retrieveRobExpDate(getManagedBean().getCurrentProfile());
+			if(this.getManagedBean().isShowRobExpiredDate()){
+				if(DateUtils.getDaysDifference(getManagedBean().getCurrentProfile().getSmSupplier().getSmAppl().getSmCompanyBasic().getRobExpiryDate(), new Date())<=90){
+					this.getManagedBean().setShowRobExpiredDateMesej(true);
+				}else{
+					this.getManagedBean().setShowRobExpiredDateMesej(false);
+				}
+			}
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_INFO_ROB_EXPIRE);
+		} catch (Exception e) {
+			fc.addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, MessageConst.ERROR_770045, PmCommonUtil
+							.getMsgFromMsgUtils(MessageConst.ERROR_770045, null)));
+			PmCommonUtil.redirectToPage(ERROR_PAGE, null, null);
+		}
 
+	}
+	
 	// //TODO: testing
 	// public void handleFileUpload(FileUploadEvent event) {
 	// System.out.println("handleFileUploadTest - start");
