@@ -408,7 +408,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	
 	private class taskPagingMyTaskDataModel extends PagingDataModel<WorklistItemVO> {
 
-		private static final long serialVersionUID = 1L;
+		private static final long serialVersionUID = 1L;		
+		private final Logger log = EpLogger.getLogger(taskPagingMyTaskDataModel.class);
 
 		public taskPagingMyTaskDataModel() {
 			super("taskListMyTaskId");
@@ -657,6 +658,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	private class taskPagingGroupDataModel extends PagingDataModel<WorklistItemVO> {
 
 		private static final long serialVersionUID = 1L;
+		private final Logger log = EpLogger.getLogger(taskPagingGroupDataModel.class);
 
 		public taskPagingGroupDataModel() {
 			super("taskListGroupId");
