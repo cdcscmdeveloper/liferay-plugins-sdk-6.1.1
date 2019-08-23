@@ -158,39 +158,45 @@
 			</tr>
 			<!--#17087 icon tooltip -->
 			<c:if test="#{purchaseRequestBackingBean.zonalTest ne '298'}">
-           	<tr>
-           		<td colspan="5">
-           		    <p:outputLabel style="float:left !important; color:red" value="#{lbl['lbl.fl.flag']}" />
-           			<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.flag']}" />
-           		</td>
-			</tr>
-			<!--#17087 radio select -->
-			
-			<tr>
-			
-				<td>
-          			<p:outputLabel  value="*" styleClass="mandatory" />
-          		</td>
-          								
-								
-				<td>
-				<!-- <h:outputText value="#{purchaseRequestBackingBean.zonalTest}"/> -->
-				
-					<p:selectOneRadio id="prGeneralRadio" required="true" value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.radioCheckDeliveryDate}">
-						<f:selectItem itemLabel="#{lbl['lbl.btn.yes']}" itemValue="true" />
-						<f:selectItem itemLabel="#{lbl['lbl.btn.no']}" itemValue="false" />
-						<p:ajax event="change"
-							listener="#{purchaseRequestBackingBean.upDateStartDateFromBpm}" 
-							update="delStartDate"/>                   
-           			</p:selectOneRadio>
-           			  
-           		</td>
-           	</tr>
-           	 </c:if>
-			<tr>
-				<td style="width: 142px;">
-				</td>
-			</tr>
+
+				<!--#17087 radio select -->
+
+				<tr>
+					<td colspan="15">
+
+
+
+						<table>
+							<tr>
+								<td><p:selectBooleanCheckbox id="prGeneralRadio"
+										required="true"
+										value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.radioCheckDeliveryDate}"
+										style="margin-right: 0;">
+
+										<p:ajax event="change"
+											listener="#{purchaseRequestBackingBean.upDateStartDateFromBpm}"
+											update="delStartDate" />
+
+									</p:selectBooleanCheckbox></td>
+								<td><p:outputLabel style="float:right; color:red"
+										value="#{lbl['lbl.fl.flag']}" /></td>
+								<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.flag']}" /></td>
+
+							</tr>
+						</table>
+
+					</td>
+
+
+
+
+
+
+
+
+				</tr>
+			</c:if>
+
 			<!--#17087 calendar -->
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.start']}" /></td>
@@ -212,7 +218,7 @@
 						mindate="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.startDate}" 
 						maxdate="#{purchaseRequestBackingBean.managedBean.maxDate}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-						disabled="true"
+						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.endDate}">
 						<p:ajax event="dateSelect"
 							listener="#{purchaseRequestBackingBean.updateDeliveryEndDate}" />
