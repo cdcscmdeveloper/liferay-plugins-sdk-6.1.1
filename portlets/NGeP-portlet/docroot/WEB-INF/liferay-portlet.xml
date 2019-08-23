@@ -10,14 +10,6 @@
 		<css-class-wrapper>au-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>travellingTicketingSystemMaintenance</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
-		<css-class-wrapper>travelling-portlet</css-class-wrapper>
-	</portlet>
-	<portlet>
 		<portlet-name>tempUserSearch</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
@@ -1033,20 +1025,6 @@
 		</footer-portlet-javascript>
 		<css-class-wrapper>onlineregistration-portlet</css-class-wrapper>
 	</portlet>
-	
-		<portlet>
-		<portlet-name>smCancelRegistration</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
-		<footer-portlet-javascript>
-			/js/main.js
-		</footer-portlet-javascript>
-		<css-class-wrapper>sm-CancelRegistration-portlet</css-class-wrapper>
-	</portlet>
-		
-	
-	
 	<!-- Supplier Management - End - Andrew -->
 	
 	<!-- Supplier Task Reassignment - KK LIM -->
@@ -1172,6 +1150,16 @@
 		<css-class-wrapper>bpmtasklist-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
+		<portlet-name>TasklistCombined</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>tasklistcombined-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
 		<portlet-name>BpmServiceRetry</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
@@ -1229,7 +1217,19 @@
 			scQTMaintenance-portlet
 		</css-class-wrapper>
 	</portlet>
-	
+	<portlet>
+		<portlet-name>applProposalValidPeriodExtension</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>
+			scSupplierProposal-portlet
+		</css-class-wrapper>
+	</portlet>
+
 	<portlet>
 		<portlet-name>SiteVisit</portlet-name>
 		<icon>/icon.png</icon>
@@ -2168,7 +2168,20 @@
 			/js/main.js
 		</footer-portlet-javascript>
 		<css-class-wrapper>pm-Salutation-portlet</css-class-wrapper>
-	</portlet>	 	
+	</portlet>	 
+	
+	<portlet>
+		<portlet-name>pmSupplierCriteria</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>pm-SupplierCriteria-portlet</css-class-wrapper>
+	</portlet>
+		
+		
 		<portlet>
 		<portlet-name>pmLocation</portlet-name>
 		<icon>/icon.png</icon>
@@ -3195,8 +3208,42 @@
 		<css-class-wrapper>
 			ss-portlet
 		</css-class-wrapper>
+	</portlet>	
+	<portlet>
+		<portlet-name>softCertProvider</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>
+			softCertProdiver-portlet
+		</css-class-wrapper>
 	</portlet>
 	
+	<portlet>
+		<portlet-name>directPurchaseMaintenance</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>
+			softCertProdiver-portlet
+		</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>profileRobExpire</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>profileRobExpire-portlet</css-class-wrapper>
+	</portlet>
 	<role-mapper>
 		<role-name>administrator</role-name>
 		<role-link>Administrator</role-link>

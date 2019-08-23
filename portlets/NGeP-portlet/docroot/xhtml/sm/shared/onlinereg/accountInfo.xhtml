@@ -141,6 +141,14 @@
 						<p:message id="regNoMsg" for="regNo" display="icon" />
 					</p:outputPanel>
 				</td>
+				
+				<!--  16052019 - SSM INTEGRATION CR  -->
+				<td class="tdTitle">
+					<p:outputLabel value="#{lbl['lbl.sm.epno']}" />
+				</td>
+				<td class="tdContent">
+					<p:outputLabel styleClass="outputLabel-view" value="#{registrationBackingBean.managedBean.smSupp.epNo}" />
+				</td>
 			</tr>
 		</table>
 	</p:panel>
