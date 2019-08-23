@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,6 +22,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
@@ -178,6 +180,7 @@ public class TaskReassignmentBackingBean extends
 		this.getManagedBean().setTaskLazy(false);
 		resetAllTaskList();
 		resetReassigneeList();
+		resetCheckAllTasks();
 	}
 	
 	/**
@@ -317,6 +320,7 @@ public class TaskReassignmentBackingBean extends
 			this.getManagedBean().setTaskLazy(false);
 			resetAllTaskList();
 			resetReassigneeList();
+			resetCheckAllTasks();
 		}
 	}
 
@@ -401,6 +405,7 @@ public class TaskReassignmentBackingBean extends
 		this.getManagedBean().getTaskAssignmentSearchBean().setDocType(null);
 		this.getManagedBean().setTaskLazy(false);
 		resetAllTaskList();
+		resetCheckAllTasks();
 	}
 
 	/**
@@ -437,6 +442,7 @@ public class TaskReassignmentBackingBean extends
 			.setSearched(false);
 		this.getManagedBean().setTaskLazy(false);
 		resetAllTaskList();
+		resetCheckAllTasks();
 	}
 
 	/**
@@ -736,6 +742,7 @@ public class TaskReassignmentBackingBean extends
 		}
 		if (this.getManagedBean().getTaskAssignmentSearchBean().getDocNo().isEmpty()) {
 			resetReassigneeList(); //If the Reset button is not clicked when performing the next search
+			resetCheckAllTasks();
 			searchTaskAssign();
 		} else {
 			if (!verifiedDocNumber(this.getManagedBean().
@@ -743,6 +750,7 @@ public class TaskReassignmentBackingBean extends
 				throw new EpException(MessageConst.ERROR_770206);
 			} else {
 				resetReassigneeList();
+				resetCheckAllTasks();
 				searchUsers();
 			}
 		}
@@ -1229,6 +1237,16 @@ public class TaskReassignmentBackingBean extends
 									.getWorklistVO().getTotal());
 							resultBean.setResultList(responseDTO
 									.getWorklistVO().getWorklistItem());
+							
+							if (!responseDTO.getWorklistVO().getWorklistItem().isEmpty() && 
+									responseDTO.getWorklistVO().getWorklistItem().size() > 0) {
+								getManagedBean().setCheckAllGroupTasksEnabled(true);
+								for (WorklistItemVO worklist : responseDTO.getWorklistVO().getWorklistItem()) {
+									getManagedBean().getAllGroupTasks().add(worklist);
+								}
+							} else {
+								getManagedBean().setCheckAllGroupTasksEnabled(false);
+							}
 						}
 					}
 				}
@@ -1396,7 +1414,17 @@ public class TaskReassignmentBackingBean extends
 									.getWorklistVO().getTotal());
 							resultBean.setResultList(responseDTO
 									.getWorklistVO().getWorklistItem());
-						}
+							
+							if (!responseDTO.getWorklistVO().getWorklistItem().isEmpty() && 
+									responseDTO.getWorklistVO().getWorklistItem().size() > 0) {
+								getManagedBean().setCheckAllOthersTasksEnabled(true);
+								for (WorklistItemVO worklist : responseDTO.getWorklistVO().getWorklistItem()) {
+									getManagedBean().getAllOthersTasks().add(worklist);
+								}
+							} else {
+								getManagedBean().setCheckAllOthersTasksEnabled(false);
+							} 
+						} 
 					}
 				}
 			} catch (Exception e) {
@@ -2669,5 +2697,247 @@ public class TaskReassignmentBackingBean extends
 		return statusDesc;
 	}
 	
+	// Enhancement #25013					
+	public void checkAllGroupTasks() {
+		
+		log.info("Total number of GROUP tasks= "+this.getManagedBean().getAllGroupTasks().size());
+		
+		if (this.getManagedBean().getSelectedGroupTasks() != null && 
+				this.getManagedBean().getSelectedGroupTasks().size() > 0) {
+			this.getManagedBean().getSelectedGroupTasks().clear();
+		}
+    	for ( WorklistItemVO task : this.getManagedBean().getAllGroupTasks()) {
+    		if (this.getManagedBean().isCheckAllGroupTasks()) {
+    			task.setTaskSelect(true);
+    			this.getManagedBean().getSelectedGroupTasks().put(task.getTaskId(),task);
+    		} else {
+    			task.setTaskSelect(false);
+    			if (this.getManagedBean().getSelectedGroupTasks().containsKey(task.getTaskId())) {
+	    			this.getManagedBean().getSelectedGroupTasks().remove(task.getTaskId());
+	    		}
+    		}
+		}
+    	this.getManagedBean().setShowDeleteGroupTasksButton(this.getManagedBean().isCheckAllGroupTasks());
+    	log.info("showDeleteGroupTasksButton= "+this.getManagedBean().isShowDeleteGroupTasksButton());
+	}
 	
+	public void checkGroupTask(AjaxBehaviorEvent event) {
+		
+		if ((boolean) event.getComponent().getAttributes().get("value")) {
+			for (WorklistItemVO checkedTask : this.getManagedBean().getAllGroupTasks()) {
+		    	if (checkedTask.getTaskSelect()) {
+		    		log.info("task= "+checkedTask.getTaskId());
+		    		this.getManagedBean().getSelectedGroupTasks().put(checkedTask.getTaskId(),checkedTask);
+		    	}
+		    }
+		} else {
+			for (WorklistItemVO uncheckedTask : this.getManagedBean().getAllGroupTasks()) {
+				if (!uncheckedTask.getTaskSelect()) {
+					uncheckedTask.setTaskSelect(false);
+		    		this.getManagedBean().getSelectedGroupTasks().remove(uncheckedTask.getTaskId());
+		    	}
+			}
+		}
+		if (this.getManagedBean().getSelectedGroupTasks() != null && 
+				!this.getManagedBean().getSelectedGroupTasks().isEmpty()) {
+	    	this.getManagedBean().setShowDeleteGroupTasksButton(true);
+    	} else {
+    		this.getManagedBean().setShowDeleteGroupTasksButton(false);
+    	}
+		log.info("showDeleteGroupTasksButton= "+this.getManagedBean().isShowDeleteGroupTasksButton());
+	}
+	
+	public void checkAllOthersTasks() {
+		
+		log.info("Total number of OTHERS tasks= "+this.getManagedBean().getAllOthersTasks().size());
+		
+		if (this.getManagedBean().getSelectedOthersTasks() != null && 
+				this.getManagedBean().getSelectedOthersTasks().size() > 0) {
+			this.getManagedBean().getSelectedOthersTasks().clear();
+		}
+    	for ( WorklistItemVO task : this.getManagedBean().getAllOthersTasks()) {
+    		if (this.getManagedBean().isCheckAllOthersTasks()) {
+    			task.setTaskSelect(true);
+    			this.getManagedBean().getSelectedOthersTasks().put(task.getTaskId(),task);
+    		} else {
+    			task.setTaskSelect(false);
+    			if (this.getManagedBean().getSelectedOthersTasks().containsKey(task.getTaskId())) {
+	    			this.getManagedBean().getSelectedOthersTasks().remove(task.getTaskId());
+	    		}
+    		}
+		}
+    	this.getManagedBean().setShowDeleteOthersTasksButton(this.getManagedBean().isCheckAllOthersTasks());
+    	log.info("showDeleteOthersTasksButton= "+this.getManagedBean().isShowDeleteOthersTasksButton());
+	}
+	
+	public void checkOthersTask(AjaxBehaviorEvent event) {
+		
+		if ((boolean) event.getComponent().getAttributes().get("value")) {
+			for (WorklistItemVO checkedTask : this.getManagedBean().getAllOthersTasks()) {
+		    	if (checkedTask.getTaskSelect()) {
+		    		log.info("task= "+checkedTask.getTaskId());
+		    		this.getManagedBean().getSelectedOthersTasks().put(checkedTask.getTaskId(),checkedTask);
+		    	}
+		    }
+		} else {
+			for (WorklistItemVO uncheckedTask : this.getManagedBean().getAllOthersTasks()) {
+				if (!uncheckedTask.getTaskSelect()) {
+					uncheckedTask.setTaskSelect(false);
+					this.getManagedBean().getSelectedOthersTasks().remove(uncheckedTask.getTaskId());
+		    	}
+			}
+		}
+		if (this.getManagedBean().getSelectedOthersTasks() != null && 
+				!this.getManagedBean().getSelectedOthersTasks().isEmpty()) {
+	    	this.getManagedBean().setShowDeleteOthersTasksButton(true);
+    	} else {
+    		this.getManagedBean().setShowDeleteOthersTasksButton(false);
+    	}
+		log.info("showDeleteOthersTasksButton= "+this.getManagedBean().isShowDeleteOthersTasksButton());
+	}
+	
+	public void removeReassignGroupTasks() {
+		
+		log.info("removeReassignGroupTasks");
+
+		String claimedBy = null;
+		ITaskAssignmentSO taskAssignmentSO = null;
+		int reassignWorkListType = getManagedBean().getTaskType();
+		List<String> assigneeUsers = new ArrayList<String>();
+		
+		if (this.getManagedBean().getSelectedGroupTasks() != null && 
+				!this.getManagedBean().getSelectedGroupTasks().isEmpty()) {
+			
+			log.info("Number of task(s) to be deleted= "+this.getManagedBean().getSelectedGroupTasks().size());
+			
+			for (Entry<String, WorklistItemVO> selectedTask : this.getManagedBean().getSelectedGroupTasks().entrySet()) {
+				
+				String taskId = selectedTask.getKey();
+				WorklistItemVO task = selectedTask.getValue();
+				log.info("Task(s) to be deleted: "+task.getDocNumber()+" - "+taskId);
+				
+				if (!task.getAssignees().isEmpty()) {
+					assigneeUsers = task.getAssignees();
+				}
+				if (assigneeUsers != null && !assigneeUsers.isEmpty()) {
+					String currentUser = getManagedBean().getTaskAssignmentSearchBean().getUser() != null ?
+							  getManagedBean().getTaskAssignmentSearchBean().getUser().getLoginId() : 
+							  this.getManagedBean().getSelectedReassignee().get(0);
+					
+					if (assigneeUsers.contains(currentUser)) {
+						assigneeUsers.remove(currentUser);
+					}
+					if (assigneeUsers != null && assigneeUsers.size() > 1 && 
+							ProfileManagementConst.REASSIGN_WORKLIST_TYPE_OTHERS == reassignWorkListType) {
+						claimedBy = task.getAcquiredBy();
+					}
+				}
+				
+				try {
+					TaskAssignmentReqDTO reqDTO = new TaskAssignmentReqDTO();
+					reqDTO.setTaskId(task.getTaskId());
+					reqDTO.setUserIdList(assigneeUsers);
+					reqDTO.setClaimedBy(claimedBy);
+
+					taskAssignmentSO = (ITaskAssignmentSO) BusinessDelegate
+							.getInstance().getServiceObject(
+									ModuleCodeConst.PROFILE_MANAGEMENT,
+									ITaskAssignmentSO.class);
+					TaskAssignmentResDTO resDTO = taskAssignmentSO.removeGroupOrOthersTask(reqDTO);
+
+					if (resDTO != null && resDTO.isSuccessful()) {
+						resetCheckAllTasks();
+						reloadAllTaskList();
+						PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), 
+						FacesMessage.SEVERITY_INFO, MessageConst.INFO_770105, null);
+					}
+				} finally {
+					taskAssignmentSO = null;
+				}
+			}
+		}
+	}
+	
+	public void removeReassignOthersTasks() {
+		
+		log.info("removeReassignOthersTasks");
+
+		String claimedBy = null;
+		ITaskAssignmentSO taskAssignmentSO = null;
+		int reassignWorkListType = getManagedBean().getTaskType();
+		List<String> assigneeUsers = new ArrayList<String>();
+		
+		if (this.getManagedBean().getSelectedOthersTasks() != null && 
+				!this.getManagedBean().getSelectedOthersTasks().isEmpty()) {
+			
+			log.info("Number of task(s) to be deleted= "+this.getManagedBean().getSelectedOthersTasks().size());
+			
+			for (Entry<String, WorklistItemVO> selectedTask : this.getManagedBean().getSelectedOthersTasks().entrySet()) {
+				
+				String taskId = selectedTask.getKey();
+				WorklistItemVO task = selectedTask.getValue();
+				log.info("Task(s) to be deleted: "+taskId);
+				
+				if (!task.getAssignees().isEmpty()) {
+					assigneeUsers = task.getAssignees();
+				}
+				
+				if (assigneeUsers != null && !assigneeUsers.isEmpty()) {
+					String currentUser = getManagedBean().getTaskAssignmentSearchBean().getUser() != null ?
+							  getManagedBean().getTaskAssignmentSearchBean().getUser().getLoginId() : 
+							  this.getManagedBean().getSelectedReassignee().get(0);
+					
+					if (assigneeUsers.contains(currentUser)) {
+						assigneeUsers.remove(currentUser);
+					}
+					if (assigneeUsers != null && assigneeUsers.size() > 1 && 
+							ProfileManagementConst.REASSIGN_WORKLIST_TYPE_OTHERS == reassignWorkListType) {
+						claimedBy = task.getAcquiredBy();
+					}
+				}
+				
+				try {
+					TaskAssignmentReqDTO reqDTO = new TaskAssignmentReqDTO();
+					reqDTO.setTaskId(task.getTaskId());
+					reqDTO.setUserIdList(assigneeUsers);
+					reqDTO.setClaimedBy(claimedBy);
+
+					taskAssignmentSO = (ITaskAssignmentSO) BusinessDelegate
+							.getInstance().getServiceObject(
+									ModuleCodeConst.PROFILE_MANAGEMENT,
+									ITaskAssignmentSO.class);
+					TaskAssignmentResDTO resDTO = taskAssignmentSO.removeGroupOrOthersTask(reqDTO);
+
+					if (resDTO != null && resDTO.isSuccessful()) {
+						resetCheckAllTasks();
+						reloadAllTaskList();
+						PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), 
+								FacesMessage.SEVERITY_INFO, MessageConst.INFO_770105, null);
+					}
+				} finally {
+					taskAssignmentSO = null;
+				}
+			}
+		} else {
+			throw new EpException(MessageConst.ERROR_770098);
+		}
+	}
+	
+	public void resetCheckAllTasks() {
+		
+		if (getManagedBean().isCheckAllGroupTasksEnabled()) {
+			getManagedBean().setCheckAllGroupTasksEnabled(false);
+		}
+		if (getManagedBean().isCheckAllGroupTasks()) {
+			getManagedBean().setCheckAllGroupTasks(false);
+		}
+		if (getManagedBean().isCheckAllOthersTasksEnabled()) {
+			getManagedBean().setCheckAllOthersTasksEnabled(false);
+		}
+		if (getManagedBean().isCheckAllOthersTasks()) {
+			getManagedBean().setCheckAllOthersTasks(false);
+		}
+		log.info("isCheckAllGroupTasksEnabled= "+getManagedBean().isCheckAllGroupTasksEnabled());
+		log.info("isCheckAllOthersTasksEnabled= "+getManagedBean().isCheckAllOthersTasksEnabled());
+	}
 }

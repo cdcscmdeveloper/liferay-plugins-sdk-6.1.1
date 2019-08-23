@@ -3,6 +3,8 @@
  */
 package my.ep.web.managedbean.pm.taskassign;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +53,17 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	private Map<String,String> reassigneeList = new LinkedHashMap<String,String>();
 	private List<String> selectedReassignee;
 	private boolean showReassigneeList;
+	private boolean showDeleteGroupTasksButton;
+	private boolean checkAllGroupTasksEnabled;
+	private boolean checkAllGroupTasks;
+	private List<WorklistItemVO> allGroupTasks = new ArrayList<WorklistItemVO>();
+	private Map<String,WorklistItemVO> selectedGroupTasks = new HashMap<String,WorklistItemVO>();
+	private boolean showDeleteOthersTasksButton;
+	private boolean checkAllOthersTasksEnabled;
+	private boolean checkAllOthersTasks;
+	private List<WorklistItemVO> allOthersTasks = new ArrayList<WorklistItemVO>();
+	private Map<String,WorklistItemVO> selectedOthersTasks = new HashMap<String,WorklistItemVO>();
+
 	
 	public TaskReassignmentManagedBean(){}
 
@@ -368,6 +381,122 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	 */
 	public void setShowReassigneeList(boolean showReassigneeList) {
 		this.showReassigneeList = showReassigneeList;
+	}
+	
+	/**
+	 * @return the showDeleteGroupTasksButton
+	 */
+	public boolean isShowDeleteGroupTasksButton() {
+		return showDeleteGroupTasksButton;
+	}
+	
+	/**
+	 * @param showDeleteGroupTasksButton the showDeleteGroupTasksButton to set
+	 */
+	public void setShowDeleteGroupTasksButton(boolean showDeleteGroupTasksButton) {
+		this.showDeleteGroupTasksButton = showDeleteGroupTasksButton;
+	}
+	
+	/**
+	 * @param checkAllGroupTasksEnabled the checkAllGroupTasksEnabled to set
+	 */
+	public void setCheckAllGroupTasksEnabled(boolean checkAllGroupTasksEnabled) {
+		this.checkAllGroupTasksEnabled = checkAllGroupTasksEnabled;
+	}
+	
+	/**
+	 * @return the checkAllGroupTasksEnabled
+	 */
+	public boolean isCheckAllGroupTasksEnabled() {
+		return checkAllGroupTasksEnabled;
+	}
+
+	/**
+	 * @return the checkAllGroupTasks
+	 */
+	public boolean isCheckAllGroupTasks() {
+		return checkAllGroupTasks;
+	}
+
+	/**
+	 * @param checkAllGroupTasks the checkAllGroupTasks to set
+	 */
+	public void setCheckAllGroupTasks(boolean checkAllGroupTasks) {
+		this.checkAllGroupTasks = checkAllGroupTasks;
+	}
+	
+	public List<WorklistItemVO> getAllGroupTasks() {
+	    return allGroupTasks;
+	}
+	
+	public void setAllGroupTasks(List<WorklistItemVO> allGroupTasks) {
+		this.allGroupTasks = allGroupTasks;
+	}
+	
+	public void setSelectedGroupTasks(Map<String,WorklistItemVO> selectedGroupTasks) {
+		this.selectedGroupTasks = selectedGroupTasks;
+	}
+	
+	public Map<String,WorklistItemVO> getSelectedGroupTasks() {
+	    return selectedGroupTasks;
+	}
+	
+	/**
+	 * @return the showDeleteOthersTasksButton
+	 */
+	public boolean isShowDeleteOthersTasksButton() {
+		return showDeleteOthersTasksButton;
+	}
+	
+	/**
+	 * @param showDeleteOthersTasksButton the showDeleteOthersTasksButton to set
+	 */
+	public void setShowDeleteOthersTasksButton(boolean showDeleteOthersTasksButton) {
+		this.showDeleteOthersTasksButton = showDeleteOthersTasksButton;
+	}
+	
+	/**
+	 * @param checkAllOthersTasksEnabled the checkAllOthersTasksEnabled to set
+	 */
+	public void setCheckAllOthersTasksEnabled(boolean checkAllOthersTasksEnabled) {
+		this.checkAllOthersTasksEnabled = checkAllOthersTasksEnabled;
+	}
+	
+	/**
+	 * @return the checkAllOthersTasksEnabled
+	 */
+	public boolean isCheckAllOthersTasksEnabled() {
+		return checkAllOthersTasksEnabled;
+	}
+
+	/**
+	 * @return the checkAllOthersTasks
+	 */
+	public boolean isCheckAllOthersTasks() {
+		return checkAllOthersTasks;
+	}
+
+	/**
+	 * @param checkAllOthersTasks the checkAllOthersTasks to set
+	 */
+	public void setCheckAllOthersTasks(boolean checkAllOthersTasks) {
+		this.checkAllOthersTasks = checkAllOthersTasks;
+	}
+	
+	public List<WorklistItemVO> getAllOthersTasks() {
+	    return allOthersTasks;
+	}
+	
+	public void setAllOthersTasks(List<WorklistItemVO> allOthersTasks) {
+		this.allOthersTasks = allOthersTasks;
+	}
+	
+	public void setSelectedOthersTasks(Map<String,WorklistItemVO> selectedOthersTasks) {
+		this.selectedOthersTasks = selectedOthersTasks;
+	}
+	
+	public Map<String,WorklistItemVO> getSelectedOthersTasks() {
+	    return selectedOthersTasks;
 	}
 	
 }
