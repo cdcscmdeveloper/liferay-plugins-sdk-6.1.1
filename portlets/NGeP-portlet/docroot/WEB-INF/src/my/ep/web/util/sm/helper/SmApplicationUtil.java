@@ -396,7 +396,31 @@ public class SmApplicationUtil {
 
 		return addedNewCode;
 	}
-	
+	/**
+	 * Validate max new category added.
+	 * 
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 */
+	private static void validateMaxNewCategoryAdded(SmApplicationManagedBean managedBean) {
+		int count = 0;
+		int maxCatSize = SmRuleHelper.getInstance().getMaxCategoryAllowed();
+		List<String> applTypes = Arrays.asList(ParameterConst.NEW_SM_APPLN_FOR_MOF,
+				ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES, ParameterConst.NEW_SM_APPLN_FOR_RENEW);
+
+		if (applTypes.contains(managedBean.getSmAppl().getApplType())) {
+			for (SmSupplierCategory cat : managedBean.getSmAppl().getSmSupplierCategories()) {
+				if (cat.getRecordStatusFlg().compareTo(SupplierManagementConst.PENDING_ACT_STATUS) == 0
+						|| cat.getRecordStatusFlg().compareTo(SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0) {
+					count++;
+				}
+			}
+		}
+
+		if (count > maxCatSize) {
+			throw new EpException(MessageConst.ERROR_722517, new String[] { maxCatSize + "" });
+		}
+	}
 	// 25996 start
 	public static List<String> getCatCodesNotVerifiedByPo(SmApplicationManagedBean managedBean) {
 
@@ -416,7 +440,32 @@ public class SmApplicationUtil {
 		return invalidCatCodes;
 	}
 	// 25996 end
+	/**
+	 * Retrieve unverified category codes by PO or Approver
+	 * 
+	 * @param managedBean
+	 * @return
+	 */
+	public static List<String> getUnverifiedCatCodes(List<SmSupplierCategory> catList, String applType,
+			boolean isApprover) {
 
+		List<String> applTypes = Arrays.asList(ParameterConst.NEW_SM_APPLN_FOR_MOF,
+				ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES, ParameterConst.NEW_SM_APPLN_FOR_RENEW);
+		List<String> invalidCatCodes = new ArrayList<>();
+
+		if (applTypes.contains(applType)) {
+			//Enhancement #11765
+			sortSupplierCategory(catList);
+			for (SmSupplierCategory cat : catList) {
+				if (cat.getPoDecFlg() == null) {
+					//Enhancement #11765
+					invalidCatCodes.add(cat.getPmCategoryL1().getCategoryL1Code()+cat.getPmCategoryL2().getCategoryL2Code()+cat.getPmCategoryL3().getCategoryL3Code());
+				}
+			}
+		}
+
+		return invalidCatCodes;
+	}
 	/**
 	 * Validate supporting documents.For online application check whether
 	 * supplier uploaded all the files or not
