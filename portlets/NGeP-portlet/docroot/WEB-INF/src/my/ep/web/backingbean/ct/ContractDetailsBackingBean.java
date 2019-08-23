@@ -601,6 +601,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 	}
 	
+	public void downloadFile(String filePath, String fileName) throws IOException {
+		commonDownload(filePath, fileName);
+	}
+	
 	private void chkBondWaivedAttachment() {
 		if(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_UPDATE)
 				|| ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)){
@@ -1805,12 +1809,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 		ContractReqDTO reqDTO = new ContractReqDTO();
 		reqDTO.setContractId(contractId);
-		CtContractVer  latestContractVer = contractSO.getLatestContractVer(reqDTO).getCtContractVer();
-		if (latestContractVer != null) {
-			reqDTO.setContractVerId(latestContractVer.getContractVerId());
-		} else {
-			reqDTO.setContractVerId(contractVerId);
-		}
+		
+		reqDTO.setContractVerId(contractVerId);
+			
 		reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE); // View purpose, FU or FW also fine
 		reqDTO.setViewOnly(true);
 		ctBB.getManagedBean().setViewContract(true);
@@ -1818,7 +1819,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		setValidateContractField(reqDTO);
 		getManagedBean().setSelectedTabIndex(0);
 		getManagedBean().setExternalPageUrl(null);
-		getManagedBean().setLoaContractVerId( ctBB.getManagedBean().getContractVer().getContractVerId());
+		getManagedBean().setLoaContractVerId(ctBB.getManagedBean().getContractVer().getContractVerId());
 		reqDTO.setCtContractVer( ctBB.getManagedBean().getContractVer());
 		getManagedBean().setWarningPercentage(contractSO.checkAdvancedPaymentProgress(reqDTO).getPercentage());
 		return CONTRACT_PAGE;
