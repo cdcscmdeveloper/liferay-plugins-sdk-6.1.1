@@ -80,6 +80,7 @@ public class SoftCertManagedBean extends BaseManagedBean {
 	private List<SmSoftcertDocFile> smSoftcertDocFileList;
 	
 	private SmSoftcertDoc supportDoc;
+	private String revokeMessage;
 
 	@ManagedProperty(value = "#{spkiBackingBean}")
 	private SpkiBackingBean spkiBackingBean;
@@ -480,4 +481,11 @@ public class SoftCertManagedBean extends BaseManagedBean {
 		this.supportDoc = supportDoc;
 	}
 
+	public String getRevokeMessage() {
+		return revokeMessage;
+	}
+
+	public void setRevokeMessage(String revokeMessage) {
+		this.revokeMessage = revokeMessage;
+	}
 }
