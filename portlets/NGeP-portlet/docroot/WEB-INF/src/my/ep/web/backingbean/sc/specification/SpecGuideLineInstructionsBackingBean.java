@@ -85,16 +85,11 @@ public class SpecGuideLineInstructionsBackingBean extends SourcingBaseBackingBea
 		return specGuideLineStreamContent;
 	}
 
-	public StreamedContent getSpecGuideLineStreamContent(String activeIndex) throws Exception {
+	public StreamedContent getSpecPreparationGuideLineStreamContent() throws Exception {
 		if (specGuideLineStreamContent == null) {
 			ScSpecGuideLineAttachment specGuideLineAttachment = new ScSpecGuideLineAttachment();
-			if (ParameterConst.TAB_FINANCIAL_CHECK_LIST.equals(activeIndex)) {
-				generateSpecGuideLinePdfFromSharedrepository(specGuideLineAttachment, null,
-						SourcingConstants.DOCNAME_QT_SPEC_FINANCIAL_ITEM_GUIDELINE);
-			} else {
-				generateSpecGuideLinePdfFromSharedrepository(specGuideLineAttachment, null,
-						SourcingConstants.DOCNAME_QT_SPEC_ITEM_GUIDELINE);
-			}
+			generateSpecGuideLinePdfFromSharedrepository(specGuideLineAttachment, null,
+					SourcingConstants.DOCNAME_QT_SPEC_FINANCIAL_ITEM_GUIDELINE);
 			specGuideLineStreamContent = getAttachmentStreamContent(specGuideLineAttachment,
 					CommonConstants.FILE_CONTENT_TYPE_PDF);
 		}
