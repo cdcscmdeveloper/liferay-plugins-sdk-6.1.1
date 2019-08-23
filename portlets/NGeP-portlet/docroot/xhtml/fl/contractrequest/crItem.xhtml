@@ -19,7 +19,7 @@
            	</tr>
            	<tr>
            		<td>
-        				<p:selectOneRadio id="crGeneralRadio" required="true" value="#{contractRequestBackingBean.managedBean.flRequest.radioCheckDeliveryDate}">
+
 <p:selectBooleanCheckbox id="crGeneralRadio" required="true" value="#{contractRequestBackingBean.managedBean.flRequest.radioCheckDeliveryDate}">
 						<p:ajax event="change"
 							listener="#{contractRequestBackingBean.upDateStartDateFromBpm}" 
