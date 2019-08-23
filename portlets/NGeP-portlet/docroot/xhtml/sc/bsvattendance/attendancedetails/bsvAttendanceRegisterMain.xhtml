@@ -10,7 +10,8 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-
+	<ui:param name="bsvDetails"
+				value="#{bsvAttendanceBackingBean.managedBean.normalBsvBean}"></ui:param>
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
@@ -25,8 +26,128 @@
 					<ui:param name="buttonLabel"
 						value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 					<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
-						action="#{bsvAttendanceBackingBean.submitBsvDetails(bpmAction)}"
+						onclick = "confirmSubmit.show();"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+						
+					
+						
+					<p:confirmDialog id="confirmSubmit"
+						header="#{lbl['lbl.cm.dialog.cofirm.header']}"
+						widgetVar="confirmSubmit"  >
+						
+						<f:facet name="message">
+						        <div style="text-align: left;width:500px;"><h:outputText  value="#{lbl['lbl.sc.bsv.attendance.bil']}"></h:outputText></div>
+						    </f:facet>
+						    
+						    
+						 
+
+						<div style="text-align: left;"><ui:fragment
+			rendered="#{bsvAttendanceBackingBean.managedBean.scQt.zonal}">
+
+						<p:dataList var="zonePnlList" value="#{bsvAttendanceBackingBean.managedBean.zoneBean}" >
+						    <p:column headerText="Id" >
+						        <div style="text-align: left;"></div><h:outputText value="#{zonePnlList.tplSpecZoneDtl.zoneName}" />
+						    </p:column>
+						
+						    
+						<p:dataTable var="briefing" value="#{zonePnlList.briefingList}" >
+						    <f:facet name="header">	
+						        <h:outputText value="#{lbl['lbl.sc.notice.board.criteria.briefing']}"></h:outputText>		       
+						    </f:facet>
+						
+						    <p:column headerText="#{lbl['lbl.sc.date']}">
+						        <h:outputText value="#{briefing.bsvDate}" >
+							        <f:convertDateTime
+								pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+								</h:outputText>
+						    </p:column>
+						     <p:column headerText="#{lbl['lbl.sc.attendance.popup.msg']}">
+						        <h:outputText value="#{briefing.toBeattand}" />
+						    </p:column>
+						   
+						</p:dataTable>
+						<br/>
+						<p:dataTable var="sitevisit" value="#{zonePnlList.sitevisitList}">
+						    <f:facet name="header">
+						        <h:outputText value="#{lbl['lbl.sc.notice.board.criteria.site.visit']}"></h:outputText>
+						    </f:facet>
+						     
+						    <p:column headerText="#{lbl['lbl.sc.date']}">
+						        <h:outputText value="#{sitevisit.bsvDate}" >
+						        <f:convertDateTime
+							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+							</h:outputText>
+						    </p:column>
+						     <p:column headerText="#{lbl['lbl.sc.attendance.popup.msg']}">
+						        <h:outputText value="#{sitevisit.toBeattand}" />
+						    </p:column>
+						 
+						</p:dataTable>
+						    <br/>
+						</p:dataList>
+						
+						</ui:fragment>
+						
+						<ui:fragment
+							rendered="#{!bsvAttendanceBackingBean.managedBean.scQt.zonal}">
+							
+						
+						<p:dataTable var="briefing" value="#{bsvDetails.briefingList}" >
+						    <f:facet name="header">	
+						        <h:outputText value="#{lbl['lbl.sc.notice.board.criteria.briefing']}"></h:outputText>		       
+						    </f:facet>
+						
+						    
+						    
+						    <p:column headerText="#{lbl['lbl.sc.date']}">
+						        <h:outputText value="#{briefing.bsvDate}" >
+							        <f:convertDateTime
+								pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+								</h:outputText>
+						    </p:column>
+						     <p:column headerText="#{lbl['lbl.sc.attendance.popup.msg']}">
+						        <h:outputText value="#{briefing.toBeattand}" />
+						    </p:column>
+						   
+						</p:dataTable>
+						<br/>
+						<p:dataTable var="sitevisit" value="#{bsvDetails.sitevisitList}">
+						    <f:facet name="header">
+						        <h:outputText value="#{lbl['lbl.sc.notice.board.criteria.site.visit']}"></h:outputText>
+						    </f:facet>
+						    
+						    <p:column headerText="#{lbl['lbl.sc.date']}">
+						        <h:outputText value="#{sitevisit.bsvDate}" >
+						        <f:convertDateTime
+							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+							</h:outputText>
+						    </p:column>
+						     <p:column headerText="#{lbl['lbl.sc.attendance.popup.msg']}">
+						        <h:outputText value="#{sitevisit.toBeattand}" />
+						    </p:column>
+						 
+						</p:dataTable>
+						</ui:fragment>
+						</div>
+						
+
+						
+						
+						<div style="text-align: left;"><h:outputText value="#{lbl['lbl.sc.attendance.submit.main.message']}"></h:outputText></div>
+						<br/>
+						
+						
+						<p:commandButton id="conf" value="#{lbl['lbl.cm.dialog.cofirm.yes']}"						 
+						action="#{bsvAttendanceBackingBean.submitBsvDetails(bpmAction)}"
+						process="@form" update="@form"
+							oncomplete="confirmSubmit.hide();" style="float:right;"/>
+						<p:commandButton id="decline"
+							value="#{lbl['lbl.cm.dialog.cofirm.no']}"
+							
+							onclick="confirmSubmit.hide();" style="float:right;"/>
+			
+					</p:confirmDialog>
 				</ui:repeat>
 
 			</h:panelGroup>
