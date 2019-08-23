@@ -1309,13 +1309,8 @@ public class SpecificationBackingBean extends
 				retriveSpecdetails(this.getManagedBean().getQt().getQtId());
 				/*#19637-basri*/
 				List<TplSpecZoneDtl> businessOwnerZone = null;
-				if(null != this.getManagedBean().getTemplateSpecZoneDtls()){
-					businessOwnerZone = this.getManagedBean().getTemplateSpecZoneDtls();
-				}else{
 					businessOwnerZone = convertTreeNodesToZoneCriteria(
 						this.getManagedBean().getZoneGeneralTrees(), null);
-				}
-				/*end*/
 				ScQtSupplierCriteria supplierCriteria = this.getManagedBean()
 						.getQt().getScQtSupplierCriteria();
 				if (businessOwnerZone != null && !businessOwnerZone.isEmpty()) {
