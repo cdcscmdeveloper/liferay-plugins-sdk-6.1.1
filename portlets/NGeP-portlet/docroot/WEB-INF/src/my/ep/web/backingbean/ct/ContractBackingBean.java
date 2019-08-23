@@ -3419,6 +3419,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		RequestContext.getCurrentInstance().execute("itemSpecDlg.show()");
 	}
 	
+	// 21533 - start
 	public List<CtAgreement> filterAgreementList() {
 		List<CtAgreement> newCtAgreementList = new ArrayList<CtAgreement>();
 		List<CtAgreement> currentCtAgreementList = getManagedBean().getCtAgreementList();
@@ -3482,6 +3483,82 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		resDTO = contractSO.retrieveContractVerByAgreement(reqDTO);
 		
 		return resDTO.getCtContractVer().getSignedDate();
+	}
+	// 21533 - end
+	
+	/**
+	 * The method used to set  bond 
+	 * exempted file path and file name value is null.
+	 */
+	public void delBondExemptedDoc(){
+		getManagedBean().getContractVer().getCtContractAmount().setBondExemptedFilePath(null);
+		getManagedBean().getContractVer().getCtContractAmount().setBondExemptedFileName(null);
+	}
+
+	/**
+	 * Function to check / uncheck all checkbox into agency datatable
+	 * 
+	 * @param pass ajax event type
+	 * */
+	public void selectAllMinstryAgency(AjaxBehaviorEvent e) {
+		if (getAgencyDataModel() != null && getAgencyDataModel().getList() != null) {
+			for (PmOrgProfile pmOrgProfiles : getAgencyDataModel().getList()) {
+				if (getManagedBean().isSelectAll()) {
+					pmOrgProfiles.setSelectedCheckBox(true);
+				} else {
+					pmOrgProfiles.setSelectedCheckBox(false);
+				}
+			}
+
+			if ((boolean) e.getComponent().getAttributes().get("value")) {
+				getManagedBean().setButtonHideActive(false);
+			} else {
+				getManagedBean().setButtonHideActive(true);
+			}	
+		}
+	}
+
+	/**
+	 * Function to check / uncheck single checkbox into agency datatable
+	 * 
+	 * @param pass ajax event type
+	 * */
+	public void selectOneAgyCheckboxSelect(AjaxBehaviorEvent e) {
+		if (getAgencyDataModel() != null && getAgencyDataModel().getList() != null) {
+			getManagedBean().setSelectAll(false);
+			for (PmOrgProfile pmOrgProfiles : getAgencyDataModel().getList()) {
+				if (pmOrgProfiles.isSelectedCheckBox()) {
+					getManagedBean().setButtonHideActive(false);
+					return;
+				}
+			}
+
+			if ((boolean) e.getComponent().getAttributes().get("value")) {
+				getManagedBean().setButtonHideActive(false);
+			} else {
+				getManagedBean().setButtonHideActive(true);
+			}	
+		}
+	}
+
+	/**
+	 * Get Full Delivery Address based on CtAddress
+	 * 
+	 * @param ctAddress   an object of contract address
+	 * @return full delivery address
+	 */
+	public String getFullDeliveryAddress(CtAddress ctAddress) {
+		String separator = ", ";
+		StringBuilder address = new StringBuilder();
+		if (ctAddress != null) {
+			if (StringUtils.isNotBlank(
+					ctAddress.getAddressName())) {
+				address.append(ctAddress.getAddressName());
+				address.append(separator);
+			}
+			address.append(getFullAddress(ctAddress));
+		}
+		return address.toString();
 	}
 
 	/**
@@ -3555,4 +3632,31 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 		return false;
 	}
+	
+	// 21533 - start
+	public String getLanguage() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.getUserLocale().getLanguage();
+	}
+	
+	public List<CtAttachment> getSupplementalContractLetter(CtAgreement ctAgreement) {
+		IAgreementSO agreementSO = null;
+		List<CtAttachment> ctAttachments = null;
+		agreementSO = (IAgreementSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IAgreementSO.class);
+		ContractAgreementReqDTO reqDTO = new ContractAgreementReqDTO();
+		ContractAgreementResDTO resDTO = null;
+		
+		if(ctAgreement != null) 
+		{
+			if(ctAgreement.getCtAmendment() != null)
+			{
+				reqDTO.setContractVerId(ctAgreement.getCtAmendment().getCtContractVer().getContractVerId());
+				resDTO = agreementSO.retrieveSupplementalContractLetterAttachment(reqDTO);
+				ctAttachments = resDTO.getCtAttachments();
+			}
+		}			
+						
+		return ctAttachments;
+	}
+	// 21533 - end
 }  
