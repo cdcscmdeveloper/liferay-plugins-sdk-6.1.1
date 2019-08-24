@@ -745,6 +745,36 @@
 						</c:otherwise>
 					</c:choose></td>
 			</tr>
+			<c:if test="#{!scQt.panel and FulfilmentConst.thresHold >= scQt.tmpExpectedIntendedPrice}">
+				<tr>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.sc.spec.justification.procurement.value']}" /> 
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</td>
+					<td>
+						<c:choose>
+							<c:when test="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION}">
+								<p:inputText id="justificationProcValueId"
+									style="text-align:right; width:200px;" value="#{scQt.justificationProcValue}" required="true" 
+									label="#{lbl['lbl.sc.spec.justification.procurement.value']}" disabled="#{isReadOnly}" >
+									<f:convertNumber
+										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+								</p:inputText>
+							</c:when>
+							<c:otherwise>
+								<p:inputText id="justificationProcValueId"
+									style="text-align:right; width:200px;"
+									value="#{scQt.justificationProcValue}" disabled="true">
+									<f:convertNumber
+										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+								</p:inputText>
+							</c:otherwise>
+						</c:choose>
+						<p:message id="title2Msg" for="justificationProcValueId" display="icon" />
+					</td>
+					<td style="margin-top: -3px"><ac:iconTooltip value="#{lbl['lbl.sc.spec.justification.procurement.value.tooltip']}" /></td>
+				</tr>
+			</c:if>
 		</table>
 	</p:panel>
 	<ui:include src="viewCircularPanelItemsPopup.xhtml"></ui:include>

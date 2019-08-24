@@ -2263,17 +2263,18 @@ public class CreateQtBackingBean extends
 						deleteDeliveryAdreesZoneDetails(scQt);
 					}
 				}
+				
+				if (null != scQt.getItemGroup() && null != scQt.getItemGroup().getPanelItemGroupId()) {
+					if (null != this.getManagedBean().getLoginRoleType()
+							&& !"".equals(this.getManagedBean().getLoginRoleType())
+							&& "SC".equalsIgnoreCase(this.getManagedBean()
+									.getLoginRoleType())) {
+						deleteTemplateSpecs(scQt);
+					}
+				}
 			}
 			
 
-			if (null != scQt.getItemGroup() && null != scQt.getItemGroup().getPanelItemGroupId()) {
-				if (null != this.getManagedBean().getLoginRoleType()
-						&& !"".equals(this.getManagedBean().getLoginRoleType())
-						&& "SC".equalsIgnoreCase(this.getManagedBean()
-								.getLoginRoleType())) {
-					deleteTemplateSpecs(scQt);
-				}
-			}
 		}finally{
 			panelSupplierSO = null;
 			circularDetailSO = null;
