@@ -134,7 +134,7 @@ public class CommitteBackingBean extends
 		if (logger.isDebugEnabled()) {
 			logger.debug(message);
 		}
-		//logger.info(message);
+		logger.info(message);
 	}
 
 	/**
@@ -205,6 +205,12 @@ public class CommitteBackingBean extends
 				populateUserSearchCriteria(userQCSearchBean, searchBean);
 				committeReqDTO.setUserSearchBean(searchBean);
 				committeReqDTO.setPtjMinistryAdmin(Boolean.TRUE);
+				
+				//Enhancement #21689
+				if(getManagedBean().getScQt()!=null && getManagedBean().getScQt().size()>0){
+					committeReqDTO.setScQt(getManagedBean().getScQt().get(0));
+				}
+				
 				return committeSO.retrieveUserListByCommType(committeReqDTO)
 						.getUserResultBean();
 			} finally {
@@ -666,6 +672,7 @@ public class CommitteBackingBean extends
 	 * @return the string
 	 */
 	public String updateCommitteDetails(String outCome) {
+		
 		debugLogger("submitCommitteDetails");
 		ScQtCommittee scQtCommittee = getManagedBean().getQtCommittee();
 		
