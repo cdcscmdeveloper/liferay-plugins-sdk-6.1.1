@@ -312,6 +312,14 @@ public class SmApplicationBackingBean extends
 				"confirmDeleteHqDialog.show();");
 	}
 
+	// harris
+	public void onDeleteSupDocFileAttachment(SmApplSupportDoc doc, int index) {
+		this.getManagedBean().setAttachedFileIndex(index);
+		getManagedBean().setSupportDoc(doc);
+		RequestContext.getCurrentInstance().execute(
+				"confirmDeleteSupDocDialog.show();");
+	}
+
 	/**
 	 * On click delete overlap category supporting doc
 	 * 
@@ -7542,7 +7550,7 @@ public class SmApplicationBackingBean extends
 				}
 			}
 		} finally {
-
+			initNonMandatoryAndMandatoryDocs();
 		}
 	}
 
@@ -9176,6 +9184,11 @@ public class SmApplicationBackingBean extends
 		log.info("****** Assign Supporting Doc *******");
 		getManagedBean().setSupportDoc(doc);
 	}
+	
+	public void assignSelectedSupportDocIndex(SmApplSupportDoc doc, int index) {
+		this.getManagedBean().setAttachedFileIndex(index);
+		getManagedBean().setSupportDoc(doc);
+	}
 
 	/**
 	 * Handle and save file attachment for resubmit supproting doc file(s).
@@ -9251,6 +9264,16 @@ public class SmApplicationBackingBean extends
 
 	}
 
+	// harris
+	public void deleteSupDocFileAttachment() {
+
+		SmApplSupportDoc mainDoc = getManagedBean().getSupportDoc();
+		mainDoc.getSmApplDocFiles().get(0).setFileName(StringUtils.EMPTY);
+		mainDoc.getSmApplDocFiles().get(0).setFilePath(StringUtils.EMPTY);
+		mainDoc.setSmApplDocFiles(null);
+		
+	}
+
 	/**
 	 * Handle and save file attachment for cancel mof registration.
 	 * 
@@ -9277,6 +9300,13 @@ public class SmApplicationBackingBean extends
 
 		}
 	}
+	
+	//harris
+	public void deleteCancelMofRegFileAttachment() {
+		this.getManagedBean().getCancellationAttachment().setFileName(null);
+	}
+	
+	
 
 	/**
 	 * Clone sm application draft from the stable or prev approved application.
