@@ -306,6 +306,7 @@
 		<portlet id="complaint"></portlet>
 		<portlet id="onlineRegistration"></portlet>
 		<portlet id="onlineAccountMaintenance"></portlet>
+		<portlet id="smCancelRegistration"></portlet>	
 
 		<portlet id="sm" />
 		<portlet id="smAddtionalCatCodes"></portlet>
@@ -359,6 +360,7 @@
 		<portlet id="supplierTaskReassignment"></portlet>
 		<portlet id="smOnScreenSql"></portlet>
 		<!--<portlet id="travellingTicketingSystemMaintenance"></portlet>-->
+		<portlet id="profileRobExpire"></portlet>
 	</category>
 
 	<category name="category.ep.wp">
