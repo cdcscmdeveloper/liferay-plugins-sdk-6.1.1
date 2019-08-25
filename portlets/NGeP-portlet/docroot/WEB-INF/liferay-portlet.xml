@@ -1034,7 +1034,7 @@
 		<css-class-wrapper>onlineregistration-portlet</css-class-wrapper>
 	</portlet>
 	
-		<portlet>
+	<portlet>
 		<portlet-name>smCancelRegistration</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
