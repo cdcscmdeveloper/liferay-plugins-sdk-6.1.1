@@ -8,20 +8,15 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<ui:param name="isApprovalScreen" value="#{qTDetailBB.managedBean.approvalScreen}" />
 	<ui:define name="contentSection">
 		<table style="border: 0px; width: 100%">
 			<tr>
 				<td width="100%"><p:blockUI block=":form"
 						widgetVar="blockWidget">
 						<p:graphicImage value="/css/images/ajax-loader.gif" />
-					</p:blockUI> <p:messages id="specmessages" showDetail="true" autoUpdate="#{qTDetailBB.managedBean.autoUpdate}"
-						closable="true" showSummary="false" severity="error, info" /> 
-						<c:if test="#{not isApprovalScreen}" >
-						<ui:include
-						src="/xhtml/sc/quatationtender/quotationTenderButtons.xhtml" />
-						</c:if>
-						<ui:include
+					</p:blockUI> <p:messages id="specmessages" showDetail="true" autoUpdate="true"
+						closable="true" showSummary="false" severity="error, info" /> <ui:include
+						src="/xhtml/sc/quatationtender/quotationTenderButtons.xhtml" /> <ui:include
 						src="/xhtml/sc/quatationtender/quotationTenderHeader.xhtml" /></td>
 			</tr>
 			<tr>
