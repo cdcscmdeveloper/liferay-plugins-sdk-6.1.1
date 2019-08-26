@@ -13,25 +13,27 @@
 		<c:if test="#{purchaseRequestBackingBean.zonalTest eq '298'}">
 		<table style="width: 100%">
 			 <tr>
-           		<td colspan="5">
-           		    <p:outputLabel style="float:left !important; color:red" value="#{lbl['lbl.fl.flag']}"/>
-           			<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.flag']}"/>
-           		</td>
+           		<br/>
+           		<br/>
            	</tr>
            	<tr>
            		<td>
-          			<p:outputLabel value="*" styleClass="mandatory" />
-          		</td>
-           		<td>
-                <!--  <h:outputText value="#{purchaseRequestBackingBean.zonalTest}"/> -->
-				
-					<p:selectOneRadio id="prGeneralRadio" required="true" value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.radioCheckDeliveryDate}">
-						<f:selectItem itemLabel="#{lbl['lbl.btn.yes']}" itemValue="true" />
-						<f:selectItem itemLabel="#{lbl['lbl.btn.no']}" itemValue="false" />
+           		 <p:selectBooleanCheckbox id="prGeneralRadio" required="true" value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.radioCheckDeliveryDate}">
+					
 						<p:ajax event="change"
 							listener="#{purchaseRequestBackingBean.upDateStartDateFromBpm}" 
 							update="delStartDate"/>                   
-           			</p:selectOneRadio>
+           			</p:selectBooleanCheckbox>
+          			
+          		</td>
+           		<td>
+                <!--  <h:outputText value="#{purchaseRequestBackingBean.zonalTest}"/> -->
+               
+                            
+                <p:outputLabel style="float:left !important; color:red" value="#{lbl['lbl.fl.flag']}"/> 
+           			<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.flag']}"/>
+				
+					<br/>
 
             	</td>
 			</tr>
