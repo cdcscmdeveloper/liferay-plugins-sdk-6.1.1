@@ -6390,6 +6390,12 @@ public class SimpleQuoteBackingBean extends
 						serviceMaster
 						.setTplSpecQuestions(new ArrayList<TplSpecQuestion>());
 					}
+
+					//#21423 - start
+					if(getManagedBean().getCurrentStatusId() != null && getManagedBean().getCurrentStatusId().equals(DPStatusConstants.SQ_PENDING_SUBMISSION)){
+						serviceMaster.setDeliveryTermReq(true);
+					}
+					//#21423 - end
 					serviceTplSpecBean.setSpecMaster(serviceMaster);
 					getManagedBean().setServiceTemplateSpecBean(
 							serviceTplSpecBean);
