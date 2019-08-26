@@ -83,7 +83,7 @@
 					<p:menuitem value="#{lbl['lbl.sc.qt.public.approval']}"
 						action="#{qTDetailBB.qtDetailsTabChange(9)}" update="@form"
 						process="@form"
-						rendered="#{isQTStatusBtwScheduleDocAndPendingPublication and qTDetailBB.displayMenuItem(qTDetailBB.menuItemPublicationApproval)}" />
+						rendered="#{(isQTStatusBtwScheduleDocAndPendingPublication and qTDetailBB.displayMenuItem(qTDetailBB.menuItemPublicationApproverAssignment)) or qTDetailBB.displayMenuItem(qTDetailBB.menuItemPublicationApproval)}" />
 					<p:menuitem value="#{lbl['lbl.sc.qt.approval.bpk']}" 
 						action="#{qTDetailBB.qtDetailsTabChange(9)}" update="@form"
 						process="@form"
@@ -138,8 +138,8 @@
 						<c:if test="#{qTDetailBB.managedBean.activeIndex eq '8'}">
 							<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderActivitiesTracking.xhtml" />
 						</c:if>
-						<c:choose>
-							<c:when test="#{isQTStatusBtwScheduleDocAndPendingPublication and qTDetailBB.displayMenuItem(qTDetailBB.menuItemPublicationApproval)}">
+						<c:choose>							
+							<c:when test="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemPublicationApproval)}">
 								<c:if test="#{qTDetailBB.managedBean.activeIndex eq '9'}">
 									<!-- <ui:include
 										src="/xhtml/sc/quatationtender/approval/qtpublicationapproval.xhtml" /> -->
@@ -151,6 +151,12 @@
 							</c:when>
 							<c:when test="#{qTDetailBB.managedBean.activeIndex eq '9' and qTDetailBB.displayMenuItem(qTDetailBB.menuItemCommitteeApprovalEcOcTecFec)}">
 							 	<ui:include src="#{qTDetailBB.getCommitteeAppointmentApprovalPage()}" />
+							</c:when>
+							<c:when test="#{isQTStatusBtwScheduleDocAndPendingPublication and qTDetailBB.displayMenuItem(qTDetailBB.menuItemPublicationApproverAssignment)}">
+								<c:if test="#{qTDetailBB.managedBean.activeIndex eq '9'}">
+									<ui:include
+										src="/xhtml/sc/quatationtender/approval/qtpublicationapproval.xhtml" />
+								</c:if>
 							</c:when>
 						</c:choose>
 					</c:if>
