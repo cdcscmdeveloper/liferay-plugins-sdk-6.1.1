@@ -44,14 +44,12 @@ import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
-import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.ContractBaseBackingBean;
-import my.ep.web.backingbean.ct.ContractItemSearchBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.ct.suspension.SuspensionManagedBean;
 import my.ep.web.util.DateUtils;
@@ -165,7 +163,11 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			getManagedBean().setTaskId(taskId);
 			return;
 		}/*End if statement to check  login user */
-
+		// 20997 - start : to reset search list after save
+		if(getManagedBean().getTaskId()!=null) {
+			getManagedBean().getSuspensionProductListingPagingDataModel().reloadData();
+		}
+		// 20997 - end
 		/*Return when not call from tasklist*/
 		if(taskId==null) 
 			return;
@@ -192,7 +194,8 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		ContractResDTO resDTO = null;
 		if(ctBB.getManagedBean().getDeleteAttachmentList() != null ){
 			ctBB.getManagedBean().getDeleteAttachmentList().clear();
-		}     
+		}
+
 		try{
 			contractSuspensionSO = (IContractSuspensionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSuspensionSO.class);
 			resDTO = contractSuspensionSO.retrieveSuspensionContractVerDtls(reqDTO);
@@ -434,22 +437,25 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	 */
 	public void setSuspensionStatusValue(CtContractItem item) {
 		Date currentDate = DateUtils.getCurrentDateWithoutTime();
-		for(CtContractItem ctItem :this.getManagedBean().getContractVer().getCtContractItems()) {
-			if(ctItem.equals(item)) {		
-				CtContractItem latestVerItem = getManagedBean().getItemMap().get(ctItem.getScRequestItem().getRequestNoteItemId());
-				Date effDate = null;
-				Date expDate = null;
-
-				if(item.getRecordStatusFlg().intValue() == 1) {					 
-					effDate = (latestVerItem.getRecordStatusFlg() == 0) ? currentDate : latestVerItem.getEffDate();
-					expDate = (latestVerItem.getRecordStatusFlg() == 0) ? getManagedBean().getContractVer().getCtContractValue().getExpDate() : latestVerItem.getExpDate();
-					item.setEffDate(effDate);
-					item.setExpDate(expDate);					
-				} else {
-					effDate = (latestVerItem.getRecordStatusFlg() == 0) ? latestVerItem.getEffDate() : currentDate;
-					expDate = (latestVerItem.getRecordStatusFlg() == 0) ?  latestVerItem.getExpDate() : getManagedBean().getContractVer().getCtContractValue().getExpDate();
-					item.setEffDate(effDate);
-					item.setExpDate(expDate);		
+		//#20997 - start
+		//for(CtContractItem ctItem :this.getManagedBean().getContractVer().getCtContractItems()) {
+		for (CtContractItem ctItem : getManagedBean().getSuspensionProductListingPagingDataModel().getList()) {
+			if(ctItem != null && item != null) {
+				if(ctItem.getContractItemId() != null && ctItem.getContractItemId().equals(item.getContractItemId())) {
+					CtContractItem latestVerItem = getManagedBean().getItemMap().get(ctItem.getScRequestItem().getRequestNoteItemId());
+					Date effDate = null;
+					Date expDate = null;
+					if(item.getRecordStatusFlg().intValue() == 1) {
+						effDate = (latestVerItem.getRecordStatusFlg() == 0) ? currentDate : latestVerItem.getEffDate();
+						expDate = (latestVerItem.getRecordStatusFlg() == 0) ? getManagedBean().getContractVer().getCtContractValue().getExpDate() : latestVerItem.getExpDate();
+						item.setEffDate(effDate);
+						item.setExpDate(expDate);
+					} else {
+						effDate = (latestVerItem.getRecordStatusFlg() == 0) ? latestVerItem.getEffDate() : currentDate;
+						expDate = (latestVerItem.getRecordStatusFlg() == 0) ?  latestVerItem.getExpDate() : getManagedBean().getContractVer().getCtContractValue().getExpDate();
+						item.setEffDate(effDate);
+						item.setExpDate(expDate);
+					}
 				}
 			}
 		}
@@ -507,6 +513,22 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			
 			validateSuspensionDetails(outcome);		
 			contractSuspensionSO = (IContractSuspensionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSuspensionSO.class);
+			//#20997 - to copy from searching list to items list
+			if (getManagedBean().getSuspensionProductListingPagingDataModel() != null && getManagedBean().getSuspensionProductListingPagingDataModel().getList() != null) {
+				for (CtContractItem ctContractItem : getManagedBean().getSuspensionProductListingPagingDataModel().getList()) {			
+					for(CtContractItem ctItem : this.getManagedBean().getContractVer().getCtContractItems()){
+						if(ctContractItem.getContractItemId().equals(ctItem.getContractItemId())
+								|| ctItem.getScRequestItem().getRequestNoteItemId().equals(ctContractItem.getScRequestItem().getRequestNoteItemId())) {
+							ctItem.setEffDate(ctContractItem.getEffDate());
+							ctItem.setExpDate(ctContractItem.getExpDate());
+							if(ctContractItem.getRecordStatusFlg() != null) {
+								ctItem.setRecordStatusFlg(ctContractItem.getRecordStatusFlg().intValue());
+							}
+						}
+					}
+				}
+			}
+			//#20997 - end
 
 			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 			reqDTO = new ContractReqDTO();
