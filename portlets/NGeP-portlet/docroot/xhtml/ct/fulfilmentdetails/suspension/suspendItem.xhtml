@@ -98,7 +98,6 @@
 			         mindate="#{DateUtils.getCurrentDateWithoutTime()}"  maxdate="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.expDate}"
 			         pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 			         <p:ajax event="dateSelect" process="@this" update="expDateActive" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
-			         <p:ajax event="dateSelect" process="@this"  update="@this" listener="#{suspensionBackingBean.onChangeEffExpDate(itemData)}"/>
 			    </p:calendar>
 			  </p:column>
 			
@@ -113,7 +112,6 @@
 			          pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 			          <f:attribute name="startDate" value="#{itemData.effDate}" />
                       <f:validator validatorId="primeDateRangeValidator" />
-                       <p:ajax event="dateSelect" process="@this"  update="@this" listener="#{suspensionBackingBean.onChangeEffExpDate(itemData)}"/>
 			      </p:calendar>
 			  </p:column>
 		   	  
