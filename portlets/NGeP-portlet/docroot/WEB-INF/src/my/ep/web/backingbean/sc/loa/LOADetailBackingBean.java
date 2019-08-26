@@ -5029,7 +5029,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			log.info(this.getClass().getName() + ".checkDpIsElisibleForPB(): DocType is: " + ParameterConst.DOCTYPE_PURCHASE_REQUEST);
 			log.info(this.getClass().getName() + ".checkDpIsElisibleForPB(): Source ID is: " + getManagedBean().getSourceId());
 			DpLOABackingBean dpLOABackingBean = new DpLOABackingBean();
-			if (null == getManagedBean().getSourceId()) {
+			Map<String,String> params = FacesContext.getCurrentInstance()
+					.getExternalContext().getRequestParameterMap();
+			String requestNoteDtlId = params.get("requestNoteDtlId");
+			if (null == getManagedBean().getSourceId() || StringUtils.isEmpty(requestNoteDtlId)) {
 				if (loa.isBondReq() && null != loa.getScLoiLoa() 
 					&& null != loa.getScLoiLoa().getFulfilmentTypeCode()
 					&& (loa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
@@ -5049,9 +5052,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					}
 				return;
 			}
-			Map<String,String> params = FacesContext.getCurrentInstance()
-					.getExternalContext().getRequestParameterMap();
-			String requestNoteDtlId = params.get("requestNoteDtlId");
+			
 			log.info(this.getClass().getName() + ".checkDpIsElisibleForPB(): requestNoteDtlId is: " + requestNoteDtlId);
 			dpLOABackingBean.retrieveLOAList(getManagedBean().getSourceId(), userIdRequired);
 			if (StringUtils.isNotEmpty(requestNoteDtlId) && null != dpLOABackingBean.getManagedBean() && null != dpLOABackingBean.getManagedBean().getPurchaseRequestList()
