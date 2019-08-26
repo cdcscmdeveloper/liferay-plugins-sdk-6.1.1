@@ -14,7 +14,7 @@
 		<tr>
 		<td style="vertical-align: bottom;" align="right"><p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
 					style="float:right;"
-					action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeQuotation, qTDetailBB.managedBean.qt.qtId)}"
+					action="#{qTDetailBB.redirectToTrackingDiary(qTDetailBB.managedBean.qt.qtId)}"
 					immediate="true" rendered="#{qTDetailBB.managedBean.maintanceFlow}"/></td>
 		</tr>
 		<tr>
@@ -26,6 +26,32 @@
 					process="@this"
 					update="@this" />
 			</c:if>
+			
+			<!-- ***25692 - start -->
+			<c:if test="#{qTDetailBB.approvalScreen and qTDetailBB.managedBean.readOnly}" >
+				
+				<div class="ppRightBtn">
+					<h:panelGroup id="approverBtns">
+					<ui:param name="readOnlyTask" value="#{approvalBackingBean.managedBean.readOnly}" />
+						<ui:decorate
+							template="/WEB-INF/facelets/templates/claim_template.xhtml">
+							<ui:define name="outComeSection">
+								<ui:repeat var="bpmAction"
+									value="#{approvalBackingBean.managedBean.outComes}">
+									<ui:param name="buttonLabel"
+										value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+									
+									<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
+										styleClass="ui-button" onstart="blockWidget.show();"
+										oncomplete="blockWidget.hide();"
+										action="#{approvalBackingBean.approvalBpmTask(bpmAction)}" />
+								</ui:repeat>
+							</ui:define>
+						</ui:decorate>
+					</h:panelGroup>
+				</div>
+			</c:if>
+			<!-- ***25692 - end -->
 				
 			<c:if test="#{!qTDetailBB.managedBean.readOnly}">
 				<p:commandButton value="#{lbl['lbl.btn.save']}"
@@ -90,7 +116,6 @@
 								(empty qTDetailBB.managedBean.amendMentBean or !qTDetailBB.managedBean.amendMentBean.brandNew) and !qTDetailBB.managedBean.changesOnQTMaintenance}" />
 						</c:otherwise>
 				</c:choose>
-				
 				<c:if test="#{qTDetailBB.isQTStatusInBetween(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_QT_SUBMISSION, QTStatusConst.QT_PENDING_LOA)}">
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
 						style="float:right;margin-right: 12px;" 

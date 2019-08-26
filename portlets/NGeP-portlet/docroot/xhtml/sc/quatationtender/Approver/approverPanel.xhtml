@@ -23,29 +23,6 @@
 			postSignAction="#{approvalBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}"
 			enableAutoUpdate="#{approvalBackingBean.enableAutoUpdate()}" />
 
-		<div class="ppRightBtn">
-			<h:panelGroup id="approverBtns">
-<ui:param name="readOnlyTask" value="#{approvalBackingBean.managedBean.readOnly}" />
-				<ui:decorate
-					template="/WEB-INF/facelets/templates/claim_template.xhtml">
-					<ui:define name="outComeSection">
-						<ui:repeat var="bpmAction"
-							value="#{approvalBackingBean.managedBean.outComes}">
-							<ui:param name="buttonLabel"
-								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-							
-							<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
-								styleClass="ui-button" onstart="blockWidget.show();"
-								oncomplete="blockWidget.hide();"
-								action="#{approvalBackingBean.approvalBpmTask(bpmAction)}" />
-						</ui:repeat>
-					</ui:define>
-				</ui:decorate>
-
-
-
-			</h:panelGroup>
-		</div>
 		
 		<c:if
 			test="${approvalBackingBean.managedBean.approvalType == ParameterConst.approvalCategoryBudget}">
