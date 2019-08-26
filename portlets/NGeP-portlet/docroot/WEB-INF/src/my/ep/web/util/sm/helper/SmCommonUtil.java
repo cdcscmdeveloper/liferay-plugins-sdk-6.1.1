@@ -168,6 +168,7 @@ import my.ep.persistence.entity.sm.SmAttachment;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
+import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmGstSupplierDoc;
@@ -5718,4 +5719,40 @@ public class SmCommonUtil {
 
 		return resDTO.getPmCountry();
 	}
+	
+	//25929 - start
+	/**
+	 * Calculate equity or share holding company's percentage for the supplier.
+	 */
+	public static void calculateEquityCompanyPercent(SmApplicationManagedBean managedBean) {
+		BigDecimal companiesEquityTotal = null;
+		BigDecimal mul = new BigDecimal(100);
+		try {
+			
+			if(managedBean.getSmAppl().getSmCompanyBasic().getCompaniesEquityTotal() != null)
+			{
+				companiesEquityTotal = managedBean.getSmAppl().getSmCompanyBasic().getCompaniesEquityTotal();
+				for (SmEquityCompany comp : managedBean.getSmAppl()
+						.getSmEquityCompanies()) {
+					
+					if(comp.getShareAmt() != null 
+							&& companiesEquityTotal != null 
+							&& companiesEquityTotal.compareTo(BigDecimal.ZERO) > 0) {
+						comp.setSharePercentage(comp.getShareAmt().divide(companiesEquityTotal,8,
+								RoundingMode.HALF_UP)
+						.multiply(mul)
+						.setScale(3, RoundingMode.HALF_UP));
+					} else {
+						comp.setSharePercentage(
+								new BigDecimal(0).setScale(3, RoundingMode.HALF_UP));
+						comp.setShareAmt(
+								new BigDecimal(0).setScale(3, RoundingMode.HALF_UP));
+					}					
+				}			
+			}
+		}catch (NumberFormatException ne) {
+			throw new EpException(MessageConst.ERROR_722522);
+		}
+	}
+	//25929 - end
 }
