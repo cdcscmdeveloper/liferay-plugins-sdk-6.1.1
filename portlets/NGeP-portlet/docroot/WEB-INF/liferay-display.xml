@@ -305,6 +305,7 @@
 		<portlet id="disciplinaryAction"></portlet>
 		<portlet id="complaint"></portlet>
 		<portlet id="onlineRegistration"></portlet>
+		<portlet id="smCancelRegistration"></portlet>
 		<portlet id="onlineAccountMaintenance"></portlet>
 
 		<portlet id="sm" />
