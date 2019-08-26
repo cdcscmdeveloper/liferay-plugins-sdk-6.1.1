@@ -538,27 +538,34 @@ public class TaskReassignmentBackingBean extends
 							getManagedBean().getCurrentActiveOrg().getOrgProfileId();
 				Integer activeRecordStatusFlg = new Integer(1);
 				Long taskDetailOrgProfileId = 0L;
+				Long pmOrgProfileId = 0L;
 				
 				for (WorklistItemVO task : bpmResDTO.getWorklistVO().getWorklistItem()) {
 					for (String loginId : task.getAssignees()) {
 						user = PmCommonUtil.retrieveUserByLoginId(loginId);
 						taskDetail = retrieveSourcingTaskReassignmentDetail(task);
-						log.info("["+user.getLoginId()+" "+user.getUserName()+"] "+
-								taskDetail.getOrgProfileId()+" : "+profileId+" : "+
-								user.getRecordStatusFlg()+" : "+
-								this.getManagedBean().getTaskAssignmentSearchBean().getOrgProfile().getRecordStatusFlg());
 						
 						// Ensures only users within the selected Organization will be listed
+						List<PmUserOrg> userOrgList = PmCommonUtil
+								.retrieveActiveOrgWithoutRole(user.getUserId(), false);
+						for (PmUserOrg userOrg : userOrgList) {
+							pmOrgProfileId = userOrg.getPmOrgProfile().getOrgProfileId();
+						}
+				
 						if (taskDetail != null) {
 							taskDetailOrgProfileId = taskDetail.getOrgProfileId() != null ? 
 											  taskDetail.getOrgProfileId() : profileId;
 							if ( ((user.getRecordStatusFlg().equals(activeRecordStatusFlg)) && 
 									(user.getRecordStatusFlg().equals(this.getManagedBean().getTaskAssignmentSearchBean()
 									.getOrgProfile().getRecordStatusFlg()))) &&
-									(taskDetailOrgProfileId.equals(profileId)) ) {
+									(pmOrgProfileId.equals(profileId)) ) {
 								users.add(user);
 							}
 						}
+						log.info("USER.INFO= ["+user.getLoginId()+" "+user.getUserName()+"] "+
+								pmOrgProfileId+" : "+profileId+" : "+taskDetailOrgProfileId+" : "+
+								user.getRecordStatusFlg()+" : "+
+								this.getManagedBean().getTaskAssignmentSearchBean().getOrgProfile().getRecordStatusFlg());
 					}
 				}
 			}
@@ -846,7 +853,8 @@ public class TaskReassignmentBackingBean extends
 		if (this.getManagedBean().isShowReassigneeList()) {
 			this.getManagedBean().setShowReassigneeList(false);
 		}
-		
+		this.getManagedBean().setSelectedReassignee(new ArrayList<String>());
+		this.getManagedBean().getSelectedReassignee().clear();
 	}
 	
 	public boolean verifiedDocNumber(String docNumber) {
@@ -950,7 +958,7 @@ public class TaskReassignmentBackingBean extends
         		docPrefix = docPrefix.replace("-", "");
 	        }
         	if (!docPrefix.isEmpty() && docPrefix.matches("[a-zA-Z]+")) {
-		        if (docPrefix.length() != 2 ) {
+        		if (docPrefix.length() != 2 && docPrefix.length() < 2 ) {
 	        		valid = false;
 		    	} else {
 		    		moduleList.add(docPrefix);
@@ -2162,6 +2170,21 @@ public class TaskReassignmentBackingBean extends
 						
 						if(resultBean != null && resultBean.getResultList() != null){
 							String capitalizeUserName;
+							HashMap<String, PmUser> users = new HashMap<String, PmUser>();
+							
+							String currentUser = getManagedBean().getTaskAssignmentSearchBean().getUser() != null ?
+									  getManagedBean().getTaskAssignmentSearchBean().getUser().getLoginId() : 
+									  getManagedBean().getSelectedReassignee().get(0);
+									  
+						    for (PmUser getResultList : resultBean.getResultList()) {
+						    	if (!getResultList.getLoginId().equals(currentUser)) {
+						    		users.put(getResultList.getLoginId(), getResultList);
+						    	}
+						    }
+						    
+						    resultBean.getResultList().clear();
+							resultBean.getResultList().addAll(new ArrayList<PmUser>(users.values()));
+							
 							for(PmUser user : resultBean.getResultList()){
 								capitalizeUserName = WordUtils.capitalizeFully(user.getUserName());
 								user.setUserName(capitalizeUserName);
