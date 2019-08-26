@@ -270,6 +270,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	private static final String menuItemBPKApproval = "MenuItemBPKApproval";
 	private static final String menuItemCommitteeApproval = "MenuItemCommitteeApproval";
 	private static final String menuItemCommitteeApprovalEcOcTecFec = "MenuItemCommitteeApprovalEcOcTecFec";
+	private static final String menuItemPublicationApproverAssignment = "MenuItemPublicationApproverAssignment";
 	
 	public String getMenuItemDetails() {
 		return menuItemDetails;
@@ -393,7 +394,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 		
 		//initialization of loi and loa data model
-		if(isQTMaintenanceScreen()){
+		if(isQTMaintenanceScreen() || isQTSearchScreen()){
 			getSearchQtLoiDataModelPriv(false);
 			getSearchLoaForQtDataModelPriv(false);
 		}
@@ -1734,7 +1735,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}else if(ParameterConst.DOCTYPE_LETTER_OF_AWARD.equals(docType) 
 					&& (ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(procurementMode)
 						|| ParameterConst.PROCUREMENT_MODE_TENDER.equals(procurementMode)) 
-							&& !isQTMaintenanceScreen()){
+							&& !(isQTMaintenanceScreen() || isQTSearchScreen())){
 				List<String> procurementModes = new ArrayList<String>();
 				procurementModes.add(procurementMode);
 				procurementModes.add(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO);	
@@ -1748,7 +1749,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				List<String> procurementModes = new ArrayList<String>();
 				procurementModes.add(ParameterConst.PROCUREMENT_MODE_QUOTATION);
 				procurementModes.add(ParameterConst.PROCUREMENT_MODE_TENDER);
-				if (!isQTMaintenanceScreen()) {
+				if (!(isQTMaintenanceScreen() || isQTSearchScreen())) {
 					procurementModes.add(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO);	
 				}
 				searchFilterBean.add(
@@ -1963,7 +1964,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	private boolean isQTMaintenanceScreen() {
 		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
-
+	
+	// ***17376#42
+	private boolean isQTSearchScreen() {
+		return QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+	}
+	
+	
+	
 	/**
 	 * Retrive financial specification.
 	 */
@@ -3704,7 +3712,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				reqDTO.setQtnTenderSearchBean(qtnTenderSearchBean.toQTSearchBean());
 				reqDTO.putToArgs(MapKeyEnum.isMofSupplier, isMofSupplier());
 				reqDTO.putToArgs(MapKeyEnum.isDeskOfficer, isDeskOfficer());
-				reqDTO.putToArgs(MapKeyEnum.isQtMaintenanceScreen, isQTMaintenanceScreen());
+				reqDTO.putToArgs(MapKeyEnum.isQtMaintenanceScreen, isQTMaintenanceScreen() || isQTSearchScreen());
 				
 				if((Boolean)reqDTO.getFromArgs(MapKeyEnum.isMofSupplier)){
 					ISupplierSearchSO supplierSearchSO;
@@ -3818,7 +3826,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				reqDTO.setQtnTenderSearchBean(qtnTenderSearchBean.toQTSearchBean());
 				reqDTO.putToArgs(MapKeyEnum.isMofSupplier, isMofSupplier());
 				reqDTO.putToArgs(MapKeyEnum.isDeskOfficer, isDeskOfficer());
-				reqDTO.putToArgs(MapKeyEnum.isQtMaintenanceScreen, isQTMaintenanceScreen());
+				reqDTO.putToArgs(MapKeyEnum.isQtMaintenanceScreen, isQTMaintenanceScreen() || isQTSearchScreen());
 				if((Boolean)reqDTO.getFromArgs(MapKeyEnum.isMofSupplier)){
 					ISupplierSearchSO supplierSearchSO;
 					try {
@@ -4436,7 +4444,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	public SelectItem[] getProcurementModeDropdownValues() {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> recommendList = new ArrayList<String>();
-		if (isQTMaintenanceScreen()) {
+		if (isQTMaintenanceScreen() || isQTSearchScreen()) {
 			recommendList.add(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO);	
 		}
 		recommendList.add(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE);
@@ -6904,7 +6912,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		String docType = getManagedBean().getQtnTenderSearchBean().getResultDocType();
 		if (scQt != null && scQt.getQtStatus() != null && scQt.getQtStatus().getStatusId() != null &&
 				ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION.equals(docType) &&
-				isQTMaintenanceScreen()) {
+				(isQTMaintenanceScreen() || isQTSearchScreen())) {
 			isAllowQTViewSupplierFinalization = true;
 		}		
 		
@@ -7046,7 +7054,19 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	}
 	
 	
+	/*  ***25692 - start */
+	public boolean isApprovalScreen(){
+		return QTConstants.PORTLET_NAME_APPROVAL.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+	}
 	
+	public String getMenuItemPublicationApproverAssignment() {
+		return menuItemPublicationApproverAssignment;
+	}
+	
+	/**
+	 * @param menuItem
+	 * @return
+	 */
 	public boolean displayMenuItem(String menuItem){
 		/*List<String> t = new ArrayList<String>();
 		t.addAll(Arrays.asList(
@@ -7097,28 +7117,35 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				getMenuItemPublishDetail(), //5
 				getMenuItemPaymentDeduction(), //6
 				getMenuItemDocuments(), //7
-				getMenuItemActivities() //8)
+				getMenuItemActivities(), //8
+				getMenuItemPublicationApproverAssignment() //9
 			));
-		if(getUserTaskIsBPKApproval()){
+		if(getUserTaskIsBPKApproval() && isApprovalScreen()){
+			menuSet.remove(getMenuItemPublicationApproverAssignment());
 			menuSet.add(getMenuItemBPKApproval());
 		}
-		else if(getUserTaskIsCommitteeAppointmentApproval()){
+		else if(getUserTaskIsCommitteeAppointmentApproval() && isApprovalScreen()){
 			menuSet.remove(getMenuItemBriefSiteVisit()); //4 from initialized menuSet
 			menuSet.remove(getMenuItemPublishDetail()); //5 from initialized menuSet
 			menuSet.remove(getMenuItemPaymentDeduction()); //6 from initialized menuSet
 			menuSet.remove(getMenuItemDocuments()); //7 from initialized menuSet
+			menuSet.remove(getMenuItemPublicationApproverAssignment());
 			menuSet.add(getMenuItemCommitteeApproval());
 		}
-		else if(getUserTaskIsCommitteeAppointmentApprovalEcOcTecFec()){
+		else if(getUserTaskIsCommitteeAppointmentApprovalEcOcTecFec() && isApprovalScreen()){
+			menuSet.remove(getMenuItemPublicationApproverAssignment());
 			menuSet.add(getMenuItemCommitteeApprovalEcOcTecFec());
 		}
-		else if(getUserTaskIsPublicationApproval()){
+		else if(getUserTaskIsPublicationApproval() && isApprovalScreen()){
+			menuSet.remove(getMenuItemPublicationApproverAssignment());
 			menuSet.add(getMenuItemPublicationApproval());
 		}
 		else;
 		return menuSet.contains(menuItem);
 		
 	}
+	
+	/* ***25692 - end */
 
 	
 
