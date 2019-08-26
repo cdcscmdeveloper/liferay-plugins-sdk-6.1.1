@@ -483,7 +483,7 @@
 		
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.ok']}" onclick="equityChangeAlertDialog.hide();" 
-				action="#{backingBean.calculateCapital}" update=":form:tt:capInfPan,@(.shareHolderInfPanelClass)"
+				action="#{backingBean.calculateCapital}" update=":form"
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 		</div>
 	</p:confirmDialog>
