@@ -4,8 +4,17 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
-
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<!-- ***25692 - start -->
+	<c:if test="#{qTDetailBB.approvalScreen}">
+		<ac:gpkiPopup textBeforeSign="#{approvalBackingBean.textBeforeSign}"
+				postSignAction="#{approvalBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}"
+				enableAutoUpdate="#{approvalBackingBean.enableAutoUpdate()}" />
+	</c:if>
+	<!-- ***25692 - end -->
+	
 	<c:choose>
 	<c:when test="#{qTDetailBB.managedBean.committeeAppointment}">
 		<ui:include src="/xhtml/sc/quatationtender/committeeappointment/qtcommitteeappointment.xhtml" />
