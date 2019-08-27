@@ -924,16 +924,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				fc.getApplication().getNavigationHandler()
 						.handleNavigation(fc, null, gpkiSignAction(null));
 			}
-			// ***25692 - start
-			else if(SCProcessNameConst.APPROVE_BPK.equalsIgnoreCase(taskName)){
-				action = BpmOutcomeConst.BPM_APPROVE;
-//					showDialog = "gpki_dlg.show()";
-//					isGpkiPopup = true;
-				FacesContext fc = FacesContext.getCurrentInstance();
-				fc.getApplication().getNavigationHandler()
-						.handleNavigation(fc, null, gpkiSignAction(null));
-			}
-			// ***25692 - end
 			else {
 				showDialog = "gpki_dlg.show()";
 				isGpkiPopup = true;
