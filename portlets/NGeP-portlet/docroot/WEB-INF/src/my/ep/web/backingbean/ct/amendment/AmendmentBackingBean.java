@@ -1327,8 +1327,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 
 			// Validation for Deduction
-			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && 
-					ctBackingBean.getManagedBean().getContractVer().getCtDeductions() != null 
+			if(ctBackingBean.getManagedBean().getContractVer().getCtDeductions() != null 
 					&& ctBackingBean.getManagedBean().getContractVer().getCtDeductions().size() > 0){
 				for(CtDeduction deduction : ctBackingBean.getManagedBean().getContractVer().getCtDeductions()){
 					if(deduction.getDeductionType() == null ||deduction.getDeductionType().getParameterId() == null ){
@@ -1347,6 +1346,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 												ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 							}
 						}
+					}else{
+						/*mandatory to fill deduction clause*/
+						setTabValue("DE");
+						throw new EpException(MessageConst.ERROR_100022, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.deduction.clause.desc", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 					}
 				}  
 			}
