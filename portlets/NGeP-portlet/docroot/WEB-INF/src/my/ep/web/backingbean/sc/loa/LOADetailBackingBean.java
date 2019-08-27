@@ -5033,7 +5033,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					.getExternalContext().getRequestParameterMap();
 			String requestNoteDtlId = params.get("requestNoteDtlId");
 			if (null == getManagedBean().getSourceId() || StringUtils.isEmpty(requestNoteDtlId)) {
-				if (loa.isBondReq() && null != loa.getScLoiLoa() 
+				if (null != loa.getScLoiLoa() 
 					&& null != loa.getScLoiLoa().getFulfilmentTypeCode()
 					&& (loa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
 					|| loa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN))
@@ -5050,6 +5050,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							getManagedBean().setNoParameterId(String.valueOf(getParameterIdByTypeAndCode(ParameterTypeConst.YES_NO_FLAG, ParameterConst.COMPLIANCE_STATUS_NOT_COMPLIANCE.toUpperCase())));
 						}
 					}
+			}
+			
+			if (getManagedBean().isEnablePBForDP()) {
 				return;
 			}
 			
