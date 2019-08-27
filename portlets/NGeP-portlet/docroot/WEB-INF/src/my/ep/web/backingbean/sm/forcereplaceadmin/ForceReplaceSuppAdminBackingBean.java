@@ -678,7 +678,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 
 		PmCountry countryMy = SmCommonUtil
 				.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
-		getManagedBean().getNewAdmin().setPmCountry(countryMy);
+		
 		SmPersonnelAddress perm = null;
 		if (getManagedBean().getNewAdmin() != null
 				&& !EntityHelper.isCollectionEmpty(getManagedBean()
