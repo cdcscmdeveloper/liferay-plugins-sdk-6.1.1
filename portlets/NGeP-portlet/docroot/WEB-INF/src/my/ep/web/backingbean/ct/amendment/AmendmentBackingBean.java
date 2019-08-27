@@ -1327,8 +1327,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 
 			// Validation for Deduction
-			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && 
-					ctBackingBean.getManagedBean().getContractVer().getCtDeductions() != null 
+			if(ctBackingBean.getManagedBean().getContractVer().getCtDeductions() != null 
 					&& ctBackingBean.getManagedBean().getContractVer().getCtDeductions().size() > 0){
 				for(CtDeduction deduction : ctBackingBean.getManagedBean().getContractVer().getCtDeductions()){
 					if(deduction.getDeductionType() == null ||deduction.getDeductionType().getParameterId() == null ){
