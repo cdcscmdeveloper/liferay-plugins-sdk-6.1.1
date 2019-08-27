@@ -140,6 +140,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -2170,9 +2171,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}
 			if (getManagedBean().getCtAttachmentLatest().getFileName() == null || "".equalsIgnoreCase(getManagedBean().getCtAttachmentLatest().getFileName())) {
-				throw new EpException(MessageConst.ERROR_100022,
-						new String[] {ResourceBundleUtils.getMessage("lbl.ct.bond.waiver.letter", 
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				/*throw new EpException(MessageConst.ERROR_100022,
+						new String[] {ResourceBundleUtils.getMessage("lbl.ct.bond.waiver.deferment", 
+								2, new FacesScopes().getUserLocale())});*/
+				throw new EpException(MessageConst.ERROR_740060,new String[]{SmCommonUtil.getMessage("lbl.ct.bond.waiver.deferment",null), ""});
 			}
 			/*
 			 * the value 0 if the argument Date is equal to this Date;
