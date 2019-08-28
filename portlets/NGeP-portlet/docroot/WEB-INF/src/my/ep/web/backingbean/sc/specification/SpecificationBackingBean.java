@@ -2021,8 +2021,20 @@ public class SpecificationBackingBean extends
 									.getQtScoreWeightage());
 							pkgOfferPrice
 									.setOfferPriceType(ParameterConst.RECOMMEND_TYPE_PACKAGE);
-							pkgOfferPrice.setScoreType(new BigDecimal(this.getManagedBean()
-									.getOfferScoreType()));
+							
+							if (scoreTypeN.equals(QTConstants.AUTO_SCORE)) {
+								pkgOfferPrice.setScoreType(new BigDecimal(this.getManagedBean()
+										.getOfferScoreType()));
+
+							} else if (scoreTypeN.equals(QTConstants.USER_SCORE)) {
+								pkgOfferPrice.setScoreType(new BigDecimal(this.getManagedBean()
+										.getOfferScoreType()));
+								pkgOfferPrice.setAboveScore(null);
+								pkgOfferPrice.setBelowScore(null);
+								pkgOfferPrice.setFromVariance(null);
+								pkgOfferPrice.setToVariance(null);
+
+							}
 							setUserDetails(pkgOfferPrice);
 							this.getManagedBean()
 									.setOfferPricePackage(pkgOfferPrice);
