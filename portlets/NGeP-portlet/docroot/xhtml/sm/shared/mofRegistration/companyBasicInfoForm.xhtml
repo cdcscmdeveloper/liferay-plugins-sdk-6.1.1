@@ -62,7 +62,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.account.rob.expire']}" rendered="#{backingBean.managedBean.smSupplier.businessType == 'C' or backingBean.managedBean.smSupplier.businessType == 'F'}" /></td>
 					<td>
 						<p:calendar showOn="button" navigator="true"
-							display="inline" required="true" readonlyInput="true"
+							display="inline" readonlyInput="true"
 							label="#{lbl['lbl.sm.account.rob.expire']}" id="robExpiryDate"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 							yearRange="-99:+0" 
@@ -70,7 +70,7 @@
 							rendered="#{(backingBean.managedBean.smSupplier.businessType == 'C' or backingBean.managedBean.smSupplier.businessType == 'F') and (!backingBean.managedBean.companyValidWithSSM || empty backingBean.managedBean.smAppl.smCompanyBasic.robExpiryDate) }"/>	
 							
 							<p:calendar  navigator="true"
-							display="inline" required="true" readonlyInput="true" disabled = "true"
+							display="inline" readonlyInput="true" disabled = "true"
 							label="#{lbl['lbl.sm.account.rob.expire']}" id="robExpiryDateD"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 							yearRange="-99:+0" 
