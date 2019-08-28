@@ -105,6 +105,7 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
+import org.apache.bcel.generic.Select;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -3278,32 +3279,65 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 	
 	public void ownerNationalityOnChange(){
-		getUnknownCountry();
-		SmSupplierOwner owner = getManagedBean().getSmSuppOwner();
-		Long countryId = owner.getNationality().getCountryId();
-		ParameterReqDTO reqDTO = new ParameterReqDTO();
-	
-		if(countryId != null){
-			PmCountry country = SmCommonUtil.retrievePmCountryById(countryId);
-			owner.setNationality(country);
-			if(country.getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE) || 
-					country.getCountryCode().equalsIgnoreCase(ParameterConst.COUNTRY_UNKNOWN_CODE)){
-				reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_IC);
-			}else{
-				reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_PASSPORT);
-			}
-			reqDTO.setParameterType(ParameterTypeConst.IDENTIFICATION_TYPES);
-		}else{
-			PmCountry defaultNationality = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
-			owner.setNationality(defaultNationality);
-			reqDTO.setParameterType(ParameterTypeConst.IDENTIFICATION_TYPES);
-			reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_IC);
-		}
+		//16052019 - SSM INTEGRATION CR => START
+		List<SmSupplierOwner> listSuppOwner = getManagedBean().getSmSuppOwners();
 		
-		//owner.setNationality(country);
-		PmParameter identObj = SmServiceLookup.getParameterSO().retrieveParameterByTypeAndCode(reqDTO).getPmParameter();
-		owner.setIdentificationTypeId(identObj.getParameterId());
-		owner.setIdentificationType(identObj);
+		if(listSuppOwner.size() > 0){
+			for(SmSupplierOwner owner : listSuppOwner){
+				getUnknownCountry();
+				ParameterReqDTO reqDTO = new ParameterReqDTO();
+				if(owner.getNationality().getCountryId() != null) {
+					PmCountry country = SmCommonUtil.retrievePmCountryById(owner.getNationality().getCountryId());
+					owner.setNationality(country);
+					//set if malaysia or not
+					if(country.getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE) || 
+							country.getCountryCode().equalsIgnoreCase(ParameterConst.COUNTRY_UNKNOWN_CODE)){
+						reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_IC);
+					}else{
+						reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_PASSPORT);
+					}
+					reqDTO.setParameterType(ParameterTypeConst.IDENTIFICATION_TYPES);
+				} else {
+					PmCountry defaultNationality = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+					owner.setNationality(defaultNationality);
+					reqDTO.setParameterType(ParameterTypeConst.IDENTIFICATION_TYPES);
+					reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_IC);
+				}
+				
+				PmParameter identObj = SmServiceLookup.getParameterSO().retrieveParameterByTypeAndCode(reqDTO).getPmParameter();
+				owner.setIdentificationTypeId(identObj.getParameterId());
+				owner.setIdentificationType(identObj);
+			}
+		} else {
+		//16052019 - SSM INTEGRATION CR => END
+		
+			getUnknownCountry();
+			SmSupplierOwner owner = getManagedBean().getSmSuppOwner();
+			Long countryId = owner.getNationality().getCountryId();
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+		
+			if(countryId != null){
+				PmCountry country = SmCommonUtil.retrievePmCountryById(countryId);
+				owner.setNationality(country);
+				if(country.getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE) || 
+						country.getCountryCode().equalsIgnoreCase(ParameterConst.COUNTRY_UNKNOWN_CODE)){
+					reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_IC);
+				}else{
+					reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_PASSPORT);
+				}
+				reqDTO.setParameterType(ParameterTypeConst.IDENTIFICATION_TYPES);
+			}else{
+				PmCountry defaultNationality = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+				owner.setNationality(defaultNationality);
+				reqDTO.setParameterType(ParameterTypeConst.IDENTIFICATION_TYPES);
+				reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_IC);
+			}
+			
+			//owner.setNationality(country);
+			PmParameter identObj = SmServiceLookup.getParameterSO().retrieveParameterByTypeAndCode(reqDTO).getPmParameter();
+			owner.setIdentificationTypeId(identObj.getParameterId());
+			owner.setIdentificationType(identObj);
+		}
 	}
 
 	public void personnelNationalityOnChange(){
