@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.report.sm;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -35,6 +36,7 @@ import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.type.pm.OrganizationType;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.report.ReportBaseBackingBean;
@@ -213,6 +215,12 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			getManagedBean().setCapitalShareTo(StringUtils.EMPTY);
 		}
 	}
+	
+	// #23080 - start
+	public void onChangeOrganizationType() {
+
+	}
+	// #23080 - end
 
 	public void reportOnChange() {
 		if (!StringUtils.isBlank(getManagedBean().getReportCode())) {
@@ -254,7 +262,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		}
 	}
 
-	public List<SelectItem> retrieveRegType(boolean showAll, boolean showUpgrade) {
+	public List<SelectItem> retrieveRegType(boolean showAll, boolean showUpgrade, boolean compProfile) {
 		List<SelectItem> items = new ArrayList<SelectItem>();
 		SelectItem item = null;
 		if (showAll) {
@@ -263,20 +271,37 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			item.setValue(StringUtils.EMPTY);
 			items.add(item);
 		}
-		item = new SelectItem();
-		item.setLabel(SmCommonUtil.getMessage("lbl.rpt.regBasic", null));
-		item.setValue(SmReportConst.SM_REG_TYPE_BASIC);
-		items.add(item);
-		item = new SelectItem();
-		item.setLabel(SmCommonUtil.getMessage("lbl.rpt.regMOF", null));
-		item.setValue(SmReportConst.SM_REG_TYPE_MOF);
-		items.add(item);
-		if (showUpgrade) {
+		if (!compProfile) {
 			item = new SelectItem();
-			item.setLabel(SmCommonUtil.getMessage("lbl.rpt.upgradeBasicToMOF",
-					null));
-			item.setValue(SmReportConst.SM_REG_TYPE_UPGRADE_BASIC_TO_MOF);
+			item.setLabel(SmCommonUtil.getMessage("lbl.rpt.regBasic", null));
+			item.setValue(SmReportConst.SM_REG_TYPE_BASIC);
 			items.add(item);
+			item = new SelectItem();
+			item.setLabel(SmCommonUtil.getMessage("lbl.rpt.regMOF", null));
+			item.setValue(SmReportConst.SM_REG_TYPE_MOF);
+			items.add(item);
+			if (showUpgrade) {
+				item = new SelectItem();
+				item.setLabel(SmCommonUtil.getMessage("lbl.rpt.upgradeBasicToMOF",
+						null));
+				item.setValue(SmReportConst.SM_REG_TYPE_UPGRADE_BASIC_TO_MOF);
+				items.add(item);
+			}
+		} else {
+			// #23080 - start
+			item = new SelectItem();
+			item.setLabel(SmCommonUtil.getMessage("lbl.rpt.regBasicAccount", null));
+			item.setValue(SmReportConst.SM_REG_TYPE_BASIC);
+			items.add(item);
+			item = new SelectItem();
+			item.setLabel(SmCommonUtil.getMessage("lbl.rpt.regG2GAccount", null));
+			item.setValue(SmReportConst.SM_REG_TYPE_G2G);
+			items.add(item);
+			item = new SelectItem();
+			item.setLabel(SmCommonUtil.getMessage("lbl.rpt.regMOFAccount", null));
+			item.setValue(SmReportConst.SM_REG_TYPE_MOF);
+			items.add(item);
+			// #23080 - end
 		}
 		return items;
 	}
@@ -694,5 +719,25 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		getManagedBean().setDateTo(new Date());
 	}
 	//end of Enhancement #19245 
+	
+	// #23080 - start
+	/**
+	 * Initialized agency type
+	 */
+	public void retrieveAgencyTypes() {
+		getManagedBean().setAgencyTypeItems(new ArrayList<SelectItem>());
+		SelectItem[] items = getDropdownCodeValues("OT");
+		String[] agencyType = new String[] { OrganizationType.STATUTORY_BODIES.value(), OrganizationType.STATUTORY_BODIES_STATE.value(), OrganizationType.STATE_GOVERNMENT.value(),
+				OrganizationType.LOCAL_AUTHORITY.value() };
+		if (items != null && items.length > 0) {
+			List<SelectItem> itemList = Arrays.asList(items);
+			for (SelectItem item : itemList) {
+				if (item.getValue() != null && Arrays.asList(agencyType).contains(item.getValue())) {
+					getManagedBean().getAgencyTypeItems().add(item);
+				}
+			}
+		}
+	}
+	// #23080 - end
 	
 }
