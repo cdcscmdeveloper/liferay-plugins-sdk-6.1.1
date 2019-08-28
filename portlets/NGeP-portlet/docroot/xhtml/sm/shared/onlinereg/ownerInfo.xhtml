@@ -49,7 +49,12 @@
 			
 			<p:column styleClass="column-align-center">
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.sm.individual.newicno']}" />
+					<c:if test="#{not empty varOwner.nationality and varOwner.nationality.countryCode != 'MY'}">
+						<h:outputText value="#{lbl['lbl.sm.individual.passport']}" />
+					</c:if>
+					<c:if test="#{empty varOwner.nationality or varOwner.nationality.countryCode eq 'MY'}">
+						<h:outputText value="#{lbl['lbl.sm.individual.newicno']}" />
+					</c:if>
 				</f:facet>
 				<h:outputText rendered="#{!varOwner.showTextField}" value="#{varOwner.identificationNo}" />
 			
@@ -61,7 +66,14 @@
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.person.nationality.origin']}" />
 				</f:facet>
-				<h:outputText value="#{varOwner.nationality.countryName}" />
+				<!-- <h:outputText value="#{varOwner.nationality.countryName}" /> -->
+				<!-- 16052019 - SSM INTEGRATION CR - START -->
+				<p:selectOneMenu value="#{varOwner.nationality.countryId}">
+					<f:selectItems var="counLs"
+						value="#{registrationBackingBean.managedBean.countryLs}" />
+						<p:ajax event="change" listener="#{registrationBackingBean.ownerNationalityOnChange}" update=":form:tableOwner" />
+				</p:selectOneMenu>
+				<!-- 16052019 - SSM INTEGRATION CR  - END -->
 			</p:column>
 			
 			<p:column  styleClass="column-align-center" rendered="#{registrationBackingBean.managedBean.showOwner || registrationBackingBean.managedBean.showDirector}">

@@ -143,12 +143,14 @@
 				</td>
 				
 				<!--  16052019 - SSM INTEGRATION CR  -->
-				<td class="tdTitle">
-					<p:outputLabel value="#{lbl['lbl.sm.epno']}" />
-				</td>
-				<td class="tdContent">
-					<p:outputLabel styleClass="outputLabel-view" value="#{registrationBackingBean.managedBean.smSupp.epNo}" />
-				</td>
+				<c:if test="#{registrationBackingBean.managedBean.smSupp.epNo}">
+					<td class="tdTitle">
+						<p:outputLabel value="#{lbl['lbl.sm.epno']}" />
+					</td>
+					<td class="tdContent">
+						<p:outputLabel styleClass="outputLabel-view" value="#{registrationBackingBean.managedBean.smSupp.epNo}" />
+					</td>
+				</c:if>
 			</tr>
 		</table>
 	</p:panel>
