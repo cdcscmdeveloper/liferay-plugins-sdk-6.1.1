@@ -142,16 +142,16 @@
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa}"
 			actionListener="#{amendmentBackingBean.setTabValue('SLOA')}" update=":form" />
-	
+	<!-- Start PUTRA #24333 -->
 			<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.performance.bond']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			rendered="#{(amendmentBackingBean.managedBean.prepareLOA or amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa)
-			 and ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa != null
+			rendered="#{(ctBackingBean.managedBean.contractVer.ctContractAmount.bondReq or amendmentBackingBean.managedBean.prepareLOA or amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa)
+			 or ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa != null
 			 and !ctBackingBean.managedBean.contractVer.ctContractAmount.bondExempted
 			 and ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondReq
 			 and ctBackingBean.managedBean.contractVer.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}"
 			actionListener="#{amendmentBackingBean.setTabValue('PB')}" update=":form" />
-			
+		<!-- End PUTRA #24333 -->	
 	       <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.declaration']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa}"
@@ -190,9 +190,13 @@
 				   <p:outputPanel id="ctMenuIdPidId" rendered="#{ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
 		 	                <ui:include src="/xhtml/ct/common/purchaseInDefault.xhtml" />
 		 	        </p:outputPanel>
-				    <ui:include src="performanceBond.xhtml" />
+				  <!--   <ui:include src="performanceBond.xhtml" /> --> 
 				</p:outputPanel>
 				
+				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.performanceBond']
+				and amendmentBackingBean.managedBean.ackFA eq null }">
+					<ui:include src="performanceBond.xhtml" />
+				</p:outputPanel>
 				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.amendment'] }">
 					<ui:include src="amendmentDetails.xhtml" />
 					<ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
@@ -220,7 +224,8 @@
 					<ui:include src="/xhtml/ct/common/schedule.xhtml" />
 				</p:outputPanel>
 				
-				 <p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.performance.bond'] }">
+				 <p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.performance.bond'] 
+				 and amendmentBackingBean.managedBean.prepareLOA or amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa}">
 					<ui:include src="loaBondDetails.xhtml" />
 			    </p:outputPanel>
 				
@@ -274,7 +279,7 @@
 			</td>
 		</tr>
 		</table>
-		<p:confirmDialog message="#{amendmentBackingBean.getCancelConfirmationContent(ctBackingBean.managedBean.contractVer.docType)}"
+		<p:confirmDialog message="#{lbl['lbl.msg.confirm.cancel.amendment']}"
 			severity="alert" widgetVar="cancelConfirmDlg" closable="true"
 			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
 			<div class="ppRightBtn">
