@@ -29,6 +29,7 @@ public class AmendTabSideMenus {
 	List<String> menuWithMeetings  = null;
 	List<String> menuWithDeclaration = null;
 	List<String> menuWithAmendSupplier = null;
+	List<String> menuWithBond = null; //24333 
 
 	List<String> menuWithAgency = null;
 	List<String> menuDeduction= null;
@@ -72,7 +73,12 @@ public class AmendTabSideMenus {
 			menuWithPrepareBond =  new ArrayList<String>(Arrays.asList(
 					ResourceBundleUtils.getMessage("lbl.ct.menu.performance.bond", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
-
+		//24333 - Start
+		if (menuWithBond ==  null) {
+			menuWithBond =  new ArrayList<String>(Arrays.asList(
+					ResourceBundleUtils.getMessage("lbl.ct.menu.performance.bond", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+		}
+		//24333 - End
 		if (menuWithDecision == null) {
 			menuWithDecision =  new ArrayList<String>(Arrays.asList(
 					ResourceBundleUtils.getMessage("lbl.ct.decision", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
