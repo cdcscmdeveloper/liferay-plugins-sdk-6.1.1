@@ -143,14 +143,20 @@
 				</td>
 				
 				<!--  16052019 - SSM INTEGRATION CR  -->
-				<c:if test="#{registrationBackingBean.managedBean.smSupp.epNo}">
-					<td class="tdTitle">
-						<p:outputLabel value="#{lbl['lbl.sm.epno']}" />
-					</td>
-					<td class="tdContent">
-						<p:outputLabel styleClass="outputLabel-view" value="#{registrationBackingBean.managedBean.smSupp.epNo}" />
-					</td>
-				</c:if>
+				<c:choose>
+					<c:when test="#{!registrationBackingBean.managedBean.smAppl.brandNew}">
+						<td class="tdTitle">
+							<p:outputLabel value="#{lbl['lbl.sm.epno']}" />
+						</td>
+						<td class="tdContent">
+							<p:outputLabel styleClass="outputLabel-view" value="#{registrationBackingBean.managedBean.smSupp.epNo}" />
+						</td>
+					</c:when>
+					<c:otherwise>
+						<td class="tdTitle"></td>
+						<td class="tdContent"></td>
+					</c:otherwise>
+				</c:choose>
 			</tr>
 		</table>
 	</p:panel>
