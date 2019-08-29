@@ -745,7 +745,7 @@ public class TaskReassignmentBackingBean extends
 				&& this.getManagedBean().getTaskAssignmentSearchBean()
 						.getUser().getUserId() != null && this.getManagedBean()
 				.getTaskAssignmentSearchBean().getUser().getLoginId().length() > 0)) {
-			throw new EpException(MessageConst.ERROR_770107);
+			throw new EpException(MessageConst.ERROR_770206);
 		}
 		if (this.getManagedBean().getTaskAssignmentSearchBean().getDocNo().isEmpty()) {
 			resetReassigneeList(); //If the Reset button is not clicked when performing the next search
@@ -754,7 +754,7 @@ public class TaskReassignmentBackingBean extends
 		} else {
 			if (!verifiedDocNumber(this.getManagedBean().
 					getTaskAssignmentSearchBean().getDocNo())) {
-				throw new EpException(MessageConst.ERROR_770206);
+				throw new EpException(MessageConst.ERROR_770207);
 			} else {
 				resetReassigneeList();
 				resetCheckAllTasks();
