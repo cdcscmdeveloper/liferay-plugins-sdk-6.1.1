@@ -266,13 +266,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				smSupplierOwner.setShowTextField(true);
 				this.getManagedBean().getSmSuppOwners().add(smSupplierOwner);
 			}
-
-
-			
 			return accountRegistration;
 		}
 		
 	}
+	
 	//16052019 - SSM INTEGRATION CR
 	public void setHeaderName(){
 		if(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN.equalsIgnoreCase(this.getManagedBean().getSmSupp().getBusinessType())){
@@ -440,6 +438,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		
 		//Validate GST No
 		validateGstRegNo();
+		
+		validateBusinessType();
 		
 		//harris
 		validateSstRegNo();
@@ -3564,6 +3564,28 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			this.getManagedBean().setOwnerIsDirector(true);
 		}
 	}
+	
+	//16052019 - SSM INTEGRATION CR START
+	public void validateBusinessType() {
+		String businessType = getManagedBean().getSmSupp().getBusinessType().toUpperCase();
+		switch(businessType){
+			//ROB PARTNERSHIP must > 1 owners
+			case SupplierManagementConst.BUSINESS_TYPE_ROB_PARTNERSHIP:
+				if(getManagedBean().getSmSuppOwners().size() <= 1) {
+					throw new EpException(MessageConst.ERROR_721077);
+				}
+				break;
+			//ROB SOLE PROPRIETOSHIP must <= 1 owner
+			case SupplierManagementConst.BUSINESS_TYPE_ROB_SOLE_PROPRIETORSHIP:
+				if(getManagedBean().getSmSuppOwners().size() > 1) {
+					throw new EpException(MessageConst.ERROR_721078);
+				}
+				break;
+			default:
+				break;
+		}
+	}
+	//16052019 - SSM INTEGRATION CR END
 }
 
 
