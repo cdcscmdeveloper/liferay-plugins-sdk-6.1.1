@@ -6954,37 +6954,25 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			getManagedBean().setButtonHideSchActive(true);
 		}
 	}
-
+	
+	//#25022-start	
 	public void deleteFreqScheduleDetails() {
-		List<ScQtSchedule> brandNewSchedules = new ArrayList<ScQtSchedule>();
-		List<ScQtSchedule> result = new ArrayList<ScQtSchedule>();
 		AwardSupplierResDTO resDTO = null;
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 		reqDTO.setScLoa(this.getManagedBean().getScLoa());
 
 		try {
 			if (null != getManagedBean().getScLoa().getScQtSchedules()) {
-				for (ScQtSchedule scQtSchedule : getManagedBean().getScLoa()
-						.getScQtSchedules()) {
-					if (scQtSchedule.isSelected()) {
-						result.add(scQtSchedule);
-					}else{
-						if(scQtSchedule.isBrandNew()){
-							brandNewSchedules.add(scQtSchedule);
-						}
-					}
-				}
 				
 				resDTO = getQtAwardSO()
 						.deletetScheduleIdAndPaymentId(reqDTO);
 				if (resDTO.isSuccessful()) {
 					getManagedBean().setSelectAll(false);
 					getManagedBean().setButtonHideSchActive(true);
-					editLOAAction(getManagedBean().getScLoa());
 				}
+				getManagedBean().getScLoa().setScQtSchedules(resDTO.getScLoa().getScQtSchedules());
 			}
 			
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
@@ -6995,32 +6983,21 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 	}
 	public void deleteProgPaymentDetails() {
-		List<ScQtProgressivePayment> result = new ArrayList<ScQtProgressivePayment>();
-		List<ScQtProgressivePayment> brandNewProgPayments = new ArrayList<ScQtProgressivePayment>();
 		AwardSupplierResDTO resDTO = null;
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 		reqDTO.setScLoa(this.getManagedBean().getScLoa());
 		try {
 			if (null != getManagedBean().getScLoa().getScQtProgPayments()) {
-				for (ScQtProgressivePayment ScQtProgressivePayment : getManagedBean().getScLoa()
-						.getScQtProgPayments()) {
-					if (ScQtProgressivePayment.isSelected()) {
-						result.add(ScQtProgressivePayment);
-					}else{
-						if(ScQtProgressivePayment.isBrandNew()){
-							brandNewProgPayments.add(ScQtProgressivePayment);
-						}
-					}
-				}
 				
 				resDTO = getQtAwardSO()
 						.deletetScheduleIdAndPaymentId(reqDTO);
 				if (resDTO.isSuccessful()) {
 					getManagedBean().setSelectAll(false);
 					getManagedBean().setButtonHideSchActive(true);
-					editLOAAction(getManagedBean().getScLoa());
 				}
+				getManagedBean().getScLoa().setScQtProgPayments(resDTO.getScLoa().getScQtProgPayments());
 			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
@@ -7028,7 +7005,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
 							e.getMessage()));
 		}
-	}
+	}//#25022-end	
 	
 	/**
 	 * only if qt no prefix is 'QT'
