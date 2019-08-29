@@ -7184,7 +7184,9 @@ public class SupplierFinalizationBackingBean extends
 
 	// ***25201
 	public boolean isQTMaintenanceScreen() {
-		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+				|| QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId()) // ***17376#55
+				;
 	}
 	
 }

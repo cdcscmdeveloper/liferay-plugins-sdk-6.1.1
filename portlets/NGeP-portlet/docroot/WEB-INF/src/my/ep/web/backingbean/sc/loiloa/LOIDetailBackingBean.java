@@ -6085,7 +6085,9 @@ public class LOIDetailBackingBean extends
 	}
 	
 	private boolean isQTMaintenanceScreen() {
-		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+			|| QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId()) // ***17376#55
+			;
 	}
 	
 	public boolean getIsDeskOfficer(){

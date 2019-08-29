@@ -332,7 +332,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			RoleCode.PBA_SECRETARY,
 			RoleCode.QCA_SECRETARY,
 			RoleCode.QCB_SECRETARY,
-			RoleCode.FPB_SECRETARY};
+			RoleCode.FPB_SECRETARY,
+			// ***17376#55
+			RoleCode.PPB_SECRETARY 
+			};
 
 	
 
@@ -1092,8 +1095,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				return null;
 			}
 			else if(ParameterConst.DOCTYPE_LETTER_OF_AWARD.equalsIgnoreCase(docType)){
-				// ***19287#42
-				if(ParameterConst.DOCTYPE_DIRECT_NEGO.equalsIgnoreCase(scQt.getLoiLoa().getDocType())){
+				// ***19287#42 , ******17376#55  
+				if(scQt.getLoiLoa()!=null && ParameterConst.DOCTYPE_DIRECT_NEGO.equalsIgnoreCase(scQt.getLoiLoa().getDocType())){
 					DirectLOABackingBean directLoaBackingBean = new DirectLOABackingBean();
 					directLoaBackingBean.renewSesionObject();
 					
@@ -1749,9 +1752,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				List<String> procurementModes = new ArrayList<String>();
 				procurementModes.add(ParameterConst.PROCUREMENT_MODE_QUOTATION);
 				procurementModes.add(ParameterConst.PROCUREMENT_MODE_TENDER);
-				if (!(isQTMaintenanceScreen() || isQTSearchScreen())) {
-					procurementModes.add(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO);	
-				}
+				// ***17376#55 - start
+				//if (!(isQTMaintenanceScreen() || isQTSearchScreen())) {
+				procurementModes.add(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO);	
+				//}
+				// ***17376#55 - end 
 				searchFilterBean.add(
 						new SearchFilterBean(
 								"procurementMode.parameterCode",
@@ -1916,7 +1921,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					
 					// Only DO Actor with edit access right. 
 					// Otherwise (Audit Search), user can view QT based on user roles match with actor.
-					if (isQTMaintenanceScreen()) {
+					if (isQTMaintenanceScreen() || isQTSearchScreen()) {
 						reqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
 					}
 				}
@@ -7146,6 +7151,57 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	}
 	
 	/* ***25692 - end */
+	
+	
+	/* ***17376#55 - start */
+	public boolean[] actionRender(ScQt scQt){
+		
+		boolean[] resArr = new boolean[10];
+		resArr[0] = !ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO.equalsIgnoreCase(scQt.getProcurementMode().getParameterCode()); 
+		resArr[1] = ParameterConst.DOCTYPE_QUOTATION.equalsIgnoreCase(getManagedBean().getQtnTenderSearchBean().getResultDocType());
+		resArr[2] = ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO.equalsIgnoreCase(scQt.getProcurementMode().getParameterCode());
+		resArr[3] = !ParameterConst.DOCTYPE_BIDDING.equalsIgnoreCase(getManagedBean().getQtnTenderSearchBean().getResultDocType()) && !ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO.equalsIgnoreCase( scQt.getProcurementMode().getParameterCode());
+		resArr[4] = ParameterConst.DOCTYPE_BIDDING.equalsIgnoreCase(getManagedBean().getQtnTenderSearchBean().getResultDocType());
+		resArr[5] = getManagedSearchBeanDocumentTypeIsLOI();
+		resArr[6] = getManagedSearchBeanDocumentTypeIsLOA();
+		resArr[7] = getManagedSearchBeanDocumentTypeIsSuppFinal() && !ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO.equalsIgnoreCase(scQt.getProcurementMode().getParameterCode()) && isAllowQTViewSupplierFinalization(scQt);
+		resArr[8] = isAllowQTPublishBtn(scQt);
+		resArr[9] = isAllowQTClosedBtn(scQt);
+		
+		//only 1 is true
+		if(resArr[5] || resArr[6] || resArr[7]){
+			resArr = new boolean[]{false, false, false, false, false, resArr[5], resArr[6], resArr[7], false, false};
+		}
+		else{
+			boolean fnd = false;
+			resArr[1] = false;
+			for(int i = 0; i<resArr.length; i++){ 
+				if(i==1){continue;} //ignore resArr[1].
+				if(fnd){
+					resArr[i] = false;
+				}
+				if(resArr[i]){
+					fnd = true;
+				}
+			}
+			
+			qtEnableEditCheck(resArr);
+		}
+		return resArr;
+		
+	}
+	/* ***17376#55 -end */
+	
+	
+	/* ***19336#73 - start */
+	private void qtEnableEditCheck(boolean [] arr){
+		if(isQTMaintenanceScreen()){
+			if(arr[0]){
+				arr[1] = true;
+			}
+		}
+	}
+	/* ***19336#73 - end */
 
 	
 
