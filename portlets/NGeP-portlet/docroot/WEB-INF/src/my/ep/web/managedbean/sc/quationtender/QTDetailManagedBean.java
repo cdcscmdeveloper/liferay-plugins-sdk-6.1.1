@@ -949,9 +949,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	/** The check list score. */
 	private List<ScQtCheckListScore> checkListScore;
-	
-	/** The score offer price. *///ahmaa-#25138
-	private List<ScQtScoreOfferPrice> scoreOfferPrice;
 
 	/** The scoring for years. */
 	private List<ScQtCheckListScore> scoringForYears;
@@ -1153,18 +1150,12 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	/** The checklist score type. */
 	private String checklistScoreType;
-	
-	/** The offer price score type. */
-	private String offerScoreType;//ahmaa-#25138
 
 	/** The company score type. */
 	private String companyScoreType;
 
 	/** The sc qt check list score. */
 	private ScQtCheckListScore scQtCheckListScore;
-	
-	/** The sc qt score offer price. *///ahmaa-#25138
-	private ScQtScoreOfferPrice scQtScoreOfferPrice;
 
 	/** The sc qt contract score. */
 	private ScQtCheckListScore scQtContractScore;
@@ -1382,9 +1373,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	/** The to be remove list. */
 	private List<ScQtCheckListScore> toBeRemoveList;
-	
-	/** The offer price to be remove list. *///ahmaa-#25138
-	private List<ScQtScoreOfferPrice> offertoBeRemoveList;
 
 	/** The other score selected. */
 	private List<ScQtCheckListScore> otherScoreSelected;
@@ -7668,22 +7656,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setCheckListScore(List<ScQtCheckListScore> checkListScore) {
 		this.checkListScore = checkListScore;
 	}
-	//	ahmaa-#25138 - start
-	/**
-	 * @return the scoreOfferPrice
-	 */
-	public List<ScQtScoreOfferPrice> getScoreOfferPrice() {
-		return scoreOfferPrice;
-	}
 
-	/**
-	 * @param scoreOfferPrice the scoreOfferPrice to set
-	 */
-	public void setScoreOfferPrice(List<ScQtScoreOfferPrice> scoreOfferPrice) {
-		this.scoreOfferPrice = scoreOfferPrice;
-	}
-	//	ahmaa-#25138 - end
-	
 	/**
 	 * @return the scoringForYears
 	 */
@@ -9158,20 +9131,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setToBeRemoveList(List<ScQtCheckListScore> toBeRemoveList) {
 		this.toBeRemoveList = toBeRemoveList;
 	}
-	
-	/**
-	 * @return the offertoBeRemoveList
-	 */
-	public List<ScQtScoreOfferPrice> getOfferToBeRemoveList() {	//	ahmaa-#25138 -start
-		return offertoBeRemoveList;
-	}
-
-	/**
-	 * @param toBeRemoveList the toBeRemoveList to set
-	 */
-	public void setOfferToBeRemoveList(List<ScQtScoreOfferPrice> offertoBeRemoveList) {
-		this.offertoBeRemoveList = offertoBeRemoveList;
-	}//	ahmaa-#25138 -end
 
 	/**
 	 * @return the otherScoreSelected
@@ -9951,34 +9910,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setSelectAll(boolean selectAll) {
 		this.selectAll = selectAll;
 	}
-	
-	/**
-	 * @return the scQtScoreOfferPrice
-	 *////ahmaa-#25138 -start
-	public ScQtScoreOfferPrice getScQtScoreOfferPrice() {
-		return scQtScoreOfferPrice;
-	}
 
-	/**
-	 * @param scQtScoreOfferPrice the scQtScoreOfferPrice to set
-	 */
-	public void setScQtScoreOfferPrice(ScQtScoreOfferPrice scQtScoreOfferPrice) {
-		this.scQtScoreOfferPrice = scQtScoreOfferPrice;
+	public boolean isButtonHideActive() {
+		return ButtonHideActive;
 	}
-
-	/**
-	 * @return the offerScoreType
-	 */
-	public String getOfferScoreType() {
-		return offerScoreType;
-	}
-
-	/**
-	 * @param offerScoreType the offerScoreType to set
-	 */
-	public void setOfferScoreType(String offerScoreType) {
-		this.offerScoreType = offerScoreType;
-	}//	ahmaa-#25138 -end
 
 	public void setButtonHideActive(boolean buttonHideActive) {
 		ButtonHideActive = buttonHideActive;
