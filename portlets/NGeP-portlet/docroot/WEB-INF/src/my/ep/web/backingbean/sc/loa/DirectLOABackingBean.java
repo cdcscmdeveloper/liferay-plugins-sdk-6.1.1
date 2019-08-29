@@ -8641,44 +8641,21 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 	}
 
+	//#25022-start	
 	public void deleteFreqScheduleDetails() {
-		List<ScQtSchedule> result = new ArrayList<ScQtSchedule>();
-		List<ScQtSchedule> brandNewSchedules = new ArrayList<ScQtSchedule>();
 		AwardSupplierResDTO resDTO = null;
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 		reqDTO.setScLoa(this.getManagedBean().getScLoa());
 		try {
 			if (null != getManagedBean().getScLoa().getScQtSchedules()) {
-				for (ScQtSchedule scQtSchedule : getManagedBean().getScLoa()
-						.getScQtSchedules()) {
-					if (scQtSchedule.isSelected()) {
-						result.add(scQtSchedule);
-					}else{
-						if(scQtSchedule.isBrandNew() || scQtSchedule.getQtScheduleId()==null){
-							brandNewSchedules.add(scQtSchedule);
-						}
-					}
-				}
 				resDTO = getQtAwardSO()
 						.deletetScheduleIdAndPaymentId(reqDTO);
 				if (resDTO.isSuccessful()) {
 					getManagedBean().setSelectAll(false);
 					getManagedBean().setButtonHideSchActive(true);
-					
-					if (!QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
-							.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())) {
-						retriveLoaDetails(resDTO.getScLoa().getLoaId(), null, false);
-
-						contractTypeChanged();
-					}
-					if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
-							.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())) {
-						getSupplierDeatilsByLoaId(resDTO.getScLoa().getLoaId());
-
-					}
 
 				}
-				getManagedBean().getScLoa().getScQtSchedules().addAll(brandNewSchedules);
+				getManagedBean().getScLoa().setScQtSchedules(resDTO.getScLoa().getScQtSchedules());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -8689,43 +8666,19 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 	}
 	public void deleteProgPaymentDetails() {
-		List<ScQtProgressivePayment> result = new ArrayList<ScQtProgressivePayment>();
-		List<ScQtProgressivePayment> brandNewSchedules = new ArrayList<ScQtProgressivePayment>();
 		AwardSupplierResDTO resDTO = null;
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 		reqDTO.setScLoa(this.getManagedBean().getScLoa());
 		try {
 			if (null != getManagedBean().getScLoa().getScQtProgPayments()) {
-				for (ScQtProgressivePayment ScQtProgressivePayment : getManagedBean().getScLoa()
-						.getScQtProgPayments()) {
-					if (ScQtProgressivePayment.isSelected()) {
-						result.add(ScQtProgressivePayment);
-					}else{
-						if(ScQtProgressivePayment.isBrandNew() || ScQtProgressivePayment.getQtPaymentId()==null){
-							brandNewSchedules.add(ScQtProgressivePayment);
-						}
-					}
-				}
 				resDTO = getQtAwardSO()
 						.deletetScheduleIdAndPaymentId(reqDTO);
 				if (resDTO.isSuccessful()) {
 					getManagedBean().setSelectAll(false);
 					getManagedBean().setButtonHideSchActive(true);
-					
-					if (!QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
-							.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())) {
-						retriveLoaDetails(resDTO.getScLoa().getLoaId(), null, false);
-
-						contractTypeChanged();
-					}
-					if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
-							.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())) {
-						getSupplierDeatilsByLoaId(resDTO.getScLoa().getLoaId());
-
-					}
 
 				}
-				getManagedBean().getScLoa().getScQtProgPayments().addAll(brandNewSchedules);
+				getManagedBean().getScLoa().setScQtProgPayments(resDTO.getScLoa().getScQtProgPayments());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -8734,7 +8687,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
 							e.getMessage()));
 		}
-	}
+	}//#25022-end	
 	
 	public boolean isPk7Periodic() {
 		PmParameter qtType = null;

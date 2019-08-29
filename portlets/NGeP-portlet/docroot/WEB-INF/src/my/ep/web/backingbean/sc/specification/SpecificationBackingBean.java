@@ -24,7 +24,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -55,7 +54,6 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
-import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
@@ -97,8 +95,6 @@ import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
-import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
-import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
 import my.ep.dto.sc.quationtender.QTSupplierResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
@@ -138,7 +134,6 @@ import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
-import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScFinancialUserScoringSchemaAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -200,7 +195,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-import my.ep.web.util.sc.helper.LocationSingleton;
 import my.ep.web.util.sc.helper.SourcingLocationHelper;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
@@ -10312,7 +10306,8 @@ public class SpecificationBackingBean extends
 					resDTO = specSO.saveQTDtl(specReqDTO);
 					renewSesionObject();
 					this.getManagedBean().setQt(resDTO.getScQt());
-					getManagedBean().setScheduleList(getManagedBean().getQt().getScQtSchedules());
+					//#25022	
+					//getManagedBean().setScheduleList(getManagedBean().getQt().getScQtSchedules());
 					getfulfilmentDtls(resDTO.getScQt());
 					retriveSpecdetails(resDTO.getScQt().getQtId());
 					retriveFulfilmentDtls();
@@ -15474,44 +15469,25 @@ public class SpecificationBackingBean extends
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 	}
 	
+	//#25022-start	
 	public void deleteFreqScheduleDetails() {
 		SpecificationResDTO resDTO = null;
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
-		List<ScQtSchedule> scheduleList = new ArrayList<ScQtSchedule>();
-		List<ScQtSchedule> brandNewSchedule = new ArrayList<ScQtSchedule>();
 		reqDTO.setToBeRemoveSchedulesList(this.getManagedBean()
 				.getScheduleList());
 		reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
 
 		try {
 			if (null != getManagedBean().getScheduleList()) {
-				for (ScQtSchedule scQtSchedule : getManagedBean()
-						.getScheduleList()) {
-					if (scQtSchedule.isSelected()) {
-						scheduleList.add(scQtSchedule);
-					} else {
-						if (scQtSchedule.isBrandNew()) {
-							brandNewSchedule.add(scQtSchedule);
-						}
-					}
-				}
+
 				resDTO = getQtSpecSO().deleteQtScheduleIdAndPaymentId(reqDTO);
 
 				if (resDTO.isSuccessful()) {
 					getManagedBean().setSelectAll(false);
 					getManagedBean().setButtonHideSchActive(true);
-					getManagedBean().setQt(resDTO.getScQt());
-					getfulfilmentDtls(getManagedBean().getQt());
-					populateFreqSchedules(getManagedBean().getQt()
-							.getScQtSchedules());
-					
-					getManagedBean().setScheduleList(
-							getManagedBean().getQt().getScQtSchedules());
-					if(!EntityHelper.isCollectionEmpty(brandNewSchedule)){
-						getManagedBean().getScheduleList().addAll(brandNewSchedule);
-					}
-				}
 
+				}
+				getManagedBean().setScheduleList(resDTO.getToBeRemoveSchedulesList());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -15522,42 +15498,23 @@ public class SpecificationBackingBean extends
 		}
 	}
 	
-	
-
 	public void deleteProgPaymentDetails() {
 		SpecificationResDTO resDTO = null;
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
-		List<ScQtProgressivePayment> brandNewPayment = new ArrayList<ScQtProgressivePayment>();
 		reqDTO.setToBeRemoveProgressivePayments(getManagedBean()
 				.getProgressivePaymentList());
 		reqDTO.setQtId(getManagedBean().getQt().getQtId());
 		try {
 			if (null != getManagedBean().getProgressivePaymentList()) {
-				for (ScQtProgressivePayment scQtProgressivePayment : getManagedBean()
-						.getProgressivePaymentList()) {
-					if (scQtProgressivePayment.isSelected()
-							&& scQtProgressivePayment.isBrandNew()) {
-						brandNewPayment.add(scQtProgressivePayment);
-					}
-				}
-
+				
 				resDTO = getQtSpecSO().deleteQtScheduleIdAndPaymentId(reqDTO);
 
 				if (resDTO.isSuccessful()) {
 					getManagedBean().setSelectAll(false);
 					getManagedBean().setButtonHideSchActive(true);
-					getManagedBean().setQt(resDTO.getScQt());
-					getfulfilmentDtls(getManagedBean().getQt());
-					populateProgressivePayment(getManagedBean().getQt()
-							.getScQtProgressivePayments());
-					getManagedBean().setProgressivePaymentList(
-							getManagedBean().getQt()
-									.getScQtProgressivePayments());
-					if (!EntityHelper.isCollectionEmpty(brandNewPayment)) {
-						getManagedBean().getProgressivePaymentList().addAll(
-								brandNewPayment);
-					}
+					
 				}
+				getManagedBean().setProgressivePaymentList(resDTO.getToBeRemoveProgressivePayments());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -15566,7 +15523,7 @@ public class SpecificationBackingBean extends
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
 							e.getMessage()));
 		}
-	}
+	}//#25022-end	
 	
 	private void checkProcurementModeValue(){
 		log.debug("===========checkProcurementCodeValue============");
