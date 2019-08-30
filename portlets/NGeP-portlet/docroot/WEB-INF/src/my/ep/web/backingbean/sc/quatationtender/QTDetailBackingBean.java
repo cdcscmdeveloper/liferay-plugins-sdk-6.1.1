@@ -1975,6 +1975,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		return QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	
+	// ***17376#55
+	private boolean isQtTechSupportSearchScreen(){
+		return QTConstants.PORTLET_NAME_QT_TECHSUPP.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+	}
+	
 	
 	
 	/**
@@ -7165,8 +7170,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		resArr[5] = getManagedSearchBeanDocumentTypeIsLOI();
 		resArr[6] = getManagedSearchBeanDocumentTypeIsLOA();
 		resArr[7] = getManagedSearchBeanDocumentTypeIsSuppFinal() && !ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO.equalsIgnoreCase(scQt.getProcurementMode().getParameterCode()) && isAllowQTViewSupplierFinalization(scQt);
-		resArr[8] = isAllowQTPublishBtn(scQt);
-		resArr[9] = isAllowQTClosedBtn(scQt);
 		
 		//only 1 is true
 		if(resArr[5] || resArr[6] || resArr[7]){
@@ -7186,6 +7189,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 			
 			qtEnableEditCheck(resArr);
+		}
+		
+		if(isQtTechSupportSearchScreen()){
+			resArr[8] = isAllowQTPublishBtn(scQt);
+			resArr[9] = isAllowQTClosedBtn(scQt);
 		}
 		return resArr;
 		

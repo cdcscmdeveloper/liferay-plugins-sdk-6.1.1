@@ -214,7 +214,8 @@ public interface QTConstants {
 	public static final String HTML_GREATER_THEN = "&#62;";
 	
 	public static final String PORTLET_NAME_QT_MAINTENANCE = "scQuotationTender_WAR_NGePportlet";
-	public static final String PORTLET_NAME_QT_SEARCH = "scQuotationTenderSearch_WAR_NGePportlet";	
+	public static final String PORTLET_NAME_QT_SEARCH = "scQuotationTenderSearch_WAR_NGePportlet";
+	public static final String PORTLET_NAME_QT_TECHSUPP = "scQuotationTenderSearchTechSupp_WAR_NGePportlet";
 	// ***25692#19 - start
 	public static final String PORTLET_NAME_APPROVAL = "QTApproval_WAR_NGePportlet";
 	// ***25692#19 - end
@@ -233,4 +234,5 @@ public interface QTConstants {
 	public static final String KPI_CODE_BIDDING_REMINDER = "SC018"; //Upcoming BidSessions Reminder
 	public static final String SPEC_MAINTENANCE = "SM"; 
 	public static final String SPEC_MAINTENANCE_SEARCH_PAGE = "/xhtml/sc/speccommitteemaintenance/specificationCommitteeMaintenanceSearch.xhtml";
+	
 }
