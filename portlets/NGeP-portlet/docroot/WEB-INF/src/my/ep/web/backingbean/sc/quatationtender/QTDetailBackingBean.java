@@ -1975,6 +1975,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		return QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	
+	// ***17376#55
+	private boolean isQtTechSupportSearchScreen(){
+		return QTConstants.PORTLET_NAME_QT_TECHSUPP.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+	}
+	
 	
 	
 	/**
