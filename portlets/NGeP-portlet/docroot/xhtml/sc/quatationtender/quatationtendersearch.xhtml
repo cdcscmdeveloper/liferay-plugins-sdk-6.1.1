@@ -25,7 +25,7 @@
 
               <div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
-					action="#{qTDetailBB.searchQTAction}" update="searchQTs, searchQTLoaLois"
+					action="#{qTDetailBB.searchQTAction}" update="@all"
 					process="@this, qtsearchid" />
 				<p:commandButton value="#{lbl['lbl.btn.reset']}"
 					action="#{qTDetailBB.reset}" update="qtsearchid"
@@ -116,7 +116,7 @@
 					<!-- ***17376#55 - start -->
 					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:6%;text-align: center;">
 						<p:menuButton value="#{lbl['lbl.btn.option']}">
-							<c:set var="renderArr" value="#{qTDetailBB.actionRender(scQt)}" />
+							<ui:param name="renderArr" value="#{qTDetailBB.actionRender(scQt)}" />
 							<p:menuitem value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();" 
 								rendered="#{renderArr[0]}"
@@ -168,9 +168,6 @@
 								action="#{qTDetailBB.closeProposal(scQt)}"
 								partialSubmit="true" process="@this" update="searchQTs"/>
 						</p:menuButton>
-						
-						
-						
 					</p:column>
 					<!-- ***17376#55 - end -->
 					
@@ -246,20 +243,16 @@
 			
 					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:6%;text-align: center;">
 						<p:menuButton value="#{lbl['lbl.btn.option']}">
-							<c:choose>
-							<c:when test="#{listType eq 'loiList'}">
 							<p:menuitem value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();" 
 								icon="ui-icon-view" action="#{qTDetailBB.viewSupplierProposalDetailsGen(listItem, view.viewId)}"
+								rendered="#{listType eq 'loiList'}"
 								partialSubmit="true" process="@this"/>
-							</c:when>
-							<c:when test="#{listType eq 'loaList'}">
 							<p:menuitem value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();" 
 								icon="ui-icon-view" action="#{qTDetailBB.viewSupplierProposalDetailsGen(listItem, view.viewId)}"
+								rendered="#{listType eq 'loaList'}"
 								partialSubmit="true" process="@this"/>
-							</c:when>
-							</c:choose>
 						</p:menuButton>					
 					</p:column>
 				</p:dataTable>
@@ -276,10 +269,12 @@
 				if(v == '#{ParameterConst.doctypeLetterOfAward}' || v == '#{ParameterConst.doctypeLetterOfIntent}'){
 					document.getElementById('searchQTDiv').style.display = 'none';
 					document.getElementById('searchQTLoaLoiDiv').style.display = 'block';
+					
 				}
 				else{
 					document.getElementById('searchQTLoaLoiDiv').style.display = 'none';
 					document.getElementById('searchQTDiv').style.display = 'block';
+					
 				}
 			}
 		</h:outputScript>
