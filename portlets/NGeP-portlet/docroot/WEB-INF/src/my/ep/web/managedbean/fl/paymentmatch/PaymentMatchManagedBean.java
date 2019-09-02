@@ -17,6 +17,7 @@ import org.primefaces.model.TreeNode;
 
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeductionClause;
+import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.payment.FlPaymentAdvice;
@@ -146,6 +147,11 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	private String ptjCodeNameSearchValues;
 	
 	private PmOrgProfile selectedPmOrgProfile;
+		
+	private List<FlRemark> remarkReviseList;
+	private boolean hideReviseRemarks = false;
+	private boolean queryDisplay = false;
+	private String queryPaymentDesc;
 	//end 21229
 	/**
 	 * Gets the doc type.
@@ -1525,6 +1531,39 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	public void setSelectedPmOrgProfile(PmOrgProfile selectedPmOrgProfile) {
 		this.selectedPmOrgProfile = selectedPmOrgProfile;
 	}
+
+	public List<FlRemark> getRemarkReviseList() {
+		return remarkReviseList;
+	}
+
+	public void setRemarkReviseList(List<FlRemark> remarkReviseList) {
+		this.remarkReviseList = remarkReviseList;
+	}
+
+	public boolean isHideReviseRemarks() {
+		return hideReviseRemarks;
+	}
+
+	public void setHideReviseRemarks(boolean hideReviseRemarks) {
+		this.hideReviseRemarks = hideReviseRemarks;
+	}
+
+	public boolean isQueryDisplay() {
+		return queryDisplay;
+	}
+
+	public void setQueryDisplay(boolean queryDisplay) {
+		this.queryDisplay = queryDisplay;
+	}
+
+	public String getQueryPaymentDesc() {
+		return queryPaymentDesc;
+	}
+
+	public void setQueryPaymentDesc(String queryPaymentDesc) {
+		this.queryPaymentDesc = queryPaymentDesc;
+	}
+	
 	//end 21229
 
 }
