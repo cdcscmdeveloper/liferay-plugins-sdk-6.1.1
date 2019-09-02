@@ -227,22 +227,6 @@
 				</p:panelGrid>
 				
 				<p:spacer height="15"></p:spacer>
-				
-				<panelGrid>
-					<table>
-						<tr>
-							<td style="width: 260px;"><p:outputLabel
-									value="#{lbl['lbl.sc.passing.score']}" /> <p:outputLabel
-									value="*" styleClass="mandatory" /></td>
-							<td><p:inputText style="text-align:right" maxlength="3"
-									disabled="#{specificationBackingBean.managedBean.readOnly}"
-									value="#{specificationBackingBean.managedBean.financialScoreSetting.passingScore}">
-									<p:ajax event="blur" process="@all" partialSubmit="true"
-										listener="#{specificationBackingBean.checkFinancialPassingScore(specificationBackingBean.managedBean.financialScoreSetting)}" />
-								</p:inputText> <p:spacer width="5"></p:spacer></td>
-						</tr>
-					</table>
-				</panelGrid>
 					
 				</h:panelGroup>
 
@@ -259,7 +243,7 @@
 									style="text-align:right;"
 									readonly="true" disabled="true"
 									label="#{lbl['lbl.sc.spec.max.score']}" maxlength="14"
-									value="#{specificationBackingBean.managedBean.finPoints}">
+									value="#{finance.qtScoreWeightage.score}">
 									<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
 									<p:ajax  event="change" process="@this" partialSubmit="true" update="offeredPrice"></p:ajax>
 								</p:inputText> <p:message id="techContractPrivateScore"
@@ -268,7 +252,22 @@
 					</table>
 				</h:panelGroup>
 			</h:panelGroup>
-			<p:spacer height="15"></p:spacer>	
+			<p:spacer height="15"></p:spacer>
+			<panelGrid><!-- #25138-30/8 start-->
+					<table>
+						<tr>
+							<td style="width: 260px;"><p:outputLabel
+									value="#{lbl['lbl.sc.passing.score']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
+							<td><p:inputText style="text-align:right" maxlength="3"
+									disabled="#{specificationBackingBean.managedBean.readOnly}"
+									value="#{specificationBackingBean.managedBean.financialScoreSetting.passingScore}">
+									<p:ajax event="blur" process="@all" partialSubmit="true"
+										listener="#{specificationBackingBean.checkFinancialPassingScore(specificationBackingBean.managedBean.financialScoreSetting)}" />
+								</p:inputText> <p:spacer width="5"></p:spacer></td>
+						</tr>
+					</table>
+			</panelGrid><!-- #25138-30/8 end-->	
 		</p:panel>
 	</h:panelGroup>
 	<!-- ahmaa-#25138 - end -->
