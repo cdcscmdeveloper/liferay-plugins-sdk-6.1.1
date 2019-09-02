@@ -95,6 +95,7 @@ import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.fl.FlActor;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
+import my.ep.persistence.entity.fl.FlWorkflowStatus;
 import my.ep.persistence.entity.fl.adjust.FlAdjustment;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
@@ -237,7 +238,17 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
-				
+			//start 21229
+			if(getManagedBean().getButtonVal() != null && getManagedBean().getButtonVal().equals(BpmOutcomeConst.BPM_REVISE)){
+				reqDTO.setActionCode(FulfilmentConst.IDD_ACTION_CODE_ADJUSTMENT);
+			}else{
+				reqDTO.setActionCode(FulfilmentConst.IDD_ACTION_CODE_CREATE);
+			}
+			
+			if(getManagedBean().getRemarkReviseList().size() >0){
+				reqDTO.setFlRemarkRevise(getManagedBean().getRemarkReviseList().get(0));
+			}
+			//end 21229
 			if(getManagedBean().getPmDigiSign() != null){
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 			}
@@ -305,17 +316,6 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			flReqDTO.setFlOrderId(paymentObj.getFlOrderId());
 			IInvoiceSO invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IInvoiceSO.class);
 			IPaymentMatchSO paymentMatchSO = (IPaymentMatchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IPaymentMatchSO.class);
-			if(FLProcessNameConst.PAYMENT_INSTRUCTION_QUERY_VERIFICATION.equals(this.getManagedBean().getTaskName())){
-				getManagedBean().setButtonVal(BpmOutcomeConst.BPM_REVISE);
-				
-			}else{
-				String[] outcome = new String[this.getManagedBean().getOutComes().length];
-				String[] str_array = this.getManagedBean().getOutComes();
-				List<String> list = new ArrayList<String>(Arrays.asList(str_array));
-				list.remove(BpmOutcomeConst.BPM_REVISE);
-				outcome = list.toArray(new String[0]);
-				this.getManagedBean().setOutComes(outcome);
-			}
 			
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.getManagedBean().setHideRemarks(false);
@@ -332,6 +332,38 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 				setStopInstrNo(paymentAdvice.getFulfilmentOrder());
 				flBB.initializeRemarkAndAttachement(paymentAdvice.getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 			}
+			
+			//start 21229
+			getManagedBean().setQueryDisplay(false);			
+			if(paymentAdvice!=null && paymentAdvice.getStatus()!= null 
+					&& (paymentAdvice.getStatus().getStatusId().equals(FulfilmentStatusConst.PA_PENDING_PAYMENT_QUERY)
+							|| paymentAdvice.getStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_PAYMENT_QUERY) 
+							|| paymentAdvice.getStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_PAYMENT_QUERY)) ){
+				getManagedBean().setButtonVal(BpmOutcomeConst.BPM_REVISE);
+				getManagedBean().setHideReviseRemarks(false);
+				initializeRemarkRevision(paymentAdvice.getFlWorkflowStatus(), null,false);
+				
+				FulfilmentReqDTO reqQueryDTO = new FulfilmentReqDTO();
+				FulfilmentResDTO resQueryDTO = new FulfilmentResDTO();
+				reqQueryDTO.setFlOrderId(paymentObj.getFlOrderId());			
+				resQueryDTO = paymentMatchSO.retrievePaymentQuery(reqQueryDTO);
+				
+				if(resQueryDTO.getQueryPayment() != null){
+					getManagedBean().setQueryDisplay(true);
+					getManagedBean().setQueryPaymentDesc(resQueryDTO.getQueryPayment().getQueryDesc());
+
+				}
+			}else{
+				String[] outcome = new String[this.getManagedBean().getOutComes().length];
+				String[] str_array = this.getManagedBean().getOutComes();
+				List<String> list = new ArrayList<String>(Arrays.asList(str_array));
+				list.remove(BpmOutcomeConst.BPM_REVISE);
+				outcome = list.toArray(new String[0]);
+				getManagedBean().setOutComes(outcome);
+				getManagedBean().setHideReviseRemarks(true);
+			}
+			//end 21229			
+			
 			for(FlPaymentDeduction deduction : paymentAdvice.getFlPaymentDeduction()){
 				CtDeduction ctDeduction = new CtDeduction();
 				if(deduction.getCtDeduction() != null){
@@ -1411,22 +1443,36 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			reqDTO.setOutcome(outcome);
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());				
 			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
-			if(paymentAdvice.getDescription() == null || paymentAdvice.getDescription().trim().isEmpty()){
-				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
-					paymentAdvice.setDescription(" ");
-				}else{
-					getManagedBean().setSelectedTabIndex(0);
-					throw new EpException(MessageConst.ERROR_100022, new String[]{
-							ResourceBundleUtils.getMessage("lbl.fl.payment.match.payment.desc",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+			//start 21229
+			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) { 
+				if(getManagedBean().getRemarkReviseList().size() > 0){
+					
+					FlRemark remarkRevise = getManagedBean().getRemarkReviseList().get(0);
+					if(remarkRevise.getRemark() == null || remarkRevise.getRemark().isEmpty()){
+						getManagedBean().setSelectedTabIndex(0);
+						throw new EpException(MessageConst.ERROR_100022, new String[]{
+								ResourceBundleUtils.getMessage("lbl.txt.catatankajisemula",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+					}
+					
 				}
-			}
-			validateDuplicateDeduction(outcome);
-			validateDeductionAmt();
-			if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_MATCH)){
-				calPmSummary();
-			}
-			
-			paymentSO.validatePaymentMatch(reqDTO);
+			}else{ //
+				if(paymentAdvice.getDescription() == null || paymentAdvice.getDescription().trim().isEmpty()){
+					if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
+						paymentAdvice.setDescription(" ");
+					}else{
+						getManagedBean().setSelectedTabIndex(0);
+						throw new EpException(MessageConst.ERROR_100022, new String[]{
+								ResourceBundleUtils.getMessage("lbl.fl.payment.match.payment.desc",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+					}
+				}
+				validateDuplicateDeduction(outcome);
+				validateDeductionAmt();
+				if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_MATCH)){
+					calPmSummary();
+				}
+				
+				paymentSO.validatePaymentMatch(reqDTO);
+			} //end 21229
 			
 		}finally {
 			paymentSO = null;
@@ -2385,6 +2431,42 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			IPagingDataModel<PmOrgProfile> chargedPtjDataModel) {
 		this.chargedPtjDataModel = chargedPtjDataModel;
 	}
+	
+	/**
+	 * Initialize remark .
+	 * <p> get remarks lists.
+	 * @param flWorkflowStatus the fl workflow status
+	 * @param remarkList the remark list
+	 */
+	public void initializeRemarkRevision(FlWorkflowStatus flWorkflowStatus ,List<FlRemark> remarkList, boolean isHideRemarks) {
+		FacesScopes facesScopes = new FacesScopes();
+
+		FlRemark remark = new FlRemark();
+		remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+		remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		remark.setChangedBy(remark.getCreatedBy());
+		remark.setChangedDate(remark.getCreatedDate());
+		remark.setCreatedUsername(facesScopes.getUserSessionBean()
+				.getUserName());
+		remark.setUserId(facesScopes.getUserSessionBean().getLoginId());
+	
+		if(!isHideRemarks) {			
+			List remarklist = new ArrayList();
+			remarklist.add(remark);
+			getManagedBean().setRemarkReviseList(remarklist);
+		}			
+		
+	}
+	
+	/**
+	 * Show item query.
+	 *
+	 * @param flItemAddress the fl item address
+	 */
+	public void showQuery(){
+		
+	}
+	
 	//end 21229
 	
 	
