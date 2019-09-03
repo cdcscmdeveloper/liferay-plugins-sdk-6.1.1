@@ -1,6 +1,7 @@
 package my.ep.web.managedbean.bpm.tasklist;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -18,8 +19,12 @@ import my.ep.biz.service.fl.frn.IReceivedNoteSO;
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
+import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.access.application.IAccessApplSO;
 import my.ep.biz.service.pm.common.kpi.IPmKpiSO;
+import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
+import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
+import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sc.directpurchase.IPrInquirySO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -30,6 +35,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractStatusConst;
 import my.ep.constant.pm.KPICodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.sm.SupplierManagementConst;
@@ -41,6 +47,11 @@ import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.access.application.AccessApplReqDTO;
 import my.ep.dto.pm.access.application.AccessApplResDTO;
 import my.ep.dto.pm.common.kpi.KpiReqDTO;
+import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
+import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
+import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
+import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
+import my.ep.dto.sc.requestitem.RequestItemResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.exception.EpException;
@@ -65,6 +76,7 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.PagingConst;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -616,6 +628,65 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 											&& ContractStatusConst.CR_PENDING_REVISION.intValue() == worklistItemVO.getDocStatus().intValue()) {
 						    		   worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.ct.revise.circular.cancellation", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 						    	   }
+						       }
+						       //pid validity
+						       
+						       if(worklistItemVO.getDocType().equals("RN")){
+						    	   System.out.println("Begin PID validity process");
+						    	   IRequestNoteSO requestSO = (IRequestNoteSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestNoteSO.class);
+						    	   IRequestItemSO requestItemSO = (IRequestItemSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
+						    	   RequestNoteReqDTO reqRNDTO = new RequestNoteReqDTO();
+						    	   RequestNoteResDTO resRNDTO = new RequestNoteResDTO();
+						    	   
+						    	   
+						    	   
+						    	   reqRNDTO.setRequestNoteNo(worklistItemVO.getDocNumber());
+						    	   resRNDTO = requestSO.getRequestNote(reqRNDTO);
+						    	   
+						    	   if(resRNDTO.getRequestNoteDetail().getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault()!=null) {
+										int pidValidDays = resRNDTO.getRequestNoteDetail().getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault().getPidValidDays();
+										Date pidExpiredDate = new Date(); 
+										
+										if(resRNDTO.getRequestNoteDetail().getQuote()!=null) {
+											pidExpiredDate = DateUtils.addDays(resRNDTO.getRequestNoteDetail().getQuote().getCreatedDate(), pidValidDays);
+										} else {
+											pidExpiredDate = DateUtils.addDays(resRNDTO.getRequestNoteDetail().getCreatedDate(), pidValidDays);
+										}
+										if(pidExpiredDate.compareTo(DateUtils.getCurrentDate())<0) {
+											//set overide status here 
+											//taskListMyTaskDataModel.getRowKey(worklistItemVO).
+											worklistItemVO.setDocStatus(DPStatusConstants.PID_EXPIRED.intValue());
+											//System.out.println("Lets overide the status! here");
+										}
+									}
+						       }
+						       else  if(worklistItemVO.getDocType().equals("PR")){
+						    	   System.out.println("Begin PID validity process");
+						    	  // IPurchaseRequestSO requestSO = (IPurchaseRequestSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseRequestSO.class);
+						    	   IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+						    	   //IRequestItemSO requestItemSO = (IRequestItemSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
+						    	   FulfilmentReqDTO reqFLDTO = new FulfilmentReqDTO();
+						    	   FulfilmentResDTO resFLDTO = new FulfilmentResDTO();
+						    	   
+						    	   
+						    	   
+						    	   reqFLDTO.setFlDocNo(worklistItemVO.getDocNumber());
+						    	   resFLDTO = fulfilmentSO.retrieveFulfilmentRequestByDocNo(reqFLDTO);
+						    	   
+						    	   if(resFLDTO.getFlFulfilmentRequest().getScPurchaseInDefault()!=null) {
+										int pidValidDays = resFLDTO.getFlFulfilmentRequest().getScPurchaseInDefault().getPidValidDays();
+										Date pidExpiredDate = new Date(); 
+										
+										if(resFLDTO.getFlFulfilmentRequest().getScPurchaseInDefault().getCreatedDate()!=null) {
+											pidExpiredDate = DateUtils.addDays(resFLDTO.getFlFulfilmentRequest().getScPurchaseInDefault().getCreatedDate(), pidValidDays);
+										}
+										if(pidExpiredDate.compareTo(DateUtils.getCurrentDate())<0) {
+											//set overide status here 
+											//taskListMyTaskDataModel.getRowKey(worklistItemVO).
+											worklistItemVO.setDocStatus(DPStatusConstants.PID_EXPIRED.intValue());
+											//System.out.println("Lets overide the status! here");
+										}
+									}
 						       }
 							}catch(Exception ex){
 								worklistItemVO.setTitle("Please check");
