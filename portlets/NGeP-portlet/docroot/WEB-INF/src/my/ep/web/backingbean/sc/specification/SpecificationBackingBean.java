@@ -223,12 +223,7 @@ public class SpecificationBackingBean extends
 	 * The serialVersionUID
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	/**
-	 * The scoreType String
-	 */
-	private String scoreTypeN = "";//ahmaa-#25138
-	
+
 	/** The search circular. */
 	private IPagingDataModel<CtCircularVer> searchCircular = new SearchCircularPagingDataModel();
 
@@ -2003,9 +1998,6 @@ public class SpecificationBackingBean extends
 
 					List<ScQtScoreOfferPrice> offerPrice = specChecklist.get(0)
 							.getQtScoreWeightage().getScQtScoreOfferPrices();
-					//ahmaa-#25138 - start
-					this.getManagedBean().setOfferScoreType(scoreTypeN);
-
 					if (null == offerPrice || offerPrice.isEmpty()) {
 						offerPrice = new ArrayList<ScQtScoreOfferPrice>();
 						if (null == this.getManagedBean()
@@ -2015,23 +2007,9 @@ public class SpecificationBackingBean extends
 									.getQtScoreWeightage());
 							pkgOfferPrice
 									.setOfferPriceType(ParameterConst.RECOMMEND_TYPE_PACKAGE);
-							
-							if (scoreTypeN.equals(QTConstants.AUTO_SCORE)) {
-								pkgOfferPrice.setScoreType(new BigDecimal(this.getManagedBean()
-										.getOfferScoreType()));
-
-							} else if (scoreTypeN.equals(QTConstants.USER_SCORE)) {
-								pkgOfferPrice.setScoreType(new BigDecimal(this.getManagedBean()
-										.getOfferScoreType()));
-								pkgOfferPrice.setAboveScore(null);
-								pkgOfferPrice.setBelowScore(null);
-								pkgOfferPrice.setFromVariance(null);
-								pkgOfferPrice.setToVariance(null);
-
-							}
 							setUserDetails(pkgOfferPrice);
-							this.getManagedBean()
-									.setOfferPricePackage(pkgOfferPrice);
+							this.getManagedBean().setOfferPricePackage(
+									pkgOfferPrice);
 							offerPrice.add(pkgOfferPrice);
 						}
 
@@ -2046,69 +2024,15 @@ public class SpecificationBackingBean extends
 							if (ParameterConst.RECOMMEND_TYPE_PACKAGE
 									.equalsIgnoreCase(scoreOfferPrice
 											.getOfferPriceType())) {
-								
-								if(null == scoreOfferPrice.getScoreType()){
-									scoreOfferPrice
-										.setScoreType(new BigDecimal(QTConstants.AUTO_SCORE));
-									this.getManagedBean()
-										.setOfferPricePackage(scoreOfferPrice);
-								}else{
-									
-									if (null == this.getManagedBean().getOfferPricePackage()) {
-										
-										this.getManagedBean().setOfferScoreType(
-												String.valueOf(scoreOfferPrice.getScoreType().intValue()));
-										this.getManagedBean()
-												.setOfferPricePackage(scoreOfferPrice);
-
-										if (scoreTypeN.equals(QTConstants.AUTO_SCORE)) {
-
-											this.getManagedBean()
-												.setOfferScoreType(scoreTypeN);
-											scoreOfferPrice.setScoreType(new BigDecimal(this.getManagedBean()
-													.getOfferScoreType()));
-
-										} else if (scoreTypeN.equals(QTConstants.USER_SCORE)) {
-											this.getManagedBean()
-													.setOfferScoreType(scoreTypeN);
-											scoreOfferPrice.setScoreType(new BigDecimal(this.getManagedBean()
-													.getOfferScoreType()));
-											scoreOfferPrice.setAboveScore(null);
-											scoreOfferPrice.setBelowScore(null);
-											scoreOfferPrice.setFromVariance(null);
-											scoreOfferPrice.setToVariance(null);
-
-										}
-
-									} else {
-										if (scoreTypeN.equals(QTConstants.AUTO_SCORE)) {
-
-											this.getManagedBean().setOfferScoreType(scoreTypeN);											
-											this.getManagedBean().getOfferPricePackage()
-												.setScoreType(new BigDecimal(scoreTypeN));
-
-										} else if (scoreTypeN.equals(QTConstants.USER_SCORE)) {
-											this.getManagedBean()
-												.setOfferScoreType(scoreTypeN);
-											this.getManagedBean()
-												.getOfferPricePackage().setFromVariance(null);
-											this.getManagedBean()
-												.getOfferPricePackage().setToVariance(null);
-											this.getManagedBean()
-												.getOfferPricePackage().setBelowScore(null);
-											this.getManagedBean()
-												.getOfferPricePackage().setAboveScore(null);
-
-										}
-
-									}
+								if (null == this.getManagedBean()
+										.getOfferPricePackage()) {
+									this.getManagedBean().setOfferPricePackage(
+											scoreOfferPrice);
 								}
-								
 							}
-
 						}
 
-					}//Enhancement(ahmaa) #25138-end
+					}
 					this.getManagedBean().getFinancialScoring()
 							.add(0, tmpCheckList);
 					map = null;
@@ -4125,49 +4049,6 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setCompanyScoreType(scoreType);
 		}
 	}
-	//Enhancement #25138-start
-	/**
-	 * Score type change.Change Offer Price Score type(Auto/User) Scores in
-	 * specification committee menu.
-	 * 
-	 * @param event
-	 *            (String scoreType).
-	 */
-	public void offerscoreTypeChange(AjaxBehaviorEvent event) {
-		scoreTypeN = event.getComponent().getAttributes().get("value").toString();
-		// String scoreType = this.getManagedBean().getOfferScoreType();
-		// scoreTypeN = this.getManagedBean().getOfferScoreType();
-		List<ScQtScoreOfferPrice> toBeRemoveList = this.getManagedBean().getOfferToBeRemoveList();
-		if (null == toBeRemoveList) {
-			toBeRemoveList = new ArrayList<ScQtScoreOfferPrice>();
-		}
-		if (null != scoreTypeN && !"".equalsIgnoreCase(scoreTypeN)) {
-			if (scoreTypeN.equalsIgnoreCase(QTConstants.AUTO_SCORE)) {
-				ScQtScoreOfferPrice score = new ScQtScoreOfferPrice();
-				setUserDetails(score);
-
-				this.getManagedBean().setScQtScoreOfferPrice(score);
-				// toBeRemoveList.add(this.getManagedBean().getCheckListScore());
-				if (null != this.getManagedBean().getScoreOfferPrice()
-						&& !this.getManagedBean().getScoreOfferPrice().isEmpty()) {
-
-					toBeRemoveList.addAll(this.getManagedBean().getScoreOfferPrice());
-					this.getManagedBean().setScoreOfferPrice(new ArrayList<ScQtScoreOfferPrice>());
-				}
-			} else {
-
-				if (null != this.getManagedBean().getScQtScoreOfferPrice()) {
-					toBeRemoveList.add(this.getManagedBean().getScQtScoreOfferPrice());
-
-				}
-			}
-			this.getManagedBean().setOfferToBeRemoveList(toBeRemoveList);
-			this.getManagedBean().setOfferScoreType(scoreTypeN);
-			this.getManagedBean().getOfferPricePackage().setScoreType(new BigDecimal(scoreTypeN));
-			System.out.println("ajax_value==" + this.getManagedBean().getOfferScoreType());
-		}
-	}
-	//Enhancement(ahmaa) #25138-end
 
 	/**
 	 * Bank statementsfrom change.change bankStatemnt checklist month dropdown
@@ -10209,7 +10090,6 @@ public class SpecificationBackingBean extends
 				specReqDTO
 						.setSpecType(ParameterConst.SPECIFICATION_TYPE_FINANCIAL);
 				specReqDTO.setScQt(recommendation);
-				specReqDTO.setOfferScoreType(this.getManagedBean().getOfferScoreType());// Enhancement(ahmaa) #25138
 				specReqDTO.setAllowZeroVariance(true);
 				validateFinancialPackageItemPassingScoring(this
 						.getManagedBean().getFinancialScoreSetting(), this
@@ -10221,7 +10101,6 @@ public class SpecificationBackingBean extends
 						.getFinacialItemScoreSetting());
 				validateFinancialUserScoringAttachment(this.getManagedBean()
 						.isFinancialUserScoringSchema());
-				retriveFinancialScoring();// Enhancement(ahmaa) #25138
 				resDTO = specSO.saveQTDtl(specReqDTO);
 				renewSesionObject();
 				this.getManagedBean().setQt(resDTO.getScQt());
@@ -10939,7 +10818,6 @@ public class SpecificationBackingBean extends
 		spReqDTO.setPrepareSpecStatus(this.getManagedBean()
 				.getCurrentStatusId());
 		spReqDTO.setUserLocale(facesScopes.getUserLocale());
-		spReqDTO.setOfferScoreType(this.getManagedBean().getOfferScoreType());//25138 - ahmaa
 		IQTSpecSO specSO = getSpecSO();
 		SpecificationResDTO resDTO = new SpecificationResDTO();
 		try {
