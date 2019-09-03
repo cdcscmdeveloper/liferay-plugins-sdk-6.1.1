@@ -241,13 +241,13 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			//start 21229
 			if(getManagedBean().getButtonVal() != null && getManagedBean().getButtonVal().equals(BpmOutcomeConst.BPM_REVISE)){
 				reqDTO.setActionCode(FulfilmentConst.IDD_ACTION_CODE_ADJUSTMENT);
+				if(getManagedBean().getRemarkReviseList()!=null && getManagedBean().getRemarkReviseList().size() > 0){
+					reqDTO.setFlRemarkRevise(getManagedBean().getRemarkReviseList().get(0));
+				}
 			}else{
 				reqDTO.setActionCode(FulfilmentConst.IDD_ACTION_CODE_CREATE);
 			}
-			
-			if(getManagedBean().getRemarkReviseList().size() >0){
-				reqDTO.setFlRemarkRevise(getManagedBean().getRemarkReviseList().get(0));
-			}
+						
 			//end 21229
 			if(getManagedBean().getPmDigiSign() != null){
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
@@ -260,7 +260,10 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 				String messageId = MessageConst.INFO_745013;
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700004;
-				}				
+				}else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+					messageId = MessageConst.INFO_745021;
+				}		
+				
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 						FacesMessage.SEVERITY_INFO, 
 						null,
@@ -430,9 +433,12 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		IInvoiceSO invoiceSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IInvoiceSO.class);
-		reqDTO.setInvoice(getManagedBean().getPaymentAdvice().getFlInvoice());
-		resDTO = invoiceSO.isInvoiceTaxable(reqDTO);
-		getManagedBean().setTaxInvoice(resDTO.isTaxable());
+		if(getManagedBean().getPaymentAdvice() !=null){
+			reqDTO.setInvoice(getManagedBean().getPaymentAdvice().getFlInvoice());
+			resDTO = invoiceSO.isInvoiceTaxable(reqDTO);
+			getManagedBean().setTaxInvoice(resDTO.isTaxable());
+		}
+		
 	}
 	
 	/**
@@ -1383,7 +1389,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 	 * @param outcome the outcome
 	 */
 	public void gpkiSignAction(String outcome){
-		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_MATCH)) {
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_MATCH ) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 			validatePaymentMatch(outcome);
 			StringBuilder sb = new StringBuilder();
 			sb.append(getManagedBean().getPaymentAdvice().getFulfilmentOrder().getDocNo()+"|");
@@ -1443,6 +1449,23 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			reqDTO.setOutcome(outcome);
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());				
 			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
+			if(paymentAdvice.getDescription() == null || paymentAdvice.getDescription().trim().isEmpty()){
+				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
+					paymentAdvice.setDescription(" ");
+				}else{
+					getManagedBean().setSelectedTabIndex(0);
+					throw new EpException(MessageConst.ERROR_100022, new String[]{
+							ResourceBundleUtils.getMessage("lbl.fl.payment.match.payment.desc",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+				}
+			}
+			validateDuplicateDeduction(outcome);
+			validateDeductionAmt();
+			if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_MATCH)){
+				calPmSummary();
+			}
+			
+			paymentSO.validatePaymentMatch(reqDTO);
+				
 			//start 21229
 			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) { 
 				if(getManagedBean().getRemarkReviseList().size() > 0){
@@ -1455,24 +1478,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 					}
 					
 				}
-			}else{ //
-				if(paymentAdvice.getDescription() == null || paymentAdvice.getDescription().trim().isEmpty()){
-					if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
-						paymentAdvice.setDescription(" ");
-					}else{
-						getManagedBean().setSelectedTabIndex(0);
-						throw new EpException(MessageConst.ERROR_100022, new String[]{
-								ResourceBundleUtils.getMessage("lbl.fl.payment.match.payment.desc",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
-					}
-				}
-				validateDuplicateDeduction(outcome);
-				validateDeductionAmt();
-				if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_MATCH)){
-					calPmSummary();
-				}
-				
-				paymentSO.validatePaymentMatch(reqDTO);
-			} //end 21229
+			}
 			
 		}finally {
 			paymentSO = null;
