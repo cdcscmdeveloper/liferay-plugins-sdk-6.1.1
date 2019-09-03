@@ -264,6 +264,9 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 	/** The offer price item. */
 	private ScQtScoreOfferPrice offerPriceItem;
+	
+	/** The offer price score type. */
+	private String offerScoreType;//#25138
 
 	/** The endorscommittee member list. */
 	private List<ScQtCommitteeActivity> endorscommitteeMemberList;
@@ -3373,6 +3376,19 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.reportsToBeRemovedList = reportsToBeRemovedList;
 	}
 
+	/**
+	 * @return the offerScoreType
+	 */
+	public String getOfferScoreType() {//#25138 - start
+		return offerScoreType;
+	}
+
+	/**
+	 * @param offerScoreType the offerScoreType to set
+	 */
+	public void setOfferScoreType(String offerScoreType) {
+		this.offerScoreType = offerScoreType;
+	}//#25138 - end
 	
 
 }
