@@ -390,9 +390,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			approvalRequests = getApprovalRequests(qtId, approvalCategoryCode,
 					ParameterConst.DOCTYPE_BPK_APPROVAL, paramTypes, null);
 			// ***25692 - start
-			this.getManagedBean().setOutComes(new String[]{my.ep.web.constant.BpmOutcomeConst.BPM_APPROVE,
-			                                             my.ep.web.constant.BpmOutcomeConst.BPM_REVISE,
-			                                             my.ep.web.constant.BpmOutcomeConst.BPM_REJECT});
+			//this.getManagedBean().setOutComes(new String[]{my.ep.web.constant.BpmOutcomeConst.BPM_APPROVE,
+			//                                             my.ep.web.constant.BpmOutcomeConst.BPM_REVISE,
+			//                                             my.ep.web.constant.BpmOutcomeConst.BPM_REJECT});
 			// ***25692 - end
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
 
@@ -882,54 +882,89 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		this.getManagedBean().setAction(action);
 		String taskName = this.getManagedBean().getTaskName();
 		logger.debug("Task Name : " + taskName);
-		
-		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
-			showDialog = "reviceApprovalDlg.show()";
-		} else if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(action)) {
-			showDialog = "rejectApprovalDlg.show()";
-		} else {
-			if (ParameterConst.APPROVAL_REQUEST_PUBLICATION_APPROVAL.equalsIgnoreCase(this
-					.getManagedBean().getApprovalType())) {
-				detailSO.validatePublicationScheduleDetails(reqDTO);
-				// detailSO.validateScheduleDetails(reqDTO);
-			} else if(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT.equalsIgnoreCase(this
-					.getManagedBean().getApprovalType())){
+		if (SCProcessNameConst.APPROVE_BPK.equalsIgnoreCase(taskName)) {
+			boolean isRevised = false;
+			boolean isApproved = false;
+			boolean isRejected = false;
+			for (ScQtApprovalRequest approvalRequest : this.getManagedBean().getScQtApprovalRequestList()) {
+				String approverAction = approvalRequest.getApproverAction().getParameterCode();
 				
-				List<TabBean> qtCommittes = this.getManagedBean().getScCommitteeMemberTabList();
-				if (CollectionUtils.isNotEmpty(qtCommittes)) {
-					List<ScQtCommittee> qtCommitees = new ArrayList<ScQtCommittee>(
-							qtCommittes.size());
-					for (int i = 0; i < qtCommittes.size(); i++) {
-						ScQtCommittee qtCommittee = qtCommittes.get(i)
-								.getScQtCommittee();
-						qtCommittee.setQtCommitteRemarks(this.getManagedBean()
-								.getQtCommitteeRemarks());
-						qtCommitees.add(qtCommittee);
-					}
-					reqDTO.getQtdetail().setScQtCommittees(qtCommitees);
+				if (ParameterConst.APPROVAL_DECISION_TYPE_REVISED.equalsIgnoreCase(approverAction) ||
+						ParameterConst.RESTR_APPROVAL_DECISION_TYPE_REVISE.equalsIgnoreCase(approverAction)) {
+					isRevised = true;
+					
+				} else if (ParameterConst.APPROVAL_DECISION_TYPE_APPROVED.equalsIgnoreCase(approverAction) ||
+						ParameterConst.RESTR_APPROVAL_DECISION_TYPE_AGREED.equalsIgnoreCase(approverAction) ||
+						ParameterConst.RESTR_APPROVAL_DECISION_TYPE_PROCEED.equalsIgnoreCase(approverAction)) {
+					isApproved = true;
+					
+				} else if (ParameterConst.APPROVAL_DECISION_TYPE_REJECTED.equalsIgnoreCase(approverAction)) {
+					isRejected = true;
 				}
-				ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,ICommitteSO.class);
-				CommitteReqDTO committeReqDTO = new CommitteReqDTO();
-				committeReqDTO.setScQt(reqDTO.getQtdetail());
-				FacesScopes scope = new FacesScopes();
-				committeReqDTO.setPmUser(scope.getUserSessionBean());
-				committeReqDTO.setUserLocale(scope.getUserLocale());
-				committeReqDTO.setSpecApprovalReq(true);
-				committeSO.validateAppointCommitteDtls(committeReqDTO);
 			}
 			
-			if(SCProcessNameConst.APPROVE_CANCELATION.equalsIgnoreCase(taskName)) {
+			if (isRevised) {
+				action = BpmOutcomeConst.BPM_REVISE;
+				showDialog = "reviceApprovalDlg.show()";
+			} else if (isApproved) {
+				action = BpmOutcomeConst.BPM_APPROVE;
+//				showDialog = "gpki_dlg.show()";
+//				isGpkiPopup = true;
 				FacesContext fc = FacesContext.getCurrentInstance();
 				fc.getApplication().getNavigationHandler()
 						.handleNavigation(fc, null, gpkiSignAction(null));
+			} else if (isRejected) {
+				action = BpmOutcomeConst.BPM_REJECT;
+				showDialog = "rejectApprovalDlg.show()";
 			}
-			else {
-				showDialog = "gpki_dlg.show()";
-				isGpkiPopup = true;
+			
+		} else {
+			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
+				showDialog = "reviceApprovalDlg.show()";
+			} else if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(action)) {
+				showDialog = "rejectApprovalDlg.show()";
+			} else {
+				if (ParameterConst.APPROVAL_REQUEST_PUBLICATION_APPROVAL.equalsIgnoreCase(this
+						.getManagedBean().getApprovalType())) {
+					detailSO.validatePublicationScheduleDetails(reqDTO);
+					// detailSO.validateScheduleDetails(reqDTO);
+				} else if(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT.equalsIgnoreCase(this
+						.getManagedBean().getApprovalType())){
+					
+					List<TabBean> qtCommittes = this.getManagedBean().getScCommitteeMemberTabList();
+					if (CollectionUtils.isNotEmpty(qtCommittes)) {
+						List<ScQtCommittee> qtCommitees = new ArrayList<ScQtCommittee>(
+								qtCommittes.size());
+						for (int i = 0; i < qtCommittes.size(); i++) {
+							ScQtCommittee qtCommittee = qtCommittes.get(i)
+									.getScQtCommittee();
+							qtCommittee.setQtCommitteRemarks(this.getManagedBean()
+									.getQtCommitteeRemarks());
+							qtCommitees.add(qtCommittee);
+						}
+						reqDTO.getQtdetail().setScQtCommittees(qtCommitees);
+					}
+					ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
+							.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,ICommitteSO.class);
+					CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+					committeReqDTO.setScQt(reqDTO.getQtdetail());
+					FacesScopes scope = new FacesScopes();
+					committeReqDTO.setPmUser(scope.getUserSessionBean());
+					committeReqDTO.setUserLocale(scope.getUserLocale());
+					committeReqDTO.setSpecApprovalReq(true);
+					committeSO.validateAppointCommitteDtls(committeReqDTO);
+				}
+				
+				if(SCProcessNameConst.APPROVE_CANCELATION.equalsIgnoreCase(taskName)) {
+					FacesContext fc = FacesContext.getCurrentInstance();
+					fc.getApplication().getNavigationHandler()
+							.handleNavigation(fc, null, gpkiSignAction(null));
+				} else {
+					showDialog = "gpki_dlg.show()";
+					isGpkiPopup = true;
+				}
 			}
 		}
-		
 		
 		if (StringUtils.isNotBlank(showDialog)) {
 			reqDTO.setOutcome(action);
