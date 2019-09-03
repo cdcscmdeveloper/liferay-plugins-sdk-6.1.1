@@ -264,6 +264,9 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 	/** The offer price item. */
 	private ScQtScoreOfferPrice offerPriceItem;
+	
+	/** The offer price score type. */
+	private String offerScoreType;//#25138
 
 	/** The endorscommittee member list. */
 	private List<ScQtCommitteeActivity> endorscommitteeMemberList;
