@@ -50,6 +50,7 @@ import my.ep.jaxb.ct.bankaccount.CTBankAccountDataType;
 import my.ep.jaxb.ct.factoring.CTFactoringDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtActor;
+import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.factoring.CtFactoring;
@@ -168,6 +169,39 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 		ctBB.initializeRemarkAndAttachement(null, getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 	}
+	
+	/*25139-basri*/
+	public void initializeUpdateFactoring(ContractResDTO resDTO){
+		getManagedBean().setFactoring(new CtFactoring());
+		PmStatus pmStatus = new PmStatus();
+		pmStatus.setStatusId(ContractStatusConst.UF_PENDING_SUBMISSION);
+		getManagedBean().getFactoring().setStatus(pmStatus);
+		getManagedBean().getFactoring().setAgreementDate(resDTO.getContract().getCtFactoring().getAgreementDate());
+		getManagedBean().getFactoring().setCtContract(new CtContract());
+		/*getManagedBean().getFactoring().setFinancialOrg(new PmFinancialOrg());
+		getManagedBean().setAccBankName(null);*/
+		
+		getManagedBean().getFactoring().setEffDate(resDTO.getContract().getCtFactoring().getEffDate());
+		getManagedBean().getFactoring().setExpDate(resDTO.getContract().getCtFactoring().getExpDate());
+		getManagedBean().getFactoring().setAuthRefNo(resDTO.getContract().getCtFactoring().getAuthRefNo());
+		getManagedBean().getFactoring().setFinancialOrg(resDTO.getContract().getCtFactoring().getFinancialOrg());
+		getManagedBean().getFactoring().setFinancialOrgAddress(resDTO.getContract().getCtFactoring().getFinancialOrgAddress());
+		getManagedBean().getFactoring().setBankAccountNo(resDTO.getContract().getCtFactoring().getBankAccountNo());
+		getManagedBean().getFactoring().setBankName(resDTO.getContract().getCtFactoring().getBankName());
+		getManagedBean().getFactoring().setFinancialOrgName(resDTO.getContract().getCtFactoring().getFinancialOrgName());
+		getManagedBean().setAccBankName(resDTO.getContract().getCtFactoring().getBankAccountNo()
+				+ ContractConst.SPACE_SLASH
+				+resDTO.getContract().getCtFactoring().getBankName());
+		getManagedBean().getFactoring().setFilePath(resDTO.getContract().getCtFactoring().getFilePath());
+		getManagedBean().getFactoring().setFileName(resDTO.getContract().getCtFactoring().getFileName());
+		getManagedBean().getFactoring().setAttachement(resDTO.getContract().getCtFactoring().getAttachement());
+		
+		
+		
+		ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
+		ctBB.initializeRemarkAndAttachement(null, getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
+	}
+	/*25139-end*/
 
 	/**
 	 * The method used to clear the previous viewed information before
@@ -258,6 +292,8 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			CTFactoringDataType dataType = (CTFactoringDataType) payLoad;
 			reqDTO = new ContractSupplierReqDTO();
 			reqDTO.setFactoringId(new Long(dataType.getDocId()));
+			reqDTO.setDocType(dataType.getDocType().toString());
+			
 			setFactoringDetails(reqDTO);	
 		}
 	}
@@ -338,6 +374,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			}
 			getManagedBean().setRemarkList(resDTO.getCtRemarks());
 			getManagedBean().setAttachmentList(resDTO.getCtAttachments());
+			getManagedBean().getFactoring().setAttachement(resDTO.getFactoring().getAttachement());
 			getManagedBean().setLoaDate(getManagedBean().getContractVer().getCtContractValue().getAckDate());
 			getManagedBean().setContractNo(getManagedBean().getCtContract().getContractNo());
 			getManagedBean().setContractName(getManagedBean().getCtContract().getContractName());
@@ -349,10 +386,10 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			// Remove Factoring Request
 			if (getManagedBean().getFactoring().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
 				getManagedBean().setRemoveFactoring(true);
-				getManagedBean().setDocType(ParameterConst.DOCTYPE_REMOVE_FACTORING);
+				getManagedBean().setDocType(reqDTO.getDocType());
 			} else {
 				getManagedBean().setRemoveFactoring(false);
-				getManagedBean().setDocType(ParameterConst.DOCTYPE_REQUEST_FACTORING);
+				getManagedBean().setDocType(reqDTO.getDocType());
 			}
 
 			if (getManagedBean().getUserMap().size() == 0) {
@@ -533,18 +570,36 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			getManagedBean().getFactoring().setCtContract(getManagedBean().getCtContract());
 			getManagedBean().getFactoring().setSmSupplier(getManagedBean().getCtContract().getSmSupplier());
 			getManagedBean().getFactoring().setLoa(getManagedBean().getCtContract().getLoa());
+			
+			if (getManagedBean().getAttachmentList() != null  ||  getManagedBean().getFactoring().getAttachement() != null) {
+				for (CtAttachment attachment : getManagedBean().getAttachmentList()) {
+					attachment.setSectionId(ContractConst.ATTACHMENT_FACTORING);
+				}
+				
+				for (CtAttachment attachment : getManagedBean().getFactoring().getAttachement()) {
+					attachment.setSectionId(ContractConst.ATTACHMENT_COPY_AGREEMENT_FACTORING);
+				}
+			}
+			
+			
+			List<CtAttachment> newAttachmentList = new ArrayList<CtAttachment>(getManagedBean().getAttachmentList());
+			newAttachmentList.addAll(getManagedBean().getFactoring().getAttachement());
 
 			reqDTO.setFactoring(getManagedBean().getFactoring());
 			reqDTO.setCtContract(getManagedBean().getFactoring().getCtContract());
 			reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
-			reqDTO.setAttachments(getManagedBean().getAttachmentList());			
+			reqDTO.setAttachments(newAttachmentList);			
 			reqDTO.setDeleteAttachmentList(ctBB.getManagedBean().getDeleteAttachmentList());
 			reqDTO.setUserMap(getManagedBean().getUserMap());
 			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
 			reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
 			reqDTO.setRemoveFactoring(getManagedBean().isRemoveFactoring());
+			reqDTO.setUpdateFactoring(getManagedBean().isUpdateFactoring());
 			reqDTO.setDocType(getManagedBean().getDocType());
-
+			/*25139-basri*/
+			reqDTO.setReqType(getManagedBean().getFcRequestType());
+			/*25139-end*/
+			
 			if (getManagedBean().getPmDigiSign() != null) {
 				reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
 			}
@@ -981,6 +1036,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		}
 	}
 
+
 	/**
 	 * The method used to set the upload index for
 	 * file upload purpose.
@@ -1000,31 +1056,71 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	 * @throws Exception  if an exception occurred
 	 * @see    Exception
 	 */
-	public void fileUpload(FileUploadEvent event) throws Exception {
+	public void fileUploadCopyAgreement(FileUploadEvent event) throws Exception {
+		
+		FacesScopes facesScopes = new FacesScopes();
 		UploadedFile item = event.getFile();
 		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
 		String filePath = getManagedBean().getFileDirectory();
 		File file = new File(filePath);
 		file.mkdirs();
-		filePath = filePath + ContractConst.SPACE_SLASH + attachmentFormat.format(item.getFileName(), null);
+		filePath = filePath + "/" + attachmentFormat.format(item.getFileName(), null);
 
-		FileOutputStream fileOutputStream = new FileOutputStream(filePath); 
-		fileOutputStream.write(item.getContents());
-		fileOutputStream.close();    	
+		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
+		fileOuputStream.write(item.getContents());
+		fileOuputStream.close();
 
-		if (getManagedBean().getIndex() == 1) {
-			getManagedBean().getFactoring().setFactoringPayFileName(item.getFileName());
-			getManagedBean().getFactoring().setFactoringPayFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));	  
-		} else if(getManagedBean().getIndex() == 2) {
-			getManagedBean().getFactoring().setFileName(item.getFileName());
-			getManagedBean().getFactoring().setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));	  
-		} else if(getManagedBean().getIndex() == 3) {
-			getManagedBean().getFactoring().setRemoveFileName(item.getFileName());
-			getManagedBean().getFactoring().setRemoveFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-		}
-		RequestContext.getCurrentInstance().execute("uploadFactoringDlg.hide()");
+		getManagedBean().getFactoring().setFileName("Stored in CtAttachment");
+		getManagedBean().getFactoring().setFilePath(DocumentRepositoryUtils.getDBFilePath("CtAttachment"));	
+		
+		CtAttachment attachment = new CtAttachment();
+		attachment.setFileName(item.getFileName());
+		attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+		attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+		attachment.setCreatedUser(facesScopes.getUserSessionBean());
+		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		
+		getManagedBean().getFactoring().getAttachement().add(attachment);
+		
+		
 	}
+	
+	public void fileUpload(FileUploadEvent event) throws Exception {
+			UploadedFile item = event.getFile();
+			AttachmentFormat attachmentFormat = new AttachmentDateFormat();
+			String filePath = getManagedBean().getFileDirectory();
+			File file = new File(filePath);
+			file.mkdirs();
+			filePath = filePath + ContractConst.SPACE_SLASH + attachmentFormat.format(item.getFileName(), null);
+	
+			FileOutputStream fileOutputStream = new FileOutputStream(filePath); 
+			fileOutputStream.write(item.getContents());
+			fileOutputStream.close();    	
+		
+			if (getManagedBean().getIndex() == 1) {
+				getManagedBean().getFactoring().setFactoringPayFileName(item.getFileName());
+				getManagedBean().getFactoring().setFactoringPayFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));	  
+			} else if(getManagedBean().getIndex() == 2) {
+			getManagedBean().getFactoring().setFileName(item.getFileName());
+				getManagedBean().getFactoring().setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));	  
+			} else if(getManagedBean().getIndex() == 3) {
+			getManagedBean().getFactoring().setRemoveFileName(item.getFileName());
+				getManagedBean().getFactoring().setRemoveFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+			}
+			RequestContext.getCurrentInstance().execute("uploadFactoringDlg.hide()");
+		
+			
+			
+		}
 
+	/**
+	 * The method used to retreive the factoring attachment from the list.
+	 */
+	public List<CtAttachment> retrieveAttachmentList()
+	{
+		return getManagedBean().getFactoring().getAttachement();
+	}
+	
 	/**
 	 * The method used to delete the factoring attachment from the list.
 	 */
@@ -1036,6 +1132,19 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			getManagedBean().getFactoring().setFileName(null);
 			getManagedBean().getFactoring().setFilePath(null);
 		}
+	}
+	
+	/**
+	 * The method used to delete attachment from the list.
+	 * 
+	 * @param index  file index of attachment list
+	 */
+	public void deleteAttachmentActionByIndex(int index) {
+		CtAttachment attachment = this.getManagedBean().getFactoring().getAttachement().get(index);
+		if(attachment.getAttachmentId() != null){
+			getManagedBean().getFactoring().getDeleteAttachmentList().add(attachment);
+		}
+		this.getManagedBean().getFactoring().getAttachement().remove(index);
 	}
 
 	/**
@@ -1057,6 +1166,15 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		} else {
 			return true;
 		}
+	}
+	
+	/**
+	 * The method used to set the file index of attachment list.
+	 * 
+	 * @param index  file index of attachment list
+	 */
+	public void setAttachFileIndex(int index) {
+		this.getManagedBean().setAttachFileIndex(index);
 	}
 
 	/**
@@ -1272,6 +1390,17 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		}	
 	}
 
+	/**
+	 * The method used to download the attached file.
+	 * 
+	 * @param  attachment   an object of attached file
+	 * @throws IOException  if an input or output exception occurred
+	 * @see    IOException
+	 */
+	public void downloadFile(CtAttachment attachment) throws IOException {
+		commonDownload(attachment.getFilePath(), attachment.getFileName());
+	}
+	
 	/**
 	 * The method to used auto update of request.
 	 */
