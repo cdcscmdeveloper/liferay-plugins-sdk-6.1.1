@@ -28,40 +28,15 @@
 							style="float:left;" />
 					</p:column>
 					<p:column width="10%" style="text-align:right" >
-					
-					<p:commandButton value="#{lbl['lbl.btn.complete']}" 
-						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" onclick = "confirmSubmit.show();"
+					<p:commandButton value="#{lbl['lbl.btn.complete']}" process="@form" update="@form"
+						action="#{bsvAttendanceBackingBean.saveBriefingRegAttendance('complete')}"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 						style="float:right;" rendered="#{bsvAttendanceBackingBean.managedBean.outComes[0] ne null and bsvAttendanceBackingBean.managedBean.outComes[0] eq 'SUBMIT'}" />
 						
-							
 					<p:commandButton value="#{lbl['lbl.btn.save']}" process="@form" update="@form"
 						action="#{bsvAttendanceBackingBean.saveBriefingRegAttendance('save')}"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 						style="float:right;" />
-						
-					<p:confirmDialog id="confirmSubmit"
-						header="#{lbl['lbl.cm.dialog.cofirm.header']}"
-						widgetVar="confirmSubmit">
-						
-						 <f:facet name="message">  
-							<p:outputPanel>  
-							       <h:outputFormat value="#{lbl['lbl.sc.attendance.submit.message']}" escape="false">
-					   				<f:param value="#{bsvAttendanceBackingBean.managedBean.attandance_count}" />
-							       </h:outputFormat>
-							</p:outputPanel>  
-						 </f:facet> 
-						
-						
-						<p:commandButton id="conf" value="#{lbl['lbl.cm.dialog.cofirm.yes']}"						 
-						action="#{bsvAttendanceBackingBean.saveBriefingRegAttendance('complete')}"
-						process="@form" update="@form"
-							oncomplete="confirmSubmit.hide();" style="float:right;"/>
-						<p:commandButton id="decline"
-							value="#{lbl['lbl.cm.dialog.cofirm.no']}"
-							
-							onclick="confirmSubmit.hide();" style="float:right;"/>
-			
-					</p:confirmDialog>
 				</p:column>
 				</p:row>
 				</h:panelGrid>
