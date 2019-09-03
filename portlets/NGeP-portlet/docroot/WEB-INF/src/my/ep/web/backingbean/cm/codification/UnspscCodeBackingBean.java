@@ -340,7 +340,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 									null,
 									MessageUtils
 									.getMessage(
-											MessageConst.INFO_710013, new String[] {resDTO.getRequestCode().getDocNo()},
+											MessageConst.INFO_710013, new String[] {resDTO.getRequestCode().getDocNo()}, 
 											MessageUtils.BUNDLE_COMMON_MESSAGES,
 											new FacesScopes()
 											.getUserLocale())));
@@ -489,9 +489,9 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			}
 			resDTO = unspscSO.addCodificationRequest(reqDTO);
 
-			FacesContext facesContext = FacesContext.getCurrentInstance();
+			FacesContext facesContext = FacesContext.getCurrentInstance();   
 			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-					MessageUtils.getMessage(MessageConst.INFO_710001,
+					MessageUtils.getMessage(MessageConst.INFO_710016,							//20190830@emy - CR15028
 							MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale())));
 
@@ -513,15 +513,66 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			}			
 			resDTO = unspscSO.updateCodificationRequest(reqDTO);
 		}
+		
+		//20190830@emy - CR15028 - start
+		
+		if (action.equalsIgnoreCase("RECOMMEND_TO_SUPPLIER")) {
+			
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(
+					null,	
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, 				// *** new added
+							MessageUtils.getMessage(MessageConst.INFO_710017,new String[] {resDTO.getRequestCode().getDocNo()},
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+		}
+		else if (action.equalsIgnoreCase("REJECT")){
+			
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(
+					null,	
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, 				// *** new added - reject
+							MessageUtils.getMessage(MessageConst.INFO_710018,new String[] {resDTO.getRequestCode().getDocNo()},
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
 
-		FacesContext facesContext = FacesContext.getCurrentInstance();
-		facesContext.addMessage(
-				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-						MessageUtils.getMessage(MessageConst.INFO_710001,
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
+		}else if (action.equalsIgnoreCase("REVISE")  ) {
+		
+			
+			if (this.getManagedBean().isCodeExtension()){
+			
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+				facesContext.addMessage(
+						null,	
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, 				
+								MessageUtils.getMessage(MessageConst.INFO_710021,new String[] {resDTO.getRequestCode().getDocNo()},
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));	
+			}else{
+				
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+				facesContext.addMessage(
+						null,	
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, 				
+								MessageUtils.getMessage(MessageConst.INFO_710020,new String[] {resDTO.getRequestCode().getDocNo()},
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+			}
+			
+			
+		}else{
+			
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(
+					null,	
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(MessageConst.INFO_710015,new String[] {resDTO.getRequestCode().getDocNo()},
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+			
+		}
 
+		//20190830@emy - CR15028 - end
 
 		return "BPMtesting";
 
@@ -1763,16 +1814,48 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 		}
 
-
-
-		FacesContext facesContext = FacesContext.getCurrentInstance();
-		facesContext.addMessage(
-				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-						.getMessage(MessageConst.INFO_710001,
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
+		//20190830@emy - CR15028 - start
+		
+		if (outcome.equalsIgnoreCase("SUBMIT")) {
+			
+			
+			if(reqDTO.isService() && this.getManagedBean().isRenderV2()){
+				
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+				facesContext.addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+								.getMessage(MessageConst.INFO_710017,new String[] {reqDTO.getRequestCode().getDocNo()},
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+			}else{
+				
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+				facesContext.addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+								.getMessage(MessageConst.INFO_710019,new String[] {resDTO.getRequestCode().getDocNo()},
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+			}
+			
+		}
+		else if (outcome.equalsIgnoreCase("RECOMMEND_TO_SUPPLIER")){
+			
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+							.getMessage(MessageConst.INFO_710017,new String[] {resDTO.getRequestCode().getDocNo()},
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+			
+		}
+		
+		//20190820@emy - CR15028 - end
+		
 		RequestContext.getCurrentInstance().execute("extensionConfirmation.hide();");
+		
 		return "BPMtesting";
 
 	}
@@ -2827,17 +2910,46 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				resDTO = unspscSO.publishCodificationRequest(reqDTO);
 			}else{
 				resDTO = unspscSO.updateExtensionRequest(reqDTO);
+				
 			}
 		}
 
-		FacesContext facesContext = FacesContext.getCurrentInstance();
-		facesContext.addMessage(
-				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-						.getMessage(MessageConst.INFO_710001,
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
+		//20190830@emy CR15028 - start
+		
+		if(this.getManagedBean().isRecommendExtension()){
 
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+							.getMessage(MessageConst.INFO_710017,new String[] {this.getManagedBean().getReviewExtCodeList().get(0).getDocNo()}  ,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+			
+		}else if(this.getManagedBean().isRenderV2() && isCdCommittee()){ 
+			
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+							.getMessage(MessageConst.INFO_710017,new String[] {this.getManagedBean().getReviewExtCodeList().get(0).getDocNo()},
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+		}
+		else{
+			
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+							.getMessage(MessageConst.INFO_710019,new String[] {this.getManagedBean().getReviewExtCodeList().get(0).getDocNo()}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+		
+		};
+
+		//20190830@emy CR15028 - end
+		
 		RequestContext.getCurrentInstance().execute("extensionConfirmation.hide()");
 
 		log.info("***************b4 return**************");
