@@ -2161,7 +2161,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * 
 	 * @return the navigate URL 
 	 */
-	public String gotoFactoringPage(Long contractId) {		
+	public String gotoFactoringPage(Long contractId,boolean update) {		
 		IContractSO contractSO = null;
 		ContractReqDTO reqDTO = null;
 		ContractResDTO resDTO = null;
@@ -2183,11 +2183,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}	    	
 
 				if (supplierBB.getManagedBean().getCtContract().getCtFactoring() != null &&  supplierBB.getManagedBean().getCtContract().isFactored()
-						&& supplierBB.getManagedBean().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.RF_COMPLETE.longValue()) {
-					// Remove Factoring
+						&& supplierBB.getManagedBean().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.RF_COMPLETE.longValue()
+						&& !update) {
+					log.debug("remove factoring");
 					supplierBB.getManagedBean().setFactoring(resDTO.getContract().getCtFactoring());
 					supplierBB.getManagedBean().getFactoring().setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
 					supplierBB.getManagedBean().setRemoveFactoring(true);
+					supplierBB.getManagedBean().setUpdateFactoring(false);
 					supplierBB.getManagedBean().setDocType(ParameterConst.DOCTYPE_REMOVE_FACTORING);
 					PmStatus pmStatus = new PmStatus();
 					pmStatus.setStatusId(ContractStatusConst.XF_PENDING_SUBMISSION);
@@ -2198,15 +2200,29 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 							+ ContractConst.SPACE_SLASH 
 							+ supplierBB.getManagedBean().getFactoring().getBankName());
 					supplierBB.getCtBB().initializeRemarkAndAttachement(null, supplierBB.getManagedBean().getRemarkList(), supplierBB.getManagedBean().getAttachmentList());
-				} else {
-					// Request Factoring
+					supplierBB.getManagedBean().setFcRequestType(ParameterConst.REMOVE_TYPE_FACTORING);
+					
+				}else if(supplierBB.getManagedBean().getCtContract().getCtFactoring() != null &&  supplierBB.getManagedBean().getCtContract().isFactored()
+						&& supplierBB.getManagedBean().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.RF_COMPLETE.longValue()
+						&& update){
+					/*25139-basri*/
+					log.debug("update factoring");
+					supplierBB.initializeUpdateFactoring(resDTO);
+					supplierBB.getManagedBean().getFactoring().setRecordStatusFlg(DbValueConst.RECORD_STATUS_IN_PROGRESS);
+					supplierBB.getManagedBean().setRemoveFactoring(false);
+					supplierBB.getManagedBean().setUpdateFactoring(true);
+					supplierBB.getManagedBean().setDocType(ParameterConst.DOCTYPE_UPDATE_FACTORING);
+					supplierBB.getManagedBean().setFcRequestType(ParameterConst.UPDATE_TYPE_FACTORING);
+					/*25139-end*/
+				}else {
+					log.debug("request factoring");
 					supplierBB.initializeFactoring();
 					supplierBB.getManagedBean().setRemoveFactoring(false);
+					supplierBB.getManagedBean().setUpdateFactoring(false);
 					supplierBB.getManagedBean().setDocType(ParameterConst.DOCTYPE_REQUEST_FACTORING);
+					supplierBB.getManagedBean().setFcRequestType("A");
 				}
-				String docType = (supplierBB.getManagedBean().isRemoveFactoring()) ? ParameterConst.DOCTYPE_REMOVE_FACTORING : ParameterConst.DOCTYPE_REQUEST_FACTORING;
-				supplierBB.getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(
-						ModuleCodeConst.CONTRACT_MANAGEMENT, docType, supplierBB.getManagedBean().getCtContract().getContractNo()));
+				supplierBB.getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, supplierBB.getManagedBean().getDocType(), supplierBB.getManagedBean().getCtContract().getContractNo()));
 				supplierBB.setCtBB(new ContractBackingBean(supplierBB.getManagedBean().getFileDirectory()));
 			}			
 		} catch(Exception ex) {
