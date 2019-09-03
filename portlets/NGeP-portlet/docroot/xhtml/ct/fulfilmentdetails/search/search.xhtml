@@ -264,7 +264,16 @@
 					   	     	rendered="#{data.isAllowFactoring() and data.ctContract.recordStatusFlg==1
 					   	     		and !contractDetailsBackingBean.managedBean.trackingDiarySearch
 					   	     		and !data.allowAgreementCreation}"
-                            	action="#{contractDetailsBackingBean.gotoFactoringPage(data.ctContract.contractId)}"
+                            	action="#{contractDetailsBackingBean.gotoFactoringPage(data.ctContract.contractId,false)}"
+					   			onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
+					     	</p:menuitem>
+					     	<p:menuitem id="menuItemId14" value="#{lbl['lbl.ct.update.factoring']}"
+					   	     	icon="ui-icon-edit" 
+					   	     	process="@this" partialSubmit="true"
+					   	     	rendered="#{data.isAllowFactoring() and data.ctContract.recordStatusFlg==1
+					   	     		and !contractDetailsBackingBean.managedBean.trackingDiarySearch
+					   	     		and !data.allowAgreementCreation and data.ctContract.factored}"
+                            	action="#{contractDetailsBackingBean.gotoFactoringPage(data.ctContract.contractId,true)}"
 					   			onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
 					     	</p:menuitem>
 						</p:menuButton>
