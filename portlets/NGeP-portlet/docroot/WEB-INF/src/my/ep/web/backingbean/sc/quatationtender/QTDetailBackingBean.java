@@ -268,7 +268,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	private static final String menuItemActivities = "MenuItemActivities";
 	private static final String menuItemPublicationApproval = "MenuItemPublicationApproval";
 	private static final String menuItemBPKApproval = "MenuItemBPKApproval";
+	
+	// ***25692#31 - start
 	private static final String menuItemCommitteeApproval = "MenuItemCommitteeApproval";
+	// ***25692#31 - end 
+	
 	private static final String menuItemCommitteeApprovalEcOcTecFec = "MenuItemCommitteeApprovalEcOcTecFec";
 	private static final String menuItemPublicationApproverAssignment = "MenuItemPublicationApproverAssignment";
 	
@@ -316,9 +320,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		return menuItemBPKApproval;
 	}
 
+	// ***25692#31 - start
 	public String getMenuItemCommitteeApproval() {
 		return menuItemCommitteeApproval;
 	}
+	// ***25692#31 - end
 	
 	public String getMenuItemCommitteeApprovalEcOcTecFec() {
 		return menuItemCommitteeApprovalEcOcTecFec;
@@ -7153,6 +7159,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			menuSet.remove(getMenuItemPaymentDeduction()); //6 from initialized menuSet
 			menuSet.remove(getMenuItemDocuments()); //7 from initialized menuSet
 			menuSet.remove(getMenuItemPublicationApproverAssignment());
+			// ***25692#31 
 			menuSet.add(getMenuItemCommitteeApproval());
 		}
 		else if(getUserTaskIsCommitteeAppointmentApprovalEcOcTecFec() && isApprovalScreen()){
