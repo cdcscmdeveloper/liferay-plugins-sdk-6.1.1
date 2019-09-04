@@ -778,7 +778,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			smResAdd.getSmPersonnelAddresses().add(personnelAddRes);
 		}
 		smPersonnel.getSmPersonnelAddresses().add(personnelAddRes);
-		personnelAddPerm.setAddressType(SupplierManagementConst.PERM_ADD);
+		//16052019 - SSM INTEGRATION CR
+		personnelAddPerm.setAddressType(SupplierManagementConst.RES_ADD);
 		personnelAddPerm.setSmAddress(smPermAdd);
 		personnelAddPerm.setSmPersonnel(smPersonnel);
 		smPermAdd.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
