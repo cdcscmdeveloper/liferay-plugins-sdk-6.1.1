@@ -454,6 +454,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			return ParameterConst.DOCTYPE_QUOTATION;
 		}
 		
+		
 	}
 	
 	private void renewQTSesionObject() {
@@ -775,7 +776,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			getManagedBean().getSearchLoiForQtDataModel().reloadData();
 		}
 		else;
-		getManagedBean().getSearchQTDataModel().reloadData();		
+		getManagedBean().getSearchQTDataModel().reloadData();
+		
 	}
 
 	/**
@@ -3658,6 +3660,17 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				
 				// set search result doc type for navigate to diff page based on diff doc type selected.
 				qtnTenderSearchBean.setResultDocType(qtnTenderSearchBean.getDocType());
+				
+				
+				// ***17376#66 - start
+				if(resDTO.getQtResultBean()!=null && resDTO.getQtResultBean().getResultList()!=null){
+					for(int i = 0; i< resDTO.getQtResultBean().getResultList().size(); i++){
+						resDTO.getQtResultBean().getResultList().get(i).setActionRender(actionRender(resDTO.getQtResultBean().getResultList().get(i)));
+					}
+				}
+				// ***17376#66 - end
+				
+				
 				
 				return resDTO.getQtResultBean();
 			}catch(Exception e){
