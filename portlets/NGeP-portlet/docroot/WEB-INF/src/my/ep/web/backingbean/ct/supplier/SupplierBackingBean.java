@@ -1142,7 +1142,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	public void deleteAttachmentActionByIndex(int index) {
 		CtAttachment attachment = this.getManagedBean().getFactoring().getAttachement().get(index);
 		if(attachment.getAttachmentId() != null){
-			getManagedBean().getFactoring().getDeleteAttachmentList().add(attachment);
+//			getManagedBean().getFactoring().getDeleteAttachmentList().add(attachment);
 		}
 		this.getManagedBean().getFactoring().getAttachement().remove(index);
 	}
