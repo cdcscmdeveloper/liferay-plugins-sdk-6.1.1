@@ -2183,7 +2183,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}	    	
 
 				if (supplierBB.getManagedBean().getCtContract().getCtFactoring() != null &&  supplierBB.getManagedBean().getCtContract().isFactored()
-						&& supplierBB.getManagedBean().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.RF_COMPLETE.longValue()
+						&& (supplierBB.getManagedBean().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.RF_COMPLETE.longValue()
+								|| supplierBB.getManagedBean().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.UF_COMPLETE.longValue())
 						&& !update) {
 					log.debug("remove factoring");
 					supplierBB.getManagedBean().setFactoring(resDTO.getContract().getCtFactoring());
@@ -2203,7 +2204,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					supplierBB.getManagedBean().setFcRequestType(ParameterConst.REMOVE_TYPE_FACTORING);
 					
 				}else if(supplierBB.getManagedBean().getCtContract().getCtFactoring() != null &&  supplierBB.getManagedBean().getCtContract().isFactored()
-						&& supplierBB.getManagedBean().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.RF_COMPLETE.longValue()
+						&& (supplierBB.getManagedBean().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.RF_COMPLETE.longValue() 
+						|| supplierBB.getManagedBean().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.UF_COMPLETE.longValue())
 						&& update){
 					/*25139-basri*/
 					log.debug("update factoring");
