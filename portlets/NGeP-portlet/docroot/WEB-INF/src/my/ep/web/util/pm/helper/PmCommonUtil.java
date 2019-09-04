@@ -224,6 +224,7 @@ public class PmCommonUtil implements Serializable{
 	
 	
 	/**
+	 * Enhancement #25136 
 	 * Check date BankDetailRedundant
 	 * 
 	 * @param bankIdA
@@ -234,13 +235,13 @@ public class PmCommonUtil implements Serializable{
 	 * @param accountCodeB
 	 * @return isRedundant
 	 */
-	public static boolean BankDetailRedundant(Long bankIdA,String bankCodeA,String accountCodeA, Long bankIdB, String bankCodeB, String accountCodeB) {
+	public static boolean BankDetailRedundant(Long bankIdA,String bankCodeA,String accountCodeA, Long bankIdB, String bankCodeB, String accountCodeB, Integer statusA, Integer statusB) {
 
 		boolean isRedundant = false;
 		
 		// cannot Redundant
 		if(bankIdA.equals(bankIdB)){
-			if (bankCodeA.equalsIgnoreCase(bankCodeB)&& accountCodeA.equalsIgnoreCase(accountCodeB)){
+			if (bankCodeA.equalsIgnoreCase(bankCodeB)&& accountCodeA.equalsIgnoreCase(accountCodeB) && statusA==statusB){
 				isRedundant = true;
 				
 			}
