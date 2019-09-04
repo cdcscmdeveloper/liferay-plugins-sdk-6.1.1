@@ -116,54 +116,55 @@
 					<!-- ***17376#55 - start -->
 					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:6%;text-align: center;">
 						<p:menuButton value="#{lbl['lbl.btn.option']}">
-							<p:menuitem id="menuItem1" value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
+							<ui:param name="renderArr" value="#{qTDetailBB.actionRender(scQt)}" />
+							<p:menuitem value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();" 
-								rendered="#{scQt.actionRender[0]}"
+								rendered="#{renderArr[0]}"
 								icon="ui-icon-view" action="#{qTDetailBB.editQuationTenderDetails(scQt, false)}" 
 								partialSubmit="true" process="@this"/>
-							<p:menuitem id="menuItem2" value="#{lbl['lbl.btn.update']}" onstart="blockWidget.show();"
+							<p:menuitem value="#{lbl['lbl.btn.update']}" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();" 
-								rendered="#{scQt.actionRender[1]}"
+								rendered="#{renderArr[1]}"
 								icon="ui-icon-edit" action="#{qTDetailBB.editQuationTenderDetails(scQt, true)}" 
 								partialSubmit="true" process="@this"/>
-							<p:menuitem id="menuItem3" value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
+							<p:menuitem value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();" 
-								rendered="#{scQt.actionRender[2]}"
+								rendered="#{renderArr[2]}"
 								icon="ui-icon-view" action="#{qTDetailBB.viewDirectLOADetails(scQt, view.viewId)}" 
 								partialSubmit="true" process="@this"/>
-							<p:menuitem id="menuItem4" value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
+							<p:menuitem value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();" 
-								rendered="#{scQt.actionRender[3]}"
+								rendered="#{renderArr[3]}"
 								icon="ui-icon-view" action="#{qTDetailBB.viewSupplierProposalDetails(scQt, view.viewId)}" 
 								partialSubmit="true" process="@this"/>
-							<p:menuitem id="menuItem5" value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
+							<p:menuitem value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();" 
-								rendered="#{scQt.actionRender[4]}"
+								rendered="#{renderArr[4]}"
 								icon="ui-icon-view" action="#{qTDetailBB.viewSupplierProposalDetails(scQt, view.viewId)}" 
 								partialSubmit="true" process="@this"/>
-							<p:menuitem id="menuItem6" value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
+							<p:menuitem value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();" 
-								rendered="#{scQt.actionRender[5]}"
+								rendered="#{renderArr[5]}"
 								icon="ui-icon-view" action="#{qTDetailBB.viewSupplierProposalDetailsGen(scQt, view.viewId)}"
 								partialSubmit="true" process="@this"/>
-							<p:menuitem id="menuItem7" value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
+							<p:menuitem value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();" 
-								rendered="#{scQt.actionRender[6]}"
+								rendered="#{renderArr[6]}"
 								icon="ui-icon-view" action="#{qTDetailBB.viewSupplierProposalDetailsGen(scQt, view.viewId)}"
 								partialSubmit="true" process="@this"/>
-							<p:menuitem id="menuItem8" value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
+							<p:menuitem value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();" 
-								rendered="#{scQt.actionRender[7]}"
+								rendered="#{renderArr[7]}"
 								icon="ui-icon-view" action="#{qTDetailBB.viewFinalizationSupplierDetails(scQt, view.viewId)}"
 								partialSubmit="true" process="@this"/>
-							<p:menuitem id="menuItem9" value="#{lbl['lbl.btn.publish']}" onstart="blockWidget.show();"
+							<p:menuitem value="#{lbl['lbl.btn.publish']}" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();" 
-								rendered="#{scQt.actionRender[8]}"
+								rendered="#{renderArr[8]}"
 								action="#{qTDetailBB.publishQT(scQt)}"
 								partialSubmit="true" process="@this" update="searchQTs"/>
-							<p:menuitem id="menuItem10" value="#{lbl['lbl.btn.close']}" onstart="blockWidget.show();"
+							<p:menuitem value="#{lbl['lbl.btn.close']}" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();" 
-								rendered="#{scQt.actionRender[9]}"
+								rendered="#{renderArr[9]}"
 								action="#{qTDetailBB.closeProposal(scQt)}"
 								partialSubmit="true" process="@this" update="searchQTs"/>
 						</p:menuButton>
