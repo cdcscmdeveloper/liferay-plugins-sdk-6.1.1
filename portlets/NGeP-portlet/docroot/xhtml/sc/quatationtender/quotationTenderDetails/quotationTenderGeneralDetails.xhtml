@@ -594,15 +594,29 @@
 						value="*" styleClass="mandatory"
 						rendered="#{qtStatusChecklistScoring or qtStatusAfterChecklistScoring}" />
 				</td>
-				<td><p:inputText id="contractBo" maxlength="3"
-						label="#{lbl['lbl.sc.spec.complete.period']}"
-						value="#{scQt.contractDuration}"
-						style="text-align:right;margin-bottom:5px; width:200px;"
-						required="#{qtStatusChecklistScoring or qtStatusAfterChecklistScoring}"
-						disabled="#{qtStatusAfterChecklistScoring or isReadOnly}">
-						<p:ajax event="change" process="@this" partialSubmit="true"
-							update="@this" />
-					</p:inputText> <p:message id="completionBo" for="contractBo" display="icon"></p:message></td>
+				<td>
+					<c:choose>
+						<c:when
+							test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_CONTRACT_DURATION) and !isReadOnly}">
+							<p:inputText id="contractBo" maxlength="3"
+								label="#{lbl['lbl.sc.spec.complete.period']}"
+								value="#{scQt.contractDuration}"
+								style="text-align:right;margin-bottom:5px; width:200px;"
+								required="#{qtStatusChecklistScoring or qtStatusAfterChecklistScoring}">
+								<p:ajax event="change" process="@this" partialSubmit="true" update="@this" />
+							</p:inputText>
+							<p:message id="completionBo" for="contractBo" display="icon"></p:message>
+						</c:when>
+						<c:otherwise>
+							<p:inputText label="#{lbl['lbl.sc.spec.complete.period']}"
+								value="#{scQt.contractDuration}"
+								style="text-align:right;margin-bottom:5px; width:200px;"
+								required="#{qtStatusChecklistScoring or qtStatusAfterChecklistScoring}"
+								disabled="true">
+							</p:inputText>
+						</c:otherwise>
+					</c:choose> 
+				</td>
 			</tr>
 			<c:if test="#{qtStatusScheduleDocAndAfter}">
 				<tr>
