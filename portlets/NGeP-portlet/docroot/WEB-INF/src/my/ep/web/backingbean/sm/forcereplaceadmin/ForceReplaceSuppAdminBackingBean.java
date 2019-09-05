@@ -351,16 +351,16 @@ public class ForceReplaceSuppAdminBackingBean extends
 						}
 					}
 					// set old admin
-					if (smPersonnel.getIdentificationNo().equalsIgnoreCase(
+					if (smPersonnel.getIdentificationNo().trim().equalsIgnoreCase(
 							getManagedBean().getReactivateBasic()
-									.getIdentificationNo())) {
+									.getIdentificationNo().trim())) {
 						getManagedBean().setOldAdmin(smPersonnel);
 					}
 					// set new admin
-					else if (smPersonnel.getIdentificationNo()
+					else if (smPersonnel.getIdentificationNo().trim()
 							.equalsIgnoreCase(
 									getManagedBean().getReactivateBasic()
-											.getNewIdentificationNo())) {
+											.getNewIdentificationNo().trim())) {
 						getManagedBean().setNewAdmin(smPersonnel);
 						getManagedBean().setExistingUser(true);
 					}
