@@ -131,7 +131,7 @@
 											style="width: 240px;margin-bottom: 5px;" id="justificationId"
 											panelStyle="overflow-y: scroll; width:400px; height:200px;"
 											label="#{lbl['lbl.sc.reason']}"
-											required="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'A'}"
+											required="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'A' and param['submitBtnPressed']=='1'}"
 											disabled="#{!isEditable}"
 											value="#{simpleQuoteBackingBean.managedBean.scQuote.justificationType.reasonCode}">
 											<f:selectItems
@@ -151,7 +151,7 @@
 											value="#{simpleQuoteBackingBean.managedBean.scQuote.justificationRemark}"
 											id="justificationRmk" label="#{lbl['lbl.sc.justification']}"
 											maxlength="100" disabled="#{!isEditable}"
-											required="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'A'}"
+											required="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'A' and param['submitBtnPressed']=='1'}"
 											rows="3" cols="58" style="margin-bottom: 5px; width: 230px;" >
 											<f:ajax></f:ajax>
 											</p:inputTextarea>

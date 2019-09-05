@@ -1289,6 +1289,10 @@ public class SimpleQuoteBackingBean extends
 							IRequestNoteSO.class);
 			QuoteReqDTO reqDTO = new QuoteReqDTO();
 			ScQuote quote = getManagedBean().getScQuote();
+			
+			if(quote.getPanelItem()==null){
+				quote.setPanelItem(getTopPanelItem());
+			}
 
 			// validate start date and end date
 			if (quote.getStartDate() != null && quote.getEndDate() != null) {
@@ -1352,23 +1356,28 @@ public class SimpleQuoteBackingBean extends
 			}
 
 			// justification type
-			if (quote.getProcurementType().getParameterCode()
-					.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
-				if (quote.getJustificationType().getReasonCode() != null) {
-					quote.setJustificationType(getReasonByCategoryAndCode(
-							ReasonCategory.JUSTIFICATION_AD_HOC.value(), quote
-							.getJustificationType().getReasonCode()));
-
+			
+			if(quote.getJustificationType().getReasonCode() != null){
+				if (quote.getProcurementType().getParameterCode()
+						.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
+					if (quote.getJustificationType().getReasonCode() != null) {
+						quote.setJustificationType(getReasonByCategoryAndCode(
+								ReasonCategory.JUSTIFICATION_AD_HOC.value(), quote
+								.getJustificationType().getReasonCode()));
+	
+					}
+				}  else if (quote.getProcurementType().getParameterCode()
+						.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
+					if (quote.getJustificationType().getReasonCode() != null) {
+						quote.setJustificationType(getReasonByCategoryAndCode(
+								ReasonCategory.JUSTIFICATION_PK7.value(), quote
+								.getJustificationType().getReasonCode()));
+	
+					}
+				} else {
+					quote.setJustificationType(null);
 				}
-			}  else if (quote.getProcurementType().getParameterCode()
-					.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
-				if (quote.getJustificationType().getReasonCode() != null) {
-					quote.setJustificationType(getReasonByCategoryAndCode(
-							ReasonCategory.JUSTIFICATION_PK7.value(), quote
-							.getJustificationType().getReasonCode()));
-
-				}
-			} else {
+			}else {
 				quote.setJustificationType(null);
 			}
 
