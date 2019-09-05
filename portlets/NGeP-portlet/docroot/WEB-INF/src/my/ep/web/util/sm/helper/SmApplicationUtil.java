@@ -6782,8 +6782,11 @@ public class SmApplicationUtil {
 								.equals(SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE)
 						&& !fac.getFacilityType()
 								.equals(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)
-						&& !isFacilityExistInLatest(fac,
-								latestAppl.getSmFacilities())) {
+						// #26384 - start
+						&& (!appl.getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF) && (!isFacilityExistInLatest(fac, latestAppl.getSmFacilities())))
+						// #26384 - end
+//						&& !isFacilityExistInLatest(fac, latestAppl.getSmFacilities())
+						) {
 					if (SmCommonUtil.isCollectionEmpty(catTypeList)
 							|| !catTypeList.contains(fac.getFacilityType())) {
 						facIt.remove();
