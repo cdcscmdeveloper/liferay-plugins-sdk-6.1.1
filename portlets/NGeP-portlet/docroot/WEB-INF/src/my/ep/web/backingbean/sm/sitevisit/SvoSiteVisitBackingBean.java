@@ -2732,4 +2732,25 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 
 	}
+	
+	// #24964 - start
+	public void saveSiteVisitReportByPO(){		
+		log.info("***********saveSiteVisitReportByPO***********");
+		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
+		SmSvTask svTask = this.getManagedBean().getSmSvTask();	
+		
+		//validate assistant officer
+		if(StringUtils.isBlank(svTask.getSmSvAssistantOfficer().getName())){
+			svTask.setSmSvAssistantOfficer(null);
+		}
+
+		reqDTO.setSmSvTask(svTask);
+		reqDTO.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
+		ISiteVisitSO reqSO = (ISiteVisitSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISiteVisitSO.class);
+		reqSO.saveOrSubmitSiteVisitReport(reqDTO);
+		
+		refreshPage();
+		RequestContext.getCurrentInstance().execute("poReportDlg.hide()");
+	} 
+	// #24964 - end
 }
