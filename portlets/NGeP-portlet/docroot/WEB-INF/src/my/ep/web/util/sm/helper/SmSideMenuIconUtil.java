@@ -393,7 +393,49 @@ public class SmSideMenuIconUtil {
 					bean.getEditVO().setAppEditSuppDoc(true);
 				}
 			}
-		}
+		} 
+		//24964
+		else if (sectionType
+				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)) {
+			if (bean.isSupplierUser()) {
+				bean.getEditVO().setSuppEditSiteVisit(false);
+				if (step10SiteVisitReportHasDifference(true, bean.getLatestAppl(),
+						bean.getSmAppl())) {
+					bean.getEditVO().setSuppEditSiteVisit(true);
+				}
+				if (step10SiteVisitReportHasDifference(true,
+						bean.getLatestApproveAppl(), bean.getSmAppl())) {
+					bean.getSupplierEditVO().setSuppEditSiteVisit(true);
+				}
+			} else if (bean.isPoUser()) {
+				bean.getEditVO().setSuppEditSiteVisit(false);
+				bean.getEditVO().setPoEditSiteVisit(false);
+				if (step10SiteVisitReportHasDifference(true, bean.getLatestAppl(),
+						bean.getSupplierAppl())) {
+					bean.getEditVO().setSuppEditSiteVisit(true);
+				}
+				if (step10SiteVisitReportHasDifference(false, bean.getSupplierAppl(),
+						bean.getSmAppl())) {
+					bean.getEditVO().setPoEditSiteVisit(true);
+				}
+			} else if (bean.isApproverUser()) {
+				bean.getEditVO().setSuppEditSiteVisit(false);
+				bean.getEditVO().setPoEditSiteVisit(false);
+				bean.getEditVO().setAppEditSiteVisit(false);
+				if (step10SiteVisitReportHasDifference(true, bean.getLatestAppl(),
+						bean.getSupplierAppl())) {
+					bean.getEditVO().setSuppEditSiteVisit(true);
+				}
+				if (step10SiteVisitReportHasDifference(false, bean.getSupplierAppl(),
+						bean.getPoAppl())) {
+					bean.getEditVO().setPoEditSiteVisit(true);
+				}
+				if (step10SiteVisitReportHasDifference(false, bean.getPoAppl(),
+						bean.getSmAppl())) {
+					bean.getEditVO().setAppEditSiteVisit(true);
+				}
+			}
+		} //END
 	}
 
 	public static void setAllSectionEditorVO(SmApplicationManagedBean bean,
@@ -1298,6 +1340,29 @@ public class SmSideMenuIconUtil {
 
 		return retVal;
 	}
+	
+	//24964
+	private static boolean step10SiteVisitReportHasDifference(boolean isSupplier,
+			SmAppl applPrev, SmAppl applCurr) {
+		boolean retVal = false;
+
+		if (applPrev != null && applCurr != null) {
+			if (isSupplier) {
+				retVal = EntityHelper.hasDiffBetweenList(
+						applPrev.getSmSvTasks(),
+						applCurr.getSmSvTasks(), new String[] {
+								"smSvAssistantOfficer" },
+						new String[] { "" }, null);
+			} else {
+				retVal = EntityHelper.hasDiffBetweenList(
+						applPrev.getSmSvTasks(),
+						applCurr.getSmSvTasks(),
+						new String[] { "smSvAssistantOfficer" }, null, null);
+			}
+		}
+
+		return retVal;
+	} //END
 
 	private static SmAppl getSmApplFromSerFile(String applNo, String serType) {
 		SmAppl retVal = null;
