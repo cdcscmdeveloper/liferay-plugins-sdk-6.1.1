@@ -3,6 +3,7 @@
  */
 package my.ep.web.managedbean.pm.usergroup;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -44,6 +45,7 @@ public class UsergroupManagedBean extends BaseManagedBean {
 	private boolean brandNew = false;
 	private boolean selectGrp = false;
 	private boolean disabledOrg;
+	private HashMap<Long,Integer> hmGroupUserFlagStatDb = null;
 
 	public UsergroupManagedBean() {
 	}
@@ -318,6 +320,21 @@ public class UsergroupManagedBean extends BaseManagedBean {
 	 */
 	public void setUsergroupSearchBean(UserGroupSearchBean usergroupSearchBean) {
 		this.usergroupSearchBean = usergroupSearchBean;
+	}
+
+	/**
+	 * @return the hmGroupUserFlagStatDb
+	 */
+	public HashMap<Long, Integer> getHmGroupUserFlagStatDb() {
+		return hmGroupUserFlagStatDb;
+	}
+
+	/**
+	 * @param hmGroupUserFlagStatDb the hmGroupUserFlagStatDb to set
+	 */
+	public void setHmGroupUserFlagStatDb(
+			HashMap<Long, Integer> hmGroupUserFlagStatDb) {
+		this.hmGroupUserFlagStatDb = hmGroupUserFlagStatDb;
 	}
 
 }
