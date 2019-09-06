@@ -57,15 +57,19 @@ public class ViewSuppProfileManagedBean extends
 	public ViewSuppProfileManagedBean() {
 
 	}
-
-	private class SmSupplierPagingDataModel extends PagingDataModel<SmSupplier> {
+	/*
+	 * CREATE CLASS PAGING DATA MODEL
+	 * HERE EXAMPLE USING NATIVE QUERY, IF CRITERIA STILL SAME, JUZ USE AND RETURN ENTITY
+	 * 
+	 * */
+	private class SmSupplierPagingDataModel extends PagingDataModel<SmSupplier> { 
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
 
 		public SmSupplierPagingDataModel() {
-			super("supplierApplHistoryDtId");
+			super("supplierApplHistoryDtId");//REFER TO DATATABLE ID
 		}
 
 		@Override
@@ -113,6 +117,7 @@ public class ViewSuppProfileManagedBean extends
 	 */
 	public void searchSupplier() {
 		validateAtLeastOneSearchCriteria();
+		//HERE WILL START PROCESS PAGING DATA MODEL
 		smSupplierDataModel.reloadData();
 	}
 
