@@ -301,8 +301,7 @@
 				</p:column>
 				<p:column
 					headerText="#{lbl['lbl.fl.doc.maintain.doc.status']}" style="white-space:normal;" >
-					<h:outputText
-						value="#{flDocumentBackingBean.getStatusDescById(flDocument.statusId)}" />
+						<h:outputText value="#{flDocumentBackingBean.getDocStatus(flDocument.docNo, flDocument.statusId, flDocument.docType)}" />
 				</p:column>  
 				<p:column headerText="#{lbl['lbl.fl.doc.maintain.action.no']}"
 					style="text-align: center">
