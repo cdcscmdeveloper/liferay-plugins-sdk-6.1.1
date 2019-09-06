@@ -240,7 +240,7 @@
 					    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.factoring.bank.name']}" />
 				   </h:panelGrid>			
 	
-				   <p:outputLabel value="#{lbl['lbl.ct.start.date']}"  styleClass="required" />
+				   <p:outputLabel value="#{lbl['lbl.ct.ft.start.date']}"  styleClass="required" />
 				    <h:panelGrid columns="5">
 					     <p:calendar id="effdateCal" size="10" required="true" showOn="button" 
 						     value="#{supplierBackingBean.managedBean.factoring.effDate}" label="#{lbl['lbl.ct.start.date']}"
@@ -291,7 +291,7 @@
 					  </h:panelGrid>
 				</h:panelGroup>
               
-               	<p:outputLabel value="#{lbl['lbl.ct.end.date']}"  styleClass="required" />
+               	<p:outputLabel value="#{lbl['lbl.ct.ft.end.date']}"  styleClass="required" />
 				<h:panelGrid columns="5">
 					<p:calendar id="expdateCal" size="10" required="true"
 						showOn="button" label="#{lbl['lbl.ct.end.date']}" value="#{supplierBackingBean.managedBean.factoring.expDate}"
