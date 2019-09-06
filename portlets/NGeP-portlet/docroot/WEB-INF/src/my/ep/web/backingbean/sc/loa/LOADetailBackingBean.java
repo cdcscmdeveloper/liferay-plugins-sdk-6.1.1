@@ -5052,7 +5052,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					}
 			}
 			
-			if (getManagedBean().isEnablePBForDP()) {
+			if (getManagedBean().isEnablePBForDP() || null == getManagedBean().getSourceId()) {
 				return;
 			}
 			
