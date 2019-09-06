@@ -36,13 +36,16 @@
 						widgetVar="confirmSubmit"  >
 						
 						<f:facet name="message">
-						        <div style="text-align: left;width:500px;"><h:outputText  value="#{lbl['lbl.sc.bsv.attendance.bil']}"></h:outputText></div>
+						        <div style="text-align: left;width:500px;height: 10px;"><h:outputText  value="#{lbl['lbl.sc.bsv.attendance.bil']}"></h:outputText></div>
 						    </f:facet>
+						    <br/>
+						<p:scrollPanel style="height:350px;align:center;">
+						
 						    
 						    
 						 
 
-						<div style="text-align: left;"><ui:fragment
+						<div style="text-align: left;margin: auto"><ui:fragment
 			rendered="#{bsvAttendanceBackingBean.managedBean.scQt.zonal}">
 
 						<p:dataList var="zonePnlList" value="#{bsvAttendanceBackingBean.managedBean.zoneBean}" >
@@ -134,19 +137,22 @@
 
 						
 						
-						<div style="text-align: left;"><h:outputText value="#{lbl['lbl.sc.attendance.submit.main.message']}"></h:outputText></div>
+						</p:scrollPanel>
+						
+						<br/>
+						<div style="text-align: center;"><h:outputText value="#{lbl['lbl.sc.attendance.submit.main.message']}"></h:outputText></div>
 						<br/>
 						
 						
 						<p:commandButton id="conf" value="#{lbl['lbl.cm.dialog.cofirm.yes']}"						 
 						action="#{bsvAttendanceBackingBean.submitBsvDetails(bpmAction)}"
 						process="@form" update="@form"
-							oncomplete="confirmSubmit.hide();" style="float:right;"/>
+							oncomplete="confirmSubmit.hide();" style="float:left;margin-left:75%"/>
 						<p:commandButton id="decline"
 							value="#{lbl['lbl.cm.dialog.cofirm.no']}"
 							
-							onclick="confirmSubmit.hide();" style="float:right;"/>
-			
+							onclick="confirmSubmit.hide();" style="float:left;"/>
+					
 					</p:confirmDialog>
 				</ui:repeat>
 
