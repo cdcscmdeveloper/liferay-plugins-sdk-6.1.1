@@ -93,6 +93,10 @@
 			test="#{svoSiteVisitBackingBean.managedBean.activeIndex == svoSiteVisitBackingBean.managedBean.lastIndex}">
 				<ui:include src="/xhtml/sm/shared/sitevisit/view_uploadedSiteVisitReport.xhtml" />
 				<ui:include src="/xhtml/sm/shared/sitevisit/recommendation.xhtml" />
-		</c:if>
+		</c:if>	
+		
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.close']}" action="#{svoSiteVisitBackingBean.saveSiteVisitReportByPO}" />
+		</div>	
 	</p:outputPanel>
 </ui:composition>
