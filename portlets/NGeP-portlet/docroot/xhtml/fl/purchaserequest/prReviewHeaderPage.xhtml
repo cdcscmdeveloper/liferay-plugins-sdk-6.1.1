@@ -32,7 +32,14 @@
 					<p:outputLabel value="#{lbl['lbl.fl.status']} " />
 				</td>
 				<td class="header-info-text">
-					#{purchaseRequestBackingBean.getStatusDescById(purchaseRequestBackingBean.managedBean.fulfilmentRequest.status.statusId)}
+					<c:choose>
+						<c:when test="#{!purchaseRequestBackingBean.isSqStillValid()}">
+							#{purchaseRequestBackingBean.getStatusDescById(DPStatusConstants.SQ_EXPIRED)}
+						</c:when>
+						<c:otherwise>
+							#{purchaseRequestBackingBean.getStatusDescById(purchaseRequestBackingBean.managedBean.fulfilmentRequest.status.statusId)}
+						</c:otherwise>
+					</c:choose>				
 				</td>
 			</tr>
 		</table>

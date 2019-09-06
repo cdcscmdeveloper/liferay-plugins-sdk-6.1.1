@@ -4639,7 +4639,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	public boolean isSqStillValid(){		
 		
 		Boolean validDate = true;		
-		Long currentStatusId = getManagedBean().getCurrentStatusId();
+		Long currentStatusId = getManagedBean().getFulfilmentRequest().getFlWorkflowStatus().getPmStatus().getStatusId();
 		Integer sqTimeValidity = null;
 		ScQuote scQuote = getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getRequestNote().getQuote();
 		
