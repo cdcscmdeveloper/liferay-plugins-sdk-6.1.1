@@ -4519,7 +4519,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	public boolean isSqStillValid(){		
 		
 		Boolean validDate = true;	
-		Long currentStatusId = getManagedBean().getCurrentStatusId();
+		Long currentStatusId = getManagedBean().getRequestNote().getCurrentStatus().getPmStatus().getStatusId();
 		Integer sqTimeValidity = null;
 		ScQuote scQuote = getManagedBean().getRequestNote().getQuote();
 		
