@@ -7223,8 +7223,14 @@ public class SimpleQuoteBackingBean extends
 			
 			Boolean validDate = true;	
 			Integer sqTimeValidity = null;
+			Long currentStatusId = null;
 			ScQuote scQuote = getManagedBean().getScQuote();
-			Long currentStatusId = scQuote.getCurrentStatus().getPmStatus().getStatusId();
+			
+			if(scQuote != null){
+				if(scQuote.getCurrentStatus() != null){
+					currentStatusId = scQuote.getCurrentStatus().getPmStatus().getStatusId();
+				}				
+			}
 			
 			// by default days
 			IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
@@ -7239,7 +7245,7 @@ public class SimpleQuoteBackingBean extends
 				throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
 			}		
 			
-			if(scQuote != null){
+			if(scQuote != null && currentStatusId != null){
 				if(scQuote.getPurchaseInDefault() == null){
 					Date currentDate = new Date();
 					Date closingDate = scQuote.getEndDate();

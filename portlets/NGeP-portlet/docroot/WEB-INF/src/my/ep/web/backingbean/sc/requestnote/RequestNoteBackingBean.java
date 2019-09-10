@@ -4519,9 +4519,24 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	public boolean isSqStillValid(){		
 		
 		Boolean validDate = true;	
-		Long currentStatusId = getManagedBean().getRequestNote().getCurrentStatus().getPmStatus().getStatusId();
 		Integer sqTimeValidity = null;
-		ScQuote scQuote = getManagedBean().getRequestNote().getQuote();
+		Long currentStatusId = null;
+		ScQuote scQuote = null;
+		
+		if(getManagedBean().getRequestNote() != null){
+			scQuote = getManagedBean().getRequestNote().getQuote();
+			if(getManagedBean().getRequestNote().getCurrentStatus() == null){
+				if(getManagedBean().getCurrentStatusId() != null){
+					currentStatusId = getManagedBean().getCurrentStatusId();
+				}
+					
+				if(scQuote != null && scQuote.getCurrentStatus() != null){
+					currentStatusId =  scQuote.getCurrentStatus().getPmStatus().getStatusId();
+				}			
+			}else{
+				currentStatusId = getManagedBean().getRequestNote().getCurrentStatus().getPmStatus().getStatusId();
+			}	
+		}	 
 		
 		// by default days
 		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
@@ -4536,7 +4551,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
 		}		
 		
-		if(scQuote != null){
+		if(scQuote != null && currentStatusId != null){
 			if(getManagedBean().getPurchaseInDefaultId() == null){
 				Date currentDate = new Date();
 				Date closingDate = scQuote.getEndDate();
