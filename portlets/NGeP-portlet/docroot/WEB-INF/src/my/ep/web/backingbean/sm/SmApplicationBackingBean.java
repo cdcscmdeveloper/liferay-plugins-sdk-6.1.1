@@ -8661,7 +8661,7 @@ public class SmApplicationBackingBean extends
 				}
 				reqDTO.setChangedBy(new FacesScopes().getUserSessionBean()
 						.getUserId());
-				//reqSO.submitPOorApproverReviewToBPM(reqDTO);
+				reqSO.submitPOorApproverReviewToBPM(reqDTO);
 
 				FacesContext.getCurrentInstance().addMessage(
 						null,

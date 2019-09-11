@@ -448,7 +448,8 @@ public class SmApplicationUtil {
 			sortSupplierCategory(catList);
 			for (SmSupplierCategory cat : catList) {
 				// Bug #26031 - filter valid category
-				if (cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED && cat.getPoDecFlg() == null) {
+				// //Bug #25676 : SM Showstopper - No Categories Appear in Processing Officer Screen
+				if (cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE && cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED && cat.getPoDecFlg() == null) {
 					//Enhancement #11765
 					invalidCatCodes.add(cat.getPmCategoryL1().getCategoryL1Code()+cat.getPmCategoryL2().getCategoryL2Code()+cat.getPmCategoryL3().getCategoryL3Code());
 				}
