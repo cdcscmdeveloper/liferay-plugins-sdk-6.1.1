@@ -833,12 +833,7 @@ public class SmSideMenuIconUtil {
 								currPersonnel, new String[] { "shareAmt",
 										"sharePercentage", "softcert",
 										"softcertFlg", "epRole" });
-					} else {
-						retVal = EntityHelper.isObjectDifference(prevPersonnel,
-								currPersonnel, new String[] { "shareAmt",
-										"sharePercentage", "softcert",
-										"softcertFlg" });
-					}
+					} //21937
 
 					if (retVal) {
 						log.info(">>>>DIFFERENT IN PERSONNEL FOR PERSONNEL:"
