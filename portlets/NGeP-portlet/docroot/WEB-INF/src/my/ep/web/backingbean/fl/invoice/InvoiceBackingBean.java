@@ -43,6 +43,7 @@ import my.ep.biz.service.fl.frn.IReceivedNoteSO;
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
+import my.ep.biz.service.fl.payment.IPaymentMatchSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
@@ -609,10 +610,17 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				//Start  #21229
 				FulfilmentReqDTO reqRemarkDTO = new FulfilmentReqDTO();
 				if(resDTO.getInvoice()!=null && resDTO.getInvoice().getInvoiceId() !=null){
-					reqRemarkDTO.setDocId(resDTO.getInvoice().getInvoiceId());
-					reqRemarkDTO.setDocType(ParameterConst.DOCTYPE_INVOICE);
-					FulfilmentResDTO resRemarkDTO = invoiceSO.retrieveRevisionRemarksInvoice(reqRemarkDTO);
-					initializeRemarkRevision(resDTO.getInvoice().getFlWorkflowStatus(), resRemarkDTO.getRevisionRemarks(),false);
+					FulfilmentReqDTO flRemarkDTO = new FulfilmentReqDTO();
+					FulfilmentResDTO resRemarkDTO = new FulfilmentResDTO();
+					flRemarkDTO.setFlOrderId(paymentObj.getFlOrderId());
+					IPaymentMatchSO paymentMatchSO = (IPaymentMatchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IPaymentMatchSO.class);
+
+					resRemarkDTO = paymentMatchSO.retrievePaymentAdviseByOrderId(flRemarkDTO);
+					if(resRemarkDTO.getPaymentAdvice()!=null) {
+						initializeRemarkRevision(resRemarkDTO.getPaymentAdvice().getFlWorkflowStatus(), resRemarkDTO.getRemarkList(),false);
+
+					}
+					
 				}
 				//End  #21229
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
@@ -2373,16 +2381,18 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 
 		boolean flWorkflowStatusMatch = false;
 		if(flWorkflowStatus!=null) {
-			if(remarkList.size()>0 && remarkList.get(0).getFlWorkflowStatus()!=null) {
-				if(flWorkflowStatus.getWorkflowStatusId().longValue()==remarkList.get(0).getFlWorkflowStatus().getWorkflowStatusId().longValue() ){
-						//&& flWorkflowStatus.getWorkflowStatusId().longValue() == FulfilmentStatusConst.CO_PENDING_REVISION_INVOICE.longValue()
-						//&& flWorkflowStatus.getWorkflowStatusId().longValue() == FulfilmentStatusConst.PO_PENDING_REVISION_INVOICE.longValue()) {
+			if(remarkList.size()>0 && remarkList.get(0).getFlWorkflowStatus()!=null ) {
+				
+				if( remarkList.get(0).getFlWorkflowStatus().getPmStatus().getStatusId().longValue() == FulfilmentStatusConst.CO_PENDING_PAYMENT_QUERY.longValue()
+						||remarkList.get(0).getFlWorkflowStatus().getPmStatus().getStatusId().longValue() == FulfilmentStatusConst.PO_PENDING_PAYMENT_QUERY.longValue()
+						||remarkList.get(0).getFlWorkflowStatus().getPmStatus().getStatusId().longValue() == FulfilmentStatusConst.PA_PENDING_PAYMENT_QUERY.longValue()
+					) {
 					flWorkflowStatusMatch = true;
 				}
 			}
 		} 		
 	
-		if (remarkList.size() > 0 || flWorkflowStatusMatch) {			
+		if (flWorkflowStatusMatch) {			
 			getManagedBean().setRemarkRevise(remarkList);
 		}
 	}
