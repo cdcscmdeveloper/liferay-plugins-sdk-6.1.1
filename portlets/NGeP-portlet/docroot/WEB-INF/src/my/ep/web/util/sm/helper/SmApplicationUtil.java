@@ -12977,4 +12977,89 @@ public class SmApplicationUtil {
 		
 	}
 
+	/**
+	 * Gets the current supplier based on the user id.
+	 * 
+	 * @return the SmSupplier object
+	 * 
+	 * Log : 12491
+	 */
+	public static SmSupplier getCurrentSupplier(long userId) {
+		SmSupplier smSupp = new SmSupplier();
+		try {
+			//get pm user
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(userId);
+			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
+					.getServiceObject("pm", IUserSO.class);
+			UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
+			PmUser pmUser = null;
+			if (userResDTO != null && userResDTO.getPmUser() != null) {
+				pmUser = userResDTO.getPmUser();
+			}
+			SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
+			if (pmUser == null || (pmUser != null && pmUser.getUserId() == null)) {
+				log.info("**** Invalid user from the session scope ******");
+				throw new EpException(MessageConst.ERROR_721017);
+			}
+			userReqDTO.setLoginId(pmUser.getLoginId());
+			log.info("************Supplier PmUser Login Id:"
+					+ pmUser.getLoginId());
+
+			supplierSearchReqDTO.setUserId(pmUser.getUserId());
+			supplierSearchReqDTO.setAllStatuses(true);
+			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
+					.getInstance().getServiceObject("sm",
+							ISupplierSearchSO.class);
+			SupplierSearchResDTO smResDTO = supplierSearchSO
+					.retriveSupplierProfiles(supplierSearchReqDTO);
+			if (smResDTO.getResultBean().getResultList() != null
+					&& smResDTO.getResultBean().getResultList().size() > 0) {
+				smSupp = (SmSupplier) smResDTO.getResultBean().getResultList()
+						.get(0);
+				log.debug("*************Current Supplier: "
+						+ smSupp.getSupplierId());
+			} else {
+				log.debug("**** No valid supplier record found for this user ******");
+				throw new EpException(MessageConst.ERROR_721018);
+			}
+			if (smSupp.getSupplierId() == null) {
+				throw new EpException(MessageConst.ERROR_721018);
+			}
+			return smSupp;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(MessageUtils.getMessage(
+					MessageConst.ERROR_721017,
+					MessageUtils.BUNDLE_COMMON_MESSAGES,
+					new FacesScopes().getUserLocale())
+					+ " (" + e.getMessage() + ")");
+		}
+
+	}
+	
+	/**
+	 * Retreive User By Login Id
+	 * 
+	 * @param idNo
+	 *            - the id no
+	 * @return PmUser, if is exist user by Login ID
+	 * 
+	 *  Log : 12491
+	 */
+	public static PmUser retreiveUserByLoginId(String loginId) {
+		log.debug("*********retreiveUserByLoginId**********" + loginId);
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", IUserSO.class);
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setLoginId(loginId);
+		UserResDTO resDTO = userSO.retrieveUserByLoginId(reqDTO);
+
+		if (resDTO.getPmUser() != null) {
+			return resDTO.getPmUser();
+		} else {
+			return null;
+		}
+	}
+
 }
