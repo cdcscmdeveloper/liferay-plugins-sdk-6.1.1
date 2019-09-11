@@ -239,7 +239,8 @@
 					<p:ajax process="@this" partialSubmit="true" update="@this" />
 				</p:inputTextarea>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.action']}"
+			<c:if test="#{evaluationBackingBean.managedBean.currentStatusId ne QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL}">
+			  <p:column headerText="#{lbl['lbl.sc.action']}"
 				style="width:5%;white-space: normal;text-align: center;">
 			    
 			    <p:commandLink action="#{supplierProposalDetailBackingBean.editRowNonFederalGovtExperience(technongovt)}"
@@ -259,7 +260,8 @@
 				 action="#{supplierProposalDetailBackingBean.updateRowNonFederalGovtExperience(technongovt)}"
 				 update="@([id$=technongovtid])" >
 				</p:commandButton>
-			</p:column>
+			  </p:column>
+			</c:if>
 		</p:dataTable>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.add']}" partialSubmit="true"
