@@ -9549,15 +9549,6 @@ public class SpecificationBackingBean extends
 						checkForProcumentMethodDropdown(scQt));
 			}
 		}
-		// Set back procurement mode if null
-		//20190910@asyrafhaziq - 26404 -Start
-		if (null == scQt.getProcurementMode()) {	
-			BigDecimal amount = scQt.getEstimatedAmount() !=null ? scQt.getEstimatedAmount() : scQt.getTmpExpectedIntendedPrice();
-			if(null != amount){
-				new CreateQtBackingBean().setProcurementModeOnly(scQt, amount);
-			}
-		}
-         //20190910@asyrafhaziq - 26404 -End
 		checkProcurementModeValue();
 		committeSO = null;
 		this.getManagedBean().setLoginRoleType("SC");
