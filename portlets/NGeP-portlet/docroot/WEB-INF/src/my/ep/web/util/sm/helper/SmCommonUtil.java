@@ -3147,13 +3147,14 @@ public class SmCommonUtil {
 	 */
 	//Bug #25601 : SM SHOWSTOPPER: Duplicate MOF Account for New Supplier Registration
 	public static SmMofAccount getPreviousMofAccountBySuppIdAndSuppType(
-			Long supplierId,Long applId, String suppType) {
+			Long supplierId,Long applId, String suppType,Integer recordStatus) {
 		SmMofAccount mofAcc = null;
 		if (supplierId != null) {
 			MofAccountReqDTO reqDTO = new MofAccountReqDTO();
 			reqDTO.setSupplierType(suppType);
 			reqDTO.setSupplierId(supplierId);
 			reqDTO.setApplId(applId);
+			reqDTO.setRecordStatus(recordStatus);
 			mofAcc = SmServiceLookup.getMofAccountSO()
 					.retrivePreviousMOFAccountBySupplierIdAndType(reqDTO)
 					.getMofAccount();
