@@ -9863,6 +9863,18 @@ public class SmApplicationBackingBean extends
 	private void setDefaultPoReviewSection() {
 		//#Enhancement #11765
 		if(!alreadyExecute && (SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC.equalsIgnoreCase(getManagedBean().getCurrentPageType()) ||(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY.equalsIgnoreCase(getManagedBean().getCurrentPageType()) && this.currentTab==7))){
+			////START Bug #25676 : SM Showstopper - No Categories Appear in Processing Officer Screen
+			//Add checking category code 
+			if (!getManagedBean().isSiteVisitAfterApproval()) {
+				boolean validNewCatAdded = SmApplicationUtil
+						.valiateNewCategoryAdded(getManagedBean());
+				if (!validNewCatAdded) {
+					//Bug #25676 : SM Showstopper - No Categories Appear in Processing Officer Screen
+					getManagedBean().setShowParentMsg(true);
+					throw new EpException(MessageConst.ERROR_722570);
+				}
+			}
+		////END Bug #25676 : SM Showstopper - No Categories Appear in Processing Officer Screen
 			List<String> catList = SmApplicationUtil.getUnverifiedCatCodes(getManagedBean().getSmAppl()
 					.getSmSupplierCategories(), getManagedBean().getSmAppl().getApplType(), getManagedBean()
 					.isApproverUser());
