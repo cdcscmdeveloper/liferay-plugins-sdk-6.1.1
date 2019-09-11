@@ -10,8 +10,8 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
@@ -73,7 +73,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
 
 @ManagedBean (name = "postSupplierRegBB")
-@RequestScoped
+@ApplicationScoped
 public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSupplierRegistrationManagedBean>{
 	//private static final String CATALOGUE_UPLOAD_PATH = "/xhtml/cm/codification/codificationView.xhtml";
 	private static final String CATALOGUE_UPLOAD_PATH = "supptemp-codification-search";
@@ -1333,4 +1333,313 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		getManagedBean().setRejectedApplExist(false);
 		getManagedBean().setDisplayRejectLabel(true);
 	}
+	
+	//START : LOG 12491
+	public String finishButtonAction(long userId){
+		SmSupplier userSupplier = getSupplierProfileByUserId(userId);
+		String path = null;
+		Boolean isRejApplExpired = false;
+
+		if(userSupplier != null){
+			ISupplierSearchSO supplierSearchSO = SmServiceLookup.getSupplierSearchSO();
+			SupplierSearchReqDTO suppSearchReqDTO = new SupplierSearchReqDTO();
+			suppSearchReqDTO.setSupplierId(userSupplier.getSupplierId());
+			SupplierSearchResDTO suppSearchResDTO = supplierSearchSO.retriveSupplierById(suppSearchReqDTO);
+
+			SmSupplier supplier = suppSearchResDTO.getSmSupplier();
+			log.info("Supplier is not null===>" + supplier.getSupplierId());
+			SmAppl appl = retrieveInProcessAppl(supplier.getSupplierId());
+			SmWorkflowStatus rejectedWf = rejectedApplExistFinish(supplier.getSupplierId());
+			boolean isRejectedApplExist = (rejectedWf == null) ? false : true;
+			boolean successPayment = checkSuccessPaymentBySupplierId(supplier.getSupplierId());
+			
+			//Self Request Supplier Admin
+			if(supplier.getRecordStatusFlg()==SupplierManagementConst.SUPPLIER_SELF_REQUEST_ADMIN_STATUS){
+				path = basicAccountFlowFinish(supplier,userId);
+			}else{
+				//Active Appl
+				if(appl != null){
+					log.info("*****In Progress*********" + isRejectedApplExist);			
+					SmWorkflowStatus workFlowStatus = getSmWorkflowStatus(appl);
+					//Enhancement #20467
+					if(rejectedWf != null){
+						log.info("************** currentStatusAndPath: rejectedWf.getDocId() = " + rejectedWf.getDocId());
+						SmAppl rejAppl = new SmAppl();
+						rejAppl.setApplId(rejectedWf.getDocId());
+						
+						//to check rejected appl expired or not
+						isRejApplExpired = checkRejectedApplExpired(rejAppl);				
+						log.info("************** currentStatusAndPath: isRejApplExpired = " + isRejApplExpired);
+						
+						//if rejected appl expired, treat as new appl
+						if(isRejApplExpired) {
+							isRejectedApplExist = false;
+						}
+					}
+
+					if(successPayment){
+						//setSuccessPaymentFlag();
+						
+						//to check whether is resubmit
+						if(appl.isResubmit()){
+							//getManagedBean().setRejectedApplExist(true);
+						}else{
+							//if refId for processing fee not equeal to current workflow doc id
+							//treat is as rejectedAppl
+							PyBill pyBill = getSuccessPaymentApplIdBySupplierId(supplier.getSupplierId());
+							if(pyBill != null){
+								if(pyBill.getBillRefId() == workFlowStatus.getDocId()){
+									//getManagedBean().setRejectedApplExist(false);
+									successPayment = false;
+								}else{
+									if(rejectedPaymentExpired(supplier.getSupplierId()).size() > 0){
+										// to avoid resubmit flow when supplier rejected by system during Registration fee(20119)
+										//getManagedBean().setRejectedApplExist(false);
+									}
+									//if rejected appl expired, user need to pay processing fee
+									if(isRejApplExpired) {
+										//getManagedBean().setSuccessPayment(false);
+									}
+								}
+							}else{
+								//getManagedBean().setRejectedApplExist(false);
+								if(isRejApplExpired) {
+									//getManagedBean().setSuccessPayment(false);
+								}
+							}
+						}
+					}
+					
+					//showHyperlink(workFlowStatus.getPmStatus().getStatusId(),isRejectedApplExist,successPayment);
+					//path = TASK_LIST_PATH;
+					//log.info("*****Flow Status*********" + getManagedBean().getFlowStatus());				
+				}else{
+					//MOF APPL
+					if(supplier.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
+						SmWorkflowStatus workFlowStatus = getSmWorkflowStatus(supplier.getSmAppl());
+						if(workFlowStatus != null && 
+							(workFlowStatus.getPmStatus().getStatusId().longValue() == my.ep.constant.sm.SupplierManagementConst.PM_STATUS_REGISTERED || 
+							workFlowStatus.getPmStatus().getStatusId().longValue() == my.ep.constant.sm.SupplierManagementConst.PM_STATUS_SV_ASSIGNMENT_AFTER_APPROVAL || 
+							workFlowStatus.getPmStatus().getStatusId().longValue() == my.ep.constant.sm.SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT)){
+							
+							boolean isRejectedApplExistF = false;
+							PyBill pyBill = getSuccessPaymentApplIdBySupplierId(supplier.getSupplierId());
+							if(pyBill != null){
+								if(pyBill.getBillRefId() == workFlowStatus.getDocId()){
+									isRejectedApplExistF = false;
+						
+								}else{
+									isRejectedApplExistF = true;
+								}
+							}else{
+								isRejectedApplExistF = false;
+							}
+							
+							path = mofSupplierFlowAfterApprovalFinish(supplier,isRejectedApplExistF);
+						}else{
+							SmWorkflowStatus wfStatus = isLatestActiveWorkFlow(supplier.getSupplierId());
+							if(wfStatus != null){
+								PmStatus wfStat = wfStatus.getPmStatus();
+								if(wfStat != null && 
+									(wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PO_REJECTED_APPLICATION || 
+									wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_APPROVER_REJECTED_APPLICATION ||
+									wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS)){
+									
+									log.info("*******Resubmit********");
+									//path = RESUBMIT_APPLICATION + wfStatus.getDocId();
+								//	getManagedBean().setFlowStatus(3);
+									//path = validPaymentForResubmission(supplier.getSupplierId(), rejectedWf.getDocId());
+									
+									if(wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS){
+										/*log.info("*******PM_STATUS_REJECTED_BY_SYS********");
+										if(!checkSuccessPaymentBySupplierId(supplier.getSupplierId())){
+											log.info("*******No SUCCESS PAYMENT********");
+											getManagedBean().setRejectedApplExist(false);
+											path = MOF_REG_PATH;
+											getManagedBean().setFlowStatus(1);
+											getManagedBean().setDisplayRejectLabel(true);
+										}*/
+									}
+								}else{
+								/*	getManagedBean().setRejectedApplExist(false);
+									log.info("*******Not Resubmit********");
+									path = MOF_REG_PATH;
+									getManagedBean().setFlowStatus(1);*/
+									
+									/*if(rejectedWf != null){
+										path = validPaymentForResubmission(supplier.getSupplierId(), rejectedWf.getDocId());
+									}*/
+								}
+							}
+						}
+						log.info("********FLOW STATUS**********" +  getManagedBean().getFlowStatus());
+					}else if(supplier.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.BASIC_ACCOUNT)){
+						path = basicAccountFlowFinish(supplier,userId);
+					}
+				}
+			}
+			
+		}
+
+		return path;
+
+	}
+	/**
+	 * get user's supplier profile
+	 * @return SmSupplier
+	 */
+	private SmSupplier getSupplierProfileByUserId(Long userId){
+
+		if(userId != null){
+			SmSupplier smSupp = SmApplicationUtil.getCurrentSupplier(userId);
+			if(smSupp != null){
+				log.info("------getSupplierProfile--------" + smSupp.getCompanyName());
+				return smSupp;
+			}
+		}
+		return null;
+	}
+	
+	private String basicAccountFlowFinish(SmSupplier supplier,long userId){
+		String path = null;
+		
+		//Basic Applcation
+		//List<CmSupplierItem> cmSuppItemLs = getCmSupplierItems(supplier.getSupplierId());
+		
+		//retreive Personnel
+		IPersonnelSO reqSO = SmServiceLookup.getPersonnelSO();
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setUserId(userId);
+		PersonnelResDTO resDTO = reqSO.retrievePersonnelByUserId(reqDTO);
+		SmPersonnel currentPersonnel = resDTO.getSmPersonnel();
+		
+		softCertStatus = currentPersonnel.getSoftcertFlg();
+		boolean isG2G = supplier.getBusinessType().
+				equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER) ? true : false;
+		boolean isWithFederal = currentPersonnel.getSmAppl().getSmCompanyBasic().isWithFederal();
+		boolean isMigratedFirstLogin = currentPersonnel.getSmAppl().getSmCompanyBasic().getRevNo() == 2;
+		log.info("isWithFederal --> " + isWithFederal );
+		log.info("isMigratedFirstLogin --> " + isMigratedFirstLogin );
+		log.info("softCertStatus --> " + softCertStatus );
+
+		if(!isPublishedCatalogue(supplier.getSupplierId()) && !isG2G){
+			log.info("this is basic not g2g");
+/*
+			if(getCmSupplierItems(supplier.getSupplierId()).size() > 0){
+				path = CATALOGUE_MAINT;
+			}else{
+				path = CATALOGUE_UPLOAD_PATH;
+			}*/
+			//getManagedBean().setFlowStatus(1);
+			//if(validSupplierTemp()){
+			if(currentPersonnel.getEpRole().equalsIgnoreCase(RoleCode.SUPPLIER_TEMP.value())){
+				if(softCertStatus == SupplierManagementConst.SOFT_CERT_PENDING_REQ && !isWithFederal && isMigratedFirstLogin){
+					log.info(">>>CHange ROle for SUpplier Temp<<");
+					changeRoleForSupplierTempFinish(currentPersonnel.getPersonnelId(),supplier);
+				}				
+			}
+		}else{
+			log.info("this is basic g2g");
+
+			if(checkPendingSoftCertRequest(supplier.getSupplierId())){
+				path = SOFT_CERT_PATH;
+				//getManagedBean().setFlowStatus(2);
+			}else{
+				if(softCertStatus == SupplierManagementConst.SOFT_CERT_REJECTED){
+					path = SOFT_CERT_PATH;
+				}
+				// #25384: happen if the previous admin already request
+				// softcert and replaced by this new admin which after request
+				// need to do softcert payment.
+				else if (softCertStatus == SupplierManagementConst.IS_SOFTCERT_REQ) {
+					path = TASK_LIST_PATH;
+				}
+				
+				//getManagedBean().setFlowStatus(2);
+			}
+			
+			if(validSupplierTemp() && softCertStatus == SupplierManagementConst.SOFT_CERT_ISSUED){
+				log.info(">>>CHange ROle for SUpplier Temp<<");
+				changeRoleForSupplierTemp(currentPersonnel.getPersonnelId(),supplier);
+			}
+		}
+		
+		return path;
+	}
+	private String mofSupplierFlowAfterApprovalFinish(SmSupplier supplier, boolean isRejectedApplExist){
+		String path = null;
+		SmPersonnel currentPersonnel = retrieveCurrentPersonnel();
+		log.info("-------mofSupplierFlowAfterApproval supplier type-------------" + supplier.getSmAppl().getSupplierType());
+		if(!supplier.getSmAppl().isQuestionnaire()){
+			
+		}else{
+			if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(ParameterConst.SUPPLIER_TYPE_CONTRACTOR)){
+				softCertStatus = currentPersonnel.getSoftcertFlg();
+				if(supplier.getSmAppl().getSmCompanyBasic().isWithFederal()){
+					if(isPublishedCatalogue(supplier.getSupplierId()) && validSupplierTemp() && softCertStatus == SupplierManagementConst.SOFT_CERT_ISSUED){
+						log.info(">>>CHange ROle for SUpplier Temp<<");
+						changeRoleForSupplierTemp(currentPersonnel.getPersonnelId(),supplier);
+					}
+				}else{
+					log.info(">>>Contractor<<<");
+					if(validSupplierTemp()){
+						log.info(">>>CHange ROle for SUpplier Temp<<");
+						changeRoleForSupplierTemp(currentPersonnel.getPersonnelId(),supplier);
+
+					}
+				}
+			}else{
+				log.info(">>>Consultant<<");
+				if(validSupplierTemp()){
+					log.info(">>>CHange ROle for SUpplier Temp<<");
+					changeRoleForSupplierTemp(currentPersonnel.getPersonnelId(),supplier);
+				}
+			}
+		}
+
+		return path;
+	}
+	private SmWorkflowStatus rejectedApplExistFinish(Long supplierId){
+		//boolean isRejectedApplExist = false;
+		SmWorkflowStatus wf = null;
+		ISmWorkFlowStatusSO workFlowStatusSO = SmServiceLookup.getSmWorkFlowStatusSO();
+		SmWorkFlowStatusReqDTO reqDTO = new SmWorkFlowStatusReqDTO();
+		
+		reqDTO.setStatusIds(new ArrayList<Long>());
+		reqDTO.getStatusIds().add(SupplierManagementConst.PM_STATUS_PO_REJECTED_APPLICATION);
+		reqDTO.getStatusIds().add(SupplierManagementConst.PM_STATUS_APPROVER_REJECTED_APPLICATION);
+		reqDTO.getStatusIds().add(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS);
+		reqDTO.setSupplierId(supplierId);
+		
+		SmWorkFlowStatusResDTO resDTO = workFlowStatusSO.
+				retrieveWorkFlowBySuppIdAndStatusIds(reqDTO);
+		
+		if(resDTO.getWorkFlowStatusLs().size() > 0){
+			wf = resDTO.getWorkFlowStatusLs().get(0);
+		}
+		
+		return wf;
+	}
+	private void changeRoleForSupplierTempFinish(Long personnelId, SmSupplier supplier){
+		log.info("*****changeRoleForSupplierTemp - start******");
+		changeRoleSection = true;
+		IPersonnelSO personnelSO = SmServiceLookup.getPersonnelSO();
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setPersonnelId(personnelId);
+		//reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
+		
+		try{
+			PersonnelResDTO resDTO =  personnelSO.supplierTempChangeRole(reqDTO);
+			//PersonnelResDTO resDTO = new PersonnelResDTO();
+			//resDTO.setSuccessful(true);
+			if(resDTO.isSuccessful()){
+				roleChangeSuccess = true;
+			}
+		}catch(Exception ex){
+			ex.printStackTrace();
+			//FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,null,ex.getMessage()));	
+		}
+		
+	}
+	//END : LOG 12491
 }
