@@ -4678,9 +4678,11 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			for (ScQtDocReport scQtDocReport : scQtDocReports) {
 				ScQtDocReportAttachment attachment = scQtDocReport
 						.getScQtDocReportAttachment();
-				String docDefinitionKey = scQtDocReport.getPmDocument()
-						.getDocDefinitionKey();
-
+				
+				//start Bug #26416
+				String docDefinitionKey = scQtDocReport.getPmDocument()!=null? scQtDocReport.getPmDocument().getDocDefinitionKey() : " ";
+				//end Bug #26416
+				
 				if (attachment != null
 						&& SourcingConstants.DOC_DEF_KEY_CONTRACT_COPY_SAMPLE
 								.equals(docDefinitionKey)) {
