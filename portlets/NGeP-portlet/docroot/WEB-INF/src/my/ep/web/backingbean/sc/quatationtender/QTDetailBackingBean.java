@@ -1424,6 +1424,15 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			scQt.setScQtDocReports(docReportsList);
 		}
 		
+		// Set back procurement mode if null
+		//20190910@asyrafhaziq - 26404 -Start
+				if (null == scQt.getProcurementMode()) {	
+					BigDecimal amount = scQt.getEstimatedAmount() !=null ? scQt.getEstimatedAmount() : scQt.getTmpExpectedIntendedPrice();
+					if(null != amount){
+						new CreateQtBackingBean().setProcurementModeOnly(scQt, amount);
+					}
+				}
+		//20190910@asyrafhaziq - 26404 -End
 		// save.
 		QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
 		quationTenderReqDTO.setQtdetail(scQt);
@@ -7161,6 +7170,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			menuSet.remove(getMenuItemPublicationApproverAssignment());
 			// ***25692#31 
 			menuSet.add(getMenuItemCommitteeApproval());
+			log.info("********** getmenuItemCommitteeApproval() : "+menuSet.contains(getMenuItemCommitteeApproval()));
 		}
 		else if(getUserTaskIsCommitteeAppointmentApprovalEcOcTecFec() && isApprovalScreen()){
 			menuSet.remove(getMenuItemPublicationApproverAssignment());
