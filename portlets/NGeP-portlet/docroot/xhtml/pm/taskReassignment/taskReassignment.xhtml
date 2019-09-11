@@ -10,7 +10,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 >
 	<ui:define name="contentSection">
 		<!-- Validation Message -->
-		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" rendered="#{taskReassignmentBackingBean.managedBean.showParentMsg}" />
 		<!-- Search -->
 		<ui:include src="taskReassignmentSearch.xhtml"/>
 		<!-- Result -->

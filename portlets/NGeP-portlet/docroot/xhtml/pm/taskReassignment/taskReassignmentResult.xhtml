@@ -42,17 +42,40 @@
 			</h:panelGroup>
 		</p:panel>
 	</p:outputPanel>
-    <p:messages id="noReassignees"  closable="true" />
+    <p:messages id="noReassignees" closable="true" showDetail="true" autoUpdate="true" showSummary="false" rendered="#{taskReassignmentBackingBean.managedBean.showChildMsg}" />    
 	<p:panel id="pUserTaskAssignResult" header="#{lbl['lbl.pm.ta.user.task']}"
 		toggleable="true">
 		<div class="clear"></div>
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.txt.usertasklist.instruction']}"/>
+		<h:outputText styleClass="instruction" escape="false" value="#{lbl['lbl.pm.ta.user.task.instruction']}"/>
+		<div class="clear">&#160;</div>
+		<h:outputText styleClass="instruction" escape="false" value="#{lbl['lbl.pm.ta.user.task.note']}"/>
 		<h:panelGroup id="userTaskListID">
 			<p:dataTable value="#{taskReassignmentBackingBean.userTaskListDataModel}"
 				lazy="true" rowIndexVar="userRowIndex" rowKey="#{userTasks.taskId}" rows="10" id="dtTaskAssignResult"
-				style="width:100%;" var="userTasks" widgetVar="taskListTableWidget">
+				style="width:100%;" var="userTasks" widgetVar="taskListTableWidget"
+				selectionMode="single">
 				<ac:paginator for="dtTaskAssignResult"></ac:paginator>
 				
+				<p:column style="width:2%;">
+					<f:facet name="header">
+						<p:selectBooleanCheckbox value="#{taskReassignmentBackingBean.managedBean.checkAllUserTasks}"
+							disabled="#{not taskReassignmentBackingBean.managedBean.checkAllUserTasksEnabled}">
+							<p:ajax partialSubmit="true" 
+									process="@this" 
+									update="@form,:form:dtTaskAssignResult,:form:messages,:form:noReassignees" 
+									listener="#{taskReassignmentBackingBean.checkAllUserTasks}" />
+						</p:selectBooleanCheckbox>
+					 </f:facet>
+					 <p:selectBooleanCheckbox value="#{userTasks.taskSelect}"> 
+						<p:ajax partialSubmit="true"
+								process="@this"
+								event="change" 
+								update="@form,:form:dtTaskAssignResult,:form:messages,:form:noReassignees" 
+								listener="#{taskReassignmentBackingBean.checkUserTask}">
+						</p:ajax>
+					  </p:selectBooleanCheckbox>
+				</p:column>	
 				<p:column headerText="#{lbl['lbl.pm.ta.created.date']}" width="13%;">
 					<h:outputText value="#{userTasks.createDate.time}">
 						<f:convertDateTime
@@ -79,6 +102,14 @@
 					</p:commandLink>
 				</p:column>
 			</p:dataTable>
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.pm.ta.task.bulkReassigment']}" id="bulkReassignBtnId"
+					partialSubmit="true"					
+					action="#{taskReassignmentBackingBean.redirectToBulkTasksReassign}"
+					rendered="#{taskReassignmentBackingBean.managedBean.admin}"
+					disabled="#{empty taskReassignmentBackingBean.managedBean.selectedTasksToBulkReassign}"
+					update=":form:dlTaskReassignment" process="@this"/>
+			</div>
 		</h:panelGroup>
 		
 	</p:panel>
