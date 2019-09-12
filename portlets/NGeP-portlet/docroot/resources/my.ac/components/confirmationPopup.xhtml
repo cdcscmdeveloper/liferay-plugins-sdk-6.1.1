@@ -19,7 +19,6 @@
 		<cc:attribute name="height" default="200" />
 		<cc:attribute name="resetInput" default="" />
 		<cc:attribute name="okProcess" default="@this" />
-		<cc:attribute name="styleClass" default="" />
 	</cc:interface>
 
 	<cc:implementation>
@@ -32,7 +31,7 @@
 		<p:dialog id="#{cc.attrs.id}" widgetVar="#{cc.attrs.widget}"
 			header="#{confirmationheader}" resizable="false"
 			width="#{cc.attrs.width}" height="#{cc.attrs.height}"
-			closable="false" modal="true" styleClass="#{cc.attrs.styleClass}">
+			closable="false" modal="true" style="z-index:90" position="absolute">
 			
 			<p:blockUI block="#{cc.attrs.id}Popup" widgetVar="confirmPopupBlockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
