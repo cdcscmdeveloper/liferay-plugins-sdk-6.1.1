@@ -53,12 +53,12 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	private Map<String,String> reassigneeList = new LinkedHashMap<String,String>();
 	private List<String> selectedReassignee;
 	private boolean showReassigneeList;
-	private boolean showDeleteGroupTasksButton;
+	private boolean enableDeleteGroupTasksButton;
 	private boolean checkAllGroupTasksEnabled;
 	private boolean checkAllGroupTasks;
 	private List<WorklistItemVO> allGroupTasks = new ArrayList<WorklistItemVO>();
 	private Map<String,WorklistItemVO> selectedGroupTasks = new HashMap<String,WorklistItemVO>();
-	private boolean showDeleteOthersTasksButton;
+	private boolean enableDeleteOthersTasksButton;
 	private boolean checkAllOthersTasksEnabled;
 	private boolean checkAllOthersTasks;
 	private List<WorklistItemVO> allOthersTasks = new ArrayList<WorklistItemVO>();
@@ -400,17 +400,17 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	}
 	
 	/**
-	 * @return the showDeleteGroupTasksButton
+	 * @return the enableDeleteGroupTasksButton
 	 */
-	public boolean isShowDeleteGroupTasksButton() {
-		return showDeleteGroupTasksButton;
+	public boolean isEnableDeleteGroupTasksButton() {
+		return enableDeleteGroupTasksButton;
 	}
 	
 	/**
-	 * @param showDeleteGroupTasksButton the showDeleteGroupTasksButton to set
+	 * @param enableDeleteGroupTasksButton the enableDeleteGroupTasksButton to set
 	 */
-	public void setShowDeleteGroupTasksButton(boolean showDeleteGroupTasksButton) {
-		this.showDeleteGroupTasksButton = showDeleteGroupTasksButton;
+	public void setEnableDeleteGroupTasksButton(boolean enableDeleteGroupTasksButton) {
+		this.enableDeleteGroupTasksButton = enableDeleteGroupTasksButton;
 	}
 	
 	/**
@@ -458,17 +458,17 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	}
 	
 	/**
-	 * @return the showDeleteOthersTasksButton
+	 * @return the enableDeleteOthersTasksButton
 	 */
-	public boolean isShowDeleteOthersTasksButton() {
-		return showDeleteOthersTasksButton;
+	public boolean isEnableDeleteOthersTasksButton() {
+		return enableDeleteOthersTasksButton;
 	}
 	
 	/**
-	 * @param showDeleteOthersTasksButton the showDeleteOthersTasksButton to set
+	 * @param enableDeleteOthersTasksButton the enableDeleteOthersTasksButton to set
 	 */
-	public void setShowDeleteOthersTasksButton(boolean showDeleteOthersTasksButton) {
-		this.showDeleteOthersTasksButton = showDeleteOthersTasksButton;
+	public void setEnableDeleteOthersTasksButton(boolean enableDeleteOthersTasksButton) {
+		this.enableDeleteOthersTasksButton = enableDeleteOthersTasksButton;
 	}
 	
 	/**
