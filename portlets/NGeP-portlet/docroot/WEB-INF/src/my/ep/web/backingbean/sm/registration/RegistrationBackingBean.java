@@ -1757,7 +1757,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	public void goToViewOnlineAccount(){
 		fromtncProceed = true;
 		SmSupplier smSupp = SmApplicationUtil.getCurrentSupplier();
-		if(businessTypeTovalidateWithSSM(smSupp.getRegNo(),smSupp.getBusinessType())){
+		if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(smSupp.getRegNo(),smSupp.getBusinessType())){
 			this.getManagedBean().setCompanyValidWithSSM(true);
 			
 			//16052019 - SSM INTEGRATION CR 
