@@ -7245,7 +7245,7 @@ public class SimpleQuoteBackingBean extends
 				throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
 			}		
 			
-			if(scQuote != null && currentStatusId != null){
+			if(scQuote != null && currentStatusId != null && scQuote.getEndDate() != null){
 				if(scQuote.getPurchaseInDefault() == null){
 					Date currentDate = new Date();
 					Date closingDate = scQuote.getEndDate();
