@@ -184,17 +184,13 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 	 * @param cert
 	 * @throws IOException
 	 */
+	// 26340
 	public void printVirtualCert(SmMofCert cert) throws IOException{
-		if(cert.getFileName() != null || cert.getFilePath() != null){
-			String file = cert.getFilePath() + "/" + cert.getFileName();
-			commonDownload(file,cert.getFileName());
-		}else{
-			SmMofCert mofCert = SmVirtualCertHelper.getInstance().genReport(
-					SmVirtualCertHelper.getInstance().getReportType(cert.getBumiCertFlg()), 
-					SmVirtualCertHelper.getInstance().getReportParam(cert), cert, false);
-			String newfile = mofCert.getFilePath() + "/" + cert.getFileName();
-			commonDownload(newfile,mofCert.getFileName());
-		}
+		SmMofCert mofCert = SmVirtualCertHelper.getInstance().genReport(
+				SmVirtualCertHelper.getInstance().getReportType(cert.getBumiCertFlg()), 
+				SmVirtualCertHelper.getInstance().getReportParam(cert), cert, false);
+		String newfile = mofCert.getFilePath() + "/" + cert.getFileName();
+		commonDownload(newfile,mofCert.getFileName());
 	}
 
 	/**
