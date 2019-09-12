@@ -175,15 +175,15 @@
 				</p:commandLink>
 				</p:column>
 			</p:dataTable>
-			<p:outputPanel
-				rendered="#{taskReassignmentBackingBean.managedBean.showDeleteGroupTasksButton}">
+			<p:outputPanel>
 				<div class="ppRightBtn">
 					<p:commandButton 
 					    value="#{lbl['lbl.btn.remove']}" 
 						process="@this"
 						partialSubmit="true"
 						oncomplete="multipleGroupTasksDeletePopUp.show();" 
-						update="@([id$=#{multipleGroupTasksDeleteId}])"/>
+						update="@([id$=#{multipleGroupTasksDeleteId}])"
+						disabled="#{not taskReassignmentBackingBean.managedBean.enableDeleteGroupTasksButton}"/>
 				</div>
 			</p:outputPanel>
 		</h:panelGroup>
@@ -249,15 +249,15 @@
 				</p:commandLink>
 				</p:column>
 			</p:dataTable>
-			<p:outputPanel
-				rendered="#{taskReassignmentBackingBean.managedBean.showDeleteOthersTasksButton}">
+			<p:outputPanel>
 				<div class="ppRightBtn">
 					<p:commandButton 
 					    value="#{lbl['lbl.btn.remove']}" 
 						process="@this"
 						partialSubmit="true"
 						oncomplete="multipleOthersTasksDeletePopUp.show();" 
-						update="@([id$=#{multipleOthersTasksDeleteId}])"/>
+						update="@([id$=#{multipleOthersTasksDeleteId}])"
+						disabled="#{not taskReassignmentBackingBean.managedBean.enableDeleteOthersTasksButton}"/>
 				</div>
 			</p:outputPanel>
 		</h:panelGroup>

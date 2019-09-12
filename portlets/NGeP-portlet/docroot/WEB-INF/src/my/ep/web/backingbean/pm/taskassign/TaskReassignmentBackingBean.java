@@ -2976,8 +2976,8 @@ public class TaskReassignmentBackingBean extends
 	    		}
     		}
 		}
-    	this.getManagedBean().setShowDeleteGroupTasksButton(this.getManagedBean().isCheckAllGroupTasks());
-    	log.info("showDeleteGroupTasksButton= "+this.getManagedBean().isShowDeleteGroupTasksButton());
+    	this.getManagedBean().setEnableDeleteGroupTasksButton(this.getManagedBean().isCheckAllGroupTasks());
+    	log.info("enableDeleteGroupTasksButton= "+this.getManagedBean().isEnableDeleteGroupTasksButton());
 	}
 	
 	public void checkGroupTask(AjaxBehaviorEvent event) {
@@ -2999,11 +2999,11 @@ public class TaskReassignmentBackingBean extends
 		}
 		if (this.getManagedBean().getSelectedGroupTasks() != null && 
 				!this.getManagedBean().getSelectedGroupTasks().isEmpty()) {
-	    	this.getManagedBean().setShowDeleteGroupTasksButton(true);
+	    	this.getManagedBean().setEnableDeleteGroupTasksButton(true);
     	} else {
-    		this.getManagedBean().setShowDeleteGroupTasksButton(false);
+    		this.getManagedBean().setEnableDeleteGroupTasksButton(false);
     	}
-		log.info("showDeleteGroupTasksButton= "+this.getManagedBean().isShowDeleteGroupTasksButton());
+		log.info("enableDeleteGroupTasksButton= "+this.getManagedBean().isEnableDeleteGroupTasksButton());
 	}
 	
 	public void checkAllOthersTasks() {
@@ -3025,8 +3025,8 @@ public class TaskReassignmentBackingBean extends
 	    		}
     		}
 		}
-    	this.getManagedBean().setShowDeleteOthersTasksButton(this.getManagedBean().isCheckAllOthersTasks());
-    	log.info("showDeleteOthersTasksButton= "+this.getManagedBean().isShowDeleteOthersTasksButton());
+    	this.getManagedBean().setEnableDeleteOthersTasksButton(this.getManagedBean().isCheckAllOthersTasks());
+    	log.info("enableDeleteOthersTasksButton= "+this.getManagedBean().isEnableDeleteOthersTasksButton());
 	}
 	
 	public void checkOthersTask(AjaxBehaviorEvent event) {
@@ -3048,11 +3048,11 @@ public class TaskReassignmentBackingBean extends
 		}
 		if (this.getManagedBean().getSelectedOthersTasks() != null && 
 				!this.getManagedBean().getSelectedOthersTasks().isEmpty()) {
-	    	this.getManagedBean().setShowDeleteOthersTasksButton(true);
+	    	this.getManagedBean().setEnableDeleteOthersTasksButton(true);
     	} else {
-    		this.getManagedBean().setShowDeleteOthersTasksButton(false);
+    		this.getManagedBean().setEnableDeleteOthersTasksButton(false);
     	}
-		log.info("showDeleteOthersTasksButton= "+this.getManagedBean().isShowDeleteOthersTasksButton());
+		log.info("enableDeleteOthersTasksButton= "+this.getManagedBean().isEnableDeleteOthersTasksButton());
 	}
 	
 	public void removeReassignGroupTasks() {
