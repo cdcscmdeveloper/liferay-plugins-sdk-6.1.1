@@ -239,7 +239,12 @@
 					<p:ajax process="@this" partialSubmit="true" update="@this" />
 				</p:inputTextarea>
 			</p:column>
-			<c:if test="#{evaluationBackingBean.managedBean.currentStatusId ne QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL}">
+			<c:if test="#{evaluationBackingBean.managedBean.currentStatusId ne QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL and 
+			              evaluationBackingBean.managedBean.currentStatusId ne QTStatusConst.EC_PENDING_ENDORSEMENT and
+			              evaluationBackingBean.managedBean.currentStatusId ne QTStatusConst.EC_PENDING_SIGN_OFF and  
+			              evaluationBackingBean.managedBean.currentStatusId ne QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL and 
+			              evaluationBackingBean.managedBean.currentStatusId ne QTStatusConst.TEC_PENDING_ENDORSEMENT and
+			              evaluationBackingBean.managedBean.currentStatusId ne QTStatusConst.TEC_PENDING_SIGN_OFF}">
 			  <p:column headerText="#{lbl['lbl.sc.action']}"
 				style="width:5%;white-space: normal;text-align: center;">
 			    
