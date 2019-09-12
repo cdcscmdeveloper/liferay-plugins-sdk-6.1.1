@@ -45,7 +45,7 @@
 						    
 						 
 
-						<div style="text-align: left;margin: auto"><ui:fragment
+						<div style="text-align: left;margin: auto;width: 480px;"><ui:fragment
 			rendered="#{bsvAttendanceBackingBean.managedBean.scQt.zonal}">
 
 						<p:dataList var="zonePnlList" value="#{bsvAttendanceBackingBean.managedBean.zoneBean}" >
@@ -140,18 +140,19 @@
 						</p:scrollPanel>
 						
 						<br/>
-						<div style="text-align: center;"><h:outputText value="#{lbl['lbl.sc.attendance.submit.main.message']}"></h:outputText></div>
+						<div style="text-align: right;"><h:outputText value="#{lbl['lbl.sc.attendance.submit.main.message']}"></h:outputText></div>
 						<br/>
 						
 						
-						<p:commandButton id="conf" value="#{lbl['lbl.cm.dialog.cofirm.yes']}"						 
-						action="#{bsvAttendanceBackingBean.submitBsvDetails(bpmAction)}"
-						process="@form" update="@form"
-							oncomplete="confirmSubmit.hide();" style="float:left;margin-left:75%"/>
+						
 						<p:commandButton id="decline"
 							value="#{lbl['lbl.cm.dialog.cofirm.no']}"
 							
-							onclick="confirmSubmit.hide();" style="float:left;"/>
+							onclick="confirmSubmit.hide();" style="float:right;"/>
+						<p:commandButton id="conf" value="#{lbl['lbl.cm.dialog.cofirm.yes']}"						 
+						action="#{bsvAttendanceBackingBean.submitBsvDetails(bpmAction)}"
+						process="@form" update="@form"
+							oncomplete="confirmSubmit.hide();" style="float:right;"/>
 					
 					</p:confirmDialog>
 				</ui:repeat>
