@@ -49,6 +49,7 @@ import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.payment.IPaymentMatchSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.confgeneral.IConfigGeneralSO;
 import my.ep.biz.service.pm.common.fund.IFundSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
@@ -239,15 +240,17 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
 			//start 21229
-			if(getManagedBean().getButtonVal() != null && getManagedBean().getButtonVal().equals(BpmOutcomeConst.BPM_REVISE)){
-				reqDTO.setActionCode(FulfilmentConst.IDD_ACTION_CODE_ADJUSTMENT);
-				if(getManagedBean().getRemarkReviseList()!=null && getManagedBean().getRemarkReviseList().size() > 0){
-					reqDTO.setFlRemarkRevise(getManagedBean().getRemarkReviseList().get(0));
-				}
+			if(getManagedBean().isQueryDisplay() ){
+				reqDTO.setActionCode(FulfilmentConst.IDD_ACTION_CODE_ADJUSTMENT);				
 			}else{
 				reqDTO.setActionCode(FulfilmentConst.IDD_ACTION_CODE_CREATE);
 			}
-						
+			
+			if(getManagedBean().getButtonVal() != null && getManagedBean().getButtonVal().equals(BpmOutcomeConst.BPM_REVISE)){
+				if(getManagedBean().getRemarkReviseList()!=null && getManagedBean().getRemarkReviseList().size() > 0){
+					reqDTO.setFlRemarkRevise(getManagedBean().getRemarkReviseList().get(0));
+				}
+			}			
 			//end 21229
 			if(getManagedBean().getPmDigiSign() != null){
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
