@@ -525,9 +525,8 @@ public class SmSideMenuIconUtil {
 						|| bean.getSmAppl().getApplType()
 								.equals(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)) {
 					retVal = ICON_VIEW;
-				} else {
-					////Bug #25676 : SM Showstopper - No Categories Appear in Processing Officer Screen
-					boolean isAllCatcodeVerified = false;
+				} else {					
+					boolean isAllCatcodeVerified = true;
 					if (!EntityHelper.isCollectionEmpty(bean.getSmAppl()
 							.getSmSupplierCategories())) {
 						for (SmSupplierCategory cat : bean.getSmAppl()
@@ -536,14 +535,20 @@ public class SmSideMenuIconUtil {
 									&& (cat.getRecordStatusFlg() == SupplierManagementConst.PENDING_ACT_STATUS || cat
 											.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL)
 									&& cat.getPoDecFlg() == null) {
-								isAllCatcodeVerified = true;////Bug #25676 : SM Showstopper - No Categories Appear in Processing Officer Screen
+								isAllCatcodeVerified = false;
 							} else if (bean.isApproverUser()
 									&& (cat.getRecordStatusFlg() == SupplierManagementConst.PENDING_ACT_STATUS || cat
 											.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL)
 									&& cat.getApprvrDecFlg() == null) {
-								isAllCatcodeVerified = true;////Bug #25676 : SM Showstopper - No Categories Appear in Processing Officer Screen
+								isAllCatcodeVerified = false;
 							}
 						}
+						//Bug #25676 : SM Showstopper - No Categories Appear in Processing Officer Screen
+						//to check, if data not exist no need to auto check
+						if(bean.isPoUser() && isAllCatcodeVerified &&(bean.getActiveCategoryList()==null || bean.getActiveCategoryList().size()<=0) ){
+							isAllCatcodeVerified = false;
+						}
+						
 						if (isAllCatcodeVerified) {
 							retVal = ICON_TICK;
 						}
