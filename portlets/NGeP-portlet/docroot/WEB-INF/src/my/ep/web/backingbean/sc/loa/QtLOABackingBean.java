@@ -147,17 +147,37 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			ScLoaForQt loaForQt = new MapKeyEnum.ValueRetriever<ScLoaForQt>().getValue(otherArgs, MapKeyEnum.loiLoaSelected, null);
+			
 			if(isQTMaintenanceScreen() && loaForQt!=null){
 				if(!CollectionUtils.isEmpty(getManagedBean().getSuppLoiLoaList())){
+					boolean loaFnd = false;
 					for(int i = 0; i<getManagedBean().getSuppLoiLoaList().size();i++){
 						SuppLoiLoaBean llb = getManagedBean().getSuppLoiLoaList().get(i);
 						if(llb.getScLoa()!=null && loaForQt.getLoaId()!=null && loaForQt.getLoaId().longValue() == llb.getScLoa().getLoaId().longValue()){
 							loaDetailBackingBean.getManagedBean().setReadOnly(true);
+							loaFnd = true;
 							fc.getApplication().getNavigationHandler()
 								.handleNavigation(fc, null, loaDetailBackingBean.goQtEditLoaAction(llb));
 							break;
 						}
 					}
+					/* ***25201#82 - start */
+					if(!loaFnd){
+						SuppLoiLoaBean llb = new SuppLoiLoaBean();
+						IQTAwardSO qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
+								ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+						
+						AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+						reqDTO.setLoaId(loaForQt.getLoaId());
+						AwardSupplierResDTO resDTO = qtAwardSO.retrieveLOADtlByLoaId(reqDTO);
+						llb.setScLoa(resDTO.getScLoa());
+						loaDetailBackingBean.getManagedBean().setReadOnly(true);
+						loaFnd = true;
+						fc.getApplication().getNavigationHandler()
+							.handleNavigation(fc, null, loaDetailBackingBean.goQtEditLoaAction(llb));
+						
+					}
+					/* ***25201#82 - end */
 				}
 				
 			}
@@ -472,7 +492,7 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 	private boolean isQTMaintenanceScreen() {
 		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
 				|| QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId()) // ***17376#55
-				;
+				|| QTConstants.PORTLET_NAME_QT_TECHSUPP.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 }
 
