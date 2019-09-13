@@ -588,12 +588,21 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		
 		//logger.info("[#26037] - calling setUserDetails...start");
 		HashMap<Long,Integer> hMap = this.getManagedBean().getHmGroupUserFlagStatDb();
-		for (PmUserGroupUser groupUser : pmUserGroupUsers) {			
+		for (PmUserGroupUser groupUser : pmUserGroupUsers) {
+			//logger.info("[#26423] User [" + groupUser.getPmUser().getUserId()  + "]");
 			if(hMap != null && !(hMap.isEmpty())) {
-				if(groupUser.getRecordStatusFlg().intValue() != hMap.get(groupUser.getPmUser().getUserId()).intValue()) {
-					//logger.info("[#26037] User [" + groupUser.getPmUser().getUserId()  + "] status has been changed from " + hMap.get(groupUser.getPmUser().getUserId()) + " to " + groupUser.getRecordStatusFlg());
+				//[#26423] - start
+				if(hMap.containsKey(groupUser.getPmUser().getUserId())) {
+					//logger.info("[#26423] Existing user [" + groupUser.getPmUser().getUserId()  + "]");
+					if(groupUser.getRecordStatusFlg().intValue() != hMap.get(groupUser.getPmUser().getUserId()).intValue()) {
+						//logger.info("[#26037] User [" + groupUser.getPmUser().getUserId()  + "] status has been changed from " + hMap.get(groupUser.getPmUser().getUserId()) + " to " + groupUser.getRecordStatusFlg());
+						setUserDetails(userGroup, groupUser);
+					}
+				} else {
+					//logger.info("[#26423] New user added [" + groupUser.getPmUser().getUserId()  + "]");
 					setUserDetails(userGroup, groupUser);
 				}
+				//[#26423] - end
 			} else {
 				setUserDetails(userGroup, groupUser);
 			}
