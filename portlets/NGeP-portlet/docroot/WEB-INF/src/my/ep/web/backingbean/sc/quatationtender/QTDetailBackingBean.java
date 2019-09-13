@@ -2443,9 +2443,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				finalizationSecratary = new SelectItem[1];
 				for (int i = 0; i < finalizationCommTypes.size(); i++) {
 					PmParameter parameter = finalizationCommTypes.get(i);
+					String commTypeDesc = getParameterDesc(parameter, new FacesScopes().getUserLocale());
+					finalizationSecratary[0] = new SelectItem(parameter.getParameterId(), commTypeDesc);
 					if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(parameter.getParameterCode())) {
-						String commTypeDesc = getParameterDesc(parameter, new FacesScopes().getUserLocale());
-						finalizationSecratary[0] = new SelectItem(parameter.getParameterId(), commTypeDesc);
+						break;
 					}
 				}
 				getManagedBean().setFinalizationSecratary(finalizationSecratary);
@@ -2671,7 +2672,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 *            the outcome
 	 * @return the string
 	 */
-	public String updateBpmTask(String outcome) {
+	public void updateBpmTask(String outcome) {
 		
 		ScQt scQt = this.getManagedBean().getQt();
 		debugLogger("updateBpmTask");
@@ -2832,33 +2833,16 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					|| (null != qtResDTO && qtResDTO.isSuccessful())) {
 
 				renewSesionObject();
-				
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_INFO,
-										null,
-										MessageUtils
-												.getMessage(
-														getMsgCodeByTaskName(taskName),
-														new String[] {
-																getParameterDesc(
-																		ParameterTypeConst.DOCUMENT_TYPES,
-																		ParameterConst.DOCTYPE_QUOTATION),
-																qt.getQtNo() },
-														MessageUtils.BUNDLE_COMMON_MESSAGES,
-														new FacesScopes()
-																.getUserLocale())));
+
+				successMessage(getMsgCodeByTaskName(taskName), ParameterTypeConst.DOCUMENT_TYPES,
+						ParameterConst.DOCTYPE_QUOTATION, qt.getQtNo(), Boolean.TRUE);
+
 				debugLogger("end of updateBpmTask");
-				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			}
 		} finally {
 			detailSO = null;
 			committeSO=null;
 		}
-		return null;
 	}
 
 	/**
@@ -5275,7 +5259,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * 
 	 * @return the string
 	 */
-	public String submitQtCancelDetails() {
+	public void submitQtCancelDetails() {
 
 		IQTDetailSO detailSO;
 		try {
@@ -5328,17 +5312,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						.getUserSessionBean());
 				quationTenderReqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
 				
-				ackMsg = MessageUtils
-						.getMessage(
-								MessageConst.INFO_700052,
-								new String[] {
-										getParameterDesc(
-												ParameterTypeConst.DOCUMENT_TYPES,
-												ParameterConst.DOCTYPE_QUOTATION),
-										qt.getQtNo() },
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes()
-										.getUserLocale());
+				ackMsg = MessageConst.INFO_700052;
 			} else {
 				quationTenderReqDTO.setQtId(this.getManagedBean().getQt()
 						.getQtId());
@@ -5365,37 +5339,15 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				quationTenderReqDTO.setPmUser(new FacesScopes()
 						.getUserSessionBean());
 				
-				ackMsg = MessageUtils
-						.getMessage(
-								MessageConst.INFO_700031,
-								new String[] {
-										getParameterDesc(
-												ParameterTypeConst.DOCUMENT_TYPES,
-												ParameterConst.DOCTYPE_QUOTATION),
-										qt.getQtNo() },
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes()
-										.getUserLocale());
-
+				ackMsg = MessageConst.INFO_700031;
 			}
 			QuationTenderResDTO quationTenderResDTO = detailSO
 					.cancleQT(quationTenderReqDTO);
 
 			if (quationTenderResDTO.isSuccessful()) {
-				FacesContext
-				.getCurrentInstance()
-				.addMessage(
-						null,
-						new FacesMessage(
-								FacesMessage.SEVERITY_INFO,
-								null,
-								ackMsg));
-				
-				return CommonUIConst.ACKNOWLEDGE_PAGE;
+				successMessage(ackMsg, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION,
+						qt.getQtNo(), Boolean.TRUE);
 			}
-			
-			return null;
-
 		} finally {
 			detailSO = null;
 		}
