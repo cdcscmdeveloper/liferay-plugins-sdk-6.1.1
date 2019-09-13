@@ -9870,6 +9870,7 @@ public class SmApplicationBackingBean extends
 						.valiateNewCategoryAdded(getManagedBean());
 				if (!validNewCatAdded) {
 					//Bug #25676 : SM Showstopper - No Categories Appear in Processing Officer Screen
+					getManagedBean().getPoSecReview().setVerifiedAll(false);
 					getManagedBean().setShowParentMsg(true);
 					throw new EpException(MessageConst.ERROR_722570);
 				}
