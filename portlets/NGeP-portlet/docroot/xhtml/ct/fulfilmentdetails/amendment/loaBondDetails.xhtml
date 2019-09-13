@@ -56,11 +56,11 @@
 				<f:facet name="header">
 					<p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.selectAll}">
 					<p:ajax partialSubmit="true" process="@this"
-						update=":form:tableBond, :form:delPdBtn" listener="#{ctBackingBean.selectAllBond}" />
+						update=":form:tableBondId, :form:delPdBtn" listener="#{ctBackingBean.selectAllBond}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox value="#{varBond.selectedCheckBox}" styleClass="myCustomChekBox">
-					<p:ajax event="change"  update="@this, :form:tableBond, :form:delPdBtn" listener="#{ctBackingBean.selectOnePerformanceCheckboxSelect}" />
+					<p:ajax event="change"  update="@this, :form:tableBondId, :form:delPdBtn" listener="#{ctBackingBean.selectOnePerformanceCheckboxSelect}" />
 				</p:selectBooleanCheckbox>
 			</p:column> 
 					
@@ -172,7 +172,7 @@
 			  rendered="#{!ctBackingBean.managedBean.viewContract
 			  	and ctBackingBean.managedBean.contractVer.docType != ParameterConst.doctypeContractAmendment
 			  	and ctBackingBean.managedBean.ctContractAmount.bondReq}" 
-			     action="#{ctBackingBean.addBondDetails}" update=":form:tableBond" partialSubmit="true"
+			     action="#{ctBackingBean.addBondDetails}" update=":form:tableBondId" partialSubmit="true"
 			     oncomplete="tableBondWidget.paginator.endLink.click();">
 				<p:tooltip for="addPdBtn">
 				    <h:outputText value="#{lbl['lbl.ct.tooltip.add.performance.bond']}" escape="false" />
@@ -227,17 +227,20 @@
 			</p:inputText>
 			<p:outputLabel value="#{lbl['lbl.ct.pb.percentage']}" />
 			<p:inputText style="width:200px;" disabled="true" styleClass="ppRightBtn"
-				value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondPercentage}">
+				value="#{ctBackingBean.managedBean.contractVer.ctContract.loa.bondPercentage}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 				</p:inputText>
 			<p:outputLabel value="#{lbl['lbl.ct.pb.amount']}" />
+			  
 			<p:inputText style="width:200px;" disabled="true"  styleClass="ppRightBtn"
-			  value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondAmt}" >
+			  value="#{ctBackingBean.managedBean.contractVer.ctContract.loa.bondAmt}" >
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />				
 			</p:inputText>
+			
 			<p:outputLabel />
 			<p:inputTextarea autoResize="false" disabled="true" rows="4" 
 				style="width:200px;margin-bottom:5px;"
+				rendered="#{ctBackingBean.managedBean.contractVer.ctContract.loa.bondAmt != null }"
 			   	value="#{amendmentBackingBean.getBondAmountInText()}" />
 		<p:spacer width="2" />	   	
 		<p:panel rendered="#{ctBackingBean.isContractExtend()}" width="700px" height="350px">
