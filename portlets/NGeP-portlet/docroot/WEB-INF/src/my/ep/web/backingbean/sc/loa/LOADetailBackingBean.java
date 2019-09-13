@@ -6753,19 +6753,24 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	
 	
 	public Boolean canShowSupplierProposal(){
-		IUserSO userSO = null;
+		
+		// ***25201#82 - start
+		// allow as in ***25201#35
+		return true;
+		// ***25201#82 - end
+		/*IUserSO userSO = null;
 		try{
 			userSO = BusinessDelegate.getInstance()
 					.getServiceObject(IUserSO.class);
 			
 			
 			
-			/**
+			*//**
 			 * 	1. find qt pm_org_profile
 			 *  2. find user pm_org_profile
 			 *  3. give permission to user within same organization with the role accesibility  
 			 *  (cancel)4. by state group (sabah, sarawak, peninsular) within same PTJ
-			 */
+			 *//*
 			
 			//1			
 			ScQt scQt = getManagedBean().getScQt();
@@ -6778,33 +6783,45 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			reqDTO.setUserId(userId);
 			reqDTO.setOrgProfileId(qtOrgProfile.getOrgProfileId());
 			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
-			reqDTO.setRoleCodes(Arrays.asList(
-					RoleCode.DESK_OFFICER.value(),
-					RoleCode.FPB_SECRETARY.value(),
-					RoleCode.QCA_SECRETARY.value(),
-					RoleCode.QCB_SECRETARY.value(),
-					RoleCode.PBA_SECRETARY.value(),
-					RoleCode.PBB_SECRETARY.value()
-					));
+			RoleCode[] roleCodes = {
+					RoleCode.DESK_OFFICER,
+					RoleCode.FPB_SECRETARY,
+					RoleCode.QCA_SECRETARY,
+					RoleCode.QCB_SECRETARY,
+					RoleCode.PBA_SECRETARY,
+					RoleCode.PBB_SECRETARY};
+			List<String> roleCodesList = new ArrayList<String>();
+			for(RoleCode s: roleCodes){
+				roleCodesList.add(s.value());
+			}
+			reqDTO.setRoleCodes(roleCodesList);
 			reqDTO.setForceGetAllUserOrgList(false);
 			UserResDTO resDTO = userSO.checkAndGetUserInOrgProfile(reqDTO);
-			/*reqDTO.setForceGetAllUserOrgList(true);
+			reqDTO.setForceGetAllUserOrgList(true);
 			UserResDTO allUserOrgResDTO = userSO.checkAndGetUserInOrgProfile(reqDTO);
-			reqDTO.setForceGetAllUserOrgList(false);*/
+			reqDTO.setForceGetAllUserOrgList(false);
 			
-			
+			boolean ret = false;
 			if(resDTO!=null && resDTO.isSuccessful()){
 				debugLogger("checkUserInOrgProfile Successful");
 				if(!CollectionUtils.isEmpty(resDTO.getUserOrgList())){
-					return true;
+					ret = true;
 				}
 			}
-			return false;
+			// ***25201#82 - start
+			if(roleCodes!=null && roleCodes.length > 0){
+				if(userHasRole(roleCodes)){
+					ret = true;
+				}
+			}
+			// ***25201#82 - end
+			
+			return ret;
 			
 		}
 		finally{
 			userSO = null;
-		}
+		}*/
 	}
 	
 	// ***25201#35
