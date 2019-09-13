@@ -1090,6 +1090,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					}
 					else{	
 						bb.preRenderViewForQtMaintenance(scQt, previousPageUrl, otherArgs);
+						return null;
 					}
 				}
 			}
@@ -7122,7 +7123,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			menuSet.remove(getMenuItemPublicationApproverAssignment());
 			// ***25692#31 
 			menuSet.add(getMenuItemCommitteeApproval());
-			log.info("********** getmenuItemCommitteeApproval() : "+menuSet.contains(getMenuItemCommitteeApproval()));
 		}
 		else if(getUserTaskIsCommitteeAppointmentApprovalEcOcTecFec() && isApprovalScreen()){
 			menuSet.remove(getMenuItemPublicationApproverAssignment());
@@ -7133,6 +7133,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			menuSet.add(getMenuItemPublicationApproval());
 		}
 		else;
+		// ***25692#31
+		if(isApprovalScreen() && menuSet != null){
+			for(Object s : menuSet.toArray()){
+				log.info("******** getmenuItemCommitteeApproval() : "+s.toString());
+			}
+		}
 		return menuSet.contains(menuItem);
 		
 	}
