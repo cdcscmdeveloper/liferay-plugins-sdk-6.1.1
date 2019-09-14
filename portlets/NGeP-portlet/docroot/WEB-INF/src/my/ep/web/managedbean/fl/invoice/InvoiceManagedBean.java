@@ -143,6 +143,8 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	
 	private Map<String, PmFinancialOrg> factoringAccountMap;
 	
+	private boolean reviseInvoice = false;
+	
 
 	public Map<String, PmFinancialOrg> getFactoringAccountMap() {
 		if(factoringAccountMap==null) {
@@ -1199,5 +1201,14 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	public void setRemarkRevise(List<FlRemark> remarkRevise) {
 		this.remarkRevise = remarkRevise;
 	}
+
+	public boolean isReviseInvoice() {
+		return reviseInvoice;
+	}
+
+	public void setReviseInvoice(boolean reviseInvoice) {
+		this.reviseInvoice = reviseInvoice;
+	}
+	
 	//End  #21229
 }

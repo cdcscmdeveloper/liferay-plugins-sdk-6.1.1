@@ -266,7 +266,11 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			}
 			reqDTO.setApproverUserList(listOfApprover);
 			reqDTO.setOutcome(action);
-			reqDTO.setTaskId(getManagedBean().getTaskId());
+			//start 21229
+			if(!getManagedBean().isReviseInvoice()){
+				reqDTO.setTaskId(getManagedBean().getTaskId());
+			}
+			//end 21229
 			reqDTO.setToken(token);
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
 			if(flBB.getManagedBean().getRemarkList().size() >0){
@@ -326,6 +330,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						}
 					}
 				}
+				
 				resDTO = invoiceSO.invoiceModification(reqDTO);
 			}else{
 				reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
@@ -459,7 +464,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
-		
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		if(taskId != null){
@@ -607,8 +611,12 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				reqDTO.setDocType(ParameterConst.DOCTYPE_INVOICE);
 				reqDTO.setFlOrderId(paymentObj.getFlOrderId());
 				resDTO = invoiceSO.retrieveInvoiceByFlOrderId(reqDTO);//if save button are exist
-				//Start  #21229
-				FulfilmentReqDTO reqRemarkDTO = new FulfilmentReqDTO();
+				
+				//Start  #21229	
+				if(FLProcessNameConst.REVISE_INVOICE.equals(this.getManagedBean().getTaskName())){
+					getManagedBean().setReviseInvoice(true);
+				}
+				
 				if(resDTO.getInvoice()!=null && resDTO.getInvoice().getInvoiceId() !=null){
 					FulfilmentReqDTO flRemarkDTO = new FulfilmentReqDTO();
 					FulfilmentResDTO resRemarkDTO = new FulfilmentResDTO();
