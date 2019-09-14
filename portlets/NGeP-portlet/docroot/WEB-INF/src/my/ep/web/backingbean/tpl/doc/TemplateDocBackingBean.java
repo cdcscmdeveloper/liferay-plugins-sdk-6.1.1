@@ -70,8 +70,13 @@ import org.docx4j.convert.in.xhtml.XHTMLImporter;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.WordprocessingML.NumberingDefinitionsPart;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.safety.Cleaner;
+import org.jsoup.safety.Whitelist;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
+import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfPTable;
@@ -521,6 +526,22 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 			for (int i = 0; i < docSectionList.size(); i++) {
 				TplDocSection sectionOrder = docSectionList.get(i);
 				sectionOrder.setSectionOrder(i);
+				//25142 - start
+				String html = sectionOrder.getSectionContent();
+				Document doc = Jsoup.parse(html);
+				boolean valid = Jsoup.isValid(html, Whitelist.relaxed());
+				if(!valid)
+				{
+					Document cleanDoc = new Cleaner(Whitelist.relaxed().addAttributes("table", "style","class","border=\"1\"")).clean(doc);
+					doc = cleanDoc;
+				}
+				
+				doc.outputSettings().syntax(Document.OutputSettings.Syntax.xml); 
+				doc.outputSettings().charset("UTF-8");
+				sectionOrder.setSectionContent(doc.body().html());
+				
+				
+				//25142 - end
 			}
 			tplDocMaster.setTplDocSectionCollection(docSectionList);
 
