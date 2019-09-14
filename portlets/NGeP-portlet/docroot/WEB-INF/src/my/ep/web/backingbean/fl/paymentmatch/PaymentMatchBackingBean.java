@@ -263,7 +263,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 				String messageId = MessageConst.INFO_745013;
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700004;
-				}else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+				}else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 					messageId = MessageConst.INFO_745021;
 				}		
 				
