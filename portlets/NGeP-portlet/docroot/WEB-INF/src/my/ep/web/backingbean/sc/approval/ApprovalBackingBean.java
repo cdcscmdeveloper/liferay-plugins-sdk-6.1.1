@@ -624,6 +624,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		else if(SCProcessNameConst.APPROVE_BPK.equalsIgnoreCase(taskName) 
 				|| SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName)
 				|| SCProcessNameConst.APPROVE_PUBLICATION.equalsIgnoreCase(taskName)){
+			log.info("*********** qtPageFirst");
 			qtPageFirst = true;
 		}
 		
@@ -634,12 +635,12 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			page = qtDetailBB.editQuationTenderDetails(getManagedBean().getQt(), false);
 			qtDetailBB.getManagedBean().setAdditionalPages(null);
 			qtDetailBB.getManagedBean().setUserTasks(null);
-			if(userHasRole(new RoleCode[]{RoleCode.BPK_APPROVER}) && SCProcessNameConst.APPROVE_BPK.equalsIgnoreCase(taskName)){
+			if(SCProcessNameConst.APPROVE_BPK.equalsIgnoreCase(taskName)){
 				qtDetailBB.getManagedBean().addAdditionalPages(UserTasks.BPKApproval.toString(), pageAppr);
 				qtDetailBB.getManagedBean().addUserTasks(UserTasks.BPKApproval);
 				log.info("*********** preRenderView:userHasRole(BPK_APPROVER)");
 			}
-			else if(userHasRole(new RoleCode[]{RoleCode.COMMITTEE_APPROVER}) && SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName) ){
+			else if(SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName) ){
 				List<ScQtCommittee> cmts = null;
 				if(this.getManagedBean().getQt()!=null) { cmts = this.getManagedBean().getQt().getScQtCommittees();}
 				boolean isEcOcTecFec = false;
@@ -661,7 +662,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					log.info("*********** preRenderView:userHasRole(COMMITTEE_APPROVER)");
 				}
 			}
-			else if(userHasRole(new RoleCode[]{RoleCode.PUBLICATION_APPROVER}) && SCProcessNameConst.APPROVE_PUBLICATION.equalsIgnoreCase(taskName)){
+			else if(SCProcessNameConst.APPROVE_PUBLICATION.equalsIgnoreCase(taskName)){
 				qtDetailBB.getManagedBean().addAdditionalPages(UserTasks.PublicationApproval.toString(), pageAppr);
 				qtDetailBB.getManagedBean().addUserTasks(UserTasks.PublicationApproval);
 				log.info("*********** preRenderView:userHasRole(PUBLICATION_APPROVER)");
@@ -669,7 +670,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			else{
 				log.info("*********** preRenderView:userHasRole()");
 			}
-				;
+				
 			
 			
 			/*
