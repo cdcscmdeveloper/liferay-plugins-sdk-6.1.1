@@ -1558,9 +1558,9 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				//getManagedBean().setFlowStatus(2);
 			}
 			
-			if(validSupplierTemp() && softCertStatus == SupplierManagementConst.SOFT_CERT_ISSUED){
+			if(currentPersonnel.getEpRole().equalsIgnoreCase(RoleCode.SUPPLIER_TEMP.value()) && softCertStatus == SupplierManagementConst.SOFT_CERT_ISSUED){
 				log.info(">>>CHange ROle for SUpplier Temp<<");
-				changeRoleForSupplierTemp(currentPersonnel.getPersonnelId(),supplier);
+				changeRoleForSupplierTempFinish(currentPersonnel.getPersonnelId(),supplier);
 			}
 		}
 		
