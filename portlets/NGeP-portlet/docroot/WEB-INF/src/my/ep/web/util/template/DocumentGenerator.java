@@ -3,6 +3,8 @@
  */
 package my.ep.web.util.template;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
@@ -58,6 +60,8 @@ import org.jsoup.safety.Cleaner;
 import org.jsoup.safety.Whitelist;
 import org.jsoup.select.Elements;
 import org.xhtmlrenderer.pdf.ITextRenderer;
+
+import com.lowagie.text.DocumentException;
 
 import my.ep.factory.EpLogger;
 
@@ -168,7 +172,8 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 	 * 		the html content to generate as PDF.
 	 * @throws Exception
 	 */
-	public void generatePdf(OutputStream os, String html) throws Exception {
+	
+	/*public void generatePdf(OutputStream os, String html) throws Exception {
 		debugLogger("generatePdf");
 		
 		ITextRenderer render = new ITextRenderer();
@@ -212,7 +217,7 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 			os.close();
 			os = null;
 		}
-	}
+	}*/
 	
 	/**
 	 * Generate Doc file by velocity.
@@ -373,10 +378,10 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 		run.setRPr(rpr);
 
 		Text t1 = factory.createText();
-		t1.setValue("Tandatangan & Cop (Kerajaan)  : …………………………………");
+		t1.setValue("Tandatangan & Cop (Kerajaan)  : ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
 		Br br = factory.createBr(); // this Br element is used break the current and go for next line
 		Text t2 = factory.createText();
-		t2.setValue("\r\n Tandatangan & Cop (Syarikat ) : …………………………………");
+		t2.setValue("\r\n Tandatangan & Cop (Syarikat ) : ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
 		Text t3 = factory.createText();
 
 		t3.setValue("\r\n  Pihak Kerajaan : pegawai yang diberi kuasa oleh Kerajaan di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani Surat ini");
@@ -564,22 +569,39 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
         }
     }
 	
-	public static void main(String[] args) {
-		String html = "<body><div><h1>Test</h1><img alt=\"Smiley face\"><h3 style=\"font-family: \"Trebuchet MS\", Verdana, sans-serif; padding: 2px 10px 1px 0px; margin: 0px 0px 0.1em; color: rgb(85, 85, 85); font-size: 16px;\">Allowed Special Character and Copy paste for QT Document</h3>hahaha<br>hahahaha</div>";
+	public static void main(String[] args) throws FileNotFoundException, DocumentException {
+		String html = "<table width=\"100%\" border=\"0\" bordercolor=\"#142396\" cellpadding=\"0\" cellspacing=\"0\"> <tbody> <tr> <th  class=\"header\"><u>Spesifikasi</u></th> </tr> </tbody> </table> <br/> #foreach( $tplspecMaster in $masters ) <table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\"> <tbody> <tr> <td width=\"20%\" class=\"standard\"><nobr>Tajuk Templat:</nobr></td> <td class=\"standard\">$tplspecMaster.specName</td> </tr> <tr> <td width=\"20%\" class=\"standard\"><nobr>Jenis Item:</nobr></td> <td class=\"standard\">$bean.getParameterDescForReport($tplspecMaster.itemTypeCode)</td> </tr> <tr> <td width=\"20%\" class=\"standard\"><nobr>Jenis Barangan:</nobr></td> <td class=\"standard\">$bean.getParameterDescForReport($tplspecMaster.itemOriginCode)</td> </tr> </tbody> </table> #end";
 		String tempHtml = null;
 		Elements elements = null;
 		Document doc = null;
-		
-		boolean valid = Jsoup.isValid(html, Whitelist.relaxed());
+		ITextRenderer render = new ITextRenderer();
+		boolean valid = Jsoup.isValid(html, Whitelist.relaxed().addAttributes("h3", "style"));
 		System.out.println("Is Valid: "+ valid);
+		html = html.replaceAll("&amp;nbsp;", " ");
+		html = html.replaceAll("&amp;", "&amp;amp;")
+				.replaceAll("&", "&amp;");
+		html = html.replaceAll("&amp;#62", "&#62");
+		html = html.replaceAll("&amp;#60", "&#60");
+		System.out.println(html);
 		doc = Jsoup.parse(html);
-		Document cleanDoc = new Cleaner(Whitelist.relaxed()).clean(doc);
-		doc = cleanDoc;
+		//Document cleanDoc = new Cleaner(Whitelist.relaxed().addAttributes("table", "style","class","border=\"1\"")).clean(doc);
+		//doc = cleanDoc;
 		//doc.outputSettings().escapeMode(org.jsoup.nodes.Entities.EscapeMode.xhtml);
 		doc.outputSettings().syntax(Document.OutputSettings.Syntax.xml); 
 		doc.outputSettings().charset("UTF-8");
-		elements = doc.getAllElements();
-		System.out.println(doc.html());
+		html = doc.html();
+		
+		html = html.replaceAll("&amp;nbsp;", " ");
+		html = html.replaceAll("&amp;amp;", "&");
+		html = html.replaceAll("&amp;lt", "&#60");
+		html = html.replaceAll("&amp;gt", "&#62");					
+		System.out.println(doc.body().html());
+		render.setDocumentFromString(html);
+		render.layout();
+		OutputStream os = new FileOutputStream("C:\\Users\\asyrafali\\Desktop\\test (2).pdf");
+		render.createPDF(os);
+		//elements = doc.getAllElements();
+		//System.out.println(doc.html());
 		/*html = elements.html();elements.
 		for(Element element: elements) {
 			if(!element.nodeName().equalsIgnoreCase("br")&&!element.nodeName().equalsIgnoreCase("h1")
@@ -599,6 +621,30 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 		}*/
 		
 		
+	}
+	
+	public void generatePdf(OutputStream os, String html) throws Exception {
+		debugLogger("generatePdf");
+		
+		ITextRenderer render = new ITextRenderer();
+		try{
+			 if (html != null) {
+		        	html = html.replaceAll("&amp;nbsp;", "");
+		        	html = html.replaceAll("&amp;", "&amp;amp;")
+		        			   .replaceAll("&", "&amp;");
+		        	html = html.replaceAll("&amp;#62", "&#62");
+		          	html = html.replaceAll("&amp;#60", "&#60");
+		        	 
+		            render.setDocumentFromString(html);
+		            render.layout();
+		            render.createPDF(os);
+		        }
+		        
+		        os.flush();
+		}finally{
+			render = null;
+			os.close();
+		}
 	}
 }
 
