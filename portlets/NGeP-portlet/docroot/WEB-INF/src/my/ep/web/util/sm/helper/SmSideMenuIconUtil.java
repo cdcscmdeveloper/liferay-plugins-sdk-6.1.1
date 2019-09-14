@@ -582,7 +582,7 @@ public class SmSideMenuIconUtil {
 				}
 			} else if (sectionType
 					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)) {
-
+				retVal = ICON_UNTICK; //24964
 				List<SmApplSupportDoc> licenseMandatoryDocs = new ArrayList<SmApplSupportDoc>();
 				if (!EntityHelper.isCollectionEmpty(bean
 						.getMandatoryLicenseDocs())) {
@@ -839,11 +839,8 @@ public class SmSideMenuIconUtil {
 								currPersonnel, new String[] { "shareAmt",
 										"sharePercentage", "softcert",
 										"softcertFlg", "epRole" });
-					} else {
-						retVal = EntityHelper.isObjectDifference(prevPersonnel,
-								currPersonnel, null);
-					}
-
+					} //24964					
+					
 					if (retVal) {
 						log.info(">>>>DIFFERENT IN PERSONNEL FOR PERSONNEL:"
 								+ currPersonnel.getName()
@@ -861,11 +858,17 @@ public class SmSideMenuIconUtil {
 					} else {
 						primitive = new String[] { "personnelAddressId" };
 					}
-					retVal = EntityHelper.hasDiffBetweenList(
-							prevPersonnel.getSmPersonnelAddresses(),
-							currPersonnel.getSmPersonnelAddresses(), primitive,
-							null, excludeProps);
-
+					//24964 - start
+					if (prevPersonnel.getSmPersonnelAddresses().isEmpty() 
+							&& currPersonnel.getSmPersonnelAddresses().isEmpty()){
+						retVal = false;
+					} else {
+						retVal = EntityHelper.hasDiffBetweenList(
+								prevPersonnel.getSmPersonnelAddresses(),
+								currPersonnel.getSmPersonnelAddresses(), primitive,
+								null, excludeProps);
+					}//24964 - end
+					
 					if (retVal) {
 						log.info(">>>>DIFFERENT IN PERSONNEL ADDRESS FOR PERSONNEL:"
 								+ currPersonnel.getName()
@@ -884,10 +887,15 @@ public class SmSideMenuIconUtil {
 					} else {
 						primitive = new String[] { "staffExperienceId" };
 					}
-					retVal = EntityHelper.hasDiffBetweenList(
-							prevPersonnel.getSmStaffExperiences(),
-							currPersonnel.getSmStaffExperiences(), primitive,
-							null, excludeProps);
+					//24964 - start
+					if(prevPersonnel.getSmStaffExperiences().isEmpty() && currPersonnel.getSmStaffExperiences().isEmpty()){
+						retVal = false;
+					} else {
+						retVal = EntityHelper.hasDiffBetweenList(
+								prevPersonnel.getSmStaffExperiences(),
+								currPersonnel.getSmStaffExperiences(), primitive,
+								null, excludeProps);
+					}// 24964- end					
 
 					if (retVal) {
 						log.info(">>>>DIFFERENT IN PERSONNEL STAFF EXPERIENCE FOR PERSONNEL:"
@@ -906,11 +914,17 @@ public class SmSideMenuIconUtil {
 					} else {
 						primitive = new String[] { "relatedCompanyId" };
 					}
-					retVal = EntityHelper.hasDiffBetweenList(
-							prevPersonnel.getSmRelatedCompanies(),
-							currPersonnel.getSmRelatedCompanies(), primitive,
-							null, excludeProps);
-
+					//24964 - start
+					if(prevPersonnel.getSmRelatedCompanies().isEmpty() 
+							&& currPersonnel.getSmRelatedCompanies().isEmpty()){
+						retVal = false;
+					} else {
+						retVal = EntityHelper.hasDiffBetweenList(
+								prevPersonnel.getSmRelatedCompanies(),
+								currPersonnel.getSmRelatedCompanies(), primitive,
+								null, excludeProps);
+					}// 24964 - end
+					
 					if (retVal) {
 						log.info(">>>>DIFFERENT IN PERSONNEL RELATED COMPANY FOR PERSONNEL:"
 								+ currPersonnel.getName()
@@ -929,10 +943,16 @@ public class SmSideMenuIconUtil {
 					} else {
 						primitive = new String[] { "associationBodyId" };
 					}
-					retVal = EntityHelper.hasDiffBetweenList(
-							prevPersonnel.getSmAssociationBodies(),
-							currPersonnel.getSmAssociationBodies(), primitive,
-							nonPrimitive, excludeProps);
+					//24964 - start
+					if(prevPersonnel.getSmAssociationBodies().isEmpty() 
+							&& currPersonnel.getSmAssociationBodies().isEmpty()){
+						retVal = false;
+					}else {
+						retVal = EntityHelper.hasDiffBetweenList(
+								prevPersonnel.getSmAssociationBodies(),
+								currPersonnel.getSmAssociationBodies(), primitive,
+								nonPrimitive, excludeProps);
+					} //24964 - end					
 
 					if (retVal) {
 						log.info(">>>>DIFFERENT IN PERSONNEL ASSOC BODY FOR PERSONNEL:"
@@ -953,10 +973,16 @@ public class SmSideMenuIconUtil {
 					} else {
 						primitive = new String[] { "staffAcademicId" };
 					}
-					retVal = EntityHelper.hasDiffBetweenList(
-							prevPersonnel.getSmStaffAcademics(),
-							currPersonnel.getSmStaffAcademics(), primitive,
-							nonPrimitive, excludeProps);
+					//24964 - start
+					if(prevPersonnel.getSmStaffAcademics().isEmpty()
+							&& currPersonnel.getSmStaffAcademics().isEmpty()){
+						retVal = false;
+					} else {
+						retVal = EntityHelper.hasDiffBetweenList(
+								prevPersonnel.getSmStaffAcademics(),
+								currPersonnel.getSmStaffAcademics(), primitive,
+								nonPrimitive, excludeProps);
+					} //24964 - end					
 
 					if (retVal) {
 						log.info(">>>>DIFFERENT IN PERSONNEL ACADEMIC FOR PERSONNEL:"
@@ -977,10 +1003,17 @@ public class SmSideMenuIconUtil {
 				} else {
 					primitive = new String[] { "supplierBranchId" };
 				}
-				retVal = EntityHelper.hasDiffBetweenList(
-						applPrev.getSmSupplierBranches(),
-						applCurr.getSmSupplierBranches(), primitive, null,
-						new String[] { "contactPersonId" });
+				//24964 - start
+				if(applPrev.getSmSupplierBranches().isEmpty()
+						&& applCurr.getSmSupplierBranches().isEmpty()){
+					retVal = false;
+				} else {
+					retVal = EntityHelper.hasDiffBetweenList(
+							applPrev.getSmSupplierBranches(),
+							applCurr.getSmSupplierBranches(), primitive, null,
+							new String[] { "contactPersonId" });
+				} //24964 - end
+				
 				if (retVal) {
 					log.info(">>>>DIFFERENT IN SUPPLIER BRANCH");
 				}
