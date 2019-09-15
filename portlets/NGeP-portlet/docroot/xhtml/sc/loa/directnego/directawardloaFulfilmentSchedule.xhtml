@@ -18,15 +18,15 @@
 							value="#{lbl['lbl.sc.periodic.fullfillent.type']}" /></td>
 					<td>
 						<c:choose>
-							<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}">
+							<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}">  
 								<p:selectOneRadio 
 									value="#{directLOABackingBean.managedBean.scQt.scheduleType}" >
-									<f:selectItems value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.periodicScheduleType)}" />
+									<f:selectItems value="#{directLOABackingBean.getSelectRadioButtonCodeValues(ParameterTypeConst.periodicScheduleType)}" />
 									<p:ajax event="change" update="progressive,schedule"
 										partialSubmit="true" process="@this"
 										listener="#{directLOABackingBean.scheduleTypeChange}"></p:ajax>
 								</p:selectOneRadio>
-							</c:when>
+							 </c:when>
 							<c:otherwise>
 								<p:inputText id="scheduleTypeTxt"
 									value="#{directLOABackingBean.getParameterDesc(ParameterTypeConst.periodicScheduleType, directLOABackingBean.managedBean.scQt.scheduleType)}"
