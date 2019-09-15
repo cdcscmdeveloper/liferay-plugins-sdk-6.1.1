@@ -266,10 +266,9 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			}
 			reqDTO.setApproverUserList(listOfApprover);
 			reqDTO.setOutcome(action);
+			reqDTO.setTaskId(getManagedBean().getTaskId());
 			//start 21229
-			if(!getManagedBean().isReviseInvoice()){
-				reqDTO.setTaskId(getManagedBean().getTaskId());
-			}
+			reqDTO.setInvoiceRevise(getManagedBean().isReviseInvoice());
 			//end 21229
 			reqDTO.setToken(token);
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
@@ -362,6 +361,11 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 					messagePrefix=ResourceBundleUtils.getMessage("lbl.fl.update.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 					messageId = MessageConst.INFO_745017;
+					//start 21229
+					if(reqDTO.isInvoiceRevise()){
+						messageId = MessageConst.INFO_745018;
+					}
+					//end 21229
 				}
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
@@ -599,13 +603,16 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				flBB.initializeRemarkAndAttachement(resDTO.getInvoice().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 			}
 			else{
-				String[] outcome = new String[this.getManagedBean().getOutComes().length + 1];
-				outcome[0] = BpmOutcomeConst.BPM_SAVE;
-				int i = 1;
-				for (String action : this.getManagedBean().getOutComes()) {
-					outcome[i++] = action;
+				if(!FLProcessNameConst.REVISE_INVOICE.equals(this.getManagedBean().getTaskName())){
+					String[] outcome = new String[this.getManagedBean().getOutComes().length + 1];
+					outcome[0] = BpmOutcomeConst.BPM_SAVE;
+					int i = 1;
+					for (String action : this.getManagedBean().getOutComes()) {
+						outcome[i++] = action;
+					}
+					this.getManagedBean().setOutComes(outcome);
 				}
-				this.getManagedBean().setOutComes(outcome);
+				
 				FLInvoiceDataType paymentObj = (FLInvoiceDataType)obj;
 				IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 				reqDTO.setDocType(ParameterConst.DOCTYPE_INVOICE);
@@ -615,6 +622,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				//Start  #21229	
 				if(FLProcessNameConst.REVISE_INVOICE.equals(this.getManagedBean().getTaskName())){
 					getManagedBean().setReviseInvoice(true);
+					getManagedBean().setButtonVal(BpmOutcomeConst.BPM_CANCEL);
 				}
 				
 				if(resDTO.getInvoice()!=null && resDTO.getInvoice().getInvoiceId() !=null){

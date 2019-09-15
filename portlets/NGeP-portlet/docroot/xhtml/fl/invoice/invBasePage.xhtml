@@ -91,7 +91,7 @@
 						</p:commandButton></td>
 				</h:panelGroup>
 				<h:panelGroup
-					rendered="#{invoiceBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancel}">	
+					rendered="#{invoiceBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancel and !invoiceBackingBean.managedBean.isReviseInvoice()}">	
 					<td colspan="4" style="text-align: right"><p:commandButton
 							value="#{lbl['lbl.btn.cancel']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{invoiceBackingBean.signingAction(BpmOutcomeConstant.bpmCancel)}">
