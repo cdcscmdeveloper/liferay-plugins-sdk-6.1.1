@@ -700,32 +700,32 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		FacesScopes facesScopes = new FacesScopes();
 		Date startDate = null;
 		Date endDate = null;
-
-		if (scQtSchedule.getStartYear() == null
-				|| scQtSchedule.getStartYear().isEmpty()) {
-			throw new EpException(MessageConst.ERROR_721110, new String[] {
-					ResourceBundleUtils.getMessage("lbl.sc.start.year",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							facesScopes.getUserLocale()), "" });
-		}
+		//#25022
 		if (scQtSchedule.getStartMonth() == null
 				|| scQtSchedule.getStartMonth().isEmpty()) {
-			throw new EpException(MessageConst.ERROR_721110, new String[] {
+			throw new EpException(MessageConst.ERROR_100022, new String[] {
 					ResourceBundleUtils.getMessage("lbl.sc.start.month",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							facesScopes.getUserLocale()), "" });
 		}
-		if (scQtSchedule.getEndYear() == null
-				|| scQtSchedule.getEndYear().isEmpty()) {
-			throw new EpException(MessageConst.ERROR_721110, new String[] {
-					ResourceBundleUtils.getMessage("lbl.sc.end.year",
+		if (scQtSchedule.getStartYear() == null
+				|| scQtSchedule.getStartYear().isEmpty()) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] {
+					ResourceBundleUtils.getMessage("lbl.sc.start.year",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							facesScopes.getUserLocale()), "" });
 		}
 		if (scQtSchedule.getEndMonth() == null
 				|| scQtSchedule.getEndMonth().isEmpty()) {
-			throw new EpException(MessageConst.ERROR_721110, new String[] {
+			throw new EpException(MessageConst.ERROR_100022, new String[] {
 					ResourceBundleUtils.getMessage("lbl.sc.end.month",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							facesScopes.getUserLocale()), "" });
+		}
+		if (scQtSchedule.getEndYear() == null
+				|| scQtSchedule.getEndYear().isEmpty()) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] {
+					ResourceBundleUtils.getMessage("lbl.sc.end.year",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							facesScopes.getUserLocale()), "" });
 		}
@@ -1268,36 +1268,37 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 */
 	private void progressivePayValidation(
 			ScQtProgressivePayment progressivePayment) {
-		debugLogger("frequencyScheduleValidation");
+		debugLogger("progressivePayValidation");
 		FacesScopes facesScopes = new FacesScopes();
 		Calendar startDate = null;
 		Calendar endDate = null;
-
-		if (progressivePayment.getStartYear() == null
-				|| progressivePayment.getStartYear().isEmpty()) {
-			throw new EpException(MessageConst.ERROR_721110, new String[] {
-					ResourceBundleUtils.getMessage("lbl.sc.start.year",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							facesScopes.getUserLocale()), "" });
-		}
+		
+		//#25022
 		if (progressivePayment.getStartMonth() == null
 				|| progressivePayment.getStartMonth().isEmpty()) {
-			throw new EpException(MessageConst.ERROR_721110, new String[] {
+			throw new EpException(MessageConst.ERROR_100022, new String[] {
 					ResourceBundleUtils.getMessage("lbl.sc.start.month",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							facesScopes.getUserLocale()), "" });
 		}
-		if (progressivePayment.getEndYear() == null
-				|| progressivePayment.getEndYear().isEmpty()) {
-			throw new EpException(MessageConst.ERROR_721110, new String[] {
-					ResourceBundleUtils.getMessage("lbl.sc.end.year",
+		if (progressivePayment.getStartYear() == null
+				|| progressivePayment.getStartYear().isEmpty()) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] {
+					ResourceBundleUtils.getMessage("lbl.sc.start.year",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							facesScopes.getUserLocale()), "" });
 		}
 		if (progressivePayment.getEndMonth() == null
 				|| progressivePayment.getEndMonth().isEmpty()) {
-			throw new EpException(MessageConst.ERROR_721110, new String[] {
+			throw new EpException(MessageConst.ERROR_100022, new String[] {
 					ResourceBundleUtils.getMessage("lbl.sc.end.month",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							facesScopes.getUserLocale()), "" });
+		}
+		if (progressivePayment.getEndYear() == null
+				|| progressivePayment.getEndYear().isEmpty()) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] {
+					ResourceBundleUtils.getMessage("lbl.sc.end.year",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							facesScopes.getUserLocale()), "" });
 		}
