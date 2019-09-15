@@ -18,7 +18,7 @@
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							value="#{specificationBackingBean.managedBean.qt.scheduleType}">
 							<f:selectItems
-								value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.periodicScheduleType)}" />
+								value="#{specificationBackingBean.getSelectRadioButtonCodeValues(ParameterTypeConst.periodicScheduleType)}" />
 							<p:ajax event="change" process="@this" partialSubmit="true"
 								update="@([id$=progressive],[id$=schedule])"
 								listener="#{specificationBackingBean.scheduleTypeChange(specificationBackingBean.managedBean.qt)}"></p:ajax>
