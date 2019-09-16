@@ -908,7 +908,8 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	    		}
 			}								   
 	    }else if(docType.equals("RN")){
-	    	if(currentStatusId.equals(DPStatusConstants.RN_PENDING_APPROVAL)
+	    	if(currentStatusId.equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION)
+	    	   || currentStatusId.equals(DPStatusConstants.RN_PENDING_APPROVAL)
 	    	   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION) 
 	    	   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL)
 	    	   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)){

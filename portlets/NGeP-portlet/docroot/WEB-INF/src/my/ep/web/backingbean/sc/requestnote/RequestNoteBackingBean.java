@@ -4561,7 +4561,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				cal.setTime(closingDate);
 				cal.add(Calendar.DATE, sqTimeValidity); //add 60days to closing/end date
 				
-				if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION) 
+				if(currentStatusId.equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION)
+				   || currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION) 
 				   || currentStatusId.equals(DPStatusConstants.RN_PENDING_APPROVAL)
 				   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION) 
 				   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL) ){
