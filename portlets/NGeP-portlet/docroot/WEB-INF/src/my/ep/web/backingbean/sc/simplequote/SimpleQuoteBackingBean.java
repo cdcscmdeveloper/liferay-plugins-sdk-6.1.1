@@ -345,7 +345,17 @@ public class SimpleQuoteBackingBean extends
 
 				// status
 				if(scQuote.getCurrentStatus() != null){
+					if(scQuote.getCurrentStatus().getPmStatus().getStatusId().equals(DPStatusConstants.SQ_PENDING_RN_CREATION)){
+						Date today  = DateUtils.getCurrentDateWithoutTime();
+						Date ExpDate = DateUtils.addDays(scQuote.getPurchaseInDefault().getCreatedDate(),scQuote.getPurchaseInDefault().getPidValidDays() );
+						
+						if(ExpDate.before(today)){
+							scQuote.getCurrentStatus().getPmStatus().setStatusId(DPStatusConstants.PID_EXPIRED);							
+						} 
+					}
+				
 					getCurrentStatus(scQuote.getCurrentStatus().getPmStatus());
+				
 				}
 				// remarks
 				scQuote.setRemarks(initializeRemarks(
@@ -1357,7 +1367,7 @@ public class SimpleQuoteBackingBean extends
 
 			// justification type
 			
-			if(quote.getJustificationType().getReasonCode() != null){
+			
 				if (quote.getProcurementType().getParameterCode()
 						.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
 					if (quote.getJustificationType().getReasonCode() != null) {
@@ -1365,6 +1375,9 @@ public class SimpleQuoteBackingBean extends
 								ReasonCategory.JUSTIFICATION_AD_HOC.value(), quote
 								.getJustificationType().getReasonCode()));
 	
+					}
+					else {
+						quote.setJustificationType(null);
 					}
 				}  else if (quote.getProcurementType().getParameterCode()
 						.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
@@ -1374,12 +1387,12 @@ public class SimpleQuoteBackingBean extends
 								.getJustificationType().getReasonCode()));
 	
 					}
+					else {
+						quote.setJustificationType(null);
+					}
 				} else {
 					quote.setJustificationType(null);
 				}
-			}else {
-				quote.setJustificationType(null);
-			}
 
 			// procurement type category
 			if (null != quote.getProcurementTypeCategory()) {
