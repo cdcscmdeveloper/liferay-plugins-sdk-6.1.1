@@ -107,6 +107,7 @@ import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.report.CommonMethod;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.fl.doc.FlDocumentManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
@@ -326,6 +327,22 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 				flBB.getManagedBean().setHideRemarks(true);
 				PrBB.getManagedBean().setDeclarationCheck(true);
 			}
+			
+			 if(resDTO.getFlFulfilmentRequest().getScPurchaseInDefault()!=null){
+				 	Date today  = DateUtils.getCurrentDateWithoutTime();
+					Date ExpDate = DateUtils.addDays(resDTO.getFlFulfilmentRequest().getScPurchaseInDefault().getCreatedDate(), resDTO.getFlFulfilmentRequest().getScPurchaseInDefault().getPidValidDays());
+					log.info("pID validity begin");
+					if(resDTO.getFlFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_APPROVAL)
+					 		   || resDTO.getFlFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_REVISION)
+							   || resDTO.getFlFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
+							   || resDTO.getFlFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)){
+						if(ExpDate.before(today)){
+							resDTO.getFlFulfilmentRequest().getStatus().setStatusId(DPStatusConstants.PID_EXPIRED);
+						}  
+					}
+					log.info("pID validity end");
+			 }
+			
 			PrBB.setFulfilmentRequestField(resDTO);
 			PrBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			PrBB.getManagedBean().setBackToDocument(null);
