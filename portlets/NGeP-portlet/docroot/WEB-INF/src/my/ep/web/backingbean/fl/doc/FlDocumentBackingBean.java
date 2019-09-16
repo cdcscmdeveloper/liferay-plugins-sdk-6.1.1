@@ -1358,7 +1358,8 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	    Boolean sqExpired = false;
 	       
 	    if(docType.equals("PR")){
-	    	if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL)
+	    	if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)
+	    	   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL)
 	 		   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION)
 			   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
 			   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)){

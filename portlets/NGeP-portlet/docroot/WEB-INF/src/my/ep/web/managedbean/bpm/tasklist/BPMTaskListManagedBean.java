@@ -687,7 +687,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 											//System.out.println("Lets overide the status! here");
 										}
 									}else{ // 12177 - Start
-										if(currentStatusId.equals(DPStatusConstants.RN_PENDING_APPROVAL)
+										if(currentStatusId.equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION)
+										   || currentStatusId.equals(DPStatusConstants.RN_PENDING_APPROVAL)
 								    	   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION) 
 								    	   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL)
 								    	   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)){
@@ -1216,7 +1217,73 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						    	   retrievePoCoNoForCancelInvoice(worklistItemVO,worklistItemVO.getTaskId());
 						       }
 								// end added for #24968
-
+						       
+						       // 12177 - Start
+						       IQuoteSO quoteSO;
+					    	   quoteSO = BusinessDelegate.getInstance().getServiceObject(
+										ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
+					    	   QuoteResDTO quoteResDTO = null;
+						       Long currentStatusId = Long.valueOf(worklistItemVO.getDocStatus());
+						       
+						       if(worklistItemVO.getDocType().equals("SQ")){
+								   if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION)){
+									   quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
+											    currentStatusId, worklistItemVO.getDocType());	
+						    		   if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
+						    			   if(!isSqStillValid(quoteResDTO.getEndDate())){
+									    	   worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
+									       }
+						    		   }
+								   }								   
+						       }
+						       
+						       if(worklistItemVO.getDocType().equals("RN")){ 
+						    	   if(currentStatusId.equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION)
+						    		  || currentStatusId.equals(DPStatusConstants.RN_PENDING_APPROVAL)
+								      || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION) 
+								      || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL)
+								      || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)){
+									  quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
+												currentStatusId, worklistItemVO.getDocType());	
+									  if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
+										  if(!isSqStillValid(quoteResDTO.getEndDate())){
+											  worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
+										  }
+									  }   	   
+								   }
+						       }
+						       
+						       if(worklistItemVO.getDocType().equals("PR")){
+						    	   if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL)
+						    		  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION)
+									  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
+									  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)){
+									  quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
+												 currentStatusId, worklistItemVO.getDocType());	
+									  if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
+										  if(!isSqStillValid(quoteResDTO.getEndDate())){
+											  worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
+										  }
+									  }
+								   }
+						       }
+						       
+						       if(worklistItemVO.getDocType().equals("LA")){
+						    	   if(currentStatusId.equals(QTStatusConst.LOA_PENDING_SUBMISSION)
+									  || currentStatusId.equals(QTStatusConst.LOA_PENDING_APPROVAL)
+								      || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION)
+								      || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL)){
+								      quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
+													currentStatusId, worklistItemVO.getDocType());	
+									  if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
+										  if(!isSqStillValid(quoteResDTO.getEndDate())){
+											  worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
+										  }
+									  }  			   
+								   }
+						       }
+						       // 12177 - End
+						       
 								// Identify if it is a group or individual task
 								log.info("getTaskType: " + worklistItemVO.getTaskType());
 								worklistItemVO.getTaskType();
