@@ -18,7 +18,7 @@
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							value="#{specificationBackingBean.managedBean.qt.scheduleType}">
 							<f:selectItems
-								value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.periodicScheduleType)}" />
+								value="#{specificationBackingBean.getSelectRadioButtonCodeValues(ParameterTypeConst.periodicScheduleType)}" />
 							<p:ajax event="change" process="@this" partialSubmit="true"
 								update="@([id$=progressive],[id$=schedule])"
 								listener="#{specificationBackingBean.scheduleTypeChange(specificationBackingBean.managedBean.qt)}"></p:ajax>
@@ -41,27 +41,6 @@
 				<h:outputText styleClass="instruction"
 					value="#{lbl['lbl.sc.spec.instruction.delete']}"
 					escape="false" />
-				<table>
-					<tr>
-						<h:panelGroup
-							rendered="#{!specificationBackingBean.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeScheduled and  specificationBackingBean.managedBean.qt.scheduleType eq ParameterConst.periodicScheduleTypeFrequencySchedule}">
-							<td style="width: 175px;"><h:outputLabel
-									value="#{lbl['lbl.sc.spec.total.frequency']}"></h:outputLabel></td>
-							<td><p:inputText style="text-align:right;" id="focus"
-									disabled="#{specificationBackingBean.managedBean.readOnly}"
-									value="#{specificationBackingBean.managedBean.totalFrequency}">
-									<p:ajax event="change" update="@([id$=schedule])"
-										partialSubmit="true" process="@this"
-										listener="#{specificationBackingBean.addScheduleDetails}" />
-								</p:inputText> <ac:iconTooltip
-									value="#{lbl['lbl.sc.spec.total.frequency.tooltip']}" /></td>
-						</h:panelGroup>
-					</tr>
-				</table>
-
-
-
-
 
 				<p:dataTable id="frequencySchedule" var="frequency" rows="10"
 					rendered="#{specificationBackingBean.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeScheduled and  specificationBackingBean.managedBean.qt.scheduleType eq ParameterConst.periodicScheduleTypeFrequencySchedule}"
@@ -104,8 +83,11 @@
 						</p:inputText>
 						<p:message id="freqScheduledid" for="scheduleNum" display="icon"></p:message>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.start.month']}"
-						style="width:20%">
+					<p:column style="width:20%">
+						<f:facet name="header">
+							<h:outputText value="* " styleClass="mandatory" />
+							<h:outputText value="#{lbl['lbl.sc.start.month']}" />
+						</f:facet>
 						<p:selectOneMenu style="width:140px;"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							value="#{frequency.startMonth}">
@@ -120,8 +102,11 @@
 						<!-- <p:calendar value="#{frequency.fromDate}" showOn="button"
 						pattern="MM/yyyy"></p:calendar> -->
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.start.year']}"
-						style="width:15%">
+					<p:column style="width:15%">
+						<f:facet name="header">
+							<h:outputText value="* " styleClass="mandatory" />
+							<h:outputText value="#{lbl['lbl.sc.start.year']}" />
+						</f:facet>
 						<p:selectOneMenu value="#{frequency.startYear}"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							style="width:110px;">
@@ -136,7 +121,11 @@
 
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.end.month']}" style="width:20%">
+					<p:column style="width:20%">
+					<f:facet name="header">
+							<h:outputText value="* " styleClass="mandatory" />
+							<h:outputText value="#{lbl['lbl.sc.end.month']}" />
+						</f:facet>
 						<p:selectOneMenu style="width:140px;" id="scheduleendMonth"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							value="#{frequency.endMonth}">
@@ -150,7 +139,11 @@
 						</p:selectOneMenu>
 
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.end.year']}" style="width:15%">
+					<p:column style="width:15%">
+					<f:facet name="header">
+							<h:outputText value="* " styleClass="mandatory" />
+							<h:outputText value="#{lbl['lbl.sc.end.year']}" />
+						</f:facet>
 						<p:selectOneMenu value="#{frequency.endYear}"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							style="width:110px;">
@@ -180,18 +173,7 @@
 								value="#{lbl['lbl.sc.schedule.type.tooltip']}" />
 						</f:facet>
 
-						<p:selectOneMenu style="width:170px;" required="true"
-							disabled="#{specificationBackingBean.managedBean.readOnly}"
-							id="scheduledTypeId" label="#{lbl['lbl.sc.schedule.type']}"
-							value="#{frequency.scheduleType.parameterId}">
-
-							<f:selectItems
-								value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.scheduleType)}" />
-							<p:message id="freqScheduledTypeId" for="scheduledTypeId"
-								display="icon"></p:message>
-
-						</p:selectOneMenu>
-
+						<h:outputText value="#{specificationBackingBean.getParameterDesc(frequency.scheduleType)}"/>
 					</p:column>
 
 				</p:dataTable>
@@ -241,26 +223,6 @@
 				<br />
 				<h:outputText styleClass="instruction"
 					value="#{lbl['lbl.sc.spec.instruction.delete']}" escape="false" />
-
-				<table>
-					<tr>
-						<h:panelGroup
-							rendered="#{!specificationBackingBean.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeScheduled and specificationBackingBean.managedBean.qt.scheduleType eq ParameterConst.periodicScheduleTypeProgressivePayment}">
-							<td style="width: 175px;"><h:outputLabel
-									value="#{lbl['lbl.sc.spec.total.phase']}"></h:outputLabel></td>
-							<td><p:inputText style="text-align:right;"
-									id="progressivefocus"
-									disabled="#{specificationBackingBean.managedBean.readOnly}"
-									value="#{specificationBackingBean.managedBean.totalProgressivePayment}">
-									<p:ajax event="change" update="@([id$=progressive])"
-										partialSubmit="true" process="@this"
-										listener="#{specificationBackingBean.addProgressiveDetails}" />
-								</p:inputText> <ac:iconTooltip value="#{lbl['lbl.sc.spec.phase.tooltip']}" /></td>
-						</h:panelGroup>
-					</tr>
-
-				</table>
-
 
 				<p:dataTable id="progressivePayment" var="payment"
 					rowIndexVar="index" rows="10" widgetVar="progPaymentWidget"
@@ -319,8 +281,11 @@
 							display="icon"></p:message>
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.start.month']}"
-						style="width:15%">
+					<p:column style="width:15%">
+						<f:facet name="header">
+							<h:outputText value="* " styleClass="mandatory" />
+							<h:outputText value="#{lbl['lbl.sc.start.month']}" />
+						</f:facet>
 						<p:selectOneMenu style="width:130px;"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							value="#{payment.startMonth}">
@@ -333,8 +298,11 @@
 						</p:selectOneMenu>
 
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.start.year']}"
-						style="width:15%">
+					<p:column style="width:15%">
+						<f:facet name="header">
+							<h:outputText value="* " styleClass="mandatory" />
+							<h:outputText value="#{lbl['lbl.sc.start.year']}" />
+						</f:facet>
 
 						<p:selectOneMenu value="#{payment.startYear}"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
@@ -348,9 +316,11 @@
 
 
 					</p:column>
-					<p:column headerText="
-								#{lbl['lbl.sc.end.month']}"
-						style="width:15%">
+					<p:column style="width:15%">
+						<f:facet name="header">
+							<h:outputText value="* " styleClass="mandatory" />
+							<h:outputText value="#{lbl['lbl.sc.end.month']}" />
+						</f:facet>
 						<p:selectOneMenu style="width:130px;" id="paymentEndMonth"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							value="#{payment.endMonth}">

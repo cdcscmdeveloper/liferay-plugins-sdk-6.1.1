@@ -3975,16 +3975,15 @@ public class SpecificationBackingBean extends
 
 		String scheduleType = scqt.getScheduleType();
 		log.debug("display schedule type" + scheduleType);
-		log.debug("display fulfilment  type"
-				+ this.getManagedBean().getFulfilmentType());
+		log.debug("display fulfilment  type"+ this.getManagedBean().getFulfilmentType());
 		if (ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE
 				.equalsIgnoreCase(scheduleType)) {
 			scheduleType = ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT;
 			this.getManagedBean().setTotalProgressivePayment(0);
 		} else if (ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT
 				.equalsIgnoreCase(scheduleType)) {
-			scheduleType = ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE;
-			this.getManagedBean().setTotalFrequency(0);
+			//scheduleType = ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE;
+			//this.getManagedBean().setTotalFrequency(0);
 		}
 		removefullfillmentDetails(scheduleType,true);
 	}
@@ -10667,6 +10666,24 @@ public class SpecificationBackingBean extends
 
 		return super.getRadioButtonCodeValuesBySearchBean(quotationTenderType,
 				searchBean);
+	}
+	
+	
+	public SelectItem[]  getSelectRadioButtonCodeValues(String type)
+	{
+		
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		//ScQt scQt = getManagedBean().getQt();
+
+		
+			List<String> qtTypes = new ArrayList<String>();
+			qtTypes.add(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmParameter.parameterCode",
+							SearchOperator.OPERATOR_IN.value(), qtTypes));
+		
+		
+			return super.getRadioButtonCodeValuesBySearchBean(type,searchBean);
 	}
 
 	/**
