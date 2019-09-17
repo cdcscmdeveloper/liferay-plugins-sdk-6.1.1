@@ -9,6 +9,11 @@
 		value="#{PpReportConst.ppProcurementSummRptVal eq ppReportsBackingBean.managedBean.reportCode}" />
 	<ui:param name="isPPDtlReport"
 		value="#{PpReportConst.ppProcurementDetailRptVal eq ppReportsBackingBean.managedBean.reportCode}" />
+	<!--//[#24976] - start  -->
+	<ui:param name="isPPPerformanceReport"
+		value="#{PpReportConst.ppProcurementPerformanceRptVal eq ppReportsBackingBean.managedBean.reportCode}" />
+	<!--//[#24976] - end  -->
+	<c:if test="#{not isPPPerformanceReport}">	<!--[#24976]-->
 	<table style="width: 100%;">
 		<tr>
 			<td width="20%"><p:outputLabel value="#{lbl['lbl.pp.ministry']}" /></td>
@@ -123,4 +128,27 @@
 
 		</tr>
 	</table>
+	</c:if>	<!--[#24976]-->
+	<!--[#24976] - start  -->
+	<c:if test="#{isPPPerformanceReport}">
+	<table style="width: 100%;">
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.rpt.yearone']}" /> 
+				<p:outputLabel value="*" styleClass="mandatory" />
+			</td>
+			<td width="20%">
+				<p:selectOneMenu id="ppYear"
+					label="#{lbl['lbl.rpt.yearone']}"
+					value="#{ppReportsBackingBean.managedBean.selectedYear}">
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
+					<f:selectItems value="#{ppReportsBackingBean.generateCommonYearList()}"></f:selectItems>
+				</p:selectOneMenu>
+				<p:message id="ppYearMsg" for="ppYear" display="icon" showDetail="false" />
+			</td>
+			<td width="50%" colspan="2"></td>
+		</tr>
+	</table>
+	</c:if>	
+	<!--[#24976] - end  -->	
 </ui:composition>
