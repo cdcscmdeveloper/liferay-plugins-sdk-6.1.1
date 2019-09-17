@@ -68,6 +68,7 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	public String orgTypeCode;
 	public String orgTypeName;
 	public List<SelectItem> agencyTypeItems;
+	public String searchDate;
 
 
 	public String getDocumentType() {
@@ -444,6 +445,14 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 
 	public void setOrgTypeName(String orgTypeName) {
 		this.orgTypeName = orgTypeName;
+	}
+
+	public String getSearchDate() {
+		return searchDate;
+	}
+
+	public void setSearchDate(String searchDate) {
+		this.searchDate = searchDate;
 	}
 	
 }
