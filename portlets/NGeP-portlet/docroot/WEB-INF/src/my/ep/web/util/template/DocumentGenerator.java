@@ -8,13 +8,11 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.util.List;
 
 import javax.faces.context.FacesContext;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -55,8 +53,6 @@ import org.docx4j.wml.SectPr;
 import org.docx4j.wml.Text;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.safety.Cleaner;
 import org.jsoup.safety.Whitelist;
 import org.jsoup.select.Elements;
 import org.xhtmlrenderer.pdf.ITextRenderer;
@@ -173,21 +169,20 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 	 * @throws Exception
 	 */
 	
-	/*public void generatePdf(OutputStream os, String html) throws Exception {
+	public void generatePdf(OutputStream os, String html) throws Exception {
 		debugLogger("generatePdf");
 		
 		ITextRenderer render = new ITextRenderer();
-		Document doc = null;
-		Document cleanDoc = null;
 		try{
-			//#25142, #26180
+			//#26180
 			if (html != null) {
 				html = html.replaceAll("&amp;nbsp;", " ");
 				html = html.replaceAll("&amp;", "&amp;amp;")
 						.replaceAll("&", "&amp;");
 				html = html.replaceAll("&amp;#62", "&#62");
-				html = html.replaceAll("&amp;#60", "&#60");         
-				doc = Jsoup.parse(html);
+				html = html.replaceAll("&amp;#60", "&#60"); 
+			//25142 - start
+				/*doc = Jsoup.parse(html);
 				boolean valid = Jsoup.isValid(doc.html(), Whitelist.relaxed());
 				if(!valid){
 					cleanDoc = new Cleaner(Whitelist.relaxed()).clean(doc);
@@ -196,13 +191,13 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 				doc.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
 				doc.outputSettings().charset("UTF-8");
 			
-				html = doc.html();
+				html = doc.html();*/
 				
 				html = html.replaceAll("&amp;nbsp;", " ");
 				html = html.replaceAll("&amp;amp;", "&");
 				html = html.replaceAll("&amp;lt", "&#60");
 				html = html.replaceAll("&amp;gt", "&#62");					
-				
+			//#25142 - end
 				render.setDocumentFromString(html);
 				render.layout();
 				render.createPDF(os);
@@ -211,13 +206,11 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 			os.flush();
 		}finally{
 			html = null;
-			doc = null;
-			cleanDoc = null;
 			render = null;
 			os.close();
 			os = null;
 		}
-	}*/
+	}
 	
 	/**
 	 * Generate Doc file by velocity.
@@ -570,7 +563,7 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
     }
 	
 	public static void main(String[] args) throws FileNotFoundException, DocumentException {
-		String html = "<table width=\"100%\" border=\"0\" bordercolor=\"#142396\" cellpadding=\"0\" cellspacing=\"0\"> <tbody> <tr> <th  class=\"header\"><u>Spesifikasi</u></th> </tr> </tbody> </table> <br/> #foreach( $tplspecMaster in $masters ) <table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\"> <tbody> <tr> <td width=\"20%\" class=\"standard\"><nobr>Tajuk Templat:</nobr></td> <td class=\"standard\">$tplspecMaster.specName</td> </tr> <tr> <td width=\"20%\" class=\"standard\"><nobr>Jenis Item:</nobr></td> <td class=\"standard\">$bean.getParameterDescForReport($tplspecMaster.itemTypeCode)</td> </tr> <tr> <td width=\"20%\" class=\"standard\"><nobr>Jenis Barangan:</nobr></td> <td class=\"standard\">$bean.getParameterDescForReport($tplspecMaster.itemOriginCode)</td> </tr> </tbody> </table> #end";
+		String html = "<div> <div> 10.1 Fi perkhidmatan Sistem eP yang dikenakan ini adalah seperti yang termaktub dalam terma dan syarat bagi pendaftaran di bawah Sistem eP. Kadar fi perkhidmatan adalah seperti berikut : </div> <div> <br /> </div> <div> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;&gt; </div> <div> <br /> </div> <div> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;&gt; </div> <div> <br /> </div> </div>";
 		String tempHtml = null;
 		Elements elements = null;
 		Document doc = null;
@@ -587,9 +580,9 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 		//Document cleanDoc = new Cleaner(Whitelist.relaxed().addAttributes("table", "style","class","border=\"1\"")).clean(doc);
 		//doc = cleanDoc;
 		//doc.outputSettings().escapeMode(org.jsoup.nodes.Entities.EscapeMode.xhtml);
-		doc.outputSettings().syntax(Document.OutputSettings.Syntax.xml); 
+		/*doc.outputSettings().syntax(Document.OutputSettings.Syntax.xml); 
 		doc.outputSettings().charset("UTF-8");
-		html = doc.html();
+		html = doc.html();*/
 		
 		html = html.replaceAll("&amp;nbsp;", " ");
 		html = html.replaceAll("&amp;amp;", "&");
@@ -621,30 +614,6 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 		}*/
 		
 		
-	}
-	
-	public void generatePdf(OutputStream os, String html) throws Exception {
-		debugLogger("generatePdf");
-		
-		ITextRenderer render = new ITextRenderer();
-		try{
-			 if (html != null) {
-		        	html = html.replaceAll("&amp;nbsp;", "");
-		        	html = html.replaceAll("&amp;", "&amp;amp;")
-		        			   .replaceAll("&", "&amp;");
-		        	html = html.replaceAll("&amp;#62", "&#62");
-		          	html = html.replaceAll("&amp;#60", "&#60");
-		        	 
-		            render.setDocumentFromString(html);
-		            render.layout();
-		            render.createPDF(os);
-		        }
-		        
-		        os.flush();
-		}finally{
-			render = null;
-			os.close();
-		}
 	}
 }
 
