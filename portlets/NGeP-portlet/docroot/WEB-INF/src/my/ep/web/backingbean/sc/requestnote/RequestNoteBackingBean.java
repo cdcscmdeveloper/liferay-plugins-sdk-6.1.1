@@ -49,6 +49,7 @@ import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
@@ -229,7 +230,20 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		if(requestNoteResDTO.getRequestNoteDetail() != null){
 			ScRequestNote requestNote = requestNoteResDTO.getRequestNoteDetail();
 			retrieveRequestNoteDetails(requestNote, null, Boolean.FALSE);
+			
 			if(requestNote.getCurrentStatus() != null) {
+				if(requestNote.getCurrentStatus().getPmStatus().getStatusId().equals(DPStatusConstants.RN_PENDING_APPROVAL)
+				    	   || requestNote.getCurrentStatus().getPmStatus().getStatusId().equals(DPStatusConstants.RN_PENDING_REVISION) 
+				    	   || requestNote.getCurrentStatus().getPmStatus().getStatusId().equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL)
+				    	   || requestNote.getCurrentStatus().getPmStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)){
+					Date today  = DateUtils.getCurrentDateWithoutTime();
+					Date ExpDate = DateUtils.addDays(requestNote.getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault().getCreatedDate(),requestNote.getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault().getPidValidDays() );
+					
+					if(ExpDate.before(today)){
+						requestNote.getCurrentStatus().getPmStatus().setStatusId(DPStatusConstants.PID_EXPIRED);							
+					} 
+				}
+			
 				getCurrentStatus(requestNote.getCurrentStatus().getPmStatus());	
 			}
 		}
@@ -4561,7 +4575,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				cal.setTime(closingDate);
 				cal.add(Calendar.DATE, sqTimeValidity); //add 60days to closing/end date
 				
-				if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION) 
+				if(currentStatusId.equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION)
+				   || currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION) 
 				   || currentStatusId.equals(DPStatusConstants.RN_PENDING_APPROVAL)
 				   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION) 
 				   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL) ){

@@ -29,6 +29,7 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
+import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -49,6 +50,8 @@ import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.SourcingIntegrationReqDTO;
 import my.ep.dto.sc.SourcingIntegrationResDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
+import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
+import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
@@ -59,6 +62,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
+import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
@@ -76,6 +80,7 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.sc.directpurchase.DirectPurchaseManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.StatusHelper;
@@ -908,7 +913,8 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	    		}
 			}								   
 	    }else if(docType.equals("RN")){
-	    	if(currentStatusId.equals(DPStatusConstants.RN_PENDING_APPROVAL)
+	    	if(currentStatusId.equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION)
+	    	   || currentStatusId.equals(DPStatusConstants.RN_PENDING_APPROVAL)
 	    	   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION) 
 	    	   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL)
 	    	   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)){
@@ -986,7 +992,9 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			return null;
 		}
 		
-		if(checkStatusSqExpired(dpObj)){
+		if(checkStatusPidExpired(dpObj)){
+			return getStatusDescById(DPStatusConstants.PID_EXPIRED);
+		}else if(checkStatusSqExpired(dpObj)){
 			return getStatusDescById(DPStatusConstants.SQ_EXPIRED);
 		}
 		Long statusId = null;
@@ -997,5 +1005,119 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	}
 	
 	// 12177 - End
+	
+	//12183 - Start
+		
+	public boolean checkStatusPidExpired(Object[] dpObj){
+		
+		
+		
+		String docNo = null;
+		Long docStatusId = null;
+		String docType = null;
+		
+		if(dpObj[1] != null){
+			docNo = (String) dpObj[1];
+		}
+		if(dpObj[4] != null){
+			docStatusId = (Long) dpObj[4];
+		}
+		if(dpObj[3] != null){
+			docType = (String) dpObj[3];
+		}
+		
+		ScPurchaseInDefault scPID = null;
+		
+		Long currentStatusId = docStatusId;
+		
+		if(docType.equals("SQ")){
+	    	if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION)){
+	    		
+	    		scPID = (ScPurchaseInDefault)dpObj[8];
+	    		
+			}								   
+	    }else if(docType.equals("RN")){
+	    	if(currentStatusId.equals(DPStatusConstants.RN_PENDING_APPROVAL)
+	    	   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION) 
+	    	   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL)
+	    	   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)){
+	    		
+	    		
+	    		//scPID = (ScPurchaseInDefault)dpObj[8];
+	    		RequestNoteReqDTO reqDTO = new RequestNoteReqDTO();
+	    		RequestNoteResDTO resDTO = new RequestNoteResDTO();
+	    		IRequestNoteSO reqSO = null;
+	    		reqSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IRequestNoteSO.class);
+	    		
+	    		reqDTO.setRequestNoteId((Long)dpObj[0]);
+	    		reqDTO.setRequestNoteNo(docNo);
+	    		
+	    		resDTO = reqSO.getRequestNote(reqDTO);
+	    		
+	    		if(resDTO.getRequestNoteDetail().getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault()!=null){
+	    			scPID = resDTO.getRequestNoteDetail().getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault();
+	    		}
+	    		//reqDTO.setRequestNoteNo()
+	    		
+	    	}  	
+	    }else if(docType.equals("PR")){
+	    	if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL)
+	 		   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION)
+			   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
+			   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)){
+	    		
+	    		scPID = (ScPurchaseInDefault)dpObj[8];
+	    	}
+	    }
+		
+	    
+		return pidValidityBoolean(scPID);
+	
+	}
+	
+		/**
+		 * Pid validity.
+		 *
+		 * @param purchaseInDefault the purchase in default
+		 * @param scRequestNote the sc request note
+		 */
+		private void pidValidity(ScPurchaseInDefault purchaseInDefault) {
+			Date today  = DateUtils.getCurrentDateWithoutTime();
+			Date ExpDate = DateUtils.addDays(purchaseInDefault.getCreatedDate(), purchaseInDefault.getPidValidDays());
+			log.info("pID validity begin");
+			if(ExpDate.before(today)){
+
+				throw new EpException(
+						MessageConst.ERROR_760355,
+						new String[] {purchaseInDefault.getPurchaseInDefaultNo()});
+			}  
+			log.info("pID validity end");
+		}
+		
+		/**
+		 * Pid validity.
+		 *
+		 * @param purchaseInDefault the purchase in default
+		 * @param scRequestNote the sc request note
+		 */
+		private boolean pidValidityBoolean(ScPurchaseInDefault purchaseInDefault) {
+			boolean valid = false;
+			
+			if(purchaseInDefault!=null){
+				Date today  = DateUtils.getCurrentDateWithoutTime();
+				Date ExpDate = DateUtils.addDays(purchaseInDefault.getCreatedDate(), purchaseInDefault.getPidValidDays());
+				
+				log.info("pID validity begin");
+				
+				if(ExpDate.before(today)){
+					valid = true;
+				}
+				log.info("pID validity end");
+			}
+			return valid;
+		}
+		
+		//12183 - end
 }
 
