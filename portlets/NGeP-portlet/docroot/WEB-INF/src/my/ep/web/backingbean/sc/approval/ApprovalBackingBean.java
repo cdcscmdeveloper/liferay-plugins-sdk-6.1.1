@@ -638,6 +638,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if(SCProcessNameConst.APPROVE_BPK.equalsIgnoreCase(taskName)){
 				qtDetailBB.getManagedBean().addAdditionalPages(UserTasks.BPKApproval.toString(), pageAppr);
 				qtDetailBB.getManagedBean().addUserTasks(UserTasks.BPKApproval);
+				qtDetailBB.getManagedBean().setActiveIndex(9);
 				log.info("*********** preRenderView:userHasRole(BPK_APPROVER)");
 			}
 			else if(SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName) ){
@@ -654,17 +655,20 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				if(isEcOcTecFec){
 					qtDetailBB.getManagedBean().addAdditionalPages(UserTasks.CommitteeAppointmentApprovalEcOcTecFec.toString(), pageAppr);
 					qtDetailBB.getManagedBean().addUserTasks(UserTasks.CommitteeAppointmentApprovalEcOcTecFec);
+					qtDetailBB.getManagedBean().setActiveIndex(9);
 					log.info("*********** preRenderView:userHasRole(COMMITTEE_APPROVER) for ecOcTecFec");
 				}
 				else{
 					qtDetailBB.getManagedBean().addAdditionalPages(UserTasks.CommitteeAppointmentApproval.toString(), pageAppr);
 					qtDetailBB.getManagedBean().addUserTasks(UserTasks.CommitteeAppointmentApproval);
+					qtDetailBB.getManagedBean().setActiveIndex(5);
 					log.info("*********** preRenderView:userHasRole(COMMITTEE_APPROVER)");
 				}
 			}
 			else if(SCProcessNameConst.APPROVE_PUBLICATION.equalsIgnoreCase(taskName)){
 				qtDetailBB.getManagedBean().addAdditionalPages(UserTasks.PublicationApproval.toString(), pageAppr);
 				qtDetailBB.getManagedBean().addUserTasks(UserTasks.PublicationApproval);
+				qtDetailBB.getManagedBean().setActiveIndex(9);
 				log.info("*********** preRenderView:userHasRole(PUBLICATION_APPROVER)");
 			}
 			else{
