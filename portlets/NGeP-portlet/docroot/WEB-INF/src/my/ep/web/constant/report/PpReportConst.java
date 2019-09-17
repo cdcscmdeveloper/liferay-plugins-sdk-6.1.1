@@ -11,6 +11,7 @@ public class PpReportConst implements Serializable {
 	public static final String PP_PROCUREMENT_DETAIL_RPT_VAL = "PP_002";
 	public static final String PP_EXPENDITURE_SUMM_RPT_VAL = "PP_003";
 	public static final String PP_EXPENDITURE_DETAIL_RPT_VAL = "PP_004";
+	public static final String PP_EXPENDITURE_PERFORMANCE_RPT_VAL = "PP_005";	//[#24976]
 	
 	public static final String PARAM_PP_MINISTRY = "PMINIS";
 	public static final String PARAM_PP_PEGAWAI_PEGAWAL = "PFPP";
@@ -51,6 +52,13 @@ public class PpReportConst implements Serializable {
 	 */
 	public String getPpExpenditureDetailRptVal() {
 		return PP_EXPENDITURE_DETAIL_RPT_VAL;
+	}
+	//[#24976]
+	/**
+	 * @return the ppProcurementPerformanceRptVal
+	 */
+	public String getPpProcurementPerformanceRptVal() {
+		return PP_EXPENDITURE_PERFORMANCE_RPT_VAL;
 	}
 	
 	
