@@ -30,6 +30,7 @@ public class PostSupplierRegistrationManagedBean extends BaseManagedBean{
 	private boolean rejectedApplExist;
 	private boolean displayRejectLabel;
 	private boolean successPayment;
+	private boolean showWelcome;
 
 	public SmSupplier getSmSupplier() {
 		return smSupplier;
@@ -117,5 +118,13 @@ public class PostSupplierRegistrationManagedBean extends BaseManagedBean{
 
 	public void setSuccessPayment(boolean successPayment) {
 		this.successPayment = successPayment;
+	}
+
+	public boolean isShowWelcome() {
+		return showWelcome;
+	}
+
+	public void setShowWelcome(boolean showWelcome) {
+		this.showWelcome = showWelcome;
 	}
 }

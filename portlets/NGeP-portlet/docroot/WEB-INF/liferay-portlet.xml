@@ -3234,6 +3234,7 @@
 			softCertProdiver-portlet
 		</css-class-wrapper>
 	</portlet>
+	<!-- SSM INTEGRATION -->
 	<portlet>
 		<portlet-name>profileRobExpire</portlet-name>
 		<icon>/icon.png</icon>
@@ -3244,6 +3245,18 @@
 		</footer-portlet-javascript>
 		<css-class-wrapper>profileRobExpire-portlet</css-class-wrapper>
 	</portlet>
+	<!-- LOG :12491 Finish Button -->
+	<portlet>
+		<portlet-name>FirstTimeMessage</portlet-name>
+		<icon>/icon.png</icon>
+		<requires-namespaced-parameters>false</requires-namespaced-parameters>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>FirstTimeMessage-portlet</css-class-wrapper>
+	</portlet>
+	
 	<role-mapper>
 		<role-name>administrator</role-name>
 		<role-link>Administrator</role-link>
