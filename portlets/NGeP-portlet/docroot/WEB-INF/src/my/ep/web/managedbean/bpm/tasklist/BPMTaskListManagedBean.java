@@ -687,7 +687,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 											//System.out.println("Lets overide the status! here");
 										}
 									}else{ // 12177 - Start
-										if(currentStatusId.equals(DPStatusConstants.RN_PENDING_APPROVAL)
+										if(currentStatusId.equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION)
+										   || currentStatusId.equals(DPStatusConstants.RN_PENDING_APPROVAL)
 								    	   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION) 
 								    	   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL)
 								    	   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)){
@@ -1216,7 +1217,124 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						    	   retrievePoCoNoForCancelInvoice(worklistItemVO,worklistItemVO.getTaskId());
 						       }
 								// end added for #24968
-
+						       
+						       // 12177 - Start
+						       IQuoteSO quoteSO;
+					    	   quoteSO = BusinessDelegate.getInstance().getServiceObject(
+										ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
+					    	   QuoteResDTO quoteResDTO = null;
+						       Long currentStatusId = Long.valueOf(worklistItemVO.getDocStatus());
+						       
+						       if(worklistItemVO.getDocType().equals("SQ")){
+								   if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION)){
+									   quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
+											    currentStatusId, worklistItemVO.getDocType());	
+						    		   if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
+						    			   if(!isSqStillValid(quoteResDTO.getEndDate())){
+									    	   worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
+									       }
+						    		   }
+								   }								   
+						       }
+						       
+						       if(worklistItemVO.getDocType().equals("RN")){ 
+						    	   if(currentStatusId.equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION)
+						    		  || currentStatusId.equals(DPStatusConstants.RN_PENDING_APPROVAL)
+								      || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION) 
+								      || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL)
+								      || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)){
+									  quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
+												currentStatusId, worklistItemVO.getDocType());	
+									  if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
+										  if(!isSqStillValid(quoteResDTO.getEndDate())){
+											  worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
+										  }
+									  }else{
+										  System.out.println("Begin PID validity process");
+								    	   IRequestNoteSO requestSO = (IRequestNoteSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestNoteSO.class);
+								    	   IRequestItemSO requestItemSO = (IRequestItemSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
+								    	   RequestNoteReqDTO reqRNDTO = new RequestNoteReqDTO();
+								    	   RequestNoteResDTO resRNDTO = new RequestNoteResDTO();
+								    	   
+								    	   reqRNDTO.setRequestNoteNo(worklistItemVO.getDocNumber());
+								    	   resRNDTO = requestSO.getRequestNote(reqRNDTO);
+								    	   
+								    	   if(resRNDTO.getRequestNoteDetail().getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault()!=null) {
+												int pidValidDays = resRNDTO.getRequestNoteDetail().getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault().getPidValidDays();
+												Date pidExpiredDate = new Date(); 
+												
+												if(resRNDTO.getRequestNoteDetail().getQuote()!=null) {
+													pidExpiredDate = DateUtils.addDays(resRNDTO.getRequestNoteDetail().getQuote().getCreatedDate(), pidValidDays);
+												} else {
+													pidExpiredDate = DateUtils.addDays(resRNDTO.getRequestNoteDetail().getCreatedDate(), pidValidDays);
+												}
+												if(pidExpiredDate.compareTo(DateUtils.getCurrentDate())<0) {
+													//set overide status here 
+													//taskListMyTaskDataModel.getRowKey(worklistItemVO).
+													worklistItemVO.setDocStatus(DPStatusConstants.PID_EXPIRED.intValue());
+													//System.out.println("Lets overide the status! here");
+												}
+									  }
+								   }
+						    	   }
+						       }
+						       
+						       if(worklistItemVO.getDocType().equals("PR")){
+						    	   if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL)
+						    		  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION)
+									  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
+									  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)){
+									  quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
+												 currentStatusId, worklistItemVO.getDocType());	
+									  if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
+										  if(!isSqStillValid(quoteResDTO.getEndDate())){
+											  worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
+										  }
+									  }else if(quoteResDTO.getPid() != null){
+										  System.out.println("Begin PID validity process");
+								    	  // IPurchaseRequestSO requestSO = (IPurchaseRequestSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseRequestSO.class);
+								    	   IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+								    	   //IRequestItemSO requestItemSO = (IRequestItemSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
+								    	   FulfilmentReqDTO reqFLDTO = new FulfilmentReqDTO();
+								    	   FulfilmentResDTO resFLDTO = new FulfilmentResDTO();
+								    	   
+								    	   reqFLDTO.setFlDocNo(worklistItemVO.getDocNumber());
+								    	   resFLDTO = fulfilmentSO.retrieveFulfilmentRequestByDocNo(reqFLDTO);
+								    	   
+								    	   if(resFLDTO.getFlFulfilmentRequest().getScPurchaseInDefault()!=null) {
+												int pidValidDays = resFLDTO.getFlFulfilmentRequest().getScPurchaseInDefault().getPidValidDays();
+												Date pidExpiredDate = new Date(); 
+												
+												if(resFLDTO.getFlFulfilmentRequest().getScPurchaseInDefault().getCreatedDate()!=null) {
+													pidExpiredDate = DateUtils.addDays(resFLDTO.getFlFulfilmentRequest().getScPurchaseInDefault().getCreatedDate(), pidValidDays);
+												}
+												if(pidExpiredDate.compareTo(DateUtils.getCurrentDate())<0) {
+													//set overide status here 
+													//taskListMyTaskDataModel.getRowKey(worklistItemVO).
+													worklistItemVO.setDocStatus(DPStatusConstants.PID_EXPIRED.intValue());
+													//System.out.println("Lets overide the status! here");
+												}
+										   }
+									  }
+								   }
+						       }
+						       
+						       if(worklistItemVO.getDocType().equals("LA")){
+						    	   if(currentStatusId.equals(QTStatusConst.LOA_PENDING_SUBMISSION)
+									  || currentStatusId.equals(QTStatusConst.LOA_PENDING_APPROVAL)
+								      || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION)
+								      || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL)){
+								      quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
+													currentStatusId, worklistItemVO.getDocType());	
+									  if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
+										  if(!isSqStillValid(quoteResDTO.getEndDate())){
+											  worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
+										  }
+									  }  			   
+								   }
+						       }
+						       // 12177 - End
+						       
 								// Identify if it is a group or individual task
 								log.info("getTaskType: " + worklistItemVO.getTaskType());
 								worklistItemVO.getTaskType();
@@ -1537,11 +1655,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	public void retrievePoCoNoForCreateFRN(WorklistItemVO worklistItemVO,String taskId) {
 		IDeliveryOrderSO deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-		//#24968-start-bazlin
-		reqDTO.setDeliveryOrderId(worklistItemVO.getDocId());
-		String poCoNumber = deliveryOrderSO.retrievePocoDOById(reqDTO);
-		//#24968-end-bazlin
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		Object obj = getBpmTaskDetails(taskId);
+		FLFulFillmentReceivedNoteDataType fulFillmentRecievedNoteDataType = (FLFulFillmentReceivedNoteDataType)obj;
+		reqDTO.setDeliveryOrderId(fulFillmentRecievedNoteDataType.getDoId());
+		reqDTO.setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+		resDTO = deliveryOrderSO.retrieveDeliveryOrderById(reqDTO);
 		
+		String poCoNumber = resDTO.getFlDeliveryOrder().getFlRequest().getFlFulfilmentOrder().getDocNo();
 		if(poCoNumber != null){
 			worklistItemVO.setPocoNo(poCoNumber);
 		}
@@ -1551,11 +1672,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		
 		IDeliveryOrderSO deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-		//#24968-start-bazlin
-		reqDTO.setDeliveryOrderId(worklistItemVO.getDocId());
-		String poCoNumber = deliveryOrderSO.retrievePocoDOById(reqDTO);
-		//#24968-end-bazlin
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		Object obj = getBpmTaskDetails(taskId);
+		FLDOFulfillmentModificationReqType doModDataType = (FLDOFulfillmentModificationReqType) obj;
+		reqDTO.setDeliveryOrderId(Long.valueOf(doModDataType.getDoId()));
+		reqDTO.setDocType(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+		resDTO = deliveryOrderSO.retrieveDeliveryOrderById(reqDTO);
 		
+		String poCoNumber = resDTO.getFlDeliveryOrder().getFlFulfilmentOrder().getDocNo();
 		if(poCoNumber != null){
 			worklistItemVO.setPocoNo(poCoNumber);
 		}
@@ -1565,11 +1689,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		
 		IDeliveryOrderSO deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-		//#24968-start-bazlin
-		reqDTO.setDeliveryOrderId(worklistItemVO.getDocId());
-		String poCoNumber = deliveryOrderSO.retrievePocoDOById(reqDTO);
-		//#24968-end-bazlin
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		Object obj = getBpmTaskDetails(taskId);
+		FLDOFulfillmentCancelReqType doCancelDataType = (FLDOFulfillmentCancelReqType) obj;
+		reqDTO.setDeliveryOrderId(Long.valueOf(doCancelDataType.getDoId()));
+		reqDTO.setDocType(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+		resDTO = deliveryOrderSO.retrieveDeliveryOrderById(reqDTO);
 		
+		String poCoNumber = resDTO.getFlDeliveryOrder().getFlFulfilmentOrder().getDocNo();
 		if(poCoNumber != null){
 			worklistItemVO.setPocoNo(poCoNumber);
 		}
@@ -1579,11 +1706,13 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		
 		IReceivedNoteSO receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-		//#24968-start-bazlin
-		reqDTO.setFulfilmentNoteId(worklistItemVO.getDocId());
-		String poCoNumber = receivedNoteSO.retrievePocoRNById(reqDTO);
-		//#24968-end-bazlin
-
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		Object obj = getBpmTaskDetails(taskId);
+		FLFulFillmentReceivedNoteDataType fulFillmentRecievedNoteDataType = (FLFulFillmentReceivedNoteDataType)obj;
+		reqDTO.setDeliveryOrderId(fulFillmentRecievedNoteDataType.getDoId());
+		resDTO = receivedNoteSO.retrieveReceivedNoteByDeliveryOrderId(reqDTO);
+		
+		String poCoNumber = resDTO.getFulfilmentNote().getFlRequest().getFlFulfilmentOrder().getDocNo();
 		if(poCoNumber != null){
 			worklistItemVO.setPocoNo(poCoNumber);
 		}
@@ -1593,12 +1722,13 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		
 		IAdjustmentSO adjustmentSO = (IAdjustmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IAdjustmentSO.class);
 		FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
-		//#24968-start-bazlin
-		flReqDTO.setDanId(worklistItemVO.getDocId());
-		String poCoNumber = adjustmentSO.retrievePoCoAdjNoById(flReqDTO);
-		//#24968-end-bazlin
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		Object obj = getBpmTaskDetails(taskId);
+		FLDanDataType danObj = (FLDanDataType)obj;
+		flReqDTO.setDanId(danObj.getDanId());
+		resDTO = adjustmentSO.retrieveAdjustmentById(flReqDTO);
 		
-		
+		String poCoNumber = resDTO.getAdjustment().getFlOrder().getDocNo();
 		if(poCoNumber != null){
 			worklistItemVO.setPocoNo(poCoNumber);
 		}
@@ -1608,12 +1738,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		
 		IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 		FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
-		//#24968-start-bazlin
-		flReqDTO.setDocId(Long.valueOf(worklistItemVO.getDocId()));
-		String poCoNumber = orderSO.retrievePoCoStopInstruction(flReqDTO);
-		//#24968-end-bazlin
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		Object obj = getBpmTaskDetails(taskId);
+		FLStopFullfillmentDataType stopFlData = (FLStopFullfillmentDataType)obj;
+		flReqDTO.setFlOrderId(stopFlData.getOrderId());
+		flReqDTO.setStopRequestId(stopFlData.getStopRequestId().longValue());
+		resDTO = orderSO.retrieveStopInstruction(flReqDTO);
 		
-		
+		String poCoNumber = resDTO.getFlStopInstr().getFlFulfilmentOrder().getDocNo();
 		if(poCoNumber != null){
 			worklistItemVO.setPocoNo(poCoNumber);
 		}
@@ -1623,11 +1755,13 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		
 		IReceivedNoteSO receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-		//#24968-start-bazlin
-		reqDTO.setDeliveryOrderId(worklistItemVO.getDocId());
-		String poCoNumber = receivedNoteSO.retrievePocoRNByDOId(reqDTO);
-		//#24968-end-bazlin
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		Object obj = getBpmTaskDetails(taskId);
+		FLDOFulfillmentCancelReqType fulfillmentCancelReqType = (FLDOFulfillmentCancelReqType)obj;
+		reqDTO.setDeliveryOrderId(fulfillmentCancelReqType.getDoId());
+		resDTO = receivedNoteSO.retrieveReceivedNoteByDeliveryOrderId(reqDTO);
 		
+		String poCoNumber = resDTO.getFulfilmentNote().getFlRequest().getFlFulfilmentOrder().getDocNo();
 		if(poCoNumber != null){
 			worklistItemVO.setPocoNo(poCoNumber);
 		}
@@ -1636,24 +1770,29 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	public void retrievePoCoNoForAckModifiedInvoice(WorklistItemVO worklistItemVO,String taskId) {
 		IInvoiceSO invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-		//#24968-start-bazlin
-		reqDTO.setInvoiceId(Long.valueOf(worklistItemVO.getDocId()));
-		String poCoNumber = invoiceSO.retrievePocoInvoiceByInvoiceId(reqDTO);
-		//#24968-end-bazlin
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		Object obj = getBpmTaskDetails(taskId);
+		FLInvoiceModificationReqType invModObj = (FLInvoiceModificationReqType) obj;
+		reqDTO.setInvoiceId(Long.valueOf(invModObj.getInvoiceId()));
+		resDTO = invoiceSO.retrieveInvoiceByInvoiceId(reqDTO);
 		
+		String poCoNumber = resDTO.getInvoice().getFlFulfilmentOrder().getDocNo();
 		if(poCoNumber != null){
 			worklistItemVO.setPocoNo(poCoNumber);
 		}		
 	}
 	
-	public void retrievePoCoNoForCancelInvoice(WorklistItemVO worklistItemVO,String taskId) {		
+	public void retrievePoCoNoForCancelInvoice(WorklistItemVO worklistItemVO,String taskId) {
+		
 		IInvoiceSO invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-		//#24968-start-bazlin
-		reqDTO.setInvoiceId(Long.valueOf(worklistItemVO.getDocId()));
-		String poCoNumber = invoiceSO.retrievePocoInvoiceByInvoiceId(reqDTO);
-		//#24968-end-bazlin
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		Object obj = getBpmTaskDetails(taskId);
+		FLInvoiceCancelReqType invCanObj = (FLInvoiceCancelReqType) obj;
+		reqDTO.setInvoiceId(Long.valueOf(invCanObj.getInvoiceId()));
+		resDTO = invoiceSO.retrieveInvoiceByInvoiceId(reqDTO);
 		
+		String poCoNumber = resDTO.getInvoice().getFlFulfilmentOrder().getDocNo();
 		if(poCoNumber != null){
 			worklistItemVO.setPocoNo(poCoNumber);
 		}		
