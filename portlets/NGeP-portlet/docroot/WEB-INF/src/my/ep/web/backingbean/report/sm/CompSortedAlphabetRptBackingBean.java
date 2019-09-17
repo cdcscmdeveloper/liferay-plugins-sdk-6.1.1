@@ -35,18 +35,29 @@ public class CompSortedAlphabetRptBackingBean extends
 				CommonConstants.DEFAULT_DATE_FORMAT);
 
 		retrieveReportValueFromDb();
-		params.put(SmReportConst.PARAM_DATE_FROM,
-				df.format(getManagedBean().getDateFrom()));
-		params.put(SmReportConst.PARAM_DATE_TO,
-				df.format(getManagedBean().getDateTo()));
-		if (getManagedBean().getDateExpFrom() != null) {
-			params.put(SmReportConst.PARAM_DATE_EXP_FROM,
-					df.format(getManagedBean().getDateExpFrom()));
+		
+		// #21331 - start
+		if (getManagedBean().getSearchDate().equalsIgnoreCase("mofRegisteredDate")) {
+			if (getManagedBean().getDateFrom() != null && getManagedBean().getDateTo() != null) {
+				checkOneYearDifferent(getManagedBean().getDateFrom(), getManagedBean().getDateTo());
+				params.put(SmReportConst.PARAM_DATE_FROM, df.format(getManagedBean().getDateFrom()));
+				params.put(SmReportConst.PARAM_DATE_TO, df.format(getManagedBean().getDateTo()));
+			}
+		} else if (getManagedBean().getSearchDate().equalsIgnoreCase("mofEndDate")) {
+			if (getManagedBean().getDateExpFrom() != null && getManagedBean().getDateExpTo() != null) {
+				checkOneYearDifferent(getManagedBean().getDateExpFrom(), getManagedBean().getDateExpTo());			
+			}
+			if (getManagedBean().getDateExpFrom() != null) {
+				params.put(SmReportConst.PARAM_DATE_EXP_FROM,
+						df.format(getManagedBean().getDateExpFrom()));
+			}
+			if (getManagedBean().getDateExpTo() != null) {
+				params.put(SmReportConst.PARAM_DATE_EXP_TO,
+						df.format(getManagedBean().getDateExpTo()));
+			}
 		}
-		if (getManagedBean().getDateExpTo() != null) {
-			params.put(SmReportConst.PARAM_DATE_EXP_TO,
-					df.format(getManagedBean().getDateExpTo()));
-		}
+		// #21331 - end
+		
 		params.put(SmReportConst.PARAM_ZONE,
 				getManagedBean().getZone() == null ? StringUtils.EMPTY
 						: getManagedBean().getZone());
@@ -78,6 +89,11 @@ public class CompSortedAlphabetRptBackingBean extends
 			getManagedBean().getSelectedOrgProfile().getSmSupplier()
 					.setCompanyName(StringUtils.EMPTY);
 		}
+		// #21331 - start
+		getManagedBean().setSearchDate(null);
+		getManagedBean().setDateExpFrom(null);
+		getManagedBean().setDateExpTo(null);
+		// #21331 - end
 	}
 
 }
