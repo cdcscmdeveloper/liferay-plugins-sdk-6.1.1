@@ -52,7 +52,15 @@
 					<h:outputText value="#{lbl['lbl.sc.spec.customer.name']}" />
 				</f:facet>
 				<h:outputText value="#{technongovt.clientName}"
-					rendered="#{technongovt.brandNew eq false}" />
+					rendered="#{technongovt.brandNew eq false and not technongovt.editable}" />
+			     <p:inputTextarea id="clientNameEdit" value="#{technongovt.clientName}"
+					style="width : 90%;" rows="3" cols="17" maxlength="50"
+					onkeyup="limitTextArea(this,50);" onkeydown="limitTextArea(this,50);" onmouseout="limitTextArea(this,50);"
+					required="true" label="#{lbl['lbl.sc.spec.customer.name']}"
+					rendered="#{technongovt.brandNew eq false and technongovt.editable}">
+					<p:ajax process="@this" partialSubmit="true"
+						update="@this,clientNameMsg" />
+				</p:inputTextarea>
 				<p:inputTextarea id="clientName" value="#{technongovt.clientName}"
 					style="width : 90%;" rows="3" cols="17" maxlength="50"
 					onkeyup="limitTextArea(this,50);" onkeydown="limitTextArea(this,50);" onmouseout="limitTextArea(this,50);"
@@ -72,7 +80,16 @@
 					<h:outputText value="#{lbl['lbl.sc.spec.contract.title']}" />
 				</f:facet>
 				<h:outputText value="#{technongovt.contractTitle}"
-					rendered="#{technongovt.brandNew eq false}" />
+					rendered="#{technongovt.brandNew eq false and not technongovt.editable}" />
+					<p:inputTextarea id="contractTitleEdit"
+					value="#{technongovt.contractTitle}" rows="3" cols="22"
+					style="width : 90%;" maxlength="1000" required="true"
+					onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);" onmouseout="limitTextArea(this,1000);"
+					label="#{lbl['lbl.sc.spec.contract.title']}"
+					rendered="#{technongovt.brandNew eq false and technongovt.editable}">
+					<p:ajax process="@this" partialSubmit="true"
+						update="@this,contractTitleMsg" />
+				</p:inputTextarea>
 				<p:inputTextarea id="contractTitle"
 					value="#{technongovt.contractTitle}" rows="3" cols="22"
 					style="width : 90%;" maxlength="1000" required="true"
@@ -93,8 +110,15 @@
 					<h:outputText value="#{lbl['lbl.sc.spec.loa.no']}" />
 				</f:facet>
 				<h:outputText value="#{technongovt.contractNo}"
-					rendered="#{technongovt.brandNew eq false}" />
-				<p:inputText id="contractNo" value="#{technongovt.contractNo}"
+					rendered="#{technongovt.brandNew eq false and not technongovt.editable}" />
+				<p:inputText  id="contractNoEdit"  value="#{technongovt.contractNo}"
+					style="width : 90%;" size="17" maxlength="30" required="true"
+					label="#{lbl['lbl.sc.spec.loa.no']}"
+					rendered="#{technongovt.brandNew eq false and technongovt.editable}">
+					<p:ajax process="@this" partialSubmit="true"
+						update="@this,contractNoMsg" />
+				</p:inputText>
+					<p:inputText id="contractNo" value="#{technongovt.contractNo}"
 					style="width : 90%;" size="17" maxlength="30" required="true"
 					label="#{lbl['lbl.sc.spec.loa.no']}"
 					rendered="#{technongovt.brandNew eq true}">
@@ -112,10 +136,22 @@
 					<h:outputText value="#{lbl['lbl.sc.effective.date']}" />
 				</f:facet>
 				<h:outputText value="#{technongovt.effectiveDate}"
-					rendered="#{technongovt.brandNew eq false}">
+					rendered="#{technongovt.brandNew eq false and not technongovt.editable}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
+				<p:calendar id="effectiveDateEdit" value="#{technongovt.effectiveDate}"
+					readonlyInput="true" showOn="button" navigator="true" size="7"
+					style="width : 76%;"
+					mindate="#{supplierProposalDetailBackingBean.managedBean.nonFedEffMinDate}"
+					maxdate="#{supplierProposalDetailBackingBean.managedBean.nonFedEffMaxDate}"
+					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" required="true"
+					label="#{lbl['lbl.sc.effective.date']}"
+					rendered="#{technongovt.brandNew eq false and technongovt.editable}">
+					<p:ajax event="dateSelect" process="@this" partialSubmit="true"
+						update="@this,effectiveDateMsg,@([id$=expDatePanelGroupID])"
+						listener="#{supplierProposalDetailBackingBean.effectiveDateSelectListener(technongovt)}" />
+				</p:calendar>
 				<p:calendar id="effectiveDate" value="#{technongovt.effectiveDate}"
 					readonlyInput="true" showOn="button" navigator="true" size="7"
 					style="width : 76%;"
@@ -140,10 +176,22 @@
 				</f:facet>
 				<h:panelGroup id="expDatePanelGroupID">
 					<h:outputText value="#{technongovt.expiryDate}"
-						rendered="#{technongovt.brandNew eq false}">
+						rendered="#{technongovt.brandNew eq false and not technongovt.editable}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
+						<p:calendar id="expiryDateEdit"  value="#{technongovt.expiryDate}"
+						readonlyInput="true" showOn="button" navigator="true" size="7"
+						style="width : 76%;"
+						mindate="#{supplierProposalDetailBackingBean.managedBean.nonFedMinDate}"
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" required="true"
+						label="#{lbl['lbl.sc.exp.date']}"
+						rendered="#{technongovt.brandNew eq false and technongovt.editable}">
+						<p:ajax event="dateSelect"
+							listener="#{supplierProposalDetailBackingBean.expiryDateSelectListener(technongovt)}"
+							update="@this,expiryDateMsg,@([id$=totalcontractyrs],[id$=contractPeriodPanelGropID])"
+							process="@this" partialSubmit="true" />
+					</p:calendar>
 					<p:calendar id="expiryDate" value="#{technongovt.expiryDate}"
 						readonlyInput="true" showOn="button" navigator="true" size="7"
 						style="width : 76%;"
@@ -176,14 +224,49 @@
 			<p:column style="width : 18%;white-space : normal;"
 				headerText="#{lbl['lbl.sc.remarks']}">
 				<h:outputText value="#{technongovt.remark}"
-					rendered="#{technongovt.brandNew eq false}" />
-				<p:inputTextarea value="#{technongovt.remark}" rows="3" cols="17"
+					rendered="#{technongovt.brandNew eq false and not technongovt.editable}" />
+				<p:inputTextarea id="remarkEdit" value="#{technongovt.remark}" rows="3" cols="17"
+					style="width : 96%;" maxlength="300"
+					onkeyup="limitTextArea(this,300);" onkeydown="limitTextArea(this,300);" onmouseout="limitTextArea(this,300);"
+					rendered="#{technongovt.brandNew eq false and technongovt.editable}">
+					<p:ajax process="@this" partialSubmit="true" update="@this" />
+				</p:inputTextarea>
+					
+				<p:inputTextarea id="remark"  value="#{technongovt.remark}" rows="3" cols="17"
 					style="width : 96%;" maxlength="300"
 					onkeyup="limitTextArea(this,300);" onkeydown="limitTextArea(this,300);" onmouseout="limitTextArea(this,300);"
 					rendered="#{technongovt.brandNew eq true}">
 					<p:ajax process="@this" partialSubmit="true" update="@this" />
 				</p:inputTextarea>
 			</p:column>
+			<c:if test="#{evaluationBackingBean.managedBean.currentStatusId ne QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL and 
+			              evaluationBackingBean.managedBean.currentStatusId ne QTStatusConst.EC_PENDING_ENDORSEMENT and
+			              evaluationBackingBean.managedBean.currentStatusId ne QTStatusConst.EC_PENDING_SIGN_OFF and  
+			              evaluationBackingBean.managedBean.currentStatusId ne QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL and 
+			              evaluationBackingBean.managedBean.currentStatusId ne QTStatusConst.TEC_PENDING_ENDORSEMENT and
+			              evaluationBackingBean.managedBean.currentStatusId ne QTStatusConst.TEC_PENDING_SIGN_OFF}">
+			  <p:column headerText="#{lbl['lbl.sc.action']}"
+				style="width:5%;white-space: normal;text-align: center;">
+			    
+			    <p:commandLink action="#{supplierProposalDetailBackingBean.editRowNonFederalGovtExperience(technongovt)}"
+		         partialSubmit="true" 
+		         process="@this" 
+		         rendered="#{technongovt.brandNew eq false and not technongovt.editable}"
+		         update="@([id$=technongovtid])" >
+			         <h:graphicImage
+							value="#{CommonUIConstant.imagePathUptoDesign}/edit.png"
+							styleClass="tasklist_title1" title="#{lbl['lbl.sc.qt.search.edit.tooltip']}" />
+							
+				 </p:commandLink>
+				 
+				 <p:commandButton value="#{lbl['lbl.btn.update']}" 
+				 partialSubmit="true" process="@this" styleClass="BtnSpacing"
+				 rendered="#{technongovt.brandNew eq false and technongovt.editable}" 
+				 action="#{supplierProposalDetailBackingBean.updateRowNonFederalGovtExperience(technongovt)}"
+				 update="@([id$=technongovtid])" >
+				</p:commandButton>
+			  </p:column>
+			</c:if>
 		</p:dataTable>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.add']}" partialSubmit="true"
