@@ -523,16 +523,22 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 
 			List<TplDocSection> docSectionList = new ArrayList<TplDocSection>();
 			getDocSectionList(1, getManagedBean().getDocSectionTN(), docSectionList);
+			//25142 - start
+			String html = null;
+			Document doc = null;
+			boolean valid = false;
 			for (int i = 0; i < docSectionList.size(); i++) {
 				TplDocSection sectionOrder = docSectionList.get(i);
 				sectionOrder.setSectionOrder(i);
-				//25142 - start
-				String html = sectionOrder.getSectionContent();
-				Document doc = Jsoup.parse(html);
-				boolean valid = Jsoup.isValid(html, Whitelist.relaxed());
+				
+				html = sectionOrder.getSectionContent();
+				html = html.replaceAll("<<", "&lt;&lt;");
+				html = html.replaceAll(">>", "&gt;&gt;");
+				doc = Jsoup.parse(html);
+				valid = Jsoup.isValid(html, Whitelist.relaxed());
 				if(!valid)
 				{
-					Document cleanDoc = new Cleaner(Whitelist.relaxed().addAttributes("table", "style","class","border=\"1\"")).clean(doc);
+					Document cleanDoc = new Cleaner(Whitelist.relaxed()).clean(doc);
 					doc = cleanDoc;
 				}
 				
