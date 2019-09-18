@@ -2688,8 +2688,7 @@ public class SmApplicationBackingBean extends
 			}
 		}else{
 			//Just in case
-			FacesContext facesContext = FacesContext.getCurrentInstance();
-			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, "Reject reason in mandatory."));		
+			throw new EpException("Rejection reason is mandatory."); //21937		
 		}
 
 		if (getManagedBean().getSmAppl().getSmApplRejectReasons() != null
