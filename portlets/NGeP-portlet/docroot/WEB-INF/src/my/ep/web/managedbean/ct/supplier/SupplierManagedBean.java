@@ -23,6 +23,7 @@ import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.factoring.CtFactoring;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -64,6 +65,7 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private Map<Long, PmUser> userMap;
 	private Map<Long, String> factoringCompMap;
 	private Map<String, SmSupplierBank> supplierBankAccountMap;
+	private Map<String,PmFinancialAcc> financialAccMap;/*#25139*/
 	private SelectItem[] listOfFinancialOrg;
 	private SelectItem[] populateBankAccountList;
 	private CtContract selectedContract;
@@ -415,6 +417,24 @@ public class SupplierManagedBean extends BaseManagedBean {
 		this.supplierBankAccountMap = supplierBankAccountMap;
 	}
 
+	/*#25139-basri*/
+	/**
+	 * @return the financialAccMap
+	 */
+	public Map<String, PmFinancialAcc> getFinancialAccMap() {
+		if (financialAccMap == null) {
+			financialAccMap = new HashMap<String, PmFinancialAcc>();
+		}
+		return financialAccMap;
+	}
+
+	/**
+	 * @param financialAccMap the financialAccMap to set
+	 */
+	public void setFinancialAccMap(Map<String, PmFinancialAcc> financialAccMap) {
+		this.financialAccMap = financialAccMap;
+	}
+	/*#25139-end*/
 	/**
 	 * @return the listOfFinancialOrg
 	 */
