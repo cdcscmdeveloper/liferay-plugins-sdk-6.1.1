@@ -53,11 +53,13 @@
 								<ui:param name="isCancel" value="#{bpmAction == 'CANCEL'}" />
 								<ui:param name="isCancelNReject" value="#{isReject || isCancel}" />
 
+								<!-- 20190405@asyrafhaziq - CR(25062)- Start -->
+								<!-- changes the calling action   -->
 								<p:commandButton value="#{lbl[buttonLabel]}"
 									styleClass="ui-button" onstart="blockWidget.show();"
 									rendered="#{!isPendingVerification}"
 									oncomplete="blockWidget.hide();"
-									action="#{directLOABackingBean.updateBpmTaskAction(bpmAction)}"
+									action="#{directLOABackingBean.approveBeforeupdateBpmTaskAction(bpmAction)}"
 									partialSubmit="true" process="#{isCancelNReject ? '@this' : '@form'}"
 									update="#{isCancelNReject ? '@this' : '@form'}" />
 
@@ -66,10 +68,10 @@
 									rendered="#{isPendingVerification}"
 									oncomplete="blockWidget.hide();"
 									disabled="#{directLOABackingBean.managedBean.verifyBtnFlag}"
-									action="#{directLOABackingBean.updateBpmTaskAction(bpmAction)}"
+									action="#{directLOABackingBean.approveBeforeupdateBpmTaskAction(bpmAction)}"
 									partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
 									update="#{isReject ? '@this' : '@form'}" />
-
+								<!-- 20190405@asyrafhaziq - CR(25062)- End -->
 							</ui:repeat>
 						</c:when>
 					</c:choose>
