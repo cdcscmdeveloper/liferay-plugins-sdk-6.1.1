@@ -234,8 +234,18 @@
 
                    <p:outputLabel value="#{lbl['lbl.ct.bank.account.name']}" />
 				   <h:panelGrid columns="3">
-					   <p:inputText id="bankName" style="width:320px;"
-						value="#{supplierBackingBean.managedBean.accBankName}" disabled="true" />
+					    
+						<p:selectOneMenu id="bankName"  style="width:320px;"
+								value="#{supplierBackingBean.managedBean.accBankName}" required="true"
+								rendered="#{!supplierBackingBean.managedBean.removeFactoring and !supplierBackingBean.managedBean.viewOnly
+								and !supplierBackingBean.isContractAdmin() and !supplierBackingBean.isApproverRole()}">
+								<f:selectItems value="#{supplierBackingBean.managedBean.populateBankAccountList}"/>
+								<p:ajax event="change" process="@this" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								listener="#{supplierBackingBean.selectFinancialAcc}" />
+						</p:selectOneMenu>
+						<p:inputText style="width:320px;" rendered="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.managedBean.viewOnly
+								or supplierBackingBean.isContractAdmin() or supplierBackingBean.isApproverRole()}"
+							value="#{supplierBackingBean.managedBean.accBankName}" disabled="true" />
 					    <p:spacer width="1" />
 					    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.factoring.bank.name']}" />
 				   </h:panelGrid>			
