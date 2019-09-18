@@ -336,7 +336,8 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 					if(resDTO.getFlFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_APPROVAL)
 					 		   || resDTO.getFlFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_REVISION)
 							   || resDTO.getFlFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
-							   || resDTO.getFlFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)){
+							   || resDTO.getFlFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)
+							   || resDTO.getFlFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)){
 						if(ExpDate.before(today)){
 							resDTO.getFlFulfilmentRequest().getStatus().setStatusId(DPStatusConstants.PID_EXPIRED);
 						}  
@@ -1380,7 +1381,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	    Boolean sqExpired = false;
 	       
 	    if(docType.equals("PR")){
-	    	if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)
+	    	if(  )
 	    	   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL)
 	 		   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION)
 			   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
