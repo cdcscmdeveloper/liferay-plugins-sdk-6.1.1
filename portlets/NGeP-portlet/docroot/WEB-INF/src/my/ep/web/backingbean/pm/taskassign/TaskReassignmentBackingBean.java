@@ -565,6 +565,15 @@ public class TaskReassignmentBackingBean extends
 		log.info("Searching reassignees..");
 		
 		List<PmUser> users = new ArrayList<PmUser>();
+		PmUser user = new PmUser();
+		Long profileId = getManagedBean().getTaskAssignmentSearchBean().getOrgProfile() != null ?
+				getManagedBean().getTaskAssignmentSearchBean().getOrgProfile().getOrgProfileId() :
+					getManagedBean().getCurrentActiveOrg().getOrgProfileId();
+		Integer activeRecordStatusFlg = new Integer(1);
+		boolean orgMember = false;
+		
+		List <PmUser> userOrgList = PmCommonUtil.retrieveUserListByOrgProfileId(profileId);
+		
 		BpmResponseDTO bpmResDTO = null;
 		
 		BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
@@ -580,41 +589,29 @@ public class TaskReassignmentBackingBean extends
 				throw new EpException(MessageConst.ERROR_770100);
 			}
 			
-			PmUser user = new PmUser();
-			PmTaskReassignmentVO taskDetail = new PmTaskReassignmentVO();
-			
 			if (bpmResDTO.getWorklistVO() != null) {
-				Long profileId = getManagedBean().getTaskAssignmentSearchBean().getOrgProfile() != null ?
-						getManagedBean().getTaskAssignmentSearchBean().getOrgProfile().getOrgProfileId() :
-							getManagedBean().getCurrentActiveOrg().getOrgProfileId();
-				Integer activeRecordStatusFlg = new Integer(1);
-				Long taskDetailOrgProfileId = 0L;
-				Long pmOrgProfileId = 0L;
-				
 				for (WorklistItemVO task : bpmResDTO.getWorklistVO().getWorklistItem()) {
 					for (String loginId : task.getAssignees()) {
 						user = PmCommonUtil.retrieveUserByLoginId(loginId);
-						taskDetail = retrieveSourcingTaskReassignmentDetail(task);
 						
 						// Ensures only users within the selected Organization will be listed
-						List<PmUserOrg> userOrgList = PmCommonUtil
-								.retrieveActiveOrgWithoutRole(user.getUserId(), false);
-						for (PmUserOrg userOrg : userOrgList) {
-							pmOrgProfileId = userOrg.getPmOrgProfile().getOrgProfileId();
-						}
-				
-						if (taskDetail != null) {
-							taskDetailOrgProfileId = taskDetail.getOrgProfileId() != null ? 
-											  taskDetail.getOrgProfileId() : profileId;
-							if ( ((user.getRecordStatusFlg().equals(activeRecordStatusFlg)) && 
-									(user.getRecordStatusFlg().equals(this.getManagedBean().getTaskAssignmentSearchBean()
-									.getOrgProfile().getRecordStatusFlg()))) &&
-									(pmOrgProfileId.equals(profileId)) ) {
-								users.add(user);
+						if (userOrgList != null && userOrgList.size() > 0) {
+							for (PmUser orgList : userOrgList) {
+								if (orgList.getLoginId().equals(user.getLoginId())) {
+									orgMember = true;
+									log.info(user.getLoginId()+" is a member of "+profileId);
+									break;
+								}
 							}
 						}
+						
+						if ( ((user.getRecordStatusFlg().equals(activeRecordStatusFlg)) && 
+								(user.getRecordStatusFlg().equals(this.getManagedBean().getTaskAssignmentSearchBean()
+								.getOrgProfile().getRecordStatusFlg()))) && orgMember ) {
+							users.add(user);
+						}
 						log.info("USER.INFO= ["+user.getLoginId()+" "+user.getUserName()+"] "+
-								pmOrgProfileId+" : "+profileId+" : "+taskDetailOrgProfileId+" : "+
+								profileId+" : "+orgMember+" : "+
 								user.getRecordStatusFlg()+" : "+
 								this.getManagedBean().getTaskAssignmentSearchBean().getOrgProfile().getRecordStatusFlg());
 					}
@@ -861,7 +858,7 @@ public class TaskReassignmentBackingBean extends
 		}
 		
 		if (this.getManagedBean().getReassigneeList().isEmpty()) {
-			throw new EpException(MessageConst.ERROR_770207);
+			throw new EpException(MessageConst.ERROR_770208);
 		} else {
 			if (this.getManagedBean().getTaskAssignmentSearchBean().getUser() != null) {
 				this.getManagedBean().setResultUser(this.getManagedBean().getTaskAssignmentSearchBean().getUser());
