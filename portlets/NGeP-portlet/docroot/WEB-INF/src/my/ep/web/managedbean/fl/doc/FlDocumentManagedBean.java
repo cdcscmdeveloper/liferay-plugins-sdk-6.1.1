@@ -22,14 +22,12 @@ import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.order.IReliefOrderSO;
-import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
-import my.ep.constant.sc.DPStatusConstants;
 import my.ep.dto.fl.FlDocumentReqDTO;
 import my.ep.dto.fl.FlDocumentResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
@@ -37,7 +35,9 @@ import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.fl.VFlDocument;
+import my.ep.persistence.entity.fl.order.FlReliefOrder;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -49,7 +49,6 @@ import my.ep.type.pm.RoleCode;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -156,12 +155,8 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 			super("flDocListDt",false);
 		}
 		
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep
-		 * .biz.bean.search.ISearchBean)
+		/* (non-Javadoc)
+		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
 		 */
 		@Override
 		public ISearchResultBean<VFlDocument> pageChangeListener(ISearchBean<VFlDocument> searchBean) {
@@ -169,8 +164,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				log.debug("pageChangeListener");
 			}
 			try {
-				//#21150 - Document type become mandatory 
-				if(null == getSearchOrderType() || null ==getSearchDocType()){ 
+				if(null == getSearchOrderType()){ 
 					throw new EpException(MessageConst.ERROR_740023);
 				}else if((null ==getSearchDocType() &&  "".equalsIgnoreCase(getSearchOrderNo()) && "".equalsIgnoreCase(getSearchDocNo()))){
 					throw new EpException(MessageConst.ERROR_740023);
@@ -280,36 +274,8 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 						if(resDTO.getResultBean().getTotalRecord() >0){
 							filterSearchResults(resDTO.getResultBean().getResultList());
 						}
-						
-						//start search fulfilmenrequest based on doctype is PR
-						IFulfilmentRequestSO flRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
-						for (VFlDocument docsearchResult : resDTO.getResultBean().getResultList()) {
-						 if(docsearchResult.getDocType().equals("PR")){
-							
-							 FulfilmentReqDTO ffReqDTO = new FulfilmentReqDTO();
-							 FulfilmentResDTO ffResDTO = new FulfilmentResDTO();
-							 ffReqDTO.setFlDocNo(docsearchResult.getDocNo());
-							 ffResDTO= flRequestSO.retrieveFulfilmentRequestByDocNo(ffReqDTO);
-							 
-							 if(ffResDTO.getFlFulfilmentRequest().getScPurchaseInDefault()!=null){
-								 	Date today  = DateUtils.getCurrentDateWithoutTime();
-									Date ExpDate = DateUtils.addDays(ffResDTO.getFlFulfilmentRequest().getScPurchaseInDefault().getCreatedDate(), ffResDTO.getFlFulfilmentRequest().getScPurchaseInDefault().getPidValidDays());
-									log.info("pID validity begin");
-									if(docsearchResult.getStatusId().equals(FulfilmentStatusConst.PR_PENDING_APPROVAL)
-									 		   || docsearchResult.getStatusId().equals(FulfilmentStatusConst.PR_PENDING_REVISION)
-											   || docsearchResult.getStatusId().equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
-											   || docsearchResult.getStatusId().equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)){
-										if(ExpDate.before(today)){
-												docsearchResult.setStatusId(DPStatusConstants.PID_EXPIRED);
-										}  
-									}
-									log.info("pID validity end");
-							 }
-						 }
-						}
-					
 					}
-  					return resDTO.getResultBean();
+					return resDTO.getResultBean();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -317,7 +283,6 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 			return null;
 		}
 	}
-
 	
 	/**
 	 * Filter search results based on user id and doc type.
@@ -334,12 +299,6 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 		for(VFlDocument docsearchResult:searchResultList){
 			if(isTrackingDiarySearch()) {
 				docsearchResult.setViewAction(true);
-				FLOrderInfo orderInfo=null;
-				orderInfo=getStatusInfo(docsearchResult.getDocId(),docsearchResult.getDocType());
-				if(orderInfo.isCoGSTR()){
-					docsearchResult.setCoGSTR(orderInfo.isCoGSTR);
-					docsearchResult.setCoGSTRNo(orderInfo.getCoGSTRNo());
-				}
 				continue;
 			}
 				docsearchResult.setUpdateAction(false);
@@ -535,7 +494,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 		        	if(null != resDTO.getFlOrder().getStatus()){
 		        		if(null !=resDTO.getFlOrder().getStatus().getStatusId()){
 		        			orderInfo.setOrderStatusId(resDTO.getFlOrder().getStatus().getStatusId());
-		        			if(isFlFulfilmentApprover() && getSearchFunctionType().equalsIgnoreCase(ParameterConst.ORG_TYPE_PTJ)){
+		        			if(isFlFulfilmentApprover()){
 		        				orderInfo.setRole(RoleCode.FL_APPROVER.value());
 		        			}else if(isFlFulfilmentSupplier()){
 		        				orderInfo.setRole(RoleCode.BASIC_SUPPLIER_USER.value());
@@ -550,7 +509,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 		        	reqDTO.setFulfilmentOrderId(resDTO.getFlOrder().getFulfilmentOrderId());
 		        	resDTO = reliefOrderSO.retrieveReliefOrderByOrderId(reqDTO);
 		        	if(resDTO.getReliefOrder() != null){
-		        		if(isFlFulfilmentApprover() || isFlFulfilmentSupplier() || isAcknowledgeOfficer() || isAuditor()) {
+		        		if(isFlFulfilmentApprover() || isFlFulfilmentSupplier() || isAcknowledgeOfficer()) {
 		        			orderInfo.setCoGSTR(true);
 		        			orderInfo.setCoGSTRNo(resDTO.getReliefOrder().getReliefOrderNo());
 		        		}
