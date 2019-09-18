@@ -1516,6 +1516,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private int checkListYesIndex;
 	private boolean technicalOtherChecklistSubmit;
 	private boolean financialOtherChecklistSubmit;
+	private boolean isPanelZone;
 
 	private List<ScQtSchedule> toBeRemoveSchedules;
 	private List<ScQtProgressivePayment> toBeRemoveProgPayments;
@@ -9844,8 +9845,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setBsvDBStateId(Long bsvDBStateId) {
 		this.bsvDBStateId = bsvDBStateId;
 	}
+	
+	/*basri 19637*/
+	public boolean isPanelZone() {
+		return isPanelZone;
+	}
 
-	
-	
+	public void setPanelZone(boolean isPanelZone) {
+		this.isPanelZone = isPanelZone;
+	}	
 
 }
