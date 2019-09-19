@@ -10326,6 +10326,12 @@
 				<short-title>First Time Message</short-title>
 				<keywords></keywords>
 			</portlet-info>
+			<portlet-preferences>                           
+				<preference>
+	                <name>portlet-setup-show-borders</name>
+	                <value>false</value>
+	            </preference>
+            </portlet-preferences>			
 			<security-role-ref>
 				<role-name>administrator</role-name>
 			</security-role-ref>

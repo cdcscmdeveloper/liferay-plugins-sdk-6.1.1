@@ -3249,6 +3249,7 @@
 	<portlet>
 		<portlet-name>FirstTimeMessage</portlet-name>
 		<icon>/icon.png</icon>
+		<use-default-template>false</use-default-template>
 		<requires-namespaced-parameters>false</requires-namespaced-parameters>
 		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
 		<footer-portlet-javascript>
