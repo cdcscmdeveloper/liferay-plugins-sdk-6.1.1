@@ -113,6 +113,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	}
 	
 	public String currentStatusAndPath(){
+		log.info("Here Enter Funtion currentStatusAndPath ===>");
 		SmSupplier userSupplier = getSupplierProfileByUserId();
 		String path = null;
 		String desc = null;
