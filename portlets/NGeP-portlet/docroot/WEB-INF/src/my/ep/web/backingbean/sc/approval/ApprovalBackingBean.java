@@ -78,7 +78,6 @@ import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
-import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -86,7 +85,6 @@ import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.QTDocumentsBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
-import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.UserTasks;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
@@ -922,9 +920,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				action = BpmOutcomeConst.BPM_APPROVE;
 //				showDialog = "gpki_dlg.show()";
 //				isGpkiPopup = true;
-				FacesContext fc = FacesContext.getCurrentInstance();
-				fc.getApplication().getNavigationHandler()
-						.handleNavigation(fc, null, gpkiSignAction(null));
+				gpkiSignAction(null);
 			} else if (isRejected) {
 				action = BpmOutcomeConst.BPM_REJECT;
 				showDialog = "rejectApprovalDlg.show()";
@@ -969,9 +965,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				
 				if(SCProcessNameConst.APPROVE_CANCELATION.equalsIgnoreCase(taskName) || 
 						SCProcessNameConst.FC_APPROVE_QT_CHANGE.equalsIgnoreCase(taskName)) {
-					FacesContext fc = FacesContext.getCurrentInstance();
-					fc.getApplication().getNavigationHandler()
-							.handleNavigation(fc, null, gpkiSignAction(null));
+					gpkiSignAction(null);
 				} else {
 					showDialog = "gpki_dlg.show()";
 					isGpkiPopup = true;
@@ -996,7 +990,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 *            (Mandatory)
 	 * @return the string(ACKNOWLEDGE_PAGE)
 	 */
-	public String gpkiSignAction(PmDigiSign digiSign) {
+	public void gpkiSignAction(PmDigiSign digiSign) {
 		QuationTenderResDTO tenderResDTO = updateBpmTask(this.getManagedBean()
 				.getAction(), digiSign);
 		if (tenderResDTO.isSuccessful()) {
@@ -1004,48 +998,16 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (ParameterConst.APPROVAL_REQUEST_PUBLICATION_APPROVAL.equalsIgnoreCase(this
 					.getManagedBean().getApprovalType())) {
 				log.info("Publication Approval executed");
-				FacesContext
-				.getCurrentInstance()
-				.addMessage(
-						null,
-						new FacesMessage(
-								FacesMessage.SEVERITY_INFO,
-								null,
-								MessageUtils
-										.getMessage(
-												MessageConst.INFO_700069,
-												new String[] {
-														getMessageCommon("lbl.sc.qt.public.approval.approve.message"),
-														qt.getQtNo() },
-												MessageUtils.BUNDLE_COMMON_MESSAGES,
-												new FacesScopes()
-														.getUserLocale())));
+				successMessage(MessageConst.INFO_700069, getMessageCommon("lbl.sc.qt.public.approval.approve.message"),
+						qt.getQtNo(), Boolean.TRUE);
+
 			}else{
 				log.info("Other Approval executed");
-			FacesContext
-					.getCurrentInstance()
-					.addMessage(
-							null,
-							new FacesMessage(
-									FacesMessage.SEVERITY_INFO,
-									null,
-									MessageUtils
-											.getMessage(
-													getMessgeConstant(this
-															.getManagedBean()
-															.getAction()),
-													new String[] {
-															getParameterDesc(
-																	ParameterTypeConst.DOCUMENT_TYPES,
-																	ParameterConst.DOCTYPE_QUOTATION),
-															qt.getQtNo() },
-													MessageUtils.BUNDLE_COMMON_MESSAGES,
-													new FacesScopes()
-															.getUserLocale())));
+				successMessage(getMessgeConstant(this.getManagedBean().getAction()),
+						getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION),
+						qt.getQtNo(), Boolean.TRUE);
 			}
-			return CommonUIConst.ACKNOWLEDGE_PAGE;
 		}
-		return null;
 	}
 
 	/**
@@ -1315,34 +1277,16 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * 
 	 * @return the string
 	 */
-	public String updateReviceBpmTask() {
+	public void updateReviceBpmTask() {
 		QuationTenderResDTO tenderResDTO = updateBpmTask(this.getManagedBean()
 				.getAction(), null);
 		if (tenderResDTO.isSuccessful()) {
 			ScQt qt = tenderResDTO.getQtDetail();
-			FacesContext
-					.getCurrentInstance()
-					.addMessage(
-							null,
-							new FacesMessage(
-									FacesMessage.SEVERITY_INFO,
-									null,
-									MessageUtils
-											.getMessage(
-													getMessgeConstant(this
-															.getManagedBean()
-															.getAction()),
-													new String[] {
-															getParameterDesc(
-																	ParameterTypeConst.DOCUMENT_TYPES,
-																	ParameterConst.DOCTYPE_QUOTATION),
-															qt.getQtNo() },
-													MessageUtils.BUNDLE_COMMON_MESSAGES,
-													new FacesScopes()
-															.getUserLocale())));
-			return CommonUIConst.ACKNOWLEDGE_PAGE;
+
+			successMessage(getMessgeConstant(this.getManagedBean().getAction()),
+					getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION),
+					qt.getQtNo(), Boolean.TRUE);
 		}
-		return null;
 	}
 	
 	/**
@@ -1350,34 +1294,16 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * 
 	 * @return the string
 	 */
-	public String updateRejectBpmTask() {
+	public void updateRejectBpmTask() {
 		QuationTenderResDTO tenderResDTO = updateBpmTask(this.getManagedBean()
 				.getAction(), null);
 		if (tenderResDTO.isSuccessful()) {
 			ScQt qt = tenderResDTO.getQtDetail();
-			FacesContext
-					.getCurrentInstance()
-					.addMessage(
-							null,
-							new FacesMessage(
-									FacesMessage.SEVERITY_INFO,
-									null,
-									MessageUtils
-											.getMessage(
-													getMessgeConstant(this
-															.getManagedBean()
-															.getAction()),
-													new String[] {
-															getParameterDesc(
-																	ParameterTypeConst.DOCUMENT_TYPES,
-																	ParameterConst.DOCTYPE_QUOTATION),
-															qt.getQtNo() },
-													MessageUtils.BUNDLE_COMMON_MESSAGES,
-													new FacesScopes()
-															.getUserLocale())));
-			return CommonUIConst.ACKNOWLEDGE_PAGE;
+
+			successMessage(getMessgeConstant(this.getManagedBean().getAction()),
+					getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION),
+					qt.getQtNo(), Boolean.TRUE);
 		}
-		return null;
 	}
 
 	/**
