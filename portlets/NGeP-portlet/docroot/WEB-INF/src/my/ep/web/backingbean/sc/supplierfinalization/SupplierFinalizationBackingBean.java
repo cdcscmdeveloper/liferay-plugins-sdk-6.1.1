@@ -1755,11 +1755,16 @@ public class SupplierFinalizationBackingBean extends
 	 * @param outcome
 	 *            the task to be performed by BPM
 	 */
-	public void submitSuppFinalization() {
+	public void submitSuppFinalization(String... revise) {
 		log.info("submitSuppFinalization");
 		String outcome = this.getManagedBean().getOutcome();
 		this.getManagedBean().setAction(outcome);
-		
+
+		//25638 - Start
+		if (revise.length == 0 && BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
+			RequestContext.getCurrentInstance().execute("reviseSuppFinalizationDlgs.show()");
+		} else {
+		//25638 - End
 		ScQtFinalization scQtFinalization = this.getManagedBean().getScQtFinalization();
 		List<ScQtFinalizationReport> finalizationReports = new ArrayList<ScQtFinalizationReport>();
 		finalizationReports.addAll(this.getManagedBean().getDocumentList());
@@ -1773,6 +1778,7 @@ public class SupplierFinalizationBackingBean extends
 		}
 
 		SuppFinalizationReqDTO reqDTO = preSubmitValidation();
+
 		if (QTStatusConst.SF_PENDING_SIGN_OFF.equals(currentStatusId)) {
 			if (CollectionUtils.isNotEmpty(
 					this.getManagedBean().getCommitteeList())) {
@@ -1806,7 +1812,7 @@ public class SupplierFinalizationBackingBean extends
 					throw new EpException(MessageConst.ERROR_760265);
 				}
 			}
-			
+
 			String committeeType = getManagedBean().getCommitteeType();
 			CommitteResDTO committeeResDTO = getCommitteMemberByUserId();
 			ScCommitteeMember committeeMember = committeeResDTO.getCommMember();
@@ -1823,8 +1829,11 @@ public class SupplierFinalizationBackingBean extends
 			signOff();
 			updateBPMTask(outcome, null, reqDTO);
 		}
+		//25638 - Start
+		}
+		//25638 - End
 	}
-	
+
 	/**
 	 *  If the LoogedIn user is Secretary, then show pop-up confirmation during the Supplier Finalization submission.
 	 */
@@ -1839,7 +1848,11 @@ public class SupplierFinalizationBackingBean extends
 			this.submitSuppFinalization();
 		}
 	}
-	
+
+	public void reviseSuppFinalization() {
+		updateBPMTask(this.getManagedBean().getOutcome(), null, null);
+	}
+
 	/**
 	 * Method to navigate back to previous page
 	 * 
@@ -2138,14 +2151,10 @@ public class SupplierFinalizationBackingBean extends
 				} else {
 					msgCode = getMessgeConstant(outcome);
 				}
-				commonMessageAcknowledmentPage(msgCode,
-						ResourceBundleUtils.getMessage(
-								"lbl.sc.sf.supplier.finalization", 
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale()), 
-						getManagedBean().getScQt().getQtNo());
+				successMessage(msgCode, getMessageCommon("lbl.sc.sf.supplier.finalization"), getManagedBean().getScQt()
+						.getQtNo(), Boolean.TRUE);
+				super.renewSesionObject();
 			}
-
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
@@ -3657,23 +3666,6 @@ public class SupplierFinalizationBackingBean extends
 				}
 			}
 		}
-	}
-
-	private void commonMessageAcknowledmentPage(String messageId,
-			String variable1, String variable2) {
-		log.info("commonMessageAcknowledmentPage");
-		FacesContext.getCurrentInstance().addMessage(
-				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-						.getMessage(messageId, new String[] { variable1,
-								variable2 },
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								getFacesScopes().getUserLocale())));
-		// clear data
-		super.renewSesionObject();
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 	}
 
 	/**
