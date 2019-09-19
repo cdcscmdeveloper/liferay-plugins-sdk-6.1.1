@@ -1655,9 +1655,12 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	public void retrievePoCoNoForCreateFRN(WorklistItemVO worklistItemVO,String taskId) {
 		IDeliveryOrderSO deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		
 		//#24968-start-bazlin
 		reqDTO.setDeliveryOrderId(worklistItemVO.getDocId());
-		String poCoNumber = deliveryOrderSO.retrievePocoDOById(reqDTO);
+		resDTO = deliveryOrderSO.retrievePocoDOById(reqDTO);
+		String poCoNumber = resDTO.getDocNo();
 		//#24968-end-bazlin
 		
 		if(poCoNumber != null){
@@ -1669,9 +1672,12 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		
 		IDeliveryOrderSO deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		
 		//#24968-start-bazlin
 		reqDTO.setDeliveryOrderId(worklistItemVO.getDocId());
-		String poCoNumber = deliveryOrderSO.retrievePocoDOById(reqDTO);
+		resDTO = deliveryOrderSO.retrievePocoDOById(reqDTO);
+		String poCoNumber = resDTO.getDocNo();		
 		//#24968-end-bazlin
 		
 		if(poCoNumber != null){
@@ -1683,9 +1689,12 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		
 		IDeliveryOrderSO deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		
 		//#24968-start-bazlin
 		reqDTO.setDeliveryOrderId(worklistItemVO.getDocId());
-		String poCoNumber = deliveryOrderSO.retrievePocoDOById(reqDTO);
+		resDTO = deliveryOrderSO.retrievePocoDOById(reqDTO);
+		String poCoNumber = resDTO.getDocNo();	
 		//#24968-end-bazlin
 		
 		if(poCoNumber != null){
@@ -1697,9 +1706,12 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		
 		IReceivedNoteSO receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		
 		//#24968-start-bazlin
 		reqDTO.setFulfilmentNoteId(worklistItemVO.getDocId());
-		String poCoNumber = receivedNoteSO.retrievePocoRNById(reqDTO);
+		resDTO = receivedNoteSO.retrievePocoRNById(reqDTO);
+		String poCoNumber = resDTO.getDocNo();	
 		//#24968-end-bazlin
 
 		if(poCoNumber != null){
@@ -1711,11 +1723,13 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		
 		IAdjustmentSO adjustmentSO = (IAdjustmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IAdjustmentSO.class);
 		FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		
 		//#24968-start-bazlin
 		flReqDTO.setDanId(worklistItemVO.getDocId());
-		String poCoNumber = adjustmentSO.retrievePoCoAdjNoById(flReqDTO);
+		resDTO = adjustmentSO.retrievePoCoAdjNoById(flReqDTO);
+		String poCoNumber = resDTO.getDocNo();	
 		//#24968-end-bazlin
-		
 		
 		if(poCoNumber != null){
 			worklistItemVO.setPocoNo(poCoNumber);
@@ -1726,9 +1740,12 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		
 		IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 		FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		
 		//#24968-start-bazlin
 		flReqDTO.setDocId(Long.valueOf(worklistItemVO.getDocId()));
-		String poCoNumber = orderSO.retrievePoCoStopInstruction(flReqDTO);
+		resDTO = orderSO.retrievePoCoStopInstruction(flReqDTO);
+		String poCoNumber = resDTO.getDocNo();
 		//#24968-end-bazlin
 		
 		
@@ -1741,9 +1758,12 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		
 		IReceivedNoteSO receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		
 		//#24968-start-bazlin
 		reqDTO.setDeliveryOrderId(worklistItemVO.getDocId());
-		String poCoNumber = receivedNoteSO.retrievePocoRNByDOId(reqDTO);
+		resDTO = receivedNoteSO.retrievePocoRNByDOId(reqDTO);
+		String poCoNumber = resDTO.getDocNo();
 		//#24968-end-bazlin
 		
 		if(poCoNumber != null){
@@ -1754,9 +1774,12 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	public void retrievePoCoNoForAckModifiedInvoice(WorklistItemVO worklistItemVO,String taskId) {
 		IInvoiceSO invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		
 		//#24968-start-bazlin
 		reqDTO.setInvoiceId(Long.valueOf(worklistItemVO.getDocId()));
-		String poCoNumber = invoiceSO.retrievePocoInvoiceByInvoiceId(reqDTO);
+		resDTO = invoiceSO.retrievePocoInvoiceByInvoiceId(reqDTO);
+		String poCoNumber = resDTO.getDocNo();
 		//#24968-end-bazlin
 		
 		if(poCoNumber != null){
@@ -1767,9 +1790,12 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	public void retrievePoCoNoForCancelInvoice(WorklistItemVO worklistItemVO,String taskId) {		
 		IInvoiceSO invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		
 		//#24968-start-bazlin
 		reqDTO.setInvoiceId(Long.valueOf(worklistItemVO.getDocId()));
-		String poCoNumber = invoiceSO.retrievePocoInvoiceByInvoiceId(reqDTO);
+		resDTO = invoiceSO.retrievePocoInvoiceByInvoiceId(reqDTO);
+		String poCoNumber = resDTO.getDocNo();
 		//#24968-end-bazlin
 		
 		if(poCoNumber != null){
