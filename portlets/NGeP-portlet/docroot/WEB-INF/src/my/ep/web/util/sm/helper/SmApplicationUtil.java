@@ -456,8 +456,9 @@ public class SmApplicationUtil {
 		if (applTypes.contains(applType)) {
 			//Enhancement #11765
 			sortSupplierCategory(catList);
-			for (SmSupplierCategory cat : catList) {
-				if (cat.getPoDecFlg() == null) {
+			for (SmSupplierCategory cat : catList) 
+				// //Bug #25676 : SM Showstopper - No Categories Appear in Processing Officer Screen{
+				if (cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE && cat.getPoDecFlg() == null) {
 					//Enhancement #11765
 					invalidCatCodes.add(cat.getPmCategoryL1().getCategoryL1Code()+cat.getPmCategoryL2().getCategoryL2Code()+cat.getPmCategoryL3().getCategoryL3Code());
 				}
@@ -12786,6 +12787,19 @@ public class SmApplicationUtil {
 					.retrieveSmApplicationDetailsById(reqDTO).getSmAppl();
 		}
 		return smAppl;
+	}
+	private void sortCreatedDateAsc(List<SmWorkflowStatus> wfStatusList) {
+		//Bug #25676 : SM Showstopper - No Categories Appear in Processing Officer Screen
+		if(!EntityHelper.isCollectionEmpty(wfStatusList)){
+			// sort created date asc
+			Collections.sort(wfStatusList, new Comparator<SmWorkflowStatus>() {
+				public int compare(SmWorkflowStatus o1, SmWorkflowStatus o2) {
+					if (o2.getCreatedDate() == null || o1.getCreatedDate() == null)
+						return 0;
+					return o1.getCreatedDate().compareTo(o2.getCreatedDate());
+				}
+			});
+		}
 	}
 
 }
