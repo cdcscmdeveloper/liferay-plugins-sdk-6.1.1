@@ -501,6 +501,12 @@ public class SmSideMenuIconUtil {
 								isAllCatcodeVerified = false;
 							}
 						}
+						//Bug #25676 : SM Showstopper - No Categories Appear in Processing Officer Screen
+						//to check, if data not exist no need to auto check
+						if(bean.isPoUser() && isAllCatcodeVerified &&(bean.getActiveCategoryList()==null || bean.getActiveCategoryList().size()<=0) ){
+							isAllCatcodeVerified = false;
+						}
+						
 						if (isAllCatcodeVerified) {
 							retVal = ICON_TICK;
 						}
