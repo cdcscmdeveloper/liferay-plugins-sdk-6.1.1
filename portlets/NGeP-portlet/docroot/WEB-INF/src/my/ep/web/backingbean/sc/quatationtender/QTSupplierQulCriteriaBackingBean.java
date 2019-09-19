@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import my.ep.helper.EntityHelper;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -306,6 +307,18 @@ public class QTSupplierQulCriteriaBackingBean extends
 				pmCategoryL3.getCategoryName());
 		
 		qtCategoryList.add(category);
+		
+		// 20190709@hatta - 22240 - Start
+		this.getManagedBean().getQt().setOpenFor(ParameterConst.OPEN_FOR_ALL);
+		if (!EntityHelper.isCollectionEmpty(this.getManagedBean().getQtCategoryList())) {
+			for(ScQtCategory cat: this.getManagedBean().getQtCategoryList()){
+				if( (!StringUtils.isBlank(cat.getPmCategoryL2Name()) && cat.getPmCategoryL2Name().length() > 10 && cat.getPmCategoryL2Name().substring(0,10).equalsIgnoreCase("PERCETAKAN")) ){
+					this.getManagedBean().getQt().setOpenFor(ParameterConst.OPEN_FOR_BUMI);
+					break;
+				}
+			}
+		}
+		// 20190709@hatta - 22240 - End
 	}
 
 	
@@ -337,6 +350,19 @@ public class QTSupplierQulCriteriaBackingBean extends
 		.setSelectedCategoryList(null);
 		this.getManagedBean().getQt().setScQtCategorys(openList);
 		this.getManagedBean().setTobeRemoveCategoryCodes(removeList);
+		
+		// 20190709@hatta - 22240 - Start
+				this.getManagedBean().getQt().setOpenFor(ParameterConst.OPEN_FOR_ALL);
+				if (!EntityHelper.isCollectionEmpty(this.getManagedBean().getQtCategoryList())) {
+					for(ScQtCategory cat: this.getManagedBean().getQtCategoryList()){
+						if( (!StringUtils.isBlank(cat.getPmCategoryL2Name()) && cat.getPmCategoryL2Name().length() > 10 && cat.getPmCategoryL2Name().substring(0,10).equalsIgnoreCase("PERCETAKAN")) ){
+							this.getManagedBean().getQt().setOpenFor(ParameterConst.OPEN_FOR_BUMI);
+							break;
+						}
+					}
+				}
+		// 20190709@hatta - 22240 - End
+				
 	}
 	
 	/**
