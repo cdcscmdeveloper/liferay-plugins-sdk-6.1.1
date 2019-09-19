@@ -6919,31 +6919,35 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 */
 	public void selectAllSchedule(AjaxBehaviorEvent e) {
 
-		for (ScQtSchedule ScQtSchedule : getManagedBean().getScLoa()
-				.getScQtSchedules()) {
-			if (getManagedBean().isSelectAll()) {
-				ScQtSchedule.setSelected(true);
-				if (getManagedBean().isButtonHideSchActive()) {
-					getManagedBean().setButtonHideSchActive(false);
-				}
-			} else {
-				ScQtSchedule.setSelected(false);
-				if (!getManagedBean().isButtonHideSchActive()) {
-					getManagedBean().setButtonHideSchActive(true);
+		if (getManagedBean().getScLoa().getScQtSchedules() != null) {
+			for (ScQtSchedule ScQtSchedule : getManagedBean().getScLoa()
+					.getScQtSchedules()) {
+				if (getManagedBean().isSelectAll()) {
+					ScQtSchedule.setSelected(true);
+					if (getManagedBean().isButtonHideSchActive()) {
+						getManagedBean().setButtonHideSchActive(false);
+					}
+				} else {
+					ScQtSchedule.setSelected(false);
+					if (!getManagedBean().isButtonHideSchActive()) {
+						getManagedBean().setButtonHideSchActive(true);
+					}
 				}
 			}
 		}
-		for (ScQtProgressivePayment ScQtProgressivePayment : getManagedBean()
-				.getScLoa().getScQtProgPayments()) {
-			if (getManagedBean().isSelectAll()) {
-				ScQtProgressivePayment.setSelected(true);
-				if (getManagedBean().isButtonHideSchActive()) {
-					getManagedBean().setButtonHideSchActive(false);
-				}
-			} else {
-				ScQtProgressivePayment.setSelected(false);
-				if (!getManagedBean().isButtonHideSchActive()) {
-					getManagedBean().setButtonHideSchActive(true);
+		if (getManagedBean().getScLoa().getScQtProgPayments() != null) {
+			for (ScQtProgressivePayment ScQtProgressivePayment : getManagedBean()
+					.getScLoa().getScQtProgPayments()) {
+				if (getManagedBean().isSelectAll()) {
+					ScQtProgressivePayment.setSelected(true);
+					if (getManagedBean().isButtonHideSchActive()) {
+						getManagedBean().setButtonHideSchActive(false);
+					}
+				} else {
+					ScQtProgressivePayment.setSelected(false);
+					if (!getManagedBean().isButtonHideSchActive()) {
+						getManagedBean().setButtonHideSchActive(true);
+					}
 				}
 			}
 		}
@@ -6951,20 +6955,25 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 	public void selectOneScheCheckboxSelect(AjaxBehaviorEvent e) {
 		getManagedBean().setSelectAll(false);
-		for (ScQtSchedule ScQtSchedule : getManagedBean().getScLoa()
-				.getScQtSchedules()) {
-			if (ScQtSchedule.isSelected()) {
-				getManagedBean().setButtonHideSchActive(false);
-				return;
+		if (getManagedBean().getScLoa().getScQtSchedules() != null) {
+			for (ScQtSchedule ScQtSchedule : getManagedBean().getScLoa()
+					.getScQtSchedules()) {
+				if (ScQtSchedule.isSelected()) {
+					getManagedBean().setButtonHideSchActive(false);
+					return;
+				}
 			}
 		}
-		for (ScQtProgressivePayment ScQtProgressivePayment : getManagedBean()
-				.getScLoa().getScQtProgPayments()) {
-			if (ScQtProgressivePayment.isSelected()) {
-				getManagedBean().setButtonHideSchActive(false);
-				return;
+		if (getManagedBean().getScLoa().getScQtProgPayments() != null) {
+			for (ScQtProgressivePayment ScQtProgressivePayment : getManagedBean()
+					.getScLoa().getScQtProgPayments()) {
+				if (ScQtProgressivePayment.isSelected()) {
+					getManagedBean().setButtonHideSchActive(false);
+					return;
+				}
 			}
 		}
+		
 		if ((boolean) e.getComponent().getAttributes().get("value")) {
 			getManagedBean().setButtonHideSchActive(false);
 		} else {
@@ -6979,15 +6988,19 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		reqDTO.setScLoa(this.getManagedBean().getScLoa());
 
 		try {
-			if (null != getManagedBean().getScLoa().getScQtSchedules()) {
-				
-				resDTO = getQtAwardSO()
-						.deletetScheduleIdAndPaymentId(reqDTO);
-				if (resDTO.isSuccessful()) {
-					getManagedBean().setSelectAll(false);
-					getManagedBean().setButtonHideSchActive(true);
+			if(getManagedBean().getScLoa().isBrandNew()){
+				removeNewFreqSchedules();
+			}else{
+				if (null != getManagedBean().getScLoa().getScQtSchedules()) {
+					
+					resDTO = getQtAwardSO()
+							.deletetScheduleIdAndPaymentId(reqDTO);
+					if (resDTO.isSuccessful()) {
+						getManagedBean().setSelectAll(false);
+						getManagedBean().setButtonHideSchActive(true);
+					}
+					getManagedBean().getScLoa().setScQtSchedules(resDTO.getScLoa().getScQtSchedules());
 				}
-				getManagedBean().getScLoa().setScQtSchedules(resDTO.getScLoa().getScQtSchedules());
 			}
 			
 		} catch (Exception e) {
@@ -6999,6 +7012,19 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 
 	}
+	//25022
+	private void removeNewFreqSchedules() {
+		List<ScQtSchedule> names = getManagedBean().getScLoa()
+				.getScQtSchedules();
+		Iterator<ScQtSchedule> i = names.iterator();
+		while (i.hasNext()) {
+			ScQtSchedule s = i.next();
+			if(s.isSelected()){
+				i.remove();
+			}
+		}
+	}
+	
 	public void deleteProgPaymentDetails() {
 		AwardSupplierResDTO resDTO = null;
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
