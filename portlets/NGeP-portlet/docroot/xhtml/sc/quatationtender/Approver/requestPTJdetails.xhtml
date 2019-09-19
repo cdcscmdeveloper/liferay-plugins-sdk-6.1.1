@@ -61,7 +61,8 @@
 						value="#{approvalBackingBean.getParameterDesc(scQt.procurementMode)}"
 						disabled="true" readonly="true" style="width:212px;" /></td>
 			</tr>
-			<c:if test="#{approvalBackingBean.managedBean.taskName eq ParameterConst.supplierAcceptQtChange}" >
+
+			<c:if test="#{approvalBackingBean.managedBean.taskName eq ParameterConst.supplierAcceptQtChange || approvalBackingBean.managedBean.taskName eq ParameterConst.fcApproveQTChange}" >
 				<tr>
 					<td>
 						<p:outputLabel value="#{lbl['lbl.sc.qt.response.period']}" /> 
