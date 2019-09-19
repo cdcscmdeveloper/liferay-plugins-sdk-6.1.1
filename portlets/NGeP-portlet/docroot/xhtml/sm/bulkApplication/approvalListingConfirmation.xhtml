@@ -58,11 +58,11 @@
 							<td style="text-align: left;border-style: none !important;">
 								<b><h:outputText value="#{tasks.appl.applNo} (#{tasks.appl.smSupplier.companyName})" /></b>
 							</td>
-							<td style="text-align: right;border-style: none !important;">
-								<b><h:outputText value="#{lbl['lbl.rpt.rgstStatus']}" />&#160;:</b>
+							<td style="text-align: right;border-style: none !important;">								
+								<b><h:outputText value="#{lbl['lbl.sm.curr.regstatus']}" />&#160;:</b>
 								&#160;&#160;<h:outputText value="#{tasks.currentRegStatus}" />
 								<br /><br />
-								<b><h:outputText value="#{lbl['lbl.rpt.rgstStatus']}" />&#160;:</b>
+								<b><h:outputText value="#{lbl['lbl.sm.po.recommend.status']}" />&#160;:</b>
 								&#160;&#160;<h:outputText value="#{tasks.poRecommendStatus}" />
 							</td>
 						</tr>
@@ -113,11 +113,12 @@
 					</p:outputPanel>
 					
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.po.recommend']}" style="white-space: normal;">
-					<h:outputText value="#{tasks.poRecommendation}" />
+				<p:column headerText="#{lbl['lbl.sm.po.recommend']}" style="width: 15%;white-space: normal;vertical-align: top;">
+					<h:outputText value="#{tasks.poRecommendation}"/>
 					<br />
 					
-					<h:outputText value="#{tasks.poRemarks}" />
+					<h:outputText value="#{tasks.poRemarks}" rendered="#{not empty tasks.poRemarks}"/>
+					<h:outputText value="#{lbl['lbl.sm.mof.status.not.applicable']}" rendered="#{empty tasks.poRemarks}"/>
 				</p:column>
 			</p:dataTable>
 
