@@ -543,7 +543,7 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 				}
 				
 				doc.outputSettings().syntax(Document.OutputSettings.Syntax.xml); 
-				doc.outputSettings().charset("UTF-8");
+				//doc.outputSettings().charset("UTF-8");
 				sectionOrder.setSectionContent(doc.body().html());
 				
 				
