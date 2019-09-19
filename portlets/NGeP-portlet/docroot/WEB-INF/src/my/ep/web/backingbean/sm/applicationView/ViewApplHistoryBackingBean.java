@@ -373,6 +373,7 @@ public class ViewApplHistoryBackingBean extends
 					+ resDTO.getPoApproverRemarksList().size());
 			for (Object[] obj : resDTO.getPoApproverRemarksList()) {
 				boolean isPoUser = false;
+				boolean isApproverUser = false;
 
 				String userName = (String) obj[0];
 				Date remarkCreatedDate = (Date) obj[1];
@@ -383,17 +384,23 @@ public class ViewApplHistoryBackingBean extends
 				log.info("userName:" + userName + ",remarkCreatedDate:"
 						+ remarkCreatedDate + ",roleType:" + roleType
 						+ ",docType:" + docType + ",remark:" + remark);
-
-				if (roleType != null
-						&& roleType
-								.equals(my.ep.web.constant.sm.SupplierManagementConst.SECTION_REV_ROLE_PO)) {
-					isPoUser = true;
+				
+				if (roleType != null){
+					if (roleType.equals(my.ep.web.constant.sm.SupplierManagementConst.SECTION_REV_ROLE_PO)) {
+						isPoUser = true;
+					} 
+					
+					if (roleType.equals(my.ep.web.constant.sm.SupplierManagementConst.SECTION_REV_ROLE_APP)){
+						isApproverUser = true;
+					}
 				}
 
 				if (isPoUser) {
 					getManagedBean().setPoUserName(userName);
 					setPORemarksInfo(docType, remark, remarkCreatedDate);
-				} else {
+				} 
+				//25930
+				if(isApproverUser) {
 					getManagedBean().setApproverUserName(userName);
 					setApproverRemarksInfo(docType, remark, remarkCreatedDate);
 				}
