@@ -152,7 +152,6 @@ import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.tpl.TemplateSpecBean;
-import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.evaluation.EvaluationManagedBean;
@@ -1027,18 +1026,8 @@ public class EvaluationBackingBean extends
 									.getCommitteeType()))) {
 				complianceChangeScQtStatusUpdate();
 			}
-
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(
-									MessageConst.INFO_700004, new String[] {
-											getMessageCommon("lbl.sc.prepare.evaluation.compliance")," "},
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-			
-		
-
+			successMessage(MessageConst.INFO_700004, getMessageCommon("lbl.sc.prepare.evaluation.compliance"), " ",
+					Boolean.FALSE);
 		} finally {
 			evaluationSo = null;
 		}
@@ -1170,17 +1159,8 @@ public class EvaluationBackingBean extends
 				complianceChangeScQtStatusUpdate();
 			}
 
-			
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(
-									MessageConst.INFO_700004, new String[] {
-											getMessageCommon("lbl.sc.prepare.evaluation.compliance")," "},
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-			
-
+			successMessage(MessageConst.INFO_700004, getMessageCommon("lbl.sc.prepare.evaluation.compliance"), " ",
+					Boolean.FALSE);
 		} finally {
 			evaluationSo = null;
 		}
@@ -7311,19 +7291,12 @@ private void retriveCommitteeRemarksList(){
 			retriveMeetingDtls(qtId, committeeType, index);
 			// getStatusDropdownValues("SC", "MS");
 			if (save == true) {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-								MessageUtils.getMessage(
-										MessageConst.INFO_700004, new String[] {
-												getMessageCommon("lbl.sc.prepare.evaluation"), QtNum },
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
+				successMessage(MessageConst.INFO_700004, getMessageCommon("lbl.sc.prepare.evaluation"), QtNum,
+						Boolean.FALSE);
 			}
 		} finally {
 			evaluationSO=null;
 		}
-
 	}
 
 	/**
@@ -7554,15 +7527,8 @@ private void retriveCommitteeRemarksList(){
 			}
 			updateSummaryGeneratedStatus();
 
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(
-									MessageConst.INFO_700004, new String[] {
-											getMessageCommon("lbl.sc.prepare.evaluation.evaluationStage.scores")," "},
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-			
+			successMessage(MessageConst.INFO_700004,
+					getMessageCommon("lbl.sc.prepare.evaluation.evaluationStage.scores"), " ", Boolean.FALSE);
 		} finally {
 			evaluationSO=null;
 		}
@@ -8002,15 +7968,8 @@ private void retriveCommitteeRemarksList(){
 								.getScQtChecklist()), evalResDTO.getCheckList());
 			}
 
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(
-									MessageConst.INFO_700004, new String[] {
-											getMessageCommon("lbl.sc.prepare.evaluation.evaluationStage.scores")," "},
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-		
+			successMessage(MessageConst.INFO_700004,
+					getMessageCommon("lbl.sc.prepare.evaluation.evaluationStage.scores"), " ", Boolean.FALSE);
 		} finally {
 			evaluationSO = null;
 		}
@@ -8022,34 +7981,14 @@ private void retriveCommitteeRemarksList(){
 	 * 
 	 * @return navigate to acknowledge page.
 	 */
-	public String reviseProposalEvaluation() {
+	public void reviseProposalEvaluation() {
 		EvaluationResDTO resDTO = updateEvaluationCommitteDtls(this
 				.getManagedBean().getLocalOutCome(), null);
 		if (resDTO.isSuccessful()) {
 			ScQtCommittee qtCommittee = resDTO.getQtCommittee();
-			FacesContext
-					.getCurrentInstance()
-					.addMessage(
-							null,
-							new FacesMessage(
-									FacesMessage.SEVERITY_INFO,
-									null,
-									MessageUtils
-											.getMessage(
-													getMessgeConstant(this
-															.getManagedBean()
-															.getLocalOutCome()),
-													new String[] {
-														getMessageCommon("lbl.sc.prepare.evaluation"),
-															qtCommittee
-																	.getScQt()
-																	.getQtNo() },
-													MessageUtils.BUNDLE_COMMON_MESSAGES,
-													new FacesScopes()
-															.getUserLocale())));
-			return CommonUIConst.ACKNOWLEDGE_PAGE;
+			successMessage(getMessgeConstant(this.getManagedBean().getLocalOutCome()),
+					getMessageCommon("lbl.sc.prepare.evaluation"), qtCommittee.getScQt().getQtNo(), Boolean.TRUE);
 		}
-		return null;
 	}
 
 	/**
@@ -8059,7 +7998,7 @@ private void retriveCommitteeRemarksList(){
 	 *            (Mandatory)
 	 * @return the string(ACKNOWLEDGE_PAGE)
 	 */
-	public String submitPrepareEvaluationDetails(String outCome) {
+	public void submitPrepareEvaluationDetails(String outCome) {
 
 		FacesScopes facesScopes = new FacesScopes();
 
@@ -8080,9 +8019,15 @@ private void retriveCommitteeRemarksList(){
 		if (roleCode
 				.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
 			this.getManagedBean().setLocalOutCome(outCome);
-			this.getManagedBean().setAutoUpdate(Boolean.FALSE);
-			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 
+			//25638 - Start
+			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outCome)) {
+				RequestContext.getCurrentInstance().execute("reviseApprovalDlgs.show()");
+			} else {
+				getManagedBean().setAutoUpdate(false);
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			}
+			//25638 - End
 		} else {
 			this.getManagedBean().setLocalOutCome(outCome);
 
@@ -8105,53 +8050,20 @@ private void retriveCommitteeRemarksList(){
 						null);
 				if (resDTO.isSuccessful()) {
 					ScQtCommittee qtCommittee = resDTO.getQtCommittee();
-					if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outCome)){
-						FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_INFO,
-										null,
-										MessageUtils
-												.getMessage(
-														 MessageConst.INFO_700033,
-														new String[] {
-															getMessageCommon("lbl.sc.prepare.secretary.evaluation"),
-																qtCommittee
-																		.getScQt()
-																		.getQtNo() },
-														MessageUtils.BUNDLE_COMMON_MESSAGES,
-														new FacesScopes()
-																.getUserLocale())));
-						
-					}else{
-					FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_INFO,
-											null,
-											MessageUtils
-													.getMessage(
-															getMessgeConstant(outCome),
-															new String[] {
-																getMessageCommon("lbl.sc.prepare.secretary.evaluation"),
-																	qtCommittee
-																			.getScQt()
-																			.getQtNo() },
-															MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes()
-																	.getUserLocale())));
-					}
 
-					return CommonUIConst.ACKNOWLEDGE_PAGE;
+					String messageCode = "";
+					if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outCome)) {
+						messageCode = MessageConst.INFO_700033;
+
+					} else {
+						messageCode = getMessgeConstant(outCome);
+					}
+					successMessage(messageCode, getMessageCommon("lbl.sc.prepare.secretary.evaluation"), qtCommittee
+							.getScQt().getQtNo(), Boolean.TRUE);
 				}
 			}
 		}
 		committeSO=null;
-		return null;
 
 	}
 
@@ -8221,32 +8133,14 @@ private void retriveCommitteeRemarksList(){
 	 *            (Mandatory)
 	 * @return the string(ACKNOWLEDGE_PAGE)
 	 */
-	public String gpkiSignAction(PmDigiSign digiSign) {
+	public void gpkiSignAction(PmDigiSign digiSign) {
 		EvaluationResDTO resDTO = updateEvaluationCommitteDtls(
 				this.getManagedBean().getLocalOutCome(), digiSign);
 		if (resDTO.isSuccessful()) {
 			ScQtCommittee qt = resDTO.getQtCommittee();
-			FacesContext
-					.getCurrentInstance()
-					.addMessage(
-							null,
-							new FacesMessage(
-									FacesMessage.SEVERITY_INFO,
-									null,
-									MessageUtils
-											.getMessage(
-													MessageConst.INFO_700033,
-													new String[] {
-														getMessageCommon("lbl.sc.prepare.secretary.evaluation"),
-															qt.getScQt()
-																	.getQtNo() },
-													MessageUtils.BUNDLE_COMMON_MESSAGES,
-													new FacesScopes()
-															.getUserLocale())));
-
-			return CommonUIConst.ACKNOWLEDGE_PAGE;
+			successMessage(MessageConst.INFO_700033, getMessageCommon("lbl.sc.prepare.secretary.evaluation"), qt
+					.getScQt().getQtNo(), Boolean.TRUE);
 		}
-		return null;
 	}
 
 	
@@ -10455,17 +10349,8 @@ private void retriveCommitteeRemarksList(){
 				}
 				updateSummaryGeneratedStatus();
 			}
-
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(
-									MessageConst.INFO_700004, new String[] {
-											getMessageCommon("lbl.sc.prepare.evaluation.evaluationStage.scores")," "},
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-			
-
+			successMessage(MessageConst.INFO_700004,
+					getMessageCommon("lbl.sc.prepare.evaluation.evaluationStage.scores"), " ", Boolean.FALSE);
 		} finally {
 			evaluationSo=null;
 		}

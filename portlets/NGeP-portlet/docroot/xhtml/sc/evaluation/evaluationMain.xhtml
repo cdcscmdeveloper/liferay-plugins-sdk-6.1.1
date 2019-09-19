@@ -41,6 +41,27 @@
 			style="float:right;" process="@form" update="@form"
 			action="#{evaluationBackingBean.saveMeetingDtls(true)}" />
 
+		<p:dialog id="reviseApprovalDlgs" widgetVar="reviseApprovalDlgs"
+			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
+			resizable="false" width="400" height="75" closable="false">
+			<table>
+				<tr>
+					<td align="center">
+						<h:graphicImage value="/css/images/design/exclamation.png" /> 
+						<p:outputLabel value="#{lbl['lbl.sc.dialog.confirm.to.revise']}" />
+					</td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					oncomplete="reviseApprovalDlgs.hide();"
+					action="#{evaluationBackingBean.reviseProposalEvaluation}" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="reviseApprovalDlgs.hide();" type="button" />
+			</div>
+		</p:dialog>
+
 		<p:dialog id="reviceApprovalDlgs" widgetVar="reviceApprovalDlgs"
 			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
 			resizable="false" width="400" height="75" closable="false">
@@ -136,6 +157,3 @@
 	</ui:define>
 
 </ui:composition>
-
-
-
