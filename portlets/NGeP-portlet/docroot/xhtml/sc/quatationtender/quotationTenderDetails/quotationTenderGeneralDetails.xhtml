@@ -162,6 +162,7 @@
 											itemValue="#{panelItem.panelItemGroupId}" />
 
 										<p:ajax event="change" process="@this" partialSubmit="true"
+											update=":form:zoneTxt,generalLocationList"
 											listener="#{createQtBB.changePanelGroupItem}"></p:ajax>
 									</p:selectOneMenu>
 									<p:message id="panelIteMsgId" for="panelItemId" display="icon" />
