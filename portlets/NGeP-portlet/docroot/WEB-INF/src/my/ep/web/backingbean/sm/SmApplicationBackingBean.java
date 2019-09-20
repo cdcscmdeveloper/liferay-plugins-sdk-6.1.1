@@ -4690,8 +4690,11 @@ public class SmApplicationBackingBean extends
 			assignValReqdToFalse();
 			// API FOR LIST OF OVERLAPPING CATEGORIES
 			SmApplicationUtil.checkOverLappingCategories(getManagedBean());
-			SmApplicationUtil.initOverlapCategoryDocs(getManagedBean()
-					.isOverLappedCategoryExists(), getManagedBean());
+			if((this.getManagedBean().getOverlapDocs().size()>0 
+					&& StringUtils.isBlank(this.getManagedBean().getOverlapDocs().get(0).getFileName()))){
+					SmApplicationUtil.initOverlapCategoryDocs(getManagedBean()
+							.isOverLappedCategoryExists(), getManagedBean());
+			}
 			RequestContext.getCurrentInstance().execute("regCatDialog.hide()");
 
 		}
