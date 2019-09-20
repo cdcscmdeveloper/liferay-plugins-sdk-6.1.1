@@ -4721,6 +4721,11 @@ public class SmApplicationBackingBean extends
 							.after(cancelDate)) {
 				retVal = true;
 			}
+			// #26031 - start
+			if (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
+				retVal = true;
+			}
+			// #26031 - end
 		}
 		return retVal;
 	}
