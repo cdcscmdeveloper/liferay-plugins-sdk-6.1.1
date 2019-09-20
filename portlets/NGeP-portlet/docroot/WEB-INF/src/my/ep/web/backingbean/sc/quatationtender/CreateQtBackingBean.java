@@ -627,6 +627,59 @@ public class CreateQtBackingBean extends
 				searchBean);
 	}
 
+	//20190910@asyrafhaziq - 26404 -Start
+		/**
+		 * Set only the procurement mode.based on Estimated price set Procurement
+		 * Mode(Quotation/Tender).
+		 * 
+		 * @param scQt
+		 *            (ScQt scQt)
+		 */
+		public void setProcurementModeOnly(ScQt scQt, BigDecimal amount) {
+
+			log.info("setProcurementModeOnly,@qtNo = " + scQt.getQtNo());
+			IParameterSO parameterSo = null;
+			try {
+				parameterSo = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+
+				boolean isQuotationThresHold = isQuotationThresHold(amount);
+				boolean isPanel = scQt.isPanel();
+					PmPtjSpecialApproval ptjSpecialApproval = getManagedBean().getPtjSpecialApproval();
+					ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+					parameterReqDTO
+							.setParameterType(ParameterTypeConst.SC_PROCUREMENT_MODE);
+					this.getManagedBean().setProcMethodDropdownPresent(false);
+					if (isQuotationThresHold || isPanel) {
+						parameterReqDTO
+								.setParameterCode(ParameterConst.PROCUREMENT_MODE_QUOTATION);
+					} else if (BooleanUtils.isTrue(scQt.getObtainSpecialApproval()) && 
+							ptjSpecialApproval != null && !isQuotationThresHold &&
+							ptjSpecialApproval.getProcureAmt() != null &&
+							amount != null &&
+							amount.compareTo(ptjSpecialApproval.getProcureAmt()) <= 0){
+						this.getManagedBean().setProcMethodDropdownPresent(true);
+					}else {
+						parameterReqDTO
+								.setParameterCode(ParameterConst.PROCUREMENT_MODE_TENDER);
+					}
+					if(!this.getManagedBean().isProcMethodDropdownPresent()){
+						ParameterResDTO parameterResDTO = parameterSo
+								.retrieveParameterByTypeAndCode(parameterReqDTO);
+						scQt.setProcurementMode(parameterResDTO.getPmParameter());
+					}
+				log.info("setProcurementMode, @procurementMode = "
+						+ scQt.getProcurementMode());
+	
+			} finally {
+				parameterSo = null;
+			}
+		}
+		
+		//20190910@asyrafhaziq - 26404 -End
+		
+	
+
 	//20190415@asyrafhaziq - 15979 -Start
 	/**
 	 * Sets the Open for .based on Estimated price
