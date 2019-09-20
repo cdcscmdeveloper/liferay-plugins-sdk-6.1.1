@@ -3,6 +3,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:panel header="#{lbl['lbl.sc.qt.req.ptj']}" toggleable="true" id="qtScQtReqPtjId">
@@ -65,11 +66,12 @@
 			<c:if test="#{approvalBackingBean.managedBean.taskName eq ParameterConst.supplierAcceptQtChange || approvalBackingBean.managedBean.taskName eq ParameterConst.fcApproveQTChange}" >
 				<tr>
 					<td>
-						<p:outputLabel value="#{lbl['lbl.sc.qt.response.period']}" /> 
 						<p:outputLabel value="*" styleClass="mandatory" />
+						<p:outputLabel value="#{lbl['lbl.sc.qt.response.period']}" /> 
 					</td>
 					<td>
 						<p:inputText id="responsePeriod" value="#{CommonConstants.DEFAULT_RESPONSE_PERIOD}" style="width:200px;" disabled="true" />
+						<ac:iconTooltip value="#{lbl['lbl.sc.qt.response.period.tooltip']}" />
 					</td>
 					<td>
 						<p:outputLabel value="#{lbl['lbl.sc.qt.proposal.validity.extension.response.due.date']}" />
@@ -92,8 +94,9 @@
 				<c:if test="#{approvalBackingBean.managedBean.taskName eq ParameterConst.fcApproveQTChange}" >
 					<tr>
 						<td style="width: 235px;">
+							<p:outputLabel value="*" style="color:red;"/>
 							<p:outputLabel value="#{lbl['lbl.sc.qt.proposal.approval.date.chairperson.finalization']}" /> 
-							<p:outputLabel value="*" style="color:red;"/></td>
+						</td>
 						<td>
 							<p:calendar label="#{lbl['lbl.sc.qt.proposal.approval.date.chairperson.finalization']}"
 								disabled="#{approvalBackingBean.managedBean.readOnly}"
