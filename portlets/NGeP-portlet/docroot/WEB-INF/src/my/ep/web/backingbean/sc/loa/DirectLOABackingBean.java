@@ -99,6 +99,7 @@ import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
+import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
@@ -8069,8 +8070,26 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 */
 	private void validateLoaWitnessAndAckBy() {
 		ScLoa scLoa = this.getManagedBean().getScLoa();
-		ScLoaWitness witness = this.getManagedBean().getLoaSupplierWitness();
 		PmUser ackBy = scLoa.getAckBy();
+		//Bug 26458 - Start
+		ScLoaWitness witness = null;
+		Long statusId = this.getManagedBean().getScLoa().getPmStatus().getStatusId().longValue();
+		if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)) {
+			if(scLoa.getScLoaWitnesses() !=null){
+				for (ScLoaWitness scLoaWitness : scLoa.getScLoaWitnesses()) {
+					String partyType = scLoaWitness.getPartyType();
+		
+					if (ParameterConst.WITNESS_PARTY_TYPE_SUPPLIER.equals(partyType)) {
+						witness = scLoaWitness;
+		
+						break;
+					}
+				}
+			}
+		}else{
+			witness = this.getManagedBean().getLoaSupplierWitness();
+		}
+		//Bug 26458 - End
 		if(witness == null || 
 				StringUtils.isBlank(witness.getWitnessName()) || StringUtils.isBlank(witness.getIdentificationNo()) ||
 				StringUtils.isBlank(witness.getDesignation()) || StringUtils.isBlank(witness.getAddress()) || 
@@ -8603,6 +8622,17 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		getManagedBean().getScLoa().setJustificationType(getReasonByCategoryAndCode(
 				ReasonCategory.JUSTIFICATION_PK7.value(), reasonCode));
 	}
+	
+	/* ***19336#83 - start */
+	public String getReasonDesc(String reasonCode){
+		PmReason reason = getReasonByCategoryAndCode(ReasonCategory.JUSTIFICATION_PK7.value(), reasonCode);
+		String reasonDesc = getReasonDesc(reason);
+		if(!StringUtils.isEmpty(reasonDesc)){
+			return reasonDesc;
+		}
+		return "";
+	}
+	/* ***19336#83 - end */
 	
 	/**
 	 * @param e
