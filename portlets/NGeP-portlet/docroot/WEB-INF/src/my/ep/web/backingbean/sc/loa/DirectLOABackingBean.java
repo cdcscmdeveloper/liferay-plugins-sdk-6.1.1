@@ -8070,8 +8070,26 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 */
 	private void validateLoaWitnessAndAckBy() {
 		ScLoa scLoa = this.getManagedBean().getScLoa();
-		ScLoaWitness witness = this.getManagedBean().getLoaSupplierWitness();
 		PmUser ackBy = scLoa.getAckBy();
+		//Bug 26458 - Start
+		ScLoaWitness witness = null;
+		Long statusId = this.getManagedBean().getScLoa().getPmStatus().getStatusId().longValue();
+		if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)) {
+			if(scLoa.getScLoaWitnesses() !=null){
+				for (ScLoaWitness scLoaWitness : scLoa.getScLoaWitnesses()) {
+					String partyType = scLoaWitness.getPartyType();
+		
+					if (ParameterConst.WITNESS_PARTY_TYPE_SUPPLIER.equals(partyType)) {
+						witness = scLoaWitness;
+		
+						break;
+					}
+				}
+			}
+		}else{
+			witness = this.getManagedBean().getLoaSupplierWitness();
+		}
+		//Bug 26458 - End
 		if(witness == null || 
 				StringUtils.isBlank(witness.getWitnessName()) || StringUtils.isBlank(witness.getIdentificationNo()) ||
 				StringUtils.isBlank(witness.getDesignation()) || StringUtils.isBlank(witness.getAddress()) || 
