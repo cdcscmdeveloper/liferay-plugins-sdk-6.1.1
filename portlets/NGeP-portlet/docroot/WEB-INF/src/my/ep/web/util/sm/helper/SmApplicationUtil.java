@@ -456,7 +456,7 @@ public class SmApplicationUtil {
 		if (applTypes.contains(applType)) {
 			//Enhancement #11765
 			sortSupplierCategory(catList);
-			for (SmSupplierCategory cat : catList) 
+			for (SmSupplierCategory cat : catList) {
 				// //Bug #25676 : SM Showstopper - No Categories Appear in Processing Officer Screen{
 				if (cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE && cat.getPoDecFlg() == null) {
 					//Enhancement #11765
