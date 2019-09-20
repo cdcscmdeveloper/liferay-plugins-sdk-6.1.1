@@ -937,7 +937,7 @@ public class SpecificationBackingBean extends
 		} else {
 			this.getManagedBean().setActiveIndex(activeIndex);
 		}
-
+		checkProcurementModeValue();
 	}
 
 	/**
@@ -9245,7 +9245,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				this.getManagedBean().setProcMethodDropdownPresent(checkForProcumentMethodDropdown(scQt));
 			}
 		}
-		committeSO=null;
+		checkProcurementModeValue();
+		committeSO = null;
 		this.getManagedBean().setLoginRoleType("SC");
 		fc.getApplication()
 				.getNavigationHandler()
@@ -14730,4 +14731,22 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		return isDisable;
 	}
 
+	private void checkProcurementModeValue(){
+		log.debug("===========checkProcurementCodeValue============");
+		if(null!=this.getManagedBean().getQt() && null==this.getManagedBean().getQt().getProcurementMode()){
+			BigDecimal estimatedAmount=null;
+			if(null!=this.getManagedBean().getQt().getEstimatedAmount() && this.getManagedBean().getQt().getEstimatedAmount().compareTo(BigDecimal.ZERO)>0){
+				estimatedAmount=this.getManagedBean().getQt().getEstimatedAmount();
+			}else{
+				estimatedAmount=this.getManagedBean().getQt().getTmpExpectedIntendedPrice();
+			}
+			log.info("mangalatestChangedCodesExecutedestimatedAmount"+estimatedAmount);
+			if(null==estimatedAmount){
+				estimatedAmount=new BigDecimal(0);
+			}
+			new CreateQtBackingBean().setProcurementMode(this.getManagedBean().getQt(),
+					estimatedAmount);
+		}
+	}
+	
 }
