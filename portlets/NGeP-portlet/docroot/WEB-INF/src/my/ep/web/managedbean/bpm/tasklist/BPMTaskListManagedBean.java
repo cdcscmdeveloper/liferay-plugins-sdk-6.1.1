@@ -3,7 +3,6 @@ package my.ep.web.managedbean.bpm.tasklist;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +24,6 @@ import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.access.application.IAccessApplSO;
 import my.ep.biz.service.pm.common.kpi.IPmKpiSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
-import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sc.directpurchase.IPrInquirySO;
@@ -54,22 +52,12 @@ import my.ep.dto.pm.access.application.AccessApplResDTO;
 import my.ep.dto.pm.common.kpi.KpiReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
-import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
-import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
-import my.ep.dto.sc.requestitem.RequestItemResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
-import my.ep.jaxb.fl.dandata.FLDanDataType;
-import my.ep.jaxb.fl.frndata.FLFulFillmentReceivedNoteDataType;
-import my.ep.jaxb.fl.maintenace.cancel.dofulfillment.FLDOFulfillmentCancelReqType;
-import my.ep.jaxb.fl.maintenace.cancel.invoice.FLInvoiceCancelReqType;
-import my.ep.jaxb.fl.maintenace.modification.dofulfillment.FLDOFulfillmentModificationReqType;
-import my.ep.jaxb.fl.maintenace.modification.invoice.FLInvoiceModificationReqType;
-import my.ep.jaxb.fl.stopfullfillmentdata.FLStopFullfillmentDataType;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
@@ -78,7 +66,6 @@ import my.ep.persistence.entity.pm.common.PmKPIValue;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
-import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -89,7 +76,6 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 @ManagedBean(name = "bpmTasklistMB")
@@ -1657,13 +1643,13 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		IDeliveryOrderSO deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
-		Object obj = getBpmTaskDetails(taskId);
-		FLFulFillmentReceivedNoteDataType fulFillmentRecievedNoteDataType = (FLFulFillmentReceivedNoteDataType)obj;
-		reqDTO.setDeliveryOrderId(fulFillmentRecievedNoteDataType.getDoId());
-		reqDTO.setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
-		resDTO = deliveryOrderSO.retrieveDeliveryOrderById(reqDTO);
 		
-		String poCoNumber = resDTO.getFlDeliveryOrder().getFlRequest().getFlFulfilmentOrder().getDocNo();
+		//#24968-start-bazlin
+		reqDTO.setDeliveryOrderId(worklistItemVO.getDocId());
+		resDTO = deliveryOrderSO.retrievePocoDOById(reqDTO);
+		String poCoNumber = resDTO.getDocNo();
+		//#24968-end-bazlin
+		
 		if(poCoNumber != null){
 			worklistItemVO.setPocoNo(poCoNumber);
 		}
@@ -1674,13 +1660,13 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		IDeliveryOrderSO deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
-		Object obj = getBpmTaskDetails(taskId);
-		FLDOFulfillmentModificationReqType doModDataType = (FLDOFulfillmentModificationReqType) obj;
-		reqDTO.setDeliveryOrderId(Long.valueOf(doModDataType.getDoId()));
-		reqDTO.setDocType(ParameterConst.DOCTYPE_DELIVERY_ORDER);
-		resDTO = deliveryOrderSO.retrieveDeliveryOrderById(reqDTO);
 		
-		String poCoNumber = resDTO.getFlDeliveryOrder().getFlFulfilmentOrder().getDocNo();
+		//#24968-start-bazlin
+		reqDTO.setDeliveryOrderId(worklistItemVO.getDocId());
+		resDTO = deliveryOrderSO.retrievePocoDOById(reqDTO);
+		String poCoNumber = resDTO.getDocNo();		
+		//#24968-end-bazlin
+		
 		if(poCoNumber != null){
 			worklistItemVO.setPocoNo(poCoNumber);
 		}
@@ -1691,13 +1677,13 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		IDeliveryOrderSO deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
-		Object obj = getBpmTaskDetails(taskId);
-		FLDOFulfillmentCancelReqType doCancelDataType = (FLDOFulfillmentCancelReqType) obj;
-		reqDTO.setDeliveryOrderId(Long.valueOf(doCancelDataType.getDoId()));
-		reqDTO.setDocType(ParameterConst.DOCTYPE_DELIVERY_ORDER);
-		resDTO = deliveryOrderSO.retrieveDeliveryOrderById(reqDTO);
 		
-		String poCoNumber = resDTO.getFlDeliveryOrder().getFlFulfilmentOrder().getDocNo();
+		//#24968-start-bazlin
+		reqDTO.setDeliveryOrderId(worklistItemVO.getDocId());
+		resDTO = deliveryOrderSO.retrievePocoDOById(reqDTO);
+		String poCoNumber = resDTO.getDocNo();	
+		//#24968-end-bazlin
+		
 		if(poCoNumber != null){
 			worklistItemVO.setPocoNo(poCoNumber);
 		}
@@ -1708,12 +1694,13 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		IReceivedNoteSO receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
-		Object obj = getBpmTaskDetails(taskId);
-		FLFulFillmentReceivedNoteDataType fulFillmentRecievedNoteDataType = (FLFulFillmentReceivedNoteDataType)obj;
-		reqDTO.setDeliveryOrderId(fulFillmentRecievedNoteDataType.getDoId());
-		resDTO = receivedNoteSO.retrieveReceivedNoteByDeliveryOrderId(reqDTO);
 		
-		String poCoNumber = resDTO.getFulfilmentNote().getFlRequest().getFlFulfilmentOrder().getDocNo();
+		//#24968-start-bazlin
+		reqDTO.setFulfilmentNoteId(worklistItemVO.getDocId());
+		resDTO = receivedNoteSO.retrievePocoRNById(reqDTO);
+		String poCoNumber = resDTO.getDocNo();	
+		//#24968-end-bazlin
+
 		if(poCoNumber != null){
 			worklistItemVO.setPocoNo(poCoNumber);
 		}
@@ -1724,12 +1711,13 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		IAdjustmentSO adjustmentSO = (IAdjustmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IAdjustmentSO.class);
 		FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
-		Object obj = getBpmTaskDetails(taskId);
-		FLDanDataType danObj = (FLDanDataType)obj;
-		flReqDTO.setDanId(danObj.getDanId());
-		resDTO = adjustmentSO.retrieveAdjustmentById(flReqDTO);
 		
-		String poCoNumber = resDTO.getAdjustment().getFlOrder().getDocNo();
+		//#24968-start-bazlin
+		flReqDTO.setDanId(worklistItemVO.getDocId());
+		resDTO = adjustmentSO.retrievePoCoAdjNoById(flReqDTO);
+		String poCoNumber = resDTO.getDocNo();	
+		//#24968-end-bazlin
+		
 		if(poCoNumber != null){
 			worklistItemVO.setPocoNo(poCoNumber);
 		}
@@ -1740,13 +1728,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 		FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
-		Object obj = getBpmTaskDetails(taskId);
-		FLStopFullfillmentDataType stopFlData = (FLStopFullfillmentDataType)obj;
-		flReqDTO.setFlOrderId(stopFlData.getOrderId());
-		flReqDTO.setStopRequestId(stopFlData.getStopRequestId().longValue());
-		resDTO = orderSO.retrieveStopInstruction(flReqDTO);
 		
-		String poCoNumber = resDTO.getFlStopInstr().getFlFulfilmentOrder().getDocNo();
+		//#24968-start-bazlin
+		flReqDTO.setDocId(Long.valueOf(worklistItemVO.getDocId()));
+		resDTO = orderSO.retrievePoCoStopInstruction(flReqDTO);
+		String poCoNumber = resDTO.getDocNo();
+		//#24968-end-bazlin
+		
+		
 		if(poCoNumber != null){
 			worklistItemVO.setPocoNo(poCoNumber);
 		}
@@ -1757,12 +1746,13 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		IReceivedNoteSO receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
-		Object obj = getBpmTaskDetails(taskId);
-		FLDOFulfillmentCancelReqType fulfillmentCancelReqType = (FLDOFulfillmentCancelReqType)obj;
-		reqDTO.setDeliveryOrderId(fulfillmentCancelReqType.getDoId());
-		resDTO = receivedNoteSO.retrieveReceivedNoteByDeliveryOrderId(reqDTO);
 		
-		String poCoNumber = resDTO.getFulfilmentNote().getFlRequest().getFlFulfilmentOrder().getDocNo();
+		//#24968-start-bazlin
+		reqDTO.setDeliveryOrderId(worklistItemVO.getDocId());
+		resDTO = receivedNoteSO.retrievePocoRNByDOId(reqDTO);
+		String poCoNumber = resDTO.getDocNo();
+		//#24968-end-bazlin
+		
 		if(poCoNumber != null){
 			worklistItemVO.setPocoNo(poCoNumber);
 		}
@@ -1772,28 +1762,29 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		IInvoiceSO invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
-		Object obj = getBpmTaskDetails(taskId);
-		FLInvoiceModificationReqType invModObj = (FLInvoiceModificationReqType) obj;
-		reqDTO.setInvoiceId(Long.valueOf(invModObj.getInvoiceId()));
-		resDTO = invoiceSO.retrieveInvoiceByInvoiceId(reqDTO);
 		
-		String poCoNumber = resDTO.getInvoice().getFlFulfilmentOrder().getDocNo();
+		//#24968-start-bazlin
+		reqDTO.setInvoiceId(Long.valueOf(worklistItemVO.getDocId()));
+		resDTO = invoiceSO.retrievePocoInvoiceByInvoiceId(reqDTO);
+		String poCoNumber = resDTO.getDocNo();
+		//#24968-end-bazlin
+		
 		if(poCoNumber != null){
 			worklistItemVO.setPocoNo(poCoNumber);
 		}		
 	}
 	
-	public void retrievePoCoNoForCancelInvoice(WorklistItemVO worklistItemVO,String taskId) {
-		
+	public void retrievePoCoNoForCancelInvoice(WorklistItemVO worklistItemVO,String taskId) {		
 		IInvoiceSO invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
-		Object obj = getBpmTaskDetails(taskId);
-		FLInvoiceCancelReqType invCanObj = (FLInvoiceCancelReqType) obj;
-		reqDTO.setInvoiceId(Long.valueOf(invCanObj.getInvoiceId()));
-		resDTO = invoiceSO.retrieveInvoiceByInvoiceId(reqDTO);
 		
-		String poCoNumber = resDTO.getInvoice().getFlFulfilmentOrder().getDocNo();
+		//#24968-start-bazlin
+		reqDTO.setInvoiceId(Long.valueOf(worklistItemVO.getDocId()));
+		resDTO = invoiceSO.retrievePocoInvoiceByInvoiceId(reqDTO);
+		String poCoNumber = resDTO.getDocNo();
+		//#24968-end-bazlin
+		
 		if(poCoNumber != null){
 			worklistItemVO.setPocoNo(poCoNumber);
 		}		
