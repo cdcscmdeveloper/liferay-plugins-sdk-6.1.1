@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import my.ep.factory.EpLogger;
 import javax.faces.application.FacesMessage;
@@ -50,6 +51,7 @@ import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
+import my.ep.constant.ct.ContractStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
@@ -130,6 +132,7 @@ import my.ep.web.backingbean.sc.loa.DirectLOABackingBean;
 import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.ct.ContractManagedBean;
@@ -138,6 +141,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
+import my.ep.web.util.NumberWordUtilEn;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmCommonUtil;
@@ -3984,13 +3988,26 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return  bond amount in text format.
 	 */
 	public String getBondAmountInText() {
+		Locale locale = null;
+		String lang = new FacesScopes().getUserLocale().getLanguage();
 		if (getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt() == null
 				|| getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt().doubleValue() == 0) {
 			return "";
 		}
-		DecimalFormat df = new DecimalFormat("#.00");		
-		return NumberWordUtil.convert(df.format(
-				getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt()));
+
+		if (lang.equalsIgnoreCase(ReportConst.ENG_LANGUAGE_CODE)) {
+			locale = new Locale(lang, ReportConst.ENG_COUNTRY_CODE);
+			DecimalFormat df = new DecimalFormat("#.00");		
+			return NumberWordUtilEn.convert(df.format(
+					getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt()));
+		} else if (lang.equalsIgnoreCase(ReportConst.MALAY_LANGUAGE_CODE)) {
+			locale = new Locale(lang, ReportConst.MALAYSIA_COUNTRY_CODE);
+			DecimalFormat df = new DecimalFormat("#.00");
+			return NumberWordUtil.convert(df.format(
+					getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt()));
+		}else{
+			return "";
+		}
 	}
 	
 	/**
@@ -4020,5 +4037,20 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * Function to check if bond required for contract status
+	 * 
+	 * @return true, if performance bond is Pending Amendment With Supplemental Submission
+	 *         false, if performance bond is not Pending Amendment With Supplemental Submission
+	 * */
+	public boolean isPendingSupplementalContractLetter(){
+		if(getManagedBean().getContractVer().getStatus().getStatusId() 
+				== ContractStatusConst.FA_PENDING_LOA_SUBMISSION.longValue()){								
+			return true;
+		}
+		return false;
+		
 	}
 }  
