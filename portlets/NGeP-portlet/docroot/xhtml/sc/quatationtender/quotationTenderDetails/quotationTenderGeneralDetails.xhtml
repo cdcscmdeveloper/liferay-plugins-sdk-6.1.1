@@ -767,19 +767,20 @@
 					<td>
 						<c:choose>
 							<c:when test="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION}">
-								<p:inputText id="justificationProcValueId"
-									style="text-align:right; width:200px;" value="#{scQt.justificationProcValue}" required="true" 
-									label="#{lbl['lbl.sc.spec.justification.procurement.value']}" disabled="#{isReadOnly}" >
-									<f:convertNumber
-										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-								</p:inputText>
+								<p:inputTextarea id="justificationProcValueId"
+									style="text-align:right; margin-bottom:5px; width: 250px;" maxlength="100" value="#{scQt.justificationProcValue}" required="true" 
+									label="#{lbl['lbl.sc.spec.justification.procurement.value']}" disabled="#{isReadOnly}" 
+									cols="110" rows="3"
+									onkeyup="limitTextArea(this,100);"
+									onkeydown="limitTextArea(this,100);"
+									onmouseout="limitTextArea(this,100);">
+									<f:ajax></f:ajax>
+								</p:inputTextarea>
 							</c:when>
 							<c:otherwise>
 								<p:inputText id="justificationProcValueId"
 									style="text-align:right; width:200px;"
 									value="#{scQt.justificationProcValue}" disabled="true">
-									<f:convertNumber
-										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 								</p:inputText>
 							</c:otherwise>
 						</c:choose>
