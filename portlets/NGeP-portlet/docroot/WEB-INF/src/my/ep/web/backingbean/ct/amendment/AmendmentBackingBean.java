@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
@@ -120,6 +121,7 @@ import my.ep.web.bean.ct.CtLetterOfAcceptance;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.ct.amendment.AmendmentManagedBean;
@@ -128,6 +130,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
+import my.ep.web.util.NumberWordUtilEn;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.RoleHelper;
@@ -2789,13 +2792,25 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @return new bond amount in text format.
 	 */
 	public String getBondAmountInText() {
+		Locale locale = null;
+		String lang = new FacesScopes().getUserLocale().getLanguage();
 		if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt() == null
 				|| ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt().doubleValue() == 0) {
 			return "";
 		}
-		DecimalFormat df = new DecimalFormat("#.00");		
-		return NumberWordUtil.convert(df.format(
-				ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt()));
+		if (lang.equalsIgnoreCase(ReportConst.ENG_LANGUAGE_CODE)) {
+			locale = new Locale(lang, ReportConst.ENG_COUNTRY_CODE);
+			DecimalFormat df = new DecimalFormat("#.00");		
+			return NumberWordUtilEn.convert(df.format(
+					ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt()));
+		} else if (lang.equalsIgnoreCase(ReportConst.MALAY_LANGUAGE_CODE)) {
+			locale = new Locale(lang, ReportConst.MALAYSIA_COUNTRY_CODE);
+			DecimalFormat df = new DecimalFormat("#.00");
+			return NumberWordUtil.convert(df.format(
+					ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt()));
+		}else{
+			return "";
+		}
 	}
 
 	/**
