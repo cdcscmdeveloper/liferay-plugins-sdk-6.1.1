@@ -38,7 +38,7 @@
 			        <p:row>  
 			            <p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.code']}" style="width:10%; text-align:center;"/>
 			           	<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:10%"/>
-			           	<p:column rowspan="2" headerText="#{lbl['lbl.sc.eva.package.offered.price']}" style="width:15%;text-align:right;"/>    
+			           	<p:column rowspan="2" headerText="#{lbl['lbl.sc.eva.package.offered.price']}" style="width:15%;text-align:center;"/>    
 			            <p:column colspan="2" headerText="#{lbl['lbl.sc.eva.package.score']}" style="width:10%;text-align:center;"/>  
 			       		<p:column rowspan="2" style="width:15%; text-align:right;">
 			       			<f:facet name="header">
@@ -60,9 +60,9 @@
 			        </p:row>  
 			  
 			        <p:row>  
-			            <p:column headerText="#{lbl['lbl.tpl.spec.content.system.score']}" style="width:20%;text-align:right;"
+			            <p:column headerText="#{lbl['lbl.tpl.spec.content.system.score']}" style="width:50%;text-align:center;"
 						rendered="#{evaluationBackingBean.managedBean.scQtChecklist.scoringReq}"/>  
-			            <p:column>
+			            <p:column style="width:50%;text-align:center;">
 				            <f:facet name="header">
 								<h:outputText value="* " styleClass="mandatory" />
 								<h:outputText value="#{lbl['lbl.tpl.spec.content.user.score']}"/>
@@ -90,16 +90,19 @@
 			    </p:column>
 			    
 			    <p:column>  
-			        <h:outputText type="hidden" value="#{finSpec.totalAutoScore}"></h:outputText> 
+			        <h:outputText rendered="#{evaluationBackingBean.managedBean.offerScoreType eq '1'}" 
+			        type="hidden" value="#{finSpec.totalAutoScore}"></h:outputText> 
 			    </p:column>
 			    
 			    <p:column>
-			        <p:inputText readonly="true" disabled="true" id="userScore" 
+			        <p:inputText rendered="#{evaluationBackingBean.managedBean.offerScoreType eq '2'}" 
+			        	readonly="true" disabled="true" id="userScore" 
 			        	style="text-align:right;" maxlength="16" size="2" required="true"
 			        	value="#{finSpec.totalUserScore}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 			        </p:inputText>
-			        <h:outputText style="text-align:left;"
+			        <h:outputText rendered="#{evaluationBackingBean.managedBean.offerScoreType eq '2'}"
+			        	style="text-align:left;"
 						value="/ #{evaluationBackingBean.managedBean.withInVarieance}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
