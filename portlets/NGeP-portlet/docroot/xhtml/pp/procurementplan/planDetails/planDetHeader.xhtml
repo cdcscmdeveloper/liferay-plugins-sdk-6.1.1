@@ -96,6 +96,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			</td>
 		</tr>
 	</table>
+	<ui:remove>		<!--[#24972] -->
 	<ac:confirmationPopup id="planYearChangeId"
 			widget="planYearChangeId"
 			okProcess="@form"
@@ -104,5 +105,6 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			width="450" height="200"
 			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
 			content="#{lbl['lbl.pp.plan.year.change']}" 
-			update=":form:pPlanDet,:form:pPlanHeader" />	
+			update=":form:pPlanDet,:form:pPlanHeader" />
+	</ui:remove>	<!--[#24972] -->
 </ui:composition>
