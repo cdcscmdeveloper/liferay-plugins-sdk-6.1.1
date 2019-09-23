@@ -94,19 +94,7 @@ public class QuestionnaireBackingBean extends
 		if (resDTO.isInitTask()) {
 			SmApplicationUtil.initiateMofApplNewBpmTask(resDTO.getSmAppl());
 		}
-		//START LOG 12491
-		try{
-			log.info("START Upgrade Role IN updateSupplierSoftcert ");
-			if(loginUser!=null){
-				log.info("STart Upgrade Role IN IF updateSupplierSoftcert ");
-				SmServiceLookup.getUpgradeRoleSO().finishButtonAction(loginUser.getUserId());
-				log.info("END Upgrade Role IN IF updateSupplierSoftcert ");
-			}
-		}catch(Exception ex){
-			ex.printStackTrace();
-			log.info("Problem During Upgrade Role After updateSupplierSoftcert ");
-		}
-		//END LOG 12491
+
 		// for resubmit application directly inject to task list
 		if (this.getManagedBean().getRejectedAppl() != null) {
 			SmCommonUtil.redirectToPage(this.getManagedBean().getTargetUrl(),
