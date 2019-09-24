@@ -42,8 +42,8 @@
 					rendered="#{(report.pmDocument ne null and
 											!suppFinalizationBackingBean.managedBean.getDirectdownloaddocdefkeys()
 												.contains(report.pmDocument.docDefinitionKey)) or report.pmDocument eq null}">
-					<ac:scSingleFileUploadButton id="sfBriefingReportUploadBtn"
-						popupWidgetVar="sfBriefingReportAttWidget"
+					<ac:scSingleFileUploadButton id="briefingReportUploadBtn"
+						popupWidgetVar="briefingReportAttWidget"
 						attachment="#{report.scQtFinalizationReportAttachment}"
 						readonly="#{!(isSecretaryUser and report.selected)}"
 						rowIndex="#{rowIndex}">
@@ -73,7 +73,11 @@
 					</ac:scSingleFileUploadButton>
 				</ui:fragment> -->
 
-		<ui:include src="/xhtml/sc/supplierFinalization/briefingPaper/briefingPaperEvaluationSfReport.xhtml" />
+		<div class="ppRightBtn BtnSpacing">
+			<p:commandButton value="#{lbl['lbl.btn.download.all']}"
+				action="#{suppFinalizationBackingBean.downloadAllReports}"
+				ajax="false" immediate="true" rendered="#{!readOnlyTask}" />
+		</div>
 	</p:panel>
 
 </ui:composition>

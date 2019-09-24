@@ -30,8 +30,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -51,12 +49,10 @@ import my.ep.biz.service.ct.circular.IPanelGroupItemSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IPtjSpecialApprovalSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
-import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
@@ -79,15 +75,11 @@ import my.ep.dto.pm.authorization.orgprofile.PtjSpecialApprovalReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.PtjSpecialApprovalResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
-import my.ep.dto.pm.common.document.DocumentReqDTO;
-import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
-import my.ep.dto.sc.quationtender.EvaluationReqDTO;
-import my.ep.dto.sc.quationtender.EvaluationResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.SpecificationReqDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
@@ -129,8 +121,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
-import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationReport;
-import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportAttachment;
@@ -151,14 +141,12 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
-import my.ep.type.sc.EvaluationReport;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.shared.PerformanceBondUtil;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentDefaultFormat;
@@ -190,7 +178,6 @@ import org.docx4j.openpackaging.parts.PartName;
 import org.docx4j.openpackaging.parts.WordprocessingML.AlternativeFormatInputPart;
 import org.docx4j.relationships.Relationship;
 import org.docx4j.wml.CTAltChunk;
-import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
@@ -687,7 +674,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	protected IQTDetailSO getQTDetailSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 	}
-
+	
 	/**
 	 * To initialize remarks.
 	 * 
@@ -1953,7 +1940,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		} 
 		
 		return scLoa;
-	}	
+	}		
 	//end Enhancement #24259 #24269	
 
 	/**
@@ -3280,540 +3267,5 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				zos.closeEntry();
 			}
 		}
-	}
-	
-	/**
-	 * Retrieve report tab dtl.Event handle set attachment for Reports tab.
-	 */
-	/**
-	 * @param scqt
-	 * @param committeeType
-	 * @param taskType 
-	 */
-	public void retrieveReportTabDtl (ScQt scqt, String committeeType, String taskType) {
-		log.debug("start retrieveReportTabDtl");
-		//retrieveReportHeader();  
-		IQTEvaluationSO evaluationSO;
-		EvaluationResDTO resDTO = null;
-		try {
-			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
-			reqDTO.setQtId(scqt.getQtId());
-			reqDTO.setCommType(EvaluationReport.getName(committeeType));
-			// qtReqDTO.setQtId(qtId);
-			
-			resDTO = evaluationSO.retriveQtDtlsByRemarksAttachments(reqDTO);
-			
-			resDTO = evaluationSO.retriveReportDetails(reqDTO);
-			if (null != resDTO.getReports()
-					&& !resDTO.getReports().isEmpty()) {
-				Iterator<ScQtEvaluationReport> iterator = resDTO.getReports().iterator();
-				if (taskType.equals(SourcingConstants.CONSOLIDATION_TASK)) {
-					while (iterator.hasNext()) {
-						ScQtEvaluationReport report = iterator.next(); 
-						if (SourcingConstants.PERAKUAN_REPORT.equals(report.getTitle())
-								|| SourcingConstants.UDPUPBM_REPORT.equals(report.getTitle())) {
-							iterator.remove();
-						}
-					}
-				}
-				
-				if (taskType.equals(SourcingConstants.SUPPLIER_FINALIZATION_TASK)) {
-					while (iterator.hasNext()) {
-						ScQtEvaluationReport report = iterator.next(); 
-						if (SourcingConstants.PERAKUAN_REPORT.equals(report.getTitle())
-								|| SourcingConstants.LATAR_BELAKANG_REPORT.equals(report.getTitle())
-								|| SourcingConstants.UDPUP_REPORT.equals(report.getTitle())
-								|| SourcingConstants.METODOLOGI_PENILAIAN_REPORT.equals(report.getTitle())
-								|| SourcingConstants.TUJUAN_REPORT.equals(report.getTitle())) {
-							iterator.remove(); 
-						}
-					}
-					
-					if (resDTO.getReports().isEmpty()) {
-						createReportForSF(scqt); 
-					}
-				}
-				getManagedBean().setScQtEvaluationReportList(
-						resDTO.getReports());
-			}
-				
-		
-			if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
-					.equalsIgnoreCase(committeeType)) {
-				/*if (null != scqt.getScEvaluationCommitteeReportAttachment()) {
-					ScAttachment attachment = scqt.getScEvaluationCommitteeReportAttachment();
-					this.getManagedBean().setScAttachment(attachment);
-				}*/
-				this.getManagedBean().setReportDownloadFileName(
-						"NGeP-QT-Evaluation-Committee-Report");
-
-			} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
-					.equalsIgnoreCase(committeeType)) {
-				ScAttachment attachment = scqt.getScOpenCommitteeReportAttachment();
-				this.getManagedBean().setReportDownloadFileName(
-						"NGeP-QT-Opening-Committee-Report");
-
-				this.getManagedBean().setScAttachment(attachment);
-
-			} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
-					.equalsIgnoreCase(committeeType)) {
-				ScAttachment attachment = scqt.getScTechnicalEvaluationReportAttachment();
-				this.getManagedBean().setReportDownloadFileName(
-						"NGeP-QT-TechnicalEvaluation-Committee-Report");
-
-				this.getManagedBean().setScAttachment(attachment);
-
-			} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
-					.equalsIgnoreCase(committeeType)) {
-				ScAttachment attachment = scqt.getScFinancialEvaluationReportAttachment();
-				this.getManagedBean().setReportDownloadFileName(
-						"NGeP-QT-FinancialEvaluation-Committee-Report");
-
-				this.getManagedBean().setScAttachment(attachment);
-
-			}
-			log.debug("end retrieveReportTabDtl");
-		} finally {
-			evaluationSO = null;
-		}
-
-	}
-
-	/**
-	 * Create new report during Supplier Finalization Preparation.
-	 * @param scqt
-	 */
-	private void createReportForSF(ScQt scqt) {
-		log.debug("Entered " + this.getClass().getName() +".createReportForSF");
-		DocumentReqDTO docReqDTO = new DocumentReqDTO();
-		docReqDTO.setDocName(SourcingConstants.UDPUPBM_REPORT);
-		List<String> docDefinitionKeys = new ArrayList<>();
-		docDefinitionKeys.add("UPP");
-		docReqDTO.setDocDefinitionKeys(docDefinitionKeys);
-		IDocumentSO reqSO = (IDocumentSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IDocumentSO.class);
-		
-		IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-		ParameterReqDTO paramReqDTO = new ParameterReqDTO();
-		paramReqDTO.setParameterType(ParameterTypeConst.DOCUMENT_CATEGORY);
-		paramReqDTO.setParameterCode(ParameterConst.DOCUMENT_CATEGORY_EVALUATION_REPORT);
-		ParameterResDTO paramResDTO = parameterSO.retrieveParameterByTypeAndCode(paramReqDTO);
-		PmParameter docCategoryCode = null;
-		if (null != paramResDTO) {
-			docCategoryCode = paramResDTO.getPmParameter();
-		}
-		DocumentResDTO docResDTO = reqSO.retrieveDocument(docReqDTO, docCategoryCode);
-		if (null != docResDTO && docResDTO.isSuccessful() && null != scqt && null != docResDTO.getDocument()) {
-			log.debug(this.getClass().getName() +".createReportForSF: DocName is: " + docResDTO.getDocument().getDocName());
-			ScQtEvaluationReport evaluationReport = new ScQtEvaluationReport();
-			evaluationReport.setScQt(scqt);
-			evaluationReport.setDocCategory(docResDTO.getDocument().getDocCategoryCode().getParameterCode());
-			evaluationReport.setPmDocument(docResDTO.getDocument());
-			evaluationReport.setTitle(docResDTO.getDocument().getDocName());
-			evaluationReport.setDefinationType(docResDTO.getDocument().getDocDefinitionTypeCode());
-			
-			IQTEvaluationSO evaluationSo = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-			EvaluationReqDTO newReqDTO = new EvaluationReqDTO();
-			newReqDTO.setEvaluationReportList(new ArrayList<ScQtEvaluationReport>());
-			newReqDTO.getEvaluationReportList().add(evaluationReport);
-			newReqDTO.setReportType(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
-			evaluationSo.saveReportsDtls(newReqDTO );
-		}
-		log.debug("Exit " + this.getClass().getName() +".createReportForSF");
-	}
-	
-	/**
-	 * Download all reports.download all evaluation reports.
-	 * 
-	 * @throws Exception
-	 *             the exception
-	 */
-	public void downloadAllReports(ScQt scqt) throws Exception {
-		log.debug(this.getClass().getName() + ".downloadAllReports()");
-		List<ScQtEvaluationReport> evaluationReports = getManagedBean()
-				.getScQtEvaluationReportList();
-		List<ScAttachment> attachments = new ArrayList<ScAttachment>();
-		/*for (ScQtEvaluationReport scQtEvaluationReport : evaluationReports) {
-			ScQtEvaluationReportAttachment reportAttachment = scQtEvaluationReport
-					.getScQtEvaluationReportAttachment();
-			if (reportAttachment == null) {
-				//reportAttachment = generateDocumentAttachment(scQtEvaluationReport);
-				reportAttachment =(ScQtEvaluationReportAttachment)generateDocumentAttachment();
-				scQtEvaluationReport
-						.setScQtEvaluationReportAttachment(reportAttachment);
-			}
-			attachments.add(reportAttachment);
-		}*/
-		for(ScQtEvaluationReport evaluationreport:evaluationReports){
-			if(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD.equalsIgnoreCase(evaluationreport.getDefinationType().getParameterCode())){
-				if(null!=evaluationreport.getScQtEvaluationReportAttachment()){
-					attachments.add(evaluationreport.getScQtEvaluationReportAttachment());	
-				}
-			}
-			
-		}
-		attachments.add(generateDocumentAttachment(scqt, ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE));
-		downloadAllFiles(this.getManagedBean().getReportDownloadFileName(),
-				attachments);
-	}
-	
-	/**
-	 * @param scqt
-	 * @param committeeType
-	 * @return
-	 * @throws Exception
-	 */
-	private ScAttachment generateDocumentAttachment(ScQt scqt, String committeeType) throws Exception {
-		log.debug(this.getClass().getName() + ".generateDocumentAttachment()");
-		
-		ScAttachment reportAttachment = null;
-		ScQt scQt = scqt;
-		
-		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
-				.equalsIgnoreCase(committeeType)) {
-			reportAttachment = new ScEvaluationCommitteeReportAttachment();
-		} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
-				.equalsIgnoreCase(committeeType)) {
-			reportAttachment = new ScOpenCommitteeReportAttachment();
-		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
-				.equalsIgnoreCase(committeeType)) {
-			reportAttachment = new ScTechnicalEvaluationReportAttachment();
-		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
-				.equalsIgnoreCase(committeeType)) {
-			reportAttachment = new ScFinancialEvaluationReportAttachment();
-		}	
-		
-		StringBuilder fileName = new StringBuilder(
-				getManagedBean().getReportDownloadFileName());
-		fileName.append(".pdf");
-		reportAttachment.setFileName(fileName.toString());
-		reportAttachment.setDocNo(scQt.getQtNo());
-		generateEvaluationPdf(
-				(ScAttachment) reportAttachment,
-				scqt, committeeType);
-		
-		return reportAttachment;
-	}
-	
-	/**
-	 * @param committeeType 
-	 * @param scQtEvaluationReportAttachment
-	 * @param scQt
-	 */
-	private void generateEvaluationPdf(ScAttachment attachment, ScQt qt, String committeeType)
-			throws Exception {
-		log.debug(this.getClass().getName() + ".generateEvaluationPdf()");
-		populateAttachmentDetails(attachment);
-		
-		FacesScopes facesScopes = new FacesScopes();
-		long qtId = qt.getQtId();
-		String reportName = StringUtils.EMPTY;
-		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
-				.equals(committeeType)) {
-			reportName = ReportConst.SC_EC_RPT_JSP;
-		} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
-				.equals(committeeType)) {
-			reportName = ReportConst.SC_OC_RPT_JSP;
-		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
-				.equals(committeeType)) {
-			reportName = ReportConst.SC_TEC_RPT_JSP;
-		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
-				.equals(committeeType)) {
-			reportName = ReportConst.SC_FEC_RPT_JSP;
-		}
-		
-		String estimatedAmountStr = null;
-		IQTDetailSO qtDetailSO = null;
-		try {
-			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			BigDecimal estimatedAmount = qtDetailSO.getdecryptedEstAmount(qtId);
-			if (null != estimatedAmount) { 
-				estimatedAmountStr = estimatedAmount.toPlainString();
-			}
-		} finally {
-			qtDetailSO = null;
-		}
-
-		Map<String, String> paramMap = new HashMap<String, String>();
-		paramMap.put(ReportConst.PARAM_QUOTE_ID_EQ, qtId + "");
-		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes
-				.getUserSessionBean().getUserId() + "");
-		paramMap.put(ReportConst.PARAM_ESTIMATED_AMOUNT, estimatedAmountStr);
-		
-		if (StringUtils.isNotBlank(reportName)) { 
-			// Add dynamic value for boolean value in below line.
-			generatePdfFromOracle(reportName, paramMap, attachment, true);
-		} else {
-			log.info("ReportName is empty");
-		}
-	}
-	
-	/**
-	 * Delete reports upload file.Event handle to delete upload file in
-	 * reports tab.
-	 * @param delEntity
-	 *               (BaseEntity delEntity).
-	 */
-	public void deleteReportsUploadFile(BaseEntity delEntity) {
-		log.debug("deleteUploadFile");
-		
-		try{
-		log.debug("deleteReportsUploadFile");
-		ScQtEvaluationReport selectedEvaluationReport = getManagedBean()
-				.getSelectedReport();
-		selectedEvaluationReport.setScQtEvaluationReportAttachment(null);
-		 getManagedBean()
-			.setSelectedReport(selectedEvaluationReport);
-		}finally{
-		
-		}
-
-	}
-	
-	/**
-	 * @param finalizationReports
-	 * @param scQt 
-	 */
-	public void populateEvolutionReports(List<ScQtFinalizationReport> finalizationReports, ScQt scQt) {
-		if (null != scQt) {
-			String evaluationType = scQt.getEvaluationType();
-			if (StringUtils.isNotEmpty(evaluationType)) {
-				Iterator<ScQtFinalizationReport> iterator = finalizationReports.iterator();
-				while (iterator.hasNext()) {
-					ScQtFinalizationReport report = iterator.next();
-					if (null != report) {
-						if (getManagedBean().getEvaluationReportList() == null) {
-							List<ScQtFinalizationReport> erList = new ArrayList<>();
-							getManagedBean().setEvaluationReportList(erList);
-						}
-						if (SourcingConstants.EVALUATION_TYPE_TIER1.equals(evaluationType)) {
-							if (SourcingConstants.EVALUATION_REPORT.equals(report.getTitle())) {
-								getManagedBean().getEvaluationReportList().add(report);
-								iterator.remove();
-							}
-						} else if (SourcingConstants.EVALUATION_TYPE_TIER2.equals(evaluationType)) {
-							if (SourcingConstants.OPENING_REPORT.equals(report.getTitle())
-									|| SourcingConstants.TECHNICAL_EVALUATION_REPORT.equals(report.getTitle())
-									|| SourcingConstants.FINANCIAL_EVALUATION_REPORT.equals(report.getTitle())) {
-								getManagedBean().getEvaluationReportList().add(report);
-								iterator.remove();
-							}
-							
-						}
-					}
-				}
-			}
-		}
-	}
-	
-	/**
-	 * @param taskType 
-	 * 
-	 */
-	public void validateEvaluationReports(String taskType){
-		List<ScQtEvaluationReport> evaluationReportList=this.getManagedBean().getScQtEvaluationReportList();
-		if (null != evaluationReportList && evaluationReportList.size() > 0) {
-			String reportNames = "";
-			for (ScQtEvaluationReport evaluationReport : evaluationReportList) {
-				
-				if (taskType.equals(SourcingConstants.CONSOLIDATION_TASK)) {
-						if (SourcingConstants.LATAR_BELAKANG_REPORT.equals(evaluationReport.getTitle())
-								|| SourcingConstants.TUJUAN_REPORT.equals(evaluationReport.getTitle())
-								|| SourcingConstants.METODOLOGI_PENILAIAN_REPORT.equals(evaluationReport.getTitle())
-								|| SourcingConstants.UDPUP_REPORT.equals(evaluationReport.getTitle())) {
-							
-							if (StringUtils.isEmpty(evaluationReport.getReportContent())) {
-								if (StringUtils.isEmpty(reportNames)) {
-									reportNames = reportNames + evaluationReport.getTitle();
-								} else {
-									reportNames = reportNames + ", " + evaluationReport.getTitle();
-								}
-							}
-						}
-					} else if (taskType.equals(SourcingConstants.SUPPLIER_FINALIZATION_TASK)) {
-						if (SourcingConstants.UDPUPBM_REPORT.equals(evaluationReport.getTitle())) {
-							if (StringUtils.isEmpty(evaluationReport.getReportContent())) {
-								if (StringUtils.isEmpty(reportNames)) {
-									reportNames = reportNames + evaluationReport.getTitle();
-								} else {
-									reportNames = reportNames + ", " + evaluationReport.getTitle();
-								}
-							}
-						}
-					}
-			} 
-				
-			if (StringUtils.isNotEmpty(reportNames)) {
-				throw new EpException(MessageConst.ERROR_775149, new String[] { reportNames });
-			}
-		}
-	}
-	
-	/**
-	 * this method is used to save the userInput type popup window content in reports tab.
-	 * @param evaluationReport
-	 *                 (ScQtEvaluationReport evaluationReport).
-	 *                 
-	 */
-	public void saveEditTemplateDocContent(ScQtEvaluationReport evaluationReport){
-		IQTEvaluationSO evaluationSO = null;
-		try{
-	List<ScQtEvaluationReport> evaluationReportList=this.getManagedBean().getScQtEvaluationReportList();
-		if(null!=evaluationReport && !this.getManagedBean().isReadOnly()){
-			int report=	evaluationReportList.indexOf(evaluationReport);
-			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-			EvaluationReqDTO reqDto=new EvaluationReqDTO();
-			reqDto.setScQtEvaluationReport(evaluationReport);
-			reqDto.setReportType(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_DOCUMENT);
-			EvaluationResDTO resDto=evaluationSO.saveReportsDtls(reqDto);
-			if(null!=resDto.getScQtEvaluationReport()){
-				this.getManagedBean().getScQtEvaluationReportList().set(report, resDto.getScQtEvaluationReport());
-				//this.getManagedBean().setScQtEvaluationReport(resDto.getScQtEvaluationReport());
-			}
-		}
-		}finally{
-			evaluationSO = null;
-		}
-		
-	}
-	
-	/**
-	 * To add empty row to document data table.
-	 */
-	public void addDocumentList(ScQt scqt) {
-		log.debug("addDocumentList");
-		List<ScQtEvaluationReport> scQtDocReports = this.getManagedBean()
-				.getScQtEvaluationReportList();
-		if (scQtDocReports == null) {
-			scQtDocReports = new ArrayList<ScQtEvaluationReport>();
-			//scQt.setScQtE(scQtDocReports);
-		}
-		ScQtEvaluationReport scQtDocReport = new ScQtEvaluationReport();
-		scQtDocReport.setDocCategory(SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT);
-		scQtDocReport.setScQt(scqt);
-		// scQtDocReport.setScQtDocReportAttachment(new
-		// ScQtDocReportAttachment());
-		IParameterSO parameterSO = null;
-		try {
-			parameterSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-			ParameterReqDTO reqDTO = new ParameterReqDTO();
-			reqDTO.setParameterType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
-			reqDTO.setParameterCode(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
-			ParameterResDTO resDTO = parameterSO
-					.retrieveParameterByTypeAndCode(reqDTO);
-			scQtDocReport.setDefinationType(resDTO.getPmParameter());
-		} finally {
-			parameterSO = null;
-		}
-		scQtDocReports.add(scQtDocReport);
-	}
-	
-
-	/**
-	 *reports file upload.to upload files for manual added reports.
-	 * 
-	 * @param event
-	 *            (Mandatory)
-	 * @throws FileNotFoundException
-	 *             the file not found exception
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 */
-	public void reportsUploadAttachment(FileUploadEvent event)
-			throws FileNotFoundException, IOException {
-		if (event.getFile() != null) {
-			ScAttachment scAttachment = null;
-			ScQtEvaluationReport selectedEvaluationReport = getManagedBean()
-					.getSelectedReport();
-			ScQtEvaluationReportAttachment reportAttachment = selectedEvaluationReport
-					.getScQtEvaluationReportAttachment();
-			if (null == reportAttachment) {
-				reportAttachment = new ScQtEvaluationReportAttachment();
-				reportAttachment.setScQtEvaluationReport(selectedEvaluationReport);
-				selectedEvaluationReport
-						.setScQtEvaluationReportAttachment(reportAttachment);
-			} else {
-				reportAttachment.setScQtEvaluationReport(selectedEvaluationReport);
-				selectedEvaluationReport
-						.setScQtEvaluationReportAttachment(reportAttachment);
-			}
-			List<ScQtEvaluationReport> evaluationReports = getManagedBean()
-					.getScQtEvaluationReportList();
-			int indexOfReport = evaluationReports.indexOf(selectedEvaluationReport);
-			reportAttachment.setDocNo(selectedEvaluationReport.getScQt()
-					.getQtNo());
-			scAttachment = reportAttachment;
-			uploadAttachment(event.getFile(), scAttachment);
-			String fileName = scAttachment.getFileName();
-			if (indexOfReport >= 0 && fileName != null) {
-				reportAttachment.setFileName(indexOfReport + SourcingConstants.UNDER_SCORE
-						+ fileName);
-			}
-			selectedEvaluationReport
-					.setScQtEvaluationReportAttachment(reportAttachment);
-			
-		}
-	}
-	
-	/**
-	 * 
-	 */
-	public void saveEvaluationReportsDetaills(){
-		IQTEvaluationSO evaluationSO = null;
-		try{
-			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-		List<ScQtEvaluationReport> evaluationReportList=this.getManagedBean().getScQtEvaluationReportList();
-		EvaluationReqDTO reqDTO=new EvaluationReqDTO();
-		reqDTO.setEvaluationReportList(evaluationReportList);
-		reqDTO.setReportType(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
-		if(CollectionUtils.isNotEmpty(getManagedBean()
-				.getReportsToBeRemovedList())){
-			List<ScQtEvaluationReport> localReports=new ArrayList<ScQtEvaluationReport>();
-		for(ScQtEvaluationReport evaluationReport:getManagedBean()
-				.getReportsToBeRemovedList()){
-			if(null!=evaluationReport.getQtReportId() && !evaluationReport.isBrandNew()){
-				evaluationReport.setDeleted(true);
-				localReports.add(evaluationReport);
-			}
-			
-		}
-		reqDTO.setToBeRemovedReportList(localReports);
-		}
-		EvaluationResDTO resDto=evaluationSO.saveReportsDtls(reqDTO);
-		getManagedBean()
-		.setReportsToBeRemovedList(null);
-		}finally{
-			evaluationSO = null;
-		}
-		
-	}
-	
-	/**
-	 * delete existing report details records from database.
-	 *  
-	 */
-	public void deleteReportsTabDtls() {
-		List<ScQtEvaluationReport> evaluationReportRemoveList = getManagedBean()
-				.getReportsToBeRemovedList();
-		if (null == evaluationReportRemoveList) {
-			evaluationReportRemoveList = new ArrayList<ScQtEvaluationReport>();
-			getManagedBean()
-			.setReportsToBeRemovedList(evaluationReportRemoveList);
-		}
-		markDeleteSelectedRowsAction(getManagedBean()
-				.getScQtEvaluationReportList(), evaluationReportRemoveList);
-		if(CollectionUtils.isNotEmpty(evaluationReportRemoveList)){
-			getManagedBean()
-			.setReportsToBeRemovedList(evaluationReportRemoveList);
-		}
-
 	}
 }
