@@ -23,7 +23,6 @@
 				<div>
 					<div class="ppRightBtn">
 						<p:commandButton value="#{lbl['lbl.btn.save']}"
-							rendered="#{!isPidExpired}"
 							action="#{requestNoteBackingBean.saveCodificationAction('Save')}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							process="@this" />
@@ -35,7 +34,6 @@
 							<ui:param name="isCancel" value="${bpmAction == 'CANCEL'}" />
 
 							<p:commandButton value="#{lbl[buttonLabel]}" partialSubmit="true"
-								rendered="#{!isPidExpired}"
 								onclick="blockWidget.show();" oncomplete="blockWidget.hide();"
 								process="#{isCancel ? '@this,  @([id$= remark])' : '@form'}"
 								update="#{isCancel ? '@this,  @([id$= remark])' : '@form'}"
