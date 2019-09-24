@@ -99,7 +99,10 @@
 			</c:if>
 			<h:commandLink action="#{backingBean.redirectToRevisionSupplierProfilePage('O')}" 
 					process="@this" partialSubmit="true" update=":form" target="_blank"
-					value="#{lbl['lbl.sm.view.original.appl']}"/>
+					value="#{lbl['lbl.sm.view.original.appl']}"/>&#160;&#160;
+					
+			<h:commandLink action="#{backingBean.redirectToViewSSMInfo()}" target="_blank"
+					value="#{lbl['lbl.sm.view.ssm.infomation']}"/>
 		</div>
 		<br /><br />
 	</c:if>
