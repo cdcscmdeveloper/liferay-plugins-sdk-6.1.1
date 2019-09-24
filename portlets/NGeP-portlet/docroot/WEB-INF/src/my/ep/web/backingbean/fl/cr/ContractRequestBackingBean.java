@@ -345,6 +345,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				validateContractRequest(action);
 			}
 			
+			//#21489-start
+			if(!(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL))) {
+				validateUnitPrice(flRequest); 
+			}
+			//#21489-end
+			
 			//Bug #20701 Problem to generate DO - to monitor
 			log.info(":::submitAction() "+ action +". Doc no.: "+ flRequest.getDocNo() +". Deliv adrs size: "+ flRequest.getFlDeliveryAddresses().size());
 			//end Bug #20701			
@@ -380,9 +386,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				log.info("Record saved successfully for doc no. "+ flRequest.getDocNo());
 				String messageId = MessageConst.INFO_700005;
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
-					if(flRequest.getDocNo()!= null){
-						validateUnitPrice(flRequest); //#21489
-						}
 					messageId = MessageConst.INFO_700004;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 					messageId = MessageConst.INFO_745004;
@@ -1214,12 +1217,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}else{
 				setFulfilmentItemAddr(getManagedBean().getFlRequest());
 			}
-			
-			//#21489
-			validateUnitPrice(getManagedBean().getFlRequest());
-			
-			
-			
 				
 		}else if(contractId != null){
 			renewSesionObject();
@@ -1842,21 +1839,23 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}
 	}
 	
-	//#21489
+	//#21489-start
 	/**
 	 * check item unit price has exceed or not exceed.
 	 * 
 	 * @param FlItemSummaryReqDTO reqDTO - contractId, orgProfileId,itemId
 	 */
 	public void validateUnitPrice(FlFulfilmentRequest flRequest){
-		log.info("validateUnitPrice 160419");
+		log.info("ContractRequestBackingBean.validateUnitPrice");
 		IContractItemSO contractItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
+		String warn ="";
 
 		ContractItemReqDTO ctReqDTO = new ContractItemReqDTO();
 		ContractItemResDTO ctResDTO = new ContractItemResDTO();
 		ctReqDTO.setContractId(flRequest.getCtContract().getContractId());
 		ctReqDTO.setOrgProfileId(flRequest.getPreparedOrgProfile().getOrgProfileId());
 		BigDecimal unitPriceKeyIn = BigDecimal.ZERO;
+		int count =0;
 		
 		if(getManagedBean().getSelectedDelAddr() != null){
 			ctReqDTO.setFlAddress(getManagedBean().getSelectedDelAddr().getFlAddress());
@@ -1871,27 +1870,31 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()){
 				ctReqDTO.setItemId(itemAddr.getScRequestItem().getRequestNoteItemId());
 				ctReqDTO.setOrderedQty(itemAddr.getOrderedQty());
-				ctResDTO = contractItemSO.getItemPrice(ctReqDTO);
-				if(ctResDTO.getItemPrice().doubleValue() <= 0){
-					break;
+				ctReqDTO.setContractZoneId(itemAddr.getZoneId());
+				ctResDTO = contractItemSO.getItemPriceByZone(ctReqDTO);
+				
+				if(itemAddr.getUnitPrice().doubleValue() <= 0){
+					throw new EpException(MessageConst.ERROR_740061, new String[]{itemAddr.getScRequestItem().getItemName(),"0"});
 				}
 				
 				unitPriceKeyIn = itemAddr.getUnitPrice();
 
 				if (ParameterConst.ITEM_TYPE_SERVICE.equals(itemAddr.getItemType().getParameterCode())) {
 					if (unitPriceKeyIn.doubleValue() > ctResDTO.getItemPrice().doubleValue()) {
-						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO , null,
-								MessageUtils.getMessage(MessageConst.INFO_745086, 
-										new String[]{itemAddr.getScRequestItem().getItemName()}, 
-										MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+						count++;
+						warn += MessageUtils.getMessage(MessageConst.ERROR_740062, new String[]{},MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()); 
+						warn += itemAddr.getScRequestItem().getItemName();
+						warn += MessageUtils.getMessage(MessageConst.ERROR_740063, new String[]{},MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
 					}
 				}
 			}
 		}
-	}
-	
-	
-	//#21489
+		if (count > 0) {
+			warn += MessageUtils.getMessage(MessageConst.ERROR_740064, new String[]{},MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()); 			
+			throw new EpException(warn);			
+		}	
+	}//#21489-end
+
 	/**
 	 * initialize approver group.
 	 */
