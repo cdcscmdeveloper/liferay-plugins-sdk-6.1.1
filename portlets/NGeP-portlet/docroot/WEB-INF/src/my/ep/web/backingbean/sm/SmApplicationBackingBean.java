@@ -130,6 +130,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBranchBank;
+import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.entity.sm.SmSupplierSystem;
@@ -145,6 +146,7 @@ import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.backingbean.sm.applicationView.ViewApplHistoryBackingBean;
 import my.ep.web.backingbean.sm.outputmsg.SmOutputMsgBackingBean;
 import my.ep.web.backingbean.sm.questionnaire.QuestionnaireBackingBean;
+import my.ep.web.backingbean.sm.registration.RegistrationBackingBean;
 import my.ep.web.backingbean.sm.sitevisit.SvoSiteVisitBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
@@ -152,6 +154,7 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.pp.common.PpCommonUtil;
 import my.ep.web.util.sm.helper.SmApplicationNotificationUtil;
@@ -12275,5 +12278,31 @@ public class SmApplicationBackingBean extends
 	public void assignBankAccountNo(SmSupplierBank bank){
 		this.getManagedBean().setAccountNo(bank.getAccountNo());
 	}
+	
+	//FIXME : 16052019 - SSM INTEGRATION CR - start
+	public void redirectToViewSSMInfo() {
+		clearPersonnelList();
+		for(SmPersonnel personnel:getManagedBean().getSmAppl().getSmPersonnels()){
+			if(personnel.isEquityOwner()){
+				this.getManagedBean().getPersonnelsOwner().add(personnel);
+			}
+			if(personnel.isDirector()){
+				this.getManagedBean().getPersonnelsDirector().add(personnel);
+			}
+		}
+		SmCommonUtil.redirectToExternalUrl(SupplierManagementConst.VIEW_SSM_INFOMATION);
+	}
+	
+	public void clearPersonnelList() {
+		this.getManagedBean().getPersonnelsOwner().clear();
+		this.getManagedBean().getPersonnelsDirector().clear();
+	}
+	
+	public String getBusinessNatureSection(SmSupplierBusiness suppBizNature){
+		RegistrationBackingBean registrationBackingBean = new RegistrationBackingBean();
+		return registrationBackingBean.getBusinessNatureSection(suppBizNature);
+	}
+	
+	//FIXME : 16052019 - SSM INTEGRATION CR - end
 
 }
