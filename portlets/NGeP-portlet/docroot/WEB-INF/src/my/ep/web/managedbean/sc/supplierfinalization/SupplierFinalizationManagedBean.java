@@ -214,7 +214,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private Long originalFinalizationSecretaryUserId;
 	
 	private int preparationTabIndex;
-	private int evaluationReportIndex;
 	private int reportTabIndex;
 	private int finalizationTabIndex;
 	private int commEndorsementTabIndex;
@@ -2116,20 +2115,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.outcome = outcome;
 	}
 
-	/**
-	 * @return the evaluationReportIndex
-	 */
-	public int getEvaluationReportIndex() {
-		return evaluationReportIndex;
-	}
-
-	/**
-	 * @param evaluationReportIndex the evaluationReportIndex to set
-	 */
-	public void setEvaluationReportIndex(int evaluationReportIndex) {
-		this.evaluationReportIndex = evaluationReportIndex;
-	}
-	
 	public String getPreviousPageUrl() {
 		return previousPageUrl;
 	}
@@ -2137,4 +2122,19 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setPreviousPageUrl(String previousPageUrl) {
 		this.previousPageUrl = previousPageUrl;
 	}
+	
+	
+
 }
+
+
+
+
+
+
+
+
+
+
+
+// ***25201
