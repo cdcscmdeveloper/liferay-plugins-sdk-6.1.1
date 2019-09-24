@@ -212,7 +212,8 @@
 						disabled="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing or contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or !bpmTasklistBackingBean.managedBean.claim}" 
 						readonlyInput="true"
 						rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing =='false'}"
-					    mindate="#{contractRequestBackingBean.managedBean.flRequest.startDate}"
+					    mindate="#{contractRequestBackingBean.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.effDate}"
+						maxdate="#{contractRequestBackingBean.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.expDate}"
 						value="#{contractRequestBackingBean.managedBean.flRequest.startDate}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 						<p:ajax event="dateSelect"
@@ -268,7 +269,7 @@
 									<p:row>
 										<p:column colspan="3"
 											style="white-space:normal;text-align: center;"
-											headerText="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgCode} #{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgName}" />
+											headerText="#{lbl['lbl.pm.org.ptjCode']}/#{lbl['lbl.pm.org.ptjName']} : #{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgCode} #{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgName}" />
 
 
 									</p:row>
