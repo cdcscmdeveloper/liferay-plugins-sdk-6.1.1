@@ -1694,9 +1694,19 @@ public class PurchaseInquiryBackingBean extends
 		prInquiryReqDTO.setFetchSubEntity(true);
 		PrInquiryResDTO prInquiryResDTO = prInquirySO.getPrInquiry(prInquiryReqDTO);
 		prInquiry  = prInquiryResDTO.getPrInquiryDetail();
+
+		getManagedBean().setPriceType(getParameterDesc(prInquiry.getPriceType()));
 		// status
-		if(prInquiry.getCurrentStatus() != null){
+		if (prInquiry.getCurrentStatus() != null) {
 			getCurrentStatus(prInquiry.getCurrentStatus().getPmStatus());
+			PmStatus pmStatus = getManagedBean().getPriStatus();
+			if (ParameterConst.DOCTYPE_PURCHASE_INQUIRY.equals(pmStatus.getDocType())
+					&& DPStatusConstants.PRI_PENDING_SUBMISSION.equals(pmStatus.getStatusId())) {
+				String priceType = prInquiry.getPriceType().getParameterCode();
+				getManagedBean().setPriceType(priceType);
+				getManagedBean().setPriceTypes(
+						getPriceTypeDropdownValues(ParameterTypeConst.PRICE_TYPE, Arrays.asList(priceType)));
+			}
 		}
 
 		// get selected supplier 
@@ -1714,7 +1724,6 @@ public class PurchaseInquiryBackingBean extends
 			getManagedBean().setRequestNoteDtl(scRequestNoteDtl);
 		}
 		getManagedBean().setPmOrgProfile(requestSupplierItem.getRequestNoteItem().getRequestNote().getPmOrgProfile());
-		getManagedBean().setPriceType(getParameterDesc(prInquiry.getPriceType()));
 		getManagedBean().setScRequestSupplierItem(requestSupplierItem);
 		getManagedBean().setSupplierItemPrices(requestSupplierItem.getSupplierItemPrices());
 
