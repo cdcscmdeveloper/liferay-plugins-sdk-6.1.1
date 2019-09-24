@@ -106,10 +106,9 @@ public class ConsolidationReportBackingBean extends
 	private static final Logger log = EpLogger
 			.getLogger(ConsolidationReportBackingBean.class);
 
-	private final static int BRIEFING_PAPER_TAB_INDEX = 3;
+	private final static int BRIEFING_PAPER_TAB_INDEX = 0;
 	private final static int PACKAGE_TYPE_TAB_INDEX = 1;
 	private final static int ITEMIZED_TYPE_TAB_INDEX = 2;
-	private final static int EVALUATION_REPORT_TAB_INDEX = 0;
 
 	private final static Long DEFAULT_ITEM = 0L;
 	private final static Long DEFAULT_ZONE = 0L;
@@ -155,16 +154,13 @@ public class ConsolidationReportBackingBean extends
 	public void onTabMenuChangeAction(int tabIndex) {
 		switch (tabIndex) {
 		case 0:
-			navigateToEvaluationReport();
+			navigateToBriefingPaperTab();
 			break;
 		case 1:
 			navigateToPackagewiseTab();
 			break;
 		case 2:
 			navigateToItemizedTab();
-			break;
-		case 3:
-			navigateToBriefingPaperTab();
 			break;
 		}
 		onTabMenuChangeAction(tabIndex, true);
@@ -184,16 +180,13 @@ public class ConsolidationReportBackingBean extends
 		}
 		switch (tabIndex) {
 		case 0:
-			navigateToEvaluationReport();
+			navigateToBriefingPaperTab();
 			break;
 		case 1:
 			navigateToPackagewiseTab();
 			break;
 		case 2:
 			navigateToItemizedTab();
-			break;
-		case 3: 
-			navigateToBriefingPaperTab();
 			break;
 		}
 	}
@@ -514,16 +507,17 @@ public class ConsolidationReportBackingBean extends
 	}
 
 	/**
-	 * To download all reports under Evaluation Report tab.
+	 * To download all reports under Briefing Paper/Kertas Taklimat tab
 	 * 
 	 * @throws Exception
 	 *             the exception that would be thrown in case of any error while
 	 *             downloading the report(s)
 	 */
-	public void downloadAllEvaluationReports() throws Exception {
-		debugLogger("downloadAllEvaluationReports");
+	public void downloadAllReports() throws Exception {
+		debugLogger("downloadAllReports");
 
-		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean().getEvaluationReportList();
+		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean()
+				.getScQtFinalization().getScQtFinalizationReports();
 		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<ScQtFinalizationReportAttachment>();
 
 		for (int i = 0; i < scQtFinalizationReports.size(); i++) {
@@ -540,10 +534,10 @@ public class ConsolidationReportBackingBean extends
 
 		// Generate all the reports before submission
 		if (!getManagedBean().isSubmit()) {
-			downloadAllFiles("NGeP-Evaluation-Report", scAttachments);
+			downloadAllFiles("NGeP-Finalization-Report", scAttachments);
 		}
 	}
-	
+
 	/**
 	 * save consolidationReport Details.
 	 * 
@@ -560,8 +554,7 @@ public class ConsolidationReportBackingBean extends
 							IQTSuppFinalizationSO.class);
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 					.saveConsolidationReport(reqDTO);
-			validateEvaluationReports(SourcingConstants.CONSOLIDATION_TASK);
-			saveEvaluationReportsDetaills();
+
 			if (resDTO.isSuccessful()) {
 				renewSessionAndRetrieve(getManagedBean().getActiveIndex());
 
@@ -826,11 +819,9 @@ public class ConsolidationReportBackingBean extends
 			scQtFinalization.setScQtFinalizationReports(finalizationReports);
 
 			if (finalizationReports != null) {
-				populateEvolutionReports(finalizationReports, getManagedBean().getScQt());
-				this.getManagedBean().setFinalizationReports(finalizationReports);
+				this.getManagedBean().setFinalizationReports(
+						finalizationReports);
 			}
-			
-			retrieveReportTabDtl(getManagedBean().getScQt(), "EC", SourcingConstants.CONSOLIDATION_TASK);
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
@@ -1053,15 +1044,14 @@ public class ConsolidationReportBackingBean extends
 		} else {
 			validateDORanking(null, scQtFinalization.getScQtRecommends());
 		}
-		// Commented below code for #18685.
-		/*if (!scQtFinalization.isBriefingPaperUploaded()
+		if (!scQtFinalization.isBriefingPaperUploaded()
 				&& (kertasTaklimatReport != null && kertasTaklimatReport
 						.getScQtFinalizationReportAttachment() == null)) {
 			navigateToBriefingPaperTab();
 			throw new EpException(MessageConst.ERROR_760452);
 		}else{
 			scQtFinalization.setBriefingPaperUploaded(true);
-		}*/
+		}
 	}
 
 	private void validateDORanking(TplSpecZoneDtl specZoneDtl,
@@ -1805,14 +1795,4 @@ public class ConsolidationReportBackingBean extends
 		}
 	}
 
-	/**
-	 * @return the evaluationReportTabIndex
-	 */
-	public static int getEvaluationReportTabIndex() {
-		return EVALUATION_REPORT_TAB_INDEX;
-	}
-	
-	private void navigateToEvaluationReport() {
-		getManagedBean().setActiveIndex(EVALUATION_REPORT_TAB_INDEX);
-	}
 }

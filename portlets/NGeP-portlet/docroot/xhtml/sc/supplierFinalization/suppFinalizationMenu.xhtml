@@ -92,11 +92,6 @@
 					src="/xhtml/sc/supplierFinalization/preparation/preparation.xhtml" />
 			</c:if>
 			<c:if test="#{suppFinalizationBackingBean.managedBean.activeIndex eq 
-							suppFinalizationBackingBean.managedBean.evaluationReportIndex}">
-				<ui:include
-					src="/xhtml/sc/supplierFinalization/supplierFinalization/evaluationReport/evaluationReport.xhtml" />
-			</c:if>
-			<c:if test="#{suppFinalizationBackingBean.managedBean.activeIndex eq 
 							suppFinalizationBackingBean.managedBean.reportTabIndex}">
 				<ui:include
 					src="/xhtml/sc/supplierFinalization/briefingPaper/briefingPaperReport.xhtml" />
@@ -122,8 +117,8 @@
 		<ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/boardofDirectorsDetails.xhtml" />
 		<ui:include src="/xhtml/sc/supplierFinalization/committeeEndorsement/signOff.xhtml" />
 
-		<ui:include src="/xhtml/sc/supplierFinalization/upload.xhtml" />
-
+		<ui:include src="/xhtml/sc/supplierFinalization/upload.xhtml" />			
+		
 		<p:dialog id="reviseSuppFinalizationDlgs" widgetVar="reviseSuppFinalizationDlgs"
 			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
 			resizable="false" width="400" height="75" closable="false">
@@ -144,7 +139,7 @@
 					onclick="reviseSuppFinalizationDlgs.hide();" type="button" />
 			</div>
 		</p:dialog>
-
+		
 		<p:dialog id="submissionPopupId" widgetVar="submissionPopup"
 			header="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit.header']}"
 			resizable="false" width="325" height="100" closable="false"
@@ -170,10 +165,6 @@
 			</div>
 		</p:dialog>
 		
-		<ac:scSingleFileUploadPopup widgetVar="sfBriefingReportAttWidget"
-			fileUploadListener="consolidationReportBackingBean.handleFileUpload"
-			update="@([id$=reportTbl])" />
-			
 	</ui:define>
 
 </ui:composition>
