@@ -63,11 +63,11 @@
 						disabled="true" readonly="true" style="width:212px;" /></td>
 			</tr>
 
-			<c:if test="#{approvalBackingBean.managedBean.taskName eq ParameterConst.supplierAcceptQtChange || approvalBackingBean.managedBean.taskName eq ParameterConst.fcApproveQTChange}" >
+			<c:if test="#{approvalBackingBean.managedBean.taskName eq ParameterConst.supplierAcceptQtChange}" >
 				<tr>
 					<td>
-						<p:outputLabel value="*" styleClass="mandatory" />
 						<p:outputLabel value="#{lbl['lbl.sc.qt.response.period']}" /> 
+						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<td>
 						<p:inputText id="responsePeriod" value="#{CommonConstants.DEFAULT_RESPONSE_PERIOD}" style="width:200px;" disabled="true" />
@@ -83,6 +83,28 @@
 					</td>
 				</tr>
 			</c:if>
+			<c:if test="#{approvalBackingBean.managedBean.taskName eq ParameterConst.fcApproveQTChange}" >
+				<tr>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.sc.qt.response.period']}" /> 
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</td>
+					<td>
+						<p:inputText id="responsePeriod" value="#{CommonConstants.DEFAULT_RESPONSE_PERIOD}" style="width:200px;" disabled="true" />
+						<ac:iconTooltip value="#{lbl['lbl.sc.qt.response.period.tooltip']}" />
+					</td>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.sc.qt.proposal.validity.extension.response.due.date']}" />
+					</td>
+					<td>
+						<p:inputText value="#{''}" style="width:200px;" disabled="true" >
+						</p:inputText>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="4"><p:outputLabel value="#{lbl['lbl.sc.qt.proposal.validity.extension.response.due.date.desc']}" /></td>
+				</tr>
+			</c:if>
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.sc.title']}" /></td>
 				<td colspan="3"><p:inputTextarea
@@ -94,8 +116,8 @@
 				<c:if test="#{approvalBackingBean.managedBean.taskName eq ParameterConst.fcApproveQTChange}" >
 					<tr>
 						<td style="width: 235px;">
-							<p:outputLabel value="*" style="color:red;"/>
 							<p:outputLabel value="#{lbl['lbl.sc.qt.proposal.approval.date.chairperson.finalization']}" /> 
+							<p:outputLabel value="*" styleClass="mandatory"/>
 						</td>
 						<td>
 							<p:calendar label="#{lbl['lbl.sc.qt.proposal.approval.date.chairperson.finalization']}"
@@ -119,7 +141,7 @@
 						<c:if test="#{approvalBackingBean.managedBean.qt.approvalPBM eq true}"> 
 							<td style="width: 235px;">
 								<p:outputLabel value="#{lbl['lbl.sc.qt.proposal.approval.date.mof']}" /> 
-								<p:outputLabel value="*" style="color:red;"/></td>
+								<p:outputLabel value="*" styleClass="mandatory"/></td>
 							<td>
 								<p:calendar label="#{lbl['lbl.sc.qt.proposal.approval.date.mof']}"
 									disabled="#{approvalBackingBean.managedBean.readOnly}"
