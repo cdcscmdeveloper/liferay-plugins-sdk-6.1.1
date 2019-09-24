@@ -619,8 +619,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			page = "/xhtml/sc/quatationtender/Approver/applProposalValidPeriodExtension.xhtml";
 			qtPageFirst = false;
 		}
-		else if(//SCProcessNameConst.APPROVE_BPK.equalsIgnoreCase(taskName) 
-				 SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName)
+		else if(SCProcessNameConst.APPROVE_BPK.equalsIgnoreCase(taskName) 
+				|| SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName)
 				|| SCProcessNameConst.APPROVE_PUBLICATION.equalsIgnoreCase(taskName)){
 			log.info("*********** qtPageFirst");
 			qtPageFirst = true;
