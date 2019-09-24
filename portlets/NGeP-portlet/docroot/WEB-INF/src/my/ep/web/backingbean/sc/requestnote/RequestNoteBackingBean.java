@@ -1190,7 +1190,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		reloadRequestNoteForCodification(requestNoteResDTO);
 		
 		if(!pidExpiredFlag){
-			getPurchaseInDefaultExpiredMessageCodification(getManagedBean().getRequestNoteStatus().getStatusId());
+			//getPurchaseInDefaultExpiredMessageCodification(getManagedBean().getRequestNoteStatus().getStatusId());
 			
 		}
 		
