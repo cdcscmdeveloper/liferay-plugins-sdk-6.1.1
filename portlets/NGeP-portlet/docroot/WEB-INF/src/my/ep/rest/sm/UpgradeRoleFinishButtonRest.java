@@ -11,10 +11,13 @@ import my.ep.biz.service.osb.sm.ISMOsbSO;
 import my.ep.biz.service.sm.upgraderole.IUpgradeRoleSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.osb.sm.SMOsbReqDTO;
+import my.ep.dto.sm.scheduler.SmSchedulerResDTO;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.web.backingbean.sm.postsupplierregistration.PostSupplierRegistrationBackingBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.log4j.Logger;
 
@@ -45,21 +48,26 @@ public class UpgradeRoleFinishButtonRest {
 		}
 	}
 	
+	
 	@GET
-	@Path("/upgraderolefinishbuttonbyloginid/{loginId}")
-	public Response upgradeRoleFinishButtonByLoginId(@PathParam("loginId") String loginId) {
-		log.info("Before success calling upgraderolefinishbuttonbyloginid rest api....loginId="+loginId);
-		PostSupplierRegistrationBackingBean bean = new PostSupplierRegistrationBackingBean();
+	@Path("upgraderolefinishbuttonbulk")
+	public Response upgradeRoleFinishButtonBulk() {
+		log.info("calling upgradeRoleFinishButtonBulk rest api....");
 		try {	
-			/*PmUser pmUser = SmApplicationUtil.retreiveUserByLoginId(loginId);
-			if(pmUser!= null){
-				bean.finishButtonAction(pmUser.getUserId());
-				bean = null;
-			}*/
+			IUpgradeRoleSO upgradeRoleSO = SmServiceLookup.getUpgradeRoleSO();
+			SmSchedulerResDTO resDTO = upgradeRoleSO.retrievePendingUpgradeRole();
+			if(resDTO.getPersonnels() != null){
+				for(SmPersonnel personnel:resDTO.getPersonnels()){
+					if(personnel.getPmUser()!=null){
+						log.info("LIST USER ID = "+personnel.getPmUser().getUserId());
+						upgradeRoleSO.finishButtonAction(personnel.getPmUser().getUserId());
+					}
+					
+				}
+			}
 			
-			return Response.status(200).entity("success calling upgraderolefinishbuttonbyloginid!!").build();
+			return Response.status(200).entity("success calling upgradeRoleFinishButtonBulk!!").build();
 		} catch (Exception ex) {
-			bean=null;
 			return Response.status(406).entity(ex.getMessage()).build();
 		}
 	}
