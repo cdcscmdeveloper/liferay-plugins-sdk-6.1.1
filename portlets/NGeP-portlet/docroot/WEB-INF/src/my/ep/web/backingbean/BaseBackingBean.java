@@ -1223,6 +1223,24 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 	}
 	
+	//25638 - Start
+	public void successMessage(String messageCode, String messageCommon, String docNo, boolean isAcknowledgeRequired) {
+		FacesContext.getCurrentInstance()
+				.addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, 
+								MessageUtils.getMessage(messageCode,
+										new String[] { messageCommon, docNo }, 
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+
+		if (isAcknowledgeRequired) {
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
+		}
+	}
+	//25638 - End
+
 	/**
 	 * Success message.
 	 * 
@@ -2462,6 +2480,39 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 		return false;
 	}
+	/**
+	 * getUomCode and description.
+	 * 
+	 * 
+	 *@return uomCodeDesc.		
+	 */
+	public static String retriveUomDescOnly(PmUom pmUom){
+		String uomCodeDesc="";
+		if(null!=pmUom){
+			if(null!=pmUom.getUomCode() && null!=pmUom.getUomName()){
+			uomCodeDesc=pmUom.getUomName();	
+			}
+		}
+		
+	return uomCodeDesc;	
+	}
+	/**
+	 * getUomCode and description.
+	 * 
+	 * 
+	 *@return uomCodeDesc.		
+	 */
+	public static String retriveUomCodeOnly(PmUom pmUom){
+		String uomCode="";
+		if(null!=pmUom){
+			if(null!=pmUom.getUomCode() && null!=pmUom.getUomName()){
+			uomCode=pmUom.getUomCode();	
+			}
+		}
+		
+	return uomCode;	
+	}
+
 }
 
 
