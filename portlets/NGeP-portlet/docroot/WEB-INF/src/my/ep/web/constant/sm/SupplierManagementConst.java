@@ -62,6 +62,7 @@ public class SupplierManagementConst {
 	public static final String PROCEED_RENEW_MOF_APPLN = "renewMofBasePage";
 	public static final String PROCEED_RENEW_APPLN_SIDEMENU = "smRenewRegSideMenu_BasePage";
 	public static final String PROCEED_RENEW_APPLN_TNC_PAGE = "/xhtml/sm/renewMofApplication/renewMofApplTermsAndConditionsPage.xhtml";
+	public static final String VIEW_SSM_INFOMATION = "/xhtml/sm/renewMofApplication/viewSsmInformation.xhtml";
 	// public static final String PROCEED_RENEW_MOF_APPLN =
 	// "renewMofSmUser_BaseWizardPage";
 	public static final String PROCEED_CANCEL_MOF_APPLN = "cancelRegistrationWithMof";
