@@ -3701,3 +3701,8 @@ table.rptTbl {
     text-align: left;
     white-space: nowrap !important;
 }
+
+.ui-icon.ui-icon-alert.ui-confirm-dialog-severity {
+    background-position:0px 0px;
+    background-image: none;
+}
