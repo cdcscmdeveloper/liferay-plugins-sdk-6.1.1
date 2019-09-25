@@ -803,14 +803,14 @@ public class TaskReassignmentBackingBean extends
 			resetCheckAllTasks();
 			searchTaskAssign();
 		} else {
-			if (!verifiedDocNumber(this.getManagedBean().
+			/*if (!verifiedDocNumber(this.getManagedBean().
 					getTaskAssignmentSearchBean().getDocNo())) {
 				throw new EpException(MessageConst.ERROR_770207);
-			} else {
+			} else {*/
 				resetReassigneeList();
 				resetCheckAllTasks();
 				searchUsers();
-			}
+			//}
 		}
 		
 	}
