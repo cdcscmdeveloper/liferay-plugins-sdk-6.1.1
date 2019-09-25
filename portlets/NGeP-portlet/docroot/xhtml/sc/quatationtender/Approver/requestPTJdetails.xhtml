@@ -102,7 +102,10 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan="4"><p:outputLabel value="#{lbl['lbl.sc.qt.proposal.validity.extension.response.due.date.desc']}" /></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td><h:outputText value="#{lbl['lbl.sc.qt.proposal.validity.extension.response.due.date.desc']}" style="color: blue; font-style: italic;"/></td>
 				</tr>
 			</c:if>
 			<tr>
@@ -115,9 +118,9 @@
 			<c:if test="${approvalBackingBean.managedBean.approvalType == ParameterConst.approvalCategoryFinalizationCommittee}">
 				<c:if test="#{approvalBackingBean.managedBean.taskName eq ParameterConst.fcApproveQTChange}" >
 					<tr>
-						<td style="width: 235px;">
-							<p:outputLabel value="#{lbl['lbl.sc.qt.proposal.approval.date.chairperson.finalization']}" /> 
-							<p:outputLabel value="*" styleClass="mandatory"/>
+						<td style="width: 235px; padding: 10px; text-align: right;">
+							<h:outputText value="*" styleClass="mandatory"/>
+							<span style="font-size: 12px;"><h:outputText value="#{lbl['lbl.sc.qt.proposal.approval.date.chairperson.finalization']}" /></span>
 						</td>
 						<td>
 							<p:calendar label="#{lbl['lbl.sc.qt.proposal.approval.date.chairperson.finalization']}"
