@@ -8,67 +8,10 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="resourceSection">
-		<script type="text/javascript">
-			function test() {
-				location.reload();
-			}
-			function fileUpload() {
-				$('input[type=file]').click();
-
-			}
-		</script>
-
-
-		<style type="text/css">
-.ui-fileupload {
-	width: 100px;
-}
-
-.ui-fileupload-content {
-	border-style: none;
-}
-
-.fileupload-content.ui-widget-content.ui-corner-bottom {
-	border: 0px;
-}
-
-.fileupload-buttonbar.ui-widget-header.ui-corner-top {
-	padding: 0.2em 0.4em;
-	border: 0px solid;
-	background: transparent;
-}
-
-.ui-button-icon-left.ui-icon.ui-c.ui-icon-plusthick {
-	width: 0px;
-	height: 0px;
-	display: inline;
-	background: none;
-}
-
-.ui-button-text-icon-left.ui-button-text {
-	padding: 5.4em 2em 0.4em 1.1em;
-}
-
-.ui-button-text-only .ui-button-text {
-	padding: .4em 1em;
-}
-
-label>span.ui-button-text {
-	vertical-align: middle;
-	padding-top: 8px !important;
-	padding-left: 18px !important;
-	padding-right: 16px !important;
-}
-</style>
-
-
-
 	</ui:define>
 
 	<ui:define name="contentSection">
-
-
-		<ui:include src="/xhtml/common/uompopinclude.xhtml"></ui:include>
+	<ui:include src="/xhtml/common/uompopinclude.xhtml"></ui:include>
 		<!-- <ac:title value="#{lbl['lbl.sc.spec.specification.committee']}"></ac:title> -->
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
@@ -84,7 +27,8 @@ label>span.ui-button-text {
 						action="#{specificationBackingBean.committeeBackAction}" /> <p:commandButton
 						value="#{lbl['lbl.btn.print']}" process="@all" type="button">
 						<p:printer target="committeeTechEdit" />
-					</p:commandButton> <p:commandButton value="#{lbl['lbl.btn.cancel']}"
+					</p:commandButton>
+					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 						rendered="#{((specificationBackingBean.isQTStatusChecklistScoring()) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.isQTStatusChecklistScoringRevision()))}"
 						style="float:right;" immediate="true"
 						onclick="createTechnicalDialog.show();"></p:commandButton> <p:commandButton
@@ -105,19 +49,16 @@ label>span.ui-button-text {
 
 		<h:panelGroup id="committeeTechEdit">
 			<p:panel header="#{lbl['lbl.sc.template.spec']}" toggleable="true">
-				<ui:include src="/xhtml/sc/common/specGuideLineInstructions.xhtml"></ui:include>
-				<ui:include src="/xhtml/common/uominstruction.xhtml"></ui:include>
-
+			 <ui:include src="/xhtml/sc/common/specGuideLineInstructions.xhtml"></ui:include>
+			  <ui:include src="/xhtml/common/uominstruction.xhtml"></ui:include>
+			
 				<table>
 					<tr>
 						<td valign="top"><h:outputLabel
 								value="#{lbl['lbl.sc.document.title']}"></h:outputLabel></td>
 						<td colspan="3"><p:inputTextarea rows="2" cols="95"
 								disabled="#{(specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring())}"
-								style="margin-bottom:5px;width:83%;" maxlength="200"
-								onkeyup="limitTextArea(this,200);"
-								onkeydown="limitTextArea(this,200);"
-								onmouseout="limitTextArea(this,200);"
+								style="margin-bottom:5px;width:83%;" maxlength="200" onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);"
 								value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specName}" /></td>
 					</tr>
 
@@ -195,33 +136,15 @@ label>span.ui-button-text {
 					</div>
 				</p:dialog>
 
-
-
-
-				<ac:templateSpec
-					updateSpec="#{specificationBackingBean.managedBean.updateSpec}"
-					newable="#{specificationBackingBean.managedBean.specNewable}"
-					removable="#{specificationBackingBean.managedBean.specNewable}"
-					editable="#{((specificationBackingBean.isQTStatusChecklistScoring()) or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision()) or (specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance() and !specificationBackingBean.managedBean.readOnly))}"
-					templateSpecBean="#{specificationBackingBean.managedBean.templateSpecBean}" />
-
 			</p:panel>
 
-			<p:panel header="Process specification data (Import/ Export)"
-				toggleable="true">
-				<table>
-					<tr align="left">
-						<td><p:commandButton value="Import"
-								action="#{specificationBackingBean.handleFileUploadImport}" /></td>
-						<td><p:fileUpload id="uploader" value="filerUp"
-								fileUploadListener="#{specificationBackingBean.handleFileUploadExport}"
-								label="Export" showButtons="false" auto="true"
-								oncomplete="test()" /></td>
-					</tr>
-				</table>
 
-				<p:growl id="messages" showDetail="true" />
-			</p:panel>
+			<ac:templateSpec
+			    updateSpec="#{specificationBackingBean.managedBean.updateSpec}"
+				newable="#{specificationBackingBean.managedBean.specNewable}"
+				removable="#{specificationBackingBean.managedBean.specNewable}"
+				editable="#{((specificationBackingBean.isQTStatusChecklistScoring()) or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision()) or (specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance() and !specificationBackingBean.managedBean.readOnly))}"
+				templateSpecBean="#{specificationBackingBean.managedBean.templateSpecBean}" />
 
 		</h:panelGroup>
 	</ui:define>
