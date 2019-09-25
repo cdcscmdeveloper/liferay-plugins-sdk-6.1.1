@@ -819,8 +819,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	}
 
 	private void mandatoryByMessage(String message) {
-		throw new EpException(MessageConst.ERROR_770086, new String[] { ResourceBundleUtils.getMessage(message,
-				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
+		throw new EpException(MessageConst.ERROR_770400, new String[] { "'"
+				+ ResourceBundleUtils.getMessage(message, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()) + "'" });
 	}
 
 	public void submitAction() {
