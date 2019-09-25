@@ -6725,9 +6725,12 @@ public class SmApplicationUtil {
 										.isCollectionEmpty(pendingApproveCatTypeList) || !pendingApproveCatTypeList
 										.contains(mac.getCategoryType()
 												.getParameterCode()))
-								&& !isMachineExistInLatest(mac, bean
-										.getLatestAppl().getSmMachineDtls())) {
-							macIt.remove();
+							//24964 - start
+								&& !appl.getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+							if(!isMachineExistInLatest(mac, bean
+									.getLatestAppl().getSmMachineDtls())){
+								macIt.remove();
+							} //24964 - end						
 						}
 					}
 				}
