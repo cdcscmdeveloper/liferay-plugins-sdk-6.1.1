@@ -819,7 +819,7 @@ a:visited.menuItemLink-selected {
 }
 
 .ui-button .ui-button-text {
-	display: inline !important;
+	display: inline;
 }
 /* --------------------------          End Button         ------------------------------ */
 a.blue_font {
