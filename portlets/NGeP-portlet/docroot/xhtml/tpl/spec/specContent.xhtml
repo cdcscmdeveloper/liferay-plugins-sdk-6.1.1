@@ -98,7 +98,8 @@
 			
 			<c:if test="#{isContentTypeQuestion or isContentTypeReview or (isContentTypeUpdateSpec and !isUpdateSpecByAnswers)}">
 				<c:if test="#{isContentTypeQuestion and editable and isScoringReq}">
-					<h:outputText  styleClass="instruction" value="#{lbl['lbl.tpl.spec.content.instruction']}" escape="false" />
+					<h:outputText  styleClass="instruction" value="#{lbl['lbl.tpl.spec.content.instruction']}" escape="false" /><br/>
+					<h:outputText  styleClass="instruction" value="#{lbl['lbl.tpl.spec.content.EksImport']}" escape="false" />
 				</c:if>
 				
 			
@@ -111,9 +112,8 @@
 					partialSubmit="true" process="@this" update="@(.ac-paginator)"
 					oncomplete="#{templateSpecId}specBlockWidget.hide();" />
 					
-				<ac:dataTable id="questionTbl" widgetVar="#{templateSpecId}questionTblWidget" var="question" rowIndexVar="row"
+				<ac:dataTable id="questionTbl" converter="PositionMetricConverter" value="#{templateSpecBean.specMaster.tplSpecQuestions}" widgetVar="#{templateSpecId}questionTblWidget" var="question" rowIndexVar="row"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-					value="#{templateSpecBean.specMaster.tplSpecQuestions}"
 					scrollable1="true" scrollWidth1="#{scrollWidth}">
 					
 					<ui:param name="prevSpecQuestion" value="#{row > 0 ? templateSpecBean.specMaster.tplSpecQuestions[row-1] : null}" />
