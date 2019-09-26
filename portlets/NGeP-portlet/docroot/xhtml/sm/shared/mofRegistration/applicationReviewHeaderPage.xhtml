@@ -101,7 +101,7 @@
 					process="@this" partialSubmit="true" update=":form" target="_blank"
 					value="#{lbl['lbl.sm.view.original.appl']}"/>&#160;&#160;
 					
-			<h:commandLink action="#{backingBean.redirectToViewSSMInfo()}" target="_blank"
+			<h:commandLink rendered="#{backingBean.managedBean.smAppl.applValidWithSsm}" action="#{backingBean.redirectToViewSSMInfo()}" target="_blank"
 					value="#{lbl['lbl.sm.view.ssm.infomation']}"/>
 		</div>
 		<br /><br />
