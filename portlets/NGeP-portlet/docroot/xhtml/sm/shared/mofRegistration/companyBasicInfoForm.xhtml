@@ -49,7 +49,7 @@
 
 					<td><p:outputLabel value="#{lbl['lbl.sm.companyname']}" /></td>
 					<td><p:inputText
-							disabled="#{backingBean.managedBean.disabledCompanyName || backingBean.managedBean.companyValidWithSSM}"
+							disabled="#{backingBean.managedBean.disabledCompanyName || backingBean.managedBean.smAppl.applValidWithSsm}"
 							readonly="#{backingBean.managedBean.disabledCompanyName}"
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.companyName}"
 							size="50" />
@@ -67,7 +67,7 @@
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 							yearRange="-99:+0" 
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.robExpiryDate}"
-							rendered="#{(backingBean.managedBean.smSupplier.businessType == 'C' or backingBean.managedBean.smSupplier.businessType == 'F') and (!backingBean.managedBean.companyValidWithSSM || empty backingBean.managedBean.smAppl.smCompanyBasic.robExpiryDate) }"/>	
+							rendered="#{(backingBean.managedBean.smSupplier.businessType == 'C' or backingBean.managedBean.smSupplier.businessType == 'F') and (!backingBean.managedBean.smAppl.applValidWithSsm || empty backingBean.managedBean.smAppl.smCompanyBasic.robExpiryDate) }"/>	
 							
 							<p:calendar  navigator="true"
 							display="inline" readonlyInput="true" disabled = "true"
@@ -75,7 +75,7 @@
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 							yearRange="-99:+0" 
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.robExpiryDate}"
-							rendered="#{(backingBean.managedBean.smSupplier.businessType == 'C' or backingBean.managedBean.smSupplier.businessType == 'F')and (backingBean.managedBean.companyValidWithSSM || !empty backingBean.managedBean.smAppl.smCompanyBasic.robExpiryDate) }"/>	
+							rendered="#{(backingBean.managedBean.smSupplier.businessType == 'C' or backingBean.managedBean.smSupplier.businessType == 'F')and (backingBean.managedBean.smAppl.applValidWithSsm || !empty backingBean.managedBean.smAppl.smCompanyBasic.robExpiryDate) }"/>	
 							
 												
 						<p:message id="robExpiryDateMsg" for="robExpiryDate" showSummary="true"
@@ -100,7 +100,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.estdate']}" /></td>
 					<td>
 								<p:calendar showOn="button" navigator="true"
-								rendered="#{!backingBean.managedBean.companyValidWithSSM || empty backingBean.managedBean.smAppl.smCompanyBasic.establishDate}" 
+								rendered="#{!backingBean.managedBean.smAppl.applValidWithSsm || empty backingBean.managedBean.smAppl.smCompanyBasic.establishDate}" 
 								display="inline" required="true" readonlyInput="true"
 								label="#{lbl['lbl.sm.estdate']}" id="establishDate"
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
@@ -108,7 +108,7 @@
 								value="#{backingBean.managedBean.smAppl.smCompanyBasic.establishDate}" />
 								
 								<p:calendar navigator="true" disabled="true"
-								rendered="#{backingBean.managedBean.companyValidWithSSM and !empty backingBean.managedBean.smAppl.smCompanyBasic.establishDate}" 
+								rendered="#{backingBean.managedBean.smAppl.applValidWithSsm and !empty backingBean.managedBean.smAppl.smCompanyBasic.establishDate}" 
 								display="inline" required="true" readonlyInput="true"
 								label="#{lbl['lbl.sm.estdate']}" id="establishDateW"
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
@@ -147,8 +147,12 @@
 							<tr>
 								<td><p:inputText size="35" required="true" id="smSupAddr1"
 										maxlength="100" label="#{lbl['lbl.sm.companyaddress']}"
-										disabled="#{backingBean.managedBean.companyValidWithSSM}"
+										disabled="#{backingBean.disableFieldSSm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.addressSsmNull)}"
 										value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}" />
+									<ac:ssmShowIconAlertGreen 
+										greenIcon="#{backingBean.showGreenIconSsm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.addressSsmNull)}" 
+										poUser="#{backingBean.managedBean.poUser}" 
+									/>
 									<ac:smFieldChangeAlert 
 										isShow="#{backingBean.managedBean.showFieldChanges}"
 										oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}" 
@@ -159,7 +163,7 @@
 							</tr>
 							<tr>
 								<td><p:inputText size="35" maxlength="100" id="smSupAddr2"
-										disabled="#{backingBean.managedBean.companyValidWithSSM}"
+										disabled="#{backingBean.disableFieldSSm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.addressSsmNull)}"
 										value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address2}" />
 									<ac:smFieldChangeAlert 
 										isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -170,7 +174,7 @@
 							</tr>
 							<tr>
 								<td><p:inputText size="35" maxlength="100" id="smSupAddr3"
-										disabled="#{backingBean.managedBean.companyValidWithSSM}"
+										disabled="#{backingBean.disableFieldSSm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.addressSsmNull)}"
 										value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address3}" />
 									<ac:smFieldChangeAlert 
 										isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -216,7 +220,11 @@
 										<p:ajax event="change" process="@this"
 											listener="#{backingBean.onChangeCountry(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress,SupplierManagementConst.SM_BASIC_INFO_PANEL)}"
 											update="basicComState,basicCompDist,basicCompCity,postCodeCompPanelId" />
-									</p:selectOneMenu> 
+									</p:selectOneMenu>
+									<ac:ssmShowIconAlertGreen 
+										greenIcon="#{backingBean.showGreenIconSsm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.countrySsmNull)}" 
+										poUser="#{backingBean.managedBean.poUser}" 
+									/> 
 									<ac:smFieldChangeAlert 
 										isShow="#{backingBean.managedBean.showFieldChanges}"
 										oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCountry.countryId}" 
@@ -233,7 +241,7 @@
 								<p:selectOneMenu
 										style="width: 250px;margin-bottom: 5px;" id="basicComState"
 										required="true" label="#{lbl['lbl.sm.state']}"
-										disabled="#{backingBean.managedBean.companyValidWithSSM}"
+										disabled="#{backingBean.disableFieldSSm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.stateSsmNull)}"
 										value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.stateId}">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 											itemValue="" />
@@ -244,6 +252,10 @@
 											SupplierManagementConst.SM_BASIC_INFO_PANEL)}"
 											update="basicCompDist,basicCompCity" />
 									</p:selectOneMenu> 
+									<ac:ssmShowIconAlertGreen 
+										greenIcon="#{backingBean.showGreenIconSsm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.stateSsmNull)}" 
+										poUser="#{backingBean.managedBean.poUser}" 
+									/>
 									<ac:smFieldChangeAlert 
 										isShow="#{backingBean.managedBean.showFieldChanges}"
 										oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.stateId}" 
@@ -317,12 +329,16 @@
 								rendered="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.countryId==backingBean.managedBean.myCountryId}">
 								<p:inputText maxlength="5" required="true"
 									label="#{lbl['lbl.sm.postcode']}" id="smSupPostCodeMy"
-									disabled="#{backingBean.managedBean.companyValidWithSSM}"
+									disabled="#{backingBean.disableFieldSSm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcodeSsmNull)}"
 									value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcode}"
 									validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
 									size="35">
 									<f:validator validatorId="postcodeValidator" />
 								</p:inputText>
+								<ac:ssmShowIconAlertGreen 
+									greenIcon="#{backingBean.showGreenIconSsm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcodeSsmNull)}" 
+									poUser="#{backingBean.managedBean.poUser}" 
+								/>
 								<ac:smFieldChangeAlert 
 										isShow="#{backingBean.managedBean.showFieldChanges}"
 										oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcode}" 
@@ -335,10 +351,14 @@
 								rendered="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.countryId!=backingBean.managedBean.myCountryId}">
 								<p:inputText maxlength="10" required="true"
 									label="#{lbl['lbl.sm.postcode']}" id="smSupPostCodeForeign"
-									disabled="#{backingBean.managedBean.companyValidWithSSM}"
+									disabled="#{backingBean.disableFieldSSm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcodeSsmNull)}"
 									value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcode}"
 									size="35">
 								</p:inputText>
+								<ac:ssmShowIconAlertGreen 
+									greenIcon="#{backingBean.showGreenIconSsm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcodeSsmNull)}" 
+									poUser="#{backingBean.managedBean.poUser}" 
+								/>
 								<ac:smFieldChangeAlert 
 										isShow="#{backingBean.managedBean.showFieldChanges}"
 										oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcode}" 
@@ -354,10 +374,14 @@
 					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 							label="#{lbl['lbl.sm.annualRev']}" required="true"
 							id="smSupAnnRev"
-							disabled="#{backingBean.managedBean.companyValidWithSSM and backingBean.managedBean.smAppl.smCompanyBasic.annualRevenue>0 }"
+							disabled="#{backingBean.managedBean.smAppl.applValidWithSsm and backingBean.managedBean.smAppl.smCompanyBasic.annualRevenue>0 }"
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.annualRevenue}">
 							<f:selectItems value="#{backingBean.getDropdownValues('SAR')}" />
 						</p:selectOneMenu> 
+						<ac:ssmShowIconAlertGreen 
+							greenIcon="#{backingBean.showGreenIconSsm(null,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.revenueSsmNull)}" 
+							poUser="#{backingBean.managedBean.poUser}" 
+						/>
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges}"
 							oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.annualRevenue}" 
