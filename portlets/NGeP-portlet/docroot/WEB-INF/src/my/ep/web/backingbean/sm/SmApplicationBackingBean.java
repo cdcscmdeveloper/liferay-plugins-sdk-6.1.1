@@ -1454,7 +1454,9 @@ public class SmApplicationBackingBean extends
 				|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW) 
 				|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)
 				|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)){
-			if(!fromBpm && getManagedBean().isSsmIntegrationActive() && this.getManagedBean().getSmSupplier()!= null){
+			if(!fromBpm && getManagedBean().isSsmIntegrationActive() && this.getManagedBean().getSmSupplier()!= null 
+					&& !this.getManagedBean().getSmAppl().isApplValidWithSsm() 
+					&& businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupplier().getRegNo(),this.getManagedBean().getSmSupplier().getBusinessType())){
 				//SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
 				if(businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupplier().getRegNo(),this.getManagedBean().getSmSupplier().getBusinessType())){
 					SsmReqDTO ssmReqDTO = new SsmReqDTO();
@@ -1534,18 +1536,19 @@ public class SmApplicationBackingBean extends
 						throw new EpException(MessageConst.ERROR_721070);
 					}
 				}
-			}else if(fromBpm && this.getManagedBean().getSmSupplier() != null && getManagedBean().isSsmIntegrationActive() && businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupplier().getRegNo(),this.getManagedBean().getSmSupplier().getBusinessType())){
+			//}else if(fromBpm && this.getManagedBean().getSmSupplier() != null && getManagedBean().isSsmIntegrationActive() && businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupplier().getRegNo(),this.getManagedBean().getSmSupplier().getBusinessType())){
+			}else if(fromBpm && this.getManagedBean().getSmAppl().isApplValidWithSsm()&& businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupplier().getRegNo(),this.getManagedBean().getSmSupplier().getBusinessType())){
 				//this will use, when click from tasklist n only to check data is valid with ssm or not
-				SsmReqDTO ssmReqDTO = new SsmReqDTO();
+				/*SsmReqDTO ssmReqDTO = new SsmReqDTO();
 				ssmReqDTO.setRegNo(this.getManagedBean().getSmSupplier().getRegNo());
 				ssmReqDTO.setBusinessType(this.getManagedBean().getSmSupplier().getBusinessType());
 				ssmReqDTO.setCheckOnly(true);
-				SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
-				getManagedBean().setCompanyValidWithSSM(ssmResDTO.isCompanyValid());
-				getManagedBean().setValidateWithSSM(ssmResDTO.isCompanyValid());
+				SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);*/
+				getManagedBean().setCompanyValidWithSSM(true);
+				getManagedBean().setValidateWithSSM(true);
 			}else{
-				getManagedBean().setCompanyValidWithSSM(false);
-				getManagedBean().setValidateWithSSM(false);
+				getManagedBean().setCompanyValidWithSSM(this.getManagedBean().getSmAppl().isApplValidWithSsm());
+				getManagedBean().setValidateWithSSM(this.getManagedBean().getSmAppl().isApplValidWithSsm());
 			}
 		}
 		//16052019 - SSM INTEGRATION CR - Fahmi END
