@@ -9,39 +9,8 @@
 	<ui:include src="../shared/loaInstructionHeader.xhtml" />
 	
 	<h:panelGroup id="frequency">
-
-		<table border="0" cellspacing="0" cellpadding="0">
-			<tr>
-				<h:panelGroup
-					rendered="#{directLOABackingBean.managedBean.scQt.fulfilmentType.parameterCode eq ParameterConst.fulfilmentTypeScheduled}">
-					<td width="150px"><h:outputLabel
-							value="#{lbl['lbl.sc.periodic.fullfillent.type']}" /></td>
-					<td>
-						<c:choose>
-							<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}">  
-								<p:selectOneRadio 
-									value="#{directLOABackingBean.managedBean.scQt.scheduleType}" >
-									<f:selectItems value="#{directLOABackingBean.getSelectRadioButtonCodeValues(ParameterTypeConst.periodicScheduleType)}" />
-									<p:ajax event="change" update="progressive,schedule"
-										partialSubmit="true" process="@this"
-										listener="#{directLOABackingBean.scheduleTypeChange}"></p:ajax>
-								</p:selectOneRadio>
-							 </c:when>
-							<c:otherwise>
-								<p:inputText id="scheduleTypeTxt"
-									value="#{directLOABackingBean.getParameterDesc(ParameterTypeConst.periodicScheduleType, directLOABackingBean.managedBean.scQt.scheduleType)}"
-									size="30" disabled="true" />
-							</c:otherwise>
-						</c:choose>
-					</td>
-					<td style="margin-top: -3px"><ac:iconTooltip
-							value="#{lbl['lbl.sc.periodic.fullfillent.type.tooltip']}" /></td>
-				</h:panelGroup>
-			</tr>
-		</table>
-
-
-		<h:panelGroup id="schedule">
+	<!-- Enhancement #25659 remove the Radio button options selection between Frequency Payment/progressive Payment  -->
+	<h:panelGroup id="schedule">
 			<p:panel header="#{lbl['lbl.sc.spec.freq.schedule']} "
 				toggleable="true"
 				rendered="#{directLOABackingBean.managedBean.scQt.scheduleType eq ParameterConst.periodicScheduleTypeFrequencySchedule}">
