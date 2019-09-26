@@ -84,6 +84,7 @@ import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSstSupplier;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.persistence.logging.LogKey;
@@ -327,6 +328,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				this.getManagedBean().setSmSuppOwners(ssmResDTO.getSmSupplierOwners());
 				this.getManagedBean().setSmPersonnelAll(ssmResDTO.getSmPersonnelAll());
 				this.getManagedBean().setSmEquityCompany(ssmResDTO.getSmEquityCompanys());
+				this.getManagedBean().setSmSupplierBranches(ssmResDTO.getSmSupplierBranches());
 				//set country desc
 				/*for(SmSupplierOwner smSupplierOwner : ssmResDTO.getSmSupplierOwners()){
 					if(smSupplierOwner.getNationality() != null && !"".equalsIgnoreCase(smSupplierOwner.getNationality().getCountryCodeSSM())){
@@ -397,7 +399,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					case "C":
 					case "X":
 					case "Y":
-						throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
+						throw new EpException(MessageConst.ERROR_721078);
 					default:
 						break;
 				}
@@ -817,6 +819,19 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				}
 			}
 			smAppl.setSmEquityCompanies(this.getManagedBean().getSmEquityCompany());
+		}
+		//#16052019 - SSM INTEGRATION CR
+		//set branches
+		if(this.getManagedBean().isCompanyValidWithSSM() && this.getManagedBean().getSmSupplierBranches()!=null && this.getManagedBean().getSmSupplierBranches().size()>0){
+			for(SmSupplierBranch branch : this.getManagedBean().getSmSupplierBranches()){
+				branch.setSmAppl(smAppl);
+				//set company to address
+				if(branch.getSmAddress()!= null){
+					branch.getSmAddress().setSmSupplierBranches(new ArrayList<SmSupplierBranch>());
+					branch.getSmAddress().getSmSupplierBranches().add(branch);
+				}
+			}
+			smAppl.setSmSupplierBranches(this.getManagedBean().getSmSupplierBranches());
 		}
 		
 		
@@ -3579,7 +3594,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			//ROB SOLE PROPRIETOSHIP must <= 1 owner
 			case SupplierManagementConst.BUSINESS_TYPE_ROB_SOLE_PROPRIETORSHIP:
 				if(getManagedBean().getSmSuppOwners().size() > 1) {
-					throw new EpException(MessageConst.ERROR_721078);
+					throw new EpException(MessageConst.ERROR_721077);
 				}
 				break;
 			default:
