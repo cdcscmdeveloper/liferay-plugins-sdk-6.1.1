@@ -710,7 +710,7 @@ public class CreateQtBackingBean extends
 					    boolean cetak = false;	
 						if (!EntityHelper.isCollectionEmpty(scQt.getScQtCategorys())) {
 							for (ScQtCategory cat : scQt.getScQtCategorys()) {
-							   if( (!StringUtils.isBlank(cat.getPmCategoryL2Name()) && 
+							   if( (!StringUtils.isBlank(cat.getPmCategoryL2Name()) && cat.getPmCategoryL2Name().length() > 10 &&
 								       cat.getPmCategoryL2Name().substring(0,10).equalsIgnoreCase("PERCETAKAN")) && 
 										     (getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) ||
 										      getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL) || 
