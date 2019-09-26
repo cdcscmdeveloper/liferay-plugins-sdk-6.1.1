@@ -4693,8 +4693,12 @@ public class SmApplicationBackingBean extends
 			assignValReqdToFalse();
 			// API FOR LIST OF OVERLAPPING CATEGORIES
 			SmApplicationUtil.checkOverLappingCategories(getManagedBean());
+			if(this.getManagedBean().getOverlapDocs() == null){//init just to be safe
+				this.getManagedBean().setOverlapDocs(new ArrayList<SmCategoryOverlapDoc>());
+			}
 			if((this.getManagedBean().getOverlapDocs().size()>0 
-					&& StringUtils.isBlank(this.getManagedBean().getOverlapDocs().get(0).getFileName()))){
+					&& StringUtils.isBlank(this.getManagedBean().getOverlapDocs().get(0).getFileName()))
+					|| this.getManagedBean().getOverlapDocs().size() == 0){
 					SmApplicationUtil.initOverlapCategoryDocs(getManagedBean()
 							.isOverLappedCategoryExists(), getManagedBean());
 			}
@@ -7727,6 +7731,12 @@ public class SmApplicationBackingBean extends
 				outcome = SupplierManagementConst.SM_APPL_BPM_OUTCOME_DRAFT;
 			} else {
 				outcome = "";
+			}
+			if(currentPageType.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
+				SmApplicationUtil.validateCategoriesBeforeSave(true, getManagedBean(), currentTab);
+				SmApplicationUtil.validateOverlapCategoryJustificationAndSuppDocs(getManagedBean(), currentPageType);
+				SmApplicationUtil.updateOverlapDocsToSmAppl(getManagedBean());
+				SmApplicationUtil.getInstance().removeNotApplicableInformationBeforeSave(getManagedBean());
 			}
 			MofRegistrationReqDTO reqDTO = setMofRegistrationReqDTO(bpmAppl,
 					outcome, SupplierManagementConst.SUPP_SAVE_APPL_DRAFT);
