@@ -4189,7 +4189,8 @@ public class SmCommonUtil {
 				case "70039":
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70039);
 				case "70040":
-					if(type != null && type.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN)){
+					//SSM INTEGRATION
+					if(type != null && ssmActive() && type.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN)){
 						throw new EpException(MessageConst.ERROR_SSM_70062);
 					}else{
 						throw new EpException(MessageConst.ERROR_MYIDENTITY_70040);
@@ -4249,6 +4250,7 @@ public class SmCommonUtil {
 			String regNo = ssmReqDTO.getRegNo();
 			regNo = regNo.substring(0, regNo.length() - 2);
 			ssmReqDTO.setRegNo(regNo);
+			ssmReqDTO.setDigitNo(ssmReqDTO.getRegNo().substring(ssmReqDTO.getRegNo().length()-1));
 			SsmResDTO resDTO = reqSO.ssmValidation(ssmReqDTO);
 			//only return company valid or not
 			if(ssmReqDTO.isCheckOnly()){
