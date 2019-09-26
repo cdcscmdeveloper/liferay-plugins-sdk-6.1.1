@@ -12,25 +12,21 @@
 			function test() {
 				location.reload();
 			}
-			function fileUpload() {
-				$('input[type=file]').click();
-
-			}
+		
+			$(document).ready(function() {
+			    $('.ui-fileupload.ui-widget .fileupload-content.ui-widget-content.ui-corner-bottom').removeClass('fileupload-content ui-widget-content ui-corner-bottom');
+			});
+			
+			
+			$(document).ready(function() {
+			    $('table .files').removeClass('files');
+			});
+			
 		</script>
 
 
 		<style type="text/css">
-.ui-fileupload {
-	width: 100px;
-}
 
-.ui-fileupload-content {
-	border-style: none;
-}
-
-.fileupload-content.ui-widget-content.ui-corner-bottom {
-	border: 0px;
-}
 
 .fileupload-buttonbar.ui-widget-header.ui-corner-top {
 	padding: 0.2em 0.4em;
@@ -45,20 +41,17 @@
 	background: none;
 }
 
-.ui-button-text-icon-left.ui-button-text {
-	padding: 5.4em 2em 0.4em 1.1em;
-}
-
-.ui-button-text-only .ui-button-text {
-	padding: .4em 1em;
-}
-
 label>span.ui-button-text {
 	vertical-align: middle;
 	padding-top: 8px !important;
 	padding-left: 18px !important;
 	padding-right: 16px !important;
 }
+
+label.ui-button>span.ui-button-text {
+	display: block !important;
+}
+
 </style>
 
 
@@ -211,11 +204,11 @@ label>span.ui-button-text {
 				toggleable="true">
 				<table>
 					<tr align="left">
-						<td><p:commandButton value="Import"
+						<td><p:commandButton value="#{lbl['lbl.btn.import']}"
 								action="#{specificationBackingBean.handleFileUploadImport}" /></td>
 						<td><p:fileUpload id="uploader" value="filerUp"
 								fileUploadListener="#{specificationBackingBean.handleFileUploadExport}"
-								label="Export" showButtons="false" auto="true"
+								ajax="false" label="#{lbl['lbl.btn.export']}" showButtons="false" auto="true"
 								oncomplete="test()" /></td>
 					</tr>
 				</table>
