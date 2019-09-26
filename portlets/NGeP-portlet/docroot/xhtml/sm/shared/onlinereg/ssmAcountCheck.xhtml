@@ -21,7 +21,7 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>		
 
-	    <p:messages id="messages" showSummary="false" showDetail="true"  autoUpdate="true" closable="true" severity="error, info, warn" />
+	    <p:messages id="messages" showSummary="false" showDetail="true"  escape="false" autoUpdate="true" closable="true" severity="error, info, warn" />
 	
 		
 		<p:panel header="#{lbl['lbl.sm.account.info']}" toggleable="true">
@@ -177,10 +177,10 @@
 				</p:commandButton>
 			
 				<p:commandButton id="btnProceed" value="#{lbl['lbl.sm.next']}"  style="float:right;"
-				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" rendered="#{registrationBackingBean.managedBean.statusFromSSM == 'A' || registrationBackingBean.managedBean.statusFromSSM == 'E'}"			
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 		
 				disabled="#{!registrationBackingBean.managedBean.agreeTC}" action="#{registrationBackingBean.proceedToCompanyInfo}"
 				 />
-				
+				<!-- rendered="#{registrationBackingBean.managedBean.statusFromSSM == 'A' || registrationBackingBean.managedBean.statusFromSSM == 'E'}"	 -->
 				
 			</div>
 	</p:panel>
