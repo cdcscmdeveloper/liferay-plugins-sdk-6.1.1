@@ -25,7 +25,12 @@
 					<ui:repeat var="attch" value="#{svTask.smSvTemplate.smAttachments}">
 					<p:outputPanel rendered="#{attch.recordStatusFlg == svoSiteVisitBackingBean.getRecordStatusActive()}">
 					<tr>
-						<td><h:outputText value="#{attch.fileName}" /></td>
+						<td>
+							<p:commandLink ajax="false" value="#{attch.fileName}">
+								<p:fileDownload
+									value="#{svoSiteVisitBackingBean.attachmentDownload(attch)}" />
+							</p:commandLink>
+						</td>
 						<td><p:commandLink oncomplete="attachmentDeleteDlg.show()" action="#{svoSiteVisitBackingBean.showDeleteDialog(dtlTemplate.svTemplateId,attch)}" 
 						update="@([id$=attachmentDeleteDlg])">
 							<p:graphicImage value="/css/images/design/delete.png" title="#{lbl['lbl.btn.delete']}" />
