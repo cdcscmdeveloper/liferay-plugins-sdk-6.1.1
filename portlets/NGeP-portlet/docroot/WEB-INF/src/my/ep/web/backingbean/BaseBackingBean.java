@@ -2523,13 +2523,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	
 	//16052019 - SSM INTEGRATION CR
-	public boolean disableFieldSSm(Boolean ssmData,boolean isSsmAppl,boolean isNullValue){
+	public boolean disableFieldSSm(Boolean ssmData,Boolean isSsmAppl,boolean isNullValue){
 		boolean disabledField = false;
-		if(ssmData == null){
-			if(isSsmAppl && !isNullValue){
+		if(isSsmAppl == null){
+			if(ssmData && !isNullValue){
 				return true;
 			}
-		}else if(ssmData){
+		}else if(isSsmAppl){
 			if(ssmData && isSsmAppl && !isNullValue){
 				return true;
 			}
