@@ -4047,7 +4047,13 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * */
 	public boolean isPendingSupplementalContractLetter(){
 		if(getManagedBean().getContractVer().getStatus().getStatusId() 
-				== ContractStatusConst.FA_PENDING_LOA_SUBMISSION.longValue()){								
+				== ContractStatusConst.FA_PENDING_LOA_SUBMISSION.longValue()
+				|| getManagedBean().getContractVer().getStatus().getStatusId() 
+				== ContractStatusConst.FA_PENDING_LOA_ACKNOWLEDGEMENT.longValue()
+				|| getManagedBean().getContractVer().getStatus().getStatusId() 
+				== ContractStatusConst.FA_PENDING_LOA_APPROVAL.longValue()
+				|| getManagedBean().getContractVer().getStatus().getStatusId() 
+				== ContractStatusConst.FA_PENDING_VERIFICATION.longValue()){								
 			return true;
 		}
 		return false;
