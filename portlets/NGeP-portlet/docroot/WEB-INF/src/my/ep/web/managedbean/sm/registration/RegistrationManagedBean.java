@@ -23,6 +23,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -130,6 +131,7 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private List<SelectItem> selectItemsSmPersonnelOwners = new ArrayList();
 	private List<SmPersonnel> SmPersonnelAll = new ArrayList();
 	private List<SmEquityCompany> smEquityCompany = new ArrayList();
+	 private List<SmSupplierBranch> smSupplierBranches = new ArrayList();
 	private String headerName = "";
 	private boolean ownerIsEquity=false;
 	private boolean ownerIsDirector=false;
@@ -805,6 +807,14 @@ public class RegistrationManagedBean extends BaseManagedBean {
 
 	public void setShowDirectorInOwner(boolean showDirectorInOwner) {
 		this.showDirectorInOwner = showDirectorInOwner;
+	}
+
+	public List<SmSupplierBranch> getSmSupplierBranches() {
+		return smSupplierBranches;
+	}
+
+	public void setSmSupplierBranches(List<SmSupplierBranch> smSupplierBranches) {
+		this.smSupplierBranches = smSupplierBranches;
 	}
 
 }
