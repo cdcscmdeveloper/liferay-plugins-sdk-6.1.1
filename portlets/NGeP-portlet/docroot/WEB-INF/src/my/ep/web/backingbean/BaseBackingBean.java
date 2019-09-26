@@ -2514,7 +2514,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	
 	//16052019 - SSM INTEGRATION CR
-	public boolean showGreenIconSsm(boolean isSsmAppl,boolean isNullValue){
+	public boolean showGreenIconSsm(Boolean ssmData,boolean isSsmAppl,boolean isNullValue){
 		boolean showIcon = false;
 		if(isSsmAppl && isNullValue){
 			return true;
@@ -2523,11 +2523,20 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	
 	//16052019 - SSM INTEGRATION CR
-	public boolean disableFieldSSm(boolean isSsmAppl,boolean isNullValue){
+	public boolean disableFieldSSm(Boolean ssmData,boolean isSsmAppl,boolean isNullValue){
 		boolean disabledField = false;
-		if(isSsmAppl && !isNullValue){
-			return true;
+		if(ssmData == null){
+			if(isSsmAppl && !isNullValue){
+				return true;
+			}
+		}else if(ssmData){
+			if(ssmData && isSsmAppl && !isNullValue){
+				return true;
+			}
+		}else{
+			return false;
 		}
+		
 		return disabledField;
 	}
 
