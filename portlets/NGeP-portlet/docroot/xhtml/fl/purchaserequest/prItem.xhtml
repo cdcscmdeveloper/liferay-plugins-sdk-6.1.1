@@ -203,6 +203,9 @@
 					<span style="white-space:pre-wrap; text-align:left; float:left;">(<h:outputText value="#{flItem.scRequestItem.uom.uomName}" />)</span>
 							<br />
 					<h:outputText value="#{flItem.scRequestItem.itemName}" id="itemDesc" style="white-space:pre-wrap; text-align:left; float:left;" />
+							<br />	
+<!--#16344 Display SKU-->					
+					<h:outputText value="#{flItem.scRequestItem.ctContractItem[0].sku}" rendered="#{flItem.scRequestItem.ctContractItem != null} " id="itemDesc" style="white-space:pre-wrap; text-align:left; float:left;"/>
 				</h:panelGroup>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="white-space:normal;text-align:center">
