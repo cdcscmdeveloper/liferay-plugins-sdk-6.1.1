@@ -151,7 +151,7 @@
 											value="#{simpleQuoteBackingBean.managedBean.scQuote.justificationRemark}"
 											id="justificationRmk" label="#{lbl['lbl.sc.justification']}"
 											maxlength="100" disabled="#{!isEditable}"
-											required="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'A' and param['submitBtnPressed']=='1'}"
+											required="#{(simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'A' or simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'P') and param['submitBtnPressed']=='1'}"
 											rows="3" cols="58" style="margin-bottom: 5px; width: 230px;" >
 											<f:ajax></f:ajax>
 											</p:inputTextarea>

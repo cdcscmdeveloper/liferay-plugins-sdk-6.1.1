@@ -2062,6 +2062,12 @@ public class SimpleQuoteBackingBean extends
 									"lbl.sc.reason",
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 									new FacesScopes().getUserLocale()) });
+				} else if (quote.getJustificationRemark().isEmpty()) {
+					throw new EpException(MessageConst.ERROR_100022,
+							new String[] { ResourceBundleUtils.getMessage(
+									"lbl.sc.justification",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale()) });
 				}
 
 				quote.setJustificationType(getReasonByCategoryAndCode(
@@ -2073,6 +2079,12 @@ public class SimpleQuoteBackingBean extends
 					throw new EpException(MessageConst.ERROR_100022,
 							new String[] { ResourceBundleUtils.getMessage(
 									"lbl.sc.reason",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale()) });
+				}else if (quote.getJustificationRemark().isEmpty()) {
+					throw new EpException(MessageConst.ERROR_100022,
+							new String[] { ResourceBundleUtils.getMessage(
+									"lbl.sc.justification",
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 									new FacesScopes().getUserLocale()) });
 				}
@@ -2456,6 +2468,8 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().getScQuote().setJustificationType(
 					new PmReason());
 		}
+		
+		debugLogger(getManagedBean().getScQuote().getProcurementType().getParameterCode());
 	}
 
 	
