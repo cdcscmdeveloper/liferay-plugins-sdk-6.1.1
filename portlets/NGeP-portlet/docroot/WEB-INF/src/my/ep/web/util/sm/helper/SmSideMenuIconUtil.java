@@ -877,148 +877,152 @@ public class SmSideMenuIconUtil {
 								+ EntityHelper.getArrayToPrint(nonPrimitive));
 						break;
 					}
-
-					// smPersonnel address
-					if (isSupplier) {
-						primitive = new String[] { "addressType" };
-					} else {
-						primitive = new String[] { "personnelAddressId" };
-					}
-					//24964 - start
-					if (prevPersonnel.getSmPersonnelAddresses().isEmpty() 
-							&& currPersonnel.getSmPersonnelAddresses().isEmpty()){
-						retVal = false;
-					} else {
-						retVal = EntityHelper.hasDiffBetweenList(
-								prevPersonnel.getSmPersonnelAddresses(),
-								currPersonnel.getSmPersonnelAddresses(), primitive,
-								null, excludeProps);
-					}//24964 - end
 					
-					if (retVal) {
-						log.info(">>>>DIFFERENT IN PERSONNEL ADDRESS FOR PERSONNEL:"
-								+ currPersonnel.getName()
-								+ currPersonnel.getName()
-								+ "  SEARCH CRITERIA PRIMITIVE:"
-								+ EntityHelper.getArrayToPrint(primitive)
-								+ "  NON PRIMITIVE:"
-								+ EntityHelper.getArrayToPrint(nonPrimitive));
-						break;
-					}
+					//#26329 - start
+					if (prevPersonnel != null) {
+						// smPersonnel address
+						if (isSupplier) {
+							primitive = new String[] { "addressType" };
+						} else {
+							primitive = new String[] { "personnelAddressId" };
+						}
+						//24964 - start
+						if (prevPersonnel.getSmPersonnelAddresses().isEmpty() 
+								&& currPersonnel.getSmPersonnelAddresses().isEmpty()){
+							retVal = false;
+						} else {
+							retVal = EntityHelper.hasDiffBetweenList(
+									prevPersonnel.getSmPersonnelAddresses(),
+									currPersonnel.getSmPersonnelAddresses(), primitive,
+									null, excludeProps);
+						}//24964 - end
+						
+						if (retVal) {
+							log.info(">>>>DIFFERENT IN PERSONNEL ADDRESS FOR PERSONNEL:"
+									+ currPersonnel.getName()
+									+ currPersonnel.getName()
+									+ "  SEARCH CRITERIA PRIMITIVE:"
+									+ EntityHelper.getArrayToPrint(primitive)
+									+ "  NON PRIMITIVE:"
+									+ EntityHelper.getArrayToPrint(nonPrimitive));
+							break;
+						}
 
-					// smStaffExperience
-					if (isSupplier) {
-						primitive = new String[] { "companyName", "fromYear",
-								"toYear" };
-					} else {
-						primitive = new String[] { "staffExperienceId" };
-					}
-					//24964 - start
-					if(prevPersonnel.getSmStaffExperiences().isEmpty() && currPersonnel.getSmStaffExperiences().isEmpty()){
-						retVal = false;
-					} else {
-						retVal = EntityHelper.hasDiffBetweenList(
-								prevPersonnel.getSmStaffExperiences(),
-								currPersonnel.getSmStaffExperiences(), primitive,
-								null, excludeProps);
-					}// 24964- end					
+						// smStaffExperience
+						if (isSupplier) {
+							primitive = new String[] { "companyName", "fromYear",
+									"toYear" };
+						} else {
+							primitive = new String[] { "staffExperienceId" };
+						}
+						//24964 - start
+						if(prevPersonnel.getSmStaffExperiences().isEmpty() && currPersonnel.getSmStaffExperiences().isEmpty()){
+							retVal = false;
+						} else {
+							retVal = EntityHelper.hasDiffBetweenList(
+									prevPersonnel.getSmStaffExperiences(),
+									currPersonnel.getSmStaffExperiences(), primitive,
+									null, excludeProps);
+						}// 24964- end					
 
-					if (retVal) {
-						log.info(">>>>DIFFERENT IN PERSONNEL STAFF EXPERIENCE FOR PERSONNEL:"
-								+ currPersonnel.getName()
-								+ currPersonnel.getName()
-								+ "  SEARCH CRITERIA PRIMITIVE:"
-								+ EntityHelper.getArrayToPrint(primitive)
-								+ "  NON PRIMITIVE:"
-								+ EntityHelper.getArrayToPrint(nonPrimitive));
-						break;
-					}
+						if (retVal) {
+							log.info(">>>>DIFFERENT IN PERSONNEL STAFF EXPERIENCE FOR PERSONNEL:"
+									+ currPersonnel.getName()
+									+ currPersonnel.getName()
+									+ "  SEARCH CRITERIA PRIMITIVE:"
+									+ EntityHelper.getArrayToPrint(primitive)
+									+ "  NON PRIMITIVE:"
+									+ EntityHelper.getArrayToPrint(nonPrimitive));
+							break;
+						}
 
-					// smRelatedCompany
-					if (isSupplier) {
-						primitive = new String[] { "regNo" };
-					} else {
-						primitive = new String[] { "relatedCompanyId" };
-					}
-					//24964 - start
-					if(prevPersonnel.getSmRelatedCompanies().isEmpty() 
-							&& currPersonnel.getSmRelatedCompanies().isEmpty()){
-						retVal = false;
-					} else {
-						retVal = EntityHelper.hasDiffBetweenList(
-								prevPersonnel.getSmRelatedCompanies(),
-								currPersonnel.getSmRelatedCompanies(), primitive,
-								null, excludeProps);
-					}// 24964 - end
-					
-					if (retVal) {
-						log.info(">>>>DIFFERENT IN PERSONNEL RELATED COMPANY FOR PERSONNEL:"
-								+ currPersonnel.getName()
-								+ currPersonnel.getName()
-								+ "  SEARCH CRITERIA PRIMITIVE:"
-								+ EntityHelper.getArrayToPrint(primitive)
-								+ "  NON PRIMITIVE:"
-								+ EntityHelper.getArrayToPrint(nonPrimitive));
-						break;
-					}
+						// smRelatedCompany
+						if (isSupplier) {
+							primitive = new String[] { "regNo" };
+						} else {
+							primitive = new String[] { "relatedCompanyId" };
+						}
+						//24964 - start
+						if(prevPersonnel.getSmRelatedCompanies().isEmpty() 
+								&& currPersonnel.getSmRelatedCompanies().isEmpty()){
+							retVal = false;
+						} else {
+							retVal = EntityHelper.hasDiffBetweenList(
+									prevPersonnel.getSmRelatedCompanies(),
+									currPersonnel.getSmRelatedCompanies(), primitive,
+									null, excludeProps);
+						}// 24964 - end
+						
+						if (retVal) {
+							log.info(">>>>DIFFERENT IN PERSONNEL RELATED COMPANY FOR PERSONNEL:"
+									+ currPersonnel.getName()
+									+ currPersonnel.getName()
+									+ "  SEARCH CRITERIA PRIMITIVE:"
+									+ EntityHelper.getArrayToPrint(primitive)
+									+ "  NON PRIMITIVE:"
+									+ EntityHelper.getArrayToPrint(nonPrimitive));
+							break;
+						}
 
-					// smAssociationBody
-					if (isSupplier) {
-						primitive = new String[] { "regNo", "expDate" };
-						nonPrimitive = new String[] { "pmCertBody" };
-					} else {
-						primitive = new String[] { "associationBodyId" };
-					}
-					//24964 - start
-					if(prevPersonnel.getSmAssociationBodies().isEmpty() 
-							&& currPersonnel.getSmAssociationBodies().isEmpty()){
-						retVal = false;
-					}else {
-						retVal = EntityHelper.hasDiffBetweenList(
-								prevPersonnel.getSmAssociationBodies(),
-								currPersonnel.getSmAssociationBodies(), primitive,
-								nonPrimitive, excludeProps);
-					} //24964 - end					
+						// smAssociationBody
+						if (isSupplier) {
+							primitive = new String[] { "regNo", "expDate" };
+							nonPrimitive = new String[] { "pmCertBody" };
+						} else {
+							primitive = new String[] { "associationBodyId" };
+						}
+						//24964 - start
+						if(prevPersonnel.getSmAssociationBodies().isEmpty() 
+								&& currPersonnel.getSmAssociationBodies().isEmpty()){
+							retVal = false;
+						}else {
+							retVal = EntityHelper.hasDiffBetweenList(
+									prevPersonnel.getSmAssociationBodies(),
+									currPersonnel.getSmAssociationBodies(), primitive,
+									nonPrimitive, excludeProps);
+						} //24964 - end					
 
-					if (retVal) {
-						log.info(">>>>DIFFERENT IN PERSONNEL ASSOC BODY FOR PERSONNEL:"
-								+ currPersonnel.getName()
-								+ currPersonnel.getName()
-								+ "  SEARCH CRITERIA PRIMITIVE:"
-								+ EntityHelper.getArrayToPrint(primitive)
-								+ "  NON PRIMITIVE:"
-								+ EntityHelper.getArrayToPrint(nonPrimitive));
-						break;
-					}
+						if (retVal) {
+							log.info(">>>>DIFFERENT IN PERSONNEL ASSOC BODY FOR PERSONNEL:"
+									+ currPersonnel.getName()
+									+ currPersonnel.getName()
+									+ "  SEARCH CRITERIA PRIMITIVE:"
+									+ EntityHelper.getArrayToPrint(primitive)
+									+ "  NON PRIMITIVE:"
+									+ EntityHelper.getArrayToPrint(nonPrimitive));
+							break;
+						}
 
-					// smStaffAcademics
-					if (isSupplier) {
-						nonPrimitive = new String[] { "qualificationId",
-								"pmEduField" };
-						primitive = new String[] { "year", "instituteName" };
-					} else {
-						primitive = new String[] { "staffAcademicId" };
-					}
-					//24964 - start
-					if(prevPersonnel.getSmStaffAcademics().isEmpty()
-							&& currPersonnel.getSmStaffAcademics().isEmpty()){
-						retVal = false;
-					} else {
-						retVal = EntityHelper.hasDiffBetweenList(
-								prevPersonnel.getSmStaffAcademics(),
-								currPersonnel.getSmStaffAcademics(), primitive,
-								nonPrimitive, excludeProps);
-					} //24964 - end					
+						// smStaffAcademics
+						if (isSupplier) {
+							nonPrimitive = new String[] { "qualificationId",
+									"pmEduField" };
+							primitive = new String[] { "year", "instituteName" };
+						} else {
+							primitive = new String[] { "staffAcademicId" };
+						}
+						//24964 - start
+						if(prevPersonnel.getSmStaffAcademics().isEmpty()
+								&& currPersonnel.getSmStaffAcademics().isEmpty()){
+							retVal = false;
+						} else {
+							retVal = EntityHelper.hasDiffBetweenList(
+									prevPersonnel.getSmStaffAcademics(),
+									currPersonnel.getSmStaffAcademics(), primitive,
+									nonPrimitive, excludeProps);
+						} //24964 - end					
 
-					if (retVal) {
-						log.info(">>>>DIFFERENT IN PERSONNEL ACADEMIC FOR PERSONNEL:"
-								+ currPersonnel.getName()
-								+ "  SEARCH CRITERIA PRIMITIVE:"
-								+ EntityHelper.getArrayToPrint(primitive)
-								+ "  NON PRIMITIVE:"
-								+ EntityHelper.getArrayToPrint(nonPrimitive));
-						break;
+						if (retVal) {
+							log.info(">>>>DIFFERENT IN PERSONNEL ACADEMIC FOR PERSONNEL:"
+									+ currPersonnel.getName()
+									+ "  SEARCH CRITERIA PRIMITIVE:"
+									+ EntityHelper.getArrayToPrint(primitive)
+									+ "  NON PRIMITIVE:"
+									+ EntityHelper.getArrayToPrint(nonPrimitive));
+							break;
+						}
 					}
+					//#26329 - end
 				}
 			}
 
