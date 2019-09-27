@@ -67,6 +67,7 @@ import my.ep.persistence.entity.sm.SmStaffExperience;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.entity.sm.SmSupplierOwner;
@@ -537,6 +538,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmEquityCompany> smEquityCompanyTemp;
 	private List<SmPersonnel> personnelsOwner = new ArrayList();;
 	private List<SmPersonnel> personnelsDirector  = new ArrayList();;
+	private List<SmPersonnel> personnelsSsm  = new ArrayList();;
+	private List<SmSupplierBranch>  smSupplierBranchSsm = new ArrayList();;
+	private List<SmSupplierBusiness> smSupplierBusinessSsm   = new ArrayList();;
 	
 	private class RejectReasonPagingDataModel extends
 			PagingDataModel<PmReasonDesc> {
@@ -4131,6 +4135,30 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setPersonnelsDirector(List<SmPersonnel> personnelsDirector) {
 		this.personnelsDirector = personnelsDirector;
+	}
+
+	public List<SmSupplierBranch> getSmSupplierBranchSsm() {
+		return smSupplierBranchSsm;
+	}
+
+	public void setSmSupplierBranchSsm(List<SmSupplierBranch> smSupplierBranchSsm) {
+		this.smSupplierBranchSsm = smSupplierBranchSsm;
+	}
+
+	public List<SmSupplierBusiness> getSmSupplierBusinessSsm() {
+		return smSupplierBusinessSsm;
+	}
+
+	public void setSmSupplierBusinessSsm(List<SmSupplierBusiness> smSupplierBusinessSsm) {
+		this.smSupplierBusinessSsm = smSupplierBusinessSsm;
+	}
+
+	public List<SmPersonnel> getPersonnelsSsm() {
+		return personnelsSsm;
+	}
+
+	public void setPersonnelsSsm(List<SmPersonnel> personnelsSsm) {
+		this.personnelsSsm = personnelsSsm;
 	}
 
 }

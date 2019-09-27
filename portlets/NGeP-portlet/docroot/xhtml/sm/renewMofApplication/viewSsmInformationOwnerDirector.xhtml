@@ -15,7 +15,8 @@
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			render="#{backingBean.managedBean.personnelsOwner != null and backingBean.managedBean.personnelsOwner.size() >0}"
 			value="#{backingBean.managedBean.personnelsOwner}"
-			rowKey="#{rowKeyObj}">
+			rowKey="#{rowKeyObj}"
+			sortBy="#{varOwner.nameInSsm}">
 			<ac:paginator for="tableOwner" />
 
 			<p:column style="width:3%" styleClass="column-align-center">
@@ -36,7 +37,7 @@
 						<h:outputText value="#{lbl['lbl.sm.ownername']}" />
 					</c:if>
 				</f:facet>
-				<h:outputText value="#{varOwner.name}" />
+				<h:outputText value="#{varOwner.nameInSsm}" />
 			</p:column>
 
 			<p:column styleClass="column-align-center">
@@ -132,7 +133,8 @@
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				render="#{backingBean.managedBean.personnelsDirector != null and backingBean.managedBean.personnelsDirector.size() >0}"
 				value="#{backingBean.managedBean.personnelsDirector}"
-				rowKey="#{rowKeyObj}">
+				rowKey="#{rowKeyObj}"
+				sortBy="#{varDirector.nameInSsm}">
 				<ac:paginator for="tableDirector" />
 
 				<p:column style="width:3%" styleClass="column-align-center">
@@ -146,7 +148,7 @@
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sm.directorname']}" />
 					</f:facet>
-					<h:outputText value="#{varDirector.name}" />
+					<h:outputText value="#{varDirector.nameInSsm}" />
 				</p:column>
 
 				<p:column styleClass="column-align-center">
