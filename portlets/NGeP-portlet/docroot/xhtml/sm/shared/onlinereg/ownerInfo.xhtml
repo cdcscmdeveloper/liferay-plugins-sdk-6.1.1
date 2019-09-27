@@ -68,7 +68,7 @@
 				</f:facet>
 				<!-- <h:outputText value="#{varOwner.nationality.countryName}" /> -->
 				<!-- 16052019 - SSM INTEGRATION CR - START -->
-				<p:selectOneMenu value="#{varOwner.nationality.countryId}">
+				<p:selectOneMenu value="#{varOwner.nationality.countryId}" disabled="#{!varOwner.showTextField}">
 					<f:selectItems var="counLs"
 						value="#{registrationBackingBean.managedBean.countryLs}" />
 						<p:ajax event="change" listener="#{registrationBackingBean.ownerNationalityOnChange}" update=":form:tableOwner" />

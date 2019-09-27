@@ -10905,6 +10905,13 @@ public class SmApplicationUtil {
 					smAddress.setAddress1(addr.getSmAddress().getAddress1());
 					smAddress.setAddress2(addr.getSmAddress().getAddress2());
 					smAddress.setAddress3(addr.getSmAddress().getAddress3());
+					//START SSM INTEGRATION
+					smAddress.setSsmData(addr.getSmAddress().isSsmData());
+					smAddress.setAddressSsmNull(addr.getSmAddress().isAddressSsmNull());
+					smAddress.setPostcodeSsmNull(addr.getSmAddress().isPostcodeSsmNull());
+					smAddress.setStateSsmNull(addr.getSmAddress().isStateSsmNull());
+					smAddress.setCountrySsmNull(addr.getSmAddress().isCountrySsmNull());
+					//END SSM INTEGRATION
 					PmCountry country = new PmCountry();
 					country.setCountryId(addr.getSmAddress().getPmCountry()
 							.getCountryId());

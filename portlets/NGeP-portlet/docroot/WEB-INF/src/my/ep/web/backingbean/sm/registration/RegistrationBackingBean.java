@@ -84,6 +84,7 @@ import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSstSupplier;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.persistence.logging.LogKey;
@@ -266,13 +267,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				smSupplierOwner.setShowTextField(true);
 				this.getManagedBean().getSmSuppOwners().add(smSupplierOwner);
 			}
-
-
-			
 			return accountRegistration;
 		}
 		
 	}
+	
 	//16052019 - SSM INTEGRATION CR
 	public void setHeaderName(){
 		if(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN.equalsIgnoreCase(this.getManagedBean().getSmSupp().getBusinessType())){
@@ -329,6 +328,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				this.getManagedBean().setSmSuppOwners(ssmResDTO.getSmSupplierOwners());
 				this.getManagedBean().setSmPersonnelAll(ssmResDTO.getSmPersonnelAll());
 				this.getManagedBean().setSmEquityCompany(ssmResDTO.getSmEquityCompanys());
+				this.getManagedBean().setSmSupplierBranches(ssmResDTO.getSmSupplierBranches());
 				//set country desc
 				/*for(SmSupplierOwner smSupplierOwner : ssmResDTO.getSmSupplierOwners()){
 					if(smSupplierOwner.getNationality() != null && !"".equalsIgnoreCase(smSupplierOwner.getNationality().getCountryCodeSSM())){
@@ -399,7 +399,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					case "C":
 					case "X":
 					case "Y":
-						throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
+						throw new EpException(MessageConst.ERROR_721078);
 					default:
 						break;
 				}
@@ -440,6 +440,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		
 		//Validate GST No
 		validateGstRegNo();
+		
+		validateBusinessType();
 		
 		//harris
 		validateSstRegNo();
@@ -778,7 +780,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			smResAdd.getSmPersonnelAddresses().add(personnelAddRes);
 		}
 		smPersonnel.getSmPersonnelAddresses().add(personnelAddRes);
-		personnelAddPerm.setAddressType(SupplierManagementConst.PERM_ADD);
+		//16052019 - SSM INTEGRATION CR
+		personnelAddPerm.setAddressType(SupplierManagementConst.RES_ADD);
 		personnelAddPerm.setSmAddress(smPermAdd);
 		personnelAddPerm.setSmPersonnel(smPersonnel);
 		smPermAdd.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
@@ -816,6 +819,19 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				}
 			}
 			smAppl.setSmEquityCompanies(this.getManagedBean().getSmEquityCompany());
+		}
+		//#16052019 - SSM INTEGRATION CR
+		//set branches
+		if(this.getManagedBean().isCompanyValidWithSSM() && this.getManagedBean().getSmSupplierBranches()!=null && this.getManagedBean().getSmSupplierBranches().size()>0){
+			for(SmSupplierBranch branch : this.getManagedBean().getSmSupplierBranches()){
+				branch.setSmAppl(smAppl);
+				//set company to address
+				if(branch.getSmAddress()!= null){
+					branch.getSmAddress().setSmSupplierBranches(new ArrayList<SmSupplierBranch>());
+					branch.getSmAddress().getSmSupplierBranches().add(branch);
+				}
+			}
+			smAppl.setSmSupplierBranches(this.getManagedBean().getSmSupplierBranches());
 		}
 		
 		
@@ -3564,6 +3580,28 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			this.getManagedBean().setOwnerIsDirector(true);
 		}
 	}
+	
+	//16052019 - SSM INTEGRATION CR START
+	public void validateBusinessType() {
+		String businessType = getManagedBean().getSmSupp().getBusinessType().toUpperCase();
+		switch(businessType){
+			//ROB PARTNERSHIP must > 1 owners
+			case SupplierManagementConst.BUSINESS_TYPE_ROB_PARTNERSHIP:
+				if(getManagedBean().getSmSuppOwners().size() <= 1) {
+					throw new EpException(MessageConst.ERROR_721077);
+				}
+				break;
+			//ROB SOLE PROPRIETOSHIP must <= 1 owner
+			case SupplierManagementConst.BUSINESS_TYPE_ROB_SOLE_PROPRIETORSHIP:
+				if(getManagedBean().getSmSuppOwners().size() > 1) {
+					throw new EpException(MessageConst.ERROR_721077);
+				}
+				break;
+			default:
+				break;
+		}
+	}
+	//16052019 - SSM INTEGRATION CR END
 }
 
 

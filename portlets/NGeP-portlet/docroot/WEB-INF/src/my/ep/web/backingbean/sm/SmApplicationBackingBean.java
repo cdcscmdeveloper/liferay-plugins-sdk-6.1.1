@@ -130,6 +130,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBranchBank;
+import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.entity.sm.SmSupplierSystem;
@@ -145,6 +146,7 @@ import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.backingbean.sm.applicationView.ViewApplHistoryBackingBean;
 import my.ep.web.backingbean.sm.outputmsg.SmOutputMsgBackingBean;
 import my.ep.web.backingbean.sm.questionnaire.QuestionnaireBackingBean;
+import my.ep.web.backingbean.sm.registration.RegistrationBackingBean;
 import my.ep.web.backingbean.sm.sitevisit.SvoSiteVisitBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
@@ -152,6 +154,7 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.pp.common.PpCommonUtil;
 import my.ep.web.util.sm.helper.SmApplicationNotificationUtil;
@@ -1451,7 +1454,9 @@ public class SmApplicationBackingBean extends
 				|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW) 
 				|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)
 				|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)){
-			if(!fromBpm && getManagedBean().isSsmIntegrationActive() && this.getManagedBean().getSmSupplier()!= null){
+			if(!fromBpm && getManagedBean().isSsmIntegrationActive() && this.getManagedBean().getSmSupplier()!= null 
+					&& !this.getManagedBean().getSmAppl().isApplValidWithSsm() 
+					&& businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupplier().getRegNo(),this.getManagedBean().getSmSupplier().getBusinessType())){
 				//SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
 				if(businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupplier().getRegNo(),this.getManagedBean().getSmSupplier().getBusinessType())){
 					SsmReqDTO ssmReqDTO = new SsmReqDTO();
@@ -1531,18 +1536,19 @@ public class SmApplicationBackingBean extends
 						throw new EpException(MessageConst.ERROR_721070);
 					}
 				}
-			}else if(fromBpm && this.getManagedBean().getSmSupplier() != null && getManagedBean().isSsmIntegrationActive() && businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupplier().getRegNo(),this.getManagedBean().getSmSupplier().getBusinessType())){
+			//}else if(fromBpm && this.getManagedBean().getSmSupplier() != null && getManagedBean().isSsmIntegrationActive() && businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupplier().getRegNo(),this.getManagedBean().getSmSupplier().getBusinessType())){
+			}else if(fromBpm && this.getManagedBean().getSmAppl().isApplValidWithSsm()&& businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupplier().getRegNo(),this.getManagedBean().getSmSupplier().getBusinessType())){
 				//this will use, when click from tasklist n only to check data is valid with ssm or not
-				SsmReqDTO ssmReqDTO = new SsmReqDTO();
+				/*SsmReqDTO ssmReqDTO = new SsmReqDTO();
 				ssmReqDTO.setRegNo(this.getManagedBean().getSmSupplier().getRegNo());
 				ssmReqDTO.setBusinessType(this.getManagedBean().getSmSupplier().getBusinessType());
 				ssmReqDTO.setCheckOnly(true);
-				SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
-				getManagedBean().setCompanyValidWithSSM(ssmResDTO.isCompanyValid());
-				getManagedBean().setValidateWithSSM(ssmResDTO.isCompanyValid());
+				SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);*/
+				getManagedBean().setCompanyValidWithSSM(true);
+				getManagedBean().setValidateWithSSM(true);
 			}else{
-				getManagedBean().setCompanyValidWithSSM(false);
-				getManagedBean().setValidateWithSSM(false);
+				getManagedBean().setCompanyValidWithSSM(this.getManagedBean().getSmAppl().isApplValidWithSsm());
+				getManagedBean().setValidateWithSSM(this.getManagedBean().getSmAppl().isApplValidWithSsm());
 			}
 		}
 		//16052019 - SSM INTEGRATION CR - Fahmi END
@@ -12285,5 +12291,46 @@ public class SmApplicationBackingBean extends
 	public void assignBankAccountNo(SmSupplierBank bank){
 		this.getManagedBean().setAccountNo(bank.getAccountNo());
 	}
+	
+	//FIXME : 16052019 - SSM INTEGRATION CR - start
+	public void redirectToViewSSMInfo() {
+		clearPersonnelList();
+		for(SmPersonnel personnel:getManagedBean().getSmAppl().getSmPersonnels()){
+			if(personnel.isSsmData()){
+				if(personnel.isEquityOwner()){
+					this.getManagedBean().getPersonnelsOwner().add(personnel);
+				}
+				if(personnel.isDirector()){
+					this.getManagedBean().getPersonnelsDirector().add(personnel);
+				}
+				this.getManagedBean().getPersonnelsSsm().add(personnel);
+			}
+			
+		}
+		for(SmSupplierBranch branch:getManagedBean().getSmAppl().getSmSupplierBranches()){
+			if(branch.isSsmData())
+				this.getManagedBean().getSmSupplierBranchSsm().add(branch);
+		}
+		for(SmSupplierBusiness business:getManagedBean().getSmSupplier().getSmSupplierBusinesses()){
+			if(business.isSsmData())
+				this.getManagedBean().getSmSupplierBusinessSsm().add(business);
+		}
+		SmCommonUtil.redirectToExternalUrl(SupplierManagementConst.VIEW_SSM_INFOMATION);
+	}
+	
+	public void clearPersonnelList() {
+		this.getManagedBean().getPersonnelsOwner().clear();
+		this.getManagedBean().getPersonnelsDirector().clear();
+		this.getManagedBean().getSmSupplierBranchSsm().clear();
+		this.getManagedBean().getSmSupplierBusinessSsm().clear();
+		this.getManagedBean().getPersonnelsSsm().clear();
+	}
+	
+	public String getBusinessNatureSection(SmSupplierBusiness suppBizNature){
+		RegistrationBackingBean registrationBackingBean = new RegistrationBackingBean();
+		return registrationBackingBean.getBusinessNatureSection(suppBizNature);
+	}
+	
+	//FIXME : 16052019 - SSM INTEGRATION CR - end
 
 }

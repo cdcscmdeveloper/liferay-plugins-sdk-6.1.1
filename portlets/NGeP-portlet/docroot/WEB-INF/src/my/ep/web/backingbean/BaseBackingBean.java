@@ -2512,6 +2512,33 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		
 	return uomCode;	
 	}
+	
+	//16052019 - SSM INTEGRATION CR
+	public boolean showGreenIconSsm(Boolean ssmData,boolean isSsmAppl,boolean isNullValue){
+		boolean showIcon = false;
+		if(isSsmAppl && isNullValue){
+			return true;
+		}
+		return showIcon;
+	}
+	
+	//16052019 - SSM INTEGRATION CR
+	public boolean disableFieldSSm(Boolean ssmData,Boolean isSsmAppl,boolean isNullValue){
+		boolean disabledField = false;
+		if(isSsmAppl == null){
+			if(ssmData && !isNullValue){
+				return true;
+			}
+		}else if(isSsmAppl){
+			if(ssmData && isSsmAppl && !isNullValue){
+				return true;
+			}
+		}else{
+			return false;
+		}
+		
+		return disabledField;
+	}
 
 }
 
