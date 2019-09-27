@@ -177,10 +177,10 @@
 				</p:commandButton>
 			
 				<p:commandButton id="btnProceed" value="#{lbl['lbl.sm.next']}"  style="float:right;"
-				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 		
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" rendered="#{registrationBackingBean.managedBean.statusFromSSM == 'A' || registrationBackingBean.managedBean.statusFromSSM == 'E'}"			
 				disabled="#{!registrationBackingBean.managedBean.agreeTC}" action="#{registrationBackingBean.proceedToCompanyInfo}"
 				 />
-				<!-- rendered="#{registrationBackingBean.managedBean.statusFromSSM == 'A' || registrationBackingBean.managedBean.statusFromSSM == 'E'}"	 -->
+				
 				
 			</div>
 	</p:panel>
