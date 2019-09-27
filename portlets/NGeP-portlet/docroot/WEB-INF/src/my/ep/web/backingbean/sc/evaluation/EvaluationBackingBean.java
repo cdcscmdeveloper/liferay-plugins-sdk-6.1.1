@@ -8169,7 +8169,17 @@ private void retriveCommitteeRemarksList(){
 		ScQt scQt = this.getManagedBean().getScQt();
 		EvaluationReqDTO endorsmentRemarks=committeeRemarksSave();
 		if(null!=endorsmentRemarks.getScQt()){
+			if(BpmOutcomeConst.BPM_SIGNOFF.equalsIgnoreCase(action)){
+				log.info("evaluationBackingBeanQtNotnullBPM_SIGNOFF111111111111");
+				endorsmentRemarks.getScQt().setFecEvaluationCheck(null);
+			}
 			reqDtO.setScQt(endorsmentRemarks.getScQt());
+		}else{
+			if(BpmOutcomeConst.BPM_SIGNOFF.equalsIgnoreCase(action)){
+				log.info("evaluationBackingBeanQtnullBPM_SIGNOFF222222222222222");
+				scQt.setFecEvaluationCheck(null);
+				reqDtO.setScQt(scQt);
+			}
 		}
 		reqDtO.setOutcome(action);
 		if (null != digiSign) {
