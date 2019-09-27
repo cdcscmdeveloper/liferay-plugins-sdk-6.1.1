@@ -12296,12 +12296,24 @@ public class SmApplicationBackingBean extends
 	public void redirectToViewSSMInfo() {
 		clearPersonnelList();
 		for(SmPersonnel personnel:getManagedBean().getSmAppl().getSmPersonnels()){
-			if(personnel.isEquityOwner()){
-				this.getManagedBean().getPersonnelsOwner().add(personnel);
+			if(personnel.isSsmData()){
+				if(personnel.isEquityOwner()){
+					this.getManagedBean().getPersonnelsOwner().add(personnel);
+				}
+				if(personnel.isDirector()){
+					this.getManagedBean().getPersonnelsDirector().add(personnel);
+				}
+				this.getManagedBean().getPersonnelsSsm().add(personnel);
 			}
-			if(personnel.isDirector()){
-				this.getManagedBean().getPersonnelsDirector().add(personnel);
-			}
+			
+		}
+		for(SmSupplierBranch branch:getManagedBean().getSmAppl().getSmSupplierBranches()){
+			if(branch.isSsmData())
+				this.getManagedBean().getSmSupplierBranchSsm().add(branch);
+		}
+		for(SmSupplierBusiness business:getManagedBean().getSmSupplier().getSmSupplierBusinesses()){
+			if(business.isSsmData())
+				this.getManagedBean().getSmSupplierBusinessSsm().add(business);
 		}
 		SmCommonUtil.redirectToExternalUrl(SupplierManagementConst.VIEW_SSM_INFOMATION);
 	}
@@ -12309,6 +12321,9 @@ public class SmApplicationBackingBean extends
 	public void clearPersonnelList() {
 		this.getManagedBean().getPersonnelsOwner().clear();
 		this.getManagedBean().getPersonnelsDirector().clear();
+		this.getManagedBean().getSmSupplierBranchSsm().clear();
+		this.getManagedBean().getSmSupplierBusinessSsm().clear();
+		this.getManagedBean().getPersonnelsSsm().clear();
 	}
 	
 	public String getBusinessNatureSection(SmSupplierBusiness suppBizNature){
