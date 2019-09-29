@@ -374,7 +374,7 @@
 					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 							label="#{lbl['lbl.sm.annualRev']}" required="true"
 							id="smSupAnnRev"
-							disabled="#{backingBean.managedBean.smAppl.applValidWithSsm and backingBean.managedBean.smAppl.smCompanyBasic.annualRevenue>0 }"
+							disabled="#{backingBean.managedBean.smAppl.applValidWithSsm and !backingBean.managedBean.smAppl.smCompanyBasic.revenueSsmNull and backingBean.managedBean.smAppl.smCompanyBasic.annualRevenue>0 }"
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.annualRevenue}">
 							<f:selectItems value="#{backingBean.getDropdownValues('SAR')}" />
 						</p:selectOneMenu> 
