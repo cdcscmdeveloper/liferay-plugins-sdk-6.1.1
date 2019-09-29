@@ -76,7 +76,7 @@
 
 				<h:outputLabel style="font-weight:bold"
 					value="#{lbl['lbl.sm.annualRev']} :"></h:outputLabel>
-					<p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+					<p:selectOneMenu rendered="#{!backingBean.managedBean.smAppl.smCompanyBasic.revenueSsmNull}" style="width: 207px;margin-bottom: 5px;"
 							label="#{lbl['lbl.sm.annualRev']}" required="true"
 							id="smSupAnnRev"
 							disabled="true"
