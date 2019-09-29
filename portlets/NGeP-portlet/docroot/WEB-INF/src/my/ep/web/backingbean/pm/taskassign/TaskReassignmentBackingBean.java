@@ -586,7 +586,8 @@ public class TaskReassignmentBackingBean extends
 			bpmResDTO = SmServiceLookup.getBpmSO().getReassignedItems(bpmReqDTO);
 			
 			if (!bpmResDTO.isSuccessful()) {
-				throw new EpException(MessageConst.ERROR_770100);
+				//throw new EpException(MessageConst.ERROR_770100);
+				throw new EpException(MessageConst.ERROR_770208);
 			}
 			
 			if (bpmResDTO.getWorklistVO() != null) {
