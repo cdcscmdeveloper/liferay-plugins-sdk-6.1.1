@@ -85,7 +85,7 @@
 							<tr>
 								<c:if test="#{registrationBackingBean.managedBean.showOwner}">
 									<td style="width:10%" >
-										<p:selectBooleanCheckbox rendered="#{!varOwner.showTextField and registrationBackingBean.managedBean.showOwner}" disabled="#{registrationBackingBean.managedBean.disableRole}" value="#{registrationBackingBean.managedBean.smPersonnelAll[0].equityOwner}"/>
+										<p:selectBooleanCheckbox rendered="#{!varOwner.showTextField and registrationBackingBean.managedBean.showOwner}" disabled="#{registrationBackingBean.managedBean.disableRole}" value="#{registrationBackingBean.managedBean.smPersonnelAll.size() > 0 and registrationBackingBean.managedBean.smPersonnelAll[0].equityOwner}"/>
 										<p:selectBooleanCheckbox rendered="#{varOwner.showTextField and registrationBackingBean.managedBean.showOwner}" disabled="#{registrationBackingBean.managedBean.disableRole}" value="#{registrationBackingBean.managedBean.ownerIsEquity}"/>
 									</td>
 									<td style="width:20%" >
