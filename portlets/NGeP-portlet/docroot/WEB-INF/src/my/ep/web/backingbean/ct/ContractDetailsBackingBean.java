@@ -681,7 +681,41 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		ctBB.getManagedBean().getContractVer().setBondWaiverAttachments(null);
 			
 	}
+	//Start - 25890 - Minh
+	private void validateFDDescAndAmount(String action) {
+		List<CtDeduction> ctDeductions = ctBB.getManagedBean().getContractVer().getCtDeductions();
+		for (CtDeduction ctDeduction : ctDeductions) {
+			Long parameterId = ctDeduction.getDeductionType().getParameterId();
+			PmParameter pmParameter = retrieveParameterById(parameterId);
+			if (ParameterConst.DEDUCTION_TYPE_FIXED.equalsIgnoreCase(pmParameter.getParameterCode())) {
+				validateFDDescAndAmount(action, ctDeduction);
+			}
+		}
+	}
 
+	private void validateFDDescAndAmount(String action, CtDeduction ctDeduction) {
+		String actionUpper = action.toUpperCase();
+		switch (actionUpper) {
+		case BpmOutcomeConst.BPM_SUBMIT:
+		case BpmOutcomeConst.BPM_APPROVE:
+			if (ctDeduction.getAmount() == 0) {
+				throwExceptions(MessageConst.ERROR_740059, null);
+			}
+			break;
+		default:
+			break;
+		}
+	}
+
+	private void throwExceptions(String messageId, String paramMessage) {
+		if (paramMessage == null) {
+			throw new EpException(messageId);
+		} else {
+			throw new EpException(messageId, new String[] { ResourceBundleUtils.getMessage(paramMessage,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
+		}
+	}
+	//End - 25890 - Minh
 	/**
 	 * The method used to save the contract.
 	 * This method will navigate to acknowledgment page with a 
@@ -704,19 +738,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 			}
 
-			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
-					|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-				List<CtDeduction> ctDeductions = ctBB.getManagedBean().getContractVer().getCtDeductions();
-				for (CtDeduction ctDeduction : ctDeductions) {
-					Long parameterId = ctDeduction.getDeductionType().getParameterId();
-					PmParameter pmParameter = retrieveParameterById(parameterId);
-					if (ParameterConst.DEDUCTION_TYPE_FIXED.equalsIgnoreCase(pmParameter.getParameterCode())
-							&& ctDeduction.getAmount() == 0) {
-						throw new EpException(MessageConst.ERROR_740059);
-					}
-				}
-			}
-			
+			validateFDDescAndAmount(action);
 			ctBB.getZoneObjDetails();
 
 			if(!ctBB.getManagedBean().getContractVer().getCtContractValue().isPid()){
@@ -867,9 +889,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	
 	private PmParameter retrieveParameterById(Long parameterId) {
 		if (parameterId == null) {
-			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
-					"lbl.ct.deduction.type", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale()) });
+			throwExceptions(MessageConst.ERROR_100022, "lbl.ct.deduction.type");
 		}
 
 		ParameterReqDTO paramReqDTO = new ParameterReqDTO();
@@ -907,9 +927,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				&& (ctBB.getManagedBean().getCtContractAmount().getBondExemptedFileName() == null 
 				|| ctBB.getManagedBean().getCtContractAmount().getBondExemptedFileName().equalsIgnoreCase(""))) {
 			getManagedBean().setSelectedTabIndex(0);
-			throw new EpException(MessageConst.ERROR_100022, 
-					new String[] {ResourceBundleUtils.getMessage("lbl.ct.bond.exempted.letter", 
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			throwExceptions(MessageConst.ERROR_100022, "lbl.ct.bond.exempted.letter");
 		}
 
 		// Validation for remark
@@ -930,9 +948,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					&& (scheduleRemark == null || scheduleRemark.length() == 0) 
 					&& (settingRemark == null || settingRemark.length() == 0)) {
 				getManagedBean().setSelectedTabIndex(0);
-				throw new EpException(MessageConst.ERROR_100022, 
-						new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", 
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				throwExceptions(MessageConst.ERROR_100022, "lbl.ct.remark");
 			}
 		}
 
@@ -941,9 +957,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				ctBB.getManagedBean().getContractVer().getCtContractValue().isPid() && 
 				(ctBB.getManagedBean().getContractVer().getCtPidReasons() == null || ctBB.getManagedBean().getContractVer().getCtPidReasons().size() == 0)) {
 			getManagedBean().setSelectedTabIndex(0);
-			throw new EpException(MessageConst.ERROR_100022, 
-					new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", 
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			throwExceptions(MessageConst.ERROR_100022, "lbl.ct.pid.reason");
 		}
 		// Validation for PID Reason
 		if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
@@ -951,18 +965,14 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				for(CtPidReason reason : ctBB.getManagedBean().getContractVer().getCtPidReasons()){
 					if(reason.getPmReason() == null || reason.getPmReason().getReasonId() == null){
 						getManagedBean().setSelectedTabIndex(0);
-						throw new EpException(MessageConst.ERROR_100022, 
-								new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", 
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						throwExceptions(MessageConst.ERROR_100022, "lbl.ct.pid.reason");
 					}
 
 					ctBB.validatePidReason(reason.getPmReason().getReasonId());
 					if(ctBB.PidPurchaseTypeOther(reason.getPmReason().getReasonId())){
 						if(reason.getReasonDesc().isEmpty()){
 							getManagedBean().setSelectedTabIndex(0);
-							throw new EpException(MessageConst.ERROR_100022, 
-									new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason.desc", 
-											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+							throwExceptions(MessageConst.ERROR_100022, "lbl.ct.pid.reason.desc");
 						}
 					}
 				}
@@ -979,25 +989,19 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				if (ctBB.getManagedBean().getCtContractAmount().getGstAmount() == null
 						|| ctBB.getManagedBean().getCtContractAmount().getGstAmount().doubleValue() == 0) {
 					getManagedBean().setSelectedTabIndex(0);
-					throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.gst.amt", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					throwExceptions(MessageConst.ERROR_100022, "lbl.ct.gst.amt");
 				}
 				
 				if (ctBB.getManagedBean().getCtContractAmount().getStaxAmount() == null
 						|| ctBB.getManagedBean().getCtContractAmount().getStaxAmount().doubleValue() == 0) {
 					getManagedBean().setSelectedTabIndex(0);
-					throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.stax.amt", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					throwExceptions(MessageConst.ERROR_100022, "lbl.ct.stax.amt");
 				}	
 
 				if (ctBB.getManagedBean().getCtContractAmount().getContractAmount() == null
 						|| ctBB.getManagedBean().getCtContractAmount().getContractAmount().doubleValue() == 0) {
 					getManagedBean().setSelectedTabIndex(0);
-					throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.contract.amount", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					throwExceptions(MessageConst.ERROR_100022, "lbl.ct.contract.amount");
 				}
 			}
 		}
@@ -1085,9 +1089,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					} else {
 						setTabCentralValue("IT");
 					}
-					throw new EpException(MessageConst.ERROR_100033,
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					throwExceptions(MessageConst.ERROR_100033, "lbl.ct.min.order.qty");
 				} 
 
 				// Validation for ceiling quantity
@@ -1115,9 +1117,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			for(CtDeduction deduction : ctBB.getManagedBean().getContractVer().getCtDeductions()){
 				if(deduction.getDeductionType() == null ||deduction.getDeductionType().getParameterId() == null ){
 					setTabValue("DE");
-					throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.deduction.type", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					throwExceptions(MessageConst.ERROR_100022, "lbl.ct.deduction.type");
 				}
 
 				ctBB.validateDeductionType(deduction);
@@ -1125,19 +1125,14 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					for(CtDeductionClause ctDeductionClauses : deduction.getCtDeductionClauses()){
 						if(ctDeductionClauses.getClauseDescription().isEmpty()){
 							setTabValue("DE");
-							throw new EpException(MessageConst.ERROR_100022, 
-									new String[]{ResourceBundleUtils.getMessage("lbl.ct.deduction.clause.desc", 
-											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+							throwExceptions(MessageConst.ERROR_100022, "lbl.ct.deduction.clause.desc");
 						}
 					}
 				/*#25592-basri*/
 				/*validation error if deduction clause is empty*/
-				}else{
+				} else {
 						setTabValue("DE");
-						throw new EpException(MessageConst.ERROR_100022, 
-								new String[]{ResourceBundleUtils.getMessage("lbl.ct.deduction.clause.desc", 
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-					
+						throwExceptions(MessageConst.ERROR_100022, "lbl.ct.deduction.clause.desc");					
 				}
 				/*end*/
 			}  
@@ -1197,9 +1192,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 					if (schedules.getFulfilmentTypeId() == null) {
 						setTabValue("SC");
-						throw new EpException(MessageConst.ERROR_100022, 
-								new String[] {ResourceBundleUtils.getMessage("lbl.ct.schedule.type", 
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						throwExceptions(MessageConst.ERROR_100022, "lbl.ct.schedule.type");
 					}
 				}     	
 			} else if (ctBB.getManagedBean().getContractVer().getCtProgressivePayments() == null || ctBB.getManagedBean().getContractVer().getCtProgressivePayments().size() < 2 
@@ -1275,9 +1268,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				if (value != 0 && (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
 						|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))) {
 					setTabValue("SC");
-					throw new EpException(MessageConst.ERROR_100022, 
-							new String[] {ResourceBundleUtils.getMessage("lbl.ct.percentage.progressive", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					throwExceptions(MessageConst.ERROR_100022, "lbl.ct.percentage.progressive");
 				}
 			}
 		}
@@ -1299,10 +1290,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 							&& (ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds() == null 
 							|| ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds().isEmpty())) {
 								setTabValue("PB");
-								throw new EpException(MessageConst.ERROR_100022, 
-										new String[]{ResourceBundleUtils.getMessage("lbl.ct.menu.performance.bond", 
-												ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-
+								throwExceptions(MessageConst.ERROR_100022, "lbl.ct.menu.performance.bond");
 							}
 						}
 					} 
@@ -1317,32 +1305,24 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					bondAmount = bondAmount + performanceBond.getBondAmount();
 					if (performanceBond.getRefNo() == null || performanceBond.getRefNo().isEmpty()) {
 						setTabValue("PB");
-						throw new EpException(MessageConst.ERROR_100022,
-								new String[] {ResourceBundleUtils.getMessage("lbl.ct.pb.ref.no",
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						throwExceptions(MessageConst.ERROR_100022, "lbl.ct.pb.ref.no");
 					}						
 
 					if (performanceBond.getFinancialOrg() == null || performanceBond.getFinancialOrg().getFinancialOrgId() == null) {
 						setTabValue("PB");
-						throw new EpException(MessageConst.ERROR_100022, 
-								new String[] {ResourceBundleUtils.getMessage("lbl.ct.pb.financial.org", 
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						throwExceptions(MessageConst.ERROR_100022, "lbl.ct.pb.financial.org");
 					}						
 
 					if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
 						if (performanceBond.getBondAmount() == 0) {
 							setTabValue("PB");
-							throw new EpException(MessageConst.ERROR_100033,
-									new String[]{ResourceBundleUtils.getMessage("lbl.ct.pb.amount",
-											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+							throwExceptions(MessageConst.ERROR_100033, "lbl.ct.pb.amount");
 						}
 					}						
 
 					if (performanceBond.getFileName() == null || performanceBond.getFileName().isEmpty()) {
 						setTabValue("PB");
-						throw new EpException(MessageConst.ERROR_100022,
-								new String[] {ResourceBundleUtils.getMessage("lbl.ct.pb.ref.letter",
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						throwExceptions(MessageConst.ERROR_100022, "lbl.ct.pb.ref.letter");
 					} 
 				}//End for loop				 
 
@@ -1431,27 +1411,19 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			if(ctBB.getManagedBean().getCtContractAmount().isBondWaived()){
 				if (ctBB.getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverStartDate() == null) {
 					setTabValue("PB");
-					throw new EpException(MessageConst.ERROR_100022,
-							new String[] {ResourceBundleUtils.getMessage("lbl.ct.pb.waiver.start.date", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					throwExceptions(MessageConst.ERROR_100022, "lbl.ct.pb.waiver.start.date");
 				}
 				if (ctBB.getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverEndDate() == null) {
 					setTabValue("PB");
-					throw new EpException(MessageConst.ERROR_100022,
-							new String[] {ResourceBundleUtils.getMessage("lbl.ct.pb.waiver.end.date", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					throwExceptions(MessageConst.ERROR_100022, "lbl.ct.pb.waiver.end.date");
 				}
 				if (ctBB.getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getReferenceNo() == null || "".equalsIgnoreCase(ctBB.getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getReferenceNo())) {
 					setTabValue("PB");
-					throw new EpException(MessageConst.ERROR_100022,
-							new String[] {ResourceBundleUtils.getMessage("lbl.ct.pb.waiver.reference.no", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					throwExceptions(MessageConst.ERROR_100022, "lbl.ct.pb.waiver.reference.no");
 				}
 				if (ctBB.getManagedBean().getCtAttachmentLatest().getFileName() == null || "".equalsIgnoreCase(ctBB.getManagedBean().getCtAttachmentLatest().getFileName())) {
 					setTabValue("PB");
-					throw new EpException(MessageConst.ERROR_100022,
-							new String[] {ResourceBundleUtils.getMessage("lbl.ct.bond.waiver.letter", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					throwExceptions(MessageConst.ERROR_100022, "lbl.ct.bond.waiver.letter");
 				}
 				
 				if (ctBB.getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverStartDate()
