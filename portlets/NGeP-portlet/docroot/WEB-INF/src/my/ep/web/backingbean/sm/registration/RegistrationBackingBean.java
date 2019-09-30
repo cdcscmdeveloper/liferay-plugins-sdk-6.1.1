@@ -1782,6 +1782,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			SsmReqDTO ssmReqDTO = new SsmReqDTO();
 			ssmReqDTO.setRegNo(smSupp.getRegNo());
 			ssmReqDTO.setBusinessType(smSupp.getBusinessType());
+			ssmReqDTO.setCheckOnly(true);
 			SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
 			if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
 				//check the business/company registration status in ssm
