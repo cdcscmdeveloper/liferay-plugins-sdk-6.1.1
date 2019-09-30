@@ -15681,7 +15681,7 @@ public class SpecificationBackingBean extends
 			InvalidFormatException {
 		log.info("handleFileUploadImport - BEGIN");
 		String fileName = "ImportData.xlsx";
-		String contentType = "application/vnd.ms-excel";
+		String contentType = "application/application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 		List<String> itemm = new ArrayList<String>();
 		List<String> specificationn = new ArrayList<String>();
 		List<String> uomm = new ArrayList<String>();
