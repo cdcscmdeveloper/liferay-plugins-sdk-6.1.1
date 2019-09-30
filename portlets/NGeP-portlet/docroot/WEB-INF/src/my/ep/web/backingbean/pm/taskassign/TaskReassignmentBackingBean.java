@@ -580,14 +580,14 @@ public class TaskReassignmentBackingBean extends
 		bpmReqDTO.setDocNumber(docNo);
 		bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
 		
-		if (SmServiceLookup.getBpmSO().getReassignedItems(bpmReqDTO) == null) {
-			log.info("getReassignedItems is EMPTY");
+		if (SmServiceLookup.getBpmSO().getReassignedTasks(bpmReqDTO) == null) {
+			log.info("getReassignedTasks is EMPTY");
 			throw new EpException(MessageConst.ERROR_770208);
 		} else {
-			bpmResDTO = SmServiceLookup.getBpmSO().getReassignedItems(bpmReqDTO);
+			bpmResDTO = SmServiceLookup.getBpmSO().getReassignedTasks(bpmReqDTO);
 			
 			if (!bpmResDTO.isSuccessful()) {
-				log.info("getReassignedItems is UNSUCCESSFUL");
+				log.info("getReassignedTasks is UNSUCCESSFUL");
 				//throw new EpException(MessageConst.ERROR_770100);
 				throw new EpException(MessageConst.ERROR_770208);
 			}
