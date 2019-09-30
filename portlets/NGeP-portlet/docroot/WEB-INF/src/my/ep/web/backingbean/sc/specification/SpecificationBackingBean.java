@@ -15680,7 +15680,8 @@ public class SpecificationBackingBean extends
 	public void handleFileUploadImport() throws FileNotFoundException, IOException, EncryptedDocumentException,
 			InvalidFormatException {
 		log.info("handleFileUploadImport - BEGIN");
-
+		String fileName = "ImportData.xlsx";
+		String contentType = "application/vnd.ms-excel";
 		List<String> itemm = new ArrayList<String>();
 		List<String> specificationn = new ArrayList<String>();
 		List<String> uomm = new ArrayList<String>();
@@ -15801,9 +15802,20 @@ public class SpecificationBackingBean extends
 		}
 		makeRowBold(workbook, sheet.getRow(0));
 
-		FileOutputStream out = new FileOutputStream(new File("C:/Import/ImportData.xlsx"));
+		//FileOutputStream out = new FileOutputStream(new File("C:/Import/ImportData.xlsx"));
 
+		FacesContext fc = FacesContext.getCurrentInstance();
+		
+		ExternalContext ec = fc.getExternalContext();
+		ec.responseReset(); 
+		ec.setResponseContentType(contentType); 
+		ec.setResponseHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\""); 
+
+		OutputStream out = ec.getResponseOutputStream();
+		
 		workbook.write(out);
+
+		fc.responseComplete();
 		out.close();
 		workbook.close();
 		log.info("Writesheet.xlsx written successfully");
