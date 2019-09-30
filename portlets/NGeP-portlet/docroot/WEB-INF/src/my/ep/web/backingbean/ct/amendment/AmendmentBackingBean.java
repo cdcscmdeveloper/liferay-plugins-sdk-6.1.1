@@ -316,7 +316,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		 */
 		public void searchReset(){
 			
-			ContractBackingBean ccBB = new ContractBackingBean();
+			AmendmentBackingBean ccBB = new AmendmentBackingBean();
 
 			getManagedBean().setItemcode(null);
 			getManagedBean().setItemname(null);
@@ -331,7 +331,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			//ccBB.getManagedBean().setShowServiceItem(null);
 			//ccBB.getManagedBean().setServiceselectedItem(null);
 			ccBB.getManagedBean().setSelectedItem(null);
-			ccBB.getManagedBean().setServiceselectedItem(null);
+			ccBB.getManagedBean().setSelectedServiceItem(null);
 			
 
 			if(getManagedBean().isReadOnly()) {
