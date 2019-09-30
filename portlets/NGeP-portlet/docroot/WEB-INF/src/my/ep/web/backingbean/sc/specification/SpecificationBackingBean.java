@@ -15680,7 +15680,8 @@ public class SpecificationBackingBean extends
 	public void handleFileUploadImport() throws FileNotFoundException, IOException, EncryptedDocumentException,
 			InvalidFormatException {
 		log.info("handleFileUploadImport - BEGIN");
-
+		String fileName = "ImportData.xlsx";
+		String contentType = "application/application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 		List<String> itemm = new ArrayList<String>();
 		List<String> specificationn = new ArrayList<String>();
 		List<String> uomm = new ArrayList<String>();
