@@ -1843,6 +1843,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				
 				if(resDTO.getSmSupp().getSmSupplierOwners()!=null && CollectionUtils.isNotEmpty(resDTO.getSmSupp().getSmSupplierOwners())){
 					this.getManagedBean().setSmSuppOwner(resDTO.getSmSupp().getSmSupplierOwners().get(0));
+					this.getManagedBean().setSmSuppOwners(resDTO.getSmSupp().getSmSupplierOwners());
 				}
 
 				//this.getManagedBean().setSuppBusinessNature(new SmSupplierBusiness());	
@@ -1892,6 +1893,87 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				//retrieve Supplier GST Info
 				initGstInfo(resDTO.getSmSupp(),getManagedBean(),false);
 				getManagedBean().setGstFlag(false);
+				//START CHANGES SSM
+				if(SmCommonUtil.getInstance().ssmActive() &&  businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupp().getRegNo(),this.getManagedBean().getSmSupp().getBusinessType())){
+					SsmReqDTO ssmReqDTO = new SsmReqDTO();
+					ssmReqDTO.setRegNo(this.getManagedBean().getSmSupp().getRegNo());
+					ssmReqDTO.setBusinessType(this.getManagedBean().getSmSupp().getBusinessType());
+					SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
+					this.getManagedBean().setCompanyValidWithSSM(false);
+					this.getManagedBean().setValidateWithSSM(true);
+					if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
+						this.getManagedBean().setStatusDescFromSSM(setStatusMessageFromSSM(ssmResDTO.getStatusFromSSM()));
+						if(!ssmResDTO.getStatusFromSSM().equalsIgnoreCase("A") && !ssmResDTO.getStatusFromSSM().equalsIgnoreCase("E")){
+							//					throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.contractor",null), getManagedBean().getSmSupp().getRegNo()});
+							//throw new EpException(MessageConst.ERROR_721070);
+							throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
+						}
+						this.getManagedBean().setCompanyValidWithSSM(true);
+						this.getManagedBean().getSmSupp().getSmAppl().setApplValidWithSsm(true);
+						//SET COMPANY NAME
+						String[] copyProp = {"companyName","robExpiryDate","authorizedCapital","bumiEquity","foreignCompanyEquity","foreignerEquity","govtEquity","govtUnitrustEquity","businessDesc","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus"};
+						EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(),this.getManagedBean().getSmAppl().getSmCompanyBasic(),copyProp);
+						//SET ADDRESS
+						String[] copyPropAddress = {"address1","address2","address3","addressSsmNull","postcodeSsmNull","stateSsmNull","countrySsmNull","ssmData","postcode"};
+
+						EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmAddress(),this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress(),copyPropAddress);
+						this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPostcode(ssmResDTO.getSmAddress().getPostcode());
+						this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPmState(ssmResDTO.getSmAddress().getPmState());
+						this.getManagedBean().getSmSupp().getSmAppl().setApplValidWithSsm(true);
+						//set establish date
+						this.getManagedBean().getSmAppl().getSmCompanyBasic().setEstablishDate(ssmResDTO.getSmCompanyBasic().getEstablishDate());
+						
+						//CHECK EQUITY OWNER EXIT IN SSM TO DISABLE CHECKBOX
+						int i = 0;
+						for(SmPersonnel personnel : this.getManagedBean().getSmAppl().getSmPersonnels()){
+							if(EntityHelper
+									.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo") != null){
+								personnel.setSsmData(true);
+								this.getManagedBean().getSmAppl().getSmPersonnels().set(i, personnel);
+							}
+							i++;
+						}
+						//SET EQUITY COMPANY
+						/*//if(this.getManagedBean().getSmAppl().getSmEquityCompanies()!=null){
+						if(ssmResDTO.getSmEquityCompanys()!=null){
+							this.getManagedBean().setSmEquityCompanyTemp(ssmResDTO.getSmEquityCompanys());
+							if(this.getManagedBean().getSmAppl().getSmEquityCompanies()==null){
+								this.getManagedBean().getSmAppl().setSmEquityCompanies(new ArrayList());
+							}
+							
+							for(SmEquityCompany equityCompany : ssmResDTO.getSmEquityCompanys()){
+								if(EntityHelper.getEntityBySinglePropertyFromList(equityCompany.getCompanyName(), this.getManagedBean().getSmAppl().getSmEquityCompanies(), "companyName") == null){
+									equityCompany.setSmAppl(this.getManagedBean().getSmAppl());
+									this.getManagedBean().getSmAppl().getSmEquityCompanies().add(equityCompany);
+								}
+							}
+							
+						}*/
+						//SET SMPERSONNEL
+						if(ssmResDTO.getSmPersonnelAll()!=null){
+							if(this.getManagedBean().getSmSupp().getSmAppl().getSmPersonnels()==null){
+								this.getManagedBean().getSmSupp().getSmAppl().setSmPersonnels(new ArrayList());
+							}
+							for(SmPersonnel personnel : ssmResDTO.getSmPersonnelAll()){
+								if(EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), this.getManagedBean().getSmSupp().getSmAppl().getSmPersonnels(), "identificationNo") == null){
+									personnel.setSmAppl(this.getManagedBean().getSmAppl());
+									this.getManagedBean().getSmSupp().getSmAppl().getSmPersonnels().add(personnel);
+								}
+							}
+						}
+					}else{
+						this.getManagedBean().setCompanyValidWithSSM(false);
+					}
+					
+					// maybe here to put method to check with ssm
+					//SmCommonUtil.getInstance().validateWithSSM(regNo,businessType,"");
+					
+					if(!this.getManagedBean().isCompanyValidWithSSM()){
+	//					throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.contractor",null), getManagedBean().getSmSupp().getRegNo()});
+						throw new EpException(MessageConst.ERROR_721070);
+					}
+				}
+				//END CHANGES SSM
 
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlineAccount/accountMaintenanceDet.xhtml");
 			}
