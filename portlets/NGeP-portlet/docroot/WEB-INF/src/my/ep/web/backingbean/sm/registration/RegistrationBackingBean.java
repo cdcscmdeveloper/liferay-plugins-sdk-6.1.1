@@ -359,6 +359,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				this.getManagedBean().setStatusFromSSM(ssmResDTO.getStatusFromSSM());
 				this.getManagedBean().setStatusDescFromSSM(setStatusMessageFromSSM(ssmResDTO.getStatusFromSSM()));
 				this.getManagedBean().setSmPersonnelOwners(ssmResDTO.getSmPersonnelOwners());
+				this.getManagedBean().getSelectItemsSmPersonnelOwners().clear();
 				for(SmPersonnel personnel : ssmResDTO.getSmPersonnelAll()){
 					if(personnel.isEquityOwner() || personnel.isDirector()){
 						SelectItem selectItem = new SelectItem();
