@@ -1024,7 +1024,6 @@ public class SupplierFinalizationBackingBean extends
 			ScQtCommittee scQtCommittee = null;
 			if (activeIndex == 0 && 
 					!getManagedBean().isInitialDecisionFwdToBPK()) {
-				this.getManagedBean().setSubmit(true);
 				reqDTO = validateInfo(activeIndex);
 				scQtCommittee = reqDTO.getScQtCommittee();
 				reqDTO = validateInfo(2);
