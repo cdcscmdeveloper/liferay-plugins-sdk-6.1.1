@@ -327,7 +327,12 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     /** The Clone and Re-Quote btn. */
     private boolean cloneReQuote = Boolean.FALSE;	
     	
-	private boolean cancel = Boolean.FALSE;
+	private boolean cancel = Boolean.FALSE; 
+	
+	// 12177 - Start
+	/** The flag of SQ expired */
+	private boolean sqExpiredStatus = Boolean.FALSE;
+	// 12177 - End
 	
     /**
      * Instantiates a new request note managed bean.
@@ -1923,4 +1928,20 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setCancel(boolean cancel) {
 		this.cancel = cancel;
 	}
+	
+	// 12177 - Start
+	/**
+	 * @return the sqExpiredStatus
+	 */
+	public boolean getSqExpiredStatus() {
+		return sqExpiredStatus;
+	}
+	
+	/**
+	 * @param sqExpiredStatus the sqExpiredStatus to set
+	 */
+	public void setSqExpiredStatus(boolean sqExpiredStatus) {
+		this.sqExpiredStatus = sqExpiredStatus;
+	}
+	// 12177 - End
 }
