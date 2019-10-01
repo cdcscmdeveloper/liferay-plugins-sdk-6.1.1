@@ -195,6 +195,10 @@ public class TaskReassignmentBackingBean extends
 		this.getManagedBean().setShowChildMsg(false);
 		setIsAdminUser();
 		retrieveStatusIdsForInvalidBulkTask();
+		if (this.getManagedBean().getSelectedTasksToBulkReassign() != null && 
+				this.getManagedBean().getSelectedTasksToBulkReassign().size() > 0) {
+			this.getManagedBean().getSelectedTasksToBulkReassign().clear();
+		}
 		//[#25018] - end
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
@@ -779,6 +783,12 @@ public class TaskReassignmentBackingBean extends
 		
 		this.getManagedBean().setShowParentMsg(true);	// [#25018]
 		this.getManagedBean().setShowChildMsg(false);	// [#25018]
+		// [#25018] - start
+		if (this.getManagedBean().getSelectedTasksToBulkReassign() != null && 
+				this.getManagedBean().getSelectedTasksToBulkReassign().size() > 0) {
+			this.getManagedBean().getSelectedTasksToBulkReassign().clear();
+		}
+		// [#25018] - end
 		
 		if (!(this.getManagedBean().getTaskAssignmentSearchBean()
 				.getOrgProfile() != null && this.getManagedBean()
@@ -3247,17 +3257,22 @@ public class TaskReassignmentBackingBean extends
 				this.getManagedBean().getSelectedTasksToBulkReassign().size() > 0) {
     		this.getManagedBean().setShowParentMsg(false);
 			this.getManagedBean().setShowChildMsg(true);
+			boolean isValid = false;
 	    	//validate selected task list - same doc type and same doc status
-	    	validateDocTypeAndStatus();
+			//log.info("[#25018] - call validateDocTypeAndStatus");
+			isValid = validateDocTypeAndStatus();
 	    	
-	    	//validate selected task list - applicable for valid roles
-	    	validateTaskForRole();	    	
+			if(isValid) {
+				//validate selected task list - applicable for valid roles
+				//log.info("[#25018] - call validateTaskForRole");
+				isValid = validateTaskForRole();
+			}
     	
     	} else {
     		this.getManagedBean().setShowParentMsg(true);
 			this.getManagedBean().setShowChildMsg(false);    		
     	}
-    	
+    	//log.info("[#25018] Total number of all task: "+ this.getManagedBean().getSelectedTasksToBulkReassign().size());
     	//log.info("[#25018] Total number of selected task: "+ this.getManagedBean().getSelectedTasksToBulkReassign().size());
     	log.info("checkAllUserTasks - End");
 	}
@@ -3278,7 +3293,8 @@ public class TaskReassignmentBackingBean extends
 		if ((boolean) event.getComponent().getAttributes().get("value")) {
 			for (WorklistItemVO task : this.getManagedBean().getAllUserTasks()) {
 		    	if (task.getTaskSelect()) {
-		    		//log.info("[#25018] task: "+task.getTaskId());		    		
+		    		//log.info("[#25018] task: "+task.getTaskId());
+		    		task.setTaskSelect(true);
 		    		this.getManagedBean().getSelectedTasksToBulkReassign().add(task);		    		
 		    	}
 		    }
@@ -3288,7 +3304,10 @@ public class TaskReassignmentBackingBean extends
 			for (WorklistItemVO task : this.getManagedBean().getAllUserTasks()) {
 				if (task.getTaskSelect()) {
 		    		//log.info("[#25018] task: "+task.getTaskId());
+					task.setTaskSelect(true);
 		    		this.getManagedBean().getSelectedTasksToBulkReassign().add(task);
+		    	} else {
+		    		task.setTaskSelect(false);
 		    	}
 			}
 		}
@@ -3297,12 +3316,20 @@ public class TaskReassignmentBackingBean extends
 				this.getManagedBean().getSelectedTasksToBulkReassign().size() > 0) {
 			this.getManagedBean().setShowParentMsg(false);
 			this.getManagedBean().setShowChildMsg(true);
+			boolean isValid = false;
 	    	if(this.getManagedBean().getSelectedTasksToBulkReassign().size() > 1) {
 	    		//validate selected task list - same doc type and same doc status
-	    		validateDocTypeAndStatus();
-	    	}	    	
-	    	//validate selected task list - applicable for valid roles
-	    	validateTaskForRole();
+	    		//log.info("[#25018] - call validateDocTypeAndStatus");
+	    		isValid = validateDocTypeAndStatus();
+	    	} else {
+	    		isValid = true;
+	    	}
+	    	
+	    	if(isValid) {
+				//validate selected task list - applicable for valid roles
+	    		//log.info("[#25018] - call validateTaskForRole");
+				isValid = validateTaskForRole();
+			}
 	    	
     	} else {
     		this.getManagedBean().setShowParentMsg(true);
@@ -3355,7 +3382,7 @@ public class TaskReassignmentBackingBean extends
 			IStatusSO statusSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IStatusSO.class);
-			log.info("[#25018] calling retrieveStatusRoleListByRoleCode...");
+			//log.info("[#25018] calling retrieveStatusRoleListByRoleCode...");
 			StatusResDTO resDTO = statusSO
 					.retrieveStatusRoleListByRoleCode(reqDTO);
 			if (resDTO != null && resDTO.isSuccessful()) {
@@ -3384,7 +3411,7 @@ public class TaskReassignmentBackingBean extends
 	}
 	
 	//[#25018]
-	private void validateTaskForRole() {
+	private boolean validateTaskForRole() {
 		log.info("validateTaskForRole - Start");
 		
 		StringBuilder stb = null;		
@@ -3406,13 +3433,24 @@ public class TaskReassignmentBackingBean extends
 				//log.info("[#25018] Invalid doc number: [" + (stb != null ? stb.toString():' ') + "]");
 				if(stb != null && stb.length() > 0) {					
 					this.getManagedBean().getSelectedTasksToBulkReassign().clear();					
-					throw new EpException(ResourceBundleUtils.getMessage("lbl.pm.ta.user.task.invalidrole", new String[] { stb.toString() }, ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()));
+					//throw new EpException(ResourceBundleUtils.getMessage("lbl.pm.ta.user.task.invalidrole", new String[] { stb.toString() }, ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()));
+
+					FacesContext fc = FacesContext.getCurrentInstance();
+					fc.addMessage(null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+									ResourceBundleUtils.getMessage("lbl.pm.ta.user.task.invalidrole", new String[] { stb.toString() }, ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale())));
+					return false;
+				
+				} else {
+					return true;
 				}
-			}
+			} else {
+				return false;
+			}			
 		} catch (Exception e) {
 			throw new EpException(e.getMessage());
 		}
-		log.info("validateTaskForRole - End");
+		//log.info("validateTaskForRole - End");
 	}
 	
 	//[#25018]
@@ -3421,7 +3459,7 @@ public class TaskReassignmentBackingBean extends
 	 * 
 	 * @return void
 	 */	
-	public void validateDocTypeAndStatus() {
+	public boolean validateDocTypeAndStatus() {
 		log.info("validateDocTypeAndStatus - Start");
 		
 		String docType = null;
@@ -3461,15 +3499,22 @@ public class TaskReassignmentBackingBean extends
 			
 			if(isSameTypeAndStat) {				
 				//set value for text area
-				this.getManagedBean().setSelectedTasksTA(getSelectedTasks());			
+				this.getManagedBean().setSelectedTasksTA(getSelectedTasks());
+				return true;
 			} else {				
 				this.getManagedBean().getSelectedTasksToBulkReassign().clear();				
-				throw new EpException(ResourceBundleUtils.getMessage("lbl.pm.ta.user.task.invalidtypeandstatus", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()));
+				//throw new EpException(ResourceBundleUtils.getMessage("lbl.pm.ta.user.task.invalidtypeandstatus", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()));
+				
+				FacesContext fc = FacesContext.getCurrentInstance();
+				fc.addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								ResourceBundleUtils.getMessage("lbl.pm.ta.user.task.invalidtypeandstatus", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale())));
+				return false;
 			}
 		} catch (Exception e) {
 			throw new EpException(e.getMessage());
 		}
-		log.info("validateDocTypeAndStatus - End");				
+		//log.info("validateDocTypeAndStatus - End");				
 	}
 	
 }

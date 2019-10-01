@@ -60,20 +60,23 @@
 				<p:column style="width:2%;">
 					<f:facet name="header">
 						<p:selectBooleanCheckbox value="#{taskReassignmentBackingBean.managedBean.checkAllUserTasks}"
-							disabled="#{not taskReassignmentBackingBean.managedBean.checkAllUserTasksEnabled}">
+							disabled="#{not taskReassignmentBackingBean.managedBean.checkAllUserTasksEnabled}" 
+							onchange="dtTaskAssignResultBU.show();">
 							<p:ajax partialSubmit="true" 
 									process="@this" 
+									event="change"
 									update="@form,:form:dtTaskAssignResult,:form:messages,:form:noReassignees" 
-									listener="#{taskReassignmentBackingBean.checkAllUserTasks}" />
+									listener="#{taskReassignmentBackingBean.checkAllUserTasks}"									
+									oncomplete="dtTaskAssignResultBU.hide();" />
 						</p:selectBooleanCheckbox>
 					 </f:facet>
-					 <p:selectBooleanCheckbox value="#{userTasks.taskSelect}"> 
+					 <p:selectBooleanCheckbox value="#{userTasks.taskSelect}" onchange="dtTaskAssignResultBU.show();"> 
 						<p:ajax partialSubmit="true"
 								process="@this"
 								event="change" 
 								update="@form,:form:dtTaskAssignResult,:form:messages,:form:noReassignees" 
-								listener="#{taskReassignmentBackingBean.checkUserTask}">
-						</p:ajax>
+								listener="#{taskReassignmentBackingBean.checkUserTask}"								
+								oncomplete="dtTaskAssignResultBU.hide();" />											
 					  </p:selectBooleanCheckbox>
 				</p:column>	
 				<p:column headerText="#{lbl['lbl.pm.ta.created.date']}" width="13%;">
@@ -113,6 +116,11 @@
 		</h:panelGroup>
 		
 	</p:panel>
+	
+	<p:blockUI block="dtTaskAssignResult" widgetVar="dtTaskAssignResultBU">
+		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+	</p:blockUI>
+	
 	<p:panel id="pGroupTaskAssignResult" header="#{lbl['lbl.pm.ta.group.task']}"
 		toggleable="true">
 		<div class="clear"></div>
