@@ -88,7 +88,8 @@
 				<p:commandButton value="#{lbl['lbl.btn.reset']}" action="#{contractItemSearchBackingBean.searchReset}"  update="@form" />
 			</div>		  
 	</p:panel><br/>
-    <p:panel id="itemId" toggleSpeed="500" header="Toggleable" toggleable="true" collapsed="false" >
+    <p:panel id="itemId" toggleSpeed="500" header="Toggleable" 
+    rendered="#{ctBackingBean.managedBean.ctItemList.size() > 0}"  toggleable="true" collapsed="false" >
        <f:facet name="header">
 			<h:outputText value="#{lbl['lbl.ct.panel.product']}"/>
 			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.product.dtls']}"/>
@@ -613,7 +614,8 @@
 		</p:dialog>
   	 </p:panel>
           
-          <p:panel id="itemId2"  toggleSpeed="500"  header="Toggleable" toggleable="true"  collapsed="false" >
+          <p:panel id="itemId2"  toggleSpeed="500"  header="Toggleable" toggleable="true"  collapsed="false"
+          rendered="#{ctBackingBean.managedBean.ctItemServiceList.size() > 0}" >
           <f:facet name="header">
    			<h:outputText value="#{lbl['lbl.ct.panel.service']}"/>
    			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.service.dtls']}"/>
