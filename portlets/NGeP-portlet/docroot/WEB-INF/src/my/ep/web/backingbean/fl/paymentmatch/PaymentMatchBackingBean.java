@@ -340,14 +340,16 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			}
 			
 			//start 21229
-			getManagedBean().setQueryDisplay(false);			
+			getManagedBean().setQueryDisplay(false);
+			getManagedBean().setHideReviseRemarks(false);
+			
+			initializeRemarkRevision(paymentAdvice.getFlWorkflowStatus(), null,false);
+			
 			if(paymentAdvice!=null && paymentAdvice.getStatus()!= null 
 					&& (paymentAdvice.getStatus().getStatusId().equals(FulfilmentStatusConst.PA_PENDING_PAYMENT_QUERY)
 							|| paymentAdvice.getStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_PAYMENT_QUERY) 
 							|| paymentAdvice.getStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_PAYMENT_QUERY)) ){
 				getManagedBean().setButtonVal(BpmOutcomeConst.BPM_REVISE);
-				getManagedBean().setHideReviseRemarks(false);
-				initializeRemarkRevision(paymentAdvice.getFlWorkflowStatus(), null,false);
 				
 				FulfilmentReqDTO reqQueryDTO = new FulfilmentReqDTO();
 				FulfilmentResDTO resQueryDTO = new FulfilmentResDTO();
@@ -359,14 +361,6 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 					getManagedBean().setQueryPaymentDesc(resQueryDTO.getQueryPayment().getQueryDesc());
 
 				}
-			}else{
-				String[] outcome = new String[this.getManagedBean().getOutComes().length];
-				String[] str_array = this.getManagedBean().getOutComes();
-				List<String> list = new ArrayList<String>(Arrays.asList(str_array));
-				list.remove(BpmOutcomeConst.BPM_REVISE);
-				outcome = list.toArray(new String[0]);
-				getManagedBean().setOutComes(outcome);
-				getManagedBean().setHideReviseRemarks(true);
 			}
 			//end 21229			
 			
