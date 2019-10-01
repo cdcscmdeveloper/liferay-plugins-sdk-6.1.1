@@ -71,13 +71,20 @@
 				<td width="10%"><h:outputLabel
 						value="#{lbl['lbl.sc.proposal.no']}" /></td>
 				<td class="header-info-text">
-				<p:commandLink rendered="#{(isDocTypeQuotation or isDocTypeDirectNego) and canShowSupplierProposal}" process="@this" partialSubmit="true"
+				<c:choose>
+				<c:when test="#{((isDocTypeQuotation or isDocTypeDirectNego) and canShowSupplierProposal) or not empty lOADetailBackingBean.managedBean.scQtProposal}" >
+				<p:commandLink process="@this" partialSubmit="true"
 						action="#{ViewSPBackingBean.navigatetoViewSupplierProposal(view.viewId, lOADetailBackingBean.managedBean.scQtProposal.qtProposalId)}">
 				       #{lOADetailBackingBean.managedBean.scQtProposal.proposalNo}
 					</p:commandLink>
-				 <h:outputText
-						value="#{lOADetailBackingBean.managedBean.scLoa.scQuote.quoteNo}"
-						rendered="#{!(isDocTypeQuotation or isDocTypeDirectNego)}" /></td>
+				</c:when>
+				<c:when test="#{!(isDocTypeQuotation or isDocTypeDirectNego)}">
+				<h:outputText
+						value="#{lOADetailBackingBean.managedBean.scLoa.scQuote.quoteNo}" />
+				</c:when>
+				</c:choose>
+				</td>
+				
 				<td><p:spacer width="1" /></td>
 				<td><p:spacer width="1" /></td>
 				<td><p:spacer width="1" /></td>
