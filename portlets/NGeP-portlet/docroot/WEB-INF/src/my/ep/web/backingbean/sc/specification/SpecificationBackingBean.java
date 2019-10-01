@@ -261,6 +261,8 @@ import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
+
+import com.liferay.portal.util.PortalUtil;
 /**
  * The Class SpecificationBackingBean.
  * 
@@ -15816,17 +15818,20 @@ public class SpecificationBackingBean extends
 		log.info("bytes is : " + bytes);
 
 		FacesContext fc = FacesContext.getCurrentInstance();
-		HttpServletResponse response = (HttpServletResponse) fc.getExternalContext().getResponse();
-
+		PortletResponse response1 = (PortletResponse)fc.getExternalContext().getResponse();
+        
+		HttpServletResponse response = (HttpServletResponse)PortalUtil.getHttpServletResponse(response1);;
 		response.reset();
 		response.setContentType(contentType);
 		response.setHeader("Content-Disposition", "attachment;fileName=ImportData.xlsx");
-
-		OutputStream output = response.getOutputStream();
-		workbook.write(output);
-		log.info("Output is : "+output);
+		response.getOutputStream().write(bytes);
+		response.getOutputStream().flush();
+		response.getOutputStream().close();
+		log.info("response is : "+response);
+		
 		fc.responseComplete();
 		workbook.close();
+		
 		log.info("ImportData.xlsx written successfully");
 		log.info("handleFileUploadImport - END");
 	}
