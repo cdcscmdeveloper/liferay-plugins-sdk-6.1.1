@@ -26,6 +26,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -68,7 +69,9 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
+import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -258,6 +261,8 @@ import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
+
+import com.liferay.portal.util.PortalUtil;
 /**
  * The Class SpecificationBackingBean.
  * 
@@ -14397,6 +14402,7 @@ public class SpecificationBackingBean extends
 		spReqDTO.setPrepareSpecStatus(this.getManagedBean()
 				.getCurrentStatusId());
 		spReqDTO.setUserLocale(facesScopes.getUserLocale());
+		spReqDTO.setOfferScoreType(this.getManagedBean().getOfferScoreType());//#25138
 		//Bug #26214
 		spReqDTO.setAllowZeroVariance(true);
 		IQTSpecSO specSO = getSpecSO();
@@ -14737,6 +14743,7 @@ public class SpecificationBackingBean extends
 		spReqDTO.setPrepareSpecStatus(this.getManagedBean()
 				.getCurrentStatusId());
 		spReqDTO.setUserLocale(facesScopes.getUserLocale());
+		spReqDTO.setOfferScoreType(this.getManagedBean().getOfferScoreType());//#25138
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)){
 			//Bug #26214
 			spReqDTO.setAllowZeroVariance(true);
@@ -15735,7 +15742,7 @@ public class SpecificationBackingBean extends
 				if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClPriceTypeCode() != null) {
 
 					priceTypee.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClPriceTypeCode()
-							.getPmParameterDescs().get(0).getCodeName());
+							.getPmParameterDescsSpecCallOnly().get(0).getCodeName());
 				} else {
 					priceTypee.add("");
 				}
@@ -15801,24 +15808,31 @@ public class SpecificationBackingBean extends
 			}
 		}
 		makeRowBold(workbook, sheet.getRow(0));
-
-		//FileOutputStream out = new FileOutputStream(new File("C:/Import/ImportData.xlsx"));
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		try {
+			workbook.write(bos);
+		} finally {
+			bos.close();
+		}
+		byte[] bytes = bos.toByteArray();
+		log.info("bytes is : " + bytes);
 
 		FacesContext fc = FacesContext.getCurrentInstance();
+		PortletResponse response1 = (PortletResponse)fc.getExternalContext().getResponse();
+        
+		HttpServletResponse response = (HttpServletResponse)PortalUtil.getHttpServletResponse(response1);;
+		response.reset();
+		response.setContentType(contentType);
+		response.setHeader("Content-Disposition", "attachment;fileName=ImportData.xlsx");
+		response.getOutputStream().write(bytes);
+		response.getOutputStream().flush();
+		response.getOutputStream().close();
+		log.info("response is : "+response);
 		
-		ExternalContext ec = fc.getExternalContext();
-		ec.responseReset(); 
-		ec.setResponseContentType(contentType); 
-		ec.setResponseHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\""); 
-
-		OutputStream out = ec.getResponseOutputStream();
-		
-		workbook.write(out);
-
 		fc.responseComplete();
-		out.close();
 		workbook.close();
-		log.info("Writesheet.xlsx written successfully");
+		
+		log.info("ImportData.xlsx written successfully");
 		log.info("handleFileUploadImport - END");
 	}
 
