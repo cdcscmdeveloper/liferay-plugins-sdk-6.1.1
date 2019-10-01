@@ -692,6 +692,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			setUserDetails(requestNote);
 			requestNoteReqDTO.setRequestNote(requestNote);
 			requestNoteReqDTO.setUserLocale(new FacesScopes().getUserLocale());
+			
+			//12177 - Start
+			requestNoteReqDTO.setSqExpiredStatus(getManagedBean().getSqExpiredStatus());
+			//12177 - End
 			try {
 				if(outcome.isEmpty()) {	
 					requestNoteReqDTO.setToken(ctxToken);
@@ -1113,6 +1117,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		debugLogger("preRenderView");
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		SCDirectPurchaseDataType directPurchaseDataType = super.getBpmTaskDetails(SCDirectPurchaseDataType.class, null);
+		System.out.println("fadzly supplier size : " + directPurchaseDataType.getSuppliers().size());
+		for(String supplier : directPurchaseDataType.getSuppliers()){
+			System.out.println("fadzly supplier : " + supplier);
+		}
+		
 		Long dpId = null;
 		boolean zoneFlag = Boolean.FALSE;
 		ScRequestNote requestNote = null; 
@@ -1174,7 +1183,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		Long supplierId = null;
 		
 		SCAwardSupplierDataType awardSupplierDataType = super.getBpmTaskDetails(SCAwardSupplierDataType.class, null);
-		
+		System.out.println("fadzly supplier : " + awardSupplierDataType.getSupplierId());
 		if(awardSupplierDataType.getSourceId() != null){
 			dpId = Long.valueOf(awardSupplierDataType.getSourceId());
 		} 
@@ -1407,6 +1416,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNoteReqDTO.setPidId(getManagedBean().getPurchaseInDefaultId());
 			requestNoteReqDTO.setDeletedRequestNoteDtls(getManagedBean().getDeleteRequestNoteDtls());
 			requestNoteReqDTO.setUserLocale(new FacesScopes().getUserLocale());
+			// 12177 - Start
+			requestNoteReqDTO.setSqExpiredStatus(getManagedBean().getSqExpiredStatus());
+			// 12177 - End
 			try {
 				requestNoteResDTO = getRequestNoteSO().updateRequestNote(requestNoteReqDTO);
 			} catch(EpException e) {
@@ -4583,6 +4595,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					if(currentDate.compareTo(cal.getTime()) >= 0){
 						validDate = false;
 						sqExpiredMessageFlag = true;
+						getManagedBean().setSqExpiredStatus(true);
 					}
 				}					
 			}				
