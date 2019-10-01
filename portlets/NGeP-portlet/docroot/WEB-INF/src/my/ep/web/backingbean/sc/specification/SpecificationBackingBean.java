@@ -26,6 +26,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -68,7 +69,9 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
+import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -15737,7 +15740,7 @@ public class SpecificationBackingBean extends
 				if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClPriceTypeCode() != null) {
 
 					priceTypee.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClPriceTypeCode()
-							.getPmParameterDescs().get(0).getCodeName());
+							.getPmParameterDescsSpecCallOnly().get(0).getCodeName());
 				} else {
 					priceTypee.add("");
 				}
@@ -15803,24 +15806,28 @@ public class SpecificationBackingBean extends
 			}
 		}
 		makeRowBold(workbook, sheet.getRow(0));
-
-		//FileOutputStream out = new FileOutputStream(new File("C:/Import/ImportData.xlsx"));
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		try {
+			workbook.write(bos);
+		} finally {
+			bos.close();
+		}
+		byte[] bytes = bos.toByteArray();
+		log.info("bytes is : " + bytes);
 
 		FacesContext fc = FacesContext.getCurrentInstance();
-		
-		ExternalContext ec = fc.getExternalContext();
-		ec.responseReset(); 
-		ec.setResponseContentType(contentType); 
-		ec.setResponseHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\""); 
+		HttpServletResponse response = (HttpServletResponse) fc.getExternalContext().getResponse();
 
-		OutputStream out = ec.getResponseOutputStream();
-		
-		workbook.write(out);
+		response.reset();
+		response.setContentType(contentType);
+		response.setHeader("Content-Disposition", "attachment;fileName=ImportData.xlsx");
 
+		OutputStream output = response.getOutputStream();
+		workbook.write(output);
+		log.info("Output is : "+output);
 		fc.responseComplete();
-		out.close();
 		workbook.close();
-		log.info("Writesheet.xlsx written successfully");
+		log.info("ImportData.xlsx written successfully");
 		log.info("handleFileUploadImport - END");
 	}
 
