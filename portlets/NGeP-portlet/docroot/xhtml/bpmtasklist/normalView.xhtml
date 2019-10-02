@@ -8,7 +8,8 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-
+	<h:outputStylesheet library="ep/css" name="blinktext.css"  />
+	
 	<p:panel header="#{lbl['lbl.bpm.my.task']}" collapsed="true"
 		toggleable="true">
 
@@ -149,7 +150,9 @@
 				<f:convertDateTime
 					pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 			</h:outputText>
-
+			<p:outputPanel rendered="#{tasks.docStatus eq SupplierManagementConst.PM_STATUS_PO_REVIEW}">
+				<h:outputText value="#{bpmTasklistBackingBean.poKpiByCompanyState(tasks.docId, tasks.docStatus)}" escape="false"/>
+			</p:outputPanel>
 		</p:column>
 		<p:column width="18%;" style="white-space:normal;">
 			<f:facet name="header">
