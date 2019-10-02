@@ -2450,11 +2450,13 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setG2GFlag(Boolean.FALSE);
 			getManagedBean().setLocAndBusinessFlag(Boolean.TRUE);
 		    getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_AD_HOC.value()));
+		    getManagedBean().getScQuote().setJustificationRemark("");
 		} else if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
 			getManagedBean().setProcTypeOption(Boolean.TRUE);
 			getManagedBean().setG2GFlag(Boolean.FALSE);
 			getManagedBean().setLocAndBusinessFlag(Boolean.TRUE);
 		    getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7.value()));
+		    getManagedBean().getScQuote().setJustificationRemark("");
 		} 
 
 		if (getManagedBean().getScQuote().isPanel()) {
