@@ -7,7 +7,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
 	<p:panel  header="#{lbl['lbl.sm.bulk.applied.category']}" toggleable="true" >		
-		<p:dataTable var="applCat" value="#{tasks.appliedPaginator.model}" rowIndexVar="indexAppl"
+		<p:dataTable var="applCat" value="#{tasks.appliedPaginatorApprovedByPO.model}" rowIndexVar="indexAppl"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" sortBy="#{applCat.poDecFlg}">
 			
 			<p:columnGroup type="header">
@@ -24,11 +24,11 @@
 				</p:row>
 			</p:columnGroup>
 			
-			<p:column style="width : 2% !important;" rendered="#{applCat.poDecFlg eq 1}">
-				<p:outputLabel value="#{indexAppl + 1 + tasks.appliedPaginator.fromIndex}"
+			<p:column style="width : 2% !important;">
+				<p:outputLabel value="#{indexAppl + 1 + tasks.appliedPaginatorApprovedByPO.fromIndex}"
 					style="float: left;white-space: normal;" />
 			</p:column>
-			<p:column style="white-space : normal" rendered="#{applCat.poDecFlg eq 1}">
+			<p:column style="white-space : normal">
 				<h:outputText
 					value="#{applCat.pmCategoryL1.categoryL1Code} -  #{empty applCat.categoryL1Name ? applCat.pmCategoryL1.categoryName : applCat.categoryL1Name}" />
 				<br />
@@ -38,13 +38,13 @@
 				<h:outputText
 					value="#{applCat.pmCategoryL3.categoryL3Code} -  #{empty applCat.categoryL3Name ? applCat.pmCategoryL3.categoryName : applCat.categoryL3Name}" />
 			</p:column>
-			<p:column style="width : 10% !important;white-space : normal" rendered="#{applCat.poDecFlg eq 1}">
+			<p:column style="width : 10% !important;white-space : normal">
 				<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
 					rendered="#{!applCat.specialCategory}" />
 				<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
 					rendered="#{applCat.specialCategory}" />
 			</p:column>
-			<p:column style="width : 10% !important;white-space : normal" rendered="#{applCat.poDecFlg eq 1}">			
+			<p:column style="width : 10% !important;white-space : normal">			
 				<table style="width: 100%; border: none !important; table-layout: fixed !important;">
 						<tr>
 							<td style="border: none !important; white-space: normal; word-wrap: break-word !important;">
@@ -65,7 +65,7 @@
 						</tr>
 					</table>					
 			</p:column>
-			<p:column style="width : 10% !important;white-space : normal" rendered="#{applCat.poDecFlg eq 1}">
+			<p:column style="width : 10% !important;white-space : normal">
 				<p:selectOneRadio layout="pageDirection" id="catApprvrAppr"
 					value="#{applCat.apprvrDecFlg}" 
 					label="#{lbl['lbl.sm.catCodes.appAct']} #{lbl['lbl.sm.catCodes.forCatCode']} 
@@ -81,7 +81,7 @@
 						listener="#{bulkApplicationBackingBean.assignCategoryApproveOrRejectDate(applCat)}" />
 				</p:selectOneRadio>
 			</p:column>
-			<p:column style="width : 25% !important;white-space : normal" rendered="#{applCat.poDecFlg eq 1}">
+			<p:column style="width : 25% !important;white-space : normal">
 				<p:inputTextarea value="#{applCat.approverRemarks}" maxlength="200"
 					style="width : 100%;" rows="3"   
 					label="#{lbl['lbl.sm.catCodes.rejRemarks']} #{applCat.pmCategoryL1.categoryL1Code} 
@@ -91,8 +91,9 @@
 					<f:validateLength maximum="200" />
 				</p:inputTextarea>
 			</p:column>
-		</p:dataTable>
-		<p:dataTable var="applCat" value="#{tasks.appliedPaginator.model}" rowIndexVar="indexAppl"
+		</p:dataTable> 
+		<ac:smBulkPaginator paginator="#{tasks.appliedPaginatorApprovedByPO}" /><p:spacer height="5"/>
+		<p:dataTable var="applCat" value="#{tasks.appliedPaginatorRejectedByPO.model}" rowIndexVar="indexAppl2"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" sortBy="#{applCat.poDecFlg}">
 			
 			<p:columnGroup type="header">
@@ -108,12 +109,11 @@
 					<p:column headerText="#{lbl['lbl.sm.catCodes.remark']}" style="width : 25% !important;"/>
 				</p:row>
 			</p:columnGroup>
-			
-			<p:column style="width : 2% !important;" rendered="#{applCat.poDecFlg eq 0}">
-				<p:outputLabel value="#{indexAppl + 1 + tasks.appliedPaginator.fromIndex}"
+			<p:column style="width : 2% !important;">
+				<p:outputLabel value="#{indexAppl2 + 1 + tasks.appliedPaginatorRejectedByPO.fromIndex}"
 					style="float: left;white-space: normal;" />
 			</p:column>
-			<p:column style="white-space : normal" rendered="#{applCat.poDecFlg eq 0}">
+			<p:column style="white-space : normal">
 				<h:outputText
 					value="#{applCat.pmCategoryL1.categoryL1Code} -  #{empty applCat.categoryL1Name ? applCat.pmCategoryL1.categoryName : applCat.categoryL1Name}" />
 				<br />
@@ -123,13 +123,13 @@
 				<h:outputText
 					value="#{applCat.pmCategoryL3.categoryL3Code} -  #{empty applCat.categoryL3Name ? applCat.pmCategoryL3.categoryName : applCat.categoryL3Name}" />
 			</p:column>
-			<p:column style="width : 10% !important;white-space : normal" rendered="#{applCat.poDecFlg eq 0}">
+			<p:column style="width : 10% !important;white-space : normal">
 				<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
 					rendered="#{!applCat.specialCategory}" />
 				<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
 					rendered="#{applCat.specialCategory}" />
 			</p:column>
-			<p:column style="width : 10% !important;white-space : normal" rendered="#{applCat.poDecFlg eq 0}">			
+			<p:column style="width : 10% !important;white-space : normal">			
 				<table style="width: 100%; border: none !important; table-layout: fixed !important;">
 						<tr>
 							<td style="border: none !important; white-space: normal; word-wrap: break-word !important;">
@@ -150,7 +150,7 @@
 						</tr>
 					</table>					
 			</p:column>
-			<p:column style="width : 10% !important;white-space : normal" rendered="#{applCat.poDecFlg eq 0}">
+			<p:column style="width : 10% !important;white-space : normal">
 				<p:selectOneRadio layout="pageDirection" id="catApprvrAppr2"
 					value="#{applCat.apprvrDecFlg}" 
 					label="#{lbl['lbl.sm.catCodes.appAct']} #{lbl['lbl.sm.catCodes.forCatCode']} 
@@ -166,7 +166,7 @@
 						listener="#{bulkApplicationBackingBean.assignCategoryApproveOrRejectDate(applCat)}" />
 				</p:selectOneRadio>
 			</p:column>
-			<p:column style="width : 25% !important;white-space : normal" rendered="#{applCat.poDecFlg eq 0}">
+			<p:column style="width : 25% !important;white-space : normal">
 				<p:inputTextarea value="#{applCat.approverRemarks}" maxlength="200"
 					style="width : 100%;" rows="3"   
 					label="#{lbl['lbl.sm.catCodes.rejRemarks']} #{applCat.pmCategoryL1.categoryL1Code} 
@@ -178,6 +178,6 @@
 			</p:column>
 		</p:dataTable>
 		<br />
-		<ac:smBulkPaginator paginator="#{tasks.appliedPaginator}" />
+		<ac:smBulkPaginator paginator="#{tasks.appliedPaginatorRejectedByPO}" />
 	</p:panel>
 </ui:composition>
