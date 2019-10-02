@@ -116,7 +116,7 @@
 					styleClass="BtnSpacing" update="@([id$=zonePopupGeneral])"
 					actionListener="#{createQtBB.showGeneralZonesPopup}"
 					disabled="#{createQtBB.isPanelZone()}"/>
-					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this,locationLevels,qtdetailsid" rendered="#{!createQtBB.isPanelZone()}"
+					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this,qtdetailsid" rendered="#{!createQtBB.isPanelZone()}"
 					styleClass="BtnSpacing" update="@([id$=zonePopupGeneral])"
 					actionListener="#{createQtBB.showGeneralZonesPopup}" />
 				<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
