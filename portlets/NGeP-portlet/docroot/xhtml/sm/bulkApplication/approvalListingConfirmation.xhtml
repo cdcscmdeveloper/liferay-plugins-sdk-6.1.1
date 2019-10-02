@@ -96,11 +96,15 @@
 						<ui:include src="renewedMOFCategoryTable.xhtml">
 							<ui:param name="tableName" value="#{lbl['lbl.sm.catCodes.existing.panHdr']}" />
 							<ui:param name="tableContent" value="#{tasks.approvedPaginator}" />
+							<ui:param name="tableContentApprovedByPO" value="#{tasks.approvedPaginatorApprovedByPO}" />
+							<ui:param name="tableContentRejectedByPO" value="#{tasks.approvedPaginatorRejectedByPO}" />
 						</ui:include>
 						<br /><br />
 						<ui:include src="renewedMOFCategoryTable.xhtml">
 							<ui:param name="tableName" value="#{lbl['lbl.sm.addtnl.catCodes.panHdr']}" />
 							<ui:param name="tableContent" value="#{tasks.appliedPaginator}" />
+							<ui:param name="tableContentApprovedByPO" value="#{tasks.appliedPaginatorApprovedByPO}" />
+							<ui:param name="tableContentRejectedByPO" value="#{tasks.appliedPaginatorRejectedByPO}" />
 						</ui:include>
 					</p:outputPanel>
 					<p:outputPanel rendered="#{tasks.applType ne 'R'}">
