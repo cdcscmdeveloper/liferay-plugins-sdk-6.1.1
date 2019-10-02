@@ -864,6 +864,16 @@ public class SmBulkApplicationBackingBean extends
 				}
 				bulkApplicationVO.setPaymentReqd(getPaymentMode(appl));
 				bulkApplicationVO.setApplType(appl.getApplType());
+				//21937 - start
+				bulkApplicationVO
+						.setPendingApproveCategoriesApprovedByPO(new ArrayList<SmSupplierCategory>());
+				bulkApplicationVO
+						.setPendingApproveCategoriesRejectedByPO(new ArrayList<SmSupplierCategory>());
+				bulkApplicationVO
+						.setApprovedCategoriesByPO(new ArrayList<SmSupplierCategory>());
+				bulkApplicationVO
+						.setRejectedCategoriesByPO(new ArrayList<SmSupplierCategory>());
+				//21937 - end
 				bulkApplicationVO
 						.setPendingApproveCategories(new ArrayList<SmSupplierCategory>());
 				bulkApplicationVO
@@ -878,6 +888,13 @@ public class SmBulkApplicationBackingBean extends
 						if (cat.getRecordStatusFlg().compareTo(SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0
 								&& SupplierManagementConst.ACC_BASIC_REACTIVATE.equals(appl.getApplType())) {
 							bulkApplicationVO.getApprovedCategories().add(cat);
+							//21937 - start
+							if(cat.isApprovedByPo()){
+								bulkApplicationVO.getApprovedCategoriesByPO().add(cat);
+							} else {
+								bulkApplicationVO.getRejectedCategoriesByPO().add(cat);
+							}
+							//21937 - end
 						} else if (cat.isApprovedByPo()) {
 							pendingApprovedCategories.add(cat);
 						} else {
@@ -885,6 +902,13 @@ public class SmBulkApplicationBackingBean extends
 						}
 					} else {
 						bulkApplicationVO.getApprovedCategories().add(cat);
+						//21937 - start
+						if(cat.isApprovedByPo()){
+							bulkApplicationVO.getApprovedCategoriesByPO().add(cat); 
+						} else {
+							bulkApplicationVO.getRejectedCategoriesByPO().add(cat); 
+						}					
+						//21937 - end
 					}
 				}
 
@@ -892,6 +916,17 @@ public class SmBulkApplicationBackingBean extends
 				sortListByCategoryCodes(pendingRejectedCategories);
 				bulkApplicationVO.getPendingApproveCategories().addAll(pendingApprovedCategories);
 				bulkApplicationVO.getPendingApproveCategories().addAll(pendingRejectedCategories);
+				//21937 - start
+				bulkApplicationVO.getPendingApproveCategoriesApprovedByPO().addAll(pendingApprovedCategories);
+				bulkApplicationVO.getPendingApproveCategoriesRejectedByPO().addAll(pendingRejectedCategories);
+				
+				bulkApplicationVO.setAppliedPaginatorApprovedByPO(new Paginator(bulkApplicationVO.getPendingApproveCategoriesApprovedByPO()));
+				bulkApplicationVO.setAppliedPaginatorRejectedByPO(new Paginator(bulkApplicationVO.getPendingApproveCategoriesRejectedByPO()));
+				
+				bulkApplicationVO.setApprovedPaginatorApprovedByPO(new Paginator(bulkApplicationVO.getApprovedCategoriesByPO()));
+				bulkApplicationVO.setApprovedPaginatorRejectedByPO(new Paginator(bulkApplicationVO.getRejectedCategoriesByPO()));
+				//21937 - end
+				
 				bulkApplicationVO.setAppliedPaginator(new Paginator(bulkApplicationVO.getPendingApproveCategories()));
 
 				sortListByCategoryCodes(bulkApplicationVO.getApprovedCategories());
