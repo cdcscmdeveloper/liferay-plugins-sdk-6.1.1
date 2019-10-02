@@ -692,10 +692,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			setUserDetails(requestNote);
 			requestNoteReqDTO.setRequestNote(requestNote);
 			requestNoteReqDTO.setUserLocale(new FacesScopes().getUserLocale());
-			
-			//12177 - Start
-			requestNoteReqDTO.setSqExpiredStatus(getManagedBean().getSqExpiredStatus());
-			//12177 - End
 			try {
 				if(outcome.isEmpty()) {	
 					requestNoteReqDTO.setToken(ctxToken);
@@ -1416,9 +1412,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNoteReqDTO.setPidId(getManagedBean().getPurchaseInDefaultId());
 			requestNoteReqDTO.setDeletedRequestNoteDtls(getManagedBean().getDeleteRequestNoteDtls());
 			requestNoteReqDTO.setUserLocale(new FacesScopes().getUserLocale());
-			// 12177 - Start
-			requestNoteReqDTO.setSqExpiredStatus(getManagedBean().getSqExpiredStatus());
-			// 12177 - End
 			try {
 				requestNoteResDTO = getRequestNoteSO().updateRequestNote(requestNoteReqDTO);
 			} catch(EpException e) {
@@ -4595,7 +4588,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					if(currentDate.compareTo(cal.getTime()) >= 0){
 						validDate = false;
 						sqExpiredMessageFlag = true;
-						getManagedBean().setSqExpiredStatus(true);
 					}
 				}					
 			}				
