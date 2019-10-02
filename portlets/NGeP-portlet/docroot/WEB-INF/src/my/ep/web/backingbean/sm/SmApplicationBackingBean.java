@@ -1872,6 +1872,13 @@ public class SmApplicationBackingBean extends
 
 				SmApplicationUtil.updateApplBranchCodeIfEmpty(getManagedBean()
 						.getSmAppl());
+				//START SSM AUTO CALCULATE SHARE
+				if(getManagedBean().getSmAppl().isApplValidWithSsm()){
+					calcPersonnelShareAmt(getManagedBean().getSmAppl().getSmPersonnels(),getManagedBean().getSmAppl().getSmCompanyBasic());
+					setApplicationShareHolders(getManagedBean().getSmAppl().getSmPersonnels());
+					calculateCapital();
+				}
+				//END SSM AUTO CALCULATE SHARE
 
 			}
 			if (currentPageType
@@ -12330,7 +12337,35 @@ public class SmApplicationBackingBean extends
 		RegistrationBackingBean registrationBackingBean = new RegistrationBackingBean();
 		return registrationBackingBean.getBusinessNatureSection(suppBizNature);
 	}
-	
+	public void calcPersonnelShareAmt(List<SmPersonnel> personnels,SmCompanyBasic companyBasic){
+		BigDecimal bumiputeraCapital = new BigDecimal(0);
+		BigDecimal nonBumiputeraCapital = new BigDecimal(0);
+		BigDecimal nonMalaysianCapital = new BigDecimal(0);
+		/*BigDecimal govermentAgencyEquityCapital = new BigDecimal(0); // XAK,XAU
+		BigDecimal govermentEquityCapital = new BigDecimal(0);// XG
+		BigDecimal foreignCapital = new BigDecimal(0);// f
+		BigDecimal localCapital = new BigDecimal(0);// C
+*/		for(SmPersonnel personnel: personnels){
+			if(personnel.isEquityOwner() && personnel.getShareAmt() !=null){
+				if(ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(personnel.getIdentificationType().getParameterCode())){
+					nonMalaysianCapital = nonMalaysianCapital.add(personnel.getShareAmt());
+				}else{
+					if(personnel.getBumiFlg()==1){
+						bumiputeraCapital = bumiputeraCapital.add(personnel.getShareAmt());
+					}else {
+						nonBumiputeraCapital = nonBumiputeraCapital.add(personnel.getShareAmt());
+					}
+				}
+								
+			}
+		}
+		//set latest Value to company basic
+		companyBasic.setBumiEquity(bumiputeraCapital);
+		companyBasic.setNonBumiEquity(nonBumiputeraCapital);
+		companyBasic.setForeignerEquity(nonMalaysianCapital);
+		
+				
+	}
 	//FIXME : 16052019 - SSM INTEGRATION CR - end
 
 }
