@@ -65,7 +65,7 @@
 	</script>
 	<p:panel header="#{lbl['lbl.sm.companyinfo']}" toggleable="true" id="pnlCompInfo">
 		<table class="customTbl">
-		<c:if test="#{!registrationBackingBean.managedBean.companyValidWithSSM and registrationBackingBean.managedBean.companyValidWithSSM}">	
+		<c:if test="#{!registrationBackingBean.managedBean.smAppl.applValidWithSsm and registrationBackingBean.managedBean.smAppl.applValidWithSsm}">	
 			<tr>
 				<td class="tdTitle"><p:outputLabel
 						value="#{lbl['lbl.sm.nationality']}" /> <p:outputLabel value="*"
@@ -86,7 +86,7 @@
 							<ui:param name="unknownCountry" value="#{registrationBackingBean.getUnknownCountry()}" />
 							<f:selectItem itemValue="#{unknownCountry.countryId}" itemLabel="#{unknownCountry.countryName}" />
 						</c:if>
-						<p:ajax event="change" disabled="#{registrationBackingBean.managedBean.companyValidWithSSM}" listener="#{registrationBackingBean.ownerNationalityOnChange}" update="pnlIdentypeSelect,pnlIdentType,pnlIdentLabel"/>
+						<p:ajax event="change" disabled="#{registrationBackingBean.managedBean.smAppl.applValidWithSsm}" listener="#{registrationBackingBean.ownerNationalityOnChange}" update="pnlIdentypeSelect,pnlIdentType,pnlIdentLabel"/>
 					</p:selectOneMenu>
 					<p:message id="nationalityIdMsg" for="nationalityId" display="icon" />
 					
@@ -98,7 +98,7 @@
 				<td class="tdTitle"><p:outputLabel value="#{lbl[registrationBackingBean.getOwnerLabel()]}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td class="tdContent"><p:inputText id="ownerNameId" required="#{!empty param['disableValidation']}" label="#{lbl[registrationBackingBean.getOwnerLabel()]}"
 							value="#{registrationBackingBean.managedBean.smSuppOwner.ownerName}"
-							size="40" maxlength="80" disabled="#{!registrationBackingBean.managedBean.smSuppOwner.brandNew || registrationBackingBean.managedBean.companyValidWithSSM}"/>
+							size="40" maxlength="80" disabled="#{!registrationBackingBean.managedBean.smSuppOwner.brandNew || registrationBackingBean.managedBean.smAppl.applValidWithSsm}"/>
 						&#160;
 						<p:graphicImage id="ownNmti" value="/css/images/design/tooltips.png" />
 						<p:tooltip id="ownNmtt" for="ownNmti">
@@ -154,7 +154,7 @@
 								label="#{lbl['lbl.sm.identificationno']}"
 								value="#{registrationBackingBean.managedBean.smSuppOwner.identificationNo}"
 								size="30" maxlength="12" validatorMessage="#{lbl['lbl.sm.invalidIcNo']}"
-								disabled="#{!registrationBackingBean.managedBean.smSuppOwner.brandNew || registrationBackingBean.managedBean.companyValidWithSSM}">
+								disabled="#{!registrationBackingBean.managedBean.smSuppOwner.brandNew || registrationBackingBean.managedBean.smAppl.applValidWithSsm}">
 								<f:validateRegex pattern="^-?\d*(\.\d+)?$" disabled="#{empty param['disableValidation']}"/>
 							</p:inputText>
 						</c:when>
@@ -164,7 +164,7 @@
 								label="#{lbl['lbl.sm.identificationno']}"
 								value="#{registrationBackingBean.managedBean.smSuppOwner.identificationNo}"
 								size="30" maxlength="15"
-								disabled="#{!registrationBackingBean.managedBean.smSuppOwner.brandNew || registrationBackingBean.managedBean.companyValidWithSSM}">
+								disabled="#{!registrationBackingBean.managedBean.smSuppOwner.brandNew || registrationBackingBean.managedBean.smAppl.applValidWithSsm}">
 								<p:ajax process="@this" partialSubmit="true" update="@this" listener="#{registrationBackingBean.trimOwnerPassportValue}"/>
 							</p:inputText>
 						</c:otherwise>
@@ -208,7 +208,7 @@
 						label="#{lbl['lbl.sm.companyname']}" maxlength="100"
 						value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.companyName}"
 						size="40" id="companyNameId"  
-						disabled="#{registrationBackingBean.managedBean.disabledCompanyNameInMaintenance or registrationBackingBean.managedBean.viewMode or registrationBackingBean.managedBean.companyValidWithSSM}" /> 
+						disabled="#{registrationBackingBean.managedBean.disabledCompanyNameInMaintenance or registrationBackingBean.managedBean.viewMode or registrationBackingBean.managedBean.smAppl.applValidWithSsm}" /> 
 						<p:message id="companyNameIdMsg" for="companyNameId" display="icon" /></td>
 			</tr>
 			<tr>
@@ -218,13 +218,13 @@
 				</td>
 				<td class="tdContent">
 				
-					<p:calendar rendered="#{!registrationBackingBean.managedBean.companyValidWithSSM || empty registrationBackingBean.managedBean.smAppl.smCompanyBasic.establishDate}" disabled="#{isReadOnly}" id="estDateCalId"
+					<p:calendar rendered="#{!registrationBackingBean.managedBean.smAppl.applValidWithSsm || empty registrationBackingBean.managedBean.smAppl.smCompanyBasic.establishDate}" disabled="#{isReadOnly}" id="estDateCalId"
 						navigator="true" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.estdate']}"
 						value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.establishDate}"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
 						readonlyInput="true" size="30" showOn="button" yearRange="-99:+0" maxdate="#{CommonConstants.CURRENT_DATE}"/>
 					
-					<p:calendar rendered="#{registrationBackingBean.managedBean.companyValidWithSSM and !empty registrationBackingBean.managedBean.smAppl.smCompanyBasic.establishDate}" disabled="true" id="estDateCalIdV"
+					<p:calendar rendered="#{registrationBackingBean.managedBean.smAppl.applValidWithSsm and !empty registrationBackingBean.managedBean.smAppl.smCompanyBasic.establishDate}" disabled="true" id="estDateCalIdV"
 						navigator="true" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.estdate']}"
 						value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.establishDate}"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline" 
@@ -250,7 +250,7 @@
 				<td class="tdContent" >
 					<p:inputText size="40"
 						id="compAdd1" required="#{!empty param['disableValidation']}" maxlength="100"
-						label="#{lbl['lbl.sm.companyaddress']}" disabled="#{registrationBackingBean.managedBean.viewMode || registrationBackingBean.managedBean.companyValidWithSSM}"
+						label="#{lbl['lbl.sm.companyaddress']}" disabled="#{registrationBackingBean.managedBean.viewMode || registrationBackingBean.managedBean.smAppl.applValidWithSsm}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.address1}"
 						>
 						<p:ajax event="blur" update=":form:acgmap:gmapInput:gmapInput"></p:ajax>
@@ -281,7 +281,7 @@
 			<tr>
 				<td></td>
 				<td class="tdContent"><p:inputText size="40"
-						id="compAdd2" maxlength="100" disabled="#{registrationBackingBean.managedBean.viewMode || registrationBackingBean.managedBean.companyValidWithSSM}"
+						id="compAdd2" maxlength="100" disabled="#{registrationBackingBean.managedBean.viewMode || registrationBackingBean.managedBean.smAppl.applValidWithSsm}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.address2}" 
 						/></td>
 
@@ -289,7 +289,7 @@
 					<p:outputLabel value="#{lbl['lbl.sm.state']}" />
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
-				<td class="tdContent"><p:selectOneMenu id="busState" disabled="#{registrationBackingBean.managedBean.sabahSarawakType or registrationBackingBean.managedBean.viewMode or registrationBackingBean.managedBean.companyValidWithSSM}"
+				<td class="tdContent"><p:selectOneMenu id="busState" disabled="#{registrationBackingBean.managedBean.sabahSarawakType or registrationBackingBean.managedBean.viewMode or registrationBackingBean.managedBean.smAppl.applValidWithSsm}"
 						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.state']}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.pmState.stateId}"
 						style="width:80%">
@@ -306,7 +306,7 @@
 			<tr>
 				<td></td>
 				<td class="tdContent"><p:inputText size="40"
-						id="compAdd3" maxlength="100" disabled="#{registrationBackingBean.managedBean.viewMode || registrationBackingBean.managedBean.companyValidWithSSM}"
+						id="compAdd3" maxlength="100" disabled="#{registrationBackingBean.managedBean.viewMode || registrationBackingBean.managedBean.smAppl.applValidWithSsm}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.address3}"
 						 /></td>
 
@@ -321,7 +321,7 @@
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="dist"
 							value="#{registrationBackingBean.managedBean.businessDistrictLs}"
-							itemValue="#{dist.districtId}" itemLabel="#{dist.districtName}" disabled="#{registrationBackingBean.managedBean.companyValidWithSSM}" />
+							itemValue="#{dist.districtId}" itemLabel="#{dist.districtName}" disabled="#{registrationBackingBean.managedBean.smAppl.applValidWithSsm}" />
 						<p:ajax event="change" process="@this"
 							listener="#{registrationBackingBean.populateCityByAddType('business',true)}"
 							update="busCity,:form:acgmap:gmapInput:gmapInput,localAuthLabelOutPanelId,localAuthInputOutPanelId" />
@@ -338,7 +338,7 @@
 						<p:outputPanel
 							rendered="#{registrationBackingBean.managedBean.smBusinessAdd.pmCountry.countryId==registrationBackingBean.managedBean.myCountryId}">
 							<p:inputText maxlength="5" required="#{!empty param['disableValidation']}"
-								label="#{lbl['lbl.sm.postcode']}" id="compPostCodeMy" disabled="#{registrationBackingBean.managedBean.viewMode or registrationBackingBean.managedBean.companyValidWithSSM}"
+								label="#{lbl['lbl.sm.postcode']}" id="compPostCodeMy" disabled="#{registrationBackingBean.managedBean.viewMode or registrationBackingBean.managedBean.smAppl.applValidWithSsm}"
 								value="#{registrationBackingBean.managedBean.smBusinessAdd.postcode}"
 								validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
 								size="40">
@@ -371,7 +371,7 @@
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="pcity"
 							value="#{registrationBackingBean.managedBean.businessCityLs}"
-							itemValue="#{pcity.cityId}" itemLabel="#{pcity.cityName}" disabled="#{registrationBackingBean.managedBean.companyValidWithSSM}"/>
+							itemValue="#{pcity.cityId}" itemLabel="#{pcity.cityName}" disabled="#{registrationBackingBean.managedBean.smAppl.applValidWithSsm}"/>
 						<p:ajax event="change" update=":form:acgmap:gmapInput:gmapInput" process="@this"
 							listener="#{registrationBackingBean.onSelectCity('business')}"/>
 					</p:selectOneMenu> <p:message id="busCityMsg" for="busCity" display="icon" /></td>
