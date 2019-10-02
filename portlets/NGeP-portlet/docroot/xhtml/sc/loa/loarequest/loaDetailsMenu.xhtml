@@ -594,10 +594,10 @@
 				</td>
 				<h:panelGroup id="followLoaAmtId"
 					rendered="#{lOADetailBackingBean.managedBean.scLoa.contractType.parameterCode == ParameterConst.contractTypeCentral}">
-					<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.is.follow.loa.amt']}" /> </td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.is.follow.loa.amt']}" style="text-align:left;"/> </td>
 					<td><p:selectOneRadio id="isFollowLOAAmt" styleClass="commonLabel"
-							value="#{lOADetailBackingBean.managedBean.scLoa.followLoaAmt}"
-							required="true"
+							value="#{lOADetailBackingBean.managedBean.flowamt}"
+							required="true" label="#{lbl['lbl.sc.loiloa.loa.is.follow.loa.amt']}"
 							disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}">
 							<f:selectItems
 								value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
