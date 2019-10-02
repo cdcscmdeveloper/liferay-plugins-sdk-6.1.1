@@ -203,6 +203,12 @@ public class TaskReassignmentBackingBean extends
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, NAV_TO_SEARCH);
+		if (this.getManagedBean().isEnableDeleteGroupTasksButton()) {
+			this.getManagedBean().setEnableDeleteGroupTasksButton(false);
+		}
+		if (this.getManagedBean().isEnableDeleteOthersTasksButton()) {
+			this.getManagedBean().setEnableDeleteOthersTasksButton(false);
+		}
 	}
 
 	/**
@@ -3193,7 +3199,7 @@ public class TaskReassignmentBackingBean extends
 	}
 	
 	public void resetCheckAllTasks() {
-		
+		log.info("resetCheckAllTasks");
 		if (getManagedBean().isCheckAllGroupTasksEnabled()) {
 			getManagedBean().setCheckAllGroupTasksEnabled(false);
 		}
