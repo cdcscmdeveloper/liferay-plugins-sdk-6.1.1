@@ -3531,6 +3531,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				&& contractSignerUser.getUserId() != null) {
 			scLoa.setContractSigner(contractSignerUser);
 		}
+		//#25022
+		saveScheduleList();
 	}
 
 	/**
@@ -6917,7 +6919,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	/**
 	 * @param e
 	 */
-	public void selectAllSchedule(AjaxBehaviorEvent e) {
+	public void selectAllSchedule() {
 
 		if (getManagedBean().getScLoa().getScQtSchedules() != null) {
 			for (ScQtSchedule ScQtSchedule : getManagedBean().getScLoa()
