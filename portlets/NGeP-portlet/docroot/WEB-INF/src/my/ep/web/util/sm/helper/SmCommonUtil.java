@@ -53,27 +53,6 @@ import javax.portlet.PortletContext;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.id.Hex;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.apache.log4j.MDC;
-import org.apache.velocity.VelocityContext;
-import org.primefaces.context.RequestContext;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.DefaultStreamedContent;
-import org.primefaces.model.StreamedContent;
-
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.model.Layout;
-import com.liferay.portal.theme.ThemeDisplay;
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.pdf.PdfContentByte;
-import com.lowagie.text.pdf.PdfImportedPage;
-import com.lowagie.text.pdf.PdfReader;
-import com.lowagie.text.pdf.PdfWriter;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -86,6 +65,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.pojobtyperatio.IPoJobTypeRatioSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.pm.general.settings.calendar.ICalendarSO;
 import my.ep.biz.service.sm.common.myidentity.IMyIdentitySO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
@@ -123,6 +103,8 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.zone.ZoneReqDTO;
 import my.ep.dto.pm.common.zone.ZoneResDTO;
+import my.ep.dto.pm.general.settings.calendar.CalendarReqDTO;
+import my.ep.dto.pm.general.settings.calendar.CalendarResDTO;
 import my.ep.dto.sm.attachment.SmAttachmentReqDTO;
 import my.ep.dto.sm.attachment.SmAttachmentResDTO;
 import my.ep.dto.sm.common.myidentity.MyIdentityReqDTO;
@@ -218,6 +200,27 @@ import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.vo.SmCancelMofRemarksVO;
 import my.ep.web.vo.SmPersonnelSummaryCountVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.id.Hex;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
+import org.apache.velocity.VelocityContext;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
+
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.Layout;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfImportedPage;
+import com.lowagie.text.pdf.PdfReader;
+import com.lowagie.text.pdf.PdfWriter;
 
 // TODO: Auto-generated Javadoc
 public class SmCommonUtil {
@@ -5540,5 +5543,34 @@ public class SmCommonUtil {
 		}
 
 		return null;
+	}
+	
+	public int getDaysDiffMinusHolidayByState(Date start, Date end, Long stateId) {
+		int retVal = 0;
+		Calendar startCal = Calendar.getInstance();
+		startCal.setTime(start);
+		while (startCal.getTime().before(end)) {
+			startCal.add(startCal.DATE, 1);
+			if (!isDateHoliday(startCal, stateId)) {
+				retVal++;
+			}
+		}
+		return retVal;
+	}
+
+	public boolean isDateHoliday(Calendar checkedDate, Long stateId) {
+		ICalendarSO calendarSO = (ICalendarSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						ICalendarSO.class);
+		CalendarReqDTO reqDTO = new CalendarReqDTO();
+		reqDTO.setStateId(stateId);
+		reqDTO.setDate(checkedDate.getTime());
+		CalendarResDTO resDTO = calendarSO.checkHolidayByDateAndStateId(reqDTO);
+
+		if (DateUtils.isDateWeekend(checkedDate) || resDTO.isDateHoliday()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
