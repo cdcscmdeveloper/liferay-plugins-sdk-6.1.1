@@ -67,6 +67,8 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 	private  boolean prodcollapse=false;
 	private IPagingDataModel<CtContractItem> contractListingPagingDataModel = new ContractListingPagingDataModel();
 	private IPagingDataModel<CtContractItem> ServiceListingPagingDataModel =  new ServiceListingPagingDataModel();
+	private boolean itemProductExist;
+	private boolean itemServiceExist;
 
 	
 	
@@ -744,5 +746,34 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 	public void setResetval(boolean resetval) {
 		this.resetval = resetval;
 	}
+	
+	/**
+	 * @return the itemProductExist
+	 */
+	public boolean isItemProductExist() {
+		return itemProductExist;
+	}
+
+	/**
+	 * @param itemProductExist the itemProductExist to set
+	 */
+	public void setItemProductExist(boolean itemProductExist) {
+		this.itemProductExist = itemProductExist;
+	}
+	
+	/**
+	 * @return the itemServiceExist
+	 */
+	public boolean isItemServiceExist() {
+		return itemServiceExist;
+	}
+
+	/**
+	 * @param itemServiceExist the itemServiceExist to set
+	 */
+	public void setItemServiceExist(boolean itemServiceExist) {
+		this.itemServiceExist = itemServiceExist;
+	}
+
 	
 }
