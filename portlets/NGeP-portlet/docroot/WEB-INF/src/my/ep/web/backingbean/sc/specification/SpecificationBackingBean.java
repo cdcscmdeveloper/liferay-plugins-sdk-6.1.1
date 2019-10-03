@@ -69,6 +69,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
+import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -262,6 +263,7 @@ import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 
+import com.liferay.portal.kernel.servlet.ServletResponseUtil;
 import com.liferay.portal.util.PortalUtil;
 /**
  * The Class SpecificationBackingBean.
@@ -15688,7 +15690,7 @@ public class SpecificationBackingBean extends
 			InvalidFormatException {
 		log.info("handleFileUploadImport - BEGIN");
 		String fileName = "ImportData.xlsx";
-		String contentType = "application/application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+		String contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 		List<String> itemm = new ArrayList<String>();
 		List<String> specificationn = new ArrayList<String>();
 		List<String> uomm = new ArrayList<String>();
@@ -15808,30 +15810,28 @@ public class SpecificationBackingBean extends
 			}
 		}
 		makeRowBold(workbook, sheet.getRow(0));
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		try {
-			workbook.write(bos);
-		} finally {
-			bos.close();
-		}
-		byte[] bytes = bos.toByteArray();
-		log.info("bytes is : " + bytes);
+	
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		PortletRequest req = (PortletRequest) facesContext.getExternalContext().getRequest();
+		HttpServletRequest httpServletRequest = (HttpServletRequest) PortalUtil.getHttpServletRequest(req);
+		PortletResponse response = (PortletResponse) facesContext.getExternalContext().getResponse();
+		HttpServletResponse httpServletResponse = (HttpServletResponse) PortalUtil.getHttpServletResponse(response);
 
-		FacesContext fc = FacesContext.getCurrentInstance();
-		PortletResponse response1 = (PortletResponse)fc.getExternalContext().getResponse();
-        
-		HttpServletResponse response = (HttpServletResponse)PortalUtil.getHttpServletResponse(response1);;
-		response.reset();
-		response.setContentType(contentType);
-		response.setHeader("Content-Disposition", "attachment;fileName=ImportData.xlsx");
-		response.getOutputStream().write(bytes);
-		response.getOutputStream().flush();
-		response.getOutputStream().close();
-		log.info("response is : "+response);
-		
-		fc.responseComplete();
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		workbook.write(bos);
+
 		workbook.close();
-		
+
+		httpServletResponse.setHeader("Content-Disposition", "attachment; filename=ImportData.xlsx");
+		httpServletResponse.setContentType(contentType);
+		httpServletResponse.setCharacterEncoding("UTF-8");
+		httpServletResponse.setContentLength(bos.size());
+		ServletResponseUtil.sendFile(httpServletRequest, httpServletResponse, fileName, bos.toByteArray());
+
+		log.info("httpServletResponse is : " + httpServletResponse);
+		log.info("httpServletResponse.toString() is : " + httpServletResponse.toString());
+		log.info("httpServletResponse.getOutputStream() is : " + httpServletResponse.getOutputStream());
+
 		log.info("ImportData.xlsx written successfully");
 		log.info("handleFileUploadImport - END");
 	}
