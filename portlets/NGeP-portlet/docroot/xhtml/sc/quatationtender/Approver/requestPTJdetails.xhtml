@@ -63,7 +63,7 @@
 						disabled="true" readonly="true" style="width:212px;" /></td>
 			</tr>
 
-			<c:if test="#{approvalBackingBean.managedBean.taskName eq ParameterConst.supplierAcceptQtChange}" >
+			<c:if test="#{approvalBackingBean.managedBean.taskName eq ParameterConst.supplierAcceptQtChange || approvalBackingBean.managedBean.taskName eq ParameterConst.fcApproveQTChange}" >
 				<tr>
 					<td>
 						<p:outputLabel value="#{lbl['lbl.sc.qt.response.period']}" /> 
@@ -79,25 +79,6 @@
 					<td>
 						<p:inputText value="#{qTDetailBB.getExtensionResponseDueDate(scQt.qtId)}" style="width:200px;" disabled="true" >
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
-						</p:inputText>
-					</td>
-				</tr>
-			</c:if>
-			<c:if test="#{approvalBackingBean.managedBean.taskName eq ParameterConst.fcApproveQTChange}" >
-				<tr>
-					<td>
-						<p:outputLabel value="#{lbl['lbl.sc.qt.response.period']}" /> 
-						<p:outputLabel value="*" styleClass="mandatory" />
-					</td>
-					<td>
-						<p:inputText id="responsePeriod" value="#{CommonConstants.DEFAULT_RESPONSE_PERIOD}" style="width:200px;" disabled="true" />
-						<ac:iconTooltip value="#{lbl['lbl.sc.qt.response.period.tooltip']}" />
-					</td>
-					<td>
-						<p:outputLabel value="#{lbl['lbl.sc.qt.proposal.validity.extension.response.due.date']}" />
-					</td>
-					<td>
-						<p:inputText value="#{''}" style="width:200px;" disabled="true" >
 						</p:inputText>
 					</td>
 				</tr>
