@@ -178,6 +178,7 @@
 				rowKey="#{flItem}">
 				<ac:paginator for="itemDataTable" />
 				<p:column>
+				
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.fl.gst']}" /><br/>
 						<c:choose>
@@ -204,8 +205,9 @@
 							<br />
 					<h:outputText value="#{flItem.scRequestItem.itemName}" id="itemDesc" style="white-space:pre-wrap; text-align:left; float:left;" />
 							<br />	
-<!--#16344 Display SKU-->					
-					<h:outputText value="#{flItem.scRequestItem.ctContractItem[0].sku}" rendered="#{flItem.scRequestItem.ctContractItem != null}" style="white-space:pre-wrap; text-align:left; float:left;" />
+<!--#16344 Display SKU-->									
+					<h:outputText value="#{purchaseRequestBackingBean.getSkuDescription(flItem.scRequestItem)}"
+					style="white-space:pre-wrap; text-align:left; float:left;" />
 				</h:panelGroup>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="white-space:normal;text-align:center">
