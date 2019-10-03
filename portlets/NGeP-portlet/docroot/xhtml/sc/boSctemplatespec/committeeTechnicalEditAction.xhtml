@@ -204,7 +204,7 @@ label.ui-button>span.ui-button-text {
 				toggleable="true">
 				<table>
 					<tr align="left">
-						<td><p:commandButton value="#{lbl['lbl.btn.import']}"
+						<td><p:commandButton value="#{lbl['lbl.btn.import']}" id="getFile" ajax="false"
 								action="#{specificationBackingBean.handleFileUploadImport}" /></td>
 						<td><p:fileUpload id="uploader" value="filerUp"
 								fileUploadListener="#{specificationBackingBean.handleFileUploadExport}"
