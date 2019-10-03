@@ -39,17 +39,55 @@
 
 	<h:panelGroup rendered="#{isShowButton}">
 		<c:if test="#{isPendingSubmissionStatus}">
-			<div>
-				<p:commandButton immediate="true"
-					value="#{lbl['lbl.btn.item.search']}" partialSubmit="true"
-					process="@this"
-					action="#{purchaseInquiryBackingBean.backToPrevious}" />
-				<p:commandButton value="#{lbl['lbl.btn.submit']}"
-					partialSubmit="true" process="@form"
-					action="#{purchaseInquiryBackingBean.submitPrInquiryDtl}"
-					style="float:right;" onstart="blockWidget.show();"
-					oncomplete="blockWidget.hide();" update="@form" />
-			</div>
+			<table border="0" cellpadding="0" cellspacing="0" width="100%">
+				<tr>
+					<td>
+						<p:commandButton immediate="true"
+							value="#{lbl['lbl.btn.item.search']}" partialSubmit="true"
+							process="@this"
+							action="#{purchaseInquiryBackingBean.backToPrevious}" />
+					</td>
+					<td style="float:right;">
+						<p:commandButton
+							value="#{lbl['lbl.btn.submit']}" partialSubmit="true"
+							process="@form"
+							action="#{purchaseInquiryBackingBean.submitPrInquiryDtl('SUBMIT')}"
+							onstart="blockWidget.show();"
+							oncomplete="blockWidget.hide();" update="@form" />
+					</td>
+					<c:if test="#{purchaseInquiryBackingBean.managedBean.disProcTyp}" >
+						<td style="float:right;">
+							<p:commandButton
+								value="#{lbl['lbl.btn.save']}" onclick="blockWidget.show();"
+								oncomplete="blockWidget.hide();"
+								action="#{purchaseInquiryBackingBean.submitPrInquiryDtl('')}"
+								process="@all" update="@form" /> 
+						</td>
+					</c:if>
+					<c:if test="#{!purchaseInquiryBackingBean.managedBean.disProcTyp}" >
+						<td style="float:right;">
+
+							<p:commandButton value="#{lbl['lbl.btn.save']}" partialSubmit="true"
+								process="@form" onstart="blockWidget.show();" update="@form"
+								oncomplete="blockWidget.hide(); if (args &amp;&amp; !args.validationFailed) cd.show();" />
+
+							<p:confirmDialog
+								message="#{lbl['lbl.sc.dialog.confirm.message.save']}"
+								header="#{lbl['lbl.sc.dialog.confirm.header.save']}"
+								severity="alert" widgetVar="cd">
+								<div class="ppRightBtn">
+									<p:commandButton value="#{lbl['lbl.btn.yes']}"
+										actionListener="#{purchaseInquiryBackingBean.submitPrInquiryDtl('')}"
+										onclick="cd.hide();" id="saveId"
+										partialSubmit="true" process="@all" immediate="true" update="@form"/>
+									<p:commandButton value="#{lbl['lbl.btn.no']}"
+										onclick="cd.hide();" />
+								</div>
+							</p:confirmDialog>
+						</td>
+					</c:if>
+				</tr>
+			</table>
 		</c:if>
 
 		<c:if test="#{!empty purchaseInquiryBackingBean.managedBean.taskId}">
@@ -72,16 +110,21 @@
 						value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 
 					<c:if test="#{isPendingSupplierRespStatus}">
-						<p:commandButton value="#{lbl[buttonLabel]}"
-							styleClass="ui-button" update="@([id$=spkiOutputPanel])"
-							action="#{purchaseInquiryBackingBean.supplierSubmit}"
-							onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
-							<f:setPropertyActionListener value="#{bpmAction}"
-								target="#{purchaseInquiryBackingBean.managedBean.action}" />
-						</p:commandButton>
 
-					</c:if>
-				</ui:repeat>
+						<p:commandButton value="#{lbl['lbl.btn.save']}"
+							action="#{purchaseInquiryBackingBean.supplierSave}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							process="@this" />
+
+						<p:commandButton value="#{lbl[buttonLabel]}"
+								styleClass="ui-button" update="@([id$=spkiOutputPanel])"
+								action="#{purchaseInquiryBackingBean.supplierSubmit}"
+								onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
+								<f:setPropertyActionListener value="#{bpmAction}"
+									target="#{purchaseInquiryBackingBean.managedBean.action}" />
+							</p:commandButton>
+
+						</c:if></ui:repeat>
 				<p:outputPanel id="spkiOutputPanel">
 					<ac:spkiPopup id="spkiPopup"
 						password="#{purchaseInquiryBackingBean.managedBean.spkiBackingBean.password}"
