@@ -4056,9 +4056,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 
 	private String getMonth(String month) {
+		//#25022
+		FacesScopes facesScopes = new FacesScopes();
 
 		if (StringUtils.isEmpty(month)) {
-			throw new EpException("Month should not be empty");
+			throw new EpException(MessageConst.ERROR_100022, new String[] {ResourceBundleUtils.getMessage("lbl.sc.start.month",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});
 		}
 		int mon = Integer.parseInt(month);
 		String finalMonth = null;
