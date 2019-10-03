@@ -4702,5 +4702,16 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		}
 		return thresholdAmt;
 	}
+	
+	public String getSkuDescription(ScRequestItem scRequestItem) {
+		String skuDesc = "";
+		log.info("BEFORE IF ===================================="+scRequestItem.getCtContractItem());
+			if(scRequestItem.getCtContractItem() != null && scRequestItem.getCtContractItem().size() > 0){
+				log.info("IN IF ===================================="+scRequestItem.getCtContractItem().size());
+				skuDesc = scRequestItem.getCtContractItem().get(0).getSku();	
+			}
+			log.info(skuDesc+"=======AFTER IF ===================================="+scRequestItem.getCtContractItem());
+			return skuDesc;
+	}
 }
 
