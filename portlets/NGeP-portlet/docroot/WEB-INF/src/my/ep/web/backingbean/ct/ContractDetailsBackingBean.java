@@ -364,6 +364,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 
 			// Retrieve Items
+			ContractItemSearchBackingBean cisbb = new ContractItemSearchBackingBean();
+			cisbb.getManagedBean().setItemProductExist(false);
+			cisbb.getManagedBean().setItemServiceExist(false);
 			ctBB.getManagedBean().getCtItemList().clear();
 			ctBB.getManagedBean().getCtItemServiceList().clear();	        	   
 			ctBB.getManagedBean().setShowItem(null);
@@ -388,9 +391,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					}
 
 					if (item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
+						cisbb.getManagedBean().setItemServiceExist(true);
 						Collections.sort(item.getCtItemPrices(), new CtItemPrice());
 						ctBB.getManagedBean().getCtItemServiceList().add(item);			           
 					} else if (item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
+						cisbb.getManagedBean().setItemProductExist(true);
 						Collections.sort(item.getCtItemPrices(), new CtItemPrice());
 						if (item.getCtItemCeilingQties() != null && item.getCtItemCeilingQties().size() > 0) {
 							for (CtItemCeilingQty ceilingQty : item.getCtItemCeilingQties()) {			        	        	    	   

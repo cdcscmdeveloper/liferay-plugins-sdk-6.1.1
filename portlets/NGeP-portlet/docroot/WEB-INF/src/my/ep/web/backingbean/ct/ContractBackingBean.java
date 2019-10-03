@@ -2882,10 +2882,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public void onSelectProductItem() {
 		try{
-			
+			ContractItemSearchBackingBean cisbb = new ContractItemSearchBackingBean();
 			log.info("Selected Item ***"+getManagedBean().getSelectedItem());
 			log.info("Show Item ****"+getManagedBean().getShowItem());
 			if (getManagedBean().getSelectedItem() != null || getManagedBean().getServiceselectedItem()!=null) {
+				cisbb.getManagedBean().setItemServiceExist(false);
 				if (getManagedBean().getShowItem() != null
 						&& getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
 					getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
@@ -2900,6 +2901,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				} else {
 					getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
 				}
+				
+				if(getManagedBean().getShowItem() == null){
+					cisbb.getManagedBean().setItemProductExist(false);
+				}
+				
 				// retrieve zone label for new price
 				if (getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)
 						|| getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
@@ -2921,10 +2927,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public void onSelectServiceItem() {
 		try{
-			
+			ContractItemSearchBackingBean cisbb = new ContractItemSearchBackingBean();
 			log.info("Selected Item onSelectServiceItem ***"+getManagedBean().getServiceselectedItem());
 			log.info("Show Item  onSelectServiceItem ****"+getManagedBean().getShowItem());
 			if (getManagedBean().getSelectedItem() != null || getManagedBean().getServiceselectedItem()!=null) {
+				cisbb.getManagedBean().setItemProductExist(false);
 				if (getManagedBean().getShowServiceItem() != null
 						&& getManagedBean().getShowServiceItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
 					getManagedBean().setShowServiceItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
@@ -4035,10 +4042,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 *         false, if performance bond is not required
 	 * */
 	public boolean isContractExtend(){
-		if(getManagedBean().getContractVer().getCtAmendment() != null
-				&& (getManagedBean().getCtContractAmount().isBondReq()
-						|| getManagedBean().getCtContractAmount().getTotalBondAmt() != null)
-								&& getManagedBean().getContractVer().getCtAmendment().isContractExtend()){								
+		System.out.println("Test Putra  :"+getManagedBean().getCtContractAmount().isBondReq());
+		//System.out.println("Test Putra2  :"+getManagedBean().getContractVer().getDocType());
+		if((getManagedBean().getCtContractAmount().isBondReq()
+						|| getManagedBean().getCtContractAmount().getTotalBondAmt() != null)){								
 			return true;
 		}
 		return false;
