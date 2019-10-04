@@ -18,7 +18,7 @@
 						value="#{lbl['lbl.btn.back']}" /></td>
 				<td style="text-align: right"><p:commandButton
 						action="#{templateDocBackingBean.saveAction}"
-						value="#{lbl['lbl.btn.save']}" /> <p:spacer width="5px"
+						value="#{lbl['lbl.btn.save']}" rendered="#{!(templateDocBackingBean.managedBean.readOnlyFlag or templateDocBackingBean.managedBean.readOnly)}"/> <p:spacer width="5px"
 						rendered="#{false and templateDocBackingBean.managedBean.externalPageUrl==null}" />
 					<p:commandButton action="#{templateDocBackingBean.saveAction}"
 						rendered="#{false and templateDocBackingBean.managedBean.externalPageUrl==null}"
@@ -199,7 +199,7 @@
 			</h:panelGrid>
 			<h:panelGrid width="100%" columns="1">
 				<h:panelGroup style="float: right;">
-					<p:commandButton value="#{lbl['lbl.tpl.doc.renumbering']}"
+					<p:commandButton value="#{lbl['lbl.tpl.doc.renumbering']}" disabled="#{templateDocBackingBean.managedBean.readOnlyFlag}"
 						action="#{templateDocBackingBean.reNumbering(templateDocBackingBean.managedBean.docSectionTN)}"
 						process="@this" update=":form:sampleTT" />
 					<p:commandButton action="#{templateDocBackingBean.previewAction}"
