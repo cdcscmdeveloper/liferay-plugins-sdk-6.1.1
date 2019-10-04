@@ -106,6 +106,8 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_INQUIRY);
 			temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME,
 					SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT);
+			temp.put(SCProcessNameConst.START_PURCHASE_INQUIRY_CREATION + SCProcessNameConst.START_PURCHASE_INQUIRY,
+					SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_INQUIRY);
 
 			temp.put(SCProcessNameConst.START_SIMPLE_QUOTE_CREATION,
 					SourcingConstants.NAV_PAGE_REVIEW_SIMPLE_QUOTE);
