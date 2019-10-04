@@ -560,16 +560,16 @@ public class SmBulkApplicationBackingBean extends
 			sbFullMessage.append(SmCommonUtil.getMessage("lbl.sm.bulk.approval.failed.noActionCat.msg",
 					new String[] { sbNoAction.toString() }) + "<br />");
 		}
-
+		//21937 - start
 		if (!sbNoRemarks.toString().equals("<table></table>")) {
-			sbFullMessage.append(SmCommonUtil.getMessage("lbl.sm.bulk.approval.failed.noApprovedCat.msg",
-					new String[] { sbNoRemarks.toString() }) + "<br />");
+			sbFullMessage.append(SmCommonUtil.getMessage("lbl.sm.bulk.rejected.failed.noRemarks.msg",
+					new String[] { sbNoRemarks.toString() }) + "<br />");			
 		}
 
 		if (!sbNoApprove.toString().equals("<table></table>")) {
-			sbFullMessage.append(SmCommonUtil.getMessage("lbl.sm.bulk.rejected.failed.noRemarks.msg",
+			sbFullMessage.append(SmCommonUtil.getMessage("lbl.sm.bulk.approval.failed.noApprovedCat.msg",
 					new String[] { sbNoApprove.toString() }) + "<br />");
-		}
+		} //21937 - end
 
 		if (sbFullMessage.length() != 0) {
 			throw new EpException(sbFullMessage.toString());

@@ -165,6 +165,8 @@
 						update="apprvrCatDecisionRmrk2" partialSubmit="true"
 						listener="#{bulkApplicationBackingBean.assignCategoryApproveOrRejectDate(applCat)}" />
 				</p:selectOneRadio>
+				<p:graphicImage rendered="#{applCat.overLapCategory}"
+						value="/css/images/design/reject.png" style="float:right;"/>
 			</p:column>
 			<p:column style="width : 25% !important;white-space : normal">
 				<p:inputTextarea value="#{applCat.approverRemarks}" maxlength="200"
