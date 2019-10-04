@@ -7,16 +7,12 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<h:panelGroup
-		rendered="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForUpdate}">
+	<ui:define name="contentSection">
 		<script>
 			$('#portlet_MOFApplication_WAR_NGePportlet').find(
 					'.portlet-title-text').html(
 					"#{lbl['lbl.sm.view.ssm.infomation']}");
 		</script>
-	</h:panelGroup>
-
-	<ui:define name="contentSection">
 		<p:panel header="#{lbl['lbl.sm.panHdr.comBasic']}" toggleable="true"
 			toggleSpeed="500">
 
