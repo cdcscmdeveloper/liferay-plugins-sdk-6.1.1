@@ -4,6 +4,7 @@
 package my.ep.web.backingbean.sc.directpurchase;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -1033,7 +1034,14 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		if(docType.equals("SQ")){
 	    	if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION)){
 	    		
-	    		scPID = (ScPurchaseInDefault)dpObj[8];
+	    		//scPID = (ScPurchaseInDefault)dpObj[8];
+	    		if(dpObj[8]!=null){
+	    			scPID = new ScPurchaseInDefault();
+		    		scPID.setPurchaseInDefaultId((Long) dpObj[8]);
+		    		scPID.setPurchaseInDefaultNo((String) dpObj[9]);
+		    		scPID.setPidValidDays((Integer) dpObj[10]);
+		    		scPID.setCreatedDate((Timestamp) dpObj[11]);
+	    		}
 	    		
 			}								   
 	    }else if(docType.equals("RN")){
@@ -1083,10 +1091,10 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		 * @param scRequestNote the sc request note
 		 */
 		private void pidValidity(ScPurchaseInDefault purchaseInDefault) {
-			Date today  = DateUtils.getCurrentDateWithoutTime();
+			Date today  = DateUtils.getCurrentDate();
 			Date ExpDate = DateUtils.addDays(purchaseInDefault.getCreatedDate(), purchaseInDefault.getPidValidDays());
 			log.info("pID validity begin");
-			if(ExpDate.before(today)){
+			if(today.after(ExpDate)){
 
 				throw new EpException(
 						MessageConst.ERROR_760355,
@@ -1105,12 +1113,12 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			boolean valid = false;
 			
 			if(purchaseInDefault!=null){
-				Date today  = DateUtils.getCurrentDateWithoutTime();
+				Date today  = DateUtils.getCurrentDate();
 				Date ExpDate = DateUtils.addDays(purchaseInDefault.getCreatedDate(), purchaseInDefault.getPidValidDays());
 				
 				log.info("pID validity begin");
 				
-				if(ExpDate.before(today)){
+				if(today.after(ExpDate)){
 					valid = true;
 				}
 				log.info("pID validity end");
