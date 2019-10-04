@@ -13,9 +13,9 @@
 		<ui:param name="alertGreenIconId" value="#{cc.id}"></ui:param>
 		<p:outputPanel rendered="#{cc.attrs.greenIcon and cc.attrs.poUser}">
 			&#160;
-			<p:graphicImage id="#{alertId}gi" style="vertical-align:top"
+			<p:graphicImage id="#{alertGreenIconId}gi" style="vertical-align:top"
 				value="/css/images/design/icon_alert-green.svg" />
-			<p:tooltip id="alertChangeTtId">
+			<p:tooltip id="alertChangeTtId" for="#{alertGreenIconId}gi">
 				<p:outputLabel escape="false" value="#{lbl['lbl.sm.register.icon.tooltips']}" />
 	         </p:tooltip>
 		</p:outputPanel>
