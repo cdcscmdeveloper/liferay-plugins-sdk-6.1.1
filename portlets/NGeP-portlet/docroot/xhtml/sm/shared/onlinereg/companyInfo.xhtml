@@ -250,7 +250,7 @@
 				<td class="tdContent" >
 					<p:inputText size="40"
 						id="compAdd1" required="#{!empty param['disableValidation']}" maxlength="100"
-						label="#{lbl['lbl.sm.companyaddress']}" disabled="#{registrationBackingBean.managedBean.viewMode || registrationBackingBean.managedBean.smAppl.applValidWithSsm}"
+						label="#{lbl['lbl.sm.companyaddress']}" disabled="#{backingBean.disableFieldSSm(registrationBackingBean.managedBean.smBusinessAdd.ssmData,registrationBackingBean.managedBean.smAppl.applValidWithSsm,registrationBackingBean.managedBean.smBusinessAdd.addressSsmNull)}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.address1}"
 						>
 						<p:ajax event="blur" update=":form:acgmap:gmapInput:gmapInput"></p:ajax>
@@ -281,7 +281,7 @@
 			<tr>
 				<td></td>
 				<td class="tdContent"><p:inputText size="40"
-						id="compAdd2" maxlength="100" disabled="#{registrationBackingBean.managedBean.viewMode || registrationBackingBean.managedBean.smAppl.applValidWithSsm}"
+						id="compAdd2" maxlength="100" disabled="#{backingBean.disableFieldSSm(registrationBackingBean.managedBean.smBusinessAdd.ssmData,registrationBackingBean.managedBean.smAppl.applValidWithSsm,registrationBackingBean.managedBean.smBusinessAdd.addressSsmNull)}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.address2}" 
 						/></td>
 
@@ -289,7 +289,7 @@
 					<p:outputLabel value="#{lbl['lbl.sm.state']}" />
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
-				<td class="tdContent"><p:selectOneMenu id="busState" disabled="#{registrationBackingBean.managedBean.sabahSarawakType or registrationBackingBean.managedBean.viewMode or registrationBackingBean.managedBean.smAppl.applValidWithSsm}"
+				<td class="tdContent"><p:selectOneMenu id="busState" disabled="#{backingBean.disableFieldSsm(registrationBackingBean.managedBean.smBusinessAdd.ssmData,registrationBackingBean.managedBean.smAppl.applValidWithSsm,registrationBackingBean.managedBean.smBusinessAdd.stateSsmNull)}"
 						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.state']}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.pmState.stateId}"
 						style="width:80%">
@@ -306,7 +306,7 @@
 			<tr>
 				<td></td>
 				<td class="tdContent"><p:inputText size="40"
-						id="compAdd3" maxlength="100" disabled="#{registrationBackingBean.managedBean.viewMode || registrationBackingBean.managedBean.smAppl.applValidWithSsm}"
+						id="compAdd3" maxlength="100" disabled="#{backingBean.disableFieldSSm(registrationBackingBean.managedBean.smBusinessAdd.ssmData,registrationBackingBean.managedBean.smAppl.applValidWithSsm,registrationBackingBean.managedBean.smBusinessAdd.addressSsmNull)}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.address3}"
 						 /></td>
 
@@ -338,7 +338,7 @@
 						<p:outputPanel
 							rendered="#{registrationBackingBean.managedBean.smBusinessAdd.pmCountry.countryId==registrationBackingBean.managedBean.myCountryId}">
 							<p:inputText maxlength="5" required="#{!empty param['disableValidation']}"
-								label="#{lbl['lbl.sm.postcode']}" id="compPostCodeMy" disabled="#{registrationBackingBean.managedBean.viewMode or registrationBackingBean.managedBean.smAppl.applValidWithSsm}"
+								label="#{lbl['lbl.sm.postcode']}" id="compPostCodeMy" disabled="#{backingBean.disableFieldSSm(registrationBackingBean.managedBean.smBusinessAdd.ssmData,registrationBackingBean.managedBean.smAppl.applValidWithSsm,registrationBackingBean.managedBean.smBusinessAdd.postcodeSsmNull)}"
 								value="#{registrationBackingBean.managedBean.smBusinessAdd.postcode}"
 								validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
 								size="40">
