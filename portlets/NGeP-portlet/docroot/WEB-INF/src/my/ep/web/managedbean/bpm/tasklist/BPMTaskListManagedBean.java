@@ -17,6 +17,7 @@ import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.pm.access.application.IAccessApplSO;
 import my.ep.biz.service.pm.common.kpi.IPmKpiSO;
+import my.ep.biz.service.sc.directpurchase.IPrInquirySO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -36,6 +37,7 @@ import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.pm.access.application.AccessApplReqDTO;
 import my.ep.dto.pm.access.application.AccessApplResDTO;
 import my.ep.dto.pm.common.kpi.KpiReqDTO;
+import my.ep.dto.sc.directpurchase.PrInquiryResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.exception.EpException;
@@ -44,6 +46,7 @@ import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmKPIValue;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -53,6 +56,7 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 @ManagedBean(name = "bpmTasklistMB")
@@ -275,7 +279,15 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 								worklistItemVO.setTitle(worklistItemVO.getTitle().replaceAll("<", "&#60;"));
 							}
 							// s1 module
-							if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
+							if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE_DRAFT)) {
+								log.info("Doc number = " + worklistItemVO.getDocNumber());
+								ScPrInquiry scPrInquiry = retrivePrInquiryByPrInquiryNo(worklistItemVO.getDocNumber());
+								if (scPrInquiry != null) {
+									worklistItemVO.setTitle(scPrInquiry.getTitle());
+									log.info("prno = " + scPrInquiry.getPrInquiryNo() + "title = "
+											+ scPrInquiry.getTitle());
+								}
+							} else if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
 								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 							} else if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE)) {
 								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.pr.inquiry", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
@@ -367,9 +379,17 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		} finally {
 			mofRegistrationSO = null;
 		}
-
 	}
 	
+	private ScPrInquiry retrivePrInquiryByPrInquiryNo(String prInquiryNo) {
+		ScPrInquiry scPrInquiry = getPrInquirySO().retrivePrInquiryByPrInquiryNo(prInquiryNo);
+		return scPrInquiry;
+	}
+
+	private IPrInquirySO getPrInquirySO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPrInquirySO.class);
+	}
+
 	private int calculateFinalOffSet(int currentPage) {
 
 		int offSet = (currentPage - 1) * PagingConst.ROWS_PER_PAGE;
@@ -455,11 +475,21 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						boolean viewGlpFlag = viewGlpFlag();
 						for(WorklistItemVO worklistItemVO : responseDTO.getWorklistVO().getWorklistItem()) {
 							try{
-							if (worklistItemVO.getTitle().contains("<")) {
-								worklistItemVO.setTitle(worklistItemVO.getTitle().replaceAll("<", "&#60;"))  ;
-							}
+								if (worklistItemVO.getTitle().contains("<")) {
+									worklistItemVO.setTitle(worklistItemVO.getTitle().replaceAll("<", "&#60;"));
+								}
+
 							// s1 module
-							if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
+							if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE_DRAFT)) {
+								log.info("Doc number = " + worklistItemVO.getDocNumber());
+								ScPrInquiry scPrInquiry = retrivePrInquiryByPrInquiryNo(worklistItemVO
+										.getDocNumber());
+								if (scPrInquiry != null) {
+									worklistItemVO.setTitle(scPrInquiry.getTitle());
+									log.info("prno = " + scPrInquiry.getPrInquiryNo() + "title = "
+											+ scPrInquiry.getTitle());
+								}
+							} else if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
 								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 							} else if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE)) {
 								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.pr.inquiry", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
@@ -670,15 +700,22 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 					
 					if(responseDTO.getWorklistVO().getWorklistItem()!=null) {
 						boolean viewGlpFlag = viewGlpFlag();
-						
-						
-						
-						
 						for(WorklistItemVO worklistItemVO : responseDTO.getWorklistVO().getWorklistItem()) {
-							try{
-							if (worklistItemVO.getTitle().matches("<")) {
-								worklistItemVO.setTitle(worklistItemVO.getTitle().replaceAll("<", "&#60;"));
-							}
+							try {
+								if (worklistItemVO.getTitle().matches("<")) {
+									worklistItemVO.setTitle(worklistItemVO.getTitle().replaceAll("<", "&#60;"));
+								}
+
+								if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE_DRAFT)) {
+									log.info("Doc number = " + worklistItemVO.getDocNumber());
+									ScPrInquiry scPrInquiry = retrivePrInquiryByPrInquiryNo(worklistItemVO
+											.getDocNumber());
+									if (scPrInquiry != null) {
+										worklistItemVO.setTitle(scPrInquiry.getTitle());
+										log.info("prno = " + scPrInquiry.getPrInquiryNo() + "title = "
+												+ scPrInquiry.getTitle());
+									}
+								}
 							// s1 module
 							if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
 								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
@@ -864,11 +901,20 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						boolean viewGlpFlag = viewGlpFlag();
 						
 						for( WorklistItemVO worklistItemVO : responseDTO.getWorklistVO().getWorklistItem()) {
-							
 							try {
-							if (worklistItemVO.getTitle().matches("<")) {
-								worklistItemVO.setTitle(worklistItemVO.getTitle().replaceAll("<", "&#60;"));
-							}
+								if (worklistItemVO.getTitle().matches("<")) {
+									worklistItemVO.setTitle(worklistItemVO.getTitle().replaceAll("<", "&#60;"));
+								}
+								if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE_DRAFT)) {
+									log.info("Doc number = " + worklistItemVO.getDocNumber());
+									ScPrInquiry scPrInquiry = retrivePrInquiryByPrInquiryNo(worklistItemVO
+											.getDocNumber());
+									if (scPrInquiry != null) {
+										worklistItemVO.setTitle(scPrInquiry.getTitle());
+										log.info("prno = " + scPrInquiry.getPrInquiryNo() + "title = "
+												+ scPrInquiry.getTitle());
+									}
+								}
 							// s1 module
 							if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
 								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
@@ -900,8 +946,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						    	   
 						        worklistItemVO.setTitle(sb.toString());
 						       }
-						       
-						       
+
 						       if(worklistItemVO.getTitle().startsWith("lbl.cd")) {
 						    	
 						    	   StringBuilder sb = new StringBuilder();
