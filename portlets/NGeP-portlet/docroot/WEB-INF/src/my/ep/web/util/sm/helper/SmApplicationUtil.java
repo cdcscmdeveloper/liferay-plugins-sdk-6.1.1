@@ -2036,6 +2036,7 @@ public class SmApplicationUtil {
 	 */
 	public static boolean validateEquityCompanyAmount(
 			SmApplicationManagedBean managedBean, int currentTab) {
+		
 		boolean validAmt = true;
 		if ((managedBean.getBusinessTypeVal().equalsIgnoreCase(
 				SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT) || managedBean
@@ -2052,6 +2053,14 @@ public class SmApplicationUtil {
 						.getEquiCompCapTotal().add(comp.getShareAmt())
 						.setScale(2, RoundingMode.HALF_UP));
 			}
+			//25929 - start
+			BigDecimal companiesEquityTotal = new BigDecimal(0);
+			companiesEquityTotal = managedBean.getSmAppl().getSmCompanyBasic().getGovtUnitrustEquity();
+			companiesEquityTotal = companiesEquityTotal.add(managedBean.getSmAppl().getSmCompanyBasic().getGovtEquity());
+			companiesEquityTotal = companiesEquityTotal.add(managedBean.getSmAppl().getSmCompanyBasic().getForeignCompanyEquity());
+			companiesEquityTotal = companiesEquityTotal.add(managedBean.getSmAppl().getSmCompanyBasic().getLocalCompanyEquity());
+			managedBean.getSmAppl().getSmCompanyBasic().setCompaniesEquityTotal(companiesEquityTotal);
+			//25929 - end
 			if (managedBean.getSmAppl().getSmCompanyBasic()
 					.getCompaniesEquityTotal() != null
 					&& managedBean.getSmAppl().getSmCompanyBasic()

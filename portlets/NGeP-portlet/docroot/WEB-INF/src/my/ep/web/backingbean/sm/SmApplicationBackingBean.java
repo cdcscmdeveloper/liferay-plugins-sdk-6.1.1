@@ -2708,7 +2708,9 @@ public class SmApplicationBackingBean extends
 				if (validSave) {
 					validSave = SmApplicationUtil.validateEquityOwnerAmount(
 							getManagedBean(), currentTab, ruleHelper);
-				} else if (validSave) {
+				} 
+				//25929 - start
+				if (validSave) {
 					validSave = SmApplicationUtil.validateEquityCompanyAmount(
 							getManagedBean(), currentTab);
 				} else if (validSave
@@ -2720,6 +2722,7 @@ public class SmApplicationBackingBean extends
 					validSave = SmApplicationUtil.validatePersonnelAcademics(
 							validSave, getManagedBean(), currentTab);
 				}
+				//25929 - end
 				validatePaidCaptialAmt(true);
 			}
 		}
@@ -9922,6 +9925,9 @@ public class SmApplicationBackingBean extends
 					.calculateSmApplicationPaidUpCapitalPercent(getManagedBean()
 							.getSmAppl().getSmCompanyBasic());
 			SmCommonUtil.calcAllEquityOwnerPercent(getManagedBean());
+			//25929 - start
+			SmCommonUtil.calculateEquityCompanyPercent(getManagedBean());
+			//25929 - end
 			getManagedBean().setBumiEquityPercentage(
 					getManagedBean().getSmAppl().getSmCompanyBasic()
 							.getBumiPercent());
