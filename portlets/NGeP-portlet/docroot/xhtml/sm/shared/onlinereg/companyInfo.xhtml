@@ -289,7 +289,7 @@
 					<p:outputLabel value="#{lbl['lbl.sm.state']}" />
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
-				<td class="tdContent"><p:selectOneMenu id="busState" disabled="#{backingBean.disableFieldSsm(registrationBackingBean.managedBean.smBusinessAdd.ssmData,registrationBackingBean.managedBean.smAppl.applValidWithSsm,registrationBackingBean.managedBean.smBusinessAdd.stateSsmNull)}"
+				<td class="tdContent"><p:selectOneMenu id="busState" disabled="#{backingBean.disableFieldSSm(registrationBackingBean.managedBean.smBusinessAdd.ssmData,registrationBackingBean.managedBean.smAppl.applValidWithSsm,registrationBackingBean.managedBean.smBusinessAdd.stateSsmNull)}"
 						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.state']}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.pmState.stateId}"
 						style="width:80%">
