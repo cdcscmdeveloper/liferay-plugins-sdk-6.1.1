@@ -2431,11 +2431,14 @@ public class SimpleQuoteBackingBean extends
 		templateSpecBackingBean.getManagedBean().setG2G(false);
 		
 		String procurementType = getManagedBean().getScQuote().getProcurementType().getParameterCode();
+		
 		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL)) {
 			getManagedBean().setProcTypeOption(Boolean.FALSE);
 			getManagedBean().setJustTypeOption(Boolean.FALSE);
 			getManagedBean().setG2GFlag(Boolean.FALSE);
 			getManagedBean().setLocAndBusinessFlag(Boolean.TRUE);
+			getManagedBean().getScQuote().setJustificationRemark("");
+		    getManagedBean().getScQuote().setJustificationType(null);
 
 		} else if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
 			getManagedBean().setProcTypeOption(Boolean.FALSE);
@@ -2445,18 +2448,22 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setByBusinessNature(Boolean.FALSE);
 			getManagedBean().setByLocality(Boolean.FALSE);
 			templateSpecBackingBean.getManagedBean().setG2G(true);
+			getManagedBean().getScQuote().setJustificationRemark("");
+		    getManagedBean().getScQuote().setJustificationType(null);
 		} else if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)){
 			getManagedBean().setProcTypeOption(Boolean.TRUE);
 			getManagedBean().setG2GFlag(Boolean.FALSE);
 			getManagedBean().setLocAndBusinessFlag(Boolean.TRUE);
 		    getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_AD_HOC.value()));
 		    getManagedBean().getScQuote().setJustificationRemark("");
+		    getManagedBean().getScQuote().setJustificationType(null);
 		} else if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
 			getManagedBean().setProcTypeOption(Boolean.TRUE);
 			getManagedBean().setG2GFlag(Boolean.FALSE);
 			getManagedBean().setLocAndBusinessFlag(Boolean.TRUE);
 		    getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7.value()));
 		    getManagedBean().getScQuote().setJustificationRemark("");
+		    getManagedBean().getScQuote().setJustificationType(null);
 		} 
 
 		if (getManagedBean().getScQuote().isPanel()) {
