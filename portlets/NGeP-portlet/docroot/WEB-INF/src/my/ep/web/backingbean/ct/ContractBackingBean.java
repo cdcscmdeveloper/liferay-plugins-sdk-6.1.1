@@ -127,6 +127,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.ct.CtAddressUtil;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
 import my.ep.web.backingbean.ct.circular.cc.CentralContractBackingBean;
 import my.ep.web.backingbean.sc.loa.DirectLOABackingBean;
 import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
@@ -4028,24 +4029,30 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return new contract period
 	 */
 	public String calculateBondPeriod() {
-		
-		getManagedBean().getContractVer().getCtContractAmount().isBondReq();
+		if(getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
+				|| getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)){
+			return String.valueOf(getManagedBean().getContractVer().getCtContractValue().getContractPeriod());
 
+		} 
 			return String.valueOf(getManagedBean().getContractVer().getCtContract().getLoa().getContractDuration());
 
 	}
 	
 	/**
-	 * Function to check if bond required for contract
+	 * Function to check if bond required for contract is extend
 	 * 
-	 * @return true, if performance bond is required
-	 *         false, if performance bond is not required
+	 * @return true, if performance bond is required contract extend
+	 *         false, if performance bond is not required contract extend
 	 * */
 	public boolean isContractExtend(){
-		System.out.println("Test Putra  :"+getManagedBean().getCtContractAmount().isBondReq());
-		//System.out.println("Test Putra2  :"+getManagedBean().getContractVer().getDocType());
+		int extendperiod = getManagedBean().getContractVer().getCtContractValue().getContractPeriod();
 		if((getManagedBean().getCtContractAmount().isBondReq()
-						|| getManagedBean().getCtContractAmount().getTotalBondAmt() != null)){								
+						|| getManagedBean().getCtContractAmount().getTotalBondAmt() != null)
+						&& (!getManagedBean().getContractVer().getCtContract().getLoa()
+								.getContractDuration().equals(extendperiod))
+						&& (getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
+								|| getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT))){
+			getManagedBean().setExtendContract(true);
 			return true;
 		}
 		return false;
