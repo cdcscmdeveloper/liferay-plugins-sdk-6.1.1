@@ -8148,7 +8148,8 @@ private void retriveCommitteeRemarksList(){
 				this.getManagedBean().getLocalOutCome(), digiSign);
 		if (resDTO.isSuccessful()) {
 			ScQtCommittee qt = resDTO.getQtCommittee();
-			successMessage(MessageConst.INFO_700033, getMessageCommon("lbl.sc.prepare.secretary.evaluation"), qt
+			
+			successMessage(MessageConst.INFO_700032, getMessageCommon("lbl.sc.prepare.secretary.evaluation"), qt
 					.getScQt().getQtNo(), Boolean.TRUE);
 		}
 	}
