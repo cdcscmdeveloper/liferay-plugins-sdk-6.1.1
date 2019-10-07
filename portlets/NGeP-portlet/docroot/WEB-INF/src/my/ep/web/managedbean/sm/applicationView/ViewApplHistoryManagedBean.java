@@ -143,10 +143,10 @@ public class ViewApplHistoryManagedBean extends
 											obj[8]==null?StringUtils.EMPTY: obj[8].toString());
 								}
 							}
-							//Bug #25601 : SM SHOWSTOPPER: Duplicate MOF Account for New Supplier Registration 
-							resultListTemp.add(obj);
-							i++;
-						}		
+						}
+						//Bug #25601 : SM SHOWSTOPPER: Duplicate MOF Account for New Supplier Registration 
+						resultListTemp.add(obj);
+						i++;
 				}
 				//Bug #25601 : SM SHOWSTOPPER: Duplicate MOF Account for New Supplier Registration 
 				retVal.getResultList().clear();
