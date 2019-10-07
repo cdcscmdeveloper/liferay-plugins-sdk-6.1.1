@@ -69,7 +69,7 @@
 				</f:facet>
 				<p:inputText id="bondRefNoId" value="#{varBond.refNo}" maxlength="50" style="width:95%;" 
 					rendered="#{!ctBackingBean.managedBean.viewContract
-					and ctBackingBean.managedBean.ctContractAmount.bondReq}">
+					and ctBackingBean.managedBean.ctContractAmount.bondReq}" disabled="ctBackingBean.managedBean.isExtendContract eq true">
 					<p:ajax  process="@this"></p:ajax>
 				</p:inputText>			
 				<h:outputText value="#{varBond.refNo}" 
@@ -84,7 +84,7 @@
 				
 				<p:selectOneMenu id="orgName"  value="#{varBond.financialOrg.financialOrgId}"
 				    style="width:200px;" rendered="#{!ctBackingBean.managedBean.viewContract
-				    and ctBackingBean.managedBean.ctContractAmount.bondReq}" >
+				    and ctBackingBean.managedBean.ctContractAmount.bondReq}" disabled="ctBackingBean.managedBean.isExtendContract eq true">
 					   <f:selectItems value="#{ctBackingBean.retrieveFinancialOrgList()}" />
 					   <p:ajax  process="@this"></p:ajax>
 				</p:selectOneMenu>	  
@@ -96,8 +96,8 @@
 					
 			<p:column style="width:12%;" headerText="#{lbl['lbl.ct.amount']}" styleClass="column-align-center" >
 				<p:inputText value="#{varBond.bondAmount}" styleClass="ppRightBtn" maxlength="18" 
-				    rendered="#{!ctBackingBean.managedBean.viewContract
-				    and ctBackingBean.managedBean.ctContractAmount.bondReq}" style="width:90px;" label="#{lbl['lbl.ct.amount']}">
+				    rendered="#{!ctBackingBean.managedBean.viewContract 
+				    and ctBackingBean.managedBean.ctContractAmount.bondReq}" disabled="ctBackingBean.managedBean.isExtendContract eq true" style="width:90px;" label="#{lbl['lbl.ct.amount']}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						<p:ajax process="@this"></p:ajax>
@@ -118,6 +118,7 @@
 				<p:calendar id="popupButtonCal4" value="#{varBond.effDate}"  styleClass="calendarDateField" size="9" 
 					rendered="#{!ctBackingBean.managedBean.viewContract and ctBackingBean.managedBean.ctContractAmount.bondReq}"
 					showOn="button" readonlyInput="true" navigator="true"
+					disabled="ctBackingBean.managedBean.isExtendContract eq true"
 					mindate="#{ctBackingBean.managedBean.contractVer.ctContractValue.effDate}"
 					maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
@@ -157,7 +158,7 @@
 						style="float:left;" styleClass="blue_font"
 						action="#{ctBackingBean.commonDownload(varBond.filePath, varBond.fileName)}" />
 					<p:commandLink rendered="#{varBond.fileName != null and (!ctBackingBean.managedBean.viewContract
-						or !ctBackingBean.managedBean.ctContractAmount.bondReq)}" style="float:left;" 
+						or !ctBackingBean.managedBean.ctContractAmount.bondReq )and !ctBackingBean.isContractExtend()}" style="float:left;" 
 					  	action="#{ctBackingBean.setIndexProperty(index)}"
 					   	process="@this" partialSubmit="true"  onsuccess="deleteBondAttachmentDlg.show();">
 			   			<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
@@ -170,7 +171,7 @@
 			<p:commandButton id="addPdBtn"  value="#{lbl['lbl.btn.add']}" process="@this" 
 			  rendered="#{!ctBackingBean.managedBean.viewContract
 			  	and ctBackingBean.managedBean.contractVer.docType != ParameterConst.doctypeContractAmendment
-			  	and ctBackingBean.managedBean.ctContractAmount.bondReq}" 
+			  	and ctBackingBean.managedBean.ctContractAmount.bondReq and !ctBackingBean.isContractExtend()}" 
 			     action="#{ctBackingBean.addBondDetails}" update=":form:tableBond" partialSubmit="true"
 			     oncomplete="tableBondWidget.paginator.endLink.click();">
 				<p:tooltip for="addPdBtn">
@@ -186,7 +187,7 @@
 		          disabled="#{ctBackingBean.managedBean.buttonHideActive}"
 			      rendered="#{!ctBackingBean.managedBean.viewContract
 			      	and ctBackingBean.managedBean.contractVer.docType != ParameterConst.doctypeContractAmendment
-			      	and ctBackingBean.managedBean.ctContractAmount.bondReq}" >
+			      	and ctBackingBean.managedBean.ctContractAmount.bondReq and !ctBackingBean.isContractExtend()}" >
 				<p:tooltip for="delPdBtn">
 				    <h:outputText value="#{lbl['lbl.ct.tooltip.delete.performance.bond']}" escape="false" />
 				</p:tooltip>
@@ -282,7 +283,7 @@
 					
 			<p:column style="width:8%;" headerText="#{lbl['lbl.ct.expiry.date']}" styleClass="column-align-center">
 				<p:calendar id="bondExpDateCalIdSpl"  value="#{varBondsupplemental.expDate}" styleClass="calendarDateField" showOn="button"
-				    readonlyInput="true" disabled="true"  navigator="true" rendered="#{!ctBackingBean.managedBean.viewContract
+				    readonlyInput="true" disabled="true" navigator="true" rendered="#{!ctBackingBean.managedBean.viewContract
 				    and ctBackingBean.managedBean.ctContractAmount.bondReq}"
 					size="9"  pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 				    <f:attribute name="startDate" value="#{varBond.effDate}" />

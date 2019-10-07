@@ -152,6 +152,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	private CtAttachment ctAttachmentLatest;
 	private CtAttachment ctAttachmentDelete;
 	private List<ScLoa> bondDetail;
+	private boolean isExtendContract = false;
 	
 
 	/**
@@ -1320,6 +1321,14 @@ public class ContractManagedBean extends BaseManagedBean {
 
 	public void setBondDetail(List<ScLoa> bondDetail) {
 		this.bondDetail = bondDetail;
+	}
+
+	public boolean isExtendContract() {
+		return isExtendContract;
+	}
+
+	public void setExtendContract(boolean isExtendContract) {
+		this.isExtendContract = isExtendContract;
 	}
 
 }
