@@ -1416,19 +1416,19 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			if(ctBB.getManagedBean().getCtContractAmount().isBondWaived()){
 				if (ctBB.getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverStartDate() == null) {
 					setTabValue("PB");
-					throwExceptions(MessageConst.ERROR_100022, "lbl.ct.pb.waiver.general");
+					throwExceptions(MessageConst.ERROR_100061, "lbl.ct.pb.waiver.general");
 				}
 				if (ctBB.getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverEndDate() == null) {
 					setTabValue("PB");
-					throwExceptions(MessageConst.ERROR_100022, "lbl.ct.pb.waiver.general");
+					throwExceptions(MessageConst.ERROR_100061, "lbl.ct.pb.waiver.general");
 				}
 				if (ctBB.getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getReferenceNo() == null || "".equalsIgnoreCase(ctBB.getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getReferenceNo())) {
 					setTabValue("PB");
-					throwExceptions(MessageConst.ERROR_100022, "lbl.ct.pb.waiver.general");
+					throwExceptions(MessageConst.ERROR_100061, "lbl.ct.pb.waiver.general");
 				}
 				if (ctBB.getManagedBean().getCtAttachmentLatest().getFileName() == null || "".equalsIgnoreCase(ctBB.getManagedBean().getCtAttachmentLatest().getFileName())) {
 					setTabValue("PB");
-					throwExceptions(MessageConst.ERROR_100022, "lbl.ct.pb.waiver.general");
+					throwExceptions(MessageConst.ERROR_100061, "lbl.ct.pb.waiver.general");
 				}
 				
 				if (ctBB.getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverStartDate()
