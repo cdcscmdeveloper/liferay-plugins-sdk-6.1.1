@@ -70,7 +70,9 @@
 									oncomplete="dtTaskAssignResultBU.hide();" />
 						</p:selectBooleanCheckbox>
 					 </f:facet>
-					 <p:selectBooleanCheckbox value="#{userTasks.taskSelect}" onchange="dtTaskAssignResultBU.show();"> 
+					 <p:selectBooleanCheckbox value="#{userTasks.taskSelect}" 
+					 	disabled="#{taskReassignmentBackingBean.managedBean.bpkAdminUser}"
+					 	onchange="dtTaskAssignResultBU.show();"> 
 						<p:ajax partialSubmit="true"
 								process="@this"
 								event="change" 
@@ -100,7 +102,8 @@
 					style="width:10%;text-align:center;">
 					<p:commandLink id="cLEditTask"
 						action="#{taskReassignmentBackingBean.redirectToTaskReassign(userTasks)}"
-						update=":form:dlTaskReassignment">
+						update=":form:dlTaskReassignment"
+						disabled="#{taskReassignmentBackingBean.managedBean.bpkAdminUser}" >
 						<p:graphicImage value="/css/images/design/edit.png" />
 					</p:commandLink>
 				</p:column>
@@ -145,7 +148,8 @@
                      <p:selectBooleanCheckbox value="#{groupTasks.taskSelect}"> 
 	               		<p:ajax event="change" 
 	               				update="@form,:form:dtGroupTaskAssignResult" 
-	               				listener="#{taskReassignmentBackingBean.checkGroupTask}">
+	               				listener="#{taskReassignmentBackingBean.checkGroupTask}"
+	               				disabled="#{taskReassignmentBackingBean.managedBean.bpkAdminUser}">
 	              		</p:ajax>
    	                  </p:selectBooleanCheckbox>
 				</p:column>		
@@ -170,7 +174,7 @@
 					style="width:10%;text-align:center;">
 					 <p:commandLink
 					 	id="cLDeleteGroupTask"
-					 	disabled="#{groupTasks.isSwimlane()}"
+					 	disabled="#{taskReassignmentBackingBean.managedBean.bpkAdminUser or groupTasks.isSwimlane()}"
 					 	partialSubmit="true"
 						process="@this"
 						oncomplete="taskDeletePopUp.show();"
@@ -220,7 +224,8 @@
                      <p:selectBooleanCheckbox value="#{otherTasks.taskSelect}"> 
 	               		<p:ajax event="change" 
 	               				update="@form,:form:pOthersTaskAssignResult" 
-	               				listener="#{taskReassignmentBackingBean.checkOthersTask}">
+	               				listener="#{taskReassignmentBackingBean.checkOthersTask}"
+	               				disabled="#{taskReassignmentBackingBean.managedBean.bpkAdminUser}">
 	              		</p:ajax>
    	                  </p:selectBooleanCheckbox>
 				</p:column>
@@ -244,7 +249,7 @@
 					style="width:10%;text-align:center;">
 					 <p:commandLink
 					 	id="cLDeleteOtherTask"
-					 	disabled="#{otherTasks.isSwimlane()}"
+					 	disabled="#{taskReassignmentBackingBean.managedBean.bpkAdminUser or otherTasks.isSwimlane()}"
 					 	partialSubmit="true"
 						process="@this"
 						oncomplete="taskDeletePopUp.show();"
