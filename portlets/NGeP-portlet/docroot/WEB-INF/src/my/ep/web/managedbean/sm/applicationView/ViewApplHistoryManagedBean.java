@@ -101,9 +101,9 @@ public class ViewApplHistoryManagedBean extends
 					.retrieveApplicationHistoryUsingNativeQuery(reqDTO)
 					.getObjectArrResultBean();
 			//Bug #25601 :
-			int i = 0;
 			int[] indexToCheck = new int[]{0, 10, 11, 12, 13}; 
 			List<Object[]> resultListTemp = new ArrayList();
+			String previousAppl="applno,";
 			try {
 				for (Object[] obj : retVal.getResultList()) {
 					//Bug #25601 : SM SHOWSTOPPER: Duplicate MOF Account for New Supplier Registration //10 = appl id & 11 = supplier id
@@ -117,8 +117,10 @@ public class ViewApplHistoryManagedBean extends
 						}
 						if(removeDuplicate){	
 							//Bug #25601 : SM SHOWSTOPPER: Duplicate MOF Account for New Supplier Registration 
-							if(obj[14]!=null && Long.parseLong(obj[14].toString())==9){
+							if(previousAppl.contains(obj[0].toString())){
 								continue;
+							}else{
+								previousAppl = previousAppl+","+obj[0].toString();
 							}
 							//Condition for MOF NO
 							if(obj[8]==null || "".equalsIgnoreCase(obj[8].toString())){
@@ -146,12 +148,11 @@ public class ViewApplHistoryManagedBean extends
 						}
 						//Bug #25601 : SM SHOWSTOPPER: Duplicate MOF Account for New Supplier Registration 
 						resultListTemp.add(obj);
-						i++;
 				}
 				//Bug #25601 : SM SHOWSTOPPER: Duplicate MOF Account for New Supplier Registration 
 				retVal.getResultList().clear();
 				retVal.getResultList().addAll(resultListTemp);
-				retVal.setTotalRecord(resultListTemp.size());
+				//retVal.setTotalRecord(resultListTemp.size());
 				
 			}catch(Exception e) {
 				e.printStackTrace();
