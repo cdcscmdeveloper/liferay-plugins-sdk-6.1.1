@@ -79,6 +79,10 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	private boolean showParentMsg;
 	private boolean showChildMsg;
 	//[#25018] - end
+	
+	//[#22117 - start]
+	private boolean bpkAdminUser;
+	//[#22117 - stop]
 
 	
 	public TaskReassignmentManagedBean(){}
@@ -626,6 +630,14 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 
 	public void setShowChildMsg(boolean showChildMsg) {
 		this.showChildMsg = showChildMsg;
+	}
+
+	public boolean isBpkAdminUser() {
+		return bpkAdminUser;
+	}
+
+	public void setBpkAdminUser(boolean bpkAdminUser) {
+		this.bpkAdminUser = bpkAdminUser;
 	}
 
 		

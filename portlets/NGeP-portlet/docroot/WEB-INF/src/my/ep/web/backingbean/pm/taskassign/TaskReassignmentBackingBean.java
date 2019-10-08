@@ -821,6 +821,7 @@ public class TaskReassignmentBackingBean extends
 			resetReassigneeList(); //If the Reset button is not clicked when performing the next search
 			resetCheckAllTasks();
 			searchTaskAssign();
+			log.info("[#22117] - isBpkAdminUser: " + this.getManagedBean().isBpkAdminUser());
 		} else {
 			/*if (!verifiedDocNumber(this.getManagedBean().
 					getTaskAssignmentSearchBean().getDocNo())) {
@@ -841,6 +842,22 @@ public class TaskReassignmentBackingBean extends
 		this.getManagedBean().setStatusIds(retrieveAvailableStatusId());
 		
 		reloadAllTaskList();
+		
+		//[#22117 - start]
+		this.getManagedBean().setBpkAdminUser(checkBpkAdminUser());
+		if(this.getManagedBean().isBpkAdminUser()) {
+			//disable check box for user task
+			this.getManagedBean().setCheckAllUserTasksEnabled(false);
+			//disable check box for group task
+			this.getManagedBean().setCheckAllGroupTasksEnabled(false);
+			//disable button for group task
+			this.getManagedBean().setEnableDeleteGroupTasksButton(false);
+			//disable check box for other task
+			this.getManagedBean().setCheckAllOthersTasksEnabled(false);
+			//disable button for other task
+			this.getManagedBean().setEnableDeleteOthersTasksButton(false);
+		}
+		//[#22117 - end]
 		log.info("searchDocument - End");
 
 	}
@@ -2117,6 +2134,58 @@ public class TaskReassignmentBackingBean extends
 		if (pmUser == null) {
 			throw new EpException(MessageConst.ERROR_770096);
 		}
+		
+		//[#22117] - start
+		//validate task reassignment to BPK_ADMIN
+		if (pmUser != null) {
+			log.info("[#22117] - Validate user if has role BPK_ADMIN");			
+			List<PmUserOrg> pmUserOrgs = pmUser.getPmUserOrgs();
+			if (pmUserOrgs != null && pmUserOrgs.size() > 0) {
+				PmOrgProfile orgProfile = pmUserOrgs.get(0).getPmOrgProfile();
+				log.info("[#22117] - Selected user org type is: " + orgProfile.getOrgTypeCode().getParameterCode());
+				if(orgProfile.getOrgTypeCode().getParameterCode().equals(ParameterConst.ORG_TYPE_BPK)) {
+					log.info("[#22117] - Selected user org type is: BPK");
+					for (PmUserRole userRole : pmUserOrgs.get(0).getPmUserRoles()) {
+						if (DbValueConst.RECORD_STATUS_ACTIVE == userRole.getRecordStatusFlg()
+								&& userRole.getPmRole().getRoleCode().equals(RoleCode.BPK_ADMIN.value())) {
+							log.info("[#22117] - Selected user has role: BPK_ADMIN");
+							//to restrict only role EP_ADMIN or EP_ADMIN_2 can perform reassign task
+							//to BPK_ADMIN
+							if (!(getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value()) 
+									|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN_2.value()))) {
+								String errMsg = pmUser.getUserName();
+								throw new EpException(MessageConst.ERROR_770209,  new String[] { errMsg });
+							} else{							
+								log.info("[#22117] - Proceed reassign task...");
+							}
+						}
+					}
+				}
+			}
+			//throw new EpException(MessageConst.ERROR_770096);
+		}
+		
+		//validate task reassignment from BPK_ADMIN
+		String orgType = this.getManagedBean().getTaskAssignmentSearchBean().getOrgType().getParameterCode();
+		log.info("[#22117] Org type: " + orgType);
+		if (pmUser != null && orgType.equals(ParameterConst.ORG_TYPE_BPK)) {
+			log.info("[#22117] - Validate user if has role BPK_ADMIN");			
+			List<String> userRoles = this.getManagedBean().getTaskAssignmentSearchBean().getSelectedRoles();
+			if(userRoles.contains(RoleCode.BPK_ADMIN.value())) {
+				log.info("[#22117] - Selected user has role: BPK_ADMIN");
+				//to restrict only role EP_ADMIN or EP_ADMIN_2 can perform reassign task
+				//from BPK_ADMIN
+				if (!(getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value()) 
+						|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN_2.value()))) {
+					String errMsg = this.getManagedBean().getTaskAssignmentSearchBean().getUser().getUserName();
+					throw new EpException(MessageConst.ERROR_770229,  new String[] { errMsg });
+				} else{							
+					log.info("[#22117] - Proceed reassign task...");
+				}
+			}			
+		} 
+		//[#22117] - end
+		
 		// replace with the new assignee.
 		assigneeUsers.add(pmUser.getLoginId());
 		
@@ -2427,6 +2496,14 @@ public class TaskReassignmentBackingBean extends
 //										capitalizeUserName = WordUtils.capitalizeFully(user.getUserName());
 //										user.setUserName(capitalizeUserName);
 //									}
+								    //[#22117]
+								    //remove from list if login user has role BPK administrator
+								    if (getFacesScopes().hasRoleUser(RoleCode.BPK_ADMIN.value())) {
+								    	log.info("[#22117] BPK admin login id: " + getFacesScopes().getUserSessionBean().getLoginId());
+								    	if(users.containsKey(getFacesScopes().getUserSessionBean().getLoginId())) {
+								    		users.remove(getFacesScopes().getUserSessionBean().getLoginId());
+								    	}
+								    }
 								}
 								//return resultBean;
 							}				
@@ -3225,7 +3302,12 @@ public class TaskReassignmentBackingBean extends
 		log.info("[#25018] User Id: " + getFacesScopes().getUserSessionBean().getUserId());
 		//PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelByUserId(reqDTO);		
 		log.info("[#25018] User role code: " + PmCommonUtil.getUserRoleValue());
-		getManagedBean().setAdmin(adminRolesForBulkReassignment.containsValue(PmCommonUtil.getUserRoleValue()));		
+		//getManagedBean().setAdmin(adminRolesForBulkReassignment.containsValue(PmCommonUtil.getUserRoleValue()));
+		if(adminRolesForBulkReassignment.containsValue(PmCommonUtil.getUserRoleValue())) {
+			getManagedBean().setAdmin(true);
+		} else if(getFacesScopes().hasRoleUser(RoleCode.BPK_ADMIN.value())) {
+			getManagedBean().setAdmin(true);
+		}
 		log.info("[#25018] IsAdmin: " + getManagedBean().isAdmin());
 		log.info("[#25018] setIsAdminUser - End");
 	}
@@ -3520,7 +3602,36 @@ public class TaskReassignmentBackingBean extends
 		} catch (Exception e) {
 			throw new EpException(e.getMessage());
 		}
-		//log.info("validateDocTypeAndStatus - End");				
+		//log.info("validateDocTypeAndStatus - End");		
+	}
+	
+	//[#22117]
+	public boolean checkBpkAdminUser() {
+		log.info("checkBpkAdminUser - Start");
+		boolean isBpkAdmin = false;
+		
+		if (getFacesScopes().hasRoleUser(RoleCode.BPK_ADMIN.value())) {
+			log.info("[#22117] - is BPK_ADMIN");
+			//check if BPK administrator has other roles
+			log.info("[#22117] - retrieve BPK_ADMIN role");
+			List<PmUserOrg> userOrgList = PmCommonUtil.retrieveActiveOrg(getFacesScopes().getUserSessionBean().getUserId());
+			log.info("[#22117] - BPK_ADMIN org size: " + userOrgList.size());
+			if(userOrgList != null && userOrgList.size() > 0) {
+				PmUserOrg userOrg = userOrgList.get(0);
+				if(userOrg != null && userOrg.getPmUserRoles() != null && userOrg.getPmUserRoles().size() > 0) {
+					for (PmUserRole userRole : userOrg.getPmUserRoles()) {
+						log.info("[#22117] - BPK_ADMIN role: " + userRole.getPmRole().getRoleCode());
+						if (DbValueConst.RECORD_STATUS_ACTIVE == userRole.getRecordStatusFlg() 
+								&& !(userRole.getPmRole().getRoleCode().equals(RoleCode.BPK_ADMIN.value()))) {								
+							log.info("[#22117] - BPK_ADMIN has other role!!");
+							isBpkAdmin = true;							
+							break;
+						}						
+					}
+				}				
+			}
+		}		
+		return isBpkAdmin;			
 	}
 	
 }
