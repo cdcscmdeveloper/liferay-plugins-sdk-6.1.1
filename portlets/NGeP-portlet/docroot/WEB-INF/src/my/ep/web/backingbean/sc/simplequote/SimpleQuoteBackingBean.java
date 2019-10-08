@@ -386,7 +386,7 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setTitleChecker(Boolean.FALSE);
 
 			// procurement type event
-			procurementTypeEvent();
+			procurementTypeBackProcess();
 
 			// current page url for page navigation from sq to request note
 			getManagedBean().setNewableFlag(Boolean.FALSE);
@@ -1965,7 +1965,7 @@ public class SimpleQuoteBackingBean extends
 		getManagedBean().setScQuote(scQuote);
 		// duration calc
 		calculateDuration(scQuote);
-		procurementTypeEvent();
+		procurementTypeBackProcess();
 		//implement here
 	}
 	
@@ -2439,7 +2439,6 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setLocAndBusinessFlag(Boolean.TRUE);
 			getManagedBean().getScQuote().setJustificationRemark("");
 		    getManagedBean().getScQuote().setJustificationType(null);
-
 		} else if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
 			getManagedBean().setProcTypeOption(Boolean.FALSE);
 			getManagedBean().setJustTypeOption(Boolean.FALSE);
@@ -2464,6 +2463,64 @@ public class SimpleQuoteBackingBean extends
 		    getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7.value()));
 		    getManagedBean().getScQuote().setJustificationRemark("");
 		    getManagedBean().getScQuote().setJustificationType(null);
+		} 
+
+		if (getManagedBean().getScQuote().isPanel()) {
+			getManagedBean().setLocAndBusinessFlag(Boolean.FALSE);
+			getManagedBean().setG2GFlag(Boolean.FALSE);
+			getManagedBean().setByBusinessNature(Boolean.FALSE);
+			getManagedBean().setByLocality(Boolean.FALSE);
+		}
+
+		if (getManagedBean().getScQuote().getJustificationType() == null) {
+			getManagedBean().getScQuote().setJustificationType(
+					new PmReason());
+		}
+		
+		debugLogger(getManagedBean().getScQuote().getProcurementType().getParameterCode());
+	}
+	
+	
+	/**
+	 * Back Process for procurement type drop down in SQ. to show justification drop
+	 * down and justification remark based on procurement type.
+	 */
+	public void procurementTypeBackProcess() {
+		debugLogger("procurementTypeBackProcess");
+		PortletSession portletSession = (PortletSession) FacesContext
+				.getCurrentInstance().getExternalContext().getSession(false);
+		TemplateSpecBackingBean templateSpecBackingBean = (TemplateSpecBackingBean) portletSession
+				.getAttribute("templateSpecBackingBean");
+		if (templateSpecBackingBean == null) {
+			templateSpecBackingBean = new TemplateSpecBackingBean();
+		}
+		templateSpecBackingBean.getManagedBean().setG2G(false);
+		
+		String procurementType = getManagedBean().getScQuote().getProcurementType().getParameterCode();
+		
+		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL)) {
+			getManagedBean().setProcTypeOption(Boolean.FALSE);
+			getManagedBean().setJustTypeOption(Boolean.FALSE);
+			getManagedBean().setG2GFlag(Boolean.FALSE);
+			getManagedBean().setLocAndBusinessFlag(Boolean.TRUE);
+		} else if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
+			getManagedBean().setProcTypeOption(Boolean.FALSE);
+			getManagedBean().setJustTypeOption(Boolean.FALSE);
+			getManagedBean().setG2GFlag(Boolean.TRUE);
+			getManagedBean().setLocAndBusinessFlag(Boolean.FALSE);
+			getManagedBean().setByBusinessNature(Boolean.FALSE);
+			getManagedBean().setByLocality(Boolean.FALSE);
+			templateSpecBackingBean.getManagedBean().setG2G(true);
+		} else if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)){
+			getManagedBean().setProcTypeOption(Boolean.TRUE);
+			getManagedBean().setG2GFlag(Boolean.FALSE);
+			getManagedBean().setLocAndBusinessFlag(Boolean.TRUE);
+		    getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_AD_HOC.value()));
+		} else if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
+			getManagedBean().setProcTypeOption(Boolean.TRUE);
+			getManagedBean().setG2GFlag(Boolean.FALSE);
+			getManagedBean().setLocAndBusinessFlag(Boolean.TRUE);
+		    getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7.value()));
 		} 
 
 		if (getManagedBean().getScQuote().isPanel()) {
@@ -3919,7 +3976,7 @@ public class SimpleQuoteBackingBean extends
 		} else if (activeIndex.equals(3)) {
 			getManagedBean().setActiveIndex(3);
 		}
-		procurementTypeEvent();
+		procurementTypeBackProcess();
 	}
 
 	/**
@@ -5850,7 +5907,7 @@ public class SimpleQuoteBackingBean extends
 		// procurement dropdown
 		getManagedBean().setProcurementTypes(
 				getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE));
-		procurementTypeEvent();
+		procurementTypeBackProcess();
 	}
 
 	/**
@@ -6662,7 +6719,7 @@ public class SimpleQuoteBackingBean extends
 		}
 		// duration calc
 		calculateDuration(scQuote);
-		procurementTypeEvent();
+		procurementTypeBackProcess();
 
 		
 		Long currentStatusId = getManagedBean().getCurrentStatusId();
