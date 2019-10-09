@@ -1560,7 +1560,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 									labelText = SmCommonUtil.getMessage("lbl.sm.consultant", null);
 								}
 								if(supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE){
-									throw new EpException(MessageConst.ERROR_721073,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
+									throw new EpException(MessageConst.ERROR_721079,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
 								}
 								//b)	If registration number exist and account is inactive 
 								else if(supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED){
@@ -1588,7 +1588,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							
 							if(getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
 								if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_BASIC)){
-									throw new EpException(MessageConst.ERROR_721066,new String[]{getManagedBean().getSmSupp().getRegNo()});
+									throw new EpException(MessageConst.ERROR_721067,new String[]{getManagedBean().getSmSupp().getRegNo()});
 								}
 							}
 						}
