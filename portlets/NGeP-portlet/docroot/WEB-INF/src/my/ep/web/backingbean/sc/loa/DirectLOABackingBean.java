@@ -744,6 +744,16 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		effDate.set(Calendar.DAY_OF_MONTH, 1);
 		Date contractEffDate = effDate.getTime();
 
+		//25022
+		List<BigDecimal> scheduleNo = new ArrayList<BigDecimal>();
+		for (ScQtSchedule schedule : loa.getScQtSchedules()) {
+			if (scheduleNo.contains(schedule.getScheduleNo())) {
+				throw new EpException(MessageConst.ERROR_760319);
+			} else {
+				scheduleNo.add(schedule.getScheduleNo());
+			}
+		}
+		
 		if (scQtSchedule.getStartYear() != null
 				&& scQtSchedule.getStartMonth() != null) {
 			Calendar strtDate = Calendar.getInstance();
