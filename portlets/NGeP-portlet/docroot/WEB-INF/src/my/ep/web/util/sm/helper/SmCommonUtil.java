@@ -116,6 +116,7 @@ import my.ep.dto.sm.complaint.ComplaintReqDTO;
 import my.ep.dto.sm.complaint.ComplaintResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
+import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
@@ -4254,6 +4255,7 @@ public class SmCommonUtil {
 			SsmResDTO resDTO = reqSO.ssmValidation(ssmReqDTO);
 			//only return company valid or not
 			if(ssmReqDTO.isCheckOnly()){
+				
 				return resDTO;
 			}
 			if (!resDTO.getStatusCode().equalsIgnoreCase("") && !"70060".equalsIgnoreCase(resDTO.getStatusCode())){
@@ -5758,4 +5760,11 @@ public class SmCommonUtil {
 		}
 	}
 	//25929 - end
+	
+	//Bug #25601 : SM SHOWSTOPPER: Duplicate MOF Account for New Supplier Registration
+	public static MofAccountResDTO getMofAccountBySuppIdAndApplId(MofAccountReqDTO req) {
+		MofAccountResDTO mofAcc = SmServiceLookup.getMofAccountSO().retriveMOFAccountByApplId(req);
+		return mofAcc;
+		}
+		
 }
