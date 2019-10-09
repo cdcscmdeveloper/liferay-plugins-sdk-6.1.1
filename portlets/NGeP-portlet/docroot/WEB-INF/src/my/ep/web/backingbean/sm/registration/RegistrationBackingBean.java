@@ -79,6 +79,7 @@ import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmGstSupplierDoc;
 import my.ep.persistence.entity.sm.SmMofAccount;
+import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSstSupplier;
@@ -1528,30 +1529,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					if(getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF)){
 						for(SmSupplier supplier : resDTO.getSmSuppliers()){
 							if(supplier.getSmAppl() == null){
-								if(supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE){
-									throw new EpException(MessageConst.ERROR_721073,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
-								}
-								//b)	If registration number exist and account is inactive 
-								else if(supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED){
-									throw new EpException(MessageConst.ERROR_721074,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
-								}
-								//c)	If account already created but has not been activated, 
-								else if(supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION){
-									throw new EpException(MessageConst.ERROR_721075,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
-								}
-								//d)	If registration number exist and MoF Account has been expired
-								else if(supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_EXPIRED){
-									throw new EpException(MessageConst.ERROR_721076,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
-									
-								}else if(supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_IN_PROGRESS){
-									if(supplier.getEpNo() ==null ||"".equalsIgnoreCase(supplier.getEpNo())){
-										throw new EpException(MessageConst.ERROR_721075,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
-									}else{
-										throw new EpException(MessageConst.ERROR_721073,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
-									}
-								}
-							}
-							if(getManagedBean().getSmAppl().getSupplierType().equals(supplier.getSmAppl().getSupplierType())){
+								errorMessageSSM(supplier);
+							}else if(getManagedBean().getSmAppl().getSupplierType().equals(supplier.getSmAppl().getSupplierType())){
 								log.info("MOF - Contain same supplier type");
 								String labelText = null;
 								if(getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
@@ -1560,14 +1539,14 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 									labelText = SmCommonUtil.getMessage("lbl.sm.consultant", null);
 								}
 								if(supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE){
-									throw new EpException(MessageConst.ERROR_721079,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
+									throw new EpException(MessageConst.ERROR_721069,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
 								}
 								//b)	If registration number exist and account is inactive 
 								else if(supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED){
 									throw new EpException(MessageConst.ERROR_721074,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
 								}
 								//c)	If account already created but has not been activated, 
-								else if(supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION){
+								else if(supplier.getEpNo() == null || supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION){
 									throw new EpException(MessageConst.ERROR_721075,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
 								}
 								//d)	If registration number exist and MoF Account has been expired
@@ -1584,13 +1563,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 								}else {
 									throw new EpException(MessageConst.ERROR_721041,new String[]{labelText,supplier.getRegNo()});
 								}
+							}else if(supplier.getEpNo() == null || "".equalsIgnoreCase(supplier.getEpNo())){
+								throw new EpException(MessageConst.ERROR_721075,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
+							}else{
+								errorMessageSSM(supplier);
 							}
 							
-							if(getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
-								if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_BASIC)){
-									throw new EpException(MessageConst.ERROR_721067,new String[]{getManagedBean().getSmSupp().getRegNo()});
-								}
-							}
 						}
 					}
 					else{
@@ -1639,6 +1617,60 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	/**
 	 * populate indiviual Service Type
 	 */
+	public void errorMessageSSM(SmSupplier supp){
+		//IF MOF CHECK MOF EXPIRED FIRST
+		if(supp.getSmAppl() != null){
+			if(supp.getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF) || supp.getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_BASIC_REACTIVATE)){
+				if(supp.getSmAppl().getSmMofCerts() != null){
+					boolean expiredBelowOneYear = false;
+					boolean expiredMoreOneYear = false;
+					for(SmMofCert cert:supp.getSmAppl().getSmMofCerts()){
+						if(cert.getSmMofAccount() != null){
+							if(cert.getSmMofAccount().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE){
+								expiredBelowOneYear = false;
+								expiredMoreOneYear = false;
+								break;
+							}else if(cert.getSmMofAccount().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_EXPIRED){
+								if(DateUtils.getDaysDifference(cert.getSmMofAccount().getExpDate(), new Date())<=365){
+									expiredBelowOneYear = true;
+								}else{
+									expiredMoreOneYear = true;
+								}
+							}
+						}
+					}
+					if(expiredBelowOneYear){
+						throw new EpException(MessageConst.ERROR_721069,new String[]{SmCommonUtil.getMessage(supp.getRegNo(),null), ""});
+					}else if(expiredMoreOneYear){
+						throw new EpException(MessageConst.ERROR_721072,new String[]{SmCommonUtil.getMessage(supp.getRegNo(),null), ""});
+					}
+				}
+			}
+		}
+		
+		if(supp.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE){
+			throw new EpException(MessageConst.ERROR_721073,new String[]{SmCommonUtil.getMessage(supp.getRegNo(),null), ""});
+		}
+		//b)	If registration number exist and account is inactive 
+		else if(supp.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED){
+			throw new EpException(MessageConst.ERROR_721067,new String[]{SmCommonUtil.getMessage(supp.getRegNo(),null), ""});
+		}
+		//c)	If account already created but has not been activated, 
+		else if(supp.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION){
+			throw new EpException(MessageConst.ERROR_721075,new String[]{SmCommonUtil.getMessage(supp.getRegNo(),null), ""});
+		}
+		//d)	If registration number exist and MoF Account has been expired
+		else if(supp.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_EXPIRED){
+			throw new EpException(MessageConst.ERROR_721076,new String[]{SmCommonUtil.getMessage(supp.getRegNo(),null), ""});
+			
+		}else if(supp.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_IN_PROGRESS){
+			if(supp.getEpNo() ==null ||"".equalsIgnoreCase(supp.getEpNo())){
+				throw new EpException(MessageConst.ERROR_721075,new String[]{SmCommonUtil.getMessage(supp.getRegNo(),null), ""});
+			}else{
+				throw new EpException(MessageConst.ERROR_721073,new String[]{SmCommonUtil.getMessage(supp.getRegNo(),null), ""});
+			}
+		}
+	}
 	public void getIndividualServiceType(){
 //		log.info("******getIndividualServiceType******");
 //		if(this.getManagedBean().getSmSupp().getServiceCategory() != null){
