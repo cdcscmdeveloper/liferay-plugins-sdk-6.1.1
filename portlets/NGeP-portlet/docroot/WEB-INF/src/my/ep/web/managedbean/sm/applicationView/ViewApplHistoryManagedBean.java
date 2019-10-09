@@ -11,6 +11,8 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
 import my.ep.dto.sm.bulkApplication.SmBulkApplicationVO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
+import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
@@ -124,26 +126,36 @@ public class ViewApplHistoryManagedBean extends
 							}*/
 							//Condition for MOF NO
 							if(obj[8]==null || "".equalsIgnoreCase(obj[8].toString())){
-								//1.& 2. (SM_Appl : Is_Active_Appl = 1 and Record_Status = 1) except application no start from (KN-XXXXXX-XXXX / JN-XXXXXX-XXXX) will display based on active MOF Account (Record_Status = 1)
-								if(Integer.parseInt(obj[13].toString())==1 &&  Integer.parseInt(obj[12].toString())==1 && (!obj[0].toString().contains("KN") || !obj[0].toString().contains("JN"))){
-									obj[8] = getMofNo(Long.parseLong(obj[11].toString()),Long.parseLong(obj[10].toString()),
-											obj[8]==null?StringUtils.EMPTY: obj[8].toString());
-								}else if((obj[0].toString().contains("KN") || obj[0].toString().contains("JN"))){
-										obj[8] = "";
-								}
-								//3. For other rejected application that not include in scenario No. 2, the MOF No will display the previous application MOF No (registered application before the application has been rejected).
-								else if("R".equalsIgnoreCase(obj[1].toString())){
-									obj[8] = getMofNoPrevious(Long.parseLong(obj[11].toString()),Long.parseLong(obj[10].toString()),
-											obj[8]==null?StringUtils.EMPTY: obj[8].toString(),null);
-								}//4. For registered application from migrated Supplier (from old eP) that has application no start with K-XXXXXX-XXXX/J-XXXXXX-XXXX, the MOF No will pointing to the old eP MOF No (as per migrated MOF No).
-								 //Read record status 9
-								else if(!obj[0].toString().contains("KN") && !obj[0].toString().contains("JN") && (obj[0].toString().contains("K") || obj[0].toString().contains("J"))){
-									obj[8] = getMofNoPrevious(Long.parseLong(obj[11].toString()),Long.parseLong(obj[10].toString()),
-											obj[8]==null?StringUtils.EMPTY: obj[8].toString(),DbValueConst.RECORD_STATUS_DELETED); 
+								//get MOF NO
+								MofAccountReqDTO reqMofDTO = new MofAccountReqDTO();
+								reqMofDTO.setSupplierId(Long.parseLong(obj[11].toString()));
+								reqMofDTO.setApplId(Long.parseLong(obj[10].toString()));
+								MofAccountResDTO resDto = SmCommonUtil.getMofAccountBySuppIdAndApplId(reqMofDTO);
+								if(resDto.getMofAccount() != null){
+									obj[8] = resDto.getMofAccount().getMofNo();
 								}else{
-									obj[8] = getMofNo(Long.parseLong(obj[11].toString()),Long.parseLong(obj[10].toString()),
-											obj[8]==null?StringUtils.EMPTY: obj[8].toString());
+									//1.& 2. (SM_Appl : Is_Active_Appl = 1 and Record_Status = 1) except application no start from (KN-XXXXXX-XXXX / JN-XXXXXX-XXXX) will display based on active MOF Account (Record_Status = 1)
+									if(Integer.parseInt(obj[13].toString())==1 &&  Integer.parseInt(obj[12].toString())==1 && (!obj[0].toString().contains("KN") || !obj[0].toString().contains("JN"))){
+										obj[8] = getMofNo(Long.parseLong(obj[11].toString()),Long.parseLong(obj[10].toString()),
+												obj[8]==null?StringUtils.EMPTY: obj[8].toString());
+									}else if((obj[0].toString().contains("KN") || obj[0].toString().contains("JN"))){
+											obj[8] = "";
+									}
+									//3. For other rejected application that not include in scenario No. 2, the MOF No will display the previous application MOF No (registered application before the application has been rejected).
+									else if("R".equalsIgnoreCase(obj[1].toString())){
+										obj[8] = getMofNoPrevious(Long.parseLong(obj[11].toString()),Long.parseLong(obj[10].toString()),
+												obj[8]==null?StringUtils.EMPTY: obj[8].toString(),null);
+									}//4. For registered application from migrated Supplier (from old eP) that has application no start with K-XXXXXX-XXXX/J-XXXXXX-XXXX, the MOF No will pointing to the old eP MOF No (as per migrated MOF No).
+									 //Read record status 9
+									else if(!obj[0].toString().contains("KN") && !obj[0].toString().contains("JN") && (obj[0].toString().contains("K") || obj[0].toString().contains("J"))){
+										obj[8] = getMofNoPrevious(Long.parseLong(obj[11].toString()),Long.parseLong(obj[10].toString()),
+												obj[8]==null?StringUtils.EMPTY: obj[8].toString(),DbValueConst.RECORD_STATUS_DELETED); 
+									}else{
+										obj[8] = getMofNo(Long.parseLong(obj[11].toString()),Long.parseLong(obj[10].toString()),
+												obj[8]==null?StringUtils.EMPTY: obj[8].toString());
+									}
 								}
+								
 							}
 						}
 						//Bug #25601 : SM SHOWSTOPPER: Duplicate MOF Account for New Supplier Registration 
