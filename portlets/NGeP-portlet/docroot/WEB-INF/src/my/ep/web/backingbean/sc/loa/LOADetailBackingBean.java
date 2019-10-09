@@ -709,7 +709,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		effDate.setTime(loa.getContractEffDate());
 		effDate.set(Calendar.DAY_OF_MONTH, 1);
 		Date contractEffDate = effDate.getTime();  
-
+		
+		//25022
+		List<BigDecimal> scheduleNo = new ArrayList<BigDecimal>();
+		for (ScQtSchedule schedule : loa.getScQtSchedules()) {
+			if (scheduleNo.contains(schedule.getScheduleNo())) {
+				throw new EpException(MessageConst.ERROR_760319);
+			} else {
+				scheduleNo.add(schedule.getScheduleNo());
+			}
+		}
+		
 		if(scQtSchedule.getStartYear() != null && scQtSchedule.getStartMonth() != null){
 			startDate = Calendar.getInstance();
 			startDate.clear();
@@ -6922,7 +6932,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	/**
 	 * @param e
 	 */
-	public void selectAllSchedule() {
+	public void selectAllSchedule(AjaxBehaviorEvent e) {
 
 		if (getManagedBean().getScLoa().getScQtSchedules() != null) {
 			for (ScQtSchedule ScQtSchedule : getManagedBean().getScLoa()
