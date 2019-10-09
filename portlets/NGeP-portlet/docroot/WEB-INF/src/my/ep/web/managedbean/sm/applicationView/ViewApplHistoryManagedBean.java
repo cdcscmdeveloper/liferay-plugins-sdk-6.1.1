@@ -117,11 +117,11 @@ public class ViewApplHistoryManagedBean extends
 						}
 						if(removeDuplicate){	
 							//Bug #25601 : SM SHOWSTOPPER: Duplicate MOF Account for New Supplier Registration 
-							if(previousAppl.contains(obj[0].toString())){
+							/*if(previousAppl.contains(obj[0].toString())){
 								continue;
 							}else{
 								previousAppl = previousAppl+","+obj[0].toString();
-							}
+							}*/
 							//Condition for MOF NO
 							if(obj[8]==null || "".equalsIgnoreCase(obj[8].toString())){
 								//1.& 2. (SM_Appl : Is_Active_Appl = 1 and Record_Status = 1) except application no start from (KN-XXXXXX-XXXX / JN-XXXXXX-XXXX) will display based on active MOF Account (Record_Status = 1)
@@ -152,7 +152,6 @@ public class ViewApplHistoryManagedBean extends
 				//Bug #25601 : SM SHOWSTOPPER: Duplicate MOF Account for New Supplier Registration 
 				retVal.getResultList().clear();
 				retVal.getResultList().addAll(resultListTemp);
-				//retVal.setTotalRecord(resultListTemp.size());
 				
 			}catch(Exception e) {
 				e.printStackTrace();
