@@ -270,7 +270,7 @@
 									<p:commandLink update=":form:itemId" process="@form" 
 										disabled="#{itemPriceVar.chkIndexOfRow or 
 										(ctBackingBean.managedBean.contractVer.ctAmendment.otherChange and !ctBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange) }"
-									   	rendered="#{itemPriceVar.editable}" action="#{amendmentBackingBean.editItemPriceOnIndexs()}">
+									   	rendered="#{!itemPriceVar.changePrice and itemPriceVar.editable}" action="#{amendmentBackingBean.editItemPriceOnIndexs()}">
 										<f:setPropertyActionListener value="#{itemPriceVar}" target="#{amendmentBackingBean.managedBean.ctItemPrices}" />
 										<p:graphicImage value="/css/images/design/ico-edit.png" title="#{lbl['lbl.ct.edit']}" />
 									</p:commandLink>
@@ -571,7 +571,7 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center" style="width:10%;white-space:normal;" 
 						rendered="#{!ctBackingBean.managedBean.disableAmendDetails and 
-								amendmentBackingBean.managedBean.selectedItem.recordStatusFlg == 1}">
+								amendmentBackingBean.managedBean.selectedServiceItem.recordStatusFlg == 1}">
 						<p:commandLink update=":form:servicePriceTable" process="@form" rendered="#{!ItemPricesVar.changePrice and ItemPricesVar.editable}"
 							action="#{amendmentBackingBean.editServiceItemPriceOnIndexs()}"
 							 disabled="#{ItemPricesVar.chkIndexOfRow or 
