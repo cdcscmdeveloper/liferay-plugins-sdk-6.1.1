@@ -1704,7 +1704,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			if(reset){
 				getManagedBean().getSmBusinessAdd().getPmState().setStateId(null);
 			}
-			pmStateDropdownValues();
+			if(this.getManagedBean().getSmBusinessAdd().getPmCountry() != null){
+				pmStateDropdownValues();
+			}
+			
 			//registrationBackingBean.managedBean.smBusinessAdd.pmState.
 			if(getManagedBean().getSmBusinessAdd().isBrandNew()){
 				getManagedBean().getSmBusinessAdd().getPmDistrict().setDistrictId(null);
