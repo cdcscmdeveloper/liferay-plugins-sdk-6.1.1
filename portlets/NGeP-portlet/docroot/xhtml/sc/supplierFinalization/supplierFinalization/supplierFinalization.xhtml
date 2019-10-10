@@ -54,14 +54,22 @@
 				<table>
 					<tr>
 						<td>
+							<ui:param name="disableSelect" value="#{!(isBPKTaskAndClaimed or 
+													isSecretaryUser)
+													or suppFinalizationBackingBean.isQTMaintenanceScreen()}" />
 							<c:if test="#{validityDaysExpiredQt}">
 								<p:selectOneMenu id="decisionType" required="true" label="#{lbl['lbl.sc.sf.meeting.decision']}"
 									value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.decision.parameterCode}"
-									disabled="#{!(isBPKTaskAndClaimed or 
-													isSecretaryUser)
-													or suppFinalizationBackingBean.isQTMaintenanceScreen()}"
+									disabled="#{disableSelect}"
 									style="width:333px;">
-									<f:selectItems value="#{suppFinalizationBackingBean.getDecisionDropDown()}" />
+									<c:choose>
+										<c:when test="#{disableSelect}">
+											<f:selectItems value="#{suppFinalizationBackingBean.getDecisionDropDownAll()}" />
+										</c:when>
+										<c:otherwise>
+											<f:selectItems value="#{suppFinalizationBackingBean.getDecisionDropDown()}" />
+										</c:otherwise>
+									</c:choose>
 									<p:ajax event="change" update="@([id$=recommendSupplierPanel],[id$=reEvaluatePanel],
 																     [id$=rePublishPanel],[id$=itemSupplierPanel])" 
 										listener="#{suppFinalizationBackingBean.decisionEvent}" process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
@@ -70,11 +78,17 @@
 							<c:if test="#{!validityDaysExpiredQt}">
 								<p:selectOneMenu id="decisionType" required="true" label="#{lbl['lbl.sc.sf.meeting.decision']}"
 									value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.decision.parameterCode}"
-									disabled="#{!(isBPKTaskAndClaimed or 
-													isSecretaryUser)
-													or suppFinalizationBackingBean.isQTMaintenanceScreen()}"
+									disabled="#{disableSelect}"
 									style="width:333px;">
-									<f:selectItems value="#{suppFinalizationBackingBean.getDecisionDropDownExpiredProposal()}" />
+									<c:choose>
+										<c:when test="#{disableSelect}">
+											<f:selectItems value="#{suppFinalizationBackingBean.getDecisionDropDownAll()}" />
+										</c:when>
+										<c:otherwise>
+											<f:selectItems value="#{suppFinalizationBackingBean.getDecisionDropDownExpiredProposal()}" />
+										</c:otherwise>
+									</c:choose>
+									
 									<p:ajax event="change" update="@([id$=recommendSupplierPanel],[id$=reEvaluatePanel],
 																     [id$=rePublishPanel],[id$=itemSupplierPanel])" 
 										listener="#{suppFinalizationBackingBean.decisionEvent}" process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
