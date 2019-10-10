@@ -1087,7 +1087,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					if(ParameterConst.DOCTYPE_DIRECT_NEGO.equalsIgnoreCase(scLoaForQt.getScLoiLoa().getDocType())){
 						return viewDirectLOADetails(scQt, previousPageUrl);
 					}
-					else{	
+					else{
+						otherArgs.put(MapKeyEnum.showTrackingDiary, Boolean.TRUE);
 						bb.preRenderViewForQtMaintenance(scQt, previousPageUrl, otherArgs);
 						return null;
 					}

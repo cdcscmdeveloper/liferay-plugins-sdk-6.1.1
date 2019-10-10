@@ -141,6 +141,13 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 
 			lOIDetailBackingBean.getManagedBean().setSourceId(sourceId);
 			lOIDetailBackingBean.getManagedBean().setPayLoad(dpDataType);
+			
+			
+			/* ***19287#78 - start */
+			if(new MapKeyEnum.ValueRetriever<Boolean>().getValue(otherArgs, MapKeyEnum.showTrackingDiary)){
+				loaDetailBackingBean.getManagedBean().setTrackingDairyView(true);
+			}
+			/* ***19287#78 - end */
 
 			generateSuppLoiLoaList();
 			
