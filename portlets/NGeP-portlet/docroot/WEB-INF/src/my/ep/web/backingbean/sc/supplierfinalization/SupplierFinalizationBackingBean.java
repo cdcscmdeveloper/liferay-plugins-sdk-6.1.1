@@ -3774,6 +3774,16 @@ public class SupplierFinalizationBackingBean extends
 
 		return items;
 	}
+	
+	
+	public SelectItem[] getDecisionDropDownAll(){
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		SelectItem[] items = getDropdownCodeValuesBySearchBean(ParameterTypeConst.FINALIZATION_DECISION_TYPE,
+				searchBean);
+
+		return items;
+		
+	}
 	/**
 	 * Populate values for Recommend Type radio button(s) under Supplier
 	 * Finalization tab
