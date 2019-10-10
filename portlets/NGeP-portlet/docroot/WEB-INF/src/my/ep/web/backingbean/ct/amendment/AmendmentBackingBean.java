@@ -3008,7 +3008,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		ctItemPriceList.clear();
 
 		//CT_CHANGE_LOG
-		ctBackingBean.getManagedBean().getUpdateItemMap().put(getManagedBean().getSelectedItem().getScRequestItem().getRequestNoteItemId(), getManagedBean().getSelectedItem());
+		ctBackingBean.getManagedBean().getUpdateItemMap().put(getManagedBean().getSelectedServiceItem().getScRequestItem().getRequestNoteItemId(), getManagedBean().getSelectedServiceItem());
 	}
 
 	/**
