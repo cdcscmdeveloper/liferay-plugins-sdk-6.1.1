@@ -149,7 +149,7 @@
 						<p:commandButton id="addBtn" icon="ui-icon-add"
 							style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;"
 							partialSubmit="true" process="@this"
-							disabled="#{templateDocBackingBean.managedBean.readOnlyFlag or templateDocBackingBean.managedBean.readOnly}"
+							rendered="#{!templateDocBackingBean.managedBean.readOnlyFlag or templateDocBackingBean.managedBean.readOnly}" 
 							title="#{lbl['lbl.tpl.spec.content.btn.add.tooltip']}" />
 						<p:menu overlay="true" trigger="addBtn" my="left top"
 							at="left bottom">
@@ -185,7 +185,7 @@
 						</p:commandLink>
 						<p:spacer width="5px" />
 						<p:commandLink update=":form"
-							disabled="#{templateDocBackingBean.managedBean.readOnlyFlag}"
+							rendered="#{!templateDocBackingBean.managedBean.readOnlyFlag}"
 							oncomplete="confirmation1.show();">
 							<!-- oncomplete="popupsEdit.show();return false;" update=":form:popupsEdit"> -->
 							<h:graphicImage value="/css/images/design/delete.png" />
