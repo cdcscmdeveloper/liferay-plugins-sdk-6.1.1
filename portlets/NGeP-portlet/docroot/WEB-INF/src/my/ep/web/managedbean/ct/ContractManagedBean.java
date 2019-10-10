@@ -449,11 +449,13 @@ public class ContractManagedBean extends BaseManagedBean {
 			
 		 }
 		else if (getFrequencySchedule().equalsIgnoreCase(ContractConst.CONTRACT_FREQUENCY_PROGRESSIVE)) {
+			radioButtonSchedule = new LinkedHashMap<String,Object>();
 			FacesScopes face = new FacesScopes();
 			radioButtonSchedule.put(ResourceBundleUtils.getMessage("lbl.ct.frequency.schedule", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()), "S");
 			radioButtonSchedule.put(ResourceBundleUtils.getMessage("lbl.ct.progressive.schedule", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()), "P");
 		 }
 		else if (radioButtonSchedule == null){
+			radioButtonSchedule = new LinkedHashMap<String,Object>();
 			FacesScopes face = new FacesScopes();
 			radioButtonSchedule.put(ResourceBundleUtils.getMessage("lbl.ct.frequency.schedule", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()), "S");
 
