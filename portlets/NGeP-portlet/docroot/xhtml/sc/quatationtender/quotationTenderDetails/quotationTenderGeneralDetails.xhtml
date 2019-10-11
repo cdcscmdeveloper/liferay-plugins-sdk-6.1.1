@@ -24,6 +24,8 @@
 		value="#{qTDetailBB.managedBean.showAndHideAmounts}" />
 	<ui:param name="qtExtensionResponseDueDate"
 		value="#{qTDetailBB.getExtensionResponseDueDate(scQt.qtId)}" />
+	<ui:param name="expectTotalIndPriceBelowThreshold"
+		value="#{createQtBB.expectTotalIndPriceBelowThreshold(scQt)}" />
 	<ac:lovPopup />
 
 	<p:panel id="qtdetailsid" header="#{lbl['lbl.sc.general.info']}"
@@ -255,7 +257,7 @@
 											label="#{lbl['lbl.sc.spec.expected.intended.price']}"
 											disabled="#{isReadOnly}">
 											<p:ajax event="blur" partialSubmit="true" update="@form"
-												listener="#{createQtBB.setProcurementMode(scQt, scQt.tmpExpectedIntendedPrice)}">
+												listener="#{createQtBB.setProcurementMode(scQt, scQt.tmpExpectedIntendedPrice, 'Y')}">
 											</p:ajax>
 
 											<f:convertNumber
@@ -767,7 +769,7 @@
 						</c:otherwise>
 					</c:choose></td>
 			</tr>
-			<c:if test="#{!scQt.panel and FulfilmentConst.thresHold >= scQt.tmpExpectedIntendedPrice}">
+			<c:if test="#{expectTotalIndPriceBelowThreshold}">
 				<tr>
 					<td>
 						<p:outputLabel value="#{lbl['lbl.sc.spec.justification.procurement.value']}" /> 
@@ -777,7 +779,7 @@
 						<c:choose>
 							<c:when test="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION}">
 								<p:inputTextarea id="justificationProcValueId"
-									style="text-align:right; margin-bottom:5px; width: 250px;" maxlength="100" value="#{scQt.justificationProcValue}" required="true" 
+									style="margin-bottom:5px; width: 250px;" maxlength="100" value="#{scQt.justificationProcValue}" required="true" 
 									label="#{lbl['lbl.sc.spec.justification.procurement.value']}" disabled="#{isReadOnly}" 
 									cols="110" rows="3"
 									onkeyup="limitTextArea(this,100);"
@@ -825,6 +827,29 @@
 				partialSubmit="true" update="@form"
 				actionListener="#{createQtBB.panelNoConformation}"
 				oncomplete="panelApprovalDlgs.hide();" />
+		</div>
+	</p:dialog>
+
+	<p:dialog id="proceedBelowQtValueId" widgetVar="proceedBelowQtValueDlgs"
+		header="#{lbl['lbl.sc.note.request.dialog.confirm.cancel']}"
+		resizable="false" closable="false">
+		<table>
+			<tr>
+				<td align="center">
+					<h:graphicImage value="/css/images/design/exclamation.png" /> 
+					<p:outputLabel value="#{lbl['lbl.sc.spec.alert.proceed.below.quotation.value']}" />
+				</td>
+			</tr>
+		</table>
+		<p:spacer height="1" />
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@this"
+				partialSubmit="true" update="@form"
+				action="#{createQtBB.enableJustificationProValue(true)}" />
+			<p:commandButton value="#{lbl['lbl.btn.no']}" process="@this"
+				partialSubmit="true" update="@form"
+				actionListener="#{createQtBB.enableJustificationProValue(false)}"
+				oncomplete="proceedBelowQtValueDlgs.hide();" />
 		</div>
 	</p:dialog>
 </ui:composition>
