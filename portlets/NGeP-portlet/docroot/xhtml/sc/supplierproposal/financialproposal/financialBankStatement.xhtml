@@ -36,7 +36,7 @@
 					<h:outputText value="#{lbl['lbl.sc.amount']}" />
 				</f:facet>
 				<p:inputText id="balanceAmt" value="#{bankstmt.balanceAmt}"
-					disabled="#{statusHide}" size="30" style="text-align:right"
+					disabled="#{statusHide or supplierProposalDetailBackingBean.managedBean.readOnly}" size="30" style="text-align:right"
 					maxlength="14" required="true"
 					label="#{bankstmt.month} #{lbl['lbl.sc.amount']}">
 					<f:convertNumber
