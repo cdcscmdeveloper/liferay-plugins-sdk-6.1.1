@@ -44,6 +44,7 @@ import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
@@ -747,7 +748,7 @@ public class CreateQtBackingBean extends
 	 * @param scQt
 	 *            (ScQt scQt)
 	 */
-	public void setProcurementMode(ScQt scQt, BigDecimal amount) {
+	public void setProcurementMode(ScQt scQt, BigDecimal amount, String ... enable) {
 
 		debugLogger("setProcurementMode,@qtNo = " + scQt.getQtNo());
 		IParameterSO parameterSo = null;
@@ -871,9 +872,31 @@ public class CreateQtBackingBean extends
 					getManagedBean().setZoneTrees(null);
 				}
 			}
+			//Start - 25729
+			if (!isPanel && enable.length > 0 && amount.intValue() < FulfilmentConst.THRESHOLD) {
+				RequestContext.getCurrentInstance().execute("proceedBelowQtValueDlgs.show()");
+			}
+			//End - 25729
 		} finally {
 			parameterSo = null;
 		}
+	}
+
+	public boolean expectTotalIndPriceBelowThreshold(ScQt scQt) {
+		BigDecimal tmpExpectedIntendedPrice = scQt.getTmpExpectedIntendedPrice();
+		if (!scQt.isPanel() && tmpExpectedIntendedPrice != null) {
+			if (FulfilmentConst.THRESHOLD >= tmpExpectedIntendedPrice.intValue()) {
+				return Boolean.TRUE;
+			}
+		}
+		return Boolean.FALSE;
+	}
+
+	public boolean enableJustificationProValue(boolean enable) {
+		if (!enable) {
+			this.getManagedBean().getQt().setTmpExpectedIntendedPrice(null);
+		}
+		return enable;
 	}
 
 	/**
@@ -2409,9 +2432,15 @@ public class CreateQtBackingBean extends
 		if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(scQt
 				.getQtStatus().getStatusId())) {
 			BigDecimal amount = scQt.getTmpExpectedIntendedPrice();
-			if(null != amount){
-				setProcurementMode(scQt, amount);
+			//Start - 25729
+			if (null != amount) {
+				if (amount.intValue() < FulfilmentConst.THRESHOLD) {
+					setProcurementMode(scQt, amount, "Y");
+				} else {
+					setProcurementMode(scQt, amount);
+				}
 			}
+			//End - 25729
 		}
 	}
 

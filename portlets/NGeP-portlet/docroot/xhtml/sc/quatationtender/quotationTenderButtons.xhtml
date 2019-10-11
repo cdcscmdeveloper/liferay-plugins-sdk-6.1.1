@@ -76,34 +76,11 @@
 						</ui:repeat>
 					</c:when>
 					<c:when test="#{qTDetailBB.managedBean.createQt or isQTStatusPendingQtSubmission}">
-						<c:if test="#{!createQtBB.managedBean.qt.panel and FulfilmentConst.thresHold >= createQtBB.managedBean.qt.tmpExpectedIntendedPrice}">
-							<p:commandButton value="#{lbl['lbl.btn.submit']}" partialSubmit="true"
-								process="@form" onstart="blockWidget.show();" update="@form"
-								oncomplete="blockWidget.hide(); if (args &amp;&amp; !args.validationFailed) cd.show();" disabled="#{!qTDetailBB.managedBean.ptjPresent}" />
-							<p:confirmDialog
-								message="#{lbl['lbl.sc.spec.alert.proceed.below.quotation.value']}"
-								header="#{lbl['lbl.sc.note.request.dialog.confirm.cancel']}"
-								severity="alert" widgetVar="cd">
-								<div class="ppRightBtn">
-									<p:commandButton value="#{lbl['lbl.btn.yes']}"
-										process="@form"
-										update="@all"
-										actionListener="#{qTDetailBB.submitQTDetailsAction}"
-										onclick="blockWidget.show();"
-										oncomplete="cd.hide();blockWidget.hide();" id="submitQtDetailsId"
-										partialSubmit="true" immediate="true" />
-									<p:commandButton value="#{lbl['lbl.btn.no']}"
-										oncomplete="cd.hide();" />
-								</div>
-							</p:confirmDialog>
-						</c:if>
-						<c:if test="#{!(!createQtBB.managedBean.qt.panel and FulfilmentConst.thresHold >= createQtBB.managedBean.qt.tmpExpectedIntendedPrice)}">
-							<p:commandButton value="#{lbl['lbl.btn.submit']}"
-								action="#{qTDetailBB.submitQTDetailsAction}" process="@form"
-								update="@all"
-								onclick="blockWidget.show();"
-								oncomplete="blockWidget.hide();" disabled="#{!qTDetailBB.managedBean.ptjPresent}"/>
-						</c:if>
+						<p:commandButton value="#{lbl['lbl.btn.submit']}"
+							action="#{qTDetailBB.submitQTDetailsAction}" process="@form"
+							update="@all"
+							onclick="blockWidget.show();"
+							oncomplete="blockWidget.hide();" disabled="#{!qTDetailBB.managedBean.ptjPresent}"/>
 					</c:when>
 					<c:otherwise>
 							<p:commandButton value="#{lbl['lbl.btn.submit']}"
