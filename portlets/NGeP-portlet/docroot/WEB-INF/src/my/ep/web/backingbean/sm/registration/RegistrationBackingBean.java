@@ -360,20 +360,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				this.getManagedBean().setStatusFromSSM(ssmResDTO.getStatusFromSSM());
 				this.getManagedBean().setStatusDescFromSSM(setStatusMessageFromSSM(ssmResDTO.getStatusFromSSM()));
 				this.getManagedBean().setSmPersonnelOwners(ssmResDTO.getSmPersonnelOwners());
-				this.getManagedBean().getSelectItemsSmPersonnelOwners().clear();
-				for(SmPersonnel personnel : ssmResDTO.getSmPersonnelAll()){
-					if(personnel.isEquityOwner() || personnel.isDirector()){
-						SelectItem selectItem = new SelectItem();
-						selectItem.setLabel(personnel.getName());
-						selectItem.setValue(personnel.getIdentificationNo());
-						if(this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF)){
-							this.getManagedBean().getSelectItemsSmPersonnelOwners().add(selectItem);//FOR MOF
-						}else if(personnel.isEquityOwner()){
-							this.getManagedBean().getSelectItemsSmPersonnelOwners().add(selectItem);//FOR BASIC
-						}
-						
-					}
-				}
+				setPersonnelToItem();
+				
 				//get detail business nature from ep
 				//List<SmSupplierBusiness> smSupplierBusinesses = ssmResDTO.getSmSupplierBusinessList();
 				/*for(SmSupplierBusiness smSupplierBusiness : ssmResDTO.getSmSupplierBusinessList()){
@@ -479,7 +467,16 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 									null, my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN, null);
 						}
 					}
+					
+					//set ssm updated name
+					if(suppOwner.isShowNameTextField()){
+						SmPersonnel personnel = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(suppOwner.getIdentificationNo(), this.getManagedBean().getSmPersonnelAll(), "identificationNo");
+						if(personnel != null){
+							personnel.setName(suppOwner.getOwnerName());
+						}
+					}
 				}
+				setPersonnelToItem();
 			}
 		}else{
 			SmSupplierOwner suppOwner = this.getManagedBean().getSmSuppOwner();
@@ -1543,7 +1540,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 								}
 								//b)	If registration number exist and account is inactive 
 								else if(supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED){
-									throw new EpException(MessageConst.ERROR_721074,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
+									throw new EpException(MessageConst.ERROR_721072,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
 								}
 								//c)	If account already created but has not been activated, 
 								else if(supplier.getEpNo() == null || supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION){
@@ -1576,7 +1573,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						for(SmSupplier supplier : resDTO.getSmSuppliers()){
 							//a)	If registration number exists and account is active 
 							if(supplier.getSmAppl().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE || supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_IN_PROGRESS){
-								throw new EpException(MessageConst.ERROR_721066,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
+								throw new EpException(MessageConst.ERROR_721069,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
 							}
 							//b)	If registration number exist and account is inactive 
 							else if(supplier.getSmAppl().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED){
@@ -1704,7 +1701,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			if(reset){
 				getManagedBean().getSmBusinessAdd().getPmState().setStateId(null);
 			}
-			pmStateDropdownValues();
+			if(this.getManagedBean().getSmBusinessAdd().getPmCountry() != null){
+				pmStateDropdownValues();
+			}
+			
 			//registrationBackingBean.managedBean.smBusinessAdd.pmState.
 			if(getManagedBean().getSmBusinessAdd().isBrandNew()){
 				getManagedBean().getSmBusinessAdd().getPmDistrict().setDistrictId(null);
@@ -3718,6 +3718,22 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 	}
 	//16052019 - SSM INTEGRATION CR END
+	
+	public void setPersonnelToItem(){
+		this.getManagedBean().getSelectItemsSmPersonnelOwners().clear();
+		for(SmPersonnel personnel : this.getManagedBean().getSmPersonnelAll()){
+			if(personnel.isEquityOwner() || personnel.isDirector()){
+				SelectItem selectItem = new SelectItem();
+				selectItem.setLabel(personnel.getName());
+				selectItem.setValue(personnel.getIdentificationNo());
+				if(this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF)){
+					this.getManagedBean().getSelectItemsSmPersonnelOwners().add(selectItem);//FOR MOF
+				}else if(personnel.isEquityOwner()){
+					this.getManagedBean().getSelectItemsSmPersonnelOwners().add(selectItem);//FOR BASIC
+				}
+			}
+		}
+	}
 }
 
 
