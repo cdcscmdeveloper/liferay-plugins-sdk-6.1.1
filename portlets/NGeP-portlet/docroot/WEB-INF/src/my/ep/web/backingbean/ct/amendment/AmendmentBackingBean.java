@@ -4402,6 +4402,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					allowChairpersonRole = true;
 				}
 			}
+			
+			//Bug #26520 - start
+			if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)
+					|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)){
+				allowChairpersonRole = true;
+			}
+			//Bug #26520 - end
+			
 //			} else {	// Others same Ministry
 //				PmOrgProfile contractMinistry = retrieveMinistryOrgProfile(
 //						ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
