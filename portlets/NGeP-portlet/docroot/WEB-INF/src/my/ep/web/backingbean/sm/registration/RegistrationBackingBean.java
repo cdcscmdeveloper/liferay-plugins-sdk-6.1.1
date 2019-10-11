@@ -360,20 +360,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				this.getManagedBean().setStatusFromSSM(ssmResDTO.getStatusFromSSM());
 				this.getManagedBean().setStatusDescFromSSM(setStatusMessageFromSSM(ssmResDTO.getStatusFromSSM()));
 				this.getManagedBean().setSmPersonnelOwners(ssmResDTO.getSmPersonnelOwners());
-				this.getManagedBean().getSelectItemsSmPersonnelOwners().clear();
-				for(SmPersonnel personnel : ssmResDTO.getSmPersonnelAll()){
-					if(personnel.isEquityOwner() || personnel.isDirector()){
-						SelectItem selectItem = new SelectItem();
-						selectItem.setLabel(personnel.getName());
-						selectItem.setValue(personnel.getIdentificationNo());
-						if(this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF)){
-							this.getManagedBean().getSelectItemsSmPersonnelOwners().add(selectItem);//FOR MOF
-						}else if(personnel.isEquityOwner()){
-							this.getManagedBean().getSelectItemsSmPersonnelOwners().add(selectItem);//FOR BASIC
-						}
-						
-					}
-				}
+				setPersonnelToItem();
+				
 				//get detail business nature from ep
 				//List<SmSupplierBusiness> smSupplierBusinesses = ssmResDTO.getSmSupplierBusinessList();
 				/*for(SmSupplierBusiness smSupplierBusiness : ssmResDTO.getSmSupplierBusinessList()){
@@ -479,7 +467,16 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 									null, my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN, null);
 						}
 					}
+					
+					//set ssm updated name
+					if(suppOwner.isShowNameTextField()){
+						SmPersonnel personnel = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(suppOwner.getIdentificationNo(), this.getManagedBean().getSmPersonnelAll(), "identificationNo");
+						if(personnel != null){
+							personnel.setName(suppOwner.getOwnerName());
+						}
+					}
 				}
+				setPersonnelToItem();
 			}
 		}else{
 			SmSupplierOwner suppOwner = this.getManagedBean().getSmSuppOwner();
@@ -3721,6 +3718,22 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 	}
 	//16052019 - SSM INTEGRATION CR END
+	
+	public void setPersonnelToItem(){
+		this.getManagedBean().getSelectItemsSmPersonnelOwners().clear();
+		for(SmPersonnel personnel : this.getManagedBean().getSmPersonnelAll()){
+			if(personnel.isEquityOwner() || personnel.isDirector()){
+				SelectItem selectItem = new SelectItem();
+				selectItem.setLabel(personnel.getName());
+				selectItem.setValue(personnel.getIdentificationNo());
+				if(this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF)){
+					this.getManagedBean().getSelectItemsSmPersonnelOwners().add(selectItem);//FOR MOF
+				}else if(personnel.isEquityOwner()){
+					this.getManagedBean().getSelectItemsSmPersonnelOwners().add(selectItem);//FOR BASIC
+				}
+			}
+		}
+	}
 }
 
 
