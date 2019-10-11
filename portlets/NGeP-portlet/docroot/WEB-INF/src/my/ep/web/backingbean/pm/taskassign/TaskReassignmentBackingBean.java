@@ -576,13 +576,26 @@ public class TaskReassignmentBackingBean extends
 		
 		List<PmUser> users = new ArrayList<PmUser>();
 		PmUser user = new PmUser();
-		Long profileId = getManagedBean().getTaskAssignmentSearchBean().getOrgProfile() != null ?
-				getManagedBean().getTaskAssignmentSearchBean().getOrgProfile().getOrgProfileId() :
-					getManagedBean().getCurrentActiveOrg().getOrgProfileId();
-		Integer activeRecordStatusFlg = new Integer(1);
-		boolean orgMember = false;
+		String orgCode = null;
+		Long profileId = 0L;
 		
-		List <PmUser> userOrgList = PmCommonUtil.retrieveUserListByOrgProfileId(profileId);
+		if (getManagedBean().getTaskAssignmentSearchBean().getOrgProfile() != null) {
+			profileId = getManagedBean().getTaskAssignmentSearchBean().getOrgProfile().getOrgProfileId();
+			orgCode = getManagedBean().getTaskAssignmentSearchBean().getOrgProfile().getOrgCode();
+		} else {
+			profileId = getManagedBean().getCurrentActiveOrg().getOrgProfileId();
+			orgCode = getManagedBean().getCurrentActiveOrg().getOrgCode();
+		}
+		
+		/* Due to a possibility of having more than one profileId for the selected Org Name, 
+		 * we need to safeguard the Org returned is always correct by evaluating the Org Code first */
+		PmOrgProfile orgProfileDetail = PmCommonUtil.retrieveOrgProfileDtlByCode(orgCode);
+		List <PmUser> userOrgList = null;
+		
+		if (orgProfileDetail != null) {
+			userOrgList = PmCommonUtil.retrieveUserListByOrgProfileId(
+					orgProfileDetail.getOrgProfileId());
+		}
 		
 		BpmResponseDTO bpmResDTO = null;
 		
@@ -591,13 +604,11 @@ public class TaskReassignmentBackingBean extends
 		bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
 		
 		if (SmServiceLookup.getBpmSO().getReassignedTasks(bpmReqDTO) == null) {
-			log.info("getReassignedTasks is EMPTY");
 			throw new EpException(MessageConst.ERROR_770208);
 		} else {
 			bpmResDTO = SmServiceLookup.getBpmSO().getReassignedTasks(bpmReqDTO);
 			
 			if (!bpmResDTO.isSuccessful()) {
-				log.info("getReassignedTasks is UNSUCCESSFUL");
 				//throw new EpException(MessageConst.ERROR_770100);
 				throw new EpException(MessageConst.ERROR_770208);
 			}
@@ -611,20 +622,12 @@ public class TaskReassignmentBackingBean extends
 						if (userOrgList != null && userOrgList.size() > 0) {
 							for (PmUser orgList : userOrgList) {
 								if (orgList.getLoginId().equals(user.getLoginId())) {
-									orgMember = true;
-									log.info(user.getLoginId()+" is a member of "+profileId);
-									break;
+									users.add(user);
 								}
 							}
 						}
-						
-						if ( ((user.getRecordStatusFlg().equals(activeRecordStatusFlg)) && 
-								(user.getRecordStatusFlg().equals(this.getManagedBean().getTaskAssignmentSearchBean()
-								.getOrgProfile().getRecordStatusFlg()))) && orgMember ) {
-							users.add(user);
-						}
 						log.info("USER.INFO= ["+user.getLoginId()+" "+user.getUserName()+"] "+
-								profileId+" : "+orgMember+" : "+
+								profileId+" : "+orgCode+" : "+
 								user.getRecordStatusFlg()+" : "+
 								this.getManagedBean().getTaskAssignmentSearchBean().getOrgProfile().getRecordStatusFlg());
 					}
