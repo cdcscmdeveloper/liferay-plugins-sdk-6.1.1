@@ -692,6 +692,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			setUserDetails(requestNote);
 			requestNoteReqDTO.setRequestNote(requestNote);
 			requestNoteReqDTO.setUserLocale(new FacesScopes().getUserLocale());
+			// 12177 - Start
+			requestNoteReqDTO.setSqEndDate(getManagedBean().getSqEndDate());
+			// 12177 - End
 			try {
 				if(outcome.isEmpty()) {	
 					requestNoteReqDTO.setToken(ctxToken);
@@ -848,7 +851,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				}
 			}
 		}
-		
+
 		debugLogger("RequestNoteBackingBean >> submitAction ---- isExceededAmountAlerted() = "+ getManagedBean().isExceededAmountAlerted());
 		if(getManagedBean().isExceededAmountAlerted()){
 			if(!getManagedBean().isExceededMessagePrompt()){
@@ -1113,10 +1116,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		debugLogger("preRenderView");
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		SCDirectPurchaseDataType directPurchaseDataType = super.getBpmTaskDetails(SCDirectPurchaseDataType.class, null);
-		System.out.println("fadzly supplier size : " + directPurchaseDataType.getSuppliers().size());
-		for(String supplier : directPurchaseDataType.getSuppliers()){
-			System.out.println("fadzly supplier : " + supplier);
-		}
 		
 		Long dpId = null;
 		boolean zoneFlag = Boolean.FALSE;
@@ -1228,7 +1227,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		Long supplierId = null;
 		
 		SCAwardSupplierDataType awardSupplierDataType = super.getBpmTaskDetails(SCAwardSupplierDataType.class, null);
-		System.out.println("fadzly supplier : " + awardSupplierDataType.getSupplierId());
 		if(awardSupplierDataType.getSourceId() != null){
 			dpId = Long.valueOf(awardSupplierDataType.getSourceId());
 		} 
@@ -1461,6 +1459,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNoteReqDTO.setPidId(getManagedBean().getPurchaseInDefaultId());
 			requestNoteReqDTO.setDeletedRequestNoteDtls(getManagedBean().getDeleteRequestNoteDtls());
 			requestNoteReqDTO.setUserLocale(new FacesScopes().getUserLocale());
+			// 12177 - Start
+			requestNoteReqDTO.setSqEndDate(getManagedBean().getSqEndDate());
+			// 12177 - End
 			try {
 				requestNoteResDTO = getRequestNoteSO().updateRequestNote(requestNoteReqDTO);
 			} catch(EpException e) {
@@ -4649,6 +4650,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					if(currentDate.compareTo(cal.getTime()) >= 0){
 						validDate = false;
 						sqExpiredMessageFlag = true;
+						// 12177 - Start
+						getManagedBean().setSqEndDate(toCalendar(scQuote.getEndDate()));
+						// 12177 - End
 					}
 				}					
 			}				
@@ -4739,4 +4743,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		
 		return totalAmt;
 	}
+	
+	// 12177 - Start
+	public static Calendar toCalendar(Date date){ 
+		  Calendar cal = Calendar.getInstance();
+		  cal.setTime(date);
+		  return cal;
+	}
+	// 12177 - End
 }
