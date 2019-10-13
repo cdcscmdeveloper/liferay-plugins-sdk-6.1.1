@@ -692,10 +692,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			setUserDetails(requestNote);
 			requestNoteReqDTO.setRequestNote(requestNote);
 			requestNoteReqDTO.setUserLocale(new FacesScopes().getUserLocale());
-			
-			//12177 - Start
-			requestNoteReqDTO.setSqExpiredStatus(getManagedBean().getSqExpiredStatus());
-			//12177 - End
+			// 12177 - Start
+			requestNoteReqDTO.setSqEndDate(getManagedBean().getSqEndDate());
+			// 12177 - End
 			try {
 				if(outcome.isEmpty()) {	
 					requestNoteReqDTO.setToken(ctxToken);
@@ -852,7 +851,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				}
 			}
 		}
-		
+
 		debugLogger("RequestNoteBackingBean >> submitAction ---- isExceededAmountAlerted() = "+ getManagedBean().isExceededAmountAlerted());
 		if(getManagedBean().isExceededAmountAlerted()){
 			if(!getManagedBean().isExceededMessagePrompt()){
@@ -1117,10 +1116,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		debugLogger("preRenderView");
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		SCDirectPurchaseDataType directPurchaseDataType = super.getBpmTaskDetails(SCDirectPurchaseDataType.class, null);
-		System.out.println("fadzly supplier size : " + directPurchaseDataType.getSuppliers().size());
-		for(String supplier : directPurchaseDataType.getSuppliers()){
-			System.out.println("fadzly supplier : " + supplier);
-		}
 		
 		Long dpId = null;
 		boolean zoneFlag = Boolean.FALSE;
@@ -1155,11 +1150,23 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			
 			retrieveRequestNoteDetails(requestNote, getManagedBean().getCurrentStatusId(), zoneFlag);
 			checkIsSupplierResponse(requestNote.getRequestNoteDtls(), getManagedBean().getCurrentStatusId());
+			checkPidValidity(requestNote);
 		}
 		
 		//Redmine Enhancement #12177
 		addButton();
-		if(sqExpiredMessageFlag){
+		if(!pidExpiredFlag){
+			Locale locale = new FacesScopes().getUserLocale();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+							.getMessage(
+									ResourceBundleUtils.getMessage("lbl.sc.purchase.in.default.exp.msg",
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale),
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+		}
+		else if(sqExpiredMessageFlag){
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 				MessageUtils.getMessage(MessageConst.ERROR_760481, 
 					null,MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
@@ -1172,6 +1179,43 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, REQUEST_NOTE_PAGE);
 	}
 	
+	private void checkPidValidity(ScRequestNote requestNote) {
+		// TODO Auto-generated method stub
+		//CHECK VALIDITY PID
+				IPurchaseInDefaultSO purchaseInDefaultSO  = null;
+				try {
+					// Based on ptj selection have to get pid for request note 
+					purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
+					PurchaseInDefaultReqDTO purchaseInDefaultReqDTO = new PurchaseInDefaultReqDTO();
+					// fetch pid item for request note item	
+					List<ScRequestItem>	requestNoteItems = getManagedBean().getRequestNoteItems();
+					List<ScRequestNoteDtl>	requestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();
+					if(requestNote.getRequestNoteDtls()!= null && requestNote.getRequestNoteDtls().size() >0){
+						for (ScRequestNoteDtl scRequestNoteDtl : requestNote.getRequestNoteDtls()) {
+							ScRequestSupplierItem requestSupplierItem = scRequestNoteDtl.getScRequestSupplierItem();
+							ScRequestItem requestItem = scRequestNoteDtl.getRequestItem();
+							
+							
+							if(requestItem.getPurchaseInDefault() != null){
+								// selected ptj id for non contract item for pid
+								purchaseInDefaultReqDTO.setOrgProfileId(requestNote.getPmOrgProfile().getOrgProfileId());
+								purchaseInDefaultReqDTO.setPurchaseInDefaultId(requestItem.getPurchaseInDefault().getPurchaseInDefaultId());
+								PurchaseInDefaultResDTO defaultResDTO = purchaseInDefaultSO.getPurchaseInDefaultByPidNo(purchaseInDefaultReqDTO);
+
+								// pid to request note
+								if(defaultResDTO.getPurchaseInDefaultDtl() != null){
+									ScPurchaseInDefault  purchaseInDefault = defaultResDTO.getPurchaseInDefaultDtl();
+									pidExpiredFlag = pidValidityBoolean(purchaseInDefault, requestNote);
+								} 
+							}
+							
+						}
+					}
+				}catch(Exception ex){
+						ex.printStackTrace();
+				}
+	}
+
 	/**
 	 * Pre render page navigation to request note page based on task id for codification task
 	 * @return void
@@ -1183,7 +1227,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		Long supplierId = null;
 		
 		SCAwardSupplierDataType awardSupplierDataType = super.getBpmTaskDetails(SCAwardSupplierDataType.class, null);
-		System.out.println("fadzly supplier : " + awardSupplierDataType.getSupplierId());
 		if(awardSupplierDataType.getSourceId() != null){
 			dpId = Long.valueOf(awardSupplierDataType.getSourceId());
 		} 
@@ -1417,7 +1460,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNoteReqDTO.setDeletedRequestNoteDtls(getManagedBean().getDeleteRequestNoteDtls());
 			requestNoteReqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			// 12177 - Start
-			requestNoteReqDTO.setSqExpiredStatus(getManagedBean().getSqExpiredStatus());
+			requestNoteReqDTO.setSqEndDate(getManagedBean().getSqEndDate());
 			// 12177 - End
 			try {
 				requestNoteResDTO = getRequestNoteSO().updateRequestNote(requestNoteReqDTO);
@@ -4525,18 +4568,30 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		Long currentStatusId = getManagedBean().getCurrentStatusId();
 		//check if pid expired ovewrite sq
 		//checking if SQ still valid, if not valid thus cancel/reject button will be added
+		if(!pidExpiredFlag){			
 		
-		if(!isSqStillValid()){
 			if(currentStatusId.equals(DPStatusConstants.RN_PENDING_APPROVAL)
-			   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL) ){
-			   String[] addReject = new String[]{BpmOutcomeConst.BPM_REJECT};    		
-			   getManagedBean().setOutComes(addReject);
-			}
-			else{
-			   String[] addCancel = new String[]{BpmOutcomeConst.BPM_CANCEL};    		
-			   getManagedBean().setOutComes(addCancel);
-			}						
-		}	
+					   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL) ){
+					   String[] addReject = new String[]{BpmOutcomeConst.BPM_REJECT};    		
+						getManagedBean().setOutComes(addReject);	
+						
+					}else{
+						String[] addCancel = new String[]{BpmOutcomeConst.BPM_CANCEL};    		
+						getManagedBean().setOutComes(addCancel);
+					}
+		}else{
+			if(!isSqStillValid()){
+				if(currentStatusId.equals(DPStatusConstants.RN_PENDING_APPROVAL)
+				   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL) ){
+				   String[] addReject = new String[]{BpmOutcomeConst.BPM_REJECT};    		
+				   getManagedBean().setOutComes(addReject);
+				}
+				else{
+				   String[] addCancel = new String[]{BpmOutcomeConst.BPM_CANCEL};    		
+				   getManagedBean().setOutComes(addCancel);
+				}						
+			}	
+		}
 	}
 	
 	/**
@@ -4595,7 +4650,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					if(currentDate.compareTo(cal.getTime()) >= 0){
 						validDate = false;
 						sqExpiredMessageFlag = true;
-						getManagedBean().setSqExpiredStatus(true);
+						// 12177 - Start
+						getManagedBean().setSqEndDate(toCalendar(scQuote.getEndDate()));
+						// 12177 - End
 					}
 				}					
 			}				
@@ -4686,4 +4743,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		
 		return totalAmt;
 	}
+	
+	// 12177 - Start
+	public static Calendar toCalendar(Date date){ 
+		  Calendar cal = Calendar.getInstance();
+		  cal.setTime(date);
+		  return cal;
+	}
+	// 12177 - End
 }

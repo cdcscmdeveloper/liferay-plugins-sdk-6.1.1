@@ -330,8 +330,8 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	private boolean cancel = Boolean.FALSE; 
 	
 	// 12177 - Start
-	/** The flag of SQ expired */
-	private boolean sqExpiredStatus = Boolean.FALSE;
+	/** The SQ end date */
+	private Calendar sqEndDate;
 	// 12177 - End
 	
     /**
@@ -1931,17 +1931,17 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	
 	// 12177 - Start
 	/**
-	 * @return the sqExpiredStatus
+	 * @return the taskExpiryDate
 	 */
-	public boolean getSqExpiredStatus() {
-		return sqExpiredStatus;
+	public Calendar getSqEndDate() {
+		return sqEndDate;
 	}
-	
+
 	/**
-	 * @param sqExpiredStatus the sqExpiredStatus to set
+	 * @param taskExpiryDate the taskExpiryDate to set
 	 */
-	public void setSqExpiredStatus(boolean sqExpiredStatus) {
-		this.sqExpiredStatus = sqExpiredStatus;
+	public void setSqEndDate(Calendar sqEndDate) {
+		this.sqEndDate = sqEndDate;
 	}
 	// 12177 - End
 }
