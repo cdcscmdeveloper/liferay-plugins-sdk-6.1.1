@@ -296,6 +296,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			reqDTO.setUserLocale(getFacesScopes().getUserLocale());
 			reqDTO.setPidValidityExpired(getManagedBean().isPidValidityExpired());
 			reqDTO.setTaskDeadLine(getManagedBean().getTaskDeadLine());
+			// 12177 - Start
+			reqDTO.setSqExpiredStatus(getManagedBean().getSqExpiredStatus());
+			reqDTO.setSqNumber(getManagedBean().getSqNumber());
+			reqDTO.setRequestNoteId(getManagedBean().getRequestNoteId());
+			// 12177 - End
 			if(isFlFulfilmentRequisitioner()) {
 				reqDTO.setRequisitioner(Boolean.TRUE);
 				if(getManagedBean().getSelectedApprover() != null){
@@ -4629,7 +4634,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					getManagedBean().setOutComes(addCancel);
 				}
 						
-		}		
+			}		
 		}
 	}
 	
@@ -4642,6 +4647,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		Long currentStatusId = getManagedBean().getFulfilmentRequest().getFlWorkflowStatus().getPmStatus().getStatusId();
 		Integer sqTimeValidity = null;
 		ScQuote scQuote = getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getRequestNote().getQuote();
+		ScRequestNote scRequestNote = getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getRequestNote();
 		
 		// by default days
 		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
@@ -4674,6 +4680,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					if(currentDate.compareTo(cal.getTime()) >= 0){
 						validDate = false;
 						sqExpiredMessageFlag = true;
+						getManagedBean().setSqExpiredStatus(true);
+						getManagedBean().setSqNumber(scQuote.getQuoteNo());
+						getManagedBean().setRequestNoteId(scRequestNote.getRequestNoteId());
 					}
 				}
 			}				
