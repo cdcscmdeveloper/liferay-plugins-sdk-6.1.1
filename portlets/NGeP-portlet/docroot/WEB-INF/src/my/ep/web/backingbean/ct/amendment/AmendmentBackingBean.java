@@ -2266,13 +2266,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getManagedBean().setSelectedTabIndex(1);
 			}
 			// 24333
-			if (outputValue.equalsIgnoreCase("PB")){
-				if (ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq()
+			if (outputValue.equalsIgnoreCase("PB") && ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq()
 							&& (!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
 									|| !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange())){
-					getManagedBean().setSelectedTabIndex(2);
+				if (getManagedBean().isPbConfirmMeeting()) {
+					getManagedBean().setSelectedTabIndex(index + 2);
+				} else {
+					getManagedBean().setSelectedTabIndex(index + 1);
 				}
 			}
+			
 			// 24333
 			if(outputValue.equalsIgnoreCase("SE")){
 				if (isApproverSetting() && !getManagedBean().isPrepareLOA() 
@@ -2409,7 +2412,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				if (isApproverSetting() && !getManagedBean().isPrepareLOA() && outputValue.equalsIgnoreCase("SE")
 					&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
 					&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()) {
-						getManagedBean().setSelectedTabIndex(index + 2);	
+					    getManagedBean().setSelectedTabIndex(index + 2);	
 					}			
 			} 
 			/*Menu for other started*/
@@ -3220,7 +3223,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public void onSelectProductItem() {
 		if (getManagedBean().getSelectedItem() != null) {
-			getManagedBean().setItemServiceExist(false);
+			//getManagedBean().setItemServiceExist(false); #20997
 			if (ctBackingBean.getManagedBean().getShowItem() != null 
 					&& ctBackingBean.getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
 				ctBackingBean.getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
@@ -3303,7 +3306,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public void onSelectServiceItem() {
 		if (getManagedBean().getSelectedServiceItem() != null) {
-			getManagedBean().setItemProductExist(false);
+			//getManagedBean().setItemProductExist(false); #20997
 			if (ctBackingBean.getManagedBean().getShowServiceItem() != null
 					&& ctBackingBean.getManagedBean().getShowServiceItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
 				ctBackingBean.getManagedBean().setShowServiceItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
