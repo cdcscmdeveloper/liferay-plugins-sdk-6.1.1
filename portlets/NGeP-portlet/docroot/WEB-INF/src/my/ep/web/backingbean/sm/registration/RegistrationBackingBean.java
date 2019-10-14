@@ -1571,6 +1571,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					else{
 						//Appl Type is BASIC
 						for(SmSupplier supplier : resDTO.getSmSuppliers()){
+							errorMessageSSM(supplier);/*
 							//a)	If registration number exists and account is active 
 							if(supplier.getSmAppl().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE || supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_IN_PROGRESS){
 								throw new EpException(MessageConst.ERROR_721069,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
@@ -1596,7 +1597,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 									throw new EpException(MessageConst.ERROR_721069,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
 								}
 								//throw new EpException(MessageConst.ERROR_721069,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
-							}
+							}*/
 							/*if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
 								throw new EpException(MessageConst.ERROR_721041,new String[]{SmCommonUtil.getMessage("lbl.sm.contractor",null), getManagedBean().getSmSupp().getRegNo()});
 							}
@@ -2040,22 +2041,22 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 	
 	//harris
-	public void initSstInfo(SmSupplier sup,
-			RegistrationManagedBean managedBean, boolean loadBranchSst) {
-
-		managedBean.setSmSstSupplier(SmCommonUtil
-				.getSmSstSupplierBySupplierIdAndBranchCode(sup.getSupplierId(),
-						null, null, true));
-		if (managedBean.getSmSstSupplier() == null) {
-			managedBean.setSmSstSupplier(new SmSstSupplier());
-			managedBean.getSmSstSupplier().setIsCurrent(true);
-		}
-//		SmApplicationUtil.initSstSuppDocs(managedBean.getSmSstSupplier());
-		if (loadBranchSst) {
-			SmApplicationUtil.initBranchSstInformation(
-					managedBean.getSmSstSupplier(), managedBean.getSmAppl());
-		}
-	}
+//	public void initSstInfo(SmSupplier sup,
+//			RegistrationManagedBean managedBean, boolean loadBranchSst) {
+//
+//		managedBean.setSmSstSupplier(SmCommonUtil
+//				.getSmSstSupplierBySupplierIdAndBranchCode(sup.getSupplierId(),
+//						null, null, true));
+//		if (managedBean.getSmSstSupplier() == null) {
+//			managedBean.setSmSstSupplier(new SmSstSupplier());
+//			managedBean.getSmSstSupplier().setIsCurrent(true);
+//		}
+////		SmApplicationUtil.initSstSuppDocs(managedBean.getSmSstSupplier());
+//		if (loadBranchSst) {
+//			SmApplicationUtil.initBranchSstInformation(
+//					managedBean.getSmSstSupplier(), managedBean.getSmAppl());
+//		}
+//	}
 	
 	/**
 	 * populate the business type drop down based
