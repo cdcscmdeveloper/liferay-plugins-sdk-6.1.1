@@ -285,7 +285,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 	}
 	public String validateWithSSM() {
-		
 		String regNo = this.getManagedBean().getSmSupp().getRegNo();
 		String businessType = this.getManagedBean().getSmSupp().getBusinessType();
 		//only business type ROB & ROC will check with SSM
@@ -2042,22 +2041,22 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 	
 	//harris
-//	public void initSstInfo(SmSupplier sup,
-//			RegistrationManagedBean managedBean, boolean loadBranchSst) {
-//
-//		managedBean.setSmSstSupplier(SmCommonUtil
-//				.getSmSstSupplierBySupplierIdAndBranchCode(sup.getSupplierId(),
-//						null, null, true));
-//		if (managedBean.getSmSstSupplier() == null) {
-//			managedBean.setSmSstSupplier(new SmSstSupplier());
-//			managedBean.getSmSstSupplier().setIsCurrent(true);
-//		}
-////		SmApplicationUtil.initSstSuppDocs(managedBean.getSmSstSupplier());
-//		if (loadBranchSst) {
-//			SmApplicationUtil.initBranchSstInformation(
-//					managedBean.getSmSstSupplier(), managedBean.getSmAppl());
-//		}
-//	}
+	public void initSstInfo(SmSupplier sup,
+			RegistrationManagedBean managedBean, boolean loadBranchSst) {
+
+		managedBean.setSmSstSupplier(SmCommonUtil
+				.getSmSstSupplierBySupplierIdAndBranchCode(sup.getSupplierId(),
+						null, null, true));
+		if (managedBean.getSmSstSupplier() == null) {
+			managedBean.setSmSstSupplier(new SmSstSupplier());
+			managedBean.getSmSstSupplier().setIsCurrent(true);
+		}
+//		SmApplicationUtil.initSstSuppDocs(managedBean.getSmSstSupplier());
+		if (loadBranchSst) {
+			SmApplicationUtil.initBranchSstInformation(
+					managedBean.getSmSstSupplier(), managedBean.getSmAppl());
+		}
+	}
 	
 	/**
 	 * populate the business type drop down based
