@@ -196,6 +196,37 @@
 			</p:panel>
 		</ui:remove>
 
+		<p:panel header="#{lbl['lbl.pm.parent.category']}" toggleable="true"
+			id="catParent">
+			<table style="width: 100%;">
+				<tr>
+					<td style="width: 17%"><p:outputLabel
+							value="#{lbl['lbl.pm.main.category.code']}" /></td>
+					<td><p:inputText style="width:80%"
+							value="#{categoryBackingBean.managedBean.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}"
+							size="33" disabled="true" readonly="true" /></td>
+
+					<td style="width: 15%"><p:outputLabel
+							value="#{lbl['lbl.pm.main.category.desc']}" style="float: right" /></td>
+					<td><p:inputText style="width:98%"
+							value="#{categoryBackingBean.managedBean.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName}"
+							size="90" disabled="true" readonly="true" /></td>
+				</tr>
+				<tr>
+					<td style="width: 17%"><p:outputLabel
+							value="#{lbl['lbl.pm.sub.category.code']}" /></td>
+					<td><p:inputText style="width:80%"
+							value="#{categoryBackingBean.managedBean.pmCategoryL3.pmCategoryL2.categoryL2Code}"
+							size="33" disabled="true" readonly="true" /></td>
+
+					<td style="width: 19%;"><p:outputLabel
+							value="#{lbl['lbl.pm.sub.category.desc']}" /></td>
+					<td><p:inputText style="width:98%"
+							value="#{categoryBackingBean.managedBean.pmCategoryL3.pmCategoryL2.categoryName}"
+							size="90" disabled="true" readonly="true" /></td>
+				</tr>
+			</table>
+		</p:panel>
 
 		<p:panel header="#{lbl['lbl.pm.category.level']}" toggleable="true"
 			id="catLevel" widgetVar="catLevel">
@@ -373,41 +404,7 @@
 				</tr>
 			</table>
 		</p:panel>
-
-		<p:panel header="#{lbl['lbl.pm.parent.category']}" toggleable="true"
-			id="catParent">
-			<table style="width: 100%;">
-				<tr>
-					<td style="width: 17%"><p:outputLabel
-							value="#{lbl['lbl.pm.sub.category.code']}" /></td>
-					<td><p:inputText style="width:80%"
-							value="#{categoryBackingBean.managedBean.pmCategoryL3.pmCategoryL2.categoryL2Code}"
-							size="33" disabled="true" readonly="true" /></td>
-
-					<td style="width: 19%;"><p:outputLabel
-							value="#{lbl['lbl.pm.sub.category.desc']}" /></td>
-					<td><p:inputText style="width:98%"
-							value="#{categoryBackingBean.managedBean.pmCategoryL3.pmCategoryL2.categoryName}"
-							size="90" disabled="true" readonly="true" /></td>
-				</tr>
-				<tr>
-					<td style="width: 17%"><p:outputLabel
-							value="#{lbl['lbl.pm.main.category.code']}" /></td>
-					<td><p:inputText style="width:80%"
-							value="#{categoryBackingBean.managedBean.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}"
-							size="33" disabled="true" readonly="true" /></td>
-
-					<td style="width: 15%"><p:outputLabel
-							value="#{lbl['lbl.pm.main.category.desc']}" style="float: right" /></td>
-					<td><p:inputText style="width:98%"
-							value="#{categoryBackingBean.managedBean.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName}"
-							size="90" disabled="true" readonly="true" /></td>
-				</tr>
-
-			</table>
-		</p:panel>
-
-
+		
 		<p:outputPanel id="outpnlCatRes">
 			<p:panel header="#{lbl['lbl.pm.category.additional.requirement']}"
 				toggleable="true" id="catRestrictionId">
@@ -585,7 +582,7 @@
 						
 					</p:tab>
 					<p:tab title="#{lbl['lbl.pm.company.type.tab']}"
-						disabled="#{!categoryBackingBean.managedBean.pmCategoryL3.byCompType}">
+					disabled="#{!categoryBackingBean.managedBean.pmCategoryL3.byCompType}">
 						<p:dataTable id="dtlCategoryRestrId" rowIndexVar="rowIndex"
 							rowKey="#{pmCategoryRestr}"
 							value="#{categoryBackingBean.managedBean.categoryRestrList}"
@@ -686,8 +683,7 @@
 
 						</div>
 					</p:tab>
-					<p:tab title="#{lbl['lbl.pm.special.equipment']}"
-						disabled="#{!categoryBackingBean.managedBean.checkSpecialCategory}">
+					<p:tab title="#{lbl['lbl.pm.special.equipment']}">
 						<p:dataTable id="machineDetailsId" rowIndexVar="rowIndex"
 							rowKey="#{pmMachineCategory.createdDate}"
 							value="#{categoryBackingBean.managedBean.pmMachineCategoryList}"
@@ -709,7 +705,35 @@
 				</f:facet>
 								<h:outputText value="#{pmMachineCategory.pmMachine.machineDesc}" />
 							</p:column>
+							
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="*" styleClass="mandatory" />
+					#{lbl['lbl.pm.machine.sitevisitsection']}
+					<ac:iconTooltip value="#{lbl['lbl.pm.machine.sitevisitsection.tooltip']}"/>	
+				</f:facet>
+								<p:selectManyCheckbox
+									value="#{pmMachineCategory.pmMachine.pmMachineSectionListString}">
+									<f:selectItem
+										itemLabel="#{lbl['lbl.pm.siteVisitSection.checkBox.Dockyard']}"
+										itemValue="818" />
+								</p:selectManyCheckbox>
 
+								<p:selectManyCheckbox
+									value="#{pmMachineCategory.pmMachine.pmMachineSectionListString}">
+									<f:selectItem
+										itemLabel="#{lbl['lbl.pm.siteVisitSection.checkBox.WorkShop']}"
+										itemValue="819" />
+								</p:selectManyCheckbox>
+
+								<p:selectManyCheckbox
+									value="#{pmMachineCategory.pmMachine.pmMachineSectionListString}">
+									<f:selectItem
+										itemLabel="#{lbl['lbl.pm.siteVisitSection.checkBox.Printing']}"
+										itemValue="1001" />
+								</p:selectManyCheckbox>
+							</p:column>
+						
 							<p:column>
 								<f:facet name="header">
 									<h:outputText value="*" styleClass="mandatory" />
@@ -734,7 +758,6 @@
 
 						<div class="ppRightBtn">
 							<p:commandButton value="#{lbl['lbl.btn.add']}"
-								disabled="#{!categoryBackingBean.managedBean.checkSpecialCategory}"
 								action="#{categoryBackingBean.addPmMachine()}" process="@this"
 								partialSubmit="true" oncomplete="lovPopupPmMachine.show();"
 								update="lovPopupPmMachine" />
@@ -853,7 +876,7 @@
 			</p:panel>
 				</p:outputPanel>
 
-
+<ac:lovPopup />
 
 	</ui:define>
 </ui:composition>
