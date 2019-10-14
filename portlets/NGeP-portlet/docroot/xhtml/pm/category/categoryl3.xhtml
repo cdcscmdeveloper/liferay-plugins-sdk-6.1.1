@@ -404,8 +404,7 @@
 				</tr>
 			</table>
 		</p:panel>
-
-
+		
 		<p:outputPanel id="outpnlCatRes">
 			<p:panel header="#{lbl['lbl.pm.category.additional.requirement']}"
 				toggleable="true" id="catRestrictionId">
@@ -583,7 +582,7 @@
 						
 					</p:tab>
 					<p:tab title="#{lbl['lbl.pm.company.type.tab']}"
-						disabled="#{!categoryBackingBean.managedBean.pmCategoryL3.byCompType}">
+					disabled="#{!categoryBackingBean.managedBean.pmCategoryL3.byCompType}">
 						<p:dataTable id="dtlCategoryRestrId" rowIndexVar="rowIndex"
 							rowKey="#{pmCategoryRestr}"
 							value="#{categoryBackingBean.managedBean.categoryRestrList}"
@@ -684,8 +683,7 @@
 
 						</div>
 					</p:tab>
-					<p:tab title="#{lbl['lbl.pm.special.equipment']}"
-						disabled="#{!categoryBackingBean.managedBean.checkSpecialCategory}">
+					<p:tab title="#{lbl['lbl.pm.special.equipment']}">
 						<p:dataTable id="machineDetailsId" rowIndexVar="rowIndex"
 							rowKey="#{pmMachineCategory.createdDate}"
 							value="#{categoryBackingBean.managedBean.pmMachineCategoryList}"
@@ -714,15 +712,28 @@
 					#{lbl['lbl.pm.machine.sitevisitsection']}
 					<ac:iconTooltip value="#{lbl['lbl.pm.machine.sitevisitsection.tooltip']}"/>	
 				</f:facet>
-								<ac:lov id="searchMachine" lovId="PM_MACHINE" 
-							readonly="true"
-							headerText="#{lbl['lbl.pm.machine.sitevisitsection']}" 
-							value="#{categoryBackingBean.managedBean.pmMachine.machineDesc}"
-							selectionMode="multiple"
-							update="@form"
-							saveObject="categoryBackingBean.managedBean.pmMachine"/>						
-							</p:column>
+								<p:selectManyCheckbox
+									value="#{pmMachineCategory.pmMachine.pmMachineSectionListString}">
+									<f:selectItem
+										itemLabel="#{lbl['lbl.pm.siteVisitSection.checkBox.Dockyard']}"
+										itemValue="818" />
+								</p:selectManyCheckbox>
 
+								<p:selectManyCheckbox
+									value="#{pmMachineCategory.pmMachine.pmMachineSectionListString}">
+									<f:selectItem
+										itemLabel="#{lbl['lbl.pm.siteVisitSection.checkBox.WorkShop']}"
+										itemValue="819" />
+								</p:selectManyCheckbox>
+
+								<p:selectManyCheckbox
+									value="#{pmMachineCategory.pmMachine.pmMachineSectionListString}">
+									<f:selectItem
+										itemLabel="#{lbl['lbl.pm.siteVisitSection.checkBox.Printing']}"
+										itemValue="1001" />
+								</p:selectManyCheckbox>
+							</p:column>
+						
 							<p:column>
 								<f:facet name="header">
 									<h:outputText value="*" styleClass="mandatory" />
@@ -747,7 +758,6 @@
 
 						<div class="ppRightBtn">
 							<p:commandButton value="#{lbl['lbl.btn.add']}"
-								disabled="#{!categoryBackingBean.managedBean.checkSpecialCategory}"
 								action="#{categoryBackingBean.addPmMachine()}" process="@this"
 								partialSubmit="true" oncomplete="lovPopupPmMachine.show();"
 								update="lovPopupPmMachine" />
