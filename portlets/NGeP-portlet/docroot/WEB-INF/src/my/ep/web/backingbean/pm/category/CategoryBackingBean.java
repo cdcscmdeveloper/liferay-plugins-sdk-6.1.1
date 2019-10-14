@@ -452,7 +452,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				 * .parseInt(getManagedBean().getSearchOperatorValue()[i]),
 				 * getManagedBean().getSearchValue()[i])); }
 				 */
-
+/*
 				for (int i = 0; i < 2; i++) {
 					if (getManagedBean().getSearchValue()[i] != null
 							&& !getManagedBean().getSearchValue()[i].equals("")) {
@@ -484,7 +484,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("recordStatusFlg",
 								SearchOperator.OPERATOR_EQUALS.value(),
-								DbValueConst.RECORD_STATUS_ACTIVE));
+								DbValueConst.RECORD_STATUS_ACTIVE));*/
 
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean(
@@ -494,8 +494,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean(
 								"pmMachineSection.categoryType.parameterCode",
-								SearchOperator.OPERATOR_EQUALS.value(), "PC"));
-
+								SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getPmCategoryL3().getCategoryTypeCode().getParameterCode()));
 				reqDTO.setSearchMachineBean(searchBean);
 				CategoryCodeResDTO resDTO = categoryCodeSO
 						.searchAllPmMachine(reqDTO);
@@ -752,7 +751,6 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	 * Adds the pm machine.
 	 */
 	public void addPmMachine() {
-
 		List<SelectItem> searchField = new ArrayList<SelectItem>();
 
 		searchField.add(new SelectItem(1, ResourceBundleUtils.getMessage(
@@ -967,6 +965,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		log.info("***editSubDivision id***" + id);
 
 		loadPmCategoryL3Data(id);
+		//initialCategoryCode();
 
 		return "/xhtml/pm/category/categoryl3.xhtml?faces-redirect=true";
 	}
@@ -994,7 +993,9 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			reqDTO.setCategoryL3Id(id);
 			CategoryCodeResDTO resDTO = categoryCodeSO
 					.retrieveCategoryL3DtlById(reqDTO);
-
+			for(PmMachineCategory cat: resDTO.getCategoryL3().getPmMachineCategory()){
+				cat.getPmMachine().setPmMachineSectionListString(getMachineSection(cat.getPmMachine().getPmMachineSection()));
+			}
 			if (resDTO.isSuccessful()) {
 				log.info("***editSubDivision - Category Name***"
 						+ resDTO.getCategoryL3().getCategoryName());
@@ -1990,7 +1991,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 					.getPmMachineCategoryList())) {
 				if (!this.getManagedBean().isNewCategory()) {
 					for (PmMachineCategory deleMachine : this.getManagedBean()
-							.getPmMachineCategoryList()) {
+							.getPmMachineCategoryList()){
 						if (deleMachine.isBrandNew()) {
 							statusMessageId = MessageConst.TD_80714;
 							reqDTO.setTrackingStatus(true);
@@ -2183,7 +2184,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 		if (CollectionUtils.isNotEmpty(this.getManagedBean()
 				.getPmMachineCategoryList())) {
-
+			//System.out.println("pmMachineCategoryList="+getManagedBean().getPmMachineCategoryList());
 			this.getManagedBean().getPmMachineCategoryList()
 					.remove(pmMachineCategory);
 
@@ -4110,6 +4111,20 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	public void setSearchCategory(IPagingDataModel<Object[]> searchCategory) {
 		this.searchCategory = searchCategory;
 	}
+//	public void initialCategoryCode(){
+//		getManagedBean().setPmMachineSection(new PmMachineSection());
+//		getManagedBean().getPmMachineSection().setCategoryType(new PmParameter());
+//	}
 	
-	
+	private List<String> getMachineSection(List<PmMachineSection> list){
+		List<String> strList = new ArrayList<String>();
+		if(list.size()>0 && list!= null){
+			for(PmMachineSection sc: list){
+				if(sc.getSection()!=null){
+					strList.add(sc.getSection().getParameterId().toString());		
+				}
+			}
+		}
+		return strList;
+	}
 }
