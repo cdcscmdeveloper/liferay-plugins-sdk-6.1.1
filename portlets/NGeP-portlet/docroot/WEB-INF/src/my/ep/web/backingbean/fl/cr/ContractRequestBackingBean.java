@@ -3425,12 +3425,17 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		int deliveryTerm = 0;
 		String uomCode = "";
 		deliveryTerm = getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getDeliveryTerm();
-		
+
 		uomCode = getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getDeliveryTermUom().getParameterCode();
 		if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_DAYS)){
 			getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_DAYS));
+			if(getManagedBean().getFlRequest().getEndDate()== null){
+			getManagedBean().getFlRequest().setEndDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_DAYS));}
 		}else if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_MONTHS)){
 			getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_MONTHS));
+			if(getManagedBean().getFlRequest().getEndDate()== null){
+			getManagedBean().getFlRequest().setEndDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_MONTHS));}
+
 		}
 		
 		if(getManagedBean().getFlRequest().getPmUom()==null) {
