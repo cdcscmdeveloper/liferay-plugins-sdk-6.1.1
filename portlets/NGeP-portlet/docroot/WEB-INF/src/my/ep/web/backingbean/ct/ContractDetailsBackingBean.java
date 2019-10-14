@@ -11,6 +11,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -2512,14 +2513,26 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		if (getManagedBean().getAsAtDate() == null) {
 			getManagedBean().setAsAtDate(ctBB.getManagedBean().getContractVer().getCtContractValue().getExpDate());
 		}
-
-		for (CtContractAmount contractAmt : ctBB.getManagedBean().getContractVer().getCtContractAmounts()){
-			if (getManagedBean().getAsAtDate().getTime() >= contractAmt.getEffDate().getTime() 
-					&& getManagedBean().getAsAtDate().getTime() <= contractAmt.getExpDate().getTime()){
-				ctBB.getManagedBean().setCtContractAmount(contractAmt);
-				break;
-			}
+		//Bug #26542 -start
+		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+		ContractReqDTO contractReqDTO = new ContractReqDTO();
+		contractReqDTO.setContractVerId(ctBB.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId());
+		contractReqDTO.setAsAtDate(new Date());
+		CtContractAmount contractAmt = contractSO.retrieveContractAmountCurrent(contractReqDTO).getCtContractAmount();		
+		
+		if(contractAmt !=null){
+			ctBB.getManagedBean().setCtContractAmount(contractAmt);
+		}else{
+			for (CtContractAmount contractAmt1 : ctBB.getManagedBean().getContractVer().getCtContractAmounts()){
+				if (getManagedBean().getAsAtDate().getTime() >= contractAmt1.getEffDate().getTime() 
+						&& getManagedBean().getAsAtDate().getTime() <= contractAmt1.getExpDate().getTime()){
+					ctBB.getManagedBean().setCtContractAmount(contractAmt1);		
+					break;
+				}
+			}			
 		}
+		//Bug #26542 -end
+
 		//Retrieve agreement contract version for physical no & signed date
 		retrieveContractVerOfAgreement();
 
