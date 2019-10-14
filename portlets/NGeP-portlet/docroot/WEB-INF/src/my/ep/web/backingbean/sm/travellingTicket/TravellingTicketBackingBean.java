@@ -1,13 +1,9 @@
 package my.ep.web.backingbean.sm.travellingTicket;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
@@ -15,42 +11,21 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.service.pm.admin.adminmatrix.IAdminMatrixSO;
-import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.biz.service.pm.common.city.ICitySO;
-import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
-import my.ep.biz.service.pm.common.state.IStateSO;
-import my.ep.biz.service.pm.common.states.IListOfStatesSO;
 import my.ep.biz.service.sm.travel.ITravellingTicketSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.fl.FulfilmentStatusConst;
-import my.ep.constants.CommonConstants;
-import my.ep.dto.pm.common.city.CityReqDTO;
-import my.ep.dto.pm.common.city.CityResDTO;
-import my.ep.dto.pm.common.country.CountryResDTO;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
-import my.ep.dto.pm.common.state.StateResDTO;
-import my.ep.dto.sm.blacklistDirector.BlacklistDirectorReqDTO;
-import my.ep.dto.sm.blacklistDirector.BlacklistDirectorResDTO;
 import my.ep.dto.sm.mofAccount.MachineReqDTO;
 import my.ep.dto.sm.mofAccount.MachineResDTO;
 import my.ep.exception.EpException;
-import my.ep.helper.EntityHelper;
-import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.authorization.PmUserGroup;
-import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
-import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmMachine;
 import my.ep.persistence.entity.pm.common.PmMachineSection;
 import my.ep.persistence.entity.pm.common.PmParameter;
-import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.sm.SmAppl;
-import my.ep.persistence.entity.sm.SmPersonnel;
-import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
@@ -58,12 +33,11 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
-import my.ep.web.bean.pm.CitySearchBean;
 import my.ep.web.constant.sm.MachineSearchBean;
 import my.ep.web.managedbean.sm.travellingTicket.TravellingTicketManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -140,7 +114,7 @@ public class TravellingTicketBackingBean extends BaseBackingBean<TravellingTicke
 	}
 	
 	public void searchMachine() {
-		searchMachine.reloadData();
+			searchMachine.reloadData();
 	}
 	
 	public String getCategoryTypeDescById(PmParameter parameter){
@@ -155,6 +129,10 @@ public class TravellingTicketBackingBean extends BaseBackingBean<TravellingTicke
 	}
 	
 	public List<SelectItem> getListOfCategories() {
+		
+		if(CollectionUtils.isNotEmpty(this.getManagedBean().getListOfCategories())){
+			return this.getManagedBean().getListOfCategories();
+		}
 
 		IParameterSO listOfCategoriesSO = null;
 
@@ -277,6 +255,9 @@ public class TravellingTicketBackingBean extends BaseBackingBean<TravellingTicke
 			
 			PmMachine pmMachine = this.getManagedBean().getPmMachine();
 			machineNameValidationMsg(pmMachine);
+			if(this.getManagedBean().getSelectedMachine().isBrandNew()){
+				this.generateMachineCode();
+			}
 			pmMachine.setMachineCode(pmMachine.getMachineCode().toUpperCase());
 			pmMachine.setMachineDesc(pmMachine.getMachineDesc().trim());
 			machineReqDTO.setPmMachine(pmMachine);
@@ -334,12 +315,12 @@ public class TravellingTicketBackingBean extends BaseBackingBean<TravellingTicke
 		if (StringUtils.isBlank(pmMachine.getMachineDesc())) {
 			throw new EpException(MessageConst.ERR_900035);
 		}
-		if (StringUtils.isBlank(pmMachine.getMachineCode())) {
+		/*if (StringUtils.isBlank(pmMachine.getMachineCode())) {
 			throw new EpException(MessageConst.ERR_900039);
 		}
 		if (null == pmMachine.getRecordStatusFlg() || 0 == pmMachine.getRecordStatusFlg()) {
 			throw new EpException(MessageConst.ERR_900009);
-		}
+		}*/
 	}
 	
 	private void machineCategoryValidationMsg(PmMachineSection pmMachineSection) {
@@ -436,6 +417,48 @@ public class TravellingTicketBackingBean extends BaseBackingBean<TravellingTicke
 		}
 		
 	}
+	 public static SelectItem[] getStatusList() {
+			return PmCommonUtil.getCommonStatusOptions();
+		}
 	
+	 private void generateMachineCode() {
+		 ITravellingTicketSO machineSO = (ITravellingTicketSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ITravellingTicketSO.class);
+			IParameterSO parameterSO  = (IParameterSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 
+			MachineReqDTO reqDTO = new MachineReqDTO();
+			//reqDTO.setCode(MachineCategory.valueOf(this.getManagedBean().getTestCheck().toString()));
+			
+			ParameterReqDTO paramReq = new ParameterReqDTO();
+			String machineCode = null;
+			paramReq.setParameterId(getManagedBean().getPmMachineSection().getCategoryType().getParameterId());
+			ParameterResDTO paramRes = parameterSO.retrieveParamById(paramReq);	
+			
+			if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_TRANSPORTATION)){
+			machineCode = ProfileManagementConst.CATEGORY_TYPE_TRANSPORTATION;
+			}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_WORKSHOP)){
+				machineCode = ProfileManagementConst.CATEGORY_TYPE_WORKSHOP;
+			}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_INSURANCE)){
+				machineCode = ProfileManagementConst.CATEGORY_TYPE_INSURANCE;
+			}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_DOCKYARD)){
+				machineCode = ProfileManagementConst.CATEGORY_TYPE_DOCKYARD;
+			}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_MANUFACTURING)){
+				machineCode = ProfileManagementConst.CATEGORY_TYPE_MANUFACTURING;
+			}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_NORMAL)){
+				machineCode = ProfileManagementConst.CATEGORY_TYPE_NORMAL;
+			}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_PRINTING)){
+				machineCode = ProfileManagementConst.CATEGORY_TYPE_PRINTING;
+			}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_TRAVEL)){
+				machineCode = ProfileManagementConst.CATEGORY_TYPE_TRAVEL;
+			}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_BUMIPUTRA)){
+				machineCode = ProfileManagementConst.CATEGORY_TYPE_BUMIPUTRA;
+			}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_READING_MATERIAL)){
+				machineCode = ProfileManagementConst.CATEGORY_TYPE_READING_MATERIAL;
+			}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_NOT_APPLICABLE)){
+				machineCode = ProfileManagementConst.CATEGORY_TYPE_NOT_APPLICABLE;
+			}
+			reqDTO.setMachineCode(machineCode);
+			//reqDTO.setMachineCode(paramRes.getPmParameter().getParameterCode());
+			MachineResDTO resDTO = machineSO.generateMachineCode(reqDTO);
+			this.getManagedBean().getPmMachine().setMachineCode(resDTO.getMachineCode());
+}
 }

@@ -2,31 +2,18 @@ package my.ep.web.managedbean.sm.travellingTicket;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
-import org.apache.log4j.Logger;
-
-import my.ep.biz.bean.search.ISearchBean;
-import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
-import my.ep.biz.service.sm.travel.ITravellingTicketSO;
-import my.ep.constant.ModuleCodeConst;
-import my.ep.dto.sm.mofAccount.MachineReqDTO;
-import my.ep.dto.sm.mofAccount.MachineResDTO;
 import my.ep.persistence.entity.pm.common.PmMachine;
 import my.ep.persistence.entity.pm.common.PmMachineSection;
 import my.ep.persistence.entity.pm.common.PmParameter;
-import my.ep.web.bean.paginator.IPagingDataModel;
-import my.ep.web.bean.paginator.PagingDataModel;
-import my.ep.web.bean.pm.CitySearchBean;
 import my.ep.web.constant.sm.MachineSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.util.FacesScopes;
-import my.ep.web.util.lookupservice.BusinessDelegate;
+
+import org.apache.log4j.Logger;
 
 @ManagedBean(name = "travellingTicketMB")
 @SessionScoped
@@ -49,6 +36,11 @@ public class TravellingTicketManagedBean extends BaseManagedBean{
 	private PmMachine pmMachine;
 	
 	private PmMachineSection pmMachineSection;
+	private PmMachine selectedMachine;
+	
+	private String Code;
+	
+	
 	
 	private int recordStatus;
 	
@@ -115,6 +107,20 @@ public class TravellingTicketManagedBean extends BaseManagedBean{
 	public void setDisabledVal(boolean disabledVal) {
 		this.disabledVal = disabledVal;
 	}
+	public PmMachine getSelectedMachine() {
+		if(selectedMachine==null)
+			selectedMachine = new PmMachine();
+		return selectedMachine;
+	}
+	public void setSelectedMachine(PmMachine selectedMachine) {
+		this.selectedMachine = selectedMachine;
+	}
 
+	public String getCode() {
+		return Code;
+	}
 
+	public void setCode(String code) {
+		Code = code;
+	}
 }

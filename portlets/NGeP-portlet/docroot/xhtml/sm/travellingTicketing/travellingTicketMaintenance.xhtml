@@ -5,19 +5,26 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	
 	<p:panel header="#{lbl['lbl.sm.tt.task.search']}" toggleable="true" id="searchPnl">
 		<table class="ppTwoTable">
+			
 			<tr>
-				<th width="25%"><p:outputLabel value="#{lbl['lbl.sm.travelling.ticketing.system.code']}" /></th>
-				<td width="25%"><p:inputText id="code" value="#{travellingTicketBB.managedBean.pmMachine.machineCode}" maxlength="20" /></td>
-				<th>&#160;</th>
-				<td>&#160;</td>
-			</tr>
+					<th><p:outputLabel value="#{lbl['lbl.sm.travelling.ticketing.system.code']}" /></th>
+					<td><p:inputText id="code" styleClass="ppDisplayTextM"
+							style="text-transform:uppercase" required="true" maxlength="10"
+							disabled="true"
+							value="#{travellingTicketBB.managedBean.pmMachine.machineCode}"
+							validatorMessage="#{lbl['lbl.sm.travelling.ticketing.system.code']} - #{lbl['lbl.pm.uppercase']}"
+							label="#{lbl['lbl.sm.travelling.ticketing.system.code']}">
+
+						</p:inputText> <p:message id="specialEqiMsg" for="code" display="icon" />
+					</td>
+				</tr>
 			
 			<tr>
 				<th width="25%"><p:outputLabel
-						value="#{lbl['lbl.sm.travelling.ticketing.system.name']}" /></th>
+						value="#{lbl['lbl.sm.travelling.ticketing.system.name']}" /><p:outputLabel
+							value="* " styleClass="mandatory" /></th>
 				<td width="25%"><p:inputText id="name" value="#{travellingTicketBB.managedBean.pmMachine.machineDesc}" maxlength="80" /></td>
 				<th>&#160;</th>
 				<td>&#160;</td>
@@ -25,7 +32,8 @@
 			
 			<tr>
 				<th width="25%">
-				<p:outputLabel value="#{lbl['lbl.sm.travelling.ticketing.system.catogory']}" /></th>
+				<p:outputLabel value="#{lbl['lbl.sm.travelling.ticketing.system.catogory']}" />
+				<p:outputLabel value="* " styleClass="mandatory" /></th>
 				<td width="35%"><p:selectOneMenu
 						label="#{lbl['lbl.sm.travelling.ticketing.system.catogory']}" id="categoryType"
 						value="#{travellingTicketBB.managedBean.pmMachineSection.categoryType.parameterId}"
@@ -39,12 +47,11 @@
 				<td>&#160;</td>
 			</tr>
 			
-			<tr>
+		<!-- 	<tr>
 				<th width="25%">
 				<p:outputLabel value="#{lbl['lbl.sm.travelling.ticketing.system.status']}" /></th>
 				<td width="25%">
 					<p:selectOneMenu style="width:203px"
-					 disabled="#{!travellingTicketBB.managedBean.disabledVal}"
 					 value="#{travellingTicketBB.managedBean.pmMachine.recordStatusFlg}">  
             			<f:selectItem itemLabel="Select One" itemValue="0" />  
             			<f:selectItem selected="true"  itemLabel="Active" itemValue="1" /> 
@@ -53,7 +60,17 @@
 				</td>
 				<th>&#160;</th>
 				<td>&#160;</td>
-			</tr>
+			</tr> -->
+			
+			<tr>
+					<th><p:outputLabel value="#{lbl['lbl.pm.status']}" /> <p:outputLabel value="* " styleClass="mandatory" /></th>
+					<td><p:selectOneMenu styleClass="ppDropDownWidthM"
+							label="#{lbl['lbl.pm.status']}" disabled="true"
+							value="#{travellingTicketBB.managedBean.pmMachine.recordStatusFlg}">
+							<f:selectItems
+								value="#{travellingTicketBB.getStatusList()}" />
+						</p:selectOneMenu></td>
+				</tr>
 
 		</table>	
 	</p:panel>
