@@ -273,7 +273,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		
 	}
 	
-	//16052019 - SSM INTEGRATION CR
+	//16052019 - SSM INTEGRATION CR 
 	public void setHeaderName(){
 		if(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN.equalsIgnoreCase(this.getManagedBean().getSmSupp().getBusinessType())){
 			this.getManagedBean().setHeaderName(SmCommonUtil.getMessage("lbl.sm.directorinfo", null));
@@ -285,6 +285,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 	}
 	public String validateWithSSM() {
+		
 		String regNo = this.getManagedBean().getSmSupp().getRegNo();
 		String businessType = this.getManagedBean().getSmSupp().getBusinessType();
 		//only business type ROB & ROC will check with SSM
