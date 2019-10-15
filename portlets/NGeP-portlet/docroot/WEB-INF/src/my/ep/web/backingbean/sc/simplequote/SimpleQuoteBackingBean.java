@@ -4126,7 +4126,7 @@ public class SimpleQuoteBackingBean extends
 				cloneSpecMaster = resDTO.getSpecMaster();
 				cloneSpecMaster.setSpecCreatedBySQ(true);
 				
-				//Bug #26087 - to differentiate items based on extension code
+				//Bug #21423 - to differentiate items based on extension code
 				Boolean isProduct = null;
 				Long itemSpecQuestionId = null;
 				List<TplSpecQuestion> prodItemQuestions = new ArrayList<TplSpecQuestion>();
@@ -4194,7 +4194,8 @@ public class SimpleQuoteBackingBean extends
 						questions.addAll(prodQuestions);
 					}
 					
-					if(cloneSpecMaster.getTplSpecQuestions().size() > 0) {
+					if((cloneSpecMaster.getTplSpecQuestions().size() > 0) && ParameterConst.SQ_ITEM_LIST_PRODUCT
+							.equals(productOrService)) {
 						cloneQuestions = TemplateSpecHelper.getInstance()
 								.cloneTplSpecQuestions(prodSpecMaster,
 										cloneSpecMaster.getTplSpecQuestions());
@@ -4247,7 +4248,8 @@ public class SimpleQuoteBackingBean extends
 						questions.addAll(serviceQuestions);
 					}
 					
-					if(cloneSpecMaster.getTplSpecQuestions().size() > 0) {
+					if((cloneSpecMaster.getTplSpecQuestions().size() > 0) && ParameterConst.SQ_ITEM_LIST_SERVICE
+							.equals(productOrService)){
 						cloneQuestions = TemplateSpecHelper.getInstance()
 								.cloneTplSpecQuestions(serviceSpecMaster,
 										cloneSpecMaster.getTplSpecQuestions());
