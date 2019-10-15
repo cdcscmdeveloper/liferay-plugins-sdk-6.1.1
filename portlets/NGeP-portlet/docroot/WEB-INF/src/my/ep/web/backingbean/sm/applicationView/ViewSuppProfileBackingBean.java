@@ -8,6 +8,7 @@ import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.util.SLAUtils;
 import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
@@ -29,6 +30,8 @@ public class ViewSuppProfileBackingBean extends
 	 * Pre - render for View Supplier Profile
 	 */
 	public void preRenderViewSupplierProfile() {
+		//LOG : 26549 : SLA Monitoring
+		long startTime = System.currentTimeMillis();
 		renewSesionObject();
 		initLogin();
 		getManagedBean().setViewSupplierProfile(true);
@@ -57,6 +60,8 @@ public class ViewSuppProfileBackingBean extends
 						MessageConst.INFO_721212, null, null);
 			}
 			setTabParam();
+			SLAUtils.getInstance().logSLAInfo("SM","SR",
+					"ViewSuppProfileBackingBean.preRenderViewSupplierProfile", startTime);
 			getManagedBean().setRenderedBackButton(false);
 		} else {
 			initLoginUserZone();
@@ -72,7 +77,13 @@ public class ViewSuppProfileBackingBean extends
 				viewApplication(SmApplicationUtil
 						.getLatestApplBySupplierId(Long
 								.parseLong(supplierIdParam)));
+				//LOG : 26549 : SLA Monitoring
+				SLAUtils.getInstance().logSLAInfo("SM","",
+						"ViewSuppProfileBackingBean.preRenderViewSupplierProfile", startTime);
 			} else {
+				//LOG : 26549 : SLA Monitoring
+				SLAUtils.getInstance().logSLAInfo("SM","VIEW PROFILE",
+						"ViewSuppProfileBackingBean.preRenderViewSupplierProfile", startTime);
 				SmCommonUtil
 						.redirectToPage(
 								"/xhtml/sm/revisionSmApplView/viewSupplierProfile/searchSupplierProfilePage.xhtml",

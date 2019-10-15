@@ -38,6 +38,7 @@ import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -68,6 +69,8 @@ public class CmTrackingDiaryBackingBean extends
 	}
 	
 	public void search() {
+		//LOG : 26549 : SLA Monitoring
+		long startTime = System.currentTimeMillis();
 		System.out.println("pageChangeListener");
 		if ((getManagedBean().getSearchItemCodeValue() != null && getManagedBean().getSearchItemCodeValue().isEmpty()) 
 				&& (getManagedBean().getSearchItemNameValue() != null && getManagedBean().getSearchItemNameValue().isEmpty()) 
@@ -76,6 +79,8 @@ public class CmTrackingDiaryBackingBean extends
 			throw new EpException(MessageConst.ERROR_716006);
 		}
 		getManagedBean().getCmDocumentDataModel().reloadData();
+		//LOG : 26549 : SLA Monitoring
+		SLAUtils.getInstance().logSLAInfo("CM","SEARCH CATALOGUE","CmTrackingDiaryBackingBean.search", startTime);
 	}
 
 	private class SearchTrackingDiaryPagingDataModel extends PagingDataModel<PmTrackingDiary> {
