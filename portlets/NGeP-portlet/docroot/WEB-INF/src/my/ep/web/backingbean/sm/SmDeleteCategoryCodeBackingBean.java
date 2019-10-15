@@ -13,6 +13,7 @@ import javax.faces.event.ComponentSystemEvent;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -77,11 +78,8 @@ public class SmDeleteCategoryCodeBackingBean extends
 			checkIsAllowedToProceed(smApplSupplier);
 			SmAppl smAppl = smApplSupplier.getSmAppl();
 			if (smAppl != null) {
-				log.info("******** The application id is *******"
-						+ smAppl.getApplId());
-				getManagedBean().setSmAppl(smAppl);
-				retriveLatestApplAfterUpdate();
-
+				log.info("******** The application id is *******" + smAppl.getApplId());
+				getManagedBean().setSmAppl(retriveLatestApplAfterUpdate(smAppl));
 			} else {
 				smAppl = new SmAppl();
 				smAppl.setSmSupplierCategories(new ArrayList<SmSupplierCategory>());
@@ -267,12 +265,16 @@ public class SmDeleteCategoryCodeBackingBean extends
 					selCat.setCancelledDate(new Date());
 				}
 				//this.getManagedBean().getSmAppl().setQuestionnaire(false);
-				updateSmAppl();
+				this.getManagedBean().setSmAppl(updateSmAppl(this.getManagedBean().getSmAppl()));
 				
 				SmVirtualCertHelper.getInstance().
 				autoGenerateVirtualCert(getManagedBean().getSmAppl().getApplId(), true);
 				
 				assignActiveCategoryList();
+
+				//25963 - update deleted codes in rejected appl, if any
+				updateDeletedCodesInRejAppl();
+
 				FacesContext
 						.getCurrentInstance()
 						.addMessage(
@@ -295,47 +297,68 @@ public class SmDeleteCategoryCodeBackingBean extends
 	/**
 	 * Update SmAppl object in the managed bean.
 	 */
-	private void updateSmAppl() {
+	private SmAppl updateSmAppl(SmAppl smAppl) {
 		IMofRegistrationSO mofRegistrationSO = null;
 		try {
-			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
-					.getInstance().getServiceObject("sm",
-							IMofRegistrationSO.class);
-			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
-			reqDto.setSmAppl(this.getManagedBean().getSmAppl());
-			mofRegistrationSO.updateApplication(reqDto);
-			retriveLatestApplAfterUpdate();
+			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance().getServiceObject("sm",
+					IMofRegistrationSO.class);
 
+			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
+			reqDto.setSmAppl(smAppl);
+			mofRegistrationSO.updateApplication(reqDto);
+			return retriveLatestApplAfterUpdate(smAppl);
 		} catch (Exception e) {
 			e.printStackTrace();
-			retriveLatestApplAfterUpdate();
 			mofRegistrationSO = null;
+			return retriveLatestApplAfterUpdate(smAppl);
 		}
+	}
 
+	/**
+	 * Update deleted codes in rejected appl, if any
+	 */
+	private void updateDeletedCodesInRejAppl() {
+		SmAppl latestRejectedAppl = SmApplicationUtil.getLatesRejectedApplicationBySuppIdAndAppType(this
+				.getManagedBean().getSmSupplier().getSupplierId(), ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES);
+
+		if (latestRejectedAppl != null) {
+			for (SmSupplierCategory cat : latestRejectedAppl.getSmSupplierCategories()) {
+				for (SmSupplierCategory delCat : getManagedBean().getSelectedCategories())
+					if (cat.getPmCategoryL1().getCategoryL1Code().equals(delCat.getPmCategoryL1().getCategoryL1Code())
+							&& cat.getPmCategoryL2().getCategoryL2Code()
+									.equals(delCat.getPmCategoryL2().getCategoryL2Code())
+							&& cat.getPmCategoryL3().getCategoryL3Code()
+									.equals(delCat.getPmCategoryL3().getCategoryL3Code())) {
+						cat.setRecordStatusFlg(SupplierManagementConst.DELETED_RECORD_STATUS);
+						cat.setCancelledDate(new Date());
+					}
+			}
+			updateSmAppl(latestRejectedAppl);
+		}
 	}
 
 	/**
 	 * Retrive latest SmAppl after updates.
 	 */
-	private void retriveLatestApplAfterUpdate() {
+	private SmAppl retriveLatestApplAfterUpdate(SmAppl smAppl) {
 
 		IMofRegistrationSO mofRegistrationSO = null;
-		mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance()
-				.getServiceObject("sm", IMofRegistrationSO.class);
+		mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance().getServiceObject("sm",
+				IMofRegistrationSO.class);
+		SmAppl appl = smAppl;
 		try {
 
 			MofRegistrationReqDTO finReqDto = new MofRegistrationReqDTO();
-			finReqDto.setApplId(getManagedBean().getSmAppl().getApplId());
+			finReqDto.setApplId(appl.getApplId());
 
-			MofRegistrationResDTO resDTO = mofRegistrationSO
-					.retrieveCurrentDraftApplication(finReqDto);
-			getManagedBean().setSmAppl(resDTO.getSmAppl());
+			MofRegistrationResDTO resDTO = mofRegistrationSO.retrieveCurrentDraftApplication(finReqDto);
+			appl = resDTO.getSmAppl();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			mofRegistrationSO = null;
 		}
-
+		return appl;
 	}
 
 	/**
