@@ -1,6 +1,7 @@
 package my.ep.web.bean.pp;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -27,6 +28,10 @@ public class ProcurementPlanSearchBean implements Serializable{
 	private PmParameter planType;
 	private PmParameter votType;
 	private String planTitle;
+	private Date invitationDateFrom;	//[#25550]
+	private Date invitationDateTo;		//[#25550]
+	private PmParameter categoryType;	//[#25550]
+	private String titleOrDesc;			//[#25550]
 	
 	public ProcurementPlanSearchBean() {
 	}
@@ -172,6 +177,40 @@ public class ProcurementPlanSearchBean implements Serializable{
 	 */
 	public void setKptj(PmOrgProfile kptj) {
 		this.kptj = kptj;
+	}
+
+	public Date getInvitationDateFrom() {
+		return invitationDateFrom;
+	}
+
+	public void setInvitationDateFrom(Date invitationDateFrom) {
+		this.invitationDateFrom = invitationDateFrom;
+	}
+
+	public Date getInvitationDateTo() {
+		return invitationDateTo;
+	}
+
+	public void setInvitationDateTo(Date invitationDateTo) {
+		this.invitationDateTo = invitationDateTo;
+	}
+
+	public PmParameter getCategoryType() {
+		if (categoryType == null)
+			categoryType = new PmParameter();
+		return categoryType;
+	}
+
+	public void setCategoryType(PmParameter categoryType) {
+		this.categoryType = categoryType;
+	}
+
+	public String getTitleOrDesc() {
+		return titleOrDesc;
+	}
+
+	public void setTitleOrDesc(String titleOrDesc) {
+		this.titleOrDesc = titleOrDesc;
 	}
 
 }
