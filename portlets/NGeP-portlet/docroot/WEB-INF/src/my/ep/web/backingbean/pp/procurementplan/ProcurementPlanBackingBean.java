@@ -29,7 +29,9 @@ import javax.servlet.http.HttpServletRequest;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pp.procurementplan.IProcurementPlanSO;
@@ -71,6 +73,7 @@ import my.ep.persistence.entity.pp.procurementplan.PpProcurementItem;
 import my.ep.persistence.entity.pp.procurementplan.PpRejectReason;
 import my.ep.persistence.entity.pp.procurementplan.PpRemark;
 import my.ep.persistence.entity.pp.procurementplan.PpWorkflowStatus;
+import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
@@ -122,10 +125,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	//Navigation Details
 	public static final String NAV_TO_MAINTAIN = "procurementPlanDet";
 	public static final String NAV_TO_SEARCH = "procurementPlanMain";
+	private static final String NAV_TO_ANNUAL_PPLAN = "/xhtml/pp/procurementplan/search/annualplan/apProcurementMain.xhtml";
 	
 	//List for Paging
 	private IPagingDataModel<PpPlan> ppPlanDataModel = new PpPlanDataModel();
 	private IPagingDataModel<PmOrgProfile> ppOrgProfileDataModel = new PpOrgProfileDataModel();
+	private IPagingDataModel<PpProcurementItem> ppAnnualPlanDataModel = new PpAPlanDataModel();	//[#25550]
 	
 	//Default value
 	public static final boolean SEARCH_DEFAULT = false;
@@ -4646,4 +4651,244 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			}
 		}
 	}
+	
+	//[#25550]
+	/**
+	 * Pre-loading from Annual Ministry Procurement Plan
+	 */
+	public void preRenderAnnualPlanView() {
+		
+		super.renewSesionObject();
+		searchProcurementAnnualPlan();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, NAV_TO_ANNUAL_PPLAN + "?faces-redirect=true");
+	}
+	
+	/**
+	 * Main Filtration For Procurement Annual Plan
+	 */
+	public void searchProcurementAnnualPlan() {
+		
+		//log.debug("*** searchProcurementPlan **** ");
+		log.info("[#25550] searchProcurementAnnualPlan");			
+		
+		if(this.getManagedBean().getSelectedMinistry() == null) {
+			this.getManagedBean().setSelectedMinistry(new PmOrgProfile());
+		}
+		if(this.getManagedBean().getSelectedKumpulanPTJ() == null) {
+			this.getManagedBean().setSelectedKumpulanPTJ(new PmOrgProfile());
+		}
+		if(this.getManagedBean().getSelectedPTJ() == null) {
+			this.getManagedBean().setSelectedPTJ(new PmOrgProfile());
+		}
+		
+		log.info("[#25550] invoke ppAnnualPlanDataModel...");
+		ppAnnualPlanDataModel.reloadData();
+	}
+	
+	/**
+	 * reset search bean fields
+	 */
+	public void resetProcurementAnnualPlanSearchBean(){
+		log.info("resetProcurementAnnualPlanSearchBean");		
+		this.getManagedBean().setPlanSearchBean(new ProcurementPlanSearchBean());
+		getManagedBean().setSelectedMinistry(new PmOrgProfile());
+		getManagedBean().setSelectedKumpulanPTJ(new PmOrgProfile());
+		getManagedBean().setSelectedPTJ(new PmOrgProfile());
+		//setupOrgProfile();
+		//generateOrgFilter();
+		ppAnnualPlanDataModel = new PpAPlanDataModel();
+	}
+	
+	//[#25550]
+	/**
+	 * @return the ppAnnualPlanDataModel
+	 */
+	public IPagingDataModel<PpProcurementItem> getPpAnnualPlanDataModel() {
+		return ppAnnualPlanDataModel;
+	}
+
+	//[#25550]
+	/**
+	 * @param ppAnnualPlanDataModel the ppAnnualPlanDataModel to set
+	 */
+	public void setPpAnnualPlanDataModel(IPagingDataModel<PpProcurementItem> ppAnnualPlanDataModel) {
+		this.ppAnnualPlanDataModel = ppAnnualPlanDataModel;
+	}
+	
+	/**
+	 * notice board quotation/tender list paging class
+	 */
+	private class PpAPlanDataModel extends PagingDataModel<PpProcurementItem> {
+
+		private static final long serialVersionUID = 1L;
+
+		public PpAPlanDataModel() {
+			super("dtapsearchresults");
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep
+		 * .biz.bean.search.ISearchBean)
+		 */
+		@Override
+		public ISearchResultBean<PpProcurementItem> pageChangeListener(ISearchBean<PpProcurementItem> searchBean) {
+			if (log.isDebugEnabled()) {
+				log.debug("pageChangeListener");
+			}
+			
+			try {
+				log.info("[#25550] pageChangeListener...");						
+				log.info("[#25550] call getProcItemSearchBeanData");
+				//construct search bean criteria
+				ISearchBean<PpProcurementItem> searchBeanData = getProcItemSearchBeanData(searchBean);
+				
+				ProcurementPlanReqDTO reqDTO = new ProcurementPlanReqDTO();
+				//set search criteria
+				reqDTO.setProcItemSearchBean(searchBeanData);					
+				//set status [30005] - Approved						
+				reqDTO.setStatusId(ProcurementPlanConst.PPP_APPROVED);
+				//set document type - PP	
+				reqDTO.setDocType(ParameterConst.DOCTYPE_PLAN_PROCUREMENT);						
+				
+				IProcurementPlanSO reqSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROCUREMENT_PLAN, IProcurementPlanSO.class);
+				
+				//retrieve records for view
+				log.info("[#25550] call retrieveAnnualPlanBySearchBean");
+				ProcurementPlanResDTO resDTO = reqSO.retrieveAnnualPlanBySearchBean(reqDTO);
+				
+				if (resDTO.isSuccessful()) {						
+					return resDTO.getPlanItemResultBean();
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+	}
+	
+	/**
+	 * Get search bean, filtered based on default value or by search criteria.
+	 * @return ISearchBean<PpProcurementItem>
+	 */
+	private ISearchBean<PpProcurementItem> getProcItemSearchBeanData(ISearchBean<PpProcurementItem> searchBean){
+		log.info("[#25550] getProcItemSearchBeanData - Start");
+		
+		//get search bean properties
+		ProcurementPlanSearchBean planSearchBean = this.getManagedBean().getPlanSearchBean();
+			
+		//set plan year
+		Calendar calNow = Calendar.getInstance();		
+		Long currentYr = new Long(calNow.get(Calendar.YEAR));
+		
+		log.info("[#25550] Current Year is : " + currentYr);
+		SearchFilterBean bean = new SearchFilterBean();		
+		bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+		bean.setSearchField("ppPlan.planYear");
+		bean.setSearchValue(currentYr);
+		searchBean.getDataFilterBeans().add(bean);
+			
+		//set plan type		
+		log.info("[#25550] Plan type is: " + ProcurementPlanConst.PLAN_TYPE_PROCUREMENT);
+		bean = new SearchFilterBean();
+		bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+		bean.setSearchField("ppPlan.planType.parameterCode");
+		bean.setSearchValue(ProcurementPlanConst.PLAN_TYPE_PROCUREMENT);	// P - Procurement
+		searchBean.getDataFilterBeans().add(bean);
+		
+		//set procurement item type		
+		log.info("[#25550] Procurement item type is: " + ProcurementPlanConst.PROCUREMENT_ITEM_TYPE_TD);
+		bean = new SearchFilterBean();
+		bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+		bean.setSearchField("procurementType.parameterCode");
+		bean.setSearchValue(ProcurementPlanConst.PROCUREMENT_ITEM_TYPE_TD);	// TD - Tender
+		searchBean.getDataFilterBeans().add(bean);
+			
+		//set procurement item title or description
+		if(StringUtils.isNotBlank(planSearchBean.getTitleOrDesc())){
+			log.info("[#25550] Procurement title/description like: " + planSearchBean.getTitleOrDesc());
+			SearchFilterBean sfbean1 = new SearchFilterBean();
+			sfbean1.setCaseInsensitive(true);
+			sfbean1.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+			sfbean1.setSearchField("procurementTitle");
+			sfbean1.setSearchValue(planSearchBean.getTitleOrDesc());
+			sfbean1.setAndOr(SearchCondition.CONDITION_OR.value());
+			
+			SearchFilterBean sfbean2 = new SearchFilterBean();
+			sfbean2.setCaseInsensitive(true);
+			sfbean2.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+			sfbean2.setSearchField("procurementDesc");
+			sfbean2.setSearchValue(planSearchBean.getTitleOrDesc());
+			sfbean2.setAndOr(SearchCondition.CONDITION_OR.value());
+			
+			SearchMultiFilterBean beans = new SearchMultiFilterBean(sfbean1,sfbean2);			
+			searchBean.getDataFilterBeans().add(beans);				
+		}
+		
+		//set procurement item category type
+		if(planSearchBean.getCategoryType()!=null && planSearchBean.getCategoryType().getParameterId()!=null){
+			log.info("[#25550] Procurement item category type is: " + planSearchBean.getCategoryType().getParameterId());
+			bean = new SearchFilterBean();
+			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+			bean.setSearchField("procurementCat.parameterId");
+			bean.setSearchValue(planSearchBean.getCategoryType().getParameterId());
+			searchBean.getDataFilterBeans().add(bean);
+		}
+				
+		//set ptj
+		if(planSearchBean.getPtj()!=null && planSearchBean.getPtj().getOrgProfileId()!=null){
+			log.info("[#25550] Ptj is: " + planSearchBean.getPtj().getOrgProfileId());
+			bean = new SearchFilterBean();
+			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+			bean.setSearchField("ppPlan.orgProfile.orgProfileId");
+			bean.setSearchValue(planSearchBean.getPtj().getOrgProfileId());
+			searchBean.getDataFilterBeans().add(bean);
+						
+		//set kumpulan ptj
+		} else if(planSearchBean.getKptj()!=null  && planSearchBean.getKptj().getOrgProfileId()!=null){
+			log.info("[#25550] KPtj is: " + planSearchBean.getKptj().getOrgProfileId());
+			bean = new SearchFilterBean();
+			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+			bean.setSearchField("ppPlan.orgProfile." + OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()));
+			bean.setSearchValue(planSearchBean.getKptj().getOrgProfileId());
+			searchBean.getDataFilterBeans().add(bean);
+						
+		//set ministry
+		}else if(planSearchBean.getMinistry()!=null  && planSearchBean.getMinistry().getOrgProfileId()!=null){
+			log.info("[#25550] Ministry is: "  +planSearchBean.getMinistry().getOrgProfileId());
+			bean = new SearchFilterBean();
+			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+			bean.setSearchField("ppPlan.orgProfile." + OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()));
+			bean.setSearchValue(planSearchBean.getMinistry().getOrgProfileId());
+			searchBean.getDataFilterBeans().add(bean);			
+		}
+
+		//set expected invitation date
+		if(planSearchBean.getInvitationDateFrom() != null && planSearchBean.getInvitationDateTo() != null) {
+			log.info("[#25550] Expected invitation date from is: " + planSearchBean.getInvitationDateFrom());
+			log.info("[#25550] Expected invitation date to is: " + planSearchBean.getInvitationDateTo());
+			bean = new SearchFilterBean();
+			bean.setSearchField("invitationDate");
+			bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
+			SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
+					planSearchBean.getInvitationDateFrom(), planSearchBean.getInvitationDateTo());
+			bean.setSearchValue(betweenVal);
+			searchBean.getDataFilterBeans().add(bean);
+		}
+		
+		//set record status flag		
+		bean = new SearchFilterBean();
+		bean.setSearchField("recordStatusFlg");
+		bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+		bean.setSearchValue(DbValueConst.RECORD_STATUS_ACTIVE);
+		searchBean.getDataFilterBeans().add(bean);		
+	
+		log.info("getProcItemSearchBeanData - End");
+		return searchBean;
+	}	
 }
