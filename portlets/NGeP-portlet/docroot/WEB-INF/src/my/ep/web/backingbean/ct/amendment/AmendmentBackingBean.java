@@ -3156,8 +3156,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			c.add(Calendar.DATE, 1);
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendStartDate(c.getTime());
 
-			c.setTime(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+			//#26076 - start
+			//c.setTime(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
 			c.add(Calendar.MONTH, 1);
+			c.add(Calendar.DATE, -1);
+			//#26076 - end
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendEndDate(c.getTime());
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendStartDate());
 		}
@@ -3275,8 +3278,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		c.add(Calendar.DATE, 1);
 		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendStartDate(c.getTime());
 
-		c.setTime(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+		//#26076 - start
+		//c.setTime(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
 		c.add(Calendar.MONTH, ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod());
+		c.add(Calendar.DATE, -1);
+		//#26076 - end
 		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendEndDate(c.getTime());
 		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendStartDate());
 		changeAmendmentEffDate();
