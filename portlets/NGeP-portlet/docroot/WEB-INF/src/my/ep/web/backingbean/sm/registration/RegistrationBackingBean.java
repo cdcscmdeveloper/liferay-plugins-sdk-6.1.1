@@ -477,6 +477,31 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					}
 				}
 				setPersonnelToItem();
+				//Check Match identification with nationality
+				//check owner
+				for(SmSupplierOwner owner:this.getManagedBean().getSmSuppOwners()){
+					if(owner.getNationality() == null){
+						throw new EpException(MessageConst.ERROR_SSM_70063);
+					}else if(owner.getIdentificationType().getParameterCode().equalsIgnoreCase(ParameterConst.IDENTIFICATION_TYPES_IC)
+							&& !owner.getNationality().getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)){
+						throw new EpException(MessageConst.ERROR_SSM_70063);
+					}else if(owner.getIdentificationType().getParameterCode().equalsIgnoreCase(ParameterConst.IDENTIFICATION_TYPES_PASSPORT)
+							&& (owner.getNationality().getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE) || owner.getNationality().getCountryCode().equalsIgnoreCase(ParameterConst.COUNTRY_UNKNOWN_CODE))){
+						throw new EpException(MessageConst.ERROR_SSM_70063);
+					}
+				}
+				//Check Director
+				for(SmPersonnel director:this.getManagedBean().getSmPersonnelDirector()){
+					if(director.getPmCountry() == null){
+						throw new EpException(MessageConst.ERROR_SSM_70063);
+					}else if(director.getIdentificationType().getParameterCode().equalsIgnoreCase(ParameterConst.IDENTIFICATION_TYPES_IC)
+							&& !director.getPmCountry().getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)){
+						throw new EpException(MessageConst.ERROR_SSM_70063);
+					}else if(director.getIdentificationType().getParameterCode().equalsIgnoreCase(ParameterConst.IDENTIFICATION_TYPES_PASSPORT)
+							&& (director.getPmCountry().getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)|| director.getPmCountry().getCountryCode().equalsIgnoreCase(ParameterConst.COUNTRY_UNKNOWN_CODE))){
+						throw new EpException(MessageConst.ERROR_SSM_70063);
+					}
+				}
 			}
 		}else{
 			SmSupplierOwner suppOwner = this.getManagedBean().getSmSuppOwner();
@@ -3684,7 +3709,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			//- Role in company to display “Equity Owner” and the checkbox auto-ticked and non-editable.
 			this.getManagedBean().setShowDirector(false);
 			this.getManagedBean().setShowOwner(true);
-			this.getManagedBean().setDisableRole(true);
+			//this.getManagedBean().setDisableRole(true);
 			this.getManagedBean().setOwnerIsEquity(true);
 		} else {
 			// show “Director” and the checkbox auto-ticked and non-editable.
@@ -3734,6 +3759,16 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				}
 			}
 		}
+	}
+	//16052019 - SSM INTEGRATION CR => START
+	public void directorNationalityOnChange(SmPersonnel director){
+		//16052019 - SSM INTEGRATION CR => START
+		if(director != null){
+			PmCountry country = SmCommonUtil.retrievePmCountryById(director.getPmCountry().getCountryId());
+			director.setPmCountry(country);
+		}
+		
+		
 	}
 }
 
