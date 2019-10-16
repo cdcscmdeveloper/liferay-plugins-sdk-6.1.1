@@ -828,7 +828,15 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						personnel.getSmPersonnelAddresses().add(personnel.getSmPersonnelAdd());
 						smAppl.getSmPersonnels().add(personnel);
 					}else if(personnell.getSmPersonnelAddresses()!=null){//supplier admin, need to set residensial address from SSM
-						smPersonnel.getSmPersonnelAddresses().add(personnel.getSmPersonnelAdd());
+						if(personnell.getSmPersonnelAdd() != null){
+							personnell.getSmPersonnelAdd().setSmPersonnel(smPersonnel);
+							if(personnell.getSmPersonnelAdd().getSmAddress()!= null){
+								if(personnell.getSmPersonnelAdd().getSmAddress().getPmState()!= null){
+									personnell.getSmPersonnelAdd().getSmAddress().setPmState(personnell.getSmPersonnelAdd().getSmAddress().getPmState());
+								}
+							}
+						}
+						smPersonnel.getSmPersonnelAddresses().add(personnell.getSmPersonnelAdd());
 					}
 						
 				}
