@@ -1845,7 +1845,7 @@ public class SmCommonUtil {
 		SmTrackingDairyVO trckVO = new SmTrackingDairyVO();
 		PmUser user = new FacesScopes().getUserSessionBean();
 		trckVO.setActionDesc(actionDesc);
-		trckVO.setActionedBy(user != null ? user.getUserId() : null);
+		trckVO.setActionedBy(user != null ? user.getUserId() : 1L);
 		trckVO.setActionedByRole(userRole);
 		trckVO.setDocId(applId);
 		trckVO.setDocNo(applNo);

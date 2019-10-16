@@ -352,17 +352,16 @@ public class SmDeleteCategoryCodeBackingBean extends
 		String actionDesc = null;
 		SmTrackingDairyVO smTrackingDairyVO = null;
 		List<SmTrackingDairyVO> listSmTrackingDiary = new ArrayList<SmTrackingDairyVO>();
+		
+		int i = getManagedBean().getSelectedCategories().size();
 
 		try {
 			if (getManagedBean().getSmAppl().getSmSupplierCategories() != null) {
+				sb.append("Bidang berikut telah dihapuskan : ");
+				
 				for (SmSupplierCategory selCat : getManagedBean()
 						.getSelectedCategories()) {
-					if (selCat.getRecordStatusFlg().equals(
-							SupplierManagementConst.DELETED_RECORD_STATUS)) {
-
-						sb.append("Bidang berikut telah dihapuskan : ");
-						int i = getManagedBean().getSmAppl()
-								.getSmSupplierCategories().size();
+					
 						i = i - 1;
 						sb.append(selCat.getPmCategoryL1().getCategoryL1Code()
 								+ selCat.getPmCategoryL2().getCategoryL2Code()
@@ -383,7 +382,7 @@ public class SmDeleteCategoryCodeBackingBean extends
 					smTrackingDairyVO.setStatus(getManagedBean().getSmAppl().getPmStatus());
 					listSmTrackingDiary.add(smTrackingDairyVO);
 				}
-			}
+			
 			processTrackingDiaryList(listSmTrackingDiary);
 
 		} catch (Exception e) {
