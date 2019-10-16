@@ -280,7 +280,18 @@
 							navigator="true" required="#{!empty param['disableValidation']}" 
 							label="#{lbl['lbl.sm.userprofile.dob']}" value="#{registrationBackingBean.managedBean.smPersonnel.birthDate}"
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
-							readonlyInput="true" size="30" showOn="button" yearRange="-99"  maxdate="#{CommonConstants.CURRENT_DATE}">
+							readonlyInput="true" size="30" showOn="button" yearRange="-99"  maxdate="#{CommonConstants.CURRENT_DATE}"
+							rendered="#{!registrationBackingBean.disableFieldSSm(registrationBackingBean.managedBean.smPersonnel.ssmData,registrationBackingBean.managedBean.smAppl.applValidWithSsm,registrationBackingBean.managedBean.smPersonnel.birthDateSsmNull)}"
+							>
+						</p:calendar>
+						<p:calendar id="dobCalId2"
+							navigator="true" required="#{!empty param['disableValidation']}" 
+							label="#{lbl['lbl.sm.userprofile.dob']}" value="#{registrationBackingBean.managedBean.smPersonnel.birthDate}"
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
+							readonlyInput="true" size="30"  yearRange="-99"  maxdate="#{CommonConstants.CURRENT_DATE}"
+							disabled="true"
+							rendered="#{registrationBackingBean.disableFieldSSm(registrationBackingBean.managedBean.smPersonnel.ssmData,registrationBackingBean.managedBean.smAppl.applValidWithSsm,registrationBackingBean.managedBean.smPersonnel.birthDateSsmNull)}"
+							>
 						</p:calendar>
 					</td>
 				</tr>
