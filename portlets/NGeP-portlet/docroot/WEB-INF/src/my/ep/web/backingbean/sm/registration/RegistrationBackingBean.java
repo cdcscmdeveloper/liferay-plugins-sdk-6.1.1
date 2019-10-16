@@ -3709,7 +3709,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			//- Role in company to display “Equity Owner” and the checkbox auto-ticked and non-editable.
 			this.getManagedBean().setShowDirector(false);
 			this.getManagedBean().setShowOwner(true);
-			this.getManagedBean().setDisableRole(true);
+			//this.getManagedBean().setDisableRole(true);
 			this.getManagedBean().setOwnerIsEquity(true);
 		} else {
 			// show “Director” and the checkbox auto-ticked and non-editable.
