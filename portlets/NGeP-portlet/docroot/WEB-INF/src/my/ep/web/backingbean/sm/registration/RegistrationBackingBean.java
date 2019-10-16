@@ -805,7 +805,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 		smPersonnel.getSmPersonnelAddresses().add(personnelAddRes);
 		//16052019 - SSM INTEGRATION CR
-		personnelAddPerm.setAddressType(SupplierManagementConst.RES_ADD);
+		personnelAddPerm.setAddressType(SupplierManagementConst.PERM_ADD);
 		personnelAddPerm.setSmAddress(smPermAdd);
 		personnelAddPerm.setSmPersonnel(smPersonnel);
 		smPermAdd.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
@@ -820,12 +820,23 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				for(SmPersonnel personnel : this.getManagedBean().getSmPersonnelAll()){
 					//to check,personel is equity owner or not
 					SmPersonnel personnell = (SmPersonnel) EntityHelper.compareSingleEntityByProp(smPersonnel.getIdentificationNo(), personnel,"identificationNo");
+					//not suppplier admin
 					if(personnell == null){
 						personnel.setSmAppl(smAppl);
 						personnel.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
 						personnel.getSmPersonnelAdd().setSmPersonnel(personnel);
 						personnel.getSmPersonnelAddresses().add(personnel.getSmPersonnelAdd());
 						smAppl.getSmPersonnels().add(personnel);
+					}else if(personnell.getSmPersonnelAddresses()!=null){//supplier admin, need to set residensial address from SSM
+						if(personnell.getSmPersonnelAdd() != null){
+							personnell.getSmPersonnelAdd().setSmPersonnel(smPersonnel);
+							if(personnell.getSmPersonnelAdd().getSmAddress()!= null){
+								if(personnell.getSmPersonnelAdd().getSmAddress().getPmState()!= null){
+									personnell.getSmPersonnelAdd().getSmAddress().setPmState(personnell.getSmPersonnelAdd().getSmAddress().getPmState());
+								}
+							}
+						}
+						smPersonnel.getSmPersonnelAddresses().add(personnell.getSmPersonnelAdd());
 					}
 						
 				}
@@ -3614,12 +3625,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			personnel.setIdentificationNo(null);
 			personnel.setIdentificationTypeId(null);
 			//#16052019 - SSM INTEGRATION CR
-			SmAddress address = new SmAddress();
-			address.setPmCity(new PmCity());
-			address.setPmDistrict(new PmDistrict());
-			address.setPmCountry(defaultCountry);
-			address.setPmState(new PmState());
-			this.getManagedBean().setSmPermenantAdd(address);
+			//SmAddress address = new SmAddress();
+			//address.setPmCity(new PmCity());
+			//address.setPmDistrict(new PmDistrict());
+			//address.setPmCountry(defaultCountry);
+			//address.setPmState(new PmState());
+			//this.getManagedBean().setSmPermenantAdd(address);
 		}
 		getManagedBean().setSmPersonnel(personnel);
 		personnelNationalityOnChange();
@@ -3664,11 +3675,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 			personnel.setPmCountry(defaultCountry);
 			getManagedBean().setSmPersonnel(personnel);
-			if(personnel.getSmPersonnelAdd() != null)
-				getManagedBean().setSmPermenantAdd(personnel.getSmPersonnelAdd().getSmAddress());
-				this.populateStateByAddType("permenant", false);
-				this.populateDistrictByAddType("permenant", false);
-				this.populateCityByAddType("permenant", false);
+			//if(personnel.getSmPersonnelAdd() != null)
+				//getManagedBean().setSmPermenantAdd(personnel.getSmPersonnelAdd().getSmAddress());
+				//this.populateStateByAddType("permenant", false);
+				//this.populateDistrictByAddType("permenant", false);
+				//this.populateCityByAddType("permenant", false);
 			if(this.getManagedBean().getSmPersonnel().getTitle() == null) {
 				this.getManagedBean().getSmPersonnel().setTitle(new PmSalutation());
 			}
