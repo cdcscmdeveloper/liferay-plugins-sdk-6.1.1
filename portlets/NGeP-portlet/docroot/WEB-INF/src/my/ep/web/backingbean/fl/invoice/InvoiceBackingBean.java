@@ -705,7 +705,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 								}
 									//for contract, factoring acc not editable
 								if(finOrgResDTO.getPmFinancialAcc()!=null) {
-									getManagedBean().getInvoice().setAccountNo(finOrgResDTO.getPmFinancialAcc().getAccountNo());
+									getManagedBean().getInvoice().setAccountNo(contractSupplierResDTO.getFactoring().getBankAccountNo()); // account number from ct_factoring
 									getManagedBean().getInvoice().setPaymentBank(finOrgResDTO.getPmFinancialAcc().getPmPaymentBankOrg());
 									getManagedBean().getInvoice().setPaymentBankName(getManagedBean().getInvoice().getPaymentBank().getFinOrgName());
 								}
