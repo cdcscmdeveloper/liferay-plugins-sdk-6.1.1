@@ -347,7 +347,7 @@
 						
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
-					<td class="tdContent"><p:inputText size="40" maxlength="100" disabled="#{registrationBackingBean.managedBean.smPersonnel.ssmData}"
+					<td class="tdContent"><p:inputText size="40" maxlength="100" 
 							required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.permenantaddress']}"
 							value="#{registrationBackingBean.managedBean.smPermenantAdd.address1}"
 							id="txtPermAdd1" /> &#160; <p:graphicImage id="addti"
@@ -363,7 +363,7 @@
 						<p:outputLabel value="*" styleClass="mandatory" />	
 					</td>
 					<td id="tdContent"><p:selectOneMenu required="#{!empty param['disableValidation']}"
-							label="#{lbl['lbl.sm.country']}" disabled="#{registrationBackingBean.managedBean.smPersonnel.ssmData}"
+							label="#{lbl['lbl.sm.country']}" 
 							value="#{registrationBackingBean.managedBean.smPermenantAdd.pmCountry.countryId}"
 							id="cmbPermCounrty" style="width:80%">
 							<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
@@ -381,14 +381,14 @@
 				<tr>
 					<td class="tdTitle"></td>
 					<td class="tdContent"><p:inputText size="40" value="#{registrationBackingBean.managedBean.smPermenantAdd.address2}"
-							disabled="#{registrationBackingBean.managedBean.smPersonnel.ssmData}" id="txtPermAdd2" maxlength="100" /></td>
+							 id="txtPermAdd2" maxlength="100" /></td>
 							
 					<td class="tdTitle">
 						<p:outputLabel value="#{lbl['lbl.sm.state']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<td class="tdContent"><p:selectOneMenu id="cmbPermState" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.state']}"
-							value="#{registrationBackingBean.managedBean.smPermenantAdd.pmState.stateId}" disabled="#{registrationBackingBean.managedBean.smPersonnel.ssmData}" style="width:80%">
+							value="#{registrationBackingBean.managedBean.smPermenantAdd.pmState.stateId}" style="width:80%">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="state"
 								value="#{registrationBackingBean.managedBean.permenantStateLs}"
@@ -403,7 +403,7 @@
 				<tr>
 					<td class="tdTitle"></td>
 					<td class="tdContent"><p:inputText size="40" value="#{registrationBackingBean.managedBean.smPermenantAdd.address3}"
-							disabled="#{registrationBackingBean.managedBean.smPersonnel.ssmData}" id="txtPermAdd3" maxlength="100" /></td>
+							id="txtPermAdd3" maxlength="100" /></td>
 							
 					<td class="tdTitle">
 						<p:outputLabel value="#{lbl['lbl.sm.district']}" />
@@ -446,7 +446,7 @@
 							<p:outputPanel
 								rendered="#{registrationBackingBean.managedBean.smPermenantAdd.pmCountry.countryId==registrationBackingBean.managedBean.myCountryId}">
 								<p:inputText maxlength="5" required="#{!empty param['disableValidation']}"
-									label="#{lbl['lbl.sm.postcode']}" id="txtPermPostcodeMy" disabled="#{registrationBackingBean.managedBean.smPersonnel.ssmData}"
+									label="#{lbl['lbl.sm.postcode']}" id="txtPermPostcodeMy" 
 									value="#{registrationBackingBean.managedBean.smPermenantAdd.postcode}"
 									validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
 									size="40">
