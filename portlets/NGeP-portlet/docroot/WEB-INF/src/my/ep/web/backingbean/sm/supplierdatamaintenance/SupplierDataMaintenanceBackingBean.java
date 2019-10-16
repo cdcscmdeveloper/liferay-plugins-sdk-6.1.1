@@ -664,9 +664,23 @@ public class SupplierDataMaintenanceBackingBean extends
 			String actionDesc) {
 		SmTrackingDairyVO trckVO = new SmTrackingDairyVO();
 		PmUser user = new FacesScopes().getUserSessionBean();
+		List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(user
+				.getUserId());
+		String ePRole = StringUtils.EMPTY;
+		if (!EntityHelper.isCollectionEmpty(userRoles)) { 
+			for (PmUserRole userRole : userRoles) {
+				if (userRole.getPmRole().getRoleCode()
+						.equals(RoleCode.UPS_APPROVER.value())
+						|| userRole.getPmRole().getRoleCode()
+								.equals(RoleCode.UPS_PO.value())) {
+					ePRole = userRole.getPmRole().getRoleCode();
+					break;
+				}
+			}
+		}
 		trckVO.setActionDesc(actionDesc);
-		trckVO.setActionedBy(user != null ? user.getUserId() : null);
-		trckVO.setActionedByRole(getManagedBean().getRoleCode());
+		trckVO.setActionedBy(user != null ? user.getUserId() : 1L);
+		trckVO.setActionedByRole(ePRole);
 		trckVO.setDocId(appl.getApplId());
 		trckVO.setDocNo(appl.getApplNo());
 		trckVO.setDocType("SR");
