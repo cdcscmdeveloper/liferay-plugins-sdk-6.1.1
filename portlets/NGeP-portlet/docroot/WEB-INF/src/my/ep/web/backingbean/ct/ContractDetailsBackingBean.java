@@ -2513,25 +2513,22 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		if (getManagedBean().getAsAtDate() == null) {
 			getManagedBean().setAsAtDate(ctBB.getManagedBean().getContractVer().getCtContractValue().getExpDate());
 		}
-		//Bug #26542 -start
-		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-		ContractReqDTO contractReqDTO = new ContractReqDTO();
-		contractReqDTO.setContractVerId(ctBB.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId());
-		contractReqDTO.setAsAtDate(new Date());
-		CtContractAmount contractAmt = contractSO.retrieveContractAmountCurrent(contractReqDTO).getCtContractAmount();		
 		
-		if(contractAmt !=null){
-			ctBB.getManagedBean().setCtContractAmount(contractAmt);
-		}else{
-			for (CtContractAmount contractAmt1 : ctBB.getManagedBean().getContractVer().getCtContractAmounts()){
-				if (getManagedBean().getAsAtDate().getTime() >= contractAmt1.getEffDate().getTime() 
-						&& getManagedBean().getAsAtDate().getTime() <= contractAmt1.getExpDate().getTime()){
-					ctBB.getManagedBean().setCtContractAmount(contractAmt1);		
+			for (CtContractAmount contractAmt : ctBB.getManagedBean().getContractVer().getCtContractAmounts()){
+				if (getManagedBean().getAsAtDate().getTime() >= contractAmt.getEffDate().getTime() 
+						&& getManagedBean().getAsAtDate().getTime() <= contractAmt.getExpDate().getTime()){
+					ctBB.getManagedBean().setCtContractAmount(contractAmt);
+				}
+				//Bug #26542 -start
+				if (new Date().getTime() >= contractAmt.getEffDate().getTime() 
+						&& new Date().getTime() <= contractAmt.getExpDate().getTime()){
+					ctBB.getManagedBean().setCtContractAmount(contractAmt);		
 					break;
 				}
-			}			
-		}
-		//Bug #26542 -end
+				//Bug #26542 -end
+				
+			}
+		
 
 		//Retrieve agreement contract version for physical no & signed date
 		retrieveContractVerOfAgreement();
