@@ -219,6 +219,16 @@
 						yearRange="-99:+0" maxdate="#{backingBean.managedBean.currDate}"
 						value="#{backingBean.managedBean.selectedShareHolder.birthDate}" 
 						disabled="#{backingBean.disableFieldSSm(backingBean.managedBean.selectedShareHolder.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.selectedShareHolder.birthDateSsmNull)}"
+						rendered="#{!backingBean.disableFieldSSm(backingBean.managedBean.selectedShareHolder.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.selectedShareHolder.birthDateSsmNull)}"
+						/>
+						<p:calendar navigator="true"
+						display="inline" required="true" readonlyInput="true"
+						label="#{lbl['lbl.sm.person.dob']}" id="equiPerDob"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+						yearRange="-99:+0" maxdate="#{backingBean.managedBean.currDate}"
+						value="#{backingBean.managedBean.selectedShareHolder.birthDate}" 
+						disabled="#{backingBean.disableFieldSSm(backingBean.managedBean.selectedShareHolder.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.selectedShareHolder.birthDateSsmNull)}"
+						rendered="#{backingBean.disableFieldSSm(backingBean.managedBean.selectedShareHolder.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.selectedShareHolder.birthDateSsmNull)}"						
 						/>
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges 
