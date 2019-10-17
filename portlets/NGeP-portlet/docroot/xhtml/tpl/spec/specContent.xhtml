@@ -98,8 +98,7 @@
 			
 			<c:if test="#{isContentTypeQuestion or isContentTypeReview or (isContentTypeUpdateSpec and !isUpdateSpecByAnswers)}">
 				<c:if test="#{isContentTypeQuestion and editable and isScoringReq}">
-					<h:outputText  styleClass="instruction" value="#{lbl['lbl.tpl.spec.content.instruction']}" escape="false" /><br/>
-					<h:outputText  styleClass="instruction" value="#{lbl['lbl.tpl.spec.content.EksImport']}" escape="false" />
+					<h:outputText  styleClass="instruction" value="#{lbl['lbl.tpl.spec.content.instruction']}" escape="false" />
 				</c:if>
 				
 			
