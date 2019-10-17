@@ -51,7 +51,7 @@
 						value="#{lbl['lbl.sc.document.no']}" /></td>
 				<td class="header-info-text">
 				<p:commandLink rendered="#{isDocTypeQuotation or isDocTypeDirectNego}" process="@this" partialSubmit="true"
-						action="#{ViewQtDetailsGeneralInfoBB.navigatetoViewQtDetailsGeneralInfo(view.viewId,lOADetailBackingBean.managedBean.scLoa.scQt,true)}">
+						action="#{qTDetailBB.editQuationTenderDetails(lOADetailBackingBean.managedBean.scLoa.scQt, false, true, view.viewId)}">
 				       #{lOADetailBackingBean.managedBean.scLoa.scQt.qtNo}
 					</p:commandLink>
 				 <h:outputText
