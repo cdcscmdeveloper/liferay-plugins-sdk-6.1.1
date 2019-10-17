@@ -201,14 +201,14 @@ label.ui-button>span.ui-button-text {
 			</p:panel>
 
 			<p:panel header="Process specification data (Import/ Export)"
-				toggleable="true">
+				toggleable="false">
 				<table>
 					<tr align="left">
-						<td><p:commandButton value="#{lbl['lbl.btn.import']}" id="getFile" ajax="false"
+						<td><p:commandButton value="#{lbl['lbl.btn.export']}" id="getFile" ajax="false"
 								action="#{specificationBackingBean.handleFileUploadImport}" /></td>
 						<td><p:fileUpload id="uploader" value="filerUp"
 								fileUploadListener="#{specificationBackingBean.handleFileUploadExport}"
-								ajax="false" label="#{lbl['lbl.btn.export']}" showButtons="false" auto="true"
+								ajax="false" label="#{lbl['lbl.btn.import']}" showButtons="false" auto="true"
 								oncomplete="test()" /></td>
 					</tr>
 				</table>
