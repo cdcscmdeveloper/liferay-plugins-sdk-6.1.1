@@ -15,7 +15,10 @@
 					</p:commandButton>
 				</td>
 				<td style="text-align: right;">
-					<p:outputPanel rendered="#{not empty viewSmApplBackingBean.managedBean.resubmitUrl and viewSmApplBackingBean.managedBean.supplierUser}">
+					<p:outputPanel rendered="#{not empty viewSmApplBackingBean.managedBean.resubmitUrl 
+					and viewSmApplBackingBean.managedBean.supplierUser 
+					and viewSmApplBackingBean.managedBean.smAppl.pmStatus.statusId ne SupplierMgmtConst.pmStatusRejectedBySystemPayment 
+					and viewSmApplBackingBean.managedBean.smAppl.pmStatus.statusId ne SupplierMgmtConst.pmStatusRejectedBySystemProcessingFee}">
 						<p:commandLink onclick="blockWidget.show()"
 							action="#{viewSmApplBackingBean.redirectToResubmit()}" 
 							process="@this" partialSubmit="true" update=":form" 
