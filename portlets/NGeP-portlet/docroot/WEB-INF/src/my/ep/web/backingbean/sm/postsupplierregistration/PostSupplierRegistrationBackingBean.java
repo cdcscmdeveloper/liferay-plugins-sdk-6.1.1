@@ -1062,22 +1062,21 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		boolean isG2G = supplier.getBusinessType().
 				equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER) ? true : false;
 		boolean isWithFederal = currentPersonnel.getSmAppl().getSmCompanyBasic().isWithFederal();
-		boolean isMigratedFirstLogin = currentPersonnel.getSmAppl().getSmCompanyBasic().getRevNo() == 2;
 		log.info("isWithFederal --> " + isWithFederal );
-		log.info("isMigratedFirstLogin --> " + isMigratedFirstLogin );
 		log.info("softCertStatus --> " + softCertStatus );
 
-		if(!isPublishedCatalogue(supplier.getSupplierId()) && !isG2G){
+		if(!isWithFederal && !isG2G){ //assumption non-federal has no published catalog
 			log.info("this is basic not g2g");
-
-			if(getCmSupplierItems(supplier.getSupplierId()).size() > 0){
-				path = CATALOGUE_MAINT;
-			}else{
-				path = CATALOGUE_UPLOAD_PATH;
+			if(!isPublishedCatalogue(supplier.getSupplierId())){
+				if(getCmSupplierItems(supplier.getSupplierId()).size() > 0){
+					path = CATALOGUE_MAINT;
+				}else{
+					path = CATALOGUE_UPLOAD_PATH;
+				}
+				getManagedBean().setFlowStatus(1);
 			}
-			getManagedBean().setFlowStatus(1);
 			if(validSupplierTemp()){
-				if(softCertStatus == SupplierManagementConst.SOFT_CERT_PENDING_REQ && !isWithFederal && isMigratedFirstLogin){
+				if(softCertStatus == SupplierManagementConst.SOFT_CERT_PENDING_REQ && !isWithFederal){
 					log.info(">>>CHange ROle for SUpplier Temp<<");
 					changeRoleForSupplierTemp(currentPersonnel.getPersonnelId(),supplier);
 				}				
