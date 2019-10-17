@@ -2036,6 +2036,13 @@ public class SPDetailBackingBean extends
 						event.getFile(), attachment);
 
 				scQtProposalChecklist.setScQtProposalChecklistAttachment(attachment);
+				/* As per CR Request #26339*/
+				if(scQtProposalChecklist.getScQtCheckList().getTitle().contains("Annual Balance Sheet Kunci Kira-Kira Tahunan"))
+				{
+
+					scQtProposalChecklist.setCompliance(new Integer(2));
+					log.debug("SPDetailsBackingBean : Value 2 is set for Compliance");
+				}
 				scQtProposalChecklist.setSubmitted(true);
 
 				reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
