@@ -1572,11 +1572,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 									labelText = SmCommonUtil.getMessage("lbl.sm.consultant", null);
 								}
 								if(supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE){
-									throw new EpException(MessageConst.ERROR_721069,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
+									throw new EpException(MessageConst.ERROR_721073,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
 								}
 								//b)	If registration number exist and account is inactive 
 								else if(supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED){
-									throw new EpException(MessageConst.ERROR_721072,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
+									throw new EpException(MessageConst.ERROR_721074,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
 								}
 								//c)	If account already created but has not been activated, 
 								else if(supplier.getEpNo() == null || supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION){
@@ -1607,10 +1607,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					else{
 						//Appl Type is BASIC
 						for(SmSupplier supplier : resDTO.getSmSuppliers()){
-							errorMessageSSM(supplier);/*
 							//a)	If registration number exists and account is active 
-							if(supplier.getSmAppl().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE || supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_IN_PROGRESS){
-								throw new EpException(MessageConst.ERROR_721069,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
+							if(supplier.getSmAppl().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE){
+								throw new EpException(MessageConst.ERROR_721066,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
 							}
 							//b)	If registration number exist and account is inactive 
 							else if(supplier.getSmAppl().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED){
@@ -1623,7 +1622,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							//d)	If registration number exist and MoF Account has been expired
 							else if(supplier.getSmAppl().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_EXPIRED){
 								//throw new EpException(MessageConst.ERROR_721069,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
-								if(supplier.getSmMofAccount() != null && supplier.getSmMofAccount().getExpDate()!= null){
+								if(supplier.getSmMofAccount() != null && supplier.getSmMofAccount().getExpDate() != null){
 									if(DateUtils.getDaysDifference(supplier.getSmMofAccount().getExpDate(), new Date())<=365){
 										throw new EpException(MessageConst.ERROR_721069,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
 									}else{
@@ -1633,7 +1632,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 									throw new EpException(MessageConst.ERROR_721069,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
 								}
 								//throw new EpException(MessageConst.ERROR_721069,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
-							}*/
+							}
 							/*if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
 								throw new EpException(MessageConst.ERROR_721041,new String[]{SmCommonUtil.getMessage("lbl.sm.contractor",null), getManagedBean().getSmSupp().getRegNo()});
 							}
