@@ -15689,7 +15689,7 @@ public class SpecificationBackingBean extends
 	public void handleFileUploadImport() throws FileNotFoundException, IOException, EncryptedDocumentException,
 			InvalidFormatException {
 		log.info("handleFileUploadImport - BEGIN");
-		String fileName = "ImportData.xlsx";
+		String fileName = "ExportData.xlsx";
 		String contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 		List<String> itemm = new ArrayList<String>();
 		List<String> specificationn = new ArrayList<String>();
@@ -15822,7 +15822,7 @@ public class SpecificationBackingBean extends
 
 		workbook.close();
 
-		httpServletResponse.setHeader("Content-Disposition", "attachment; filename=ImportData.xlsx");
+		httpServletResponse.setHeader("Content-Disposition", "attachment; filename=ExportData.xlsx");
 		httpServletResponse.setContentType(contentType);
 		httpServletResponse.setCharacterEncoding("UTF-8");
 		httpServletResponse.setContentLength(bos.size());
@@ -15832,7 +15832,7 @@ public class SpecificationBackingBean extends
 		log.info("httpServletResponse.toString() is : " + httpServletResponse.toString());
 		log.info("httpServletResponse.getOutputStream() is : " + httpServletResponse.getOutputStream());
 
-		log.info("ImportData.xlsx written successfully");
+		log.info("ExportData.xlsx written successfully");
 		log.info("handleFileUploadImport - END");
 	}
 
