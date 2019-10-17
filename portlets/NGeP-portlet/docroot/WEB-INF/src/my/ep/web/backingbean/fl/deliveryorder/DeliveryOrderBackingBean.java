@@ -1113,6 +1113,12 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 					getManagedBean().getFulfilmentOrder().getFulfilmentOrderId(), getManagedBean().getFulfilmentOrder().getDocNo(), 
 					getManagedBean().getTextBeforeSign());
 			}
+			//#26191-start
+			if(getManagedBean().getPmDigiSign().getOriginalData().isEmpty()) {
+				setTextBeforeSign(getManagedBean().getButtonAction());
+				getManagedBean().getPmDigiSign().setOriginalData(getManagedBean().getTextBeforeSign());
+			}
+			//#26191-end
 		}
 		return createDeliveryOrder(getManagedBean().getButtonAction());
 	}
