@@ -850,7 +850,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		return QTConstants.SEARCH_PAGE;
 	}
 	
-	//one
+	public String editQuationTenderDetails(ScQt scQt, boolean editable){
+		return editQuationTenderDetails(scQt, editable, false, null);
+	}
+	
+	
 	/**
 	 * Method to return the maintance page.
 	 * 
@@ -858,7 +862,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 *            the sc qt
 	 * @return maintanacepage
 	 */
-	public String editQuationTenderDetails(ScQt scQt, boolean editable) {
+	public String editQuationTenderDetails(ScQt scQt, boolean editable, boolean fullPath, String backUrl) {
 		
 		debugLogger("start editQuationTenderDetails");
 		renewQTSesionObject();
@@ -867,6 +871,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		this.getManagedBean().setMaintanceFlow(true);
 		IQTDetailSO detailSO;
 		String REDIRECT_PAGE = QTConstants.MAINTANANCE_PAGE;
+		if(fullPath){
+			REDIRECT_PAGE = "/xhtml/sc/quatationtender/quatationtendercreation.xhtml";
+		}
+		if(!StringUtils.isBlank(backUrl)){
+			this.getManagedBean().setViewOriginalUrl(backUrl);
+		}
 		FacesContext fc = FacesContext.getCurrentInstance();
 		try {
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
@@ -7200,6 +7210,16 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	/* ***19336#73 - end */
 
 	
+	/* ***19287#86 - start */
+	public void backToPrevious() {
+		debugLogger("backToPrevious");
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication()
+				.getNavigationHandler()
+				.handleNavigation(fc, null,
+						getManagedBean().getViewOriginalUrl());
+	}
+	/* ***19287#86 - end */
 
 }
 

@@ -144,7 +144,7 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 			
 			
 			/* ***19287#78 - start */
-			if(new MapKeyEnum.ValueRetriever<Boolean>().getValue(otherArgs, MapKeyEnum.showTrackingDiary)){
+			if(new MapKeyEnum.ValueRetriever<Boolean>().getValue(otherArgs, MapKeyEnum.showTrackingDiary, Boolean.FALSE)){
 				loaDetailBackingBean.getManagedBean().setTrackingDairyView(true);
 			}
 			/* ***19287#78 - end */
