@@ -183,7 +183,10 @@
 					test="#{FlReportConst.fl054StopInstBySupplier == flReportBB.managedBean.reportCode}">
 					<ui:include src="/xhtml/reports/fl/cc/FL054_stopInstBySupplier.xhtml"></ui:include>
 				</c:when>
-				
+			 	<c:when
+					test="#{FlReportConst.fl066Deduction == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/cc/FL066_deduction.xhtml"></ui:include>
+				</c:when>
 			<!-- Purchase Order -->
 				
 				<c:when

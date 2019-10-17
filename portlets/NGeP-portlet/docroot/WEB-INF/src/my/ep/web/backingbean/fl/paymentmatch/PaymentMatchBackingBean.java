@@ -1416,7 +1416,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 			BigDecimal deductionAmt = new BigDecimal(0);
 			
-			if(paymentAdvice.getFlRequest().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+			//if(paymentAdvice.getFlRequest().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 				if(getManagedBean().getTaskId()==null) {
 					if(getManagedBean().getPaymentAdvice().getFlPaymentDeduction().size()>0) {
 						getManagedBean().setShowDeductionTab(false);
@@ -1434,7 +1434,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 						getManagedBean().getPaymentAdvice().getFlPaymentDeduction().clear();
 					} 
 				}
-			}
+			//}
 			
 			for(CtDeduction deduction : paymentAdvice.getFlRequest().getCtContract().getLatestContractVer().getCtDeductions()){
 				if(deduction.getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_ADVANCE_PAYMENT)){
