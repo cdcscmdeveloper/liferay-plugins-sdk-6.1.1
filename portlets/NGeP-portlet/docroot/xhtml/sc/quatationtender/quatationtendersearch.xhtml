@@ -26,7 +26,7 @@
               <div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
 					action="#{qTDetailBB.searchQTAction}" update="@all"
-					process="@this, qtsearchid" />
+					process="@this, qtsearchid" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:commandButton value="#{lbl['lbl.btn.reset']}"
 					action="#{qTDetailBB.reset}" update="qtsearchid"
 					resetValues="true" partialSubmit="true"
