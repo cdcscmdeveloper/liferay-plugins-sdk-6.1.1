@@ -4475,10 +4475,26 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	private String getMonth(String month) {
 		//#25022
 		FacesScopes facesScopes = new FacesScopes();
-		if (StringUtils.isEmpty(month)) {
-			throw new EpException(MessageConst.ERROR_100022, new String[] {ResourceBundleUtils.getMessage("lbl.sc.start.month",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});
+		List <ScQtSchedule> scQtSchedule = getManagedBean().getScLoa().getScQtSchedules();
+		for (ScQtSchedule schedule : scQtSchedule) {
+			if (StringUtils.isEmpty(month)
+					|| schedule.getStartMonth() == null) {
+				throw new EpException(MessageConst.ERROR_100022,
+						new String[] { ResourceBundleUtils.getMessage(
+								"lbl.sc.start.month",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								facesScopes.getUserLocale()) });
+			}
+			else if(StringUtils.isEmpty(month)
+					|| schedule.getEndMonth() == null) {
+				throw new EpException(MessageConst.ERROR_100022,
+						new String[] { ResourceBundleUtils.getMessage(
+								"lbl.sc.end.month",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								facesScopes.getUserLocale()) });
+			}
 		}
+		
 		int mon = Integer.parseInt(month);
 		String finalMonth = null;
 		if (mon <= 9) {
