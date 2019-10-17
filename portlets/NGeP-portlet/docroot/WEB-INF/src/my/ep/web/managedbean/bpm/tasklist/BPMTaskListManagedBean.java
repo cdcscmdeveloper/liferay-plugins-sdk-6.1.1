@@ -558,20 +558,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 										worklistItemVO.setTitle(sb.toString());
 									}
 								}
-							} else if (worklistItemVO.getDocStatus() != null
-									&& QTStatusConst.SF_PENDING_LOI_PREPARATION.intValue() == worklistItemVO.getDocStatus().intValue()) {
-								if (loiPreparationDays == null) {
-									loiPreparationDays = retrieveKpiValueByModuleCodeAndKpiCode(
-											ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(), KPICodeConst.SC_LOI_PREPARATION);
+								} else {
+									processTitleWithDocStatus(worklistItemVO, face);
 								}
-								
-								worklistItemVO.setTitle(worklistItemVO.getTitle() + "<br/> - "
-												+ ResourceBundleUtils.getMessage(
-														"lbl.sc.loiloa.loi.preparation.due.date.message",
-														new String[] { loiPreparationDays != null ? loiPreparationDays.toString() : "" },
-														ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-														face.getUserLocale()));
-							}
 							 if(worklistItemVO.getTaskName().equals(FLProcessNameConst.PERFORM_PAYMNET_MATCH_HT)){
 						    	   worklistItemVO.setTitle(retreiveSupplierInvoiceNo(worklistItemVO.getDocId()) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
 						       }
@@ -777,6 +766,29 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 
 	}
 
+	private void processTitleWithDocStatus(WorklistItemVO worklistItemVO, FacesScopes face) {
+		if (worklistItemVO.getDocStatus() != null) {
+			int docStatus = worklistItemVO.getDocStatus().intValue();
+
+			if (QTStatusConst.SF_PENDING_LOI_PREPARATION.intValue() == docStatus) {
+				if (loiPreparationDays == null) {
+					loiPreparationDays = retrieveKpiValueByModuleCodeAndKpiCode(
+							ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(), KPICodeConst.SC_LOI_PREPARATION);
+				}
+				worklistItemVO.setTitle(worklistItemVO.getTitle()
+						+ "<br/> - "
+						+ ResourceBundleUtils.getMessage("lbl.sc.loiloa.loi.preparation.due.date.message",
+								new String[] { loiPreparationDays != null ? loiPreparationDays.toString() : "" },
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+			} else if (QTStatusConst.EPV_PENDING_SUPPLIER_ACCEPTANCE.intValue() == docStatus) {
+				worklistItemVO.setTitle(worklistItemVO.getTitle()
+						+ "<br/> - "
+						+ ResourceBundleUtils.getMessage("lbl.sc.proposal.validity.period.extension.response.supplier",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+			}
+		}
+	}
+
 	public PagingDataModel<WorklistItemVO> getTaskListMyTaskDataModel() {
 		return taskListMyTaskDataModel;
 	}
@@ -873,20 +885,22 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 												+ scPrInquiry.getTitle());
 									}
 								}
-							// s1 module
-							if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
-								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-							}
-							if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE)) {
-								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.pr.inquiry", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-							}
-							if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PD_TITLE)) {
-								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.purchase.in.default", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-							}
-							
-							//sm module
-							//worklistItemVO.setTitle(SmCommonUtil.getSmBpmTaskTitle(worklistItemVO.getTitle(),worklistItemVO.getProcess()));
-							//sm module
+								// s1 module
+								if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
+									worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note",
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+								}
+								if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE)) {
+									worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.pr.inquiry",
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+								}
+								if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PD_TITLE)) {
+									worklistItemVO.setTitle(ResourceBundleUtils.getMessage(
+											"lbl.sc.purchase.in.default", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+											face.getUserLocale()));
+								}
+								processTitleWithDocStatus(worklistItemVO, face);
+
 						       if(worklistItemVO.getTitle().startsWith("lbl.sm")) {
 						    		MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
 									log.info("***** The document Id for the workflow is ****** "
