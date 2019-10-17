@@ -33,7 +33,8 @@
 					partialSubmit="true"
 					process="@this"
 					update="@this" />
-			</c:if>
+			</c:when>
+			</c:choose>
 			
 			<!-- ***25692 - start -->
 			<c:if test="#{qTDetailBB.approvalScreen and qTDetailBB.managedBean.readOnly}" >
