@@ -4660,9 +4660,35 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		
 		super.renewSesionObject();
 		searchProcurementAnnualPlan();
+		setMinDateMaxDate();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, NAV_TO_ANNUAL_PPLAN + "?faces-redirect=true");
+	}
+	
+	/**
+	 * reset search bean fields
+	 */
+	public void setMinDateMaxDate(){
+		log.info("setMinDateMaxDate");
+		
+		if(this.getManagedBean().getPlanSearchBean().getInvitationDateFrom() != null) {			
+			//log.info("[#25550] Selected date From: " + this.getManagedBean().getPlanSearchBean().getInvitationDateFrom().toString());
+			this.getManagedBean().setInvitationMinDateTo(this.getManagedBean().getPlanSearchBean().getInvitationDateFrom());
+		}
+		
+		else if(this.getManagedBean().getPlanSearchBean().getInvitationDateFrom() == null 
+				&& this.getManagedBean().getPlanSearchBean().getInvitationDateTo() == null) {
+			Calendar cal = Calendar.getInstance();		
+			cal.set(Calendar.DAY_OF_YEAR, 1); //set 1st day of year   
+			this.getManagedBean().setInvitationMinDateFrom(cal.getTime());
+			this.getManagedBean().setInvitationMinDateTo(cal.getTime());
+	
+			//set date to last day of current year		
+			cal.set(Calendar.MONTH, 11); // 11 = december
+			cal.set(Calendar.DAY_OF_MONTH, 31); // new years eve
+			this.getManagedBean().setInvitationMaxDate(cal.getTime());
+		}
 	}
 	
 	/**
@@ -4696,8 +4722,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		getManagedBean().setSelectedMinistry(new PmOrgProfile());
 		getManagedBean().setSelectedKumpulanPTJ(new PmOrgProfile());
 		getManagedBean().setSelectedPTJ(new PmOrgProfile());
-		//setupOrgProfile();
-		//generateOrgFilter();
+		getManagedBean().setInvitationMinDateFrom(null);
+		getManagedBean().setInvitationMinDateTo(null);
+		getManagedBean().setInvitationMaxDate(null);
+		setMinDateMaxDate();
+		
 		ppAnnualPlanDataModel = new PpAPlanDataModel();
 	}
 	
