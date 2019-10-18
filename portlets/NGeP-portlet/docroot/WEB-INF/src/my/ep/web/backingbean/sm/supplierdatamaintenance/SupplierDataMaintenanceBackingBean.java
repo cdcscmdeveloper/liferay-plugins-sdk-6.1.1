@@ -664,6 +664,8 @@ public class SupplierDataMaintenanceBackingBean extends
 			String actionDesc) {
 		SmTrackingDairyVO trckVO = new SmTrackingDairyVO();
 		PmUser user = new FacesScopes().getUserSessionBean();
+		
+		//start-#26418 SM URGENT SHOWSTOPPER : Registered Category Created By Issue
 		List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(user
 				.getUserId());
 		String ePRole = StringUtils.EMPTY;
@@ -678,8 +680,10 @@ public class SupplierDataMaintenanceBackingBean extends
 				}
 			}
 		}
+		
 		trckVO.setActionDesc(actionDesc);
-		trckVO.setActionedBy(user != null ? user.getUserId() : 1L);
+		trckVO.setActionedBy(user != null && user.getUserId()!= null ? user.getUserId() : 1L);
+		//end
 		trckVO.setActionedByRole(ePRole);
 		trckVO.setDocId(appl.getApplId());
 		trckVO.setDocNo(appl.getApplNo());
