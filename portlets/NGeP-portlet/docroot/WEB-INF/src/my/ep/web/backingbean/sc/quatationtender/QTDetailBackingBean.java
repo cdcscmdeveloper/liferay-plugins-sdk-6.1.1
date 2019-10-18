@@ -860,6 +860,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * 
 	 * @param scQt
 	 *            the sc qt
+	 * @param fullPath
+	 * 			  full path of redirect page
+	 * @param editable
+	 * 			  editable
+	 * @param backUrl 
+	 * 			  usually view.viewId
 	 * @return maintanacepage
 	 */
 	public String editQuationTenderDetails(ScQt scQt, boolean editable, boolean fullPath, String backUrl) {
