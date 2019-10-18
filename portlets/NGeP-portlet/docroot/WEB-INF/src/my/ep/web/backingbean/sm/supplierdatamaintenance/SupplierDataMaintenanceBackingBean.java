@@ -680,9 +680,10 @@ public class SupplierDataMaintenanceBackingBean extends
 				}
 			}
 		}
-		//end
+		
 		trckVO.setActionDesc(actionDesc);
-		trckVO.setActionedBy(user != null && user.getUserId()!= null? user.getUserId() : 1L);
+		trckVO.setActionedBy(user != null && user.getUserId()!= null ? user.getUserId() : 1L);
+		//end
 		trckVO.setActionedByRole(ePRole);
 		trckVO.setDocId(appl.getApplId());
 		trckVO.setDocNo(appl.getApplNo());
