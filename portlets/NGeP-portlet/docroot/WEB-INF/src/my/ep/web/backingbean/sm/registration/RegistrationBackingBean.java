@@ -818,25 +818,26 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		if(this.getManagedBean().isCompanyValidWithSSM()){
 			if(this.getManagedBean().getSmPersonnelAll()!= null){
 				for(SmPersonnel personnel : this.getManagedBean().getSmPersonnelAll()){
+					SmPersonnel personnelSSM = (SmPersonnel)personnel.cloneEntity();
 					//to check,personel is equity owner or not
-					SmPersonnel personnell = (SmPersonnel) EntityHelper.compareSingleEntityByProp(smPersonnel.getIdentificationNo(), personnel,"identificationNo");
+					SmPersonnel personnelAdmin = (SmPersonnel) EntityHelper.compareSingleEntityByProp(smPersonnel.getIdentificationNo(), personnelSSM,"identificationNo");
 					//not suppplier admin
-					if(personnell == null){
-						personnel.setSmAppl(smAppl);
-						personnel.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
-						personnel.getSmPersonnelAdd().setSmPersonnel(personnel);
-						personnel.getSmPersonnelAddresses().add(personnel.getSmPersonnelAdd());
-						smAppl.getSmPersonnels().add(personnel);
-					}else if(personnell.getSmPersonnelAddresses()!=null){//supplier admin, need to set residensial address from SSM
-						if(personnell.getSmPersonnelAdd() != null){
-							personnell.getSmPersonnelAdd().setSmPersonnel(smPersonnel);
-							if(personnell.getSmPersonnelAdd().getSmAddress()!= null){
-								if(personnell.getSmPersonnelAdd().getSmAddress().getPmState()!= null){
-									personnell.getSmPersonnelAdd().getSmAddress().setPmState(personnell.getSmPersonnelAdd().getSmAddress().getPmState());
+					if(personnelAdmin == null){
+						personnelSSM.setSmAppl(smAppl);
+						personnelSSM.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
+						personnelSSM.getSmPersonnelAdd().setSmPersonnel(personnelSSM);
+						personnelSSM.getSmPersonnelAddresses().add(personnelSSM.getSmPersonnelAdd());
+						smAppl.getSmPersonnels().add(personnelSSM);
+					}else if(personnelAdmin.getSmPersonnelAddresses()!=null){//supplier admin, need to set residensial address from SSM
+						if(personnelAdmin.getSmPersonnelAdd() != null){
+							personnelAdmin.getSmPersonnelAdd().setSmPersonnel(smPersonnel);
+							if(personnelAdmin.getSmPersonnelAdd().getSmAddress()!= null){
+								if(personnelAdmin.getSmPersonnelAdd().getSmAddress().getPmState()!= null){
+									personnelAdmin.getSmPersonnelAdd().getSmAddress().setPmState(personnelAdmin.getSmPersonnelAdd().getSmAddress().getPmState());
 								}
 							}
 						}
-						smPersonnel.getSmPersonnelAddresses().add(personnell.getSmPersonnelAdd());
+						smPersonnel.getSmPersonnelAddresses().add(personnelSSM.getSmPersonnelAdd());
 					}
 						
 				}
