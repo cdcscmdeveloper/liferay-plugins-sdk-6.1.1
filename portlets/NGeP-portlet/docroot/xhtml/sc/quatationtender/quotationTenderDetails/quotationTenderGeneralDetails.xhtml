@@ -778,7 +778,7 @@
 					<td>
 						<c:choose>
 							<c:when test="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION}">
-								<p:inputTextarea id="justificationProcValueId"
+								<p:inputTextarea id="justificationProcValueId_1"
 									style="margin-bottom:5px; width: 250px;" maxlength="100" value="#{scQt.justificationProcValue}" required="true" 
 									label="#{lbl['lbl.sc.spec.justification.procurement.value']}" disabled="#{isReadOnly}" 
 									cols="110" rows="3"
@@ -787,17 +787,17 @@
 									onmouseout="limitTextArea(this,100);">
 									<f:ajax></f:ajax>
 								</p:inputTextarea>
+								<p:message id="title2Msg_1" for="justificationProcValueId_1" display="icon" />
 							</c:when>
 							<c:otherwise>
-								<p:inputText id="justificationProcValueId"
+								<p:inputText id="justificationProcValueId_2"
 									style="text-align:right; width:200px;"
 									value="#{scQt.justificationProcValue}" disabled="true">
 								</p:inputText>
+								<p:message id="title2Msg_2" for="justificationProcValueId_2" display="icon" />
 							</c:otherwise>
 						</c:choose>
-						<p:message id="title2Msg" for="justificationProcValueId" display="icon" />
 					</td>
-					<td style="margin-top: -3px"><ac:iconTooltip value="#{lbl['lbl.sc.spec.justification.procurement.value.tooltip']}" /></td>
 				</tr>
 			</c:if>
 		</table>
