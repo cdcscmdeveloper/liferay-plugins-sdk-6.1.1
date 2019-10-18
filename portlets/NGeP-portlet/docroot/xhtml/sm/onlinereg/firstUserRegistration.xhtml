@@ -193,7 +193,7 @@
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<td class="tdContent">
-						<h:outputText id="cmbUsrIdenType"
+						<h:outputText id="cmbUsrIdenType" 
 							value="#{registrationBackingBean.getParamDescByParameterId(registrationBackingBean.managedBean.smPersonnel.identificationTypeId)}"/>
 					</td>
 
@@ -278,6 +278,7 @@
 					<td class="tdContent">
 						<p:calendar id="dobCalId"
 							navigator="true" required="#{!empty param['disableValidation']}" 
+							disabled="#{registrationBackingBean.managedBean.sameAsOwner}"
 							label="#{lbl['lbl.sm.userprofile.dob']}" value="#{registrationBackingBean.managedBean.smPersonnel.birthDate}"
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
 							readonlyInput="true" size="30" showOn="button" yearRange="-99"  maxdate="#{CommonConstants.CURRENT_DATE}"
