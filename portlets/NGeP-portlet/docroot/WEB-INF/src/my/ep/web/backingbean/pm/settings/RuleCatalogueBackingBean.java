@@ -377,6 +377,7 @@ public class RuleCatalogueBackingBean extends
 			initOperationThreshold();
 			initGst();
 			initQuotationWithTenderValue();
+			initYearEndForProcessing();
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, SETTING_CONFIG_MAIN);
 		} catch (Exception e) {
@@ -386,6 +387,30 @@ public class RuleCatalogueBackingBean extends
 			PmCommonUtil.redirectToPage(ERROR_PAGE, null, null);
 		}
 		return "";
+	}
+	
+	private void initYearEndForProcessing(){
+		IFeeExemptionSO feeSO = null;
+		try {
+			feeSO = (IFeeExemptionSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IFeeExemptionSO.class);
+			FeeExemptionReqDTO reqFDTO = new FeeExemptionReqDTO();
+			FeeExemptionResDTO resFDTO = null;
+			this.getManagedBean().getFeeExemptionsForYepProcessing().clear();
+			this.getManagedBean().getDeletedYepProcessingFeeExemptions().clear();
+			resFDTO = feeSO.getFeeExemptionsYepProcessing(reqFDTO);
+			
+			log.info("resFDTO is : "+resFDTO);
+			/*22119*/
+			String lang = getLanguage();
+			this.getManagedBean().setFeeExemptionsForYepProcessing(
+					resFDTO.getFeeExemptions());
+
+		} finally {
+			feeSO = null;
+		}
+	
 	}
 
 	private void initConfigRule() {
@@ -5046,6 +5071,13 @@ public class RuleCatalogueBackingBean extends
 				addTrackingDiaryIntoList(messageId, params, deleted, reqDTO);	
 			}
 		}
+	}
+	
+	public String getLanguage() {
+		FacesScopes facesScopes = new FacesScopes();
+		
+		log.info("Language is : "+facesScopes.getUserLocale().getLanguage());
+		return facesScopes.getUserLocale().getLanguage();
 	}
 	
 	private void addTrackingDiaryIntoList(String messageId, String[] params,PmPtjSpecialApproval approval,PtjSpecialApprovalReqDTO reqDTO){
