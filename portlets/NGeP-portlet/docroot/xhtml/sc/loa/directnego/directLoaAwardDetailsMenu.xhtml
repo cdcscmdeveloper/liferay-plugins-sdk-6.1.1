@@ -10,10 +10,11 @@
 	<ui:include src="../shared/loaInstructionHeader.xhtml" />
 	
 	<ui:include src="/xhtml/sc/common/specGuideLineInstructions.xhtml"></ui:include>
-	<ui:include src="/xhtml/common/uominstruction.xhtml"></ui:include>
+	<ui:include src="/xhtml/common/uominstruction.xhtml"></ui:include> <br/>
+	<h:outputText styleClass="instruction" value="#{lbl['lbl.pm.uom.instruction.view.progressive.payment.option']}" escape="false" />
 	<ui:include src="/xhtml/common/uompopinclude.xhtml"></ui:include>
-	<p:panel header="#{lbl['lbl.sc.loiloa.award.details']}"
-		toggleable="true">
+	
+	<p:panel header="#{lbl['lbl.sc.loiloa.award.details']}" toggleable="true">
 		<h:outputText styleClass="instruction" rendered="#{isSupplierAckStatus}"
 			value="#{lbl['lbl.sc.item.codification.instruction']}" />
 		<table width="100%">
