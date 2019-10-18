@@ -36,7 +36,7 @@
 				</td>
 				<td>
 					<ac:lov id="minstryPtj" lovId="PM_ORG_PROFILE_MINSTRY"
-						headerText="#{lbl['lbl.pp.ministry']}" update="@form"
+						headerText="#{lbl['lbl.pp.annual.plan.searchCriteria.ministry']}" update="@form"
 						saveObject="pPlanBackingBean.managedBean.selectedMinistry"
 						value="#{pPlanBackingBean.managedBean.selectedMinistry.pmOrgValidity.orgName}"
 						size="25" readonly="true"
@@ -50,7 +50,7 @@
 				</td>
 				<td>
 					<ac:lov id="PtjGropup" lovId="PM_ORG_PROFILE_PTJ_GROUP"
-						headerText="#{lbl['lbl.pp.kumpulan.ptj']}" update="@form"
+						headerText="#{lbl['lbl.pp.annual.plan.searchCriteria.kump.ptj']}" update="@form"
 						saveObject="pPlanBackingBean.managedBean.selectedKumpulanPTJ"
 						value="#{pPlanBackingBean.managedBean.selectedKumpulanPTJ.pmOrgValidity.orgName}"
 						size="25" readonly="true" 
@@ -64,7 +64,7 @@
 				</td>
 				<td>
 					<ac:lov id="openPtj" lovId="PM_ORG_PROFILE_PTJ"
-						headerText="#{lbl['lbl.pp.ptj']}"
+						headerText="#{lbl['lbl.pp.annual.plan.searchCriteria.ptj']}"
 						saveObject="pPlanBackingBean.managedBean.selectedPTJ"
 						value="#{pPlanBackingBean.managedBean.selectedPTJ.pmOrgValidity.orgName}"
 						size="25" readonly="true"
@@ -84,8 +84,10 @@
 					<p:calendar showOn="button" readonlyInput="true" id="invitationDtFrm"
 						value="#{pPlanBackingBean.managedBean.planSearchBean.invitationDateFrom}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-						size="10">
-						<p:ajax event="dateSelect" update=":form:invitationDtTo" />
+						size="10" 
+						mindate="#{pPlanBackingBean.managedBean.invitationMinDateFrom}" 
+						maxdate="#{pPlanBackingBean.managedBean.invitationMaxDate}" >
+						<p:ajax event="dateSelect" partialSubmit="true" listener="#{pPlanBackingBean.setMinDateMaxDate}" update=":form:invitationDtTo" />
 					</p:calendar>
 				</p:column>				
 				<p:column rendered="true" style="white-space: nowrap">
@@ -95,8 +97,9 @@
 					<p:calendar showOn="button" readonlyInput="true" id="invitationDtTo"
 						value="#{pPlanBackingBean.managedBean.planSearchBean.invitationDateTo}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-						mindate="#{pPlanBackingBean.managedBean.planSearchBean.invitationDateFrom}"
-						size="10">
+						mindate="#{pPlanBackingBean.managedBean.invitationMinDateTo}"						 
+						maxdate="#{pPlanBackingBean.managedBean.invitationMaxDate}"
+						size="10" >
 					</p:calendar>
 				</p:column>
 			</h:panelGrid>			
