@@ -17,11 +17,11 @@
 				<h:outputText value="#{planItem.ppPlan.orgProfile!=null ? planItem.ppPlan.orgProfile.pmOrgValidity.orgName : '-'}" />
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.pp.procurement.title']}" style="width:27%;white-space: normal;">
+			<p:column headerText="#{lbl['lbl.pp.annual.plan.title']}" style="width:27%;white-space: normal;">
 				<h:outputText value="#{planItem.procurementTitle}" />
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.pp.procurement.desc']}" style="width:27%;white-space: normal;">
+			<p:column headerText="#{lbl['lbl.pp.annual.plan.desc']}" style="width:27%;white-space: normal;">
 				<h:outputText value="#{planItem.procurementDesc}" />
 			</p:column>
 			
@@ -39,7 +39,7 @@
 				</h:outputText>
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.pp.last.updated']}" style="width:11%;white-space: normal;">
+			<p:column headerText="#{lbl['lbl.pp.annual.plan.last.updated']}" style="width:11%;white-space: normal;">
 				<h:outputText value="#{planItem.changedDate}">
 					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 				</h:outputText>
