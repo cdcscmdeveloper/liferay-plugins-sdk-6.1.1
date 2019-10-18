@@ -480,18 +480,20 @@
 								<td>
 									<h:outputText style="float: left" value="#{lbl['lbl.sm.person.equiOwner']}" />
 								</td>
-								<td>
-									<p:selectBooleanCheckbox disabled="" value="#{registrationBackingBean.managedBean.smPersonnel.director}"/>
-								</td>
-								<td>
-									<h:outputText style="float: left" value="#{lbl['lbl.sm.person.dir']}" />
-								</td>
-								<td>
-									<p:selectBooleanCheckbox disabled="" value="#{registrationBackingBean.managedBean.smPersonnel.higherManagement}"/>
-								</td>
-								<td>
-									<h:outputText style="float: left" value="#{lbl['lbl.sm.person.hghMngmt']}" />
-								</td>
+								<c:if test="#{!registrationBackingBean.managedBean.smSupp.businessType == 'C' or !registrationBackingBean.managedBean.smSupp.businessType == 'F'}">
+									<td>
+										<p:selectBooleanCheckbox disabled="" value="#{registrationBackingBean.managedBean.smPersonnel.director}"/>
+									</td>
+									<td>
+										<h:outputText style="float: left" value="#{lbl['lbl.sm.person.dir']}" />
+									</td>
+									<td>
+										<p:selectBooleanCheckbox disabled="" value="#{registrationBackingBean.managedBean.smPersonnel.higherManagement}"/>
+									</td>
+									<td>
+										<h:outputText style="float: left" value="#{lbl['lbl.sm.person.hghMngmt']}" />
+									</td>
+								</c:if>
 							</tr>
 						</table>
 					</p:outputPanel>
