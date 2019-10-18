@@ -1290,6 +1290,7 @@ public class SimpleQuoteBackingBean extends
 		Long defaultCountryId = getManagedBean().getDefaultCountryId();
 		boolean autoUpdate = getManagedBean().isAutoUpdate();
 		Calendar pidExpDate = getManagedBean().getTaskExpiryDate();
+		Date pidExpiryDate = getManagedBean().getPidExpiryDate();
 		String pidApprovers = getManagedBean().getPidApprovers();
 		Long doUserId = getManagedBean().getDoUserId();
 		try {
@@ -1605,6 +1606,7 @@ public class SimpleQuoteBackingBean extends
 					getManagedBean().setAutoUpdate(autoUpdate);
 					getManagedBean().setTaskExpiryDate(pidExpDate);
 					getManagedBean().setPidApprovers(pidApprovers);
+					getManagedBean().setPidExpiryDate(pidExpiryDate);
 					reloadSimpleQuote(scQuote);
 					successMessage(MessageConst.INFO_700025, ParameterTypeConst.DOCUMENT_TYPES, 
 							ParameterConst.DOCTYPE_SIMPLE_QUOTE,scQuote.getQuoteNo(), Boolean.FALSE);
@@ -3919,7 +3921,7 @@ public class SimpleQuoteBackingBean extends
 				getManagedBean().setConformDlgBtnFlag(Boolean.FALSE);
 			}
 			RequestContext.getCurrentInstance().execute("sqConformDlg.show()");
-			getManagedBean().setPromptMessage(message.toString());
+ 			getManagedBean().setPromptMessage(message.toString());
 
 		} else if ( null == quote.getStartDate() ||  null == quote.getEndDate()) {
 			throw new EpException(MessageConst.ERROR_760388);
