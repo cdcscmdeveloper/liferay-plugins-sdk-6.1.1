@@ -3609,14 +3609,19 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		SmPersonnel personnel = getManagedBean().getSmPersonnel();
 		// #16052019 - SSM INTEGRATION CR
 		if(getManagedBean().isSameAsOwner()){
-			SmSupplierOwner suppOwner = getManagedBean().getSmSuppOwner();
-			if(this.getManagedBean().getSmSuppOwners().size()>0){
-				suppOwner = this.getManagedBean().getSmSuppOwners().get(0);
+			if(!getManagedBean().isSsmIntegrationActive()){
+				SmSupplierOwner suppOwner = getManagedBean().getSmSuppOwner();
+				if(this.getManagedBean().getSmSuppOwners().size()>0){
+					suppOwner = this.getManagedBean().getSmSuppOwners().get(0);
+				}
+				personnel.setPmCountry(suppOwner.getNationality());
+				personnel.setName(suppOwner.getOwnerName());
+				personnel.setIdentificationNo(suppOwner.getIdentificationNo());
+				personnel.setIdentificationTypeId(suppOwner.getIdentificationTypeId());
+			}else{
+				this.getManagedBean().setSmPersonnelSelected(new SmPersonnel());				
 			}
-			personnel.setPmCountry(suppOwner.getNationality());
-			personnel.setName(suppOwner.getOwnerName());
-			personnel.setIdentificationNo(suppOwner.getIdentificationNo());
-			personnel.setIdentificationTypeId(suppOwner.getIdentificationTypeId());
+			
 
 		}else{
 			PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
@@ -3624,6 +3629,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			personnel.setName(null);
 			personnel.setIdentificationNo(null);
 			personnel.setIdentificationTypeId(null);
+			personnel.setBirthDateSsmNull(true);
+			personnel.setBirthDate(null);
+			this.getManagedBean().setSmPersonnelSelected(new SmPersonnel());
 			//#16052019 - SSM INTEGRATION CR
 			//SmAddress address = new SmAddress();
 			//address.setPmCity(new PmCity());
@@ -3674,7 +3682,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			
 			PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 			personnel.setPmCountry(defaultCountry);
-			getManagedBean().setSmPersonnel(personnel);
+			getManagedBean().setSmPersonnel((SmPersonnel)personnel.cloneEntity());
 			//if(personnel.getSmPersonnelAdd() != null)
 				//getManagedBean().setSmPermenantAdd(personnel.getSmPersonnelAdd().getSmAddress());
 				//this.populateStateByAddType("permenant", false);
