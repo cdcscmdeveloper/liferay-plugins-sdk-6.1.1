@@ -1609,11 +1609,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						//Appl Type is BASIC
 						for(SmSupplier supplier : resDTO.getSmSuppliers()){
 							//a)	If registration number exists and account is active 
-							if(supplier.getSmAppl().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE){
+							if(supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE){
 								throw new EpException(MessageConst.ERROR_721066,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
 							}
 							//b)	If registration number exist and account is inactive 
-							else if(supplier.getSmAppl().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED){
+							else if(supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED){
 								throw new EpException(MessageConst.ERROR_721067,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
 							}
 							//c)	If account already created but has not been activated, 
@@ -1621,7 +1621,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 								throw new EpException(MessageConst.ERROR_721068,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
 							}
 							//d)	If registration number exist and MoF Account has been expired
-							else if(supplier.getSmAppl().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_EXPIRED){
+							else if(supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_EXPIRED){
 								//throw new EpException(MessageConst.ERROR_721069,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
 								if(supplier.getSmMofAccount() != null && supplier.getSmMofAccount().getExpDate() != null){
 									if(DateUtils.getDaysDifference(supplier.getSmMofAccount().getExpDate(), new Date())<=365){
