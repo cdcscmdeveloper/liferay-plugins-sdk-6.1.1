@@ -1459,6 +1459,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome) || BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
 			validateCtContractVer(outcome);
 			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
+			// Start - 25890 - Minh
+			if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
+				PmStatus pmStatus = ctBB.getManagedBean().getContractVer().getStatus();
+				if (pmStatus != null
+						&& ContractStatusConst.FD_PENDING_APPROVAL.longValue() == pmStatus.getStatusId().longValue()) {
+					validateFDDescAndAmount(outcome);
+				}
+			}
+			// End - 25890 - Minh
 			StringBuilder sb = new StringBuilder();
 			sb.append(ctBB.getManagedBean().getContractVer().getCtContract().getContractNo());
 			sb.append(ContractConst.SEPRATE_LINE);
