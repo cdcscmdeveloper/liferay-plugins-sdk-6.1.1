@@ -479,7 +479,7 @@
 								<td>
 									<h:outputText style="float: left" value="#{lbl['lbl.sm.person.equiOwner']}" />
 								</td>
-								<c:if test="#{!registrationBackingBean.managedBean.smSupp.businessType == 'C' or !registrationBackingBean.managedBean.smSupp.businessType == 'F'}">
+								<c:if test="#{registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG and registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG}">
 									<td>
 										<p:selectBooleanCheckbox disabled="" value="#{registrationBackingBean.managedBean.smPersonnel.director}"/>
 									</td>
