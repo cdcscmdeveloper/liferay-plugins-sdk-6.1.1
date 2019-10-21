@@ -94,6 +94,14 @@
 								 <!-- 20190405@asyrafhaziq - CR(25062)- End -->
 							</h:panelGroup>	
 							
+							<h:panelGroup rendered="#{bpmAction == 'REJECT'}">
+								<p:commandButton value="#{lbl['lbl.btn.reject']}"
+								rendered="#{!isSqStillValid}"
+								action="#{lOADetailBackingBean.approveBeforeupdateBpmTaskAction(bpmAction)}" process="@form"
+								update="@form" onstart="blockWidget.show();"
+								oncomplete="blockWidget.hide();" />
+							</h:panelGroup>
+							
 							<h:panelGroup rendered="#{bpmAction == 'CANCEL'}">
 								<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 								rendered="#{!isSqStillValid}"
