@@ -234,10 +234,9 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 	/**
 	 * Check either SQ is valid or not (SQ only valid for 60 days after it closing date)
 	 */
-	public boolean isSqStillValid(){		
+	public boolean isSqStillValid(Long currentStatusId){		
 		
 		Boolean validDate = true;	
-		Long currentStatusId = getManagedBean().getCurrentStatusId();
 		Integer sqTimeValidity = null;
 		ScQuote scQuote = getManagedBean().getScRequestNote().getQuote();
 		
@@ -263,7 +262,10 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 			cal.setTime(closingDate);
 			cal.add(Calendar.DATE, sqTimeValidity); //add 60days to closing/end date
 				
-			if(currentStatusId.equals(QTStatusConst.LOA_PENDING_SUBMISSION)){
+			if(currentStatusId.equals(QTStatusConst.LOA_PENDING_SUBMISSION)
+			   || currentStatusId.equals(QTStatusConst.LOA_PENDING_APPROVAL)
+			   || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION)
+			   || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL)){
 				if(currentDate.compareTo(cal.getTime()) >= 0){
 					validDate = false;
 					sqExpiredMessageFlag = true;
