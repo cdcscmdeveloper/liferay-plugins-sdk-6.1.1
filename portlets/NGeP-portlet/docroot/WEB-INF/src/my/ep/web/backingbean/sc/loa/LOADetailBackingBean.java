@@ -3097,7 +3097,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				scLoa = resDTO.getScLoa();
 				String messageCode = null;
 				if(BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome) && !isSqStillValid()){
-					messageCode = MessageConst.INFO_700031;
+					messageCode = MessageConst.INFO_700031; 
 				}
 				else if (QTStatusConst.LOA_PENDING_APPROVAL.equals(statusId) || 
 						QTStatusConst.LOA_PENDING_REVISION_APPROVAL.equals(statusId)) {
@@ -3106,7 +3106,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						messageCode = MessageConst.INFO_700007;
 					} else if (BpmOutcomeConst.BPM_REJECT
 							.equalsIgnoreCase(outcome)) {
-						messageCode = MessageConst.INFO_700008;
+						//12177 - Start
+						if(!isSqStillValid()){
+							messageCode = MessageConst.INFO_700035;
+						}else{
+							messageCode = MessageConst.INFO_700008;
+						}
+						//12177 - End
 					} else if (BpmOutcomeConst.BPM_REVISE
 							.equalsIgnoreCase(outcome)) {
 						messageCode = MessageConst.INFO_700009;
