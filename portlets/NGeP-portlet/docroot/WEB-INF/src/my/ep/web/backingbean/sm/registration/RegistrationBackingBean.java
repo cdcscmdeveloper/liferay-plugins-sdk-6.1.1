@@ -1964,7 +1964,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				initGstInfo(resDTO.getSmSupp(),getManagedBean(),false);
 				getManagedBean().setGstFlag(false);
 				//START CHANGES SSM
-				if(SmCommonUtil.getInstance().ssmActive() &&  businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupp().getRegNo(),this.getManagedBean().getSmSupp().getBusinessType())){
+				if(!this.getManagedBean().isViewMode() && SmCommonUtil.getInstance().ssmActive() &&  businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupp().getRegNo(),this.getManagedBean().getSmSupp().getBusinessType())){
 					SsmReqDTO ssmReqDTO = new SsmReqDTO();
 					ssmReqDTO.setRegNo(this.getManagedBean().getSmSupp().getRegNo());
 					ssmReqDTO.setBusinessType(this.getManagedBean().getSmSupp().getBusinessType());
