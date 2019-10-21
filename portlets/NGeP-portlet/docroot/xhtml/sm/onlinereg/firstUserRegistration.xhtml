@@ -140,7 +140,7 @@
 				   			<f:selectItems value="#{registrationBackingBean.managedBean.selectItemsSmPersonnelOwners}"  />
 				   		
 				   			<p:ajax event="change" listener="#{registrationBackingBean.nameOnchange()}" process="@form"
-							update="@form" />
+							partialSubmit="true"  update="@([id$=pnlUsrInfo])" />
 				   		</p:selectOneMenu>	
 					</c:if>
 					<c:if test="#{!registrationBackingBean.managedBean.companyValidWithSSM}">
@@ -276,9 +276,8 @@
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<td class="tdContent">
-						<p:calendar id="dobCalId"
-							navigator="true" required="#{!empty param['disableValidation']}" 
-							disabled="#{registrationBackingBean.managedBean.sameAsOwner}"
+					<p:calendar id="dobCalId"
+							navigator="true" required="#{!empty param['disableValidation']}" 							
 							label="#{lbl['lbl.sm.userprofile.dob']}" value="#{registrationBackingBean.managedBean.smPersonnel.birthDate}"
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
 							readonlyInput="true" size="30" showOn="button" yearRange="-99"  maxdate="#{CommonConstants.CURRENT_DATE}"
@@ -289,8 +288,7 @@
 							navigator="true" required="#{!empty param['disableValidation']}" 
 							label="#{lbl['lbl.sm.userprofile.dob']}" value="#{registrationBackingBean.managedBean.smPersonnel.birthDate}"
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
-							readonlyInput="true" size="30"  yearRange="-99"  maxdate="#{CommonConstants.CURRENT_DATE}"
-							disabled="true"
+							readonlyInput="true" size="30"  yearRange="-99"  maxdate="#{CommonConstants.CURRENT_DATE}"							
 							rendered="#{registrationBackingBean.disableFieldSSm(registrationBackingBean.managedBean.smPersonnel.ssmData,registrationBackingBean.managedBean.smAppl.applValidWithSsm,registrationBackingBean.managedBean.smPersonnel.birthDateSsmNull)}"
 							>
 						</p:calendar>
