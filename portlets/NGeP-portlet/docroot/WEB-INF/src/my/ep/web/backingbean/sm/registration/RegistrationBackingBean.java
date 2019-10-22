@@ -822,13 +822,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					//to check,personel is equity owner or not
 					SmPersonnel personnelAdmin = (SmPersonnel) EntityHelper.compareSingleEntityByProp(smPersonnel.getIdentificationNo(), personnelSSM,"identificationNo");
 					//not suppplier admin
-					if(personnelAdmin == null){
+					if(personnelAdmin == null && personnelSSM.getSmPersonnelAdd() != null ){
 						personnelSSM.setSmAppl(smAppl);
 						personnelSSM.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
 						personnelSSM.getSmPersonnelAdd().setSmPersonnel(personnelSSM);
 						personnelSSM.getSmPersonnelAddresses().add(personnelSSM.getSmPersonnelAdd());
 						smAppl.getSmPersonnels().add(personnelSSM);
-					}else if(personnelAdmin.getSmPersonnelAddresses()!=null){//supplier admin, need to set residensial address from SSM
+					}else if(personnelAdmin != null && personnelAdmin.getSmPersonnelAddresses()!=null){//supplier admin, need to set residensial address from SSM
 						if(personnelAdmin.getSmPersonnelAdd() != null){
 							personnelAdmin.getSmPersonnelAdd().setSmPersonnel(smPersonnel);
 							if(personnelAdmin.getSmPersonnelAdd().getSmAddress()!= null){
