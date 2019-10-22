@@ -3676,18 +3676,23 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	//#16052019 - SSM INTEGRATION CR
 	public void nameOnchange(){
 		if(this.getManagedBean().getSmPersonnelSelected() != null){	
+			if(this.getManagedBean().getSmPersonnelSelected().getIdentificationNo() != null){
+				SmPersonnel personnel = (SmPersonnel) EntityHelper
+						.getEntityBySinglePropertyFromList(this.getManagedBean().getSmPersonnelSelected().getIdentificationNo(),this.getManagedBean().getSmPersonnelAll(),"identificationNo");
+				
+				PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+				personnel.setPmCountry(defaultCountry);
+				getManagedBean().setSmPersonnel((SmPersonnel)personnel.cloneEntity());
+				//if(personnel.getSmPersonnelAdd() != null)
+					//getManagedBean().setSmPermenantAdd(personnel.getSmPersonnelAdd().getSmAddress());
+					//this.populateStateByAddType("permenant", false);
+					//this.populateDistrictByAddType("permenant", false);
+					//this.populateCityByAddType("permenant", false);
+			} else {
+				this.getManagedBean().getSmPersonnel().setBirthDate(null);
+				this.getManagedBean().getSmPersonnel().setIdentificationNo(null);
+			}
 			
-			SmPersonnel personnel = (SmPersonnel) EntityHelper
-					.getEntityBySinglePropertyFromList(this.getManagedBean().getSmPersonnelSelected().getIdentificationNo(),this.getManagedBean().getSmPersonnelAll(),"identificationNo");
-			
-			PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
-			personnel.setPmCountry(defaultCountry);
-			getManagedBean().setSmPersonnel((SmPersonnel)personnel.cloneEntity());
-			//if(personnel.getSmPersonnelAdd() != null)
-				//getManagedBean().setSmPermenantAdd(personnel.getSmPersonnelAdd().getSmAddress());
-				//this.populateStateByAddType("permenant", false);
-				//this.populateDistrictByAddType("permenant", false);
-				//this.populateCityByAddType("permenant", false);
 			if(this.getManagedBean().getSmPersonnel().getTitle() == null) {
 				this.getManagedBean().getSmPersonnel().setTitle(new PmSalutation());
 			}
