@@ -1486,12 +1486,33 @@ public class SmApplicationBackingBean extends
 						//set establish date
 						this.getManagedBean().getSmAppl().getSmCompanyBasic().setEstablishDate(ssmResDTO.getSmCompanyBasic().getEstablishDate());
 						
-						//CHECK EQUITY OWNER EXIT IN SSM TO DISABLE CHECKBOX
+						//CHECK EQUITY OWNER EXIST IN SSM TO DISABLE CHECKBOX
 						int i = 0;
 						for(SmPersonnel personnel : this.getManagedBean().getSmAppl().getSmPersonnels()){
-							if(EntityHelper
-									.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo") != null){
+							SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
+							if(personnelSSM != null){
 								personnel.setSsmData(true);
+								String[] copyEquityOwner = {"birthDate","shareAmt","designation","nameInSsm","raceSsmNull","birthDateSsmNull","shareAmtSsmNull","designationSsmNull"};
+								EntityHelper.copyEntityPropertiesOnly(personnelSSM,personnel,copyEquityOwner);
+								//personnel.setSmPersonnelAddresses(personnelSSM.getSmPersonnelAddresses());
+								//personnel.setSmAppl(this.getManagedBean().getSmAppl());
+								///check ssm address exist or not
+								if(personnelSSM.getSmPersonnelAddresses()!= null && personnelSSM.getSmPersonnelAddresses().size() > 0){
+									//check ssm address exist type = R
+									SmPersonnelAddress personnelAddressSSM = (SmPersonnelAddress)EntityHelper.getEntityBySinglePropertyFromList(my.ep.constant.sm.SupplierManagementConst.ADDRESS_TYPE_RESIDENTIAL,personnelSSM.getSmPersonnelAddresses(),"addressType");
+									if(personnelAddressSSM != null){
+										if(personnel.getSmPersonnelAddresses()!= null && personnel.getSmPersonnelAddresses().size() > 0){
+											for(SmPersonnelAddress personnelAddress : personnel.getSmPersonnelAddresses()){
+												if(my.ep.constant.sm.SupplierManagementConst.ADDRESS_TYPE_RESIDENTIAL.equalsIgnoreCase(personnelAddress.getAddressType())){
+													EntityHelper.copyEntityPropertiesOnly(personnelAddressSSM.getSmAddress(),personnelAddress.getSmAddress(),copyPropAddress);
+													break;
+												}
+											}
+										}
+									}
+									
+								}
+								
 								this.getManagedBean().getSmAppl().getSmPersonnels().set(i, personnel);
 							}
 							i++;
@@ -1521,6 +1542,19 @@ public class SmApplicationBackingBean extends
 								if(EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), this.getManagedBean().getSmAppl().getSmPersonnels(), "identificationNo") == null){
 									personnel.setSmAppl(this.getManagedBean().getSmAppl());
 									this.getManagedBean().getSmAppl().getSmPersonnels().add(personnel);
+								}
+							}
+						}
+						//SET EQUITY BRANCH
+						if(ssmResDTO.getSmSupplierBranches() != null){
+							if(this.getManagedBean().getSmAppl().getSmSupplierBranches()==null){
+								this.getManagedBean().getSmAppl().setSmSupplierBranches(new ArrayList());
+							}
+							
+							for(SmSupplierBranch branch : ssmResDTO.getSmSupplierBranches()){
+								if(EntityHelper.getEntityBySinglePropertyFromList(branch.getBranchName(), this.getManagedBean().getSmAppl().getSmSupplierBranches(), "branchName") == null){
+									branch.setSmAppl(this.getManagedBean().getSmAppl());
+									this.getManagedBean().getSmAppl().getSmSupplierBranches().add(branch);
 								}
 							}
 						}
