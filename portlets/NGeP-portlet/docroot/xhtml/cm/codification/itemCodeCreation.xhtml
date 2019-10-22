@@ -40,24 +40,25 @@
 
 			<p:panel header="#{lbl['lbl.cm.create.UNSPSC.code']}"
 				toggleable="true">
+
 				<p:panelGrid style="width:100%;" styleClass="tablePanel"
 					id="tablePanelId">
 					<f:facet name="header">
 						<p:row>
-							<p:column style="width:10%;">
+							<p:column>
 								<h:outputLabel value="" />
 							</p:column>
-							<p:column style="width:25%px;text-align:center;">
-								<span style="color: red;">*</span>
-								<h:outputLabel value="#{lbl['lbl.cm.code']}" />
+							<p:column>
+								<h:outputText value="*" styleClass="mandatory" />
+								<h:outputText style="color:white;"  value=" #{lbl['lbl.cm.code']}" />
 							</p:column>
-							<p:column style="width:35%;text-align:center;">
-								<span style="color: red;">*</span>
-								<h:outputLabel value=" #{lbl['lbl.cm.doc.title']}" />
+							<p:column>
+								<h:outputText value="*" styleClass="mandatory" />
+								<h:outputText style="color:white;"  value=" #{lbl['lbl.cm.doc.title']}" />
 							</p:column>
-							<p:column style="width:35%;text-align:center;">
-								<span style="color: red;">*</span>
-								<h:outputLabel value=" #{lbl['lbl.cm.doc.title.eng']}" />
+							<p:column>
+								<h:outputText value="*" styleClass="mandatory" />
+								<h:outputText style="color:white;"  value=" #{lbl['lbl.cm.doc.title.eng']}" />
 							</p:column>
 						</p:row>
 
@@ -82,7 +83,6 @@
 						<p:column>
 							<p:inputText style="width:400px;"
 								value="#{itemCodeCreationBackingBean.managedBean.selectedLovUnspscSegment.unspscTitle}"></p:inputText>
-
 						</p:column>
 						<p:column>
 							<p:inputText style="width:400px;"
@@ -109,11 +109,14 @@
 						<p:column>
 							<p:inputText style="width:400px;"
 								value="#{itemCodeCreationBackingBean.managedBean.selectedLovUnspscfamily.unspscTitle}"></p:inputText>
+
 						</p:column>
 						<p:column>
 							<p:inputText style="width:400px;"
 								value="#{itemCodeCreationBackingBean.managedBean.selectedLovUnspscfamily.unspscTitleEng}"></p:inputText>
+
 						</p:column>
+
 					</p:row>
 
 					<p:row>
@@ -133,11 +136,14 @@
 						<p:column>
 							<p:inputText style="width:400px;"
 								value="#{itemCodeCreationBackingBean.managedBean.selectedLovUnspscClass.unspscTitle}"></p:inputText>
+
 						</p:column>
 						<p:column>
 							<p:inputText style="width:400px;"
 								value="#{itemCodeCreationBackingBean.managedBean.selectedLovUnspscClass.unspscTitleEng}"></p:inputText>
+
 						</p:column>
+
 					</p:row>
 
 
@@ -155,27 +161,30 @@
 							</ac:lov>
 							<ac:lovPopup />
 
+
 						</p:column>
 						<p:column>
 							<p:inputText style="width:400px;"
 								value="#{itemCodeCreationBackingBean.managedBean.selectedLovUnspsc.unspscTitle}"></p:inputText>
+
 						</p:column>
 						<p:column>
 							<p:inputText style="width:400px;"
 								value="#{itemCodeCreationBackingBean.managedBean.selectedLovUnspsc.unspscTitleEng}"></p:inputText>
+
 						</p:column>
+						
 					</p:row>
 
 
 				</p:panelGrid>
 
-
 			</p:panel>
 			
-      
-       <p:confirmDialog
+			 <p:confirmDialog                
 		           style="font-size:14px;height:20px"
 		           header="#{lbl['lbl.cm.dialog.cofirm.header']}" 
+		            icon="pi-question-circle"
                    message="#{lbl['lbl.cm.dialog.message']}" 
                    showEffect="fade"
                    hideEffect="fade" 
@@ -192,9 +201,7 @@
                      </div>
         </p:confirmDialog>
 			
-
-		</h:panelGroup>
-		
+			</h:panelGroup>
 
 	</ui:define>
 
