@@ -35,69 +35,68 @@
 		<table width="100%;">
 		
 			<tr>
-				<td width="20%"><p:outputLabel style="font-weight: bold;padding-left:100px;"  
+				<td width="15%"><p:outputLabel style="font-weight: bold;"  
 						value="#{lbl['lbl.cm.segment.code']}"></p:outputLabel></td>
-				<td><h:outputText
-						value="#{codificationMaintenanceBackingBean.managedBean.segmentCode}"
-						size="25" /></td>
+				<td width="30%"><h:outputText
+						value="#{codificationMaintenanceBackingBean.managedBean.segmentCode}"/></td>
 
-				<td width="20%"><p:outputLabel style="font-weight: bold;padding-left:120px;"
+				<td width="15%"><p:outputLabel style="font-weight: bold;"
 						value="#{lbl['lbl.cm.segment.title']}"></p:outputLabel></td>
 				<td><h:outputText
 						value="#{codificationMaintenanceBackingBean.managedBean.segmentTitle}"
-						style="white-space:normal!important;" size="25" /></td>
+						style="white-space:normal!important;" /></td>
 			</tr>
 			<tr>
-				<td width="20%"><p:outputLabel style="font-weight: bold;padding-left:100px;"
+				<td width="15%"><p:outputLabel style="font-weight: bold;"
 						value="#{lbl['lbl.cm.family.code']}"></p:outputLabel></td>
-				<td><h:outputText id="familyCode"
-						value="#{codificationMaintenanceBackingBean.managedBean.familyCode}"
-						size="25" disabled="true"/></td>
+				<td width="30%"><h:outputText id="familyCode"
+						value="#{codificationMaintenanceBackingBean.managedBean.familyCode}"/></td>
 
-				<td width="20%"><p:outputLabel style="font-weight: bold;padding-left:120px;"
+				<td width="15%"><p:outputLabel style="font-weight: bold;"
 						value="#{lbl['lbl.cm.family.title']}"></p:outputLabel></td>
 				<td><h:outputText
 						value="#{codificationMaintenanceBackingBean.managedBean.familyTitle}"
-						style="white-space:normal!important;" size="25" disabled="true" /></td>
+						style="white-space:normal!important;" /></td>
 			</tr>
 			<tr>
-				<td width="20%"><p:outputLabel style="font-weight: bold;padding-left:100px;"
+				<td width="15%"><p:outputLabel style="font-weight: bold;"
 						value="#{lbl['lbl.cm.class.code']}"></p:outputLabel></td>
-				<td><h:outputText id="classCode"
-						value="#{codificationMaintenanceBackingBean.managedBean.classCode}" size="25"
-						disabled="true" /></td>
-				<td width="20%"><p:outputLabel style="font-weight: bold;padding-left:120px;"
+				<td width="30%"><h:outputText id="classCode"
+						value="#{codificationMaintenanceBackingBean.managedBean.classCode}" /></td>
+				<td width="15%"><p:outputLabel style="font-weight: bold;"
 						value="#{lbl['lbl.cm.class.title']}"></p:outputLabel></td>
 				<td><h:outputText
 						value="#{codificationMaintenanceBackingBean.managedBean.classTitle}"
-						style="white-space:normal!important;" size="25" disabled="true" /></td>
+						style="white-space:normal!important;" /></td>
 			</tr>
 			<tr>
-				<td width="20%"><p:outputLabel style="font-weight: bold;padding-left:100px;"
+				<td width="15%"><p:outputLabel style="font-weight: bold;"
 						value="#{lbl['lbl.cm.commodity.code']} "></p:outputLabel></td>
-				<td><h:outputText id="commodityCode"
-						value="#{codificationMaintenanceBackingBean.managedBean.commodityCode}" size="25"
-						disabled="true" /></td>
-				<td width="20%"><p:outputLabel style="font-weight: bold;padding-left:120px;"
+				<td width="30%"><h:outputText id="commodityCode"
+						value="#{codificationMaintenanceBackingBean.managedBean.selectedUNSPSCObj.unspscCode}" /></td>
+				<td width="15%"><p:outputLabel style="font-weight: bold;"
 						value="#{lbl['lbl.cm.commodity.title']}"></p:outputLabel></td>
 				<td><h:outputText
-						value="#{codificationMaintenanceBackingBean.managedBean.commodityTitle}"
-						style="white-space:normal!important;" size="25" disabled="true" /></td>
+						value="#{codificationMaintenanceBackingBean.managedBean.selectedUNSPSCObj.unspscTitle}"
+						style="white-space:normal!important;"/></td>
 		   </tr>
 		    <tr>
-				<td width="20%"><p:outputLabel style="font-weight: bold;padding-left:100px;"
+				<td width="15%"><p:outputLabel style="font-weight: bold;"
 						value="#{lbl['lbl.cm.extension.attr']} "></p:outputLabel></td>
-				<td><p:selectOneMenu id="extension" style="width:200px">
-                    <f:selectItem itemLabel="#{lbl['lbl.cm.type']}"  itemValue="T" />
-                    <f:selectItem itemLabel="#{lbl['lbl.cm.brand']}" itemValue="B" />
-                    <f:selectItem itemLabel="#{lbl['lbl.cm.measurement']}" itemValue="M" />
-                    <f:selectItem itemLabel="#{lbl['lbl.cm.color']}" itemValue="C" />
+				<td width="30%"><p:selectOneMenu styleClass="custom-filter"
+				       id="extension" style="width:200px" value = "#{codificationMaintenanceBackingBean.data}">
+                    <f:selectItem itemLabel="#{lbl['lbl.cm.type']}"  itemValue="type" />
+                    <f:selectItem itemLabel="#{lbl['lbl.cm.brand']}" itemValue="brand" />
+                    <f:selectItem itemLabel="#{lbl['lbl.cm.measurement']}" itemValue="measurement" />
+                    <f:selectItem itemLabel="#{lbl['lbl.cm.color']}" itemValue="color" />
+                  <p:ajax event="change" process="@this" update="unspscTableID" 
+					listener="#{codificationMaintenanceBackingBean.changeSearchPlanType(codificationMaintenanceBackingBean.data)}" />                 
         </p:selectOneMenu></td>
 		   </tr>
 		     <tr>
-				<td width="20%"><p:outputLabel style="font-weight: bold;padding-left:100px;"
+				<td width="15%"><p:outputLabel style="font-weight: bold;"
 						value="#{lbl['lbl.cm.status.name']} "></p:outputLabel></td>
-				<td><p:selectOneMenu id="status"  style="width:200px">
+				<td width="30%"><p:selectOneMenu id="status"  style="width:200px">
 				    <f:selectItem itemLabel="#{lbl['lbl.cm.selectOne']}"  itemValue="" />
                     <f:selectItem itemLabel="#{lbl['lbl.cm.active']}"  itemValue="1" />
                     <f:selectItem itemLabel="#{lbl['lbl.cm.inactive']}" itemValue="0" />               
@@ -107,62 +106,41 @@
 		
 			<div style="text-align: right;">
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
-					action="#{codificationMaintenanceBackingBean.extensionCodeSearch}"
-					 update="itemTableID" />				 	 
+					 action="#{codificationMaintenanceBackingBean.extensionCodeSearch}"
+					 update="unspscTableID" />
 			</div>
 		
 		</p:panel>
 			
 		<p:panel  header="#{lbl['lbl.cm.search.result']}" toggleable="true">
-		
-		<p:dataTable tableStyleClass = "fixedTable" id="itemTableID" lazy="true" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-				value="#{codificationMaintenanceBackingBean.managedBean.extensionSearchItemDataModel}" rowKey="#{obj}" var="obj"
-				width="100%" rows="10">
+		<p:dataTable  id="unspscTableID" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"  lazy="true"
+				value="#{codificationMaintenanceBackingBean.managedBean.extensionSearchItemDataModel}" var="obj"
+				style="width:500px;" rows="10">
 
-				<ac:paginator for="itemTableID"></ac:paginator>
+				<ac:paginator for="unspscTableID"></ac:paginator>
 
-
-				<p:column  styleClass = "wrappedTd">
+				<p:column  style="text-align:center;white-space:normal;color:white;width:300px;">
 					<f:facet name="header">
 					#{lbl['lbl.cm.type']}
 				</f:facet>
-					#{obj[4]}
+				#{obj.typeName} 
 				</p:column>
-				<p:column  styleClass = "wrappedTd">
+				<p:column  style="text-align:center;white-space:normal;color:white;width:100px;">
 					<f:facet name="header">
 					#{lbl['lbl.cm.code']}
 				</f:facet>
+				#{obj.typeCode} 
 			</p:column>
-				<p:column headerText="#{lbl['lbl.cm.status.name']}" styleClass="column-align-center"  style="width:10%;white-space:normal;">
+				<p:column headerText="#{lbl['lbl.cm.status.name']}" style="text-align:center;white-space:normal;width:100px;" >
 					<p:selectOneMenu id="status" style="width:125px">
-				    <f:selectItem itemLabel="#{lbl['lbl.cm.selectOne']}"  itemValue="" />
+					<f:selectItems value="#{obj.recordStatus}"/>
                     <f:selectItem itemLabel="#{lbl['lbl.cm.active']}"  itemValue="1" />
                     <f:selectItem itemLabel="#{lbl['lbl.cm.inactive']}" itemValue="0" />               
                     </p:selectOneMenu>
 				</p:column>					
 			</p:dataTable>
-		</p:panel> 
-		
-		<p:confirmDialog
-		           style="font-size:14px;height:20px"
-		           header="#{lbl['lbl.cm.dialog.cofirm.header']}" 
-                   message="#{lbl['lbl.cm.dialog.message.item.code.maintenance']}" 
-                   showEffect="fade"
-                   hideEffect="fade" 
-                   widgetVar="updateData">
-        <div style="text-align: right;">
-            <p:commandButton 
-                     value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
-                     action="#{codificationMaintenanceBackingBean.SubmitUpdateData}"
-                     oncomplete="updateData.hide()" 
-                     update=":form"/>
-            <p:commandButton
-                     value="#{lbl['lbl.btn.no']}"
-                     oncomplete="updateData.hide()"/>
-                     </div>
-        </p:confirmDialog>
-	</h:panelGroup>
-		
+		</p:panel>
+		</h:panelGroup>
   </ui:define>
 	
  </ui:composition>
