@@ -49,6 +49,7 @@ import my.ep.dto.pm.common.zone.ZoneResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.persistence.entity.pm.common.PmDocument;
@@ -2055,7 +2056,11 @@ public class SupportDocumentBackingBean extends
 	 */
 	public String saveSupportDoc() {
 		log.info("saveSupportDoc - Start");
-
+		
+		// #26666 - start
+		PmUser user = new FacesScopes().getUserSessionBean();
+		log.info("userId == " + user.getUserId() + "| userName == " + user.getUserName());
+		// #26666 - end
 		DocumentReqDTO reqDTO = null;
 		DocumentResDTO resDTO = null;
 		IDocumentSO reqSO = null;
@@ -2076,13 +2081,15 @@ public class SupportDocumentBackingBean extends
 			reqDTO.setBrandNew(createAction);
 			reqDTO.setTrackDairyVOs((new ArrayList<PmTrackingDairyVO>()));
 
+			// #26666 - start
 			if (createAction) {
+				reqDTO.setCreatedBy(user.getUserId());
 				messageId = MessageConst.TD_80800;
 			} else {
 				messageId = MessageConst.TD_80801;
 			}
-
-			
+			reqDTO.setChangedBy(user.getUserId());
+			// #26666 - end
 
 			getAllRestrictions(pmDocument, reqDTO, pmDocument.getRecordStatusFlg()
 					.longValue());
