@@ -2369,6 +2369,26 @@ public class TaskReassignmentBackingBean extends
 			String capitalizeUserName;
 			PmTaskReassignmentVO vo = null;
 			List<String> roleList = new ArrayList<String>();
+			String orgCode = null;
+			PmOrgProfile orgProfileDetail = new PmOrgProfile();
+			
+			if (getManagedBean().getTaskAssignmentSearchBean() != null &&
+					getManagedBean().getTaskAssignmentSearchBean().
+						getOrgProfile() != null) {
+				orgCode = getManagedBean().getTaskAssignmentSearchBean().getOrgProfile().getOrgCode();
+				orgProfileDetail = PmCommonUtil.retrieveOrgProfileDtlByCode(orgCode);
+				
+				if (orgProfileDetail != null && 
+					(orgProfileDetail.getOrgProfileId().longValue() == 
+					getManagedBean().getTaskAssignmentSearchBean().
+					getOrgProfile().getOrgProfileId().longValue())) {
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean(
+									"pmUserOrgs.pmOrgProfile.pmOrgValidity.orgCode",
+									SearchOperator.OPERATOR_EQUALS.value(),
+									orgCode));
+				}
+			}
 			
 			try {
 				log.info("[#25018] isBulkReassign? " + getManagedBean().isBulkReassign());
@@ -2520,10 +2540,12 @@ public class TaskReassignmentBackingBean extends
 				resultBean.getResultList().addAll(new ArrayList<PmUser>(users.values()));
 				
 				for(PmUser user : resultBean.getResultList()){
-					log.info("[#25018] capitalize user name...");
+					log.info("[#25018] capitalize user name "+user.getIdentificationNo()+
+							"("+user.getUserName()+")");
 					capitalizeUserName = WordUtils.capitalizeFully(user.getUserName());
 					user.setUserName(capitalizeUserName);
-				}			
+				}
+				log.info("getTotalRecord:: "+resultBean.getTotalRecord());
 				return resultBean;
 			}
 			
@@ -2648,7 +2670,7 @@ public class TaskReassignmentBackingBean extends
 			log.info(":::generateUserResultBean() userId: "+ userId +", vo.getDocId(): "+ vo.getDocId() 
 					+", vo.getDocType(): "+ vo.getDocType() +", vo.getRoleList(): "+ vo.getRoleList() +".");	
 			
-			resultBean = generateCommitteAssignees(searchBean, vo.getDocId(), vo.getDocType(), vo.getRoleList(), orgProfileId);
+			resultBean = generateCommitteAssignees(searchBean, vo.getDocId(), vo.getDocType(), roleList, orgProfileId);
 			//Bug #25021
 			
 			getManagedBean().setCommitteeUpdate(true);		
@@ -2874,7 +2896,7 @@ public class TaskReassignmentBackingBean extends
 			
 			resultBean = PmCommonUtil.searchUsersResultBeanBySearchBean(searchBean);
 		}
-		
+		log.info("isSearched:: "+isSearched);
 		return resultBean;
 		
 	}
