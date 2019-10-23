@@ -214,6 +214,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	/*13984 Schedule/ Phase Information*/
     private static List<ScheduleInfo> schInfo;
+    private static String orgCode;
+    private static String orgName;
 
 	/** The log. */
 	private static Logger log = Logger.getLogger(CatalogueBackingBean.class);
@@ -270,10 +272,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			FulfilmentResDTO resfDTO;
 			
 
-
 			resfDTO = requestSO.retrieveFulfilmentRequestDocNosByContractId(flReqDTO);
 			resDTO = contractSO.retrieveAvailableSchedulePhaseNo(reqDTO);
-
+			
 			if (resDTO.getAvailableNoList() != null) {
 				getManagedBean().setAvailableNoList(resDTO.getAvailableNoList());
 			}
@@ -302,6 +303,16 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						.getDocNoStatus().get(i), resfDTO.getFlOrderDocNos().get(i), resfDTO.getFlOrderDocNoStatus()
 						.get(i)));
 			}
+            resfDTO.getFlFulfilmentRequest();
+            
+			String orgCode = resfDTO.getOrgCodes().get(0);
+			setOrgCode(orgCode);
+			
+			String orgName = resfDTO.getOrgNames().get(0);
+			setOrgName(orgName);
+		   
+		    getManagedBean().setFlRequest(resfDTO.getFlFulfilmentRequest());
+		
 		}
 
 		if (MDC.get(LogKey.USER_ID) == null) {
@@ -310,6 +321,23 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		
 		return schInfo;
 
+	}
+	
+
+	public String getOrgCode() {
+		return orgCode;
+	}
+
+	public void setOrgCode(String orgCode) {
+		this.orgCode = orgCode;
+	}
+	
+	public String getOrgName() {
+		return orgName;
+	}
+
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
 	}
 
 	/**
