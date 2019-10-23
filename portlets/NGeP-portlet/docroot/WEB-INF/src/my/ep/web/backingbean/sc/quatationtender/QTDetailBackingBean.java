@@ -860,12 +860,20 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * 
 	 * @param scQt
 	 *            the sc qt
+	 * @param fullPath
+	 * 			  full path of redirect page
+	 * @param editable
+	 * 			  editable
+	 * @param backUrl 
+	 * 			  usually view.viewId
 	 * @return maintanacepage
 	 */
 	public String editQuationTenderDetails(ScQt scQt, boolean editable, boolean fullPath, String backUrl) {
 		
 		debugLogger("start editQuationTenderDetails");
-		renewQTSesionObject();
+		if(!isApprovalScreen()){
+			renewQTSesionObject();
+		}
 		debugLogger("editQuationTenderDetails, @Managedbean = "+ this.getManagedBean());
 		this.getManagedBean().setReadOnly(!editable);
 		this.getManagedBean().setMaintanceFlow(true);
@@ -915,7 +923,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			checkForPublishperiodAndValidityDays(selectedScQt,fc);
 			Long currentStatus = selectedScQt.getQtStatus().getStatusId();
 			this.getManagedBean().setCurrentStatusId(currentStatus);
-			this.getManagedBean().setQt(selectedScQt);
+			if(!isApprovalScreen() || this.getManagedBean().getQt() == null){
+				this.getManagedBean().setQt(selectedScQt);
+			}
 
 			if ( QTStatusConst.QT_CANCELLED.equals(currentStatus) && null == selectedScQt
 							.getQtType()) {
