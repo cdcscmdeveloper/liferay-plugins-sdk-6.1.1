@@ -32,11 +32,12 @@
 			
 			<tr>
 				<th width="25%">
-				<p:outputLabel value="#{lbl['lbl.sm.travelling.ticketing.system.catogory']}" />
+				<p:outputLabel value="#{lbl['lbl.sm.travelling.ticketing.system.category']}" />
 				<p:outputLabel value="* " styleClass="mandatory" /></th>
 				<td width="35%"><p:selectOneMenu
-						label="#{lbl['lbl.sm.travelling.ticketing.system.catogory']}" id="categoryType"
+						label="#{lbl['lbl.sm.travelling.ticketing.system.category']}" id="categoryType"
 						value="#{travellingTicketBB.managedBean.pmMachineSection.categoryType.parameterId}"
+						disabled="#{!travellingTicketBB.managedBean.pmMachineSection.brandNew}"						
 						style="width:300px;">
 						<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
 							itemValue="#{null}"></f:selectItem>
@@ -47,25 +48,10 @@
 				<td>&#160;</td>
 			</tr>
 			
-		<!-- 	<tr>
-				<th width="25%">
-				<p:outputLabel value="#{lbl['lbl.sm.travelling.ticketing.system.status']}" /></th>
-				<td width="25%">
-					<p:selectOneMenu style="width:203px"
-					 value="#{travellingTicketBB.managedBean.pmMachine.recordStatusFlg}">  
-            			<f:selectItem itemLabel="Select One" itemValue="0" />  
-            			<f:selectItem selected="true"  itemLabel="Active" itemValue="1" /> 
-            			<f:selectItem itemLabel="Non-Active" itemValue="2" />  
-              		</p:selectOneMenu> 
-				</td>
-				<th>&#160;</th>
-				<td>&#160;</td>
-			</tr> -->
-			
 			<tr>
-					<th><p:outputLabel value="#{lbl['lbl.pm.status']}" /> <p:outputLabel value="* " styleClass="mandatory" /></th>
+					<th><p:outputLabel value="#{lbl['lbl.pm.status']}" /> <p:outputLabel value="*" styleClass="mandatory" /></th>
 					<td><p:selectOneMenu styleClass="ppDropDownWidthM"
-							label="#{lbl['lbl.pm.status']}" disabled="true"
+							label="#{lbl['lbl.pm.status']}" 
 							value="#{travellingTicketBB.managedBean.pmMachine.recordStatusFlg}">
 							<f:selectItems
 								value="#{travellingTicketBB.getStatusList()}" />
