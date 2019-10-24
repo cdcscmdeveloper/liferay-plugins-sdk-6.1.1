@@ -1448,8 +1448,7 @@ public class SmApplicationBackingBean extends
 		}
 		
 		//16052019 - SSM INTEGRATION CR - Fahmi
-		if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
-				||applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
+		if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
 				|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF) 
 				|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW) 
 				|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)
@@ -1534,7 +1533,7 @@ public class SmApplicationBackingBean extends
 							
 						}
 						//SET SMPERSONNEL
-						if(ssmResDTO.getSmPersonnelAll()!=null){
+						/*if(ssmResDTO.getSmPersonnelAll()!=null){
 							if(this.getManagedBean().getSmAppl().getSmPersonnels()==null){
 								this.getManagedBean().getSmAppl().setSmPersonnels(new ArrayList());
 							}
@@ -1544,7 +1543,7 @@ public class SmApplicationBackingBean extends
 									this.getManagedBean().getSmAppl().getSmPersonnels().add(personnel);
 								}
 							}
-						}
+						}*/
 						//SET EQUITY BRANCH
 						if(ssmResDTO.getSmSupplierBranches() != null){
 							if(this.getManagedBean().getSmAppl().getSmSupplierBranches()==null){
