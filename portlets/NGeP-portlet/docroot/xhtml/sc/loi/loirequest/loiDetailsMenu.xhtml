@@ -248,7 +248,7 @@
 						disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
 							value="#{lOIDetailBackingBean.managedBean.contractSignerUser.userId}"
 							style="width: 276px;margin-bottom: 5px;"
-							required="true"
+							required="#{!lOIDetailBackingBean.managedBean.readOnly}"
 							label="#{lbl['lbl.sc.loiloa.loi.signer']}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 							<f:selectItems value="#{lOIDetailBackingBean.managedBean.contractSigners}"
@@ -272,7 +272,7 @@
 				</td>
 				<td><p:inputText id="loiSignerDesigId" disabled="#{!isEditableStatus or lOIDetailBackingBean.managedBean.readOnly}"
 						value="#{lOIDetailBackingBean.managedBean.scLoi.loiSignerDesig}"
-						size="34" maxlength="100" required="true" label="#{lbl['lbl.sc.loiloa.loi.signer.desig']}">
+						size="34" maxlength="100" required="#{!lOIDetailBackingBean.managedBean.readOnly}" label="#{lbl['lbl.sc.loiloa.loi.signer.desig']}">
 					</p:inputText><p:message id="loiSignerDesigIdMsg" for="loiSignerDesigId"
 										display="icon" /></td>
 			</tr>
