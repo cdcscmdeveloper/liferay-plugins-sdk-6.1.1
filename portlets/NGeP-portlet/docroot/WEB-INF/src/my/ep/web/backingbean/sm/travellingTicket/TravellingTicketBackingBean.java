@@ -99,7 +99,7 @@ public class TravellingTicketBackingBean extends BaseBackingBean<TravellingTicke
 	}
 
 	public String backToSearch() {
-
+		resetMachineSearchBean();
 		return TRAVELLING_TICKET_MAIN;
 	}
 	
@@ -179,19 +179,29 @@ public class TravellingTicketBackingBean extends BaseBackingBean<TravellingTicke
 
 		if (StringUtils.isNotBlank(machineSearchBean.getName())) {
 
-			searchBean.getDataFilterBeans().add(
+			/*searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("pmMachine.machineDesc",
 							SearchOperator.OPERATOR_EQUALS.value(),
-							machineSearchBean.getName()));	
+							machineSearchBean.getName()));	*/
+			
+			SearchFilterBean filterBean = new SearchFilterBean(
+					SearchOperator.OPERATOR_LIKE.value());
+			filterBean.setSearchField("pmMachine.machineDesc");
+			filterBean.setCaseInsensitive(true);
+			filterBean.setSearchValue(getManagedBean().getMachineSearchBean().getName());
+			searchBean.getDataFilterBeans().add(filterBean);
 			
 		}
 
 		if (StringUtils.isNotBlank(machineSearchBean.getCode())) {
 
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmMachine.machineCode",
-							SearchOperator.OPERATOR_EQUALS.value(),
-							machineSearchBean.getCode()));	
+			SearchFilterBean filterBean = new SearchFilterBean(
+					SearchOperator.OPERATOR_LIKE.value());
+			filterBean.setSearchField("pmMachine.machineCode");
+			filterBean.setCaseInsensitive(true);
+			filterBean.setSearchValue(getManagedBean().getMachineSearchBean().getCode());
+			searchBean.getDataFilterBeans().add(filterBean);
+			
 		}
 		
 		if (machineSearchBean.getCategoryId() != null) {
@@ -270,7 +280,7 @@ public class TravellingTicketBackingBean extends BaseBackingBean<TravellingTicke
 			
 			if (machineResDTO.isSuccessful()) {
 				message = getManagedBean().getPmMachine().isBrandNew() 
-						? MessageConst.ERR_900038 : MessageConst.ERR_900037;
+						? MessageConst.INFO_900038 : MessageConst.INFO_900037;
 				messageParam = new String[] {ResourceBundleUtils.getMessage(
 						"lbl.pm.state", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						new FacesScopes().getUserLocale()),
@@ -308,7 +318,6 @@ public class TravellingTicketBackingBean extends BaseBackingBean<TravellingTicke
 			throw e;
 		}
 	}
-	
 	private void machineNameValidationMsg(PmMachine pmMachine) {
 		debugLogger("machineValidationMsg");
 
