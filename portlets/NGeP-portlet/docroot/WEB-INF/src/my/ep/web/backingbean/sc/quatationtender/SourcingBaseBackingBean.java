@@ -66,6 +66,7 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.constant.tpl.TemplateDocConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.circular.PanelGroupItemReqDTO;
 import my.ep.dto.ct.circular.PanelGroupItemResDTO;
@@ -82,6 +83,7 @@ import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.SpecificationReqDTO;
+import my.ep.dto.sc.quationtender.SpecificationResDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
@@ -102,6 +104,7 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
@@ -136,6 +139,8 @@ import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
+import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchOperator;
@@ -3266,6 +3271,202 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				}
 				zos.closeEntry();
 			}
+		}
+	}
+	
+	/**
+	 * @param context
+	 * @param scLoa
+	 */
+	public void constructSupplierSpecificationAndRemarks(VelocityContext context, ScLoa scLoa) {
+		List<TplSpecMaster> masters = new ArrayList<TplSpecMaster>();
+		IQTSpecSO specSO;
+		try {
+			specSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+			reqDTO.setQtId(scLoa.getScLoiLoa().getDocId());
+			reqDTO.setSpecType(ParameterConst.SPECIFICATION_TYPE_TECHNICAL);
+			reqDTO.setPrepareSpec(true);
+			SpecificationResDTO resDto = specSO.retrieveSpecDetails(reqDTO);
+			String dafaltValue = "T/B";
+			if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
+				dafaltValue = "N/A";
+			}
+			for (ScQtCheckList scQtCheckList : resDto.getSpecResultBean()
+					.getResultList()) {
+				List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
+				TplSpecMaster master = null;
+				master = scQtCheckList.getScQtDoc().getTplSpecMaster();
+				for (TplSpecQuestion question : master.getTplSpecQuestions()) {
+					constructTplSpecQuestion(dafaltValue,
+							newTplSpecQuestionsList, master, question);
+				}
+				master.setTplSpecQuestions(newTplSpecQuestionsList);
+				masters.add(master);
+			}
+			context.put("serviceScope", dafaltValue);
+			context.put("masters", masters);
+			context.put("bean", this);
+		} finally {
+			specSO = null;
+		}
+	}
+
+	/**
+	 * @param dafaltValue
+	 * @param newTplSpecQuestionsList
+	 * @param master
+	 * @param question
+	 */
+	private void constructTplSpecQuestion(String dafaltValue,
+			List<TplSpecQuestion> newTplSpecQuestionsList,
+			TplSpecMaster master, TplSpecQuestion question) {
+		TplSpecQuestion parentQuestion = question
+				.getParentSpecQuestion();
+		if(null!=master.getSpecName()){
+               String specTitle= master.getSpecName();
+               specTitle=specTitle.replaceAll(QTConstants.NEW_LINE_CHARACTER,TemplateDocConst.PARAM_SPACE);
+               specTitle=specTitle.replaceAll(QTConstants.AMBRA_SENT,TemplateDocConst.PARAM_SPACE);
+               specTitle=specTitle.replaceAll(QTConstants.LESS_THEN,TemplateDocConst.PARAM_SPACE);
+               specTitle=specTitle.replaceAll(QTConstants.GREATER_THEN,TemplateDocConst.PARAM_SPACE);
+               master.setSpecName(specTitle);
+			
+		}
+		if (question.getClItem() == null) {
+			question.setClItem("");
+		}else{
+		    String clItem = question.getClItem();
+		//20190513@asyrafhaziq - 25812 - Start
+		// add a condition to filter the character (character after space and before space) length for data 'ITEM'.
+		    String[] words = clItem.split(" "); //get array of words
+		    StringBuilder sb = new StringBuilder();
+		    StringBuilder subSb = new StringBuilder();//this is for perfomance
+		    for(String word : words) //affect each word in string
+		    {
+		      int length = word.length();
+		      if ( length >= 20)
+		    	{
+		    	  String subWord;
+		            for (int i = 0; i < length; i += 20) {
+		            	subWord = word.substring(i, Math.min(length, i + 20));
+		            	subSb.append(subWord).append(TemplateDocConst.PARAM_SPACE);
+		            }
+		    		word = subSb.toString();	
+		    	}
+		        sb.append(word).append(TemplateDocConst.PARAM_SPACE);
+		    }
+		    clItem =  sb.toString();
+		    //20190513@asyrafhaziq - 25812 - End
+			clItem=clItem.replaceAll(QTConstants.NEW_LINE_CHARACTER,TemplateDocConst.PARAM_SPACE);
+			clItem=clItem.replaceAll(QTConstants.AMBRA_SENT,TemplateDocConst.PARAM_SPACE);
+			clItem=clItem.replaceAll(QTConstants.LESS_THEN,TemplateDocConst.PARAM_SPACE);
+			clItem=clItem.replaceAll(QTConstants.GREATER_THEN,TemplateDocConst.PARAM_SPACE);
+			question.setClItem(clItem);
+		}
+		if (question.getClSpecDetail() == null) {
+			question.setClSpecDetail(dafaltValue);
+		} else{
+			 String clSpecDetail = question.getClSpecDetail()
+					.replaceAll(QTConstants.NEW_LINE_CHARACTER,TemplateDocConst.PARAM_SPACE);
+			 clSpecDetail=clSpecDetail.replaceAll(QTConstants.AMBRA_SENT,TemplateDocConst.PARAM_SPACE);
+			 clSpecDetail=clSpecDetail.replaceAll(QTConstants.LESS_THEN,TemplateDocConst.PARAM_SPACE);
+			 clSpecDetail=clSpecDetail.replaceAll(QTConstants.GREATER_THEN,TemplateDocConst.PARAM_SPACE);
+			question.setClSpecDetail(clSpecDetail);
+		}
+		if (question.getClUom() != null) {
+			if (question.getClUom().getUomName() == null) {
+				question.getClUom().setUomName(dafaltValue);
+			}
+		} else {
+			question.setClUom(new PmUom());
+			question.getClUom().setUomName(dafaltValue);
+		}
+		
+		if (question.getClUomFrequency() == null) {
+			question.setClUomFrequency(new BigDecimal(0));
+		}
+		
+		if (question.getClUomPerDay() == null) {
+			question.setClUomPerDay(new BigDecimal(0));
+		}
+		
+		if (question.getClUomPerMonth() == null) {
+			question.setClUomPerMonth(new BigDecimal(0));
+		}
+		
+		if (question.getClPriceTypeCode() == null) {
+			question.setClPriceTypeCode(new PmParameter());
+			question.getClPriceTypeCode().setParameterCode(dafaltValue);
+		} else {
+			if (question.getClPriceTypeCode().getParameterCode() == null) {
+				question.getClPriceTypeCode().setParameterCode(dafaltValue);
+			}
+		}
+		if (question.getClQuantity() == null) {
+			question.setClQuantity(new BigDecimal(0));
+		}
+
+		if (question.isClAnswerRequired()) {
+			question.setClAnswerRequired(true);
+		}
+		if (question.getClReviewRemark() == null) {
+			question.setClReviewRemark(dafaltValue);
+		}
+		if (parentQuestion != null) {
+			int specCount = parentQuestion.getSpecCount();
+			if (specCount == 0) {
+				specCount = 1;
+			}
+			parentQuestion.setSpecCount(specCount + 1);
+		}
+		newTplSpecQuestionsList.add(question);
+	}
+	
+	/**
+	 * @param context
+	 * @param scLoa
+	 * @param specMasters 
+	 */
+	public void constructSupplierSpecificationAndRemarks(VelocityContext context, ScLoa scLoa, List<TplSpecMaster> specMasters) {
+		List<TplSpecMaster> masters = new ArrayList<TplSpecMaster>();
+		String dafaltValue = "T/B";
+		if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
+			dafaltValue = "N/A";
+		}
+		
+		if (CollectionUtils.isNotEmpty(specMasters)) {
+			
+			for (TplSpecMaster master : specMasters) {
+				List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
+				for (TplSpecQuestion question : master.getTplSpecQuestions()) {
+					constructTplSpecQuestion(dafaltValue,
+							newTplSpecQuestionsList, master, question);
+				}
+				master.setTplSpecQuestions(newTplSpecQuestionsList);
+				masters.add(master);
+			}
+		}
+		context.put("serviceScope", dafaltValue);
+		context.put("masters", masters);
+		context.put("bean", this);
+	}
+	
+	/**
+	 * Get Parameter description by parameter for report.
+	 * 
+	 * @param parameter
+	 *            the PmParameter instance.
+	 * @return parameter description
+	 */
+	public String getParameterDescForReport(PmParameter parameter) {
+		if (parameter != null
+				&& StringUtils.isNotBlank(parameter.getParameterType())) {
+			return getParameterDesc(
+					parameter,
+					new FacesScopes().getUserLocale());
+		} else {
+			return null;
 		}
 	}
 }

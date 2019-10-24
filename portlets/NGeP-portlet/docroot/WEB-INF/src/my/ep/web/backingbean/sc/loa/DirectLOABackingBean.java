@@ -371,9 +371,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		
 		boolean isGenerate = false;
 		if(scLoaReport.getDefinationType().getParameterCode().equals(
-				ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD_AND_DOWNLOAD) &&
-				getManagedBean().getScLoa().getPmStatus().getStatusId().equals(
-						QTStatusConst.LOA_PENDING_SUBMISSION)) {
+				ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD_AND_DOWNLOAD)
+				&& (getManagedBean().getScLoa().getPmStatus().getStatusId().equals(
+						QTStatusConst.LOA_PENDING_SUBMISSION)
+						|| getManagedBean().getScLoa().getPmStatus().getStatusId().equals(
+								QTStatusConst.LOA_PENDING_VERIFICATION)
+						|| getManagedBean().getScLoa().getPmStatus().getStatusId().equals(
+										QTStatusConst.LOA_COMPLETED))) {
 			isGenerate = true;
 		}
 		if(scLoaReport.getDefinationType().getParameterCode().equals(
@@ -3965,7 +3969,20 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 			ScLoaReportAttachment scLoaReportAttachment = scLoaReport
 					.getScLoaReportAttachment();
-			ScLoaReportAttachment scLoaReportAttachmentGenerated = generateDocumentAttachment(scLoaReport, false);
+			
+			// #26130 - Start
+			boolean isGenerate = false;
+			if ("SuratSetujuTerima(TermasukLampiranA)".equals(scLoaReport.getTitle().replaceAll("\\s", ""))
+					&& scLoaReport.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD_AND_DOWNLOAD)
+					&& (getManagedBean().getScLoa().getPmStatus().getStatusId().equals(
+											QTStatusConst.LOA_PENDING_VERIFICATION)
+						|| getManagedBean().getScLoa().getPmStatus().getStatusId().equals(
+								QTStatusConst.LOA_COMPLETED))) {
+					isGenerate = true;
+			}
+			// #26130 - End
+			
+			ScLoaReportAttachment scLoaReportAttachmentGenerated = generateDocumentAttachment(scLoaReport, isGenerate);
 			if(scLoaReport.getDefinationType().getParameterCode().equals(
 					ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD_AND_DOWNLOAD) ||
 					scLoaReport.getDefinationType().getParameterCode().equals(
@@ -4013,10 +4030,21 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 							.getLoaNo());
 					if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
 							.equals(docDefinitionKey)) {
-						filename.append(".docx");
-						scLoaReportAttachment.setFileName(filename.toString());
-						generateAgreementLetterDocFromVelocity(
-								(ScAttachment) scLoaReportAttachment, scLoa, getManagedBean().getScQt());
+						if (getManagedBean().getScLoa().getPmStatus().getStatusId().equals(
+								QTStatusConst.LOA_PENDING_VERIFICATION)
+								|| getManagedBean().getScLoa().getPmStatus().getStatusId().equals(
+										QTStatusConst.LOA_COMPLETED)) {
+							filename.append(".pdf");
+							scLoaReportAttachment.setFileName(filename.toString());
+							generateAgreementLetterPdfFromVelocity(
+									(ScAttachment) scLoaReportAttachment, scLoa, getManagedBean().getScQt());
+
+						} else {
+							filename.append(".docx");
+							scLoaReportAttachment.setFileName(filename.toString());
+							generateAgreementLetterDocFromVelocity(
+									(ScAttachment) scLoaReportAttachment, scLoa, getManagedBean().getScQt());
+						}
 					}else if (SourcingConstants.DOC_DEF_KEY_ACKNOWLEDGEMENT_LOA_RECEIPT
 							.equals(docDefinitionKey)) {
 						filename.append(".pdf");
@@ -5411,6 +5439,45 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		/*DocumentGenerator.getInstance().generatePdfFromVelocity(
 				SourcingConstants.LOA_AGREEMENT_LETTER, context,
 				new FileOutputStream(getActualFilePath(attachment)));*/
+		
+		// #26130 - Start
+		if(scQt != null && (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())
+				|| ParameterConst.DOCTYPE_DIRECT_NEGO.equals(scLoa.getScLoiLoa().getDocType()))
+				&& (ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(scQt.getFulfilmentType().getParameterCode()) 
+					|| ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scQt.getFulfilmentType().getParameterCode())
+					|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equals(scQt.getFulfilmentType().getParameterCode()))){
+			TplSpecMaster productSpecMaster = getManagedBean()
+					.getProdTemplateSpecBean().getSpecMaster();
+			TplSpecMaster serviceSpecMaster = getManagedBean()
+					.getSpecTemplateSpecBean().getSpecMaster();
+			List<TplSpecMaster> specMasters = null;
+			if (null != productSpecMaster || null != serviceSpecMaster) {
+				specMasters = new ArrayList<>();
+				if (null != productSpecMaster) {
+					specMasters.add(productSpecMaster);
+				}
+				if (null != serviceSpecMaster) {
+					specMasters.add(serviceSpecMaster);
+				}
+			}
+			constructSupplierSpecificationAndRemarks(context, scLoa, specMasters);
+			
+			// scLoa
+			context.put("scLoa", scLoa);
+			
+			if(scLoa.getProcurementTypeCatId() != null && 
+					scLoa.getProcurementTypeCatId().getParameterCode().equals(ParameterConst.PROCUREMENT_TYPE_CODE_SUPPLY)){
+				DocumentGenerator.getInstance().generatePdfFromVelocity(
+						SourcingConstants.LOA_AGREEMENT_LETTER_PRODUCT, context,
+						new FileOutputStream(getActualFilePath(attachment)));
+			} else{
+				DocumentGenerator.getInstance().generatePdfFromVelocity(
+						SourcingConstants.LOA_AGREEMENT_LETTER_SERVICE, context,
+						new FileOutputStream(getActualFilePath(attachment)));
+			}
+		}
+		
+		// #26130 - End
 	}
 
 //	/**
