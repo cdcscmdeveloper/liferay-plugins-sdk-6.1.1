@@ -28,9 +28,9 @@
 			</tr>
 			<tr>
 				<th width="25%">
-				<p:outputLabel value="#{lbl['lbl.sm.travelling.ticketing.system.catogory']}" /></th>
+				<p:outputLabel value="#{lbl['lbl.sm.travelling.ticketing.system.category']}" /></th>
 				<td width="35%"><p:selectOneMenu
-						label="#{lbl['lbl.sm.travelling.ticketing.system.catogory']}" id="categoryType"
+						label="#{lbl['lbl.sm.travelling.ticketing.system.category']}" id="categoryType"
 						value="#{travellingTicketBB.managedBean.machineSearchBean.categoryId}"
 						style="width:300px;">
 						<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
@@ -49,7 +49,7 @@
 					<p:selectOneMenu style="width:203px" value="#{travellingTicketBB.managedBean.machineSearchBean.ttStatus}">  
             			<f:selectItem itemLabel="Select One" itemValue="0" />  
             			<f:selectItem itemLabel="Active" itemValue="1" /> 
-            			<f:selectItem itemLabel="Non-Active" itemValue="2" />  
+            			<f:selectItem itemLabel="Inactive" itemValue="2" />  
               		</p:selectOneMenu> 
 				</td>
 				<th>&#160;</th>
