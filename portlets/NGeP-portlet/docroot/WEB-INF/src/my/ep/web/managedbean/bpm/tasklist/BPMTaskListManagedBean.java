@@ -120,6 +120,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	private FlFulfilmentRequest fulfilmentRequest;
 	private FlFulfilmentNote fulfilmentNote = new FlFulfilmentNote();
 	//end added for #24968
+	
+	// 12177 - Start
+	private Calendar expirationDateSq;
+	// 12177 - End
 
 	public List<WorklistItemVO> getTaskList() {
 		return taskList;
@@ -637,6 +641,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						    		   if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 						    			   if(!isSqStillValid(quoteResDTO.getEndDate())){
 									    	   worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
+									    	   worklistItemVO.setExpirationDate(getExpirationDate());
 									       }
 						    		   }
 								   }								   
@@ -681,6 +686,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 									       if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 									    	   if(!isSqStillValid(quoteResDTO.getEndDate())){
 									    		   worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
+									    		   worklistItemVO.setExpirationDate(getExpirationDate());
 											   }
 									       }   	   
 								        }
@@ -721,6 +727,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 										   if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 									    	   if(!isSqStillValid(quoteResDTO.getEndDate())){
 									    		   worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
+									    		   worklistItemVO.setExpirationDate(getExpirationDate());
 											   }
 										   }
 									   }
@@ -738,6 +745,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 										   if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 									    	   if(!isSqStillValid(quoteResDTO.getEndDate())){
 									    		   worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
+									    		   worklistItemVO.setExpirationDate(getExpirationDate());
 											   }
 										   }  			   
 							    	   }
@@ -1235,6 +1243,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						    		   if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 						    			   if(!isSqStillValid(quoteResDTO.getEndDate())){
 									    	   worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
+									    	   worklistItemVO.setExpirationDate(getExpirationDate());
 									       }
 						    		   }
 								   }								   
@@ -1251,6 +1260,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 									  if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 										  if(!isSqStillValid(quoteResDTO.getEndDate())){
 											  worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
+											  worklistItemVO.setExpirationDate(getExpirationDate());
 										  }
 									  }else{
 										  System.out.println("Begin PID validity process");
@@ -1292,6 +1302,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 									  if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 										  if(!isSqStillValid(quoteResDTO.getEndDate())){
 											  worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
+											  worklistItemVO.setExpirationDate(getExpirationDate());
 										  }
 									  }else if(quoteResDTO.getPid() != null){
 										  System.out.println("Begin PID validity process");
@@ -1332,6 +1343,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 									  if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 										  if(!isSqStillValid(quoteResDTO.getEndDate())){
 											  worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
+											  worklistItemVO.setExpirationDate(getExpirationDate());
 										  }
 									  }  			   
 								   }
@@ -1850,9 +1862,26 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 					
 				if(currentDate.compareTo(cal.getTime()) >= 0){
 						validDate = false;
+						setExpirationDate(dateToCalendar(cal.getTime()));
 				}							
 			}						
 			return validDate;	
 	}
+	
+	public Calendar getExpirationDate() {
+		return expirationDateSq;
+	}
+
+	public void setExpirationDate(Calendar expirationDateSq) {
+		this.expirationDateSq = expirationDateSq;
+	}
+	
+	//Convert Date to Calendar
+    private Calendar dateToCalendar(Date date) {
+    	Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		return calendar;
+	}
 	// 12177 - End
+	
 }

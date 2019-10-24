@@ -41,8 +41,6 @@ public class DpLOAManagedBean extends BaseManagedBean {
 	/** The source id. */
 	private Long sourceId;
 	
-	/** The show cancel buttons. */
-	private Boolean showCancelButtons;
 	
 	/**
 	 * Instantiates a new dp loa managed bean.
@@ -138,24 +136,6 @@ public class DpLOAManagedBean extends BaseManagedBean {
 	 */
 	public void setSourceId(Long sourceId) {
 		this.sourceId = sourceId;
-	}
-	
-	/**
-	 * Gets the show cancel buttons.
-	 *
-	 * @return the show cancel buttons
-	 */
-	public Boolean getShowCancelButtons() {
-		return showCancelButtons;
-	}
-
-	/**
-	 * Sets the show cancel buttons.
-	 *
-	 * @param showCancelButtons the new show cancel buttons
-	 */
-	public void setShowCancelButtons(Boolean showCancelButtons) {
-		this.showCancelButtons = showCancelButtons;
 	}
 
 }
