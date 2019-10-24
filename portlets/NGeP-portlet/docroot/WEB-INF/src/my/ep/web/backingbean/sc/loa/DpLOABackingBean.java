@@ -148,35 +148,25 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 					Long statusId = null;
 					int completeCount = 0;
 					boolean isCancelled = false;
-					boolean isShowCancelButton = true;
 					
 					for (ScPurchaseRequest scPurchaseRequest : purchaseRequestList) {
 						statusId = scPurchaseRequest.getScLoa().getPmStatus()
-								.getStatusId();						
-						if (!QTStatusConst.LOA_CANCELLED_DUE_TO_SIMPLE_QUOTE_VALIDITY_EXPIRED.equals(statusId)) {
-							isShowCancelButton = false;
-						}
+								.getStatusId();			
 						
 						if (QTStatusConst.LOA_REJECTED.equals(statusId)) {
-							isCancelled = true;
-							
+							isCancelled = true;							
 						} else if (!QTStatusConst.LOA_PENDING_VERIFICATION.equals(statusId) && 
 								!QTStatusConst.LOA_COMPLETED.equals(statusId) && 
-								!QTStatusConst.LOA_CANCELLED_DUE_TO_SIMPLE_QUOTE_VALIDITY_EXPIRED.equals(statusId) ) {
+								!QTStatusConst.LOA_CANCELLED_DUE_TO_SIMPLE_QUOTE_VALIDITY_EXPIRED.equals(statusId) &&
+								!QTStatusConst.LOA_REJECTED_DUE_TO_SIMPLE_QUOTE_VALIDITY_EXPIRED.equals(statusId) ) {
 							
 							continue;
 						}
 						
 						completeCount++;
-					}
+					}			
 					
-					if(isShowCancelButton){
-						getManagedBean().setShowCancelButtons(true);
-					} else {
-						getManagedBean().setShowCancelButtons(false);
-					}
-					
-					if ((isCancelled && completeCount == purchaseRequestList.size()) || isShowCancelButton) {
+					if (isCancelled && completeCount == purchaseRequestList.size()) {
 						getManagedBean().setShowBPMButtons(true);
 					} else {
 						getManagedBean().setShowBPMButtons(false);
