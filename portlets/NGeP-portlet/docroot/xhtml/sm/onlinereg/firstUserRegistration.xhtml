@@ -290,6 +290,7 @@
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
 							readonlyInput="true" size="30"  yearRange="-99"  maxdate="#{CommonConstants.CURRENT_DATE}"							
 							rendered="#{registrationBackingBean.disableFieldSSm(registrationBackingBean.managedBean.smPersonnel.ssmData,registrationBackingBean.managedBean.smAppl.applValidWithSsm,registrationBackingBean.managedBean.smPersonnel.birthDateSsmNull)}"
+							disabled="#{!registrationBackingBean.managedBean.smPersonnel.birthDateSsmNull}"
 							>
 						</p:calendar>
 					</td>
