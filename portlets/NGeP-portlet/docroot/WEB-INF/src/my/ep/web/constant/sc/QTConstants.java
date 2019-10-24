@@ -235,4 +235,7 @@ public interface QTConstants {
 	public static final String SPEC_MAINTENANCE = "SM"; 
 	public static final String SPEC_MAINTENANCE_SEARCH_PAGE = "/xhtml/sc/speccommitteemaintenance/specificationCommitteeMaintenanceSearch.xhtml";
 	
+	
+	public static final long PM_STATUS_INACTIVE_CODE = 0L;
+	
 }

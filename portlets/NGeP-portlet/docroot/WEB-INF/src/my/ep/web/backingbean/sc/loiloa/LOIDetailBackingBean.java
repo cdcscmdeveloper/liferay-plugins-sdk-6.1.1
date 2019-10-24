@@ -318,6 +318,9 @@ public class LOIDetailBackingBean extends
 						}
 					}
 				}
+				
+				// ***19287#91
+				getManagedBean().setReadOnly(true);
 			}
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -1087,9 +1090,15 @@ public class LOIDetailBackingBean extends
 			loiLoaBean.setScLoa(scLoa);
 			loiLoaBean
 			.setLoiLoaType(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
-			loiLoaBean.setLoiLoaStatus(getStatusDescById(scLoa
+			if(null!=scLoa.getPmStatus()){
+				loiLoaBean.setLoiLoaStatus(getStatusDescById(scLoa
 					.getPmStatus().getStatusId()));
-			loiLoaBean.setPmStatus(scLoa.getPmStatus());
+				loiLoaBean.setPmStatus(scLoa.getPmStatus());
+			}
+			else{
+				loiLoaBean.setPmStatus(getPmStatusByStatusId(new Long(QTConstants.PM_STATUS_INACTIVE_CODE)));
+			}
+			
 			loiloaBeans.add(loiLoaBean);
 		}
 
@@ -1098,11 +1107,17 @@ public class LOIDetailBackingBean extends
 			loiLoaBean.setScLoi(scLoi);
 			loiLoaBean
 			.setLoiLoaType(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
-			loiLoaBean.setLoiLoaStatus(getStatusDescById(scLoi
+			if(null!=scLoi.getScWorkFlowStatus() && null!=scLoi.getScWorkFlowStatus().getPmStatus()){
+				loiLoaBean.setLoiLoaStatus(getStatusDescById(scLoi
 					.getScWorkFlowStatus().getPmStatus()
 					.getStatusId()));
-			loiLoaBean.setPmStatus(scLoi.getScWorkFlowStatus()
-					.getPmStatus());
+				loiLoaBean.setPmStatus(scLoi.getScWorkFlowStatus()
+						.getPmStatus());
+			}
+			else{
+				loiLoaBean.setPmStatus(getPmStatusByStatusId(new Long(QTConstants.PM_STATUS_INACTIVE_CODE)));
+			}
+			
 			loiloaBeans.add(loiLoaBean);
 		}
 		return loiloaBeans;
@@ -1718,6 +1733,8 @@ public class LOIDetailBackingBean extends
 			}
 
 			getManagedBean().setEditFlag(Boolean.TRUE);
+			
+			getManagedBean().setReadOnly(!isEditFlag);
 
 			if (getManagedBean().getBackToPreviousPage() == null
 					|| getManagedBean().getBackToPreviousPage().isEmpty()) {
@@ -6087,6 +6104,7 @@ public class LOIDetailBackingBean extends
 	private boolean isQTMaintenanceScreen() {
 		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
 			|| QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId()) // ***17376#55
+			|| QTConstants.PORTLET_NAME_QT_TECHSUPP.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
 			;
 	}
 	

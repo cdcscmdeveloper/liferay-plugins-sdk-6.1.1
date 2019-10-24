@@ -28,7 +28,7 @@
 				</f:facet>
 				<p:selectOneMenu id="decisiontypeid"
 					value="#{otherrequestdetails.approverAction.parameterId}"
-					style="width: 178px;margin-bottom: 5px;">
+					style="width: 178px;margin-bottom: 5px;" disabled="#{createQtBB.managedBean.readOnly}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 					<f:selectItems var="app"
 						value="#{approvalBackingBean.getStatusDropdownValues()}"
