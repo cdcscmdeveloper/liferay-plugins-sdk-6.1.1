@@ -32,6 +32,9 @@
 		toggleable="true">
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.qt.instruction']}" escape="false" />    <!--Enhancement #25659 rendered="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION}" -->
+		<br/>
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.qt.instruction.revise']}" escape="false" />
+
 			<ui:fragment rendered="#{!scQt.panel and (qtStatusChecklistScoring or qtStatusAfterChecklistScoring)}">
 				<ui:param name="checkCategoryCodemedicine" value="#{createQtBB.isMultipleProposalCategory(scQt, null)}"></ui:param>
 			<ui:fragment rendered="#{checkCategoryCodemedicine}">

@@ -8022,6 +8022,7 @@ private void retriveCommitteeRemarksList(){
 
 			//25638 - Start
 			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outCome)) {
+				validateRemarks();
 				RequestContext.getCurrentInstance().execute("reviseApprovalDlgs.show()");
 			} else {
 				getManagedBean().setAutoUpdate(false);
@@ -8032,17 +8033,8 @@ private void retriveCommitteeRemarksList(){
 			this.getManagedBean().setLocalOutCome(outCome);
 
 			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outCome)) {
-				/*
-				 * retriveCommitteeEndorsment(); List<ScQtSpecificationRemark>
-				 * remarks = this.getManagedBean() .getSpecificationRemarks();
-				 * if (null != remarks) { for (int i = 0; i < remarks.size();
-				 * i++) { String userRemark = remarks.get(i).getRemark(); if
-				 * (null == userRemark || "".equals(userRemark)) { throw new
-				 * EpException(MessageConst.ERROR_760154); } } }
-				 */
-
-				RequestContext.getCurrentInstance().execute(
-						"reviceApprovalDlgs.show()");
+				validateRemarks();
+				RequestContext.getCurrentInstance().execute("reviseApprovalDlgs.show()");
 			} else if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outCome)
 					|| BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outCome) || BpmOutcomeConst.BPM_ENDORSE.equalsIgnoreCase(outCome)) {
 
@@ -8066,6 +8058,63 @@ private void retriveCommitteeRemarksList(){
 		committeSO=null;
 
 	}
+	
+	//25638 - Start
+	private void validateRemarks() {
+		String committeeType = (this.getManagedBean().getCommitteeType() == null) ? "" : this.getManagedBean()
+				.getCommitteeType().toUpperCase();
+		switch (committeeType) {
+		case ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE:
+			List<ScQtOpeningCommitteeRemark> OCRemarks = this.getManagedBean().getEvaluationOpeningCommitteeRemark();
+			if (null != OCRemarks) {
+				for (int i = 0; i < OCRemarks.size(); i++) {
+					String userRemark = OCRemarks.get(i).getRemark();
+					if (null == userRemark || "".equals(userRemark)) {
+						throw new EpException(MessageConst.ERROR_760154);
+					}
+				}
+			}
+			break;
+		case ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE:
+			List<ScQtEvaluationCommitteeRemark> ECRemarks = this.getManagedBean().getEvaluationCommitteeRemark();
+			if (null != ECRemarks) {
+				for (int i = 0; i < ECRemarks.size(); i++) {
+					String userRemark = ECRemarks.get(i).getRemark();
+					if (null == userRemark || "".equals(userRemark)) {
+						throw new EpException(MessageConst.ERROR_760154);
+					}
+				}
+			}
+			break;
+		case ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE:
+			List<ScQtTechnicalCommitteeRemark> TECRemarks = this.getManagedBean()
+					.getEvaluationTechnicalCommitteeRemark();
+			if (null != TECRemarks) {
+				for (int i = 0; i < TECRemarks.size(); i++) {
+					String userRemark = TECRemarks.get(i).getRemark();
+					if (null == userRemark || "".equals(userRemark)) {
+						throw new EpException(MessageConst.ERROR_760154);
+					}
+				}
+			}
+			break;
+		case ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE:
+			List<ScQtFinancialCommitteeRemark> FECRemarks = this.getManagedBean()
+					.getEvaluationFinancialCommitteeRemark();
+			if (null != FECRemarks) {
+				for (int i = 0; i < FECRemarks.size(); i++) {
+					String userRemark = FECRemarks.get(i).getRemark();
+					if (null == userRemark || "".equals(userRemark)) {
+						throw new EpException(MessageConst.ERROR_760154);
+					}
+				}
+			}
+			break;
+		default:
+			break;
+		}
+	}
+	//25638 - End
 
 	/**
 	 * Update evaluation committe dtls.
