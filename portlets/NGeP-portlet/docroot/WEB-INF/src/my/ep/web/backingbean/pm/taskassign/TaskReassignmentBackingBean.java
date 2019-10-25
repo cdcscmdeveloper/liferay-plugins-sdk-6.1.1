@@ -2369,26 +2369,6 @@ public class TaskReassignmentBackingBean extends
 			String capitalizeUserName;
 			PmTaskReassignmentVO vo = null;
 			List<String> roleList = new ArrayList<String>();
-			String orgCode = null;
-			PmOrgProfile orgProfileDetail = new PmOrgProfile();
-			
-			if (getManagedBean().getTaskAssignmentSearchBean() != null &&
-					getManagedBean().getTaskAssignmentSearchBean().
-						getOrgProfile() != null) {
-				orgCode = getManagedBean().getTaskAssignmentSearchBean().getOrgProfile().getOrgCode();
-				orgProfileDetail = PmCommonUtil.retrieveOrgProfileDtlByCode(orgCode);
-				
-				if (orgProfileDetail != null && 
-					(orgProfileDetail.getOrgProfileId().longValue() == 
-					getManagedBean().getTaskAssignmentSearchBean().
-					getOrgProfile().getOrgProfileId().longValue())) {
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean(
-									"pmUserOrgs.pmOrgProfile.pmOrgValidity.orgCode",
-									SearchOperator.OPERATOR_EQUALS.value(),
-									orgCode));
-				}
-			}
 			
 			try {
 				log.info("[#25018] isBulkReassign? " + getManagedBean().isBulkReassign());
