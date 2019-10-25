@@ -86,6 +86,6 @@
 		<ac:scRemarkAndAttachment
 			remarkList="#{specificationBackingBean.managedBean.specificationRemarks}"
 			showAttachment="false"
-			readonly="#{specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF or (specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION and specificationBackingBean.managedBean.readOnly)}" />
+			readonly="#{(specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION and specificationBackingBean.managedBean.readOnly)}" />
 	</c:if>
 </ui:composition>
