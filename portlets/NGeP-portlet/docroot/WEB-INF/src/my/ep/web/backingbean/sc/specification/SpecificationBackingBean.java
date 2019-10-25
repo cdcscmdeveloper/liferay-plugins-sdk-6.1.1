@@ -11,7 +11,6 @@
 package my.ep.web.backingbean.sc.specification;
 
 import java.io.FileNotFoundException;
-import java.lang.reflect.*;
 
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -19,29 +18,17 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
-import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Iterator;
 
-import java.io.IOException;
 import java.io.Serializable;
-import java.lang.reflect.Field;
 import java.math.BigDecimal;
-import java.nio.file.Files;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -58,15 +45,11 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
@@ -80,11 +63,9 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
-import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.circular.ICircularDetailSO;
 import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
-import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
@@ -177,14 +158,11 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScAddress;
-import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScFinancialUserScoringSchemaAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
-import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
-import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
@@ -225,7 +203,6 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
-import my.ep.web.backingbean.cm.catalogue.ScheduleInfo;
 import my.ep.web.backingbean.sc.quatationtender.CreateQtBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -244,24 +221,19 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-import my.ep.web.util.pm.helper.UomHelper;
-import my.ep.web.util.sc.helper.LocationSingleton;
 import my.ep.web.util.sc.helper.SourcingLocationHelper;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.Validate;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
-import org.primefaces.component.fileupload.FileUpload;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.TreeNode;
-import org.primefaces.model.UploadedFile;
 
 import com.liferay.portal.kernel.servlet.ServletResponseUtil;
 import com.liferay.portal.util.PortalUtil;
@@ -2982,19 +2954,13 @@ public class SpecificationBackingBean extends
 				if (null == this.getManagedBean().getSpecificationRemarks()) {
 					this.getManagedBean().setSpecificationRemarks(
 							new ArrayList<ScQtSpecificationRemark>());
-					if (null != this.getManagedBean().getCurrentStatusId()
-							&& (this.getManagedBean()
-									.getCurrentStatusId()
-									.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT)
-									|| this.getManagedBean()
-											.getCurrentStatusId()
-											.equals(QTStatusConst.QT_PENDING_MSC_APPROVAL)
-									|| this.getManagedBean()
-											.getCurrentStatusId()
-											.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)
-									|| this.getManagedBean()
-											.getCurrentStatusId()
-											.equals(QTStatusConst.SE_PENDING_ENDORSMENT) || !this
+					Long currentStatusId = this.getManagedBean().getCurrentStatusId();
+					if (null != currentStatusId
+							&& (currentStatusId.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT)
+									|| currentStatusId.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF)
+									|| currentStatusId.equals(QTStatusConst.QT_PENDING_MSC_APPROVAL)
+									|| currentStatusId.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)
+									|| currentStatusId.equals(QTStatusConst.SE_PENDING_ENDORSMENT) || !this
 									.getManagedBean().isReadOnly())) {
 						initializeRemarks(this.getManagedBean().getQt(), this
 								.getManagedBean().getQt()
@@ -3006,7 +2972,6 @@ public class SpecificationBackingBean extends
 			}
 
 			else {
-
 				List<ScQtSpecificationRemark> remarkList = new ArrayList<ScQtSpecificationRemark>();
 				for (ScRemark remark : resDto.getRemarks()) {
 					ScQtSpecificationRemark qtRemark = (ScQtSpecificationRemark) remark;
@@ -3017,20 +2982,14 @@ public class SpecificationBackingBean extends
 						|| this.getManagedBean().getSpecificationRemarks()
 								.isEmpty()) {
 					this.getManagedBean().setSpecificationRemarks(remarkList);
-					if (null != this.getManagedBean().getCurrentStatusId()
-							&& (this.getManagedBean()
-									.getCurrentStatusId()
-									.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT)
-									|| this.getManagedBean()
-											.getCurrentStatusId()
-											.equals(QTStatusConst.QT_PENDING_MSC_APPROVAL)
-									|| (this.getManagedBean()
-											.getCurrentStatusId()
-											.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION) && !this
+					Long currentStatusId = this.getManagedBean().getCurrentStatusId();
+					if (null != currentStatusId
+							&& (currentStatusId.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT)
+									|| currentStatusId.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF)
+									|| currentStatusId.equals(QTStatusConst.QT_PENDING_MSC_APPROVAL)
+									|| (currentStatusId.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION) && !this
 											.getManagedBean().isReadOnly())
-									|| this.getManagedBean()
-											.getCurrentStatusId()
-											.equals(QTStatusConst.SE_PENDING_ENDORSMENT) || !this
+									|| currentStatusId.equals(QTStatusConst.SE_PENDING_ENDORSMENT) || !this
 									.getManagedBean().isReadOnly())) {
 						initializeRemarks(this.getManagedBean().getQt(), this
 								.getManagedBean().getQt()
@@ -10398,6 +10357,15 @@ public class SpecificationBackingBean extends
 
 			//25638 - Start
 			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
+				List<ScQtSpecificationRemark> remarks = this.getManagedBean().getSpecificationRemarks();
+				if (null != remarks) {
+					for (int i = 0; i < remarks.size(); i++) {
+						String userRemark = remarks.get(i).getRemark();
+						if (null == userRemark || "".equals(userRemark)) {
+							throw new EpException(MessageConst.ERROR_760154);
+						}
+					}
+				}
 				RequestContext.getCurrentInstance().execute("reviseSCDlgs.show()");
 			} else {
 				getManagedBean().setAutoUpdate(false);

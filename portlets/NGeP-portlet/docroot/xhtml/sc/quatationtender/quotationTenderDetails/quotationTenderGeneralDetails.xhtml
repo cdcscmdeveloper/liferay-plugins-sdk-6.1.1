@@ -32,6 +32,9 @@
 		toggleable="true">
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.qt.instruction']}" escape="false" />    <!--Enhancement #25659 rendered="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION}" -->
+		<br/>
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.qt.instruction.revise']}" escape="false" />
+
 			<ui:fragment rendered="#{!scQt.panel and (qtStatusChecklistScoring or qtStatusAfterChecklistScoring)}">
 				<ui:param name="checkCategoryCodemedicine" value="#{createQtBB.isMultipleProposalCategory(scQt, null)}"></ui:param>
 			<ui:fragment rendered="#{checkCategoryCodemedicine}">
@@ -702,7 +705,10 @@
 						<td></td>
 						<td></td>
 						<td></td>
-						<td><h:outputText value="#{lbl['lbl.sc.qt.proposal.validity.extension.response.due.date.desc']}" style="color: #0054a6; font-size: 12px; font-family: Arial, helvetica, sans-serif; font-weight: normal; font-style: italic; margin-left: 10px;"/></td>
+						<td>
+							<h:outputText value="#{lbl['lbl.sc.qt.proposal.validity.extension.response.due.date.desc']}" 
+								style="float:left; color: #0054a6; font-size: 12px; font-family: Arial, helvetica, sans-serif; font-weight: normal; font-style: italic; margin-left: 10px;"/>
+							</td>
 					</tr>
 				</c:if>
 			</c:if>
