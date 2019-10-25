@@ -112,11 +112,11 @@
 				<p:spacer width="1" />
 				<h:outputText value="#{lbl['lbl.sc.spec.check.all']}"
 					style="float:left;margin-top: 12px;;margin-left: 10px;" />
-				    <p:commandButton value="#{lbl['lbl.btn.add']}" process="@this,qtdetailsid" rendered="#{createQtBB.isPanelZone()}"
+				    <p:commandButton value="#{lbl['lbl.btn.add']}" process="@this,qtdetailsid" rendered="#{(scQt.zonal eq 'true' and scQt.panel eq 'true')}"
 					styleClass="BtnSpacing" update="@([id$=zonePopupGeneral])"
 					actionListener="#{createQtBB.showGeneralZonesPopup}"
-					disabled="#{createQtBB.isPanelZone()}"/>
-					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this,qtdetailsid" rendered="#{!createQtBB.isPanelZone()}"
+					disabled="#{(scQt.zonal eq 'true' and scQt.panel eq 'true')}"/>
+					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this,locationLevels,qtdetailsid" rendered="#{scQt.panel eq 'false'}"
 					styleClass="BtnSpacing" update="@([id$=zonePopupGeneral])"
 					actionListener="#{createQtBB.showGeneralZonesPopup}" />
 				<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
