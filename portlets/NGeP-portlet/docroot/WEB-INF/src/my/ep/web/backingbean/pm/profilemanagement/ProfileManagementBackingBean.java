@@ -2564,6 +2564,17 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		if (getFacesScopes().hasRoleUser(RoleCode.BPK_ADMIN.value())) {
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("pmUserRoles.pmRole.roleCode",
 					SearchOperator.OPERATOR_NOT_EQUALS.value(), RoleCode.BPK_ADMIN.value()));
+			
+			//[#22117] - start
+			//get list of user_org_id which has role BPK_ADMIN
+			List<Long> userOrgIds = getListOfOrgIdByOrgIdAndRole(this.getManagedBean().getSelectedOrgType().getParameterId(), 
+																	upSearchBean.getSelectedOrgProfileId(), 
+																	RoleCode.BPK_ADMIN.value());
+			if(userOrgIds != null && userOrgIds.size() > 0) {
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("userOrgId",
+					SearchOperator.OPERATOR_NOT_IN.value(), userOrgIds));
+			}
+			//[#22117] - end
 		}
 
 		// UPS_ADMIN is not allowed to view/edit UPS_ADMIN
@@ -5004,5 +5015,35 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		}
 		return false;
 	}
+	
+	//[#22117]
+	public List<Long> getListOfOrgIdByOrgIdAndRole(Long orgTypeId, Long orgProfileId, String role) {		
+			
+		IUserSO userSO = null;
+			
+		try {
+			List<Long> usrOrgId = null;
+			UserOrgReqDTO userOrgReqDTO = new UserOrgReqDTO();
+			userOrgReqDTO.setOrgTypeId(orgTypeId);
+			userOrgReqDTO.setOrgProfileId(orgProfileId);
+			userOrgReqDTO.setRoleCode(role);
+			
+			userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
+			UserOrgResDTO resDTO = userSO.retrieveUserOrgIdByOrgIdAndRole(userOrgReqDTO);
+			
+			if (resDTO != null && resDTO.isSuccessful()) {
+				if(resDTO.getPmUserOrgList() != null && resDTO.getPmUserOrgList().size() > 0) {
+					usrOrgId = new ArrayList<Long>();
+					for(PmUserOrg pmusrorg : resDTO.getPmUserOrgList()) {
+						usrOrgId.add(pmusrorg.getUserOrgId());
+					}							
+					return usrOrgId;
+				}					
+			}					
+		} finally {
+			userSO = null;
+		}
 
+		return null;
+	}
 }
