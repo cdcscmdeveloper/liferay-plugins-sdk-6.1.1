@@ -1533,17 +1533,22 @@ public class SmApplicationBackingBean extends
 							
 						}
 						//SET SMPERSONNEL
-						/*if(ssmResDTO.getSmPersonnelAll()!=null){
+						if(ssmResDTO.getSmPersonnelAll()!=null){
 							if(this.getManagedBean().getSmAppl().getSmPersonnels()==null){
 								this.getManagedBean().getSmAppl().setSmPersonnels(new ArrayList());
 							}
 							for(SmPersonnel personnel : ssmResDTO.getSmPersonnelAll()){
 								if(EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), this.getManagedBean().getSmAppl().getSmPersonnels(), "identificationNo") == null){
 									personnel.setSmAppl(this.getManagedBean().getSmAppl());
+									if(personnel.getSmPersonnelAddresses()!=null){
+										for(SmPersonnelAddress address:personnel.getSmPersonnelAddresses()){
+											address.setSmPersonnel(personnel);
+										}
+									}
 									this.getManagedBean().getSmAppl().getSmPersonnels().add(personnel);
 								}
 							}
-						}*/
+						}
 						//SET EQUITY BRANCH
 						if(ssmResDTO.getSmSupplierBranches() != null){
 							if(this.getManagedBean().getSmAppl().getSmSupplierBranches()==null){
