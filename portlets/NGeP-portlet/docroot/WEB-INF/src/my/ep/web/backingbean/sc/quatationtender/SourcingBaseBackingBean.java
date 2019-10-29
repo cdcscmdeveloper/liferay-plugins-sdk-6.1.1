@@ -3438,13 +3438,15 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		if (CollectionUtils.isNotEmpty(specMasters)) {
 			
 			for (TplSpecMaster master : specMasters) {
-				List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
-				for (TplSpecQuestion question : master.getTplSpecQuestions()) {
-					constructTplSpecQuestion(dafaltValue,
-							newTplSpecQuestionsList, master, question);
+				if (CollectionUtils.isNotEmpty(master.getTplSpecQuestions())) {
+					List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
+					for (TplSpecQuestion question : master.getTplSpecQuestions()) {
+						constructTplSpecQuestion(dafaltValue,
+								newTplSpecQuestionsList, master, question);
+					}
+					master.setTplSpecQuestions(newTplSpecQuestionsList);
+					masters.add(master);
 				}
-				master.setTplSpecQuestions(newTplSpecQuestionsList);
-				masters.add(master);
 			}
 		}
 		context.put("serviceScope", dafaltValue);
