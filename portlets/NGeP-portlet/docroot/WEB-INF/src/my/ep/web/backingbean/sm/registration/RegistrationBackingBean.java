@@ -1017,6 +1017,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		smSupp.setEstablishDate(smSupp.getSmAppl().getSmCompanyBasic().getEstablishDate());
 
 		reqDTO.setSmSupp(getManagedBean().getSmSupp());
+		
+		if(SmCommonUtil.getInstance().ssmActive()){
+			SmSupplierOwner smSupplierOwners = getManagedBean().getSmSupp().getSmSupplierOwners().get(0);
+			getManagedBean().getSmSupp().getSmSupplierOwners().clear();
+			getManagedBean().getSmSupp().getSmSupplierOwners().add(smSupplierOwners);
+		}
+		
 		reqDTO.setGstList(getCleanGst());
 		
 		try{
@@ -2031,6 +2038,20 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 								}
 							}
 						}
+						
+						//SET SMSUPPLIEROWNER
+						if(ssmResDTO.getSmSupplierOwners() != null) {
+							if(this.getManagedBean().getSmSuppOwners() == null){
+								this.getManagedBean().setSmSuppOwners(new ArrayList());
+							}
+							for(SmSupplierOwner suppOwner : ssmResDTO.getSmSupplierOwners()){
+								if(EntityHelper.getEntityBySinglePropertyFromList(suppOwner.getIdentificationNo(), this.getManagedBean().getSmSuppOwners(), "identificationNo") == null) {
+									suppOwner.setSmSupplier(this.getManagedBean().getSmSupp());
+									this.getManagedBean().getSmSuppOwners().add(suppOwner);
+								}
+							}
+						}
+						
 					}else{
 						this.getManagedBean().setCompanyValidWithSSM(false);
 					}
