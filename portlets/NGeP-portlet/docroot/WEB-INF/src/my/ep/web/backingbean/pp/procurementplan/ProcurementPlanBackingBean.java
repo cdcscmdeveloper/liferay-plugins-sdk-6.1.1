@@ -80,6 +80,7 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -2025,6 +2026,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 	}
 	public String savePlan(String action) throws Exception{
+		//LOG : 26549 : SLA Monitoring
+		long startTime = System.currentTimeMillis();
 		log.info("savePlan - START");
 		log.info("the action: " + action);
 		ProcurementPlanReqDTO reqDTO = null;
@@ -2109,6 +2112,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			docType = retrievePlanDocType(ppPlan);
 				
 			if (resDTO.isSuccessful()) {
+				//LOG : 26549 : SLA Monitoring
+				SLAUtils.getInstance().logSLAInfo("PM","PS",
+						"ViewSuppProfileBackingBean.preRenderViewSupplierProfile", startTime);
 				log.info("Record saved successfully"); 
 				if(this.getManagedBean().getTaskId()!=null){
 					loadPlanDetails(resDTO.getPlan().getPlanId(), false);

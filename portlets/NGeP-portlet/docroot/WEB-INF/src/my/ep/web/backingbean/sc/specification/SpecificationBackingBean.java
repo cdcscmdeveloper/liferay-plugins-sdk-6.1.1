@@ -201,6 +201,7 @@ import my.ep.type.pm.PTJLocalityCode;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.quatationtender.CreateQtBackingBean;
@@ -9025,6 +9026,8 @@ public class SpecificationBackingBean extends
 			IParameterSO parameterSo;
 
 			try {
+				long startTime = System.currentTimeMillis();
+				
 				TemplateSpecReqDTO qtTemplateReqDTO = new TemplateSpecReqDTO();
 				parameterSo = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
@@ -9192,6 +9195,9 @@ public class SpecificationBackingBean extends
 				resDto = qtTemplateSO.searchTemplateMaster(qtTemplateReqDTO);
 
 				if (resDto != null) {
+					SLAUtils.getInstance().logSLAInfo(ModuleCodeConst.SUPPLIER_SELECTION, ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, 
+						"SpecificationBackingBean.pageChangeListener", startTime);
+					
 					return resDto.getSearchResultBean();
 				}
 

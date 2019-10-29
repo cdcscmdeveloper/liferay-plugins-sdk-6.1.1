@@ -35,6 +35,7 @@ import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.util.MessageUtils;
+import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
 import my.ep.web.backingbean.sm.SmApplicationBackingBean;
@@ -64,6 +65,8 @@ public class CommonApplBackingBean extends
 	public static Logger log = Logger.getLogger(CommonApplBackingBean.class);
 
 	public void preRenderView() {
+		//LOG : 26549 : SLA Monitoring
+		long startTime = System.currentTimeMillis();
 		log.info("-------ComAppl prerender view-------");
 		HttpServletRequest servletRequest = PortalUtil
 				.getHttpServletRequest(new FacesScopes().getRequest());
@@ -409,6 +412,9 @@ public class CommonApplBackingBean extends
 				smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
 				smApplBB.getManagedBean().setTaskId(taskId);
 				smApplBB.getManagedBean().setClaimTask(isClaim);
+				//LOG : 26549 : SLA Monitoring
+				SLAUtils.getInstance().logSLAInfo("SM","VIEW APP",
+						"CommonApplBackingBean.preRenderView", startTime);
 				setNavigationForSmDecision(appl.getApplType(), smApplBB);
 			} else if (resDTO.getProcessName().equalsIgnoreCase(
 					SMProcessNameConst.PROCESS_NAME_MOF_SUPP_SITE_VISIT)) {
