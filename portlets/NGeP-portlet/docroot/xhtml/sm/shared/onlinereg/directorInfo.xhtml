@@ -14,7 +14,8 @@
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			render="#{registrationBackingBean.managedBean.smPersonnelDirector != null and registrationBackingBean.managedBean.smPersonnelDirector.size() >0}"
 			value="#{registrationBackingBean.managedBean.smPersonnelDirector}"
-			rowKey="#{rowKeyObj}">
+			rowKey="#{rowKeyObj}" 
+			sortBy="#{varDirector.name}">
 			<ac:paginator for="tableDirector" />
 
 			<p:column style="width:3%" styleClass="column-align-center">

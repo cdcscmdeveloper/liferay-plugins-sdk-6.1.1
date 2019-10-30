@@ -11,7 +11,8 @@
 			editable="false"
 			value="#{backingBean.managedBean.smAppl.smPersonnels}"
 			selection="#{backingBean.managedBean.selectedShareHolders}"
-			rowKey="#{person}" rowIndexVar="index" id="personDt">
+			rowKey="#{person}" rowIndexVar="index" id="personDt" 
+			sortBy="#{person.name}">
 			<ac:paginator for="personDt" />
 			<p:ajax event="rowSelect" listener="#{backingBean.unSelectAdmin}"
 				update=":#{p:component('persInfPan')},:#{p:component('deletePersonnelBtnId')}"></p:ajax>
@@ -33,7 +34,8 @@
 
 			<p:column headerText="#{lbl['lbl.sm.person.composition.name']}"
 				disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
-				or person.softcertFlg eq 3 or backingBean.managedBean.disAllowOwnerEdit}">
+				or person.softcertFlg eq 3 or backingBean.managedBean.disAllowOwnerEdit}"
+				>
 				<h:outputText value="#{person.name}" />
 			</p:column>
 
