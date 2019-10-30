@@ -12,7 +12,7 @@
 		<p:dataTable var="person" widgetVar="suppPersonnelInfoDtWidVar"
 			editable="false"
 			value="#{backingBean.managedBean.personnelsSsm}"
-			rowKey="#{person}" rowIndexVar="index" id="personDt" rows="5" sortBy="#{person.nameInSsm}">
+			rowKey="#{person}" rowIndexVar="index" id="personDt" rows="5" sortBy="#{person.name}">
 			<ac:paginator for="personDt" />
 			
 			<p:column style="width:3%" styleClass="column-align-center" headerText="#{lbl['lbl.sm.no']}">
@@ -20,7 +20,7 @@
 			</p:column>
 			
 			<p:column styleClass="column-align-center" headerText="#{lbl['lbl.sm.worker.name']}">
-				<h:outputText value="#{person.nameInSsm}" />
+				<h:outputText value="#{person.name}" />
 			</p:column>
 
 			<p:column styleClass="column-align-center" headerText="#{lbl['lbl.sm.identificationtype.ic']} / #{lbl['lbl.sm.identificationtype.passport']}">
