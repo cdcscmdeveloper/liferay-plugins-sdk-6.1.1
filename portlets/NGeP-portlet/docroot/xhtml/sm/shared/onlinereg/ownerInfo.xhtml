@@ -14,7 +14,8 @@
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			render="#{registrationBackingBean.managedBean.smSuppOwners != null and registrationBackingBean.managedBean.smSuppOwners.size() >0}"
 			value="#{registrationBackingBean.managedBean.smSuppOwners}"
-			rowKey="#{rowKeyObj}">
+			rowKey="#{rowKeyObj}"
+			sortBy="#{varOwner.ownerName}"	>
 			<ac:paginator for="tableOwner" />
 
 			<p:column style="width:3%" styleClass="column-align-center">
