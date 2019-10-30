@@ -10336,35 +10336,58 @@ public class SmApplicationUtil {
 					}
 
 					for (SmMachineDtl mach : smAppl.getSmMachineDtls()) {
-						if (mach.getCategoryType()
-								.getParameterId()
-								.compareTo(
-										cat.getPmCategoryL3()
-												.getCategoryTypeCode()
-												.getParameterId()) == 0) {
-							machDtlTmp = (SmMachineDtl) EntityHelper
-									.getEntityBySinglePropertyFromList(mach
-											.getMachineDtlId(),
-											machineCategoryVO
-													.getSmMachineDtls(),
-											"machineDtlId");
-							if(mach.getSmMachineCategories()!=null && mach.getSmMachineCategories().size()>0){
-								boolean isCategoryExist = false;
-								for(SmMachineCategory machCat: mach.getSmMachineCategories()){
-									String macCatCode = machCat.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code().concat(
-											machCat.getPmCategoryL3().getPmCategoryL2().getCategoryL2Code()).concat(
-													machCat.getPmCategoryL3().getCategoryL3Code());
-									String suppCatCode = cat.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code().concat(
-											cat.getPmCategoryL3().getPmCategoryL2().getCategoryL2Code()).concat(
-													cat.getPmCategoryL3().getCategoryL3Code());
-									if(macCatCode.equalsIgnoreCase(suppCatCode)){
-										isCategoryExist = true;
-										break;
+						//Bug #26616
+						if (mach.getCategoryType() != null) {
+							if (mach.getCategoryType()
+									.getParameterId()
+									.compareTo(
+											cat.getPmCategoryL3()
+													.getCategoryTypeCode()
+													.getParameterId()) == 0) {
+								machDtlTmp = (SmMachineDtl) EntityHelper
+										.getEntityBySinglePropertyFromList(mach
+												.getMachineDtlId(),
+												machineCategoryVO
+														.getSmMachineDtls(),
+												"machineDtlId");
+								if (mach.getSmMachineCategories() != null
+										&& mach.getSmMachineCategories().size() > 0) {
+									boolean isCategoryExist = false;
+									for (SmMachineCategory machCat : mach
+											.getSmMachineCategories()) {
+										String macCatCode = machCat
+												.getPmCategoryL3()
+												.getPmCategoryL2()
+												.getPmCategoryL1()
+												.getCategoryL1Code()
+												.concat(machCat
+														.getPmCategoryL3()
+														.getPmCategoryL2()
+														.getCategoryL2Code())
+												.concat(machCat
+														.getPmCategoryL3()
+														.getCategoryL3Code());
+										String suppCatCode = cat
+												.getPmCategoryL3()
+												.getPmCategoryL2()
+												.getPmCategoryL1()
+												.getCategoryL1Code()
+												.concat(cat.getPmCategoryL3()
+														.getPmCategoryL2()
+														.getCategoryL2Code())
+												.concat(cat.getPmCategoryL3()
+														.getCategoryL3Code());
+										if (macCatCode
+												.equalsIgnoreCase(suppCatCode)) {
+											isCategoryExist = true;
+											break;
+										}
+									}
+									if (machDtlTmp == null && isCategoryExist) {
+										machineCategoryVO.getSmMachineDtls()
+												.add(mach);
 									}
 								}
-								if (machDtlTmp == null && isCategoryExist) {
-									machineCategoryVO.getSmMachineDtls().add(mach);
-								}							
 							}
 						}
 					}
