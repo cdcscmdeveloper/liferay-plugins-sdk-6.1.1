@@ -16,7 +16,7 @@
 			render="#{backingBean.managedBean.personnelsOwner != null and backingBean.managedBean.personnelsOwner.size() >0}"
 			value="#{backingBean.managedBean.personnelsOwner}"
 			rowKey="#{rowKeyObj}"
-			sortBy="#{varOwner.nameInSsm}">
+			sortBy="#{varOwner.name}">
 			<ac:paginator for="tableOwner" />
 
 			<p:column style="width:3%" styleClass="column-align-center">
@@ -37,7 +37,7 @@
 						<h:outputText value="#{lbl['lbl.sm.ownername']}" />
 					</c:if>
 				</f:facet>
-				<h:outputText value="#{varOwner.nameInSsm}" />
+				<h:outputText value="#{varOwner.name}" />
 			</p:column>
 
 			<p:column styleClass="column-align-center">
@@ -134,7 +134,7 @@
 				render="#{backingBean.managedBean.personnelsDirector != null and backingBean.managedBean.personnelsDirector.size() >0}"
 				value="#{backingBean.managedBean.personnelsDirector}"
 				rowKey="#{rowKeyObj}"
-				sortBy="#{varDirector.nameInSsm}">
+				sortBy="#{varDirector.name}">
 				<ac:paginator for="tableDirector" />
 
 				<p:column style="width:3%" styleClass="column-align-center">
@@ -148,7 +148,7 @@
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sm.directorname']}" />
 					</f:facet>
-					<h:outputText value="#{varDirector.nameInSsm}" />
+					<h:outputText value="#{varDirector.name}" />
 				</p:column>
 
 				<p:column styleClass="column-align-center">
