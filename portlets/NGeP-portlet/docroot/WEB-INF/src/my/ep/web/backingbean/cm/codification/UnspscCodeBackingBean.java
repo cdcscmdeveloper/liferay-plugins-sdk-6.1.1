@@ -412,7 +412,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 										.getUserLocale())));
 
 				return facesContext.getViewRoot().getViewId();
-			}}
+			}
+		}
 		
 		if (action.equalsIgnoreCase("RECOMMEND_TO_SUPPLIER")) {
 
@@ -443,13 +444,11 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 					.getRequestCode().getCmRecommendCodes()) {
 
 				unspsc.setCmRequestCode(this.getManagedBean()
-						.getRequestCode());					
-
+						.getRequestCode());	
 			}
-
 		}
 
-		log.info("size:"
+		log.info("CmRecommendCodes size: "
 				+ this.getManagedBean().getRequestCode()
 				.getCmRecommendCodes().size());
 		reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
@@ -457,12 +456,9 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		CodificationResDTO resDTO = null;
 		StatusReqDTO statusReqDTO = new StatusReqDTO();
 
-
-
 		if (this.getManagedBean().getRequestCode().isBrandNew()) {
 			log.info("tracking diary for UNSPSC CODE REQUEST By CatalogAdmin:addCodificationRequest");
 			reqDTO.setTrackingStatus(true);
-
 
 			reqDTO.setCatalogueAdminRequest(true);
 			statusReqDTO.setStatusId(15011L);
@@ -501,16 +497,28 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			log.info("***update***");
 			log.info("size:"
 					+ reqDTO.getRequestCode().getCmRecommendCodes().size());
+			
+			//[#15028] to remove CmRecommendCodes object list if action equal to REJECT
+			if(action.equalsIgnoreCase("REJECT") 
+				&& (reqDTO.getRequestCode().getCmRecommendCodes() != null) 
+					&& (reqDTO.getRequestCode().getCmRecommendCodes().size() > 0)){
+				reqDTO.getRequestCode().getCmRecommendCodes().clear();
+				//log.info("[#15028] size after: " + reqDTO.getRequestCode().getCmRecommendCodes().size());
+			}				
+			
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
 			reqDTO.setUserName(pmUser.getUserName()!=null?pmUser.getUserName():"SYS");
-			if(!action.equalsIgnoreCase(CmConst.ACTIONSTATUS))
-			{	log.info("tracking diary for status:bpmTesting");			
-			reqDTO.setTrackingStatus(true);
-			UNSPSCCodeRequestReviewByUser(reqDTO,face,action,statusSO,statusReqDTO);					
+			
+			if(!action.equalsIgnoreCase(CmConst.ACTIONSTATUS)) {
+				log.info("tracking diary for status:bpmTesting");			
+				reqDTO.setTrackingStatus(true);
+				//log.info("[#15028] calling UNSPSCCodeRequestReviewByUser...");
+				UNSPSCCodeRequestReviewByUser(reqDTO,face,action,statusSO,statusReqDTO);					
 			}
 			if(!this.isAllSupplier()){
 				reqDTO.setRemark(this.getManagedBean().getSelectedRemarks().get(0));
-			}			
+			}
+			//log.info("[#15028] calling unspscSO.updateCodificationRequest...");
 			resDTO = unspscSO.updateCodificationRequest(reqDTO);
 		}
 		
