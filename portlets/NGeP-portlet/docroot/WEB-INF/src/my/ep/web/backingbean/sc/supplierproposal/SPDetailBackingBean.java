@@ -107,6 +107,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.AddressType;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.encrypt.BouncyCastleProvider_AES_CBC;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -580,6 +581,9 @@ public class SPDetailBackingBean extends
 	 */
 	public void submitSupplierProposal(PmDigiSign digiSign) {
 		debugLogger("submitSupplierProposal supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
+		
+		long startTime = System.currentTimeMillis();
+		
 		validateProposalCloseTime(this.getManagedBean().getQt());
 		if (getManagedBean().getSmSupplier() == null
 				|| getManagedBean().getSmAppl() == null) {
@@ -622,8 +626,11 @@ public class SPDetailBackingBean extends
 			if (resDTO.isSuccessful()) {
 				String variable1 = getMessageCommon("lbl.sc.proposal.no");
 				String variable2 = scQtProposal.getProposalNo();
-				commonMessageAcknowledgementPage(MessageConst.INFO_700026,
-						variable1, variable2);
+				
+				commonMessageAcknowledgementPage(MessageConst.INFO_700026, variable1, variable2);
+								
+				SLAUtils.getInstance().logSLAInfo(ModuleCodeConst.SUPPLIER_SELECTION, ParameterConst.DOCTYPE_SUPPLIER_PROPOSAL, 
+						"SPDetailBackingBean.submitSupplierProposal", startTime);
 			} else {
 				throw new EpException("Failed.");
 			}

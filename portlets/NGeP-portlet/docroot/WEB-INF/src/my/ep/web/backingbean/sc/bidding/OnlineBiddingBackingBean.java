@@ -43,6 +43,7 @@ import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.FacesScopes;
@@ -615,6 +616,9 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 	 */
 	public void updateBidPriceAndCalculateRank() {
 		log.debug("updateBidPriceNDcalculateRank");
+		
+		long startTime = System.currentTimeMillis();
+		
 		ScBidPrice priceItemToPersist = null;
 		priceItemToPersist = this.getScBidPrice().getNewBidPrice();
 		priceItemToPersist.setBidTotalPrice(TemplateSpecHelper.getInstance().calcTotalAmount(
@@ -645,7 +649,11 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 						.getScBidSchedule().getScBid().getRecommendedTypeId()
 						.getParameterCode())) {
 					setPackageRanking(resDTO.getPackageRanking());
-				}
+				}				
+				
+				SLAUtils.getInstance().logSLAInfo(ModuleCodeConst.SUPPLIER_SELECTION, ParameterConst.DOCTYPE_BIDDING, 
+						"OnlineBiddingBackingBean.updateBidPriceAndCalculateRank", startTime);
+
 				RequestContext.getCurrentInstance().execute("rc()");
 			}
 
