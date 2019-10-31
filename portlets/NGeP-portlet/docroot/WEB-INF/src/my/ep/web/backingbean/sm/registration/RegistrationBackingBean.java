@@ -1023,6 +1023,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		smSupp.setEstablishDate(smSupp.getSmAppl().getSmCompanyBasic().getEstablishDate());
 
 		reqDTO.setSmSupp(getManagedBean().getSmSupp());
+		
+		if(SmCommonUtil.getInstance().ssmActive()){
+			SmSupplierOwner smSupplierOwners = getManagedBean().getSmSupp().getSmSupplierOwners().get(0);
+			getManagedBean().getSmSupp().getSmSupplierOwners().clear();
+			getManagedBean().getSmSupp().getSmSupplierOwners().add(smSupplierOwners);
+		}
+		
 		reqDTO.setGstList(getCleanGst());
 		
 		try{
@@ -1623,7 +1630,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 								throw new EpException(MessageConst.ERROR_721067,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
 							}
 							//c)	If account already created but has not been activated, 
-							else if(supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION){
+							else if(supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION || supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_IN_PROGRESS){
 								throw new EpException(MessageConst.ERROR_721068,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
 							}
 							//d)	If registration number exist and MoF Account has been expired
@@ -2037,6 +2044,20 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 								}
 							}
 						}
+						
+						//SET SMSUPPLIEROWNER
+						if(ssmResDTO.getSmSupplierOwners() != null) {
+							if(this.getManagedBean().getSmSuppOwners() == null){
+								this.getManagedBean().setSmSuppOwners(new ArrayList());
+							}
+							for(SmSupplierOwner suppOwner : ssmResDTO.getSmSupplierOwners()){
+								if(EntityHelper.getEntityBySinglePropertyFromList(suppOwner.getIdentificationNo(), this.getManagedBean().getSmSuppOwners(), "identificationNo") == null) {
+									suppOwner.setSmSupplier(this.getManagedBean().getSmSupp());
+									this.getManagedBean().getSmSuppOwners().add(suppOwner);
+								}
+							}
+						}
+						
 					}else{
 						this.getManagedBean().setCompanyValidWithSSM(false);
 					}
