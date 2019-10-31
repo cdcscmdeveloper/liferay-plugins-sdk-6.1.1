@@ -655,9 +655,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		setAdminSameAsOwner();
 		SmSupplier smSupp = this.getManagedBean().getSmSupp();
 		SmAppl smAppl = this.getManagedBean().getSmAppl();
+		
 		//only use for individual flag
 		SmSupplierOwner smSuppOwner = this.getManagedBean().getSmSuppOwner();
 		//#16052019 - SSM INTEGRATION CR
+		smAppl.getSmPersonnels().clear();
 		if(this.getManagedBean().getSmSuppOwners().size()>0){
 			smSuppOwner = this.getManagedBean().getSmSuppOwners().get(0);//save only one tu supp owner
 		}/*else if(this.getManagedBean().getSmSuppOwners().size()==1){
@@ -822,7 +824,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					//to check,personel is equity owner or not
 					SmPersonnel personnelAdmin = (SmPersonnel) EntityHelper.compareSingleEntityByProp(smPersonnel.getIdentificationNo(), personnelSSM,"identificationNo");
 					//not suppplier admin
-					if(personnelAdmin == null && personnelSSM.getSmPersonnelAdd() != null ){
+					if(personnelAdmin == null && personnelSSM.getSmPersonnelAdd() != null ){//store personnel not supplier admin but contain address
 						personnelSSM.setSmAppl(smAppl);
 						personnelSSM.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
 						personnelSSM.getSmPersonnelAdd().setSmPersonnel(personnelSSM);
@@ -838,6 +840,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							}
 						}
 						smPersonnel.getSmPersonnelAddresses().add(personnelSSM.getSmPersonnelAdd());
+					}else if(personnelAdmin == null && personnelSSM.getSmPersonnelAddresses()==null){//store personnel not supplier admin and not contain address
+						personnelSSM.setSmAppl(smAppl);
+						personnelSSM.setPmCountry(null);
+						smAppl.getSmPersonnels().add(personnelSSM);
 					}
 						
 				}
@@ -1017,13 +1023,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		smSupp.setEstablishDate(smSupp.getSmAppl().getSmCompanyBasic().getEstablishDate());
 
 		reqDTO.setSmSupp(getManagedBean().getSmSupp());
-		
-		if(SmCommonUtil.getInstance().ssmActive()){
-			SmSupplierOwner smSupplierOwners = getManagedBean().getSmSupp().getSmSupplierOwners().get(0);
-			getManagedBean().getSmSupp().getSmSupplierOwners().clear();
-			getManagedBean().getSmSupp().getSmSupplierOwners().add(smSupplierOwners);
-		}
-		
 		reqDTO.setGstList(getCleanGst());
 		
 		try{
@@ -1624,7 +1623,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 								throw new EpException(MessageConst.ERROR_721067,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
 							}
 							//c)	If account already created but has not been activated, 
-							else if(supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION || supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_IN_PROGRESS){
+							else if(supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION){
 								throw new EpException(MessageConst.ERROR_721068,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
 							}
 							//d)	If registration number exist and MoF Account has been expired
@@ -2038,20 +2037,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 								}
 							}
 						}
-						
-						//SET SMSUPPLIEROWNER
-						if(ssmResDTO.getSmSupplierOwners() != null) {
-							if(this.getManagedBean().getSmSuppOwners() == null){
-								this.getManagedBean().setSmSuppOwners(new ArrayList());
-							}
-							for(SmSupplierOwner suppOwner : ssmResDTO.getSmSupplierOwners()){
-								if(EntityHelper.getEntityBySinglePropertyFromList(suppOwner.getIdentificationNo(), this.getManagedBean().getSmSuppOwners(), "identificationNo") == null) {
-									suppOwner.setSmSupplier(this.getManagedBean().getSmSupp());
-									this.getManagedBean().getSmSuppOwners().add(suppOwner);
-								}
-							}
-						}
-						
 					}else{
 						this.getManagedBean().setCompanyValidWithSSM(false);
 					}
