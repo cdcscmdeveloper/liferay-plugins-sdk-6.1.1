@@ -174,6 +174,7 @@ import my.ep.type.pm.PTJLocalityCode;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.quatationtender.CreateQtBackingBean;
@@ -8955,6 +8956,9 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				resDto = qtTemplateSO.searchTemplateMaster(qtTemplateReqDTO);
 
 				if (resDto != null) {
+					SLAUtils.getInstance().logSLAInfo(ModuleCodeConst.SUPPLIER_SELECTION, ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, 
+						"SpecificationBackingBean.pageChangeListener", startTime);
+					
 					return resDto.getSearchResultBean();
 				}
 
