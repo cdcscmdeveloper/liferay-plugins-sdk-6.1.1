@@ -505,7 +505,7 @@ public class SmBulkApplicationBackingBean extends
 		String catNoRemarks = "";
 		int countNoAction = 0;
 		int countNoRemarks = 0;
-		boolean catNoApprove = true;
+		boolean catNoApprove = false; //21937
 
 		sbNoAction.append("<table>");
 		sbNoRemarks.append("<table>");
@@ -526,9 +526,10 @@ public class SmBulkApplicationBackingBean extends
 							+ cat.getPmCategoryL2().getCategoryL2Code() + cat.getPmCategoryL3().getCategoryL3Code()
 							+ ",";
 				}
-				if (cat.getApprvrDecFlg() == 1) {
-					catNoApprove = false;
-				}
+				//21937 - start
+				if (cat.getApprvrDecFlg() == 0) {
+					catNoApprove = true;
+				} //21937 - end
 			}
 
 			if (!catNoAction.equals("")) {
