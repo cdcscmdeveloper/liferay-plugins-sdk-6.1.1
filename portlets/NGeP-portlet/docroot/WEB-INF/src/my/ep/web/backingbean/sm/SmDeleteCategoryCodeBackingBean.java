@@ -16,6 +16,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
+import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
@@ -30,6 +31,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.sm.helper.SmVirtualCertHelper;
 
 import org.apache.log4j.Logger;
@@ -267,6 +269,9 @@ public class SmDeleteCategoryCodeBackingBean extends
 				//this.getManagedBean().getSmAppl().setQuestionnaire(false);
 				this.getManagedBean().setSmAppl(updateSmAppl(this.getManagedBean().getSmAppl()));
 				
+				//26418
+				saveDeletedCodesTrackingDiary();
+				
 				SmVirtualCertHelper.getInstance().
 				autoGenerateVirtualCert(getManagedBean().getSmAppl().getApplId(), true);
 				
@@ -336,7 +341,73 @@ public class SmDeleteCategoryCodeBackingBean extends
 			updateSmAppl(latestRejectedAppl);
 		}
 	}
+	
+	
+	/**
+	 * save supplier delete category tracking diary.
+	 */
+	//Bug #26418
+	private void saveDeletedCodesTrackingDiary() {
+		StringBuffer sb = new StringBuffer();
+		String actionDesc = null;
+		SmTrackingDairyVO smTrackingDairyVO = null;
+		List<SmTrackingDairyVO> listSmTrackingDiary = new ArrayList<SmTrackingDairyVO>();
+		
+		int i = getManagedBean().getSelectedCategories().size();
 
+		try {
+			if (getManagedBean().getSmAppl().getSmSupplierCategories() != null) {
+				sb.append("Bidang berikut telah dihapuskan : ");
+				
+				for (SmSupplierCategory selCat : getManagedBean()
+						.getSelectedCategories()) {
+					
+						i = i - 1;
+						sb.append(selCat.getPmCategoryL1().getCategoryL1Code()
+								+ selCat.getPmCategoryL2().getCategoryL2Code()
+								+ selCat.getPmCategoryL3().getCategoryL3Code());
+						if (i > 0) {
+							sb.append(", ");
+						}
+						actionDesc = sb.toString();
+
+					}
+				}
+
+				smTrackingDairyVO = SmCommonUtil.assignTrackingDiaryValues(
+						actionDesc, getManagedBean().getSmAppl().getApplId(),
+						getManagedBean().getSmAppl().getApplNo(),
+						SmCommonUtil.getUserRoleValue());
+				if (smTrackingDairyVO !=null){
+					smTrackingDairyVO.setStatus(getManagedBean().getSmAppl().getPmStatus());
+					listSmTrackingDiary.add(smTrackingDairyVO);
+				}
+			
+			processTrackingDiaryList(listSmTrackingDiary);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+
+	}
+	//Bug #26418
+	private void processTrackingDiaryList(List<SmTrackingDairyVO> trackingDiaryVOList) {
+		for(SmTrackingDairyVO trackingDiaryVO : trackingDiaryVOList) {
+			SmServiceLookup.getTrackingDiarySO().insertTrackingDiary(
+					trackingDiaryVO.getActionDesc(),
+					trackingDiaryVO.getActionedBy() != null ? trackingDiaryVO
+							.getActionedBy() : null, trackingDiaryVO
+							.getActionedByRole(), trackingDiaryVO.getDocId(),
+					trackingDiaryVO.getDocNo(), trackingDiaryVO.getDocType(), null,
+					trackingDiaryVO.getStatus() != null ? trackingDiaryVO
+							.getStatus().getStatusId() : null, null);
+		}
+	}
+	
 	/**
 	 * Retrive latest SmAppl after updates.
 	 */
