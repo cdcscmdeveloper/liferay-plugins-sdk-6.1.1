@@ -8789,6 +8789,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			IParameterSO parameterSo;
 
 			try {
+				long startTime = System.currentTimeMillis();
+				
 				TemplateSpecReqDTO qtTemplateReqDTO = new TemplateSpecReqDTO();
 				parameterSo = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
