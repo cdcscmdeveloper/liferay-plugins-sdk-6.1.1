@@ -108,6 +108,7 @@ public class MolPayServlet extends HttpServlet {
 				boolean validPayment = false;
 
 				if (resDTO.getPyPayment() != null) {
+					log.info("MolPayServlet| getPaymentId >>>>" + resDTO.getPyPayment().getPaymentId());
 					PyPayment smPayment = resDTO.getPyPayment();
 					PyPaymentResponse smPaymentRes = new PyPaymentResponse();
 					PyPaymentOrder paymentOrder = smPayment.getPyPaymentOrder();
