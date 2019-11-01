@@ -65,6 +65,8 @@ public class CommonApplBackingBean extends
 	public static Logger log = Logger.getLogger(CommonApplBackingBean.class);
 
 	public void preRenderView() {
+		//LOG : 26549 : SLA Monitoring
+		long startTime = System.currentTimeMillis();
 		log.info("-------ComAppl prerender view-------");
 		HttpServletRequest servletRequest = PortalUtil
 				.getHttpServletRequest(new FacesScopes().getRequest());
