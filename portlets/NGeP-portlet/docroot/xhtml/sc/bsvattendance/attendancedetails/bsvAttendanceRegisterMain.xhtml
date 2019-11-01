@@ -169,7 +169,7 @@
 						<p:commandButton id="conf" value="#{lbl['lbl.cm.dialog.cofirm.yes']}"						 
 						action="#{bsvAttendanceBackingBean.submitBsvDetails(bpmAction)}"
 						process="@form" update="@form"
-							oncomplete="confirmSubmit.hide();" style="float:right;"/>
+							onstart="confirmSubmit.hide(); blockWidget.show();" oncomplete="blockWidget.hide();" style="float:right"/>
 					
 					</p:confirmDialog>
 				</ui:repeat>
