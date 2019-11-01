@@ -3206,9 +3206,12 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 				&& totalPaid.intValue() > 0) {
 			MathContext mc = new MathContext(4);
 
-			percentagePaid = totalPaid.divide(totalCredit, mc).multiply(
-					BigDecimal.valueOf(100));
-
+			//Start Bug #26498
+			if (totalCredit.compareTo(BigDecimal.ZERO) == 1){
+				percentagePaid = totalPaid.divide(totalCredit, mc).multiply(
+						BigDecimal.valueOf(100));
+			}
+			//end Bug #26498
 		}
 
 		this.getManagedBean().setTotalAmountCredit(totalCredit);
