@@ -642,8 +642,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						    		   if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 						    			   if(!isSqStillValid(quoteResDTO.getEndDate())){
 									    	   worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
-									    	   worklistItemVO.setExpirationDate(getExpirationDate());
 									       }
+						    			   if(getExpirationDate() != null){
+								    		   worklistItemVO.setExpirationDate(getExpirationDate());
+								    	   }
 						    		   }
 								   }
 								   
@@ -702,9 +704,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 														 currentStatusId, worklistItemVO.getDocType());	
 									       if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 									    	   if(!isSqStillValid(quoteResDTO.getEndDate())){
-									    		   worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
-									    		   worklistItemVO.setExpirationDate(getExpirationDate());
+									    		   worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());							    		   
 											   }
+									    	   if(getExpirationDate() != null){
+									    		   worklistItemVO.setExpirationDate(getExpirationDate());
+									    	   }							    	   
 									       }   	   
 								        }
 									}
@@ -747,8 +751,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 										   if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 									    	   if(!isSqStillValid(quoteResDTO.getEndDate())){
 									    		   worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
-									    		   worklistItemVO.setExpirationDate(getExpirationDate());
 											   }
+									    	   if(getExpirationDate() != null){
+									    		   worklistItemVO.setExpirationDate(getExpirationDate());
+									    	   }
 										   }
 									   }
 								   }
@@ -765,8 +771,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 										   if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 									    	   if(!isSqStillValid(quoteResDTO.getEndDate())){
 									    		   worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
-									    		   worklistItemVO.setExpirationDate(getExpirationDate());
 											   }
+									    	   if(getExpirationDate() != null){
+									    		   worklistItemVO.setExpirationDate(getExpirationDate());
+									    	   }
 										   }  			   
 							    	   }
 							    }
@@ -1263,8 +1271,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						    		   if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 						    			   if(!isSqStillValid(quoteResDTO.getEndDate())){
 									    	   worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
-									    	   worklistItemVO.setExpirationDate(getExpirationDate());
 									       }
+						    			   if(getExpirationDate() != null){
+								    		   worklistItemVO.setExpirationDate(getExpirationDate());
+								    	   }
 						    		   }
 								   }
 								   
@@ -1293,8 +1303,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 									  if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 										  if(!isSqStillValid(quoteResDTO.getEndDate())){
 											  worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
-											  worklistItemVO.setExpirationDate(getExpirationDate());
 										  }
+										  if(getExpirationDate() != null){
+								    		  worklistItemVO.setExpirationDate(getExpirationDate());
+								    	  }
 									  }else{
 										  System.out.println("Begin PID validity process");
 								    	   IRequestNoteSO requestSO = (IRequestNoteSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestNoteSO.class);
@@ -1337,8 +1349,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 									  if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 										  if(!isSqStillValid(quoteResDTO.getEndDate())){
 											  worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
-											  worklistItemVO.setExpirationDate(getExpirationDate());
 										  }
+										  if(getExpirationDate() != null){
+								    		  worklistItemVO.setExpirationDate(getExpirationDate());
+								    	  }
 									  }else if(quoteResDTO.getPid() != null){
 										  System.out.println("Begin PID validity process");
 								    	  // IPurchaseRequestSO requestSO = (IPurchaseRequestSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseRequestSO.class);
@@ -1381,8 +1395,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 									  if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 										  if(!isSqStillValid(quoteResDTO.getEndDate())){
 											  worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
-											  worklistItemVO.setExpirationDate(getExpirationDate());
 										  }
+										  if(getExpirationDate() != null){
+								    		  worklistItemVO.setExpirationDate(getExpirationDate());
+								    	  }
 									  }  			   
 								   }
 						       }
@@ -1897,10 +1913,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				cal.clear(); 
 				cal.setTime(closingDate);
 				cal.add(Calendar.DATE, sqTimeValidity); //add 60days to closing/end date
+				setExpirationDate(dateToCalendar(cal.getTime()));
 					
 				if(currentDate.compareTo(cal.getTime()) >= 0){
-						validDate = false;
-						setExpirationDate(dateToCalendar(cal.getTime()));
+						validDate = false;					
 				}							
 			}						
 			return validDate;	
