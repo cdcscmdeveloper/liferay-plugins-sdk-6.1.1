@@ -146,6 +146,8 @@ public class RuleCatalogueBackingBean extends
 	private String inactiveFeeOrgPopUpMsg = "";
 	private String inactiveFeeComoPopUpMsg = "";
 	private String inactiveFeeContPopUpMsg = "";
+	/*#22119*/
+	private static List<YearEndInfo> yearEndInfoPhasesTooltip;
 
 	private String dupplicateOrgTypeName;
 
@@ -172,6 +174,23 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	public RuleCatalogueBackingBean() {
+		initYearEndProcessingTable();
+	}
+
+	public List<YearEndInfo> initYearEndProcessingTable() {
+		log.info("Make frontend table");
+		//log.info("get :"+this.getManagedBean().getFeeExemptionsForYepProcessing());
+
+		//log.info("get :"+this.getManagedBean().getFeeExemptionsForYepProcessing().toString());
+
+
+		initYearEndForProcessing();
+		if(yearEndInfoPhasesTooltip!=null){
+		log.info("yearEndInfoPhasesTooltip is : " + yearEndInfoPhasesTooltip.toString());
+		}
+		
+		
+		return yearEndInfoPhasesTooltip;
 
 	}
 
@@ -389,28 +408,35 @@ public class RuleCatalogueBackingBean extends
 		return "";
 	}
 	
-	private void initYearEndForProcessing(){
+	private void initYearEndForProcessing() {
 		IFeeExemptionSO feeSO = null;
 		try {
-			feeSO = (IFeeExemptionSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IFeeExemptionSO.class);
+			feeSO = (IFeeExemptionSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IFeeExemptionSO.class);
 			FeeExemptionReqDTO reqFDTO = new FeeExemptionReqDTO();
 			FeeExemptionResDTO resFDTO = null;
 			this.getManagedBean().getFeeExemptionsForYepProcessing().clear();
 			this.getManagedBean().getDeletedYepProcessingFeeExemptions().clear();
 			resFDTO = feeSO.getFeeExemptionsYepProcessing(reqFDTO);
-			
-			log.info("resFDTO is : "+resFDTO);
-			/*22119*/
+			this.getManagedBean().setFeeExemptionsForYepProcessing(resFDTO.getFeeExemptions());
+
+			log.info("resFDTO is : " + resFDTO);
+			/* 22119 */
 			String lang = getLanguage();
-			this.getManagedBean().setFeeExemptionsForYepProcessing(
-					resFDTO.getFeeExemptions());
+
+			if (lang.equals("en")) {
+				yearEndInfoPhasesTooltip = new ArrayList<YearEndInfo>();
+				for (int i = 0; i < resFDTO.getPhaseInfo().size(); i++) {
+					yearEndInfoPhasesTooltip.add(new YearEndInfo(resFDTO.getPhaseInfo().get(i), resFDTO
+							.getPhaseToolTip().get(i), resFDTO.getEffDate().get(i), resFDTO.getExpDate().get(i)));
+
+				}
+			}
 
 		} finally {
 			feeSO = null;
 		}
-	
+
 	}
 
 	private void initConfigRule() {
@@ -5088,5 +5114,21 @@ public class RuleCatalogueBackingBean extends
 							approval.getRecordStatusFlg().longValue()));
 		}
 	}
+	/*#22119*/
+	public List<YearEndInfo> getYearEndInfoPhasesTooltip() {
+		if (yearEndInfoPhasesTooltip == null)
+			yearEndInfoPhasesTooltip = new ArrayList<YearEndInfo>();
+		
+        log.info("yearEndInfoPhasesTooltip is,ln5117 : "+yearEndInfoPhasesTooltip);
+		return yearEndInfoPhasesTooltip;
+	}
+
+	@SuppressWarnings("static-access")
+	public void setYearEndInfoPhasesTooltip(List<YearEndInfo> yearEndInfoPhasesTooltip) {
+		this.yearEndInfoPhasesTooltip = yearEndInfoPhasesTooltip;
+	}
+
+	
+	
 
 }
