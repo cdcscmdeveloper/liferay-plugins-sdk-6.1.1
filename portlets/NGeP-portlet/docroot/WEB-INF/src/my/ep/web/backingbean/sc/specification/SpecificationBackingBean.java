@@ -32,6 +32,18 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import java.io.ByteArrayOutputStream;
+import java.util.Iterator;
+
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -217,6 +229,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
+
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -231,6 +244,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -15500,6 +15514,11 @@ public class SpecificationBackingBean extends
 		return null;
 
 	}
+	public boolean checkTplSpecQuestion(){
+		TemplateSpecBean templateSpecBean = getManagedBean().getTemplateSpecBean();
+		boolean a = templateSpecBean.getSpecMaster().getTplSpecQuestions().isEmpty();
+		return a;
+	}
 	
 	public String handleFileUploadExport(FileUploadEvent event) throws FileNotFoundException, IOException,
 			EncryptedDocumentException, InvalidFormatException {
@@ -15554,7 +15573,20 @@ public class SpecificationBackingBean extends
 					specification.add("");
 				}
 				if (row.getCell(2).toString() != "" || row.getCell(2).toString() != null) {
-					uom.add(row.getCell(2).toString());
+					String tempUom = row.getCell(2).toString();
+					String firstThreeChars = "";
+					
+					if (tempUom.length() > 3)
+					{
+						firstThreeChars = tempUom.substring(0, 3);
+					}
+					else
+					{
+						firstThreeChars = tempUom;
+					}
+					log.info("firstThreeChars xlsx"+firstThreeChars);
+					
+					uom.add(firstThreeChars);
 				} else {
 					uom.add("");
 				}
@@ -15614,7 +15646,20 @@ public class SpecificationBackingBean extends
 					specification.add("");
 				}
 				if (row.getCell(2).toString() != "" || row.getCell(2).toString() != null) {
-					uom.add(row.getCell(2).toString());
+					String tempUom = row.getCell(2).toString();
+					String firstThreeChars = "";
+					
+					if (tempUom.length() > 3)
+					{
+						firstThreeChars = tempUom.substring(0, 3);
+					}
+					else
+					{
+						firstThreeChars = tempUom;
+					}
+					log.info("firstThreeChars xls"+firstThreeChars);
+					
+					uom.add(firstThreeChars);
 				} else {
 					uom.add("");
 				}
@@ -15711,7 +15756,7 @@ public class SpecificationBackingBean extends
 				}
 				if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClUom() != null) {
 
-					uomm.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClUom().getUomCode());
+					uomm.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClUom().getUomId().toString()+" - "+templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClUom().getUomCode()+" - "+templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClUom().getUomName());
 
 				} else {
 					uomm.add("");
