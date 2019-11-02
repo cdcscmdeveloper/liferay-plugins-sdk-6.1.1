@@ -19,76 +19,51 @@
 			</td>
 		</tr>
 	</table>
-	<p:dataTable id="yearEndProcessTable"  
+	
+	<p:dataTable
+								emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+								value="#{ruleCatalogueBackingBean.yearEndInfoPhasesTooltip}" id="yearEndProcessTable"
+								rowIndexVar="rowIndex" var="yepObjj" width="100%">
 
-		value="#{ruleCatalogueBackingBean.managedBean.feeExemptionsForYepProcessing}"
-		rowIndexVar="rowIndex" var="feeObj" width="100%">
-		<ac:paginator for="yearEndProcessTable" />
-		
-		<p:column>
-			<f:facet name="header">
-			    <h:outputText value="*" styleClass="mandatory" />
-				<h:outputText value=" #{lbl['lbl.pm.settings.yep.period.process']}" />
+								<ac:paginator for="yearEndProcessTable"></ac:paginator>
 				
-			</f:facet>
-			<c:if test="#{ruleCatalogueBackingBean.getLanguage() eq 'en'}">
+				
+								<p:columnGroup type="header">
+									
+									<p:row>
+										<p:column style="text-align: center;" colspan="1"
+											headerText="#{lbl['lbl.pm.settings.yep.period.process']}" />
+										<p:column style="text-align: center;" colspan="1"
+											headerText="#{lbl['lbl.pm.yep.effdate']}" />
+										<p:column style="text-align: center;" colspan="1"
+											headerText="#{lbl['lbl.pm.yep.expdate']}" />
+									</p:row>
 
-				<ui:repeat
-					value="#{feeObj.orgTypeId.pmParameterDescsSpecCallOnly.get(0)}"
-					var="bean" varStatus="status">
-					<h:outputText value="#{bean.codeName}" />
-					<ac:iconTooltip value="#{bean.codeDesc}" />
-				</ui:repeat>
-			</c:if>
-			<c:if test="#{ruleCatalogueBackingBean.getLanguage() eq 'ms'}">
-				<ui:repeat
-					value="#{feeObj.orgTypeId.pmParameterDescsSpecCallOnly.get(1)}"
-					var="bean" varStatus="status">
-					<h:outputText value="#{bean.codeName}" />
-					<ac:iconTooltip value="#{bean.codeDesc}" />
-				</ui:repeat>
-			</c:if>
+								</p:columnGroup>
 
 
-		</p:column>
-		<p:column  width="15%">
-			<f:facet name="header">
-			<h:outputText value="*" styleClass="mandatory" />
-								#{lbl['lbl.pm.yep.effdate']}
-		                		</f:facet>
-			<p:calendar showOn="button" id="orgTypefeeeffDateId" navigator="true"
-				yearRange="#{DateUtils.getCalendarMaxYearRange(feeObj.effDate)}"
-				style="width :100px;" required="true"
-				maxdate="#{ruleCatalogueBackingBean.managedBean.maxDate}"
-				label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
-				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-				value="#{feeObj.effDate}">
-				<p:ajax event="dateSelect" update="orgTypefeeeffDateId,@this"
-					process="@this" />
-			</p:calendar>
-		</p:column>
+								<p:column>
+							#{yepObjj.phaseInfo}
+							
+                                <ac:iconTooltip value="#{yepObjj.phaseTooltip}" />
 
-		<p:column  width="15%">
-			<f:facet name="header">
-			
-						#{lbl['lbl.pm.yep.expdate']}
-			                	</f:facet>
-			<p:calendar showOn="button" id="orgTypefeeexpDateId" navigator="true"
-				yearRange="#{DateUtils.getCalendarMaxYearRange(feeObj.expDate)}"
-				style="width :100px;"
-				mindate="#{ruleCatalogueBackingBean.managedBean.today}"
-				maxdate="#{ruleCatalogueBackingBean.managedBean.maxDate}"
-				label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true"
-				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-				value="#{feeObj.expDate}"
-				validatorMessage="#{lbl['lbl.pm.as.expdate']} #{lbl['lbl.pm.date.range.validation']} #{lbl['lbl.pm.as.effdate']}">
-				<f:attribute name="startDate" value="#{feeObj.effDate}" />
-				<f:validator validatorId="primeDateRangeValidator" />
-				<p:ajax event="dateSelect" update="@this"
-					process="@this" />
+								</p:column>
+								<p:column>
+									<h:outputText value="#{yepObjj.effDate}"
+										style="display: block; width:100%; text-align:center;" />
+									
+								</p:column>
 
-			</p:calendar>
-		</p:column>
-	</p:dataTable>
+								<p:column>
+									<h:outputText value="#{yepObjj.expDate}"
+										style="display: block; width:100%; text-align:center;" />
+
+						
+								</p:column>
+
+
+							</p:dataTable>
+	
+	
 	</p:panel>
 </ui:composition>
