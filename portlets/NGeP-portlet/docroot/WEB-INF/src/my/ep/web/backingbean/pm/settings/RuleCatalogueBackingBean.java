@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -146,8 +147,6 @@ public class RuleCatalogueBackingBean extends
 	private String inactiveFeeOrgPopUpMsg = "";
 	private String inactiveFeeComoPopUpMsg = "";
 	private String inactiveFeeContPopUpMsg = "";
-	/*#22119*/
-	private static List<YearEndInfo> yearEndInfoPhasesTooltip;
 
 	private String dupplicateOrgTypeName;
 
@@ -174,23 +173,6 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	public RuleCatalogueBackingBean() {
-		initYearEndProcessingTable();
-	}
-
-	public List<YearEndInfo> initYearEndProcessingTable() {
-		log.info("Make frontend table");
-		//log.info("get :"+this.getManagedBean().getFeeExemptionsForYepProcessing());
-
-		//log.info("get :"+this.getManagedBean().getFeeExemptionsForYepProcessing().toString());
-
-
-		initYearEndForProcessing();
-		if(yearEndInfoPhasesTooltip!=null){
-		log.info("yearEndInfoPhasesTooltip is : " + yearEndInfoPhasesTooltip.toString());
-		}
-		
-		
-		return yearEndInfoPhasesTooltip;
 
 	}
 
@@ -408,35 +390,29 @@ public class RuleCatalogueBackingBean extends
 		return "";
 	}
 	
-	private void initYearEndForProcessing() {
+	private void initYearEndForProcessing(){
 		IFeeExemptionSO feeSO = null;
 		try {
-			feeSO = (IFeeExemptionSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IFeeExemptionSO.class);
+			feeSO = (IFeeExemptionSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IFeeExemptionSO.class);
 			FeeExemptionReqDTO reqFDTO = new FeeExemptionReqDTO();
 			FeeExemptionResDTO resFDTO = null;
 			this.getManagedBean().getFeeExemptionsForYepProcessing().clear();
 			this.getManagedBean().getDeletedYepProcessingFeeExemptions().clear();
+			
+			//retrieve pm_fee_exemption records
 			resFDTO = feeSO.getFeeExemptionsYepProcessing(reqFDTO);
-			this.getManagedBean().setFeeExemptionsForYepProcessing(resFDTO.getFeeExemptions());
-
-			log.info("resFDTO is : " + resFDTO);
-			/* 22119 */
-			String lang = getLanguage();
-
-			if (lang.equals("en")) {
-				yearEndInfoPhasesTooltip = new ArrayList<YearEndInfo>();
-				for (int i = 0; i < resFDTO.getPhaseInfo().size(); i++) {
-					yearEndInfoPhasesTooltip.add(new YearEndInfo(resFDTO.getPhaseInfo().get(i), resFDTO
-							.getPhaseToolTip().get(i), resFDTO.getEffDate().get(i), resFDTO.getExpDate().get(i)));
-
-				}
+			
+			log.info("[#22119] resFDTO.getFeeExemptions size: " + resFDTO.getFeeExemptions().size());
+			/*22119*/
+//			String lang = getLanguage();
+			if(resFDTO != null && resFDTO.getFeeExemptions().size() > 0) {
+				this.getManagedBean().setFeeExemptionsForYepProcessing(resFDTO.getFeeExemptions());
 			}
-
 		} finally {
 			feeSO = null;
-		}
-
+		}	
 	}
 
 	private void initConfigRule() {
@@ -5100,10 +5076,10 @@ public class RuleCatalogueBackingBean extends
 	}
 	
 	public String getLanguage() {
-		FacesScopes facesScopes = new FacesScopes();
+//		FacesScopes facesScopes = new FacesScopes();
 		
-		log.info("Language is : "+facesScopes.getUserLocale().getLanguage());
-		return facesScopes.getUserLocale().getLanguage();
+		log.info("[#22119] Language is: " + getFacesScopes().getUserLocale().getLanguage());
+		return getFacesScopes().getUserLocale().getLanguage();
 	}
 	
 	private void addTrackingDiaryIntoList(String messageId, String[] params,PmPtjSpecialApproval approval,PtjSpecialApprovalReqDTO reqDTO){
@@ -5114,21 +5090,82 @@ public class RuleCatalogueBackingBean extends
 							approval.getRecordStatusFlg().longValue()));
 		}
 	}
-	/*#22119*/
-	public List<YearEndInfo> getYearEndInfoPhasesTooltip() {
-		if (yearEndInfoPhasesTooltip == null)
-			yearEndInfoPhasesTooltip = new ArrayList<YearEndInfo>();
+	
+	//[#22119]
+	public void saveYEPValues() {
+		log.info("saveYEPValues");		
 		
-        log.info("yearEndInfoPhasesTooltip is,ln5117 : "+yearEndInfoPhasesTooltip);
-		return yearEndInfoPhasesTooltip;
-	}
-
-	@SuppressWarnings("static-access")
-	public void setYearEndInfoPhasesTooltip(List<YearEndInfo> yearEndInfoPhasesTooltip) {
-		this.yearEndInfoPhasesTooltip = yearEndInfoPhasesTooltip;
-	}
-
-	
-	
-
+		Calendar effectiveDt = null;
+        Calendar expiryDt = null;       
+		boolean isValidDt = false;
+		
+		for(PmFeeExemption feeExemption : this.getManagedBean().getFeeExemptionsForYepProcessing()) {			
+			
+			if(feeExemption.getEffDate() != null) {
+				if(effectiveDt == null) {
+					effectiveDt = Calendar.getInstance();
+				}
+				effectiveDt.setTime(feeExemption.getEffDate());
+			}
+			
+			if(feeExemption.getExpDate() != null) {
+				if(expiryDt == null) {
+					expiryDt = Calendar.getInstance();
+				}
+				expiryDt.setTime(feeExemption.getExpDate());
+			}
+			
+			if(expiryDt != null) {
+				if (effectiveDt.after(expiryDt)) {
+					isValidDt =  false;
+					break;
+		        }
+				else {
+					isValidDt =  true;
+				}
+			} else {
+				isValidDt =  true;
+			}
+		}
+		log.info("[#22119] all effective and expiry date is valid ? " + isValidDt);
+		if(isValidDt) {			
+			
+			IFeeExemptionSO feeExemptionSO = null;
+			
+			try{
+				feeExemptionSO = (IFeeExemptionSO) BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFeeExemptionSO.class);
+				
+				FeeExemptionReqDTO reqDTO = new FeeExemptionReqDTO();
+				FeeExemptionResDTO resDTO = null;
+				
+				getManagedBean().getMainPtjSpecialApprovalList().addAll(getManagedBean().getDeletedPtjSpecialApprovalList());
+				//setupTrackingDiaryVal(reqDTO);
+				reqDTO.setUser(getFacesScopes().getUserSessionBean());				
+				reqDTO.setFeeExemptionList(this.getManagedBean().getFeeExemptionsForYepProcessing());				
+				
+				//update pm_fee_exemption records
+				resDTO = feeExemptionSO.updateFeeExemptionList(reqDTO);
+				
+				if(resDTO.isSuccessful()){					
+					FacesContext facesContext = FacesContext.getCurrentInstance();
+					facesContext.addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+									MessageUtils.getMessage(
+											MessageConst.INFO_711001,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+				}
+			}catch(Exception e){				
+				throw e;
+			}finally{
+				feeExemptionSO = null;
+			}
+		} else {
+			throw new EpException(
+					MessageConst.ERROR_100003,
+					new String[] { "Date" });			
+		}
+	}	
 }
