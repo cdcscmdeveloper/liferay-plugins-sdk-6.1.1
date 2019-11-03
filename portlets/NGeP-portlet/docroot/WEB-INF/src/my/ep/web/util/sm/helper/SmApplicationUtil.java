@@ -43,8 +43,10 @@ import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
+import my.ep.biz.service.sm.search.ISupplierCategorySO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.siteVisit.ISiteAssignSO;
+import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.biz.service.sm.workFlowStatus.ISmWorkFlowStatusSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.EpPropertiesConst;
@@ -93,6 +95,8 @@ import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.reviewApplication.ReviewApplicationReqDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.dto.sm.revision.SmApplRevisionResDTO;
+import my.ep.dto.sm.search.SupplierCategoryReqDTO;
+import my.ep.dto.sm.search.SupplierCategoryResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.siteVisit.SiteAssignReqDTO;
@@ -100,6 +104,8 @@ import my.ep.dto.sm.siteVisit.SiteAssignResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.dto.sm.sst.SupplierSstReqDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
 import my.ep.exception.EpException;
@@ -146,6 +152,7 @@ import my.ep.persistence.entity.sm.SmCategoryOverlapDoc;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmGstSupplier;
@@ -3920,6 +3927,19 @@ public class SmApplicationUtil {
 						.getEntityBySinglePropertyFromList(userId, smSupplier
 								.getSmAppl().getSmPersonnels(), "pmUser");
 			}
+			//26238 - start
+			if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
+					|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
+					|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
+				if(suppAdmin != null){
+					if(suppAdmin.isSuspendRegistration() || suppAdmin.isCancelRegistration()){
+						throw new EpException(SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
+							null));
+					}
+				}
+			}
+			//26238 - end
+			
 			if (smSupplier.getSmAppl() != null
 					&& !smSupplier.getSmAppl().isQuestionnaire()
 					&& !StringUtils.isBlank(smSupplier.getSmAppl()
@@ -13010,6 +13030,87 @@ public class SmApplicationUtil {
 		}
 		
 	}
+	//26238 - start
+	/**
+	 * Retrieve sm disciplinary action
+	 *
+	 * Param - supplierId
+	 * @return SmDisciplinaryAction
+	 */
+	public static List<SmDisciplinaryAction> retrieveSmDisciplinaryActionBySupplier(SmSupplier supplier) {
+		ISupplierDataMaintenanceSO supplierDataMaintenanceSO = (ISupplierDataMaintenanceSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						ISupplierDataMaintenanceSO.class);
+		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+		SupplierDataMaintenanceResDTO resDTO = new SupplierDataMaintenanceResDTO();
+		reqDTO.setSupplier(supplier);
+		
+		resDTO = supplierDataMaintenanceSO.retrieveDisciplinaryActionBySupplier(reqDTO);
+
+		return resDTO.getSmDisciplinaryActions();
+	} 
+	
+	public static List<SmDisciplinaryAction> retrieveActiveSmDisciplinaryActionBySupplier(SmSupplier supplier) {
+		ISupplierDataMaintenanceSO supplierDataMaintenanceSO = (ISupplierDataMaintenanceSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						ISupplierDataMaintenanceSO.class);
+		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+		SupplierDataMaintenanceResDTO resDTO = new SupplierDataMaintenanceResDTO();
+		reqDTO.setSupplier(supplier);
+		
+		resDTO = supplierDataMaintenanceSO.retrieveActiveDisciplinaryActionBySupplier(reqDTO);
+
+		return resDTO.getSmDisciplinaryActions();
+	} 
+	
+	/**
+	 * Get supplier category by supplierId and isCancelCategory
+	 * 
+	 * @return List<SmSupplierCategory>
+	 */
+	public static List<SmSupplierCategory> retrieveSmSupplierCategory() {
+		ISupplierCategorySO supplierCategorySO = (ISupplierCategorySO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierCategorySO.class);
+		
+		SupplierCategoryReqDTO reqDTO = new SupplierCategoryReqDTO();
+		SupplierCategoryResDTO resDTO = new SupplierCategoryResDTO();
+		Long supplierId = getCurrentSupplier().getSupplierId();
+		
+//		reqDTO.setApplId(getCurrentSupplier().getSmAppl().getApplId());
+		reqDTO.setSupplierId(supplierId);
+		
+		resDTO = supplierCategorySO.retrieveCategoryBySupplierId(reqDTO);
+		return resDTO.getSupplierCategoryList();
+	}
+	
+	public static List<Object[]> retrieveCancelCategory() {
+		ISupplierCategorySO supplierCategorySO = (ISupplierCategorySO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierCategorySO.class);
+		
+		SupplierCategoryReqDTO reqDTO = new SupplierCategoryReqDTO();
+		SupplierCategoryResDTO resDTO = new SupplierCategoryResDTO();
+		Long supplierId = getCurrentSupplier().getSupplierId();
+		
+		reqDTO.setSupplierId(supplierId);
+		
+		resDTO = supplierCategorySO.retrieveCancelCategoryDetails(reqDTO);
+		return resDTO.getResultList();
+	}
+	
+	public static List<Object[]> retrieveCancelCategoryBySupplier(SmSupplier supplier) {
+		ISupplierCategorySO supplierCategorySO = (ISupplierCategorySO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierCategorySO.class);
+		
+		SupplierCategoryReqDTO reqDTO = new SupplierCategoryReqDTO();
+		SupplierCategoryResDTO resDTO = new SupplierCategoryResDTO();
+		Long supplierId = supplier.getSupplierId();
+		
+		reqDTO.setSupplierId(supplierId);
+		
+		resDTO = supplierCategorySO.retrieveCancelCategoryDetails(reqDTO);
+		return resDTO.getResultList();
+	}
+	//26238 - end
 
 	
 
