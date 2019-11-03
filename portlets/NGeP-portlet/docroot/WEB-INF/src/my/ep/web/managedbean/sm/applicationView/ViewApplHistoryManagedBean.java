@@ -25,6 +25,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.vo.DisciplinaryActionVO;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -46,6 +47,7 @@ public class ViewApplHistoryManagedBean extends
 	private List<SmBulkApplicationVO> smBulkApplicationVO;
 	private SmAttachment cancellationAttachment;
 	private SmMofAccount currMof;
+	private List<DisciplinaryActionVO> disciplineVOs; //26238
 
 	public ViewApplHistoryManagedBean() {
 
@@ -277,5 +279,13 @@ public class ViewApplHistoryManagedBean extends
 	public void setCurrMof(SmMofAccount currMof) {
 		this.currMof = currMof;
 	}
+	
+	public List<DisciplinaryActionVO> getDisciplineVOs() {
+		return disciplineVOs;
+	}
+	
+	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
+		this.disciplineVOs = disciplineVOs;
+	}	
 
 }

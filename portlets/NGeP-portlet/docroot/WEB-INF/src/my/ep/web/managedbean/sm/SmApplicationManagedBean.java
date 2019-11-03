@@ -542,6 +542,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmSupplierBranch>  smSupplierBranchSsm = new ArrayList();;
 	private List<SmSupplierBusiness> smSupplierBusinessSsm   = new ArrayList();;
 	
+	//26238
+	private Long disabledCategoryL3Id;
+	
 	private class RejectReasonPagingDataModel extends
 			PagingDataModel<PmReasonDesc> {
 		/**
@@ -4160,5 +4163,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setPersonnelsSsm(List<SmPersonnel> personnelsSsm) {
 		this.personnelsSsm = personnelsSsm;
 	}
+	//26238 - start 
+	public Long getDisabledCategoryL3Id() {
+		return disabledCategoryL3Id;
+	}
+
+	public void setDisabledCategoryL3Id(Long disabledCategoryL3Id) {
+		this.disabledCategoryL3Id = disabledCategoryL3Id;
+	} //26238 - end
 
 }
