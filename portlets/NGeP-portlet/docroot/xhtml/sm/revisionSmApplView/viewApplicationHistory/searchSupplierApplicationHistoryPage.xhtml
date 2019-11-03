@@ -23,6 +23,20 @@
 		
 		<p:messages id="messages" showDetail="true" closable="true" showSummary="false" />
 		
+		<!-- Enhancement 26238 - START -->
+		<p:outputPanel rendered="#{viewSuppProfileBackingBean.managedBean.supplierUser and viewSuppProfileBackingBean.managedBean.disciplinaryAction}" style="color:red;font-weight:bold;">
+			<h:outputText styleClass="warning" value="#{lbl['lbl.sm.supplier.disciplinary.action.msg']}" escape="false"/><p:spacer width="2"/>
+			<h:outputText styleClass="warning" value="#{lbl['lbl.sm.disciplinary.click']}" escape="false"/>
+			<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				action="#{viewSuppProfileBackingBean.onViewDisciplinaryAction}" 
+				process="@this" partialSubmit="true" update=":form">
+					<u><h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" styleClass="warning" /></u>
+			</p:commandLink><p:spacer width="2"/>
+			<h:outputText styleClass="warning" value="#{lbl['lbl.sm.disciplinary.to.view.history.disciplinary.action']}" escape="false"/><br />
+			<p:spacer height="2"/>
+		</p:outputPanel>
+		<!-- 26238 - END -->
+		
 		<p:panel header="#{lbl['lbl.sm.search.supp.appl.history']}" toggleable="true" id="searchSupplierProfilePanelId">
 			<ui:include src="/xhtml/sm/shared/applViewOnlyPages/supplierApplicationSearchCriteria.xhtml" />
 		</p:panel>
@@ -90,5 +104,7 @@
 			</p:dataTable>
 			
 		</p:panel>
+		<ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" />
+		
 	</ui:define>
 </ui:composition>
