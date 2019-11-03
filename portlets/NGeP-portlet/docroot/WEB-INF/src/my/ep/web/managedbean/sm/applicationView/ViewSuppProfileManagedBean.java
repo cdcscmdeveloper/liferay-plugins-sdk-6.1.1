@@ -1,19 +1,30 @@
 package my.ep.web.managedbean.sm.applicationView;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmFinancialOrg;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmRegStatus;
+import my.ep.persistence.entity.sm.SmAddress;
+import my.ep.persistence.entity.sm.SmGstSupplier;
+import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
+import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.util.FacesScopes;
@@ -53,6 +64,68 @@ public class ViewSuppProfileManagedBean extends
 	private boolean hasRegStatusChanged = false;
 	private boolean hasMofExpiryDateChanged = false;
 	private Long existingStatusId;
+	//26238 - start
+	private boolean warning;
+	private boolean cancelCategoryCode;
+	private boolean suspendRegistration;
+	private boolean cancelRegistration;
+	private boolean blacklistOwnerOrDirector;
+	private boolean bumiputeraStatusCancel;
+	private boolean manufacturerStatusCancel;
+	private List<DisciplinaryActionVO> disciplinaryActionVoList;
+	private List<DisciplinaryActionVO> disciplineVOs; 
+	private List<SmPersonnel> ownerAndDirectorList; 
+	private List<SmPersonnel> selectedOwnerAndDirectorList; 
+	private String applType; 
+	private boolean viewFlag; 
+	private SmSupplier smSupp; 
+	private boolean viewMode; 
+	
+	private SmSupplierBank[] selectedSuppBanks;
+	private List<PmFinancialOrg> financialOrgLs;
+	
+	private SmAddress smBusinessAdd;
+	private SmAddress smPermenantAdd;
+	private SmAddress smResAdd;
+	
+	private boolean sameAsOwner;
+	private boolean disabledCompanyNameInMaintenance;
+	private boolean disabledBusinessTypeInMaintenance;
+	
+	private List<SelectItem> countryLs;
+	private List<SelectItem> businessStateLs;
+	private List<SelectItem> residentialStateLs;
+	private List<SelectItem> permenantStateLs;
+
+	private List<SelectItem> businessDistrictLs;
+	private List<SelectItem> residentialDistrictLs;
+	private List<SelectItem> permenantDistrictLs;
+
+	private List<SelectItem> businessCityLs;
+	private List<SelectItem> residentialCityLs;
+	private List<SelectItem> permenantCityLs;
+	
+	private List<PmParameterDesc> serviceLs;
+	
+	private boolean sabahSarawakType;
+	
+	private SmPersonnel smPersonnel;
+	private SmSupplierOwner smSuppOwner;
+	private List<SmSupplierOwner> smSuppOwners = new ArrayList();
+	private SmPersonnelAddress smPersonnelAdd;
+	
+	private Integer userBumiFlg;
+	private Integer userMuslimFlg;
+	
+	private Long myCountryId;
+	
+	private SmGstSupplier smGstSupplier;
+	
+	private boolean gstFlag;
+	
+	private SmSupplierBusiness selectedBusinessNature;
+	private SmSupplierBusiness[] selectedBusinessNatureLs;
+	//26238 - end
 
 	public ViewSuppProfileManagedBean() {
 
@@ -308,5 +381,378 @@ public class ViewSuppProfileManagedBean extends
 	public void setOldRegStatusId(Long oldRegStatusId) {
 		this.oldRegStatusId = oldRegStatusId;
 	}
+	//26238 - START	
+	public boolean isWarning() {
+		return warning;
+	}
 
+	public void setWarning(boolean warning) {
+		this.warning = warning;
+	}
+
+	public boolean isCancelCategoryCode() {
+		return cancelCategoryCode;
+	}
+
+	public void setCancelCategoryCode(boolean cancelCategoryCode) {
+		this.cancelCategoryCode = cancelCategoryCode;
+	}
+
+	public boolean isSuspendRegistration() {
+		return suspendRegistration;
+	}
+
+	public void setSuspendRegistration(boolean suspendRegistration) {
+		this.suspendRegistration = suspendRegistration;
+	}
+
+	public boolean isCancelRegistration() {
+		return cancelRegistration;
+	}
+
+	public void setCancelRegistration(boolean cancelRegistration) {
+		this.cancelRegistration = cancelRegistration;
+	}
+
+	public boolean isBlacklistOwnerOrDirector() {
+		return blacklistOwnerOrDirector;
+	}
+
+	public void setBlacklistOwnerOrDirector(boolean blacklistOwnerOrDirector) {
+		this.blacklistOwnerOrDirector = blacklistOwnerOrDirector;
+	}
+
+	public boolean isBumiputeraStatusCancel() {
+		return bumiputeraStatusCancel;
+	}
+
+	public void setBumiputeraStatusCancel(boolean bumiputeraStatusCancel) {
+		this.bumiputeraStatusCancel = bumiputeraStatusCancel;
+	}
+
+	public boolean isManufacturerStatusCancel() {
+		return manufacturerStatusCancel;
+	}
+
+	public void setManufacturerStatusCancel(boolean manufacturerStatusCancel) {
+		this.manufacturerStatusCancel = manufacturerStatusCancel;
+	}
+
+	public List<DisciplinaryActionVO> getDisciplinaryActionVoList() {
+		return disciplinaryActionVoList;
+	}
+
+	public void setDisciplinaryActionVoList(List<DisciplinaryActionVO> disciplinaryActionVoList) {
+		this.disciplinaryActionVoList = disciplinaryActionVoList;
+	}
+
+	public List<DisciplinaryActionVO> getDisciplineVOs() {
+		return disciplineVOs;
+	}
+
+	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
+		this.disciplineVOs = disciplineVOs;
+	}
+
+	public List<SmPersonnel> getOwnerAndDirectorList() {
+		return ownerAndDirectorList;
+	}
+
+	public void setOwnerAndDirectorList(List<SmPersonnel> ownerAndDirectorList) {
+		this.ownerAndDirectorList = ownerAndDirectorList;
+	}
+
+	public List<SmPersonnel> getSelectedOwnerAndDirectorList() {
+		return selectedOwnerAndDirectorList;
+	}
+
+	public void setSelectedOwnerAndDirectorList(List<SmPersonnel> selectedOwnerAndDirectorList) {
+		this.selectedOwnerAndDirectorList = selectedOwnerAndDirectorList;
+	}
+
+	public String getApplType() {
+		return applType;
+	}
+
+	public void setApplType(String applType) {
+		this.applType = applType;
+	} 
+
+	public boolean isViewFlag() {
+		return viewFlag;
+	}
+
+	public void setViewFlag(boolean viewFlag) {
+		this.viewFlag = viewFlag;
+	}
+
+	public SmSupplier getSmSupp() {
+		return smSupp;
+	}
+
+	public void setSmSupp(SmSupplier smSupp) {
+		this.smSupp = smSupp;
+	}
+
+	public boolean isViewMode() {
+		return viewMode;
+	}
+
+	public void setViewMode(boolean viewMode) {
+		this.viewMode = viewMode;
+	}
+
+	public SmSupplierBusiness[] getSelectedBusinessNatureLs() {
+		return selectedBusinessNatureLs;
+	}
+
+	public void setSelectedBusinessNatureLs(SmSupplierBusiness[] selectedBusinessNatureLs) {
+		this.selectedBusinessNatureLs = selectedBusinessNatureLs;
+	}
+
+	public SmSupplierBank[] getSelectedSuppBanks() {
+		return selectedSuppBanks;
+	}
+
+	public void setSelectedSuppBanks(SmSupplierBank[] selectedSuppBanks) {
+		this.selectedSuppBanks = selectedSuppBanks;
+	}
+
+	public List<PmFinancialOrg> getFinancialOrgLs() {
+		return financialOrgLs;
+	}
+
+	public void setFinancialOrgLs(List<PmFinancialOrg> financialOrgLs) {
+		this.financialOrgLs = financialOrgLs;
+	}
+
+	public SmAddress getSmBusinessAdd() {
+		return smBusinessAdd;
+	}
+
+	public void setSmBusinessAdd(SmAddress smBusinessAdd) {
+		this.smBusinessAdd = smBusinessAdd;
+	}
+
+	public SmAddress getSmPermenantAdd() {
+		return smPermenantAdd;
+	}
+
+	public void setSmPermenantAdd(SmAddress smPermenantAdd) {
+		this.smPermenantAdd = smPermenantAdd;
+	}
+
+	public SmAddress getSmResAdd() {
+		return smResAdd;
+	}
+
+	public void setSmResAdd(SmAddress smResAdd) {
+		this.smResAdd = smResAdd;
+	}
+
+	public boolean isSameAsOwner() {
+		return sameAsOwner;
+	}
+
+	public void setSameAsOwner(boolean sameAsOwner) {
+		this.sameAsOwner = sameAsOwner;
+	}
+
+	public boolean isDisabledCompanyNameInMaintenance() {
+		return disabledCompanyNameInMaintenance;
+	}
+
+	public void setDisabledCompanyNameInMaintenance(boolean disabledCompanyNameInMaintenance) {
+		this.disabledCompanyNameInMaintenance = disabledCompanyNameInMaintenance;
+	}
+
+	public boolean isDisabledBusinessTypeInMaintenance() {
+		return disabledBusinessTypeInMaintenance;
+	}
+
+	public void setDisabledBusinessTypeInMaintenance(boolean disabledBusinessTypeInMaintenance) {
+		this.disabledBusinessTypeInMaintenance = disabledBusinessTypeInMaintenance;
+	}
+
+	public List<SelectItem> getCountryLs() {
+		return countryLs;
+	}
+
+	public void setCountryLs(List<SelectItem> countryLs) {
+		this.countryLs = countryLs;
+	}
+
+	public List<SelectItem> getBusinessStateLs() {
+		return businessStateLs;
+	}
+
+	public void setBusinessStateLs(List<SelectItem> businessStateLs) {
+		this.businessStateLs = businessStateLs;
+	}
+
+	public List<SelectItem> getResidentialStateLs() {
+		return residentialStateLs;
+	}
+
+	public void setResidentialStateLs(List<SelectItem> residentialStateLs) {
+		this.residentialStateLs = residentialStateLs;
+	}
+
+	public List<SelectItem> getPermenantStateLs() {
+		return permenantStateLs;
+	}
+
+	public void setPermenantStateLs(List<SelectItem> permenantStateLs) {
+		this.permenantStateLs = permenantStateLs;
+	}
+
+	public List<SelectItem> getBusinessDistrictLs() {
+		return businessDistrictLs;
+	}
+
+	public void setBusinessDistrictLs(List<SelectItem> businessDistrictLs) {
+		this.businessDistrictLs = businessDistrictLs;
+	}
+
+	public List<SelectItem> getResidentialDistrictLs() {
+		return residentialDistrictLs;
+	}
+
+	public void setResidentialDistrictLs(List<SelectItem> residentialDistrictLs) {
+		this.residentialDistrictLs = residentialDistrictLs;
+	}
+
+	public List<SelectItem> getPermenantDistrictLs() {
+		return permenantDistrictLs;
+	}
+
+	public void setPermenantDistrictLs(List<SelectItem> permenantDistrictLs) {
+		this.permenantDistrictLs = permenantDistrictLs;
+	}
+
+	public List<SelectItem> getBusinessCityLs() {
+		return businessCityLs;
+	}
+
+	public void setBusinessCityLs(List<SelectItem> businessCityLs) {
+		this.businessCityLs = businessCityLs;
+	}
+
+	public List<SelectItem> getResidentialCityLs() {
+		return residentialCityLs;
+	}
+
+	public void setResidentialCityLs(List<SelectItem> residentialCityLs) {
+		this.residentialCityLs = residentialCityLs;
+	}
+
+	public List<SelectItem> getPermenantCityLs() {
+		return permenantCityLs;
+	}
+
+	public void setPermenantCityLs(List<SelectItem> permenantCityLs) {
+		this.permenantCityLs = permenantCityLs;
+	}
+
+	public List<PmParameterDesc> getServiceLs() {
+		return serviceLs;
+	}
+
+	public void setServiceLs(List<PmParameterDesc> serviceLs) {
+		this.serviceLs = serviceLs;
+	}
+
+	public boolean isSabahSarawakType() {
+		return sabahSarawakType;
+	}
+
+	public void setSabahSarawakType(boolean sabahSarawakType) {
+		this.sabahSarawakType = sabahSarawakType;
+	}
+	
+	public SmPersonnel getSmPersonnel() {
+		if(smPersonnel == null)
+			smPersonnel = new SmPersonnel();
+		return smPersonnel;
+	}
+
+	public void setSmPersonnel(SmPersonnel smPersonnel) {
+		this.smPersonnel = smPersonnel;
+	}
+
+	public SmSupplierOwner getSmSuppOwner() {
+		if(smSuppOwner == null) {
+			smSuppOwner = new SmSupplierOwner();
+		}
+		return smSuppOwner;
+	}
+
+	public void setSmSuppOwner(SmSupplierOwner smSuppOwner) {
+		this.smSuppOwner = smSuppOwner;
+	}
+
+	public SmPersonnelAddress getSmPersonnelAdd() {
+		return smPersonnelAdd;
+	}
+
+	public void setSmPersonnelAdd(SmPersonnelAddress smPersonnelAdd) {
+		this.smPersonnelAdd = smPersonnelAdd;
+	}
+
+	public Integer getUserBumiFlg() {
+		return userBumiFlg;
+	}
+
+	public void setUserBumiFlg(Integer userBumiFlg) {
+		this.userBumiFlg = userBumiFlg;
+	}
+
+	public Integer getUserMuslimFlg() {
+		return userMuslimFlg;
+	}
+
+	public void setUserMuslimFlg(Integer userMuslimFlg) {
+		this.userMuslimFlg = userMuslimFlg;
+	}
+
+	public Long getMyCountryId() {
+		return myCountryId;
+	}
+
+	public void setMyCountryId(Long myCountryId) {
+		this.myCountryId = myCountryId;
+	}
+
+	public SmGstSupplier getSmGstSupplier() {
+		return smGstSupplier;
+	}
+
+	public void setSmGstSupplier(SmGstSupplier smGstSupplier) {
+		this.smGstSupplier = smGstSupplier;
+	}
+
+	public boolean isGstFlag() {
+		return gstFlag;
+	}
+
+	public void setGstFlag(boolean gstFlag) {
+		this.gstFlag = gstFlag;
+	}
+
+	public SmSupplierBusiness getSelectedBusinessNature() {
+		return selectedBusinessNature;
+	}
+
+	public void setSelectedBusinessNature(SmSupplierBusiness selectedBusinessNature) {
+		this.selectedBusinessNature = selectedBusinessNature;
+	} //26238 - END
+
+	public List<SmSupplierOwner> getSmSuppOwners() {
+		return smSuppOwners;
+	}
+
+	public void setSmSuppOwners(List<SmSupplierOwner> smSuppOwners) {
+		this.smSuppOwners = smSuppOwners;
+	}
+	
 }
