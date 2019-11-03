@@ -1,0 +1,69 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:cc="http://java.sun.com/jsf/composite">
+	
+	<cc:interface>
+		<cc:attribute name="dialogHeader" default="#{lbl['lbl.sm.view.history.disciplinary.action.headerlbl']}"/>
+		<cc:attribute name="dialogWidth" default="1100px" />
+		<cc:attribute name="dialogHeight" default="500px" />
+		<cc:attribute name="voList" type="java.util.List" required="true" />
+	</cc:interface>
+	
+	<cc:implementation>
+	<p:dialog id="disciplinaryActionHistoryDlgId" header="#{cc.attrs.dialogHeader}" closable="true"
+		widgetVar="disciplinaryActionHistoryDlg" modal="true" width="#{cc.attrs.dialogWidth}" height="#{cc.attrs.dialogHeight}"
+		resizable="true">
+	
+		<p:dataTable value="#{cc.attrs.voList}" var="disciplinaryAction" 
+		 sortBy="#{disciplinaryAction.endDate}" rowIndexVar="index" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" 
+		 style="table-layout: fixed;">
+			
+			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2% !important; vertical-align:top;">
+				<p:outputLabel value="#{index + 1}"
+					style="float: left;white-space: normal;" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sm.disciplinary.jktt.punishment.type']}" style="width : 23% !important; vertical-align:top;">
+				<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.warning']}" rendered="#{disciplinaryAction.warning}"/>
+				<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.cancel.cat.code']}" rendered="#{disciplinaryAction.cancelCategory}"/>
+				<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.suspend.registration']}" rendered="#{disciplinaryAction.suspendRegistration}"/>
+				<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.cancel.registration']}" rendered="#{disciplinaryAction.cancelRegistration}"/>
+				<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']}" rendered="#{disciplinaryAction.blacklistOwnerDirector}"/>
+				<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.cancel.of.bumiputera']}" rendered="#{disciplinaryAction.bumiputeraCancel}"/>
+				<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.cancel.of.manufacturer']}" rendered="#{disciplinaryAction.manufacturerCancel}"/>
+			</p:column>			
+			<p:column headerText="#{lbl['lbl.sm.disciplinary.jktt.start.date']}" style="width : 10% !important; vertical-align:top;">
+				<ac:labelDateTime styleClass="outputLabel-view" value="#{disciplinaryAction.startDate}"/>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sm.disciplinary.jktt.end.date']}" style="width : 10% !important; vertical-align:top;">
+				<ac:labelDateTime styleClass="outputLabel-view" value="#{disciplinaryAction.endDate}"/>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sm.disciplinary.jktt.remarks']}" style="width : 25% !important; vertical-align:top;word-break: break-all;">
+				<h:outputText value="#{disciplinaryAction.remarks}"/>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sm.disciplinary.list.cancel.category.code']}" style="width : 15% !important; vertical-align:top;">
+				<h:dataTable value="#{disciplinaryAction.categoryCodeList}" var="suppCat" rendered="#{not empty disciplinaryAction.categoryCodeList}"
+					rowIndexVar="indexCat" emptyMessage="#{lbl['lbl.sm.no.available']}" style="border: none !important;">
+					<p:column style="border: none !important;">
+						<h:outputText value="#{suppCat.categoryCode}"/>
+					</p:column>
+				</h:dataTable>
+				<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty disciplinaryAction.categoryCodeList}"/>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sm.disciplinary.list.of.ic.no.blacklist']}" style="width : 15% !important; vertical-align:top;">
+				<h:dataTable value="#{disciplinaryAction.blacklistownerDirectorList}" var="personnel" 
+					rowIndexVar="indexPer" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" rendered="#{not empty disciplinaryAction.blacklistownerDirectorList}">
+					<p:column style="border: none !important;">
+						<h:outputText value="#{personnel.icNo}"/>
+					</p:column>
+				</h:dataTable>
+				<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty disciplinaryAction.blacklistownerDirectorList}" />
+			</p:column>
+		</p:dataTable>
+	</p:dialog>
+	</cc:implementation>
+</ui:composition>
