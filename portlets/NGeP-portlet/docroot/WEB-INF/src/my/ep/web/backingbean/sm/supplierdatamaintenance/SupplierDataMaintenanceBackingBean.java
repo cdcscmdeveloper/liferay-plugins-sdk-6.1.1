@@ -4,22 +4,35 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.model.SelectItem;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceException;
 
+import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
+import my.ep.biz.service.pm.common.state.IStateSO;
+import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.dto.pm.common.PmTrackingDairyVO;
+import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
+import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
+import my.ep.dto.pm.common.state.StateReqDTO;
+import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.zone.ZoneReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
+import my.ep.dto.sm.registration.RegistrationReqDTO;
+import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
@@ -30,27 +43,46 @@ import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
+import my.ep.persistence.entity.pm.common.PmCity;
+import my.ep.persistence.entity.pm.common.PmCountry;
+import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmFinancialOrg;
+import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmRegStatus;
+import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
+import my.ep.persistence.entity.sm.SmGstSupplier;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
+import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.sm.applicationView.BaseReviewApplicationBackingBean;
+import my.ep.web.backingbean.sm.registration.RegistrationBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.vo.BlacklistOwnerDirectorVO;
+import my.ep.web.vo.DisciplinaryActionCategoryVO;
 import my.ep.web.vo.DisciplinaryActionVO;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.primefaces.context.RequestContext;
 
@@ -63,7 +95,10 @@ public class SupplierDataMaintenanceBackingBean extends
 	 * 
 	 */
 	private static final long serialVersionUID = 3781591594455061750L;
-	
+	//26238 - start
+	private static Map<Long, Object> identityType; 
+	private boolean gmapDisabled; 
+	//26238 - end
 	/**
 	 * Pre-render and redirect to Search Page
 	 */
@@ -84,6 +119,28 @@ public class SupplierDataMaintenanceBackingBean extends
 				"/xhtml/sm/cancelRegWithMof/searchSupplierCancelMofPage.xhtml",
 				"", null, null);
 	}
+	//26238 - start
+	private static String defaultAccPurpose = "P";
+	
+	/**
+	 * Pre-render and redirect to Search Page
+	 */
+	public void preRenderBasicAccountMaintenance() {
+		FacesContext fc = FacesContext.getCurrentInstance();
+		if(getManagedBean().isSupplierUser()){
+			RegistrationBackingBean registrationBackingBean = new RegistrationBackingBean();
+			registrationBackingBean.viewOnlineAccount();
+			
+//			fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlineAccount/accountMaintenanceDet.xhtml");
+		} else {
+			initDataForSearchSupplier();
+			SmCommonUtil
+					.redirectToPage(
+							"/xhtml/sm/basicaccountmaintenance/searchBasicAccountMaintenance.xhtml",
+							"", null, null);
+		}
+		
+	} //26238 - end
 
 	/**
 	 * Navigate to Supplier Maintenance Screen
@@ -106,7 +163,62 @@ public class SupplierDataMaintenanceBackingBean extends
 		//setOverLappingCategories();
 		getManagedBean().setOverLappedCategoryMsg("");
 		getManagedBean().setOverLappedCategoryExists(false);
+		//26238 - start
+		getOwnerAndDirectorList(); 
+		getManagedBean().setFinancialOrgLs(retrieveFinancialOrgList());
+		getManagedBean().setSmSupp(getManagedBean().getSmSupplier());
 		
+		RegistrationReqDTO regReqDTO = new RegistrationReqDTO();
+		regReqDTO.setSupplierId(getManagedBean().getSmSupp().getSupplierId());
+
+		IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate.getInstance().getServiceObject("sm", IRegistrationSO.class);
+		RegistrationResDTO regResDTO = reqSO.retrieveSuppOnlineAcc(regReqDTO);
+		getManagedBean().setSmSuppOwner(new SmSupplierOwner());
+		getManagedBean().setApplType(getManagedBean().getSmAppl().getApplType());
+		
+		if(regResDTO.getSmSupp().getSmSupplierOwners()!=null && CollectionUtils.isNotEmpty(regResDTO.getSmSupp().getSmSupplierOwners())){
+			getManagedBean().setSmSuppOwner(regResDTO.getSmSupp().getSmSupplierOwners().get(0));
+			getManagedBean().setSmSuppOwners(regResDTO.getSmSupp().getSmSupplierOwners());
+		}
+		
+		getManagedBean().setSelectedBusinessNature(new SmSupplierBusiness());
+		setDisableCompanyNameBusinessTypeInMaintenance();
+		
+		if(regResDTO.getSmSupp().getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)){
+			SmPersonnel personnel = getManagedBean().getSmAppl().getSmPersonnels().get(0);
+			getManagedBean().setSmPersonnel(personnel);
+			getManagedBean().setUserBumiFlg(personnel.getBumiFlg());
+			getManagedBean().setUserMuslimFlg(personnel.getMuslimFlg());
+			getIndividualServiceType();
+			getManagedBean().setSmPermenantAdd(regResDTO.getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress());
+			populateStateByAddType("permenant", false);
+			populateDistrictByAddType("permenant", false);
+			populateCityByAddType("permenant", false);
+
+			getManagedBean().setSmBusinessAdd(regResDTO.getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress());
+			populateStateByAddType("business", false);
+			populateDistrictByAddType("business", false);
+			populateCityByAddType("business", false);
+		}else{
+			if(getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK) || 
+					getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK) ||
+					getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH) || 
+					getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)){
+				getManagedBean().setSabahSarawakType(true);
+			}
+			
+			getManagedBean().setSmBusinessAdd(regResDTO.getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress());
+			populateStateByAddType("business", false);
+			populateDistrictByAddType("business", false);
+			populateCityByAddType("business", false);
+		}
+		retrievePmCountryList();
+		
+		//retrieve Supplier GST Info
+		initGstInfo(regResDTO.getSmSupp(),getManagedBean(),false);
+		getManagedBean().setGstFlag(false);
+		
+		//26238 - end
 		setCategoryTypeConfirm();
 		getManagedBean().setDisplaySearchPage(false);
 		setLoginUserAllowedToDoMaintenance();
@@ -172,7 +284,83 @@ public class SupplierDataMaintenanceBackingBean extends
 	public void search() {
 		getManagedBean().searchSupplier();
 	}
-
+	//26238 - start
+	public void submitBasicAccountMaintenance(){
+		PmUser user = new FacesScopes().getUserSessionBean();
+		validateDisciplinaryAction();
+		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+		SupplierDataMaintenanceResDTO resDTO = new SupplierDataMaintenanceResDTO();
+		List<SmTrackingDairyVO> listSmTrackingDiary = new ArrayList<SmTrackingDairyVO>();
+		
+		SmAppl activeAppl = SmCommonUtil
+				.getActiveApplBySupplier(getManagedBean().getSmSupplier());
+		
+		try {
+			reqDTO.setSupplier(getManagedBean().getSmSupplier());
+			
+			if(getManagedBean().getSmAppl().getSmSupplierBanks().size() > 0){
+				reqDTO.setAdditionalBankList(getManagedBean().getSmAppl().getSmSupplierBanks());
+			} else {
+				reqDTO.setAdditionalBankList(null);
+			}
+			
+			if(getManagedBean().isEditDisciplinaryAction()){
+				reqDTO.setSmDisciplinaryAction(getManagedBean()
+						.getDisciplineVO().getSmDiscplinaryAction());
+			}
+			
+			if(getManagedBean().isWarning()) {
+				getManagedBean().getDisciplineVO().getSmDiscplinaryAction().setWarning(true);			
+			}
+			
+			if(getManagedBean().isSuspendRegistration()){
+				getManagedBean().getDisciplineVO().getSmDiscplinaryAction().setSuspendRegistration(true);
+				
+				SmTrackingDairyVO trckVO = new SmTrackingDairyVO();
+				PmStatus status = new PmStatus();
+				status.setStatusId(SupplierManagementConst.PM_STATUS_DELETED_BY_DISCIPLINARY_ACTION);
+				
+				trckVO.setActionDesc(SupplierManagementConst.DELETED_BY_DISCIPLINARY_ACTION);
+				trckVO.setActionedBy(user.getUserId());
+				trckVO.setActionedByRole(getManagedBean().getRoleCode());
+				trckVO.setDocId(activeAppl.getApplId());
+				trckVO.setDocNo(activeAppl.getApplNo());
+				trckVO.setDocType("SR");
+				trckVO.setGroupId(null);
+				trckVO.setStatus(status);
+				trckVO.setGroupDocType(null);
+				
+				reqDTO.setSmTrackingDairyVO(trckVO);
+			}
+			
+			if(getManagedBean().isCancelRegistration()){
+				getManagedBean().getDisciplineVO().getSmDiscplinaryAction().setCancelRegistration(true);
+			}
+			
+			if(getManagedBean().isBlacklistOwnerOrDirector()){
+				getManagedBean().getDisciplineVO().getSmDiscplinaryAction().setBlacklistOwner(true);
+			}
+			
+			//set tracking diary for Disciplinary Action
+			if (getManagedBean().isEditDisciplinaryAction()) {				
+				SmTrackingDairyVO smTrackingDairyVO = assignTrackingDairyValues(
+						getManagedBean().getSmAppl(),
+						getTrackingActionDesc(reqDTO,"DA"));
+				listSmTrackingDiary.add(smTrackingDairyVO);
+			}			
+			reqDTO.setSmTrackingDiaryVOList(listSmTrackingDiary);
+			
+			resDTO = SmServiceLookup.getSupplierDataMaintenanceSO()
+					.updateBasicAccountInfo(reqDTO);
+			getManagedBean().setSmAppl(resDTO.getSmAppl());
+			
+		} catch (NullPointerException nex) {
+			throw new EpException(nex.getMessage());
+		}
+		reqDTO = null;
+		getManagedBean().setDisplaySearchPage(true);
+	}
+	//26238 - end - updateBasicAccountInfo
 	/**
 	 * Submit supplier maintenance
 	 */
@@ -214,7 +402,65 @@ public class SupplierDataMaintenanceBackingBean extends
 			reqDTO.setPortalBaseUrl(SmCommonUtil.getEpBaseUrl());
 			reqDTO.setOverlapCategoryRemarkDocType(ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY_APPROVER);
 			reqDTO.setRemarkId(getManagedBean().getRemarkId());
-			reqDTO.setRemarkOverlappedId(getManagedBean().getRemarkOverlappedId());
+			reqDTO.setRemarkOverlappedId(getManagedBean().getRemarkOverlappedId());	
+			//26238 - start
+			if(getManagedBean().getSelectedApprovedCategories() != null 
+					|| getManagedBean().getSelectedApprovedCategories().size() > 0){
+				reqDTO.setSelectedCategories(getManagedBean().getSelectedApprovedCategories());
+			} 
+			
+			if(getManagedBean().getOwnerAndDirectorList().size() > 0){
+				reqDTO.setSelectedOwnerAndDirector(getManagedBean().getOwnerAndDirectorList());
+			}
+//			if(getManagedBean().getSelectedOwnerAndDirectorList() != null 
+//					|| getManagedBean().getSelectedOwnerAndDirectorList().size() > 0){
+//				reqDTO.setSelectedOwnerAndDirector(getManagedBean().getOwnerAndDirectorList());
+//			}
+			
+			if(getManagedBean().isWarning()) {
+				getManagedBean().getDisciplineVO().getSmDiscplinaryAction().setWarning(true);			
+			}
+			
+			if(getManagedBean().isCancelCategoryCode()){
+				getManagedBean().getDisciplineVO().getSmDiscplinaryAction().setCancelCategory(true);
+			}
+			
+			if(getManagedBean().isSuspendRegistration()){
+				getManagedBean().getDisciplineVO().getSmDiscplinaryAction().setSuspendRegistration(true);
+
+//				SmTrackingDairyVO trckVO = new SmTrackingDairyVO();
+//				PmStatus status = new PmStatus();
+//				status.setStatusId(SupplierManagementConst.PM_STATUS_DELETED_BY_DISCIPLINARY_ACTION);
+//				
+//				trckVO.setActionDesc(SupplierManagementConst.DELETED_BY_DISCIPLINARY_ACTION);
+//				trckVO.setActionedBy(user.getUserId());
+//				trckVO.setActionedByRole(getManagedBean().getRoleCode());
+//				trckVO.setDocId(activeAppl.getApplId());
+//				trckVO.setDocNo(activeAppl.getApplNo());
+//				trckVO.setDocType("SR");
+//				trckVO.setGroupId(null);
+//				trckVO.setStatus(status);
+//				trckVO.setGroupDocType(null);
+//				
+//				reqDTO.setSmTrackingDairyVO(trckVO);
+			}
+			
+			if(getManagedBean().isCancelRegistration()){
+				getManagedBean().getDisciplineVO().getSmDiscplinaryAction().setCancelRegistration(true);
+			}
+			
+			if(getManagedBean().isBlacklistOwnerOrDirector()){
+				getManagedBean().getDisciplineVO().getSmDiscplinaryAction().setBlacklistOwner(true);
+			}
+			
+			if(getManagedBean().isBumiputeraStatusCancel()){
+				getManagedBean().getDisciplineVO().getSmDiscplinaryAction().setBumiputeraCancel(true);
+			}
+			
+			if(getManagedBean().isManufacturerStatusCancel()){
+				getManagedBean().getDisciplineVO().getSmDiscplinaryAction().setManufacturerCancel(true);
+			}
+			//26238 - end
 			
 			if (getManagedBean().getApproverRemark() != null) {
 				reqDTO.setApproverRemark(getManagedBean().getApproverRemark());
@@ -887,6 +1133,21 @@ public class SupplierDataMaintenanceBackingBean extends
 	public void onAddCategoryCode() {
 		RequestContext.getCurrentInstance().execute("catCodePopup.show();");
 	}
+	
+	//26238 - start
+	public void onTickPunishmentType(){		
+		if(!getManagedBean().isWarning() && !getManagedBean().isCancelCategoryCode()
+				&& !getManagedBean().isSuspendRegistration() && !getManagedBean().isCancelRegistration()
+				&& !getManagedBean().isBlacklistOwnerOrDirector() && !getManagedBean().isBumiputeraStatusCancel()
+				&& !getManagedBean().isManufacturerStatusCancel()){
+			getManagedBean().setEditDisciplinaryAction(false);
+			onTickDiscipline();
+		} else {
+			getManagedBean().setEditDisciplinaryAction(true);
+			onTickDiscipline();
+		}
+	}
+	//26238 - end
 
 	public void onTickDiscipline() {
 		if (getManagedBean().isEditDisciplinaryAction()) {
@@ -1439,5 +1700,536 @@ public class SupplierDataMaintenanceBackingBean extends
 		return PmCommonUtil.retriveUserName(userId);
 
 	}
+	
+	//26238 - start
+	public void onViewDisciplinaryAction() {
+		SmSupplier currSupp = getManagedBean().getSmSupplier();
+		if(currSupp != null){
+			List<DisciplinaryActionVO> voList = getDisciplinaryActionVO(currSupp);
+			if(!EntityHelper.isCollectionEmpty(voList)
+					&& voList.size() > 0){
+				getManagedBean().setDisciplineVOs(voList);
+			} else {
+				getManagedBean().setDisciplineVOs(new ArrayList<DisciplinaryActionVO>());
+			}
+		} else {
+			getManagedBean().setDisciplineVOs(new ArrayList<DisciplinaryActionVO>());
+		}
+		RequestContext.getCurrentInstance().execute(
+				"disciplinaryActionHistoryDlg.show();");
+	} 
+	
+	private static List<DisciplinaryActionVO> getDisciplinaryActionVO(SmSupplier currSupp) {
+		List<DisciplinaryActionVO> voList = new ArrayList<DisciplinaryActionVO>();
+	
+		List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(currSupp);
+		if (!EntityHelper.isCollectionEmpty(resultList)
+				&& resultList.size() > 0) {
+			for(SmDisciplinaryAction disciplinaryAction: resultList){
+				DisciplinaryActionVO retVal = new DisciplinaryActionVO();
+				if(disciplinaryAction.getStartDate() != null)
+					retVal.setStartDate(DateUtils.dateToString("dd/MM/yyyy",disciplinaryAction.getStartDate()));				
+				if(disciplinaryAction.getEndDate() != null)
+					retVal.setEndDate(DateUtils.dateToString("dd/MM/yyyy",disciplinaryAction.getEndDate()));
+				if(disciplinaryAction.getRemark() != null)
+					retVal.setRemarks(disciplinaryAction.getRemark());
+				
+				if(disciplinaryAction.isWarning())
+					retVal.setWarning(true);
+				if(disciplinaryAction.isCancelCategory())
+					retVal.setCancelCategory(true);
+				if(disciplinaryAction.isSuspendRegistration())
+					retVal.setSuspendRegistration(true);
+				if(disciplinaryAction.isCancelRegistration())
+					retVal.setCancelRegistration(true);
+				if(disciplinaryAction.isBumiputeraCancel())
+					retVal.setBumiputeraCancel(true);
+				if(disciplinaryAction.isManufacturerCancel())
+					retVal.setManufacturerCancel(true);
+				if(disciplinaryAction.isBlacklistOwner())
+					retVal.setBlacklistOwnerDirector(true);
+				
+				if(disciplinaryAction.isCancelCategory()){
+					List<DisciplinaryActionCategoryVO> catVoList = new ArrayList<DisciplinaryActionCategoryVO>();
+					List<Object[]> catList = SmApplicationUtil.retrieveCancelCategoryBySupplier(currSupp);
+					
+					if(!EntityHelper.isCollectionEmpty(catList)
+							&& catList.size() > 0){
+						for(Object[] arr : catList){
+							DisciplinaryActionCategoryVO catVo = new DisciplinaryActionCategoryVO();
+							String catCode = StringUtils.EMPTY;
+							catCode = arr[3].toString() + arr[4].toString() + arr[5].toString() ;
+							catVo.setCategoryCode(catCode);	
+							catVoList.add(catVo);
+						}						
+						retVal.setCategoryCodeList(catVoList);
+					}
+				}				
+				if(disciplinaryAction.isBlacklistOwner()){
+					List<BlacklistOwnerDirectorVO> blacklistownerDirectorList = new ArrayList<BlacklistOwnerDirectorVO>();
+					if(disciplinaryAction.getSmSupplier().getSmAppl().getSmPersonnels().size() > 0)
+						for(SmPersonnel personnel : disciplinaryAction.getSmSupplier().getSmAppl().getSmPersonnels()){
+							BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
+							if(personnel.isCancelRegistration()){
+								blacklistOwner.setIcNo(personnel.getIdentificationNo());
+								blacklistownerDirectorList.add(blacklistOwner);
+							}
+						}
+						retVal.setBlacklistownerDirectorList(blacklistownerDirectorList);
+				}
+			voList.add(retVal);
+			}
+		}
+		return voList;
+	}
+	
+	/**
+	 * Retrieve owner and director list
+	 */
+	private void getOwnerAndDirectorList() {
+		List<SmPersonnel> perList = new ArrayList<SmPersonnel>();
+		
+		for (SmPersonnel per : getManagedBean().getSmAppl()
+				.getSmPersonnels()) {
+			if (per.getRecordStatusFlg().equals(SupplierManagementConst.APPROVED_RECORD_STATUS)) {
+				if((per.isEquityOwner() || per.isDirector()) && per.getIdentificationNo().length() == 12){
+					perList.add(per);
+				}
+			}
+		}
+		getManagedBean().setOwnerAndDirectorList(perList);
+	}
+	
+	
+	/**
+	 * retrieve PM FinancialOrg List 
+	 */
+	public List<PmFinancialOrg> retrieveFinancialOrgList() {
+		FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
+		reqDTO.setServiceType("PB");
+		IFinancialOrgSO reqSO = (IFinancialOrgSO) BusinessDelegate
+				.getInstance().getServiceObject("pm", IFinancialOrgSO.class);
+		FinancialOrgResDTO resDTO = reqSO
+				.retrieveFinancialOrgListByServiceType(reqDTO);
+		return resDTO.getFinancialOrgList();
+	}
+	
+	/**
+	 * add new row to Supplier Bank
+	 */
+	public void addSupplierBank() {
+
+		if (getManagedBean().getSmAppl().getSmSupplierBanks() == null) {
+			getManagedBean().getSmAppl().setSmSupplierBanks(new ArrayList<SmSupplierBank>());
+		}
+		
+		checkMaxBankAccount();
+		
+		SmSupplierBank smSuppBank = new SmSupplierBank();
+		smSuppBank.setPmFinancialOrg(new PmFinancialOrg());
+		smSuppBank.setSmAppl(getManagedBean().getSmAppl());
+		smSuppBank.setAccountPurpose(defaultAccPurpose);
+		smSuppBank.setForHqFlg(1);
+		getManagedBean().getSmAppl().getSmSupplierBanks().add(smSuppBank);
+		// this.getManagedBean().getSmSuppBanks().add(new SmSupplierBank());
+	}
+	
+	private void checkMaxBankAccount(){
+		int maxPaymentBank = SmServiceLookup.getSmRuleSO().retrieveMaxPaymentBank().getMaxPaymentBank();
+		
+		if(getManagedBean().getSmAppl().getSmSupplierBanks().size() >= maxPaymentBank){
+			throw new EpException(MessageConst.ERROR_721049,new String[]{String.valueOf(maxPaymentBank)});
+		}
+	}
+	
+	/**
+	 * remove selected Supplier Bank
+	 */
+	public void removeSupplierBank() {
+		if(this.getManagedBean().getSelectedSuppBanks() != null && this.getManagedBean().getSelectedSuppBanks().length > 0){
+			log.info("---removeSupplierBank 1---");
+			for (SmSupplierBank suppBank : this.getManagedBean().getSelectedSuppBanks()) {
+				this.getManagedBean().getSmAppl().getSmSupplierBanks().remove(suppBank);
+				log.info("---removeSupplierBank---" + suppBank);
+				// suppBank.getPmFinancialOrg().getFinancialOrgId()
+			}
+		}
+		
+		this.getManagedBean().setSelectedSuppBanks(null);
+	}
+	
+	/**
+	 * Supplier Bank Validation
+	 */
+	public void validateBankInfo(List<SmSupplierBank> banks){
+		List<String> bankList = new ArrayList<String>();
+		for(SmSupplierBank suppBank : banks){
+			log.info("*********suppBank.getPmFinancialOrg().getFinancialOrgId()****" + suppBank.getPmFinancialOrg().getFinancialOrgId());
+			if(suppBank.getPmFinancialOrg().getFinancialOrgId() == null){
+				throw new EpException(MessageConst.ERROR_721008);
+			}
+
+			if(StringUtils.isBlank(suppBank.getAccountNo())){
+				throw new EpException(MessageConst.ERROR_721009);
+			}
+				
+			if (StringUtils.isNotBlank(suppBank.getAccountNo()) && !StringUtils.isNumeric(suppBank.getAccountNo())) {
+				throw new EpException(MessageConst.ERROR_722616);
+			}
+
+			String uniqBank = suppBank.getPmFinancialOrg().getFinancialOrgId().toString() + suppBank.getAccountNo();
+			if(bankList.contains(uniqBank)){
+				throw new EpException(MessageConst.ERROR_721012);
+			}
+			bankList.add(uniqBank);
+		}
+	}
+	
+	public String getOwnerLabel(){
+		String bizType = getManagedBean().getSmSupp().getBusinessType();
+		if(bizType != null){
+			if(bizType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI) || 
+					bizType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI_LAIN2)){
+				return "lbl.sm.director.name";
+			}else if(bizType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN) || 
+					bizType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERSATUAN) || 
+					bizType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN_LAIN2)){
+				return "lbl.sm.chairman.name";
+			}else{
+				return "lbl.sm.ownername";
+			}
+		}else{
+			return "lbl.sm.ownername";
+		}
+	}
+	
+	/**
+	 * retrieve identity type from PM
+	 * @return SelectItem[]
+	 */
+	public SelectItem[] pmIdTypeDropdownValues() {
+		List<SelectItem> itemList = new ArrayList<SelectItem>();
+		SelectItem[] items = getDropdownValues(ParameterTypeConst.IDENTIFICATION_TYPES);
+		
+		for(SelectItem selectItem : items) {
+			
+			if(selectItem.getValue() == null){
+				itemList.add(selectItem);
+			}else{
+				PmParameter pmParameter = (PmParameter) identityType.get(selectItem.getValue());
+				if(!pmParameter.getParameterCode().equals("A")){
+					itemList.add(selectItem);
+				}
+			}
+			
+		}
+		
+		return itemList.toArray(new SelectItem[itemList.size()]);
+		
+	}
+	
+	/**
+	 * Set whether to disable company name and business type field from editing
+	 * in maintenance
+	 */
+	private void setDisableCompanyNameBusinessTypeInMaintenance() {
+		getManagedBean().setDisabledCompanyNameInMaintenance(false);
+		if (SmApplicationUtil.hasActiveTransactions(getManagedBean()
+				.getSmSupp()) || SmApplicationUtil.hasOtherActiveTransactions(getManagedBean()
+				.getSmSupp())) {
+			getManagedBean().setDisabledCompanyNameInMaintenance(true);
+		}
+		
+		if (SupplierManagementConst.LIST_OF_BUSINESS_TYPE_NOT_ALLOWED_TO_EDIT_COMPANY_NAME
+				.contains(getManagedBean().getSmSupp().getBusinessType())) {
+			getManagedBean().setDisabledCompanyNameInMaintenance(true);
+		}
+		if (!SupplierManagementConst.LIST_OF_BUSINESS_TYPE_ALLOWED_TO_BE_EDITED
+				.contains(getManagedBean().getSmSupp().getBusinessType())) {
+			getManagedBean().setDisabledBusinessTypeInMaintenance(true);
+		}
+		
+		SmAppl isActieveAppl = SmCommonUtil.getActiveApplBySupplier(getManagedBean().getSmSupp());
+		if(isActieveAppl != null){
+			getManagedBean().setDisabledCompanyNameInMaintenance(true);
+			getManagedBean().setDisabledBusinessTypeInMaintenance(true);
+		}
+		
+		if (SmApplicationUtil
+				.isApplHasSoftcertProcessingNotComplete(getManagedBean()
+						.getSmSupp().getSmAppl())) {
+			getManagedBean().setDisabledCompanyNameInMaintenance(true);
+			getManagedBean().setDisabledBusinessTypeInMaintenance(true);
+		}
+	}
+	
+	/**
+	 * Retrieve Country List from PM
+	 */
+	private void retrievePmCountryList() {
+		List<SelectItem> countryLs = SmCommonUtil.getCountryList();
+		this.getManagedBean().setCountryLs(countryLs);
+	}
+	
+	/**
+	 * populate indiviual Service Type
+	 */
+	public void getIndividualServiceType(){
+		
+		List<PmParameterDesc> paramDesc = SmCommonUtil.retrieveParameterDescList(SupplierManagementConst.SPECIAL_SERVICE_CODE, new FacesScopes().getUserLocale().getLanguage());
+		getManagedBean().setServiceLs(paramDesc);
+	}
+	
+	/**
+	 * set State By Address Type
+	 * @param typeAdd - business, residential, permenant
+	 */
+	public void populateStateByAddType(String typeAdd, boolean reset) {
+		if (typeAdd.equals("business")) {
+			//List<PmState> stateLs = this.retrievePmStateList(this.getManagedBean().getSmBusinessAdd().getPmCountry().getCountryId());
+			//this.getManagedBean().setBusinessStateLs(stateLs);
+			if(reset){
+				getManagedBean().getSmBusinessAdd().getPmState().setStateId(null);
+			}
+			pmStateDropdownValues();
+			//registrationBackingBean.managedBean.smBusinessAdd.pmState.
+			if(getManagedBean().getSmBusinessAdd().isBrandNew()){
+				getManagedBean().getSmBusinessAdd().getPmDistrict().setDistrictId(null);
+				getManagedBean().getSmBusinessAdd().getPmCity().setCityId(null);
+				getManagedBean().setBusinessDistrictLs(new ArrayList<SelectItem>());
+				getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
+			}
+		} else if (typeAdd.equals("residential")) {
+			List<SelectItem> stateLs = SmCommonUtil.getStateList(this.getManagedBean().getSmResAdd().getPmCountry().getCountryId());
+			this.getManagedBean().setResidentialStateLs(stateLs);
+		} else if (typeAdd.equals("permenant")) {
+			List<SelectItem> stateLs = SmCommonUtil.getStateList(this.getManagedBean().getSmPermenantAdd().getPmCountry().getCountryId());
+			this.getManagedBean().setPermenantStateLs(stateLs);
+			//registrationBackingBean.managedBean.smPermenantAdd.pmCountry.countryId
+			if(getManagedBean().getSmPermenantAdd().isBrandNew()){
+				getManagedBean().getSmPermenantAdd().getPmDistrict().setDistrictId(null);
+				getManagedBean().getSmPermenantAdd().getPmCity().setCityId(null);
+				getManagedBean().setPermenantDistrictLs(new ArrayList<SelectItem>());
+				getManagedBean().setPermenantCityLs(new ArrayList<SelectItem>());
+			}
+		}
+	}
+
+	/**
+	 * set State By Address Type
+	 * @param typeAdd - business, residential, permenant
+	 */
+	public void populateDistrictByAddType(String typeAdd, boolean reset) {
+		if (typeAdd.equals("business")) {
+			if(reset){
+				getManagedBean().getSmBusinessAdd().setPmDistrict(new PmDistrict());
+				getManagedBean().getSmBusinessAdd().getPmCity().setCityId(null);
+			}
+			this.getManagedBean().getSmBusinessAdd().setPmState(SmCommonUtil.getInstance().getStateById(this.getManagedBean().getSmBusinessAdd().getPmState().getStateId()));
+			List<SelectItem> districtLs = SmCommonUtil.getDistrictList(this.getManagedBean().getSmBusinessAdd().getPmState().getStateId());
+			this.getManagedBean().setBusinessDistrictLs(districtLs);
+			this.getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
+		} else if (typeAdd.equals("residential")) {
+			log.info("------------residential----------------");
+			List<SelectItem> districtLs = SmCommonUtil.getDistrictList(this.getManagedBean().getSmResAdd().getPmState().getStateId());
+			this.getManagedBean().setResidentialDistrictLs(districtLs);
+			this.getManagedBean().setResidentialCityLs(new ArrayList<SelectItem>());
+		} else if (typeAdd.equals("permenant")) {
+			log.info("------------permenant----------------"
+					+ this.getManagedBean().getSmPermenantAdd().getPmState()
+					.getStateId());
+			List<SelectItem> districtLs = SmCommonUtil.getDistrictList(this.getManagedBean().getSmPermenantAdd().getPmState().getStateId());
+			this.getManagedBean().setPermenantDistrictLs(districtLs);
+			this.getManagedBean().setPermenantCityLs(new ArrayList<SelectItem>());
+
+			log.info("------permenant LS-------------"
+					+ this.getManagedBean().getPermenantDistrictLs().size());
+		}
+	}
+
+	/**
+	 * set City By AddType
+	 * @param typeAdd - business, residential, permenant
+	 */
+	public void populateCityByAddType(String typeAdd, boolean reset) {
+		log.info("---------------City By Type--------------------");
+		if (typeAdd.equals("business")) {
+			if(reset){
+				getManagedBean().getSmBusinessAdd().setPmCity(new PmCity());
+			}
+			this.getManagedBean().getSmBusinessAdd().setPmDistrict(SmCommonUtil.getInstance().getDistrictById(getManagedBean().getSmBusinessAdd().getPmDistrict().getDistrictId()));
+			List<SelectItem> cityLs = SmCommonUtil.getCityList(getManagedBean().getSmBusinessAdd().getPmDistrict().getDistrictId());
+			this.getManagedBean().setBusinessCityLs(cityLs);
+			populateLocalAuthority(getManagedBean().getSmSupp(), getManagedBean().getSmBusinessAdd());
+		} else if (typeAdd.equals("residential")) {
+			List<SelectItem> cityLs = SmCommonUtil.getCityList(getManagedBean().getSmResAdd().getPmDistrict().getDistrictId());
+			getManagedBean().setResidentialCityLs(cityLs);
+		} else if (typeAdd.equals("permenant")) {
+			List<SelectItem> cityLs = SmCommonUtil.getCityList(getManagedBean().getSmPermenantAdd().getPmDistrict().getDistrictId());
+			getManagedBean().setPermenantCityLs(cityLs);
+		}
+	}
+	
+	public void onSelectCity(String typeAdd){
+		if (typeAdd.equals("business")) {
+			getManagedBean().getSmBusinessAdd().setPmCity(SmCommonUtil.getInstance().getCityById(getManagedBean().getSmBusinessAdd().getPmCity().getCityId()));
+		}
+	}
+	
+	/**
+	 * set state drop down value
+	 */
+	public void pmStateDropdownValues() {
+		Long countryId = this.getManagedBean().getSmBusinessAdd().getPmCountry().getCountryId();
+		List<PmState> stateLs = retrievePmStateList(countryId);
+		List<SelectItem> stateSelectLs = new ArrayList<SelectItem>();
+		PmState state = new PmState();
+		
+		if(this.getManagedBean().getBusinessStateLs() == null){
+			this.getManagedBean().setBusinessStateLs(new ArrayList<SelectItem>());
+		}
+		
+		if(this.getManagedBean().getSmSupp().getBusinessType() != null && !this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase("")){
+			log.info("------pmStateDropdownValues------" + this.getManagedBean().getSmBusinessAdd().getPmCountry().getCountryId());
+			if(SupplierManagementConst.LOCAL_AUTH_BUSINESS_TYPE.contains(this.getManagedBean().getSmSupp().getBusinessType())){
+
+				PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+				this.getManagedBean().getSmBusinessAdd().setPmCountry(defaultCountry);
+				this.getManagedBean().setSabahSarawakType(true);
+				this.getManagedBean().setBusinessStateLs(new ArrayList<SelectItem>());
+				
+				if(this.getManagedBean().getSmBusinessAdd().isBrandNew()){
+					this.getManagedBean().getSmBusinessAdd().setPmDistrict(new PmDistrict());
+					this.getManagedBean().getSmBusinessAdd().setPmCity(new PmCity());
+				}
+
+				//for(PmState state : stateLs){
+				if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK) || 
+						this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK)){
+					List<PmState> sarawakLs = SmCommonUtil.getInstance().retrieveStateByZone(SupplierManagementConst.SM_STATE_NAME_SARAWAK, 
+							SupplierManagementConst.COUNTRY_MALAYSIA_CODE);				
+					if(sarawakLs.size() > 0){
+						stateSelectLs = EntityHelper.convertListToSelectItem(sarawakLs,"stateName", "stateId");
+						state = sarawakLs.get(0);
+						this.getManagedBean().getSmBusinessAdd().setPmState(state);
+						this.getManagedBean().setBusinessDistrictLs(SmCommonUtil.getDistrictList(state.getStateId()));
+					}
+				}else if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH) || 
+						this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)){
+					List<PmState> sabahLs = SmCommonUtil.getInstance().retrieveStateByZone(SupplierManagementConst.SM_STATE_NAME_SABAH, 
+							SupplierManagementConst.COUNTRY_MALAYSIA_CODE);	
+					if(sabahLs.size() > 0){
+						stateSelectLs = EntityHelper.convertListToSelectItem(sabahLs,"stateName", "stateId");
+						state = sabahLs.get(0);
+						this.getManagedBean().getSmBusinessAdd().setPmState(state);
+						this.getManagedBean().setBusinessDistrictLs(SmCommonUtil.getDistrictList(state.getStateId()));
+					}
+				}
+				//}
+				
+				if(getManagedBean().getSmBusinessAdd().isBrandNew()){
+					getManagedBean().setBusinessCityLs(null);
+					getManagedBean().getSmBusinessAdd().getPmDistrict().setDistrictId(null);
+					getManagedBean().getSmBusinessAdd().getPmCity().setCityId(null);
+					getManagedBean().getSmSupp().setLocalAuthorityId(null);
+				}
+			}else if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG) ||
+					this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)){
+				/*List<PmState> sabahLs = SmCommonUtil.getInstance().retrieveStateByZone(SupplierManagementConst.SM_STATE_NAME_SEMENANJUNG, 
+						SupplierManagementConst.COUNTRY_MALAYSIA_CODE);	
+				stateSelectLs  = EntityHelper.convertListToSelectItem(sabahLs,"stateName", "stateId");*/
+				List<PmState> semenanjungLs = new ArrayList<PmState>();
+				
+				for(PmState smjState : stateLs){
+					if(!smjState.getStateCode().equalsIgnoreCase(SupplierManagementConst.SABAH_CODE) && 
+							!smjState.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)){
+						semenanjungLs.add(smjState);
+					}
+				}
+				
+				stateSelectLs  = EntityHelper.convertListToSelectItem(semenanjungLs,"stateName", "stateId");
+				
+				if(getManagedBean().getSmBusinessAdd().isBrandNew()){
+					getManagedBean().setSabahSarawakType(false);
+					getManagedBean().getSmBusinessAdd().getPmState().setStateId(null);
+					getManagedBean().getSmBusinessAdd().getPmDistrict().setDistrictId(null);
+					getManagedBean().getSmBusinessAdd().getPmCity().setCityId(null);
+					getManagedBean().setBusinessDistrictLs(null);
+					getManagedBean().setBusinessCityLs(null);
+				}
+			}else{
+				this.getManagedBean().setSabahSarawakType(false);
+				//this.getManagedBean().setBusinessStateLs(stateLs);
+			}
+		}
+		
+		if(stateSelectLs.size() < 1){
+			stateSelectLs = EntityHelper.convertListToSelectItem(stateLs,"stateName", "stateId");
+		}
+		this.getManagedBean().setBusinessStateLs(stateSelectLs);
+		populateLocalAuthority(getManagedBean().getSmSupp(), getManagedBean().getSmBusinessAdd());
+		
+	}
+	
+	/**
+	 * retrieve State List by country Id
+	 * @param countryId
+	 * @return List<PmState>
+	 */
+	private List<PmState> retrievePmStateList(Long countryId) {
+		if(countryId != null){
+			StateReqDTO reqDTO = new StateReqDTO();
+			reqDTO.setCountryId(countryId);
+			IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance()
+					.getServiceObject("pm", IStateSO.class);
+			StateResDTO resDTO = reqSO.retriveStatesListByCountryID(reqDTO);
+			return resDTO.getStateList();
+		}
+
+		return null;
+	}
+	
+	public boolean isGmapDisabled() {
+		gmapDisabled = false;
+		
+		if(getManagedBean().getSmBusinessAdd() != null){
+			SmAddress bizAddress = getManagedBean().getSmBusinessAdd();
+
+			if(bizAddress.getPmCountry() == null || bizAddress.getPmDistrict() == null || 
+					bizAddress.getPmState() == null || bizAddress.getPmCity() == null || 
+					bizAddress.getAddress1() == null ){
+					gmapDisabled = true;
+			}else{
+				if(StringUtils.isBlank(bizAddress.getAddress1()) || bizAddress.getPmCountry().getCountryId() == null ||
+						bizAddress.getPmDistrict().getDistrictId() == null || bizAddress.getPmState().getStateId() == null ||
+						bizAddress.getPmCity().getCityId() == null){
+					gmapDisabled = true;
+				}
+
+			}
+		}else{
+			gmapDisabled = true;
+		}
+
+		return gmapDisabled;
+	}
+	
+	public void initGstInfo(SmSupplier sup,
+			ViewSuppProfileManagedBean managedBean, boolean loadBranchGst) {
+
+		managedBean.setSmGstSupplier(SmCommonUtil
+				.getSmGstSupplierBySupplierIdAndBranchCode(sup.getSupplierId(),
+						null, null, true));
+		if (managedBean.getSmGstSupplier() == null) {
+			managedBean.setSmGstSupplier(new SmGstSupplier());
+			managedBean.getSmGstSupplier().setIsCurrent(true);
+		}
+		SmApplicationUtil.initGstSuppDocs(managedBean.getSmGstSupplier());
+		if (loadBranchGst) {
+			SmApplicationUtil.initBranchGstInformation(
+					managedBean.getSmGstSupplier(), managedBean.getSmAppl());
+		}
+	}
+	//26238 - end
 
 }
