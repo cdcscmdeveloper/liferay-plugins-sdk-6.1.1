@@ -519,6 +519,13 @@
 		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
 		<css-class-wrapper>flReSubmitAp59-portlet</css-class-wrapper>
 	</portlet>
+		<portlet>
+		<portlet-name>flYearEndProcess</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<css-class-wrapper>flYearEndProcess-portlet</css-class-wrapper>
+	</portlet>
 	<!-- Fulfilment End Added by Giri -->
 
 	<portlet>

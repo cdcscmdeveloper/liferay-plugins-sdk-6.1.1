@@ -215,6 +215,7 @@
 			<portlet id="flPendingDeliveryListDashBoard" />
 			<portlet id="flPendingFlListDashBoard" />
 			<portlet id="flReSubmitAp59" />
+			<portlet id="flYearEndProcess" />
 		</category>
 		<!-- Fulfilment End Added by Giri -->
 		<portlet id="NGeP" />
