@@ -6,56 +6,55 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
-	<p:panel id="blablaId">
-<ui:param name="language" value="#{ruleCatalogueBackingBean.getLanguage()}"></ui:param>
+	<p:panel id="yepPnlId">
+	<ui:param name="language" value="#{ruleCatalogueBackingBean.getLanguage()}"></ui:param>
 
 	<table style="width: 100%">
 	<h:outputText value=" #{lbl['lbl.pm.settings.yep.process.instruction']}" style="color: blue"/>
 		<tr>
 			<td>
-				<div align="right" style="width: 100%">
-					<p:commandButton value="#{lbl['lbl.btn.save']}"></p:commandButton>
+				<div align="right" style="width: 100%">					
+					<p:commandButton value="#{lbl['lbl.btn.save']}"
+						id="yepSaveBtnId" partialSubmit="true"
+						process=":form:settingTabId:yepPnlId"
+						update=":form:settingTabId:yepPnlId"
+						action="#{ruleCatalogueBackingBean.saveYEPValues}" />
 				</div>
 			</td>
 		</tr>
 	</table>
-	<p:dataTable id="yearEndProcessTable"  
-
+	<p:dataTable id="yearEndProcessTable"
 		value="#{ruleCatalogueBackingBean.managedBean.feeExemptionsForYepProcessing}"
-		rowIndexVar="rowIndex" var="feeObj" width="100%">
+		var="feeObj" rowIndexVar="rowIndex" width="100%">
 		<ac:paginator for="yearEndProcessTable" />
 		
 		<p:column>
 			<f:facet name="header">
 			    <h:outputText value="*" styleClass="mandatory" />
-				<h:outputText value=" #{lbl['lbl.pm.settings.yep.period.process']}" />
-				
+				<h:outputText value=" #{lbl['lbl.pm.settings.yep.period.process']}" />				
 			</f:facet>
-			<c:if test="#{ruleCatalogueBackingBean.getLanguage() eq 'en'}">
-
+			<c:if test="#{language eq 'en'}">
 				<ui:repeat
-					value="#{feeObj.orgTypeId.pmParameterDescsSpecCallOnly.get(0)}"
+					value="#{feeObj.orgTypeId.pmParameterDescs.get(0)}"
 					var="bean" varStatus="status">
 					<h:outputText value="#{bean.codeName}" />
 					<ac:iconTooltip value="#{bean.codeDesc}" />
 				</ui:repeat>
 			</c:if>
-			<c:if test="#{ruleCatalogueBackingBean.getLanguage() eq 'ms'}">
+			<c:if test="#{language eq 'ms'}">
 				<ui:repeat
-					value="#{feeObj.orgTypeId.pmParameterDescsSpecCallOnly.get(1)}"
+					value="#{feeObj.orgTypeId.pmParameterDescs.get(1)}"
 					var="bean" varStatus="status">
 					<h:outputText value="#{bean.codeName}" />
 					<ac:iconTooltip value="#{bean.codeDesc}" />
 				</ui:repeat>
 			</c:if>
-
-
 		</p:column>
 		<p:column  width="15%">
 			<f:facet name="header">
 			<h:outputText value="*" styleClass="mandatory" />
-								#{lbl['lbl.pm.yep.effdate']}
-		                		</f:facet>
+				#{lbl['lbl.pm.yep.effdate']}
+		    </f:facet>
 			<p:calendar showOn="button" id="orgTypefeeeffDateId" navigator="true"
 				yearRange="#{DateUtils.getCalendarMaxYearRange(feeObj.effDate)}"
 				style="width :100px;" required="true"
@@ -63,16 +62,14 @@
 				label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 				value="#{feeObj.effDate}">
-				<p:ajax event="dateSelect" update="orgTypefeeeffDateId,@this"
-					process="@this" />
+				<p:ajax event="dateSelect" update="orgTypefeeeffDateId,@this" process="@this" />
 			</p:calendar>
 		</p:column>
 
 		<p:column  width="15%">
-			<f:facet name="header">
-			
-						#{lbl['lbl.pm.yep.expdate']}
-			                	</f:facet>
+			<f:facet name="header">			
+				#{lbl['lbl.pm.yep.expdate']}
+			</f:facet>
 			<p:calendar showOn="button" id="orgTypefeeexpDateId" navigator="true"
 				yearRange="#{DateUtils.getCalendarMaxYearRange(feeObj.expDate)}"
 				style="width :100px;"
@@ -84,9 +81,7 @@
 				validatorMessage="#{lbl['lbl.pm.as.expdate']} #{lbl['lbl.pm.date.range.validation']} #{lbl['lbl.pm.as.effdate']}">
 				<f:attribute name="startDate" value="#{feeObj.effDate}" />
 				<f:validator validatorId="primeDateRangeValidator" />
-				<p:ajax event="dateSelect" update="@this"
-					process="@this" />
-
+				<p:ajax event="dateSelect" update="@this" process="@this" />
 			</p:calendar>
 		</p:column>
 	</p:dataTable>
