@@ -3075,6 +3075,7 @@ public class TaskReassignmentBackingBean extends
     		}
 		}
     	this.getManagedBean().setEnableDeleteGroupTasksButton(this.getManagedBean().isCheckAllGroupTasks());
+    	log.info("getSelectedGroupTasks= "+this.getManagedBean().getSelectedGroupTasks().size());
     	log.info("enableDeleteGroupTasksButton= "+this.getManagedBean().isEnableDeleteGroupTasksButton());
 	}
 	
@@ -3095,12 +3096,14 @@ public class TaskReassignmentBackingBean extends
 		    	}
 			}
 		}
-		if (this.getManagedBean().getSelectedGroupTasks() != null && 
-				!this.getManagedBean().getSelectedGroupTasks().isEmpty()) {
-	    	this.getManagedBean().setEnableDeleteGroupTasksButton(true);
+		if ( (this.getManagedBean().getSelectedGroupTasks() != null && 
+				!this.getManagedBean().getSelectedGroupTasks().isEmpty()) &&
+				(this.getManagedBean().getSelectedGroupTasks().size() > 1) ) {
+			this.getManagedBean().setEnableDeleteGroupTasksButton(true);
     	} else {
     		this.getManagedBean().setEnableDeleteGroupTasksButton(false);
     	}
+		log.info("getSelectedGroupTasks= "+this.getManagedBean().getSelectedGroupTasks().size());
 		log.info("enableDeleteGroupTasksButton= "+this.getManagedBean().isEnableDeleteGroupTasksButton());
 	}
 	
@@ -3124,6 +3127,7 @@ public class TaskReassignmentBackingBean extends
     		}
 		}
     	this.getManagedBean().setEnableDeleteOthersTasksButton(this.getManagedBean().isCheckAllOthersTasks());
+    	log.info("getSelectedOthersTasks= "+this.getManagedBean().getSelectedOthersTasks().size());
     	log.info("enableDeleteOthersTasksButton= "+this.getManagedBean().isEnableDeleteOthersTasksButton());
 	}
 	
@@ -3144,12 +3148,14 @@ public class TaskReassignmentBackingBean extends
 		    	}
 			}
 		}
-		if (this.getManagedBean().getSelectedOthersTasks() != null && 
-				!this.getManagedBean().getSelectedOthersTasks().isEmpty()) {
-	    	this.getManagedBean().setEnableDeleteOthersTasksButton(true);
+		if ( (this.getManagedBean().getSelectedOthersTasks() != null && 
+				!this.getManagedBean().getSelectedOthersTasks().isEmpty()) &&
+				(this.getManagedBean().getSelectedOthersTasks().size() > 1) ) {
+			this.getManagedBean().setEnableDeleteOthersTasksButton(true);
     	} else {
     		this.getManagedBean().setEnableDeleteOthersTasksButton(false);
     	}
+		log.info("getSelectedOthersTasks= "+this.getManagedBean().getSelectedOthersTasks().size());
 		log.info("enableDeleteOthersTasksButton= "+this.getManagedBean().isEnableDeleteOthersTasksButton());
 	}
 	
@@ -3161,6 +3167,8 @@ public class TaskReassignmentBackingBean extends
 		ITaskAssignmentSO taskAssignmentSO = null;
 		int reassignWorkListType = getManagedBean().getTaskType();
 		List<String> assigneeUsers = new ArrayList<String>();
+		
+		TaskAssignmentResDTO resDTO = new TaskAssignmentResDTO();
 		
 		if (this.getManagedBean().getSelectedGroupTasks() != null && 
 				!this.getManagedBean().getSelectedGroupTasks().isEmpty()) {
@@ -3200,18 +3208,21 @@ public class TaskReassignmentBackingBean extends
 							.getInstance().getServiceObject(
 									ModuleCodeConst.PROFILE_MANAGEMENT,
 									ITaskAssignmentSO.class);
-					TaskAssignmentResDTO resDTO = taskAssignmentSO.removeGroupOrOthersTask(reqDTO);
+					resDTO = taskAssignmentSO.removeGroupOrOthersTask(reqDTO);
 
-					if (resDTO != null && resDTO.isSuccessful()) {
-						resetCheckAllTasks();
-						reloadAllTaskList();
-						PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), 
-						FacesMessage.SEVERITY_INFO, MessageConst.INFO_770105, null);
-					}
 				} finally {
 					taskAssignmentSO = null;
 				}
 			}
+		}
+		if (resDTO != null && resDTO.isSuccessful()) {
+			resetCheckAllTasks();
+			this.getManagedBean().getAllGroupTasks().clear();
+			this.getManagedBean().getSelectedGroupTasks().clear();
+			this.getManagedBean().setEnableDeleteGroupTasksButton(false);
+			reloadAllTaskList();
+			PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), 
+			FacesMessage.SEVERITY_INFO, MessageConst.INFO_770105, null);
 		}
 	}
 	
@@ -3223,6 +3234,8 @@ public class TaskReassignmentBackingBean extends
 		ITaskAssignmentSO taskAssignmentSO = null;
 		int reassignWorkListType = getManagedBean().getTaskType();
 		List<String> assigneeUsers = new ArrayList<String>();
+		
+		TaskAssignmentResDTO resDTO = new TaskAssignmentResDTO();
 		
 		if (this.getManagedBean().getSelectedOthersTasks() != null && 
 				!this.getManagedBean().getSelectedOthersTasks().isEmpty()) {
@@ -3263,20 +3276,23 @@ public class TaskReassignmentBackingBean extends
 							.getInstance().getServiceObject(
 									ModuleCodeConst.PROFILE_MANAGEMENT,
 									ITaskAssignmentSO.class);
-					TaskAssignmentResDTO resDTO = taskAssignmentSO.removeGroupOrOthersTask(reqDTO);
+					resDTO = taskAssignmentSO.removeGroupOrOthersTask(reqDTO);
 
-					if (resDTO != null && resDTO.isSuccessful()) {
-						resetCheckAllTasks();
-						reloadAllTaskList();
-						PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), 
-								FacesMessage.SEVERITY_INFO, MessageConst.INFO_770105, null);
-					}
 				} finally {
 					taskAssignmentSO = null;
 				}
 			}
 		} else {
 			throw new EpException(MessageConst.ERROR_770098);
+		}
+		if (resDTO != null && resDTO.isSuccessful()) {
+			resetCheckAllTasks();
+			this.getManagedBean().getAllOthersTasks().clear();
+			this.getManagedBean().getSelectedOthersTasks().clear();
+			this.getManagedBean().setEnableDeleteOthersTasksButton(false);
+			reloadAllTaskList();
+			PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), 
+			FacesMessage.SEVERITY_INFO, MessageConst.INFO_770105, null);
 		}
 	}
 	
