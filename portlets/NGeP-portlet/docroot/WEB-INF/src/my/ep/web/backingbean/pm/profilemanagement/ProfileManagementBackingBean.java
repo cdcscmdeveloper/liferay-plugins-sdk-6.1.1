@@ -1540,28 +1540,31 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		}
 		
 		//[22117] - start
-		// validate if user has BPK_ADMIN role and selected new role is COMMON_USER or PPB_CHAIRPERSON
+		// if login user is BPK_ADMIN
+		// validate if selected user has BPK_ADMIN role and selected new role is COMMON_USER or PPB_CHAIRPERSON
 		logger.info("[#22117 - start]");
-		if (!roleRestrictionValidation(this.getManagedBean().getSelectedRole().getPmRole())) {
-			if(this.getManagedBean().getSelectedUserOrg().getPmOrgProfile() != null
-					&& this.getManagedBean().getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode() != null
-					&& this.getManagedBean().getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode().getParameterCode().equals(ParameterConst.ORG_TYPE_BPK)) {
-				logger.info("[#22117] Org code - " + this.getManagedBean().getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode().getParameterCode());
-				logger.info("[#22117] Selected role - " + this.getManagedBean().getSelectedRole().getPmRole().getRoleCode());
-				logger.info("[#22117] Search for BPK_ADMIN role... ");
-				for (PmUserRole userRole : this.getManagedBean().getSelectedUserOrg().getPmUserRoles()) {
-					if (DbValueConst.RECORD_STATUS_ACTIVE == userRole.getRecordStatusFlg()
-							&& userRole.getPmRole().getRoleCode().equals(RoleCode.BPK_ADMIN.value())
-							&& (this.getManagedBean().getSelectedRole().getPmRole().getRoleCode().equals(RoleCode.COMMON_USER.value()) 
-									|| this.getManagedBean().getSelectedRole().getPmRole().getRoleCode().equals(RoleCode.PPB_CHAIRPERSON.value()))) {
-						logger.info("[#22117] Found match condition - Throw Exception!!");
-						//to restrict only role EP_ADMIN or EP_ADMIN_2 can assign role
-						String errMsg = this.getManagedBean().getSelectedRole().getRoleName();
-						throw new EpException(MessageConst.ERROR_770230, new String[] { errMsg });						
-						//break;						
+		if(getFacesScopes().hasRoleUser(RoleCode.BPK_ADMIN.value())) {
+			if (!roleRestrictionValidation(this.getManagedBean().getSelectedRole().getPmRole())) {
+				if(this.getManagedBean().getSelectedUserOrg().getPmOrgProfile() != null
+						&& this.getManagedBean().getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode() != null
+						&& this.getManagedBean().getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode().getParameterCode().equals(ParameterConst.ORG_TYPE_BPK)) {
+					logger.info("[#22117] Org code - " + this.getManagedBean().getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode().getParameterCode());
+					logger.info("[#22117] Selected role - " + this.getManagedBean().getSelectedRole().getPmRole().getRoleCode());
+					logger.info("[#22117] Search for BPK_ADMIN role... ");
+					for (PmUserRole userRole : this.getManagedBean().getSelectedUserOrg().getPmUserRoles()) {
+						if (DbValueConst.RECORD_STATUS_ACTIVE == userRole.getRecordStatusFlg()
+								&& userRole.getPmRole().getRoleCode().equals(RoleCode.BPK_ADMIN.value())
+								&& (this.getManagedBean().getSelectedRole().getPmRole().getRoleCode().equals(RoleCode.COMMON_USER.value()) 
+										|| this.getManagedBean().getSelectedRole().getPmRole().getRoleCode().equals(RoleCode.PPB_CHAIRPERSON.value()))) {
+							logger.info("[#22117] Found match condition - Throw Exception!!");
+							//to restrict only role EP_ADMIN or EP_ADMIN_2 can assign role
+							String errMsg = this.getManagedBean().getSelectedRole().getRoleName();
+							throw new EpException(MessageConst.ERROR_770230, new String[] { errMsg });						
+							//break;						
+						}
 					}
+					logger.info("[#22117] BPK_ADMIN not found!!");
 				}
-				logger.info("[#22117] BPK_ADMIN not found!!");
 			}
 		}
 		//[22117] - end
