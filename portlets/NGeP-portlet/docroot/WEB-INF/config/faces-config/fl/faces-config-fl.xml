@@ -60,7 +60,12 @@
 			<from-outcome>flDocSearch</from-outcome>
 			<to-view-id>/xhtml/fl/docsearch/flDocSearch.xhtml</to-view-id>
 			<redirect />
-		</navigation-case>			
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>searchYearEndProcess</from-outcome>
+			<to-view-id>/xhtml/fl/yep/search/searchYearEndProcess.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>				
 	</navigation-rule>
 	
 	<managed-bean>
