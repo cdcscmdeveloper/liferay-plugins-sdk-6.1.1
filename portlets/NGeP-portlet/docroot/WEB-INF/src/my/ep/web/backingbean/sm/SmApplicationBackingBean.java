@@ -12358,14 +12358,22 @@ public class SmApplicationBackingBean extends
 			}
 			
 		}
-		for(SmSupplierBranch branch:getManagedBean().getSmAppl().getSmSupplierBranches()){
-			if(branch.isSsmData())
-				this.getManagedBean().getSmSupplierBranchSsm().add(branch);
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setApplNo(getManagedBean().getSmAppl().getApplNo());
+		MofRegistrationResDTO resDTO =  SmServiceLookup.getMofRegistrationSO().retrieveSmApplSSM(reqDTO);
+		if(resDTO.getSmAppl().getSmSupplierBranches() != null){
+			for(SmSupplierBranch branch:resDTO.getSmAppl().getSmSupplierBranches()){
+				if(branch.isSsmData())
+					this.getManagedBean().getSmSupplierBranchSsm().add(branch);
+			}
 		}
-		for(SmSupplierBusiness business:getManagedBean().getSmSupplier().getSmSupplierBusinesses()){
-			if(business.isSsmData())
-				this.getManagedBean().getSmSupplierBusinessSsm().add(business);
+		if(resDTO.getSmAppl().getSmSupplier().getSmSupplierBusinesses() != null){
+			for(SmSupplierBusiness business:resDTO.getSmAppl().getSmSupplier().getSmSupplierBusinesses()){
+				if(business.isSsmData())
+					this.getManagedBean().getSmSupplierBusinessSsm().add(business);
+			}
 		}
+		
 		SmCommonUtil.redirectToExternalUrl(SupplierManagementConst.VIEW_SSM_INFOMATION);
 	}
 	
