@@ -278,6 +278,35 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			fulfilmentOrderSO = null;
 		}
 	}
+   	
+   	public void closeManualPayment() throws IOException{
+		debugLogger("start of close manual payment");
+		IFulfilmentOrderSO fulfilementOrderSO = null;
+		FulfilmentResDTO resDTO = null;
+		
+		try{
+			fulfilementOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			
+			reqDTO.setOutcome(BpmOutcomeConst.BPM_CLOSE_MANUAL);
+			reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
+			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+			reqDTO.setUserRole(getUserRole());
+			
+			if(getManagedBean().getPmDigiSign() != null){
+				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
+			}
+			
+			
+			
+			resDTO = fulfilementOrderSO.closeManualPayment(reqDTO);
+			
+			successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES,
+					ParameterConst.DOCTYPE_FULFILMENT_NOTE, "order no", Boolean.FALSE);
+		}finally{
+			
+		}
+	}
 	
 	/**
 	 * Validate fulfillment order before submit or save action.
@@ -1733,6 +1762,29 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			throw new EpException(MessageConst.ERROR_71024, new String[]{"SapOrderNo"});
 		}
 		return sapOrderNo;
+		
+	}
+	
+	
+	
+	/**
+	 * Debug logger.
+	 * 
+	 * @param message
+	 *            the message
+	 */
+	private void debugLogger(Object message) {
+		
+		/*ScQt scQt = this.getManagedBean().getQt();
+		if(scQt!= null){
+			message += " @qtNo = "+scQt.getQtNo();
+		}*/
+		if (log.isDebugEnabled()) {
+			log.debug(message);
+		}
+		/*else{
+			log.info(message);
+		}*/
 		
 	}
 }
