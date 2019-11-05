@@ -33,6 +33,8 @@ import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
 import my.ep.dto.sm.bulkApplication.SmBulkApplicationVO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
+import my.ep.dto.sm.personnel.PersonnelReqDTO;
+import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
@@ -65,6 +67,7 @@ import my.ep.web.backingbean.trackingdiary.PmTrackingDiaryBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.managedbean.sm.applicationView.ViewApplHistoryManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
@@ -953,16 +956,20 @@ public class ViewApplHistoryBackingBean extends
 	
 	private static List<DisciplinaryActionVO> getDisciplinaryActionVO(SmSupplier currSupp) {
 		List<DisciplinaryActionVO> voList = new ArrayList<DisciplinaryActionVO>();
-	
+		PersonnelReqDTO perReqDTO = new PersonnelReqDTO();
+		perReqDTO.setSmSupplierId(currSupp.getSupplierId());
+		
+		PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelBySupplierId(perReqDTO);
+		
 		List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(currSupp);
 		if (!EntityHelper.isCollectionEmpty(resultList)
 				&& resultList.size() > 0) {
 			for(SmDisciplinaryAction disciplinaryAction: resultList){
 				DisciplinaryActionVO retVal = new DisciplinaryActionVO();
 				if(disciplinaryAction.getStartDate() != null)
-					retVal.setStartDate(disciplinaryAction.getStartDate().toString());
+					retVal.setStartDate(DateUtils.dateToString("dd/MM/yyyy",disciplinaryAction.getStartDate()));
 				if(disciplinaryAction.getEndDate() != null)
-					retVal.setEndDate(disciplinaryAction.getEndDate().toString());
+					retVal.setEndDate(DateUtils.dateToString("dd/MM/yyyy",disciplinaryAction.getEndDate()));
 				if(disciplinaryAction.getRemark() != null)
 					retVal.setRemarks(disciplinaryAction.getRemark());
 				
@@ -996,12 +1003,28 @@ public class ViewApplHistoryBackingBean extends
 						}						
 						retVal.setCategoryCodeList(catVoList);
 					}
-				}				
+				}
 				
-				if(disciplinaryAction.isBlacklistOwner()){
+				if(disciplinaryAction.isSuspendRegistration()){
+					List<BlacklistOwnerDirectorVO> blacklistownerDirectorList = new ArrayList<BlacklistOwnerDirectorVO>();					
+					if(personnelResDTO != null 
+							&& personnelResDTO.getSmPersonnelList().size() > 0){
+						for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
+							BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
+							if(personnel.isSuspendRegistration()){
+								blacklistOwner.setIcNo(personnel.getIdentificationNo());
+								blacklistownerDirectorList.add(blacklistOwner);
+							}
+						}
+						retVal.setBlacklistownerDirectorList(blacklistownerDirectorList);
+					}						
+				}
+				
+				if(disciplinaryAction.isCancelRegistration()){
 					List<BlacklistOwnerDirectorVO> blacklistownerDirectorList = new ArrayList<BlacklistOwnerDirectorVO>();
-					if(disciplinaryAction.getSmSupplier().getSmAppl().getSmPersonnels().size() > 0)
-						for(SmPersonnel personnel : disciplinaryAction.getSmSupplier().getSmAppl().getSmPersonnels()){
+					if(personnelResDTO != null 
+							&& personnelResDTO.getSmPersonnelList().size() > 0){
+						for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
 							BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
 							if(personnel.isCancelRegistration()){
 								blacklistOwner.setIcNo(personnel.getIdentificationNo());
@@ -1009,6 +1032,22 @@ public class ViewApplHistoryBackingBean extends
 							}
 						}
 						retVal.setBlacklistownerDirectorList(blacklistownerDirectorList);
+					}						
+				}
+				
+				if(disciplinaryAction.isBlacklistOwner()){
+					List<BlacklistOwnerDirectorVO> blacklistownerDirectorList = new ArrayList<BlacklistOwnerDirectorVO>();
+					if(personnelResDTO != null 
+							&& personnelResDTO.getSmPersonnelList().size() > 0){
+						for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
+							BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
+							if(personnel.isBlacklisted()){
+								blacklistOwner.setIcNo(personnel.getIdentificationNo());
+								blacklistownerDirectorList.add(blacklistOwner);
+							}
+						}
+						retVal.setBlacklistownerDirectorList(blacklistownerDirectorList);
+					}
 				}
 			voList.add(retVal);
 			}

@@ -53,7 +53,6 @@
 		
 		<!-- Enhancement 26238 - START -->
 		<p:outputPanel style="color:red;font-weight:bold;">
-			<h:outputText styleClass="warning" value="#{lbl['lbl.sm.supplier.disciplinary.action.msg']}" escape="false"/><p:spacer width="2"/>
 			<h:outputText styleClass="warning" value="#{lbl['lbl.sm.disciplinary.click']}" escape="false"/>
 			<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 				action="#{supplierDataMaintenanceBackingBean.onViewDisciplinaryAction}" 
