@@ -26,6 +26,8 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
@@ -150,6 +152,21 @@ public class SmPersonnelBackingBean extends
 		String redirectPage = SmApplicationUtil.getApplicationErrorPage();
 
 		getManagedBean().setNoSupplierUserMsg("");
+		
+		//26238 - start
+		//check disciplinary action on supplier
+		String labelNameVal = "";
+		SupplierDataMaintenanceReqDTO supReqDTO = new SupplierDataMaintenanceReqDTO();
+		supReqDTO.setSupplier(smSupplier);
+		SupplierDataMaintenanceResDTO activeDisc = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionBySupplier(supReqDTO);
+		if(activeDisc != null){
+			FacesContext.getCurrentInstance().addMessage("imposedDisciplinary", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+					SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
+							new String[] { labelNameVal })));
+			SmCommonUtil.redirectToPage(
+					"/xhtml/sm/userProfileMaintenance/adminReAssign.xhtml", "", null, null);
+		}
+		//26238 - end
 
 		redirectPage = "adminReAssign.xhtml";
 		if (!EntityHelper.isCollectionEmpty(resDTO.getSmPersonnelList())) {

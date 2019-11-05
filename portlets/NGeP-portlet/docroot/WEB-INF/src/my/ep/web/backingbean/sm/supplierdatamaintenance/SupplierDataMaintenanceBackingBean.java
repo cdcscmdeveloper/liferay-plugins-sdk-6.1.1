@@ -31,6 +31,8 @@ import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.zone.ZoneReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
+import my.ep.dto.sm.personnel.PersonnelReqDTO;
+import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
@@ -297,11 +299,16 @@ public class SupplierDataMaintenanceBackingBean extends
 		
 		try {
 			reqDTO.setSupplier(getManagedBean().getSmSupplier());
+			reqDTO.setSmAppl(getManagedBean().getSmAppl());
 			
 			if(getManagedBean().getSmAppl().getSmSupplierBanks().size() > 0){
 				reqDTO.setAdditionalBankList(getManagedBean().getSmAppl().getSmSupplierBanks());
 			} else {
 				reqDTO.setAdditionalBankList(null);
+			}
+			
+			if(getManagedBean().getOwnerAndDirectorList().size() > 0){
+				reqDTO.setSelectedOwnerAndDirector(getManagedBean().getOwnerAndDirectorList());
 			}
 			
 			if(getManagedBean().isEditDisciplinaryAction()){
@@ -316,21 +323,21 @@ public class SupplierDataMaintenanceBackingBean extends
 			if(getManagedBean().isSuspendRegistration()){
 				getManagedBean().getDisciplineVO().getSmDiscplinaryAction().setSuspendRegistration(true);
 				
-				SmTrackingDairyVO trckVO = new SmTrackingDairyVO();
-				PmStatus status = new PmStatus();
-				status.setStatusId(SupplierManagementConst.PM_STATUS_DELETED_BY_DISCIPLINARY_ACTION);
-				
-				trckVO.setActionDesc(SupplierManagementConst.DELETED_BY_DISCIPLINARY_ACTION);
-				trckVO.setActionedBy(user.getUserId());
-				trckVO.setActionedByRole(getManagedBean().getRoleCode());
-				trckVO.setDocId(activeAppl.getApplId());
-				trckVO.setDocNo(activeAppl.getApplNo());
-				trckVO.setDocType("SR");
-				trckVO.setGroupId(null);
-				trckVO.setStatus(status);
-				trckVO.setGroupDocType(null);
-				
-				reqDTO.setSmTrackingDairyVO(trckVO);
+//				SmTrackingDairyVO trckVO = new SmTrackingDairyVO();
+//				PmStatus status = new PmStatus();
+//				status.setStatusId(SupplierManagementConst.PM_STATUS_DELETED_BY_DISCIPLINARY_ACTION);
+//				
+//				trckVO.setActionDesc(SupplierManagementConst.DELETED_BY_DISCIPLINARY_ACTION);
+//				trckVO.setActionedBy(user.getUserId());
+//				trckVO.setActionedByRole(getManagedBean().getRoleCode());
+//				trckVO.setDocId(activeAppl.getApplId());
+//				trckVO.setDocNo(activeAppl.getApplNo());
+//				trckVO.setDocType("SR");
+//				trckVO.setGroupId(null);
+//				trckVO.setStatus(status);
+//				trckVO.setGroupDocType(null);
+//				
+//				reqDTO.setSmTrackingDairyVO(trckVO);
 			}
 			
 			if(getManagedBean().isCancelRegistration()){
@@ -1721,14 +1728,19 @@ public class SupplierDataMaintenanceBackingBean extends
 	
 	private static List<DisciplinaryActionVO> getDisciplinaryActionVO(SmSupplier currSupp) {
 		List<DisciplinaryActionVO> voList = new ArrayList<DisciplinaryActionVO>();
-	
+		PersonnelReqDTO perReqDTO = new PersonnelReqDTO();
+		perReqDTO.setSmSupplierId(currSupp.getSupplierId());
+		
+		PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelBySupplierId(perReqDTO);
+		
 		List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(currSupp);
 		if (!EntityHelper.isCollectionEmpty(resultList)
 				&& resultList.size() > 0) {
 			for(SmDisciplinaryAction disciplinaryAction: resultList){
 				DisciplinaryActionVO retVal = new DisciplinaryActionVO();
 				if(disciplinaryAction.getStartDate() != null)
-					retVal.setStartDate(DateUtils.dateToString("dd/MM/yyyy",disciplinaryAction.getStartDate()));				
+					retVal.setStartDate(DateUtils.dateToString("dd/MM/yyyy",disciplinaryAction.getStartDate()));
+				retVal.setEndDate(DateUtils.dateToString("dd/MM/yyyy",disciplinaryAction.getEndDate()));
 				if(disciplinaryAction.getEndDate() != null)
 					retVal.setEndDate(DateUtils.dateToString("dd/MM/yyyy",disciplinaryAction.getEndDate()));
 				if(disciplinaryAction.getRemark() != null)
@@ -1764,18 +1776,25 @@ public class SupplierDataMaintenanceBackingBean extends
 						}						
 						retVal.setCategoryCodeList(catVoList);
 					}
-				}				
-				if(disciplinaryAction.isBlacklistOwner()){
+				}	
+				
+				if(disciplinaryAction.isBlacklistOwner()
+						|| disciplinaryAction.isSuspendRegistration()
+							|| disciplinaryAction.isCancelRegistration()){
 					List<BlacklistOwnerDirectorVO> blacklistownerDirectorList = new ArrayList<BlacklistOwnerDirectorVO>();
-					if(disciplinaryAction.getSmSupplier().getSmAppl().getSmPersonnels().size() > 0)
-						for(SmPersonnel personnel : disciplinaryAction.getSmSupplier().getSmAppl().getSmPersonnels()){
+					if(personnelResDTO != null 
+							&& personnelResDTO.getSmPersonnelList().size() > 0){
+						for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
 							BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
-							if(personnel.isCancelRegistration()){
+							if(personnel.isCancelRegistration()
+									|| personnel.isSuspendRegistration()
+										|| personnel.isBlacklisted()){
 								blacklistOwner.setIcNo(personnel.getIdentificationNo());
 								blacklistownerDirectorList.add(blacklistOwner);
 							}
 						}
 						retVal.setBlacklistownerDirectorList(blacklistownerDirectorList);
+					}
 				}
 			voList.add(retVal);
 			}

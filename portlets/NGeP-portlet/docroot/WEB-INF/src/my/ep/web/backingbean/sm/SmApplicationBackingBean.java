@@ -73,6 +73,8 @@ import my.ep.dto.sm.reviewApplication.ReviewApplicationReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
@@ -112,6 +114,7 @@ import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
 import my.ep.persistence.entity.sm.SmCompanyExperienceCat;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmGstSupplier;
@@ -885,6 +888,20 @@ public class SmApplicationBackingBean extends
 					SmCommonUtil.redirectToPage(
 							"/xhtml/sm/payment/portletViewMode.xhtml", "", null, null);
 				}
+				
+				//26238 - start
+				//check disciplinary action on supplier
+				SupplierDataMaintenanceReqDTO supReqDTO = new SupplierDataMaintenanceReqDTO();
+				supReqDTO.setSupplier(currSupp);
+				SupplierDataMaintenanceResDTO activeDisc = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionBySupplier(supReqDTO);
+				if(activeDisc != null){
+					FacesContext.getCurrentInstance().addMessage("imposedDisciplinary", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
+									new String[] { labelNameVal })));
+					SmCommonUtil.redirectToPage(
+							"/xhtml/sm/payment/portletViewMode.xhtml", "", null, null);
+				}
+				//26238 - end
 
 				// checked whether supplier already MOF, should not allowed to
 				// proceed if already MOF (#25601)
