@@ -51,7 +51,8 @@
 						<td>
 							<p:selectOneMenu label="#{lbl['lbl.pm.supplier.zone']}" required="true"
 								id="zoneId" value="#{viewSuppProfileBackingBean.managedBean.searchPmZoneId}"
-								style="width: 207px;margin-bottom: 5px;" >
+								style="width: 207px;margin-bottom: 5px;"
+								disabled="#{viewSuppProfileBackingBean.managedBean.viewSupplierMaintenancePage and viewSuppProfileBackingBean.managedBean.loginUserZone.zoneCode ne '1'}" >
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems
 									value="#{viewSuppProfileBackingBean.managedBean.zoneList}" var="zone"
