@@ -46,6 +46,7 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
+import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -220,6 +221,8 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private List<SmRemark> approverRemarkList;
 	
 	private SmCancelMofRemarksVO cancelRemarkVO;
+	
+	private SmSupplierOwner smSuppOwner; //26238
 
 	public BaseReviewApplicationManagedBean() {
 		selectedCert = new SmSupplierCert();
@@ -1580,5 +1583,13 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	public void setRemarkOverlappedId(Long remarkOverlappedId) {
 		this.remarkOverlappedId = remarkOverlappedId;
 	}
+	//26238 - start
+	public SmSupplierOwner getSmSuppOwner() {
+		return smSuppOwner;
+	}
 
+	public void setSmSuppOwner(SmSupplierOwner smSuppOwner) {
+		this.smSuppOwner = smSuppOwner;
+	}
+	//26238 - end
 }

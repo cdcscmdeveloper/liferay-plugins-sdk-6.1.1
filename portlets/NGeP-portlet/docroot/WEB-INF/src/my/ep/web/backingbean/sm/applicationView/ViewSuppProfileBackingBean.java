@@ -1,20 +1,29 @@
 package my.ep.web.backingbean.sm.applicationView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
 import my.ep.constant.MessageConst;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
-import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.util.SLAUtils;
 import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.vo.BlacklistOwnerDirectorVO;
+import my.ep.web.vo.DisciplinaryActionCategoryVO;
+import my.ep.web.vo.DisciplinaryActionVO;
 
 import org.apache.commons.lang.StringUtils;
+import org.primefaces.context.RequestContext;
 
 @ManagedBean(name = "viewSuppProfileBackingBean")
 @RequestScoped
@@ -63,6 +72,16 @@ public class ViewSuppProfileBackingBean extends
 			SLAUtils.getInstance().logSLAInfo("SM","SR",
 					"ViewSuppProfileBackingBean.preRenderViewSupplierProfile", startTime);
 			getManagedBean().setRenderedBackButton(false);
+			
+			//26238 - start
+			List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
+			if(!EntityHelper.isCollectionEmpty(resultList)
+					&& resultList.size() > 0){
+				getManagedBean().setDisciplinaryAction(true);
+			} else {
+				getManagedBean().setDisciplinaryAction(false);
+			}
+			//26238 - end
 		} else {
 			initLoginUserZone();
 			getManagedBean().setRenderedBackButton(true);
@@ -96,5 +115,92 @@ public class ViewSuppProfileBackingBean extends
 		validateCompanySearch();
 		getManagedBean().searchSupplier();
 	}
+	
+	//26238 - start
+	public void onViewDisciplinaryAction() {
+		SmSupplier currSupp = null;
+		if(getManagedBean().isSupplierUser()){
+			currSupp = SmApplicationUtil.getCurrentSupplier();
+		} else {
+			currSupp = getManagedBean().getSearchSupplier();
+		}
+		
+		List<DisciplinaryActionVO> voList = getDisciplinaryActionVO(currSupp);
+		if(!EntityHelper.isCollectionEmpty(voList)
+				&& voList.size() > 0){
+			getManagedBean().setDisciplineVOs(voList);
+		} else {
+			getManagedBean().setDisciplineVOs(new ArrayList<DisciplinaryActionVO>());
+		}
+		RequestContext.getCurrentInstance().execute(
+				"disciplinaryActionHistoryDlg.show();");
+	} 
+	
+	private static List<DisciplinaryActionVO> getDisciplinaryActionVO(SmSupplier currSupp) {
+		List<DisciplinaryActionVO> voList = new ArrayList<DisciplinaryActionVO>();
+	
+		List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(currSupp);
+		if (!EntityHelper.isCollectionEmpty(resultList)
+				&& resultList.size() > 0) {
+			for(SmDisciplinaryAction disciplinaryAction: resultList){
+				DisciplinaryActionVO retVal = new DisciplinaryActionVO();
+				if(disciplinaryAction.getStartDate() != null)
+					retVal.setStartDate(disciplinaryAction.getStartDate().toString());
+				if(disciplinaryAction.getEndDate() != null)
+					retVal.setEndDate(disciplinaryAction.getEndDate().toString());
+				if(disciplinaryAction.getRemark() != null)
+					retVal.setRemarks(disciplinaryAction.getRemark());
+				
+				if(disciplinaryAction.isWarning())
+					retVal.setWarning(true);
+				if(disciplinaryAction.isCancelCategory())
+					retVal.setCancelCategory(true);
+				if(disciplinaryAction.isSuspendRegistration())
+					retVal.setSuspendRegistration(true);
+				if(disciplinaryAction.isCancelRegistration())
+					retVal.setCancelRegistration(true);
+				if(disciplinaryAction.isBumiputeraCancel())
+					retVal.setBumiputeraCancel(true);
+				if(disciplinaryAction.isManufacturerCancel())
+					retVal.setManufacturerCancel(true);
+				if(disciplinaryAction.isBlacklistOwner())
+					retVal.setBlacklistOwnerDirector(true);
+				
+				if(disciplinaryAction.isCancelCategory()){
+					List<DisciplinaryActionCategoryVO> catVoList = new ArrayList<DisciplinaryActionCategoryVO>();
+					List<Object[]> catList = SmApplicationUtil.retrieveCancelCategory();
+					
+					if(!EntityHelper.isCollectionEmpty(catList)
+							&& catList.size() > 0){
+						for(Object[] arr : catList){
+							DisciplinaryActionCategoryVO catVo = new DisciplinaryActionCategoryVO();
+							String catCode = StringUtils.EMPTY;
+							catCode = arr[3].toString() + arr[4].toString() + arr[5].toString() ;
+							catVo.setCategoryCode(catCode);	
+							catVoList.add(catVo);
+						}						
+						retVal.setCategoryCodeList(catVoList);
+					}
+				}
+				
+				if(disciplinaryAction.isBlacklistOwner()){
+					List<BlacklistOwnerDirectorVO> blacklistownerDirectorList = new ArrayList<BlacklistOwnerDirectorVO>();
+					if(disciplinaryAction.getSmSupplier().getSmAppl().getSmPersonnels().size() > 0)
+						for(SmPersonnel personnel : disciplinaryAction.getSmSupplier().getSmAppl().getSmPersonnels()){
+							BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
+							if(personnel.isCancelRegistration()){
+								blacklistOwner.setIcNo(personnel.getIdentificationNo());
+								blacklistownerDirectorList.add(blacklistOwner);
+							}
+						}
+						retVal.setBlacklistownerDirectorList(blacklistownerDirectorList);
+				}
+			voList.add(retVal);
+			}
+			log.info(voList);
+		}
+		return voList;
+	}
+	//26238 - end
 
 }
