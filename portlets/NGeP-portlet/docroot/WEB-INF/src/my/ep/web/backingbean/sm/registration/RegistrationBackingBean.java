@@ -829,6 +829,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						personnelSSM.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
 						personnelSSM.getSmPersonnelAdd().setSmPersonnel(personnelSSM);
 						personnelSSM.getSmPersonnelAddresses().add(personnelSSM.getSmPersonnelAdd());
+						personnelSSM.setRevNo(SupplierManagementConst.DEFAULT_REV_NO);
 						smAppl.getSmPersonnels().add(personnelSSM);
 					}else if(personnelAdmin != null && personnelAdmin.getSmPersonnelAddresses()!=null){//supplier admin, need to set residensial address from SSM
 						if(personnelAdmin.getSmPersonnelAdd() != null){
@@ -842,6 +843,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						smPersonnel.getSmPersonnelAddresses().add(personnelSSM.getSmPersonnelAdd());
 					}else if(personnelAdmin == null && personnelSSM.getSmPersonnelAddresses()==null){//store personnel not supplier admin and not contain address
 						personnelSSM.setSmAppl(smAppl);
+						personnelSSM.setRevNo(SupplierManagementConst.DEFAULT_REV_NO);
 						personnelSSM.setPmCountry(null);
 						smAppl.getSmPersonnels().add(personnelSSM);
 					}
