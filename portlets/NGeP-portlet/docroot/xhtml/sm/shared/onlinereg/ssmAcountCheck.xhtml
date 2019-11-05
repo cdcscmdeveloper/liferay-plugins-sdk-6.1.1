@@ -98,16 +98,16 @@
 							<f:validator validatorId="busRegNoValidator" />
 							</p:inputText>
 						&#160;
-						<p:graphicImage id="regNoti" value="/css/images/design/tooltips.png" rendered="#{not empty registrationBackingBean.managedBean.smSupp.businessType}"/>
+						<p:graphicImage id="regNoti" value="/css/images/design/tooltips.png" rendered="#{not empty registrationBackingBean.managedBean.smSupp.businessType and registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.INDIVIDUAL_FLAG}"/>
 						<ui:param name="lblRegNoTlTip" value="tt.sm.business.type.#{registrationBackingBean.managedBean.smSupp.businessType}" />
 						<c:choose>
 							<c:when test="registrationBackingBean.businessTypeTovalidateWithSSM()">
-								<p:tooltip id="regNott" for="regNoti" rendered="#{not empty registrationBackingBean.managedBean.smSupp.businessType}" >
+								<p:tooltip id="regNott" for="regNoti" rendered="#{not empty registrationBackingBean.managedBean.smSupp.businessType and registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.INDIVIDUAL_FLAG}" >
 							<p:outputLabel escape="false" value="#{lbl[lblRegNoTlTip]}"  />
 						</p:tooltip>&#160;
 							</c:when>
 							<c:otherwise>
-								<p:tooltip id="regNott" for="regNoti" rendered="#{not empty registrationBackingBean.managedBean.smSupp.businessType}" >
+								<p:tooltip id="regNott" for="regNoti" rendered="#{not empty registrationBackingBean.managedBean.smSupp.businessType and registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.INDIVIDUAL_FLAG}" >
 							<p:outputLabel escape="false" value="#{lbl[lblRegNoTlTip]}"  />
 						</p:tooltip>&#160;
 							</c:otherwise>
