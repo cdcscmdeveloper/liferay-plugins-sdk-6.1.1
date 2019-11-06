@@ -139,6 +139,7 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private boolean showDirector=false;
 	private boolean showDirectorInOwner=false;
 	private boolean disableRole=false;
+	private boolean showOwnerPersonnel = false;
 	
 	public SmSupplier getSmSupp() {
 		return smSupp;
@@ -815,6 +816,14 @@ public class RegistrationManagedBean extends BaseManagedBean {
 
 	public void setSmSupplierBranches(List<SmSupplierBranch> smSupplierBranches) {
 		this.smSupplierBranches = smSupplierBranches;
+	}
+
+	public boolean isShowOwnerPersonnel() {
+		return showOwnerPersonnel;
+	}
+
+	public void setShowOwnerPersonnel(boolean showOwnerPersonnel) {
+		this.showOwnerPersonnel = showOwnerPersonnel;
 	}
 
 }
