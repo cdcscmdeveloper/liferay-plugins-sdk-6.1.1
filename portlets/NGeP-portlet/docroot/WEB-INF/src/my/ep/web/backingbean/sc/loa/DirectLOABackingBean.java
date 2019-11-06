@@ -8681,7 +8681,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 			return true;
 		} else {
-			if (!getManagedBean().getScLoa().isAgreementReq()) {
+			if (!getManagedBean().getScLoa().isAgreementReq() && !isPk7Periodic()) {
 				setOverallCtAmount(getManagedBean().getScLoa().getLoaAmt());
 			}
 		}
