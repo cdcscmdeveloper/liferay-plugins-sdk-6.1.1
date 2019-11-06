@@ -121,7 +121,7 @@
 					<tr>
 						<!-- doc type  -->
 						<td width="20%"><p:outputLabel value="#{lbl['lbl.fl.yep.search.doc.type']}"	/>
-						<p:outputLabel value="*" styleClass="mandatory" /></td>
+						</td>
 						<td width="30%">
 							<p:selectOneMenu
 								value="#{yearEndProcessBackingBean.managedBean.searchDocType}"
@@ -214,7 +214,7 @@
 				</table>
 				<!-- expanded panel -->
 				<h:panelGroup id="ctOrderExpandPnl"  rendered="#{yearEndProcessBackingBean.managedBean.checkDocType}">
-					<table>
+					<table style="width: 100%">
 						<tr>
 							<td  width="20%"><p:outputLabel
 									value="#{lbl['lbl.fl.sistem.panel.name']}" /></td>
@@ -306,13 +306,11 @@
 				<p:column headerText="#{lbl['lbl.fl.doc.maintain.contract.no']}" style="white-space:normal;">
 					<h:outputText value="#{flYep.ctContract.contractId}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.fl.created.date.from']}" style="white-space:normal;" >
+				<p:column headerText="#{lbl['lbl.fl.yep.po.created.date']}" style="white-space:normal;" >
 					<h:outputText value="#{flYep.orderCreatedDate}" ><f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" /></h:outputText>
 				</p:column>  
-				<p:column headerText="#{lbl['lbl.fl.created.date.to']}" style="white-space:normal" >
-					<h:outputText value="#{yearEndProcessBackingBean.managedBean.searchToDate}" />
-				</p:column>
+				
 				<p:column headerText="#{lbl['lbl.fl.doc.maintain.doc.status']}" style="white-space:normal;" >
 					<h:outputText value="#{yearEndProcessBackingBean.getStatusDescById(flYep.statusId)}" />
 				</p:column> 
