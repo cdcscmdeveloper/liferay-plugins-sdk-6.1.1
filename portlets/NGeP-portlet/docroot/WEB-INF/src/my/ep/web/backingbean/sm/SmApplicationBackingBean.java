@@ -891,22 +891,23 @@ public class SmApplicationBackingBean extends
 				
 				//26238 - start
 				//check disciplinary action on supplier
-				SupplierDataMaintenanceReqDTO supReqDTO = new SupplierDataMaintenanceReqDTO();
-				supReqDTO.setSupplier(currSupp);
-				SupplierDataMaintenanceResDTO activeDisc = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionBySupplier(supReqDTO);
-				if(activeDisc.getSmDisciplinaryActions().size() > 0){
-					for(SmDisciplinaryAction disciplinary : activeDisc.getSmDisciplinaryActions()){
-						if(disciplinary.isSuspendRegistration() 
-								|| disciplinary.isCancelRegistration()
-								|| disciplinary.isBlacklistOwner()){
-							FacesContext.getCurrentInstance().addMessage("imposedDisciplinary", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-									SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
-											new String[] { labelNameVal })));
-							SmCommonUtil.redirectToPage(
-									"/xhtml/sm/payment/portletViewMode.xhtml", "", null, null);
-						}
-					}					
-				}
+				if (currSupp != null){
+					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
+//					SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionBySupplier(supReqDTO);
+					if(activeDisc.size() > 0){
+						for(SmDisciplinaryAction disciplinary : activeDisc){
+							if(disciplinary.isSuspendRegistration() 
+									|| disciplinary.isCancelRegistration()
+									|| disciplinary.isBlacklistOwner()){
+								FacesContext.getCurrentInstance().addMessage("imposedDisciplinary", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+										SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
+												new String[] { labelNameVal })));
+								SmCommonUtil.redirectToPage(
+										"/xhtml/sm/payment/portletViewMode.xhtml", "", null, null);
+							}
+						}					
+					}
+				}							
 				//26238 - end
 
 				// checked whether supplier already MOF, should not allowed to
