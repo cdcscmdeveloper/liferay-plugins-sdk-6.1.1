@@ -3,6 +3,7 @@ package my.ep.web.backingbean.fl.yep;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -19,6 +20,7 @@ import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
@@ -29,6 +31,7 @@ import my.ep.web.constant.report.CommonMethod;
 import my.ep.web.managedbean.fl.yep.YearEndProcessManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.StatusHelper;
 
 /**
  * Backing bean for year end process
@@ -106,6 +109,73 @@ public class YearEndProcessBackingBean extends
 					.add(new SelectItem(years, Integer.toString(years)));
 		}
 		return financialYearOpt;
+	}
+	
+	/**
+	 * Get status select items by module and doc type for dropdown.
+	 * 
+	 * @param moduleCode
+	 *            the module code
+	 * @param docType
+	 *            the document type
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getStatusDropdownValues(String moduleCode,
+			String docType) {
+		
+		
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+
+		try {
+			List<PmStatusDesc> statusDescs = StatusHelper.getInstance()
+					.getStatusDescList(moduleCode, docType, null);
+			
+			List<PmStatusDesc> statusDescsYep = new ArrayList<PmStatusDesc>();
+			
+				for (PmStatusDesc statusDesc : statusDescs) {
+				
+				if(statusDesc.getPmStatus().getStatusId()==41002
+					|| statusDesc.getPmStatus().getStatusId()==41030
+					||statusDesc.getPmStatus().getStatusId()==41035
+					||statusDesc.getPmStatus().getStatusId()==41040
+					||statusDesc.getPmStatus().getStatusId()==41100
+					||statusDesc.getPmStatus().getStatusId()==41130
+					||statusDesc.getPmStatus().getStatusId()==41310
+					||statusDesc.getPmStatus().getStatusId()==41420
+					||statusDesc.getPmStatus().getStatusId()==41430
+					||statusDesc.getPmStatus().getStatusId()==41440
+					||statusDesc.getPmStatus().getStatusId()==41027
+					||statusDesc.getPmStatus().getStatusId()==41017
+					||statusDesc.getPmStatus().getStatusId()==96708){
+					
+					
+				}else{
+					statusDescsYep.add(statusDesc);
+				}
+			}
+				
+				
+			items = new SelectItem[statusDescsYep.size() + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			int i = 1;
+			for (PmStatusDesc statusDescYep : statusDescsYep) {
+				
+					items[i++] = new SelectItem(statusDescYep.getPmStatus()
+							.getStatusId(), statusDescYep.getStatusName());
+				
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+
+		return items;
 	}
 	
 	
