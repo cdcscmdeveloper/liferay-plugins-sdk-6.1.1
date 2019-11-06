@@ -1277,9 +1277,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					this.getManagedBean().getZoneTrees(), scQt.getScQtSupplierCriteria());*/
 			if (null != locCriteria && !locCriteria.isEmpty()) {
 				scQt.getScQtSupplierCriteria().setScQtLocCriteria(locCriteria);
-			} /*else {
-				scQt.getScQtSupplierCriteria().setScQtLocCriteria(null);
-			}*/
+			} 
+			//20191106@asyrafhaziq - Bug #26289 - Start
+			else {
+				//scQt.getScQtSupplierCriteria().setScQtLocCriteria(null);
+				scQt.getScQtSupplierCriteria().getScQtLocCriteria().clear();
+			}
+			//20191106@asyrafhaziq - Bug #26289 - End
 		}
 		if (scQt.isZonal()) {
 			if (null != scQt.getScQtSupplierCriteria() && scQt.getScQtSupplierCriteria().getQtZoneCriterias() != null) {
