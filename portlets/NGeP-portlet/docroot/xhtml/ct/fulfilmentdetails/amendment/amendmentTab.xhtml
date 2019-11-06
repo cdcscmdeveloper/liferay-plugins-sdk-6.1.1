@@ -128,12 +128,12 @@
 		    and amendmentBackingBean.managedBean.ackFA eq null}"
 			actionListener="#{amendmentBackingBean.setTabValue('SC')}" update=":form" />
 		
-		<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.loa.details']}"
+			<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.loa.details']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{amendmentBackingBean.managedBean.prepareLOA or amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa}"
 			actionListener="#{amendmentBackingBean.setTabValue('LOD')}" update=":form" />
 	 
-		  <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.loa.content']}"
+		 	<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.loa.content']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{amendmentBackingBean.managedBean.prepareLOA or amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa}"
 			actionListener="#{amendmentBackingBean.setTabValue('CNT')}" update=":form" />
@@ -147,6 +147,12 @@
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{amendmentBackingBean.managedBean.pbConfirmMeeting}"
 			actionListener="#{amendmentBackingBean.setTabValue('MET')}" update=":form" />
+							
+		 	<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.decision']}"
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			rendered="#{amendmentBackingBean.managedBean.signUpdateDecision or amendmentBackingBean.managedBean.signOffDecision
+			or amendmentBackingBean.managedBean.decisionPbQcLOA}"
+			actionListener="#{amendmentBackingBean.setTabValue('DCN')}" update=":form" />
 	
 			<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.performance.bond']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
@@ -161,12 +167,6 @@
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa}"
 			actionListener="#{amendmentBackingBean.setTabValue('SDEC')}" update=":form" />
-				
-		 <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.decision']}"
-			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			rendered="#{amendmentBackingBean.managedBean.signUpdateDecision or amendmentBackingBean.managedBean.signOffDecision
-			or amendmentBackingBean.managedBean.decisionPbQcLOA}"
-			actionListener="#{amendmentBackingBean.setTabValue('DCN')}" update=":form" />
 	
 	        <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.setting']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
