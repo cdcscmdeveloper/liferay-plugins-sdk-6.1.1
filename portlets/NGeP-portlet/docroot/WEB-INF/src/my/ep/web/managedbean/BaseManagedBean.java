@@ -44,7 +44,6 @@ public abstract class BaseManagedBean implements Serializable {
 	private String processName;
 	private Boolean groupTask;
 	private boolean isReadOnly;
-	private boolean isDisciplinaryAction; //26238
 	/*
 	 * commonly used as a flag to user's permission to download documents/attachment
 	 */
@@ -412,15 +411,7 @@ public abstract class BaseManagedBean implements Serializable {
 		bm.setGroupTask(this.groupTask);
 		bm.setReadOnly(this.isReadOnly);
 	}
-	//26238 - start
-	public boolean isDisciplinaryAction() {
-		return isDisciplinaryAction;
-	}
-
-	public void setDisciplinaryAction(boolean isDisciplinaryAction) {
-		this.isDisciplinaryAction = isDisciplinaryAction;
-	}
-	//26238 - end
+	
 	
 	
 }
