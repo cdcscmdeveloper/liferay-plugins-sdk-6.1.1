@@ -714,6 +714,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 	 * @param event
 	 */
 	public void selectSupplierLocation(AjaxBehaviorEvent event) {
+		log.info("enter selectSupplierLocation");
 		debugLogger("selectSupplierLocation");
 		Long location = (Long) event.getComponent().getAttributes()
 				.get("value");
@@ -721,7 +722,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 		if (null != getManagedBean().getZoneTrees()
 				&& !getManagedBean().getZoneTrees().isEmpty()) {
 			this.getManagedBean().setSupplierLocationList(getManagedBean().getExistingSupplierLocationList());
-			getManagedBean().setZoneTrees(null);
+			//getManagedBean().setZoneTrees(null);
 		}
 		if(null!=location){
 			ParameterReqDTO reqDTO=new ParameterReqDTO();
@@ -730,6 +731,26 @@ public class QTSupplierQulCriteriaBackingBean extends
 				.retrieveParameterById(reqDTO);
 		this.getManagedBean().getQt().getScQtSupplierCriteria().setLocationLevel(resDTO.getPmParameter());
 		}
+		
+		//20191106@asyrafhaziq - Bug #26289 - Start
+		if ( !this.getManagedBean().getQt().getScQtSupplierCriteria().isAllState())
+		{
+			 
+		  if (this.getManagedBean().getQt().isZonal() && this.getManagedBean().getQt().getProcurementMode().getParameterCode() == ParameterConst.PROCUREMENT_MODE_QUOTATION )
+		{
+			  if ( this.getManagedBean().getZoneSuppQualTrees() != null && !this.getManagedBean().getZoneSuppQualTrees().isEmpty())
+			  {
+			      this.getManagedBean().getZoneSuppQualTrees().clear();
+			  }
+		}
+		else
+		{	if ( this.getManagedBean().getZoneTrees() != null && !this.getManagedBean().getZoneTrees().isEmpty())
+			  {
+				 this.getManagedBean().getZoneTrees().clear();
+			  }
+		}
+		}	
+		//20191106@asyrafhaziq - Bug #26289 - End
 	}
 
 	/**
