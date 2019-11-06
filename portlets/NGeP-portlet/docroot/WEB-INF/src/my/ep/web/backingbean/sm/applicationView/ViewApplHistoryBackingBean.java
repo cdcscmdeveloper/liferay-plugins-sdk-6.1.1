@@ -965,93 +965,98 @@ public class ViewApplHistoryBackingBean extends
 		if (!EntityHelper.isCollectionEmpty(resultList)
 				&& resultList.size() > 0) {
 			for(SmDisciplinaryAction disciplinaryAction: resultList){
-				DisciplinaryActionVO retVal = new DisciplinaryActionVO();
-				if(disciplinaryAction.getStartDate() != null)
-					retVal.setStartDate(DateUtils.dateToString("dd/MM/yyyy",disciplinaryAction.getStartDate()));
-				if(disciplinaryAction.getEndDate() != null)
-					retVal.setEndDate(DateUtils.dateToString("dd/MM/yyyy",disciplinaryAction.getEndDate()));
-				if(disciplinaryAction.getRemark() != null)
-					retVal.setRemarks(disciplinaryAction.getRemark());
-				
-				if(disciplinaryAction.isWarning())
-					retVal.setWarning(true);
-				if(disciplinaryAction.isCancelCategory())
-					retVal.setCancelCategory(true);
-				if(disciplinaryAction.isSuspendRegistration())
-					retVal.setSuspendRegistration(true);
-				if(disciplinaryAction.isCancelRegistration())
-					retVal.setCancelRegistration(true);
-				if(disciplinaryAction.isBumiputeraCancel())
-					retVal.setBumiputeraCancel(true);
-				if(disciplinaryAction.isManufacturerCancel())
-					retVal.setManufacturerCancel(true);
-				if(disciplinaryAction.isBlacklistOwner())
-					retVal.setBlacklistOwnerDirector(true);
-				
-				if(disciplinaryAction.isCancelCategory()){
-					List<DisciplinaryActionCategoryVO> catVoList = new ArrayList<DisciplinaryActionCategoryVO>();
-					List<Object[]> catList = SmApplicationUtil.retrieveCancelCategory();
+				if(disciplinaryAction.isWarning() || disciplinaryAction.isCancelCategory() 
+						|| disciplinaryAction.isSuspendRegistration() || disciplinaryAction.isCancelRegistration() 
+						|| disciplinaryAction.isBlacklistOwner() || disciplinaryAction.isManufacturerCancel()
+						|| disciplinaryAction.isBumiputeraCancel()){
+					DisciplinaryActionVO retVal = new DisciplinaryActionVO();
+					if(disciplinaryAction.getStartDate() != null)
+						retVal.setStartDate(DateUtils.dateToString("dd/MM/yyyy",disciplinaryAction.getStartDate()));
+					if(disciplinaryAction.getEndDate() != null)
+						retVal.setEndDate(DateUtils.dateToString("dd/MM/yyyy",disciplinaryAction.getEndDate()));
+					if(disciplinaryAction.getRemark() != null)
+						retVal.setRemarks(disciplinaryAction.getRemark());
 					
-					if(!EntityHelper.isCollectionEmpty(catList)
-							&& catList.size() > 0){
-						for(Object[] arr : catList){
-							DisciplinaryActionCategoryVO catVo = new DisciplinaryActionCategoryVO();
-							String catCode = StringUtils.EMPTY;
-							catCode = arr[3].toString() + arr[4].toString() + arr[5].toString() ;
-							catVo.setCategoryCode(catCode);	
-							catVoList.add(catVo);
+					if(disciplinaryAction.isWarning())
+						retVal.setWarning(true);
+					if(disciplinaryAction.isCancelCategory())
+						retVal.setCancelCategory(true);
+					if(disciplinaryAction.isSuspendRegistration())
+						retVal.setSuspendRegistration(true);
+					if(disciplinaryAction.isCancelRegistration())
+						retVal.setCancelRegistration(true);
+					if(disciplinaryAction.isBumiputeraCancel())
+						retVal.setBumiputeraCancel(true);
+					if(disciplinaryAction.isManufacturerCancel())
+						retVal.setManufacturerCancel(true);
+					if(disciplinaryAction.isBlacklistOwner())
+						retVal.setBlacklistOwnerDirector(true);
+					
+					if(disciplinaryAction.isCancelCategory()){
+						List<DisciplinaryActionCategoryVO> catVoList = new ArrayList<DisciplinaryActionCategoryVO>();
+						List<Object[]> catList = SmApplicationUtil.retrieveCancelCategory();
+						
+						if(!EntityHelper.isCollectionEmpty(catList)
+								&& catList.size() > 0){
+							for(Object[] arr : catList){
+								DisciplinaryActionCategoryVO catVo = new DisciplinaryActionCategoryVO();
+								String catCode = StringUtils.EMPTY;
+								catCode = arr[3].toString() + arr[4].toString() + arr[5].toString() ;
+								catVo.setCategoryCode(catCode);	
+								catVoList.add(catVo);
+							}						
+							retVal.setCategoryCodeList(catVoList);
+						}
+					}
+					
+					if(disciplinaryAction.isSuspendRegistration()){
+						List<BlacklistOwnerDirectorVO> blacklistownerDirectorList = new ArrayList<BlacklistOwnerDirectorVO>();					
+						if(personnelResDTO != null 
+								&& personnelResDTO.getSmPersonnelList().size() > 0){
+							for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
+								BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
+								if(personnel.isSuspendRegistration()){
+									blacklistOwner.setIcNo(personnel.getIdentificationNo());
+									blacklistownerDirectorList.add(blacklistOwner);
+								}
+							}
+							retVal.setBlacklistownerDirectorList(blacklistownerDirectorList);
 						}						
-						retVal.setCategoryCodeList(catVoList);
 					}
-				}
-				
-				if(disciplinaryAction.isSuspendRegistration()){
-					List<BlacklistOwnerDirectorVO> blacklistownerDirectorList = new ArrayList<BlacklistOwnerDirectorVO>();					
-					if(personnelResDTO != null 
-							&& personnelResDTO.getSmPersonnelList().size() > 0){
-						for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
-							BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
-							if(personnel.isSuspendRegistration()){
-								blacklistOwner.setIcNo(personnel.getIdentificationNo());
-								blacklistownerDirectorList.add(blacklistOwner);
+					
+					if(disciplinaryAction.isCancelRegistration()){
+						List<BlacklistOwnerDirectorVO> blacklistownerDirectorList = new ArrayList<BlacklistOwnerDirectorVO>();
+						if(personnelResDTO != null 
+								&& personnelResDTO.getSmPersonnelList().size() > 0){
+							for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
+								BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
+								if(personnel.isCancelRegistration()){
+									blacklistOwner.setIcNo(personnel.getIdentificationNo());
+									blacklistownerDirectorList.add(blacklistOwner);
+								}
 							}
-						}
-						retVal.setBlacklistownerDirectorList(blacklistownerDirectorList);
-					}						
-				}
-				
-				if(disciplinaryAction.isCancelRegistration()){
-					List<BlacklistOwnerDirectorVO> blacklistownerDirectorList = new ArrayList<BlacklistOwnerDirectorVO>();
-					if(personnelResDTO != null 
-							&& personnelResDTO.getSmPersonnelList().size() > 0){
-						for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
-							BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
-							if(personnel.isCancelRegistration()){
-								blacklistOwner.setIcNo(personnel.getIdentificationNo());
-								blacklistownerDirectorList.add(blacklistOwner);
-							}
-						}
-						retVal.setBlacklistownerDirectorList(blacklistownerDirectorList);
-					}						
-				}
-				
-				if(disciplinaryAction.isBlacklistOwner()){
-					List<BlacklistOwnerDirectorVO> blacklistownerDirectorList = new ArrayList<BlacklistOwnerDirectorVO>();
-					if(personnelResDTO != null 
-							&& personnelResDTO.getSmPersonnelList().size() > 0){
-						for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
-							BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
-							if(personnel.isBlacklisted()){
-								blacklistOwner.setIcNo(personnel.getIdentificationNo());
-								blacklistownerDirectorList.add(blacklistOwner);
-							}
-						}
-						retVal.setBlacklistownerDirectorList(blacklistownerDirectorList);
+							retVal.setBlacklistownerDirectorList(blacklistownerDirectorList);
+						}						
 					}
+					
+					if(disciplinaryAction.isBlacklistOwner()){
+						List<BlacklistOwnerDirectorVO> blacklistownerDirectorList = new ArrayList<BlacklistOwnerDirectorVO>();
+						if(personnelResDTO != null 
+								&& personnelResDTO.getSmPersonnelList().size() > 0){
+							for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
+								BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
+								if(personnel.isBlacklisted()){
+									blacklistOwner.setIcNo(personnel.getIdentificationNo());
+									blacklistownerDirectorList.add(blacklistOwner);
+								}
+							}
+							retVal.setBlacklistownerDirectorList(blacklistownerDirectorList);
+						}
+					}
+					voList.add(retVal);
 				}
-			voList.add(retVal);
-			}
-			log.info(voList);
+				log.info(voList);					
+				}				
 		}
 		return voList;
 	}

@@ -47,7 +47,9 @@ public class ViewApplHistoryManagedBean extends
 	private List<SmBulkApplicationVO> smBulkApplicationVO;
 	private SmAttachment cancellationAttachment;
 	private SmMofAccount currMof;
-	private List<DisciplinaryActionVO> disciplineVOs; //26238
+	//26238
+	private List<DisciplinaryActionVO> disciplineVOs; 
+	private boolean disciplinaryAction;
 
 	public ViewApplHistoryManagedBean() {
 
@@ -286,6 +288,12 @@ public class ViewApplHistoryManagedBean extends
 	
 	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
 		this.disciplineVOs = disciplineVOs;
+	}
+	public boolean isDisciplinaryAction() {
+		return disciplinaryAction;
+	}
+	public void setDisciplinaryAction(boolean disciplinaryAction) {
+		this.disciplinaryAction = disciplinaryAction;
 	}	
 
 }
