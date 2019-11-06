@@ -135,22 +135,23 @@ public class YearEndProcessBackingBean extends
 			
 				for (PmStatusDesc statusDesc : statusDescs) {
 				
-				if(statusDesc.getPmStatus().getStatusId()==41002
-					|| statusDesc.getPmStatus().getStatusId()==41030
-					||statusDesc.getPmStatus().getStatusId()==41035
-					||statusDesc.getPmStatus().getStatusId()==41040
-					||statusDesc.getPmStatus().getStatusId()==41100
-					||statusDesc.getPmStatus().getStatusId()==41130
-					||statusDesc.getPmStatus().getStatusId()==41310
-					||statusDesc.getPmStatus().getStatusId()==41420
-					||statusDesc.getPmStatus().getStatusId()==41430
-					||statusDesc.getPmStatus().getStatusId()==41440
-					||statusDesc.getPmStatus().getStatusId()==41027
-					||statusDesc.getPmStatus().getStatusId()==41017
-					||statusDesc.getPmStatus().getStatusId()==96708){
+				if(statusDesc.getPmStatus().getStatusId()==41000
+					||statusDesc.getPmStatus().getStatusId()==41005
+					||statusDesc.getPmStatus().getStatusId()==41010
+					||statusDesc.getPmStatus().getStatusId()==41015
+					||statusDesc.getPmStatus().getStatusId()==41020
+					||statusDesc.getPmStatus().getStatusId()==41025
+					||statusDesc.getPmStatus().getStatusId()==41400
+					||statusDesc.getPmStatus().getStatusId()==41410
+					||statusDesc.getPmStatus().getStatusId()==41500
+					||statusDesc.getPmStatus().getStatusId()==41505
+					||statusDesc.getPmStatus().getStatusId()==41510
+					||statusDesc.getPmStatus().getStatusId()==41515
+					||statusDesc.getPmStatus().getStatusId()==41520
+					||statusDesc.getPmStatus().getStatusId()==41525
+					||statusDesc.getPmStatus().getStatusId()==41900
+					||statusDesc.getPmStatus().getStatusId()==41910){
 					
-					
-				}else{
 					statusDescsYep.add(statusDesc);
 				}
 			}
