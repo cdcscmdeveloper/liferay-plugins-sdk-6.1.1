@@ -952,8 +952,9 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 				/*#25139-basri*/
 				bankItems = new SelectItem[1];
 				if(getManagedBean().getDocType().equals("UF")){
-					bankItems[0] = new SelectItem(this.getManagedBean().getAccBankName(),this.getManagedBean().getAccBankName());
-					getManagedBean().setPopulateBankAccountList(bankItems);	
+				
+					getFinancialAccountBank();
+			
 				}
 			/*	#25139-end*/
 			} finally {
@@ -963,6 +964,64 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			}
 		}   
 		return getManagedBean().getListOfFinancialOrg();
+	}
+	
+	/**
+	 * The method used to reset the factoring company name, bank account and bank address
+	 * with the selected factoring company.
+	 */
+	public void getFinancialAccountBank() {
+		IFinancialOrgSO financialOrgSO = null;
+		FinancialOrgReqDTO reqDTO = null;
+		FinancialOrgResDTO resDTO = null;
+		SelectItem[] items = null;
+		
+
+		try {
+			financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IFinancialOrgSO.class);
+			reqDTO = new FinancialOrgReqDTO();
+			int i = 1;
+			if (getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId() != null) {
+				reqDTO.setFinancialOrgId(getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId());
+				resDTO = financialOrgSO.retriveFinAccListByFinOrgId(reqDTO);//#25139
+				getManagedBean().getFactoring().setFinancialOrgName(getManagedBean().getFactoringCompMap().get(getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId()));
+				getManagedBean().getFactoring().setFinancialOrgAddress(CtAddressUtil.convertPmAddressTypeToCtAddress(resDTO.getPmAddressType()));
+				//#25139-basri
+				
+				items = new SelectItem[resDTO.getPmFinancialAccList().size() + 1];
+				items[0] = new SelectItem(this.getManagedBean().getAccBankName(), this.getManagedBean().getAccBankName());
+				for (PmFinancialAcc pmFinancialAcc : resDTO.getPmFinancialAccList()) {
+					String account = pmFinancialAcc.getAccountNo();
+					if (pmFinancialAcc.getPmPaymentBankOrg() != null && pmFinancialAcc.getPmPaymentBankOrg().getFinOrgName() != null) {
+						account = account +" "+ ContractConst.SPACE_SLASH +" "+ pmFinancialAcc.getPmPaymentBankOrg().getFinOrgName();
+					}
+					items[i++] = new SelectItem(account, account);
+					if (!getManagedBean().getFinancialAccMap().containsKey(pmFinancialAcc.getAccountNo())) {
+						getManagedBean().getFinancialAccMap().put(pmFinancialAcc.getAccountNo(), pmFinancialAcc);
+					}
+					// Default the bank account no if only 1 bank account is available
+
+					if (resDTO.getPmFinancialAccList().size() == 1) {
+						getManagedBean().getFactoring().setBankAccountNo(resDTO.getPmFinancialAcc().getAccountNo());
+						
+					}
+				}
+				getManagedBean().setPopulateBankAccountList(items);	
+//			    getManagedBean().getFactoring().setBankAccountNo("22222");
+//				getManagedBean().getFactoring().setBankName(resDTO.getPmFinancialAcc().getPmPaymentBankOrg().getFinOrgName()); 
+//				getManagedBean().setAccBankName(getManagedBean().getFactoring().getBankAccountNo()+ ContractConst.SPACE_SLASH + "bank");	
+//				#25139-end
+				
+				
+				
+			}
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			financialOrgSO = null;
+			resDTO = null;
+		}
+		
 	}
 
 	/**
