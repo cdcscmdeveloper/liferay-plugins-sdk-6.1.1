@@ -58,6 +58,7 @@ import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmMofAccount;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -70,6 +71,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.pm.helper.RoleHelper;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.commons.lang.StringUtils;
@@ -1644,27 +1646,28 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			FacesScopes facesScopes = new FacesScopes();
 			FacesContext fc = FacesContext.getCurrentInstance();
 			try {
-//				PmUser sUsers = facesScopes.getUserSessionBean();
-//				if (sUsers == null) {
-//					throw new EpException(MessageConst.ERROR_770045);
-//				} else {
-//					loadUserCommonDetails(sUsers.getUserId());
-//				}
+				PmUser sUsers = facesScopes.getUserSessionBean();
+				if (sUsers == null) {
+					throw new EpException(MessageConst.ERROR_770045);
+				} else {
+					loadUserCommonDetails(sUsers.getUserId());
+				}
 				
-				retrieveDisciplinaryAction(getManagedBean().getCurrentProfile());
+				retrieveDisciplinaryAction();
 				if(this.getManagedBean().isDisciplinaryAction()){
 					SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
-					if(getManagedBean().getCurrentProfile().getSmSupplier() != null)
-						reqDTO.setSupplier(getManagedBean().getCurrentProfile().getSmSupplier());
+					if(getManagedBean().getCurrentProfile() != null){
+						if(getManagedBean().getCurrentProfile().getSmSupplier() != null)
+							reqDTO.setSupplier(getManagedBean().getCurrentProfile().getSmSupplier());
+					}
+							
 					
 					SupplierDataMaintenanceResDTO resDTO = suppDataSO.retrieveDisciplinaryActionMsg(reqDTO);
 					if(resDTO.getErrorMessage() != null){
 						this.getManagedBean().setDisciplinaryActionMsg(resDTO.getErrorMessage());
 					} else {
-						this.getManagedBean().setDisciplinaryAction(false);
+						this.getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
 					}
-						
-					
 				}
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_INFO_DISC_ACTION);
 			} catch (Exception e) {
@@ -1676,17 +1679,15 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			}
 		}
 		
-		private void retrieveDisciplinaryAction(PmOrgProfile orgProfile) {
-			ISupplierDataMaintenanceSO suppDataSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
-			if (orgProfile.getSmSupplier() != null) {			
-				SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
-				
-				reqDTO.setSupplier(orgProfile.getSmSupplier());
-				
-				SupplierDataMaintenanceResDTO resDTO = suppDataSO.retrieveActiveDisciplinaryActionBySupplier(reqDTO);
-				
-				if(resDTO.getSmDisciplinaryActions().size() > 0){
-					for(SmDisciplinaryAction disciplinaryAction: resDTO.getSmDisciplinaryActions()){
+		private void retrieveDisciplinaryAction() {
+//			ISupplierDataMaintenanceSO suppDataSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
+			
+			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
+			if(currSupp != null){
+				List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(currSupp);
+				logger.info(resultList);
+				if(resultList.size() > 0){
+					for(SmDisciplinaryAction disciplinaryAction: resultList){
 						if(disciplinaryAction.isWarning() || disciplinaryAction.isCancelCategory() 
 								|| disciplinaryAction.isSuspendRegistration() || disciplinaryAction.isCancelRegistration() 
 								|| disciplinaryAction.isBlacklistOwner() || disciplinaryAction.isManufacturerCancel()
@@ -1696,7 +1697,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 					}
 				} else {
 					getManagedBean().setDisciplinaryAction(false);
-				}			
+				}
 			}
 		}
 		//26238 - end
