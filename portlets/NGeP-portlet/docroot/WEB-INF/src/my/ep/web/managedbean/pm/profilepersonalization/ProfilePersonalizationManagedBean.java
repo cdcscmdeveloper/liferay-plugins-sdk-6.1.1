@@ -60,6 +60,9 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	private Date robExpDate;
 	private boolean showRobExpiredDate = false;
 	private boolean showRobExpiredDateMesej = false;
+	//26238
+	private boolean disciplinaryAction; 
+	private String disciplinaryActionMsg; 
 	
 	public ProfilePersonalizationManagedBean(){}
 	
@@ -377,6 +380,22 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 
 	public void setShowRobExpiredDateMesej(boolean showRobExpiredDateMesej) {
 		this.showRobExpiredDateMesej = showRobExpiredDateMesej;
+	}
+	//26238
+	public boolean isDisciplinaryAction() {
+		return disciplinaryAction;
+	}
+
+	public void setDisciplinaryAction(boolean disciplinaryAction) {
+		this.disciplinaryAction = disciplinaryAction;
+	}
+
+	public String getDisciplinaryActionMsg() {
+		return disciplinaryActionMsg;
+	}
+
+	public void setDisciplinaryActionMsg(String disciplinaryActionMsg) {
+		this.disciplinaryActionMsg = disciplinaryActionMsg;
 	}
 
 }

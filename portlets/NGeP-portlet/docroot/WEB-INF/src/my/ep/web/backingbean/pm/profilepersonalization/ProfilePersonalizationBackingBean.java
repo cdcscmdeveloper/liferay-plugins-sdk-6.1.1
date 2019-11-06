@@ -21,6 +21,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -33,6 +34,8 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.PmTrackingDairyVO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.constant.DbValueConst;
@@ -53,6 +56,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -194,6 +198,8 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		adminUserRoleMap.put("SUPPORT_APPL", Arrays.asList("SUPPORT_ADMIN"));
 
 	}
+	//26238
+	public static final String NAV_TO_INFO_DISC_ACTION = "/xhtml/pm/profilePersonalization/userDetails/infoActiveDisciplinaryAction.xhtml";
 
 	// Navigation Details
 	public static final String NAV_TO_MYACCOUNT = "/xhtml/pm/profilePersonalization/userDetails/profileManagementMaintain.xhtml";
@@ -1629,5 +1635,70 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	//
 	// System.out.println("handleFileUploadTest - end");
 	// }
+	
+	//26238 - start
+		public void preRenderDisciplinaryAction() {
+			logger.info("preRenderDisciplinaryAction");
+			ISupplierDataMaintenanceSO suppDataSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
+			renewSesionObject();
+			FacesScopes facesScopes = new FacesScopes();
+			FacesContext fc = FacesContext.getCurrentInstance();
+			try {
+//				PmUser sUsers = facesScopes.getUserSessionBean();
+//				if (sUsers == null) {
+//					throw new EpException(MessageConst.ERROR_770045);
+//				} else {
+//					loadUserCommonDetails(sUsers.getUserId());
+//				}
+				
+				retrieveDisciplinaryAction(getManagedBean().getCurrentProfile());
+				if(this.getManagedBean().isDisciplinaryAction()){
+					SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+					if(getManagedBean().getCurrentProfile().getSmSupplier() != null)
+						reqDTO.setSupplier(getManagedBean().getCurrentProfile().getSmSupplier());
+					
+					SupplierDataMaintenanceResDTO resDTO = suppDataSO.retrieveDisciplinaryActionMsg(reqDTO);
+					if(resDTO.getErrorMessage() != null){
+						this.getManagedBean().setDisciplinaryActionMsg(resDTO.getErrorMessage());
+					} else {
+						this.getManagedBean().setDisciplinaryAction(false);
+					}
+						
+					
+				}
+				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_INFO_DISC_ACTION);
+			} catch (Exception e) {
+				fc.addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, MessageConst.ERROR_770045, PmCommonUtil
+								.getMsgFromMsgUtils(MessageConst.ERROR_770045, null)));
+				PmCommonUtil.redirectToPage(ERROR_PAGE, null, null);
+			}
+		}
+		
+		private void retrieveDisciplinaryAction(PmOrgProfile orgProfile) {
+			ISupplierDataMaintenanceSO suppDataSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
+			if (orgProfile.getSmSupplier() != null) {			
+				SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+				
+				reqDTO.setSupplier(orgProfile.getSmSupplier());
+				
+				SupplierDataMaintenanceResDTO resDTO = suppDataSO.retrieveActiveDisciplinaryActionBySupplier(reqDTO);
+				
+				if(resDTO.getSmDisciplinaryActions().size() > 0){
+					for(SmDisciplinaryAction disciplinaryAction: resDTO.getSmDisciplinaryActions()){
+						if(disciplinaryAction.isWarning() || disciplinaryAction.isCancelCategory() 
+								|| disciplinaryAction.isSuspendRegistration() || disciplinaryAction.isCancelRegistration() 
+								|| disciplinaryAction.isBlacklistOwner() || disciplinaryAction.isManufacturerCancel()
+								|| disciplinaryAction.isBumiputeraCancel()){
+							getManagedBean().setDisciplinaryAction(true);
+						}
+					}
+				} else {
+					getManagedBean().setDisciplinaryAction(false);
+				}			
+			}
+		}
+		//26238 - end
 
 }

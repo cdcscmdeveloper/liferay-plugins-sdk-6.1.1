@@ -3932,7 +3932,9 @@ public class SmApplicationUtil {
 					|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
 					|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
 				if(suppAdmin != null){
-					if(suppAdmin.isSuspendRegistration() || suppAdmin.isCancelRegistration()){
+					if(suppAdmin.isSuspendRegistration() 
+							|| suppAdmin.isCancelRegistration()
+								|| suppAdmin.isBlacklisted()){
 						throw new EpException(SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
 							null));
 					}
