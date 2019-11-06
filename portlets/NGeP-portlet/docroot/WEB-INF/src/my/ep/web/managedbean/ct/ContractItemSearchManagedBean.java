@@ -118,18 +118,13 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 				ContractBackingBean contractBb=new ContractBackingBean();
 				
 				Long contId=contractBb.getManagedBean().getContractVer().getCtContract().getContractId();
-				//Long contractVerId=contractBb.getManagedBean().getContractVer().getContractVerId();
-				log.info("*****ServiceListingPagingDataModel******"+"Contract Version Id--->"+contractBb.getManagedBean().getContractVer().getContractVerId());
 				Long contractVerId=null;
-				if(contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer()!=null){
-					contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();
-					log.info("*****ServiceListingPagingDataModel******"+"contId--->"+contId+"contractVerId"+contractVerId);
-					
-				}
-				else {
-					contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId();
-					log.info("*****ServiceListingPagingDataModel******"+"contId--->"+contId+"contractVerId"+contractVerId);
-				}
+				if(contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId()
+						.equals(contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId())){
+							contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();	
+						}else {
+							contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId();	
+						}
 				
 			  if(contId!=null ){
 					
@@ -267,17 +262,15 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 				//private String contractId = null;
 				ContractBackingBean contractBb=new ContractBackingBean();
 				Long contId=contractBb.getManagedBean().getContractVer().getCtContract().getContractId();
-				//Long contractVerId=contractBb.getManagedBean().getContractVer().getContractVerId();
 				log.info("*****ContractListingPagingDataModel******"+"Contract Version Id--->"+contractBb.getManagedBean().getContractVer().getContractVerId());
 				Long contractVerId=null;
-				if(contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer()!=null){
-					contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();
-					log.info("*****ContractListingPagingDataModel******"+"contId--->"+contId+"contractVerId"+contractVerId);
+				System.out.println("CEK Putra contractVerId Product"+contractBb.getManagedBean().getContractVer().getContractVerId());
+				if(contractBb.getManagedBean().getContractVer().getContractVerId()!=null)
+				{
 					
-				}
-				else {
-					contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId();
-					log.info("*****ContractListingPagingDataModel******"+"contId--->"+contId+"contractVerId"+contractVerId);
+					contractVerId=contractBb.getManagedBean().getContractVer().getContractVerId();
+					log.info("*****ServiceListingPagingDataModel******"+"contId--->"+contId+"contractVerId"+contractVerId);
+					
 				}
 				if(contId!=null ){
 						SearchFilterBean filterBean = new SearchFilterBean("ctContractVer.ctContract.contractId", SearchOperator.OPERATOR_EQUALS.value(),contId);
