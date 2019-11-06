@@ -9,12 +9,15 @@ import javax.faces.bean.RequestScoped;
 import my.ep.constant.MessageConst;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
+import my.ep.dto.sm.personnel.PersonnelReqDTO;
+import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.util.SLAUtils;
 import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
@@ -77,7 +80,14 @@ public class ViewSuppProfileBackingBean extends
 			List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
 			if(!EntityHelper.isCollectionEmpty(resultList)
 					&& resultList.size() > 0){
-				getManagedBean().setDisciplinaryAction(true);
+				for(SmDisciplinaryAction disciplinaryAction : resultList){
+					if(disciplinaryAction.isWarning() || disciplinaryAction.isCancelCategory() 
+							|| disciplinaryAction.isSuspendRegistration() || disciplinaryAction.isCancelRegistration() 
+							|| disciplinaryAction.isBlacklistOwner() || disciplinaryAction.isManufacturerCancel()
+							|| disciplinaryAction.isBumiputeraCancel()){
+						getManagedBean().setDisciplinaryAction(true);
+					}
+				}				
 			} else {
 				getManagedBean().setDisciplinaryAction(false);
 			}
@@ -138,64 +148,106 @@ public class ViewSuppProfileBackingBean extends
 	
 	private static List<DisciplinaryActionVO> getDisciplinaryActionVO(SmSupplier currSupp) {
 		List<DisciplinaryActionVO> voList = new ArrayList<DisciplinaryActionVO>();
-	
+		PersonnelReqDTO perReqDTO = new PersonnelReqDTO();
+		perReqDTO.setSmSupplierId(currSupp.getSupplierId());
+		
+		PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelBySupplierId(perReqDTO);
+		
 		List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(currSupp);
 		if (!EntityHelper.isCollectionEmpty(resultList)
 				&& resultList.size() > 0) {
 			for(SmDisciplinaryAction disciplinaryAction: resultList){
-				DisciplinaryActionVO retVal = new DisciplinaryActionVO();
-				if(disciplinaryAction.getStartDate() != null)
-					retVal.setStartDate(disciplinaryAction.getStartDate().toString());
-				if(disciplinaryAction.getEndDate() != null)
-					retVal.setEndDate(disciplinaryAction.getEndDate().toString());
-				if(disciplinaryAction.getRemark() != null)
-					retVal.setRemarks(disciplinaryAction.getRemark());
-				
-				if(disciplinaryAction.isWarning())
-					retVal.setWarning(true);
-				if(disciplinaryAction.isCancelCategory())
-					retVal.setCancelCategory(true);
-				if(disciplinaryAction.isSuspendRegistration())
-					retVal.setSuspendRegistration(true);
-				if(disciplinaryAction.isCancelRegistration())
-					retVal.setCancelRegistration(true);
-				if(disciplinaryAction.isBumiputeraCancel())
-					retVal.setBumiputeraCancel(true);
-				if(disciplinaryAction.isManufacturerCancel())
-					retVal.setManufacturerCancel(true);
-				if(disciplinaryAction.isBlacklistOwner())
-					retVal.setBlacklistOwnerDirector(true);
-				
-				if(disciplinaryAction.isCancelCategory()){
-					List<DisciplinaryActionCategoryVO> catVoList = new ArrayList<DisciplinaryActionCategoryVO>();
-					List<Object[]> catList = SmApplicationUtil.retrieveCancelCategory();
+				if(disciplinaryAction.isWarning() || disciplinaryAction.isCancelCategory() 
+						|| disciplinaryAction.isSuspendRegistration() || disciplinaryAction.isCancelRegistration() 
+						|| disciplinaryAction.isBlacklistOwner() || disciplinaryAction.isManufacturerCancel()
+						|| disciplinaryAction.isBumiputeraCancel()){
 					
-					if(!EntityHelper.isCollectionEmpty(catList)
-							&& catList.size() > 0){
-						for(Object[] arr : catList){
-							DisciplinaryActionCategoryVO catVo = new DisciplinaryActionCategoryVO();
-							String catCode = StringUtils.EMPTY;
-							catCode = arr[3].toString() + arr[4].toString() + arr[5].toString() ;
-							catVo.setCategoryCode(catCode);	
-							catVoList.add(catVo);
-						}						
-						retVal.setCategoryCodeList(catVoList);
-					}
-				}
-				
-				if(disciplinaryAction.isBlacklistOwner()){
-					List<BlacklistOwnerDirectorVO> blacklistownerDirectorList = new ArrayList<BlacklistOwnerDirectorVO>();
-					if(disciplinaryAction.getSmSupplier().getSmAppl().getSmPersonnels().size() > 0)
-						for(SmPersonnel personnel : disciplinaryAction.getSmSupplier().getSmAppl().getSmPersonnels()){
-							BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
-							if(personnel.isCancelRegistration()){
-								blacklistOwner.setIcNo(personnel.getIdentificationNo());
-								blacklistownerDirectorList.add(blacklistOwner);
+						DisciplinaryActionVO retVal = new DisciplinaryActionVO();
+						if(disciplinaryAction.getStartDate() != null)
+							retVal.setStartDate(DateUtils.dateToString("dd/MM/yyyy",disciplinaryAction.getStartDate()));
+						if(disciplinaryAction.getEndDate() != null)
+							retVal.setEndDate(DateUtils.dateToString("dd/MM/yyyy",disciplinaryAction.getEndDate()));
+						if(disciplinaryAction.getRemark() != null)
+							retVal.setRemarks(disciplinaryAction.getRemark());
+						
+						if(disciplinaryAction.isWarning())
+							retVal.setWarning(true);
+						if(disciplinaryAction.isCancelCategory())
+							retVal.setCancelCategory(true);
+						if(disciplinaryAction.isSuspendRegistration())
+							retVal.setSuspendRegistration(true);
+						if(disciplinaryAction.isCancelRegistration())
+							retVal.setCancelRegistration(true);
+						if(disciplinaryAction.isBumiputeraCancel())
+							retVal.setBumiputeraCancel(true);
+						if(disciplinaryAction.isManufacturerCancel())
+							retVal.setManufacturerCancel(true);
+						if(disciplinaryAction.isBlacklistOwner())
+							retVal.setBlacklistOwnerDirector(true);
+						
+						if(disciplinaryAction.isCancelCategory()){
+							List<DisciplinaryActionCategoryVO> catVoList = new ArrayList<DisciplinaryActionCategoryVO>();
+							List<Object[]> catList = SmApplicationUtil.retrieveCancelCategory();
+							
+							if(!EntityHelper.isCollectionEmpty(catList)
+									&& catList.size() > 0){
+								for(Object[] arr : catList){
+									DisciplinaryActionCategoryVO catVo = new DisciplinaryActionCategoryVO();
+									String catCode = StringUtils.EMPTY;
+									catCode = arr[3].toString() + arr[4].toString() + arr[5].toString() ;
+									catVo.setCategoryCode(catCode);	
+									catVoList.add(catVo);
+								}						
+								retVal.setCategoryCodeList(catVoList);
 							}
 						}
-						retVal.setBlacklistownerDirectorList(blacklistownerDirectorList);
+						
+						if(disciplinaryAction.isSuspendRegistration()){
+							List<BlacklistOwnerDirectorVO> blacklistownerDirectorList = new ArrayList<BlacklistOwnerDirectorVO>();					
+							if(personnelResDTO != null 
+									&& personnelResDTO.getSmPersonnelList().size() > 0){
+								for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
+									BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
+									if(personnel.isSuspendRegistration()){
+										blacklistOwner.setIcNo(personnel.getIdentificationNo());
+										blacklistownerDirectorList.add(blacklistOwner);
+									}
+								}
+								retVal.setBlacklistownerDirectorList(blacklistownerDirectorList);
+							}						
+						}
+						
+						if(disciplinaryAction.isCancelRegistration()){
+							List<BlacklistOwnerDirectorVO> blacklistownerDirectorList = new ArrayList<BlacklistOwnerDirectorVO>();
+							if(personnelResDTO != null 
+									&& personnelResDTO.getSmPersonnelList().size() > 0){
+								for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
+									BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
+									if(personnel.isCancelRegistration()){
+										blacklistOwner.setIcNo(personnel.getIdentificationNo());
+										blacklistownerDirectorList.add(blacklistOwner);
+									}
+								}
+								retVal.setBlacklistownerDirectorList(blacklistownerDirectorList);
+							}						
+						}
+						
+						if(disciplinaryAction.isBlacklistOwner()){
+							List<BlacklistOwnerDirectorVO> blacklistownerDirectorList = new ArrayList<BlacklistOwnerDirectorVO>();
+							if(personnelResDTO != null 
+									&& personnelResDTO.getSmPersonnelList().size() > 0){
+								for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
+									BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
+									if(personnel.isBlacklisted()){
+										blacklistOwner.setIcNo(personnel.getIdentificationNo());
+										blacklistownerDirectorList.add(blacklistOwner);
+									}
+								}
+								retVal.setBlacklistownerDirectorList(blacklistownerDirectorList);
+							}
+						}
+					voList.add(retVal);					
 				}
-			voList.add(retVal);
 			}
 			log.info(voList);
 		}
