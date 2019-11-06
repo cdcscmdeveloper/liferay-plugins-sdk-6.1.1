@@ -9415,15 +9415,18 @@ public class SmApplicationUtil {
 							} else {
 								List<SmMachineCategory> machineCategories = new ArrayList<SmMachineCategory>();
 								for (SmMachineDtl mac : appl.getSmMachineDtls()) {
-									if (mac.getCategoryType()
-											.getParameterId()
-											.compareTo(
-													cat.getPmCategoryL3()
-															.getCategoryTypeCode()
-															.getParameterId()) == 0) {
-										machineCategories.addAll(mac
-												.getSmMachineCategories());
+									//Bug #26616
+									if (mac.getCategoryType() != null) {
+										if (mac.getCategoryType()
+												.getParameterId()
+												.compareTo(
+														cat.getPmCategoryL3()
+																.getCategoryTypeCode()
+																.getParameterId()) == 0) {
+											machineCategories.addAll(mac
+													.getSmMachineCategories());
 
+										}
 									}
 								}
 
