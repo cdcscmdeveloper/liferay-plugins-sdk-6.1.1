@@ -95,6 +95,7 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sm.govtsellerregistration.GovtSellerRegistrationBackingBean;
+import my.ep.web.backingbean.sm.userprofilemaintenance.SmPersonnelBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.registration.RegistrationManagedBean;
@@ -1929,6 +1930,19 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				if(resDTO.getSmSupp().getSmSupplierOwners()!=null && CollectionUtils.isNotEmpty(resDTO.getSmSupp().getSmSupplierOwners())){
 					this.getManagedBean().setSmSuppOwner(resDTO.getSmSupp().getSmSupplierOwners().get(0));
 					this.getManagedBean().setSmSuppOwners(resDTO.getSmSupp().getSmSupplierOwners());
+					// for view owner
+					if(this.getManagedBean().getSmSupp().getSmAppl().isApplValidWithSsm()){
+						this.getManagedBean().setShowOwnerPersonnel(true);
+						for(SmPersonnel personnel: this.getManagedBean().getSmAppl().getSmPersonnels()){
+							if(personnel.isEquityOwner()){
+								if(personnel.getPmCountry() == null){
+									PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+									personnel.setPmCountry(defaultCountry);
+								}
+								this.getManagedBean().getSmPersonnelOwners().add(personnel);
+							}
+						}
+					}
 				}
 
 				//this.getManagedBean().setSuppBusinessNature(new SmSupplierBusiness());	
@@ -1985,6 +1999,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					ssmReqDTO.setBusinessType(this.getManagedBean().getSmSupp().getBusinessType());
 					SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
 					this.getManagedBean().setCompanyValidWithSSM(false);
+					this.getManagedBean().setShowOwnerPersonnel(false);
 					this.getManagedBean().setValidateWithSSM(true);
 					if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
 						this.getManagedBean().setStatusDescFromSSM(setStatusMessageFromSSM(ssmResDTO.getStatusFromSSM()));
