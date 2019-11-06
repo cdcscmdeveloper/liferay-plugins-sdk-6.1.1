@@ -568,6 +568,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}					
 				return;
 			}
+			
+			if(getManagedBean().getTaskId()!=null) {
+				getManagedBean().getContractListingPagingDataModel().reloadData();
+				getManagedBean().getServiceListingPagingDataModel().reloadData();
+			}
 
 			/*Retrieve bpm details*/
 			getManagedBean().setSelectedTabIndex(0);
@@ -2396,7 +2401,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				if (getManagedBean().isPbConfirmMeeting() && outputValue.equalsIgnoreCase("MET")) {
 					getManagedBean().setSelectedTabIndex(index + 1);
 				}
-				
+								
 				if ((getManagedBean().isSignUpdateDecision() || getManagedBean().isSignOffDecision()) 
 						&& outputValue.equalsIgnoreCase("DCN")) {
 					getManagedBean().setConfirmMeeting(true);
@@ -2407,6 +2412,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					} else {
 						getManagedBean().setSelectedTabIndex(index + 1);
 					}
+				}
+				if(outputValue.equalsIgnoreCase("PB")){
+					if(ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq()
+						&& ( ctBackingBean.getManagedBean().getContractVer().getCtDeductions()!= null
+						|| ctBackingBean.getManagedBean().getContractVer().getCtDeductions().size() > 0))
+					getManagedBean().setSelectedTabIndex(index + 3);
+				else
+					getManagedBean().setSelectedTabIndex(index + 2);
 				}
 							
 				if (isApproverSetting() && !getManagedBean().isPrepareLOA() && outputValue.equalsIgnoreCase("SE")
@@ -2905,9 +2918,20 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					priceOfItem.setChangeZoneLabel(true);
 					ctContractItem.getCtItemPrices().remove(index - 1);
 					ctContractItem.getCtItemPrices().add(index - 1, priceOfItem);
+					if(ctBackingBean.getManagedBean().getCtItemList() !=null){
+						for(CtContractItem ctItemList : ctBackingBean.getManagedBean().getCtItemList()){
+							ctItemList.getCtItemPrices().add(index - 1, priceOfItem);
+						}
+					}
+					
+					if(ctBackingBean.getManagedBean().getCtItemServiceList() !=null){
+						for(CtContractItem ctServiceList : ctBackingBean.getManagedBean().getCtItemServiceList()){
+							ctServiceList.getCtItemPrices().add(index - 1, priceOfItem);
+						}
+					}
 				}
 			}
-		}			
+		}		
 	}
 
 	/**
@@ -2956,6 +2980,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		this.getManagedBean().getSelectedItem().getCtItemPrices().clear();
 		this.getManagedBean().getSelectedItem().getCtItemPrices().addAll(ctItemPriceList);
 		newItemPrice(getManagedBean().getSelectedItem());
+		if(ctBackingBean.getManagedBean().getCtItemList() !=null){
+		for (CtContractItem item :ctBackingBean.getManagedBean().getCtItemList()){
+				item.getCtItemPrices().addAll(ctItemPriceList);
+			}
+		}
 		ctItemPriceList.clear();
 
 		//CT_CHANGE_LOG
@@ -3008,6 +3037,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		this.getManagedBean().getSelectedServiceItem().getCtItemPrices().clear();
 		this.getManagedBean().getSelectedServiceItem().getCtItemPrices().addAll(ctItemPriceList);
 		newItemPrice(getManagedBean().getSelectedServiceItem());
+		if(ctBackingBean.getManagedBean().getCtItemServiceList() !=null){
+		for (CtContractItem serviceItem :ctBackingBean.getManagedBean().getCtItemServiceList()){
+			serviceItem.getCtItemPrices().addAll(ctItemPriceList);
+			}
+		}
 		ctItemPriceList.clear();
 
 		//CT_CHANGE_LOG
@@ -3137,6 +3171,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		getManagedBean().getSelectedItem().getCtItemMaxQties().clear();
 		getManagedBean().getSelectedItem().getCtItemMaxQties().addAll(ctItemMaxQtyList);
 		newItemMaxQty(getManagedBean().getSelectedItem());
+		if(ctBackingBean.getManagedBean().getCtItemList() !=null){
+			for(CtContractItem ctItemList : ctBackingBean.getManagedBean().getCtItemList()){
+				ctItemList.getCtItemMaxQties().addAll(ctItemMaxQtyList);
+			}
+		}
 		ctItemMaxQtyList.clear();
 
 		//CT_CHANGE_LOG
@@ -3177,9 +3216,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				int countRow =0;
 				for (CtItemMaxQty itemMaxQty1 : ctContractItem.getCtItemMaxQties()) {
 					countRow++;
-					if (ctContractItem.getCtItemMaxQties().get(temp).getCtContractZone() != null
-							&& ctContractItem.getCtItemMaxQties().get(temp).getCtContractZone().getZoneName().equalsIgnoreCase(
-									itemMaxQty1.getCtContractZone().getZoneName())) {
+					if (ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_STANDARD)
+							|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)
+							|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TARIFF)) {
 						counter++;
 						if (counter >= 2) {
 							if (date.before(itemMaxQty1.getEffDate())) {
@@ -3194,9 +3233,49 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					maxQtyOfItem.setChangeZoneLabel(true);
 					ctContractItem.getCtItemMaxQties().remove(index-1);
 					ctContractItem.getCtItemMaxQties().add(index-1, maxQtyOfItem);
+					if(ctBackingBean.getManagedBean().getCtItemList() !=null){
+						for(CtContractItem ctItemList : ctBackingBean.getManagedBean().getCtItemList()){
+							ctItemList.getCtItemMaxQties().add(index - 1, maxQtyOfItem);
+						}
+					}
 				}
 			}
-		}			
+		}else{			
+			for (CtItemMaxQty zonelOfItem : ctContractItem.getCtItemMaxQties()) {
+			zonelOfItem.setChangeZoneLabel(false);
+		}
+		for (int temp = 0; temp<ctContractItem.getCtItemMaxQties().size(); temp++) {
+			Date date = ctContractItem.getCtItemMaxQties().get(temp).getEffDate();
+			int counter = 0;
+			int index = 0;
+			int countRow = 0;
+			for (CtItemMaxQty itemPrice1 : ctContractItem.getCtItemMaxQties()) {
+				countRow++;
+				if (ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_STANDARD)
+						|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)
+						|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TARIFF)) {
+						counter++;
+						if (counter >= 2) {
+							if (date.before(itemPrice1.getEffDate())) {
+								index = countRow;
+								date = itemPrice1.getEffDate();
+							}
+						}
+					}
+				} 
+			
+			if (index > 0) {
+				CtItemMaxQty priceOfItem = ctContractItem.getCtItemMaxQties().get(index - 1);
+				ctContractItem.getCtItemMaxQties().remove(index - 1);
+				ctContractItem.getCtItemMaxQties().add(index - 1, priceOfItem);
+				if(ctBackingBean.getManagedBean().getCtItemList() !=null){
+					for(CtContractItem ctItemList : ctBackingBean.getManagedBean().getCtItemList()){
+						ctItemList.getCtItemMaxQties().add(index - 1, priceOfItem);
+					}
+				}
+			}
+		}
+	}		
 	}
 
 	/**
@@ -3315,6 +3394,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				ctBackingBean.getManagedBean().setShowServiceItem(ParameterConst.ITEM_DISPLAY_TYPE_QTY);
 			} else {
 				ctBackingBean.getManagedBean().setShowServiceItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
+			}
+			
+			if (ctBackingBean.getManagedBean().getShowServiceItem() == null){
+				getManagedBean().setItemServiceExist(false);
 			}
 
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()) {
