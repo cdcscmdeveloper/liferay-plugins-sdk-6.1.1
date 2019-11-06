@@ -49,6 +49,7 @@ import my.ep.biz.service.ct.circular.IPanelGroupItemSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IPtjSpecialApprovalSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
@@ -76,6 +77,8 @@ import my.ep.dto.pm.authorization.orgprofile.PtjSpecialApprovalReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.PtjSpecialApprovalResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
+import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -91,6 +94,7 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
@@ -3470,5 +3474,40 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		} else {
 			return null;
 		}
+	}
+	
+	/**
+	 * Method to return true, if is printing or false if is not printing
+	 * @param category of printing only
+	 * @return	true or false
+	 **/
+	
+	public boolean isPrintedForBumiputraOnly(List<ScQtCategory> listQfCategory, boolean printed) { 
+		ICategoryCodeSO categoryCodeSO = null;
+	    try{
+	    	categoryCodeSO = BusinessDelegate.getInstance().getServiceObject(
+	    			ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
+				
+				if (!EntityHelper.isCollectionEmpty(listQfCategory)) {
+					for(ScQtCategory cat : listQfCategory){
+						if(cat.getPmCategoryL3().getCategoryL3Code() != null){
+							CategoryCodeReqDTO catCodeReqDTO = new CategoryCodeReqDTO();
+							catCodeReqDTO.setCategoryL3Id(cat.getPmCategoryL3().getCategoryL3Id());	
+							catCodeReqDTO.setIsPrinting(1);
+							//true, if is printing or false if is not printing	
+							CategoryCodeResDTO catCodeResDTO = categoryCodeSO.checkIsPrinting(catCodeReqDTO);
+							if(catCodeResDTO.isPrinting()){
+								printed = true;
+								break;
+							}
+						}
+					}
+				}
+				
+				return printed;	
+				
+	    }finally{
+	    	categoryCodeSO = null;
+	    }
 	}
 }
