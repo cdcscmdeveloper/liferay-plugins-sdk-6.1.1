@@ -308,17 +308,15 @@ public class QTSupplierQulCriteriaBackingBean extends
 		
 		qtCategoryList.add(category);
 		
-		// 20190709@hatta - 22240 - Start
-		this.getManagedBean().getQt().setOpenFor(ParameterConst.OPEN_FOR_ALL);
-		if (!EntityHelper.isCollectionEmpty(this.getManagedBean().getQtCategoryList())) {
-			for(ScQtCategory cat: this.getManagedBean().getQtCategoryList()){
-				if( (!StringUtils.isBlank(cat.getPmCategoryL2Name()) && cat.getPmCategoryL2Name().length() > 10 && cat.getPmCategoryL2Name().substring(0,10).equalsIgnoreCase("PERCETAKAN")) ){
-					this.getManagedBean().getQt().setOpenFor(ParameterConst.OPEN_FOR_BUMI);
-					break;
-				}
-			}
+		if(!EntityHelper.isCollectionEmpty(this.getManagedBean().getQtCategoryList())){
+			boolean printed = false;
+	    	printed = isPrintedForBumiputraOnly(this.getManagedBean().getQtCategoryList(),printed);
+	        if(printed){
+	        	this.getManagedBean().getQt().setOpenFor(ParameterConst.OPEN_FOR_BUMI);
+	    	}else{
+	    		this.getManagedBean().getQt().setOpenFor(ParameterConst.OPEN_FOR_ALL);
+	    	}
 		}
-		// 20190709@hatta - 22240 - End
 	}
 
 	
@@ -351,17 +349,19 @@ public class QTSupplierQulCriteriaBackingBean extends
 		this.getManagedBean().getQt().setScQtCategorys(openList);
 		this.getManagedBean().setTobeRemoveCategoryCodes(removeList);
 		
-		// 20190709@hatta - 22240 - Start
-				this.getManagedBean().getQt().setOpenFor(ParameterConst.OPEN_FOR_ALL);
-				if (!EntityHelper.isCollectionEmpty(this.getManagedBean().getQtCategoryList())) {
-					for(ScQtCategory cat: this.getManagedBean().getQtCategoryList()){
-						if( (!StringUtils.isBlank(cat.getPmCategoryL2Name()) && cat.getPmCategoryL2Name().length() > 10 && cat.getPmCategoryL2Name().substring(0,10).equalsIgnoreCase("PERCETAKAN")) ){
-							this.getManagedBean().getQt().setOpenFor(ParameterConst.OPEN_FOR_BUMI);
-							break;
-						}
-					}
-				}
-		// 20190709@hatta - 22240 - End
+		if(!EntityHelper.isCollectionEmpty(this.getManagedBean().getQtCategoryList())){
+			boolean isQuotationThresHold = false;
+			if(this.getManagedBean().getQt().getEstimatedAmount() != null){
+				isQuotationThresHold = isQuotationThresHold(this.getManagedBean().getQt().getEstimatedAmount());
+			}
+			boolean printed = false;
+	    	printed = isPrintedForBumiputraOnly(this.getManagedBean().getQtCategoryList(),printed);
+	        if( (isQuotationThresHold && isOpenForBumiputraThresHold(this.getManagedBean().getQt().getEstimatedAmount())) || printed){
+	        	this.getManagedBean().getQt().setOpenFor(ParameterConst.OPEN_FOR_BUMI);
+	    	}else{
+	    		this.getManagedBean().getQt().setOpenFor(ParameterConst.OPEN_FOR_ALL);
+	    	}
+		}
 				
 	}
 	
