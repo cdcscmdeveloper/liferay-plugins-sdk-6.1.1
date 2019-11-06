@@ -80,6 +80,7 @@ public class ViewSuppProfileManagedBean extends
 	private boolean viewFlag; 
 	private SmSupplier smSupp; 
 	private boolean viewMode; 
+	private boolean disciplinaryAction;
 	
 	private SmSupplierBank[] selectedSuppBanks;
 	private List<PmFinancialOrg> financialOrgLs;
@@ -753,6 +754,14 @@ public class ViewSuppProfileManagedBean extends
 
 	public void setSmSuppOwners(List<SmSupplierOwner> smSuppOwners) {
 		this.smSuppOwners = smSuppOwners;
+	}
+
+	public boolean isDisciplinaryAction() {
+		return disciplinaryAction;
+	}
+
+	public void setDisciplinaryAction(boolean disciplinaryAction) {
+		this.disciplinaryAction = disciplinaryAction;
 	}
 	
 }
