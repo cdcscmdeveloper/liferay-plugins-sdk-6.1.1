@@ -14,6 +14,7 @@ import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
@@ -135,22 +136,22 @@ public class YearEndProcessBackingBean extends
 			
 				for (PmStatusDesc statusDesc : statusDescs) {
 				
-				if(statusDesc.getPmStatus().getStatusId()==41000
-					||statusDesc.getPmStatus().getStatusId()==41005
-					||statusDesc.getPmStatus().getStatusId()==41010
-					||statusDesc.getPmStatus().getStatusId()==41015
-					||statusDesc.getPmStatus().getStatusId()==41020
-					||statusDesc.getPmStatus().getStatusId()==41025
-					||statusDesc.getPmStatus().getStatusId()==41400
-					||statusDesc.getPmStatus().getStatusId()==41410
-					||statusDesc.getPmStatus().getStatusId()==41500
-					||statusDesc.getPmStatus().getStatusId()==41505
-					||statusDesc.getPmStatus().getStatusId()==41510
-					||statusDesc.getPmStatus().getStatusId()==41515
-					||statusDesc.getPmStatus().getStatusId()==41520
-					||statusDesc.getPmStatus().getStatusId()==41525
-					||statusDesc.getPmStatus().getStatusId()==41900
-					||statusDesc.getPmStatus().getStatusId()==41910){
+				if(statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_SUPPLIER_ACKNOWLEDGEMENT)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_FULFILMENT)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_PARTIAL_FL)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_INVOICE)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_DAN_APPROVAL)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_PAYMENT_MATCH)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_CANCELLED)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_CANCELLED_BY_YEP)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_SUPPLIER_ACKNOWLEDGEMENT)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_FULFILMENT)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_PARTIAL_FL)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_INVOICE)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_DAN_APPROVAL)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_PAYMENT_MATCH)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_CANCELLED)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_CANCELLED_BY_YEP)){
 					
 					statusDescsYep.add(statusDesc);
 				}
@@ -193,6 +194,20 @@ public class YearEndProcessBackingBean extends
 		renewSesionObject();
 	}
 	
+	public boolean getAllowClose(Long statusId){
+		
+		
+		if(statusId.equals(FulfilmentStatusConst.PO_PENDING_INVOICE)
+				||statusId.equals(FulfilmentStatusConst.PO_PENDING_DAN_APPROVAL)
+				||statusId.equals(FulfilmentStatusConst.PO_PENDING_PAYMENT_MATCH)
+				||statusId.equals(FulfilmentStatusConst.CO_PENDING_INVOICE)
+				||statusId.equals(FulfilmentStatusConst.CO_PENDING_DAN_APPROVAL)
+				||statusId.equals(FulfilmentStatusConst.CO_PENDING_PAYMENT_MATCH)){
+				
+				return true;
+			}
+		return false;
+	}
 	
 	public String navigateToPage(){
 		
