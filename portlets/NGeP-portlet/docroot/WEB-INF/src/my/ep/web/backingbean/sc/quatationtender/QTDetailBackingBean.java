@@ -1279,10 +1279,16 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				scQt.getScQtSupplierCriteria().setScQtLocCriteria(locCriteria);
 			} 
 			//20191106@asyrafhaziq - Bug #26289 - Start
-			else {
-				//scQt.getScQtSupplierCriteria().setScQtLocCriteria(null);
-				scQt.getScQtSupplierCriteria().getScQtLocCriteria().clear();
+			Long currentStatus = scQt.getQtStatus().getStatusId();
+			if ( currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT))
+			{
+				if (this.getManagedBean().getZoneTrees() == null && this.getManagedBean().getZoneTrees().isEmpty())
+				{
+				scQt.getScQtSupplierCriteria().setScQtLocCriteria(null);
+				//scQt.getScQtSupplierCriteria().getScQtLocCriteria().clear();
+				}
 			}
+				
 			//20191106@asyrafhaziq - Bug #26289 - End
 		}
 		if (scQt.isZonal()) {
