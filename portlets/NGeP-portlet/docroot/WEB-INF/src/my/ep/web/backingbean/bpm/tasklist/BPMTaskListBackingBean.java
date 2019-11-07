@@ -596,7 +596,11 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			temp.put(SCProcessNameConst.SPEC_MAINTENANCE_PROCESS_NAME
 					+ SCProcessNameConst.SPEC_MAINTENANCE_REVISE_SCORING,
 					SourcingConstants.NAV_PAGE_SPECIFICATION_ENDORSMENT);
-			
+			// 25627
+			temp.put(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME
+					+ SCProcessNameConst.APPROVE_DO_REASSIGNMENT,
+					SourcingConstants.NAV_PAGE_DO_REASSIGNMENT_APPROVAL);
+			// 25627
 			this.getManagedBean().setBpmMap(temp);
 		}
 
