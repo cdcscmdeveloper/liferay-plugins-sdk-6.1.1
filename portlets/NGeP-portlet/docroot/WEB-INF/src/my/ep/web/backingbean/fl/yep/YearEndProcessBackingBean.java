@@ -194,6 +194,20 @@ public class YearEndProcessBackingBean extends
 		renewSesionObject();
 	}
 	
+	public boolean getAllowClose(Long statusId){
+		
+		
+		if(statusId.equals(FulfilmentStatusConst.PO_PENDING_INVOICE)
+				||statusId.equals(FulfilmentStatusConst.PO_PENDING_DAN_APPROVAL)
+				||statusId.equals(FulfilmentStatusConst.PO_PENDING_PAYMENT_MATCH)
+				||statusId.equals(FulfilmentStatusConst.CO_PENDING_INVOICE)
+				||statusId.equals(FulfilmentStatusConst.CO_PENDING_DAN_APPROVAL)
+				||statusId.equals(FulfilmentStatusConst.CO_PENDING_PAYMENT_MATCH)){
+				
+				return true;
+			}
+		return false;
+	}
 	
 	public String navigateToPage(){
 		
