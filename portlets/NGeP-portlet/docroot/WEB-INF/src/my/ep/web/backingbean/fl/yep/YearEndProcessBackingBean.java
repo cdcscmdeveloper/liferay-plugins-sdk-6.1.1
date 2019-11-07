@@ -136,22 +136,22 @@ public class YearEndProcessBackingBean extends
 			
 				for (PmStatusDesc statusDesc : statusDescs) {
 				
-				if(statusDesc.getPmStatus().getStatusId()==FulfilmentStatusConst.PO_PENDING_SUPPLIER_ACKNOWLEDGEMENT
-					||statusDesc.getPmStatus().getStatusId()==FulfilmentStatusConst.PO_PENDING_FULFILMENT
-					||statusDesc.getPmStatus().getStatusId()==FulfilmentStatusConst.PO_PENDING_PARTIAL_FL
-					||statusDesc.getPmStatus().getStatusId()==FulfilmentStatusConst.PO_PENDING_INVOICE
-					||statusDesc.getPmStatus().getStatusId()==FulfilmentStatusConst.PO_PENDING_DAN_APPROVAL
-					||statusDesc.getPmStatus().getStatusId()==FulfilmentStatusConst.PO_PENDING_PAYMENT_MATCH
-					||statusDesc.getPmStatus().getStatusId()==FulfilmentStatusConst.PO_CANCELLED
-					||statusDesc.getPmStatus().getStatusId()==FulfilmentStatusConst.PO_CANCELLED_BY_YEP
-					||statusDesc.getPmStatus().getStatusId()==FulfilmentStatusConst.CO_PENDING_SUPPLIER_ACKNOWLEDGEMENT
-					||statusDesc.getPmStatus().getStatusId()==FulfilmentStatusConst.CO_PENDING_FULFILMENT
-					||statusDesc.getPmStatus().getStatusId()==FulfilmentStatusConst.CO_PENDING_PARTIAL_FL
-					||statusDesc.getPmStatus().getStatusId()==FulfilmentStatusConst.CO_PENDING_INVOICE
-					||statusDesc.getPmStatus().getStatusId()==FulfilmentStatusConst.CO_PENDING_DAN_APPROVAL
-					||statusDesc.getPmStatus().getStatusId()==FulfilmentStatusConst.CO_PENDING_PAYMENT_MATCH
-					||statusDesc.getPmStatus().getStatusId()==FulfilmentStatusConst.CO_CANCELLED
-					||statusDesc.getPmStatus().getStatusId()==FulfilmentStatusConst.CO_CANCELLED_BY_YEP){
+				if(statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_SUPPLIER_ACKNOWLEDGEMENT)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_FULFILMENT)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_PARTIAL_FL)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_INVOICE)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_DAN_APPROVAL)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_PAYMENT_MATCH)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_CANCELLED)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_CANCELLED_BY_YEP)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_SUPPLIER_ACKNOWLEDGEMENT)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_FULFILMENT)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_PARTIAL_FL)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_INVOICE)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_DAN_APPROVAL)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_PAYMENT_MATCH)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_CANCELLED)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_CANCELLED_BY_YEP)){
 					
 					statusDescsYep.add(statusDesc);
 				}
