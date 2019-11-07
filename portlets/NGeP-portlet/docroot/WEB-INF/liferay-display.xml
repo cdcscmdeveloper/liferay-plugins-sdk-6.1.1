@@ -178,6 +178,8 @@
 			<portlet id="scSupplierInvitationSq" />
 			<portlet id="scSupplierInvitationQt" />
 			<portlet id="directPurchaseMaintenance" />
+			<portlet id="deskOfficerMaintenance">
+			<portlet id="deskOfficerMaintenanceApproval">
 		</category>
 
 		<!-- Fulfilment Start Added by Giri -->
