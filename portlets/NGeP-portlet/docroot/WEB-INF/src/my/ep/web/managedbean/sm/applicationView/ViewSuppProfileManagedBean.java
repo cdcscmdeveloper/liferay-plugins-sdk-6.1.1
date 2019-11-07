@@ -65,6 +65,7 @@ public class ViewSuppProfileManagedBean extends
 	private boolean hasMofExpiryDateChanged = false;
 	private Long existingStatusId;
 	//26238 - start
+	private boolean warningExist;
 	private boolean warning;
 	private boolean cancelCategoryCode;
 	private boolean suspendRegistration;
@@ -746,7 +747,7 @@ public class ViewSuppProfileManagedBean extends
 
 	public void setSelectedBusinessNature(SmSupplierBusiness selectedBusinessNature) {
 		this.selectedBusinessNature = selectedBusinessNature;
-	} //26238 - END
+	} 
 
 	public List<SmSupplierOwner> getSmSuppOwners() {
 		return smSuppOwners;
@@ -763,5 +764,13 @@ public class ViewSuppProfileManagedBean extends
 	public void setDisciplinaryAction(boolean disciplinaryAction) {
 		this.disciplinaryAction = disciplinaryAction;
 	}
+
+	public boolean isWarningExist() {
+		return warningExist;
+	}
+
+	public void setWarningExist(boolean warningExist) {
+		this.warningExist = warningExist;
+	} //26238 - END
 	
 }
