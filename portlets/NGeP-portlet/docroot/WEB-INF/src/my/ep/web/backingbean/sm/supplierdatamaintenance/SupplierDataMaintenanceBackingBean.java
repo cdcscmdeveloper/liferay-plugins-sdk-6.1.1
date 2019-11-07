@@ -166,6 +166,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setOverLappedCategoryMsg("");
 		getManagedBean().setOverLappedCategoryExists(false);
 		//26238 - start
+		retrieveAllDisciplinaryAction();
 		getOwnerAndDirectorList(); 
 		getManagedBean().setFinancialOrgLs(retrieveFinancialOrgList());
 		getManagedBean().setSmSupp(getManagedBean().getSmSupplier());
@@ -1802,8 +1803,7 @@ public class SupplierDataMaintenanceBackingBean extends
 						}
 					}
 				voList.add(retVal);
-				}
-				
+				}				
 			}
 		}
 		return voList;
@@ -2254,6 +2254,20 @@ public class SupplierDataMaintenanceBackingBean extends
 		if (loadBranchGst) {
 			SmApplicationUtil.initBranchGstInformation(
 					managedBean.getSmGstSupplier(), managedBean.getSmAppl());
+		}
+	}
+	
+	public void retrieveAllDisciplinaryAction(){
+		SmSupplier supplier = getManagedBean().getSmSupplier();
+		if(supplier != null){
+			List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(supplier);
+			if(discList.size() > 0){
+				for(SmDisciplinaryAction disc : discList){
+					if(disc.isWarning()){
+						getManagedBean().setWarningExist(true);
+					}
+				}
+			}
 		}
 	}
 	//26238 - end
