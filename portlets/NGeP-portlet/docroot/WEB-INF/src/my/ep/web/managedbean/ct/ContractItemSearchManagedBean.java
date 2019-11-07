@@ -10,9 +10,11 @@ import javax.faces.context.FacesContext;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.dtl.ContractItemReqDTO;
 import my.ep.dto.ct.dtl.ContractItemResDTO;
 import my.ep.factory.EpLogger;
@@ -114,17 +116,27 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 				//log.info("*****ServiceListingPagingDataModel******"+"servicecollapse--->"+servicecollapse+"prodcollapse"+prodcollapse);
 				//log.info("*****ServiceListingPagingDataModel******"+"isServicecollapse--->"+isServicecollapse()+"isProdcollapse"+isProdcollapse());
 				//private String contractId = null;
+				IContractSO	contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+				ContractReqDTO ctReqDTO  = new ContractReqDTO();	
 				
 				ContractBackingBean contractBb=new ContractBackingBean();
 				
 				Long contId=contractBb.getManagedBean().getContractVer().getCtContract().getContractId();
 				Long contractVerId=null;
-				if(contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId()
-						.equals(contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId())){
-							contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();	
-						}else {
-							contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId();	
-						}
+				contractVerId = contractBb.getManagedBean().getContractVer().getContractVerId();				
+				log.info("**SuspensionProductListingPagingDataModel******ContractID **--> : "+contId);
+				log.info("**SuspensionProductListingPagingDataModel******ContractVerID **--> : "+contractVerId);
+				
+				if(contractVerId==null){
+					ctReqDTO.setContractId(contId);
+					 contractVerId = contractSO.getLatestContractVer(ctReqDTO).getCtContractVer().getContractVerId();					
+				}
+//				if(contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId()
+//						.equals(contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId())){
+//							contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();	
+//						}else {
+//							contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId();	
+//						}
 				
 			  if(contId!=null ){
 					
