@@ -894,7 +894,7 @@ public class SmApplicationBackingBean extends
 				if (currSupp != null){
 					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
 //					SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionBySupplier(supReqDTO);
-					if(activeDisc.size() > 0 || activeDisc != null){
+					if(activeDisc != null && activeDisc.size() > 0){
 						for(SmDisciplinaryAction disciplinary : activeDisc){
 							if(disciplinary.isSuspendRegistration() 
 									|| disciplinary.isCancelRegistration()
