@@ -5,9 +5,19 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<p:dialog id="dlTaskReassignment" position="top"
+	<style>
+		.doReassignUserDialog{
+			position: absolute !important; 
+			left: 25% !important; 
+			top: 5% !important; 
+			width: 50% !important; 
+			max-width:550px !important; 
+		}
+	</style>
+	<p:dialog id="dlTaskReassignment" 
 		header="#{lbl['lbl.pm.ta.task.reassignment']}" modal="true"
-		widgetVar="dlTaskReassignment" dynamic="true" style="width: 1000px !important;">
+		widgetVar="dlTaskReassignment" dynamic="true" 
+		styleClass="doReassignUserDialog">
 		<!-- Validation Message -->
 		<p:blockUI block="dlTaskReassignment" widgetVar="taskReassignPopupBlockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
@@ -21,13 +31,14 @@
 					cellspacing="0">
 					<p:outputLabel id="searchPtjLbL" value="#{lbl['lbl.sc.ptj']}" />
 					<ac:lov id="ptj" lovId="PM_ORG_PROFILE_AUTH_TYPE"
-							size="135" readonly="true"
+							size="60" readonly="true"
 							headerText="#{lbl['lbl.sc.ptj']}" 
 							value="#{DOMaintenanceBackingBean.managedBean.doMaintenanceSearchBean.ptjProfile.orgName}"
 							postUpdateListener="DOMaintenanceBackingBean.postUpdateOrgProfileListener"
 							update="@form"
 							saveObject="DOMaintenanceBackingBean.managedBean.doMaintenanceSearchBean.ptjProfile"
-							conditionField="recordStatus^1" />
+							conditionField="recordStatus^1" 
+							disabled="true"/>
 					<ui:remove>
 						<p:outputLabel value="#{lbl['lbl.pm.ta.doc.type']}" />
 						<p:inputText label="#{lbl['lbl.pm.ta.doc.type']}" disabled="true"

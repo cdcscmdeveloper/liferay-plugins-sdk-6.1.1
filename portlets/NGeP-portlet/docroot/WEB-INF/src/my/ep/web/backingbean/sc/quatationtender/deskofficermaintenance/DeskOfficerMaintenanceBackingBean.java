@@ -513,6 +513,8 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 			if (log.isDebugEnabled()) {
 				log.debug("pageChangeListener");
 			}
+			getManagedBean().setSelectedQtIds(new ArrayList<Long>());
+			getManagedBean().setQtNoDeskOfficerMap(null);
 			IQTDetailSO detailSO;
 			IQTSuppFinalizationSO sfDetailSO;
 			try {
@@ -837,23 +839,24 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 		}
 		if (getManagedBean().getSelectedQtIds().contains(qtId)) {
 			getManagedBean().getSelectedQtIds().remove(qtId);
+			if(getManagedBean().getQtNoDeskOfficerMap()!=null){
+				if(getManagedBean().getQtNoDeskOfficerMap().get(qtId)!=null){
+					getManagedBean().getQtNoDeskOfficerMap().remove(qtId);
+				}
+			}
 		} else {
 			getManagedBean().getSelectedQtIds().add(qtId);
 		}
 		
-		if (getManagedBean().getSelectedQtIds().size() > 0) {
+		if (CollectionUtils.isNotEmpty(getManagedBean().getSelectedQtIds())) {
 			getManagedBean().setDisableAssignTo(false);
 			if (null != getManagedBean().getQtNoDeskOfficerMap()) {
 				boolean disableSubmit = false;
 				for (Long qtIde : getManagedBean().getSelectedQtIds()) {
 					PmUser selectedUser = getManagedBean().getQtNoDeskOfficerMap().get(qtIde);
-					if(selectedUser!=null){
-						if (null != selectedUser.getUserName()) {
-							disableSubmit = false;
-						} else {
-							disableSubmit = true;
-							break;
-						}
+					if(selectedUser==null){
+						disableSubmit = true;
+						break;
 					}
 				}
 				getManagedBean().setDisableSubmit(disableSubmit);
@@ -862,6 +865,7 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 			getManagedBean().setDisableAssignTo(true);
 			getManagedBean().setDisableSubmit(true);
 		}
+
 	}
 	
 	/**
@@ -1014,10 +1018,11 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 								MessageUtils.getMessage("ERR-760493", null,
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
+				getManagedBean().setDisableSubmit(true);
 			}else{
+				getManagedBean().setDisableSubmit(false);
 				RequestContext.getCurrentInstance().execute("dlTaskReassignment.hide()");
 			}
-			getManagedBean().setDisableSubmit(false);
 		}
 	}
 	
@@ -1059,7 +1064,7 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 		this.userListDataModel = userListDataModel;
 	}
 	
-	public String submitReassignmentForApproval(PmDigiSign digisign){
+	public void submitReassignmentForApproval(PmDigiSign digisign){
 		QuationTenderResDTO resDTO  = null;
 		try{
 			IQTDetailSO detailSO= BusinessDelegate.getInstance().getServiceObject(
@@ -1103,20 +1108,21 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 			String msgCode = this.isCommitteeApprover() ? "INFO-760490" : "INFO-760492";
 			if(successCount ==  this.getManagedBean().getQtNoDeskOfficerMap().size()){
 			
-				FacesContext.getCurrentInstance().addMessage(
+				FacesContext fc = FacesContext.getCurrentInstance();
+				fc.addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 								MessageUtils.getMessage(msgCode, null,
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
+				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
+
 			}	
-			this.reset();
 		}catch(EpException e){
 			handleException(new EpException(MessageConst.ERROR_000001));
 		}finally{
 			resDTO = null;
 		}
-		return CommonUIConst.ACKNOWLEDGE_PAGE;
 	}
 	
 	public void preRenderApprovalView(){
@@ -1154,10 +1160,26 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 				}
 			}
 			
-			initializeRemarks(getManagedBean().getCurrentApproval(), 
-					currentStatus, 
-					getManagedBean().getCurrentApproval().getScQtApprovalRemarks(),
-					ScQtApprovalRemark.class);
+			if(CollectionUtils.isEmpty(getManagedBean().getCurrentApproval().getScQtApprovalRemarks())){//BYPASS DEFAULT REMARK INIT
+				getManagedBean().getCurrentApproval().setScQtApprovalRemarks(new ArrayList<ScQtApprovalRemark>());
+			}else{
+				for(ScQtApprovalRemark remark: getManagedBean().getCurrentApproval().getScQtApprovalRemarks()){
+					remark.setBrandNew(false);
+					remark.setEditable(false);
+				}
+			}		
+			ScQtApprovalRemark remark = new ScQtApprovalRemark();
+			remark.setCreatedBy(getFacesScopes().getUserSessionBean()
+					.getUserId());
+			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			remark.setChangedBy(remark.getCreatedBy());
+			remark.setCreatedUser(getFacesScopes().getUserSessionBean());
+			remark.setParent(getManagedBean().getCurrentApproval());
+			getManagedBean().getCurrentApproval().getScQtApprovalRemarks().add(0, remark);
+//			initializeRemarks(getManagedBean().getCurrentApproval(), 
+//					currentStatus, 
+//					getManagedBean().getCurrentApproval().getScQtApprovalRemarks(),
+//					ScQtApprovalRemark.class);
 			
 			this.getManagedBean().setPayLoad(payload);
 			this.getManagedBean().setCurrentApprovalRequest(currentApprovalRequest);
@@ -1323,4 +1345,10 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 		}
 	}
 	
+	public void preRenderDeskReassignmentView(){
+		this.reset();
+		String page = "/xhtml/sc/quatationtender/deskOfficerMaintenance/deskOfficerMaintenance.xhtml";
+		FacesContext context = FacesContext.getCurrentInstance();
+		context.getApplication().getNavigationHandler().handleNavigation(context, null, page);
+	}
 }
