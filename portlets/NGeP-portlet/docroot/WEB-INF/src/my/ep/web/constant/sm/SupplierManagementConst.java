@@ -1177,7 +1177,10 @@ public class SupplierManagementConst {
 	public long getPM_STATUS_PO_REVIEW() {
 		return PM_STATUS_PO_REVIEW;
 	}
-	
-	
-	
+
+//25792 - start
+	public String getSmSupplierBusinessTypeIndividual() {
+		return SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL;
+	}
+//25792 - end	
 }
