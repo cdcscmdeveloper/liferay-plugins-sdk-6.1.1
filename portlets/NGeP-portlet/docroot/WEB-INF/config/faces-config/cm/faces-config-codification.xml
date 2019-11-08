@@ -109,6 +109,11 @@
 		<managed-bean-class>my.ep.web.constant.cm.CmConst</managed-bean-class>
 		<managed-bean-scope>application</managed-bean-scope>
 	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>cmConstant</managed-bean-name>
+		<managed-bean-class>my.ep.constant.cm.CmConst</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
 
 
 </faces-config>
