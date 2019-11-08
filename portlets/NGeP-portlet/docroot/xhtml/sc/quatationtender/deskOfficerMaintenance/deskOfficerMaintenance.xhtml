@@ -1,11 +1,20 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition 
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc">
-	
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	<ui:define name="contentSection">
+		<style>
+		.ui-dialog{
+			width: 50% !important; 
+			max-width:550px !important; 
+		}
+	</style>
 	<p:messages showDetail="true"
 			autoUpdate="#{simpleQuoteBackingBean.managedBean.autoUpdate}"
 			closable="true" severity="error, info" showSummary="false" />
@@ -16,7 +25,6 @@
 	<ac:gpkiPopup beforeSignText="#{DOMaintenanceBackingBean.textBeforeSign}"
 				postSignAction="#{DOMaintenanceBackingBean.submitReassignmentForApproval(gpkiBackingBean.pmDigiSign)}"
 				enableAutoUpdate="#{DOMaintenanceBackingBean.enableAutoUpdate()}" />
-				
 	<p:panel header="#{lbl['lbl.sc.search']}" toggleable="true"
 			id="qtsearchid">		
 		<ui:param name="screenName" value="QT"></ui:param>
@@ -44,8 +52,7 @@
 					
 					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:6%;text-align: center;">
 						<p:selectBooleanCheckbox disabled="#{!scQt.selectable}" id="selectAllItemsByItem" value="#{scQt.selected}">
-								<p:ajax partialSubmit="true" process="@this" immediate="true" update="@([id$=taskReassignBtn], [id$=taskReassignSubmitBtn])" 
-									listener="#{DOMaintenanceBackingBean.selectedQtId(scQt.qtId)}" />
+								<p:ajax listener="#{DOMaintenanceBackingBean.selectedQtId(scQt.qtId)}" update=":#{p:component('taskReassignBtn')},  :#{p:component('taskReassignSubmitBtn')}, :#{p:component('searchQTs')} " />
 						</p:selectBooleanCheckbox>
 					</p:column>
 					
@@ -106,5 +113,6 @@
 						disabled="#{DOMaintenanceBackingBean.managedBean.disableSubmit}" onstart="doSearchBlockWidget.show()" oncomplete="doSearchBlockWidget.hide()"/>
 			</div>
 		</p:panel>
-		<ui:include src="deskOfficerTaskReassignPopup.xhtml" />
+			<ui:include src="deskOfficerTaskReassignPopup.xhtml" />
+	</ui:define>		
 </ui:composition>
