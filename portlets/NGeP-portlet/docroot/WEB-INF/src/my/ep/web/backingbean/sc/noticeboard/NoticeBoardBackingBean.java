@@ -2336,7 +2336,9 @@ public class NoticeBoardBackingBean extends
 						ScQtBsvAttendance attendance = new ScQtBsvAttendance();
 						// attendance.setPreRegisterd(true);
 						attendance.setAuthorized(true);
-						attendance.setContactNo(smPersonal.getPhoneNo());
+						//Start Bug #26525
+						attendance.setContactNo(smPersonal.getPhoneFull());
+						//End Bug #26525
 						attendance.setIcPassPort(smPersonal.getIdentificationNo());
 						attendance.setEmail(smPersonal.getEmail());
 						attendance.setName(smPersonal.getName());
