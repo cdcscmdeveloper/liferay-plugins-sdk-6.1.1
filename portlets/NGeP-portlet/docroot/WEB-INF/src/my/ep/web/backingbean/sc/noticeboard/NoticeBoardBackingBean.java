@@ -1121,6 +1121,17 @@ public class NoticeBoardBackingBean extends
 				supplierReqDTO.setQtId(qtId);
 				NoticeBoardResDTO supplierResDTO = boardSO
 						.retrieveQtSupplierByQtIdNSupplierId(supplierReqDTO);
+				
+				//start Bug #26764
+				if(!supplierResDTO.isSuccessful()){			
+					supplierReqDTO.setSmSupplier(supplier);					
+					NoticeBoardResDTO suppMissingLinkResDTO = boardSO.inviteMissingSupplier(supplierReqDTO);
+					if (suppMissingLinkResDTO.isSuccessful()){
+						supplierResDTO = boardSO.retrieveQtSupplierByQtIdNSupplierId(supplierReqDTO);			
+					}
+				}
+				//end Bug #26764
+				
 				if(supplierResDTO.isSuccessful()){
 					// Value will be present when supplier rejected for prepare proposal
 					// while doing bsv registration by DO
