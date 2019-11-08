@@ -919,7 +919,9 @@ this.getManagedBean().setSelectedbriefRegistrationEnableDisable(briefingRegistra
 				briefingAttendance.setName(personnel.getName());
 				briefingAttendance.setIcPassPort(personnel
 						.getIdentificationNo());
-				briefingAttendance.setContactNo(personnel.getMobileNo());
+				//Start Bug #26525
+				briefingAttendance.setContactNo(personnel.getPhoneFull());
+				//End Bug #26525
 				briefingAttendance.setEmail(personnel.getEmail());
 				briefingAttendance.setBsvRegistration(briefingRegistration);
 				briefingAttendance.setAuthorized(true);
@@ -1130,7 +1132,9 @@ this.getManagedBean().setSelectedbriefRegistrationEnableDisable(briefingRegistra
 				briefingAttendance.setName(personnel.getName());
 				briefingAttendance.setIcPassPort(personnel
 						.getIdentificationNo());
-				briefingAttendance.setContactNo(personnel.getMobileNo());
+				//Start Bug #26525
+				briefingAttendance.setContactNo(personnel.getPhoneFull());
+				//end Bug #26525				
 				briefingAttendance.setEmail(personnel.getEmail());
 				briefingAttendance.setBsvRegistration(briefingRegistration);
 				briefingAttendance.setAuthorized(true);
