@@ -1736,7 +1736,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelBySupplierId(perReqDTO);
 		
 		List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(currSupp);
-		if (!EntityHelper.isCollectionEmpty(resultList)
+		if (resultList != null
 				&& resultList.size() > 0) {
 			for(SmDisciplinaryAction disciplinaryAction: resultList){
 				if(disciplinaryAction.isWarning() || disciplinaryAction.isCancelCategory() 
@@ -2261,7 +2261,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		SmSupplier supplier = getManagedBean().getSmSupplier();
 		if(supplier != null){
 			List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(supplier);
-			if(discList.size() > 0){
+			if(discList != null && discList.size() > 0){
 				for(SmDisciplinaryAction disc : discList){
 					if(disc.isWarning()){
 						getManagedBean().setWarningExist(true);
