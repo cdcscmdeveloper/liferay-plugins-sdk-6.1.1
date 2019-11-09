@@ -90,9 +90,9 @@
 					value="#{registrationBackingBean.getParameterDesc(SupplierManagementConst.supplierBusinessType,registrationBackingBean.managedBean.smSupp.businessType)}" 
 					rendered="#{registrationBackingBean.managedBean.disabledBusinessTypeInMaintenance}" />
 					&#160;
-					<p:graphicImage id="typeofbusiness" value="/css/images/design/tooltips.png" rendered="#{registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.INDIVIDUAL_FLAG}"/>
-					<p:tooltip id="businesscomtype" for="typeofbusiness" rendered="#{registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.INDIVIDUAL_FLAG}">						
-					<p:outputLabel escape="false" rendered="#{registrationBackingBean.managedBean.smAppl.applType eq SupplierManagementConst.ACC_BASIC and registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.INDIVIDUAL_FLAG}"
+					<p:graphicImage id="typeofbusiness" value="/css/images/design/tooltips.png" />
+					<p:tooltip id="businesscomtype" for="typeofbusiness" >						
+					<p:outputLabel escape="false" rendered="#{registrationBackingBean.managedBean.smAppl.applType eq SupplierManagementConst.ACC_BASIC}"
 							value="#{lbl['tt.sm.registration.business.basic.company.type']}" />
 						<p:outputLabel escape="false" rendered="#{registrationBackingBean.managedBean.smAppl.applType eq SupplierManagementConst.ACC_MOF}"
 							value="#{lbl['tt.sm.registration.business.mof.company.type']}" />	
