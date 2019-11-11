@@ -5015,8 +5015,13 @@ public class SmApplicationUtil {
 	 */
 	public static void setNavigationForApplTnCPage(String applType) {
 		FacesContext fc = FacesContext.getCurrentInstance();
+		String s = setStringNavigationForApplTnCPage(applType);
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, s);
+	}
+	
+	public static String setStringNavigationForApplTnCPage(String applType){
 		String s = "";
-
 		switch (applType) {
 		case "N":
 			s = SupplierManagementConst.PROCEED_MOF_REG_TNC_PAGE;
@@ -5048,8 +5053,7 @@ public class SmApplicationUtil {
 					+ applType);
 			break;
 		}
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, s);
+		return s;
 	}
 
 	/**
