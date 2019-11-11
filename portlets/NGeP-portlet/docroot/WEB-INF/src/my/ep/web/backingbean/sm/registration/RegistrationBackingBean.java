@@ -1895,6 +1895,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 
 		if(pmUser.getUserId().longValue() != 1 || pmUser == null){
+			
+			
 			SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
 			//846846516516
 			//PmUser pmUser = new FacesScopes().getUserSessionBean();
@@ -2003,6 +2005,19 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					this.getManagedBean().setShowOwnerPersonnel(false);
 					this.getManagedBean().setValidateWithSSM(true);
 					if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
+						//POPUP USER NOT SSM OWNER #26734  START
+						FacesScopes facesScope = new FacesScopes();
+						PmUser userSession = facesScope.getUserSessionBean();
+						if(userSession != null){
+							SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
+							if(personnelSSM == null) {								
+								RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
+								fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlineAccount/accountMaintenanceTermAndCond.xhtml");
+								return;
+							}
+						}
+						// #26734 - END
+						
 						this.getManagedBean().setStatusDescFromSSM(setStatusMessageFromSSM(ssmResDTO.getStatusFromSSM()));
 						if(!ssmResDTO.getStatusFromSSM().equalsIgnoreCase("A") && !ssmResDTO.getStatusFromSSM().equalsIgnoreCase("E")){
 							//					throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.contractor",null), getManagedBean().getSmSupp().getRegNo()});
