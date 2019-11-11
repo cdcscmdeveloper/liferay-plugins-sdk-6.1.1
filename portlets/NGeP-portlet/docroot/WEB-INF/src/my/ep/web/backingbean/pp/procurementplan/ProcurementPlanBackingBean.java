@@ -73,6 +73,8 @@ import my.ep.persistence.entity.pp.procurementplan.PpProcurementItem;
 import my.ep.persistence.entity.pp.procurementplan.PpRejectReason;
 import my.ep.persistence.entity.pp.procurementplan.PpRemark;
 import my.ep.persistence.entity.pp.procurementplan.PpWorkflowStatus;
+//#24975
+import my.ep.persistence.entity.pp.procurementplan.PpUpdateReason;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
@@ -496,6 +498,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setApprovedPlan(false);
 		this.getManagedBean().setBtnValue(null);
 		this.getManagedBean().setTrackingDiary(false);
+		this.getManagedBean().setSelectedUpdateReasons(null);
 		
 		//EP
 		this.getManagedBean().setEpItemsB(null);
@@ -836,7 +839,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						if(ppPlan.getLastApprovedDt().equals(ppItem.getCreatedDate()) 
 								|| ppPlan.getLastApprovedDt().after(ppItem.getCreatedDate())){
 							log.info("[SIR#12802] - item has an approval history");
-							ppItem.setSelectable(false); //disabled checkbox							
+							ppItem.setSelectable(false); //disabled checkbox
+							//#25975
+							//ppItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);	//190919 set if approved, auto update status = inactive
+							ppItem.setEditable(false); 
 						} else {
 							log.info("[SIR#12802] - item pending for approval");
 							ppItem.setSelectable(true); //enabled checkbox
@@ -2040,6 +2046,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		String docType = "";
 		PpRemark remark = null;
 		boolean brandNew = false;
+		//#24975
+		List <PpUpdateReason> updateReasons = null;
 		
 		try{
 			reqDTO = new ProcurementPlanReqDTO();
@@ -2049,7 +2057,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			
 			//Validation
 			validationPlanSubmit(action, ppPlan);
-			if(ppPlan.isBrandNew()){
+			if(brandNew){
 				//comment this for testing purpose only
 				validationPlanAvailability(ppPlan);  
 			}
@@ -2087,6 +2095,16 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					rejectReasons = getAllRejectionReasons(ppPlan);
 					if(rejectReasons!=null && !rejectReasons.isEmpty()){
 						reqDTO.setRejectReasonList(rejectReasons);
+					}
+				}
+				//#24975
+				updateReasons = getAllUpdateReasons(ppPlan);
+				//getAllUpdateReasons(ppPlan);
+							
+				if (BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(action)) {
+					updateReasons = getAllUpdateReasons(ppPlan);
+					if (updateReasons!= null && !updateReasons.isEmpty()) {
+						reqDTO.setUpdateReasonList(updateReasons);
 					}
 				}
 			}
@@ -4650,6 +4668,243 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				//log.info("[SIR#12802] - item list size AFTER: " + pplan.getPpProcurementItems().size());
 			}
 		}
+	}
+	
+	//#24975
+	/**
+	 * This method used to invoke 
+	 * and initiate the item specification dialog.
+	 */
+	public void viewreasonUpdateDlg() {
+		//getManagedBean().setSelectedItemForSpec(ctContractItem);
+		log.info("view dialog");
+		RequestContext.getCurrentInstance().execute("reasonUpdateDlg.show()");
+	}
+	
+	/**
+	 * The method used for rendering the item price
+	 * of selected service item that to be displayed on screen.
+	 * @param list 
+	 * @param 
+	 * @return 
+	 */
+
+    public PpProcurementItem addUpdateInfo(PpPlan PpPlan, List<PpProcurementItem> ProcurementList, Integer index) {
+    	log.info("addUpdateInfo");
+ 		    	   	
+    	if (this.getManagedBean().getSelectedPlan().getPlanYear() == null) {	
+    		throw new EpException(MessageConst.ERROR_730028);
+    	}
+    	if (this.getManagedBean().getSelectedPlan().getPpProcurementItems() == null) {
+    		this.getManagedBean().getSelectedPlan().
+    		setPpProcurementItems(new ArrayList<PpProcurementItem>());
+    	}
+
+    	validatePpItem(); // disabled this if no validation required at this stage
+
+    	// validate reason to update
+    	
+    	/*if(this.getManagedBean().getSelectedPlan().getPpProcurementItems().get(index).getPpUpdateReasons() == null){
+    		throw new EpException(MessageConst.ERROR_730031);    		
+    	}*/
+    	
+    	PpProcurementItem ppItem = new PpProcurementItem();
+    	//ppItem.setProcurementCat(new PmParameter());
+    	//ppItem.setProcurementType(new PmParameter());
+    	//ppItem.setEditable(true);
+    	  	
+    	log.info("index 0 : " + index); 			// index before click
+    	//log.info("PpProcurementItem index : " + PpPlan.getPpProcurementItems().get(index).getProcurementItemId());
+
+    	
+    	if (Calendar.getInstance().get(Calendar.YEAR) == 
+    			this.getManagedBean().getSelectedPlan().getPlanYear()) { 
+    		ppItem.setInvitationDate(new Date());
+    	} else { 
+    		log.info("Next year");
+    		int nextYear = Calendar.getInstance().get(Calendar.YEAR);
+    		Calendar date = new GregorianCalendar((nextYear+1), Calendar.JANUARY, 1);
+    		ppItem.setInvitationDate(date.getTime());
+    	}    	 
+    	
+    	log.info("index 1 : " + index); 
+    	
+    	if (index < ProcurementList.size()) {   // changes for row after added one
+    		ppItem = (PpProcurementItem) ProcurementList.get(index).cloneEntity();
+    		
+    		index = index + 1 ;
+    	    ProcurementList.add(index, ppItem);
+     		ppItem.setProcurementItemId(null);
+    		ppItem.setEditable(true);
+    		ppItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+		}
+    	
+    	index = index - 1 ;
+    	 
+    	PpProcurementItem prevProcurementItem = (PpProcurementItem) ProcurementList.get(index);
+    	prevProcurementItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+		
+		log.info("new item list...");
+		for (int i = 0; i < ProcurementList.size(); i++) {
+			log.info("index i : " + i);
+
+			ppItem = ProcurementList.get(i);
+			ppItem.setProcurementOrderNo(i);
+			
+			log.info("title : " + ppItem.getProcurementTitle());
+			log.info("status :  " + ppItem.getRecordStatusFlg());
+			log.info("procurement order :  " + ppItem.getProcurementOrderNo());
+		}
+		//log.info("PpPlan.getPpProcurementItems 2 size  = "+PpPlan.getPpProcurementItems().size());
+		return ppItem;
+	}
+    
+    /**
+	 * retrieve pp reject reason
+	 * @param ppItem
+	 */
+	public void retrievePpUpdateReasons(PpProcurementItem ppItem){
+		log.info("retrievePpUpdateReasons");
+		log.info("pp item " + ppItem.getProcurementDesc());
+	if(!ppItem.isBrandNew()){
+		if(ppItem.getPpUpdateReasons()==null || ppItem.getPpUpdateReasons().isEmpty()){
+			ppItem.setPpUpdateReasons(new ArrayList<PpUpdateReason>());
+//			ppItem.setPpRejectReasons(PpCommonUtil.retrieveRejectReason(ppItem.getProcurementItemId(), ParameterConst.DOCTYPE_PLAN_PROCUREMENT));
+		}
+	}
+		loadUpdateReasons(ppItem.getPpUpdateReasons());
+		//loadUpdateReasons(ppItem);
+	}
+
+	/**
+	 * Initial or load reject reasons
+	 * @param ppUpdateReasons
+	 */
+	
+	public void loadUpdateReasons(List<PpUpdateReason> ppUpdateReasons) {
+		log.info("loadUpdateReasons - Start");
+		this.getManagedBean().setConfirmReason(false);
+		this.getManagedBean().setSelectedReasonDesc("");
+		this.getManagedBean().setSelectedUpdateReasons(null);
+		boolean newReason = false;
+		
+		if(ppUpdateReasons==null){
+			//ppItem.setPpUpdateReasons(new ArrayList<PpUpdateReason>());
+			ppUpdateReasons = new ArrayList<PpUpdateReason>();
+		}
+		
+		if (!ppUpdateReasons.isEmpty()){
+			if(!ppUpdateReasons.get(0).isBrandNew()){
+				newReason = true;
+			}
+		}
+
+		// if reason is empty
+		if (ppUpdateReasons.isEmpty() || ppUpdateReasons.size() == 0) {
+			newReason = true;
+		}
+		
+		//if(newReason && this.getManagedBean().isModeReviewEditable()){
+		if (newReason) {
+			log.info("new reason added");
+			PpUpdateReason reason = new PpUpdateReason();
+			reason.setEditable(true);
+			reason.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+			reason.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			reason.setChangedBy(reason.getCreatedBy());
+			reason.setChangedDate(reason.getCreatedDate());
+			reason.setCreatedUsername(getFacesScopes().getUserSessionBean().getUserName());
+			reason.setPpWorkflowStatus(this.getManagedBean().getSelectedPlan().getCurrentStatus());
+			PmRole roleCode = new PmRole();
+			roleCode.setRoleCode(getOneRoleByStatus(this.getManagedBean().getSelectedPlan()));
+			reason.setRoleCode(roleCode);
+			//reason.setDocId(ppUpdateReasons.getProcurementItemId());
+			ppUpdateReasons.add(0, reason);
+			//ppItem.getPpUpdateReasons().add(0, reason);
+			log.info("doc id : " + reason.getDocId());
+		}
+	
+		this.getManagedBean().setSelectedUpdateReasons(ppUpdateReasons);
+		this.getManagedBean().setSelectedReasonDesc(ppUpdateReasons.isEmpty() ? "": ppUpdateReasons.get(0).getReasonDesc());
+		
+		log.info("loadUpdateReasons - End");
+	}
+	
+	/**
+	 * Get new rejection reason from UI
+	 * @param ppPlan
+	 * @return List <PpUpdateReason>
+	 */
+	private List <PpUpdateReason> getAllUpdateReasons(PpPlan ppPlan) {
+		log.info("getAllUpdateReasons");
+		List <PpUpdateReason> updateReasons = new ArrayList<PpUpdateReason>();
+		List <PpRejectReason> rejectReasons = new ArrayList<PpRejectReason>();
+		if (ppPlan.getStatus() != null 
+				&& (ProcurementPlanConst.PPP_PENDING_VERIFICATION.equals(ppPlan.getStatus().getStatusId())
+						|| ProcurementPlanConst.PPP_PENDING_APPROVAL.equals(ppPlan.getStatus().getStatusId())
+						|| ProcurementPlanConst.PPE_PENDING_APPROVAL.equals(ppPlan.getStatus().getStatusId()))
+						|| ProcurementPlanConst.PPP_PENDING_REVISION_APPROVAL.equals(ppPlan.getStatus().getStatusId())
+						|| ProcurementPlanConst.PPP_PENDING_REVISION_VERIFICATION.equals(ppPlan.getStatus().getStatusId())
+						|| ProcurementPlanConst.PPE_PENDING_REVISION_APPROVAL.equals(ppPlan.getStatus().getStatusId())
+				) {
+			if (ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())) {
+				for (PpProcurementItem ppProcurementItem : ppPlan.getPpProcurementItems()) {
+					if (ppProcurementItem.getPpUpdateReasons()!= null && !ppProcurementItem.getPpUpdateReasons().isEmpty()) {
+						PpUpdateReason updateReason = ppProcurementItem.getPpUpdateReasons().get(0);
+						if (updateReason != null && 
+								!StringUtils.isBlank(updateReason.getReasonDesc())) { //&& rejectReason.isBrandNew() add this for phase 2
+							updateReason.setDocId(ppProcurementItem.getProcurementItemId());
+							updateReason.setDocType(ParameterConst.DOCTYPE_PLAN_PROCUREMENT);
+							updateReasons.add(updateReason);
+						}
+					}
+				}
+			}
+			else if (ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())) {
+				for (PpExpenditureItem ppExpenditureItem : ppPlan.getPpExpenditureItems()){
+					if (ppExpenditureItem.getPpUpdateReason() != null && 
+							!ppExpenditureItem.getPpUpdateReason().isEmpty()) {
+						PpRejectReason rejectReason = ppExpenditureItem.getPpRejectReasons().get(0);
+						if (rejectReason != null &&
+								!StringUtils.isBlank(rejectReason.getReasonDesc())) { //&& rejectReason.isBrandNew() add this for phase 2
+							rejectReason.setDocId(ppExpenditureItem.getExpenditureItemId());
+							rejectReason.setDocType(ParameterConst.DOCTYPE_PLAN_EXPENDITURE);
+							rejectReasons.add(rejectReason);
+						}
+					}
+				}
+			}
+		}
+		log.info("updateReasons:"+updateReasons);
+		return updateReasons;
+	}
+	
+	/**
+	 * validate if Update is required
+	 */
+	private void UpdateReasonRequired(){
+		log.info("remarkIsRequired");
+		if(this.getManagedBean().getSelectedRemarks()!=null && !this.getManagedBean().getSelectedRemarks().isEmpty()){
+			if(StringUtils.isBlank(this.getManagedBean().getSelectedRemarks().get(0).getRemark())){
+				throw new EpException(MessageConst.ERROR_730023);
+			}
+		}
+	}
+	
+	/**
+	 * Handle update reason close popup
+	 */
+	public void closeUpdateReason(){
+		log.info("closeUpdateReason");
+		if(!this.getManagedBean().isConfirmReason()){
+			if(this.getManagedBean().getSelectedUpdateReasons()!= null && 
+					!this.getManagedBean().getSelectedUpdateReasons().isEmpty()) {
+			
+				this.getManagedBean().getSelectedUpdateReasons().get(0).setReasonDesc(this.getManagedBean().getSelectedReasonDesc());
+				this.getManagedBean().setSelectedReasonDesc("");
+			}
+		}
+		this.getManagedBean().setSelectedUpdateReasons(null);
 	}
 	
 	//[#25550]
