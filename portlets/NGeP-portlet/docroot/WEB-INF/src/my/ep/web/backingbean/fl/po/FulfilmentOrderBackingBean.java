@@ -130,7 +130,65 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	 */
 	public FulfilmentOrderBackingBean(){
 	}
+	
+	/**
+	 * close/manual payment fulfilment order.
+	 *
+	 *  navigate to acknowledge page.
+	 *  @throws IOException 
+	 */
 
+  	public void closeManualPayment() throws IOException{
+		debugLogger("start of close manual payment");
+		IFulfilmentOrderSO fulfilementOrderSO = null;
+		FulfilmentResDTO resDTO = null;
+		String messagePrefix = "";
+		String messageSuffix = "";
+		
+		try{
+			fulfilementOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			
+			reqDTO.setOutcome(BpmOutcomeConst.BPM_CLOSE_MANUAL);
+			reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
+			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+			reqDTO.setUserRole(getUserRole());
+			
+			
+			
+			
+			
+			resDTO = fulfilementOrderSO.closeManualPayment(reqDTO);
+			
+			successMessage(MessageConst.INFO_700072, ParameterTypeConst.DOCUMENT_TYPES,
+					ParameterConst.DOCTYPE_PURCHASE_ORDER,getManagedBean().getFulfilmentOrder().getDocNo().toString(), Boolean.FALSE);
+			if(resDTO.isSuccessful()) {
+				String messageId = MessageConst.INFO_700005;
+				String documentType = ParameterConst.DOCTYPE_PURCHASE_ORDER;
+				String docNo = getManagedBean().getFulfilmentOrder().getDocNo();
+				getManagedBean().setAllowCloseManualPay(false);
+				
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+						FacesMessage.SEVERITY_INFO, null,
+						MessageUtils.getMessage(messageId, 
+								new String[]{messagePrefix+getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, documentType)+messageSuffix, docNo}, 
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				
+				
+			} else {
+				throw new EpException(MessageConst.ERROR_740017);
+			}
+			
+			
+			
+			
+//			return CommonUIConst.ACKNOWLEDGE_REPORT_PAGE;
+			
+		}finally{
+			fulfilementOrderSO = null;
+		}
+	}
+	
 	/**
 	 * save,submit Fulfillment order.
 	 *
@@ -279,34 +337,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		}
 	}
    	
-   	public void closeManualPayment() throws IOException{
-		debugLogger("start of close manual payment");
-		IFulfilmentOrderSO fulfilementOrderSO = null;
-		FulfilmentResDTO resDTO = null;
-		
-		try{
-			fulfilementOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
-			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-			
-			reqDTO.setOutcome(BpmOutcomeConst.BPM_CLOSE_MANUAL);
-			reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
-			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-			reqDTO.setUserRole(getUserRole());
-			
-			if(getManagedBean().getPmDigiSign() != null){
-				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
-			}
-			
-			
-			
-			resDTO = fulfilementOrderSO.closeManualPayment(reqDTO);
-			
-			successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES,
-					ParameterConst.DOCTYPE_FULFILMENT_NOTE, "order no", Boolean.FALSE);
-		}finally{
-			
-		}
-	}
+ 
 	
 	/**
 	 * Validate fulfillment order before submit or save action.
