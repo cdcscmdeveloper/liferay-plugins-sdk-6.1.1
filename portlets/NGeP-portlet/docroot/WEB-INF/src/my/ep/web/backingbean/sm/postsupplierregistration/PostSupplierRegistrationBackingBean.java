@@ -1085,6 +1085,13 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 					changeRoleForSupplierTemp(currentPersonnel.getPersonnelId(),supplier);
 				}				
 			}
+		}else if(!isG2G && isWithFederal && !isPublishedCatalogue(supplier.getSupplierId())){
+			if(getCmSupplierItems(supplier.getSupplierId()).size() > 0){
+				path = CATALOGUE_MAINT;
+			}else{
+				path = CATALOGUE_UPLOAD_PATH;
+			}
+			getManagedBean().setFlowStatus(1);
 		}else{
 			log.info("this is basic g2g");
 
