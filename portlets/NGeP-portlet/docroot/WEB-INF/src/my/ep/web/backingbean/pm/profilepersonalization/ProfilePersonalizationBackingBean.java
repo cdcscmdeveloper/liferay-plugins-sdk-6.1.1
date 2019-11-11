@@ -1654,6 +1654,11 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			retrieveDisciplinaryAction();
 			if(this.getManagedBean().isDisciplinaryAction()){
 				SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+				
+				if (sUsers != null && sUsers.getPreferredLanguage() != null){
+					reqDTO.setLanguage(sUsers.getPreferredLanguage());
+				}
+				
 				if(getManagedBean().getCurrentProfile() != null){
 					if(getManagedBean().getCurrentProfile().getSmSupplier() != null)
 						reqDTO.setSupplier(getManagedBean().getCurrentProfile().getSmSupplier());
