@@ -31,6 +31,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
@@ -178,6 +179,7 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.jasper.compiler.SmapUtil;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -742,6 +744,26 @@ public class SmApplicationBackingBean extends
 	public String proceedToApplication(String applicationType) {
 		return proceedToApplication(applicationType, Boolean.FALSE, null, null);
 	}
+	
+//	public void checkSupplierOwnerAndProceed(String applicationType) {
+//		//check supplierOwner
+//		Boolean suppOwnerExistSsm = false;
+//		FacesScopes facesScope = new FacesScopes();
+//		PmUser userSession = facesScope.getUserSessionBean();
+//		if(userSession != null){
+//			SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
+//			if(personnelSSM == null) {
+//				suppOwnerExistSsm = true;
+//			}
+//		}
+//	
+//		
+//		if(!suppOwnerExistSsm){
+//			RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
+//		} else {
+//			proceedToApplication(applicationType, Boolean.FALSE, null, null);
+//		}
+//	}
 
 	/**
 	 * Gets the max date.
@@ -1514,6 +1536,20 @@ public class SmApplicationBackingBean extends
 						this.getManagedBean().getSmAppl().setApplValidWithSsm(true);
 						//set establish date
 						this.getManagedBean().getSmAppl().getSmCompanyBasic().setEstablishDate(ssmResDTO.getSmCompanyBasic().getEstablishDate());
+						
+						//POPUP USER NOT SSM OWNER #26734 START
+						FacesScopes facesScope = new FacesScopes();
+						PmUser userSession = facesScope.getUserSessionBean();
+						if(applicationType.equalsIgnoreCase("N") || applicationType.equalsIgnoreCase("U")){
+							if(userSession != null){
+								SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
+								if(personnelSSM == null) {								
+									RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
+									return SmApplicationUtil.setStringNavigationForApplTnCPage(applicationType);
+								}
+							}
+						}
+						// #26734 END
 						
 						//CHECK EQUITY OWNER EXIST IN SSM TO DISABLE CHECKBOX
 						int i = 0;
@@ -12429,6 +12465,7 @@ public class SmApplicationBackingBean extends
 		RegistrationBackingBean registrationBackingBean = new RegistrationBackingBean();
 		return registrationBackingBean.getBusinessNatureSection(suppBizNature);
 	}
+	
 	public void calcPersonnelShareAmt(List<SmPersonnel> personnels,SmCompanyBasic companyBasic){
 		BigDecimal bumiputeraCapital = new BigDecimal(0);
 		BigDecimal nonBumiputeraCapital = new BigDecimal(0);
@@ -12455,9 +12492,15 @@ public class SmApplicationBackingBean extends
 		companyBasic.setBumiEquity(bumiputeraCapital);
 		companyBasic.setNonBumiEquity(nonBumiputeraCapital);
 		companyBasic.setForeignerEquity(nonMalaysianCapital);
-		
-				
 	}
+	// #26734 START
+	public void redirectToHomepage() throws IOException {
+		log.debug("redirectToHomepage()  <<--- here ");
+		ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+		String path = SmCommonUtil.getBasePortalUrl();
+		context.redirect(path);
+	}
+	// #26734 END
 	//FIXME : 16052019 - SSM INTEGRATION CR - end
 
 }
