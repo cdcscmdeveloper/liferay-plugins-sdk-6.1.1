@@ -28,6 +28,7 @@ import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.vo.BlacklistOwnerDirectorVO;
 
 @ManagedBean(name = "registrationMB")
 @SessionScoped
@@ -139,6 +140,18 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private boolean showDirector=false;
 	private boolean showDirectorInOwner=false;
 	private boolean disableRole=false;
+	//26238 - Disciplinary Action
+	private boolean warning;
+	private boolean suspendRegistration;
+	private boolean cancelRegistration;
+	private boolean blacklistowner;
+	private String startDate;
+	private String endDate;
+	private String remarks;
+	private List<SmPersonnel> blacklistOwner;
+	private List<BlacklistOwnerDirectorVO> blacklistownerDirectorList;
+	private boolean noDisciplinary;
+	
 	private boolean showOwnerPersonnel = false;
 	
 	public SmSupplier getSmSupp() {
@@ -816,6 +829,86 @@ public class RegistrationManagedBean extends BaseManagedBean {
 
 	public void setSmSupplierBranches(List<SmSupplierBranch> smSupplierBranches) {
 		this.smSupplierBranches = smSupplierBranches;
+	}
+
+	public boolean isWarning() {
+		return warning;
+	}
+
+	public void setWarning(boolean warning) {
+		this.warning = warning;
+	}
+
+	public boolean isSuspendRegistration() {
+		return suspendRegistration;
+	}
+
+	public void setSuspendRegistration(boolean suspendRegistration) {
+		this.suspendRegistration = suspendRegistration;
+	}
+
+	public boolean isCancelRegistration() {
+		return cancelRegistration;
+	}
+
+	public void setCancelRegistration(boolean cancelRegistration) {
+		this.cancelRegistration = cancelRegistration;
+	}
+
+	public boolean isBlacklistowner() {
+		return blacklistowner;
+	}
+
+	public void setBlacklistowner(boolean blacklistowner) {
+		this.blacklistowner = blacklistowner;
+	}
+
+	public String getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+
+	public List<SmPersonnel> getBlacklistOwner() {
+		return blacklistOwner;
+	}
+
+	public void setBlacklistOwner(List<SmPersonnel> blacklistOwner) {
+		this.blacklistOwner = blacklistOwner;
+	}
+
+	public List<BlacklistOwnerDirectorVO> getBlacklistownerDirectorList() {
+		return blacklistownerDirectorList;
+	}
+
+	public void setBlacklistownerDirectorList(List<BlacklistOwnerDirectorVO> blacklistownerDirectorList) {
+		this.blacklistownerDirectorList = blacklistownerDirectorList;
+	}
+
+	public boolean isNoDisciplinary() {
+		return noDisciplinary;
+	}
+
+	public void setNoDisciplinary(boolean noDisciplinary) {
+		this.noDisciplinary = noDisciplinary;
 	}
 
 	public boolean isShowOwnerPersonnel() {
