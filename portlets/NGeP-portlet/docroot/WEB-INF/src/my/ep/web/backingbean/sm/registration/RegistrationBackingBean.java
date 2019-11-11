@@ -307,7 +307,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		PmParameter identificationType = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_IC);
 
 		if(businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupp().getRegNo(),this.getManagedBean().getSmSupp().getBusinessType())){
-			checkExistingBusinessRegNoSSM();
+			
 
 			SsmReqDTO ssmReqDTO = new SsmReqDTO();
 			//ssmResDTO.setSmAppl(smAppl);
@@ -324,6 +324,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			this.getManagedBean().setCompanyValidWithSSM(false);
 			this.getManagedBean().getDummy().clear();
 			if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
+				checkExistingBusinessRegNoSSM();
 				this.getManagedBean().setCompanyValidWithSSM(true);
 				this.getManagedBean().setValidateWithSSM(true);
 				this.getManagedBean().setCompanyValidWithSSM(true);
