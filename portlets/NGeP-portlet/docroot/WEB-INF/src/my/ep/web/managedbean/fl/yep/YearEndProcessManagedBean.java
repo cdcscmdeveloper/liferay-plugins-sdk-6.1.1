@@ -602,9 +602,6 @@ public class YearEndProcessManagedBean extends BaseManagedBean {
 				if(resDTO.isSuccessful()){
 					if(null != resDTO.getResultBean()){
 						log.info("Yep resDTO.getResultBean().getTotalRecord(): "+resDTO.getResultBean().getTotalRecord());
-						if(resDTO.getResultBean().getTotalRecord()>0){
-//							filterSearchResults(resDTO.getResultBean().getResultList());
-						}
 					}
 					return resDTO.getResultBean();
 				}
@@ -616,102 +613,7 @@ public class YearEndProcessManagedBean extends BaseManagedBean {
 		}
 	}
 	
-	/**
-	 * Filter search results based on user id and doc type.
-	 *
-	 * @param searchResultList the search result list
-	 */
-	/*public void filterSearchResults(List<VFlDocument> searchResultList){
-		IFulfilmentDocumentSO flDocumentSO  = (IFulfilmentDocumentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentDocumentSO.class);
-		IFulfilmentOrderSO fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
-		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-		FulfilmentResDTO resDTO = new FulfilmentResDTO();
-		reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
-		
-		for(VFlDocument docsearchResult:searchResultList){
-			if(isTrackingDiarySearch()) {
-				docsearchResult.setViewAction(true);
-				FLOrderInfo orderInfo=null;
-				orderInfo=getStatusInfo(docsearchResult.getDocId(),docsearchResult.getDocType());
-				if(orderInfo.isCoGSTR()){
-					docsearchResult.setCoGSTR(orderInfo.isCoGSTR);
-					docsearchResult.setCoGSTRNo(orderInfo.getCoGSTRNo());
-				}
-				continue;
-			}
-				docsearchResult.setUpdateAction(false);
-				docsearchResult.setViewAction(false);
-				docsearchResult.setCancelAction(false);
-				if(null == docsearchResult.getStatusId() || ParameterConst.DOCTYPE_PURCHASE_REQUEST.equalsIgnoreCase(docsearchResult.getDocType()) ){
-					docsearchResult.setViewAction(true);
-				}else if(ParameterConst.DOCTYPE_CONTRACT_REQUEST.equalsIgnoreCase(docsearchResult.getDocType()) && FulfilmentStatusConst.CR_PENDING_SUBMISSION.equals(docsearchResult.getStatusId())){
-					docsearchResult.setViewAction(true);
-				}else if(ParameterConst.DOCTYPE_CONTRACT_REQUEST.equalsIgnoreCase(docsearchResult.getDocType())){
-					docsearchResult.setViewAction(true);
-				}else{
-					docsearchResult.setViewAction(true);
-					boolean isUpdate=false;
-					boolean isCancel=false;
-					boolean isStopFulfilment=false;
-					boolean isRemoveFactoring=false;
-					FLOrderInfo orderInfo=null;
-					orderInfo=getStatusInfo(docsearchResult.getDocId(),docsearchResult.getDocType());
-						if(null != orderInfo){	
-							isUpdate = flDocumentSO.canDocumentUpdate(docsearchResult.getStatusId(), orderInfo.getOrderStatusId(), orderInfo.getRole());
-							isCancel = flDocumentSO.canDocumentCancel(docsearchResult.getStatusId(), orderInfo.getOrderStatusId(), orderInfo.getRole(), orderInfo.getOrderId(),reqDTO.getUserId());
-							isStopFulfilment = flDocumentSO.canDocumentStopFulfilment(docsearchResult.getStatusId(),docsearchResult.getDocId(),orderInfo.getRole(),orderInfo.getOrderId(),reqDTO.getUserId());
-							if(docsearchResult.getDocType().equals(FulfilmentConst.DOC_TYPE_PO)){
-								isRemoveFactoring = flDocumentSO.canDocumentRemoveFactoring(docsearchResult.getStatusId(),docsearchResult.getDocId(), orderInfo.getRole(),orderInfo.isFactored());
-							}	
-							if(isUpdate || isCancel) {
-								if(docsearchResult.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_FULFILMENT_NOTE)) {
-									reqDTO.setFulfilmentNoteId(docsearchResult.getDocId());
-									resDTO = fulfilmentOrderSO.isSelectedAcknowledgeOfficerForOrder(reqDTO);
-								}
-							}
-							if(isUpdate){
-								docsearchResult.setUpdateAction(true);
-								docsearchResult.setViewAction(true);
-								if(docsearchResult.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_FULFILMENT_NOTE)) {
-									if(!resDTO.isFlag()) {
-										docsearchResult.setUpdateAction(false);
-									}
-								}
-							}
-							if(isCancel){
-								docsearchResult.setCancelAction(true);
-								docsearchResult.setViewAction(true);
-								if(docsearchResult.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_FULFILMENT_NOTE)) {
-									if(!resDTO.isFlag()) {
-										docsearchResult.setCancelAction(false);
-									}
-								}
-								if(docsearchResult.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DELIVERY_ORDER)) {
-									// Check respective FRN is it Awaiting 1GFMAS or Pending Cancellation Submission
-									if(flDocumentSO.isRelatedDocumentInProgress(docsearchResult.getDocType(), docsearchResult.getDocId())) {
-										docsearchResult.setCancelAction(false);
-									}
-								}
-							}
-							if(isStopFulfilment){
-								docsearchResult.setStopFulfilmentAction(true);
-								docsearchResult.setViewAction(true);
-							}
-							if(isRemoveFactoring){
-								docsearchResult.setRemoveFactoringAction(true);
-								docsearchResult.setViewAction(true);
-							}
-							if(orderInfo.isCoGSTR()){
-								docsearchResult.setCoGSTR(orderInfo.isCoGSTR);
-								docsearchResult.setCoGSTRNo(orderInfo.getCoGSTRNo());
-							}
-							if(orderInfo.isTaxable()){
-								docsearchResult.setTaxable(orderInfo.isTaxable);
-							}
-					  }
-			     }
-		 }		
-	}*/
+	
 
 
 }
