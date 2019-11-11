@@ -20,7 +20,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		}
 			
  	</script>
-	<p:outputPanel id="opPlanPp">
+	<p:outputPanel id="opPlanPp">BIADAP
 		<p:inputText style="display:none" id="hiddenGtEstAmt" styleClass="hiddenGtEstAmt" value="#{pPlanBackingBean.managedBean.ppTotalEst}">
 			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 		</p:inputText>
@@ -31,7 +31,14 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			<ac:paginator for="dtProcurementPlan" />
 			<p:columnGroup type="header">
 				<p:row>
-				 	<p:column style="width:2%" />
+					<!-- #24975 -->
+				 	<!-- <p:column style="width:2%" /> -->
+				 	<p:column width="5%">
+					    <f:facet name="header">
+					     	<h:outputText value="* " styleClass="mandatory" />
+					     	<h:outputText value="#{lbl['lbl.pp.action']}" />
+					    </f:facet>
+				    </p:column>
 			 	 	<p:column width="12%">
 					    <f:facet name="header">
 					     	<h:outputText value="* " styleClass="mandatory" />
@@ -77,6 +84,15 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					    <f:facet name="header">
 					     	<h:outputText value="#{lbl['lbl.pp.reject.and.reason']}" />
 					    </f:facet>
+				    </p:column>
+				     <!-- #24975 -->
+				    <p:column width="5%" 
+				    		rendered="#{pPlanBackingBean.managedBean.modeEditable and 
+				    		(pPlanBackingBean.managedBean.selectedPlan.updatable or 
+				    		pPlanBackingBean.managedBean.approvedPlan)}">
+				    	<f:facet name="header">
+					     	<h:outputText value="#{lbl['lbl.pp.reason.update']}" />
+					    </f:facet>
 				    </p:column>			      	
 				    <p:column width="5%">
 					    <f:facet name="header">
@@ -95,8 +111,18 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<!-- [SIR#12802] - start -->				
 				<p:selectBooleanCheckbox 
 					disabled="#{!(ppItem.brandNew ? ppItem.brandNew : ppItem.selectable)}" 
-					value="#{ppItem.deleted}"/>
+					value="#{ppItem.deleted}" title="#{lbl['lbl.pp.make.amendment']}" />
 				<!-- [SIR#12802] - end -->
+				<!-- #24975 -->
+				<p:commandLink id="addUpdateInfo" 
+						immediate="true" 
+						update="dtProcurementPlan" 
+						partialSubmit="true" 
+						disabled="#{(ppItem.brandNew ? ppItem.brandNew : ppItem.selectable)}"
+						action="#{pPlanBackingBean.addUpdateInfo(pPlanBackingBean.managedBean.selectedPlan, pPlanBackingBean.managedBean.selectedPlan.ppProcurementItems, index)}">
+				     <p:graphicImage value="/css/images/design/ico-viewnedit.png"  
+				     style="float:left; padding-left: 5px;" process="@this" />
+				</p:commandLink>
 			</p:column>
 			
 	        <p:column>	
@@ -182,9 +208,16 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:graphicImage value="#{!pPlanBackingBean.managedBean.modeReviewEditable ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"/>
 				</p:commandLink>
 	        </p:column>
-
+			<!-- #24975 -->
+			<p:column style="white-space:nowrap;" rendered="#{pPlanBackingBean.managedBean.modeEditable and (pPlanBackingBean.managedBean.selectedPlan.updatable or pPlanBackingBean.managedBean.approvedPlan)}">			    
+			    <p:commandLink oncomplete="dlUpdateReasonWv.show();" action="#{pPlanBackingBean.retrievePpUpdateReasons(ppItem)}"
+			    	update=":form:dlUpdateReason" immediate="true" id="UpdateReason" >
+					<p:graphicImage value="#{!pPlanBackingBean.managedBean.selectedPlan.updatable ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"
+					disabled="#{(pPlanBackingBean.managedBean.modeEditable) or ppItem.brandNew}"/>
+				</p:commandLink>
+	        </p:column>
 	        <p:column>
-	        	<p:selectOneMenu value="#{ppItem.recordStatusFlg}" style="width:99%"
+	        	<p:selectOneMenu id="recordStatus" value="#{ppItem.recordStatusFlg}" style="width:99%"
 	        		disabled="#{!(pPlanBackingBean.managedBean.modeEditable) or ppItem.brandNew}">  
 	            	<f:selectItems value="#{pPlanBackingBean.getStatusOptions()}" />
 	          	</p:selectOneMenu> 
