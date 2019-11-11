@@ -75,6 +75,7 @@ import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmGstSupplierDoc;
@@ -107,6 +108,7 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.vo.BlacklistOwnerDirectorVO;
 
 import org.apache.bcel.generic.Select;
 import org.apache.commons.collections.CollectionUtils;
@@ -1930,6 +1932,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				this.getManagedBean().setSmSuppOwner(new SmSupplierOwner());
 				getManagedBean().setApplType(getManagedBean().getSmAppl().getApplType());
 				
+				//26238 - retrieve active DA. To display at basic account supplier screen
+				if(resDTO.getSmSupp() != null){
+					retrieveActiveDisicplinaryAction(resDTO.getSmSupp());
+				}
+				//26238 - end
 				if(resDTO.getSmSupp().getSmSupplierOwners()!=null && CollectionUtils.isNotEmpty(resDTO.getSmSupp().getSmSupplierOwners())){
 					this.getManagedBean().setSmSuppOwner(resDTO.getSmSupp().getSmSupplierOwners().get(0));
 					this.getManagedBean().setSmSuppOwners(resDTO.getSmSupp().getSmSupplierOwners());
@@ -3854,6 +3861,53 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		
 		
 	}
+	
+	//26238 - start 
+	public void retrieveActiveDisicplinaryAction(SmSupplier supplier){
+		List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
+		PersonnelReqDTO perReqDTO = new PersonnelReqDTO();
+		perReqDTO.setSmSupplierId(supplier.getSupplierId());
+		
+		PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelBySupplierId(perReqDTO);
+		
+		if(discList != null && discList.size() > 0){
+			for(SmDisciplinaryAction disc : discList){
+				if(disc.isWarning() || disc.isSuspendRegistration() 
+						|| disc.isCancelRegistration() || disc.isBlacklistOwner()){
+					if(disc.isWarning())
+						this.getManagedBean().setWarning(true);					
+					if(disc.isSuspendRegistration())
+						this.getManagedBean().setSuspendRegistration(true);
+					if(disc.isCancelRegistration())
+						this.getManagedBean().setCancelRegistration(true);
+					if(disc.isBlacklistOwner())
+						this.getManagedBean().setBlacklistowner(true);
+					
+					if(!disc.isWarning()){
+						List<BlacklistOwnerDirectorVO> blacklistownerDirectorList = new ArrayList<BlacklistOwnerDirectorVO>();
+						if(personnelResDTO != null 
+								&& personnelResDTO.getSmPersonnelList().size() > 0){
+							for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
+								BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
+								if(personnel.isCancelRegistration()
+										|| personnel.isSuspendRegistration()
+											|| personnel.isBlacklisted()){
+									blacklistOwner.setIcNo(personnel.getIdentificationNo());
+									blacklistownerDirectorList.add(blacklistOwner);
+								}
+							}
+							this.getManagedBean().setBlacklistownerDirectorList(blacklistownerDirectorList);
+						}
+					}
+					this.getManagedBean().setStartDate(DateUtils.dateToString("dd/MM/yyyy",disc.getStartDate()));
+					this.getManagedBean().setEndDate(DateUtils.dateToString("dd/MM/yyyy",disc.getEndDate()));
+					this.getManagedBean().setRemarks(disc.getRemark());
+				}
+			}
+		} else {
+			this.getManagedBean().setNoDisciplinary(true);
+		}
+	} //26238 - end
 }
 
 
