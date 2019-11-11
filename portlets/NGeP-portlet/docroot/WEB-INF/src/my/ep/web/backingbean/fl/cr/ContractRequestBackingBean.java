@@ -1000,6 +1000,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				flItemAddr.setItemType(contractedItem.getItemType());
 				flItemAddr.setScRequestItem(contractedItem.getScRequestItem());
 				flItemAddr.setCmItem(contractedItem.getScRequestItem().getCmItem());
+				flItemAddr.setSkuNumber(contractedItem.getSku()); //# redmine 16344 FARID 
 				if(contractedItem.getScRequestItem().getCmItem()!=null) {
 					flItemAddr.setItemCode(contractedItem.getScRequestItem().getCmItem().getExtensionCode());
 				} else {
@@ -4113,7 +4114,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				flItemAddr.setScRequestItem(flTempItem.getScRequestItem());
 				flItemAddr.setCmItem(flTempItem.getScRequestItem().getCmItem());
 				flItemAddr.setPmUomId(flTempItem.getScRequestItem().getUom().getUomId());
-				flItemAddr.setItemSku(contractItemResDTO.getCtContractItem().getSku());  /*#16344  */
 				if(flTempItem.getScRequestItem().getCmItem()!=null) {
 					flItemAddr.setItemCode(flTempItem.getScRequestItem().getCmItem().getExtensionCode());
 				} else {
