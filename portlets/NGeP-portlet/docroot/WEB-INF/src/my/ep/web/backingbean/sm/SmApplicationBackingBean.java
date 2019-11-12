@@ -73,6 +73,7 @@ import my.ep.dto.sm.revertApplication.RevertApplicationReqDTO;
 import my.ep.dto.sm.reviewApplication.ReviewApplicationReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
+import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
@@ -8124,6 +8125,9 @@ public class SmApplicationBackingBean extends
 			SmApplicationUtil.validateEquityOwnerCount(getManagedBean(), -1,
 					SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
 		}
+		//Bug #26705
+		getlatestPoOverlappingRemarks();
+		
 		assignValReqdToTrue();
 		getManagedBean().getSmAppl().setBumi(
 				getManagedBean().getSmAppl().getSmSupplier().isBumi());
@@ -12503,4 +12507,26 @@ public class SmApplicationBackingBean extends
 	// #26734 END
 	//FIXME : 16052019 - SSM INTEGRATION CR - end
 
+	//Bug #26705 - start
+	public void getlatestPoOverlappingRemarks() {
+		SmAppl applId = SmApplicationUtil
+				.getLatestApplBySupplierId(getManagedBean().getSmAppl()
+						.getSmSupplier().getSupplierId());
+		if (applId != null) {
+			SmRemaksResDTO remResDTO = SmApplicationUtil.getRemarksByDoc(
+					ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY_APPROVER,
+					applId.getApplId());
+			if (getManagedBean().isOverLappedCategoryExists()) {
+				for (SmRemark rmk : remResDTO.getRemarksList())
+					if (rmk.getDocType()
+							.equals(ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY_APPROVER)) {
+						getManagedBean()
+								.setApplnOverLapRemarks(rmk.getRemark());
+
+					}
+			}
+		}
+	}
+	//Bug #26705 - End
+	
 }
