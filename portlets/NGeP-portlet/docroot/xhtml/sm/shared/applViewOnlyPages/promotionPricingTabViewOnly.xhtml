@@ -23,7 +23,11 @@
 				
 			</p:row>
 		</f:facet>
-		<p:row>
+		<c:choose>
+		<c:when test="#{viewSmApplBackingBean.managedBean.selectedSupplierItem.cmPromotionPricing.price ne null 
+		or viewSmApplBackingBean.managedBean.selectedSupplierItem.cmPromotionPricing.startDate ne null 
+		or viewSmApplBackingBean.managedBean.selectedSupplierItem.cmPromotionPricing.endDate ne null}">
+			<p:row>
 			<p:column>
 				<p:inputText readonly="true"
 					value="#{viewSmApplBackingBean.managedBean.selectedSupplierItem.cmPromotionPricing.price}" maxlength="18" style="text-align:right">
@@ -53,5 +57,15 @@
 			</p:column>
 
 		</p:row>
+		</c:when>
+		<c:otherwise>
+			<p:row>
+			<p:column colspan="3">
+				#{lbl['lbl.datatable.msg.no.records.found']}
+			</p:column>
+				
+			</p:row>
+		</c:otherwise>
+		</c:choose>		
 	</p:panelGrid>
 </ui:composition>
