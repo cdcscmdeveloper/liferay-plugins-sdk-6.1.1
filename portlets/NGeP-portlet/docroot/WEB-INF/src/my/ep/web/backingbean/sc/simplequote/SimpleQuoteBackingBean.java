@@ -105,6 +105,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScBusinessNatureQuoteCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScLocationDistrictCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScLocationDivisionCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScLocationStateCriteria;
+import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
 import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sc.directpurchase.ScQuoteAttachment;
 import my.ep.persistence.entity.sc.directpurchase.ScQuoteDoc;
@@ -2505,6 +2506,7 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setJustTypeOption(Boolean.FALSE);
 			getManagedBean().setG2GFlag(Boolean.FALSE);
 			getManagedBean().setLocAndBusinessFlag(Boolean.TRUE);
+			
 		} else if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
 			getManagedBean().setProcTypeOption(Boolean.FALSE);
 			getManagedBean().setJustTypeOption(Boolean.FALSE);
@@ -4768,16 +4770,17 @@ public class SimpleQuoteBackingBean extends
 	 */
 	public void preRenderView() {
 		QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
+		TemplateSpecBackingBean templateSpecBackingBean = new TemplateSpecBackingBean();
 		SCDirectPurchaseDataType directPurchaseDataType = super.getBpmTaskDetails(SCDirectPurchaseDataType.class, null);
 
 		// pid expiry date
 		if(directPurchaseDataType.getPidExpiryDate() != null){
 			getManagedBean().setPidExpiryDate(directPurchaseDataType.getPidExpiryDate().getTime());	
 			getManagedBean().setTaskExpiryDate(directPurchaseDataType.getPidExpiryDate());
-			TemplateSpecBackingBean templateSpecBackingBean = new TemplateSpecBackingBean();
+			//TemplateSpecBackingBean templateSpecBackingBean = new TemplateSpecBackingBean();
 			templateSpecBackingBean.getManagedBean().setPidSQ(Boolean.TRUE);
 		} else{
-			TemplateSpecBackingBean templateSpecBackingBean = new TemplateSpecBackingBean();
+			//TemplateSpecBackingBean templateSpecBackingBean = new TemplateSpecBackingBean();
 			templateSpecBackingBean.getManagedBean().setPidSQ(Boolean.FALSE);
 		}
 		
@@ -4800,6 +4803,23 @@ public class SimpleQuoteBackingBean extends
 		QuoteResDTO quoteResDTO = getQuoteSO().getQuoteDtl((quoteReqDTO));
 		ScQuote scQuote = quoteResDTO.getQuoteBidDtl();
 		getManagedBean().setScQuote(scQuote);
+		
+		//#25095 repatch for scquote pid clone
+		
+		if(scQuote.getPurchaseInDefault()!=null && scQuote.getParentQuoteId()!=null){
+			templateSpecBackingBean.getManagedBean().setPidSQ(Boolean.TRUE);
+			ScPurchaseInDefault scpid = scQuote.getPurchaseInDefault();
+			
+			Date today  = DateUtils.getCurrentDateWithoutTime();
+			Date ExpDate = DateUtils.addDays(scQuote.getPurchaseInDefault().getChangedDate(),scQuote.getPurchaseInDefault().getPidValidDays() );
+			
+			 Calendar cal = Calendar.getInstance(); 
+			 cal.setTime(ExpDate);
+			
+			
+			getManagedBean().setPidExpiryDate(ExpDate);	
+			getManagedBean().setTaskExpiryDate(cal);
+		}
 
 		preRenderScQuote(scQuote);
 
