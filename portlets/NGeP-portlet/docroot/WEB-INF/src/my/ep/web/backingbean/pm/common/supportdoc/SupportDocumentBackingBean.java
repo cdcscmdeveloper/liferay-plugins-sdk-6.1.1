@@ -5,7 +5,7 @@
  * Release 1.00    
  *    
  * Copyright © 2013 Archisoft. All rights reserved.
- *  
+ * 
  ****************************************************
 */
 package my.ep.web.backingbean.pm.common.supportdoc;
@@ -71,6 +71,8 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.web.util.sm.helper.SmCommonUtil;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -2083,12 +2085,14 @@ public class SupportDocumentBackingBean extends
 
 			// #26666 - start
 			if (createAction) {
-				reqDTO.setCreatedBy(user.getUserId());
+				System.out.println("1. getUserId = " + user.getUserId());
+				pmDocument.setCreatedBy(user.getUserId());
 				messageId = MessageConst.TD_80800;
 			} else {
+				System.out.println("2. getUserId = " + user.getUserId());
 				messageId = MessageConst.TD_80801;
 			}
-			reqDTO.setChangedBy(user.getUserId());
+			pmDocument.setChangedBy(user.getUserId());
 			// #26666 - end
 
 			getAllRestrictions(pmDocument, reqDTO, pmDocument.getRecordStatusFlg()
