@@ -2631,6 +2631,7 @@ public class TemplateSpecBackingBean extends
 		TplSpecMaster specMaster = templateSpecBean.getSpecMaster();
 		TplSpecZoneDtl specZoneDtl = templateSpecBean.getTplSpecZoneDtl();
 		List<TplSpecEstimation> specEstimations = new ArrayList<TplSpecEstimation>();
+		long questionId = templateSpecBean.getSelectedSpecQuestion().getSpecQuestionId();
 		
 		if (TemplateSpecConst.CONTENT_TYPE_SCORE.equals(templateSpecBean
 				.getContentType())) {
@@ -2683,12 +2684,14 @@ public class TemplateSpecBackingBean extends
 				}
 				else {
 					if (specZoneId == specEstimation.getTplSpecZoneDtl().getSpecZoneId()){
-						specEstimation.setEstimatedCost(totalIndicativePrice); ///update value  Item Total Indicative Price (RM)
+						if (questionId == specEstimation.getTplSpecQuestion().getSpecQuestionId()){
+							specEstimation.setEstimatedCost(totalIndicativePrice); ///update value  Item Total Indicative Price (RM)
+						}
 					}
 
 					if (specEstimation.getEstimatedCost() != null) { // bugs #26234 
-								totalEstAmount = totalEstAmount.add(specEstimation
-										.getEstimatedCost()).setScale(2, BigDecimal.ROUND_UP); // bugs #26234 add decimal point
+						totalEstAmount = totalEstAmount.add(specEstimation
+								.getEstimatedCost()).setScale(2, BigDecimal.ROUND_UP); // bugs #26234 add decimal point
 					} // bugs #26234 
 				}
 		};
@@ -2701,7 +2704,7 @@ public class TemplateSpecBackingBean extends
 	 * 
 	 */
 	public void calcItemTotalIndicateUnitPrice(TemplateSpecBean templateSpecBean, 
-			BigDecimal indicativeUnitPrice, 
+			double indicativeUnitPrice, 
 			BigDecimal clQuantity, 
 			BigDecimal clUomFrequency, 
 			BigDecimal clUomPerDay, 
@@ -2714,6 +2717,8 @@ public class TemplateSpecBackingBean extends
 
 			BigDecimal totalIndicativePrice = new BigDecimal(0);
 			BigDecimal zeroChangeTo1 = new BigDecimal(1);
+			BigDecimal RoundIndicativePrice = BigDecimal.valueOf(indicativeUnitPrice);
+
 			
 			if (clUomFrequency.intValue() == 0 )
 			{ clUomFrequency=clUomFrequency.add(zeroChangeTo1);}
@@ -2730,7 +2735,7 @@ public class TemplateSpecBackingBean extends
 			if (!isItemTypeService)  //Product - input indicative unit price and autocalculate estimated cost
 			{
 				totalIndicativePrice = totalIndicativePrice.add(clQuantity
-						.multiply(indicativeUnitPrice)).setScale(2, BigDecimal.ROUND_UP); // bugs #26234 add decimal point
+						.multiply(RoundIndicativePrice.setScale(2, BigDecimal.ROUND_UP))); // bugs #26234 add decimal point
 			}
 			else {
 				if (isItemTypeService && !isFulfilmentTypeScheduled) //Service with non periodic Fulfillment Type(OneOff & As and When)  - input indicative unit price and autocalculate estimated cost
@@ -2738,7 +2743,7 @@ public class TemplateSpecBackingBean extends
 						.multiply(clUomFrequency)
 						.multiply(clUomPerDay)
 						.multiply(clUomPerMonth)
-						.multiply(indicativeUnitPrice)).setScale(2, BigDecimal.ROUND_UP); // bugs #26234 add decimal point
+						.multiply(RoundIndicativePrice.setScale(2, BigDecimal.ROUND_UP))); // bugs #26234 add decimal point
 				}
 				else {
 					if (isItemTypeService && isFulfilmentTypeScheduled) //Service with periodic Fulfillment Type - input indicative unit price and autocalculate estimated cost
@@ -2748,8 +2753,7 @@ public class TemplateSpecBackingBean extends
 								.multiply(clUomFrequency)
 								.multiply(clUomPerDay)
 								.multiply(clUomPerMonth)
-								.multiply(indicativeUnitPrice)
-								  ).setScale(2, BigDecimal.ROUND_UP); // bugs #26234 add decimal point
+								.multiply(RoundIndicativePrice.setScale(2, BigDecimal.ROUND_UP))); // bugs #26234 add decimal point
 					}
 				}
 			}
@@ -2846,12 +2850,13 @@ public class TemplateSpecBackingBean extends
 	 */
 	public void zoneEstCostCancelAction(TemplateSpecBean templateSpecBean) {
 		debugLogger("zoneEstCostCancelAction");
+		TplSpecQuestion oriSpecQuestion = templateSpecBean.getOriSpecQuestion();
+		TplSpecQuestion selectedSpecQuestion = templateSpecBean.getSelectedSpecQuestion();
 
-		
-		 TplSpecQuestion oriSpecQuestion = templateSpecBean.getOriSpecQuestion(); 
-		 TplSpecQuestion selectedSpecQuestion = templateSpecBean.getSelectedSpecQuestion();
-		  
-		 selectedSpecQuestion.setTplSpecEstimations(oriSpecQuestion.getTplSpecEstimations());
+		selectedSpecQuestion.setTplSpecTierQties(oriSpecQuestion
+				.getTplSpecTierQties());
+
+		selectedSpecQuestion.setTplSpecEstimations(oriSpecQuestion.getTplSpecEstimations());
 	}
 	// #25039 End - version zonal
 }
