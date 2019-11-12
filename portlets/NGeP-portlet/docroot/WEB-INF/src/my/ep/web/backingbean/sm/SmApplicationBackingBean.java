@@ -1552,7 +1552,6 @@ public class SmApplicationBackingBean extends
 						// #26734 END
 						
 						//CHECK EQUITY OWNER EXIST IN SSM TO DISABLE CHECKBOX
-						int i = 0;
 						for(SmPersonnel personnel : this.getManagedBean().getSmAppl().getSmPersonnels()){
 							SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
 							if(personnelSSM != null){
@@ -1579,6 +1578,7 @@ public class SmApplicationBackingBean extends
 										if(personnel.getSmPersonnelAddresses()!= null && personnel.getSmPersonnelAddresses().size() > 0){
 											for(SmPersonnelAddress personnelAddress : personnel.getSmPersonnelAddresses()){
 												if(my.ep.constant.sm.SupplierManagementConst.ADDRESS_TYPE_RESIDENTIAL.equalsIgnoreCase(personnelAddress.getAddressType())){
+													personnelAddress.setSmPersonnel(personnel);
 													EntityHelper.copyEntityPropertiesOnly(personnelAddressSSM.getSmAddress(),personnelAddress.getSmAddress(),copyPropAddress);
 													break;
 												}
@@ -1587,10 +1587,7 @@ public class SmApplicationBackingBean extends
 									}
 									
 								}
-								
-								this.getManagedBean().getSmAppl().getSmPersonnels().set(i, personnel);
 							}
-							i++;
 						}
 						//SET EQUITY COMPANY
 						//if(this.getManagedBean().getSmAppl().getSmEquityCompanies()!=null){
@@ -1615,12 +1612,15 @@ public class SmApplicationBackingBean extends
 							}
 							for(SmPersonnel personnel : ssmResDTO.getSmPersonnelAll()){
 								if(EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), this.getManagedBean().getSmAppl().getSmPersonnels(), "identificationNo") == null){
+									personnel.setBrandNew(true);
 									personnel.setSmAppl(this.getManagedBean().getSmAppl());
-									if(personnel.getSmPersonnelAddresses()!=null){
-										for(SmPersonnelAddress address:personnel.getSmPersonnelAddresses()){
-											address.setSmPersonnel(personnel);
-										}
+									personnel.setRevNo(SupplierManagementConst.DEFAULT_REV_NO);	
+									if(personnel.getSmPersonnelAdd()!= null){
+										personnel.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
+										personnel.getSmPersonnelAdd().setSmPersonnel(personnel);
+										personnel.getSmPersonnelAddresses().add(personnel.getSmPersonnelAdd());
 									}
+									personnel.setPmCountry(null);
 									this.getManagedBean().getSmAppl().getSmPersonnels().add(personnel);
 								}
 							}
