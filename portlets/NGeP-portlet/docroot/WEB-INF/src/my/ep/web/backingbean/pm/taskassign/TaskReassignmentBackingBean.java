@@ -2141,8 +2141,8 @@ public class TaskReassignmentBackingBean extends
 		//[#22117] - start
 		//validate task reassignment to BPK_ADMIN
 		if (pmUser != null) {
-			log.info("[#22117] - Validate user if has role BPK_ADMIN");			
-			List<PmUserOrg> pmUserOrgs = pmUser.getPmUserOrgs();
+			log.info("[#22117] - Validate user if has role BPK_ADMIN");
+			List<PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(pmUser.getUserId());
 			if (pmUserOrgs != null && pmUserOrgs.size() > 0) {
 				PmOrgProfile orgProfile = pmUserOrgs.get(0).getPmOrgProfile();
 				log.info("[#22117] - Selected user org type is: " + orgProfile.getOrgTypeCode().getParameterCode());
@@ -2232,11 +2232,12 @@ public class TaskReassignmentBackingBean extends
 				reqDTO.setActionedByUser(getFacesScopes().getUserSessionBean()
 						.getUserId());
 				reqDTO.setFromUser(fromUser);
+				//log.info("[#25018] isCommitteeUpdate():" + getManagedBean().isCommitteeUpdate());
 				reqDTO.setCommitteeUpdate(getManagedBean().isCommitteeUpdate());	
 				reqDTO.setUserLocale(getFacesScopes().getUserLocale());
 				reqDTO.setRemark(getManagedBean().getRemarks());
 				reqDTO.setTaskRoleCode(vo.getRoleList() !=null && !vo.getRoleList().isEmpty() ? vo.getRoleList().get(0) : null);
-				
+				//log.info("[#25018] TaskRoleCode: " + reqDTO.getTaskRoleCode());
 				//For Tracking Diary List (CT)
 				if(vo.getTrackingDiaryList() != null && !vo.getTrackingDiaryList().isEmpty()){
 					reqDTO.setTrackingDiaryList(vo.getTrackingDiaryList());
@@ -2376,10 +2377,12 @@ public class TaskReassignmentBackingBean extends
 				if(getManagedBean().isSingleReassign()){
 				//WorklistItemVO task = getManagedBean().getSelectedTask();
 					tasks.add(getManagedBean().getSelectedTask());
+					getManagedBean().setTasksReassignmentVO(null); //[#25018] newly added
 				}
 				//[#25018]
 				else if(getManagedBean().isBulkReassign()) {
-					tasks.addAll(getManagedBean().getSelectedTasksToBulkReassign());					
+					tasks.addAll(getManagedBean().getSelectedTasksToBulkReassign());
+					getManagedBean().setTasksReassignmentVO(null); //[#25018] newly added
 				}
 				//[#25018]
 				for(WorklistItemVO task : tasks) {	
@@ -2437,6 +2440,7 @@ public class TaskReassignmentBackingBean extends
 								}
 								//[#25018] -start
 								else if(getManagedBean().isBulkReassign()){
+									vo.setDocNo(task.getDocNumber()); //[#25018] newly added
 									if(getManagedBean().getTasksReassignmentVO() != null) {
 										log.info("[#25018] add vo...");
 										getManagedBean().getTasksReassignmentVO().add(vo);
