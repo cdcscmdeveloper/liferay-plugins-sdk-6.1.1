@@ -163,16 +163,16 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			successMessage(MessageConst.INFO_700072, ParameterTypeConst.DOCUMENT_TYPES,
 					ParameterConst.DOCTYPE_PURCHASE_ORDER,getManagedBean().getFulfilmentOrder().getDocNo().toString(), Boolean.FALSE);
 			if(resDTO.isSuccessful()) {
-				String messageId = MessageConst.INFO_700005;
+				/*String messageId = MessageConst.INFO_700005;
 				String documentType = ParameterConst.DOCTYPE_PURCHASE_ORDER;
 				String docNo = getManagedBean().getFulfilmentOrder().getDocNo();
-//				getManagedBean().setAllowCloseManualPay(false);
+				getManagedBean().setAllowCloseManualPay(false);
 				
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 						FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(messageId, 
 								new String[]{messagePrefix+getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, documentType)+messageSuffix, docNo}, 
-								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));*/
 				
 				
 			} else {
