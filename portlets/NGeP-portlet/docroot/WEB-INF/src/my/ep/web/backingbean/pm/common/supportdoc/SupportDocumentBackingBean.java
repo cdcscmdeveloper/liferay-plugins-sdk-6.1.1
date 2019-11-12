@@ -71,6 +71,8 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.web.util.sm.helper.SmCommonUtil;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -115,6 +117,11 @@ public class SupportDocumentBackingBean extends
 	// Default value
 	public static final boolean SEARCH_DEFAULT = false;
 	private static final String LABEL_dISPLAY_PRIORITY_KEY = "lbl.pm.display.priority";
+		
+	public SupportDocumentBackingBean() {
+		System.out.println(">>>>>>>>>>>>>>> SupportDocumentBackingBean.SupportDocumentBackingBean() <<<<<<<<<<<<<<<");
+		SmCommonUtil.setMDCUserId();
+	}
 
 	/**
 	 * get faces scopes
@@ -2083,9 +2090,11 @@ public class SupportDocumentBackingBean extends
 
 			// #26666 - start
 			if (createAction) {
+				System.out.println("1. getUserId = " + user.getUserId());
 				reqDTO.setCreatedBy(user.getUserId());
 				messageId = MessageConst.TD_80800;
 			} else {
+				System.out.println("2. getUserId = " + user.getUserId());
 				messageId = MessageConst.TD_80801;
 			}
 			reqDTO.setChangedBy(user.getUserId());
