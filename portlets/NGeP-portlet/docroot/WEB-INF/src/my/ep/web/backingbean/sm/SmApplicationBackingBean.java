@@ -1965,7 +1965,10 @@ public class SmApplicationBackingBean extends
 						.removeNotApplicableInformationBeforeSave(
 								getManagedBean());
 			} else if (currentPageType
-					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)) {
+					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)
+					//Bug #26616
+					|| currentPageType
+							.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY)) {
 				SmApplicationUtil.updateTravellingSoftware(getManagedBean());
 				nullifiedPmMachineWithNoId();
 			} else if (currentPageType
