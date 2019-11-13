@@ -62,7 +62,7 @@
 						label="#{lbl['lbl.sm.person.nationality.origin']}" id="equiPerNational"
 						required="true"
 						value="#{backingBean.managedBean.selectedShareHolder.pmCountry.countryId}"
-						disabled="#{backingBean.managedBean.disabledShareholderPersonnelNameAndNationality}"
+						disabled="#{backingBean.managedBean.disabledShareholderPersonnelNameAndNationality and backingBean.managedBean.selectedShareHolder.pmCountry.countryId != null}"
 						style="width: 207px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="shrOffCountry"
