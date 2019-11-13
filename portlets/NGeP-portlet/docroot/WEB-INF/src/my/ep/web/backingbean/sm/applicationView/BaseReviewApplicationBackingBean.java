@@ -3133,25 +3133,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				getManagedBean().setSelectedSignatoryBankAcct(
 						new SmSupplierBank());
 				removeDeletedFromList(getManagedBean().getSmSupplierBankList());
-
-				getManagedBean().setSelectedPersonnel(
-						getManagedBean().getSmAppl().getSmPersonnels().get(0));
-				setAddresses(getManagedBean().getSelectedPersonnel());
-
-				SmSoftcertRequest smSoftcertReq = getSoftcertRequest(getManagedBean()
-						.getSelectedPersonnel().getPmUser().getUserId());
-				if (smSoftcertReq != null) {
-					List<SmSoftcertRequest> smSoftcerRequests = new ArrayList<SmSoftcertRequest>();
-					smSoftcerRequests.add(smSoftcertReq);
-					getManagedBean().getSelectedPersonnel().getPmUser()
-							.setSmSoftcertRequests(smSoftcerRequests);
-
-				}
-
-				String epRoleName = epRoleName(getManagedBean().getSmAppl()
-						.getSmPersonnels().get(0).getEpRole());
-				getManagedBean().getSelectedPersonnel().setEpRole(epRoleName);
-
+				setPersonnelInfo();				
 			} else {
 				if (getManagedBean().getSmAppl().getSmCompanyBasic() == null) {
 					getManagedBean().getSmAppl().setSmCompanyBasic(
@@ -3217,11 +3199,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						smSapVendorCode.getSapVendorCode());
 			}
 
-			//if (getManagedBean().getAgencyTypeName() == null) {
-				String agencyTypeName = getAgencyTypeName(getManagedBean()
-						.getSmAppl().getSmSupplier());
-				getManagedBean().setAgencyTypeName(agencyTypeName);
-			//}
+
+			String agencyTypeName = getAgencyTypeName(getManagedBean()
+					.getSmAppl().getSmSupplier());
+			getManagedBean().setAgencyTypeName(agencyTypeName);
+
 		}
 
 	}
@@ -3316,132 +3298,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				getManagedBean().setRedirectToSupplierItemPage(false);
 				retrieveSupplierCatalogueRequestBySupplierId(getManagedBean().getSmSupplier().getSupplierId());
 			} else {
-
-				PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-				reqDTO.setApplNo(getManagedBean().getSmAppl().getApplNo());
-				PersonnelResDTO resDTO = getPersonnelSO()
-						.retrievePersonnelListByApplNo(reqDTO);
-				getManagedBean().getSmAppl().setSmPersonnels(
-						resDTO.getSmPersonnelList());
-				List<SmPersonnel> deletedPersonnels = new ArrayList<SmPersonnel>();
-
-				if (getManagedBean().getSmAppl().getSmPersonnels() == null) {
-					getManagedBean().getSmAppl().setSmPersonnels(
-							new ArrayList<SmPersonnel>());
-				} else {
-					for (SmPersonnel smPersonnel : getManagedBean().getSmAppl()
-							.getSmPersonnels()) {
-
-						String epRoleName = epRoleName(smPersonnel.getEpRole());
-						smPersonnel.setEpRole(epRoleName);
-						if (smPersonnel.getPmUser() != null) {
-							SmSoftcertRequest smSoftcertReq = getSoftcertRequest(smPersonnel
-									.getPmUser().getUserId());
-							if (smSoftcertReq != null) {
-								List<SmSoftcertRequest> smSoftcerRequests = new ArrayList<SmSoftcertRequest>();
-								smSoftcerRequests.add(smSoftcertReq);
-								smPersonnel.getPmUser().setSmSoftcertRequests(
-										smSoftcerRequests);
-
-							}
-						}
-
-						setAddresses(smPersonnel);
-
-						List<PmParameterDesc> pmParameterDescList = smPersonnel
-								.getIdentificationType().getPmParameterDescs();
-
-						for (PmParameterDesc pmParameterDesc : pmParameterDescList) {
-							FacesScopes facesScopes = new FacesScopes();
-
-							if (!facesScopes
-									.getUserLocale()
-									.getLanguage()
-									.equalsIgnoreCase(
-											pmParameterDesc.getLanguageCode())) {
-								smPersonnel.getIdentificationType()
-										.getPmParameterDescs()
-										.remove(pmParameterDesc);
-								break;
-							}
-						}
-
-						if (smPersonnel.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE
-								&& smPersonnel.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_PENDING_ACTIVATION) {
-							deletedPersonnels.add(smPersonnel);
-						}
-
-						if (smPersonnel.getRoleName() != null
-								&& StringUtils.isNotBlank(smPersonnel
-										.getRoleName())) {
-							// read value rolename from properties
-							smPersonnel
-									.setRoleName(smPersonnel
-											.getRoleName()
-											.replaceAll(
-													"Director",
-													SmCommonUtil
-															.getMessage(
-																	"lbl.sm.personnel.comprole.director",
-																	null)));
-							smPersonnel
-									.setRoleName(smPersonnel
-											.getRoleName()
-											.replaceAll(
-													"Staff",
-													SmCommonUtil
-															.getMessage(
-																	"lbl.sm.personnel.comprole.staff",
-																	null)));
-							smPersonnel
-									.setRoleName(smPersonnel
-											.getRoleName()
-											.replaceAll(
-													"Equity Owner",
-													SmCommonUtil
-															.getMessage(
-																	"lbl.sm.personnel.comprole.shareholder",
-																	null)));
-							smPersonnel
-									.setRoleName(smPersonnel
-											.getRoleName()
-											.replaceAll(
-													"Higher Management",
-													SmCommonUtil
-															.getMessage(
-																	"lbl.sm.personnel.comprole.higher.mngmnt",
-																	null)));
-							smPersonnel
-									.setRoleName(smPersonnel
-											.getRoleName()
-											.replaceAll(
-													"Management",
-													SmCommonUtil
-															.getMessage(
-																	"lbl.sm.personnel.comprole.mngmnt",
-																	null)));
-						}
-						if (getManagedBean().getSmSupplier() != null
-								&& SmCommonUtil.isSoftcertReadyForRenewal(
-										getManagedBean().getSmSupplier()
-												.getSupplierId(), smPersonnel)) {
-							log.info("Ready for renewal");
-							smPersonnel
-									.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL);
-						}
-						if (getManagedBean().getSmSupplier() != null) {
-							SmCommonUtil.setRejectedPersonnelSoftcert(
-									smPersonnel, getManagedBean()
-											.getSmSupplier().getSupplierId());
-						}
-					}
-					getManagedBean().getSmAppl().setSmPersonnels(
-							getPersonnelByRevNo());
-				}
-				SmApplicationUtil.sortPersonnelByRoleInCompany(getManagedBean()
-						.getSmAppl());
-				getManagedBean().getSmAppl().getSmPersonnels()
-						.removeAll(deletedPersonnels);
+				setPersonnelInfo();				
 			}
 
 		}
@@ -3618,6 +3475,138 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		resDTO = catalogueSO.getNumOfSuppItemByStatusAndSuppId(reqDTO);
 		size = Integer.parseInt(String.valueOf(resDTO.getNumberOfSupplierItems()));
 		getManagedBean().setExpiredSupplierItemSize(size);
+	}
+	
+	private void setPersonnelInfo() {
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setApplId(getManagedBean().getSmAppl().getApplId());
+		PersonnelResDTO resDTO = getPersonnelSO()
+				.retrievePersonnelListByApplId(reqDTO);
+		getManagedBean().getSmAppl().setSmPersonnels(
+				resDTO.getSmPersonnelList());
+		List<SmPersonnel> deletedPersonnels = new ArrayList<SmPersonnel>();
+
+		if (getManagedBean().getSmAppl().getSmPersonnels() == null) {
+			getManagedBean().getSmAppl().setSmPersonnels(
+					new ArrayList<SmPersonnel>());
+		} else {
+			for (SmPersonnel smPersonnel : getManagedBean().getSmAppl()
+					.getSmPersonnels()) {
+
+				String epRoleName = epRoleName(smPersonnel.getEpRole());
+				smPersonnel.setEpRole(epRoleName);
+				if (smPersonnel.getPmUser() != null) {
+					SmSoftcertRequest smSoftcertReq = getSoftcertRequest(smPersonnel
+							.getPmUser().getUserId());
+					if (smSoftcertReq != null) {
+						List<SmSoftcertRequest> smSoftcerRequests = new ArrayList<SmSoftcertRequest>();
+						smSoftcerRequests.add(smSoftcertReq);
+						smPersonnel.getPmUser().setSmSoftcertRequests(
+								smSoftcerRequests);
+
+					}
+				}
+
+				setAddresses(smPersonnel);
+
+				List<PmParameterDesc> pmParameterDescList = smPersonnel
+						.getIdentificationType().getPmParameterDescs();
+
+				for (PmParameterDesc pmParameterDesc : pmParameterDescList) {
+					FacesScopes facesScopes = new FacesScopes();
+
+					if (!facesScopes
+							.getUserLocale()
+							.getLanguage()
+							.equalsIgnoreCase(
+									pmParameterDesc.getLanguageCode())) {
+						smPersonnel.getIdentificationType()
+								.getPmParameterDescs()
+								.remove(pmParameterDesc);
+						break;
+					}
+				}
+
+				if (smPersonnel.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE
+						&& smPersonnel.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_PENDING_ACTIVATION) {
+					deletedPersonnels.add(smPersonnel);
+				}
+
+				if (smPersonnel.getRoleName() != null
+						&& StringUtils.isNotBlank(smPersonnel
+								.getRoleName())) {
+					// read value rolename from properties
+					smPersonnel
+							.setRoleName(smPersonnel
+									.getRoleName()
+									.replaceAll(
+											"Director",
+											SmCommonUtil
+													.getMessage(
+															"lbl.sm.personnel.comprole.director",
+															null)));
+					smPersonnel
+							.setRoleName(smPersonnel
+									.getRoleName()
+									.replaceAll(
+											"Staff",
+											SmCommonUtil
+													.getMessage(
+															"lbl.sm.personnel.comprole.staff",
+															null)));
+					smPersonnel
+							.setRoleName(smPersonnel
+									.getRoleName()
+									.replaceAll(
+											"Equity Owner",
+											SmCommonUtil
+													.getMessage(
+															"lbl.sm.personnel.comprole.shareholder",
+															null)));
+					smPersonnel
+							.setRoleName(smPersonnel
+									.getRoleName()
+									.replaceAll(
+											"Higher Management",
+											SmCommonUtil
+													.getMessage(
+															"lbl.sm.personnel.comprole.higher.mngmnt",
+															null)));
+					smPersonnel
+							.setRoleName(smPersonnel
+									.getRoleName()
+									.replaceAll(
+											"Management",
+											SmCommonUtil
+													.getMessage(
+															"lbl.sm.personnel.comprole.mngmnt",
+															null)));
+				}
+				if (getManagedBean().getSmSupplier() != null
+						&& SmCommonUtil.isSoftcertReadyForRenewal(
+								getManagedBean().getSmSupplier()
+										.getSupplierId(), smPersonnel)) {
+					log.info("Ready for renewal");
+					smPersonnel
+							.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL);
+				}
+				if (getManagedBean().getSmSupplier() != null) {
+					SmCommonUtil.setRejectedPersonnelSoftcert(
+							smPersonnel, getManagedBean()
+									.getSmSupplier().getSupplierId());
+				}
+			}
+			getManagedBean().getSmAppl().setSmPersonnels(
+					getPersonnelByRevNo());
+		}
+		if(SupplierManagementConst.SUPP_TYPE_BASIC.equalsIgnoreCase(getManagedBean().getSmAppl().getSupplierType()) 
+				&& !SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL
+				.equalsIgnoreCase(getManagedBean().getSmAppl().getSmSupplier().getBusinessType())) {
+			SmApplicationUtil.sortPersonnelByRoleInCompany(getManagedBean()
+					.getSmAppl());
+		}
+		getManagedBean().getSmAppl().getSmPersonnels()
+				.removeAll(deletedPersonnels);
 	}
 	// 25792 - end
 }
