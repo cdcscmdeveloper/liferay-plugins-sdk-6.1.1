@@ -9126,7 +9126,7 @@
 	</portlet>	
 	<portlet>
 		<portlet-name>scQTRetry</portlet-name>
-		<display-name>Quotation / Tender Service Retry</display-name>
+		<display-name>Sourcing Service Retry</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -9138,8 +9138,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Quotation / Tender Service Retry</title>
-			<short-title>Quotation / Tender Service Retry</short-title>
+			<title>Sourcing Service Retry</title>
+			<short-title>Sourcing Service Retry</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
