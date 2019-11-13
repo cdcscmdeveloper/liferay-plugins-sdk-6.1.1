@@ -2379,26 +2379,25 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 */
 	public void printSupplierProfile() throws IOException {
 		Map<String, String> paramMap = new HashMap<String, String>();
-		//paramMap.put("PAPPLNO", getManagedBean().getSmAppl().getApplNo());
 		//25792 - start
-		//currently PAPPLID and PLANG use for Basic and G2G
-		paramMap.put("PAPPLID", String.valueOf(getManagedBean().getSmAppl().getApplId()));
-		paramMap.put("PLANG", new FacesScopes().getUserLocale().getLanguage());
-		
 		String supplierType = getManagedBean().getSmAppl().getSupplierType();
 		if(my.ep.constant.sm.SupplierManagementConst.SUPP_TYPE_BASIC
 				.equalsIgnoreCase(supplierType)) {
+			//currently PAPPLID and PLANG use for Basic and G2G
+			paramMap.put("PAPPLID", String.valueOf(getManagedBean().getSmAppl().getApplId()));
+			paramMap.put("PLANG", new FacesScopes().getUserLocale().getLanguage());
 			generateReport(ReportConst.SM_SUPPLIER_PROFILE_BASIC_ACCOUNT_REPORT, paramMap);
 		} else if(my.ep.constant.sm.SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT
 				.equalsIgnoreCase(supplierType)) {
+			//currently PAPPLID and PLANG use for Basic and G2G
+			paramMap.put("PAPPLID", String.valueOf(getManagedBean().getSmAppl().getApplId()));
+			paramMap.put("PLANG", new FacesScopes().getUserLocale().getLanguage());
 			generateReport(ReportConst.SM_SUPPLIER_PROFILE_G2G_REPORT, paramMap);
 		} else {
 			paramMap.put("PAPPLNO", getManagedBean().getSmAppl().getApplNo());
 			generateReport(ReportConst.SM_SUPPLIER_PROFILE_REPORT, paramMap);
 		}
-			
-		//25792 - end	
-		//generateReport(ReportConst.SM_SUPPLIER_PROFILE_REPORT, paramMap);
+		//25792 - end
 	}
 
 	/**
