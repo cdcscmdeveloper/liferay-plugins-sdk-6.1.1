@@ -39,15 +39,20 @@
 					</c:if>
 					<tr>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.userprofile.eprole']}" /></td>
-						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedPersonnel.epRole}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedPersonnel ne null ? 
+						viewSmApplBackingBean.managedBean.selectedPersonnel.epRole : ''}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.activation.status']}" /></td>
-						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.getPersonnelActivationStatus(viewSmApplBackingBean.managedBean.selectedPersonnel,viewSmApplBackingBean.managedBean.smSupplier)}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedPersonnel ne null ? 
+						viewSmApplBackingBean.getPersonnelActivationStatus(viewSmApplBackingBean.managedBean.selectedPersonnel,viewSmApplBackingBean.managedBean.smSupplier) 
+						: ''}" /></td>
 					</tr>			
 					<tr>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.contract.signer']}" /></td>
-						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedPersonnel.contractSigner ? lbl['lbl.txt.yes'] : lbl['lbl.txt.no']}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedPersonnel ne null ? 
+						(viewSmApplBackingBean.managedBean.selectedPersonnel.contractSigner ? lbl['lbl.txt.yes'] : lbl['lbl.txt.no']) : ''}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.digital.certificate.status']}" /></td>
 						<td>
+						<c:if test="#{viewSmApplBackingBean.managedBean.selectedPersonnel ne null}">
 						<c:choose>
 						<c:when test="#{viewSmApplBackingBean.managedBean.selectedPersonnel.softcertFlg == 1}">
 						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.softcert.flg.issued']}" />
@@ -76,18 +81,21 @@
 						<c:otherwise>
 						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}" />
 						</c:otherwise>
-						</c:choose>						
+						</c:choose>	
+						</c:if>					
 						</td>
 					</tr>
 					<tr>						
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.digital.certificate.start.date']}" /></td>
 						<td><p:outputPanel>
-								<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedPersonnel.pmUser.smSoftcertRequests.get(0).pmDigiCert.validFrom}" />
+								<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedPersonnel ne null ? 
+								viewSmApplBackingBean.managedBean.selectedPersonnel.pmUser.smSoftcertRequests.get(0).pmDigiCert.validFrom : ''}" />
 							</p:outputPanel>
 						</td>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.digital.certificate.end.date']}" /></td>
 						<td><p:outputPanel>
-								<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedPersonnel.pmUser.smSoftcertRequests.get(0).pmDigiCert.validTo}" />
+								<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedPersonnel ne null ? 
+								viewSmApplBackingBean.managedBean.selectedPersonnel.pmUser.smSoftcertRequests.get(0).pmDigiCert.validTo : ''}" />
 							</p:outputPanel>
 						</td>
 					</tr>
