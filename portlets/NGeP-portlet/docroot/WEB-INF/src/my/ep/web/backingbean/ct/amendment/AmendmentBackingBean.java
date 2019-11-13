@@ -258,6 +258,20 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			ICommitteSO committeSO = null;
 			try {
 				committeReqDTO = new CommitteReqDTO();
+				//Enhancement #26520 - start
+				committeReqDTO.setDocId(ctBackingBean.getManagedBean().getContractVer().getContractVerId());
+				committeReqDTO.setOrgProfileId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+				String committeeType = getManagedBean().getCommitteeType();
+				if(committeeType != null && committeeType != ""){
+					if(committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) 
+							|| committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
+						committeReqDTO.setCommitteeType(SourcingConstants.COMMTYPE_SABAH_SARAWAK_ROLE);
+					} else {
+						committeReqDTO.setCommitteeType(committeeType);
+					}
+				}
+				committeReqDTO.setDocType(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode());
+				//Enhancement #26520 - end
 				if (getManagedBean().getCommitteeName() != null && !"".equalsIgnoreCase(getManagedBean().getCommitteeName())) {
 					SearchFilterBean filterBean = new SearchFilterBean("userName", SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getCommitteeName());
 					filterBean.setCaseInsensitive(true);
