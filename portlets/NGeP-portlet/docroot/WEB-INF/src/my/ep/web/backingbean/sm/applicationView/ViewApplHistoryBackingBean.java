@@ -437,38 +437,29 @@ public class ViewApplHistoryBackingBean extends
 		reqDTO.setApplId(applId);
 		SmAppl smAppl = SmServiceLookup.getMofRegistrationSO()
 				.retrieveSmApplicationDetailsById(reqDTO).getSmAppl();
-		log.info("Init Sm Appl");
-		log.info("Appl Id: " + smAppl.getApplId());
+		
 		// 25792 - start
-		String statusDesc = null;
-				
-		if (SupplierManagementConst.SUPP_TYPE_BASIC.equalsIgnoreCase(smAppl
-				.getSupplierType())) {
-			getManagedBean().setTabActiveIndex(0);
-			viewApplication(smAppl);
-			initWorkflowStatus(getManagedBean().getSmAppl(), status);
-			log.info("Supp Type Basic");
-		} else if (SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT
-				.equalsIgnoreCase(smAppl.getSupplierType())) {
-			getManagedBean().setTabActiveIndex(0);
-			viewApplication(smAppl);
-			initWorkflowStatus(getManagedBean().getSmAppl(), status);
-			log.info("Supp Type G2G");
-		} else {
-			log.info("Supp Type MOF");
-			
-				getManagedBean().setTabActiveIndex(0);
-				viewApplication(smAppl);
-				initBumiRecommendNote();
-				initVirtualCert();
-				initWorkflowStatus(getManagedBean().getSmAppl(), status);
-				if (!getManagedBean().isSupplierUser()) {
-					initPOApproverDecisionInfo();
-					initSiteVisit();
-				}
-			
+		log.info("Init Sm Appl");
+		log.info("Appl Id: " + smAppl.getApplId());		
+		log.info("Supplier type: " + smAppl.getSupplierType());
+		getManagedBean().setTabActiveIndex(0);
+		viewApplication(smAppl);
+		initWorkflowStatus(getManagedBean().getSmAppl(), status);	
+		if (!SupplierManagementConst.SUPP_TYPE_BASIC.equalsIgnoreCase(smAppl
+				.getSupplierType()) && !SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT.equalsIgnoreCase(smAppl
+						.getSupplierType())) {
+			initBumiRecommendNote();
+			initVirtualCert();
+			if (!getManagedBean().isSupplierUser()) {
+				initPOApproverDecisionInfo();
+				initSiteVisit();
+			}
 		}
-		/*if(smAppl.getPmStatus() != null) {
+		
+		/*
+		 * retrieve status from SM_APPL, not workflow status
+		 String statusDesc = null; 
+		 if(smAppl.getPmStatus() != null) {
 			statusDesc = getApplicationStatus(smAppl.getPmStatus(), smAppl);
 			getManagedBean().setApplicationStatusDesc(statusDesc);
 			List<String> rejectedStatus = Arrays
