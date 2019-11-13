@@ -92,8 +92,8 @@
 		</p:panel>
 		
 		<p:panel header="#{lbl['lbl.sm.other.application.inquiry']}" id="onlineInquiryPanelId" 
-			rendered="#{backingBean.managedBean.poToSupplierInquiry ne null}">
-			<p:inputTextarea value="#{backingBean.managedBean.poToSupplierInquiry.inquiryText}" cols="200" disabled="true" rows="15"/>
+			rendered="#{backingBean.managedBean.poToSupplierInquiry ne null}" style="word-break: break-all">
+			<h:outputText value="#{backingBean.managedBean.poToSupplierInquiry.inquiryText}" />
 		</p:panel>
 		
 		<p:panel header="#{lbl['lbl.sm.supplier.respond']}" id="onlineResponsePanelId" 
