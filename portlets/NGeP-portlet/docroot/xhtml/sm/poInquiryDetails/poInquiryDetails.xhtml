@@ -58,7 +58,7 @@
 		rendered="#{backingBean.managedBean.poUser and backingBean.managedBean.poToSupplierInquiry ne null}">
 		<table style="width: 100%;table-layout:fixed">
 			<tr>
-				<td style="white-space : normal" >
+				<td style="white-space : normal;word-break:break-all" >
 					<h:outputText value="#{backingBean.managedBean.poToSupplierInquiry.inquiryText}" />
 				</td>
 			</tr>
@@ -101,7 +101,7 @@
 					</h:outputText>
 				</p:column>
 	
-				<p:column headerText="#{lbl['lbl.sm.enquiry.po.inquiry']}" style="width : 35%;white-space : normal">
+				<p:column headerText="#{lbl['lbl.sm.enquiry.po.inquiry']}" style="width : 35%;white-space : normal;word-break: break-all">
 					<h:outputText value="#{inqHistVar.inquiryText}" />
 				</p:column>
 				
