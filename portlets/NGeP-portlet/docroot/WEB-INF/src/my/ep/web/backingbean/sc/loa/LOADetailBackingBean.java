@@ -5184,8 +5184,20 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		boolean isOneOffFulfilment = ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(fulfilmentType);
 		if(!isOneOffFulfilment) {
-			isAgreementMandatory = true;
-			loa.setAgreementReq(isAgreementMandatory);
+			//25725 - Start
+			Boolean agreementReq = loa.isAgreementReq();
+			if(loa.getContractDuration().intValue() <= 4){ //Contract period equal or less than 4 month 
+				isAgreementMandatory = false;			
+			}else{ //Contract period more than 4 month
+				isAgreementMandatory = true;
+			}	
+			
+			if(agreementReq != null){
+				loa.setAgreementReq(agreementReq);	
+			}else{
+				loa.setAgreementReq(true); // default to yes
+			}			
+			//25725 - End
 		} else if (isOneOffFulfilment && !isQuotationThresHold(overallContractAmtOrLoaAmt)){
 			//Bug #24065
 			//isAgreementMandatory = false;
