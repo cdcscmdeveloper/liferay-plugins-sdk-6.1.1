@@ -18,30 +18,33 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.service.sc.bidding.IBiddingSO;
-import my.ep.biz.service.sc.qtretry.IQTRetrySO;
-import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
-import my.ep.biz.service.sc.quationtender.IQTProposalSO;
+import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.sc.directpurchase.IQuoteSO;
+import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.scretry.IScRetrySO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constant.sc.QTDisruptionConst;
-import my.ep.constants.BpmEndpointConst;
-import my.ep.dto.sc.bidding.BiddingReqDTO;
-import my.ep.dto.sc.bidding.BiddingResDTO;
-import my.ep.dto.sc.qtretry.QTRetryReqDTO;
-import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
-import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
-import my.ep.dto.sc.quationtender.ProposalReqDTO;
-import my.ep.dto.sc.quationtender.ProposalResDTO;
+import my.ep.dto.sc.directpurchase.QuoteReqDTO;
+import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
+import my.ep.dto.sc.scretry.ScRetryReqDTO;
+import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
-import my.ep.persistence.entity.sc.qtretry.ScQtDisruptionLog;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.scretry.ScDisruptionLog;
+import my.ep.persistence.entity.sc.scretry.ScQtDisruptionLog;
+import my.ep.persistence.entity.sc.scretry.ScSQDisruptionLog;
+import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -49,7 +52,9 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 /**
  * Quotation / Tender Retry Backing Bean
@@ -65,10 +70,13 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean implements Seria
 
 	public static Logger log = EpLogger.getLogger(QTRetryBackingBean.class);
 	
-	private IPagingDataModel<ScQtDisruptionLog> retryQTDataModel = new RetryQTPagingDataModel();
+	private IPagingDataModel<ScDisruptionLog> retryQTDataModel = new RetryQTPagingDataModel();
 	private String reason;
-	private ScQtDisruptionLog selectedRetryQT;
-	private List<ScQtDisruptionLog> selectedRetryQTs;
+	private String docType;
+	private String docNo;
+	private Integer disruptionStage;
+	private ScDisruptionLog selectedRetryQT;
+	private List<ScDisruptionLog> selectedRetryQTs;
 	
 	public QTRetryBackingBean() {
 	}
@@ -80,39 +88,173 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean implements Seria
 		this.retryQTDataModel.reloadData();
 	}
 	
-	public void inactiveQTRetryAction(){ 
-		if (CollectionUtils.isNotEmpty(this.selectedRetryQTs)) {
-			List<ScQtDisruptionLog> selectedRetryQTs = new ArrayList<ScQtDisruptionLog>(this.selectedRetryQTs);
-			IQTRetrySO qtRetrySO;
-			try {
-				qtRetrySO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQTRetrySO.class);
+	/**
+	 * Add new Sc Retry Action
+	 */
+	public void addScRetryAction(){ 
+		log.info("addScRetryAction - start");
+		
+		if (StringUtils.isNotBlank(this.docType) &&
+				StringUtils.isNotBlank(this.docNo) && 
+				this.disruptionStage != null &&
+				StringUtils.isNotBlank(this.reason)) {
+			ScDisruptionLog scDisruptionLog = null;
+			if (ParameterConst.DOCTYPE_QUOTATION.equals(this.docType)) {
+				IQTDetailSO qtDetailSO;
+				try {
+					qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+					
+					QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+					reqDTO.setQtTndrNo(this.docNo);
+					ScQt scQt = qtDetailSO.retriveQtByQtNumber(reqDTO).getQtDetail();
+					if (scQt != null) {
+						scDisruptionLog = new ScQtDisruptionLog();
+						((ScQtDisruptionLog)scDisruptionLog).setScQt(scQt);
+					} else {
+						throw new EpException(MessageConst.ERROR_100004,
+								new String[] { 
+									ResourceBundleUtils.getMessage(
+										"lbl.sc.document.no", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+										new FacesScopes().getUserLocale()) });
+					}
+				} finally {
+					qtDetailSO = null;
+				}
 				
-				for (ScQtDisruptionLog qtDisruptionLog : selectedRetryQTs) {
-					qtDisruptionLog.setSuccess(true);
-					qtDisruptionLog.setErrorMsg(new StringBuilder()
-						.append(qtDisruptionLog.getErrorMsg())
+			} else if (ParameterConst.DOCTYPE_SIMPLE_QUOTE.equals(this.docType)) {
+				IQuoteSO quoteSO;
+				try {
+					quoteSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
+					
+					QuoteReqDTO reqDTO = new QuoteReqDTO();
+					reqDTO.setQuoteNo(this.docNo);
+					ScQuote quote = quoteSO.getQuoteDtlByQuoteNo(reqDTO).getQuoteBidDtl();
+					if (quote != null) {
+						scDisruptionLog = new ScSQDisruptionLog();
+						((ScSQDisruptionLog)scDisruptionLog).setScQuote(quote);
+					} else {
+						throw new EpException(MessageConst.ERROR_100004,
+								new String[] { 
+									ResourceBundleUtils.getMessage(
+										"lbl.sc.document.no", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+										new FacesScopes().getUserLocale()) });
+					}
+				} finally {
+					quoteSO = null;
+				}
+			}
+			
+			if (scDisruptionLog != null) {
+				IScRetrySO scRetrySO;
+				try {
+					scRetrySO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION, IScRetrySO.class);
+					
+					scDisruptionLog.setDisruptionStage(this.disruptionStage);
+					scDisruptionLog.setErrorMsg(this.reason);
+					super.setUserDetails(scDisruptionLog);
+					
+					log.info(new StringBuilder().append("docType:").append(scDisruptionLog.getDocType())
+							.append(", docNo:").append(scDisruptionLog.getDocNo())
+							.append(", disruptionStage:").append(scDisruptionLog.getDisruptionStage())
+							.append(", errorMsg:").append(scDisruptionLog.getErrorMsg())
+							.toString());
+					
+					ScRetryReqDTO reqDTO = new ScRetryReqDTO();
+					reqDTO.setScDisruptionLog(scDisruptionLog);
+					scRetrySO.saveScDisruption(reqDTO);	
+					
+					reloadRetryQTAction();
+					
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(
+									FacesMessage.SEVERITY_INFO,
+									null,
+									MessageUtils.getMessage(
+											MessageConst.INFO_700004,
+											new String[] { 
+													getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, scDisruptionLog.getDocType()),
+													scDisruptionLog.getDocNo() },
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));	
+				} finally {
+					scRetrySO = null;
+					this.docType = null;
+					this.docNo = null;
+					this.disruptionStage = null;
+					this.reason = null;
+				}
+			}
+		}
+		
+		RequestContext.getCurrentInstance().execute("addDisruptionPopUp.hide()");
+		
+		log.info("addScRetryAction - end");
+	}
+	
+	/**
+	 * Delete Sc Retry Action
+	 */
+	public void deleteScRetryAction(){ 
+		log.info("deleteScRetryAction - start");
+		if (CollectionUtils.isNotEmpty(this.selectedRetryQTs)) {
+			List<ScDisruptionLog> selectedRetryQTs = new ArrayList<ScDisruptionLog>(this.selectedRetryQTs);
+			IScRetrySO scRetrySO;
+			try {
+				scRetrySO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IScRetrySO.class);
+				
+				for (ScDisruptionLog scDisruptionLog : selectedRetryQTs) {
+					scDisruptionLog.setSuccess(true);
+					scDisruptionLog.setErrorMsg(new StringBuilder()
+						.append(scDisruptionLog.getErrorMsg())
 						.append("\r\nInactive Reason:")
 						.append(this.reason)
 						.toString());
-					log.info(new StringBuilder().append("qtDisruptionLogId:")
-							.append(qtDisruptionLog.getQtDisruptionLogId())
-							.append(", qtNo:" + qtDisruptionLog.getScQt().getQtNo())
-							.append(", disruptionStage:" + qtDisruptionLog.getDisruptionStage())
-							.append(", errorMsg:" + qtDisruptionLog.getErrorMsg())
+					super.setUserDetails(scDisruptionLog);
+					
+					log.info(new StringBuilder().append("disruptionLogId:").append(scDisruptionLog.getDisruptionLogId())
+							.append(", docType:").append(scDisruptionLog.getDocType())
+							.append(", docNo:").append(scDisruptionLog.getDocNo())
+							.append(", disruptionStage:").append(scDisruptionLog.getDisruptionStage())
+							.append(", errorMsg:").append(scDisruptionLog.getErrorMsg())
 							.toString());
 					
-					QTRetryReqDTO reqDTO = new QTRetryReqDTO();
-					reqDTO.setScQtDisruptionLog(qtDisruptionLog);
-					qtRetrySO.saveQTDisruption(reqDTO);
+					ScRetryReqDTO reqDTO = new ScRetryReqDTO();
+					reqDTO.setScDisruptionLog(scDisruptionLog);
+					scRetrySO.saveScDisruption(reqDTO);
+					
+					this.selectedRetryQTs.remove(scDisruptionLog);
+					
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(
+									FacesMessage.SEVERITY_INFO,
+									null,
+									MessageUtils.getMessage(
+											MessageConst.INFO_721205,
+											new String[] { 
+													getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, scDisruptionLog.getDocType()),
+													scDisruptionLog.getDocNo() },
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));	
 				}
 				
 				reloadRetryQTAction();
 			} finally {
-				qtRetrySO = null;
+				scRetrySO = null;
 				this.reason = null;
 			}
 		}
+		
+		RequestContext.getCurrentInstance().execute("deleteDisruptionPopUp.hide()");
+		
+		log.info("deleteScRetryAction - end");
 	}
 	
 	/**
@@ -122,32 +264,44 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean implements Seria
 		log.info("submitQTRetryAction - start");
 		
 		if (CollectionUtils.isNotEmpty(this.selectedRetryQTs)) {
-			List<ScQtDisruptionLog> selectedRetryQTs = new ArrayList<ScQtDisruptionLog>(this.selectedRetryQTs);
+			List<ScDisruptionLog> selectedRetryQTs = new ArrayList<ScDisruptionLog>(this.selectedRetryQTs);
 			
-			IQTRetrySO qtRetrySO;
+			IScRetrySO qtRetrySO;
 			try {
 				qtRetrySO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQTRetrySO.class);
+						ModuleCodeConst.SUPPLIER_SELECTION, IScRetrySO.class);
 				
-				QTRetryReqDTO reqDTO = new QTRetryReqDTO();
+				ScRetryReqDTO reqDTO = new ScRetryReqDTO();
 				reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
-				for (ScQtDisruptionLog selectedRetryQT : selectedRetryQTs) {
-					reqDTO.setScQtDisruptionLog(selectedRetryQT);
+				for (ScDisruptionLog selectedRetryQT : selectedRetryQTs) {
+					reqDTO.setScDisruptionLog(selectedRetryQT);
 					reqDTO.setDisruptionStage(selectedRetryQT.getDisruptionStage());
-					qtRetrySO.retryQTService(reqDTO);
+					String errorMessage = qtRetrySO.retryScService(reqDTO)
+							.getErrorMessage();
 					
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(
-									FacesMessage.SEVERITY_INFO,
-									null,
-									MessageUtils.getMessage(
-											MessageConst.INFO_700005,
-											new String[] { 
-													getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,ParameterConst.DOCTYPE_QUOTATION),
-													selectedRetryQT.getScQt().getQtNo() },
-											MessageUtils.BUNDLE_COMMON_MESSAGES,
-											new FacesScopes().getUserLocale())));	
+					if (StringUtils.isNotBlank(errorMessage)) {
+						FacesContext.getCurrentInstance().addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_ERROR,
+										null,
+										getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, selectedRetryQT.getDocType()) + " " +
+										selectedRetryQT.getDocNo() + ": " + 
+										errorMessage));	
+					} else {
+						FacesContext.getCurrentInstance().addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_INFO,
+										null,
+										MessageUtils.getMessage(
+												MessageConst.INFO_700005,
+												new String[] { 
+														getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, selectedRetryQT.getDocType()),
+														selectedRetryQT.getDocNo() },
+												MessageUtils.BUNDLE_COMMON_MESSAGES,
+												new FacesScopes().getUserLocale())));	
+					}
 				}
 			} finally {
 				qtRetrySO = null;
@@ -159,12 +313,30 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean implements Seria
 		
 		log.info("submitQTRetryAction - end");
 	}
+	
+	/**
+	 * Gets the doc types dropdown values for sc retry.
+	 *
+	 * @return the doc types dropdown values for sc retry
+	 */
+	public SelectItem[] getScRetryDocTypeDropdownValues() {
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		List<String> docTypes = new ArrayList<String>();	
+		docTypes.add(ParameterConst.DOCTYPE_QUOTATION);
+		docTypes.add(ParameterConst.DOCTYPE_SIMPLE_QUOTE);
+		
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmParameter.parameterCode",
+						SearchOperator.OPERATOR_IN.value(), docTypes));
+		return getDropdownCodeValuesBySearchBean(
+				ParameterTypeConst.DOCUMENT_TYPES, searchBean);
+	}
 
 	/**
 	 * Get the RetryQTDataModel.
 	 * @return the retryQTDataModel
 	 */
-	public IPagingDataModel<ScQtDisruptionLog> getRetryQTDataModel() {
+	public IPagingDataModel<ScDisruptionLog> getRetryQTDataModel() {
 		return retryQTDataModel;
 	}
 
@@ -172,8 +344,50 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean implements Seria
 	 * Set the RetryQTDataModel.
 	 * @param retryQTDataModel the retryQTDataModel to set
 	 */
-	public void setRetryQTDataModel(IPagingDataModel<ScQtDisruptionLog> retryQTDataModel) {
+	public void setRetryQTDataModel(IPagingDataModel<ScDisruptionLog> retryQTDataModel) {
 		this.retryQTDataModel = retryQTDataModel;
+	}
+
+	/**
+	 * @return the docType
+	 */
+	public String getDocType() {
+		return docType;
+	}
+
+	/**
+	 * @param docType the docType to set
+	 */
+	public void setDocType(String docType) {
+		this.docType = docType;
+	}
+
+	/**
+	 * @return the docNo
+	 */
+	public String getDocNo() {
+		return docNo;
+	}
+
+	/**
+	 * @param docNo the docNo to set
+	 */
+	public void setDocNo(String docNo) {
+		this.docNo = docNo;
+	}
+
+	/**
+	 * @return the disruptionStage
+	 */
+	public Integer getDisruptionStage() {
+		return disruptionStage;
+	}
+
+	/**
+	 * @param disruptionStage the disruptionStage to set
+	 */
+	public void setDisruptionStage(Integer disruptionStage) {
+		this.disruptionStage = disruptionStage;
 	}
 
 	/**
@@ -194,7 +408,7 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean implements Seria
 	 * Get the SelectedRetryQT.
 	 * @return the selectedRetryQT
 	 */
-	public ScQtDisruptionLog getSelectedRetryQT() {
+	public ScDisruptionLog getSelectedRetryQT() {
 		return selectedRetryQT;
 	}
 
@@ -202,7 +416,7 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean implements Seria
 	 *  Set the SelectedRetryQT.
 	 * @param selectedRetryQT the selectedRetryQT to set
 	 */
-	public void setSelectedRetryQT(ScQtDisruptionLog selectedRetryQT) {
+	public void setSelectedRetryQT(ScDisruptionLog selectedRetryQT) {
 		this.selectedRetryQT = selectedRetryQT;
 	}
 
@@ -210,7 +424,7 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean implements Seria
 	 *  Get the SelectedRetryQT.
 	 * @return the selectedRetryQTs
 	 */
-	public List<ScQtDisruptionLog> getSelectedRetryQTs() {
+	public List<ScDisruptionLog> getSelectedRetryQTs() {
 		return selectedRetryQTs;
 	}
 
@@ -218,14 +432,14 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean implements Seria
 	 *  Set the SelectedRetryQT.
 	 * @param selectedRetryQTs the selectedRetryQTs to set
 	 */
-	public void setSelectedRetryQTs(List<ScQtDisruptionLog> selectedRetryQTs) {
+	public void setSelectedRetryQTs(List<ScDisruptionLog> selectedRetryQTs) {
 		this.selectedRetryQTs = selectedRetryQTs;
 	}
 
 	/**
 	 * Retry quotation/tender list paging class
 	 */
-	private class RetryQTPagingDataModel extends PagingDataModel<ScQtDisruptionLog> {
+	private class RetryQTPagingDataModel extends PagingDataModel<ScDisruptionLog> {
 
 		private static final long serialVersionUID = 1L;
 
@@ -241,25 +455,25 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean implements Seria
 		 * .biz.bean.search.ISearchBean)
 		 */
 		@Override
-		public ISearchResultBean<ScQtDisruptionLog> pageChangeListener(ISearchBean<ScQtDisruptionLog> searchBean) {
+		public ISearchResultBean<ScDisruptionLog> pageChangeListener(ISearchBean<ScDisruptionLog> searchBean) {
 			if (log.isDebugEnabled()) {
 				log.debug("pageChangeListener");
 			}
 
-			IQTRetrySO qtRetrySO = null;
+			IScRetrySO scRetrySO = null;
 			try {
-				qtRetrySO = BusinessDelegate.getInstance()
+				scRetrySO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-								IQTRetrySO.class);
+								IScRetrySO.class);
 
-				QTRetryReqDTO reqDTO = new QTRetryReqDTO();
-				reqDTO.setQtRetrySearchBean(searchBean);
-				return qtRetrySO
-						.retrieveQTRetryList(reqDTO)
-						.getQtRetryResultBean();
+				ScRetryReqDTO reqDTO = new ScRetryReqDTO();
+				reqDTO.setScRetrySearchBean(searchBean);
+				return scRetrySO
+						.retrieveScRetryList(reqDTO)
+						.getScRetryResultBean();
 
 			} finally {
-				qtRetrySO = null;
+				scRetrySO = null;
 			}
 		}
 	}
