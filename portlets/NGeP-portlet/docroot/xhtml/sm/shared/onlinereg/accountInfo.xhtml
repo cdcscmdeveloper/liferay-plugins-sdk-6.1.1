@@ -36,7 +36,7 @@
 					<td class="tdContent"><p:selectOneMenu id="suppTypeId" required="#{!empty param['disableValidation']}"
 							value="#{registrationBackingBean.managedBean.smAppl.supplierType}"
 							label="#{lbl['lbl.sm.mofsuppliertype']}" style="width:200px"
-							disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew || registrationBackingBean.managedBean.companyValidWithSSM}">
+							disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew || registrationBackingBean.managedBean.smAppl.applValidWithSsm}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItem itemLabel="#{lbl['lbl.sm.contractor']}"
 								itemValue="#{SupplierManagementConst.STYPE_CONTRACTOR}" />
@@ -64,13 +64,13 @@
 				<!-- 16052019 - SSM INTEGRATION CR - Fahmi-->
 				<td style="text-align:left;width:30%;word-wrap: break-word;">
 				<c:choose>
-					<c:when test="#{registrationBackingBean.managedBean.smAppl.brandNew and registrationBackingBean.managedBean.companyValidWithSSM}">
+					<c:when test="#{registrationBackingBean.managedBean.smAppl.brandNew and registrationBackingBean.managedBean.smAppl.applValidWithSsm}">
 						<p:selectOneMenu id="busTypeId" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.businesscomptype']}"
 							value="#{registrationBackingBean.managedBean.smSupp.businessType}" 
 							rendered="#{registrationBackingBean.managedBean.smAppl.brandNew or !registrationBackingBean.managedBean.disabledBusinessTypeInMaintenance}" 
 							style="width:310px">
 							<f:selectItems value="#{registrationBackingBean.pmBusinessTypeDropDown()}"/>
-							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues}" update="@all" process="@form" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew || registrationBackingBean.managedBean.companyValidWithSSM}" ></p:ajax>
+							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues}" update="@all" process="@form" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew || registrationBackingBean.managedBean.smAppl.applValidWithSsm}" ></p:ajax>
 						</p:selectOneMenu>
 					</c:when>
 					<c:otherwise>
@@ -78,9 +78,9 @@
 							value="#{registrationBackingBean.managedBean.smSupp.businessType}" 
 							rendered="#{registrationBackingBean.managedBean.smAppl.brandNew or !registrationBackingBean.managedBean.disabledBusinessTypeInMaintenance}" 
 							style="width:310px"
-							disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew || registrationBackingBean.managedBean.companyValidWithSSM}">
+							disabled="#{(registrationBackingBean.managedBean.smAppl.applType == SupplierManagementConst.ACC_BASIC and registrationBackingBean.managedBean.disabledBusinessTypeInMaintenance) or (!registrationBackingBean.managedBean.smAppl.brandNew or registrationBackingBean.managedBean.companyValidWithSSM)}">
 							<f:selectItems value="#{registrationBackingBean.pmBusinessTypeDropDown()}"/>
-							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues}" update="@all" process="@form" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew || registrationBackingBean.managedBean.companyValidWithSSM}" ></p:ajax>
+							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues}" update="@all" process="@form" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew || registrationBackingBean.managedBean.smAppl.applValidWithSsm}" ></p:ajax>
 						</p:selectOneMenu>
 					</c:otherwise>
 				</c:choose>
@@ -127,7 +127,7 @@
 					<!--  #16052019 - SSM INTEGRATION CR - Fahmi  -->
 						<p:inputText id="regNo" required="#{!empty param['disableValidation']}" maxlength="30"
 							value="#{registrationBackingBean.managedBean.smSupp.regNo}" converter="toUpperCaseConverter"
-							disabled="#{!registrationBackingBean.managedBean.smSupp.brandNew || registrationBackingBean.managedBean.companyValidWithSSM}"
+							disabled="#{!registrationBackingBean.managedBean.smSupp.brandNew || registrationBackingBean.managedBean.smAppl.applValidWithSsm}"
 							size="40" label="#{lbl['lbl.sm.businessregno']}" >
 							<p:ajax event="blur" update="regNoPanelId" listener="#{registrationBackingBean.removeRegNoWhiteSpace}" />
 							<f:validator validatorId="busRegNoValidator" />
