@@ -3349,10 +3349,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			
 			if (scLoa.getScLoiLoa().getSmSupplier() != null) {
 				quoteReqDTO.setSupplierId(scLoa.getScLoiLoa().getSmSupplier().getSupplierId());
-				
+				quoteReqDTO.setSmSupplier(scLoa.getScLoiLoa().getSmSupplier());
 			}
 			//quoteReqDTO.setFetchSubEntity(true);
-			QuoteResDTO quoteResDTO = quoteSO.getQuoteDtlForSupplier(quoteReqDTO);
+			QuoteResDTO quoteResDTO = quoteSO.getQuoteDtlForLOASupplier(quoteReqDTO);
 			log.info("Supplier ID"+quoteReqDTO.getSupplierId());  
 			
 	
