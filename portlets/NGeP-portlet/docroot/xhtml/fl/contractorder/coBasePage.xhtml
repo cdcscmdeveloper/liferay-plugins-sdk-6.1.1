@@ -80,7 +80,7 @@
 				</ui:decorate>
 				</c:if>
 				</td>
-							<c:if test='#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmUpdate}'>
+			<c:if test='#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmUpdate}'>
 				<td colspan="4" style="text-align: right"><p:commandButton
 						value="#{lbl['lbl.btn.update']}" 
 						action="#{flOrderBB.fulfillmentOrderAction(BpmOutcomeConstant.bpmUpdate)}">
@@ -94,13 +94,17 @@
 						<f:param name="actionName" value="#{BpmOutcomeConstant.bpmCancel}" />
 					</p:commandButton></td>
 			</c:if>
-				<c:if test='#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}'>
-					<td colspan="4" style="text-align: right"><p:commandLink
-							rendered="#{!flOrderBB.managedBean.isHyperLinkPage()}"
-							value="#{lbl['lbl.td.doc.trackingDiary']}"
-							action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(flOrderBB.managedBean.fulfilmentOrder.docType,flOrderBB.managedBean.fulfilmentOrder.fulfilmentOrderId)}"
-							immediate="true" /></td>
-				</c:if>
+			<c:if test='#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}'>
+				<td colspan="4" style="text-align: right"><p:commandLink
+						rendered="#{!flOrderBB.managedBean.isHyperLinkPage()}"
+						value="#{lbl['lbl.td.doc.trackingDiary']}"
+						action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(flOrderBB.managedBean.fulfilmentOrder.docType,flOrderBB.managedBean.fulfilmentOrder.fulfilmentOrderId)}"
+						immediate="true" /></td>
+			</c:if>
+			<td colspan="4" style="text-align: right">
+			<p:commandButton value="#{lbl['lbl.btn.close.manual.pay']}" immediate="true" action="#{flOrderBB.closeManualPayment}" 
+					process="@form" partialSubmit="true" rendered="#{flOrderBB.managedBean.yep}"
+					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/></td>
 				<h:panelGroup id="printButtonCo">
 					<td style="text-align: right; width: 30px;"><p:commandLink
 							value="#{lbl['lbl.btn.print']}" ajax="false">
