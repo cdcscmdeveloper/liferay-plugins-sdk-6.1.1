@@ -84,7 +84,8 @@
 							</ui:define>
 						</ui:decorate>
 					</c:if>
-					<p:commandButton value="#{lbl['lbl.btn.close.manual.pay']}" immediate="true" action="#{flOrderBB.closeManualPayment}" process="@form" partialSubmit="true"
+					<p:commandButton value="#{lbl['lbl.btn.close.manual.pay']}" immediate="true" action="#{flOrderBB.closeManualPayment}" 
+					process="@form" partialSubmit="true" rendered="#{flOrderBB.managedBean.yep}"
 					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/>
 				</td>
 				</c:if>
