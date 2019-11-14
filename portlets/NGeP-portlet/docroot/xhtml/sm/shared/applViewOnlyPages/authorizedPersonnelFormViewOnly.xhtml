@@ -88,13 +88,15 @@
 					<tr>						
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.digital.certificate.start.date']}" /></td>
 						<td><p:outputPanel>
-								<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedPersonnel ne null ? 
+								<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedPersonnel ne null 
+								and !viewSmApplBackingBean.managedBean.selectedPersonnel.pmUser.smSoftcertRequests.isEmpty() ? 
 								viewSmApplBackingBean.managedBean.selectedPersonnel.pmUser.smSoftcertRequests.get(0).pmDigiCert.validFrom : ''}" />
 							</p:outputPanel>
 						</td>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.digital.certificate.end.date']}" /></td>
 						<td><p:outputPanel>
-								<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedPersonnel ne null ? 
+								<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedPersonnel ne null 
+								and !viewSmApplBackingBean.managedBean.selectedPersonnel.pmUser.smSoftcertRequests.isEmpty() ? 
 								viewSmApplBackingBean.managedBean.selectedPersonnel.pmUser.smSoftcertRequests.get(0).pmDigiCert.validTo : ''}" />
 							</p:outputPanel>
 						</td>
