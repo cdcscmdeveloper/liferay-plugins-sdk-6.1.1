@@ -141,6 +141,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.constant.SPKIConst;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -204,6 +205,26 @@ public class PmCommonUtil implements Serializable{
 	
 	
 	/**
+	 * get report type options pdf 1 excel 2
+	 * 
+	 * @return SelectItem[]
+	 */
+	public static SelectItem[] getDocumentTypeOption() {
+		SelectItem[] items = new SelectItem[2];
+		items[0] = new SelectItem(ReportConst.PDF,
+				ResourceBundleUtils.getMessage("lbl.sm.pdf",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
+		items[1] = new SelectItem(ReportConst.XLS,
+				ResourceBundleUtils.getMessage("lbl.sm.excel",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
+		return items;
+	}
+	
+	
+	/**
+	 * Enhancement #25136 
 	 * Check date BankDetailRedundant
 	 * 
 	 * @param bankIdA
@@ -214,14 +235,13 @@ public class PmCommonUtil implements Serializable{
 	 * @param accountCodeB
 	 * @return isRedundant
 	 */
-	/** rollback #25136
-	public static boolean BankDetailRedundant(Long bankIdA,String bankCodeA,String accountCodeA, Long bankIdB, String bankCodeB, String accountCodeB) {
+	public static boolean BankDetailRedundant(Long bankIdA,String bankCodeA,String accountCodeA, Long bankIdB, String bankCodeB, String accountCodeB, Integer statusA, Integer statusB) {
 
 		boolean isRedundant = false;
 		
 		// cannot Redundant
 		if(bankIdA.equals(bankIdB)){
-			if (bankCodeA.equalsIgnoreCase(bankCodeB)&& accountCodeA.equalsIgnoreCase(accountCodeB)){
+			if (bankCodeA.equalsIgnoreCase(bankCodeB)&& accountCodeA.equalsIgnoreCase(accountCodeB) && statusA==statusB){
 				isRedundant = true;
 				
 			}
@@ -229,7 +249,7 @@ public class PmCommonUtil implements Serializable{
 
 		return isRedundant;
 	}
-*/
+
 	/**
 	 * Check Role Restriction by role code and user role list
 	 * 
@@ -2706,6 +2726,20 @@ public class PmCommonUtil implements Serializable{
 						IOrgProfileSO.class);
 		OrgProfileResDTO orgResDTO = orgProfileSO
 				.retrieveOrgDetailsByOrgId(reqDTO);
+		return orgResDTO.getPmOrgProfile();
+		
+	}
+	
+	public static PmOrgProfile retrieveOrgProfileDtlByCode(String code) {
+		log.info("retrieveOrgProfileDtlByCode");
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgCode(code);
+		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+		OrgProfileResDTO orgResDTO = orgProfileSO
+				.retrieveOrgProfileByCode(reqDTO);
 		return orgResDTO.getPmOrgProfile();
 		
 	}
