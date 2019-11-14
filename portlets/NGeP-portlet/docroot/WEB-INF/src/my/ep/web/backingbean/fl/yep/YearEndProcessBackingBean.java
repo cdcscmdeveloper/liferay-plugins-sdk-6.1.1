@@ -215,12 +215,14 @@ public class YearEndProcessBackingBean extends
 		IFulfilmentOrderSO fulfilmentOrderSO = null;
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+		FulfilmentOrderBackingBean flOrderBB=new FulfilmentOrderBackingBean();
 		
 		String navgPage = "xhtml/fl/yep/search/searchYearEndProcess.xhtml";
 		String docType = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docType");
 		String flDocId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docId");
 		String buttonVal = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("buttonVal");
 		String statusDesc = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("statusDesc");
+		
 		
 		
 		 if(docType.equals(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
@@ -230,7 +232,7 @@ public class YearEndProcessBackingBean extends
 				FulfilmentResDTO resDTO = fulfilmentOrderSO.retrieveFulfilmentOrderById(reqDTO);			
 				fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 
-				FulfilmentOrderBackingBean flOrderBB=new FulfilmentOrderBackingBean();
+				
 				flOrderBB.renewSesionObject();
 				flOrderBB.getManagedBean().setButtonVal(buttonVal);
 				String[] outcome = new String[1];
@@ -267,7 +269,7 @@ public class YearEndProcessBackingBean extends
 				reqDTO.setFlOrderId(Long.valueOf(flDocId));
 				FulfilmentResDTO coResDTO=fulfilmentOrderSO.retrieveFulfilmentOrderById(reqDTO);
 				
-				FulfilmentOrderBackingBean flOrderBB=new FulfilmentOrderBackingBean();
+				
 				flOrderBB.renewSesionObject();
 				flOrderBB.getManagedBean().setButtonVal(buttonVal);
 				flOrderBB.getManagedBean().setSelectedTabIndex(0);
@@ -287,7 +289,7 @@ public class YearEndProcessBackingBean extends
 				
 				navgPage=NAV_TO_MAINTAIN_CO;
 			}
-		 
+		 flOrderBB.getManagedBean().setYep(true);
 		 return navgPage;
 	}
 

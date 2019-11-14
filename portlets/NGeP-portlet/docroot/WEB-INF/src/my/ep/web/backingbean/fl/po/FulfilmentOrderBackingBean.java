@@ -138,7 +138,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	 *  @throws IOException 
 	 */
 
-  	public void closeManualPayment() throws IOException{
+  	public String closeManualPayment() throws IOException{
 		debugLogger("start of close manual payment");
 		IFulfilmentOrderSO fulfilementOrderSO = null;
 		FulfilmentResDTO resDTO = null;
@@ -160,9 +160,10 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			
 			resDTO = fulfilementOrderSO.closeManualPayment(reqDTO);
 			
-			successMessage(MessageConst.INFO_700072, ParameterTypeConst.DOCUMENT_TYPES,
-					ParameterConst.DOCTYPE_PURCHASE_ORDER,getManagedBean().getFulfilmentOrder().getDocNo().toString(), Boolean.FALSE);
+			
 			if(resDTO.isSuccessful()) {
+				successMessage(MessageConst.INFO_700072, ParameterTypeConst.DOCUMENT_TYPES,
+						ParameterConst.DOCTYPE_PURCHASE_ORDER,getManagedBean().getFulfilmentOrder().getDocNo().toString(), Boolean.FALSE);
 				/*String messageId = MessageConst.INFO_700005;
 				String documentType = ParameterConst.DOCTYPE_PURCHASE_ORDER;
 				String docNo = getManagedBean().getFulfilmentOrder().getDocNo();
@@ -182,7 +183,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			
 			
 			
-//			return CommonUIConst.ACKNOWLEDGE_REPORT_PAGE;
+			return CommonUIConst.ACKNOWLEDGE_REPORT_PAGE;
 			
 		}finally{
 			fulfilementOrderSO = null;
@@ -550,7 +551,10 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				
 			}
 		}
-		getEspkbCommitmentNo();
+		if(!getManagedBean().getButtonVal().equalsIgnoreCase(BpmOutcomeConst.BPM_CLOSE_MANUAL)){
+			getEspkbCommitmentNo();
+		}
+		
 		
 	}
 	
