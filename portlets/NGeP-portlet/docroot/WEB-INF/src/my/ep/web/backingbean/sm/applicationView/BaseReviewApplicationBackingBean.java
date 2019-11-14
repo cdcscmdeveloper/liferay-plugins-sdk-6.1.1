@@ -3417,7 +3417,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 							break;
 						}
 					}
-
 				}
 			}
 		}
@@ -3498,15 +3497,13 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				if (smPersonnel.getPmUser() != null) {
 					SmSoftcertRequest smSoftcertReq = getSoftcertRequest(smPersonnel
 							.getPmUser().getUserId());
-					if (smSoftcertReq != null) {
-						List<SmSoftcertRequest> smSoftcerRequests = new ArrayList<SmSoftcertRequest>();
-						smSoftcerRequests.add(smSoftcertReq);
-						smPersonnel.getPmUser().setSmSoftcertRequests(
-								smSoftcerRequests);
-
+					List<SmSoftcertRequest> smSoftcerRequests = new ArrayList<SmSoftcertRequest>();
+					if (smSoftcertReq != null) {						
+						smSoftcerRequests.add(smSoftcertReq);						
 					}
+					smPersonnel.getPmUser().setSmSoftcertRequests(
+							smSoftcerRequests);
 				}
-
 				setAddresses(smPersonnel);
 
 				List<PmParameterDesc> pmParameterDescList = smPersonnel
