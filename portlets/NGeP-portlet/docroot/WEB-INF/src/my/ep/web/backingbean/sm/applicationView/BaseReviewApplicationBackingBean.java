@@ -2385,13 +2385,13 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				.equalsIgnoreCase(supplierType)) {
 			//currently PAPPLID and PLANG use for Basic and G2G
 			paramMap.put("PAPPLID", String.valueOf(getManagedBean().getSmAppl().getApplId()));
-			paramMap.put("PLANG", new FacesScopes().getUserLocale().getLanguage());
+			paramMap.put("PLANGUAGE", new FacesScopes().getUserLocale().getLanguage());
 			generateReport(ReportConst.SM_SUPPLIER_PROFILE_BASIC_ACCOUNT_REPORT, paramMap);
 		} else if(my.ep.constant.sm.SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT
 				.equalsIgnoreCase(supplierType)) {
 			//currently PAPPLID and PLANG use for Basic and G2G
 			paramMap.put("PAPPLID", String.valueOf(getManagedBean().getSmAppl().getApplId()));
-			paramMap.put("PLANG", new FacesScopes().getUserLocale().getLanguage());
+			paramMap.put("PLANGUAGE", new FacesScopes().getUserLocale().getLanguage());
 			generateReport(ReportConst.SM_SUPPLIER_PROFILE_G2G_REPORT, paramMap);
 		} else {
 			paramMap.put("PAPPLNO", getManagedBean().getSmAppl().getApplNo());
