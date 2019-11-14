@@ -3,7 +3,9 @@
  */
 package my.ep.web.managedbean.pm.taskassign;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -46,6 +48,9 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	private List<Integer> statusIds;
 	private boolean isRemarkRequired;
 	private String remarks;
+	private Map<String,String> reassigneeList = new LinkedHashMap<String,String>();
+	private List<String> selectedReassignee;
+	private boolean showReassigneeList;
 	
 	public TaskReassignmentManagedBean(){}
 
@@ -329,7 +334,40 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	public void setCommitteeUpdate(boolean isCommitteeUpdate) {
 		this.isCommitteeUpdate = isCommitteeUpdate;
 	}
-
 	
+	/**
+	 *  @return the reassigneeList
+	 */
+	public Map<String,String> getReassigneeList() {
+		return reassigneeList;
+	}
+	
+	/**
+	 * @param selectedReassignee the selectedReassignee to set
+	 */
+	public void setSelectedReassignee(List<String> selectedReassignee) {
+		this.selectedReassignee = selectedReassignee;
+	}
+	
+	/**
+	 * @return the selectedReassignee
+	 */
+	public List<String> getSelectedReassignee() {
+		return selectedReassignee;
+	}
+	
+	/**
+	 * @return the showReassigneeList
+	 */
+	public boolean isShowReassigneeList() {
+		return showReassigneeList;
+	}
+
+	/**
+	 * @param showReassigneeList the showReassigneeList to set
+	 */
+	public void setShowReassigneeList(boolean showReassigneeList) {
+		this.showReassigneeList = showReassigneeList;
+	}
 	
 }
