@@ -2730,20 +2730,6 @@ public class PmCommonUtil implements Serializable{
 		
 	}
 	
-	public static PmOrgProfile retrieveOrgProfileDtlByCode(String code) {
-		log.info("retrieveOrgProfileDtlByCode");
-		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-		reqDTO.setOrgCode(code);
-		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
-				.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IOrgProfileSO.class);
-		OrgProfileResDTO orgResDTO = orgProfileSO
-				.retrieveOrgProfileByCode(reqDTO);
-		return orgResDTO.getPmOrgProfile();
-		
-	}
-	
 	public static List<PmPoJobWeight> retrievePmPoJobWeightList(){
 		log.info("retrievePmPoJobWeightList");
 		IPoJobWeightSO jobWeightSO = null;
