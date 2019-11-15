@@ -2529,9 +2529,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					ctBB.getManagedBean().setCtContractAmount(contractAmt);
 				}
 				//Bug #26542 -start
-				if (new Date().getTime() >= contractAmt.getEffDate().getTime() 
-						&& new Date().getTime() <= contractAmt.getExpDate().getTime()){
-					ctBB.getManagedBean().setCtContractAmount(contractAmt);		
+				if ((new Date().after(contractAmt.getEffDate()) || (new Date().equals(contractAmt.getEffDate())))
+						&& ((new Date().before(contractAmt.getExpDate())) || (new Date().equals(contractAmt.getExpDate())))){
+					ctBB.getManagedBean().setCtContractAmount(contractAmt);
 					break;
 				}
 				//Bug #26542 -end
