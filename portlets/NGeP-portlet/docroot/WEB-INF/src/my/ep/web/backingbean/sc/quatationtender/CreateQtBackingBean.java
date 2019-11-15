@@ -706,32 +706,13 @@ public class CreateQtBackingBean extends
 						scQt.setOpenFor(ParameterConst.OPEN_FOR_BUMI);
 					} else {
 						
-						// 20190820@hatta - 22240 - Start
-					    boolean cetak = false;	
-						if (!EntityHelper.isCollectionEmpty(scQt.getScQtCategorys())) {
-							for (ScQtCategory cat : scQt.getScQtCategorys()) {
-							   if( (!StringUtils.isBlank(cat.getPmCategoryL2Name()) && 
-								       cat.getPmCategoryL2Name().substring(0,10).equalsIgnoreCase("PERCETAKAN")) && 
-										     (getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) ||
-										      getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL) || 
-										      getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT) ||
-										      getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF) ||
-										      getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)) ){
-									cetak = true;
-							   }	
-							}
-							
-						}
-						
-						if(cetak)
-						{
+						boolean printed = false; 
+						printed = isPrintedForBumiputraOnly(this.getManagedBean().getQtCategoryList(),printed);
+						if(printed || scQt.getOpenFor().equals(ParameterConst.OPEN_FOR_BUMI)){
 							scQt.setOpenFor(ParameterConst.OPEN_FOR_BUMI);
-						}
-						else
-						{
+						}else{
 							scQt.setOpenFor(ParameterConst.OPEN_FOR_ALL);
-						}
-						// 20190820@hatta - 22240 - End
+						}   
 						
 					}	
 				}
