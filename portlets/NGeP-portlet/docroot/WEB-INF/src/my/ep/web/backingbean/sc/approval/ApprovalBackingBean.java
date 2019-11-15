@@ -72,6 +72,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalReqAttachement;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
+import my.ep.persistence.entity.sc.quationtender.ScQtApproverSettings;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
@@ -86,7 +87,6 @@ import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.QTDocumentsBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
-import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.UserTasks;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
@@ -330,30 +330,54 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		return imageFileName;
 	}
 
-	
+	/*:::Enhancement #21692 #135 - start:::*/
 	/**
 	 * preRenderView(). user click on task list it will Render Approvals screens
 	 * for(Committee/BPK/Finalization/Publication).
 	 */
-	public void prepareTrackingDiary(ScQt scQt, Long decessionType) {
-		QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+	public void prepareTrackingDiary(ScQt scQt, Long decisionType) {
+		Long currentStatusId = this.getManagedBean().getCurrentStatusId();
 		FacesScopes facesScope = new FacesScopes();
+		QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+		
 		qtReqDTO.setToken(facesScope.getBPMAuthenticationCtxToken());
 		qtReqDTO.setTaskId(this.getManagedBean().getTaskId());
-		qtReqDTO.setStatusId(this.getManagedBean().getCurrentStatusId());
+		qtReqDTO.setStatusId(currentStatusId);
 		qtReqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 		qtReqDTO.setDeskOfficer(facesScope.getUserSessionBean());
 		qtReqDTO.setQtdetail(scQt);
 		qtReqDTO.setPmUser(facesScope.getUserSessionBean());
+		
+		String approvalType = this.getManagedBean().getApprovalType();
+		
+		if (approvalType.equals(ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE) && 
+			currentStatusId.equals(QTStatusConst.EPV_PENDING_APPROVAL)) {
 
-		getQTDetailSO().prepareTrackingDiaryByDecessionType(qtReqDTO, decessionType);
+			String fcSecretaryRole = null;
+			List<ScQtApproverSettings> approverSettings = this.getManagedBean().getScQtApproval().getApproverSettings();
+		
+			if (null != approverSettings && !approverSettings.isEmpty()) {
+								
+				if (approverSettings.get(0).getCommitteeType().getParameterCode().equals(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD)) {
+					fcSecretaryRole = RoleCode.PBB_SECRETARY.value();
+				} else if (approverSettings.get(0).getCommitteeType().getParameterCode().equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)
+						|| approverSettings.get(0).getCommitteeType().getParameterCode().equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
+					fcSecretaryRole = RoleCode.FPB_SECRETARY.value();
+				}					
+				
+				log.info(":::prepareTrackingDiary() roleCode: "+ fcSecretaryRole +", decisionType: "+ decisionType);
+
+				qtReqDTO.setRoleCode(fcSecretaryRole);
+			}						
+		}
+
+		getQTDetailSO().prepareTrackingDiaryByDecisionType(qtReqDTO, decisionType);
 	}
+	/*:::Enhancement #21692 #135 - end:::*/
 
 	public void preRenderView() {
 		Object obj = getBpmTaskDetails(Object.class, null);
 		String taskName = getManagedBean().getTaskName();
-		
-		
 
 		Long qtId = null;
 		List<String> paramTypes = null;
@@ -431,10 +455,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					getManagedBean().getQt().getQtId());
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
 
-		} else if (SCProcessNameConst.FC_APPROVE_QT_CHANGE
-				.equalsIgnoreCase(taskName)) {
-			paramTypes = getRequestTypes(((SCQuotationTenderDataType) obj)
-					.getXflagFinalization());
+		} else if (SCProcessNameConst.FC_APPROVE_QT_CHANGE.equalsIgnoreCase(taskName)) { //valid
+			
+			paramTypes = getRequestTypes(((SCQuotationTenderDataType) obj).getXflagFinalization());
 			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE;
 			approvalRequests = getApprovalRequests(qtId, approvalCategoryCode,
 					ParameterConst.DOCTYPE_QUOTATION, paramTypes, null);
@@ -444,8 +467,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			setFCApproveQTChangeValues(approvalRequests);
 
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
-		} else if (SCProcessNameConst.SUPPLIER_ACCEPT_QT_CHANGE
-						.equalsIgnoreCase(taskName)) {
+			
+		} else if (SCProcessNameConst.SUPPLIER_ACCEPT_QT_CHANGE.equalsIgnoreCase(taskName)) {
+			
 			SCQuotationTenderDataType dataType = (SCQuotationTenderDataType)obj;
 			paramTypes = getRequestTypes(dataType.getXflagFinalization());
 			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE;
@@ -862,14 +886,18 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			Long decessionType = approvalRequest.getDecessionType().getParameterId();
 
 			if (QTStatusConst.PCB_RQ1_APPROVED.longValue() == decessionType.longValue()
-					|| QTStatusConst.PCB_RQ3_APPROVED.longValue() == decessionType.longValue()) {
+					|| QTStatusConst.PCB_RQ3_APPROVED.longValue() == decessionType.longValue()) { //1834L || 1854L
+				
 				approvalBpmTask(BpmOutcomeConst.BPM_APPROVE);
+				
 			} else if (QTStatusConst.PCB_RQ1_REJECTED.longValue() == decessionType.longValue()
-					|| QTStatusConst.PCB_RQ3_REJECTED.longValue() == decessionType.longValue()) {
+					|| QTStatusConst.PCB_RQ3_REJECTED.longValue() == decessionType.longValue()) { //1835L || 1855L
+				
 				approvalBpmTask(BpmOutcomeConst.BPM_REJECT);
-			}
 
-			prepareTrackingDiary(this.getManagedBean().getQt(), decessionType);
+				prepareTrackingDiary(this.getManagedBean().getQt(), decessionType);
+			}
+			
 		}
 	}
 	
@@ -883,22 +911,24 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	public void approvalBpmTask(String action) {
 		String showDialog = null;
 		boolean isGpkiPopup = false;
-		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-						IQTDetailSO.class);
+		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+		
 		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 		reqDTO.setQtdetail(this.getManagedBean().getQt());
 		reqDTO.setApproval(this.getManagedBean().getScQtApproval());
-		reqDTO.setApprovalRequests(this.getManagedBean()
-						.getScQtApprovalRequestList());
+		reqDTO.setApprovalRequests(this.getManagedBean().getScQtApprovalRequestList());
 		reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+		
 		this.getManagedBean().setAction(action);
+		
 		String taskName = this.getManagedBean().getTaskName();
 		logger.debug("Task Name : " + taskName);
+		
 		if (SCProcessNameConst.APPROVE_BPK.equalsIgnoreCase(taskName)) {
 			boolean isRevised = false;
 			boolean isApproved = false;
 			boolean isRejected = false;
+			
 			for (ScQtApprovalRequest approvalRequest : this.getManagedBean().getScQtApprovalRequestList()) {
 				String approverAction = approvalRequest.getApproverAction().getParameterCode();
 				
@@ -923,9 +953,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				action = BpmOutcomeConst.BPM_APPROVE;
 //				showDialog = "gpki_dlg.show()";
 //				isGpkiPopup = true;
-				FacesContext fc = FacesContext.getCurrentInstance();
-				fc.getApplication().getNavigationHandler()
-						.handleNavigation(fc, null, gpkiSignAction(null));
+				gpkiSignAction(null);
 			} else if (isRejected) {
 				action = BpmOutcomeConst.BPM_REJECT;
 				showDialog = "rejectApprovalDlg.show()";
@@ -970,9 +998,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				
 				if(SCProcessNameConst.APPROVE_CANCELATION.equalsIgnoreCase(taskName) || 
 						SCProcessNameConst.FC_APPROVE_QT_CHANGE.equalsIgnoreCase(taskName)) {
-					FacesContext fc = FacesContext.getCurrentInstance();
-					fc.getApplication().getNavigationHandler()
-							.handleNavigation(fc, null, gpkiSignAction(null));
+					gpkiSignAction(null);
 				} else {
 					showDialog = "gpki_dlg.show()";
 					isGpkiPopup = true;
@@ -997,56 +1023,24 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 *            (Mandatory)
 	 * @return the string(ACKNOWLEDGE_PAGE)
 	 */
-	public String gpkiSignAction(PmDigiSign digiSign) {
-		QuationTenderResDTO tenderResDTO = updateBpmTask(this.getManagedBean()
-				.getAction(), digiSign);
+	public void gpkiSignAction(PmDigiSign digiSign) {
+		QuationTenderResDTO tenderResDTO = updateBpmTask(this.getManagedBean().getAction(), digiSign);
+		
 		if (tenderResDTO.isSuccessful()) {
 			ScQt qt = tenderResDTO.getQtDetail();
-			if (ParameterConst.APPROVAL_REQUEST_PUBLICATION_APPROVAL.equalsIgnoreCase(this
-					.getManagedBean().getApprovalType())) {
+			
+			if (ParameterConst.APPROVAL_REQUEST_PUBLICATION_APPROVAL.equalsIgnoreCase(this.getManagedBean().getApprovalType())) {
 				log.info("Publication Approval executed");
-				FacesContext
-				.getCurrentInstance()
-				.addMessage(
-						null,
-						new FacesMessage(
-								FacesMessage.SEVERITY_INFO,
-								null,
-								MessageUtils
-										.getMessage(
-												MessageConst.INFO_700069,
-												new String[] {
-														getMessageCommon("lbl.sc.qt.public.approval.approve.message"),
-														qt.getQtNo() },
-												MessageUtils.BUNDLE_COMMON_MESSAGES,
-												new FacesScopes()
-														.getUserLocale())));
+				successMessage(MessageConst.INFO_700069, getMessageCommon("lbl.sc.qt.public.approval.approve.message"),
+						qt.getQtNo(), Boolean.TRUE);
+
 			}else{
 				log.info("Other Approval executed");
-			FacesContext
-					.getCurrentInstance()
-					.addMessage(
-							null,
-							new FacesMessage(
-									FacesMessage.SEVERITY_INFO,
-									null,
-									MessageUtils
-											.getMessage(
-													getMessgeConstant(this
-															.getManagedBean()
-															.getAction()),
-													new String[] {
-															getParameterDesc(
-																	ParameterTypeConst.DOCUMENT_TYPES,
-																	ParameterConst.DOCTYPE_QUOTATION),
-															qt.getQtNo() },
-													MessageUtils.BUNDLE_COMMON_MESSAGES,
-													new FacesScopes()
-															.getUserLocale())));
+				successMessage(getMessgeConstant(this.getManagedBean().getAction()),
+						getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION),
+						qt.getQtNo(), Boolean.TRUE);
 			}
-			return CommonUIConst.ACKNOWLEDGE_PAGE;
 		}
-		return null;
 	}
 
 	/**
@@ -1058,11 +1052,11 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 *            (optional)
 	 * @return QuationTenderResDTO (boolean successful,ScQtCommittee committee)
 	 */
-	private QuationTenderResDTO updateBpmTask(String outcome,
-			PmDigiSign digiSign) {
+	private QuationTenderResDTO updateBpmTask(String outcome, PmDigiSign digiSign) {
 		FacesScopes facesScopes = new FacesScopes();
 		String taskName = this.getManagedBean().getTaskName();
 		QuationTenderResDTO tenderResDTO = new QuationTenderResDTO();
+		
 		try {
 			ScQt qt = this.getManagedBean().getQt();
 			qt.setScQtStatus(null);
@@ -1076,8 +1070,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				ScQtApproval approval = this.getManagedBean().getScQtApproval();
 				List<String> committeeTypes = new ArrayList<String>();
 
-				updateApprovalRequest(this.getManagedBean()
-						.getScQtApprovalRequestList(), outcome);
+				updateApprovalRequest(this.getManagedBean().getScQtApprovalRequestList(), outcome);
 				finalizeRemarks(approval.getScQtApprovalRemarks());
 				List<ScQtApproval> qtApproval = new ArrayList<ScQtApproval>();
 				qtApproval.add(approval);
@@ -1151,30 +1144,31 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				committeResDto = committeSO.updateBPMAction(committeReqDTO);
 				tenderResDTO.setSuccessful(committeResDto.isSuccessful());
 				tenderResDTO.setQtDetail(qt);
+			
 			} else {
+				
 				boolean isFinalApproval = false;
 				boolean bpkRevise = false;
 				List<String> approvalTypes = null;
 				QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
 				SCQuotationTenderDataType dataType = (SCQuotationTenderDataType)this.getManagedBean().getPayLoad();
+				
 				qtReqDTO.setApprovalFlow(true);
 				qtReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 				qtReqDTO.setTaskId(this.getManagedBean().getTaskId());
 				qtReqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 				qtReqDTO.setUserLocale(new FacesScopes().getUserLocale());
-				IQTDetailSO detailSO = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-								IQTDetailSO.class);
+				
+				IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 				String approvalDocType = ParameterConst.DOCTYPE_QUOTATION;
 				ScQtApproval approval = this.getManagedBean().getScQtApproval();
 
-				String approvalCategoryCode = approval.getApprovalCategory()
-						.getParameterCode();
+				String approvalCategoryCode = approval.getApprovalCategory().getParameterCode();
 				qtReqDTO.setApprovalCategory(approvalCategoryCode);
-				List<ScQtApprovalRequest> approvalRequests = this
-						.getManagedBean().getScQtApprovalRequestList();
-				if (ParameterConst.APPROVAL_CATEGORY_BPK
-						.equalsIgnoreCase(approvalCategoryCode)) {
+				
+				List<ScQtApprovalRequest> approvalRequests = this.getManagedBean().getScQtApprovalRequestList();
+				
+				if (ParameterConst.APPROVAL_CATEGORY_BPK.equalsIgnoreCase(approvalCategoryCode)) { //BPK
 					approvalDocType = ParameterConst.DOCTYPE_BPK_APPROVAL;
 					approval.setApproverSettings(null);
 
@@ -1189,15 +1183,15 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						qtReqDTO.setRejected(true);
 						revertToOldValues(qt, approvalRequests);
 					}
-				} else if (ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE
-						.equalsIgnoreCase(approvalCategoryCode)) {
+					
+				} else if (ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE.equalsIgnoreCase(approvalCategoryCode)) { //FC
 
 					if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
 						qtReqDTO.setRejected(true);
 						revertToOldValues(qt, approvalRequests);
-					} else if (BpmOutcomeConst.BPM_APPROVE
-							.equalsIgnoreCase(outcome)) {
+					} else if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
 						isFinalApproval = dataType != null && CollectionUtils.isEmpty(dataType.getSupplierList());
+						
 						approvalTypes = approveApprovalRequests(qt, 
 								approvalRequests, 
 								isFinalApproval);
@@ -1231,6 +1225,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 				qt.setScQtCommittees(null);
 				qtReqDTO.setPayLoad(dataType);
+				
 				FacesScopes facesScope = new FacesScopes();
 				qtReqDTO.setDeskOfficer(facesScope.getUserSessionBean());
 				qtReqDTO.setQtdetail(qt);
@@ -1238,16 +1233,15 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				qtReqDTO.setRoleCode(getUserRoleCode());
 				qtReqDTO.setOutcome(outcome);
 				qtReqDTO.setUserLocale(facesScope.getUserLocale());
-				qtReqDTO.setToBeRemoveRestrictedSupplierList(this
-						.getManagedBean().getToBeRemoveRestrictedSupplierList());
+				qtReqDTO.setToBeRemoveRestrictedSupplierList(this.getManagedBean().getToBeRemoveRestrictedSupplierList());
 
 				if (null != digiSign) {
-					updatePmDigiSignData(digiSign, approvalDocType,
-							qt.getQtId(), qt.getQtNo());
+					updatePmDigiSignData(digiSign, approvalDocType, qt.getQtId(), qt.getQtNo());
 				}
+				
 				qtReqDTO.setDigiSignData(digiSign);
-				tenderResDTO = (QuationTenderResDTO) detailSO
-						.updateBPMAction(qtReqDTO);
+				
+				tenderResDTO = (QuationTenderResDTO) detailSO.updateBPMAction(qtReqDTO);
 				// tenderResDTO.setSuccessful(qtResDTO.isSuccessful());
 				
 				if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
@@ -1316,34 +1310,16 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * 
 	 * @return the string
 	 */
-	public String updateReviceBpmTask() {
+	public void updateReviceBpmTask() {
 		QuationTenderResDTO tenderResDTO = updateBpmTask(this.getManagedBean()
 				.getAction(), null);
 		if (tenderResDTO.isSuccessful()) {
 			ScQt qt = tenderResDTO.getQtDetail();
-			FacesContext
-					.getCurrentInstance()
-					.addMessage(
-							null,
-							new FacesMessage(
-									FacesMessage.SEVERITY_INFO,
-									null,
-									MessageUtils
-											.getMessage(
-													getMessgeConstant(this
-															.getManagedBean()
-															.getAction()),
-													new String[] {
-															getParameterDesc(
-																	ParameterTypeConst.DOCUMENT_TYPES,
-																	ParameterConst.DOCTYPE_QUOTATION),
-															qt.getQtNo() },
-													MessageUtils.BUNDLE_COMMON_MESSAGES,
-													new FacesScopes()
-															.getUserLocale())));
-			return CommonUIConst.ACKNOWLEDGE_PAGE;
+
+			successMessage(getMessgeConstant(this.getManagedBean().getAction()),
+					getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION),
+					qt.getQtNo(), Boolean.TRUE);
 		}
-		return null;
 	}
 	
 	/**
@@ -1351,34 +1327,16 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * 
 	 * @return the string
 	 */
-	public String updateRejectBpmTask() {
+	public void updateRejectBpmTask() {
 		QuationTenderResDTO tenderResDTO = updateBpmTask(this.getManagedBean()
 				.getAction(), null);
 		if (tenderResDTO.isSuccessful()) {
 			ScQt qt = tenderResDTO.getQtDetail();
-			FacesContext
-					.getCurrentInstance()
-					.addMessage(
-							null,
-							new FacesMessage(
-									FacesMessage.SEVERITY_INFO,
-									null,
-									MessageUtils
-											.getMessage(
-													getMessgeConstant(this
-															.getManagedBean()
-															.getAction()),
-													new String[] {
-															getParameterDesc(
-																	ParameterTypeConst.DOCUMENT_TYPES,
-																	ParameterConst.DOCTYPE_QUOTATION),
-															qt.getQtNo() },
-													MessageUtils.BUNDLE_COMMON_MESSAGES,
-													new FacesScopes()
-															.getUserLocale())));
-			return CommonUIConst.ACKNOWLEDGE_PAGE;
+
+			successMessage(getMessgeConstant(this.getManagedBean().getAction()),
+					getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION),
+					qt.getQtNo(), Boolean.TRUE);
 		}
-		return null;
 	}
 
 	/**
@@ -1464,15 +1422,15 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				SCProcessNameConst.SUPPLIER_ACCEPT_QT_CHANGE.equalsIgnoreCase(taskName));
 		tenderReqDTO.setShowAmendmentData(
 				SCProcessNameConst.PUBLICATION_APPROVE_QT_CHANGE.equalsIgnoreCase(taskName));
+		
 		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-						IQTDetailSO.class);
-		QuationTenderResDTO resDTO = detailSO
-				.retrieveApprovalsByQtIdNType(tenderReqDTO);
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+		QuationTenderResDTO resDTO = detailSO.retrieveApprovalsByQtIdNType(tenderReqDTO);
 
 		this.getManagedBean().setQt(resDTO.getQtDetail());
 		this.getManagedBean().setScQtApproval(resDTO.getQtApproval());
 		this.getManagedBean().setAmendMentBean(resDTO.getAmendMentBean());
+		
 		return resDTO.getApprovalRequests();
 	}
 
@@ -1976,8 +1934,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			qtReqDTO.setRoleCode(getUserRoleCode());
 			qtReqDTO.setOutcome(outcome);
 
-			QuationTenderResDTO tenderResDTO = (QuationTenderResDTO) detailSO
-					.updateSupplierAction(qtReqDTO);
+			QuationTenderResDTO tenderResDTO = (QuationTenderResDTO) detailSO.updateSupplierAction(qtReqDTO);
 
 			qt = tenderResDTO.getQtDetail();
 			if (tenderResDTO.isSuccessful()) {
