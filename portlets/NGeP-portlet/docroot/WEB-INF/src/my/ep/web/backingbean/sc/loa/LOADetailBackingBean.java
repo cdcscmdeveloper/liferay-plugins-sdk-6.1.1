@@ -1353,10 +1353,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			ScLoaReport scLoaReport) {
 		ScLoa scLoa = getManagedBean().getScLoa();	
 		ScQt scQt = getManagedBean().getScQt();
-		if(scQt !=null)
-		{
-			log.info("scQt is not null****    "+scQt);
-		}
+		
 		String definitionType = scLoaReport.getDefinationType()
 				.getParameterCode();
 		ScLoaReportAttachment scLoaReportAttachment = scLoaReport
@@ -1369,34 +1366,30 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			
 			try {
 				String docDefinitionKey = scLoaReport.getPmDocument().getDocDefinitionKey();
-				log.info("docDefinitionKey****    "+docDefinitionKey);
 				Long statusId = scLoa.getPmStatus().getStatusId();
+				log.info("docDefinitionKey--->   "+docDefinitionKey);
+				log.info("statusId --->    "+statusId);
 				
-				log.info("statusId ****    "+statusId);
-				
-			  //  Long statusId1=Long.valueOf(statusId3);
-			   // log.info("statusId II****    "+str);
-				//log.info("statusId II****    "+statusId3);
+			
 				
 				//development purpose - enable create document when the document doesn't exist
 				/* if(scLoaReportAttachment == null || getManagedBean().getEnableDownloadAllDocuments()) {*/
 				if (scLoaReportAttachment == null ) {
-					log.info("scLoaReportAttachment  in the if condition  ");
 					//replace white space due to firefox 
 					filename.append(scLoaReport.getTitle().replaceAll("\\s",""));
 					scLoaReportAttachment = new ScLoaReportAttachment();
 					scLoaReportAttachment.setScLoaReport(scLoaReport);
 					scLoaReportAttachment.setDocNo(scLoaReport.getScLoa()
 							.getLoaNo());
-					log.info("End of scLoaReportAttachment  condition and docDefinitionKey value "+ docDefinitionKey+" --->  " +SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER);
+					
 					if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER.trim().equals(docDefinitionKey.trim())) {
 						filename.append(".docx");
-						log.info("filename****    "+filename);
+						log.info("filename--->    "+filename);
 						scLoaReportAttachment.setFileName(filename.toString());
-						log.info("scLoaReportAttachment****    "+scLoaReportAttachment.getFileName());
+						log.info("scLoaReportAttachment--->   "+scLoaReportAttachment.getFileName());
 						generateAgreementLetterDocFromVelocity(
 								(ScAttachment) scLoaReportAttachment, scLoa, this.getManagedBean().getScQt());
-						log.info("docDefinitionKey****    "+scLoa.getScLoiLoa());
+						//log.info("docDefinitionKey--->    "+scLoa.getScLoiLoa());
 					}else if (SourcingConstants.DOC_DEF_KEY_ACKNOWLEDGEMENT_LOA_RECEIPT
 							.equals(docDefinitionKey)) {
 						filename.append(".pdf");
@@ -1460,11 +1453,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 				}else if(scLoaReportAttachment != null && 
 						QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId) || QTStatusConst.LOA_PENDING_VERIFICATION.equals(statusId)
-						|| QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId) || QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)){
+						|| QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)){
 					// if pending supplier acknowledgment , always regenerate 
 					scLoaReportAttachment.setDocNo(scLoaReport.getScLoa()
 							.getLoaNo());
-					log.info("****In the report attachment not equal to null ****");
+					
 					if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
 							.equals(docDefinitionKey)) {
 						//filename.append(".pdf");
