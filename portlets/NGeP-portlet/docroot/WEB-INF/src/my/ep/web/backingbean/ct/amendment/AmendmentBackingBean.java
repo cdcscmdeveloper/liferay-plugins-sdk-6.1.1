@@ -4478,9 +4478,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		userReqDTO.setUserId(committeeMember.getPmUser().getUserId());
 		
 		UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);	
+		/*#25892-basri*/
 		userReqDTO.setLanguageCode("EN");
 		userResDTO.setRoleDescList(userSO.retrieveUserRoleDescListByUserId(userReqDTO).getRoleDescList());
 		userResDTO.setPmUser(userSO.retrieveUserByUserId(userReqDTO).getPmUser());
+		/*end*/
 		
 		PmOrgProfile orgProfile = null;
 
@@ -4504,6 +4506,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			
 			
+			/*#25892-basri*/
 			/*code for allow bpk chairperson*/
 			if(userResDTO.getPmUser().getOrgTypeCode().getParameterCode().equalsIgnoreCase(ParameterConst.ORG_TYPE_BPK)){
 				for(PmRoleDesc pm : userResDTO.getRoleDescList())
