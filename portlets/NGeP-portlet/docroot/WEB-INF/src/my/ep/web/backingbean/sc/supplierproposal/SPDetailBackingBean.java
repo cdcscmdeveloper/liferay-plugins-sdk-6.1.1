@@ -621,6 +621,9 @@ public class SPDetailBackingBean extends
 			scQtProposal.setSubmitted(true);
 			reqDTO.setScQtProposal(scQtProposal);
 			reqDTO.setDigiSignData(digiSign);
+			///20191023@asyrafhaziq - Prevent Auto Score null - Start
+			checkingForAutoScore(scQtProposal);
+			//20191023@asyrafhaziq - Prevent Auto Score null - End
 
 			ProposalResDTO resDTO = proposalSO.submitSupplierProposal(reqDTO);
 			if (resDTO.isSuccessful()) {
@@ -645,6 +648,32 @@ public class SPDetailBackingBean extends
 			reqDTO = null;
 		}
 	}
+	
+	//20191023@asyrafhaziq - Prevent Auto Score null - Start
+	public void checkingForAutoScore(ScQtProposal scQtProposal ) {
+		log.info("enter checkingForAutoScore");
+		List<ScQtProposalChecklist> scQtProposalChecklist = scQtProposal.getScQtProposalChecklists();
+		IQTProposalSO proposalSO = null;	
+		try {
+
+			proposalSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+			
+			ProposalReqDTO proposalReqDTO = new ProposalReqDTO();
+			for (ScQtProposalChecklist proposalChecklist : scQtProposalChecklist )
+			{
+				proposalReqDTO.setScQtProposalChecklist(proposalChecklist);
+				proposalReqDTO.setScQt(this.getManagedBean().getQt());
+				proposalReqDTO.setSupplierId(getManagedBean().getSupplierId());
+				proposalSO.saveAndCheckAutoScore(proposalReqDTO);
+					
+			}
+		} finally {
+
+			proposalSO = null;
+		}
+	}
+	//20191023@asyrafhaziq - Prevent Auto Score null - End
 
 	/**
 	 * Prepare original text.
