@@ -220,6 +220,8 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private List<SmRemark> approverRemarkList;
 	
 	private SmCancelMofRemarksVO cancelRemarkVO;
+	
+	private boolean viewSupplierMaintenancePage; // #26639
 
 	public BaseReviewApplicationManagedBean() {
 		selectedCert = new SmSupplierCert();
@@ -1581,4 +1583,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		this.remarkOverlappedId = remarkOverlappedId;
 	}
 
+	// #26639 - start
+	public boolean isViewSupplierMaintenancePage() {
+		return viewSupplierMaintenancePage;
+	}
+
+	public void setViewSupplierMaintenancePage(boolean viewSupplierMaintenancePage) {
+		this.viewSupplierMaintenancePage = viewSupplierMaintenancePage;
+	}
+	// #26639 - end
+	
 }

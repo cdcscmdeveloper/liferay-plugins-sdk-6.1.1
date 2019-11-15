@@ -966,6 +966,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setViewSupplierProfile(true);
 		getManagedBean().setReviewApplicationExist(false);
 		getManagedBean().setViewApplicationHistory(false);
+		getManagedBean().setViewSupplierMaintenancePage(true);		
 		getManagedBean().setRegStatusDescList(
 				SmApplicationUtil.getInstance().retrieveRegistrationStatusList(
 						null, null));
