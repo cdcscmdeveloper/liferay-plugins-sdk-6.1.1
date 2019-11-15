@@ -2253,14 +2253,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}*/
 		//SSM INTEGRATION CR
 		//to filter out by company type
-		if(businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG) || businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG) || businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD) || businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD)){
-//		if(this.getManagedBean().isSsmIntegrationActive() && this.getManagedBean().isCompanyValidWithSSM()){
+		if(this.getManagedBean().isSsmIntegrationActive() && this.getManagedBean().isCompanyValidWithSSM()){
 			List<SelectItem> itemTemp = new ArrayList<SelectItem>();
 			itemTemp.add(new SelectItem(null, ResourceBundleUtils.getMessage(
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					fs.getUserLocale())));
 			for(SelectItem item : items){
-//				if(this.getManagedBean().isSsmIntegrationActive() && this.getManagedBean().isCompanyValidWithSSM()){
+				if(this.getManagedBean().isSsmIntegrationActive() && this.getManagedBean().isCompanyValidWithSSM()){
 					if(item.getValue() == null){
 						continue;
 					}
@@ -2273,7 +2272,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							itemTemp.add(item);
 						}
 					}
-//				}
+				}
 			}
 			items = null;
 			items =  itemTemp.toArray(new SelectItem[itemTemp.size()]);
