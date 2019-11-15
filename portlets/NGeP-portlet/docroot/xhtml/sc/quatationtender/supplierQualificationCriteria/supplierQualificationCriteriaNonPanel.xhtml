@@ -65,10 +65,23 @@
 									value="*" styleClass="mandatory" rendered="#{!scQt.panel}" />               
 				             </td>
 				              <td>
-						     	<p:selectOneRadio required="true" label="#{lbl['lbl.sc.open.for']}" value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.openFor}">
-								 <f:selectItems value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.scOpenFor)}" />
-									<p:ajax event="change" process="@this" partialSubmit="true" update="@form" listener="#{createQtBB.openForChange}"></p:ajax>				
-							    </p:selectOneRadio>	    
+						     	<c:choose>
+	                                   <c:when test="#{qTDetailBB.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_BPK_APPROVAL or 
+	                                                   qTDetailBB.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL or 
+	                                                   qTDetailBB.managedBean.currentStatusId eq QTStatusConst.QT_REVISION_PUBLICATION or
+	                                                   qTDetailBB.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_PUBLICATION}" >
+					                       <p:selectOneRadio label="#{lbl['lbl.sc.open.for']}" value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.openFor}" disabled="true" >
+												 <f:selectItems value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.scOpenFor)}" />
+												 <p:ajax event="change" process="@this" partialSubmit="true" update="@form" listener="#{createQtBB.openForChange}"></p:ajax>				
+								           </p:selectOneRadio>	
+							           </c:when>
+							           <c:otherwise>  
+										    <p:selectOneRadio required="true" label="#{lbl['lbl.sc.open.for']}" value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.openFor}" disabled="#{qTDetailBB.managedBean.readOnly}">
+											 <f:selectItems value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.scOpenFor)}" />
+												<p:ajax event="change" process="@this" partialSubmit="true" update="@form" listener="#{createQtBB.openForChange}"></p:ajax>				
+										    </p:selectOneRadio>	
+									  </c:otherwise> 
+								 </c:choose>    	    
 							  </td>
 						  </tr>
 					 </table>
