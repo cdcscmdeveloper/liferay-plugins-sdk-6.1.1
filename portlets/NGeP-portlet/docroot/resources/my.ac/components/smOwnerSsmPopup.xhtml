@@ -15,14 +15,14 @@
 		<cc:attribute name="btnOkProcess" required="false" default="@this" />
 		<cc:attribute name="btnOkUpdate" required="false" default="@form" />
 		<cc:attribute name="btnCancelLabel" required="true" />
-		<cc:attribute name="height" required="false" default="200" />
-		<cc:attribute name="width" required="false" default="400" />
+		<cc:attribute name="height" default="200" />
+		<cc:attribute name="width" default="400" />
 	</cc:interface>
 
 	<cc:implementation>
 		<p:dialog id="#{cc.attrs.dialogId}" header="#{cc.attrs.title}"
 			widgetVar="#{cc.attrs.dialogId}WidgetVar" modal="true"
-			height="#{cc.attrs.height}" width="#{cc.attrs.width}">
+			height="#{cc.attrs.height}" width="#{cc.attrs.width}" resizable="false">
 			<div id="#{cc.attrs.dialogId}ContentDiv">
 				<h:outputText value="#{cc.attrs.content}" />
 			</div>
