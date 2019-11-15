@@ -92,6 +92,7 @@ import my.ep.persistence.entity.ct.dtl.item.CtItemMaxQty;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
@@ -107,6 +108,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
+import my.ep.type.pm.LanguageCode;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.MemberRole;
 import my.ep.util.EpPropertiesUtils;
@@ -4475,7 +4477,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		UserReqDTO userReqDTO = new UserReqDTO();
 		userReqDTO.setUserId(committeeMember.getPmUser().getUserId());
 		
-		UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);		
+		UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);	
+		userReqDTO.setLanguageCode("EN");
+		userResDTO.setRoleDescList(userSO.retrieveUserRoleDescListByUserId(userReqDTO).getRoleDescList());
+		userResDTO.setPmUser(userSO.retrieveUserByUserId(userReqDTO).getPmUser());
+		
 		PmOrgProfile orgProfile = null;
 
 		if (userResDTO.getUserOrgList() != null && userResDTO.getUserOrgList().size() > 0) {
@@ -4496,6 +4502,23 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				
 				allowChairpersonRole = true;
 			}
+			
+			
+			/*code for allow bpk chairperson*/
+			if(userResDTO.getPmUser().getOrgTypeCode().getParameterCode().equalsIgnoreCase(ParameterConst.ORG_TYPE_BPK)){
+				for(PmRoleDesc pm : userResDTO.getRoleDescList())
+				{
+					if(pm.getPmRole().getRoleCode().equalsIgnoreCase(RoleCode.PBB_CHAIRPERSON.value()) 
+							|| pm.getPmRole().getRoleCode().equalsIgnoreCase(RoleCode.PBA_CHAIRPERSON.value())
+							|| pm.getPmRole().getRoleCode().equalsIgnoreCase(RoleCode.PPB_CHAIRPERSON.value())){
+						allowChairpersonRole = true;
+						continue;
+						
+					}
+				}
+			}
+			
+			/*end*/
 			
 			log.info(":::allowChairpersonRole() "+ orgProfileId +". committee type: "+ getManagedBean().getCommitteeType());
 
