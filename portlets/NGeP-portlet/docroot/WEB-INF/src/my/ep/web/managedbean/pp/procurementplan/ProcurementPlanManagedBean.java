@@ -5,6 +5,7 @@ package my.ep.web.managedbean.pp.procurementplan;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -111,6 +112,9 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private boolean isDisabledPTJLov = false;	
 	private boolean isTrackingDiary;
 	private Long oldYearValue;
+	private Date invitationMinDateFrom;
+	private Date invitationMinDateTo;
+	private Date invitationMaxDate;
 	
 	public ProcurementPlanManagedBean(){}
 
@@ -1113,5 +1117,28 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 		this.deleteEpItemsH = deleteEpItemsH;
 	}
 
+	public Date getInvitationMinDateFrom() {
+		return invitationMinDateFrom;
+	}
+
+	public void setInvitationMinDateFrom(Date invitationMinDateFrom) {
+		this.invitationMinDateFrom = invitationMinDateFrom;
+	}
+
+	public Date getInvitationMinDateTo() {
+		return invitationMinDateTo;
+	}
+
+	public void setInvitationMinDateTo(Date invitationMinDateTo) {
+		this.invitationMinDateTo = invitationMinDateTo;
+	}
+
+	public Date getInvitationMaxDate() {
+		return invitationMaxDate;
+	}
+
+	public void setInvitationMaxDate(Date invitationMaxDate) {
+		this.invitationMaxDate = invitationMaxDate;
+	}
 
 }
