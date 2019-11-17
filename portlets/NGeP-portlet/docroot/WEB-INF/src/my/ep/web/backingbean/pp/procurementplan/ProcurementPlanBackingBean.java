@@ -2098,14 +2098,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					}
 				}
 				//#24975
-				updateReasons = getAllUpdateReasons(ppPlan);
+				//updateReasons = getAllUpdateReasons(ppPlan);
 				//getAllUpdateReasons(ppPlan);
 							
 				if (BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(action)) {
 					updateReasons = getAllUpdateReasons(ppPlan);
-					if (updateReasons!= null && !updateReasons.isEmpty()) {
 						reqDTO.setUpdateReasonList(updateReasons);
-					}
 				}
 			}
 			
