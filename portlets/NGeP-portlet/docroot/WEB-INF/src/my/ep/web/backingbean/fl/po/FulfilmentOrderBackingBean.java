@@ -551,9 +551,15 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				
 			}
 		}
-		if(!getManagedBean().getButtonVal().equalsIgnoreCase(BpmOutcomeConst.BPM_CLOSE_MANUAL)){
+		if(null != getManagedBean().getButtonVal()){
+			if(!getManagedBean().getButtonVal().equalsIgnoreCase(BpmOutcomeConst.BPM_CLOSE_MANUAL)){
+				getEspkbCommitmentNo();
+			}
+		}else{
 			getEspkbCommitmentNo();
 		}
+		
+		
 		
 		
 	}
@@ -1716,26 +1722,30 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	
 	private void getEspkbCommitmentNo() {
 		String gfmasEnable = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.GFMAS_ENABLED);
-		if(!gfmasEnable.equalsIgnoreCase("true")){//isEspkb
-			if(getManagedBean().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)
-					|| getManagedBean().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)
-					&& getManagedBean().getFlRequest().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)){
-				IContractSO contractSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-				ContractReqDTO reqDTO = new ContractReqDTO();
-				reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
-				reqDTO.setContractVerId(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getContractVerId());
-				getManagedBean().setShowCommitmentNo(true);
-				ContractResDTO resDTO = contractSO.retrieveAgencyCommitmentNo(reqDTO);
-				if(resDTO.getCommitmentNo() == null){//cater for migrated data if did not patch commitmentNo
-					getManagedBean().setEspkbCommitmentNo("K"+String.format("%1$08d", getManagedBean().getFlRequest().getCtContract().getContractId().longValue())+String.format("%1$08d", getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId().longValue()));
+		if(null != gfmasEnable){
+			if(!gfmasEnable.equalsIgnoreCase("true")){//isEspkb
+				if(getManagedBean().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)
+						|| getManagedBean().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)
+						&& getManagedBean().getFlRequest().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)){
+					IContractSO contractSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+					ContractReqDTO reqDTO = new ContractReqDTO();
+					reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
+					reqDTO.setContractVerId(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getContractVerId());
+					getManagedBean().setShowCommitmentNo(true);
+					ContractResDTO resDTO = contractSO.retrieveAgencyCommitmentNo(reqDTO);
+					if(resDTO.getCommitmentNo() == null){//cater for migrated data if did not patch commitmentNo
+						getManagedBean().setEspkbCommitmentNo("K"+String.format("%1$08d", getManagedBean().getFlRequest().getCtContract().getContractId().longValue())+String.format("%1$08d", getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId().longValue()));
+					}else{
+						getManagedBean().setEspkbCommitmentNo(resDTO.getCommitmentNo());
+					}
+					
 				}else{
-					getManagedBean().setEspkbCommitmentNo(resDTO.getCommitmentNo());
+					getManagedBean().setShowCommitmentNo(false);
 				}
 				
 			}else{
 				getManagedBean().setShowCommitmentNo(false);
 			}
-			
 		}else{
 			getManagedBean().setShowCommitmentNo(false);
 		}
