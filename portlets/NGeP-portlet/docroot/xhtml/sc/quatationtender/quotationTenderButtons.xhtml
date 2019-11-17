@@ -102,6 +102,13 @@
 								(empty qTDetailBB.managedBean.amendMentBean or !qTDetailBB.managedBean.amendMentBean.brandNew) and !qTDetailBB.managedBean.changesOnQTMaintenance}" />
 						</c:otherwise>
 				</c:choose>
+				
+				<p:commandButton value="#{lbl['lbl.btn.clone']}" style="float:right;" id="cloneButton"
+											process="@this" partialSubmit="true" update="pnlid2"
+											action="#{qTCloneBackingbean.cloneCommitteePopupAction}"
+											title="#{lbl['lbl.sc.qt.committee.btn.clone.tooltip']}" />
+				
+				
 				<c:if test="#{qTDetailBB.isQTStatusInBetween(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_QT_SUBMISSION, QTStatusConst.QT_PENDING_LOA)}">
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
 						style="float:right;margin-right: 12px;" 
