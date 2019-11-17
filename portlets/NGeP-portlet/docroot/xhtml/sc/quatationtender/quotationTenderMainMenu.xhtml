@@ -32,23 +32,23 @@
 					styleClass="sidemenu"
 					activeIndex="#{qTDetailBB.managedBean.activeIndex}"	>
 					<p:menuitem value="#{lbl['lbl.sc.qt.qtn.details']}"
-						action="#{qTDetailBB.qtDetailsTabChange(0)}" update="@form"
+						action="#{qTDetailBB.qtDetailsTabChange(0)}" update="@form cloneButton"
 						process="@form" 
 						rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemDetails)}" />
 					<p:menuitem value="#{lbl['lbl.sc.supplier.qulification.criteria']}"
-						action="#{qTDetailBB.qtDetailsTabChange(1)}" update="@form"
+						action="#{qTDetailBB.qtDetailsTabChange(1)}" update="@form cloneButton"
 						process="@form" 
 						rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemSuppQualificationCriteria)}" />
 					<p:menuitem value="#{lbl['lbl.sc.qt.committee.appointment']}"
-						action="#{qTDetailBB.qtDetailsTabChange(2)}" update="@form"
+						action="#{qTDetailBB.qtDetailsTabChange(2)}" update="@form cloneButton"
 						process="@form" 
 						rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemCommitteeAppointment)}" />	
 					<p:menuitem value="#{lbl['lbl.sc.approval']}"
-						action="#{qTDetailBB.qtDetailsTabChange(3)}" update="@form"
+						action="#{qTDetailBB.qtDetailsTabChange(3)}" update="@form cloneButton"
 						process="@form" 
 						rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemApproval)}" />
 					<p:menuitem value="#{lbl['lbl.sc.activities']}"
-						action="#{qTDetailBB.qtDetailsTabChange(4)}" update="@form"
+						action="#{qTDetailBB.qtDetailsTabChange(4)}" update="@form cloneButton"
 						process="@form"
 						rendered="#{isQTStatusSCApprovalAndBefore and qTDetailBB.displayMenuItem(qTDetailBB.menuItemActivities)}" />
 						
@@ -110,7 +110,8 @@
 					
 							
 				</p:tabMenu></td>
-			<td width="80%" valign="top"><h:panelGroup id="menuQTContent">
+			<td width="80%" valign="top">
+			<h:panelGroup id="menuQTContent">
 					<c:if test="#{qTDetailBB.managedBean.activeIndex eq '0'}">
 						<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderGeneralDetails.xhtml" />
 					</c:if>
@@ -204,7 +205,7 @@
 		</tr>
 	</table>
 	<ui:include src="/xhtml/sc/quatationtender/uploadPopup.xhtml" />
-		
+	<ui:include src="/xhtml/sc/quatationtender/createquotationtender/clone/cloneDetails.xhtml" />	
 	</c:otherwise>
 	</c:choose>
 </ui:composition>
