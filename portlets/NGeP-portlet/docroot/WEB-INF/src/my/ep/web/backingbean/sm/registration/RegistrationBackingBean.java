@@ -451,6 +451,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 		}
 		//#16052019 - SSM INTEGRATION CR  - Check validation. Start
+		if(getManagedBean().getSmPersonnel()!=null){
+			getManagedBean().getSmPersonnel().setDirector(this.getManagedBean().isOwnerIsDirector());
+			getManagedBean().getSmPersonnel().setEquityOwner(this.getManagedBean().isOwnerIsEquity());
+		}
 		if(this.getManagedBean().isCompanyValidWithSSM()){
 			if(this.getManagedBean().getSmSuppOwners() != null){
 				for(SmSupplierOwner suppOwner:this.getManagedBean().getSmSuppOwners()){
@@ -3677,7 +3681,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		SmPersonnel personnel = getManagedBean().getSmPersonnel();
 		// #16052019 - SSM INTEGRATION CR
 		if(getManagedBean().isSameAsOwner()){
-			if(!getManagedBean().isSsmIntegrationActive()){
+			if(!getManagedBean().isCompanyValidWithSSM()){
 				SmSupplierOwner suppOwner = getManagedBean().getSmSuppOwner();
 				if(this.getManagedBean().getSmSuppOwners().size()>0){
 					suppOwner = this.getManagedBean().getSmSuppOwners().get(0);
@@ -3782,6 +3786,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			this.getManagedBean().setShowDirector(true);
 			this.getManagedBean().setShowOwner(true);
 			this.getManagedBean().setDisableRole(false);
+			this.getManagedBean().setOwnerIsEquity(true);
+			this.getManagedBean().setOwnerIsDirector(true);
 		} else if (SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG
 				.equalsIgnoreCase(businessType)
 				|| SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG
