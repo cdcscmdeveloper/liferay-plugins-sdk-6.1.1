@@ -2626,12 +2626,13 @@ public class TemplateSpecBackingBean extends
 	 * @param templateSpecBean
 	 *            the TemplateSpecBean instance
 	 */
-	public void calcGrandTotalEstAmountNew(TemplateSpecBean templateSpecBean,BigDecimal totalIndicativePrice, long specEstimationId) {
+	public void calcGrandTotalEstAmountNew(TemplateSpecBean templateSpecBean,BigDecimal totalIndicativePrice, long specEstimationId, long specZoneId, BigDecimal mainQuestionId) {
 		BigDecimal totalEstAmount = new BigDecimal(0);
 		TplSpecMaster specMaster = templateSpecBean.getSpecMaster();
 		TplSpecZoneDtl specZoneDtl = templateSpecBean.getTplSpecZoneDtl();
 		List<TplSpecEstimation> specEstimations = new ArrayList<TplSpecEstimation>();
-		
+		long questionId = mainQuestionId.longValue();
+		//questionId = templateSpecBean.getSelectedSpecQuestion().getSpecQuestionId();
 		if (TemplateSpecConst.CONTENT_TYPE_SCORE.equals(templateSpecBean
 				.getContentType())) {
 			List<Long> specQuestionIds = new ArrayList<Long>();
@@ -2674,18 +2675,26 @@ public class TemplateSpecBackingBean extends
 
 		for (TplSpecEstimation specEstimation : specEstimations) {
 			// bugs #26234 if (specEstimation.getEstimatedCost() != null) {
-				if (specEstimationId == specEstimation.getSpecEstimationId()){
-					specEstimation.setEstimatedCost(totalIndicativePrice); ///update value  Item Total Indicative Price (RM)
-					totalEstAmount = totalEstAmount.add(totalIndicativePrice).setScale(2, BigDecimal.ROUND_UP); // bugs #26234 add decimal point
-				}
-				else {
-					if (specEstimation.getEstimatedCost() != null) { // bugs #26234 
+				if (specEstimationId != 0){
+					if (specEstimationId == specEstimation.getSpecEstimationId()){
+						specEstimation.setEstimatedCost(totalIndicativePrice); ///update value  Item Total Indicative Price (RM)
 						totalEstAmount = totalEstAmount.add(specEstimation
 										.getEstimatedCost()).setScale(2, BigDecimal.ROUND_UP); // bugs #26234 add decimal point
+					}
+				}
+				else {
+					if (specZoneId == specEstimation.getTplSpecZoneDtl().getSpecZoneId()){
+						if (questionId == specEstimation.getTplSpecQuestion().getSpecQuestionId()){
+							specEstimation.setEstimatedCost(totalIndicativePrice); ///update value  Item Total Indicative Price (RM)
+						}
+					}
+
+					if (specEstimation.getEstimatedCost() != null) { // bugs #26234 
+						totalEstAmount = totalEstAmount.add(specEstimation
+								.getEstimatedCost()).setScale(2, BigDecimal.ROUND_UP); // bugs #26234 add decimal point
 					} // bugs #26234 
 				}
-				// bugs #26234 }
-		}
+		};
 		specMaster.setTotalEstAmount(totalEstAmount);
 	}
 	// #25039 end
@@ -2694,10 +2703,23 @@ public class TemplateSpecBackingBean extends
 	 * To calculate Item Total Indicative Unit Price
 	 * 
 	 */
-	public void calcItemTotalIndicateUnitPrice(TemplateSpecBean templateSpecBean, BigDecimal indicativeUnitPrice, BigDecimal clQuantity, BigDecimal clUomFrequency, BigDecimal clUomPerDay, BigDecimal clUomPerMonth, BigDecimal contractDuration, long specEstimationId, Boolean isItemTypeService, Boolean isFulfilmentTypeScheduled) {
+	public void calcItemTotalIndicateUnitPrice(TemplateSpecBean templateSpecBean, 
+			double indicativeUnitPrice, 
+			BigDecimal clQuantity, 
+			BigDecimal clUomFrequency, 
+			BigDecimal clUomPerDay, 
+			BigDecimal clUomPerMonth, 
+			BigDecimal contractDuration, 
+			long specEstimationId, 
+			Boolean isItemTypeService, 
+			Boolean isFulfilmentTypeScheduled, 
+			long specZoneId,
+			BigDecimal questionId) {
+
 			BigDecimal totalIndicativePrice = new BigDecimal(0);
 			BigDecimal zeroChangeTo1 = new BigDecimal(1);
-			
+			BigDecimal RoundIndicativePrice = BigDecimal.valueOf(indicativeUnitPrice);
+		
 			if (clUomFrequency.intValue() == 0 )
 			{ clUomFrequency=clUomFrequency.add(zeroChangeTo1);}
 
@@ -2713,7 +2735,7 @@ public class TemplateSpecBackingBean extends
 			if (!isItemTypeService)  //Product - input indicative unit price and autocalculate estimated cost
 			{
 				totalIndicativePrice = totalIndicativePrice.add(clQuantity
-						.multiply(indicativeUnitPrice)).setScale(2, BigDecimal.ROUND_UP); // bugs #26234 add decimal point
+						.multiply(RoundIndicativePrice.setScale(2, BigDecimal.ROUND_UP))); // bugs #26234 add decimal point
 			}
 			else {
 				if (isItemTypeService && !isFulfilmentTypeScheduled) //Service with non periodic Fulfillment Type(OneOff & As and When)  - input indicative unit price and autocalculate estimated cost
@@ -2721,7 +2743,7 @@ public class TemplateSpecBackingBean extends
 						.multiply(clUomFrequency)
 						.multiply(clUomPerDay)
 						.multiply(clUomPerMonth)
-						.multiply(indicativeUnitPrice)).setScale(2, BigDecimal.ROUND_UP); // bugs #26234 add decimal point
+						.multiply(RoundIndicativePrice.setScale(2, BigDecimal.ROUND_UP))); // bugs #26234 add decimal point
 				}
 				else {
 					if (isItemTypeService && isFulfilmentTypeScheduled) //Service with periodic Fulfillment Type - input indicative unit price and autocalculate estimated cost
@@ -2731,12 +2753,127 @@ public class TemplateSpecBackingBean extends
 								.multiply(clUomFrequency)
 								.multiply(clUomPerDay)
 								.multiply(clUomPerMonth)
-								.multiply(indicativeUnitPrice)
-								  ).setScale(2, BigDecimal.ROUND_UP); // bugs #26234 add decimal point
+								.multiply(RoundIndicativePrice.setScale(2, BigDecimal.ROUND_UP))); // bugs #26234 add decimal point
 					}
 				}
 			}
-			calcGrandTotalEstAmountNew(templateSpecBean, totalIndicativePrice, specEstimationId);
+			calcGrandTotalEstAmountNew(templateSpecBean, totalIndicativePrice, specEstimationId, specZoneId, questionId);
 		}
 	// #25039 end
+	
+	// #25039 Begin - version zonal
+	/**
+	 * Zone Estimation Popup Action
+	 * 
+	 * @param templateSpecBean
+	 *            the TemplateSpecBean instance
+	 */
+	public void zoneEstimationPopupAction(TemplateSpecBean templateSpecBean) {
+		debugLogger("zonalEstimationPopupAction");
+
+		TplSpecQuestion tplSpecQuestion = templateSpecBean
+				.getSelectedSpecQuestion();
+		List<TplSpecEstimation> specEstimations = tplSpecQuestion
+				.getTplSpecEstimations();
+		TplSpecZone specZone = templateSpecBean.getSpecMaster()
+				.getTplSpecZone();
+		List<TplSpecZoneDtl> specZoneDtls = null;
+		
+		TplSpecQuestion oriSpecQuestion = new TplSpecQuestion();
+		List<TplSpecEstimation> oriSpecEstimations =TemplateSpecHelper.getInstance().cloneTplSpecEstimation(
+				oriSpecQuestion, specEstimations);
+		if (oriSpecEstimations != null) 
+		{ for (TplSpecEstimation
+				oriSpecEstimation : oriSpecEstimations) {
+			oriSpecEstimation.setTplSpecQuestion(tplSpecQuestion);
+			templateSpecBean.setOriSpecQuestion(oriSpecQuestion);
+			} 
+		}
+				 
+		log.info("speczone "+specZone);
+		if (specZone != null) {
+			if (specZone.isBrandNew() || specZone.isModified()) {
+				specZoneDtls = specZone.getTplSpecZoneDtls();
+			} else {
+				ISpecZoneLocSO specZoneLocSO;
+				try {
+					specZoneLocSO = BusinessDelegate.getInstance()
+							.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
+									ISpecZoneLocSO.class);
+
+					SpecZoneLocReqDTO reqDTO = new SpecZoneLocReqDTO();
+					reqDTO.setDocType(specZone.getDocType());
+					reqDTO.setDocId(specZone.getDocId());
+
+					// Get zone details list from db.
+					SpecZoneLocResDTO resDTO = specZoneLocSO
+							.retrieveZoneDtlAndLocByDocIdNType(reqDTO);
+
+					specZoneDtls = resDTO.getZonesList();
+				} finally {
+					specZoneLocSO = null;
+				}
+			}
+		}
+		
+		if (specEstimations == null
+				|| specEstimations.size() == 0
+				|| (specZoneDtls != null && specEstimations.size() != specZoneDtls
+						.size())
+				|| !compareZoneDtlsWithEstimations(specZoneDtls, specEstimations)) {
+
+			specEstimations = new ArrayList<TplSpecEstimation>();
+
+			for (int zoneRow = 0; zoneRow < (specZoneDtls == null
+					|| specZoneDtls.size() == 0 ? 0 : specZoneDtls.size()); zoneRow++) {
+				if (specZoneDtls != null && specZoneDtls.size() > 0) {
+					TplSpecEstimation specEstimation = new TplSpecEstimation();
+					specEstimation.setTplSpecQuestion(tplSpecQuestion);
+					specEstimation.setTplSpecZoneDtl(specZoneDtls.get(zoneRow));
+
+					specEstimations.add(specEstimation);
+				}
+			}
+			tplSpecQuestion.setTplSpecEstimations(specEstimations);
+		}
+	}
+	
+	/**
+	 * Estimation Cost Popup Ok Action
+	 * 
+	 * @param templateSpecBean
+	 *            the TemplateSpecBean instance
+	 */
+	public void zoneEstCostOkAction(TemplateSpecBean templateSpecBean) {
+		debugLogger("zoneEstCostOkAction");
+
+		templateSpecBean.setSelectedSpecQuestion(null);
+
+		RequestContext.getCurrentInstance().execute(
+				templateSpecBean.getSpecComponentId()
+						+ "zoneEstimationPopup.hide()");
+	}
+	
+	/**
+	 * Estimation Popup Cancel Action
+	 * 
+	 * @param templateSpecBean
+	 *            the TemplateSpecBean instance
+	 */
+	public void zoneEstCostCancelAction(TemplateSpecBean templateSpecBean) {
+		TplSpecQuestion oriSpecQuestion = templateSpecBean.getOriSpecQuestion();
+		TplSpecQuestion selectedSpecQuestion = templateSpecBean
+				.getSelectedSpecQuestion();
+		BigDecimal totalEstAmount = new BigDecimal(0);
+
+		if (oriSpecQuestion.getTplSpecEstimations() != null) {
+			if (oriSpecQuestion.getTplSpecEstimations().size() != 0){		
+				selectedSpecQuestion.setTplSpecEstimations(oriSpecQuestion.getTplSpecEstimations());
+				totalEstAmount = calcGrandTotalEstAmount(templateSpecBean);
+				selectedSpecQuestion.getTplSpecMaster().setTotalEstAmount(totalEstAmount);
+				templateSpecBean.getSpecMaster().setTotalEstAmount(totalEstAmount);
+			}
+		}
+	}
+	// #25039 End - version zonal
 }

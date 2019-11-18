@@ -10,14 +10,21 @@
 	<ui:param name="isFulfilmentTypeScheduled" 
 		value="#{specificationBackingBean.managedBean.fulfilmentType == ParameterConst.fulfilmentTypeScheduled}" />
 <!-- 	end -->						
-	<ui:decorate template="specColumnQuestionViewHeader.xhtml">
+	<ui:decorate template="specColumnQuestionFinancialHeader.xhtml"> <!-- #25039 change specColumnQuestionViewHeader.xhtml from to specColumnQuestionHeader.xhtml-->
 	<ui:define name="otherHeaderSection">
 	<ui:param name="specificationRequired" value="#{isSpecTypeTechnical or isSqSpec or (isSpecTypeFinancial and !isSpecificationReq)}"></ui:param> 
-<!-- 	#25039 Begin to change indicative label-->
-	<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:97px;" rendered="#{isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.Indicative.unit.price']}">
-<!-- 	end -->	
+<!-- 	#25039 Begin to change indicative label -->	
+	<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:97px;" rendered="#{isSpecTypeFinancial}" >
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.tpl.spec.content.Indicative.unit.price']}"/>
+		</f:facet>
 	</p:column>
-	<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:115px;white-space:normal;" rendered="#{isItemTypeService and isSpecTypeFinancial and !isDurationByItem}" headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
+<!-- 	end -->	
+	<p:column style="width:95px;" rendered="#{isItemTypeService and isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
+		<p:inputText style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign"
+			rendered="#{isQuestionTypeItem}" disabled="true">
+			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+		</p:inputText>
 	</p:column>
 	<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:115px;white-space:normal;" rendered="#{isEstCostReq}">
 		<f:facet name="header">
@@ -52,17 +59,36 @@
 					partialSubmit="true"
 					process="@this" 
 					event="change"
-					listener="#{templateSpecBackingBean.calcItemTotalIndicateUnitPrice(templateSpecBean,question.tplSpecEstimations[0].indicativeUnitPrice, question.clQuantity, question.clUomFrequency, question.clUomPerDay, question.clUomPerMonth, specificationBackingBean.managedBean.qt.contractDuration, question.tplSpecEstimations[0].specEstimationId, isItemTypeService,isFulfilmentTypeScheduled)}"></p:ajax>
+					listener="#{templateSpecBackingBean.calcItemTotalIndicateUnitPrice(
+						templateSpecBean,
+						question.tplSpecEstimations[0].indicativeUnitPrice, 
+						question.clQuantity, 
+						question.clUomFrequency, 
+						question.clUomPerDay, 
+						question.clUomPerMonth, 
+						specificationBackingBean.managedBean.qt.contractDuration, 
+						question.tplSpecEstimations[0].specEstimationId, 
+						isItemTypeService,
+						isFulfilmentTypeScheduled, 
+						templateSpecBean.selectedSpecQuestion.tplSpecZoneQties[rowIndex].tplSpecZoneDtl.specZoneId,
+						question.getSpecQuestionId())}"></p:ajax>
+					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
 			</p:inputText>	
 						
 		</c:if>
 
-		<c:if test="#{isZonal}">
-<!-- 	end -->			
-		<p:inputText style="min-width:0px !important;width:86px;" rendered="#{isQuestionTypeItem}" disabled="true" />
-			
+<!-- 	#25039 Begin - version zonal -->
+		<c:if test="#{isZonal}">			
+			<p:inputText style="min-width:0px !important;width:86px;" rendered="#{isQuestionTypeItem}" disabled="true" />
+			<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;"  
+				action="#{templateSpecBackingBean.zoneEstimationPopupAction(templateSpecBean)}"
+				oncomplete="#{zoneEstimationPopup}.show();"
+				partialSubmit="true" process="@this" update="@([id$=zoneEstimationPopup])"
+				title="#{lbl['lbl.tpl.spec.content.estimate.cost.tooltip']}">
+				<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
+			</p:commandButton>	
 		</c:if>		
-			
+<!-- 	#25039 end - version zonal -->				
 	</p:column>
 	<p:column style="width:115px;white-space:normal;" rendered="#{isItemTypeService and isSpecTypeFinancial and !isDurationByItem}" headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
 		<p:inputText style="min-width:0px !important;width:104px; text-align:right;"
