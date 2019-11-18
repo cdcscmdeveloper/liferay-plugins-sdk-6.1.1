@@ -947,7 +947,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 *            the status id.
 	 */
 	
-	public SelectItem[] getStatusDropdownValuesByIds(Long[] statusIds) {
+	public SelectItem[] getStatusDropdownValuesByIds(Long... statusIds) {
 	
 		SelectItem[] items = null;
 		FacesScopes face = new FacesScopes();
