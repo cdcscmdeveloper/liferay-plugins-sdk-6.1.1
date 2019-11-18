@@ -334,8 +334,6 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	private Calendar sqEndDate;
 	// 12177 - End
 	
-	private	Object[] selectedPrDtls;
-	
     /**
      * Instantiates a new request note managed bean.
      */
@@ -1946,18 +1944,4 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 		this.sqEndDate = sqEndDate;
 	}
 	// 12177 - End
-
-	/**
-	 * @return the selectedPrDtls
-	 */
-	public Object[] getSelectedPrDtls() {
-		return selectedPrDtls;
-	}
-
-	/**
-	 * @param selectedPrDtls the selectedPrDtls to set
-	 */
-	public void setSelectedPrDtls(Object[] selectedPrDtls) {
-		this.selectedPrDtls = selectedPrDtls;
-	}
 }
