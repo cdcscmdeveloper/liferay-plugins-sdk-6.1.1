@@ -3635,25 +3635,30 @@ public class TaskReassignmentBackingBean extends
 		log.info("checkBpkAdminUser - Start");
 		boolean isBpkAdmin = false;
 		
-		if (getFacesScopes().hasRoleUser(RoleCode.BPK_ADMIN.value())) {
-			log.info("[#22117] - is BPK_ADMIN");
-			//check if BPK administrator has other roles
-			log.info("[#22117] - retrieve BPK_ADMIN role");
-			List<PmUserOrg> userOrgList = PmCommonUtil.retrieveActiveOrg(getFacesScopes().getUserSessionBean().getUserId());
-			log.info("[#22117] - BPK_ADMIN org size: " + userOrgList.size());
-			if(userOrgList != null && userOrgList.size() > 0) {
-				PmUserOrg userOrg = userOrgList.get(0);
-				if(userOrg != null && userOrg.getPmUserRoles() != null && userOrg.getPmUserRoles().size() > 0) {
-					for (PmUserRole userRole : userOrg.getPmUserRoles()) {
-						log.info("[#22117] - BPK_ADMIN role: " + userRole.getPmRole().getRoleCode());
-						if (DbValueConst.RECORD_STATUS_ACTIVE == userRole.getRecordStatusFlg() 
-								&& !(userRole.getPmRole().getRoleCode().equals(RoleCode.BPK_ADMIN.value()))) {								
-							log.info("[#22117] - BPK_ADMIN has other role!!");
-							isBpkAdmin = true;							
-							break;
-						}						
-					}
-				}				
+		if (getFacesScopes().hasRoleUser(RoleCode.BPK_ADMIN.value())) {			
+			log.info("[#22117] - login user is BPK_ADMIN");
+			log.info("[#22117] - login user login Id: " + getFacesScopes().getUserSessionBean().getLoginId());
+			log.info("[#22117] - search user login Id: " + this.getManagedBean().getTaskAssignmentSearchBean().getUser().getLoginId());
+			if(getFacesScopes().getUserSessionBean().getLoginId().equals(this.getManagedBean().getTaskAssignmentSearchBean().getUser().getLoginId())) {
+				isBpkAdmin = true;
+				//check if BPK administrator has other roles
+				log.info("[#22117] - retrieve BPK_ADMIN role");
+				List<PmUserOrg> userOrgList = PmCommonUtil.retrieveActiveOrg(getFacesScopes().getUserSessionBean().getUserId());
+				log.info("[#22117] - BPK_ADMIN org size: " + userOrgList.size());
+				if(userOrgList != null && userOrgList.size() > 0) {
+					PmUserOrg userOrg = userOrgList.get(0);
+					if(userOrg != null && userOrg.getPmUserRoles() != null && userOrg.getPmUserRoles().size() > 0) {
+						for (PmUserRole userRole : userOrg.getPmUserRoles()) {
+							log.info("[#22117] - BPK_ADMIN role: " + userRole.getPmRole().getRoleCode());
+							if (DbValueConst.RECORD_STATUS_ACTIVE == userRole.getRecordStatusFlg() 
+									&& !(userRole.getPmRole().getRoleCode().equals(RoleCode.BPK_ADMIN.value()))) {								
+								log.info("[#22117] - BPK_ADMIN has other role!!");
+								isBpkAdmin = true;							
+								break;
+							}						
+						}
+					}				
+				}
 			}
 		}		
 		return isBpkAdmin;			
