@@ -62,7 +62,6 @@ import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
@@ -148,8 +147,6 @@ import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
-import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
-import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -172,8 +169,7 @@ import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.template.DocumentGenerator;
-import my.ep.dto.sc.directpurchase.QuoteReqDTO;
-import my.ep.dto.sc.directpurchase.QuoteResDTO;
+
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -3321,101 +3317,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 
-	/**
-	 * @param context
-	 * @param scLoa
-	 */
-	/**  
-	 * CR Enhancement 26226  Nov 2019
-	 */
-	public void constructPRSupplierSpecificationAndRemarks(VelocityContext context, ScLoa scLoa) {
-		List<TplSpecMaster> masters = new ArrayList<TplSpecMaster>();	
-		IQuoteSO quoteSO;
-		try {
-			quoteSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
-			String supplierName= scLoa.getScLoiLoa().getSmSupplier().getCompanyName();
-			log.info("constructPRSupplierSpecificationAndRemarks supplierName    "+supplierName+ " quoteId :   "+scLoa.getScQuote().getQuoteId() );
-			
-			QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
-		
-			
-			
-			quoteReqDTO.setQuoteId(scLoa.getScQuote().getQuoteId());
-			
-			quoteReqDTO.setQuoteId(scLoa.getScQuote().getQuoteId());
-			quoteReqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
-			
-			
-			if (scLoa.getScLoiLoa().getSmSupplier() != null) {
-				quoteReqDTO.setSupplierId(scLoa.getScLoiLoa().getSmSupplier().getSupplierId());
-				quoteReqDTO.setSmSupplier(scLoa.getScLoiLoa().getSmSupplier());
-			}
-			//quoteReqDTO.setFetchSubEntity(true);
-			QuoteResDTO quoteResDTO = quoteSO.getQuoteDtlForLOASupplier(quoteReqDTO);
-			log.info("Supplier ID"+quoteReqDTO.getSupplierId());  
-			
-	
-			String dafaltValue = "T/B";
-			if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
-				dafaltValue = "N/A";
-			}
-			
-			if (CollectionUtils.isNotEmpty(quoteResDTO.getServiceAnswersTpl())) {
-				TplSpecMaster master = null;
-				List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
-				for (TplSpecAnswer answer : quoteResDTO.getServiceAnswersTpl()) {
-					//log.info("constructPRSupplierSpecificationAndRemarks I"+answer.getTplSpecQuestion().getClFulfilmentTypeCode().getParameterCode());
-					if(answer.getTplSpecQuestion().getClFulfilmentTypeCode() == null)
-					{
-						answer.getTplSpecQuestion().setClFulfilmentTypeCode(scLoa.getScLoiLoa().getFulfilmentTypeCode()); 
-						
-					}
-					//log.info("constructPRSupplierSpecificationAndRemarks I"+ answer.getTplSpecQuestion().getClFulfilmentTypeCode().getParameterCode());
-					log.info("TplSpecAnswer for service:- "
-							+ "|" + answer.getSpecAnswerId()
-							+ "|" + answer.getAnswerText()
-							+ "|" + answer.getTplSpecQuestion().getSpecQuestionId()
-							+ "|" + answer.getTplSpecQuestion().getClItem()
-							+ "|" + answer.getTplSpecQuestion().getClFulfilmentTypeCode().getParameterCode()
-							+ "|" + answer.getTplSpecQuestion().getClSpecDetail()
-							//+ "|" + answer.getTplSpecQuestion().getClUom().getUomCode()
-							+ "|" + answer.getTplSpecQuestion().getClUomFrequency()
-							+ "|" + answer.getTplSpecQuestion().getClUomPerDay()
-							+ "|" + answer.getTplSpecQuestion().getClUomPerMonth()
-							+ "|" + answer.getTplSpecQuestion().getClQuantity()
-							+ "|" + answer.getTplSpecQuestion().getClReviewRemark()
-							+ "|" + answer.getTplSpecQuestion().getClReviewRemark()
-							);
-					if(master == null)
-					{ 
-						master = answer.getTplSpecQuestion().getTplSpecMaster();
-					}
-					
-					constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master, answer.getTplSpecQuestion());
-					
-				}
-				master.setTplSpecQuestions(newTplSpecQuestionsList);
-				masters.add(master);
-			}
-			log.info("constructPRSupplierSpecificationAndRemarks method master record size -->"+masters.size());
-			context.put("serviceScope", dafaltValue);
-			context.put("supplierName", supplierName);
-			context.put("masters", masters);
-			context.put("bean", this);
-		} finally {
-			quoteSO = null;
-		}
-	}
-
-	/**  
-	 * CR Enhancement 26226 Nov 2019   End of the method 
-	 */
-	
-		
-	
-	
-	
 	/**
 	 * @param dafaltValue
 	 * @param newTplSpecQuestionsList
