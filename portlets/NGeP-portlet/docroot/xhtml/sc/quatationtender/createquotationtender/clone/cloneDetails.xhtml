@@ -185,14 +185,14 @@
 				<br />
 				<ui:fragment
 					rendered="#{qTCommitteBackingBean.managedBean.cloneCommitteeSelectQt ne null}">
-					#{qTCommitteBackingBean.managedBean.cloneCommitteeSelectQt.qtNo} > #{lbl['lbl.sc.committee.details']}
+					#{qTCommitteBackingBean.managedBean.cloneCommitteeSelectQt.qtNo}
 				</ui:fragment>
 
 				<p:tree value="#{qTCloneBackingbean.root}" var="node" rendered="#{qTCloneBackingbean.showTree}"
                         selection="#{qTCloneBackingbean.selectedNodes}"
 					selectionMode="checkbox">
 					<p:treeNode>
-			<h:outputText value="#{node}"/>
+			<h:outputText value="#{node.label}"/>
 		</p:treeNode>
 					
 				</p:tree>
