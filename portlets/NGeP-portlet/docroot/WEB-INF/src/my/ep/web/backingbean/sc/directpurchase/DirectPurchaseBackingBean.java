@@ -60,10 +60,15 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
+import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
@@ -300,9 +305,18 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 				getManagedBean().setDocumentTypeDesc(ParameterConst.LA_TITLE);
 			}
 		}
+		getManagedBean().setSearchDPM(false);
 		getManagedBean().getDpDocumentDataModel().reloadData();
 	}
-
+	
+	public void searchDPM() {
+		debugLogger("Entered: " + this.getClass().getName() + ".searchDPM()"); 
+		getManagedBean().setSearchDPM(true);
+		if(getManagedBean().getSearchDocumentType().equals(ParameterConst.DOCTYPE_REQUEST_NOTE)){
+			getManagedBean().setDocumentTypeDesc(ParameterConst.RN_TITLE);
+		}
+		getManagedBean().getDpDocumentDataModel().reloadData();
+	}
 
 	private class SearchTrackingDiaryPagingDataModel extends PagingDataModel<PmTrackingDiary> {
 		private static final long serialVersionUID = 1L;
@@ -366,45 +380,98 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	 * @param dpObj the dp obj
 	 */
 	public void viewMaintenance(Object[] dpObj, boolean isCancel) {
-		log.info("viewMaintenance");
-		long docId = (long) dpObj[0];
-		String docNo = (String) dpObj[1];
-		String docType = (String) dpObj[3];
-		long statusId = (long) dpObj[4];
-
-		TrackingDiarySearchBackingBean diarySearchBackingBean = new TrackingDiarySearchBackingBean();
-		diarySearchBackingBean.getManagedBean().setDocNo(docNo);
-		diarySearchBackingBean.getManagedBean().setDocType(docType);
-		diarySearchBackingBean.getManagedBean().setStatusId(statusId);
-
-		if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_REQUEST_NOTE)) {
-			RequestNoteBackingBean rnBackingBean = new RequestNoteBackingBean();
-			rnBackingBean.viewRequestNote(docId);
-			rnBackingBean.getManagedBean().setDpObj(dpObj);
-			rnBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
-			rnBackingBean.getManagedBean().setCancel(isCancel);
-		} else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_INQUIRY)) {
-			PurchaseInquiryBackingBean prInqBackingBean = new PurchaseInquiryBackingBean();
-			prInqBackingBean.viewPurchaseInquiry(docId);
-			prInqBackingBean.getManagedBean().setDpObj(dpObj);
-			prInqBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
-		} else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT)) {
-			PurchaseInDefaultBackingBean pidBackingBean = new PurchaseInDefaultBackingBean();
-			pidBackingBean.viewPurchaseInDefault(docId);
-			pidBackingBean.getManagedBean().setDpObj(dpObj);
-			pidBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
-
-		} else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_SIMPLE_QUOTE)) {
-			SimpleQuoteBackingBean sqBackingBean = new SimpleQuoteBackingBean();
-			sqBackingBean.viewQuote(docId);
-			sqBackingBean.getManagedBean().setDpObj(dpObj);
-			sqBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
-
-		} else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_LETTER_OF_AWARD)) {
-			LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
-			loaDetailBackingBean.viewLOA(docId);
-			loaDetailBackingBean.getManagedBean().setDpObj(dpObj);
-			loaDetailBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
+		
+		if (getManagedBean().isSearchDPM() && getManagedBean().getSearchStatusId().equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION)) {
+			this.viewDpMaintenance(dpObj);
+		} else {
+			log.info("viewMaintenance");
+			long docId = (long) dpObj[0];
+			String docNo = (String) dpObj[1];
+			String docType = (String) dpObj[3];
+			long statusId = (long) dpObj[4];
+			
+			TrackingDiarySearchBackingBean diarySearchBackingBean = new TrackingDiarySearchBackingBean();
+			diarySearchBackingBean.getManagedBean().setDocNo(docNo);
+			diarySearchBackingBean.getManagedBean().setDocType(docType);
+			diarySearchBackingBean.getManagedBean().setStatusId(statusId);
+			
+			if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_REQUEST_NOTE)) {
+				RequestNoteBackingBean rnBackingBean = new RequestNoteBackingBean();
+				rnBackingBean.viewRequestNote(docId);
+				rnBackingBean.getManagedBean().setDpObj(dpObj);
+				rnBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
+				rnBackingBean.getManagedBean().setCancel(isCancel);
+			} else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_INQUIRY)) {
+				PurchaseInquiryBackingBean prInqBackingBean = new PurchaseInquiryBackingBean();
+				prInqBackingBean.viewPurchaseInquiry(docId);
+				prInqBackingBean.getManagedBean().setDpObj(dpObj);
+				prInqBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
+			} else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT)) {
+				PurchaseInDefaultBackingBean pidBackingBean = new PurchaseInDefaultBackingBean();
+				pidBackingBean.viewPurchaseInDefault(docId);
+				pidBackingBean.getManagedBean().setDpObj(dpObj);
+				pidBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
+				
+			} else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_SIMPLE_QUOTE)) {
+				SimpleQuoteBackingBean sqBackingBean = new SimpleQuoteBackingBean();
+				sqBackingBean.viewQuote(docId);
+				sqBackingBean.getManagedBean().setDpObj(dpObj);
+				sqBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
+				
+			} else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_LETTER_OF_AWARD)) {
+				LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
+				loaDetailBackingBean.viewLOA(docId);
+				loaDetailBackingBean.getManagedBean().setDpObj(dpObj);
+				loaDetailBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
+			}
+			
+		}
+	}
+	
+	/**
+	 * @param prObj
+	 */
+	@SuppressWarnings("unchecked")
+	public void viewDpMaintenance(Object[] prObj) {
+		ScPurchaseRequest purchaseRequest =  (ScPurchaseRequest) prObj[2];
+		if (null != purchaseRequest) {
+			Long purchaseRequestId = purchaseRequest.getPurchaseRequestId();
+			List<ScRequestNoteDtl> requestNoteDtls = null;
+			ScRequestNote requestNote = null;
+			if (null != purchaseRequestId && null != getManagedBean().getDpDocumentDataModel()) {
+				requestNote = (ScRequestNote) prObj[7];
+				List<Object[]> objList = getManagedBean().getDpDocumentDataModel().getList();
+				if (!CollectionUtils.isEmpty(objList)) {
+					for (Object[] obj : objList) {
+						ScPurchaseRequest purchaseRequestFromModel =  (ScPurchaseRequest) obj[2];
+						if (purchaseRequestId == purchaseRequestFromModel.getPurchaseRequestId()) {
+							requestNoteDtls = (List<ScRequestNoteDtl>) obj[6];
+							break;
+						}
+					}
+				}
+			}
+			
+			if (!CollectionUtils.isEmpty(requestNoteDtls)) { 
+				RequestNoteBackingBean rnBackingBean = new RequestNoteBackingBean();
+				rnBackingBean.getManagedBean().setSelectedPrDtls(prObj);
+				rnBackingBean.getManagedBean().setRequestNoteDtls(requestNoteDtls);
+				rnBackingBean.getManagedBean().setCancel(true);
+				rnBackingBean.getManagedBean().setViewOnly(true);
+				rnBackingBean.getManagedBean().setReadOnly(true);
+				if (null != requestNote.getCreatedBy()) {
+					rnBackingBean.getManagedBean().setCreatedBy(rnBackingBean.getUserById(requestNote.getCreatedBy()).getUserName());
+				}
+				SmSupplier smSupplier = new SmSupplier();
+				smSupplier.setCompanyName((String) prObj[3]);
+				rnBackingBean.getManagedBean().setSmSupplier(smSupplier);
+				
+				PmStatus requestNoteStatus = new PmStatus();
+				requestNoteStatus.setStatusId((Long) prObj[4]);
+				rnBackingBean.getManagedBean().setRequestNoteStatus(requestNoteStatus );
+				rnBackingBean.getManagedBean().setRequestNote(requestNote);
+				rnBackingBean.viewRequestNote();
+			}
 		}
 	}
 
