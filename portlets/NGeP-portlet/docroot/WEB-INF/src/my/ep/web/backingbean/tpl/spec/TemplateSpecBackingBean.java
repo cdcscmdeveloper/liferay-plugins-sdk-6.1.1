@@ -2626,13 +2626,13 @@ public class TemplateSpecBackingBean extends
 	 * @param templateSpecBean
 	 *            the TemplateSpecBean instance
 	 */
-	public void calcGrandTotalEstAmountNew(TemplateSpecBean templateSpecBean,BigDecimal totalIndicativePrice, long specEstimationId, long specZoneId) {
+	public void calcGrandTotalEstAmountNew(TemplateSpecBean templateSpecBean,BigDecimal totalIndicativePrice, long specEstimationId, long specZoneId, BigDecimal mainQuestionId) {
 		BigDecimal totalEstAmount = new BigDecimal(0);
 		TplSpecMaster specMaster = templateSpecBean.getSpecMaster();
 		TplSpecZoneDtl specZoneDtl = templateSpecBean.getTplSpecZoneDtl();
 		List<TplSpecEstimation> specEstimations = new ArrayList<TplSpecEstimation>();
-		long questionId = templateSpecBean.getSelectedSpecQuestion().getSpecQuestionId();
-		
+		long questionId = mainQuestionId.longValue();
+		//questionId = templateSpecBean.getSelectedSpecQuestion().getSpecQuestionId();
 		if (TemplateSpecConst.CONTENT_TYPE_SCORE.equals(templateSpecBean
 				.getContentType())) {
 			List<Long> specQuestionIds = new ArrayList<Long>();
@@ -2713,13 +2713,13 @@ public class TemplateSpecBackingBean extends
 			long specEstimationId, 
 			Boolean isItemTypeService, 
 			Boolean isFulfilmentTypeScheduled, 
-			long specZoneId) {
+			long specZoneId,
+			BigDecimal questionId) {
 
 			BigDecimal totalIndicativePrice = new BigDecimal(0);
 			BigDecimal zeroChangeTo1 = new BigDecimal(1);
 			BigDecimal RoundIndicativePrice = BigDecimal.valueOf(indicativeUnitPrice);
-
-			
+		
 			if (clUomFrequency.intValue() == 0 )
 			{ clUomFrequency=clUomFrequency.add(zeroChangeTo1);}
 
@@ -2757,7 +2757,7 @@ public class TemplateSpecBackingBean extends
 					}
 				}
 			}
-			calcGrandTotalEstAmountNew(templateSpecBean, totalIndicativePrice, specEstimationId, specZoneId);
+			calcGrandTotalEstAmountNew(templateSpecBean, totalIndicativePrice, specEstimationId, specZoneId, questionId);
 		}
 	// #25039 end
 	
@@ -2778,6 +2778,18 @@ public class TemplateSpecBackingBean extends
 		TplSpecZone specZone = templateSpecBean.getSpecMaster()
 				.getTplSpecZone();
 		List<TplSpecZoneDtl> specZoneDtls = null;
+		
+		TplSpecQuestion oriSpecQuestion = new TplSpecQuestion();
+		List<TplSpecEstimation> oriSpecEstimations =TemplateSpecHelper.getInstance().cloneTplSpecEstimation(
+				oriSpecQuestion, specEstimations);
+		if (oriSpecEstimations != null) 
+		{ for (TplSpecEstimation
+				oriSpecEstimation : oriSpecEstimations) {
+			oriSpecEstimation.setTplSpecQuestion(tplSpecQuestion);
+			templateSpecBean.setOriSpecQuestion(oriSpecQuestion);
+			} 
+		}
+				 
 		log.info("speczone "+specZone);
 		if (specZone != null) {
 			if (specZone.isBrandNew() || specZone.isModified()) {
@@ -2849,14 +2861,19 @@ public class TemplateSpecBackingBean extends
 	 *            the TemplateSpecBean instance
 	 */
 	public void zoneEstCostCancelAction(TemplateSpecBean templateSpecBean) {
-		debugLogger("zoneEstCostCancelAction");
 		TplSpecQuestion oriSpecQuestion = templateSpecBean.getOriSpecQuestion();
-		TplSpecQuestion selectedSpecQuestion = templateSpecBean.getSelectedSpecQuestion();
+		TplSpecQuestion selectedSpecQuestion = templateSpecBean
+				.getSelectedSpecQuestion();
+		BigDecimal totalEstAmount = new BigDecimal(0);
 
-		selectedSpecQuestion.setTplSpecTierQties(oriSpecQuestion
-				.getTplSpecTierQties());
-
-		selectedSpecQuestion.setTplSpecEstimations(oriSpecQuestion.getTplSpecEstimations());
+		if (oriSpecQuestion.getTplSpecEstimations() != null) {
+			if (oriSpecQuestion.getTplSpecEstimations().size() != 0){		
+				selectedSpecQuestion.setTplSpecEstimations(oriSpecQuestion.getTplSpecEstimations());
+				totalEstAmount = calcGrandTotalEstAmount(templateSpecBean);
+				selectedSpecQuestion.getTplSpecMaster().setTotalEstAmount(totalEstAmount);
+				templateSpecBean.getSpecMaster().setTotalEstAmount(totalEstAmount);
+			}
+		}
 	}
 	// #25039 End - version zonal
 }
