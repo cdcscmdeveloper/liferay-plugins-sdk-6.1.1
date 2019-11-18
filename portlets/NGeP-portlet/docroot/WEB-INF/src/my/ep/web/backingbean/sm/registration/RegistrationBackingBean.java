@@ -450,11 +450,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			throw new EpException(MessageConst.ERROR_721002);
 
 		}
-		//#16052019 - SSM INTEGRATION CR  - Check validation. Start
-		if(getManagedBean().getSmPersonnel()!=null){
-			getManagedBean().getSmPersonnel().setDirector(this.getManagedBean().isOwnerIsDirector());
-			getManagedBean().getSmPersonnel().setEquityOwner(this.getManagedBean().isOwnerIsEquity());
-		}
+		//#16052019 - SSM INTEGRATION CR  - Check validation. Start		
 		if(this.getManagedBean().isCompanyValidWithSSM()){
 			if(this.getManagedBean().getSmSuppOwners() != null){
 				for(SmSupplierOwner suppOwner:this.getManagedBean().getSmSuppOwners()){
@@ -512,6 +508,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				}
 			}
 		}else{
+			if(getManagedBean().getSmPersonnel()!=null){
+				getManagedBean().getSmPersonnel().setDirector(this.getManagedBean().isOwnerIsDirector());
+				getManagedBean().getSmPersonnel().setEquityOwner(this.getManagedBean().isOwnerIsEquity());
+			}
 			SmSupplierOwner suppOwner = this.getManagedBean().getSmSuppOwner();
 			if(this.getManagedBean().getSmSuppOwners().size()>0){
 				suppOwner = this.getManagedBean().getSmSuppOwners().get(0);
