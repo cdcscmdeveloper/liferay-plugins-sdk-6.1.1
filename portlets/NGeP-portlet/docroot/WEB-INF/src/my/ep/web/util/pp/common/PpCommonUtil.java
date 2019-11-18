@@ -42,6 +42,7 @@ import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.persistence.entity.pp.procurementplan.PpRejectReason;
 import my.ep.persistence.entity.pp.procurementplan.PpRemark;
 import my.ep.persistence.entity.pp.procurementplan.PpWorkflowStatus;
+import my.ep.persistence.entity.pp.procurementplan.PpUpdateReason;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.util.FacesScopes;
@@ -986,6 +987,41 @@ public class PpCommonUtil implements Serializable{
 		OrgProfileResDTO resDTO = profileSO
 				.retrieveOrgProfileListFromGroupOrgType(reqDTO);
 		return resDTO.getOrgProfileList();
+	}
+	
+	//#24975
+	/**
+	 * Retrieve update reason list by docId and docType
+	 * 
+	 * @param docId
+	 * @param docType
+	 * @return List<PpUpdateReason>
+	 */
+	public static List<PpUpdateReason> retrieveUpdateReason(Long docId,
+			String docType) {
+		log.info("retrieveUpdateReason - Start");
+		List<PpUpdateReason> updateReasons = null;
+		ProcurementPlanReqDTO reqDTO = null;
+		IProcurementPlanSO reqSO = null;
+		ProcurementPlanResDTO resDTO = null;
+
+		try {
+			reqDTO = new ProcurementPlanReqDTO();
+			resDTO = new ProcurementPlanResDTO();
+			reqDTO.setDocId(docId);
+			reqDTO.setDocType(docType);
+			reqSO = (IProcurementPlanSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROCUREMENT_PLAN,
+							IProcurementPlanSO.class);
+			resDTO = reqSO.retrieveUpdateReason(reqDTO);
+			if (resDTO.isSuccessful()) {
+				updateReasons = resDTO.getUpdateReasonList();
+			}
+		} finally {
+			reqSO = null;
+		}
+		log.info("retrieveUpateReason - End");
+		return updateReasons;
 	}
 
 }
