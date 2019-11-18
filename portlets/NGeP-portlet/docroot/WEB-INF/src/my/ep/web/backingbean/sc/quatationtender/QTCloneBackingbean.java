@@ -107,18 +107,16 @@ public class QTCloneBackingbean extends
 
 		this.root = new DefaultTreeNode("Root Node", null);
 
-		TreeNode child = new DefaultTreeNode(getLabel(ALL), this.root);
+		TreeNode child = new DefaultTreeNode(new QTSelectionNode(getLabel(ALL),0L), this.root);
 		child.setParent(this.root);
 
-		TreeNode descendent1 = new DefaultTreeNode(getLabel(QT_DETAILS), child);
+		TreeNode descendent1 = new DefaultTreeNode(new QTSelectionNode(getLabel(QT_DETAILS),1L), child);
 		descendent1.setParent(child);
-		TreeNode descendent2 = new DefaultTreeNode(
-				getLabel(SUPPLIER_QUALIFICATION_CRITERIA), child);
+		TreeNode descendent2 = new DefaultTreeNode(new QTSelectionNode(getLabel(SUPPLIER_QUALIFICATION_CRITERIA),2L), child);
 		descendent2.setParent(child);
-		TreeNode descendent3 = new DefaultTreeNode(
-				getLabel(COMMITTEE_APPOINTMENT), child);
+		TreeNode descendent3 = new DefaultTreeNode(new QTSelectionNode(getLabel(COMMITTEE_APPOINTMENT),3L), child);
 		descendent3.setParent(child);
-		TreeNode descendent4 = new DefaultTreeNode(getLabel(APPROVAL), child);
+		TreeNode descendent4 = new DefaultTreeNode(new QTSelectionNode(getLabel(APPROVAL),4L), child);
 		descendent4.setParent(child);
 
 		if (null == this.getManagedBean().getCommitteMember()) {
@@ -442,19 +440,32 @@ public class QTCloneBackingbean extends
 			tenderResDTO = QtDetailsSO.retriveQTDetails(tenderReqDTO);
 			ScQt copyScqt = tenderResDTO.getQtDetail();
 			if (tenderResDTO.getQtDetail() != null) {
-				retrieveQtnDetails(scQt,copyScqt,QtDetailsSO);
-				retrieveSupplierCriteria(scQt,copyScqt,QtDetailsSO);
-				retrieveCommitteeMembers(copyScqt);
+				TreeNode[] nodes=this.selectedNodes;
+				for(TreeNode node:nodes){
+					QTSelectionNode selection=(QTSelectionNode) node.getData();
+					if(selection.getValue().equals(1L)){
+						retrieveQtnDetails(scQt,copyScqt,QtDetailsSO);
+					}
+					if(selection.getValue().equals(2L)){
+						retrieveSupplierCriteria(scQt,copyScqt,QtDetailsSO);
+					}
+					if(selection.getValue().equals(3L)){
+						retrieveCommitteeMembers(copyScqt);
+						updateCommittees();
+						copyScqt=retrieveScqtCommittee(copyScqt);
+					}
+					
+					if(selection.getValue().equals(4L)){
+						tenderReqDTO.setQtdetail(copyScqt);
+						tenderReqDTO.setAvaliableApprovals(copyScqt.getScQtApprovals());
+						tenderReqDTO.setAmendMentBean(this.getManagedBean().getAmendMentBean());
+						tenderReqDTO.setDeskOfficer(new FacesScopes().getUserSessionBean());
+						tenderResDTO = QtDetailsSO.retriveQTApprovalDetails(tenderReqDTO);
+						List<ScQtApproval> requiredApproval = tenderResDTO.getApproval();
+						retrieveApproval(requiredApproval,copyScqt);
+					}
+				}
 				
-				updateQtDtls();
-				copyScqt=retrieveScqtCommittee(copyScqt);
-				tenderReqDTO.setQtdetail(copyScqt);
-				tenderReqDTO.setAvaliableApprovals(copyScqt.getScQtApprovals());
-				tenderReqDTO.setAmendMentBean(this.getManagedBean().getAmendMentBean());
-				tenderReqDTO.setDeskOfficer(new FacesScopes().getUserSessionBean());
-				tenderResDTO = QtDetailsSO.retriveQTApprovalDetails(tenderReqDTO);
-				List<ScQtApproval> requiredApproval = tenderResDTO.getApproval();
-				retrieveApproval(requiredApproval,copyScqt);
 			}
 
 		} finally {
@@ -598,7 +609,7 @@ public class QTCloneBackingbean extends
 	/**
 	 * Update qt dtls.
 	 */
-	private void updateQtDtls() {
+	private void updateCommittees() {
 		List<TabBean> commiteTabs = this.getManagedBean()
 				.getScCommitteeMemberTabList();
 		List<ScQtCommittee> qtCommittes = null;
