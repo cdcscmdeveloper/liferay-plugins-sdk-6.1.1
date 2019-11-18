@@ -15,6 +15,7 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -1186,6 +1187,59 @@ public class QTCloneBackingbean extends
 
 	public void setShowTree(boolean showTree) {
 		this.showTree = showTree;
+	}
+	
+	/**
+	 * Get parameter code select items by parameter type for radio buttons.
+	 * 
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getProcurementModeDropdownValues() {
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		List<String> recommendList = new ArrayList<String>();
+		recommendList.add(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO);
+		recommendList.add(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE);
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmParameter.parameterCode",
+						SearchOperator.OPERATOR_NOT_IN.value(), recommendList));
+		SelectItem[] items = getDropdownCodeValuesBySearchBean(
+				ParameterTypeConst.SC_PROCUREMENT_MODE, searchBean);
+		return items;
+	}
+	
+	/**
+	 * Clone search qt action.
+	 */
+	public void cloneSearchQtAction() {
+		getManagedBean().setCloneCommitteeSelectQt(null);
+
+		getManagedBean().getCloneSearchQTDataModel().reloadData();
+	}
+	
+	/**
+	 * Reset clone.
+	 */
+	public void resetClone() {
+		debugLogger("resetClone");
+		this.getManagedBean().getCloneQtnTenderSearchBean().setQtTitle(null);
+		this.getManagedBean().getCloneQtnTenderSearchBean().setQtNo(null);
+		this.getManagedBean().getCloneQtnTenderSearchBean()
+				.setProcurementMode(null);
+		this.getManagedBean().getCloneQtnTenderSearchBean()
+				.setFromCreatedDate(null);
+		this.getManagedBean().getCloneQtnTenderSearchBean()
+				.setToCreatedDate(null);
+		this.getManagedBean().getCloneQtnTenderSearchBean().setQtStatus(null);
+		this.getManagedBean().setSearchcommitteeNode(new DefaultTreeNode());
+		this.getManagedBean().getCloneQtnTenderSearchBean()
+				.setFromPublishDate(null);
+		this.getManagedBean().getCloneQtnTenderSearchBean()
+				.setToPublishDate(null);
+		this.getManagedBean().getCloneQtnTenderSearchBean()
+				.setFromClosingDate(null);
+		this.getManagedBean().getCloneQtnTenderSearchBean()
+		.setToClosingDate(null);
+		getManagedBean().setCloneCommitteeSelectQt(null);
 	}
 
 }
