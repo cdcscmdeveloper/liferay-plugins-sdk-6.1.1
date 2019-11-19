@@ -356,6 +356,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					smSupplierOwner.setIdentificationTypeId(identificationType.getParameterId());
 					smSupplierOwner.setShowTextField(true);
 					ssmResDTO.getSmSupplierOwners().add(smSupplierOwner);
+				}else{
+					//if ssm, disable role.
+					this.getManagedBean().setDisableRole(true);
 				}
 				this.getManagedBean().setSmSuppOwners(ssmResDTO.getSmSupplierOwners());
 				this.getManagedBean().setSmPersonnelDirector(ssmResDTO.getSmPersonnelDirector());
@@ -380,6 +383,18 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				//this.populateCityByAddType("business", false);
 				
 				//16052019 - SSM INTEGRATION CR 
+				//TODO: start check rob type and owners count #26270
+				if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.BUSINESS_TYPE_ROB_SOLE_PROPRIETORSHIP)){
+					if(this.getManagedBean().getSmSuppOwners().size() > 1){
+						throw new EpException(MessageConst.ERROR_721077);
+					}					
+				} else if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.BUSINESS_TYPE_ROB_PARTNERSHIP)){
+					if(this.getManagedBean().getSmSuppOwners().size() <= 1){
+						throw new EpException(MessageConst.ERROR_721077);
+					}
+				}
+				//TODO: end check rob type and owners count #26270
+				
 				//FIXME: start checking ssm status
 				this.getManagedBean().setStatusDescFromSSM(setStatusMessageFromSSM(ssmResDTO.getStatusFromSSM()));
 				String status = ssmResDTO.getStatusFromSSM().toUpperCase();
@@ -667,6 +682,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		//only use for individual flag
 		SmSupplierOwner smSuppOwner = this.getManagedBean().getSmSuppOwner();
 		//#16052019 - SSM INTEGRATION CR
+		PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 		smAppl.getSmPersonnels().clear();
 		if(this.getManagedBean().getSmSuppOwners().size()>0){
 			smSuppOwner = this.getManagedBean().getSmSuppOwners().get(0);//save only one tu supp owner
@@ -852,7 +868,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					}else if(personnelAdmin == null && personnelSSM.getSmPersonnelAddresses()==null){//store personnel not supplier admin and not contain address
 						personnelSSM.setSmAppl(smAppl);
 						personnelSSM.setRevNo(SupplierManagementConst.DEFAULT_REV_NO);
-						personnelSSM.setPmCountry(null);
+						if(personnelSSM.getIdentificationType().getParameterCode().equalsIgnoreCase(ParameterConst.IDENTIFICATION_TYPES_IC)){
+							personnelSSM.setPmCountry((PmCountry)defaultCountry.cloneEntity());
+						}else{
+							personnelSSM.setPmCountry(null);
+						}
 						smAppl.getSmPersonnels().add(personnelSSM);
 					}
 						
@@ -3818,6 +3838,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			this.getManagedBean().setShowOwner(false);
 			this.getManagedBean().setDisableRole(true);
 			this.getManagedBean().setOwnerIsDirector(true);
+		}
+		//if company valid with ssm need to disable checkbox role
+		if(this.getManagedBean().isCompanyValidWithSSM()){
+			this.getManagedBean().setDisableRole(true);
 		}
 	}
 	
