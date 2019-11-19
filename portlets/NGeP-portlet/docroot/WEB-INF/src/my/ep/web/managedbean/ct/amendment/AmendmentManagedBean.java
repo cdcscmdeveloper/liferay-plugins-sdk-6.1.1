@@ -170,7 +170,7 @@ private class ServiceListingPagingDataModel extends PagingDataModel<CtContractIt
 		private  Logger log = EpLogger.getLogger(ServiceListingPagingDataModel.class);
 		
 		public ServiceListingPagingDataModel() {
-			super("amenditemServiceTable", isReadOnly());
+			super("amenditemServiceTable");
 		}
 		
 		public ServiceListingPagingDataModel(String table) {
@@ -272,10 +272,11 @@ private class ServiceListingPagingDataModel extends PagingDataModel<CtContractIt
 					    resDTO.getContractItemResultBean();
 
 					    if(resDTO.getContractItemResultBean().getResultList().size()>0){
-							readOnly=false;
+							//readOnly=false;
+							return resDTO.getContractItemResultBean();
 					    }
 					  
-						return resDTO.getContractItemResultBean();
+						
 	                }
                 }
 			} catch (Exception e) {
@@ -292,7 +293,7 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	
 	private Logger log = EpLogger.getLogger(ContractListingPagingDataModel.class);
 	public ContractListingPagingDataModel() {
-		super("amenditemTable", isReadOnly());
+		super("amenditemTable");
 	}
 	public ContractListingPagingDataModel(String table) {
 		super(table, false);
@@ -393,9 +394,10 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 				
 				resDTO=contractItemSO.searchProductServiceItemDtls(reqDTO);
 				if(resDTO.getContractItemResultBean().getResultList().size()>0) {
-			    	 readOnly=false;
+//			    	 readOnly=false;
+			    	 return resDTO.getContractItemResultBean();
 			    }
-				return resDTO.getContractItemResultBean();
+				
 			}
           }
 		} catch (Exception e) {
