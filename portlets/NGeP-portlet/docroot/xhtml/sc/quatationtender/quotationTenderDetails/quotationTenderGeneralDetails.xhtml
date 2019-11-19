@@ -26,6 +26,8 @@
 		value="#{qTDetailBB.getExtensionResponseDueDate(scQt.qtId)}" />
 	<ui:param name="expectTotalIndPriceBelowThreshold"
 		value="#{createQtBB.expectTotalIndPriceBelowThreshold(scQt)}" />
+	<ui:param name="qtStatusIsProposalValidPeriodExtApproval" 
+		value="#{createQtBB.isQTStatusInProposalValidPeriodExtApproval(scQt.qtStatus.statusId)}" />
 	<ac:lovPopup />
 
 	<p:panel id="qtdetailsid" header="#{lbl['lbl.sc.general.info']}"
@@ -33,7 +35,10 @@
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.qt.instruction']}" escape="false" />    <!--Enhancement #25659 rendered="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION}" -->
 		<br/>
-		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.qt.instruction.revise']}" escape="false" />
+		<c:if test="#{!isMaintenanceFlow}">
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.qt.instruction.revise']}" escape="false" 
+				rendered="#{isStatusInQTReviseGroupStatus}" />
+		</c:if>
 
 			<ui:fragment rendered="#{!scQt.panel and (qtStatusChecklistScoring or qtStatusAfterChecklistScoring)}">
 				<ui:param name="checkCategoryCodemedicine" value="#{createQtBB.isMultipleProposalCategory(scQt, null)}"></ui:param>
