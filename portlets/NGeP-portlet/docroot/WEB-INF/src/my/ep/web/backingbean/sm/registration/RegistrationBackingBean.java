@@ -380,6 +380,18 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				//this.populateCityByAddType("business", false);
 				
 				//16052019 - SSM INTEGRATION CR 
+				//TODO: start check rob type and owners count #26270
+				if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.BUSINESS_TYPE_ROB_SOLE_PROPRIETORSHIP)){
+					if(this.getManagedBean().getSmSuppOwners().size() > 1){
+						throw new EpException(MessageConst.ERROR_721077);
+					}					
+				} else if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.BUSINESS_TYPE_ROB_PARTNERSHIP)){
+					if(this.getManagedBean().getSmSuppOwners().size() <= 1){
+						throw new EpException(MessageConst.ERROR_721077);
+					}
+				}
+				//TODO: end check rob type and owners count #26270
+				
 				//FIXME: start checking ssm status
 				this.getManagedBean().setStatusDescFromSSM(setStatusMessageFromSSM(ssmResDTO.getStatusFromSSM()));
 				String status = ssmResDTO.getStatusFromSSM().toUpperCase();
