@@ -20,7 +20,6 @@ import my.ep.persistence.entity.pp.procurementplan.PpProcurementItem;
 import my.ep.persistence.entity.pp.procurementplan.PpRejectReason;
 import my.ep.persistence.entity.pp.procurementplan.PpRemark;
 import my.ep.persistence.entity.pp.procurementplan.PpWorkflowStatus;
-import my.ep.persistence.entity.pp.procurementplan.PpUpdateReason;
 import my.ep.web.bean.pp.ProcurementPlanSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -116,8 +115,6 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private Date invitationMinDateFrom;
 	private Date invitationMinDateTo;
 	private Date invitationMaxDate;
-	
-	private List<PpUpdateReason> selectedUpdateReasons;
 	
 	public ProcurementPlanManagedBean(){}
 
@@ -458,21 +455,7 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	public void setSelectedRejectReasons(List<PpRejectReason> selectedRejectReasons) {
 		this.selectedRejectReasons = selectedRejectReasons;
 	}
-	
-	//#24975
-	/**
-	 * @return the selectedRejectReasons
-	 */
-	public List<PpUpdateReason> getSelectedUpdateReasons() {
-		return selectedUpdateReasons;
-	}
 
-	/**
-	 * @param selectedUpdateReasons the selectedRejectReasons to set
-	 */
-	public void setSelectedUpdateReasons(List<PpUpdateReason> selectedUpdateReasons) {
-		this.selectedUpdateReasons = selectedUpdateReasons;
-	}
 
 
 	/**
