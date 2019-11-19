@@ -68,27 +68,17 @@
 				</f:facet>
 
 				<p:commandLink
-					action="#{codificationMaintenanceBackingBean.goToExtensionSearchPortal(unspscObj1)}"
-					rendered="#{codificationMaintenanceBackingBean.productCode(unspscObj1.unspscCode) and (unspscObj1.unspscLevel eq 3)}">
-							#{unspscObj1.unspscCode}
-							</p:commandLink>
-
-				<p:commandLink
-					action="#{codificationMaintenanceBackingBean.goToAddServiceConfirmPopUp(unspscObj1)}"
-					disabled="true"
-					rendered="#{!(codificationMaintenanceBackingBean.productCode(unspscObj1.unspscCode)) and (unspscObj1.unspscLevel eq 3)}"
-					onclick="unspscPopUp.hide()" oncomplete="confirmationPopUp.show()"
-					update=":form:confirmationPopUpId">
+					action="#{codificationMaintenanceBackingBean.unspscSearchPortal(unspscObj1)}"
+					rendered="#{codificationBackingBean.productCode(unspscObj1.unspscCode) and (unspscObj1.unspscLevel eq 3)}">
 							#{unspscObj1.unspscCode}
 							</p:commandLink>
 
 				<p:commandLink
 					action="#{codificationMaintenanceBackingBean.unspscPopUpSearch(unspscObj1)}"
 					rendered="#{unspscObj1.unspscLevel ne 3}"
-					update=":form:codificationPopUpId">
+				    update=":form:codificationPopUpId">
 							#{unspscObj1.unspscCode}
-							</p:commandLink>
-
+				</p:commandLink>
 
 			</p:column>
 			<p:column sortBy="#{unspscObj1.unspscTitle}">
