@@ -480,7 +480,7 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 	}
 
 	public String backToPrevPortal() {
-		this.getManagedBean().initRefreshPageNoFlag();
+		this.getManagedBean().initRefreshMainPageNoFlag();
 		return "codificationMaintenance";
 	}
 	
@@ -699,96 +699,14 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 	// 2019/08/27 - Start
 	public String PopupOption(CmUnspsc obj) {
 
-		this.getManagedBean().setClassCode("");
-		this.getManagedBean().setClassTitle("");
-		this.getManagedBean().setClassTitleEng("");
-
-		this.getManagedBean().setFamilyTitleEng("");
-
-		this.getManagedBean().setFamilyCode("");
-		this.getManagedBean().setFamilyTitle("");
-		this.getManagedBean().setSegmentCode("");
-		this.getManagedBean().setSegmentTitle("");
-		this.getManagedBean().setSegmentTitleEng("");
-
 		this.getManagedBean().setCommodityCode("");
 		this.getManagedBean().setCommodityTitle("");
 		this.getManagedBean().setCommodityTitleEng("");
-		this.getManagedBean().setEditMode(true);
 
 		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",
 				ICodificationSO.class);
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
-		
-		
-		Integer level = checkUnspscLevel(new Long(obj.getUnspscCode()));
-
-		log.info("level:" + level);
-
-		if (level == 0) {
-
-			log.info("***********0000****************");
-			reqDTO.setParentCode(obj.getUnspscCode());
-			CodificationResDTO familyDTO = unspscSO.searchFamily(reqDTO);
-
-			this.getManagedBean().setUnspscPopUpList(familyDTO.getFamilyList());
-
-			this.getManagedBean().setSegmentCode(obj.getUnspscCode());
-			this.getManagedBean().setSegmentTitle(obj.getUnspscTitle());
-			this.getManagedBean().setSegmentTitleEng(obj.getUnspscTitleEng());
-
-		} else if (level == 1) {
-			log.info("***********11111****************");
-			reqDTO.setParentCode(obj.getUnspscCode());
-			CodificationResDTO ClassDTO = unspscSO.searchClass(reqDTO);
-
-			this.getManagedBean().setUnspscPopUpList(ClassDTO.getClassList());
-
-			this.getManagedBean().setFamilyCode(obj.getUnspscCode());
-			this.getManagedBean().setFamilyTitle(obj.getUnspscTitle());
-			this.getManagedBean().setFamilyTitleEng(obj.getUnspscTitleEng());
-
-			String segmentCode = getParentCode(new Long(obj.getUnspscCode()));
-
-			reqDTO.setUnspscCode(segmentCode);
-			CodificationResDTO segmentDTO = unspscSO.searchUnspscObj(reqDTO);
-
-			this.getManagedBean().setSegmentCode(segmentDTO.getUnspscObj().getUnspscCode());
-			this.getManagedBean().setSegmentTitle(segmentDTO.getUnspscObj().getUnspscTitle());
-			this.getManagedBean().setSegmentTitleEng(segmentDTO.getUnspscObj().getUnspscTitleEng());
-
-		} else if (level == 2) {
-			log.info("***********222****************" + obj.getUnspscCode());
-			reqDTO.setParentCode(obj.getUnspscCode());
-			CodificationResDTO CommodityDTO = unspscSO.searchCommodity(reqDTO);
-
-			this.getManagedBean().setUnspscPopUpList(CommodityDTO.getCommodityList());
-
-			this.getManagedBean().setClassCode(obj.getUnspscCode());
-			this.getManagedBean().setClassTitle(obj.getUnspscTitle());
-			this.getManagedBean().setClassTitleEng(obj.getUnspscTitleEng());
-
-			String familyCode = getParentCode(new Long(obj.getUnspscCode()));
-			log.info("familyCode:" + familyCode);
-			reqDTO.setUnspscCode(familyCode);
-			CodificationResDTO familyDTO = unspscSO.searchUnspscObj(reqDTO);
-
-			this.getManagedBean().setFamilyCode(familyDTO.getUnspscObj().getUnspscCode());
-			this.getManagedBean().setFamilyTitle(familyDTO.getUnspscObj().getUnspscTitleEng());
-			this.getManagedBean().setFamilyTitleEng(familyDTO.getUnspscObj().getUnspscTitleEng());
-
-			String segmentCode = getParentCode(new Long(familyDTO.getUnspscObj().getUnspscCode()));
-			log.info("segmentCode:" + segmentCode);
-			reqDTO.setUnspscCode(segmentCode);
-			CodificationResDTO segmentDTO = unspscSO.searchUnspscObj(reqDTO);
-
-			this.getManagedBean().setSegmentCode(segmentDTO.getUnspscObj().getUnspscCode());
-			this.getManagedBean().setSegmentTitle(segmentDTO.getUnspscObj().getUnspscTitle());
-			this.getManagedBean().setSegmentTitleEng(segmentDTO.getUnspscObj().getUnspscTitleEng());
-
-		}else if (level == 3) {
-			log.info("***********333****************" + obj.getUnspscCode());
-			
+				
 			reqDTO.setUnspscCode(obj.getUnspscCode());
 			CodificationResDTO resDTO = unspscSO
 					.retrieveUNSPSCByCommodityCode(reqDTO);
@@ -827,8 +745,6 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 
 			}
 
-		}
-
 		return "optionItemCodeMaintenance.xhtml?faces-redirect=true";
 	}
 
@@ -836,17 +752,6 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 	public String PopupExtensionCode(CmUnspsc unspscObj) {
 		log.debug("**********goToPopupExtensionCode************");
 		
-		this.getManagedBean().setClassCode("");
-		this.getManagedBean().setClassTitle("");
-		this.getManagedBean().setClassTitleEng("");
-
-		this.getManagedBean().setFamilyTitleEng("");
-
-		this.getManagedBean().setFamilyCode("");
-		this.getManagedBean().setFamilyTitle("");
-		this.getManagedBean().setSegmentCode("");
-		this.getManagedBean().setSegmentTitle("");
-		this.getManagedBean().setSegmentTitleEng("");
 
 		this.getManagedBean().setCommodityCode("");
 		this.getManagedBean().setCommodityTitle("");
@@ -856,72 +761,72 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 				.getInstance().getServiceObject("cm", ICodificationSO.class);
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 			
-		Integer level = checkUnspscLevel(new Long(unspscObj.getUnspscCode()));
-
-		log.info("level:" + level);
-
-		if (level == 0) {
-
-			log.info("***********0000****************");
-			reqDTO.setParentCode(unspscObj.getUnspscCode());
-			CodificationResDTO familyDTO = unspscSO.searchFamily(reqDTO);
-
-			this.getManagedBean().setUnspscPopUpList(familyDTO.getFamilyList());
-
-			this.getManagedBean().setSegmentCode(unspscObj.getUnspscCode());
-			this.getManagedBean().setSegmentTitle(unspscObj.getUnspscTitle());
-			this.getManagedBean().setSegmentTitleEng(unspscObj.getUnspscTitleEng());
-
-		} else if (level == 1) {
-			log.info("***********11111****************");
-			reqDTO.setParentCode(unspscObj.getUnspscCode());
-			CodificationResDTO ClassDTO = unspscSO.searchClass(reqDTO);
-
-			this.getManagedBean().setUnspscPopUpList(ClassDTO.getClassList());
-
-			this.getManagedBean().setFamilyCode(unspscObj.getUnspscCode());
-			this.getManagedBean().setFamilyTitle(unspscObj.getUnspscTitle());
-			this.getManagedBean().setFamilyTitleEng(unspscObj.getUnspscTitleEng());
-
-			String segmentCode = getParentCode(new Long(unspscObj.getUnspscCode()));
-
-			reqDTO.setUnspscCode(segmentCode);
-			CodificationResDTO segmentDTO = unspscSO.searchUnspscObj(reqDTO);
-
-			this.getManagedBean().setSegmentCode(segmentDTO.getUnspscObj().getUnspscCode());
-			this.getManagedBean().setSegmentTitle(segmentDTO.getUnspscObj().getUnspscTitle());
-			this.getManagedBean().setSegmentTitleEng(segmentDTO.getUnspscObj().getUnspscTitleEng());
-
-		} else if (level == 2) {
-			log.info("***********222****************" + unspscObj.getUnspscCode());
-			reqDTO.setParentCode(unspscObj.getUnspscCode());
-			CodificationResDTO CommodityDTO = unspscSO.searchCommodity(reqDTO);
-
-			this.getManagedBean().setUnspscPopUpList(CommodityDTO.getCommodityList());
-
-			this.getManagedBean().setClassCode(unspscObj.getUnspscCode());
-			this.getManagedBean().setClassTitle(unspscObj.getUnspscTitle());
-			this.getManagedBean().setClassTitleEng(unspscObj.getUnspscTitleEng());
-
-			String familyCode = getParentCode(new Long(unspscObj.getUnspscCode()));
-			log.info("familyCode:" + familyCode);
-			reqDTO.setUnspscCode(familyCode);
-			CodificationResDTO familyDTO = unspscSO.searchUnspscObj(reqDTO);
-
-			this.getManagedBean().setFamilyCode(familyDTO.getUnspscObj().getUnspscCode());
-			this.getManagedBean().setFamilyTitle(familyDTO.getUnspscObj().getUnspscTitleEng());
-			this.getManagedBean().setFamilyTitleEng(familyDTO.getUnspscObj().getUnspscTitleEng());
-
-			String segmentCode = getParentCode(new Long(familyDTO.getUnspscObj().getUnspscCode()));
-			log.info("segmentCode:" + segmentCode);
-			reqDTO.setUnspscCode(segmentCode);
-			CodificationResDTO segmentDTO = unspscSO.searchUnspscObj(reqDTO);
-
-			this.getManagedBean().setSegmentCode(segmentDTO.getUnspscObj().getUnspscCode());
-			this.getManagedBean().setSegmentTitle(segmentDTO.getUnspscObj().getUnspscTitle());
-			this.getManagedBean().setSegmentTitleEng(segmentDTO.getUnspscObj().getUnspscTitleEng());
-
-		}else if (level == 3) {
+//		Integer level = checkUnspscLevel(new Long(unspscObj.getUnspscCode()));
+//
+//		log.info("level:" + level);
+//
+//		if (level == 0) {
+//
+//			log.info("***********0000****************");
+//			reqDTO.setParentCode(unspscObj.getUnspscCode());
+//			CodificationResDTO familyDTO = unspscSO.searchFamily(reqDTO);
+//
+//			this.getManagedBean().setUnspscPopUpList(familyDTO.getFamilyList());
+//
+//			this.getManagedBean().setSegmentCode(unspscObj.getUnspscCode());
+//			this.getManagedBean().setSegmentTitle(unspscObj.getUnspscTitle());
+//			this.getManagedBean().setSegmentTitleEng(unspscObj.getUnspscTitleEng());
+//
+//		} else if (level == 1) {
+//			log.info("***********11111****************");
+//			reqDTO.setParentCode(unspscObj.getUnspscCode());
+//			CodificationResDTO ClassDTO = unspscSO.searchClass(reqDTO);
+//
+//			this.getManagedBean().setUnspscPopUpList(ClassDTO.getClassList());
+//
+//			this.getManagedBean().setFamilyCode(unspscObj.getUnspscCode());
+//			this.getManagedBean().setFamilyTitle(unspscObj.getUnspscTitle());
+//			this.getManagedBean().setFamilyTitleEng(unspscObj.getUnspscTitleEng());
+//
+//			String segmentCode = getParentCode(new Long(unspscObj.getUnspscCode()));
+//
+//			reqDTO.setUnspscCode(segmentCode);
+//			CodificationResDTO segmentDTO = unspscSO.searchUnspscObj(reqDTO);
+//
+//			this.getManagedBean().setSegmentCode(segmentDTO.getUnspscObj().getUnspscCode());
+//			this.getManagedBean().setSegmentTitle(segmentDTO.getUnspscObj().getUnspscTitle());
+//			this.getManagedBean().setSegmentTitleEng(segmentDTO.getUnspscObj().getUnspscTitleEng());
+//
+//		} else if (level == 2) {
+//			log.info("***********222****************" + unspscObj.getUnspscCode());
+//			reqDTO.setParentCode(unspscObj.getUnspscCode());
+//			CodificationResDTO CommodityDTO = unspscSO.searchCommodity(reqDTO);
+//
+//			this.getManagedBean().setUnspscPopUpList(CommodityDTO.getCommodityList());
+//
+//			this.getManagedBean().setClassCode(unspscObj.getUnspscCode());
+//			this.getManagedBean().setClassTitle(unspscObj.getUnspscTitle());
+//			this.getManagedBean().setClassTitleEng(unspscObj.getUnspscTitleEng());
+//
+//			String familyCode = getParentCode(new Long(unspscObj.getUnspscCode()));
+//			log.info("familyCode:" + familyCode);
+//			reqDTO.setUnspscCode(familyCode);
+//			CodificationResDTO familyDTO = unspscSO.searchUnspscObj(reqDTO);
+//
+//			this.getManagedBean().setFamilyCode(familyDTO.getUnspscObj().getUnspscCode());
+//			this.getManagedBean().setFamilyTitle(familyDTO.getUnspscObj().getUnspscTitleEng());
+//			this.getManagedBean().setFamilyTitleEng(familyDTO.getUnspscObj().getUnspscTitleEng());
+//
+//			String segmentCode = getParentCode(new Long(familyDTO.getUnspscObj().getUnspscCode()));
+//			log.info("segmentCode:" + segmentCode);
+//			reqDTO.setUnspscCode(segmentCode);
+//			CodificationResDTO segmentDTO = unspscSO.searchUnspscObj(reqDTO);
+//
+//			this.getManagedBean().setSegmentCode(segmentDTO.getUnspscObj().getUnspscCode());
+//			this.getManagedBean().setSegmentTitle(segmentDTO.getUnspscObj().getUnspscTitle());
+//			this.getManagedBean().setSegmentTitleEng(segmentDTO.getUnspscObj().getUnspscTitleEng());
+//
+//		}else if (level == 3) {
 			reqDTO.setUnspscCode(unspscObj.getUnspscCode());
 			CodificationResDTO resDTO = unspscSO
 					.retrieveUNSPSCByCommodityCode(reqDTO);
@@ -1019,8 +924,8 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 				.getColorCriteria()
 				.add(new SelectItem(color.getColorId(), color
 						.getColorName()));
-			}
 		}
+			
 		this.getManagedBean().getExtensionSearchItemDataModel().reloadData();
 		this.getManagedBean().getExtensionSearchItemDataModel().resetData();
 		this.getManagedBean().getColorFilterBean().setSearchValue("");
@@ -1062,7 +967,10 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 			}
 	
 		// Segment..
-		if (this.getManagedBean().isEditMode()== false){
+			
+			
+			
+		if (this.getManagedBean().isEditMode()==false){		
 		if (this.getManagedBean().getSegmentTitle().isEmpty() || this.getManagedBean().getSegmentTitleEng().isEmpty()) {
 
 			FacesContext.getCurrentInstance().addMessage(
@@ -1086,28 +994,21 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 						getSegmentTitle());
 				resDTO.getUnspscObj().setUnspscTitleEng(this.getManagedBean()
 						.getSegmentTitleEng());
+				resDTO.getUnspscObj().getUnspscId();
 				
+				
+				log.info("unspsc id for segment " + resDTO.getUnspscObj().getUnspscId());
+						
 				reqDTO.getUnspscList().add(resDTO.getUnspscObj());
 						
 				resDTO = unspscSO.updateUnspsc(reqDTO);
 				
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
-								MessageConst.INFO_710023, MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
-				
-				this.getManagedBean().setEditMode(true);
-				
-				return;
-				
 				
 			}
 		  }
-	    }else
-
+		}
 		// Family..
-		if (this.getManagedBean().isEditMode()== false){
+	    if (this.getManagedBean().isEditModeFamily()== false){
 		if (this.getManagedBean().getFamilyTitle().isEmpty() || this.getManagedBean().getFamilyTitleEng().isEmpty()) {
 
 			FacesContext.getCurrentInstance().addMessage(
@@ -1131,26 +1032,22 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 					.getFamilyTitle());
 			resDTO.getUnspscObj().setUnspscTitleEng(this.getManagedBean()
 					.getFamilyTitleEng());
-			reqDTO.getUnspscList().add(resDTO.getUnspscObj());
+			resDTO.getUnspscObj().getUnspscId();
+			
+			log.info("unspsc id for famliy " + resDTO.getUnspscObj().getUnspscId());
+			
+			
+			reqDTO.getFamilyList().add(resDTO.getUnspscObj());
 					
 			resDTO = unspscSO.updateFamilyList(reqDTO);
 			
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
-							MessageConst.INFO_710023, MessageUtils.BUNDLE_COMMON_MESSAGES,
-							new FacesScopes().getUserLocale())));
-			
-			this.getManagedBean().setEditMode(true);
-			
-			return;
 			
 			}
 		}
-	}else
+	 }
 
 		// Class
-		if (this.getManagedBean().isEditMode()== false){	
+		if (this.getManagedBean().isEditModeClass()==false){	
 		if (this.getManagedBean().getClassTitle().isEmpty() || this.getManagedBean().getClassTitleEng().isEmpty()) {
 
 			FacesContext.getCurrentInstance().addMessage(
@@ -1174,30 +1071,22 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 					.getClassTitle());
 			resDTO.getUnspscObj().setUnspscTitleEng(this.getManagedBean()
 					.getClassTitleEng());
+			resDTO.getUnspscObj().getUnspscId();
 			
-			reqDTO.getUnspscList().add(resDTO.getUnspscObj());
+			log.info("unspsc id for class " + resDTO.getUnspscObj().getUnspscId());
+			
+			
+			reqDTO.getClassList().add(resDTO.getUnspscObj());
 						
 			resDTO = unspscSO.updateClassList(reqDTO);
 
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
-							MessageConst.INFO_710023, MessageUtils.BUNDLE_COMMON_MESSAGES,
-							new FacesScopes().getUserLocale())));
-			
-			this.getManagedBean().setEditMode(true);
-			
-			return;
 			}
 		  }
-		}else
-
-		// Commodity..
-		
-		if (this.getManagedBean().isEditMode() == false){		
-
-		if (this.getManagedBean().getCommodityTitle().isEmpty()
-				|| this.getManagedBean().getCommodityTitleEng().isEmpty()) {
+		}
+			
+		// Commodity..				
+		if (this.getManagedBean().getSelectedUNSPSCObj().getUnspscTitle().isEmpty()||
+				this.getManagedBean().getSelectedUNSPSCObj().getUnspscTitleEng().isEmpty()){
 
 			FacesContext.getCurrentInstance().addMessage(
 					null,
@@ -1211,41 +1100,63 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 			log.info("***update***");
 			
 			
-			reqDTO.setUnspscCode(this.getManagedBean()
-					.getCommodityCode());
+			reqDTO.setUnspscCode(this.getManagedBean().getSelectedUNSPSCObj()
+					.getUnspscCode());
 			resDTO = unspscSO.searchUnspscObj(reqDTO);
 			
 			if (resDTO.getUnspscObj() != null) {
-			
 		
-			resDTO.getUnspscObj().setUnspscTitle(this.getManagedBean()
-					.getCommodityTitle());
-			resDTO.getUnspscObj().setUnspscTitleEng(this.getManagedBean()
-					.getCommodityTitleEng());
-			reqDTO.getUnspscList().add(resDTO.getUnspscObj());
+			resDTO.getUnspscObj().setUnspscTitle(this.getManagedBean().getSelectedUNSPSCObj()
+					.getUnspscTitle());
+			resDTO.getUnspscObj().setUnspscTitleEng(this.getManagedBean().getSelectedUNSPSCObj()
+					.getUnspscTitleEng());
+			resDTO.getUnspscObj().getUnspscId();
+			
+			
+			log.info("unspsc id for commodity " + resDTO.getUnspscObj().getUnspscId());
+			
+			reqDTO.getCommodityList().add(resDTO.getUnspscObj());
 					
 			resDTO = unspscSO.updateCommodityList(reqDTO);
 			
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
-									MessageConst.INFO_710023, MessageUtils.BUNDLE_COMMON_MESSAGES,
-							new FacesScopes().getUserLocale())));
-			
-			this.getManagedBean().setEditMode(true);
-			
-			return;
-			
 			
 		    }
-		  }
 		}
-	}
+		
+		
+		FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+								MessageConst.INFO_710023, MessageUtils.BUNDLE_COMMON_MESSAGES,
+						new FacesScopes().getUserLocale())));
+		
+		this.getManagedBean().setEditMode(true);
+		this.getManagedBean().setEditModeFamily(true);
+		this.getManagedBean().setEditModeClass(true);
+
+				
+		return;
+		
+	 }	
+
 
 
 	public void editSegment() {
 		log.info("editSegment...");
 		this.getManagedBean().setEditMode(false);
+
+	}
+	
+	
+	public void editFamily() {
+		log.info("editFamily...");
+		this.getManagedBean().setEditModeFamily(false);
+
+	}
+	
+	public void editClass() {
+		log.info("editClass...");
+		this.getManagedBean().setEditModeClass(false);
 
 	}
 	
@@ -1369,7 +1280,102 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 				this.getManagedBean().getExtensionSearchItemDataModel().reloadData();
 			}
 		}
+		
+		
+		public String unspscSearchPortal(CmUnspsc unspscObj) {
+			
+			this.getManagedBean().setAutoCompleteUnspscCode(unspscObj);	
+	
+			this.getManagedBean().getSearchDataModel().reloadData();
+			
+			System.out.println("NAV_TO_CODIFICATION_MAINTENANCE");
+			return NAV_TO_CODIFICATION_MAINTENANCE + "?faces-redirect=true";
+				
+		}
+		
+		
+		public void unspscPopUpSearch(CmUnspsc obj) {
 
+			this.getManagedBean().setAutoCompleteUnspscCode(null);
+			this.getManagedBean().setTitleFilterBean(null);
+			resetAction();	
+
+			ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
+					.getInstance().getServiceObject("cm", ICodificationSO.class);
+			CodificationReqDTO reqDTO = new CodificationReqDTO();
+
+			Integer level = checkUnspscLevel(new Long(obj.getUnspscCode()));
+
+			log.info("level:" + level);
+
+			if (level == 0) {
+
+				log.info("***********0000****************");
+				reqDTO.setParentCode(obj.getUnspscCode());
+				CodificationResDTO familyDTO = unspscSO.searchFamily(reqDTO);
+
+				this.getManagedBean().setUnspscPopUpList(familyDTO.getFamilyList());
+
+				this.getManagedBean().setSegmentCode(obj.getUnspscCode());
+				this.getManagedBean().setSegmentTitle(obj.getUnspscTitle());
+
+			} else if (level == 1) {
+				log.info("***********11111****************");
+				reqDTO.setParentCode(obj.getUnspscCode());
+				CodificationResDTO ClassDTO = unspscSO.searchClass(reqDTO);
+
+				this.getManagedBean().setUnspscPopUpList(ClassDTO.getClassList());
+
+				this.getManagedBean().setFamilyCode(obj.getUnspscCode());
+				this.getManagedBean().setFamilyTitle(obj.getUnspscTitle());
+
+				String segmentCode = getParentCode(new Long(obj.getUnspscCode()));
+
+				reqDTO.setUnspscCode(segmentCode);
+				CodificationResDTO segmentDTO = unspscSO.searchUnspscObj(reqDTO);
+
+				this.getManagedBean().setSegmentCode(
+						segmentDTO.getUnspscObj().getUnspscCode());
+				this.getManagedBean().setSegmentTitle(
+						segmentDTO.getUnspscObj().getUnspscTitle());
+
+			} else if (level == 2) {
+				log.info("***********222****************"
+						+ obj.getUnspscCode());
+				reqDTO.setParentCode(obj.getUnspscCode());
+				CodificationResDTO CommodityDTO = unspscSO.searchCommodity(reqDTO);
+
+				this.getManagedBean().setUnspscPopUpList(
+						CommodityDTO.getCommodityList());
+
+				this.getManagedBean().setClassCode(obj.getUnspscCode());
+				this.getManagedBean().setClassTitle(obj.getUnspscTitle());
+
+				String familyCode = getParentCode(new Long(obj.getUnspscCode()));
+				log.info("familyCode:" + familyCode);
+				reqDTO.setUnspscCode(familyCode);
+				CodificationResDTO familyDTO = unspscSO.searchUnspscObj(reqDTO);
+
+				this.getManagedBean().setFamilyCode(
+						familyDTO.getUnspscObj().getUnspscCode());
+				this.getManagedBean().setFamilyTitle(
+						familyDTO.getUnspscObj().getUnspscTitle());
+
+				String segmentCode = getParentCode(new Long(familyDTO
+						.getUnspscObj().getUnspscCode()));
+				log.info("segmentCode:" + segmentCode);
+				reqDTO.setUnspscCode(segmentCode);
+				CodificationResDTO segmentDTO = unspscSO.searchUnspscObj(reqDTO);
+
+				this.getManagedBean().setSegmentCode(
+						segmentDTO.getUnspscObj().getUnspscCode());
+				this.getManagedBean().setSegmentTitle(
+						segmentDTO.getUnspscObj().getUnspscTitle());
+				
+			
+			}
+		}
+		
 
 }
 

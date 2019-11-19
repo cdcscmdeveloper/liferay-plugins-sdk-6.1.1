@@ -142,17 +142,17 @@
 					</p:column>
 					<p:column>
 						<p:inputText id="famTitle" style="width:420px;"
-							value="#{codificationMaintenanceBackingBean.managedBean.familyTitle}" disabled="#{codificationMaintenanceBackingBean.managedBean.editMode}"></p:inputText>
+							value="#{codificationMaintenanceBackingBean.managedBean.familyTitle}" disabled="#{codificationMaintenanceBackingBean.managedBean.editModeFamily}"></p:inputText>
 							<p:spacer width="5px" />
-								<p:commandLink action="#{codificationMaintenanceBackingBean.editSegment()}" partialSubmit="true" update=":form:famTitle">
+								<p:commandLink action="#{codificationMaintenanceBackingBean.editFamily()}" partialSubmit="true" update=":form:famTitle">
 								<h:graphicImage value="/css/images/design/ico-edit.png" />	
 							</p:commandLink>
 					</p:column>
 					<p:column>
 						<p:inputText id="famTitleEng" style="width:420px;"
-							value="#{codificationMaintenanceBackingBean.managedBean.familyTitleEng}" disabled="#{codificationMaintenanceBackingBean.managedBean.editMode}"></p:inputText>
+							value="#{codificationMaintenanceBackingBean.managedBean.familyTitleEng}" disabled="#{codificationMaintenanceBackingBean.managedBean.editModeFamily}"></p:inputText>
 							<p:spacer width="5px" />
-								<p:commandLink action="#{codificationMaintenanceBackingBean.editSegment()}" partialSubmit="true" update=":form:famTitleEng">
+								<p:commandLink action="#{codificationMaintenanceBackingBean.editFamily()}" partialSubmit="true" update=":form:famTitleEng">
 								<h:graphicImage value="/css/images/design/ico-edit.png" />	
 							</p:commandLink>
 					</p:column>
@@ -169,17 +169,17 @@
 					</p:column>
 					<p:column>
 						<p:inputText id="classTitle" style="width:420px;"
-							value="#{codificationMaintenanceBackingBean.managedBean.classTitle}" disabled="#{codificationMaintenanceBackingBean.managedBean.editMode}"></p:inputText>
+							value="#{codificationMaintenanceBackingBean.managedBean.classTitle}" disabled="#{codificationMaintenanceBackingBean.managedBean.editModeClass}"></p:inputText>
 							<p:spacer width="8px" />
-							<p:commandLink action="#{codificationMaintenanceBackingBean.editSegment()}" partialSubmit="true" update=":form:classTitle">
+							<p:commandLink action="#{codificationMaintenanceBackingBean.editClass()}" partialSubmit="true" update=":form:classTitle">
 								<h:graphicImage value="/css/images/design/ico-edit.png" />	
 							</p:commandLink>
 					</p:column>
 					<p:column>
 					<p:inputText id="classTitleEng" style="width:420px;"
-							value="#{codificationMaintenanceBackingBean.managedBean.classTitleEng}" disabled="#{codificationMaintenanceBackingBean.managedBean.editMode}"></p:inputText>
+							value="#{codificationMaintenanceBackingBean.managedBean.classTitleEng}" disabled="#{codificationMaintenanceBackingBean.managedBean.editModeClass}"></p:inputText>
 							<p:spacer width="8px" />
-							<p:commandLink action="#{codificationMaintenanceBackingBean.editSegment()}" partialSubmit="true" update=":form:classTitleEng">
+							<p:commandLink action="#{codificationMaintenanceBackingBean.editClass()}" partialSubmit="true" update=":form:classTitleEng">
 								<h:graphicImage value="/css/images/design/ico-edit.png" />	
 							</p:commandLink>	
 					</p:column>
@@ -196,23 +196,21 @@
 					</p:column>
 					<p:column>
 						<p:inputText style="width:420px;"
-							value="#{codificationMaintenanceBackingBean.managedBean.selectedUNSPSCObj.unspscTitle}"></p:inputText>
+							value="#{codificationMaintenanceBackingBean.managedBean.selectedUNSPSCObj.unspscTitle}" ></p:inputText>
 					</p:column>
 					<p:column>
 						<p:inputText style="width:420px;"
-							value="#{codificationMaintenanceBackingBean.managedBean.selectedUNSPSCObj.unspscTitleEng}"></p:inputText>
+							value="#{codificationMaintenanceBackingBean.managedBean.selectedUNSPSCObj.unspscTitleEng}" ></p:inputText>
 					</p:column>
 				</p:row>
 
 			
 			</p:panelGrid>
 		</p:panel>
-		
-		<p:confirmDialog
-		           style="font-size:14px;height:20px"
+        
+        <p:confirmDialog style="font-size:14px;height:20px;text-align: left;"
 		           header="#{lbl['lbl.cm.dialog.cofirm.header']}" 
                    message="#{lbl['lbl.cm.dialog.message.item.code.maintenance']}" 
-                   icon="ui-icon-alert"
                    showEffect="fade"
                    hideEffect="fade" 
                    widgetVar="updateData">
@@ -226,16 +224,11 @@
                      value="#{lbl['lbl.btn.no']}"
                      oncomplete="updateData.hide()"/>
                      </div>
-        </p:confirmDialog>
-	</h:panelGroup>
-    
-    <style type="text/css">
-      .required:before { 
-    content:"* ";
-    color: red;
-}
-</style>
+		</p:confirmDialog>
+		</h:panelGroup>
+	
 
   </ui:define>
+ 
 	
  </ui:composition>
