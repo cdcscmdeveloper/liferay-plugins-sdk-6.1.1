@@ -32,23 +32,23 @@
 					styleClass="sidemenu"
 					activeIndex="#{qTDetailBB.managedBean.activeIndex}"	>
 					<p:menuitem value="#{lbl['lbl.sc.qt.qtn.details']}"
-						action="#{qTDetailBB.qtDetailsTabChange(0)}" update="@form cloneButton"
+						action="#{qTDetailBB.qtDetailsTabChange(0)}" update="@form"
 						process="@form" 
 						rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemDetails)}" />
 					<p:menuitem value="#{lbl['lbl.sc.supplier.qulification.criteria']}"
-						action="#{qTDetailBB.qtDetailsTabChange(1)}" update="@form cloneButton"
+						action="#{qTDetailBB.qtDetailsTabChange(1)}" update="@form"
 						process="@form" 
 						rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemSuppQualificationCriteria)}" />
 					<p:menuitem value="#{lbl['lbl.sc.qt.committee.appointment']}"
-						action="#{qTDetailBB.qtDetailsTabChange(2)}" update="@form cloneButton"
+						action="#{qTDetailBB.qtDetailsTabChange(2)}" update="@form"
 						process="@form" 
 						rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemCommitteeAppointment)}" />	
 					<p:menuitem value="#{lbl['lbl.sc.approval']}"
-						action="#{qTDetailBB.qtDetailsTabChange(3)}" update="@form cloneButton"
+						action="#{qTDetailBB.qtDetailsTabChange(3)}" update="@form"
 						process="@form" 
 						rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemApproval)}" />
 					<p:menuitem value="#{lbl['lbl.sc.activities']}"
-						action="#{qTDetailBB.qtDetailsTabChange(4)}" update="@form cloneButton"
+						action="#{qTDetailBB.qtDetailsTabChange(4)}" update="@form"
 						process="@form"
 						rendered="#{isQTStatusSCApprovalAndBefore and qTDetailBB.displayMenuItem(qTDetailBB.menuItemActivities)}" />
 						
