@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:dialog id="cloneid2" header="#{lbl['lbl.sc.clone.committee']}"
+	<p:dialog id="cloneid2" header="#{lbl['lbl.sc.clone.specification']}"
 		widgetVar="screen3" width="970" height="600"
 		styleClass="cloneCommitteMember" position="top">
 		<h:panelGroup id="pnlid2">
@@ -20,7 +20,7 @@
 								value="#{lbl['lbl.sc.title']}" /></td>
 						<td colspan="3"><p:inputText
 								onkeypress="if (event.keyCode == 13) { quotationTndrCommitteeAppointmentMainCloneSearch.jq.click(); return false; }"
-								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.qtTitle}"
+								value="#{qtSpecCloneBackingBean.managedBean.cloneQtnTenderSearchBean.qtTitle}"
 								style="width:98%;" maxlength="100" /></td>
 					</tr>
 					<tr>
@@ -28,22 +28,22 @@
 								value="#{lbl['lbl.sc.qtn.no']}" /></td>
 						<td style="width: 285px;"><p:inputText
 								onkeypress="if (event.keyCode == 13) { quotationTndrCommitteeAppointmentMainCloneSearch.jq.click(); return false; }"
-								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.qtNo}"
+								value="#{qtSpecCloneBackingBean.managedBean.cloneQtnTenderSearchBean.qtNo}"
 								maxlength="21" size="35" /></td>
 						<td style="width: 165px;"><p:outputLabel
 								value="#{lbl['lbl.sc.procurement.mode']}" /></td>
 						<td style="width: 285px;"><p:selectOneMenu
 								style="width: 283px;margin-bottom: 5px;"
-								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.procurementMode}">
+								value="#{qtSpecCloneBackingBean.managedBean.cloneQtnTenderSearchBean.procurementMode}">
 								<f:selectItems
-									value="#{qTCommitteBackingBean.getProcurementModeDropdownValues()}" />
+									value="#{qtSpecCloneBackingBean.getProcurementModeDropdownValues()}" />
 							</p:selectOneMenu></td>
 					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sc.created.date.from']}" /></td>
 						<td><p:calendar id="datecreatedfrm2" showOn="button"
 								onkeypress="if (event.keyCode == 13) { quotationTndrCommitteeAppointmentMainCloneSearch.jq.click(); return false; }"
-								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}"
+								value="#{qtSpecCloneBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}"
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 								size="29" readonlyInput="true" style="width:180px;">
 								<p:ajax event="dateSelect" update="datecreatedto2" />
@@ -51,19 +51,19 @@
 						<td><p:outputLabel value="#{lbl['lbl.sc.created.date.to']}" /></td>
 						<td><p:calendar id="datecreatedto2" showOn="button"
 								onkeypress="if (event.keyCode == 13) { quotationTndrCommitteeAppointmentMainCloneSearch.jq.click(); return false; }"
-								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.toCreatedDate}"
-								mindate="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}"
+								value="#{qtSpecCloneBackingBean.managedBean.cloneQtnTenderSearchBean.toCreatedDate}"
+								mindate="#{qtSpecCloneBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}"
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 								size="29" readonlyInput="true" style="width:180px;">
 								<f:attribute name="startDate"
-									value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}" />
+									value="#{qtSpecCloneBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}" />
 							</p:calendar></td>
 					</tr>
 					<tr>
 						<td><h:outputLabel value="#{lbl['lbl.sc.pbldtfrom']}" /></td>
 						<td><p:calendar
 								onkeypress="if (event.keyCode == 13) { quotationTndrCommitteeAppointmentMainCloneSearch.jq.click(); return false; }"
-								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.fromPublishDate}"
+								value="#{qtSpecCloneBackingBean.managedBean.cloneQtnTenderSearchBean.fromPublishDate}"
 								id="pbdateFrom2" showOn="button" size="29" readonlyInput="true"
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 								style="width:180px;">
@@ -72,13 +72,13 @@
 						<td><h:outputLabel value="#{lbl['lbl.sc.pbldtto']}" /></td>
 						<td><p:calendar id="pbdateTo2" showOn="button"
 								onkeypress="if (event.keyCode == 13) { quotationTndrCommitteeAppointmentMainCloneSearch.jq.click(); return false; }"
-								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.toPublishDate}"
-								mindate="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.fromPublishDate}"
+								value="#{qtSpecCloneBackingBean.managedBean.cloneQtnTenderSearchBean.toPublishDate}"
+								mindate="#{qtSpecCloneBackingBean.managedBean.cloneQtnTenderSearchBean.fromPublishDate}"
 								size="29" readonlyInput="true"
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 								style="width:180px;">
 								<f:attribute name="startDate"
-									value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.fromPublishDate}" />
+									value="#{qtSpecCloneBackingBean.managedBean.cloneQtnTenderSearchBean.fromPublishDate}" />
 								<f:validator validatorId="dateRangeValidator" />
 							</p:calendar></td>
 					</tr>
@@ -86,7 +86,7 @@
 						<td><h:outputLabel value="#{lbl['lbl.sc.clsdtfrom']}" /></td>
 						<td><p:calendar
 								onkeypress="if (event.keyCode == 13) { quotationTndrCommitteeAppointmentMainCloneSearch.jq.click(); return false; }"
-								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.fromClosingDate}"
+								value="#{qtSpecCloneBackingBean.managedBean.cloneQtnTenderSearchBean.fromClosingDate}"
 								id="cldateFrom2" showOn="button" size="29" readonlyInput="true"
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 								style="width:180px;">
@@ -95,22 +95,22 @@
 						<td><h:outputLabel value="#{lbl['lbl.sc.clsdtto']}" /></td>
 						<td><p:calendar id="cldateTo2" showOn="button"
 								onkeypress="if (event.keyCode == 13) { quotationTndrCommitteeAppointmentMainCloneSearch.jq.click(); return false; }"
-								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.toClosingDate}"
-								mindate="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.fromClosingDate}"
+								value="#{qtSpecCloneBackingBean.managedBean.cloneQtnTenderSearchBean.toClosingDate}"
+								mindate="#{qtSpecCloneBackingBean.managedBean.cloneQtnTenderSearchBean.fromClosingDate}"
 								size="29" readonlyInput="true"
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 								style="width:180px;">
 								<f:attribute name="startDate"
-									value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.fromClosingDate}" />
+									value="#{qtSpecCloneBackingBean.managedBean.cloneQtnTenderSearchBean.fromClosingDate}" />
 								<f:validator validatorId="dateRangeValidator" />
 							</p:calendar></td>
 					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
 						<td><p:selectOneMenu style="width: 283px;margin-bottom: 5px;"
-								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.qtStatus}">
+								value="#{qtSpecCloneBackingBean.managedBean.cloneQtnTenderSearchBean.qtStatus}">
 								<f:selectItems
-									value="#{qTDetailBB.getStatusDropdownValues('SC', 'QT')}" />
+									value="#{qTDetailBB.getStatusDropdownValuesByIds(60004,60003, 60024, 60002)}" />
 							</p:selectOneMenu></td>
 						<td />
 						<td />
@@ -119,16 +119,16 @@
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.search']}"
 						widgetVar="quotationTndrCommitteeAppointmentMainCloneSearch"
-						action="#{qTCommitteBackingBean.cloneSearchQtAction}"
+						action="#{qtSpecCloneBackingBean.cloneSearchQtAction}"
 						update="pnlid2" process="@parent" />
 					<p:commandButton value="#{lbl['lbl.btn.reset']}"
-						action="#{qTCommitteBackingBean.resetClone}" update="pnlid2"
+						action="#{qtSpecCloneBackingBean.resetClone}" update="pnlid2"
 						resetValues="true" partialSubmit="true" process="@this" />
 				</div>
 			</p:panel>
 			<p:panel header="#{lbl['lbl.sc.qtn.list']}" toggleable="true">
 				<p:dataTable id="clonesearchCommitteid2"
-					value="#{qTCommitteBackingBean.managedBean.cloneSearchQTDataModel}"
+					value="#{qtSpecCloneBackingBean.managedBean.cloneSearchQTDataModel}"
 					selection="#{qtSpecCloneBackingBean.managedBean.selectedCloneTender}"
 					rowKey="#{rscQt}" selectionMode="single" var="rscQt" lazy="true"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -150,7 +150,7 @@
 
 					<p:column headerText="#{lbl['lbl.sc.procurement.mode']}">
 						<h:outputText
-							value="#{qTCommitteBackingBean.getParameterDesc(rscQt.procurementMode)}"
+							value="#{qtSpecCloneBackingBean.getParameterDesc(rscQt.procurementMode)}"
 							style="white-space: normal;" />
 					</p:column>
 
@@ -177,15 +177,15 @@
 
 					<p:column headerText="#{lbl['lbl.sc.status']}">
 						<h:outputText
-							value="#{qTCommitteBackingBean.getStatusDescById(rscQt.qtStatus.statusId)}"
+							value="#{qtSpecCloneBackingBean.getStatusDescById(rscQt.qtStatus.statusId)}"
 							style="white-space: normal;" />
 					</p:column>
 
 				</p:dataTable>
 				<br />
 				<ui:fragment
-					rendered="#{qTCommitteBackingBean.managedBean.cloneCommitteeSelectQt ne null}">
-					#{qTCommitteBackingBean.managedBean.cloneCommitteeSelectQt.qtNo} > #{lbl['lbl.sc.committee.details']}
+					rendered="#{qtSpecCloneBackingBean.managedBean.cloneCommitteeSelectQt ne null}">
+					#{qtSpecCloneBackingBean.managedBean.cloneCommitteeSelectQt.qtNo}
 				</ui:fragment>
 
 				<p:tree value="#{qtSpecCloneBackingBean.root}" var="node" rendered="#{qtSpecCloneBackingBean.showTree}"
@@ -206,7 +206,9 @@
 					</p:commandButton>
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 						styleClass="BtnSpacing" onclick="screen3.hide();"
-					 />
+					 >
+					 <f:param name="skipvalidation" value="1" />
+					 </p:commandButton>
 				</div>
 			</p:panel>
 		</h:panelGroup>
