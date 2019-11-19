@@ -68,7 +68,6 @@ import my.ep.dto.sc.quationtender.SpecificationReqDTO;
 import my.ep.dto.sc.quationtender.SpecificationResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
-import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
@@ -3161,4 +3160,17 @@ public class CreateQtBackingBean extends
 
 		return Boolean.FALSE;
 	}
+	
+	/*:::Enhancement #25638 #29 - start:::*/
+	public boolean isStatusInQTReviseGroupStatus(Long currentStatusId) {
+		List<Long> allowReviseStatus = Arrays.asList(QTStatusConst.QT_REVISE_GROUP_STATUS);
+		
+		if (allowReviseStatus.contains(currentStatusId)) {
+			return Boolean.TRUE;
+		}
+		
+		return Boolean.FALSE;
+	}
+	/*:::Enhancement #25638 #29 - end:::*/
+	
 }
