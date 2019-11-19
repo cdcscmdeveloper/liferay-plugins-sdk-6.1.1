@@ -403,6 +403,8 @@ public class TemplateSpecBackingBean extends
 		}
 
 		templateSpecBean.setSelectedSpecQuestion(null);
+		//#21423
+		specMaster.setTechnicalSpecQuestionsToDelete(techicalDeleteQuestionList);
 	}
 
 	/**
