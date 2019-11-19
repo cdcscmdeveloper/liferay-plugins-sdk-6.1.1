@@ -144,15 +144,25 @@
 		       <!--  <p:column headerText="#{lbl['lbl.ct.skuno']}" styleClass="column-align-center" style="width:12%; white-space:normal;">
 	              <h:outputText value="#{ctItemVar.sku}" style="float:left;"/>
 	         </p:column> -->
-		  
+		         
 		         <p:column style="width:10%; white-space:normal;" styleClass="column-align-center">
 		            <f:facet name="header">
 			            <h:outputText value="#{lbl['lbl.ct.min.order.qty']}"/>
 	               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.product.min.order.qty']}"/>
 	               	</f:facet>	               	
-	               
-	               	<h:outputText value="#{ctItemVar.minimumOrderQty}" style="float:left;"/>
-		         </p:column>   
+	               	<p:inputText value="#{ctItemVar.minimumOrderQty}" styleClass="ppRightBtn" style="float:right;width:100px;" label="#{lbl['lbl.ct.min.order.qty']}"
+		        		maxlength="#{ctItemVar.scRequestItem.uom.decimalScale == 0 ? 13 : 14}" rendered="#{!ctBackingBean.managedBean.viewContract}">
+						<f:converter converterId="dynamicNumberConverter" />
+						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItemVar.scRequestItem.uom.uomCode)}" />
+						<p:ajax event="change" update="@this" listener="#{ctBackingBean.onChangeMinimumQty(ctItemVar)}"/>
+			        </p:inputText>
+			        
+			        	<h:outputText value="#{ctItemVar.minimumOrderQty}"  style="float:right;" rendered="#{ctBackingBean.managedBean.viewContract}">
+               			<f:converter converterId="dynamicNumberConverter" />
+						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItemVar.scRequestItem.uom.uomCode)}" />
+	             	</h:outputText>
+	             	
+		         </p:column>  
 		   
 		        <!-- <p:column style="width:14%;white-space:normal;" styleClass="column-align-center">
 		            <f:facet name="header">
@@ -227,7 +237,7 @@
 			            <c:if test="#{ctBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeTier}">
 			                  <p:column styleClass="column-align-center">
 					          	<f:facet name="header">
-					        	<h:outputText value="#{itemPrice1.expDate}" style="float:right;"></h:outputText> 
+					        	<!-- <h:outputText value="#{itemPrice1.expDate}" style="float:right;"></h:outputText> -->
 									<h:outputText value="#{lbl['lbl.ct.from.qty']}"/>
 				               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.qty']}"/>
 				               	</f:facet>

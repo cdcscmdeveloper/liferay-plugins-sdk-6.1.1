@@ -2887,7 +2887,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			log.info("Selected Item ***"+getManagedBean().getSelectedItem());
 			log.info("Show Item ****"+getManagedBean().getShowItem());
 			if (getManagedBean().getSelectedItem() != null || getManagedBean().getServiceselectedItem()!=null) {
-				cisbb.getManagedBean().setItemServiceExist(false);
+				//cisbb.getManagedBean().setItemServiceExist(false);
 				if (getManagedBean().getShowItem() != null
 						&& getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
 					getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
@@ -2932,7 +2932,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			log.info("Selected Item onSelectServiceItem ***"+getManagedBean().getServiceselectedItem());
 			log.info("Show Item  onSelectServiceItem ****"+getManagedBean().getShowItem());
 			if (getManagedBean().getSelectedItem() != null || getManagedBean().getServiceselectedItem()!=null) {
-				cisbb.getManagedBean().setItemProductExist(false);
+				//cisbb.getManagedBean().setItemProductExist(false);
 				if (getManagedBean().getShowServiceItem() != null
 						&& getManagedBean().getShowServiceItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
 					getManagedBean().setShowServiceItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
