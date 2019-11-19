@@ -3,6 +3,7 @@ package my.ep.web.backingbean.sc.quatationtender;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -322,6 +323,17 @@ public class QTCloneBackingbean extends
 						.add(new SearchFilterBean(
 								"scQtStatus.pmStatus.statusId",
 								SearchOperator.OPERATOR_EQUALS.value(), status));
+				qtSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean("scQtStatus.current",
+								SearchOperator.OPERATOR_EQUALS.value(), true));
+			}else{
+				Long[] stats= {60003L, 60024L, 60002L};
+				ArrayList<Long> s=new ArrayList<Long>(Arrays.asList(stats));
+				qtSearchBean
+				.getDataFilterBeans()
+				.add(new SearchFilterBean(
+						"scQtStatus.pmStatus.statusId",
+						SearchOperator.OPERATOR_IN.value(), s));
 				qtSearchBean.getDataFilterBeans().add(
 						new SearchFilterBean("scQtStatus.current",
 								SearchOperator.OPERATOR_EQUALS.value(), true));
