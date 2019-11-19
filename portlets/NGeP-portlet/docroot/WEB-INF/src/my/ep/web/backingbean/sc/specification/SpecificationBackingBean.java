@@ -4370,10 +4370,14 @@ public class SpecificationBackingBean extends
 						.getTplSpecMaster());
 				specReqDTO
 						.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
-				TemplateSpecResDTO templateresDTO = templateSpecSO
-						.getTemplateMaster(specReqDTO);
-				checkList.getScQtDoc().setTplSpecMaster(
-						templateresDTO.getSpecMaster());
+				TemplateSpecResDTO templateresDTO =null;
+				if(null==checkList.getScQtDoc().getTplSpecMaster()){
+					templateresDTO = templateSpecSO
+							.getTemplateMaster(specReqDTO);
+					checkList.getScQtDoc().setTplSpecMaster(
+							templateresDTO.getSpecMaster());
+				}		
+				
 				TemplateSpecBean templateSpecBean = getManagedBean()
 						.getTemplateSpecBean();
 				templateSpecBean.setSpecMaster(checkList.getScQtDoc()
@@ -4442,15 +4446,31 @@ public class SpecificationBackingBean extends
 						 * 
 						 * }
 						 */
-						if (null != templateresDTO.getSpecMaster()
-								&& null == templateresDTO.getSpecMaster()
-										.getCtPanelItem()) {
+						boolean panelItem=false;
+						if(null!=checkList.getScQtDoc().getTplSpecMaster().getCtPanelItem()){
+							panelItem=true;
+						}
+						if(null!=templateresDTO.getSpecMaster().getCtPanelItem()){
+							panelItem=true;
+						}
+						if(panelItem){
 							this.getManagedBean().setPanelItemCategory(
-									ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC);
-						} else {
+								ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC);
+						}else{
 							this.getManagedBean().setPanelItemCategory(
 									ParameterConst.ITEM_CATEGORY_TYPE_GENERAL);
 						}
+						
+						/** 31/10/2019 **/
+//						if (null != templateresDTO.getSpecMaster()
+//								&& null == templateresDTO.getSpecMaster()
+//										.getCtPanelItem()) {
+//							this.getManagedBean().setPanelItemCategory(
+//									ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC);
+//						} else {
+//							this.getManagedBean().setPanelItemCategory(
+//									ParameterConst.ITEM_CATEGORY_TYPE_GENERAL);
+//						}
 					}
 					if ((null != this.getManagedBean().getPanelItemCategory() && !""
 							.equals(this.getManagedBean()

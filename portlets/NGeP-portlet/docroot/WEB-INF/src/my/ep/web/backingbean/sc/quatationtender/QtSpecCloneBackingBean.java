@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -18,9 +19,11 @@ import java.util.Set;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
@@ -43,6 +46,7 @@ import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
@@ -778,6 +782,17 @@ public class QtSpecCloneBackingBean extends
 				qtSearchBean.getDataFilterBeans().add(
 						new SearchFilterBean("scQtStatus.current",
 								SearchOperator.OPERATOR_EQUALS.value(), true));
+			}else{
+				Long[] stats= {6004L,60003L, 60024L, 60002L};
+				ArrayList<Long> s=new ArrayList<Long>(Arrays.asList(stats));
+				qtSearchBean
+				.getDataFilterBeans()
+				.add(new SearchFilterBean(
+						"scQtStatus.pmStatus.statusId",
+						SearchOperator.OPERATOR_IN.value(), s));
+				qtSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean("scQtStatus.current",
+								SearchOperator.OPERATOR_EQUALS.value(), true));
 			}
 			// Filter by - ptj org profileId
 			qtSearchBean.getDataFilterBeans().add(
@@ -825,5 +840,58 @@ public class QtSpecCloneBackingBean extends
 
 	public void setShowTree(boolean showTree) {
 		this.showTree = showTree;
+	}
+	
+	/**
+	 * Get parameter code select items by parameter type for radio buttons.
+	 * 
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getProcurementModeDropdownValues() {
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		List<String> recommendList = new ArrayList<String>();
+		recommendList.add(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO);
+		recommendList.add(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE);
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmParameter.parameterCode",
+						SearchOperator.OPERATOR_NOT_IN.value(), recommendList));
+		SelectItem[] items = getDropdownCodeValuesBySearchBean(
+				ParameterTypeConst.SC_PROCUREMENT_MODE, searchBean);
+		return items;
+	}
+	
+	/**
+	 * Clone search qt action.
+	 */
+	public void cloneSearchQtAction() {
+		getManagedBean().setCloneCommitteeSelectQt(null);
+
+		getManagedBean().getCloneSearchQTDataModel().reloadData();
+	}
+	
+	/**
+	 * Reset clone.
+	 */
+	public void resetClone() {
+		debugLogger("resetClone");
+		this.getManagedBean().getCloneQtnTenderSearchBean().setQtTitle(null);
+		this.getManagedBean().getCloneQtnTenderSearchBean().setQtNo(null);
+		this.getManagedBean().getCloneQtnTenderSearchBean()
+				.setProcurementMode(null);
+		this.getManagedBean().getCloneQtnTenderSearchBean()
+				.setFromCreatedDate(null);
+		this.getManagedBean().getCloneQtnTenderSearchBean()
+				.setToCreatedDate(null);
+		this.getManagedBean().getCloneQtnTenderSearchBean().setQtStatus(null);
+		this.getManagedBean().setSearchcommitteeNode(new DefaultTreeNode());
+		this.getManagedBean().getCloneQtnTenderSearchBean()
+				.setFromPublishDate(null);
+		this.getManagedBean().getCloneQtnTenderSearchBean()
+				.setToPublishDate(null);
+		this.getManagedBean().getCloneQtnTenderSearchBean()
+				.setFromClosingDate(null);
+		this.getManagedBean().getCloneQtnTenderSearchBean()
+		.setToClosingDate(null);
+		getManagedBean().setCloneCommitteeSelectQt(null);
 	}
 }
