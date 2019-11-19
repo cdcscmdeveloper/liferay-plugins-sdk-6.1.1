@@ -46,7 +46,7 @@
 			<div style="text-align: right;">
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
 					action="#{codificationMaintenanceBackingBean.unspscSearch}"
-					 update="unspscTableID itemCodeSearchMsg" />
+			       update="unspscTableID itemCodeSearchMsg" />
 				<p:commandButton value="#{lbl['lbl.btn.reset']}" 
 				    action="#{codificationMaintenanceBackingBean.resetSearch}" 
 				     update="panel1,unspscTableID"/>					 	 
@@ -70,7 +70,11 @@
 					<f:facet name="header">
 					#{lbl['lbl.cm.unspsc.code']}
 				</f:facet>
-					#{unspscObj.unspscCode}
+					<p:commandLink
+							action="#{codificationMaintenanceBackingBean.unspscPopUpSearch(unspscObj)}"
+							onclick="codificationMaintenanceSearchPopUpPortal.show()" update=":form:unspscTablePopUpId">
+							#{unspscObj.unspscCode}
+							</p:commandLink>		
 				</p:column>
 				<p:column  styleClass = "wrappedTd" sortBy="#{unspscObj.unspscTitle}">
 					<f:facet name="header">
@@ -84,8 +88,8 @@
 				</f:facet>
 				#{unspscObj.unspscTitleEng}
 			</p:column>
-				<p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center"  style="width:10%;white-space:normal;">
-					<p:menuButton id="menuButtonId" value="#{lbl['lbl.btn.option']}">
+				<p:column headerText="#{lbl['lbl.ct.action']}"  styleClass="column-align-center"  style="width:10%;white-space:normal;">
+					<p:menuButton id="menuButtonId" value="#{lbl['lbl.btn.option']}" rendered="#{unspscObj.unspscLevel eq 3}">
 						<p:menuitem id="menuItemId1" value="#{lbl['lbl.cm.item.code.maintenance.title.option']}" icon="ui-icon-view"							  
 							action="#{codificationMaintenanceBackingBean.PopupOption(unspscObj)}">
 						</p:menuitem>						
@@ -96,6 +100,13 @@
 				</p:column>					
 			</p:dataTable>
 		</p:panel>
+		
+		<p:dialog id="codificationMaintenanceSearchPopUpPortal" widgetVar="codificationMaintenanceSearchPopUpPortal" modal="true"
+			header="#{lbl['lbl.cm.item.code.search.title']}" width="800" height="500">
+			<ui:include src="codificationMaintenanceSearchPopUpPortal.xhtml"></ui:include>
+
+		</p:dialog>
+		
 	</h:panelGroup>
 
 

@@ -209,7 +209,9 @@ public class CodificationMaintenanceManagedBean extends BaseManagedBean {
 	private String docTitle;
 	
 	private boolean assignCodeFlg = false;
-	private boolean editMode;
+	private boolean editMode = true;
+	private boolean editModeFamily = true;
+	private boolean editModeClass= true;
 
 
 	public IPagingDataModel<Object[]> getExtensionSearchItemDataModel() {
@@ -1595,5 +1597,27 @@ public class CodificationMaintenanceManagedBean extends BaseManagedBean {
 	}
 	public void setEditMode(boolean editMode) {
 		this.editMode = editMode;
+	}
+	
+	public boolean isEditModeFamily() {
+		return editModeFamily;
+	}
+	public void setEditModeFamily(boolean editModeFamily) {
+		this.editModeFamily = editModeFamily;
+	}
+	
+	public boolean isEditModeClass() {
+		return editModeClass;
+	}
+	public void setEditModeClass(boolean editModeClass) {
+		this.editModeClass = editModeClass;
+	}
+	
+    public void initRefreshMainPageNoFlag(){
+		
+			System.out.println("****************************");
+			PagingDataModel paging = new SearchPagingDataModel();
+			this.getSearchDataModel().resetData();
+			System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 	}
 }
