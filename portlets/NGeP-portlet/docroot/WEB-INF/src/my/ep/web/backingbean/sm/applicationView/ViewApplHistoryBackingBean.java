@@ -1222,7 +1222,7 @@ public class ViewApplHistoryBackingBean extends
 		PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelBySupplierId(perReqDTO);
 		
 		List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(currSupp);
-		if (!EntityHelper.isCollectionEmpty(resultList)
+		if (resultList != null
 				&& resultList.size() > 0) {
 			for(SmDisciplinaryAction disciplinaryAction: resultList){
 				if(disciplinaryAction.isWarning() || disciplinaryAction.isCancelCategory() 
@@ -1313,12 +1313,25 @@ public class ViewApplHistoryBackingBean extends
 							retVal.setBlacklistownerDirectorList(blacklistownerDirectorList);
 						}
 					}
+					
+					if(disciplinaryAction.getMofNo() != null){
+						retVal.setMofNoExist(true);
+					}
 					voList.add(retVal);
 				}
 				log.info(voList);					
 				}				
 		}
 		return voList;
+	}
+	
+	public boolean basicView(){
+		boolean basicView = false;
+		SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
+		if(supplier != null && supplier.getMofNo() != null){
+			basicView = true;
+		}
+		return basicView;
 	}
 	//26238 - end
 	

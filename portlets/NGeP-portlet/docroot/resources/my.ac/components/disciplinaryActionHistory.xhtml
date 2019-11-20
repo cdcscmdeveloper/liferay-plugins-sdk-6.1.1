@@ -12,6 +12,7 @@
 		<cc:attribute name="dialogWidth" default="1100px" />
 		<cc:attribute name="dialogHeight" default="500px" />
 		<cc:attribute name="voList" type="java.util.List" required="true" />
+		<cc:attribute name="basicView" default="true" />
 	</cc:interface>
 	
 	<cc:implementation>
@@ -45,7 +46,9 @@
 			<p:column headerText="#{lbl['lbl.sm.disciplinary.jktt.remarks']}" style="width : 25% !important; vertical-align:top;word-break: break-all;">
 				<h:outputText value="#{disciplinaryAction.remarks}"/>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.disciplinary.list.cancel.category.code']}" style="width : 15% !important; vertical-align:top;">
+			<p:column headerText="#{lbl['lbl.sm.disciplinary.list.cancel.category.code']}" 
+				rendered="#{cc.attrs.basicView}"
+				style="width : 15% !important; vertical-align:top;">
 				<h:dataTable value="#{disciplinaryAction.categoryCodeList}" var="suppCat" rendered="#{not empty disciplinaryAction.categoryCodeList}"
 					rowIndexVar="indexCat" emptyMessage="#{lbl['lbl.sm.no.available']}" style="border: none !important;">
 					<p:column style="border: none !important;">
