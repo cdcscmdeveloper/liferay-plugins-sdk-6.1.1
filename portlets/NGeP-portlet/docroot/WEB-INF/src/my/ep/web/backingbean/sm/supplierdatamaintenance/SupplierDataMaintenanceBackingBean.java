@@ -289,14 +289,10 @@ public class SupplierDataMaintenanceBackingBean extends
 	}
 	//26238 - start
 	public void submitBasicAccountMaintenance(){
-		PmUser user = new FacesScopes().getUserSessionBean();
 		validateDisciplinaryAction();
 		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
 		SupplierDataMaintenanceResDTO resDTO = new SupplierDataMaintenanceResDTO();
 		List<SmTrackingDairyVO> listSmTrackingDiary = new ArrayList<SmTrackingDairyVO>();
-		
-		SmAppl activeAppl = SmCommonUtil
-				.getActiveApplBySupplier(getManagedBean().getSmSupplier());
 		
 		try {
 			reqDTO.setSupplier(getManagedBean().getSmSupplier());
@@ -324,29 +320,34 @@ public class SupplierDataMaintenanceBackingBean extends
 			if(getManagedBean().isSuspendRegistration()){
 				getManagedBean().getDisciplineVO().getSmDiscplinaryAction().setSuspendRegistration(true);
 				
-//				SmTrackingDairyVO trckVO = new SmTrackingDairyVO();
-//				PmStatus status = new PmStatus();
-//				status.setStatusId(SupplierManagementConst.PM_STATUS_DELETED_BY_DISCIPLINARY_ACTION);
-//				
-//				trckVO.setActionDesc(SupplierManagementConst.DELETED_BY_DISCIPLINARY_ACTION);
-//				trckVO.setActionedBy(user.getUserId());
-//				trckVO.setActionedByRole(getManagedBean().getRoleCode());
-//				trckVO.setDocId(activeAppl.getApplId());
-//				trckVO.setDocNo(activeAppl.getApplNo());
-//				trckVO.setDocType("SR");
-//				trckVO.setGroupId(null);
-//				trckVO.setStatus(status);
-//				trckVO.setGroupDocType(null);
-//				
-//				reqDTO.setSmTrackingDairyVO(trckVO);
+				SmTrackingDairyVO smTrackingDairyVO = assignTrackingDairyValues(
+						getManagedBean().getSmAppl(),
+						SupplierManagementConst.DELETED_BY_DISCIPLINARY_ACTION);
+				if(smTrackingDairyVO != null){
+					reqDTO.setSmTrackingDairyVO(smTrackingDairyVO);
+				}	
 			}
 			
 			if(getManagedBean().isCancelRegistration()){
 				getManagedBean().getDisciplineVO().getSmDiscplinaryAction().setCancelRegistration(true);
+				
+				SmTrackingDairyVO smTrackingDairyVO = assignTrackingDairyValues(
+						getManagedBean().getSmAppl(),
+						SupplierManagementConst.DELETED_BY_DISCIPLINARY_ACTION);
+				if(smTrackingDairyVO != null){
+					reqDTO.setSmTrackingDairyVO(smTrackingDairyVO);
+				}
 			}
 			
 			if(getManagedBean().isBlacklistOwnerOrDirector()){
 				getManagedBean().getDisciplineVO().getSmDiscplinaryAction().setBlacklistOwner(true);
+				
+				SmTrackingDairyVO smTrackingDairyVO = assignTrackingDairyValues(
+						getManagedBean().getSmAppl(),
+						SupplierManagementConst.DELETED_BY_DISCIPLINARY_ACTION);
+				if(smTrackingDairyVO != null){
+					reqDTO.setSmTrackingDairyVO(smTrackingDairyVO);
+				}
 			}
 			
 			//set tracking diary for Disciplinary Action
@@ -417,13 +418,10 @@ public class SupplierDataMaintenanceBackingBean extends
 				reqDTO.setSelectedCategories(getManagedBean().getSelectedApprovedCategories());
 			} 
 			
-			if(getManagedBean().getOwnerAndDirectorList().size() > 0){
+			if(getManagedBean().getOwnerAndDirectorList() != null
+					&& getManagedBean().getOwnerAndDirectorList().size() > 0){
 				reqDTO.setSelectedOwnerAndDirector(getManagedBean().getOwnerAndDirectorList());
 			}
-//			if(getManagedBean().getSelectedOwnerAndDirectorList() != null 
-//					|| getManagedBean().getSelectedOwnerAndDirectorList().size() > 0){
-//				reqDTO.setSelectedOwnerAndDirector(getManagedBean().getOwnerAndDirectorList());
-//			}
 			
 			if(getManagedBean().isWarning()) {
 				getManagedBean().getDisciplineVO().getSmDiscplinaryAction().setWarning(true);			
@@ -435,30 +433,35 @@ public class SupplierDataMaintenanceBackingBean extends
 			
 			if(getManagedBean().isSuspendRegistration()){
 				getManagedBean().getDisciplineVO().getSmDiscplinaryAction().setSuspendRegistration(true);
-
-//				SmTrackingDairyVO trckVO = new SmTrackingDairyVO();
-//				PmStatus status = new PmStatus();
-//				status.setStatusId(SupplierManagementConst.PM_STATUS_DELETED_BY_DISCIPLINARY_ACTION);
-//				
-//				trckVO.setActionDesc(SupplierManagementConst.DELETED_BY_DISCIPLINARY_ACTION);
-//				trckVO.setActionedBy(user.getUserId());
-//				trckVO.setActionedByRole(getManagedBean().getRoleCode());
-//				trckVO.setDocId(activeAppl.getApplId());
-//				trckVO.setDocNo(activeAppl.getApplNo());
-//				trckVO.setDocType("SR");
-//				trckVO.setGroupId(null);
-//				trckVO.setStatus(status);
-//				trckVO.setGroupDocType(null);
-//				
-//				reqDTO.setSmTrackingDairyVO(trckVO);
+				
+				SmTrackingDairyVO smTrackingDairyVO = assignTrackingDairyValues(
+						getManagedBean().getSmAppl(),
+						SupplierManagementConst.DELETED_BY_DISCIPLINARY_ACTION);
+				if(smTrackingDairyVO != null){
+					reqDTO.setSmTrackingDairyVO(smTrackingDairyVO);
+				}					
 			}
 			
 			if(getManagedBean().isCancelRegistration()){
 				getManagedBean().getDisciplineVO().getSmDiscplinaryAction().setCancelRegistration(true);
+
+				SmTrackingDairyVO smTrackingDairyVO = assignTrackingDairyValues(
+						getManagedBean().getSmAppl(),
+						SupplierManagementConst.DELETED_BY_DISCIPLINARY_ACTION);
+				if(smTrackingDairyVO != null){
+					reqDTO.setSmTrackingDairyVO(smTrackingDairyVO);
+				}
 			}
 			
 			if(getManagedBean().isBlacklistOwnerOrDirector()){
 				getManagedBean().getDisciplineVO().getSmDiscplinaryAction().setBlacklistOwner(true);
+
+				SmTrackingDairyVO smTrackingDairyVO = assignTrackingDairyValues(
+						getManagedBean().getSmAppl(),
+						SupplierManagementConst.DELETED_BY_DISCIPLINARY_ACTION);
+				if(smTrackingDairyVO != null){
+					reqDTO.setSmTrackingDairyVO(smTrackingDairyVO);
+				}
 			}
 			
 			if(getManagedBean().isBumiputeraStatusCancel()){
@@ -1005,7 +1008,12 @@ public class SupplierDataMaintenanceBackingBean extends
 			} else if (cat.getRecordStatusFlg().compareTo(
 					SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
 				cat.setEntryMode(cat.getOtherDesc());
-				apprvList.add(cat);
+				//apprvList.add(cat);
+				//26238 - start
+				if(!cat.isCancelCategory()){
+					apprvList.add(cat);
+				}
+				//26238 - end
 			}
 		}
 		if (getManagedBean().getActiveCategoryList() != null
