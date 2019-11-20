@@ -1257,7 +1257,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	/** The fin spec list. */
 	private List<ScQtCheckList> finSpecList;
-
+/** #21695 FARID */	
+	/** The Tech spec list. */
+	private List<ScQtCheckList> techSpecList;
+	
 	/** The panel item id. */
 	private Long panelItemId;
 
@@ -1492,9 +1495,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	/** The financial Item score setting. */
 	private ScQtScoreSetting finacialItemScoreSetting;
-
+/** #21695 FARID START */	
+	/** The technical Item score setting. */
+	private ScQtScoreSetting technicalItemScoreSetting;
+	
 	private BigDecimal financialItemScore;
-
+	
+	private BigDecimal technicalItemScore;
+/** #21695 FARID END*/	
 	private BigDecimal totalScore = new BigDecimal(0);
 
 	private String locationLevel;
@@ -1584,6 +1592,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	private boolean approvalEditableSection;
 
+	private boolean secretaryValidate;
+	/** #21695 FARID */		
 	/**
 	 * Instantiates a new QT detail managed bean.
 	 */
@@ -8824,7 +8834,21 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setFinSpecList(List<ScQtCheckList> finSpecList) {
 		this.finSpecList = finSpecList;
 	}
+/** #21695 FARID START*/		
+	/**
+	 * @return the techSpecList
+	 */
+	public List<ScQtCheckList> getTechSpecList() {
+		return techSpecList;
+	}
 
+	/**
+	 * @param finSpecList the finSpecList to set
+	 */
+	public void setTechSpecList(List<ScQtCheckList> techSpecList) {
+		this.techSpecList = techSpecList;
+	}
+/** #21695 FARID END*/		
 	/**
 	 * @return the panelItemId
 	 */
@@ -9514,7 +9538,22 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			ScQtScoreSetting finacialItemScoreSetting) {
 		this.finacialItemScoreSetting = finacialItemScoreSetting;
 	}
+/** #21695 FARID START*/	
+	/**
+	 * @return the finacialItemScoreSetting
+	 */
+	public ScQtScoreSetting getTechnicalItemScoreSetting() {
+		return technicalItemScoreSetting;
+	}
 
+	/**
+	 * @param finacialItemScoreSetting the finacialItemScoreSetting to set
+	 */
+	public void setTechnicalItemScoreSetting(
+			ScQtScoreSetting technicalItemScoreSetting) {
+		this.technicalItemScoreSetting = technicalItemScoreSetting;
+	}
+/** #21695 FARID END */	
 	/**
 	 * @return the financialItemScore
 	 */
@@ -9998,5 +10037,25 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setApprovalScreen(boolean isApprovalScreen) {
 		this.isApprovalScreen = isApprovalScreen;
 	}
+	/** #21695 FARID START*/		
+	public void setSecretaryValidate(boolean secretaryValidate) {
+		this.secretaryValidate = secretaryValidate;
+	}
+	/**
+	 * @return the orgProfileOfLoginUser
+	 */
+	public boolean getSecretaryValidate() {
+		return secretaryValidate;
+	}
+
+	public BigDecimal getTechnicalItemScore() {
+		return technicalItemScore;
+	}
+
+	public void setTechnicalItemScore(BigDecimal technicalItemScore) {
+		this.technicalItemScore = technicalItemScore;
+		
+	}
+	/** #21695 FARID END*/	
 }
 // ***25201

@@ -30,10 +30,15 @@
 				<p:ajax partialSubmit="true" process="@this" 
 				    listener="#{templateSpecBackingBean.calcTotalAmount(templateSpecBean, templateSpecBean.selectedSpecQuestion.tplSpecAnswers[0], isItemTypeService)}"
 					update="@this, zoneQtyMsg, @(.calcAmount)" />
-				<ac:validateNumber
+ <!-- START #21695 farid-->	
+  			<c:if test="#{!templateSpecBackingBean.managedBean.secretaryValidate}">
+  				<ac:validateNumber
 					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, templateSpecBean.selectedSpecQuestion.clUom.uomCode)}"
-					maxIntegerDigits="10" />
+					maxIntegerDigits="10"/>
+			</c:if>
 			</p:inputText>
+			<ac:iconTooltip value="#{lbl['lbl.tpl.qty.instruction.tooltip']}" />
+<!-- END #21695 farid-->
 			<p:message id="zoneQtyMsg" for="zoneQty" display="icon" />
 		</p:column>
 	</p:dataTable>
