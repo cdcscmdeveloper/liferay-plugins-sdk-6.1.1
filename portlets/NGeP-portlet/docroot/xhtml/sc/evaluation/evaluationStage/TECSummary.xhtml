@@ -6,125 +6,159 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
+	<ui:param name="qualifiedSupplierListHeader"
+		value="#{lbl['lbl.sc.eva.qualified.supplier.list.fec.evaluation.stage']}" />
+	<ui:param name="qualifiedSupplierListTooltip"
+		value="#{lbl['lbl.sc.eva.qualified.supplier.list.fec.evaluation.stage.tooltip']}" />
+	<ui:param name="disQualifiedSupplierListHeader"
+		value="#{lbl['lbl.sc.eva.disqualified.supplier.list.fec.evaluation.stage']}" />
+	<ui:param name="disQualifiedSupplierListTooltip"
+		value="#{lbl['lbl.sc.eva.disqualified.supplier.list.fec.evaluation.stage.tooltip']}" />
+
+	<table>
+		<tr>
+			<td><h:outputLabel value="#{lbl['lbl.sc.view.by']}" /></td>
+			<td><p:selectOneMenu
+					value="#{evaluationBackingBean.managedBean.technicalSummaryView}">
+					<f:selectItems value="#{evaluationBackingBean.technicalSummaryDropDownValues()}"></f:selectItems>
+					<p:ajax event="change" process="@this" partialSubmit="true"
+						listener="#{evaluationBackingBean.technicalsummaryChange}"
+						update="@([id$=technicalviewSummary])"></p:ajax>
+				</p:selectOneMenu></td>
+		</tr>
+
+	</table>
 
 
 
-
-	<p:panel id="onerTierTechnicalOrTecSummarySuppliersQualifiedIdsEvaluation" toggleable="true">
-		<f:facet name="header">
-			<h:outputText
-				value="#{lbl['lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage']}" />
-			<ac:iconTooltip
-				value="#{lbl['lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage.tooltip']}" />
-		</f:facet>
-
-		<p:dataTable var="qualifiedSupplier" id="oneTierQualifiedSupplier"
-		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			rows="10" editable="true" rowIndexVar="index"
-			value="#{evaluationBackingBean.managedBean.qualifiedSuppliersDM}"
-			lazy="true" rowKey="#{qualifiedSupplier}">
-			<ac:paginator for="oneTierQualifiedSupplier" />
-
-			<p:column headerText="#{lbl['lbl.sc.ranking']}"
-				style="width:25%;white-space: normal;text-align:right;">
-
-				<h:outputText value="#{qualifiedSupplier.evalRank}"></h:outputText>
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
-				style="width:25%;white-space: normal; text-align:center;">
-
-				<h:outputText
-					value="#{qualifiedSupplier.qtEvaluationResult.scQtProposal.supplierNo}"></h:outputText>
-
-
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.total.score']}"
-				style="width:30%;white-space: normal;text-align:right;">
-				<h:outputText value="#{qualifiedSupplier.totalScore}"></h:outputText>
-			</p:column>
+	<h:panelGroup id="technicalviewSummary">
+		<c:if
+			test="#{evaluationBackingBean.managedBean.technicalSummaryView eq 'TI'}">
+			<c:if
+				test="#{evaluationBackingBean.managedBean.scQt.zonal ne 'false'}">
+				<p:accordionPanel dynamic="true"
+					value="#{evaluationBackingBean.managedBean.evaluationStageZonesSummary}"
+					var="zonePnlList">
+					<p:ajax event="tabChange"
+						listener="#{evaluationBackingBean.evaluationZonesTechnicalsummaryTabChange}"
+						update="@(.evaluationstagesummaryrecommendationItemtab)" />
+					<p:tab title="#{zonePnlList.zoneName}">
+						<h:panelGroup
+							styleClass="evaluationstagesummaryrecommendationItemtab">
+							<c:if test="#{zonePnlList.zoneName ne null}">
+								<ui:param name="recommendationitemListId"
+									value="#{zonePnlList.zoneName}"></ui:param>
+								<ui:param name="recommendationitemSelectQualifiedId"
+									value="#{zonePnlList.zoneName}"></ui:param>
+								<ui:param name="recommendationitemSelectDisQualifiedId"
+									value="#{zonePnlList.zoneName}"></ui:param>
+								<ui:param name="recommendationqualifiedSupplierItemId"
+									value="#{zonePnlList.zoneName}"></ui:param>
+								<ui:param name="recommendationdisQualifiedSupplierItemId"
+									value="#{zonePnlList.zoneName}"></ui:param>
 
 
 
-		</p:dataTable>
-		<p:spacer height="10px" />
-		<table>
-			<tr>
-				<td style="width: 230px;"><h:outputLabel
-						value="#{lbl['lbl.sc.passing.score']}" /></td>
-				<td><p:inputText readonly="true" disabled="true"
-						style="text-align:right" value="#{passingScore}"></p:inputText></td>
-			</tr>
-			<tr>
-				<td><h:outputLabel value="#{lbl['lbl.sc.evaluation.total.suppliers']}" /></td>
-				<td><p:inputText readonly="true" disabled="true"
-						style="text-align:right"
-						value="#{evaluationBackingBean.managedBean.qualifiedSuppliersDM.rowCount}"></p:inputText></td>
-			</tr>
+							</c:if>
 
-		</table>
+							<c:if test="#{zonePnlList.zoneName eq null}">
+								<ui:param name="recommendationitemListId" value="itemLst1"></ui:param>
+								<ui:param name="recommendationitemSelectDisQualifiedId"
+									value="supplierItemsdisSelected"></ui:param>
+								<ui:param name="recommendationqualifiedSupplierItemId"
+									value="qualifiedSuppliersZone"></ui:param>
+								<ui:param name="recommendationdisQualifiedSupplierItemId"
+									value="disQualifiedSupplierszone"></ui:param>
+								<ui:param name="recommendationitemSelectQualifiedId"
+									value="supplierItemsSelected"></ui:param>
 
-	</p:panel>
+							</c:if>
 
+							<ui:param name="passingScore"
+								value="#{evaluationBackingBean.managedBean.passingScore}"></ui:param>
+							<ui:param name="itemList"
+								value="#{evaluationBackingBean.managedBean.summaryItemList}"></ui:param>
 
+							<ui:include src="tecSummaryItems.xhtml"></ui:include>
+						</h:panelGroup>
+					</p:tab>
+				</p:accordionPanel>
+			</c:if>
+			<c:if
+				test="#{evaluationBackingBean.managedBean.scQt.zonal eq 'false'}">
+				<ui:param name="recommendationitemListId" value="itemLstwithoutzone"></ui:param>
+				<ui:param name="recommendationitemSelectQualifiedId"
+					value="itemSupplierQualifiedoutzoneId"></ui:param>
+				<ui:param name="recommendationitemSelectDisQualifiedId"
+					value="itemSupplierDisQualifiedoutzoneId"></ui:param>
+				<ui:param name="recommendationqualifiedSupplierItemId"
+					value="qualifiedSupplierswithOutZone"></ui:param>
+				<ui:param name="recommendationdisQualifiedSupplierItemId"
+					value="disQualifiedSupplierswithOutzone"></ui:param>
+				<ui:param name="itemList"
+					value="#{evaluationBackingBean.managedBean.summaryItemList}"></ui:param>
+				<ui:param name="passingScore"
+					value="#{evaluationBackingBean.managedBean.passingScore}"></ui:param>
+				<ui:include src="tecSummaryItems.xhtml"></ui:include>
+			</c:if>
+		</c:if>
 
+		<c:if
+			test="#{evaluationBackingBean.managedBean.technicalSummaryView eq 'TPM'}">
 
+			<c:if
+				test="#{evaluationBackingBean.managedBean.scQt.zonal ne 'false'}">
+				<p:accordionPanel dynamic="true"
+					value="#{evaluationBackingBean.managedBean.evaluationStageZonesSummary}"
+					var="zonePnlList">
+					<p:ajax event="tabChange"
+						listener="#{evaluationBackingBean.evaluationZonesTechnicalsummaryTabChange}"
+						update="@(.evaluationstagesummaryrecommendationPreferenceMargintab)" />
+					<p:tab title="#{zonePnlList.zoneName}">
+						<h:panelGroup
+							styleClass="evaluationstagesummaryrecommendationPreferenceMargintab">
+							<c:if test="#{zonePnlList.zoneName ne null}">
+								<ui:param name="recommendationqualifiedPreferenceListId"
+									value="#{zonePnlList.zoneName}"></ui:param>
+								<ui:param name="recommendationdisQualifiedPreferenceListId"
+									value="#{zonePnlList.zoneName}"></ui:param>
+							</c:if>
 
+							<c:if test="#{zonePnlList.zoneName eq null}">
+								<ui:param name="recommendationqualifiedPreferenceListId"
+									value="preference1"></ui:param>
+								<ui:param name="recommendationdisQualifiedPreferenceListId"
+									value="preference2"></ui:param>
+							</c:if>
 
-	<p:panel id="onerTierTechnicalOrTecSummarySuppliersDisQualifiedIdsEvaluation" toggleable="true">
-		<f:facet name="header">
-			<h:outputText
-				value="#{lbl['lbl.sc.eva.disqualified.supplier.list.tec.evaluation.stage']}" />
-			<ac:iconTooltip
-				value="#{lbl['lbl.sc.eva.disqualified.supplier.list.tec.evaluation.stage.tooltip']}" />
-		</f:facet>
+							<ui:param name="qualifiedPreferenceList"
+								value="#{evaluationBackingBean.managedBean.qualifiedSuppliersDM}"></ui:param>
+							<ui:param name="disQualifiedPreferenceList"
+								value="#{evaluationBackingBean.managedBean.disqualifiedSuppliersDM}"></ui:param>
+							<ui:param name="passingScore"
+								value="#{evaluationBackingBean.managedBean.passingScore}"></ui:param>
+							<ui:include src="tecSummaryItems.xhtml"></ui:include>
+						</h:panelGroup>
+					</p:tab>
+				</p:accordionPanel>
+			</c:if>
 
-		<p:dataTable var="disQualifiedSupplier" rows="10"
-		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			value="#{evaluationBackingBean.managedBean.disqualifiedSuppliersDM}"
-			lazy="true" id="oneTierDisQualifiedSupplier" editable="true"
-			rowIndexVar="index" rowKey="#{disQualifiedSupplier}">
-			<ac:paginator for="oneTierDisQualifiedSupplier" />
-
-
-
-
-
-			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
-				style="width:30%;white-space: normal; text-align:center;">
-
-				<h:outputText
-					value="#{disQualifiedSupplier.qtEvaluationResult.scQtProposal.supplierNo}"></h:outputText>
-
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.total.score']}"
-				style="width:50%;white-space: normal;text-align:right;">
-				<h:outputText value="#{disQualifiedSupplier.totalScore}"></h:outputText>
-
-			</p:column>
-
-
-		</p:dataTable>
-
-		<p:spacer height="10px" />
-		<table>
-
-			<tr>
-				<td style="width: 230px;"><h:outputLabel
-						value="#{lbl['lbl.sc.evaluation.total.suppliers']}" /></td>
-				<td><p:inputText readonly="true" disabled="true"
-						style="text-align:right"
-						value="#{evaluationBackingBean.managedBean.disqualifiedSuppliersDM.rowCount}"></p:inputText></td>
-			</tr>
-
-		</table>
-
-
-	</p:panel>
-
-
+			<c:if
+				test="#{evaluationBackingBean.managedBean.scQt.zonal eq 'false'}">
+				<ui:param name="recommendationqualifiedPreferenceListId"
+					value="QualifiedPreferenceMarginListId"></ui:param>
+				<ui:param name="recommendationdisQualifiedPreferenceListId"
+					value="disQualifiedPreferenceMarginListId"></ui:param>
+				<ui:param name="qualifiedPreferenceList"
+					value="#{evaluationBackingBean.managedBean.qualifiedSuppliersDM}"></ui:param>
+				<ui:param name="disQualifiedPreferenceList"
+					value="#{evaluationBackingBean.managedBean.disqualifiedSuppliersDM}"></ui:param>
+				<ui:param name="passingScore"
+					value="#{evaluationBackingBean.managedBean.passingScore}"></ui:param>
+				<ui:include src="tecSummaryItems.xhtml"></ui:include>
+			</c:if>
+		</c:if>
+	</h:panelGroup>
 
 
 

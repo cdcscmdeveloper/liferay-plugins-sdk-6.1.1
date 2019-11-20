@@ -1009,7 +1009,20 @@ public class CreateQtBackingBean extends
 				.get("value");
 		this.getManagedBean().getQt().setOpenFor(type);
 	}
-	
+/** #21695 FARID START */	
+	/**
+	 * Partial offer change.change partialy offer(offer/not offer) radion button in 
+	 * owner.
+	 * 
+	 * @param event
+	 *            (String partialChange)
+	 */
+	public void partialChange(AjaxBehaviorEvent event) {
+		Boolean type = (Boolean) event.getComponent().getAttributes()
+				.get("value");
+		this.getManagedBean().getQt().setPartial(type);
+	}
+/** #21695 FARID END */		
 	/**
 	 * Procurement change.change Procurement Category Dropdown in Business
 	 * owner.
