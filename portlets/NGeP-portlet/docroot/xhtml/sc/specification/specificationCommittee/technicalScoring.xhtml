@@ -176,10 +176,91 @@
 			</tr>
 		</table>
 
+	</p:panel>
+<!-- #21695 START FARID -->	
+	<p:panel id="technicalScoringItemPanel"
+		header="#{lbl['lbl.sc.by.item']}" toggleable="true">
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.passing.score.financial.instruction']}"
+			escape="false" />
 
 
+<!-- #21695 START FARID -->
 
+		<p:panelGrid style="margin-top:5px;width:100%;">
+			<f:facet name="header">
+				<p:row>
+					<p:column colspan="1">
+						#{lbl['lbl.sc.spec.items.scoring']}
+						<ac:iconTooltip value="#{lbl['lbl.sc.spec.item.tooltip']}" />
+					</p:column>
+					<p:column colspan="1">
+						#{lbl['lbl.sc.spec.others']}
+						<ac:iconTooltip value="#{lbl['lbl.sc.spec.others.tooltip']}" />
+					</p:column>
+					<p:column colspan="1">#{lbl['lbl.sc.spec.score']}</p:column>
+				</p:row>
+			</f:facet>
 
+			<p:row>
+
+				<p:column colspan="1" style="font-weight: bold;">
+					<p:inputText style="text-align:right" maxlength="3"
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
+						value="#{specificationBackingBean.managedBean.technicalItemScoreSetting.overallTechnical}">
+						<ac:validateNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
+							maxIntegerDigits="3" integerOnly="true" />
+						<f:attribute name="min" value="0"></f:attribute>
+						<p:ajax event="blur" update="technicalScoringItemScore"
+							process="@this,technicalScoringItemPanel" partialSubmit="true"
+							listener="#{specificationBackingBean.calculateTechnicalItemScore(specificationBackingBean.managedBean.technicalItemScoreSetting)}"></p:ajax>
+
+					</p:inputText>
+				</p:column>
+
+				<p:column colspan="1" style="font-weight: bold;">
+					<p:inputText style="text-align:right" maxlength="3"
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
+						value="#{specificationBackingBean.managedBean.technicalItemScoreSetting.overallOtherTechnical}">
+						<ac:validateNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
+							maxIntegerDigits="3" integerOnly="true" />
+						<f:attribute name="min" value="0"></f:attribute>
+						<p:ajax update="technicalScoringItemScore"
+							process="@this,technicalScoringItemPanel" partialSubmit="true"
+							listener="#{specificationBackingBean.calculateTechnicalItemScore(specificationBackingBean.managedBean.technicalItemScoreSetting)}"></p:ajax>
+
+					</p:inputText>
+				</p:column>
+				<p:column colspan="1" style="text-align:right">
+					<h:outputText id="technicalScoringItemScore"
+						value="#{specificationBackingBean.managedBean.technicalItemScore}" />
+				</p:column>
+			</p:row>
+
+		</p:panelGrid>
+		
+
+		<p:spacer height="15"></p:spacer>
+		<table>
+			<tr>
+				<td style="width: 260px;"><p:outputLabel
+						value="#{lbl['lbl.sc.passing.score']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:inputText style="text-align:right" maxlength="3"
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
+						value="#{specificationBackingBean.managedBean.technicalItemScoreSetting.passingScore}">
+						<p:ajax event="change" process="@this" partialSubmit="true" />
+						<ac:validateNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
+							maxIntegerDigits="3" integerOnly="true" />
+						<f:attribute name="min" value="50"></f:attribute>
+						<f:attribute name="max" value="100"></f:attribute>
+					</p:inputText> <p:spacer width="5"></p:spacer></td>
+			</tr>
+		</table>
+<!-- #21695 END FARID -->
 	</p:panel>
 
 	<p:panel id="sctechnicalScoringUserScoringSchemaIds"
