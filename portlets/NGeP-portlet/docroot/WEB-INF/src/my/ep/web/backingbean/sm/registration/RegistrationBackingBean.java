@@ -472,18 +472,19 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					//SmSupplierOwner suppOwner = this.getManagedBean().getSmSuppOwner();
 					if(SmCommonUtil.isSupplierOwnerIndividualAcc(suppOwner.getIdentificationType().getParameterCode(),suppOwner.getIdentificationNo(),
 							my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL)){
-						throw new EpException(MessageConst.ERROR_721050);
+						throw new EpException(MessageConst.ERROR_SSM_70062);
+						//throw new EpException(MessageConst.ERROR_721050);
 					}
 					validateIDFormat(suppOwner.getIdentificationNo(),suppOwner.getIdentificationType().getParameterCode());
 					if(suppOwner.getIdentificationType().getParameterCode().equals(SupplierManagementConst.BASIC_IND_IDENT_TYPE)){
 						if(getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF)){
 							//MOF
 							SmCommonUtil.getInstance().verifyWithMyIdentity(suppOwner.getOwnerName(), suppOwner.getIdentificationNo(), 
-									null, my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN);
+									null, my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN,this.getManagedBean().isCompanyValidWithSSM());
 						}else{
 							//Basic
 							SmCommonUtil.getInstance().verifyOwnerWithMyIdentity(suppOwner.getOwnerName(), suppOwner.getIdentificationNo(), 
-									null, my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN, null);
+									null, my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN, null,this.getManagedBean().isCompanyValidWithSSM());
 						}
 					}
 					
@@ -3746,20 +3747,20 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			if(!isIndividual){
 				if(!smPersonnel.getPmCountry().getCountryCode().equalsIgnoreCase(ParameterConst.COUNTRY_UNKNOWN_CODE)){
 					SmCommonUtil.getInstance().verifyWithMyIdentity(smPersonnel.getName(), smPersonnel.getIdentificationNo(),
-							getManagedBean().getSmPermenantAdd().getPostcode(), null);
+							getManagedBean().getSmPermenantAdd().getPostcode(), null,smPersonnel.isSsmData());
 				}else{
 					SmCommonUtil.getInstance().verifyWithMyIdentity(smPersonnel.getName(), smPersonnel.getIdentificationNo(),
-							getManagedBean().getSmPermenantAdd().getPostcode(), my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_ONLINE);
+							getManagedBean().getSmPermenantAdd().getPostcode(), my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_ONLINE,smPersonnel.isSsmData());
 				}
 			}else{
 				if(smPersonnel.isSsmData()){
 					SmCommonUtil.getInstance().verifyOwnerWithMyIdentity(smPersonnel.getName(), smPersonnel.getIdentificationNo(),
 							getManagedBean().getSmPermenantAdd().getPostcode(), my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_SSM,
-							null);
+							null,smPersonnel.isSsmData());
 				}else{
 					SmCommonUtil.getInstance().verifyOwnerWithMyIdentity(smPersonnel.getName(), smPersonnel.getIdentificationNo(),
 							getManagedBean().getSmPermenantAdd().getPostcode(), my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_ONLINE,
-							null);
+							null,smPersonnel.isSsmData());
 				}
 				
 			}
