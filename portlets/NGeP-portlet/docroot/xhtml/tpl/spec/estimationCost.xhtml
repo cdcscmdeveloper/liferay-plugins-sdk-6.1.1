@@ -31,15 +31,28 @@
 				#25039 ruzaimah End -->
 				<h:outputText value="#{lbl['lbl.tpl.spec.content.estimate.cost']}"/>
 			</f:facet>
-			<p:inputText id="estCost" value="#{tplSpecEstimation.estimatedCost}" style="width:165px; text-align:right;" 
-				required="true" maxlength="19"
-				label="#{lbl['lbl.tpl.spec.content.estimate.cost']}"
-				disabled="#{editable}">
-				<!-- #25039 ruzaimah Begin - comment
-				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
-				<p:ajax partialSubmit="true" process="@this" update="@this, estCostMsg" />
-				#25039 ruzaimah End-->
-			</p:inputText>
+<!-- START #21695 farid -->
+
+	  				<p:inputText id="estCost" value="#{tplSpecEstimation.estimatedCost}" style="width:165px; text-align:right;" 
+						styleClass="mandatory"
+						required="true" maxlength="19"
+						rendered="#{templateSpecBackingBean.checkValueGreaterThanZero(templateSpecBean.selectedSpecQuestion,rowIndex)}"
+						label="#{lbl['lbl.tpl.spec.content.estimate.cost']}"
+						disabled="#{editable}">
+		 				<!-- #25039 ruzaimah Begin - comment
+						<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
+						<p:ajax partialSubmit="true" process="@this" update="@this, estCostMsg" />
+						#25039 ruzaimah End-->
+				</p:inputText>
+	  				
+					<p:inputText id="estCost1" value="#{0.00}" style="width:165px; text-align:right;" 
+						required="true" maxlength="19"
+						rendered="#{!templateSpecBackingBean.checkValueGreaterThanZero(templateSpecBean.selectedSpecQuestion,rowIndex)}"
+						label="#{lbl['lbl.tpl.spec.content.estimate.cost']}"
+						disabled="#{editable}">
+					<p:ajax partialSubmit="true" process="@this" update="@this, estCostMsg" />
+					</p:inputText>
+<!--END #21695 farid -->	
 			<p:message id="estCostMsg" for="estCost" display="icon" />
 		</p:column>
 	</p:dataTable>
