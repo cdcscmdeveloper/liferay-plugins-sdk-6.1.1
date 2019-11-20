@@ -6,15 +6,13 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
-import my.ep.dto.sm.pending.PendingPaymentResDTO;
-import my.ep.dto.sm.personnel.PersonnelReqDTO;
-import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
+import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
-import my.ep.persistence.entity.sm.SmDisciplinaryAction_;
-import my.ep.persistence.entity.sm.SmPendingProcess;
-import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.util.FacesScopes;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.log4j.Logger;
 
@@ -28,9 +26,24 @@ public class DisciplinaryActionRest {
 	public Response retrieveDisciplinaryAction() {
 		log.info("Before success calling retrieve rest api....");
 		try {
+			PmUser user = new FacesScopes().getUserSessionBean();
+			List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(user
+					.getUserId());
+			//hantar List<PmUserRole> dan PmUSer 
 			SupplierDataMaintenanceResDTO resDTO = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveDisciplinaryAction();
-			for (SmDisciplinaryAction disc : resDTO.getSmDisciplinaryActions()) {
-				SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(disc);	
+			SupplierDataMaintenanceResDTO activeDisc = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryAction();
+			if(resDTO.getSmDisciplinaryActions() != null 
+					&& resDTO.getSmDisciplinaryActions().size() > 0){
+				for (SmDisciplinaryAction disc : resDTO.getSmDisciplinaryActions()) {
+					SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(disc);	
+				}
+			}
+			
+			if(activeDisc.getSmDisciplinaryActions() != null
+					&& activeDisc.getSmDisciplinaryActions().size() > 0){
+				for (SmDisciplinaryAction pendingDisc : activeDisc.getSmDisciplinaryActions()) {
+					SmServiceLookup.getSupplierDataMaintenanceSO().updatePendingDisciplinaryAction(pendingDisc, user, userRoles);
+				}
 			}
 			return Response.status(200).entity("success calling process disciplinary action !!").build();
 		} catch (Exception e) {
