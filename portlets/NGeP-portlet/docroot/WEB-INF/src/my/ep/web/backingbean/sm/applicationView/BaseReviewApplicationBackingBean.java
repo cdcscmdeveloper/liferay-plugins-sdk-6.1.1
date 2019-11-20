@@ -2392,6 +2392,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			//currently PAPPLID and PLANGUAGE use for Basic and G2G
 			paramMap.put("PAPPLID", String.valueOf(getManagedBean().getSmAppl().getApplId()));
 			paramMap.put("PLANGUAGE", new FacesScopes().getUserLocale().getLanguage());
+			paramMap.put("PAGENCYTYPE", getManagedBean().getAgencyTypeName());
 			generateReport(ReportConst.SM_SUPPLIER_PROFILE_G2G_REPORT, paramMap);
 		} else {
 			paramMap.put("PAPPLNO", getManagedBean().getSmAppl().getApplNo());
