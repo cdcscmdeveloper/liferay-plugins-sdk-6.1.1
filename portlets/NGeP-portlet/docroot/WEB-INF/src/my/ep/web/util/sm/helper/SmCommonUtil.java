@@ -232,7 +232,8 @@ public class SmCommonUtil {
 	private static Logger log = Logger.getLogger(SmCommonUtil.class);
 	private static SmCommonUtil instance;
 	private static final BigDecimal percent = new BigDecimal(100);
-
+	//SSM INTEGRATIONS
+	boolean showSSMError;
 	/**
 	 * Hash string.
 	 * 
@@ -4191,7 +4192,8 @@ public class SmCommonUtil {
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70039);
 				case "70040":
 					//SSM INTEGRATION
-					if(type != null && ssmActive() && type.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN)){
+					if(showSSMError){
+						showSSMError = false;
 						throw new EpException(MessageConst.ERROR_SSM_70062);
 					}else{
 						throw new EpException(MessageConst.ERROR_MYIDENTITY_70040);
@@ -4356,7 +4358,13 @@ public class SmCommonUtil {
 				case "70039":
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70039);
 				case "70040":
-					throw new EpException(MessageConst.ERROR_MYIDENTITY_70040);
+					//SSM INTEGRATION
+					if(showSSMError){
+						showSSMError = false;
+						throw new EpException(MessageConst.ERROR_SSM_70062);
+					}else{
+						throw new EpException(MessageConst.ERROR_MYIDENTITY_70040);
+					}
 				}
 			} else {
 				if (resDTO.getStatusCode().equals("70018")) {
@@ -5766,5 +5774,20 @@ public class SmCommonUtil {
 		MofAccountResDTO mofAcc = SmServiceLookup.getMofAccountSO().retriveMOFAccountByApplId(req);
 		return mofAcc;
 		}
+	
+	//SSM INTEGRATION
+	public String verifyWithMyIdentity(String name, String identificationNo,
+			String postCode, String type,boolean showSSMError) {
+		this.showSSMError = showSSMError;
+		return verifyWithMyIdentity(name,identificationNo,
+				postCode,type) ;
+	}
+	//SSM INTEGRATION
+	public void verifyOwnerWithMyIdentity(String name, String identificationNo,
+			String postCode, String type, String supplierType,boolean showSSMError) {
+		this.showSSMError = showSSMError;
+		verifyOwnerWithMyIdentity(name, identificationNo,
+				postCode, type, supplierType);
+	}
 		
 }
