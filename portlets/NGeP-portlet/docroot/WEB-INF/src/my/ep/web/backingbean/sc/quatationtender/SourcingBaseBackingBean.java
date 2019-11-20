@@ -117,6 +117,7 @@ import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
+import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScEvaluationCommitteeReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScFinancialEvaluationReportAttachment;
@@ -171,6 +172,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.template.DocumentGenerator;
 import my.ep.dto.sc.directpurchase.QuoteReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
@@ -209,6 +211,9 @@ import com.liferay.portal.util.PortalUtil;
 public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		extends BaseBackingBean<T> {
 	private static final long serialVersionUID = 1L;
+	private static final Locale myLocale = new Locale(SourcingConstants.MALAY_LANGUAGE_CODE,
+			  SourcingConstants.MALAYSIA_COUNTRY_CODE);
+
 	
 	/**
 	 * Logger instance.
@@ -3334,13 +3339,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		try {
 			quoteSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
-			String supplierName= scLoa.getScLoiLoa().getSmSupplier().getCompanyName();
+			String supplierName= scLoa.getScLoiLoa().getSupplierName();
 			log.info("constructPRSupplierSpecificationAndRemarks supplierName    "+supplierName+ " quoteId :   "+scLoa.getScQuote().getQuoteId() );
 			
 			QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
 		
-			
-			
 			quoteReqDTO.setQuoteId(scLoa.getScQuote().getQuoteId());
 			
 			quoteReqDTO.setQuoteId(scLoa.getScQuote().getQuoteId());
@@ -3355,29 +3358,42 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			QuoteResDTO quoteResDTO = quoteSO.getQuoteDtlForLOASupplier(quoteReqDTO);
 			log.info("Supplier ID"+quoteReqDTO.getSupplierId());  
 			
-	
+			List<ScLoiLoaItem> items = scLoa.getScLoiLoaItems();
+			for (ScLoiLoaItem item :items)	
+			{	
+				Long  itemId =item.getScRequestItem().getTplSpecQuestion().getSpecQuestionId();
+				log.info("itemName -->"+itemId);
+			if(masters.size() > 0)
+			{	
+				masters.clear();
+				log.info("Master Record List Size I -->"+masters.size());
+			}
 			String dafaltValue = "T/B";
 			if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
-				dafaltValue = "N/A";
+				dafaltValue = "T/B";
 			}
 			
 			if (CollectionUtils.isNotEmpty(quoteResDTO.getServiceAnswersTpl())) {
 				TplSpecMaster master = null;
 				List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
+				
 				for (TplSpecAnswer answer : quoteResDTO.getServiceAnswersTpl()) {
 					//log.info("constructPRSupplierSpecificationAndRemarks I"+answer.getTplSpecQuestion().getClFulfilmentTypeCode().getParameterCode());
 					if(answer.getTplSpecQuestion().getClFulfilmentTypeCode() == null)
 					{
 						answer.getTplSpecQuestion().setClFulfilmentTypeCode(scLoa.getScLoiLoa().getFulfilmentTypeCode()); 
 						
+						
 					}
+				
 					//log.info("constructPRSupplierSpecificationAndRemarks I"+ answer.getTplSpecQuestion().getClFulfilmentTypeCode().getParameterCode());
 					log.info("TplSpecAnswer for service:- "
 							+ "|" + answer.getSpecAnswerId()
 							+ "|" + answer.getAnswerText()
 							+ "|" + answer.getTplSpecQuestion().getSpecQuestionId()
 							+ "|" + answer.getTplSpecQuestion().getClItem()
-							+ "|" + answer.getTplSpecQuestion().getClFulfilmentTypeCode().getParameterCode()
+							//+ "|" + SmCommonUtil.retrieveParameterDescByTypeAndCodeAndLang(answer.getTplSpecQuestion().getClFulfilmentTypeCode().getParameterCode(),new FacesScopes().getUserLocale().getLanguage())
+							+ "|"+getParameterDescForReport(answer.getTplSpecQuestion().getClFulfilmentTypeCode())
 							+ "|" + answer.getTplSpecQuestion().getClSpecDetail()
 							//+ "|" + answer.getTplSpecQuestion().getClUom().getUomCode()
 							+ "|" + answer.getTplSpecQuestion().getClUomFrequency()
@@ -3385,26 +3401,45 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							+ "|" + answer.getTplSpecQuestion().getClUomPerMonth()
 							+ "|" + answer.getTplSpecQuestion().getClQuantity()
 							+ "|" + answer.getTplSpecQuestion().getClReviewRemark()
-							+ "|" + answer.getTplSpecQuestion().getClReviewRemark()
+							+ "|" + answer.getRatePerUom()
+							+ "|" + answer.getAnswerRemark()
 							);
+					answer.getTplSpecQuestion().setAnswerText(answer.getAnswerRemark());
 					if(master == null)
 					{ 
-						master = answer.getTplSpecQuestion().getTplSpecMaster();
+						if(itemId.equals(answer.getTplSpecQuestion().getSpecQuestionId()) || (answer.getTplSpecQuestion().getParentSpecQuestion()!=null && itemId.equals(answer.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId())))
+						{
+		
+							master = answer.getTplSpecQuestion().getTplSpecMaster();
+							constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master, answer.getTplSpecQuestion());
+							
+						}
 					}
-					
-					constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master, answer.getTplSpecQuestion());
+					else if(answer.getTplSpecQuestion().getClSpecDetail()!=null)
+					{
+						if(itemId.equals(answer.getTplSpecQuestion().getSpecQuestionId()) || (answer.getTplSpecQuestion().getParentSpecQuestion()!=null && itemId.equals(answer.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId())))
+						{
+		
+						master = answer.getTplSpecQuestion().getTplSpecMaster();
+						constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master, answer.getTplSpecQuestion());
+						}
+					}
 					
 				}
 				master.setTplSpecQuestions(newTplSpecQuestionsList);
 				masters.add(master);
+			
 			}
-			log.info("constructPRSupplierSpecificationAndRemarks method master record size -->"+masters.size());
+			log.info("Master Record List Size II -->"+masters.size());
 			context.put("serviceScope", dafaltValue);
 			context.put("supplierName", supplierName);
 			context.put("masters", masters);
 			context.put("bean", this);
+		}	
+			
 		} finally {
 			quoteSO = null;
+			//masters.clear();
 		}
 	}
 
@@ -3575,6 +3610,24 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 	
+	
+	/**
+	 * Get Parameter description by parameter for report.
+	 * 
+	 * @param parameter
+	 *            the PmParameter instance.
+	 * @return parameter description
+	 */
+	public String getParameterDescForVelocityReport(PmParameter parameter) {
+		if (parameter != null
+				&& StringUtils.isNotBlank(parameter.getParameterType())) {
+			return getParameterDesc(
+					parameter,
+					myLocale);
+		} else {
+			return null;
+		}
+	}
 	/**
 	 * Method to return true, if is printing or false if is not printing
 	 * @param category of printing only
