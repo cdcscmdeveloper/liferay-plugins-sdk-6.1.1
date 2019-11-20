@@ -1222,7 +1222,8 @@ public class SPDetailBackingBean extends
 			if (isCompleted) {
 				processResponseException(answers);
 			}
-
+			/** #21695 Farid */			
+			proposalReqDTO.setTplSpecZoneQties(answers.get(0).getTplSpecQuestion().getTplSpecZoneQties());
 			proposalReqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			proposalReqDTO.setAnswersList(answers);
 			proposalReqDTO.setScQt(this.getManagedBean().getQt());
