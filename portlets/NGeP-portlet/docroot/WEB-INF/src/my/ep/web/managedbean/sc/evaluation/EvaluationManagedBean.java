@@ -454,6 +454,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private int passingScore;
 
 	private String financialSummaryView;
+	/** #21695 Farid */
+	private String technicalSummaryView;
 
 	private String roleCode;
 
@@ -2949,6 +2951,21 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public void setFinancialSummaryView(String financialSummaryView) {
 		this.financialSummaryView = financialSummaryView;
+	}
+/** #21695 Farid */	
+	/**
+	 * @return the technicalSummaryView
+	 */
+	public String getTechnicalSummaryView() {
+		return technicalSummaryView;
+	}
+
+	/**
+	 * @param technicalSummaryView
+	 *            the technicalSummaryView to set
+	 */
+	public void setTechnicalSummaryView(String technicalSummaryView) {
+		this.technicalSummaryView = technicalSummaryView;
 	}
 
 	/**

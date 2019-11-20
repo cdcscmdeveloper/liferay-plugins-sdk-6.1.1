@@ -262,6 +262,8 @@ public class EvaluationBackingBean extends
 				getManagedBean().setSelectedZone(null);
 				getManagedBean().setSinglesummaryItemList(null);
 				this.getManagedBean().setFinancialSummaryView("");
+				/** #21695 Farid */
+				this.getManagedBean().setTechnicalSummaryView("");
 				this.getManagedBean().setSummaryViewBy(view);
 				EvaluationReqDTO summaryReqDTO = setSummaryPrepareData(view);
 				evalResDTO = evaluationSO.retrieveSummaryDetails(summaryReqDTO);
@@ -470,7 +472,31 @@ public class EvaluationBackingBean extends
 				reqDTO.setSettingType(getSettingType(QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE));
 				resDTO = evaluationSO.retrievePassingScoreByQT(reqDTO);
 			}
+			/** #21695 Farid  Start*/			
+			else if (QTConstants.TECHNICAL_EVALUATION_BY_ITEM.equalsIgnoreCase(view)) {
 
+				resultStg.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+				summaryReqDTO.setResultStages(resultStg);
+				if (!this.getManagedBean().getScQt().isZonal()) {
+					award = SourcingConstants.AWARD_BY_ITEM;
+				}
+				// this.getManagedBean().setSummaryZoneBean(null);
+
+				reqDTO.setSettingType(getSettingType(QTConstants.TECHNICAL_EVALUATION_BY_ITEM));
+				resDTO = evaluationSO.retrievePassingScoreByQT(reqDTO);
+			} 
+			else if (QTConstants.TECHNICAL_PREFERENCE_MARGIN
+					.equalsIgnoreCase(view)) {
+
+				resultStg.add(QTConstants.TECHNICAL_EVALUATION);
+
+				summaryReqDTO.setResultStages(resultStg);
+				// this.getManagedBean().setSummaryZoneBean(null);
+
+				reqDTO.setSettingType(getSettingType(QTConstants.TECHNICAL_EVALUATION));
+				resDTO = evaluationSO.retrievePassingScoreByQT(reqDTO);
+			}
+			/** #21695 Farid End*/
 			else if (QTConstants.RECOMMENDATION_BY_ITEM.equalsIgnoreCase(this
 					.getManagedBean().getSummaryViewBy())) {
 				resultStg.add(QTConstants.RECOMMENDATION_BY_ITEM);
@@ -503,6 +529,105 @@ public class EvaluationBackingBean extends
 
 		return summaryReqDTO;
 	}
+	/** #21695 Farid */	
+	/**
+	 * Summary change. when you change summary in evaluation stage it will
+	 * display all the qualified and disqualified suppliers for package and
+	 * preference margin
+	 * 
+	 * @param event
+	 *            (is Mandatory)
+	 * 
+	 */
+	public void technicalsummaryChange(AjaxBehaviorEvent event) {
+		IQTEvaluationSO evaluationSO = null;
+		EvaluationResDTO evalResDTO = null;
+		EvaluationReqDTO partialIdReqDto = null;
+		try {
+			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			String view = (String) event.getComponent().getAttributes()
+					.get("value");
+			if (null != view && !"".equals(view)) {
+				ScQt scQt = getManagedBean().getScQt();
+
+				getManagedBean().setSelectedZone(null);
+				getManagedBean().setSinglesummaryItemList(null);
+				this.getManagedBean().setTechnicalSummaryView(view);
+				this.getManagedBean().setSummaryViewBy("");
+				EvaluationReqDTO summaryReqDTO = setSummaryPrepareData(view);
+				
+				//evaluationSO.retrieveSuppPartialOffer(partialIdReqDto);  // farid add
+				evalResDTO = evaluationSO.retrieveSummaryDetails(summaryReqDTO);
+				//evalResDTO = evaluationSO.retrieveSuppPartialOffer(summaryReqDTO);  //farid add
+				
+				this.getManagedBean().setEvaluationStageZonesSummary(
+						new ArrayList<TplSpecZoneDtl>());
+				if (null != evalResDTO.getZones()
+						&& !evalResDTO.getZones().isEmpty()) {
+					this.getManagedBean().setEvaluationStageZonesSummary(
+							evalResDTO.getZones());
+					summaryReqDTO.setSpeZoneId(this.getManagedBean()
+							.getEvaluationStageZonesSummary().get(0)
+							.getSpecZoneId());
+					getManagedBean().setSelectedZone(
+							this.getManagedBean()
+									.getEvaluationStageZonesSummary().get(0));
+					EvaluationStageZoneSummary(summaryReqDTO);
+				}
+
+				else {
+					this.getManagedBean().setSummaryItemList(
+							new ArrayList<ScRequestItem>());
+					if (null != evalResDTO.getRequestItemResults()
+							&& null != evalResDTO.getRequestItemResults()
+									.getResultList()
+							&& !evalResDTO.getRequestItemResults()
+									.getResultList().isEmpty()) {
+						this.getManagedBean().setSummaryItemList(
+								evalResDTO.getRequestItemResults()
+										.getResultList());
+					}
+				}
+
+				if (SourcingConstants.AWARD_BY_ITEM.equals(summaryReqDTO
+						.getAwardBy())) {
+					this.getManagedBean().setQualifiedSuppliersDM(
+							new SummarySupplierPagingDataModel(
+									"evaluationSummaryItemQualifiedSuppliers",
+									true, scQt.isZonal(), summaryReqDTO
+											.getAwardBy(), summaryReqDTO
+											.getResultStages()));
+					this.getManagedBean()
+							.setDisqualifiedSuppliersDM(
+									new SummarySupplierPagingDataModel(
+											"evaluationSummaryItemDisQualifiedSuppliers",
+											false, scQt.isZonal(),
+											summaryReqDTO.getAwardBy(),
+											summaryReqDTO.getResultStages()));
+
+				} else {
+					this.getManagedBean()
+							.setQualifiedSuppliersDM(
+									new SummarySupplierPagingDataModel(
+											"evaluationSummaryPreferencemarginQualifiedSuppliers",
+											true, scQt.isZonal(), null,
+											summaryReqDTO.getResultStages()));
+					this.getManagedBean()
+							.setDisqualifiedSuppliersDM(
+									new SummarySupplierPagingDataModel(
+											"evaluationSummaryPreferencemarginDisQualifiedSuppliers",
+											false, scQt.isZonal(), null,
+											summaryReqDTO.getResultStages()));
+				}
+
+			}
+
+		} finally {
+			evaluationSO=null;
+		}
+
+	}
 
 	/*
 	 * user get setting type as technical,financial,package,item
@@ -524,6 +649,9 @@ public class EvaluationBackingBean extends
 		if (StringUtils.equals(recommendBy, QTConstants.TECHNICAL_EVALUATION)) {
 			return SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL;
 		} else if (StringUtils.equals(recommendBy,
+				QTConstants.TECHNICAL_EVALUATION_BY_ITEM)) {
+			return SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM;
+		}else if (StringUtils.equals(recommendBy,
 				QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE)) {
 			return SourcingConstants.SCORE_SETTING_TYPE_FINANCIAL_BY_PACKAGE;
 		} else if (StringUtils.equals(recommendBy,
@@ -559,7 +687,9 @@ public class EvaluationBackingBean extends
 					.getManagedBean().getSummaryViewBy())
 					|| QTConstants.FINANCIAL_EVALUATION_BY_ITEM
 							.equalsIgnoreCase(this.getManagedBean()
-									.getFinancialSummaryView())) {
+									.getFinancialSummaryView()) || QTConstants.TECHNICAL_EVALUATION_BY_ITEM
+									.equalsIgnoreCase(this.getManagedBean()
+											.getTechnicalSummaryView())) {
 				summaryReqDTO.setZonal(false);
 				String award = SourcingConstants.AWARD_BY_ITEM;
 				summaryReqDTO.setAwardBy(award);
@@ -593,6 +723,8 @@ public class EvaluationBackingBean extends
 
 		try {
 			this.getManagedBean().setFinancialSummaryView("");
+			/** #21695 Farid */
+			this.getManagedBean().setTechnicalSummaryView("");
 
 			TplSpecZoneDtl specZoneDtl = (TplSpecZoneDtl) event.getData();
 			getManagedBean().setSelectedZone(specZoneDtl);
@@ -653,7 +785,45 @@ public class EvaluationBackingBean extends
 
 		}
 	}
+	
+	/** #21695 Farid Start*/
+	/**
+	 * Evaluation zonessummary tab change.when you change zones in evaluation
+	 * stage Technical summary based on zonal to get all qualified and
+	 * disqualified suppliers for package and preference margin
+	 * 
+	 * @param event
+	 *            (Mandatory)
+	 */
+	public void evaluationZonesTechnicalsummaryTabChange(TabChangeEvent event) {
 
+		try {
+			this.getManagedBean().setSummaryViewBy("");
+			TplSpecZoneDtl specZoneDtl = (TplSpecZoneDtl) event.getData();
+			getManagedBean().setSelectedZone(specZoneDtl);
+			getManagedBean().setSinglesummaryItemList(null);
+
+			for (int i = 0; i < this.getManagedBean()
+					.getEvaluationStageZonesSummary().size(); i++) {
+				TplSpecZoneDtl zoneDtls = this.getManagedBean()
+						.getEvaluationStageZonesSummary().get(i);
+				if (zoneDtls.getSpecZoneId() == specZoneDtl.getSpecZoneId()) {
+					EvaluationReqDTO summaryReqDTO = setSummaryPrepareData(this
+							.getManagedBean().getTechnicalSummaryView());
+					summaryReqDTO.setSpeZoneId(specZoneDtl.getSpecZoneId());
+					EvaluationStageZoneSummary(summaryReqDTO);
+
+				}
+			}
+
+			this.getManagedBean().getQualifiedSuppliersDM().reloadData();
+			this.getManagedBean().getDisqualifiedSuppliersDM().reloadData();
+		} finally {
+
+		}
+	}
+	/** #21695 Farid End*/
+	
 	/**
 	 * Summary item select.when you select item in evaluation stage summary
 	 * based on item you will get all qualified and disqualified suppliers for
@@ -1904,6 +2074,8 @@ public class EvaluationBackingBean extends
 			}
 			this.getManagedBean().setSummaryViewBy("");
 			this.getManagedBean().setFinancialSummaryView("");
+			/** #21695 Farid */
+			this.getManagedBean().setTechnicalSummaryView("");
 			int count = this.getManagedBean().getComplianceSummaryCount();
 			count++;
 			int count2 = count;
@@ -2015,6 +2187,9 @@ public class EvaluationBackingBean extends
 				resultStg2.add(QTConstants.RECOMMENDATION_BY_ITEM);
 				resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE);
 				resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_ITEM);
+				/** #21695 Farid */
+				resultStg2.add(QTConstants.TECHNICAL_EVALUATION);
+				resultStg2.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
 				summaryReqDTO.setResultStages(resultStg2);
 				if (this.getManagedBean().getCurrentStatusId()
 						.equals(QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL)
@@ -2049,6 +2224,9 @@ public class EvaluationBackingBean extends
 					resultStg2.add(QTConstants.RECOMMENDATION_BY_ITEM);
 					resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE);
 					resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_ITEM);
+					/** #21695 Farid */
+					resultStg2.add(QTConstants.TECHNICAL_EVALUATION);
+					resultStg2.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
 					summaryReqDTO.setResultStages(resultStg2);
 					if (this.getManagedBean()
 							.getCurrentStatusId()
@@ -2153,6 +2331,8 @@ public class EvaluationBackingBean extends
 			this.getManagedBean().setOneTierFinancialActiveIndex(1);
 			this.getManagedBean().setSummaryViewBy("");
 			this.getManagedBean().setFinancialSummaryView("");
+			/** #21695 Farid */
+			this.getManagedBean().setTechnicalSummaryView("");
 			if (this.getManagedBean().getCurrentStatusId()
 					.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
 					&& !this.getManagedBean().isReadOnly()
@@ -2173,6 +2353,9 @@ public class EvaluationBackingBean extends
 				resultStg2.add(QTConstants.RECOMMENDATION_BY_ITEM);
 				resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE);
 				resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_ITEM);
+				/** #21695 Farid */
+				resultStg2.add(QTConstants.TECHNICAL_EVALUATION);
+				resultStg2.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
 				summaryReqDTO.setResultStages(resultStg2);
 				if (this.getManagedBean().getCurrentStatusId()
 						.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
@@ -2207,6 +2390,8 @@ public class EvaluationBackingBean extends
 			this.getManagedBean().setOneTierFinancialActiveIndex(2);
 			this.getManagedBean().setSummaryViewBy("");
 			this.getManagedBean().setFinancialSummaryView("");
+			/** #21695 Farid */
+			this.getManagedBean().setTechnicalSummaryView("");
 			if (this.getManagedBean().getCurrentStatusId()
 					.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
 					&& !this.getManagedBean().isReadOnly()
@@ -2227,6 +2412,9 @@ public class EvaluationBackingBean extends
 				resultStg2.add(QTConstants.RECOMMENDATION_BY_ITEM);
 				resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE);
 				resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_ITEM);
+				/** #21695 Farid */
+				resultStg2.add(QTConstants.TECHNICAL_EVALUATION);
+				resultStg2.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
 				summaryReqDTO.setResultStages(resultStg2);
 				if (this.getManagedBean().getCurrentStatusId()
 						.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
@@ -2261,6 +2449,8 @@ public class EvaluationBackingBean extends
 			this.getManagedBean().setEvaluatioStageActiveIndex(2);
 			this.getManagedBean().setSummaryViewBy("");
 			this.getManagedBean().setFinancialSummaryView("");
+			/** #21695 Farid */
+			this.getManagedBean().setTechnicalSummaryView("");
 			if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 					.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
 				evaluationSo = BusinessDelegate.getInstance().getServiceObject(
@@ -2287,6 +2477,9 @@ public class EvaluationBackingBean extends
 					resultStg2.add(QTConstants.RECOMMENDATION_BY_ITEM);
 					resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE);
 					resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_ITEM);
+					/** #21695 Farid */
+					resultStg2.add(QTConstants.TECHNICAL_EVALUATION);
+					resultStg2.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
 					summaryReqDTO.setResultStages(resultStg2);
 					evaluationSo
 							.prepareFinancialEvaluationSummary(summaryReqDTO);
@@ -11830,6 +12023,34 @@ private void retriveCommitteeRemarksList(){
 				});
 	}
 	
+	/** #21695 Farid START */
+	/** 
+	 * this method is used to get the technical summary dropdown values.
+	 * @return List<SelectItem>
+	 */
+	public List<SelectItem> technicalSummaryDropDownValues(){
+		log.debug("technicalSummaryDropDownValues");
+		List<SelectItem> selectItems = new ArrayList<SelectItem>();
+		selectItems.add(new SelectItem(null, ResourceBundleUtils
+				.getMessage("lbl.txt.select",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale())));
+	//boolean medicineCategoryCode=isMultipleProposalCategory(this.getManagedBean().getScQt(), null);
+	//medicineCategoryCode=false;
+	//log.info("finanialSummaryDropDownValues medicineCategoryCode"+medicineCategoryCode);
+	if(SourcingConstants.EVALUATE_BY_BOTH_PACKAGE_ITEM.equalsIgnoreCase(this.getManagedBean().getScQt().getEvaluateBy())){
+		selectItems.add(new SelectItem(QTConstants.TECHNICAL_SUMMARY_PACKAGE_MARGIN, ResourceBundleUtils
+				.getMessage("lbl.sc.evaluation.view.by.package.preference.margin",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale())));
+	}
+		selectItems.add(new SelectItem(QTConstants.TECHNICAL_SUMMARY_ITEM, ResourceBundleUtils
+				.getMessage("lbl.sc.evaluation.view.by.item.preference.margin",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale())));
+		return selectItems;
+	}
+	/** #21695 Farid END*/
 	
 	/**
 	 * To add empty row to document data table.
