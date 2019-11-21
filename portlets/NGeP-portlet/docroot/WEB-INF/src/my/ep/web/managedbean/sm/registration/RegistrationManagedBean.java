@@ -140,6 +140,8 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private boolean showDirector=false;
 	private boolean showDirectorInOwner=false;
 	private boolean disableRole=false;
+	private boolean disableEquity=false;
+	private boolean disableStaff=false;
 	//26238 - Disciplinary Action
 	private boolean warning;
 	private boolean suspendRegistration;
@@ -917,6 +919,22 @@ public class RegistrationManagedBean extends BaseManagedBean {
 
 	public void setShowOwnerPersonnel(boolean showOwnerPersonnel) {
 		this.showOwnerPersonnel = showOwnerPersonnel;
+	}
+
+	public boolean isDisableEquity() {
+		return disableEquity;
+	}
+
+	public void setDisableEquity(boolean disableEquity) {
+		this.disableEquity = disableEquity;
+	}
+
+	public boolean isDisableStaff() {
+		return disableStaff;
+	}
+
+	public void setDisableStaff(boolean disableStaff) {
+		this.disableStaff = disableStaff;
 	}
 
 }
