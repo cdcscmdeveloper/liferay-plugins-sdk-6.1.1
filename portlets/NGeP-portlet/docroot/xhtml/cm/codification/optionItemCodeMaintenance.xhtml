@@ -207,24 +207,13 @@
 			
 			</p:panelGrid>
 		</p:panel>
-        
-        <p:confirmDialog style="font-size:14px;height:20px;text-align: left;"
-		           header="#{lbl['lbl.cm.dialog.cofirm.header']}" 
-                   message="#{lbl['lbl.cm.dialog.message.item.code.maintenance']}" 
-                   showEffect="fade"
-                   hideEffect="fade" 
-                   widgetVar="updateData">
-        <div style="text-align: right;">
-            <p:commandButton 
-                     value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
-                     action="#{codificationMaintenanceBackingBean.SubmitUpdateData}"
-                     oncomplete="updateData.hide()" 
-                     update=":form"/>
-            <p:commandButton
-                     value="#{lbl['lbl.btn.no']}"
-                     oncomplete="updateData.hide()"/>
-                     </div>
-		</p:confirmDialog>
+
+			<ac:confirmationPopup id="updateData" widget="updateData"
+				okAction="codificationMaintenanceBackingBean.SubmitUpdateData()"
+				width="400" height="100"
+				title="#{lbl['lbl.cm.dialog.cofirm.header']}"
+				content="#{lbl['lbl.cm.dialog.message.item.code.maintenance']}"
+				update=":form" />
 		</h:panelGroup>
 	
 
