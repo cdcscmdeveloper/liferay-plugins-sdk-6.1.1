@@ -272,9 +272,9 @@
 			
 			<div class="clear"></div>
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.search']}"
+				<p:commandButton value="#{lbl['lbl.btn.search']}" validateClient="true"
 					action="#{yearEndProcessBackingBean.searchYep}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-					update="resultPanel" />
+					update="flYepList" />
 				<p:commandButton value="#{lbl['lbl.btn.reset']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 					action="#{yearEndProcessBackingBean.searchReset}" 
 					update=":form"  title="#{lbl['lbl.fl.tooltip.doc.maintain.reset']}"/>
