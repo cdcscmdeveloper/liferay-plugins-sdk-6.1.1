@@ -27,6 +27,7 @@ public class DisciplinaryActionVO implements Serializable {
 	private List<DisciplinaryActionVO> disciplinaryActionVoList;
 	private List<DisciplinaryActionCategoryVO> categoryCodeList;
 	private List<BlacklistOwnerDirectorVO> blacklistownerDirectorList;
+	private boolean mofNoExist;
 
 	public SmDisciplinaryAction getSmDiscplinaryAction() {
 		return smDiscplinaryAction;
@@ -170,6 +171,14 @@ public class DisciplinaryActionVO implements Serializable {
 
 	public void setBlacklistownerDirectorList(List<BlacklistOwnerDirectorVO> blacklistownerDirectorList) {
 		this.blacklistownerDirectorList = blacklistownerDirectorList;
+	}
+
+	public boolean isMofNoExist() {
+		return mofNoExist;
+	}
+
+	public void setMofNoExist(boolean mofNoExist) {
+		this.mofNoExist = mofNoExist;
 	}
 
 }
