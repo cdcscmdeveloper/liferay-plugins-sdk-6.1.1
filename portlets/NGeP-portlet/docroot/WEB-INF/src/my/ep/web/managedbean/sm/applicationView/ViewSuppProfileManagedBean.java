@@ -82,6 +82,7 @@ public class ViewSuppProfileManagedBean extends
 	private SmSupplier smSupp; 
 	private boolean viewMode; 
 	private boolean disciplinaryAction;
+	private boolean mofNoExist;
 	
 	private SmSupplierBank[] selectedSuppBanks;
 	private List<PmFinancialOrg> financialOrgLs;
@@ -772,5 +773,13 @@ public class ViewSuppProfileManagedBean extends
 	public void setWarningExist(boolean warningExist) {
 		this.warningExist = warningExist;
 	} //26238 - END
+
+	public boolean isMofNoExist() {
+		return mofNoExist;
+	}
+
+	public void setMofNoExist(boolean mofNoExist) {
+		this.mofNoExist = mofNoExist;
+	}
 	
 }
