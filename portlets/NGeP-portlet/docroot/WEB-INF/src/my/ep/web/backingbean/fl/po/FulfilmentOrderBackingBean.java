@@ -142,8 +142,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		debugLogger("start of close manual payment");
 		IFulfilmentOrderSO fulfilementOrderSO = null;
 		FulfilmentResDTO resDTO = null;
-		String messagePrefix = "";
-		String messageSuffix = "";
+		
 		
 		try{
 			fulfilementOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);

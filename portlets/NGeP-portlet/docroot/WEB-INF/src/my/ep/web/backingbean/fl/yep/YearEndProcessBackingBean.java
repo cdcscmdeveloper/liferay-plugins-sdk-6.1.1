@@ -81,6 +81,7 @@ public class YearEndProcessBackingBean extends
 		// reset everything to false
 		this.getManagedBean().setCheckDocType(false);
 		resetSearchCriteria();
+		this.getManagedBean().setSearchAp58(true);
 		if (docType != null) {
 			if (docType.equals(ParameterConst.DOCTYPE_CONTRACT_ORDER)) {
 				this.getManagedBean().setCheckDocType(true);
@@ -93,7 +94,27 @@ public class YearEndProcessBackingBean extends
 	 * Reset search criteria.
 	 */
 	private void resetSearchCriteria() {
-		/** to be implemented */
+		getManagedBean().setSearchOrderNo(null);
+		getManagedBean().setSearchTitle(null);
+		getManagedBean().setSearchDocType(null);
+		getManagedBean().setStatusDescId(null);
+		getManagedBean().setSearchAp58(null);
+		getManagedBean().setSearchCarryFoward(null);
+		getManagedBean().setSearchCloseMnualPay(null);
+		getManagedBean().setSearchNonAction(null);
+		getManagedBean().setSearchStartDate(null);
+		getManagedBean().setSearchToDate(null);
+		getManagedBean().setSearchSuppName(null);
+		getManagedBean().setSearchPhysLoaNo(null);
+		
+		getManagedBean().setSearchCentralPanelContractName(null);
+		getManagedBean().setSearchCircularNo(null);
+		getManagedBean().setSearchLoaNo(null);
+		getManagedBean().setSearchPhysLoaNo(null);
+		getManagedBean().setSearchContractNo(null);
+		getManagedBean().setSearchPhysContractNo(null);
+		getManagedBean().setSearchContractFromDuration(null);
+		getManagedBean().setSearchContractToDuration(null);
 	}
 
 	/**
@@ -104,7 +125,7 @@ public class YearEndProcessBackingBean extends
 	public static List<SelectItem> getFinancialYearOpt() {
 		int years = 0;
 		List<SelectItem> financialYearOpt = new ArrayList<SelectItem>();
-		for (Integer i = 0; i < 7; i++) {
+		for (Integer i = 0; i < 2; i++) {
 			years = CommonMethod.getYear(-i);
 			financialYearOpt
 					.add(new SelectItem(years, Integer.toString(years)));
@@ -182,7 +203,8 @@ public class YearEndProcessBackingBean extends
 	
 	
 	public void searchYep(){
-		
+//		renewSesionObject();
+//		resetSearchCriteria();
 		getManagedBean().getFlYepDataModel().reloadData();
 		
 	}
