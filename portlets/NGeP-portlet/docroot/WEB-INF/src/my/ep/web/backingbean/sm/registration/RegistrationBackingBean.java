@@ -466,6 +466,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 		}
 		//#16052019 - SSM INTEGRATION CR  - Check validation. Start		
+		
 		if(this.getManagedBean().isCompanyValidWithSSM()){
 			if(this.getManagedBean().getSmSuppOwners() != null){
 				for(SmSupplierOwner suppOwner:this.getManagedBean().getSmSuppOwners()){
@@ -570,7 +571,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				}
 			}
 		}
-		
+		listenerChangeRole();
 		//#16052019 - SSM INTEGRATION CR  - Check validation. End
 		
 		checkExistingBusinessRegNo();
@@ -3941,6 +3942,22 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			this.getManagedBean().setNoDisciplinary(true);
 		}
 	} //26238 - end
+	
+	//16052019 - SSM INTEGRATION CR => START
+	public void listenerChangeRole(){
+		if(this.getManagedBean().getSmPersonnel()!=null){
+			if(this.getManagedBean().getSmPersonnel().isEquityOwner()){
+				this.getManagedBean().setDisableStaff(true);
+				this.getManagedBean().getSmPersonnel().setClerical(false);
+			}else if(!this.getManagedBean().getSmPersonnel().isEquityOwner()){
+				this.getManagedBean().setDisableStaff(false);
+				this.getManagedBean().setDisableEquity(false);				
+			}else if(this.getManagedBean().getSmPersonnel().isClerical()){
+				this.getManagedBean().setDisableStaff(false);
+				this.getManagedBean().setDisableEquity(false);
+			}
+		}
+	}
 }
 
 
