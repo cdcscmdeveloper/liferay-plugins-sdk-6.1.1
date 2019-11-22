@@ -85,6 +85,7 @@ import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
@@ -7125,5 +7126,26 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 		return false;
 	}
+	
+	
+	/* 19336#99 - start */
+	public String getManagedBeanLoaContractAgencyOrgName(){
+		try{
+			return getManagedBean().getScLoa().getContractAgency().getOrgName();
+		}
+		catch(Exception ex){
+			return "";
+		}
+	}
+	
+	public String getManagedBeanSelectedPtjOrgName(){
+		try{
+			return getManagedBean().getSelectedPtj().getOrgName();
+		}
+		catch(Exception ex){
+			return "";
+		}
+	}
+	/* 19336#99 - end */
 }
 
