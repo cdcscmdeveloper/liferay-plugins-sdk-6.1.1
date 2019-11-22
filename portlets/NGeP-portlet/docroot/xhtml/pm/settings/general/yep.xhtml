@@ -58,11 +58,11 @@
 			<p:calendar showOn="button" id="orgTypefeeeffDateId" navigator="true"
 				yearRange="#{DateUtils.getCalendarMaxYearRange(feeObj.effDate)}"
 				style="width :100px;" required="true"
-				maxdate="#{ruleCatalogueBackingBean.managedBean.maxDate}"
+				mindate="#{ruleCatalogueBackingBean.managedBean.today}"
 				label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 				value="#{feeObj.effDate}">
-				<p:ajax event="dateSelect" update="orgTypefeeeffDateId,@this" process="@this" />
+				<p:ajax event="dateSelect" partialSubmit="true" listener="#{ruleCatalogueBackingBean.setMinDateMaxDate(feeObj.effDate)}" update="@this,orgTypefeeexpDateId" process="@this" />
 			</p:calendar>
 		</p:column>
 
@@ -73,8 +73,7 @@
 			<p:calendar showOn="button" id="orgTypefeeexpDateId" navigator="true"
 				yearRange="#{DateUtils.getCalendarMaxYearRange(feeObj.expDate)}"
 				style="width :100px;"
-				mindate="#{ruleCatalogueBackingBean.managedBean.today}"
-				maxdate="#{ruleCatalogueBackingBean.managedBean.maxDate}"
+				mindate="#{ruleCatalogueBackingBean.managedBean.minDate}"				
 				label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 				value="#{feeObj.expDate}"
