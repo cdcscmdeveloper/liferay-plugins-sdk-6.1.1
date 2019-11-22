@@ -705,7 +705,7 @@
 			<ui:include src="/xhtml/sm/shared/onlinereg/bankInfo.xhtml" />
 			</p:outputPanel>
 			
-			<ac:disciplinaryActionHistory voList="#{supplierDataMaintenanceBackingBean.managedBean.disciplineVOs}" />
+			<ac:disciplinaryActionHistory basicView="false" voList="#{supplierDataMaintenanceBackingBean.managedBean.disciplineVOs}" />
 			
 			<p:confirmDialog id="confirmDialog" closable="true"
 				message="#{lbl['lbl.sm.supp.data.maintenance.submitoconfirm.msg']}"
