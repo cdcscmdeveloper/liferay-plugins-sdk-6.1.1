@@ -15,30 +15,22 @@
 			<p:outputPanel rendered="#{viewSuppProfileBackingBean.managedBean.supplierUser}">
 				<tr>
 					<td>
-						<p:outputLabel value="#{lbl['lbl.sm.companyname']}" rendered="#{!viewSuppProfileBackingBean.managedBean.isG2GSupplierAdmin()}"/>
-						<p:outputLabel value="#{lbl['lbl.sm.agency.name']}" rendered="#{viewSuppProfileBackingBean.managedBean.isG2GSupplierAdmin()}"/>
+						<p:outputLabel value="#{lbl['lbl.sm.companyname']}" />
 					</td>
 					<td>
 						<p:inputText label="#{lbl['lbl.sm.companyname']}"
 							value="#{viewSuppProfileBackingBean.managedBean.searchSupplier.companyName}"
-							size="40" disabled="true" rendered="#{!viewSuppProfileBackingBean.managedBean.isG2GSupplierAdmin()}"/>
-						<p:inputText label="#{lbl['lbl.sm.agency.name']}"
-							value="#{viewSuppProfileBackingBean.managedBean.searchSupplier.companyName}"
-							size="40" disabled="true" rendered="#{viewSuppProfileBackingBean.managedBean.isG2GSupplierAdmin()}"/>
+							size="40" disabled="true"/>
 					</td>
 				</tr>
 				<tr>
 					<td>
-						<p:outputLabel value="#{lbl['lbl.sm.rocNo']}" rendered="#{!viewSuppProfileBackingBean.managedBean.isG2GSupplierAdmin()}"/>
-						<p:outputLabel value="#{lbl['lbl.sm.agency.type']}" rendered="#{viewSuppProfileBackingBean.managedBean.isG2GSupplierAdmin()}"/>
+						<p:outputLabel value="#{lbl['lbl.sm.rocNo']}" />
 					</td>
 					<td>
 						<p:inputText label="#{lbl['lbl.sm.rocNo']}"
 							value="#{viewSuppProfileBackingBean.managedBean.searchSupplier.regNo}"
-							size="35" disabled="true" rendered="#{!viewSuppProfileBackingBean.managedBean.isG2GSupplierAdmin()}"/>
-						<p:inputText label="#{lbl['lbl.sm.agency.type']}"
-							value="#{viewSuppProfileBackingBean.managedBean.agencyTypeName}"
-							size="35" disabled="true" rendered="#{viewSuppProfileBackingBean.managedBean.isG2GSupplierAdmin()}"/>
+							size="35" disabled="true"/>
 					</td>
 				</tr>
 				<tr>
@@ -55,52 +47,12 @@
 			
 			<p:outputPanel rendered="#{!viewSuppProfileBackingBean.managedBean.supplierUser}">
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.account.type']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
-						<td>
-							<p:selectOneMenu label="#{lbl['lbl.sm.account.type']}" required="true"
-								id="accountTypeId" value="#{viewSuppProfileBackingBean.managedBean.searchAccountType}"
-								style="width: 207px;margin-bottom: 5px;" valueChangeListener="#{viewSuppProfileBackingBean.resetInputOnChangeAccountType()}">
-								<f:selectItem itemLabel="#{lbl['lbl.txt.please.select']}" itemValue="" />
-								<f:selectItem itemLabel="#{lbl['lbl.sm.account.type.basic']}" itemValue="#{SupplierManagementConst.SUPP_TYPE_BASIC}" />
-								<f:selectItem itemLabel="#{lbl['lbl.sm.account.type.g2g']}" itemValue="#{SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT}"/>
-								<f:selectItem itemLabel="#{lbl['lbl.sm.account.type.mof']}" itemValue="M" />
-								<p:ajax event="change" process="@this" 
-								update=":form" />
-							</p:selectOneMenu>
-							<p:message id="accountTypeIdMsg" for="accountTypeId" display="icon" />
-						</td>
-					</tr>
-					<p:outputPanel id="g2gOnly" rendered="#{viewSuppProfileBackingBean.managedBean.searchAccountType eq SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT}">
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.agency.type']}" /><p:outputLabel value="*" styleClass="mandatory" id="agencyTypeLbl" /></td>
-						<td><p:selectOneMenu required="true" label="#{lbl['lbl.sm.agency.type']}"
-								value="#{viewSuppProfileBackingBean.managedBean.agencyType}" id="agencyTypeId">
-								<f:selectItems value="#{viewSuppProfileBackingBean.getAgencyTypeDropdownValues()}" />
-							</p:selectOneMenu>
-							<p:message id="agencyTypeIdMsg" for="agencyTypeId" display="icon" />
-						</td>
-					</tr>
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.agency.name']}" /></td>
-						<td>
-							<p:inputText id="agencyNameId"
-								label="#{lbl['lbl.sm.agency.name']}"
-								value="#{viewSuppProfileBackingBean.managedBean.agencyName}"
-								size="35" maxlength="255" />&#160; 
-							<p:graphicImage id="agencyNameImg" value="/css/images/design/tooltips.png" /> 
-							<p:tooltip id="agencyNameTt" for="agencyNameImg">
-								<p:outputLabel escape="false" value="#{lbl['lbl.search.agency.prefix.three.char']}" />
-							</p:tooltip>
-						</td>
-					</tr>
-					</p:outputPanel>
-					<p:outputPanel id="mofOnly" rendered="#{viewSuppProfileBackingBean.managedBean.searchAccountType eq 'M'}">
-					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.pm.supplier.zone']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 						<td>
 							<p:selectOneMenu label="#{lbl['lbl.pm.supplier.zone']}" required="true"
 								id="zoneId" value="#{viewSuppProfileBackingBean.managedBean.searchPmZoneId}"
-								style="width: 207px;margin-bottom: 5px;" disabled="#{viewSuppProfileBackingBean.managedBean.loginUserZone.zoneCode != null and viewSuppProfileBackingBean.managedBean.viewSupplierMaintenancePage and viewSuppProfileBackingBean.managedBean.loginUserZone.zoneCode ne '1'}">
+								style="width: 207px;margin-bottom: 5px;"
+								disabled="#{viewSuppProfileBackingBean.managedBean.viewSupplierMaintenancePage and viewSuppProfileBackingBean.managedBean.loginUserZone.zoneCode ne '1'}" >
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems
 									value="#{viewSuppProfileBackingBean.managedBean.zoneList}" var="zone"
@@ -145,8 +97,6 @@
 								size="35" maxlength="14" />
 						</td>
 					</tr>
-					</p:outputPanel>	
-					<p:outputPanel rendered="#{viewSuppProfileBackingBean.managedBean.searchAccountType != null and viewSuppProfileBackingBean.managedBean.searchAccountType.trim() ne ''}">		
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.epno']}" /></td>
 						<td>
@@ -156,10 +106,6 @@
 								size="35" maxlength="14" />
 						</td>
 					</tr>
-					</p:outputPanel>
-					<p:outputPanel  id="mofOrBasicOnly" 
-					rendered="#{viewSuppProfileBackingBean.managedBean.searchAccountType eq SupplierManagementConst.SUPP_TYPE_BASIC
-					 or viewSuppProfileBackingBean.managedBean.searchAccountType eq 'M'}">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.companyname']}" /></td>
 						<td>
@@ -214,7 +160,7 @@
 							</td>
 						</tr>
 					</p:outputPanel>
-					</p:outputPanel>				
+				
 					<tr>
 						<td colspan="2">
 							<div style="text-align: right;">
