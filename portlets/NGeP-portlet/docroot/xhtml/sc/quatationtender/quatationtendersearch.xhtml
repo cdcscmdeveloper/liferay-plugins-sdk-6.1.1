@@ -35,13 +35,13 @@
 	</p:panel>
 	
 		<c:choose>
-			<c:when test="#{qTDetailBB.managedSearchBeanDocTypeIsLOAAndPrefixLAAndIsDO}">
+			<c:when test="#{qTDetailBB.managedSearchBeanDocumentTypeIsLOA}">
 				<c:set var="tableHeader" value="#{lbl['lbl.sc.loiloa.loalist']}" scope="view" />
 				<c:set var="itemNoHeader" value="#{lbl['lbl.sc.loiloa.loa.no']}" scope="view" />
 				<c:set var="listType" value="loaList" scope="view" />
 				<c:set var="dataModelLoiLoa" value="#{qTDetailBB.searchLoaForQtDataModel}" scope="view" />
 			</c:when>
-			<c:when test="#{qTDetailBB.managedSearchBeanDocTypeIsLOIAndPrefixLIAndIsDO}">
+			<c:when test="#{qTDetailBB.managedSearchBeanDocumentTypeIsLOI}">
 				<c:set var="tableHeader" value="#{lbl['lbl.sc.loiloa.loilist']}" scope="view" />
 				<c:set var="itemNoHeader" value="#{lbl['lbl.sc.loiloa.loi.no']}" scope="view" />
 				<c:set var="listType" value="loiList" scope="view" /> 
