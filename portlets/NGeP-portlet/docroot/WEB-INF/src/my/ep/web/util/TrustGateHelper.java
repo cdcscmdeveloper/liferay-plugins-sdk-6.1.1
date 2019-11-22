@@ -50,7 +50,14 @@ public class TrustGateHelper {
 		String filePath = substring + SPKIConst.TRUSTGATE_CONFIG_FILE_PATH;
 
 		File f = new File(filePath);
-		KMCClient client = KMCClientFactory.getInstance(f);
+		KMCClient client=null;
+		try {
+			client = KMCClientFactory.getInstance(f);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			log.info("Error while getKMCClient");
+			e.printStackTrace();
+		}
 		return client;
 	}
 
