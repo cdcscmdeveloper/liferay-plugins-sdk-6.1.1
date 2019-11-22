@@ -934,6 +934,22 @@ public class TaskReassignmentBackingBean extends
 		}
 		reloadAllTaskList();
 		
+		
+		this.getManagedBean().setBpkAdminUser(checkBpkAdminSameUser());
+		if(this.getManagedBean().isBpkAdminUser()) {
+			//disable check box for user task
+			this.getManagedBean().setCheckAllUserTasksEnabled(false);
+			//disable check box for group task
+			this.getManagedBean().setCheckAllGroupTasksEnabled(false);
+			//disable button for group task
+			this.getManagedBean().setEnableDeleteGroupTasksButton(false);
+			//disable check box for other task
+			this.getManagedBean().setCheckAllOthersTasksEnabled(false);
+			//disable button for other task
+			this.getManagedBean().setEnableDeleteOthersTasksButton(false);
+		}
+		
+		
 	}
 	
 	public void resetReassigneeList() {
@@ -2625,7 +2641,7 @@ public class TaskReassignmentBackingBean extends
 		switch (reassignType) {
 		case ProfileManagementConst.REASSIGN_TYPE_COMMON:
 			//1 - Normal Reassignment
-
+			
 			//check because to allow cross org profile for market research #10927
 			if(task.getDocStatus().longValue() != ProfileManagementStatusConst.PENDING_MARKET_RESEARCH_ACCESS_APPROVAL.longValue()) {
 				
@@ -2864,6 +2880,12 @@ public class TaskReassignmentBackingBean extends
 			if (roleList == null || roleList.isEmpty()) {
 				roleList = retrieveAvailableRoles(task.getDocStatus()
 						.longValue(),reassignType,subReassignType);
+				//--10927
+				if (getFacesScopes().hasRoleUser(RoleCode.BPK_ADMIN.value())){
+					roleList.remove(RoleCode.EP_ADMIN_2.value());
+					System.out.println("Remove EpAdmin2::::::::::::::::::");
+				}
+				//--10927
 			}
 
 			if (!roleList.isEmpty()) {
@@ -3653,6 +3675,35 @@ public class TaskReassignmentBackingBean extends
 							if (DbValueConst.RECORD_STATUS_ACTIVE == userRole.getRecordStatusFlg() 
 									&& !(userRole.getPmRole().getRoleCode().equals(RoleCode.BPK_ADMIN.value()))) {								
 								log.info("[#22117] - BPK_ADMIN has other role!!");
+								isBpkAdmin = true;							
+								break;
+							}						
+						}
+					}				
+				}
+			}
+		}		
+		return isBpkAdmin;			
+	}
+	
+	public boolean checkBpkAdminSameUser() {
+		log.info("checkBpkAdminSameUser - Start");
+		boolean isBpkAdmin = false;
+		
+		if (getFacesScopes().hasRoleUser(RoleCode.BPK_ADMIN.value())) {			
+			if(getFacesScopes().getUserSessionBean().getLoginId().equals(this.getManagedBean().getSelectedReassignee().get(0))) {
+				isBpkAdmin = true;
+				log.info("retrieve BPK_ADMIN role----");
+				List<PmUserOrg> userOrgList = PmCommonUtil.retrieveActiveOrg(getFacesScopes().getUserSessionBean().getUserId());
+				log.info("BPK_ADMIN org size: ----" + userOrgList.size());
+				if(userOrgList != null && userOrgList.size() > 0) {
+					PmUserOrg userOrg = userOrgList.get(0);
+					if(userOrg != null && userOrg.getPmUserRoles() != null && userOrg.getPmUserRoles().size() > 0) {
+						for (PmUserRole userRole : userOrg.getPmUserRoles()) {
+							log.info(" BPK_ADMIN role: --" + userRole.getPmRole().getRoleCode());
+							if (DbValueConst.RECORD_STATUS_ACTIVE == userRole.getRecordStatusFlg() 
+									&& !(userRole.getPmRole().getRoleCode().equals(RoleCode.BPK_ADMIN.value()))) {								
+								log.info(" BPK_ADMIN has other role!!---");
 								isBpkAdmin = true;							
 								break;
 							}						
