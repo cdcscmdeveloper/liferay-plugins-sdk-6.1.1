@@ -110,7 +110,7 @@
 						<td><p:selectOneMenu style="width: 283px;margin-bottom: 5px;"
 								value="#{qTCloneBackingbean.managedBean.cloneQtnTenderSearchBean.qtStatus}">
 								<f:selectItems
-									value="#{qTDetailBB.getStatusDropdownValuesByIds(60003, 60024, 60002)}" />
+									value="#{qTDetailBB.getStatusDropdownValuesWithExclusions('SC', 'QT',60002)}" />
 							</p:selectOneMenu></td>
 						<td />
 						<td />
