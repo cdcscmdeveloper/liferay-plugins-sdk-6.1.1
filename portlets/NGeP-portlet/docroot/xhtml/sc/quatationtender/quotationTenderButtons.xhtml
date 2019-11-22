@@ -9,7 +9,7 @@
 	
 	<ui:param name="isQTStatusPendingQtSubmission" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_QT_SUBMISSION}" />
 	<ui:param name="isQTStatusPendingScheduleAndBefore" value="#{qTDetailBB.isQTStatusLessThanOrEquals(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
-			
+	<ui:param name="isClone" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_QT_SUBMISSION or qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT}" />		
 		<table width="100%">
 		<tr>
 		<td style="vertical-align: bottom;" align="right"><p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
@@ -103,7 +103,7 @@
 						</c:otherwise>
 				</c:choose>
 				
-				<p:commandButton value="#{lbl['lbl.btn.clone']}" style="float:right;" id="cloneButton"
+				<p:commandButton value="#{lbl['lbl.btn.clone']}" style="float:right;" id="cloneButton" rendered="#{isClone}"
 											process="@this" partialSubmit="true" update="pnlid2"
 											action="#{qTCloneBackingbean.cloneCommitteePopupAction}"
 											title="#{lbl['lbl.sc.qt.committee.btn.clone.tooltip']}" />

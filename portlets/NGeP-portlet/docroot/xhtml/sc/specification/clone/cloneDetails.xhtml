@@ -110,7 +110,7 @@
 						<td><p:selectOneMenu style="width: 283px;margin-bottom: 5px;"
 								value="#{qtSpecCloneBackingBean.managedBean.cloneQtnTenderSearchBean.qtStatus}">
 								<f:selectItems
-									value="#{qTDetailBB.getStatusDropdownValuesByIds(60004,60003, 60024, 60002)}" />
+									value="#{qTDetailBB.getStatusDropdownValuesWithExclusions('SC', 'QT',60002,60024,60003)}" />
 							</p:selectOneMenu></td>
 						<td />
 						<td />
@@ -183,19 +183,19 @@
 
 				</p:dataTable>
 				<br />
-				<ui:fragment
+				<!--ui:fragment
 					rendered="#{qtSpecCloneBackingBean.managedBean.cloneCommitteeSelectQt ne null}">
 					#{qtSpecCloneBackingBean.managedBean.cloneCommitteeSelectQt.qtNo}
-				</ui:fragment>
+				</ui:fragment-->
 
-				<p:tree value="#{qtSpecCloneBackingBean.root}" var="node" rendered="#{qtSpecCloneBackingBean.showTree}"
+				<!--  p:tree value="#{qtSpecCloneBackingBean.root}" var="node" rendered="#{qtSpecCloneBackingBean.showTree}"
                         selection="#{qtSpecCloneBackingBean.selectedNodes}"
 					selectionMode="checkbox">
 					<p:treeNode>
 			<h:outputText value="#{node}"/>
 		</p:treeNode>
 					
-				</p:tree>
+				</p:tree-->
 
 
 				<div class="ppRightBtn">
