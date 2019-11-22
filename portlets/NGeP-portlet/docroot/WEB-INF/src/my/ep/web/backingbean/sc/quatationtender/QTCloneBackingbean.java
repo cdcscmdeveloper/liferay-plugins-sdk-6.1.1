@@ -101,26 +101,55 @@ public class QTCloneBackingbean extends
 	private static final String SUPPLIER_QUALIFICATION_CRITERIA = "lbl.sc.supplier.qulification.criteria";
 	private static final String COMMITTEE_APPOINTMENT = "lbl.sc.qt.committee.appointment";
 	private static final String APPROVAL = "lbl.sc.approval";
+	
+	/**
+	 * lbl.sc.qt.briefing.sv
+	 * lbl.sc.qt.schedule.contact
+	 * lbl.sc.deduction.payment
+	 * lbl.sc.qt.documents
+	 * lbl.sc.qt.public.approval
+	 */
+	private static final String BRIEFING = "lbl.sc.qt.briefing.sv";
+	private static final String PUBLISHING = "lbl.sc.qt.schedule.contact";
+	private static final String PAYMENT = "lbl.sc.deduction.payment";
+	private static final String DOCUMENT = "lbl.sc.qt.documents";
+	private static final String PUBLICATION_APPROVAL = "lbl.sc.qt.public.approval";
+	
+	
 
 	/**
 	 * Instantiates a new QT committe backing bean.
 	 */
 	public QTCloneBackingbean() {
-
+		Long statusId=this.getManagedBean().getQt().getQtStatus().getStatusId();
 		this.root = new DefaultTreeNode("Root Node", null);
 
 		TreeNode child = new DefaultTreeNode(new QTSelectionNode(getLabel(ALL),0L), this.root);
 		child.setParent(this.root);
-
-		TreeNode descendent1 = new DefaultTreeNode(new QTSelectionNode(getLabel(QT_DETAILS),1L), child);
-		descendent1.setParent(child);
-		TreeNode descendent2 = new DefaultTreeNode(new QTSelectionNode(getLabel(SUPPLIER_QUALIFICATION_CRITERIA),2L), child);
-		descendent2.setParent(child);
-		TreeNode descendent3 = new DefaultTreeNode(new QTSelectionNode(getLabel(COMMITTEE_APPOINTMENT),3L), child);
-		descendent3.setParent(child);
-		TreeNode descendent4 = new DefaultTreeNode(new QTSelectionNode(getLabel(APPROVAL),4L), child);
-		descendent4.setParent(child);
-
+		
+		if(QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(statusId)){
+			TreeNode descendent1 = new DefaultTreeNode(new QTSelectionNode(getLabel(QT_DETAILS),1L), child);
+			descendent1.setParent(child);
+			TreeNode descendent2 = new DefaultTreeNode(new QTSelectionNode(getLabel(SUPPLIER_QUALIFICATION_CRITERIA),2L), child);
+			descendent2.setParent(child);
+			TreeNode descendent3 = new DefaultTreeNode(new QTSelectionNode(getLabel(COMMITTEE_APPOINTMENT),3L), child);
+			descendent3.setParent(child);
+			TreeNode descendent4 = new DefaultTreeNode(new QTSelectionNode(getLabel(APPROVAL),4L), child);
+			descendent4.setParent(child);
+		}
+		if(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId)){
+			TreeNode descendent5 = new DefaultTreeNode(new QTSelectionNode(getLabel(BRIEFING),5L), child);
+			descendent5.setParent(child);
+			TreeNode descendent6 = new DefaultTreeNode(new QTSelectionNode(getLabel(PUBLISHING),6L), child);
+			descendent6.setParent(child);
+			TreeNode descendent7 = new DefaultTreeNode(new QTSelectionNode(getLabel(PAYMENT),7L), child);
+			descendent7.setParent(child);
+			TreeNode descendent8 = new DefaultTreeNode(new QTSelectionNode(getLabel(DOCUMENT),8L), child);
+			descendent8.setParent(child);
+			TreeNode descendent9 = new DefaultTreeNode(new QTSelectionNode(getLabel(PUBLICATION_APPROVAL),9L), child);
+			descendent9.setParent(child);
+		}
+		
 		if (null == this.getManagedBean().getCommitteMember()) {
 			this.getManagedBean().setCommitteMember(new ScCommitteeMember());
 		}
@@ -327,13 +356,13 @@ public class QTCloneBackingbean extends
 						new SearchFilterBean("scQtStatus.current",
 								SearchOperator.OPERATOR_EQUALS.value(), true));
 			}else{
-				Long[] stats= {60003L, 60024L, 60002L};
+				Long[] stats= {60002L};
 				ArrayList<Long> s=new ArrayList<Long>(Arrays.asList(stats));
 				qtSearchBean
 				.getDataFilterBeans()
 				.add(new SearchFilterBean(
 						"scQtStatus.pmStatus.statusId",
-						SearchOperator.OPERATOR_IN.value(), s));
+						SearchOperator.OPERATOR_NOT_IN.value(), s));
 				qtSearchBean.getDataFilterBeans().add(
 						new SearchFilterBean("scQtStatus.current",
 								SearchOperator.OPERATOR_EQUALS.value(), true));
