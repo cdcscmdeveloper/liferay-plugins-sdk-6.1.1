@@ -58,6 +58,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
+import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
@@ -540,6 +541,10 @@ public class QTCloneBackingbean extends
 					if(selection.getValue().equals(5L)){
 						retrieveBrief(copyScqt);
 					}
+					if(selection.getValue().equals(6L)){
+						retrievePublishing(copyScqt);
+					}
+					
 				}
 				
 			}
@@ -549,6 +554,65 @@ public class QTCloneBackingbean extends
 			QtDetailsSO = null;
 		}
 		RequestContext.getCurrentInstance().execute("screen3.hide()");
+	}
+	
+	private void retrievePublishing(ScQt copyScqt){
+		ScQt qt = this.getManagedBean().getQt();
+		IQTDetailSO detailSO=null;
+		try{
+			detailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			// reqDTO.setQtId(getManagedBean().getQt().getQtId());
+			reqDTO.setQtdetail(copyScqt);
+			QuationTenderResDTO resDTO = detailSO
+					.retriveQTScheduleDetails(reqDTO);
+			
+			ISearchResultBean<ScQtContactPerson> contactPersons = resDTO
+					.getContactPersons();
+			List<ScQtContactPerson> qtContactPersons = contactPersons
+					.getResultList();
+			if (qtContactPersons != null || !qtContactPersons.isEmpty()) {
+				List<ScQtContactPerson> persons=new ArrayList<ScQtContactPerson>();
+				for(ScQtContactPerson origin:qtContactPersons){
+					ScQtContactPerson copy=populateContact(origin,SourcingConstants.OFFICER_TYPE_QT);
+					persons.add(copy);
+				}
+				this.getManagedBean().getScQtContactPersons().addAll(persons);
+			}
+			List<ScQtContactPerson> desks=resDTO.getDeskOfficers().getResultList();
+			if (desks != null || !desks.isEmpty()) {
+				List<ScQtContactPerson> persons=new ArrayList<ScQtContactPerson>();
+				for(ScQtContactPerson origin:desks){
+					ScQtContactPerson copy=populateContact(origin,SourcingConstants.OFFICER_TYPE_DOAA);
+					persons.add(copy);
+				}
+				this.getManagedBean().setPmuserContactpersonList(persons);
+			}
+			//
+		}finally{
+			detailSO=null;
+		}
+	}
+	
+	private ScQtContactPerson populateContact(ScQtContactPerson origin,String type){
+		ScQtContactPerson contactPerson = new ScQtContactPerson();
+		//PmUser user = new FacesScopes().getUserSessionBean();
+		contactPerson.setPhoneNo(origin.getPhoneNo());
+		//contactPerson.setUser(user);
+		contactPerson.setEmail(origin.getEmail());
+		contactPerson.setFaxNo(origin.getFaxNo());
+		contactPerson
+				.setOfficerType(type);
+		if(SourcingConstants.OFFICER_TYPE_DOAA.equals(type)){
+			contactPerson.setUser(origin.getUser());
+		}else{
+			contactPerson.setUser(new PmUser());
+		}
+		
+		contactPerson.setName(origin.getName());
+		contactPerson.setScQt(this.getManagedBean().getQt());
+		return contactPerson;
 	}
 	
 	private void retrieveBrief(ScQt copyScqt){
@@ -980,33 +1044,33 @@ public class QTCloneBackingbean extends
 		
 		
 		
-		if (copyScqt.isZonal()
-				&& null != this.getManagedBean().getZoneGeneralTrees()
-				&& this.getManagedBean().getZoneGeneralTrees()
-						.isEmpty()) {
-			if (null != copyScqt.getZoneLocationLevel()) {
-				this.getManagedBean().setStateCodes(
-						copyScqt.getZoneLocationLevel()
-								.getParameterCode());
-			}
-			
-			if (copyScqt.getScQtSupplierCriteria() != null &&
-					copyScqt.getScQtSupplierCriteria().getQtZoneCriterias() != null) {
-				List<TplSpecZoneDtl> specZoneDtls = copyScqt.getScQtSupplierCriteria().getQtZoneCriterias().getTplSpecZoneDtls();
-				populateZoneDetailIntoTreeNode(scQt, specZoneDtls);
-				// setting into zones bean to validate zones while adding 
-				if (CollectionUtils.isNotEmpty(specZoneDtls)) {
-					List<ZonesBean> zoneBeanLst = new ArrayList<ZonesBean>();
-					for (TplSpecZoneDtl specZoneDtl : specZoneDtls) {
-						ZonesBean bean = new ZonesBean();
-						bean.setTplSpecZoneDtl(specZoneDtl);
-						zoneBeanLst.add(bean);
-					}
-					this.getManagedBean().setBeans(zoneBeanLst);
-				}
-			}
-
-		}
+//		if (copyScqt.isZonal()
+//				&& null != this.getManagedBean().getZoneGeneralTrees()
+//				&& this.getManagedBean().getZoneGeneralTrees()
+//						.isEmpty()) {
+//			if (null != copyScqt.getZoneLocationLevel()) {
+//				this.getManagedBean().setStateCodes(
+//						copyScqt.getZoneLocationLevel()
+//								.getParameterCode());
+//			}
+//			
+//			if (copyScqt.getScQtSupplierCriteria() != null &&
+//					copyScqt.getScQtSupplierCriteria().getQtZoneCriterias() != null) {
+//				List<TplSpecZoneDtl> specZoneDtls = copyScqt.getScQtSupplierCriteria().getQtZoneCriterias().getTplSpecZoneDtls();
+//				populateZoneDetailIntoTreeNode(scQt, specZoneDtls);
+//				// setting into zones bean to validate zones while adding 
+//				if (CollectionUtils.isNotEmpty(specZoneDtls)) {
+//					List<ZonesBean> zoneBeanLst = new ArrayList<ZonesBean>();
+//					for (TplSpecZoneDtl specZoneDtl : specZoneDtls) {
+//						ZonesBean bean = new ZonesBean();
+//						bean.setTplSpecZoneDtl(specZoneDtl);
+//						zoneBeanLst.add(bean);
+//					}
+//					this.getManagedBean().setBeans(zoneBeanLst);
+//				}
+//			}
+//
+//		}
 		scQt.setProcurementTypeCatId(copyScqt.getProcurementTypeCatId());
 		scQt.setPmProcurementCategory(copyScqt.getPmProcurementCategory());
 		scQt.setEvaluationType(copyScqt.getEvaluationType());
