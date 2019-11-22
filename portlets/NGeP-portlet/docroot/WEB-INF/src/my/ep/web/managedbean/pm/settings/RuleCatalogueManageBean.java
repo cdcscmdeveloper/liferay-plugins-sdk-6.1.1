@@ -140,6 +140,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private String ptjCodeNameSearchValues;
 	private List<PmOrgProfile> ptjList;
 	private BigDecimal qtLimit;
+	private Date minDate = null; //[#22119]
 
 	public RuleCatalogueManageBean() {
 
@@ -1448,6 +1449,18 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	}
 	public void setAftertomorrow(Date aftertomorrow) {
 		this.aftertomorrow = aftertomorrow;
+	}
+	
+	public Date getMinDate() {
+		if (minDate == null) {
+			//get current date
+			minDate = Calendar.getInstance().getTime();
+		}
+		return minDate;
+	}
+	
+	public void setMinDate(Date minDate) {
+		this.minDate = minDate;
 	}
 	
 

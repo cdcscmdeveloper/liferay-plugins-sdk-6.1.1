@@ -5167,5 +5167,15 @@ public class RuleCatalogueBackingBean extends
 					MessageConst.ERROR_100003,
 					new String[] { "Date" });			
 		}
-	}	
+	}
+	
+	//[#22119]
+	public void setMinDateMaxDate(Date inputDate){
+		log.info("setMinDateMaxDate");
+		
+		if(inputDate != null) {			
+			log.info("[#22119] Selected date From: " + inputDate.toString());
+			this.getManagedBean().setMinDate(inputDate);
+		}		
+	}
 }
