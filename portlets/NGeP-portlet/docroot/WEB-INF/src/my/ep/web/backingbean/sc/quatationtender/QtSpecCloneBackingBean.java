@@ -51,6 +51,8 @@ import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtCheckListScore;
+import my.ep.persistence.entity.sc.quationtender.ScQtCheckListValue;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
@@ -182,6 +184,127 @@ public class QtSpecCloneBackingBean extends
 		this.getManagedBean().setCloneCommitteeSelectQt(scQt);
 		this.showTree = true;
 	}
+	
+	private ScQtCheckList retrieveScoreNValue(ScQtCheckList originCL,ScQtCheckList copyCL){
+		IQTSpecSO specSo = null;
+		SpecificationResDTO resDTO = null;
+		try{
+		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+		specSo = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+		reqDTO.setScQtCheckList(originCL);
+		resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
+		if (null != resDTO.getScQtCheckListValue()) {
+			ScQtCheckListValue origin=resDTO.getScQtCheckListValue();
+			
+			ScQtCheckListValue checkListValue = new ScQtCheckListValue();
+			setUserDetails(checkListValue);
+			checkListValue.setYear(origin.getYear());
+			checkListValue.setScQtCheckList(copyCL);
+			checkListValue.setAllEmployee(origin.isAllEmployee());
+			checkListValue.setFromDate(origin.getFromDate());
+			checkListValue.setToDate(origin.getToDate());
+			checkListValue.setScQtCheckList(copyCL);
+			copyCL.setScQtCheckListValue(checkListValue);
+		}
+		
+		if(resDTO.getCheckListScores()!=null){
+			List<ScQtCheckListScore> scores = new ArrayList<ScQtCheckListScore>();
+			for (ScQtCheckListScore origin : resDTO
+					.getCheckListScores()) {
+				
+				ScQtCheckListScore copy=new ScQtCheckListScore();
+				copy.setCheckList(copyCL);
+				copy.setRangeFrom(origin.getRangeFrom());
+				copy.setRangeTo(origin.getRangeTo());
+				copy.setScore(origin.getScore());
+				copy.setScoreType(origin.getScoreType());
+				copy.setCriteriaType(origin.getCriteriaType());
+				scores.add(copy);
+			}
+			copyCL.setScQtCheckListScores(scores);
+		}
+		
+		}finally{
+			specSo = null;
+		}
+		return copyCL;
+	}
+	
+	private boolean isChecklistDefault(ScQtCheckList cl){
+		List<ScQtCheckList> list=this.getManagedBean().getScQtCheckSt2financeProposalList();
+		for(ScQtCheckList def:list){
+			if(def.getTitle().equals(cl.getTitle())){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private ScQtCheckList getDefault(String title){
+		for(ScQtCheckList cl:this.getManagedBean().getScQtCheckSt2financeProposalList()){
+			if(title.equals(cl.getTitle())){
+				return cl;
+			}
+		}
+		return null;
+	}
+	
+	private void retrieveFinancialChecklist(ScQt scqt) throws FileNotFoundException{
+		IQTSpecSO specSo = null;
+		SpecificationResDTO resDTO = null;
+		
+		if (getManagedBean().getMarkDeletedFinChecklist() == null) {
+			getManagedBean().setMarkDeletedFinChecklist(
+					new ArrayList<ScQtCheckList>());
+		}
+		try{
+			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+			specSo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+			reqDTO.setScQt(scqt);
+			reqDTO.setSpecType(SourcingConstants.FINANCIAL_DOCTYPE);
+			resDTO = specSo.retrieveCheckLists(reqDTO);
+			if(null!=resDTO.getFinancialCheckLists()){
+				List<ScQtCheckList> defaults =new ArrayList<ScQtCheckList>();
+				List<ScQtCheckList> localcheckList =this.getManagedBean().getScQtCheckSt2financeProposalList();
+				for (ScQtCheckList checklist : resDTO
+						.getFinancialCheckLists()) {
+					
+					if (!ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
+							.equalsIgnoreCase(checklist.getDefinationType().getParameterCode())) {
+						if(!isChecklistDefault(checklist)){
+							ScQtCheckList copy = copyBean(checklist);
+							copy.setScQt(this.getManagedBean().getQt());
+							copy=retrieveScoreNValue(checklist,copy);
+							
+							if (null != copy.getPmDocument()) {
+								if (!SourcingConstants.DOC_DEF_KEY_SERVICE_SCOPE
+										.equalsIgnoreCase(checklist.getPmDocument()
+												.getDocDefinitionKey())) {
+									localcheckList.add(copy);
+								}
+							} else {
+								localcheckList.add(copy);
+							}
+						}else{
+							ScQtCheckList copy =getDefault(checklist.getTitle());
+							retrieveScoreNValue(checklist,copy);
+						}
+					}
+				}
+							
+				//this.getManagedBean().setScQtCheckSt2financeProposalList(localcheckList);
+				if (CollectionUtils.isNotEmpty(this.getManagedBean()
+						.getScQtCheckSt2financeProposalList())) {
+					checklistSorting(this.getManagedBean()
+							.getScQtCheckSt2financeProposalList());
+				}
+			}
+		}finally{
+			specSo = null;
+		}
+	}
 
 	private void retrieveTechnicalChecklist(ScQt scqt)
 			throws FileNotFoundException {
@@ -206,6 +329,10 @@ public class QtSpecCloneBackingBean extends
 							.getTechnicalCheckList()) {
 						ScQtCheckList copy = copyBean(checklist);
 						copy.setScQt(this.getManagedBean().getQt());
+						if (!ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
+								.equalsIgnoreCase(checklist.getDefinationType().getParameterCode())) {
+						copy=retrieveScoreNValue(checklist,copy);
+						}
 						if (null != copy.getPmDocument()) {
 							if (!SourcingConstants.DOC_DEF_KEY_SERVICE_SCOPE
 									.equalsIgnoreCase(checklist.getPmDocument()
@@ -256,7 +383,13 @@ public class QtSpecCloneBackingBean extends
 		copy.setAction(origin.getAction());
 		copy.setManditory(origin.isManditory());
 		copy.setScoringReq(origin.isScoringReq());
-		copy.setDocCategory(QTConstants.TECHNICAL_DOC_TYPE);
+		if(QTConstants.TECHNICAL_DOC_TYPE.equals(origin.getDocCategory())){
+			copy.setDocCategory(QTConstants.TECHNICAL_DOC_TYPE);
+		}
+		if(QTConstants.FINANCIAL_DOC_TYPE.equals(origin.getDocCategory())){
+			copy.setDocCategory(QTConstants.FINANCIAL_DOC_TYPE);
+		}
+		
 		copy.setPmDocument(origin.getPmDocument());
 		copy.setChecklistSeq(origin.getChecklistSeq());
 		if (origin.getScQtCheckListAttachment() != null)
@@ -475,6 +608,7 @@ public class QtSpecCloneBackingBean extends
 				.retriveQTDetails(tenderReqDTO);
 
 		retrieveTechnicalChecklist(tenderResDTO.getQtDetail());
+		retrieveFinancialChecklist(tenderResDTO.getQtDetail());
 	}
 
 	/**
@@ -783,22 +917,22 @@ public class QtSpecCloneBackingBean extends
 						new SearchFilterBean("scQtStatus.current",
 								SearchOperator.OPERATOR_EQUALS.value(), true));
 			}else{
-				Long[] stats= {6004L,60003L, 60024L, 60002L};
+				Long[] stats= {60002L,60024L,60003L};
 				ArrayList<Long> s=new ArrayList<Long>(Arrays.asList(stats));
 				qtSearchBean
 				.getDataFilterBeans()
 				.add(new SearchFilterBean(
 						"scQtStatus.pmStatus.statusId",
-						SearchOperator.OPERATOR_IN.value(), s));
+						SearchOperator.OPERATOR_NOT_IN.value(), s));
 				qtSearchBean.getDataFilterBeans().add(
 						new SearchFilterBean("scQtStatus.current",
 								SearchOperator.OPERATOR_EQUALS.value(), true));
 			}
 			// Filter by - ptj org profileId
-			qtSearchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmOrgProfile.orgProfileId",
-							SearchOperator.OPERATOR_EQUALS.value(),
-							getPTJOrgProfileByLoginUser().getOrgProfileId()));
+//			qtSearchBean.getDataFilterBeans().add(
+//					new SearchFilterBean("pmOrgProfile.orgProfileId",
+//							SearchOperator.OPERATOR_EQUALS.value(),
+//							getPTJOrgProfileByLoginUser().getOrgProfileId()));
 
 			// Filter by - evaluationType
 			String commType = getManagedBean().getCommType();
