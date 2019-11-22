@@ -22,6 +22,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
+import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -36,6 +37,8 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
+import my.ep.dto.sc.quationtender.BriefingReqDTO;
+import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
@@ -50,6 +53,9 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproverSettings;
+import my.ep.persistence.entity.sc.quationtender.ScQtBSVRemark;
+import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
+import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
@@ -62,6 +68,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sc.common.ZonesBean;
+import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.constant.sc.QTConstants;
@@ -356,7 +363,17 @@ public class QTCloneBackingbean extends
 						new SearchFilterBean("scQtStatus.current",
 								SearchOperator.OPERATOR_EQUALS.value(), true));
 			}else{
-				Long[] stats= {60002L};
+				Long[] stats= null;
+				Long statusId=this.getManagedBean().getQt().getQtStatus().getStatusId();
+				if(QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(statusId)){
+					stats=getStatuses(QTStatusConst.QT_PENDING_QT_SUBMISSION,QTStatusConst.QT_PENDING_QT_SUBMISSION);
+				}
+				if(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId)){
+					stats=getStatuses(QTStatusConst.QT_PENDING_QT_SUBMISSION,QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT);
+				}
+				
+				
+				
 				ArrayList<Long> s=new ArrayList<Long>(Arrays.asList(stats));
 				qtSearchBean
 				.getDataFilterBeans()
@@ -387,6 +404,19 @@ public class QTCloneBackingbean extends
 			// Adding search filterbeans to searchbean.
 			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
 		}
+	}
+	
+	public Long[] getStatuses(Long fromStatusId,Long toStatusId){
+		List<Long> orderedStatuses = Arrays.asList(QTStatusConst.QT_ORDERED_STATUSES);
+		orderedStatuses = orderedStatuses.subList(
+				orderedStatuses.indexOf(fromStatusId), 
+				orderedStatuses.indexOf(toStatusId)+1);
+		Long[] ret = new Long[orderedStatuses.size()];
+	    for (int i=0; i < ret.length; i++)
+	    {
+	        ret[i] = orderedStatuses.get(i).longValue();
+	    }
+	    return ret;
 	}
 
 	public void cloneCommitteePopupAction() {
@@ -506,6 +536,10 @@ public class QTCloneBackingbean extends
 						List<ScQtApproval> requiredApproval = tenderResDTO.getApproval();
 						retrieveApproval(requiredApproval,copyScqt);
 					}
+					
+					if(selection.getValue().equals(5L)){
+						retrieveBrief(copyScqt);
+					}
 				}
 				
 			}
@@ -515,6 +549,77 @@ public class QTCloneBackingbean extends
 			QtDetailsSO = null;
 		}
 		RequestContext.getCurrentInstance().execute("screen3.hide()");
+	}
+	
+	private void retrieveBrief(ScQt copyScqt){
+		ScQt qt = this.getManagedBean().getQt();
+		IQTBriefingSO qTBriefingSO = null;
+		try {
+			qTBriefingSO = (IQTBriefingSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTBriefingSO.class);
+			String languageCode = new FacesScopes().getUserLocale()
+					.getLanguage();
+			BriefingReqDTO reqDTO = new BriefingReqDTO();
+			reqDTO.setScQt(copyScqt);
+			reqDTO.setLanguageCode(languageCode);
+			reqDTO.setMaintanceFlow(true);
+			BriefingResDTO resDTO = qTBriefingSO
+					.retrieveBriefingSiteVisitDtl(reqDTO);
+			
+			Long currentStatus = this.getManagedBean().getQt()
+					.getQtStatus().getStatusId();
+			this.getManagedBean().setCurrentStatusId(currentStatus);
+			
+			ScQtBsv qtBsv = resDTO.getScQtBsv();
+			
+			ScQtBsv copy=new ScQtBsv();
+			copy.setScQt(qt);
+			copy.setBrandNew(true);
+			copy.setAllSiteVisitReq(qtBsv.isAllSiteVisitReq());
+			copy.setAllBriefingReq(qtBsv.isAllBriefingReq());
+			copy.setSameBsv(qtBsv.isSameBsv());
+			copy.setMinBriefingAttend(qtBsv.getMinBriefingAttend());
+			copy.setMinSiteVisitAttend(qtBsv.getMinSiteVisitAttend());
+			List<ScQtBsvDtl> listBsv=new ArrayList<ScQtBsvDtl>();
+			List<ScQtBsvDtl> listBrief=new ArrayList<ScQtBsvDtl>();
+			List<ScQtBsvDtl> listSiteVisit=new ArrayList<ScQtBsvDtl>();
+			if (null != qtBsv.getScQtBsvDtls()) {
+				for (ScQtBsvDtl bsvDtl : qtBsv.getScQtBsvDtls()) {
+					ScQtBsvDtl copydtl=new ScQtBsvDtl();
+					copydtl.setScQtBsv(copy);
+					copydtl.setBsvType(bsvDtl.getBsvType());
+					copydtl.setBsvDesc(bsvDtl.getBsvDesc());
+					copydtl.setBsvDate(bsvDtl.getBsvDate());
+					copydtl.setAddress(bsvDtl.getAddress());
+					copydtl.setCoordinatingOfficer(bsvDtl.getCoordinatingOfficer());
+					copydtl.setMaxNoOfAttendance(bsvDtl.getMaxNoOfAttendance());
+					if(SourcingConstants.BSV_TYPE_SITEVISIT.equals(bsvDtl.getBsvType())){
+						listSiteVisit.add(copydtl);
+					}else{
+						listBrief.add(copydtl);
+					}
+					
+					
+				}
+				listBsv.addAll(listSiteVisit);
+				listBsv.addAll(listBrief);
+				
+				copy.setScQtBsvDtls(listBsv);
+				
+			}
+			//TODO visit list
+			BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
+					null, listBrief,
+					listSiteVisit, copy);
+			copy.setBsvRemarks(initializeRemarks(copy, this
+					.getManagedBean().getQt()
+					.getCurrentWorkFlowStatus(), copy.getBsvRemarks(),
+					ScQtBSVRemark.class));
+			this.getManagedBean().setBsvDtlBean(briefingZoneBean);
+		}finally{
+			qTBriefingSO = null;
+		}
 	}
 	
 	private void retrieveApproval(List<ScQtApproval> requiredApproval,ScQt copyScqt){
