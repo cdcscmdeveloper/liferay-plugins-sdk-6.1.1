@@ -5096,37 +5096,67 @@ public class RuleCatalogueBackingBean extends
 		log.info("saveYEPValues");		
 		
 		Calendar effectiveDt = null;
-        Calendar expiryDt = null;       
+        Calendar expiryDt = null; 
+        Calendar currentDt = Calendar.getInstance(); 
 		boolean isValidDt = false;
 		PmFeeExemption p2Np3_period = null, p5_period = null, p6_PATperiod = null;
 		
 		for(PmFeeExemption feeExemption : this.getManagedBean().getFeeExemptionsForYepProcessing()) {			
-			
-			if(feeExemption.getEffDate() != null) {
-				if(effectiveDt == null) {
-					effectiveDt = Calendar.getInstance();
+			log.info("[#22119] FeeExemption Code: " + feeExemption.getOrgTypeId().getParameterCode());
+			//Phase 2 and Phase 3 Period
+			if(feeExemption.getOrgTypeId().getParameterCode().equals("7")) {
+				if(feeExemption.getEffDate() == null) {
+					throw new EpException(MessageConst.ERR_900040);
 				}
+				
+				if(feeExemption.getExpDate() == null) {
+					throw new EpException(MessageConst.ERR_900041);
+				}
+			}
+			//Phase 5 Period
+			else if(feeExemption.getOrgTypeId().getParameterCode().equals("8")) {
+				if(feeExemption.getEffDate() == null) {
+					throw new EpException(MessageConst.ERR_900043);
+				}
+				
+				if(feeExemption.getExpDate() == null) {
+					throw new EpException(MessageConst.ERR_900044);
+				}
+			}
+			//Proses Akhir Tahun (PAT) Period (Phase 6)
+			else if(feeExemption.getOrgTypeId().getParameterCode().equals("9")) {
+				if(feeExemption.getExpDate() != null && feeExemption.getEffDate() == null) {
+					throw new EpException(MessageConst.ERR_900047);
+				}
+				
+				if(feeExemption.getEffDate() != null && feeExemption.getExpDate() == null) {
+					throw new EpException(MessageConst.ERR_900048);
+				}
+			}			
+			
+			if(feeExemption.getEffDate() != null) {				
+				effectiveDt = Calendar.getInstance();			
 				effectiveDt.setTime(feeExemption.getEffDate());
 			}
 			
-			if(feeExemption.getExpDate() != null) {
-				if(expiryDt == null) {
-					expiryDt = Calendar.getInstance();
-				}
+			if(feeExemption.getExpDate() != null) {				
+				expiryDt = Calendar.getInstance();
 				expiryDt.setTime(feeExemption.getExpDate());
 			}
 			
-			if(expiryDt != null) {
-				if (effectiveDt.after(expiryDt)) {
-					isValidDt =  false;
-					break;
-		        }
-				else {
-					isValidDt =  true;
-				}
-			} else {
-				isValidDt =  true;
+			if(effectiveDt.before(currentDt)) {
+				throw new EpException(MessageConst.ERR_900049, 
+						new String[] {ResourceBundleUtils.getMessage("lbl.pm.yep.effdate",
+      				  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}
+			
+			if(expiryDt.before(currentDt)) {
+				throw new EpException(MessageConst.ERR_900049, 
+						new String[] {ResourceBundleUtils.getMessage("lbl.pm.yep.expdate",
+      				  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
+			
+			isValidDt =  true;
 		}
 		
 		if(isValidDt) {
@@ -5138,8 +5168,7 @@ public class RuleCatalogueBackingBean extends
 				}
 			}
 			
-			for(PmFeeExemption feeExemption : this.getManagedBean().getFeeExemptionsForYepProcessing()) {
-				log.info("[#22119] FeeExemption Code: " + feeExemption.getOrgTypeId().getParameterCode());
+			for(PmFeeExemption feeExemption : this.getManagedBean().getFeeExemptionsForYepProcessing()) {				
 				if(feeExemption.getOrgTypeId().getParameterCode().equals("7")) {
 					if(p6_PATperiod != null && p6_PATperiod.getEffDate() != null && p6_PATperiod.getExpDate() != null) {
 						p2Np3_period = feeExemption;
@@ -5230,7 +5259,7 @@ public class RuleCatalogueBackingBean extends
 			log.info("[#22119] P2 and P3 date not overlap with P6 date");
 			return true;
 		} else {
-			throw new EpException("P2 and P3 date is overlap with P6 date");
+			throw new EpException(MessageConst.ERR_900042);
 		}
 	}
 	
@@ -5267,12 +5296,12 @@ public class RuleCatalogueBackingBean extends
 					log.info("[#22119] P5 date not overlap with P6 date");
 					isValid = true;
 				}  else {
-					throw new EpException("P5 date is overlap with P6 date");
+					throw new EpException(MessageConst.ERR_900045);
 				}
 			}			
 			return isValid;
 		} else {
-			throw new EpException("P5 date is less than P2 and P3 date");
+			throw new EpException(MessageConst.ERR_900046);
 		}
 	}	
 }
