@@ -5098,6 +5098,7 @@ public class RuleCatalogueBackingBean extends
 		Calendar effectiveDt = null;
         Calendar expiryDt = null;       
 		boolean isValidDt = false;
+		PmFeeExemption p2Np3_period = null, p5_period = null, p6_PATperiod = null;
 		
 		for(PmFeeExemption feeExemption : this.getManagedBean().getFeeExemptionsForYepProcessing()) {			
 			
@@ -5127,6 +5128,32 @@ public class RuleCatalogueBackingBean extends
 				isValidDt =  true;
 			}
 		}
+		
+		if(isValidDt) {
+			for(PmFeeExemption feeExemption : this.getManagedBean().getFeeExemptionsForYepProcessing()) {
+				log.info("[#22119] FeeExemption Code: " + feeExemption.getOrgTypeId().getParameterCode());
+				if(feeExemption.getOrgTypeId().getParameterCode().equals("9")) {
+					p6_PATperiod = feeExemption;
+					break;
+				}
+			}
+			
+			for(PmFeeExemption feeExemption : this.getManagedBean().getFeeExemptionsForYepProcessing()) {
+				log.info("[#22119] FeeExemption Code: " + feeExemption.getOrgTypeId().getParameterCode());
+				if(feeExemption.getOrgTypeId().getParameterCode().equals("7")) {
+					if(p6_PATperiod != null && p6_PATperiod.getEffDate() != null && p6_PATperiod.getExpDate() != null) {
+						p2Np3_period = feeExemption;
+						isValidDt = validateP2AndP3PeriodDt(p2Np3_period, p6_PATperiod);
+					}
+				} else if(feeExemption.getOrgTypeId().getParameterCode().equals("8")) {
+					if(p2Np3_period != null && p2Np3_period.getEffDate() != null && p2Np3_period.getExpDate() != null) {
+						p5_period = feeExemption;
+						isValidDt = validateP5PeriodDt(p5_period, p2Np3_period, p6_PATperiod);
+					}
+				}				
+			}
+		}
+		
 		log.info("[#22119] all effective and expiry date is valid ? " + isValidDt);
 		if(isValidDt) {			
 			
@@ -5145,7 +5172,13 @@ public class RuleCatalogueBackingBean extends
 				reqDTO.setFeeExemptionList(this.getManagedBean().getFeeExemptionsForYepProcessing());				
 				
 				//update pm_fee_exemption records
+				//log.info("[#22119] TEMPORARY DISABLE updateFeeExemptionList!!!");
 				resDTO = feeExemptionSO.updateFeeExemptionList(reqDTO);
+				
+				//TEST ONLY - START
+				//resDTO = new FeeExemptionResDTO();
+				//resDTO.setSuccessful(true);
+				//TEST ONLY - END
 				
 				if(resDTO.isSuccessful()){					
 					FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -5178,4 +5211,68 @@ public class RuleCatalogueBackingBean extends
 			this.getManagedBean().setMinDate(inputDate);
 		}		
 	}
+	
+	//[#22119]
+	public boolean validateP2AndP3PeriodDt(PmFeeExemption p2Np3_period, PmFeeExemption p6_PATperiod){
+		log.info("validateP2AndP3PeriodDt");
+		
+		Calendar p2Np3_effDt = Calendar.getInstance();			
+		Calendar p2Np3_expDt = Calendar.getInstance();
+		Calendar p6_effDt = Calendar.getInstance();			
+		Calendar p6_expDt = Calendar.getInstance();
+		
+		p2Np3_effDt.setTime(p2Np3_period.getEffDate());	
+		p2Np3_expDt.setTime(p2Np3_period.getExpDate());
+		p6_effDt.setTime(p6_PATperiod.getEffDate());	
+		p6_expDt.setTime(p6_PATperiod.getExpDate());
+		
+		if(p2Np3_expDt.before(p6_effDt) || p2Np3_effDt.after(p6_expDt)) {			
+			log.info("[#22119] P2 and P3 date not overlap with P6 date");
+			return true;
+		} else {
+			throw new EpException("P2 and P3 date is overlap with P6 date");
+		}
+	}
+	
+	//[#22119]
+	public boolean validateP5PeriodDt(PmFeeExemption p5_period, PmFeeExemption p2Np3_period, PmFeeExemption p6_PATperiod){
+		log.info("validateP5PeriodDt");
+		
+		Calendar p5_effDt = Calendar.getInstance();			
+		Calendar p5_expDt = Calendar.getInstance();
+		Calendar p2Np3_effDt = Calendar.getInstance();			
+		Calendar p2Np3_expDt = Calendar.getInstance();
+		Calendar p6_effDt = null;			
+		Calendar p6_expDt = null;
+		boolean isValid = false;
+		
+		p5_effDt.setTime(p5_period.getEffDate());	
+		p5_expDt.setTime(p5_period.getExpDate());
+		p2Np3_effDt.setTime(p2Np3_period.getEffDate());	
+		p2Np3_expDt.setTime(p2Np3_period.getExpDate());
+		
+		if(p6_PATperiod != null && p6_PATperiod.getEffDate() != null && p6_PATperiod.getExpDate() != null) {
+			p6_effDt = Calendar.getInstance();			
+			p6_expDt = Calendar.getInstance();
+			p6_effDt.setTime(p6_PATperiod.getEffDate());	
+			p6_expDt.setTime(p6_PATperiod.getExpDate());
+		}
+		
+		if(p5_effDt.equals(p2Np3_effDt) || p5_effDt.after(p2Np3_effDt)) {			
+			log.info("[#22119] P5 date is equal or greter than P2 and P3 date");
+			isValid = true;
+			
+			if(isValid && (p6_PATperiod != null && p6_PATperiod.getEffDate() != null && p6_PATperiod.getExpDate() != null)) {
+				if(p5_expDt.before(p6_effDt) || p5_effDt.after(p6_expDt)) {			
+					log.info("[#22119] P5 date not overlap with P6 date");
+					isValid = true;
+				}  else {
+					throw new EpException("P5 date is overlap with P6 date");
+				}
+			}			
+			return isValid;
+		} else {
+			throw new EpException("P5 date is less than P2 and P3 date");
+		}
+	}	
 }
