@@ -1647,6 +1647,8 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		FacesContext fc = FacesContext.getCurrentInstance();
 		try {
 			PmUser sUsers = facesScopes.getUserSessionBean();
+			Locale locale = new FacesScopes().getUserLocale();
+			
 			if (sUsers != null){
 				loadSupplierCommonDetails(sUsers.getUserId());
 			}
@@ -1655,8 +1657,11 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			if(this.getManagedBean().isDisciplinaryAction()){
 				SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
 				
-				if (sUsers != null && sUsers.getPreferredLanguage() != null){
-					reqDTO.setLanguage(sUsers.getPreferredLanguage());
+				if (locale != null 
+						&& locale.getLanguage() != null){
+					reqDTO.setLanguage(locale.getLanguage());
+				} else {
+					reqDTO.setLanguage("en");
 				}
 				
 				if(getManagedBean().getCurrentProfile() != null){

@@ -52,14 +52,14 @@
 	<p:panel header="#{lbl['lbl.sm.disciplinary.action.headerLbl']}" toggleable="true" id="disciplinaryActionPanelId">
 		
 		<!-- Enhancement 26238 - START -->
-		<p:outputPanel style="color:red;font-weight:bold;">
-			<h:outputText styleClass="warning" value="#{lbl['lbl.sm.disciplinary.click']}" escape="false"/>
+		<p:outputPanel>
+			<h:outputText value="#{lbl['lbl.sm.disciplinary.click']}" escape="false"/>
 			<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 				action="#{supplierDataMaintenanceBackingBean.onViewDisciplinaryAction}" 
 				process="@this" partialSubmit="true" update=":form">
-					<u><h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" styleClass="warning" /></u>
+					<u><h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" style="color:blue;" escape="false"/></u>
 			</p:commandLink><p:spacer width="2"/>
-			<h:outputText styleClass="warning" value="#{lbl['lbl.sm.disciplinary.to.view.history.disciplinary.action']}" escape="false"/><br />
+			<h:outputText value="#{lbl['lbl.sm.disciplinary.to.view.history.disciplinary.action']}" escape="false"/><br />
 			<p:spacer height="2"/>
 		</p:outputPanel>
 		<!-- 26238 - END -->

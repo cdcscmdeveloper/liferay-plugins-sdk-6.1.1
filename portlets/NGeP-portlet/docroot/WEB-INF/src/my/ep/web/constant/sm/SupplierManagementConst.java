@@ -637,7 +637,7 @@ public class SupplierManagementConst {
 	public static final int MAX_PAYMENT_BANK = 35;
 	
 	public static final String DELETED_BY_DISCIPLINARY_ACTION = "Dibatalkan kerana dikenakan Tindakan Tatatertib"; //26238
-	public static final String PM_STATUS_DELETED_BY_DISCIPLINARY_ACTION = "20300"; //26238
+	public static final long PM_STATUS_DELETED_BY_DISCIPLINARY_ACTION = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_DELETED_BY_DISCIPLINARY_ACTION; //26238
 
 	// EXTERNAL CONTEXT SESSION KEY MAP
 	public static final String KEY_MAP_PERSONNEL_LIST = "personnelList";
@@ -1177,7 +1177,10 @@ public class SupplierManagementConst {
 	public long getPM_STATUS_PO_REVIEW() {
 		return PM_STATUS_PO_REVIEW;
 	}
-	
-	
-	
+
+//25792 - start
+	public String getSmSupplierBusinessTypeIndividual() {
+		return SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL;
+	}
+//25792 - end	
 }

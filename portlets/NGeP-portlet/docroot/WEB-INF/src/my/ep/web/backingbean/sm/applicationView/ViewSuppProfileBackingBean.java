@@ -77,8 +77,8 @@ public class ViewSuppProfileBackingBean extends
 			getManagedBean().setRenderedBackButton(false);
 			
 			//26238 - start
-			List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
-			if(!EntityHelper.isCollectionEmpty(resultList)
+			List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(supplier);
+			if(resultList != null
 					&& resultList.size() > 0){
 				for(SmDisciplinaryAction disciplinaryAction : resultList){
 					if(disciplinaryAction.isWarning() || disciplinaryAction.isCancelCategory() 
@@ -135,6 +135,10 @@ public class ViewSuppProfileBackingBean extends
 			currSupp = getManagedBean().getSearchSupplier();
 		}
 		
+		if(getManagedBean().isMofSupplier()){
+			getManagedBean().setMofSupplier(true);
+		}
+		
 		List<DisciplinaryActionVO> voList = getDisciplinaryActionVO(currSupp);
 		if(!EntityHelper.isCollectionEmpty(voList)
 				&& voList.size() > 0){
@@ -154,7 +158,7 @@ public class ViewSuppProfileBackingBean extends
 		PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelBySupplierId(perReqDTO);
 		
 		List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(currSupp);
-		if (!EntityHelper.isCollectionEmpty(resultList)
+		if (resultList != null
 				&& resultList.size() > 0) {
 			for(SmDisciplinaryAction disciplinaryAction: resultList){
 				if(disciplinaryAction.isWarning() || disciplinaryAction.isCancelCategory() 
