@@ -450,8 +450,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	
 	public String toggleView(){
 		RequestContext rc = ((RequestContext) FacesContext.getCurrentInstance().getAttributes().get(Constants.REQUEST_CONTEXT_ATTR));
-		//if(getManagedSearchBeanDocTypeIsLOAAndPrefixLAAndIsDO()||getManagedSearchBeanDocTypeIsLOIAndPrefixLIAndIsDO()){
-		if(getManagedSearchBeanDocumentTypeIsLOA()||getManagedSearchBeanDocumentTypeIsLOI()){
+		if(getManagedSearchBeanDocTypeIsLOAAndPrefixLAAndIsDO()||getManagedSearchBeanDocTypeIsLOIAndPrefixLIAndIsDO()){
 			if(rc!=null)rc.execute("toggleView('"+ParameterConst.DOCTYPE_LETTER_OF_AWARD+"');");
 			return ParameterConst.DOCTYPE_LETTER_OF_AWARD;
 		}
@@ -775,10 +774,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * Method to search the quationtenders based on serach date.
 	 */
 	public void searchQTAction() {
-		if(this.getManagedSearchBeanDocumentTypeIsLOA()){
+		if(this.getManagedSearchBeanDocTypeIsLOAAndPrefixLAAndIsDO()){
 			getManagedBean().getSearchLoaForQtDataModel().reloadData();
 		}
-		else if(this.getManagedSearchBeanDocumentTypeIsLOI()){
+		else if(this.getManagedSearchBeanDocTypeIsLOIAndPrefixLIAndIsDO()){
 			getManagedBean().getSearchLoiForQtDataModel().reloadData();
 		}
 		else;
@@ -1085,7 +1084,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		ScQt scQt = null;
 		ScLoiForQt scLoiForQt = null;
 		ScLoaForQt scLoaForQt = null;
-		if(getManagedSearchBeanDocumentTypeIsLOA() || getManagedSearchBeanDocumentTypeIsLOI()){
+		if(getManagedSearchBeanDocTypeIsLOAAndPrefixLAAndIsDO() || getManagedSearchBeanDocTypeIsLOIAndPrefixLIAndIsDO()){
 			if(obj instanceof ScLoiForQt ){
 				scLoiForQt = (ScLoiForQt)obj;
 				if (ParameterConst.DOCTYPE_LETTER_OF_INTENT.equals(docType)) {
