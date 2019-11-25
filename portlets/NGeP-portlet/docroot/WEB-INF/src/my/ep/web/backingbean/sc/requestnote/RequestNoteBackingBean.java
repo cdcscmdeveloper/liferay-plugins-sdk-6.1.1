@@ -86,6 +86,7 @@ import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
+import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
@@ -4797,4 +4798,50 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		  return cal;
 	}
 	// 12177 - End
+	
+	
+	
+	public List<PmUser> getPreparedByApprove(ScRequestNoteDtl requestNoteDtl) {
+		debugLogger("getPreparedByApprove");
+		UserReqDTO reqDTO = new UserReqDTO();
+		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+		List<PmUser> userlist = null;
+		if (requestNoteDtl.getFulfilmentType() != null) {
+			if (requestNoteDtl.getFulfilmentType().getParameterCode()
+					.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
+				reqDTO.setRoleCode(RoleCode.REQUISITIONER.value());
+
+			} else {
+				reqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
+			}
+			
+		    OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+			orgProfileReqDTO.setOrgProfileId(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
+			orgProfileReqDTO.setGroupOrgType("N");
+			OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveProfileGroupByGroupOrgType(orgProfileReqDTO);
+				
+				
+			
+				List<Long> orgProfileIds = new ArrayList<Long>();
+				
+				orgProfileIds.add(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
+				if (CollectionUtils.isNotEmpty(orgProfileResDTO.getProfileGroups())) {
+
+				for(PmProfileGroup group: orgProfileResDTO.getProfileGroups()  ){
+					orgProfileIds.add(group.getMainOrgProfile().getOrgProfileId());
+				}
+				}
+				reqDTO.setOrgProfileIds(orgProfileIds );
+				UserResDTO resDTO = getUserSO().retrieveUserListByRole(reqDTO);
+				userlist = resDTO.getUserList();
+				if (CollectionUtils.isNotEmpty(userlist)) {
+					Collections.sort(userlist, new usersComparator());
+				}
+			}
+		
+		getManagedBean().setPreparedBys(userlist);
+		return userlist;
+	}
+	
 }
