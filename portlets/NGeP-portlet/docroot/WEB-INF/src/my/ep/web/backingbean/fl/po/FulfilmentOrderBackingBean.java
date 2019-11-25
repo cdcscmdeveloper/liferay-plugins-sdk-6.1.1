@@ -142,7 +142,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		debugLogger("start of close manual payment");
 		IFulfilmentOrderSO fulfilementOrderSO = null;
 		FulfilmentResDTO resDTO = null;
-		
+		validateCloseManualRequest();
 		
 		try{
 			fulfilementOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
@@ -188,6 +188,15 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			fulfilementOrderSO = null;
 		}
 	}
+  	
+  	private void validateCloseManualRequest() {	
+	
+			/*validate remark cannot be null*/
+			if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
+				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+			}
+		
+  	}
 	
 	/**
 	 * save,submit Fulfillment order.
