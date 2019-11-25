@@ -493,12 +493,12 @@
 			</td>
 			<td colspan="3">
 				<p:inputText id="contractAgency" disabled="true" size="106"
-					value="#{lOADetailBackingBean.managedBeanLoaContractAgencyOrgName}"
+					value="#{lOADetailBackingBean.managedBean.scLoa.contractAgency.orgName}"
 					rendered="#{!isEditableStatus}"/>
 
 				<c:if test="#{isEditableStatus}">
 					<p:inputText id="contractAgencyEdit" disabled="true" size="106"
-						value="#{lOADetailBackingBean.managedBeanLoaContractAgencyOrgName}"
+						value="#{lOADetailBackingBean.managedBean.scLoa.contractAgency.orgName}"
 						rendered="#{lOADetailBackingBean.managedBean.selectedOrgType.parameterCode == null}" />
 
 					<p:outputPanel id="opPtjOrgCode" 
@@ -507,7 +507,7 @@
 						<p:inputText 
 							size="60"
 							id="itSelectedPtj" 
-							value="#{lOADetailBackingBean.managedBeanSelectedPtjOrgName}" 
+							value="#{lOADetailBackingBean.managedBean.selectedPtj.orgName}" 
 							readonly="true"
 							/>
 						&#160;
