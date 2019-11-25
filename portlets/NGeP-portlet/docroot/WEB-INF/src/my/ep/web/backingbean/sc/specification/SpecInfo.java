@@ -1,12 +1,9 @@
 package my.ep.web.backingbean.sc.specification;
 
-import java.math.BigDecimal;
-import java.util.List;
-
-import javax.annotation.ManagedBean;
+import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-@ManagedBean(value="dtSpecView")
+@ManagedBean(name="dtSpecView")
 @ViewScoped
 public class SpecInfo {
 
