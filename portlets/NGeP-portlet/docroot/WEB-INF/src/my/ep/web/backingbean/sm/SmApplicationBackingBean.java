@@ -1501,7 +1501,7 @@ public class SmApplicationBackingBean extends
 				|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)
 				|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)){
 			if(!fromBpm && getManagedBean().isSsmIntegrationActive() && this.getManagedBean().getSmSupplier()!= null 
-					&& !this.getManagedBean().getSmAppl().isApplValidWithSsm() 
+					//&& !this.getManagedBean().getSmAppl().isApplValidWithSsm() disable cz problem when upgarde to MOF
 					&& businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupplier().getRegNo(),this.getManagedBean().getSmSupplier().getBusinessType())){
 				//SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
 				if(businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupplier().getRegNo(),this.getManagedBean().getSmSupplier().getBusinessType())){
@@ -1664,25 +1664,25 @@ public class SmApplicationBackingBean extends
 			}else{
 				
 				// START upgrade checking owner in ssm #26734
-				SsmReqDTO ssmReqDTO = new SsmReqDTO();
-				ssmReqDTO.setRegNo(this.getManagedBean().getSmSupplier().getRegNo());
-				ssmReqDTO.setBusinessType(this.getManagedBean().getSmSupplier().getBusinessType());
-				SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
-				this.getManagedBean().setCompanyValidWithSSM(false);
-				this.getManagedBean().setValidateWithSSM(true);
-				if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
-					FacesScopes facesScope = new FacesScopes();
-					PmUser userSession = facesScope.getUserSessionBean();
-					if(applicationType.equalsIgnoreCase("N") || applicationType.equalsIgnoreCase("U")){
-						if(userSession != null){
-							SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
-							if(personnelSSM == null) {								
-								RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
-								return SmApplicationUtil.setStringNavigationForApplTnCPage(applicationType);
-							}
-						}
-					}
-				}
+//				SsmReqDTO ssmReqDTO = new SsmReqDTO();
+//				ssmReqDTO.setRegNo(this.getManagedBean().getSmSupplier().getRegNo());
+//				ssmReqDTO.setBusinessType(this.getManagedBean().getSmSupplier().getBusinessType());
+//				SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
+//				this.getManagedBean().setCompanyValidWithSSM(false);
+//				this.getManagedBean().setValidateWithSSM(true);
+//				if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
+//					FacesScopes facesScope = new FacesScopes();
+//					PmUser userSession = facesScope.getUserSessionBean();
+//					if(applicationType.equalsIgnoreCase("N") || applicationType.equalsIgnoreCase("U")){
+//						if(userSession != null){
+//							SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
+//							if(personnelSSM == null) {								
+//								RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
+//								return SmApplicationUtil.setStringNavigationForApplTnCPage(applicationType);
+//							}
+//						}
+//					}
+//				}
 				// END upgrade checking owner in ssm #26734
 				
 				getManagedBean().setCompanyValidWithSSM(this.getManagedBean().getSmAppl().isApplValidWithSsm());
