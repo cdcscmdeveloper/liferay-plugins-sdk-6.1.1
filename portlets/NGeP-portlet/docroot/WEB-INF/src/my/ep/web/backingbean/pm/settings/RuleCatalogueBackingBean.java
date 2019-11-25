@@ -5097,7 +5097,8 @@ public class RuleCatalogueBackingBean extends
 		
 		Calendar effectiveDt = null;
         Calendar expiryDt = null; 
-        Calendar currentDt = Calendar.getInstance(); 
+        Calendar currentDt = Calendar.getInstance();         
+        currentDt.setTime(DateUtils.getCurrentDateWithoutTime());
 		boolean isValidDt = false;
 		PmFeeExemption p2Np3_period = null, p5_period = null, p6_PATperiod = null;
 		
@@ -5144,6 +5145,9 @@ public class RuleCatalogueBackingBean extends
 				expiryDt.setTime(feeExemption.getExpDate());
 			}
 			
+			log.info("[#22119] Curent date: " + currentDt.getTime().toString());
+			log.info("[#22119] Effective date: " + effectiveDt.getTime().toString());
+			log.info("[#22119] Expiry date: " + expiryDt.getTime().toString());
 			if(effectiveDt.before(currentDt)) {
 				throw new EpException(MessageConst.ERR_900049, 
 						new String[] {ResourceBundleUtils.getMessage("lbl.pm.yep.effdate",
@@ -5219,6 +5223,10 @@ public class RuleCatalogueBackingBean extends
 											MessageUtils.BUNDLE_COMMON_MESSAGES,
 											new FacesScopes().getUserLocale())));
 				}
+				
+				log.info("[#22119] reload YEP page...");
+				initYearEndForProcessing();
+				
 			}catch(Exception e){				
 				throw e;
 			}finally{
