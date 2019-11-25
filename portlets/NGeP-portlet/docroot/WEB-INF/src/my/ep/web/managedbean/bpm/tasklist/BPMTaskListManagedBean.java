@@ -1308,7 +1308,33 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						    			   if(getExpirationDate() != null){
 								    		   worklistItemVO.setExpirationDate(getExpirationDate());
 								    	   }
+						    		   }else if (quoteResDTO.getPid() != null){
+						    			   QuoteReqDTO quotereqDTO = new QuoteReqDTO();
+										   quotereqDTO.setQuoteNo(worklistItemVO.getDocNumber());
+										   quoteResDTO = quoteSO.getQuoteDtlByQuoteNo(quotereqDTO);
+										   if(quoteResDTO.getQuoteBidDtl().getPurchaseInDefault() != null){
+											   Calendar cal = Calendar.getInstance();
+												cal.clear(); 
+												cal.setTime(quoteResDTO.getQuoteBidDtl().getPurchaseInDefault().getChangedDate());
+												cal.add(Calendar.DATE, quoteResDTO.getQuoteBidDtl().getPurchaseInDefault().getPidValidDays());
+											   worklistItemVO.setExpirationDate(cal);
+										   }
+
+						    			   
 						    		   }
+								   }
+								   
+								   if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_SUBMISSION)){
+									   QuoteReqDTO quotereqDTO = new QuoteReqDTO();
+									   quotereqDTO.setQuoteNo(worklistItemVO.getDocNumber());
+									   quoteResDTO = quoteSO.getQuoteDtlByQuoteNo(quotereqDTO);
+									   if(quoteResDTO.getQuoteBidDtl().getPurchaseInDefault() != null){
+										   Calendar cal = Calendar.getInstance();
+											cal.clear(); 
+											cal.setTime(quoteResDTO.getQuoteBidDtl().getPurchaseInDefault().getChangedDate());
+											cal.add(Calendar.DATE, quoteResDTO.getQuoteBidDtl().getPurchaseInDefault().getPidValidDays());
+										   worklistItemVO.setExpirationDate(cal);
+									   }
 								   }
 								   
 								   if(currentStatusId.equals(DPStatusConstants.PID_EXPIRED)){
@@ -1357,14 +1383,16 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 												
 												
 													pidExpiredDate = DateUtils.addDays(changedDate, pidValidDays);
+													
+													Calendar pidExpiredDateCL = Calendar.getInstance();
+													   pidExpiredDateCL.setTime(pidExpiredDate);
+													   worklistItemVO.setExpirationDate(pidExpiredDateCL);
 												
 												if(pidExpiredDate.compareTo(DateUtils.getCurrentDate())<0) {
 													//set overide status here 
 													//taskListMyTaskDataModel.getRowKey(worklistItemVO).
 													worklistItemVO.setDocStatus(DPStatusConstants.PID_EXPIRED.intValue());
-													Calendar pidExpiredDateCL = Calendar.getInstance();
-													   pidExpiredDateCL.setTime(pidExpiredDate);
-													   worklistItemVO.setExpirationDate(pidExpiredDateCL);
+													
 													//System.out.println("Lets overide the status! here");
 												}
 									  }
@@ -1404,13 +1432,16 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 												if(resFLDTO.getFlFulfilmentRequest().getScPurchaseInDefault().getChangedDate()!=null) {
 													pidExpiredDate = DateUtils.addDays(resFLDTO.getFlFulfilmentRequest().getScPurchaseInDefault().getChangedDate(), pidValidDays);
 												}
+												
+												Calendar pidExpiredDateCL = Calendar.getInstance();
+												   pidExpiredDateCL.setTime(pidExpiredDate);
+												   worklistItemVO.setExpirationDate(pidExpiredDateCL);
+												   
 												if(pidExpiredDate.compareTo(DateUtils.getCurrentDate())<0) {
 													//set overide status here 
 													//taskListMyTaskDataModel.getRowKey(worklistItemVO).
 													worklistItemVO.setDocStatus(DPStatusConstants.PID_EXPIRED.intValue());
-													Calendar pidExpiredDateCL = Calendar.getInstance();
-													   pidExpiredDateCL.setTime(pidExpiredDate);
-													   worklistItemVO.setExpirationDate(pidExpiredDateCL);
+													
 													//System.out.println("Lets overide the status! here");
 												}
 										   }
