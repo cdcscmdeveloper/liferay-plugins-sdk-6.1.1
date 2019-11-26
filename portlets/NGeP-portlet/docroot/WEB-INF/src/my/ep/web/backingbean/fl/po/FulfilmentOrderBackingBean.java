@@ -174,15 +174,13 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 								new String[]{messagePrefix+getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, documentType)+messageSuffix, docNo}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));*/
 				
+				renewSesionObject();
+				return CommonUIConst.ACKNOWLEDGE_PAGE;
 				
 			} else {
 				throw new EpException(MessageConst.ERROR_740017);
 			}
 			
-			
-			
-			
-			return CommonUIConst.ACKNOWLEDGE_REPORT_PAGE;
 			
 		}finally{
 			fulfilementOrderSO = null;
