@@ -2882,10 +2882,42 @@ public class TaskReassignmentBackingBean extends
 						.longValue(),reassignType,subReassignType);
 				//--10927
 				if (getFacesScopes().hasRoleUser(RoleCode.BPK_ADMIN.value())){
+					for(Iterator<String> role=roleList.listIterator();
+							role.hasNext();){
+						String a=role.next();
+						if (a.equals(RoleCode.EP_ADMIN_2.value())){
+							role.remove();
+							log.info("roleList1="+roleList.size());
+						}
+						if (a.equals(RoleCode.BPK_ADMIN.value())){
+							role.remove();
+							log.info("roleList2="+roleList.size());
+						}
+						
+					}
+				}
+				
+				if (getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())){
+					for(Iterator<String> role=roleList.listIterator();
+							role.hasNext();){
+						String a=role.next();
+						if (a.equals(RoleCode.BPK_ADMIN.value())){
+							role.remove();
+							log.info("roleList_SYS="+roleList.size());//size=1/3
+						}
+						
+					}
+				}
+				
+				//--10927
+				
+				/*//--10927
+				if (getFacesScopes().hasRoleUser(RoleCode.BPK_ADMIN.value())){
 					roleList.remove(RoleCode.EP_ADMIN_2.value());
 					System.out.println("Remove EpAdmin2::::::::::::::::::");
 				}
-				//--10927
+				
+				//--10927*/
 			}
 
 			if (!roleList.isEmpty()) {
