@@ -16,7 +16,6 @@ import java.util.List;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
-import my.ep.persistence.entity.tpl.spec.TplSpecEstimation; //#25039 
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
@@ -42,7 +41,6 @@ public class TemplateSpecBean implements Serializable {
 	private TplSpecZoneDtl tplSpecZoneDtl;
 	private boolean updateSpecByAnswers;
 	private List<TplSpecAnswer> specAnswersToDelete;
-	private TplSpecEstimation specEstimation;  //#25039 
 	
 	/**
 	 * Constructor for template specification bean
@@ -228,21 +226,5 @@ public class TemplateSpecBean implements Serializable {
 	public void setSpecAnswersToDelete(List<TplSpecAnswer> specAnswersToDelete) {
 		this.specAnswersToDelete = specAnswersToDelete;
 	}
-	
-	//#25039 Begin
-	/**
-	 * @return the specMaster
-	 */
-	public TplSpecEstimation getSpecEstimation() {
-		return specEstimation;
-	}
-
-	/**
-	 * @param specMaster the specMaster to set
-	 */
-	public void setSpecEstimation(TplSpecEstimation specEstimation) {
-		this.specEstimation = specEstimation;
-	}
-	//#25039 End
 	
 }
