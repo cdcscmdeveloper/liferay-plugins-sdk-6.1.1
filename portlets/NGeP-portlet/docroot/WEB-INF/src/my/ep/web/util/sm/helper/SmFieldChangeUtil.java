@@ -37,11 +37,12 @@ public class SmFieldChangeUtil {
 	 *            bean
 	 */
 	public static void initLatestAppl(SmApplicationManagedBean bean) {
+		//16052019 - SSM INTEGRATION CR
 		if (bean.isShowNewChanges()
 				&& bean.getSmAppl() != null
 				&& StringUtils.isNotBlank(bean.getSmAppl().getApplType())
-				&& !bean.getSmAppl().getApplType()
-						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+				&& (!bean.getSmAppl().getApplType()
+						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF) || bean.getSmAppl().isApplValidWithSsm())) {
 			MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
 			SmAppl srcAppl = null;
 			mofReqDTO.setSupplierId(bean.getSmSupplier().getSupplierId());
