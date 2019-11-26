@@ -7,7 +7,9 @@ package my.ep.web.backingbean.ct;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -2529,8 +2531,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					ctBB.getManagedBean().setCtContractAmount(contractAmt);
 				}
 				//Bug #26542 -start
-				if ((new Date().after(contractAmt.getEffDate()) || (new Date().equals(contractAmt.getEffDate())))
-						&& ((new Date().before(contractAmt.getExpDate())) || (new Date().equals(contractAmt.getExpDate())))){
+				DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+				Date CurrentDate = new Date();
+				if(dateFormat.format(contractAmt.getEffDate()).compareTo(dateFormat.format(CurrentDate))<=0
+						&& dateFormat.format(contractAmt.getExpDate()).compareTo(dateFormat.format(CurrentDate)) >=0){
 					ctBB.getManagedBean().setCtContractAmount(contractAmt);
 					break;
 				}
