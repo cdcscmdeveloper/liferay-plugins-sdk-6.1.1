@@ -1306,16 +1306,17 @@ public class SmSideMenuIconUtil {
 			}
 
 			List<SmFacility> currFacList = new ArrayList<SmFacility>();
+			//SSM INTEGRATION
 			if (!EntityHelper.isCollectionEmpty(applCurr.getSmFacilities())) {
 				for (SmFacility currFac : applCurr.getSmFacilities()) {
-					if (!currFac
-							.getFacilityType()
+					if (!SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE
 							.equalsIgnoreCase(
-									SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE)
-							&& !currFac
-									.getFacilityType()
+									currFac
+									.getFacilityType())
+							&& !SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE
 									.equalsIgnoreCase(
-											SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
+											currFac
+											.getFacilityType())) {
 						currFacList.add(currFac);
 					}
 				}
