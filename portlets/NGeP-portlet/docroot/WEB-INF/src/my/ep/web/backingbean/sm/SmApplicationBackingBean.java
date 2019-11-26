@@ -1553,6 +1553,7 @@ public class SmApplicationBackingBean extends
 						// #26734 END
 						
 						//CHECK EQUITY OWNER EXIST IN SSM TO DISABLE CHECKBOX
+						int i = 0;
 						for(SmPersonnel personnel : this.getManagedBean().getSmAppl().getSmPersonnels()){
 							SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
 							if(personnelSSM != null){
@@ -1589,6 +1590,8 @@ public class SmApplicationBackingBean extends
 									
 								}
 							}
+							this.getManagedBean().getSmAppl().getSmPersonnels().set(i, personnel);
+							i++;
 						}
 						//SET EQUITY COMPANY
 						//if(this.getManagedBean().getSmAppl().getSmEquityCompanies()!=null){
@@ -1613,6 +1616,7 @@ public class SmApplicationBackingBean extends
 							}
 							for(SmPersonnel personnel : ssmResDTO.getSmPersonnelAll()){
 								if(EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), this.getManagedBean().getSmAppl().getSmPersonnels(), "identificationNo") == null){
+									log.info(personnel.getName()+" = Personnel Share Amt di bawah= "+personnel.getShareAmt());
 									personnel.setBrandNew(true);
 									personnel.setSmAppl(this.getManagedBean().getSmAppl());
 									personnel.setRevNo(SupplierManagementConst.DEFAULT_REV_NO);	
@@ -1645,7 +1649,8 @@ public class SmApplicationBackingBean extends
 					
 					// maybe here to put method to check with ssm
 					//SmCommonUtil.getInstance().validateWithSSM(regNo,businessType,"");
-					
+					reCalculateCapitalPersonnel();
+
 					if(!this.getManagedBean().isCompanyValidWithSSM()){
 	//					throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.contractor",null), getManagedBean().getSmSupp().getRegNo()});
 						throw new EpException(MessageConst.ERROR_721070);
@@ -12554,5 +12559,41 @@ public class SmApplicationBackingBean extends
 		}
 	}
 	//Bug #26705 - End
+	
+	//SSM INTEGRATION
+	public void reCalculateCapitalPersonnel(){
+		BigDecimal bumiputeraCapital = new BigDecimal(0);
+		BigDecimal nonBumiputeraCapital = new BigDecimal(0);
+		BigDecimal nonMalaysianCapital = new BigDecimal(0);
+		
+		if(this.getManagedBean().getSmAppl().getSmPersonnels()!=null){
+			for(SmPersonnel per : this.getManagedBean().getSmAppl().getSmPersonnels()){
+				if(per.isEquityOwner()){
+					if(per.getPmCountry() != null && SupplierManagementConst.COUNTRY_MALAYSIA_CODE.equalsIgnoreCase(per.getPmCountry().getCountryCode())){
+						if(per.isBumi()){
+							bumiputeraCapital = bumiputeraCapital.add(per.getShareAmt());
+						}else{
+							nonBumiputeraCapital = nonBumiputeraCapital.add(per.getShareAmt());
+						}
+					}else{
+						nonMalaysianCapital = nonMalaysianCapital.add(per.getShareAmt());
+					}
+				}
+			}
+			
+			this.getManagedBean().getSmAppl().getSmCompanyBasic().setNonBumiEquity(nonBumiputeraCapital);
+			this.getManagedBean().getSmAppl().getSmCompanyBasic().setBumiEquity(bumiputeraCapital);
+			this.getManagedBean().getSmAppl().getSmCompanyBasic().setForeignerEquity(nonMalaysianCapital);
+			this.getManagedBean().getSmAppl().getSmCompanyBasic().setPaidUpCapital(this.getManagedBean().getSmAppl().getSmCompanyBasic().getBumiEquity()
+					.add(this.getManagedBean().getSmAppl().getSmCompanyBasic().getNonBumiEquity())
+					.add(this.getManagedBean().getSmAppl().getSmCompanyBasic().getLocalCompanyEquity())
+					.add(this.getManagedBean().getSmAppl().getSmCompanyBasic().getForeignCompanyEquity())
+					.add(this.getManagedBean().getSmAppl().getSmCompanyBasic().getForeignerEquity())
+					.add(this.getManagedBean().getSmAppl().getSmCompanyBasic().getGovtEquity())
+					.add(this.getManagedBean().getSmAppl().getSmCompanyBasic().getGovtUnitrustEquity())
+					.setScale(2, RoundingMode.HALF_UP));
+			
+		}
+	}
 	
 }
