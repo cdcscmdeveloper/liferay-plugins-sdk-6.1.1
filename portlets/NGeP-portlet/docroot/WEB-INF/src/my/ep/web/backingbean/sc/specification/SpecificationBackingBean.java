@@ -5275,10 +5275,12 @@ public class SpecificationBackingBean extends
 					reqDTO.setScQtCheckList(checkList);
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
 					if (null == resDTO.getScQtCheckListValue()) {
-						
+						log.info("IN FINANCIAL_BANK_STMT_CODE 1");
 						if(null!=checkList.getScQtCheckListValue()){
+							log.info("IN FINANCIAL_BANK_STMT_CODE 2");
 							List<ScQtCheckListScore> bankStatement = new ArrayList<ScQtCheckListScore>();
 							for (ScQtCheckListScore checklistScore : checkList.getScQtCheckListScores()) {
+								log.info("IN FINANCIAL_BANK_STMT_CODE 3");
 								if (checklistScore.getCriteriaType() == QTConstants.CRITERIA_TYPE_AVERAGE_OF_BANK_STATEMENT) {
 									if (checklistScore.getScoreType().intValue() == Integer
 											.valueOf(QTConstants.AUTO_SCORE)) {
