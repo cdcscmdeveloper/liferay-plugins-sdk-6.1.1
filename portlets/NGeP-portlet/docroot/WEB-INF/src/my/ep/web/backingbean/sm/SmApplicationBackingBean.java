@@ -1649,7 +1649,9 @@ public class SmApplicationBackingBean extends
 					
 					// maybe here to put method to check with ssm
 					//SmCommonUtil.getInstance().validateWithSSM(regNo,businessType,"");
-					reCalculateCapitalPersonnel();
+					if(!businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())){
+						reCalculateCapitalPersonnel();
+					}
 
 					if(!this.getManagedBean().isCompanyValidWithSSM()){
 	//					throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.contractor",null), getManagedBean().getSmSupp().getRegNo()});
