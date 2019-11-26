@@ -415,7 +415,7 @@
 
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.qt.zone.location']}" /></td>
-				<td> <!-- START #21695 farid remove colspan="3"-->
+				<td colspan="3">
 					<table>
 						<tr>
 							<td><c:choose>
@@ -436,28 +436,7 @@
 									</c:otherwise>
 								</c:choose></td>
 							<td style="margin-top: -3px"><ac:iconTooltip
-								value="#{lbl['lbl.sc.qt.zone.location.tooltip']}" /></td>
-<!-- START #21695 farid -->
-								</tr>
-					</table>
-				</td>
-					<td><h:outputLabel value="#{lbl['lbl.sc.qt.partiallyoffer']}" /></td>
-				<td>
-					<table>
-						<tr>
-							<td>
-										<p:selectOneRadio value="#{scQt.partial}">
-											<f:selectItems
-												value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-											<p:ajax event="change" partialSubmit="true"
-												update="generalLocationList" process="@this"
-												listener="#{createQtBB.partialChange}"></p:ajax>
-										</p:selectOneRadio>
-
-							</td>
-							<td ><ac:iconTooltip
-								value="#{lbl['lbl.sc.qt.partiallyoffer.tooltip']}" /></td>
-<!-- END #21695 farid -->
+									value="#{lbl['lbl.sc.qt.zone.location.tooltip']}" /></td>
 						</tr>
 					</table>
 				</td>
