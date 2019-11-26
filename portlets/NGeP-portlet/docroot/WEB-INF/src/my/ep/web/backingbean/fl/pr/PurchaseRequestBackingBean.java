@@ -4690,28 +4690,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		return validDate;	
 	}
 	
-	public BigDecimal getPRThresholdPerItem(FlFulfilmentItemAddr item){
-		IFlItemSummarySO itemSummSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
-
-		BigDecimal thresholdAmt = null;
-
-		FlItemSummaryReqDTO summReq = new FlItemSummaryReqDTO();
-		summReq.setFlRequestId(getManagedBean().getFulfilmentRequest().getFulfilmentReqId());
-		summReq.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
-		summReq.setSupplierId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
-		summReq.setYear(getManagedBean().getFulfilmentRequest().getFinancialYear());
-		summReq.setItemId(item.getCmItem().getItemId());
-		summReq.setExtensionCode(item.getCmItem().getExtensionCode().substring(0, 8));
-
-		thresholdAmt = itemSummSO.retrievePerItemPerPtjPerYearByExtensionCode(summReq);
-
-		if(thresholdAmt == null)
-		{
-			thresholdAmt = new BigDecimal(0);
-		}
-		return thresholdAmt;
-	}
-	
 	public String getSkuDescription(ScRequestItem scRequestItem) {
 		String skuDesc = "";
 		log.info("BEFORE IF ===================================="+scRequestItem.getCmItem().getCmSupplierItems());
