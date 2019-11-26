@@ -1568,7 +1568,7 @@ public class SmApplicationBackingBean extends
 									String[] copyEquityOwner = {"birthDate","shareAmt","designation","nameInSsm","raceSsmNull","birthDateSsmNull","shareAmtSsmNull","designationSsmNull"};
 									EntityHelper.copyEntityPropertiesOnly(personnelSSM,personnel,copyEquityOwner);
 								}
-								
+								log.info(personnelSSM.getShareAmt()+" = Personnel Share Amt = "+personnel.getShareAmt());
 								//personnel.setSmPersonnelAddresses(personnelSSM.getSmPersonnelAddresses());
 								//personnel.setSmAppl(this.getManagedBean().getSmAppl());
 								///check ssm address exist or not
