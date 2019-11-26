@@ -16,7 +16,8 @@
 		value="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION or qtStatusChecklistScoring}" />
 	<ui:param name="qtStatusScheduleDocAndAfter"
 		value="#{createQtBB.isQTStatusGreaterThanOrEquals(scQt.qtStatus.statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
-	<ui:param name="qtStatusIsProposalValidPeriodExtApproval" value="#{createQtBB.isQTStatusInProposalValidPeriodExtApproval(scQt.qtStatus.statusId)}" />
+	<ui:param name="qtStatusIsProposalValidPeriodExtApproval" 
+		value="#{createQtBB.isQTStatusInProposalValidPeriodExtApproval(scQt.qtStatus.statusId)}" />
 	<ui:param name="zoneCoverageReadonly"
 		value="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_ZONE_COVERAGE)}" />
 	<ui:param name="isReadOnly" value="#{createQtBB.managedBean.readOnly}" />
@@ -26,12 +27,13 @@
 		value="#{qTDetailBB.getExtensionResponseDueDate(scQt.qtId)}" />
 	<ui:param name="expectTotalIndPriceBelowThreshold"
 		value="#{createQtBB.expectTotalIndPriceBelowThreshold(scQt)}" />
-	<ui:param name="qtStatusIsProposalValidPeriodExtApproval" 
-		value="#{createQtBB.isQTStatusInProposalValidPeriodExtApproval(scQt.qtStatus.statusId)}" />
+	<ui:param name="isStatusInQTReviseGroupStatus" 
+		value="#{createQtBB.isStatusInQTReviseGroupStatus(scQt.qtStatus.statusId)}" />
+	<ui:param name="isMaintenanceFlow"  
+		value="#{qTDetailBB.managedBean.maintanceFlow}" />
 	<ac:lovPopup />
 
-	<p:panel id="qtdetailsid" header="#{lbl['lbl.sc.general.info']}"
-		toggleable="true">
+	<p:panel id="qtdetailsid" header="#{lbl['lbl.sc.general.info']}" toggleable="true">
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.qt.instruction']}" escape="false" />    <!--Enhancement #25659 rendered="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION}" -->
 		<br/>
