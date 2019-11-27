@@ -20,10 +20,10 @@
 	
 		<table style="width: 50%;table-layout:fixed">
 			<tr>
-				<td>
+				<td style="vertical-align: top;">
 					<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.punishment.type']}" styleClass="outputLabel-view-label"/>
 				</td>
-				<td style="vertical-align: baseline;">
+				<td style="vertical-align: top;">
 					<p:outputLabel rendered="#{viewSuppProfileBackingBean.managedBean.noDisciplinary}"
 						value="#{lbl['lbl.sm.no.available']}" styleClass="outputLabel-view"/>
 					
@@ -84,12 +84,12 @@
 					<p:outputLabel rendered="#{empty viewSuppProfileBackingBean.managedBean.categoryCodeList}"
 						value="#{lbl['lbl.sm.no.available']}" styleClass="outputLabel-view"/>
 					<p:outputLabel rendered="#{not empty viewSuppProfileBackingBean.managedBean.categoryCodeList}" styleClass="outputLabel-view">
-						<p:dataTable value="#{viewSuppProfileBackingBean.managedBean.categoryCodeList}"
-							var="categoryCodeList">
+						<h:dataTable value="#{viewSuppProfileBackingBean.managedBean.categoryCodeList}"
+							var="categoryCodeList" style="border: none !important;">
 								<p:column style="border: none !important;">
 									<h:outputText value="#{categoryCodeList.categoryCode}"/>
 								</p:column>
-						</p:dataTable>
+						</h:dataTable>
 					</p:outputLabel>
 				</td>
 			</tr>
@@ -101,12 +101,12 @@
 					<p:outputLabel rendered="#{empty viewSuppProfileBackingBean.managedBean.blacklistownerDirectorList}"
 						value="#{lbl['lbl.sm.no.available']}" styleClass="outputLabel-view"/>
 					<p:outputLabel rendered="#{not empty viewSuppProfileBackingBean.managedBean.blacklistownerDirectorList}" styleClass="outputLabel-view">
-						<p:dataTable value="#{viewSuppProfileBackingBean.managedBean.blacklistownerDirectorList}"
-							var="blacklist">
+						<h:dataTable value="#{viewSuppProfileBackingBean.managedBean.blacklistownerDirectorList}"
+							var="blacklist" style="border: none !important;">
 								<p:column style="border: none !important;">
 									<h:outputText value="#{blacklist.icNo}"/>
 								</p:column>
-						</p:dataTable>
+						</h:dataTable>
 					</p:outputLabel>
 				</td>
 			</tr>
