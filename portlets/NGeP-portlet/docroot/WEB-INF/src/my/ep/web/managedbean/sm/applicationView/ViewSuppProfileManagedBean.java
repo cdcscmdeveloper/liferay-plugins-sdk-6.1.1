@@ -29,6 +29,8 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.vo.BlacklistOwnerDirectorVO;
+import my.ep.web.vo.DisciplinaryActionCategoryVO;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.SmSupplierBasicInfoVO;
 
@@ -128,6 +130,13 @@ public class ViewSuppProfileManagedBean extends
 	
 	private SmSupplierBusiness selectedBusinessNature;
 	private SmSupplierBusiness[] selectedBusinessNatureLs;
+	
+	private List<BlacklistOwnerDirectorVO> blacklistownerDirectorList;
+	private String startDate;
+	private String endDate;
+	private String remarks;
+	private boolean noDisciplinary;
+	private List<DisciplinaryActionCategoryVO> categoryCodeList;
 	//26238 - end
 
 	public ViewSuppProfileManagedBean() {
@@ -780,6 +789,54 @@ public class ViewSuppProfileManagedBean extends
 
 	public void setMofNoExist(boolean mofNoExist) {
 		this.mofNoExist = mofNoExist;
+	}
+
+	public List<BlacklistOwnerDirectorVO> getBlacklistownerDirectorList() {
+		return blacklistownerDirectorList;
+	}
+
+	public void setBlacklistownerDirectorList(List<BlacklistOwnerDirectorVO> blacklistownerDirectorList) {
+		this.blacklistownerDirectorList = blacklistownerDirectorList;
+	}
+
+	public String getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+
+	public boolean isNoDisciplinary() {
+		return noDisciplinary;
+	}
+
+	public void setNoDisciplinary(boolean noDisciplinary) {
+		this.noDisciplinary = noDisciplinary;
+	}
+
+	public List<DisciplinaryActionCategoryVO> getCategoryCodeList() {
+		return categoryCodeList;
+	}
+
+	public void setCategoryCodeList(List<DisciplinaryActionCategoryVO> categoryCodeList) {
+		this.categoryCodeList = categoryCodeList;
 	}
 	
 }
