@@ -3,15 +3,27 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.sm.disciplinary.action.info.headerlbl']}" toggleable="true">
-		<table class="customTbl" style="width:50%">
+		<p:outputPanel>
+			<h:outputText value="#{lbl['lbl.sm.disciplinary.click']}" escape="false"/>
+			<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				action="#{viewSuppProfileBackingBean.onViewDisciplinaryAction}"
+				process="@this" partialSubmit="true" update=":form">
+					<u><h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" style="color:blue;" escape="false"/></u>
+			</p:commandLink><p:spacer width="2"/>
+			<h:outputText value="#{lbl['lbl.sm.disciplinary.to.view.history.disciplinary.action']}" escape="false"/><br />
+			<p:spacer height="2"/>
+		</p:outputPanel>
+		
+		<table style="width: 50%;table-layout:fixed">
 			<tr>
-				<td class="tdTitle">
+				<td>
 					<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.punishment.type']}" />
 				</td>
-				<td class="tdContent">
+				<td style="vertical-align: baseline;">
 					<p:outputLabel rendered="#{registrationBackingBean.managedBean.noDisciplinary}"
 						value="#{lbl['lbl.sm.no.available']}" styleClass="outputLabel-view"/>
 					
@@ -26,10 +38,10 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="tdTitle">
+				<td>
 					<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.start.date']}" />
 				</td>
-				<td class="tdContent">
+				<td>
 					<p:outputLabel rendered="#{registrationBackingBean.managedBean.noDisciplinary}"
 						value="#{lbl['lbl.sm.no.available']}" styleClass="outputLabel-view"/>
 					<p:outputLabel rendered="#{!registrationBackingBean.managedBean.noDisciplinary}"
@@ -37,10 +49,10 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="tdTitle">
+				<td>
 					<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.end.date']}" />
 				</td>
-				<td class="tdContent">
+				<td>
 					<p:outputLabel rendered="#{registrationBackingBean.managedBean.noDisciplinary}"
 						value="#{lbl['lbl.sm.no.available']}" styleClass="outputLabel-view"/>
 					<p:outputLabel rendered="#{!registrationBackingBean.managedBean.noDisciplinary}"
@@ -48,10 +60,10 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="tdTitle">
+				<td>
 					<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.remarks']}" />
 				</td>
-				<td class="tdContent">
+				<td>
 					<p:outputLabel rendered="#{registrationBackingBean.managedBean.noDisciplinary}"
 						value="#{lbl['lbl.sm.no.available']}" styleClass="outputLabel-view"/>
 					<p:outputLabel rendered="#{!registrationBackingBean.managedBean.noDisciplinary}"
@@ -59,10 +71,10 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="tdTitle">
+				<td>
 					<p:outputLabel value="#{lbl['lbl.sm.disciplinary.list.of.ic.no.blacklist']}" />
 				</td>
-				<td class="tdContent">
+				<td>
 					<p:outputLabel rendered="#{empty registrationBackingBean.managedBean.blacklistownerDirectorList}"
 						value="#{lbl['lbl.sm.no.available']}" styleClass="outputLabel-view"/>
 					<p:outputLabel rendered="#{not empty registrationBackingBean.managedBean.blacklistownerDirectorList}" styleClass="outputLabel-view">
@@ -77,5 +89,5 @@
 			</tr>
 		</table>
 	</p:panel>
-
+	<ac:disciplinaryActionHistory mofView="false" voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" />
 </ui:composition>
