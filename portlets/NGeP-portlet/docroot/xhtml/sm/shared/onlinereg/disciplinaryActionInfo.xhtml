@@ -20,10 +20,10 @@
 		
 		<table style="width: 50%;table-layout:fixed">
 			<tr>
-				<td>
+				<td style="vertical-align: top;">
 					<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.punishment.type']}" />
 				</td>
-				<td style="vertical-align: baseline;">
+				<td style="vertical-align: top;">
 					<p:outputLabel rendered="#{registrationBackingBean.managedBean.noDisciplinary}"
 						value="#{lbl['lbl.sm.no.available']}" styleClass="outputLabel-view"/>
 					
@@ -78,12 +78,12 @@
 					<p:outputLabel rendered="#{empty registrationBackingBean.managedBean.blacklistownerDirectorList}"
 						value="#{lbl['lbl.sm.no.available']}" styleClass="outputLabel-view"/>
 					<p:outputLabel rendered="#{not empty registrationBackingBean.managedBean.blacklistownerDirectorList}" styleClass="outputLabel-view">
-						<p:dataTable value="#{registrationBackingBean.managedBean.blacklistownerDirectorList}"
-							var="blacklist">
+						<h:dataTable value="#{registrationBackingBean.managedBean.blacklistownerDirectorList}"
+							var="blacklist" style="border: none !important;">
 								<p:column style="border: none !important;">
 									<h:outputText value="#{blacklist.icNo}"/>
 								</p:column>
-						</p:dataTable>
+						</h:dataTable>
 					</p:outputLabel>
 				</td>
 			</tr>
