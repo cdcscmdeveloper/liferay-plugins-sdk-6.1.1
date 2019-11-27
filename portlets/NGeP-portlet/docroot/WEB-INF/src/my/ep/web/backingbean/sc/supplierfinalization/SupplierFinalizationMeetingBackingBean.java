@@ -1649,8 +1649,8 @@ if (CollectionUtils.isNotEmpty(
 									member.getRepresentativeType()
 										  		.getParameterCode()))) {
 					
-					throw new EpException(MessageConst.ERROR_760212, new String[]{
-							ResourceBundleUtils.getMessage("lbl.sc.please.select.representative.type", 
+					throw new EpException(MessageConst.ERROR_100022, new String[]{
+							ResourceBundleUtils.getMessage("lbl.sc.representative.type", 
 						 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, 
 						 			new FacesScopes().getUserLocale())
 					});						
