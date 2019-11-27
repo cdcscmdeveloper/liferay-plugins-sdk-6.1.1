@@ -1653,7 +1653,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			String docType = qtnTenderSearchBean.getDocType();
 			String docNo = qtnTenderSearchBean.getDocNo();
 			if (StringUtils.isNotEmpty(docType)) {
-				if (ParameterConst.DOCTYPE_LETTER_OF_INTENT.equals(docType)) {
+				if (ParameterConst.DOCTYPE_LETTER_OF_INTENT.equals(docType)
+						// ***19336#99 - start
+						&& checkSearchBeanDocTypePrefix(ParameterConst.DOCTYPE_LETTER_OF_INTENT) 
+						// ***19336#99 - end
+						) {
 					if (!StringUtils.isBlank(docNo)) {
 						SearchFilterBean bean = new SearchFilterBean();
 						bean.setSearchField("loiNo");
@@ -1702,7 +1706,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			String docNo = qtnTenderSearchBean.getDocNo();
 			if (StringUtils.isNotEmpty(docType)) {
 				if (ParameterConst.DOCTYPE_LETTER_OF_AWARD.equals(docType)) {
-					if (!StringUtils.isBlank(docNo)) {
+					if (!StringUtils.isBlank(docNo) 
+							// ***19336#99 - start
+							&& checkSearchBeanDocTypePrefix(ParameterConst.DOCTYPE_LETTER_OF_AWARD) 
+							// ***19336#99 - end
+						)
+							{
 						SearchFilterBean bean = new SearchFilterBean();
 						bean.setSearchField("loaNo");
 						bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
