@@ -85,6 +85,7 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 		getManagedBean().setSelectedAccClass(null);
 		getManagedBean().setSelectedAccType(null);
 		getManagedBean().setSelectedGenObjCode(null);
+		getManagedBean().setSelectedGoSoObjCode(null);
 		retrieveAccountType();
 		retrieveAccountClass();
 		getPmGoDataModel().resetData();
@@ -269,17 +270,34 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 							getManagedBean().getSelectedGenObjCode()));
 		}
 		
+		//log.info("[#24973] - new filter bean for GoSo code - start");
+		if (StringUtils.isNotBlank(getManagedBean().getSelectedGoSoObjCode())) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("gosoCode",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							getManagedBean().getSelectedGoSoObjCode()));
+		}
+		//log.info("[#24973] - new filter bean for GoSo code - end");
+		
 		if (StringUtils.isNotBlank(getManagedBean().getDesc())) {
 //			searchBean.getDataFilterBeans().add(
 //					new SearchFilterBean("desc",
 //							SearchOperator.OPERATOR_LIKE.value(),
 //							getManagedBean().getDesc().toLowerCase(),true));
 			
-			SearchFilterBean subClassFilterBean = new SearchFilterBean("glAccCode",
-					SearchOperator.OPERATOR_LIKE.value(), 
-					getManagedBean().getDesc().toLowerCase(),
-					SearchCondition.CONDITION_OR.value());
+//			SearchFilterBean subClassFilterBean = new SearchFilterBean("glAccCode",
+//					SearchOperator.OPERATOR_LIKE.value(), 
+//					getManagedBean().getDesc().toLowerCase(),
+//					SearchCondition.CONDITION_OR.value());
+//			subClassFilterBean.setCaseInsensitive(true);
+			
+			//log.info("[#24973] - modified filter - start");
+			SearchFilterBean subClassFilterBean = new SearchFilterBean("gosoCode",
+			SearchOperator.OPERATOR_LIKE.value(), 
+			getManagedBean().getDesc().toLowerCase(),
+			SearchCondition.CONDITION_OR.value());
 			subClassFilterBean.setCaseInsensitive(true);
+			//log.info("[#24973] - modified filter - end");
 			
 			searchBean.getDataFilterBeans().add(
 					new SearchMultiFilterBean(new SearchFilterBean("desc",
@@ -351,10 +369,76 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 	public void onChangeAccType(){
 		getManagedBean().setSelectedAccClass(null);
 		getManagedBean().setSelectedGenObjCode(null);
+		getManagedBean().setSelectedGoSoObjCode(null);
 	}
 	
 	public void onChangeAccClass(){
 		getManagedBean().setSelectedGenObjCode(null);
+		getManagedBean().setSelectedGoSoObjCode(null);
+	}
+	
+	public void onChangeGenObjCode(){
+		getManagedBean().setSelectedGoSoObjCode(null);
+	}
+	
+	public SelectItem[] retrieveGoSoCodeList() {
+		log.info("retrieveGoSoCodeList");
+		
+		SelectItem[] items = null;
+		//log.info("[#24973] - GO Code: " + getManagedBean().getSelectedGenObjCode());
+		if (StringUtils.isNotBlank(getManagedBean().getSelectedGenObjCode())) {
+			IObjectSO objectSO = null;
+			try {
+				int i = 1;
+				ObjectReqDTO reqDTO = new ObjectReqDTO();
+				SearchBean<String> accGoSoSearchBean = new SearchBean<String>();
+				accGoSoSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean("accType",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								getManagedBean().getSelectedAccType()));
+				
+				accGoSoSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean("accClass",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								getManagedBean().getSelectedAccClass()));
+				
+				accGoSoSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean("goCode",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								getManagedBean().getSelectedGenObjCode()));
+				
+				accGoSoSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean("recordStatus",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								DbValueConst.RECORD_STATUS_ACTIVE));
+				
+				accGoSoSearchBean.getSortColumns().add(new SearchOrderBean("gosoCode"));
+
+				reqDTO.setAccGoSoSearchBean(accGoSoSearchBean);
+				objectSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IObjectSO.class);
+				ObjectResDTO resDTO = objectSO
+						.retrieveGoSoCodeListBySearchBean(reqDTO);
+				List<String> list = resDTO.getAccGoSoResultBean().getResultList();
+				items = new SelectItem[list.size() + 1];
+				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+						"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
+				for (String object : list) {
+					items[i++] = new SelectItem(object, object);
+				}
+			} catch (Exception e) {
+				throw new EpException(e.getMessage());
+			} finally {
+			  objectSO = null;
+			}
+		}else{
+			items = new SelectItem[1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
+		}
+		return items;
 	}
 
 }

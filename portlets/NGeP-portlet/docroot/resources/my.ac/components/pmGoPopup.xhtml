@@ -35,10 +35,10 @@
 				<p:panel id="goPnlId"
 					header="#{lbl['lbl.pm.header.general.org.search']}"
 					toggleable="true">
-					<h:panelGrid columns="3" id="orgProfilePg">
+					<h:panelGrid columns="5" id="orgProfilePg">
 						<p:inputText id="itAccType" disabled="true" style="width:170px"
 							value="#{lbl['lbl.pm.go.search.acc.type']}" />
-						<p:spacer height="1" />
+						<p:spacer height="1"/>
 						<p:selectOneMenu id="somAccType" styleClass="pmGoPopupSomWidth"
 							disabled="#{pmGoSearchBackingBean.managedBean.accTypeDisabled}"
 							value="#{pmGoSearchBackingBean.managedBean.selectedAccType}">
@@ -50,12 +50,14 @@
 								itemValue="#{parameter.pmParameter.parameterCode}" />
 							<p:ajax event="change" process="@this" partialSubmit="true"
 								listener="#{pmGoSearchBackingBean.onChangeAccType()}"
-								update="somAccClass,somGoCode" />
+								update="somAccClass,somGoCode,somGoSoCode" />
 						</p:selectOneMenu>
+						<p:spacer height="1"/>
+						<p:spacer height="1"/>
 
 						<p:inputText id="itAccClass" disabled="true" style="width:170px"
 							value="#{lbl['lbl.pm.go.search.acc.class']}" />
-						<p:spacer height="1" />
+						<p:spacer height="1"/>
 						<p:selectOneMenu id="somAccClass" styleClass="pmGoPopupSomWidth"
 							value="#{pmGoSearchBackingBean.managedBean.selectedAccClass}"
 							disabled="#{pmGoSearchBackingBean.managedBean.accClassDisabled}">
@@ -63,28 +65,47 @@
 								value="#{pmGoSearchBackingBean.retrieveAccountClass()}" />
 							<p:ajax event="change" process="@this" partialSubmit="true"
 							listener="#{pmGoSearchBackingBean.onChangeAccClass()}"
-								update="@this,somGoCode" />
+								update="@this,somGoCode,somGoSoCode" />
 						</p:selectOneMenu>
+						<p:spacer height="1"/>
+						<p:spacer height="1"/>
 
 						<p:inputText id="itGoCode" disabled="true" style="width:170px"
 							value="#{lbl['lbl.pm.go.search.gen.obj.code']}" />
-						<p:spacer height="1" />
+						<p:spacer height="1"/>
 						<p:selectOneMenu id="somGoCode" styleClass="pmGoPopupSomWidth"
 							value="#{pmGoSearchBackingBean.managedBean.selectedGenObjCode}">
 							<f:selectItems
 								value="#{pmGoSearchBackingBean.retrieveGoCodeList()}" />
 							<p:ajax event="change" process="@this" partialSubmit="true"
-								update="@this" />
+								listener="#{pmGoSearchBackingBean.onChangeGenObjCode()}"
+								update="@this,somGoSoCode" />
 						</p:selectOneMenu>
-
+						<p:graphicImage id="giGoCode" value="/css/images/design/tooltips.png"/>
+						<p:tooltip for="giGoCode" value="#{lbl['lbl.pm.go.search.gocode.tooltip']}" 
+							showEffect="fade" hideEffect="fade"/>						
+						
+						<p:inputText id="itGoSoCode" disabled="true" style="width:170px"
+							value="#{lbl['lbl.pm.go.search.goso.obj.code']}" />						
+						<p:spacer height="1"/>
+						<p:selectOneMenu id="somGoSoCode" styleClass="pmGoPopupSomWidth"
+							value="#{pmGoSearchBackingBean.managedBean.selectedGoSoObjCode}">
+							<f:selectItems
+								value="#{pmGoSearchBackingBean.retrieveGoSoCodeList()}"/>
+							<p:ajax event="change" process="@this" partialSubmit="true"								
+								update="@this"/>
+						</p:selectOneMenu>
+						<p:graphicImage id="giGoSoCode" value="/css/images/design/tooltips.png" />
+						<p:tooltip for="giGoSoCode" value="#{lbl['lbl.pm.go.search.gosocode.tooltip']}" 
+							showEffect="fade" hideEffect="fade"/>	
+						
 						<p:inputText id="itDesc" disabled="true" style="width:170px"
 							value="#{lbl['lbl.pm.go.search.desc']}" />
-						<p:spacer height="1" />
+						<p:spacer height="1"/>
 						<p:inputText id="itSearchDesc"  style="width:300px"
 							maxlength="100" value="#{pmGoSearchBackingBean.managedBean.desc}" >
 							<p:ajax event="blur" process="@this" partialSubmit="true" update="@this"/>
 						</p:inputText>
-
 					</h:panelGrid>
 					<div class="ppRightBtn">
 						<p:commandButton id="searcbBtnId" widgetVar="ptjSearchBtnWV"
