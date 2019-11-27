@@ -12570,7 +12570,7 @@ public class SmApplicationBackingBean extends
 		
 		if(this.getManagedBean().getSmAppl().getSmPersonnels()!=null){
 			for(SmPersonnel per : this.getManagedBean().getSmAppl().getSmPersonnels()){
-				if(per.isEquityOwner()){
+				if(per.isEquityOwner() && per.getShareAmt() !=null ){
 					if(per.getPmCountry() != null && SupplierManagementConst.COUNTRY_MALAYSIA_CODE.equalsIgnoreCase(per.getPmCountry().getCountryCode())){
 						if(per.isBumi()){
 							bumiputeraCapital = bumiputeraCapital.add(per.getShareAmt());
