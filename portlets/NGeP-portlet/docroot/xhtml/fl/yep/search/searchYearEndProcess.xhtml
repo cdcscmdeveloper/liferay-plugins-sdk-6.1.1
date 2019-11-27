@@ -96,12 +96,12 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>
+			<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error,info" />
 		<!-- start search panel -->
 		<p:panel id="searchPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
 			
 			<!-- PO panel -->
 			<p:panel id="purchaseOrderPanel" header="#{lbl['lbl.fl.purchaseorder']}" toggleable="true">
-			<p:messages id="messages" showSummary="false" showDetail="true"  closable="true" severity="error,info" />
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}"/>
 				<table style="width: 100%">
 					<tr>
@@ -120,7 +120,8 @@
 					</tr>
 					<tr>
 						<!-- doc type  -->
-						<td width="20%"><p:outputLabel value="#{lbl['lbl.fl.yep.search.doc.type']}"	/>
+						<td width="20%"><p:outputLabel value="#{lbl['lbl.fl.yep.search.doc.type']}"	/><p:outputLabel
+						value="*" styleClass="mandatory" />
 						</td>
 						<td width="30%">
 							<p:selectOneMenu
