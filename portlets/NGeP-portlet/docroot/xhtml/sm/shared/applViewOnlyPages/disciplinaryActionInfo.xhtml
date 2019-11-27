@@ -1,0 +1,116 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.sm.disciplinary.action.info.headerlbl']}" toggleable="true" id="discActionPanelId">
+		<p:outputPanel>
+			<h:outputText value="#{lbl['lbl.sm.disciplinary.click']}" escape="false"/>
+			<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				action="#{viewSuppProfileBackingBean.onViewDisciplinaryAction}"
+				process="@this" partialSubmit="true" update=":form">
+					<u><h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" style="color:blue;" escape="false"/></u>
+			</p:commandLink><p:spacer width="2"/>
+			<h:outputText value="#{lbl['lbl.sm.disciplinary.to.view.history.disciplinary.action']}" escape="false"/><br />
+			<p:spacer height="2"/>
+		</p:outputPanel>
+	
+		<table style="width: 50%;table-layout:fixed">
+			<tr>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.punishment.type']}" styleClass="outputLabel-view-label"/>
+				</td>
+				<td style="vertical-align: baseline;">
+					<p:outputLabel rendered="#{viewSuppProfileBackingBean.managedBean.noDisciplinary}"
+						value="#{lbl['lbl.sm.no.available']}" styleClass="outputLabel-view"/>
+					
+					<p:outputLabel rendered="#{viewSuppProfileBackingBean.managedBean.warning}" styleClass="outputLabel-view"
+						value="#{lbl['lbl.sm.disciplinary.jktt.warning']}"/>
+					<p:outputLabel rendered="#{viewSuppProfileBackingBean.managedBean.cancelCategoryCode}" styleClass="outputLabel-view"
+						value="#{lbl['lbl.sm.disciplinary.jktt.cancel.cat.code']}"/>
+					<p:outputLabel rendered="#{viewSuppProfileBackingBean.managedBean.suspendRegistration}" styleClass="outputLabel-view"
+						value="#{lbl['lbl.sm.disciplinary.jktt.suspend.registration']}"/>
+					<p:outputLabel rendered="#{viewSuppProfileBackingBean.managedBean.cancelRegistration}" styleClass="outputLabel-view"
+						value="#{lbl['lbl.sm.disciplinary.jktt.cancel.registration']}"/>
+					<p:outputLabel rendered="#{viewSuppProfileBackingBean.managedBean.blacklistOwnerOrDirector}" styleClass="outputLabel-view"
+						value="#{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']}"/>
+					<p:outputLabel rendered="#{viewSuppProfileBackingBean.managedBean.bumiputeraStatusCancel}" styleClass="outputLabel-view"
+						value="#{lbl['lbl.sm.disciplinary.jktt.cancel.of.bumiputera']}"/>
+					<p:outputLabel rendered="#{viewSuppProfileBackingBean.managedBean.manufacturerStatusCancel}" styleClass="outputLabel-view"
+						value="#{lbl['lbl.sm.disciplinary.jktt.cancel.of.manufacturer']}"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.start.date']}" styleClass="outputLabel-view-label"/>
+				</td>
+				<td>
+					<p:outputLabel rendered="#{viewSuppProfileBackingBean.managedBean.noDisciplinary}"
+						value="#{lbl['lbl.sm.no.available']}" styleClass="outputLabel-view"/>
+					<p:outputLabel rendered="#{!viewSuppProfileBackingBean.managedBean.noDisciplinary}"
+						value="#{viewSuppProfileBackingBean.managedBean.startDate}" styleClass="outputLabel-view"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.end.date']}" styleClass="outputLabel-view-label"/>
+				</td>
+				<td>
+					<p:outputLabel rendered="#{viewSuppProfileBackingBean.managedBean.noDisciplinary}"
+						value="#{lbl['lbl.sm.no.available']}" styleClass="outputLabel-view"/>
+					<p:outputLabel rendered="#{!viewSuppProfileBackingBean.managedBean.noDisciplinary}"
+						value="#{viewSuppProfileBackingBean.managedBean.endDate}" styleClass="outputLabel-view"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.remarks']}" styleClass="outputLabel-view-label"/>
+				</td>
+				<td>
+					<p:outputLabel rendered="#{viewSuppProfileBackingBean.managedBean.noDisciplinary}"
+						value="#{lbl['lbl.sm.no.available']}" styleClass="outputLabel-view"/>
+					<p:outputLabel rendered="#{!viewSuppProfileBackingBean.managedBean.noDisciplinary}"
+						value="#{viewSuppProfileBackingBean.managedBean.remarks}" styleClass="outputLabel-view"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sm.disciplinary.list.cancel.category.code']}" styleClass="outputLabel-view-label"/>
+				</td>
+				<td>
+					<p:outputLabel rendered="#{empty viewSuppProfileBackingBean.managedBean.categoryCodeList}"
+						value="#{lbl['lbl.sm.no.available']}" styleClass="outputLabel-view"/>
+					<p:outputLabel rendered="#{not empty viewSuppProfileBackingBean.managedBean.categoryCodeList}" styleClass="outputLabel-view">
+						<p:dataTable value="#{viewSuppProfileBackingBean.managedBean.categoryCodeList}"
+							var="categoryCodeList">
+								<p:column style="border: none !important;">
+									<h:outputText value="#{categoryCodeList.categoryCode}"/>
+								</p:column>
+						</p:dataTable>
+					</p:outputLabel>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sm.disciplinary.list.of.ic.no.blacklist']}" styleClass="outputLabel-view-label"/>
+				</td>
+				<td>
+					<p:outputLabel rendered="#{empty viewSuppProfileBackingBean.managedBean.blacklistownerDirectorList}"
+						value="#{lbl['lbl.sm.no.available']}" styleClass="outputLabel-view"/>
+					<p:outputLabel rendered="#{not empty viewSuppProfileBackingBean.managedBean.blacklistownerDirectorList}" styleClass="outputLabel-view">
+						<p:dataTable value="#{viewSuppProfileBackingBean.managedBean.blacklistownerDirectorList}"
+							var="blacklist">
+								<p:column style="border: none !important;">
+									<h:outputText value="#{blacklist.icNo}"/>
+								</p:column>
+						</p:dataTable>
+					</p:outputLabel>
+				</td>
+			</tr>
+		</table>
+	</p:panel>
+	<ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" /> 
+</ui:composition>
