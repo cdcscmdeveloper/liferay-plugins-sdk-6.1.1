@@ -203,8 +203,14 @@ public class YearEndProcessBackingBean extends
 	
 	
 	public void searchYep(){
-//		renewSesionObject();
-//		resetSearchCriteria();
+
+		if(null ==getManagedBean().getSearchDocType()){ 
+			throw new EpException(MessageConst.ERROR_760444);
+		}
+		
+		if(null == getManagedBean().getSearchStartDate() && null != getManagedBean().getSearchToDate()){
+			throw new EpException(MessageConst.ERROR_760494);
+		}
 		getManagedBean().getFlYepDataModel().reloadData();
 		
 	}
