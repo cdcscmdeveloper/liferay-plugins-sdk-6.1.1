@@ -2096,7 +2096,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 								getManagedBean().setSelectedTabIndex(index + 4);
 							
 						} else {
-							getManagedBean().setSelectedTabIndex(index+4);
+							if(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL) && ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange())
+								getManagedBean().setSelectedTabIndex(index + 4);
+							else
+								getManagedBean().setSelectedTabIndex(index + 3);
 						}
 					}
 				}
