@@ -12,7 +12,7 @@
 		<cc:attribute name="dialogWidth" default="1100px" />
 		<cc:attribute name="dialogHeight" default="500px" />
 		<cc:attribute name="voList" type="java.util.List" required="true" />
-		<cc:attribute name="basicView" default="true" />
+		<cc:attribute name="mofView" default="true" />
 	</cc:interface>
 	
 	<cc:implementation>
@@ -29,13 +29,13 @@
 					style="float: left;white-space: normal;" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.disciplinary.jktt.punishment.type']}" style="width : 23% !important; vertical-align:top;">
-				<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.warning']}" rendered="#{disciplinaryAction.warning}"/>
-				<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.cancel.cat.code']}" rendered="#{disciplinaryAction.cancelCategory}"/>
-				<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.suspend.registration']}" rendered="#{disciplinaryAction.suspendRegistration}"/>
-				<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.cancel.registration']}" rendered="#{disciplinaryAction.cancelRegistration}"/>
-				<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']}" rendered="#{disciplinaryAction.blacklistOwnerDirector}"/>
-				<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.cancel.of.bumiputera']}" rendered="#{disciplinaryAction.bumiputeraCancel}"/>
-				<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.cancel.of.manufacturer']}" rendered="#{disciplinaryAction.manufacturerCancel}"/>
+				<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.warning']}" rendered="#{disciplinaryAction.warning}" styleClass="outputLabel-view"/>
+				<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.cancel.cat.code']}" rendered="#{disciplinaryAction.cancelCategory}" styleClass="outputLabel-view"/>
+				<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.suspend.registration']}" rendered="#{disciplinaryAction.suspendRegistration}" styleClass="outputLabel-view"/>
+				<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.cancel.registration']}" rendered="#{disciplinaryAction.cancelRegistration}" styleClass="outputLabel-view"/>
+				<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']}" rendered="#{disciplinaryAction.blacklistOwnerDirector}" styleClass="outputLabel-view"/>
+				<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.cancel.of.bumiputera']}" rendered="#{disciplinaryAction.bumiputeraCancel}" styleClass="outputLabel-view"/>
+				<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.cancel.of.manufacturer']}" rendered="#{disciplinaryAction.manufacturerCancel}" styleClass="outputLabel-view"/>
 			</p:column>			
 			<p:column headerText="#{lbl['lbl.sm.disciplinary.jktt.start.date']}" style="width : 10% !important; vertical-align:top;">
 				<ac:labelDateTime styleClass="outputLabel-view" value="#{disciplinaryAction.startDate}"/>
@@ -47,7 +47,7 @@
 				<h:outputText value="#{disciplinaryAction.remarks}"/>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.disciplinary.list.cancel.category.code']}" 
-				rendered="#{cc.attrs.basicView}"
+				rendered="#{cc.attrs.mofView}"
 				style="width : 15% !important; vertical-align:top;">
 				<h:dataTable value="#{disciplinaryAction.categoryCodeList}" var="suppCat" rendered="#{not empty disciplinaryAction.categoryCodeList}"
 					rowIndexVar="indexCat" emptyMessage="#{lbl['lbl.sm.no.available']}" style="border: none !important;">

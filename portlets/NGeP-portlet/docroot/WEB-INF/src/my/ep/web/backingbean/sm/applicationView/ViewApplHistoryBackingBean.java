@@ -1066,13 +1066,13 @@ public class ViewApplHistoryBackingBean extends
 		return voList;
 	}
 	
-	public boolean basicView(){
-		boolean basicView = false;
+	public boolean mofView(){
+		boolean mofView = false;
 		SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
 		if(supplier != null && supplier.getMofNo() != null){
-			basicView = true;
+			mofView = true;
 		}
-		return basicView;
+		return mofView;
 	}
 	//26238 - end
 	
