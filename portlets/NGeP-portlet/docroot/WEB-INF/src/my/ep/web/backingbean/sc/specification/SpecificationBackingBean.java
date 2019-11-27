@@ -10,10 +10,23 @@
  */
 package my.ep.web.backingbean.sc.specification;
 
-import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+
+import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Iterator;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.DateFormat;
@@ -26,23 +39,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-
-import org.apache.poi.EncryptedDocumentException;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import java.io.ByteArrayOutputStream;
-import java.util.Iterator;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -229,22 +229,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
-
-import org.apache.poi.EncryptedDocumentException;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.DataFormatter;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -4370,14 +4354,10 @@ public class SpecificationBackingBean extends
 						.getTplSpecMaster());
 				specReqDTO
 						.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
-				TemplateSpecResDTO templateresDTO =null;
-				templateresDTO = templateSpecSO
+				TemplateSpecResDTO templateresDTO = templateSpecSO
 						.getTemplateMaster(specReqDTO);
-				if(null!=templateresDTO){
-					checkList.getScQtDoc().setTplSpecMaster(
-							templateresDTO.getSpecMaster());
-				}		
-				
+				checkList.getScQtDoc().setTplSpecMaster(
+						templateresDTO.getSpecMaster());
 				TemplateSpecBean templateSpecBean = getManagedBean()
 						.getTemplateSpecBean();
 				templateSpecBean.setSpecMaster(checkList.getScQtDoc()
@@ -4446,31 +4426,15 @@ public class SpecificationBackingBean extends
 						 * 
 						 * }
 						 */
-						boolean panelItem=false;
-						if(null!=checkList.getScQtDoc().getTplSpecMaster().getCtPanelItem()){
-							panelItem=true;
-						}
-						if(null!=templateresDTO.getSpecMaster().getCtPanelItem()){
-							panelItem=true;
-						}
-						if(panelItem){
+						if (null != templateresDTO.getSpecMaster()
+								&& null == templateresDTO.getSpecMaster()
+										.getCtPanelItem()) {
 							this.getManagedBean().setPanelItemCategory(
-								ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC);
-						}else{
+									ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC);
+						} else {
 							this.getManagedBean().setPanelItemCategory(
 									ParameterConst.ITEM_CATEGORY_TYPE_GENERAL);
 						}
-						
-						/** 31/10/2019 **/
-//						if (null != templateresDTO.getSpecMaster()
-//								&& null == templateresDTO.getSpecMaster()
-//										.getCtPanelItem()) {
-//							this.getManagedBean().setPanelItemCategory(
-//									ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC);
-//						} else {
-//							this.getManagedBean().setPanelItemCategory(
-//									ParameterConst.ITEM_CATEGORY_TYPE_GENERAL);
-//						}
 					}
 					if ((null != this.getManagedBean().getPanelItemCategory() && !""
 							.equals(this.getManagedBean()
@@ -5275,54 +5239,17 @@ public class SpecificationBackingBean extends
 					reqDTO.setScQtCheckList(checkList);
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
 					if (null == resDTO.getScQtCheckListValue()) {
-						log.info("IN FINANCIAL_BANK_STMT_CODE 1");
-						if(null!=checkList.getScQtCheckListValue()){
-							log.info("IN FINANCIAL_BANK_STMT_CODE 2");
-							List<ScQtCheckListScore> bankStatement = new ArrayList<ScQtCheckListScore>();
-							for (ScQtCheckListScore checklistScore : checkList.getScQtCheckListScores()) {
-								log.info("IN FINANCIAL_BANK_STMT_CODE 3");
-								if (checklistScore.getCriteriaType() == QTConstants.CRITERIA_TYPE_AVERAGE_OF_BANK_STATEMENT) {
-									if (checklistScore.getScoreType().intValue() == Integer
-											.valueOf(QTConstants.AUTO_SCORE)) {
-										this.getManagedBean()
-												.setChecklistScoreType(
-														String.valueOf(checklistScore
-																.getScoreType()
-																.intValue()));
-										bankStatement.add(checklistScore);
-										this.getManagedBean().setCheckListScore(
-												bankStatement);
-									} else if (checklistScore.getScoreType()
-											.intValue() == Integer
-											.valueOf(QTConstants.USER_SCORE)) {
-										this.getManagedBean()
-												.setChecklistScoreType(
-														String.valueOf(checklistScore
-																.getScoreType()
-																.intValue()));
-										this.getManagedBean()
-												.setScQtCheckListScore(
-														checklistScore);
-									}
+						this.getManagedBean()
+								.setStartYear(String.valueOf(year));
+						this.getManagedBean().setEndYear(String.valueOf(year));
 
-								}
-							}
-							
-							 checkList.setScQtCheckListScores(null);
-							 checkList.setScQtCheckListValue(null);
-						}else{
-							this.getManagedBean()
-							.setStartYear(String.valueOf(year));
-							this.getManagedBean().setEndYear(String.valueOf(year));
+						this.getManagedBean().setChecklistScoreType(null);
 
-							this.getManagedBean().setChecklistScoreType(null);
+						ScQtCheckListValue checkListValue = new ScQtCheckListValue();
+						setUserDetails(checkListValue);
 
-							ScQtCheckListValue checkListValue = new ScQtCheckListValue();
-							setUserDetails(checkListValue);
-
-							checkListValue.setScQtCheckList(checkList);
-							checkList.setScQtCheckListValue(checkListValue);
-						}
+						checkListValue.setScQtCheckList(checkList);
+						checkList.setScQtCheckListValue(checkListValue);
 
 					} else {
 
@@ -5400,69 +5327,10 @@ public class SpecificationBackingBean extends
 
 					reqDTO.setScQtCheckList(checkList);
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
-					if (null == resDTO.getCheckListScores() || (resDTO.getCheckListScores().size()==0)) {
-						
-						if(null!=checkList.getScQtCheckListScores()){
-							List<ScQtCheckListScore> assetLiability = new ArrayList<ScQtCheckListScore>();
-							List<ScQtCheckListScore> currentRation = new ArrayList<ScQtCheckListScore>();
-							for (ScQtCheckListScore checklistScore : checkList.getScQtCheckListScores()) {
-								if (checklistScore.getCriteriaType() == QTConstants.CRITERIA_TYPE_ASSETS_AND_LIABILITIES_ACID_RATIO) {
-									if (checklistScore.getScoreType().intValue() == Integer
-											.valueOf(QTConstants.AUTO_SCORE)) {
-										this.getManagedBean()
-												.setChecklistScoreType(
-														String.valueOf(checklistScore
-																.getScoreType()
-																.intValue()));
-										assetLiability.add(checklistScore);
-										this.getManagedBean().setCheckListScore(
-												assetLiability);
-									} else if (checklistScore.getScoreType()
-											.intValue() == Integer
-											.valueOf(QTConstants.USER_SCORE)) {
-										this.getManagedBean()
-												.setChecklistScoreType(
-														String.valueOf(checklistScore
-																.getScoreType()
-																.intValue()));
-										this.getManagedBean()
-												.setScQtCheckListScore(
-														checklistScore);
-									}
-
-								} else if (checklistScore.getCriteriaType() == QTConstants.CRITERIA_TYPE_ASSETS_AND_LIABILITIES_CURRENT_RATIO) {
-
-									if (checklistScore.getScoreType().intValue() == Integer
-											.valueOf(QTConstants.AUTO_SCORE)) {
-
-										this.getManagedBean()
-												.setCompanyScoreType(
-														String.valueOf(checklistScore
-																.getScoreType()
-																.intValue()));
-										currentRation.add(checklistScore);
-										this.getManagedBean().setScoringForYears(
-												currentRation);
-									} else if (checklistScore.getScoreType()
-											.intValue() == Integer
-											.valueOf(QTConstants.USER_SCORE)) {
-										this.getManagedBean()
-												.setCompanyScoreType(
-														String.valueOf(checklistScore
-																.getScoreType()
-																.intValue()));
-										this.getManagedBean().setScQtContractScore(
-												checklistScore);
-									}
-
-								}
-
-							}
-						}else{
-							checkList.setScQtCheckListValue(resDTO
-									.getScQtCheckListValue());
-							this.getManagedBean().setChecklistScoreType(null);
-						}
+					if (null == resDTO.getCheckListScores()) {
+						checkList.setScQtCheckListValue(resDTO
+								.getScQtCheckListValue());
+						this.getManagedBean().setChecklistScoreType(null);
 
 					} else {
 
