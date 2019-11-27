@@ -5049,8 +5049,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		boolean isContractAmountAmend = false;
 		if(ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount().longValue() < 20000L){
 			isContractAmountAmend = true;
-		}		
-		
+		}
 		return isContractAmountAmend;
 	}
 }
