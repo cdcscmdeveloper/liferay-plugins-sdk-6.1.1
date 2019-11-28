@@ -1278,18 +1278,17 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (null != locCriteria && !locCriteria.isEmpty()) {
 				scQt.getScQtSupplierCriteria().setScQtLocCriteria(locCriteria);
 			} 
-			//20191106@asyrafhaziq - Bug #26289 - Start
+			//20191127@asyrafhaziq - Bug #26289 - Start
+			else
+			{				
 			Long currentStatus = scQt.getQtStatus().getStatusId();
-			if ( currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT))
-			{
-				if (this.getManagedBean().getZoneTrees() == null && this.getManagedBean().getZoneTrees().isEmpty())
-				{
-				scQt.getScQtSupplierCriteria().setScQtLocCriteria(null);
-				//scQt.getScQtSupplierCriteria().getScQtLocCriteria().clear();
+			if (isQTStatusGreaterThanOrEqualsScheduleDoc(currentStatus)) {
+				if ((null == this.getManagedBean().getZoneTrees()) && scQt.getScQtSupplierCriteria().getScQtLocCriteria() != null) {
+					scQt.getScQtSupplierCriteria().setScQtLocCriteria(null);
 				}
 			}
-				
-			//20191106@asyrafhaziq - Bug #26289 - End
+			}
+			//20191127@asyrafhaziq - Bug #26289 - End
 		}
 		if (scQt.isZonal()) {
 			if (null != scQt.getScQtSupplierCriteria() && scQt.getScQtSupplierCriteria().getQtZoneCriterias() != null) {
