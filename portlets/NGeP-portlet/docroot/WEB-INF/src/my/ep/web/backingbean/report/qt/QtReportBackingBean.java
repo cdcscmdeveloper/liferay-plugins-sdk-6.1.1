@@ -22,10 +22,13 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.dto.rpt.ReportTempInfoReqDTO;
 import my.ep.biz.dto.rpt.ReportTempInfoResDTO;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.biz.service.rpt.IRPTRequestSO;
@@ -33,7 +36,10 @@ import my.ep.biz.service.rpt.IReportTempInfoSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
@@ -42,11 +48,17 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.rpt.ReportTempInfo;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.type.pm.RoleCode;
+import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.report.ReportBaseBackingBean;
 import my.ep.web.bean.report.ScReportFieldsSearchBean;
 import my.ep.web.constant.report.QtReportConst;
@@ -69,6 +81,8 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 	private static final long serialVersionUID = 1L;
 	private static final Logger log = EpLogger
 			.getLogger(QtReportBackingBean.class);
+	private static final String CARET_SYMBOL = "^";
+	private static final String PIPE_SYMBOL = "|";
  
 	private String strLanguage = ResourceBundleUtils.getMessage(
 			ReportConst.LABEL_LANG, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -661,7 +675,11 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		if (QtReportConst.SC_PROP_VALID_PERIOD_EXT_RPT_VAL.equals(reportCode) && reportFileSearchBean != null) {
 			reportFileSearchBean.setScPtj(null);
 			reportFileSearchBean.setScPtjName(null);
-			reportFileSearchBean.setScDeskOfficer(null);
+			if (!isDeskOfficer()) {
+				reportFileSearchBean.setScDeskOfficer(null);
+				reportFileSearchBean.setPtjProfile(null);
+				reportFileSearchBean.setDoSelectItem(null);
+			}
 			reportFileSearchBean = getDefaultValuesFromAndToDate(reportFileSearchBean);
 			this.getManagedBean().setScReportSearchBean(reportFileSearchBean);
 		}
@@ -688,21 +706,29 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 	public List<SelectItem> retrieveDescOfficerByAgency() {
 		List<SelectItem> scDescOfficerList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-			ScQt scQt = findScQtByQuotationNumber();
-
-			Long orgProfileId = null;
-			if (scQt != null) {
-				orgProfileId = scQt.getOrgProfileId();
-			}
-
-			List<Object[]> reqLst = getPMReportSO().retrieveDeskOfficer(
-					new FacesScopes().getUserSessionBean().getUserId(), orgProfileId);
-			if (CollectionUtils.isNotEmpty(reqLst)) {
-				for (Object[] object : reqLst) {
-					SelectItem selectItem = new SelectItem();
-					selectItem.setLabel(object[0].toString());
-					selectItem.setValue(object[1]);
-					scDescOfficerList.add(selectItem);
+			if (isDeskOfficer()) {
+				SelectItem selectItem = new SelectItem();
+				selectItem.setLabel(new FacesScopes().getUserSessionBean().getUserName());
+				selectItem.setValue(new FacesScopes().getUserSessionBean().getUserId());
+				getManagedBean().getScReportSearchBean().setDoSelectItem(selectItem);
+				scDescOfficerList.add(selectItem);
+			} else {
+				ScQt scQt = findScQtByQuotationNumber();
+				
+				Long orgProfileId = null;
+				if (scQt != null) {
+					orgProfileId = scQt.getOrgProfileId();
+				}
+				
+				List<Object[]> reqLst = getPMReportSO().retrieveDeskOfficer(
+						new FacesScopes().getUserSessionBean().getUserId(), orgProfileId);
+				if (CollectionUtils.isNotEmpty(reqLst)) {
+					for (Object[] object : reqLst) {
+						SelectItem selectItem = new SelectItem();
+						selectItem.setLabel(object[0].toString());
+						selectItem.setValue(object[1]);
+						scDescOfficerList.add(selectItem);
+					}
 				}
 			}
 		}
@@ -735,5 +761,148 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 
 	private IPMReportSO getPMReportSO() {
 		return EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
+	}
+	
+	/**
+	 * Gets the PTJ values based on user role.
+	 */
+	public boolean getPtjValues() {
+
+		if (!getManagedBean().isPtjEnable()) {
+			if (isDeskOfficer()) {
+				PmOrgProfile ptjProfile = null;
+				try {
+					ptjProfile = getOrgProfileByLoginUser();
+				} catch (EpException e) {
+					String msgCode = MessageConst.ERROR_770224;
+					FacesContext.getCurrentInstance().addMessage(
+							null,new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+									MessageUtils.getMessage(msgCode, null,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())
+											+ " (" + msgCode + ")"));
+				}
+				
+				getManagedBean().getScReportSearchBean().setPtjProfile(ptjProfile);
+				getManagedBean().setPtjEnable(true);
+				
+				SelectItem selectItem = new SelectItem();
+				selectItem.setLabel(new FacesScopes().getUserSessionBean().getUserName());
+				selectItem.setValue(new FacesScopes().getUserSessionBean().getUserId());
+				getManagedBean().getScReportSearchBean().setScDeskOfficer(String.valueOf(new FacesScopes().getUserSessionBean().getUserId()));
+				getManagedBean().getScReportSearchBean().setDoSelectItem(selectItem);
+			} else if (this.getManagedBean().getScQt() == null){
+				PmOrgProfile orgProfile = getOrgProfileByLoginUser();
+				if(orgProfile != null){
+					if (!ParameterConst.ORG_TYPE_MINISTRY.equalsIgnoreCase(orgProfile
+							.getOrgTypeCode().getParameterCode())) {
+						orgProfile = getMinistryOrgProfile(orgProfile);
+					}
+					this.getManagedBean().setScQt(new ScQt());
+					
+					this.getManagedBean().getScQt().setMinistryOrgProfile(orgProfile);
+				}
+			}
+			
+		}
+		return getManagedBean().isPtjEnable();
+	}
+	
+	/**
+	 * Ptj dropdown list.
+	 * 
+	 * @return the list
+	 */
+	public PmOrgProfile getMinistryOrgProfile(PmOrgProfile orgProfile) {
+
+		if (null != orgProfile) {
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+
+			reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IOrgProfileSO.class);
+			OrgProfileResDTO resDTO = orgProfileSO
+					.retrieveMinistryByOrgProfileId(reqDTO);
+
+			return resDTO.getPmOrgProfile();
+		}
+		return null;
+	}
+	
+	/**
+	 * construct the ConditionFields based on MinistryProfile
+	 * 
+	 * @return orgProfileId
+	 */
+	public String constuctConditionFields() {
+		StringBuilder conditionField = null;
+		if (null != this.getManagedBean().getScQt() && null == this.getManagedBean().getScQt()
+				.getMinistryOrgProfile()) {
+			PmOrgProfile ministryOrg = this.getManagedBean().getScQt()
+					.getMinistryOrgProfile();
+			if (null != ministryOrg) {
+				conditionField = new StringBuilder();
+				Long ministryOrgProfileId = ministryOrg.getOrgProfileId();
+				if (ParameterConst.ORG_TYPE_MINISTRY.equalsIgnoreCase(ministryOrg
+						.getOrgTypeCode().getParameterCode())) {
+					
+					conditionField.append(OrgProfileUtil
+							.getSearchBeanParentString(ParameterConst.ORG_TYPE_MINISTRY)
+							+ CARET_SYMBOL + ministryOrgProfileId);
+				} else {
+					conditionField.append("orgProfileId" + CARET_SYMBOL + ministryOrgProfileId);
+				}
+				conditionField.append(PIPE_SYMBOL + "recordStatus" + CARET_SYMBOL + 
+						DbValueConst.RECORD_STATUS_ACTIVE);
+			}
+			if (conditionField != null) {
+				return conditionField.toString();
+			}
+		}
+		
+		return null;
+	}
+	
+	
+	/**
+	 * @return
+	 */
+	public boolean isDeskOfficer() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value());
+	}
+	
+	/**
+	 * @return
+	 */
+	private PmOrgProfile getOrgProfileByLoginUser() {
+		PmOrgProfile pmOrgProfile = null;
+		Long userId = new FacesScopes().getUserSessionBean().getUserId();
+		
+		if (userId != null) {
+			IUserSO userSO = null;
+			try {
+				UserReqDTO reqDTO = new UserReqDTO();
+				reqDTO.setUserId(userId);
+				userSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+				UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+
+				if (resDTO.getUserOrgList() != null
+						&& resDTO.getUserOrgList().size() > 0) {
+					for (PmUserOrg pmUserOrg : resDTO.getUserOrgList()) {
+						if (pmUserOrg.getPmOrgProfile() != null) {
+							pmOrgProfile = pmUserOrg.getPmOrgProfile();
+							break;
+						}
+					}
+				}
+			} finally {
+				userSO = null;
+			}	
+		}
+		
+		return pmOrgProfile;
 	}
 }
