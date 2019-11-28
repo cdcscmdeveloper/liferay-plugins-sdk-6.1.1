@@ -3193,8 +3193,16 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 				if (!scQt.getScQtSupplierCriteria().isAllState()) {
 					List<ScQtLocCriteria> locCriteria = new ArrayList<ScQtLocCriteria>();
-					
-					if (null != tenderResDTO.getLocationDetails() && !tenderResDTO.getLocationDetails().isEmpty()) {
+					//20191127@asyrafhaziq - Bug #26289 - Start
+					boolean isSetLocCriteria = true ;
+					if (isQTStatusGreaterThanOrEqualsScheduleDoc(scQt.getQtStatus().getStatusId())) {
+						if (null != this.getManagedBean().getZoneTrees() && !this.getManagedBean().getZoneTrees().isEmpty()&& 
+								scQt.getScQtSupplierCriteria().getScQtLocCriteria() != null) {
+							isSetLocCriteria = false;
+						}
+					}
+					if (null != tenderResDTO.getLocationDetails() && !tenderResDTO.getLocationDetails().isEmpty() && isSetLocCriteria ) {
+					//20191127@asyrafhaziq - Bug #26289 - End
 						if (null == this.getManagedBean()
 								.getTotalSuppliersSpecLoc()) {
 							this.getManagedBean().setTotalSuppliersSpecLoc(
