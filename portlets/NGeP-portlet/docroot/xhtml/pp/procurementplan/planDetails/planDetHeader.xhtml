@@ -93,16 +93,58 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
                 <p:graphicImage id="giPlanYear" value="/css/images/design/tooltips.png" />
 				<p:tooltip for="giPlanYear" value="#{lbl['lbl.pp.plan.year.tooltip']}" showEffect="fade" hideEffect="fade" />
 				<p:message id="somPlanYearMsg" for="somPlanYear" display="icon" />
-			</td>
+			</td>			
 		</tr>
 	</table>
+	<ui:remove>
 	<ac:confirmationPopup id="planYearChangeId"
 			widget="planYearChangeId"
 			okProcess="@form"
 			okAction="pPlanBackingBean.updatePlanYearControl()"
 			cancelAction="pPlanBackingBean.cancelPlanYearUpdate()"
-			width="450" height="200"
+			width="220" height="200"
 			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
 			content="#{lbl['lbl.pp.plan.year.change']}" 
-			update=":form:pPlanDet,:form:pPlanHeader" />	
+			update=":form:pPlanDet,:form:pPlanHeader" 
+			resetInput="" />
+	</ui:remove>	
+	<p:dialog id="planYearChangeId" widgetVar="planYearChangeId"
+			header="#{lbl['lbl.btn.dialog.cofirm.header']}" 
+			resizable="false"
+			width="420" height="150"
+			closable="false" modal="true"
+			visible="false">
+			
+		<p:blockUI block="dlgPPlanHeader" widgetVar="confirmPopupBlockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		<p:panel id="dlgPPlanHeader" style="border: none">
+		<table>
+			<tr>
+				<td>
+					<h:graphicImage style="text-align:left" value="/css/images/design/exclamation.png" />
+					<p:outputLabel style="text-align:left" value="#{lbl['lbl.pp.plan.year.change']}" />
+				</td>
+			</tr>
+		</table>
+		<p:spacer height="1" />
+		<div class="ppRightBtn">				
+		   <p:commandButton value="#{lbl['lbl.btn.yes']}" 
+				process="@form"
+				partialSubmit="true"
+				onstart="confirmPopupBlockWidget.show();"
+				action="#{pPlanBackingBean.updatePlanYearControl()}"
+				oncomplete="confirmPopupBlockWidget.hide(); planYearChangeId.hide();" 
+				update=":form:pPlanDet,:form:pPlanHeader" />	   
+	
+			<p:commandButton value="#{lbl['lbl.btn.no']}"
+				partialSubmit="true" 
+				onstart="confirmPopupBlockWidget.show();"
+				action="#{pPlanBackingBean.cancelPlanYearUpdate()}"
+				oncomplete="confirmPopupBlockWidget.hide(); planYearChangeId.hide();" 
+				update=":form:pPlanDet,:form:pPlanHeader" />			
+		</div>
+		</p:panel>
+	</p:dialog>
+	
 </ui:composition>
