@@ -152,6 +152,10 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			reqDTO.setUserRole(getUserRole());
+			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+			if(!flBB.getManagedBean().getRemarkList().isEmpty()){
+				reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
+			}
 			
 			
 			
