@@ -101,7 +101,7 @@
 				<tr>
 					<td style="vertical-align: top"><p:outputLabel
 							value="#{lbl['lbl.sm.remarks.approval']}" /></td>
-					<td style="padding-top: 5px;"><p:inputTextarea cols="90"
+					<td style="padding-top: 5px;"><p:inputTextarea cols="100"
 							style="width : auto;" rows="10"
 							value="#{cc.attrs.approvalRemarks}"
 							id="rmrksForApprTxtArea" label="#{lbl['lbl.sm.remarks.approval']}"
@@ -113,12 +113,13 @@
 				</tr>
 				<c:if test="#{cc.attrs.overLappedCategoryExists}">
 					<tr>
-						<td colspan="2" align="left"><p:outputLabel
+					<td></td>
+						<td align="left"><p:outputLabel style="float:left;"
 								value="#{lbl['lbl.sm.remarks.overLap.note1']}" escape="false" /></td>
 					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.remarks.overLapping']}" /></td>
-						<td style="padding-top: 5px;"><p:inputTextarea cols="90"
+						<td style="padding-top: 5px;"><p:inputTextarea cols="100"
 								style="width : auto;" rows="10" id="rmrksForSplApprTxtArea"
 								maxlength="2500"
 								value="#{cc.attrs.overLapRemarks}"
@@ -131,7 +132,8 @@
 								display="icon" /></td>
 					</tr>
 					<tr>
-						<td colspan="2" align="left"><p:outputLabel
+					<td></td>
+						<td align="left"><p:outputLabel style="float:left;"
 								value="#{lbl['lbl.sm.remarks.overLap.note2']}" escape="false" /></td>
 					</tr>
 				</c:if>
