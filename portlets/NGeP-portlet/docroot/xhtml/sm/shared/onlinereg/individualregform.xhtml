@@ -230,7 +230,7 @@
 <!-- 			<ui:include src="/xhtml/sm/shared/onlinereg/profCert.xhtml" /> -->
 <!-- 		</c:if> -->
 <!-- 	</p:outputPanel> -->
-	<p:panel header="#{lbl['lbl.sm.contactinfo']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.contactinfo']}" toggleable="true" rendered="#{registrationBackingBean.managedBean.smSupp.brandNew}">
 		<table class="customTbl">
 			<tr>
 				<td class="tdTitle"><p:outputLabel
