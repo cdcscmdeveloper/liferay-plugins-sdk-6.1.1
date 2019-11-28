@@ -11,6 +11,7 @@
 
 package my.ep.web.managedbean.report.qt;
 
+import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.web.bean.report.ScReportFieldsSearchBean;
 import my.ep.web.managedbean.report.ReportBaseManagedBean;
 
@@ -29,6 +30,7 @@ public abstract class QtReportManagedBean extends ReportBaseManagedBean {
 	private ScReportFieldsSearchBean scReportSearchBean=null;
 	private boolean isPtjEnable=Boolean.FALSE;
 	private boolean isDeskOfficerEnable=Boolean.FALSE;
+	private ScQt scQt;
 	/**
 	 * @return the quotationNumner
 	 */
@@ -88,6 +90,18 @@ public abstract class QtReportManagedBean extends ReportBaseManagedBean {
 	 */
 	public void setDeskOfficerEnable(boolean isDeskOfficerEnable) {
 		this.isDeskOfficerEnable = isDeskOfficerEnable;
+	}
+	/**
+	 * @return the scQt
+	 */
+	public ScQt getScQt() {
+		return scQt;
+	}
+	/**
+	 * @param scQt the scQt to set
+	 */
+	public void setScQt(ScQt scQt) {
+		this.scQt = scQt;
 	}
 	
 
