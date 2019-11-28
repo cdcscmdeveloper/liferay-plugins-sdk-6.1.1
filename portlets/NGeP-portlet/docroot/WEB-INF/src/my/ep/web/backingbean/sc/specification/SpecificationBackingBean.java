@@ -32,18 +32,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import org.apache.poi.EncryptedDocumentException;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import java.io.ByteArrayOutputStream;
-import java.util.Iterator;
-
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -229,7 +217,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
-
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -244,7 +231,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
+import org.eclipse.persistence.indirection.IndirectList;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -5421,8 +5408,7 @@ public class SpecificationBackingBean extends
 					reqDTO.setScQtCheckList(checkList);
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
 					if (null == resDTO.getCheckListScores() || (resDTO.getCheckListScores().size()==0)) {
-						
-						if(null!=checkList.getScQtCheckListScores()){
+						if(isIndirectWithInstantiated(checkList.getScQtCheckListScores())){
 							List<ScQtCheckListScore> assetLiability = new ArrayList<ScQtCheckListScore>();
 							List<ScQtCheckListScore> currentRation = new ArrayList<ScQtCheckListScore>();
 							for (ScQtCheckListScore checklistScore : checkList.getScQtCheckListScores()) {
@@ -7467,6 +7453,16 @@ public class SpecificationBackingBean extends
 		} finally {
 
 		}
+	}
+	
+	private boolean isIndirectWithInstantiated(Object o){
+		
+		if(o instanceof IndirectList) {
+		    boolean inst = ((IndirectList)o).isInstantiated();
+		    return inst;
+		}
+		
+		return true;
 	}
 
 	/**
