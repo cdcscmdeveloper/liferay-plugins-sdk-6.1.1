@@ -3639,7 +3639,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			summReq.setSupplierId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
 			summReq.setYear(getManagedBean().getFulfilmentRequest().getFinancialYear());
 			summReq.setItemId(requestItemMap.get(map.getKey()).getCmItem().getItemId());
-			BigDecimal sumAmt = itemSummSO.retrievePerItemPerPtjPerYear(summReq);
+			summReq.setExtensionCode(requestItemMap.get(map.getKey()).getCmItem().getExtensionCode().substring(0, 8));
+			//BigDecimal sumAmt = itemSummSO.retrievePerItemPerPtjPerYear(summReq);
+			BigDecimal sumAmt = itemSummSO.retrievePerItemPerPtjPerYearByExtensionCode(summReq);
 			sumAmt = map.getValue().add(sumAmt);
 			if(sumAmt != null){
 				RuleReqDTO ruleReqDTO = new RuleReqDTO();
