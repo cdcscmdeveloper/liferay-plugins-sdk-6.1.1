@@ -212,6 +212,7 @@ import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.cm.helper.ApproverSettings;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sc.helper.LocationSingleton;
@@ -3030,13 +3031,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 									retrieveFinalizationCommitteeType()));
 						} else if (ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT
 								.equals(approvalCategoryCode)) {
+							Long[] orgIds={scQt.getPmOrgProfile().getOrgProfileId(),scQt.getOwnerOrgProfile().getOrgProfileId()};
+							DualListModel<ScQtApproverSettings> budgetApprovalUsers=ApproverSettings.getDetails(
+									RoleCode.COMMITTEE_APPROVER,orgIds,
+							qtApproval);
 							tabBeans.add(new TabBean(titleName,
 									approvalCategoryCode, qtApproval,
-									approverSettingDtls(
-											RoleCode.COMMITTEE_APPROVER, scQt
-													.getPmOrgProfile()
-													.getOrgProfileId(),
-											qtApproval)));
+									budgetApprovalUsers));
 						} else if (ParameterConst.APPROVAL_CATEGORY_OTHERS
 								.equals(approvalCategoryCode)) {
 							List<ScQtApprovalRequest> approvalRequest = qtApproval
@@ -3617,9 +3618,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			} 
 			
 			// set up approval pick list
-			dualListModel = approverSettingDtls(
-					RoleCode.PUBLICATION_APPROVER, scQt.getPmOrgProfile()
-							.getOrgProfileId(), publicationApproval);
+//			dualListModel = approverSettingDtls(
+//					RoleCode.PUBLICATION_APPROVER, scQt.getPmOrgProfile()
+//							.getOrgProfileId(), publicationApproval);
+			Long[] orgIds={scQt.getPmOrgProfile().getOrgProfileId(),scQt.getOwnerOrgProfile().getOrgProfileId()};
+			dualListModel = ApproverSettings.getDetails(
+					RoleCode.PUBLICATION_APPROVER,orgIds, publicationApproval);
 			this.getManagedBean().setPublicationApprovals(dualListModel);
 			
 			// set up remark.
