@@ -928,21 +928,35 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						// Check total procurement amount per ptj per item per year
 						FlItemSummaryReqDTO flReqDTO = new FlItemSummaryReqDTO();
 						if (requestNoteDtl.getRequestItem().getCmItem() != null) {
-							Long itemId = requestNoteDtl.getRequestItem().getCmItem()
-									.getItemId();
-							flReqDTO.setItemId(itemId);
-							debugLogger("RequestNoteBackingBean >> validateRequestNote : RequestNoteDtl ID = " + requestNoteDtl.getRequestNoteDtlId());
-							debugLogger("RequestNoteBackingBean >> validateRequestNote : Item Id : " + itemId);
-							flReqDTO.setYear(Calendar.getInstance().get(Calendar.YEAR));
-							Long supplierId = requestNoteDtl.getScRequestSupplierItem().getSupplierId();
-							flReqDTO.setOrgProfileId(requestNote.getPmOrgProfile()
-									.getOrgProfileId());
-							flReqDTO.setSupplierId(supplierId);
-							debugLogger("RequestNoteBackingBean >> validateRequestNote : Supplier Id : " + supplierId);
-							IFlItemSummarySO itemSummarySO = (IFlItemSummarySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
-
-							BigDecimal totalAmt = itemSummarySO
-									.retrieveAccumulatedAmount(flReqDTO);
+							Long itemId = requestNoteDtl.getRequestItem().getCmItem().getItemId();
+							String extensionCode = requestNoteDtl.getRequestItem().getCmItem().getExtensionCode();
+							debugLogger("RequestNoteBackingBean >> validateRequestNote : RequestNoteDtl ID = "
+									+ requestNoteDtl.getRequestNoteDtlId());
+							debugLogger("RequestNoteBackingBean >> validateRequestNote : Extension Code : "
+									+ extensionCode);
+							
+							Calendar cal = Calendar.getInstance();
+							if(requestNoteDtl.getCreatedDate()!=null){
+								cal.setTimeInMillis(requestNoteDtl.getCreatedDate().getTime());
+							}
+							else{
+								cal.setTimeInMillis(System.currentTimeMillis());
+							}
+							
+							flReqDTO.setOrgProfileId(requestNote.getPmOrgProfile().getOrgProfileId());
+							flReqDTO.setExtensionCode(extensionCode);
+							flReqDTO.setYear(cal.get(Calendar.YEAR));
+							IFlItemSummarySO itemSummarySO = (IFlItemSummarySO) BusinessDelegate.getInstance()
+									.getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
+							// BigDecimal totalAmt = itemSummarySO
+							// .retrieveAccumulatedAmount(flReqDTO);
+							// changes to calculate per ptj per item per year
+							// using 8 digit
+							BigDecimal totalAmt = itemSummarySO.retrieveAccumulatedAmountByItemExtensionCode(flReqDTO);
+							
+							totalAmt=requestNoteDtl.getTotalPricePerItem().add(totalAmt);
+							
+							
 							debugLogger("RequestNoteBackingBean >> validateRequestNote : totalAmt = " + totalAmt);
 							IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
 									ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
