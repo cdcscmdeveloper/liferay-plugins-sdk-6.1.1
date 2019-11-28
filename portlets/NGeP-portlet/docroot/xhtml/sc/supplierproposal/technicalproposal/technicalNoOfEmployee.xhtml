@@ -38,7 +38,7 @@
 							size="20" required="true" maxlength="6"
 							label="#{lbl['lbl.sc.total.employees']}"
 							value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPEmployee.totalEmployees}"
-							disabled="#{supplierProposalDetailBackingBean.managedBean.technicalQtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee or statusHide}">
+							disabled="#{supplierProposalDetailBackingBean.managedBean.technicalQtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee or statusHide or supplierProposalDetailBackingBean.managedBean.readOnly}">
 							<f:validateLongRange minimum="1" maximum="99999999999" />
 							<p:ajax process="@this" partialSubmit="true"
 								update="@this,totalEmployeesMsg"></p:ajax>
