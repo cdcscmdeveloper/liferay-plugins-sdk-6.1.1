@@ -1279,18 +1279,17 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (null != locCriteria && !locCriteria.isEmpty()) {
 				scQt.getScQtSupplierCriteria().setScQtLocCriteria(locCriteria);
 			} 
-			//20191106@asyrafhaziq - Bug #26289 - Start
+			//20191127@asyrafhaziq - Bug #26289 - Start
+			else
+			{				
 			Long currentStatus = scQt.getQtStatus().getStatusId();
-			if ( currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT))
-			{
-				if (this.getManagedBean().getZoneTrees() == null && this.getManagedBean().getZoneTrees().isEmpty())
-				{
-				scQt.getScQtSupplierCriteria().setScQtLocCriteria(null);
-				//scQt.getScQtSupplierCriteria().getScQtLocCriteria().clear();
+			if (isQTStatusGreaterThanOrEqualsScheduleDoc(currentStatus)) {
+				if ((null == this.getManagedBean().getZoneTrees()) && scQt.getScQtSupplierCriteria().getScQtLocCriteria() != null) {
+					scQt.getScQtSupplierCriteria().setScQtLocCriteria(null);
 				}
 			}
-				
-			//20191106@asyrafhaziq - Bug #26289 - End
+			}
+			//20191127@asyrafhaziq - Bug #26289 - End
 		}
 		if (scQt.isZonal()) {
 			if (null != scQt.getScQtSupplierCriteria() && scQt.getScQtSupplierCriteria().getQtZoneCriterias() != null) {
@@ -3203,8 +3202,16 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 				if (!scQt.getScQtSupplierCriteria().isAllState()) {
 					List<ScQtLocCriteria> locCriteria = new ArrayList<ScQtLocCriteria>();
-					
-					if (null != tenderResDTO.getLocationDetails() && !tenderResDTO.getLocationDetails().isEmpty()) {
+					//20191127@asyrafhaziq - Bug #26289 - Start
+					boolean isSetLocCriteria = true ;
+					if (isQTStatusGreaterThanOrEqualsScheduleDoc(scQt.getQtStatus().getStatusId())) {
+						if (null != this.getManagedBean().getZoneTrees() && !this.getManagedBean().getZoneTrees().isEmpty()&& 
+								scQt.getScQtSupplierCriteria().getScQtLocCriteria() != null) {
+							isSetLocCriteria = false;
+						}
+					}
+					if (null != tenderResDTO.getLocationDetails() && !tenderResDTO.getLocationDetails().isEmpty() && isSetLocCriteria ) {
+					//20191127@asyrafhaziq - Bug #26289 - End
 						if (null == this.getManagedBean()
 								.getTotalSuppliersSpecLoc()) {
 							this.getManagedBean().setTotalSuppliersSpecLoc(
