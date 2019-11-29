@@ -2218,8 +2218,14 @@ public class SmApplicationUtil {
 				if (currentTab != -1) {
 					setNavigationBackToCurrentPage(currentTab, managedBean);
 				}
-				throw new EpException(MessageConst.ERROR_722555, new String[] {
-						s, sb.toString(), supType });
+				if(managedBean.getSmAppl().isApplValidWithSsm()){
+					throw new EpException(MessageConst.ERROR_722677, new String[] {
+							s, sb.toString(), supType });
+				} else {
+					throw new EpException(MessageConst.ERROR_722555, new String[] {
+							s, sb.toString(), supType });
+				}
+				
 			}
 		}
 		if (managedBean.getBusinessTypeVal() != null
