@@ -2190,7 +2190,7 @@ public class TaskReassignmentBackingBean extends
 		if (pmUser != null && orgType.equals(ParameterConst.ORG_TYPE_BPK)) {
 			log.info("[#22117] - Validate user if has role BPK_ADMIN");			
 			List<String> userRoles = this.getManagedBean().getTaskAssignmentSearchBean().getSelectedRoles();
-			if(userRoles.contains(RoleCode.BPK_ADMIN.value())) {
+			if(userRoles != null && userRoles.contains(RoleCode.BPK_ADMIN.value())) {
 				log.info("[#22117] - Selected user has role: BPK_ADMIN");
 				//to restrict only role EP_ADMIN or EP_ADMIN_2 can perform reassign task
 				//from BPK_ADMIN
@@ -2903,7 +2903,7 @@ public class TaskReassignmentBackingBean extends
 						String a=role.next();
 						if (a.equals(RoleCode.BPK_ADMIN.value())){
 							role.remove();
-							log.info("roleList_SYS="+roleList.size());//size=1/3
+							log.info("roleList_SYS="+roleList.size());
 						}
 						
 					}
