@@ -48,12 +48,12 @@
 
 		<p:spacer width="1" />		
 		<p:dataTable id="tableBond" var="varBond" rowIndexVar="index" widgetVar="tableBondWidget"
-			value="#{ctBackingBean.managedBean.ctContractAmount.ctPerformanceBonds}"  rowKey="#{rowKeyObj}">
+			value="#{ctBackingBean.managedBean.ctContractAmount.ctPerformanceBondsOriginal}" rowKey="#{rowKeyObj}">
 			<ac:paginator for="tableBond" />
 			<p:column style="width:2%;"  rendered="#{!ctBackingBean.managedBean.viewContract
 				and ctBackingBean.managedBean.ctContractAmount.bondReq}">
 				<f:facet name="header">
-					<p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.selectAll}">
+					<p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.selectAll}" disabled ="ctBackingBean.isContractExtend()">
 					<p:ajax partialSubmit="true" process="@this"
 						update=":form:tableBond, :form:delPdBtn" listener="#{ctBackingBean.selectAllBond}" />
 					</p:selectBooleanCheckbox>
@@ -69,12 +69,12 @@
 				</f:facet>
 				<p:inputText id="bondRefNoId" value="#{varBond.refNo}" maxlength="50" style="width:95%;" 
 					rendered="#{!ctBackingBean.managedBean.viewContract
-					and ctBackingBean.managedBean.ctContractAmount.bondReq}" disabled="ctBackingBean.managedBean.isExtendContract eq true">
+					and ctBackingBean.managedBean.ctContractAmount.bondReq}" disabled ="ctBackingBean.isContractExtend()">
 					<p:ajax  process="@this"></p:ajax>
 				</p:inputText>			
 				<h:outputText value="#{varBond.refNo}" 
 				      style="float:left;text-align:left;"  rendered="#{ctBackingBean.managedBean.viewContract
-				      or !ctBackingBean.managedBean.ctContractAmount.bondReq}"/>
+				      or !ctBackingBean.managedBean.ctContractAmount.bondReq}" />
 			</p:column>
 				
 			<p:column style="width:25%;white-space:normal;"  styleClass="column-align-center">
@@ -84,20 +84,20 @@
 				
 				<p:selectOneMenu id="orgName"  value="#{varBond.financialOrg.financialOrgId}"
 				    style="width:200px;" rendered="#{!ctBackingBean.managedBean.viewContract
-				    and ctBackingBean.managedBean.ctContractAmount.bondReq}" disabled="ctBackingBean.managedBean.isExtendContract eq true">
+				    and ctBackingBean.managedBean.ctContractAmount.bondReq}" disabled ="ctBackingBean.isContractExtend()" >
 					   <f:selectItems value="#{ctBackingBean.retrieveFinancialOrgList()}" />
 					   <p:ajax  process="@this"></p:ajax>
 				</p:selectOneMenu>	  
 	
 				<h:outputText value="#{varBond.financialOrgName}"
 				   style="float:left;text-align:left;" rendered="#{ctBackingBean.managedBean.viewContract
-				   or !ctBackingBean.managedBean.ctContractAmount.bondReq}"/>
+				   or !ctBackingBean.managedBean.ctContractAmount.bondReq}" />
 			</p:column>
 					
 			<p:column style="width:12%;" headerText="#{lbl['lbl.ct.amount']}" styleClass="column-align-center" >
 				<p:inputText value="#{varBond.bondAmount}" styleClass="ppRightBtn" maxlength="18" 
 				    rendered="#{!ctBackingBean.managedBean.viewContract 
-				    and ctBackingBean.managedBean.ctContractAmount.bondReq}" disabled="ctBackingBean.managedBean.isExtendContract eq true" style="width:90px;" label="#{lbl['lbl.ct.amount']}">
+				    and ctBackingBean.managedBean.ctContractAmount.bondReq}" disabled ="ctBackingBean.isContractExtend()" style="width:90px;" label="#{lbl['lbl.ct.amount']}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						<p:ajax process="@this"></p:ajax>
@@ -118,7 +118,7 @@
 				<p:calendar id="popupButtonCal4" value="#{varBond.effDate}"  styleClass="calendarDateField" size="9" 
 					rendered="#{!ctBackingBean.managedBean.viewContract and ctBackingBean.managedBean.ctContractAmount.bondReq}"
 					showOn="button" readonlyInput="true" navigator="true"
-					disabled="ctBackingBean.managedBean.isExtendContract eq true"
+					disabled ="ctBackingBean.isContractExtend()"
 					mindate="#{ctBackingBean.managedBean.contractVer.ctContractValue.effDate}"
 					maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
@@ -149,7 +149,8 @@
 					<p:commandButton oncomplete="uploadBondDlg.show();return false;" update=":form:uploadBondDlg"
 					   	process="@this" partialSubmit="true" actionListener="#{ctBackingBean.PerformanceBondValue(varBond)}"
 						rendered="#{!ctBackingBean.managedBean.viewContract and varBond.fileName == null
-						and ctBackingBean.managedBean.ctContractAmount.bondReq}"
+						and ctBackingBean.managedBean.ctContractAmount.bondReq and !ctBackingBean.isContractExtend()}"
+						
 						style="float:left;" icon="ui-icon-upload">
 					</p:commandButton>
 					<h:commandLink
@@ -158,7 +159,7 @@
 						style="float:left;" styleClass="blue_font"
 						action="#{ctBackingBean.commonDownload(varBond.filePath, varBond.fileName)}" />
 					<p:commandLink rendered="#{varBond.fileName != null and (!ctBackingBean.managedBean.viewContract
-						or !ctBackingBean.managedBean.ctContractAmount.bondReq )and !ctBackingBean.isContractExtend()}" style="float:left;" 
+						or !ctBackingBean.managedBean.ctContractAmount.bondReq) and !ctBackingBean.isContractExtend()}" style="float:left;" 
 					  	action="#{ctBackingBean.setIndexProperty(index)}"
 					   	process="@this" partialSubmit="true"  onsuccess="deleteBondAttachmentDlg.show();">
 			   			<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
@@ -201,7 +202,7 @@
 			<h:outputText value="#{lbl['lbl.ct.panel.performance.spl.bond']}"/>
 	   	</f:facet>
 	   	<p:dataTable id="tableBondsupplemental" var="varBondsupplemental" rowIndexVar="index" widgetVar="tableBondWidget"
-			value="#{ctBackingBean.managedBean.ctContractAmount.ctPerformanceBonds}"  rowKey="#{rowKeyObj}">
+			value="#{ctBackingBean.managedBean.ctContractAmount.ctPerformanceBondsNew}"  rowKey="#{rowKeyObj}">
 			<ac:paginator for="tableBondsupplemental" />
 			<p:column style="width:2%;"  rendered="#{!ctBackingBean.managedBean.viewContract
 				and ctBackingBean.managedBean.ctContractAmount.bondReq}">
@@ -297,7 +298,7 @@
 					
 			<p:column styleClass="column-align-center"  headerText="#{lbl['lbl.txt.attachment']}" style="width:15%;">			
 				<h:panelGroup id="uploadBondPg" columns="2">
-					<p:commandButton oncomplete="uploadBondDlg.show();return false;" update=":form:uploadBondDlg"
+					<p:commandButton oncomplete="uploadBondSplDlg.show();return false;" update=":form:uploadBondSplDlg"
 					   	process="@this" partialSubmit="true" actionListener="#{ctBackingBean.PerformanceBondValue(varBondsupplemental)}"
 						rendered="#{!ctBackingBean.managedBean.viewContract and varBondsupplemental.fileName == null
 						and ctBackingBean.managedBean.ctContractAmount.bondReq}"
@@ -331,7 +332,7 @@
 			
 			<p:spacer width="1" />			  
 		     <p:commandButton id="delPdBtnSpl" value="#{lbl['lbl.ct.delete']}" 
-		          process="@this" partialSubmit="true" onsuccess="dlgPerformDel.show();"
+		          process="@this" partialSubmit="true" onsuccess="dlgPerformSplDel.show();"
 		          disabled="#{ctBackingBean.managedBean.buttonHideActive}"
 			      rendered="#{!ctBackingBean.managedBean.viewContract
 			      	and ctBackingBean.managedBean.contractVer.docType != ParameterConst.doctypeContractAmendment
@@ -621,6 +622,49 @@
 		 	<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteBondAttachmentDlg.hide();" type="button" />
 		</div>
 		</p:confirmDialog>
+				<!-- START Bond Supplemental, by Putra 10112019 -->
+		
+		<p:dialog id="uploadBondSplDlg" widgetVar="uploadBondSplDlg" modal="true" resizable="false"
+			width="700px" height="350px" styleClass="pop_up_top"
+			header="#{lbl['lbl.txt.choose.files']}"
+			onShow="singleUploadListener(performanceBondUploadWV);">
+			<p:ajax event="close" />
+			<p:fileUpload style="display:inline;"  dragDropSupport="false"
+			   	fileUploadListener="#{ctBackingBean.fileUploadPerformance}"
+			    mode="advanced" id="performanceFileuploadSplId" multiple="false"
+			 	sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"  showButtons="false"
+				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" widgetVar="performanceBondUploadWV"
+				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+				invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"  
+				update=":form:tableBondsupplemental" label="#{lbl['lbl.btn.choose']}" oncomplete="uploadBondSplDlg.hide();" >
+			</p:fileUpload>
+			<f:facet name="footer">
+			<div class="ppRightBtn">
+			    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadBondSplDlg.hide();" />
+	   		</div>
+	   		</f:facet>
+		</p:dialog>
+	    <p:confirmDialog id="dlgPerformSplDel" widgetVar="dlgPerformSplDel" message="#{lbl['lbl.msg.confirm.delete']}" 	
+	   		severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+		<div class="ppRightBtn">
+		<p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:tableBondsupplemental, :form:delPdBtnSpl" partialSubmit="true"
+	         process="@this" actionListener="#{ctBackingBean.removePerformanceBond()}" oncomplete="dlgPerformSplDel.hide();">
+	         <f:setPropertyActionListener
+				target="#{ctBackingBean.managedBean.selectAll}" value="#{false}" /></p:commandButton>
+			<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgPerformSplDel.hide();" type="button" />
+		</div>
+		</p:confirmDialog>
+			
+	   <p:confirmDialog id="deleteBondAttachmentSplDlg" widgetVar="deleteBondAttachmentSplDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
+			severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+		<div class="ppRightBtn">
+		    <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this" partialSubmit="true" update=":form:tableBondsupplemental"
+		    	actionListener="#{ctBackingBean.deleteBondAttachement()}" immediate="true"
+		    	oncomplete="deleteBondAttachmentSplDlg.hide();"/>
+		 	<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteBondAttachmentSplDlg.hide();" type="button" />
+		</div>
+		</p:confirmDialog>
+		
 	</p:panel>
 		
 	<p:dialog id="uploadWaiverDlg" widgetVar="uploadWaiverDlg" modal="true"  resizable="false"

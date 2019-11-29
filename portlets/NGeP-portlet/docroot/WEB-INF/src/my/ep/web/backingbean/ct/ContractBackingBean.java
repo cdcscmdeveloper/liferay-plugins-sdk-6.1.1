@@ -89,6 +89,7 @@ import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.CtWorkflowStatus;
 import my.ep.persistence.entity.ct.agreement.CtAgreement;
+import my.ep.persistence.entity.ct.circular.cc.CtCircularItem;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
 import my.ep.persistence.entity.ct.dtl.CtContractAmount;
@@ -2821,8 +2822,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		cal.setTime(getManagedBean().getContractVer().getCtContractValue().getExpDate());
 		cal.add(Calendar.YEAR, 1); 
 		newBond.setExpDate(cal.getTime());
-
-		getManagedBean().getCtContractAmount().getCtPerformanceBonds().add(newBond);
+		//#24333 - Start
+		if(isContractExtend()){
+			newBond.setBondNew(true);
+			getManagedBean().getCtContractAmount().getCtPerformanceBondsNew().add(newBond);
+		}else{
+			newBond.setBondNew(false);
+			getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal().add(newBond);
+		}
+		//#24333 - End
 	}		    
 
 	/**
@@ -2843,13 +2851,23 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
 		fileOuputStream.write(item.getContents());
 		fileOuputStream.close();
-
-		for (CtPerformanceBond ctPerformanceBond : getManagedBean().getCtContractAmount().getCtPerformanceBonds()) {
-			if (ctPerformanceBond.equals(getManagedBean().getCtPerformanceBond())) {
-				ctPerformanceBond.setFileName(item.getFileName());
-				ctPerformanceBond.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+		//#24333 - Start
+		if(isContractExtend()){
+			for (CtPerformanceBond ctPerformanceBondNew : getManagedBean().getCtContractAmount().getCtPerformanceBondsNew()) {
+				if (ctPerformanceBondNew.equals(getManagedBean().getCtPerformanceBond())) {
+					ctPerformanceBondNew.setFileName(item.getFileName());
+					ctPerformanceBondNew.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+				}
+			}
+		}else{
+			for (CtPerformanceBond ctPerformanceBond : getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal()) {
+				if (ctPerformanceBond.equals(getManagedBean().getCtPerformanceBond())) {
+					ctPerformanceBond.setFileName(item.getFileName());
+					ctPerformanceBond.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+				}
 			}
 		}
+		//#24333 - End
 		RequestContext.getCurrentInstance().execute("uploadBondDlg.hide()");
 	}
 
@@ -2858,15 +2876,29 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public void removePerformanceBond() {
 		try {
-			if (getManagedBean().getCtContractAmount().getCtPerformanceBonds() != null) {
-				Iterator<CtPerformanceBond> performanceBond = getManagedBean().getCtContractAmount().getCtPerformanceBonds().iterator();
-				while (performanceBond.hasNext()) {
-					CtPerformanceBond  bond = performanceBond.next();
-					if (bond.isSelectedCheckBox()) {
-						performanceBond.remove();
+			//#24333 - Start
+			if(isContractExtend()){
+				if (getManagedBean().getCtContractAmount().getCtPerformanceBondsNew() != null) {
+					Iterator<CtPerformanceBond> performanceBond = getManagedBean().getCtContractAmount().getCtPerformanceBondsNew().iterator();
+					while (performanceBond.hasNext()) {
+						CtPerformanceBond  bond = performanceBond.next();
+						if (bond.isSelectedCheckBox()) {
+							performanceBond.remove();
+						}
 					}
 				}
+			}else{
+				if (getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal() != null) {
+					Iterator<CtPerformanceBond> performanceBond = getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal().iterator();
+					while (performanceBond.hasNext()) {
+						CtPerformanceBond  bond = performanceBond.next();
+						if (bond.isSelectedCheckBox()) {
+							performanceBond.remove();
+						}
+					}
+				}				
 			}
+		//#24333 - End
 			getManagedBean().setSelectAll(false);
 			getManagedBean().setButtonHideActive(true);
 		} catch (Exception e) {
@@ -2887,7 +2919,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			log.info("Selected Item ***"+getManagedBean().getSelectedItem());
 			log.info("Show Item ****"+getManagedBean().getShowItem());
 			if (getManagedBean().getSelectedItem() != null || getManagedBean().getServiceselectedItem()!=null) {
-				//cisbb.getManagedBean().setItemServiceExist(false);
+
 				if (getManagedBean().getShowItem() != null
 						&& getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
 					getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
@@ -2902,11 +2934,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				} else {
 					getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
 				}
-				
-				if(getManagedBean().getShowItem() == null){
-					cisbb.getManagedBean().setItemProductExist(false);
-				}
-				
 				// retrieve zone label for new price
 				if (getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)
 						|| getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
@@ -4044,19 +4071,20 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return true, if performance bond is required contract extend
 	 *         false, if performance bond is not required contract extend
 	 * */
-	public boolean isContractExtend(){
-		int extendperiod = getManagedBean().getContractVer().getCtContractValue().getContractPeriod();
-		if((getManagedBean().getCtContractAmount().isBondReq()
-						|| getManagedBean().getCtContractAmount().getTotalBondAmt() != null)
-						&& (!getManagedBean().getContractVer().getCtContract().getLoa()
-								.getContractDuration().equals(extendperiod))
-						&& (getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
-								|| getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT))){
+	
+	public boolean isContractExtend() {
+		//#24333 - Start
+		String currentPeriod = BigDecimal.valueOf(getManagedBean().getContractVer().getCtContract().getLoa().getContractDuration().longValue()).toString();
+		String extendPeriod = Integer.toString(getManagedBean().getContractVer().getCtContractValue().getContractPeriod()); 
+		boolean isContractExtend = false;
+		getManagedBean().setExtendContract(false);
+		if(!extendPeriod.equals(currentPeriod)){
+			isContractExtend = true;
 			getManagedBean().setExtendContract(true);
-			return true;
 		}
-		return false;
-	}
+		return isContractExtend;
+		//#24333 - End	
+		}
 	
 	/**
 	 * Function to check if bond required for contract status
@@ -4078,4 +4106,5 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		return false;
 		
 	}
+	
 }  
