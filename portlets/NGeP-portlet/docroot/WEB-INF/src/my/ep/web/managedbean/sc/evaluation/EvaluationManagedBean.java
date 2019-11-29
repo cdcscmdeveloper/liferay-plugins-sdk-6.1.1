@@ -487,6 +487,10 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	
 	private String encryptionKey;
 	
+	private boolean isFP_Compliance = false;
+	
+	
+
 	private List<ScQtProposalChecklistAttachment> toBeRemovedProposalAttachmentsChecklists;
 	private List<ScQtEvaluationReport> reportsToBeRemovedList;
 	
@@ -3407,5 +3411,11 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.offerScoreType = offerScoreType;
 	}//#25138 - end
 	
+	public boolean isFP_Compliance() {
+		return isFP_Compliance;
+	}
 
+	public void setFP_Compliance(boolean isFP_Compliance) {
+		this.isFP_Compliance = isFP_Compliance;
+	}
 }
