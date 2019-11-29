@@ -758,7 +758,13 @@ public class SmApplicationUtil {
 		} else if (sup.getBusinessType().equalsIgnoreCase(
 				SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP)) {
 			return SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT;
-		} else {
+		} 
+		//25792 - start
+		else if(sup.getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL)) {
+			return SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL;
+		}
+		//25792 - end
+		else {
 			return SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_UNKNOWN;
 		}
 	}
@@ -2212,8 +2218,14 @@ public class SmApplicationUtil {
 				if (currentTab != -1) {
 					setNavigationBackToCurrentPage(currentTab, managedBean);
 				}
-				throw new EpException(MessageConst.ERROR_722555, new String[] {
-						s, sb.toString(), supType });
+				if(managedBean.getSmAppl().isApplValidWithSsm()){
+					throw new EpException(MessageConst.ERROR_722677, new String[] {
+							s, sb.toString(), supType });
+				} else {
+					throw new EpException(MessageConst.ERROR_722555, new String[] {
+							s, sb.toString(), supType });
+				}
+				
 			}
 		}
 		if (managedBean.getBusinessTypeVal() != null
