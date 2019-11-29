@@ -1090,6 +1090,16 @@ public class EvaluationBackingBean extends
 			 * 
 			 * }
 			 */
+			
+			String title =this.getManagedBean().getScQtChecklist().getTitle();
+			if(title.equals("Kunci Kira-Kira Tahunan (Nota - Untuk syarikat ROC, ini mestilah salinan yang telah diaudit)") ||
+					title.equals("Pengesahan dari Institusi Kewangan ke atas jumlah yang telah dibayar"))
+			{
+				this.getManagedBean().setFP_Compliance(true);
+			}else{
+				this.getManagedBean().setFP_Compliance(false);
+			}
+				
 			this.getManagedBean().setComplianceTechnicalProposalCheckListDM(
 					new ComplianceSupplierPagingDataModel(
 							"complianceTechnicalSupplier", reqDTO
@@ -12211,4 +12221,54 @@ private void retriveCommitteeRemarksList(){
 		}
 		
 	}
+	
+	
+	/**
+	* Gets the local goods radio values.
+	* 
+	* @param itemType
+	* the item type
+	* @return the Status values
+	*/
+	public SelectItem[] statusDropdownCodeValues(String itemType) {
+	List<Integer> types = new ArrayList<Integer>();
+	if(!this.getManagedBean().isFP_Compliance())
+	{
+		types.add(ParameterConst.COMPLIANCE_STATUS_NONCOMPLIANCE);
+		types.add(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
+	}else{
+		types.add(ParameterConst.COMPLIANCE_STATUS_NONCOMPLIANCE);
+		types.add(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
+		types.add(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
+	}
+	SelectItem[] items = null;
+	try {
+		
+		items = new SelectItem[types.size() + 1];
+		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+				"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
+		int i = 1;
+		for (Integer location : types) {
+			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(itemType);
+
+			for (PmParameterDesc paramDesc : localParamDesc) {
+				log.info("ParamerterDesc Code "+paramDesc.getPmParameter().getParameterCode());
+				if (paramDesc.getPmParameter().getParameterCode()
+						.equals(String.valueOf(location.intValue()))) {   
+
+					items[i++] = new SelectItem(paramDesc.getPmParameter()
+							.getParameterCode(), paramDesc.getCodeName());
+				}
+			}
+			
+		}
+	} finally {
+
+	}
+	return items;
+	}
+
+	
+	
 }
