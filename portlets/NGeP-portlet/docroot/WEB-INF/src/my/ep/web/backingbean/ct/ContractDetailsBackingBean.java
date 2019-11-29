@@ -328,6 +328,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		if(ctBB.getManagedBean().getDeleteAttachmentList() != null ){
 			ctBB.getManagedBean().getDeleteAttachmentList().clear();
 		}
+		
+		if(ctBB.getManagedBean().getCtAgreementList() != null ){
+			ctBB.getManagedBean().getCtAgreementList().clear();
+		}
 		try {
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 			resDTO = contractSO.retrieveContractVerDtls(reqDTO);
