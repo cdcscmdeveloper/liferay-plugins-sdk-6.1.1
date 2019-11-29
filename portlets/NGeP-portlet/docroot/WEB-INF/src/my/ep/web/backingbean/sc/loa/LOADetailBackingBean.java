@@ -6282,13 +6282,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			tFilePath.append(tempFilePath);
 			//create source File object
 			File oldName = new File(tFilePath.toString());
-
+			log.info("Old Path : " + tFilePath.toString());
 			//create destination File object
 			//StringBuilder aFilePath = new StringBuilder("c:");
 			StringBuilder aFilePath = new StringBuilder();
 			aFilePath.append(actualFilePath);
 			File newName = new File(aFilePath.toString());
+			log.info("New Path : " + aFilePath.toString());
+			log.info("Before rename to new path");
 			boolean isFileRenamed = oldName.renameTo(newName);
+			log.info("After rename to new path");
 			if(isFileRenamed)
 				log.info("Temporary Loa No folder has been renamed.");
 			else
@@ -6302,7 +6305,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		List<ScLoaReport> scLoaReports = loa.getScLoaReports();
 		if (scLoaReports != null && scLoaReports.size() > 0) {
 			for (ScLoaReport scLoaReport : scLoaReports) {
-				if (null == scLoaReport.getPmDocument()) {
+				if (null == scLoaReport.getPmDocument() || SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
+						.equals(scLoaReport.getPmDocument().getDocDefinitionKey())) {
 					if (scLoaReport.getScLoaReportAttachment() != null) {
 						String docRepoBaseDir = EpPropertiesUtils.getInstance().getProperty(
 								EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
