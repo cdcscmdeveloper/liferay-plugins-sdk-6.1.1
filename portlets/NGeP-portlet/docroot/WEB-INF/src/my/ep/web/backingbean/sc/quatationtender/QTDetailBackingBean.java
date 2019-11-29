@@ -212,6 +212,7 @@ import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.cm.helper.ApproverSettings;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sc.helper.LocationSingleton;
@@ -450,7 +451,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	
 	public String toggleView(){
 		RequestContext rc = ((RequestContext) FacesContext.getCurrentInstance().getAttributes().get(Constants.REQUEST_CONTEXT_ATTR));
-		if(getManagedSearchBeanDocTypeIsLOAAndPrefixLAAndIsDO()||getManagedSearchBeanDocTypeIsLOIAndPrefixLIAndIsDO()){
+		//if(getManagedSearchBeanDocTypeIsLOAAndPrefixLAAndIsDO()||getManagedSearchBeanDocTypeIsLOIAndPrefixLIAndIsDO()){
+		if(getManagedSearchBeanDocumentTypeIsLOA()||getManagedSearchBeanDocumentTypeIsLOI()){
 			if(rc!=null)rc.execute("toggleView('"+ParameterConst.DOCTYPE_LETTER_OF_AWARD+"');");
 			return ParameterConst.DOCTYPE_LETTER_OF_AWARD;
 		}
@@ -774,10 +776,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * Method to search the quationtenders based on serach date.
 	 */
 	public void searchQTAction() {
-		if(this.getManagedSearchBeanDocTypeIsLOAAndPrefixLAAndIsDO()){
+		if(this.getManagedSearchBeanDocumentTypeIsLOA()){
 			getManagedBean().getSearchLoaForQtDataModel().reloadData();
 		}
-		else if(this.getManagedSearchBeanDocTypeIsLOIAndPrefixLIAndIsDO()){
+		else if(this.getManagedSearchBeanDocumentTypeIsLOI()){
 			getManagedBean().getSearchLoiForQtDataModel().reloadData();
 		}
 		else;
@@ -1084,7 +1086,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		ScQt scQt = null;
 		ScLoiForQt scLoiForQt = null;
 		ScLoaForQt scLoaForQt = null;
-		if(getManagedSearchBeanDocTypeIsLOAAndPrefixLAAndIsDO() || getManagedSearchBeanDocTypeIsLOIAndPrefixLIAndIsDO()){
+		if(getManagedSearchBeanDocumentTypeIsLOA() || getManagedSearchBeanDocumentTypeIsLOI()){
 			if(obj instanceof ScLoiForQt ){
 				scLoiForQt = (ScLoiForQt)obj;
 				if (ParameterConst.DOCTYPE_LETTER_OF_INTENT.equals(docType)) {
@@ -1651,7 +1653,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			String docType = qtnTenderSearchBean.getDocType();
 			String docNo = qtnTenderSearchBean.getDocNo();
 			if (StringUtils.isNotEmpty(docType)) {
-				if (ParameterConst.DOCTYPE_LETTER_OF_INTENT.equals(docType)) {
+				if (ParameterConst.DOCTYPE_LETTER_OF_INTENT.equals(docType)
+						// ***19336#99 - start
+						&& checkSearchBeanDocTypePrefix(ParameterConst.DOCTYPE_LETTER_OF_INTENT) 
+						// ***19336#99 - end
+						) {
 					if (!StringUtils.isBlank(docNo)) {
 						SearchFilterBean bean = new SearchFilterBean();
 						bean.setSearchField("loiNo");
@@ -1700,7 +1706,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			String docNo = qtnTenderSearchBean.getDocNo();
 			if (StringUtils.isNotEmpty(docType)) {
 				if (ParameterConst.DOCTYPE_LETTER_OF_AWARD.equals(docType)) {
-					if (!StringUtils.isBlank(docNo)) {
+					if (!StringUtils.isBlank(docNo) 
+							// ***19336#99 - start
+							&& checkSearchBeanDocTypePrefix(ParameterConst.DOCTYPE_LETTER_OF_AWARD) 
+							// ***19336#99 - end
+						)
+							{
 						SearchFilterBean bean = new SearchFilterBean();
 						bean.setSearchField("loaNo");
 						bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
@@ -3020,13 +3031,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 									retrieveFinalizationCommitteeType()));
 						} else if (ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT
 								.equals(approvalCategoryCode)) {
+							Long[] orgIds={scQt.getPmOrgProfile().getOrgProfileId(),scQt.getOwnerOrgProfile().getOrgProfileId()};
+							DualListModel<ScQtApproverSettings> budgetApprovalUsers=ApproverSettings.getDetails(
+									RoleCode.COMMITTEE_APPROVER,orgIds,
+							qtApproval);
 							tabBeans.add(new TabBean(titleName,
 									approvalCategoryCode, qtApproval,
-									approverSettingDtls(
-											RoleCode.COMMITTEE_APPROVER, scQt
-													.getPmOrgProfile()
-													.getOrgProfileId(),
-											qtApproval)));
+									budgetApprovalUsers));
 						} else if (ParameterConst.APPROVAL_CATEGORY_OTHERS
 								.equals(approvalCategoryCode)) {
 							List<ScQtApprovalRequest> approvalRequest = qtApproval
@@ -3607,9 +3618,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			} 
 			
 			// set up approval pick list
-			dualListModel = approverSettingDtls(
-					RoleCode.PUBLICATION_APPROVER, scQt.getPmOrgProfile()
-							.getOrgProfileId(), publicationApproval);
+//			dualListModel = approverSettingDtls(
+//					RoleCode.PUBLICATION_APPROVER, scQt.getPmOrgProfile()
+//							.getOrgProfileId(), publicationApproval);
+			Long[] orgIds={scQt.getPmOrgProfile().getOrgProfileId(),scQt.getOwnerOrgProfile().getOrgProfileId()};
+			dualListModel = ApproverSettings.getDetails(
+					RoleCode.PUBLICATION_APPROVER,orgIds, publicationApproval);
 			this.getManagedBean().setPublicationApprovals(dualListModel);
 			
 			// set up remark.
