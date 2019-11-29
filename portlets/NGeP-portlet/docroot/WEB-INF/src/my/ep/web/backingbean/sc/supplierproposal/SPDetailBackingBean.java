@@ -2078,14 +2078,18 @@ public class SPDetailBackingBean extends
 				//20191104@asyrafhaziq - Bug #26698 - problem when upload 
 				if (getActualFilePath(attachment) != null && !getActualFilePath(attachment).isEmpty())
 				{
-				scQtProposalChecklist.setScQtProposalChecklistAttachment(attachment);
+					scQtProposalChecklist.setScQtProposalChecklistAttachment(attachment);
 				/* As per CR Request #26339*/
-				if(scQtProposalChecklist.getScQtCheckList().getTitle().contains("Annual Balance Sheet Kunci Kira-Kira Tahunan"))
-				{
-
-					scQtProposalChecklist.setCompliance(new Integer(2));
-					log.debug("SPDetailsBackingBean : Value 2 is set for Compliance");
-				}
+					if(scQtProposalChecklist.getScQtCheckList().getTitle().contains("Annual Balance Sheet Kunci Kira-Kira Tahunan") ||
+						scQtProposalChecklist.getScQtCheckList().getTitle().contains("Kunci Kira-Kira Tahunan (Nota - Untuk syarikat ROC, ini mestilah salinan yang telah diaudit)") ||
+						scQtProposalChecklist.getScQtCheckList().getTitle().contains("Pengesahan dari Institusi Kewangan ke atas jumlah yang telah dibayar"))
+					{
+	
+						scQtProposalChecklist.setCompliance(new Integer(2));
+						log.info("SPDeatsilBackingBean Tile : "+scQtProposalChecklist.getScQtCheckList().getTitle());
+						log.info("SPDetailsBackingBean 	 Value 2 is set for Compliance");
+					}
+				
 				scQtProposalChecklist.setSubmitted(true);
 
 				reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
