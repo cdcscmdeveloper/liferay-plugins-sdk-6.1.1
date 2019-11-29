@@ -50,11 +50,12 @@
 			<p:column headerText="#{lbl['lbl.sc.compliance.status']}"
 				style="width:15%">
 				<p:selectOneMenu
-					disabled="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'false' or evaluationBackingBean.managedBean.statusOnly or evaluationBackingBean.managedBean.complianceReEvaluateRequired}"
+					disabled="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'false' or evaluationBackingBean.managedBean.statusOnly or evaluationBackingBean.managedBean.complianceReEvaluateRequired
+					or evaluationBackingBean.managedBean.FP_Compliance}"  
 					value="#{complianceTechnicalSupplier.compliance}">
 
 					<f:selectItems
-						value="#{evaluationBackingBean.getDropdownCodeValues(ParameterTypeConst.complianceStatus)}"></f:selectItems>
+						value="#{evaluationBackingBean.statusDropdownCodeValues(ParameterTypeConst.complianceStatus)}"></f:selectItems>
 					<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
 				</p:selectOneMenu>
 			</p:column>
@@ -65,7 +66,7 @@
 					rendered="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'true'}">
 					<p:inputTextarea rows="2" cols="40" maxlength="200" onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);"
 						onmouseout="limitTextArea(this,200);"
-						disabled="#{evaluationBackingBean.managedBean.statusOnly or evaluationBackingBean.managedBean.complianceReEvaluateRequired}"
+						disabled="#{evaluationBackingBean.managedBean.statusOnly or evaluationBackingBean.managedBean.complianceReEvaluateRequired or evaluationBackingBean.managedBean.FP_Compliance}"
 						id="complianceRemarksid"
 						value="#{complianceTechnicalSupplier.remark}">
 						<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
