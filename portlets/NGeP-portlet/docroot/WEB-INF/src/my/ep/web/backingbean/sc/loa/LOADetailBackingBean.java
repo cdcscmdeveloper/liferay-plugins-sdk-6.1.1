@@ -85,6 +85,7 @@ import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
@@ -1352,37 +1353,44 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	private ScLoaReportAttachment generateDocumentAttachment(
 			ScLoaReport scLoaReport) {
 		ScLoa scLoa = getManagedBean().getScLoa();	
+		ScQt scQt = getManagedBean().getScQt();
+		
 		String definitionType = scLoaReport.getDefinationType()
 				.getParameterCode();
 		ScLoaReportAttachment scLoaReportAttachment = scLoaReport
 				.getScLoaReportAttachment();
-
+		StringBuilder filename = new StringBuilder();
 		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED.equals(definitionType) || 
 				ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD_AND_DOWNLOAD.equals(definitionType) ||
-				ParameterConst.DOCUMENT_DEFINITION_TYPE_SUPPLIER_UPLOAD_AND_DOWNLOAD.equals(definitionType)) {
-
+				ParameterConst.DOCUMENT_DEFINITION_TYPE_SUPPLIER_UPLOAD_AND_DOWNLOAD.equals(definitionType) ||
+				ParameterConst.DOCUMENT_DEFINITION_KEY_LETTER_OF_ACCEPTANCE.equals(definitionType)) {
+			
 			try {
-				String docDefinitionKey = scLoaReport.getPmDocument()
-						.getDocDefinitionKey();
-				Long statusId = scLoa.getPmStatus().getStatusId().longValue();
-
+				String docDefinitionKey = scLoaReport.getPmDocument().getDocDefinitionKey();
+				Long statusId = scLoa.getPmStatus().getStatusId();
+				log.info("docDefinitionKey--->   "+docDefinitionKey);
+				log.info("statusId --->    "+statusId);
+				
+			
+				
 				//development purpose - enable create document when the document doesn't exist
 				/* if(scLoaReportAttachment == null || getManagedBean().getEnableDownloadAllDocuments()) {*/
 				if (scLoaReportAttachment == null ) {
-					StringBuilder filename = new StringBuilder();
 					//replace white space due to firefox 
 					filename.append(scLoaReport.getTitle().replaceAll("\\s",""));
 					scLoaReportAttachment = new ScLoaReportAttachment();
 					scLoaReportAttachment.setScLoaReport(scLoaReport);
 					scLoaReportAttachment.setDocNo(scLoaReport.getScLoa()
 							.getLoaNo());
-
-					if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
-							.equals(docDefinitionKey)) {
+					
+					if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER.trim().equals(docDefinitionKey.trim())) {
 						filename.append(".docx");
+						log.info("filename--->    "+filename);
 						scLoaReportAttachment.setFileName(filename.toString());
+						log.info("scLoaReportAttachment--->   "+scLoaReportAttachment.getFileName());
 						generateAgreementLetterDocFromVelocity(
-								(ScAttachment) scLoaReportAttachment, scLoa, getManagedBean().getScQt());
+								(ScAttachment) scLoaReportAttachment, scLoa, this.getManagedBean().getScQt());
+						//log.info("docDefinitionKey--->    "+scLoa.getScLoiLoa());
 					}else if (SourcingConstants.DOC_DEF_KEY_ACKNOWLEDGEMENT_LOA_RECEIPT
 							.equals(docDefinitionKey)) {
 						filename.append(".pdf");
@@ -1450,7 +1458,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					// if pending supplier acknowledgment , always regenerate 
 					scLoaReportAttachment.setDocNo(scLoaReport.getScLoa()
 							.getLoaNo());
-
+					
 					if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
 							.equals(docDefinitionKey)) {
 						//filename.append(".pdf");
@@ -1472,7 +1480,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							.equals(docDefinitionKey)){
 						//generateDeclarationOfOathFromVelocity(scLoaReportAttachment, scLoa);
 					}
-
+					
 					/*else if (SourcingConstants.DOC_DEF_KEY_JADUAL_HARGA
 							.equals(docDefinitionKey)) {
 						filename.append(".xlsx");
@@ -1698,7 +1706,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * @throws Exception the exception
 	 */
 	private void generateAgreementLetterDocFromVelocity(ScAttachment attachment, ScLoa scLoa, ScQt scQt) throws Exception {
-		debugLogger("generateAgreementLetterDocFromVelocity");
+		//debugLogger("generateAgreementLetterDocFromVelocity" );
 		populateAttachmentDetails(attachment);
 		CommonUtils commonUtils = new CommonUtils();
 		SimpleDateFormat dateSDF = new SimpleDateFormat(
@@ -1706,7 +1714,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
 		Locale myLocale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
 		ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
-
+		debugLogger("generateAgreementLetterDocFromVelocity");
 		DecimalFormat integerDF = new DecimalFormat(
 				commonUtils
 				.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER));
@@ -1916,6 +1924,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					|| ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scQt.getFulfilmentType().getParameterCode())
 					|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equals(scQt.getFulfilmentType().getParameterCode()))){
 				constructSupplierSpecificationAndRemarks(context, scLoa);
+		}
+		// #26130 - End
+		
+		// #26226 - Start
+		if((ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType()))
+				&& (ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equals(scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode()) ||
+						ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode()))){
+			
+			constructPRSupplierSpecificationAndRemarks(context, scLoa);
+			log.info(".....CR Enhancement 26226 generateAgreementLetterDocFromVelocity method.....");
 		}
 		// #26130 - End
 		
@@ -6264,13 +6282,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			tFilePath.append(tempFilePath);
 			//create source File object
 			File oldName = new File(tFilePath.toString());
-
+			log.info("Old Path : " + tFilePath.toString());
 			//create destination File object
 			//StringBuilder aFilePath = new StringBuilder("c:");
 			StringBuilder aFilePath = new StringBuilder();
 			aFilePath.append(actualFilePath);
 			File newName = new File(aFilePath.toString());
+			log.info("New Path : " + aFilePath.toString());
+			log.info("Before rename to new path");
 			boolean isFileRenamed = oldName.renameTo(newName);
+			log.info("After rename to new path");
 			if(isFileRenamed)
 				log.info("Temporary Loa No folder has been renamed.");
 			else
@@ -6284,7 +6305,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		List<ScLoaReport> scLoaReports = loa.getScLoaReports();
 		if (scLoaReports != null && scLoaReports.size() > 0) {
 			for (ScLoaReport scLoaReport : scLoaReports) {
-				if (null == scLoaReport.getPmDocument()) {
+				if (null == scLoaReport.getPmDocument() || SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
+						.equals(scLoaReport.getPmDocument().getDocDefinitionKey())) {
 					if (scLoaReport.getScLoaReportAttachment() != null) {
 						String docRepoBaseDir = EpPropertiesUtils.getInstance().getProperty(
 								EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
@@ -7108,5 +7130,26 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 		return false;
 	}
+	
+	
+	/* 19336#99 - start */
+	public String getManagedBeanLoaContractAgencyOrgName(){
+		try{
+			return getManagedBean().getScLoa().getContractAgency().getOrgName();
+		}
+		catch(Exception ex){
+			return "";
+		}
+	}
+	
+	public String getManagedBeanSelectedPtjOrgName(){
+		try{
+			return getManagedBean().getSelectedPtj().getOrgName();
+		}
+		catch(Exception ex){
+			return "";
+		}
+	}
+	/* 19336#99 - end */
 }
 
