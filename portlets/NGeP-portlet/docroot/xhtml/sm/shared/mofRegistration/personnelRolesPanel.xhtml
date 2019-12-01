@@ -80,8 +80,9 @@
 												currValue="#{backingBean.managedBean.selectedShareHolder.management}" />
 										<h:outputText style="float: left" value="#{lbl['lbl.sm.person.mngmt']}" />
 									</td>
+									<!-- SSM Redmine : 9456 -->
 									<td style="width: 20px"><p:selectBooleanCheckbox
-											disabled="#{backingBean.managedBean.selectedShareHolder.disableStaff}"
+											disabled="#{backingBean.managedBean.selectedShareHolder.disableStaff || backingBean.managedBean.selectedShareHolder.equityOwner}"
 											value="#{backingBean.managedBean.selectedShareHolder.clerical}" >
 											<p:ajax event="change" update=":#{p:component('shrRolesPanel')},@([id$=shareHolderAddrDialog])"
 												process=":#{p:component('shrRolesPanel')}" partialSubmit="true" listener="#{backingBean.setRoleStaffAddrReqd()}"/>
@@ -213,8 +214,9 @@
 										<h:outputText style="float: left"
 											value="#{lbl['lbl.sm.professional.semi']}" />
 									</td>
+									<!-- SSM Redmine 9456 -->
 									<td style="width: 20px"><p:selectBooleanCheckbox
-											disabled="#{backingBean.managedBean.selectedShareHolder.disableStaff}"
+											disabled="#{backingBean.managedBean.selectedShareHolder.disableStaff || backingBean.managedBean.selectedShareHolder.equityOwner}"
 											value="#{backingBean.managedBean.selectedShareHolder.clerical}" >
 										<p:ajax event="change" update=":#{p:component('shrRolesPanel')},@([id$=shareHolderAddrDialog])"
 												process=":#{p:component('shrRolesPanel')}" partialSubmit="true" listener="#{backingBean.setRoleStaffAddrReqd()}"/>
