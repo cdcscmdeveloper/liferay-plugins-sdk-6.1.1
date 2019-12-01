@@ -9669,7 +9669,12 @@ public class SmApplicationBackingBean extends
 				reqDto.setRejectedApplId(rejectedAppl.getApplId());
 
 				if (SmApplicationUtil.checkRejectedApplExpired(rejectedAppl)) {
-					reqDto.setResubmitExpired(true);
+					// #25794 - start
+					// if rejected application type = current application type
+					if (applicationType.equalsIgnoreCase(rejectedAppl.getApplType())) {
+						reqDto.setResubmitExpired(true);
+					}
+					// #25794 - start
 				}
 			}
 			MofRegistrationResDTO resDTO = mofRegistrationSO
