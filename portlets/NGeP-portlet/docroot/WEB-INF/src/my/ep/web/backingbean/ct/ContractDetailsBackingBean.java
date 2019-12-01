@@ -11,6 +11,8 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -74,6 +76,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.type.pm.OrganizationType;
@@ -95,6 +98,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.RoleHelper;
 
+import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -327,6 +331,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		ctBB = new ContractBackingBean();
 		if(ctBB.getManagedBean().getDeleteAttachmentList() != null ){
 			ctBB.getManagedBean().getDeleteAttachmentList().clear();
+		}
+		
+		if(ctBB.getManagedBean().getCtAgreementList() != null ){
+			ctBB.getManagedBean().getCtAgreementList().clear();
 		}
 		try {
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
@@ -796,7 +804,19 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					if (contractAmt.getContractAmountId() != null && ctBB.getManagedBean().getCtContractAmount() != null
 							&& contractAmt.getContractAmountId().intValue() == ctBB.getManagedBean().getCtContractAmount().getContractAmountId().intValue()){
 						contractAmt.setTotalBondAmt(ctBB.getManagedBean().getCtContractAmount().getTotalBondAmt());
-						contractAmt.setCtPerformanceBonds( ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds());
+				//#24333 - Start	
+						if(ctBB.isContractExtend()){
+							List<CtPerformanceBond> originalBond = new ArrayList<CtPerformanceBond>(ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal());
+					        List<CtPerformanceBond> newBond = new ArrayList<CtPerformanceBond>(ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsNew());
+
+					        List<CtPerformanceBond> result = new ArrayList<CtPerformanceBond>(newBond);
+					        result.addAll(originalBond);
+					        result = ListUtils.union(newBond, originalBond);
+							contractAmt.setCtPerformanceBonds( result);
+						}else{
+							contractAmt.setCtPerformanceBonds( ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal());	
+						}
+				//#24333 - End			
 					}
 				}
 			}
@@ -2526,6 +2546,50 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 		
 			for (CtContractAmount contractAmt : ctBB.getManagedBean().getContractVer().getCtContractAmounts()){
+				//#24333 - Start
+				if(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
+						|| ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)){
+					List<CtPerformanceBond> result = new ArrayList<CtPerformanceBond>();
+					List<CtPerformanceBond> resultBondNew = new ArrayList<CtPerformanceBond>();
+					for(CtPerformanceBond listBond : contractAmt.getCtPerformanceBonds()){
+						CtPerformanceBond performanceBondList = new CtPerformanceBond();
+						performanceBondList = SerializationUtils.clone(listBond);										
+			            if (!listBond.isBondNew()) {			            	
+			                result.add(performanceBondList);
+			            }
+			         if(ctBB.isContractExtend()){
+			            if(listBond.isBondNew()){			            	
+			            	resultBondNew.add(performanceBondList);			            	
+			            }
+					}
+				}
+		            contractAmt.getCtPerformanceBondsOriginal().addAll(result);
+		            contractAmt.getCtPerformanceBondsNew().addAll(resultBondNew);
+		            
+					if(contractAmt.getCtPerformanceBondsNew().isEmpty() || contractAmt.getCtPerformanceBondsNew().size() < 0){
+						List<CtPerformanceBond> resultBondNewList = new ArrayList<CtPerformanceBond>();
+							for(CtPerformanceBond performanceBond : contractAmt.getCtPerformanceBonds()){
+							 CtPerformanceBond ctPerformanceBond = new CtPerformanceBond();
+							 ctPerformanceBond = (CtPerformanceBond) performanceBond.cloneEntity();
+				            if (!ctPerformanceBond.isBondNew()) {	
+				            		ctPerformanceBond.setPerformanceBondId(null);
+					            	ctPerformanceBond.setBondNew(true);
+					            	ctPerformanceBond.setFileName(null);
+					            	ctPerformanceBond.setFilePath(null);
+									Calendar cal = Calendar.getInstance();
+									cal.setTime(ctBB.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+									cal.add(Calendar.YEAR, 1);
+									ctPerformanceBond.setExpDate(cal.getTime());
+									ctPerformanceBond.setEffDate(ctBB.getManagedBean().getContractVer().getCtContractValue().getEffDate());
+									resultBondNewList.add(ctPerformanceBond);
+				            }						
+						}
+							contractAmt.getCtPerformanceBondsNew().addAll(resultBondNewList);
+					}
+				}					
+				//#24333 - End
+				
+				
 				if (getManagedBean().getAsAtDate().getTime() >= contractAmt.getEffDate().getTime() 
 						&& getManagedBean().getAsAtDate().getTime() <= contractAmt.getExpDate().getTime()){
 					ctBB.getManagedBean().setCtContractAmount(contractAmt);
