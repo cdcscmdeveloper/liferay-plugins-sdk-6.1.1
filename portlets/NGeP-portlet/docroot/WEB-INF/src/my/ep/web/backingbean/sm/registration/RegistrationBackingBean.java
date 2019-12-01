@@ -3571,6 +3571,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				PmParameter identObj = SmServiceLookup.getParameterSO().retrieveParameterByTypeAndCode(reqDTO).getPmParameter();
 				owner.setIdentificationTypeId(identObj.getParameterId());
 				owner.setIdentificationType(identObj);
+				//#26987
+				if(getManagedBean().isSameAsOwner() && getManagedBean().getSmPersonnel()!= null){
+					SmPersonnel personnel = getManagedBean().getSmPersonnel();
+					personnel.setPmCountry(owner.getNationality());
+				}
 			}
 		} else {
 		//16052019 - SSM INTEGRATION CR => END
@@ -3601,6 +3606,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			PmParameter identObj = SmServiceLookup.getParameterSO().retrieveParameterByTypeAndCode(reqDTO).getPmParameter();
 			owner.setIdentificationTypeId(identObj.getParameterId());
 			owner.setIdentificationType(identObj);
+			//#26987
+			if(getManagedBean().isSameAsOwner() && getManagedBean().getSmPersonnel()!= null){
+				SmPersonnel personnel = getManagedBean().getSmPersonnel();
+				personnel.setPmCountry(owner.getNationality());
+			}
 		}
 	}
 
@@ -3830,7 +3840,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			//- Role in company to display “Equity Owner” and the checkbox auto-ticked and non-editable.
 			this.getManagedBean().setShowDirector(false);
 			this.getManagedBean().setShowOwner(true);
-			//this.getManagedBean().setDisableRole(true);
+			this.getManagedBean().setDisableRole(true);
 			this.getManagedBean().setOwnerIsEquity(true);
 		} else {
 			// show “Director” and the checkbox auto-ticked and non-editable.
