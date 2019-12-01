@@ -744,7 +744,7 @@ u {
 					<td align="left" class="submenu_padding"><span
 						class="text_family">4.6 Tarikh Mula Kontrak </span></td>
 					<td>:</td>
-					<td>$dateSDF.format($!scLoa.contractEffDate) </td>
+					 <td>#if($!scLoa.contractEffDate) $dateSDF.format($scLoa.contractEffDate) #end </td> 
 				</tr>
 				<tr>
 					<td align="left" class="submenu_padding"><span
@@ -1301,7 +1301,7 @@ u {
 	 
 	 </table>
 	 
-	 #if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")	
+	 #if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG" )	
 		#if ($scLoa.scLoiLoa.docType == "NG")
 			#foreach( $tplspecMaster in $masters )
 				#set($itemType = $bean.getParameterDescForReport($tplspecMaster.itemTypeCode)) 
@@ -1381,7 +1381,7 @@ u {
 							<tr>
 								<td bgcolor="#d0eaee" class="title border left" colspan="10" style="text-align: left;">&nbsp;</td>
 							</tr>
-						#end
+						#end   
 							<tr>
 								<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px;">Item</th>
 								<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px;">UOM</th>
@@ -1434,8 +1434,127 @@ u {
 					#set($rowCount = $rowCount + 1)
 				#end
 			#end
+			
 		#end
-	#else
+		
+	#end	
+
+
+				
+	#if ($scLoa.scLoiLoa.docType == "PR")
+	  #set($rowCount = 0)
+	  #foreach( $tplspecMaster in $masters )
+
+				#set($itemType = $bean.getParameterDescForReport($tplspecMaster.itemTypeCode)) 
+					#if ($itemType == "Perkhidmatan" || $itemType == "Service")
+			      
+			       
+						<table width="100%" border="1" cellpadding="0" cellspacing="0">
+							<tbody>
+					         #if($rowCount == 0)
+								<tr>
+									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px;">Item</th>
+									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px;">Jenis Pemenuhan</th>
+									<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px;">UOM</th>
+									<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px;">Kekerapan / <br/>Unit Ukuran</th>
+									<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px;">Bil. Unit <br/>Ukuran Sehari</th>
+									<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px;">Bil. Unit <br/>Ukuran Sebulan</th>
+									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px;">Kuantiti</th>
+									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px;">Tawaran Pembekal</th>
+									
+									 
+									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px;">Skop Perkhidmatan / SLA</th>
+								</tr>
+								
+								<tr>
+									<th bgcolor="#6d839b" class="title border left" colspan="5" style="text-align: center;">Spesifikasi</th>
+								</tr>
+							  #end
+					#foreach( $tplspecQuestion in $tplspecMaster.tplSpecQuestions )
+					    #if ($tplspecQuestion.questionType == "I")
+						<tr>
+							
+							<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" >
+									<strong>
+										$tplspecQuestion.clItem
+									</strong>
+							</td>
+							
+							
+							<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" >
+							<strong>
+								#if($tplspecQuestion.clFulfilmentTypeCode)
+									$bean.getParameterDescForVelocityReport($tplspecQuestion.clFulfilmentTypeCode)
+								#end
+							</strong>
+							</td>
+							
+									
+								<td valign="top" bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">
+								<strong>
+								#if($tplspecQuestion.clUom)
+								$tplspecQuestion.clUom.uomName
+								#end
+								
+								</td>
+								<td valign="top" bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">
+									#if ($tplspecQuestion.clUomFrequency)
+										$tplspecQuestion.clUomFrequency
+									#end
+								</td>
+								<td valign="top" bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">
+									#if ($tplspecQuestion.clUomPerDay)
+										$tplspecQuestion.clUomPerDay
+									#end
+								</td>
+								<td valign="top" bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">
+									#if ($tplspecQuestion.clUomPerMonth)
+										$tplspecQuestion.clUomPerMonth
+									#end
+								</td>
+								<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;">
+									#if($tplspecQuestion.clQuantity)
+									 $tplspecQuestion.clQuantity
+									#end
+								</td>
+								
+							    <td valign="top" bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;">
+									#if($tplspecQuestion.AnswerText)
+									$tplspecQuestion.AnswerText
+									#end
+								</td>
+								<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;">
+								#if($serviceScope)
+								 $serviceScope 
+								 #end
+								</td>
+						
+							</tr>
+						#else
+							<tr>
+							
+							<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="2" style="text-align: left; padding-left: 5px;" > &nbsp;</td>
+									<td bgcolor="#d0eaee" class="standard border-bottom left" colspan="5" style="text-align: center; padding-left: 5px;">$tplspecQuestion.clSpecDetail</td>
+							<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left"  colspan="2" style="text-align: left; padding-left: 5px;" > &nbsp;</td>
+							
+							</tr>
+						#end	
+					#end
+						</tbody>
+					</table>
+					
+			#end
+			 #set($rowCount = $rowCount + 1)
+		#end
+	    
+	 
+	 
+
+	 #else
+     
+	 
+	
+	
 		<tr align='left'>
 			<td><span
 				style='font-weight: bold; font-size: 10px; font-family: Times New Roman;'>
