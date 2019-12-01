@@ -104,7 +104,7 @@
 								display="inline" required="true" readonlyInput="true"
 								label="#{lbl['lbl.sm.estdate']}" id="establishDate"
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-								yearRange="-99:+0" maxdate="#{backingBean.managedBean.currDate}"
+								yearRange="#{lbl['lbl.calendar.year.range']}" maxdate="#{backingBean.managedBean.currDate}"
 								value="#{backingBean.managedBean.smAppl.smCompanyBasic.establishDate}" />
 								
 								<p:calendar navigator="true" disabled="true"
@@ -112,7 +112,7 @@
 								display="inline" required="true" readonlyInput="true"
 								label="#{lbl['lbl.sm.estdate']}" id="establishDateW"
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-								yearRange="-99:+0" maxdate="#{backingBean.managedBean.currDate}"
+								yearRange="#{lbl['lbl.calendar.year.range']}" maxdate="#{backingBean.managedBean.currDate}"
 								value="#{backingBean.managedBean.smAppl.smCompanyBasic.establishDate}" />
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -237,7 +237,7 @@
 							</tr>
 							<tr>
 
-								<td>
+								<td>								
 								<p:selectOneMenu
 										style="width: 250px;margin-bottom: 5px;" id="basicComState"
 										required="true" label="#{lbl['lbl.sm.state']}"

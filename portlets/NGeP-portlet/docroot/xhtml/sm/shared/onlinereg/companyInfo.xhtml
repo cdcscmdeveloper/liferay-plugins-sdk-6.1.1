@@ -222,7 +222,7 @@
 						navigator="true" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.estdate']}"
 						value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.establishDate}"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
-						readonlyInput="true" size="30" showOn="button" yearRange="-99:+0" maxdate="#{CommonConstants.CURRENT_DATE}"/>
+						readonlyInput="true" size="30" showOn="button" yearRange="#{lbl['lbl.calendar.year.range']}" maxdate="#{CommonConstants.CURRENT_DATE}" />
 					
 					<p:calendar rendered="#{registrationBackingBean.managedBean.smAppl.applValidWithSsm and !empty registrationBackingBean.managedBean.smAppl.smCompanyBasic.establishDate}" disabled="true" id="estDateCalIdV"
 						navigator="true" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.estdate']}"
