@@ -35,13 +35,13 @@
 	</p:panel>
 	
 		<c:choose>
-			<c:when test="#{qTDetailBB.managedSearchBeanDocTypeIsLOAAndPrefixLAAndIsDO}">
+			<c:when test="#{qTDetailBB.managedSearchBeanDocumentTypeIsLOA}">
 				<c:set var="tableHeader" value="#{lbl['lbl.sc.loiloa.loalist']}" scope="view" />
 				<c:set var="itemNoHeader" value="#{lbl['lbl.sc.loiloa.loa.no']}" scope="view" />
 				<c:set var="listType" value="loaList" scope="view" />
 				<c:set var="dataModelLoiLoa" value="#{qTDetailBB.searchLoaForQtDataModel}" scope="view" />
 			</c:when>
-			<c:when test="#{qTDetailBB.managedSearchBeanDocTypeIsLOIAndPrefixLIAndIsDO}">
+			<c:when test="#{qTDetailBB.managedSearchBeanDocumentTypeIsLOI}">
 				<c:set var="tableHeader" value="#{lbl['lbl.sc.loiloa.loilist']}" scope="view" />
 				<c:set var="itemNoHeader" value="#{lbl['lbl.sc.loiloa.loi.no']}" scope="view" />
 				<c:set var="listType" value="loiList" scope="view" /> 
@@ -121,6 +121,7 @@
 								rendered="#{scQt.actionRender[0]}"
 								icon="ui-icon-view" action="#{qTDetailBB.editQuationTenderDetails(scQt, false)}" 
 								partialSubmit="true" process="@this"/>
+							
 							<p:menuitem id="menuItem2" value="#{lbl['lbl.btn.update']}" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();" 
 								rendered="#{scQt.actionRender[1]}"
@@ -166,11 +167,59 @@
 								rendered="#{scQt.actionRender[9]}"
 								action="#{qTDetailBB.closeProposal(scQt)}"
 								partialSubmit="true" process="@this" update="searchQTs"/>
+						    <p:menuitem id="menuItem11" value="#{lbl['lbl.btn.clone']}" 
+								
+								rendered="#{scQt.actionRender[0]}" 
+								icon="ui-icon-edit" update=":form:displayk"
+								action="#{qtMultipleCloneBackingBean.clonePopupAction(scQt)}" 
+								partialSubmit="true" process="@this"/>
 						</p:menuButton>
 					</p:column>
 					<!-- ***17376#55 - end -->
 					
 				</p:dataTable>
+				<p:dialog widgetVar="kklik" >
+				  <h:panelGroup id="displayk">
+						<p:panel id="clonesearchpnlid2" header="#{lbl['lbl.sc.clone.qt']}" toggleable="true">
+							<table style="width: 100%;">
+								<tr>
+									<td valign="top"><p:outputLabel value="#{lbl['lbl.sc.quotation.tender.noClone']}" /></td>
+									<td><p:inputText
+								onkeypress="if (event.keyCode == 13) { quotationTndrCommitteeAppointmentMainCloneSearch.jq.click(); return false; }"
+								value="#{qtMultipleCloneBackingBean.totalClone}"
+								maxlength="21" size="35" /></td>
+								</tr>
+					
+							</table>
+				        </p:panel>
+				        <p:panel header="#{lbl['lbl.sc.qtn.list']}" toggleable="true">
+				<br />
+
+				<p:tree value="#{qtMultipleCloneBackingBean.root}" var="node"
+                        selection="#{qtMultipleCloneBackingBean.selectedNodes}"
+					selectionMode="checkbox">
+					<p:treeNode>
+						<h:outputText value="#{node.label}"/>
+					</p:treeNode>
+					
+				</p:tree>
+
+
+				<div class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.btn.ok']}"
+						styleClass="BtnSpacing" id="cloneCommitteeTreeBtnOnId2" update="@all"
+						action="#{qtMultipleCloneBackingBean.addToClone()}">
+					 <f:param name="skipvalidation" value="1" />
+					</p:commandButton>
+					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+						styleClass="BtnSpacing" onclick="screen3.hide();"
+					 ><f:param name="skipvalidation" value="1" />
+					 </p:commandButton>
+				</div>
+			</p:panel>
+					</h:panelGroup>
+				</p:dialog>
+				<ui:include src="/xhtml/sc/quatationtender/createquotationtender/clone/clone-multiple.xhtml" />
 				</div>
 				
 				
