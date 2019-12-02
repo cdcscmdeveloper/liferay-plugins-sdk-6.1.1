@@ -72,7 +72,7 @@ public class ViewSuppProfileBackingBean extends
 						MessageConst.INFO_721212, null, null);
 			}
 			setTabParam();
-			SLAUtils.getInstance().logSLAInfo("SM","SR",
+			SLAUtils.getInstance().logSLAInfo("SM","SP",
 					"ViewSuppProfileBackingBean.preRenderViewSupplierProfile", startTime);
 			getManagedBean().setRenderedBackButton(false);
 			//26238 - start
@@ -110,11 +110,11 @@ public class ViewSuppProfileBackingBean extends
 						.getLatestApplBySupplierId(Long
 								.parseLong(supplierIdParam)));
 				//LOG : 26549 : SLA Monitoring
-				SLAUtils.getInstance().logSLAInfo("SM","",
+				SLAUtils.getInstance().logSLAInfo("SM","SP",
 						"ViewSuppProfileBackingBean.preRenderViewSupplierProfile", startTime);
 			} else {
 				//LOG : 26549 : SLA Monitoring
-				SLAUtils.getInstance().logSLAInfo("SM","VIEW PROFILE",
+				SLAUtils.getInstance().logSLAInfo("SM","SP",
 						"ViewSuppProfileBackingBean.preRenderViewSupplierProfile", startTime);
 				SmCommonUtil
 						.redirectToPage(
