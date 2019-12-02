@@ -3575,6 +3575,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				if(getManagedBean().isSameAsOwner() && getManagedBean().getSmPersonnel()!= null){
 					SmPersonnel personnel = getManagedBean().getSmPersonnel();
 					personnel.setPmCountry(owner.getNationality());
+					personnel.setName(owner.getOwnerName());
+					personnel.setIdentificationNo(owner.getIdentificationNo());
 				}
 			}
 		} else {
@@ -3610,6 +3612,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			if(getManagedBean().isSameAsOwner() && getManagedBean().getSmPersonnel()!= null){
 				SmPersonnel personnel = getManagedBean().getSmPersonnel();
 				personnel.setPmCountry(owner.getNationality());
+				personnel.setName(owner.getOwnerName());
+				personnel.setIdentificationNo(owner.getIdentificationNo());
 			}
 		}
 	}
