@@ -80,7 +80,7 @@ public class CmTrackingDiaryBackingBean extends
 		}
 		getManagedBean().getCmDocumentDataModel().reloadData();
 		//LOG : 26549 : SLA Monitoring
-		SLAUtils.getInstance().logSLAInfo("CM","SEARCH CATALOGUE","CmTrackingDiaryBackingBean.search", startTime);
+		SLAUtils.getInstance().logSLAInfo("CM","SC","CmTrackingDiaryBackingBean.search", startTime);
 	}
 
 	private class SearchTrackingDiaryPagingDataModel extends PagingDataModel<PmTrackingDiary> {
