@@ -920,7 +920,14 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 								SearchOperator.OPERATOR_EQUALS.value(), RoleCode.DESK_OFFICER));
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean(
-								"pmUserOrgs.pmUserRoles.pmRole.recordStatus",
+								"pmUserOrgs.pmUserRoles.recordStatus",
+								SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_ACTIVE));
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("recordStatus",
+								SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_ACTIVE));
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean(
+								"pmUserOrgs.recordStatus",
 								SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_ACTIVE));
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean(
@@ -935,13 +942,13 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 					searchBean.getDataFilterBeans().add(
 							new SearchFilterBean(
 									"identificationNo",
-									SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getSearchUserIdNo().trim(), false));
+									SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getSearchUserIdNo().trim()));
 				}
 				if(StringUtils.isNotBlank(getManagedBean().getSearchUserName())){
 					searchBean.getDataFilterBeans().add(
 							new SearchFilterBean(
 									"userName",
-									SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getSearchUserName().trim(), false));
+									SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getSearchUserName().trim(), true));
 				}
 
 				searchBean.getSortColumns().add(new SearchOrderBean("userName"));
