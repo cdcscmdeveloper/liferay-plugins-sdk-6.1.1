@@ -2130,7 +2130,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			if (resDTO.isSuccessful()) {
 				//LOG : 26549 : SLA Monitoring
 				SLAUtils.getInstance().logSLAInfo("PM","PS",
-						"ViewSuppProfileBackingBean.preRenderViewSupplierProfile", startTime);
+						"ProcurementPlanBackingBean.savePlan", startTime);
 				log.info("Record saved successfully"); 
 				if(this.getManagedBean().getTaskId()!=null){
 					loadPlanDetails(resDTO.getPlan().getPlanId(), false);

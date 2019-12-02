@@ -415,7 +415,7 @@ public class CommonApplBackingBean extends
 				smApplBB.getManagedBean().setTaskId(taskId);
 				smApplBB.getManagedBean().setClaimTask(isClaim);
 				//LOG : 26549 : SLA Monitoring
-				SLAUtils.getInstance().logSLAInfo("SM","VIEW APP",
+				SLAUtils.getInstance().logSLAInfo("SM","VA",
 						"CommonApplBackingBean.preRenderView", startTime);
 				setNavigationForSmDecision(appl.getApplType(), smApplBB);
 			} else if (resDTO.getProcessName().equalsIgnoreCase(
@@ -1077,27 +1077,7 @@ public class CommonApplBackingBean extends
 
 	}
 	
-	//JANGAN COMMIT, TEST CALL SCHEDULER
-	private void callScheduler() {
-		//ISmSchedulerSO smSchedulerSO = null;
-		DowngradeExpMofPersonnelRest downgradeExpMofPersonnelRest = new DowngradeExpMofPersonnelRest();
-		try {
-			downgradeExpMofPersonnelRest.downgradeExpMofPersonnel();
-			/*smSchedulerSO = (ISmSchedulerSO) BusinessDelegate
-					.getInstance().getServiceObject("sm",
-							ISmSchedulerSO.class);
-			smSchedulerSO.resetExpiredPendingActivationPersonnel();*/
 	
-
-		} catch (Exception e) {
-			log.info("**** THIS IS THE EXCEPTION IN RETRIVE LIST ****");
-			MofRegistrationResDTO resDTO = new MofRegistrationResDTO();
-			resDTO.setErrorCaued(Boolean.TRUE);
-		} finally {
-			//smSchedulerSO = null;
-		}
-
-	}
 	// private SmWorkflowStatus getCurrentActiveWokFlowStatus(Long applId) {
 	// log.info("*** This is resubmit to get po ****** ");
 	// SmWorkFlowStatusReqDTO reqDTO = new SmWorkFlowStatusReqDTO();
