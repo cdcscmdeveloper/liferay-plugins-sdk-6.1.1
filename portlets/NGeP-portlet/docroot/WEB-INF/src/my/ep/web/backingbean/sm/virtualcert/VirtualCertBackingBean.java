@@ -186,6 +186,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 	 */
 	// 26340
 	public void printVirtualCert(SmMofCert cert) throws IOException{
+		log.info("printVirtualCert=="+cert);
 		SmMofCert mofCert = SmVirtualCertHelper.getInstance().genReport(
 				SmVirtualCertHelper.getInstance().getReportType(cert.getBumiCertFlg()), 
 				SmVirtualCertHelper.getInstance().getReportParam(cert), cert, false);
