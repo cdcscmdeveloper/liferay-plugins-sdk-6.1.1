@@ -3571,6 +3571,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				PmParameter identObj = SmServiceLookup.getParameterSO().retrieveParameterByTypeAndCode(reqDTO).getPmParameter();
 				owner.setIdentificationTypeId(identObj.getParameterId());
 				owner.setIdentificationType(identObj);
+				//#26987
+				if(getManagedBean().isSameAsOwner() && getManagedBean().getSmPersonnel()!= null){
+					SmPersonnel personnel = getManagedBean().getSmPersonnel();
+					personnel.setPmCountry(owner.getNationality());
+				}
 			}
 		} else {
 		//16052019 - SSM INTEGRATION CR => END
@@ -3601,6 +3606,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			PmParameter identObj = SmServiceLookup.getParameterSO().retrieveParameterByTypeAndCode(reqDTO).getPmParameter();
 			owner.setIdentificationTypeId(identObj.getParameterId());
 			owner.setIdentificationType(identObj);
+			//#26987
+			if(getManagedBean().isSameAsOwner() && getManagedBean().getSmPersonnel()!= null){
+				SmPersonnel personnel = getManagedBean().getSmPersonnel();
+				personnel.setPmCountry(owner.getNationality());
+			}
 		}
 	}
 
