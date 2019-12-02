@@ -804,7 +804,23 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					if (contractAmt.getContractAmountId() != null && ctBB.getManagedBean().getCtContractAmount() != null
 							&& contractAmt.getContractAmountId().intValue() == ctBB.getManagedBean().getCtContractAmount().getContractAmountId().intValue()){
 						contractAmt.setTotalBondAmt(ctBB.getManagedBean().getCtContractAmount().getTotalBondAmt());
-				//#24333 - Start	
+						//#24333 - Start	
+						if(ctBB.isContractExtend()){
+							List<CtPerformanceBond> originalBond = new ArrayList<CtPerformanceBond>(ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal());
+					        List<CtPerformanceBond> newBond = new ArrayList<CtPerformanceBond>(ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsNew());
+
+					        List<CtPerformanceBond> result = new ArrayList<CtPerformanceBond>(newBond);
+					        result.addAll(originalBond);
+					        result = ListUtils.union(newBond, originalBond);
+							contractAmt.setCtPerformanceBonds( result);
+						}else{
+							contractAmt.setCtPerformanceBonds( ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal());	
+						}
+							
+					}else{
+						
+						contractAmt.setTotalBondAmt(ctBB.getManagedBean().getCtContractAmount().getTotalBondAmt());
+
 						if(ctBB.isContractExtend()){
 							List<CtPerformanceBond> originalBond = new ArrayList<CtPerformanceBond>(ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal());
 					        List<CtPerformanceBond> newBond = new ArrayList<CtPerformanceBond>(ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsNew());
@@ -817,6 +833,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 							contractAmt.setCtPerformanceBonds( ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal());	
 						}
 				//#24333 - End			
+					
 					}
 				}
 			}
@@ -2544,29 +2561,31 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		if (getManagedBean().getAsAtDate() == null) {
 			getManagedBean().setAsAtDate(ctBB.getManagedBean().getContractVer().getCtContractValue().getExpDate());
 		}
-		
-			for (CtContractAmount contractAmt : ctBB.getManagedBean().getContractVer().getCtContractAmounts()){
-				//#24333 - Start
-				if(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
-						|| ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)){
-					List<CtPerformanceBond> result = new ArrayList<CtPerformanceBond>();
-					List<CtPerformanceBond> resultBondNew = new ArrayList<CtPerformanceBond>();
-					for(CtPerformanceBond listBond : contractAmt.getCtPerformanceBonds()){
-						CtPerformanceBond performanceBondList = new CtPerformanceBond();
-						performanceBondList = SerializationUtils.clone(listBond);										
-			            if (!listBond.isBondNew()) {			            	
-			                result.add(performanceBondList);
-			            }
-			         if(ctBB.isContractExtend()){
-			            if(listBond.isBondNew()){			            	
-			            	resultBondNew.add(performanceBondList);			            	
-			            }
-					}
+
+		for (CtContractAmount contractAmt : ctBB.getManagedBean().getContractVer().getCtContractAmounts()){
+			//#24333 - Start
+			if(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
+					|| ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)){
+				List<CtPerformanceBond> result = new ArrayList<CtPerformanceBond>();
+				List<CtPerformanceBond> resultBondNew = new ArrayList<CtPerformanceBond>();
+				for(CtPerformanceBond listBond : contractAmt.getCtPerformanceBonds()){
+		            if (!listBond.isBondNew()) {
+		                result.add(listBond);
+		            }
+		         if(ctBB.isContractExtend()){
+		            if(listBond.isBondNew()){
+		            	resultBondNew.add(listBond);			            	
+		            }
 				}
-		            contractAmt.getCtPerformanceBondsOriginal().addAll(result);
-		            contractAmt.getCtPerformanceBondsNew().addAll(resultBondNew);
+			}
+				
+				contractAmt.getCtPerformanceBondsOriginal().clear();
+	            contractAmt.getCtPerformanceBondsOriginal().addAll(result);
+	            
+	            contractAmt.getCtPerformanceBondsNew().clear();
+	            contractAmt.getCtPerformanceBondsNew().addAll(resultBondNew);
 		            
-					if(contractAmt.getCtPerformanceBondsNew().isEmpty() || contractAmt.getCtPerformanceBondsNew().size() < 0){
+					if(ctBB.isContractExtend() && (contractAmt.getCtPerformanceBondsNew().isEmpty() || contractAmt.getCtPerformanceBondsNew().size() < 0)){
 						List<CtPerformanceBond> resultBondNewList = new ArrayList<CtPerformanceBond>();
 							for(CtPerformanceBond performanceBond : contractAmt.getCtPerformanceBonds()){
 							 CtPerformanceBond ctPerformanceBond = new CtPerformanceBond();
