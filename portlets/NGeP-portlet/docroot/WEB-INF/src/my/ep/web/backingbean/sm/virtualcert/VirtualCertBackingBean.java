@@ -192,6 +192,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 				SmVirtualCertHelper.getInstance().getReportParam(cert), cert, false);
 		String newfile = mofCert.getFilePath() + "/" + cert.getFileName();
 		commonDownload(newfile,mofCert.getFileName());
+		log.info("printVirtualCert : After download=="+cert);
 	}
 
 	/**
