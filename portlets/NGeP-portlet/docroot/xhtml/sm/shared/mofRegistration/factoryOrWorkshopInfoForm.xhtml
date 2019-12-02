@@ -41,7 +41,7 @@
 				          </p:selectBooleanCheckbox>
 				       </f:facet>
 						<p:selectBooleanCheckbox value="#{fac.selected}">
-							<p:ajax event="change" update="@this,:#{p:component('delFactoryBtnId')}" 
+							<p:ajax event="change" update="@this,:#{p:component('smFacilityFactoryDtPanel')}" 
 								process="@this" partialSubmit="true" />
 						</p:selectBooleanCheckbox>
 					</p:column>
@@ -107,7 +107,7 @@
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					partialSubmit="true" process="smFacilityFactoryDtPanel"
 					id="delFactoryBtnId" disabled="#{backingBean.disableDeleteBtn(factoryCatVar.facilityList)}"
-					update=":#{p:component('smFacilityFactoryDtPanel')},@this" 
+					update=":#{p:component('facDt')},@this" 
 					oncomplete="factoryDeletePopUp.show()" />
 			</div>
 			<br />
