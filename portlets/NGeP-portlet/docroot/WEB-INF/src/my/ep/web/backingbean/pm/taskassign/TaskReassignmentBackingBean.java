@@ -182,7 +182,7 @@ public class TaskReassignmentBackingBean extends
 		invalidRolesForBulkReassignmentLst.add(RoleCode.OC_SECRETARY.value());
 		invalidRolesForBulkReassignmentLst.add(RoleCode.PBA_MEMBER.value());
 		invalidRolesForBulkReassignmentLst.add(RoleCode.PPB_MEMBER.value());
-		//invalidRolesForBulkReassignmentLst.add(RoleCode.REQUISITIONER.value()); //for test validation
+		//invalidRolesForBulkReassignmentLst.add(RoleCode.PPB_SECRETARY.value()); //for test validation
 	}
 	//[#25018] - end
 	
@@ -1743,7 +1743,17 @@ public class TaskReassignmentBackingBean extends
 			this.getManagedBean().setCommitteeUpdate(false);
 			this.getManagedBean().setRemarks(null);		
 			this.getManagedBean().setBulkReassign(true);
-			this.getManagedBean().setSingleReassign(false);			
+			this.getManagedBean().setSingleReassign(false);
+			
+			if(this.getManagedBean().getSelectedTasksToBulkReassign() != null 
+					&& this.getManagedBean().getSelectedTasksToBulkReassign().size() > 0) {
+				WorklistItemVO task = this.getManagedBean().getSelectedTasksToBulkReassign().get(0);
+				//set value for text input document type
+				this.getManagedBean().setDocType(task.getDocType());
+			}
+			
+			//set value for text area document number
+			this.getManagedBean().setSelectedTasksTA(getSelectedTasks());
 			
 			if(ProfileManagementConst.TASK_REASSIGN_REMARKS_CT.contains(this.getManagedBean().getDocStatus())
 					|| ProfileManagementConst.TASK_REASSIGN_REMARKS_S2.contains(this.getManagedBean().getDocStatus())){
@@ -2421,7 +2431,7 @@ public class TaskReassignmentBackingBean extends
 							String moduleCode = status.getModuleCode();
 							
 							log.info(":::pageChangeListener() reassignType: "+ reassignType +", moduleCode: "+ moduleCode +".");		
-									
+							log.info("[#25018] docType: "+ task.getDocType() +", docNo: "+ task.getDocNumber() + ", docStatus: " + task.getDocStatus().longValue() + ", taskName: " + task.getTaskName());		
 							if(vo == null ){
 								if (ModuleCodeConst.CONTRACT_MANAGEMENT
 										.equalsIgnoreCase(moduleCode)) {
@@ -3519,18 +3529,18 @@ public class TaskReassignmentBackingBean extends
 	public String getSelectedTasks() {		
 		log.info("getSelectedTasks - Start");		
 		WorklistItemVO task = null;
-		StringBuilder tasks = new StringBuilder();
+		StringBuilder documents = new StringBuilder();
 		
 		if(this.getManagedBean().getSelectedTasksToBulkReassign().size() > 0) {			 
 			for (int i = 0; i < this.getManagedBean().getSelectedTasksToBulkReassign().size(); i++) {
 				task = this.getManagedBean().getSelectedTasksToBulkReassign().get(i);				
-				tasks.append(task.getDocNumber());
-				tasks.append(", ");				
+				documents.append(task.getDocNumber());
+				documents.append(", ");				
 			}
 		}
-		//log.info("[#25018] List of selected tasks: " + tasks.toString());
+		//log.info("[#25018] List of selected documents: " + documents.toString());
 		log.info("getSelectedTasks - End");
-		return tasks.toString();
+		return documents.toString();
 		
 	}
 	
@@ -3581,20 +3591,65 @@ public class TaskReassignmentBackingBean extends
 	private boolean validateTaskForRole() {
 		log.info("validateTaskForRole - Start");
 		
-		StringBuilder stb = null;		
+		StringBuilder stb = null;
+		PmTaskReassignmentVO vo = null;
+		ISearchBean<PmUser> searchBean = null;
 		
 		try {
 			if(this.getManagedBean().getSelectedTasksToBulkReassign() != null 
 					&& this.getManagedBean().getSelectedTasksToBulkReassign().size() > 0) {
 				for(WorklistItemVO task : this.getManagedBean().getSelectedTasksToBulkReassign()) {
-					//log.info("[#25018] Doc status: " + task.getDocStatus().longValue());
-					if(excludeRolesForBulkReassignment.containsKey(new Long(task.getDocStatus().longValue()))) {				
-						if(stb != null) {
-							stb.append(", ");
-							stb.append(task.getDocNumber());
-						} else {
-							stb = new StringBuilder(task.getDocNumber());
-						}					
+					log.info("[#25018] docType: "+ task.getDocType() +", docNo: "+ task.getDocNumber() + ", docStatus: " + task.getDocStatus().longValue() + ", taskName: " + task.getTaskName());
+					PmStatus status = PmCommonUtil.getPmStatusById(task.getDocStatus().longValue());
+
+					if (status != null) {
+						if (ModuleCodeConst.CONTRACT_MANAGEMENT
+								.equalsIgnoreCase(status.getModuleCode())) {
+							vo = retrieveCtTaskReassignmentDetails(task,searchBean);
+						} else if (ModuleCodeConst.SUPPLIER_SELECTION
+								.equalsIgnoreCase(status.getModuleCode())) {
+							vo = retrieveSourcingTaskReassignmentDetail(task);
+						} else if (ModuleCodeConst.ORDER_FULFILLMENT
+								.equalsIgnoreCase(status.getModuleCode())) {
+							vo = retrieveFLTaskReassignmentDetail(task);
+						}else if (ModuleCodeConst.PROCUREMENT_PLAN
+								.equalsIgnoreCase(status.getModuleCode())) {
+							vo = retrievePpTaskReassignmentDetail(task);
+						}else if(ModuleCodeConst.CATALOGUE_MANAGEMENT
+								.equalsIgnoreCase(status.getModuleCode())) {
+							vo = retrieveCMTaskReassignmentDetail(task);
+						}else if(ModuleCodeConst.PROFILE_MANAGEMENT
+								.equalsIgnoreCase(status.getModuleCode())) {
+							vo = retrievePMTaskReassignmentDetail(task);
+						}else if(ModuleCodeConst.SUPPLIER_MANAGEMENT
+								.equalsIgnoreCase(status.getModuleCode())) {
+							vo = retrieveSMTaskReassignmentDetail(task);							
+						}
+					}					
+					
+					log.info("[#25018] Doc status id: " + task.getDocStatus().longValue());
+					if(excludeRolesForBulkReassignment.containsKey(new Long(task.getDocStatus().longValue()))) {
+						log.info("[#25018] Found match status id...");
+						boolean invalid = false;
+						if(vo != null && vo.getRoleList() != null && vo.getRoleList().size() > 0){
+							for(String role : vo.getRoleList()) {
+								log.info("[#25018] Role code: " + role);
+								if(invalidRolesForBulkReassignmentLst.contains(role)) {
+									log.info("[#25018] Has invalid role for bulk task reassingment");
+									invalid = true;
+									break;
+								}
+							}						
+						}
+						
+						if(invalid) {
+							if(stb != null) {
+								stb.append(", ");
+								stb.append(task.getDocNumber());
+							} else {
+								stb = new StringBuilder(task.getDocNumber());
+							}
+						}
 					}
 				}
 				//log.info("[#25018] Invalid doc number: [" + (stb != null ? stb.toString():' ') + "]");
@@ -3666,7 +3721,7 @@ public class TaskReassignmentBackingBean extends
 			
 			if(isSameTypeAndStat) {				
 				//set value for text area
-				this.getManagedBean().setSelectedTasksTA(getSelectedTasks());
+				//this.getManagedBean().setSelectedTasksTA(getSelectedTasks());
 				return true;
 			} else {				
 				this.getManagedBean().getSelectedTasksToBulkReassign().clear();				
