@@ -837,7 +837,22 @@ public class SmApplicationBackingBean extends
 		if (!fromBpm) {
 			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
 			boolean cannotProceedAlertMsg = false;
-
+			//26238 - start
+			if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)){
+				if (currSupp != null){
+					List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
+					
+					if(discList != null && discList.size() > 0){
+						for(SmDisciplinaryAction disc : discList){
+							if(disc.isBumiputeraCancel()){
+								throw new EpException(SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
+										null));
+							}
+						}
+					}
+				}
+			} 
+			//26238 - end
 			if (applicationType
 					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 
