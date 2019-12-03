@@ -14,7 +14,7 @@
 
 	<p:panel header="#{lbl['lbl.sm.factory.details']}" toggleable="true"
 		id="smFacilityFactoryDtPanel" rendered="#{backingBean.managedBean.showFactoryPanel}">
-		<p:outputPanel rendered="#{backingBean.managedBean.showFactoryPanel}">
+		<p:outputPanel id="factoryPan" rendered="#{backingBean.managedBean.showFactoryPanel}">
 			<br />
 			<ui:repeat var="factoryCatVar" value="#{backingBean.managedBean.factoryFacilitiesVOList}" varStatus="factoryCatVarStatus">
 				<table style="width: 100%;">
@@ -41,7 +41,7 @@
 				          </p:selectBooleanCheckbox>
 				       </f:facet>
 						<p:selectBooleanCheckbox value="#{fac.selected}">
-							<p:ajax event="change" update="@this,:#{p:component('delFactoryBtnId')}" 
+							<p:ajax event="change" update="@this,:#{p:component('factoryPan')}" 
 								process="@this" partialSubmit="true" />
 						</p:selectBooleanCheckbox>
 					</p:column>
@@ -105,9 +105,9 @@
 					update=":form:tt:factoryDialog" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
-					partialSubmit="true" process="smFacilityFactoryDtPanel"
+					partialSubmit="true" process="factoryPan"
 					id="delFactoryBtnId" disabled="#{backingBean.disableDeleteBtn(factoryCatVar.facilityList)}"
-					update=":#{p:component('facDt')},@this" 
+					update=":#{p:component('smFacilityFactoryDtPanel')},@this" 
 					oncomplete="factoryDeletePopUp.show()" />
 			</div>
 			<br />
