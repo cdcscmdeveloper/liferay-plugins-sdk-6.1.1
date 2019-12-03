@@ -161,7 +161,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		if (getManagedBean().isExistingUser()) {
 			replaceWithExistingUser();
 		} else {
-			//replaceWithNewUser();
+			replaceWithNewUser();
 		}
 	}
 
@@ -177,9 +177,9 @@ public class ForceReplaceSuppAdminBackingBean extends
 				getManagedBean().getPermAddr());
 
 		validateMyIdentity();
-		/*PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO()
-				.replaceAdminWithNewPersonnel(getReqDTO());*/
-		//redirectToSuccessPage(resDto);
+		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO()
+				.replaceAdminWithNewPersonnel(getReqDTO());
+		redirectToSuccessPage(resDto);
 	}
 
 	/**
