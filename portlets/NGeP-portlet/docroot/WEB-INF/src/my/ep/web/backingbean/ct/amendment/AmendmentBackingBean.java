@@ -2469,12 +2469,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				if (getManagedBean().isPbConfirmMeeting() && outputValue.equalsIgnoreCase("MET")) {
 					getManagedBean().setSelectedTabIndex(index + 1);
 				}
-				
-				if(getManagedBean().isPbConfirmMeeting() && outputValue.equalsIgnoreCase("PB")
-						&& (getManagedBean().isSignUpdateDecision() || getManagedBean().isSignOffDecision())){
-					getManagedBean().setSelectedTabIndex(index + 3);
-					
-				}
 								
 				if ((getManagedBean().isSignUpdateDecision() || getManagedBean().isSignOffDecision()) 
 						&& outputValue.equalsIgnoreCase("DCN")) {
@@ -2487,7 +2481,17 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						getManagedBean().setSelectedTabIndex(index + 1);
 					}
 				}
-							
+				//#20997 - Start
+				if(outputValue.equalsIgnoreCase("PB")
+						&& (getManagedBean().isSignUpdateDecision() || getManagedBean().isSignOffDecision())){
+					if(getManagedBean().isPbConfirmMeeting()){
+					getManagedBean().setSelectedTabIndex(index + 3);
+					
+				}else{
+					getManagedBean().setSelectedTabIndex(index + 2);
+				}
+			}
+				//#20997 - End			
 				if (isApproverSetting() && !getManagedBean().isPrepareLOA() && outputValue.equalsIgnoreCase("SE")
 					&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
 					&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()) {
