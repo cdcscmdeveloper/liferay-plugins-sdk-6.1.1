@@ -8,7 +8,7 @@
 
 	<p:panel header="#{lbl['lbl.sm.store.details']}" toggleable="true"
 		id="smStrDtPanel" rendered="#{backingBean.managedBean.showStorePanel}">
-		<p:outputPanel rendered="#{backingBean.managedBean.showStorePanel}">
+		<p:outputPanel id="storePan" rendered="#{backingBean.managedBean.showStorePanel}">
 			<br />
 			<ui:repeat var="storeCatVar" value="#{backingBean.managedBean.storeFacilitiesVOList}" varStatus="storeCatVarStatus">
 				<table style="width: 100%;">
@@ -35,7 +35,7 @@
 				          </p:selectBooleanCheckbox>
 				       </f:facet>
 						<p:selectBooleanCheckbox value="#{stor.selected}">
-							<p:ajax event="change" update="@this,:#{p:component('delStoreBtnId')}" 
+							<p:ajax event="change" update="@this,:#{p:component('storePan')}" 
 								process="@this" partialSubmit="true" />
 						</p:selectBooleanCheckbox>
 					</p:column>
@@ -95,9 +95,9 @@
 					update=":form:tt:storeDialog" partialSubmit="true" process="@this" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
-					process="smStrDtPanel" partialSubmit="true"
+					process="storePan" partialSubmit="true"
 					id="delStoreBtnId" disabled="#{backingBean.disableDeleteBtn(storeCatVar.facilityList)}"
-					update=":#{p:component('storeDt')},@this" oncomplete="storeDeletePopUp.show()" />
+					update=":#{p:component('smStrDtPanel')},@this" oncomplete="storeDeletePopUp.show()" />
 			</div>
 			<br />
 		</p:outputPanel>
