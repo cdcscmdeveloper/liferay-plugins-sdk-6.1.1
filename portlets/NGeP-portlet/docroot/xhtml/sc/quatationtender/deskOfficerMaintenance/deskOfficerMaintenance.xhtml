@@ -12,7 +12,7 @@
 		<style>
 		.ui-dialog{
 			width: 50% !important; 
-			max-width:550px !important; 
+			max-width: 600px !important; 
 		}
 	</style>
 	<p:messages showDetail="true"
@@ -97,7 +97,7 @@
 
 					<p:column headerText="#{lbl['lbl.sc.quotation.tender.deskofficermaintenance.newDO']}" style="width:200px;">
 						<h:outputText rendered="#{scQt.selectable}" value="#{DOMaintenanceBackingBean.getNewDeskOfficer(scQt.qtId)}" />
-						<h:outputText rendered="#{!scQt.selectable}" value="DO Reassignment Not Supported" />
+						<h:outputText rendered="#{!scQt.selectable}" value="#{lbl['lbl.sc.quotation.tender.deskofficermaintenance.notSupported']}" />
 					</p:column>
 					
 				</p:dataTable>
