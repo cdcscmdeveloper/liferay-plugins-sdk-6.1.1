@@ -24,10 +24,14 @@ import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
+import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmSalutation;
+import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
@@ -855,6 +859,44 @@ public class ForceReplaceSuppAdminBackingBean extends
 		mofRegistrationReqDTO.setSupplierId(smSupplier.getSupplierId());
 		return SmServiceLookup.getMofRegistrationSO()
 				.retrieveActiveSmApplBySupp(mofRegistrationReqDTO).getSmAppl();
+	}
+	
+	public void copyPermanentAddress(SmAddress refAddress){
+		if(this.getManagedBean().getMailAddr().isSameAsPerm()){
+			if(this.getManagedBean().getMailAddr().getSmAddress() != null){
+				if(this.getManagedBean().getMailAddr().getSmAddress() == null){
+					this.getManagedBean().getMailAddr().setSmAddress(new SmAddress());
+				}
+				SmAddress address = this.getManagedBean().getMailAddr().getSmAddress();
+				if (refAddress.getAddress1() != null)
+					address.setAddress1(new String(refAddress.getAddress1().toString()));
+				if (refAddress.getAddress2() != null)
+					address.setAddress2(new String(refAddress.getAddress2().toString()));
+				if (refAddress.getAddress3() != null)
+					address.setAddress3(new String(refAddress.getAddress3().toString()));
+				if (refAddress.getPostcode() != null)
+					address.setPostcode(new String(refAddress.getPostcode().toString()));
+
+				PmCountry country = new PmCountry();
+				PmState state = new PmState();
+				PmDistrict district = new PmDistrict();
+				PmCity city = new PmCity();
+
+				country.setCountryId(refAddress.getPmCountry().getCountryId());
+				address.setPmCountry(country);
+				
+				state.setStateId(refAddress.getPmState().getStateId());
+				address.setPmState(state);
+				
+				updateMailAddLists("", refAddress.getPmState().getStateId().toString(),"");
+				district.setDistrictId(refAddress.getPmDistrict().getDistrictId());
+				address.setPmDistrict(district);
+				updateMailAddLists("", "",refAddress.getPmDistrict().getDistrictId().toString());
+				city.setCityId(refAddress.getPmCity().getCityId());
+				address.setPmCity(city);
+			}
+		}
+		
 	}
 
 }
