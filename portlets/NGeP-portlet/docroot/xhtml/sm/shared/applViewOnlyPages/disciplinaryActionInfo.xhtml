@@ -6,7 +6,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.sm.disciplinary.action.info.headerlbl']}" toggleable="true" id="discActionPanelId">
+	<p:panel header="#{lbl['lbl.sm.disciplinary.action.info.headerlbl']}" toggleable="true" id="discActionPanelId" 
+		rendered="#{viewSuppProfileBackingBean.managedBean.disciplinaryAction}">
 		<p:outputPanel>
 			<h:outputText value="#{lbl['lbl.sm.disciplinary.click']}" escape="false"/>
 			<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
