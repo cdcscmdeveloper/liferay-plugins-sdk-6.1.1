@@ -185,31 +185,19 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 	 * @throws IOException
 	 */
 	// 26340
-	public void printVirtualCert1(SmMofCert cert) throws IOException{
-		log.info("printVirtualCert=="+cert);
-		SmMofCert mofCert = SmVirtualCertHelper.getInstance().genReport(
-				SmVirtualCertHelper.getInstance().getReportType(cert.getBumiCertFlg()), 
-				SmVirtualCertHelper.getInstance().getReportParam(cert), cert, false);
-		String newfile = mofCert.getFilePath() + "/" + cert.getFileName();
-		commonDownload(newfile,mofCert.getFileName());
-		log.info("printVirtualCert : After download=="+cert);
-	}
-	
+	//rollback to v H1.53 cz error on redmine:26915
 	public void printVirtualCert(SmMofCert cert) throws IOException{
-		System.out.print("printVirtualCert1="+cert);
 		if(cert.getFileName() != null || cert.getFilePath() != null){
-			System.out.print("printVirtualCert1a="+cert);
 			String file = cert.getFilePath() + "/" + cert.getFileName();
 			commonDownload(file,cert.getFileName());
 		}else{
-			System.out.print("printVirtualCert1b="+cert);
 			SmMofCert mofCert = SmVirtualCertHelper.getInstance().genReport(
 					SmVirtualCertHelper.getInstance().getReportType(cert.getBumiCertFlg()), 
 					SmVirtualCertHelper.getInstance().getReportParam(cert), cert, false);
 			String newfile = mofCert.getFilePath() + "/" + cert.getFileName();
 			commonDownload(newfile,mofCert.getFileName());
 		}
-		System.out.print("printVirtualCert1=after download : "+cert);
+		
 	}
 
 	/**
