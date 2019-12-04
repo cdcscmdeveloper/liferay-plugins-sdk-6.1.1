@@ -3989,9 +3989,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			personnel.setName(owner.getOwnerName());
 			personnel.setIdentificationNo(owner.getIdentificationNo());
 		}
-		if(updatePersonnel){
-			
-		}
 	}
 }
 
