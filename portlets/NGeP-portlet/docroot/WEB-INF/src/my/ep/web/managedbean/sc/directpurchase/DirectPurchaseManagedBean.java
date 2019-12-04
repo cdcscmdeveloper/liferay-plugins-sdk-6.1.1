@@ -138,8 +138,14 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 				
 				if(ParameterConst.DOCTYPE_REQUEST_NOTE.equals(getSearchDocumentType())){
 					paramPtj = "pmOrgProfile.orgProfileId";
-					paramPtjGroupAndMinistry = "pmOrgProfile";
 					paramTitle ="title";
+					if (isSearchDPM()) {
+						if (getSearchStatusId().equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION)) {
+							paramPtj = "requestNote.pmOrgProfile.orgProfileId";
+							paramTitle ="requestNote.title";
+						} 
+					} 
+					paramPtjGroupAndMinistry = "pmOrgProfile";
 				} else if(ParameterConst.DOCTYPE_SIMPLE_QUOTE.equals(getSearchDocumentType())){
 					paramPtj = "requestNotes.pmOrgProfile.orgProfileId";
 					paramPtjGroupAndMinistry = "requestNotes.pmOrgProfile";
