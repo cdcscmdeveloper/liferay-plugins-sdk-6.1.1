@@ -9185,7 +9185,10 @@ public class SmApplicationBackingBean extends
 				for (SmSupplierCategory cat : getManagedBean().getSmAppl()
 						.getSmSupplierCategories()) {
 					if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
-							&& cat.getPmCategoryL3().getHomeOperated() != DbValueConst.RECORD_STATUS_ACTIVE) {
+							&& cat.getPmCategoryL3().getHomeOperated() != DbValueConst.RECORD_STATUS_ACTIVE 
+							//Bug #26703
+							|| cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
+							&& cat.getPmCategoryL3().getHomeOperated() != DbValueConst.RECORD_STATUS_PENDING_ACTIVATION) {
 						getManagedBean().setAlreadyBusinessSpecialCatcode(true);
 						bf.append(" "
 								+ cat.getPmCategoryL1().getCategoryL1Code()
