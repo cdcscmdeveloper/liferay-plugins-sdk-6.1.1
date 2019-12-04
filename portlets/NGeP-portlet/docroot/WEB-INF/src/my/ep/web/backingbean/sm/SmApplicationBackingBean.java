@@ -1523,6 +1523,11 @@ public class SmApplicationBackingBean extends
 					SsmReqDTO ssmReqDTO = new SsmReqDTO();
 					ssmReqDTO.setRegNo(this.getManagedBean().getSmSupplier().getRegNo());
 					ssmReqDTO.setBusinessType(this.getManagedBean().getSmSupplier().getBusinessType());
+					if(SupplierManagementConst.ACC_BASIC.equalsIgnoreCase(this.getManagedBean().getSmAppl().getApplType())){
+						ssmReqDTO.setBasicAcc(true);
+					}else{
+						ssmReqDTO.setBasicAcc(false);
+					}
 					SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
 					this.getManagedBean().setCompanyValidWithSSM(false);
 					this.getManagedBean().setValidateWithSSM(true);

@@ -68,10 +68,11 @@
 				</f:facet>
 				<!-- <h:outputText value="#{varOwner.nationality.countryName}" /> -->
 				<!-- 16052019 - SSM INTEGRATION CR - START -->
-				<p:selectOneMenu value="#{varOwner.nationality.countryId}" disabled="#{!varOwner.showTextField}">
+				<p:selectOneMenu value="#{varOwner.tempCountryId}" disabled="#{!varOwner.nationalityNull}">
+					<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 					<f:selectItems var="counLs"
 						value="#{registrationBackingBean.managedBean.countryLs}" />
-						<p:ajax event="change" listener="#{registrationBackingBean.ownerNationalityOnChange}" update=":form:tableOwner" />
+						<p:ajax event="change" listener="#{registrationBackingBean.setOwnerNationality(varOwner,true)}" update=":form:tableOwner" />
 				</p:selectOneMenu>
 				<!-- 16052019 - SSM INTEGRATION CR  - END -->
 			</p:column>
