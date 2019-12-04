@@ -66,6 +66,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private List<PmFeeExemption> feeExemptionsForComodity;
 	private List<PmFeeExemption> feeExemptionsForContract;
 	private List<PmFeeExemption> feeExemptionsForOrgType;
+	private List<PmFeeExemption> feeExemptionsForYepProcessing;
 	private PmFeeExemption selectedFeeExemption;
 	private SmSupplier selectedSmSupplier;
 	private CtContractItem selectedCtContractItem;
@@ -77,6 +78,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private List<PmFeeExemption> deletedComodityFeeExemptions;
 	private List<PmFeeExemption> deletedContractFeeExemptions;
 	private List<PmFeeExemption> deletedOrgTypeFeeExemptions;
+	private List<PmFeeExemption> deletedYepProcessingFeeExemptions;
 	private List<PmThreshold> thresholds;
 	private List<PmThreshold> deletedThresholds;
 	private PmOrgProfile selectedOrgProfile;
@@ -138,6 +140,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private String ptjCodeNameSearchValues;
 	private List<PmOrgProfile> ptjList;
 	private BigDecimal qtLimit;
+	private Date minDate = null; //[#22119]
 
 	public RuleCatalogueManageBean() {
 
@@ -306,6 +309,15 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		this.deletedOrgTypeFeeExemptions = deletedOrgTypeFeeExemptions;
 	}
 
+	public List<PmFeeExemption> getDeletedYepProcessingFeeExemptions() {
+		if (deletedYepProcessingFeeExemptions == null) {
+			deletedYepProcessingFeeExemptions = new ArrayList<PmFeeExemption>();
+		}
+		return deletedYepProcessingFeeExemptions;
+	}
+	public void setDeletedYepProcessingFeeExemptions(List<PmFeeExemption> deletedYepProcessingFeeExemptions) {
+		this.deletedYepProcessingFeeExemptions = deletedYepProcessingFeeExemptions;
+	}
 	/**
 	 * @return the thresholds
 	 */
@@ -869,6 +881,15 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		this.feeExemptionsForOrgType = feeExemptionsForOrgType;
 	}
 
+	public List<PmFeeExemption> getFeeExemptionsForYepProcessing() {
+		if (this.feeExemptionsForYepProcessing == null) {
+			this.feeExemptionsForYepProcessing = new ArrayList<PmFeeExemption>();
+		}
+		return feeExemptionsForYepProcessing;
+	}
+	public void setFeeExemptionsForYepProcessing(List<PmFeeExemption> feeExemptionsForYepProcessing) {
+		this.feeExemptionsForYepProcessing = feeExemptionsForYepProcessing;
+	}
 	/**
 	 * @return the maxDate
 	 */
@@ -1428,6 +1449,18 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	}
 	public void setAftertomorrow(Date aftertomorrow) {
 		this.aftertomorrow = aftertomorrow;
+	}
+	
+	public Date getMinDate() {
+		if (minDate == null) {
+			//get current date
+			minDate = Calendar.getInstance().getTime();
+		}
+		return minDate;
+	}
+	
+	public void setMinDate(Date minDate) {
+		this.minDate = minDate;
 	}
 	
 
