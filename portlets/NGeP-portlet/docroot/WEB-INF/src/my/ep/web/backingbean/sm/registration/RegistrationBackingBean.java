@@ -322,6 +322,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			ssmReqDTO.setRegNo(regNo);
 			ssmReqDTO.setBusinessType(businessType);
 			ssmReqDTO.setSmAppl(this.getManagedBean().getSmAppl());
+			if(SupplierManagementConst.ACC_BASIC.equalsIgnoreCase(this.getManagedBean().getSmAppl().getApplType())){
+				ssmReqDTO.setBasicAcc(true);
+			}else{
+				ssmReqDTO.setBasicAcc(false);
+			}
 			SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
 			this.getManagedBean().setCompanyValidWithSSM(false);
 			this.getManagedBean().getDummy().clear();
@@ -2035,6 +2040,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					SsmReqDTO ssmReqDTO = new SsmReqDTO();
 					ssmReqDTO.setRegNo(this.getManagedBean().getSmSupp().getRegNo());
 					ssmReqDTO.setBusinessType(this.getManagedBean().getSmSupp().getBusinessType());
+					if(SupplierManagementConst.ACC_BASIC.equalsIgnoreCase(this.getManagedBean().getSmAppl().getApplType())){
+						ssmReqDTO.setBasicAcc(true);
+					}else{
+						ssmReqDTO.setBasicAcc(false);
+					}
 					SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
 					this.getManagedBean().setCompanyValidWithSSM(false);
 					this.getManagedBean().setShowOwnerPersonnel(false);
@@ -3545,39 +3555,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	public void ownerNationalityOnChange(){
 		//16052019 - SSM INTEGRATION CR => START
 		List<SmSupplierOwner> listSuppOwner = getManagedBean().getSmSuppOwners();
-		
 		if(listSuppOwner.size() > 0){
 			for(SmSupplierOwner owner : listSuppOwner){
-				getUnknownCountry();
-				ParameterReqDTO reqDTO = new ParameterReqDTO();
-				if(owner.getNationality().getCountryId() != null) {
-					PmCountry country = SmCommonUtil.retrievePmCountryById(owner.getNationality().getCountryId());
-					owner.setNationality(country);
-					//set if malaysia or not
-					if(country.getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE) || 
-							country.getCountryCode().equalsIgnoreCase(ParameterConst.COUNTRY_UNKNOWN_CODE)){
-						reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_IC);
-					}else{
-						reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_PASSPORT);
-					}
-					reqDTO.setParameterType(ParameterTypeConst.IDENTIFICATION_TYPES);
-				} else {
-					PmCountry defaultNationality = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
-					owner.setNationality(defaultNationality);
-					reqDTO.setParameterType(ParameterTypeConst.IDENTIFICATION_TYPES);
-					reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_IC);
-				}
-				
-				PmParameter identObj = SmServiceLookup.getParameterSO().retrieveParameterByTypeAndCode(reqDTO).getPmParameter();
-				owner.setIdentificationTypeId(identObj.getParameterId());
-				owner.setIdentificationType(identObj);
-				//#26987
-				if(getManagedBean().isSameAsOwner() && getManagedBean().getSmPersonnel()!= null){
-					SmPersonnel personnel = getManagedBean().getSmPersonnel();
-					personnel.setPmCountry(owner.getNationality());
-					personnel.setName(owner.getOwnerName());
-					personnel.setIdentificationNo(owner.getIdentificationNo());
-				}
+				setOwnerNationality(owner,false);
 			}
 		} else {
 		//16052019 - SSM INTEGRATION CR => END
@@ -3970,6 +3950,47 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				this.getManagedBean().setDisableStaff(false);
 				this.getManagedBean().setDisableEquity(false);
 			}
+		}
+	}
+	//SSM INTEGRATION CR
+	public void setOwnerNationality(SmSupplierOwner owner,boolean updatePersonnel){
+		getUnknownCountry();
+		ParameterReqDTO reqDTO = new ParameterReqDTO();
+		PmCountry country = null;
+		if(owner.getTempCountryId() > 0){
+			country  = SmCommonUtil.retrievePmCountryById(owner.getTempCountryId());
+		}else{
+			country  = SmCommonUtil.retrievePmCountryById(owner.getNationality().getCountryId());
+		}
+		if(owner.getTempCountryId() > 0 || owner.getNationality().getCountryId() > 0) {
+			owner.setNationality(country);
+			//set if malaysia or not
+			if(country.getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE) || 
+					country.getCountryCode().equalsIgnoreCase(ParameterConst.COUNTRY_UNKNOWN_CODE)){
+				reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_IC);
+			}else{
+				reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_PASSPORT);
+			}
+			reqDTO.setParameterType(ParameterTypeConst.IDENTIFICATION_TYPES);
+		} else {
+			PmCountry defaultNationality = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+			owner.setNationality(defaultNationality);
+			reqDTO.setParameterType(ParameterTypeConst.IDENTIFICATION_TYPES);
+			reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_IC);
+		}
+		
+		PmParameter identObj = SmServiceLookup.getParameterSO().retrieveParameterByTypeAndCode(reqDTO).getPmParameter();
+		owner.setIdentificationTypeId(identObj.getParameterId());
+		owner.setIdentificationType(identObj);
+		//#26987
+		if(getManagedBean().isSameAsOwner() && getManagedBean().getSmPersonnel()!= null){
+			SmPersonnel personnel = getManagedBean().getSmPersonnel();
+			personnel.setPmCountry(owner.getNationality());
+			personnel.setName(owner.getOwnerName());
+			personnel.setIdentificationNo(owner.getIdentificationNo());
+		}
+		if(updatePersonnel){
+			
 		}
 	}
 }
