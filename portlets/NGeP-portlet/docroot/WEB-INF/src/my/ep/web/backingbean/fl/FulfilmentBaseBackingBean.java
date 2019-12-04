@@ -9,15 +9,21 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
+import my.ep.biz.service.sm.helper.SmServiceHelper;
+import my.ep.biz.service.sm.search.ISupplierCategorySO;
+import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.RuleTypeConst;
@@ -28,7 +34,14 @@ import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
+import my.ep.dto.sm.personnel.PersonnelReqDTO;
+import my.ep.dto.sm.personnel.PersonnelResDTO;
+import my.ep.dto.sm.search.SupplierCategoryReqDTO;
+import my.ep.dto.sm.search.SupplierCategoryResDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtAddress;
 import my.ep.persistence.entity.ct.dtl.CtContractValue;
@@ -44,17 +57,24 @@ import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.vo.BlacklistOwnerDirectorVO;
+import my.ep.web.vo.DisciplinaryActionCategoryVO;
+import my.ep.web.vo.DisciplinaryActionVO;
 
 /**
  * Base Backing Bean for Fulfilment.
@@ -669,4 +689,132 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		return null;
 	}
 	
+	//26279 - start	
+	protected SmDisciplinaryAction getImposedDisciplinaryAction(SmSupplier smSupplier) {
+		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+		reqDTO.setSupplier(smSupplier);
+		
+		ISupplierDataMaintenanceSO supplierDataMaintenanceSO = (ISupplierDataMaintenanceSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						ISupplierDataMaintenanceSO.class);
+		
+		SupplierDataMaintenanceResDTO resDTO = supplierDataMaintenanceSO.retrieveImposedDisciplinaryActionBySupplier(reqDTO);//always return single result
+		
+		if(resDTO.getSmDisciplinaryActions() != null && !resDTO.getSmDisciplinaryActions().isEmpty()) {
+			return resDTO.getSmDisciplinaryActions().get(0);
+		}
+		return null;
+	}
+	
+	protected String getWarningOrDisciplinaryActionMsg(Date startDate,
+			Date endDate, String langCode, boolean isWarningOnly) {
+		StringBuilder msg = new StringBuilder();
+		if (startDate != null && endDate != null) {
+			msg.append(" ");
+			String messagePrefix = null;
+			if(isWarningOnly) {
+				messagePrefix = "lbl.sm.supplier.warning.disc.action";				
+			} else {
+				messagePrefix = "lbl.sm.supplier.imposed.disc.action";
+			}
+			msg.append(getMessageByKey(
+					messagePrefix,
+					new String[] {
+							DateUtils.dateToString("dd-MM-yyyy",
+									startDate),
+							DateUtils.dateToString("dd-MM-yyyy",
+									endDate) }, langCode));		
+		}
+		return msg.toString();
+	}
+	
+	protected List<DisciplinaryActionVO> retrieveDisciplinaryActions(SmDisciplinaryAction smDisciplinaryAction) {
+		List<DisciplinaryActionVO> disciplinaryActionVOs = new ArrayList<>();
+		
+		if(smDisciplinaryAction != null) {
+			DisciplinaryActionVO disciplinaryActionVO = new DisciplinaryActionVO();
+			disciplinaryActionVO.setWarning(smDisciplinaryAction.isWarning());
+			disciplinaryActionVO.setCancelCategory(smDisciplinaryAction.isCancelCategory());
+			disciplinaryActionVO.setSuspendRegistration(smDisciplinaryAction.isSuspendRegistration());
+			disciplinaryActionVO.setCancelRegistration(smDisciplinaryAction.isCancelRegistration());
+			disciplinaryActionVO.setBlacklistOwnerDirector(smDisciplinaryAction.isBlacklistOwner());
+			disciplinaryActionVO.setBumiputeraCancel(smDisciplinaryAction.isBumiputeraCancel());
+			disciplinaryActionVO.setManufacturerCancel(smDisciplinaryAction.isManufacturerCancel());
+			disciplinaryActionVO.setStartDate(DateUtils.dateToString("dd-MM-yyyy",
+					smDisciplinaryAction.getStartDate()));
+			disciplinaryActionVO.setEndDate(DateUtils.dateToString("dd-MM-yyyy",
+					smDisciplinaryAction.getEndDate()));
+			disciplinaryActionVO.setRemarks(smDisciplinaryAction.getRemark());
+			
+			if(smDisciplinaryAction.isCancelCategory()){
+				List<DisciplinaryActionCategoryVO> catVoList = new ArrayList<DisciplinaryActionCategoryVO>();
+				
+				ISupplierCategorySO supplierCategorySO = (ISupplierCategorySO) BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierCategorySO.class);
+				
+				SupplierCategoryReqDTO reqDTO = new SupplierCategoryReqDTO();
+				SupplierCategoryResDTO resDTO = new SupplierCategoryResDTO();
+				Long supplierId = smDisciplinaryAction.getSmSupplier().getSupplierId();				
+				reqDTO.setSupplierId(supplierId);				
+				resDTO = supplierCategorySO.retrieveCancelCategoryDetails(reqDTO);	
+				List<Object[]> catList = resDTO.getResultList();
+				
+				if(!EntityHelper.isCollectionEmpty(catList)
+						&& catList.size() > 0){
+					for(Object[] arr : catList){
+						DisciplinaryActionCategoryVO catVo = new DisciplinaryActionCategoryVO();
+						String catCode = StringUtils.EMPTY;
+						catCode = arr[3].toString() + arr[4].toString() + arr[5].toString() ;
+						catVo.setCategoryCode(catCode);	
+						catVoList.add(catVo);
+					}						
+					disciplinaryActionVO.setCategoryCodeList(catVoList);
+				}
+			}	
+			
+			if(smDisciplinaryAction.isBlacklistOwner()
+					|| smDisciplinaryAction.isSuspendRegistration()
+						|| smDisciplinaryAction.isCancelRegistration()){
+				List<BlacklistOwnerDirectorVO> blacklistownerDirectorList = new ArrayList<BlacklistOwnerDirectorVO>();
+				PersonnelReqDTO perReqDTO = new PersonnelReqDTO();
+				perReqDTO.setSmSupplierId(smDisciplinaryAction.getSmSupplier().getSupplierId());
+				
+				PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelBySupplierId(perReqDTO);
+				if(personnelResDTO != null 
+						&& personnelResDTO.getSmPersonnelList().size() > 0){
+					for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
+						BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
+						if(personnel.isCancelRegistration()
+								|| personnel.isSuspendRegistration()
+									|| personnel.isBlacklisted()){
+							blacklistOwner.setIcNo(personnel.getIdentificationNo());
+							blacklistownerDirectorList.add(blacklistOwner);
+						}
+					}
+					disciplinaryActionVO.setBlacklistownerDirectorList(blacklistownerDirectorList);
+				}
+			}
+			disciplinaryActionVOs.add(disciplinaryActionVO);
+		}
+		
+		return disciplinaryActionVOs;
+	}
+	
+	private String getMessageByKey(String key, String[] params,
+			String langCode) {
+		String msg = "";
+		Locale loc = new Locale("en", "EN");
+		if (StringUtils.isNotBlank(langCode) && langCode.equalsIgnoreCase("ms")) {
+			loc = new Locale("ms", "MY");
+		}
+		if (params != null) {
+			msg = ResourceBundleUtils.getMessage(key, params,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, loc);
+		} else {
+			msg = ResourceBundleUtils.getMessage(key,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, loc);
+		}
+		return msg;
+	}
+	//26279 - end
 }
