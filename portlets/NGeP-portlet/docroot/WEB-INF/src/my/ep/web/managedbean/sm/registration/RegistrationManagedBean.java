@@ -142,6 +142,7 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private boolean disableRole=false;
 	private boolean disableEquity=false;
 	private boolean disableStaff=false;
+	private boolean hideButton=false;
 	//26238 - Disciplinary Action
 	private boolean warning;
 	private boolean suspendRegistration;
@@ -935,6 +936,14 @@ public class RegistrationManagedBean extends BaseManagedBean {
 
 	public void setDisableStaff(boolean disableStaff) {
 		this.disableStaff = disableStaff;
+	}
+
+	public boolean isHideButton() {
+		return hideButton;
+	}
+
+	public void setHideButton(boolean hideButton) {
+		this.hideButton = hideButton;
 	}
 
 }
