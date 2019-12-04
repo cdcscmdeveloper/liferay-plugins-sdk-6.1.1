@@ -288,6 +288,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 	}
 	public String validateWithSSM() {
+		this.getManagedBean().setHideButton(false);
 		String regNo = this.getManagedBean().getSmSupp().getRegNo();
 		String businessType = this.getManagedBean().getSmSupp().getBusinessType();
 		//only business type ROB & ROC will check with SSM
@@ -351,7 +352,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					this.getManagedBean().setSmSuppOwner(smSupplierOwner);
 				}*/
 				//to set defaul value ic and country if supplier owner not exist in ssm;
-				if(ssmResDTO.getSmSupplierOwners().size()<=0){
+				//- if no Equity Owner (individual), system to check at least one Director name is populated from SSM.
+				//- if no Equity Owner (individual) AND no Director, system to prompt error below;
+				if(ssmResDTO.getSmSupplierOwners().size()<=0 && businessTypeIsROB(this.getManagedBean().getSmSupp().getBusinessType())){
 					SmSupplierOwner smSupplierOwner = new SmSupplierOwner();
 					smSupplierOwner.setOwnerName("");
 					PmCountry indNationality = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
@@ -398,8 +401,14 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						throw new EpException(MessageConst.ERROR_721077);
 					}
 				}
-				//TODO: end check rob type and owners count #26270
 				
+				//TODO: end check rob type and owners count #26270
+				if(!businessTypeIsROB(this.getManagedBean().getSmSupp().getBusinessType())){
+					if(ssmResDTO.getSmSupplierOwners().size() <= 0 && ssmResDTO.getSmPersonnelDirector().size() <= 0){
+						this.getManagedBean().setHideButton(true);
+						throw new EpException(MessageConst.ERROR_721080);
+					}
+				}
 				//FIXME: start checking ssm status
 				this.getManagedBean().setStatusDescFromSSM(setStatusMessageFromSSM(ssmResDTO.getStatusFromSSM()));
 				String status = ssmResDTO.getStatusFromSSM().toUpperCase();
@@ -880,6 +889,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						}else{
 							personnelSSM.setPmCountry(null);
 						}
+						personnelSSM.setSmPersonnelAdd(null);
+						personnelSSM.setSmPersonnelAddresses(null);
 						smAppl.getSmPersonnels().add(personnelSSM);
 					}
 						
@@ -973,8 +984,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		smSupp.setRecordStatusFlg(DbValueConst.RECORD_STATUS_IN_PROGRESS);
 		//#16052019 - SSM INTEGRATION CR
 		//if(this.getManagedBean().getSmSuppOwners().size()==1){
+		if(smSuppOwner.getOwnerName() != null && !"".equalsIgnoreCase(smSuppOwner.getOwnerName())){
 			smSuppOwner.setSmSupplier(this.getManagedBean().getSmSupp());
 			smSupp.getSmSupplierOwners().add(smSuppOwner);
+		}
+			
 		//}else{
 			//for(SmSupplierOwner smSupplierOwner:this.getManagedBean().getSmSuppOwners()){
 			//	smSupplierOwner.setSmSupplier(this.getManagedBean().getSmSupp());
@@ -3769,8 +3783,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				SmPersonnel personnel = (SmPersonnel) EntityHelper
 						.getEntityBySinglePropertyFromList(this.getManagedBean().getSmPersonnelSelected().getIdentificationNo(),this.getManagedBean().getSmPersonnelAll(),"identificationNo");
 				
-				PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
-				personnel.setPmCountry(defaultCountry);
+				if(personnel.getPmCountry() == null){
+					PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+					personnel.setPmCountry(defaultCountry);
+				}				
 				getManagedBean().setSmPersonnel((SmPersonnel)personnel.cloneEntity());
 				//if(personnel.getSmPersonnelAdd() != null)
 					//getManagedBean().setSmPermenantAdd(personnel.getSmPersonnelAdd().getSmAddress());
@@ -3885,6 +3901,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		if(director != null){
 			PmCountry country = SmCommonUtil.retrievePmCountryById(director.getPmCountry().getCountryId());
 			director.setPmCountry(country);
+			SmPersonnel personnel = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(director.getIdentificationNo(), this.getManagedBean().getSmPersonnelAll(), "identificationNo");
+			personnel.setPmCountry(director.getPmCountry());
+			personnel.setName(director.getName());
 		}
 		
 		
@@ -3988,6 +4007,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			personnel.setPmCountry(owner.getNationality());
 			personnel.setName(owner.getOwnerName());
 			personnel.setIdentificationNo(owner.getIdentificationNo());
+		}
+		if(updatePersonnel){
+			SmPersonnel personnel = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(owner.getIdentificationNo(), this.getManagedBean().getSmPersonnelAll(), "identificationNo");
+			personnel.setPmCountry(owner.getNationality());
+			personnel.setName(owner.getOwnerName());
 		}
 	}
 }
