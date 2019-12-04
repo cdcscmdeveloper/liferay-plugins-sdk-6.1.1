@@ -10,8 +10,8 @@
 		toggleable="true">
 		<p:dataTable id="tableOwner" var="varOwner" rowIndexVar="index"
 			widgetVar="tableOwnerWidget"
-			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			rendered="#{registrationBackingBean.managedBean.smSuppOwners != null and registrationBackingBean.managedBean.smSuppOwners.size() >0 and !registrationBackingBean.managedBean.showOwnerPersonnel}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.ssm']}"
+			rendered="#{!registrationBackingBean.managedBean.showOwnerPersonnel}"
 			value="#{registrationBackingBean.managedBean.smSuppOwners}"
 			rowKey="#{rowKeyObj}"
 			sortBy="#{varOwner.ownerName}"	>

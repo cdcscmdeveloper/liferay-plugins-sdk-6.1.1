@@ -177,7 +177,7 @@
 				</p:commandButton>
 			
 				<p:commandButton id="btnProceed" value="#{lbl['lbl.sm.next']}"  style="float:right;"
-				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" rendered="#{registrationBackingBean.managedBean.statusFromSSM == 'A' || registrationBackingBean.managedBean.statusFromSSM == 'E'}"			
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" rendered="#{(registrationBackingBean.managedBean.statusFromSSM == 'A' || registrationBackingBean.managedBean.statusFromSSM == 'E') and !registrationBackingBean.managedBean.hideButton}"			
 				disabled="#{!registrationBackingBean.managedBean.agreeTC}" action="#{registrationBackingBean.proceedToCompanyInfo}"
 				 />
 				
