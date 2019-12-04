@@ -51,6 +51,8 @@
 		</h:panelGrid>
 		
 		<p:outputPanel id="supplierListTblPanel" styleClass="header-spacing">
+			<ui:param name="canShowSupplierProposal" 
+					value="#{suppFinalizationBackingBean.canShowSupplierProposal() or isSecretaryUser}" />
 			<ui:param name="showSelectionColumn" value="#{empty suppFinalizationBackingBean.managedBean.finalizationMethod or 
 		               			  			 				!suppFinalizationBackingBean.managedBean.itemCancelled}" />
 		               			  			 				
@@ -72,7 +74,7 @@
 					
 				<p:columnGroup type="header">
 		        	<p:row>
-		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.code']}" style="width:5%; white-space:normal; text-align:center;"/>
+		           		<p:column rowspan="2" colspan="#{canShowSupplierProposal?'2':'1'}" headerText="#{lbl['lbl.sc.supplier.code']}" style="width:5%; white-space:normal; text-align:center;"/>
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:5%; white-space:normal;" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" style="width:10%; text-align:right;"/>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" style="width:5%; text-align:right;"/>
@@ -112,6 +114,14 @@
 						<h:outputText value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
 					</p:commandLink>
 				</p:column>
+				<c:if test="#{canShowSupplierProposal}">
+					<p:column style="text-align:center;">
+						<p:commandLink  process="@this" partialSubmit="true"
+							action="#{ViewSPBackingBean.navigatetoViewSupplierProposal(view.viewId, shortlistedSupp.qtEvaluationResult.scQtProposal.qtProposalId)}">
+					       <p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" title="#{lbl['lbl.sc.qt.proposal.url.view']}"/>
+						</p:commandLink>
+					</p:column>
+				</c:if>
 	
 				<p:column>
 					<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
@@ -223,7 +233,7 @@
 					
 				<p:columnGroup type="header">
 		        	<p:row>
-		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.code']}" style="width:5%; white-space:normal; text-align:center;"/>
+		           		<p:column rowspan="2" colspan="#{canShowSupplierProposal?'2':'1'}" headerText="#{lbl['lbl.sc.supplier.code']}" style="width:5%; white-space:normal; text-align:center;"/>
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:5%; white-space:normal;" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" style="width:10%; text-align:right;"/>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" style="width:5%; text-align:right;"/>
@@ -263,6 +273,14 @@
 						<h:outputText value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
 					</p:commandLink>
 				</p:column>
+				<c:if test="#{canShowSupplierProposal}">
+					<p:column style="text-align:center;">
+						<p:commandLink  process="@this" partialSubmit="true"
+							action="#{ViewSPBackingBean.navigatetoViewSupplierProposal(view.viewId, shortlistedSupp.qtEvaluationResult.scQtProposal.qtProposalId)}">
+					       <p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" title="#{lbl['lbl.sc.qt.proposal.url.view']}"/>
+						</p:commandLink>
+					</p:column>
+				</c:if>
 	
 				<p:column>
 					<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
@@ -373,3 +391,8 @@
 	</p:panel>
 
 </ui:composition>
+
+
+
+
+<!-- ***25201 -->
