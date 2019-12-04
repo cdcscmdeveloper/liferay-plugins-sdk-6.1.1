@@ -21,6 +21,7 @@ import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
@@ -87,6 +88,8 @@ import my.ep.persistence.entity.pm.common.PmCriteria;
 import my.ep.persistence.entity.pm.common.PmCriteriaDesc;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.GSLType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
@@ -104,6 +107,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.web.vo.DisciplinaryActionVO;
 
 /**
  * Backing Bean for Create Received Note .
@@ -478,6 +482,37 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 					noteItem.getRejectionRemarks().add(new FlRemark());
 				}
 			}
+			//26279 - start
+			if(getManagedBean().getFulfilmentNote().getStatus().getStatusId().longValue() == FulfilmentStatusConst.FN_PENDING_APPROVAL 
+					|| getManagedBean().getFulfilmentNote().getStatus().getStatusId().longValue() == FulfilmentStatusConst.FN_PENDING_REVISION 
+					|| getManagedBean().getFulfilmentNote().getStatus().getStatusId().longValue() == FulfilmentStatusConst.FN_PENDING_REV_APPROVAL 
+					|| getManagedBean().getFulfilmentNote().getStatus().getStatusId().longValue() == FulfilmentStatusConst.FN_PENDING_CANCEL_SUBMISSION) {
+				SmSupplier smSupplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
+				SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
+				if(smDisciplinaryAction != null) {
+					getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
+					boolean isWarningOnly = false;
+					String warningOrDisciplinaryActionMsg = null;
+					String language =  new FacesScopes().getUserLocale().getLanguage();
+					if(smDisciplinaryAction.isWarning() && !smDisciplinaryAction.isCancelCategory() 
+							&& !smDisciplinaryAction.isSuspendRegistration() && !smDisciplinaryAction.isCancelRegistration() 
+							&& !smDisciplinaryAction.isBlacklistOwner() && !smDisciplinaryAction.isBumiputeraCancel() 
+							&& !smDisciplinaryAction.isManufacturerCancel()) {
+						isWarningOnly = true;
+						warningOrDisciplinaryActionMsg = getWarningOrDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(), language, isWarningOnly) ;
+						getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
+					} else if(smDisciplinaryAction.isCancelCategory() 
+							|| smDisciplinaryAction.isSuspendRegistration() || smDisciplinaryAction.isCancelRegistration() 
+							|| smDisciplinaryAction.isBlacklistOwner() || smDisciplinaryAction.isBumiputeraCancel() 
+							|| smDisciplinaryAction.isManufacturerCancel()){
+						warningOrDisciplinaryActionMsg = getWarningOrDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(), language, isWarningOnly) ;
+						getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
+					}
+				} else {
+					getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
+				}
+			}
+			//26279 - end
 		}else{
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
@@ -1617,5 +1652,12 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	public void closeListener() {
 		RequestContext.getCurrentInstance().execute("rejectionRemarksHistory.hide()");
 	}
-		
+	//26279 - start
+	public void viewDisciplinaryAction() {
+		List<DisciplinaryActionVO> disciplinaryActionVOs = retrieveDisciplinaryActions(getManagedBean().getSmDisciplinaryAction());
+		getManagedBean().setDisciplineVOs(disciplinaryActionVOs);
+		RequestContext.getCurrentInstance().execute(
+				"disciplinaryActionHistoryDlg.show();");
+	}
+	//26279 - end	
 }

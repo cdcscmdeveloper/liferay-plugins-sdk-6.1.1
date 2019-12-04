@@ -20,7 +20,9 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCriteriaDesc;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.vo.DisciplinaryActionVO;
 
 /**
  * Managed Bean for Create Received Note.
@@ -105,7 +107,11 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	private boolean issuanceCogstrCheck=false;
 	private String rejectionRemark;
 	private List<FlRemark> rejectionRemarkHistory;
-	
+	//26279 - start
+	private String disciplinaryActionMessage;
+	private List<DisciplinaryActionVO> disciplineVOs;
+	private SmDisciplinaryAction smDisciplinaryAction;
+	//26279 - end
 	
 	/**
 	 * Gets the fl remark.
@@ -937,5 +943,30 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	public void setPrevHideRemarks(boolean prevHideRemarks) {
 		this.prevHideRemarks = prevHideRemarks;
 	}
+	
+	//26279 - start
+	public String getDisciplinaryActionMessage() {
+		return disciplinaryActionMessage;
+	}
 
+	public void setDisciplinaryActionMessage(String disciplinaryActionMessage) {
+		this.disciplinaryActionMessage = disciplinaryActionMessage;
+	}	
+
+	public List<DisciplinaryActionVO> getDisciplineVOs() {
+		return disciplineVOs;
+	}
+
+	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
+		this.disciplineVOs = disciplineVOs;
+	}
+
+	public SmDisciplinaryAction getSmDisciplinaryAction() {
+		return smDisciplinaryAction;
+	}
+
+	public void setSmDisciplinaryAction(SmDisciplinaryAction smDisciplinaryAction) {
+		this.smDisciplinaryAction = smDisciplinaryAction;
+	}
+	//26279 - end
 }

@@ -21,6 +21,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
@@ -45,6 +46,7 @@ import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.FulfilmentConst;
+import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.FLProcessNameConst;
@@ -82,6 +84,8 @@ import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.GSLType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
@@ -97,6 +101,7 @@ import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.fl.stopinstr.StopInstrManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.vo.DisciplinaryActionVO;
 
 /**
  * Backingbean for Stop Instruction.
@@ -304,7 +309,34 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 				getManagedBean().getStopInstr().setGstDeclaredDate(gstResDTO.getSmGstSupplier().getGstDeclaredDate());
 				getManagedBean().getStopInstr().setGstRegNo(gstResDTO.getSmGstSupplier().getGstRegNo());
 			}
-			
+			//26279 - start
+			if(getManagedBean().getStopInstr().getPmStatus().getStatusId().longValue() == FulfilmentStatusConst.SD_PENDING_APPROVAL.longValue()) {
+				SmSupplier smSupplier = getManagedBean().getStopInstr().getFlRequest().getSmSupplier();
+				SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
+				if(smDisciplinaryAction != null) {
+					getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
+					boolean isWarningOnly = false;
+					String warningOrDisciplinaryActionMsg = null;
+					String language =  new FacesScopes().getUserLocale().getLanguage();
+					if(smDisciplinaryAction.isWarning() && !smDisciplinaryAction.isCancelCategory() 
+							&& !smDisciplinaryAction.isSuspendRegistration() && !smDisciplinaryAction.isCancelRegistration() 
+							&& !smDisciplinaryAction.isBlacklistOwner() && !smDisciplinaryAction.isBumiputeraCancel() 
+							&& !smDisciplinaryAction.isManufacturerCancel()) {
+						isWarningOnly = true;
+						warningOrDisciplinaryActionMsg = getWarningOrDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(), language, isWarningOnly) ;
+						getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
+					} else if(smDisciplinaryAction.isCancelCategory() 
+							|| smDisciplinaryAction.isSuspendRegistration() || smDisciplinaryAction.isCancelRegistration() 
+							|| smDisciplinaryAction.isBlacklistOwner() || smDisciplinaryAction.isBumiputeraCancel() 
+							|| smDisciplinaryAction.isManufacturerCancel()){
+						warningOrDisciplinaryActionMsg = getWarningOrDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(), language, isWarningOnly) ;
+						getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
+					}
+				} else {
+					getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
+				}
+			}
+			//26279 - end
 		}else{
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
@@ -887,4 +919,12 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
 		return fulfilmentSO.checkTaxInvoice(reqId);
 	}
+	//26279 - start
+	public void viewDisciplinaryAction() {
+		List<DisciplinaryActionVO> disciplinaryActionVOs = retrieveDisciplinaryActions(getManagedBean().getSmDisciplinaryAction());
+		getManagedBean().setDisciplineVOs(disciplinaryActionVOs);
+		RequestContext.getCurrentInstance().execute(
+				"disciplinaryActionHistoryDlg.show();");
+	}
+	//26279 - end
 }
