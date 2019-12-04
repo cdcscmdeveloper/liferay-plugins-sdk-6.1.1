@@ -3280,7 +3280,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 	
+	/**
+	 * 
+	 */
 	public void cancelPendingItemCodificationDPM() {
+		
+		FacesScopes facesScopes = new FacesScopes();
+		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+		requestNoteReqDTO.setRequestNote(getManagedBean().getRequestNote());
+		requestNoteReqDTO.setUserLocale(facesScopes.getUserLocale());
+		List<String> loginIdAssignees = getRequestNoteSO().getSuppliersPendingAssignItemCode(requestNoteReqDTO);
 		
 		Object[] prObj = getManagedBean().getSelectedPrDtls();
 		if (null != prObj) {
@@ -3314,11 +3323,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			} finally {
 				purchaseRequestSO = null;
 			}
-			FacesScopes facesScopes = new FacesScopes();
-			RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
-			requestNoteReqDTO.setRequestNote(getManagedBean().getRequestNote());
-			requestNoteReqDTO.setUserLocale(facesScopes.getUserLocale());
-			List<String> loginIdAssignees = getRequestNoteSO().getSuppliersPendingAssignItemCode(requestNoteReqDTO);
+			
 			if (CollectionUtils.isNotEmpty(loginIdAssignees)) {
 				getRequestNoteSO().sendRequestNoteNotification(requestNoteReqDTO, loginIdAssignees);
 			} else {
