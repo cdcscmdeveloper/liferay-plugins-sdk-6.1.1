@@ -6,10 +6,13 @@ package my.ep.web.backingbean.ct;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -313,6 +316,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		ctBB = new ContractBackingBean();
 		if(ctBB.getManagedBean().getDeleteAttachmentList() != null ){
 			ctBB.getManagedBean().getDeleteAttachmentList().clear();
+		}
+		
+		if(ctBB.getManagedBean().getCtAgreementList() != null ){
+			ctBB.getManagedBean().getCtAgreementList().clear();
 		}
 		try {
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
@@ -2316,14 +2323,25 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		if (getManagedBean().getAsAtDate() == null) {
 			getManagedBean().setAsAtDate(ctBB.getManagedBean().getContractVer().getCtContractValue().getExpDate());
 		}
-
-		for (CtContractAmount contractAmt : ctBB.getManagedBean().getContractVer().getCtContractAmounts()){
-			if (getManagedBean().getAsAtDate().getTime() >= contractAmt.getEffDate().getTime() 
-					&& getManagedBean().getAsAtDate().getTime() <= contractAmt.getExpDate().getTime()){
-				ctBB.getManagedBean().setCtContractAmount(contractAmt);
-				break;
+		
+			for (CtContractAmount contractAmt : ctBB.getManagedBean().getContractVer().getCtContractAmounts()){
+				if (getManagedBean().getAsAtDate().getTime() >= contractAmt.getEffDate().getTime() 
+						&& getManagedBean().getAsAtDate().getTime() <= contractAmt.getExpDate().getTime()){
+					ctBB.getManagedBean().setCtContractAmount(contractAmt);
+				}
+				//Bug #26542 -start
+				DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+				Date CurrentDate = new Date();
+				if(dateFormat.format(contractAmt.getEffDate()).compareTo(dateFormat.format(CurrentDate))<=0
+						&& dateFormat.format(contractAmt.getExpDate()).compareTo(dateFormat.format(CurrentDate)) >=0){
+					ctBB.getManagedBean().setCtContractAmount(contractAmt);
+					break;
+				}
+				//Bug #26542 -end
+				
 			}
-		}
+		
+
 		//Retrieve agreement contract version for physical no & signed date
 		retrieveContractVerOfAgreement();
 
