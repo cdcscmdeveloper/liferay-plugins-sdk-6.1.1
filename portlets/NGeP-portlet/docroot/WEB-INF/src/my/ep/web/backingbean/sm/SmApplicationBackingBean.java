@@ -9207,7 +9207,7 @@ public class SmApplicationBackingBean extends
 								+ cat.getPmCategoryL3().getCategoryL3Code()
 								+ ",");
 					}
-				}
+//				}
 		}
 		getManagedBean().setBusinessOfficeCatCodeMsg(
 				SmCommonUtil.getMessage(
