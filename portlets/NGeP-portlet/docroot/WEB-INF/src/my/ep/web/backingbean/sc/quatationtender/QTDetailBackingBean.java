@@ -1285,7 +1285,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			{				
 			Long currentStatus = scQt.getQtStatus().getStatusId();
 			if (isQTStatusGreaterThanOrEqualsScheduleDoc(currentStatus)) {
-				if ((null == this.getManagedBean().getZoneTrees()) && scQt.getScQtSupplierCriteria().getScQtLocCriteria() != null) {
+				if ((null == this.getManagedBean().getZoneTrees() || this.getManagedBean().getZoneTrees().isEmpty()) && scQt.getScQtSupplierCriteria().getScQtLocCriteria() != null) {
 					scQt.getScQtSupplierCriteria().setScQtLocCriteria(null);
 				}
 			}
