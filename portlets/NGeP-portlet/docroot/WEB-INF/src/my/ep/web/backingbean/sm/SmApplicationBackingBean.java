@@ -9183,10 +9183,11 @@ public class SmApplicationBackingBean extends
 	private void setBusinessAndHadApprovedSpecialCatcode() {
 		getManagedBean().setAlreadyBusinessSpecialCatcode(false);
 		StringBuilder bf = new StringBuilder();
-		if (!getManagedBean().getSmAppl().getApplType()
-				.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
-				&& !SmCommonUtil.isCollectionEmpty(getManagedBean().getSmAppl()
-						.getSmSupplierCategories())) {
+		//Bug #26703
+//		if (getManagedBean().getSmAppl().getApplType()
+//				.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+//				&& SmCommonUtil.isCollectionEmpty(getManagedBean().getSmAppl()
+//						.getSmSupplierCategories())) {
 			SmFacility hq = getHq();
 			if (hq != null && hq.getFacilityType().equals("B"))
 				for (SmSupplierCategory cat : getManagedBean().getSmAppl()
@@ -9206,7 +9207,7 @@ public class SmApplicationBackingBean extends
 								+ cat.getPmCategoryL3().getCategoryL3Code()
 								+ ",");
 					}
-				}
+//				}
 		}
 		getManagedBean().setBusinessOfficeCatCodeMsg(
 				SmCommonUtil.getMessage(
