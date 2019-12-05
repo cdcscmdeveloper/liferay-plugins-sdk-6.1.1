@@ -86,6 +86,7 @@ import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCertBody;
+import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmDocumentRestr;
@@ -1582,11 +1583,11 @@ public class SmApplicationBackingBean extends
 								if(businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())){
 									personnel.setSsmData(true);
 									personnel.setShareAmtSsmNull(true);
-									String[] copyEquityOwner = {"birthDate","designation","nameInSsm","raceSsmNull","birthDateSsmNull","designationSsmNull","equityOwner","director"};
+									String[] copyEquityOwner = {"birthDate","designation","nameInSsm","raceSsmNull","birthDateSsmNull","designationSsmNull","equityOwner","director","pmCountry"};
 									EntityHelper.copyEntityPropertiesOnly(personnelSSM,personnel,copyEquityOwner);
 								}else{
 									personnel.setSsmData(true);
-									String[] copyEquityOwner = {"birthDate","shareAmt","designation","nameInSsm","raceSsmNull","birthDateSsmNull","shareAmtSsmNull","designationSsmNull","equityOwner","director"};
+									String[] copyEquityOwner = {"birthDate","shareAmt","designation","nameInSsm","raceSsmNull","birthDateSsmNull","shareAmtSsmNull","designationSsmNull","equityOwner","director","pmCountry"};
 									EntityHelper.copyEntityPropertiesOnly(personnelSSM,personnel,copyEquityOwner);
 								}
 								if(personnel.isEquityOwner()){
@@ -1648,7 +1649,11 @@ public class SmApplicationBackingBean extends
 										personnel.getSmPersonnelAdd().setSmPersonnel(personnel);
 										personnel.getSmPersonnelAddresses().add(personnel.getSmPersonnelAdd());
 									}
-									personnel.setPmCountry(null);
+									if(personnel.getPmCountry().getCountryId() == null){
+										PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+										personnel.setPmCountry(defaultCountry);
+									}
+									
 									this.getManagedBean().getSmAppl().getSmPersonnels().add(personnel);
 								}
 							}
