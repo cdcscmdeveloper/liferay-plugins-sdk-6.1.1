@@ -2595,6 +2595,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					            	ctPerformanceBond.setBondNew(true);
 					            	ctPerformanceBond.setFileName(null);
 					            	ctPerformanceBond.setFilePath(null);
+					            	ctPerformanceBond.setRefNo(performanceBond.getRefNo());
+					            	ctPerformanceBond.setFinancialOrg(performanceBond.getFinancialOrg());
+					            	ctPerformanceBond.setFinancialOrgName(performanceBond.getFinancialOrgName());
+					            	ctPerformanceBond.setBondAmount(performanceBond.getBondAmount());
 									Calendar cal = Calendar.getInstance();
 									cal.setTime(ctBB.getManagedBean().getContractVer().getCtContractValue().getExpDate());
 									cal.add(Calendar.YEAR, 1);

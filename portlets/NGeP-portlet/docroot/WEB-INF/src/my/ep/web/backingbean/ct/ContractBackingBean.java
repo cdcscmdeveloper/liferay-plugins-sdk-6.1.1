@@ -2826,9 +2826,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		if(isContractExtend()){
 			newBond.setBondNew(true);
 			getManagedBean().getCtContractAmount().getCtPerformanceBondsNew().add(newBond);
+			getManagedBean().getCtContractAmount().getCtPerformanceBonds().add(newBond);
 		}else{
 			newBond.setBondNew(false);
 			getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal().add(newBond);
+			getManagedBean().getCtContractAmount().getCtPerformanceBonds().add(newBond);
 		}
 		//#24333 - End
 	}		    
@@ -4028,26 +4030,28 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return  bond amount in text format.
 	 */
 	public String getBondAmountInText() {
+		//#24333 - Start
 		Locale locale = null;
 		String lang = new FacesScopes().getUserLocale().getLanguage();
-		if (getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt() == null
-				|| getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt().doubleValue() == 0) {
+		if (getManagedBean().getCtContractAmount().getTotalBondAmt() == null
+				|| getManagedBean().getCtContractAmount().getTotalBondAmt().doubleValue() == 0) {
 			return "";
 		}
 
 		if (lang.equalsIgnoreCase(ReportConst.ENG_LANGUAGE_CODE)) {
 			locale = new Locale(lang, ReportConst.ENG_COUNTRY_CODE);
-			DecimalFormat df = new DecimalFormat("#.00");		
+			DecimalFormat df = new DecimalFormat("#.00");	
 			return NumberWordUtilEn.convert(df.format(
-					getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt()));
+					getManagedBean().getCtContractAmount().getTotalBondAmt()));
 		} else if (lang.equalsIgnoreCase(ReportConst.MALAY_LANGUAGE_CODE)) {
 			locale = new Locale(lang, ReportConst.MALAYSIA_COUNTRY_CODE);
 			DecimalFormat df = new DecimalFormat("#.00");
 			return NumberWordUtil.convert(df.format(
-					getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt()));
+					getManagedBean().getCtContractAmount().getTotalBondAmt()));
 		}else{
 			return "";
 		}
+		//#24333 - End
 	}
 	
 	/**
