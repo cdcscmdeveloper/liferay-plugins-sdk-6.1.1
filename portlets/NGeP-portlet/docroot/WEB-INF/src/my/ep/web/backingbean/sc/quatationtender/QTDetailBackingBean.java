@@ -1004,9 +1004,18 @@ public class QTDetailBackingBean extends
 					this.getManagedBean().getZoneTrees(), scQt.getScQtSupplierCriteria());*/
 			if (null != locCriteria && !locCriteria.isEmpty()) {
 				scQt.getScQtSupplierCriteria().setScQtLocCriteria(locCriteria);
-			} /*else {
-				scQt.getScQtSupplierCriteria().setScQtLocCriteria(null);
-			}*/
+			} 
+			//20191127@asyrafhaziq - Bug #26289 - Start
+			else
+			{				
+			Long currentStatus = scQt.getQtStatus().getStatusId();
+			if (isQTStatusGreaterThanOrEqualsScheduleDoc(currentStatus)) {
+				if ((null == this.getManagedBean().getZoneTrees() || this.getManagedBean().getZoneTrees().isEmpty()) && scQt.getScQtSupplierCriteria().getScQtLocCriteria() != null) {
+					scQt.getScQtSupplierCriteria().setScQtLocCriteria(null);
+				}
+			}
+			}
+			//20191127@asyrafhaziq - Bug #26289 - End
 		}
 		if (scQt.isZonal()) {
 			if (null != scQt.getScQtSupplierCriteria() && scQt.getScQtSupplierCriteria().getQtZoneCriterias() != null) {
@@ -2761,7 +2770,16 @@ public class QTDetailBackingBean extends
 				if (!scQt.getScQtSupplierCriteria().isAllState()) {
 					List<ScQtLocCriteria> locCriteria = new ArrayList<ScQtLocCriteria>();
 					
-					if (null != tenderResDTO.getLocationDetails() && !tenderResDTO.getLocationDetails().isEmpty()) {
+					//20191127@asyrafhaziq - Bug #26289 - Start
+					boolean isSetLocCriteria = true ;
+					if (isQTStatusGreaterThanOrEqualsScheduleDoc(scQt.getQtStatus().getStatusId())) {
+						if (null != this.getManagedBean().getZoneTrees() && !this.getManagedBean().getZoneTrees().isEmpty()&& 
+								scQt.getScQtSupplierCriteria().getScQtLocCriteria() != null) {
+							isSetLocCriteria = false;
+						}
+					}
+					if (null != tenderResDTO.getLocationDetails() && !tenderResDTO.getLocationDetails().isEmpty() && isSetLocCriteria ) {
+					//20191127@asyrafhaziq - Bug #26289 - End
 						if (null == this.getManagedBean()
 								.getTotalSuppliersSpecLoc()) {
 							this.getManagedBean().setTotalSuppliersSpecLoc(
