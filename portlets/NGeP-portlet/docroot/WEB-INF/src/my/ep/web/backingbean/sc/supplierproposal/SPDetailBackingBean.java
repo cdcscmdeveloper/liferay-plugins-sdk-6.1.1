@@ -1972,7 +1972,10 @@ public class SPDetailBackingBean extends
 
 				uploadAttachmentWithEncryption(getEncryptionKey(),
 						event.getFile(), attachment);
-
+				
+				//20191104@asyrafhaziq - Bug #26698 - problem when upload 
+				if (getActualFilePath(attachment) != null && !getActualFilePath(attachment).isEmpty())
+				{
 				scQtProposalChecklist.setScQtProposalChecklistAttachment(attachment);
 				scQtProposalChecklist.setSubmitted(true);
 
@@ -1985,7 +1988,7 @@ public class SPDetailBackingBean extends
 							resDTO.getProposalChecklist());
 					// RequestContext.getCurrentInstance().execute("checklistUploadDlg.hide();");
 				}
-
+			 }
 			} catch (Exception e) {
 				scQtProposalChecklist.setSubmitted(false);
 				throw e;
@@ -2032,6 +2035,9 @@ public class SPDetailBackingBean extends
 				uploadAttachmentWithEncryption(getEncryptionKey(),
 						event.getFile(), attachment);
 
+				//20191104@asyrafhaziq - Bug #26698 - problem when upload 
+				if (getActualFilePath(attachment) != null && !getActualFilePath(attachment).isEmpty())
+				{
 				scQtProposalChecklist.setScQtProposalChecklistAttachment(attachment);
 				scQtProposalChecklist.setSubmitted(true);
 
@@ -2044,7 +2050,7 @@ public class SPDetailBackingBean extends
 							resDTO.getProposalChecklist());
 					// RequestContext.getCurrentInstance().execute("checklistUploadDlg.hide();");
 				}
-
+			}
 			} catch (Exception e) {
 				scQtProposalChecklist.setSubmitted(false);
 				throw e;
