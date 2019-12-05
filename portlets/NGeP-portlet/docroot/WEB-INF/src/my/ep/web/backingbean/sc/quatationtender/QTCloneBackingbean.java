@@ -1044,33 +1044,33 @@ public class QTCloneBackingbean extends
 		
 		
 		
-//		if (copyScqt.isZonal()
-//				&& null != this.getManagedBean().getZoneGeneralTrees()
-//				&& this.getManagedBean().getZoneGeneralTrees()
-//						.isEmpty()) {
-//			if (null != copyScqt.getZoneLocationLevel()) {
-//				this.getManagedBean().setStateCodes(
-//						copyScqt.getZoneLocationLevel()
-//								.getParameterCode());
-//			}
-//			
-//			if (copyScqt.getScQtSupplierCriteria() != null &&
-//					copyScqt.getScQtSupplierCriteria().getQtZoneCriterias() != null) {
-//				List<TplSpecZoneDtl> specZoneDtls = copyScqt.getScQtSupplierCriteria().getQtZoneCriterias().getTplSpecZoneDtls();
-//				populateZoneDetailIntoTreeNode(scQt, specZoneDtls);
-//				// setting into zones bean to validate zones while adding 
-//				if (CollectionUtils.isNotEmpty(specZoneDtls)) {
-//					List<ZonesBean> zoneBeanLst = new ArrayList<ZonesBean>();
-//					for (TplSpecZoneDtl specZoneDtl : specZoneDtls) {
-//						ZonesBean bean = new ZonesBean();
-//						bean.setTplSpecZoneDtl(specZoneDtl);
-//						zoneBeanLst.add(bean);
-//					}
-//					this.getManagedBean().setBeans(zoneBeanLst);
-//				}
-//			}
-//
-//		}
+		if (copyScqt.isZonal()
+				&& null != this.getManagedBean().getZoneGeneralTrees()
+				&& this.getManagedBean().getZoneGeneralTrees()
+						.isEmpty()) {
+			if (null != copyScqt.getZoneLocationLevel()) {
+				this.getManagedBean().setStateCodes(
+						copyScqt.getZoneLocationLevel()
+								.getParameterCode());
+			}
+			
+			if (copyScqt.getScQtSupplierCriteria() != null &&
+					copyScqt.getScQtSupplierCriteria().getQtZoneCriterias() != null) {
+				List<TplSpecZoneDtl> specZoneDtls = copyScqt.getScQtSupplierCriteria().getQtZoneCriterias().getTplSpecZoneDtls();
+				populateZoneDetailIntoTreeNode(scQt, specZoneDtls);
+				// setting into zones bean to validate zones while adding 
+				if (CollectionUtils.isNotEmpty(specZoneDtls)) {
+					List<ZonesBean> zoneBeanLst = new ArrayList<ZonesBean>();
+					for (TplSpecZoneDtl specZoneDtl : specZoneDtls) {
+						ZonesBean bean = new ZonesBean();
+						bean.setTplSpecZoneDtl(specZoneDtl);
+						zoneBeanLst.add(bean);
+					}
+					this.getManagedBean().setBeans(zoneBeanLst);
+				}
+			}
+
+		}
 		scQt.setProcurementTypeCatId(copyScqt.getProcurementTypeCatId());
 		scQt.setPmProcurementCategory(copyScqt.getPmProcurementCategory());
 		scQt.setEvaluationType(copyScqt.getEvaluationType());
@@ -1256,6 +1256,7 @@ public class QTCloneBackingbean extends
 			// All State
 			if (ParameterConst.QUOTATION_TENDER_TYPE_OPEN
 					.equalsIgnoreCase(qtType)) {
+				updateRestrictedTenderOpenFor(scQt);
 				if (null != scQtSupplierCriteria) {
 					if (!isQuotationThresHold
 							&& getManagedBean().getAllStateCode() == PTJLocalityCode.STATE_PENINSULAR) {
