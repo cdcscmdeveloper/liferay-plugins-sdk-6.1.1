@@ -27,6 +27,7 @@ import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.vo.BlacklistOwnerDirectorVO;
 
@@ -143,6 +144,7 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private boolean disableEquity=false;
 	private boolean disableStaff=false;
 	private boolean hideButton=false;
+	private String labelDataTable;
 	//26238 - Disciplinary Action
 	private boolean warning;
 	private boolean suspendRegistration;
@@ -944,6 +946,15 @@ public class RegistrationManagedBean extends BaseManagedBean {
 
 	public void setHideButton(boolean hideButton) {
 		this.hideButton = hideButton;
+	}
+
+	public String getLabelDataTable() {
+		labelDataTable = new FacesScopes().getUserLocale().toString();
+		return labelDataTable;
+	}
+
+	public void setLabelDataTable(String labelDataTable) {
+		this.labelDataTable = labelDataTable;
 	}
 
 }
