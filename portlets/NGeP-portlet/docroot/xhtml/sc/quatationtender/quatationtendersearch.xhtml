@@ -14,9 +14,7 @@
 		</p:blockUI>
 		
 		<p:messages id="qtSearchMsg" showDetail="true" autoUpdate="true"
-			closable="true" showSummary="false" severity="error, info" />
-			
-			
+			closable="true" showSummary="false" severity="error, info" />			
 	
 	<p:panel header="#{lbl['lbl.sc.search']}" toggleable="true"
 			id="qtsearchid">		
@@ -168,8 +166,7 @@
 								action="#{qTDetailBB.closeProposal(scQt)}"
 								partialSubmit="true" process="@this" update="searchQTs"/>
 						    <p:menuitem id="menuItem11" value="#{lbl['lbl.btn.clone']}" 
-								
-								rendered="#{scQt.actionRender[0]}" 
+								rendered="#{qTDetailBB.isQTMaintenanceScreen()}" 
 								icon="ui-icon-edit" update=":form:displayk"
 								action="#{qtMultipleCloneBackingBean.clonePopupAction(scQt)}" 
 								partialSubmit="true" process="@this"/>
@@ -178,52 +175,9 @@
 					<!-- ***17376#55 - end -->
 					
 				</p:dataTable>
-				<p:dialog widgetVar="kklik" >
-				  <h:panelGroup id="displayk">
-						<p:panel id="clonesearchpnlid2" header="#{lbl['lbl.sc.clone.qt']}" toggleable="true">
-							<table style="width: 100%;">
-								<tr>
-									<td valign="top"><p:outputLabel value="#{lbl['lbl.sc.quotation.tender.noClone']}" /></td>
-									<td><p:inputText
-								onkeypress="if (event.keyCode == 13) { quotationTndrCommitteeAppointmentMainCloneSearch.jq.click(); return false; }"
-								value="#{qtMultipleCloneBackingBean.totalClone}"
-								maxlength="21" size="35" /></td>
-								</tr>
-					
-							</table>
-				        </p:panel>
-				        <p:panel header="#{lbl['lbl.sc.qtn.list']}" toggleable="true">
-				<br />
-
-				<p:tree value="#{qtMultipleCloneBackingBean.root}" var="node"
-                        selection="#{qtMultipleCloneBackingBean.selectedNodes}"
-					selectionMode="checkbox">
-					<p:treeNode>
-						<h:outputText value="#{node.label}"/>
-					</p:treeNode>
-					
-				</p:tree>
-
-
-				<div class="ppRightBtn">
-					<p:commandButton value="#{lbl['lbl.btn.ok']}"
-						styleClass="BtnSpacing" id="cloneCommitteeTreeBtnOnId2" update="@all"
-						action="#{qtMultipleCloneBackingBean.addToClone()}">
-					 <f:param name="skipvalidation" value="1" />
-					</p:commandButton>
-					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-						styleClass="BtnSpacing" onclick="screen3.hide();"
-					 ><f:param name="skipvalidation" value="1" />
-					 </p:commandButton>
-				</div>
-			</p:panel>
-					</h:panelGroup>
-				</p:dialog>
+				
 				<ui:include src="/xhtml/sc/quatationtender/createquotationtender/clone/clone-multiple.xhtml" />
-				</div>
-				
-				
-				
+				</div>				
 				
 				<!-- Loa/Loi Data Table -->
 				<div id="searchQTLoaLoiDiv" style="display:none">
