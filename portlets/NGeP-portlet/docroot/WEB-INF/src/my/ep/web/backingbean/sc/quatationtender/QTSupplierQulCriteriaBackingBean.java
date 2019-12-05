@@ -1339,7 +1339,9 @@ public class QTSupplierQulCriteriaBackingBean extends
 					} else {
 						deleteChildTreeNodes(zoneTree.getChildren());
 						if (zoneTree.getChildren().size() == 0) {
-							// rootTrees.remove(row--);
+							//20191127@asyrafhaziq - Bug #26289 - Start
+							 rootTrees.remove(row--);
+						    //20191127@asyrafhaziq - Bug #26289 - End
 						}
 					}
 				}
