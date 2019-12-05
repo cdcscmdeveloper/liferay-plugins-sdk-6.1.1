@@ -3098,7 +3098,27 @@ public class RuleCatalogueBackingBean extends
 					.getSelectedRuleDescType().getRuleType();
 			PmConfigRuleValue newRuleValue = new PmConfigRuleValue();
 			newRuleValue.setRuleType(configRuleType);
-			newRuleValue.setEffDate(this.getManagedBean().getTomorrow());
+						
+			//#22113
+			String ruleType = this.getManagedBean()
+					.getSelectedRuleDescType().getRuleType().getRuleType();
+			Calendar forwardedEffDate = Calendar.getInstance();
+			Date nextDay;
+			
+			for (PmConfigRuleValue configRuleValue : configRuleType.getConfigRuleValues()) {
+				if (ruleType.equals("LOPO")) {
+					newRuleValue.setRuleNumberValue(configRuleValue.getRuleNumberValue());
+					if (configRuleValue.getExpDate() != null) {
+						forwardedEffDate.setTime(configRuleValue.getExpDate());
+					}
+					forwardedEffDate.add(Calendar.DATE, 
+							Integer.parseInt("1"));
+					nextDay = forwardedEffDate.getTime();
+					newRuleValue.setEffDate(nextDay);
+				} else {
+					newRuleValue.setEffDate(this.getManagedBean().getTomorrow());
+				}
+			}
 
 			// if
 			// (this.getManagedBean().getSelectedRuleType().getRuleDataTypeId()
@@ -5311,5 +5331,23 @@ public class RuleCatalogueBackingBean extends
 		} else {
 			throw new EpException(MessageConst.ERR_900046);
 		}
-	}	
+	}
+	
+	public void onRuleType(org.primefaces.event.SelectEvent event) {
+
+		String selectedRuleType = null;
+		
+        if (getManagedBean().getSelectedRuleDescType() != null) {
+        	selectedRuleType = getManagedBean().getSelectedRuleDescType()
+        			.getRuleType().getRuleType();
+        	
+        	if (selectedRuleType.equals("LOPO")) {
+        		getManagedBean().setLOPOSelected(true);
+        	} else {
+        		getManagedBean().setLOPOSelected(false);
+        	}
+        }
+        
+	}
+	
 }
