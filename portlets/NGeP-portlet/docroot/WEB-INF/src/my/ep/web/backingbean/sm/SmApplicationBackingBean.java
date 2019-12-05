@@ -2022,6 +2022,8 @@ public class SmApplicationBackingBean extends
 				SmApplicationUtil.getInstance()
 						.removeNotApplicableInformationBeforeSave(
 								getManagedBean());
+				//Bug #26703 set whether allowed to change business type from home office to business
+				setBusinessAndHadApprovedSpecialCatcode();
 			} else if (currentPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)) {
 					//Bug #26616
