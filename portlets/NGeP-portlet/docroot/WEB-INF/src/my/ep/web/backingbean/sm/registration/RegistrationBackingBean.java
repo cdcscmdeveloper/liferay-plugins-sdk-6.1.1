@@ -491,7 +491,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						//throw new EpException(MessageConst.ERROR_721050);
 					}
 					validateIDFormat(suppOwner.getIdentificationNo(),suppOwner.getIdentificationType().getParameterCode());
-					if(suppOwner.getIdentificationType().getParameterCode().equals(SupplierManagementConst.BASIC_IND_IDENT_TYPE)){
+					/*if(suppOwner.getIdentificationType().getParameterCode().equals(SupplierManagementConst.BASIC_IND_IDENT_TYPE)){
 						if(getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF)){
 							//MOF
 							SmCommonUtil.getInstance().verifyWithMyIdentity(suppOwner.getOwnerName(), suppOwner.getIdentificationNo(), 
@@ -501,7 +501,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							SmCommonUtil.getInstance().verifyOwnerWithMyIdentity(suppOwner.getOwnerName(), suppOwner.getIdentificationNo(), 
 									null, my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN, null,this.getManagedBean().isCompanyValidWithSSM());
 						}
-					}
+					}*/
 					
 					//set ssm updated name
 					if(suppOwner.isShowNameTextField()){
@@ -1051,7 +1051,22 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		getManagedBean().setAggreeDeclareAdmin(false);
 		setAdminSameAsOwner();
 		SmPersonnel smPersonnel = this.getManagedBean().getSmPersonnel();
-		
+		//SSM INTEGRATION
+		if(this.getManagedBean().isCompanyValidWithSSM()){
+			for(SmSupplierOwner suppOwner:this.getManagedBean().getSmSuppOwners()){
+				if(suppOwner.getIdentificationType().getParameterCode().equals(SupplierManagementConst.BASIC_IND_IDENT_TYPE)){
+					if(getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF)){
+						//MOF
+						SmCommonUtil.getInstance().verifyWithMyIdentity(suppOwner.getOwnerName(), suppOwner.getIdentificationNo(), 
+								null, my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN,this.getManagedBean().isCompanyValidWithSSM());
+					}else{
+						//Basic
+						SmCommonUtil.getInstance().verifyOwnerWithMyIdentity(suppOwner.getOwnerName(), suppOwner.getIdentificationNo(), 
+								null, my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN, null,this.getManagedBean().isCompanyValidWithSSM());
+					}
+				}
+			}
+		}
 		validateNewIC(smPersonnel,false);
 		RequestContext.getCurrentInstance().execute("firstUserTncDialog.show()");
 	}
