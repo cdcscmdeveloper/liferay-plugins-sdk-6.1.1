@@ -296,6 +296,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		String taskId  = getManagedBean().getTaskId();
 		Object payLoad  = getManagedBean().getPayLoad();
 		RequestNoteResDTO requestNoteResDTO = null;
+		Boolean isAssignedState = getManagedBean().isAssignedState();
     try {
     	
     	parseRequestNote(requestNote, outcome);
@@ -373,7 +374,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    		getManagedBean().setOutComes(outcomes);
 	    		getManagedBean().setTaskId(taskId);
 	    		getManagedBean().setPayLoad(payLoad);
+	    		getManagedBean().setAssignedState(isAssignedState);
 	    		reloadRequestNote(scRequestNote);
+	    		
 	    		successMessage(MessageConst.INFO_700025,ParameterTypeConst.DOCUMENT_TYPES,
 	    				ParameterConst.DOCTYPE_REQUEST_NOTE,scRequestNote.getRequestNoteNo(), Boolean.FALSE);
 	    	} else{
@@ -2912,6 +2915,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			UserResDTO resDTO = getUserSO().retrieveUserByUserId(reqDTO);
 			requestNoteDtl.setAssignedUser(resDTO.getPmUser());	
 		}
+		
 	}
 	
 	/**
