@@ -1377,13 +1377,16 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					if (ctBB.getManagedBean().getCtContractAmount().getTotalBondAmt() == null) {
 						setTabValue("PB");
 						throw new EpException(MessageConst.ERROR_750021);
-					} else {						
+					} else {
+						double oriBondAmount = 0;
+						for(CtContractAmount oriBondAmountList : ctBB.getManagedBean().getContractVer().getCtContractAmounts()){
+							 
 						bondAmount = Double.valueOf(df.format(bondAmount));
-						double oriBondAmount = Double.valueOf(df.format(
-								ctBB.getManagedBean().getCtContractAmount().getTotalBondAmt().doubleValue()));
-
-						int retval = Double.compare(bondAmount , oriBondAmount);
+						oriBondAmount = Double.valueOf(df.format(
+								oriBondAmountList.getTotalBondAmt()));
 						
+						}
+						int retval = Double.compare(bondAmount , oriBondAmount);
 						/** Enhancement #20025: Changes for GST in Contract Management
 						if (retval >0) {
 							setTabValue("PB");
