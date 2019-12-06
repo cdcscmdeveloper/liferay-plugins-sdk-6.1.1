@@ -130,7 +130,76 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	 */
 	public FulfilmentOrderBackingBean(){
 	}
+	
+	/**
+	 * close/manual payment fulfilment order.
+	 *
+	 *  navigate to acknowledge page.
+	 *  @throws IOException 
+	 */
 
+  	public String closeManualPayment() throws IOException{
+		debugLogger("start of close manual payment");
+		IFulfilmentOrderSO fulfilementOrderSO = null;
+		FulfilmentResDTO resDTO = null;
+		validateCloseManualRequest();
+		
+		try{
+			fulfilementOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			
+			reqDTO.setOutcome(BpmOutcomeConst.BPM_CLOSE_MANUAL);
+			reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
+			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+			reqDTO.setUserRole(getUserRole());
+			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+			if(!flBB.getManagedBean().getRemarkList().isEmpty()){
+				reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
+			}
+			
+			
+			
+			
+			
+			resDTO = fulfilementOrderSO.closeManualPayment(reqDTO);
+			
+			
+			if(resDTO.isSuccessful()) {
+				successMessage(MessageConst.INFO_700072, ParameterTypeConst.DOCUMENT_TYPES,
+						ParameterConst.DOCTYPE_PURCHASE_ORDER,getManagedBean().getFulfilmentOrder().getDocNo().toString(), Boolean.FALSE);
+				/*String messageId = MessageConst.INFO_700005;
+				String documentType = ParameterConst.DOCTYPE_PURCHASE_ORDER;
+				String docNo = getManagedBean().getFulfilmentOrder().getDocNo();
+				getManagedBean().setAllowCloseManualPay(false);
+				
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+						FacesMessage.SEVERITY_INFO, null,
+						MessageUtils.getMessage(messageId, 
+								new String[]{messagePrefix+getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, documentType)+messageSuffix, docNo}, 
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));*/
+				
+				renewSesionObject();
+				return CommonUIConst.ACKNOWLEDGE_PAGE;
+				
+			} else {
+				throw new EpException(MessageConst.ERROR_740017);
+			}
+			
+			
+		}finally{
+			fulfilementOrderSO = null;
+		}
+	}
+  	
+  	private void validateCloseManualRequest() {	
+	
+			/*validate remark cannot be null*/
+			if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
+				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+			}
+		
+  	}
+	
 	/**
 	 * save,submit Fulfillment order.
 	 *

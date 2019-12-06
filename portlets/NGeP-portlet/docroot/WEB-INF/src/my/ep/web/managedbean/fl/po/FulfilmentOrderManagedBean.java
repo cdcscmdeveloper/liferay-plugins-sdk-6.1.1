@@ -166,6 +166,7 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	private BigDecimal orderSummaryOrderedAmtGrandTotal ;
 	private boolean showCommitmentNo;
 	private String espkbCommitmentNo;
+	private boolean yep;
     
     /**
 	 * @return the pendingDoDataModel
@@ -1446,5 +1447,15 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	public void setToDate(Date toDate) {
 		this.toDate = toDate;
 	}
+
+	public boolean isYep() {
+		return yep;
+	}
+
+	public void setYep(boolean yep) {
+		this.yep = yep;
+	}
+	
+	
 
 }
