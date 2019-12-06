@@ -2083,7 +2083,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						FacesScopes facesScope = new FacesScopes();
 						PmUser userSession = facesScope.getUserSessionBean();
 						if(userSession != null){
-							SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
+							SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelAll(),"identificationNo");
 							if(personnelSSM == null) {								
 								RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
 								fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlineAccount/accountMaintenanceTermAndCond.xhtml");
