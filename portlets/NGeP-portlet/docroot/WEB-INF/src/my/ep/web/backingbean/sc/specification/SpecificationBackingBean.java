@@ -10522,18 +10522,25 @@ public class SpecificationBackingBean extends
 								ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
 			this.getManagedBean().setLocalOutCome(action);
 
-			//25638 - Start
+			//25638 Revise at SC,EC,OC,TEC,FEC,FC - Start
 			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
 				retriveCommitteeEndorsment();   //Added the line 25638 Enhancement 
 				List<ScQtSpecificationRemark> remarks = this.getManagedBean().getSpecificationRemarks();
+				
 				if (null != remarks) {
 					for (int i = 0; i < remarks.size(); i++) {
 						String userRemark = remarks.get(i).getRemark();
+						
 						if (null == userRemark || "".equals(userRemark)) {
-							throw new EpException(MessageConst.ERROR_760154);
+							throw new EpException(MessageConst.ERROR_100022,
+									new String[] { ResourceBundleUtils.getMessage(
+												    "lbl.sc.remarks",
+												    ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+												    new FacesScopes().getUserLocale()) });
 						}
 					}
 				}
+				
 				RequestContext.getCurrentInstance().execute("reviseSCDlgs.show()");
 			} else {
 				getManagedBean().setAutoUpdate(false);
@@ -10545,14 +10552,19 @@ public class SpecificationBackingBean extends
 
 			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
 				retriveCommitteeEndorsment();
-				List<ScQtSpecificationRemark> remarks = this.getManagedBean()
-						.getSpecificationRemarks();
+				List<ScQtSpecificationRemark> remarks = this.getManagedBean().getSpecificationRemarks();
+				
 				if (null != remarks) {
 					for (int i = 0; i < remarks.size(); i++) {
 						ScQtSpecificationRemark Remark = remarks.get(0);
 						String userRemark = remarks.get(i).getRemark();
+						
 						if (null == userRemark || "".equals(userRemark)) {
-							throw new EpException(MessageConst.ERROR_760154);
+							throw new EpException(MessageConst.ERROR_100022,
+									new String[] { ResourceBundleUtils.getMessage(
+												    "lbl.sc.remarks",
+												    ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+												    new FacesScopes().getUserLocale()) });
 						} else if (null == Remark.getRemarkId()) {
 							RequestContext.getCurrentInstance().execute(
 									"reviceApprovalDlgs.show()");
@@ -14795,14 +14807,19 @@ public class SpecificationBackingBean extends
 
 			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
 				retriveCommitteeEndorsment();
-				List<ScQtSpecificationRemark> remarks = this.getManagedBean()
-						.getSpecificationRemarks();
+				List<ScQtSpecificationRemark> remarks = this.getManagedBean().getSpecificationRemarks();
+				
 				if (null != remarks) {
 					for (int i = 0; i < remarks.size(); i++) {
 						ScQtSpecificationRemark Remark = remarks.get(0);
 						String userRemark = remarks.get(i).getRemark();
+						
 						if (null == userRemark || "".equals(userRemark)) {
-							throw new EpException(MessageConst.ERROR_760154);
+							throw new EpException(MessageConst.ERROR_100022,
+									new String[] { ResourceBundleUtils.getMessage(
+												    "lbl.sc.remarks",
+												    ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+												    new FacesScopes().getUserLocale()) });
 						} else if (null == Remark.getRemarkId()) {
 							RequestContext
 									.getCurrentInstance()
