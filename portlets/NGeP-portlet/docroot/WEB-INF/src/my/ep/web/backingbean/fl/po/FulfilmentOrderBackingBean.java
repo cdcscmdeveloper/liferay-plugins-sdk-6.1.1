@@ -139,7 +139,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	 */
 
   	public String closeManualPayment() throws IOException{
-		debugLogger("start of close manual payment");
+		
 		IFulfilmentOrderSO fulfilementOrderSO = null;
 		FulfilmentResDTO resDTO = null;
 		validateCloseManualRequest();
