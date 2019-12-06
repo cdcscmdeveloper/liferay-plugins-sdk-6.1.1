@@ -440,6 +440,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			SmSupplierOwner smSupplierOwner = new SmSupplierOwner();
 			smSupplierOwner.setOwnerName("");
 			PmCountry indNationality = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+			smSupplierOwner.setTempCountryId(indNationality.getCountryId());
 			smSupplierOwner.setNationality(indNationality);					
 			smSupplierOwner.setIdentificationNo(smSupplierOwner.getIdentificationNo());
 			smSupplierOwner.setIdentificationType(identificationType);
