@@ -10524,6 +10524,7 @@ public class SpecificationBackingBean extends
 
 			//25638 - Start
 			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
+				retriveCommitteeEndorsment();   //Added the line 25638 Enhancement 
 				List<ScQtSpecificationRemark> remarks = this.getManagedBean().getSpecificationRemarks();
 				if (null != remarks) {
 					for (int i = 0; i < remarks.size(); i++) {
