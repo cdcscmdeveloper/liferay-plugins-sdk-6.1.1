@@ -86,14 +86,14 @@
 			</f:facet>
 			<p:inputText id="zoneEstCost" 
 				value="#{tplSpecEstimation.indicativeUnitPrice}" style="width:165px; text-align:right;" 
-				required="true" maxlength="19"
+				required="#{empty tplSpecEstimation.estimatedCost}" maxlength="19"
 				disabled="#{!editable}">
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
 				<p:ajax 
 					update="@all, zoneEstCostMsg, @(.calcEstAmount), zoneEstCost1"
 					partialSubmit="true"
 					process="@this" 
-					event="change"
+					event="keyup"
 					listener="#{templateSpecBackingBean.calcItemTotalIndicateUnitPrice(templateSpecBean,
 						tplSpecEstimation.indicativeUnitPrice, 
 						templateSpecBean.selectedSpecQuestion.tplSpecZoneQties[rowIndex].qty, 
@@ -105,7 +105,7 @@
 						isItemTypeService,
 						isFulfilmentTypeScheduled, 
 						templateSpecBean.selectedSpecQuestion.tplSpecZoneQties[rowIndex].tplSpecZoneDtl.specZoneId,
-						question.getSpecQuestionId())}"></p:ajax>
+						tplSpecEstimation.tplSpecQuestion.specQuestionId)}"></p:ajax>
 					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
 			</p:inputText>
 			
