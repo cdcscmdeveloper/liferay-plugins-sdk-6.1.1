@@ -14,4 +14,5 @@ public class BpmOutcomeConst {
 	public static final String BPM_STOP_FULFILMENT = "STOP FULFILMENT";
 	public static final String BPM_VIEW = "VIEW";
 	public static final String BPM_MATCH = "MATCH";
+	public static final String BPM_CLOSE_MANUAL = "CLOSE MANUAL";
 }
