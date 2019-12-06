@@ -1575,6 +1575,7 @@ public class SimpleQuoteBackingBean extends
 			reqDTO.setRoleCode(getUserRoleCode());
 			reqDTO.setTaskExpiredDate(pidExpDate);
 			reqDTO.setPidApprovers(pidApprovers);
+			
 			reqDTO.setDoUserId(doUserId);
 
 			// ReQuote
@@ -1583,6 +1584,13 @@ public class SimpleQuoteBackingBean extends
 			reqDTO.setEndLoaToken(getManagedBean().getEndLoaToken());
 			reqDTO.setEndLoaRN(getManagedBean().getEndLoaRN());
 			reqDTO.setUserLocale(facesScopes.getUserLocale());
+			
+			//pid requote
+			if(quote.getPurchaseInDefault()!=null){
+				reqDTO.setPidNo(quote.getPurchaseInDefault().getPurchaseInDefaultNo());
+				reqDTO.setPidExpiryPeriod(quote.getPurchaseInDefault().getPidValidDays());
+				reqDTO.setPurchaseInDefaultId(quote.getPurchaseInDefault().getPurchaseInDefaultId());
+			}
 			
 			QuoteResDTO quoteResDTO = null;
 			if (outcome.isEmpty()) {
