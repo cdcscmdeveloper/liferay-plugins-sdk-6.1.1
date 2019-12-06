@@ -7,6 +7,7 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
+<ui:param name="isClone" value="#{specificationBackingBean.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING}" />
 	<h:panelGroup>
 		<ac:gpkiPopup
 			textBeforeSign="#{specificationBackingBean.textBeforeSign}"
@@ -22,6 +23,10 @@
 					partialSubmit="true"
 					process="@this"
 					update="@this" />
+				<p:commandButton value="#{lbl['lbl.sc.clone.specification']}" style="float:right;" id="cloneButton"
+											process="@this" partialSubmit="true" update="pnlid2" rendered="#{isClone and !specificationBackingBean.managedBean.readOnly}"
+											action="#{qtSpecCloneBackingBean.cloneCommitteePopupAction}"
+											title="#{lbl['lbl.sc.qt.create.btn.clone.tooltip']}" />
 			<ui:fragment rendered="#{specificationBackingBean.managedBean.specMaintenanceScreen ne specificationBackingBean.getSpecMaintenance()}">
 				<ui:repeat var="bpmAction"
 						value="#{specificationBackingBean.managedBean.outComes}">
@@ -45,6 +50,8 @@
 								target="#{specificationBackingBean.managedBean.buttonOutCome}"
 								value="save" />
 						</p:commandButton>
+						
+						
 					</ui:fragment>
 					</ui:fragment>
 					<ui:fragment rendered="#{specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()}">
@@ -55,6 +62,7 @@
 							oncomplete="blockWidget.hide();" rendered="#{(!specificationBackingBean.managedBean.readOnly and workflowStatus ==null) or (!specificationBackingBean.managedBean.readOnly and workflowStatus !=null and (workflowStatus.pmStatus.statusId == QTStatusConst.SE_PENDING_SUBMISSION or workflowStatus.pmStatus.statusId == QTStatusConst.SE_COMPLETED))}"
 							action="#{specificationBackingBean.submitSpecMaintenanceDtls('Submit')}">
 							</p:commandButton>
+					
 							
 							<ui:repeat var="bpmAction"
 						value="#{specificationBackingBean.managedBean.outComes}">
@@ -70,12 +78,9 @@
 						</ui:fragment>
 						</ui:repeat>
 					</ui:fragment>
-					<p:commandButton value="#{lbl['lbl.sc.clone.specification']}" style="float:right;" id="cloneButton"
-											process="@this" partialSubmit="true" update="pnlid2" 
-											action="#{qtSpecCloneBackingBean.cloneCommitteePopupAction}"
-											title="#{lbl['lbl.sc.qt.committee.btn.clone.tooltip']}" />
 					
 					</td>
+					
 			</tr>
 		</table>
 
