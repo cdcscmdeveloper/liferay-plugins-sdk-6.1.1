@@ -4030,28 +4030,26 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return  bond amount in text format.
 	 */
 	public String getBondAmountInText() {
-		//#24333 - Start
 		Locale locale = null;
 		String lang = new FacesScopes().getUserLocale().getLanguage();
-		if (getManagedBean().getCtContractAmount().getTotalBondAmt() == null
-				|| getManagedBean().getCtContractAmount().getTotalBondAmt().doubleValue() == 0) {
+		if (getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt() == null
+				|| getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt().doubleValue() == 0) {
 			return "";
 		}
 
 		if (lang.equalsIgnoreCase(ReportConst.ENG_LANGUAGE_CODE)) {
 			locale = new Locale(lang, ReportConst.ENG_COUNTRY_CODE);
-			DecimalFormat df = new DecimalFormat("#.00");	
+			DecimalFormat df = new DecimalFormat("#.00");		
 			return NumberWordUtilEn.convert(df.format(
-					getManagedBean().getCtContractAmount().getTotalBondAmt()));
+					getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt()));
 		} else if (lang.equalsIgnoreCase(ReportConst.MALAY_LANGUAGE_CODE)) {
 			locale = new Locale(lang, ReportConst.MALAYSIA_COUNTRY_CODE);
 			DecimalFormat df = new DecimalFormat("#.00");
 			return NumberWordUtil.convert(df.format(
-					getManagedBean().getCtContractAmount().getTotalBondAmt()));
+					getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt()));
 		}else{
 			return "";
 		}
-		//#24333 - End
 	}
 	
 	/**
