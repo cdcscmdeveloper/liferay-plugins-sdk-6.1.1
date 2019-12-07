@@ -440,6 +440,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			SmSupplierOwner smSupplierOwner = new SmSupplierOwner();
 			smSupplierOwner.setOwnerName("");
 			PmCountry indNationality = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+			smSupplierOwner.setTempCountryId(indNationality.getCountryId());
+			smSupplierOwner.setNationalityNull(true);
 			smSupplierOwner.setNationality(indNationality);					
 			smSupplierOwner.setIdentificationNo(smSupplierOwner.getIdentificationNo());
 			smSupplierOwner.setIdentificationType(identificationType);
@@ -2083,7 +2085,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						FacesScopes facesScope = new FacesScopes();
 						PmUser userSession = facesScope.getUserSessionBean();
 						if(userSession != null){
-							SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
+							SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelAll(),"identificationNo");
 							if(personnelSSM == null) {								
 								RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
 								fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlineAccount/accountMaintenanceTermAndCond.xhtml");
@@ -3855,7 +3857,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			//- Role in company to display “Equity Owner” and the checkbox auto-ticked and non-editable.
 			this.getManagedBean().setShowDirector(false);
 			this.getManagedBean().setShowOwner(true);
-			//this.getManagedBean().setDisableRole(true);
+			this.getManagedBean().setDisableRole(true);
 			this.getManagedBean().setOwnerIsEquity(true);
 		} else {
 			// show “Director” and the checkbox auto-ticked and non-editable.
