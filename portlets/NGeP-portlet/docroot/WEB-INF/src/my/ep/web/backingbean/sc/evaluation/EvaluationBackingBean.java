@@ -524,6 +524,9 @@ public class EvaluationBackingBean extends
 		if (StringUtils.equals(recommendBy, QTConstants.TECHNICAL_EVALUATION)) {
 			return SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL;
 		} else if (StringUtils.equals(recommendBy,
+				QTConstants.TECHNICAL_EVALUATION_BY_ITEM)) {
+			return SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM;
+		}else if (StringUtils.equals(recommendBy,
 				QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE)) {
 			return SourcingConstants.SCORE_SETTING_TYPE_FINANCIAL_BY_PACKAGE;
 		} else if (StringUtils.equals(recommendBy,
@@ -559,7 +562,9 @@ public class EvaluationBackingBean extends
 					.getManagedBean().getSummaryViewBy())
 					|| QTConstants.FINANCIAL_EVALUATION_BY_ITEM
 							.equalsIgnoreCase(this.getManagedBean()
-									.getFinancialSummaryView())) {
+									.getFinancialSummaryView()) || QTConstants.TECHNICAL_EVALUATION_BY_ITEM
+									.equalsIgnoreCase(this.getManagedBean()
+											.getTechnicalSummaryView())) {
 				summaryReqDTO.setZonal(false);
 				String award = SourcingConstants.AWARD_BY_ITEM;
 				summaryReqDTO.setAwardBy(award);
@@ -920,6 +925,16 @@ public class EvaluationBackingBean extends
 			 * 
 			 * }
 			 */
+			
+			String title =this.getManagedBean().getScQtChecklist().getTitle();
+			if(title.equals("Kunci Kira-Kira Tahunan (Nota - Untuk syarikat ROC, ini mestilah salinan yang telah diaudit)") ||
+					title.equals("Pengesahan dari Institusi Kewangan ke atas jumlah yang telah dibayar"))
+			{
+				this.getManagedBean().setFP_Compliance(true);
+			}else{
+				this.getManagedBean().setFP_Compliance(false);
+			}
+				
 			this.getManagedBean().setComplianceTechnicalProposalCheckListDM(
 					new ComplianceSupplierPagingDataModel(
 							"complianceTechnicalSupplier", reqDTO
@@ -8020,7 +8035,7 @@ private void retriveCommitteeRemarksList(){
 				.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
 			this.getManagedBean().setLocalOutCome(outCome);
 
-			//25638 - Start
+			//25638 Revise at SC,EC,OC,TEC,FEC,FC - Start
 			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outCome)) {
 				validateRemarks();
 				RequestContext.getCurrentInstance().execute("reviseApprovalDlgs.show()");
@@ -8059,59 +8074,89 @@ private void retriveCommitteeRemarksList(){
 
 	}
 	
-	//25638 - Start
+	//25638 Revise at SC,EC,OC,TEC,FEC,FC - Start
 	private void validateRemarks() {
 		String committeeType = (this.getManagedBean().getCommitteeType() == null) ? "" : this.getManagedBean()
 				.getCommitteeType().toUpperCase();
 		switch (committeeType) {
-		case ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE:
-			List<ScQtOpeningCommitteeRemark> OCRemarks = this.getManagedBean().getEvaluationOpeningCommitteeRemark();
-			if (null != OCRemarks) {
-				for (int i = 0; i < OCRemarks.size(); i++) {
-					String userRemark = OCRemarks.get(i).getRemark();
-					if (null == userRemark || "".equals(userRemark)) {
-						throw new EpException(MessageConst.ERROR_760154);
+			case ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE:
+				List<ScQtOpeningCommitteeRemark> OCRemarks = this.getManagedBean().getEvaluationOpeningCommitteeRemark();
+				
+				if (null != OCRemarks) {
+					for (int i = 0; i < OCRemarks.size(); i++) {
+						String userRemark = OCRemarks.get(i).getRemark();
+						
+						if (null == userRemark || "".equals(userRemark)) {
+							throw new EpException(MessageConst.ERROR_100022,
+									new String[] { ResourceBundleUtils.getMessage(
+												    "lbl.sc.remarks",
+												    ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+												    new FacesScopes().getUserLocale()) });
+						}
 					}
 				}
-			}
-			break;
-		case ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE:
-			List<ScQtEvaluationCommitteeRemark> ECRemarks = this.getManagedBean().getEvaluationCommitteeRemark();
-			if (null != ECRemarks) {
-				for (int i = 0; i < ECRemarks.size(); i++) {
-					String userRemark = ECRemarks.get(i).getRemark();
-					if (null == userRemark || "".equals(userRemark)) {
-						throw new EpException(MessageConst.ERROR_760154);
+				
+				break;
+				
+			case ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE:
+				List<ScQtEvaluationCommitteeRemark> ECRemarks = this.getManagedBean().getEvaluationCommitteeRemark();
+				
+				if (null != ECRemarks) {
+					for (int i = 0; i < ECRemarks.size(); i++) {
+						String userRemark = ECRemarks.get(i).getRemark();
+						
+						if (null == userRemark || "".equals(userRemark)) {
+							throw new EpException(MessageConst.ERROR_100022,
+									new String[] { ResourceBundleUtils.getMessage(
+												    "lbl.sc.remarks",
+												    ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+												    new FacesScopes().getUserLocale()) });
+						}
 					}
 				}
-			}
-			break;
-		case ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE:
-			List<ScQtTechnicalCommitteeRemark> TECRemarks = this.getManagedBean()
-					.getEvaluationTechnicalCommitteeRemark();
-			if (null != TECRemarks) {
-				for (int i = 0; i < TECRemarks.size(); i++) {
-					String userRemark = TECRemarks.get(i).getRemark();
-					if (null == userRemark || "".equals(userRemark)) {
-						throw new EpException(MessageConst.ERROR_760154);
+				
+				break;
+				
+			case ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE:
+				List<ScQtTechnicalCommitteeRemark> TECRemarks = this.getManagedBean().getEvaluationTechnicalCommitteeRemark();
+				
+				if (null != TECRemarks) {
+					for (int i = 0; i < TECRemarks.size(); i++) {
+						String userRemark = TECRemarks.get(i).getRemark();
+						
+						if (null == userRemark || "".equals(userRemark)) {
+							throw new EpException(MessageConst.ERROR_100022,
+									new String[] { ResourceBundleUtils.getMessage(
+												    "lbl.sc.remarks",
+												    ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+												    new FacesScopes().getUserLocale()) });
+						}
 					}
 				}
-			}
-			break;
-		case ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE:
-			List<ScQtFinancialCommitteeRemark> FECRemarks = this.getManagedBean()
-					.getEvaluationFinancialCommitteeRemark();
-			if (null != FECRemarks) {
-				for (int i = 0; i < FECRemarks.size(); i++) {
-					String userRemark = FECRemarks.get(i).getRemark();
-					if (null == userRemark || "".equals(userRemark)) {
-						throw new EpException(MessageConst.ERROR_760154);
+				
+				break;
+				
+			case ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE:
+				List<ScQtFinancialCommitteeRemark> FECRemarks = this.getManagedBean().getEvaluationFinancialCommitteeRemark();
+				
+				if (null != FECRemarks) {
+					for (int i = 0; i < FECRemarks.size(); i++) {						
+						String userRemark = FECRemarks.get(i).getRemark();
+						
+						if (null == userRemark || "".equals(userRemark)) {
+							throw new EpException(MessageConst.ERROR_100022,
+									new String[] { ResourceBundleUtils.getMessage(
+												    "lbl.sc.remarks",
+												    ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+												    new FacesScopes().getUserLocale()) });
+						}
 					}
 				}
-			}
-			break;
-		default:
-			break;
+				
+				break;
+				
+			default:
+				break;
 		}
 	}
 	//25638 - End
@@ -11990,4 +12035,54 @@ private void retriveCommitteeRemarksList(){
 		}
 		
 	}
+	
+	
+	/**
+	* Gets the local goods radio values.
+	* 
+	* @param itemType
+	* the item type
+	* @return the Status values
+	*/
+	public SelectItem[] statusDropdownCodeValues(String itemType) {
+	List<Integer> types = new ArrayList<Integer>();
+	if(!this.getManagedBean().isFP_Compliance())
+	{
+		types.add(ParameterConst.COMPLIANCE_STATUS_NONCOMPLIANCE);
+		types.add(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
+	}else{
+		types.add(ParameterConst.COMPLIANCE_STATUS_NONCOMPLIANCE);
+		types.add(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
+		types.add(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
+	}
+	SelectItem[] items = null;
+	try {
+		
+		items = new SelectItem[types.size() + 1];
+		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+				"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
+		int i = 1;
+		for (Integer location : types) {
+			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(itemType);
+
+			for (PmParameterDesc paramDesc : localParamDesc) {
+				log.info("ParamerterDesc Code "+paramDesc.getPmParameter().getParameterCode());
+				if (paramDesc.getPmParameter().getParameterCode()
+						.equals(String.valueOf(location.intValue()))) {   
+
+					items[i++] = new SelectItem(paramDesc.getPmParameter()
+							.getParameterCode(), paramDesc.getCodeName());
+				}
+			}
+			
+		}
+	} finally {
+
+	}
+	return items;
+	}
+
+	
+	
 }
