@@ -524,9 +524,6 @@ public class EvaluationBackingBean extends
 		if (StringUtils.equals(recommendBy, QTConstants.TECHNICAL_EVALUATION)) {
 			return SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL;
 		} else if (StringUtils.equals(recommendBy,
-				QTConstants.TECHNICAL_EVALUATION_BY_ITEM)) {
-			return SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM;
-		}else if (StringUtils.equals(recommendBy,
 				QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE)) {
 			return SourcingConstants.SCORE_SETTING_TYPE_FINANCIAL_BY_PACKAGE;
 		} else if (StringUtils.equals(recommendBy,
@@ -562,9 +559,7 @@ public class EvaluationBackingBean extends
 					.getManagedBean().getSummaryViewBy())
 					|| QTConstants.FINANCIAL_EVALUATION_BY_ITEM
 							.equalsIgnoreCase(this.getManagedBean()
-									.getFinancialSummaryView()) || QTConstants.TECHNICAL_EVALUATION_BY_ITEM
-									.equalsIgnoreCase(this.getManagedBean()
-											.getTechnicalSummaryView())) {
+									.getFinancialSummaryView())) {
 				summaryReqDTO.setZonal(false);
 				String award = SourcingConstants.AWARD_BY_ITEM;
 				summaryReqDTO.setAwardBy(award);
@@ -925,16 +920,6 @@ public class EvaluationBackingBean extends
 			 * 
 			 * }
 			 */
-			
-			String title =this.getManagedBean().getScQtChecklist().getTitle();
-			if(title.equals("Kunci Kira-Kira Tahunan (Nota - Untuk syarikat ROC, ini mestilah salinan yang telah diaudit)") ||
-					title.equals("Pengesahan dari Institusi Kewangan ke atas jumlah yang telah dibayar"))
-			{
-				this.getManagedBean().setFP_Compliance(true);
-			}else{
-				this.getManagedBean().setFP_Compliance(false);
-			}
-				
 			this.getManagedBean().setComplianceTechnicalProposalCheckListDM(
 					new ComplianceSupplierPagingDataModel(
 							"complianceTechnicalSupplier", reqDTO
