@@ -646,6 +646,7 @@ public class EvaluationBackingBean extends
 		//
 		// }
 
+		// 21695 - add new logic at line 653 - 655
 		if (StringUtils.equals(recommendBy, QTConstants.TECHNICAL_EVALUATION)) {
 			return SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL;
 		} else if (StringUtils.equals(recommendBy,
