@@ -1943,7 +1943,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
 				}
 			} else{
-				throw new EpException(MessageConst.ERROR_721070);
+				SmCommonUtil.ssmError(ssmResDTO);
 			}
 		}
 		viewOnlineAccount();
