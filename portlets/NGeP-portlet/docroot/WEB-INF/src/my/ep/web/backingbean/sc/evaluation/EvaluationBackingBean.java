@@ -682,7 +682,7 @@ public class EvaluationBackingBean extends
 		try {
 			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-
+			// 21695 - add if condition QTConstants.TECHNICAL_EVALUATION_BY_ITEM
 			if (QTConstants.RECOMMENDATION_BY_ITEM.equalsIgnoreCase(this
 					.getManagedBean().getSummaryViewBy())
 					|| QTConstants.FINANCIAL_EVALUATION_BY_ITEM
