@@ -4262,27 +4262,8 @@ public class SmCommonUtil {
 				
 				return resDTO;
 			}
-			if (!resDTO.getStatusCode().equalsIgnoreCase("") && !"70060".equalsIgnoreCase(resDTO.getStatusCode())){
-				
-				switch (resDTO.getStatusCode()) {
-				case "70001":
-					throw new EpException(MessageConst.ERROR_SSM_70001);
-				case "70002":
-					throw new EpException(MessageConst.ERROR_SSM_70002);
-				case "70003":
-					throw new EpException(MessageConst.ERROR_SSM_70003);
-				case "70004":
-					//throw new EpException(MessageConst.ERROR_SSM_70004);
-					throw new EpException(MessageConst.ERROR_721071);
-				case "70005":
-					//throw new EpException(MessageConst.ERROR_SSM_70005);
-					throw new EpException(MessageConst.ERROR_721071);
-				case "70006":
-//					throw new EpException(MessageConst.ERROR_SSM_70006);
-					throw new EpException(MessageConst.ERROR_721071);
-				case "70061":
-					throw new EpException(MessageConst.ERROR_SSM_70001);
-				}
+			if (!resDTO.getStatusCode().equalsIgnoreCase("") && !"70060".equalsIgnoreCase(resDTO.getStatusCode())){				
+				ssmError(resDTO);
 			}
 
 			return resDTO;
@@ -5790,6 +5771,28 @@ public class SmCommonUtil {
 		this.showSSMError = showSSMError;
 		verifyOwnerWithMyIdentity(name, identificationNo,
 				postCode, type, supplierType);
+	}
+	//SSM Integration
+	public static void ssmError(SsmResDTO resDTO){
+		switch (resDTO.getStatusCode()) {
+		case "70001":
+			throw new EpException(MessageConst.ERROR_SSM_70001);
+		case "70002":
+			throw new EpException(MessageConst.ERROR_SSM_70002);
+		case "70003":
+			throw new EpException(MessageConst.ERROR_SSM_70003);
+		case "70004":
+			//throw new EpException(MessageConst.ERROR_SSM_70004);
+			throw new EpException(MessageConst.ERROR_721071);
+		case "70005":
+			//throw new EpException(MessageConst.ERROR_SSM_70005);
+			throw new EpException(MessageConst.ERROR_721071);
+		case "70006":
+//			throw new EpException(MessageConst.ERROR_SSM_70006);
+			throw new EpException(MessageConst.ERROR_721071);
+		case "70061":
+			throw new EpException(MessageConst.ERROR_721071);
+		}
 	}
 		
 }
