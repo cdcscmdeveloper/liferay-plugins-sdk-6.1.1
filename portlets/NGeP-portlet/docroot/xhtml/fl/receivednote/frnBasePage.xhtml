@@ -21,7 +21,8 @@
 		<h:panelGroup layout="block" class="ui-messages ui-widget" rendered="#{(receivedNoteBackingBean.managedBean.fulfilmentNote.status.statusId.longValue() == FulfilmentStatusCont.fnPendingApproval.longValue() 
 		or receivedNoteBackingBean.managedBean.fulfilmentNote.status.statusId.longValue() == FulfilmentStatusCont.fnPendingRevision.longValue() 
 		or receivedNoteBackingBean.managedBean.fulfilmentNote.status.statusId.longValue() == FulfilmentStatusCont.fnPendingRevApproval.longValue() 
-		or receivedNoteBackingBean.managedBean.fulfilmentNote.status.statusId.longValue() == FulfilmentStatusCont.fnPendingCancelSubmission.longValue()) 
+		or receivedNoteBackingBean.managedBean.fulfilmentNote.status.statusId.longValue() == FulfilmentStatusCont.fnPendingCancelSubmission.longValue()
+		or receivedNoteBackingBean.managedBean.fulfilmentNote.status.statusId.longValue() == FulfilmentStatusCont.fnPendingDoAcknowledgment.longValue()) 
 		and not empty receivedNoteBackingBean.managedBean.disciplinaryActionMessage}">
 		<h:panelGroup layout="block" class="ui-messages-info ui-corner-all">
 		<h:outputText class="ui-messages-info-icon" /><ul><li>
