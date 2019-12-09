@@ -137,9 +137,9 @@ public class ViewApplHistoryManagedBean extends
 				
 				reqDTO.setAccountType(getAccountType());
 			} else {
-				if(SupplierManagementConst.SUPP_TYPE_BASIC.equalsIgnoreCase(getSearchSupplier().getSmAppl().getSupplierType())) {
+				if(getSearchSupplier().getSmAppl() != null && SupplierManagementConst.SUPP_TYPE_BASIC.equalsIgnoreCase(getSearchSupplier().getSmAppl().getSupplierType())) {
 					reqDTO.setAccountType(SupplierManagementConst.SUPP_TYPE_BASIC);
-				} else if(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT.equalsIgnoreCase(getSearchSupplier().getSmAppl().getSupplierType())) {
+				} else if(getSearchSupplier().getSmAppl() != null && SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT.equalsIgnoreCase(getSearchSupplier().getSmAppl().getSupplierType())) {
 					reqDTO.setAccountType(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT);
 					
 				} else {
@@ -193,7 +193,8 @@ public class ViewApplHistoryManagedBean extends
 										obj[8] = getMofNo(Long.parseLong(obj[11].toString()),Long.parseLong(obj[10].toString()),
 												obj[8]==null?StringUtils.EMPTY: obj[8].toString());
 									}else if((obj[0].toString().contains("KN") || obj[0].toString().contains("JN"))){
-											obj[8] = "";
+											obj[8] = getMofNo(Long.parseLong(obj[11].toString()),Long.parseLong(obj[10].toString()),
+													obj[8]==null?StringUtils.EMPTY: obj[8].toString());
 									}
 									//3. For other rejected application that not include in scenario No. 2, the MOF No will display the previous application MOF No (registered application before the application has been rejected).
 									else if("R".equalsIgnoreCase(obj[1].toString())){
