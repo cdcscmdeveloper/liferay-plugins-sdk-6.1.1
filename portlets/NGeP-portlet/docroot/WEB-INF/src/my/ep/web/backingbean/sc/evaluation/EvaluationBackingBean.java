@@ -1091,16 +1091,16 @@ public class EvaluationBackingBean extends
 			 * 
 			 * }
 			 */
-			
+			// 26339  -venkat start
 			String title =this.getManagedBean().getScQtChecklist().getTitle();
-			if(title.equals("Kunci Kira-Kira Tahunan (Nota - Untuk syarikat ROC, ini mestilah salinan yang telah diaudit)") ||
-					title.equals("Pengesahan dari Institusi Kewangan ke atas jumlah yang telah dibayar"))
+			if(title.equals(ParameterConst.CREDIT_FACILITIES_TITLE) ||
+					title.equals(ParameterConst.ASSET_FACILITIES_TITLE))
 			{
 				this.getManagedBean().setFP_Compliance(true);
 			}else{
 				this.getManagedBean().setFP_Compliance(false);
 			}
-				
+			// 26339  -venkat End	
 			this.getManagedBean().setComplianceTechnicalProposalCheckListDM(
 					new ComplianceSupplierPagingDataModel(
 							"complianceTechnicalSupplier", reqDTO
