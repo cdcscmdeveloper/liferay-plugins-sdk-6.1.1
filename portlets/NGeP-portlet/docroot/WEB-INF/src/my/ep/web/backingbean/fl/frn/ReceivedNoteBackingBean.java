@@ -486,7 +486,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			if(getManagedBean().getFulfilmentNote().getStatus().getStatusId().longValue() == FulfilmentStatusConst.FN_PENDING_APPROVAL 
 					|| getManagedBean().getFulfilmentNote().getStatus().getStatusId().longValue() == FulfilmentStatusConst.FN_PENDING_REVISION 
 					|| getManagedBean().getFulfilmentNote().getStatus().getStatusId().longValue() == FulfilmentStatusConst.FN_PENDING_REV_APPROVAL 
-					|| getManagedBean().getFulfilmentNote().getStatus().getStatusId().longValue() == FulfilmentStatusConst.FN_PENDING_CANCEL_SUBMISSION) {
+					|| getManagedBean().getFulfilmentNote().getStatus().getStatusId().longValue() == FulfilmentStatusConst.FN_PENDING_CANCEL_SUBMISSION
+					|| getManagedBean().getFulfilmentNote().getStatus().getStatusId().longValue() == FulfilmentStatusConst.FN_PENDING_DO_ACKNOWLEDGMENT) {
 				SmSupplier smSupplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
 				SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
 				if(smDisciplinaryAction != null) {
