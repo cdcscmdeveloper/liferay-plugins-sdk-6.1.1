@@ -3053,6 +3053,16 @@ public class TaskReassignmentBackingBean extends
 		getManagedBean().setBackURL(fc.getViewRoot().getViewId());		
 		resetTaskAssignSearchBean();
 		retrieveOrgTypeMap();
+		//[#25018] - start		
+		this.getManagedBean().setShowParentMsg(true);
+		this.getManagedBean().setShowChildMsg(false);
+		setIsAdminUser();
+		retrieveStatusIdsForInvalidBulkTask();
+		if (this.getManagedBean().getSelectedTasksToBulkReassign() != null && 
+				this.getManagedBean().getSelectedTasksToBulkReassign().size() > 0) {
+			this.getManagedBean().getSelectedTasksToBulkReassign().clear();
+		}
+		//[#25018] - end
 		
 		this.getManagedBean().getTaskAssignmentSearchBean()
 			.setOrgProfile(orgProfile);
