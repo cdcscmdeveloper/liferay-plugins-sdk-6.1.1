@@ -917,6 +917,36 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			doBB.getManagedBean().setHyperLinkPage(true);
 			doBB.getManagedBean().setPrevHideRemarks(flBB.getManagedBean().isHideRemarks());
 			doBB.getManagedBean().setSupplierUserName(PmCommonUtil.retriveUserName(resDTO.getFlDeliveryOrder().getCreatedBy()));
+			//26279 - start
+			if(doBB.getManagedBean().getFulfilmentOrder().getStatus().getStatusId().longValue() == FulfilmentStatusConst.DO_PENDING_ACKNOWLEDGEMENT 
+					|| doBB.getManagedBean().getFulfilmentOrder().getStatus().getStatusId().longValue() == FulfilmentStatusConst.DO_PENDING_CANCELLATION_APPROVAL 
+					|| doBB.getManagedBean().getFulfilmentOrder().getStatus().getStatusId().longValue() == FulfilmentStatusConst.DO_PENDING_MODIFICATION_APRROVAL) {
+				SmSupplier smSupplier = doBB.getManagedBean().getFulfilmentRequest().getSmSupplier();
+				SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
+				if(smDisciplinaryAction != null) {
+					doBB.getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
+					boolean isWarningOnly = false;
+					String warningOrDisciplinaryActionMsg = null;
+					String language =  new FacesScopes().getUserLocale().getLanguage();
+					if(smDisciplinaryAction.isWarning() && !smDisciplinaryAction.isCancelCategory() 
+							&& !smDisciplinaryAction.isSuspendRegistration() && !smDisciplinaryAction.isCancelRegistration() 
+							&& !smDisciplinaryAction.isBlacklistOwner() && !smDisciplinaryAction.isBumiputeraCancel() 
+							&& !smDisciplinaryAction.isManufacturerCancel()) {
+						isWarningOnly = true;
+						warningOrDisciplinaryActionMsg = getWarningOrDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(), language, isWarningOnly) ;
+						doBB.getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
+					} else if(smDisciplinaryAction.isCancelCategory() 
+							|| smDisciplinaryAction.isSuspendRegistration() || smDisciplinaryAction.isCancelRegistration() 
+							|| smDisciplinaryAction.isBlacklistOwner() || smDisciplinaryAction.isBumiputeraCancel() 
+							|| smDisciplinaryAction.isManufacturerCancel()){
+						warningOrDisciplinaryActionMsg = getWarningOrDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(), language, isWarningOnly) ;
+						doBB.getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
+					}
+				} else {
+					doBB.getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
+				}
+			}
+			//26279 - end
 			flBB.getManagedBean().setHideRemarks(true);
 			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
 			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());

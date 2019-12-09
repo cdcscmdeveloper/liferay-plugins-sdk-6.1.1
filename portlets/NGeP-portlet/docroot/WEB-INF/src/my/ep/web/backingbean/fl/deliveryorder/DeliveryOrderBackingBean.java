@@ -721,6 +721,36 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 				flBB.getManagedBean().setHideRemarks(false);
 				flBB.initializeRemarkAndAttachement(resDTO.getFlDeliveryOrder().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
+				//26279 - start
+				if(getManagedBean().getFulfilmentOrder().getStatus().getStatusId().longValue() == FulfilmentStatusConst.DO_PENDING_ACKNOWLEDGEMENT 
+						|| getManagedBean().getFulfilmentOrder().getStatus().getStatusId().longValue() == FulfilmentStatusConst.DO_PENDING_CANCELLATION_APPROVAL 
+						|| getManagedBean().getFulfilmentOrder().getStatus().getStatusId().longValue() == FulfilmentStatusConst.DO_PENDING_MODIFICATION_APRROVAL) {
+					SmSupplier smSupplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
+					SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
+					if(smDisciplinaryAction != null) {
+						getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
+						boolean isWarningOnly = false;
+						String warningOrDisciplinaryActionMsg = null;
+						String language =  new FacesScopes().getUserLocale().getLanguage();
+						if(smDisciplinaryAction.isWarning() && !smDisciplinaryAction.isCancelCategory() 
+								&& !smDisciplinaryAction.isSuspendRegistration() && !smDisciplinaryAction.isCancelRegistration() 
+								&& !smDisciplinaryAction.isBlacklistOwner() && !smDisciplinaryAction.isBumiputeraCancel() 
+								&& !smDisciplinaryAction.isManufacturerCancel()) {
+							isWarningOnly = true;
+							warningOrDisciplinaryActionMsg = getWarningOrDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(), language, isWarningOnly) ;
+							getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
+						} else if(smDisciplinaryAction.isCancelCategory() 
+								|| smDisciplinaryAction.isSuspendRegistration() || smDisciplinaryAction.isCancelRegistration() 
+								|| smDisciplinaryAction.isBlacklistOwner() || smDisciplinaryAction.isBumiputeraCancel() 
+								|| smDisciplinaryAction.isManufacturerCancel()){
+							warningOrDisciplinaryActionMsg = getWarningOrDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(), language, isWarningOnly) ;
+							getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
+						}
+					} else {
+						getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
+					}
+				}
+				//26279 - end
 		}else{
 			getManagedBean().setOrderDisabledForSdCheck(false);
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
@@ -747,36 +777,6 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				MessageUtils.getMessage(MessageConst.INFO_745009, new String[]{getManagedBean().getFulfilmentOrder().getDocNo()}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 			getManagedBean().setGstAmtChanged(false);
 		}
-		//26279 - start
-		if(getManagedBean().getFulfilmentOrder().getStatus().getStatusId().longValue() == FulfilmentStatusConst.DO_PENDING_ACKNOWLEDGEMENT 
-				|| getManagedBean().getFulfilmentOrder().getStatus().getStatusId().longValue() == FulfilmentStatusConst.DO_PENDING_CANCELLATION_APPROVAL 
-				|| getManagedBean().getFulfilmentOrder().getStatus().getStatusId().longValue() == FulfilmentStatusConst.DO_PENDING_MODIFICATION_APRROVAL) {
-			SmSupplier smSupplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
-			SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
-			if(smDisciplinaryAction != null) {
-				getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
-				boolean isWarningOnly = false;
-				String warningOrDisciplinaryActionMsg = null;
-				String language =  new FacesScopes().getUserLocale().getLanguage();
-				if(smDisciplinaryAction.isWarning() && !smDisciplinaryAction.isCancelCategory() 
-						&& !smDisciplinaryAction.isSuspendRegistration() && !smDisciplinaryAction.isCancelRegistration() 
-						&& !smDisciplinaryAction.isBlacklistOwner() && !smDisciplinaryAction.isBumiputeraCancel() 
-						&& !smDisciplinaryAction.isManufacturerCancel()) {
-					isWarningOnly = true;
-					warningOrDisciplinaryActionMsg = getWarningOrDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(), language, isWarningOnly) ;
-					getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
-				} else if(smDisciplinaryAction.isCancelCategory() 
-						|| smDisciplinaryAction.isSuspendRegistration() || smDisciplinaryAction.isCancelRegistration() 
-						|| smDisciplinaryAction.isBlacklistOwner() || smDisciplinaryAction.isBumiputeraCancel() 
-						|| smDisciplinaryAction.isManufacturerCancel()){
-					warningOrDisciplinaryActionMsg = getWarningOrDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(), language, isWarningOnly) ;
-					getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
-				}
-			} else {
-				getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
-			}
-		}
-		//26279 - end
 	}
 
 	/**
