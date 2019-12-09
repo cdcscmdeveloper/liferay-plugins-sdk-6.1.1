@@ -487,7 +487,8 @@ public class SmApplicationUtil {
 							|| doc.getSmApplDocFiles().get(0).getFileName()
 									.equalsIgnoreCase(" ") || doc
 							.getSmApplDocFiles().get(0).getFilePath()
-							.equalsIgnoreCase(" "))) {
+							.equalsIgnoreCase(" ")) //16052019 - SSM INTEGRATION CR - #27003
+							&& !sb.toString().contains(doc.getPmDocument().getDocName())) {
 				sb.append(++i + ".)");
 				sb.append(doc.getPmDocument().getDocName());
 				// sb.append(",  ");
