@@ -233,9 +233,11 @@ public class QtSpecCloneBackingBean extends
 	
 	private boolean isChecklistDefault(ScQtCheckList cl){
 		List<ScQtCheckList> list=this.getManagedBean().getScQtCheckSt2financeProposalList();
-		for(ScQtCheckList def:list){
-			if(def.getTitle().equals(cl.getTitle())){
-				return true;
+		if(list!=null){
+			for(ScQtCheckList def:list){
+				if(def.getTitle().equals(cl.getTitle())){
+					return true;
+				}
 			}
 		}
 		return false;
@@ -282,10 +284,10 @@ public class QtSpecCloneBackingBean extends
 								if (!SourcingConstants.DOC_DEF_KEY_SERVICE_SCOPE
 										.equalsIgnoreCase(checklist.getPmDocument()
 												.getDocDefinitionKey())) {
-									localcheckList.add(copy);
+									defaults.add(copy);
 								}
 							} else {
-								localcheckList.add(copy);
+								defaults.add(copy);
 							}
 						}else{
 							ScQtCheckList copy =getDefault(checklist.getTitle());
@@ -294,7 +296,7 @@ public class QtSpecCloneBackingBean extends
 					}
 				}
 							
-				//this.getManagedBean().setScQtCheckSt2financeProposalList(localcheckList);
+				this.getManagedBean().setScQtCheckSt2financeProposalList(defaults);
 				if (CollectionUtils.isNotEmpty(this.getManagedBean()
 						.getScQtCheckSt2financeProposalList())) {
 					checklistSorting(this.getManagedBean()
@@ -321,38 +323,32 @@ public class QtSpecCloneBackingBean extends
 			reqDTO.setScQt(scqt);
 			reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
 			resDTO = specSo.retrieveCheckLists(reqDTO);
-
-			if (!isAtleastOneSeriveReq(resDTO.getTechnicalCheckList())) {
-				if (null != resDTO.getTechnicalCheckList()) {
-					// Collections.sort(resDTO.getTechnicalCheckList());
-					for (ScQtCheckList checklist : resDTO
-							.getTechnicalCheckList()) {
-						ScQtCheckList copy = copyBean(checklist);
-						copy.setScQt(this.getManagedBean().getQt());
-						if (!ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
-								.equalsIgnoreCase(checklist.getDefinationType().getParameterCode())) {
-						copy=retrieveScoreNValue(checklist,copy);
-						}
-						if (null != copy.getPmDocument()) {
-							if (!SourcingConstants.DOC_DEF_KEY_SERVICE_SCOPE
-									.equalsIgnoreCase(checklist.getPmDocument()
-											.getDocDefinitionKey())) {
-								localcheckList.add(copy);
-							}
-						} else {
-							localcheckList.add(copy);
-						}
-					}
-				}
-			} else {
-
-				for (ScQtCheckList checklist : resDTO.getTechnicalCheckList()) {
+			
+			//if (!isAtleastOneSeriveReq(resDTO.getTechnicalCheckList())) {}
+			
+			if (null != resDTO.getTechnicalCheckList()) {
+				// Collections.sort(resDTO.getTechnicalCheckList());
+				for (ScQtCheckList checklist : resDTO
+						.getTechnicalCheckList()) {
 					ScQtCheckList copy = copyBean(checklist);
 					copy.setScQt(this.getManagedBean().getQt());
-					localcheckList.add(copy);
+					if (!ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
+							.equalsIgnoreCase(checklist.getDefinationType().getParameterCode())) {
+					copy=retrieveScoreNValue(checklist,copy);
+					}
+					if (null != copy.getPmDocument()) {
+						if (!SourcingConstants.DOC_DEF_KEY_SERVICE_SCOPE
+								.equalsIgnoreCase(checklist.getPmDocument()
+										.getDocDefinitionKey())) {
+							localcheckList.add(copy);
+						}
+					} else {
+						localcheckList.add(copy);
+					}
 				}
-
 			}
+				
+			
 			this.getManagedBean().setScQtCheckSt2techProposal(localcheckList);
 			if (CollectionUtils.isNotEmpty(this.getManagedBean()
 					.getScQtCheckSt2techProposal())) {
@@ -929,10 +925,10 @@ public class QtSpecCloneBackingBean extends
 								SearchOperator.OPERATOR_EQUALS.value(), true));
 			}
 			// Filter by - ptj org profileId
-//			qtSearchBean.getDataFilterBeans().add(
-//					new SearchFilterBean("pmOrgProfile.orgProfileId",
-//							SearchOperator.OPERATOR_EQUALS.value(),
-//							getPTJOrgProfileByLoginUser().getOrgProfileId()));
+			qtSearchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmOrgProfile.orgProfileId",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							getPTJOrgProfileByLoginUser().getOrgProfileId()));
 
 			// Filter by - evaluationType
 			String commType = getManagedBean().getCommType();
