@@ -578,7 +578,8 @@ public class QTCloneBackingbean extends
 					ScQtContactPerson copy=populateContact(origin,SourcingConstants.OFFICER_TYPE_QT);
 					persons.add(copy);
 				}
-				this.getManagedBean().getScQtContactPersons().addAll(persons);
+			   this.getManagedBean().setScQtContactPersons(persons);
+				
 			}
 			List<ScQtContactPerson> desks=resDTO.getDeskOfficers().getResultList();
 			if (desks != null || !desks.isEmpty()) {
