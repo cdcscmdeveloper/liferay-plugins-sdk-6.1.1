@@ -4382,13 +4382,18 @@ public class SpecificationBackingBean extends
 				TemplateSpecResDTO templateresDTO =null;
 				templateresDTO = templateSpecSO
 						.getTemplateMaster(specReqDTO);
+				TemplateSpecBean templateSpecBean = getManagedBean()
+						.getTemplateSpecBean();
 				if(null!=templateresDTO){
 					checkList.getScQtDoc().setTplSpecMaster(
 							templateresDTO.getSpecMaster());
+				}else{
+					TemplateSpecBackingBean templateSpecBackingbean = new TemplateSpecBackingBean();
+					templateSpecBackingbean
+							.updateItemWeightageReq(templateSpecBean);
 				}		
 				
-				TemplateSpecBean templateSpecBean = getManagedBean()
-						.getTemplateSpecBean();
+				
 				templateSpecBean.setSpecMaster(checkList.getScQtDoc()
 						.getTplSpecMaster());
 				if (this.getManagedBean().getQt().isZonal()
@@ -4459,7 +4464,10 @@ public class SpecificationBackingBean extends
 						if(null!=checkList.getScQtDoc().getTplSpecMaster().getCtPanelItem()){
 							panelItem=true;
 						}
-						if(null!=templateresDTO.getSpecMaster().getCtPanelItem()){
+						
+						if(null!=templateresDTO 
+								&& null!=templateresDTO.getSpecMaster() 
+								&& null!=templateresDTO.getSpecMaster().getCtPanelItem()){
 							panelItem=true;
 						}
 						if(panelItem){
