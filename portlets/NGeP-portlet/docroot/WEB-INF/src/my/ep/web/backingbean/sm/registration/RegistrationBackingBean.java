@@ -1974,7 +1974,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			//16052019 - SSM INTEGRATION CR - Fahmi
 			//businessTypeTovalidateWithSSM(smSupp.getRegNo(),smSupp.getBusinessType()) &&
 			if(!fromtncProceed){
-				fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlineAccount/accountMaintenanceTermAndCond.xhtml");
+				if(smSupp.getBusinessType().equals("Q")){
+					fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlineAccount/accountMaintenanceG2GTermAndCond.xhtml");
+				}else {
+					fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlineAccount/accountMaintenanceTermAndCond.xhtml");
+				}
 				return;
 			}
 			//for govt seller basic account maintenance
