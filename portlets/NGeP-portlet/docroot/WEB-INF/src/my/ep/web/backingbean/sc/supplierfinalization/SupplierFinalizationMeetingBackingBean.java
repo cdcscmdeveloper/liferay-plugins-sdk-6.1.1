@@ -230,7 +230,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 					for (ScCommitteeMember member : membersList) {
 						if(!ParameterConst.COMMITTEE_ROLE_CHAIRPERSON
 								.equals(member.getMemberRole().getParameterCode())){
-							if(member.isPNP() == true && !ParameterConst.COMMITTEE_ROLE_SECRETARY
+							if(member.getRepresentativeType() == null && !ParameterConst.COMMITTEE_ROLE_SECRETARY
 									.equals(member.getMemberRole().getParameterCode())){
 								ParameterReqDTO roleReqDTO = new ParameterReqDTO();
 								roleReqDTO.setParameterCode(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
