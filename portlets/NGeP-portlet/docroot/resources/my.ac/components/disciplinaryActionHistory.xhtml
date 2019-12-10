@@ -18,9 +18,9 @@
 	<cc:implementation>
 	<p:dialog id="disciplinaryActionHistoryDlgId" header="#{cc.attrs.dialogHeader}" closable="true"
 		widgetVar="disciplinaryActionHistoryDlg" modal="true" width="#{cc.attrs.dialogWidth}" height="#{cc.attrs.dialogHeight}"
-		resizable="true">
+		resizable="true" style="display: block;">
 	
-		<p:dataTable value="#{cc.attrs.voList}" var="disciplinaryAction" 
+		<p:dataTable value="#{cc.attrs.voList}" var="disciplinaryAction" id="disciplinaryActionDtId"
 		 sortBy="#{disciplinaryAction.endDate}" rowIndexVar="index" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" 
 		 style="table-layout: fixed;">
 			
