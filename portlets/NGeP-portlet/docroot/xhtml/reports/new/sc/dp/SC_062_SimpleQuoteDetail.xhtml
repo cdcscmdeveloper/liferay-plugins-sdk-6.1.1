@@ -69,21 +69,6 @@
 		</tr>
 	</table>
 
-	<c:if test="#{ptjEnableDisable}">
-		<p:outputLabel value="#{lbl['lbl.rpt.ptj']}"
-			style="margin-top:5px;width:130px;" />
-		<p:selectOneMenu
-			value="#{sqDetailRptBackingBean.managedBean.scPtj}"
-			style="margin-top:5px;width:300px;">
-			<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
-				itemValue="#{null}"></f:selectItem>
-
-			<f:selectItems
-				value="#{sqDetailRptBackingBean.retrievePTJList()}"></f:selectItems>
-			<p:ajax event="change" partialSubmit="true" update="@this"
-				process="@this" />
-		</p:selectOneMenu>
-	</c:if>
 	<c:if test="#{requisitionerEnableDisable}">
 		<p:outputLabel value="#{lbl['lbl.rpt.requisitioner']}"
 			style="margin-top:5px;width:160px;" />
