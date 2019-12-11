@@ -2164,9 +2164,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 								this.getManagedBean().setSmSuppOwners(new ArrayList());
 							}
 							for(SmSupplierOwner suppOwner : ssmResDTO.getSmSupplierOwners()){
-								if(EntityHelper.getEntityBySinglePropertyFromList(suppOwner.getIdentificationNo(), this.getManagedBean().getSmSuppOwners(), "identificationNo") == null) {
+								SmSupplierOwner suppOwnerOld = (SmSupplierOwner)EntityHelper.getEntityBySinglePropertyFromList(suppOwner.getIdentificationNo(), this.getManagedBean().getSmSuppOwners(), "identificationNo");
+								if(suppOwnerOld == null) {
 									suppOwner.setSmSupplier(this.getManagedBean().getSmSupp());
 									this.getManagedBean().getSmSuppOwners().add(suppOwner);
+								}else{
+									String[] copyOwner = {"tempCountryId","nationalityNull","nationality"};
+									EntityHelper.copyEntityPropertiesOnly(suppOwner,suppOwnerOld,copyOwner);
 								}
 							}
 						}
@@ -2181,6 +2185,16 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					if(!this.getManagedBean().isCompanyValidWithSSM()){
 	//					throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.contractor",null), getManagedBean().getSmSupp().getRegNo()});
 						throw new EpException(MessageConst.ERROR_721070);
+					}
+				}else{
+					//set pmcountry to temp
+					for(SmSupplierOwner suppOwner : this.getManagedBean().getSmSuppOwners()){
+						if(suppOwner.getNationality()!= null){
+							suppOwner.setTempCountryId(suppOwner.getNationality().getCountryId());
+						}else{
+							suppOwner.setNationalityNull(true);
+						}
+						
 					}
 				}
 				//END CHANGES SSM
