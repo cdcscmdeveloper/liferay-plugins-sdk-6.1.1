@@ -1576,6 +1576,7 @@ public class SmApplicationBackingBean extends
 						//CHECK EQUITY OWNER EXIST IN SSM TO DISABLE CHECKBOX
 						int i = 0;
 						for(SmPersonnel personnel : this.getManagedBean().getSmAppl().getSmPersonnels()){
+							validateRole(personnel);
 							SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
 							if(personnelSSM != null){
 								
@@ -1590,9 +1591,7 @@ public class SmApplicationBackingBean extends
 									String[] copyEquityOwner = {"birthDate","shareAmt","designation","nameInSsm","raceSsmNull","birthDateSsmNull","shareAmtSsmNull","designationSsmNull","equityOwner","director","pmCountry"};
 									EntityHelper.copyEntityPropertiesOnly(personnelSSM,personnel,copyEquityOwner);
 								}
-								if(personnel.isEquityOwner()){
-									personnel.setClerical(false);
-								}
+								validateRole(personnel);
 								log.info(personnelSSM.getShareAmt()+" = Personnel Share Amt = "+personnel.getShareAmt());
 								//personnel.setSmPersonnelAddresses(personnelSSM.getSmPersonnelAddresses());
 								//personnel.setSmAppl(this.getManagedBean().getSmAppl());
@@ -1640,6 +1639,7 @@ public class SmApplicationBackingBean extends
 							}
 							for(SmPersonnel personnel : ssmResDTO.getSmPersonnelAll()){
 								SmPersonnel oldPersonnel = (SmPersonnel)EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), this.getManagedBean().getSmAppl().getSmPersonnels(), "identificationNo");
+								validateRole(oldPersonnel);
 								if(oldPersonnel == null){
 									personnel.setBrandNew(true);
 									personnel.setSmAppl(this.getManagedBean().getSmAppl());
@@ -12648,4 +12648,9 @@ public class SmApplicationBackingBean extends
 		}
 	}
 	
+	public void validateRole(SmPersonnel personnel){
+		if(personnel.isEquityOwner() || personnel.isDirector() || personnel.isDirOrHghrMngmt()){
+			personnel.setClerical(false);
+		}
+	}
 }
