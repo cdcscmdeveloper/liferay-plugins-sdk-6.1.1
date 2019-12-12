@@ -814,7 +814,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 		
 		//check if supplier admin is supplier owner set clerical false and equityOwner true
-		smPersonnel.setClerical(true);
+		if(smPersonnel.isEquityOwner() || smPersonnel.isDirector()){
+			smPersonnel.setClerical(false);
+		}		
 		//#16052019 - SSM INTEGRATION CR
 		
 		for(SmSupplierOwner smSupplierOwner:this.getManagedBean().getSmSuppOwners()){
