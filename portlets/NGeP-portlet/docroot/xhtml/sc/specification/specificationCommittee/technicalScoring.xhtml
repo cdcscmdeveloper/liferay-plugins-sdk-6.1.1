@@ -19,8 +19,10 @@
 						rendered="#{!specificationBackingBean.managedBean.readOnly}">
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</ui:fragment></td>
-				<td><p:selectOneRadio required="true"
-						disabled="#{specificationBackingBean.managedBean.readOnly}"
+				<td>
+				<!-- #21695 FARID START DISABLE SCQT PARTIAL-->
+				<p:selectOneRadio required="true"
+						disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.qt.partial}"
 						label="#{lbl['lbl.sc.spec.weightage']}" id="techWeightage"
 						value="#{specificationBackingBean.managedBean.technicalScoreSetting.weightageReq}">
 						<f:selectItems
@@ -227,7 +229,7 @@
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
 							maxIntegerDigits="3" integerOnly="true" />
 						<f:attribute name="min" value="0"></f:attribute>
-						<p:ajax update="technicalScoringItemScore"
+						<p:ajax event="blur" update="technicalScoringItemScore"
 							process="@this,technicalScoringItemPanel" partialSubmit="true"
 							listener="#{specificationBackingBean.calculateTechnicalItemScore(specificationBackingBean.managedBean.technicalItemScoreSetting)}"></p:ajax>
 
