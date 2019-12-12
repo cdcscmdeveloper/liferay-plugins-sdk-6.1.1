@@ -3701,6 +3701,42 @@ public class SpecificationBackingBean extends
 		recommendList = null;
 		return items;
 	}
+	
+/** #21695 FARID START */	
+	/**
+	 * Gets the technical checklist def type values.display Technical Checklist IF PARTIAL
+	 * Type Dropdown values.
+	 * 
+	 * @param type
+	 *            (String type)
+	 * @return SelectItem[].
+	 */
+	public SelectItem[] getTechnicalChecklistDefTypeValuesPartial(String type) {
+
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		List<String> recommendList = new ArrayList<String>();
+		recommendList.add(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
+		recommendList.add(ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION);
+		if (null != this.getManagedBean().getQt()
+				&& ParameterConst.EVALUATION_TYPES_TWO_TIER
+						.equalsIgnoreCase(this.getManagedBean().getQt()
+								.getEvaluationType())) {
+
+			recommendList
+					.remove(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO);
+		}
+
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmParameter.parameterCode",
+						SearchOperator.OPERATOR_IN.value(), recommendList));
+
+		SelectItem[] items = getDropdownValuesBySearchBean(
+				ParameterTypeConst.DOCUMENT_DEFINITION_TYPE, searchBean);
+		searchBean = null;
+		recommendList = null;
+		return items;
+	}
+	/** #21695 FARID END */	
 
 	/**
 	 * Spec title change.Event handle change Title in Template Spec.
@@ -14623,7 +14659,7 @@ public class SpecificationBackingBean extends
 			validateTechnicalPassingScoring(this.getManagedBean()
 					.getTechnicalScoreSetting(), this.getManagedBean()
 					.getTechnicalItemScoreSetting());
-			// #21695 START FARID
+// #21695 START FARID
 			resetTechnicalWeightage(this.getManagedBean()
 					.getTechnicalScoreSetting());
 			validateTechnicalDemoPassingScoring(this.getManagedBean()
@@ -14631,7 +14667,7 @@ public class SpecificationBackingBean extends
 			technicalWeightageCalculate();
 			technicalItemScoreCalculate(this.getManagedBean()
 					.getTechnicalItemScoreSetting());
-			// #21695 START FARID
+// #21695 START FARID
 			validateFinancialPackageItemPassingScoring(this.getManagedBean()
 					.getFinancialScoreSetting(), this.getManagedBean()
 					.getFinacialItemScoreSetting());
