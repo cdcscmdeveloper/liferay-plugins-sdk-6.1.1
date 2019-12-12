@@ -8146,7 +8146,10 @@ public class SmApplicationBackingBean extends
 		// validate equity owner
 		SmApplicationUtil.validateEquityOwnerCount(getManagedBean(), -1,
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
-		SmApplicationUtil.validateCategoriesDecision(getManagedBean());
+		if(!recommendation.equalsIgnoreCase("REJECT")){
+			SmApplicationUtil.validateCategoriesDecision(getManagedBean());
+		}
+		
 		getManagedBean().getPoSecReview().setRecommendation(recommendation);
 		MofRegistrationResDTO resDTO = getCurrentRegStatus();
 		if (resDTO.getStatusId() != null
