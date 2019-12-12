@@ -115,7 +115,7 @@
 
 	</p:panel>
 	
-<c:if test ="#{evaluationBackingBean.managedBean.scQt.zonal ne 'false' and !templateSpecBackingBean.managedBean.scQt.partial}">	
+<c:if test ="#{evaluationBackingBean.managedBean.scQt.zonal ne 'false' and templateSpecBackingBean.managedBean.scQt.partial}">	
 
 	<p:panel id="onerTierTechnicalOrTecSummarySuppliersDisQualifiedIdsEvaluationPackage" toggleable="true">
 		<f:facet name="header">
@@ -155,7 +155,7 @@
 		
 </c:if>
 
-<c:if test="#{evaluationBackingBean.managedBean.technicalSummaryView eq 'TPM' and !templateSpecBackingBean.managedBean.scQt.partial}">
+<c:if test="#{evaluationBackingBean.managedBean.technicalSummaryView eq 'TPM' and templateSpecBackingBean.managedBean.scQt.partial}">
 	<c:if test ="#{evaluationBackingBean.managedBean.scQt.zonal eq 'false'}">
 		<p:panel id="onerTierTechnicalOrTecSummarySuppliersDisQualifiedIdsEvaluationPackage" toggleable="true">
 		<f:facet name="header">
