@@ -64,6 +64,7 @@ public class DigiCertHelper {
 			KMCClient client = getClient();
 			IKMCAPIResponse res = client.requestService(KMCRequestBuilder
 					.generateToken(identificationNo, epNo));
+			log.info("res.getStatusCode()==="+res.getStatusCode());
 			switch (res.getStatusCode()) {
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
 				tok = (String) res.get(GenSecToken.TOKEN);
@@ -76,7 +77,7 @@ public class DigiCertHelper {
 			ex.printStackTrace();
 			throw new EpException(ex.getMessage());
 		}
-
+		log.info("tok==="+tok);
 		return tok;
 	}
 
@@ -127,6 +128,7 @@ public class DigiCertHelper {
 		String url = getDns() + "/kmc/RequestResetPIN.aspx?userID="
 				+ identificationNo + "&email=" + email + "&token="
 				+ encodedtoken;
+		log.info("Reset Pin URL=="+url);
 		externalContext.redirect(url);
 	}
 
