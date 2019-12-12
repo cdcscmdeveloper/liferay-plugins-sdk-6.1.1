@@ -830,7 +830,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		for (ScQtApprovalRequest approvalRequest : approvalRequests) {
 			if (approvalRequest.getDecessionType().getParameterId() == null) {
 				if (enableDateMOF) {
-					mandatoryByMessage("lbl.sc.qt.proposal.decision.mof");
+					mandatoryByMessage("lbl.sc.qt.proposal.extension.mof");
 				} else {
 					mandatoryByMessage("lbl.sc.qt.proposal.decision.chairperson.finalization");
 				}
@@ -838,7 +838,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 			if (enableDateMOF) {
 				if (approvalRequest.getDecisionCertPBM().getParameterId() == null) {
-					mandatoryByMessage("lbl.sc.qt.proposal.extension.mof");
+					mandatoryByMessage("lbl.sc.qt.proposal.decision.mof");
 				}
 			}
 		}
