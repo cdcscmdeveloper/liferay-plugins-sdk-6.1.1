@@ -3080,4 +3080,73 @@ public class TemplateSpecBackingBean extends
 		}
 	}
 	// #25039 End - version zonal
+/** #21695 FARID START */
+	/**
+	 * Item type change.Change Item Type(product/Service) Dropdown in Template
+	 * Spec Popup.
+	 * 
+	 * @param event
+	 *            (Long itemType)
+	 */
+	public void offerTypeChange(boolean offerType,Long parentQuestionId, int rowindex) {
+		List<TplSpecAnswer> returnSpec = new ArrayList<>();
+		TemplateSpecBean templateSpecBean = new TemplateSpecBean();
+		if(this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()!=null && this.getManagedBean().getTemplateSpecBean().getSpecAnswerList().size()>0){
+			for(TplSpecAnswer tplSpecAnswer: this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
+				if(tplSpecAnswer.getTplSpecQuestion().getParentSpecQuestion()!=null){
+					/*
+					 * IF CHILD
+					 */
+					if(tplSpecAnswer.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId().equals(parentQuestionId)){
+						tplSpecAnswer.setOffer(offerType);
+					}
+				}else{
+					if(tplSpecAnswer.getTplSpecQuestion().getSpecQuestionId().equals(parentQuestionId)){
+						/*
+						 * IF PARENT ITSELF
+						 */
+						tplSpecAnswer.setOffer(offerType);
+					}
+				}
+				
+				returnSpec.add(tplSpecAnswer);
+			}
+		}
+		
+		this.getManagedBean().getTemplateSpecBean().setSpecAnswerList(returnSpec);
+
+	}
+			
+/**	#21695 FARID END */		
+
+	/**	#21695 FARID START */
+	/**
+	 * Gets the partially offer details.display in dropdown.
+	 * @param b 
+	 * 
+	 * @return List<SelectItem>
+	 */
+	public List<SelectItem> getOfferDetails() {
+		List<SelectItem> selectItems = new ArrayList<SelectItem>();
+
+		try {
+			selectItems.add(new SelectItem(true, ResourceBundleUtils.getMessage(
+					"lbl.sc.checklist.partial.offer",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale())));
+			selectItems.add(new SelectItem(false, ResourceBundleUtils.getMessage(
+					"lbl.sc.checklist.partial.notoffer",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale())));
+
+			this.getManagedBean().setOffer(selectItems);
+			selectItems = null;
+			
+		} finally {
+
+		}
+		return this.getManagedBean().getOffer();
+		
+	}
+/** #21695 FARID END */	
 }
