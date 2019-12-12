@@ -1022,6 +1022,27 @@ public class CreateQtBackingBean extends
 				.get("value");
 		this.getManagedBean().getQt().setPartial(type);
 	}
+/** #21695 FARID END */	
+/** #21695 FARID START */		
+	
+	public void partialChangePopUpNo() {
+		if(this.getManagedBean().getQt().isPartial()==false){
+			this.getManagedBean().getQt().setPartial(true);
+		}
+		else if(this.getManagedBean().getQt().isPartial()!=false){
+			this.getManagedBean().getQt().setPartial(false);
+		}
+				 
+	}
+	public void partialChangePopUpYes() {
+		if(this.getManagedBean().getQt().isPartial()!=true){
+			this.getManagedBean().getQt().setPartial(false);
+		}
+		else if(this.getManagedBean().getQt().isPartial()==true){
+			this.getManagedBean().getQt().setPartial(true);
+		}
+	}
+	
 /** #21695 FARID END */		
 	/**
 	 * Procurement change.change Procurement Category Dropdown in Business
