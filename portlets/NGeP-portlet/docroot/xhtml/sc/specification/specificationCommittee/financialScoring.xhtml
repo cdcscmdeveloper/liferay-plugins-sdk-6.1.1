@@ -17,8 +17,10 @@
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</ui:fragment></td>
 
-				<td><p:selectOneRadio id="finScoreWeight"
-						disabled="#{specificationBackingBean.managedBean.readOnly}"
+				<td>
+				<!-- #21695 FARID START RENDER SCQT PARTIAL-->
+				<p:selectOneRadio id="finScoreWeight"
+						disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.qt.partial}"
 						label="#{lbl['lbl.sc.spec.weightage']}" required="true"
 						value="#{specificationBackingBean.managedBean.financialScoreSetting.weightageReq}">
 						<f:selectItems
