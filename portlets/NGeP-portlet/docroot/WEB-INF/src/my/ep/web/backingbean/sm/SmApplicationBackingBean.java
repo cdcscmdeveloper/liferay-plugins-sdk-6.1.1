@@ -1639,8 +1639,8 @@ public class SmApplicationBackingBean extends
 								this.getManagedBean().getSmAppl().setSmPersonnels(new ArrayList());
 							}
 							for(SmPersonnel personnel : ssmResDTO.getSmPersonnelAll()){
-								if(EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), this.getManagedBean().getSmAppl().getSmPersonnels(), "identificationNo") == null){
-									log.info(personnel.getName()+" = Personnel Share Amt di bawah= "+personnel.getShareAmt());
+								SmPersonnel oldPersonnel = (SmPersonnel)EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), this.getManagedBean().getSmAppl().getSmPersonnels(), "identificationNo");
+								if(oldPersonnel == null){
 									personnel.setBrandNew(true);
 									personnel.setSmAppl(this.getManagedBean().getSmAppl());
 									personnel.setRevNo(SupplierManagementConst.DEFAULT_REV_NO);	
@@ -1655,6 +1655,11 @@ public class SmApplicationBackingBean extends
 									}
 									
 									this.getManagedBean().getSmAppl().getSmPersonnels().add(personnel);
+								}else{
+									if(personnel.getPmCountry().getCountryId() == null){
+										PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+										oldPersonnel.setPmCountry(defaultCountry);
+									}
 								}
 							}
 						}
