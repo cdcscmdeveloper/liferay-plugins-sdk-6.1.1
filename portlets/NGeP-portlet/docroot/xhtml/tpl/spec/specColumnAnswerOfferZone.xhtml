@@ -6,21 +6,31 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 			 
-    <p:dataTable var="tplSpecZoneOffer" id="specZoneTbl" rowIndexVar="rowIndex"
-    	value="#{question.tplSpecZoneQties}" 
+    <p:dataTable var="tplSpecZoneOffer" id="specZoneTbl" rowIndexVar="rowIndex" value="#{question.tplSpecZoneQties}" 
      	rendered="#{!tplSpecAnswer.offer and isQuestionTypeItem and !isSpecTypeFinancial and isZonal and templateSpecBackingBean.managedBean.scQt.partial}">
-        <p:column><h:selectBooleanCheckbox value="#{tplSpecZoneOffer.offer}" checked = "checked" >
-        </h:selectBooleanCheckbox> 
-        </p:column>
-        <p:column headerText="#{lbl['lbl.tpl.spec.content.estimation.zone.name']}"> 
-        <h:outputText value="#{tplSpecZoneOffer.tplSpecZoneDtl.zoneName}" />
-        </p:column>
-        
+<!-- turn off for awhile 	<p:ajax event="rowToggle"
+				onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
+			</p:ajax>  
+ 	       		 <p:column>
+	        			<p:rowToggler/>
+	       	 	</p:column>
+ --> 	        
+	        <p:column headerText="#{lbl['lbl.tpl.spec.content.estimation.zone.name']}">
+	        	<h:outputText value="#{tplSpecZoneOffer.tplSpecZoneDtl.zoneName}" />
+	        </p:column>
+	       
+			<p:column>
+				<h:selectBooleanCheckbox value="#{tplSpecZoneOffer.offer}" checked = "checked" />
+	        </p:column>
+<!-- turn off        
+	         <p:rowExpansion>
+	              <h:outputText value="#{tplSpecZoneOffer.tplSpecZoneDtl.zoneName}" />
+	        </p:rowExpansion>
+-->	         
         <f:facet name="footer"/>
     </p:dataTable>   
 	
-	 			
-						
-						
-
 </ui:composition>
+
+
+					
