@@ -59,27 +59,39 @@
 							currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.companyName}" 
 							alertValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.companyName}"/>
 					</td>
+					
 					<td><p:outputLabel value="#{lbl['lbl.sm.account.rob.expire']}" rendered="#{backingBean.managedBean.smSupplier.businessType == 'C' or backingBean.managedBean.smSupplier.businessType == 'F'}" /></td>
 					<td>
-						<p:calendar showOn="button" navigator="true"
+					<c:if test="#{backingBean.managedBean.smSupplier.businessType == 'C' or backingBean.managedBean.smSupplier.businessType == 'F'}">
+						<c:choose> 
+								<c:when test="#{backingBean.managedBean.smAppl.applValidWithSsm and !empty backingBean.managedBean.smAppl.smCompanyBasic.robExpiryDate}">
+								<p:calendar  navigator="true"
+							display="inline" readonlyInput="true" disabled = "true"
+							label="#{lbl['lbl.sm.account.rob.expire']}" id="robExpiryDate"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							yearRange="-99:+0" 
+							value="#{backingBean.managedBean.smAppl.smCompanyBasic.robExpiryDate}"
+							/>	
+							</c:when>
+							<c:otherwise> 
+								<p:calendar showOn="button" navigator="true"
 							display="inline" readonlyInput="true"
 							label="#{lbl['lbl.sm.account.rob.expire']}" id="robExpiryDate"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 							yearRange="-99:+0" 
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.robExpiryDate}"
-							rendered="#{(backingBean.managedBean.smSupplier.businessType == 'C' or backingBean.managedBean.smSupplier.businessType == 'F') and (!backingBean.managedBean.smAppl.applValidWithSsm || empty backingBean.managedBean.smAppl.smCompanyBasic.robExpiryDate) }"/>	
+							/>	
+						</c:otherwise>
+							</c:choose>
+							<p:message id="robExpiryDateMsg" for="robExpiryDate" showSummary="true"
+							showDetail="false" display="icon" />
+							</c:if>
+						
 							
-							<p:calendar  navigator="true"
-							display="inline" readonlyInput="true" disabled = "true"
-							label="#{lbl['lbl.sm.account.rob.expire']}" id="robExpiryDateD"
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-							yearRange="-99:+0" 
-							value="#{backingBean.managedBean.smAppl.smCompanyBasic.robExpiryDate}"
-							rendered="#{(backingBean.managedBean.smSupplier.businessType == 'C' or backingBean.managedBean.smSupplier.businessType == 'F')and (backingBean.managedBean.smAppl.applValidWithSsm || !empty backingBean.managedBean.smAppl.smCompanyBasic.robExpiryDate) }"/>	
+							
 							
 												
-						<p:message id="robExpiryDateMsg" for="robExpiryDate" showSummary="true"
-							showDetail="false" display="icon" />
+						
 					</td>
 				</tr>
 				
@@ -221,6 +233,7 @@
 											listener="#{backingBean.onChangeCountry(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress,SupplierManagementConst.SM_BASIC_INFO_PANEL)}"
 											update="basicComState,basicCompDist,basicCompCity,postCodeCompPanelId" />
 									</p:selectOneMenu>
+									
 									<ac:ssmShowIconAlertGreen 
 										greenIcon="#{backingBean.showGreenIconSsm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.countrySsmNull)}" 
 										poUser="#{backingBean.managedBean.poUser}" 
