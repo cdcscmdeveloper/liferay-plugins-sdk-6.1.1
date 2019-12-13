@@ -713,8 +713,12 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		String actionUpper = action.toUpperCase();
 		switch (actionUpper) {
 		case BpmOutcomeConst.BPM_SUBMIT:
+			if (ctDeduction.getAmount() <= 0) {
+				throwExceptions(MessageConst.ERROR_740059, null);
+			}
+			break;
 		case BpmOutcomeConst.BPM_APPROVE:
-			if (ctDeduction.getAmount() == 0) {
+			if (ctDeduction.getAmount() <= 0) {
 				throwExceptions(MessageConst.ERROR_740059, null);
 			}
 			break;
