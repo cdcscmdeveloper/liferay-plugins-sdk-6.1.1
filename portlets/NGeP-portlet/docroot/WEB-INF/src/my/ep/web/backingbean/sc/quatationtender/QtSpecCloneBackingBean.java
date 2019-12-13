@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 
+import javax.el.ELContext;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -58,6 +59,8 @@ import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.web.backingbean.sc.specification.SpecificationBackingBean;
+import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
@@ -330,21 +333,22 @@ public class QtSpecCloneBackingBean extends
 				// Collections.sort(resDTO.getTechnicalCheckList());
 				for (ScQtCheckList checklist : resDTO
 						.getTechnicalCheckList()) {
-					ScQtCheckList copy = copyBean(checklist);
-					copy.setScQt(this.getManagedBean().getQt());
 					if (!ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
 							.equalsIgnoreCase(checklist.getDefinationType().getParameterCode())) {
-					copy=retrieveScoreNValue(checklist,copy);
-					}
-					if (null != copy.getPmDocument()) {
-						if (!SourcingConstants.DOC_DEF_KEY_SERVICE_SCOPE
-								.equalsIgnoreCase(checklist.getPmDocument()
-										.getDocDefinitionKey())) {
+						ScQtCheckList copy = copyBean(checklist);
+						copy.setScQt(this.getManagedBean().getQt());
+						copy=retrieveScoreNValue(checklist,copy);
+						if (null != copy.getPmDocument()) {
+							if (!SourcingConstants.DOC_DEF_KEY_SERVICE_SCOPE
+									.equalsIgnoreCase(checklist.getPmDocument()
+											.getDocDefinitionKey())) {
+								localcheckList.add(copy);
+							}
+						} else {
 							localcheckList.add(copy);
 						}
-					} else {
-						localcheckList.add(copy);
 					}
+					
 				}
 			}
 				
@@ -550,50 +554,222 @@ public class QtSpecCloneBackingBean extends
 	private ScQtCheckList copyBean(ScQtCheckList origin)
 			throws FileNotFoundException {
 		ScQtCheckList copy = new ScQtCheckList();
-		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
+//		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
+//				.equalsIgnoreCase(origin.getDefinationType().getParameterCode())) {
+//			copy=copySpecTemplate(origin.getScQtDoc().getTplSpecMaster());
+//		} else {
+//			copy = copyStandardChecklist(origin);
+//		}
+		if (!ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
 				.equalsIgnoreCase(origin.getDefinationType().getParameterCode())) {
-			copy=copySpecTemplate(origin.getScQtDoc().getTplSpecMaster());
-		} else {
 			copy = copyStandardChecklist(origin);
-		}
-
-		// Set<String> ignoreFields
-		// =getNullPropertyNames(origin,"qtChecklistId","scQt","scQtCheckListValue","scQtCheckListScores");
-		// origin =(ScQtCheckList) origin.cloneEntity();
-		// BeanUtils.copyProperties(origin, copy,ignoreFields.toArray(new
-		// String[ignoreFields.size()]));
-		if (null != copy.getDefinationType()
-				&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
+			
+			if (null != copy.getDefinationType()
+					&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
+							.equalsIgnoreCase(copy.getDefinationType()
+									.getParameterCode())) {
+				Long statusId = null;
+				if (!copy.isScoringReq()) {
+					statusId = QTStatusConst.TS_COMPLETED;
+				} else {
+					statusId = QTStatusConst.TS_PENDING_SUBMISSION;
+				}
+				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
 						.equalsIgnoreCase(copy.getDefinationType()
 								.getParameterCode())) {
-			Long statusId = null;
-			if (!copy.isScoringReq()) {
-				statusId = QTStatusConst.TS_COMPLETED;
+					statusId = QTStatusConst.TS_COMPLETED;
+				}
+				copy.setPmStatus(getPmStatusByStatusId(statusId));
 			} else {
-				statusId = QTStatusConst.TS_PENDING_SUBMISSION;
-			}
-			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
-					.equalsIgnoreCase(copy.getDefinationType()
-							.getParameterCode())) {
-				statusId = QTStatusConst.TS_COMPLETED;
-			}
-			copy.setPmStatus(getPmStatusByStatusId(statusId));
-		} else {
-			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
-					.equalsIgnoreCase(copy.getDefinationType()
-							.getParameterCode())) {
-				copy.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
-			} else {
-				copy.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
-			}
+				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
+						.equalsIgnoreCase(copy.getDefinationType()
+								.getParameterCode())) {
+					copy.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
+				} else {
+					copy.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+				}
 
+			}
+			copy.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+			setUserDetails(copy);
 		}
-		copy.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
-		setUserDetails(copy);
+
+		
+		
 		return copy;
 	}
 
-	public void addToClone() throws FileNotFoundException {
+	public String addToClone() throws FileNotFoundException {
+		ScQt selected = this.getManagedBean().getSelectedCloneTender();
+		IQTDetailSO QtDetailsSO = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTDetailSO.class);
+		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+		tenderReqDTO.setQtId(selected.getQtId());
+		QuationTenderResDTO tenderResDTO = QtDetailsSO
+				.retriveQTDetails(tenderReqDTO);
+		
+		ScQt copyScQt=tenderResDTO.getQtDetail();
+		
+		SpecificationResDTO resDTO = null;
+		IQTSpecSO specSo=null;
+		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+		try{
+			specSo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+			reqDTO.setScQt(copyScQt);
+			reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
+			resDTO = specSo.retrieveCheckLists(reqDTO);
+			if (null != resDTO.getTechnicalCheckList()) {
+				// Collections.sort(resDTO.getTechnicalCheckList());
+				for (ScQtCheckList checklist : resDTO
+						.getTechnicalCheckList()) {
+					
+					if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
+							.equalsIgnoreCase(checklist.getDefinationType().getParameterCode())) {
+						
+						retrieveTechnicalChecklist(copyScQt);
+						retrieveFinancialChecklist(copyScQt);
+						return createTemplateSpec(checklist.getScQtDoc().getTplSpecMaster(), "SC");
+					}
+				}
+			}
+		}finally{
+			specSo=null;
+		}
+		
+		return null;
+		
+	}
+	
+	public String createTemplateSpec(TplSpecMaster tplSpecMaster,
+			String flowtype) throws FileNotFoundException {
+		this.getManagedBean().setSpecSelectStats(false);
+		this.getManagedBean().setSpecNewable(true);
+		this.getManagedBean().setUpdateSpec(true);
+		this.getManagedBean().setSpecItemWeightageRequired(false);
+		try {
+			ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.COMMON_COMPONENT,
+							ITemplateSpecSO.class);
+			TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
+			specReqDTO.setSpecMaster(tplSpecMaster);
+			specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
+			TemplateSpecResDTO resDTO = templateSpecSO
+					.getTemplateMaster(specReqDTO);
+			TplSpecMaster specMaster = TemplateSpecHelper.getInstance()
+					.cloneTplSpecMaster(resDTO.getSpecMaster(), true,
+							getManagedBean().getQt().isTechEvaluationReq(),
+							true);
+			specMaster
+					.setProcessType(ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING);
+			if (getManagedBean().getQt().isZonal()) {
+				ScQtSupplierCriteria supplierCriteria = getManagedBean()
+						.getQt().getScQtSupplierCriteria();
+				if (null != supplierCriteria
+						&& null != supplierCriteria.getQtZoneCriterias()) {
+					TemplateSpecHelper.getInstance().updateZoneDtl(specMaster,
+							supplierCriteria.getQtZoneCriterias());
+				} else {
+					throw new EpException(
+							"Please choose the zones before proceed.");
+				}
+			} else {
+				TemplateSpecHelper.getInstance()
+						.updateZoneDtl(specMaster, null);
+			}
+
+			ScQtCheckList qtCheckList = constructQtDocByType(specMaster,
+					SourcingConstants.TECHNICAL_DOCTYPE);
+
+			TemplateSpecBean templateSpecBean = getManagedBean()
+					.getTemplateSpecBean();
+			List<ScQtCheckList> technicalCheckList = this.getManagedBean()
+					.getScQtCheckSt2techProposal();
+			if (null != technicalCheckList && !technicalCheckList.isEmpty()) {
+				boolean istechnicalSpec = isAtleastTechnicalSpec(technicalCheckList);
+				this.getManagedBean().setSpecItemWeightageRequired(
+						istechnicalSpec);
+				boolean weightageType = retriveExistingTemplatespec(technicalCheckList);
+				specMaster.setWeightageReq(weightageType);
+				templateSpecBean.setSpecMaster(specMaster);
+				TemplateSpecBackingBean templateSpecBackingbean = new TemplateSpecBackingBean();
+				templateSpecBackingbean
+						.updateItemWeightageReq(templateSpecBean);
+
+			} else {
+				this.getManagedBean().setSpecItemWeightageRequired(false);
+			}
+			templateSpecBean.setSpecMaster(specMaster);
+
+			this.getManagedBean().setScQtChecklist(qtCheckList);
+			this.getManagedBean().setIndex(-1);
+			this.getManagedBean().setAutoUpdate(true);
+			templateSpecSO = null;
+			RequestContext.getCurrentInstance().execute(
+					"screen3.hide()");
+			// RequestContext.getCurrentInstance().update("btnId");
+		} finally {
+
+		}
+
+		this.getManagedBean().setIndex(-1);
+		this.getManagedBean().setNewTemplateSpec(true);
+		
+		return "/xhtml/sc/boSctemplatespec/technicalCommitteeTemplate.xhtml?faces-redirect=true";
+	}
+	
+	private boolean retriveExistingTemplatespec(List<ScQtCheckList> checkList) {
+		if (null != checkList && !checkList.isEmpty()) {
+			for (ScQtCheckList specChecklist : checkList) {
+				if (QTConstants.TEMPLETE_SPEC_CODE
+						.equalsIgnoreCase(specChecklist.getDefinationType()
+								.getParameterCode())) {
+					if (null != specChecklist.getScQtDoc()) {
+						ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate
+								.getInstance().getServiceObject(
+										ModuleCodeConst.COMMON_COMPONENT,
+										ITemplateSpecSO.class);
+						TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
+						specReqDTO.setSpecMaster(specChecklist.getScQtDoc()
+								.getTplSpecMaster());
+						specReqDTO
+								.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
+						TemplateSpecResDTO resDTO = templateSpecSO
+								.getTemplateMaster(specReqDTO);
+
+						return resDTO.getSpecMaster().isWeightageReq();
+
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
+	private boolean isAtleastTechnicalSpec(List<ScQtCheckList> checklist) {
+		int i = 0;
+		if (null != checklist && !checklist.isEmpty()) {
+			for (ScQtCheckList specChecklist : checklist) {
+				if (QTConstants.TEMPLETE_SPEC_CODE
+						.equalsIgnoreCase(specChecklist.getDefinationType()
+								.getParameterCode())) {
+					if (null != specChecklist.getScQtDoc()) {
+						i++;
+						if (i >= 1) {
+							return true;
+						}
+
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+	
+	private void toClone() throws FileNotFoundException{
 		ScQt selected = this.getManagedBean().getSelectedCloneTender();
 		IQTDetailSO QtDetailsSO = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
