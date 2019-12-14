@@ -2861,6 +2861,13 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					ctPerformanceBondNew.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 				}
 			}
+			for (CtPerformanceBond ctPerformanceBonds : getManagedBean().getCtContractAmount().getCtPerformanceBonds()) {
+				if (ctPerformanceBonds.equals(getManagedBean().getCtPerformanceBond())) {
+					ctPerformanceBonds.setBrandNew(true);
+					ctPerformanceBonds.setFileName(item.getFileName());
+					ctPerformanceBonds.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+				}
+			}
 		}else{
 			for (CtPerformanceBond ctPerformanceBond : getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal()) {
 				if (ctPerformanceBond.equals(getManagedBean().getCtPerformanceBond())) {
@@ -3409,12 +3416,22 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * The method used to delete 
 	 * the uploaded bond attached file
 	 */    
-	public void deleteBondAttachement(){
-		CtPerformanceBond ctBondAttch =  getManagedBean().getCtContractAmount().getCtPerformanceBonds().get(getManagedBean().getIndex());
-		getManagedBean().getCtContractAmount().getCtPerformanceBonds().remove(getManagedBean().getIndex());
-		ctBondAttch.setFileName(null);
-		ctBondAttch.setFilePath(null);
-		getManagedBean().getCtContractAmount().getCtPerformanceBonds().add(getManagedBean().getIndex(), ctBondAttch);
+	public void deleteBondAttachement(){		
+		if(isContractExtend()){			
+			CtPerformanceBond ctBondAttch =  getManagedBean().getCtContractAmount().getCtPerformanceBondsNew().get(getManagedBean().getIndex());
+			getManagedBean().getCtContractAmount().getCtPerformanceBondsNew().remove(getManagedBean().getIndex());
+			ctBondAttch.setFileName(null);
+			ctBondAttch.setFilePath(null);
+			getManagedBean().getCtContractAmount().getCtPerformanceBondsNew().add(getManagedBean().getIndex(), ctBondAttch);
+		}else{
+			CtPerformanceBond ctBondAttch =  getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal().get(getManagedBean().getIndex());
+			getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal().remove(getManagedBean().getIndex());
+			ctBondAttch.setFileName(null);
+			ctBondAttch.setFilePath(null);
+			getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal().add(getManagedBean().getIndex(), ctBondAttch);
+		}
+		
+
 		
 	}
 
