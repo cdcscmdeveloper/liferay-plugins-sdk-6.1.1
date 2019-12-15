@@ -1639,7 +1639,7 @@ public class SmApplicationBackingBean extends
 							}
 							for(SmPersonnel personnel : ssmResDTO.getSmPersonnelAll()){
 								SmPersonnel oldPersonnel = (SmPersonnel)EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), this.getManagedBean().getSmAppl().getSmPersonnels(), "identificationNo");
-								validateRole(oldPersonnel);
+								
 								if(oldPersonnel == null){
 									personnel.setBrandNew(true);
 									personnel.setSmAppl(this.getManagedBean().getSmAppl());
@@ -1656,6 +1656,7 @@ public class SmApplicationBackingBean extends
 									
 									this.getManagedBean().getSmAppl().getSmPersonnels().add(personnel);
 								}else{
+									validateRole(oldPersonnel);
 									if(personnel.getPmCountry().getCountryId() == null){
 										PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 										oldPersonnel.setPmCountry(defaultCountry);
