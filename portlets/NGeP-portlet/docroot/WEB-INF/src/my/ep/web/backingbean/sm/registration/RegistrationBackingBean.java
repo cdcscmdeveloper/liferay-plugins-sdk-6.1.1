@@ -3838,6 +3838,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			if(this.getManagedBean().getSmPersonnel().getTitle() == null) {
 				this.getManagedBean().getSmPersonnel().setTitle(new PmSalutation());
 			}
+			listenerChangeRole();
 		}
 	}
 	//#16052019 - SSM INTEGRATION CR
