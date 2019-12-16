@@ -81,7 +81,8 @@
 
 			<p:column headerText="#{lbl['lbl.fl.delivery.start']}"  style="white-space:normal;text-align:center">
 				<!--#17087 calendarStartDate -->
-				<p:calendar id="calStartDate" value="#{address.startDate}" style="float:right;"  
+				<p:calendar id="calStartDate" value="#{address.startDate}" style="float:right;" mindate="#{contractRequestBackingBean.managedBean.minContractDate}"
+				 maxdate="#{contractRequestBackingBean.managedBean.maxContractDate}"
 					readonlyInput="true"
 					rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}"
 					size="8" 

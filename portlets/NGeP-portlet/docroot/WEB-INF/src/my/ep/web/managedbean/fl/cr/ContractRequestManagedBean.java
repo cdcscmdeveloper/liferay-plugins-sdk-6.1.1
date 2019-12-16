@@ -173,6 +173,9 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private Date gstRegistrationDate;
 	private Date maxDate;
 	
+	private Date minContractDate;
+	private Date maxContractDate;
+	
 	private String tempLogin; //TODO: temp and to be removed
 	private String espkbCommitmentNo;
 	private String ptjCodeName;
@@ -3063,4 +3066,34 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.smDisciplinaryAction = smDisciplinaryAction;
 	}
 	//26279 - end
+	
+	// start #17087
+	/**
+	 * @return the minContractDate
+	 */
+	public Date getMinContractDate() {
+		return minContractDate;
+	}
+
+	/**
+	 * @param minContractDate to set
+	 */
+	public void setMinContractDate(Date minContractDate) {
+		this.minContractDate = minContractDate;
+	}
+	
+	/**
+	 * @return the maxContractDate
+	 */
+	public Date getMaxContractDate() {
+		return maxContractDate;
+	}
+
+	/**
+	 * @param maxContractDate to set
+	 */
+	public void setMaxContractDate(Date maxContractDate) {
+		this.maxContractDate = maxContractDate;
+	}
+	// End #17087
 }
