@@ -22,6 +22,7 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
@@ -73,7 +74,9 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmUom;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmGstSupplier;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
@@ -94,6 +97,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.web.vo.DisciplinaryActionVO;
 
 /**
  * Backing Bean for Create Delivery Order.
@@ -717,6 +721,36 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 				flBB.getManagedBean().setHideRemarks(false);
 				flBB.initializeRemarkAndAttachement(resDTO.getFlDeliveryOrder().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
+				//26279 - start
+				if(getManagedBean().getFulfilmentOrder().getStatus().getStatusId().longValue() == FulfilmentStatusConst.DO_PENDING_ACKNOWLEDGEMENT 
+						|| getManagedBean().getFulfilmentOrder().getStatus().getStatusId().longValue() == FulfilmentStatusConst.DO_PENDING_CANCELLATION_APPROVAL 
+						|| getManagedBean().getFulfilmentOrder().getStatus().getStatusId().longValue() == FulfilmentStatusConst.DO_PENDING_MODIFICATION_APRROVAL) {
+					SmSupplier smSupplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
+					SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
+					if(smDisciplinaryAction != null) {
+						getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
+						boolean isWarningOnly = false;
+						String warningOrDisciplinaryActionMsg = null;
+						String language =  new FacesScopes().getUserLocale().getLanguage();
+						if(smDisciplinaryAction.isWarning() && !smDisciplinaryAction.isCancelCategory() 
+								&& !smDisciplinaryAction.isSuspendRegistration() && !smDisciplinaryAction.isCancelRegistration() 
+								&& !smDisciplinaryAction.isBlacklistOwner() && !smDisciplinaryAction.isBumiputeraCancel() 
+								&& !smDisciplinaryAction.isManufacturerCancel()) {
+							isWarningOnly = true;
+							warningOrDisciplinaryActionMsg = getWarningOrDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(), language, isWarningOnly) ;
+							getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
+						} else if(smDisciplinaryAction.isCancelCategory() 
+								|| smDisciplinaryAction.isSuspendRegistration() || smDisciplinaryAction.isCancelRegistration() 
+								|| smDisciplinaryAction.isBlacklistOwner() || smDisciplinaryAction.isBumiputeraCancel() 
+								|| smDisciplinaryAction.isManufacturerCancel()){
+							warningOrDisciplinaryActionMsg = getWarningOrDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(), language, isWarningOnly) ;
+							getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
+						}
+					} else {
+						getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
+					}
+				}
+				//26279 - end
 		}else{
 			getManagedBean().setOrderDisabledForSdCheck(false);
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
@@ -1514,4 +1548,13 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		List<FlDeliveryOrder> submittedDoList=delOrderSO.retrieveSubmittedDoList(addressId);
 		getManagedBean().setSubmittedDoList(submittedDoList);
 	}
+	
+	//26279 - start
+	public void viewDisciplinaryAction() {
+		List<DisciplinaryActionVO> disciplinaryActionVOs = retrieveDisciplinaryActions(getManagedBean().getSmDisciplinaryAction());
+		getManagedBean().setDisciplineVOs(disciplinaryActionVOs);
+		RequestContext.getCurrentInstance().execute(
+				"disciplinaryActionHistoryDlg.show();");
+	}
+	//26279 - end
 }
