@@ -42,7 +42,7 @@
 					test="#{backingBean.managedBean.smSupplier.businessType == 'C' or backingBean.managedBean.smSupplier.businessType == 'F'}">
 					<h:outputLabel style="font-weight:bold"
 						value="#{lbl['lbl.sm.account.rob.expire']} :"></h:outputLabel>
-					<h:outputText
+					<h:outputText 
 						value="${backingBean.managedBean.smAppl.smCompanyBasic.robExpiryDate}">
 						<f:convertDateTime pattern="dd/MM/yyyy" />
 					</h:outputText>
@@ -69,16 +69,22 @@
 					value="#{lbl['lbl.sm.postcode']} :"></h:outputLabel>
 				<h:outputText
 					value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcode}"></h:outputText>
-
-				<h:outputLabel style="font-weight:bold"
+	
+				<h:outputLabel style="font-weight:bold" 
 					value="#{lbl['lbl.sm.annualRev']} :"></h:outputLabel>
-					<p:selectOneMenu rendered="#{!backingBean.managedBean.smAppl.smCompanyBasic.revenueSsmNull}" style="width: 207px;margin-bottom: 5px;"
-							label="#{lbl['lbl.sm.annualRev']}" required="true"
-							id="smSupAnnRev"
-							disabled="true"
-							value="#{backingBean.managedBean.smAppl.smCompanyBasic.annualRevenue}">
-							<f:selectItems value="#{backingBean.getDropdownValues('SAR')}" />
-						</p:selectOneMenu>
+					<h:panelGrid columns="2" layout="grid"> 
+						<p:selectOneMenu rendered="#{!backingBean.managedBean.smAppl.smCompanyBasic.revenueSsmNull}" style="width: 207px;margin-bottom: 5px;"
+								label="#{lbl['lbl.sm.annualRev']}" required="true"
+								id="smSupAnnRev"
+								disabled="true"
+								value="#{backingBean.managedBean.smAppl.smCompanyBasic.annualRevenue}">
+								<f:selectItems value="#{backingBean.getDropdownValues('SAR')}" />
+							</p:selectOneMenu>
+							&#160;&#160;
+							<h:outputText value="#{backingBean.managedBean.smAppl.smCompanyBasic.annualRevenueSSM}" rendered="#{!backingBean.managedBean.smAppl.smCompanyBasic.revenueSsmNull}">
+							<f:convertNumber groupingUsed="true" maxFractionDigits="3" minFractionDigits="3" />
+						</h:outputText>
+					</h:panelGrid>
 				<!-- <h:outputText
 					value="#{backingBean.getParameterDesc('SAR',backingBean.managedBean.smAppl.smCompanyBasic.annualRevenue)}"></h:outputText> -->
 			</h:panelGrid>
@@ -92,11 +98,16 @@
 
 		<ui:include
 			src="/xhtml/sm/renewMofApplication/viewSsmInformationOwnerDirector.xhtml" />
+		
+		<ui:include
+			src="/xhtml/sm/renewMofApplication/viewSsmInformationCompanyEquity.xhtml" />
 
 		<ui:include
 			src="/xhtml/sm/renewMofApplication/viewSsmInformationPersonnel.xhtml" />
 
 		<ui:include
 			src="/xhtml/sm/renewMofApplication/viewSsmInformationNatureBusiness.xhtml" />
+			
+			
 	</ui:define>
 </ui:composition>

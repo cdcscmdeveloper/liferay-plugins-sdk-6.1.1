@@ -536,11 +536,12 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	
 	//#16052019 - SSM INTEGRATION CR
 	private List<SmEquityCompany> smEquityCompanyTemp;
-	private List<SmPersonnel> personnelsOwner = new ArrayList();;
-	private List<SmPersonnel> personnelsDirector  = new ArrayList();;
-	private List<SmPersonnel> personnelsSsm  = new ArrayList();;
-	private List<SmSupplierBranch>  smSupplierBranchSsm = new ArrayList();;
-	private List<SmSupplierBusiness> smSupplierBusinessSsm   = new ArrayList();;
+	private List<SmPersonnel> personnelsOwner = new ArrayList();
+	private List<SmPersonnel> personnelsDirector  = new ArrayList();
+	private List<SmPersonnel> personnelsSsm  = new ArrayList();
+	private List<SmSupplierBranch>  smSupplierBranchSsm = new ArrayList();
+	private List<SmSupplierBusiness> smSupplierBusinessSsm   = new ArrayList();
+	private List<SmEquityCompany> smEquityCompaniesSsm   = new ArrayList();
 	
 	//26238
 	private Long disabledCategoryL3Id;
@@ -4171,5 +4172,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setDisabledCategoryL3Id(Long disabledCategoryL3Id) {
 		this.disabledCategoryL3Id = disabledCategoryL3Id;
 	} //26238 - end
+
+	public List<SmEquityCompany> getSmEquityCompaniesSsm() {
+		return smEquityCompaniesSsm;
+	}
+
+	public void setSmEquityCompaniesSsm(List<SmEquityCompany> smEquityCompaniesSsm) {
+		this.smEquityCompaniesSsm = smEquityCompaniesSsm;
+	}
 
 }
