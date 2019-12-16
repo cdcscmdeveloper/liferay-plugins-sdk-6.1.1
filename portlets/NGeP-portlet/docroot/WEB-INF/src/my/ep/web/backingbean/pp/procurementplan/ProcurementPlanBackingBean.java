@@ -36,6 +36,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pp.procurementplan.IProcurementPlanSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -80,6 +81,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
@@ -149,6 +151,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	private static final int SEARCH_MINISTRY_NAME = 1;
 	private static final int SEARCH_PTJ_CODE = 2;
 	private static final int SEARCH_PTJ_NAME = 3;
+	private static final String CAP_CHAR = "^"; //[Bug#27032]
 	
 	/**
 	 * 
@@ -4073,9 +4076,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 */
 	public String retrievePpBillingAddr() {
 		if(getManagedBean().getSelectedPlan().getOrgProfileAddress() != null){
+			//log.info("[#20191212] - OrgProfileAddress NOT NULL");
 			return getPpFullAddress(getManagedBean().getSelectedPlan().getOrgProfileAddress());
 		}else{
-
+			//log.info("[#20191212] - OrgProfileAddress IS NULL");
 			AddressReqDTO reqDTO = new AddressReqDTO();
 			reqDTO.setOrgProfileId(getManagedBean().getSelectedPlan().getOrgProfile().getOrgProfileId());
 			reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
@@ -4165,6 +4169,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		PmOrgProfile orgProfile = (PmOrgProfile) entity;
 		this.getManagedBean().getPlanSearchBean()
 				.setKptj(orgProfile);
+		
+		resetPtjOrgProfile(); //[Bug#27032]
 	}
 	
 	/**
@@ -4175,6 +4181,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		PmOrgProfile orgProfile = (PmOrgProfile) entity;
 		this.getManagedBean().getPlanSearchBean()
 				.setMinistry(orgProfile);
+		
+		resetPtjGroupOrgProfile(); //[Bug#27032]
 	}
 	
 	/**
@@ -5172,5 +5180,69 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	
 		log.info("getProcItemSearchBeanData - End");
 		return searchBean;
-	}	
+	}
+	
+	//[Bug#27032]
+	public String constuctConditionFieldsForPTJGroup() {
+
+		StringBuffer parentOrgProfile = new StringBuffer();
+		PmOrgProfile ministryOrgProfile = this.getManagedBean().getSelectedMinistry();
+		Long MinistryOrgProfileId = ministryOrgProfile != null ? ministryOrgProfile
+				.getOrgProfileId() : null;
+		if (null != MinistryOrgProfileId) {
+			String minLevel = EpPropertiesUtils.getInstance().getProperty(
+					EpPropertiesConst.LVL_ORG_PROFILE_MINISTRY);
+			String ptjGrpLevel = EpPropertiesUtils.getInstance().getProperty(
+					EpPropertiesConst.LVL_ORG_PROFILE_PTJGROUP);
+			if (minLevel != null && ptjGrpLevel != null) {
+				int ministryLevel = Integer.valueOf(minLevel);
+				int ptjGroupLevel = Integer.valueOf(ptjGrpLevel);
+				int orgLevel = ministryLevel - ptjGroupLevel;
+
+				for (int i = 0; i < orgLevel; i++) {
+					parentOrgProfile.append("parentOrgProfile.");
+				}
+				parentOrgProfile.append("orgProfileId");
+				parentOrgProfile.append(CAP_CHAR);
+				parentOrgProfile.append(MinistryOrgProfileId);
+
+			}
+
+		} else {
+			parentOrgProfile.append("  ");
+		}
+		return parentOrgProfile.toString();
+	}
+	
+	//[Bug#27032]
+	public String constuctConditionFieldsForPTJ() {
+
+		String parentOrgProfile = null;
+		
+		PmOrgProfile ministryOrgProfile = this.getManagedBean().getSelectedMinistry();
+		Long MinistryOrgProfileId = ministryOrgProfile != null ? ministryOrgProfile.getOrgProfileId() : null;
+		PmOrgProfile groupOrgProfile = this.getManagedBean().getSelectedKumpulanPTJ();
+		Long PTJGroupOrgProfileId = groupOrgProfile != null ? groupOrgProfile.getOrgProfileId() : null;
+		if (null != PTJGroupOrgProfileId) {
+			parentOrgProfile = OrgProfileUtil.getSearchBeanParentString(ParameterConst.ORG_TYPE_PTJ_GROUP)
+					+ CAP_CHAR + PTJGroupOrgProfileId;
+		} else if (null != MinistryOrgProfileId) {
+			parentOrgProfile = OrgProfileUtil.getSearchBeanParentString(ParameterConst.ORG_TYPE_MINISTRY)
+					+ CAP_CHAR + MinistryOrgProfileId;
+		} else {
+			parentOrgProfile = "";
+		}
+		return parentOrgProfile;
+	}
+	
+	//[Bug#27032]
+	public void resetPtjGroupOrgProfile() {
+		this.getManagedBean().setSelectedKumpulanPTJ(new PmOrgProfile());
+		resetPtjOrgProfile();
+	}
+	
+	//[Bug#27032]
+	public void resetPtjOrgProfile() {
+		this.getManagedBean().setSelectedPTJ(new PmOrgProfile());
+	}
 }
