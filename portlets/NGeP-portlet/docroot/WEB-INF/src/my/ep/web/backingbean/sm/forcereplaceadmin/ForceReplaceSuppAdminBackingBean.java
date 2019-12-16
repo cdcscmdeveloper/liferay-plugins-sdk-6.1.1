@@ -448,6 +448,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 				throw new EpException(MessageConst.ERROR_770167);
 			}				
 		}
+		listenerChangeRole();
 	}
 
 	/**
@@ -896,7 +897,21 @@ public class ForceReplaceSuppAdminBackingBean extends
 				address.setPmCity(city);
 			}
 		}
-		
 	}
-
+	
+	//16052019 - SSM INTEGRATION CR
+	public void listenerChangeRole(){
+		if(this.getManagedBean().getNewAdmin() !=null){
+			if(this.getManagedBean().getNewAdmin().isEquityOwner()){
+				this.getManagedBean().setDisableStaff(true);
+				this.getManagedBean().getNewAdmin().setClerical(false);
+			}else if(!this.getManagedBean().getNewAdmin().isEquityOwner()){
+				this.getManagedBean().setDisableStaff(false);
+				this.getManagedBean().setDisableEquity(false);				
+			}else if(this.getManagedBean().getNewAdmin().isClerical()){
+				this.getManagedBean().setDisableStaff(false);
+				this.getManagedBean().setDisableEquity(false);
+			}
+		}
+	}
 }
