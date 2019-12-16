@@ -45,6 +45,9 @@ public class ForceReplaceSuppAdminManagedBean extends BaseManagedBean {
 	private PmParameter identificationType;
 	private Long myCountryId;
 	private String accType;
+	
+	private boolean disableEquity=false;
+	private boolean disableStaff=false;
 
 	public ForceReplaceSuppAdminManagedBean() {
 		
@@ -248,6 +251,22 @@ public class ForceReplaceSuppAdminManagedBean extends BaseManagedBean {
 
 	public void setAccType(String accType) {
 		this.accType = accType;
+	}
+
+	public boolean isDisableEquity() {
+		return disableEquity;
+	}
+
+	public void setDisableEquity(boolean disableEquity) {
+		this.disableEquity = disableEquity;
+	}
+
+	public boolean isDisableStaff() {
+		return disableStaff;
+	}
+
+	public void setDisableStaff(boolean disableStaff) {
+		this.disableStaff = disableStaff;
 	}
 
 }
