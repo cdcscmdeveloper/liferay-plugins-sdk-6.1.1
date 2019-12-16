@@ -1219,7 +1219,20 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				}
 			}else{
 				setFulfilmentItemAddr(getManagedBean().getFlRequest());
-			}	
+			}
+			
+			//start - #17087
+			if(getManagedBean().getFlRequest().getCtContract().isZonalPricing()){
+				IContractSO contractSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+				ContractReqDTO contractReqDTO = new ContractReqDTO();
+				contractReqDTO.setContractVerId(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getContractVerId());
+				contractReqDTO.setAsAtDate(new Date());
+				CtContractAmount ctContractAmount = contractSO.retrieveContractAmount(contractReqDTO).getCtContractAmount();
+				getManagedBean().setMinContractDate(ctContractAmount.getEffDate());
+				getManagedBean().setMaxContractDate(ctContractAmount.getExpDate());
+			}
+			//end - #17087
+			
 		}else if(contractId != null){
 			renewSesionObject();
 			new ContractRequestBackingBean();
@@ -1371,6 +1384,17 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			checkMofAccountExpDate(getManagedBean().getFlRequest());
 			
 			getManagedBean().setButtonVal(FulfilmentConst.CONTRACT_REQUEST);
+			
+			//start - #17087
+			if(getManagedBean().getFlRequest().getCtContract().isZonalPricing()){
+				ContractReqDTO contractReqDTO = new ContractReqDTO();
+				contractReqDTO.setContractVerId(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getContractVerId());
+				contractReqDTO.setAsAtDate(new Date());
+				CtContractAmount ctContractAmount = contractSO.retrieveContractAmount(contractReqDTO).getCtContractAmount();
+				getManagedBean().setMinContractDate(ctContractAmount.getEffDate());
+				getManagedBean().setMaxContractDate(ctContractAmount.getExpDate());				
+			}
+			//end - #17087
 		}
 		
 		//26279 - start
