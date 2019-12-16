@@ -55,7 +55,7 @@
 						value="#{pPlanBackingBean.managedBean.selectedKumpulanPTJ.pmOrgValidity.orgName}"
 						size="25" readonly="true" 
 						postUpdateListener="pPlanBackingBean.updateKPTJSearchCriteria"
-						conditionField="#{pPlanBackingBean.constructKumpulanPTJConditionFields()}" />			
+						conditionField="#{pPlanBackingBean.constuctConditionFieldsForPTJGroup()}" /> <!-- [Bug#27032] -->			
 				</td>
 			</tr>			
 			<tr>
@@ -69,7 +69,7 @@
 						value="#{pPlanBackingBean.managedBean.selectedPTJ.pmOrgValidity.orgName}"
 						size="25" readonly="true"
 						postUpdateListener="pPlanBackingBean.updateSearchCriteria"
-						conditionField="#{pPlanBackingBean.constructPTJConditionFields()}" />					
+						conditionField="#{pPlanBackingBean.constuctConditionFieldsForPTJ()}" /> <!-- [Bug#27032] -->					
 				</td>	
 			</tr>
 		</table>
