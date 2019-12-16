@@ -42,7 +42,7 @@ public class SmFieldChangeUtil {
 				&& bean.getSmAppl() != null
 				&& StringUtils.isNotBlank(bean.getSmAppl().getApplType())
 				&& (!bean.getSmAppl().getApplType()
-						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF) || bean.getSmAppl().isApplValidWithSsm())) {
+						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF))) {//|| bean.getSmAppl().isApplValidWithSsm() -> remove this from if cz effect other
 			MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
 			SmAppl srcAppl = null;
 			mofReqDTO.setSupplierId(bean.getSmSupplier().getSupplierId());
