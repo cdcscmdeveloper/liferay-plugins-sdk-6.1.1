@@ -62,6 +62,7 @@ import my.ep.persistence.entity.pm.common.PmPrgActivity;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmVotFund;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -69,6 +70,7 @@ import my.ep.web.bean.pm.GlAccountSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.FLCtSupplierItemVO;
 
 import org.primefaces.model.TreeNode;
@@ -170,6 +172,9 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	
 	private Date gstRegistrationDate;
 	private Date maxDate;
+	
+	private Date minContractDate;
+	private Date maxContractDate;
 	
 	private String tempLogin; //TODO: temp and to be removed
 	private String espkbCommitmentNo;
@@ -303,9 +308,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	
 	/** The active contract list document data model. */
 	private IPagingDataModel<VCtActiveContract> activeContractDataModel = new ActiveContractPagingDataModel();
-	//13984
 	private List<String> availableNoList;
-	
+	//26279 - start
+	private String disciplinaryActionMessage;
+	private List<DisciplinaryActionVO> disciplineVOs;
+	private SmDisciplinaryAction smDisciplinaryAction;
+	//26279 - end
 	
 	private class ActiveContractPagingDataModel extends PagingDataModel<VCtActiveContract> {
 		
@@ -3033,5 +3041,59 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.scheduleNo = scheduleNo;
 	}
 
+	//26279 - start
+	public String getDisciplinaryActionMessage() {
+		return disciplinaryActionMessage;
+	}
+
+	public void setDisciplinaryActionMessage(String disciplinaryActionMessage) {
+		this.disciplinaryActionMessage = disciplinaryActionMessage;
+	}	
+
+	public List<DisciplinaryActionVO> getDisciplineVOs() {
+		return disciplineVOs;
+	}
+
+	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
+		this.disciplineVOs = disciplineVOs;
+	}
+
+	public SmDisciplinaryAction getSmDisciplinaryAction() {
+		return smDisciplinaryAction;
+	}
+
+	public void setSmDisciplinaryAction(SmDisciplinaryAction smDisciplinaryAction) {
+		this.smDisciplinaryAction = smDisciplinaryAction;
+	}
+	//26279 - end
 	
+	// start #17087
+	/**
+	 * @return the minContractDate
+	 */
+	public Date getMinContractDate() {
+		return minContractDate;
+	}
+
+	/**
+	 * @param minContractDate to set
+	 */
+	public void setMinContractDate(Date minContractDate) {
+		this.minContractDate = minContractDate;
+	}
+	
+	/**
+	 * @return the maxContractDate
+	 */
+	public Date getMaxContractDate() {
+		return maxContractDate;
+	}
+
+	/**
+	 * @param maxContractDate to set
+	 */
+	public void setMaxContractDate(Date maxContractDate) {
+		this.maxContractDate = maxContractDate;
+	}
+	// End #17087
 }

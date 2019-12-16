@@ -202,6 +202,7 @@ import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.persistence.entity.pm.common.VPmDo;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.type.aut.SearchCondition;
@@ -229,6 +230,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.fl.helper.LocationSingleton;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.FLCtSupplierItemVO;
 
 /**
@@ -1218,7 +1220,19 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}else{
 				setFulfilmentItemAddr(getManagedBean().getFlRequest());
 			}
-				
+			
+			//start - #17087
+			if(getManagedBean().getFlRequest().getCtContract().isZonalPricing()){
+				IContractSO contractSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+				ContractReqDTO contractReqDTO = new ContractReqDTO();
+				contractReqDTO.setContractVerId(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getContractVerId());
+				contractReqDTO.setAsAtDate(new Date());
+				CtContractAmount ctContractAmount = contractSO.retrieveContractAmount(contractReqDTO).getCtContractAmount();
+				getManagedBean().setMinContractDate(ctContractAmount.getEffDate());
+				getManagedBean().setMaxContractDate(ctContractAmount.getExpDate());
+			}
+			//end - #17087
+			
 		}else if(contractId != null){
 			renewSesionObject();
 			new ContractRequestBackingBean();
@@ -1370,7 +1384,51 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			checkMofAccountExpDate(getManagedBean().getFlRequest());
 			
 			getManagedBean().setButtonVal(FulfilmentConst.CONTRACT_REQUEST);
+			
+			//start - #17087
+			if(getManagedBean().getFlRequest().getCtContract().isZonalPricing()){
+				ContractReqDTO contractReqDTO = new ContractReqDTO();
+				contractReqDTO.setContractVerId(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getContractVerId());
+				contractReqDTO.setAsAtDate(new Date());
+				CtContractAmount ctContractAmount = contractSO.retrieveContractAmount(contractReqDTO).getCtContractAmount();
+				getManagedBean().setMinContractDate(ctContractAmount.getEffDate());
+				getManagedBean().setMaxContractDate(ctContractAmount.getExpDate());				
+			}
+			//end - #17087
 		}
+		
+		//26279 - start
+		if(getManagedBean().getFlRequest().getStatus().getStatusId().longValue() == FulfilmentStatusConst.CR_PENDING_SUBMISSION.longValue() 
+				|| getManagedBean().getFlRequest().getStatus().getStatusId().longValue() == FulfilmentStatusConst.CR_PENDING_APPROVAL.longValue() 
+				|| getManagedBean().getFlRequest().getStatus().getStatusId().longValue() == FulfilmentStatusConst.CR_PENDING_REVISION.longValue() 
+				|| getManagedBean().getFlRequest().getStatus().getStatusId().longValue() == FulfilmentStatusConst.CR_PENDING_REVISION_APPROVAL.longValue() 
+				|| getManagedBean().getFlRequest().getStatus().getStatusId().longValue() == FulfilmentStatusConst.CR_PENDING_QUERY_VERIFICATION.longValue()) {
+			SmSupplier smSupplier = getManagedBean().getFlRequest().getSmSupplier();
+			SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
+			if(smDisciplinaryAction != null) {
+				getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
+				boolean isWarningOnly = false;
+				String warningOrDisciplinaryActionMsg = null;
+				String language =  new FacesScopes().getUserLocale().getLanguage();
+				if(smDisciplinaryAction.isWarning() && !smDisciplinaryAction.isCancelCategory() 
+						&& !smDisciplinaryAction.isSuspendRegistration() && !smDisciplinaryAction.isCancelRegistration() 
+						&& !smDisciplinaryAction.isBlacklistOwner() && !smDisciplinaryAction.isBumiputeraCancel() 
+						&& !smDisciplinaryAction.isManufacturerCancel()) {
+					isWarningOnly = true;
+					warningOrDisciplinaryActionMsg = getWarningOrDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(), language, isWarningOnly) ;
+					getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
+				} else if(smDisciplinaryAction.isCancelCategory() 
+						|| smDisciplinaryAction.isSuspendRegistration() || smDisciplinaryAction.isCancelRegistration() 
+						|| smDisciplinaryAction.isBlacklistOwner() || smDisciplinaryAction.isBumiputeraCancel() 
+						|| smDisciplinaryAction.isManufacturerCancel()){
+					warningOrDisciplinaryActionMsg = getWarningOrDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(), language, isWarningOnly) ;
+					getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
+				}
+			} else {
+				getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
+			}
+		}
+		//26279 - end
 		
 		//Default procurement type category to Supply of Goods in case of null
 		if(getManagedBean().getFlRequest().getProcurementTypeCategory()==null) {
@@ -1394,6 +1452,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		if(!gfmasEnable.equalsIgnoreCase("true")){
 			getManagedBean().setEspkb(true);
 		}
+		
 		//Redmine #20011
 		getManagedBean().setOldGstRateFlg(checkOldGSTRate(getManagedBean().getFlRequest()));
 		getEspkbCommitmentNo();
@@ -2694,7 +2753,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 * 
 	 * @param selectedTabIndex the selected tab index
 	 */
-	public void onTabChange(int selectedTabIndex){
+	public void onTabChange(int selectedTabIndex){		
 		
 		initialize();
 		
@@ -6385,7 +6444,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		this.schno = schNo;
 	}
 	
-	
+	//26279 - start
+	public void viewDisciplinaryAction() {
+		List<DisciplinaryActionVO> disciplinaryActionVOs = retrieveDisciplinaryActions(getManagedBean().getSmDisciplinaryAction());
+		getManagedBean().setDisciplineVOs(disciplinaryActionVOs);
+		RequestContext.getCurrentInstance().execute(
+				"disciplinaryActionHistoryDlg.show();");
+	}
+	//26279 - end
 }
 	
 
