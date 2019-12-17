@@ -37,6 +37,7 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.validator.common.BusinessRegNoValidator;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -92,11 +93,13 @@ public class SelfRequestSupplierAdminBackingBean extends
 			
 			//START SSM INTEGRATION
 			if(SmCommonUtil.getInstance().ssmActive() && this.getManagedBean().getSupplier()!= null && businessTypeTovalidateWithSSM(this.getManagedBean().getSupplier().getRegNo(),this.getManagedBean().getSupplier().getBusinessType())){
+				BusinessRegNoValidator validate = new BusinessRegNoValidator();
+				validate.validateRegNo(this.getManagedBean().getSupplier().getBusinessType(), this.getManagedBean().getSupplier().getRegNo(),true);
 				FacesContext fc = FacesContext.getCurrentInstance();
 				SsmReqDTO ssmReqDTO = new SsmReqDTO();
 				ssmReqDTO.setRegNo(this.getManagedBean().getSupplier().getRegNo());
 				ssmReqDTO.setBusinessType(this.getManagedBean().getSupplier().getBusinessType());
-				ssmReqDTO.setCheckOnly(true);
+				ssmReqDTO.setCheckOnly(true);				
 				SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
 				if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
 					//check the business/company registration status in ssm
