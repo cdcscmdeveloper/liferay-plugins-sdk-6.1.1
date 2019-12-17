@@ -1021,6 +1021,12 @@ public class CreateQtBackingBean extends
 		Boolean type = (Boolean) event.getComponent().getAttributes()
 				.get("value");
 		this.getManagedBean().getQt().setPartial(type);
+		if(type == false){
+		RequestContext.getCurrentInstance().execute("confirmDialogWidgetVar.hide()");
+		}else {
+
+			RequestContext.getCurrentInstance().execute("confirmDialogWidgetVar.show()");
+		}
 	}
 /** #21695 FARID END */	
 /** #21695 FARID START */		
