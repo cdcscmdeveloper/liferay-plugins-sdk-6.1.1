@@ -896,35 +896,49 @@ public class FinancialOrgBackingBean extends
 					throw new EpException(MessageConst.ERROR_775209);
 				}
 			}
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			Date endLess = sdf.parse("2099-12-31");
+//			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//			Date endLess = sdf.parse("2099-12-31");
 			for (int index1 = 0; index1 < pmFinancialAccList.size(); index1++) {
-				if (pmFinancialAccList.get(index1).getRecordStatusFlg() 
-						== DbValueConst.RECORD_STATUS_ACTIVE) {
+				//Enhancement #25136 start
+				if (pmFinancialAccList.get(index1).getRecordStatusFlg()== DbValueConst.RECORD_STATUS_ACTIVE) {
 					if (pmFinancialAccList.size() > 1) {
 						for (int index2 = index1 + 1; index2 < pmFinancialAccList.size(); index2++) {
-							if (pmFinancialAccList.get(index2).getRecordStatusFlg() 
-									== DbValueConst.RECORD_STATUS_ACTIVE) {
+							if (pmFinancialAccList.get(index2).getRecordStatusFlg()== DbValueConst.RECORD_STATUS_ACTIVE) {
 								// Overlap exists if (StartA <= EndB) and (EndA
 								// >= StartB)
-								Date startA = pmFinancialAccList.get(index1).getEffDate();
-								Date endA = pmFinancialAccList.get(index1).getExpDate();
-								Date startB = pmFinancialAccList.get(index2).getEffDate();
-								Date endB = pmFinancialAccList.get(index2).getExpDate();
+//								Date startA = pmFinancialAccList.get(index1).getEffDate();
+//								Date endA = pmFinancialAccList.get(index1).getExpDate();
+//								Date startB = pmFinancialAccList.get(index2).getEffDate();
+//								Date endB = pmFinancialAccList.get(index2).getExpDate();
+//
+//								// not null
+//								if(endA==null){
+//									endA = endLess;
+//								}if(endB==null){
+//									endB = endLess;
+//								}
+								
+								
+//								boolean isCurrentPairOverlap = false;
+//								isCurrentPairOverlap = PmCommonUtil.dateOverlapping(startA, endA, startB, endB, false);
+								Long bankIdA = pmFinancialAccList.get(index1).getPmPaymentBankOrg().getFinancialOrgId();
+								String bankCodeA = pmFinancialAccList.get(index1).getBankCode();
+								String accountCodeA = pmFinancialAccList.get(index1).getAccountNo();
+								Integer statusA = pmFinancialAccList.get(index1).getRecordStatusFlg();
+								 
+								Long bankIdB = pmFinancialAccList.get(index2).getPmPaymentBankOrg().getFinancialOrgId();
+								String bankCodeB = pmFinancialAccList.get(index2).getBankCode();
+								String accountCodeB = pmFinancialAccList.get(index2).getAccountNo();
+								Integer statusB = pmFinancialAccList.get(index2).getRecordStatusFlg();
+								
+								boolean isRedundant  = false;
+								isRedundant = PmCommonUtil.BankDetailRedundant(bankIdA, bankCodeA, accountCodeA, bankIdB, bankCodeB, accountCodeB, statusA, statusB);
 
-								// not null
-								if(endA==null){
-									endA = endLess;
-								}if(endB==null){
-									endB = endLess;
-								}
 								
-								boolean isCurrentPairOverlap = false;
-								isCurrentPairOverlap = PmCommonUtil.dateOverlapping(startA, endA, startB, endB, false);
-								
-								if (isCurrentPairOverlap) {
-									throw new EpException(MessageConst.ERROR_775210);
+								if (isRedundant) {
+									throw new EpException(MessageConst.ERROR_775214);
 								}
+								//Enhancement #25136 end
 							}
 						}
 					} 
