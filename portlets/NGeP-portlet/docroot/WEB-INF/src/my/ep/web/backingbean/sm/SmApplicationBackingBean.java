@@ -1543,10 +1543,10 @@ public class SmApplicationBackingBean extends
 						//SET COMPANY NAME
 						//if rob no need to copy capital.
 						if(businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())){
-							String[] copyProp = {"companyName","robExpiryDate","businessDesc","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus"};
+							String[] copyProp = {"companyName","robExpiryDate","businessDesc","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus","annualRevenueSSM"};
 							EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(),this.getManagedBean().getSmAppl().getSmCompanyBasic(),copyProp);							
 						}else{
-							String[] copyProp = {"companyName","robExpiryDate","authorizedCapital","bumiEquity","foreignCompanyEquity","foreignerEquity","govtEquity","govtUnitrustEquity","businessDesc","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus"};
+							String[] copyProp = {"companyName","robExpiryDate","authorizedCapital","bumiEquity","foreignCompanyEquity","foreignerEquity","govtEquity","govtUnitrustEquity","businessDesc","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus","annualRevenueSSM"};
 							EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(),this.getManagedBean().getSmAppl().getSmCompanyBasic(),copyProp);							
 						}
 						//SET ADDRESS
@@ -12526,12 +12526,14 @@ public class SmApplicationBackingBean extends
 		reqDTO.setApplNo(getManagedBean().getSmAppl().getApplNo());
 		MofRegistrationResDTO resDTO =  SmServiceLookup.getMofRegistrationSO().retrieveSmApplSSM(reqDTO);
 		if(resDTO.getSmAppl().getSmSupplierBranches() != null){
+			this.getManagedBean().getSmSupplierBranchSsm().clear();
 			for(SmSupplierBranch branch:resDTO.getSmAppl().getSmSupplierBranches()){
 				if(branch.isSsmData())
 					this.getManagedBean().getSmSupplierBranchSsm().add(branch);
 			}
 		}
 		if(resDTO.getSmAppl().getSmSupplier().getSmSupplierBusinesses() != null){
+			this.getManagedBean().getSmSupplierBusinessSsm().clear();
 			for(SmSupplierBusiness business:resDTO.getSmAppl().getSmSupplier().getSmSupplierBusinesses()){
 				if(business.isSsmData())
 					this.getManagedBean().getSmSupplierBusinessSsm().add(business);
