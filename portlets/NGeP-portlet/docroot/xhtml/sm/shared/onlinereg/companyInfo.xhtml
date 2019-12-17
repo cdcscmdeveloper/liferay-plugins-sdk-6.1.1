@@ -248,15 +248,7 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td class="tdContent" >
-					<c:choose>
-					    <c:when test="#{empty registrationBackingBean.managedBean.smBusinessAdd.address1}">
-					       <c:set var="address1Size" value="178" scope="request" />
-					    </c:when>
-					    <c:otherwise>
-					        <c:set var="address1Size" value="#{((registrationBackingBean.managedBean.smBusinessAdd.address1.length() + 1)* 5)}" scope="request" />
-					    </c:otherwise>
-					</c:choose>
-					<p:inputText style="width: #{address1Size}pt"
+					<p:inputText size="60"
 						id="compAdd1" required="#{!empty param['disableValidation']}" maxlength="100"
 						label="#{lbl['lbl.sm.companyaddress']}" disabled="#{backingBean.disableFieldSSm(registrationBackingBean.managedBean.smBusinessAdd.ssmData,registrationBackingBean.managedBean.smAppl.applValidWithSsm,registrationBackingBean.managedBean.smBusinessAdd.addressSsmNull)}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.address1}"
@@ -289,16 +281,7 @@
 			<tr>
 				<td></td>
 				<td class="tdContent">
-					<c:choose>
-					    <c:when test="#{empty registrationBackingBean.managedBean.smBusinessAdd.address2}">
-					       <c:set var="address2Size" value="178" scope="request" />
-					    </c:when>
-					    <c:otherwise>
-					        <c:set var="address2Size" value="#{((registrationBackingBean.managedBean.smBusinessAdd.address2.length() + 1)* 5)}" scope="request" />
-					    </c:otherwise>
-					</c:choose>
-					
-					<p:inputText style="width: #{address2Size}pt"
+					<p:inputText size="60"
 						id="compAdd2" maxlength="100" disabled="#{backingBean.disableFieldSSm(registrationBackingBean.managedBean.smBusinessAdd.ssmData,registrationBackingBean.managedBean.smAppl.applValidWithSsm,registrationBackingBean.managedBean.smBusinessAdd.addressSsmNull)}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.address2}" 
 						/></td>
@@ -324,16 +307,7 @@
 			<tr>
 				<td></td>
 				<td class="tdContent">
-					<c:choose>
-					    <c:when test="#{empty registrationBackingBean.managedBean.smBusinessAdd.address3}">
-					       <c:set var="address3Size" value="178" scope="request" />
-					    </c:when>
-					    <c:otherwise>
-					        <c:set var="address3Size" value="#{((registrationBackingBean.managedBean.smBusinessAdd.address3.length() + 1)* 5)}" scope="request" />
-					    </c:otherwise>
-					</c:choose>
-					
-					<p:inputText style="width:#{address3Size}pt"
+					<p:inputText size="60"
 						id="compAdd3" maxlength="100" disabled="#{backingBean.disableFieldSSm(registrationBackingBean.managedBean.smBusinessAdd.ssmData,registrationBackingBean.managedBean.smAppl.applValidWithSsm,registrationBackingBean.managedBean.smBusinessAdd.addressSsmNull)}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.address3}"
 						 /></td>
