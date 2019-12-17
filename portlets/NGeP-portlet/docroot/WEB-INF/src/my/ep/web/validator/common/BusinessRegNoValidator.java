@@ -13,6 +13,7 @@ import javax.faces.validator.FacesValidator;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
+import my.ep.constant.MessageConst;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.commons.lang3.StringUtils;
@@ -49,6 +50,8 @@ public class BusinessRegNoValidator implements Validator {
 			}
 		}
 	}
+	
+	
 
 	/**
 	 * Validate ROS
@@ -65,7 +68,6 @@ public class BusinessRegNoValidator implements Validator {
 			validateRosKoperasi(value.toString());
 		}
 	}
-
 	/**
 	 * Validate ROC
 	 * 
@@ -221,7 +223,7 @@ public class BusinessRegNoValidator implements Validator {
 	 * @param String
 	 *            key
 	 */
-	private void throwErrorMsg(String key) {
+	private void throwErrorMsg(String key) {		
 		throw new ValidatorException(new FacesMessage(
 				FacesMessage.SEVERITY_ERROR, "Business Reg No Error",
 				SmCommonUtil.getMessage(key, null)));
@@ -252,4 +254,63 @@ public class BusinessRegNoValidator implements Validator {
 		}
 		return retVal;
 	}
+	//START SSM INTEGRATION CHANGES
+	private void throwErrorMsgFC(String key,boolean useFC) {
+		if(useFC){
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.addMessage("ssmInvalid",
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, SmCommonUtil.getMessage(key, null),
+							""));
+		}
+		throw new ValidatorException(new FacesMessage(
+				FacesMessage.SEVERITY_ERROR, "Business Reg No Error",
+				SmCommonUtil.getMessage(key, null)));
+		
+	}
+	private void validateRobFc(String robNo,boolean useFC) {
+		String[] splitRob = robNo.split("-");
+		String splitRob1 = "";
+		String splitRob2 = "";
+		if (splitRob != null && splitRob.length > 1) {
+			splitRob1 = splitRob[0] != null ? splitRob[0] : "";
+			splitRob2 = splitRob[1] != null ? splitRob[1] : "";
+			if (splitRob1.length() > 9) {
+				throwErrorMsgFC("lbl.sm.businessregno.beforedash.rob",useFC);
+			} else {
+				if (StringUtils.isBlank(splitRob2) || splitRob2.length() != 1) {
+					throwErrorMsgFC("lbl.sm.businessregno.afterdash.rob",useFC);
+				}
+			}
+		} else {
+			throwErrorMsgFC("lbl.sm.businessregno.notvalid.rob",useFC);
+		}
+	}
+	private void validateRocFc(String rocNo,boolean useFC) {
+		String[] splitRoc = rocNo.split("-");
+		String splitRoc1 = "";
+		String splitRoc2 = "";
+		if (splitRoc != null && splitRoc.length > 1) {
+			splitRoc1 = splitRoc[0] != null ? splitRoc[0] : "";
+			splitRoc2 = splitRoc[1] != null ? splitRoc[1] : "";
+			if (splitRoc1.length() > 7) {
+				throwErrorMsgFC("lbl.sm.businessregno.beforedash.roc",useFC);
+			} else {
+				if (StringUtils.isBlank(splitRoc2) || splitRoc2.length() != 1) {
+					throwErrorMsgFC("lbl.sm.businessregno.afterdash.roc",useFC);
+				}
+			}
+		} else {
+			throwErrorMsgFC("lbl.sm.businessregno.notvalid.roc",useFC);
+		}
+	}
+	public void validateRegNo(String businessType,String regNo,boolean useFc){
+		if (businessType != null && StringUtils.isNotBlank(businessType.toString()))
+				if (robList.contains(businessType)) {
+					validateRobFc(regNo.toString(),useFc);
+				} else if (rocList.contains(businessType)) {
+					validateRocFc(regNo.toString(),useFc);
+				} 
+			
+		}
+	//END SSM INTEGRATION CHANGES
 }
