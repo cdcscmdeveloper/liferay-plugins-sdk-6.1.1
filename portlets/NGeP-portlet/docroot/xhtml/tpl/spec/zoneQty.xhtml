@@ -22,39 +22,22 @@
 				<h:outputText value="* " styleClass="mandatory" rendered="#{editable}" />
 				<h:outputText value="#{lbl['lbl.tpl.spec.content.quantity']}"/>
 			</f:facet>
+			<p:inputText id="zoneQty"
+				style="min-width:0px !important;width:90px; text-align:right;"
+				value="#{tplSpecZoneQty.qty}" required="true"
+				maxlength="14" label="#{lbl['lbl.tpl.spec.content.quantity']}"
+				disabled="#{!isQuestion or !editable or (isSpecificationReq and !isSpecTypeTechnical)}">
+				<p:ajax partialSubmit="true" process="@this" 
+				    listener="#{templateSpecBackingBean.calcTotalAmount(templateSpecBean, templateSpecBean.selectedSpecQuestion.tplSpecAnswers[0], isItemTypeService)}"
+					update="@this, zoneQtyMsg, @(.calcAmount)" />
  <!-- START #21695 farid-->	
-<c:choose>
-		<c:when test="#{templateSpecBackingBean.managedBean.secretaryValidate}">
-			<p:inputText id="zoneQty"
-				style="min-width:0px !important;width:90px; text-align:right;"
-				value="#{tplSpecZoneQty.qty}" required="true"
-				maxlength="14" label="#{lbl['lbl.tpl.spec.content.quantity']}"
-				disabled="#{!isQuestion or !editable or (isSpecificationReq and !isSpecTypeTechnical)}">
-				<p:ajax partialSubmit="true" process="@this" 
-				    listener="#{templateSpecBackingBean.calcTotalAmount(templateSpecBean, templateSpecBean.selectedSpecQuestion.tplSpecAnswers[0], isItemTypeService)}"
-					update="@this, zoneQtyMsg, @(.calcAmount)" />
-
-			</p:inputText>
-			<ac:iconTooltip value="#{lbl['lbl.tpl.qty.instruction.tooltip']}" />
-		</c:when>
-
-<c:otherwise>
-			<p:inputText id="zoneQty"
-				style="min-width:0px !important;width:90px; text-align:right;"
-				value="#{tplSpecZoneQty.qty}" required="true"
-				maxlength="14" label="#{lbl['lbl.tpl.spec.content.quantity']}"
-				disabled="#{!isQuestion or !editable or (isSpecificationReq and !isSpecTypeTechnical)}">
-				<p:ajax partialSubmit="true" process="@this" 
-				    listener="#{templateSpecBackingBean.calcTotalAmount(templateSpecBean, templateSpecBean.selectedSpecQuestion.tplSpecAnswers[0], isItemTypeService)}"
-					update="@this, zoneQtyMsg, @(.calcAmount)" />
-					<ac:validateNumber
-  					rendered="#{!templateSpecBackingBean.managedBean.secretaryValidate}" 
+  			<c:if test="#{!templateSpecBackingBean.managedBean.secretaryValidate}">
+  				<ac:validateNumber
 					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, templateSpecBean.selectedSpecQuestion.clUom.uomCode)}"
 					maxIntegerDigits="10"/>
+			</c:if>
 			</p:inputText>
 			<ac:iconTooltip value="#{lbl['lbl.tpl.qty.instruction.tooltip']}" />
-</c:otherwise>	
-</c:choose>		
 <!-- END #21695 farid-->
 			<p:message id="zoneQtyMsg" for="zoneQty" display="icon" />
 		</p:column>
