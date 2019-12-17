@@ -59,16 +59,6 @@
 					value="#{pidSummaryRptBackingBean.managedBean.contractName}">
 				</p:inputText></td>
 		</tr>
-	</table>
-	
-	<c:if test="#{ptjEnableDisable}">
-			<p:outputLabel value="#{lbl['lbl.rpt.ptj']}"
-				style="margin-top:5px;width:130px;" />
-			<p:selectOneMenu
-				value="#{pidSummaryRptBackingBean.managedBean.scPtj}"
-				style="margin-top:5px;width:300px;">
-				<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
-					itemValue="#{null}"></f:selectItem>
 
 				<f:selectItems value="#{pidSummaryRptBackingBean.retrievePTJList()}"></f:selectItems>
 				<p:ajax event="change" partialSubmit="true" update="@this"

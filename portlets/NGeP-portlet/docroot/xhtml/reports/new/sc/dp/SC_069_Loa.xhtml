@@ -59,16 +59,6 @@
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu></td>
 		</tr>
-	</table>
-
-	<c:if test="#{ptjEnableDisable}">
-		<p:outputLabel value="#{lbl['lbl.rpt.ptj']}"
-			style="margin-top:5px;width:130px;" />
-		<p:selectOneMenu
-			value="#{loaRptBackingBean.managedBean.scPtj}"
-			style="margin-top:5px;width:300px;">
-			<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
-				itemValue="#{null}"></f:selectItem>
 
 			<f:selectItems
 				value="#{loaRptBackingBean.retrievePTJList()}"></f:selectItems>
