@@ -99,12 +99,7 @@ public class SelfRequestSupplierAdminBackingBean extends
 				SsmReqDTO ssmReqDTO = new SsmReqDTO();
 				ssmReqDTO.setRegNo(this.getManagedBean().getSupplier().getRegNo());
 				ssmReqDTO.setBusinessType(this.getManagedBean().getSupplier().getBusinessType());
-				ssmReqDTO.setCheckOnly(true);
-				if(businessTypeIsROB(this.getManagedBean().getSupplier().getBusinessType())){
-					
-				}else{
-					
-				}
+				ssmReqDTO.setCheckOnly(true);				
 				SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
 				if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
 					//check the business/company registration status in ssm
