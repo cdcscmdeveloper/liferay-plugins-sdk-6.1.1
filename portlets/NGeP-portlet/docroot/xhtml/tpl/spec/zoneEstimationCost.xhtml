@@ -87,7 +87,7 @@
 			<p:inputText id="zoneEstCost" 
 				value="#{tplSpecEstimation.indicativeUnitPrice}" style="width:165px; text-align:right;" 
 				required="#{empty tplSpecEstimation.estimatedCost}" maxlength="19"
-				rendered="#{templateSpecBackingBean.checkValueGreaterThanZero(templateSpecBean.selectedSpecQuestion,rowIndex)}"
+				rendered="#{templateSpecBean.selectedSpecQuestion.tplSpecZoneQties[rowIndex].qty ne 0}"
 				disabled="#{!editable}">
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
 				<p:ajax 
@@ -114,7 +114,7 @@
 			<p:inputText id="zoneEstCostValueZero" 
 				value="#{0.00}" style="width:165px; text-align:right;" 
 				required="true" maxlength="19"
-				rendered="#{!templateSpecBackingBean.checkValueGreaterThanZero(templateSpecBean.selectedSpecQuestion,rowIndex)}"
+				rendered="#{templateSpecBean.selectedSpecQuestion.tplSpecZoneQties[rowIndex].qty eq 0}"
 				event="change"
 				disabled="#{editable}">
 			
@@ -148,7 +148,7 @@
 			<p:inputText id="zoneEstCost1" value="#{tplSpecEstimation.estimatedCost}" style="width:165px; text-align:right;" 
 				required="true" maxlength="19" 
 				label="#{lbl['lbl.tpl.spec.content.estimate.cost']}"
-				rendered="#{templateSpecBackingBean.checkValueGreaterThanZero(templateSpecBean.selectedSpecQuestion,rowIndex)}"
+				rendered="#{templateSpecBean.selectedSpecQuestion.tplSpecZoneQties[rowIndex].qty ne 0}"
 				disabled="#{editable}">
 			</p:inputText>
 <!-- #21695 FARID START -->			
@@ -156,7 +156,7 @@
 			<p:inputText id="zoneEstCost2" value="#{0.00}" style="width:165px; text-align:right;" 
 				required="true" maxlength="19" 
 				label="#{lbl['lbl.tpl.spec.content.estimate.cost']}"
-				rendered="#{!templateSpecBackingBean.checkValueGreaterThanZero(templateSpecBean.selectedSpecQuestion,rowIndex)}"
+				rendered="#{templateSpecBean.selectedSpecQuestion.tplSpecZoneQties[rowIndex].qty eq 0}"
 				disabled="#{editable}">
 			</p:inputText>
 			<p:message id="zoneEstCostMsg3" for="zoneEstCost2" display="icon" />
