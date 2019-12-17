@@ -3925,11 +3925,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				SelectItem selectItem = new SelectItem();
 				selectItem.setLabel(personnel.getName());
 				selectItem.setValue(personnel.getIdentificationNo());
-				if(this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF)){
+				//Redmine #26594
+				//if(this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF)){
 					this.getManagedBean().getSelectItemsSmPersonnelOwners().add(selectItem);//FOR MOF
-				}else if(personnel.isEquityOwner()){
-					this.getManagedBean().getSelectItemsSmPersonnelOwners().add(selectItem);//FOR BASIC
-				}
+				//}else if(personnel.isEquityOwner()){
+					//this.getManagedBean().getSelectItemsSmPersonnelOwners().add(selectItem);//FOR BASIC
+				//}
 			}
 		}
 	}
