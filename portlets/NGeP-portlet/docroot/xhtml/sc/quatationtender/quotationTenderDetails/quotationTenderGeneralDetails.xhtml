@@ -453,7 +453,7 @@
 														<f:selectItems
 															value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 														<p:ajax event="change" partialSubmit="true"
-															update="generalLocationList" process="@this" oncomplete="confirmDialogWidgetVar.show()" 
+															update="generalLocationList" process="@this" 
 															listener="#{createQtBB.partialChange}">
 														</p:ajax>
 														<p:ajax render="confirmDialog" ></p:ajax>
