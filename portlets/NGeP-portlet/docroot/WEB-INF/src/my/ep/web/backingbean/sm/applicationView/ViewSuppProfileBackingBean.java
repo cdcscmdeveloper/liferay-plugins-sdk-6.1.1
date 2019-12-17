@@ -15,9 +15,11 @@ import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.SLAUtils;
 import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
 import my.ep.web.util.DateUtils;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
@@ -72,7 +74,7 @@ public class ViewSuppProfileBackingBean extends
 						MessageConst.INFO_721212, null, null);
 			}
 			setTabParam();
-			SLAUtils.getInstance().logSLAInfo("SM","SR",
+			SLAUtils.getInstance().logSLAInfo("SM","SP",
 					"ViewSuppProfileBackingBean.preRenderViewSupplierProfile", startTime);
 			getManagedBean().setRenderedBackButton(false);
 			//26238 - start
@@ -110,11 +112,11 @@ public class ViewSuppProfileBackingBean extends
 						.getLatestApplBySupplierId(Long
 								.parseLong(supplierIdParam)));
 				//LOG : 26549 : SLA Monitoring
-				SLAUtils.getInstance().logSLAInfo("SM","",
+				SLAUtils.getInstance().logSLAInfo("SM","SP",
 						"ViewSuppProfileBackingBean.preRenderViewSupplierProfile", startTime);
 			} else {
 				//LOG : 26549 : SLA Monitoring
-				SLAUtils.getInstance().logSLAInfo("SM","VIEW PROFILE",
+				SLAUtils.getInstance().logSLAInfo("SM","SP",
 						"ViewSuppProfileBackingBean.preRenderViewSupplierProfile", startTime);
 				SmCommonUtil
 						.redirectToPage(
@@ -130,6 +132,16 @@ public class ViewSuppProfileBackingBean extends
 	}
 	
 	//26238 - start
+	/**
+	 * get faces scopes
+	 * 
+	 * @return FacesScopes
+	 */
+	private FacesScopes getFacesScopes() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
+	}
+
 	public void onViewDisciplinaryAction() {
 		SmSupplier currSupp = null;
 		if(getManagedBean().isSupplierUser()){
@@ -138,7 +150,8 @@ public class ViewSuppProfileBackingBean extends
 			currSupp = getManagedBean().getSearchSupplier();
 		}
 		
-		if(getManagedBean().isMofSupplier()){
+		if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())){
 			getManagedBean().setMofSupplier(true);
 		}
 		
@@ -153,7 +166,7 @@ public class ViewSuppProfileBackingBean extends
 				"disciplinaryActionHistoryDlg.show();");
 	} 
 	
-	private static List<DisciplinaryActionVO> getDisciplinaryActionVO(SmSupplier currSupp) {
+	public static List<DisciplinaryActionVO> getDisciplinaryActionVO(SmSupplier currSupp) {
 		List<DisciplinaryActionVO> voList = new ArrayList<DisciplinaryActionVO>();
 		PersonnelReqDTO perReqDTO = new PersonnelReqDTO();
 		perReqDTO.setSmSupplierId(currSupp.getSupplierId());
