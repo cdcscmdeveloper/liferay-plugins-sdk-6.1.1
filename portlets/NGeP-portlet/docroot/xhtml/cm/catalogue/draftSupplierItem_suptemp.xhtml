@@ -109,7 +109,9 @@
 			<p:calendar value="#{selectedSuppCat.cmStandardPricing.startDate}" readonlyInput="true"
 				navigator="true" showOn="button" size="10"
 				mindate="#{catalogueBackingBean.managedBean.currentDate}"
-				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
+				<p:ajax event="dateSelect"  partialSubmit="true" update="endDate" process="@this"/>
+			</p:calendar>
 
 		</p:column>
 		<p:column width="2%">
@@ -117,9 +119,9 @@
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.cm.end.date']}" />
 			</f:facet>
-			<p:calendar value="#{selectedSuppCat.cmStandardPricing.endDate}" readonlyInput="true"
+			<p:calendar value="#{selectedSuppCat.cmStandardPricing.endDate}" readonlyInput="true" id="endDate"
 				navigator="true" showOn="button" size="10"
-				mindate="#{catalogueBackingBean.managedBean.currentDate}"
+				mindate="#{catalogueBackingBean.getMinDate(selectedSuppCat.cmStandardPricing.startDate)}"
 				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 		</p:column>
