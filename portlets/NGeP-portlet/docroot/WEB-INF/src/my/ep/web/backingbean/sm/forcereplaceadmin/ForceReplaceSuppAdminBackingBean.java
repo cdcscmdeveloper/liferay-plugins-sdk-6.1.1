@@ -186,11 +186,6 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * Replace admin with existing personnel and redirect to success page
 	 */
 	public void replaceWithExistingUser() {
-		//26798 & 25969
-		SmCommonUtil.setNewPersonnelPermAndMailAddress(getManagedBean()
-				.getNewAdmin(), getManagedBean().getMailAddr(),
-				getManagedBean().getPermAddr());
-		
 		validateMyIdentity();
 		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO()
 				.reassignSupplierAdmin(getReqDTO());
