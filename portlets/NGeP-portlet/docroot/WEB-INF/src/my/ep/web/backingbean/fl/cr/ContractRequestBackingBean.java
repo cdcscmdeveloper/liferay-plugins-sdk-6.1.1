@@ -1841,6 +1841,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			ContractZoneReqDTO czReqDTO = new ContractZoneReqDTO();
 			Map<ScRequestItem, Map<Long, BigDecimal>> requestItemZonalQtyMap = new HashMap<ScRequestItem, Map<Long, BigDecimal>>();
 			CtContractZone ctContractZone = null;
+			CtContractZone ctContractZoneLatestVer = null; //17087
 			Long ctContractZoneId = null;
 			Map<Long, BigDecimal> zonalQtyMap = null;
 			for(FlDeliveryAddress deliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()){
@@ -1878,8 +1879,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				}
 				zonalQtyMap = requestItemZonalQtyMap.get(requestNoteItem);
 				for(Long contractZoneId : zonalQtyMap.keySet()) {
+					ctContractZoneLatestVer = contractZoneSO.retrieveContractZoneByAddressLatestVer(czReqDTO).getCtContractZone(); //17087
 					ctReqDTO.setItemId(requestNoteItem.getRequestNoteItemId());
-					ctReqDTO.setContractZoneId(contractZoneId);
+					ctReqDTO.setContractZoneId(ctContractZoneLatestVer.getContractZoneId());//17087
 					ctResDTO = contractItemSO.getItemMaxQuantity(ctReqDTO);
 					if(ctResDTO.getCtItemMaxQuantity()!=null) {
 						itemMaxQty = ctResDTO.getCtItemMaxQuantity().getMaxQuantity();
