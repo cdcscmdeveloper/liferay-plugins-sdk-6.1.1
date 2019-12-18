@@ -101,6 +101,7 @@
 				conditionField="recordStatus^1">
 			</ac:lov>
 		</p:column>
+		<!-- START SSM INTEGRATION #27089 -->
 		<p:column width="2%">
 			<f:facet name="header">
 				<h:outputText value="* " styleClass="mandatory" />
@@ -125,7 +126,7 @@
 				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 		</p:column>
-		
+		<!-- END SSM INTEGRATION #27089 -->
 		<p:column width="2%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.action']}
