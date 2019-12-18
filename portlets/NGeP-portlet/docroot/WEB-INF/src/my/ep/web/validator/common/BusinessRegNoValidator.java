@@ -14,6 +14,9 @@ import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
 import my.ep.constant.MessageConst;
+import my.ep.exception.EpException;
+import my.ep.util.MessageUtils;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.commons.lang3.StringUtils;
@@ -259,12 +262,12 @@ public class BusinessRegNoValidator implements Validator {
 		if(useFC){
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.addMessage("ssmInvalid",
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, SmCommonUtil.getMessage(key, null),
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, MessageUtils.getMessage(MessageConst.ERROR_721081,
+							MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale()),
 							""));
 		}
-		throw new ValidatorException(new FacesMessage(
-				FacesMessage.SEVERITY_ERROR, "Business Reg No Error",
-				SmCommonUtil.getMessage(key, null)));
+		throw new EpException(MessageConst.ERROR_721081);
 		
 	}
 	private void validateRobFc(String robNo,boolean useFC) {
