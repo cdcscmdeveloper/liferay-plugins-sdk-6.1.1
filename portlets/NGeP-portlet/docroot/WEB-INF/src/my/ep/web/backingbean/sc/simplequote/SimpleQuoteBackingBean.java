@@ -2275,6 +2275,11 @@ public class SimpleQuoteBackingBean extends
 			reqDTO.setEndLoaRN(getManagedBean().getEndLoaRN());
 			reqDTO.setUserLocale(facesScopes.getUserLocale());
 			
+			
+			if(quote.getPurchaseInDefault()!=null){
+				reqDTO.setPurchaseInDefaultId(quote.getPurchaseInDefault().getPurchaseInDefaultId());
+			}
+			
 			QuoteResDTO quoteResDTO = null;
 			if (outcome.isEmpty()) {
 				reqDTO.setSubmit(Boolean.TRUE);
