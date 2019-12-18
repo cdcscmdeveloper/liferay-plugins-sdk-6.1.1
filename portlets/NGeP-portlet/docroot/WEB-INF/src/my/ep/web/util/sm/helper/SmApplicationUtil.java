@@ -2221,13 +2221,13 @@ public class SmApplicationUtil {
 				}
 				
 				if (managedBean.getSmAppl().isApplValidWithSsm()) {
-					if (managedBean.getBusinessTypeVal().equalsIgnoreCase(
+					if (managedBean.getSmSupplier().getBusinessType().equalsIgnoreCase(
 							SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD)
-							|| managedBean.getBusinessTypeVal().equalsIgnoreCase(
+							|| managedBean.getSmSupplier().getBusinessType().equalsIgnoreCase(
 									SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD)) {
-						throw new EpException(MessageConst.ERROR_722555, new String[] { s, sb.toString(), supType });
-					} else {
 						throw new EpException(MessageConst.ERROR_722677, new String[] { s, sb.toString(), supType });
+					} else {
+						throw new EpException(MessageConst.ERROR_722555, new String[] { s, sb.toString(), supType });
 					}
 				}
 			}
