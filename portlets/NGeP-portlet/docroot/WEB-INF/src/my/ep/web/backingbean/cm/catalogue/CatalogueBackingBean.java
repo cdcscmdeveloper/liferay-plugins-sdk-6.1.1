@@ -10505,4 +10505,16 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		
 		
 	}
+	//SSM INTEGRATION #27089
+	public Date getMinDate(Date startDate){
+		if(startDate==null){
+			return this.getManagedBean().getCurrentDate();
+		}else{
+			Calendar c = new GregorianCalendar();
+			c.setTime(startDate);
+			c.add(Calendar.DATE, 1);
+			Date d = c.getTime();
+			return d;
+		}
+	}
 }
