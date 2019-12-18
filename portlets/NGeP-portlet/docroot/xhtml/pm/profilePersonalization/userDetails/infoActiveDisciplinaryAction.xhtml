@@ -45,8 +45,6 @@
 		}
 	</style>
 	
-		<p:messages id="messages" showDetail="true" autoUpdate="true"
-			closable="true" showSummary="true" escape="false" />
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
@@ -56,10 +54,10 @@
 						<h:outputText rendered="#{not empty profilePersonalizationBackingBean.managedBean.disciplinaryActionMsg}"
 							value="#{profilePersonalizationBackingBean.managedBean.disciplinaryActionMsg}"/>
 						
-						<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-							rendered="#{not empty profilePersonalizationBackingBean.managedBean.disciplinaryActionMsg}"
+						<p:commandLink rendered="#{not empty profilePersonalizationBackingBean.managedBean.disciplinaryActionMsg}"			
 							action="#{viewSuppProfileBackingBean.onViewDisciplinaryAction}" 
-							process="@this" partialSubmit="true" update=":form">
+							update=":form" process="@this"
+							onclick="blockWidget.show()" onsuccess="blockWidget.hide()">
 								<u><h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" styleClass="warning" /></u>
 						</p:commandLink><p:spacer width="2"/>
 						
