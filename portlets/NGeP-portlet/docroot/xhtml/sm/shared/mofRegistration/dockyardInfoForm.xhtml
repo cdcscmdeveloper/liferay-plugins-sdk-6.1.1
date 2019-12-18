@@ -8,7 +8,7 @@
 
 	<p:panel header="#{lbl['lbl.sm.dockyard.details']}" toggleable="true"
 		id="smDocDtPanel" rendered="#{backingBean.managedBean.showDockyardPanel}">
-		<p:outputPanel rendered="#{backingBean.managedBean.showDockyardPanel}">
+		<p:outputPanel id="dockyardPan" rendered="#{backingBean.managedBean.showDockyardPanel}">
 			<br />
 			<ui:repeat var="dockyardCatVar" value="#{backingBean.managedBean.dockYardFacilitiesVOList}" varStatus="dockyardCatVarStatus">
 				<table style="width: 100%;">
@@ -36,7 +36,7 @@
 				          </p:selectBooleanCheckbox>
 				       </f:facet>
 						<p:selectBooleanCheckbox value="#{doc.selected}">
-							<p:ajax event="change" update="@this,:#{p:component('delDockyardBtnId')}" 
+							<p:ajax event="change" update="@this,:#{p:component('dockyardPan')}" 
 								process="@this" partialSubmit="true" />
 						</p:selectBooleanCheckbox>
 					</p:column>
@@ -99,8 +99,8 @@
 					update=":form:tt:dockYardDialog" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
-					process="smDocDtPanel" partialSubmit="true"
-					update=":#{p:component('docDt')},@this" 
+					process="dockyardPan" partialSubmit="true"
+					update=":#{p:component('smDocDtPanel')},@this" 
 					id="delDockyardBtnId" disabled="#{backingBean.disableDeleteBtn(dockyardCatVar.facilityList)}"
 					oncomplete="dockyardDeletePopUp.show()" />
 			</div>
