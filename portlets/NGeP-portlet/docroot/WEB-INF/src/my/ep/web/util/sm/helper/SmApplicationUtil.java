@@ -2219,12 +2219,16 @@ public class SmApplicationUtil {
 				if (currentTab != -1) {
 					setNavigationBackToCurrentPage(currentTab, managedBean);
 				}
-				if(managedBean.getSmAppl().isApplValidWithSsm()){
-					throw new EpException(MessageConst.ERROR_722677, new String[] {
-							s, sb.toString(), supType });
-				} else {
-					throw new EpException(MessageConst.ERROR_722555, new String[] {
-							s, sb.toString(), supType });
+				
+				if (managedBean.getSmAppl().isApplValidWithSsm()) {
+					if (managedBean.getBusinessTypeVal().equalsIgnoreCase(
+							SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD)
+							|| managedBean.getBusinessTypeVal().equalsIgnoreCase(
+									SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD)) {
+						throw new EpException(MessageConst.ERROR_722555, new String[] { s, sb.toString(), supType });
+					} else {
+						throw new EpException(MessageConst.ERROR_722677, new String[] { s, sb.toString(), supType });
+					}
 				}
 				
 			}
