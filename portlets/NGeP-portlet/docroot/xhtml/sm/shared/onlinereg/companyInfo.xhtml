@@ -468,7 +468,7 @@
 		</table>
 	</p:panel>
 		<ui:include src="/xhtml/sm/shared/onlinereg/ownerInfo.xhtml" />
-		<c:if test="#{registrationBackingBean.managedBean.smPersonnelDirector != null and registrationBackingBean.managedBean.smPersonnelDirector.size() >0 and registrationBackingBean.managedBean.smAppl.applType == SupplierManagementConst.ACC_MOF}">	
+		<c:if test="#{registrationBackingBean.managedBean.smPersonnelDirector != null and registrationBackingBean.managedBean.smPersonnelDirector.size() >0}">	
 			<ui:include src="/xhtml/sm/shared/onlinereg/directorInfo.xhtml" />
 		</c:if>
 	
