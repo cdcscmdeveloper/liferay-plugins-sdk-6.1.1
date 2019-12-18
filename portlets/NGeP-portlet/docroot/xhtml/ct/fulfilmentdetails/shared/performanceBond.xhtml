@@ -201,11 +201,11 @@
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.ct.panel.performance.spl.bond']}"/>
 	   	</f:facet>
-	   	<h:panelGrid columns="1">
+	  <!-- 	<h:panelGrid columns="1">
 	    <p:outputLabel value="#{lbl['lbl.ct.bond.spl.alert']}" 
 	   	position = "left" styleClass="red_font" />
 	   	</h:panelGrid>
-	   	<p:spacer width="1" />	
+	   	<p:spacer width="1" />	-->
 	   	<p:dataTable id="tableBondsupplemental" var="varBondsupplemental" rowIndexVar="index" widgetVar="tableBondWidget"
 			value="#{ctBackingBean.managedBean.ctContractAmount.ctPerformanceBondsNew}"  rowKey="#{rowKeyObj}">
 			<ac:paginator for="tableBondsupplemental" />
