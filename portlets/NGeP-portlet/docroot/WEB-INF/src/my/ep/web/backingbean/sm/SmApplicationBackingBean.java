@@ -1584,15 +1584,14 @@ public class SmApplicationBackingBean extends
 								if(businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())){
 									personnel.setSsmData(true);
 									personnel.setShareAmtSsmNull(true);
-									String[] copyEquityOwner = {"birthDate","designation","nameInSsm","raceSsmNull","birthDateSsmNull","designationSsmNull","equityOwner","director","pmCountry"};
+									String[] copyEquityOwner = {"birthDate","designation","nameInSsm","raceSsmNull","birthDateSsmNull","designationSsmNull","equityOwner","director","pmCountry","directorSsm","equityOwnerSsm","IS_MGT_SSM"};
 									EntityHelper.copyEntityPropertiesOnly(personnelSSM,personnel,copyEquityOwner);
 								}else{
 									personnel.setSsmData(true);
-									String[] copyEquityOwner = {"birthDate","shareAmt","designation","nameInSsm","raceSsmNull","birthDateSsmNull","shareAmtSsmNull","designationSsmNull","equityOwner","director","pmCountry"};
+									String[] copyEquityOwner = {"birthDate","shareAmt","designation","nameInSsm","raceSsmNull","birthDateSsmNull","shareAmtSsmNull","designationSsmNull","equityOwner","director","pmCountry","directorSsm","equityOwnerSsm","IS_MGT_SSM"};
 									EntityHelper.copyEntityPropertiesOnly(personnelSSM,personnel,copyEquityOwner);
 								}
 								validateRole(personnel);
-								log.info(personnelSSM.getShareAmt()+" = Personnel Share Amt = "+personnel.getShareAmt());
 								//personnel.setSmPersonnelAddresses(personnelSSM.getSmPersonnelAddresses());
 								//personnel.setSmAppl(this.getManagedBean().getSmAppl());
 								///check ssm address exist or not
