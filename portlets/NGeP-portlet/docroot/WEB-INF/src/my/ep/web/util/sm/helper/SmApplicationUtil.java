@@ -2332,6 +2332,14 @@ public class SmApplicationUtil {
 	public static void validatePaidCaptialAmt(boolean setNavigationCurrentPage,
 			SmApplicationManagedBean managedBean, int currentTab) {
 		SmAppl appl = managedBean.getSmAppl();
+		//SSM INTEGRATION #27110
+		boolean showError = true;
+		if(appl.isApplValidWithSsm() && managedBean.getCurrentPageType()
+				.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)
+				){
+			showError = false;
+			
+		}
 		if (appl != null && appl.getSmCompanyBasic() != null
 				&& appl.getSmCompanyBasic().getPaidUpCapital() != null
 				&& appl.getSmCompanyBasic().getAuthorizedCapital() != null
@@ -2351,9 +2359,12 @@ public class SmApplicationUtil {
 				if (setNavigationCurrentPage) {
 					setNavigationBackToCurrentPage(currentTab, managedBean);
 				}
-				throw new EpException(MessageConst.ERROR_722523,
-						new String[] { SmCommonUtil.getMessage(
-								"lbl.sm.authorized.capital", null) });
+				if(showError){
+					throw new EpException(MessageConst.ERROR_722523,
+							new String[] { SmCommonUtil.getMessage(
+									"lbl.sm.authorized.capital", null) });
+				}
+				
 			}
 			if (managedBean
 					.getBusinessTypeVal()
@@ -2365,9 +2376,12 @@ public class SmApplicationUtil {
 				if (setNavigationCurrentPage) {
 					setNavigationBackToCurrentPage(currentTab, managedBean);
 				}
-				throw new EpException(MessageConst.ERROR_722509,
-						new String[] { SmCommonUtil.getMessage(
-								"label.sm.total.share", null) });
+				if(showError){
+					throw new EpException(MessageConst.ERROR_722509,
+							new String[] { SmCommonUtil.getMessage(
+									"label.sm.total.share", null) });
+				}
+				
 			}
 		}
 		appl = null;
