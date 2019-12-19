@@ -636,8 +636,16 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 					IPaymentMatchSO paymentMatchSO = (IPaymentMatchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IPaymentMatchSO.class);
 
 					resRemarkDTO = paymentMatchSO.retrievePaymentAdviseByOrderId(flRemarkDTO);
+
 					if(resRemarkDTO.getPaymentAdvice()!=null) {
-						initializeRemarkRevision(resRemarkDTO.getPaymentAdvice().getFlWorkflowStatus(), resRemarkDTO.getRemarkList(),false);
+						FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+						FulfilmentResDTO flresDTO = new FulfilmentResDTO();
+						flReqDTO.setDocId(resRemarkDTO.getPaymentAdvice().getPaymentAdviceId());
+						flReqDTO.setDocType(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
+						flReqDTO.setSectionId(FulfilmentConst.REMARK_SECTION_INVOICE_REVISION);
+						flresDTO = paymentMatchSO.retrieveRemarkAndAttachmentSection(flReqDTO);
+						List remarklist = flresDTO.getRemarkList();
+						initializeRemarkRevision(null, remarklist,false);
 
 					}
 					
@@ -2428,17 +2436,12 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		FacesScopes facesScopes = new FacesScopes();
 
 		boolean flWorkflowStatusMatch = false;
-		if(flWorkflowStatus!=null) {
-			if(remarkList.size()>0 && remarkList.get(0).getFlWorkflowStatus()!=null ) {
+		
+		if(remarkList.size()>0  ) {
 				
-				if( remarkList.get(0).getFlWorkflowStatus().getPmStatus().getStatusId().longValue() == FulfilmentStatusConst.CO_PENDING_PAYMENT_QUERY.longValue()
-						||remarkList.get(0).getFlWorkflowStatus().getPmStatus().getStatusId().longValue() == FulfilmentStatusConst.PO_PENDING_PAYMENT_QUERY.longValue()
-						||remarkList.get(0).getFlWorkflowStatus().getPmStatus().getStatusId().longValue() == FulfilmentStatusConst.PA_PENDING_PAYMENT_QUERY.longValue()
-					) {
-					flWorkflowStatusMatch = true;
-				}
-			}
-		} 		
+				flWorkflowStatusMatch = true;
+		}
+				
 	
 		if (flWorkflowStatusMatch) {			
 			getManagedBean().setRemarkRevise(remarkList);
