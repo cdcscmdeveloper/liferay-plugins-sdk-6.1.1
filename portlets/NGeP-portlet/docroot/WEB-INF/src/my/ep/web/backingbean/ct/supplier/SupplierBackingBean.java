@@ -50,11 +50,13 @@ import my.ep.jaxb.ct.bankaccount.CTBankAccountDataType;
 import my.ep.jaxb.ct.factoring.CTFactoringDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtActor;
+import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.factoring.CtFactoring;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmSupplierBank;
@@ -78,6 +80,7 @@ import my.ep.web.util.template.DocumentGenerator;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
+import org.primefaces.component.log.Log;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DualListModel;
@@ -168,6 +171,39 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 		ctBB.initializeRemarkAndAttachement(null, getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 	}
+	
+	/*25139-basri*/
+	public void initializeUpdateFactoring(ContractResDTO resDTO){
+		getManagedBean().setFactoring(new CtFactoring());
+		PmStatus pmStatus = new PmStatus();
+		pmStatus.setStatusId(ContractStatusConst.UF_PENDING_SUBMISSION);
+		getManagedBean().getFactoring().setStatus(pmStatus);
+		getManagedBean().getFactoring().setAgreementDate(resDTO.getContract().getCtFactoring().getAgreementDate());
+		getManagedBean().getFactoring().setCtContract(new CtContract());
+		/*getManagedBean().getFactoring().setFinancialOrg(new PmFinancialOrg());
+		getManagedBean().setAccBankName(null);*/
+		
+		getManagedBean().getFactoring().setEffDate(resDTO.getContract().getCtFactoring().getEffDate());
+		getManagedBean().getFactoring().setExpDate(resDTO.getContract().getCtFactoring().getExpDate());
+		getManagedBean().getFactoring().setAuthRefNo(resDTO.getContract().getCtFactoring().getAuthRefNo());
+		getManagedBean().getFactoring().setFinancialOrg(resDTO.getContract().getCtFactoring().getFinancialOrg());
+		getManagedBean().getFactoring().setFinancialOrgAddress(resDTO.getContract().getCtFactoring().getFinancialOrgAddress());
+		getManagedBean().getFactoring().setBankAccountNo(resDTO.getContract().getCtFactoring().getBankAccountNo());
+		getManagedBean().getFactoring().setBankName(resDTO.getContract().getCtFactoring().getBankName());
+		getManagedBean().getFactoring().setFinancialOrgName(resDTO.getContract().getCtFactoring().getFinancialOrgName());
+		getManagedBean().setAccBankName(resDTO.getContract().getCtFactoring().getBankAccountNo()
+				+ ContractConst.SPACE_SLASH
+				+resDTO.getContract().getCtFactoring().getBankName());
+		getManagedBean().getFactoring().setFilePath(resDTO.getContract().getCtFactoring().getFilePath());
+		getManagedBean().getFactoring().setFileName(resDTO.getContract().getCtFactoring().getFileName());
+		getManagedBean().getFactoring().setAttachement(resDTO.getContract().getCtFactoring().getAttachement());
+		
+		
+		
+		ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
+		ctBB.initializeRemarkAndAttachement(null, getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
+	}
+	/*25139-end*/
 
 	/**
 	 * The method used to clear the previous viewed information before
@@ -258,6 +294,8 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			CTFactoringDataType dataType = (CTFactoringDataType) payLoad;
 			reqDTO = new ContractSupplierReqDTO();
 			reqDTO.setFactoringId(new Long(dataType.getDocId()));
+			reqDTO.setDocType(dataType.getDocType().toString());
+			
 			setFactoringDetails(reqDTO);	
 		}
 	}
@@ -338,6 +376,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			}
 			getManagedBean().setRemarkList(resDTO.getCtRemarks());
 			getManagedBean().setAttachmentList(resDTO.getCtAttachments());
+			getManagedBean().getFactoring().setAttachement(resDTO.getFactoring().getAttachement());
 			getManagedBean().setLoaDate(getManagedBean().getContractVer().getCtContractValue().getAckDate());
 			getManagedBean().setContractNo(getManagedBean().getCtContract().getContractNo());
 			getManagedBean().setContractName(getManagedBean().getCtContract().getContractName());
@@ -349,10 +388,10 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			// Remove Factoring Request
 			if (getManagedBean().getFactoring().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
 				getManagedBean().setRemoveFactoring(true);
-				getManagedBean().setDocType(ParameterConst.DOCTYPE_REMOVE_FACTORING);
+				getManagedBean().setDocType(reqDTO.getDocType());
 			} else {
 				getManagedBean().setRemoveFactoring(false);
-				getManagedBean().setDocType(ParameterConst.DOCTYPE_REQUEST_FACTORING);
+				getManagedBean().setDocType(reqDTO.getDocType());
 			}
 
 			if (getManagedBean().getUserMap().size() == 0) {
@@ -533,18 +572,36 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			getManagedBean().getFactoring().setCtContract(getManagedBean().getCtContract());
 			getManagedBean().getFactoring().setSmSupplier(getManagedBean().getCtContract().getSmSupplier());
 			getManagedBean().getFactoring().setLoa(getManagedBean().getCtContract().getLoa());
+			
+			if (getManagedBean().getAttachmentList() != null  ||  getManagedBean().getFactoring().getAttachement() != null) {
+				for (CtAttachment attachment : getManagedBean().getAttachmentList()) {
+					attachment.setSectionId(ContractConst.ATTACHMENT_FACTORING);
+				}
+				
+				for (CtAttachment attachment : getManagedBean().getFactoring().getAttachement()) {
+					attachment.setSectionId(ContractConst.ATTACHMENT_COPY_AGREEMENT_FACTORING);
+				}
+			}
+			
+			
+			List<CtAttachment> newAttachmentList = new ArrayList<CtAttachment>(getManagedBean().getAttachmentList());
+			newAttachmentList.addAll(getManagedBean().getFactoring().getAttachement());
 
 			reqDTO.setFactoring(getManagedBean().getFactoring());
 			reqDTO.setCtContract(getManagedBean().getFactoring().getCtContract());
 			reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
-			reqDTO.setAttachments(getManagedBean().getAttachmentList());			
+			reqDTO.setAttachments(newAttachmentList);			
 			reqDTO.setDeleteAttachmentList(ctBB.getManagedBean().getDeleteAttachmentList());
 			reqDTO.setUserMap(getManagedBean().getUserMap());
 			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
 			reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
 			reqDTO.setRemoveFactoring(getManagedBean().isRemoveFactoring());
+			reqDTO.setUpdateFactoring(getManagedBean().isUpdateFactoring());
 			reqDTO.setDocType(getManagedBean().getDocType());
-
+			/*25139-basri*/
+			reqDTO.setReqType(getManagedBean().getFcRequestType());
+			/*25139-end*/
+			
 			if (getManagedBean().getPmDigiSign() != null) {
 				reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
 			}
@@ -875,6 +932,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			IFinancialOrgSO financialOrgSO = null;
 			FinancialOrgReqDTO reqDTO = null;
 			FinancialOrgResDTO resDTO = null;
+			SelectItem[] bankItems = null;/*#25138*/
 
 			try {
 				int i = 1;
@@ -891,6 +949,14 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 					getManagedBean().getFactoringCompMap().put(pmFinancialOrg.getFinancialOrgId(), pmFinancialOrg.getFinOrgName());
 				}
 				getManagedBean().setListOfFinancialOrg(items);
+				/*#25139-basri*/
+				bankItems = new SelectItem[1];
+				if(getManagedBean().getDocType().equals("UF")){
+				
+					getFinancialAccountBank();
+			
+				}
+			/*	#25139-end*/
 			} finally {
 				financialOrgSO = null;
 				reqDTO = null;
@@ -898,6 +964,64 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			}
 		}   
 		return getManagedBean().getListOfFinancialOrg();
+	}
+	
+	/**
+	 * The method used to reset the factoring company name, bank account and bank address
+	 * with the selected factoring company.
+	 */
+	public void getFinancialAccountBank() {
+		IFinancialOrgSO financialOrgSO = null;
+		FinancialOrgReqDTO reqDTO = null;
+		FinancialOrgResDTO resDTO = null;
+		SelectItem[] items = null;
+		
+
+		try {
+			financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IFinancialOrgSO.class);
+			reqDTO = new FinancialOrgReqDTO();
+			int i = 1;
+			if (getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId() != null) {
+				reqDTO.setFinancialOrgId(getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId());
+				resDTO = financialOrgSO.retriveFinAccListByFinOrgId(reqDTO);//#25139
+				getManagedBean().getFactoring().setFinancialOrgName(getManagedBean().getFactoringCompMap().get(getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId()));
+				getManagedBean().getFactoring().setFinancialOrgAddress(CtAddressUtil.convertPmAddressTypeToCtAddress(resDTO.getPmAddressType()));
+				//#25139-basri
+				
+				items = new SelectItem[resDTO.getPmFinancialAccList().size() + 1];
+				items[0] = new SelectItem(this.getManagedBean().getAccBankName(), this.getManagedBean().getAccBankName());
+				for (PmFinancialAcc pmFinancialAcc : resDTO.getPmFinancialAccList()) {
+					String account = pmFinancialAcc.getAccountNo();
+					if (pmFinancialAcc.getPmPaymentBankOrg() != null && pmFinancialAcc.getPmPaymentBankOrg().getFinOrgName() != null) {
+						account = account +" "+ ContractConst.SPACE_SLASH +" "+ pmFinancialAcc.getPmPaymentBankOrg().getFinOrgName();
+					}
+					items[i++] = new SelectItem(account, account);
+					if (!getManagedBean().getFinancialAccMap().containsKey(pmFinancialAcc.getAccountNo())) {
+						getManagedBean().getFinancialAccMap().put(pmFinancialAcc.getAccountNo(), pmFinancialAcc);
+					}
+					// Default the bank account no if only 1 bank account is available
+
+					if (resDTO.getPmFinancialAccList().size() == 1) {
+						getManagedBean().getFactoring().setBankAccountNo(resDTO.getPmFinancialAcc().getAccountNo());
+						
+					}
+				}
+				getManagedBean().setPopulateBankAccountList(items);	
+//			    getManagedBean().getFactoring().setBankAccountNo("22222");
+//				getManagedBean().getFactoring().setBankName(resDTO.getPmFinancialAcc().getPmPaymentBankOrg().getFinOrgName()); 
+//				getManagedBean().setAccBankName(getManagedBean().getFactoring().getBankAccountNo()+ ContractConst.SPACE_SLASH + "bank");	
+//				#25139-end
+				
+				
+				
+			}
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			financialOrgSO = null;
+			resDTO = null;
+		}
+		
 	}
 
 	/**
@@ -944,15 +1068,41 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IFinancialOrgSO.class);
 			reqDTO = new FinancialOrgReqDTO();
 			getManagedBean().setAccBankName(null);
+			int i = 1;
 			if (getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId() != null) {
 				reqDTO.setFinancialOrgId(getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId());
-				resDTO = financialOrgSO.retriveFinAccDtlByFinOrgId(reqDTO);
+				resDTO = financialOrgSO.retriveFinAccListByFinOrgId(reqDTO);//#25139
 				getManagedBean().getFactoring().setFinancialOrgName(getManagedBean().getFactoringCompMap().get(getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId()));
 				getManagedBean().getFactoring().setFinancialOrgAddress(CtAddressUtil.convertPmAddressTypeToCtAddress(resDTO.getPmAddressType()));
+				//#25139-basri
+				SelectItem[] items = null;
+				items = new SelectItem[resDTO.getPmFinancialAccList().size() + 1];
+				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+						"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()));
+				for (PmFinancialAcc pmFinancialAcc : resDTO.getPmFinancialAccList()) {
+					String account = pmFinancialAcc.getAccountNo();
+					if (pmFinancialAcc.getPmPaymentBankOrg() != null && pmFinancialAcc.getPmPaymentBankOrg().getFinOrgName() != null) {
+						account = account +" "+ ContractConst.SPACE_SLASH +" "+ pmFinancialAcc.getPmPaymentBankOrg().getFinOrgName();
+					}
+					items[i++] = new SelectItem(account, account);
+					if (!getManagedBean().getFinancialAccMap().containsKey(pmFinancialAcc.getAccountNo())) {
+						getManagedBean().getFinancialAccMap().put(pmFinancialAcc.getAccountNo(), pmFinancialAcc);
+					}
+					// Default the bank account no if only 1 bank account is available
 
-				getManagedBean().getFactoring().setBankAccountNo(resDTO.getPmFinancialAcc().getAccountNo());
-				getManagedBean().getFactoring().setBankName(resDTO.getPmFinancialAcc().getPmPaymentBankOrg().getFinOrgName()); 				
-				getManagedBean().setAccBankName(getManagedBean().getFactoring().getBankAccountNo()+ ContractConst.SPACE_SLASH + getManagedBean().getFactoring().getBankName());	
+					if (resDTO.getPmFinancialAccList().size() == 1) {
+						getManagedBean().getFactoring().setBankAccountNo(resDTO.getPmFinancialAcc().getAccountNo());
+						
+					}
+				}
+				getManagedBean().setPopulateBankAccountList(items);	
+			   /*getManagedBean().getFactoring().setBankAccountNo(resDTO.getPmFinancialAcc().getAccountNo());
+				*getManagedBean().getFactoring().setBankName(resDTO.getPmFinancialAcc().getPmPaymentBankOrg().getFinOrgName()); 
+				*getManagedBean().setAccBankName(getManagedBean().getFactoring().getBankAccountNo()+ ContractConst.SPACE_SLASH + getManagedBean().getFactoring().getBankName());	
+				#25139-end*/
+				
+				
+				
 			}
 		} catch(Exception ex) {
 			ex.printStackTrace();
@@ -961,6 +1111,22 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			resDTO = null;
 		}
 	}
+	
+	/**
+	 * The method used to set bank account no and bank name for selected factoring company
+	 * 
+	 */
+	/*#25139-basri*/
+public void selectFinancialAcc(){
+		String[] str = getManagedBean().getAccBankName().split("/");
+		this.getManagedBean().getFactoring().setBankAccountNo(str[0]);
+		this.getManagedBean().getFactoring().setBankName(str[1]);
+		
+		log.info(this.getManagedBean().getFactoring().getBankAccountNo()+" "+this.getManagedBean().getFactoring().getBankName());
+		
+		
+	}
+	/*#25139-end*/
 
 	/**
 	 * This  method used for back button
@@ -981,6 +1147,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		}
 	}
 
+
 	/**
 	 * The method used to set the upload index for
 	 * file upload purpose.
@@ -1000,31 +1167,71 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	 * @throws Exception  if an exception occurred
 	 * @see    Exception
 	 */
-	public void fileUpload(FileUploadEvent event) throws Exception {
+	public void fileUploadCopyAgreement(FileUploadEvent event) throws Exception {
+		
+		FacesScopes facesScopes = new FacesScopes();
 		UploadedFile item = event.getFile();
 		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
 		String filePath = getManagedBean().getFileDirectory();
 		File file = new File(filePath);
 		file.mkdirs();
-		filePath = filePath + ContractConst.SPACE_SLASH + attachmentFormat.format(item.getFileName(), null);
+		filePath = filePath + "/" + attachmentFormat.format(item.getFileName(), null);
 
-		FileOutputStream fileOutputStream = new FileOutputStream(filePath); 
-		fileOutputStream.write(item.getContents());
-		fileOutputStream.close();    	
+		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
+		fileOuputStream.write(item.getContents());
+		fileOuputStream.close();
 
-		if (getManagedBean().getIndex() == 1) {
-			getManagedBean().getFactoring().setFactoringPayFileName(item.getFileName());
-			getManagedBean().getFactoring().setFactoringPayFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));	  
-		} else if(getManagedBean().getIndex() == 2) {
-			getManagedBean().getFactoring().setFileName(item.getFileName());
-			getManagedBean().getFactoring().setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));	  
-		} else if(getManagedBean().getIndex() == 3) {
-			getManagedBean().getFactoring().setRemoveFileName(item.getFileName());
-			getManagedBean().getFactoring().setRemoveFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-		}
-		RequestContext.getCurrentInstance().execute("uploadFactoringDlg.hide()");
+		getManagedBean().getFactoring().setFileName("Stored in CtAttachment");
+		getManagedBean().getFactoring().setFilePath(DocumentRepositoryUtils.getDBFilePath("CtAttachment"));	
+		
+		CtAttachment attachment = new CtAttachment();
+		attachment.setFileName(item.getFileName());
+		attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+		attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+		attachment.setCreatedUser(facesScopes.getUserSessionBean());
+		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		
+		getManagedBean().getFactoring().getAttachement().add(attachment);
+		
+		
 	}
+	
+	public void fileUpload(FileUploadEvent event) throws Exception {
+			UploadedFile item = event.getFile();
+			AttachmentFormat attachmentFormat = new AttachmentDateFormat();
+			String filePath = getManagedBean().getFileDirectory();
+			File file = new File(filePath);
+			file.mkdirs();
+			filePath = filePath + ContractConst.SPACE_SLASH + attachmentFormat.format(item.getFileName(), null);
+	
+			FileOutputStream fileOutputStream = new FileOutputStream(filePath); 
+			fileOutputStream.write(item.getContents());
+			fileOutputStream.close();    	
+		
+			if (getManagedBean().getIndex() == 1) {
+				getManagedBean().getFactoring().setFactoringPayFileName(item.getFileName());
+				getManagedBean().getFactoring().setFactoringPayFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));	  
+			} else if(getManagedBean().getIndex() == 2) {
+			getManagedBean().getFactoring().setFileName(item.getFileName());
+				getManagedBean().getFactoring().setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));	  
+			} else if(getManagedBean().getIndex() == 3) {
+			getManagedBean().getFactoring().setRemoveFileName(item.getFileName());
+				getManagedBean().getFactoring().setRemoveFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+			}
+			RequestContext.getCurrentInstance().execute("uploadFactoringDlg.hide()");
+		
+			
+			
+		}
 
+	/**
+	 * The method used to retreive the factoring attachment from the list.
+	 */
+	public List<CtAttachment> retrieveAttachmentList()
+	{
+		return getManagedBean().getFactoring().getAttachement();
+	}
+	
 	/**
 	 * The method used to delete the factoring attachment from the list.
 	 */
@@ -1036,6 +1243,19 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			getManagedBean().getFactoring().setFileName(null);
 			getManagedBean().getFactoring().setFilePath(null);
 		}
+	}
+	
+	/**
+	 * The method used to delete attachment from the list.
+	 * 
+	 * @param index  file index of attachment list
+	 */
+	public void deleteAttachmentActionByIndex(int index) {
+		CtAttachment attachment = this.getManagedBean().getFactoring().getAttachement().get(index);
+		if(attachment.getAttachmentId() != null){
+//			getManagedBean().getFactoring().getDeleteAttachmentList().add(attachment);
+		}
+		this.getManagedBean().getFactoring().getAttachement().remove(index);
 	}
 
 	/**
@@ -1057,6 +1277,15 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		} else {
 			return true;
 		}
+	}
+	
+	/**
+	 * The method used to set the file index of attachment list.
+	 * 
+	 * @param index  file index of attachment list
+	 */
+	public void setAttachFileIndex(int index) {
+		this.getManagedBean().setAttachFileIndex(index);
 	}
 
 	/**
@@ -1272,6 +1501,17 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		}	
 	}
 
+	/**
+	 * The method used to download the attached file.
+	 * 
+	 * @param  attachment   an object of attached file
+	 * @throws IOException  if an input or output exception occurred
+	 * @see    IOException
+	 */
+	public void downloadFile(CtAttachment attachment) throws IOException {
+		commonDownload(attachment.getFilePath(), attachment.getFileName());
+	}
+	
 	/**
 	 * The method to used auto update of request.
 	 */
