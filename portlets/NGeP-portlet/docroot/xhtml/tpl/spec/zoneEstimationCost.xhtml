@@ -87,9 +87,10 @@
 			<p:inputText id="zoneEstCost" 
 				value="#{tplSpecEstimation.indicativeUnitPrice}" style="width:165px; text-align:right;" 
 				required="#{empty tplSpecEstimation.estimatedCost}" maxlength="19"
-				rendered="#{templateSpecBean.selectedSpecQuestion.tplSpecZoneQties[rowIndex].qty ne 0}"
-				disabled="#{!editable}">
+				disabled="#{!editable or templateSpecBean.selectedSpecQuestion.tplSpecZoneQties[rowIndex].qty eq 0}">
+				<c:when test="#{templateSpecBean.selectedSpecQuestion.tplSpecZoneQties[rowIndex].qty ne 0}">
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
+				</c:when>
 				<p:ajax 
 					update="@all, zoneEstCostMsg, @(.calcEstAmount), zoneEstCost1"
 					partialSubmit="true"
@@ -107,38 +108,13 @@
 						isFulfilmentTypeScheduled, 
 						templateSpecBean.selectedSpecQuestion.tplSpecZoneQties[rowIndex].tplSpecZoneDtl.specZoneId,
 						tplSpecEstimation.tplSpecQuestion.specQuestionId)}"></p:ajax>
+				<c:when test="#{templateSpecBean.selectedSpecQuestion.tplSpecZoneQties[rowIndex].qty ne 0}">
 					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
+				</c:when>
 			</p:inputText>
+			
 			<p:message id="zoneEstCostMsg" for="zoneEstCost" display="icon" />
-<!-- #21695 FARID START -->			
-			<p:inputText id="zoneEstCostValueZero" 
-				value="#{0.00}" style="width:165px; text-align:right;" 
-				required="true" maxlength="19"
-				rendered="#{templateSpecBean.selectedSpecQuestion.tplSpecZoneQties[rowIndex].qty eq 0}"
-				event="change"
-				disabled="#{editable}">
-			
-				<p:ajax 
-					update="@all, zoneEstCostMsg2, @(.calcEstAmount), zoneEstCost2"
-					partialSubmit="true"
-					process="@this" 
-					listener="#{templateSpecBackingBean.calcItemTotalIndicateUnitPrice(templateSpecBean,
-						tplSpecEstimation.indicativeUnitPrice, 
-						templateSpecBean.selectedSpecQuestion.tplSpecZoneQties[rowIndex].qty, 
-						templateSpecBean.selectedSpecQuestion.clUomFrequency, 
-						templateSpecBean.selectedSpecQuestion.clUomPerDay, 
-						templateSpecBean.selectedSpecQuestion.clUomPerMonth, 
-						specificationBackingBean.managedBean.qt.contractDuration, 
-						tplSpecEstimation.specEstimationId, 
-						isItemTypeService,
-						isFulfilmentTypeScheduled, 
-						templateSpecBean.selectedSpecQuestion.tplSpecZoneQties[rowIndex].tplSpecZoneDtl.specZoneId,
-						tplSpecEstimation.tplSpecQuestion.specQuestionId)}"></p:ajax>
-					
-			</p:inputText>
-			
-			<p:message id="zoneEstCostMsg2" for="zoneEstCostValueZero" display="icon" />
-<!-- #21695 FARID END -->		
+	
 		</p:column>		
 		
 		<p:column style="width:80px;">
@@ -148,19 +124,9 @@
 			<p:inputText id="zoneEstCost1" value="#{tplSpecEstimation.estimatedCost}" style="width:165px; text-align:right;" 
 				required="true" maxlength="19" 
 				label="#{lbl['lbl.tpl.spec.content.estimate.cost']}"
-				rendered="#{templateSpecBean.selectedSpecQuestion.tplSpecZoneQties[rowIndex].qty ne 0}"
-				disabled="#{editable}">
+				disabled="#{editable or templateSpecBean.selectedSpecQuestion.tplSpecZoneQties[rowIndex].qty eq 0}">
 			</p:inputText>
-<!-- #21695 FARID START -->			
-			<p:message id="zoneEstCostMsg1" for="zoneEstCost1" display="icon" />
-			<p:inputText id="zoneEstCost2" value="#{0.00}" style="width:165px; text-align:right;" 
-				required="true" maxlength="19" 
-				label="#{lbl['lbl.tpl.spec.content.estimate.cost']}"
-				rendered="#{templateSpecBean.selectedSpecQuestion.tplSpecZoneQties[rowIndex].qty eq 0}"
-				disabled="#{editable}">
-			</p:inputText>
-			<p:message id="zoneEstCostMsg3" for="zoneEstCost2" display="icon" />
-<!-- #21695 FARID END -->
+
 		</p:column>
 	</p:dataTable>
 </ui:composition>
