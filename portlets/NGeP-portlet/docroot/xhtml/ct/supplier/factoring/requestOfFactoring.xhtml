@@ -234,16 +234,26 @@
 
                    <p:outputLabel value="#{lbl['lbl.ct.bank.account.name']}" />
 				   <h:panelGrid columns="3">
-					   <p:inputText id="bankName" style="width:320px;"
-						value="#{supplierBackingBean.managedBean.accBankName}" disabled="true" />
+					    
+						<p:selectOneMenu id="bankName"  style="width:320px;"
+								value="#{supplierBackingBean.managedBean.accBankName}" required="true"
+								rendered="#{!supplierBackingBean.managedBean.removeFactoring and !supplierBackingBean.managedBean.viewOnly
+								and !supplierBackingBean.isContractAdmin() and !supplierBackingBean.isApproverRole()}" label="#{lbl['lbl.ct.bank.account.name']}">
+								<f:selectItems value="#{supplierBackingBean.managedBean.populateBankAccountList}"/>
+								<p:ajax event="change" process="@this" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								listener="#{supplierBackingBean.selectFinancialAcc}" />
+						</p:selectOneMenu>
+						<p:inputText style="width:320px;" rendered="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.managedBean.viewOnly
+								or supplierBackingBean.isContractAdmin() or supplierBackingBean.isApproverRole()}"
+							value="#{supplierBackingBean.managedBean.accBankName}" disabled="true" />
 					    <p:spacer width="1" />
 					    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.factoring.bank.name']}" />
 				   </h:panelGrid>			
 	
-				   <p:outputLabel value="#{lbl['lbl.ct.start.date']}"  styleClass="required" />
+				   <p:outputLabel value="#{lbl['lbl.ct.ft.start.date']}"  styleClass="required" />
 				    <h:panelGrid columns="5">
 					     <p:calendar id="effdateCal" size="10" required="true" showOn="button" 
-						     value="#{supplierBackingBean.managedBean.factoring.effDate}" label="#{lbl['lbl.ct.start.date']}"
+						     value="#{supplierBackingBean.managedBean.factoring.effDate}" label="#{lbl['lbl.ct.ft.start.date']}"
 						     mindate="#{supplierBackingBean.managedBean.contractVer.ctContractValue.effDate}"
 						     maxdate="#{supplierBackingBean.managedBean.contractVer.ctContractValue.expDate}"
 						     disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.managedBean.viewOnly
@@ -262,32 +272,39 @@
 				    <h:panelGroup id="uploadFactoringPg">
 					    <h:panelGrid columns="5">
 						    <p:commandButton  oncomplete="uploadFactoringDlg.show();return false;"
-							  icon="ui-icon-upload"  immediate="true" update="factoringPanel, uploadFactoringDlg" 
-							   actionListener="#{supplierBackingBean.setUploadIndexValue(2)}"
-							   rendered="#{supplierBackingBean.managedBean.factoring.filePath == null}"/>			 
+							  icon="ui-icon-upload"  immediate="true" update="copyAgreement, uploadFactoringDlg" 
+							  rendered="#{supplierBackingBean.isSupplierRole()}"/>			 
 						     
-						      <h:commandLink title="#{supplierBackingBean.managedBean.factoring.fileName}"
-							     value="#{supplierBackingBean.getShortFileName(supplierBackingBean.managedBean.factoring.fileName)}"
-							     style="float:left;" styleClass="blue_font" rendered="#{supplierBackingBean.managedBean.factoring.filePath != null}"
-							     action="#{supplierBackingBean.commonDownload(supplierBackingBean.managedBean.factoring.filePath, supplierBackingBean.managedBean.factoring.fileName)}" />
-					
-					         <p:commandLink onclick="deleteFactoringAttach.show();"
-						        rendered="#{supplierBackingBean.managedBean.factoring.filePath != null
-									and !supplierBackingBean.managedBean.removeFactoring
-									and !supplierBackingBean.isContractAdmin()
-						        	and !supplierBackingBean.isApproverRole()
-							       	and !supplierBackingBean.managedBean.viewOnly}" >
-			   				    <h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
-			        	     </p:commandLink>
+						      <p:dataGrid id="copyAgreement" value="#{supplierBackingBean.retrieveAttachmentList()}"
+									var="attachAggreement" rowIndexVar="attachAggreementIndex" columns="1" style="width:100%"
+									emptyMessage ="#{lbl['lbl.datatable.msg.no.records.found']}">
+									<table>
+										
+										<tr>
+											<td></td>
+											<td>
+												<h:commandLink value="#{attachAggreement.fileName}" 
+													styleClass="blue_font" action="#{supplierBackingBean.downloadFile(attachAggreement)}" />
+												<p:commandLink onclick="deleteFactoringAttach.show();" action="#{supplierBackingBean.setAttachFileIndex(attachAggreementIndex)}"
+												 	       rendered="#{!supplierBackingBean.managedBean.removeFactoring
+															and !supplierBackingBean.isContractAdmin()
+												        	and !supplierBackingBean.isApproverRole()
+													       	and !supplierBackingBean.managedBean.viewOnly}" >
+							   						<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
+							 	 				</p:commandLink>
+							 	 			</td>
+										</tr>
+									</table>
+								</p:dataGrid>
 						      <p:spacer width="1" />
 				     	      <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.factoring.agreement']}" />
 					  </h:panelGrid>
 				</h:panelGroup>
               
-               	<p:outputLabel value="#{lbl['lbl.ct.end.date']}"  styleClass="required" />
+               	<p:outputLabel value="#{lbl['lbl.ct.ft.end.date']}"  styleClass="required" />
 				<h:panelGrid columns="5">
 					<p:calendar id="expdateCal" size="10" required="true"
-						showOn="button" label="#{lbl['lbl.ct.end.date']}" value="#{supplierBackingBean.managedBean.factoring.expDate}"
+						showOn="button" label="#{lbl['lbl.ct.ft.end.date']}" value="#{supplierBackingBean.managedBean.factoring.expDate}"
 						disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.managedBean.viewOnly
 							or supplierBackingBean.isContractAdmin() or supplierBackingBean.isApproverRole()}"
 						readonlyInput="true" navigator="true" mindate="#{supplierBackingBean.managedBean.factoring.effDate}"
@@ -307,8 +324,8 @@
 					  styleClass="required" rendered="#{supplierBackingBean.managedBean.removeFactoring}"  />
 				     <h:panelGroup id="uploadRemoveFactoringPg" rendered="#{supplierBackingBean.managedBean.removeFactoring}">
 					     <h:panelGrid columns="3">
-					 		<p:commandButton  oncomplete="uploadFactoringDlg.show();return false;"
-							  icon="ui-icon-upload"  immediate="true" update="factoringPanel, uploadFactoringDlg" 
+					 		<p:commandButton  oncomplete="uploadRemoveFactoringDlg.show();return false;"
+							  icon="ui-icon-upload"  immediate="true" update="factoringPanel, uploadRemoveFactoringDlg" 
 							   actionListener="#{supplierBackingBean.setUploadIndexValue(3)}"
 							   rendered="#{supplierBackingBean.managedBean.factoring.removeFilePath == null}"/>			 
 						     
@@ -317,7 +334,7 @@
 							     style="float:left;" styleClass="blue_font" rendered="#{supplierBackingBean.managedBean.factoring.removeFilePath != null}"
 							     action="#{supplierBackingBean.commonDownload(supplierBackingBean.managedBean.factoring.removeFilePath, supplierBackingBean.managedBean.factoring.removeFileName)}" />
 					
-					         <p:commandLink onclick="deleteFactoringAttach.show();"
+					         <p:commandLink onclick="deleteRemoveFactoringAttach.show();"
 						        rendered="#{supplierBackingBean.managedBean.factoring.removeFilePath!= null
 									and !supplierBackingBean.isContractAdmin()
 								    and !supplierBackingBean.isApproverRole()
@@ -345,33 +362,66 @@
 					<p:message for="agDateCal" display="icon" />
 				</h:panelGrid>
 			</h:panelGrid>
-
-			<p:dialog id="uploadFactoringDlg" widgetVar="uploadFactoringDlg"
-				modal="true" width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}" resizable="false"
-				onShow="singleUploadListener(factoringUploadWV);">
+		</p:panel>
+		
+		<p:dialog id="uploadFactoringDlg" widgetVar="uploadFactoringDlg" modal="true" 
+				resizable="false" width="700px" height="350px" 
+				styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}" >
 				<p:ajax event="close" />
-				<p:fileUpload style="display:inline;" mode="advanced" dragDropSupport="false"
-				    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" multiple="false"
-					fileUploadListener="#{supplierBackingBean.fileUpload}"  showButtons="false"
+				<p:fileUpload style="display:inline;"
+					mode="advanced" dragDropSupport="false" 
+					multiple="true"
+				    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+				    fileUploadListener="#{supplierBackingBean.fileUploadCopyAgreement}"
 					allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" widgetVar="factoringUploadWV"
 					invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
 					invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
-					update="factoringPanel" label="#{lbl['lbl.btn.choose']}" oncomplete="uploadFactoringDlg.hide();" >
+					label="#{lbl['lbl.btn.choose']}" 
+					uploadLabel="#{lbl['lbl.btn.upload.all']}"
+					cancelLabel="#{lbl['lbl.btn.remove.all']}" update="copyAgreement"  >
 				</p:fileUpload>
 				<f:facet name="footer">
 				<div class="ppRightBtn">
 			    	<p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadFactoringDlg.hide();" />
 		  		</div>
 		  		</f:facet>
-			</p:dialog>
-		</p:panel>
-		
+		</p:dialog>
+
 		  <p:confirmDialog id="deleteFactoringAttachId" widgetVar="deleteFactoringAttach" message="#{lbl['lbl.msg.confirm.delete']}" 	
                 severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
                  <div class="ppRightBtn">
 		             <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		                   update=":form:copyAgreement" 
+		                   action="#{supplierBackingBean.deleteAttachmentActionByIndex(supplierBackingBean.managedBean.attachFileIndex)}" oncomplete="deleteFactoringAttach.hide();"/>
+			          <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteFactoringAttach.hide();" type="button" />
+		           </div>
+          </p:confirmDialog>
+          
+          <p:dialog id="uploadRemoveFactoringDlg" widgetVar="uploadRemoveFactoringDlg"
+				modal="true" width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}" resizable="false"
+				onShow="singleUploadListener(factoringRemoveUploadWV);">
+				<p:ajax event="close" />
+				<p:fileUpload style="display:inline;" mode="advanced" dragDropSupport="false"
+				    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" multiple="false"
+					fileUploadListener="#{supplierBackingBean.fileUpload}"  showButtons="false"
+					allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" widgetVar="factoringRemoveUploadWV"
+					invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+					invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
+					update="factoringPanel" label="#{lbl['lbl.btn.choose']}" oncomplete="uploadRemoveFactoringDlg.hide();" >
+				</p:fileUpload>
+				<f:facet name="footer">
+				<div class="ppRightBtn">
+			    	<p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadRemoveFactoringDlg.hide();" />
+		  		</div>
+		  		</f:facet>
+			</p:dialog>
+			
+			<p:confirmDialog id="deleteRemoveFactoringAttachId" widgetVar="deleteRemoveFactoringAttach" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                 <div class="ppRightBtn">
+		             <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
 		                   update=":form:factoringPanel" 
-		                   action="#{supplierBackingBean.deleteFactoringAttachment()}" oncomplete="deleteFactoringAttach.hide();"/>
+		                   action="#{supplierBackingBean.deleteFactoringAttachment()}" oncomplete="deleteRemoveFactoringAttach.hide();"/>
 			          <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteFactoringAttach.hide();" type="button" />
 		           </div>
           </p:confirmDialog>

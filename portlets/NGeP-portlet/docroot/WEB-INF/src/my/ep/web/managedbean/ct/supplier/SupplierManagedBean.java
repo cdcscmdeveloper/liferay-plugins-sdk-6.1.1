@@ -23,6 +23,7 @@ import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.factoring.CtFactoring;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -53,6 +54,7 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private Date loaDate;
 	private int index;
 	private boolean removeFactoring;
+	private boolean updateFactoring;
 	private boolean agreeFactoringClause;
 	private boolean viewOnly = false;
 	private boolean autoUpdate;
@@ -63,6 +65,7 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private Map<Long, PmUser> userMap;
 	private Map<Long, String> factoringCompMap;
 	private Map<String, SmSupplierBank> supplierBankAccountMap;
+	private Map<String,PmFinancialAcc> financialAccMap;/*#25139*/
 	private SelectItem[] listOfFinancialOrg;
 	private SelectItem[] populateBankAccountList;
 	private CtContract selectedContract;
@@ -71,6 +74,8 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private CtFactoring factoring;
 	private PmUser supplierPmUser;
 	private PmDigiSign pmDigiSign;
+	private String fcRequestType;
+	private int attachFileIndex;
 
 	@ManagedProperty(value="#{spkiBackingBean}")
 	private SpkiBackingBean spkiBackingBean;
@@ -412,6 +417,24 @@ public class SupplierManagedBean extends BaseManagedBean {
 		this.supplierBankAccountMap = supplierBankAccountMap;
 	}
 
+	/*#25139-basri*/
+	/**
+	 * @return the financialAccMap
+	 */
+	public Map<String, PmFinancialAcc> getFinancialAccMap() {
+		if (financialAccMap == null) {
+			financialAccMap = new HashMap<String, PmFinancialAcc>();
+		}
+		return financialAccMap;
+	}
+
+	/**
+	 * @param financialAccMap the financialAccMap to set
+	 */
+	public void setFinancialAccMap(Map<String, PmFinancialAcc> financialAccMap) {
+		this.financialAccMap = financialAccMap;
+	}
+	/*#25139-end*/
 	/**
 	 * @return the listOfFinancialOrg
 	 */
@@ -564,5 +587,54 @@ public class SupplierManagedBean extends BaseManagedBean {
 	 */
 	public void setDocType(String docType) {
 		this.docType = docType;
+	}
+
+	/*25139-basri*/
+	/**
+	 * @param updateFactoring the updateFactoring to set
+	 */
+	public boolean isUpdateFactoring() {
+		return updateFactoring;
+	}
+
+	/**
+	 * @return the updateFactoring
+	 */
+	public void setUpdateFactoring(boolean updateFactoring) {
+		this.updateFactoring = updateFactoring;
 	}	
+	
+	
+	/**
+	 * @return the fcRequestType
+	 */
+	public String getFcRequestType() {
+		return fcRequestType;
+	}
+
+	/**
+	 * @param fcRequesType the fcRequestType to set
+	 */
+	public void setFcRequestType(String fcRequestType) {
+		this.fcRequestType = fcRequestType;
+	}
+	
+	/**
+	 * @return the attachFileIndex
+	 */
+	public int getAttachFileIndex() {
+		return attachFileIndex;
+	}
+	
+	/**
+	 * @param attachFileIndex the attachFileIndex to set
+	 */
+
+	public void setAttachFileIndex(int attachFileIndex) {
+		this.attachFileIndex = attachFileIndex;
+	}	
+	/*25139-end*/
+	
+	
+	
 }
