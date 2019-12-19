@@ -249,11 +249,10 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 				reqDTO.setActionCode(FulfilmentConst.IDD_ACTION_CODE_CREATE);
 			}
 			
-			if(getManagedBean().getButtonVal() != null && getManagedBean().getButtonVal().equals(BpmOutcomeConst.BPM_REVISE)){
-				if(getManagedBean().getRemarkReviseList()!=null && getManagedBean().getRemarkReviseList().size() > 0){
+			if(getManagedBean().getRemarkReviseList()!=null && getManagedBean().getRemarkReviseList().size() > 0){
 					reqDTO.setFlRemarkRevise(getManagedBean().getRemarkReviseList().get(0));
-				}
-			}			
+			}
+					
 			//end 21229
 			if(getManagedBean().getPmDigiSign() != null){
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
@@ -346,7 +345,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			getManagedBean().setQueryDisplay(false);
 			getManagedBean().setHideReviseRemarks(false);
 			
-			initializeRemarkRevision(paymentAdvice.getFlWorkflowStatus(), null,false);
+			initializeRemarkRevision(ParameterConst.DOCTYPE_PAYMENT_ADVICE, paymentAdvice.getPaymentAdviceId());
 			
 			if(paymentAdvice!=null && paymentAdvice.getStatus()!= null 
 					&& (paymentAdvice.getStatus().getStatusId().equals(FulfilmentStatusConst.PA_PENDING_PAYMENT_QUERY)
@@ -2474,26 +2473,36 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 	}
 	
 	/**
-	 * Initialize remark .
+	 * Initialize remark #21229 .
 	 * <p> get remarks lists.
 	 * @param flWorkflowStatus the fl workflow status
 	 * @param remarkList the remark list
 	 */
-	public void initializeRemarkRevision(FlWorkflowStatus flWorkflowStatus ,List<FlRemark> remarkList, boolean isHideRemarks) {
+	public void initializeRemarkRevision(String docType, Long docId) {
 		FacesScopes facesScopes = new FacesScopes();
+
+		IPaymentMatchSO paymentMatchSO = (IPaymentMatchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IPaymentMatchSO.class);
+		FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		flReqDTO.setDocId(docId);
+		flReqDTO.setDocType(docType);
+		flReqDTO.setSectionId(FulfilmentConst.REMARK_SECTION_INVOICE_REVISION);
+		resDTO = paymentMatchSO.retrieveRemarkAndAttachmentSection(flReqDTO);
+		List remarklist = resDTO.getRemarkList();
 
 		FlRemark remark = new FlRemark();
 		remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
 		remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		remark.setChangedBy(remark.getCreatedBy());
 		remark.setChangedDate(remark.getCreatedDate());
-		remark.setCreatedUsername(facesScopes.getUserSessionBean()
-				.getUserName());
+		remark.setCreatedUsername(facesScopes.getUserSessionBean().getUserName());
 		remark.setUserId(facesScopes.getUserSessionBean().getLoginId());
-	
-		if(!isHideRemarks) {			
-			List remarklist = new ArrayList();
-			remarklist.add(remark);
+
+		if (remarklist.size() == 0 ) {		
+			List remarklistT = new ArrayList();
+			remarklistT.add(remark);
+			getManagedBean().setRemarkReviseList(remarklistT);
+		}else {
 			getManagedBean().setRemarkReviseList(remarklist);
 		}			
 		
