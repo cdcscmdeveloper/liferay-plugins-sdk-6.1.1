@@ -30,7 +30,7 @@
 		
 		<p:column>
 			<f:facet name="header">
-			    <h:outputText value="*" styleClass="mandatory" />
+			    <!-- <h:outputText value="*" styleClass="mandatory" /> -->
 				<h:outputText value=" #{lbl['lbl.pm.settings.yep.period.process']}" />				
 			</f:facet>
 			<c:if test="#{language eq 'en'}">
@@ -52,17 +52,18 @@
 		</p:column>
 		<p:column  width="15%">
 			<f:facet name="header">
-			<h:outputText value="*" styleClass="mandatory" />
+			<!-- <h:outputText value="*" styleClass="mandatory" /> -->
 				#{lbl['lbl.pm.yep.effdate']}
 		    </f:facet>
 			<p:calendar showOn="button" id="orgTypefeeeffDateId" navigator="true"
 				yearRange="#{DateUtils.getCalendarMaxYearRange(feeObj.effDate)}"
-				style="width :100px;" required="true"
+				style="width :100px;" required="false"
 				mindate="#{ruleCatalogueBackingBean.managedBean.today}"
-				label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
+				label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="false"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 				value="#{feeObj.effDate}">
 				<p:ajax event="dateSelect" partialSubmit="true" listener="#{ruleCatalogueBackingBean.setMinDateMaxDate(feeObj.effDate)}" update="@this,orgTypefeeexpDateId" process="@this" />
+				<p:ajax event="valueChange" update="@this" />
 			</p:calendar>
 		</p:column>
 
@@ -74,13 +75,14 @@
 				yearRange="#{DateUtils.getCalendarMaxYearRange(feeObj.expDate)}"
 				style="width :100px;"
 				mindate="#{ruleCatalogueBackingBean.managedBean.minDate}"				
-				label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true"
+				label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="false"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 				value="#{feeObj.expDate}"
 				validatorMessage="#{lbl['lbl.pm.yep.expdate']} #{lbl['lbl.pm.yep.date.range.validation']} #{lbl['lbl.pm.yep.effdate']}.">
 				<f:attribute name="startDate" value="#{feeObj.effDate}" />
 				<f:validator validatorId="primeDateRangeValidator" />
 				<p:ajax event="dateSelect" update="@this" process="@this" />
+				<p:ajax event="valueChange" update="@this" />
 			</p:calendar>
 		</p:column>
 	</p:dataTable>
