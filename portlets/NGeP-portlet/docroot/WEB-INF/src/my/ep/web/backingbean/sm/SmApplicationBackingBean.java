@@ -1717,6 +1717,8 @@ public class SmApplicationBackingBean extends
 				SmApplicationUtil.getInstance()
 						.removeNotApplicableInformationBeforeSave(
 								getManagedBean());
+				//Bug #26703 set whether allowed to change business type from home office to business
+				setBusinessAndHadApprovedSpecialCatcode();
 			} else if (currentPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)) {
 					//Bug #26616
@@ -8835,16 +8837,23 @@ public class SmApplicationBackingBean extends
 	private void setBusinessAndHadApprovedSpecialCatcode() {
 		getManagedBean().setAlreadyBusinessSpecialCatcode(false);
 		StringBuilder bf = new StringBuilder();
-		if (!getManagedBean().getSmAppl().getApplType()
-				.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
-				&& !SmCommonUtil.isCollectionEmpty(getManagedBean().getSmAppl()
-						.getSmSupplierCategories())) {
+		//Bug #26703
+//		if (getManagedBean().getSmAppl().getApplType()
+//				.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+//				&& SmCommonUtil.isCollectionEmpty(getManagedBean().getSmAppl()
+//						.getSmSupplierCategories())) {
 			SmFacility hq = getHq();
 			if (hq != null && hq.getFacilityType().equals("B"))
 				for (SmSupplierCategory cat : getManagedBean().getSmAppl()
 						.getSmSupplierCategories()) {
 					if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
-							&& cat.getPmCategoryL3().getHomeOperated() != DbValueConst.RECORD_STATUS_ACTIVE) {
+							&& cat.getPmCategoryL3().getHomeOperated() != DbValueConst.RECORD_STATUS_ACTIVE 
+							//Bug #26703-start
+							|| cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
+							&& cat.getPmCategoryL3().getHomeOperated() != DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
+							|| cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL
+							&& cat.getPmCategoryL3().getHomeOperated() != DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL) {
+							//Bug #26703-end
 						getManagedBean().setAlreadyBusinessSpecialCatcode(true);
 						bf.append(" "
 								+ cat.getPmCategoryL1().getCategoryL1Code()
@@ -8852,7 +8861,7 @@ public class SmApplicationBackingBean extends
 								+ cat.getPmCategoryL3().getCategoryL3Code()
 								+ ",");
 					}
-				}
+//				}
 		}
 		getManagedBean().setBusinessOfficeCatCodeMsg(
 				SmCommonUtil.getMessage(
