@@ -2924,7 +2924,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			QuationTenderResDTO resDTO = null;
 
 			reqDTO.setQtdetail(scQt);
-			reqDTO.setAvaliableApprovals(scQt.getScQtApprovals());
+			//reqDTO.setAvaliableApprovals(scQt.getScQtApprovals());
 			reqDTO.setAmendMentBean(this.getManagedBean().getAmendMentBean());
 			reqDTO.setDeskOfficer(new FacesScopes().getUserSessionBean());
 			// reqDTO.setRuleDataBean(this.getManagedBean().getRuleDataBean());
