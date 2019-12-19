@@ -5121,6 +5121,7 @@ public class RuleCatalogueBackingBean extends
         currentDt.setTime(DateUtils.getCurrentDateWithoutTime());
 		boolean isValidDt = false;
 		PmFeeExemption p2Np3_period = null, p5_period = null, p6_PATperiod = null;
+		String processname = null;
 		
 		for(PmFeeExemption feeExemption : this.getManagedBean().getFeeExemptionsForYepProcessing()) {			
 			log.info("[#22119] FeeExemption Code: " + feeExemption.getOrgTypeId().getParameterCode());
@@ -5165,19 +5166,44 @@ public class RuleCatalogueBackingBean extends
 				expiryDt.setTime(feeExemption.getExpDate());
 			}
 			
-			log.info("[#22119] Curent date: " + currentDt.getTime().toString());
+			//get process name
+			if(this.getLanguage().equals("en")) {
+				feeExemption.getOrgTypeId().getPmParameterDescs().get(0).getCodeName();
+				processname = feeExemption.getOrgTypeId().getPmParameterDescs().get(0).getCodeName();
+				if(feeExemption.getOrgTypeId().getParameterCode().equals("9")) {
+					processname = "Proses Akhir Tahun Period";
+				}
+				log.info("[#22119] Process name: " + processname);
+			} else if(this.getLanguage().equals("ms")) {
+				feeExemption.getOrgTypeId().getPmParameterDescs().get(1).getCodeName();
+				processname = feeExemption.getOrgTypeId().getPmParameterDescs().get(1).getCodeName();
+				if(feeExemption.getOrgTypeId().getParameterCode().equals("9")) {
+					processname = "Tempoh Proses Akhir Tahun";
+				}
+				log.info("[#22119] Process name: " + processname);
+			}
+			
+			log.info("[#22119] Current date: " + currentDt.getTime().toString());
 			log.info("[#22119] Effective date: " + effectiveDt.getTime().toString());
 			log.info("[#22119] Expiry date: " + expiryDt.getTime().toString());
 			if(feeExemption.getEffDate() != null && effectiveDt.before(currentDt)) {
 				throw new EpException(MessageConst.ERR_900049, 
 						new String[] {ResourceBundleUtils.getMessage("lbl.pm.yep.effdate",
-      				  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+      				  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()), processname});
 			}
 			
 			if(feeExemption.getExpDate() != null && expiryDt.before(currentDt)) {
 				throw new EpException(MessageConst.ERR_900049, 
 						new String[] {ResourceBundleUtils.getMessage("lbl.pm.yep.expdate",
-      				  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+      				  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()), processname});
+			}
+			
+			if(feeExemption.getExpDate() != null && expiryDt.before(effectiveDt)) {
+				throw new EpException(MessageConst.ERR_900050, 
+						new String[] {ResourceBundleUtils.getMessage("lbl.pm.yep.expdate",
+      				  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()), 
+      				  processname, 
+      				  ResourceBundleUtils.getMessage("lbl.pm.yep.effdate", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}
 			
 			isValidDt =  true;
@@ -5194,17 +5220,27 @@ public class RuleCatalogueBackingBean extends
 			
 			for(PmFeeExemption feeExemption : this.getManagedBean().getFeeExemptionsForYepProcessing()) {				
 				if(feeExemption.getOrgTypeId().getParameterCode().equals("7")) {
-					if(p6_PATperiod != null && p6_PATperiod.getEffDate() != null && p6_PATperiod.getExpDate() != null) {
-						p2Np3_period = feeExemption;
+					p2Np3_period = feeExemption;
+					/*if(p6_PATperiod != null && p6_PATperiod.getEffDate() != null && p6_PATperiod.getExpDate() != null) {
+						//p2Np3_period = feeExemption;
 						isValidDt = validateP2AndP3PeriodDt(p2Np3_period, p6_PATperiod);
-					}
+					} */
 				} else if(feeExemption.getOrgTypeId().getParameterCode().equals("8")) {
-					if(p2Np3_period != null && p2Np3_period.getEffDate() != null && p2Np3_period.getExpDate() != null) {
-						p5_period = feeExemption;
+					p5_period = feeExemption;
+					/*if(p2Np3_period != null && p2Np3_period.getEffDate() != null && p2Np3_period.getExpDate() != null) {
+						//p5_period = feeExemption;
 						isValidDt = validateP5PeriodDt(p5_period, p2Np3_period, p6_PATperiod);
-					}
-				}				
+					}*/
+				}
 			}
+			
+			if(p6_PATperiod != null && p6_PATperiod.getEffDate() != null && p6_PATperiod.getExpDate() != null) {				
+				isValidDt = validateP2AndP3PeriodDt(p2Np3_period, p6_PATperiod);
+			}
+			
+			if(p2Np3_period != null && p2Np3_period.getEffDate() != null && p2Np3_period.getExpDate() != null) {				
+				isValidDt = validateP5PeriodDt(p5_period, p2Np3_period, p6_PATperiod);
+			}			
 		}
 		
 		log.info("[#22119] all effective and expiry date is valid ? " + isValidDt);
@@ -5316,11 +5352,12 @@ public class RuleCatalogueBackingBean extends
 		}
 		
 		if(p5_effDt.equals(p2Np3_effDt) || p5_effDt.after(p2Np3_effDt)) {			
-			log.info("[#22119] P5 date is equal or greter than P2 and P3 date");
+			log.info("[#22119] P5 date is equal or greater than P2 and P3 date");
 			isValid = true;
 			
 			if(isValid && (p6_PATperiod != null && p6_PATperiod.getEffDate() != null && p6_PATperiod.getExpDate() != null)) {
-				if(p5_expDt.before(p6_effDt) || p5_effDt.after(p6_expDt)) {			
+				//if(p5_expDt.before(p6_effDt) || p5_effDt.after(p6_expDt)) {
+				if(p5_expDt.before(p6_effDt)) {
 					log.info("[#22119] P5 date not overlap with P6 date");
 					isValid = true;
 				}  else {
