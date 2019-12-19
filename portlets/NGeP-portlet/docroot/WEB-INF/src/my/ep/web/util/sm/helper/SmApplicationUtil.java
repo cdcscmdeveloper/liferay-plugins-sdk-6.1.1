@@ -4006,9 +4006,10 @@ public class SmApplicationUtil {
 			for (SmMofAccount account : accounts) {
 				if (account.getSupplierType().equalsIgnoreCase(
 						smSupplier.getSmAppl().getSupplierType())) {
-					
+					//SSM INTEGRATION #27111
 					if(account.getRecordStatusFlg().compareTo(
-								DbValueConst.RECORD_STATUS_ACTIVE) == 0){
+								DbValueConst.RECORD_STATUS_ACTIVE) == 0 || account.getRecordStatusFlg().compareTo(
+										DbValueConst.RECORD_STATUS_EXPIRED) == 0){
 						Timestamp currentDate = new Timestamp(
 								System.currentTimeMillis());
 						long diff = account.getExpDate().getTime()
