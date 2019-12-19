@@ -5168,13 +5168,13 @@ public class RuleCatalogueBackingBean extends
 			log.info("[#22119] Curent date: " + currentDt.getTime().toString());
 			log.info("[#22119] Effective date: " + effectiveDt.getTime().toString());
 			log.info("[#22119] Expiry date: " + expiryDt.getTime().toString());
-			if(effectiveDt.before(currentDt)) {
+			if(feeExemption.getEffDate() != null && effectiveDt.before(currentDt)) {
 				throw new EpException(MessageConst.ERR_900049, 
 						new String[] {ResourceBundleUtils.getMessage("lbl.pm.yep.effdate",
       				  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}
 			
-			if(expiryDt.before(currentDt)) {
+			if(feeExemption.getExpDate() != null && expiryDt.before(currentDt)) {
 				throw new EpException(MessageConst.ERR_900049, 
 						new String[] {ResourceBundleUtils.getMessage("lbl.pm.yep.expdate",
       				  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
