@@ -3040,6 +3040,34 @@ public class TemplateSpecBackingBean extends
 			}
 			tplSpecQuestion.setTplSpecEstimations(specEstimations);
 		}
+
+/** #21695 FARID START */
+		List<TplSpecEstimation> specEstimationZero = tplSpecQuestion.getTplSpecEstimations();
+		List<TplSpecZoneQty> specEstimationsQtyZero = tplSpecQuestion.getTplSpecZoneQties();
+
+		for (int zoneRow = 0; zoneRow < (specEstimationsQtyZero == null
+				|| specEstimationsQtyZero.size() == 0 ? 0 : specEstimationsQtyZero.size()); zoneRow++){
+			TplSpecZoneQty specEstimationsQtyZeroNew = specEstimationsQtyZero.get(zoneRow);
+			if(specEstimationsQtyZeroNew.getQty().equals(new BigDecimal(0))){
+					if(specEstimationZero != null && specEstimationZero.size() > 0){
+						if(specEstimationsQtyZeroNew.getTplSpecZoneDtl().getSpecZoneId() == specEstimationsQtyZeroNew.getTplSpecZoneDtl().getSpecZoneId()){
+
+							 if(specEstimationsQtyZeroNew.getTplSpecQuestion().getTplSpecEstimations()==null){
+								 specEstimationsQtyZeroNew.getTplSpecQuestion().setTplSpecEstimations(new ArrayList());
+							 }
+							 for(TplSpecEstimation estimation :specEstimationsQtyZeroNew.getTplSpecQuestion().getTplSpecEstimations()){
+								 if(estimation.getTplSpecZoneDtl().getSpecZoneId() == specEstimationsQtyZeroNew.getTplSpecZoneDtl().getSpecZoneId()){
+								 estimation.setIndicativeUnitPrice(new BigDecimal(0));
+								 estimation.setEstimatedCost(new BigDecimal(0));
+								 }
+							 }
+							 
+						}	
+					}
+				}
+			}
+		
+/** #21695 FARID END */		
 	}
 	
 	/**
