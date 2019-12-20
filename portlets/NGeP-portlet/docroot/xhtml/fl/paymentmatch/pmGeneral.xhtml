@@ -184,7 +184,7 @@
 						disabled="true"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.invoiceNo}/#{paymentMatchBackingBean.managedBean.invoiceDate}">
 					</p:inputText>
-					<p:inputText size="24" maxlength="24" 
+					<p:inputText size="35" maxlength="228" 
 						disabled="#{paymentMatchBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or !bpmTasklistBackingBean.managedBean.claim}"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.description}"
 						required="false"
@@ -358,7 +358,52 @@
 				<td><p:inputText disabled="true" size="25"
 						value="#{paymentMatchBackingBean.getText(paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.factoringAddress.contactPhoneNoFull)}" /></td>
 			</tr>
+
 		</table>
+	</p:panel>
+	<p:panel header="#{lbl['lbl.txt.catatankajisemula']}" toggleable="true" rendered="#{!fulfilmentBackingBean.managedBean.isHideRemarks()}" >
+	<table style="width: 50%">
+		<tr>
+			<td class="TableFieldLeft" width="24%"><h:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
+			<td class="TableFieldRight">
+				<p:dataGrid value="#{paymentMatchBackingBean.managedBean.remarkReviseList}" var="remarkRVar" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" rowIndexVar="remarkRIndex" columns="1" styleClass="noBorder">
+					<table>
+						<tr>
+							<td rowspan="2" valign="top">
+								<h:graphicImage value="#{fulfilmentBackingBean.userImagePath(remarkRVar.userId)}" height="30" width="30" />
+							</td>
+							<td width="5"></td>
+							<td width="210px">
+								<h:outputText value="#{remarkRVar.createdUsername}"></h:outputText>,
+								<h:outputText id="remarkDate" value="#{remarkRVar.changedDate}">
+									<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
+								</h:outputText>
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td>
+								<p:inputTextarea cols="40" 
+									value="#{remarkRVar.remark}" rendered="#{remarkRIndex==0 and !fulfilmentBackingBean.managedBean.isHideRemarks()}"
+									disabled="#{!bpmTasklistBackingBean.managedBean.claim}"
+									autoResize="false"
+									onkeyup="limitTextArea(this,1000);"
+									onkeydown="limitTextArea(this,1000);">
+									<p:ajax event="blur" process="@this" />
+								</p:inputTextarea> 
+								<h:outputText value="#{remarkRVar.remark}" rendered="#{remarkRIndex>0 or !fulfilmentBackingBean.managedBean.isHideRemarks()}" style="display: inline-block; width:220px;word-wrap: break-word;" />
+							</td>
+							<td>
+								<h:panelGroup rendered="#{remarkRIndex==0 and !fulfilmentBackingBean.managedBean.isHideRemarks()}">
+								<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.remarks']}"/> 
+								</h:panelGroup>
+							</td>
+						</tr>
+					</table>
+				</p:dataGrid>
+			</td>
+		</tr>
+	</table>
 	</p:panel>
 	<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">
 		<table style="width: 100%">

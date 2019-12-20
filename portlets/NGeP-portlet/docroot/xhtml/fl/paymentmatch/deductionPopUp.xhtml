@@ -115,7 +115,7 @@
 					id="slbtn"
 					value="#{lbl['lbl.btn.select']}"
 					oncomplete="deductionPopup.hide();"
-					update=":form,:form:deductionDataTable,:form:deductionDataTable:paymentMethod" 
+					update=":form,:form:deductionDataTable" 
 					disabled="#{paymentMatchBackingBean.isSelectButtonDisable()}"
 					styleClass="BtnSpacing"
 					action="#{paymentMatchBackingBean.populateSelectedObj}"/>	
