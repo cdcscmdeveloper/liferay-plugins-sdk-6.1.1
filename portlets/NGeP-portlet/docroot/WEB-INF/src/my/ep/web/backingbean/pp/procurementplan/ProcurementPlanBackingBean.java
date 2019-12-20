@@ -5129,10 +5129,20 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			bean.setSearchValue(planSearchBean.getCategoryType().getParameterId());
 			searchBean.getDataFilterBeans().add(bean);
 		}
+		
+		if(planSearchBean.getMinistry()!=null  && planSearchBean.getMinistry().getOrgProfileId()!=null) {
+			log.info("[Bug#27032] Ministry Id: " + planSearchBean.getMinistry().getOrgProfileId());
+		}
+		if(planSearchBean.getKptj()!=null  && planSearchBean.getKptj().getOrgProfileId()!=null) {
+			log.info("[Bug#27032] KPtj Id: " + planSearchBean.getKptj().getOrgProfileId());
+		}
+		if(planSearchBean.getPtj()!=null && planSearchBean.getPtj().getOrgProfileId()!=null) {
+			log.info("[Bug#27032] Ptj Id: " + planSearchBean.getPtj().getOrgProfileId());
+		}
 				
 		//set ptj
 		if(planSearchBean.getPtj()!=null && planSearchBean.getPtj().getOrgProfileId()!=null){
-			log.info("[#25550] Ptj is: " + planSearchBean.getPtj().getOrgProfileId());
+			//log.info("[#25550] Ptj is: " + planSearchBean.getPtj().getOrgProfileId());
 			bean = new SearchFilterBean();
 			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 			bean.setSearchField("ppPlan.orgProfile.orgProfileId");
@@ -5141,7 +5151,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						
 		//set kumpulan ptj
 		} else if(planSearchBean.getKptj()!=null  && planSearchBean.getKptj().getOrgProfileId()!=null){
-			log.info("[#25550] KPtj is: " + planSearchBean.getKptj().getOrgProfileId());
+			//log.info("[#25550] KPtj is: " + planSearchBean.getKptj().getOrgProfileId());
 			bean = new SearchFilterBean();
 			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 			bean.setSearchField("ppPlan.orgProfile." + OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()));
@@ -5150,7 +5160,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						
 		//set ministry
 		}else if(planSearchBean.getMinistry()!=null  && planSearchBean.getMinistry().getOrgProfileId()!=null){
-			log.info("[#25550] Ministry is: "  +planSearchBean.getMinistry().getOrgProfileId());
+			//log.info("[#25550] Ministry is: "  +planSearchBean.getMinistry().getOrgProfileId());
 			bean = new SearchFilterBean();
 			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 			bean.setSearchField("ppPlan.orgProfile." + OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()));
@@ -5205,9 +5215,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				parentOrgProfile.append("orgProfileId");
 				parentOrgProfile.append(CAP_CHAR);
 				parentOrgProfile.append(MinistryOrgProfileId);
-
 			}
-
 		} else {
 			parentOrgProfile.append("  ");
 		}
@@ -5237,12 +5245,14 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	
 	//[Bug#27032]
 	public void resetPtjGroupOrgProfile() {
-		this.getManagedBean().setSelectedKumpulanPTJ(new PmOrgProfile());
+		this.getManagedBean().setSelectedKumpulanPTJ(new PmOrgProfile());		
+		this.getManagedBean().getPlanSearchBean().setKptj(null); //new
 		resetPtjOrgProfile();
 	}
 	
 	//[Bug#27032]
 	public void resetPtjOrgProfile() {
-		this.getManagedBean().setSelectedPTJ(new PmOrgProfile());
+		this.getManagedBean().setSelectedPTJ(new PmOrgProfile());		
+		this.getManagedBean().getPlanSearchBean().setPtj(null); //new
 	}
 }
