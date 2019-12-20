@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
@@ -22,6 +23,7 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
@@ -133,6 +135,28 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	private String gfmasErrorDesc;
 	
 	private Long danStatusId;
+	
+	//Start  #21229
+	private List<SelectItem> populateFactoringAcccList;
+	
+	private List<FlRemark> remarkRevise;
+	
+	private Map<String, PmFinancialOrg> factoringAccountMap;
+	
+	private boolean reviseInvoice = false;
+	
+
+	public Map<String, PmFinancialOrg> getFactoringAccountMap() {
+		if(factoringAccountMap==null) {
+			factoringAccountMap = new HashMap<String, PmFinancialOrg>();
+		}
+		return factoringAccountMap;
+	}
+
+	public void setFactoringAccountMap(Map<String, PmFinancialOrg> factoringAccountMap) {
+		this.factoringAccountMap = factoringAccountMap;
+	}
+	//End  #21229
 	
 	/**
 	 * Gets the doc type.
@@ -1160,4 +1184,31 @@ public class InvoiceManagedBean extends BaseManagedBean {
 		this.prevHideRemarks = prevHideRemarks;
 	}
 
+	//Start  #21229
+	public List<SelectItem> getPopulateFactoringAcccList() {
+		return populateFactoringAcccList;
+	}
+
+	public void setPopulateFactoringAcccList(
+			List<SelectItem> populateFactoringAcccList) {
+		this.populateFactoringAcccList = populateFactoringAcccList;
+	}
+
+	public List<FlRemark> getRemarkRevise() {
+		return remarkRevise;
+	}
+
+	public void setRemarkRevise(List<FlRemark> remarkRevise) {
+		this.remarkRevise = remarkRevise;
+	}
+
+	public boolean isReviseInvoice() {
+		return reviseInvoice;
+	}
+
+	public void setReviseInvoice(boolean reviseInvoice) {
+		this.reviseInvoice = reviseInvoice;
+	}
+	
+	//End  #21229
 }
