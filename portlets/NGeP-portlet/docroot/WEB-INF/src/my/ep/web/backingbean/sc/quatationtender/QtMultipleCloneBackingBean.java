@@ -19,6 +19,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -29,9 +30,10 @@ import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
+import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
@@ -39,7 +41,6 @@ import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
-import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproverSettings;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
@@ -48,6 +49,8 @@ import my.ep.persistence.entity.sc.quationtender.ScQtStatus;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -56,6 +59,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.CloseEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
@@ -107,12 +111,17 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 		this.totalClone=1;
 		selectedScqt=scQt;
 		RequestContext.getCurrentInstance().execute("kklik.show()");
+		this.getManagedBean().setCloned(false);
 	}
 	
 	public void addToClone(){
 		IQTDetailSO QtDetailsSO;
 		try {
-		
+			TreeNode[] nodes=this.selectedNodes;
+			if(nodes.length==0){
+				throw new EpException(MessageConst.ERROR_760494);
+			}
+			
 			if(totalClone>0){
 				QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 				QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
@@ -124,16 +133,18 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 				QuationTenderResDTO tenderResDTO = null;
 				tenderResDTO = QtDetailsSO.retriveQTDetails(tenderReqDTO);
 				ScQt copyScqt = tenderResDTO.getQtDetail();
+				selectedScqt.setQtNo(copyScqt.getQtNo());
 				int i=0;
 				while(i<totalClone){
 					ScQt scQt=populateQtnDetails(copyScqt,QtDetailsSO);
 					
-					TreeNode[] nodes=this.selectedNodes;
 					for(TreeNode node:nodes){
 						QTSelectionNode selection=(QTSelectionNode) node.getData();
 						if(selection.getValue().equals(2L)){
 							if(null!=copyScqt.getScQtSupplierCriteria()){
-								scQt=populateSupplierCriteria(scQt,copyScqt,QtDetailsSO);
+								if(!copyScqt.isPanel()){
+									scQt=populateSupplierCriteria(scQt,copyScqt,QtDetailsSO);
+								}
 							}
 						}
 						if(selection.getValue().equals(3L)){
@@ -165,6 +176,30 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 		}finally{
 			QtDetailsSO=null;
 		}
+		
+		this.getManagedBean().setCloned(true);
+		successMessage(MessageConst.INFO_700074, ParameterTypeConst.DOCUMENT_TYPES,
+				ParameterConst.DOCTYPE_QUOTATION, selectedScqt.getQtNo(), Boolean.FALSE);
+	//	RequestContext.getCurrentInstance().update("qtsearchid, qtList");
+	}
+	
+	public void closeEvent(CloseEvent event){
+		if(this.getManagedBean().isCloned()){
+			this.getManagedBean().getQtnTenderSearchBean().setDocType(ParameterConst.DOCTYPE_QUOTATION);
+			this.getManagedBean().getQtnTenderSearchBean().setDocNo(null);
+			this.getManagedBean().getQtnTenderSearchBean().setQtTitle(null);
+			this.getManagedBean().getQtnTenderSearchBean().setQtNo(null);
+			this.getManagedBean().getQtnTenderSearchBean().setProcurementMode(null);
+			this.getManagedBean().getQtnTenderSearchBean().setFromCreatedDate(null);
+			this.getManagedBean().getQtnTenderSearchBean().setToCreatedDate(null);
+			this.getManagedBean().getQtnTenderSearchBean().setFromPublishDate(null);
+			this.getManagedBean().getQtnTenderSearchBean().setToPublishDate(null);
+			this.getManagedBean().getQtnTenderSearchBean().setFromClosingDate(null);
+			this.getManagedBean().getQtnTenderSearchBean().setToClosingDate(null);
+			this.getManagedBean().getQtnTenderSearchBean().setQtStatus(null);
+			this.getManagedBean().getSearchQTDataModel().reloadData();
+		}
+		
 	}
 	
 	private ScQt populateApprovals(ScQt scQt,ScQt copyScqt,IQTDetailSO QtDetailsSO){
@@ -375,23 +410,34 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
 		tenderReqDTO.setQtdetail(copyScqt);
 		QuationTenderResDTO resDTO =QtDetailsSO.retriveQTSuppQulCriDetails(tenderReqDTO);
+		
 		ScQtSupplierCriteria cps =copyScqt.getScQtSupplierCriteria();
 		
 		ScQtSupplierCriteria supplierCriteria = new ScQtSupplierCriteria();
 		supplierCriteria.setScQt(scQt);
-		supplierCriteria.setAllState(cps.isAllState());
 		supplierCriteria.setBrandNew(true);
-		supplierCriteria.setLocationLevel(cps.getLocationLevel());
-		scQt.setScQtSupplierCriteria(supplierCriteria);
-		
-		if(cps.getQtZoneCriterias()!=null && cps.getQtZoneCriterias().getTplSpecZoneDtls()!=null){
+		setUserDetails(supplierCriteria);
+		if(cps!=null){
+			if(cps.getLocationLevel()!=null){
+				supplierCriteria.setLocationLevel(cps.getLocationLevel());
+			}
+			if(cps.getScQtLocCriteria()!=null){
+				supplierCriteria.setScQtLocCriteria(cps.getScQtLocCriteria());
+			}
+			supplierCriteria.setAllState(cps.isAllState());
+		}
+		if(copyScqt.isZonal()){
 			ScQtZoneCriteria qtZoneCriterias =new ScQtZoneCriteria();
 			qtZoneCriterias.setBrandNew(true);
 			qtZoneCriterias.setScQtSupplierCriteria(supplierCriteria);
-			qtZoneCriterias.setTplSpecZoneDtls(cps.getQtZoneCriterias().getTplSpecZoneDtls());
+			
+			if(cps!=null && cps.getQtZoneCriterias()!=null && cps.getQtZoneCriterias().getTplSpecZoneDtls()!=null){
+				qtZoneCriterias.setTplSpecZoneDtls(cps.getQtZoneCriterias().getTplSpecZoneDtls());
+			}
 			supplierCriteria.setQtZoneCriterias(qtZoneCriterias);
 		}
 		
+		scQt.setScQtSupplierCriteria(supplierCriteria);
 		
 		List<ScQtCategory> categoryResults = resDTO
 				.getCategories();
@@ -445,6 +491,66 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 	//	scQt.setDecExpectedIntendedPrice(copyScqt.getDecExpectedIntendedPrice());
 		
 		scQt.setZonal(copyScqt.isZonal());
+		if(copyScqt.isZonal()){
+			
+			ScQtSupplierCriteria cps =copyScqt.getScQtSupplierCriteria();
+			ScQtSupplierCriteria supplierCriteria = new ScQtSupplierCriteria();
+			supplierCriteria.setScQt(scQt);
+			supplierCriteria.setBrandNew(true);
+			supplierCriteria.setLocationLevel(new PmParameter());
+			supplierCriteria.setScQtLocCriteria(null);
+			setUserDetails(supplierCriteria);
+			
+			ScQtZoneCriteria qtZoneCriterias =new ScQtZoneCriteria();
+			qtZoneCriterias.setBrandNew(true);
+			qtZoneCriterias.setScQtSupplierCriteria(supplierCriteria);
+			setUserDetails(qtZoneCriterias);
+			if(copyScqt.isPanel()){
+				if(cps!=null && cps.getQtZoneCriterias()!=null && cps.getQtZoneCriterias().getTplSpecZoneDtls()!=null){
+					List<TplSpecZoneDtl> listTpl=new ArrayList<TplSpecZoneDtl>();
+					for(TplSpecZoneDtl tpl:cps.getQtZoneCriterias().getTplSpecZoneDtls()){
+						TplSpecZoneDtl tplSpecZoneDtl = new TplSpecZoneDtl();
+						tplSpecZoneDtl.setZoneName(tpl.getZoneName());
+						tplSpecZoneDtl.setPanelZone(tpl.getPanelZone());
+						tplSpecZoneDtl.setTplSpecZone(qtZoneCriterias);
+						setUserDetails(tplSpecZoneDtl);
+						if(tpl.getTplSpecZoneLocs()!=null){
+							List<TplSpecZoneLoc> listLoc=new ArrayList<TplSpecZoneLoc>();
+							for(TplSpecZoneLoc loc:tpl.getTplSpecZoneLocs()){
+								TplSpecZoneLoc l=new TplSpecZoneLoc();
+								l.setBrandNew(true);
+								l.setTplSpecZoneDtl(tplSpecZoneDtl);
+								l.setPmDistrict(loc.getPmDistrict());
+								l.setPmState(loc.getPmState());
+								l.setPmDivision(loc.getPmDivision());
+								l.setZonalLocation(loc.isZonalLocation());
+								setUserDetails(l);
+								listLoc.add(l);
+							}
+							tplSpecZoneDtl.setTplSpecZoneLocs(listLoc);
+						}
+						
+						
+						listTpl.add(tplSpecZoneDtl);
+					}
+					qtZoneCriterias.setTplSpecZoneDtls(listTpl);
+				}
+			}
+			
+			supplierCriteria.setQtZoneCriterias(qtZoneCriterias);
+			scQt.setScQtSupplierCriteria(supplierCriteria);
+		}else{
+			ScQtSupplierCriteria cps =copyScqt.getScQtSupplierCriteria();
+			ScQtSupplierCriteria supplierCriteria = new ScQtSupplierCriteria();
+			supplierCriteria.setScQt(scQt);
+			supplierCriteria.setBrandNew(true);
+			supplierCriteria.setLocationLevel(new PmParameter());
+			supplierCriteria.setScQtLocCriteria(cps.getScQtLocCriteria());
+			supplierCriteria.setAllState(cps.isAllState());
+			setUserDetails(supplierCriteria);
+			scQt.setScQtSupplierCriteria(supplierCriteria);
+		}
+		
 		
 		scQt.setProcurementMode(copyScqt.getProcurementMode());
 		scQt.setQtType(copyScqt.getQtType());
@@ -491,11 +597,17 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 			scQt.setOrgProfileId(pmOrgProfile.getOrgProfileId());
 			scQt.setOwnerOrgProfileId(pmOrgProfile.getOrgProfileId());
 		}
-	
+		
+		
+		if(copyScqt.isPanel()){
+			
+		}
 		
 		return scQt;
 	
 	}
+		
+	
 	
 	private ScQt retrieveScqtCommittee(ScQt copyScqt){
 		String commType = ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE;

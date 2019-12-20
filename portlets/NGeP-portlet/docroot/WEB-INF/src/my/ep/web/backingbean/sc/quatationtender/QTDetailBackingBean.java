@@ -848,7 +848,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 */
 	public String gotoQtSearchPage() {
 		debugLogger("gotoQtSearchPage");
-
+		this.getManagedBean().getSearchQTDataModel().reloadData();
 		return QTConstants.SEARCH_PAGE;
 	}
 	
