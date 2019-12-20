@@ -311,6 +311,8 @@ public class CreateQtBackingBean extends
 					scQt.setPanel(false);
 					this.getManagedBean().setPtjSpecialApproval(ptjSpecialApproval);
 					scQt.setObtainSpecialApproval(false);
+				}else{
+					scQt.setItemGroup(new CtPanelItemGroup());
 				}
 			}else{
 				addFacesMessage(fc, MessageConst.ERROR_760447, null);
