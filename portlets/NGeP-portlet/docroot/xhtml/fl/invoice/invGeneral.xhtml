@@ -263,7 +263,18 @@
 				<td><p:inputText size="45" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factoringOrgName}" /></td>
 				<td style="width: 170px;"><p:outputLabel
 						value="#{lbl['lbl.fl.bank.acc.no.name']}" /></td>
-				<td><p:inputText size="55" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.accountNo}  #{invoiceBackingBean.managedBean.invoice.paymentBankName}" /></td>
+				<td><p:inputText size="55" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.accountNo}  #{invoiceBackingBean.managedBean.invoice.paymentBankName}" rendered="#{invoiceBackingBean.managedBean.invoice.flRequest.docType eq 'CR'}"/>
+					<p:selectOneMenu id="factoringAccountId" label="#{lbl['lbl.fl.bank.acc.no']}" 
+						rendered="#{invoiceBackingBean.managedBean.invoice.flRequest.docType eq 'PR'}"
+						disabled="#{invoiceBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmCancel || invoiceBackingBean.managedBean.buttonVal=='ACK' || !bpmTasklistBackingBean.managedBean.claim}"
+						style="width:350px;margin-bottom: 5px;"
+						value="#{invoiceBackingBean.managedBean.invoice.accountNo}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
+						<f:selectItems value="#{invoiceBackingBean.getFactoringAccountList()}" />
+						<p:ajax event="change" update="@this" listener="#{invoiceBackingBean.factoringInfoActionListener()}" />
+					</p:selectOneMenu>
+				</td>
+			
 			</tr>
 			<tr>
 				<td valign="top" style="width: 137px;"><p:outputLabel
@@ -306,6 +317,39 @@
 						value="#{invoiceBackingBean.getText(invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factoringAddress.contactPhoneNoFull)}" /></td>
 			</tr>
 		</table>
+	</p:panel>
+	<p:panel header="#{lbl['lbl.txt.catatankajisemula']}" toggleable="true">
+	<table style="width: 50%">
+		<tr>
+			<td class="TableFieldLeft" width="24%"><h:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
+			<td class="TableFieldRight">
+				<p:dataGrid value="#{invoiceBackingBean.managedBean.remarkRevise}" var="remarkRVar" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" rowIndexVar="remarkIndex" columns="1" styleClass="noBorder">
+					<table>
+						<tr>
+							<td rowspan="2" valign="top">
+								<h:graphicImage value="#{fulfilmentBackingBean.userImagePath(remarkRVar.userId)}" height="30" width="30" />
+							</td>
+							<td width="5"></td>
+							<td width="210px">
+								<h:outputText value="#{remarkRVar.createdUsername}"></h:outputText>,
+								<h:outputText id="remarkDate" value="#{remarkRVar.changedDate}">
+									<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
+								</h:outputText>
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td>								
+								<h:outputText value="#{remarkRVar.remark}" style="display: inline-block; width:220px;word-wrap: break-word;" />
+							</td>
+							<td>								
+							</td>
+						</tr>
+					</table>
+				</p:dataGrid>
+			</td>
+		</tr>
+	</table>
 	</p:panel>
 	<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">
 		<table style="width: 100%">
