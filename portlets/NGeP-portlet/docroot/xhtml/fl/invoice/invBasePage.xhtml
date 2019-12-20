@@ -91,7 +91,7 @@
 						</p:commandButton></td>
 				</h:panelGroup>
 				<h:panelGroup
-					rendered="#{invoiceBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancel}">	
+					rendered="#{invoiceBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancel and !invoiceBackingBean.managedBean.isReviseInvoice()}">	
 					<td colspan="4" style="text-align: right"><p:commandButton
 							value="#{lbl['lbl.btn.cancel']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{invoiceBackingBean.signingAction(BpmOutcomeConstant.bpmCancel)}">
@@ -116,6 +116,12 @@
 			</tr>
 		</table>
 		<ui:include src="/xhtml/fl/invoice/invReviewHeaderPage.xhtml" />
+		<h:panelGroup id="instructionRevise">
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.txt.pleaseclick']}" escape="false"  />&#160;
+			<p:commandLink value="#{lbl['lbl.txt.guideline']}" ajax="false" style="font-size:11px;font-style:italic" process="@this"
+							action="#{invoiceBackingBean.downloadFile('/shared/FL/Garis_Panduan_Kaji_Semula_Invois.pdf')}"></p:commandLink>&#160;
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.invoice.revise']}" escape="false"  />
+		</h:panelGroup>
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
 				<td width="20%" valign="top" class="sidemenutd"><p:tabMenu
