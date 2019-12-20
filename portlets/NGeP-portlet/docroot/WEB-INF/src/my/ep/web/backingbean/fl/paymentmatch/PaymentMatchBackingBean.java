@@ -10,6 +10,7 @@ import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -46,6 +47,8 @@ import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.payment.IPaymentMatchSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.confgeneral.IConfigGeneralSO;
 import my.ep.biz.service.pm.common.fund.IFundSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
@@ -64,10 +67,13 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constants.CommonConstants;
+import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.confgeneral.ConfigGeneralResDTO;
 import my.ep.dto.pm.common.fund.FundReqDTO;
 import my.ep.dto.pm.common.fund.FundResDTO;
@@ -100,6 +106,7 @@ import my.ep.persistence.entity.fl.payment.FlPaymentDeduction;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmGlAccount;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -109,11 +116,13 @@ import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.GSFType;
+import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.pm.VotFundType;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBaseBackingBean;
@@ -128,6 +137,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.fl.paymentmatch.PaymentMatchManagedBean;
 import my.ep.web.util.CommonUtils;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.InvoiceChargeLineVO;
@@ -159,6 +169,8 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 	private static final String NAV_FULFILMENTNOTE_PAGE= "/xhtml/fl//receivednote/frnBasePage.xhtml";
 	private IPagingDataModel<Object[]> searchVot = new SearchVotPagingDataModel();
 	private IPagingDataModel<Object[]> searchFund = new SearchFundPagingDataModel();
+	//21229
+	private IPagingDataModel<PmOrgProfile> chargedPtjDataModel = new chargedPtjPagingDataModel();
 	
 	/**
 	 * Gets the class name.
@@ -223,7 +235,18 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
-				
+			//start 21229
+			if(getManagedBean().isQueryDisplay() ){
+				reqDTO.setActionCode(FulfilmentConst.IDD_ACTION_CODE_ADJUSTMENT);				
+			}else{
+				reqDTO.setActionCode(FulfilmentConst.IDD_ACTION_CODE_CREATE);
+			}
+			
+			if(getManagedBean().getRemarkReviseList()!=null && getManagedBean().getRemarkReviseList().size() > 0){
+					reqDTO.setFlRemarkRevise(getManagedBean().getRemarkReviseList().get(0));
+			}
+					
+			//end 21229
 			if(getManagedBean().getPmDigiSign() != null){
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 			}
@@ -235,7 +258,10 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 				String messageId = MessageConst.INFO_745013;
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700004;
-				}				
+				}else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+					messageId = MessageConst.INFO_745021;
+				}		
+				
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 						FacesMessage.SEVERITY_INFO, 
 						null,
@@ -307,6 +333,32 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 				setStopInstrNo(paymentAdvice.getFulfilmentOrder());
 				flBB.initializeRemarkAndAttachement(paymentAdvice.getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 			}
+			
+			//start 21229
+			getManagedBean().setQueryDisplay(false);
+			getManagedBean().setHideReviseRemarks(false);
+			
+			initializeRemarkRevision(ParameterConst.DOCTYPE_PAYMENT_ADVICE, paymentAdvice.getPaymentAdviceId());
+			
+			if(paymentAdvice!=null && paymentAdvice.getStatus()!= null 
+					&& (paymentAdvice.getStatus().getStatusId().equals(FulfilmentStatusConst.PA_PENDING_PAYMENT_QUERY)
+							|| paymentAdvice.getStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_PAYMENT_QUERY) 
+							|| paymentAdvice.getStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_PAYMENT_QUERY)) ){
+				getManagedBean().setButtonVal(BpmOutcomeConst.BPM_REVISE);
+				
+				FulfilmentReqDTO reqQueryDTO = new FulfilmentReqDTO();
+				FulfilmentResDTO resQueryDTO = new FulfilmentResDTO();
+				reqQueryDTO.setFlOrderId(paymentObj.getFlOrderId());			
+				resQueryDTO = paymentMatchSO.retrievePaymentQuery(reqQueryDTO);
+				
+				if(resQueryDTO.getQueryPayment() != null){
+					getManagedBean().setQueryDisplay(true);
+					getManagedBean().setQueryPaymentDesc(resQueryDTO.getQueryPayment().getQueryDesc());
+
+				}
+			}
+			//end 21229			
+			
 			for(FlPaymentDeduction deduction : paymentAdvice.getFlPaymentDeduction()){
 				CtDeduction ctDeduction = new CtDeduction();
 				if(deduction.getCtDeduction() != null){
@@ -371,9 +423,12 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		IInvoiceSO invoiceSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IInvoiceSO.class);
-		reqDTO.setInvoice(getManagedBean().getPaymentAdvice().getFlInvoice());
-		resDTO = invoiceSO.isInvoiceTaxable(reqDTO);
-		getManagedBean().setTaxInvoice(resDTO.isTaxable());
+		if(getManagedBean().getPaymentAdvice() !=null){
+			reqDTO.setInvoice(getManagedBean().getPaymentAdvice().getFlInvoice());
+			resDTO = invoiceSO.isInvoiceTaxable(reqDTO);
+			getManagedBean().setTaxInvoice(resDTO.isTaxable());
+		}
+		
 	}
 	
 	/**
@@ -1324,7 +1379,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 	 * @param outcome the outcome
 	 */
 	public void gpkiSignAction(String outcome){
-		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_MATCH)) {
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_MATCH ) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 			validatePaymentMatch(outcome);
 			StringBuilder sb = new StringBuilder();
 			sb.append(getManagedBean().getPaymentAdvice().getFulfilmentOrder().getDocNo()+"|");
@@ -1400,6 +1455,20 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			}
 			
 			paymentSO.validatePaymentMatch(reqDTO);
+				
+			//start 21229
+			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) { 
+				if(getManagedBean().getRemarkReviseList().size() > 0){
+					
+					FlRemark remarkRevise = getManagedBean().getRemarkReviseList().get(0);
+					if(remarkRevise.getRemark() == null || remarkRevise.getRemark().isEmpty()){
+						getManagedBean().setSelectedTabIndex(0);
+						throw new EpException(MessageConst.ERROR_100022, new String[]{
+								ResourceBundleUtils.getMessage("lbl.txt.catatankajisemula",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+					}
+					
+				}
+			}
 			
 		}finally {
 			paymentSO = null;
@@ -1497,6 +1566,12 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			if(deduction.getCtDeduction() == null){
 				return null;
 			}
+			//start 21229
+			if(deduction.getOrgProfile()!=null){
+				deduction.getOrgProfile().getOrgCode();
+			}
+			//end 21229
+			
 			if(deduction.getCtDeduction().getDeductionType().getParameterCode() == null){
 				deductionTable.add(deduction);
 			}else if(!deduction.getCtDeduction().getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_TRANSACTION_FEE)){
@@ -1913,6 +1988,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 		getManagedBean().setSelectedVotFundId(null);
 		getManagedBean().setSelectedVotValue(null);
 		getManagedBean().setSearchVotField(null);
+		getManagedBean().setSelectedPmOrgProfile(null); //start 21229
 	}
 	
 	public boolean isSelectButtonDisable() {
@@ -1942,7 +2018,18 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			try {
 				VotFundReqDTO votReqDTO = new VotFundReqDTO();
 				votReqDTO.setVotRecordStatus(DbValueConst.RECORD_STATUS_ACTIVE);
-				votReqDTO.setPtjGroupCode(getManagedBean().getPaymentAdvice().getFlRequest().getChargeOrgProfile().getParentOrgProfile().getOrgCode());
+				
+				//start 21229
+				if(getManagedBean().getSelectedDeduction().getOrgProfile()!=null){
+					System.out.println("PaymentMatchBackingBean.populateSelectedObj() Jabatan Id"+getManagedBean().getSelectedDeduction().getOrgProfile().getOrgProfileId());
+
+					PmOrgProfile obj = retrieveJabatanOrgProfile(getManagedBean().getSelectedDeduction().getOrgProfile().getOrgProfileId());
+					System.out.println("PaymentMatchBackingBean.SearchVotPagingDataModel.pageChangeListener()"+ obj.getOrgCode());
+					votReqDTO.setPtjGroupCode(obj.getOrgCode());
+				}else{
+					votReqDTO.setPtjGroupCode(getManagedBean().getPaymentAdvice().getFlRequest().getChargeOrgProfile().getParentOrgProfile().getOrgCode());
+				}	
+				//end 21229
 				if(StringUtils.isNotBlank(getManagedBean().getSearchVotField())){
 					if(getManagedBean().getSelectedVotValue() ==  2){
 						votReqDTO.setVotFundCode(getManagedBean().getSearchVotField());
@@ -2136,4 +2223,255 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 		super.downloadFile(downloadPath.toString());
 	}
 	
+	//start 21229
+	/**
+	 * The method used for generating a list of available ministry
+	 * for searching charged PTJ as selection.
+	 * 
+	 * @return the selection list of ministry
+	 */
+	public SelectItem[] getMinistryDropdown() {		
+		SelectItem[] items = null;
+		
+		try {
+		    int i = 1;
+		    IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IOrgProfileSO.class);
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByMinistry(reqDTO);
+		    
+		    List<PmOrgProfile> list = resDTO.getOrgProfileList();
+		    items = new SelectItem[list.size() + 1];
+		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+		    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			for (PmOrgProfile orgProfile : list) {
+			  items[i++] = new SelectItem(orgProfile.getOrgProfileId(), orgProfile.getOrgName());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+	    return items;
+	}
+	
+	/**
+	 * The method used for generating a list of available jabatan
+	 * for searching charged PTJ as selection.
+	 * 
+	 * @return the selection list of jabatan
+	 */
+	public SelectItem[] getJabatanDropdown() {		
+		SelectItem[] items = null;
+		
+		try {
+		    int i = 1;
+		    IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
+		    		ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+		    OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		    if(getManagedBean().getMinistryProfileId()!=null){
+				reqDTO.setParentOrgProfileId(getManagedBean().getMinistryProfileId());
+				reqDTO.setOrgCode(OrganizationType.DEPARTMENT.value());
+				OrgProfileResDTO resDTO = orgProfileSO.retrieveChildDDListByParentOrgProfileId(reqDTO);
+				
+			    List<Object[]> list = resDTO.getOrgProfileDDList();
+			    if(list==null) {
+			    	list = new ArrayList<Object[]>();
+			    }
+			    items = new SelectItem[list.size() + 1];
+			    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+			    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+				
+			    for(Object[] object : list){
+				  items[i++] = new SelectItem(Long.parseLong(object[0].toString()), object[1].toString());
+				}
+		    }else{		    				    
+			   items = new SelectItem[1];
+			   items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+			    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+		    }
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+	    return items;
+	}
+	
+	/**
+	 * The method used for searching the charged PTJ.
+	 */
+	public void searchChargedPtjDetails() {
+		try {
+			chargedPtjDataModel.reloadData();
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), "contract search failed."));
+		}
+	}
+	
+	/**
+	 * Pagination for available charged PTJ search list
+	 */
+	private class chargedPtjPagingDataModel extends PagingDataModel<PmOrgProfile> {
+		private static final long serialVersionUID = 1L;
+
+		public chargedPtjPagingDataModel() {
+			super("tableChargePtj", false);
+		}
+		
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep
+	 * .biz.bean.search.ISearchBean)
+	 */
+	@Override
+	public ISearchResultBean<PmOrgProfile> pageChangeListener(ISearchBean<PmOrgProfile> searchBean) {			
+		try {
+			// Filter By - parameterType
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("orgTypeCode.pmParameterType.parameterType",SearchOperator.OPERATOR_EQUALS.value(),ParameterTypeConst.ORGANISATION_TYPES));
+		
+			// Filter By - Org Type
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("orgTypeCode.parameterCode",SearchOperator.OPERATOR_EQUALS.value(),OrganizationType.DIVISION.value()));
+			
+			// Filter By - Ministry Profile Id
+			Long ministryProfileId = getManagedBean().getMinistryProfileId();
+			if (ministryProfileId == null) {
+				ministryProfileId = 0L;
+			}
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
+							SearchOperator.OPERATOR_EQUALS.value(),
+							ministryProfileId));
+			if (getManagedBean().getJabatanProfileId() != null) {
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean(OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()),
+								SearchOperator.OPERATOR_EQUALS.value(),
+								getManagedBean().getJabatanProfileId()));
+			}
+			
+			Date currentDate = DateUtils.getCurrentDateWithoutTime();
+			// Filter By - Org effDate
+			searchBean.getDataFilterBeans()
+					.add(new SearchFilterBean("pmOrgValidity.effDate",SearchOperator.OPERATOR_LESS_EQUAL.value(), currentDate));
+
+			// Filter By - Org expDate
+			searchBean.getDataFilterBeans().add(
+					new SearchMultiFilterBean(new SearchFilterBean(
+							"pmOrgValidity.expDate",
+							SearchOperator.OPERATOR_GREATER_EQUAL.value(),
+							currentDate), new SearchFilterBean(
+							"pmOrgValidity.expDate",
+							SearchOperator.OPERATOR_IS_NULL.value(), null,
+							SearchCondition.CONDITION_OR.value())));
+			
+			if (getManagedBean().getPtjCodeName() != null
+					&& (getManagedBean().getPtjCodeNameSearchValues() != null && !getManagedBean().getPtjCodeNameSearchValues().equalsIgnoreCase(""))) {
+				if (getManagedBean().getPtjCodeName().equalsIgnoreCase(ContractConst.PTJ_CODE)) {
+					SearchFilterBean filterBean = new SearchFilterBean("pmOrgValidity.orgCode", SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getPtjCodeNameSearchValues());
+					filterBean.setCaseInsensitive(true);
+				    searchBean.getDataFilterBeans().add(filterBean);
+				
+				} else if (getManagedBean().getPtjCodeName().equalsIgnoreCase(ContractConst.PTJ_NAME)) {
+					SearchFilterBean filterBean = new SearchFilterBean("pmOrgValidity.orgName", SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getPtjCodeNameSearchValues());
+					filterBean.setCaseInsensitive(true);
+				    searchBean.getDataFilterBeans().add(filterBean);
+				}
+			}
+			
+			IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			reqDTO.setOrgProfileSearchBean(searchBean);
+			OrgProfileResDTO resDTO = orgProfileSO.searchOrgProfile(reqDTO);
+			if (resDTO.isSuccessful()) {
+				 return resDTO.getOrgProfileResultBean();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+}
+	
+	/**
+	 * The method used to reset the search criteria for charged PTJ.
+	 */
+	public void resetChargedPtjDetails() {
+		getManagedBean().setMinistryProfileId(retrieveMinistryOrgProfile(
+				getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getOrgProfileId()).getOrgProfileId());
+		getManagedBean().setJabatanProfileId(null);
+		//getManagedBean().setJabatanProfileId(retrieveJabatanOrgProfile(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getOrgProfileId()).getOrgProfileId()) ;
+		getManagedBean().setPtjCodeName(ContractConst.PTJ_CODE);		
+		getManagedBean().setPtjCodeNameSearchValues(null);
+		chargedPtjDataModel.resetData();
+	}
+
+	
+	public void addChargedPtjDetails() {
+		getManagedBean().getSelectedDeduction().setOrgProfile(getManagedBean().getSelectedPmOrgProfile());
+		
+		///resetAction();
+	}
+
+	/**
+	 * @return the chargedPtjDataModel
+	 */
+	public IPagingDataModel<PmOrgProfile> getChargedPtjDataModel() {
+		return chargedPtjDataModel;
+	}
+	/**
+	 * @param chargedPtjDataModel the chargedPtjDataModel to set
+	 */
+	public void setChargedPtjDataModel(
+			IPagingDataModel<PmOrgProfile> chargedPtjDataModel) {
+		this.chargedPtjDataModel = chargedPtjDataModel;
+	}
+	
+	/**
+	 * Initialize remark #21229 .
+	 * <p> get remarks lists.
+	 * @param flWorkflowStatus the fl workflow status
+	 * @param remarkList the remark list
+	 */
+	public void initializeRemarkRevision(String docType, Long docId) {
+		FacesScopes facesScopes = new FacesScopes();
+
+		IPaymentMatchSO paymentMatchSO = (IPaymentMatchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IPaymentMatchSO.class);
+		FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		flReqDTO.setDocId(docId);
+		flReqDTO.setDocType(docType);
+		flReqDTO.setSectionId(FulfilmentConst.REMARK_SECTION_INVOICE_REVISION);
+		resDTO = paymentMatchSO.retrieveRemarkAndAttachmentSection(flReqDTO);
+		List remarklist = resDTO.getRemarkList();
+
+		FlRemark remark = new FlRemark();
+		remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+		remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		remark.setChangedBy(remark.getCreatedBy());
+		remark.setChangedDate(remark.getCreatedDate());
+		remark.setCreatedUsername(facesScopes.getUserSessionBean().getUserName());
+		remark.setUserId(facesScopes.getUserSessionBean().getLoginId());
+
+		if (remarklist.size() == 0 ) {		
+			List remarklistT = new ArrayList();
+			remarklistT.add(remark);
+			getManagedBean().setRemarkReviseList(remarklistT);
+		}else {
+			getManagedBean().setRemarkReviseList(remarklist);
+		}			
+		
+	}
+	
+	/**
+	 * Show item query.
+	 *
+	 * @param flItemAddress the fl item address
+	 */
+	public void showQuery(){
+		
+	}
+	
+	//end 21229
 }
