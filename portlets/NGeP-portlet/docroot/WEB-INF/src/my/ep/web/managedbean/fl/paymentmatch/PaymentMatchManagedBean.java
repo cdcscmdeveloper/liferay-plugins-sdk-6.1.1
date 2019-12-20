@@ -17,11 +17,13 @@ import org.primefaces.model.TreeNode;
 
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeductionClause;
+import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.payment.FlPaymentAdvice;
 import my.ep.persistence.entity.fl.payment.FlPaymentDeduction;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmGlAccount;
@@ -138,6 +140,19 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	private boolean hyperLinkPage = false;
 	private boolean taxInvoice = false;
 	
+	//start 21229
+	private Long ministryProfileId;
+	private Long jabatanProfileId;
+	private String ptjCodeName;
+	private String ptjCodeNameSearchValues;
+	
+	private PmOrgProfile selectedPmOrgProfile;
+		
+	private List<FlRemark> remarkReviseList;
+	private boolean hideReviseRemarks = false;
+	private boolean queryDisplay = false;
+	private String queryPaymentDesc;
+	//end 21229
 	/**
 	 * Gets the doc type.
 	 *
@@ -1475,5 +1490,80 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	public void setPopulateSubSetiaList(List<SelectItem> populateSubSetiaList) {
 		this.populateSubSetiaList = populateSubSetiaList;
 	}
+
+	//start 21229
+	public Long getMinistryProfileId() {
+		return ministryProfileId;
+	}
+
+	public void setMinistryProfileId(Long ministryProfileId) {
+		this.ministryProfileId = ministryProfileId;
+	}
+
+	public Long getJabatanProfileId() {
+		return jabatanProfileId;
+	}
+
+	public void setJabatanProfileId(Long jabatanProfileId) {
+		this.jabatanProfileId = jabatanProfileId;
+	}
+
+	public String getPtjCodeName() {
+		return ptjCodeName;
+	}
+
+	public void setPtjCodeName(String ptjCodeName) {
+		this.ptjCodeName = ptjCodeName;
+	}
+
+	public String getPtjCodeNameSearchValues() {
+		return ptjCodeNameSearchValues;
+	}
+
+	public void setPtjCodeNameSearchValues(String ptjCodeNameSearchValues) {
+		this.ptjCodeNameSearchValues = ptjCodeNameSearchValues;
+	}
+
+	public PmOrgProfile getSelectedPmOrgProfile() {
+		return selectedPmOrgProfile;
+	}
+
+	public void setSelectedPmOrgProfile(PmOrgProfile selectedPmOrgProfile) {
+		this.selectedPmOrgProfile = selectedPmOrgProfile;
+	}
+
+	public List<FlRemark> getRemarkReviseList() {
+		return remarkReviseList;
+	}
+
+	public void setRemarkReviseList(List<FlRemark> remarkReviseList) {
+		this.remarkReviseList = remarkReviseList;
+	}
+
+	public boolean isHideReviseRemarks() {
+		return hideReviseRemarks;
+	}
+
+	public void setHideReviseRemarks(boolean hideReviseRemarks) {
+		this.hideReviseRemarks = hideReviseRemarks;
+	}
+
+	public boolean isQueryDisplay() {
+		return queryDisplay;
+	}
+
+	public void setQueryDisplay(boolean queryDisplay) {
+		this.queryDisplay = queryDisplay;
+	}
+
+	public String getQueryPaymentDesc() {
+		return queryPaymentDesc;
+	}
+
+	public void setQueryPaymentDesc(String queryPaymentDesc) {
+		this.queryPaymentDesc = queryPaymentDesc;
+	}
+	
+	//end 21229
 
 }
