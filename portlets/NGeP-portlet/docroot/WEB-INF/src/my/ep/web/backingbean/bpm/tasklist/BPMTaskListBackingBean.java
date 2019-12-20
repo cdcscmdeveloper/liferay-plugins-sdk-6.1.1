@@ -265,7 +265,9 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					"remove-factoring-company");
 			temp.put(FLProcessNameConst.RESUBMIT_ORDER_CANCELLATION + FLProcessNameConst.RESUBMIT_AP59_ORDER,
 					"resubmit-ap59-order");
-
+			//21229
+			temp.put(FLProcessNameConst.INVOICE_AND_PAYMENT_CREATION_PROCESS_NAME
+					+ FLProcessNameConst.REVISE_INVOICE, "invoice");
 			// Added for qt..
 			temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS_NAME
 					+ SCProcessNameConst.SPECIFICATION_APPROVAL, SourcingConstants.NAV_PAGE_PREPARE_CHECKLIST_SCORING);

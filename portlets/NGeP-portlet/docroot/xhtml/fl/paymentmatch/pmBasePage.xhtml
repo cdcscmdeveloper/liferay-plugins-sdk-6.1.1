@@ -49,7 +49,28 @@
 					</td>					
 				</tr>
 			</table>
-		</p:panel>							
+		</p:panel>	
+		<p:panel style="background:#f2dede !important; border:0px;" styleClass="gfmasPanelCss" rendered="#{paymentMatchBackingBean.managedBean.queryDisplay}" >		
+			<table>
+				<tr>
+					<td>
+						<p:commandLink oncomplete="addQuery.show();"
+							action="#{paymentMatchBackingBean.showQuery()}"
+							rendered="#{paymentMatchBackingBean.managedBean.queryDisplay}"
+							update=":form:queryDialog">
+							<p:graphicImage value="/css/images/design/exclamation.png"
+								title="Query" />
+						</p:commandLink>
+						<p:spacer width="2" />
+					</td>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.fl.instruction.payment.query']}" style="color: #C55751 !important; font-weight: normal !important"
+							rendered="#{paymentMatchBackingBean.managedBean.queryDisplay}" />
+					</td>						
+				</tr>
+			</table>
+		</p:panel>			
+				
 		<table style="width: 100%;">
 			<tr>
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" 
@@ -85,7 +106,13 @@
 				</h:panelGroup>	
 			</tr>
 		</table>
-		<ui:include src="/xhtml/fl/paymentmatch/pmReviewHeaderPage.xhtml" />		
+		<ui:include src="/xhtml/fl/paymentmatch/pmReviewHeaderPage.xhtml" />	
+		<h:panelGroup id="instructionRevise">
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.txt.pleaseclick']}" escape="false"  />&#160;
+			<p:commandLink value="#{lbl['lbl.txt.guideline']}" ajax="false" style="font-size:11px;font-style:italic" process="@this"
+							action="#{invoiceBackingBean.downloadFile('/shared/FL/Garis_Panduan_Payment_Query.pdf')}"></p:commandLink>&#160;
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.payment.revise']}" escape="false"  />
+		</h:panelGroup>	
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
 				<td width="20%" valign="top" class="sidemenutd">
@@ -153,6 +180,25 @@
 			<div style="width: 100%; text-align: right">
 				<p:commandButton value="#{lbl['lbl.btn.close']}" oncomplete="gfmasError.hide();" />
 			</div>
-		</p:dialog>			
+		</p:dialog>	
+		<p:dialog id="queryDialog" header="#{lbl['lbl.fl.query.detail']}" widgetVar="addQuery"
+			showEffect="fade" hideEffect="fade" modal="true" width="600px"
+			height="250px" resizable="false">
+		<table style="width: 100%">
+			<tr>
+				<td valign="top" ><h:outputText style="text-align:left; float:left;" value="#{lbl['lbl.fl.query.payment.desc']}" /></td>
+			</tr>
+			<tr>
+				<td><p:inputTextarea cols="50" rows="6" disabled="true" autoResize="false"
+						style=" margin-bottom:5px;" value="#{paymentMatchBackingBean.managedBean.queryPaymentDesc}"/></td>
+			</tr>
+		</table>
+		<p:spacer height="2px"></p:spacer>
+		<div style="width: 100%; text-align: right">
+			<p:commandButton value="#{lbl['lbl.btn.close']}" 
+				oncomplete="addQuery.hide();">
+			</p:commandButton>
+		</div>
+	</p:dialog>		
 	</ui:define>
 </ui:composition>
