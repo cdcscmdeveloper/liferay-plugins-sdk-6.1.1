@@ -747,26 +747,6 @@ public class SmApplicationBackingBean extends
 		return proceedToApplication(applicationType, Boolean.FALSE, null, null);
 	}
 	
-//	public void checkSupplierOwnerAndProceed(String applicationType) {
-//		//check supplierOwner
-//		Boolean suppOwnerExistSsm = false;
-//		FacesScopes facesScope = new FacesScopes();
-//		PmUser userSession = facesScope.getUserSessionBean();
-//		if(userSession != null){
-//			SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
-//			if(personnelSSM == null) {
-//				suppOwnerExistSsm = true;
-//			}
-//		}
-//	
-//		
-//		if(!suppOwnerExistSsm){
-//			RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
-//		} else {
-//			proceedToApplication(applicationType, Boolean.FALSE, null, null);
-//		}
-//	}
-
 	/**
 	 * Gets the max date.
 	 * 
@@ -1563,9 +1543,21 @@ public class SmApplicationBackingBean extends
 						FacesScopes facesScope = new FacesScopes();
 						PmUser userSession = facesScope.getUserSessionBean();
 						if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF) || applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW) || applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
-							if(userSession != null){
-								SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelAll(),"identificationNo");
-								if(personnelSSM == null) {								
+							boolean checkWithSSM = true;
+							SmPersonnel personnelOld = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(
+									userSession.getIdentificationNo(), this.getManagedBean().getSmAppl()
+											.getSmPersonnels(), "identificationNo");
+							if (personnelOld.isEquityOwner()) {
+								checkWithSSM = true;
+							} else {
+								checkWithSSM = false;
+							}
+							
+							if(userSession != null && checkWithSSM){
+								SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
+								if(personnelSSM == null) {	
+									getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupplier());	
+									getManagedBean().setSmPersonnelSsm(personnelOld);
 									RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
 									return SmApplicationUtil.setStringNavigationForApplTnCPage(applicationType);
 								}
@@ -1702,29 +1694,6 @@ public class SmApplicationBackingBean extends
 				getManagedBean().setCompanyValidWithSSM(true);
 				getManagedBean().setValidateWithSSM(true);
 			}else{
-				
-				// START upgrade checking owner in ssm #26734
-//				SsmReqDTO ssmReqDTO = new SsmReqDTO();
-//				ssmReqDTO.setRegNo(this.getManagedBean().getSmSupplier().getRegNo());
-//				ssmReqDTO.setBusinessType(this.getManagedBean().getSmSupplier().getBusinessType());
-//				SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
-//				this.getManagedBean().setCompanyValidWithSSM(false);
-//				this.getManagedBean().setValidateWithSSM(true);
-//				if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
-//					FacesScopes facesScope = new FacesScopes();
-//					PmUser userSession = facesScope.getUserSessionBean();
-//					if(applicationType.equalsIgnoreCase("N") || applicationType.equalsIgnoreCase("U")){
-//						if(userSession != null){
-//							SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
-//							if(personnelSSM == null) {								
-//								RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
-//								return SmApplicationUtil.setStringNavigationForApplTnCPage(applicationType);
-//							}
-//						}
-//					}
-//				}
-				// END upgrade checking owner in ssm #26734
-				
 				getManagedBean().setCompanyValidWithSSM(this.getManagedBean().getSmAppl().isApplValidWithSsm());
 				getManagedBean().setValidateWithSSM(this.getManagedBean().getSmAppl().isApplValidWithSsm());
 			}

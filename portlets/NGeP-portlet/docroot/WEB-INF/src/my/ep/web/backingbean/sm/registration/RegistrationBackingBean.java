@@ -95,6 +95,7 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.sm.SmApplicationBackingBean;
 import my.ep.web.backingbean.sm.govtsellerregistration.GovtSellerRegistrationBackingBean;
 import my.ep.web.backingbean.sm.userprofilemaintenance.SmPersonnelBackingBean;
 import my.ep.web.constant.CommonUIConst;
@@ -2090,9 +2091,22 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						//POPUP USER NOT SSM OWNER #26734  START
 						FacesScopes facesScope = new FacesScopes();
 						PmUser userSession = facesScope.getUserSessionBean();
-						if(userSession != null){
+						
+						boolean checkWithSSM = true;
+						SmPersonnel personnelOld = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(
+								userSession.getIdentificationNo(), this.getManagedBean().getSmAppl()
+										.getSmPersonnels(), "identificationNo");
+						if (personnelOld.isEquityOwner()) {
+							checkWithSSM = true;
+						} else {
+							checkWithSSM = false;
+						}
+						
+						if(userSession != null && checkWithSSM){
 							SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelAll(),"identificationNo");
-							if(personnelSSM == null) {								
+							if(personnelSSM == null) {
+								getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupp());	
+								getManagedBean().setSmPersonnelSsm(personnelOld);
 								RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
 								fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlineAccount/accountMaintenanceTermAndCond.xhtml");
 								return;

@@ -56,9 +56,9 @@
 					disabled="#{!backingBean.managedBean.termsAccepted}" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 			</div>
-			<ac:smOwnerSsmPopup bBean="#{backingBean}"  title="#{lbl['lbl.sm.term.and.condition.header']}" dialogId="ownerChecking" content="#{lbl['lbl.sm.term.and.condition.checkowner']}" 
-				btnOkLabel="#{lbl['lbl.btn.ok']}" 
-				btnCancelLabel="#{lbl['lbl.btn.cancel']}" />
+			<ac:smOwnerSsmPopup bBean="#{backingBean}" title="#{lbl['lbl.sm.term.and.condition.header']}" dialogId="ownerChecking" 
+				btnOkLabel="#{lbl['lbl.btn.change']}" 
+				btnCancelLabel="#{lbl['lbl.btn.cancel']}"/>
 		</p:panel>
 	</ui:define>
 </ui:composition>
