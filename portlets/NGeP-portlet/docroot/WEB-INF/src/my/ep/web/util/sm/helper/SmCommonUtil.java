@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -4967,6 +4969,8 @@ public class SmCommonUtil {
 		StringBuilder sbMs = new StringBuilder();
 		String retVal = StringUtils.EMPTY;
 		int i = 1;
+		sortRejectReason(rejectReasons);
+		
 		if (!EntityHelper.isCollectionEmpty(rejectReasons)) {
 			for (SmApplRejectReason rej : rejectReasons) {
 				if (rej.getPmReason() != null
@@ -5037,6 +5041,18 @@ public class SmCommonUtil {
 			}
 		}
 		return retVal;
+	}
+
+	private static void sortRejectReason(List<SmApplRejectReason> rejectReasonList) {
+		Collections.sort(rejectReasonList, new Comparator<SmApplRejectReason>() {
+
+			@Override
+			public int compare(SmApplRejectReason o1, SmApplRejectReason o2) {
+				// TODO Auto-generated method stub
+				return o1.getPmReason().getReasonId().compareTo(o2.getPmReason().getReasonId());
+			}
+
+		});
 	}
 
 	public String getPaymentGatewayVKeyByBillType(String billType) {
