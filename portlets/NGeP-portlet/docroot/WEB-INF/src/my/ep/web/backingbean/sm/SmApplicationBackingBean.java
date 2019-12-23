@@ -11076,9 +11076,9 @@ public class SmApplicationBackingBean extends
 												.compareTo(
 														getManagedBean().getSmAppl().getSmCompanyBasic()
 																.getPaidUpCapitalSSM()) == 0) {
-									if (!docToExclude.contains(doc.getPmDocument().getDocumentId().toString())) {
+									//if (!docToExclude.contains(doc.getPmDocument().getDocumentId().toString())) {
 										getManagedBean().getMandatoryDocs().add(doc);
-									}
+									//}
 
 								}
 							}else{
