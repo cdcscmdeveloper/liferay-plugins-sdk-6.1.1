@@ -314,7 +314,9 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private List<DisciplinaryActionVO> disciplineVOs;
 	private SmDisciplinaryAction smDisciplinaryAction;
 	//26279 - end
-	
+	//24893 - start
+	private PmOrgProfile chargePTJOrg;
+	//24893 - end
 	private class ActiveContractPagingDataModel extends PagingDataModel<VCtActiveContract> {
 		
 		/** The Constant serialVersionUID. */
@@ -3066,7 +3068,15 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.smDisciplinaryAction = smDisciplinaryAction;
 	}
 	//26279 - end
-	
+	//24893 - start
+	public PmOrgProfile getChargePTJOrg() {
+		return chargePTJOrg;
+	}
+
+	public void setChargePTJOrg(PmOrgProfile chargePTJOrg) {
+		this.chargePTJOrg = chargePTJOrg;
+	}
+	//24893 - end	
 	// start #17087
 	/**
 	 * @return the minContractDate
