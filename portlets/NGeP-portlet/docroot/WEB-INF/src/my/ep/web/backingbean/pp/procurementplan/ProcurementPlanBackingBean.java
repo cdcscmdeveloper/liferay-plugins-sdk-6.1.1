@@ -4694,77 +4694,61 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 * @param 
 	 * @return 
 	 */
-
-    public PpProcurementItem addUpdateInfo(PpPlan PpPlan, List<PpProcurementItem> ProcurementList, Integer index) {
-    	log.info("addUpdateInfo");
- 		    	   	
-    	if (this.getManagedBean().getSelectedPlan().getPlanYear() == null) {	
-    		throw new EpException(MessageConst.ERROR_730028);
-    	}
-    	if (this.getManagedBean().getSelectedPlan().getPpProcurementItems() == null) {
-    		this.getManagedBean().getSelectedPlan().
-    		setPpProcurementItems(new ArrayList<PpProcurementItem>());
-    	}
-
-    	validatePpItem(); // disabled this if no validation required at this stage
-
-    	// validate reason to update
-    	
-    	/*if(this.getManagedBean().getSelectedPlan().getPpProcurementItems().get(index).getPpUpdateReasons() == null){
-    		throw new EpException(MessageConst.ERROR_730031);    		
-    	}*/
-    	
-    	PpProcurementItem ppItem = new PpProcurementItem();
-    	//ppItem.setProcurementCat(new PmParameter());
-    	//ppItem.setProcurementType(new PmParameter());
-    	//ppItem.setEditable(true);
-    	  	
-    	log.info("index 0 : " + index); 			// index before click
-    	//log.info("PpProcurementItem index : " + PpPlan.getPpProcurementItems().get(index).getProcurementItemId());
-
-    	
-    	if (Calendar.getInstance().get(Calendar.YEAR) == 
-    			this.getManagedBean().getSelectedPlan().getPlanYear()) { 
-    		ppItem.setInvitationDate(new Date());
-    	} else { 
-    		log.info("Next year");
-    		int nextYear = Calendar.getInstance().get(Calendar.YEAR);
-    		Calendar date = new GregorianCalendar((nextYear+1), Calendar.JANUARY, 1);
-    		ppItem.setInvitationDate(date.getTime());
-    	}    	 
-    	
-    	log.info("index 1 : " + index); 
-    	
-    	if (index < ProcurementList.size()) {   // changes for row after added one
-    		ppItem = (PpProcurementItem) ProcurementList.get(index).cloneEntity();
-    		
-    		index = index + 1 ;
-    	    ProcurementList.add(index, ppItem);
-     		ppItem.setProcurementItemId(null);
-    		ppItem.setEditable(true);
-    		ppItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-		}
-    	
-    	index = index - 1 ;
-    	 
-    	PpProcurementItem prevProcurementItem = (PpProcurementItem) ProcurementList.get(index);
-    	prevProcurementItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
-		
-		log.info("new item list...");
-		for (int i = 0; i < ProcurementList.size(); i++) {
-			log.info("index i : " + i);
-
-			ppItem = ProcurementList.get(i);
-			ppItem.setProcurementOrderNo(i);
-			
-			log.info("title : " + ppItem.getProcurementTitle());
-			log.info("status :  " + ppItem.getRecordStatusFlg());
-			log.info("procurement order :  " + ppItem.getProcurementOrderNo());
-		}
-		//log.info("PpPlan.getPpProcurementItems 2 size  = "+PpPlan.getPpProcurementItems().size());
-		return ppItem;
+	
+	 public void addUpdateInfo(PpPlan ppPlan, Integer index) {
+	    	log.info("addUpdateInfo");
+	    	
+	    	log.info("Original index= "+index);
+	    	
+	    	List<PpProcurementItem> procurementList = null;
+	    	PpProcurementItem newPpItem = new PpProcurementItem();
+	    	
+	    	if (this.getManagedBean().getSelectedPlan().getPlanYear() == null) {	
+	    		throw new EpException(MessageConst.ERROR_730028);
+	    	}
+	    	
+	    	if (ppPlan.getPpProcurementItems() != null && 
+	    			!ppPlan.getPpProcurementItems().isEmpty()) {
+	    		
+	    		procurementList = ppPlan.getPpProcurementItems();
+	    		
+	    		validatePpItem(); //Disabled this if no validation required at this stage
+	    		
+	    		newPpItem = (PpProcurementItem) procurementList.
+	    				get(index).cloneEntity();
+	    		newPpItem.setCloned(true);
+	    		
+	    		if (Calendar.getInstance().get(Calendar.YEAR) == 
+		    			this.getManagedBean().getSelectedPlan().getPlanYear()) { 
+	    			newPpItem.setInvitationDate(new Date());
+		    	} else { 
+		    		int nextYear = Calendar.getInstance().get(Calendar.YEAR);
+		    		Calendar date = new GregorianCalendar((nextYear+1), Calendar.JANUARY, 1);
+		    		newPpItem.setInvitationDate(date.getTime());
+		    	}
+				//newPpItem.setProcurementItemId(null);
+	    		newPpItem.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+	    		newPpItem.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+	    		newPpItem.setChangedDate(new Timestamp(new Date().getTime()));
+	    		newPpItem.setEditable(true);
+	    		newPpItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+	    		newPpItem.setBrandNew(true);
+	    		
+	    		index += 1;
+	    		procurementList.add(index,newPpItem);
+	    		
+	    		log.info("clonedPpProcurementItem= "+newPpItem.getProcurementItemId());
+	    		
+	    	} else {
+	    		throw new EpException(MessageConst.ERROR_730015);
+	    	}
+	 		    	   	
+	    	log.info("New procurementList size= "+this.getManagedBean().getSelectedPlan().
+	    			getPpProcurementItems().size());
+	    	this.getManagedBean().getSelectedPlan().addPpProcurementItems(newPpItem);
+	    	
 	}
-    
+	
     /**
 	 * retrieve pp reject reason
 	 * @param ppItem
