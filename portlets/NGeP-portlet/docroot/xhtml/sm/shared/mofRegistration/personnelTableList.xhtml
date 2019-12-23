@@ -12,7 +12,7 @@
 			value="#{backingBean.managedBean.smAppl.smPersonnels}"
 			selection="#{backingBean.managedBean.selectedShareHolders}"
 			rowKey="#{person}" rowIndexVar="index" id="personDt" 
-			sortBy="#{person.name}">
+			>
 			<ac:paginator for="personDt" />
 			<p:ajax event="rowSelect" listener="#{backingBean.unSelectAdmin}"
 				update=":#{p:component('persInfPan')},:#{p:component('deletePersonnelBtnId')}"></p:ajax>
