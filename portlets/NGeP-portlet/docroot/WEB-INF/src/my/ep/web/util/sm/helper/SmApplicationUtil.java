@@ -2253,7 +2253,7 @@ public class SmApplicationUtil {
 					validShrHldrsCap = false;
 				} else {
 					perShrSum = perShrSum.add(per.getShareAmt());
-					if (per.getBumiFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+					if (per.getBumiFlg() != null && per.getBumiFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 						bumiShrSum = bumiShrSum.add(per.getShareAmt());
 					}
 					if (per.getPmCountry() != null
@@ -5483,7 +5483,7 @@ public class SmApplicationUtil {
 				resDto = perSO.retrieveNonMalaysianShareHoldersByApplId(reqDto);
 				perType = SupplierManagementConst.PERSONNEL_TYPE_FRGNR;
 			} else {
-				if (managedBean.getSelectedShareHolder().getBumiFlgTrans() == 1) {
+				if (managedBean.getSelectedShareHolder().getBumiFlgTrans() != null && managedBean.getSelectedShareHolder().getBumiFlgTrans() == 1) {
 					resDto = perSO.retrieveBumiShareHoldersByApplId(reqDto);
 					perType = SupplierManagementConst.PERSONNEL_TYPE_BUMI;
 				} else {
@@ -13063,9 +13063,9 @@ public class SmApplicationUtil {
 		basic.setForeignCompanyEquity(basic.getForeignCompanyEquity()==null?new BigDecimal(0):basic.getForeignCompanyEquity());
 		basic.setLocalCompanyEquity(basic.getLocalCompanyEquity()==null?new BigDecimal(0):basic.getLocalCompanyEquity());
 
-		if(per.isBumi()){
+		if(per.isBumi() != null && per.isBumi()){
 			basic.setBumiEquity(basic.getBumiEquity().add(per.getShareAmt()));
-		}else if(!per.isBumi()){
+		}else if(per.isBumi() == null || !per.isBumi()){
 			basic.setNonBumiEquity(basic.getNonBumiEquity().add(per.getShareAmt()));
 		}else if(per.isAttachHq()){
 			
