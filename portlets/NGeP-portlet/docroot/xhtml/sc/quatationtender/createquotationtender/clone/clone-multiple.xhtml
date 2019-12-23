@@ -8,11 +8,20 @@
 
 	<p:dialog widgetVar="kklik" >
 				  <h:panelGroup id="displayk">
+				  <p:blockUI block="clonesearchpnlid2" widgetVar="blockWidgetClone">
+					<p:graphicImage value="/css/images/ajax-loader.gif" />
+				</p:blockUI>
+				  
+				  <p:messages id="qtCloneMsg" showDetail="true" autoUpdate="true"
+			          closable="true" showSummary="false" severity="error, info" />
 						<p:panel id="clonesearchpnlid2" header="#{lbl['lbl.sc.clone.qt']}" toggleable="true">
 							<table style="width: 100%;">
 								<tr>
-									<td valign="top"><p:outputLabel value="#{lbl['lbl.sc.quotation.tender.noClone']}" /></td>
+									<td valign="top"><p:outputLabel value="#{lbl['lbl.sc.quotation.tender.noClone']}" />
+									   <p:outputLabel value="*" styleClass="mandatory" />
+									</td>
 									<td><p:inputText
+									required="true" label="#{lbl['lbl.sc.quotation.tender.noClone']}" 
 								onkeypress="if (event.keyCode == 13) { quotationTndrCommitteeAppointmentMainCloneSearch.jq.click(); return false; }"
 								value="#{qtMultipleCloneBackingBean.totalClone}"
 								maxlength="21" size="35" />
@@ -33,20 +42,21 @@
 					</p:treeNode>
 					
 				</p:tree>
-
+				
 
 				<div class="ppRightBtn">
-					<p:commandButton value="#{lbl['lbl.btn.ok']}"
-						styleClass="BtnSpacing" id="cloneCommitteeTreeBtnOnId2" update="@all"
+					<p:commandButton value="#{lbl['lbl.btn.ok']}" onstart="blockWidgetClone.show()" oncomplete="blockWidgetClone.hide()"
+						styleClass="BtnSpacing" id="cloneCommitteeTreeBtnOnId2" update="qtCloneMsg"
 						action="#{qtMultipleCloneBackingBean.addToClone()}">
 					 <f:param name="skipvalidation" value="1" />
 					</p:commandButton>
-					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+					<p:commandButton value="#{lbl['lbl.btn.close']}"
 						styleClass="BtnSpacing" onclick="kklik.hide();"
 					 ><f:param name="skipvalidation" value="1" />
 					 </p:commandButton>
 				</div>
 			</p:panel>
 					</h:panelGroup>
+					<p:ajax event="close" update="qtsearchid, qtList" listener="#{qtMultipleCloneBackingBean.closeEvent}"/>
 				</p:dialog>
 </ui:composition>

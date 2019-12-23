@@ -168,6 +168,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	private boolean isCheckAllList = Boolean.FALSE;
 	
+	private boolean isCloned= Boolean.FALSE;
+	
 	/** The zone general trees. */
 	private List<TreeNode> zoneGeneralTrees = new ArrayList<TreeNode>();
 	

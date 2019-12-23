@@ -14,7 +14,9 @@
 		</p:blockUI>
 		
 		<p:messages id="qtSearchMsg" showDetail="true" autoUpdate="true"
-			closable="true" showSummary="false" severity="error, info" />			
+			closable="true" showSummary="false" severity="error, info" />
+			
+			
 	
 	<p:panel header="#{lbl['lbl.sc.search']}" toggleable="true"
 			id="qtsearchid">		
@@ -165,8 +167,8 @@
 								rendered="#{scQt.actionRender[9]}"
 								action="#{qTDetailBB.closeProposal(scQt)}"
 								partialSubmit="true" process="@this" update="searchQTs"/>
-						    <p:menuitem id="menuItem11" value="#{lbl['lbl.btn.clone']}" 
-								rendered="#{qTDetailBB.isQTMaintenanceScreen()}" 
+						    <p:menuitem id="menuItem11" value="#{lbl['lbl.btn.clone']}"
+								rendered="#{qTDetailBB.isQTMaintenanceScreen() and qTDetailBB.isQTStatusInBetween(scQt.qtStatus.statusId, QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL, QTStatusConst.QT_AWARDED)}" 
 								icon="ui-icon-edit" update=":form:displayk"
 								action="#{qtMultipleCloneBackingBean.clonePopupAction(scQt)}" 
 								partialSubmit="true" process="@this"/>
@@ -177,7 +179,10 @@
 				</p:dataTable>
 				
 				<ui:include src="/xhtml/sc/quatationtender/createquotationtender/clone/clone-multiple.xhtml" />
-				</div>				
+				</div>
+				
+				
+				
 				
 				<!-- Loa/Loi Data Table -->
 				<div id="searchQTLoaLoiDiv" style="display:none">

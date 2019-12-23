@@ -4309,6 +4309,48 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setToMonth(String.valueOf(j));
 		this.getManagedBean().setEndYear(String.valueOf(currentYear));
 	}
+	
+	private boolean isExistInDB(List<ScQtCheckList> checkList) {
+		if (null != checkList && !checkList.isEmpty()) {
+			for (ScQtCheckList specChecklist : checkList) {
+				if (QTConstants.TEMPLETE_SPEC_CODE
+						.equalsIgnoreCase(specChecklist.getDefinationType()
+								.getParameterCode())) {
+					if (null != specChecklist.getScQtDoc()) {
+						ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate
+								.getInstance().getServiceObject(
+										ModuleCodeConst.COMMON_COMPONENT,
+										ITemplateSpecSO.class);
+						TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
+						specReqDTO.setSpecMaster(specChecklist.getScQtDoc()
+								.getTplSpecMaster());
+						specReqDTO
+								.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
+						TemplateSpecResDTO resDTO = templateSpecSO
+								.getTemplateMaster(specReqDTO);
+						
+						if(null!=resDTO){
+							return true;
+						}
+						
+
+					}
+				}
+			}
+		}
+		return false;
+	}
+	private ScQtCheckList populateWeigthage(List<ScQtCheckList> list,ScQtCheckList checkList){
+		boolean exist=isExistInDB(list);
+		this.getManagedBean().setSpecItemWeightageRequired(exist);
+		boolean weightageType = false;
+		if(exist){
+			weightageType=retriveExistingTemplatespec(list);
+		}
+		checkList.getScQtDoc()
+		.getTplSpecMaster().setWeightageReq(weightageType);
+		return checkList;
+	}
 
 	/**
 	 * Technical checklist edit action.click on pencil icon in technical
