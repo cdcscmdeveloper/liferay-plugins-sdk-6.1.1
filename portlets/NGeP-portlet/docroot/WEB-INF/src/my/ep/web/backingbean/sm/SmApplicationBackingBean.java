@@ -210,6 +210,8 @@ public class SmApplicationBackingBean extends
 	NumberFormat formatter = new DecimalFormat("#0.00");
 	SmRuleHelper ruleHelper = new SmRuleHelper();
 	ViewApplHistoryBackingBean viewApplHistoryBackingBean;
+	//SSM INTEGRATION
+	private static List<String> docToExclude = Arrays.asList("2","218","721","708","709","710","693","694","695","705","706","707");
 
 	/**
 	 * Instantiates a new sm application backing bean.
@@ -1526,7 +1528,7 @@ public class SmApplicationBackingBean extends
 							String[] copyProp = {"companyName","robExpiryDate","businessDesc","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus","annualRevenueSSM"};
 							EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(),this.getManagedBean().getSmAppl().getSmCompanyBasic(),copyProp);							
 						}else{
-							String[] copyProp = {"companyName","robExpiryDate","authorizedCapital","bumiEquity","foreignCompanyEquity","foreignerEquity","govtEquity","govtUnitrustEquity","businessDesc","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus","annualRevenueSSM"};
+							String[] copyProp = {"companyName","robExpiryDate","authorizedCapital","bumiEquity","foreignCompanyEquity","foreignerEquity","govtEquity","govtUnitrustEquity","businessDesc","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus","annualRevenueSSM","paidUpCapitalSSM"};
 							EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(),this.getManagedBean().getSmAppl().getSmCompanyBasic(),copyProp);							
 						}
 						//SET ADDRESS
@@ -11047,7 +11049,41 @@ public class SmApplicationBackingBean extends
 										.isEmpty()) {
 							mandatoryLicenseDocs.add(doc);
 						} else {
-							getManagedBean().getMandatoryDocs().add(doc);
+							//SSM INTEGRATION
+							//for ssm no need supporting doc
+							//This applicable for ROC & for data valid with ssm only, to skip checking mandatory doc if paid up capital is same with ssm
+							if(getManagedBean().getSmAppl().isApplValidWithSsm()){
+								if (!businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())
+										&& (getManagedBean()
+												.getSmAppl()
+												.getSmCompanyBasic()
+												.getPaidUpCapital()
+												.compareTo(
+														getManagedBean().getSmAppl().getSmCompanyBasic()
+																.getPaidUpCapitalSSM()) < 0 || getManagedBean()
+												.getSmAppl()
+												.getSmCompanyBasic()
+												.getPaidUpCapital()
+												.compareTo(
+														getManagedBean().getSmAppl().getSmCompanyBasic()
+																.getPaidUpCapitalSSM()) > 0)) {
+									getManagedBean().getMandatoryDocs().add(doc);
+								} else if (!businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())
+										&& getManagedBean()
+												.getSmAppl()
+												.getSmCompanyBasic()
+												.getPaidUpCapital()
+												.compareTo(
+														getManagedBean().getSmAppl().getSmCompanyBasic()
+																.getPaidUpCapitalSSM()) == 0) {
+									if (!docToExclude.contains(doc.getPmDocument().getDocumentId().toString())) {
+										getManagedBean().getMandatoryDocs().add(doc);
+									}
+
+								}
+							}else{
+								getManagedBean().getMandatoryDocs().add(doc);
+							}
 						}
 					} else {
 						getManagedBean().getNonMandatoryDocs().add(doc);
@@ -12544,7 +12580,7 @@ public class SmApplicationBackingBean extends
 				if(ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(personnel.getIdentificationType().getParameterCode())){
 					nonMalaysianCapital = nonMalaysianCapital.add(personnel.getShareAmt());
 				}else{
-					if(personnel.getBumiFlg()==1){
+					if(personnel.getBumiFlg() != null && personnel.getBumiFlg()==1){
 						bumiputeraCapital = bumiputeraCapital.add(personnel.getShareAmt());
 					}else {
 						nonBumiputeraCapital = nonBumiputeraCapital.add(personnel.getShareAmt());
@@ -12600,7 +12636,7 @@ public class SmApplicationBackingBean extends
 			for(SmPersonnel per : this.getManagedBean().getSmAppl().getSmPersonnels()){
 				if(per.isEquityOwner() && per.getShareAmt() !=null ){
 					if(per.getPmCountry() != null && SupplierManagementConst.COUNTRY_MALAYSIA_CODE.equalsIgnoreCase(per.getPmCountry().getCountryCode())){
-						if(per.isBumi()){
+						if(per.isBumi() != null && per.isBumi()){
 							bumiputeraCapital = bumiputeraCapital.add(per.getShareAmt());
 						}else{
 							nonBumiputeraCapital = nonBumiputeraCapital.add(per.getShareAmt());
