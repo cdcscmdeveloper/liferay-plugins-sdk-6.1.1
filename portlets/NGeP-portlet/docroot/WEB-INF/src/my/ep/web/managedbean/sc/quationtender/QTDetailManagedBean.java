@@ -10034,9 +10034,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	
 
-	
-	
+	public boolean isCloned() {
+		return isCloned;
+	}
 
+	public void setCloned(boolean isCloned) {
+		this.isCloned = isCloned;
+	}	
 }
 
 
