@@ -298,6 +298,9 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private List<DisciplinaryActionVO> disciplineVOs;
 	private SmDisciplinaryAction smDisciplinaryAction;
 	//26279 - end
+	//24893 - start
+	private PmOrgProfile chargePTJOrg;
+	//24893 - end
 /**
  * Gets the charge line item root.
  *
@@ -3336,5 +3339,14 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	public void setSmDisciplinaryAction(SmDisciplinaryAction smDisciplinaryAction) {
 		this.smDisciplinaryAction = smDisciplinaryAction;
 	}
-	//26279 - end	
+	//26279 - end
+	//24893 - start
+	public PmOrgProfile getChargePTJOrg() {
+		return chargePTJOrg;
+	}
+
+	public void setChargePTJOrg(PmOrgProfile chargePTJOrg) {
+		this.chargePTJOrg = chargePTJOrg;
+	}
+	//24893 - end
 }

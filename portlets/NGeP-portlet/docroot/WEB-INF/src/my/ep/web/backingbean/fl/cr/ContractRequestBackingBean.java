@@ -305,6 +305,20 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
+			//24893 - start
+			//to handle WIP task
+			for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()){
+				for(FlFulfilmentItemAddr itemAddr : flDeliveryAddress.getFlFulfilmentItemAddr()){
+					if(null == itemAddr.getChargePTJOrg()) {
+						if(null != getManagedBean().getFlRequest().getChargeOrgProfile()) {
+							itemAddr.setChargePTJOrg(getManagedBean().getFlRequest().getChargeOrgProfile());
+						} else if(null != getManagedBean().getFlRequest().getIssuedOrgProfile()) {
+							itemAddr.setChargePTJOrg(getManagedBean().getFlRequest().getIssuedOrgProfile());
+						}
+					}
+				}
+			}
+			//24893 - end
 			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlFulfilmentRequest flRequest = getManagedBean().getFlRequest();
@@ -378,6 +392,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			if(getManagedBean().getPmDigiSign() != null){
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 			}
+			
+			//24893 - start
+			
+			//24893 - end
 			
 			iFulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 			FulfilmentResDTO resDTO = iFulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
@@ -1072,7 +1090,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		String taskId = originalServletRequest.getParameter("taskId");
 		String contractId = originalServletRequest.getParameter("contractId");
 		String scheduleNo = originalServletRequest.getParameter("scheduleNo");
-		
+	
 		if (taskId != null) {
 			renewSesionObject();
 			new ContractRequestBackingBean();
@@ -2788,12 +2806,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			populateChargeLineData(false);	
 			setClassName("@(.crChargeLinePnlClass)");
 			onNodeSelect();
-			Long jabatanOrgProfileId = -1l;
-			PmOrgProfile jabatan = retrieveJabatanOrgProfile(getManagedBean().getFlRequest().getChargeOrgProfile().getOrgProfileId());
-			if(jabatan!=null) {
-				jabatanOrgProfileId = jabatan.getOrgProfileId();
-			}					
-			getVotFundList(jabatanOrgProfileId);
 			getManagedBean().setChargeLinePanel(false);
 			getManagedBean().setProgramLov(false);
 			getManagedBean().setProjectLov(false);
@@ -2961,6 +2973,17 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				if(childData.getPmSubSetia()!=null) {
 					getManagedBean().setPmSubSetia(childData.getPmSubSetia());
 				}
+				//24893 - start
+				if(null != childData.getChargePTJOrg()) {
+					getManagedBean().setChargePTJOrg(childData.getChargePTJOrg());
+				} else {
+					if(null != getManagedBean().getFlRequest().getChargeOrgProfile()) {
+						getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getChargeOrgProfile());
+					} else {
+						getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getIssuedOrgProfile());
+					}					
+				}
+				//24893 - end
 			}
 		}
 	
@@ -2987,7 +3010,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().setProjectCode("");
 		getManagedBean().setSetiaCode("");
 		getManagedBean().setSubSetiaCode("");
-		getManagedBean().setFinancingTypeCode("");		
+		getManagedBean().setFinancingTypeCode("");	
+		//24893 - start
+		getManagedBean().setChargePTJOrg(new PmOrgProfile());
+		//24893 - end
 	}
 	
 	/**
@@ -3046,6 +3072,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					childItemAddress.setPmPrgActivity(pmPrgActivity);
 					childItemAddress.setPmSubSetia(pmSubSetia);
 					childItemAddress.setVotFundDisplay(getManagedBean().isVotFundDisplay());
+					//24893 - start
+					childItemAddress.setChargePTJOrg(getManagedBean().getChargePTJOrg());
+					//24893 - end
 				}
 				childItemAddress = (FlFulfilmentItemAddr)selectedNode.getData();
 				
@@ -3733,6 +3762,17 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					getManagedBean().setPmSubSetia(childData.getPmSubSetia());
 					getManagedBean().setProjectLov(true);
 				}
+				//24893 - start
+				if(null != childData.getChargePTJOrg()) {
+					getManagedBean().setChargePTJOrg(childData.getChargePTJOrg());
+				} else {
+					if(null != getManagedBean().getFlRequest().getChargeOrgProfile()) {
+						getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getChargeOrgProfile());
+					} else {
+						getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getIssuedOrgProfile());
+					}					
+				}
+				//24893 - end
 			}
 		}	 
 	}
@@ -5610,6 +5650,17 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	
 	public void addChargedPtjDetails() {
 		getManagedBean().getFlRequest().setChargeOrgProfile(selectedPmOrgProfile);
+		//24893 - start
+		getManagedBean().setChargePTJOrg(selectedPmOrgProfile);
+		Long jabatanOrgProfileId = -1l;
+		PmOrgProfile jabatan = retrieveJabatanOrgProfile(getManagedBean().getChargePTJOrg().getOrgProfileId());
+		if(jabatan!=null) {
+			jabatanOrgProfileId = jabatan.getOrgProfileId();
+		}					
+		getVotFundList(jabatanOrgProfileId);
+		getManagedBean().setVotFundCode(null);
+		getManagedBean().setVotFundId(null);
+		//24893 - end
 		selectedPmOrgProfile = null;
 	}
 	
@@ -6454,6 +6505,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				"disciplinaryActionHistoryDlg.show();");
 	}
 	//26279 - end
+	//24893 - start
+	/**
+	 * check role user is fl_approver
+	 */
+	public boolean isRequisitioner() {
+		return getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value());
+	}
+	//24893 - end
 }
 	
 
