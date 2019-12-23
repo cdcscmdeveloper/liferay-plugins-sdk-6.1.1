@@ -5972,7 +5972,7 @@ public class SmApplicationBackingBean extends
 
 		// set bumi flag
 		if (getManagedBean().getSelectedShareHolder().getBumiFlgTrans() == null) {
-			//getManagedBean().getSelectedShareHolder().setBumiFlg(0);
+			getManagedBean().getSelectedShareHolder().setBumiFlg(0);
 		} else {
 			getManagedBean().getSelectedShareHolder()
 					.setBumiFlg(
@@ -5982,7 +5982,7 @@ public class SmApplicationBackingBean extends
 
 		// set muslim flg
 		if (getManagedBean().getSelectedShareHolder().getMuslimFlgTrans() == null) {
-			//getManagedBean().getSelectedShareHolder().setMuslimFlg(0);
+			getManagedBean().getSelectedShareHolder().setMuslimFlg(0);
 		} else {
 			getManagedBean().getSelectedShareHolder().setMuslimFlg(
 					getManagedBean().getSelectedShareHolder()
