@@ -848,7 +848,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 */
 	public String gotoQtSearchPage() {
 		debugLogger("gotoQtSearchPage");
-
+		this.getManagedBean().getSearchQTDataModel().reloadData();
 		return QTConstants.SEARCH_PAGE;
 	}
 	
@@ -3031,7 +3031,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 									retrieveFinalizationCommitteeType()));
 						} else if (ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT
 								.equals(approvalCategoryCode)) {
-							Long[] orgIds={scQt.getPmOrgProfile().getOrgProfileId(),scQt.getOwnerOrgProfile().getOrgProfileId()};
+							Long[] orgIds={scQt.getOwnerOrgProfile().getOrgProfileId(),scQt.getPmOrgProfile().getOrgProfileId()};
 							DualListModel<ScQtApproverSettings> budgetApprovalUsers=ApproverSettings.getDetails(
 									RoleCode.COMMITTEE_APPROVER,orgIds,
 							qtApproval);
@@ -3621,7 +3621,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 //			dualListModel = approverSettingDtls(
 //					RoleCode.PUBLICATION_APPROVER, scQt.getPmOrgProfile()
 //							.getOrgProfileId(), publicationApproval);
-			Long[] orgIds={scQt.getPmOrgProfile().getOrgProfileId(),scQt.getOwnerOrgProfile().getOrgProfileId()};
+			Long[] orgIds={scQt.getOwnerOrgProfile().getOrgProfileId(),scQt.getPmOrgProfile().getOrgProfileId()};
 			dualListModel = ApproverSettings.getDetails(
 					RoleCode.PUBLICATION_APPROVER,orgIds, publicationApproval);
 			this.getManagedBean().setPublicationApprovals(dualListModel);
