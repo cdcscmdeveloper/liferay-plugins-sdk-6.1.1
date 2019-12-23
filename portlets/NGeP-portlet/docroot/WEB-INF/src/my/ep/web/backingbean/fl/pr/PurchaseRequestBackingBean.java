@@ -272,6 +272,20 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		IFulfilmentRequestSO fulfilmentRequestSO = null;
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
+			//24893 - start
+			//to handle WIP task
+			for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+				for(FlFulfilmentItemAddr itemAddr : flDeliveryAddress.getFlFulfilmentItemAddr()){
+					if(null == itemAddr.getChargePTJOrg()) {
+						if(null != getManagedBean().getFulfilmentRequest().getChargeOrgProfile()) {
+							itemAddr.setChargePTJOrg(getManagedBean().getFulfilmentRequest().getChargeOrgProfile());
+						} else if(null != getManagedBean().getFulfilmentRequest().getIssuedOrgProfile()) {
+							itemAddr.setChargePTJOrg(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile());
+						}
+					}
+				}
+			}
+			//24893 - end
 			if(!getManagedBean().isValidated()){
 			   validateFulfilmentRequest(action);
 			}
@@ -1894,6 +1908,17 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				if(childData.getPmSubSetia()!=null) {
 					getManagedBean().setPmSubSetia(childData.getPmSubSetia());
 				}
+				//24893 - start
+				if(null != childData.getChargePTJOrg()) {
+					getManagedBean().setChargePTJOrg(childData.getChargePTJOrg());
+				} else {
+					if(null != getManagedBean().getFulfilmentRequest().getChargeOrgProfile()) {
+						getManagedBean().setChargePTJOrg(getManagedBean().getFulfilmentRequest().getChargeOrgProfile());
+					} else {
+						getManagedBean().setChargePTJOrg(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile());
+					}					
+				}
+				//24893 - end
 			}
 		}
 	}
@@ -1919,7 +1944,10 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		getManagedBean().setProjectCode("");
 		getManagedBean().setSetiaCode("");
 		getManagedBean().setSubSetiaCode("");
-		getManagedBean().setFinancingTypeCode("");		
+		getManagedBean().setFinancingTypeCode("");
+		//24893 - start
+		getManagedBean().setChargePTJOrg(new PmOrgProfile());
+		//24893 - end
 	}
 	
 	/**
@@ -1976,6 +2004,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					childItemAddress.setPmPrgActivity(pmPrgActivity);
 					childItemAddress.setPmSubSetia(pmSubSetia);
 					childItemAddress.setVotFundDisplay(getManagedBean().isVotFundDisplay());
+					//24893 - start
+					childItemAddress.setChargePTJOrg(getManagedBean().getChargePTJOrg());
+					//24893 - end
 				}
 				childItemAddress = (FlFulfilmentItemAddr)selectedNode.getData();
 				
@@ -2725,12 +2756,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			populateChargeLineData(false);	
 			setClassName("@(.prChargeLinePnlClass)");
 			onNodeSelect();
-			Long jabatanOrgProfileId = -1l;
-			PmOrgProfile jabatan = retrieveJabatanOrgProfile(getManagedBean().getFulfilmentRequest().getChargeOrgProfile().getOrgProfileId());
-			if(jabatan!=null) {
-				jabatanOrgProfileId = jabatan.getOrgProfileId();
-			}			
-			getVotFundList(jabatanOrgProfileId);
 			getManagedBean().setChargeLinePanel(false);
 			getManagedBean().setProgramLov(false);
 			getManagedBean().setProjectLov(false);
@@ -3004,6 +3029,17 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 						getManagedBean().setPmSubSetia(childData.getPmSubSetia());
 						getManagedBean().setProjectLov(true);
 					}
+					//24893 - start
+					if(null != childData.getChargePTJOrg()) {
+						getManagedBean().setChargePTJOrg(childData.getChargePTJOrg());
+					} else {
+						if(null != getManagedBean().getFulfilmentRequest().getChargeOrgProfile()) {
+							getManagedBean().setChargePTJOrg(getManagedBean().getFulfilmentRequest().getChargeOrgProfile());
+						} else {
+							getManagedBean().setChargePTJOrg(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile());
+						}					
+					}
+					//24893 - end
 				}
 		} 
 	}
@@ -4149,6 +4185,17 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	
 	public void addChargedPtjDetails() {
 		getManagedBean().getFulfilmentRequest().setChargeOrgProfile(selectedPmOrgProfile);
+		//24893 - start
+		getManagedBean().setChargePTJOrg(selectedPmOrgProfile);
+		Long jabatanOrgProfileId = -1l;
+		PmOrgProfile jabatan = retrieveJabatanOrgProfile(getManagedBean().getChargePTJOrg().getOrgProfileId());
+		if(jabatan!=null) {
+			jabatanOrgProfileId = jabatan.getOrgProfileId();
+		}			
+		getVotFundList(jabatanOrgProfileId);
+		getManagedBean().setVotFundCode(null);
+		getManagedBean().setVotFundId(null);
+		//24893 - end
 		selectedPmOrgProfile = null;
 	}
 	
@@ -4742,4 +4789,12 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				"disciplinaryActionHistoryDlg.show();");
 	}
 	//26279 - end
+	//24893 - start
+	/**
+	 * check role user is fl_approver
+	 */
+	public boolean isRequisitioner() {
+		return getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value());
+	}
+	//24893 - end
 }
