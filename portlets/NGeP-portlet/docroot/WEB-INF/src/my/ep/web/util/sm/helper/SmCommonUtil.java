@@ -204,6 +204,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.template.DocumentGenerator;
+import my.ep.web.validator.common.BusinessRegNoValidator;
 import my.ep.web.vo.SmCancelMofRemarksVO;
 import my.ep.web.vo.SmPersonnelSummaryCountVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
@@ -1015,7 +1016,7 @@ public class SmCommonUtil {
 				&& per.getPmCountry().getCountryCode() != null
 				&& per.getPmCountry().getCountryCode()
 						.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)) {
-			if (per.getBumiFlg() == 1) {
+			if (per.getBumiFlg()!= null && per.getBumiFlg() == 1) {
 				bumiCount = bumiCount + 1;
 			} else {
 				nonBumCount = nonBumCount + 1;
@@ -1294,8 +1295,8 @@ public class SmCommonUtil {
 						.getSmChequeSignatories())) {
 			for (SmChequeSignatory sign : smSupplierBank
 					.getSmChequeSignatories()) {
-				if (sign.getSmPersonnel() != null
-						&& sign.getSmPersonnel().getBumiFlg() == 0) {
+				if (sign.getSmPersonnel() != null && 
+						sign.getSmPersonnel().getBumiFlg() != null && sign.getSmPersonnel().getBumiFlg() == 0) {
 					bankRetVal = smSupplierBank.getPmFinancialOrg() == null ? ""
 							: smSupplierBank.getPmFinancialOrg()
 									.getFinOrgName();
@@ -4249,6 +4250,8 @@ public class SmCommonUtil {
 	public SsmResDTO validateWithSSM(SsmReqDTO ssmReqDTO) {
 		ISsmSO reqSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISsmSO.class);		
 		try {
+			BusinessRegNoValidator validate = new BusinessRegNoValidator();
+			validate.validateRegNo(ssmReqDTO.getBusinessType(), ssmReqDTO.getRegNo(),false);
 			//set default parameter
 			PmParameter identificationType = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_IC);
 			PmParameter passportType = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_PASSPORT);

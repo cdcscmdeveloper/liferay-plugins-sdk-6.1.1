@@ -210,6 +210,8 @@ public class SmApplicationBackingBean extends
 	NumberFormat formatter = new DecimalFormat("#0.00");
 	SmRuleHelper ruleHelper = new SmRuleHelper();
 	ViewApplHistoryBackingBean viewApplHistoryBackingBean;
+	//SSM INTEGRATION
+	private static List<String> docToExclude = Arrays.asList("2","218","721","708","709","710","693","694","695","705","706","707");
 
 	/**
 	 * Instantiates a new sm application backing bean.
@@ -747,26 +749,6 @@ public class SmApplicationBackingBean extends
 		return proceedToApplication(applicationType, Boolean.FALSE, null, null);
 	}
 	
-//	public void checkSupplierOwnerAndProceed(String applicationType) {
-//		//check supplierOwner
-//		Boolean suppOwnerExistSsm = false;
-//		FacesScopes facesScope = new FacesScopes();
-//		PmUser userSession = facesScope.getUserSessionBean();
-//		if(userSession != null){
-//			SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
-//			if(personnelSSM == null) {
-//				suppOwnerExistSsm = true;
-//			}
-//		}
-//	
-//		
-//		if(!suppOwnerExistSsm){
-//			RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
-//		} else {
-//			proceedToApplication(applicationType, Boolean.FALSE, null, null);
-//		}
-//	}
-
 	/**
 	 * Gets the max date.
 	 * 
@@ -1546,7 +1528,7 @@ public class SmApplicationBackingBean extends
 							String[] copyProp = {"companyName","robExpiryDate","businessDesc","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus","annualRevenueSSM"};
 							EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(),this.getManagedBean().getSmAppl().getSmCompanyBasic(),copyProp);							
 						}else{
-							String[] copyProp = {"companyName","robExpiryDate","authorizedCapital","bumiEquity","foreignCompanyEquity","foreignerEquity","govtEquity","govtUnitrustEquity","businessDesc","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus","annualRevenueSSM"};
+							String[] copyProp = {"companyName","robExpiryDate","authorizedCapital","bumiEquity","foreignCompanyEquity","foreignerEquity","govtEquity","govtUnitrustEquity","businessDesc","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus","annualRevenueSSM","paidUpCapitalSSM"};
 							EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(),this.getManagedBean().getSmAppl().getSmCompanyBasic(),copyProp);							
 						}
 						//SET ADDRESS
@@ -1563,9 +1545,21 @@ public class SmApplicationBackingBean extends
 						FacesScopes facesScope = new FacesScopes();
 						PmUser userSession = facesScope.getUserSessionBean();
 						if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF) || applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW) || applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
-							if(userSession != null){
-								SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelAll(),"identificationNo");
-								if(personnelSSM == null) {								
+							boolean checkWithSSM = true;
+							SmPersonnel personnelOld = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(
+									userSession.getIdentificationNo(), this.getManagedBean().getSmAppl()
+											.getSmPersonnels(), "identificationNo");
+							if (personnelOld.isEquityOwner()) {
+								checkWithSSM = true;
+							} else {
+								checkWithSSM = false;
+							}
+							
+							if(userSession != null && checkWithSSM){
+								SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
+								if(personnelSSM == null) {	
+									getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupplier());	
+									getManagedBean().setSmPersonnelSsm(personnelOld);
 									RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
 									return SmApplicationUtil.setStringNavigationForApplTnCPage(applicationType);
 								}
@@ -1584,11 +1578,11 @@ public class SmApplicationBackingBean extends
 								if(businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())){
 									personnel.setSsmData(true);
 									personnel.setShareAmtSsmNull(true);
-									String[] copyEquityOwner = {"birthDate","nameInSsm","raceSsmNull","birthDateSsmNull","designationSsmNull","equityOwner","director","pmCountry","directorSsm","equityOwnerSsm","IS_MGT_SSM"};
+									String[] copyEquityOwner = {"birthDate","nameInSsm","raceSsmNull","birthDateSsmNull","designationSsmNull","equityOwner","director","pmCountry","directorSsm","equityOwnerSsm","managementSsm"};
 									EntityHelper.copyEntityPropertiesOnly(personnelSSM,personnel,copyEquityOwner);
 								}else{
 									personnel.setSsmData(true);
-									String[] copyEquityOwner = {"shareAmt","nameInSsm","raceSsmNull","birthDateSsmNull","shareAmtSsmNull","designationSsmNull","equityOwner","director","pmCountry","directorSsm","equityOwnerSsm","IS_MGT_SSM"};
+									String[] copyEquityOwner = {"shareAmt","nameInSsm","raceSsmNull","birthDateSsmNull","shareAmtSsmNull","designationSsmNull","equityOwner","director","pmCountry","directorSsm","equityOwnerSsm","managementSsm"};
 									EntityHelper.copyEntityPropertiesOnly(personnelSSM,personnel,copyEquityOwner);
 								}
 								validateRole(personnel);
@@ -1702,29 +1696,6 @@ public class SmApplicationBackingBean extends
 				getManagedBean().setCompanyValidWithSSM(true);
 				getManagedBean().setValidateWithSSM(true);
 			}else{
-				
-				// START upgrade checking owner in ssm #26734
-//				SsmReqDTO ssmReqDTO = new SsmReqDTO();
-//				ssmReqDTO.setRegNo(this.getManagedBean().getSmSupplier().getRegNo());
-//				ssmReqDTO.setBusinessType(this.getManagedBean().getSmSupplier().getBusinessType());
-//				SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
-//				this.getManagedBean().setCompanyValidWithSSM(false);
-//				this.getManagedBean().setValidateWithSSM(true);
-//				if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
-//					FacesScopes facesScope = new FacesScopes();
-//					PmUser userSession = facesScope.getUserSessionBean();
-//					if(applicationType.equalsIgnoreCase("N") || applicationType.equalsIgnoreCase("U")){
-//						if(userSession != null){
-//							SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
-//							if(personnelSSM == null) {								
-//								RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
-//								return SmApplicationUtil.setStringNavigationForApplTnCPage(applicationType);
-//							}
-//						}
-//					}
-//				}
-				// END upgrade checking owner in ssm #26734
-				
 				getManagedBean().setCompanyValidWithSSM(this.getManagedBean().getSmAppl().isApplValidWithSsm());
 				getManagedBean().setValidateWithSSM(this.getManagedBean().getSmAppl().isApplValidWithSsm());
 			}
@@ -11078,7 +11049,41 @@ public class SmApplicationBackingBean extends
 										.isEmpty()) {
 							mandatoryLicenseDocs.add(doc);
 						} else {
-							getManagedBean().getMandatoryDocs().add(doc);
+							//SSM INTEGRATION
+							//for ssm no need supporting doc
+							//This applicable for ROC & for data valid with ssm only, to skip checking mandatory doc if paid up capital is same with ssm
+							if(getManagedBean().getSmAppl().isApplValidWithSsm()){
+								if (!businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())
+										&& (getManagedBean()
+												.getSmAppl()
+												.getSmCompanyBasic()
+												.getPaidUpCapital()
+												.compareTo(
+														getManagedBean().getSmAppl().getSmCompanyBasic()
+																.getPaidUpCapitalSSM()) < 0 || getManagedBean()
+												.getSmAppl()
+												.getSmCompanyBasic()
+												.getPaidUpCapital()
+												.compareTo(
+														getManagedBean().getSmAppl().getSmCompanyBasic()
+																.getPaidUpCapitalSSM()) > 0)) {
+									getManagedBean().getMandatoryDocs().add(doc);
+								} else if (!businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())
+										&& getManagedBean()
+												.getSmAppl()
+												.getSmCompanyBasic()
+												.getPaidUpCapital()
+												.compareTo(
+														getManagedBean().getSmAppl().getSmCompanyBasic()
+																.getPaidUpCapitalSSM()) == 0) {
+									if (!docToExclude.contains(doc.getPmDocument().getDocumentId().toString())) {
+										getManagedBean().getMandatoryDocs().add(doc);
+									}
+
+								}
+							}else{
+								getManagedBean().getMandatoryDocs().add(doc);
+							}
 						}
 					} else {
 						getManagedBean().getNonMandatoryDocs().add(doc);
@@ -12575,7 +12580,7 @@ public class SmApplicationBackingBean extends
 				if(ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(personnel.getIdentificationType().getParameterCode())){
 					nonMalaysianCapital = nonMalaysianCapital.add(personnel.getShareAmt());
 				}else{
-					if(personnel.getBumiFlg()==1){
+					if(personnel.getBumiFlg() != null && personnel.getBumiFlg()==1){
 						bumiputeraCapital = bumiputeraCapital.add(personnel.getShareAmt());
 					}else {
 						nonBumiputeraCapital = nonBumiputeraCapital.add(personnel.getShareAmt());
@@ -12631,7 +12636,7 @@ public class SmApplicationBackingBean extends
 			for(SmPersonnel per : this.getManagedBean().getSmAppl().getSmPersonnels()){
 				if(per.isEquityOwner() && per.getShareAmt() !=null ){
 					if(per.getPmCountry() != null && SupplierManagementConst.COUNTRY_MALAYSIA_CODE.equalsIgnoreCase(per.getPmCountry().getCountryCode())){
-						if(per.isBumi()){
+						if(per.isBumi() != null && per.isBumi()){
 							bumiputeraCapital = bumiputeraCapital.add(per.getShareAmt());
 						}else{
 							nonBumiputeraCapital = nonBumiputeraCapital.add(per.getShareAmt());
