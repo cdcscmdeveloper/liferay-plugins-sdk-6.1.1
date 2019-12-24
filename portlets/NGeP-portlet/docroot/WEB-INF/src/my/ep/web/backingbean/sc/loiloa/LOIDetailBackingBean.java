@@ -87,9 +87,11 @@ import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
+import my.ep.persistence.entity.sc.loaloi.ScLoaForQt;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiApproval;
 import my.ep.persistence.entity.sc.loaloi.ScLoiAttachment;
+import my.ep.persistence.entity.sc.loaloi.ScLoiForQt;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoiNegoLocation;
@@ -129,6 +131,7 @@ import my.ep.type.sc.LoiLoaDocType;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBiddingBackingBean;
 import my.ep.web.bean.sc.quatationtender.LoiLoaBean;
@@ -1375,24 +1378,35 @@ public class LOIDetailBackingBean extends
 							groupItems.add(loiLoaItem);
 						}
 					} else{
-						if(loiLoaItem.getScRequestItem().equals(scLoiLoaItem.getScRequestItem())){
-							groupItems.add(loiLoaItem);
+						/*
+						 * Enhancement #21694
+						 */
+						if(null!=loiLoaItem.getTplSpecTierQty()){
+							if(loiLoaItem.getScRequestItem().equals(scLoiLoaItem.getScRequestItem())){
+								groupItems.add(loiLoaItem);
 
-						} else{
-							scLoiLoaItem =  loiLoaItem;
-							ScLoiLoaItem maxPriceItem  = findMaxPriceItem(groupItems);
-							filteredMaxPriceItems.add(maxPriceItem);
-							groupItems.clear();
-							groupItems.add(loiLoaItem);
+							} else{
+								scLoiLoaItem =  loiLoaItem;
+								ScLoiLoaItem maxPriceItem  = findMaxPriceItem(groupItems);
+								filteredMaxPriceItems.add(maxPriceItem);
+								groupItems.clear();
+								groupItems.add(loiLoaItem);
+							}
 						}
+						
 					}
 				}
 				++counter;
 
 				if(scLoiLoaItems.size() == counter){
-					ScLoiLoaItem maxPriceItem  = findMaxPriceItem(groupItems);
-					filteredMaxPriceItems.add(maxPriceItem);
-					groupItems.clear();
+					/*
+					 * Enhancement #21694
+					 */
+					if(null!=groupItems && groupItems.size()>0){
+						ScLoiLoaItem maxPriceItem  = findMaxPriceItem(groupItems);
+						filteredMaxPriceItems.add(maxPriceItem);
+						groupItems.clear();
+					}
 				}
 			}
 		}
@@ -2103,6 +2117,53 @@ public class LOIDetailBackingBean extends
 			}
 		}
 
+	}
+	
+	/**
+	 * Enhancement #21694
+	 * to be used in Screen From Tasklist Only
+	 * @param obj
+	 * 		instance of ScQt/ScLoiForQt
+	 * @param previousPageUrl
+	 * @return
+	 */
+	public String reverseAction() {
+		
+		debugLogger("viewReverseStatusDetails");
+		FacesContext fc = FacesContext.getCurrentInstance();
+		QTDetailBackingBean qtDtl = new QTDetailBackingBean();
+		ScLoi scLoi = this.getManagedBean().getScLoi();
+		//String docType = getManagedBean().getQtnTenderSearchBean().getResultDocType();
+		ScQt scQt = this.getManagedBean().getScQt();
+		ScLoiForQt scLoiForQt = new ScLoiForQt();
+		
+		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+		reqDTO.setLoiId(scLoi.getLoiId());
+		AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLoiForQtByLoiId(reqDTO);
+		
+		scLoiForQt = resDTO.getScLoiForQt();
+		
+		IScWorkFlowStatusSO workFlowStatusSO;
+		ScWorkFlowStatusReqDTO scWreqDTO = new ScWorkFlowStatusReqDTO();
+		workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);		
+		qtDtl.getManagedBean().setEditable(Boolean.TRUE);		
+			
+		Map<MapKeyEnum, Object> otherArgs = new HashMap<MapKeyEnum, Object>();
+		otherArgs.put(MapKeyEnum.loiLoaSelected, scLoi);
+		
+		 /* FINDING WORKFLOW STATS*/
+		scWreqDTO.setDocId(scLoi.getLoiId());		
+		scWreqDTO.setDocType(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
+		
+		ScWorkFlowStatus currentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(scWreqDTO).getWorkFlowStatus();
+		qtDtl.getManagedBean().setPreviousPage(this.getManagedBean().getBackToPreviousPage());
+		qtDtl.getManagedBean().setQt(scQt);
+		qtDtl.getManagedBean().setScLoiForQt(scLoiForQt);
+		qtDtl.getManagedBean().setStatus(getStatusDescById(currentWorkFlowStatus.getPmStatus().getStatusId()));
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, qtDtl.reverseQtDetails(Boolean.TRUE,Boolean.FALSE,qtDtl));
+		
+		return null;
 	}
 
 	/**

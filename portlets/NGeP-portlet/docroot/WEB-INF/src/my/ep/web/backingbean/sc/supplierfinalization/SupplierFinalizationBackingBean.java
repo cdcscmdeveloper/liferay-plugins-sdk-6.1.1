@@ -37,6 +37,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
+import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
@@ -49,6 +50,7 @@ import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.comparator.WorklistItemVOComparator;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
+import my.ep.constant.MapKeyEnum;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -68,6 +70,8 @@ import my.ep.dto.sc.actor.ScActorReqDTO;
 import my.ep.dto.sc.actor.ScActorResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
+import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
+import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.MeetingReqDTO;
 import my.ep.dto.sc.quationtender.MeetingResDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
@@ -90,6 +94,9 @@ import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
+import my.ep.persistence.entity.sc.loaloi.ScLoa;
+import my.ep.persistence.entity.sc.loaloi.ScLoaForQt;
+import my.ep.persistence.entity.sc.loaloi.ScLoiForQt;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -110,6 +117,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendationUlasanRemarks;
+import my.ep.persistence.entity.sc.quationtender.ScQtReverse;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalAmount;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalItem;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -125,6 +133,7 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -212,18 +221,56 @@ public class SupplierFinalizationBackingBean extends
 	public void preRenderView() {
 		log.info("preRenderView");
 		FacesContext fc = FacesContext.getCurrentInstance();
+		/* Enhancement #21694 START*/
+		IQTSuppFinalizationSO qtSuppFinalizationSO;
+		SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+		SuppFinalizationResDTO resDTO = new SuppFinalizationResDTO();
+		SuppFinalizationResDTO res2DTO = new SuppFinalizationResDTO();
+		qtSuppFinalizationSO = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTSuppFinalizationSO.class);
+		/* Enhancement #21694 END */
 		try {
+			
 			SCEvaluationDataType dataType = getBpmTaskDetails(SCEvaluationDataType.class, null);
-			Long qtId = Long.valueOf(dataType.getQtId());
 			getManagedBean().setPayLoad(dataType);
-			getManagedBean().setActiveIndex(0);
+			
+			
+			Long qtId = Long.valueOf(dataType.getQtId());
+			
+			
 			
 			Long loggedInUserId = getFacesScopes().getUserSessionBean()
 									.getUserId();
-			getManagedBean().setLoggedInUserId(loggedInUserId);
-
+			getManagedBean().setLoggedInUserId(loggedInUserId);			
+			
+			/*
+			 * Enhancement #21694 START
+			 * REVERSAL QT CASE
+			 */			
+			
+			ScQtReverse scQtReverse = new ScQtReverse();
+			reqDTO.setQtId(dataType.getQtId());			
+			resDTO = qtSuppFinalizationSO.findActiveScQtReverse(reqDTO);
+			
+			getManagedBean().setScQt(qtSuppFinalizationSO.retrieveQTDtls(reqDTO).getScQt());
+			if(null!=resDTO && null!=resDTO.getScQtReverse()){
+				scQtReverse = resDTO.getScQtReverse();
+				getManagedBean().setScQtReverse(resDTO.getScQtReverse());
+				reverseAction(scQtReverse);
+				getManagedBean().setActiveIndex(5);
+				getManagedBean().setReversed(true);
+			}else{
+				getManagedBean().setActiveIndex(0);
+				getManagedBean().setScQtReverse(null);
+				getManagedBean().setReversed(false);
+			}
+			/*
+			 * Enhancement #21694 END
+			 */
+			
 			loadInitialData(qtId);
-
+			
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
@@ -234,6 +281,63 @@ public class SupplierFinalizationBackingBean extends
 			  .handleNavigation(fc, null,
 					CommonUIConst.ACKNOWLEDGE_ERROR_PAGE);
 		}
+	}
+	
+	/**
+	 * Enhancement #21694
+	 * to be used in Screen From Tasklist Only
+	 * @param ScQtReverse
+	 * @param previousPageUrl
+	 * @return
+	 */
+	public String reverseAction(ScQtReverse scQtReverse) {
+		
+		debugLogger("viewReverseStatusDetails");
+		FacesContext fc = FacesContext.getCurrentInstance();
+		QTDetailBackingBean qtDtl = new QTDetailBackingBean();
+		ScLoiForQt scLoiForQt = new ScLoiForQt();
+		ScLoaForQt scLoaForQt = new ScLoaForQt();
+		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+		AwardSupplierResDTO resDTO = new AwardSupplierResDTO();
+		
+		if(scQtReverse.getDocType().equalsIgnoreCase("LI")){	
+			reqDTO = new AwardSupplierReqDTO();
+			reqDTO.setLoiId(scQtReverse.getDocId());
+			resDTO = getQtAwardSO().retrieveLoiForQtByLoiId(reqDTO);
+			scLoiForQt = resDTO.getScLoiForQt();
+		}else{
+			reqDTO = new AwardSupplierReqDTO();
+			reqDTO.setLoaId(scQtReverse.getDocId());
+			resDTO = getQtAwardSO().retrieveLoaForQtByLoaId(reqDTO);
+			scLoaForQt = resDTO.getScLoaForQt();		
+		}
+		
+		IScWorkFlowStatusSO workFlowStatusSO;
+		ScWorkFlowStatusReqDTO scWreqDTO = new ScWorkFlowStatusReqDTO();
+		workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);		
+		qtDtl.getManagedBean().setEditable(Boolean.TRUE);		
+			
+		
+		/* FINDING WORKFLOW STATS*/
+		 
+		scWreqDTO.setDocType(scQtReverse.getDocType().equalsIgnoreCase("LI")?ParameterConst.DOCTYPE_LETTER_OF_INTENT:ParameterConst.DOCTYPE_LETTER_OF_AWARD);
+		scWreqDTO.setDocId(scQtReverse.getDocId());					
+		ScWorkFlowStatus currentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(scWreqDTO).getWorkFlowStatus();
+		qtDtl.getManagedBean().setViewFinalization(true);
+		qtDtl.getManagedBean().setEditable(false);
+		qtDtl.getManagedBean().setPreviousPage(this.getManagedBean().getPreviousPageUrl());
+		qtDtl.getManagedBean().setQt(getManagedBean().getScQt());
+		qtDtl.getManagedBean().setScLoaForQt(scLoaForQt);
+		qtDtl.getManagedBean().setScLoiForQt(scLoiForQt);
+		qtDtl.getManagedBean().setStatus(getStatusDescById(currentWorkFlowStatus.getPmStatus().getStatusId()));
+		if(scQtReverse.getDocType().equalsIgnoreCase("LI")){
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, qtDtl.reverseQtDetails(Boolean.TRUE,Boolean.FALSE,qtDtl));
+		}else{
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, qtDtl.reverseQtDetails(Boolean.FALSE,Boolean.TRUE,qtDtl));
+		}
+		
+		return null;
 	}
 
 	/**
@@ -277,12 +381,23 @@ public class SupplierFinalizationBackingBean extends
 			getManagedBean().setFinalizationTabIndex(tabIndex++);
 			getManagedBean().setEndorsementReportActiveIndex(-1);
 			getManagedBean().setCommEndorsementTabIndex(-1);
+			getManagedBean().setEndorsementReportActiveIndex(-1);
 		} else {
 			getManagedBean().setPreparationTabIndex(tabIndex++);
 			getManagedBean().setReportTabIndex(tabIndex++);
 			getManagedBean().setFinalizationTabIndex(tabIndex++);
 			getManagedBean().setCommEndorsementTabIndex(tabIndex++);	
-			getManagedBean().setEndorsementReportActiveIndex(tabIndex);
+			
+			/*
+			 * Enhancement #21694
+			 */
+			if(null!=getManagedBean().getScQtReverse()){
+				getManagedBean().setEndorsementReportActiveIndex(tabIndex++);
+				getManagedBean().setReverseTabIndex(tabIndex);
+			}else{
+				getManagedBean().setEndorsementReportActiveIndex(tabIndex);
+				getManagedBean().setReverseTabIndex(-1);
+			}
 		}
 		
 		// Dynamically creating main tab menu
@@ -362,6 +477,10 @@ public class SupplierFinalizationBackingBean extends
 				break;
 			case 4:
 				navigateToEndorsementReportTab();	
+				break;
+			case 5:
+				//Enhancement #21694
+				navigateToViewReverseTab();
 				break;
 		}
 	}
@@ -590,7 +709,17 @@ public class SupplierFinalizationBackingBean extends
 			log.error(e);
 		}
 	}	
-
+	
+	/**
+	 * Enhancement #21694
+    * Get the Reversal tab data.
+    */
+	public void navigateToViewReverseTab() {
+		log.info("navigateToViewReverseTab");
+		this.getManagedBean().setActiveIndex(
+				this.getManagedBean().getReverseTabIndex());
+		
+	}
 
 	private void retrievePreparationDtls(Long qtId, String committeeType) {
 		log.info("..In retrievePreparationDtls()..");
@@ -1840,7 +1969,7 @@ public class SupplierFinalizationBackingBean extends
 					throw new EpException(MessageConst.ERROR_760265);
 				}
 			}
-
+			reqDTO.setScQtReverse(getManagedBean().getScQtReverse());
 			String committeeType = getManagedBean().getCommitteeType();
 			CommitteResDTO committeeResDTO = getCommitteMemberByUserId();
 			ScCommitteeMember committeeMember = committeeResDTO.getCommMember();
@@ -1898,7 +2027,7 @@ public class SupplierFinalizationBackingBean extends
 		String decisionTypeCode = scQtFinalization.getDecision().getParameterCode();
 		
 		List<ScQtMeeting> meetingList = this.getManagedBean().getMeetingList();
-
+		
 		try {
 			qtSuppFinalizationSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -2015,6 +2144,12 @@ public class SupplierFinalizationBackingBean extends
 			// Remarks are mandatory for QT cancellation
 			throw new EpException(MessageConst.ERROR_760360);
 		}
+		
+		/*
+		 * Enhancement #21694
+		 * SET MEETING MEMBER ACTIVITY
+		 */
+		reqDTO.setMeetingMembersActivity(getManagedBean().getCommitteeList());
 		
 		return reqDTO;
 	}
@@ -4464,6 +4599,31 @@ public class SupplierFinalizationBackingBean extends
 			mainMenuModel.addMenuItem(menuItem);			
 		}
 		
+		/*
+		 * Enhancement #21694
+		 *  Supplier Finalization Menu Item
+		 */
+		if(null!=getManagedBean().getScQtReverse()){
+			menuItem = new MenuItem();
+			menuItem.setValue(ResourceBundleUtils.getMessage(
+								"lbl.sc.committee.reverseStatus",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale()));
+			menuItem.setStyle("width:20%;");
+			//menuItem.setDisabled(isQTMaintenanceScreen());
+			menuItem.setTransient(true);
+			menuItem.setPartialSubmit(true);
+			menuItem.setProcess("@form");
+			menuItem.setUpdate("@form");
+			menuItem.setOncomplete(tabMenuChangeCommonAction
+					+ (isBPKUser ? 2 : (tabIndex++)) + "}]); ");
+			mainMenuModel.addMenuItem(menuItem);
+			
+		}
+		/*
+		 * Enhancement #21694 END  
+		 */
+		
 		this.getManagedBean().setMainMenuModel(mainMenuModel);
 	}	
 
@@ -6516,6 +6676,16 @@ public class SupplierFinalizationBackingBean extends
 			scQtRecommend.getRecommendDtls().clear();
 			scQtRecommend.getRecommendDtls().addAll(toBeAddedSet);
 		}			
+	}
+	
+	/**
+	 * Gets the qt award so.
+	 * 
+	 * @return the qt award so
+	 */
+	private IQTAwardSO getQtAwardSO() {
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 	}
 	
 	private void checkAndResetPreviouslyAwardedSupplier(

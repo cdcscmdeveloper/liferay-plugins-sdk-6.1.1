@@ -16,6 +16,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
+import my.ep.persistence.entity.sc.quationtender.ScQtMeetingMember;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
@@ -43,6 +44,11 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	
 	private ScCommitteeMember committeMember;
 	private List<ScCommitteeMember> deletedCommitteeMembers;
+	
+	/* Enhancement #21694 START*/
+	private List<ScQtMeetingMember> previousCommitteeMembers;
+	/* Enhancement #21694 END*/
+	
 	private List<SelectItem> selections;
 	private String tabTitle;
 	private String name = null;
@@ -73,6 +79,12 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	
 	private Date currentDate = new Date();
 	private boolean nameRequired;
+	
+	/** 
+	 *  Enhancement #21694 
+	 *  The back to previous page. 
+	 */
+	private String backToPreviousPage;
 	
 	public SupplierFinalizationMeetingManagedBean() {
 		this.userSearchBean = new UserCommitteeSearchBean();
@@ -542,5 +554,38 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	public void setNameRequired(boolean nameRequired) {
 		this.nameRequired = nameRequired;
 	}
+
+	public String getBackToPreviousPage() {
+		return backToPreviousPage;
+	}
+
+	public void setBackToPreviousPage(String backToPreviousPage) {
+		this.backToPreviousPage = backToPreviousPage;
+	}
+
+	/**
+	 * @return the previousCommitteeMembers
+	 */
+	public List<ScQtMeetingMember> getPreviousCommitteeMembers() {
+		return previousCommitteeMembers;
+	}
+
+	/**
+	 * @param previousCommitteeMembers the previousCommitteeMembers to set
+	 */
+	public void setPreviousCommitteeMembers(List<ScQtMeetingMember> previousCommitteeMembers) {
+		this.previousCommitteeMembers = previousCommitteeMembers;
+	}
+
+	/**
+	 * @param currentDate the currentDate to set
+	 */
+	public void setCurrentDate(Date currentDate) {
+		this.currentDate = currentDate;
+	}
+
+	
+	
+	
 
 }

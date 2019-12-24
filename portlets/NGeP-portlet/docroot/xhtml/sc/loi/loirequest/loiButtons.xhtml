@@ -26,7 +26,19 @@
 					update="@all" onstart="blockWidget.show();"
 					oncomplete="blockWidget.hide();"
 					action="#{lOIDetailBackingBean.previewLetter}" />
-
+				<ui:remove>
+					Enhancement #21694 START
+				</ui:remove>
+				<h:panelGroup rendered="#{!lOIDetailBackingBean.managedBean.scLoi.brandNew}"> 
+					<p:commandButton value="#{lbl['lbl.btn.reverse']}"
+						rendered="#{isPendingSubmissionStatus or !empty lOIDetailBackingBean.managedBean.taskId}"
+						action="#{lOIDetailBackingBean.reverseAction()}" process="@form" update="@form"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+				</h:panelGroup>
+				
+				<ui:remove>
+					Enhancement #21694 END
+				</ui:remove>
 				<p:commandButton value="#{lbl['lbl.btn.save']}"
 					action="#{lOIDetailBackingBean.saveAction}"
 					rendered="#{lOIDetailBackingBean.managedBean.buttonFlag}"

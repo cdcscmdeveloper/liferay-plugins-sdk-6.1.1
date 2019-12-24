@@ -1,0 +1,65 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<ui:remove>
+		Enhancement #21694
+	</ui:remove>
+	<ui:define name="contentSection">
+		<p:commandButton immediate="true" value="#{lbl['lbl.btn.back']}"
+				rendered="#{!empty qTDetailBB.managedBean.previousPage}"
+				style="float:left;" action="#{qTDetailBB.backToPrevious}" />
+		<div class="ppRightBtn">
+			<h:panelGroup id="reverseBtns" rendered="#{!qTDetailBB.managedBean.viewFinalization}">
+				<p:commandButton value="#{lbl['lbl.btn.save']}"
+					action="#{qTDetailBB.saveReverseLoiLoa}" process="@form"
+					update="@all" 
+					onstart="blockWidget.show();"
+					oncomplete="blockWidget.hide();" />
+				<p:commandButton value="#{lbl['lbl.btn.submit']}"
+					onstart="blockWidget.show();cd.show();"
+					oncomplete="blockWidget.hide();" />
+				<p:confirmDialog
+					message="#{lbl['lbl.sc.spec.alert.resubmit.deskofficer.committee.value']}"
+					header="#{lbl['lbl.sc.dialog.cofirm.header']}"
+					severity="alert" widgetVar="cd">
+					<div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.btn.yes']}"
+							process="@form"
+							update="@all"
+							actionListener="#{qTDetailBB.submitQtReverse}"
+							onclick="blockWidget.show();"
+							oncomplete="cd.hide();blockWidget.hide();" id="submitReverseQt"
+							partialSubmit="true" immediate="true" />
+						<p:commandButton value="#{lbl['lbl.btn.no']}"
+							oncomplete="cd.hide();" />
+					</div>
+				</p:confirmDialog>
+			</h:panelGroup>
+		</div>
+		<h:panelGroup rendered="#{!qTDetailBB.managedBean.viewFinalization}">
+			<ui:include src="loiLoaReverseHeader.xhtml" /> 
+			<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/icon_loadingLarge.gif" />
+			</p:blockUI>
+			<p:messages id="cancelMsg" showDetail="true" autoUpdate="true"
+				closable="true" showSummary="false" severity="error, info" />
+		</h:panelGroup>
+		<p:panel id="reverseQt"
+					toggleable="true">
+					 <ui:include
+						src="reverseFinalizationCommittee.xhtml" /> 	
+					<ui:remove>
+						<ui:include
+						src="reverseHistory.xhtml" />
+					</ui:remove>
+		</p:panel>		
+	</ui:define>
+
+</ui:composition>
