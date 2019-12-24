@@ -169,6 +169,7 @@
 							<p:inputText style="text-align: right;" size="30" maxlength="2" 
 										 required="true" label="#{lbl['lbl.sc.qt.max.attendance']}"
 										 value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.maxNoOfAttendance}">
+										 <f:validateDoubleRange minimum = "1" />
 							</p:inputText>
 							<ac:iconTooltip value="#{lbl['lbl.sc.qt.max.attendance.tooltip']}" />
 						</td>
