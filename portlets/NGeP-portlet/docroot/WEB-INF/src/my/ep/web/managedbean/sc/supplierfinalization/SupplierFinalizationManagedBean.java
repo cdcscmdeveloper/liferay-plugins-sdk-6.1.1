@@ -28,6 +28,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
+import my.ep.persistence.entity.sc.quationtender.ScQtReverse;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -218,6 +219,13 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private int finalizationTabIndex;
 	private int commEndorsementTabIndex;
 	private int endorsementReportActiveIndex;
+	/*
+	 * Enhancement #21694 START
+	 */
+	private int reverseTabIndex;
+	private ScQtReverse scQtReverse;
+	private boolean isReversed = false;
+	/* Enhancement #21694 END*/
 	
 	private int evaluationStageId;
 	private String evaluationHeader;
@@ -2121,6 +2129,48 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 
 	public void setPreviousPageUrl(String previousPageUrl) {
 		this.previousPageUrl = previousPageUrl;
+	}
+
+	/**
+	 * @return the reverseTabIndex
+	 */
+	public int getReverseTabIndex() {
+		return reverseTabIndex;
+	}
+
+	/**
+	 * @param reverseTabIndex the reverseTabIndex to set
+	 */
+	public void setReverseTabIndex(int reverseTabIndex) {
+		this.reverseTabIndex = reverseTabIndex;
+	}
+
+	/**
+	 * @return the scQtReverse
+	 */
+	public ScQtReverse getScQtReverse() {
+		return scQtReverse;
+	}
+
+	/**
+	 * @param scQtReverse the scQtReverse to set
+	 */
+	public void setScQtReverse(ScQtReverse scQtReverse) {
+		this.scQtReverse = scQtReverse;
+	}
+
+	/**
+	 * @return the isReversed
+	 */
+	public boolean isReversed() {
+		return isReversed;
+	}
+
+	/**
+	 * @param isReversed the isReversed to set
+	 */
+	public void setReversed(boolean isReversed) {
+		this.isReversed = isReversed;
 	}
 	
 	

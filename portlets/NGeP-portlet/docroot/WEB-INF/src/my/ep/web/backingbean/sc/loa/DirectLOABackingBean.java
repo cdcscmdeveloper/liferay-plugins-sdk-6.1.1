@@ -12,6 +12,7 @@ import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -38,6 +39,7 @@ import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDirectAwardSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
@@ -70,6 +72,7 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
+import my.ep.dto.sc.actor.ScActorReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.DirectAwardReqDTO;
@@ -4664,12 +4667,119 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			 		
 			if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
 					RequestContext.getCurrentInstance().execute("loaApprovalPopUp.show()");
-			} 
+			} else if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
+				//Enhancement #21694 START
+				//REVISE DOCUMENT FROM VERIFIER TO SUPPLIER AGAIN FOR REUPLOAD DOCUMENT
+				updateReviseBPMTaskAction(outcome);
+				//Enhancement #21694 END
+			}
 			else {
 				updateBpmTaskAction(outcome);
 			}
 		}
 		//20190405@asyrafhaziq - CR25062 - End
+	
+		/**
+		 * Enhancement #21694
+		 * Update bpm task action.
+		 * STAGE REVISE (VERIFY) -> LOA Acceptance (Supplier Action)
+		 * STAGE LOA Acceptance(Supplier Action) -> REVISE (VERIFY)
+		 * update bpm - save data into database and BPM process will route to the next respective user.
+		 * @param outcome the outcome
+		 */
+		public void updateReviseBPMTaskAction(String outcome){
+			debugLogger("updateReviseBPMTaskAction");
+			
+			/*******************
+			 * INITIATE BPM REVISE
+			 */
+			PmParameter procurementMode = this.getManagedBean().getScQt().getProcurementMode();
+			IScActorSO actorSO;
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			ScActorReqDTO actorReqDTO=new ScActorReqDTO();
+			actorSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IScActorSO.class);
+			reqDTO.setScLoa(this.getManagedBean().getScLoa());
+			reqDTO.setPayLoad(getManagedBean().getPayLoad());
+			reqDTO.setOutcome(outcome);
+			reqDTO.setSourceId(getManagedBean().getSourceId());
+			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			reqDTO.setScQt(this.getManagedBean().getScQt());
+			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
+			reqDTO.setQuotation(null!=procurementMode && procurementMode.getParameterCode().equals(ParameterConst.PROCUREMENT_MODE_QUOTATION)?true:false);
+			
+			actorReqDTO.setDocId(this.getManagedBean().getScQt().getQtId());
+			actorReqDTO.setDocTypes(Arrays.asList(ParameterConst.DOCTYPE_QUOTATION));
+			if(null!=this.getManagedBean().getScQt().getFinalization()){
+				//CASE FROM NORMAL LOA
+				switch(this.getManagedBean().getScQt().getFinalization().getLoiLoaBy()){
+					case ParameterConst.LOILOA_PREPARED_BY_DO	:	//DESK OFFICER
+																		actorReqDTO.setUserId(this.getManagedBean().getScQt().getCreatedBy());
+																		break;
+					case ParameterConst.LOILOA_PREPARED_BY_FC_SECRETARY	:	//SECRETARY
+																		if(null!=this.getManagedBean().getScLoa()){
+																			actorReqDTO.setUserId(this.getManagedBean().getScLoa().getCreatedBy());
+																		}else{
+																			actorReqDTO.setUserId(this.getManagedBean().getScLoa().getCreatedBy());
+																		}
+																		break;
+				}
+			}else{
+				//CASE FROM DIRECT LOA
+				actorReqDTO.setUserId(this.getManagedBean().getScQt().getCreatedBy());
+			}
+			
+			reqDTO.setScActors(actorSO.retreiveActorByDocTypesDocIdUserId(actorReqDTO).getScActorList());
+			AwardSupplierResDTO resDTO = getQtAwardSO().reviseDocumentLOA(reqDTO);		
+			if(resDTO.isSuccessful()){
+				/*******************
+				 * ACKNOWLEDGE_PAGE
+				 *******************/
+				String[] param = new String[3];
+				
+				param[0] = this.getManagedBean().getScLoa().getLoaNo();
+				param[1] = this.getManagedBean().getScQt().getQtNo();
+				param[2] = this.getManagedBean().getScLoa().getScLoiLoa().getSupplierName();
+				PmParameter loaProcurementMode = this.getManagedBean().getScLoa().getProcurementMode();
+				if(reqDTO.getScLoa().getPmStatus().getStatusId().equals(QTStatusConst.LOA_REVISE_DOC)){
+					if(null!=procurementMode){
+						switch(procurementMode.getParameterCode()){
+							case ParameterConst.PROCUREMENT_MODE_QUOTATION : successMessage(MessageConst.INFO_700079,param);	
+																				break;
+							case ParameterConst.PROCUREMENT_MODE_TENDER :	successMessage(MessageConst.INFO_700080,param);
+																				break;
+							case ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO :	
+																				if(null!=loaProcurementMode && loaProcurementMode.getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_QUOTATION)){
+																					successMessage(MessageConst.INFO_700079,param);
+																				}else if(loaProcurementMode != null && loaProcurementMode.getParameterCode().equals(ParameterConst.PROCUREMENT_MODE_TENDER)){
+																					successMessage(MessageConst.INFO_700080,param);
+																				}
+																				break;
+						}
+					}
+				}else{
+					if(null!=procurementMode){
+						switch(procurementMode.getParameterCode()){
+							case ParameterConst.PROCUREMENT_MODE_QUOTATION : successMessage(MessageConst.INFO_700077,param);	
+																				break;
+							case ParameterConst.PROCUREMENT_MODE_TENDER :	successMessage(MessageConst.INFO_700078,param);
+																				break;
+							case ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO :	
+																				if(null!=loaProcurementMode && loaProcurementMode.getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_QUOTATION)){
+																					successMessage(MessageConst.INFO_700077,param);
+																				}else if(loaProcurementMode != null && loaProcurementMode.getParameterCode().equals(ParameterConst.PROCUREMENT_MODE_TENDER)){
+																					successMessage(MessageConst.INFO_700078,param);
+																				}
+																				break;
+						}
+					}
+				}			
+				
+				FacesContext fc = FacesContext.getCurrentInstance();
+				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
+			}		
+		}
+	
 	/**
 	 * Update bpm task action. update bpm - save data into database and BPM
 	 * process will route to the next respective user. Authenticating gpki

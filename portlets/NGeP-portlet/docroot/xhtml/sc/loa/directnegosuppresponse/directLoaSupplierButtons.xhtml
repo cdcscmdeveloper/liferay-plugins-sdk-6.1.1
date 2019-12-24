@@ -34,8 +34,24 @@
 										value="#{directLOABackingBean.managedBean.outComes}">
 										<ui:param name="buttonLabel"
 											value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+										<ui:remove>
+											Enhancement #21694 START	
+										</ui:remove>
+										<h:panelGroup rendered="#{bpmAction == 'RESUBMIT' and directLOABackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_REVISE_DOC}">
+										<p:commandButton value="#{lbl[buttonLabel]}"
+											styleClass="ui-button" update="@form"
+											partialSubmit="true" process="@all"
+											action="#{directLOABackingBean.updateReviseBPMTaskAction(bpmAction)}"
+											onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
+											<f:setPropertyActionListener value="#{bpmAction}"
+												target="#{directLOABackingBean.managedBean.action}" />
+											<f:setPropertyActionListener value="false"
+												target="#{directLOABackingBean.managedBean.autoUpdate}" />										
+										</p:commandButton>
+										</h:panelGroup>
 										<!-- Enhancement #21573 -->
-										<h:panelGroup rendered="#{bpmAction == 'ACCEPT'}">
+										
+										<h:panelGroup rendered="#{bpmAction == 'ACCEPT' and directLOABackingBean.managedBean.scLoa.pmStatus.statusId ne QTStatusConst.LOA_REVISE_DOC}">
 											<p:commandButton value="#{lbl[buttonLabel]}"
 												styleClass="ui-button" update="@form"
 												partialSubmit="true" process="@all"
@@ -50,7 +66,7 @@
 											</p:commandButton>
 										</h:panelGroup>
 
-										<h:panelGroup rendered="#{bpmAction == 'REJECT'}">
+										<h:panelGroup rendered="#{bpmAction == 'REJECT' and directLOABackingBean.managedBean.scLoa.pmStatus.statusId ne QTStatusConst.LOA_REVISE_DOC}">
 											<p:commandButton value="#{lbl[buttonLabel]}"
 												styleClass="ui-button" onstart="blockWidget.show();"
 												oncomplete="blockWidget.hide();"

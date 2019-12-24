@@ -32,6 +32,7 @@ import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
+import my.ep.constant.MapKeyEnum;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -49,6 +50,8 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
+import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
+import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.MeetingReqDTO;
 import my.ep.dto.sc.quationtender.MeetingResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
@@ -56,6 +59,7 @@ import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -66,6 +70,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -165,6 +170,93 @@ public class SupplierFinalizationMeetingBackingBean extends
 					CommonUIConst.ACKNOWLEDGE_ERROR_PAGE);
 		}
 	}
+	
+	/**
+	 * Enhancement #21694
+	 * VIEW Committee
+	 * @param obj
+	 * 		instance of ScQtCommittee
+	 * @param previousPageUrl
+	 * @return
+	 */
+	public void viewMeetingDetails(Object obj) {		
+		debugLogger("viewMeetingDetails");
+		String previousPageURL = QTConstants.FC_COORDINATE_MEETING_PAGE;
+		FacesContext fc = FacesContext.getCurrentInstance();
+		
+		ScQtMeeting scQtMeeting = null;
+		if(obj instanceof ScQtMeeting ){
+			scQtMeeting = (ScQtMeeting)obj;
+			preRenderViewForQtMeeting(scQtMeeting,previousPageURL);
+			
+		}		
+		fc.getApplication().getNavigationHandler()
+		.handleNavigation(fc, null, QTConstants.VIEW_QT_COMMITTEE_PAGE);
+	}
+	
+	/**
+	 * Enhancement #21694
+	 * VIEW Committee
+	 * @param obj
+	 * 		instance of ScQtCommittee
+	 * @param previousPageUrl
+	 * @return
+	 */
+	public void viewMeetingDetailsViewFinalization(Object obj) {		
+		debugLogger("viewMeetingDetailsFinalization");
+		String previousPageURL = QTConstants.FC_SUPPLIER_FINALIZATION_PAGE;
+		FacesContext fc = FacesContext.getCurrentInstance();
+		
+		ScQtMeeting scQtMeeting = null;
+		if(obj instanceof ScQtMeeting ){
+			scQtMeeting = (ScQtMeeting)obj;
+			preRenderViewForQtMeeting(scQtMeeting,previousPageURL);
+			
+		}		
+		fc.getApplication().getNavigationHandler()
+		.handleNavigation(fc, null, QTConstants.VIEW_QT_COMMITTEE_PAGE);
+	}
+	
+	/**
+	 * Enhancement #21694 START 
+	 * Page navigation from  to qtDetailManageBean.backToPreviousPage
+	 */
+	public void backToPreviousReverse() {
+		debugLogger("backToPreviousReverse");
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication()
+				.getNavigationHandler()
+				.handleNavigation(fc, null,
+						getManagedBean().getBackToPreviousPage());
+	}
+	
+	/**
+	 * Enhancement #21694
+	 * @param ScQtMeeting
+	 */
+	public void preRenderViewForQtMeeting(ScQtMeeting scQtMeeting, String prevPageURL){
+		IQTMeetingSO qtMeetingSO;
+		getManagedBean().setBackToPreviousPage(prevPageURL);
+		getManagedBean().setPreviousCommitteeMembers(null);
+		try{
+			qtMeetingSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			QuationTenderResDTO resDTO = new QuationTenderResDTO();
+			reqDTO.setMeetingId(scQtMeeting.getQtMeetingId());
+			if(null!=scQtMeeting.getQtMeetingId() && scQtMeeting.getQtMeetingId()>0L){
+				if(null!=reqDTO)
+					resDTO = qtMeetingSO.findPreviousCommitteeMembersByMeetingId(reqDTO); 
+					if(null!=resDTO && null!=resDTO.getPreviousCommitteeMembers() && !resDTO.getPreviousCommitteeMembers().isEmpty()){
+						getManagedBean().setPreviousCommitteeMembers(resDTO.getPreviousCommitteeMembers());
+					}
+			}
+		}finally{
+			qtMeetingSO = null;
+		}
+		
+	}
+	
+	
 
 	/**
 	 * Retrieve quotation/tender details corresponding to the qtId
@@ -188,6 +280,8 @@ public class SupplierFinalizationMeetingBackingBean extends
 		}
 	}
 //End Header - QT Details
+	
+	
 	
 	
 	/**
@@ -326,9 +420,10 @@ public class SupplierFinalizationMeetingBackingBean extends
 			setUserDetails(meeting);
 
 			meeting.setMeetingStatus(getPmStatusByStatusId(QTStatusConst.MS_PENDING));
-			
+			meeting.setRecordStatusFlg(1);
 			meetingList.add(meeting);
 			this.getManagedBean().setScQtMeetings(meetingList);
+			
 		} finally{
 			
 		}
@@ -1439,6 +1534,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 			String qtNo = getManagedBean().getScQt().getQtNo();
 			//String statusParam = getStatusDescById(getManagedBean().getCurrentStatusId());
 			updateFinalizationBriefingReportStatus(getManagedBean().getScQt().getQtId());
+			
 			renewSesionObject();
 			String submitMessage=	ResourceBundleUtils
 					.getMessage("lbl.sc.sf.meeting.submit.message",
