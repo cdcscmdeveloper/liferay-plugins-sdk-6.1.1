@@ -244,21 +244,33 @@
 						</c:when>
 						</c:choose>
 					</p:column>
-			
+					<!-- Enhancement #21694 - LOA Cancellation START-->
 					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:6%;text-align: center;">
+										
 						<p:menuButton value="#{lbl['lbl.btn.option']}">
 							<p:menuitem value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();" 
 								icon="ui-icon-view" action="#{qTDetailBB.viewSupplierProposalDetailsGen(listItem, view.viewId)}"
 								rendered="#{listType eq 'loiList'}"
 								partialSubmit="true" process="@this"/>
+							<p:menuitem value="#{lbl['lbl.ct.reverseStatus']}"  icon="ui-icon-reverse"
+								    		process="@this" partialSubmit="true"
+							        		action="#{qTDetailBB.viewReverseStatusDetailsGen(listItem, view.viewId)}"
+							        		rendered="#{listType eq 'loiList'}">
+			   	   	 		</p:menuitem>
 							<p:menuitem value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();" 
 								icon="ui-icon-view" action="#{qTDetailBB.viewSupplierProposalDetailsGen(listItem, view.viewId)}"
 								rendered="#{listType eq 'loaList'}"
 								partialSubmit="true" process="@this"/>
-						</p:menuButton>					
+							<p:menuitem value="#{lbl['lbl.ct.reverseStatus']}"  icon="ui-icon-reverse"
+								    		process="@this" partialSubmit="true"
+							        		action="#{qTDetailBB.viewReverseStatusDetailsGen(listItem, view.viewId)}"
+							        		rendered="#{listType eq 'loaList'}">
+			   	   	 		</p:menuitem>
+						</p:menuButton>	
 					</p:column>
+					<!-- Enhancement #21694 - LOA Cancellation END-->
 				</p:dataTable>
 				</div>
 			</h:panelGroup>

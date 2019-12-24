@@ -95,6 +95,19 @@
 					<p:ajax partialSubmit="true" process="@this" update="@this" />
 				</p:inputTextarea>
 			</p:column>
+			<ui:remove>
+				Enhancement #21694
+			</ui:remove>
+			<p:column headerText="#{lbl['lbl.sc.meeting.previousCommittee']}" style="width:30%">
+				<h:panelGroup layout="block" rendered="#{disableMeeting}">
+					<p:commandLink style="align: center" 
+			 			process="@this" partialSubmit="true" 
+						action="#{suppFinalMeetingBackingBean.viewMeetingDetailsViewFinalization(meetingDtl)}">
+						<p:graphicImage id="viewCommitteeId" value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" />
+						<p:spacer width="5"></p:spacer>
+					</p:commandLink>
+				</h:panelGroup>
+			</p:column>
 		</p:dataTable>
 
 		<div align="right" class="BtnSpacing">

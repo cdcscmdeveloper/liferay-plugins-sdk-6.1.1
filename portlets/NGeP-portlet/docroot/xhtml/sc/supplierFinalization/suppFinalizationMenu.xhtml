@@ -112,6 +112,14 @@
 				<ui:include
 					src="/xhtml/sc/supplierFinalization/committeeEndorsement/endorsementReport.xhtml" />
 			</c:if>
+			<ui:remove>
+				Enhancement #21694
+			</ui:remove>
+			<c:if test="#{suppFinalizationBackingBean.managedBean.activeIndex eq 
+							suppFinalizationBackingBean.managedBean.reverseTabIndex}">
+				<ui:include
+					src="/xhtml/sc/loiLoaReverse/loiLoaReverseDetails.xhtml" />
+			</c:if>
 		</p:panel>
 
 		<ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/boardofDirectorsDetails.xhtml" />
