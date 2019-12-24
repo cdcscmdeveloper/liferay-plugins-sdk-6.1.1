@@ -11049,6 +11049,7 @@ public class SmApplicationBackingBean extends
 										.isEmpty()) {
 							mandatoryLicenseDocs.add(doc);
 						} else {
+							//#27120
 							//SSM INTEGRATION
 							//for ssm no need supporting doc
 							//This applicable for ROC & for data valid with ssm only, to skip checking mandatory doc if paid up capital is same with ssm
@@ -11076,9 +11077,11 @@ public class SmApplicationBackingBean extends
 												.compareTo(
 														getManagedBean().getSmAppl().getSmCompanyBasic()
 																.getPaidUpCapitalSSM()) == 0) {
-									//if (!docToExclude.contains(doc.getPmDocument().getDocumentId().toString())) {
+									if (!docToExclude.contains(doc.getPmDocument().getDocumentId().toString())) {
 										getManagedBean().getMandatoryDocs().add(doc);
-									//}
+									}else{
+										doc.getPmDocument().setMandatory(false);
+									}
 
 								}
 							}else{
