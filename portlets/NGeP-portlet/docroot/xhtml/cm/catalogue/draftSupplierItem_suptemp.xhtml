@@ -111,7 +111,7 @@
 				navigator="true" showOn="button" size="10"
 				mindate="#{catalogueBackingBean.managedBean.currentDate}"
 				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
-				<p:ajax event="dateSelect"  partialSubmit="true" update="endDate" process="@this"/>
+				<p:ajax event="dateSelect" listener="#{catalogueBackingBean.getMinDate(selectedSuppCat.cmStandardPricing.startDate,null)}" partialSubmit="true" update="endDate" process="@this"/>
 			</p:calendar>
 
 		</p:column>
@@ -122,8 +122,9 @@
 			</f:facet>
 			<p:calendar value="#{selectedSuppCat.cmStandardPricing.endDate}" readonlyInput="true" id="endDate"
 				navigator="true" showOn="button" size="10"
-				mindate="#{catalogueBackingBean.getMinDate(selectedSuppCat.cmStandardPricing.startDate)}"
-				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+				mindate="#{catalogueBackingBean.managedBean.minDate}"
+				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
+				</p:calendar>
 
 		</p:column>
 		<!-- END SSM INTEGRATION #27089 -->
