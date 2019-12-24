@@ -517,6 +517,10 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private TreeNode stateTree;
 	
 	private TreeNode[] selectedNodes;
+	
+	//SSM integration
+	/** The current date. */
+	private Date minDate = new Date();
 
 	private class ExpiredSearchPagingDataModel extends
 			PagingDataModel<CmSupplierItem> {
@@ -4238,6 +4242,14 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	public void setFlRequest(FlFulfilmentRequest flRequest) {
 		this.flRequest = flRequest;
+	}
+
+	public Date getMinDate() {
+		return minDate;
+	}
+
+	public void setMinDate(Date minDate) {
+		this.minDate = minDate;
 	}
 
 

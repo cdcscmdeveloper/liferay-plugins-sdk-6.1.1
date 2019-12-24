@@ -160,6 +160,7 @@
 								maxResults="50" dropdown="false" forceSelection="true" />
 				
 			</p:column>
+			<!-- START SSM INTEGRATION #27089 -->
 			<p:column width="2%">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
@@ -169,7 +170,7 @@
 					navigator="true" showOn="button" size="10"
 					mindate="#{catalogueBackingBean.managedBean.currentDate}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
-					<p:ajax event="dateSelect" listener="#{catalogueBackingBean.onDateSelectListener(selectedSuppCat.cmStandardPricing)}" update="standardEndDateId"/>
+					<p:ajax event="dateSelect" listener="#{catalogueBackingBean.getMinDate(selectedSuppCat.cmStandardPricing.startDate,selectedSuppCat.cmStandardPricing)}" update="standardEndDateId"/>
 				</p:calendar>
 	
 			</p:column>
@@ -182,10 +183,11 @@
 					navigator="true" showOn="button" size="10" 
 					id="standardEndDateId"  maxdate="#{catalogueBackingBean.getNextTwoYear(selectedSuppCat.cmStandardPricing.startDate)}"
 					disabled="#{selectedSuppCat.cmStandardPricing.startDate==null}"
-					mindate="#{catalogueBackingBean.managedBean.currentDate}"
+					mindate="#{catalogueBackingBean.managedBean.minDate}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 	
 			</p:column>
+			<!-- END SSM INTEGRATION #27089 -->
 			<p:column width="2%">
 				<f:facet name="header">
 					#{lbl['lbl.cm.action']}
