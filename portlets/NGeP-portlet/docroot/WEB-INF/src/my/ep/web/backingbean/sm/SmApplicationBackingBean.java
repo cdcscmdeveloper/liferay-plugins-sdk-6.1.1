@@ -11053,7 +11053,9 @@ public class SmApplicationBackingBean extends
 							//SSM INTEGRATION
 							//for ssm no need supporting doc
 							//This applicable for ROC & for data valid with ssm only, to skip checking mandatory doc if paid up capital is same with ssm
-							if(getManagedBean().getSmAppl().isApplValidWithSsm()){
+							if(getManagedBean().getSmAppl().isApplValidWithSsm() && getManagedBean().getSmAppl().getSmCompanyBasic()
+									.getPaidUpCapital() != null && getManagedBean().getSmAppl().getSmCompanyBasic()
+											.getPaidUpCapitalSSM() != null){
 								if (!businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())
 										&& (getManagedBean()
 												.getSmAppl()
