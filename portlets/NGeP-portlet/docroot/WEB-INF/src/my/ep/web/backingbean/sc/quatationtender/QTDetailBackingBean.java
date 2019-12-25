@@ -7015,8 +7015,23 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	}
 
 	public Timestamp getExtensionResponseDueDate(Long qtId) {
-		Timestamp extensionRespDate = getQTDetailSO().getExtensionResponseDueDate(qtId);
-		return extensionRespDate;
+		IScWorkFlowStatusSO workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+		ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+		reqDTO.setDocId(qtId);
+		reqDTO.setDocType(ParameterConst.APPROVAL_REQUEST_EXTEND_PROPOSAL_VALIDITY_PERIOD);
+
+		ScWorkFlowStatus status = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+		if(status!=null){
+			if(status.isCurrent() 
+					&& (status.getPmStatus().getStatusId().equals(QTStatusConst.EPV_PENDING_APPROVAL)
+					|| status.getPmStatus().getStatusId().equals(QTStatusConst.EPV_APPROVED)
+					|| status.getPmStatus().getStatusId().equals(QTStatusConst.EPV_PENDING_SUPPLIER_ACCEPTANCE))){
+				Timestamp extensionRespDate = getQTDetailSO().getExtensionResponseDueDate(qtId);
+				return extensionRespDate;
+			}
+		}
+		return null;
 	}
 	
 	public String getProcurementMode(ScQt qt){
