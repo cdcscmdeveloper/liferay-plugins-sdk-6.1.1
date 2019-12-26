@@ -22,6 +22,8 @@ import org.apache.commons.lang3.StringUtils;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
+import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 
 /**
@@ -61,6 +63,8 @@ public abstract class BaseManagedBean implements Serializable {
 	private boolean errorMessageSSM;
 	private String statusFromSSM;
 	private String statusDescFromSSM;
+	private SmSupplier smSupplierSsm;
+	private SmPersonnel smPersonnelSsm;
 		
 	
 	// For sub title displayed in screen.
@@ -410,6 +414,22 @@ public abstract class BaseManagedBean implements Serializable {
 		bm.setProcessName(this.processName);
 		bm.setGroupTask(this.groupTask);
 		bm.setReadOnly(this.isReadOnly);
+	}
+
+	public SmSupplier getSmSupplierSsm() {
+		return smSupplierSsm;
+	}
+
+	public void setSmSupplierSsm(SmSupplier smSupplierSsm) {
+		this.smSupplierSsm = smSupplierSsm;
+	}
+
+	public SmPersonnel getSmPersonnelSsm() {
+		return smPersonnelSsm;
+	}
+
+	public void setSmPersonnelSsm(SmPersonnel smPersonnelSsm) {
+		this.smPersonnelSsm = smPersonnelSsm;
 	}
 	
 	
