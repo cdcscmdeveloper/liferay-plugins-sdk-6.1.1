@@ -1694,7 +1694,7 @@ public class SmApplicationBackingBean extends
 							}
 						}
 						//SET BUSIESS NATURE
-						
+						/*
 						boolean existInOld=false;
 						//compare old data with ssm, if ssm has new data, add data into list
 						if(getManagedBean().getSmAppl().getSmSupplier().getSmSupplierBusinesses().size() > 0){
@@ -1718,7 +1718,7 @@ public class SmApplicationBackingBean extends
 								getManagedBean().getSmAppl().getSmSupplier().setSmAppl(getManagedBean().getSmAppl());
 								business.setSmSupplier(getManagedBean().getSmAppl().getSmSupplier());
 							}
-						}
+						}*/
 					
 					}else{
 						this.getManagedBean().setCompanyValidWithSSM(false);
@@ -7993,9 +7993,9 @@ public class SmApplicationBackingBean extends
 					throw new EpException(MessageConst.ERROR_722542);
 				}
 				//SSM INTEGRATION
-				if(bpmAppl.getSmSupplier() != null && bpmAppl.getSmSupplier().getSmSupplierBusinesses()!= null){
-					reqDTO.setSmSupplierBusiness(bpmAppl.getSmSupplier().getSmSupplierBusinesses());
-				}
+				//if(bpmAppl.getSmSupplier() != null && bpmAppl.getSmSupplier().getSmSupplierBusinesses()!= null){
+					//reqDTO.setSmSupplierBusiness(bpmAppl.getSmSupplier().getSmSupplierBusinesses());
+				//}
 				resDTO = regSo.saveNewDraftApplication(reqDTO);
 
 				reqDTO.setSmAppl(resDTO.getSmAppl());
@@ -11102,11 +11102,12 @@ public class SmApplicationBackingBean extends
 										.isEmpty()) {
 							mandatoryLicenseDocs.add(doc);
 						} else {
+							getManagedBean().getMandatoryDocs().add(doc);
 							//#27120
 							//SSM INTEGRATION
 							//for ssm no need supporting doc
 							//This applicable for ROC & for data valid with ssm only, to skip checking mandatory doc if paid up capital is same with ssm
-							if(getManagedBean().getSmAppl().isApplValidWithSsm() && getManagedBean().getSmAppl().getSmCompanyBasic()
+							/*if(getManagedBean().getSmAppl().isApplValidWithSsm() && getManagedBean().getSmAppl().getSmCompanyBasic()
 									.getPaidUpCapital() != null && getManagedBean().getSmAppl().getSmCompanyBasic()
 											.getPaidUpCapitalSSM() != null){
 								if (!businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())
@@ -11141,7 +11142,7 @@ public class SmApplicationBackingBean extends
 								}
 							}else{
 								getManagedBean().getMandatoryDocs().add(doc);
-							}
+							}*/
 						}
 					} else {
 						getManagedBean().getNonMandatoryDocs().add(doc);
