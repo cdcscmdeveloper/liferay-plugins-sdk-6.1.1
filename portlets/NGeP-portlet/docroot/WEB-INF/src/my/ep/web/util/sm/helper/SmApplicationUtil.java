@@ -1743,6 +1743,12 @@ public class SmApplicationUtil {
 		int directorCount = 0;
 		int profCount = 0;
 		int semiProfCount = 0;
+		//16052019 - SSM INTEGRATION CR
+		int i = 0;
+		StringBuilder sb = new StringBuilder();
+		sb.append("<br/>");
+		boolean validPersonnel = true;
+		boolean showerror = false;
 		for (SmPersonnel per : appl.getSmPersonnels()) {
 			//16052019 - SSM INTEGRATION CR - To check address complete or not
 			/*if(managedBean.isSsmIntegrationActive() && managedBean.isCompanyValidWithSSM()){
@@ -1750,7 +1756,22 @@ public class SmApplicationUtil {
 					log.info("ini tiada address");
 				}
 			}*/
-			
+			validPersonnel = true;
+			if(per.isEquityOwner() || per.isAuthorized()){
+				if(per.isBumi() == null || per.isMuslim() == null || per.getPmRace() == null){
+					validPersonnel = false;
+				}else if(per.getSmPersonnelAddresses()==null || per.getSmPersonnelAddresses().size()<=0){
+					validPersonnel = false;
+				}
+			}
+			if(!validPersonnel){
+				sb.append(++i + ".)");
+				sb.append(per.getName());
+				// sb.append(",  ");
+				sb.append("<br/>");
+				showerror = true;
+				//show alert message here
+			}
 			//END Changes SSM
 			if (per.isDirector()) {
 				directorCount = directorCount + 1;
@@ -1780,6 +1801,14 @@ public class SmApplicationUtil {
 				}
 			}
 
+		}
+		//16052019 - SSM INTEGRATION CR
+		if(showerror){
+			if (currentTab != -1) {
+				setNavigationBackToCurrentPage(currentTab, managedBean);
+			}
+			throw new EpException(MessageConst.ERROR_721082,
+					new String[] { sb.toString() });
 		}
 		if (appl.getSupplierType().equalsIgnoreCase(
 				SupplierManagementConst.STYPE_CONSULTANT)) {
@@ -13153,7 +13182,5 @@ public class SmApplicationUtil {
 		return resDTO.getResultList();
 	}
 	//26238 - end
-
-	
 
 }
