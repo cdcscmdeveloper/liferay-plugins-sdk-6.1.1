@@ -1694,7 +1694,7 @@ public class SmApplicationBackingBean extends
 							}
 						}
 						//SET BUSIESS NATURE
-						
+						/*
 						boolean existInOld=false;
 						//compare old data with ssm, if ssm has new data, add data into list
 						if(getManagedBean().getSmAppl().getSmSupplier().getSmSupplierBusinesses().size() > 0){
@@ -1718,7 +1718,7 @@ public class SmApplicationBackingBean extends
 								getManagedBean().getSmAppl().getSmSupplier().setSmAppl(getManagedBean().getSmAppl());
 								business.setSmSupplier(getManagedBean().getSmAppl().getSmSupplier());
 							}
-						}
+						}*/
 					
 					}else{
 						this.getManagedBean().setCompanyValidWithSSM(false);
@@ -7993,9 +7993,9 @@ public class SmApplicationBackingBean extends
 					throw new EpException(MessageConst.ERROR_722542);
 				}
 				//SSM INTEGRATION
-				if(bpmAppl.getSmSupplier() != null && bpmAppl.getSmSupplier().getSmSupplierBusinesses()!= null){
-					reqDTO.setSmSupplierBusiness(bpmAppl.getSmSupplier().getSmSupplierBusinesses());
-				}
+				//if(bpmAppl.getSmSupplier() != null && bpmAppl.getSmSupplier().getSmSupplierBusinesses()!= null){
+					//reqDTO.setSmSupplierBusiness(bpmAppl.getSmSupplier().getSmSupplierBusinesses());
+				//}
 				resDTO = regSo.saveNewDraftApplication(reqDTO);
 
 				reqDTO.setSmAppl(resDTO.getSmAppl());
