@@ -858,7 +858,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			
 			case "SM_073" : //Collection Report Based On Classification Code
 				try{
-					getCollectionReportBasedOnClassificationCode(params,resDTO.getRequestId());
+					getCollectionReportBasedOnClassificationCode(params, resDTO.getRequestId());
 					getPopUpMsg(String.valueOf(resDTO.getRequestId()));
 					RequestContext.getCurrentInstance().execute("rptConfirmationDlg.show()");
 				}catch(Exception e){
@@ -1201,6 +1201,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	    	FileOutputStream out = new FileOutputStream(new File(fullPath));
 	    	wb.write(out);
 	        out.close();
+	        wb.close();
 	    }catch(Exception e){
 	    	e.printStackTrace();
 	    }
@@ -1496,10 +1497,10 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			}
 		}
         // Resize all columns to fit the content size
-        for(int i = 0; i < columnsList.length; i++) {  
+        for(int i = 0; i < columnsSummaryList.length; i++) {  
         	if(i==1)sheetSummary.setColumnWidth(i, 8*256);//Column : Bil
-        	if(i==2)sheetSummary.setColumnWidth(i, 15*256);//Column : Harga
-        	if(i==3)sheetSummary.setColumnWidth(i, 15*256);//Column : GST
+        	else if(i==2)sheetSummary.setColumnWidth(i, 15*256);//Column : Harga
+        	else if(i==3)sheetSummary.setColumnWidth(i, 15*256);//Column : GST
         	else sheetSummary.autoSizeColumn(i);
         }
         
@@ -1511,9 +1512,11 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
         	FileOutputStream out = new FileOutputStream(new File(fullPath));
         	wb.write(out);
             out.close();
+            wb.close();
         }catch(Exception e){
         	e.printStackTrace();
-        }	
+        }
+
 	}
 	
 	public void getCollectionReportBasedOnReceiptAndTransactionDate(LinkedHashMap<String, String> params, BigDecimal requestId)throws Exception{
