@@ -1453,21 +1453,23 @@ u {
 							<tbody>
 					         #if($rowCount == 0)
 								<tr>
-									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px;">Item</th>
-									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px;">Jenis Pemenuhan</th>
-									<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px;">UOM</th>
-									<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px;">Kekerapan / <br/>Unit Ukuran</th>
-									<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px;">Bil. Unit <br/>Ukuran Sehari</th>
-									<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px;">Bil. Unit <br/>Ukuran Sebulan</th>
-									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px;">Kuantiti</th>
-									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px;">Tawaran Pembekal</th>
-									
-									 
-									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px;">Skop Perkhidmatan / SLA</th>
+									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px;">Item</th>
+									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px;">Jenis Pemenuhan</th>
+									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px;">UOM</th>
+									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px;">Kekerapan / <br/>Unit Ukuran</th>
+									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px;">Bil. Unit <br/>Ukuran Sehari</th>
+									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px;">Bil. Unit <br/>Ukuran Sebulan</th>
+									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px;">Kuantiti</th>
+									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px;">Tawaran Pembekal</th>
+									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px;">Skop Perkhidmatan / SLA</th>
 								</tr>
 								
 								<tr>
-									<th bgcolor="#6d839b" class="title border left" colspan="5" style="text-align: center;">Spesifikasi</th>
+									<td valign="top"  bgcolor="#6d839b" class="title border left" colspan="1" style="text-align: left; padding-left: 5px;" > &nbsp;</td>
+									<td valign="top"  bgcolor="#6d839b" class="title border left" colspan="6" style="text-align: center; padding-left: 5px;">Spesifikasi</td>
+									<td valign="top"  bgcolor="#6d839b" class="title border left" colspan="1" style="text-align: left; padding-left: 5px;" > &nbsp;</td>
+									<td valign="top"  bgcolor="#6d839b" class="title border left" colspan="1" style="text-align: left; padding-left: 5px;" > &nbsp;</td>
+
 								</tr>
 							  #end
 					#foreach( $tplspecQuestion in $tplspecMaster.tplSpecQuestions )
@@ -1503,13 +1505,17 @@ u {
 									#end
 								</td>
 								<td valign="top" bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">
-									#if ($tplspecQuestion.clUomPerDay)
-										$tplspecQuestion.clUomPerDay
+									#if (($tplspecQuestion.clUomPerDay == "") || ($tplspecQuestion.clUomPerDay == 0))
+									$serviceScope 
+									#else
+									 $tplspecQuestion.clUomPerDay
 									#end
 								</td>
 								<td valign="top" bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">
-									#if ($tplspecQuestion.clUomPerMonth)
-										$tplspecQuestion.clUomPerMonth
+									#if(($tplspecQuestion.clUomPerMonth =="") || ($tplspecQuestion.clUomPerMonth == 0))
+									$serviceScope 
+									#else	
+									$tplspecQuestion.clUomPerMonth 
 									#end
 								</td>
 								<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;">
@@ -1519,8 +1525,10 @@ u {
 								</td>
 								
 							    <td valign="top" bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;">
-									#if($tplspecQuestion.AnswerText)
-									$tplspecQuestion.AnswerText
+									#if(($tplspecQuestion.AnswerText == "" ) || ($tplspecQuestion.AnswerText == 0) )
+									 $serviceScope 
+									#else
+										$tplspecQuestion.AnswerText									
 									#end
 								</td>
 								<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;">
@@ -1533,8 +1541,8 @@ u {
 						#else
 							<tr>
 							
-							<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="2" style="text-align: left; padding-left: 5px;" > &nbsp;</td>
-									<td bgcolor="#d0eaee" class="standard border-bottom left" colspan="5" style="text-align: center; padding-left: 5px;">$tplspecQuestion.clSpecDetail</td>
+							<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="1" style="text-align: left; padding-left: 5px;" > &nbsp;</td>
+									<td bgcolor="#d0eaee" class="standard border-bottom left" colspan="6" style="text-align: center; padding-left: 5px;">$tplspecQuestion.clSpecDetail</td>
 							<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left"  colspan="2" style="text-align: left; padding-left: 5px;" > &nbsp;</td>
 							
 							</tr>
