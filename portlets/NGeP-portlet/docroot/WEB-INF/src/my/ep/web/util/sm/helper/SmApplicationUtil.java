@@ -1758,7 +1758,7 @@ public class SmApplicationUtil {
 			}*/
 			validPersonnel = true;
 			if(per.isEquityOwner() || per.isAuthorized()){
-				if(per.isBumi() == null || per.isMuslim() == null || per.getPmRace() == null){
+				if((per.isBumi() == null && per.getBumiFlg() == null && per.getBumiFlgTrans() ==  null) || (per.isMuslim() == null && per.getMuslimFlg() == null && per.getMuslimFlgTrans() == null) || per.getPmRace() == null){
 					validPersonnel = false;
 				}else if(per.getSmPersonnelAddresses()==null || per.getSmPersonnelAddresses().size()<=0){
 					validPersonnel = false;
@@ -2373,7 +2373,8 @@ public class SmApplicationUtil {
 				&& appl.getSmCompanyBasic().getPaidUpCapital() != null
 				&& appl.getSmCompanyBasic().getAuthorizedCapital() != null
 				&& appl.getSmCompanyBasic().getTotalShare() != null) {
-			if ((managedBean
+			//SSM INTEGRATION -  No Need To Check Authorized capital vs paid up capital cz new rule ssm, authorize capital not mandatory
+			/*if ((managedBean
 					.getBusinessTypeVal()
 					.equalsIgnoreCase(
 							SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT) || managedBean
@@ -2394,7 +2395,7 @@ public class SmApplicationUtil {
 									"lbl.sm.authorized.capital", null) });
 				}
 				
-			}
+			}*/
 			if (managedBean
 					.getBusinessTypeVal()
 					.equalsIgnoreCase(
