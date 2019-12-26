@@ -26,6 +26,8 @@ public class ColClassificationCodeBackingBean extends SmReportBackingBean<ColCla
 	}
 	
 	public void generateReport(){
+		
+		log.info("INSIDE METHOD generateReport !!!");
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 		LinkedHashMap<String,String> params = new LinkedHashMap<String,String>();
 		retrieveReportValueFromDb();
@@ -52,7 +54,34 @@ public class ColClassificationCodeBackingBean extends SmReportBackingBean<ColCla
 			getManagedBean().setDefaultOutputType(getManagedBean().getDocumentType());
 		}
 		
-		generateSmReport(params);
+		//START : Enhancement #15990
+		//If Document Type - Excel will by pass runJob from oracle report.
+		if(getManagedBean().getDocumentType() == null){
+			log.info("INSIDE HERE DOCUMENT TYPE IS NULL");
+			if("P".equals(getManagedBean().getDefaultOutputType())){
+				generateSmReport(params);
+			}else{
+				try{
+					generateSMReportInExcel(getManagedBean().getReportCode(), params);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		}else{
+			log.info("INSIDE HERE DOCUMENT TYPE IS NOT NULL");
+			
+			if("P".equals(getManagedBean().getDocumentType())){
+				generateSmReport(params);
+			}else{
+				try{
+					log.info("INSIDE ELSE [report_code] == "+getManagedBean().getReportCode());
+					generateSMReportInExcel(getManagedBean().getReportCode(), params);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		}
+		//END : Enhancement #15990
 	}
 	
 	public void resetSearch(){

@@ -66,7 +66,31 @@ public class RevenueCollectionRptBackingBean extends SmReportBackingBean<Revenue
 		params.put(SmReportConst.PARAM_DATE_FROM, df.format(getManagedBean().getDateFrom()));
 		params.put(SmReportConst.PARAM_DATE_TO, df.format(getManagedBean().getDateTo()));
 
-		generateSmReport(params);
+		//START : Enhancement #15990
+		//If Document Type - Excel will by pass runJob from oracle report.
+		if(getManagedBean().getDocumentType() == null){
+			if("P".equals(getManagedBean().getDefaultOutputType())){
+				generateSmReport(params);
+			}else{
+				try{
+					generateSMReportInExcel(getManagedBean().getReportCode(), params);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		}else{
+			if("P".equals(getManagedBean().getDocumentType())){
+				generateSmReport(params);
+			}else{
+				try{
+					log.info("INSIDE ELSE [report_code] == "+getManagedBean().getReportCode());
+					generateSMReportInExcel(getManagedBean().getReportCode(), params);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		}
+		//END : Enhancement #15990
 	}
 	
 	public void resetSearch(){
