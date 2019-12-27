@@ -129,6 +129,9 @@
 						oriValue="#{backingBean.managedBean.latestPersonnel.pmRace.raceId}" 
 						currValue="#{backingBean.managedBean.selectedShareHolder.pmRace.raceId}" 
 						alertValue="#{backingBean.getRaceLabel(backingBean.managedBean.latestPersonnel.pmRace.raceId)}"/>
+					<ac:ssmShowIconAlertGreen 
+						greenIcon="#{backingBean.showGreenIconSsm(null,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.selectedShareHolder.raceSsmNull)}" 
+						poUser="true" />
 					<p:message id="equiPerRaceMsg" for="equiPerRace"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
@@ -236,6 +239,9 @@
 						oriValue="#{backingBean.managedBean.latestPersonnel.birthDate}" 
 						currValue="#{backingBean.managedBean.selectedShareHolder.birthDate}" 
 						alertValue="#{backingBean.getDateFormat(backingBean.managedBean.latestPersonnel.birthDate)}"/>
+					<ac:ssmShowIconAlertGreen 
+						greenIcon="#{backingBean.showGreenIconSsm(null,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.selectedShareHolder.birthDateSsmNull)}" 
+						poUser="true" />
 					<p:message id="equiPerDobMsg" for="equiPerDob" showSummary="true"
 						showDetail="false" display="icon" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.designation']}" />
@@ -250,6 +256,9 @@
 							oriValue="#{backingBean.managedBean.latestPersonnel.designation}" 
 							currValue="#{backingBean.managedBean.selectedShareHolder.designation}" 
 							alertValue="#{backingBean.managedBean.latestPersonnel.designation}"/>
+						<ac:ssmShowIconAlertGreen 
+							greenIcon="#{backingBean.showGreenIconSsm(null,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.selectedShareHolder.designationSsmNull)}" 
+							poUser="true" />
 						<p:message id="smPerDesignationMsg"
 						for="smPerDesignation" showSummary="true" showDetail="false"
 						display="icon" /></td>
@@ -625,6 +634,9 @@
 						oriValue="#{backingBean.managedBean.latestPersonnel.shareAmt}" 
 						currValue="#{backingBean.managedBean.selectedShareHolder.shareAmt}" 
 						alertValue="#{backingBean.getPriceAmountFormat(backingBean.managedBean.latestPersonnel.shareAmt)}"/>
+					<ac:ssmShowIconAlertGreen 
+						greenIcon="#{backingBean.showGreenIconSsm(null,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.selectedShareHolder.shareAmtSsmNull)}" 
+						poUser="true" />
 					<p:message id="equiShrDetAmtMsg" for="equiShrDetAmt"
 						showSummary="true" showDetail="false" display="icon" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.shrPerc']}" /></td>
@@ -973,6 +985,9 @@
 							oriValue="#{backingBean.managedBean.latestRelatedCompany.shareAmt}" 
 							currValue="#{backingBean.managedBean.selectedRelatedCompany.shareAmt}" 
 							alertValue="#{backingBean.getPriceAmount(backingBean.managedBean.latestRelatedCompany.shareAmt)}" />
+						<ac:ssmShowIconAlertGreen 
+							greenIcon="#{backingBean.showGreenIconSsm(null,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.selectedRelatedCompany.shareAmtSsmNull)}" 
+							poUser="true" />
 						<p:message id="equiRlCmpInfShrAmtMsg" for="equiRlCmpInfShrAmt"
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
