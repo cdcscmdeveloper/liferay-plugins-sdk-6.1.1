@@ -3404,7 +3404,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							+ "|" + answer.getRatePerUom()
 							+ "|" + answer.getAnswerRemark()
 							);
-					answer.getTplSpecQuestion().setAnswerText(answer.getAnswerRemark());
+					if(answer.getAnswerText() !=null)
+					{
+						answer.getTplSpecQuestion().setAnswerText(answer.getAnswerText());
+					}
+					else{
+						answer.getTplSpecQuestion().setAnswerText(dafaltValue);
+					}
 					if(master == null)
 					{ 
 						if(itemId.equals(answer.getTplSpecQuestion().getSpecQuestionId()) || (answer.getTplSpecQuestion().getParentSpecQuestion()!=null && itemId.equals(answer.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId())))
