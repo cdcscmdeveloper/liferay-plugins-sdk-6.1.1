@@ -331,9 +331,6 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 	public SelectItem[] getProcurementModeDropdownValues() {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> recommendList = new ArrayList<String>();
-		if (isQTMaintenanceScreen()) {
-			recommendList.add(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO);	
-		}
 		recommendList.add(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE);
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("pmParameter.parameterCode",
@@ -341,10 +338,6 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 		SelectItem[] items = getDropdownCodeValuesBySearchBean(
 				ParameterTypeConst.SC_PROCUREMENT_MODE, searchBean);
 		return items;
-	}
-	
-	private boolean isQTMaintenanceScreen() {
-		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 
 	public Boolean getManagedSearchBeanDocumentTypeIsLOI(){
@@ -531,8 +524,11 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 				reqDTO.setQtnTenderSearchBean(qtnTenderSearchBean.toQTSearchBean());
 				populateQTSearchCriteria(reqDTO, qtnTenderSearchBean, searchBean);
+				reqDTO.setDoMaintenanceFlow(Boolean.TRUE);//assumption: only do maintenance portlet used this backingbean
+				if(isCommitteeApprover()){
+					reqDTO.setCAApproverScreen(Boolean.TRUE);
+				}
 				QuationTenderResDTO resDTO = detailSO.retriveQuationTenderDetailsBySearchCriteria(reqDTO);
-						//.retriveQuationTenderDetailsWithoutUserId(reqDTO);
 				
 				if(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION.equals(qtnTenderSearchBean.getDocType())){
 					if(resDTO.isSuccessful() && resDTO.getQtResultBean() != null && !CollectionUtils.isEmpty(resDTO.getQtResultBean().getResultList())){
@@ -653,9 +649,6 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 				List<String> procurementModes = new ArrayList<String>();
 				procurementModes.add(ParameterConst.PROCUREMENT_MODE_QUOTATION);
 				procurementModes.add(ParameterConst.PROCUREMENT_MODE_TENDER);
-				if (!isQTMaintenanceScreen()) {
-					procurementModes.add(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO);	
-				}
 				searchFilterBean.add(
 						new SearchFilterBean(
 								"procurementMode.parameterCode",
@@ -1264,10 +1257,7 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 	
 	public String constructConditionForUserSearch(){
 		StringBuilder sb = new StringBuilder();
-		sb.append("pmUserOrgs.pmUserRoles.pmRole.roleCode^");
-		sb.append(RoleCode.DESK_OFFICER.value());
-		sb.append("|pmUserOrgs.pmUserRoles.recordStatus^1");
-        sb.append("|pmUserOrgs.pmOrgProfile.orgProfileId^");
+        sb.append("pmUserOrgs.pmOrgProfile.orgProfileId^");
     	sb.append(this.getManagedBean().getDoMaintenanceSearchBean().getPtjProfile().getOrgProfileId());
 		sb.append("|userId^");
         sb.append(this.getFacesScopes().getUserSessionBean().getUserId());
