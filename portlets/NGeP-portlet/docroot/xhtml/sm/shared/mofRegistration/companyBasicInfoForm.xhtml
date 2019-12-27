@@ -85,6 +85,9 @@
 							</c:choose>
 							<p:message id="robExpiryDateMsg" for="robExpiryDate" showSummary="true"
 							showDetail="false" display="icon" />
+							<ac:ssmShowIconAlertGreen 
+								greenIcon="#{backingBean.showGreenIconSsm(null,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.robExpirySsmNull)}" 
+								poUser="true" />
 							</c:if>
 						
 							
@@ -163,7 +166,7 @@
 										value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}" />
 									<ac:ssmShowIconAlertGreen 
 										greenIcon="#{backingBean.showGreenIconSsm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.addressSsmNull)}" 
-										poUser="#{backingBean.managedBean.poUser}" 
+										poUser="true" 
 									/>
 									<ac:smFieldChangeAlert 
 										isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -236,7 +239,7 @@
 									
 									<ac:ssmShowIconAlertGreen 
 										greenIcon="#{backingBean.showGreenIconSsm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.countrySsmNull)}" 
-										poUser="#{backingBean.managedBean.poUser}" 
+										poUser="true" 
 									/> 
 									<ac:smFieldChangeAlert 
 										isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -267,7 +270,7 @@
 									</p:selectOneMenu> 
 									<ac:ssmShowIconAlertGreen 
 										greenIcon="#{backingBean.showGreenIconSsm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.stateSsmNull)}" 
-										poUser="#{backingBean.managedBean.poUser}" 
+										poUser="true" 
 									/>
 									<ac:smFieldChangeAlert 
 										isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -350,7 +353,7 @@
 								</p:inputText>
 								<ac:ssmShowIconAlertGreen 
 									greenIcon="#{backingBean.showGreenIconSsm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcodeSsmNull)}" 
-									poUser="#{backingBean.managedBean.poUser}" 
+									poUser="true" 
 								/>
 								<ac:smFieldChangeAlert 
 										isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -370,7 +373,7 @@
 								</p:inputText>
 								<ac:ssmShowIconAlertGreen 
 									greenIcon="#{backingBean.showGreenIconSsm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcodeSsmNull)}" 
-									poUser="#{backingBean.managedBean.poUser}" 
+									poUser="true" 
 								/>
 								<ac:smFieldChangeAlert 
 										isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -393,7 +396,7 @@
 						</p:selectOneMenu> 
 						<ac:ssmShowIconAlertGreen 
 							greenIcon="#{backingBean.showGreenIconSsm(null,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.revenueSsmNull)}" 
-							poUser="#{backingBean.managedBean.poUser}" 
+							poUser="true" 
 						/>
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges}"
