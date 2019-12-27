@@ -527,6 +527,7 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 				reqDTO.setDoMaintenanceFlow(Boolean.TRUE);//assumption: only do maintenance portlet used this backingbean
 				if(isCommitteeApprover()){
 					reqDTO.setCAApproverScreen(Boolean.TRUE);
+					reqDTO.setCAApprover(getFacesScopes().getUserSessionBean());
 				}
 				QuationTenderResDTO resDTO = detailSO.retriveQuationTenderDetailsBySearchCriteria(reqDTO);
 				
