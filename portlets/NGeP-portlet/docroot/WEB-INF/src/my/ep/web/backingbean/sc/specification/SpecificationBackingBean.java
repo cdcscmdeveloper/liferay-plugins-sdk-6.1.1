@@ -10045,6 +10045,10 @@ public class SpecificationBackingBean extends
 				&& technicalScoreSetting.getSettingType() == 1) {
 			scoreSetting.add(technicalScoreSetting);
 			scQt.setScQtScoreSettings(scoreSetting);
+// #21695 farid, if partial set weightage to false		
+			if (this.getManagedBean().getQt().isPartial() == true){
+				this.getManagedBean().getTechnicalScoreSetting().setWeightageReq(false);
+			}
 		}
 		ScQtScoreSetting financialScoreSetting = this.getManagedBean()
 				.getFinancialScoreSetting();
@@ -10066,6 +10070,10 @@ public class SpecificationBackingBean extends
 				&& financialItemScoreSetting.getSettingType() == 6) {
 			scoreSetting.add(financialItemScoreSetting);
 			scQt.setScQtScoreSettings(scoreSetting);
+// #21695 farid, if partial set weightage to false			
+			if (this.getManagedBean().getQt().isPartial() == true){
+				this.getManagedBean().getFinancialScoreSetting().setWeightageReq(false);
+			}
 		}
 		ScQtScoreSetting packageScoreSetting = this.getManagedBean()
 				.getRecommendationPackageScore();
