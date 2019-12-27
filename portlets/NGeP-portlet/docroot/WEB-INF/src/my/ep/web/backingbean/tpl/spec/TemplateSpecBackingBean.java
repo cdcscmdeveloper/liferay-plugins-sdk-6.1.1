@@ -2995,7 +2995,30 @@ public class TemplateSpecBackingBean extends
 			templateSpecBean.setOriSpecQuestion(oriSpecQuestion);
 			} 
 		}
-				 
+		
+		// START #21695 FARID set estimation & indicative price to zero if quantity zone 0
+				if(templateSpecBean != null){
+					for(TplSpecZoneQty zoneZeroQty : sepcQty){
+						if(zoneZeroQty != null && zoneZeroQty.getQty().equals(new BigDecimal(0))){
+							for(TplSpecZoneDtl specZoneDtl : specZone.getTplSpecZoneDtls()){
+								if(specZoneDtl != null){
+									for(TplSpecEstimation zoneZeroEstimation : specEstimations){
+										if(zoneZeroEstimation != null && zoneZeroQty.getTplSpecQuestion().getSpecQuestionId() == zoneZeroEstimation.getTplSpecQuestion().getSpecQuestionId() 
+												&& zoneZeroQty.getTplSpecZoneDtl().getSpecZoneId() == zoneZeroEstimation.getTplSpecZoneDtl().getSpecZoneId()){
+
+											zoneZeroEstimation.setIndicativeUnitPrice(new BigDecimal(0));
+											zoneZeroEstimation.setEstimatedCost(new BigDecimal(0));
+											
+										}
+										
+									}
+								}
+							}
+						
+						}
+					}
+				}
+		// END			 
 		log.info("speczone "+specZone);
 		if (specZone != null) {
 			if (specZone.isBrandNew() || specZone.isModified()) {
@@ -3042,30 +3065,7 @@ public class TemplateSpecBackingBean extends
 			}
 			tplSpecQuestion.setTplSpecEstimations(specEstimations);
 		}
-		
-		// START #21695 FARID set estimation & indicative price to zero if quantity zone 0
-				if(templateSpecBean != null){
-					for(TplSpecZoneQty zoneZeroQty : sepcQty){
-						if(zoneZeroQty != null && zoneZeroQty.getQty().equals(new BigDecimal(0))){
-							for(TplSpecZoneDtl specZoneDtl : specZone.getTplSpecZoneDtls()){
-								if(specZoneDtl != null){
-									for(TplSpecEstimation zoneZeroEstimation : specEstimations){
-										if(zoneZeroEstimation != null && zoneZeroQty.getTplSpecQuestion().getSpecQuestionId() == zoneZeroEstimation.getTplSpecQuestion().getSpecQuestionId() 
-												&& zoneZeroQty.getTplSpecZoneDtl().getSpecZoneId() == zoneZeroEstimation.getTplSpecZoneDtl().getSpecZoneId()){
 
-											zoneZeroEstimation.setIndicativeUnitPrice(new BigDecimal(0));
-											zoneZeroEstimation.setEstimatedCost(new BigDecimal(0));
-											
-										}
-										
-									}
-								}
-							}
-						
-						}
-					}
-				}
-		// END	
 	
 	}
 	
