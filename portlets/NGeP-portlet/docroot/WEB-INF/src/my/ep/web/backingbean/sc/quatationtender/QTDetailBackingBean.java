@@ -5598,6 +5598,20 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 		return false;
 	}
+	/**
+	 * 
+	 * @param activeIndex
+	 * @param otherwiseActiveIndex
+	 * @param conditionForActiveIndex - if true, use activeIndex. else otherwiseActiveIndex will be used.
+	 */
+	public void qtDetailsTabChange(Integer activeIndex, Integer otherwiseActiveIndex, Boolean conditionForActiveIndex){
+		if(conditionForActiveIndex){
+			qtDetailsTabChange(activeIndex);
+		}
+		else{
+			qtDetailsTabChange(otherwiseActiveIndex);
+		}
+	}
 
 	/**
 	 * will be called in maintance flow only..

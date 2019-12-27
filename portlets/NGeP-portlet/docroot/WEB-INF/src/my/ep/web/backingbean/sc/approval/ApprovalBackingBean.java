@@ -659,10 +659,18 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			page = qtDetailBB.editQuationTenderDetails(getManagedBean().getQt(), false);
 			qtDetailBB.getManagedBean().setAdditionalPages(null);
 			qtDetailBB.getManagedBean().setUserTasks(null);
-			if(SCProcessNameConst.APPROVE_BPK.equalsIgnoreCase(taskName)){
+		    Long statusId = qtDetailBB.getManagedBean().getQt().getQtStatus().getStatusId();
+		    boolean isQTStatusScheduleDocAndAfter = qtDetailBB.isQTStatusGreaterThanOrEquals(statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT);
+		    boolean isQTStatusSCApprovalAndBefore = qtDetailBB.isQTStatusLessThanOrEquals(statusId, QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL);
+		    if(SCProcessNameConst.APPROVE_BPK.equalsIgnoreCase(taskName)){
 				qtDetailBB.getManagedBean().addAdditionalPages(UserTasks.BPKApproval.toString(), pageAppr);
 				qtDetailBB.getManagedBean().addUserTasks(UserTasks.BPKApproval);
-				qtDetailBB.getManagedBean().setActiveIndex(9);
+				if(isQTStatusScheduleDocAndAfter){
+					qtDetailBB.getManagedBean().setActiveIndex(9);
+				}
+				if(isQTStatusSCApprovalAndBefore){
+					qtDetailBB.getManagedBean().setActiveIndex(5);
+				}
 				log.info("*********** preRenderView:userHasRole(BPK_APPROVER)");
 			}
 			else if(SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName) ){
@@ -680,6 +688,12 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					qtDetailBB.getManagedBean().addAdditionalPages(UserTasks.CommitteeAppointmentApprovalEcOcTecFec.toString(), pageAppr);
 					qtDetailBB.getManagedBean().addUserTasks(UserTasks.CommitteeAppointmentApprovalEcOcTecFec);
 					qtDetailBB.getManagedBean().setActiveIndex(9);
+					if(isQTStatusScheduleDocAndAfter){
+						qtDetailBB.getManagedBean().setActiveIndex(9);
+					}
+					if(isQTStatusSCApprovalAndBefore){
+						qtDetailBB.getManagedBean().setActiveIndex(5);
+					}
 					log.info("*********** preRenderView:userHasRole(COMMITTEE_APPROVER) for ecOcTecFec");
 				}
 				else{
