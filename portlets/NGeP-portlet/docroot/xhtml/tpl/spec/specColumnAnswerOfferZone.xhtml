@@ -8,13 +8,7 @@
 			 
     <p:dataTable var="tplSpecZoneOffer" id="specZoneTbl" rowIndexVar="rowIndex" value="#{question.tplSpecZoneQties}" 
      	rendered="#{!tplSpecAnswer.offer and isQuestionTypeItem and !isSpecTypeFinancial and isZonal and templateSpecBackingBean.managedBean.scQt.partial}">
-<!-- turn off for awhile 	<p:ajax event="rowToggle"
-				onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
-			</p:ajax>  
- 	       		 <p:column>
-	        			<p:rowToggler/>
-	       	 	</p:column>
- --> 	        
+     
 	        <p:column headerText="#{lbl['lbl.tpl.spec.content.estimation.zone.name']}">
 	        	<h:outputText value="#{tplSpecZoneOffer.tplSpecZoneDtl.zoneName}" />
 	        </p:column>
@@ -22,11 +16,7 @@
 			<p:column>
 				<h:selectBooleanCheckbox value="#{tplSpecZoneOffer.offer}" checked = "checked" />
 	        </p:column>
-<!-- turn off        
-	         <p:rowExpansion>
-	              <h:outputText value="#{tplSpecZoneOffer.tplSpecZoneDtl.zoneName}" />
-	        </p:rowExpansion>
--->	         
+
         <f:facet name="footer"/>
     </p:dataTable>   
 	
