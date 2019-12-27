@@ -2922,8 +2922,8 @@ public class TemplateSpecBackingBean extends
 
 			BigDecimal totalIndicativePrice = new BigDecimal(0);
 			BigDecimal zeroChangeTo1 = new BigDecimal(1);
-			BigDecimal RoundIndicativePrice = BigDecimal.valueOf(indicativeUnitPrice);
-		
+			BigDecimal RoundIndicativePrice = BigDecimal.valueOf(indicativeUnitPrice);			
+			
 			if (clUomFrequency.intValue() == 0 )
 			{ clUomFrequency=clUomFrequency.add(zeroChangeTo1);}
 
@@ -2981,6 +2981,8 @@ public class TemplateSpecBackingBean extends
 				.getTplSpecEstimations();
 		TplSpecZone specZone = templateSpecBean.getSpecMaster()
 				.getTplSpecZone();
+		List<TplSpecZoneQty> sepcQty = tplSpecQuestion.getTplSpecZoneQties();
+		
 		List<TplSpecZoneDtl> specZoneDtls = null;
 		
 		TplSpecQuestion oriSpecQuestion = new TplSpecQuestion();
@@ -3040,34 +3042,31 @@ public class TemplateSpecBackingBean extends
 			}
 			tplSpecQuestion.setTplSpecEstimations(specEstimations);
 		}
+		
+		// START #21695 FARID set estimation & indicative price to zero if quantity zone 0
+				if(templateSpecBean != null){
+					for(TplSpecZoneQty zoneZeroQty : sepcQty){
+						if(zoneZeroQty != null && zoneZeroQty.getQty().equals(new BigDecimal(0))){
+							for(TplSpecZoneDtl specZoneDtl : specZone.getTplSpecZoneDtls()){
+								if(specZoneDtl != null){
+									for(TplSpecEstimation zoneZeroEstimation : specEstimations){
+										if(zoneZeroEstimation != null && zoneZeroQty.getTplSpecQuestion().getSpecQuestionId() == zoneZeroEstimation.getTplSpecQuestion().getSpecQuestionId() 
+												&& zoneZeroQty.getTplSpecZoneDtl().getSpecZoneId() == zoneZeroEstimation.getTplSpecZoneDtl().getSpecZoneId()){
 
-/** #21695 FARID START */
-		List<TplSpecEstimation> specEstimationZero = tplSpecQuestion.getTplSpecEstimations();
-		List<TplSpecZoneQty> specEstimationsQtyZero = tplSpecQuestion.getTplSpecZoneQties();
-
-		for (int zoneRow = 0; zoneRow < (specEstimationsQtyZero == null
-				|| specEstimationsQtyZero.size() == 0 ? 0 : specEstimationsQtyZero.size()); zoneRow++){
-			TplSpecZoneQty specEstimationsQtyZeroNew = specEstimationsQtyZero.get(zoneRow);
-			if(specEstimationsQtyZeroNew.getQty().equals(new BigDecimal(0))){
-					if(specEstimationZero != null && specEstimationZero.size() > 0){
-						if(specEstimationsQtyZeroNew.getTplSpecZoneDtl().getSpecZoneId() == specEstimationsQtyZeroNew.getTplSpecZoneDtl().getSpecZoneId()){
-
-							 if(specEstimationsQtyZeroNew.getTplSpecQuestion().getTplSpecEstimations()==null){
-								 specEstimationsQtyZeroNew.getTplSpecQuestion().setTplSpecEstimations(new ArrayList());
-							 }
-							 for(TplSpecEstimation estimation :specEstimationsQtyZeroNew.getTplSpecQuestion().getTplSpecEstimations()){
-								 if(estimation.getTplSpecZoneDtl().getSpecZoneId() == specEstimationsQtyZeroNew.getTplSpecZoneDtl().getSpecZoneId()){
-								 estimation.setIndicativeUnitPrice(new BigDecimal(0));
-								 estimation.setEstimatedCost(new BigDecimal(0));
-								 }
-							 }
-							 
-						}	
+											zoneZeroEstimation.setIndicativeUnitPrice(new BigDecimal(0));
+											zoneZeroEstimation.setEstimatedCost(new BigDecimal(0));
+											
+										}
+										
+									}
+								}
+							}
+						
+						}
 					}
 				}
-			}
-		
-/** #21695 FARID END */		
+		// END	
+	
 	}
 	
 	/**
