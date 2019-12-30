@@ -12746,4 +12746,9 @@ public class SmApplicationBackingBean extends
 		return sharePercentage;
 		
 	}
+	
+	public void unSelectEquityCompany(AjaxBehaviorEvent e) {
+		SmApplicationUtil.removeEquityCompanyFromList(getManagedBean()
+						.getSelectedEquityCompanies());
+	}
 }
