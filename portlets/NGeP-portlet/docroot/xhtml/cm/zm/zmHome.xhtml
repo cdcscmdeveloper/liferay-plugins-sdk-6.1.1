@@ -39,6 +39,13 @@
 
 		<p:messages id="zmMsgs" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false"></p:messages>
+		<!-- [#26282] - start -->	
+		<div class="button-wrapper">	
+			<p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" 
+				rendered="true" 
+				onclick="javascript: window.history.go(-1)"/>	    	
+		</div>
+		<!-- [#26282] - end -->
 
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.cm.zm.save']}"
