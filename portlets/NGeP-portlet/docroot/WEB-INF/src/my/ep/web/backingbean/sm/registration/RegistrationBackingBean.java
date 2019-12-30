@@ -2738,6 +2738,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 */
 	public void pmStateDropdownValues() {
 		Long countryId = this.getManagedBean().getSmBusinessAdd().getPmCountry().getCountryId();
+		//SSM INTEGRATION
+		if(this.getManagedBean().getSmAppl()!= null && this.getManagedBean().getSmAppl().isApplValidWithSsm() && countryId == null){
+			PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+			countryId = defaultCountry.getCountryId();
+		}
 		List<PmState> stateLs = retrievePmStateList(countryId);
 		List<SelectItem> stateSelectLs = new ArrayList<SelectItem>();
 		PmState state = new PmState();
