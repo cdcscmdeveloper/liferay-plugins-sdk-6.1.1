@@ -3316,12 +3316,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				
 				if (null != purchaseRequest && null != purchaseRequestSO) {
 					
-					if (null != requestNoteSO) {
-						RequestNoteReqDTO reqDTO = new RequestNoteReqDTO();
-						reqDTO.setRequestNoteDtls(requestNoteDtls);
-						requestNoteSO.updateRequestNoteDtls(reqDTO);
-					}
-					
 					purchaseRequest.setRecordStatusFlg(2);
 					PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
 					reqDTO.setPurchaseRequest(purchaseRequest);
@@ -3331,6 +3325,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 								(String) prObj[3], Boolean.TRUE);
 					} else {
 						throw new EpException(MessageConst.ERROR_700020);
+					}
+					
+					if (null != requestNoteSO) {
+						RequestNoteReqDTO reqNoteDTO = new RequestNoteReqDTO();
+						reqNoteDTO.setRequestNoteDtls(requestNoteDtls);
+						requestNoteSO.updateRequestNoteDtls(reqNoteDTO);
 					}
 				}
 			} finally {
