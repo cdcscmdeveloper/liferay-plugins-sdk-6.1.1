@@ -168,7 +168,8 @@
 						<td>
 							<p:inputText style="text-align: right;" size="30" maxlength="2" 
 										 required="true" label="#{lbl['lbl.sc.qt.max.attendance']}"
-										 value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.maxNoOfAttendance}">
+										 value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.maxNoOfAttendance}"
+										 validatorMessage="#{lbl['lbl.sc.qt.bsv.max.validator.msg']}">
 										 <f:validateDoubleRange minimum = "1" />
 							</p:inputText>
 							<ac:iconTooltip value="#{lbl['lbl.sc.qt.max.attendance.tooltip']}" />
