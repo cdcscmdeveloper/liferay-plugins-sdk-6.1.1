@@ -3227,30 +3227,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			}
 		}
 	}
-
-	private void setPmDigiCert(SmPersonnel smPersonnel) {
-		log.info("Inside get digi cert");
-		IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate
-				.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-						IPersonnelSO.class);
-
-		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-		reqDTO.setSmSupplierId(smPersonnel.getSmAppl().getSmSupplier()
-				.getSupplierId());
-		reqDTO.setUserId(smPersonnel.getPmUser().getUserId());
-		PersonnelResDTO resDTO = personnelSO
-				.retrievePersonnelSoftcertRequestBySupplierIdAndUserId(reqDTO);
-		SmSoftcertRequest smSoftcertRequest = resDTO.getSoftcertRequest();
-		if (smSoftcertRequest != null) {
-			PmDigiCert pmDigiCert = smSoftcertRequest.getPmDigiCert();
-			if (pmDigiCert == null) {
-				pmDigiCert = new PmDigiCert();
-			}
-			getManagedBean().setPmDigiCert(pmDigiCert);
-		}
-	}
-
+	
 	private String epRoleName(String roleCode) {
 
 		IRoleSO roleSO = (IRoleSO) BusinessDelegate.getInstance()
