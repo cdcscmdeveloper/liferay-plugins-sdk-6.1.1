@@ -1617,22 +1617,24 @@ public class SmApplicationBackingBean extends
 						//if(this.getManagedBean().getSmAppl().getSmEquityCompanies()!=null){
 						if(!businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType()) && ssmResDTO.getSmEquityCompanys()!=null){
 							this.getManagedBean().setSmEquityCompanyTemp(ssmResDTO.getSmEquityCompanys());
-							if(this.getManagedBean().getSmAppl().getSmEquityCompanies()==null){
+							/*if(this.getManagedBean().getSmAppl().getSmEquityCompanies()==null){
 								this.getManagedBean().getSmAppl().setSmEquityCompanies(new ArrayList());
-							}
-							
+							}*/
+							//TO Set equity compny from ssm only #27145
+							this.getManagedBean().getSmAppl().setSmEquityCompanies(new ArrayList());
 							for(SmEquityCompany equityCompany : ssmResDTO.getSmEquityCompanys()){
-								SmEquityCompany company = (SmEquityCompany)EntityHelper.getEntityBySinglePropertyFromList(equityCompany.getCompanyName(), this.getManagedBean().getSmAppl().getSmEquityCompanies(), "companyName");
-								if(company == null){
+								//SmEquityCompany company = (SmEquityCompany)EntityHelper.getEntityBySinglePropertyFromList(equityCompany.getCompanyName(), this.getManagedBean().getSmAppl().getSmEquityCompanies(), "companyName");
+								//if(company == null){
 									equityCompany.setSmAppl(this.getManagedBean().getSmAppl());
 									this.getManagedBean().getSmAppl().getSmEquityCompanies().add(equityCompany);
-								}else{
+								//}
+							/*else{
 									String[] copyEquityCompany = {"shareAmt","ssmData"};
 									EntityHelper.copyEntityPropertiesOnly(equityCompany,company,copyEquityCompany);
 									if(equityCompany.isLocalCapital()){
 										this.getManagedBean().getSmAppl().getSmCompanyBasic().setLocalCompanyEquity(this.getManagedBean().getSmAppl().getSmCompanyBasic().getLocalCompanyEquity().add(company.getShareAmt()));
 									}else if(equityCompany.isForeignCapital()){
-										//this.getManagedBean().getSmAppl().getSmCompanyBasic().setForeignCompanyEquity(this.getManagedBean().getSmAppl().getSmCompanyBasic().getForeignCompanyEquity().add(company.getShareAmt()));
+										this.getManagedBean().getSmAppl().getSmCompanyBasic().setForeignCompanyEquity(this.getManagedBean().getSmAppl().getSmCompanyBasic().getForeignCompanyEquity().add(company.getShareAmt()));
 									}else if(equityCompany.isGovAgencyCapital()){
 										this.getManagedBean().getSmAppl().getSmCompanyBasic().setGovtUnitrustEquity(this.getManagedBean().getSmAppl().getSmCompanyBasic().getGovtUnitrustEquity().add(company.getShareAmt()));
 									}else if(equityCompany.isGovEquityCapital()){
@@ -1644,7 +1646,7 @@ public class SmApplicationBackingBean extends
 									log.info(ssmResDTO.getSmCompanyBasic().getLocalCompanyEquity()+ "==Local add Company = "+this.getManagedBean().getSmAppl().getSmCompanyBasic().getLocalCompanyEquity());
 									log.info(ssmResDTO.getSmCompanyBasic().getForeignCompanyEquity()+ "==Foreign add Company = "+this.getManagedBean().getSmAppl().getSmCompanyBasic().getForeignCompanyEquity());
 									
-								}
+								}*/
 							}
 							
 						}
