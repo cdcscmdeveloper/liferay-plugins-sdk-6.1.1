@@ -13183,5 +13183,18 @@ public class SmApplicationUtil {
 		return resDTO.getResultList();
 	}
 	//26238 - end
+	
+	public static void removeEquityCompanyFromList(
+			List<SmEquityCompany> equityCompanyList) {
+		if (equityCompanyList != null) {
+			Iterator<SmEquityCompany> iterator = equityCompanyList.iterator();
+			while (iterator.hasNext()) {
+				SmEquityCompany equityCompany = iterator.next();
+				if (equityCompany.isSsmData()) {
+					iterator.remove();
+				}
+			}
+		}
+	}
 
 }
