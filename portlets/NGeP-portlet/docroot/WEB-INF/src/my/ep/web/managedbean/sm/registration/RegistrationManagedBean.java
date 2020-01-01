@@ -156,6 +156,7 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private List<SmPersonnel> blacklistOwner;
 	private List<BlacklistOwnerDirectorVO> blacklistownerDirectorList;
 	private boolean noDisciplinary;
+	private String regIcCheckSSM;
 	
 	private boolean showOwnerPersonnel = false;
 	
@@ -955,6 +956,14 @@ public class RegistrationManagedBean extends BaseManagedBean {
 
 	public void setLabelDataTable(String labelDataTable) {
 		this.labelDataTable = labelDataTable;
+	}
+
+	public String getRegIcCheckSSM() {
+		return regIcCheckSSM;
+	}
+
+	public void setRegIcCheckSSM(String regIcCheckSSM) {
+		this.regIcCheckSSM = regIcCheckSSM;
 	}
 
 }

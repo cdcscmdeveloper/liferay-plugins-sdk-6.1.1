@@ -66,7 +66,7 @@
 							rendered="#{registrationBackingBean.managedBean.smAppl.brandNew or !registrationBackingBean.managedBean.disabledBusinessTypeInMaintenance}" 
 							style="width:310px">
 							<f:selectItems value="#{registrationBackingBean.pmBusinessTypeDropDown()}"/>
-							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues}"  update="@form" process="@form" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew}" ></p:ajax>
+							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues}"  update="@form" process="@form" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"></p:ajax>
 						</p:selectOneMenu>
 						<p:outputLabel styleClass="outputLabel-view" 
 						value="#{registrationBackingBean.getParameterDesc(SupplierManagementConst.supplierBusinessType,registrationBackingBean.managedBean.smSupp.businessType)}" 
@@ -118,7 +118,38 @@
 					</p:outputPanel>
 				</td>
 				 </tr>
-		</table>
+				 <c:if test="#{registrationBackingBean.managedBean.smSupp.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG or registrationBackingBean.managedBean.smSupp.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG}">
+					 <tr >
+						<td class="tdTitle">
+							<p:outputLabel value="#{lbl['lbl.sm.register.owner.newic']}" />
+							<p:outputLabel value="*" styleClass="mandatory" />
+						</td>
+						<td class="tdContent">
+							<p:inputText required="true" maxlength="12" size="40" label="#{lbl['lbl.sm.register.owner.newic']}" value="#{registrationBackingBean.managedBean.regIcCheckSSM}"></p:inputText>
+							<p:graphicImage id="noic" value="/css/images/design/tooltips.png" />
+							<p:tooltip style="width:25%;" id="noictt" for="noic">
+								<p:outputLabel escape="false" value="#{lbl['lbl.sm.register.owner.newic.tt']}" />
+							</p:tooltip>
+						</td>
+					</tr>
+				 </c:if>
+				 <c:if test="#{registrationBackingBean.managedBean.smSupp.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD or registrationBackingBean.managedBean.smSupp.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD}">
+				 	<tr>
+				 		<td class="tdTitle">
+				 			<p:outputLabel value="#{lbl['lbl.sm.register.ownerdirector.newic']}" />
+				 			<p:outputLabel value="*" styleClass="mandatory" />
+				 		</td>
+				 		<td class="tdContent">
+				 			<p:inputText required="#{!empty param['disableValidation']}" maxlength="12" size="40" label="#{lbl['lbl.sm.register.ownerdirector.newic']}" value="#{registrationBackingBean.managedBean.regIcCheckSSM}"></p:inputText>
+				 			<p:graphicImage id="noic" value="/css/images/design/tooltips.png" />
+				 			<p:tooltip style="width:25%;" id="noictt" for="noic">
+				 				<p:outputLabel escape="false" value="#{lbl['lbl.sm.register.ownerdirector.newic.tt']}" />
+				 			</p:tooltip>
+				 			<p:message id="noicMsg" for="noic" display="icon" />
+				 		</td>
+				 	</tr>
+				 </c:if>
+			</table>
 		
 		<div class="nav-wrapper" align="justify" >
 			<p:commandButton id="btnNext" value="#{lbl['lbl.sm.next']}" 
@@ -177,7 +208,7 @@
 				</p:commandButton>
 			
 				<p:commandButton id="btnProceed" value="#{lbl['lbl.sm.next']}"  style="float:right;"
-				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" rendered="#{registrationBackingBean.managedBean.statusFromSSM == 'A' || registrationBackingBean.managedBean.statusFromSSM == 'E'}"			
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" rendered="#{(registrationBackingBean.managedBean.statusFromSSM == 'A' || registrationBackingBean.managedBean.statusFromSSM == 'E') and !registrationBackingBean.managedBean.hideButton}"			
 				disabled="#{!registrationBackingBean.managedBean.agreeTC}" action="#{registrationBackingBean.proceedToCompanyInfo}"
 				 />
 				
