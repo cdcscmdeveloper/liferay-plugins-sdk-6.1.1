@@ -221,7 +221,7 @@
 								rendered="#{cc.attrs.addrObj.smAddress.countryId==cc.attrs.bBean.managedBean.myCountryId}">
 								<p:inputText maxlength="5"
 									required="#{!cc.attrs.addrObj.sameAsPerm}"
-									disabled="#{cc.attrs.bBean.disableFieldSSm(cc.attrs.addrObj.smAddress.ssmData,cc.attrs.addrObj.smAddress.ssmData,cc.attrs.addrObj.smAddress.postcodeSsmNull)}"
+									disabled="#{cc.attrs.addrObj.sameAsPerm || cc.attrs.bBean.disableFieldSSm(cc.attrs.addrObj.smAddress.ssmData,cc.attrs.addrObj.smAddress.ssmData,cc.attrs.addrObj.smAddress.postcodeSsmNull)}"
 									label="#{cc.attrs.addressTitle} -#{lbl['lbl.sm.postcode']}"
 									id="#{cc.attrs.postCodeId}My"
 									value="#{cc.attrs.addrObj.smAddress.postcode}"
