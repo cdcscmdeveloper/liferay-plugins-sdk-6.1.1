@@ -1708,7 +1708,7 @@ public class SmApplicationUtil {
 			if (per.getSmStaffAcademics() == null
 					|| per.getSmStaffAcademics().isEmpty()) {
 				sb.append("<br/>");
-				sb.append(++i + ".)");
+				sb.append(++i + ". ");
 				sb.append(per.getName());
 				validPersonnels = false;
 			}
@@ -1803,7 +1803,7 @@ public class SmApplicationUtil {
 
 		}
 		//16052019 - SSM INTEGRATION CR
-		if(showerror){
+		if(false){
 			if (currentTab != -1) {
 				setNavigationBackToCurrentPage(currentTab, managedBean);
 			}

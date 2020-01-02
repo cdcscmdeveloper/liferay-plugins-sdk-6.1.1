@@ -210,8 +210,6 @@ public class SmApplicationBackingBean extends
 	NumberFormat formatter = new DecimalFormat("#0.00");
 	SmRuleHelper ruleHelper = new SmRuleHelper();
 	ViewApplHistoryBackingBean viewApplHistoryBackingBean;
-	//SSM INTEGRATION
-	private static List<String> docToExclude = Arrays.asList("2","218","721","708","709","710","693","694","695","705","706","707");
 
 	/**
 	 * Instantiates a new sm application backing bean.
@@ -1524,8 +1522,6 @@ public class SmApplicationBackingBean extends
 						this.getManagedBean().setCompanyValidWithSSM(true);
 						//SET COMPANY NAME
 						//if rob no need to copy capital.
-						log.info(ssmResDTO.getSmCompanyBasic().getLocalCompanyEquity()+ "==Local Company = "+this.getManagedBean().getSmAppl().getSmCompanyBasic().getLocalCompanyEquity());
-						log.info(ssmResDTO.getSmCompanyBasic().getForeignCompanyEquity()+ "==Foreign Company = "+this.getManagedBean().getSmAppl().getSmCompanyBasic().getForeignCompanyEquity());
 						//long tempAnnualRevenue = this.getManagedBean().getSmAppl().getSmCompanyBasic().getAnnualRevenue();
 						if(businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())){
 							String[] copyProp = {"companyName","robExpiryDate","businessDesc","annualRevenue","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus","annualRevenueSSM"};
@@ -1537,8 +1533,6 @@ public class SmApplicationBackingBean extends
 						/*if((ssmResDTO.getSmCompanyBasic().getAnnualRevenue() == null || ssmResDTO.getSmCompanyBasic().getAnnualRevenue()==0) && tempAnnualRevenue > 0){
 							this.getManagedBean().getSmAppl().getSmCompanyBasic().setAnnualRevenue(tempAnnualRevenue);
 						}*/
-						log.info(ssmResDTO.getSmCompanyBasic().getLocalCompanyEquity()+ "==Local AFETER Company = "+this.getManagedBean().getSmAppl().getSmCompanyBasic().getLocalCompanyEquity());
-						log.info(ssmResDTO.getSmCompanyBasic().getForeignCompanyEquity()+ "==Foreign AFETER Company = "+this.getManagedBean().getSmAppl().getSmCompanyBasic().getForeignCompanyEquity());
 						//SET ADDRESS
 						String[] copyPropAddress = {"address1","address2","address3","addressSsmNull","postcodeSsmNull","stateSsmNull","countrySsmNull","ssmData","postcode"};
 
@@ -1580,8 +1574,7 @@ public class SmApplicationBackingBean extends
 						for(SmPersonnel personnel : this.getManagedBean().getSmAppl().getSmPersonnels()){
 							validateRole(personnel);
 							SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
-							if(personnelSSM != null){
-								
+							if(personnelSSM != null){								
 								//if rob no need to copy shareamt.
 								if(businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())){
 									personnel.setSsmData(true);
@@ -1613,6 +1606,12 @@ public class SmApplicationBackingBean extends
 									}
 									
 								}
+							}else{
+								if(personnel.isEquityOwner() ||personnel.isDirector()){
+									log.info("Personnel Id = "+personnel.getPersonnelId()+"=APPL ID="+personnel.getSmAppl().getApplId()+"--Deleted : "+personnel.getName());									
+									//personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+									//personnel.setRecordStatus(false);
+								}
 							}
 							this.getManagedBean().getSmAppl().getSmPersonnels().set(i, personnel);
 							i++;
@@ -1621,9 +1620,13 @@ public class SmApplicationBackingBean extends
 						//if(this.getManagedBean().getSmAppl().getSmEquityCompanies()!=null){
 						if(!businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType()) && ssmResDTO.getSmEquityCompanys()!=null){
 							this.getManagedBean().setSmEquityCompanyTemp(ssmResDTO.getSmEquityCompanys());
-							/*if(this.getManagedBean().getSmAppl().getSmEquityCompanies()==null){
+							if(this.getManagedBean().getSmAppl().getSmEquityCompanies()==null){
 								this.getManagedBean().getSmAppl().setSmEquityCompanies(new ArrayList());
-							}*/
+							}
+							//delete all entered company share #27145
+							for(SmEquityCompany equityCompany : this.getManagedBean().getSmAppl().getSmEquityCompanies()){
+								equityCompany.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+							}
 							//TO Set equity compny from ssm only #27145
 							this.getManagedBean().getSmAppl().setSmEquityCompanies(new ArrayList());
 							for(SmEquityCompany equityCompany : ssmResDTO.getSmEquityCompanys()){
@@ -1632,25 +1635,6 @@ public class SmApplicationBackingBean extends
 									equityCompany.setSmAppl(this.getManagedBean().getSmAppl());
 									this.getManagedBean().getSmAppl().getSmEquityCompanies().add(equityCompany);
 								//}
-							/*else{
-									String[] copyEquityCompany = {"shareAmt","ssmData"};
-									EntityHelper.copyEntityPropertiesOnly(equityCompany,company,copyEquityCompany);
-									if(equityCompany.isLocalCapital()){
-										this.getManagedBean().getSmAppl().getSmCompanyBasic().setLocalCompanyEquity(this.getManagedBean().getSmAppl().getSmCompanyBasic().getLocalCompanyEquity().add(company.getShareAmt()));
-									}else if(equityCompany.isForeignCapital()){
-										this.getManagedBean().getSmAppl().getSmCompanyBasic().setForeignCompanyEquity(this.getManagedBean().getSmAppl().getSmCompanyBasic().getForeignCompanyEquity().add(company.getShareAmt()));
-									}else if(equityCompany.isGovAgencyCapital()){
-										this.getManagedBean().getSmAppl().getSmCompanyBasic().setGovtUnitrustEquity(this.getManagedBean().getSmAppl().getSmCompanyBasic().getGovtUnitrustEquity().add(company.getShareAmt()));
-									}else if(equityCompany.isGovEquityCapital()){
-										this.getManagedBean().getSmAppl().getSmCompanyBasic().setGovtEquity(this.getManagedBean().getSmAppl().getSmCompanyBasic().getGovtEquity().add(company.getShareAmt()));
-									}else{
-										this.getManagedBean().getSmAppl().getSmCompanyBasic().setLocalCompanyEquity(this.getManagedBean().getSmAppl().getSmCompanyBasic().getLocalCompanyEquity().add(company.getShareAmt()));
-									}
-									this.getManagedBean().getSmAppl().getSmCompanyBasic().setPaidUpCapital(this.getManagedBean().getSmAppl().getSmCompanyBasic().getPaidUpCapital().add(company.getShareAmt()));										
-									log.info(ssmResDTO.getSmCompanyBasic().getLocalCompanyEquity()+ "==Local add Company = "+this.getManagedBean().getSmAppl().getSmCompanyBasic().getLocalCompanyEquity());
-									log.info(ssmResDTO.getSmCompanyBasic().getForeignCompanyEquity()+ "==Foreign add Company = "+this.getManagedBean().getSmAppl().getSmCompanyBasic().getForeignCompanyEquity());
-									
-								}*/
 							}
 							
 						}
@@ -3232,7 +3216,6 @@ public class SmApplicationBackingBean extends
 		log.info("EDIT BANK:" + rqDto.isBankInfoChanged());
 		log.info("EDIT FOREIGNER:" + rqDto.isForeigner());
 		log.info(">>>>>>>>END SET SECTION EDITOR<<<<<<<<<<");
-
 		SmFacility hq = SmApplicationUtil.getHqFacilityByAppl(getManagedBean()
 				.getSmAppl());
 		if (hq != null) {
@@ -3241,7 +3224,17 @@ public class SmApplicationBackingBean extends
 		}
 		DocumentResDTO rsDTO = null;
 		rsDTO = retrieveSupportingDocumentList(rqDto);
-
+		//SSM INTEGRATION
+		boolean changesInCapital = false;
+		if(getManagedBean().getSmAppl().isApplValidWithSsm() && getManagedBean().getSmAppl().getSmCompanyBasic().getPaidUpCapitalSSM() != null){
+			BigDecimal paidCapital = getManagedBean().getSmAppl().getSmCompanyBasic().getPaidUpCapital();
+			BigDecimal paidCapitalSSM = getManagedBean().getSmAppl().getSmCompanyBasic().getPaidUpCapitalSSM();
+			if(paidCapital.compareTo(paidCapitalSSM) < 0 || paidCapital.compareTo(paidCapitalSSM) >0){
+				changesInCapital = true;
+			}else if(paidCapital.compareTo(paidCapitalSSM) == 0){
+				changesInCapital = false;
+			}
+		}
 		if (rsDTO != null && rsDTO.getDocumentList() != null
 				&& !rsDTO.getDocumentList().isEmpty()) {
 			log.info("*** Not Empty list ****" + rsDTO.getDocumentList().size());
@@ -3249,14 +3242,27 @@ public class SmApplicationBackingBean extends
 
 			if (getManagedBean().getSmAppl().getSmApplSupportDocs().isEmpty()) {
 				log.info(" ******* Empty Doc List *****");
-				for (PmDocument doc : rsDTO.getDocumentList()) {
-					docs.add(SmApplicationUtil.getDefaultSmApplSupportingDoc(
-							doc, getManagedBean().getSmAppl()));
+				for (PmDocument doc : rsDTO.getDocumentList()) {					
+					if(businessTypeIsROC(getManagedBean().getSmAppl().getSmSupplier().getBusinessType()) && getManagedBean().getSmAppl().isApplValidWithSsm()){						
+						if(showDoc(doc,changesInCapital)){
+							docs.add(SmApplicationUtil.getDefaultSmApplSupportingDoc(
+									doc, getManagedBean().getSmAppl()));
+							// to display or hide download column
+							if (doc.isDownload()) {
+								getManagedBean().setHasSuppDocToDownload(true);
+							}
+						}
+					}else{
+						//no ssm changes
+						docs.add(SmApplicationUtil.getDefaultSmApplSupportingDoc(
+								doc, getManagedBean().getSmAppl()));
 
-					// to display or hide download column
-					if (doc.isDownload()) {
-						getManagedBean().setHasSuppDocToDownload(true);
+						// to display or hide download column
+						if (doc.isDownload()) {
+							getManagedBean().setHasSuppDocToDownload(true);
+						}
 					}
+					
 				}
 			} else {
 				if (getManagedBean().getSmAppl().getSmCompanyBasic()
@@ -3266,6 +3272,7 @@ public class SmApplicationBackingBean extends
 					log.info(" ******* Existing doc list without change in state id  *****");
 					for (PmDocument doc : rsDTO.getDocumentList()) {
 						boolean recordExists = false;
+						boolean showDoc = true;
 						for (SmApplSupportDoc smDocu : getManagedBean()
 								.getSmAppl().getSmApplSupportDocs()) {
 							if (smDocu.getPmDocument().getDocumentId()
@@ -3276,21 +3283,44 @@ public class SmApplicationBackingBean extends
 									SmApplicationUtil
 											.setDefaultSmApplDocFiles(smDocu);
 								}
-								docs.add(smDocu);
-								recordExists = true;
+								//SSM INTEGRATION
+								if(businessTypeIsROC(getManagedBean().getSmAppl().getSmSupplier().getBusinessType()) && getManagedBean().getSmAppl().isApplValidWithSsm()){
+									showDoc = showDoc(smDocu.getPmDocument(),changesInCapital);
+									if(showDoc){
+										docs.add(smDocu);
+										recordExists = true;										
+									}else{
+										smDocu.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+										recordExists = true;
+									}
+								}else{
+									docs.add(smDocu);
+									recordExists = true;
+								}
+								
 							}
 						}
 						if (!recordExists) {
 							SmApplSupportDoc suppDoc = SmApplicationUtil
 									.getDefaultSmApplSupportingDoc(doc,
 											getManagedBean().getSmAppl());
-							docs.add(suppDoc);
+							if(businessTypeIsROC(getManagedBean().getSmAppl().getSmSupplier().getBusinessType()) && getManagedBean().getSmAppl().isApplValidWithSsm()){
+								if(showDoc(suppDoc.getPmDocument(),changesInCapital)){
+									docs.add(suppDoc);
+								}else{
+									suppDoc.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+								}
+							}else{
+								docs.add(suppDoc);
+							}
+							
 						}
-
-						// to display or hide download column
-						if (doc.isDownload()) {
-							getManagedBean().setHasSuppDocToDownload(true);
-						}
+						if(showDoc){
+							// to display or hide download column
+							if (doc.isDownload()) {
+								getManagedBean().setHasSuppDocToDownload(true);
+							}
+						}						
 					}
 					EntityHelper
 							.compareAndRemoveEntityFromListIfNotExist(docs,
@@ -11108,47 +11138,7 @@ public class SmApplicationBackingBean extends
 										.isEmpty()) {
 							mandatoryLicenseDocs.add(doc);
 						} else {
-							getManagedBean().getMandatoryDocs().add(doc);
-							//#27120
-							//SSM INTEGRATION
-							//for ssm no need supporting doc
-							//This applicable for ROC & for data valid with ssm only, to skip checking mandatory doc if paid up capital is same with ssm
-							/*if(getManagedBean().getSmAppl().isApplValidWithSsm() && getManagedBean().getSmAppl().getSmCompanyBasic()
-									.getPaidUpCapital() != null && getManagedBean().getSmAppl().getSmCompanyBasic()
-											.getPaidUpCapitalSSM() != null){
-								if (!businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())
-										&& (getManagedBean()
-												.getSmAppl()
-												.getSmCompanyBasic()
-												.getPaidUpCapital()
-												.compareTo(
-														getManagedBean().getSmAppl().getSmCompanyBasic()
-																.getPaidUpCapitalSSM()) < 0 || getManagedBean()
-												.getSmAppl()
-												.getSmCompanyBasic()
-												.getPaidUpCapital()
-												.compareTo(
-														getManagedBean().getSmAppl().getSmCompanyBasic()
-																.getPaidUpCapitalSSM()) > 0)) {
-									getManagedBean().getMandatoryDocs().add(doc);
-								} else if (!businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())
-										&& getManagedBean()
-												.getSmAppl()
-												.getSmCompanyBasic()
-												.getPaidUpCapital()
-												.compareTo(
-														getManagedBean().getSmAppl().getSmCompanyBasic()
-																.getPaidUpCapitalSSM()) == 0) {
-									//if (!docToExclude.contains(doc.getPmDocument().getDocumentId().toString())) {
-										getManagedBean().getMandatoryDocs().add(doc);
-									//}else{
-									//	doc.getPmDocument().setMandatory(false);
-								//	}
-
-								}
-							}else{
-								getManagedBean().getMandatoryDocs().add(doc);
-							}*/
+							getManagedBean().getMandatoryDocs().add(doc);							
 						}
 					} else {
 						getManagedBean().getNonMandatoryDocs().add(doc);
@@ -12699,7 +12689,7 @@ public class SmApplicationBackingBean extends
 		
 		if(this.getManagedBean().getSmAppl().getSmPersonnels()!=null){
 			for(SmPersonnel per : this.getManagedBean().getSmAppl().getSmPersonnels()){
-				if(per.isEquityOwner() && per.getShareAmt() !=null ){
+				if(per.isEquityOwner() && per.getShareAmt() !=null && per.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED){
 					if(per.getPmCountry() != null && SupplierManagementConst.COUNTRY_MALAYSIA_CODE.equalsIgnoreCase(per.getPmCountry().getCountryCode())){
 						if(per.isBumi() != null && per.isBumi()){
 							bumiputeraCapital = bumiputeraCapital.add(per.getShareAmt());
@@ -12756,5 +12746,25 @@ public class SmApplicationBackingBean extends
 	public void unSelectEquityCompany(AjaxBehaviorEvent e) {
 		SmApplicationUtil.removeEquityCompanyFromList(getManagedBean()
 						.getSelectedEquityCompanies());
+	}
+	//SSM INTEGRATION
+	public boolean showDoc(PmDocument doc,boolean changesInCapital){
+		boolean showDoc = true;
+		//ssm changes to hide doc for roc if paid up capital = paid up capital ssm. if paid up capital != paid up capital ssm show doc.
+		for(PmDocumentRestr documentRestr:doc.getPmDocumentRestrs()){
+			log.info(documentRestr.getDocumentRestrId()+"documentRestr.isCapitalEquityChanged()="+documentRestr.isCapitalEquityChanged());
+			if (documentRestr.isCapitalEquityChanged()){
+				if (changesInCapital) {
+					showDoc = true;
+					break;
+				}else{
+					showDoc = false;
+				}
+			}else{
+				showDoc = true;
+			}
+			
+		}
+		return showDoc;
 	}
 }
