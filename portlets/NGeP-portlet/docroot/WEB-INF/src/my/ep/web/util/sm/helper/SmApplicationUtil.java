@@ -1765,7 +1765,7 @@ public class SmApplicationUtil {
 				}
 			}
 			if(!validPersonnel){
-				sb.append(++i + ".)");
+				sb.append(++i + ". ");
 				sb.append(per.getName());
 				// sb.append(",  ");
 				sb.append("<br/>");
