@@ -346,7 +346,7 @@ public class SimpleQuoteBackingBean extends
 
 				// status
 				if(scQuote.getCurrentStatus() != null){
-					if(scQuote.getCurrentStatus().getPmStatus().getStatusId().equals(DPStatusConstants.SQ_PENDING_RN_CREATION)&&scQuote.getPurchaseInDefault()!=null){
+					if((scQuote.getCurrentStatus().getPmStatus().getStatusId().equals(DPStatusConstants.SQ_PENDING_RN_CREATION)||scQuote.getCurrentStatus().getPmStatus().getStatusId().equals(DPStatusConstants.SQ_PENDING_SUBMISSION))&&scQuote.getPurchaseInDefault()!=null){
 						Date today  = DateUtils.getCurrentDateWithoutTime();
 						Date ExpDate = DateUtils.addDays(scQuote.getPurchaseInDefault().getChangedDate(),scQuote.getPurchaseInDefault().getPidValidDays() );
 						
