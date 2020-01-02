@@ -1803,7 +1803,7 @@ public class SmApplicationUtil {
 
 		}
 		//16052019 - SSM INTEGRATION CR
-		if(false){
+		if(showerror){
 			if (currentTab != -1) {
 				setNavigationBackToCurrentPage(currentTab, managedBean);
 			}
