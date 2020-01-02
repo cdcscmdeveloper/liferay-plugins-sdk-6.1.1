@@ -245,7 +245,7 @@
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.equiComp.addr']}" id="suppEquiCompAddr"
 							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.address1}"
-							disabled ="#{backingBean.managedBean.selectedEquityCompany.ssmData and not empty backingBean.managedBean.selectedEquityCompany.smAddress.address1}"
+							disabled ="#{backingBean.managedBean.selectedEquityCompany.smAddress.ssmData and not empty backingBean.managedBean.selectedEquityCompany.smAddress.address1}"
 							size="35" /> 
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -261,7 +261,7 @@
 					<td></td>
 					<td><p:inputText maxlength="100"
 							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.address2}"
-							disabled ="#{backingBean.managedBean.selectedEquityCompany.ssmData and not empty backingBean.managedBean.selectedEquityCompany.smAddress.address1}"							
+							disabled ="#{backingBean.managedBean.selectedEquityCompany.smAddress.ssmData and not empty backingBean.managedBean.selectedEquityCompany.smAddress.address1}"							
 							size="35" />
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -274,7 +274,7 @@
 					<td></td>
 					<td><p:inputText maxlength="100"
 							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.address3}"
-							disabled ="#{backingBean.managedBean.selectedEquityCompany.ssmData and not empty backingBean.managedBean.selectedEquityCompany.smAddress.address1}"	
+							disabled ="#{backingBean.managedBean.selectedEquityCompany.smAddress.ssmData and not empty backingBean.managedBean.selectedEquityCompany.smAddress.address1}"	
 							size="35" />
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -290,7 +290,7 @@
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.country']}" id="suppEquiCompCntry"
 							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.countryId}"
-							disabled ="#{backingBean.managedBean.selectedEquityCompany.ssmData and not empty backingBean.managedBean.selectedEquityCompany.smAddress.countryId}"	
+							disabled ="#{backingBean.managedBean.selectedEquityCompany.smAddress.ssmData and not empty backingBean.managedBean.selectedEquityCompany.smAddress.countryId}"	
 							style="width: 207px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="equiCountry"
