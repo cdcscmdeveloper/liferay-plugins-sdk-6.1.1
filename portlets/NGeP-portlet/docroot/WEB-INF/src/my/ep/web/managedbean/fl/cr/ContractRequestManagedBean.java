@@ -457,11 +457,16 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 							/*13984 Schedule/ Phase info List BEGINNING*/
 							contractReqDTO.setContractId(vCtActiveContract.getContractId());
 							flReqDTO.setContractId(vCtActiveContract.getContractId());
+
+							flReqDTO.setOrgProfileId(orgProfileId);
 							resfDTO = requestSO.retrieveFulfilmentRequestDocNosByContractId(flReqDTO);
 
 							List<VCtActiveContract> InfoActiveContractList = contractSO
 									.retrieveScheduleInfoForContract(contractReqDTO).getActiveContractList();
-
+									
+							List<VCtActiveContract> activeContractScheduleList = contractSO
+									.retrieveScheduleInfoForContractByOrgProfileId(contractReqDTO).getActiveContractList();		
+						
 							for (int i = 0; i < resfDTO.getDocNos().size(); i++) {
 
 								int j = i + 1;
@@ -481,13 +486,37 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 
 									resfDTO.getDocNoStatus().add("");
 								}
-
+								
 								InfoActiveContractList.get(i).setCrNo(resfDTO.getDocNos().get(i));
 								InfoActiveContractList.get(i).setCrNoStatus(resfDTO.getDocNoStatus().get(i));
 								InfoActiveContractList.get(i).setCoNo(resfDTO.getFlOrderDocNos().get(i));
 								InfoActiveContractList.get(i).setCoNoStatus(resfDTO.getFlOrderDocNoStatus().get(i));
+								
+								if(InfoActiveContractList.size()>0){
+									InfoActiveContractList.get(0).setOrgCode(resfDTO.getOrgCodes().get(0));
+									InfoActiveContractList.get(0).setOrgName(resfDTO.getOrgNames().get(0));
+								}
+								
+								activeContractScheduleList.get(i).setScheduleNo(resfDTO.getFlSchNos().get(i));
+								activeContractScheduleList.get(i).setCrNo(resfDTO.getDocNos().get(i));
+								activeContractScheduleList.get(i).setCrNoStatus(resfDTO.getDocNoStatus().get(i));
+								activeContractScheduleList.get(i).setCoNo(resfDTO.getFlOrderDocNos().get(i));
+								activeContractScheduleList.get(i).setCoNoStatus(resfDTO.getFlOrderDocNoStatus().get(i));
+								
+								if(activeContractScheduleList.size()>0){
+									activeContractScheduleList.get(0).setOrgCode(resfDTO.getOrgCodes().get(0));
+									activeContractScheduleList.get(0).setOrgName(resfDTO.getOrgNames().get(0));
+								}
+								
+								
 							}
+							
 							vCtActiveContract.setActiveContractSubList(InfoActiveContractList);
+							
+							if(resfDTO.getDocNos().size()>0){
+								vCtActiveContract.setActiveContractScheduleList(activeContractScheduleList);
+							}
+							
 							/*13984 Schedule/ Phase info List ENDING*/
 						}
 					}
