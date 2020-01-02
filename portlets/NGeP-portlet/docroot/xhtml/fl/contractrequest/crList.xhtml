@@ -169,7 +169,7 @@
 
 					<p:dataTable id="contractRequestIdd" var="contractExpansion"
 						styleClass="borderless"
-						value="#{vCtActiveContract.activeContractSubList}"
+						value="#{vCtActiveContract.activeContractScheduleList}"
 						resizableColumns="true">
 
 						<ac:paginator for="contractRequestIdd"></ac:paginator>
@@ -179,7 +179,7 @@
 							<p:row>
 								<p:column colspan="3"
 									style="white-space:normal;text-align: center;"
-									headerText="#{lbl['lbl.pm.org.ptjCode']}/#{lbl['lbl.pm.org.ptjName']} : #{catalogueBackingBean.orgCode} #{catalogueBackingBean.orgName}" />
+									headerText="#{lbl['lbl.pm.org.ptjCode']}/#{lbl['lbl.pm.org.ptjName']} : #{contractExpansion.orgCode} #{contractExpansion.orgName}" />
 
 
 							</p:row>

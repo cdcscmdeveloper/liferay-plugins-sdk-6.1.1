@@ -271,7 +271,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			ContractResDTO resDTO;
 			FulfilmentResDTO resfDTO;
 			
-
+			flReqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
 			resfDTO = requestSO.retrieveFulfilmentRequestDocNosByContractId(flReqDTO);
 			resDTO = contractSO.retrieveAvailableSchedulePhaseNo(reqDTO);
 			
