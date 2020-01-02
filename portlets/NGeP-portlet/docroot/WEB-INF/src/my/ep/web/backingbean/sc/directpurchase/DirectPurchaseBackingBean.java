@@ -252,6 +252,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 
 				for (PmStatusDesc statusDesc : statusDescs) {
 					if(statusDesc.getPmStatus().getStatusId().equals(DPStatusConstants.SQ_PENDING_SUPPLIER_RESPONSE)
+							|| statusDesc.getPmStatus().getStatusId().equals(DPStatusConstants.SQ_PENDING_SUBMISSION)
 							|| statusDesc.getPmStatus().getStatusId().equals(DPStatusConstants.SQ_COMPLETED)
 							|| statusDesc.getPmStatus().getStatusId().equals(DPStatusConstants.SQ_CANCELLED)
 							|| statusDesc.getPmStatus().getStatusId().equals(DPStatusConstants.SQ_CANCELLED_DUE_TO_PID_VALIDITY_EXPIRED)
@@ -1099,7 +1100,8 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		Long currentStatusId = docStatusId;
 		
 		if(docType.equals("SQ")){
-	    	if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION)){
+	    	if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION)
+	    			|| currentStatusId.equals(DPStatusConstants.SQ_PENDING_SUBMISSION) ){
 	    		
 	    		//scPID = (ScPurchaseInDefault)dpObj[8];
 	    		if(dpObj[8]!=null){
@@ -1107,7 +1109,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		    		scPID.setPurchaseInDefaultId((Long) dpObj[8]);
 		    		scPID.setPurchaseInDefaultNo((String) dpObj[9]);
 		    		scPID.setPidValidDays((Integer) dpObj[10]);
-		    		scPID.setCreatedDate((Timestamp) dpObj[11]);
+		    		scPID.setChangedDate((Timestamp) dpObj[11]);
 	    		}
 	    		
 			}								   
@@ -1159,7 +1161,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		 */
 		private void pidValidity(ScPurchaseInDefault purchaseInDefault) {
 			Date today  = DateUtils.getCurrentDate();
-			Date ExpDate = DateUtils.addDays(purchaseInDefault.getCreatedDate(), purchaseInDefault.getPidValidDays());
+			Date ExpDate = DateUtils.addDays(purchaseInDefault.getChangedDate(), purchaseInDefault.getPidValidDays());
 			log.info("pID validity begin");
 			if(today.after(ExpDate)){
 
@@ -1181,7 +1183,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			
 			if(purchaseInDefault!=null){
 				Date today  = DateUtils.getCurrentDate();
-				Date ExpDate = DateUtils.addDays(purchaseInDefault.getCreatedDate(), purchaseInDefault.getPidValidDays());
+				Date ExpDate = DateUtils.addDays(purchaseInDefault.getChangedDate(), purchaseInDefault.getPidValidDays());
 				
 				log.info("pID validity begin");
 				
