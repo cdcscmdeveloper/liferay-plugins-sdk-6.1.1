@@ -1708,7 +1708,7 @@ public class SmApplicationUtil {
 			if (per.getSmStaffAcademics() == null
 					|| per.getSmStaffAcademics().isEmpty()) {
 				sb.append("<br/>");
-				sb.append(++i + ".)");
+				sb.append(++i + ". ");
 				sb.append(per.getName());
 				validPersonnels = false;
 			}
