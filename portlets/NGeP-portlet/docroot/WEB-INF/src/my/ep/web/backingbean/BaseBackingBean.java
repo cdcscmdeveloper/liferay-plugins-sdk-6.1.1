@@ -2548,6 +2548,15 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					return false;
 				}
 			}
+			public boolean businessTypeIsROC(String businessType){
+				if(businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD)
+						|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD)
+																				){
+					return true;
+				}else{
+					return false;
+				}
+			}
 			//16052019 - SSM INTEGRATION CR
 			public String setStatusMessageFromSSM(String statusCode){
 				if("A".equalsIgnoreCase(statusCode)){
