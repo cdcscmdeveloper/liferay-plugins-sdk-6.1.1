@@ -860,13 +860,20 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			ContractResDTO resDTO;
 			FulfilmentResDTO resfDTO;
 			
-
-			
+			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserReqDTO userReqDTO = new UserReqDTO();
+			FacesScopes facesScopes = new FacesScopes();
+			if (facesScopes.getUserSessionBean().getUserId() == null) {
+				throw new IllegalArgumentException("userId cannot be null");
+			}
+			userReqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
+			UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+			Long orgProfileId = userResDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId();
+			flReqDTO.setOrgProfileId(orgProfileId);
 			resfDTO = requestSO.retrieveFulfilmentRequestDocNosByContractId(flReqDTO);
-			resDTO = contractSO.retrieveAvailableSchedulePhaseNo(reqDTO);
-
-		
 			
+			reqDTO.setOrgProfileId(orgProfileId);
+			resDTO = contractSO.retrieveAvailableSchedulePhaseNoByOrgProfileId(reqDTO);
 			
 			if (resDTO.getAvailableNoList() != null) {
 				getManagedBean().setAvailableNoList(resDTO.getAvailableNoList());
@@ -888,13 +895,13 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					resfDTO.getFlOrderDocNoStatus().add("");
 				}
 				if (j > resfDTO.getDocNoStatus().size()) {
-					
-
-					
 					resfDTO.getDocNoStatus().add("");
 				}
+				if (j > resfDTO.getFlSchNos().size()) {
+					resfDTO.getFlSchNos().add("");
+				}
 
-				schInfo.add(new ScheduleInfo(resDTO.getAvailableNoList().get(i), resfDTO.getDocNos().get(i), resfDTO
+				schInfo.add(new ScheduleInfo(resfDTO.getFlSchNos().get(i), resfDTO.getDocNos().get(i), resfDTO
 						.getDocNoStatus().get(i), resfDTO.getFlOrderDocNos().get(i), resfDTO.getFlOrderDocNoStatus()
 						.get(i)));
 			}
@@ -2806,12 +2813,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			populateChargeLineData(false);	
 			setClassName("@(.crChargeLinePnlClass)");
 			onNodeSelect();
-			Long jabatanOrgProfileId = -1l;
-			PmOrgProfile jabatan = retrieveJabatanOrgProfile(getManagedBean().getFlRequest().getChargeOrgProfile().getOrgProfileId());
-			if(jabatan!=null) {
-				jabatanOrgProfileId = jabatan.getOrgProfileId();
-			}					
-			getVotFundList(jabatanOrgProfileId);
 			getManagedBean().setChargeLinePanel(false);
 			getManagedBean().setProgramLov(false);
 			getManagedBean().setProjectLov(false);
