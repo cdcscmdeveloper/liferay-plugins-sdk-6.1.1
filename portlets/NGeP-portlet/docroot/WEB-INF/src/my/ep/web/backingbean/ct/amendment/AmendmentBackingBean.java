@@ -3894,6 +3894,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			for (CtCommitteeMember committeMember : ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {  
 				if (committeMember.getMemberRole() != null && committeMember.getMemberRole().getParameterId() != null
 						&& committeMember.getMemberRoleId().longValue() == parameterId.longValue()) {
+					// #26520 - to reset existing value saved before
+					if(committeMember.getRepresentativeType() != null && committeMember.getRepresentativeType().getParameterId() != null) {
+						committeMember.setRepresentativeType(null);
+					}
+					// #26520 - end
 					counter++;
 					if (counter == 2) {
 						throw new EpException(MessageConst.ERROR_750008);
@@ -5522,4 +5527,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}				
 		return isContractAmountAmend;
 		}
+	
+	//#26520 - start
+	public void onChangeRepType(CtCommitteeMember currCommitteeMember, Long parameterId) {
+		PmParameter repType = null;
+		if (parameterId == null || parameterId == 0) {
+			return;
+		}
+		if (parameterId != null && parameterId != 0) {
+			repType = ParameterHelper.getInstance().getPmParameterById(parameterId);
+			if(repType != null) {
+				currCommitteeMember.setRepresentativeType(repType);
+				currCommitteeMember.getRepresentativeType().setParameterId(parameterId);
+			}
+		}	
+	}
+	//#26520 - end
+
 	}
