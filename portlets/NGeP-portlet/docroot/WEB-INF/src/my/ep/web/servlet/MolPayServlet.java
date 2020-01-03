@@ -73,19 +73,19 @@ public class MolPayServlet extends HttpServlet {
 		String skey = req.getParameter("skey");
 		String channel = req.getParameter("channel") != null ?  req.getParameter("channel") : null;
 
-		log.info("nbcb:" + nbcb);
-		log.info("orderId: " + orderId);
-		log.info("tranID: " + tranID);
-		log.info("status:" + status);
-		log.info("domain:" + domain);
-		log.info("amount :" + amount);
-		log.info("currency:" + currency);
-		log.info("appcode: " + appcode);
-		log.info("paydate:" + paydate);
-		log.info("skey:" + skey);
-		log.info("error_code:" + errorCode);
-		log.info("error_desc:" + errorDesc);
-		log.info("channel:" + channel);
+		System.out.println("nbcb:" + nbcb);
+		System.out.println("orderId: " + orderId);
+		System.out.println("tranID: " + tranID);
+		System.out.println("status:" + status);
+		System.out.println("domain:" + domain);
+		System.out.println("amount :" + amount);
+		System.out.println("currency:" + currency);
+		System.out.println("appcode: " + appcode);
+		System.out.println("paydate:" + paydate);
+		System.out.println("skey:" + skey);
+		System.out.println("error_code:" + errorCode);
+		System.out.println("error_desc:" + errorDesc);
+		System.out.println("channel:" + channel);
 
 		if(nbcb != null){
 			Long ordId = Long.valueOf(orderId);
@@ -108,7 +108,7 @@ public class MolPayServlet extends HttpServlet {
 				boolean validPayment = false;
 
 				if (resDTO.getPyPayment() != null) {
-					log.info("MolPayServlet| getPaymentId >>>>" + resDTO.getPyPayment().getPaymentId());
+					System.out.println("MolPayServlet| getPaymentId >>>>" + resDTO.getPyPayment().getPaymentId());
 					PyPayment smPayment = resDTO.getPyPayment();
 					PyPaymentResponse smPaymentRes = new PyPaymentResponse();
 					PyPaymentOrder paymentOrder = smPayment.getPyPaymentOrder();
@@ -125,14 +125,14 @@ public class MolPayServlet extends HttpServlet {
 									statusCode = SupplierManagementConst.PM_STAT_SUCCESS_PAYMENT;
 									validPayment = true;
 								}else{
-									log.info("Payment Status ID -" + smPayment.getPmStatus().getStatusId());
+									System.out.println("Payment Status ID -" + smPayment.getPmStatus().getStatusId());
 								}
 							}else{
-								log.info("smPayment.getPmStatus() is NULL");
+								System.out.println("smPayment.getPmStatus() is NULL");
 							}
 						}else{
-							log.info("ord id or payment amount unmatch");
-							log.info("ord id - " + ordId);
+							System.out.println("ord id or payment amount unmatch");
+							System.out.println("ord id - " + ordId);
 							log.info("paymentAmount id - " + paymentAmount);
 						}
 					}else if(status.equals(SupplierManagementConst.MOL_FAIL)){
@@ -181,18 +181,21 @@ public class MolPayServlet extends HttpServlet {
 					pymtReqDTO.setPortalBaseUrl(portalUrl);
 					pymtReqDTO.setLanguage("en");
 
-					log.info(">>>>Before paymentBackendUpdate<<<");
+					System.out.println(">>>>Before paymentBackendUpdate Upper<<<");
 					String paymentType = StringUtils.EMPTY;
 					if(smPayment.getPyBill().getBillType().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_REG_FEE)){
 						paymentType = SupplierManagementConst.MOF_PAYMENT;
+						System.out.println(">>>>paymentType<<<"+paymentType);
 					}else if(smPayment.getPyBill().getBillType().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_PROCESS_FEE)){
 						paymentType = SupplierManagementConst.PROCESSING_PAYMENT;
+						System.out.println(">>>>paymentType<<<"+paymentType);
 					}else if(smPayment.getPyBill().getBillType().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)){
 						paymentType = SupplierManagementConst.SOFTCERT_PAYMENT;
+						System.out.println(">>>>paymentType<<<"+paymentType);
 					}
 					pymtReqDTO.setPaymentType(paymentType);
 					PaymentResDTO pymtResDTO = reqSO.paymentBackendUpdate(pymtReqDTO);
-					log.info(">>>>Before paymentBackendUpdate<<<");
+					System.out.println(">>>>Before paymentBackendUpdate<<<");
 					if(pymtResDTO.isSuccessful()){
 						if(nbcb.equals("1")){
 							//to auto generate mof cert
@@ -215,17 +218,17 @@ public class MolPayServlet extends HttpServlet {
 							}
 							
 						}else if(nbcb.equals("2")){
-							log.info("Curl IPN - nbcb " + nbcb);
+							System.out.println("Curl IPN - nbcb " + nbcb);
 							try {
 								SmCommonUtil.paymentCurlIPN(req, true, merchantId, molIpnUrl);
 							} catch (Exception e) {
 								// TODO Auto-generated catch block
-								log.info("paymentCurlIPN error>>>>>>>>>" + e.getMessage());
+								System.out.println("paymentCurlIPN error>>>>>>>>>" + e.getMessage());
 							}
 						}
 					}
 				}else{
-					log.info("No SmPayment Object is found");
+					System.out.println("No SmPayment Object is found");
 				}
 
 				//			}else{
