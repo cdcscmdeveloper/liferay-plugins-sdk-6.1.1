@@ -73,17 +73,17 @@
 				<h:outputLabel style="font-weight:bold" 
 					value="#{lbl['lbl.sm.annualRev']} :"></h:outputLabel>
 					<h:panelGrid columns="3" layout="grid"> 
-						<p:selectOneMenu rendered="#{!backingBean.managedBean.smAppl.smCompanyBasic.revenueSsmNull}" style="width: 207px;margin-bottom: 5px;"
-								label="#{lbl['lbl.sm.annualRev']}" required="true"
-								id="smSupAnnRev"
-								disabled="true"
-								value="#{backingBean.managedBean.smAppl.smCompanyBasic.annualRevenue}">
-								<f:selectItems value="#{backingBean.getDropdownValues('SAR')}" />
-							</p:selectOneMenu>
-							<h:outputText>&#160;&#160;</h:outputText>
-							<h:outputText value="#{backingBean.managedBean.smAppl.smCompanyBasic.annualRevenueSSM}" rendered="#{!backingBean.managedBean.smAppl.smCompanyBasic.revenueSsmNull}">
+						<h:outputText value="#{backingBean.managedBean.smAppl.smCompanyBasic.annualRevenueSSM}" rendered="#{!backingBean.managedBean.smAppl.smCompanyBasic.revenueSsmNull}">
 							<f:convertNumber groupingUsed="true" maxFractionDigits="3" minFractionDigits="3" />
 						</h:outputText>
+						<h:outputText>&#160;&#160;</h:outputText>
+						<p:selectOneMenu rendered="#{!backingBean.managedBean.smAppl.smCompanyBasic.revenueSsmNull}" style="width: 207px;margin-bottom: 5px;"
+							label="#{lbl['lbl.sm.annualRev']}" required="true"
+							id="smSupAnnRev"
+							disabled="true"
+							value="#{backingBean.managedBean.smAppl.smCompanyBasic.annualRevenue}">
+							<f:selectItems value="#{backingBean.getDropdownValues('SAR')}" />
+						</p:selectOneMenu>
 					</h:panelGrid>
 				<!-- <h:outputText
 					value="#{backingBean.getParameterDesc('SAR',backingBean.managedBean.smAppl.smCompanyBasic.annualRevenue)}"></h:outputText> -->
