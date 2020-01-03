@@ -34,6 +34,22 @@
 				<p:column headerText="#{lbl['lbl.sc.supplier.name']}">
 					#{scLoiLoa.supplierName}
 				</p:column>
+				<p:column style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
+						<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
+					</f:facet>
+					
+					<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
+						rendered="#{scLoiLoa.smSupplier.disciplinaryActions}"
+						action="#{viewSuppProfileBackingBean.onViewDisciplinaryAction(scLoiLoa.smSupplier)}" 
+						process="@this" partialSubmit="true" update=":form">
+							<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
+					</p:commandLink><p:spacer width="2"/>
+					
+					<h:outputText rendered="#{!scLoiLoa.smSupplier.disciplinaryActions}"
+					 value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
+				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.action']}" style="text-align: center;">
 					<p:commandButton value="#{lbl['lbl.sc.loiloa.create.loa']}"
 						rendered="#{!scLoiLoa.loaCreated}"
@@ -120,7 +136,7 @@
 		</p:panel>
 		<ui:include src="qtItemDetailPopUp.xhtml" />
 	</ui:define>
-
+	<ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" />
 </ui:composition>
 
 

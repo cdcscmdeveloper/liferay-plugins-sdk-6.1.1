@@ -6,12 +6,17 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
+import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.helper.EntityHelper;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -20,6 +25,7 @@ import my.ep.util.SLAUtils;
 import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
@@ -159,6 +165,50 @@ public class ViewSuppProfileBackingBean extends
 		if(!EntityHelper.isCollectionEmpty(voList)
 				&& voList.size() > 0){
 			getManagedBean().setDisciplineVOs(voList);
+		} else {
+			getManagedBean().setDisciplineVOs(new ArrayList<DisciplinaryActionVO>());
+		}
+		RequestContext.getCurrentInstance().execute(
+				"disciplinaryActionHistoryDlg.show();");
+	} 
+	
+	/**
+	 * @param smSupplier
+	 */
+	public void onViewDisciplinaryAction(SmSupplier smSupplier) {
+		
+		List<DisciplinaryActionVO> voList = getDisciplinaryActionVO(smSupplier);
+		if(!EntityHelper.isCollectionEmpty(voList)
+				&& voList.size() > 0){
+			getManagedBean().setDisciplineVOs(voList);
+			
+			SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+			FacesScopes facesScopes = new FacesScopes();
+			PmUser sUsers = facesScopes.getUserSessionBean();
+			
+			if (sUsers != null && sUsers.getPreferredLanguage() != null){
+				reqDTO.setLanguage(sUsers.getPreferredLanguage());
+			}
+			
+			reqDTO.setSupplier(smSupplier);
+			ISupplierDataMaintenanceSO suppDataSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
+			SupplierDataMaintenanceResDTO resDTO = null;
+			
+			if (null != suppDataSO) {
+				resDTO = suppDataSO.retrieveDisciplinaryActionMsg(reqDTO);
+				if(StringUtils.isNotEmpty(resDTO.getErrorMessage())){
+					if (resDTO.getErrorMessage().contains("Please click")) {
+						resDTO.setErrorMessage(resDTO.getErrorMessage().split("Please click")[0]); 
+					}
+					if (resDTO.getErrorMessage().contains("Sila semak")) {
+						resDTO.setErrorMessage(resDTO.getErrorMessage().split("Sila semak")[0]); 
+					}
+					this.getManagedBean().setDisciplinaryActionMsg(resDTO.getErrorMessage());
+				} else {
+					this.getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
+				}
+			}
+			
 		} else {
 			getManagedBean().setDisciplineVOs(new ArrayList<DisciplinaryActionVO>());
 		}

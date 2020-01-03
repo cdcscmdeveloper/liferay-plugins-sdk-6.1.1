@@ -138,7 +138,9 @@ public class ViewSuppProfileManagedBean extends
 	private boolean noDisciplinary;
 	private List<DisciplinaryActionCategoryVO> categoryCodeList;
 	//26238 - end
-
+	
+	private String disciplinaryActionMsg; 
+	
 	public ViewSuppProfileManagedBean() {
 
 	}
@@ -837,6 +839,20 @@ public class ViewSuppProfileManagedBean extends
 
 	public void setCategoryCodeList(List<DisciplinaryActionCategoryVO> categoryCodeList) {
 		this.categoryCodeList = categoryCodeList;
+	}
+	
+	/**
+	 * @return the disciplinaryActionMsg
+	 */
+	public String getDisciplinaryActionMsg() {
+		return disciplinaryActionMsg;
+	}
+
+	/**
+	 * @param disciplinaryActionMsg the disciplinaryActionMsg to set
+	 */
+	public void setDisciplinaryActionMsg(String disciplinaryActionMsg) {
+		this.disciplinaryActionMsg = disciplinaryActionMsg;
 	}
 	
 }
