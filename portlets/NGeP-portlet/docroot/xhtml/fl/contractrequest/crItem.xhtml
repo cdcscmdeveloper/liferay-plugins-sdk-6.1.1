@@ -78,14 +78,21 @@
 				<h:outputText style="float:left;"
 					value="#{address.deliveryTerm} #{contractRequestBackingBean.getParameterDesc(address.pmUom)}" />
 			</p:column>
-
-			<p:column headerText="#{lbl['lbl.fl.delivery.start']}"  style="white-space:normal;text-align:center">
-				<!--#17087 calendarStartDate -->
+			<!--#17087 calendarStartDate -->
+			<p:column style="white-space:normal;text-align:center">
+				<f:facet name="header" style="white-space:normal;">
+					<h:outputText value="#{lbl['lbl.fl.delivery.start']}"/>
+					<c:choose>
+							<c:when test="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}">
+						 		<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.delivery.start.date']}"/>
+						 	</c:when>
+						 </c:choose>
+				</f:facet>
 				<p:calendar id="calStartDate" value="#{address.startDate}" style="float:right;" mindate="#{contractRequestBackingBean.managedBean.minContractDate}"
 				 maxdate="#{contractRequestBackingBean.managedBean.maxContractDate}"
 					readonlyInput="true"
 					rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}"
-					size="8" 
+					size="6" 
 					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					<p:ajax event="dateSelect"
 						listener="#{contractRequestBackingBean.updateDeliveryAddrDate(address)}"
@@ -96,16 +103,15 @@
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 			</p:column>
-
-			<p:column headerText="#{lbl['lbl.fl.delivery.end']}"  style="white-space:normal;text-align:center">
+			<!--#17087 calendarEndDate -->
+			<p:column headerText="#{lbl['lbl.fl.delivery.end']}"  style="white-space:normal;text-align:center">				
 				<p:calendar value="#{address.endDate}" id="calEndDate" 
 					mindate="#{address.startDate}"
 					style="float:right;"
 					readonlyInput="true"
-					disabled="true"
 					rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing }"
-					size="8"
-					maxdate="#{contractRequestBackingBean.managedBean.maxDate}"
+					size="6"
+					maxdate="#{address.endDate}"
 					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				
 				<h:outputText value="#{address.endDate}" style="float:right;" rendered="#{!contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing or contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}">
