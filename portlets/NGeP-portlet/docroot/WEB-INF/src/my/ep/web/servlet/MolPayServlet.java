@@ -56,8 +56,8 @@ public class MolPayServlet extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		log.info("************Payment PostBack Start********");
-		log.info("******Servlet Testing doPost*********");
+		System.out.println("************Payment PostBack Start********");
+		System.out.println("******Servlet Testing doPost*********");
 
 		String nbcb = req.getParameter("nbcb") != null ? req.getParameter("nbcb") : null;
 		String amount = req.getParameter("amount");
