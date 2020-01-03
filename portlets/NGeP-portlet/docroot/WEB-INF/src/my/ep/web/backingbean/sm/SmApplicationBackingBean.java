@@ -1609,8 +1609,7 @@ public class SmApplicationBackingBean extends
 							}else{
 								if(personnel.isEquityOwner() ||personnel.isDirector()){
 									log.info("Personnel Id = "+personnel.getPersonnelId()+"=APPL ID="+personnel.getSmAppl().getApplId()+"--Deleted : "+personnel.getName());									
-									//personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
-									//personnel.setRecordStatus(false);
+									personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 								}
 							}
 							this.getManagedBean().getSmAppl().getSmPersonnels().set(i, personnel);
@@ -1623,19 +1622,20 @@ public class SmApplicationBackingBean extends
 							if(this.getManagedBean().getSmAppl().getSmEquityCompanies()==null){
 								this.getManagedBean().getSmAppl().setSmEquityCompanies(new ArrayList());
 							}
-							//delete all entered company share #27145
-							for(SmEquityCompany equityCompany : this.getManagedBean().getSmAppl().getSmEquityCompanies()){
-								equityCompany.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+							//delete all old company share #27145
+							Iterator<SmEquityCompany> iterequityCompany = this.getManagedBean().getSmAppl().getSmEquityCompanies().iterator();
+							while(iterequityCompany.hasNext()){
+								iterequityCompany.next();
+								iterequityCompany.remove();
 							}
+							
 							//TO Set equity compny from ssm only #27145
-							this.getManagedBean().getSmAppl().setSmEquityCompanies(new ArrayList());
 							for(SmEquityCompany equityCompany : ssmResDTO.getSmEquityCompanys()){
-								//SmEquityCompany company = (SmEquityCompany)EntityHelper.getEntityBySinglePropertyFromList(equityCompany.getCompanyName(), this.getManagedBean().getSmAppl().getSmEquityCompanies(), "companyName");
-								//if(company == null){
 									equityCompany.setSmAppl(this.getManagedBean().getSmAppl());
 									this.getManagedBean().getSmAppl().getSmEquityCompanies().add(equityCompany);
-								//}
 							}
+							
+							
 							
 						}
 						//SET SMPERSONNEL
@@ -1709,17 +1709,52 @@ public class SmApplicationBackingBean extends
 								business.setSmSupplier(getManagedBean().getSmAppl().getSmSupplier());
 							}
 						}*/
-					
+						// maybe here to put method to check with ssm
+						//SmCommonUtil.getInstance().validateWithSSM(regNo,businessType,"");
+						if(!businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())){
+							reCalculateCapitalPersonnel();
+						}
+						//Remove equity/director personnel not exist in ssm
+						if(this.getManagedBean().getSmAppl().getSmPersonnels()!= null){
+							Iterator<SmPersonnel> iterPersonnel = this.getManagedBean().getSmAppl().getSmPersonnels().iterator();
+							while(iterPersonnel.hasNext()){
+								SmPersonnel personnel = iterPersonnel.next();
+								if(personnel.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_DELETED){
+									if (this.getManagedBean().getSmAppl().getSmSupplierBanks() != null && !this.getManagedBean().getSmAppl().getSmSupplierBanks().isEmpty()) {
+										
+										for (SmSupplierBank smSupplierBank : this.getManagedBean().getSmAppl().getSmSupplierBanks()) {
+											if (smSupplierBank.getSmChequeSignatories() != null && !smSupplierBank.getSmChequeSignatories().isEmpty()) {
+												Iterator<SmChequeSignatory> itersmChequeSignatory = smSupplierBank.getSmChequeSignatories().iterator();
+												while (itersmChequeSignatory.hasNext()) {
+													SmChequeSignatory smChequeSignatory = itersmChequeSignatory.next();
+													if (smChequeSignatory.getSmPersonnel() != null && smChequeSignatory.getSmPersonnel().getPersonnelId() != null && smChequeSignatory.getSmPersonnel().getPersonnelId().compareTo(personnel.getPersonnelId()) == 0 ) {
+														itersmChequeSignatory.remove();
+													}
+												}
+											}
+										}
+									}
+									
+									if (this.getManagedBean().getSmAppl().getSmSupplierBranches() != null && !this.getManagedBean().getSmAppl().getSmSupplierBranches().isEmpty()) {
+										Iterator<SmSupplierBranch> itersmSupplierBranch = this.getManagedBean().getSmAppl().getSmSupplierBranches().iterator();
+										while (itersmSupplierBranch.hasNext()) {
+											SmSupplierBranch smSupplierBranch = itersmSupplierBranch.next();
+											if (smSupplierBranch.getSmPersonnel() != null && smSupplierBranch.getSmPersonnel().getPersonnelId().compareTo(personnel.getPersonnelId()) == 0) {
+													smSupplierBranch.setSmPersonnel(null);
+											}
+										}
+									}
+									
+									iterPersonnel.remove();
+								}
+							}
+						}
 					}else{
 						this.getManagedBean().setCompanyValidWithSSM(false);
 					}
 					
-					// maybe here to put method to check with ssm
-					//SmCommonUtil.getInstance().validateWithSSM(regNo,businessType,"");
-					if(!businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())){
-						reCalculateCapitalPersonnel();
-					}
-
+					
+				
 					if(!this.getManagedBean().isCompanyValidWithSSM()){
 	//					throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.contractor",null), getManagedBean().getSmSupp().getRegNo()});
 						throw new EpException(MessageConst.ERROR_721070);
