@@ -1698,10 +1698,13 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 							|| disciplinaryAction.isBlacklistOwner() || disciplinaryAction.isManufacturerCancel()
 							|| disciplinaryAction.isBumiputeraCancel()){
 						getManagedBean().setDisciplinaryAction(true);
+						new FacesScopes().getUserSessionBean().setDisciplinaryAction(true);
+						break;
 					}
 				}
 			} else {
 				getManagedBean().setDisciplinaryAction(false);
+				new FacesScopes().getUserSessionBean().setDisciplinaryAction(false);
 			}
 		}
 	}
