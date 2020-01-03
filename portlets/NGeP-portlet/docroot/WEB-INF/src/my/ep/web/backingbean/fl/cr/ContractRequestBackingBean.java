@@ -1258,6 +1258,11 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 			//end - #17087
 			
+			//13984-start
+			if(getManagedBean().getFlRequest().getCtContract().isFrequencySchedule()){
+				initSchPhaseTable(resDTO.getFlFulfilmentRequest().getCtContract().getContractId());
+			}
+			//13984-end
 		}else if(contractId != null){
 			renewSesionObject();
 			new ContractRequestBackingBean();
