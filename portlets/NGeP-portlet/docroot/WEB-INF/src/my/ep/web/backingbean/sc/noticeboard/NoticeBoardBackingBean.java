@@ -41,6 +41,7 @@ import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -70,6 +71,8 @@ import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -1142,6 +1145,10 @@ public class NoticeBoardBackingBean extends
 				}
 			}
 			
+			if (getManagedBean().isQualified()) {
+				checkDisciplinaryActionExists(supplier);
+			}
+			
 			// construct the proposal/update url
 			if (QTStatusConst.QT_PROPOSAL_PREPARATION
 					.equals(currentStatus) && isValidSupplier ) {
@@ -1157,6 +1164,35 @@ public class NoticeBoardBackingBean extends
 			boardSO = null;
 		}
 
+	}
+
+	/**
+	 * @param supplier 
+	 * 
+	 */
+	private void checkDisciplinaryActionExists(SmSupplier supplier) {
+		SupplierDataMaintenanceReqDTO supplierDataMaintenanceReqDTO = new SupplierDataMaintenanceReqDTO();
+		FacesScopes facesScopes = new FacesScopes();
+		PmUser sUsers = facesScopes.getUserSessionBean();
+		
+		if (sUsers != null && sUsers.getPreferredLanguage() != null){
+			supplierDataMaintenanceReqDTO.setLanguage(sUsers.getPreferredLanguage());
+		}
+		
+		supplierDataMaintenanceReqDTO.setSupplier(supplier);
+		ISupplierDataMaintenanceSO suppDataSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
+		SupplierDataMaintenanceResDTO supplierDataMaintenanceResDTO = null;
+		
+		if (null != suppDataSO) {
+			log.info(this.getClass().getName() + ".checkDisciplinaryActionExists() :  Checking Active Disciplinary Action for supplier ID: " + supplier.getSupplierId());
+			supplierDataMaintenanceResDTO = suppDataSO.retrieveDisciplinaryActionMsg(supplierDataMaintenanceReqDTO);
+			if (null != supplierDataMaintenanceResDTO && StringUtils.isNotEmpty(supplierDataMaintenanceResDTO.getErrorMessage())
+					&& (supplierDataMaintenanceResDTO.getErrorMessage().contains("Disciplinary Action")
+							|| supplierDataMaintenanceResDTO.getErrorMessage().contains("Tindakan Tatatertib"))) {
+				log.info(this.getClass().getName() + ".checkDisciplinaryActionExists() :  Active Disciplinary Action exist for supplier ID: " + supplier.getSupplierId());
+				this.getManagedBean().setQualified(false);
+			}
+		}
 	}
 
 	/**
