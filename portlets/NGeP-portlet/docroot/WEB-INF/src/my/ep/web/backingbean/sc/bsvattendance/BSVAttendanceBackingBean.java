@@ -1289,6 +1289,9 @@ public class BSVAttendanceBackingBean extends
 				}
 			}
 			briefingRegistration.setBsvAttendance(attanedList);
+			
+			SmSupplier smSupplier = bsvSo.retrieveActiveDisciplinaryActionBySupplier(briefingRegistration.getSupplier());
+			briefingRegistration.setSupplier(smSupplier);
 		}
 	
 	/**

@@ -25,6 +25,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.bean.tpl.TemplateSpecBean;
+import my.ep.web.util.FacesScopes;
 
 /**
  * @author siew mei
@@ -71,6 +72,8 @@ public abstract class BaseManagedBean implements Serializable {
 	private String title;
 	
 	private boolean disableFields;
+	
+	private boolean disciplinaryAction; 
 	/**
 	 * @return the token
 	 */
@@ -430,6 +433,23 @@ public abstract class BaseManagedBean implements Serializable {
 
 	public void setSmPersonnelSsm(SmPersonnel smPersonnelSsm) {
 		this.smPersonnelSsm = smPersonnelSsm;
+	}
+	
+	/**
+	 * @return the disciplinaryAction
+	 */
+	public boolean isDisciplinaryAction() {
+		if (!disciplinaryAction) {
+			disciplinaryAction = new FacesScopes().getUserSessionBean().isDisciplinaryAction();
+		}
+		return disciplinaryAction;
+	}
+
+	/**
+	 * @param disciplinaryAction the disciplinaryAction to set
+	 */
+	public void setDisciplinaryAction(boolean disciplinaryAction) {
+		this.disciplinaryAction = disciplinaryAction;
 	}
 	
 	
