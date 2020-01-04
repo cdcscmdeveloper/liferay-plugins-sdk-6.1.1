@@ -11026,12 +11026,23 @@ public class SmApplicationUtil {
 					smAddress.setPostcodeSsmNull(addr.getSmAddress().isPostcodeSsmNull());
 					smAddress.setStateSsmNull(addr.getSmAddress().isStateSsmNull());
 					smAddress.setCountrySsmNull(addr.getSmAddress().isCountrySsmNull());
+					
+					if(addr.getSmAddress().getPmCountry() != null){
+						PmCountry country = new PmCountry();
+						country.setCountryId(addr.getSmAddress().getPmCountry()
+								.getCountryId());
+						smAddress.setPmCountry(country);
+						smAddress.setCountryId(country.getCountryId());
+					}else{
+						if(addr.getSmAddress().getPmState() != null){
+							PmCountry country = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+							country.setCountryId(country
+									.getCountryId());
+							smAddress.setPmCountry(country);
+							smAddress.setCountryId(country.getCountryId());
+						}
+					}
 					//END SSM INTEGRATION
-					PmCountry country = new PmCountry();
-					country.setCountryId(addr.getSmAddress().getPmCountry()
-							.getCountryId());
-					smAddress.setPmCountry(country);
-					smAddress.setCountryId(country.getCountryId());
 					PmState state = new PmState();
 					state.setStateId(addr.getSmAddress().getPmState()
 							.getStateId());

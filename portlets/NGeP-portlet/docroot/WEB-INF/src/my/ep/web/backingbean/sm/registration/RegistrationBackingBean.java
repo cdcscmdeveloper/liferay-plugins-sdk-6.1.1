@@ -3856,7 +3856,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				SmPersonnel personnel = (SmPersonnel) EntityHelper
 						.getEntityBySinglePropertyFromList(this.getManagedBean().getSmPersonnelSelected().getIdentificationNo(),this.getManagedBean().getSmPersonnelAll(),"identificationNo");
 				
-				if(personnel.getPmCountry() == null){
+				if(personnel.getPmCountry() == null || personnel.getPmCountry().getCountryId() == null){
 					PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 					personnel.setPmCountry(defaultCountry);
 				}				
