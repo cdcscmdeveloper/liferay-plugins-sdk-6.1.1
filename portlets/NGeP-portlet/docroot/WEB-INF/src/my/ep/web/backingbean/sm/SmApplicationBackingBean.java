@@ -1663,7 +1663,7 @@ public class SmApplicationBackingBean extends
 									this.getManagedBean().getSmAppl().getSmPersonnels().add(personnel);
 								}else{
 									validateRole(oldPersonnel);
-									if(personnel.getPmCountry().getCountryId() == null){
+									if(personnel.getPmCountry() == null || personnel.getPmCountry().getCountryId() == null){
 										PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 										oldPersonnel.setPmCountry(defaultCountry);
 									}
