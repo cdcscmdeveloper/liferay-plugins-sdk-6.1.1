@@ -1573,7 +1573,7 @@ public class SmApplicationBackingBean extends
 						int i = 0;
 						for(SmPersonnel personnel : this.getManagedBean().getSmAppl().getSmPersonnels()){
 							validateRole(personnel);
-							SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
+							SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelAll(),"identificationNo");
 							if(personnelSSM != null){								
 								//if rob no need to copy shareamt.
 								if(businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())){
