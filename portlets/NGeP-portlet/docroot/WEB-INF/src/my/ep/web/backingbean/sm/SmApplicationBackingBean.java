@@ -1573,7 +1573,7 @@ public class SmApplicationBackingBean extends
 						int i = 0;
 						for(SmPersonnel personnel : this.getManagedBean().getSmAppl().getSmPersonnels()){
 							validateRole(personnel);
-							SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
+							SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelAll(),"identificationNo");
 							if(personnelSSM != null){								
 								//if rob no need to copy shareamt.
 								if(businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())){
@@ -1663,7 +1663,7 @@ public class SmApplicationBackingBean extends
 									this.getManagedBean().getSmAppl().getSmPersonnels().add(personnel);
 								}else{
 									validateRole(oldPersonnel);
-									if(personnel.getPmCountry().getCountryId() == null){
+									if(personnel.getPmCountry() == null || personnel.getPmCountry().getCountryId() == null){
 										PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 										oldPersonnel.setPmCountry(defaultCountry);
 									}
