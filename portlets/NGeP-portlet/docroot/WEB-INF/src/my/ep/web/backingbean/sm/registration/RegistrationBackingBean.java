@@ -1944,6 +1944,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	
 	//16052019 - SSM INTEGRATION CR - Fahmi
 	public void goToViewOnlineAccount(){
+		getManagedBean().setRegAccountMaintainance(true);
 		fromtncProceed = true;
 		SmSupplier smSupp = SmApplicationUtil.getCurrentSupplier();
 		if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(smSupp.getRegNo(),smSupp.getBusinessType())){
@@ -2372,13 +2373,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}*/
 		//SSM INTEGRATION CR
 		//to filter out by company type
-		if(this.getManagedBean().isSsmIntegrationActive() && this.getManagedBean().isCompanyValidWithSSM()){
+		if(this.getManagedBean().isSsmIntegrationActive() && this.getManagedBean().isCompanyValidWithSSM() || this.getManagedBean().isRegAccountMaintainance()){
 			List<SelectItem> itemTemp = new ArrayList<SelectItem>();
 			itemTemp.add(new SelectItem(null, ResourceBundleUtils.getMessage(
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					fs.getUserLocale())));
 			for(SelectItem item : items){
-				if(this.getManagedBean().isSsmIntegrationActive() && this.getManagedBean().isCompanyValidWithSSM()){
+				if(this.getManagedBean().isSsmIntegrationActive() && this.getManagedBean().isCompanyValidWithSSM() || this.getManagedBean().isRegAccountMaintainance()){
 					if(item.getValue() == null){
 						continue;
 					}
