@@ -4368,7 +4368,7 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setEndYear(String.valueOf(currentYear));
 	}
 	
-	private boolean isExistInDB(List<ScQtCheckList> checkList) {
+	private TplSpecMaster isExistInDB(List<ScQtCheckList> checkList) {
 		if (null != checkList && !checkList.isEmpty()) {
 			for (ScQtCheckList specChecklist : checkList) {
 				if (QTConstants.TEMPLETE_SPEC_CODE
@@ -4387,8 +4387,8 @@ public class SpecificationBackingBean extends
 						TemplateSpecResDTO resDTO = templateSpecSO
 								.getTemplateMaster(specReqDTO);
 						
-						if(null!=resDTO){
-							return true;
+						if(specChecklist.getPmStatus().equals(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED))){
+							return resDTO.getSpecMaster();
 						}
 						
 
@@ -4396,14 +4396,15 @@ public class SpecificationBackingBean extends
 				}
 			}
 		}
-		return false;
+		return null;
 	}
 	private ScQtCheckList populateWeigthage(List<ScQtCheckList> list,ScQtCheckList checkList){
-		boolean exist=isExistInDB(list);
+		boolean exist=null!=isExistInDB(list)?true:false;
 		this.getManagedBean().setSpecItemWeightageRequired(exist);
 		boolean weightageType = false;
 		if(exist){
-			weightageType=retriveExistingTemplatespec(list);
+			weightageType=isExistInDB(list).isWeightageReq();
+					//retriveExistingTemplatespec(list);
 		}
 		checkList.getScQtDoc()
 		.getTplSpecMaster().setWeightageReq(weightageType);
@@ -4465,13 +4466,18 @@ public class SpecificationBackingBean extends
 				if(null!=templateresDTO){
 					checkList.getScQtDoc().setTplSpecMaster(
 							templateresDTO.getSpecMaster());
-					this.getManagedBean().setSpecItemWeightageRequired(true);
+					//this.getManagedBean().setSpecItemWeightageRequired(true);
+					checkList=populateWeigthage(this.getManagedBean()
+							.getScQtCheckSt2techProposal(),checkList);
+//					TemplateSpecBackingBean templateSpecBackingbean = new TemplateSpecBackingBean();
+//					templateSpecBackingbean
+//							.updateItemWeightageReq(templateSpecBean);
 				}else{
 					checkList=populateWeigthage(this.getManagedBean()
 							.getScQtCheckSt2techProposal(),checkList);
-					TemplateSpecBackingBean templateSpecBackingbean = new TemplateSpecBackingBean();
-					templateSpecBackingbean
-							.updateItemWeightageReq(templateSpecBean);
+//					TemplateSpecBackingBean templateSpecBackingbean = new TemplateSpecBackingBean();
+//					templateSpecBackingbean
+//							.updateItemWeightageReq(templateSpecBean);
 				}		
 				
 				
@@ -9728,6 +9734,10 @@ public class SpecificationBackingBean extends
 						checkForProcumentMethodDropdown(scQt));
 			}
 		}
+		
+		this.getManagedBean().setMarkDeletedTechChecklist(new ArrayList<ScQtCheckList>());
+		this.getManagedBean().setMarkDeletedFinChecklist(new ArrayList<ScQtCheckList>());
+		
 		checkProcurementModeValue();
 		committeSO = null;
 		this.getManagedBean().setLoginRoleType("SC");
@@ -10220,6 +10230,34 @@ public class SpecificationBackingBean extends
 		return toBeRemoveList;
 
 	}
+	
+	private List<ScQtCheckList> deleteSpecCheckList(){
+		IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+		List<ScQtCheckList> specCheckList=new ArrayList<ScQtCheckList>();
+		List<ScQtCheckList> nonspecCheckList=new ArrayList<ScQtCheckList>();
+		List<ScQtCheckList> toBeRemoveCheckLists=getToBeRemoveList();
+		
+		for(ScQtCheckList cl:toBeRemoveCheckLists){
+			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
+					.equalsIgnoreCase(cl.getDefinationType().getParameterCode())) {
+				specCheckList.add(cl);
+			}else{
+				nonspecCheckList.add(cl);
+			}
+		}
+		
+		SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
+		specReqDTO.setScQt(this.getManagedBean().getQt());
+		specReqDTO.setCheckLists(specCheckList);
+		SpecificationResDTO resDTO = specSo.deleteChecklists(specReqDTO);
+//		if (resDTO.isSuccessful()) {
+//			this.getManagedBean().setMarkDeletedTechChecklist(new ArrayList<ScQtCheckList>());
+//			this.getManagedBean().setMarkDeletedFinChecklist(new ArrayList<ScQtCheckList>());
+//		}
+		
+		return nonspecCheckList;
+	}
 
 	/**
 	 * Validate prepare qt checklist.user clicks side menus in specification
@@ -10264,7 +10302,8 @@ public class SpecificationBackingBean extends
 
 			}
 
-			List<ScQtCheckList> checklistRemoveList = getToBeRemoveList();
+			//List<ScQtCheckList> checklistRemoveList = getToBeRemoveList();
+			List<ScQtCheckList> checklistRemoveList = deleteSpecCheckList();
 			if (null != checklistRemoveList && !checklistRemoveList.isEmpty()) {
 				for (int i = 0; i < checklistRemoveList.size(); i++) {
 					if (null == checklistRemoveList.get(i).getQtChecklistId()) {
@@ -13810,7 +13849,7 @@ public class SpecificationBackingBean extends
 								.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
 						TemplateSpecResDTO resDTO = templateSpecSO
 								.getTemplateMaster(specReqDTO);
-
+						
 						return resDTO.getSpecMaster().isWeightageReq();
 
 					}

@@ -46,7 +46,7 @@
 
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.ok']}" onstart="blockWidgetClone.show()" oncomplete="blockWidgetClone.hide()"
-						styleClass="BtnSpacing" id="cloneCommitteeTreeBtnOnId2" update="qtCloneMsg"
+						styleClass="BtnSpacing" id="cloneCommitteeTreeBtnOnId2" update="@all, qtList, qtsearchid"
 						action="#{qtMultipleCloneBackingBean.addToClone()}">
 					 <f:param name="skipvalidation" value="1" />
 					</p:commandButton>
@@ -57,6 +57,6 @@
 				</div>
 			</p:panel>
 					</h:panelGroup>
-					<p:ajax event="close" update="qtsearchid, qtList" listener="#{qtMultipleCloneBackingBean.closeEvent}"/>
+					
 				</p:dialog>
 </ui:composition>
