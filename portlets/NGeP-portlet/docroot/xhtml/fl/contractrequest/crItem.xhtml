@@ -964,7 +964,7 @@
 								</p:column>
 								<p:column headerText="#{lbl['lbl.fl.from.qty']}"
 									style="text-align:right"
-									rendered="#{!contractRequestBackingBean.managedBean.zonalPrice }">
+									rendered="#{!contractRequestBackingBean.managedBean.zonalPrice}">
 									<h:outputText
 										value="#{reqItemInfoList.supplierItemPrice.fromQty}"
 										styleClass="colFloatRight"
@@ -986,10 +986,9 @@
 											value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, flItem.scRequestItem.uom.uomCode)}" />
 									</h:outputText>
 								</p:column>
-<!-- #16344 2/8/2019 START update rendered fix --> 
 									<p:column headerText="#{lbl['lbl.fl.qty']}"
 									style="text-align:right"
-									 rendered="#{!contractRequestBackingBean.managedBean.zonalPrice}"> 
+									 rendered="#{contractRequestBackingBean.managedBean.zonalPrice}"> 
 <!--  END  -->
 									<h:outputText
 										value="#{reqItemInfoList.supplierItemPrice.maxQuantity}"
