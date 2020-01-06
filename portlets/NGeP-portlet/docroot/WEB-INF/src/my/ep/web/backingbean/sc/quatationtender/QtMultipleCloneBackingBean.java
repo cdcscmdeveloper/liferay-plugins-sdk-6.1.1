@@ -119,7 +119,7 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 		try {
 			TreeNode[] nodes=this.selectedNodes;
 			if(nodes.length==0){
-				throw new EpException(MessageConst.ERROR_760494);
+				throw new EpException(MessageConst.ERROR_760495);
 			}
 			
 			if(totalClone>0){
@@ -178,8 +178,21 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 		}
 		
 		this.getManagedBean().setCloned(true);
-		successMessage(MessageConst.INFO_700074, ParameterTypeConst.DOCUMENT_TYPES,
+		successMessage(MessageConst.INFO_700081, ParameterTypeConst.DOCUMENT_TYPES,
 				ParameterConst.DOCTYPE_QUOTATION, selectedScqt.getQtNo(), Boolean.FALSE);
+		this.getManagedBean().getQtnTenderSearchBean().setDocType(ParameterConst.DOCTYPE_QUOTATION);
+		this.getManagedBean().getQtnTenderSearchBean().setDocNo(null);
+		this.getManagedBean().getQtnTenderSearchBean().setQtTitle(null);
+		this.getManagedBean().getQtnTenderSearchBean().setQtNo(null);
+		this.getManagedBean().getQtnTenderSearchBean().setProcurementMode(null);
+		this.getManagedBean().getQtnTenderSearchBean().setFromCreatedDate(null);
+		this.getManagedBean().getQtnTenderSearchBean().setToCreatedDate(null);
+		this.getManagedBean().getQtnTenderSearchBean().setFromPublishDate(null);
+		this.getManagedBean().getQtnTenderSearchBean().setToPublishDate(null);
+		this.getManagedBean().getQtnTenderSearchBean().setFromClosingDate(null);
+		this.getManagedBean().getQtnTenderSearchBean().setToClosingDate(null);
+		this.getManagedBean().getQtnTenderSearchBean().setQtStatus(null);
+		this.getManagedBean().getSearchQTDataModel().reloadData();
 	//	RequestContext.getCurrentInstance().update("qtsearchid, qtList");
 	}
 	
