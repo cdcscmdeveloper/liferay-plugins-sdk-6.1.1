@@ -4258,9 +4258,9 @@ public class SmCommonUtil {
 			ssmReqDTO.setPmParameter(identificationType);
 			ssmReqDTO.setPmParameterIdTypeP(passportType);
 			String regNo = ssmReqDTO.getRegNo();
+			ssmReqDTO.setDigitNo(ssmReqDTO.getRegNo().substring(ssmReqDTO.getRegNo().length()-1));
 			regNo = regNo.substring(0, regNo.length() - 2);
 			ssmReqDTO.setRegNo(regNo);
-			ssmReqDTO.setDigitNo(ssmReqDTO.getRegNo().substring(ssmReqDTO.getRegNo().length()-1));
 			SsmResDTO resDTO = reqSO.ssmValidation(ssmReqDTO);
 			//only return company valid or not
 			if(ssmReqDTO.isCheckOnly()){
