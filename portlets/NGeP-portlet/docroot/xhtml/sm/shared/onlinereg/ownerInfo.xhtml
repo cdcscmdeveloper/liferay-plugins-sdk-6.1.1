@@ -272,10 +272,10 @@
 			
 			<p:column styleClass="column-align-center">
 				<f:facet name="header">
-					<c:if test="#{not empty varOwnerPersonnel.nationality and varOwnerPersonnel.nationality.countryCode != 'MY'}">
+					<c:if test="#{not empty varOwnerPersonnel.pmCountry and varOwnerPersonnel.pmCountry.countryCode != 'MY'}">
 						<h:outputText value="#{lbl['lbl.sm.individual.passport']}" />
 					</c:if>
-					<c:if test="#{empty varOwnerPersonnel.nationality or varOwnerPersonnel.nationality.countryCode eq 'MY'}">
+					<c:if test="#{empty varOwnerPersonnel.pmCountry or varOwnerPersonnel.pmCountry.countryCode eq 'MY'}">
 						<h:outputText value="#{lbl['lbl.sm.individual.newicno']}" />
 					</c:if>
 				</f:facet>
