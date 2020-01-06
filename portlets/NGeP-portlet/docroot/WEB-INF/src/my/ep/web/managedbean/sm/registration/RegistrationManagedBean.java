@@ -106,6 +106,7 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private boolean sameAsOwner;
 	private boolean disabledCompanyNameInMaintenance;
 	private boolean disabledBusinessTypeInMaintenance;
+	private boolean regAccountMaintainance = false;
 	
 	private boolean gstFlag;
 	//harris
@@ -966,4 +967,11 @@ public class RegistrationManagedBean extends BaseManagedBean {
 		this.regIcCheckSSM = regIcCheckSSM;
 	}
 
+	public boolean isRegAccountMaintainance() {
+		return regAccountMaintainance;
+	}
+
+	public void setRegAccountMaintainance(boolean regAccountMaintainance) {
+		this.regAccountMaintainance = regAccountMaintainance;
+	}
 }
