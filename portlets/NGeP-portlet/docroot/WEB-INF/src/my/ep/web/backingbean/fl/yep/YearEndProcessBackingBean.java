@@ -10,20 +10,35 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
+import my.ep.biz.service.pm.authorization.orgprofile.IPtjReorgSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
+import my.ep.dto.pm.authorization.orgprofile.PtjReorgReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.PtjReorgResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmPtjReorg;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBaseBackingBean;
 import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
@@ -64,6 +79,9 @@ public class YearEndProcessBackingBean extends
 	 */
 	public void preRenderSearch(boolean trackingDiary) {
 		renewSesionObject();
+		defaultPtjAndMinistryValues();
+		resetSearchCriteria();
+//		getManagedBean().setTrackingDiarySearch(trackingDiarySearch);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, SEARCH_YEP);
@@ -213,6 +231,273 @@ public class YearEndProcessBackingBean extends
 		}
 		getManagedBean().getFlYepDataModel().reloadData();
 		
+	}
+	
+	/**
+	 * Get the function type. PTJ or Supplier
+	 * 
+	 * @return the function type
+	 */
+	public SelectItem[] getFunctionType() {
+		List<String> typeList = new ArrayList<String>();
+		typeList.add(ParameterConst.ORG_TYPE_PTJ);
+		typeList.add(ParameterConst.ORG_TYPE_SUPPLIER);
+
+		SearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		searchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterCode",
+						SearchOperator.OPERATOR_IN.value(), typeList));
+
+		return getRadioButtonCodeValuesBySearchBean(ParameterTypeConst.ORGANISATION_TYPES, searchBean);
+	}
+	
+	/**
+	 * Show function type if user have both ptj & supplier role
+	 * @return boolean
+	 */
+	public boolean showFunctionType() {
+		if(hasSupplierRole() && hasGovernmentUserRole()) {
+			if(getManagedBean().getSearchFunctionType()==null) {
+				getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_PTJ);
+			}
+			return true;
+		} else {
+			if(hasSupplierRole()) {
+				getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_SUPPLIER);
+			} else {
+				getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_PTJ);
+			}
+			return false;
+		}
+	}
+	
+	/**
+	 * Gets the default ptj and ministry search values based on user role.
+	 *
+	 */
+	private void defaultPtjAndMinistryValues() {
+		if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value()) ||
+			getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()) || (hasSupplierRole() && !hasGovernmentUserRole())) {
+		} else {
+			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+			UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+			PmOrgProfile orgProfile = null;
+			if (userResDTO.getUserOrgList() != null	&& userResDTO.getUserOrgList().size() > 0) {
+				orgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
+			}
+			if (getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.ACKNOWLEDGE_OFFICER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.PAY_OFFICER.value())) {
+				this.getManagedBean().setPtj(orgProfile);
+				this.getManagedBean().setMinistry(retrieveMinistryOrgProfile(orgProfile.getOrgProfileId()));
+				this.getManagedBean().setPtjGroup(retrieveJabatanOrgProfile(orgProfile.getOrgProfileId()));
+			} else if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
+				this.getManagedBean().setPtj(null);
+				this.getManagedBean().setMinistry(orgProfile);
+			}
+		}
+	}
+	
+	/**
+	 * Get Ministry condition for construct the LOV listing
+	 * @return String
+	 */
+	public String getMinistryCondition() {
+		String condition = "";
+		if(hasGovernmentUserRole()) {
+			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
+			IPtjReorgSO ptjReorgSO = (IPtjReorgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IPtjReorgSO.class);
+			
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+			UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+			PmOrgProfile orgProfile = null;
+			if (userResDTO.getUserOrgList() != null	&& userResDTO.getUserOrgList().size() > 0) {
+				orgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
+			}
+			condition = "orgProfileId^"+retrieveMinistryOrgProfile(orgProfile.getOrgProfileId()).getOrgProfileId();
+			
+			PtjReorgReqDTO ptjReqDTO = new PtjReorgReqDTO();
+			ptjReqDTO.setDeepLevel(true);
+			ptjReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+			PtjReorgResDTO ptjResDTO = ptjReorgSO.retrieveOldPtjByNewPtjId(ptjReqDTO);
+			PmOrgProfile ministry = null;
+			for(PmPtjReorg pmPtjReorg : ptjResDTO.getPtjReorgList()) {
+				ministry = retrieveMinistryOrgProfile(pmPtjReorg.getOldPtjId());
+				if(ministry!=null) {
+					condition = condition + "*" + "orgProfileId^" + ministry.getOrgProfileId();
+				}
+			}
+		} 
+		return condition;
+	}
+	
+	/**
+	 * Get PTJ condition for construct the LOV listing
+	 * @return String
+	 */
+	public String getPTJCondition() {
+		String condition = OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value())+
+				"^"+this.getManagedBean().getPtjGroup().getOrgProfileId();
+		if(hasGovernmentUserRole()) {
+			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
+			IPtjReorgSO ptjReorgSO = (IPtjReorgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IPtjReorgSO.class);
+			
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+			UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+			PmOrgProfile orgProfile = null;
+			if (userResDTO.getUserOrgList() != null	&& userResDTO.getUserOrgList().size() > 0) {
+				orgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
+			}
+			String ptjList = orgProfile.getOrgProfileId()+"";
+			PtjReorgReqDTO ptjReqDTO = new PtjReorgReqDTO();
+			ptjReqDTO.setDeepLevel(true);
+			ptjReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+			PtjReorgResDTO ptjResDTO = ptjReorgSO.retrieveOldPtjByNewPtjId(ptjReqDTO);
+			for(PmPtjReorg pmPtjReorg : ptjResDTO.getPtjReorgList()) {
+				ptjList = ptjList + "," + pmPtjReorg.getOldPtjId();
+			}
+			condition = condition + "|orgProfileId^"+ptjList+"^9";
+		}
+		return condition;
+	}
+		
+	/**
+	 * The method used reset PTJ/PTJ Group profile value once select the Ministry
+	 */
+	public void resetPtjGroupProfile() {
+		getManagedBean().setPtj(null);
+		getManagedBean().setPtjGroup(null);
+	}
+	
+	/**
+	 * The method used reset PTJ profile value once select the Ministry
+	 */
+	public void resetPtjProfile() {
+		getManagedBean().setPtj(null);
+	}
+		
+	/**
+	  * The method used to disable the ministry Lov
+	  * if login user is FL User
+	  * or internal auditor.
+	  * 
+	  * @return true, if login user is FL User/internal auditor
+	  *         false, if login user is not User/internal auditor
+	*/	
+	public boolean disableMinistryLov() {
+		if(hasGovernmentUserRole() || getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
+			if(isPTJReOrg()) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	  * The method used to disable the ptj Lov
+	  * if login user is FL User
+	  * or ministry is null.
+	  * 
+	  * @return true, if login user is FL User/ministry is null
+	  *         false, if login user is not User/ministry is null
+	*/	
+	
+	public boolean disablePtjLov() {
+		if(getManagedBean().getPtjGroup() == null) {
+			return true;
+		} else if(hasGovernmentUserRole()) {
+			if(isPTJReOrg()) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	  * The method used to disable the ptj Lov
+	  * if login user is FL User
+	  * or ministry is null.
+	  * 
+	  * @return true, if login user is FL User/ministry is null
+	  *         false, if login user is not User/ministry is null
+	*/	
+	
+	public boolean disablePtjGroupLov() {
+		if(getManagedBean().getMinistry() == null) {
+			return true;
+		} else if(hasGovernmentUserRole()) {
+			if(isPTJReOrg()) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean isPTJReOrg() {
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
+		IPtjReorgSO ptjReorgSO = (IPtjReorgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IPtjReorgSO.class);
+		
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+		UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+		PmOrgProfile orgProfile = null;
+		if (userResDTO.getUserOrgList() != null	&& userResDTO.getUserOrgList().size() > 0) {
+			orgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
+		}
+		PtjReorgReqDTO ptjReqDTO = new PtjReorgReqDTO();
+		ptjReqDTO.setDeepLevel(true);
+		ptjReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+		PtjReorgResDTO ptjResDTO = ptjReorgSO.retrieveOldPtjByNewPtjId(ptjReqDTO);
+		if(ptjResDTO!=null && ptjResDTO.getPtjReorgList().size()>0)
+			return true;
+		else 
+			return false;
+	}
+	
+	/**
+	 * Get PTJ group condition for construct the LOV listing
+	 * @return String
+	 */
+	public String constuctConditionFieldsForPTJGroup() {	
+		String condition = OrgProfileUtil.getFromToSearchBeanParentString(OrganizationType.DEPARTMENT.value(), OrganizationType.MINISTRY.value())+"^"+
+				this.getManagedBean().getMinistry().getOrgProfileId();
+		if(hasGovernmentUserRole()) {
+			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
+			IPtjReorgSO ptjReorgSO = (IPtjReorgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IPtjReorgSO.class);
+			
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+			UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+			PmOrgProfile orgProfile = null;
+			if (userResDTO.getUserOrgList() != null	&& userResDTO.getUserOrgList().size() > 0) {
+				orgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
+			}
+			String kumpulanPtjList = retrieveJabatanOrgProfile(orgProfile.getOrgProfileId()).getOrgProfileId()+"";
+			PtjReorgReqDTO ptjReqDTO = new PtjReorgReqDTO();
+			ptjReqDTO.setDeepLevel(true);
+			ptjReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+			PtjReorgResDTO ptjResDTO = ptjReorgSO.retrieveOldPtjByNewPtjId(ptjReqDTO);
+			PmOrgProfile kumpulanPtj = null;
+			for(PmPtjReorg pmPtjReorg : ptjResDTO.getPtjReorgList()) {
+				kumpulanPtj = retrieveJabatanOrgProfile(pmPtjReorg.getOldPtjId());
+				if(kumpulanPtj!=null) {
+					kumpulanPtjList = kumpulanPtjList + "," + kumpulanPtj.getOrgProfileId();
+				}
+			}
+			condition = condition + "|orgProfileId^"+kumpulanPtjList+"^9";
+		}
+		return condition;
 	}
 	
 	/**
