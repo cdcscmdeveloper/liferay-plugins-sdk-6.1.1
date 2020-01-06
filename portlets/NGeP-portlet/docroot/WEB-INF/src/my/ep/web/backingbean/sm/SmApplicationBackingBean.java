@@ -1602,7 +1602,7 @@ public class SmApplicationBackingBean extends
 									EntityHelper.copyEntityPropertiesOnly(personnelSSM,personnel,copyEquityOwner);
 								}else{
 									personnel.setSsmData(true);
-									String[] copyEquityOwner = {"shareAmt","nameInSsm","raceSsmNull","birthDateSsmNull","shareAmtSsmNull","designationSsmNull","equityOwner","director","pmCountry","directorSsm","equityOwnerSsm","managementSsm"};
+									String[] copyEquityOwner = {"shareAmt","nameInSsm","raceSsmNull","birthDateSsmNull","shareAmtSsmNull","shareAmtSsm","designationSsmNull","equityOwner","director","pmCountry","directorSsm","equityOwnerSsm","managementSsm"};
 									EntityHelper.copyEntityPropertiesOnly(personnelSSM,personnel,copyEquityOwner);
 								}
 								validateRole(personnel);
@@ -3280,13 +3280,25 @@ public class SmApplicationBackingBean extends
 		rsDTO = retrieveSupportingDocumentList(rqDto);
 		//SSM INTEGRATION
 		boolean changesInCapital = false;
-		if(getManagedBean().getSmAppl().isApplValidWithSsm() && getManagedBean().getSmAppl().getSmCompanyBasic().getPaidUpCapitalSSM() != null){
+		if(businessTypeIsROC(getManagedBean().getSmAppl().getSmSupplier().getBusinessType()) && getManagedBean().getSmAppl().isApplValidWithSsm() && getManagedBean().getSmAppl().getSmCompanyBasic().getPaidUpCapitalSSM() != null){
 			BigDecimal paidCapital = getManagedBean().getSmAppl().getSmCompanyBasic().getPaidUpCapital();
 			BigDecimal paidCapitalSSM = getManagedBean().getSmAppl().getSmCompanyBasic().getPaidUpCapitalSSM();
 			if(paidCapital.compareTo(paidCapitalSSM) < 0 || paidCapital.compareTo(paidCapitalSSM) >0){
 				changesInCapital = true;
 			}else if(paidCapital.compareTo(paidCapitalSSM) == 0){
 				changesInCapital = false;
+			}
+			if(getManagedBean().getSmAppl().getSmPersonnels() !=null && !changesInCapital){
+				for(SmPersonnel personnel : getManagedBean().getSmAppl().getSmPersonnels()){
+					if(personnel.isEquityOwner() && !personnel.isSsmData()){
+						changesInCapital = true;
+						break;
+					}
+					if(personnel.getShareAmt() != null && personnel.getShareAmtSsm() != null && personnel.getShareAmt().compareTo(personnel.getShareAmtSsm()) != 0){
+						changesInCapital = true;
+						break;
+					}
+				}
 			}
 		}
 		if (rsDTO != null && rsDTO.getDocumentList() != null
