@@ -30,10 +30,12 @@
 					Enhancement #21694 START
 				</ui:remove>
 				<h:panelGroup rendered="#{!lOIDetailBackingBean.managedBean.scLoi.brandNew}"> 
-					<p:commandButton value="#{lbl['lbl.btn.reverse']}"
+					<p:commandButton value="#{lbl['lbl.btn.reverse']}" id="btnReverse"
 						rendered="#{isPendingSubmissionStatus or !empty lOIDetailBackingBean.managedBean.taskId}"
 						action="#{lOIDetailBackingBean.reverseAction()}" process="@form" update="@form"
-						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
+						<p:tooltip id="toolTipFade" for="btnReverse" value="#{lbl['lbl.btn.reverse.tooltip']}" position="top"/>
+					</p:commandButton>
 				</h:panelGroup>
 				
 				<ui:remove>
