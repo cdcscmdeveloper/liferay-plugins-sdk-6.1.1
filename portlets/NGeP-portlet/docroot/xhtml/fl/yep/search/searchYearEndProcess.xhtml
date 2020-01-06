@@ -99,7 +99,71 @@
 			<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error,info" />
 		<!-- start search panel -->
 		<p:panel id="searchPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
-			
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}"/>
+			<table>
+				<tr>
+					<td style="width: 190px;"/>
+					<td>
+						<p:selectOneRadio value="#{yearEndProcessBackingBean.managedBean.searchFunctionType}" 
+							rendered="#{yearEndProcessBackingBean.showFunctionType()}" >
+							<f:selectItems value="#{yearEndProcessBackingBean.getFunctionType()}" />
+							<p:ajax event="change" update=":form" />
+						</p:selectOneRadio>
+					</td>
+				</tr>
+			</table>
+			<h:panelGroup id="orgSearch" rendered="#{false}">
+			<table>
+				<tr>
+					<td style="width: 190px;">
+						<p:outputLabel value="#{lbl['lbl.fl.ministry']}"  /><p:outputLabel
+						value="*" styleClass="mandatory" />
+					</td>
+					<td>
+						<ac:lov id="searchMinistry" lovId="PM_ORG_PROFILE_MINSTRY" size="131" readonly="true" 
+							disabled="#{yearEndProcessBackingBean.disableMinistryLov()}"
+							headerText="#{lbl['lbl.fl.ministry']}" 
+							value="#{yearEndProcessBackingBean.managedBean.ministry.orgName}"
+							postUpdateListener="yearEndProcessBackingBean.resetPtjGroupProfile()"
+							update=":form:searchPtj,:form:orgSearch"
+							saveObject="yearEndProcessBackingBean.managedBean.ministry"
+							conditionField="#{yearEndProcessBackingBean.getMinistryCondition()}"
+							>
+						</ac:lov>
+					</td>
+				</tr>
+				<tr>
+					<td style="width: 190px;">
+						<p:outputLabel value="#{lbl['lbl.fl.jabatan']}"	/>
+					</td>
+					<td>
+						<ac:lov id="searchJabatan" lovId="PM_ORG_PROFILE_PTJ_GROUP" size="131" readonly="true" 
+							disabled="#{yearEndProcessBackingBean.disablePtjGroupLov()}"
+							headerText="#{lbl['lbl.fl.jabatan']}" 
+							value="#{yearEndProcessBackingBean.managedBean.ptjGroup.orgName}"
+							postUpdateListener="yearEndProcessBackingBean.resetPtjProfile()"
+							update=":form:searchPtj,:form:orgSearch"
+							saveObject="yearEndProcessBackingBean.managedBean.ptjGroup"
+							conditionField="#{yearEndProcessBackingBean.constuctConditionFieldsForPTJGroup()}"
+							>
+						</ac:lov>
+					</td>
+				</tr>
+				<tr>
+					<td style="width: 190px;"><p:outputLabel value="#{lbl['lbl.fl.ptj']}" /></td>
+					<td>
+						<ac:lov id="searchPtj" lovId="PM_ORG_PROFILE_PTJ" size="131" readonly="true" 
+							disabled="#{yearEndProcessBackingBean.disablePtjLov()}"
+							headerText="#{lbl['lbl.fl.ptj']}"
+							value="#{yearEndProcessBackingBean.managedBean.ptj.orgName}"
+							saveObject="yearEndProcessBackingBean.managedBean.ptj"	
+							conditionField="#{yearEndProcessBackingBean.getPTJCondition()}"
+							>			
+						</ac:lov>
+					</td>
+				</tr>
+			</table>
+			</h:panelGroup>
 			<!-- PO panel -->
 			<p:panel id="purchaseOrderPanel" header="#{lbl['lbl.fl.purchaseorder']}" toggleable="true">
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}"/>
