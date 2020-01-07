@@ -23,7 +23,7 @@
 					immediate="true"
 					rendered="#{!empty supplierProposalDetailBackingBean.managedBean.previousPageUrl}" />
 
-				<p:commandButton value="#{lbl['lbl.sc.print.proposal']}" disabled="#{supplierProposalDetailBackingBean.managedBean.disciplinaryAction}"
+				<p:commandButton value="#{lbl['lbl.sc.print.proposal']}"
 					styleClass="BtnSpacing" ajax="false"
 					action="#{supplierProposalDetailBackingBean.downloadProposalReport}" />
 
@@ -32,9 +32,7 @@
 					oncomplete="blockWidget.hide()"
 					action="#{supplierProposalDetailBackingBean.spkiSignAction}"
 					rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly}"
-					update="spkiOutputPanel" process="@form"
-					disabled="#{supplierProposalDetailBackingBean.managedBean.disciplinaryAction}" />
-					
+					update="spkiOutputPanel" process="@form" />
 				<p:commandButton value="#{lbl['lbl.btn.update']}"
 					styleClass="BtnSpacing"  onstart="updateProposal.show()"
 					rendered="#{supplierProposalDetailBackingBean.managedBean.readOnly and !supplierProposalDetailBackingBean.managedBean.qtClosed}"
