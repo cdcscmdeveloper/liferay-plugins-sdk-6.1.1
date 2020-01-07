@@ -335,17 +335,38 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			this.getManagedBean().getDummy().clear();
 			if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
 				//TODO: start check registration ic with ssm #27148
-				SmPersonnel checkRegistrationIcOwnerSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(checkIcSSM, ssmResDTO.getSmPersonnelOwners(), "identificationNo");
-				if(checkRegistrationIcOwnerSSM == null){
-					SmPersonnel checkRegistrationIcDirectorSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(checkIcSSM, ssmResDTO.getSmPersonnelDirector(), "identificationNo");
-					if(checkRegistrationIcDirectorSSM == null){
-						if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG) || this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)){
+				///FOR BASIC ONLY
+				if(ssmReqDTO.isBasicAcc()){
+					SmPersonnel checkRegistrationIcOwnerSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(checkIcSSM, ssmResDTO.getSmPersonnelOwnersAll(), "identificationNo");
+					if(checkRegistrationIcOwnerSSM == null){
+						SmPersonnel checkRegistrationIcDirectorSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(checkIcSSM, ssmResDTO.getSmPersonnelDirector(), "identificationNo");
+						if(checkRegistrationIcDirectorSSM == null){
+							if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG) || this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)){
+								throw new EpException(MessageConst.ERROR_722678,new String[] {ResourceBundleUtils.getMessage("lbl.sm.register.owner",ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+							} else if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD) || this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD)){
+								throw new EpException(MessageConst.ERROR_722678,new String[] {ResourceBundleUtils.getMessage("lbl.sm.register.ownerdirector",ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+							}
+						}
+					}else{
+						if(checkRegistrationIcOwnerSSM.isForeigner()){
+							//change to new message follow redmine 26977
 							throw new EpException(MessageConst.ERROR_722678,new String[] {ResourceBundleUtils.getMessage("lbl.sm.register.owner",ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-						} else if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD) || this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD)){
-							throw new EpException(MessageConst.ERROR_722678,new String[] {ResourceBundleUtils.getMessage("lbl.sm.register.ownerdirector",ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						}						
+					}
+				}else{//FOR MOF
+					SmPersonnel checkRegistrationIcOwnerSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(checkIcSSM, ssmResDTO.getSmPersonnelOwnersAll(), "identificationNo");
+					if(checkRegistrationIcOwnerSSM == null){
+						SmPersonnel checkRegistrationIcDirectorSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(checkIcSSM, ssmResDTO.getSmPersonnelDirector(), "identificationNo");
+						if(checkRegistrationIcDirectorSSM == null){
+							if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG) || this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)){
+								throw new EpException(MessageConst.ERROR_722678,new String[] {ResourceBundleUtils.getMessage("lbl.sm.register.owner",ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+							} else if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD) || this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD)){
+								throw new EpException(MessageConst.ERROR_722678,new String[] {ResourceBundleUtils.getMessage("lbl.sm.register.ownerdirector",ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+							}
 						}
 					}
 				}
+				
 				//end check registration ic with ssm #27148
 				
 				checkExistingBusinessRegNoSSM();
