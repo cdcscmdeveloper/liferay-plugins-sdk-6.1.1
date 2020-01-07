@@ -96,7 +96,8 @@
 						label="#{lbl['lbl.ct.represent.type']}" style="width: 150px;margin-bottom: 5px;">
 						<f:selectItems
 							value="#{amendmentBackingBean.getRepresentativeDropdown(ctCommitteeVar, ctCommitteeVar.representativeType.parameterId)}" />
-							<p:ajax event="change" process="@this"  listener="#{amendmentBackingBean.onChangeRepType(ctCommitteeVar, ctCommitteeVar.representativeType.parameterId)}"></p:ajax>
+							<p:ajax event="change" process="@this" update="committeRepresentId"
+								listener="#{amendmentBackingBean.onChangeRepType(ctCommitteeVar, ctCommitteeVar.representativeType.parameterId)}"></p:ajax>
 					</p:selectOneMenu>
 				</h:panelGroup>
 
