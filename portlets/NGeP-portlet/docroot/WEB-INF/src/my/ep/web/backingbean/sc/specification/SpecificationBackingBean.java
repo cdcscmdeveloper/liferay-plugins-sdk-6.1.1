@@ -4341,7 +4341,7 @@ public class SpecificationBackingBean extends
 		return null;
 	}
 	private ScQtCheckList populateWeigthage(List<ScQtCheckList> list,ScQtCheckList checkList){
-		boolean exist=isExistInDB(list);
+		boolean exist=null!=isExistInDB(list)?true:false;
 		this.getManagedBean().setSpecItemWeightageRequired(exist);
 		boolean weightageType = false;
 		if(exist){
@@ -4493,7 +4493,10 @@ public class SpecificationBackingBean extends
 						if(null!=checkList.getScQtDoc().getTplSpecMaster().getCtPanelItem()){
 							panelItem=true;
 						}
-						if(null!=templateresDTO.getSpecMaster().getCtPanelItem()){
+						
+						if(null!=templateresDTO 
+								&& null!=templateresDTO.getSpecMaster() 
+								&& null!=templateresDTO.getSpecMaster().getCtPanelItem()){
 							panelItem=true;
 						}
 						if(panelItem){
