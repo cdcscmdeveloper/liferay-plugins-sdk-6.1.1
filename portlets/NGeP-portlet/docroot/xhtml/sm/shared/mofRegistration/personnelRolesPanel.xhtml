@@ -23,12 +23,13 @@
 									        or (backingBean.managedBean.smAppl.applValidWithSsm 
 									        	and (backingBean.managedBean.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG or backingBean.managedBean.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
 									        		)}"
+									        rendered="#{backingBean.showEquity(backingBean.managedBean)}"
 											value="#{backingBean.managedBean.selectedShareHolder.equityOwner}">
 											<p:ajax event="change" update=":#{p:component('shrRolesPanel')}, @([id$=shareHolderAddrDialog]),:#{p:component('equiShrHldrJbFnc')}"
 												process=":#{p:component('shrRolesPanel')}" partialSubmit="true"
 												listener="#{backingBean.managePersonnelRoles('Y')}" />
 										</p:selectBooleanCheckbox></td>
-									<td><h:outputText style="float: left"
+									<td><h:outputText style="float: left" rendered="#{backingBean.showEquity(backingBean.managedBean)}"
 											value="#{lbl['lbl.sm.person.equiOwner']}" /></td>
 								</c:if>
 								<c:if
