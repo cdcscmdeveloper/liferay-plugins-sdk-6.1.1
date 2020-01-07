@@ -121,7 +121,7 @@
 				 <c:if test="#{registrationBackingBean.managedBean.smSupp.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG or registrationBackingBean.managedBean.smSupp.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG}">
 					 <tr >
 						<td class="tdTitle">
-							<p:outputLabel value="#{lbl['lbl.sm.register.owner.newic']}" />
+							<p:outputLabel value="#{lbl['lbl.sm.register.owner.newic']} #{lbl['lbl.sm.register.mycardonly']}" />
 							<p:outputLabel value="*" styleClass="mandatory" />
 						</td>
 						<td class="tdContent">
@@ -136,7 +136,7 @@
 				 <c:if test="#{registrationBackingBean.managedBean.smSupp.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD or registrationBackingBean.managedBean.smSupp.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD}">
 				 	<tr>
 				 		<td class="tdTitle">
-				 			<p:outputLabel value="#{lbl['lbl.sm.register.ownerdirector.newic']}" />
+				 			<p:outputLabel value="#{lbl['lbl.sm.register.ownerdirector.newic']} #{#{lbl['lbl.sm.register.mycardonly']}" />
 				 			<p:outputLabel value="*" styleClass="mandatory" />
 				 		</td>
 				 		<td class="tdContent">
