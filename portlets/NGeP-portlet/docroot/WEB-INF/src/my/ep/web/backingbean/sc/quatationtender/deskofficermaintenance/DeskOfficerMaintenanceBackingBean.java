@@ -1099,6 +1099,7 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 					}
 					reqDTO.setNewDO(entry.getValue());
 					reqDTO.setOriginalDO(originalDO);
+					reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 					resDTO = detailSO.reassignDeskOfficer(reqDTO);
 				}
 
@@ -1268,6 +1269,11 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
         }
 		sb.append("^");
 		sb.append(SearchOperator.OPERATOR_NOT_IN.value());
+		if(StringUtils.isNotEmpty(this.getManagedBean().getTaskName())){
+			sb.append("|pmUserOrgs.pmUserRoles.pmRole.roleCode^");
+			sb.append(RoleCode.DESK_OFFICER.value());
+			sb.append("|pmUserOrgs.pmUserRoles.recordStatus^1");
+		}
 		return sb.toString();
 	}
 	
