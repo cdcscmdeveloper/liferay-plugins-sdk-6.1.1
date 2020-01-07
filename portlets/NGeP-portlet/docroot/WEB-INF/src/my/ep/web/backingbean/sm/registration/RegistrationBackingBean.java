@@ -349,8 +349,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						}
 					}else{
 						if(checkRegistrationIcOwnerSSM.isForeigner()){
-							//change to new message follow redmine 26977
-							throw new EpException(MessageConst.ERROR_722678,new String[] {ResourceBundleUtils.getMessage("lbl.sm.register.owner",ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+							//change to new message follow redmine #26977
+							throw new EpException(MessageConst.ERROR_722679);
 						}						
 					}
 				}else{//FOR MOF
