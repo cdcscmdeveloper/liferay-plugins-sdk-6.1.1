@@ -12834,4 +12834,21 @@ public class SmApplicationBackingBean extends
 		}
 		return showDoc;
 	}
+	public boolean showEquity(SmApplicationManagedBean managedBean){
+		boolean show = true;
+		if(!managedBean.getSmAppl().isApplValidWithSsm()){
+			show = true;
+		}else if(managedBean.getSmAppl().isApplValidWithSsm()){
+			if(businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())){
+				if(managedBean.getSelectedShareHolder().isEquityOwner()){
+					show = true;
+				}else{
+					show = false;
+				}
+			}else{
+				show = true;
+			}
+		}
+		return show;
+	}
 }
