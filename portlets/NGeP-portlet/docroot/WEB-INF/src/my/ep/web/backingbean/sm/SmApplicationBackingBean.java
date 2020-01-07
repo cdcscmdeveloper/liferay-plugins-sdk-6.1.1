@@ -1674,7 +1674,7 @@ public class SmApplicationBackingBean extends
 										personnel.getSmPersonnelAdd().setSmPersonnel(personnel);
 										personnel.getSmPersonnelAddresses().add(personnel.getSmPersonnelAdd());
 									}
-									if(personnel.getPmCountry().getCountryId() == null){
+									if(personnel.getPmCountry() == null || personnel.getPmCountry().getCountryId() == null){
 										PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 										personnel.setPmCountry(defaultCountry);
 									}
