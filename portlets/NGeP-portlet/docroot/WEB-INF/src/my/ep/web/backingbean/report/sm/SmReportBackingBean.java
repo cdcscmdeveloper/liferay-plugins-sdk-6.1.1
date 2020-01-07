@@ -1044,13 +1044,21 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		        Set<Integer> keyIdList = reportListMap.keySet();
 				int rowid = sheetList.getLastRowNum()+1;
 				int countRowFpx = 1;
+				String receiptNo = "";
 				for (Integer key : keyIdList) {
 					Row row = sheetList.createRow(rowid++);
 					Object[] objectArr = reportListMap.get(key);
 					int cellid = 1;
 					Cell cellBil = row.createCell(0);
-					cellBil.setCellValue(countRowFpx++);
+					if(receiptNo == ""){
+						cellBil.setCellValue(countRowFpx++);
+					}else if(!receiptNo.equalsIgnoreCase((String)objectArr[2])){
+						cellBil.setCellValue(countRowFpx++);
+					}else{
+						sheetList.addMergedRegion(new CellRangeAddress(rowid-2,rowid-1,0,0)); 
+					}
 					cellBil.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,false));
+					receiptNo = (String)objectArr[2];
 					
 					for(int x=0; x<objectArr.length; x++){
 						if(x==0 && "Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE)))continue;
@@ -1073,7 +1081,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					}
 				}
 				//Setting Auto filtering in each header column list
-		        sheetList.setAutoFilter(new CellRangeAddress(headerRowList.getRowNum(),sheetList.getLastRowNum(),headerRowList.getFirstCellNum(),columnHeaderList.size()-1));
+		        sheetList.setAutoFilter(new CellRangeAddress(headerRowList.getRowNum(),sheetList.getLastRowNum(),1,columnHeaderList.size()-1));
 		        // Resize all columns to fit the content size
 		        for(int i = 0; i < columnHeaderList.size(); i++) {
 		        	if("Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE))){
@@ -1207,7 +1215,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	    }catch(Exception e){
 	    	e.printStackTrace();
 	    }
-		log.info("DONE GENERATE LAPORAN!!!");
+		
+	    log.info("DONE GENERATE REPORT COLLECTION REPORT BASED ON Payment Method !!");
 	}
 	
 	public void getCollectionReportBasedOnClassificationCode(LinkedHashMap<String, String> params, BigDecimal requestId)throws Exception{
@@ -1215,7 +1224,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		Map<Integer, Object[]> creditList = new TreeMap<Integer, Object[]>();
 		Map<Integer, Object[]> summaryList = new TreeMap<Integer, Object[]>();
 		List<Object[]> reportList = new ArrayList<Object[]>();
-		int fpxCount = 0, creditCount = 0;
+		int fpxCount = 0, creditCount = 0; 
 		BigDecimal totalPrice = new BigDecimal(0);
 		BigDecimal totalGst = new BigDecimal(0); 
 		BigDecimal totalServiceCharge = new BigDecimal(0);
@@ -1319,13 +1328,23 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	        Set<Integer> keyIdFpx = fpxList.keySet();
 			int rowid = sheetFPX.getLastRowNum()+1;
 			int countRowFpx = 1;
+			String receiptNo = "";
 			for (Integer key : keyIdFpx) {
 				Row row = sheetFPX.createRow(rowid++);
 				Object[] objectArr = fpxList.get(key);
 				int cellid = 1;
 				Cell cellBil = row.createCell(0);
-				cellBil.setCellValue(countRowFpx++);
+				if(receiptNo == ""){
+					cellBil.setCellValue(countRowFpx++);
+				}else if(!receiptNo.equalsIgnoreCase((String)objectArr[1])){
+					cellBil.setCellValue(countRowFpx++);
+				}else{
+					fpxCount = fpxCount - 1;
+					sheetFPX.addMergedRegion(new CellRangeAddress(rowid-2,rowid-1,0,0)); 
+				}
 				cellBil.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,false));
+				receiptNo = (String)objectArr[1];
+				
 				for (Object obj : objectArr) {
 					Cell cell = row.createCell(cellid);
 					if(obj instanceof Date){
@@ -1346,7 +1365,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			}
 			
 			//Setting Auto filtering in each header column list
-		    sheetFPX.setAutoFilter(new CellRangeAddress(headerRowListFpx.getRowNum(),sheetFPX.getLastRowNum(),headerRowListFpx.getFirstCellNum(),columnsList.length-1));
+		    sheetFPX.setAutoFilter(new CellRangeAddress(headerRowListFpx.getRowNum(),sheetFPX.getLastRowNum(),1,columnsList.length-1));
 		    // Resize all columns to fit the content size
 	        for(int i = 0; i < columnsList.length; i++) {
 	        	if(i==0)sheetFPX.setColumnWidth(i, 8*256);//Column : Bil	
@@ -1402,13 +1421,23 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			Set<Integer> keyIdCredit = creditList.keySet();
 			int rowid = sheetCC.getLastRowNum()+1;
 			int countRowCC = 1;
+			String receiptNoCC = "";
 			for (Integer key : keyIdCredit) {
 				Row row = sheetCC.createRow(rowid++);
 				Object[] objectArr = creditList.get(key);
 				int cellid = 1;
 				Cell cellBil = row.createCell(0);
-				cellBil.setCellValue(countRowCC++);
+				if(receiptNoCC == ""){
+					cellBil.setCellValue(countRowCC++);
+				}else if(!receiptNoCC.equalsIgnoreCase((String)objectArr[1])){
+					cellBil.setCellValue(countRowCC++);
+				}else{
+					creditCount = creditCount - 1;
+					sheetCC.addMergedRegion(new CellRangeAddress(rowid-2,rowid-1,0,0)); 
+				}
 				cellBil.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,false));
+				receiptNoCC = (String)objectArr[1];
+				
 				for (Object obj : objectArr) {
 					Cell cell = row.createCell(cellid);
 					if(obj instanceof Date){
@@ -1428,7 +1457,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 				}
 			}
 			//Setting Auto filtering in each header column list
-			sheetCC.setAutoFilter(new CellRangeAddress(headerRowListCredit.getRowNum(),sheetCC.getLastRowNum(),headerRowListCredit.getFirstCellNum(),columnsList.length-1));
+			sheetCC.setAutoFilter(new CellRangeAddress(headerRowListCredit.getRowNum(),sheetCC.getLastRowNum(),1,columnsList.length-1));
 			// Resize all columns to fit the content size
 	        for(int i = 0; i < columnsList.length; i++) {
 	        	if(i==0)sheetCC.setColumnWidth(i, 8*256);//Column : Bil	
@@ -1486,7 +1515,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 						if(key == 0)cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,true));
 						else cell.setCellStyle(columnStyle(wb,createHelper,false,true,false,false,true,false,true));
 					}else if(obj instanceof Integer){
-						cell.setCellValue(((Integer) obj).intValue());
+						cell.setCellValue(fpxCount+creditCount);
 						if(key == 0)cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,true,true));
 						else cell.setCellStyle(columnStyle(wb,createHelper,false,true,false,false,false,true,true));
 					}else{
@@ -1497,6 +1526,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 				}
 			}
 		}
+        
         if(reportList.isEmpty()){
         	summaryList.put(0, new Object[] {
 					"Keseluruhan",(fpxCount+creditCount),totalPrice,totalGst,totalServiceCharge,totalGstServiceCharge,totalNetAmount
@@ -1549,6 +1579,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
         }catch(Exception e){
         	e.printStackTrace();
         }
+        
+	    log.info("DONE GENERATE Collection Report Based on Classification Code !!");
 	}
 	
 	public void getCollectionReportBasedOnReceiptAndTransactionDate(LinkedHashMap<String, String> params, BigDecimal requestId)throws Exception{
@@ -1753,14 +1785,22 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			Set<Integer> keyIdFpx = fpxList.keySet();
 			int rowid = sheetFPX.getLastRowNum()+1;
 			int countRowFpx = 1;
+			String receiptNo = "";
 			for (Integer key : keyIdFpx) {
 				Row row = sheetFPX.createRow(rowid++);
 				Object[] objectArr = fpxList.get(key);
+				
 				int cellid = 1;
 				Cell cellBil = row.createCell(0);
-				cellBil.setCellValue(countRowFpx++);
+				if(receiptNo == ""){
+					cellBil.setCellValue(countRowFpx++);
+				}else if(!receiptNo.equalsIgnoreCase((String)objectArr[2])){
+					cellBil.setCellValue(countRowFpx++);
+				}else{
+					sheetFPX.addMergedRegion(new CellRangeAddress(rowid-2,rowid-1,0,0)); 
+				}
 				cellBil.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,false));
-				
+				receiptNo = (String)objectArr[2];
 				for(int x=0; x<objectArr.length; x++){
 					if(x==0 && "Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE)))continue;
 					Cell cell = row.createCell(cellid);
@@ -1782,7 +1822,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 				}
 			}
 			//Setting Auto filtering in each header column list
-		    sheetFPX.setAutoFilter(new CellRangeAddress(headerRowListFpx.getRowNum(),sheetFPX.getLastRowNum(),headerRowListFpx.getFirstCellNum(),columnHeaderList.size()-1));
+		    sheetFPX.setAutoFilter(new CellRangeAddress(headerRowListFpx.getRowNum(),sheetFPX.getLastRowNum(),1,columnHeaderList.size()-1));
 		
 		    //Resize all columns to fit the content size
 	        for(int i = 0; i < columnHeaderList.size(); i++) {
@@ -1867,13 +1907,21 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	        Set<Integer> keyIdCredit = creditList.keySet();
 			int rowid = sheetCC.getLastRowNum()+1;
 			int countRowCC = 1;
+			String receiptNoCC = "";
 			for (Integer key : keyIdCredit) {
 				Row row = sheetCC.createRow(rowid++);
 				Object[] objectArr = creditList.get(key);
 				int cellid = 1;
 				Cell cellBil = row.createCell(0);
-				cellBil.setCellValue(countRowCC++);
+				if(receiptNoCC == ""){
+					cellBil.setCellValue(countRowCC++);
+				}else if(!receiptNoCC.equalsIgnoreCase((String)objectArr[2])){
+					cellBil.setCellValue(countRowCC++);
+				}else{
+					sheetCC.addMergedRegion(new CellRangeAddress(rowid-2,rowid-1,0,0)); 	
+				}
 				cellBil.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,false));
+				receiptNoCC = (String)objectArr[2];
 				for (int x=0; x<objectArr.length; x++) {
 					if(x==0 && "Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE)))continue;
 					Cell cell = row.createCell(cellid);
@@ -1896,7 +1944,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			}
 
 			//Setting Auto filtering in each header column list
-	  		sheetCC.setAutoFilter(new CellRangeAddress(headerRowListCC.getRowNum(),sheetCC.getLastRowNum(),headerRowListCC.getFirstCellNum(),columnHeaderList.size()-1));
+	  		sheetCC.setAutoFilter(new CellRangeAddress(headerRowListCC.getRowNum(),sheetCC.getLastRowNum(),1,columnHeaderList.size()-1));
 	  		
 	  		// Resize all columns to fit the content size
 	        for(int i = 0; i < columnHeaderList.size(); i++) {   
@@ -2026,6 +2074,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	    }catch(Exception e){
 	    	e.printStackTrace();
 	    }
+	    log.info("DONE GENERATE REPORT COLLECTION REPORT BASED ON RECEIPT AND TRANSACTION DATE !!");
 	}
 	
 	public void getListOfDailyReceiptReport(LinkedHashMap<String, String> params, BigDecimal requestId)throws Exception{		
@@ -2120,13 +2169,22 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	        Set<Integer> keyIdList = fullList.keySet();
 			int rowid = sheetReportList.getLastRowNum()+1;
 			int countRowList = 1;
+			String receiptNo = "";
 			for (Integer key : keyIdList) {
 				Row row = sheetReportList.createRow(rowid++);
 				Object[] objectArr = fullList.get(key);
 				int cellid = 1;
 				Cell cellBil = row.createCell(0);
-				cellBil.setCellValue(countRowList++);
+				if(receiptNo == ""){
+					cellBil.setCellValue(countRowList++);
+				}else if(!receiptNo.equalsIgnoreCase((String)objectArr[1])){
+					cellBil.setCellValue(countRowList++);
+				}else{
+					sheetReportList.addMergedRegion(new CellRangeAddress(rowid-2,rowid-1,0,0)); 
+				}
 				cellBil.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,false));
+				receiptNo = (String)objectArr[1];
+				
 				for (int x=0; x<objectArr.length; x++) {
 					Cell cell = row.createCell(cellid);
 					if(objectArr[x] instanceof Date){
@@ -2147,7 +2205,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			}
 			
 			//Setting Auto filtering in each header column list
-	        sheetReportList.setAutoFilter(new CellRangeAddress(headerRowList.getRowNum(),sheetReportList.getLastRowNum(),headerRowList.getFirstCellNum(),columnHeaderList.size()-1));
+	        sheetReportList.setAutoFilter(new CellRangeAddress(headerRowList.getRowNum(),sheetReportList.getLastRowNum(),1,columnHeaderList.size()-1));
 	  		// Resize all columns to fit the content size
 	        for(int i = 0; i < columnHeaderList.size(); i++) {   
 	    		if(i==0)sheetReportList.setColumnWidth(i, 8*256);//Col : Bil
@@ -2248,6 +2306,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	    }catch(Exception e){
 	    	e.printStackTrace();
 	    }
+        
+	    log.info("DONE GENERATE List of Daily Receipt Report !!");
 	}
 	
 	public void getRevenueCollectionReport(LinkedHashMap<String, String> params, BigDecimal requestId)throws Exception{
@@ -2440,7 +2500,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	    }catch(Exception e){
 	    	e.printStackTrace();
 	    }
-	    log.info("DONE GENERATE LIST !!!");
+	    log.info("DONE GENERATE Revenue Collection Report !!!");
 	}
 	
 	public CellStyle titleHeaderStyle(Workbook wb, Boolean isBold, Boolean isAlignCenter, Boolean isWrapTxt, Boolean isVAlignTop){
