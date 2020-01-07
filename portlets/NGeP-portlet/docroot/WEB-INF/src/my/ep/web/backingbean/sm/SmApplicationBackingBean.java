@@ -677,6 +677,25 @@ public class SmApplicationBackingBean extends
 					task.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 				}
 			}
+			
+			//Bug 27022 - start 			
+			SmAppl latestAppl = supplierProfile.getSmAppl();
+			 if(latestAppl != null 
+					 && latestAppl.getSmSupplierCategories() != null
+					 	&& getManagedBean().getSmAppl().getSmSupplierCategories() != null){
+				 for(SmSupplierCategory categoryRejectedAppl : latestAppl.getSmSupplierCategories()){
+					 if(categoryRejectedAppl.getRecordStatusFlg() == SupplierManagementConst.DELETED_RECORD_STATUS){
+						 for(SmSupplierCategory categoryResubmitAppl: getManagedBean().getSmAppl().getSmSupplierCategories()){
+							 if(categoryRejectedAppl.getPmCategoryL3().getCategoryL3Id()
+									 .equals(categoryResubmitAppl.getPmCategoryL3().getCategoryL3Id())){
+								 categoryResubmitAppl.setRecordStatusFlg(SupplierManagementConst.DELETED_RECORD_STATUS);
+							 }
+						 }
+					 }
+				 }
+			 }
+			//Bug 27022 - end
+			 
 			if (getManagedBean().getSmAppl().getSmSupplierCategories() != null
 					&& !getManagedBean().getSmAppl().getSmSupplierCategories()
 							.isEmpty()) {
@@ -10815,16 +10834,17 @@ public class SmApplicationBackingBean extends
 	public void printDeclarationForm() throws Exception {
 		String language = new FacesScopes().getUserLocale().getLanguage();
 		if (language.equals("en")) {
-			SmApplicationUtil.generateDeclarationFormPdf(getManagedBean()
-					.getSmAppl());
-
-			String fileName = SmCommonUtil
-					.getUploadFilePath(SupplierManagementConst.SUPPORTING_DOC_TEMP_PATH)
-					+ File.separator
-					+ getManagedBean().getSmAppl().getApplNo()
-					+ SupplierManagementConst.DECLARE_SUPP_DOC_PREFIX;
-			commonDownload(fileName, getManagedBean().getSmAppl().getApplNo()
-					+ SupplierManagementConst.DECLARE_SUPP_DOC_PREFIX);
+			Map<String, String> paramMap = new HashMap<String, String>();
+			paramMap.put("PAPPNO", getManagedBean().getSmAppl().getApplNo());
+			paramMap.put(
+					"PAPPTYP",
+					SmCommonUtil.retrieveParameterDescByTypeAndCodeAndLang(
+							ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
+							getManagedBean().getSmAppl().getApplType(),
+							language).getCodeName());
+			paramMap.put("PSUPPNAME", getManagedBean().getSmSupplier()
+					.getCompanyName());
+			generateReport(ReportConst.SM_DECLARATION_FORM_REPORT_EN, paramMap);
 		} else {
 			Map<String, String> paramMap = new HashMap<String, String>();
 			paramMap.put("PAPPNO", getManagedBean().getSmAppl().getApplNo());
