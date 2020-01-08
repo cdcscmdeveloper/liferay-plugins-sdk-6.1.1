@@ -1769,6 +1769,7 @@ public class SPDetailBackingBean extends
 	 * @param isCompleted
 	 * @return navigation path
 	 */
+	@SuppressWarnings("unused")
 	public String saveAssetLiabilityAction(boolean isCompleted) {
 		debugLogger("saveAssetLiabilityAction supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		validateProposalCloseTime(this.getManagedBean().getQt());
@@ -1793,6 +1794,52 @@ public class SPDetailBackingBean extends
 							.getScQtProposalScoreList(), acidRatioVal,
 					currentRatioVal);
 			scQtProposalChecklist.setSubmitted(isCompleted);
+			
+			ScQtProposalChecklist assetProposalChecklist = null;
+			assetProposalChecklist = findProposalChecklistByGroupID(
+					getManagedBean().getFinanceCheckDetailsList(),
+					ParameterConst.DOCUMENT_DEFINITION_KEY_FOR_ASSET_LIABILITIES_UPLOAD,ParameterConst.ASSET_LIABILITIES_GROUP_ID);
+			int index = getManagedBean().getFinanceCheckDetailsList().indexOf(
+					assetProposalChecklist);
+			if (isCompleted && scQtPRPAssetLiability != null) {
+				if( (scQtPRPAssetLiability.getCurrentAssets() == null)
+						&& (scQtPRPAssetLiability.getCurrentLiabilities() == null) 
+						&& (scQtPRPAssetLiability.getTotalCashInHand() == null)
+						&& (scQtPRPAssetLiability.getTotalAccountReceivable() == null)
+						&& (scQtPRPAssetLiability.getAcidRatio() == null )
+						&& (scQtPRPAssetLiability.getCurrentRatio() == null)) 
+				{
+					assetProposalChecklist.setScQtProposalChecklistAttachment(null);
+					assetProposalChecklist.setSubmitted(true);
+					//this.getManagedBean().setReadOnly(true);
+					assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
+
+				}else{
+					if (assetProposalChecklist.isSubmitted()){
+						if (assetProposalChecklist.getScQtProposalChecklistAttachment() == null 
+								|| (scQtPRPAssetLiability.getCurrentAssets() != null)
+								|| (scQtPRPAssetLiability.getCurrentLiabilities() != null) 
+							    || (scQtPRPAssetLiability.getTotalCashInHand() != null)
+								|| (scQtPRPAssetLiability.getTotalAccountReceivable() != null)
+								|| (scQtPRPAssetLiability.getAcidRatio() != null )
+							    || (scQtPRPAssetLiability.getCurrentRatio() != null)) 
+						{
+							assetProposalChecklist.setSubmitted(false);
+							assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
+							
+						} else {
+							assetProposalChecklist.setSubmitted(false);
+							assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
+							
+						}
+					}else{
+						assetProposalChecklist.setSubmitted(false);
+						assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
+						
+					}
+				}
+			}
+			
 			if (scQtPRPAssetLiability.getCurrentAssets() != null) {
 				EncryptDataBean currentAsset = new EncryptDataBean();
 				currentAsset
@@ -1820,6 +1867,7 @@ public class SPDetailBackingBean extends
 						.getCurrentLiabilities().intValue());
 				scQtPRPAssetLiability.setCurrentLiabilities(null);
 			}
+			
 			reqDTO.setEncryptDataList(prpAssetLiabilityList);
 			scQtProposalChecklist.setPrpAssetLiabilities(scQtPRPAssetLiability);
 			scQtProposalChecklist.setProposalScore(proposalScores);
@@ -1827,7 +1875,25 @@ public class SPDetailBackingBean extends
 			reqDTO.setQtId(getManagedBean().getQt().getQtId());
 			reqDTO.setScQt(this.getManagedBean().getQt());
 			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
+	
 			if (resDTO.isSuccessful()) {
+				
+				if (isCompleted) {
+					reqDTO.setMultiEncryptBeanList(null);
+					reqDTO.setTobeRemovedCreditFacilities(null);
+					if(assetProposalChecklist != null){
+						reqDTO.setScQtProposalChecklist(assetProposalChecklist);
+						ProposalResDTO resDto = proposalSO
+								.saveProposalDetails(reqDTO);
+						getManagedBean().getFinanceCheckDetailsList().set(index,
+								resDto.getProposalChecklist());
+					}
+				}
+				
+				
+				
+		
+	
 				return navigatePrepareFinProposalCheckList(
 						scQtProposalChecklist, resDTO.getProposalChecklist(),
 						isCompleted);
@@ -2858,6 +2924,24 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 					if (docDefKey.equalsIgnoreCase(prChecklist
 							.getScQtCheckList().getPmDocument()
 							.getDocDefinitionKey())) {
+						proposalCheckList = prChecklist;
+						break;
+					}
+				}
+			}
+		}
+		return proposalCheckList;
+	}
+	
+	
+	
+	private ScQtProposalChecklist findProposalChecklistByGroupID( List<ScQtProposalChecklist> proposalChecklists, String docDefKey,String groupId) {
+		ScQtProposalChecklist proposalCheckList = null;
+        Integer  docGroupId= Integer.valueOf(groupId);
+		if (null != proposalChecklists && StringUtils.isNotBlank(docDefKey)) {
+			for (ScQtProposalChecklist prChecklist : proposalChecklists) {
+				if (null != prChecklist.getScQtCheckList().getPmDocument()) {
+					if ((docDefKey.equalsIgnoreCase(prChecklist.getScQtCheckList().getPmDocument().getDocDefinitionKey())) && (docGroupId.equals(prChecklist.getScQtCheckList().getPmDocument().getDocGroupId()) )) {
 						proposalCheckList = prChecklist;
 						break;
 					}
