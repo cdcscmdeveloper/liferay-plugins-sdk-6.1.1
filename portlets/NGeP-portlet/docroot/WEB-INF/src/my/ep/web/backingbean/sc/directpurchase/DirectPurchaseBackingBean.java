@@ -1067,9 +1067,19 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			return getStatusDescById(DPStatusConstants.SQ_EXPIRED);
 		}
 		Long statusId = null;
+		String docType = null;
+		
+		if(dpObj[3] != null){
+			docType = (String) dpObj[3];
+		}
 		if(dpObj[4] != null){
 			statusId = (Long) dpObj[4];
 		}		
+		if(docType.equals("PD")){
+			if(statusId.equals(DPStatusConstants.PID_EXPIRED)){
+				return getStatusDescById(DPStatusConstants.PID_COMPLETED);
+			}
+		}
 		return getStatusDescById(statusId);
 	}
 	
