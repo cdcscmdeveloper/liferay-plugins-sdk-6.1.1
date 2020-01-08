@@ -1,13 +1,16 @@
 package my.ep.web.backingbean.sm.cancelregistration;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
+import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
@@ -240,12 +243,22 @@ public class CancelRegistrationBackingBean extends
 		}
 		if (currentPersonnel != null) {
 			PersonnelReqDTO anotherReqDTO = new PersonnelReqDTO();
+			PersonnelResDTO resDTO = new PersonnelResDTO();
 			FacesScopes facesScopes = new FacesScopes();
 			anotherReqDTO.setSmPersonnel(currentPersonnel);
 			anotherReqDTO.setUserLocale(facesScopes.getUserLocale());
 			//PersonnelResDTO pResDTO = personnelSO.inactiveSupplierRole(anotherReqDTO);
 			personnelSO.inactiveSupplierRole(anotherReqDTO);
-			cancelReasonInfo();
+			cancelReasonInfo();	
+			
+			if(resDTO.isSuccessful()){
+				String succesfulMsg = SmCommonUtil.getMessage("lbl.sm.supplier.pre.registration.deleted", 
+						new String[] { getManagedBean().getAccType() });
+				
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+								FacesMessage.SEVERITY_INFO, null, succesfulMsg));
+			}
+			
 		} else {
 			throw new EpException("Missing personnel");
 		}
