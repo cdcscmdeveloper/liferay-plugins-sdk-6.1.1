@@ -1,13 +1,14 @@
 package my.ep.web.backingbean.sm.cancelregistration;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
-import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -17,13 +18,12 @@ import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
-import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
-import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.cancelregistration.CancelRegistartionManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
@@ -63,112 +63,100 @@ public class CancelRegistrationBackingBean extends
 		reqDTO.setRegNo(this.getManagedBean().getBusinessRegNo());
 		reqDTO.setCompanyName(this.getManagedBean().getCompanyName());
 		reqDTO.setApplType(getManagedBean().getAccType());
-		System.out.println("Business Reg Number:" + reqDTO.getRegNo());
-		System.out.println("Company Name:" + reqDTO.getCompanyName());
-		System.out.println("AccountType=" + getManagedBean().getAccType());
-		System.out.println("suppAdminIdentificationNo="
-				+ getManagedBean().getSuppAdminIdentificationNo());
 		String accTypeStr = StringUtils.EMPTY;
 
 		try {
 
-			
-			
 			SupplierSearchResDTO resDTO = SmServiceLookup.getSupplierSearchSO()
 					.retrieveNewSupplierAndPersonnelsByBusRegNoAndName(reqDTO);
-			System.out.println("---------1");
 
 			if (resDTO.getSmSupplier() != null
 					&& resDTO.getSmSupplier().getSmAppl() != null
 					&& !EntityHelper.isCollectionEmpty(resDTO.getSmSupplier()
 							.getSmAppl().getSmPersonnels())) {
-				System.out.println("---------2");
-				
+
+				getManagedBean().setSmAppl(resDTO.getSmSupplier().getSmAppl());
 				selectedPersonnel = getAdminPersonnel(resDTO.getSmSupplier());
-				System.out.println("getAminPersonnel-------"+selectedPersonnel);
 				getManagedBean().setSmSupplier(resDTO.getSmSupplier());
-				if (selectedPersonnel ==null) {
-					System.out.println("Error Message(missing data in DB)1="+MessageConst.ERROR_721070);
-					throw new EpException(MessageConst.ERROR_721070);
-					
+				if (selectedPersonnel == null) {
+					throw new EpException(MessageConst.ERROR_721090);
+
 				} else {
 					// check the status of softcert request
-					if(selectedPersonnel.getSoftcertFlg()==(DbValueConst.RECORD_STATUS_EXPIRED)){
-						System.out.println("Error Message softcertFlg 2="+MessageConst.ERROR_721071);
-						throw new EpException(MessageConst.ERROR_721071);
+					if (selectedPersonnel.getSoftcertFlg() == (DbValueConst.RECORD_STATUS_EXPIRED)) {
+
+						throw new EpException(MessageConst.ERROR_721091);
 					}
-					//check new MOF Account (Contractor/Consultant) pending supplier application
-					if(resDTO.getSmSupplier().getSmAppl().getRecordStatusFlg()==(DbValueConst.RECORD_STATUS_EXPIRED)){
-						
-						System.out.println("Error Message MOF error="+MessageConst.ERROR_721041);
-						throw new EpException(MessageConst.ERROR_721041,new String[]{resDTO.getSmSupplier().getSmAppl().getApplNo(),
-								resDTO.getSmSupplier().getSmAppl().getPmStatus().getPmStatusDescs().get(0).getLanguageCode()});
-						
+					// check new MOF Account (Contractor/Consultant) pending
+					// supplier application
+					if (resDTO.getSmSupplier().getSmAppl().getRecordStatusFlg() == (DbValueConst.RECORD_STATUS_EXPIRED)) {
+
+						throw new EpException(MessageConst.ERROR_721092,
+								new String[] {
+										resDTO.getSmSupplier().getSmAppl()
+												.getApplNo(),
+										resDTO.getSmSupplier().getSmAppl()
+												.getPmStatus()
+												.getPmStatusDescs().get(0)
+												.getLanguageCode() });
+
 					}
 
 					if (selectedPersonnel.getIdentificationNo().equals(
 							getManagedBean().getSuppAdminIdentificationNo())
-							&& selectedPersonnel
-									.getRecordStatusFlg()
-									.equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
-						
-						
-						
-					if(getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.STYPE_BASIC)){
-						accTypeStr=SmCommonUtil.getMessage("lbl.sm.basic.account.basic", null);
-						
-						System.out.println("accTypeStr-------1=="+accTypeStr);
-						
-					}else if(getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
-						accTypeStr=SmCommonUtil.getMessage("lbl.sm.basic.account.mof.contractor", null);
-						
-						System.out.println("accTypeStr-------2=="+accTypeStr);
-						
-					}else if(getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)){
-						accTypeStr=SmCommonUtil.getMessage("lbl.sm.basic.account.mof.consultant", null);
-						
-						System.out.println("accTypeStr-------3=="+accTypeStr);
-					}else{
-						getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.STYPE_GOVT_SELLER);
-						accTypeStr=SmCommonUtil.getMessage("lbl.sm.basic.account.govt", null);
-						System.out.println("accTypeStr-------4=="+accTypeStr);
-					}
-						
-						
-						String msg = SmCommonUtil.getMessage("lbl.sm.req.cancel.confirmation.msg", new String[] {accTypeStr});
+							&& selectedPersonnel.getRecordStatusFlg().equals(
+									DbValueConst.RECORD_STATUS_ACTIVE)) {
+
+						if (getManagedBean().getAccType().equalsIgnoreCase(
+								SupplierManagementConst.STYPE_BASIC)) {
+							accTypeStr = SmCommonUtil.getMessage(
+									"lbl.sm.basic.account.basic", null);
+
+						} else if (getManagedBean()
+								.getAccType()
+								.equalsIgnoreCase(
+										SupplierManagementConst.STYPE_CONTRACTOR)) {
+							accTypeStr = SmCommonUtil
+									.getMessage(
+											"lbl.sm.basic.account.mof.contractor",
+											null);
+
+						} else if (getManagedBean()
+								.getAccType()
+								.equalsIgnoreCase(
+										SupplierManagementConst.STYPE_CONSULTANT)) {
+							accTypeStr = SmCommonUtil
+									.getMessage(
+											"lbl.sm.basic.account.mof.consultant",
+											null);
+
+						} else {
+							getManagedBean().getAccType().equalsIgnoreCase(
+									SupplierManagementConst.STYPE_GOVT_SELLER);
+							accTypeStr = SmCommonUtil.getMessage(
+									"lbl.sm.basic.account.govt", null);
+
+						}
+
+						String msg = SmCommonUtil.getMessage(
+								"lbl.sm.req.cancel.confirmation.msg",
+								new String[] { accTypeStr });
 						getManagedBean().setAccType(msg);
-						
-//						getManagedBean().setConformPopUpMsg(SmCommonUtil.getMessage(
-//								"lbl.sm.req.cancel.confirmation.msg",
-//								new String[] {this.getManagedBean().getAccType() }));
 
 						RequestContext.getCurrentInstance().execute(
 								"confirmDialog.show();");
-						
-						
-						
-						
-						
 
 					} else {
-						System.out.println("Error Message(incorrect Identification number)3="+MessageConst.ERROR_721070);
-						throw new EpException(MessageConst.ERROR_721070);
+						throw new EpException(MessageConst.ERROR_721090);
 					}
 				}
 			} else {
-				System.out.println("Error Message(incorrect Regno/company name)4="+MessageConst.ERROR_721070);
-				throw new EpException(MessageConst.ERROR_721070);
+				throw new EpException(MessageConst.ERROR_721090);
 			}
-			
-			
-		}finally {
-			
-		} 
-		/*
-		 * catch (Exception ex) {
-		 * System.out.println("Error Message 5="+MessageConst.ERROR_721070);
-		 * throw new EpException(MessageConst.ERROR_721070); }
-		 */
+
+		} finally {
+
+		}
 	}
 
 	/**
@@ -217,11 +205,7 @@ public class CancelRegistrationBackingBean extends
 	}
 
 	public String onClickProceed() {
-		System.out.println("AccountType1=" + getManagedBean().getAccType());
-		System.out.println("AccountType2=" + getManagedBean().getAccType());
 		if (getManagedBean().getAccType() != null) {
-			System.out.println("1------AccountType="
-					+ getManagedBean().getAccType());
 			if (getManagedBean().getAccType().equals(
 					SupplierManagementConst.STYPE_BASIC)) {
 				getManagedBean()
@@ -235,8 +219,6 @@ public class CancelRegistrationBackingBean extends
 				getManagedBean().setAccType(
 						SupplierManagementConst.STYPE_CONSULTANT);
 			} else {
-				System.out.println("2----------AccountType="
-						+ getManagedBean().getAccType());
 				getManagedBean().setAccType(
 						SupplierManagementConst.STYPE_GOVT_SELLER);
 				return cancelG2GAccountRegistration;
@@ -249,12 +231,9 @@ public class CancelRegistrationBackingBean extends
 	}
 
 	public void cancelDeleteAction() {
-		// set Record Status=2(Cancelled)
 		IPersonnelSO personnelSO = SmServiceLookup.getPersonnelSO();
 		SmSupplier supplier = this.getManagedBean().getSmSupplier();
 		SmPersonnel currentPersonnel = null;
-		System.out.println("personnel value1="+supplier.getSmAppl().getApplId());
-		System.out.println("personnel value2="+supplier.getSmAppl().getSmPersonnels());
 		for (SmPersonnel personnel : supplier.getSmAppl().getSmPersonnels()) {		
 			if (this.getManagedBean().getSuppAdminIdentificationNo()
 					.equalsIgnoreCase(personnel.getIdentificationNo())) {
@@ -264,11 +243,21 @@ public class CancelRegistrationBackingBean extends
 		}
 		if (currentPersonnel != null) {
 			PersonnelReqDTO anotherReqDTO = new PersonnelReqDTO();
-
+			FacesScopes facesScopes = new FacesScopes();
 			anotherReqDTO.setSmPersonnel(currentPersonnel);
-			PersonnelResDTO pResDTO = personnelSO.inactiveSupplierRole(anotherReqDTO);
-			//System.out.println("personal ID======="+pResDTO.getSmPersonnel().getPersonnelId());
+			anotherReqDTO.setUserLocale(facesScopes.getUserLocale());
+			//PersonnelResDTO pResDTO = personnelSO.inactiveSupplierRole(anotherReqDTO);
+			personnelSO.inactiveSupplierRole(anotherReqDTO);
 			cancelReasonInfo();
+			
+			PersonnelResDTO resDTO = new PersonnelResDTO();
+			if(resDTO.isSuccessful()){
+				String succesfulMsg = SmCommonUtil.getMessage("lbl.sm.supplier.pre.registration.deleted", 
+						new String[] { getManagedBean().getAccType() });
+				
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+								FacesMessage.SEVERITY_INFO, null, succesfulMsg));
+			}
 		} else {
 			throw new EpException("Missing personnel");
 		}
@@ -276,20 +265,13 @@ public class CancelRegistrationBackingBean extends
 	}
 
 	private void cancelReasonInfo() {
-		System.out.println("getManagedBean().getSmAppl().getApplId():="
-				+ getManagedBean().getSmAppl().getApplId());
 		SmRemarksReqDTO reqDTO = new SmRemarksReqDTO();
+		SmRemaksResDTO resDTO = new SmRemaksResDTO();
 		reqDTO.setDocType(ParameterConst.SM_APPLN_RMRK_CANCEL_NEW_REGISTRATION_INPROGRESS);
-		reqDTO.setDocId(getManagedBean().getSmAppl().getApplId());
+		reqDTO.setSupplierRemark(this.getManagedBean().getCancellationReason());
+		reqDTO.setDocId(this.getManagedBean().getSmAppl().getApplId());
+	    resDTO = SmServiceLookup.getSmRemarksSO()
+				.updateSupplierReason(reqDTO);
 
-		SmRemaksResDTO resDTO = SmServiceLookup.getSmRemarksSO()
-				.retrieveSmRemarksByDocument(reqDTO);
-
-		if (resDTO.getRemarksList() != null
-				&& resDTO.getRemarksList().size() > 0) {
-			SmRemark remark = resDTO.getRemarksList().get(0);
-			getManagedBean().setCancellationReason(remark.getDocType());
-
-		}
 	}
 }
