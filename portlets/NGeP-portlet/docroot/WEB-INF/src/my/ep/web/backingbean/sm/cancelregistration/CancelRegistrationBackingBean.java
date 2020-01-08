@@ -243,14 +243,14 @@ public class CancelRegistrationBackingBean extends
 		}
 		if (currentPersonnel != null) {
 			PersonnelReqDTO anotherReqDTO = new PersonnelReqDTO();
-			PersonnelResDTO resDTO = new PersonnelResDTO();
 			FacesScopes facesScopes = new FacesScopes();
 			anotherReqDTO.setSmPersonnel(currentPersonnel);
 			anotherReqDTO.setUserLocale(facesScopes.getUserLocale());
 			//PersonnelResDTO pResDTO = personnelSO.inactiveSupplierRole(anotherReqDTO);
 			personnelSO.inactiveSupplierRole(anotherReqDTO);
-			cancelReasonInfo();	
+			cancelReasonInfo();
 			
+			PersonnelResDTO resDTO = new PersonnelResDTO();
 			if(resDTO.isSuccessful()){
 				String succesfulMsg = SmCommonUtil.getMessage("lbl.sm.supplier.pre.registration.deleted", 
 						new String[] { getManagedBean().getAccType() });
@@ -258,7 +258,6 @@ public class CancelRegistrationBackingBean extends
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 								FacesMessage.SEVERITY_INFO, null, succesfulMsg));
 			}
-			
 		} else {
 			throw new EpException("Missing personnel");
 		}
