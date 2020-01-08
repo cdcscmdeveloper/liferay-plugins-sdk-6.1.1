@@ -38,7 +38,7 @@ public class ApproverSettings {
 				}
 			}
 		}
-		removeDeskOfficer(approvers);
+//		removeDeskOfficer(approvers);
 	
 		for(PmUser pmUser:approvers){
 			ScQtApproverSettings qtApproverSettings = new ScQtApproverSettings();
