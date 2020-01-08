@@ -15,10 +15,11 @@
 		<table>
 			<tr>
 				<td><LABEL><ui:fragment rendered="#{!statusHide}">
-							<span class="mandatory">* </span>
+						<!--  <span class="mandatory">* </span> -->	   <!--  Span tag comment CR Financial Checklist #26339 -->
 						</ui:fragment>#{lbl['lbl.sc.current.asset']}</LABEL></td>
+						<!-- CR Financial Checklist #26339  Removed required="true" from below tag-->
 				<td colspan="3"><p:inputText id="currentAsset"
-						style="text-align:right;margin-bottom: 5px;" required="true"
+						style="text-align:right;margin-bottom: 5px;" 
 						label="#{lbl['lbl.sc.current.asset']}" disabled="#{statusHide or supplierProposalDetailBackingBean.managedBean.readOnly}"
 						maxlength="14"
 						value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPAssetLiability.currentAssets}"
@@ -32,10 +33,11 @@
 			</tr>
 			<tr>
 				<td><LABEL><ui:fragment rendered="#{!statusHide}">
-							<span class="mandatory">* </span>
+							<!--   <span class="mandatory">* </span> -->       <!--  Span tag comment CR Financial Checklist #26339 -->
 						</ui:fragment>#{lbl['lbl.sc.current.liability']}</LABEL></td>
+						<!-- CR Financial Checklist #26339  Removed required="true" from below tag-->
 				<td colspan="3"><p:inputText id="currentLiabilities"
-						style="text-align:right;margin-bottom: 5px;" required="true"
+						style="text-align:right;margin-bottom: 5px;" 
 						disabled="#{statusHide or supplierProposalDetailBackingBean.managedBean.readOnly}"
 						label="#{lbl['lbl.sc.current.liability']}" maxlength="14"
 						value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPAssetLiability.currentLiabilities}"
@@ -51,10 +53,11 @@
 
 			<tr>
 				<td><LABEL><ui:fragment rendered="#{!statusHide}">
-							<span class="mandatory">* </span>
+						<!--  	<span class="mandatory">* </span>   -->     <!--  Span tag comment CR Financial Checklist #26339 -->
 						</ui:fragment>#{lbl['lbl.sc.total.cash.hand']}</LABEL></td>
+						<!-- CR Financial Checklist #26339  Removed required="true" from below tag-->
 				<td colspan="3"><p:inputText id="totalCashInHand"
-						style="text-align:right;margin-bottom: 5px;" required="true"
+						style="text-align:right;margin-bottom: 5px;" 
 						label="#{lbl['lbl.sc.total.cash.hand']}" disabled="#{statusHide or supplierProposalDetailBackingBean.managedBean.readOnly}"
 						maxlength="14"
 						value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPAssetLiability.totalCashInHand}"
@@ -68,10 +71,11 @@
 			</tr>
 			<tr>
 				<td><ui:fragment rendered="#{!statusHide}">
-						<h:outputText value="* " styleClass="mandatory" />
+					<!-- 	<h:outputText value="* " styleClass="mandatory" />  -->  <!--  Span tag comment CR Financial Checklist #26339 -->
 					</ui:fragment> <h:outputLabel value="#{lbl['lbl.sc.total.account.receivable']}" /></td>
+					<!-- CR Financial Checklist #26339  Removed required="true" from below tag-->
 				<td colspan="3"><p:inputText id="totalAccountReceivable"
-						style="text-align:right;margin-bottom: 5px;" required="true"
+						style="text-align:right;margin-bottom: 5px;" 
 						disabled="#{statusHide or supplierProposalDetailBackingBean.managedBean.readOnly}"
 						label="#{lbl['lbl.sc.total.account.receivable']}" maxlength="14"
 						value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPAssetLiability.totalAccountReceivable}"
