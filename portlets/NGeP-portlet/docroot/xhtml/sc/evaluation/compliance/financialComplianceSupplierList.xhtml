@@ -49,13 +49,13 @@
 
 			<p:column headerText="#{lbl['lbl.sc.compliance.status']}"
 				style="width:15%">
+				<!-- 26339  Venkat Removed from disabled attribute  'or evaluationBackingBean.managedBean.FP_Compliance'-->
 				<p:selectOneMenu
-					disabled="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'false' or evaluationBackingBean.managedBean.statusOnly or evaluationBackingBean.managedBean.complianceReEvaluateRequired
-					or evaluationBackingBean.managedBean.FP_Compliance}"  
+					disabled="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'false' or evaluationBackingBean.managedBean.statusOnly or evaluationBackingBean.managedBean.complianceReEvaluateRequired }"  
 					value="#{complianceTechnicalSupplier.compliance}">
 
 					<f:selectItems
-						value="#{evaluationBackingBean.statusDropdownCodeValues(ParameterTypeConst.complianceStatus)}"></f:selectItems>
+						value="#{evaluationBackingBean.statusDropdownCodeValues(ParameterTypeConst.complianceStatus,complianceTechnicalSupplier.scQtProposalChecklistAttachment)}"></f:selectItems>
 					<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
 				</p:selectOneMenu>
 			</p:column>
@@ -64,9 +64,10 @@
 				style="width:35%;white-space: normal;">
 				<ui:fragment
 					rendered="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'true'}">
+					<!-- 26339  Venkat Removed from disabled attribute  'or evaluationBackingBean.managedBean.FP_Compliance'-->
 					<p:inputTextarea rows="2" cols="40" maxlength="200" onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);"
 						onmouseout="limitTextArea(this,200);"
-						disabled="#{evaluationBackingBean.managedBean.statusOnly or evaluationBackingBean.managedBean.complianceReEvaluateRequired or evaluationBackingBean.managedBean.FP_Compliance}"
+						disabled="#{evaluationBackingBean.managedBean.statusOnly or evaluationBackingBean.managedBean.complianceReEvaluateRequired }"
 						id="complianceRemarksid"
 						value="#{complianceTechnicalSupplier.remark}">
 						<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
