@@ -1122,6 +1122,18 @@ public class QtSpecCloneBackingBean extends
 				bean.setSearchValue(qtNo);
 				searchFilterBean.add(bean);
 			}
+			
+			if (null != this.getManagedBean().getQt() 
+					&& null != this.getManagedBean().getPanel() 
+					//&& QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(statId)
+					){
+				
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchField("isPanel");
+				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+				bean.setSearchValue(this.getManagedBean().getPanel());
+				searchFilterBean.add(bean);
+			}
 
 			String procurementMode = cloneQtnTenderSearchBean
 					.getProcurementMode();
