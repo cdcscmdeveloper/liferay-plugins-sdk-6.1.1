@@ -1773,6 +1773,7 @@ public class SPDetailBackingBean extends
 	public String saveAssetLiabilityAction(boolean isCompleted) {
 		debugLogger("saveAssetLiabilityAction supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		validateProposalCloseTime(this.getManagedBean().getQt());
+		// #26339 Venkat start
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 				.getFinancialQtProposalChecklist();
 		List<EncryptDataBean> prpAssetLiabilityList = new ArrayList<EncryptDataBean>();
@@ -1838,7 +1839,7 @@ public class SPDetailBackingBean extends
 						
 					}
 				}
-			}
+			}      	// #26339 Venkat End
 			
 			if (scQtPRPAssetLiability.getCurrentAssets() != null) {
 				EncryptDataBean currentAsset = new EncryptDataBean();
@@ -1875,7 +1876,8 @@ public class SPDetailBackingBean extends
 			reqDTO.setQtId(getManagedBean().getQt().getQtId());
 			reqDTO.setScQt(this.getManagedBean().getQt());
 			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
-	
+			// #26339 Venkat start
+			 
 			if (resDTO.isSuccessful()) {
 				
 				if (isCompleted) {
@@ -1890,7 +1892,7 @@ public class SPDetailBackingBean extends
 					}
 				}
 				
-				
+				// #26339 Venkat End	
 				
 		
 	
