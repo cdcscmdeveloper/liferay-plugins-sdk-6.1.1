@@ -293,7 +293,7 @@ public class QTCloneBackingbean extends
 			Long statId=this.getManagedBean().getQt().getQtStatus().getStatusId();
 			if (null != this.getManagedBean().getQt() 
 					&& null != this.getManagedBean().getPanel() 
-					&& QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(statId)
+					//&& QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(statId)
 					){
 				
 				SearchFilterBean bean = new SearchFilterBean();
