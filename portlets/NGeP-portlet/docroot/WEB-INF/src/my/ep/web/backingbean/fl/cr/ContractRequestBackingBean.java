@@ -398,6 +398,11 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			//24893 - end
 			
 			iFulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
+			//26646-start
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+				iFulfilmentRequestSO.resetFLItemSummaryItem(flRequest.getFulfilmentReqId());
+			}
+			//26646-end
 			FulfilmentResDTO resDTO = iFulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
 			reqDTO.setTriggerBPM(true);
 			reqDTO.setFlFulfilmentRequest(resDTO.getFlFulfilmentRequest());
