@@ -847,7 +847,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * @return the string
 	 */
 	public String gotoQtSearchPage() {
-		debugLogger("gotoQtSearchPage");
+		debugLogger("gotoQtSearchPage");		
 		this.getManagedBean().getSearchQTDataModel().reloadData();
 		return QTConstants.SEARCH_PAGE;
 	}
@@ -7039,8 +7039,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		ScWorkFlowStatus status = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
 		if(status!=null){
 			if(status.isCurrent() 
-					&& (status.getPmStatus().getStatusId().equals(QTStatusConst.EPV_PENDING_APPROVAL)
-					|| status.getPmStatus().getStatusId().equals(QTStatusConst.EPV_APPROVED)
+					&& (status.getPmStatus().getStatusId().equals(QTStatusConst.EPV_APPROVED)
 					|| status.getPmStatus().getStatusId().equals(QTStatusConst.EPV_PENDING_SUPPLIER_ACCEPTANCE))){
 				Timestamp extensionRespDate = getQTDetailSO().getExtensionResponseDueDate(qtId);
 				return extensionRespDate;
