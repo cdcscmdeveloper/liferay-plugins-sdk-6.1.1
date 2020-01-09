@@ -5326,7 +5326,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 			}
 		}
-
 		if (userRole == null) {
 			throw new EpException(MessageConst.ERROR_750040);
 		} else {
@@ -5543,12 +5542,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				currCommitteeMember.setRepresentativeType(repType);
 				currCommitteeMember.getRepresentativeType().setParameterId(parameterId);
 
-				for (CtCommitteeMember committeMember : ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
+				/*for (CtCommitteeMember committeMember : ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
 					if(committeMember.getPmUser().getUserId() == currCommitteeMember.getPmUser().getUserId()) {
 						committeMember.setRepresentativeType(repType);
 						committeMember.getRepresentativeType().setParameterId(parameterId);
 					}
-				}
+				}*/
 			}
 		}
 	}
