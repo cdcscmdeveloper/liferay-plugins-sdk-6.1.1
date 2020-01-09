@@ -5,6 +5,26 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<style>
+		.myProfile-title {
+			font-family: Arial, Helvetica, sans-serif;
+			font-size: 12px;
+			font-weight: bold;
+			color: #000;
+			margin: 10px;
+		}
+		
+		.myProfile-text {
+			font-family: Arial, Helvetica, sans-serif;
+			font-size: 12px;
+			color: #000;
+			margin: 10px;
+			word-wrap: break-word;
+			padding: 3px;
+		}
+	</style>
+
 	<ac:gpkiPopup
 			textBeforeSign="#{amendmentBackingBean.managedBean.textBeforeSign}"
 			postSignAction="#{amendmentBackingBean.preSubmitContractAmendment(gpkiBackingBean.pmDigiSign)}"
@@ -16,6 +36,22 @@
 			postSignAction="#{amendmentBackingBean.preSubmitContractAmendment(spkiBackingBean.pmDigiSign)}"
 			enableAutoUpdate="#{amendmentBackingBean.enableAutoUpdate()}" />
 		<table style="width: 100%;">
+			<tr>
+				<td colspan="2" valign="top" class="myProfile-title" style="color:blue;">
+					<h:outputText rendered="#{not empty amendmentBackingBean.managedBean.disciplinaryActionMsg}" 
+					value="#{amendmentBackingBean.managedBean.disciplinaryActionMsg}"/>
+						
+					<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+						rendered="#{not empty amendmentBackingBean.managedBean.disciplinaryActionMsg}"
+						action="#{amendmentBackingBean.onViewDisciplinaryAction}" 
+						process="@this" partialSubmit="true" update=":form">
+						<u><h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" styleClass="warning" /></u>
+					</p:commandLink><p:spacer width="2"/>
+						
+					<h:outputText rendered="#{not empty amendmentBackingBean.managedBean.disciplinaryActionMsg}"
+							value="#{lbl['lbl.sm.supplier.to.view.disc.action.details']}"/>
+				</td>
+			</tr>
 			<tr>
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}"
 						immediate="true" onstart="blockWidget.show();"
@@ -43,10 +79,11 @@
 					</ui:repeat>
 					</ui:define>
 					</ui:decorate>
-					</td>
+				</td>
 			</tr>
 		</table>
 	<p:remoteCommand update=":form:panelHeaderException"
 		actionListener="#{amendmentBackingBean.showCompleteButton}"
 		name="showCompleteBtn" />
+	<ac:disciplinaryActionHistory voList="#{amendmentBackingBean.managedBean.disciplineVOs}" />
 </ui:composition>
