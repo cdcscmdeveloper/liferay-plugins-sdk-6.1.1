@@ -4480,7 +4480,8 @@ public class SpecificationBackingBean extends
 //							.updateItemWeightageReq(templateSpecBean);
 				}		
 				
-				
+				checkList.getScQtDoc()
+				.getTplSpecMaster().setTechnicalSpecQuestionsToDelete(null);
 				templateSpecBean.setSpecMaster(checkList.getScQtDoc()
 						.getTplSpecMaster());
 				if (this.getManagedBean().getQt().isZonal()
@@ -5054,6 +5055,8 @@ public class SpecificationBackingBean extends
 						templateresDTO.getSpecMaster());
 				TemplateSpecBean templateSpecBean = getManagedBean()
 						.getTemplateSpecBean();
+				checkList.getScQtDoc()
+				.getTplSpecMaster().setTechnicalSpecQuestionsToDelete(null);
 				templateSpecBean.setSpecMaster(checkList.getScQtDoc()
 						.getTplSpecMaster());
 
@@ -9737,6 +9740,26 @@ public class SpecificationBackingBean extends
 		
 		this.getManagedBean().setMarkDeletedTechChecklist(new ArrayList<ScQtCheckList>());
 		this.getManagedBean().setMarkDeletedFinChecklist(new ArrayList<ScQtCheckList>());
+		Long statusId = scQt.getQtStatus().getStatusId();
+		
+		if(this.getManagedBean().isReadOnly() && !(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(statusId))){
+			log.debug("TestmangaEstimatedAmountPrerenderView");
+			if (null == scQt.getEstimatedAmount()) {
+				SpecificationReqDTO estimatedReqDTo = new SpecificationReqDTO();
+				estimatedReqDTo.setQtId(scQt.getQtId());
+				IQTSpecSO specSO = getSpecSO();
+				SpecificationResDTO resTO = specSO
+						.calCulateTemplateSpecEstimations(estimatedReqDTo);
+				if (null != resTO
+						&& null != resTO.getTotalSpecEstimatedAmount()) {
+					scQt.setEstimatedAmount(resTO
+							.getTotalSpecEstimatedAmount());
+				}
+				new CreateQtBackingBean().setProcurementMode(scQt,
+						scQt.getEstimatedAmount());
+			}
+			
+		}
 		
 		checkProcurementModeValue();
 		committeSO = null;
@@ -11696,6 +11719,8 @@ public class SpecificationBackingBean extends
 		localCheckList.getScQtDoc().setTplSpecMaster(tmpresDTO.getSpecMaster());
 		TemplateSpecBean templateSpecBean = getManagedBean()
 				.getTemplateSpecBean();
+		localCheckList.getScQtDoc()
+		.getTplSpecMaster().setTechnicalSpecQuestionsToDelete(null);
 		templateSpecBean.setSpecMaster(localCheckList.getScQtDoc()
 				.getTplSpecMaster());
 		if (this.getManagedBean().getQt().isZonal()) {
