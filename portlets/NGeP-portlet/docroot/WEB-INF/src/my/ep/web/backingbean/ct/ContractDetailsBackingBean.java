@@ -1739,7 +1739,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	public boolean checkFactoringExpiryDate() {
 		if (ctBB.getManagedBean().getContractVer().getCtContract().getCtFactoring() != null 
 				&& ctBB.getManagedBean().getContractVer().getCtContract().getCtFactoring().getStatus() != null
-				&& (ctBB.getManagedBean().getContractVer().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.RF_COMPLETE.longValue()
+				&& (ctBB.getManagedBean().getContractVer().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.RF_COMPLETE.longValue() 
+				|| ctBB.getManagedBean().getContractVer().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.UF_COMPLETE.longValue() 
 				|| ctBB.getManagedBean().getContractVer().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.XF_PENDING_ACKNOWLEDGEMENT.longValue()
 				|| ctBB.getManagedBean().getContractVer().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.XF_PENDING_ENDORSEMENT.longValue())) {
 			return true;
