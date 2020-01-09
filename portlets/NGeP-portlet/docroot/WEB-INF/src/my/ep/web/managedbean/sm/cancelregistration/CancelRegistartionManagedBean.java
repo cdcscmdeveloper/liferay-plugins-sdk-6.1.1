@@ -20,6 +20,7 @@ public class CancelRegistartionManagedBean extends BaseManagedBean {
 	private String cancellationReason;
 	private SmSupplier smSupplier;
 	private SmAppl smAppl;
+	private String confirmationMsg;
 
 	public String getAccType() {
 		return accType;
@@ -75,6 +76,14 @@ public class CancelRegistartionManagedBean extends BaseManagedBean {
 
 	public void setSmAppl(SmAppl smAppl) {
 		this.smAppl = smAppl;
+	}
+
+	public String getConfirmationMsg() {
+		return confirmationMsg;
+	}
+
+	public void setConfirmationMsg(String confirmationMsg) {
+		this.confirmationMsg = confirmationMsg;
 	}
 
 }
