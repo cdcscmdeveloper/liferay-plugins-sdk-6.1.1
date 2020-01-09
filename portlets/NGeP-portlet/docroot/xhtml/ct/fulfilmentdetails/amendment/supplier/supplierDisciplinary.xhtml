@@ -1,0 +1,85 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc" >
+    <p:panel id="disciplinaryPanel" header="#{lbl['lbl.ct.panel.disciplinary.decision.details']}" toggleable="true"  toggleSpeed="500">
+		<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth150">
+					          
+		<h:panelGrid columns="2" style="float:right;">
+			<h:outputText value="* " styleClass="mandatory" />
+			<p:outputLabel value="#{lbl['lbl.ct.decision']}"    />
+		</h:panelGrid>
+   		<p:selectOneMenu id="disciplinaryDecisionId"  style="width:190px;margin-bottom: 10px;"
+     		label="#{lbl['lbl.ct.decision']}" 
+      		value="#{amendmentBackingBean.managedBean.disciplinaryApprovedFlag}"  >
+				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue=""/>
+			    <f:selectItem itemLabel="#{lbl['lbl.ct.approve']}" itemValue="A"/>
+				<f:selectItem itemLabel="#{lbl['lbl.ct.reject']}" itemValue="R"/>
+				<p:ajax process="@this" partialSubmit="true" 
+					update=":form:disciplinaryDecisionId"  listener="#{amendmentBackingBean.setDisciplinaryDecisionValue}"></p:ajax>
+		</p:selectOneMenu>
+		   
+		<h:panelGrid columns="2" style="float:right;">               
+       		<h:outputText value="*" styleClass="mandatory" />
+       		<p:outputLabel value="#{lbl['lbl.txt.remarks']}" />
+     	</h:panelGrid>
+    	<h:panelGrid>
+    		<p:inputTextarea id="justificationDisciplinary" rows="4"
+            	style="width:180px;margin-bottom: 4px;"   maxlength="200"  autoResize="false" 
+         		label="#{lbl['lbl.txt.remarks']}"
+            	onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
+            	value="#{ctBackingBean.managedBean.contractVer.ctDisciplinaryActions.justification}"/>
+      	</h:panelGrid>
+            
+		<h:panelGrid columns="2" style="float:right;">
+     		<h:outputText value="* " styleClass="mandatory" />
+			<p:outputLabel value="#{lbl['lbl.ct.disciplinary.attachment']}"    />
+		</h:panelGrid>
+		<h:panelGroup id="uploadDisciplinaryAttachment">
+			<p:commandButton oncomplete="uploadDisciplinaryAttachmentDlg.show();return false;"
+				update="uploadDisciplinaryAttachment, uploadDisciplinaryAttachmentDlg" icon="ui-icon-upload"
+				rendered="#{ctBackingBean.managedBean.contractVer.disciplinaryActionAttachment.filePath == null}"/>
+     		<h:commandLink value="#{ctBackingBean.managedBean.contractVer.disciplinaryActionAttachment.fileName}"  
+           		rendered="#{ctBackingBean.managedBean.contractVer.disciplinaryActionAttachment.filePath != null}"
+          		styleClass="blue_font" action="#{ctBackingBean.commonDownload(ctBackingBean.managedBean.contractVer.disciplinaryActionAttachment.filePath, ctBackingBean.managedBean.contractVer.disciplinaryActionAttachment.fileName)}" />					
+     		<p:spacer width="3"/>
+         	<p:commandLink onclick="deleteDisciplinaryAttachmentDlg.show();" 
+	           rendered="#{ctBackingBean.managedBean.contractVer.disciplinaryActionAttachment.filePath != null}">
+	   			<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
+	      	</p:commandLink>
+		</h:panelGroup>
+
+   		<p:confirmDialog id="deleteDisciplinaryAttachmentDlg" widgetVar="deleteDisciplinaryAttachmentDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
+    		severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+      		<div class="ppRightBtn">
+		 		<p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		   			update=":form:uploadDisciplinaryAttachment, :form:uploadDisciplinaryAttachmentDlg" 
+		 			action="#{ctBackingBean.deleteAttachmentAction(ctBackingBean.managedBean.contractVer.disciplinaryActionAttachment)}" oncomplete="deleteDisciplinaryAttachmentDlg.hide();"/>
+				<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteDisciplinaryAttachmentDlg.hide();" type="button" />
+			</div>
+   		</p:confirmDialog>
+  		<p:dialog id="uploadDisciplinaryAttachmentDlg" widgetVar="uploadDisciplinaryAttachmentDlg" modal="true" resizable="false"
+	   		width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}"
+	   		onShow="singleUploadListener(disicplinaryActionUploadWV);">
+			<p:ajax event="close" />
+			<p:fileUpload style="display:inline;" mode="advanced" dragDropSupport="false" id="disciplinaryAttachmentId"
+				fileUploadListener="#{ctBackingBean.fileUpload}"  showButtons="false"
+				sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" multiple="false"
+				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" widgetVar="disicplinaryActionUploadWV"
+				invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
+				update="uploadDisciplinaryAttachment" label="#{lbl['lbl.btn.choose']}" oncomplete="uploadDisciplinaryAttachmentDlg.hide();" >
+			</p:fileUpload>
+			<f:facet name="footer">
+			<div class="ppRightBtn">
+		    	<p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadDisciplinaryAttachmentDlg.hide();" />
+   			</div>
+   			</f:facet>
+		</p:dialog>            
+     	</h:panelGrid>
+	</p:panel>
+</ui:composition>
