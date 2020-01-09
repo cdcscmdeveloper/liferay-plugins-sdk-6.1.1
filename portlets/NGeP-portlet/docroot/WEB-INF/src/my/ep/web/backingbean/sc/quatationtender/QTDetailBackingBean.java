@@ -1331,6 +1331,26 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}			
 		}
 		
+		/****************************
+		 * UPDATE SC_LOI_LOA_ITEM
+		 */
+		if(null!=scLoiForQt){
+			for(ScLoiLoaItem items : scLoaForQt.getScLoiLoaItems()){
+				reqDTO = new QuationTenderReqDTO();
+				reqDTO.setScLoiLoaItem(items);
+				ScLoiLoaItem resLoiLoaItem = detailSO.retrieveScLoiLoaItem(reqDTO).getScLoiLoaItem();
+				resLoiLoaItem.setScLoi(null);
+				detailSO.saveScLoiLoaItem(resLoiLoaItem);
+			}
+		}else if (null!=scLoaForQt){
+			for(ScLoiLoaItem items : scLoaForQt.getScLoiLoaItems()){
+				reqDTO = new QuationTenderReqDTO();
+				reqDTO.setScLoiLoaItem(items);
+				ScLoiLoaItem resLoiLoaItem = detailSO.retrieveScLoiLoaItem(reqDTO).getScLoiLoaItem();
+				resLoiLoaItem.setScLoa(null);
+				detailSO.saveScLoiLoaItem(resLoiLoaItem);
+			}
+		}
 		
 		/****************************
 		 * UPDATE SC_QT_RECOMMEND_DTL
