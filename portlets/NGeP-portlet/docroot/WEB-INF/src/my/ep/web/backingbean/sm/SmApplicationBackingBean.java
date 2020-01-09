@@ -12819,7 +12819,7 @@ public class SmApplicationBackingBean extends
 		boolean showDoc = true;
 		//ssm changes to hide doc for roc if paid up capital = paid up capital ssm. if paid up capital != paid up capital ssm show doc.
 		for(PmDocumentRestr documentRestr:doc.getPmDocumentRestrs()){
-			log.info(documentRestr.getDocumentRestrId()+"documentRestr.isCapitalEquityChanged()="+documentRestr.isCapitalEquityChanged());
+			log.info(doc.getDocName()+"--"+documentRestr.getDocumentRestrId()+"documentRestr.isCapitalEquityChanged()="+documentRestr.isCapitalEquityChanged());
 			if (documentRestr.isCapitalEquityChanged()){
 				if (changesInCapital) {
 					showDoc = true;
