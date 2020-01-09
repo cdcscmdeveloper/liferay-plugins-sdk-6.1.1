@@ -95,7 +95,7 @@
 						rendered="#{amendmentBackingBean.chkBooleanRepresentType(ctCommitteeVar.memberRoleId, ctCommitteeVar.pnp)}"
 						label="#{lbl['lbl.ct.represent.type']}" style="width: 150px;margin-bottom: 5px;">
 						<f:selectItems
-							value="#{amendmentBackingBean.getRepresentativeDropdown(ctCommitteeVar, ctCommitteeVar.representativeType.parameterId)}" />
+							value="#{amendmentBackingBean.getRepresentativeDropdown()}" />
 							<p:ajax event="change" process="@this" update="committeRepresentId" partialSubmit="true"
 								listener="#{amendmentBackingBean.onChangeRepType(ctCommitteeVar, ctCommitteeVar.representativeType.parameterId)}"></p:ajax>
 					</p:selectOneMenu>
