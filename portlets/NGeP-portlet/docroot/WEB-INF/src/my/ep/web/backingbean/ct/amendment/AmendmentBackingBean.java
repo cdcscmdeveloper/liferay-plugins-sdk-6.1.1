@@ -5326,7 +5326,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 			}
 		}
-		userRole = RoleCode.FPB_SECRETARY.value();
 		if (userRole == null) {
 			throw new EpException(MessageConst.ERROR_750040);
 		} else {
