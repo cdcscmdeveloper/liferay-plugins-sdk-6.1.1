@@ -3659,4 +3659,12 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		return ctAttachments;
 	}
 	// 21533 - end
+	
+	/**
+	 * The method used to retreive the factoring attachment from the list.
+	 */
+	public List<CtAttachment> retrieveAttachmentList()
+	{
+		return getManagedBean().getContractVer().getCtContract().getCtFactoring().getAttachement();
+	}
 }  
