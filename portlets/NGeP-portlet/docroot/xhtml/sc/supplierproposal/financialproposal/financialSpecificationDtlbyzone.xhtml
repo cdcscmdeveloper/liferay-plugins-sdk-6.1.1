@@ -20,6 +20,7 @@
 			<td width="84%" valign="top"><p:outputPanel id="zoneSpecAnswers">
 					<ac:templateSpec processValidationId="zoneRemote"
 						templateSpecBean="#{supplierProposalDetailBackingBean.managedBean.templateSpecBean}"
+						editable="#{!supplierProposalDetailBackingBean.managedBean.readOnly}"
 						title="#{lbl['lbl.sc.spec.financial.title']}" />
 				</p:outputPanel></td>
 		</tr>
