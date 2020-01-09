@@ -98,11 +98,11 @@
 		
 		
 		<p:confirmDialog id="confirmDialog" closable="true"
-			message="#{cancelRegistrationBackingBean.managedBean.accType}"
+			message="#{cancelRegistrationBackingBean.managedBean.confirmationMsg}"
 			header="#{lbl['lbl.sm.userprofile.confirmation']}" severity="alert"
 			widgetVar="confirmDialog">
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDialog.hide();" update="@form"
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDialog.hide();" update="@form,:#{p:component('messages')}"
 					action="#{cancelRegistrationBackingBean.cancelDeleteAction}"
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmDialog.hide();" />
