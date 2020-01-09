@@ -358,6 +358,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			getManagedBean().getContractVer().setPbqcDecisionLetterAttachment(attachment);
 		} else if (event.getComponent().getId().equalsIgnoreCase("mofDecisionLetterId")){
 			getManagedBean().getContractVer().setMofDecisionLetterAttachment(attachment);
+		} else if (event.getComponent().getId().equalsIgnoreCase("disciplinaryAttachmentId")){
+			getManagedBean().getContractVer().setDisciplinaryActionAttachment(attachment);
 		} else {
 			getManagedBean().getAttachmentList().add(attachment);
 		}

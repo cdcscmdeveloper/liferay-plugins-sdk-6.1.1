@@ -31,6 +31,7 @@ import my.ep.dto.ct.dtl.ContractItemResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContractVer;
+import my.ep.persistence.entity.ct.CtDisciplinaryAction;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.amend.CtCommitteeMember;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
@@ -50,6 +51,7 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.vo.DisciplinaryActionVO;
 
 /**
  * ManagedBean For Contract Amendment
@@ -132,6 +134,16 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private  boolean prodcollapse=false;
 	private IPagingDataModel<CtContractItem> contractListingPagingDataModel = new ContractListingPagingDataModel();
 	private IPagingDataModel<CtContractItem> ServiceListingPagingDataModel =  new ServiceListingPagingDataModel();
+	
+	//Enhancement #26186 start
+	private boolean disciplinaryAction; 
+	private String disciplinaryActionMsg; 
+	private List<DisciplinaryActionVO> disciplineVOs; 
+	private Long disciplinaryActionId;
+	private boolean disciplinaryApproved;
+	private String disciplinaryApprovedFlag;
+	private String justification;
+	//Enhancement #26186 end
 	
 	@ManagedProperty(value="#{spkiBackingBean}")
 	private SpkiBackingBean spkiBackingBean;
@@ -1285,6 +1297,64 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 			IPagingDataModel<CtContractItem> serviceListingPagingDataModel) {
 		ServiceListingPagingDataModel = serviceListingPagingDataModel;
 	}
-
 	
+	
+	//Enhancement #26186 start
+	public boolean isDisciplinaryAction() {
+		return disciplinaryAction;
+	}
+
+	public void setDisciplinaryAction(boolean disciplinaryAction) {
+		this.disciplinaryAction = disciplinaryAction;
+	}
+
+	public String getDisciplinaryActionMsg() {
+		return disciplinaryActionMsg;
+	}
+
+	public void setDisciplinaryActionMsg(String disciplinaryActionMsg) {
+		this.disciplinaryActionMsg = disciplinaryActionMsg;
+	}
+	
+	public List<DisciplinaryActionVO> getDisciplineVOs() {
+		return disciplineVOs;
+	}
+
+	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
+		this.disciplineVOs = disciplineVOs;
+	}
+
+	public Long getDisciplinaryActionId() {
+		return disciplinaryActionId;
+	}
+
+	public void setDisciplinaryActionId(Long disciplinaryActionId) {
+		this.disciplinaryActionId = disciplinaryActionId;
+	}
+
+	public boolean isDisciplinaryApproved() {
+		return disciplinaryApproved;
+	}
+
+	public void setDisciplinaryApproved(boolean disciplinaryApproved) {
+		this.disciplinaryApproved = disciplinaryApproved;
+	}
+
+	public String getDisciplinaryApprovedFlag() {
+		return disciplinaryApprovedFlag;
+	}
+
+	public void setDisciplinaryApprovedFlag(String disciplinaryApprovedFlag) {
+		this.disciplinaryApprovedFlag = disciplinaryApprovedFlag;
+	}
+
+	public String getJustification() {
+		return justification;
+	}
+
+	public void setJustification(String justification) {
+		this.justification = justification;
+	}
+
+	//Enhancement #26186 end
 }
