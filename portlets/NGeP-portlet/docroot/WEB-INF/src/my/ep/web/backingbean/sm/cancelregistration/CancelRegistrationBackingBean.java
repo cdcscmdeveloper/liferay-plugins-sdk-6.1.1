@@ -141,7 +141,7 @@ public class CancelRegistrationBackingBean extends
 						String msg = SmCommonUtil.getMessage(
 								"lbl.sm.req.cancel.confirmation.msg",
 								new String[] { accTypeStr });
-						getManagedBean().setAccType(msg);
+						getManagedBean().setConfirmationMsg(msg);
 
 						RequestContext.getCurrentInstance().execute(
 								"confirmDialog.show();");
@@ -250,10 +250,28 @@ public class CancelRegistrationBackingBean extends
 			personnelSO.inactiveSupplierRole(anotherReqDTO);
 			cancelReasonInfo();
 			
-			PersonnelResDTO resDTO = new PersonnelResDTO();
-			if(resDTO.isSuccessful()){
+			if(pResDTO.isSuccessful()){
+				String accTypeStr = "";				
+				if (getManagedBean().getAccType().equalsIgnoreCase(
+						SupplierManagementConst.STYPE_BASIC)) {
+					accTypeStr = SmCommonUtil
+							.getMessage("lbl.sm.basic.account.basic", null);
+				} else if (getManagedBean()
+						.getAccType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
+					accTypeStr = SmCommonUtil
+							.getMessage("lbl.sm.basic.account.mof.contractor",null);
+				} else if (getManagedBean()
+						.getAccType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
+					accTypeStr = SmCommonUtil
+							.getMessage("lbl.sm.basic.account.mof.consultant",null);
+				} else {
+					getManagedBean().getAccType().equalsIgnoreCase(
+							SupplierManagementConst.STYPE_GOVT_SELLER);
+					accTypeStr = SmCommonUtil.getMessage("lbl.sm.basic.account.govt", null);
+				}
+				
 				String succesfulMsg = SmCommonUtil.getMessage("lbl.sm.supplier.pre.registration.deleted", 
-						new String[] { getManagedBean().getAccType() });
+						new String[] { accTypeStr });
 				
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 								FacesMessage.SEVERITY_INFO, null, succesfulMsg));
