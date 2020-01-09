@@ -4000,7 +4000,11 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			retrieveProposalChecklistDtls(qtOrProposalId, new FacesScopes()
 			.getUserSessionBean().getUserId(), isReadonly, true);
 		}
-
+		
+		if(this.isProposalSubmitted()){
+			this.getManagedBean().setAgreeWithIntegrityPact(true);
+			this.getManagedBean().setAgreeWithOthersTermsConditions(true);
+		}
 		getManagedBean()
 				.setProcCategoryMedicine(
 						super.isMultipleProposalCategory(getManagedBean()
