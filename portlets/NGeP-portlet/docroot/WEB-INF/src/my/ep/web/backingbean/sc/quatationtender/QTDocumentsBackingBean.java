@@ -1725,6 +1725,23 @@ public class QTDocumentsBackingBean extends
 								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION)) {
 					if (!qtCheckList.getAction().getParameterCode()
 							.equals(ParameterConst.CHECKLIST_ACTION_VIEW)) {
+								
+						//start Bug #27158
+						String title = qtCheckList.getTitle();
+						
+						if (title == null) {
+							title = "";
+						}
+						
+						title = title.replaceAll("\r\n", "<br />");
+						title = title.replaceAll("<", "&#60;");
+						title = title.replaceAll(">", "&#62;");
+						title = title.replaceAll("\u2264", "&#60;=");//symbol less then equal
+						title = title.replaceAll("\u2265", "&#62;=");//symbol greater then equal	
+						
+						qtCheckList.setTitle(title);
+						//end Bug #27158
+						
 						uploadFinanceSpecList.add(qtCheckList);
 						isFinanceOff = true;
 					}
@@ -1788,6 +1805,23 @@ public class QTDocumentsBackingBean extends
 									.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION)) {
 						if (!qtCheckList.getAction().getParameterCode()
 								.equals(ParameterConst.CHECKLIST_ACTION_VIEW)) {
+											
+							//start Bug #27158
+							String title = qtCheckList.getTitle();
+							
+							if (title == null) {
+								title = "";
+							}
+							
+							title = title.replaceAll("\r\n", "<br />");
+							title = title.replaceAll("<", "&#60;");
+							title = title.replaceAll(">", "&#62;");
+							title = title.replaceAll("\u2264", "&#60;=");//symbol less then equal
+							title = title.replaceAll("\u2265", "&#62;=");//symbol greater then equal	
+							
+							qtCheckList.setTitle(title);
+							//end Bug #27158
+							
 							uploadTechSpecList.add(qtCheckList);
 							isTechOff = true;
 						}
