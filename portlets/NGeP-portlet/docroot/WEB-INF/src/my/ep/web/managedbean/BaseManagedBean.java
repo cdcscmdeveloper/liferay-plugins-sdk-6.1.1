@@ -8,6 +8,17 @@ import java.util.List;
 
 import javax.faces.model.SelectItem;
 
+import org.apache.commons.collections.CollectionUtils;
+
+import org.apache.commons.lang3.StringUtils;
+
+import my.ep.persistence.entity.sc.common.ScAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationReport;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
+import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.web.bean.tpl.TemplateSpecBean;
+
 /**
  * @author siew mei
  * 
@@ -32,6 +43,16 @@ public abstract class BaseManagedBean implements Serializable {
 	private String captchaText;
 	private String captchaAnswer;
 
+	//16052019 - SSM INTEGRATION CR - Fahmi
+	private boolean ssmIntegrationActive;
+	private boolean validateWithSSM;
+	private boolean companyValidWithSSM;
+	private boolean errorMessageSSM;
+	private String statusFromSSM;
+	private String statusDescFromSSM;
+	private SmSupplier smSupplierSsm;
+	private SmPersonnel smPersonnelSsm;
+		
 	// For sub title displayed in screen.
 	private String title;
 
@@ -250,5 +271,71 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setCaptchaAnswer(String captchaAnswer) {
 		this.captchaAnswer = captchaAnswer;
 	}
+	
+	public boolean isSsmIntegrationActive() {
+		return ssmIntegrationActive;
+	}
 
+	public void setSsmIntegrationActive(boolean ssmIntegrationActive) {
+		this.ssmIntegrationActive = ssmIntegrationActive;
+	}
+
+	public boolean isValidateWithSSM() {
+		return validateWithSSM;
+	}
+
+	public void setValidateWithSSM(boolean validateWithSSM) {
+		this.validateWithSSM = validateWithSSM;
+	}
+
+	public boolean isCompanyValidWithSSM() {
+		return companyValidWithSSM;
+	}
+
+	public void setCompanyValidWithSSM(boolean companyValidWithSSM) {
+		this.companyValidWithSSM = companyValidWithSSM;
+	}
+
+	public boolean isErrorMessageSSM() {
+		return errorMessageSSM;
+	}
+
+	public void setErrorMessageSSM(boolean errorMessageSSM) {
+		this.errorMessageSSM = errorMessageSSM;
+	}
+
+	public String getStatusFromSSM() {
+		return statusFromSSM;
+	}
+
+	public void setStatusFromSSM(String statusFromSSM) {
+		this.statusFromSSM = statusFromSSM;
+	}
+
+	public String getStatusDescFromSSM() {
+		return statusDescFromSSM;
+	}
+
+	public void setStatusDescFromSSM(String statusDescFromSSM) {
+		this.statusDescFromSSM = statusDescFromSSM;
+	}
+	
+	public SmSupplier getSmSupplierSsm() {
+		return smSupplierSsm;
+	}
+
+	public void setSmSupplierSsm(SmSupplier smSupplierSsm) {
+		this.smSupplierSsm = smSupplierSsm;
+	}
+
+	public SmPersonnel getSmPersonnelSsm() {
+		return smPersonnelSsm;
+	}
+
+	public void setSmPersonnelSsm(SmPersonnel smPersonnelSsm) {
+		this.smPersonnelSsm = smPersonnelSsm;
+	}
+	
+	
+	
 }

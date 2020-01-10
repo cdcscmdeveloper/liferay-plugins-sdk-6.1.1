@@ -66,8 +66,10 @@ import my.ep.persistence.entity.sm.SmStaffExperience;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
+import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.persistence.entity.sm.SmSupplierSystem;
 import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.type.aut.SearchOperator;
@@ -525,6 +527,15 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private int attachedFileIndex;
 	private SoftcertUploadSuppDocVO selectedSuppDoc;
 
+	//#16052019 - SSM INTEGRATION CR
+	private List<SmEquityCompany> smEquityCompanyTemp;
+	private List<SmPersonnel> personnelsOwner = new ArrayList();
+	private List<SmPersonnel> personnelsDirector  = new ArrayList();
+	private List<SmPersonnel> personnelsSsm  = new ArrayList();
+	private List<SmSupplierBranch>  smSupplierBranchSsm = new ArrayList();
+	private List<SmSupplierBusiness> smSupplierBusinessSsm   = new ArrayList();
+	private List<SmEquityCompany> smEquityCompaniesSsm   = new ArrayList();	
+		
 	private class RejectReasonPagingDataModel extends
 			PagingDataModel<PmReasonDesc> {
 		/**
@@ -4047,5 +4058,61 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setSelectedSuppDoc(SoftcertUploadSuppDocVO selectedSuppDoc) {
 		this.selectedSuppDoc = selectedSuppDoc;
+	}
+	
+	public List<SmEquityCompany> getSmEquityCompanyTemp() {
+		return smEquityCompanyTemp;
+	}
+
+	public void setSmEquityCompanyTemp(List<SmEquityCompany> smEquityCompanyTemp) {
+		this.smEquityCompanyTemp = smEquityCompanyTemp;
+	}
+
+	public List<SmPersonnel> getPersonnelsOwner() {
+		return personnelsOwner;
+	}
+
+	public void setPersonnelsOwner(List<SmPersonnel> personnelsOwner) {
+		this.personnelsOwner = personnelsOwner;
+	}
+
+	public List<SmPersonnel> getPersonnelsDirector() {
+		return personnelsDirector;
+	}
+
+	public void setPersonnelsDirector(List<SmPersonnel> personnelsDirector) {
+		this.personnelsDirector = personnelsDirector;
+	}
+
+	public List<SmSupplierBranch> getSmSupplierBranchSsm() {
+		return smSupplierBranchSsm;
+	}
+
+	public void setSmSupplierBranchSsm(List<SmSupplierBranch> smSupplierBranchSsm) {
+		this.smSupplierBranchSsm = smSupplierBranchSsm;
+	}
+
+	public List<SmSupplierBusiness> getSmSupplierBusinessSsm() {
+		return smSupplierBusinessSsm;
+	}
+
+	public void setSmSupplierBusinessSsm(List<SmSupplierBusiness> smSupplierBusinessSsm) {
+		this.smSupplierBusinessSsm = smSupplierBusinessSsm;
+	}
+
+	public List<SmPersonnel> getPersonnelsSsm() {
+		return personnelsSsm;
+	}
+
+	public void setPersonnelsSsm(List<SmPersonnel> personnelsSsm) {
+		this.personnelsSsm = personnelsSsm;
+	}
+
+	public List<SmEquityCompany> getSmEquityCompaniesSsm() {
+		return smEquityCompaniesSsm;
+	}
+
+	public void setSmEquityCompaniesSsm(List<SmEquityCompany> smEquityCompaniesSsm) {
+		this.smEquityCompaniesSsm = smEquityCompaniesSsm;
 	}
 }

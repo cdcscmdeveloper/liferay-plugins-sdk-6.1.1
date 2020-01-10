@@ -16,6 +16,8 @@ import javax.faces.model.SelectItem;
 
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.dto.sm.common.ssm.SsmReqDTO;
+import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.dto.sm.selfrequestsupplieradmin.SelfRequestSupplierAdminReqDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
@@ -35,6 +37,7 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.validator.common.BusinessRegNoValidator;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -87,6 +90,39 @@ public class SelfRequestSupplierAdminBackingBean extends
 		} else {
 			List<SmPersonnel> filteredPersonnels = new ArrayList<SmPersonnel>();
 			SmPersonnel tmp = null;
+			
+			//START SSM INTEGRATION
+			if(SmCommonUtil.getInstance().ssmActive() && this.getManagedBean().getSupplier()!= null && businessTypeTovalidateWithSSM(this.getManagedBean().getSupplier().getRegNo(),this.getManagedBean().getSupplier().getBusinessType())){
+				BusinessRegNoValidator validate = new BusinessRegNoValidator();
+				validate.validateRegNo(this.getManagedBean().getSupplier().getBusinessType(), this.getManagedBean().getSupplier().getRegNo(),true);
+				FacesContext fc = FacesContext.getCurrentInstance();
+				SsmReqDTO ssmReqDTO = new SsmReqDTO();
+				ssmReqDTO.setRegNo(this.getManagedBean().getSupplier().getRegNo());
+				ssmReqDTO.setBusinessType(this.getManagedBean().getSupplier().getBusinessType());
+				ssmReqDTO.setCheckOnly(true);				
+				SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
+				if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
+					//check the business/company registration status in ssm
+					this.getManagedBean().setStatusDescFromSSM(setStatusMessageFromSSM(ssmResDTO.getStatusFromSSM()));
+					if(!ssmResDTO.getStatusFromSSM().equalsIgnoreCase("A") && !ssmResDTO.getStatusFromSSM().equalsIgnoreCase("E")){
+						fc.addMessage("ssmInvalid",
+								new FacesMessage(FacesMessage.SEVERITY_ERROR, SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_721070, new String[]{SmCommonUtil.getOutputMsgBundle(this.getManagedBean().getStatusDescFromSSM(),null), ""}),
+										""));
+						throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getOutputMsgBundle(this.getManagedBean().getStatusDescFromSSM(),null), ""});
+					}
+				} else{
+					if("70001".equalsIgnoreCase(ssmResDTO.getStatusCode())){
+						fc.addMessage("ssmInvalid",
+								new FacesMessage(FacesMessage.SEVERITY_ERROR, SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_721081, new String[]{SmCommonUtil.getOutputMsgBundle(this.getManagedBean().getStatusDescFromSSM(),null), ""}),
+										""));
+						throw new EpException(MessageConst.ERROR_721081,new String[]{SmCommonUtil.getOutputMsgBundle(this.getManagedBean().getStatusDescFromSSM(),null), ""});
+					}else{
+						SmCommonUtil.ssmError(ssmResDTO);
+					}
+				}
+			}
+			//END SSM INTEGRATION
+			
 			if (getManagedBean().getSupplier() != null
 					&& getManagedBean().getSupplier().getSmAppl() != null
 					&& !EntityHelper.isCollectionEmpty(getManagedBean()
@@ -330,15 +366,14 @@ public class SelfRequestSupplierAdminBackingBean extends
 				// set mof account message status
 				SmMofAccount mofAcc = getManagedBean().getSupplier()
 						.getSmMofAccounts().get(0);
-
+				
 				if ((mofAcc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE || mofAcc
 						.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_EXPIRED)
 						&& mofAcc.getExpDate() != null) {
 					Calendar c = Calendar.getInstance();
 					c.setTime(mofAcc.getExpDate());
 					c.add(Calendar.YEAR, 1);
-					Date expiryDate = c.getTime();
-
+					Date expiryDate = c.getTime();					
 					// check if expire date less than a year
 					if (expiryDate.after(new Date())) {
 						mofStatusMsg = "lbl.sm.selfrequest.msg.mofstatus.valid";

@@ -92,7 +92,7 @@
 		</p:panel>
 		
 		<p:panel header="#{lbl['lbl.sm.other.application.inquiry']}" id="onlineInquiryPanelId" 
-			rendered="#{backingBean.managedBean.poToSupplierInquiry ne null}">
+			rendered="#{backingBean.managedBean.poToSupplierInquiry ne null}" style="word-break: break-all">
 			<h:outputText value="#{backingBean.managedBean.poToSupplierInquiry.inquiryText}" />
 		</p:panel>
 		

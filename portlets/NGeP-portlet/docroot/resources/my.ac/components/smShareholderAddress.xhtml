@@ -36,7 +36,9 @@
 				<td></td>
 				<td style="float: left;">
 					<p:selectBooleanCheckbox rendered="#{cc.attrs.showTick}"
-						value="#{cc.attrs.addrObj.sameAsPerm}">
+						value="#{cc.attrs.addrObj.sameAsPerm}"
+						disabled="#{cc.attrs.bBean.disableFieldSSm(cc.attrs.addrObj.smAddress.ssmData,cc.attrs.addrObj.smAddress.ssmData,cc.attrs.addrObj.smAddress.addressSsmNull)}"
+						>
 						<p:ajax event="change" partialSubmit="true" process="@this"
 							listener="#{cc.attrs.bBean.onTickSameAsAddress(cc.attrs.addrSameAsObj,cc.attrs.addrObj)}"
 							update=":#{p:component(cc.attrs.addrPanelId)}" onstart="blockWidget.show()" 
@@ -49,11 +51,12 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.address']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
+						
 				<td><p:inputText id="#{cc.attrs.addrId}" maxlength="100"
 						label="#{cc.attrs.addressTitle} - #{lbl['lbl.sm.address']}"
 						required="#{!cc.attrs.addrObj.sameAsPerm}"
 						readonly="#{cc.attrs.addrObj.sameAsPerm}"
-						disabled="#{cc.attrs.addrObj.sameAsPerm}"
+						disabled="#{cc.attrs.addrObj.sameAsPerm || cc.attrs.bBean.disableFieldSSm(cc.attrs.addrObj.smAddress.ssmData,cc.attrs.addrObj.smAddress.ssmData,cc.attrs.addrObj.smAddress.addressSsmNull)}"
 						value="#{cc.attrs.addrObj.smAddress.address1}"
 						size="35">
 						<p:ajax process="@this" partialSubmit="true"
@@ -74,8 +77,9 @@
 					<td></td>
 					<td><p:inputText maxlength="100"
 							readonly="#{cc.attrs.addrObj.sameAsPerm}"
-							disabled="#{cc.attrs.addrObj.sameAsPerm}"
+							disabled="#{cc.attrs.addrObj.sameAsPerm || cc.attrs.bBean.disableFieldSSm(cc.attrs.addrObj.smAddress.ssmData,cc.attrs.addrObj.smAddress.ssmData,cc.attrs.addrObj.smAddress.addressSsmNull)}"
 							value="#{cc.attrs.addrObj.smAddress.address2}"
+							
 							size="35">
 							<p:ajax process="@this" partialSubmit="true" update="@this" />
 						</p:inputText>
@@ -91,7 +95,7 @@
 					<td></td>
 					<td><p:inputText maxlength="100"
 							readonly="#{cc.attrs.addrObj.sameAsPerm}"
-							disabled="#{cc.attrs.addrObj.sameAsPerm}"
+							disabled="#{cc.attrs.addrObj.sameAsPerm || cc.attrs.bBean.disableFieldSSm(cc.attrs.addrObj.smAddress.ssmData,cc.attrs.addrObj.smAddress.ssmData,cc.attrs.addrObj.smAddress.addressSsmNull)}"
 							value="#{cc.attrs.addrObj.smAddress.address3}"
 							size="35">
 							<p:ajax process="@this" partialSubmit="true" update="@this" />
@@ -111,7 +115,7 @@
 							label="#{cc.attrs.addressTitle} - #{lbl['lbl.sm.country']}"
 							required="#{!cc.attrs.addrObj.sameAsPerm}"
 							id="#{cc.attrs.countryId}"
-							disabled="#{cc.attrs.addrObj.sameAsPerm}"
+							disabled="#{cc.attrs.addrObj.sameAsPerm || cc.attrs.bBean.disableFieldSSm(cc.attrs.addrObj.smAddress.ssmData,cc.attrs.addrObj.smAddress.ssmData,cc.attrs.addrObj.smAddress.countrySsmNull)}"
 							value="#{cc.attrs.addrObj.smAddress.countryId}"
 							style="width: 207px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
@@ -136,7 +140,7 @@
 							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu
 							label="#{cc.attrs.addressTitle} - #{lbl['lbl.sm.state']}"
-							disabled="#{cc.attrs.addrObj.sameAsPerm}"
+							disabled="#{cc.attrs.addrObj.sameAsPerm || cc.attrs.bBean.disableFieldSSm(cc.attrs.addrObj.smAddress.ssmData,cc.attrs.addrObj.smAddress.ssmData,cc.attrs.addrObj.smAddress.stateSsmNull)}"
 							required="#{!cc.attrs.addrObj.sameAsPerm}"
 							style="width: 207px;margin-bottom: 5px;"
 							value="#{cc.attrs.addrObj.smAddress.stateId}"
@@ -217,7 +221,7 @@
 								rendered="#{cc.attrs.addrObj.smAddress.countryId==cc.attrs.bBean.managedBean.myCountryId}">
 								<p:inputText maxlength="5"
 									required="#{!cc.attrs.addrObj.sameAsPerm}"
-									disabled="#{cc.attrs.addrObj.sameAsPerm}"
+									disabled="#{cc.attrs.addrObj.sameAsPerm || cc.attrs.bBean.disableFieldSSm(cc.attrs.addrObj.smAddress.ssmData,cc.attrs.addrObj.smAddress.ssmData,cc.attrs.addrObj.smAddress.postcodeSsmNull)}"
 									label="#{cc.attrs.addressTitle} -#{lbl['lbl.sm.postcode']}"
 									id="#{cc.attrs.postCodeId}My"
 									value="#{cc.attrs.addrObj.smAddress.postcode}"

@@ -37,8 +37,9 @@
 		</p:outputPanel>
 		
 		<p:outputPanel rendered="#{!registrationBackingBean.managedBean.viewMode}">
+			<h:outputText rendered="#{registrationBackingBean.managedBean.smAppl.applValidWithSsm}" value="#{lbl['lbl.sm.po.disclaimer']}" styleClass="splNotesFonts" />
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.sm.button.save']}" action="#{registrationBackingBean.updateBasicSupplier}" update="@([id$=Msg])" 
+				<p:commandButton value="#{lbl['lbl.btn.declare']}" action="#{registrationBackingBean.updateBasicSupplier}" update="@([id$=Msg])" 
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
 					<f:param name="disableValidation" value="true" />
 				</p:commandButton>

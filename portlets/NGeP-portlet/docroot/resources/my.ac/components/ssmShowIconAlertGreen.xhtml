@@ -1,0 +1,23 @@
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	<cc:interface>
+		<cc:attribute name="greenIcon" required="false" />
+		<cc:attribute name="poUser" required="false" />
+	</cc:interface>
+	
+	<cc:implementation>
+		<ui:param name="alertGreenIconId" value="#{cc.id}"></ui:param>
+		<p:outputPanel rendered="#{cc.attrs.greenIcon and cc.attrs.poUser}">
+			&#160;
+			<p:graphicImage id="#{alertGreenIconId}gi" style="vertical-align:top"
+				value="/css/images/design/icon_alert-green.svg" />
+			<p:tooltip id="alertChangeTtId" for="#{alertGreenIconId}gi">
+				<p:outputLabel escape="false" value="#{lbl['lbl.sm.register.icon.tooltips']}" />
+	         </p:tooltip>
+		</p:outputPanel>
+	</cc:implementation>
+</ui:component>

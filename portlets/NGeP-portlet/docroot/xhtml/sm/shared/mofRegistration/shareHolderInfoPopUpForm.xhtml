@@ -46,6 +46,7 @@
 				<td><p:inputText id="equiPerNam" maxlength="80"
 						label="#{lbl['lbl.sm.person.name']}" required="true"
 						value="#{backingBean.managedBean.selectedShareHolder.name}"
+						disabled="#{backingBean.managedBean.selectedShareHolder.ssmData}"
 						size="35" /> 
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges 
@@ -61,7 +62,7 @@
 						label="#{lbl['lbl.sm.person.nationality.origin']}" id="equiPerNational"
 						required="true"
 						value="#{backingBean.managedBean.selectedShareHolder.pmCountry.countryId}"
-						disabled="#{backingBean.managedBean.disabledShareholderPersonnelNameAndNationality}"
+						disabled="#{(backingBean.managedBean.disabledShareholderPersonnelNameAndNationality and backingBean.managedBean.selectedShareHolder.pmCountry.countryId != null) or (backingBean.managedBean.selectedShareHolder.pmCountry.countryId != null and backingBean.managedBean.selectedShareHolder.ssmData) }"
 						style="width: 207px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="shrOffCountry"
@@ -114,6 +115,7 @@
 				<td><p:selectOneMenu label="#{lbl['lbl.sm.person.race']}"
 						id="equiPerRace" required="true"
 						value="#{backingBean.managedBean.selectedShareHolder.pmRace.raceId}"
+						disabled="#{backingBean.disableFieldSSm(backingBean.managedBean.selectedShareHolder.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.selectedShareHolder.raceSsmNull)}"
 						style="width: 207px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="select"
@@ -127,6 +129,9 @@
 						oriValue="#{backingBean.managedBean.latestPersonnel.pmRace.raceId}" 
 						currValue="#{backingBean.managedBean.selectedShareHolder.pmRace.raceId}" 
 						alertValue="#{backingBean.getRaceLabel(backingBean.managedBean.latestPersonnel.pmRace.raceId)}"/>
+					<ac:ssmShowIconAlertGreen 
+						greenIcon="#{backingBean.showGreenIconSsm(null,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.selectedShareHolder.raceSsmNull)}" 
+						poUser="true" />
 					<p:message id="equiPerRaceMsg" for="equiPerRace"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
@@ -174,7 +179,7 @@
 						<p:inputText label="#{lbl['lbl.sm.shrHldrInfo.idNo']}"
 							required="true" id="equiPerIcNum"
 							requiredMessage="#{lbl['lbl.sm.icNo.required']}"
-							disabled="#{backingBean.managedBean.disableIcEmail}"
+							disabled="#{backingBean.managedBean.disableIcEmail || backingBean.managedBean.selectedShareHolder.ssmData}"
 							rendered="#{backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'I'}"
 							value="#{backingBean.managedBean.selectedShareHolder.identificationNo}"
 							size="35" maxlength="12"
@@ -183,7 +188,7 @@
 						</p:inputText>
 						<p:inputText label="#{lbl['lbl.sm.shrHldrInfo.idNo']}"
 							required="true" id="equiPerPasptNum"
-							disabled="#{backingBean.managedBean.disableIcEmail}"
+							disabled="#{backingBean.managedBean.disableIcEmail || backingBean.managedBean.selectedShareHolder.ssmData}"
 							rendered="#{backingBean.managedBean.selectedShareHolder.identificationType.parameterCode ne 'I'}"
 							value="#{backingBean.managedBean.selectedShareHolder.identificationNo}"
 							size="35" maxlength="12">
@@ -215,13 +220,28 @@
 						label="#{lbl['lbl.sm.person.dob']}" id="equiPerDob"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						yearRange="-99:+0" maxdate="#{backingBean.managedBean.currDate}"
-						value="#{backingBean.managedBean.selectedShareHolder.birthDate}" />
+						value="#{backingBean.managedBean.selectedShareHolder.birthDate}" 
+						disabled="#{backingBean.disableFieldSSm(backingBean.managedBean.selectedShareHolder.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.selectedShareHolder.birthDateSsmNull)}"
+						rendered="#{!backingBean.disableFieldSSm(backingBean.managedBean.selectedShareHolder.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.selectedShareHolder.birthDateSsmNull)}"
+						/>
+						<p:calendar navigator="true"
+						display="inline" required="true" readonlyInput="true"
+						label="#{lbl['lbl.sm.person.dob']}" id="equiPerDob1"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+						yearRange="-99:+0" maxdate="#{backingBean.managedBean.currDate}"
+						value="#{backingBean.managedBean.selectedShareHolder.birthDate}" 
+						disabled="#{backingBean.disableFieldSSm(backingBean.managedBean.selectedShareHolder.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.selectedShareHolder.birthDateSsmNull)}"
+						rendered="#{backingBean.disableFieldSSm(backingBean.managedBean.selectedShareHolder.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.selectedShareHolder.birthDateSsmNull)}"						
+						/>
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges 
 							and not empty backingBean.managedBean.latestPersonnel}"
 						oriValue="#{backingBean.managedBean.latestPersonnel.birthDate}" 
 						currValue="#{backingBean.managedBean.selectedShareHolder.birthDate}" 
 						alertValue="#{backingBean.getDateFormat(backingBean.managedBean.latestPersonnel.birthDate)}"/>
+					<ac:ssmShowIconAlertGreen 
+						greenIcon="#{backingBean.showGreenIconSsm(null,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.selectedShareHolder.birthDateSsmNull)}" 
+						poUser="true" />
 					<p:message id="equiPerDobMsg" for="equiPerDob" showSummary="true"
 						showDetail="false" display="icon" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.designation']}" />
@@ -236,6 +256,9 @@
 							oriValue="#{backingBean.managedBean.latestPersonnel.designation}" 
 							currValue="#{backingBean.managedBean.selectedShareHolder.designation}" 
 							alertValue="#{backingBean.managedBean.latestPersonnel.designation}"/>
+						<ac:ssmShowIconAlertGreen 
+							greenIcon="#{backingBean.showGreenIconSsm(null,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.selectedShareHolder.designationSsmNull)}" 
+							poUser="true" />
 						<p:message id="smPerDesignationMsg"
 						for="smPerDesignation" showSummary="true" showDetail="false"
 						display="icon" /></td>
@@ -611,6 +634,9 @@
 						oriValue="#{backingBean.managedBean.latestPersonnel.shareAmt}" 
 						currValue="#{backingBean.managedBean.selectedShareHolder.shareAmt}" 
 						alertValue="#{backingBean.getPriceAmountFormat(backingBean.managedBean.latestPersonnel.shareAmt)}"/>
+					<ac:ssmShowIconAlertGreen 
+						greenIcon="#{backingBean.showGreenIconSsm(null,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.selectedShareHolder.shareAmtSsmNull)}" 
+						poUser="true" />
 					<p:message id="equiShrDetAmtMsg" for="equiShrDetAmt"
 						showSummary="true" showDetail="false" display="icon" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.shrPerc']}" /></td>
@@ -959,6 +985,7 @@
 							oriValue="#{backingBean.managedBean.latestRelatedCompany.shareAmt}" 
 							currValue="#{backingBean.managedBean.selectedRelatedCompany.shareAmt}" 
 							alertValue="#{backingBean.getPriceAmount(backingBean.managedBean.latestRelatedCompany.shareAmt)}" />
+						
 						<p:message id="equiRlCmpInfShrAmtMsg" for="equiRlCmpInfShrAmt"
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>

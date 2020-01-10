@@ -1,5 +1,6 @@
 package my.ep.web.managedbean.sm.registration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -14,6 +15,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmAssociationBody;
+import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmSstSupplier;
 import my.ep.persistence.entity.sm.SmGstSupplierDoc;
@@ -21,9 +23,11 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
 @ManagedBean(name = "registrationMB")
@@ -101,6 +105,7 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private boolean sameAsOwner;
 	private boolean disabledCompanyNameInMaintenance;
 	private boolean disabledBusinessTypeInMaintenance;
+	private boolean regAccountMaintainance = false;
 	
 	private boolean gstFlag;
 	//harris
@@ -119,6 +124,31 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private boolean hasActiveTransaction;
 	private boolean viewMode;
 	private boolean deletedNotActivatedSupplier;
+	//#16052019 - SSM INTEGRATION CR - Fahmi
+	private List<SmSupplierOwner> smSuppOwners = new ArrayList();
+	private List<SmPersonnel> smPersonnelDirector = new ArrayList();
+	private List dummy = new ArrayList();
+	private List<SmPersonnel> smPersonnelOwners = new ArrayList();
+	private SmPersonnel smPersonnelSelected= new SmPersonnel();
+	private List<SelectItem> selectItemsSmPersonnelOwners = new ArrayList();
+	private List<SmPersonnel> SmPersonnelAll = new ArrayList();
+	private List<SmEquityCompany> smEquityCompany = new ArrayList();
+	 private List<SmSupplierBranch> smSupplierBranches = new ArrayList();
+	private String headerName = "";
+	private boolean ownerIsEquity=false;
+	private boolean ownerIsDirector=false;
+	private boolean showOwner=false;
+	private boolean showDirector=false;
+	private boolean showDirectorInOwner=false;
+	private boolean disableRole=false;
+	private boolean disableEquity=false;
+	private boolean disableStaff=false;
+	private boolean hideButton=false;
+	private String labelDataTable;
+	
+	private String regIcCheckSSM;
+	
+	private boolean showOwnerPersonnel = false;
 	
 	public SmSupplier getSmSupp() {
 		return smSupp;
@@ -669,4 +699,188 @@ public class RegistrationManagedBean extends BaseManagedBean {
 		this.smSstSupplier = smSstSupplier;
 	}
 
+	public List<SmSupplierOwner> getSmSuppOwners() {
+		return smSuppOwners;
+	}
+
+	public void setSmSuppOwners(List<SmSupplierOwner> smSuppOwners) {
+		this.smSuppOwners = smSuppOwners;
+	}
+
+	public List getDummy() {
+		return dummy;
+	}
+
+	public void setDummy(List dummy) {
+		this.dummy = dummy;
+	}
+
+	public List<SmPersonnel> getSmPersonnelOwners() {
+		return smPersonnelOwners;
+	}
+
+	public void setSmPersonnelOwners(List<SmPersonnel> smPersonnelOwners) {
+		this.smPersonnelOwners = smPersonnelOwners;
+	}
+
+	public List<SelectItem> getSelectItemsSmPersonnelOwners() {
+		return selectItemsSmPersonnelOwners;
+	}
+
+	public void setSelectItemsSmPersonnelOwners(List<SelectItem> selectItemsSmPersonnelOwners) {
+		this.selectItemsSmPersonnelOwners = selectItemsSmPersonnelOwners;
+	}
+
+	public SmPersonnel getSmPersonnelSelected() {
+		return smPersonnelSelected;
+	}
+
+	public void setSmPersonnelSelected(SmPersonnel smPersonnelSelected) {
+		this.smPersonnelSelected = smPersonnelSelected;
+	}
+
+	public List<SmPersonnel> getSmPersonnelDirector() {
+		return smPersonnelDirector;
+	}
+
+	public void setSmPersonnelDirector(List<SmPersonnel> smPersonnelDirector) {
+		this.smPersonnelDirector = smPersonnelDirector;
+	}
+
+	public List<SmPersonnel> getSmPersonnelAll() {
+		return SmPersonnelAll;
+	}
+
+	public void setSmPersonnelAll(List<SmPersonnel> smPersonnelAll) {
+		SmPersonnelAll = smPersonnelAll;
+	}
+
+	public String getHeaderName() {
+		return headerName;
+	}
+
+	public void setHeaderName(String headerName) {
+		this.headerName = headerName;
+	}
+
+	public List<SmEquityCompany> getSmEquityCompany() {
+		return smEquityCompany;
+	}
+
+	public void setSmEquityCompany(List<SmEquityCompany> smEquityCompany) {
+		this.smEquityCompany = smEquityCompany;
+	}
+
+	public boolean isOwnerIsEquity() {
+		return ownerIsEquity;
+	}
+
+	public void setOwnerIsEquity(boolean ownerIsEquity) {
+		this.ownerIsEquity = ownerIsEquity;
+	}
+
+	public boolean isOwnerIsDirector() {
+		return ownerIsDirector;
+	}
+
+	public void setOwnerIsDirector(boolean ownerIsDirector) {
+		this.ownerIsDirector = ownerIsDirector;
+	}
+
+	public boolean isShowOwner() {
+		return showOwner;
+	}
+
+	public void setShowOwner(boolean showOwner) {
+		this.showOwner = showOwner;
+	}
+
+	public boolean isShowDirector() {
+		return showDirector;
+	}
+
+	public void setShowDirector(boolean showDirector) {
+		this.showDirector = showDirector;
+	}
+
+	public boolean isDisableRole() {
+		return disableRole;
+	}
+
+	public void setDisableRole(boolean disableRole) {
+		this.disableRole = disableRole;
+	}
+
+	public boolean isShowDirectorInOwner() {
+		return showDirectorInOwner;
+	}
+
+	public void setShowDirectorInOwner(boolean showDirectorInOwner) {
+		this.showDirectorInOwner = showDirectorInOwner;
+	}
+
+	public List<SmSupplierBranch> getSmSupplierBranches() {
+		return smSupplierBranches;
+	}
+
+	public void setSmSupplierBranches(List<SmSupplierBranch> smSupplierBranches) {
+		this.smSupplierBranches = smSupplierBranches;
+	}
+
+	public boolean isShowOwnerPersonnel() {
+		return showOwnerPersonnel;
+	}
+
+	public void setShowOwnerPersonnel(boolean showOwnerPersonnel) {
+		this.showOwnerPersonnel = showOwnerPersonnel;
+	}
+
+	public boolean isDisableEquity() {
+		return disableEquity;
+	}
+
+	public void setDisableEquity(boolean disableEquity) {
+		this.disableEquity = disableEquity;
+	}
+
+	public boolean isDisableStaff() {
+		return disableStaff;
+	}
+
+	public void setDisableStaff(boolean disableStaff) {
+		this.disableStaff = disableStaff;
+	}
+
+	public boolean isHideButton() {
+		return hideButton;
+	}
+
+	public void setHideButton(boolean hideButton) {
+		this.hideButton = hideButton;
+	}
+
+	public String getLabelDataTable() {
+		labelDataTable = new FacesScopes().getUserLocale().toString();
+		return labelDataTable;
+	}
+
+	public void setLabelDataTable(String labelDataTable) {
+		this.labelDataTable = labelDataTable;
+	}
+
+	public String getRegIcCheckSSM() {
+		return regIcCheckSSM;
+	}
+
+	public void setRegIcCheckSSM(String regIcCheckSSM) {
+		this.regIcCheckSSM = regIcCheckSSM;
+	}
+
+	public boolean isRegAccountMaintainance() {
+		return regAccountMaintainance;
+	}
+
+	public void setRegAccountMaintainance(boolean regAccountMaintainance) {
+		this.regAccountMaintainance = regAccountMaintainance;
+	}
 }

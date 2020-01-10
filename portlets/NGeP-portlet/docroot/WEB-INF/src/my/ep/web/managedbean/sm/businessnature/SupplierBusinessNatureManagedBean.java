@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
@@ -21,6 +22,8 @@ public class SupplierBusinessNatureManagedBean extends BaseManagedBean{
 	private SmSupplier smSupplier;
 	private List<PmBusinessNature> bizNatures;
 	private Map<Long, SmSupplierBusiness> supplierBusinessMap = new HashMap<Long, SmSupplierBusiness>();
+	//16052019 - SSM INTEGRATION CR 
+	private SsmResDTO ssmResDTO;
 
 	public SmSupplierBusiness[] getSelectedBusinessNatureLs() {
 		return selectedBusinessNatureLs;
@@ -54,4 +57,15 @@ public class SupplierBusinessNatureManagedBean extends BaseManagedBean{
 	public void setSupplierBusinessMap(Map<Long, SmSupplierBusiness> supplierBusinessMap) {
 		this.supplierBusinessMap = supplierBusinessMap;
 	}
+
+	public SsmResDTO getSsmResDTO() {
+		return ssmResDTO;
+	}
+
+	public void setSsmResDTO(SsmResDTO ssmResDTO) {
+		this.ssmResDTO = ssmResDTO;
+	}
 }
+
+
+

@@ -1,0 +1,107 @@
+<ui:composition xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:p="http://primefaces.org/ui">
+	<cc:interface>
+		<cc:attribute name="bBean" required="true" />
+		<cc:attribute name="title" required="true" />
+		<cc:attribute name="dialogId" required="true" />
+		<cc:attribute name="btnOkLabel" required="true" />
+		<cc:attribute name="btnOkProcess" required="false" default="@this" />
+		<cc:attribute name="btnOkUpdate" required="false" default="@form" />
+		<cc:attribute name="btnCancelLabel" required="true" />
+		<cc:attribute name="height" default="200" />
+		<cc:attribute name="width" default="900" />
+	</cc:interface>
+
+	<cc:implementation>
+		<p:dialog id="#{cc.attrs.dialogId}" header="#{cc.attrs.title}"
+			widgetVar="#{cc.attrs.dialogId}WidgetVar" modal="true"
+			height="#{cc.attrs.height}" width="#{cc.attrs.width}"
+			resizable="false">
+			<div id="#{cc.attrs.dialogId}ContentDiv"
+				style="overflow-wrap: break-word;">
+				<h:outputText value="#{lbl['lbl.sm.term.and.condition.checkowner']}"
+					escape="false" />
+				<br /> &#160;&#160;&#160;&#160;&#160;a.
+				<p:commandLink update="#{cc.attrs.btnOkUpdate}"
+					style="margin-right:20px;"
+					onclick="#{cc.attrs.dialogId}WidgetVar.hide()"
+					oncomplete="#{cc.attrs.dialogId}ChangeWidgetVar.show()">
+					<h:outputFormat value="Click Here" escape="false"></h:outputFormat>
+				</p:commandLink>
+				<h:outputText
+					value="#{lbl['lbl.sm.term.and.condition.checkowner.a']}"
+					escape="false" />
+				<br /> &#160;&#160;&#160;&#160;&#160;b.
+				<h:outputText
+					value="#{lbl['lbl.sm.term.and.condition.checkowner.b']}"
+					escape="false" />
+				<br /> &#160;&#160;&#160;&#160;&#160;c.
+				<h:outputText
+					value="#{lbl['lbl.sm.term.and.condition.checkowner.c']}"
+					escape="false" />
+				<br />
+			</div>
+
+			<div style="float: right;">
+				<p:commandButton value="#{cc.attrs.btnCancelLabel}"
+					oncomplete="#{cc.attrs.dialogId}WidgetVar.hide()" />
+			</div>
+		</p:dialog>
+
+		<p:dialog id="#{cc.attrs.dialogId}Change"
+			style="overflow-wrap: break-word;" 
+			header="#{lbl['lbl.sm.term.and.condition.checkowner.changerole']}"
+			widgetVar="#{cc.attrs.dialogId}ChangeWidgetVar" modal="true"
+			height="100" width="600" resizable="false" 
+			rendered="#{not empty cc.attrs.bBean.managedBean.smPersonnelSsm}">
+			<p:outputPanel>
+				<table style="width: 100 !important">
+					<tr>
+						<td><p:outputLabel style="float: right"
+								value="#{lbl['lbl.sm.person.composition.role']}" /></td>
+						<c:if
+							test="#{cc.attrs.bBean.managedBean.smSupplierSsm.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD or cc.attrs.bBean.managedBean.smSupplierSsm.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD}">
+							<td><p:selectBooleanCheckbox
+									value="#{cc.attrs.bBean.managedBean.smPersonnelSsm.director}">
+									<p:ajax partialSubmit="true" process="@this" update="@this"></p:ajax>
+								</p:selectBooleanCheckbox></td>
+							<td><h:outputText style="float: left"
+									value="#{lbl['lbl.sm.person.dir']}" /></td>
+							<td><p:selectBooleanCheckbox
+									value="#{cc.attrs.bBean.managedBean.smPersonnelSsm.higherManagement}">
+									<p:ajax partialSubmit="true" process="@this" update="@this"></p:ajax>
+								</p:selectBooleanCheckbox></td>
+							<td><h:outputText style="float: left"
+									value="#{lbl['lbl.sm.person.hghMngmt']}" /></td>
+						</c:if>
+						<td><p:selectBooleanCheckbox
+								value="#{cc.attrs.bBean.managedBean.smPersonnelSsm.management}">
+								<p:ajax partialSubmit="true" process="@this" update="@this"></p:ajax>
+							</p:selectBooleanCheckbox></td>
+						<td><h:outputText style="float: left"
+								value="#{lbl['lbl.sm.person.mngmt']}" /></td>
+						<td><p:selectBooleanCheckbox
+								value="#{cc.attrs.bBean.managedBean.smPersonnelSsm.clerical}">
+								<p:ajax partialSubmit="true" process="@this" update="@this"></p:ajax>
+							</p:selectBooleanCheckbox></td>
+						<td><h:outputText style="float: left"
+								value="#{lbl['lbl.sm.person.stf']}" /></td>
+					</tr>
+				</table>
+			</p:outputPanel>
+			<div style="float: right;">
+				<p:commandButton value="#{cc.attrs.btnOkLabel}"
+					process="#{cc.attrs.btnOkProcess}" partialSubmit="true"
+					immediate="true" action="#{cc.attrs.bBean.changeRoleAndProceed()}"
+					update="#{cc.attrs.btnOkUpdate}" />
+				<p:commandButton value="#{cc.attrs.btnCancelLabel}"
+					oncomplete="#{cc.attrs.dialogId}ChangeWidgetVar.hide()" />
+			</div>
+		</p:dialog>
+	</cc:implementation>
+</ui:composition>

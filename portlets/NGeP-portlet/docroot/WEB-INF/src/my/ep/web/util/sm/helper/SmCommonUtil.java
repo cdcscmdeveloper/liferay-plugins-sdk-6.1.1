@@ -69,6 +69,7 @@ import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.calendar.ICalendarSO;
 import my.ep.biz.service.sm.common.myidentity.IMyIdentitySO;
+import my.ep.biz.service.sm.common.ssm.ISsmSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
@@ -111,10 +112,13 @@ import my.ep.dto.sm.attachment.SmAttachmentReqDTO;
 import my.ep.dto.sm.attachment.SmAttachmentResDTO;
 import my.ep.dto.sm.common.myidentity.MyIdentityReqDTO;
 import my.ep.dto.sm.common.myidentity.MyIdentityResDTO;
+import my.ep.dto.sm.common.ssm.SsmReqDTO;
+import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.dto.sm.complaint.ComplaintReqDTO;
 import my.ep.dto.sm.complaint.ComplaintResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
+import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
@@ -200,6 +204,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.template.DocumentGenerator;
+import my.ep.web.validator.common.BusinessRegNoValidator;
 import my.ep.web.vo.SmCancelMofRemarksVO;
 import my.ep.web.vo.SmPersonnelSummaryCountVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
@@ -230,8 +235,8 @@ public class SmCommonUtil {
 	private static Logger log = Logger.getLogger(SmCommonUtil.class);
 	private static SmCommonUtil instance;
 	private static final BigDecimal percent = new BigDecimal(100);
-
-	
+	//SSM INTEGRATIONS
+	boolean showSSMError;
 	/**
 	 * Hash string.
 	 * 
@@ -522,6 +527,26 @@ public class SmCommonUtil {
 				.getInstance().getServiceObject("pm", IBusinessNatureSO.class);
 		BusinessNatureResDTO resDTO = reqSO
 				.retrieveBusinessNatureDtlById(reqDTO);
+
+		return resDTO.getBusinessNature();
+	}
+	
+	/**
+	 * Retrieve business nature by level code.
+	 * 
+	 * @param level code
+	 *            - String Level code
+	 * @return PmBusinessNature object
+	 */
+	//SSM  : #16052019 - SSM INTEGRATION CR - Fahmi
+	public static PmBusinessNature retrieveBusinessNatureByLevelCode(String levelCode) {
+		BusinessNatureReqDTO reqDTO = new BusinessNatureReqDTO();
+		reqDTO.setLevelCode(levelCode);
+
+		IBusinessNatureSO reqSO = (IBusinessNatureSO) BusinessDelegate
+				.getInstance().getServiceObject("pm", IBusinessNatureSO.class);
+		BusinessNatureResDTO resDTO = reqSO
+				.retrieveBusinessNatureDtlByLevelCode(reqDTO);
 
 		return resDTO.getBusinessNature();
 	}
@@ -991,7 +1016,7 @@ public class SmCommonUtil {
 				&& per.getPmCountry().getCountryCode() != null
 				&& per.getPmCountry().getCountryCode()
 						.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)) {
-			if (per.getBumiFlg() == 1) {
+			if (per.getBumiFlg()!= null && per.getBumiFlg() == 1) {
 				bumiCount = bumiCount + 1;
 			} else {
 				nonBumCount = nonBumCount + 1;
@@ -1270,8 +1295,8 @@ public class SmCommonUtil {
 						.getSmChequeSignatories())) {
 			for (SmChequeSignatory sign : smSupplierBank
 					.getSmChequeSignatories()) {
-				if (sign.getSmPersonnel() != null
-						&& sign.getSmPersonnel().getBumiFlg() == 0) {
+				if (sign.getSmPersonnel() != null && 
+						sign.getSmPersonnel().getBumiFlg() != null && sign.getSmPersonnel().getBumiFlg() == 0) {
 					bankRetVal = smSupplierBank.getPmFinancialOrg() == null ? ""
 							: smSupplierBank.getPmFinancialOrg()
 									.getFinOrgName();
@@ -4146,11 +4171,82 @@ public class SmCommonUtil {
 				case "70039":
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70039);
 				case "70040":
-					throw new EpException(MessageConst.ERROR_MYIDENTITY_70040);
+					//SSM INTEGRATION
+					if(showSSMError){
+						showSSMError = false;
+						throw new EpException(MessageConst.ERROR_SSM_70062);
+					}else{
+						throw new EpException(MessageConst.ERROR_MYIDENTITY_70040);
+					}
 				}
 			}
 
 			return resDTO.getStatusCode();
+		} catch (Exception ex) {
+			String message = MessageUtils.getMessage(ex.getMessage(),
+					MessageUtils.BUNDLE_COMMON_MESSAGES,
+					new FacesScopes().getUserLocale());
+			if (message != null) {
+				throw new EpException(message + "(ERR-"
+						+ ex.getMessage().toString() + ")");
+			} else {
+				throw new EpException(ex.getMessage() + "(ERR-729999)");
+			}
+		}
+	}
+	//16052019 - SSM INTEGRATION CR - Fahmi
+		/**
+		 * Verify regNo no with SSM
+		 * 
+		 * @param regNo
+		 * @param bussinessType
+		 * 
+		 * @return responseCode
+		 */
+	public boolean ssmActive(){
+		ISsmSO reqSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISsmSO.class);
+		try {
+			return reqSO.ssmActive();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+	}
+	//16052019 - SSM INTEGRATION CR - Fahmi
+	/**
+	 * Verify regNo no with SSM
+	 * 
+	 * @param regNo
+	 * @param bussinessType
+	 * 
+	 * @return responseCode
+	 */
+	public SsmResDTO validateWithSSM(SsmReqDTO ssmReqDTO) {
+		ISsmSO reqSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISsmSO.class);		
+		try {
+			BusinessRegNoValidator validate = new BusinessRegNoValidator();
+			validate.validateRegNo(ssmReqDTO.getBusinessType(), ssmReqDTO.getRegNo(),false);
+			//set default parameter
+			PmParameter identificationType = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_IC);
+			PmParameter passportType = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_PASSPORT);
+			ssmReqDTO.setPmParameter(identificationType);
+			ssmReqDTO.setPmParameterIdTypeP(passportType);
+			String regNo = ssmReqDTO.getRegNo();
+			ssmReqDTO.setDigitNo(ssmReqDTO.getRegNo().substring(ssmReqDTO.getRegNo().length()-1));
+			regNo = regNo.substring(0, regNo.length() - 2);
+			ssmReqDTO.setRegNo(regNo);
+			SsmResDTO resDTO = reqSO.ssmValidation(ssmReqDTO);
+			//only return company valid or not
+			if(ssmReqDTO.isCheckOnly()){
+				
+				return resDTO;
+			}
+			if (!resDTO.getStatusCode().equalsIgnoreCase("") && !"70060".equalsIgnoreCase(resDTO.getStatusCode())){				
+				ssmError(resDTO);
+			}
+
+			return resDTO;
 		} catch (Exception ex) {
 			String message = MessageUtils.getMessage(ex.getMessage(),
 					MessageUtils.BUNDLE_COMMON_MESSAGES,
@@ -4225,7 +4321,13 @@ public class SmCommonUtil {
 				case "70039":
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70039);
 				case "70040":
-					throw new EpException(MessageConst.ERROR_MYIDENTITY_70040);
+					//SSM INTEGRATION
+					if(showSSMError){
+						showSSMError = false;
+						throw new EpException(MessageConst.ERROR_SSM_70062);
+					}else{
+						throw new EpException(MessageConst.ERROR_MYIDENTITY_70040);
+					}
 				}
 			} else {
 				if (resDTO.getStatusCode().equals("70018")) {
@@ -5592,6 +5694,23 @@ public class SmCommonUtil {
 			return false;
 		}
 	}
+	/**
+	 * #16052019 - SSM INTEGRATION CR 
+	 * Retrieve PmCountry by country code ssm.
+	 * 
+	 * @param countryId
+	 *            - String country code ssm
+	 * @return PmCountry object
+	 */
+	public static PmCountry retrievePmCountryByCountryCodeSSM(String countryCodeSSM) {
+		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", ICountrySO.class);
+		CountryReqDTO reqDTO = new CountryReqDTO();
+		reqDTO.setCountryCodeSSM(countryCodeSSM);
+		CountryResDTO resDTO = reqSO.retrieveCountryByCodeSSM(reqDTO);
+
+		return resDTO.getPmCountry();
+	}
 	
 	//25929 - start
 	/**
@@ -5628,4 +5747,42 @@ public class SmCommonUtil {
 		}
 	}
 	//25929 - end
+	
+	//SSM INTEGRATION
+	public String verifyWithMyIdentity(String name, String identificationNo,
+			String postCode, String type,boolean showSSMError) {
+		this.showSSMError = showSSMError;
+		return verifyWithMyIdentity(name,identificationNo,
+				postCode,type) ;
+	}
+	//SSM INTEGRATION
+	public void verifyOwnerWithMyIdentity(String name, String identificationNo,
+			String postCode, String type, String supplierType,boolean showSSMError) {
+		this.showSSMError = showSSMError;
+		verifyOwnerWithMyIdentity(name, identificationNo,
+				postCode, type, supplierType);
+	}
+	//SSM Integration
+	public static void ssmError(SsmResDTO resDTO){
+		switch (resDTO.getStatusCode()) {
+		case "70001":
+			throw new EpException(MessageConst.ERROR_SSM_70001);
+		case "70002":
+			throw new EpException(MessageConst.ERROR_SSM_70002);
+		case "70003":
+			throw new EpException(MessageConst.ERROR_SSM_70003);
+		case "70004":
+			//throw new EpException(MessageConst.ERROR_SSM_70004);
+			throw new EpException(MessageConst.ERROR_721071);
+		case "70005":
+			//throw new EpException(MessageConst.ERROR_SSM_70005);
+			throw new EpException(MessageConst.ERROR_721071);
+		case "70006":
+//			throw new EpException(MessageConst.ERROR_SSM_70006);
+			throw new EpException(MessageConst.ERROR_721071);
+		case "70061":
+			throw new EpException(MessageConst.ERROR_721078);
+		}
+	}
+		
 }

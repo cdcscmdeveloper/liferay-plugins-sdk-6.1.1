@@ -78,11 +78,25 @@
 			</table>
 		</p:outputPanel>
 		
+		<p:outputPanel rendered="#{backingBean.managedBean.smAppl.applValidWithSsm}">
+			<br />
+			<!-- #16052019 - SSM INTEGRATION CR -->
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.supplier.alert.ssm']}"/>
+		</p:outputPanel>
+		
 		<p:outputPanel rendered="#{backingBean.managedBean.showFieldChanges}">
 			<br />
 			<p:graphicImage style="vertical-align:top"
 				value="/css/images/design/icon_alert.png" />
 			&#160;&#160;<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.supplier.changed.alert.instruction']}"/>
+		</p:outputPanel>
+		
+		<p:outputPanel rendered="#{backingBean.managedBean.smAppl.applValidWithSsm}">
+			<br />
+			<!-- #16052019 - SSM INTEGRATION CR -->
+			<p:graphicImage style="vertical-align:top"
+				value="/css/images/design/icon_alert-green.svg" height="16" width="16" />
+			&#160;&#160;<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.supplier.changed.alert.instruction.ssm']}"/>
 		</p:outputPanel>
 	</div>
 	
@@ -96,7 +110,10 @@
 			</c:if>
 			<h:commandLink action="#{backingBean.redirectToRevisionSupplierProfilePage('O')}" 
 					process="@this" partialSubmit="true" update=":form" target="_blank"
-					value="#{lbl['lbl.sm.view.original.appl']}"/>
+					value="#{lbl['lbl.sm.view.original.appl']}"/>&#160;&#160;
+					
+			<h:commandLink rendered="#{backingBean.managedBean.smAppl.applValidWithSsm}" action="#{backingBean.redirectToViewSSMInfo()}" target="_blank"
+					value="#{lbl['lbl.sm.view.ssm.infomation']}"/>
 		</div>
 		<br /><br />
 	</c:if>
