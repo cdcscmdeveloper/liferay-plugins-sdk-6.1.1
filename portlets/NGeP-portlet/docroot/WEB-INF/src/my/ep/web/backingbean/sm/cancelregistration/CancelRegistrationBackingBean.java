@@ -246,8 +246,8 @@ public class CancelRegistrationBackingBean extends
 			FacesScopes facesScopes = new FacesScopes();
 			anotherReqDTO.setSmPersonnel(currentPersonnel);
 			anotherReqDTO.setUserLocale(facesScopes.getUserLocale());
-			//PersonnelResDTO pResDTO = personnelSO.inactiveSupplierRole(anotherReqDTO);
-			personnelSO.inactiveSupplierRole(anotherReqDTO);
+			PersonnelResDTO pResDTO = personnelSO.inactiveSupplierRole(anotherReqDTO);
+//			personnelSO.inactiveSupplierRole(anotherReqDTO);
 			cancelReasonInfo();
 			
 			if(pResDTO.isSuccessful()){
