@@ -891,6 +891,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	
 	public void getCollectionReportBasedOnPaymentMethod(LinkedHashMap<String, String> params, BigDecimal requestId) throws Exception{
 		List<String> payType = new ArrayList<String>();
+		List<String> payTypeDescParam = new ArrayList<String>();
 		Map<Integer, Object[]> reportListMap = new TreeMap<Integer, Object[]>();
 		Map<Integer, Object[]> summaryListMap = new TreeMap<Integer, Object[]>();
 		List<Object[]> rsltReportList = new ArrayList<Object[]>();
@@ -901,6 +902,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		BigDecimal totalGstServiceCharge = new BigDecimal(0);
 		BigDecimal totalNetAmt = new BigDecimal(0);
 		int countBil = 0;
+		String payementTypeDescParam = "";
 		String paymentType = "";
 		String paymentMethod = "";
 		String reportType = "";
@@ -908,15 +910,19 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		if("M".equalsIgnoreCase(params.get(SmReportConst.PARAM_PAYMENT_TYPE1))){//MOF Registration Fee
 			payType.add("MF");
 			payType.add("RF");
+			payTypeDescParam.add("MF");
+			payTypeDescParam.add("RF");
 		}
 		
 		if("P".equalsIgnoreCase(params.get(SmReportConst.PARAM_PAYMENT_TYPE2))){//Processing Fee
 			payType.add("PF");
 			payType.add("RPF");
+			payTypeDescParam.add("PF");
 		}
 
 		if("S".equalsIgnoreCase(params.get(SmReportConst.PARAM_PAYMENT_TYPE3))){//Soft Certificate Fee
 			payType.add("SF");
+			payTypeDescParam.add("SF");
 		}
 		
 		for(int b=0; b<payType.size(); b++){
@@ -926,15 +932,24 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 				paymentType += "'"+payType.get(b).toString()+"'";
 			}
 		}
+		
+		for(int c=0; c<payTypeDescParam.size(); c++){
+			if(c != payTypeDescParam.size()-1){
+				payementTypeDescParam += "'"+payTypeDescParam.get(c).toString() +"',";
+			}else{
+				payementTypeDescParam += "'"+payTypeDescParam.get(c).toString()+"'";
+			}
+		}
+		
 		params.put("PAYMENTTYPE",paymentType);
-		int paymentTypeSize = payType.size();
+		int paymentTypeSize = payTypeDescParam.size();
 		if("Credit".equalsIgnoreCase(params.get(SmReportConst.PARAM_PAYMENT_METHOD)))paymentMethod = "Kad Kredit";
 		else paymentMethod = "FPX";
 		
 		if("Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE)))reportType = "Tarikh Resit";
 		else reportType = "Tarikh Transaksi";
 		
-		String paymentTypeDesc = getPaymentTypeDesc(paymentType);
+		String paymentTypeDesc = getPaymentTypeDesc(payementTypeDescParam);
 		String reportTitle = "LAPORAN TERIMAAN BERDASARKAN KAEDAH BAYARAN BAGI TEMPOH " 
 				+ DateUtils.dateToString("dd/MM/yyyy",getManagedBean().getDateFrom()) + " HINGGA "
 				+ DateUtils.dateToString("dd/MM/yyyy",getManagedBean().getDateTo())
@@ -1251,6 +1266,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		try{
 			reportList = generateSMCollectionReportBasedClassificationCode(params);
 			if(!reportList.isEmpty()){
+				String receiptNoList = "";
+				String referenceNoList = "";
 				for(int m=0; m<reportList.size(); m++){
 					Object[] row = (Object[]) reportList.get(m);
 					BigDecimal priceAmt = row[13] != null ? (BigDecimal)row[13] : BigDecimal.ZERO;
@@ -1272,11 +1289,31 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 						});
 						creditCount++;
 					}
-					totalPrice = totalPrice.add(priceAmt);
-					totalGst = totalGst.add(gstAmt);
-					totalServiceCharge = totalServiceCharge.add(serviceCharge);
-					totalGstServiceCharge = totalGstServiceCharge.add(gstServiceCharge);
-					totalNetAmount = totalNetAmount.add(netPrice);
+					
+					if(receiptNoList == ""){
+						totalPrice = totalPrice.add(priceAmt);
+						totalGst = totalGst.add(gstAmt);
+						totalServiceCharge = totalServiceCharge.add(serviceCharge);
+						totalGstServiceCharge = totalGstServiceCharge.add(gstServiceCharge);
+						totalNetAmount = totalNetAmount.add(netPrice);
+						
+					}else if(receiptNoList.equalsIgnoreCase(row[2].toString())){
+						if(referenceNoList.equalsIgnoreCase(row[6].toString())){
+							totalPrice = totalPrice.add(priceAmt);
+							totalGst = totalGst.add(gstAmt);
+							totalServiceCharge = totalServiceCharge.add(serviceCharge);
+							totalGstServiceCharge = totalGstServiceCharge.add(gstServiceCharge);
+							totalNetAmount = totalNetAmount.add(netPrice);
+						}
+					}else{
+						totalPrice = totalPrice.add(priceAmt);
+						totalGst = totalGst.add(gstAmt);
+						totalServiceCharge = totalServiceCharge.add(serviceCharge);
+						totalGstServiceCharge = totalGstServiceCharge.add(gstServiceCharge);
+						totalNetAmount = totalNetAmount.add(netPrice);
+					}
+					receiptNoList = row[2].toString();
+					referenceNoList = row[6].toString();
 				}
 				summaryList.put(0, new Object[] {
 						params.get(SmReportConst.PARAM_CODE),(fpxCount+creditCount),totalPrice,totalGst,totalServiceCharge,totalGstServiceCharge,totalNetAmount
@@ -2074,6 +2111,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	    }catch(Exception e){
 	    	e.printStackTrace();
 	    }
+        
 	    log.info("DONE GENERATE REPORT COLLECTION REPORT BASED ON RECEIPT AND TRANSACTION DATE !!");
 	}
 	
@@ -2306,7 +2344,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	    }catch(Exception e){
 	    	e.printStackTrace();
 	    }
-        
+		        
 	    log.info("DONE GENERATE List of Daily Receipt Report !!");
 	}
 	
