@@ -12,12 +12,12 @@
 		<script>
 			$('#portlet_supplierBusinessNature_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.supplier.businessnature.maintenance']}");
 		</script>
-	</ui:define>
+	</ui:define> 
 	
 	<ui:define name="contentSection">
 		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.save']}"  onclick="submissionConfirmDlg.show();"/>
+			<p:commandButton value="#{lbl['lbl.btn.declare']}"  onclick="submissionConfirmDlg.show();"/>
 		</div>
 	<p:panel header="#{lbl['lbl.sm.natureofbusiness']}" id="natureBusinessId">
 		<p:dataTable var="suppBizNature" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -28,7 +28,7 @@
 			
 			<p:column selectionMode="multiple" style="width:2%" 
 			rendered="#{not empty supplierBusinessNatureBackingBean.managedBean.smSupplier.smSupplierBusinesses and supplierBusinessNatureBackingBean.managedBean.smSupplier.smSupplierBusinesses.size() gt 1}"
-			disabledSelection="#{supplierBusinessNatureBackingBean.managedBean.smSupplier.smSupplierBusinesses.size() le 1}" />
+			disabledSelection="#{suppBizNature.ssmData}" />
 			
 			<p:ajax event="rowSelectCheckbox" update=":#{p:component('btnRemove')}" />
 			<p:ajax event="rowUnselectCheckbox" update=":#{p:component('btnRemove')}" />
@@ -90,7 +90,7 @@
 		<ac:lovPopup />
 		
 		<p:dialog widgetVar="submissionConfirmDlg" modal="true" height="100" width="500">
-   			 #{lbl['lbl.sm.supplier.businessnature.confirm.save']}
+   			 #{lbl['lbl.sm.supplier.businessnature.confirm.declare']}
    			<div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" action="#{supplierBusinessNatureBackingBean.updateBusinessNature}" oncomplete="submissionConfirmDlg.hide();"></p:commandButton>
 				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="submissionConfirmDlg.hide();" ></p:commandButton>

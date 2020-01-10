@@ -32,8 +32,8 @@
 								<td ><p:inputText
 										maxlength="100" required="true" id="permAdd1"
 										label="#{lbl['lbl.sm.address']}"
-										value="#{forceReplaceSuppAdminBackingBean.managedBean.permAddr.smAddress.address1}"
-										size="35" />
+										value="#{forceReplaceSuppAdminBackingBean.managedBean.permAddr.smAddress.address1}" 
+										size="35"><p:ajax event="blur" process="@this" partialSubmit="true"/></p:inputText>
 									<p:message id="permAdd1Msg" for="permAdd1"
 										showSummary="true" showDetail="false" display="icon" /></td>
 							</tr>
@@ -42,14 +42,14 @@
 								<td ><p:inputText
 										maxlength="100"
 										value="#{forceReplaceSuppAdminBackingBean.managedBean.permAddr.smAddress.address2}"
-										size="35" /></td>
+										size="35" ><p:ajax event="blur" process="@this" partialSubmit="true"/></p:inputText></td>
 							</tr>
 							<tr>
 								<td></td>
 								<td ><p:inputText
 										maxlength="100"
 										value="#{forceReplaceSuppAdminBackingBean.managedBean.permAddr.smAddress.address3}"
-										size="35" /></td>
+										size="35" ><p:ajax event="blur" process="@this" partialSubmit="true"/></p:inputText></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel
@@ -100,7 +100,7 @@
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 										<f:selectItems
 											value="#{forceReplaceSuppAdminBackingBean.managedBean.permDistricts}" />
-										<p:ajax event="change" update="basicPermAddCityList"
+										<p:ajax event="change" update="basicPermAddCityList"  process="@this" partialSubmit="true"
 											listener="#{forceReplaceSuppAdminBackingBean.updatePermAddLists(null,null,forceReplaceSuppAdminBackingBean.managedBean.permAddr.smAddress.pmDistrict.districtId)}" />
 									</p:selectOneMenu>
 									<p:message id="basicPermAddDistrictListMsg"
@@ -118,6 +118,7 @@
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 										<f:selectItems
 											value="#{forceReplaceSuppAdminBackingBean.managedBean.permCities}" />
+											<p:ajax event="change" update="@this"  process="@this" partialSubmit="true"></p:ajax>
 									</p:selectOneMenu>
 									<p:message id="basicPermAddCityListMsg"
 										for="basicPermAddCityList" showSummary="true"
@@ -136,6 +137,7 @@
 												value="#{forceReplaceSuppAdminBackingBean.managedBean.permAddr.smAddress.postcode}"
 												validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
 												size="35">
+												<p:ajax event="blur" process="@this" partialSubmit="true"/>
 												<f:validator validatorId="postcodeValidator" />
 											</p:inputText>
 											<p:message id="basicPermAddPostCodeMyMsg" for="basicPermAddPostCodeMy"
@@ -169,16 +171,14 @@
 								<td></td>				
 								<td style="white-space: nowrap; float: left;"><p:selectBooleanCheckbox
 										value="#{forceReplaceSuppAdminBackingBean.managedBean.mailAddr.sameAsPerm}">
-										<p:ajax event="change" update="@([id$=MailingAddressInfo])"
+										<p:ajax event="change" update="@([id$=MailingAddressInfo])" listener="#{forceReplaceSuppAdminBackingBean.copyPermanentAddress(forceReplaceSuppAdminBackingBean.managedBean.permAddr.smAddress)}" 
 											partialSubmit="true"
 											process="@this" />
 									</p:selectBooleanCheckbox><p:outputLabel value="#{lbl['lbl.sm.person.duplicateAddr']}" /></td>
 								<td></td>				
 							</tr>
-						<p:outputPanel rendered="#{forceReplaceSuppAdminBackingBean.managedBean.mailAddr.sameAsPerm}">
-							<ui:include src="/xhtml/sm/userProfileMaintenance/smUserDupAddrPanelForm.xhtml" />
-						</p:outputPanel>
-						<p:outputPanel rendered="#{!forceReplaceSuppAdminBackingBean.managedBean.mailAddr.sameAsPerm}">
+						
+						<p:outputPanel>
 							<tr>
 								<td><p:outputLabel
 										value="#{lbl['lbl.sm.address']}" /> <p:outputLabel value="*"
@@ -199,9 +199,9 @@
 								<td  ><p:inputText
 										maxlength="100"
 										value="#{forceReplaceSuppAdminBackingBean.managedBean.mailAddr.smAddress.address2}"
-										size="35"
 										readonly="#{forceReplaceSuppAdminBackingBean.managedBean.mailAddr.sameAsPerm}"
-										disabled="#{forceReplaceSuppAdminBackingBean.managedBean.mailAddr.sameAsPerm}" /></td>
+										disabled="#{forceReplaceSuppAdminBackingBean.managedBean.mailAddr.sameAsPerm}"
+										size="35"/></td>
 							</tr>
 							<tr>
 								<td></td>

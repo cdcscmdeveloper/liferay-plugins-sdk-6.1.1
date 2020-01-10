@@ -356,6 +356,8 @@
 		<portlet id="rejectionAcknowledgementLetter"></portlet>
 		<portlet id="supplierTaskReassignment"></portlet>
 		<portlet id="smOnScreenSql"></portlet>
+		<!-- SSM INTEGRATION -->
+		<portlet id="profileRobExpire"></portlet>		
 	</category>
 
 	<category name="category.ep.wp">

@@ -336,6 +336,21 @@ a {
 								</div>
 							</div>
 							</c:if>
+							<!-- 16052019 - SSM INTEGRATION CR -->
+							<c:if
+								test="#{profilePersonalizationBackingBean.managedBean.showRobExpiredDate}">
+							<div class="cert">
+								<div class="col1">#{lbl['lbl.sm.account.rob.expire']}</div>
+								<div class="col2"><h:outputText
+										value="#{profilePersonalizationBackingBean.managedBean.robExpDate != null ? '' : '-'}" />
+									<h:outputText
+										value="#{profilePersonalizationBackingBean.managedBean.robExpDate}"
+										rendered="#{profilePersonalizationBackingBean.managedBean.robExpDate != null}">
+										<f:convertDateTime
+											pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+									</h:outputText></div>
+							</div>
+							</c:if>
 						</div>
 						</c:if>
 					</div>

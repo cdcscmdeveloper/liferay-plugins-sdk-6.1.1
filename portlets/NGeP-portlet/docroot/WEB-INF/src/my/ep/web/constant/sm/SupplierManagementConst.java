@@ -62,6 +62,7 @@ public class SupplierManagementConst {
 	public static final String PROCEED_RENEW_MOF_APPLN = "renewMofBasePage";
 	public static final String PROCEED_RENEW_APPLN_SIDEMENU = "smRenewRegSideMenu_BasePage";
 	public static final String PROCEED_RENEW_APPLN_TNC_PAGE = "/xhtml/sm/renewMofApplication/renewMofApplTermsAndConditionsPage.xhtml";
+	public static final String VIEW_SSM_INFOMATION = "/xhtml/sm/renewMofApplication/viewSsmInformation.xhtml";
 	// public static final String PROCEED_RENEW_MOF_APPLN =
 	// "renewMofSmUser_BaseWizardPage";
 	public static final String PROCEED_CANCEL_MOF_APPLN = "cancelRegistrationWithMof";
@@ -220,6 +221,8 @@ public class SupplierManagementConst {
 	public static final int DELETED_RECORD_STATUS = 9;
 	public static final int PENDING_RE_APPROVAL_STATUS = 6;
 	public static final String TEMP_TYPE = "T";
+	public static final String BUSINESS_TYPE_ROB_PARTNERSHIP = "C";
+	public static final String BUSINESS_TYPE_ROB_SOLE_PROPRIETORSHIP = "F";
 
 	public static final String SECTION_REV_ROLE_PO = "P";
 	public static final String SECTION_REV_ROLE_APP = "A";
@@ -354,6 +357,12 @@ public class SupplierManagementConst {
 	public static final String PERSONNEL_TYPE_FRGNR = "NON-MALAYSIAN";
 	public static final String PERSONNEL_TYPE_BUMI = "BUMI";
 	public static final String PERSONNEL_TYPE_NON_BUMI = "NON-BUMI";
+	//16052019 - SSM INTEGRATION CR
+	public static final String CAPITAL_GOV_AGENCY = "CAPITAL_GOV_AGENCY";
+	public static final String CAPITAL_GOV_EQUITY = "CAPITAL_GOV_EQUITY";
+	public static final String CAPITAL_FOREIGN = "CAPITAL_FOREIGN";
+	public static final String CAPITAL_LOCAL = "CAPITAL_LOCAL";
+	
 
 	public static final String PERSONNEL_MANAGEMENT_STAFF_CONTRACTOR_PARAMCODE = "1";
 	public static final String PERSONNEL_NORMAL_STAFF_CONTRACTOR_PARAMCODE = "2";

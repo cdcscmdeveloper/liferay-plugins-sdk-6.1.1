@@ -17,7 +17,7 @@
 
 	<ui:define name="contentSection">
 		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" escape="false"/>
-		
+		<h:outputText rendered="#{registrationBackingBean.managedBean.smAppl.applValidWithSsm}" value="#{lbl['lbl.sm.po.disclaimer']}" styleClass="splNotesFonts" style="float: inherit" />
 		<p:outputPanel id="outPnlRegForm">
 		<ui:include src="/xhtml/sm/shared/onlinereg/accountInfo.xhtml" />
 			<c:choose>
@@ -25,8 +25,12 @@
 					test="#{registrationBackingBean.managedBean.smSupp.businessType == SupplierManagementConst.INDIVIDUAL_FLAG}">
 					<ui:include
 						src="/xhtml/sm/shared/onlinereg/individualregform.xhtml" />
+					<!-- 16052019 - SSM INTEGRATION CR - Fahmi--> 
 					<div align="left">
-						<p:commandButton value="#{lbl['lbl.sm.prev']}" 
+						<p:commandButton value="#{lbl['lbl.sm.prev']}" rendered="registrationBackingBean.managedBean.ssmIntegrationActive"
+						action="#{registrationBackingBean.returnToCompanyValidation}">
+						</p:commandButton>
+						<p:commandButton value="#{lbl['lbl.sm.prev']}" rendered="!registrationBackingBean.managedBean.ssmIntegrationActive"
 						action="#{registrationBackingBean.returnToTermAndCondition}">
 						</p:commandButton>
 					</div>

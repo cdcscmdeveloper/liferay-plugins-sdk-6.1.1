@@ -2,7 +2,7 @@ package my.ep.web.backingbean.pm.profilepersonalization;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.EnumMap;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -68,7 +68,9 @@ import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.pm.profilepersonalization.ProfilePersonalizationManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -206,6 +208,8 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	public static final String NAV_TO_MYACCOUNT = "/xhtml/pm/profilePersonalization/userDetails/profileManagementMaintain.xhtml";
 	public static final String NAV_TO_COMMON_DETAILS = "/xhtml/pm/profilePersonalization/userDetails/userCommonDetails.xhtml";
 	public static final String NAV_TO_COMMON_DETAILS_R = "/xhtml/pm/profilePersonalization/userDetails/userCommonDetailsR.xhtml";
+	//#16052019 - SSM INTEGRATION CR
+	public static final String NAV_TO_INFO_ROB_EXPIRE = "/xhtml/pm/profilePersonalization/userDetails/infoRobExpire.xhtml";
 	private static final String ERROR_PAGE = "/xhtml/pm/shared/outputMsg.xhtml";
 	// Mapper for DDL object
 	private static Map<Long, Object> identityTypeMapper;
@@ -303,6 +307,8 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			constructRoles();
 			retrieveMofExpDate(getManagedBean().getCurrentProfile());
 			retrieveSoftCertExpDate(getManagedBean().getSelectedUser());
+			//#16052019 - SSM INTEGRATION CR
+			retrieveRobExpDate(getManagedBean().getCurrentProfile());
 
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_COMMON_DETAILS);
 		} catch (Exception e) {
@@ -329,6 +335,8 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			constructRoles();
 			retrieveMofExpDate(getManagedBean().getCurrentProfile());
 			retrieveSoftCertExpDate(getManagedBean().getSelectedUser());
+			//#16052019 - SSM INTEGRATION CR
+			retrieveRobExpDate(getManagedBean().getCurrentProfile());
 
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_COMMON_DETAILS_R);
 		} catch (Exception e) {
@@ -1526,7 +1534,61 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			logger.error(e.getMessage(), e);
 		}
 	}
+	//#16052019 - SSM INTEGRATION CR
+	private void retrieveRobExpDate(PmOrgProfile orgProfile) {
+		if (orgProfile.getSmSupplier() != null) {
+			if(orgProfile.getSmSupplier().getSmAppl() != null){
+				if(orgProfile.getSmSupplier().getSmAppl().getSmCompanyBasic() != null){
+					if (orgProfile.getSmSupplier().getSmAppl().getSmCompanyBasic().getRobExpiryDate() != null) {
+						getManagedBean().setRobExpDate(
+								orgProfile.getSmSupplier().getSmAppl().getSmCompanyBasic().getRobExpiryDate());
+					}
+					if (orgProfile.getSmSupplier().getBusinessType()
+							.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
+							|| orgProfile
+									.getSmSupplier()
+									.getBusinessType()
+									.equalsIgnoreCase(
+											SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)) {
+						getManagedBean().setShowRobExpiredDate(true);
+					}
+				}
+			}
+			
+		}
+	}
+	//#16052019 - SSM INTEGRATION CR
+	public void preLoadingRobExpire() {
+		logger.info("preLoadingRobExpire");
+		renewSesionObject();
+		FacesScopes facesScopes = new FacesScopes();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		try {
+			PmUser sUsers = facesScopes.getUserSessionBean();
+			if (sUsers == null) {
+				throw new EpException(MessageConst.ERROR_770045);
+			}
+			loadUserCommonDetails(sUsers.getUserId());
+			//#16052019 - SSM INTEGRATION CR
+			retrieveRobExpDate(getManagedBean().getCurrentProfile());
+			if(this.getManagedBean().isShowRobExpiredDate()){
+				if(DateUtils.getDaysDifference(getManagedBean().getCurrentProfile().getSmSupplier().getSmAppl().getSmCompanyBasic().getRobExpiryDate(), new Date())<=90){
+					this.getManagedBean().setShowRobExpiredDateMesej(true);
+				}else{
+					this.getManagedBean().setShowRobExpiredDateMesej(false);
+				}
+			}
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_INFO_ROB_EXPIRE);
+		} catch (Exception e) {
+			fc.addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, MessageConst.ERROR_770045, PmCommonUtil
+							.getMsgFromMsgUtils(MessageConst.ERROR_770045, null)));
+			PmCommonUtil.redirectToPage(ERROR_PAGE, null, null);
+		}
 
+	}
+	
 	// //TODO: testing
 	// public void handleFileUpload(FileUploadEvent event) {
 	// System.out.println("handleFileUploadTest - start");

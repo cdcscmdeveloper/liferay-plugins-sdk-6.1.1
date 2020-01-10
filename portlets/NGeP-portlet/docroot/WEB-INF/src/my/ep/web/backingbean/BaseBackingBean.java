@@ -56,6 +56,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -73,6 +74,8 @@ import my.ep.dto.pm.authorization.role.RoleReqDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
+import my.ep.dto.sm.personnel.PersonnelReqDTO;
+import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
@@ -93,9 +96,11 @@ import my.ep.persistence.entity.pp.procurementplan.PpAddress;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmMachineDtl;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -2296,4 +2301,124 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		
 	return uomCodeDesc;	
 	}
+	
+	//16052019 - SSM INTEGRATION CR - Fahmi
+			public boolean businessTypeTovalidateWithSSM(String regNo,String businessType){
+				//String regNo = this.getManagedBean().getSmSupp().getRegNo();
+				//String businessType = this.getManagedBean().getSmSupp().getBusinessType();
+				if(//businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT)
+						//|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)
+								//|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH)
+									//	|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK)
+												 businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
+														//|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)
+																//|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK)
+																		|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)
+																				|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD)
+																						//|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT)
+																								|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD)){
+					return true;
+				}else{
+					return false;
+				}
+			}
+			public boolean businessTypeIsROB(String businessType){
+				if(businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
+						|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)
+																				){
+					return true;
+				}else{
+					return false;
+				}
+			}
+			public boolean businessTypeIsROC(String businessType){
+				if(businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD)
+						|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD)
+																				){
+					return true;
+				}else{
+					return false;
+				}
+			}
+			//16052019 - SSM INTEGRATION CR
+			public String setStatusMessageFromSSM(String statusCode){
+				if("A".equalsIgnoreCase(statusCode)){
+					return SmCommonUtil.getMessage("lbl.sm.status.active", null);
+				}else if("E".equalsIgnoreCase(statusCode)){
+					return SmCommonUtil.getMessage("lbl.sm.status.existing", null);
+				}else if("L".equalsIgnoreCase(statusCode)){
+					return SmCommonUtil.getMessage("lbl.sm.status.expired", null);
+				}else if("T".equalsIgnoreCase(statusCode)){
+					return SmCommonUtil.getMessage("lbl.sm.status.terminated", null);
+				}else if("B".equalsIgnoreCase(statusCode)){
+					return SmCommonUtil.getMessage("lbl.sm.status.dissolved", null);
+				}else if("W".equalsIgnoreCase(statusCode)){
+					return SmCommonUtil.getMessage("lbl.sm.status.w", null);
+				}else if("D".equalsIgnoreCase(statusCode)){
+					return SmCommonUtil.getMessage("lbl.sm.status.d", null);
+				}else if("R".equalsIgnoreCase(statusCode)){
+					return SmCommonUtil.getMessage("lbl.sm.status.r", null);
+				}else if("C".equalsIgnoreCase(statusCode)){
+					return SmCommonUtil.getMessage("lbl.sm.status.c", null);
+				}else if("X".equalsIgnoreCase(statusCode)){
+					return SmCommonUtil.getMessage("lbl.sm.status.x", null);
+				}else if("Y".equalsIgnoreCase(statusCode)){
+					return SmCommonUtil.getMessage("lbl.sm.status.y", null);
+				}
+				return "";
+			}
+	
+	//16052019 - SSM INTEGRATION CR
+	public boolean showGreenIconSsm(Boolean ssmData,boolean isSsmAppl,boolean isNullValue){
+		boolean showIcon = false;
+		if(isSsmAppl && isNullValue){
+			return true;
+		}
+		return showIcon;
+	}
+	
+	//16052019 - SSM INTEGRATION CR
+	public boolean disableFieldSSm(Boolean ssmData,Boolean isSsmAppl,boolean isNullValue){
+		boolean disabledField = false;
+		if(isSsmAppl == null && ssmData && !isNullValue){
+			disabledField = true;
+		} else if(isSsmAppl && ssmData && !isNullValue){
+			disabledField = true;
+		} else {
+			disabledField = false;
+		}
+		return disabledField;
+	}
+	
+	public void changeRoleAndProceed() {
+		SmPersonnel personnel = this.getManagedBean().getSmPersonnelSsm();
+		personnel.setEquityOwner(false);
+		
+		IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject("sm", IPersonnelSO.class);
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		//get latest personnel by supplier id
+		reqDTO.setSmSupplierId(this.getManagedBean().getSmSupplierSsm().getSupplierId());
+		PersonnelResDTO resDTO = personnelSO.retrieveLatestActivePersonnelBySupplierId(reqDTO);
+		//find supplier admin
+		SmPersonnel personnelActive = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(
+				personnel.getIdentificationNo(), resDTO.getSmPersonnelList(), "identificationNo");
+		if(personnelActive != null){
+			//copy latest data to supplier admin
+			String[] copyEquityOwner = {"equityOwner","director","clerical","higherManagement","management"};
+			EntityHelper.copyEntityPropertiesOnly(personnel,personnelActive,copyEquityOwner);
+			reqDTO.setSmPersonnel(personnelActive);
+			//update latest data to active supplier admin
+			resDTO = personnelSO.savePersonnelRecord(reqDTO);
+			if(!resDTO.isSuccessful()){
+				throw new EpException(MessageConst.ERROR_776106);
+			}else{
+				//close popup
+			}
+		}
+		
+	}
+
 }
+
+
+// ***25201

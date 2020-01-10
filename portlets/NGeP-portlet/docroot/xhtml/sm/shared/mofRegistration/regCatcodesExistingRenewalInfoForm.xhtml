@@ -7,7 +7,15 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
 	<p:outputPanel id="catCodeInfPan" layout="block" >
+	<table>
+		<tr>
+			<td style="width: 15"><h:outputLabel escape="false" rendered="#{not empty backingBean.managedBean.smAppl.smCompanyBasic.businessDesc}" value="#{lbl['lbl.sm.business.desc']}"></h:outputLabel></td>
+			<td style="width: 85%"><h:outputText rendered="#{not empty backingBean.managedBean.smAppl.smCompanyBasic.businessDesc}"  value="#{backingBean.managedBean.smAppl.smCompanyBasic.businessDesc}" ></h:outputText></td>
+		</tr>
+	</table>
 	
+	
+		
 		<p:panel header="#{lbl['lbl.sm.catCodes.existing.panHdr']}" toggleable="true" >
 			<c:if test="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}">
 				<div align="right" style="width: 99%">

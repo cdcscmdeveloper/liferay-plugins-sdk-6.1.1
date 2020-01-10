@@ -145,6 +145,7 @@ import my.ep.persistence.entity.sm.SmAttachment;
 import my.ep.persistence.entity.sm.SmCategoryOverlapDoc;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
+import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmGstSupplier;
@@ -494,7 +495,8 @@ public class SmApplicationUtil {
 							|| doc.getSmApplDocFiles().get(0).getFileName()
 									.equalsIgnoreCase(" ") || doc
 							.getSmApplDocFiles().get(0).getFilePath()
-							.equalsIgnoreCase(" "))) {
+							.equalsIgnoreCase(" ")) //16052019 - SSM INTEGRATION CR - #27003
+							&& !sb.toString().contains(doc.getPmDocument().getDocName())) {
 				sb.append(++i + ".)");
 				sb.append(doc.getPmDocument().getDocName());
 				// sb.append(",  ");
@@ -1732,7 +1734,7 @@ public class SmApplicationUtil {
 			if (per.getSmStaffAcademics() == null
 					|| per.getSmStaffAcademics().isEmpty()) {
 				sb.append("<br/>");
-				sb.append(++i + ".)");
+				sb.append(++i + ". ");
 				sb.append(per.getName());
 				validPersonnels = false;
 			}
@@ -1767,8 +1769,36 @@ public class SmApplicationUtil {
 		int directorCount = 0;
 		int profCount = 0;
 		int semiProfCount = 0;
+		//16052019 - SSM INTEGRATION CR
+		int i = 0;
+		StringBuilder sb = new StringBuilder();
+		sb.append("<br/>");
+		boolean validPersonnel = true;
+		boolean showerror = false;
 		for (SmPersonnel per : appl.getSmPersonnels()) {
-
+			//16052019 - SSM INTEGRATION CR - To check address complete or not
+			/*if(managedBean.isSsmIntegrationActive() && managedBean.isCompanyValidWithSSM()){
+				if(per.getSmPersonnelAddresses()==null || per.getSmPersonnelAddresses().size()<=0){
+					log.info("ini tiada address");
+				}
+			}*/
+			validPersonnel = true;
+			if(per.isEquityOwner() || per.isAuthorized()){
+				if((per.isBumi() == null && per.getBumiFlg() == null && per.getBumiFlgTrans() ==  null) || (per.isMuslim() == null && per.getMuslimFlg() == null && per.getMuslimFlgTrans() == null) || per.getPmRace() == null){
+					validPersonnel = false;
+				}else if(per.getSmPersonnelAddresses()==null || per.getSmPersonnelAddresses().size()<=0){
+					validPersonnel = false;
+				}
+			}
+			if(!validPersonnel){
+				sb.append(++i + ". ");
+				sb.append(per.getName());
+				// sb.append(",  ");
+				sb.append("<br/>");
+				showerror = true;
+				//show alert message here
+			}
+			//END Changes SSM
 			if (per.isDirector()) {
 				directorCount = directorCount + 1;
 			}
@@ -1797,6 +1827,14 @@ public class SmApplicationUtil {
 				}
 			}
 
+		}
+		//16052019 - SSM INTEGRATION CR
+		if(showerror){
+			if (currentTab != -1) {
+				setNavigationBackToCurrentPage(currentTab, managedBean);
+			}
+			throw new EpException(MessageConst.ERROR_721082,
+					new String[] { sb.toString() });
 		}
 		if (appl.getSupplierType().equalsIgnoreCase(
 				SupplierManagementConst.STYPE_CONSULTANT)) {
@@ -2236,8 +2274,17 @@ public class SmApplicationUtil {
 				if (currentTab != -1) {
 					setNavigationBackToCurrentPage(currentTab, managedBean);
 				}
-				throw new EpException(MessageConst.ERROR_722555, new String[] {
-						s, sb.toString(), supType });
+				
+				if (managedBean.getSmAppl().isApplValidWithSsm()) {
+					if (managedBean.getSmSupplier().getBusinessType().equalsIgnoreCase(
+							SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD)
+							|| managedBean.getSmSupplier().getBusinessType().equalsIgnoreCase(
+									SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD)) {
+						throw new EpException(MessageConst.ERROR_722677, new String[] { s, sb.toString(), supType });
+					} else {
+						throw new EpException(MessageConst.ERROR_722555, new String[] { s, sb.toString(), supType });
+					}
+				}
 			}
 		}
 		if (managedBean.getBusinessTypeVal() != null
@@ -2261,7 +2308,7 @@ public class SmApplicationUtil {
 					validShrHldrsCap = false;
 				} else {
 					perShrSum = perShrSum.add(per.getShareAmt());
-					if (per.getBumiFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+					if (per.getBumiFlg() != null && per.getBumiFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 						bumiShrSum = bumiShrSum.add(per.getShareAmt());
 					}
 					if (per.getPmCountry() != null
@@ -2340,11 +2387,20 @@ public class SmApplicationUtil {
 	public static void validatePaidCaptialAmt(boolean setNavigationCurrentPage,
 			SmApplicationManagedBean managedBean, int currentTab) {
 		SmAppl appl = managedBean.getSmAppl();
+		//SSM INTEGRATION #27110
+		boolean showError = true;
+		if(appl.isApplValidWithSsm() && managedBean.getCurrentPageType()
+				.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)
+				){
+			showError = false;
+			
+		}
 		if (appl != null && appl.getSmCompanyBasic() != null
 				&& appl.getSmCompanyBasic().getPaidUpCapital() != null
 				&& appl.getSmCompanyBasic().getAuthorizedCapital() != null
 				&& appl.getSmCompanyBasic().getTotalShare() != null) {
-			if ((managedBean
+			//SSM INTEGRATION -  No Need To Check Authorized capital vs paid up capital cz new rule ssm, authorize capital not mandatory
+			/*if ((managedBean
 					.getBusinessTypeVal()
 					.equalsIgnoreCase(
 							SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT) || managedBean
@@ -2359,10 +2415,13 @@ public class SmApplicationUtil {
 				if (setNavigationCurrentPage) {
 					setNavigationBackToCurrentPage(currentTab, managedBean);
 				}
-				throw new EpException(MessageConst.ERROR_722523,
-						new String[] { SmCommonUtil.getMessage(
-								"lbl.sm.authorized.capital", null) });
-			}
+				if(showError){
+					throw new EpException(MessageConst.ERROR_722523,
+							new String[] { SmCommonUtil.getMessage(
+									"lbl.sm.authorized.capital", null) });
+				}
+				
+			}*/
 			if (managedBean
 					.getBusinessTypeVal()
 					.equalsIgnoreCase(
@@ -2373,9 +2432,12 @@ public class SmApplicationUtil {
 				if (setNavigationCurrentPage) {
 					setNavigationBackToCurrentPage(currentTab, managedBean);
 				}
-				throw new EpException(MessageConst.ERROR_722509,
-						new String[] { SmCommonUtil.getMessage(
-								"label.sm.total.share", null) });
+				if(showError){
+					throw new EpException(MessageConst.ERROR_722509,
+							new String[] { SmCommonUtil.getMessage(
+									"label.sm.total.share", null) });
+				}
+				
 			}
 		}
 		appl = null;
@@ -3988,9 +4050,10 @@ public class SmApplicationUtil {
 			for (SmMofAccount account : accounts) {
 				if (account.getSupplierType().equalsIgnoreCase(
 						smSupplier.getSmAppl().getSupplierType())) {
-					
+					//SSM INTEGRATION #27111
 					if(account.getRecordStatusFlg().compareTo(
-								DbValueConst.RECORD_STATUS_ACTIVE) == 0){
+								DbValueConst.RECORD_STATUS_ACTIVE) == 0 || account.getRecordStatusFlg().compareTo(
+										DbValueConst.RECORD_STATUS_EXPIRED) == 0){
 						Timestamp currentDate = new Timestamp(
 								System.currentTimeMillis());
 						long diff = account.getExpDate().getTime()
@@ -4998,8 +5061,13 @@ public class SmApplicationUtil {
 	 */
 	public static void setNavigationForApplTnCPage(String applType) {
 		FacesContext fc = FacesContext.getCurrentInstance();
+		String s = setStringNavigationForApplTnCPage(applType);
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, s);
+	}
+	
+	public static String setStringNavigationForApplTnCPage(String applType){
 		String s = "";
-
 		switch (applType) {
 		case "N":
 			s = SupplierManagementConst.PROCEED_MOF_REG_TNC_PAGE;
@@ -5031,8 +5099,7 @@ public class SmApplicationUtil {
 					+ applType);
 			break;
 		}
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, s);
+		return s;
 	}
 
 	/**
@@ -5435,7 +5502,7 @@ public class SmApplicationUtil {
 				resDto = perSO.retrieveNonMalaysianShareHoldersByApplId(reqDto);
 				perType = SupplierManagementConst.PERSONNEL_TYPE_FRGNR;
 			} else {
-				if (managedBean.getSelectedShareHolder().getBumiFlgTrans() == 1) {
+				if (managedBean.getSelectedShareHolder().getBumiFlgTrans() != null && managedBean.getSelectedShareHolder().getBumiFlgTrans() == 1) {
 					resDto = perSO.retrieveBumiShareHoldersByApplId(reqDto);
 					perType = SupplierManagementConst.PERSONNEL_TYPE_BUMI;
 				} else {
@@ -7405,7 +7472,7 @@ public class SmApplicationUtil {
 								RoleCode.MOF_SUPPLIER_ADMIN.value()) || personnel
 						.getEpRole().equalsIgnoreCase(
 								RoleCode.BASIC_SUPPLIER_ADMIN.value())))
-						|| personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING) {
+						|| personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING || personnel.isSsmData()) {
 					iterator.remove();
 				}
 			}
@@ -10939,11 +11006,29 @@ public class SmApplicationUtil {
 					smAddress.setAddress1(addr.getSmAddress().getAddress1());
 					smAddress.setAddress2(addr.getSmAddress().getAddress2());
 					smAddress.setAddress3(addr.getSmAddress().getAddress3());
-					PmCountry country = new PmCountry();
-					country.setCountryId(addr.getSmAddress().getPmCountry()
-							.getCountryId());
-					smAddress.setPmCountry(country);
-					smAddress.setCountryId(country.getCountryId());
+					//START SSM INTEGRATION
+					smAddress.setSsmData(addr.getSmAddress().isSsmData());
+					smAddress.setAddressSsmNull(addr.getSmAddress().isAddressSsmNull());
+					smAddress.setPostcodeSsmNull(addr.getSmAddress().isPostcodeSsmNull());
+					smAddress.setStateSsmNull(addr.getSmAddress().isStateSsmNull());
+					smAddress.setCountrySsmNull(addr.getSmAddress().isCountrySsmNull());
+					
+					if(addr.getSmAddress().getPmCountry() != null){
+						PmCountry country = new PmCountry();
+						country.setCountryId(addr.getSmAddress().getPmCountry()
+								.getCountryId());
+						smAddress.setPmCountry(country);
+						smAddress.setCountryId(country.getCountryId());
+					}else{
+						if(addr.getSmAddress().getPmState() != null){
+							PmCountry country = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+							country.setCountryId(country
+									.getCountryId());
+							smAddress.setPmCountry(country);
+							smAddress.setCountryId(country.getCountryId());
+						}
+					}
+					//END SSM INTEGRATION
 					PmState state = new PmState();
 					state.setStateId(addr.getSmAddress().getPmState()
 							.getStateId());
@@ -12985,6 +13070,40 @@ public class SmApplicationUtil {
 			dateCal.add(dateCal.DATE, 1);
 			if (SmCommonUtil.getInstance().isDateHoliday(dateCal, stateId)) {
 				i = i + 1;
+			}
+		}
+	}
+	public void calcCapitalDistribution(SmPersonnel per,SmCompanyBasic basic){
+		if (per.getShareAmt() == null) {
+			per.setShareAmt(new BigDecimal(0));
+		}
+		basic.setBumiEquity(basic.getBumiEquity()==null?new BigDecimal(0):basic.getBumiEquity());
+		basic.setNonBumiEquity(basic.getNonBumiEquity()==null?new BigDecimal(0):basic.getNonBumiEquity());
+		basic.setForeignerEquity(basic.getForeignerEquity()==null?new BigDecimal(0):basic.getForeignerEquity());
+		basic.setGovtUnitrustEquity(basic.getGovtUnitrustEquity()==null?new BigDecimal(0):basic.getGovtUnitrustEquity());
+		basic.setGovtEquity(basic.getGovtEquity()==null?new BigDecimal(0):basic.getGovtEquity());
+		basic.setForeignCompanyEquity(basic.getForeignCompanyEquity()==null?new BigDecimal(0):basic.getForeignCompanyEquity());
+		basic.setLocalCompanyEquity(basic.getLocalCompanyEquity()==null?new BigDecimal(0):basic.getLocalCompanyEquity());
+
+		if(per.isBumi() != null && per.isBumi()){
+			basic.setBumiEquity(basic.getBumiEquity().add(per.getShareAmt()));
+		}else if(per.isBumi() == null || !per.isBumi()){
+			basic.setNonBumiEquity(basic.getNonBumiEquity().add(per.getShareAmt()));
+		}else if(per.isAttachHq()){
+			
+		}
+		
+	}
+	
+	public static void removeEquityCompanyFromList(
+			List<SmEquityCompany> equityCompanyList) {
+		if (equityCompanyList != null) {
+			Iterator<SmEquityCompany> iterator = equityCompanyList.iterator();
+			while (iterator.hasNext()) {
+				SmEquityCompany equityCompany = iterator.next();
+				if (equityCompany.isSsmData()) {
+					iterator.remove();
+				}
 			}
 		}
 	}
