@@ -25313,7 +25313,4 @@ public class SmApplicationBackingBean extends
 				
 				return show;
 			}
-		}
-
-
 }
