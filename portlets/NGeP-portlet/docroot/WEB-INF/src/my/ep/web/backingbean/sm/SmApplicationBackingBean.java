@@ -1598,7 +1598,8 @@ public class SmApplicationBackingBean extends
 								if(businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())){
 									personnel.setSsmData(true);
 									personnel.setShareAmtSsmNull(true);
-									String[] copyEquityOwner = {"birthDate","nameInSsm","raceSsmNull","birthDateSsmNull","designationSsmNull","equityOwner","director","pmCountry","directorSsm","equityOwnerSsm","managementSsm"};
+									//SSM CHANGE 11012020
+									String[] copyEquityOwner = {"birthDate","nameInSsm","raceSsmNull","birthDateSsmNull","designationSsmNull","equityOwner","director","pmCountry","directorSsm","equityOwnerSsm","managementSsm","pmRace"};
 									EntityHelper.copyEntityPropertiesOnly(personnelSSM,personnel,copyEquityOwner);
 								}else{
 									personnel.setSsmData(true);
@@ -12819,7 +12820,7 @@ public class SmApplicationBackingBean extends
 		boolean showDoc = true;
 		//ssm changes to hide doc for roc if paid up capital = paid up capital ssm. if paid up capital != paid up capital ssm show doc.
 		for(PmDocumentRestr documentRestr:doc.getPmDocumentRestrs()){
-			log.info(documentRestr.getDocumentRestrId()+"documentRestr.isCapitalEquityChanged()="+documentRestr.isCapitalEquityChanged());
+			log.info(doc.getDocName()+"--"+documentRestr.getDocumentRestrId()+"documentRestr.isCapitalEquityChanged()="+documentRestr.isCapitalEquityChanged());
 			if (documentRestr.isCapitalEquityChanged()){
 				if (changesInCapital) {
 					showDoc = true;
