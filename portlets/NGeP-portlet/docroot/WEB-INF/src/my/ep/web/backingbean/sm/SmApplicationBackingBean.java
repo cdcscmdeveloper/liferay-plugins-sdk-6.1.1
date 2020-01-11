@@ -3389,17 +3389,11 @@ public class SmApplicationBackingBean extends
 							}
 						}						
 					}
-					log.info("Check Role NOT DELETE DOC=======================isSupplierUser========================================"+getManagedBean().isSupplierUser());
-					log.info("Check Role NOT DELETE DOC=============================isApproverUser=================================="+getManagedBean().isApproverUser());
-					log.info("Check Role NOT DELETE DOC===============================isPoUser================================"+getManagedBean().isPoUser());
-					if(!getManagedBean().isApproverUser() &&  !getManagedBean().isPoUser()){
-						EntityHelper
-						.compareAndRemoveEntityFromListIfNotExist(docs,
-								getManagedBean().getSmAppl()
-										.getSmApplSupportDocs(),
-								"applSupportDocId");
-					}
-					
+					EntityHelper
+							.compareAndRemoveEntityFromListIfNotExist(docs,
+									getManagedBean().getSmAppl()
+											.getSmApplSupportDocs(),
+									"applSupportDocId");
 				} else {
 					log.info(" ******* Existing doc list without CHANGE in state id  *****");
 					for (PmDocument doc : rsDTO.getDocumentList()) {
