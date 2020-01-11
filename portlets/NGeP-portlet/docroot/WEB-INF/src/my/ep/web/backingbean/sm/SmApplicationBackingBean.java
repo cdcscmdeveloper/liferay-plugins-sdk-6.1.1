@@ -3389,11 +3389,16 @@ public class SmApplicationBackingBean extends
 							}
 						}						
 					}
-					EntityHelper
-							.compareAndRemoveEntityFromListIfNotExist(docs,
-									getManagedBean().getSmAppl()
-											.getSmApplSupportDocs(),
-									"applSupportDocId");
+					//SSM Changes 11012020
+					//only SSM appl will reset doc with PM - Azida
+					if(getManagedBean().getSmAppl().isApplValidWithSsm()){
+						EntityHelper
+						.compareAndRemoveEntityFromListIfNotExist(docs,
+								getManagedBean().getSmAppl()
+										.getSmApplSupportDocs(),
+								"applSupportDocId");
+					}
+					
 				} else {
 					log.info(" ******* Existing doc list without CHANGE in state id  *****");
 					for (PmDocument doc : rsDTO.getDocumentList()) {
