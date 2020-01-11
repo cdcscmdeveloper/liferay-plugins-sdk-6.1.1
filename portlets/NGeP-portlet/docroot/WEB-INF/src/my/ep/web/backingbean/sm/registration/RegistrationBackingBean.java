@@ -1720,9 +1720,28 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 								}else {
 									throw new EpException(MessageConst.ERROR_721041,new String[]{labelText,supplier.getRegNo()});
 								}
+							}else if(!getManagedBean().getSmAppl().getSupplierType().equals(supplier.getSmAppl().getSupplierType()) && resDTO.getSmSuppliers().size() > 1){
+								if(getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
+									if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_BASIC)){
+										throw new EpException(MessageConst.ERROR_721042,new String[]{getManagedBean().getSmSupp().getRegNo()});
+									}
+								}else{
+									errorMessageSSM(supplier);
+								}
+							}else if(!getManagedBean().getSmAppl().getSupplierType().equals(supplier.getSmAppl().getSupplierType()) && resDTO.getSmSuppliers().size() == 1){
+								if(supplier.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE){
+									String labelText = null;
+									if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
+										labelText = SmCommonUtil.getMessage("lbl.sm.contractor", null);
+									}else{
+										labelText = SmCommonUtil.getMessage("lbl.sm.consultant", null);
+									}
+									throw new EpException(MessageConst.ERROR_721083,new String[]{supplier.getRegNo(),labelText});
+								}
+								
 							}else if(supplier.getEpNo() == null || "".equalsIgnoreCase(supplier.getEpNo())){
 								throw new EpException(MessageConst.ERROR_721075,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
-							}else{
+							}else{								
 								errorMessageSSM(supplier);
 							}
 							
@@ -3956,23 +3975,23 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	
 	//16052019 - SSM INTEGRATION CR START
 	public void validateBusinessType() {
-		String businessType = getManagedBean().getSmSupp().getBusinessType().toUpperCase();
-		switch(businessType){
-			//ROB PARTNERSHIP must > 1 owners
-			case SupplierManagementConst.BUSINESS_TYPE_ROB_PARTNERSHIP:
-				if(getManagedBean().getSmSuppOwners().size() <= 1) {
-					throw new EpException(MessageConst.ERROR_721077);
-				}
-				break;
-			//ROB SOLE PROPRIETOSHIP must <= 1 owner
-			case SupplierManagementConst.BUSINESS_TYPE_ROB_SOLE_PROPRIETORSHIP:
-				if(getManagedBean().getSmSuppOwners().size() > 1) {
-					throw new EpException(MessageConst.ERROR_721077);
-				}
-				break;
-			default:
-				break;
-		}
+			String businessType = getManagedBean().getSmSupp().getBusinessType().toUpperCase();
+			switch(businessType){
+				//ROB PARTNERSHIP must > 1 owners
+				case SupplierManagementConst.BUSINESS_TYPE_ROB_PARTNERSHIP:
+					if(getManagedBean().getSmSuppOwners().size() <= 1) {
+						throw new EpException(MessageConst.ERROR_721077);
+					}
+					break;
+				//ROB SOLE PROPRIETOSHIP must <= 1 owner
+				case SupplierManagementConst.BUSINESS_TYPE_ROB_SOLE_PROPRIETORSHIP:
+					if(getManagedBean().getSmSuppOwners().size() > 1) {
+						throw new EpException(MessageConst.ERROR_721077);
+					}
+					break;
+				default:
+					break;
+			}				
 	}
 	//16052019 - SSM INTEGRATION CR END
 	
