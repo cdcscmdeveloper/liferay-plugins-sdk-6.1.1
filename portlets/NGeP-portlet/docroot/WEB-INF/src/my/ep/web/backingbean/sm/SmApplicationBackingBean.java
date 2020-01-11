@@ -3391,7 +3391,7 @@ public class SmApplicationBackingBean extends
 					}
 					//SSM Changes 11012020
 					//only SSM appl will reset doc with PM - Azida
-					if(getManagedBean().getSmAppl().isApplValidWithSsm()){
+					if(getManagedBean().getSmAppl().isApplValidWithSsm() || (!businessTypeIsROB(getManagedBean().getSmAppl().getSmSupplier().getBusinessType()) && !businessTypeIsROC(getManagedBean().getSmAppl().getSmSupplier().getBusinessType()))){
 						EntityHelper
 						.compareAndRemoveEntityFromListIfNotExist(docs,
 								getManagedBean().getSmAppl()
