@@ -2800,6 +2800,12 @@ public class SmApplicationBackingBean extends
 		try {
 
 			MofRegistrationReqDTO finReqDto = new MofRegistrationReqDTO();
+			//SSM CHANGES 11012020
+			if(getManagedBean().isPoUser() || getManagedBean().isApproverUser()){
+				finReqDto.setPoSdoUser(true);
+			}else{
+				finReqDto.setPoSdoUser(false);
+			}
 			finReqDto.setApplId(getManagedBean().getSmAppl().getApplId());
 			finReqDto.setCurrentPage(getManagedBean().getCurrentPageType());
 			log.info("********* Final Block Id *****" + finReqDto.getApplId());
