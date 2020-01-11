@@ -35,7 +35,7 @@
 					<td class="tdContent"><p:selectOneMenu id="suppTypeId" required="#{!empty param['disableValidation']}"
 							value="#{registrationBackingBean.managedBean.smAppl.supplierType}"
 							label="#{lbl['lbl.sm.mofsuppliertype']}" style="width:200px"
-							disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew}">
+							disabled="#{!registrationBackingBean.managedBean.smSupp.brandNew or registrationBackingBean.managedBean.companyValidWithSSM}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItem itemLabel="#{lbl['lbl.sm.contractor']}"
 								itemValue="#{SupplierManagementConst.STYPE_CONTRACTOR}" />
