@@ -514,7 +514,26 @@ public class SmApplicationBackingBean extends
 						mofReqDto = new MofRegistrationReqDTO();
 						mofReqDto.setApplId(Long.parseLong(applId));
 						mofReqDto.setSmSupplier(supplierProfile);
+						//START SSM CHANGES FOR RESUBMIT
+						/*if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(supplierProfile.getRegNo(),supplierProfile.getBusinessType())){
+							//checking with ssm
+							SsmReqDTO ssmReqDTO = new SsmReqDTO();
+							ssmReqDTO.setRegNo(supplierProfile.getRegNo());
+							ssmReqDTO.setBusinessType(supplierProfile.getBusinessType());
+							ssmReqDTO.setCheckOnly(true);
+							SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
+							if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
+								//check the business/company registration status in ssm
+								this.getManagedBean().setStatusDescFromSSM(setStatusMessageFromSSM(ssmResDTO.getStatusFromSSM()));
+								if(!ssmResDTO.getStatusFromSSM().equalsIgnoreCase("A") && !ssmResDTO.getStatusFromSSM().equalsIgnoreCase("E")){
+									throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
+								}
+							} else{
+								SmCommonUtil.ssmError(ssmResDTO);
+							}
+						}*/
 						try {
+								
 							MofRegistrationResDTO mofRespDto = mofRegistrationSO
 									.cloneSmApplicationForResubmissionDraft(mofReqDto);
 							latestResubmitAppl = mofRespDto.getSmAppl();
@@ -529,7 +548,11 @@ public class SmApplicationBackingBean extends
 							getManagedBean().setSmAppl(latestResubmitAppl);
 							getManagedBean().setSmSupplier(
 									latestResubmitAppl.getSmSupplier());
-
+							//START SSM CHANGES FOR RESUBMIT
+							//if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupplier().getRegNo(),this.getManagedBean().getSmSupplier().getBusinessType())){
+								//ssmIntegrationResubmit();
+							//}							
+							//END SSM CHANGES FOR RESUBMIT
 							// already answer questionnaire, redirect to
 							// application page
 							if (rejectedAppl.isQuestionnaire()
@@ -3422,8 +3445,9 @@ public class SmApplicationBackingBean extends
 					}
 				}
 			}
-
-			getManagedBean().getSmAppl().setSmApplSupportDocs(docs);
+			if(!getManagedBean().getSmAppl().isResubmit()){
+				getManagedBean().getSmAppl().setSmApplSupportDocs(docs);
+			}
 
 			// sort by document is mandatory or not
 			Collections.sort(getManagedBean().getSmAppl()
