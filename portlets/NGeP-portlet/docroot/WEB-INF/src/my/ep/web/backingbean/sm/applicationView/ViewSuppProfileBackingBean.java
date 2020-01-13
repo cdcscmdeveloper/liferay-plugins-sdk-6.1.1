@@ -262,11 +262,14 @@ public class ViewSuppProfileBackingBean extends
 							if(!EntityHelper.isCollectionEmpty(catList)
 									&& catList.size() > 0){
 								for(Object[] arr : catList){
-									DisciplinaryActionCategoryVO catVo = new DisciplinaryActionCategoryVO();
-									String catCode = StringUtils.EMPTY;
-									catCode = arr[3].toString() + arr[4].toString() + arr[5].toString() ;
-									catVo.setCategoryCode(catCode);	
-									catVoList.add(catVo);
+									if(disciplinaryAction.getDisciplinaryActionId().toString()
+											.equalsIgnoreCase(arr[7].toString())){
+										DisciplinaryActionCategoryVO catVo = new DisciplinaryActionCategoryVO();
+										String catCode = StringUtils.EMPTY;
+										catCode = arr[3].toString() + arr[4].toString() + arr[5].toString() ;
+										catVo.setCategoryCode(catCode);	
+										catVoList.add(catVo);
+									}
 								}						
 								retVal.setCategoryCodeList(catVoList);
 							}
