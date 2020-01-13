@@ -5743,10 +5743,10 @@ public class SmCommonUtil {
 		BigDecimal companiesEquityTotal = null;
 		BigDecimal mul = new BigDecimal(100);
 		try {
-			
-			if(managedBean.getSmAppl().getSmCompanyBasic().getCompaniesEquityTotal() != null)
+			//Bug #26905
+			if(managedBean.getSmAppl().getSmCompanyBasic().getPaidUpCapital() != null)
 			{
-				companiesEquityTotal = managedBean.getSmAppl().getSmCompanyBasic().getCompaniesEquityTotal();
+				companiesEquityTotal = managedBean.getSmAppl().getSmCompanyBasic().getPaidUpCapital();
 				for (SmEquityCompany comp : managedBean.getSmAppl()
 						.getSmEquityCompanies()) {
 					
