@@ -3583,14 +3583,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @return  parameter description
 	 */
 	public String getParameterDesc(int index,  PmParameter parameter) {
+		//#26520 - start
+		String strDescription = null;
 		CtCommitteeMember ctCommitteeMember = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().get(index);
 		if (parameter != null && parameter.getParameterCode() != null 
 				&& parameter.getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
 			ctCommitteeMember.setAttended(true);
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().remove(index);
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().add(index, ctCommitteeMember);	
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().add(index, ctCommitteeMember);
+			strDescription = ResourceBundleUtils.getMessage("lbl.ct.secretary", 
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else {
+			strDescription = getParameterDesc(parameter);
 		}
-		return getParameterDesc(parameter);
+		return strDescription;
+		//#26520 - end
 	}
 
 	/**
