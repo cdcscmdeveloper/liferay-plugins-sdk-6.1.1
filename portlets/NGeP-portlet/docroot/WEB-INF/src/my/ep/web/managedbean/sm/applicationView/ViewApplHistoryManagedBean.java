@@ -1,5 +1,8 @@
 package my.ep.web.managedbean.sm.applicationView;
 
+
+import java.util.Date;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,20 +12,28 @@ import javax.faces.bean.SessionScoped;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
+import my.ep.biz.service.cm.catalogue.ICatalogueSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.constant.sm.SupplierManagementConst;
+import my.ep.dto.cm.catalogue.CatalogueReqDTO;
+import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
 import my.ep.dto.sm.bulkApplication.SmBulkApplicationVO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
+import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmAttachment;
 import my.ep.persistence.entity.sm.SmMofAccount;
+import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.trackingdiary.PmTrackingDiaryBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.DisciplinaryActionVO;
@@ -47,14 +58,21 @@ public class ViewApplHistoryManagedBean extends
 	private List<SmBulkApplicationVO> smBulkApplicationVO;
 	private SmAttachment cancellationAttachment;
 	private SmMofAccount currMof;
+
+	//25792 - start
+	private Date currentDate = new Date();
+	private String searchAccountType;
+	//25792 - end
+
 	//26238
 	private List<DisciplinaryActionVO> disciplineVOs; 
 	private boolean disciplinaryAction;
 
+
 	public ViewApplHistoryManagedBean() {
 
 	}
-
+	
 	private class SmSupplierPagingDataModel extends PagingDataModel<Object[]> {
 		/**
 		 * 
@@ -71,7 +89,7 @@ public class ViewApplHistoryManagedBean extends
 			SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
 			reqDTO.setObjArrSearchBean(searchBean);
 			reqDTO.setViewApplicationHistory(isViewApplicationHistory());
-
+			
 			try {
 				if (!isSupplierUser()) {
 					if (!isSearchCriteriaEmpty()) {
@@ -83,6 +101,7 @@ public class ViewApplHistoryManagedBean extends
 					return getApplicationHistoryResultBean(reqDTO);
 				}
 			} catch (Exception ex) {
+				ex.printStackTrace();
 				return new SearchResultBean();
 			} finally {
 				reqDTO = null;
@@ -91,16 +110,47 @@ public class ViewApplHistoryManagedBean extends
 
 		private ISearchResultBean<Object[]> getApplicationHistoryResultBean(
 				SmApplRevisionReqDTO reqDTO) {
-			reqDTO.setSmSupplier(getSearchSupplier());
-			reqDTO.setMofAccountNo(getSearchMofNo());
-			reqDTO.setPmRegStatusId(getSearchPmRegStatusId());
-			reqDTO.setSupplierType(getSearchSuppType());
+			//25792 - start
 			reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
-			reqDTO.setPmZoneId(getSearchPmZoneId());
-			reqDTO.setEpNo(getSearchEpNo());
-			reqDTO.setApplicationType(getSearchApplType());
-			reqDTO.setApplicationNo(getSearchApplNo());
-			reqDTO.setPmStatusId(getSearchApplStatusId());
+			if(getAccountType() != null) {
+				if(getAccountType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_BASIC)) {
+					reqDTO.setEpNo(getSearchEpNo());
+					reqDTO.setApplicationType(getSearchApplType());
+					reqDTO.setApplicationNo(getSearchApplNo());
+					reqDTO.setPmStatusId(getSearchApplStatusId());
+				}
+				else if(getAccountType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
+					reqDTO.setAgencyType(getAgencyType());
+					reqDTO.setAgencyName(getAgencyName());
+					reqDTO.setEpNo(getSearchEpNo());
+				}
+				else {					
+					reqDTO.setMofAccountNo(getSearchMofNo());
+					reqDTO.setPmRegStatusId(getSearchPmRegStatusId());
+					reqDTO.setSupplierType(getSearchSuppType());
+					reqDTO.setPmZoneId(getSearchPmZoneId());
+					reqDTO.setEpNo(getSearchEpNo());
+					reqDTO.setApplicationType(getSearchApplType());
+					reqDTO.setApplicationNo(getSearchApplNo());
+					reqDTO.setPmStatusId(getSearchApplStatusId());
+				}
+				
+				reqDTO.setAccountType(getAccountType());
+			} else {
+				if(SupplierManagementConst.SUPP_TYPE_BASIC.equalsIgnoreCase(getSearchSupplier().getSmAppl().getSupplierType())) {
+					reqDTO.setAccountType(SupplierManagementConst.SUPP_TYPE_BASIC);
+				} else if(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT.equalsIgnoreCase(getSearchSupplier().getSmAppl().getSupplierType())) {
+					reqDTO.setAccountType(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT);
+					
+				} else {
+					reqDTO.setAccountType("M");
+				}
+				
+				reqDTO.setEpNo(getSearchSupplier().getEpNo());
+			}
+			reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
+			reqDTO.setSmSupplier(getSearchSupplier());
+			//25792 - end
 
 			ISearchResultBean<Object[]> retVal = SmServiceLookup
 					.getSmApplRevisionSO()
@@ -282,7 +332,21 @@ public class ViewApplHistoryManagedBean extends
 	public void setCurrMof(SmMofAccount currMof) {
 		this.currMof = currMof;
 	}
+	//25792 - start
+	public Date getCurrentDate() {
+		return currentDate;
+	}
+	public void setCurrentDate(Date currentDate) {
+		this.currentDate = currentDate;
+	}
 	
+	public String getSearchAccountType() {
+		return searchAccountType;
+	}
+	public void setSearchAccountType(String searchAccountType) {
+		this.searchAccountType = searchAccountType;
+	}
+	//25792 - end
 	public List<DisciplinaryActionVO> getDisciplineVOs() {
 		return disciplineVOs;
 	}
@@ -296,5 +360,5 @@ public class ViewApplHistoryManagedBean extends
 	public void setDisciplinaryAction(boolean disciplinaryAction) {
 		this.disciplinaryAction = disciplinaryAction;
 	}	
-
+	
 }

@@ -5079,6 +5079,7 @@ public class SmApplicationUtil {
 	
 	public static String setStringNavigationForApplTnCPage(String applType){
 		String s = "";
+
 		switch (applType) {
 		case "N":
 			s = SupplierManagementConst.PROCEED_MOF_REG_TNC_PAGE;
@@ -13194,6 +13195,7 @@ public class SmApplicationUtil {
 		return resDTO.getResultList();
 	}
 	//26238 - end
+
 	
 	public static void removeEquityCompanyFromList(
 			List<SmEquityCompany> equityCompanyList) {
