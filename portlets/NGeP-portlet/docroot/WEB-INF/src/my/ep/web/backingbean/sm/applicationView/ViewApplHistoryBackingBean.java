@@ -102,8 +102,6 @@ import org.primefaces.component.tabview.TabView;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.StreamedContent;
 
-import weblogic.GetMessage;
-
 import com.liferay.portal.util.PortalUtil;
 
 @ManagedBean(name = "viewApplHistoryBackingBean")
