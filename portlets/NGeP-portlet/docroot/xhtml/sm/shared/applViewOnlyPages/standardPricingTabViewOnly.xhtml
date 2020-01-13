@@ -1,0 +1,68 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:p="http://primefaces.org/ui"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panelGrid styleClass="tablePanel" style="width:100%;">
+		<f:facet name="header">
+			<p:row>
+				<p:column>
+							#{lbl['lbl.cm.price']}
+						</p:column>
+				<p:column>
+							#{lbl['lbl.cm.start.date']}
+						</p:column>
+				<p:column>
+							#{lbl['lbl.cm.end.date']}
+						</p:column>
+				
+			</p:row>
+
+		</f:facet>
+		<c:choose>
+		<c:when test="#{viewSmApplBackingBean.managedBean.selectedSupplierItem.cmStandardPricing.price ne null 
+		or viewSmApplBackingBean.managedBean.selectedSupplierItem.cmStandardPricing.startDate ne null 
+		or viewSmApplBackingBean.managedBean.selectedSupplierItem.cmStandardPricing.endDate ne null}">		
+		<p:row>
+			<p:column>
+				<p:inputText readonly="true"
+					value="#{viewSmApplBackingBean.managedBean.selectedSupplierItem.cmStandardPricing.price}" maxlength="18" style="text-align:right">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText>
+			</p:column>
+			 <p:column>
+				<p:calendar readonly="true"
+					value="#{viewSmApplBackingBean.managedBean.selectedSupplierItem.cmStandardPricing.startDate}" 
+					mindate="#{viewSmApplBackingBean.managedBean.selectedSupplierItem.cmStandardPricing.startDate}"
+					maxdate="#{viewSmApplBackingBean.managedBean.selectedSupplierItem.cmStandardPricing.startDate}"
+					showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" onclick="disableCalendar()">
+				</p:calendar>
+
+			</p:column>
+			<p:column>
+				<p:calendar readonly="true"
+					value="#{viewSmApplBackingBean.managedBean.selectedSupplierItem.cmStandardPricing.endDate}" 
+					mindate="#{viewSmApplBackingBean.managedBean.selectedSupplierItem.cmStandardPricing.endDate}"
+					maxdate="#{viewSmApplBackingBean.managedBean.selectedSupplierItem.cmStandardPricing.endDate}"
+					showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
+				</p:calendar>
+
+			</p:column>
+		</p:row>
+		</c:when>
+		<c:otherwise>
+			<p:row>
+			<p:column colspan="3">
+				#{lbl['lbl.datatable.msg.no.records.found']}
+			</p:column>
+			</p:row>
+		</c:otherwise>
+		</c:choose>
+		
+	</p:panelGrid>
+</ui:composition>
