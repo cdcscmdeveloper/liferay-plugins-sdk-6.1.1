@@ -9,8 +9,17 @@
 
 	<ui:define name="resourceSection">
 		<script>
-			$('#portlet_viewApplicationHistory_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.supplier.application.history']}");
+			$('#portlet_viewApplicationHistory_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.supplier.application.history']}");			
 		</script>
+		<h:outputStylesheet>
+		.ui-datatable .ui-datatable-header {
+		    text-align: right;
+   		   background: unset;
+           border: 0px none;
+           font-size: 100%;
+    	font-family: inherit;
+		}
+		</h:outputStylesheet>
 	</ui:define>
 	
 	<ui:param name="viewSuppProfileBackingBean" value="#{viewApplHistoryBackingBean}" />
@@ -32,9 +41,21 @@
 			<p:dataTable var="smAppl" widgetVar="smApplWidgetVar"
 				editable="false" lazy="true" rows="10" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{viewSuppProfileBackingBean.managedBean.smSupplierDataModel}"
-				rowKey="#{smAppl}" rowIndexVar="index" id="supplierApplHistoryDtId">
+				rowKey="#{smAppl}" rowIndexVar="index" id="supplierApplHistoryDtId" >
+				
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sm.row.total']}: #{viewSuppProfileBackingBean.managedBean.smSupplierDataModel.getRowCount()}" />
+				</f:facet>
+				
 				<ac:paginator for="supplierApplHistoryDtId" />
 				
+				<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.sm.row.no']}" />
+						</f:facet>
+						<h:outputText value="#{index + 1}"/>
+						
+				</p:column>
 				<p:column headerText="#{lbl['lbl.rpt.supplierType']}">
 					<h:outputText value="#{lbl['lbl.sm.contractor']}" rendered="#{smAppl[2] eq 'K'}"/>
 					<h:outputText value="#{lbl['lbl.sm.consultant']}" rendered="#{smAppl[2] eq 'J'}"/>
