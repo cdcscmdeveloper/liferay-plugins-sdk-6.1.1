@@ -26,10 +26,6 @@ public class DisciplinaryActionRest {
 	public Response retrieveDisciplinaryAction() {
 		log.info("Before success calling retrieve rest api....");
 		try {
-			PmUser user = new FacesScopes().getUserSessionBean();
-			List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(user
-					.getUserId());
-			//hantar List<PmUserRole> dan PmUSer 
 			SupplierDataMaintenanceResDTO resDTO = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveDisciplinaryAction();
 			SupplierDataMaintenanceResDTO activeDisc = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryAction();
 			if(resDTO.getSmDisciplinaryActions() != null 
@@ -42,6 +38,9 @@ public class DisciplinaryActionRest {
 			if(activeDisc.getSmDisciplinaryActions() != null
 					&& activeDisc.getSmDisciplinaryActions().size() > 0){
 				for (SmDisciplinaryAction pendingDisc : activeDisc.getSmDisciplinaryActions()) {
+					PmUser user = SmCommonUtil.getUserByUserId(pendingDisc.getChangedBy());
+					List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(user
+							.getUserId());
 					SmServiceLookup.getSupplierDataMaintenanceSO().updatePendingDisciplinaryAction(pendingDisc, user, userRoles);
 				}
 			}
