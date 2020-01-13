@@ -4232,6 +4232,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				flItemAddr.setScRequestItem(flTempItem.getScRequestItem());
 				flItemAddr.setCmItem(flTempItem.getScRequestItem().getCmItem());
 				flItemAddr.setPmUomId(flTempItem.getScRequestItem().getUom().getUomId());
+				flItemAddr.setSkuNumber(contractItemResDTO.getCtContractItem().getSku()); //# redmine 16344 FARID added
 				if(flTempItem.getScRequestItem().getCmItem()!=null) {
 					flItemAddr.setItemCode(flTempItem.getScRequestItem().getCmItem().getExtensionCode());
 				} else {
