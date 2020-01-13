@@ -3569,6 +3569,21 @@ public class SmApplicationUtil {
 						|| cat.getRecordStatusFlg()
 								.compareTo(
 										SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0) {
+					//26238 - start
+					if(managedBean.getSmAppl().getSmSupplier() != null){
+						List<Object[]> cancelCat = SmApplicationUtil.retrieveCancelCategoryBySupplier(managedBean.getSmAppl().getSmSupplier());
+						if(cancelCat != null){
+							for(Object[] arr : cancelCat){
+								if(arr[2].toString()
+										.equalsIgnoreCase(cat.getPmCategoryL3().getCategoryL3Id().toString())){
+									cat.setCancelCategory(true);
+								} else {
+									cat.setCancelCategory(false);
+								}
+							}
+						}
+					}
+					//26238 - end
 					catList.add(cat);
 				} else if (cat.getRecordStatusFlg().compareTo(
 						SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
@@ -3990,6 +4005,21 @@ public class SmApplicationUtil {
 								.getSmAppl().getSmPersonnels(), "pmUser");
 			}
 			//26238 - start
+			SupplierDataMaintenanceResDTO resDTO = new SupplierDataMaintenanceResDTO();
+			retrieveActiveSmDisciplinaryActionBySupplier(smSupplier);
+			
+			if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)){
+				if(resDTO.getSmDisciplinaryActions() != null
+						&& resDTO.getSmDisciplinaryActions().size() > 0){
+					for(SmDisciplinaryAction disc : resDTO.getSmDisciplinaryActions()){
+						if(disc.isBumiputeraCancel()){
+							throw new EpException(SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
+									null));
+						}
+					}
+				}
+			}			
+			
 			if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
 					|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
 					|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
