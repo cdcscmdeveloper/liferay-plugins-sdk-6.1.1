@@ -159,7 +159,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		initStep6RegisterCategoryCode();
 		initStep8_9PoApproverDefaultDecision();
 		initBumiRecommendNote();
-		initSupplierDisciplinaryAction(getManagedBean().getSmSupplier());
+//		initSupplierDisciplinaryAction(getManagedBean().getSmSupplier()); //26238
 		assignApplActiveAndApprovedCategoryList();
 		//Redmine #18959 - no need to check overlapping category
 		//setOverLappingCategories();
@@ -561,6 +561,35 @@ public class SupplierDataMaintenanceBackingBean extends
 					.updateSupplierInfo(reqDTO);
 			getManagedBean().setSmAppl(resDTO.getSmAppl());
 			getManagedBean().setSmMofAccount(resDTO.getSmMofAccount());
+			
+			//26238 - start
+			if(resDTO.isSuccessful()){
+				if(resDTO.getCategoryList() != null){
+					SupplierDataMaintenanceReqDTO supplierDataMaintenanceReqDTO = new SupplierDataMaintenanceReqDTO();
+					SmAppl latestAppl = resDTO.getSmAppl();
+					SmSupplier supplier = latestAppl.getSmSupplier();
+					List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
+					
+					if(discList != null){
+						for(SmDisciplinaryAction disc : discList){
+							if(disc.getDisciplinaryActionId() != null 
+									&& disc.isRecordStatus()){
+								supplierDataMaintenanceReqDTO.setDisciplinaryActionId(disc.getDisciplinaryActionId());
+								break;
+							}
+						}
+					}
+					supplierDataMaintenanceReqDTO.setSelectedCategories(resDTO.getCategoryList());
+					SupplierDataMaintenanceResDTO resDTO2 = new SupplierDataMaintenanceResDTO();
+					resDTO2 = SmServiceLookup.getSupplierDataMaintenanceSO()
+							.updateSelectedCategory(supplierDataMaintenanceReqDTO);
+					
+					if(!resDTO2.isSuccessful()){
+						throw new EpException("Failed to update Supplier Category imposed Disciplinary Action");
+					}
+				}
+			} 
+			//26238 - end
 
 		} catch (OptimisticLockException opt) {
 			throw new EpException(opt.getMessage());
@@ -1168,9 +1197,10 @@ public class SupplierDataMaintenanceBackingBean extends
 	public void onTickDiscipline() {
 		if (getManagedBean().isEditDisciplinaryAction()) {
 			getManagedBean().setDisciplineVO(getInitDisciplinaryActionVO());
-		} else {
-			initSupplierDisciplinaryAction(getManagedBean().getSmSupplier());
-		}
+		} 
+//		else {
+//			initSupplierDisciplinaryAction(getManagedBean().getSmSupplier());
+//		}
 	}
 
 	/**
@@ -1782,11 +1812,13 @@ public class SupplierDataMaintenanceBackingBean extends
 						if(!EntityHelper.isCollectionEmpty(catList)
 								&& catList.size() > 0){
 							for(Object[] arr : catList){
-								DisciplinaryActionCategoryVO catVo = new DisciplinaryActionCategoryVO();
-								String catCode = StringUtils.EMPTY;
-								catCode = arr[3].toString() + arr[4].toString() + arr[5].toString() ;
-								catVo.setCategoryCode(catCode);	
-								catVoList.add(catVo);
+								if(disciplinaryAction.getDisciplinaryActionId().toString().equalsIgnoreCase(arr[7].toString())){
+									DisciplinaryActionCategoryVO catVo = new DisciplinaryActionCategoryVO();
+									String catCode = StringUtils.EMPTY;
+									catCode = arr[3].toString() + arr[4].toString() + arr[5].toString() ;
+									catVo.setCategoryCode(catCode);	
+									catVoList.add(catVo);
+								}
 							}						
 							retVal.setCategoryCodeList(catVoList);
 						}
