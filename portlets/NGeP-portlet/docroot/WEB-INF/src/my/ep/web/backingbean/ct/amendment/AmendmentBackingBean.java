@@ -46,6 +46,7 @@ import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
+import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -72,11 +73,14 @@ import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
 import my.ep.persistence.entity.ct.CtActor;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContractVer;
+import my.ep.persistence.entity.ct.CtDisciplinaryAction;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.amend.CtAmendment;
 import my.ep.persistence.entity.ct.amend.CtCommitteeMember;
@@ -107,7 +111,9 @@ import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
@@ -122,6 +128,7 @@ import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.ContractBaseBackingBean;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
+import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
 import my.ep.web.bean.ct.CtLetterOfAcceptance;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -139,7 +146,9 @@ import my.ep.web.util.NumberWordUtilEn;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.RoleHelper;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.template.DocumentGenerator;
+import my.ep.web.vo.DisciplinaryActionVO;
 
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang.StringUtils;
@@ -1188,67 +1197,77 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 
-			// CHange #20997 Start
+			// Change Code #20997 Start
 			if (ctBackingBean.getManagedBean().getContractVer().getCtContractItems().size() > 0) {
 				ctBackingBean.getManagedBean().getContractVer().getCtContractItems().clear();
-			
+
 			if (getManagedBean().getContractListingPagingDataModel() != null && getManagedBean().getContractListingPagingDataModel().getList() != null) {
-				for (CtContractItem ctContractItem : getManagedBean().getContractListingPagingDataModel().getList()) {	
-					for(CtContractItem ctItem : ctBackingBean.getManagedBean().getCtItemList()){
+				for (CtContractItem ctContractItem : getManagedBean().getContractListingPagingDataModel().getList()) {
+					for(CtContractItem ctItem : ctBackingBean.getManagedBean().getCtItemList() ){					
 						if(ctItem.isBrandNew()){
-						ctContractItem.setContractItemId(ctItem.getContractItemId());
-							for(CtItemPrice ctItemPrice : ctItem.getCtItemPrices()){
-								for(CtItemPrice ctItemPrice2 : ctContractItem.getCtItemPrices()){
-									ctItemPrice2.setItemPriceId(ctItemPrice.getItemPriceId());
-								}									
-							}
-								for(CtItemMaxQty itemMaxQty : ctItem.getCtItemMaxQties()){
-									for(CtItemMaxQty itemMaxQty2 : ctContractItem.getCtItemMaxQties()){
-										itemMaxQty2.setItemMaxQtyId(itemMaxQty.getItemMaxQtyId());
-									}									
-								}
-								for(CtItemCeilingQty ceilingQty : ctItem.getCtItemCeilingQties()){
-									for(CtItemCeilingQty ceilingQty2 : ctContractItem.getCtItemCeilingQties()){
-										ceilingQty2.setItemCeilingQtyId(ceilingQty.getItemCeilingQtyId());
-									}									
-								}
-							ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(getManagedBean().getContractListingPagingDataModel().getList());
-						}else{
-							ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(getManagedBean().getContractListingPagingDataModel().getList());
+							ctContractItem.setContractItemId(ctItem.getContractItemId());
+					for(CtItemPrice ctItemPrice : ctItem.getCtItemPrices()){
+						for(CtItemPrice ctItemPrice2 : ctContractItem.getCtItemPrices()){
+							ctItemPrice2.setItemPriceId(ctItemPrice.getItemPriceId());
+						}									
+					}
+					for(CtItemMaxQty itemMaxQty : ctItem.getCtItemMaxQties()){
+						for(CtItemMaxQty itemMaxQty2 : ctContractItem.getCtItemMaxQties()){
+							itemMaxQty2.setItemMaxQtyId(itemMaxQty.getItemMaxQtyId());
+						}									
+					}
+					for(CtItemCeilingQty ceilingQty : ctItem.getCtItemCeilingQties()){
+						for(CtItemCeilingQty ceilingQty2 : ctContractItem.getCtItemCeilingQties()){
+							ceilingQty2.setItemCeilingQtyId(ceilingQty.getItemCeilingQtyId());
+							}									
 						}
 					}
 				}
+					if(ctBackingBean.getManagedBean().getContractVer().isBrandNew()){
+						ctBackingBean.getManagedBean().getCtItemList().clear();
+						ctBackingBean.getManagedBean().getCtItemList().add(ctContractItem);
+					}else{
+						ctBackingBean.getManagedBean().getCtItemList().add(ctContractItem);
+					}	
+				}
+						ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(ctBackingBean.getManagedBean().getCtItemList());
 			}
+			log.info("Check Putra Product Old "+ctBackingBean.getManagedBean().getCtItemList().size());
 
 			if (getManagedBean().getServiceListingPagingDataModel() != null && getManagedBean().getServiceListingPagingDataModel().getList() != null) {
-				for (CtContractItem ctContractService : getManagedBean().getServiceListingPagingDataModel().getList()) {	
+				for (CtContractItem ctContractService : getManagedBean().getServiceListingPagingDataModel().getList()) {
 					for(CtContractItem ctService : ctBackingBean.getManagedBean().getCtItemServiceList()){
 						if(ctService.isBrandNew()){
-							ctContractService.setContractItemId(ctService.getContractItemId());
-							for(CtItemPrice ctItemPrice : ctService.getCtItemPrices()){
-								for(CtItemPrice ctItemPrice2 : ctContractService.getCtItemPrices()){
-									ctItemPrice2.setItemPriceId(ctItemPrice.getItemPriceId());
-								}									
-							}
-								for(CtItemMaxQty itemMaxQty : ctService.getCtItemMaxQties()){
-									for(CtItemMaxQty itemMaxQty2 : ctContractService.getCtItemMaxQties()){
-										itemMaxQty2.setItemMaxQtyId(itemMaxQty.getItemMaxQtyId());
-									}									
-								}
-								for(CtItemCeilingQty ceilingQty : ctService.getCtItemCeilingQties()){
-									for(CtItemCeilingQty ceilingQty2 : ctContractService.getCtItemCeilingQties()){
-										ceilingQty2.setItemCeilingQtyId(ceilingQty.getItemCeilingQtyId());
-									}									
-								}
-							ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(getManagedBean().getServiceListingPagingDataModel().getList());
-						}else{
-							ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(getManagedBean().getServiceListingPagingDataModel().getList());
+					ctContractService.setContractItemId(ctService.getContractItemId());
+					for(CtItemPrice ctItemPrice : ctService.getCtItemPrices()){
+						for(CtItemPrice ctItemPrice2 : ctContractService.getCtItemPrices()){
+							ctItemPrice2.setItemPriceId(ctItemPrice.getItemPriceId());
+						}									
+					}
+					for(CtItemMaxQty itemMaxQty : ctService.getCtItemMaxQties()){
+						for(CtItemMaxQty itemMaxQty2 : ctContractService.getCtItemMaxQties()){
+							itemMaxQty2.setItemMaxQtyId(itemMaxQty.getItemMaxQtyId());
+						}									
+					}
+					for(CtItemCeilingQty ceilingQty : ctService.getCtItemCeilingQties()){
+						for(CtItemCeilingQty ceilingQty2 : ctContractService.getCtItemCeilingQties()){
+							ceilingQty2.setItemCeilingQtyId(ceilingQty.getItemCeilingQtyId());
+							}									
 						}
 					}
 				}
+					if(ctBackingBean.getManagedBean().getContractVer().isBrandNew()){
+						ctBackingBean.getManagedBean().getCtItemServiceList().clear();
+						ctBackingBean.getManagedBean().getCtItemServiceList().add(ctContractService);
+					}else{
+						ctBackingBean.getManagedBean().getCtItemServiceList().add(ctContractService);
+						}					
+					}
+					ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(ctBackingBean.getManagedBean().getCtItemServiceList());
+				}
 			}
-		}
-			// Change #20997 End
+			log.info("Check Putra Service Old "+ctBackingBean.getManagedBean().getCtItemServiceList().size());
+			// Change Code #20997 End
 			
 			ctBackingBean.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
 
