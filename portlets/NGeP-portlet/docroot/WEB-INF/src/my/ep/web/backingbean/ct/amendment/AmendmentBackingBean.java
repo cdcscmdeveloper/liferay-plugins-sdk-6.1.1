@@ -729,8 +729,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				log.info("isDisciplinaryAction() : " + getManagedBean().isDisciplinaryAction());
 				
 				/**Resetting button to show only cancel button 
-				 * for certain contract status which 
-				 * supplier that has disciplinary action
+				 * for certain contract status which supplier has disciplinary action
 				 **/
 				if ((ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FA_PENDING_SUBMISSION.longValue()||
 						ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FA_PENDING_REVISION.longValue()||
@@ -751,6 +750,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 											new FacesScopes().getUserLocale())));
 				}
 				
+				//TODO else if for date decision. if date decision is after the disciplinary action taken then amendment not able to proceed
 				
 				 /* else if (ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FA_PENDING_LOA_SUBMISSION.longValue() ||
 						ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FA_PENDING_LOA_REVISION.longValue() ||
@@ -1998,6 +1998,27 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 					}
 				} **/
+				
+				//Enhancement 26186 start
+				if (getManagedBean().isDisciplinaryAction()){					
+					if (getManagedBean().getDisciplinaryApprovedFlag().equalsIgnoreCase("") || 
+							getManagedBean().getDisciplinaryApprovedFlag()==null){
+						setTabValue("CNT");
+						throw new EpException(MessageConst.ERROR_100022, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.decision", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					}
+					if (getManagedBean().getDisciplinaryApprovedFlag().equalsIgnoreCase("R") || 
+							ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().getApproveFlag() == 0){
+						if (ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().getJustification() == null){
+							setTabValue("CNT");
+							throw new EpException(MessageConst.ERROR_100022, 
+									new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks", 
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						}						
+					}
+				}
+				//Enhancement 26186 end
 			} 
 		}
 
