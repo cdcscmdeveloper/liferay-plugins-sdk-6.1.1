@@ -20,7 +20,7 @@
 		   	       <p:ajax event="rowSelect"  
                        update=":form:clauseDescp" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  />
 		       
-		           <p:column style="width:2%;" rendered="#{!ctBackingBean.managedBean.viewContract}">
+		           <p:column style="width:2%;" rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}">
 		              <f:facet name="header">
 							<p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.selectAll}" >
 								<p:ajax partialSubmit="true" process="@this"
@@ -42,14 +42,14 @@
 	           		   
 	           		     <p:selectOneMenu value="#{datas.deductionType.parameterId}" style="width:170px;float:left;text-align:left;"
 			      		     disabled="#{ctBackingBean.managedBean.disableAmendDetails}"  
-			      		     rendered="#{!ctBackingBean.managedBean.viewContract and 
+			      		     rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting and
 			      		          datas.deductionType.parameterCode != ParameterConst.deductionTypeAdvancePayment}">
 			                    <f:selectItems value="#{ctBackingBean.retrieveParameterDescListByType()}" />
 			                    <p:ajax event="change" update=":form:tableDeduction, :form:clauseDescp,:form:messages" 
 			                         process="@this"  partialSubmit="true"
 			                         listener="#{ctBackingBean.validateDeductionType(datas)}"></p:ajax>
 			              </p:selectOneMenu>
-			              <h:outputText  rendered="#{ctBackingBean.managedBean.viewContract and 
+			              <h:outputText  rendered="#{(ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting) and 
 			      		          datas.deductionType.parameterCode != ParameterConst.deductionTypeAdvancePayment}" 
 			                     value="#{ctBackingBean.getParameterDesc(datas.deductionType)}" style="float:left;" />
 					</p:column> 
@@ -62,7 +62,7 @@
 						<p:spacer width="15"/>
 						<p:inputText  value="#{datas.deductionDesc}"  style="width:400px;float:left;" maxlength="255"
 							disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
-							rendered="#{!ctBackingBean.managedBean.viewContract and 
+							rendered="#{!ctBackingBean.managedBean.viewContract and  !ctBackingBean.managedBean.notificationSetting and 
 								(ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeOthers
 								or ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeFixed
 								or ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeNonFixed)}" required="true" label="#{lbl['lbl.ct.deduction.description']}">
@@ -81,19 +81,19 @@
 						</h:outputText>
 						<p:inputText  value="#{datas.amount}" styleClass="ppRightBtn" style="width:100px;" 
 							disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
-							rendered="#{!ctBackingBean.managedBean.viewContract and 
+							rendered="#{!ctBackingBean.managedBean.viewContract and  !ctBackingBean.managedBean.notificationSetting and
 							ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeFixed}" required="true" label="#{lbl['lbl.ct.amount']}">
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							<p:ajax process="@this"></p:ajax>
 						</p:inputText>  
-						<h:outputText value="#{datas.amount}"  rendered="#{ctBackingBean.managedBean.viewContract and  
+						<h:outputText value="#{datas.amount}"  rendered="#{(ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting) and  
 							ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeFixed}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
 
 		   </p:dataTable>  
-		   <c:if test="#{!ctBackingBean.managedBean.viewContract }">
+		   <c:if test="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}">
 		   <div class="ppRightBtn">
                     <p:commandButton id="addDeductionBtn" value="#{lbl['lbl.btn.add']}" 
                        disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
@@ -118,7 +118,7 @@
      	                         value="#{ctBackingBean.managedBean.selectedDeduction.ctDeductionClauses}"  
         	                      selection="#{ctBackingBean.selectedDeductionClauses}"  rowKey="#{data}"> 
                                    <ac:paginator for="tableClause" />   
-                                   <p:column style="width:2%;" rendered="#{!ctBackingBean.managedBean.viewContract}">
+                                   <p:column style="width:2%;" rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}">
 		                                   <f:facet name="header">
 							                    <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.selectAll}">
 								                    <p:ajax partialSubmit="true" process="@this"
@@ -128,7 +128,7 @@
 		           
 		                                <p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
 		                                       value="#{data.selectedCheckBox}" styleClass="myCustomChekBox"
-		                                          rendered="#{!ctBackingBean.managedBean.viewContract  and
+		                                          rendered="#{(!ctBackingBean.managedBean.viewContract  and !ctBackingBean.managedBean.notificationSetting) and 
                                                      ctBackingBean.managedBean.selectedDeduction.deductionType.parameterCode != ParameterConst.deductionTypeAdvancePayment }">
 		           		                            <p:ajax event="change" 
 		           		                                update=":form:tableClause,:form:delDeductionClauseBtn" listener="#{ctBackingBean.selectOneClauseCheckboxSelect}"></p:ajax>
@@ -141,18 +141,18 @@
 				               	          	   <ac:iconTooltip id="index" value="#{lbl['lbl.ct.tooltip.deduction.clause']}"/>
 				               	          </f:facet>
                                           <p:inputTextarea value="#{data.clauseDescription}" maxlength="500" rows="4" style="width:97%;" autoResize="false"
-                                               rendered="#{!ctBackingBean.managedBean.viewContract}"
+                                               rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}"
                                                disabled="#{ctBackingBean.managedBean.disableAmendDetails}" styleClass="ui-inputtextarea">
         	                                  <p:ajax process="@this"/>
         	                              </p:inputTextarea>
         	                              
-        	                              <h:outputText  rendered="#{ctBackingBean.managedBean.viewContract}"  value="#{data.clauseDescription}" style="float:left;" />
+        	                              <h:outputText  rendered="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting}"  value="#{data.clauseDescription}" style="float:left;" />
                                      </p:column>    
            
                       </p:dataTable>
                     
                       <div class="ppRightBtn"> 
-	                          <h:panelGroup  rendered="#{ctBackingBean.managedBean.selectedDeduction != null and  !ctBackingBean.managedBean.viewContract }">
+	                          <h:panelGroup  rendered="#{ctBackingBean.managedBean.selectedDeduction != null and  (!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting)}">
 	        	                
 	        	                <p:commandButton id="addDeductionClauseBtn" value="#{lbl['lbl.btn.add']}" process="@form" 
 	        	                    disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
@@ -182,7 +182,7 @@
                 </h:panelGroup>
              </p:outputPanel>
          </p:panel>      
-	    <p:panel header="#{lbl['lbl.ct.panel.remarks.attachment']}" toggleable="true" rendered="#{!ctBackingBean.managedBean.viewContract}">
+	    <p:panel header="#{lbl['lbl.ct.panel.remarks.attachment']}" toggleable="true" rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}">
 		  <table style="width: 100%">
 			<tr>
 				<td width="50%" valign="top">
@@ -208,7 +208,7 @@
 											<td></td>
 											<td>
 												<p:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" maxlength="1000" 
-													disabled="#{ctBackingBean.managedBean.viewContract}"
+													disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting}"
 													style="width:70%;" autoResize="false" /> 
 												<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.remark']}" rendered="#{remarkIndex==0}" />
 												<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
@@ -228,7 +228,7 @@
 			<td class="TableFieldRight">
 				<p:commandButton oncomplete="uploadDeductDlg.show();return false;"
 					update="lampiranDeduct, uploadDeductDlg" value="#{lbl['lbl.txt.attach.files']}"
-					disabled="#{ctBackingBean.managedBean.viewContract
+					disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting
 						or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}" />
 			</td>
 		</tr>
@@ -255,8 +255,8 @@
 								<h:commandLink value="#{attachFile.fileName}" 
 									styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
 								<p:commandLink onsuccess="deleteDeductAttachmentDlg.show();" action="#{ctBackingBean.setAttachFileIndex(attachFileIndex)}"
-									rendered="#{!ctBackingBean.managedBean.viewContract}"
-									disabled="#{ctBackingBean.managedBean.viewContract
+									rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}"
+									disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting
 										or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}">
 			   						<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
 			 	 				</p:commandLink>
