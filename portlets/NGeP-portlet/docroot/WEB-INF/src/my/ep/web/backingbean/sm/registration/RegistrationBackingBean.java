@@ -269,6 +269,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				smSupplierOwner.setIdentificationNo(smSupplierOwner.getIdentificationNo());
 				smSupplierOwner.setIdentificationType(identificationType);
 				smSupplierOwner.setIdentificationTypeId(identificationType.getParameterId());
+				//SSM CHANGES 12012020
+				smSupplierOwner.setTempCountryId(indNationality.getCountryId());
 				smSupplierOwner.setShowTextField(true);
 				this.getManagedBean().getSmSuppOwners().add(smSupplierOwner);
 			}
