@@ -132,11 +132,16 @@
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			actionListener="#{contractDetailsBackingBean.setTabValue('PY')}" update=":form" />
 		  	 
-		 <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.setting']}"
+		<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.approver.setting']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			 rendered="#{contractDetailsBackingBean.isApproverSetting()}"
 			actionListener="#{contractDetailsBackingBean.setTabValue('SE')}" update=":form" />
-		</p:tabMenu>
+				
+		<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.notification.setting']}"
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			rendered="#{ctBackingBean.managedBean.notificationSetting}"
+			actionListener="#{contractDetailsBackingBean.setTabValue('NS')}" update=":form" />
+			</p:tabMenu>
 		</p:outputPanel>
 		
 		<p:outputPanel id="menuCentral"  
@@ -175,11 +180,16 @@
 						rendered="#{ctBackingBean.managedBean.contractVer.ctContractValue.followLoaAmt}"
 						actionListener="#{contractDetailsBackingBean.setTabCentralValue('PY')}" update=":form" />
 					 
-				      <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.setting']}"
+				   	<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.approver.setting']}"
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 						 rendered="#{contractDetailsBackingBean.isApproverSetting()}"
 						actionListener="#{contractDetailsBackingBean.setTabCentralValue('SE')}" update=":form" />
-		</p:tabMenu>
+					
+					<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.notification.setting']}"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						rendered="#{ctBackingBean.managedBean.notificationSetting}"
+						actionListener="#{contractDetailsBackingBean.setTabCentralValue('NS')}" update=":form" />
+			</p:tabMenu>
 		</p:outputPanel>
 		
 		 </td>
@@ -247,8 +257,15 @@
 				<p:outputPanel id="ctMenuId12"
 				    rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.settingIndex
 				     and contractDetailsBackingBean.isApproverSetting()}">
-					<ui:include	src="/xhtml/ct/fulfilmentdetails/shared/approverSetting.xhtml" />
-				   <ui:include	src="/xhtml/ct/common/fulfilmentSetting.xhtml" />
+					<ui:include	src="/xhtml/ct/fulfilmentdetails/shared/approverSetting.xhtml" />  
+					<ui:include src="/xhtml/ct/shared/remarkAppSetting.xhtml" />
+				</p:outputPanel>
+				
+				<p:outputPanel id="ctMenuId14"
+					rendered = "#{contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.notificationIndex}">
+					 <ui:include src="/xhtml/ct/common/fulfilmentSetting.xhtml" />
+					 <ui:include src="/xhtml/ct/shared/remarkNotiSetting.xhtml" /> 
+
 				</p:outputPanel>
 			 	</td>
 			 </tr>
