@@ -127,6 +127,13 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	
 	private boolean disableRevise = false;
 	private boolean renderV2 = false;
+	
+	//[#26282] disciplinary action - start
+	private boolean daWarning;
+	private boolean daSuspendReg;
+	private boolean daCancelReg;
+	private boolean daBlacklistOwner;
+	//[#26282] disciplinary action - end
 
 	public boolean isRecommendExtension(){
 		return this.recommendExtension;
@@ -811,6 +818,30 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	}
 	public void setShowRecommend(boolean showRecommend) {
 		this.showRecommend = showRecommend;
+	}
+	public boolean isDaWarning() {
+		return daWarning;
+	}
+	public void setDaWarning(boolean daWarning) {
+		this.daWarning = daWarning;
+	}
+	public boolean isDaSuspendReg() {
+		return daSuspendReg;
+	}
+	public void setDaSuspendReg(boolean daSuspendReg) {
+		this.daSuspendReg = daSuspendReg;
+	}
+	public boolean isDaCancelReg() {
+		return daCancelReg;
+	}
+	public void setDaCancelReg(boolean daCancelReg) {
+		this.daCancelReg = daCancelReg;
+	}
+	public boolean isDaBlacklistOwner() {
+		return daBlacklistOwner;
+	}
+	public void setDaBlacklistOwner(boolean daBlacklistOwner) {
+		this.daBlacklistOwner = daBlacklistOwner;
 	}
 
 }
