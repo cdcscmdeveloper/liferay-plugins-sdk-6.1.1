@@ -210,6 +210,9 @@ public class SmApplicationBackingBean extends
 	NumberFormat formatter = new DecimalFormat("#0.00");
 	SmRuleHelper ruleHelper = new SmRuleHelper();
 	ViewApplHistoryBackingBean viewApplHistoryBackingBean;
+	//SSM CHANGES #27214
+	//TO HANDLE, IF KN IS SIGN UP NEW SUPPLIER NO NEED TO CHECK WITH SSM AGAIN. IF UPGRADE NEED TO CHECK WITH SSM
+	public boolean fromPrerenderNewReg = false;
 
 	/**
 	 * Instantiates a new sm application backing bean.
@@ -513,8 +516,9 @@ public class SmApplicationBackingBean extends
 
 						mofReqDto = new MofRegistrationReqDTO();
 						mofReqDto.setApplId(Long.parseLong(applId));
-						mofReqDto.setSmSupplier(supplierProfile);
+						mofReqDto.setSmSupplier(supplierProfile);						
 						try {
+								
 							MofRegistrationResDTO mofRespDto = mofRegistrationSO
 									.cloneSmApplicationForResubmissionDraft(mofReqDto);
 							latestResubmitAppl = mofRespDto.getSmAppl();
@@ -1515,11 +1519,14 @@ public class SmApplicationBackingBean extends
 				|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW) 
 				|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)
 				|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)){
-			if(!fromBpm && getManagedBean().isSsmIntegrationActive() && this.getManagedBean().getSmSupplier()!= null 
+			//SSM CHANGES #27214			 
+			if(!fromPrerenderNewReg && !fromBpm && getManagedBean().isSsmIntegrationActive() && this.getManagedBean().getSmSupplier()!= null 
 					//&& !this.getManagedBean().getSmAppl().isApplValidWithSsm() disable cz problem when upgarde to MOF
 					&& businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupplier().getRegNo(),this.getManagedBean().getSmSupplier().getBusinessType())){
 				//SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
 				if(businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupplier().getRegNo(),this.getManagedBean().getSmSupplier().getBusinessType())){
+					//SSM CHANGES #27214
+					fromPrerenderNewReg = false;
 					SsmReqDTO ssmReqDTO = new SsmReqDTO();
 					ssmReqDTO.setRegNo(this.getManagedBean().getSmSupplier().getRegNo());
 					ssmReqDTO.setBusinessType(this.getManagedBean().getSmSupplier().getBusinessType());
@@ -11695,6 +11702,8 @@ public class SmApplicationBackingBean extends
 
 		getManagedBean().setNewSupplierType(
 				smSupplier.getSmAppl().getSupplierType());
+		//SSM CHANGES #27214
+		fromPrerenderNewReg = true;
 		String prerenderUrl = proceedToApplication("N");
 		log.info("prerenderUrl: " + prerenderUrl);
 		
