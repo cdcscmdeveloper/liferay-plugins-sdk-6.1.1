@@ -9476,12 +9476,25 @@ public class SmApplicationUtil {
 							.getEntityBySinglePropertyFromList(language, cat
 									.getPmCategoryL3().getCategoryTypeCode()
 									.getPmParameterDescs(), "languageCode");
-					categoryTypeDesc = desc != null ? desc.getCodeName()
-							: categoryTypeDesc;
+//					categoryTypeDesc = desc != null ? desc.getCodeName()
+//							: categoryTypeDesc;
 
 					if (bean.isShowMachineryEquipmentPanel()) {
+						
+						// SmManufacturingDtl
+						if (EntityHelper.isCollectionEmpty(appl.getSmManufacturingDtls())) {
+							categoryTypeDesc = desc != null ? SmCommonUtil.getMessage("lbl.sm.manufacture.panHdr", null) : categoryTypeDesc;
+							valid = false;
+							if (currentTab != -1) {
+								setNavigationBackToCurrentPage(currentTab, bean);
+							}
+							throw new EpException(MessageConst.ERROR_722631, new String[] { cat.getPmCategoryL3().getFullCatcode(), categoryTypeDesc });
+						}
+						
+						// SmMachineDtl
 						if (EntityHelper.isCollectionEmpty(appl
 								.getSmMachineDtls())) {
+							categoryTypeDesc = desc != null ? SmCommonUtil.getMessage("lbl.sm.machine.panHdr", null) : categoryTypeDesc;
 							valid = false;
 							if (currentTab != -1) {
 								setNavigationBackToCurrentPage(currentTab, bean);
