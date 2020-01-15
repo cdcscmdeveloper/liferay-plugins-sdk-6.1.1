@@ -533,11 +533,11 @@ public class SmApplicationBackingBean extends
 							getManagedBean().setSmAppl(latestResubmitAppl);
 							getManagedBean().setSmSupplier(
 									latestResubmitAppl.getSmSupplier());
-							//START SSM CHANGES FOR RESUBMIT
+							//#27232 - START SSM CHANGES FOR RESUBMIT
 							if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupplier().getRegNo(),this.getManagedBean().getSmSupplier().getBusinessType())){
 								ssmIntegrationResubmit();
 							}							
-							//END SSM CHANGES FOR RESUBMIT
+							//#27232 - END SSM CHANGES FOR RESUBMIT
 							// already answer questionnaire, redirect to
 							// application page
 							if (rejectedAppl.isQuestionnaire()
@@ -12899,6 +12899,7 @@ public class SmApplicationBackingBean extends
 		}
 		return show;
 	}
+	//#27232 - START SSM CHANGES FOR RESUBMIT
 	public void ssmIntegrationResubmit(){
 
 		SsmReqDTO ssmReqDTO = new SsmReqDTO();
@@ -13171,4 +13172,5 @@ public class SmApplicationBackingBean extends
 		}
 	
 	}
+	//#27232 - END SSM CHANGES FOR RESUBMIT
 }
