@@ -295,16 +295,27 @@ public class PpReportsBackingBean extends
 		Date currentDate = new Date();
 		Integer year = null;
 		String yearFrom = outputDateFormat.format(currentDate).substring(6, 10);
+		int range = 7;	//[#24976]		
 		if (yearFrom != null) {
 			year = Integer.parseInt(yearFrom);
 		}
 		List<String> yearList = new ArrayList<String>();
 		if (year != null) {
 			year = year + 1;
-			for (int i = year - 7; i <= year; i++) {
+			//[#24976] - start
+			if(PpReportConst.PP_EXPENDITURE_PERFORMANCE_RPT_VAL.equals(this.getManagedBean().getReportCode())) {
+				range = 8;
+			}
+			//[#24976] - end
+			for (int i = year - range; i <= year; i++) {
 				yearList.add(Integer.toString(i));
 			}
+		}		
+		//[#24976] - start
+		if(PpReportConst.PP_EXPENDITURE_PERFORMANCE_RPT_VAL.equals(this.getManagedBean().getReportCode())) {
+			this.getManagedBean().setSelectedYear(yearFrom);
 		}
+		//[#24976] - end
 		return yearList;
 	}
 
