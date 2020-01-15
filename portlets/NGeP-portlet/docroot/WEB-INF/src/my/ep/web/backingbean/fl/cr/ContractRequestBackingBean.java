@@ -1566,6 +1566,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 						ContractItemResDTO contractItemResDTO = contractItemSO.getContractItemByRequestItem(contractItemReqDTO);
 						selectedItem.setPriceType(contractItemResDTO.getCtContractItem().getPriceType());
 						
+						//#16344 FARID update
+						selectedItem.setSkuNumber(contractItemResDTO.getCtContractItem().getSku());
+						
 						//#21489
 						if (newItem.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)){
 							selectedItem.setUnitPrice(selectedItem.getUnitPrice());
