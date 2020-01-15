@@ -1676,7 +1676,6 @@ public class SmApplicationBackingBean extends
 							}
 							for(SmPersonnel personnel : ssmResDTO.getSmPersonnelAll()){
 								SmPersonnel oldPersonnel = (SmPersonnel)EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), this.getManagedBean().getSmAppl().getSmPersonnels(), "identificationNo");
-								
 								if(oldPersonnel == null){
 									personnel.setBrandNew(true);
 									personnel.setSmAppl(this.getManagedBean().getSmAppl());
@@ -1750,6 +1749,9 @@ public class SmApplicationBackingBean extends
 							Iterator<SmPersonnel> iterPersonnel = this.getManagedBean().getSmAppl().getSmPersonnels().iterator();
 							while(iterPersonnel.hasNext()){
 								SmPersonnel personnel = iterPersonnel.next();
+								//START SSM CHANGES #27201 - SET DESIGNATION
+								personnel = setDesignationSSM(personnel);
+								//END SSM CHANGES #27201 - SET DESIGNATION
 								if(personnel.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_DELETED){
 									if (this.getManagedBean().getSmAppl().getSmSupplierBanks() != null && !this.getManagedBean().getSmAppl().getSmSupplierBanks().isEmpty()) {
 										
