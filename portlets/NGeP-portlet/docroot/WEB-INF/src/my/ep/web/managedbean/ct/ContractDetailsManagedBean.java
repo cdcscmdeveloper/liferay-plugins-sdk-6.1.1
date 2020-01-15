@@ -110,7 +110,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	public int paymentTracking = 99;
 	public int itemIndex = 99;
 	public int settingIndex = 101;
-	public int notificationIndex = 103;/*#26083-basri*/
 	public int agencyIndex = 102;
 	public int  bondIndex = 113;
 	private int index;
@@ -818,24 +817,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	public void setBondIndex(int bondIndex) {
 		this.bondIndex = bondIndex;
 	}
-	
-	/*#26083 start - basri*/
-	/**
-	 * @return the notificationIndex
-	 */
 
-	public int getNotificationIndex() {
-		return notificationIndex;
-	}
-
-	/**
-	 * @param notificationIndex the notificationIndex to set
-	 */
-	public void setNotificationIndex(int notificationIndex) {
-		this.notificationIndex = notificationIndex;
-	}
-	/*#26083 - end*/
-	
 	/**
 	 * @return the contractDataModel
 	 */

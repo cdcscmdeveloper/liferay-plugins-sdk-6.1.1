@@ -130,9 +130,7 @@ public class ContractManagedBean extends BaseManagedBean {
 
 	private boolean updateContract = false;
 	private boolean serviceTaxAlertFlg = false;
-	//#26083 - basri
-	private boolean notificationSetting = false;
-		
+
 	private CtContractItem selectedItemForSpec;
 
 	// Change Log
@@ -1334,15 +1332,5 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setExtendContract(boolean isExtendContract) {
 		this.isExtendContract = isExtendContract;
 	}
-
-	public boolean isNotificationSetting() {
-		return notificationSetting;
-	}
-
-	public void setNotificationSetting(boolean notificationSetting) {
-		this.notificationSetting = notificationSetting;
-	}
-	
-	
 
 }
