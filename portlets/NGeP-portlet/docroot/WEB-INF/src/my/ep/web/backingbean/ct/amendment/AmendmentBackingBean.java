@@ -2733,6 +2733,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				if (getManagedBean().isPbConfirmMeeting() && outputValue.equalsIgnoreCase("MET")) {
 					getManagedBean().setSelectedTabIndex(index + 1);
 				}
+				
+				//#24333  - Start
+				if(outputValue.equalsIgnoreCase("PB")
+						&& getManagedBean().isPbConfirmMeeting()){
+					getManagedBean().setSelectedTabIndex(index + 2);					
+				}
+				
 				if ((getManagedBean().isSignUpdateDecision() || getManagedBean().isSignOffDecision()) 
 						&& outputValue.equalsIgnoreCase("DCN")) {
 					getManagedBean().setConfirmMeeting(true);
