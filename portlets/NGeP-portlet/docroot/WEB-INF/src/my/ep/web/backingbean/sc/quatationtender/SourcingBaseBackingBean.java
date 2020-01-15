@@ -202,7 +202,7 @@ import com.liferay.portal.util.PortalUtil;
 
 /**
  * 
- * SourcingBaseBackingBean is the Base class for Quation Tender
+ * SourcingBaseBackingBean is the Base class for Quotation Tender
  * 
  * @author VidyaSagarReddy
  * @since 22.11.2013
@@ -3359,10 +3359,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			log.info("Supplier ID"+quoteReqDTO.getSupplierId());  
 			
 			List<ScLoiLoaItem> items = scLoa.getScLoiLoaItems();
+			log.info("ScLoiLoaItem Item size  -->"+items.size());
 			for (ScLoiLoaItem item :items)	
 			{	
 				Long  itemId =item.getScRequestItem().getTplSpecQuestion().getSpecQuestionId();
-				log.info("itemName -->"+itemId);
+				Long loaid=scLoa.getLoaId();
+				log.info("Loa id +"   +"+itemId -->"+loaid+"  --->   " +itemId);
+				
 			if(masters.size() > 0)
 			{	
 				masters.clear();
@@ -3411,36 +3414,63 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					else{
 						answer.getTplSpecQuestion().setAnswerText(dafaltValue);
 					}
-					if(master == null)
+					if(answer.getTplSpecQuestion().getClItem()!=null)
 					{ 
-						if(itemId.equals(answer.getTplSpecQuestion().getSpecQuestionId()) || (answer.getTplSpecQuestion().getParentSpecQuestion()!=null && itemId.equals(answer.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId())))
+						/**  This code is for LOA with Single Item deatils  **/
+						if(items.size() == 1)
 						{
-		
+							
+							if(itemId.equals(answer.getTplSpecQuestion().getSpecQuestionId()) || (answer.getTplSpecQuestion().getParentSpecQuestion()!=null && itemId.equals(answer.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId())))
+							{
+								master = answer.getTplSpecQuestion().getTplSpecMaster();
+								constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master, answer.getTplSpecQuestion());
+								master.setTplSpecQuestions(newTplSpecQuestionsList);
+							}
+							
+						}else {
+							/** This code is for  LOA with multiple Items Deatils **/
 							master = answer.getTplSpecQuestion().getTplSpecMaster();
 							constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master, answer.getTplSpecQuestion());
+							master.setTplSpecQuestions(newTplSpecQuestionsList);
 							
 						}
 					}
 					else if(answer.getTplSpecQuestion().getClSpecDetail()!=null)
 					{
-						if(itemId.equals(answer.getTplSpecQuestion().getSpecQuestionId()) || (answer.getTplSpecQuestion().getParentSpecQuestion()!=null && itemId.equals(answer.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId())))
+						/**  This code is for LOA with Single Item specification **/
+						if(items.size() == 1)
 						{
-		
-						master = answer.getTplSpecQuestion().getTplSpecMaster();
-						constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master, answer.getTplSpecQuestion());
+							if(itemId.equals(answer.getTplSpecQuestion().getSpecQuestionId()) || (answer.getTplSpecQuestion().getParentSpecQuestion()!=null && itemId.equals(answer.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId())))
+							{
+			
+							master = answer.getTplSpecQuestion().getTplSpecMaster();
+							constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master, answer.getTplSpecQuestion());
+							master.setTplSpecQuestions(newTplSpecQuestionsList);
+							}
+						
+						
+						}else{
+							/** This code is for  LOA with multiple Items specification**/
+							master = answer.getTplSpecQuestion().getTplSpecMaster();
+							constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master, answer.getTplSpecQuestion());
+							master.setTplSpecQuestions(newTplSpecQuestionsList);
+
 						}
+
 					}
 					
 				}
-				master.setTplSpecQuestions(newTplSpecQuestionsList);
-				masters.add(master);
-			
+				if(master !=null)
+				{
+					masters.add(master);
+				}
 			}
 			log.info("Master Record List Size II -->"+masters.size());
 			context.put("serviceScope", dafaltValue);
 			context.put("supplierName", supplierName);
 			context.put("masters", masters);
 			context.put("bean", this);
+			
 		}	
 			
 		} finally {
@@ -3507,6 +3537,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			clItem=clItem.replaceAll(QTConstants.LESS_THEN,TemplateDocConst.PARAM_SPACE);
 			clItem=clItem.replaceAll(QTConstants.GREATER_THEN,TemplateDocConst.PARAM_SPACE);
 			question.setClItem(clItem);
+			log.info("CIItem  ----------->"+question.getClItem());
 		}
 		if (question.getClSpecDetail() == null) {
 			question.setClSpecDetail(dafaltValue);
