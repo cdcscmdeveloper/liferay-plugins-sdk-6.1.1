@@ -2727,6 +2727,12 @@ public class SmApplicationBackingBean extends
 		try {
 
 			MofRegistrationReqDTO finReqDto = new MofRegistrationReqDTO();
+			//SSM CHANGES 11012020
+			if(getManagedBean().isPoUser() || getManagedBean().isApproverUser()){
+				finReqDto.setPoSdoUser(true);
+			}else{
+				finReqDto.setPoSdoUser(false);
+			}
 			finReqDto.setApplId(getManagedBean().getSmAppl().getApplId());
 			finReqDto.setCurrentPage(getManagedBean().getCurrentPageType());
 			log.info("********* Final Block Id *****" + finReqDto.getApplId());
@@ -3316,11 +3322,19 @@ public class SmApplicationBackingBean extends
 							}
 						}						
 					}
-					EntityHelper
+					//SSM Changes 11012020
+					//only SSM appl will reset doc with PM - Azida
+					if(getManagedBean().getSmAppl().isApplValidWithSsm() || (!businessTypeIsROB(getManagedBean().getSmAppl().getSmSupplier().getBusinessType()) && !businessTypeIsROC(getManagedBean().getSmAppl().getSmSupplier().getBusinessType()))){
+						//If resubmit no need to reset
+						if(!getManagedBean().getSmAppl().isResubmit()){
+							EntityHelper
 							.compareAndRemoveEntityFromListIfNotExist(docs,
 									getManagedBean().getSmAppl()
 											.getSmApplSupportDocs(),
 									"applSupportDocId");
+						}						
+					}
+					
 				} else {
 					log.info(" ******* Existing doc list without CHANGE in state id  *****");
 					for (PmDocument doc : rsDTO.getDocumentList()) {
@@ -3335,8 +3349,9 @@ public class SmApplicationBackingBean extends
 					}
 				}
 			}
-
-			getManagedBean().getSmAppl().setSmApplSupportDocs(docs);
+			if(!getManagedBean().getSmAppl().isResubmit()){
+				getManagedBean().getSmAppl().setSmApplSupportDocs(docs);
+			}
 
 			// sort by document is mandatory or not
 			Collections.sort(getManagedBean().getSmAppl()
