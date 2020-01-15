@@ -63,6 +63,8 @@ import com.liferay.portal.util.PortalUtil;
 public class CommonApplBackingBean extends
 		BaseBackingBean<CommonApplManagedBean> {
 	public static Logger log = Logger.getLogger(CommonApplBackingBean.class);
+	//SM CHANGES 11012020
+	public boolean isPoSdoUser = false;
 
 	public void preRenderView() {
 		//LOG : 26549 : SLA Monitoring
@@ -429,6 +431,20 @@ public class CommonApplBackingBean extends
 				log.info(" *** DOCUMENT ID FROM THE BPM IS ******"
 						+ smObj.getDocumentId());
 				MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
+				//SSM CHANGES 11012020
+				if (resDTO.getTaskName().equalsIgnoreCase(
+						SMProcessNameConst.REVIEW_APPL)
+						|| resDTO.getTaskName().equalsIgnoreCase(
+								SMProcessNameConst.REVIEW_APPL_SPLCAT)
+						|| resDTO.getTaskName().equalsIgnoreCase(
+								SMProcessNameConst.VERIFY_APPL)
+						|| resDTO
+								.getTaskName()
+								.equalsIgnoreCase(
+										SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE) || resDTO.getTaskName().equalsIgnoreCase(
+												SMProcessNameConst.REVIEW_APPL_ESCALATED)) {
+					isPoSdoUser = true;
+				}
 				mofResDto = retriveApplicationById(smObj.getDocumentId());
 				SmAppl appl = mofResDto.getSmAppl();
 				log.info("********Review Application Escalted for new mof********");
@@ -1023,12 +1039,13 @@ public class CommonApplBackingBean extends
 	private MofRegistrationResDTO retriveApplicationById(long applId) {
 
 		IMofRegistrationSO mofRegistrationSO = null;
-
 		try {
 			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
 					.getInstance().getServiceObject("sm",
 							IMofRegistrationSO.class);
 			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
+			//SSM CHANGES 11012020
+			reqDto.setPoSdoUser(isPoSdoUser);
 			reqDto.setApplId(applId);
 			MofRegistrationResDTO resDTO = mofRegistrationSO
 					.retrieveSmApplicationDetailsById(reqDto);
@@ -1075,6 +1092,8 @@ public class CommonApplBackingBean extends
 		}
 
 	}
+	
+	
 	// private SmWorkflowStatus getCurrentActiveWokFlowStatus(Long applId) {
 	// log.info("*** This is resubmit to get po ****** ");
 	// SmWorkFlowStatusReqDTO reqDTO = new SmWorkFlowStatusReqDTO();
