@@ -80,6 +80,7 @@ import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
 import my.ep.persistence.entity.ct.CtActor;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContractVer;
+import my.ep.persistence.entity.ct.CtDisciplinaryAction;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.amend.CtAmendment;
 import my.ep.persistence.entity.ct.amend.CtCommitteeMember;
@@ -718,6 +719,64 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 
 			ConstructTabSideMenu();
+			
+			//Enhancement #26186 start - retrieve disciplinary info 
+			if (ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId() != ContractStatusConst.FA_PENDING_LOA_ACKNOWLEDGEMENT.longValue()
+				||ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId() != ContractStatusConst.FA_PENDING_LOA_ACKNOWLEDGEMENT.longValue()){
+				
+				preRenderDisciplinaryActionCT();
+				log.info("contract status : " + ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId());
+				log.info("isDisciplinaryAction() : " + getManagedBean().isDisciplinaryAction());
+				
+				/**Resetting button to show only cancel button 
+				 * for certain contract status which supplier has disciplinary action
+				 **/
+				if ((ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FA_PENDING_SUBMISSION.longValue()||
+						ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FA_PENDING_REVISION.longValue()||
+						ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FA_PENDING_APPROVAL.longValue() ||
+						ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FA_PENDING_REVISION_APPROVAL.longValue()||
+						ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FA_PENDING_MEETING_CONFIRMATION.longValue())
+						&& getManagedBean().isDisciplinaryAction()){
+					getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
+					
+					outcome = new String[] {BpmOutcomeConst.BPM_CANCEL};
+					getManagedBean().setOutComes(outcome);
+					
+					//throw out error amendment cant be continue
+					FacesContext.getCurrentInstance().addMessage(
+							null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,  MessageUtils
+									.getMessage(MessageConst.ERROR_750052,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+				}
+				
+				//TODO else if for date decision. if date decision is after the disciplinary action taken then amendment not able to proceed
+				
+				 /* else if (ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FA_PENDING_LOA_SUBMISSION.longValue() ||
+						ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FA_PENDING_LOA_REVISION.longValue() ||
+						ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FA_PENDING_LOA_APPROVAL.longValue()||
+						ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FA_PENDING_LOA_REVISION_APPROVAL.longValue()
+						){
+					getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
+					
+					outcome = new String[] {BpmOutcomeConst.BPM_CANCEL};
+					getManagedBean().setOutComes(outcome);
+					FacesContext.getCurrentInstance().addMessage(
+							null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,  MessageUtils
+									.getMessage(MessageConst.ERROR_750052,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale()))); 
+					
+					
+					throw new EpException(MessageConst.ERROR_750052, new String[] {MessageUtils
+							.getMessage(MessageConst.ERROR_750052,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())});
+									*/
+				//}
+				
+			}
+			//Enhancement #26186 end - retrieve disciplinary info
 		}catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -1340,6 +1399,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			reqDTO.setDeleteAgencyMap(ctBackingBean.getManagedBean().getDeleteAgencyMap());
 			reqDTO.setUpdateZoneMap(ctBackingBean.getManagedBean().getUpdateZoneMap());
 			reqDTO.setUpdateItemMap(ctBackingBean.getManagedBean().getUpdateItemMap());
+			
+			//26186 start
+			if(getManagedBean().isDisciplinaryAction()){
+				reqDTO.setCtDisciplinaryAction(ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions());
+			}
+			//26186 end
 
 			if (getManagedBean().getPmDigiSign() != null) {
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
@@ -1933,6 +1998,27 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 					}
 				} **/
+				
+				//Enhancement 26186 start
+				if (getManagedBean().isDisciplinaryAction()){					
+					if (getManagedBean().getDisciplinaryApprovedFlag().equalsIgnoreCase("") || 
+							getManagedBean().getDisciplinaryApprovedFlag()==null){
+						setTabValue("CNT");
+						throw new EpException(MessageConst.ERROR_100022, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.decision", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					}
+					if (getManagedBean().getDisciplinaryApprovedFlag().equalsIgnoreCase("R") || 
+							ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().getApproveFlag() == 0){
+						if (ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().getJustification() == null){
+							setTabValue("CNT");
+							throw new EpException(MessageConst.ERROR_100022, 
+									new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks", 
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						}						
+					}
+				}
+				//Enhancement 26186 end
 			} 
 		}
 
@@ -2024,6 +2110,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					}
 				}
 				if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)) {
+					//Enhancement #26186 - start
+					if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate() == null) {
+						setTabValue("DCN");
+						throw new EpException(MessageConst.ERROR_100022, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.pbm.decision.date", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					}
+					//Enhancement #26186 - end
+					
 					if (getManagedBean().getPbQcApproved() == null || getManagedBean().getPbQcApproved().equalsIgnoreCase("")) {
 						setTabValue("DCN");
 						throw new EpException(MessageConst.ERROR_100022, 
@@ -2048,6 +2143,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			if (getManagedBean().getTaskName() != null
 					&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_MOF_RESULT_HT_NAME)) {
+				//Enhancement #26186 - start
+				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate() == null) {
+					setTabValue("DCN");
+					throw new EpException(MessageConst.ERROR_100022, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.mof.decision.date", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				}
+				//Enhancement #26186 - end
+				
 				if (getManagedBean().getMofApproved() == null || getManagedBean().getMofApproved().equalsIgnoreCase("")) {
 					setTabValue("DCN");
 					throw new EpException(MessageConst.ERROR_100022, 
@@ -5584,5 +5688,201 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 	//#26520 - end
+	
+	//Enhancement #26186 start - retrieve disciplinary info 
+		/**
+		 * The method will retrieve the disciplinary action from supplier and contract module.
+		 * 1. Retrieve the info from supplier, if supplier has disciplinary action, then will get message from supplier
+		 * 2. Will retrieve info from contract if the supplier has disciplinary action. 
+		 **/
+		public void preRenderDisciplinaryActionCT() {
+			log.info("preRenderDisciplinaryActionCT start");
+			ISupplierDataMaintenanceSO suppDataSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
+			//IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+			IContractAmendmentSO contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);;
+			FacesScopes facesScopes = new FacesScopes();
+			try {
+				PmUser sUsers = facesScopes.getUserSessionBean();
+					
+				/*if (sUsers != null){
+					loadSupplierCommonDetails(sUsers.getUserId());
+				}*/
+					
+				retrieveDisciplinaryAction();
+				this.getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
+				
+				log.info("preRenderDisciplinaryActionCT getManagedBean :" + getManagedBean().isDisciplinaryAction());
+				if(this.getManagedBean().isDisciplinaryAction()){
+					log.info("preRenderDisciplinaryActionCT if start");
+					SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+					ContractReqDTO reqContractDTO = new ContractReqDTO();
+					
+					if (sUsers != null && sUsers.getPreferredLanguage() != null){
+						log.info("preRenderDisciplinaryActionCT set language");
+						reqDTO.setLanguage(sUsers.getPreferredLanguage());
+					}else {
+						reqDTO.setLanguage(facesScopes.getUserLocale().getLanguage());
+					}
+					log.info("preRenderDisciplinaryActionCT set language : " + reqDTO.getLanguage());
+					if(ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier() != null){
+						log.info("preRenderDisciplinaryActionCT set supplier : " + ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier().getSupplierId());
+						reqDTO.setSupplier(ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier());
+					}
+					
+					SupplierDataMaintenanceResDTO resDTO = suppDataSO.retrieveDisciplinaryActionMsg(reqDTO);
+						if(resDTO.getErrorMessage() != null){
+						this.getManagedBean().setDisciplinaryActionMsg(resDTO.getErrorMessage());
+					} else {
+						this.getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
+					}
+					
+					log.info("reqContractDTO.getContractVerId() :" + ctBackingBean.getManagedBean().getContractVer().getContractVerId());
+					ContractResDTO resContractDTO = contractAmendmentSO.retrieveDisciplinaryActionByContractVerId(ctBackingBean.getManagedBean().getContractVer().getContractVerId());
+					
+					ctBackingBean.getManagedBean().getContractVer()
+							.setCtDisciplinaryActions(resContractDTO.getCtDisciplinaryAction());
+					if (ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions() != null) {
+						if (ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().getApproveFlag() == null) {
+							getManagedBean().setDisciplinaryApprovedFlag("");
+						} else if (ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions()
+								.getApproveFlag() == 1) {
+							getManagedBean().setDisciplinaryApprovedFlag("A");
+						} else if (ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions()
+								.getApproveFlag() == 0) {
+							getManagedBean().setDisciplinaryApprovedFlag("R");
+						}
+						
+						if(ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().getJustification() == null){
+							ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().setJustification("");
+						}
+					} else {
+						
+					//set discplinary action if null
+						CtDisciplinaryAction ctDisciplinaryActions = new CtDisciplinaryAction();
+						ctDisciplinaryActions.setApprove(false);
+						ctDisciplinaryActions.setApproveFlag(0);
+						ctDisciplinaryActions.setJustification("");
+						ctDisciplinaryActions.setCtContractVer(ctBackingBean.getManagedBean().getContractVer());
+						
+						ctBackingBean.getManagedBean().getContractVer().setCtDisciplinaryActions(ctDisciplinaryActions);
+						getManagedBean().setDisciplinaryApprovedFlag("");
+						getManagedBean().setJustification("");
+					}
+							
+						/*
+						List<CtDisciplinaryAction> disciplinaryList = ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions();
+						
+						if (disciplinaryList != null && disciplinaryList.size() > 0){
+							for(CtDisciplinaryAction disciplinaryAction: disciplinaryList){
+								this.getManagedBean().setDisciplinaryActionId(disciplinaryAction.getDisciplinaryActionId());
+								this.getManagedBean().setJustification(disciplinaryAction.getJustification());
+								this.getManagedBean().setDisciplinaryApproved(disciplinaryAction.isApprove());
+								if (disciplinaryAction.getApproveFlag() == 1) {
+									getManagedBean().setDisciplinaryApprovedFlag("A");
+								} else if (disciplinaryAction.getApproveFlag() == 0) {
+									getManagedBean().setDisciplinaryApprovedFlag("R");
+								}
+							}
+						}else{
+							getManagedBean().setDisciplinaryApprovedFlag("");
+							getManagedBean().setJustification("");
+						}*/
+					}
+					log.info("preRenderDisciplinaryActionCT end");
+			} catch (Exception e) {
+				log.info("preRenderDisciplinaryActionCT Exception : " + e.toString());
+				e.printStackTrace();
+				throw new EpException(MessageConst.ERROR_750053, new String[] { e.getMessage() });
+			}
+		}
+			
+			/**
+			 * the method will retrieve the disciplinary action info from supplier module.
+			 * If supplier type of punishment is “Suspend Registration” or “Cancel Registration” 
+			 * or “Blacklist Owner / Director of Company” or “Cancel of Bumiputera Status” 
+			 * or “Cancel of Manufacturer Status”, this Amendment With Supplemental process not able to proceed
+			 **/
+			
+		private void retrieveDisciplinaryAction() {
+			log.info("retrieveDisciplinaryAction start");
+			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
+
+			if(currSupp != null){
+				log.info("retrieveDisciplinaryAction if start - supplierid:" 
+						+ ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier().getSupplierId());
+				this.getManagedBean().setDisciplinaryAction(false);
+				List<SmDisciplinaryAction> resultList = null;
+				resultList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier());
+
+				if(resultList == null){
+					this.getManagedBean().setDisciplinaryAction(false);
+				} else {
+					for(SmDisciplinaryAction disciplinaryAction: resultList){
+						if(disciplinaryAction.isSuspendRegistration() || disciplinaryAction.isCancelRegistration() ||
+								disciplinaryAction.isBlacklistOwner() || disciplinaryAction.isBumiputeraCancel() ||
+								disciplinaryAction.isManufacturerCancel()){
+							log.info("disciplinaryAction.getMofNo" + disciplinaryAction.getMofNo() + " has disciplinary action");
+							this.getManagedBean().setDisciplinaryAction(true);
+						}
+						/*else if (disciplinaryAction.isWarning() ||  disciplinaryAction.isCancelRegistration() 
+										|| disciplinaryAction.isBlacklistOwner() || disciplinaryAction.isManufacturerCancel()
+										|| disciplinaryAction.isBumiputeraCancel() || disciplinaryAction.isCancelCategory() || disciplinaryAction.isSuspendRegistration()){
+									log.info("disciplinaryAction.getMofNo" + disciplinaryAction.getMofNo());
+									this.getManagedBean().setDisciplinaryAction(true);
+								}*/
+					}
+				}
+				log.info("retrieveDisciplinaryAction isDisciplinaryAction :" + getManagedBean().isDisciplinaryAction());
+			}
+			log.info("retrieveDisciplinaryAction end");
+
+		}
+				
+		@SuppressWarnings("null")
+		public void onViewDisciplinaryAction() {
+			log.info("onViewDisciplinaryAction start");
+
+			try{
+
+				SmSupplier currSupp = null;
+				if(ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier() != null){
+					currSupp = ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier();
+					log.info("onViewDisciplinaryAction if: supplier :" + 
+							currSupp.getSupplierId());
+				} else {
+					currSupp = SmApplicationUtil.getCurrentSupplier();
+					log.info("onViewDisciplinaryAction else: supplier :" + 
+							currSupp.getSupplierId());
+				}
+
+				List<DisciplinaryActionVO> voList = ViewSuppProfileBackingBean.getDisciplinaryActionVO(currSupp);
+
+				if(voList != null || voList.size() > 0){
+					log.info("onViewDisciplinaryAction if: voList.size() :" + voList.size());
+					this.getManagedBean().setDisciplineVOs(voList);
+				} else {
+					log.info("onViewDisciplinaryAction else");
+					this.getManagedBean().setDisciplineVOs(new ArrayList<DisciplinaryActionVO>());
+				}
+				log.info("onViewDisciplinaryAction end");
+				RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
+			} catch (Exception e) {
+				log.info("onViewDisciplinaryAction Exception : " + e.toString());
+				e.printStackTrace();
+				throw new EpException(MessageConst.ERROR_770045, new String[] { e.getMessage() });
+			}
+		}	
+				
+		@SuppressWarnings("null")
+		public void setDisciplinaryDecisionValue() {
+			ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().setApproveFlag(0);
+			ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().setApprove(false);
+			if(getManagedBean().getDisciplinaryApprovedFlag()!=null && getManagedBean().getDisciplinaryApprovedFlag().equalsIgnoreCase("A")){
+				ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().setApproveFlag(1);
+				ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().setApprove(true);
+			}
+		}
+
+		//Enhancement #26186 end - retrieve disciplinary info
 
 	}
