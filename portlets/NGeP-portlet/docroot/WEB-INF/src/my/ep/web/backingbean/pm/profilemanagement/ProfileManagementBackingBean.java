@@ -1538,7 +1538,36 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			throw new EpException(MessageConst.ERROR_770135,
 					new String[] { this.getManagedBean().getSelectedRole().getRoleName() });
 		}
-
+		
+		//[22117] - start
+		// if login user is BPK_ADMIN
+		// validate if selected user has BPK_ADMIN role and selected new role is COMMON_USER or PPB_CHAIRPERSON
+		logger.info("[#22117 - start]");
+		if(getFacesScopes().hasRoleUser(RoleCode.BPK_ADMIN.value())) {
+			if (!roleRestrictionValidation(this.getManagedBean().getSelectedRole().getPmRole())) {
+				if(this.getManagedBean().getSelectedUserOrg().getPmOrgProfile() != null
+						&& this.getManagedBean().getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode() != null
+						&& this.getManagedBean().getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode().getParameterCode().equals(ParameterConst.ORG_TYPE_BPK)) {
+					logger.info("[#22117] Org code - " + this.getManagedBean().getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode().getParameterCode());
+					logger.info("[#22117] Selected role - " + this.getManagedBean().getSelectedRole().getPmRole().getRoleCode());
+					logger.info("[#22117] Search for BPK_ADMIN role... ");
+					for (PmUserRole userRole : this.getManagedBean().getSelectedUserOrg().getPmUserRoles()) {
+						if (DbValueConst.RECORD_STATUS_ACTIVE == userRole.getRecordStatusFlg()
+								&& userRole.getPmRole().getRoleCode().equals(RoleCode.BPK_ADMIN.value())
+								&& (this.getManagedBean().getSelectedRole().getPmRole().getRoleCode().equals(RoleCode.COMMON_USER.value()) 
+										|| this.getManagedBean().getSelectedRole().getPmRole().getRoleCode().equals(RoleCode.PPB_CHAIRPERSON.value()))) {
+							logger.info("[#22117] Found match condition - Throw Exception!!");
+							//to restrict only role EP_ADMIN or EP_ADMIN_2 can assign role
+							String errMsg = this.getManagedBean().getSelectedRole().getRoleName();
+							throw new EpException(MessageConst.ERROR_770230, new String[] { errMsg });						
+							//break;						
+						}
+					}
+					logger.info("[#22117] BPK_ADMIN not found!!");
+				}
+			}
+		}
+		//[22117] - end
 	}
 
 	public boolean roleRestrictionValidation(PmRole pmRole) {
@@ -2538,6 +2567,17 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		if (getFacesScopes().hasRoleUser(RoleCode.BPK_ADMIN.value())) {
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("pmUserRoles.pmRole.roleCode",
 					SearchOperator.OPERATOR_NOT_EQUALS.value(), RoleCode.BPK_ADMIN.value()));
+			
+			//[#22117] - start
+			//get list of user_org_id which has role BPK_ADMIN
+			List<Long> userOrgIds = getListOfOrgIdByOrgIdAndRole(this.getManagedBean().getSelectedOrgType().getParameterId(), 
+																	upSearchBean.getSelectedOrgProfileId(), 
+																	RoleCode.BPK_ADMIN.value());
+			if(userOrgIds != null && userOrgIds.size() > 0) {
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("userOrgId",
+					SearchOperator.OPERATOR_NOT_IN.value(), userOrgIds));
+			}
+			//[#22117] - end
 		}
 
 		// UPS_ADMIN is not allowed to view/edit UPS_ADMIN
@@ -4978,5 +5018,35 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		}
 		return false;
 	}
+	
+	//[#22117]
+	public List<Long> getListOfOrgIdByOrgIdAndRole(Long orgTypeId, Long orgProfileId, String role) {		
+			
+		IUserSO userSO = null;
+			
+		try {
+			List<Long> usrOrgId = null;
+			UserOrgReqDTO userOrgReqDTO = new UserOrgReqDTO();
+			userOrgReqDTO.setOrgTypeId(orgTypeId);
+			userOrgReqDTO.setOrgProfileId(orgProfileId);
+			userOrgReqDTO.setRoleCode(role);
+			
+			userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
+			UserOrgResDTO resDTO = userSO.retrieveUserOrgIdByOrgIdAndRole(userOrgReqDTO);
+			
+			if (resDTO != null && resDTO.isSuccessful()) {
+				if(resDTO.getPmUserOrgList() != null && resDTO.getPmUserOrgList().size() > 0) {
+					usrOrgId = new ArrayList<Long>();
+					for(PmUserOrg pmusrorg : resDTO.getPmUserOrgList()) {
+						usrOrgId.add(pmusrorg.getUserOrgId());
+					}							
+					return usrOrgId;
+				}					
+			}					
+		} finally {
+			userSO = null;
+		}
 
+		return null;
+	}
 }
