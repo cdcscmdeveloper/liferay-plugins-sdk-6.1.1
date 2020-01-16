@@ -2137,16 +2137,28 @@ public class LOIDetailBackingBean extends
 		ScQt scQt = this.getManagedBean().getScQt();
 		ScLoiForQt scLoiForQt = new ScLoiForQt();
 		
+		/**
+		 * FINDING QT WORKFLOW-> CASE REVERSAL QT
+		 */
+		IScWorkFlowStatusSO workFlowStatusSO;
+		ScWorkFlowStatusReqDTO scWreqDTO = new ScWorkFlowStatusReqDTO();
+		workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);	
+		scWreqDTO.setDocId(scQt.getQtId());		
+		scWreqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+		ScWorkFlowStatus qtcurrentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(scWreqDTO).getWorkFlowStatus();
+		if (qtcurrentWorkFlowStatus.getPmStatus().getStatusId()!=QTStatusConst.SF_PENDING_LOI_PREPARATION) {
+			throw new EpException(MessageConst.ERROR_760293); //TODO FIX MESSAGE WHEN NABIL SEND A NEW WORD
+		}
+		
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 		reqDTO.setLoiId(scLoi.getLoiId());
 		AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLoiForQtByLoiId(reqDTO);
 		
 		scLoiForQt = resDTO.getScLoiForQt();
 		
-		IScWorkFlowStatusSO workFlowStatusSO;
-		ScWorkFlowStatusReqDTO scWreqDTO = new ScWorkFlowStatusReqDTO();
-		workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);		
+		scWreqDTO = new ScWorkFlowStatusReqDTO();
+		
 		qtDtl.getManagedBean().setEditable(Boolean.TRUE);		
 			
 		Map<MapKeyEnum, Object> otherArgs = new HashMap<MapKeyEnum, Object>();
