@@ -46,6 +46,22 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	private List<Integer> statusIds;
 	private boolean isRemarkRequired;
 	private String remarks;
+	//[#25018] - start
+	private boolean admin;
+	private List<WorklistItemVO> selectedTasksToBulkReassign;
+	private boolean bulkReassign;
+	private boolean singleReassign;
+	private boolean checkAllUserTasks;
+	private boolean checkAllUserTasksEnabled;
+	private List<WorklistItemVO> allUserTasks;
+	private String selectedTasksTA;
+	private String docType;
+	private Long docStatus;
+	private List<PmTaskReassignmentVO> tasksReassignmentVO;
+	private Map<Long,String> excludeStatusId;
+	private boolean showParentMsg;
+	private boolean showChildMsg;
+	//[#25018] - end
 	
 	public TaskReassignmentManagedBean(){}
 
@@ -332,4 +348,117 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 
 	
 	
+	//[#25018]
+	public boolean isAdmin() {
+		return admin;
+	}
+	//[#25018]
+	public void setAdmin(boolean admin) {
+		this.admin = admin;
+	}
+	//[#25018]
+	public List<WorklistItemVO> getSelectedTasksToBulkReassign() {
+		return selectedTasksToBulkReassign;
+	}
+	//[#25018]
+	public void setSelectedTasksToBulkReassign(List<WorklistItemVO> selectedTasksToBulkReassign) {
+		this.selectedTasksToBulkReassign = selectedTasksToBulkReassign;
+	}
+	//[#25018]
+	public boolean isBulkReassign() {
+		return bulkReassign;
+	}
+	//[#25018]
+	public void setBulkReassign(boolean bulkReassign) {
+		this.bulkReassign = bulkReassign;
+	}
+
+	public boolean isCheckAllUserTasks() {
+		return checkAllUserTasks;
+	}
+
+	public void setCheckAllUserTasks(boolean checkAllUserTasks) {
+		this.checkAllUserTasks = checkAllUserTasks;
+	}
+
+	public boolean isCheckAllUserTasksEnabled() {
+		return checkAllUserTasksEnabled;
+	}
+
+	public void setCheckAllUserTasksEnabled(boolean checkAllUserTasksEnabled) {
+		this.checkAllUserTasksEnabled = checkAllUserTasksEnabled;
+	}
+
+	public List<WorklistItemVO> getAllUserTasks() {
+		return allUserTasks;
+	}
+
+	public void setAllUserTasks(List<WorklistItemVO> allUserTasks) {
+		this.allUserTasks = allUserTasks;
+	}
+
+	public boolean isSingleReassign() {
+		return singleReassign;
+	}
+
+	public void setSingleReassign(boolean singleReassign) {
+		this.singleReassign = singleReassign;
+	}
+
+	public String getSelectedTasksTA() {
+		return selectedTasksTA;
+	}
+
+	public void setSelectedTasksTA(String selectedTasksTA) {
+		this.selectedTasksTA = selectedTasksTA;
+	}
+
+	public String getDocType() {
+		return docType;
+	}
+
+	public void setDocType(String docType) {
+		this.docType = docType;
+	}
+
+	public List<PmTaskReassignmentVO> getTasksReassignmentVO() {
+		return tasksReassignmentVO;
+	}
+
+	public void setTasksReassignmentVO(List<PmTaskReassignmentVO> tasksReassignmentVO) {
+		this.tasksReassignmentVO = tasksReassignmentVO;
+	}
+
+	public Map<Long,String> getExcludeStatusId() {
+		return excludeStatusId;
+	}
+
+	public void setExcludeStatusId(Map<Long,String> excludeStatusId) {
+		this.excludeStatusId = excludeStatusId;
+	}
+
+	public Long getDocStatus() {
+		return docStatus;
+	}
+
+	public void setDocStatus(Long docStatus) {
+		this.docStatus = docStatus;
+	}
+
+	public boolean isShowParentMsg() {
+		return showParentMsg;
+	}
+
+	public void setShowParentMsg(boolean showParentMsg) {
+		this.showParentMsg = showParentMsg;
+	}
+
+	public boolean isShowChildMsg() {
+		return showChildMsg;
+	}
+
+	public void setShowChildMsg(boolean showChildMsg) {
+		this.showChildMsg = showChildMsg;
+	}
+		
 }
