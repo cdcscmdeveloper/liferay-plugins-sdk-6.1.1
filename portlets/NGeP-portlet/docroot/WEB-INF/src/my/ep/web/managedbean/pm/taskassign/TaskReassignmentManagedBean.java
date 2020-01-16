@@ -50,6 +50,19 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	private List<Integer> statusIds;
 	private boolean isRemarkRequired;
 	private String remarks;
+	private Map<String,String> reassigneeList = new LinkedHashMap<String,String>();
+	private List<String> selectedReassignee;
+	private boolean showReassigneeList;
+	private boolean enableDeleteGroupTasksButton;
+	private boolean checkAllGroupTasksEnabled;
+	private boolean checkAllGroupTasks;
+	private List<WorklistItemVO> allGroupTasks = new ArrayList<WorklistItemVO>();
+	private Map<String,WorklistItemVO> selectedGroupTasks = new HashMap<String,WorklistItemVO>();
+	private boolean enableDeleteOthersTasksButton;
+	private boolean checkAllOthersTasksEnabled;
+	private boolean checkAllOthersTasks;
+	private List<WorklistItemVO> allOthersTasks = new ArrayList<WorklistItemVO>();
+	private Map<String,WorklistItemVO> selectedOthersTasks = new HashMap<String,WorklistItemVO>();
 	//[#25018] - start
 	private boolean admin;
 	private List<WorklistItemVO> selectedTasksToBulkReassign;
@@ -354,8 +367,157 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	public void setCommitteeUpdate(boolean isCommitteeUpdate) {
 		this.isCommitteeUpdate = isCommitteeUpdate;
 	}
-
 	
+	/**
+	 *  @return the reassigneeList
+	 */
+	public Map<String,String> getReassigneeList() {
+		return reassigneeList;
+	}
+	
+	/**
+	 * @param selectedReassignee the selectedReassignee to set
+	 */
+	public void setSelectedReassignee(List<String> selectedReassignee) {
+		this.selectedReassignee = selectedReassignee;
+	}
+	
+	/**
+	 * @return the selectedReassignee
+	 */
+	public List<String> getSelectedReassignee() {
+		return selectedReassignee;
+	}
+	
+	/**
+	 * @return the showReassigneeList
+	 */
+	public boolean isShowReassigneeList() {
+		return showReassigneeList;
+	}
+
+	/**
+	 * @param showReassigneeList the showReassigneeList to set
+	 */
+	public void setShowReassigneeList(boolean showReassigneeList) {
+		this.showReassigneeList = showReassigneeList;
+	}
+	
+	/**
+	 * @return the enableDeleteGroupTasksButton
+	 */
+	public boolean isEnableDeleteGroupTasksButton() {
+		return enableDeleteGroupTasksButton;
+	}
+	
+	/**
+	 * @param enableDeleteGroupTasksButton the enableDeleteGroupTasksButton to set
+	 */
+	public void setEnableDeleteGroupTasksButton(boolean enableDeleteGroupTasksButton) {
+		this.enableDeleteGroupTasksButton = enableDeleteGroupTasksButton;
+	}
+	
+	/**
+	 * @param checkAllGroupTasksEnabled the checkAllGroupTasksEnabled to set
+	 */
+	public void setCheckAllGroupTasksEnabled(boolean checkAllGroupTasksEnabled) {
+		this.checkAllGroupTasksEnabled = checkAllGroupTasksEnabled;
+	}
+	
+	/**
+	 * @return the checkAllGroupTasksEnabled
+	 */
+	public boolean isCheckAllGroupTasksEnabled() {
+		return checkAllGroupTasksEnabled;
+	}
+
+	/**
+	 * @return the checkAllGroupTasks
+	 */
+	public boolean isCheckAllGroupTasks() {
+		return checkAllGroupTasks;
+	}
+
+	/**
+	 * @param checkAllGroupTasks the checkAllGroupTasks to set
+	 */
+	public void setCheckAllGroupTasks(boolean checkAllGroupTasks) {
+		this.checkAllGroupTasks = checkAllGroupTasks;
+	}
+	
+	public List<WorklistItemVO> getAllGroupTasks() {
+	    return allGroupTasks;
+	}
+	
+	public void setAllGroupTasks(List<WorklistItemVO> allGroupTasks) {
+		this.allGroupTasks = allGroupTasks;
+	}
+	
+	public void setSelectedGroupTasks(Map<String,WorklistItemVO> selectedGroupTasks) {
+		this.selectedGroupTasks = selectedGroupTasks;
+	}
+	
+	public Map<String,WorklistItemVO> getSelectedGroupTasks() {
+	    return selectedGroupTasks;
+	}
+	
+	/**
+	 * @return the enableDeleteOthersTasksButton
+	 */
+	public boolean isEnableDeleteOthersTasksButton() {
+		return enableDeleteOthersTasksButton;
+	}
+	
+	/**
+	 * @param enableDeleteOthersTasksButton the enableDeleteOthersTasksButton to set
+	 */
+	public void setEnableDeleteOthersTasksButton(boolean enableDeleteOthersTasksButton) {
+		this.enableDeleteOthersTasksButton = enableDeleteOthersTasksButton;
+	}
+	
+	/**
+	 * @param checkAllOthersTasksEnabled the checkAllOthersTasksEnabled to set
+	 */
+	public void setCheckAllOthersTasksEnabled(boolean checkAllOthersTasksEnabled) {
+		this.checkAllOthersTasksEnabled = checkAllOthersTasksEnabled;
+	}
+	
+	/**
+	 * @return the checkAllOthersTasksEnabled
+	 */
+	public boolean isCheckAllOthersTasksEnabled() {
+		return checkAllOthersTasksEnabled;
+	}
+
+	/**
+	 * @return the checkAllOthersTasks
+	 */
+	public boolean isCheckAllOthersTasks() {
+		return checkAllOthersTasks;
+	}
+
+	/**
+	 * @param checkAllOthersTasks the checkAllOthersTasks to set
+	 */
+	public void setCheckAllOthersTasks(boolean checkAllOthersTasks) {
+		this.checkAllOthersTasks = checkAllOthersTasks;
+	}
+	
+	public List<WorklistItemVO> getAllOthersTasks() {
+	    return allOthersTasks;
+	}
+	
+	public void setAllOthersTasks(List<WorklistItemVO> allOthersTasks) {
+		this.allOthersTasks = allOthersTasks;
+	}
+	
+	public void setSelectedOthersTasks(Map<String,WorklistItemVO> selectedOthersTasks) {
+		this.selectedOthersTasks = selectedOthersTasks;
+	}
+	
+	public Map<String,WorklistItemVO> getSelectedOthersTasks() {
+	    return selectedOthersTasks;
+	}
 	
 	//[#25018]
 	public boolean isAdmin() {
