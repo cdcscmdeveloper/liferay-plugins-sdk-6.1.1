@@ -1262,7 +1262,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (getManagedBean().getContractListingPagingDataModel() != null && getManagedBean().getContractListingPagingDataModel().getList() != null) {
 				for (CtContractItem ctContractItem : getManagedBean().getContractListingPagingDataModel().getList()) {
 					for(CtContractItem ctItem : ctBackingBean.getManagedBean().getCtItemList() ){					
-						if(ctItem.isBrandNew()){
+						if(ctBackingBean.getManagedBean().getContractVer().isBrandNew()){
 							ctContractItem.setContractItemId(ctItem.getContractItemId());
 					for(CtItemPrice ctItemPrice : ctItem.getCtItemPrices()){
 						for(CtItemPrice ctItemPrice2 : ctContractItem.getCtItemPrices()){
@@ -1281,21 +1281,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						}
 					}
 				}
-					if(ctBackingBean.getManagedBean().getContractVer().isBrandNew()){
-						ctBackingBean.getManagedBean().getCtItemList().clear();
-						ctBackingBean.getManagedBean().getCtItemList().add(ctContractItem);
-					}else{
-						ctBackingBean.getManagedBean().getCtItemList().add(ctContractItem);
-					}	
 				}
+				if(ctBackingBean.getManagedBean().getContractVer().isBrandNew()){
+					ctBackingBean.getManagedBean().getCtItemList().clear();
+					ctBackingBean.getManagedBean().getCtItemList().addAll(getManagedBean().getContractListingPagingDataModel().getList());
+				}else{
+					ctBackingBean.getManagedBean().getCtItemList().addAll(getManagedBean().getContractListingPagingDataModel().getList());
+				}
+				log.info("Check Putra Product :"+ctBackingBean.getManagedBean().getCtItemList().size());
 						ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(ctBackingBean.getManagedBean().getCtItemList());
 			}
-			log.info("Check Putra Product Old "+ctBackingBean.getManagedBean().getCtItemList().size());
 
 			if (getManagedBean().getServiceListingPagingDataModel() != null && getManagedBean().getServiceListingPagingDataModel().getList() != null) {
 				for (CtContractItem ctContractService : getManagedBean().getServiceListingPagingDataModel().getList()) {
 					for(CtContractItem ctService : ctBackingBean.getManagedBean().getCtItemServiceList()){
-						if(ctService.isBrandNew()){
+						if(ctBackingBean.getManagedBean().getContractVer().isBrandNew()){
 					ctContractService.setContractItemId(ctService.getContractItemId());
 					for(CtItemPrice ctItemPrice : ctService.getCtItemPrices()){
 						for(CtItemPrice ctItemPrice2 : ctContractService.getCtItemPrices()){
@@ -1313,18 +1313,19 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							}									
 						}
 					}
-				}
-					if(ctBackingBean.getManagedBean().getContractVer().isBrandNew()){
-						ctBackingBean.getManagedBean().getCtItemServiceList().clear();
-						ctBackingBean.getManagedBean().getCtItemServiceList().add(ctContractService);
-					}else{
-						ctBackingBean.getManagedBean().getCtItemServiceList().add(ctContractService);
-						}					
+				}					
 					}
+				if(ctBackingBean.getManagedBean().getContractVer().isBrandNew()){
+					ctBackingBean.getManagedBean().getCtItemServiceList().clear();
+					ctBackingBean.getManagedBean().getCtItemServiceList().addAll(getManagedBean().getServiceListingPagingDataModel().getList());
+				}else{
+					ctBackingBean.getManagedBean().getCtItemServiceList().addAll(getManagedBean().getServiceListingPagingDataModel().getList());
+					}
+				log.info("Check Putra Service :"+ctBackingBean.getManagedBean().getCtItemList().size());
 					ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(ctBackingBean.getManagedBean().getCtItemServiceList());
 				}
+			log.info("Check Putra CtContractItems :"+ctBackingBean.getManagedBean().getContractVer().getCtContractItems().size());
 			}
-			log.info("Check Putra Service Old "+ctBackingBean.getManagedBean().getCtItemServiceList().size());
 			// Change Code #20997 End
 			
 			ctBackingBean.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
