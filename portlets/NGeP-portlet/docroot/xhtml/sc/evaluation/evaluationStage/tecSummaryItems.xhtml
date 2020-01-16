@@ -7,191 +7,149 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:panel id="onerTierTechnicalOrTecSummarySuppliersQualifiedIdsEvaluation" toggleable="true">
-		<f:facet name="header">
+	<p:panel header="#{lbl['lbl.sc.item.list']}" toggleable="true">
+       <h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.eva.summary.item.instruction']}"
+			escape="false" />
+		<p:dataTable var="summaryItem" id="evaluationTechnicalSummaryItem"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			editable="true" value="#{itemList}" rows="10"
+			selection="#{evaluationBackingBean.managedBean.singlesummaryItemList}"
+			selectionMode="single" rowIndexVar="index" rowKey="#{summaryItem}">
+
+			<ac:paginator for="evaluationTechnicalSummaryItem" />
+
+			<p:ajax event="rowSelect" process="@this" partialSubmit="true"
+				update="@form"
+				listener="#{evaluationBackingBean.technicalSummaryItemSelect}"></p:ajax>
+			<p:column headerText="#{lbl['lbl.sc.item']}" style="width:35%;white-space: normal;">
+
+				<h:outputText value="#{summaryItem.tplSpecQuestion.clItem}"></h:outputText>
+
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+	
+	
+	
+	<h:panelGroup id="TechnicalOrEvaluationCommitteesummaryItemQualified">
+
+		<p:panel toggleable="true">
+			<f:facet name="header">
 			<h:outputText
 				value="#{lbl['lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage']}" />
-				
 			<ac:iconTooltip
 				value="#{lbl['lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage.tooltip']}" />
 		</f:facet>
 
-		<p:dataTable var="qualifiedSupplier" id="oneTierQualifiedSupplier"
-		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			rows="10" editable="true" rowIndexVar="index"
-			value="#{evaluationBackingBean.managedBean.qualifiedSuppliersDM}"
-			lazy="true" rowKey="#{qualifiedSupplier}">
-			<ac:paginator for="oneTierQualifiedSupplier" />
-
-			<p:column headerText="#{lbl['lbl.sc.ranking']}"
-				style="width:25%;white-space: normal;text-align:right;">
-
-				<h:outputText value="#{qualifiedSupplier.evalRank}"></h:outputText>
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
-				style="width:25%;white-space: normal; text-align:center;">
-
-				<h:outputText
-					value="#{qualifiedSupplier.qtEvaluationResult.scQtProposal.supplierNo}"></h:outputText>
+			<p:dataTable var="summaryqualSup"
+			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				id="TechnicalevaluationCommitteeSummaryItemQualifiedSuppliers" rows="10"
+				value="#{evaluationBackingBean.managedBean.qualifiedSuppliersDM}"
+				lazy="true" editable="true" rowIndexVar="index"
+				rowKey="#{summaryqualSup}">
 
 
-			</p:column>
+				<ac:paginator for="TechnicalevaluationCommitteeSummaryItemQualifiedSuppliers"></ac:paginator>
 
-			<p:column headerText="#{lbl['lbl.sc.total.score']}"
-				style="width:30%;white-space: normal;text-align:right;">
-				<h:outputText value="#{qualifiedSupplier.totalScore}"></h:outputText>
-			</p:column>
+				<p:column headerText="#{lbl['lbl.sc.ranking']}"
+					style="text-align:right">
 
-
-
-		</p:dataTable>
-		<p:spacer height="10px" />
-		<table>
-			<tr>
-				<td style="width: 230px;"><h:outputLabel
-						value="#{lbl['lbl.sc.passing.score']}" /></td>
-				<td><p:inputText readonly="true" disabled="true"
-						style="text-align:right" value="#{passingScore}"></p:inputText></td>
-			</tr>
-			<tr>
-				<td><h:outputLabel value="#{lbl['lbl.sc.evaluation.total.suppliers']}" /></td>
-				<td><p:inputText readonly="true" disabled="true"
-						style="text-align:right"
-						value="#{evaluationBackingBean.managedBean.qualifiedSuppliersDM.rowCount}"></p:inputText></td>
-			</tr>
-
-		</table>
-
-	</p:panel>
+					<h:outputText value="#{summaryqualSup.evalRank}"></h:outputText>
+				</p:column>
 
 
-	<p:panel id="onerTierTechnicalOrTecSummarySuppliersDisQualifiedIdsEvaluation" toggleable="true">
-		<f:facet name="header">
+				<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
+					style="width:30%; text-align:center;">
+
+					<h:outputText
+						value="#{summaryqualSup.qtEvaluationResult.scQtProposal.supplierNo}"></h:outputText>
+
+
+				</p:column>
+
+
+				<p:column headerText="#{lbl['lbl.sc.total.score']}"
+					style="text-align:right">
+					<h:outputText value="#{summaryqualSup.totalScore}"></h:outputText>
+				</p:column>
+
+			</p:dataTable>
+			<p:spacer height="10px" />
+			<table>
+				<tr>
+					<td style="width: 230px;"><h:outputLabel
+							value="#{lbl['lbl.sc.passing.score']}" /></td>
+					<td><p:inputText readonly="true" disabled="true"
+							style="text-align:right" value="#{passingScore}"></p:inputText></td>
+				</tr>
+
+				<tr>
+					<td><h:outputLabel value="#{lbl['lbl.sc.evaluation.total.suppliers']}" /></td>
+					<td><p:inputText readonly="true" disabled="true"
+							style="text-align:right"
+							value="#{evaluationBackingBean.managedBean.qualifiedSuppliersDM.rowCount}"></p:inputText></td>
+				</tr>
+
+			</table>
+
+		</p:panel>
+
+
+
+
+	</h:panelGroup>
+
+	<h:panelGroup id="TechnicalOrEvaluationCommitteesummaryItemDisQualified">
+		<p:panel toggleable="true">
+			<f:facet name="header">
 			<h:outputText
 				value="#{lbl['lbl.sc.eva.disqualified.supplier.list.tec.evaluation.stage']}" />
 			<ac:iconTooltip
 				value="#{lbl['lbl.sc.eva.disqualified.supplier.list.tec.evaluation.stage.tooltip']}" />
 		</f:facet>
 
-		<p:dataTable var="disQualifiedSupplier" rows="10"
-		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			value="#{evaluationBackingBean.managedBean.disqualifiedSuppliersDM}"
-			lazy="true" id="oneTierDisQualifiedSupplier" editable="true"
-			rowIndexVar="index" rowKey="#{disQualifiedSupplier}">
-			<ac:paginator for="oneTierDisQualifiedSupplier" />
-
-
-			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
-				style="width:30%;white-space: normal; text-align:center;">
-
-				<h:outputText
-					value="#{disQualifiedSupplier.qtEvaluationResult.scQtProposal.supplierNo}"></h:outputText>
-
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.total.score']}"
-				style="width:50%;white-space: normal;text-align:right;">
-				<h:outputText value="#{disQualifiedSupplier.totalScore}"></h:outputText>
-
-			</p:column>
-
-
-		</p:dataTable>
-
-		<p:spacer height="10px" />
-		<table>
-
-			<tr>
-				<td style="width: 230px;"><h:outputLabel
-						value="#{lbl['lbl.sc.evaluation.total.suppliers']}" /></td>
-				<td><p:inputText readonly="true" disabled="true"
-						style="text-align:right"
-						value="#{evaluationBackingBean.managedBean.disqualifiedSuppliersDM.rowCount}"></p:inputText></td>
-			</tr>
-
-		</table>
-
-
-	</p:panel>
-	
-<c:if test ="#{evaluationBackingBean.managedBean.scQt.zonal ne 'false' and templateSpecBackingBean.managedBean.scQt.partial}">	
-
-	<p:panel id="onerTierTechnicalOrTecSummarySuppliersDisQualifiedIdsEvaluationPackage" toggleable="true">
-		<f:facet name="header">
-			<h:outputText
-				value="#{lbl['lbl.sc.eva.disqualified.supplier.list.tec.evaluation.stage.package']}" />
-			<ac:iconTooltip
-				value="#{lbl['lbl.sc.eva.disqualified.supplier.list.tec.evaluation.stage.package.tooltip']}" />
-		</f:facet>
-		
-		
-		<p:dataTable var="disQualifiedSupplier"
+			<p:dataTable var="disQualifiedSupplier"
 			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-				id="evaluationSummaryItemDisQualifiedSuppliers" rows="10"
+				id="TechnicalevaluationCommitteeSummaryItemDisQualifiedSuppliers" rows="10"
 				value="#{evaluationBackingBean.managedBean.disqualifiedSuppliersDM}"
 				lazy="true" editable="true" rowIndexVar="index"
 				rowKey="#{disQualifiedSupplier}">
 
-			<p:column headerText="#{lbl['lbl.sc.ranking']}"
-				style="width:25%;white-space: normal;text-align:right;">
+				<ac:paginator for="TechnicalevaluationCommitteeSummaryItemDisQualifiedSuppliers"></ac:paginator>
 
-				<h:outputText value="#{qualifiedSupplierr.evalRank}"></h:outputText>
-			</p:column>
+				<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
+					style="width:30%; text-align:center;">
 
-			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
-				style="width:25%;white-space: normal; text-align:center;">
+					<h:outputText
+						value="#{disQualifiedSupplier.qtEvaluationResult.scQtProposal.supplierNo}"></h:outputText>
 
-				<h:outputText
-					value="#{qualifiedSupplierr.qtEvaluationResult.scQtProposal.supplierNo}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.total.score']}"
+					style="text-align:right">
+					<h:outputText value="#{disQualifiedSupplier.totalScore}"></h:outputText>
+				</p:column>
 
 
-			</p:column>
+			</p:dataTable>
+			<p:spacer height="10px" />
+			<table>
 
-		</p:dataTable>
-		
-	
+				<tr>
+					<td style="width: 230px;"><h:outputLabel
+							value="#{lbl['lbl.sc.evaluation.total.suppliers']}" /></td>
+					<td><p:inputText readonly="true" disabled="true"
+							style="text-align:right"
+							value="#{evaluationBackingBean.managedBean.disqualifiedSuppliersDM.rowCount}"></p:inputText></td>
+				</tr>
+
+			</table>
+
 		</p:panel>
-		
-</c:if>
 
-<c:if test="#{evaluationBackingBean.managedBean.technicalSummaryView eq 'TPM' and templateSpecBackingBean.managedBean.scQt.partial}">
-	<c:if test ="#{evaluationBackingBean.managedBean.scQt.zonal eq 'false'}">
-		<p:panel id="onerTierTechnicalOrTecSummarySuppliersDisQualifiedIdsEvaluationPackage" toggleable="true">
-		<f:facet name="header">
-			<h:outputText
-				value="#{lbl['lbl.sc.eva.disqualified.supplier.list.tec.nonzon.evaluation.stage.package']}" />
-			<ac:iconTooltip
-				value="#{lbl['lbl.sc.eva.disqualified.supplier.list.tec.nonzon.evaluation.stage.package.tooltip']}" />
-		</f:facet>
-		
-		
-		<p:dataTable var="disQualifiedSupplier"
-			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-				id="evaluationSummaryItemDisQualifiedSuppliers" rows="10"
-				value="#{evaluationBackingBean.managedBean.disqualifiedSuppliersDM}"
-				lazy="true" editable="true" rowIndexVar="index"
-				rowKey="#{disQualifiedSupplier}">
 
-			<p:column headerText="#{lbl['lbl.sc.ranking']}"
-				style="width:25%;white-space: normal;text-align:right;">
 
-				<h:outputText value="#{qualifiedSupplierr.evalRank}"></h:outputText>
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
-				style="width:25%;white-space: normal; text-align:center;">
-
-				<h:outputText
-					value="#{qualifiedSupplierr.qtEvaluationResult.scQtProposal.supplierNo}"></h:outputText>
-			</p:column>
-
-		</p:dataTable>
-		
-		</p:panel>
-		
-	</c:if>
-</c:if>
-
+	</h:panelGroup>
 
 </ui:composition>
