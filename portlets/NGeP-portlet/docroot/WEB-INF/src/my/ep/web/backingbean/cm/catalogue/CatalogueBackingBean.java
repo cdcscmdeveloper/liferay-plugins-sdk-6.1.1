@@ -577,7 +577,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		facesContext.addMessage(
 				null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-						MessageUtils.getMessage(MessageConst.INFO_710014,
+						MessageUtils.getMessage(MessageConst.INFO_710014,  //20190830@emy - CR15028
 								MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
 
@@ -4441,7 +4441,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 
+			// 20190830@emy - CR15028 - start
+			
 			if(this.getManagedBean().getSelectedMaintainItem().getItemStatus().equals("P")){
+				facesContext.addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(MessageConst.ERROR_715059,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+			}else if(this.getManagedBean().getSelectedMaintainItem().getItemStatus().equals("U")){
 				facesContext.addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 								MessageUtils.getMessage(MessageConst.ERROR_715059,
@@ -4450,10 +4458,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			}else{
 				facesContext.addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-								MessageUtils.getMessage(MessageConst.INFO_710001,
+								MessageUtils.getMessage(MessageConst.INFO_710016,
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 			}
+			
+			//20190830@emy CR15028 - end
 
 			supplierReqDTO = new SupplierSearchReqDTO();
 
@@ -4984,7 +4994,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				FacesContext facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(null, new FacesMessage(
 						FacesMessage.SEVERITY_INFO, "",
-						MessageUtils.getMessage(MessageConst.INFO_710001,
+						MessageUtils.getMessage(MessageConst.INFO_710016, 			//20190830@emy CR15028
 								MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
 
