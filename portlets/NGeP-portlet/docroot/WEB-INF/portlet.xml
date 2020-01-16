@@ -10304,4 +10304,44 @@
 				<role-name>user</role-name>
 			</security-role-ref>
 		</portlet>	
+		<!--  LOG :12491 Finish Button  -->
+		<portlet>
+			<portlet-name>FirstTimeMessage</portlet-name>
+			<display-name>First Time Message</display-name>
+			<portlet-class>
+				org.portletfaces.bridge.GenericFacesPortlet
+			</portlet-class>
+			<init-param>
+				<name>javax.portlet.faces.defaultViewId.view</name>
+				<value>/xhtml/sm/postsupplierregistration/preRenderFirstTimeMessage.xhtml</value>
+			</init-param>
+			<expiration-cache>0</expiration-cache>
+			<supports>
+				<mime-type>text/html</mime-type>
+				<portlet-mode>view</portlet-mode>
+			</supports>
+			<portlet-info>
+				<title>First Time Message</title>
+				<short-title>First Time Message</short-title>
+				<keywords></keywords>
+			</portlet-info>
+			<portlet-preferences>                           
+				<preference>
+	                <name>portlet-setup-show-borders</name>
+	                <value>false</value>
+	            </preference>
+            </portlet-preferences>			
+			<security-role-ref>
+				<role-name>administrator</role-name>
+			</security-role-ref>
+			<security-role-ref>
+				<role-name>guest</role-name>
+			</security-role-ref>
+			<security-role-ref>
+				<role-name>power-user</role-name>
+			</security-role-ref>
+			<security-role-ref>
+				<role-name>user</role-name>
+			</security-role-ref>
+		</portlet>
 </portlet-app>
