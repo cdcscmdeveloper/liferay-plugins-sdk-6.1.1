@@ -51,6 +51,7 @@ import my.ep.biz.service.sm.sst.ISupplierSstSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.biz.service.sm.supplieruseractivation.ISupplierUserActivationSO;
 import my.ep.biz.service.sm.supportingdocinquiry.ISupportingDocInquirySO;
+import my.ep.biz.service.sm.upgraderole.IUpgradeRoleSO;
 import my.ep.biz.service.sm.virtualcert.IVirtualCertSO;
 import my.ep.biz.service.sm.workFlowStatus.ISmWorkFlowStatusSO;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
@@ -627,4 +628,17 @@ public class SmServiceLookup {
 		return (IPoRoleTaskSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IPoRoleTaskSO.class);
 	}
+	
+	//START LOG 12491
+	/**
+	 * Get IUpgradeRoleSO
+	 * 
+	 * @return IUpgradeRoleSO
+	 */
+	public static IUpgradeRoleSO getUpgradeRoleSO() {
+		return (IUpgradeRoleSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						IUpgradeRoleSO.class);
+	}
+	//END LOG 12491
 }
