@@ -264,7 +264,12 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private String suppConfirmMsgReject;
 	
 	private PmOrgProfile ministryOrgProfile;
-	
+
+	private boolean selectAll;
+	private boolean ButtonHideActive = true;
+	private boolean buttonHideDedActive = true;
+	private boolean buttonHideSchActive = true;
+
 	private Boolean flowamt = null;
 
     /**
@@ -1519,7 +1524,39 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	public void setMinistryOrgProfile(PmOrgProfile ministryOrgProfile) {
 		this.ministryOrgProfile = ministryOrgProfile;
 	}
-
+	
+	public boolean isSelectAll() {
+		return selectAll;
+	}
+	
+	public void setSelectAll(boolean selectAll) {
+		this.selectAll = selectAll;
+	}
+	
+	public boolean isButtonHideActive() {
+		return ButtonHideActive;
+	}
+	
+	public void setButtonHideActive(boolean buttonHideActive) {
+		ButtonHideActive = buttonHideActive;
+	}
+	
+	public boolean isButtonHideDedActive() {
+		return buttonHideDedActive;
+	}
+	
+	public void setButtonHideDedActive(boolean buttonHideDedActive) {
+		this.buttonHideDedActive = buttonHideDedActive;
+	}
+	
+	public boolean isButtonHideSchActive() {
+		return buttonHideSchActive;
+	}
+	
+	public void setButtonHideSchActive(boolean buttonHideSchActive) {
+		this.buttonHideSchActive = buttonHideSchActive;
+	}
+	
 	public Boolean getFlowamt() {
 		return flowamt;
 	}
@@ -1527,5 +1564,4 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	public void setFlowamt(Boolean flowamt) {
 		this.flowamt = flowamt;
 	}
-	
 }

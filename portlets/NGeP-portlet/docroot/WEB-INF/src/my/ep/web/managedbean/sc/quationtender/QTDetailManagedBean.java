@@ -1560,7 +1560,12 @@ public class QTDetailManagedBean extends BaseManagedBean {
     
     private List<ScQtContactPerson> toBeRemovalContactPersonList;
     private Long bsvDBStateId;
-   
+    
+    private boolean selectAll;
+	private boolean ButtonHideActive = true;
+	private boolean buttonHideDedActive = true;
+	private boolean buttonHideSchActive = true;
+
 	/**
 	 * Sets the panel suppliers.
 	 * 
@@ -9854,5 +9859,37 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setPanelZone(boolean isPanelZone) {
 		this.isPanelZone = isPanelZone;
 	}	
+
+	public boolean isSelectAll() {
+		return selectAll;
+	}
+
+	public void setSelectAll(boolean selectAll) {
+		this.selectAll = selectAll;
+	}
+
+	public boolean isButtonHideActive() {
+		return ButtonHideActive;
+	}
+
+	public void setButtonHideActive(boolean buttonHideActive) {
+		ButtonHideActive = buttonHideActive;
+	}
+
+	public boolean isButtonHideDedActive() {
+		return buttonHideDedActive;
+	}
+
+	public void setButtonHideDedActive(boolean buttonHideDedActive) {
+		this.buttonHideDedActive = buttonHideDedActive;
+	}
+
+	public boolean isButtonHideSchActive() {
+		return buttonHideSchActive;
+	}
+
+	public void setButtonHideSchActive(boolean buttonHideSchActive) {
+		this.buttonHideSchActive = buttonHideSchActive;
+	}
 
 }
