@@ -3,7 +3,11 @@
  */
 package my.ep.web.managedbean.pm.taskassign;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -62,6 +66,11 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	private boolean showParentMsg;
 	private boolean showChildMsg;
 	//[#25018] - end
+	
+	//[#22117 - start]
+	private boolean bpkAdminUser;
+	//[#22117 - stop]
+
 	
 	public TaskReassignmentManagedBean(){}
 
@@ -460,5 +469,14 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	public void setShowChildMsg(boolean showChildMsg) {
 		this.showChildMsg = showChildMsg;
 	}
+
+	public boolean isBpkAdminUser() {
+		return bpkAdminUser;
+	}
+
+	public void setBpkAdminUser(boolean bpkAdminUser) {
+		this.bpkAdminUser = bpkAdminUser;
+	}
+
 		
 }
