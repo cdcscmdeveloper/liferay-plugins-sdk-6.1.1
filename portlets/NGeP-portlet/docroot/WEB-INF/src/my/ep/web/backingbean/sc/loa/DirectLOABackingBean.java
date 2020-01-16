@@ -2199,6 +2199,19 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 
 	}
+			
+	public SelectItem[] getSelectRadioButtonCodeValues(String type) {		
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		
+		List<String> qtTypes = new ArrayList<String>();
+		qtTypes.add(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
+		
+		searchBean.getDataFilterBeans().add(
+			new SearchFilterBean("pmParameter.parameterCode",
+			SearchOperator.OPERATOR_IN.value(), qtTypes));
+		
+		return super.getRadioButtonCodeValuesBySearchBean(type,searchBean);
+	}
 	
 	/**
 	 * On QT Selected. If supplier is also selected, retrieve exist ScLoiLoa for 

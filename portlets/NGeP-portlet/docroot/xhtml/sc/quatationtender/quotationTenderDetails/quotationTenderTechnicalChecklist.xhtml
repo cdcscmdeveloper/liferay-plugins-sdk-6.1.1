@@ -11,6 +11,8 @@
 
 	<p:panel header="#{lbl['lbl.sc.technical.specification']}" style="width: 100%"
 		toggleable="true">
+		<h:outputText styleClass="instruction" escape="false"
+			value="#{lbl['lbl.pm.uom.instruction.view.progressive.payment.option']}" />
 		<p:dataTable id="templateTechSpecification" var="technicalSpec"
 			style="width:100%" rowIndexVar="index"
 			value="#{qTDetailBB.managedBean.technicalSpecList}"
