@@ -12316,6 +12316,8 @@ private void retriveCommitteeRemarksList(){
 			types.add(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
 		}else{
 			types.add(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
+			types.add(ParameterConst.COMPLIANCE_STATUS_NONCOMPLIANCE);
+			types.add(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
 
 		}    // 26339  -venkat End
 		SelectItem[] items = null;
