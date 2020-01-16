@@ -159,7 +159,8 @@ public class SmPersonnelBackingBean extends
 		SupplierDataMaintenanceReqDTO supReqDTO = new SupplierDataMaintenanceReqDTO();
 		supReqDTO.setSupplier(smSupplier);
 		SupplierDataMaintenanceResDTO activeDisc = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionBySupplier(supReqDTO);
-		if(activeDisc != null){
+		if(activeDisc != null
+				&& activeDisc.getSmDisciplinaryActions() != null){
 			FacesContext.getCurrentInstance().addMessage("imposedDisciplinary", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 					SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
 							new String[] { labelNameVal })));
