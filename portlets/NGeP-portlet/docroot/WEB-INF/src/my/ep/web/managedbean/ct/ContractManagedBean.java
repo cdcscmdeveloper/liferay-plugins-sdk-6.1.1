@@ -14,7 +14,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import org.primefaces.model.TreeNode;
-
+import my.ep.constant.ct.ContractConst;
 import my.ep.persistence.entity.ct.CtAddress;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContractVer;
@@ -403,11 +403,33 @@ public class ContractManagedBean extends BaseManagedBean {
 	 * @return the radioButtonSchedule
 	 */
 	public Map<String, Object> getRadioButtonSchedule() {
+		/**	Enhancement #25657
+		 *  This is temporary solution until full version of progressive payment to be developed.
+		 *
 		if (radioButtonSchedule == null) {
 			radioButtonSchedule = new LinkedHashMap<String,Object>();
 			FacesScopes face = new FacesScopes();
 			radioButtonSchedule.put(ResourceBundleUtils.getMessage("lbl.ct.frequency.schedule", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()), "S");
 			radioButtonSchedule.put(ResourceBundleUtils.getMessage("lbl.ct.progressive.schedule", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()), "P");
+		 }
+		*/
+		if (getFrequencySchedule().equalsIgnoreCase(ContractConst.CONTRACT_FREQUENCY_SCHEDULE)) {
+			radioButtonSchedule = new LinkedHashMap<String,Object>();
+			FacesScopes face = new FacesScopes();
+			radioButtonSchedule.put(ResourceBundleUtils.getMessage("lbl.ct.frequency.schedule", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()), "S");
+			
+		 }
+		else if (getFrequencySchedule().equalsIgnoreCase(ContractConst.CONTRACT_FREQUENCY_PROGRESSIVE)) {
+			radioButtonSchedule = new LinkedHashMap<String,Object>();
+			FacesScopes face = new FacesScopes();
+			radioButtonSchedule.put(ResourceBundleUtils.getMessage("lbl.ct.frequency.schedule", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()), "S");
+			radioButtonSchedule.put(ResourceBundleUtils.getMessage("lbl.ct.progressive.schedule", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()), "P");
+		 }
+		else if (radioButtonSchedule == null){
+			radioButtonSchedule = new LinkedHashMap<String,Object>();
+			FacesScopes face = new FacesScopes();
+			radioButtonSchedule.put(ResourceBundleUtils.getMessage("lbl.ct.frequency.schedule", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()), "S");
+
 		}
 		return radioButtonSchedule;
 	}
