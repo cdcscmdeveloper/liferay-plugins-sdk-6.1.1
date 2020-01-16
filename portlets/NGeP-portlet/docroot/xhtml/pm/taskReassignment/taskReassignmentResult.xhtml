@@ -65,7 +65,8 @@
 					style="width:10%;text-align:center;">
 					<p:commandLink id="cLEditTask"
 						action="#{taskReassignmentBackingBean.redirectToTaskReassign(userTasks)}"
-						update=":form:dlTaskReassignment">
+						update=":form:dlTaskReassignment"
+						disabled="#{taskReassignmentBackingBean.managedBean.bpkAdminUser}" >
 						<p:graphicImage value="/css/images/design/edit.png" />
 					</p:commandLink>
 				</p:column>
@@ -93,8 +94,25 @@
 			<p:dataTable value="#{taskReassignmentBackingBean.groupTaskListDataModel}"
 				lazy="true" rowIndexVar="groupRowIndex" rowKey="#{groupTasks.taskId}" rows="10" id="dtGroupTaskAssignResult"
 				style="width:100%;" var="groupTasks" widgetVar="dtGroupTaskTableWidget">
-				<ac:paginator for="dtGroupTaskAssignResult"></ac:paginator>
-
+				<ac:paginator for="dtGroupTaskAssignResult"></ac:paginator>	
+				<p:column style="width:2%;">
+					<f:facet name="header">
+	                    <p:selectBooleanCheckbox value="#{taskReassignmentBackingBean.managedBean.checkAllGroupTasks}"
+	                    	disabled="#{not taskReassignmentBackingBean.managedBean.checkAllGroupTasksEnabled}">
+		                    <p:ajax partialSubmit="true" 
+		                    		process="@this" 
+									update="@form,@([id$=dtGroupTaskAssignResult])" 
+									listener="#{taskReassignmentBackingBean.checkAllGroupTasks}" />
+                 		</p:selectBooleanCheckbox>
+	                 </f:facet>
+                     <p:selectBooleanCheckbox value="#{groupTasks.taskSelect}"> 
+	               		<p:ajax event="change" 
+	               				update="@form,:form:dtGroupTaskAssignResult" 
+	               				listener="#{taskReassignmentBackingBean.checkGroupTask}"
+	               				disabled="#{taskReassignmentBackingBean.managedBean.bpkAdminUser}">
+	              		</p:ajax>
+   	                  </p:selectBooleanCheckbox>
+				</p:column>		
 				<p:column headerText="#{lbl['lbl.pm.ta.created.date']}" width="13%;">
 					<h:outputText value="#{groupTasks.createDate.time}">
 						<f:convertDateTime
@@ -116,7 +134,7 @@
 					style="width:10%;text-align:center;">
 					 <p:commandLink
 					 	id="cLDeleteGroupTask"
-					 	disabled="#{groupTasks.isSwimlane()}"
+					 	disabled="#{taskReassignmentBackingBean.managedBean.bpkAdminUser or groupTasks.isSwimlane()}"
 					 	partialSubmit="true"
 						process="@this"
 						oncomplete="taskDeletePopUp.show();"
@@ -139,7 +157,24 @@
 				lazy="true" rowIndexVar="otherRowIndex" rowKey="#{otherTasks.taskId}" rows="10" id="dtOthersTaskAssignResult"
 				style="width:100%;" var="otherTasks" widgetVar="dtOthersTaskListTableWidget">
 				<ac:paginator for="dtOthersTaskAssignResult"></ac:paginator>
-
+				<p:column style="width:2%;">
+					<f:facet name="header">
+	                    <p:selectBooleanCheckbox value="#{taskReassignmentBackingBean.managedBean.checkAllOthersTasks}"
+	                    	disabled="#{not taskReassignmentBackingBean.managedBean.checkAllOthersTasksEnabled}">
+		                    <p:ajax partialSubmit="true" 
+		                    		process="@this" 
+									update="@form,@([id$=pOthersTaskAssignResult])" 
+									listener="#{taskReassignmentBackingBean.checkAllOthersTasks}" />
+                 		</p:selectBooleanCheckbox>
+	                 </f:facet>
+                     <p:selectBooleanCheckbox value="#{otherTasks.taskSelect}"> 
+	               		<p:ajax event="change" 
+	               				update="@form,:form:pOthersTaskAssignResult" 
+	               				listener="#{taskReassignmentBackingBean.checkOthersTask}"
+	               				disabled="#{taskReassignmentBackingBean.managedBean.bpkAdminUser}">
+	              		</p:ajax>
+   	                  </p:selectBooleanCheckbox>
+				</p:column>
 				<p:column headerText="#{lbl['lbl.pm.ta.created.date']}" width="13%;">
 					<h:outputText value="#{otherTasks.createDate.time}">
 						<f:convertDateTime
@@ -160,7 +195,7 @@
 					style="width:10%;text-align:center;">
 					 <p:commandLink
 					 	id="cLDeleteOtherTask"
-					 	disabled="#{otherTasks.isSwimlane()}"
+					 	disabled="#{taskReassignmentBackingBean.managedBean.bpkAdminUser or otherTasks.isSwimlane()}"
 					 	partialSubmit="true"
 						process="@this"
 						oncomplete="taskDeletePopUp.show();"
