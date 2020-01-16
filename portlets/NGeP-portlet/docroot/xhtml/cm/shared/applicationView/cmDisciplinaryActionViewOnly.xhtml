@@ -1,0 +1,22 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<ui:define name="contentSection">
+	<div align="left">
+		<p:spacer height="3" />
+		<p:outputPanel deferred="false">
+        	<p style="font-size: 20px;">
+        		<h:outputText value="#{lbl['lbl.cm.supplier.disciplinaryAction.message']}"/>
+        	</p>        
+    	</p:outputPanel>
+    	<p:spacer height="30" />
+	</div>
+	</ui:define>
+		
+</ui:composition>

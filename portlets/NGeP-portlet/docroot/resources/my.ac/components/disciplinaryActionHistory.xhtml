@@ -13,12 +13,18 @@
 		<cc:attribute name="dialogHeight" default="500px" />
 		<cc:attribute name="voList" type="java.util.List" required="true" />
 		<cc:attribute name="mofView" default="true" />
+		<cc:attribute name="dialogMessage" default=""/>
 	</cc:interface>
 	
 	<cc:implementation>
 	<p:dialog id="disciplinaryActionHistoryDlgId" header="#{cc.attrs.dialogHeader}" closable="true"
 		widgetVar="disciplinaryActionHistoryDlg" modal="true" width="#{cc.attrs.dialogWidth}" height="#{cc.attrs.dialogHeight}"
 		resizable="true" style="display: block;">
+		
+		<p:outputPanel id="disciplinaryActionMsgOP" rendered="#{not empty cc.attrs.dialogMessage}">     
+			<h:outputText value = "#{cc.attrs.dialogMessage}" style="color:red;" escape="false" />
+			<p:spacer height="3" />
+		</p:outputPanel>
 	
 	<h:outputText style="color:red;" rendered="#{not empty viewSuppProfileBackingBean.managedBean.disciplinaryActionMsg}"
 							value="#{viewSuppProfileBackingBean.managedBean.disciplinaryActionMsg}"/>
