@@ -192,7 +192,7 @@
 
 
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.start']}" rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing =='false'}"/></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.start']}" rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing =='false'}" escape="false"/></td>
 				<td><p:calendar id="delStartDate" mode="popup" showOn="button" 
 						disabled="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing or contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or !bpmTasklistBackingBean.managedBean.claim}" 
 						readonlyInput="true"
