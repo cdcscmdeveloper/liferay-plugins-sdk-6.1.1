@@ -3778,8 +3778,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			this.getManagedBean().setTotalProgressivePayment(0);
 		} else if (ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT
 				.equalsIgnoreCase(scheduleType)) {
-			scheduleType = ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE;
-			this.getManagedBean().setTotalFrequency(0);
+			//scheduleType = ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE;
+			//this.getManagedBean().setTotalFrequency(0);
 		}
 		removefullfillmentDetails(scheduleType);
 	}
