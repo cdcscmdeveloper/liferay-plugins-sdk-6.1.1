@@ -11871,7 +11871,6 @@ private void retriveCommitteeRemarksList(){
 				});
 	}
 	
-	
 	/**
 	 * To add empty row to document data table.
 	 */
@@ -12040,7 +12039,6 @@ private void retriveCommitteeRemarksList(){
 	* the item type
 	* @return the Status values
 	*/
-	@SuppressWarnings("unused")
 	public SelectItem[] statusDropdownCodeValues(String itemType,ScQtProposalChecklistAttachment scQtProposalChecklistAttachment) {
 	List<Integer> types = new ArrayList<Integer>();
 	// 26339  -venkat start
@@ -12062,7 +12060,8 @@ private void retriveCommitteeRemarksList(){
 		types.add(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
 	}else{
 		types.add(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
-
+		types.add(ParameterConst.COMPLIANCE_STATUS_NONCOMPLIANCE);
+		types.add(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
 	}    // 26339  -venkat End
 	SelectItem[] items = null;
 	try {
