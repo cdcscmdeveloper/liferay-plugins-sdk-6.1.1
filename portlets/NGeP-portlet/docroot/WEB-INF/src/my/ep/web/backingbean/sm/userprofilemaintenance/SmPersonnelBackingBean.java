@@ -1648,9 +1648,15 @@ public class SmPersonnelBackingBean extends
 	 * Show deactivate admin confirmation dialog box
 	 */
 	public void confirmDeactivateAdmin() {
+		FacesScopes fs = new FacesScopes();
 		if (getManagedBean().getSelectedPersonnelToReassign() == null) {
 			throw new EpException(MessageConst.ERROR_721111);
 		} else {
+			// #26050 - start
+			if (!(getManagedBean().getTaskList().isEmpty()) && getManagedBean().getTaskList() != null && getManagedBean().getTaskList().size() > 0) {
+				throw new EpException(MessageConst.ERROR_770228, new String[] { fs.getUserSessionBean().getUserName() });
+			}
+			// #26050 - end
 			RequestContext.getCurrentInstance().execute("confirmDialog.show()");
 		}
 	}
