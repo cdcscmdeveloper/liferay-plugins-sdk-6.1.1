@@ -25,10 +25,7 @@
 			<h:outputText value = "#{cc.attrs.dialogMessage}" style="color:red;" escape="false" />
 			<p:spacer height="3" />
 		</p:outputPanel>
-	
-	<h:outputText style="color:red;" rendered="#{not empty viewSuppProfileBackingBean.managedBean.disciplinaryActionMsg}"
-							value="#{viewSuppProfileBackingBean.managedBean.disciplinaryActionMsg}"/>
-						
+							
 		<p:dataTable value="#{cc.attrs.voList}" var="disciplinaryAction" id="disciplinaryActionDtId"
 		 sortBy="#{disciplinaryAction.endDate}" rowIndexVar="index" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" 
 		 style="table-layout: fixed;">

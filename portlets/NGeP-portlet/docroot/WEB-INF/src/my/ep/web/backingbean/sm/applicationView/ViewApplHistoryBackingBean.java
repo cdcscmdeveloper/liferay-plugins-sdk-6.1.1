@@ -456,6 +456,16 @@ public class ViewApplHistoryBackingBean extends
 		reqDTO.setApplId(applId);
 		SmAppl smAppl = SmServiceLookup.getMofRegistrationSO()
 				.retrieveSmApplicationDetailsById(reqDTO).getSmAppl();
+		//26238 - start
+		SmSupplier supplier = smAppl.getSmSupplier();
+		List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
+		if(!EntityHelper.isCollectionEmpty(resultList)
+				&& resultList.size() > 0){
+			getManagedBean().setDisciplinaryAction(true);
+		} else {
+			getManagedBean().setDisciplinaryAction(false);
+		}
+		//26238 - end
 		
 		// 25792 - start
 		log.info("Init Sm Appl");
@@ -1279,11 +1289,13 @@ public class ViewApplHistoryBackingBean extends
 						if(!EntityHelper.isCollectionEmpty(catList)
 								&& catList.size() > 0){
 							for(Object[] arr : catList){
-								DisciplinaryActionCategoryVO catVo = new DisciplinaryActionCategoryVO();
-								String catCode = StringUtils.EMPTY;
-								catCode = arr[3].toString() + arr[4].toString() + arr[5].toString() ;
-								catVo.setCategoryCode(catCode);	
-								catVoList.add(catVo);
+								if(disciplinaryAction.getDisciplinaryActionId().toString().equalsIgnoreCase(arr[7].toString())){
+									DisciplinaryActionCategoryVO catVo = new DisciplinaryActionCategoryVO();
+									String catCode = StringUtils.EMPTY;
+									catCode = arr[3].toString() + arr[4].toString() + arr[5].toString() ;
+									catVo.setCategoryCode(catCode);	
+									catVoList.add(catVo);
+								}
 							}						
 							retVal.setCategoryCodeList(catVoList);
 						}
@@ -1364,5 +1376,4 @@ public class ViewApplHistoryBackingBean extends
 		super.resetSearch();
 	}
 	// 25792 - end
-	
 }
