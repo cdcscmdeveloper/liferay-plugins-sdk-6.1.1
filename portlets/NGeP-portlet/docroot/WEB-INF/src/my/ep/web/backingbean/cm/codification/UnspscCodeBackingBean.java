@@ -1872,19 +1872,6 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 	}
 
-
-		FacesContext facesContext = FacesContext.getCurrentInstance();
-		facesContext.addMessage(
-				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-						.getMessage(MessageConst.INFO_710001,
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
-		RequestContext.getCurrentInstance().execute("extensionConfirmation.hide();");
-		return "BPMtesting";
-
-	}
-
 	public boolean validateUnspscCodeHierarchy(String segnment, String family,
 			String classC, String comodity) {
 		String segmentIdentifier = segnment.substring(0, 2);
