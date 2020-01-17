@@ -71,6 +71,7 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
+import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.DirectAwardReqDTO;
 import my.ep.dto.sc.quationtender.DirectAwardResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
