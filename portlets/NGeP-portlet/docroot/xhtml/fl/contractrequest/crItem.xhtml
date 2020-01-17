@@ -230,11 +230,11 @@
 				<p:column headerText="#{lbl['lbl.fl.uom']}" style="text-align:center">
 					<h:outputText value="#{item.scRequestItem.uom.uomName}" style="float:left;"/>
 				</p:column>				
-				<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="white-space:normal;text-align:center">
+				<!-- <p:column headerText="#{lbl['lbl.fl.unit.price']}" style="white-space:normal;text-align:center">
 					<h:outputText value="#{item.unitPrice}" disabled="true" size="6" id="unitPrice" style="float:right;">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
-				</p:column>
+				</p:column> -->
 				<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="white-space:normal;text-align:center">
 					<p:inputText value="#{item.unitPrice}" size="5" id="unitPrice" label="#{lbl['lbl.fl.unit.price']}"
 					disabled="#{(empty contractRequestBackingBean.managedBean.selectedDelAddr or contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView 
