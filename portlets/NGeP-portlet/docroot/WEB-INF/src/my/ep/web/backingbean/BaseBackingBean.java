@@ -2678,6 +2678,16 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		 return designation;
 	 }
 	//SSM CHANGES END #27201
+	
+	public void listenerRolePopup(SmPersonnel smPersonnelSSm){
+		if(smPersonnelSSm.isClerical()){
+			smPersonnelSSm.setDirector(false);
+			smPersonnelSSm.setHigherManagement(false);
+			smPersonnelSSm.setManagement(false);
+		}else{
+			smPersonnelSSm.setClerical(false);
+		}
+	}
 }
 
 
