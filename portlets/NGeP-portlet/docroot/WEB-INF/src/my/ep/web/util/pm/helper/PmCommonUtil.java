@@ -205,25 +205,6 @@ public class PmCommonUtil implements Serializable{
 	
 	
 	/**
-	 * get report type options pdf 1 excel 2
-	 * 
-	 * @return SelectItem[]
-	 */
-	public static SelectItem[] getDocumentTypeOption() {
-		SelectItem[] items = new SelectItem[2];
-		items[0] = new SelectItem(ReportConst.PDF,
-				ResourceBundleUtils.getMessage("lbl.sm.pdf",
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale()));
-		items[1] = new SelectItem(ReportConst.XLS,
-				ResourceBundleUtils.getMessage("lbl.sm.excel",
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale()));
-		return items;
-	}
-	
-	
-	/**
 	 * Enhancement #25136 
 	 * Check date BankDetailRedundant
 	 * 
@@ -2726,6 +2707,20 @@ public class PmCommonUtil implements Serializable{
 						IOrgProfileSO.class);
 		OrgProfileResDTO orgResDTO = orgProfileSO
 				.retrieveOrgDetailsByOrgId(reqDTO);
+		return orgResDTO.getPmOrgProfile();
+		
+	}
+	
+	public static PmOrgProfile retrieveOrgProfileDtlByCode(String code) {
+		log.info("retrieveOrgProfileDtlByCode");
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgCode(code);
+		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+		OrgProfileResDTO orgResDTO = orgProfileSO
+				.retrieveOrgProfileByCode(reqDTO);
 		return orgResDTO.getPmOrgProfile();
 		
 	}
