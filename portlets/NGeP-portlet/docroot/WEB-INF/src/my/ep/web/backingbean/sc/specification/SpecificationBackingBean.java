@@ -54,6 +54,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
+import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
@@ -93,6 +94,8 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
+import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
+import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
@@ -108,6 +111,7 @@ import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
@@ -132,6 +136,7 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScRemark;
+import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScFinancialUserScoringSchemaAttachment;
@@ -2277,6 +2282,100 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			specSo = null;
 		}
 
+	}
+
+	private void populateFreqSchedules(List<ScQtSchedule> scheduleList){
+		if (!EntityHelper.isCollectionEmpty(scheduleList)) {
+
+			this.getManagedBean().setTotalFrequency(
+					scheduleList.size());
+			try {
+
+				for (ScQtSchedule scQtSchedule : scheduleList) {
+					String startMonth = "";
+					String endMonth = "";
+					SimpleDateFormat dateFormat = new SimpleDateFormat(
+							CommonConstants.DEFAULT_DATE_FORMAT);
+					int months;
+					Date startDate = null;
+					Date endDate = null;
+					String fromdate = dateFormat.format(scQtSchedule
+							.getFromDate());
+					String todate = dateFormat.format(scQtSchedule
+							.getToDate());
+					String startdate = fromdate.substring(3, 5);
+					String startYear = fromdate.substring(6,
+							fromdate.length());
+					String fromDay = fromdate.substring(0, 2);
+
+					String enddate = todate.substring(3, 5);
+					String endYear = todate.substring(6,
+							todate.length());
+					String toDay = todate.substring(0, 2);
+
+					startMonth = fulfilmentMonthlyDtls(startdate);
+					endMonth = fulfilmentMonthlyDtls(enddate);
+
+					int sYear = Integer.parseInt(startYear);
+					int eYear = Integer.parseInt(endYear);
+
+					String fromDate = fromDay + "/" + startdate + "/"
+							+ sYear;
+					String toDate = toDay + "/" + enddate + "/" + eYear;
+
+					startDate = dateFormat.parse(fromDate);
+					endDate = dateFormat.parse(toDate);
+
+					months = DateUtils.getMonths(startDate, endDate);
+					scQtSchedule.setTotalMonths(new BigDecimal(months));
+
+
+					scQtSchedule.setStartMonth(startMonth);
+					scQtSchedule.setEndMonth(endMonth);
+					scQtSchedule.setStartYear(startYear);
+					scQtSchedule.setEndYear(endYear);
+
+				}
+			} catch (ParseException e) {
+
+			}
+		}
+	}
+	
+	private void populateProgressivePayment(
+			List<ScQtProgressivePayment> progressivePayments) throws ParseException {
+		if (!EntityHelper.isCollectionEmpty(progressivePayments)) {
+			this.getManagedBean().setTotalProgressivePayment(
+					progressivePayments.size());
+			for (ScQtProgressivePayment scQtProgressivePayment : progressivePayments) {
+				SimpleDateFormat dateFormat = new SimpleDateFormat(
+						CommonConstants.DEFAULT_DATE_FORMAT);
+
+				String startMonth = "";
+				String endMonth = "";
+				String fromdate = dateFormat.format(scQtProgressivePayment
+						.getFromDate());
+				String todate = dateFormat.format(scQtProgressivePayment
+						.getToDate());
+				String startdate = fromdate.substring(3, 5);
+				String startYear = fromdate.substring(6, fromdate.length());
+
+				String enddate = todate.substring(3, 5);
+				String endYear = todate.substring(6, todate.length());
+				
+				startMonth = fulfilmentMonthlyDtls(startdate);
+				endMonth = fulfilmentMonthlyDtls(enddate);
+
+				scQtProgressivePayment.setStartMonth(startMonth);
+				scQtProgressivePayment.setEndMonth(endMonth);
+				scQtProgressivePayment.setStartYear(startYear);
+				scQtProgressivePayment.setEndYear(endYear);
+
+			}
+			this.sortProgressivePaymentList(progressivePayments);
+			this.getManagedBean().setProgressivePaymentList(
+					progressivePayments);
+		}
 	}
 
 	private String fulfilmentMonthlyDtls(String startdate) {
@@ -6611,26 +6710,13 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	public void addScheduleDetails() {
 		IParameterSO parameterSo = null;
 		try {
-
-			removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
-
+			
+			if(this.getManagedBean()
+					.getScheduleList()==null){
+				this.getManagedBean().setScheduleList(new ArrayList<ScQtSchedule>());
+			}
 			List<ScQtSchedule> scheduleList = this.getManagedBean()
 					.getScheduleList();
-
-			// int year = Calendar.getInstance().get(Calendar.YEAR);
-		int value=	 this.getManagedBean().getTotalFrequency()!=null? this.getManagedBean().getTotalFrequency():0;
-		this.getManagedBean().setTotalFrequency(value);
-			for (int j = 0; j < this.getManagedBean().getTotalFrequency(); j++) {
-
-				ScQtSchedule schedule = new ScQtSchedule();
-				// schedule.setStartYear(String.valueOf(year));
-				// schedule.setEndYear(String.valueOf(year));
-
-				if (StringUtils.isNotBlank(this.getManagedBean()
-						.getFulfilmentType())
-						&& ParameterConst.FULFILMENT_TYPE_SCHEDULED
-								.equalsIgnoreCase(this.getManagedBean()
-										.getFulfilmentType())) {
 					parameterSo = BusinessDelegate.getInstance()
 							.getServiceObject(
 									ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -6642,14 +6728,11 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 							.setParameterCode(ParameterConst.SCHEDULE_TYPE_PERIODIC);
 					ParameterResDTO docDefTypeResDTO = parameterSo
 							.retrieveParameterByTypeAndCode(docDefTypeReqDTO);
+					
+					ScQtSchedule schedule = new ScQtSchedule();
+					schedule.setScQt(this.getManagedBean().getQt());
 					schedule.setScheduleType(docDefTypeResDTO.getPmParameter());
-
-				} else {
-					PmParameter parameter = new PmParameter();
-					schedule.setScheduleType(parameter);
-				}
 				scheduleList.add(schedule);
-			}
 
 			this.getManagedBean().setScheduleList(scheduleList);
 		}
@@ -6828,22 +6911,18 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	public void addProgressiveDetails() {
 
 		try {
-			removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT);
+			if (this.getManagedBean().getProgressivePaymentList() == null) {
+				this.getManagedBean().setProgressivePaymentList(
+						new ArrayList<ScQtProgressivePayment>());
+			}
 			List<ScQtProgressivePayment> payments = this.getManagedBean()
 					.getProgressivePaymentList();
-			int value=	 this.getManagedBean()
-					.getTotalProgressivePayment()!=null? this.getManagedBean()
-							.getTotalProgressivePayment():0;
-			this.getManagedBean().setTotalProgressivePayment(value);
-			for (int j = 0; j < this.getManagedBean()
-					.getTotalProgressivePayment(); j++) {
 
-				ScQtProgressivePayment payment = new ScQtProgressivePayment();
+			ScQtProgressivePayment payment = new ScQtProgressivePayment();
 
-				setUserDetails(payment);
-				payments.add(payment);
-
-			}
+			setUserDetails(payment);
+			payment.setScQt(this.getManagedBean().getQt());
+			payments.add(payment);
 			this.getManagedBean()
 					.getQt()
 					.setScheduleType(
@@ -14754,5 +14833,128 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					estimatedAmount);
 		}
 	}
+	
+	/**
+	 * @param e
+	 */
+	public void selectAllSchedule(AjaxBehaviorEvent e) {
+
+		for (ScQtSchedule ScQtSchedule : getManagedBean().getScheduleList()
+				) {
+			if (getManagedBean().isSelectAll()) {
+				ScQtSchedule.setSelected(true);
+				if (getManagedBean().isButtonHideSchActive()) {
+					getManagedBean().setButtonHideSchActive(false);
+				}
+			} else {
+				ScQtSchedule.setSelected(false);
+				if (!getManagedBean().isButtonHideSchActive()) {
+					getManagedBean().setButtonHideSchActive(true);
+				}
+			}
+		}
+		for (ScQtProgressivePayment ScQtProgressivePayment : getManagedBean()
+				.getProgressivePaymentList()) {
+			if (getManagedBean().isSelectAll()) {
+				ScQtProgressivePayment.setSelected(true);
+				if (getManagedBean().isButtonHideSchActive()) {
+					getManagedBean().setButtonHideSchActive(false);
+				}
+			} else {
+				ScQtProgressivePayment.setSelected(false);
+				if (!getManagedBean().isButtonHideSchActive()) {
+					getManagedBean().setButtonHideSchActive(true);
+				}
+			}
+		}
+	}
+
+	public void selectOneScheCheckboxSelect(AjaxBehaviorEvent e) {
+		getManagedBean().setSelectAll(false);
+		for (ScQtSchedule ScQtSchedule : getManagedBean().getScheduleList()) {
+			if (ScQtSchedule.isSelected()) {
+				getManagedBean().setButtonHideSchActive(false);
+				return;
+			}
+		}
+		for (ScQtProgressivePayment ScQtProgressivePayment : getManagedBean()
+				.getProgressivePaymentList()) {
+			if (ScQtProgressivePayment.isSelected()) {
+				getManagedBean().setButtonHideSchActive(false);
+				return;
+			}
+		}
+		if ((boolean) e.getComponent().getAttributes().get("value")) {
+			getManagedBean().setButtonHideSchActive(false);
+		} else {
+			getManagedBean().setButtonHideSchActive(true);
+		}
+	}
+	
+	/**
+	 * Gets the qt award so.
+	 * 
+	 * @return the qt award so
+	 */
+	private IQTSpecSO getQtSpecSO() {
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+	}
+	
+	public void deleteFreqScheduleDetails() {
+		SpecificationResDTO resDTO = null;
+		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+		reqDTO.setToBeRemoveSchedulesList(this.getManagedBean()
+				.getScheduleList());
+		reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+
+		try {
+			if (null != getManagedBean().getScheduleList()) {
+
+				resDTO = getQtSpecSO().deleteQtScheduleIdAndPaymentId(reqDTO);
+
+				if (resDTO.isSuccessful()) {
+					getManagedBean().setSelectAll(false);
+					getManagedBean().setButtonHideSchActive(true);
+
+				}
+				getManagedBean().setScheduleList(resDTO.getToBeRemoveSchedulesList());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+	}
+	
+	public void deleteProgPaymentDetails() {
+		SpecificationResDTO resDTO = null;
+		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+		reqDTO.setToBeRemoveProgressivePayments(getManagedBean()
+				.getProgressivePaymentList());
+		reqDTO.setQtId(getManagedBean().getQt().getQtId());
+		try {
+			if (null != getManagedBean().getProgressivePaymentList()) {
+				
+				resDTO = getQtSpecSO().deleteQtScheduleIdAndPaymentId(reqDTO);
+
+				if (resDTO.isSuccessful()) {
+					getManagedBean().setSelectAll(false);
+					getManagedBean().setButtonHideSchActive(true);
+					
+				}
+				getManagedBean().setProgressivePaymentList(resDTO.getToBeRemoveProgressivePayments());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+	}
+
 	
 }
