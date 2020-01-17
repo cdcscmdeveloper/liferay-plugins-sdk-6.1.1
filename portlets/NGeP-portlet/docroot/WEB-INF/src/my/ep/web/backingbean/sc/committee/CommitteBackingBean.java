@@ -134,7 +134,7 @@ public class CommitteBackingBean extends
 		if (logger.isDebugEnabled()) {
 			logger.debug(message);
 		}
-		//logger.info(message);
+		logger.info(message);
 	}
 
 	/**
@@ -205,6 +205,13 @@ public class CommitteBackingBean extends
 				populateUserSearchCriteria(userQCSearchBean, searchBean);
 				committeReqDTO.setUserSearchBean(searchBean);
 				committeReqDTO.setPtjMinistryAdmin(Boolean.TRUE);
+				
+				//Enhancement #21689 - start -
+				if(getManagedBean().getScQt()!=null && getManagedBean().getScQt().size()>0){
+					committeReqDTO.setScQt(getManagedBean().getScQt().get(0));
+				}
+				//Enhancement #21689 - end -
+				
 				return committeSO.retrieveUserListByCommType(committeReqDTO)
 						.getUserResultBean();
 			} finally {
@@ -609,6 +616,9 @@ public class CommitteBackingBean extends
 		committeeTypes.add(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A);
 		committeeTypes.add(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B);
 		committeeTypes.add(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A);
+		//Enhancement #21691 - start -
+		committeeTypes.add(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD);
+		//Enhancement #21691 - end -
 		committeeTypes.add(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH);
 		committeeTypes.add(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK);
 		
@@ -934,6 +944,7 @@ public class CommitteBackingBean extends
 				|| committeeType.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)
 				|| committeeType.equals(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B) 
 				|| committeeType.equals(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)
+				|| committeeType.equals(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD)
 				|| committeeType.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) 
 				|| committeeType.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
 			CommitteReqDTO reqDTO = new CommitteReqDTO();

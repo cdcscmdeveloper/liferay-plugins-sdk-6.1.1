@@ -2800,9 +2800,51 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param scMember
 	 */
 	public void setCommitteeMemberOrgProfile(ScCommitteeMember scMember) {
-		scMember.setPmOrgProfile(getPTJOrgProfileByUserId(scMember.getPmUser()
-				.getUserId()));
+		/*
+		 * Enhancement #21689 - start -
+		 * IF BPK DONT SET ORG_PROFILE (PTJ)
+		 */
+		if(scMember.getPmUser()!=null && scMember.getPmUser().getOrgTypeCode()!=null) {
+			if(scMember.getPmUser().getOrgTypeCode().getParameterCode().equalsIgnoreCase("BPK")) {
+				scMember.setPmOrgProfile(getBKPOrgProfileByUserId(scMember.getPmUser()
+						.getUserId()));
+			} else {
+				scMember.setPmOrgProfile(getPTJOrgProfileByUserId(scMember.getPmUser()
+						.getUserId()));
+			}			
+		}
 	}
+	
+	private PmOrgProfile getBKPOrgProfileByUserId(Long userId) {
+		PmOrgProfile pmOrgProfile = null;
+		
+		if (userId != null) {
+			IOrgProfileSO orgProfileSO = null;
+			
+			try {
+				orgProfileSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IOrgProfileSO.class);
+
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				reqDTO.setUserId(userId);
+				reqDTO.setOrgType(OrganizationType.BAHAGIAN_PERBENDAHARAAN_KERAJAAN.value());
+				
+				OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
+				List<PmOrgProfile> pmOrgProfiles = resDTO.getOrgProfileList();
+				
+				if (pmOrgProfiles != null && pmOrgProfiles.size() > 0) {
+					pmOrgProfile = pmOrgProfiles.get(0);
+				}
+
+			} finally {
+				orgProfileSO = null;
+			}
+		}
+		
+		return pmOrgProfile;
+	}
+	// Enhancement #21689 - end - 
 	
 	private PmOrgProfile getPTJOrgProfileByUserId(Long userId) {
 
@@ -2841,7 +2883,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equalsIgnoreCase(committeeType) 
 				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(committeeType) ) {
 			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_QC);
-		
+			//Enhancement #21691 - start -
+		} else if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD.equalsIgnoreCase(committeeType)) {
+			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_PPR);
+			//Enhancement #21691 - end -
 		} else if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B.equalsIgnoreCase(committeeType)) {
 			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_PBB);
 		
