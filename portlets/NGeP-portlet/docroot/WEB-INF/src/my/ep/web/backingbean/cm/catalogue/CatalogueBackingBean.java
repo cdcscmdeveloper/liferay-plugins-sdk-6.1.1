@@ -279,7 +279,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			ContractResDTO resDTO;
 			FulfilmentResDTO resfDTO;
 			
-			flReqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
+			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserReqDTO userReqDTO = new UserReqDTO();
+			FacesScopes facesScopes = new FacesScopes();
+			if (facesScopes.getUserSessionBean().getUserId() == null) {
+				throw new IllegalArgumentException("userId cannot be null");
+			}	
+			userReqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
+			UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+			Long orgProfileId = userResDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId();
+			
+			flReqDTO.setOrgProfileId(orgProfileId);
 			resfDTO = requestSO.retrieveFulfilmentRequestDocNosByContractId(flReqDTO);
 			resDTO = contractSO.retrieveAvailableSchedulePhaseNo(reqDTO);
 			
