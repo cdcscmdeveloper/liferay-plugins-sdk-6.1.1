@@ -696,32 +696,32 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		FacesScopes facesScopes = new FacesScopes();
 		Date startDate = null;
 		Date endDate = null;
-
-		if (scQtSchedule.getStartYear() == null
-				|| scQtSchedule.getStartYear().isEmpty()) {
-			throw new EpException(MessageConst.ERROR_721110, new String[] {
-					ResourceBundleUtils.getMessage("lbl.sc.start.year",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							facesScopes.getUserLocale()), "" });
-		}
+		//#25022
 		if (scQtSchedule.getStartMonth() == null
 				|| scQtSchedule.getStartMonth().isEmpty()) {
-			throw new EpException(MessageConst.ERROR_721110, new String[] {
+			throw new EpException(MessageConst.ERROR_100022, new String[] {
 					ResourceBundleUtils.getMessage("lbl.sc.start.month",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							facesScopes.getUserLocale()), "" });
 		}
-		if (scQtSchedule.getEndYear() == null
-				|| scQtSchedule.getEndYear().isEmpty()) {
-			throw new EpException(MessageConst.ERROR_721110, new String[] {
-					ResourceBundleUtils.getMessage("lbl.sc.end.year",
+		if (scQtSchedule.getStartYear() == null
+				|| scQtSchedule.getStartYear().isEmpty()) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] {
+					ResourceBundleUtils.getMessage("lbl.sc.start.year",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							facesScopes.getUserLocale()), "" });
 		}
 		if (scQtSchedule.getEndMonth() == null
 				|| scQtSchedule.getEndMonth().isEmpty()) {
-			throw new EpException(MessageConst.ERROR_721110, new String[] {
+			throw new EpException(MessageConst.ERROR_100022, new String[] {
 					ResourceBundleUtils.getMessage("lbl.sc.end.month",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							facesScopes.getUserLocale()), "" });
+		}
+		if (scQtSchedule.getEndYear() == null
+				|| scQtSchedule.getEndYear().isEmpty()) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] {
+					ResourceBundleUtils.getMessage("lbl.sc.end.year",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							facesScopes.getUserLocale()), "" });
 		}
@@ -739,6 +739,15 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		effDate.set(Calendar.DAY_OF_MONTH, 1);
 		Date contractEffDate = effDate.getTime();
 
+		List<BigDecimal> scheduleNo = new ArrayList<BigDecimal>();
+		for (ScQtSchedule schedule : loa.getScQtSchedules()) {
+			if (scheduleNo.contains(schedule.getScheduleNo())) {
+				throw new EpException(MessageConst.ERROR_760319);
+			} else {
+				scheduleNo.add(schedule.getScheduleNo());
+			}
+		}
+		
 		if (scQtSchedule.getStartYear() != null
 				&& scQtSchedule.getStartMonth() != null) {
 			Calendar strtDate = Calendar.getInstance();
@@ -1264,36 +1273,37 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 */
 	private void progressivePayValidation(
 			ScQtProgressivePayment progressivePayment) {
-		debugLogger("frequencyScheduleValidation");
+		debugLogger("progressivePayValidation");
 		FacesScopes facesScopes = new FacesScopes();
 		Calendar startDate = null;
 		Calendar endDate = null;
-
-		if (progressivePayment.getStartYear() == null
-				|| progressivePayment.getStartYear().isEmpty()) {
-			throw new EpException(MessageConst.ERROR_721110, new String[] {
-					ResourceBundleUtils.getMessage("lbl.sc.start.year",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							facesScopes.getUserLocale()), "" });
-		}
+		
+		//#25022
 		if (progressivePayment.getStartMonth() == null
 				|| progressivePayment.getStartMonth().isEmpty()) {
-			throw new EpException(MessageConst.ERROR_721110, new String[] {
+			throw new EpException(MessageConst.ERROR_100022, new String[] {
 					ResourceBundleUtils.getMessage("lbl.sc.start.month",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							facesScopes.getUserLocale()), "" });
 		}
-		if (progressivePayment.getEndYear() == null
-				|| progressivePayment.getEndYear().isEmpty()) {
-			throw new EpException(MessageConst.ERROR_721110, new String[] {
-					ResourceBundleUtils.getMessage("lbl.sc.end.year",
+		if (progressivePayment.getStartYear() == null
+				|| progressivePayment.getStartYear().isEmpty()) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] {
+					ResourceBundleUtils.getMessage("lbl.sc.start.year",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							facesScopes.getUserLocale()), "" });
 		}
 		if (progressivePayment.getEndMonth() == null
 				|| progressivePayment.getEndMonth().isEmpty()) {
-			throw new EpException(MessageConst.ERROR_721110, new String[] {
+			throw new EpException(MessageConst.ERROR_100022, new String[] {
 					ResourceBundleUtils.getMessage("lbl.sc.end.month",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							facesScopes.getUserLocale()), "" });
+		}
+		if (progressivePayment.getEndYear() == null
+				|| progressivePayment.getEndYear().isEmpty()) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] {
+					ResourceBundleUtils.getMessage("lbl.sc.end.year",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							facesScopes.getUserLocale()), "" });
 		}
@@ -1736,7 +1746,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		IParameterSO parameterSo = null;
 		try {
 
-			removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
+			if(this.getManagedBean().getScLoa()
+					.getScQtSchedules()==null){
+				this.getManagedBean().getScLoa().setScQtSchedules(new ArrayList<ScQtSchedule>());
+			}
 
 			List<ScQtSchedule> scheduleList = this.getManagedBean().getScLoa()
 					.getScQtSchedules();
@@ -1750,16 +1763,14 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					.setParameterCode(ParameterConst.SCHEDULE_TYPE_PERIODIC);
 			ParameterResDTO docDefTypeResDTO = parameterSo
 					.retrieveParameterByTypeAndCode(docDefTypeReqDTO);
-			for (int j = 0; j < this.getManagedBean().getTotalFrequency(); j++) {
 
-				ScQtSchedule schedule = new ScQtSchedule();
-				schedule.setScQt(this.getManagedBean().getScQt());
-				schedule.setScLoa(this.getManagedBean().getScLoa());
+			ScQtSchedule schedule = new ScQtSchedule();
+			schedule.setScQt(this.getManagedBean().getScQt());
+			schedule.setScLoa(this.getManagedBean().getScLoa());
 
-				schedule.setScheduleType(docDefTypeResDTO.getPmParameter());
+			schedule.setScheduleType(docDefTypeResDTO.getPmParameter());
 
-				scheduleList.add(schedule);
-			}
+			scheduleList.add(schedule);
 
 			this.getManagedBean().getScLoa().setScQtSchedules(scheduleList);
 		}
@@ -1965,21 +1976,21 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 */
 	public void addProgressiveDetails() {
 
-		removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT);
+		if (this.getManagedBean().getScLoa().getScQtProgPayments() == null) {
+			this.getManagedBean().getScLoa().setScQtProgPayments(
+					new ArrayList<ScQtProgressivePayment>());
+		}
 		List<ScQtProgressivePayment> payments = this.getManagedBean()
 				.getScLoa().getScQtProgPayments();
 
-		for (int j = 0; j < this.getManagedBean().getTotalProgressivePayment(); j++) {
+		ScQtProgressivePayment payment = new ScQtProgressivePayment();
 
-			ScQtProgressivePayment payment = new ScQtProgressivePayment();
+		setUserDetails(payment);
 
-			setUserDetails(payment);
-
-			payment.setScQt(this.getManagedBean().getScQt());
-			payment.setScLoa(this.getManagedBean().getScLoa());
-			payments.add(payment);
-
-		}
+		payment.setScQt(this.getManagedBean().getScQt());
+		payment.setScLoa(this.getManagedBean().getScLoa());
+		payments.add(payment);
+			
 		this.getManagedBean().getScQt()
 				.setScheduleType(ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT);
 		this.getManagedBean().getScLoa().setScQtProgPayments(payments);
@@ -3496,8 +3507,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		calculateServiceTemplate();
 		this.getManagedBean().getScQt().setScQtSchedules(null);
 		this.getManagedBean().getScQt().setScQtProgressivePayments(null);
-		removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT);
-		removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
+		removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT, true);
+		removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE, true);
 		getLoaReports();
 		checkAgreementMandatory();
 
@@ -3714,11 +3725,12 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			this.getManagedBean().setTotalFrequency(0);
 		}
 		this.getManagedBean().getScQt().setScheduleType(scheduleType);
-		removefullfillmentDetails(toBeRemoveType);
+		removefullfillmentDetails(toBeRemoveType, true);
 
 	}
 
-	private void removefullfillmentDetails(String scheduleType) {
+	private void removefullfillmentDetails(String scheduleType,
+			boolean resetList) {
 
 		if (ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE.equalsIgnoreCase(scheduleType)) {
 			List<ScQtSchedule> scheduleList = this.getManagedBean().getScLoa()
@@ -3739,8 +3751,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				this.getManagedBean().setToBeRemoveSchedules(toBeRemoveList);
 				this.getManagedBean().getScQt().setScQtSchedules(null);
 			}
-			this.getManagedBean().getScLoa()
-					.setScQtSchedules(new ArrayList<ScQtSchedule>());
+			if (resetList) {
+				this.getManagedBean().getScLoa()
+						.setScQtSchedules(new ArrayList<ScQtSchedule>());
+			}
 		} else if (ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT
 				.equalsIgnoreCase(scheduleType)) {
 			List<ScQtProgressivePayment> payments = this.getManagedBean()
@@ -3762,10 +3776,12 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				this.getManagedBean().getScQt()
 						.setScQtProgressivePayments(null);
 			}
-			this.getManagedBean()
-					.getScLoa()
-					.setScQtProgPayments(
-							new ArrayList<ScQtProgressivePayment>());
+			if (resetList) {
+				this.getManagedBean()
+						.getScLoa()
+						.setScQtProgPayments(
+								new ArrayList<ScQtProgressivePayment>());
+			}
 		}
 
 	}
@@ -4424,10 +4440,27 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	}
 
 	private String getMonth(String month) {
-
-		if (StringUtils.isEmpty(month)) {
-			throw new EpException("Month should not be empty");
+		FacesScopes facesScopes = new FacesScopes();
+		List <ScQtSchedule> scQtSchedule = getManagedBean().getScLoa().getScQtSchedules();
+		for (ScQtSchedule schedule : scQtSchedule) {
+			if (StringUtils.isEmpty(month)
+					|| schedule.getStartMonth() == null) {
+				throw new EpException(MessageConst.ERROR_100022,
+						new String[] { ResourceBundleUtils.getMessage(
+								"lbl.sc.start.month",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								facesScopes.getUserLocale()) });
+			}
+			else if(StringUtils.isEmpty(month)
+					|| schedule.getEndMonth() == null) {
+				throw new EpException(MessageConst.ERROR_100022,
+						new String[] { ResourceBundleUtils.getMessage(
+								"lbl.sc.end.month",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								facesScopes.getUserLocale()) });
+			}
 		}
+		
 		int mon = Integer.parseInt(month);
 		String finalMonth = null;
 		if (mon <= 9) {
@@ -8393,5 +8426,110 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 			}
 	}
+		
+		/**
+		 * @param e
+		 */
+		public void selectAllSchedule(AjaxBehaviorEvent e) {
+
+			for (ScQtSchedule ScQtSchedule : getManagedBean().getScLoa()
+					.getScQtSchedules()) {
+				if (getManagedBean().isSelectAll()) {
+					ScQtSchedule.setSelected(true);
+					if (getManagedBean().isButtonHideSchActive()) {
+						getManagedBean().setButtonHideSchActive(false);
+					}
+				} else {
+					ScQtSchedule.setSelected(false);
+					if (!getManagedBean().isButtonHideSchActive()) {
+						getManagedBean().setButtonHideSchActive(true);
+					}
+				}
+			}
+			for (ScQtProgressivePayment ScQtProgressivePayment : getManagedBean()
+					.getScLoa().getScQtProgPayments()) {
+				if (getManagedBean().isSelectAll()) {
+					ScQtProgressivePayment.setSelected(true);
+					if (getManagedBean().isButtonHideSchActive()) {
+						getManagedBean().setButtonHideSchActive(false);
+					}
+				} else {
+					ScQtProgressivePayment.setSelected(false);
+					if (!getManagedBean().isButtonHideSchActive()) {
+						getManagedBean().setButtonHideSchActive(true);
+					}
+				}
+			}
+		}
+
+		public void selectOneScheCheckboxSelect(AjaxBehaviorEvent e) {
+			getManagedBean().setSelectAll(false);
+			for (ScQtSchedule ScQtSchedule : getManagedBean().getScLoa()
+					.getScQtSchedules()) {
+				if (ScQtSchedule.isSelected()) {
+					getManagedBean().setButtonHideSchActive(false);
+					return;
+				}
+			}
+			for (ScQtProgressivePayment ScQtProgressivePayment : getManagedBean()
+					.getScLoa().getScQtProgPayments()) {
+				if (ScQtProgressivePayment.isSelected()) {
+					getManagedBean().setButtonHideSchActive(false);
+					return;
+				}
+			}
+			if ((boolean) e.getComponent().getAttributes().get("value")) {
+				getManagedBean().setButtonHideSchActive(false);
+			} else {
+				getManagedBean().setButtonHideSchActive(true);
+			}
+		}
+
+		public void deleteFreqScheduleDetails() {
+			AwardSupplierResDTO resDTO = null;
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			reqDTO.setScLoa(this.getManagedBean().getScLoa());
+			try {
+				if (null != getManagedBean().getScLoa().getScQtSchedules()) {
+					resDTO = getQtAwardSO()
+							.deletetScheduleIdAndPaymentId(reqDTO);
+					if (resDTO.isSuccessful()) {
+						getManagedBean().setSelectAll(false);
+						getManagedBean().setButtonHideSchActive(true);
+
+					}
+					getManagedBean().getScLoa().setScQtSchedules(resDTO.getScLoa().getScQtSchedules());
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+								e.getMessage()));
+			}
+		}
+		public void deleteProgPaymentDetails() {
+			AwardSupplierResDTO resDTO = null;
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			reqDTO.setScLoa(this.getManagedBean().getScLoa());
+			try {
+				if (null != getManagedBean().getScLoa().getScQtProgPayments()) {
+					resDTO = getQtAwardSO()
+							.deletetScheduleIdAndPaymentId(reqDTO);
+					if (resDTO.isSuccessful()) {
+						getManagedBean().setSelectAll(false);
+						getManagedBean().setButtonHideSchActive(true);
+
+					}
+					getManagedBean().getScLoa().setScQtProgPayments(resDTO.getScLoa().getScQtProgPayments());
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+								e.getMessage()));
+			}
+		}
 	
 }
