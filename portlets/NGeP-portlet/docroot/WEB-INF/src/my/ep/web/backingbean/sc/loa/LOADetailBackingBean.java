@@ -3744,7 +3744,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * @param locale 
 	 * @return the month
 	 */
-	private String getMonth(int monthId, Locale locale){
+	private String getMonth(String month){
 		//#25022
 		FacesScopes facesScopes = new FacesScopes();
 		List <ScQtSchedule> scQtSchedule = getManagedBean().getScLoa().getScQtSchedules();
@@ -3775,6 +3775,23 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 		return finalMonth;
 
+	}
+	
+	/**
+	 * Gets the month.
+	 * 
+	 * @param monthId the month id
+	 * @param locale 
+	 * @return the month
+	 */
+	private String getMonth(int monthId, Locale locale){
+		Calendar fullMonth = Calendar.getInstance();
+		fullMonth.set(00, monthId, 0000);
+
+		Format formatter = new SimpleDateFormat("MMMM", locale); 
+		String month = formatter.format(fullMonth.getTime());
+
+		return month;
 	}
 
 	/**
