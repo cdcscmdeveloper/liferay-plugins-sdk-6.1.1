@@ -167,10 +167,11 @@
 					<h3></h3>
 					<p></p>
 
-					<p:dataTable id="contractRequestIdd" var="contractExpansion"
-						styleClass="borderless"
+					<p:dataTable 
+						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+						id="contractRequestIdd" var="contractExpansion"
 						value="#{vCtActiveContract.activeContractScheduleList}"
-						resizableColumns="true">
+						 width="100%">
 
 						<ac:paginator for="contractRequestIdd"></ac:paginator>
 
@@ -206,7 +207,7 @@
 								style="display: block; width:100%; text-align:center;" />
 
 							    <h:outputText value="#{contractExpansion.crNoStatus=='(null)' ? '' : contractExpansion.crNoStatus}"
-								style="display: block; width:100%; text-align:center;" />
+								style="display: block; width:100%; text-align:center;white-space: pre-wrap;" />
 								
                         </p:column>
                         
@@ -215,7 +216,7 @@
 								style="display: block; width:100%; text-align:center;" />
 			
 						  <h:outputText value="#{contractExpansion.coNoStatus=='(null)' ? '' : contractExpansion.coNoStatus}"
-							style="display: block; width:100%; text-align:center;" />
+							style="display: block; width:100%; text-align:center;white-space: pre-wrap;" />
                         </p:column>
 					</p:dataTable>
 
