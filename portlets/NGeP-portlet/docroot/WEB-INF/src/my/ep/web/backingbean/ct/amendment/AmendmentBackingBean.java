@@ -4043,9 +4043,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					if (counter == 2) {
 						throw new EpException(MessageConst.ERROR_750008);
 					}
+				}else{
+					if (parametercode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON) || parametercode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_MEMBER))
+						committeMember.getRepresentativeType().setParameterId(null);
 				}
 			}
-		}	
+		}
 	}
 
 	/**
