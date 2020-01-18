@@ -137,9 +137,9 @@ public class ViewApplHistoryManagedBean extends
 				
 				reqDTO.setAccountType(getAccountType());
 			} else {
-				if(SupplierManagementConst.SUPP_TYPE_BASIC.equalsIgnoreCase(getSearchSupplier().getSmAppl().getSupplierType())) {
+				if(getSearchSupplier().getSmAppl() != null && SupplierManagementConst.SUPP_TYPE_BASIC.equalsIgnoreCase(getSearchSupplier().getSmAppl().getSupplierType())) {
 					reqDTO.setAccountType(SupplierManagementConst.SUPP_TYPE_BASIC);
-				} else if(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT.equalsIgnoreCase(getSearchSupplier().getSmAppl().getSupplierType())) {
+				} else if(getSearchSupplier().getSmAppl() != null && SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT.equalsIgnoreCase(getSearchSupplier().getSmAppl().getSupplierType())) {
 					reqDTO.setAccountType(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT);
 					
 				} else {
@@ -200,11 +200,24 @@ public class ViewApplHistoryManagedBean extends
 									else if("R".equalsIgnoreCase(obj[1].toString())){
 										obj[8] = getMofNoPrevious(Long.parseLong(obj[11].toString()),Long.parseLong(obj[10].toString()),
 												obj[8]==null?StringUtils.EMPTY: obj[8].toString(),null);
-									}//4. For registered application from migrated Supplier (from old eP) that has application no start with K-XXXXXX-XXXX/J-XXXXXX-XXXX, the MOF No will pointing to the old eP MOF No (as per migrated MOF No).
+									}
+									//3.1 - for appl record status 9 but next gen ep
+									else if(Integer.parseInt(obj[13].toString())==0 && (!obj[0].toString().contains("KN") || !obj[0].toString().contains("JN"))){
+											obj[8] = getMofNoPrevious(Long.parseLong(obj[11].toString()),Long.parseLong(obj[10].toString()),
+													obj[8]==null?StringUtils.EMPTY: obj[8].toString(),DbValueConst.RECORD_STATUS_EXPIRED); 
+										
+									}
+									//4. For registered application from migrated Supplier (from old eP) that has application no start with K-XXXXXX-XXXX/J-XXXXXX-XXXX, the MOF No will pointing to the old eP MOF No (as per migrated MOF No).
 									 //Read record status 9
 									else if(!obj[0].toString().contains("KN") && !obj[0].toString().contains("JN") && (obj[0].toString().contains("K") || obj[0].toString().contains("J"))){
 										obj[8] = getMofNoPrevious(Long.parseLong(obj[11].toString()),Long.parseLong(obj[10].toString()),
 												obj[8]==null?StringUtils.EMPTY: obj[8].toString(),DbValueConst.RECORD_STATUS_DELETED); 
+										//IF NULL CHECK MOF STATUS EXPIRED
+										if(obj[8] == null || SmCommonUtil.getMessage("lbl.sm.no.available", null).equalsIgnoreCase(obj[8].toString())){
+											obj[8] = getMofNoPrevious(Long.parseLong(obj[11].toString()),Long.parseLong(obj[10].toString()),
+													obj[8]==null?StringUtils.EMPTY: obj[8].toString(),DbValueConst.RECORD_STATUS_EXPIRED); 
+										}
+										
 									}else{
 										obj[8] = getMofNo(Long.parseLong(obj[11].toString()),Long.parseLong(obj[10].toString()),
 												obj[8]==null?StringUtils.EMPTY: obj[8].toString());
