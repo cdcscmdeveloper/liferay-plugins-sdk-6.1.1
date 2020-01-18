@@ -1282,6 +1282,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					}
 				}
 				}
+				if(ctBackingBean.getManagedBean().getContractVer().isBrandNew()){
+					ctBackingBean.getManagedBean().getCtItemList().clear();
+					ctBackingBean.getManagedBean().getCtItemList().addAll(getManagedBean().getContractListingPagingDataModel().getList());
+				}else{
+					ctBackingBean.getManagedBean().getCtItemList().addAll(getManagedBean().getContractListingPagingDataModel().getList());
+				}
+				log.info("Check Putra Product :"+ctBackingBean.getManagedBean().getCtItemList().size());
 						ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(ctBackingBean.getManagedBean().getCtItemList());
 			}
 
@@ -4036,9 +4043,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					if (counter == 2) {
 						throw new EpException(MessageConst.ERROR_750008);
 					}
+				}else{
+					if (parametercode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON) || parametercode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_MEMBER))
+						committeMember.getRepresentativeType().setParameterId(null);
 				}
 			}
-		}	
+		}
 	}
 
 	/**
