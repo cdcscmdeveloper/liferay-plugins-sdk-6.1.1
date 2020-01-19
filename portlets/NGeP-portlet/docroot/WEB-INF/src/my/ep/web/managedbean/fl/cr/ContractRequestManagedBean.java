@@ -29,6 +29,7 @@ import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.persistence.entity.ct.CtContract;
@@ -447,6 +448,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 				contractReqDTO.setOrgProfileId(orgProfileId);
 				ContractResDTO resDTO = contractSO.retrieveActiveContractList(contractReqDTO);
 				
+				//13984-start
+	    		OrgProfileResDTO orgResDTO = profileSO.retrieveOrgProfileDtlByProfileId(reqDTO);
+	            String orgCode = orgResDTO.getPmOrgProfile().getOrgCode();
+				String orgName = orgResDTO.getPmOrgProfile().getOrgName();
+				//13984-end
+				
 				IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
 				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
@@ -493,8 +500,8 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 								InfoActiveContractList.get(i).setCoNoStatus(resfDTO.getFlOrderDocNoStatus().get(i));
 								
 								if(InfoActiveContractList.size()>0){
-									InfoActiveContractList.get(0).setOrgCode(resfDTO.getOrgCodes().get(0));
-									InfoActiveContractList.get(0).setOrgName(resfDTO.getOrgNames().get(0));
+									InfoActiveContractList.get(0).setOrgCode(orgCode);
+									InfoActiveContractList.get(0).setOrgName(orgName);
 								}
 								
 								activeContractScheduleList.get(i).setScheduleNo(resfDTO.getFlSchNos().get(i));
@@ -504,8 +511,8 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 								activeContractScheduleList.get(i).setCoNoStatus(resfDTO.getFlOrderDocNoStatus().get(i));
 								
 								if(activeContractScheduleList.size()>0){
-									activeContractScheduleList.get(0).setOrgCode(resfDTO.getOrgCodes().get(0));
-									activeContractScheduleList.get(0).setOrgName(resfDTO.getOrgNames().get(0));
+									activeContractScheduleList.get(0).setOrgCode(orgCode);
+									activeContractScheduleList.get(0).setOrgName(orgName);
 								}
 								
 								
