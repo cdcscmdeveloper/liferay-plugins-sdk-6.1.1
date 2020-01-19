@@ -244,7 +244,7 @@
 
 							<p:dataTable
 								emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-								value="#{contractRequestBackingBean.schInfo}" id="contractRequestIdd"
+								value="#{contractRequestBackingBean.schInfo=='[]' ? catalogueBackingBean.schInfo : contractRequestBackingBean.schInfo}" id="contractRequestIdd"
 								rowIndexVar="rowIndex" var="contractObjj" width="100%">
 
 								<ac:paginator for="contractRequestIdd"></ac:paginator>
