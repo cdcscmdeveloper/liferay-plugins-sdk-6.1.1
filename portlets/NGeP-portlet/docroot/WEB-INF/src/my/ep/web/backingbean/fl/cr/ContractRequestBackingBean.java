@@ -885,7 +885,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 			schInfo = new ArrayList<ScheduleInfo>();
 
-			for (int i = 0; i < resDTO.getAvailableNoList().size(); i++) {
+			for (int i = 0; i < resfDTO.getDocNos().size(); i++) {
 				int j = i + 1;
 				if (j > resfDTO.getDocNos().size()) {
 

@@ -60,6 +60,7 @@ import my.ep.biz.service.ct.circular.ICircularDetailSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
@@ -91,6 +92,8 @@ import my.ep.dto.ct.dtl.ContractItemReqDTO;
 import my.ep.dto.ct.dtl.ContractItemResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
@@ -279,16 +282,28 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			ContractResDTO resDTO;
 			FulfilmentResDTO resfDTO;
 			
-			flReqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
+			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserReqDTO userReqDTO = new UserReqDTO();
+			FacesScopes facesScopes = new FacesScopes();
+			if (facesScopes.getUserSessionBean().getUserId() == null) {
+				throw new IllegalArgumentException("userId cannot be null");
+			}	
+			userReqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
+			UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+			Long orgProfileId = userResDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId();
+			
+			flReqDTO.setOrgProfileId(orgProfileId);
 			resfDTO = requestSO.retrieveFulfilmentRequestDocNosByContractId(flReqDTO);
-			resDTO = contractSO.retrieveAvailableSchedulePhaseNo(reqDTO);
+			
+			reqDTO.setOrgProfileId(orgProfileId);
+			resDTO = contractSO.retrieveAvailableSchedulePhaseNoByOrgProfileId(reqDTO);
 			
 			if (resDTO.getAvailableNoList() != null) {
 				getManagedBean().setAvailableNoList(resDTO.getAvailableNoList());
 			}
 			schInfo = new ArrayList<ScheduleInfo>();
 
-			for (int i = 0; i < resDTO.getAvailableNoList().size(); i++) {
+			for (int i = 0; i < resfDTO.getDocNos().size() ; i++) {
 				int j = i + 1;
 				if (j > resfDTO.getDocNos().size()) {
 
@@ -306,17 +321,25 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 					resfDTO.getDocNoStatus().add("");
 				}
-
-				schInfo.add(new ScheduleInfo(resDTO.getAvailableNoList().get(i), resfDTO.getDocNos().get(i), resfDTO
-						.getDocNoStatus().get(i), resfDTO.getFlOrderDocNos().get(i), resfDTO.getFlOrderDocNoStatus()
-						.get(i)));
+				if (j > resfDTO.getFlSchNos().size()) {
+					resfDTO.getFlSchNos().add("");
+				}
+	    			
+	    			schInfo.add(new ScheduleInfo(resfDTO.getFlSchNos().get(i), resfDTO.getDocNos().get(i), resfDTO
+							.getDocNoStatus().get(i), resfDTO.getFlOrderDocNos().get(i), resfDTO.getFlOrderDocNoStatus()
+							.get(i)));
 			}
             resfDTO.getFlFulfilmentRequest();
             
-			String orgCode = resfDTO.getOrgCodes().get(0);
+            IOrgProfileSO profileSO = (IOrgProfileSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+            OrgProfileReqDTO orgReqDTO = new OrgProfileReqDTO();
+    		orgReqDTO.setOrgProfileId(orgProfileId);
+    		OrgProfileResDTO orgResDTO = profileSO.retrieveOrgProfileDtlByProfileId(orgReqDTO);
+            
+            String orgCode = orgResDTO.getPmOrgProfile().getOrgCode();
 			setOrgCode(orgCode);
 			
-			String orgName = resfDTO.getOrgNames().get(0);
+			String orgName = orgResDTO.getPmOrgProfile().getOrgName();
 			setOrgName(orgName);
 		   
 		    getManagedBean().setFlRequest(resfDTO.getFlFulfilmentRequest());
@@ -327,6 +350,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			MDC.put(LogKey.USER_ID, 1L);
 		}
 		
+		setSchInfo(schInfo);
 		return schInfo;
 
 	}
