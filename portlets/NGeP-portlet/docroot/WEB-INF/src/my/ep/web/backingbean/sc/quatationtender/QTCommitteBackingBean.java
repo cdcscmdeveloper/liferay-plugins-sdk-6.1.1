@@ -127,6 +127,13 @@ public class QTCommitteBackingBean extends
 	private ScWorkFlowStatus ocWorkFlowStatus;
 	private ScWorkFlowStatus tecWorkFlowStatus;
 
+	// #25426#36 ruzaimah - Start
+	private boolean isDeskOfficer() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value());
+	}
+	//end
+	
 	/**
 	 * Debug logger.
 	 * 
@@ -2021,7 +2028,7 @@ public class QTCommitteBackingBean extends
 	 * @return true, if is FC editable
 	 */
 	public boolean isFCEditable() {
-		
+
 		Long currentQtStatus = this.getManagedBean().getQt().getQtStatus()
 				.getStatusId();
 		if (this.getManagedBean().isMaintanceFlow()) {
@@ -2029,7 +2036,7 @@ public class QTCommitteBackingBean extends
 					QTStatusConst.QT_PENDING_PB_APPROVAL,
 					QTStatusConst.QT_CONSOLIDATION_REPORT)) {
 				return !this.getManagedBean().isReadOnly();
-			} 
+			} 	
 		}else {
 			if (super.isQTStatusLessThanOrEquals(currentQtStatus, QTStatusConst.QT_CONSOLIDATION_REPORT)) {
 				return true;
@@ -2039,6 +2046,15 @@ public class QTCommitteBackingBean extends
 				}
 			}
 		}
+		
+		// #25426#36 ruzaimah - Start
+		if ((this.getManagedBean().isMaintanceFlow()
+				&& this.isDeskOfficer())
+				&& !this.getManagedBean().isReadOnly()) {
+			return true;
+		}
+		// end
+		
 		return false;
 	}
 
