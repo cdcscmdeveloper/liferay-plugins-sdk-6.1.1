@@ -3336,6 +3336,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	public void constructPRSupplierSpecificationAndRemarks(VelocityContext context, ScLoa scLoa) {
 		List<TplSpecMaster> masters = new ArrayList<TplSpecMaster>();	
 		IQuoteSO quoteSO;
+		Integer days=null;
 		try {
 			quoteSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
@@ -3357,7 +3358,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			//quoteReqDTO.setFetchSubEntity(true);
 			QuoteResDTO quoteResDTO = quoteSO.getQuoteDtlForLOASupplier(quoteReqDTO);
 			log.info("Supplier ID"+quoteReqDTO.getSupplierId());  
-			
+		
 			List<ScLoiLoaItem> items = scLoa.getScLoiLoaItems();
 			log.info("ScLoiLoaItem Item size  -->"+items.size());
 			for (ScLoiLoaItem item :items)	
@@ -3382,13 +3383,17 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				
 				for (TplSpecAnswer answer : quoteResDTO.getServiceAnswersTpl()) {
 					//log.info("constructPRSupplierSpecificationAndRemarks I"+answer.getTplSpecQuestion().getClFulfilmentTypeCode().getParameterCode());
+					
 					if(answer.getTplSpecQuestion().getClFulfilmentTypeCode() == null)
 					{
 						answer.getTplSpecQuestion().setClFulfilmentTypeCode(scLoa.getScLoiLoa().getFulfilmentTypeCode()); 
 						
 						
 					}
-				
+				     if(days == null)
+				     {
+				    	 days=answer.getTplSpecQuestion().getClDeliveryTerm();
+				     }
 					//log.info("constructPRSupplierSpecificationAndRemarks I"+ answer.getTplSpecQuestion().getClFulfilmentTypeCode().getParameterCode());
 					log.info("TplSpecAnswer for service:- "
 							+ "|" + answer.getSpecAnswerId()
@@ -3404,17 +3409,20 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							+ "|" + answer.getTplSpecQuestion().getClUomPerMonth()
 							+ "|" + answer.getTplSpecQuestion().getClQuantity()
 							+ "|" + answer.getTplSpecQuestion().getClReviewRemark()
-							+ "|" + answer.getRatePerUom()
+							+ "|" + answer.getRatePerUom() 
 							+ "|" + answer.getAnswerRemark()
+							+ "|" + answer.getTplSpecQuestion().getClDeliveryTerm()
 							);
-					if(answer.getAnswerText() !=null)
+					//log.info("TplSpecQuestion for Delivery Term:-------> "+answer.getTplSpecQuestion().getClDeliveryTerm());
+					log.info("TplSpecQuestion for days:-------> "+days);
+					if(answer.getAnswerRemark()!=null)
 					{
-						answer.getTplSpecQuestion().setAnswerText(answer.getAnswerText());
+						answer.getTplSpecQuestion().setAnswerRemarks(answer.getAnswerRemark());
 					}
 					else{
-						answer.getTplSpecQuestion().setAnswerText(dafaltValue);
+						answer.getTplSpecQuestion().setAnswerRemarks(dafaltValue);
 					}
-					if(answer.getTplSpecQuestion().getClItem()!=null)
+					if((days.equals(answer.getTplSpecQuestion().getClDeliveryTerm())) && (answer.getTplSpecQuestion().getClItem()!=null))
 					{ 
 						/**  This code is for LOA with Single Item deatils  **/
 						if(items.size() == 1)
@@ -3429,9 +3437,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							
 						}else {
 							/** This code is for  LOA with multiple Items Deatils **/
-							master = answer.getTplSpecQuestion().getTplSpecMaster();
-							constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master, answer.getTplSpecQuestion());
-							master.setTplSpecQuestions(newTplSpecQuestionsList);
+							if(days.equals(answer.getTplSpecQuestion().getClDeliveryTerm()))
+							{
+								master = answer.getTplSpecQuestion().getTplSpecMaster();
+								constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master, answer.getTplSpecQuestion());
+								master.setTplSpecQuestions(newTplSpecQuestionsList);
+							}
 							
 						}
 					}
@@ -3451,9 +3462,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						
 						}else{
 							/** This code is for  LOA with multiple Items specification**/
-							master = answer.getTplSpecQuestion().getTplSpecMaster();
-							constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master, answer.getTplSpecQuestion());
-							master.setTplSpecQuestions(newTplSpecQuestionsList);
+							if(answer.getTplSpecQuestion().getClDeliveryTerm() == null)
+							{
+								master = answer.getTplSpecQuestion().getTplSpecMaster();
+								constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master, answer.getTplSpecQuestion());
+								master.setTplSpecQuestions(newTplSpecQuestionsList);
+							}
 
 						}
 
@@ -3463,6 +3477,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				if(master !=null)
 				{
 					masters.add(master);
+					
 				}
 			}
 			log.info("Master Record List Size II -->"+masters.size());
@@ -3475,6 +3490,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			
 		} finally {
 			quoteSO = null;
+			days=null;
 			//masters.clear();
 		}
 	}
@@ -3537,7 +3553,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			clItem=clItem.replaceAll(QTConstants.LESS_THEN,TemplateDocConst.PARAM_SPACE);
 			clItem=clItem.replaceAll(QTConstants.GREATER_THEN,TemplateDocConst.PARAM_SPACE);
 			question.setClItem(clItem);
-			log.info("CIItem  ----------->"+question.getClItem());
+			//log.info("CIItem  ----------->"+question.getClItem());
 		}
 		if (question.getClSpecDetail() == null) {
 			question.setClSpecDetail(dafaltValue);
