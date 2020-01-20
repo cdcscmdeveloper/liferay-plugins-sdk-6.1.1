@@ -8054,6 +8054,8 @@ public class SmApplicationBackingBean extends
 			}
 		} finally {
 			initNonMandatoryAndMandatoryDocs();
+			// #27186 - UAT- Personnel / Branch data displayed null after click save button on top
+			SmCommonUtil.setRoleName(getManagedBean().getSmAppl().getSmSupplier().getBusinessType(),getManagedBean().getSmAppl().getSmPersonnels());
 		}
 	}
 
