@@ -1219,7 +1219,7 @@ public class SPDetailBackingBean extends
 		ProposalReqDTO proposalReqDTO = new ProposalReqDTO();
 		ProposalResDTO proposalResDTO = new ProposalResDTO();
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean().getTechnicalQtProposalChecklist();
-
+		ScQt scQt = getManagedBean().getQt();
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 					IQTProposalSO.class);
@@ -1229,8 +1229,12 @@ public class SPDetailBackingBean extends
 			if (isCompleted) {
 				processResponseException(answers);
 			}
-			/** #21695 Farid */			
-			proposalReqDTO.setTplSpecZoneQties(answers.get(0).getTplSpecQuestion().getTplSpecZoneQties());
+			/** #21695 Farid */				
+			if(scQt != null
+					&& scQt.isZonal()){
+				proposalReqDTO.setTplSpecZoneQties(answers.get(0).getTplSpecQuestion().getTplSpecZoneQties());
+				}	
+			
 			proposalReqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			proposalReqDTO.setAnswersList(answers);
 			proposalReqDTO.setScQt(this.getManagedBean().getQt());
