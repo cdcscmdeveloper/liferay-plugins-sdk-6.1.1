@@ -127,6 +127,13 @@ public class QTCommitteBackingBean extends
 	private ScWorkFlowStatus ocWorkFlowStatus;
 	private ScWorkFlowStatus tecWorkFlowStatus;
 
+	// #25426#36 ruzaimah - Start
+	private boolean isDeskOfficer() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value());
+	}
+	//end
+	
 	/**
 	 * Debug logger.
 	 * 
@@ -2039,6 +2046,15 @@ public class QTCommitteBackingBean extends
 				}
 			}
 		}
+		
+		// #25426#36 ruzaimah - Start
+		if ((this.getManagedBean().isMaintanceFlow()
+				&& this.isDeskOfficer())
+				&& !this.getManagedBean().isReadOnly()) {
+			return true;
+		}
+		// end
+		
 		return false;
 	}
 

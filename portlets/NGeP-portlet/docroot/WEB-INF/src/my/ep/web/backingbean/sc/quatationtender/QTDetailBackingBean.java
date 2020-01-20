@@ -5666,7 +5666,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 			}
 		}
-		
+		// #25426#36 ruzaimah - Start
+		if ((this.getManagedBean().isMaintanceFlow()
+				&& this.isDeskOfficer())
+				&& !this.getManagedBean().isReadOnly()) {
+			return false;
+		}
+		// end		
 		return true;
 	}
 	
