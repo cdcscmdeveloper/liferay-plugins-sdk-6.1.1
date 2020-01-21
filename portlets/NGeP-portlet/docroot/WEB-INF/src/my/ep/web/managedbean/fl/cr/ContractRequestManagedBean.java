@@ -318,6 +318,10 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	//24893 - start
 	private PmOrgProfile chargePTJOrg;
 	//24893 - end
+	//13984-start
+	private static String orgCode;
+    private static String orgName;
+    //13984-end
 	private class ActiveContractPagingDataModel extends PagingDataModel<VCtActiveContract> {
 		
 		/** The Constant serialVersionUID. */
@@ -499,22 +503,11 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 								InfoActiveContractList.get(i).setCoNo(resfDTO.getFlOrderDocNos().get(i));
 								InfoActiveContractList.get(i).setCoNoStatus(resfDTO.getFlOrderDocNoStatus().get(i));
 								
-								if(InfoActiveContractList.size()>0){
-									InfoActiveContractList.get(0).setOrgCode(orgCode);
-									InfoActiveContractList.get(0).setOrgName(orgName);
-								}
-								
 								activeContractScheduleList.get(i).setScheduleNo(resfDTO.getFlSchNos().get(i));
 								activeContractScheduleList.get(i).setCrNo(resfDTO.getDocNos().get(i));
 								activeContractScheduleList.get(i).setCrNoStatus(resfDTO.getDocNoStatus().get(i));
 								activeContractScheduleList.get(i).setCoNo(resfDTO.getFlOrderDocNos().get(i));
 								activeContractScheduleList.get(i).setCoNoStatus(resfDTO.getFlOrderDocNoStatus().get(i));
-								
-								if(activeContractScheduleList.size()>0){
-									activeContractScheduleList.get(0).setOrgCode(orgCode);
-									activeContractScheduleList.get(0).setOrgName(orgName);
-								}
-								
 								
 							}
 							
@@ -524,6 +517,8 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 								vCtActiveContract.setActiveContractScheduleList(activeContractScheduleList);
 							}
 							
+							setOrgCode(orgCode);
+							setOrgName(orgName);
 							/*13984 Schedule/ Phase info List ENDING*/
 						}
 					}
@@ -3142,4 +3137,22 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.maxContractDate = maxContractDate;
 	}
 	// End #17087
+	
+	//13984-start
+	public String getOrgCode() {
+		return orgCode;
+	}
+
+	public void setOrgCode(String orgCode) {
+		this.orgCode = orgCode;
+	}
+	
+	public String getOrgName() {
+		return orgName;
+	}
+
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
+	}
+	//13984-end
 }

@@ -10533,7 +10533,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	/*13984 Schedule No. instance variables for table*/
 	public String getschno() {
 		
-		String schNoSelected= getManagedBean().getScheduleNo();
+		String schNoSelected= "";
+		
+		if (null != getManagedBean().getAvailableNoList()) {
+			schNoSelected = getManagedBean().getScheduleNo();
+		}
 		
 		log.info("schNoSelected in getSchno() is " +schNoSelected);
 
