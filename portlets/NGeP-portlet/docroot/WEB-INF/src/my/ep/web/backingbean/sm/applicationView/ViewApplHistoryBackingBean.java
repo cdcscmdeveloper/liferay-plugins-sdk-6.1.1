@@ -297,7 +297,10 @@ public class ViewApplHistoryBackingBean extends
 			throw new EpException(SmCommonUtil.getMessage(
 					"lbl.sm.resubmit.delete", null));
 		}
-
+		//#27250 - START SSM CHANGES FOR RESUBMIT
+		resubmitSSM();
+		//#27250 - END SSM CHANGES FOR RESUBMIT
+		
 		// #14832 - To cater if resubmit link already expired and supplier still
 		// in progress (Supplier Temp), so will call alert popup that will
 		// redirect to clone new application and start fresh
@@ -311,26 +314,7 @@ public class ViewApplHistoryBackingBean extends
 				RequestContext.getCurrentInstance().execute(
 						"confirmDialog.show()");
 			}
-		} else {
-			//#27232 - START SSM CHANGES FOR RESUBMIT
-			if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(getManagedBean().getSmAppl().getSmSupplier().getRegNo(),getManagedBean().getSmAppl().getSmSupplier().getBusinessType())){
-				//checking with ssm
-				SsmReqDTO ssmReqDTO = new SsmReqDTO();
-				ssmReqDTO.setRegNo(getManagedBean().getSmAppl().getSmSupplier().getRegNo());
-				ssmReqDTO.setBusinessType(getManagedBean().getSmAppl().getSmSupplier().getBusinessType());
-				ssmReqDTO.setCheckOnly(true);
-				SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
-				if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
-					//check the business/company registration status in ssm
-					this.getManagedBean().setStatusDescFromSSM(setStatusMessageFromSSM(ssmResDTO.getStatusFromSSM()));
-					if(!ssmResDTO.getStatusFromSSM().equalsIgnoreCase("A") && !ssmResDTO.getStatusFromSSM().equalsIgnoreCase("E")){
-						throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
-					}
-				} else{					
-					SmCommonUtil.ssmError(ssmResDTO);
-				}
-			}
-			//#27232 - END SSM CHANGES FOR RESUBMIT
+		} else {			
 			if (SmApplicationUtil
 					.isRejectedApplValidForResubmission(getManagedBean()
 							.getSmAppl())) {
@@ -1376,4 +1360,26 @@ public class ViewApplHistoryBackingBean extends
 		super.resetSearch();
 	}
 	// 25792 - end
+	
+	public void resubmitSSM(){
+		//#27232 - START SSM CHANGES FOR RESUBMIT
+		if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(getManagedBean().getSmAppl().getSmSupplier().getRegNo(),getManagedBean().getSmAppl().getSmSupplier().getBusinessType())){
+			//checking with ssm
+			SsmReqDTO ssmReqDTO = new SsmReqDTO();
+			ssmReqDTO.setRegNo(getManagedBean().getSmAppl().getSmSupplier().getRegNo());
+			ssmReqDTO.setBusinessType(getManagedBean().getSmAppl().getSmSupplier().getBusinessType());
+			ssmReqDTO.setCheckOnly(true);
+			SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
+			if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
+				//check the business/company registration status in ssm
+				this.getManagedBean().setStatusDescFromSSM(setStatusMessageFromSSM(ssmResDTO.getStatusFromSSM()));
+				if(!ssmResDTO.getStatusFromSSM().equalsIgnoreCase("A") && !ssmResDTO.getStatusFromSSM().equalsIgnoreCase("E")){
+					throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
+				}
+			} else{					
+				SmCommonUtil.ssmError(ssmResDTO);
+			}
+		}
+		//#27232 - END SSM CHANGES FOR RESUBMIT
+	}
 }
