@@ -20,7 +20,7 @@
 			<table style="width: 100%">
 				<tr>
 					<td><p:commandLink
-							value="#{lbl['lbl.quartz.scheduled.jobs.info']}"
+							value="#{lbl['lbl.quartz.scheduled.jobs.info']}" rendered="#{not empty catalogueBackingBean.managedBean.availableNoList}"
 							
 							update="display" oncomplete="sample.show()"
 							style="color: blue;display: inline-block;text-align: right;float: left;font-size: 12px;padding: 0 400px 0 0;width: 72.1%" /></td>
