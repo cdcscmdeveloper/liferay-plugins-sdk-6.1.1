@@ -1288,8 +1288,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}else{
 					ctBackingBean.getManagedBean().getCtItemList().addAll(getManagedBean().getContractListingPagingDataModel().getList());
 				}
-				log.info("Check Putra Product :"+ctBackingBean.getManagedBean().getCtItemList().size());
 						ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(ctBackingBean.getManagedBean().getCtItemList());
+			}else{
+				ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(ctBackingBean.getManagedBean().getCtItemList());
 			}
 
 			if (getManagedBean().getServiceListingPagingDataModel() != null && getManagedBean().getServiceListingPagingDataModel().getList() != null) {
@@ -1321,9 +1322,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}else{
 					ctBackingBean.getManagedBean().getCtItemServiceList().addAll(getManagedBean().getServiceListingPagingDataModel().getList());
 					}
-				log.info("Check Putra Service :"+ctBackingBean.getManagedBean().getCtItemList().size());
 					ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(ctBackingBean.getManagedBean().getCtItemServiceList());
-				}
+				}else{
+					ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(ctBackingBean.getManagedBean().getCtItemServiceList());
+				}			
 			log.info("Check Putra CtContractItems :"+ctBackingBean.getManagedBean().getContractVer().getCtContractItems().size());
 			}
 			// Change Code #20997 End
