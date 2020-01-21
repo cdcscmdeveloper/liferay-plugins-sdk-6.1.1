@@ -82,13 +82,17 @@
 <!-- 	#25039 Begin - version zonal -->
 		<c:if test="#{isZonal}">			
 			<p:inputText style="min-width:0px !important;width:86px;" rendered="#{isQuestionTypeItem}" disabled="true" />
-			<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;"  
+			<!--#25039#67 Begin-->
+			<p:commandButton 
+				icon="#{empty templateSpecBean.specMaster.specTotal ? 'ui-icon-pencil' : 'ui-icon-evaluate'}" 
+				style="background-color:transparent !important; border:0px none;"  
 				action="#{templateSpecBackingBean.zoneEstimationPopupAction(templateSpecBean)}"
 				oncomplete="#{zoneEstimationPopup}.show();"
 				partialSubmit="true" process="@this" update="@([id$=zoneEstimationPopup])"
 				title="#{lbl['lbl.tpl.spec.content.estimate.cost.tooltip']}">
 				<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
-			</p:commandButton>	
+			</p:commandButton>
+			<!--#25039#67 end-->	
 		</c:if>		
 <!-- 	#25039 end - version zonal -->				
 	</p:column>
