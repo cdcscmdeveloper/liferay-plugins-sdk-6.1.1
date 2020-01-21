@@ -1266,6 +1266,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			//13984-start
 			if(getManagedBean().getFlRequest().getCtContract().isFrequencySchedule()){
 				initSchPhaseTable(resDTO.getFlFulfilmentRequest().getCtContract().getContractId());
+			}else{
+				schInfo = new ArrayList<ScheduleInfo>();
 			}
 			//13984-end
 		}else if(contractId != null){
@@ -1430,6 +1432,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				getManagedBean().setMaxContractDate(ctContractAmount.getExpDate());				
 			}
 			//end - #17087
+			
+			//13984-start
+			if(scheduleNo!=null && scheduleNo!=""){
+				initSchPhaseTable(Long.parseLong(contractId));
+			}else{
+				schInfo = new ArrayList<ScheduleInfo>();
+			}
+			//13984-end
 		}
 		
 		//26279 - start
