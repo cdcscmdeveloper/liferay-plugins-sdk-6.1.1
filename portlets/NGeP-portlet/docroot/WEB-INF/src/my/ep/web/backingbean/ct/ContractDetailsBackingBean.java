@@ -308,6 +308,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			reqDTO.setContractVerId(new Long(dataType.getDocId()));
 			reqDTO.setDocType(dataType.getDocType());
 		}
+		
+		/*#26083 start - basri*/
+		if(reqDTO.getDocType().equals(ParameterConst.DOCTYPE_NOTIFICATION_SETTING)){
+			ctBB.getManagedBean().setNotificationSetting(true);
+		}
 		setValidateContractField(reqDTO);
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
