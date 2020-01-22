@@ -155,10 +155,14 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME
 					+ ParameterConst.DOCTYPE_CONTRACT_UPDATE, "fulfilment-details");
 			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME
+					+ ParameterConst.DOCTYPE_NOTIFICATION_SETTING, "fulfilment-details");
+			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME
 					+ ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT, "fulfilment-details");
 			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME
 					+ ParameterConst.DOCTYPE_CONTRACT_AMENDMENT,
 					"contract-amendment");
+			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME
+					+ ParameterConst.DOCTYPE_NOTIFICATION_SETTING, "fulfilment-details");
 			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME
 					+ ParameterConst.DOCTYPE_CONTRACT_UPDATE, "fulfilment-details");
 			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME
