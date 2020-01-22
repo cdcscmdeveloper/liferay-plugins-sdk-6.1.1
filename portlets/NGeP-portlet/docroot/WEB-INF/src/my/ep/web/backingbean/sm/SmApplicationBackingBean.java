@@ -1620,6 +1620,12 @@ public class SmApplicationBackingBean extends
 						int i = 0;
 						for(SmPersonnel personnel : this.getManagedBean().getSmAppl().getSmPersonnels()){
 							validateRole(personnel);
+							// SET DESINGATION SSM #27201
+							if(personnel.getDesignation() != null){
+								String designation = populateDesignationSSM(personnel.getDesignation());
+								personnel.setDesignation(designation);
+							}
+							
 							SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelAll(),"identificationNo");
 							if(personnelSSM != null){								
 								//if rob no need to copy shareamt.
@@ -8071,10 +8077,10 @@ public class SmApplicationBackingBean extends
 					renewSesionObject();
 				}
 			}
+			// #27186 - UAT- Personnel / Branch data displayed null after click save button on top
+			SmCommonUtil.setRoleName(getManagedBean().getSmAppl().getSupplierType(),getManagedBean().getSmAppl().getSmPersonnels());
 		} finally {
 			initNonMandatoryAndMandatoryDocs();
-			// #27186 - UAT- Personnel / Branch data displayed null after click save button on top
-			SmCommonUtil.setRoleName(getManagedBean().getSmAppl().getSmSupplier().getBusinessType(),getManagedBean().getSmAppl().getSmPersonnels());
 		}
 	}
 
