@@ -205,12 +205,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				&& (getManagedBean().getSearchContractStatus() == 0 && !isSupplierRole())
 				&& getManagedBean().getSearchMinistryProfile() == null
 				&& getManagedBean().getSearchPtjGroupProfile() == null
-				&& getManagedBean().getCreatedBy() == null 
 				&& getManagedBean().getSearchPtjProfile() == null) {
 			throw new EpException(MessageConst.ERROR_100060);
 		} else {
 			getManagedBean().getContractDataModel().reloadData();
-
 		}
 	}
 
@@ -264,7 +262,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
-
 
 		if (taskId == null) {
 			if (getManagedBean().getWarningPercentage() != null) {
