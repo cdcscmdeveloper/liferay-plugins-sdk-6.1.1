@@ -2342,6 +2342,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			return true;
 		} else if(getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT)){
 			return true;
+		} else if(getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_NOTIFICATION_SETTING)){
+			return true;
 		}
 		else if (!getManagedBean().getCtContractAmount().isAgreement() 
 				&& getManagedBean().getContractVer().getContractPhysicalNo() == null) {
