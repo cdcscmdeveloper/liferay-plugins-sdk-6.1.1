@@ -26,10 +26,7 @@
 			header="#{confirmationheader}" hide="true" resizable="false"
 			width="#{cc.attrs.width}" height="#{cc.attrs.height}" closable="true"
 			modal="true">
-			<p:blockUI block="#{cc.attrs.id}Popup"
-				widgetVar="cancelRejectPopupBlockWidget">
-				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
-			</p:blockUI>
+
 			<h:panelGroup id="#{cc.attrs.id}Popup">
 				<table>
 					<tr>
@@ -42,9 +39,9 @@
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.yes']}"
 						process="#{cc.attrs.okProcess}" partialSubmit="true"
-						onstart="cancelRejectPopupBlockWidget.show();"
+						onstart="blockWidget.show(); #{cc.attrs.widget}.hide()"
 						action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.okAction)}"
-						oncomplete="cancelRejectPopupBlockWidget.hide(); #{cc.attrs.widget}.hide();"
+						oncomplete="blockWidget.hide();"
 						update="#{cc.attrs.update}" />
 					<p:commandButton value="#{lbl['lbl.btn.no']}" immediate="true"
 						oncomplete="#{cc.attrs.widget}.hide();" />
