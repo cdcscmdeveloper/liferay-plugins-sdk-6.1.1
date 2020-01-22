@@ -1755,6 +1755,8 @@ public class SimpleQuoteBackingBean extends
 						specMaster
 								.setTplSpecQuestions(new ArrayList<TplSpecQuestion>());
 					}
+					//#21423
+					specMaster.setTechnicalSpecQuestionsToDelete(null);
 					productTplSpecBean.setSpecMaster(specMaster);
 					getManagedBean().setProductTemplateSpecBean(
 							productTplSpecBean);
@@ -1767,6 +1769,8 @@ public class SimpleQuoteBackingBean extends
 						specMaster
 								.setTplSpecQuestions(new ArrayList<TplSpecQuestion>());
 					}
+					//#21423
+					specMaster.setTechnicalSpecQuestionsToDelete(null);
 					serviceTplSpecBean.setSpecMaster(specMaster);
 					getManagedBean().setServiceTemplateSpecBean(
 							serviceTplSpecBean);
