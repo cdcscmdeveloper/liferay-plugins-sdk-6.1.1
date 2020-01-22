@@ -2106,7 +2106,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							
 				if (BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(action)) {
 					updateReasons = getAllUpdateReasons(ppPlan);
+					if (updateReasons != null && 
+							!updateReasons.isEmpty()) {
 						reqDTO.setUpdateReasonList(updateReasons);
+					}
 				}
 			}
 			
@@ -4742,11 +4745,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    	} else {
 	    		throw new EpException(MessageConst.ERROR_730015);
 	    	}
-	 		    	   	
-	    	log.info("New procurementList size= "+this.getManagedBean().getSelectedPlan().
-	    			getPpProcurementItems().size());
-	    	this.getManagedBean().getSelectedPlan().addPpProcurementItems(newPpItem);
-	    	
 	}
 	
     /**
