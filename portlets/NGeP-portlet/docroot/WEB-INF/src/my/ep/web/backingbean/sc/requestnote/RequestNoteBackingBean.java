@@ -1297,8 +1297,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					scRequestNoteDtl.setPriceTypeId(scRequestNoteDtl.getPriceType().getParameterId());
 				}
 
-				if(null == scRequestNoteDtl.getAssignedUser()){
-					scRequestNoteDtl.setAssignedUser(new PmUser());	
+				//#26221
+				if(scRequestNoteDtl.getAssignedUser() == null){
+					if(requestNote.getCreatedBy() != null) {
+						scRequestNoteDtl.setAssignedUser(getUserById(requestNote.getCreatedBy()));
+					} else {
+						scRequestNoteDtl.setAssignedUser(new PmUser());
+					}
 				}
 
 				if(null == scRequestNoteDtl.getProcurementTypeCategory()){
@@ -2915,16 +2920,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			UserResDTO resDTO = getUserSO().retrieveUserByUserId(reqDTO);
 			requestNoteDtl.setAssignedUser(resDTO.getPmUser());	
 		}
-		//26221--Start
-		else{
-			UserReqDTO reqDTO = new UserReqDTO();
-			FacesScopes facesScopes = new FacesScopes();
-			reqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
-			UserResDTO resDTO = getUserSO().retrieveUserByUserId(reqDTO);
-			requestNoteDtl.setAssignedUser(resDTO.getPmUser());	
-
-		}
-		//26221--End
 		
 	}
 	
