@@ -31,7 +31,6 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.persistence.entity.ct.CtAttachment;
-import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.VCtContract;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -102,7 +101,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	private IPagingDataModel<VCtContract> contractDataModel = new ContractPagingDataModel();
 	public boolean backPageAmendment;
 	private Long contractId;
-	private CtContract createdBy;
 
 	public int deductionIndex =99;
 	public int scheduleIndex =99;
@@ -110,6 +108,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	public int paymentTracking = 99;
 	public int itemIndex = 99;
 	public int settingIndex = 101;
+	public int notificationIndex = 103;/*#26083-basri*/
 	public int agencyIndex = 102;
 	public int  bondIndex = 113;
 	private int index;
@@ -750,28 +749,12 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	public PmOrgProfile getSearchPtjProfile() {
 		return searchPtjProfile;
 	}
-	
 
 	/**
 	 * @param searchPtjProfile the searchPtjProfile to set
 	 */
 	public void setSearchPtjProfile(PmOrgProfile searchPtjProfile) {
 		this.searchPtjProfile = searchPtjProfile;
-	}
-	
-	/**
-	 * @return the searchCreatedBy
-	 */
-	public CtContract getCreatedBy() {
-		return createdBy;
-	}
-	
-	
-	/**
-	 * @param searchCreatedBy the searchCreatedBy to set
-	 */
-	public void setCreatedBy(CtContract createdBy) {
-		this.createdBy = createdBy;
 	}
 
 	public boolean isBackPageAmendment() {
@@ -817,7 +800,24 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	public void setBondIndex(int bondIndex) {
 		this.bondIndex = bondIndex;
 	}
+	
+	/*#26083 start - basri*/
+	/**
+	 * @return the notificationIndex
+	 */
 
+	public int getNotificationIndex() {
+		return notificationIndex;
+	}
+
+	/**
+	 * @param notificationIndex the notificationIndex to set
+	 */
+	public void setNotificationIndex(int notificationIndex) {
+		this.notificationIndex = notificationIndex;
+	}
+	/*#26083 - end*/
+	
 	/**
 	 * @return the contractDataModel
 	 */
@@ -939,16 +939,12 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("MINISTRY_ORG_ID", SearchOperator.OPERATOR_EQUALS.value(),
 							getSearchMinistryProfile().getOrgProfileId()));
 				}
-				
-
-				
 				if (StringUtils.isNotBlank(getSearchCircularNo())) {
 					SearchFilterBean filterBean = new SearchFilterBean("CIRCULAR_NO",SearchOperator.OPERATOR_LIKE.value(),
 							getSearchCircularNo());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);				
 				}
-				
 				if (StringUtils.isNotBlank(getSearchCircularName())) {
 					SearchFilterBean filterBean = new SearchFilterBean("CIRCULAR_NAME",SearchOperator.OPERATOR_LIKE.value(),
 							getSearchCircularName());
