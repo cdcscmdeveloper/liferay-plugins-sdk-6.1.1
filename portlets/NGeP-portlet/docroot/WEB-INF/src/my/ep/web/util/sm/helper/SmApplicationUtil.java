@@ -11690,6 +11690,17 @@ public class SmApplicationUtil {
 					supplier.getSupplierId())) {
 				retVal = true;
 			}
+			//START  #27230
+			if(retVal){
+				if(smPersonnel.isSsmData()){
+					if(smPersonnel.getPmCountry() != null && smPersonnel.getPmCountry().getCountryId() != 246){
+						retVal = true;
+					}else{
+						retVal = false;
+					}
+				}
+			}
+			//END  #27230
 		} catch (Exception ex) {
 			log.info(ex.getMessage());
 		}
