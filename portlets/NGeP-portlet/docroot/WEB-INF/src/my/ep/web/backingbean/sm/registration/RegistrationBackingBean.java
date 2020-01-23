@@ -2436,7 +2436,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				if(this.getManagedBean().isSsmIntegrationActive() && this.getManagedBean().isCompanyValidWithSSM() || this.getManagedBean().isRegAccountMaintainance()){
 					if(item.getValue() == null){
 						continue;
-					}
+					}//START #27255
 					if(businessTypeIsROB(businessType)){
 						if(item.getValue().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG) || item.getValue().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)){
 							itemTemp.add(item);
@@ -2444,10 +2444,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					}else if(businessTypeIsROC(businessType)){
 						if(item.getValue().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD) || item.getValue().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD)){
 							itemTemp.add(item);
-						} //SSM CHANGES #27255
+						} 
 					} else {
 						itemTemp.add(item);
-					}
+					} //END #27255
 				}
 			}
 			items = null;
