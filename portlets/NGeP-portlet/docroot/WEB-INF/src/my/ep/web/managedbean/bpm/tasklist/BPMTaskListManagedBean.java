@@ -1211,7 +1211,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				sdoSearchFilter(reqDTO);
 				BpmResponseDTO responseDTO = bpmSO.getWorklistItems(reqDTO);
 				SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
-				
+				List<String> removeRNList = null;
 				if (responseDTO.getWorklistVO() != null) {
 					log.info("testing BPM******size=" + responseDTO.getWorklistVO().getWorklistItem().size());
 					log.info("testing BPM******total=" + responseDTO.getWorklistVO().getTotal());
@@ -1452,6 +1452,41 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 													//System.out.println("Lets overide the status! here");
 												}
 									  }
+								    	   
+								    	   if(currentStatusId.equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION)) {
+									    	   boolean cancelledPrFound = false;
+									    	   if (null !=  resRNDTO && null !=  resRNDTO.getRequestNoteDetail() && null !=  resRNDTO.getRequestNoteDetail().getRequestNoteDtls()
+									    			   && !CollectionUtils.isEmpty( resRNDTO.getRequestNoteDetail().getRequestNoteDtls())) {
+									    		   for (ScRequestNoteDtl rnDtl : resRNDTO.getRequestNoteDetail().getRequestNoteDtls()) {
+									    			   if (null != rnDtl.getPurchaseRequest() &&  null != rnDtl.getPurchaseRequest().getRecordStatusFlg()
+									    					   && rnDtl.getPurchaseRequest().getRecordStatusFlg() == 2) {
+									    				   cancelledPrFound = true;
+									    			   }
+									    		   }
+									    	   }
+									    	   if (cancelledPrFound) {
+									    		   ISourcingIntegrationSO sourcingIntegrationSO = (ISourcingIntegrationSO) EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+									    		   if (null != sourcingIntegrationSO) {
+									    			   log.info("Getting count for docNo: " + worklistItemVO.getDocNumber() + " status: " + worklistItemVO.getDocStatus() + " docType : " + worklistItemVO.getDocType());
+									    			   ISearchBean<Object[]> prSearchBean =  new SearchBean<>();
+									    			   prSearchBean.getDataFilterBeans().add(new SearchFilterBean("docNo", SearchOperator.OPERATOR_EQUALS.value(), worklistItemVO.getDocNumber()));
+									    			   prSearchBean.getDataFilterBeans().add(new SearchFilterBean("status", SearchOperator.OPERATOR_EQUALS.value(), worklistItemVO.getDocStatus()));
+									    			   prSearchBean.getDataFilterBeans().add(new SearchFilterBean("docType", SearchOperator.OPERATOR_EQUALS.value(), worklistItemVO.getDocType()));
+									    			   SourcingIntegrationReqDTO searchReqDTO = new SourcingIntegrationReqDTO();
+									    			   searchReqDTO.setSourcingDocSearchBean(prSearchBean);
+									    			   int activePrCount = sourcingIntegrationSO.getCountOfActivePR(searchReqDTO);
+									    			   
+									    			   if (activePrCount == 0) {
+									    				   if (CollectionUtils.isEmpty(removeRNList)) {
+									    					   removeRNList = new ArrayList<>();
+									    				   }
+									    				   log.info("Removing " + worklistItemVO.getDocNumber() + " from tasklist.");
+									    				   removeRNList.add(worklistItemVO.getDocNumber());
+									    				   log.info("Removed " + worklistItemVO.getDocNumber() + " from tasklist.");
+									    			   }
+									    		   }
+									    	   }
+									       }
 								   }
 						    	   }
 						       }
@@ -1532,6 +1567,18 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 								log.info("worklistItemVO.setTitle error:" + ex.getMessage());
 							}
 						}
+					}
+					
+					if (!CollectionUtils.isEmpty(removeRNList)) {
+						 for (String removeRN : removeRNList) {
+							 Iterator<WorklistItemVO> iterator = responseDTO.getWorklistVO().getWorklistItem().iterator();
+							 while (iterator.hasNext()) {
+								 WorklistItemVO worklistItemVO = iterator.next();
+								 if (removeRN.equals(worklistItemVO.getDocNumber())) {
+									 iterator.remove();
+								 }
+							 }
+						 }
 					}
 					
 					resultBean.setTotalRecord(responseDTO.getWorklistVO()
