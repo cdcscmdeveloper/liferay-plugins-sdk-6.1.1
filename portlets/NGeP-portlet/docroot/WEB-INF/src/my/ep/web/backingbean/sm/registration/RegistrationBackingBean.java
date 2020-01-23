@@ -2168,7 +2168,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						SmPersonnel personnelOld = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(
 								userSession.getIdentificationNo(), this.getManagedBean().getSmAppl()
 										.getSmPersonnels(), "identificationNo");
-						if (personnelOld.isEquityOwner()) {
+						//START #27239
+						if (personnelOld.isEquityOwner() || personnelOld.isDirector()) {//END #27239
 							checkWithSSM = true;
 						} else {
 							checkWithSSM = false;
