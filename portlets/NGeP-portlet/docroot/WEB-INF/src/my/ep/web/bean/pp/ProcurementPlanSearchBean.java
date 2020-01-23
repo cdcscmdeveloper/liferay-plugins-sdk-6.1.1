@@ -33,6 +33,13 @@ public class ProcurementPlanSearchBean implements Serializable{
 	private PmParameter categoryType;	//[#25550]
 	private String titleOrDesc;			//[#25550]
 	
+	
+	private String code; //[#25549]
+	private String desc; //[#25549]
+	private String paramforexpenditure; //[#25549]
+	private PmParameter procurementType;  //[#25549] 
+	private String planDesc;  //[#25549] 
+	
 	public ProcurementPlanSearchBean() {
 	}
 
@@ -212,5 +219,61 @@ public class ProcurementPlanSearchBean implements Serializable{
 	public void setTitleOrDesc(String titleOrDesc) {
 		this.titleOrDesc = titleOrDesc;
 	}
+	
+	
+	//25549 - Expenditure Plan - Start
+	
+		public String getCode() {
+			return code;
+		}
+
+		public void setCode(String code) {
+			this.code = code;
+		}
+		
+		public String getDesc() {
+			return desc;
+		}
+
+		public void setDesc(String desc) {
+			this.desc = desc;
+		}
+		
+		public String getParamforexpenditure() {
+			return paramforexpenditure;
+		}
+
+		public void setParamforexpenditure(String paramforexpenditure) {
+			this.paramforexpenditure = paramforexpenditure;
+		}
+		
+		
+		public PmParameter getProcurementType() {
+			if (procurementType == null)
+				procurementType = new PmParameter();
+			return procurementType;
+		}
+
+		public void setProcurementType(PmParameter procurementType) {
+			this.procurementType = procurementType;
+		}
+		
+		/**
+		 * @return the planDesc
+		 */
+		public String getPlanDesc() {
+			return planDesc;
+		}
+
+		/**
+		 * @param planDesc
+		 *            the planDesc to set
+		 */
+		public void setPlanDesc(String planDesc) {
+			this.planDesc = planDesc;
+		}
+
+		
+		//[#25549] - End
 
 }
