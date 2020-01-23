@@ -209,6 +209,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			throw new EpException(MessageConst.ERROR_100060);
 		} else {
 			getManagedBean().getContractDataModel().reloadData();
+
 		}
 	}
 
@@ -263,6 +264,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
 
+
 		if (taskId == null) {
 			if (getManagedBean().getWarningPercentage() != null) {
 				FacesContext.getCurrentInstance().addMessage(null,
@@ -304,11 +306,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			reqDTO.setContractId(new Long(dataType.getContractId()));
 			reqDTO.setContractVerId(new Long(dataType.getDocId()));
 			reqDTO.setDocType(dataType.getDocType());
-		}
-		
-		/*#26083 start - basri*/
-		if(reqDTO.getDocType().equals(ParameterConst.DOCTYPE_NOTIFICATION_SETTING)){
-			ctBB.getManagedBean().setNotificationSetting(true);
 		}
 		setValidateContractField(reqDTO);
 		
@@ -753,10 +750,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		try {
 			/*Validation for login user's org profile before initiate contract task*/
 			if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)
-					&& ctBB.getManagedBean().getContractVer().getStatus() != null/*#26083 start - basri*/
+					&& ctBB.getManagedBean().getContractVer().getStatus() != null
 					&& (ctBB.getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FU_PENDING_SUBMISSION.longValue()
-						|| ctBB.getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FW_PENDING_SUBMISSION.longValue()
-						|| ctBB.getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.NT_PENDING_SUBMISSION.longValue())) {
+						|| ctBB.getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FW_PENDING_SUBMISSION.longValue())) {
 				validateOwnerOrgProfile(
 						ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 			}
@@ -993,15 +989,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			String deductionRemark = ctBB.getManagedBean().getContractVer().getDeductionRemarks().get(0).getRemark();
 			String scheduleRemark = ctBB.getManagedBean().getContractVer().getScheduleRemarks().get(0).getRemark();
 			String settingRemark = ctBB.getManagedBean().getContractVer().getSettingRemarks().get(0).getRemark();
-			String notificationRemark = ctBB.getManagedBean().getContractVer().getNotiSettingRemarks().get(0).getRemark();/*#26083 start - basri*/
 			if ((remark == null || remark.length() == 0) 
 					&& (agencyRemark == null || agencyRemark.length() == 0) 
 					&& (zoneRemark == null || zoneRemark.length() == 0)
 					&& (itemRemark == null || itemRemark.length() == 0) 
 					&& (deductionRemark == null || deductionRemark.length() == 0)
 					&& (scheduleRemark == null || scheduleRemark.length() == 0) 
-					&& (settingRemark == null || settingRemark.length() == 0)
-					&& (notificationRemark == null) || notificationRemark.length()== 0) {/*#26083 start - basri*/
+					&& (settingRemark == null || settingRemark.length() == 0)) {
 				getManagedBean().setSelectedTabIndex(0);
 				throwExceptions(MessageConst.ERROR_100022, "lbl.ct.remark");
 			}
@@ -1728,25 +1722,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					getManagedBean().setSelectedTabIndex(3);
 				}
 				getManagedBean().setSettingIndex(getManagedBean().getSelectedTabIndex());
-			}else if(outputTab.equalsIgnoreCase(ContractConst.NOTIFICATION_DETAIL)){/*#26083 start - basri*/
-				if(bondRequired){
-					getManagedBean().setSelectedTabIndex(5);
-					if (typeFactoring && typeLoaAmt) {
-						getManagedBean().setSelectedTabIndex(7);
-					}else if(typeLoaAmt || typeFactoring){
-						getManagedBean().setSelectedTabIndex(6);
-					}
-				}else if(typeFactoring){
-					getManagedBean().setSelectedTabIndex(5);
-					if(typeLoaAmt){
-						getManagedBean().setSelectedTabIndex(6);
-					}
-				} else if(typeLoaAmt){
-					getManagedBean().setSelectedTabIndex(5);
-				}else {
-					getManagedBean().setSelectedTabIndex(4);
-				}
-				getManagedBean().setNotificationIndex(getManagedBean().getSelectedTabIndex());
 			}
 		}
 	} 
@@ -1876,26 +1851,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 				getManagedBean().setSettingIndex(getManagedBean().getSelectedTabIndex());
 			}
-			/*#26083 start - basri*/
-			if(outputTab.equalsIgnoreCase(ContractConst.NOTIFICATION_DETAIL)){
-				getManagedBean().setSelectedTabIndex(7);
-				if(typeSchedule){
-					getManagedBean().setSelectedTabIndex(8);
-					if (typeFactoring && bondRequired) {
-						getManagedBean().setSelectedTabIndex(10);
-					}else if(bondRequired || typeFactoring){
-						getManagedBean().setSelectedTabIndex(7);
-					}
-				}else if(typeFactoring){
-					getManagedBean().setSelectedTabIndex(6);
-					if(bondRequired){
-						getManagedBean().setSelectedTabIndex(7);
-					}
-				} else if(bondRequired){
-					getManagedBean().setSelectedTabIndex(6);
-				}
-				getManagedBean().setNotificationIndex(getManagedBean().getSelectedTabIndex());
-			}
 			/*Setting tab value if zonal is false*/
 		} else {
 			if(outputTab.equalsIgnoreCase(ContractConst.AGENCY_DETAIL)) {
@@ -1975,26 +1930,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 				getManagedBean().setSettingIndex(getManagedBean().getSelectedTabIndex());
 			}
-			/*#26083 start - basri*/
-			if (outputTab.equalsIgnoreCase(ContractConst.NOTIFICATION_DETAIL)) {
-				getManagedBean().setSelectedTabIndex(6);
-				if(typeSchedule){
-					getManagedBean().setSelectedTabIndex(7);
-					if (typeFactoring && bondRequired) {
-						getManagedBean().setSelectedTabIndex(9);
-					}else if(bondRequired || typeFactoring){
-						getManagedBean().setSelectedTabIndex(8);
-					}
-				}else if(typeFactoring){
-					getManagedBean().setSelectedTabIndex(7);
-					if(bondRequired){
-						getManagedBean().setSelectedTabIndex(8);
-					}
-				} else if(bondRequired){
-					getManagedBean().setSelectedTabIndex(7);
-				}
-				getManagedBean().setNotificationIndex(getManagedBean().getSelectedTabIndex());
-			}
 		}
 	}
 
@@ -2039,7 +1974,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			reqDTO.setUpdateAction(true);	
 			trBB = new TerminationBackingBean();
 			trBB.getManagedBean().setViewContract(false);
-			ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
 			trBB.getManagedBean().setButtonHideActive(true);
 			trBB.getManagedBean().setExternalPageUrl(null);
 			trBB.setTerminationContractVer(reqDTO);  
@@ -2066,7 +2000,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE);
 		reqDTO.setUpdateAction(true);
 
-		ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
 		SuspensionBackingBean	suspBB = new SuspensionBackingBean();
 		suspBB.getManagedBean().setViewOnly(false);
 		suspBB.setSuspensionContractVer(reqDTO);
@@ -2088,7 +2021,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
 		reqDTO.setUpdateAction(true);
 
-		ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
 		AmendmentBackingBean amendBB = new AmendmentBackingBean();
 		amendBB.getManagedBean().setSelectedTabIndex(0);
 		amendBB.setAmendmentContractVer(reqDTO);
@@ -2113,7 +2045,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE); // View purpose, FU or FW also fine
 		reqDTO.setViewOnly(true);
 		ctBB.getManagedBean().setViewContract(true);
-		ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
 		getManagedBean().setAsAtDate(null);
 		setValidateContractField(reqDTO);
 		getManagedBean().setSelectedTabIndex(0);
@@ -2140,7 +2071,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE); // View purpose, FU or FW also fine
 		reqDTO.setViewOnly(true); 
 		reqDTO.setCommonView(true);
-		ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
 		ctBB.getManagedBean().setViewContract(true);
 		ctBB.getManagedBean().setCommonView(true);
 		setValidateContractField(reqDTO);
@@ -2175,10 +2105,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 
 			reqDTO.setUpdateAction(true);
-			ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
 			ctBB.getManagedBean().setViewContract(false);
 			ctBB.getManagedBean().setUpdateContract(true);
-			ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
 			ctBB.getManagedBean().setCtAddress(null);
 			setValidateContractField(reqDTO);
 			getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
@@ -2190,42 +2118,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			contractSO = null;
 		}
 	}
-	
-	
-	/*#26083 start - basri*/
-	/**
-	 * The method used to navigate to notification setting screen
-	 * for update purpose.
-	 * 
-	 * @return the navigate URL 
-	 */
-	
-	public String gotoNotificationSetting(Long contractId){
-		IContractSO contractSO = null;
-		try{
-			 contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-			ContractReqDTO reqDTO = new ContractReqDTO();
-			reqDTO.setContractId(contractId);
-			reqDTO.setContractVerId(contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId());
-				
-			reqDTO.setUpdateAction(true);
-			reqDTO.setDocType(ParameterConst.DOCTYPE_NOTIFICATION_SETTING); 
-			ctBB.getManagedBean().setViewContract(false);
-			ctBB.getManagedBean().setUpdateContract(true);
-			ctBB.getManagedBean().setNotificationSetting(true);
-			ctBB.getManagedBean().setCtAddress(null);
-			setValidateContractField(reqDTO);
-			getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
-			ctBB.chkServiceTaxAlert();
-			getManagedBean().setExternalPageUrl(null);
-			getManagedBean().setSelectedTabIndex(0);	
-			return CONTRACT_PAGE;
-		}finally{
-			contractSO = null;
-		}
-	}
-	/*#26083 end*/
 
 	/**
 	 * The method used to navigate to contract termination history screen
@@ -2247,7 +2139,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		trBB.getCtBB().getManagedBean().setViewContract(true);
 		trBB.getCtBB().getManagedBean().setContractVer(resDTO.getCtContractVer());
 		trBB.getManagedBean().setExternalPageUrl(null);
-		ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
 
 		// Enable or Disable GST AND STAX field
 		if (!ctBB.isLoaContractWithGst(trBB.getCtBB().getManagedBean().getContractVer().getCtContract().getLoa().getGstEffDate())
@@ -2291,7 +2182,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			reqDTO.setContractVerId(contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId());
 			//reqDTO = new ContractReqDTO();
 			reqDTO.setDocType(ParameterConst.DOCTYPE_CHANGE_BANK_ACCOUNT);
-			ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
 			reqDTO.setUpdateAction(true);
 			SupplierBackingBean supplierBB =  new SupplierBackingBean();
 			supplierBB.setChangeBankDetails(reqDTO);
@@ -2315,7 +2205,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		ContractResDTO resDTO = null;
 
 		try {
-			ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
 			reqDTO = new ContractReqDTO();
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 			reqDTO.setContractId(contractId);
@@ -2595,7 +2484,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		initiateRemark(ctBB.getManagedBean().getContractVer().getDeductionRemarks());
 		initiateRemark(ctBB.getManagedBean().getContractVer().getScheduleRemarks());
 		initiateRemark(ctBB.getManagedBean().getContractVer().getSettingRemarks());
-		initiateRemark(ctBB.getManagedBean().getContractVer().getNotiSettingRemarks());/*#26083 start - basri*/
 	}
 
 	/**
