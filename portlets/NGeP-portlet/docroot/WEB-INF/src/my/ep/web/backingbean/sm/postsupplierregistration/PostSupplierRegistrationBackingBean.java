@@ -69,6 +69,7 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -301,15 +302,31 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	
 	public void pageNavigate() throws Exception{
 		SmSupplier supplier = getSupplierProfileByUserId();
-		
-		if(isHavePendingTaskList() && supplier.getRecordStatusFlg()!=SupplierManagementConst.SUPPLIER_SELF_REQUEST_ADMIN_STATUS){
-			pageRedirect(TASK_LIST_PATH);
-			
-		}else{
-			String path = currentStatusAndPath();
-			log.info("******xhtml*******" + path);
-			pageRedirect(path);
+		//START 27264
+		boolean proceed = true;
+		if(supplier != null){
+			try{
+				checkSSMValid(supplier);
+			}catch(Exception w){
+				proceed =false;
+				FacesContext fc = FacesContext.getCurrentInstance();
+				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CONTENT_PAGE);
+				RequestContext.getCurrentInstance().execute("blockWidget.hide()");
+				throw new EpException(w.getMessage());
+			}
+						
 		}
+		if(proceed){
+			if(isHavePendingTaskList() && supplier.getRecordStatusFlg()!=SupplierManagementConst.SUPPLIER_SELF_REQUEST_ADMIN_STATUS){
+				pageRedirect(TASK_LIST_PATH);
+				
+			}else{
+				String path = currentStatusAndPath();
+				log.info("******xhtml*******" + path);
+				pageRedirect(path);
+			}
+		}
+		//END 27264
 		
 	}
 	
