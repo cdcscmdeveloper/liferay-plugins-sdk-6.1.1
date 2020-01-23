@@ -76,6 +76,7 @@
 					<c:when test="#{!registrationBackingBean.managedBean.smAppl.brandNew and registrationBackingBean.managedBean.regAccountMaintainance}">
 						<p:selectOneMenu id="busTypeId" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.businesscomptype']}"
 							value="#{registrationBackingBean.managedBean.smSupp.businessType}" 
+							disabled="#{!registrationBackingBean.businessTypeIsROB(registrationBackingBean.managedBean.smSupp.businessType) and !registrationBackingBean.businessTypeIsROC(registrationBackingBean.managedBean.smSupp.businessType)}"
 							style="width:310px">
 							<f:selectItems value="#{registrationBackingBean.pmBusinessTypeDropDown()}"/>
 							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues}" update="@all" process="@form" ></p:ajax>
