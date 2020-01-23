@@ -6599,27 +6599,29 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		//filter document type search by role.
 		//26259
 		boolean pbbSecretaryOnly = false; 
-		if(isPbbSecretary() && !(isDeskOfficer() || isAuditor() || isMofSupplier())){
-			pbbSecretaryOnly = true;;
+		if (isPbbSecretary() && !(isDeskOfficer() || isAuditor() || isMofSupplier())){
+			pbbSecretaryOnly = true;
 		}
 		
-		if (pbbSecretaryOnly){
+		if (pbbSecretaryOnly) {
+			log.info(":::getDocTypeQtLOADropdownValues() -in true- pbbSecretaryOnly = "+ pbbSecretaryOnly +" :::");
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION);
-		}else{
+		} else {
+			log.info(":::getDocTypeQtLOADropdownValues() -in false- pbbSecretaryOnly = "+ pbbSecretaryOnly +" :::");
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_BIDDING);
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_QUOTATION);
-			if(isDeskOfficer() || isAuditor()){
+			
+			if (isDeskOfficer() || isAuditor()) {
 				qtLoaDoctypes.add(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION);
 			}			
 			if (isMofSupplier()) {
 				qtLoaDoctypes.add(ParameterConst.DOCTYPE_SUPPLIER_PROPOSAL);
 			}	
 		}
-
 		
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("pmParameter.parameterCode",
