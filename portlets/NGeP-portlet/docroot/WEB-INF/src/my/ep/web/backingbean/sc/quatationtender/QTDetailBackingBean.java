@@ -73,7 +73,6 @@ import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MapKeyEnum;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
@@ -103,8 +102,6 @@ import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.document.QTDocumentReqDTO;
 import my.ep.dto.sc.document.QTDocumentResDTO;
-import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
-import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.dto.sc.quationtender.MeetingReqDTO;
@@ -156,23 +153,15 @@ import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
-import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
 import my.ep.persistence.entity.sc.loaloi.ScLoaBasic;
 import my.ep.persistence.entity.sc.loaloi.ScLoaForQt;
-import my.ep.persistence.entity.sc.loaloi.ScLoaRemark;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReverseAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReverseRemark;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
-import my.ep.persistence.entity.sc.loaloi.ScLoiApproval;
-import my.ep.persistence.entity.sc.loaloi.ScLoiAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoiForQt;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
-import my.ep.persistence.entity.sc.loaloi.ScLoiLoaForQt;
-import my.ep.persistence.entity.sc.loaloi.ScLoiLoaForQt_;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
-import my.ep.persistence.entity.sc.loaloi.ScLoiLoaQtDiscriminator;
-import my.ep.persistence.entity.sc.loaloi.ScLoiRemark;
 import my.ep.persistence.entity.sc.loaloi.ScLoiReverseAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoiReverseRemark;
 import my.ep.persistence.entity.sc.loaloi.ScLoiWorkFlowStatus;
@@ -242,7 +231,6 @@ import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
-import my.ep.web.util.TrackingDiaryUtil;
 import my.ep.web.util.cm.helper.ApproverSettings;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -7459,33 +7447,36 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		//filter document type search by role.
 		//26259
 		boolean pbbSecretaryOnly = false; 
-		if(isPbbSecretary() && !(isDeskOfficer() || isAuditor() || isMofSupplier())){
-			pbbSecretaryOnly = true;;
+		if (isPbbSecretary() && !(isDeskOfficer() || isAuditor() || isMofSupplier())){
+			pbbSecretaryOnly = true;
 		}
 		
-		if (pbbSecretaryOnly){
+		if (pbbSecretaryOnly) {
+			log.info(":::getDocTypeQtLOADropdownValues() -in true- pbbSecretaryOnly = "+ pbbSecretaryOnly +" :::");
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION);
-		}else{
+		} else {
+			log.info(":::getDocTypeQtLOADropdownValues() -in false- pbbSecretaryOnly = "+ pbbSecretaryOnly +" :::");
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_BIDDING);
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_QUOTATION);
-			if(isDeskOfficer() || isAuditor()){
+			
+			if (isDeskOfficer() || isAuditor()) {
 				qtLoaDoctypes.add(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION);
 			}			
 			if (isMofSupplier()) {
 				qtLoaDoctypes.add(ParameterConst.DOCTYPE_SUPPLIER_PROPOSAL);
 			}	
 		}
-
 		
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("pmParameter.parameterCode",
 						SearchOperator.OPERATOR_IN.value(), qtLoaDoctypes));
 		SelectItem[] items = getDropdownCodeValuesBySearchBean(
 				ParameterTypeConst.DOCUMENT_TYPES, searchBean);
+		
 		return items;
 	}
 	
