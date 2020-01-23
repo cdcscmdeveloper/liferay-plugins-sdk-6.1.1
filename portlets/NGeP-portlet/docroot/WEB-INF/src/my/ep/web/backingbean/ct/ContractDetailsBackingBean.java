@@ -2428,17 +2428,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 		return items;
 	}
-			
-
-			
-		
-
-	public String isContractUserAdmin() {
-		
-		String userAdmin = getFacesScopes().getUserSessionBean().getUserId().toString();
-		return userAdmin;
-
-}
 
 	/**
 	 * The method used to retrieve the contract status of the contract.
