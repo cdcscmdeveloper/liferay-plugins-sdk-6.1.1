@@ -1733,7 +1733,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 									}
 								}else {
 									throw new EpException(MessageConst.ERROR_721041,new String[]{labelText,supplier.getRegNo()});
-								}
+								}// START #27221
 							}else if(!getManagedBean().getSmAppl().getSupplierType().equals(supplier.getSmAppl().getSupplierType()) && resDTO.getSmSuppliers().size() > 1){
 								if(getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
 									if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_BASIC)){
@@ -1758,7 +1758,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							}else{								
 								errorMessageSSM(supplier);
 							}
-							
+							//// END #27221
 						}
 					}
 					else{
