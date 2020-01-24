@@ -5673,8 +5673,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 
 					PpProcurementItem ppItem = new PpProcurementItem();
 
-					validatePpCloneItem(); // disabled this if no validation required at this
-					// stage
+				
 	                ppItem.setProcurementCat(PpItemClone.getProcurementCat());
 	                ppItem.setProcurementType(PpItemClone.getProcurementType());
 	                ppItem.setProcurementTitle(PpItemClone.getProcurementTitle());
@@ -5725,10 +5724,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				PpExpenditureItem ppExItem = new PpExpenditureItem();
 
 			    RequestContext.getCurrentInstance().execute("hideLovMsg();");
-				validateEpItem(this.getManagedBean().getParamExpenditure()); // disabled this if no validation required at
-											// this stage
 			
 	                ppExItem.setPmGlAccount(PpExpenditureItemClone.getPmGlAccount());
+	              
 	                ppExItem.setVotFundType(new PmParameter());
 	                ppExItem.setBudgetAmt(PpExpenditureItemClone.getBudgetAmt());
 	                ppExItem.setPlanAmt(PpExpenditureItemClone.getPlanAmt());
@@ -5759,10 +5757,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						this.getManagedBean().getEpItemsH().add(ppExItem);
 					}
 	     		}
+			   resetExpenditureClone();		   
 		      }
 		
 		
 		public void parameterExpenditure(String paramCode) {
+			
+			
 			log.info("parameterExpenditure");
 			
 			     // B
@@ -5781,6 +5782,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				// H
 				this.getManagedBean().setParamExpenditure(ParameterConst.VOT_AMANAH);
 			}
+			
+			rowSelectExpenditure();
+			
 		}    
 		
 		
@@ -5801,39 +5805,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			ppEpItemsDataModel.resetData();
 		}
 	 	
-		
-		/**
-		 * validation of ppClone item
-		 */
-		private void validatePpCloneItem() {
-			log.info("validatePpCloneItem");
-			if (!this.getManagedBean().getClonePpProcurementItemLs().isEmpty()) {
-				for (PpProcurementItem ppItem : this.getManagedBean().getClonePpProcurementItemLs()) {
-					if (DbValueConst.RECORD_STATUS_ACTIVE == ppItem.getRecordStatusFlg()) {
-						if (StringUtils.isBlank(ppItem.getProcurementTitle())) {
-							throw new EpException(MessageConst.ERROR_730010);
-						}
-						if (StringUtils.isBlank(ppItem.getProcurementDesc())) {
-							throw new EpException(MessageConst.ERROR_730030);
-						}
-						if (ppItem.getProcurementCat().getParameterId() == null) {
-							throw new EpException(MessageConst.ERROR_730011);
-						}
-						if (ppItem.getProcurementType().getParameterId() == null) {
-							throw new EpException(MessageConst.ERROR_730013);
-						}
-						if (ppItem.getInvitationDate() == null) {
-							throw new EpException(MessageConst.ERROR_730012);
-						}
-						if (ppItem.getEstimatedAmt() == null || ppItem.getEstimatedAmt().intValue() <= 0) {
-							throw new EpException(MessageConst.ERROR_730014);
-						}
-					}
-				}
-			} else {
-				// SAM TODO error msg at least one item is required
-			}
-		}
 		
 		
 		public boolean goCode(String pmGlAccount) {
@@ -5857,7 +5828,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			
 		}
 		
-		public void rowSelect() {
+		public void rowSelectProcurement() {
 	        System.out.println(this.getManagedBean().getClonePpProcurementItemLs().size());
 	        if (this.getManagedBean().getClonePpProcurementItemLs().size() > 0) {
 	        	this.getManagedBean().setDisableSelectBtn(false);
@@ -5865,6 +5836,42 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	        } else if (this.getManagedBean().getClonePpProcurementItemLs().size() == 0 || this.getManagedBean().getClonePpProcurementItemLs().size() < 0) {
 	        	this.getManagedBean().setDisableSelectBtn(true);
 	            System.out.println("unSelectRow is Disable Button !!:"+ this.getManagedBean().isDisableSelectBtn());
+	        }
+	    }
+		
+		
+		public void rowSelectExpenditure() {
+			
+			
+            List<PpExpenditureItem> PpExpenditureItemList = null;
+			
+			
+			if (ParameterConst.VOT_MENGURUS.equals(this.getManagedBean().getParamExpenditure())) {
+				  log.info("B");			
+				 PpExpenditureItemList = this.getManagedBean().getClonePpExpenditureItemLs();
+			} else if (ParameterConst.VOT_TANGGUNGAN.equals(this.getManagedBean().getParamExpenditure())) {
+				  log.info("T");	
+				 PpExpenditureItemList = this.getManagedBean().getClonePpExpenditureTItemLs();
+			} else if (ParameterConst.VOT_PEMBANGUNAN.equals(this.getManagedBean().getParamExpenditure())) {
+				  log.info("P");	
+				  PpExpenditureItemList = this.getManagedBean().getClonePpExpenditurePItemLs();
+			} else if (ParameterConst.VOT_SETIA.equals(this.getManagedBean().getParamExpenditure())) {
+				  log.info("S");	
+				  PpExpenditureItemList = this.getManagedBean().getClonePpExpenditureSItemLs();
+			} else if (ParameterConst.VOT_AMANAH.equals(this.getManagedBean().getParamExpenditure())) {
+				  log.info("H");	
+				  PpExpenditureItemList = this.getManagedBean().getClonePpExpenditureHItemLs();
+			}
+			
+			
+			
+	        System.out.println(PpExpenditureItemList.size());
+	        if (PpExpenditureItemList.size() > 0) {
+	        	this.getManagedBean().setDisableSelectExpBtn(false);
+	            System.out.println("rowSelect is Enable Button !!:"+ this.getManagedBean().isDisableSelectExpBtn());
+	        } else if (PpExpenditureItemList.size() == 0 || PpExpenditureItemList.size() < 0) {
+	        	this.getManagedBean().setDisableSelectExpBtn(true);
+	            System.out.println("unSelectRow is Disable Button !!:"+ this.getManagedBean().isDisableSelectExpBtn());
 	        }
 	    }
 		
