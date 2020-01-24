@@ -9,6 +9,10 @@
 <!-- 	#25039 Begin to check Fulfillment Type-->	
 	<ui:param name="isFulfilmentTypeScheduled" 
 		value="#{specificationBackingBean.managedBean.fulfilmentType == ParameterConst.fulfilmentTypeScheduled}" />
+<!-- 	end -->		
+<!-- 	#25039#67 Begin	-->	
+	<ui:param name="isTotalEstimatedEqZero" 
+		value="#{templateSpecBackingBean.calcGrandTotalEstAmount(templateSpecBean)==0}" />
 <!-- 	end -->						
 	<ui:decorate template="specColumnQuestionFinancialHeader.xhtml"> <!-- #25039 change specColumnQuestionViewHeader.xhtml from to specColumnQuestionHeader.xhtml-->
 	<ui:define name="otherHeaderSection">
@@ -84,7 +88,7 @@
 			<p:inputText style="min-width:0px !important;width:86px;" rendered="#{isQuestionTypeItem}" disabled="true" />
 			<!--#25039#67 Begin-->
 			<p:commandButton 
-				icon="#{empty templateSpecBean.specMaster.specTotal ? 'ui-icon-pencil' : 'ui-icon-evaluate'}" 
+				icon="#{isTotalEstimatedEqZero ? 'ui-icon-pencil' : 'ui-icon-evaluate'}" 
 				style="background-color:transparent !important; border:0px none;"  
 				action="#{templateSpecBackingBean.zoneEstimationPopupAction(templateSpecBean)}"
 				oncomplete="#{zoneEstimationPopup}.show();"
