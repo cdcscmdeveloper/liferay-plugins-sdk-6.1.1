@@ -1733,7 +1733,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 									}
 								}else {
 									throw new EpException(MessageConst.ERROR_721041,new String[]{labelText,supplier.getRegNo()});
-								}
+								}// START #27221
 							}else if(!getManagedBean().getSmAppl().getSupplierType().equals(supplier.getSmAppl().getSupplierType()) && resDTO.getSmSuppliers().size() > 1){
 								if(getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
 									if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_BASIC)){
@@ -1758,7 +1758,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							}else{								
 								errorMessageSSM(supplier);
 							}
-							
+							//// END #27221
 						}
 					}
 					else{
@@ -2176,8 +2176,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						}
 						
 						if(userSession != null && checkWithSSM){
-							SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelAll(),"identificationNo");
-							if(personnelSSM == null) {
+							SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
+							SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelDirector(),"identificationNo");
+							if(personnelSSM == null && personnelDirectorSSM == null) {
 								getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupp());	
 								getManagedBean().setSmPersonnelSsm(personnelOld);
 								RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");

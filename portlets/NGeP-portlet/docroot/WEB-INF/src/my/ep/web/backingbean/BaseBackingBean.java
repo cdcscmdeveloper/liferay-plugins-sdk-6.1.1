@@ -2601,6 +2601,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	public void changeRoleAndProceed() {
 		SmPersonnel personnel = this.getManagedBean().getSmPersonnelSsm();
 		personnel.setEquityOwner(false);
+		personnel.setDirector(false);
 		
 		IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject("sm", IPersonnelSO.class);
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
