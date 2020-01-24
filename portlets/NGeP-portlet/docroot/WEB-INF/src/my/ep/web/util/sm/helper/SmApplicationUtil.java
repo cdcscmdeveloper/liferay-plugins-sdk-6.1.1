@@ -9373,6 +9373,8 @@ public class SmApplicationUtil {
 		if (!EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())) {
 			for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
 				if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
+						//Bug #26671
+						|| cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL
 						&& cat.getPmCategoryL3() != null
 						&& cat.getPmCategoryL3().getCategoryTypeCode() != null
 						&& Arrays
