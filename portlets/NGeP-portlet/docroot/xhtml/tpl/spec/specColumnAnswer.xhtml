@@ -209,12 +209,11 @@
 		<c:if test="#{isZonal}">
 					<h:selectOneMenu id="answerOffer" style="width:calc(100% - 30px);" 
 						value="#{tplSpecAnswer.offer}" 
-						rendered="#{templateSpecBackingBean.managedBean.scQt != null and templateSpecBackingBean.managedBean.scQt.partial and isQuestionTypeItem and !isSpecTypeFinancial and isZonal}" 
+						rendered="#{templateSpecBackingBean.managedBean.scQt.partial and isQuestionTypeItem and !isSpecTypeFinancial and isZonal}" 
 						label="#{lbl[answerlbl]}">
 						 <f:selectItems value="#{templateSpecBackingBean.offerDetails}"></f:selectItems>
 						 <p:ajax event="change" partialSubmit="true" process="@this" 
-						 update="@this,questionTbl"
-		                 listener="#{templateSpecBackingBean.offerTypeChange(tplSpecAnswer.offer,tplSpecAnswer.tplSpecQuestion.specQuestionId,row)}"/>
+						 update="@this,questionTbl"/>
 					</h:selectOneMenu>
 					
 							<ui:decorate template="specColumnAnswerOfferZone.xhtml" />
