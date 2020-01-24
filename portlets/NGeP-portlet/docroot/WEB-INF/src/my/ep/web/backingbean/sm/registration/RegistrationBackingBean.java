@@ -1715,13 +1715,32 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 									}
 								}else {
 									throw new EpException(MessageConst.ERROR_721041,new String[]{labelText,supplier.getRegNo()});
+								}// START #27221
+							}else if(!getManagedBean().getSmAppl().getSupplierType().equals(supplier.getSmAppl().getSupplierType()) && resDTO.getSmSuppliers().size() > 1){
+								if(getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
+									if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_BASIC)){
+										throw new EpException(MessageConst.ERROR_721042,new String[]{getManagedBean().getSmSupp().getRegNo()});
+									}
+								}else{
+									errorMessageSSM(supplier);
 								}
+							}else if(!getManagedBean().getSmAppl().getSupplierType().equals(supplier.getSmAppl().getSupplierType()) && resDTO.getSmSuppliers().size() == 1){
+								if(supplier.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE){
+									String labelText = null;
+									if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
+										labelText = SmCommonUtil.getMessage("lbl.sm.contractor", null);
+									}else{
+										labelText = SmCommonUtil.getMessage("lbl.sm.consultant", null);
+									}
+									throw new EpException(MessageConst.ERROR_721083,new String[]{supplier.getRegNo(),labelText});
+								}
+								
 							}else if(supplier.getEpNo() == null || "".equalsIgnoreCase(supplier.getEpNo())){
 								throw new EpException(MessageConst.ERROR_721075,new String[]{SmCommonUtil.getMessage(supplier.getRegNo(),null), ""});
-							}else{
+							}else{								
 								errorMessageSSM(supplier);
 							}
-							
+							//// END #27221
 						}
 					}
 					else{
