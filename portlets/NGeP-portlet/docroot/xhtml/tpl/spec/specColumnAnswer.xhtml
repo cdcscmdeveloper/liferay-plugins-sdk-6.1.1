@@ -206,7 +206,19 @@
 			<p:message id="answerComplianceMsg" for="answerCompliance" display="icon" rendered="#{isAnswerTypeDropdown}" />
 		
 <!-- FARID START -->
-
+		<c:if test="#{isZonal and !isSpecTypeFinancial}">
+					<h:selectOneMenu id="answerOffer" style="width:calc(100% - 30px);" 
+						value="#{tplSpecAnswer.offer}" 
+						rendered="#{isQuestionTypeItem and !isSpecTypeFinancial}" 
+						label="#{lbl[answerlbl]}">
+						 <f:selectItems value="#{templateSpecBackingBean.offerDetails}"></f:selectItems>
+						 <p:ajax event="change" partialSubmit="true" process="@this" 
+						 update="@this,questionTbl"
+		                 listener="#{templateSpecBackingBean.offerTypeChange(tplSpecAnswer.offer,tplSpecAnswer.tplSpecQuestion.specQuestionId,row)}"/>
+					</h:selectOneMenu>
+					
+							<ui:decorate template="specColumnAnswerOfferZone.xhtml" />
+		</c:if>	
 <!-- END -->	
 		
 		</h:panelGroup>
