@@ -2176,8 +2176,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						}
 						
 						if(userSession != null && checkWithSSM){
-							SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelAll(),"identificationNo");
-							if(personnelSSM == null) {
+							SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
+							SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelDirector(),"identificationNo");
+							if(personnelSSM == null && personnelDirectorSSM == null) {
 								getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupp());	
 								getManagedBean().setSmPersonnelSsm(personnelOld);
 								RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
