@@ -260,7 +260,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		<!-- #25549 - start --> 
 		     <p:commandButton value="#{lbl['lbl.btn.clone']}"
 		        disabled="#{!pPlanBackingBean.managedBean.modeEditable}" 
-			    action="#{pPlanBackingBean.rowSelect()}"
+			    action="#{pPlanBackingBean.rowSelectProcurement()}"
 			    update="dtProcurementPlan, ppProcurementCloneid, dtcloneprosearchresults"
 			    onclick="cloneAcquirementPopUp.show()"/>
 		<!-- end --> 
@@ -275,7 +275,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		
 		<!-- #25549 - start -->
 		<p:dialog id="cloneAcquirementPopUp" widgetVar="cloneAcquirementPopUp" closable="false" modal="true"
-			header="#{lbl['lbl.pp.procurement.plan.clone']}" width="500" height="500">
+			header="#{lbl['lbl.pp.procurement.plan.clone']}" width="800" height="500">
 			<ui:include src="planProcurementPopup.xhtml"></ui:include>
 		</p:dialog>
 		<!-- end --> 
