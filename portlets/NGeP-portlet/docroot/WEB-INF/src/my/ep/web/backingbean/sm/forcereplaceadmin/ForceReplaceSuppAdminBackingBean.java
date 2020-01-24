@@ -142,6 +142,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		} else {
 			validate();
 			executeDecision();
+			
 			// redirectToNonExistNewAdminPage();
 		}
 	}
@@ -180,6 +181,36 @@ public class ForceReplaceSuppAdminBackingBean extends
 				.reassignSupplierAdmin(getReqDTO());
 		redirectToSuccessPage(resDto);
 	}
+	
+	//#25969
+	private void checkingAppl() {
+		MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
+		mofReqDTO.setSupplierId(getManagedBean().getSmSupplier()
+				.getSupplierId());
+		SmAppl activeAppl = SmServiceLookup.getMofRegistrationSO()
+				.retrieveActiveSmApplBySupp(mofReqDTO).getSmAppl();
+		
+		if (!getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER)) {
+
+			if (getManagedBean().getSmSupplier().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)) {
+				throw new EpException(MessageConst.ERROR_722669, new String[] { activeAppl.getApplNo() });
+			}
+
+			SmPersonnel admin = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(
+					RoleCode.SUPPLIER_TEMP.value(), getManagedBean().getSmSupplier().getSmAppl().getSmPersonnels(),
+					"epRole");
+
+			if (admin != null) {
+				if (admin.getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ
+						|| admin.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING) {
+					throw new EpException(MessageConst.ERROR_722669, new String[] { activeAppl.getApplNo() });
+				}
+			}
+
+		}
+
+	}
+	
 
 	/**
 	 * Redirect back to Force Replace Admin first page from add new personnel
@@ -261,6 +292,9 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * Validate before proceed to force replace admin
 	 */
 	private void validate() {
+		
+		//#25969
+		checkingAppl();
 
 		// validate ic length
 		ParameterReqDTO paramReqDTO = new ParameterReqDTO();

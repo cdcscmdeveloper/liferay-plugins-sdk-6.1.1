@@ -206,6 +206,13 @@ public class ViewApplHistoryBackingBean extends
 	 * Redirect to resubmit page
 	 */
 	public void redirectToResubmit() {
+		
+		// ##25969 - Blocked for resubmission if rejected application already
+		// deactivated (record status=9)
+		if (getManagedBean().getSmAppl().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED) {
+			throw new EpException(SmCommonUtil.getMessage(
+					"lbl.sm.resubmit.delete", null));
+		}
 
 		// #14832 - To cater if resubmit link already expired and supplier still
 		// in progress (Supplier Temp), so will call alert popup that will
