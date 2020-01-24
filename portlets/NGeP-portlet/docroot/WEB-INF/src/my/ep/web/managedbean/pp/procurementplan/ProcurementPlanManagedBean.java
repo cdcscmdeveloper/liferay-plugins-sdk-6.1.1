@@ -134,6 +134,8 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private String paramExpenditure;
 	private String status;
 	private boolean disableSelectBtn = false;
+	private boolean disableSelectExpBtn = false;
+	
 	//End
 	
 	public ProcurementPlanManagedBean(){}
@@ -1294,6 +1296,14 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	
 	public void setDisableSelectBtn(boolean disableSelectBtn) {
 		this.disableSelectBtn = disableSelectBtn;
+	}
+	
+	public boolean isDisableSelectExpBtn() {
+		return disableSelectExpBtn;
+	}
+	
+	public void setDisableSelectExpBtn(boolean disableSelectExpBtn) {
+		this.disableSelectExpBtn = disableSelectExpBtn;
 	}
 		
 		//[#25549] add .. End
