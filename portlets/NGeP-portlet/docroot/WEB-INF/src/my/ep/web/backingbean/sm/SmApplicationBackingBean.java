@@ -1608,7 +1608,8 @@ public class SmApplicationBackingBean extends
 							
 							if(userSession != null && checkWithSSM){
 								SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
-								if(personnelSSM == null) {	
+								SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelDirector(),"identificationNo");
+								if(personnelSSM == null && personnelDirectorSSM == null) {	
 									getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupplier());	
 									getManagedBean().setSmPersonnelSsm(personnelOld);
 									RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
