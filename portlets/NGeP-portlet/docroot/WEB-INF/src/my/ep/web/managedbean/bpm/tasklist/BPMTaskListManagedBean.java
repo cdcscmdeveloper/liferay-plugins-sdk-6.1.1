@@ -3,7 +3,6 @@ package my.ep.web.managedbean.bpm.tasklist;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -15,8 +14,6 @@ import org.apache.commons.lang.StringUtils;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchBean;
-import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.fl.adjustment.IAdjustmentSO;
 import my.ep.biz.service.fl.frn.IReceivedNoteSO;
@@ -27,7 +24,6 @@ import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.access.application.IAccessApplSO;
 import my.ep.biz.service.pm.common.kpi.IPmKpiSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
-import my.ep.biz.service.sc.ISourcingIntegrationSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sc.directpurchase.IPrInquirySO;
@@ -55,7 +51,6 @@ import my.ep.dto.pm.access.application.AccessApplReqDTO;
 import my.ep.dto.pm.access.application.AccessApplResDTO;
 import my.ep.dto.pm.common.kpi.KpiReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
-import my.ep.dto.sc.SourcingIntegrationReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
@@ -72,12 +67,9 @@ import my.ep.persistence.entity.pm.common.PmKPIValue;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
-import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
-import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.PagingConst;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -86,7 +78,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
-import org.springframework.util.CollectionUtils;
 
 @ManagedBean(name = "bpmTasklistMB")
 @SessionScoped
@@ -487,7 +478,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				reqDTO.setCtxToken(token);
 				BpmResponseDTO responseDTO = bpmSO.getWorklistItems(reqDTO);
 				SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
-				List<String> removeRNList = null;
+				
 				if (responseDTO.getWorklistVO() != null) {
 					log.info("testing BPM******size=" + responseDTO.getWorklistVO().getWorklistItem().size());
 					log.info("testing BPM******total=" + responseDTO.getWorklistVO().getTotal());
@@ -749,42 +740,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 									    		   worklistItemVO.setExpirationDate(getExpirationDate());
 									    	   }							    	   
 									       }   	   
-									       
-									       if(currentStatusId.equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION)) {
-									    	   boolean cancelledPrFound = false;
-									    	   if (null !=  resRNDTO && null !=  resRNDTO.getRequestNoteDetail().getRequestNoteDtls()
-									    			   && !CollectionUtils.isEmpty( resRNDTO.getRequestNoteDetail().getRequestNoteDtls())) {
-									    		   for (ScRequestNoteDtl rnDtl : resRNDTO.getRequestNoteDetail().getRequestNoteDtls()) {
-									    			   if (null != rnDtl.getPurchaseRequest() &&  null != rnDtl.getPurchaseRequest().getRecordStatusFlg()
-									    					   && rnDtl.getPurchaseRequest().getRecordStatusFlg() == 2) {
-									    				   cancelledPrFound = true;
-									    			   }
-									    		   }
-									    	   }
-									    	   if (cancelledPrFound) {
-									    		   ISourcingIntegrationSO sourcingIntegrationSO = (ISourcingIntegrationSO) EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
-									    		   if (null != sourcingIntegrationSO) {
-									    			   log.info("Getting count for docNo: " + worklistItemVO.getDocNumber() + " status: " + worklistItemVO.getDocStatus() + " docType : " + worklistItemVO.getDocType());
-									    			   ISearchBean<Object[]> prSearchBean =  new SearchBean<>();
-									    			   prSearchBean.getDataFilterBeans().add(new SearchFilterBean("docNo", SearchOperator.OPERATOR_EQUALS.value(), worklistItemVO.getDocNumber()));
-									    			   prSearchBean.getDataFilterBeans().add(new SearchFilterBean("status", SearchOperator.OPERATOR_EQUALS.value(), worklistItemVO.getDocStatus()));
-									    			   prSearchBean.getDataFilterBeans().add(new SearchFilterBean("docType", SearchOperator.OPERATOR_EQUALS.value(), worklistItemVO.getDocType()));
-									    			   SourcingIntegrationReqDTO searchReqDTO = new SourcingIntegrationReqDTO();
-									    			   searchReqDTO.setSourcingDocSearchBean(prSearchBean);
-									    			   int activePrCount = sourcingIntegrationSO.getCountOfActivePR(searchReqDTO);
-									    			   
-									    			   if (activePrCount == 0) {
-									    				   if (CollectionUtils.isEmpty(removeRNList)) {
-									    					   removeRNList = new ArrayList<>();
-									    				   }
-									    				   log.info("Removing " + worklistItemVO.getDocNumber() + " from tasklist.");
-									    				   removeRNList.add(worklistItemVO.getDocNumber());
-									    				   log.info("Removed " + worklistItemVO.getDocNumber() + " from tasklist.");
- 									    			   }
-									    		   }
-									    	   }
-									       }
-									    		   
 								        }
 									}
 						    	   // 12177 - End
@@ -863,18 +818,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							}
 						}
 					}
-					
-					if (!CollectionUtils.isEmpty(removeRNList)) {
-						 for (String removeRN : removeRNList) {
-							 Iterator<WorklistItemVO> iterator = responseDTO.getWorklistVO().getWorklistItem().iterator();
-							 while (iterator.hasNext()) {
-								 WorklistItemVO worklistItemVO = iterator.next();
-								 if (removeRN.equals(worklistItemVO.getDocNumber())) {
-									 iterator.remove();
-								 }
-							 }
-						 }
-					}
+
 					resultBean.setTotalRecord(responseDTO.getWorklistVO()
 							.getTotal());
 					resultBean.setResultList(responseDTO.getWorklistVO()
@@ -1211,7 +1155,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				sdoSearchFilter(reqDTO);
 				BpmResponseDTO responseDTO = bpmSO.getWorklistItems(reqDTO);
 				SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
-				List<String> removeRNList = null;
+				
 				if (responseDTO.getWorklistVO() != null) {
 					log.info("testing BPM******size=" + responseDTO.getWorklistVO().getWorklistItem().size());
 					log.info("testing BPM******total=" + responseDTO.getWorklistVO().getTotal());
@@ -1452,41 +1396,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 													//System.out.println("Lets overide the status! here");
 												}
 									  }
-								    	   
-								    	   if(currentStatusId.equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION)) {
-									    	   boolean cancelledPrFound = false;
-									    	   if (null !=  resRNDTO && null !=  resRNDTO.getRequestNoteDetail() && null !=  resRNDTO.getRequestNoteDetail().getRequestNoteDtls()
-									    			   && !CollectionUtils.isEmpty( resRNDTO.getRequestNoteDetail().getRequestNoteDtls())) {
-									    		   for (ScRequestNoteDtl rnDtl : resRNDTO.getRequestNoteDetail().getRequestNoteDtls()) {
-									    			   if (null != rnDtl.getPurchaseRequest() &&  null != rnDtl.getPurchaseRequest().getRecordStatusFlg()
-									    					   && rnDtl.getPurchaseRequest().getRecordStatusFlg() == 2) {
-									    				   cancelledPrFound = true;
-									    			   }
-									    		   }
-									    	   }
-									    	   if (cancelledPrFound) {
-									    		   ISourcingIntegrationSO sourcingIntegrationSO = (ISourcingIntegrationSO) EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
-									    		   if (null != sourcingIntegrationSO) {
-									    			   log.info("Getting count for docNo: " + worklistItemVO.getDocNumber() + " status: " + worklistItemVO.getDocStatus() + " docType : " + worklistItemVO.getDocType());
-									    			   ISearchBean<Object[]> prSearchBean =  new SearchBean<>();
-									    			   prSearchBean.getDataFilterBeans().add(new SearchFilterBean("docNo", SearchOperator.OPERATOR_EQUALS.value(), worklistItemVO.getDocNumber()));
-									    			   prSearchBean.getDataFilterBeans().add(new SearchFilterBean("status", SearchOperator.OPERATOR_EQUALS.value(), worklistItemVO.getDocStatus()));
-									    			   prSearchBean.getDataFilterBeans().add(new SearchFilterBean("docType", SearchOperator.OPERATOR_EQUALS.value(), worklistItemVO.getDocType()));
-									    			   SourcingIntegrationReqDTO searchReqDTO = new SourcingIntegrationReqDTO();
-									    			   searchReqDTO.setSourcingDocSearchBean(prSearchBean);
-									    			   int activePrCount = sourcingIntegrationSO.getCountOfActivePR(searchReqDTO);
-									    			   
-									    			   if (activePrCount == 0) {
-									    				   if (CollectionUtils.isEmpty(removeRNList)) {
-									    					   removeRNList = new ArrayList<>();
-									    				   }
-									    				   log.info("Removing " + worklistItemVO.getDocNumber() + " from tasklist.");
-									    				   removeRNList.add(worklistItemVO.getDocNumber());
-									    				   log.info("Removed " + worklistItemVO.getDocNumber() + " from tasklist.");
-									    			   }
-									    		   }
-									    	   }
-									       }
 								   }
 						    	   }
 						       }
@@ -1567,18 +1476,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 								log.info("worklistItemVO.setTitle error:" + ex.getMessage());
 							}
 						}
-					}
-					
-					if (!CollectionUtils.isEmpty(removeRNList)) {
-						 for (String removeRN : removeRNList) {
-							 Iterator<WorklistItemVO> iterator = responseDTO.getWorklistVO().getWorklistItem().iterator();
-							 while (iterator.hasNext()) {
-								 WorklistItemVO worklistItemVO = iterator.next();
-								 if (removeRN.equals(worklistItemVO.getDocNumber())) {
-									 iterator.remove();
-								 }
-							 }
-						 }
 					}
 					
 					resultBean.setTotalRecord(responseDTO.getWorklistVO()
