@@ -7152,9 +7152,9 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			PmOrgProfile qtOrgProfile =  scQt.getPmOrgProfile();
 						
 			//2 & 3
-			Long userId = getFacesScopes().getUserSessionBean().getUserId();
+			reqDTO = new UserReqDTO();
+			resDTO = null;
 			debugLogger(getFacesScopes().getUserRoleList());
-			UserReqDTO reqDTO = new UserReqDTO();
 			reqDTO.setUserId(userId);
 			reqDTO.setOrgProfileId(qtOrgProfile.getOrgProfileId());
 			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
