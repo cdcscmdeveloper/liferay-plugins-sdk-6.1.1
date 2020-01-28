@@ -21,6 +21,7 @@ import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.exception.EpException;
+import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmCity;
@@ -49,6 +50,7 @@ import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.ReactivateSupplierVO;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
 @ManagedBean(name = "forceReplaceSuppAdminBackingBean")
@@ -60,6 +62,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * 
 	 */
 	private static final long serialVersionUID = 650929814581089830L;
+	
+	private static final Logger log = EpLogger.getLogger(ForceReplaceSuppAdminBackingBean.class);
 
 	/**
 	 * Pre - render and redirect to Force Replace Supplier Admin page
@@ -91,6 +95,11 @@ public class ForceReplaceSuppAdminBackingBean extends
 	public void submit() {
 		getManagedBean().setExistingUser(false);
 		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
+		/*log.info("Acc.Type:" + getManagedBean().getAccType());
+		log.info("Reg.No:" + getManagedBean().getReactivateBasic().getRegNo());
+		log.info("Est.Date:" + getManagedBean().getReactivateBasic().getEstablishDate());
+		log.info("Agency Name:" + getManagedBean().getReactivateBasic().getAgencyName());
+		log.info("Supplier Type:" + getManagedBean().getReactivateBasic().getSuppType());*/
 		reqDTO.setRegNo(getManagedBean().getReactivateBasic().getRegNo());
 		reqDTO.setEstDate(getManagedBean().getReactivateBasic()
 				.getEstablishDate());
@@ -176,6 +185,11 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * Replace admin with existing personnel and redirect to success page
 	 */
 	public void replaceWithExistingUser() {
+		
+		//bug #26798, #25969
+		SmCommonUtil.setNewPersonnelPermAndMailAddress(getManagedBean()
+				.getNewAdmin(), getManagedBean().getMailAddr(),
+				getManagedBean().getPermAddr());
 		validateMyIdentity();
 		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO()
 				.reassignSupplierAdmin(getReqDTO());
@@ -330,15 +344,9 @@ public class ForceReplaceSuppAdminBackingBean extends
 		SmAppl activeAppl = SmServiceLookup.getMofRegistrationSO()
 				.retrieveActiveSmApplBySupp(mofReqDTO).getSmAppl();
 
-		if (activeAppl != null && activeAppl.getSmPersonnels() != null) {
-			for (SmPersonnel per : activeAppl.getSmPersonnels()) {
-				if (per.getIdentificationNo().equals(
-						getManagedBean().getReactivateBasic()
-								.getNewIdentificationNo())) {
-					throw new EpException(MessageConst.ERROR_722669,
-							new String[] { activeAppl.getApplNo() });
-				}
-			}
+		if (activeAppl != null) {
+			throw new EpException(MessageConst.ERROR_722669,
+					new String[] { activeAppl.getApplNo() });
 		}
 
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
@@ -672,7 +680,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 
 		PmCountry countryMy = SmCommonUtil
 				.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
-		getManagedBean().getNewAdmin().setPmCountry(countryMy);
+		
 		SmPersonnelAddress perm = null;
 		if (getManagedBean().getNewAdmin() != null
 				&& !EntityHelper.isCollectionEmpty(getManagedBean()
