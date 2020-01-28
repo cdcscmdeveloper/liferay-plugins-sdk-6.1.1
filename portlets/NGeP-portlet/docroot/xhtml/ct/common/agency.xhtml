@@ -25,7 +25,7 @@
         			    <p:ajax event="rowSelect" onstart="blockWidget.show();"
         			          oncomplete="blockWidget.hide();" update="@([id$=agencyDeliveryAddress],[id$=delBtn])"  />	
 						
-							<p:column style="width:5px;"   rendered="#{!ctBackingBean.managedBean.viewContract}">
+							<p:column style="width:5px;"   rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}">
 
                                   <f:facet name="header">
 							                    <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.selectAll}">
@@ -75,12 +75,12 @@
                	            		     <p:inputText value="#{agencyData.ceilingAmount}"  required="true" 
                	            		          label="#{lbl['lbl.ct.ceiling.amount']}" disabled="#{ctBackingBean.managedBean.disableAmendDetails
            		        						or (ctBackingBean.managedBean.contractVer.ctAgencies ne null and ctBackingBean.managedBean.contractVer.ctAgencies.size() eq 1)}"
-           		      							  style="width:80px;" maxlength="23"  styleClass="ppRightBtn" rendered="#{!ctBackingBean.managedBean.viewContract}">
+           		      							  style="width:80px;" maxlength="23"  styleClass="ppRightBtn" rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}">
 			 									    <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			 		  							  <p:ajax event="change" update=":form:tableAgencyDetails,:form:messages" 
 			 		  							    listener="#{ctBackingBean.validateCeilingAmount(agencyData)}" process="@all" partialSubmit="true"/> 
 				 					    </p:inputText>
-				   								  <h:outputText value="#{agencyData.ceilingAmount}"  style="float:right;text-align:right;" rendered="#{ctBackingBean.managedBean.viewContract}">
+				   								  <h:outputText value="#{agencyData.ceilingAmount}"  style="float:right;text-align:right;" rendered="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting}">
 				     						   	 			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							     				 </h:outputText>
 							  </p:column>
@@ -92,13 +92,13 @@
 							            <p:calendar id="agencyDateActive" value="#{agencyData.effDate}"  navigator="true" size="6"
 		               							readonlyInput="true"  
 		          							    mindate="#{(ctBackingBean.managedBean.contractVer.ctContractValue.effDate gt DateUtils.getCurrentDateWithoutTime()) ? ctBackingBean.managedBean.contractVer.ctContractValue.effDate : DateUtils.getCurrentDateWithoutTime()}" 
-		              						 	maxdate="#{agencyData.expDate}"	rendered="#{!ctBackingBean.managedBean.viewContract}"		             
+		              						 	maxdate="#{agencyData.expDate}"	rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}"		             
 		               							showOn="button"  disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
 		              						 	pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 		           	  								 <p:ajax event="dateSelect" update="agenyStatus" listener="#{ctBackingBean.checkAgencyStatus(agencyData)}"  /> 
 		          						 </p:calendar>
 		           
-		            					 <h:outputText value="#{agencyData.effDate}"  rendered="#{ctBackingBean.managedBean.viewContract}">
+		            					 <h:outputText value="#{agencyData.effDate}"  rendered="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting}">
 				         						  <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 				         				</h:outputText>
 							    </p:column>
@@ -127,7 +127,7 @@
        	         partialSubmit="true" process="@this"	
        	         action="#{ctBackingBean.resetAgencyDetails}" 
        	         disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
-       	        update=":form:agencyies" rendered="#{!ctBackingBean.managedBean.viewContract}">
+       	        update=":form:agencyies" rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}">
        			<p:tooltip for="addBtn">
 				    <h:outputText value="#{lbl['lbl.ct.tooltip.add.agency']}" escape="false" />
 				</p:tooltip>
@@ -135,7 +135,7 @@
 			 <p:commandButton id="delBtn" value="#{lbl['lbl.ct.delete']}" process="@this"
 			 	onsuccess="dlgAgenyDel.show()" partialSubmit="true"
 			 	disabled="#{ctBackingBean.managedBean.buttonHideActive or ctBackingBean.managedBean.disableAmendDetails}" 
-			 	rendered="#{!ctBackingBean.managedBean.viewContract}">
+			 	rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}">
        			<p:tooltip for="delBtn">
 				    <h:outputText value="#{lbl['lbl.ct.tooltip.delete.agency']}" escape="false" />
 				</p:tooltip>
@@ -151,14 +151,15 @@
 							<td class="TableFieldRight">  <p:inputText id="uploadRefNoDoc"   style="width:130px;"   
 							        value="#{ctBackingBean.managedBean.contractVer.ctContractValue.ap178RefNo}" 
 							        rendered="#{!ctBackingBean.managedBean.disableAgent}"
-							       disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewContract}">
+							       disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewContract  or ctBackingBean.managedBean.notificationSetting}">
+
 							       <p:ajax process="@this"/></p:inputText>
 							</td>
 				   </tr>
 				   <tr><td class="TableFieldLeft" width="15%"> <p:outputLabel value="#{lbl['lbl.ct.agency.ap178.attachment']}" rendered="#{!ctBackingBean.managedBean.disableAgent}"/>     </td>
 				           <td><p:commandButton  oncomplete="ctSharingAttachDlg.show();return false;" update="ctSharingAttachDlg"
 				                      rendered="#{ctBackingBean.managedBean.contractVer.agencyContractSharingAttachements.filePath == null and !ctBackingBean.managedBean.disableAgent}"
-					    		    icon="ui-icon-upload"  disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails}" process="@this" partialSubmit="true"/>
+					    		    icon="ui-icon-upload"  disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting or ctBackingBean.managedBean.disableAmendDetails}" process="@this" partialSubmit="true"/>
 								
 		     					 <h:commandLink
 										value="#{ctBackingBean.getShortFileName(ctBackingBean.managedBean.contractVer.agencyContractSharingAttachements.fileName)}"						
@@ -167,7 +168,7 @@
 						
 			   					<p:commandLink process="@this" partialSubmit="true"
 			   						   onclick="delCtSharingAttachDlg.show();"  
-			   						   disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails}"
+			   						   disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.notificationSetting}"
 									  rendered="#{ctBackingBean.managedBean.contractVer.agencyContractSharingAttachements.filePath != null}">
 			   								<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1" style="margin-bottom:-10px;"/>
 			 					</p:commandLink>
@@ -204,7 +205,7 @@
                                   <p:ajax event="rowUnselectCheckbox" 
                                          listener="#{ctBackingBean.onRowUnselect}" update=":form:delAddressBtn" />
 					<p:column selectionMode="multiple" style="width:3%"  disabledSelection="#{ctBackingBean.managedBean.disableAmendDetails}"
-						rendered="#{!ctBackingBean.managedBean.viewContract}"/>
+						rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}"/>
 					<p:column headerText="#{lbl['lbl.ct.delivery.address']}" style="width:100%; white-space:normal;">
 					   <h:outputText value="#{ctBackingBean.getFullDeliveryAddress(deliveryAddress.deliveryAddress)}" />
 					</p:column>
@@ -219,11 +220,11 @@
 						conditionField="#{ctBackingBean.getDeliveryAddressCondition()}"
 						update=":form:deliveryAddressTbl"
 						disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
-						rendered="#{!ctBackingBean.managedBean.viewContract}"/>
+						rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}"/>
 					 <p:commandButton id="delAddressBtn" value="#{lbl['lbl.ct.delete']}" 
 				     	 process="@this" onsuccess="delAddressDlg.show()" partialSubmit="true"
 				     	 disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.buttonHideActive}"
-				     	 rendered="#{!ctBackingBean.managedBean.viewContract}"/>
+				     	 rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}"/>
 				</div>
 				
 				    <p:confirmDialog id="delAddressDlg" widgetVar="delAddressDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
@@ -334,7 +335,7 @@
 	
 	
 	<p:panel id="agencyRemarksAttachmentPnl" header="#{lbl['lbl.ct.panel.remarks.attachment']}" toggleable="true" 
-	  rendered="#{!ctBackingBean.managedBean.viewContract}" >
+	  rendered="#{!ctBackingBean.managedBean.viewContract  and !ctBackingBean.managedBean.notificationSetting}" >
 		<table style="width: 100%">
 			<tr>
 				<td width="50%" valign="top">
@@ -360,7 +361,7 @@
 											<td></td>
 											<td>
 												<p:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" maxlength="1000" 
-													disabled="#{ctBackingBean.managedBean.viewContract}"
+													disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting}"
 													style="width:70%;" autoResize="false" /> 
 												<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.remark']}" rendered="#{remarkIndex==0}" />
 												<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
@@ -380,7 +381,7 @@
 			<td class="TableFieldRight">
 				<p:commandButton oncomplete="uploadAgencyDlg.show();return false;"
 					update="agencyLampiran, uploadAgencyDlg" value="#{lbl['lbl.txt.attach.files']}"
-					disabled="#{ctBackingBean.managedBean.viewContract
+					disabled="#{(ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting)
 						or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}" />
 			</td>
 		</tr>
@@ -407,8 +408,8 @@
 								<h:commandLink value="#{attachFile.fileName}" 
 									styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
 								<p:commandLink onsuccess="deleteAgyAttachmentDlg.show();" action="#{ctBackingBean.setAttachFileIndex(attachFileIndex)}"
-									rendered="#{!ctBackingBean.managedBean.viewContract}"
-									disabled="#{ctBackingBean.managedBean.viewContract
+									rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}"
+									disabled="#{ctBackingBean.managedBean.viewContract or  ctBackingBean.managedBean.notificationSetting 
 										or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}">
 			   						<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
 			 	 				</p:commandLink>
