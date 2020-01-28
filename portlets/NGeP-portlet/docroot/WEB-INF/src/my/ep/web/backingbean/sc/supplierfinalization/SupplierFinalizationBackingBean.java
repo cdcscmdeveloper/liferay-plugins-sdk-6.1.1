@@ -82,6 +82,7 @@ import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -159,6 +160,7 @@ import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
 import org.primefaces.model.StreamedContent;
 
+import com.sun.faces.util.CollectionsUtils;
 /**
  * Implementation for supplier finalization
  * 
@@ -213,6 +215,7 @@ public class SupplierFinalizationBackingBean extends
 		log.info("preRenderView");
 		FacesContext fc = FacesContext.getCurrentInstance();
 		try {
+			
 			SCEvaluationDataType dataType = getBpmTaskDetails(SCEvaluationDataType.class, null);
 			Long qtId = Long.valueOf(dataType.getQtId());
 			getManagedBean().setPayLoad(dataType);
@@ -223,7 +226,7 @@ public class SupplierFinalizationBackingBean extends
 			getManagedBean().setLoggedInUserId(loggedInUserId);
 
 			loadInitialData(qtId);
-
+			
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
@@ -590,7 +593,6 @@ public class SupplierFinalizationBackingBean extends
 			log.error(e);
 		}
 	}	
-
 
 	private void retrievePreparationDtls(Long qtId, String committeeType) {
 		log.info("..In retrievePreparationDtls()..");
@@ -1898,7 +1900,7 @@ public class SupplierFinalizationBackingBean extends
 		String decisionTypeCode = scQtFinalization.getDecision().getParameterCode();
 		
 		List<ScQtMeeting> meetingList = this.getManagedBean().getMeetingList();
-
+		
 		try {
 			qtSuppFinalizationSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -7104,6 +7106,40 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		try{
 			userSO = BusinessDelegate.getInstance()
 					.getServiceObject(IUserSO.class);		
+			Long userId = getFacesScopes().getUserSessionBean().getUserId();
+			UserReqDTO reqDTO = new UserReqDTO();
+
+			//role permission with no organization restriction
+			//add role code as necessary
+			List <String> roleToCheck = new ArrayList<String>();
+			roleToCheck.add(RoleCode.BPK_AUDITOR.value());
+			
+			ISearchBean<PmUserRole> searchBean = new SearchBean<PmUserRole>();
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(
+							"pmUserOrg.pmUser.userId", 
+							SearchOperator.OPERATOR_EQUALS.value(), userId));
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(
+							"pmRole.roleCode", 
+							SearchOperator.OPERATOR_IN.value(), 
+							roleToCheck));
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(
+							"pmUserOrg.recordStatusFlg", 
+							SearchOperator.OPERATOR_EQUALS.value(),
+							DbValueConst.RECORD_STATUS_ACTIVE));
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(
+							"pmUserOrg.pmUser.recordStatusFlg", 
+							SearchOperator.OPERATOR_EQUALS.value(),
+							DbValueConst.RECORD_STATUS_ACTIVE)					
+			);
+			reqDTO.setUserRoleSearchBean(searchBean);
+			UserResDTO resDTO = userSO.retrieveUserRoleBySearchBean(reqDTO);
+			if(CollectionUtils.isNotEmpty(resDTO.getUserRoleList())){
+				return true;
+			}
 			/**
 			 * 	1. find qt pm_org_profile
 			 *  2. find user pm_org_profile
@@ -7131,7 +7167,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 					RoleCode.PBB_SECRETARY.value()
 					));
 			reqDTO.setForceGetAllUserOrgList(false);
-			UserResDTO resDTO = userSO.checkAndGetUserInOrgProfile(reqDTO);
+			resDTO = userSO.checkAndGetUserInOrgProfile(reqDTO);
 			/*reqDTO.setForceGetAllUserOrgList(true);
 			UserResDTO allUserOrgResDTO = userSO.checkAndGetUserInOrgProfile(reqDTO);
 			reqDTO.setForceGetAllUserOrgList(false);*/
