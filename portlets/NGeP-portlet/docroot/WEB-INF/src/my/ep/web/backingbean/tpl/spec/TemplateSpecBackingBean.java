@@ -3176,4 +3176,14 @@ public class TemplateSpecBackingBean extends
 		
 	}
 /** #21695 FARID END */	
+
+	public boolean checkPartial(){
+		if(this.getManagedBean().getTemplateSpecBean().getSpecMaster().getScQtDoc().getScQt().isPartial()== true){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	
 }
