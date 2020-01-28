@@ -209,7 +209,7 @@
 
 					<h:selectOneMenu id="answerOffer" style="width:calc(100% - 30px);" 
 						value="#{tplSpecAnswer.offer}"
-						rendered="#{supplierProposalDetailBackingBean.managedBean.qt.partial and !isSpecTypeFinancial and isQuestionTypeItem and isZonal}" 
+						rendered="#{isPartial and !isSpecTypeFinancial and isQuestionTypeItem and isZonal}" 
 						label="#{lbl[answerlbl]}">
 						 <f:selectItems value="#{templateSpecBackingBean.offerDetails}"></f:selectItems>
 						 <p:ajax event="change" partialSubmit="true" process="@this" 
