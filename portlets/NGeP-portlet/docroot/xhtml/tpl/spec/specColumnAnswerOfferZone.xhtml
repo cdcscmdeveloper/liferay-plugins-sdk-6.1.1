@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 			 
     <p:dataTable var="tplSpecZoneOffer" id="specZoneTbl" rowIndexVar="rowIndex" value="#{question.tplSpecZoneQties}" 
-     	rendered="#{!tplSpecAnswer.offer and isQuestionTypeItem and !isSpecTypeFinancial and isZonal and supplierProposalDetailBackingBean.managedBean.qt.partial}">
+     	rendered="#{!tplSpecAnswer.offer and isQuestionTypeItem and !isSpecTypeFinancial and isZonal and isPartial}">
      
 	        <p:column headerText="#{lbl['lbl.tpl.spec.content.estimation.zone.name']}">
 	        	<h:outputText value="#{tplSpecZoneOffer.tplSpecZoneDtl.zoneName}" />
