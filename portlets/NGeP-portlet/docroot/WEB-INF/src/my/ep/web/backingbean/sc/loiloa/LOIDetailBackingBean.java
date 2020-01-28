@@ -2147,8 +2147,8 @@ public class LOIDetailBackingBean extends
 		scWreqDTO.setDocId(scQt.getQtId());		
 		scWreqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 		ScWorkFlowStatus qtcurrentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(scWreqDTO).getWorkFlowStatus();
-		if (qtcurrentWorkFlowStatus.getPmStatus().getStatusId()!=QTStatusConst.SF_PENDING_LOI_PREPARATION) {
-			throw new EpException(MessageConst.ERROR_760293); //TODO FIX MESSAGE WHEN NABIL SEND A NEW WORD
+		if (!qtcurrentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.QT_PENDING_LOI)) {
+			throw new EpException(MessageConst.ERROR_760496,new String[]{scQt.getQtNo()}); 
 		}
 		
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();

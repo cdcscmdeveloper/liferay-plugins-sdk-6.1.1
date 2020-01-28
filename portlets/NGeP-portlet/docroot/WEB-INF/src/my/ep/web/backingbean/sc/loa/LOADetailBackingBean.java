@@ -375,8 +375,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		scWreqDTO.setDocId(scQt.getQtId());		
 		scWreqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 		ScWorkFlowStatus qtcurrentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(scWreqDTO).getWorkFlowStatus();
-		if (qtcurrentWorkFlowStatus.getPmStatus().getStatusId() != QTStatusConst.QT_PENDING_LOA) {
-			throw new EpException(MessageConst.ERROR_760293); //TODO CHANGES WHEN NABIL PROVIDED MESSAGE
+		if (!qtcurrentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.QT_PENDING_LOI)) {
+			throw new EpException(MessageConst.ERROR_760497,new String[]{scQt.getQtNo()});
 		}
 		
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
