@@ -71,6 +71,7 @@
 			<ui:param name="isUpdateSpecByAnswers" value="#{templateSpecBean.updateSpecByAnswers}" />
 			<ui:param name="isDurationYear" value="#{templateSpecBean.specMaster.durationMonth ge 12}"/>
 			<ui:param name="isSqSpec" value="#{templateSpecBean.specMaster.specCreatedBySQ}"/>
+			<ui:param name="isPackageItemSpec" value="#{templateSpecBean.evaluatioStageActiveIndex == 1}" />
 			
 			<c:if test="#{isItemTypeService and !isDurationByItem and !isContentTypeQuestion and !isContentTypeQuestionAndAnswer and isSpecTypeFinancial and durationMonth ne null}">
 				<table style="width:100%">
@@ -293,7 +294,23 @@
 					</tr>
 					</table>
 				</c:if>
-				
+				<!--#25138-start-->
+				<c:if test="#{isContentTypeScore and isSpecTypeTechnical}">
+					<p:spacer height="10" />
+					<table style="width:100%">
+					<tr>
+						<td class="TableFieldLeft" width="8%">
+							<p:outputLabel value="#{lbl['lbl.sc.total.score']}" />
+						</td>
+						<td class="TableFieldRight" width="92%">
+							<p:inputText style="text-align:right;" styleClass="calcScore" size="8" 
+								value="#{templateSpecBackingBean.calcTotalScore(templateSpecBean)}"
+								disabled="true" />
+						</td>
+					</tr>
+					</table>
+				</c:if>
+				<!--#25138-end -->
 				<c:if test="#{isContentTypeUpdateSpec}">
 					<ui:include src="tierQtyPopup.xhtml" />
 				</c:if>
