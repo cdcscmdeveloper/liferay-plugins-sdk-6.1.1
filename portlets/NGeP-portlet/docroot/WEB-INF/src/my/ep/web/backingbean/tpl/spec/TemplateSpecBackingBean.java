@@ -3177,8 +3177,8 @@ public class TemplateSpecBackingBean extends
 	}
 /** #21695 FARID END */	
 
-	public boolean checkPartial(){
-		if(this.getManagedBean().getTemplateSpecBean().getSpecMaster().getScQtDoc().getScQt().isPartial()== true){
+	public boolean checkPartial(TemplateSpecBean templateSpecBean){
+		if(templateSpecBean.getSpecMaster().getScQtDoc().getScQt().isPartial()== true){
 			return true;
 		}
 		else{
