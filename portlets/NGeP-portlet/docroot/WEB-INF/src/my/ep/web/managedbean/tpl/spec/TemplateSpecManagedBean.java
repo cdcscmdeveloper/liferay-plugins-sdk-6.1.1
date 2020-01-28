@@ -156,7 +156,10 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	
 	/** The temp zone name. */
 	private String tempZoneName;
-
+	
+	/** The evaluatio stage active index. */
+	private int evaluatioStageActiveIndex;//#25138
+	
 	/**
 	 * @return the statecode
 	 */
@@ -948,6 +951,14 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedNodes(TreeNode[] selectedNodes) {
 		this.selectedNodes = selectedNodes;
+	}
+
+	public int getEvaluatioStageActiveIndex() {
+		return evaluatioStageActiveIndex;
+	}
+
+	public void setEvaluatioStageActiveIndex(int evaluatioStageActiveIndex) {
+		this.evaluatioStageActiveIndex = evaluatioStageActiveIndex;
 	}
 
 /* #21695 END */		
