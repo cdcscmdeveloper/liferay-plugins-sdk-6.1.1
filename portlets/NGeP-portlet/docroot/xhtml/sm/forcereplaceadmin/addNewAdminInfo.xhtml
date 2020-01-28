@@ -38,30 +38,29 @@
 							onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				</td>
 			</tr>
+		</table><br />
+
+		<table style="width: 100%">
+			<tr>
+				<td style="padding-left: 4px;"><p:outputPanel>
+						<p>
+							<h:outputText
+								value="#{lbl['lbl.sm.forcereplaceadmin.tnc.declaration']}"
+								escape="false" />
+						</p>
+					</p:outputPanel></td>
+			</tr>
+			<tr>
+				<td style="padding-left: 4px;"><p:outputPanel>
+						<p>
+							<h:outputText
+								value="#{lbl['lbl.sm.forcereplaceadmin.tnc.processing.fee']}"
+								escape="false" />
+						</p>
+					</p:outputPanel></td>
+			</tr>
 		</table>
-		<p:scrollPanel style="height:100px;border:0;" mode="native">
-				<table style="width: 100%">
-				<tr>
-					<td style="padding-left: 4px;"><p:outputPanel>
-							<p>
-								<h:outputText
-									value="#{lbl['lbl.sm.forcereplaceadmin.tnc.declaration']}"
-									escape="false" />
-							</p>
-						</p:outputPanel></td>
-					</tr>
-				<tr>
-					<td style="padding-left: 4px;"><p:outputPanel>
-							<p>
-								<h:outputText
-									value="#{lbl['lbl.sm.forcereplaceadmin.tnc.processing.fee']}"
-									escape="false" />
-							</p>
-						</p:outputPanel></td>
-				</tr>
-			</table>
-			</p:scrollPanel>
-		
+
 		<p:panel id="addInfoPanel" toggleable="true">
 			<f:facet name="header">
 				<h:outputText value="#{lbl['lbl.sm.forcereplaceadmin.headerpanel.addinfo']}" />
