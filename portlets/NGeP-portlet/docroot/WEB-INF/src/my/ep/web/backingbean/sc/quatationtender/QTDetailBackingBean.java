@@ -43,6 +43,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
+import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.bean.search.sc.QTSearchBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
@@ -1158,7 +1159,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		return null;
 	}
 	
-	
 	/**
 	 * Find Document Id by document type
 	 * 
@@ -1185,7 +1185,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			qtDetailSO = null;
 		}
 	}
-
+	
 	/**
 	 * Method to prepare scqt object with all dependent object.
 	 * 
@@ -1531,7 +1531,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		
 		return quationTenderReqDTO;
 	}
-
+	
 	/**
 	 * @param approvals
 	 */
@@ -3829,7 +3829,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				
 				populateLoaForQtSearchCriteria(reqDTO, qtnTenderSearchBean, searchBean);
 				populateScQtFilter(reqDTO, searchBean,"scLoiLoa.scQt");
-				
+				if(reqDTO.getLoaForQtSearchBean() != null){
+					reqDTO.getLoaForQtSearchBean().getSortColumns().add(new SearchOrderBean("loaId", false));
+				}
 				QuationTenderResDTO resDTO = qtDetailSO
 						.retriveLoaListBySearchCriteria(reqDTO);
 				
