@@ -4,7 +4,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true" 
+	  rendered="#{!ctBackingBean.managedBean.viewContract}">
 		<table style="width: 100%">
 			<tr>
 				<td width="50%" valign="top">
