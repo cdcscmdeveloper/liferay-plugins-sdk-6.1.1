@@ -16,8 +16,15 @@
 
 					<c:if
 						test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq}">
-						<p:menuitem value="#{lbl['lbl.sc.financial']}"
+						<p:menuitem value="#{lbl['lbl.sc.eva.financial.itemized']}"
 							action="#{evaluationBackingBean.retriveFinancialEvaluationStage}"
+							update="@form" />
+					</c:if>
+					
+					<c:if
+						test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq}">
+						<p:menuitem value="#{lbl['lbl.sc.eva.financial.package']}"
+							action="#{evaluationBackingBean.retriveFinancialEvaluationStagePackage}"
 							update="@form" />
 					</c:if>
 
@@ -46,10 +53,14 @@
 						src="/xhtml/sc/evaluation/evaluationStage/financial/financialEvaluation.xhtml"></ui:include>
 				</c:if> <c:if
 					test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq and evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '1'}">
+					<ui:include
+						src="/xhtml/sc/evaluation/evaluationStage/financial/financialEvaluationPackage.xhtml"></ui:include>
+				</c:if> <c:if
+					test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq and evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '2'}">
 					<ui:include src="financialEvaluationRecommendationSummary.xhtml" />
 				</c:if> 
 				<c:if
-					test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq and evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '2'}">
+					test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq and evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '3'}">
 					<ui:include src="FinancialEvaluationCommitteeSummary.xhtml" />
 				</c:if>
 				</td>
