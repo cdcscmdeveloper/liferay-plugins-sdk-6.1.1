@@ -61,6 +61,18 @@
 				<ui:include src="finSpecSupplierOfferPriceList.xhtml"></ui:include> 
 			
 			</c:if>
+			<c:if test="#{evaluationBackingBean.managedBean.committeeType eq 'FEC' and 
+				evaluationBackingBean.managedBean.scQt.techEvaluationReq and 
+				evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '0'}">
+				<ui:include src="financialSpecEvaluationStageSupplierList.xhtml"></ui:include>
+				
+			</c:if>
+			<c:if test="#{evaluationBackingBean.managedBean.committeeType eq 'FEC' and 
+				evaluationBackingBean.managedBean.scQt.techEvaluationReq and 
+				evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1'}">
+				<ui:include src="finSpecSupplierOfferPriceList.xhtml"></ui:include> 
+			
+			</c:if>
 			<!-- #25138-Ahmaa-End -->
 		</h:panelGroup>
 
