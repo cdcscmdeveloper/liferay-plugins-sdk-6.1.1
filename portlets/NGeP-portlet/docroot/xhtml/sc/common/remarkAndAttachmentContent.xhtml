@@ -123,6 +123,13 @@
 				</c:otherwise>
 			</c:choose>
 		</tr>
+		<!-- 26059 start -->
+		<tr>
+		<c:if test="#{requestNoteBackingBean.managedBean.proceedWithDPExceedThreshold}">
+			<ui:include	src="/xhtml/sc/directpurchase/requestnote/requestNoteExceedDPJustification.xhtml" />
+		</c:if>
+		</tr>
+		<!-- 26059 end -->
 	</table>
 
 	<c:if test="#{cc.attrs.showAttachment and !cc.attrs.readonly}">			
