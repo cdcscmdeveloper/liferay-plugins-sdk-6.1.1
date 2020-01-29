@@ -308,7 +308,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				pymtReqDTO.setPaymentType(paymentType);
 				pymtReqDTO.setMethodName("responsePreRender-PaymentResponseBackingBean");
 				PaymentResDTO pymtResDTO = null;
-				/*
+				
 				log.info(">>>>>counter equal to 1<<<<<<");
 				pymtResDTO = reqSO.updatePayment(pymtReqDTO);
 
@@ -322,7 +322,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 							}catch(Exception ex){
 								log.info("<<<<Payment - error when generate Virtual Cert>>>>" + ex.getMessage());
 							}
-						}*
+						}*/
 					try {
 						String merchantId = SmCommonUtil.getInstance().getPaymentGatewayMerchantIdByBillType(pyPayment.getPyBill().getBillType());
 						SmCommonUtil.paymentCurlIPN(httpServletRequest,true,merchantId,molIpnUrl);
@@ -330,7 +330,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 						log.error("curlIPN: " + ex.getMessage());
 					}
 				}
-				*/
+				
 			} else {
 				status = SupplierManagementConst.PAYMENT_INVALID_RES;
 			}
