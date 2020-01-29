@@ -67,11 +67,14 @@ public class TrustGateHelper {
 				+ "||" + selectedQuest);
 		List<String> retVal = new ArrayList<String>();
 		try {
+			log.info("Before Get Client=======================");
 			KMCClient client = getClient();
+			log.info("After Get Client======================="+client);
 			KMCRequestBuilder reqbuilder = getReqBuilder();
+			log.info("After Get reqbuilder======================="+reqbuilder);
 			IKMCAPIResponse.GetChallengeQuestionResponse res = reqbuilder
 					.getChallengeQuestions(identificationNo, 10, epNo);
-			
+			log.info("After Get GetChallengeQuestionResponse======================="+res);
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setUserId(pmUser.getUserId());
@@ -109,6 +112,7 @@ public class TrustGateHelper {
 		} catch (Exception ex) {
 			log.info("TRUSTGATE CHALL QUEST:" + identificationNo + "||" + epNo
 					+ "||" + selectedQuest + " ERROR MSG:" + ex.getMessage());
+			ex.printStackTrace();
 			throw new EpException(ex.getMessage());
 
 		}
@@ -284,22 +288,29 @@ public class TrustGateHelper {
 	}
 
 	public static KMCClient getClient() {
+		log.info("getClient=====================================START");
 		if (client == null) {
 			try {
 				client = getInstance().getKMCClient();
+				log.info("getClient====================================="+client);
 			} catch (Exception e) {
-
+				log.info("getClient=====================================Error");
+				e.printStackTrace();
 			}
 		}
 		return client;
 	}
 
 	public static KMCRequestBuilder getReqBuilder() {
+		log.info("reqBuilder=====================================START");
+
 		if (reqBuilder == null) {
 			try {
 				reqBuilder = new KMCRequestBuilder();
+				log.info("reqBuilder=====================================");
 			} catch (Exception e) {
-
+				log.info("reqBuilder=====================================Error");
+				e.printStackTrace();
 			}
 		}
 		return reqBuilder;
