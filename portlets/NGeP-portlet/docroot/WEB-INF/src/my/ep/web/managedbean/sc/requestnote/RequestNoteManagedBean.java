@@ -336,6 +336,12 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	
 	private	Object[] selectedPrDtls;
 	
+	//26059 - start
+	private boolean proceedWithDPExceedThreshold;
+	private String exceedThresholdMessage;
+	private boolean bpkApprover;
+	//26059 - end
+	
     /**
      * Instantiates a new request note managed bean.
      */
@@ -1960,4 +1966,47 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setSelectedPrDtls(Object[] selectedPrDtls) {
 		this.selectedPrDtls = selectedPrDtls;
 	}
+	//26059 - start
+	/**
+	 * @return the proceedWithDPExceedThreshold
+	 */
+	public boolean isProceedWithDPExceedThreshold() {
+		return proceedWithDPExceedThreshold;
+	}
+
+	/**
+	 * @param proceedWithDPExceedThreshold the proceedWithDPExceedThreshold to set
+	 */
+	public void setProceedWithDPExceedThreshold(boolean proceedWithDPExceedThreshold) {
+		this.proceedWithDPExceedThreshold = proceedWithDPExceedThreshold;
+	}
+
+	/**
+	 * @return the exceedThresholdMessage
+	 */
+	public String getExceedThresholdMessage() {
+		return exceedThresholdMessage;
+	}
+
+	/**
+	 * @param exceedThresholdMessage the exceedThresholdMessage to set
+	 */
+	public void setExceedThresholdMessage(String exceedThresholdMessage) {
+		this.exceedThresholdMessage = exceedThresholdMessage;
+	}
+
+	/**
+	 * @return the bpkApprover
+	 */
+	public boolean isBpkApprover() {
+		return bpkApprover;
+	}
+
+	/**
+	 * @param bpkApprover the bpkApprover to set
+	 */
+	public void setBpkApprover(boolean bpkApprover) {
+		this.bpkApprover = bpkApprover;
+	}
+	//26059 - end
 }
