@@ -1,0 +1,42 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<td class="TableFieldLeft" width="100px">
+	<h:panelGroup id="approvalDocId">
+		<span style="color: red;">*</span>
+	</h:panelGroup>
+	<h:outputText value="#{lbl['lbl.sc.egpa.approval.doc']}" />
+	</td>
+	<td class="TableFieldRight" width="35%">
+	<ac:scSingleFileUploadButton id="scUploadApprovalDoc"
+					popupWidgetVar="scDocUploadApprovalDlg" rendered="true"
+					attachment="#{requestNoteBackingBean.managedBean.requestNote.scApprovalDocument}"
+					readonly="#{requestNoteBackingBean.managedBean.bpkApprover}"
+					deleteFileUploadListener="requestNoteBackingBean.deleteApprovalDocUpload">
+				</ac:scSingleFileUploadButton>
+				<ac:iconTooltip id="egpaApprovalDocTooltipId"
+							value="#{lbl['lbl.sc.egpa.approval.doc.tootltip']}" /></td>
+	<tr>
+	<td class="TableFieldLeft" width="100px"><h:panelGroup id="justificationId">
+		<span style="color: red;">*</span>
+	</h:panelGroup>
+	<h:outputText value="#{lbl['lbl.sc.exceed.justification']}" /></td>
+		<td class="TableFieldRight" width="35%"><p:inputTextarea
+				title="#{lbl['lbl.sc.exceed.justification.tooltip']}"
+				cols="#{cc.attrs.numberOfCols}" maxlength="1000"
+				onkeyup="limitTextArea(this,1000);"
+				onkeydown="limitTextArea(this,1000);"
+				onmouseout="limitTextArea(this,1000);" value="#{requestNoteBackingBean.managedBean.requestNote.dpExceedJustification}"
+				disabled="#{requestNoteBackingBean.managedBean.bpkApprover}">
+				<p:ajax partialSubmit="true" process="@this" update="@this" />
+			</p:inputTextarea>
+			<ac:iconTooltip id="exceedJustificationTooltipId"
+							value="#{lbl['lbl.sc.exceed.justification.tooltip']}" />
+			</td>
+	</tr>
+</ui:composition>

@@ -36,13 +36,13 @@
 				<p:column style="width:2%">
 					<f:facet name="header">
 						<p:selectBooleanCheckbox id="selAllChk"
-							value="#{requestNoteBackingBean.flag}">
+							value="#{requestNoteBackingBean.flag}" disabled="#{requestNoteBackingBean.managedBean.bpkApprover}">
 							<p:ajax partialSubmit="true" process="@this"
 								update="@form"
 								listener="#{requestNoteBackingBean.selectAll}"></p:ajax>
 						</p:selectBooleanCheckbox>
 					</f:facet>
-					<p:selectBooleanCheckbox value="#{requestNoteDtl.selected}">
+					<p:selectBooleanCheckbox value="#{requestNoteDtl.selected}" disabled="#{requestNoteBackingBean.managedBean.bpkApprover}">
 						<p:ajax partialSubmit="true" process="@this"
 							update="@form"
 							listener="#{requestNoteBackingBean.selectSingleRow}" />
@@ -137,7 +137,7 @@
 									value="#{requestNoteDtl.vCmSupplierItem.companyName}"
 									update="@form"
 									rendered="#{requestNoteDtl.brandNew and !requestNoteDtl.reRecommend}"
-									disabled="#{isViewOnly}"
+									disabled="#{isViewOnly or requestNoteBackingBean.managedBean.bpkApprover}"
 									conditionField="#{requestNoteDtl.conditionField}">
 								</ac:lov>
 								<ac:lov id="afterSave" lovId="SC_REQUEST_SUPPLIER_ITEM"
@@ -148,7 +148,7 @@
 									saveObject="requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}].scRequestSupplierItem"
 									value="#{requestNoteDtl.scRequestSupplierItem.supplierName}"
 									update="@form"
-									disabled="#{isViewOnly}"
+									disabled="#{isViewOnly or requestNoteBackingBean.managedBean.bpkApprover}"
 									conditionField="#{requestNoteDtl.conditionField}"
 									rendered="#{!requestNoteDtl.brandNew or requestNoteDtl.reRecommend}">
 								</ac:lov>
@@ -212,7 +212,7 @@
 					<h:selectOneMenu value="#{requestNoteDtl.assignedUser.userId}"
 						style="width:115px; margin-top: 8px;" id="prepareBy"
 						label="#{requestNoteDtl.requestItem.itemName} : #{lbl['lbl.sc.request.note.loa.prepare.by']}"
-						disabled="#{isViewOnly}" required="#{!requestNoteDtl.selected}">
+						disabled="#{isViewOnly or requestNoteBackingBean.managedBean.bpkApprover}" required="#{!requestNoteDtl.selected}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
 						<f:selectItems
@@ -251,7 +251,7 @@
 					<h:selectOneMenu id="procTypeCategory"
 						value="#{requestNoteDtl.procTypeCategoryId}"
 						style="width:130px;margin-top: 8px;" required="true"
-						disabled="#{isViewOnly}"
+						disabled="#{isViewOnly or requestNoteBackingBean.managedBean.bpkApprover}"
 						label="#{requestNoteDtl.requestItem.itemName} : #{lbl['lbl.sc.procurment.type.category']}">
 
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
@@ -275,7 +275,7 @@
 					</f:facet>
 					<p:inputTextarea id="procTypeCatTitle" rows="2"
 						label="#{lbl['lbl.sc.direct.purchase.title']}" maxlength="100"
-						disabled="#{isViewOnly}"
+						disabled="#{isViewOnly or requestNoteBackingBean.managedBean.bpkApprover}"
 						value="#{requestNoteDtl.procurementTitle}" autoResize="false"
 						style="width:140px;">
 						<p:ajax event="blur" partialSubmit="true" process="@this"
@@ -299,7 +299,7 @@
 				onstart="applyAllPopUp.show();" />
 
 			<p:commandButton value="#{lbl['lbl.btn.apply.to.all']}"
-				disabled="#{requestNoteBackingBean.deleteselectedList(requestNoteBackingBean.managedBean.requestNoteDtls)}"
+				disabled="#{requestNoteBackingBean.managedBean.bpkApprover or requestNoteBackingBean.deleteselectedList(requestNoteBackingBean.managedBean.requestNoteDtls)}"
 				partialSubmit="true" process="@this"
 				rendered="#{!(isViewOnly or isSourcheMethodAsSC)}"
 				action="#{requestNoteBackingBean.applyAllAction}"
