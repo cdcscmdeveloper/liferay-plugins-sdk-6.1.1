@@ -3175,15 +3175,5 @@ public class TemplateSpecBackingBean extends
 		return this.getManagedBean().getOffer();
 		
 	}
-/** #21695 FARID END */	
-
-	public boolean checkPartial(TemplateSpecBean templateSpecBean){
-		if(templateSpecBean.getSpecMaster().getScQtDoc().getScQt().isPartial()== true){
-			return true;
-		}
-		else{
-			return false;
-		}
-	}
-	
+/** #21695 FARID END */		
 }
