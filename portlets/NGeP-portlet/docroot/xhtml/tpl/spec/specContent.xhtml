@@ -72,7 +72,6 @@
 			<ui:param name="isDurationYear" value="#{templateSpecBean.specMaster.durationMonth ge 12}"/>
 			<ui:param name="isSqSpec" value="#{templateSpecBean.specMaster.specCreatedBySQ}"/>
 			<ui:param name="isPackageItemSpec" value="#{templateSpecBean.evaluatioStageActiveIndex == 1}" />
-			<ui:param name="isPartial" value="#{templateSpecBackingBean.checkPartial(templateSpecBean)}" />
 			
 			<c:if test="#{isItemTypeService and !isDurationByItem and !isContentTypeQuestion and !isContentTypeQuestionAndAnswer and isSpecTypeFinancial and durationMonth ne null}">
 				<table style="width:100%">
