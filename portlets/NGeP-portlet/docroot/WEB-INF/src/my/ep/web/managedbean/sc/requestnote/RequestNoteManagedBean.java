@@ -46,6 +46,7 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.vo.DisciplinaryActionVO;
 
 import org.apache.commons.lang.StringUtils;
 import org.primefaces.model.DualListModel;
@@ -334,7 +335,16 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	private Calendar sqEndDate;
 	// 12177 - End
 	
+	private String selectedCondition;
+	
 	private	Object[] selectedPrDtls;
+	
+	//26284 - Start
+	private List<DisciplinaryActionVO> disciplineVOs;
+	private String disciplinaryActionstartDate;
+	private String disciplinaryActionEndDate;
+	private boolean disciplinaryActionWarning = false;
+	//26284 - End
 	
 	//26059 - start
 	private boolean proceedWithDPExceedThreshold;
@@ -1966,6 +1976,49 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setSelectedPrDtls(Object[] selectedPrDtls) {
 		this.selectedPrDtls = selectedPrDtls;
 	}
+
+	public String getSelectedCondition() {
+		return selectedCondition;
+	}
+
+	public void setSelectedCondition(String selectedCondition) {
+		this.selectedCondition = selectedCondition;
+	}
+	
+	//26284 - Start
+	public List<DisciplinaryActionVO> getDisciplineVOs() {
+		return disciplineVOs;
+	}
+
+	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
+		this.disciplineVOs = disciplineVOs;
+	}
+
+	public String getDisciplinaryActionStartDate() {
+		return disciplinaryActionstartDate;
+	}
+
+	public void setDisciplinaryActionStartDate(String disciplinaryActionstartDate) {
+		this.disciplinaryActionstartDate = disciplinaryActionstartDate;
+	}
+
+	public String getDisciplinaryActionEndDate() {
+		return disciplinaryActionEndDate;
+	}
+
+	public void setDisciplinaryActionEndDate(String disciplinaryActionEndDate) {
+		this.disciplinaryActionEndDate = disciplinaryActionEndDate;
+	}
+		
+	public boolean isDisciplinaryActionWarning() {
+		return disciplinaryActionWarning;
+	}
+
+	public void setDisciplinaryActionWarning(boolean disciplinaryActionWarning) {
+		this.disciplinaryActionWarning = disciplinaryActionWarning;
+	}
+	//26284 - End
+	
 	//26059 - start
 	/**
 	 * @return the proceedWithDPExceedThreshold
