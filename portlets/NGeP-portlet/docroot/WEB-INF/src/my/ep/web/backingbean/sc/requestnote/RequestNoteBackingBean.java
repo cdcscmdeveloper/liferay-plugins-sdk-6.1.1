@@ -32,8 +32,11 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchOrderBean;
+import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
 import my.ep.biz.service.fl.itemsummary.IFlItemSummarySO;
@@ -47,6 +50,7 @@ import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
+import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.biz.service.osb.sc.IDPOsbSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
@@ -80,11 +84,16 @@ import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
 import my.ep.dto.osb.sc.DPOsbReqDTO;
 import my.ep.dto.osb.sc.DPOsbResDTO;
 import my.ep.dto.sc.requestitem.RequestItemReqDTO;
+import my.ep.dto.sm.personnel.PersonnelReqDTO;
+import my.ep.dto.sm.personnel.PersonnelResDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
@@ -117,6 +126,8 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
@@ -137,6 +148,7 @@ import my.ep.web.backingbean.sc.purchaseinquiry.PurchaseInquiryBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
 import my.ep.web.backingbean.trackingdiary.TrackingDiarySearchBackingBean;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sc.directpurchase.MarketSummaryAndPIBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
@@ -146,8 +158,14 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sc.helper.SourcingZoneHelper;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.template.DocumentGenerator;
+import my.ep.web.vo.BlacklistOwnerDirectorVO;
+import my.ep.web.vo.DisciplinaryActionCategoryVO;
+import my.ep.web.vo.DisciplinaryActionVO;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -191,11 +209,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	private String PURCHASE_REQUEST_PAGE = "purchaseRequestMain";
 	
 	/** The request note codification page. */
-	private String REQUEST_NOTE_CODIFICARION_PAGE = "/xhtml/sc/directpurchase/requestnote/codification/requestNoteCodificationMain.xhtml";
+	private String REQUEST_NOTE_CODIFICARION_PAGE = "/xhtml/sc/directpurchase/requestnote/codification/requestNoteCodificationMain.xhtml";	
 	
 	//26059 - start
 	private String approvalDocFileType = "/(\\.|\\/)(pdf)$/";
 	//26059 - end
+
 	/**
 	 * Instantiates a new request note backing bean.
 	 */
@@ -212,6 +231,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 		}
 	}
+
+	
 
 	/**
 	 * Search action.
@@ -311,6 +332,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		RequestNoteResDTO requestNoteResDTO = null;
 		Boolean isAssignedState = getManagedBean().isAssignedState();
     try {
+    	
+    	//26284 - Start
+    	if(outcome != null && BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)){
+    		if(requestNote != null){
+        		checkSupplierDisciplinaryAction(requestNote);
+        	}
+    	}
+    	//26284 - End
     	
     	parseRequestNote(requestNote, outcome);
     	
@@ -865,6 +894,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		boolean isDeliveryTermPrompt = Boolean.FALSE;		
 		List<ScRequestNoteDtl>	requestNoteDtls  = this.getManagedBean().getRequestNoteDtls();
 		ScRequestNote scRequestNote = getManagedBean().getRequestNote();
+		
+		//26284 - Start
+		if(outcome.equals(BpmOutcomeConst.BPM_SUBMIT) ||
+		    outcome.equals(BpmOutcomeConst.BPM_APPROVE)){  	
+			if(scRequestNote != null){
+				checkSupplierDisciplinaryAction(scRequestNote);
+			}	    	
+	    }
+		//26284 - End
+				
 		parseRequestNote(scRequestNote, outcome);
 		
 		scRequestNote.setWorkFlowStatuses(null);
@@ -877,7 +916,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				}
 			}	
 		}
-		
+    	
 		if(outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || 
 				outcome.isEmpty() || 
 				outcome.equals(BpmOutcomeConst.BPM_APPROVE)){
@@ -907,6 +946,22 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 
 		debugLogger("RequestNoteBackingBean >> submitAction ---- isExceededAmountAlerted() = "+ getManagedBean().isExceededAmountAlerted());
+		if(getManagedBean().   isExceededAmountAlerted()){
+			if(!getManagedBean().isExceededMessagePrompt()){
+				getManagedBean().setExceededMessagePrompt(Boolean.TRUE);
+			}
+			else{
+				if(!isDeliveryTermPrompt){
+					if(outcome.equals(BpmOutcomeConst.BPM_APPROVE) || 
+							outcome.equals(BpmOutcomeConst.BPM_REVISE) || 
+							outcome.equals(BpmOutcomeConst.BPM_REJECT)){
+						approverAction(outcome);
+					} else{
+						requestNoteSubmit(outcome);
+					}
+				}
+			}
+		}else{
 		
 		if(getManagedBean().isExceededAmountAlerted()){
 			//26059 - start			
@@ -931,6 +986,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				}
 			}
 		}
+	}
 	}
 	
 	/**
@@ -1423,7 +1479,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 							sb.append(SearchOperator.OPERATOR_NOT_IN.value());
 						}
 					}
-
 					scRequestNoteDtl.setConditionField(sb.toString());
 //				}
 
@@ -2258,7 +2313,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			    	}
 			    }
 		    }
-		    
 		    scRequestNoteDtl.setConditionField(sb.toString());
 		    
 		    VCmSupplierItem  vCmSupplierItem = new VCmSupplierItem();
@@ -4969,6 +5023,160 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().setProceedWithDPExceedThreshold(Boolean.TRUE);
 		getManagedBean().setExceededAmountAlerted(Boolean.FALSE);
 	}
+	
+	//26284 - Start	
+	public void supplierDisciplinaryActionInfo(SmSupplier smSupplier){
+		SmSupplier currSupp = smSupplier;
+		if(currSupp != null){
+			List<DisciplinaryActionVO> voList = getDisciplinaryActionVO(currSupp);
+			if(!EntityHelper.isCollectionEmpty(voList)
+					&& voList.size() > 0){
+				getManagedBean().setDisciplineVOs(voList);
+			} else {
+				getManagedBean().setDisciplineVOs(new ArrayList<DisciplinaryActionVO>());
+			}
+		} else {
+			getManagedBean().setDisciplineVOs(new ArrayList<DisciplinaryActionVO>());
+		}
+		RequestContext.getCurrentInstance().execute(
+				"disciplinaryActionActiveDpDlg.show();");
+	}
+	
+	private List<DisciplinaryActionVO> getDisciplinaryActionVO(SmSupplier currSupp) {		
+		ISupplierDataMaintenanceSO supplierDataMaintenanceSO = (ISupplierDataMaintenanceSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						ISupplierDataMaintenanceSO.class);
+		
+		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+		reqDTO.setSupplier(currSupp);
+		List<DisciplinaryActionVO> voList = new ArrayList<DisciplinaryActionVO>();
+		PersonnelReqDTO perReqDTO = new PersonnelReqDTO();
+		perReqDTO.setSmSupplierId(currSupp.getSupplierId());
+		StringBuilder str1 = new StringBuilder();
+		StringBuilder str2 = new StringBuilder();
+		PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelBySupplierId(perReqDTO);
+		
+		List<SmDisciplinaryAction> resultList = supplierDataMaintenanceSO.retrieveActiveDisciplinaryActionBySupplierDp(reqDTO).getSmDisciplinaryActions();
+		if (resultList != null
+				&& resultList.size() > 0) {
+			for(SmDisciplinaryAction disciplinaryAction: resultList){
+				if(disciplinaryAction.isWarning() || disciplinaryAction.isCancelCategory() 
+						|| disciplinaryAction.isSuspendRegistration() || disciplinaryAction.isCancelRegistration() 
+						|| disciplinaryAction.isBlacklistOwner() || disciplinaryAction.isManufacturerCancel()
+						|| disciplinaryAction.isBumiputeraCancel()){
+					DisciplinaryActionVO retVal = new DisciplinaryActionVO();
+					if(disciplinaryAction.getStartDate() != null)
+						retVal.setStartDate(DateUtils.dateToString("dd/MM/yyyy",disciplinaryAction.getStartDate()));
+						retVal.setEndDate(DateUtils.dateToString("dd/MM/yyyy",disciplinaryAction.getEndDate()));
+						str1.append(retVal.getStartDate()).append(" "); 
+						getManagedBean().setDisciplinaryActionStartDate(str1.toString());
+					if(disciplinaryAction.getEndDate() != null)
+						retVal.setEndDate(DateUtils.dateToString("dd/MM/yyyy",disciplinaryAction.getEndDate()));
+						str2.append(retVal.getEndDate()).append(".");
+						getManagedBean().setDisciplinaryActionEndDate(str2.toString());
+					if(disciplinaryAction.getRemark() != null)
+						retVal.setRemarks(disciplinaryAction.getRemark());
+					
+					if(disciplinaryAction.isWarning())
+						retVal.setWarning(true);
+					    getManagedBean().setDisciplinaryActionWarning(true);
+					if(disciplinaryAction.isCancelCategory())
+						retVal.setCancelCategory(true);
+					if(disciplinaryAction.isSuspendRegistration())
+						retVal.setSuspendRegistration(true);
+					if(disciplinaryAction.isCancelRegistration())
+						retVal.setCancelRegistration(true);
+					if(disciplinaryAction.isBumiputeraCancel())
+						retVal.setBumiputeraCancel(true);
+					if(disciplinaryAction.isManufacturerCancel())
+						retVal.setManufacturerCancel(true);
+					if(disciplinaryAction.isBlacklistOwner())
+						retVal.setBlacklistOwnerDirector(true);
+					
+					if(disciplinaryAction.isCancelCategory()){
+						List<DisciplinaryActionCategoryVO> catVoList = new ArrayList<DisciplinaryActionCategoryVO>();
+						List<Object[]> catList = SmApplicationUtil.retrieveCancelCategoryBySupplier(currSupp);
+						
+						if(!EntityHelper.isCollectionEmpty(catList)
+								&& catList.size() > 0){
+							for(Object[] arr : catList){
+								if(disciplinaryAction.getDisciplinaryActionId().toString().equalsIgnoreCase(arr[7].toString())){
+									DisciplinaryActionCategoryVO catVo = new DisciplinaryActionCategoryVO();
+									String catCode = StringUtils.EMPTY;
+									catCode = arr[3].toString() + arr[4].toString() + arr[5].toString() ;
+									catVo.setCategoryCode(catCode);	
+									catVoList.add(catVo);
+								}
+							}						
+							retVal.setCategoryCodeList(catVoList);
+						}
+					}	
+					
+					if(disciplinaryAction.isBlacklistOwner()
+							|| disciplinaryAction.isSuspendRegistration()
+								|| disciplinaryAction.isCancelRegistration()){
+						List<BlacklistOwnerDirectorVO> blacklistownerDirectorList = new ArrayList<BlacklistOwnerDirectorVO>();
+						if(personnelResDTO != null 
+								&& personnelResDTO.getSmPersonnelList().size() > 0){
+							for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
+								BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
+								if(personnel.isCancelRegistration()
+										|| personnel.isSuspendRegistration()
+											|| personnel.isBlacklisted()){
+									blacklistOwner.setIcNo(personnel.getIdentificationNo());
+									blacklistownerDirectorList.add(blacklistOwner);
+								}
+							}
+							retVal.setBlacklistownerDirectorList(blacklistownerDirectorList);
+						}
+					}
+				voList.add(retVal);
+				}				
+			}
+		}
+		return voList;
+	}
+	
+	public Boolean getDisciplinaryActionActive(SmSupplier supplier) {
+		ISupplierDataMaintenanceSO supplierDataMaintenanceSO = (ISupplierDataMaintenanceSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						ISupplierDataMaintenanceSO.class);
+		
+		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+		reqDTO.setSupplier(supplier);
+		return supplierDataMaintenanceSO.retrieveActiveDisciplinaryActionBySupplierDp(reqDTO).isDisciplinaryActionActiveDp();
+	}
+	
+	public void checkSupplierDisciplinaryAction(ScRequestNote requestNote){
+		ISupplierDataMaintenanceSO supplierDataMaintenanceSO = (ISupplierDataMaintenanceSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						ISupplierDataMaintenanceSO.class);
+		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+		List<SmDisciplinaryAction> smDisciplinaryAction = null;
+		
+		List<ScRequestNoteDtl> requestNoteDtls = requestNote.getRequestNoteDtls();
+		if(requestNoteDtls != null){
+			for (ScRequestNoteDtl rnDtl : requestNoteDtls) {
+				if(rnDtl.getScRequestSupplierItem() != null && 
+						rnDtl.getScRequestSupplierItem().getSmSupplier() != null){
+					
+					reqDTO.setSupplier(rnDtl.getScRequestSupplierItem().getSmSupplier());
+					smDisciplinaryAction = supplierDataMaintenanceSO.retrieveActiveDisciplinaryActionBySupplierDp(reqDTO).getSmDisciplinaryActions();
+					
+					if(smDisciplinaryAction != null){
+						for(SmDisciplinaryAction disciplinaryAction: smDisciplinaryAction){
+							if(disciplinaryAction.isSuspendRegistration()
+							   || disciplinaryAction.isCancelRegistration()
+							   || disciplinaryAction.isBlacklistOwner()){
+								throw new EpException(MessageConst.ERROR_760500);
+							}			
+						}
+					}	
+				}			
+			}
+		}
+	}
+	//26284 - End
 	
 	/**
 	 * Delete Attachment for eGPA approval doc.
