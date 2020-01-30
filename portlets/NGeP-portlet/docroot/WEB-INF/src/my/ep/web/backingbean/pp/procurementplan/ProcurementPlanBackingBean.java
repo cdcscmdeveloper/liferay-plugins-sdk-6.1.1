@@ -4703,7 +4703,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	
 	 public void addUpdateInfo(PpPlan ppPlan, Integer index) {
 	    	log.info("addUpdateInfo");
-	    	
 	    	log.info("Original index= "+index);
 	    	
 	    	List<PpProcurementItem> procurementList = null;
@@ -4716,12 +4715,14 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    	if (ppPlan.getPpProcurementItems() != null && 
 	    			!ppPlan.getPpProcurementItems().isEmpty()) {
 	    		
-	    		procurementList = ppPlan.getPpProcurementItems();
+	    		procurementList = this.getManagedBean().getSelectedPlan().getPpProcurementItems();
+	    		
+	    		PpProcurementItem clonedPpItem =  procurementList.get(index);
 	    		
 	    		validatePpItem(); //Disabled this if no validation required at this stage
 	    		
-	    		newPpItem = (PpProcurementItem) procurementList.
-	    				get(index).cloneEntity();
+	    		/*newPpItem = (PpProcurementItem) procurementList.
+	    				get(index).cloneEntity();*/
 	    		newPpItem.setCloned(true);
 	    		
 	    		if (Calendar.getInstance().get(Calendar.YEAR) == 
@@ -4732,10 +4733,15 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		    		Calendar date = new GregorianCalendar((nextYear+1), Calendar.JANUARY, 1);
 		    		newPpItem.setInvitationDate(date.getTime());
 		    	}
-				//newPpItem.setProcurementItemId(null);
+	    		
 	    		newPpItem.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 	    		newPpItem.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 	    		newPpItem.setChangedDate(new Timestamp(new Date().getTime()));
+	    		newPpItem.setProcurementCat(clonedPpItem.getProcurementCat());
+		    	newPpItem.setProcurementType(clonedPpItem.getProcurementType());
+		    	newPpItem.setProcurementTitle(clonedPpItem.getProcurementTitle());
+		    	newPpItem.setProcurementDesc(clonedPpItem.getProcurementDesc());
+		    	newPpItem.setEstimatedAmt(clonedPpItem.getEstimatedAmt());
 	    		newPpItem.setEditable(true);
 	    		newPpItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 	    		newPpItem.setBrandNew(true);
@@ -4743,11 +4749,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    		index += 1;
 	    		procurementList.add(index,newPpItem);
 	    		
-	    		log.info("clonedPpProcurementItem= "+newPpItem.getProcurementItemId());
-	    		
 	    	} else {
 	    		throw new EpException(MessageConst.ERROR_730015);
 	    	}
+	    	
 	}
 	
     /**
