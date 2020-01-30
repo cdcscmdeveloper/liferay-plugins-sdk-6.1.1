@@ -5,6 +5,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
+	
 	<ui:param name="answerlbl" value="#{isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer'}" />
 	<ui:param name="remarklbl" value="#{isSqSpec ? 'lbl.sc.supplier.offer' : 'lbl.tpl.spec.content.note'}" />
 	<ui:decorate template="specColumnQuestionViewHeader.xhtml">
@@ -254,7 +255,6 @@
 		</h:outputText>
 	</p:column>
 	<p:column  style="width:200px;"  rendered="#{!(isSpecTypeFinancial and !isSpecificationReq)}">
-	#{isPartial}
 		<p:inputTextarea id="answerRemarks" label="#{lbl[remarklbl]}" style="width:calc(100% - 15px);" value="#{tplSpecAnswer.answerRemark}" 
 		disabled="#{!editable}" rows="1"  onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
 		onmouseout="limitTextArea(this,1000);" rendered="#{!isSqSpec or (isSqSpec and isQuestionTypeItem)}">
