@@ -87,6 +87,8 @@ import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
 import my.ep.dto.sm.common.myidentity.MyIdentityReqDTO;
 import my.ep.dto.sm.common.myidentity.MyIdentityResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
+import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
@@ -106,6 +108,8 @@ import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.dto.sm.sst.SupplierSstReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
+import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
+import my.ep.dto.sm.virtualcert.VirtualCertResDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
 import my.ep.exception.EpException;
@@ -161,6 +165,7 @@ import my.ep.persistence.entity.sm.SmMachineCategory;
 import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmManufacturingDtl;
 import my.ep.persistence.entity.sm.SmMofAccount;
+import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmRelatedCompany;
@@ -13266,5 +13271,34 @@ public class SmApplicationUtil {
 			}
 		}
 	}
+	
+	//24964 - start 
+	public static void rejectSmMofCertForSupplier(SmSupplier supplier){
+		VirtualCertReqDTO reqDTO = new VirtualCertReqDTO();
+		reqDTO.setSupplierId(supplier.getSupplierId());
+				
+		VirtualCertResDTO resDTO = SmServiceLookup.getVirtualCertSO().retrieveMOFCertBySupplierId(reqDTO);
+		
+		if(resDTO != null && resDTO.getSmMofCerts() != null){
+			for(SmMofCert cert : resDTO.getSmMofCerts()){
+				if(cert.isBumiCert() 
+						&& cert.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
+					VirtualCertReqDTO rejectedMofCert = new VirtualCertReqDTO();
+					MofRegistrationReqDTO mofRegistrationReqDTO = new MofRegistrationReqDTO();
+					
+					//update sm_supplier: is_bumi to 0
+					supplier.setBumi(false);
+					mofRegistrationReqDTO.setSmSupplier(supplier);
+					SmServiceLookup.getMofRegistrationSO().updateSupplierProfile(mofRegistrationReqDTO);					
+					
+					//update record_status = 4
+					cert.setRecordStatusFlg(DbValueConst.RECORD_STATUS_REJECTED);					
+					rejectedMofCert.setMofCert(cert);
+					SmServiceLookup.getVirtualCertSO().updateMOFCert(rejectedMofCert);
+				}
+			}
+		}
+	}
+	//24964 - end
 
 }
