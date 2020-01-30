@@ -139,7 +139,7 @@
 						actionListener="#{requestNoteBackingBean.proceedWithDPExceedThreshold}"
 						oncomplete="dpExceedDlg.hide(); blockWidget.hide();" id="dpExceed"
 						partialSubmit="true" process="@this" immediate="true"
-						update="@([id$=requestNoteId])" />
+						update=":form:requestNoteId" />
 					<p:commandButton value="#{lbl['lbl.btn.no']}"
 						oncomplete="dpExceedDlg.hide();" />
 				</div>
@@ -168,7 +168,7 @@
 									and isSqStillValid}"
 						action="#{requestNoteBackingBean.saveAction('Save')}"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-						process="@this" update="@([id$=requestNoteId])" />
+						process="@this" update=":form:requestNoteId" />
 
 					<ui:repeat var="bpmAction"
 						value="#{requestNoteBackingBean.managedBean.outComes}">
