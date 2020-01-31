@@ -10744,7 +10744,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						if(!EntityHelper.isCollectionEmpty(catList)
 								&& catList.size() > 0){
 							for(Object[] arr : catList){
-								if(disciplinaryAction.getDisciplinaryActionId().toString().equalsIgnoreCase(arr[7].toString())){
+								if(arr[7] != null && disciplinaryAction.getDisciplinaryActionId().toString().equalsIgnoreCase(arr[7].toString())){
 									DisciplinaryActionCategoryVO catVo = new DisciplinaryActionCategoryVO();
 									String catCode = StringUtils.EMPTY;
 									catCode = arr[3].toString() + arr[4].toString() + arr[5].toString() ;
