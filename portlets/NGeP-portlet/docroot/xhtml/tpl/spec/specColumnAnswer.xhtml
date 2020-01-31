@@ -207,10 +207,10 @@
 			<p:message id="answerComplianceMsg" for="answerCompliance" display="icon" rendered="#{isAnswerTypeDropdown}" />
 		
 <!-- FARID START -->
-			<h:panelGroup layout="div" rendered="#{not empty tplSpecAnswer.tplSpecQuestion and 
-												   not empty tplSpecAnswer.tplSpecQuestion.tplSpecMaster and 
-												   not empty tplSpecAnswer.tplSpecQuestion.tplSpecMaster.scQtDoc and 
-												   not empty tplSpecAnswer.tplSpecQuestion.tplSpecMaster.scQtDoc.scQt}">
+			<h:panelGroup layout="div" rendered="#{tplSpecAnswer.tplSpecQuestion ne null and 
+												   tplSpecAnswer.tplSpecQuestion.tplSpecMaster ne null and 
+												   tplSpecAnswer.tplSpecQuestion.tplSpecMaster.scQtDoc ne null and 
+												   tplSpecAnswer.tplSpecQuestion.tplSpecMaster.scQtDoc.scQt ne null}">
 				<h:selectOneMenu id="answerOffer" style="width:calc(100% - 30px);" 
 						value="#{tplSpecAnswer.offer}"
 						rendered="#{tplSpecAnswer.tplSpecQuestion.tplSpecMaster.scQtDoc.scQt.partial and isZonal and !isSpecTypeFinancial and isQuestionTypeItem}" 
@@ -260,7 +260,6 @@
 		</h:outputText>
 	</p:column>
 	<p:column  style="width:200px;"  rendered="#{!(isSpecTypeFinancial and !isSpecificationReq)}">
-		#{tplSpecAnswer.tplSpecQuestion.tplSpecMaster.scQtDoc.scQt.partial}
 		<p:inputTextarea id="answerRemarks" label="#{lbl[remarklbl]}" style="width:calc(100% - 15px);" value="#{tplSpecAnswer.answerRemark}" 
 		disabled="#{!editable}" rows="1"  onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
 		onmouseout="limitTextArea(this,1000);" rendered="#{!isSqSpec or (isSqSpec and isQuestionTypeItem)}">
