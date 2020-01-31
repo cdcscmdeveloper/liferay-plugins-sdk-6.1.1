@@ -306,6 +306,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				String paymentType = StringUtils.EMPTY;
 				paymentType = getPaymentFeeTypeByBillType(pyPayment.getPyBill().getBillType());
 				pymtReqDTO.setPaymentType(paymentType);
+				pymtReqDTO.setMethodName("responsePreRender-PaymentResponseBackingBean");
 				PaymentResDTO pymtResDTO = null;
 
 				log.info(">>>>>counter equal to 1<<<<<<");
