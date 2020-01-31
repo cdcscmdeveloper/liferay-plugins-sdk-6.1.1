@@ -21,7 +21,7 @@
 		
 		<p:panel id="qtPricePanelId" header="#{lbl['lbl.sc.notice.board.pricingheader']}" toggleable="true">
 			<h:panelGrid border="0" width="100%" columns="2"
-				columnClasses="columnWidth20">
+				columnClasses="columnWidth20" style="text-align:center;">
 
 				<h:outputLabel value="#{lbl['lbl.sc.ministry']}" styleClass="outputLabel-view-label"></h:outputLabel>
 				<h:outputText
@@ -43,7 +43,7 @@
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.qtNo}"
 					readonly="true" />
-
+              
 				<h:outputLabel value="#{lbl['lbl.sc.closing.date']}" styleClass="outputLabel-view-label"></h:outputLabel>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.closingDate}"
@@ -66,9 +66,9 @@
 
 			</h:panelGrid>
 		</p:panel>
-			<!-- Committee Members table -->
+			<!-- Committee Members table -->   <!-- CR 21639 added render condition Evaluation type -->
 			<p:panel header="#{noticeBoardBackingBean.managedBean.committeeName}" toggleable="true" 
-			rendered="#{noticeBoardBackingBean.managedBean.committeeName ne null?'true':'false'}">
+			rendered="#{(noticeBoardBackingBean.managedBean.committeeName ne null?'true':'false') and (noticeBoardBackingBean.managedBean.scQt.evaluationType != 1)}">
 							
 				<p:dataTable id="committeeId"
 					value="#{noticeBoardBackingBean.managedBean.scCommitteeMembers}"
