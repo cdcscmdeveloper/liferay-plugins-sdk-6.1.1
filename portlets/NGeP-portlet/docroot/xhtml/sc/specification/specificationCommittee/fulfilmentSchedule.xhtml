@@ -10,7 +10,8 @@
 	
 	<!-- Enhancement #25659 remove the Radio button options selection between Frequency Payment/progressive Payment  -->
 
-		<!-- <table border="0" cellspacing="0" cellpadding="0">
+		<ui:remove> 
+		<table border="0" cellspacing="0" cellpadding="0">
 			<tr>
 				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeScheduled}">
@@ -29,7 +30,8 @@
 							value="#{lbl['lbl.sc.periodic.fullfillent.type.tooltip']}" /></td>
 				</h:panelGroup>
 			</tr>
-		</table> -->
+		</table>
+		</ui:remove> 
 
 		<h:panelGroup id="schedule">
 			<p:panel header="#{lbl['lbl.sc.spec.freq.schedule']} "
