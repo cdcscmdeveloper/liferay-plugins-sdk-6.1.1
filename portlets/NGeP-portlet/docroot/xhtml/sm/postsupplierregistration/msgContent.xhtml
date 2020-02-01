@@ -27,8 +27,7 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>	
-					<!-- Redmine 27264 -->
-				    <p:messages id="messages" showSummary="false" showDetail="true"  escape="false" autoUpdate="true" closable="true" severity="error, info, warn" />
+					
 		
 		<div align="left">
 			<table class="cTbl">
@@ -110,7 +109,8 @@
 				</p:outputPanel>
 			</c:otherwise>
 		</c:choose>
-		
+		<!-- Redmine 27264 -->
+				    <p:messages id="messages" showSummary="false" showDetail="true"  escape="false" closable="true"  />
 		<p:outputPanel rendered="#{postSupplierRegBB.validSupplierTemp()}"
 			id="basicPanelId">
 			<c:if test="#{postSupplierRegBB.managedBean.flowStatus > 0}">
