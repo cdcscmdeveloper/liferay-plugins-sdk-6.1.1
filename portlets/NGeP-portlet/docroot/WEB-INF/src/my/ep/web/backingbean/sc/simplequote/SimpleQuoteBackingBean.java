@@ -7470,9 +7470,10 @@ public class SimpleQuoteBackingBean extends
 						if(disciplinaryAction.getRemark() != null)
 							retVal.setRemarks(disciplinaryAction.getRemark());
 						
-						if(disciplinaryAction.isWarning())
+						if(disciplinaryAction.isWarning()){
 							retVal.setWarning(true);
-						getManagedBean().setDisciplinaryActionWarning(true);
+							getManagedBean().setDisciplinaryActionWarning(true);
+						}
 						if(disciplinaryAction.isCancelCategory())
 							retVal.setCancelCategory(true);
 						if(disciplinaryAction.isSuspendRegistration())
@@ -7493,7 +7494,7 @@ public class SimpleQuoteBackingBean extends
 							if(!EntityHelper.isCollectionEmpty(catList)
 									&& catList.size() > 0){
 								for(Object[] arr : catList){		
-									if(disciplinaryAction.getDisciplinaryActionId().toString().equalsIgnoreCase(arr[7].toString())){
+									if(arr[7] != null && disciplinaryAction.getDisciplinaryActionId().toString().equalsIgnoreCase(arr[7].toString())){
 										DisciplinaryActionCategoryVO catVo = new DisciplinaryActionCategoryVO();
 										String catCode = StringUtils.EMPTY;
 										catCode = arr[3].toString() + arr[4].toString() + arr[5].toString() ;
