@@ -135,7 +135,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	private IPagingDataModel<PpPlan> ppPlanDataModel = new PpPlanDataModel();
 	private IPagingDataModel<PmOrgProfile> ppOrgProfileDataModel = new PpOrgProfileDataModel();
 	private IPagingDataModel<PpProcurementItem> ppAnnualPlanDataModel = new PpAPlanDataModel();	//[#25550]
-	private IPagingDataModel<PpProcurementItem> ppCloneProcurementDataModel = new PpCloneProcurementDataModel();	//[#25549]
+	private IPagingDataModel<PpProcurementItem> ppCloneProcurementDataModel = new PpCloneProcurementDataModel();//[#25549]
 	private IPagingDataModel<PpExpenditureItem> ppEpItemsDataModel = new PpEpItemsDataModel();	//[#25549]
 
 	
@@ -5250,6 +5250,23 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	//[#25549]- Start
 	
 	
+	public SelectItem[] getPlanPreviousYearOptions() {
+		log.info("getPlanPreviousYearOptions");
+		
+			Integer currentYear = Calendar.getInstance().get(Calendar.YEAR);
+			Integer preYear1 = currentYear - 1;
+			Integer preYear2 = preYear1 - 1;
+			SelectItem[] items = new SelectItem[2];
+			items[0] = new SelectItem(preYear1.longValue(), preYear1.toString());
+			items[1] = new SelectItem(preYear2.longValue(), preYear2.toString());
+				
+			log.info("selected year " + this.getManagedBean().getPlanSearchBean().getYear());
+			
+			return items;
+		}
+	
+	
+	
 		/**
 		 * Main Filtration For Procurement Plan
 		 */
@@ -5262,29 +5279,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		/**
 		 * Main Filtration For Procurement Plan
 		 */
-		public void searchCloneExpenditureBPlan() {
-			log.info("[#25549] searchCloneExpenditureBPlan");			
-			ppEpItemsDataModel.reloadData();
-		}
+		public void searchCloneExpenditureBPlan() {		
+		log.info("[#25549] searchCloneEpBPlan");	
 		
+		ppEpItemsDataModel.reloadData();
+	}
 
-			public SelectItem[] getPlanPreviousYearOptions() {
-				log.info("getPlanPreviousYearOptions");
-				
-					Integer currentYear = Calendar.getInstance().get(Calendar.YEAR);
-					Integer preYear1 = currentYear - 1;
-					Integer preYear2 = preYear1 - 1;
-					SelectItem[] items = new SelectItem[2];
-					items[0] = new SelectItem(preYear1.longValue(), preYear1.toString());
-					items[1] = new SelectItem(preYear2.longValue(), preYear2.toString());
-						
-					log.info("selected year " + this.getManagedBean().getPlanSearchBean().getYear());
-					
-					return items;
-				}
-			
-			
-			
 			
 			/**
 			 * @return the ppCloneProcurementDataModel
@@ -5309,11 +5309,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			 * notice board quotation/tender list paging class
 			 */
 			private class PpCloneProcurementDataModel extends PagingDataModel<PpProcurementItem> {
+				
 
 				private static final long serialVersionUID = 1L;
 
 				public PpCloneProcurementDataModel() {
 					super("dtcloneprosearchresults");
+						
 				}
 
 				/*
@@ -5324,7 +5326,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				 * .biz.bean.search.ISearchBean)
 				 */
 				@Override
-				public ISearchResultBean<PpProcurementItem> pageChangeListener(ISearchBean<PpProcurementItem> searchBean) {
+				public ISearchResultBean<PpProcurementItem> pageChangeListener(ISearchBean<PpProcurementItem> searchBean) {		
 					if (log.isDebugEnabled()) {
 						log.debug("pageChangeListener");
 					}
@@ -5383,7 +5385,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				bean.setSearchValue(ProcurementPlanConst.PLAN_TYPE_PROCUREMENT);	// P - Procurement
 				searchBean.getDataFilterBeans().add(bean);
 				
-						
+				
+				
 				//set procurement item title or description
 				if(StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanTitle()) || StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanDesc())){
 					
@@ -5417,33 +5420,43 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					searchBean.getDataFilterBeans().add(beans);				
 				}
 				
-				//set procurement item category type
-				if(this.getManagedBean().getPlanSearchBean().getCategoryType().getParameterId()!=null || this.getManagedBean().getPlanSearchBean().getProcurementType().getParameterId()!=null){
-					
-					log.info("[#25549] ParameterId: " + this.getManagedBean().getPlanSearchBean().getCategoryType().getParameterId());
-					log.info("[#25549] ParameterId: " + this.getManagedBean().getPlanSearchBean().getProcurementType().getParameterId());
-					
-					
-					SearchFilterBean sfbean1 = new SearchFilterBean();
-					sfbean1.setCaseInsensitive(true);
-					sfbean1.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
-					sfbean1.setSearchField("procurementCat.parameterId");
-					sfbean1.setSearchValue(this.getManagedBean().getPlanSearchBean().getCategoryType().getParameterId());
-					sfbean1.setAndOr(SearchCondition.CONDITION_OR.value());
-					
-					SearchFilterBean sfbean2 = new SearchFilterBean();
-					sfbean2.setCaseInsensitive(true);
-					sfbean2.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
-					sfbean2.setSearchField("procurementType.parameterCode");
-					sfbean2.setSearchValue(this.getManagedBean().getPlanSearchBean().getProcurementType().getParameterCode());
-					sfbean2.setAndOr(SearchCondition.CONDITION_OR.value());
-					
-					SearchMultiFilterBean beans = new SearchMultiFilterBean(sfbean1,sfbean2);			
-					searchBean.getDataFilterBeans().add(beans);	
-					
+				
+				if(this.getManagedBean().getPlanSearchBean().getCategoryType()!=null && this.getManagedBean().getPlanSearchBean().getCategoryType().getParameterId()!=null){
+					log.info("[#25550] Procurement item category type is: " + this.getManagedBean().getPlanSearchBean().getCategoryType().getParameterId());
+					bean = new SearchFilterBean();
+					bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+					bean.setSearchField("procurementCat.parameterId");
+					bean.setSearchValue(this.getManagedBean().getPlanSearchBean().getCategoryType().getParameterId());
+					searchBean.getDataFilterBeans().add(bean);
 				}
 				
-			
+//				//set procurement item category type
+//				if(this.getManagedBean().getPlanSearchBean().getCategoryType().getParameterId()!=null || this.getManagedBean().getPlanSearchBean().getProcurementType().getParameterId()!=null){
+//					
+//					log.info("[#25549] ParameterId: " + this.getManagedBean().getPlanSearchBean().getCategoryType().getParameterId());
+//					log.info("[#25549] ParameterCode: " + this.getManagedBean().getPlanSearchBean().getProcurementType().getParameterCode());
+//					
+//					
+//					SearchFilterBean sfbean1 = new SearchFilterBean();
+//					sfbean1.setCaseInsensitive(true);
+//					sfbean1.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+//					sfbean1.setSearchField("procurementCat.parameterId");
+//					sfbean1.setSearchValue(this.getManagedBean().getPlanSearchBean().getCategoryType().getParameterId());
+//					sfbean1.setAndOr(SearchCondition.CONDITION_OR.value());
+//					
+//					SearchFilterBean sfbean2 = new SearchFilterBean();
+//					sfbean2.setCaseInsensitive(true);
+//					sfbean2.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+//					sfbean2.setSearchField("procurementType.parameterId");
+//					sfbean2.setSearchValue(this.getManagedBean().getPlanSearchBean().getProcurementType().getParameterId());
+//					sfbean2.setAndOr(SearchCondition.CONDITION_OR.value());
+//					
+//					SearchMultiFilterBean beans = new SearchMultiFilterBean(sfbean1,sfbean2);			
+//					searchBean.getDataFilterBeans().add(beans);	
+//					
+//				}
+//				
+//			
 				
 						
 				//set ptj
@@ -5482,6 +5495,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					 */
 					public IPagingDataModel<PpExpenditureItem> getPpEpItemsDataModel() {
 						return ppEpItemsDataModel;
+					
 					}
 
 					//[#25549]
@@ -5503,6 +5517,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					private class PpEpItemsDataModel extends PagingDataModel<PpExpenditureItem> {
 
 						private static final long serialVersionUID = 1L;
+						
 
 						public PpEpItemsDataModel() {
 							super("dtclonepitemssearchresults");
@@ -5516,17 +5531,28 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						 * .biz.bean.search.ISearchBean)
 						 */
 						@Override
-						public ISearchResultBean<PpExpenditureItem> pageChangeListener(ISearchBean<PpExpenditureItem> searchBean) {
+						public ISearchResultBean<PpExpenditureItem> pageChangeListener(ISearchBean<PpExpenditureItem> searchBean) {	
 							if (log.isDebugEnabled()) {
 								log.debug("pageChangeListener");
 							}
+							
 							
 							try {
 								log.info("[#25549] pageChangeListener...");						
 								log.info("[#25549] call getPpEpItemsBDataModel");
 								//construct search bean criteria
-								ISearchBean<PpExpenditureItem> searchBeanData = getEPItemBSearchBeanData(searchBean);
 								
+								
+
+							    RequestContext.getCurrentInstance().execute("hideLovMsg();");
+									
+								
+								
+								ProcurementPlanBackingBean bb = new ProcurementPlanBackingBean();
+								
+								
+							    ISearchBean<PpExpenditureItem> searchBeanData = getEPItemBSearchBeanData(searchBean);
+						
 								ProcurementPlanReqDTO reqDTO = new ProcurementPlanReqDTO();
 								//set search criteria
 								reqDTO.setExpenditureItemSearchBean(searchBeanData);					
@@ -5556,8 +5582,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 											if (planItem.getRecordStatusFlg()!= null) {						
 												planItem.getRecordStatusFlg();	
 												
-												ProcurementPlanBackingBean bb = new ProcurementPlanBackingBean();
-
 											
 												if (planItem.getRecordStatusFlg()== DbValueConst.RECORD_STATUS_ACTIVE){
 													 bb.getManagedBean().setStatus(
@@ -5571,14 +5595,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 																	new FacesScopes().getUserLocale()));
 												}
 											}
-										   
-										
+								
 										}
-									}
-													
-									
 									return resDTO.getPlanEPItemResultBean();
 								}
+							}
 								
 							} catch (Exception e) {
 								e.printStackTrace();
@@ -5587,84 +5608,427 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						}
 					}
 					
-				
-					
+									
 					/**
 					 * Get search bean, filtered based on default value or by search criteria.
 					 * @return ISearchBean<PpExpenditureItem>
 					 */
 					private ISearchBean<PpExpenditureItem> getEPItemBSearchBeanData(ISearchBean<PpExpenditureItem> searchBean){
 						log.info("[#25549] getCloneProcItemSearchBeanData - Start");
-												
-							
-						log.info("[#25549] Selected Year : " + this.getManagedBean().getPlanSearchBean().getYear());
-						SearchFilterBean bean = new SearchFilterBean();			
-						bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-						bean.setSearchField("ppPlan.planYear");
-						bean.setSearchValue(this.getManagedBean().getPlanSearchBean().getYear());
-						searchBean.getDataFilterBeans().add(bean);
-							
-						//set plan type		
-						log.info("[#25549] Plan type is: " + ProcurementPlanConst.PLAN_TYPE_EXPENDITURE);
-						bean = new SearchFilterBean();
-						bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-						bean.setSearchField("ppPlan.planType.parameterCode");
-						bean.setSearchValue(ProcurementPlanConst.PLAN_TYPE_EXPENDITURE);
-						searchBean.getDataFilterBeans().add(bean);
+					
+						if (ParameterConst.VOT_MENGURUS.equals(	this.getManagedBean().getParamExpenditure())) {	
+							  log.info("[#25549] Selected Year : " + this.getManagedBean().getPlanSearchBean().getYearB());
+								SearchFilterBean bean = new SearchFilterBean();			
+								bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+								bean.setSearchField("ppPlan.planYear");
+								bean.setSearchValue(this.getManagedBean().getPlanSearchBean().getYearB());
+								searchBean.getDataFilterBeans().add(bean);
+									
+								//set plan type		
+								log.info("[#25549] Plan type is: " + ProcurementPlanConst.PLAN_TYPE_EXPENDITURE);
+								bean = new SearchFilterBean();
+								bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+								bean.setSearchField("ppPlan.planType.parameterCode");
+								bean.setSearchValue(ProcurementPlanConst.PLAN_TYPE_EXPENDITURE);
+								searchBean.getDataFilterBeans().add(bean);
+								
+								
+								log.info("[#25549] Vot_Mengurus : " + this.getManagedBean().getPlanSearchBean().getParamforexpenditure());
+								bean = new SearchFilterBean();
+								bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+								bean.setSearchField("votFundType.parameterCode");
+								bean.setSearchValue(ParameterConst.VOT_MENGURUS);
+								searchBean.getDataFilterBeans().add(bean);
+								
+
+								
+								if(StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExCode()) || StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExDesc())){
+										
+									String CodeOrDesc = "";
+											
+									
+									if (StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExCode())){
+										CodeOrDesc = this.getManagedBean().getPlanSearchBean().getPlanExCode();
+									}else if
+									   (StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExDesc())){
+										CodeOrDesc = this.getManagedBean().getPlanSearchBean().getPlanExDesc();
+									}
+									
+						     		
+									SearchFilterBean sfbean1 = new SearchFilterBean();
+									sfbean1.setCaseInsensitive(true);
+									sfbean1.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+									sfbean1.setSearchField("pmGlAccount.glAccCode");
+									sfbean1.setSearchValue(CodeOrDesc);
+									sfbean1.setAndOr(SearchCondition.CONDITION_OR.value());
+									
+									SearchFilterBean sfbean2 = new SearchFilterBean();
+									sfbean2.setCaseInsensitive(true);
+									sfbean2.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+									sfbean2.setSearchField("pmGlAccount.description");
+									sfbean2.setSearchValue(CodeOrDesc);
+									sfbean2.setAndOr(SearchCondition.CONDITION_OR.value());
+									
+									SearchMultiFilterBean beans = new SearchMultiFilterBean(sfbean1,sfbean2);			
+									searchBean.getDataFilterBeans().add(beans);				
+								}
+								
+								
+								//set ptj
+								if(this.getManagedBean().getSelectedPlan().getOrgProfile().getOrgProfileId()!=null){
+									log.info("[#25549] Ptj is: " + this.getManagedBean().getSelectedPlan().getOrgProfile().getOrgProfileId());
+									bean = new SearchFilterBean();
+									bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+									bean.setSearchField("ppPlan.orgProfile.orgProfileId");
+									bean.setSearchValue(this.getManagedBean().getSelectedPlan().getOrgProfile().getOrgProfileId());
+									searchBean.getDataFilterBeans().add(bean);
+								}
+																
+								//set record status flag	
+								
+								log.info("[#25549] Selected Status : " + this.getManagedBean().getPlanSearchBean().getStatusB());
+								
+								bean = new SearchFilterBean();
+								bean.setSearchField("recordStatusFlg");
+								bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+								bean.setSearchValue(this.getManagedBean().getPlanSearchBean().getStatusB());
+								searchBean.getDataFilterBeans().add(bean);		
+								
+								
+					   }
 						
 						
-						log.info("[#25549] Vot_Mengurus : " + ParameterConst.VOT_MENGURUS);
-						bean = new SearchFilterBean();
-						bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-						bean.setSearchField("votFundType.parameterCode");
-						bean.setSearchValue(this.getManagedBean().getParamExpenditure());
-						searchBean.getDataFilterBeans().add(bean);
-						
-						if(StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getCode())&& StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getDesc())){		
-				     		log.info("[#25549] Account Code is: " + this.getManagedBean().getPlanSearchBean().getCode());
-							SearchFilterBean sfbean1 = new SearchFilterBean();
-							sfbean1.setCaseInsensitive(true);
-							sfbean1.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
-							sfbean1.setSearchField("pmGlAccount.glAccCode");
-							sfbean1.setSearchValue(this.getManagedBean().getPlanSearchBean().getCode());
-							sfbean1.setAndOr(SearchCondition.CONDITION_OR.value());
-							
-							SearchFilterBean sfbean2 = new SearchFilterBean();
-							sfbean2.setCaseInsensitive(true);
-							sfbean2.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
-							sfbean2.setSearchField("pmGlAccount.description");
-							sfbean2.setSearchValue(this.getManagedBean().getPlanSearchBean().getDesc());
-							sfbean2.setAndOr(SearchCondition.CONDITION_OR.value());
-							
-							SearchMultiFilterBean beans = new SearchMultiFilterBean(sfbean1,sfbean2);			
-							searchBean.getDataFilterBeans().add(beans);				
-						}
-						
-						
-						//set ptj
-						if(this.getManagedBean().getSelectedPlan().getOrgProfile().getOrgProfileId()!=null){
-							log.info("[#25549] Ptj is: " + this.getManagedBean().getSelectedPlan().getOrgProfile().getOrgProfileId());
+						if (ParameterConst.VOT_TANGGUNGAN.equals(this.getManagedBean().getParamExpenditure())) {
+							// T
+						  log.info("[#25549] Selected Year : " + this.getManagedBean().getPlanSearchBean().getYearT());
+							SearchFilterBean bean = new SearchFilterBean();			
+							bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+							bean.setSearchField("ppPlan.planYear");
+							bean.setSearchValue(this.getManagedBean().getPlanSearchBean().getYearT());
+							searchBean.getDataFilterBeans().add(bean);
+								
+							//set plan type		
+							log.info("[#25549] Plan type is: " + ProcurementPlanConst.PLAN_TYPE_EXPENDITURE);
 							bean = new SearchFilterBean();
 							bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-							bean.setSearchField("ppPlan.orgProfile.orgProfileId");
-							bean.setSearchValue(this.getManagedBean().getSelectedPlan().getOrgProfile().getOrgProfileId());
+							bean.setSearchField("ppPlan.planType.parameterCode");
+							bean.setSearchValue(ProcurementPlanConst.PLAN_TYPE_EXPENDITURE);
 							searchBean.getDataFilterBeans().add(bean);
-						}
-														
-						//set record status flag	
-						
-						log.info("[#25549] Selected Status : " + this.getManagedBean().getPlanSearchBean().getStatus());
-						
-						bean = new SearchFilterBean();
-						bean.setSearchField("recordStatusFlg");
-						bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-						bean.setSearchValue(this.getManagedBean().getPlanSearchBean().getStatus());
-						searchBean.getDataFilterBeans().add(bean);		
-					
-						log.info("getProcItemSearchBeanData - End");
-						return searchBean;
-					}	
+							
+							
+							log.info("[#25549] Vot_Mengurus : " + this.getManagedBean().getPlanSearchBean().getParamforexpenditure());
+							bean = new SearchFilterBean();
+							bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+							bean.setSearchField("votFundType.parameterCode");
+							bean.setSearchValue(ParameterConst.VOT_TANGGUNGAN);
+							searchBean.getDataFilterBeans().add(bean);
+							
 
+							
+							if(StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExCodeT()) || StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExDescT())){
+									
+								String CodeOrDesc = "";
+										
+								
+								if (StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExCodeT())){
+									CodeOrDesc = this.getManagedBean().getPlanSearchBean().getPlanExCodeT();
+								}else if
+								   (StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExDescT())){
+									CodeOrDesc = this.getManagedBean().getPlanSearchBean().getPlanExDescT();
+								}
+								
+					     		
+								SearchFilterBean sfbean1 = new SearchFilterBean();
+								sfbean1.setCaseInsensitive(true);
+								sfbean1.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+								sfbean1.setSearchField("pmGlAccount.glAccCode");
+								sfbean1.setSearchValue(CodeOrDesc);
+								sfbean1.setAndOr(SearchCondition.CONDITION_OR.value());
+								
+								SearchFilterBean sfbean2 = new SearchFilterBean();
+								sfbean2.setCaseInsensitive(true);
+								sfbean2.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+								sfbean2.setSearchField("pmGlAccount.description");
+								sfbean2.setSearchValue(CodeOrDesc);
+								sfbean2.setAndOr(SearchCondition.CONDITION_OR.value());
+								
+								SearchMultiFilterBean beans = new SearchMultiFilterBean(sfbean1,sfbean2);			
+								searchBean.getDataFilterBeans().add(beans);				
+							}
+							
+							
+							//set ptj
+							if(this.getManagedBean().getSelectedPlan().getOrgProfile().getOrgProfileId()!=null){
+								log.info("[#25549] Ptj is: " + this.getManagedBean().getSelectedPlan().getOrgProfile().getOrgProfileId());
+								bean = new SearchFilterBean();
+								bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+								bean.setSearchField("ppPlan.orgProfile.orgProfileId");
+								bean.setSearchValue(this.getManagedBean().getSelectedPlan().getOrgProfile().getOrgProfileId());
+								searchBean.getDataFilterBeans().add(bean);
+							}
+															
+							//set record status flag	
+							
+							log.info("[#25549] Selected Status : " + this.getManagedBean().getPlanSearchBean().getStatusT());
+							
+							bean = new SearchFilterBean();
+							bean.setSearchField("recordStatusFlg");
+							bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+							bean.setSearchValue(this.getManagedBean().getPlanSearchBean().getStatusT());
+							searchBean.getDataFilterBeans().add(bean);	
+					  	
+					   }
+						
+						
+						if(ParameterConst.VOT_PEMBANGUNAN.equals(this.getManagedBean().getParamExpenditure())) {
+								// T
+							  log.info("[#25549] Selected Year : " + this.getManagedBean().getPlanSearchBean().getYearP());
+								SearchFilterBean bean = new SearchFilterBean();			
+								bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+								bean.setSearchField("ppPlan.planYear");
+								bean.setSearchValue(this.getManagedBean().getPlanSearchBean().getYearP());
+								searchBean.getDataFilterBeans().add(bean);
+									
+								//set plan type		
+								log.info("[#25549] Plan type is: " + ProcurementPlanConst.PLAN_TYPE_EXPENDITURE);
+								bean = new SearchFilterBean();
+								bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+								bean.setSearchField("ppPlan.planType.parameterCode");
+								bean.setSearchValue(ProcurementPlanConst.PLAN_TYPE_EXPENDITURE);
+								searchBean.getDataFilterBeans().add(bean);
+								
+								
+								log.info("[#25549] Vot_Mengurus : " + this.getManagedBean().getPlanSearchBean().getParamforexpenditure());
+								bean = new SearchFilterBean();
+								bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+								bean.setSearchField("votFundType.parameterCode");
+								bean.setSearchValue(ParameterConst.VOT_PEMBANGUNAN);
+								searchBean.getDataFilterBeans().add(bean);
+								
+
+								
+								if(StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExCodeP()) || StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExDescP())){
+										
+									String CodeOrDesc = "";
+											
+									
+									if (StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExCodeP())){
+										CodeOrDesc = this.getManagedBean().getPlanSearchBean().getPlanExCodeP();
+									}else if
+									   (StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExDescP())){
+										CodeOrDesc = this.getManagedBean().getPlanSearchBean().getPlanExDescP();
+									}
+									
+						     		
+									SearchFilterBean sfbean1 = new SearchFilterBean();
+									sfbean1.setCaseInsensitive(true);
+									sfbean1.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+									sfbean1.setSearchField("pmGlAccount.glAccCode");
+									sfbean1.setSearchValue(CodeOrDesc);
+									sfbean1.setAndOr(SearchCondition.CONDITION_OR.value());
+									
+									SearchFilterBean sfbean2 = new SearchFilterBean();
+									sfbean2.setCaseInsensitive(true);
+									sfbean2.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+									sfbean2.setSearchField("pmGlAccount.description");
+									sfbean2.setSearchValue(CodeOrDesc);
+									sfbean2.setAndOr(SearchCondition.CONDITION_OR.value());
+									
+									SearchMultiFilterBean beans = new SearchMultiFilterBean(sfbean1,sfbean2);			
+									searchBean.getDataFilterBeans().add(beans);				
+								}
+								
+								
+								//set ptj
+								if(this.getManagedBean().getSelectedPlan().getOrgProfile().getOrgProfileId()!=null){
+									log.info("[#25549] Ptj is: " + this.getManagedBean().getSelectedPlan().getOrgProfile().getOrgProfileId());
+									bean = new SearchFilterBean();
+									bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+									bean.setSearchField("ppPlan.orgProfile.orgProfileId");
+									bean.setSearchValue(this.getManagedBean().getSelectedPlan().getOrgProfile().getOrgProfileId());
+									searchBean.getDataFilterBeans().add(bean);
+								}
+																
+								//set record status flag	
+								
+								log.info("[#25549] Selected Status : " + this.getManagedBean().getPlanSearchBean().getStatusP());
+								
+								bean = new SearchFilterBean();
+								bean.setSearchField("recordStatusFlg");
+								bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+								bean.setSearchValue(this.getManagedBean().getPlanSearchBean().getStatusP());
+								searchBean.getDataFilterBeans().add(bean);	
+									
+					   }
+						
+						if (ParameterConst.VOT_SETIA.equals(this.getManagedBean().getParamExpenditure())) {
+							// T
+						  log.info("[#25549] Selected Year : " + this.getManagedBean().getPlanSearchBean().getYearS());
+							SearchFilterBean bean = new SearchFilterBean();			
+							bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+							bean.setSearchField("ppPlan.planYear");
+							bean.setSearchValue(this.getManagedBean().getPlanSearchBean().getYearS());
+							searchBean.getDataFilterBeans().add(bean);
+								
+							//set plan type		
+							log.info("[#25549] Plan type is: " + ProcurementPlanConst.PLAN_TYPE_EXPENDITURE);
+							bean = new SearchFilterBean();
+							bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+							bean.setSearchField("ppPlan.planType.parameterCode");
+							bean.setSearchValue(ProcurementPlanConst.PLAN_TYPE_EXPENDITURE);
+							searchBean.getDataFilterBeans().add(bean);
+							
+							
+							log.info("[#25549] Vot_Mengurus : " + this.getManagedBean().getPlanSearchBean().getParamforexpenditure());
+							bean = new SearchFilterBean();
+							bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+							bean.setSearchField("votFundType.parameterCode");
+							bean.setSearchValue(ParameterConst.VOT_SETIA);
+							searchBean.getDataFilterBeans().add(bean);
+							
+
+							
+							if(StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExCodeS()) || StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExDescS())){
+									
+								String CodeOrDesc = "";
+										
+								
+								if (StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExCodeS())){
+									CodeOrDesc = this.getManagedBean().getPlanSearchBean().getPlanExCodeS();
+								}else if
+								   (StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExDescS())){
+									CodeOrDesc = this.getManagedBean().getPlanSearchBean().getPlanExDescS();
+								}
+								
+					     		
+								SearchFilterBean sfbean1 = new SearchFilterBean();
+								sfbean1.setCaseInsensitive(true);
+								sfbean1.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+								sfbean1.setSearchField("pmGlAccount.glAccCode");
+								sfbean1.setSearchValue(CodeOrDesc);
+								sfbean1.setAndOr(SearchCondition.CONDITION_OR.value());
+								
+								SearchFilterBean sfbean2 = new SearchFilterBean();
+								sfbean2.setCaseInsensitive(true);
+								sfbean2.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+								sfbean2.setSearchField("pmGlAccount.description");
+								sfbean2.setSearchValue(CodeOrDesc);
+								sfbean2.setAndOr(SearchCondition.CONDITION_OR.value());
+								
+								SearchMultiFilterBean beans = new SearchMultiFilterBean(sfbean1,sfbean2);			
+								searchBean.getDataFilterBeans().add(beans);				
+							}
+							
+							
+							//set ptj
+							if(this.getManagedBean().getSelectedPlan().getOrgProfile().getOrgProfileId()!=null){
+								log.info("[#25549] Ptj is: " + this.getManagedBean().getSelectedPlan().getOrgProfile().getOrgProfileId());
+								bean = new SearchFilterBean();
+								bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+								bean.setSearchField("ppPlan.orgProfile.orgProfileId");
+								bean.setSearchValue(this.getManagedBean().getSelectedPlan().getOrgProfile().getOrgProfileId());
+								searchBean.getDataFilterBeans().add(bean);
+							}
+															
+							//set record status flag	
+							
+							log.info("[#25549] Selected Status : " + this.getManagedBean().getPlanSearchBean().getStatusS());
+							
+							bean = new SearchFilterBean();
+							bean.setSearchField("recordStatusFlg");
+							bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+							bean.setSearchValue(this.getManagedBean().getPlanSearchBean().getStatusS());
+							searchBean.getDataFilterBeans().add(bean);	
+								
+					   }
+						
+						
+					if (ParameterConst.VOT_AMANAH.equals(this.getManagedBean().getParamExpenditure())) {
+							// T
+						  log.info("[#25549] Selected Year : " + this.getManagedBean().getPlanSearchBean().getYearH());
+							SearchFilterBean bean = new SearchFilterBean();			
+							bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+							bean.setSearchField("ppPlan.planYear");
+							bean.setSearchValue(this.getManagedBean().getPlanSearchBean().getYearH());
+							searchBean.getDataFilterBeans().add(bean);
+								
+							//set plan type		
+							log.info("[#25549] Plan type is: " + ProcurementPlanConst.PLAN_TYPE_EXPENDITURE);
+							bean = new SearchFilterBean();
+							bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+							bean.setSearchField("ppPlan.planType.parameterCode");
+							bean.setSearchValue(ProcurementPlanConst.PLAN_TYPE_EXPENDITURE);
+							searchBean.getDataFilterBeans().add(bean);
+							
+							
+							log.info("[#25549] Vot_Mengurus : " + this.getManagedBean().getPlanSearchBean().getParamforexpenditure());
+							bean = new SearchFilterBean();
+							bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+							bean.setSearchField("votFundType.parameterCode");
+							bean.setSearchValue(ParameterConst.VOT_AMANAH);
+							searchBean.getDataFilterBeans().add(bean);
+							
+
+							
+							if(StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExCodeH()) || StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExDescH())){
+									
+								String CodeOrDesc = "";
+										
+								
+								if (StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExCodeH())){
+									CodeOrDesc = this.getManagedBean().getPlanSearchBean().getPlanExCodeH();
+								}else if
+								   (StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExDescH())){
+									CodeOrDesc = this.getManagedBean().getPlanSearchBean().getPlanExDescH();
+								}
+								
+					     		
+								SearchFilterBean sfbean1 = new SearchFilterBean();
+								sfbean1.setCaseInsensitive(true);
+								sfbean1.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+								sfbean1.setSearchField("pmGlAccount.glAccCode");
+								sfbean1.setSearchValue(CodeOrDesc);
+								sfbean1.setAndOr(SearchCondition.CONDITION_OR.value());
+								
+								SearchFilterBean sfbean2 = new SearchFilterBean();
+								sfbean2.setCaseInsensitive(true);
+								sfbean2.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+								sfbean2.setSearchField("pmGlAccount.description");
+								sfbean2.setSearchValue(CodeOrDesc);
+								sfbean2.setAndOr(SearchCondition.CONDITION_OR.value());
+								
+								SearchMultiFilterBean beans = new SearchMultiFilterBean(sfbean1,sfbean2);			
+								searchBean.getDataFilterBeans().add(beans);				
+							}
+							
+							
+							//set ptj
+							if(this.getManagedBean().getSelectedPlan().getOrgProfile().getOrgProfileId()!=null){
+								log.info("[#25549] Ptj is: " + this.getManagedBean().getSelectedPlan().getOrgProfile().getOrgProfileId());
+								bean = new SearchFilterBean();
+								bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+								bean.setSearchField("ppPlan.orgProfile.orgProfileId");
+								bean.setSearchValue(this.getManagedBean().getSelectedPlan().getOrgProfile().getOrgProfileId());
+								searchBean.getDataFilterBeans().add(bean);
+							}
+															
+							//set record status flag	
+							
+							log.info("[#25549] Selected Status : " + this.getManagedBean().getPlanSearchBean().getStatusH());
+							
+							bean = new SearchFilterBean();
+							bean.setSearchField("recordStatusFlg");
+							bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+							bean.setSearchValue(this.getManagedBean().getPlanSearchBean().getStatusH());
+							searchBean.getDataFilterBeans().add(bean);	
+					   }
+						
+						log.info("getProcItemSearchBeanData - End");
+                		return searchBean;
+							
+					}
+					
+				
 
 		/**
 		 * Add new item procurement item list (Clone Previous Year Data)
@@ -5691,6 +6055,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	               System.out.println("size list " + j );
 	               this.getManagedBean().getSelectedPlan().addPpProcurementItems(ppItem);
 	               }
+			       calculatePpGrandTotal();
 			       resetProcurementClone();
 				}
 		
@@ -5737,6 +6102,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	                ppExItem.setPlanAmt(PpExpenditureItemClone.getPlanAmt());
 	                ppExItem.setNonEpAmt(PpExpenditureItemClone.getNonEpAmt());
 	                ppExItem.setPpPlan(this.getManagedBean().getSelectedPlan());
+	                ppExItem.setJustifications(PpExpenditureItemClone.getJustifications());
 	                ppExItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 	                ppExItem.setEditable(true);
 	                
@@ -5762,19 +6128,21 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						this.getManagedBean().getEpItemsH().add(ppExItem);
 					}
 	     		}
-			   resetExpenditureClone();		   
+			    calculateEpGrandTotal(ParameterConst.VOT_MENGURUS);
+			    calculateEpGrandTotal(ParameterConst.VOT_TANGGUNGAN);
+			    calculateEpGrandTotal(ParameterConst.VOT_PEMBANGUNAN);
+			    calculateEpGrandTotal(ParameterConst.VOT_SETIA);
+			    calculateEpGrandTotal(ParameterConst.VOT_AMANAH);
+			    resetExpenditureClone();
 		      }
 		
 		
 		public void parameterExpenditure(String paramCode) {
-			
-			
-			log.info("parameterExpenditure");
-			
+			log.info("parameterExpenditure " + paramCode);
 			     // B
-			if (ParameterConst.VOT_MENGURUS.equals(paramCode)) {
-				this.getManagedBean().setParamExpenditure(ParameterConst.VOT_MENGURUS);
-			} else if (ParameterConst.VOT_TANGGUNGAN.equals(paramCode)) {
+			if (ParameterConst.VOT_MENGURUS.equals(paramCode)) {	
+			    this.getManagedBean().setParamExpenditure(ParameterConst.VOT_MENGURUS);
+	    	} else if (ParameterConst.VOT_TANGGUNGAN.equals(paramCode)) {
 				// T
 				this.getManagedBean().setParamExpenditure(ParameterConst.VOT_TANGGUNGAN);
 			} else if (ParameterConst.VOT_PEMBANGUNAN.equals(paramCode)) {
@@ -5788,13 +6156,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				this.getManagedBean().setParamExpenditure(ParameterConst.VOT_AMANAH);
 			}
 			
-			rowSelectExpenditure();
-			
+			 rowSelectExpenditure();
+
 		}    
 		
 		
 		public void resetProcurementClone() {
-			
+		
 			log.info("resetProcurementClone");
 			
 			this.getManagedBean().setPlanSearchBean(new ProcurementPlanSearchBean());
@@ -5803,23 +6171,24 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		
 		
 	     public void resetExpenditureClone() {
-			log.info("resetExpenditureClone");
-			
-			
-			this.getManagedBean().setPlanSearchBean(new ProcurementPlanSearchBean());
-			ppEpItemsDataModel.resetData();
+	    	 
+		   log.info("resetExpenditureClone");	
+		  
+		   this.getManagedBean().setPlanSearchBean(new ProcurementPlanSearchBean());
+		   ppEpItemsDataModel.resetData();
+		   
 		}
-	 	
-		
-		
+			
+
 		public boolean goCode(String pmGlAccount) {
 
 			boolean flag = false;
 			String goCode = "";
 			
-			if (pmGlAccount != null) {
+			if (pmGlAccount != null && pmGlAccount.trim().length() > 0) {
 				goCode = pmGlAccount.substring(4, 8);
 			}
+			
 			
 			log.info("goCode " + goCode);
 			
@@ -5873,14 +6242,15 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	        System.out.println(PpExpenditureItemList.size());
 	        if (PpExpenditureItemList.size() > 0) {
 	        	this.getManagedBean().setDisableSelectExpBtn(false);
-	            System.out.println("rowSelect is Enable Button !!:"+ this.getManagedBean().isDisableSelectExpBtn());
+	            System.out.println("rowSelect Expenditure is Enable Button !!:"+ this.getManagedBean().isDisableSelectExpBtn());
 	        } else if (PpExpenditureItemList.size() == 0 || PpExpenditureItemList.size() < 0) {
 	        	this.getManagedBean().setDisableSelectExpBtn(true);
-	            System.out.println("unSelectRow is Disable Button !!:"+ this.getManagedBean().isDisableSelectExpBtn());
+	            System.out.println("unSelectRow Expenditure is Disable Button !!:"+ this.getManagedBean().isDisableSelectExpBtn());
 	        }
 	    }
-		
-		
+	
+	
+    
 		//[#25549]-End
 
 		

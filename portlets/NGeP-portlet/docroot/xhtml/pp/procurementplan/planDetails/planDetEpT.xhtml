@@ -291,12 +291,15 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</p:row>
 			</p:columnGroup>
 		</p:dataTable>
+		
 		<div class="ppRightBtn">
 		    
 		    <!-- #25549 - start -->
-	        <p:commandButton value="#{lbl['lbl.btn.clone']}"
-	            action="#{pPlanBackingBean.parameterExpenditure(ParameterConst.votTanggungan)}"
-		 		onclick="cloneExpenditureTPopUp.show()"/> 
+			<p:commandButton value="#{lbl['lbl.btn.clone']}" 
+			   action="#{pPlanBackingBean.parameterExpenditure(ParameterConst.votTanggungan)}"
+	           disabled="#{!pPlanBackingBean.managedBean.modeEditable}"
+			   update="dtExpenditurePlanT, ppExpenditureTCloneid, dtclonepitemsTsearchresults"
+	           onclick="cloneExpenditureTPopUp.show()"/>
 		    <!-- end -->
 		    &#160;
 		 	<p:commandButton value="#{lbl['lbl.btn.add']}" immediate="true" update="dtExpenditurePlanT" 
@@ -304,19 +307,18 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		 		process="@this" action="#{pPlanBackingBean.addEpItemDet(ParameterConst.votTanggungan)}"/>
 			&#160;
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" update="dtExpenditurePlanT" 
-				disabled="#{!pPlanBackingBean.managedBean.modeEditable}" action="#{pPlanBackingBean.deleteEpItemDet(ParameterConst.votTanggungan)}"
+				disabled="#{!pPlanBackingBean.managedBean.modeEditable}" action="#{pPlanBackingBean.deleteEpItemDet(ParameterConst.votTanggungan)}"/>
 				
-			/> 
-		</div>
-		
-		
-		 <!-- #25549 - start -->
-		   <p:dialog id="cloneExpenditureTPopUp" widgetVar="cloneExpenditureTPopUp" modal="true"
-			header="#{lbl['lbl.pp.plan.t.clone']}" width="500" height="500">
+			</div>
+
+
+		<!-- #25549 - start -->
+		  <p:dialog id="cloneExpenditureTPopUp"  widgetVar="cloneExpenditureTPopUp" closable="false" 
+		      header="#{lbl['lbl.pp.plan.t.clone']}" modal="true" width="680">
 			<ui:include src="planExpenditureTPopup.xhtml"></ui:include>
-		</p:dialog>
+		 </p:dialog> 
 		<!-- end -->
-		
+		 
 	</p:panel> 	
 	
 </ui:composition>

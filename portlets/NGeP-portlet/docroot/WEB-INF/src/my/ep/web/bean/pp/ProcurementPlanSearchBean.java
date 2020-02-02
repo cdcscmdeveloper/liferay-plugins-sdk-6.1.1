@@ -34,11 +34,29 @@ public class ProcurementPlanSearchBean implements Serializable{
 	private String titleOrDesc;			//[#25550]
 	
 	
-	private String code; //[#25549]
-	private String desc; //[#25549]
 	private String paramforexpenditure; //[#25549]
 	private PmParameter procurementType;  //[#25549] 
+	private String yearB; //[#25549]
+	private String yearT; //[#25549]
+	private String yearP; //[#25549]
+	private String yearS; //[#25549]
+	private String yearH; //[#25549]
 	private String planDesc;  //[#25549] 
+	private String planExCode; //[#25549]
+	private String planExDesc; //[#25549]
+	private String planExCodeT; //[#25549]
+	private String planExDescT; //[#25549]
+	private String planExCodeP; //[#25549]
+	private String planExDescP; //[#25549]
+	private String planExCodeS; //[#25549]
+	private String planExDescS; //[#25549]
+	private String planExCodeH; //[#25549]
+	private String planExDescH; //[#25549]
+	private Long statusB; //[#25549]
+	private Long statusT; //[#25549]
+	private Long statusP; //[#25549]
+	private Long statusS; //[#25549]
+	private Long statusH; //[#25549]
 	
 	public ProcurementPlanSearchBean() {
 	}
@@ -220,60 +238,228 @@ public class ProcurementPlanSearchBean implements Serializable{
 		this.titleOrDesc = titleOrDesc;
 	}
 	
+    
+	//[#25549] - Start
+	public String getPlanExCode() {
+		return planExCode;
+	}
+
+
+	public void setPlanExCode(String planExCode) {
+		this.planExCode = planExCode;
+	}
 	
-	//25549 - Expenditure Plan - Start
 	
-		public String getCode() {
-			return code;
-		}
+	public String getPlanExDesc() {
+		return planExDesc;
+	}
 
-		public void setCode(String code) {
-			this.code = code;
-		}
-		
-		public String getDesc() {
-			return desc;
-		}
 
-		public void setDesc(String desc) {
-			this.desc = desc;
-		}
+	public void setPlanExDesc(String planExDesc) {
+		this.planExDesc = planExDesc;
+	}
+	
 		
-		public String getParamforexpenditure() {
-			return paramforexpenditure;
-		}
+	public String getParamforexpenditure() {
+		return paramforexpenditure;
+	}
 
-		public void setParamforexpenditure(String paramforexpenditure) {
-			this.paramforexpenditure = paramforexpenditure;
-		}
-		
-		
-		public PmParameter getProcurementType() {
-			if (procurementType == null)
-				procurementType = new PmParameter();
-			return procurementType;
-		}
+	public void setParamforexpenditure(String paramforexpenditure) {
+		this.paramforexpenditure = paramforexpenditure;
+	}
+				
+	public PmParameter getProcurementType() {
+		if (procurementType == null)
+			procurementType = new PmParameter();
+		return procurementType;
+	}
 
-		public void setProcurementType(PmParameter procurementType) {
-			this.procurementType = procurementType;
-		}
+	
+	public void setProcurementType(PmParameter procurementType) {
+		this.procurementType = procurementType;
+	}
 		
-		/**
-		 * @return the planDesc
-		 */
-		public String getPlanDesc() {
-			return planDesc;
-		}
+	public String getPlanDesc() {
+		return planDesc;
+	}
+	
+	
+	public void setPlanDesc(String planDesc) {
+	this.planDesc = planDesc;
 
-		/**
-		 * @param planDesc
-		 *            the planDesc to set
-		 */
-		public void setPlanDesc(String planDesc) {
-			this.planDesc = planDesc;
-		}
+	}
+	
+	public String getPlanExCodeT() {
+		return planExCodeT;
+	}
 
-		
-		//[#25549] - End
+
+	public void setPlanExCodeT(String planExCodeT) {
+		this.planExCodeT = planExCodeT;
+	}
+	
+	
+	public String getPlanExDescT() {
+		return planExDescT;
+	}
+
+
+	public void setPlanExDescT(String planExDescT) {
+		this.planExDescT = planExDescT;
+	}
+	
+	public String getPlanExCodeP() {
+		return planExCodeP;
+	}
+
+
+	public void setPlanExCodeP(String planExCodeP) {
+		this.planExCodeP = planExCodeP;
+	}
+	
+	
+	public String getPlanExDescP() {
+		return planExDescP;
+	}
+
+
+	public void setPlanExDescP(String planExDescP) {
+		this.planExDescP = planExDescP;
+	}
+	
+	public String getPlanExCodeH() {
+		return planExCodeH;
+	}
+
+
+	public void setPlanExCodeH(String planExCodeH) {
+		this.planExCodeH = planExCodeH;
+	}
+	
+	
+	public String getPlanExDescH() {
+		return planExDescH;
+	}
+
+
+	public void setPlanExDescH(String planExDescH) {
+		this.planExDescH = planExDescH;
+	}
+	
+	
+	public String getPlanExCodeS() {
+		return planExCodeS;
+	}
+
+
+	public void setPlanExCodeS(String planExCodeS) {
+		this.planExCodeS = planExCodeS;
+	}
+	
+	
+	public String getPlanExDescS() {
+		return planExDescS;
+	}
+
+
+	public void setPlanExDescS(String planExDescS) {
+		this.planExDescS = planExDescS;
+	}
+	
+	
+	public Long getStatusB() {
+		return statusB;
+	}
+
+
+	public void setStatusB(Long statusB) {
+		this.statusB = statusB;
+	}
+	
+	public Long getStatusT() {
+		return statusT;
+	}
+
+
+	public void setStatusT(Long statusT) {
+		this.statusT = statusT;
+	}
+	
+	
+	public Long getStatusP() {
+		return statusP;
+	}
+
+
+	public void setStatusP(Long statusP) {
+		this.statusP = statusP;
+	}
+	
+	
+	public Long getStatusS() {
+		return statusS;
+	}
+
+
+	public void setStatusS(Long statusS) {
+		this.statusS = statusS;
+	}
+	
+	
+	public Long getStatusH() {
+		return statusH;
+	}
+
+
+	public void setStatusH(Long statusH) {
+		this.statusH = statusH;
+	}
+	
+	
+	public String getYearB() {
+		return yearB;
+	}
+
+	public void setYearB(String yearB) {
+		this.yearB = yearB;
+	}
+
+	
+	public String getYearT() {
+		return yearT;
+	}
+
+	public void setYearT(String yearT) {
+		this.yearT = yearT;
+	}
+	
+	
+	public String getYearP() {
+		return yearP;
+	}
+	
+	public void setYearP(String yearP) {
+		this.yearP = yearP;
+	}
+	
+	public String getYearS() {
+		return yearS;
+	}
+
+
+	public void setYearS(String yearS) {
+		this.yearS = yearS;
+	}
+	
+	public String getYearH() {
+		return yearH;
+	}
+
+
+	public void setYearH(String yearH) {
+		this.yearH = yearH;
+	}
+	
+	//[#25549] - End
 
 }
