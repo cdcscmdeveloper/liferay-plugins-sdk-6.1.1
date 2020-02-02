@@ -10721,9 +10721,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					if(disciplinaryAction.getRemark() != null)
 						retVal.setRemarks(disciplinaryAction.getRemark());
 							
-					if(disciplinaryAction.isWarning())
+					if(disciplinaryAction.isWarning()){
 						retVal.setWarning(true);
 						getManagedBean().setDisciplinaryActionWarning(true);
+					}
 					if(disciplinaryAction.isCancelCategory())
 						retVal.setCancelCategory(true);
 					if(disciplinaryAction.isSuspendRegistration())
