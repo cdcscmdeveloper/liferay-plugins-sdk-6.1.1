@@ -294,10 +294,12 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		<div class="ppRightBtn">
 		     
 		    <!-- #25549 - start -->
-	        <p:commandButton value="#{lbl['lbl.btn.clone']}"
+	         <p:commandButton value="#{lbl['lbl.btn.clone']}"
 	            action="#{pPlanBackingBean.parameterExpenditure(ParameterConst.votAmanah)}"
-		 		onclick="cloneExpenditureHPopUp.show()"/> 
-		    <!-- end -->
+	            disabled="#{!pPlanBackingBean.managedBean.modeEditable}"
+			    update="dtExpenditurePlanH, ppExpenditureHCloneid, dtclonepitemsHsearchresults"
+		 		onclick="cloneExpenditureHPopUp.show()"/>
+		    <!-- end --> 
 		    &#160;
 		 	<p:commandButton value="#{lbl['lbl.btn.add']}" immediate="true" update="dtExpenditurePlanH" 
 		 		disabled="#{!pPlanBackingBean.managedBean.modeEditable}" partialSubmit="true"
@@ -309,11 +311,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			/> 
 		</div>
 		
-	    <!-- #25549 - start -->
-		  <p:dialog id="cloneExpenditureHPopUp" widgetVar="cloneExpenditureHPopUp" modal="true"
-			header="#{lbl['lbl.pp.plan.b.clone']}" width="500" height="500">
+	   <!-- #25549 - start -->
+		  <p:dialog id="cloneExpenditureHPopUp"  widgetVar="cloneExpenditureHPopUp" closable="false" 
+		      header="#{lbl['lbl.pp.plan.h.clone']}" modal="true" width="680">
 			<ui:include src="planExpenditureHPopup.xhtml"></ui:include>
-		</p:dialog> 
+		 </p:dialog> 
 		<!-- end -->
 		
 	</p:panel>	

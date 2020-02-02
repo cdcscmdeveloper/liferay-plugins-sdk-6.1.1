@@ -24,16 +24,16 @@
 					<td />
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.pp.procurement.desc']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.pp.procurement.title']}"/></td>
 					<td><p:inputText value="#{pPlanBackingBean.managedBean.planSearchBean.planTitle}" size="35"
-						maxlength="21" /></td>
+						maxlength="21" style="width: 230px;" /></td>
 					<td />
 					<td />
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.pp.procurement.desc']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.pp.procurement.desc']}"/></td>
 					<td><p:inputText value="#{pPlanBackingBean.managedBean.planSearchBean.planDesc}" size="35"
-						maxlength="21" /></td>
+						maxlength="21" style="width: 230px;" /></td>
 					<td />
 					<td />
 				</tr>
@@ -93,9 +93,9 @@
 				value="#{pPlanBackingBean.ppCloneProcurementDataModel}" var="ppItem" selection="#{pPlanBackingBean.managedBean.clonePpProcurementItemLs}" rowKey="#{ppItem.procurementItemId}"
 				width="100%" rows="10">
 				
-			  <p:ajax event="rowSelectCheckbox" listener="#{pPlanBackingBean.rowSelect}" update=":form:btnSelect"/>
-          	  <p:ajax event="rowUnselectCheckbox" listener="#{pPlanBackingBean.rowSelect}" update=":form:btnSelect"/>
-              <p:ajax event="toggleSelect"  listener="#{pPlanBackingBean.rowSelect}" update=":form:btnSelect" />		   
+			  <p:ajax event="rowSelectCheckbox" listener="#{pPlanBackingBean.rowSelectProcurement}" update=":form:btnSelect"/>
+          	  <p:ajax event="rowUnselectCheckbox" listener="#{pPlanBackingBean.rowSelectProcurement}" update=":form:btnSelect"/>
+              <p:ajax event="toggleSelect"  listener="#{pPlanBackingBean.rowSelectProcurement}" update=":form:btnSelect" />		   
 	
 			<ac:paginator for="dtcloneprosearchresults"/>
 				
