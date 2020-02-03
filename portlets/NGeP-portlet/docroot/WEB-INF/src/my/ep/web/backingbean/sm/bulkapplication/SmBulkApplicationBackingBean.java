@@ -180,6 +180,13 @@ public class SmBulkApplicationBackingBean extends
 		for (SmBulkApplicationVO bulkAppl : getManagedBean().getSelectedTasks()) {
 
 			try {
+				//21937 - start
+				if(bulkAppl.getRejectionRemarks() == null
+						&& StringUtils.isBlank(bulkAppl.getRejectionRemarks())){
+					throw new EpException(
+							SmCommonUtil.getMessage("lbl.sm.mandatory.rejection.remark", null));
+				}
+				//21937 - end
 				setApplPmStatus(
 						SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER,
 						bulkAppl.getAppl());
@@ -219,6 +226,7 @@ public class SmBulkApplicationBackingBean extends
 			} catch (Exception ex) {
 				getManagedBean().getFailedSubmittedList().add(
 						bulkAppl.getAppl());
+				throw new EpException(ex.getMessage()); //21937
 			}
 		}
 		RequestContext.getCurrentInstance().execute("rejectDialog.hide();");
