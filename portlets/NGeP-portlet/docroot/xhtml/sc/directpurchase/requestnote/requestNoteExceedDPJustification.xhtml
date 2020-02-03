@@ -5,14 +5,14 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-
-	<td class="TableFieldLeft" width="100px">
-	<h:panelGroup id="approvalDocId">
-		<span style="color: red;">*</span>
-	</h:panelGroup>
-	<h:outputText value="#{lbl['lbl.sc.egpa.approval.doc']}" />
+	<td colspan="3">
+	<table style="margin-left:4%;">
+	<tr>
+	<td class="TableFieldLeft">
+	<h:outputLabel value="#{lbl['lbl.sc.egpa.approval.doc']}" />
+	<p:outputLabel value="*" styleClass="mandatory" />
 	</td>
-	<td class="TableFieldRight" width="35%">
+	<td>
 	<ac:scSingleFileUploadButton id="scUploadApprovalDoc"
 					popupWidgetVar="scDocUploadApprovalDlg" rendered="true"
 					attachment="#{requestNoteBackingBean.managedBean.requestNote.scApprovalDocument}"
@@ -20,13 +20,21 @@
 					deleteFileUploadListener="requestNoteBackingBean.deleteApprovalDocUpload">
 				</ac:scSingleFileUploadButton>
 				<ac:iconTooltip id="egpaApprovalDocTooltipId"
-							value="#{lbl['lbl.sc.egpa.approval.doc.tootltip']}" /></td>
+							value="#{lbl['lbl.sc.egpa.approval.doc.tootltip']}" />
+	</td>
+	</tr>
+	</table>
+	</td>
 	<tr>
-	<td class="TableFieldLeft" width="100px"><h:panelGroup id="justificationId">
-		<span style="color: red;">*</span>
-	</h:panelGroup>
-	<h:outputText value="#{lbl['lbl.sc.exceed.justification']}" /></td>
-		<td class="TableFieldRight" width="35%"><p:inputTextarea
+	<td colspan="3">
+	<table style="margin-left:4%;">
+	<tr>
+	<td class="TableFieldLeft">
+	<h:outputLabel value="#{lbl['lbl.sc.exceed.justification']}" />
+	<p:outputLabel value="*" styleClass="mandatory" />
+	</td>
+	<td>
+	<p:inputTextarea
 				title="#{lbl['lbl.sc.exceed.justification.tooltip']}"
 				cols="#{cc.attrs.numberOfCols}" maxlength="1000"
 				onkeyup="limitTextArea(this,1000);"
@@ -37,6 +45,9 @@
 			</p:inputTextarea>
 			<ac:iconTooltip id="exceedJustificationTooltipId"
 							value="#{lbl['lbl.sc.exceed.justification.tooltip']}" />
-			</td>
+	</td>
+	</tr>
+	</table>
+	</td>
 	</tr>
 </ui:composition>
