@@ -3550,10 +3550,18 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		uomCode = getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getDeliveryTermUom().getParameterCode();
 		if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_DAYS)){
 			getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_DAYS));
-			getManagedBean().getFlRequest().setEndDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_DAYS));
+			if(getManagedBean().getTaskId() == null){
+				getManagedBean().getFlRequest().setEndDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_DAYS));
+			}else{
+				getManagedBean().getFlRequest().setEndDate(getManagedBean().getFlRequest().getEndDate());
+			}
 		}else if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_MONTHS)){
 			getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_MONTHS));
-			getManagedBean().getFlRequest().setEndDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_MONTHS));
+			if(getManagedBean().getTaskId() == null){
+				getManagedBean().getFlRequest().setEndDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_MONTHS));
+			}else{
+				getManagedBean().getFlRequest().setEndDate(getManagedBean().getFlRequest().getEndDate());
+			}
 		}
 		
 		if(getManagedBean().getFlRequest().getPmUom()==null) {
@@ -6541,6 +6549,44 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		return getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value());
 	}
 	//24893 - end
+	
+	//17087 - start
+	/**
+	 * Update delivery date based on delivery Term and uomCode.
+	 */
+	public void editDeliveryDate() {
+		if(getManagedBean().getFlRequest().getStartDate()==null) {
+			getManagedBean().getFlRequest().setStartDate(new Timestamp(System.currentTimeMillis()));
+		}
+		Date startDate = getManagedBean().getFlRequest().getStartDate();
+		int deliveryTerm = 0;
+		String uomCode = "";
+		deliveryTerm = getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getDeliveryTerm();
+
+		uomCode = getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getDeliveryTermUom().getParameterCode();
+		if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_DAYS)){
+			getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_DAYS));
+			getManagedBean().getFlRequest().setEndDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_DAYS));
+			
+		}else if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_MONTHS)){
+			getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_MONTHS));
+			getManagedBean().getFlRequest().setEndDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_MONTHS));
+			
+		}
+
+		if(getManagedBean().getFlRequest().getPmUom()==null) {
+			getManagedBean().getFlRequest().setPmUom(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getDeliveryTermUom());
+		}
+		
+		getManagedBean().getFlRequest().setDeliveryTerm(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getDeliveryTerm());
+		//update delivery address
+		for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()) {
+			flDeliveryAddress.setStartDate(getManagedBean().getFlRequest().getStartDate());
+			flDeliveryAddress.setEndDate(getManagedBean().getFlRequest().getEndDate());
+			flDeliveryAddress.setDeliveryTerm(deliveryTerm);
+		}
+	}
+	//17087- end
 }
 	
 
