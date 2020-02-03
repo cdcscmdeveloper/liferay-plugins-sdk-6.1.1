@@ -293,6 +293,15 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		</p:dataTable>
 	
 		<div class="ppRightBtn">
+		
+		      <!-- #25549 - start -->
+	          <p:commandButton value="#{lbl['lbl.btn.clone']}"
+	            action="#{pPlanBackingBean.parameterExpenditure(ParameterConst.votSetia)}"
+	            disabled="#{!pPlanBackingBean.managedBean.modeEditable}"
+			    update="dtExpenditurePlanS, ppExpenditureSCloneid, dtclonepitemsSsearchresults"
+		 		onclick="cloneExpenditureSPopUp.show()"/>
+		    <!-- end -->
+		     &#160;
 		 	<p:commandButton value="#{lbl['lbl.btn.add']}" immediate="true" update="dtExpenditurePlanS" 
 		 		disabled="#{!pPlanBackingBean.managedBean.modeEditable}" partialSubmit="true"
 		 		process="@this" action="#{pPlanBackingBean.addEpItemDet(ParameterConst.votSetia)}"/>
@@ -302,6 +311,16 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				
 			/> 
 		</div>
+		
+		
+		<!-- #25549 - start --> 
+		  <p:dialog id="cloneExpenditureSPopUp"  widgetVar="cloneExpenditureSPopUp" closable="false" 
+		      header="#{lbl['lbl.pp.plan.s.clone']}" modal="true" width="680">
+			<ui:include src="planExpenditureSPopup.xhtml"></ui:include>
+		 </p:dialog> 
+		<!-- end -->
+		
+		
 	</p:panel>	
 	
 </ui:composition>

@@ -280,15 +280,31 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		</p:dataTable>
 	
 		<div class="ppRightBtn">
+		
+		<!-- #25549 - start -->
+	       <p:commandButton value="#{lbl['lbl.btn.clone']}"
+	            action="#{pPlanBackingBean.parameterExpenditure(ParameterConst.votMengurus)}"         
+	            update="dtExpenditurePlanB, ppExpenditureBCloneid, dtclonepitemsBsearchresults"
+	            disabled="#{!pPlanBackingBean.managedBean.modeEditable}"          
+	            onclick="cloneExpenditureBPopUp.show();"/>
+		 <!-- end -->
+		     &#160;
 		 	<p:commandButton value="#{lbl['lbl.btn.add']}" immediate="true" update="dtExpenditurePlanB" 
 		 		disabled="#{!pPlanBackingBean.managedBean.modeEditable}" partialSubmit="true"
 		 		process="@this" action="#{pPlanBackingBean.addEpItemDet(ParameterConst.votMengurus)}"/>
-			&#160;
+         	&#160;
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" update="dtExpenditurePlanB" 
-				disabled="#{!pPlanBackingBean.managedBean.modeEditable}" action="#{pPlanBackingBean.deleteEpItemDet(ParameterConst.votMengurus)}"
-				
-			/> 
+				disabled="#{!pPlanBackingBean.managedBean.modeEditable}" action="#{pPlanBackingBean.deleteEpItemDet(ParameterConst.votMengurus)}"/> 
 		</div>
+		
+		<!-- #25549 - start -->
+		<p:remoteCommand name="resetAllData" update="ppExpenditureBCloneid, dtclonepitemsBsearchresults" partialSubmit="true" action="#{pPlanBackingBean.resetExpenditureClone()}" process="@this" />
+		<p:dialog id="cloneExpenditureBPopUp" widgetVar="cloneExpenditureBPopUp" modal="true" closable="false" 
+			header="#{lbl['lbl.pp.plan.b.clone']}" width="680" onHide="resetAllData();">
+			<ui:include src="planExpenditurePopup.xhtml"></ui:include>
+		</p:dialog>
+		<!-- end --> 
+		
 	</p:panel>
 
 </ui:composition>

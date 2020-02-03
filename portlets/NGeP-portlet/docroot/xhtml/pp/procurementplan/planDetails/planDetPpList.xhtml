@@ -5,8 +5,7 @@ xmlns:h="http://java.sun.com/jsf/html"
 xmlns:ui="http://java.sun.com/jsf/facelets"
 xmlns:p="http://primefaces.org/ui"
 xmlns:c="http://java.sun.com/jsp/jstl/core"
-xmlns:ac="http://ac.my/jsf/composite/cc"
->
+xmlns:ac="http://ac.my/jsf/composite/cc">
 		
 	<script type="text/javascript">
 		/*
@@ -258,14 +257,28 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			</p:columnGroup>
 		</p:dataTable>
 		<div class="ppRightBtn">
+		<!-- #25549 - start --> 
+		     <p:commandButton value="#{lbl['lbl.btn.clone']}"
+		        disabled="#{!pPlanBackingBean.managedBean.modeEditable}" 
+			    action="#{pPlanBackingBean.rowSelectProcurement()}"
+			    update="dtProcurementPlan, ppProcurementCloneid, dtcloneprosearchresults"
+			    onclick="cloneAcquirementPopUp.show()"/>
+		<!-- end --> 
+		
 			<p:commandButton value="#{lbl['lbl.btn.add']}" immediate="true" update="dtProcurementPlan" 
 		 		disabled="#{!pPlanBackingBean.managedBean.modeEditable}" partialSubmit="true"
 		 		process="@this" action="#{pPlanBackingBean.addPpItemDet()}"/>
-			
+		 		
 			<p:commandButton id="cbEpItemDelete" value="#{lbl['lbl.btn.delete']}" update="dtProcurementPlan" 
-				disabled="#{!pPlanBackingBean.managedBean.modeEditable}" action="#{pPlanBackingBean.deletePpItemDet()}"
-				
-			/> 
+				disabled="#{!pPlanBackingBean.managedBean.modeEditable}" action="#{pPlanBackingBean.deletePpItemDet()}"	/> 
 		</div>
+		
+		<!-- #25549 - start -->
+		<p:dialog id="cloneAcquirementPopUp" widgetVar="cloneAcquirementPopUp" closable="false" modal="true"
+			header="#{lbl['lbl.pp.procurement.plan.clone']}" width="800" height="500">
+			<ui:include src="planProcurementPopup.xhtml"></ui:include>
+		</p:dialog>
+		<!-- end --> 
+		
 	</p:outputPanel>
 </ui:composition>

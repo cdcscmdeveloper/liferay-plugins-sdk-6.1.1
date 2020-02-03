@@ -119,6 +119,25 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	
 	private List<PpUpdateReason> selectedUpdateReasons;
 	
+	
+	//[#25549] add .. start
+	private String procurementDesc;
+	private String procurementTitle;
+	private String procurementCatId;
+	private String procurementMethod;
+	private List<PpProcurementItem> clonePpProcurementItemLs;
+	private List<PpExpenditureItem> clonePpExpenditureItemLs;
+	private List<PpExpenditureItem> clonePpExpenditurePItemLs;
+	private List<PpExpenditureItem> clonePpExpenditureSItemLs;
+	private List<PpExpenditureItem> clonePpExpenditureTItemLs;
+	private List<PpExpenditureItem> clonePpExpenditureHItemLs;
+	private String paramExpenditure;
+	private String status;
+	private boolean disableSelectBtn = false;
+	private boolean disableSelectExpBtn = false;
+	
+	//End
+	
 	public ProcurementPlanManagedBean(){}
 
 	/**
@@ -1157,5 +1176,136 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	public void setInvitationMaxDate(Date invitationMaxDate) {
 		this.invitationMaxDate = invitationMaxDate;
 	}
+	
+	
+	//[#25549] add .. start
+	
+	
+	public String getProcurementDesc() {
+		return procurementDesc;
+	}
+	
+	
+	public void setProcurementDesc(String procurementTitle) {
+		this.procurementTitle = procurementTitle;
+	}	
+	
+	
+	public String getProcurementTitle() {
+		return procurementTitle;
+	}
+	
+	
+	public void setProcurementTitle(String procurementTitle) {
+		this.procurementTitle = procurementTitle;
+	}	
+
+	public String getProcurementCatId() {
+		return procurementCatId;
+	}
+
+		
+	public void setProcurementCatId(String procurementCatId) {
+		this.procurementCatId = procurementCatId;
+	}
+		
+		
+	public String getProcurementMethod() {
+		return procurementMethod;
+	}
+
+		
+	public void setProcurementMethod(String procurementMethod) {
+		this.procurementMethod = procurementMethod;
+	}
+		
+	public List<PpProcurementItem> getClonePpProcurementItemLs() {
+		return clonePpProcurementItemLs;
+	}
+
+	public void setClonePpProcurementItemLs(List<PpProcurementItem> clonePpProcurementItemLs) {
+		this.clonePpProcurementItemLs = clonePpProcurementItemLs;
+	}
+		
+		
+	public List<PpExpenditureItem> getClonePpExpenditureItemLs() {
+		return clonePpExpenditureItemLs;
+	}
+
+	public void setClonePpExpenditureItemLs(List<PpExpenditureItem> clonePpExpenditureItemLs) {
+		this.clonePpExpenditureItemLs = clonePpExpenditureItemLs;
+	}
+		
+	public List<PpExpenditureItem> getClonePpExpenditurePItemLs() {
+		return clonePpExpenditurePItemLs;
+	}
+
+	public void setClonePpExpenditurePItemLs(List<PpExpenditureItem> clonePpExpenditurePItemLs) {
+		this.clonePpExpenditurePItemLs = clonePpExpenditurePItemLs;
+	}
+		
+	public List<PpExpenditureItem> getClonePpExpenditureSItemLs() {
+		return clonePpExpenditureSItemLs;
+	}
+
+	public void setClonePpExpenditureSItemLs(List<PpExpenditureItem> clonePpExpenditureSItemLs) {
+		this.clonePpExpenditureSItemLs = clonePpExpenditureSItemLs;
+	}
+		
+	public List<PpExpenditureItem> getClonePpExpenditureTItemLs() {
+		return clonePpExpenditureTItemLs;
+	}
+
+	public void setClonePpExpenditureTItemLs(List<PpExpenditureItem> clonePpExpenditureTItemLs) {
+		this.clonePpExpenditureTItemLs = clonePpExpenditureTItemLs;
+	}
+		
+		
+	public List<PpExpenditureItem> getClonePpExpenditureHItemLs() {
+		return this.clonePpExpenditureHItemLs;
+	}
+
+	public void setClonePpExpenditureHItemLs(List<PpExpenditureItem> clonePpExpenditureHItemLs) {
+		this.clonePpExpenditureHItemLs = clonePpExpenditureHItemLs;
+		
+	}
+	
+	
+	public String getParamExpenditure() {
+		return paramExpenditure;
+	}
+
+		
+	public void setParamExpenditure(String paramExpenditure) {
+		this.paramExpenditure = paramExpenditure;
+	}
+		
+		
+	public String getStatus() {
+		return status;
+	}
+
+		
+	public void setStatus(String string) {
+		this.status = string;
+	}
+		
+	public boolean isDisableSelectBtn() {
+		return disableSelectBtn;
+	}
+	
+	public void setDisableSelectBtn(boolean disableSelectBtn) {
+		this.disableSelectBtn = disableSelectBtn;
+	}
+	
+	public boolean isDisableSelectExpBtn() {
+		return disableSelectExpBtn;
+	}
+	
+	public void setDisableSelectExpBtn(boolean disableSelectExpBtn) {
+		this.disableSelectExpBtn = disableSelectExpBtn;
+	}
+		
+		//[#25549] add .. End
 
 }
