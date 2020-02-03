@@ -1135,7 +1135,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 //										throw new EpException(MessageConst.ERROR_760036,
 //												new String[] {requestNoteDtl.getRequestItem().getItemName(), requestNoteDtl.getRequestItem().getCmItem().getExtensionCode()});
 									}
-								}														
+								} else {//26059 - start
+									getManagedBean().setExceededAmountAlerted(Boolean.FALSE);
+									getManagedBean().setProceedWithDPExceedThreshold(Boolean.FALSE);
+								}
+								//26059 - end
 							} else {
 								throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
 							}
