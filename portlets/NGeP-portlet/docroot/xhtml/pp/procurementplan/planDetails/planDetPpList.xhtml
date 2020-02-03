@@ -36,6 +36,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 					    <f:facet name="header">
 					     	<h:outputText value="* " styleClass="mandatory" />
 					     	<h:outputText value="#{lbl['lbl.pp.action']}" />
+					     	<ac:iconTooltip value="#{lbl['lbl.pp.action.tooltip']}" />
 					    </f:facet>
 				    </p:column>
 			 	 	<p:column width="12%">
@@ -122,13 +123,6 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				     <p:graphicImage value="/css/images/design/ico-viewnedit.png"  
 				     style="float:left; padding-left: 5px;" process="@this" />
 				</p:commandLink>
-				<ac:iconTooltip value="#{lbl['lbl.pp.action.tooltip']}" >
-				    <f:param value="param0">
-				    	<p:graphicImage value="#{!pPlanBackingBean.managedBean.modeReviewEditable ? 
-				    							'/css/images/design/ico-view.png' : 
-				    							'/css/images/design/edit.png'}"/>
-				    </f:param>
-				</ac:iconTooltip>
 			</p:column>
 			
 	        <p:column>	

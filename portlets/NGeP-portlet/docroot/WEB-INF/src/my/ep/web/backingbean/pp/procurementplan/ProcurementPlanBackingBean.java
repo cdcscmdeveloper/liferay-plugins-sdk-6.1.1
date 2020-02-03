@@ -4715,12 +4715,14 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    	if (ppPlan.getPpProcurementItems() != null && 
 	    			!ppPlan.getPpProcurementItems().isEmpty()) {
 	    		
-	    		procurementList = ppPlan.getPpProcurementItems();
+	    		procurementList = this.getManagedBean().getSelectedPlan().getPpProcurementItems();
+	    		
+	    		PpProcurementItem clonedPpItem =  procurementList.get(index);
 	    		
 	    		validatePpItem(); //Disabled this if no validation required at this stage
 	    		
-	    		newPpItem = (PpProcurementItem) procurementList.
-	    				get(index).cloneEntity();
+	    		/*newPpItem = (PpProcurementItem) procurementList.
+	    				get(index).cloneEntity();*/
 	    		newPpItem.setCloned(true);
 	    		
 	    		if (Calendar.getInstance().get(Calendar.YEAR) == 
@@ -4731,18 +4733,21 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		    		Calendar date = new GregorianCalendar((nextYear+1), Calendar.JANUARY, 1);
 		    		newPpItem.setInvitationDate(date.getTime());
 		    	}
-				//newPpItem.setProcurementItemId(null);
+	    		
 	    		newPpItem.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 	    		newPpItem.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 	    		newPpItem.setChangedDate(new Timestamp(new Date().getTime()));
+	    		newPpItem.setProcurementCat(clonedPpItem.getProcurementCat());
+		    	newPpItem.setProcurementType(clonedPpItem.getProcurementType());
+		    	newPpItem.setProcurementTitle(clonedPpItem.getProcurementTitle());
+		    	newPpItem.setProcurementDesc(clonedPpItem.getProcurementDesc());
+		    	newPpItem.setEstimatedAmt(clonedPpItem.getEstimatedAmt());
 	    		newPpItem.setEditable(true);
 	    		newPpItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 	    		newPpItem.setBrandNew(true);
 	    		
 	    		index += 1;
 	    		procurementList.add(index,newPpItem);
-	    		
-	    		log.info("clonedPpProcurementItem= "+newPpItem.getProcurementItemId());
 	    		
 	    	} else {
 	    		throw new EpException(MessageConst.ERROR_730015);
@@ -5281,6 +5286,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	}
 
 			
+			
+			
+			
 			/**
 			 * @return the ppCloneProcurementDataModel
 			 */
@@ -5304,13 +5312,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			 * notice board quotation/tender list paging class
 			 */
 			private class PpCloneProcurementDataModel extends PagingDataModel<PpProcurementItem> {
-				
 
 				private static final long serialVersionUID = 1L;
 
 				public PpCloneProcurementDataModel() {
 					super("dtcloneprosearchresults");
-						
 				}
 
 				/*
@@ -5380,8 +5386,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				bean.setSearchValue(ProcurementPlanConst.PLAN_TYPE_PROCUREMENT);	// P - Procurement
 				searchBean.getDataFilterBeans().add(bean);
 				
-				
-				
+						
 				//set procurement item title or description
 				if(StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanTitle()) || StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanDesc())){
 					
@@ -5425,6 +5430,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					searchBean.getDataFilterBeans().add(bean);
 				}
 				
+			
 				
 				if(this.getManagedBean().getPlanSearchBean().getProcurementType()!=null && this.getManagedBean().getPlanSearchBean().getProcurementType().getParameterId()!=null){
 					log.info("[#25550] Procurement item procurement type is: " + this.getManagedBean().getPlanSearchBean().getProcurementType().getParameterId());
@@ -5472,7 +5478,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					 */
 					public IPagingDataModel<PpExpenditureItem> getPpEpItemsDataModel() {
 						return ppEpItemsDataModel;
-					
 					}
 
 					//[#25549]
@@ -5491,15 +5496,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					/**
 					 * notice board quotation/tender list paging class
 					 */
-					
 					private class PpEpItemsDataModel extends PagingDataModel<PpExpenditureItem> {
 
 						private static final long serialVersionUID = 1L;
-						
 
 						public PpEpItemsDataModel() {
 							super("dtclonepitemssearchresults");
-							
 						}
 
 						/*
@@ -5514,7 +5516,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							if (log.isDebugEnabled()) {
 								log.debug("pageChangeListener");
 							}
-							
 							
 							try {
 								log.info("[#25549] pageChangeListener...");						
@@ -5574,7 +5575,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 																	new FacesScopes().getUserLocale()));
 												}
 											}
-								
+										   
+										
 										}
 									return resDTO.getPlanEPItemResultBean();
 								}
@@ -5587,7 +5589,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						}
 					}
 					
-									
+				
+					
 					/**
 					 * Get search bean, filtered based on default value or by search criteria.
 					 * @return ISearchBean<PpExpenditureItem>
