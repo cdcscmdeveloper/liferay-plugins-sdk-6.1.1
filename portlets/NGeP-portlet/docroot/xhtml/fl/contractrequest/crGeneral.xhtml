@@ -202,7 +202,7 @@
 						value="#{contractRequestBackingBean.managedBean.flRequest.startDate}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 						<p:ajax event="dateSelect"
-							listener="#{contractRequestBackingBean.updateDeliveryDate}"
+							listener="#{contractRequestBackingBean.editDeliveryDate}"
 							update="delEndDate" />
 					</p:calendar>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.delivery.start.date']}" rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing =='false'}"/></td>
