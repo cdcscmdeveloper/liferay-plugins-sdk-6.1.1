@@ -1138,6 +1138,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 								} else {//26059 - start
 									getManagedBean().setExceededAmountAlerted(Boolean.FALSE);
 									getManagedBean().setProceedWithDPExceedThreshold(Boolean.FALSE);
+									getManagedBean().getRequestNote().setScApprovalDocument(null);
+									getManagedBean().getRequestNote().setDpExceedJustification(null);
 								}
 								//26059 - end
 							} else {
