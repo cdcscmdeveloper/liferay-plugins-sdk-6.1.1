@@ -538,6 +538,12 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	
 	private TreeNode[] selectedNodes;
 	
+	//26284 - Start
+	private String disciplinaryActionstartDate;
+	private String disciplinaryActionEndDate;
+	private boolean disciplinaryActionWarning = false;
+	//26284 - End
+	
 	//SSM integration
 	/** The current date. */
 	private Date minDate = new Date();
@@ -4306,6 +4312,32 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public void setFlRequest(FlFulfilmentRequest flRequest) {
 		this.flRequest = flRequest;
 	}
+	
+	//26284 - Start
+	public String getDisciplinaryActionStartDate() {
+		return disciplinaryActionstartDate;
+	}
+
+	public void setDisciplinaryActionStartDate(String disciplinaryActionstartDate) {
+		this.disciplinaryActionstartDate = disciplinaryActionstartDate;
+	}
+
+	public String getDisciplinaryActionEndDate() {
+		return disciplinaryActionEndDate;
+	}
+
+	public void setDisciplinaryActionEndDate(String disciplinaryActionEndDate) {
+		this.disciplinaryActionEndDate = disciplinaryActionEndDate;
+	}
+		
+	public boolean isDisciplinaryActionWarning() {
+		return disciplinaryActionWarning;
+	}
+
+	public void setDisciplinaryActionWarning(boolean disciplinaryActionWarning) {
+		this.disciplinaryActionWarning = disciplinaryActionWarning;
+	}
+	//26284 - End
 
 	public Date getMinDate() {
 		return minDate;

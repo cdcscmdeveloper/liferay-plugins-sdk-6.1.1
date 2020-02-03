@@ -46,6 +46,7 @@ import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
+import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.biz.service.osb.sc.IDPOsbSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
@@ -79,9 +80,13 @@ import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
 import my.ep.dto.osb.sc.DPOsbReqDTO;
 import my.ep.dto.osb.sc.DPOsbResDTO;
 import my.ep.dto.sc.requestitem.RequestItemReqDTO;
+import my.ep.dto.sm.personnel.PersonnelReqDTO;
+import my.ep.dto.sm.personnel.PersonnelResDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.cm.catalog.CmItem;
@@ -113,6 +118,9 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
+import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
@@ -141,7 +149,12 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sc.helper.SourcingZoneHelper;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.template.DocumentGenerator;
+import my.ep.web.vo.BlacklistOwnerDirectorVO;
+import my.ep.web.vo.DisciplinaryActionCategoryVO;
+import my.ep.web.vo.DisciplinaryActionVO;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -301,6 +314,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		RequestNoteResDTO requestNoteResDTO = null;
 		Boolean isAssignedState = getManagedBean().isAssignedState();
     try {
+    	
+    	//26284 - Start
+    	if(outcome != null && BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)){
+    		if(requestNote != null){
+        		checkSupplierDisciplinaryAction(requestNote);
+        	}
+    	}
+    	//26284 - End
     	
     	parseRequestNote(requestNote, outcome);
     	
@@ -844,6 +865,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		boolean isDeliveryTermPrompt = Boolean.FALSE;		
 		List<ScRequestNoteDtl>	requestNoteDtls  = this.getManagedBean().getRequestNoteDtls();
 		ScRequestNote scRequestNote = getManagedBean().getRequestNote();
+		
+		//26284 - Start
+		if(outcome.equals(BpmOutcomeConst.BPM_SUBMIT) ||
+			outcome.equals(BpmOutcomeConst.BPM_APPROVE)){  	
+			if(scRequestNote != null){
+				checkSupplierDisciplinaryAction(scRequestNote);
+			}	    	
+		}
+		//26284 - End
+		
 		parseRequestNote(scRequestNote, outcome);
 		
 		scRequestNote.setWorkFlowStatuses(null);
@@ -863,7 +894,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 			// validate RN
 			validateRequestNote(scRequestNote);
-
+			
 			// remarks
 			if(!(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome) 
 					|| BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome) 
@@ -886,6 +917,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 
 		debugLogger("RequestNoteBackingBean >> submitAction ---- isExceededAmountAlerted() = "+ getManagedBean().isExceededAmountAlerted());
+		
 		if(getManagedBean().isExceededAmountAlerted()){
 			if(!getManagedBean().isExceededMessagePrompt()){
 				getManagedBean().setExceededMessagePrompt(Boolean.TRUE);
