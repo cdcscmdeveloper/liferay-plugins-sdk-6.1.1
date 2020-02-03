@@ -25,8 +25,8 @@ public class CreateLiferayOIMServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res)
-			throws ServletException, IOException {
-		log.info("Before success calling createLiferay servlet....");
+			throws ServletException, IOException {		
+		log.info("Before success calling createLiferay servlet...." + req.getServerName() + " " + req.getServerPort() );
 		UserReqDTO reqDTO = new UserReqDTO();
 		PrintWriter out = res.getWriter();
 		try {
