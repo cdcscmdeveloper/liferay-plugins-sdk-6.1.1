@@ -135,6 +135,7 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private String status;
 	private boolean disableSelectBtn = false;
 	private boolean disableSelectExpBtn = false;
+	private boolean disableSelectRow = false;
 	
 	//End
 	
@@ -1304,6 +1305,14 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	
 	public void setDisableSelectExpBtn(boolean disableSelectExpBtn) {
 		this.disableSelectExpBtn = disableSelectExpBtn;
+	}
+
+	public boolean isDisableSelectRow() {
+		return disableSelectRow;
+	}
+
+	public void setDisableSelectRow(boolean disableSelectRow) {
+		this.disableSelectRow = disableSelectRow;
 	}
 		
 		//[#25549] add .. End
