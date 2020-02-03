@@ -661,11 +661,17 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			qtDetailBB.getManagedBean().setUserTasks(null);
 		    Long statusId = qtDetailBB.getManagedBean().getQt().getQtStatus().getStatusId();
 		    boolean isQTStatusScheduleDocAndAfter = qtDetailBB.isQTStatusGreaterThanOrEquals(statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT);
+		    boolean isQTStatusBtwScheduleDocAndPendingPublication = qtDetailBB.isQTStatusInBetween(statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT, QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION);
 		    boolean isQTStatusSCApprovalAndBefore = qtDetailBB.isQTStatusLessThanOrEquals(statusId, QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL);
+		    
+		    
 		    if(SCProcessNameConst.APPROVE_BPK.equalsIgnoreCase(taskName)){
 				qtDetailBB.getManagedBean().addAdditionalPages(UserTasks.BPKApproval.toString(), pageAppr);
 				qtDetailBB.getManagedBean().addUserTasks(UserTasks.BPKApproval);
 				if(isQTStatusScheduleDocAndAfter){
+					qtDetailBB.getManagedBean().setActiveIndex(9);
+				}
+				if(isQTStatusBtwScheduleDocAndPendingPublication){
 					qtDetailBB.getManagedBean().setActiveIndex(9);
 				}
 				if(isQTStatusSCApprovalAndBefore){
@@ -674,6 +680,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				log.info("*********** preRenderView:userHasRole(BPK_APPROVER)");
 			}
 			else if(SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName) ){
+				boolean isCmtStatusCompletedAndBefore = qtDetailBB.isQTStatusLessThanOrEquals(statusId, QTStatusConst.CMT_COMPLETED);
+				
 				List<ScQtCommittee> cmts = null;
 				if(this.getManagedBean().getQt()!=null) { cmts = this.getManagedBean().getQt().getScQtCommittees();}
 				boolean isEcOcTecFec = false;
@@ -691,8 +699,14 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					if(isQTStatusScheduleDocAndAfter){
 						qtDetailBB.getManagedBean().setActiveIndex(9);
 					}
+					if(isQTStatusBtwScheduleDocAndPendingPublication){
+						qtDetailBB.getManagedBean().setActiveIndex(9);
+					}
 					if(isQTStatusSCApprovalAndBefore){
 						qtDetailBB.getManagedBean().setActiveIndex(5);
+					}
+					if(isCmtStatusCompletedAndBefore){
+						qtDetailBB.getManagedBean().setActiveIndex(9);
 					}
 					log.info("*********** preRenderView:userHasRole(COMMITTEE_APPROVER) for ecOcTecFec");
 				}
