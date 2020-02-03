@@ -312,7 +312,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				FacesContext fc = FacesContext.getCurrentInstance();
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CONTENT_PAGE);
 				RequestContext.getCurrentInstance().execute("blockWidget.hide()");
-				throw new EpException(MessageConst.ERROR_721070,new String[]{"TEST"});
+				throw new EpException(w.getMessage(),new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null)});
 			}
 						
 		}
