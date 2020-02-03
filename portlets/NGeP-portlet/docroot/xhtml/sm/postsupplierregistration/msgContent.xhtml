@@ -7,7 +7,13 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-
+	<ui:define name="resourceSection">
+	
+		<script type='text/javascript'>
+			//var $jq = jQuery.noConflict(true);
+		</script>
+	
+	</ui:define>
 	<ui:define name="contentSection">
 		<link rel="stylesheet" type="text/css" href="/NGeP-portlet/css/ep/tab.css" />
 		<style>
@@ -28,7 +34,8 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>	
 					
-		
+		<!-- Redmine 27264 -->
+		<p:messages id="messages" showSummary="false" showDetail="true"  escape="false" closable="true"  />
 		<div align="left">
 			<table class="cTbl">
 				<tr>
@@ -109,8 +116,7 @@
 				</p:outputPanel>
 			</c:otherwise>
 		</c:choose>
-		<!-- Redmine 27264 -->
-				    <p:messages id="messages" showSummary="false" showDetail="true"  escape="false" closable="true"  />
+		
 		<p:outputPanel rendered="#{postSupplierRegBB.validSupplierTemp()}"
 			id="basicPanelId">
 			<c:if test="#{postSupplierRegBB.managedBean.flowStatus > 0}">
