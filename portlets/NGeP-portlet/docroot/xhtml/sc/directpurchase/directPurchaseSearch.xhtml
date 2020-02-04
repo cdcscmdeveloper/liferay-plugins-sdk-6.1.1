@@ -58,6 +58,19 @@
 							conditionField="#{directPurchaseBackingBean.getPtjCondition()}">
 						</ac:lov></td>
 				</tr>
+				<!-- Redmine 25396: remove duplication option view by adding new drop down field -->  
+				<tr>
+					<td width="22%"><p:outputLabel
+							value="#{lbl['lbl.sc.document.viewas']}" rendered="#{directPurchaseBackingBean.showFunctionType()}" /></td>
+					<td><p:selectOneMenu style="width: 250px;"
+							value="#{directPurchaseBackingBean.managedBean.searchFunctionType}" 
+							rendered="#{directPurchaseBackingBean.showFunctionType()}">
+							<f:selectItems
+								value="#{directPurchaseBackingBean.getFunctionType()}" />
+							<p:ajax event="change" update="searchPanel" />
+						</p:selectOneMenu></td>
+				</tr><tr><td width="22%"></td></tr>
+				<!-- end 25396: -->
 				<tr>
 					<td width="22%"><p:outputLabel
 							value="#{lbl['lbl.sc.document.type']}" /> <p:outputLabel
@@ -168,7 +181,19 @@
 						<h:outputText value="#{lbl['lbl.sc.action']}" />
 					</f:facet>
 
-					<p:menuButton value="#{lbl['lbl.btn.option']}">
+					<!-- Redmine 25396: remove duplication option view by adding new drop down field -->  
+					<p:menuButton value="#{lbl['lbl.btn.option']}">			
+					
+						<p:menuitem id="viewBtnIconDualRole" value="#{lbl['lbl.btn.view']}"
+							icon="ui-icon-view"
+							rendered="#{directPurchaseBackingBean.managedBean.searchFunctionType eq ParameterConst.orgTypePtj and directPurchaseBackingBean.managedBean.searchDocumentType eq ParameterConst.doctypeSimpleQuote}"
+							action="#{directPurchaseBackingBean.viewDoc(Obj)}" /> 
+							
+						<p:menuitem id="viewBtnIconSimpleQuoteDualRole" value="#{lbl['lbl.btn.view']}"
+							icon="ui-icon-view"
+							rendered="#{!directPurchaseBackingBean.isSupplier() and directPurchaseBackingBean.managedBean.searchFunctionType eq ParameterConst.orgTypeSupplier and directPurchaseBackingBean.managedBean.searchDocumentType eq ParameterConst.doctypeSimpleQuote}"
+							action="#{directPurchaseBackingBean.viewDocSupplierSQ(Obj)}" />
+							
 						<p:menuitem id="viewBtnIcon" value="#{lbl['lbl.btn.view']}"
 							icon="ui-icon-view"
 							rendered="#{!directPurchaseBackingBean.isSupplier() or (directPurchaseBackingBean.isSupplier() and directPurchaseBackingBean.managedBean.searchDocumentType ne ParameterConst.doctypeSimpleQuote)}"
@@ -182,10 +207,11 @@
 							
 						<p:menuitem id="viewBtnIconSimpleQuote" value="#{lbl['lbl.btn.view']}"
 							icon="ui-icon-view"
-							rendered="#{directPurchaseBackingBean.isSupplier() ? directPurchaseBackingBean.managedBean.searchDocumentType eq ParameterConst.doctypeSimpleQuote : false}"
+							rendered="#{directPurchaseBackingBean.managedBean.searchFunctionType ne ParameterConst.orgTypePtj and directPurchaseBackingBean.isSupplier() ? directPurchaseBackingBean.managedBean.searchDocumentType eq ParameterConst.doctypeSimpleQuote : false}"
 							action="#{directPurchaseBackingBean.viewDocSupplierSQ(Obj)}" />
-
+							
 					</p:menuButton>
+					<!-- end 25396: -->
 				</p:column>
 
 			</p:dataTable>
