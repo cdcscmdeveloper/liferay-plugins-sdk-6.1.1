@@ -25,8 +25,8 @@
 	<ui:param name="isQTStatusBtwScheduleDocAndPendingPublication" value="#{qTDetailBB.isQTStatusInBetween(statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT, QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION)}" />
 	<ui:param name="isMaintancePendingChklistStatus" value="#{qTDetailBB.isMaintancePendingChklistStatus()}" />
 	<ui:param name="isQTStatusSCApprovalAndBefore" value="#{qTDetailBB.isQTStatusLessThanOrEquals(statusId, QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)}" />
-	<ui:param name="isCmtStatusCompletedAndBefore" value="#{qTDetailBB.isQTStatusLessThanOrEquals(statusId, QTStatusConst.CMT_COMPLETED)}" />
-	
+	<ui:param name="isCmtStatusCompletedAndBefore" value="#{qTDetailBB.isStatusLessThanOrEquals(statusId, QTStatusConst.CMT_COMPLETED, qTDetailBB.cmtOrderedStatuses)}" />
+		
 	<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
 			<td width="20%" valign="top" class="sidemenutd"><p:tabMenu
@@ -138,7 +138,7 @@
 						process="@form"
 						rendered="#{(isQTStatusBtwScheduleDocAndPendingPublication and qTDetailBB.displayMenuItem(qTDetailBB.menuItemPublicationApproverAssignment)) or qTDetailBB.displayMenuItem(qTDetailBB.menuItemPublicationApproval)}" />
 					<p:menuitem value="#{lbl['lbl.sc.qt.approval.bpk']}" 
-						action="#{qTDetailBB.qtDetailsTabChange(9)}" update="@form"
+						action="#{qTDetailBB.qtDetailsTabChange(5, 9, isQTStatusSCApprovalAndBefore)}" update="@form"
 						process="@form"
 						rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemBPKApproval)}" />
 					<p:menuitem value="#{lbl['lbl.sc.qt.approval.committeeappointment']}" 

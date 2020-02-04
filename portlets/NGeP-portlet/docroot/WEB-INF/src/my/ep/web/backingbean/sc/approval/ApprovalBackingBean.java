@@ -663,7 +663,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		    boolean isQTStatusScheduleDocAndAfter = qtDetailBB.isQTStatusGreaterThanOrEquals(statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT);
 		    boolean isQTStatusBtwScheduleDocAndPendingPublication = qtDetailBB.isQTStatusInBetween(statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT, QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION);
 		    boolean isQTStatusSCApprovalAndBefore = qtDetailBB.isQTStatusLessThanOrEquals(statusId, QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL);
-		    
+		    boolean isCmtStatusCompletedAndBefore = qtDetailBB.isStatusLessThanOrEquals(statusId, QTStatusConst.CMT_COMPLETED, QTStatusConst.CMT_ORDERED_STATUSES);
 		    
 		    if(SCProcessNameConst.APPROVE_BPK.equalsIgnoreCase(taskName)){
 				qtDetailBB.getManagedBean().addAdditionalPages(UserTasks.BPKApproval.toString(), pageAppr);
@@ -680,7 +680,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				log.info("*********** preRenderView:userHasRole(BPK_APPROVER)");
 			}
 			else if(SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName) ){
-				boolean isCmtStatusCompletedAndBefore = qtDetailBB.isQTStatusLessThanOrEquals(statusId, QTStatusConst.CMT_COMPLETED);
+				
 				
 				List<ScQtCommittee> cmts = null;
 				if(this.getManagedBean().getQt()!=null) { cmts = this.getManagedBean().getQt().getScQtCommittees();}
