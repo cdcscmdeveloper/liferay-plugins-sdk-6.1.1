@@ -226,6 +226,7 @@ import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.constant.pm.PmConstants;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.UserTasks;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
@@ -1216,6 +1217,29 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	}
 	
 	/**
+	 * Enhancement #25729
+	 * CHECKING TO ENABLE REVERSE BUTTON AT QT MAINTENANCE
+	 */	
+	public Boolean enableReverseButton(Long statusId){
+		if(QTStatusConst.LOI_PENDING_SUBMISSION .equals(statusId)||
+				QTStatusConst.LOI_PENDING_APPROVAL.equals(statusId) || 
+				QTStatusConst.LOI_PENDING_REVISION.equals(statusId) || 
+				QTStatusConst.LOI_PENDING_REVISION_APPROVAL.equals(statusId)){
+			//LOI CASE
+			return true;
+		}else if(QTStatusConst.LOA_PENDING_SUBMISSION .equals(statusId)||
+				QTStatusConst.LOA_PENDING_APPROVAL.equals(statusId) || 
+				QTStatusConst.LOA_PENDING_REVISION.equals(statusId) || 
+				QTStatusConst.LOA_PENDING_REVISION_APPROVAL.equals(statusId)){
+			//LOA CASE
+			return true;
+		}else{
+			return false;
+		}
+		
+	}
+	
+	/**
 	 * Enhancement #21694
 	 * Method to save the Sc_Qt_Reverse
 	 */
@@ -1322,7 +1346,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		
 		/****************************
 		 * UPDATE SC_LOI_LOA_ITEM
-		 */
+		 *//*
 		if(null!=scLoiForQt){
 			for(ScLoiLoaItem items : scLoiForQt.getScLoiLoaItems()){
 				reqDTO = new QuationTenderReqDTO();
@@ -1339,7 +1363,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				resLoiLoaItem.setScLoa(null);
 				detailSO.saveScLoiLoaItem(resLoiLoaItem);
 			}
-		}
+		}*/
 		
 		/****************************
 		 * UPDATE SC_QT_RECOMMEND_DTL
@@ -6078,6 +6102,27 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			quationTenderReqDTO.setScQtReverse(this.getManagedBean().getScQtReverse());
 			quationTenderReqDTO.setTaskId(this.getManagedBean().getTaskId());
 			
+			/**
+			 * FINDING QT WORKFLOW-> CASE REVERSAL QT
+			 */
+			IScWorkFlowStatusSO workFlowStatusSO;
+			ScWorkFlowStatusReqDTO scWreqDTO = new ScWorkFlowStatusReqDTO();
+			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);	
+			scWreqDTO.setDocId(this.getManagedBean().getQt().getQtId());		
+			scWreqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+			ScWorkFlowStatus qtcurrentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(scWreqDTO).getWorkFlowStatus();
+			if(null!=this.getManagedBean().getScLoiForQt()){
+				if (!qtcurrentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.QT_PENDING_LOI)) {
+					throw new EpException(MessageConst.ERROR_760496,new String[]{this.getManagedBean().getQt().getQtNo()}); 
+				}
+			}if(null!=this.getManagedBean().getScLoaForQt()){
+				if (!qtcurrentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.QT_PENDING_LOA)) {
+					throw new EpException(MessageConst.ERROR_760497,new String[]{this.getManagedBean().getQt().getQtNo()});
+				}
+			}
+			
+			
 			boolean isQuotation=true;
 			PmParameter procurementMode = this.getManagedBean().getQt().getProcurementMode();
 			if (procurementMode != null
@@ -6126,7 +6171,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			
 			/****************************
 			 * UPDATE SC_WORKFLOW_STATUS, 
-			 * UPDATE DIRECT WITHOUT USING BPM SINCE THE INSTANCE ARE NOT YET CREATED IN BPM (CASE NOT YET SUBMIT, JUST SAVE LOI/LOA AND REVERSE)
+			 * UPDATE DIRECT WITHOUT USING BPM SINCE THE INSTANCE ARE NOT YET CREATED IN BPM (CASE NOT YET SUBMIT, JUST SAVE LOI/LOA AND REVERSE AND UPDATE 
+			 * WORKFLOW_STATUS MANUALLY)
 			 */
 			updateReverseScWorkflowStatus(quationTenderReqDTO);
 			
