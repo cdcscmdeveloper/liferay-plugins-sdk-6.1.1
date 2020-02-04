@@ -8,6 +8,8 @@
 	<!-- FLOW STATUS 1 -->
 	<div class="flow-chartbox">
   	<div class="flow-chart">
+  	<p:messages id="messages1" showSummary="false" showDetail="true"  escape="false" autoUpdate="true" closable="true" severity="error, info, warn" />
+  	
 	<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 1}">
 		<div class="flow-chart-left flowActive">
 			<div class="bg"><div class="no">1</div></div>
