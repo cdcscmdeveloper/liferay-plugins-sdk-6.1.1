@@ -2638,6 +2638,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 				.getDefinationType().getParameterCode();
 		this.getManagedBean().setDocDefinitionKey(definationType);
 		this.getManagedBean().setFinancialQtProposalChecklist(scQtProposalChecklist);
+
 		this.getManagedBean().setFinancialQtChecklist(
 				scQtProposalChecklist.getScQtCheckList());
 
@@ -2722,7 +2723,6 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
-
 			ScQt scQt = getManagedBean().getQt();
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			reqDTO.setScQt(scQt);
@@ -2731,7 +2731,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			// To retrieve financial specification details
 			ProposalResDTO resDTO = proposalSO
 					.retrieveFinancialSpecDtls(reqDTO);
-
+			
 			if (scQt.isZonal()) {
 				List<TplSpecZoneDtl> zones = resDTO.getZones();
 				if (CollectionUtils.isNotEmpty(zones)) {
@@ -2749,6 +2749,12 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 				populateFinancialSpecDetailsByZone();
 
 			}
+// #21695 farid start add 4/2/2020			
+			if (scQt.isZonal() && scQt.isPartial() || scQt.isZonal() && !scQt.isPartial()) {
+				retrieveTemplateSpecBean();
+			}
+// #21695 farid end  4/2/2020 (troubleshoot)	
+			
 			if (!scQt.isZonal() && scQt.getMaxProposal() == 1) {
 				retrieveTemplateSpecBean();
 			}
@@ -5219,9 +5225,11 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 					}
 				}
 			}
-		} else if ("true".equals(this.getManagedBean().getQt().getDisciplinaryActionPresent())) {
+		}
+	else if ("true".equals(this.getManagedBean().getQt().getDisciplinaryActionPresent())) {
 			return true;
 		}
 		return false;
 	}
+	
 }
