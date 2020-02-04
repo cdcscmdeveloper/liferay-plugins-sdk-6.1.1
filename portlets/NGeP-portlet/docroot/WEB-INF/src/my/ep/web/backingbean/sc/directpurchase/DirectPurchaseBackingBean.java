@@ -252,7 +252,6 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 
 				for (PmStatusDesc statusDesc : statusDescs) {
 					if(statusDesc.getPmStatus().getStatusId().equals(DPStatusConstants.SQ_PENDING_SUPPLIER_RESPONSE)
-							|| statusDesc.getPmStatus().getStatusId().equals(DPStatusConstants.SQ_PENDING_SUBMISSION)
 							|| statusDesc.getPmStatus().getStatusId().equals(DPStatusConstants.SQ_COMPLETED)
 							|| statusDesc.getPmStatus().getStatusId().equals(DPStatusConstants.SQ_CANCELLED)
 							|| statusDesc.getPmStatus().getStatusId().equals(DPStatusConstants.SQ_CANCELLED_DUE_TO_PID_VALIDITY_EXPIRED)
@@ -1067,19 +1066,9 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			return getStatusDescById(DPStatusConstants.SQ_EXPIRED);
 		}
 		Long statusId = null;
-		String docType = null;
-		
-		if(dpObj[3] != null){
-			docType = (String) dpObj[3];
-		}
 		if(dpObj[4] != null){
 			statusId = (Long) dpObj[4];
 		}		
-		if(docType.equals("PD")){
-			if(statusId.equals(DPStatusConstants.PID_EXPIRED)){
-				return getStatusDescById(DPStatusConstants.PID_COMPLETED);
-			}
-		}
 		return getStatusDescById(statusId);
 	}
 	
@@ -1110,8 +1099,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		Long currentStatusId = docStatusId;
 		
 		if(docType.equals("SQ")){
-	    	if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION)
-	    			|| currentStatusId.equals(DPStatusConstants.SQ_PENDING_SUBMISSION) ){
+	    	if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION)){
 	    		
 	    		//scPID = (ScPurchaseInDefault)dpObj[8];
 	    		if(dpObj[8]!=null){
@@ -1119,7 +1107,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		    		scPID.setPurchaseInDefaultId((Long) dpObj[8]);
 		    		scPID.setPurchaseInDefaultNo((String) dpObj[9]);
 		    		scPID.setPidValidDays((Integer) dpObj[10]);
-		    		scPID.setChangedDate((Timestamp) dpObj[11]);
+		    		scPID.setCreatedDate((Timestamp) dpObj[11]);
 	    		}
 	    		
 			}								   
@@ -1171,7 +1159,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		 */
 		private void pidValidity(ScPurchaseInDefault purchaseInDefault) {
 			Date today  = DateUtils.getCurrentDate();
-			Date ExpDate = DateUtils.addDays(purchaseInDefault.getChangedDate(), purchaseInDefault.getPidValidDays());
+			Date ExpDate = DateUtils.addDays(purchaseInDefault.getCreatedDate(), purchaseInDefault.getPidValidDays());
 			log.info("pID validity begin");
 			if(today.after(ExpDate)){
 
@@ -1193,7 +1181,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			
 			if(purchaseInDefault!=null){
 				Date today  = DateUtils.getCurrentDate();
-				Date ExpDate = DateUtils.addDays(purchaseInDefault.getChangedDate(), purchaseInDefault.getPidValidDays());
+				Date ExpDate = DateUtils.addDays(purchaseInDefault.getCreatedDate(), purchaseInDefault.getPidValidDays());
 				
 				log.info("pID validity begin");
 				
