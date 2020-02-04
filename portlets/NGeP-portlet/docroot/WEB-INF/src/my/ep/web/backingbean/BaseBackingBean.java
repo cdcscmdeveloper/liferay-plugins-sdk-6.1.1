@@ -66,6 +66,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.QTStatusConst;
 import my.ep.constants.BpmConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -2795,6 +2796,25 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			}
 		}
 		//SSM #27264
+		
+	
+	/**
+	 * Check if Status less than or equals from status.
+	 * 
+	 * @param currentStatusId
+	 * 		the current status id
+	 * @param toStatusId
+	 * 		the to status id
+	 * @param orderedStatusArr
+	 * 		ordered status array
+	 * @return	the indicator qt status less than from status.
+	 */
+	public boolean isStatusLessThanOrEquals(Long currentStatusId, Long toStatusId, Long[] orderedStatusArr) {
+		List<Long> orderedStatuses = Arrays.asList(orderedStatusArr);
+		if(orderedStatuses.indexOf(currentStatusId)<0) return false;
+		if(orderedStatuses.indexOf(toStatusId)<0) return false;
+		return orderedStatuses.indexOf(currentStatusId) <= orderedStatuses.indexOf(toStatusId);
+	}	
 }
 
 
