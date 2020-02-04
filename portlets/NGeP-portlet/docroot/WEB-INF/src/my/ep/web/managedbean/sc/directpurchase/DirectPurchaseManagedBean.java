@@ -104,6 +104,8 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 	
 	private boolean searchDPM;
 	
+	// Redmine 25396:
+	private String searchFunctionType;
 
 	/**
 	 * The Class DocumentPagingDataModel.
@@ -507,6 +509,16 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 	public void setSearchDPM(boolean searchDPM) {
 		this.searchDPM = searchDPM;
 	}
+	
+	// Redmine 25396: remove duplication option view by adding new drop down field
+	public String getSearchFunctionType() {
+		return searchFunctionType;
+	}
+
+	public void setSearchFunctionType(String searchFunctionType) {
+		this.searchFunctionType = searchFunctionType;
+	}
+	// end 25396:
 
 	/**
 	 * @return the dpmDocumentDataModel
