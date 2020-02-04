@@ -207,13 +207,12 @@
 			<p:message id="answerComplianceMsg" for="answerCompliance" display="icon" rendered="#{isAnswerTypeDropdown}" />
 		
 <!-- FARID START -->
-			<h:panelGroup layout="div" rendered="#{tplSpecAnswer.tplSpecQuestion ne null and 
-												   tplSpecAnswer.tplSpecQuestion.tplSpecMaster ne null and 
-												   tplSpecAnswer.tplSpecQuestion.tplSpecMaster.scQtDoc ne null and 
-												   tplSpecAnswer.tplSpecQuestion.tplSpecMaster.scQtDoc.scQt ne null}">
+			<h:panelGroup layout="div" rendered="#{templateSpecBean.specMaster ne null and 
+												   templateSpecBean.specMaster.scQtDoc ne null and 
+												   templateSpecBean.specMaster.scQtDoc.scQt ne null}">
 				<h:selectOneMenu id="answerOffer" style="width:calc(100% - 30px);" 
 						value="#{tplSpecAnswer.offer}"
-						rendered="#{tplSpecAnswer.tplSpecQuestion.tplSpecMaster.scQtDoc.scQt.partial and isZonal and !isSpecTypeFinancial and isQuestionTypeItem}" 
+						rendered="#{templateSpecBean.specMaster.scQtDoc.scQt.partial and isZonal and !isSpecTypeFinancial and isQuestionTypeItem}" 
 						label="#{lbl[answerlbl]}">
 						 <f:selectItems value="#{templateSpecBackingBean.offerDetails}"></f:selectItems>
 						 <p:ajax event="change" partialSubmit="true" process="@this" 
