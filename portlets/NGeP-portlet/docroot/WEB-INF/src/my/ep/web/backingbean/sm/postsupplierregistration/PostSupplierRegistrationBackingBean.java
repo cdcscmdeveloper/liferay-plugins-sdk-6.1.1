@@ -309,10 +309,15 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				checkSSMValid(supplier);
 			}catch(Exception w){
 				proceed =false;
-				FacesContext fc = FacesContext.getCurrentInstance();
-				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CONTENT_PAGE);
 				RequestContext.getCurrentInstance().execute("blockWidget.hide()");
-				throw new EpException(w.getMessage(),new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null)});
+				SmCommonUtil.redirectToPage(
+						CONTENT_PAGE,
+						MessageConst.ERROR_721070,
+						new String[] { SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null) });
+				//FacesContext fc = FacesContext.getCurrentInstance();
+				//fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CONTENT_PAGE);
+				//RequestContext.getCurrentInstance().execute("blockWidget.hide()");
+				//throw new EpException(w.getMessage(),new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null)});
 			}
 						
 		}
