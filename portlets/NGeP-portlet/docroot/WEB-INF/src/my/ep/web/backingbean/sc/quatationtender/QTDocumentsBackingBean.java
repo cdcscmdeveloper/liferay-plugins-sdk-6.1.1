@@ -197,6 +197,8 @@ public class QTDocumentsBackingBean extends
 
 	private boolean readOnly;
 	
+	private String hostUrl;
+
 	/**
 	 * Instantiates a new QT documents backing bean.
 	 */
@@ -2425,12 +2427,15 @@ public class QTDocumentsBackingBean extends
 				commonUtils
 						.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
 		VelocityContext context = new VelocityContext();
-
-		FacesScopes fs = new FacesScopes();
-		String hostUrl = fs.getRequest().getServerName() + ":"
-				+ fs.getRequest().getServerPort();
+	
+		String hostUrl = this.hostUrl;
+		if(StringUtils.isEmpty(this.hostUrl)){
+			FacesScopes fs = new FacesScopes();
+			hostUrl = fs.getRequest().getServerName() + ":"
+					+ fs.getRequest().getServerPort();
+		}
+		
 		context.put("hostUrl", hostUrl);
-
 		context.put("commonUtils", commonUtils);
 		context.put("AddressUtils", new AddressUtils());
 		context.put("QTStatusConst", new QTStatusConst());
@@ -2702,7 +2707,7 @@ public class QTDocumentsBackingBean extends
 	 *             the exception
 	 */
 	public void reGenerateDocuments(Long qtId, String... qtFields) {
-		debugLogger("reGenerateDocuments-->qtId: " + qtId + ", qtFields: " + StringUtils.join(qtFields, "|"));
+		log.info("reGenerateDocuments-->qtId: " + qtId + ", qtFields: " + StringUtils.join(qtFields, "|"));
 		
 		IQTDocumentSO qtDocumentSO;
 		try {
@@ -3144,6 +3149,10 @@ public class QTDocumentsBackingBean extends
 				tplDocMaster.setScReport(scQtDocReport);
 				
 				return tplDocMaster;
+	}
+	public void invokedReGenerateDocuments(Long qtId, String hostUrl, String... qtFields) {
+		this.hostUrl = hostUrl;
+		this.reGenerateDocuments(qtId, qtFields);
 	}
 
 }
