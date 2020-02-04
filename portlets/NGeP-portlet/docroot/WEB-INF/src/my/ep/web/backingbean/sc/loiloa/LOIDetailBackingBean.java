@@ -42,6 +42,10 @@ import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
+import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.bpm.service.IBpmSO;
+import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MapKeyEnum;
 import my.ep.constant.MessageConst;
@@ -51,6 +55,7 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.constants.BpmConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
@@ -130,6 +135,7 @@ import my.ep.type.sc.ApprovalAction;
 import my.ep.type.sc.LoiLoaDocType;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -1760,11 +1766,38 @@ public class LOIDetailBackingBean extends
 			getQtProposalValidExpiredMessage(getManagedBean().getScQt());
 		
 		} finally {
+			getLOITaskId();
 		}
 
 		fc.getApplication().getNavigationHandler()
 		.handleNavigation(fc, null, QTConstants.LOI_PAGE);
 	}
+	
+	/*
+	 * Enhancement #21694 START
+	 * TO GET BPM TASK ID DIRECT WITHOUT USING TASKLIST
+	 * PURPOSE: To check whether the LOI is in the SOA or not
+	 */
+	
+	public void getLOITaskId(){
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+				.getServiceObject(IBpmSO.class);
+		BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
+		bpmReqDTO.setDocNumber(getManagedBean().getScLoi().getLoiNo());
+		bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
+		
+		BpmResponseDTO bpmResDTO = bpmSO.getTasksByDocNumber(bpmReqDTO);
+		 if(bpmResDTO != null && CollectionUtils.isNotEmpty(bpmResDTO.getWorklistVO().getWorklistItem())){
+			 for(WorklistItemVO currentVO: bpmResDTO.getWorklistVO().getWorklistItem()){
+				getManagedBean().setLoiTaskId(currentVO.getTaskId());
+			 }
+		 }else{
+			 getManagedBean().setLoiTaskId(null);
+		 }
+	}
+	/*
+	 * Enhancement #21694 END
+	 */
 
 	/**
 	 * Reaload loi.
@@ -2169,6 +2202,7 @@ public class LOIDetailBackingBean extends
 		scWreqDTO.setDocType(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
 		
 		ScWorkFlowStatus currentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(scWreqDTO).getWorkFlowStatus();
+		qtDtl.getManagedBean().setTaskId(getManagedBean().getLoiTaskId());
 		qtDtl.getManagedBean().setPreviousPage(this.getManagedBean().getBackToPreviousPage());
 		qtDtl.getManagedBean().setQt(scQt);
 		qtDtl.getManagedBean().setScLoiForQt(scLoiForQt);

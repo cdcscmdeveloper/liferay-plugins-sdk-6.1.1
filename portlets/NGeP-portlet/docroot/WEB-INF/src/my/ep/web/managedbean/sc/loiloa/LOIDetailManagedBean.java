@@ -399,6 +399,11 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private String suppConfirmMsgAccept;
 	private String suppConfirmMsgReject;
 	
+	/*
+	 * Enhancement #21694
+	 */
+	private String loiTaskId;
+	
     /**
      * Gets the spki backing bean.
      *
@@ -2301,6 +2306,20 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setSuppConfirmMsgReject(String suppConfirmMsgReject) {
 		this.suppConfirmMsgReject = suppConfirmMsgReject;
+	}
+
+	/**
+	 * @return the loiTaskId
+	 */
+	public String getLoiTaskId() {
+		return loiTaskId;
+	}
+
+	/**
+	 * @param loiTaskId the loiTaskId to set
+	 */
+	public void setLoiTaskId(String loiTaskId) {
+		this.loiTaskId = loiTaskId;
 	}
 	
 	
