@@ -22,6 +22,7 @@ import javax.naming.NamingException;
 import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
@@ -60,6 +61,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
@@ -1194,5 +1196,45 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		}
 		
 		//12183 - end
+		
+	//  Redmine 25396: remove duplication option view by adding new drop down field
+		
+			public SelectItem[] getFunctionType() {
+				List<String> typeList = new ArrayList<String>();
+				typeList.add(ParameterConst.ORG_TYPE_PTJ);
+				typeList.add(ParameterConst.ORG_TYPE_SUPPLIER); //ORG_TYPE_SUPPLIER
+
+				SearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterCode",
+								SearchOperator.OPERATOR_IN.value(), typeList));
+				
+				for (String string : typeList) {
+					log.debug("List function type: "+string);
+				}
+
+				return getDropdownCodeValuesBySearchBean(ParameterTypeConst.ORGANISATION_TYPES, searchBean);
+			}
+			
+			/**
+			 * Show function type if user have both ptj & supplier role
+			 * @return boolean
+			 */
+			public boolean showFunctionType() {
+				if(hasSupplierRole() && hasGovernmentUserRole()) {
+					if(getManagedBean().getSearchFunctionType()==null) {
+						getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_PTJ);
+					}
+					return true;
+				} else {
+					if(hasSupplierRole()) {
+						getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_SUPPLIER);
+					} else {
+						getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_PTJ);
+					}
+					return false;
+				}
+			}
+			
+			// end 25396
 }
 
