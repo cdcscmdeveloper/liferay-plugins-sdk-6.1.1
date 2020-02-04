@@ -138,8 +138,7 @@
 					<p:commandButton value="#{lbl['lbl.btn.yes']}"
 						actionListener="#{requestNoteBackingBean.proceedWithDPExceedThreshold}"
 						oncomplete="dpExceedDlg.hide(); blockWidget.hide();" id="dpExceed"
-						partialSubmit="true" process="@this" immediate="true"
-						update="@([id$= scRemarkPanelId])" />
+						partialSubmit="true" process="@this" update="@([id$= scRemarkPanelId])" />
 					<p:commandButton value="#{lbl['lbl.btn.no']}"
 						oncomplete="dpExceedDlg.hide();" />
 				</div>
