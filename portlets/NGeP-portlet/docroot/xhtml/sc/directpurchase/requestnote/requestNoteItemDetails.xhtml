@@ -173,23 +173,6 @@
 						</p:row>
 					</p:panelGrid>
 				</p:column>
-				
-				<!-- 26284 Start -->
-				<p:column style="white-space:normal;text-align:center;">
-					<f:facet name="header" style="white-space:normal;">
-						<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}"/>
-						<ac:iconTooltip value="#{lbl['lbl.sc.tooltip.disciplinary.action.taken']}"/>
-					</f:facet>
-					<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-						rendered="#{requestNoteDtl.scRequestSupplierItem.smSupplier ne null and requestNoteBackingBean.getDisciplinaryActionActive(requestNoteDtl.scRequestSupplierItem.smSupplier)}"
-						action="#{requestNoteBackingBean.supplierDisciplinaryActionInfo(requestNoteDtl.scRequestSupplierItem.smSupplier)}" 
-						process="@this" partialSubmit="true" update=":form">
-						<h:outputText value="#{lbl['lbl.txt.yes']}"/>
-					</p:commandLink>
-					<h:outputText rendered="#{requestNoteDtl.scRequestSupplierItem.smSupplier ne null and !requestNoteBackingBean.getDisciplinaryActionActive(requestNoteDtl.scRequestSupplierItem.smSupplier)}" value="#{lbl['lbl.txt.no']}"/>		
-					<h:outputText rendered="#{requestNoteDtl.scRequestSupplierItem.smSupplier eq null}" value="#{lbl['lbl.sc.no.available']}"/>							   
-				</p:column>
-				<!-- 26284 End -->
 
 				<p:column headerText="#{lbl['lbl.sc.request.note.price.offered']}"
 					style="width: 45px;white-space: normal;">
@@ -233,7 +216,7 @@
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
 						<f:selectItems
-							value="#{requestNoteBackingBean.getPreparedByApprove(requestNoteDtl)}" var="user"
+							value="#{requestNoteBackingBean.getPreparedBy(requestNoteDtl)}" var="user"
 							itemLabel="#{user.userName}" itemValue="#{user.userId}"></f:selectItems>
 						<p:ajax event="change" update="prepareBy" partialSubmit="true"
 							process="@this"
@@ -252,9 +235,9 @@
 					<p:inputText style="width:20px;margin-top: 8px;"
 						label="#{requestNoteDtl.requestItem.itemName} : #{lbl['lbl.sc.request.note.delivery.term']}"
 						size="6" maxlength="4"
-						disabled="#{(requestNoteDtl.requestItem.quote ne null and (requestNoteDtl.prodAndServiceFlag or !requestNoteDtl.prodAndServiceFlag) or isViewOnly) or requestNoteDtl.showPurchaseInquiry}"
+						disabled="#{(requestNoteDtl.requestItem.quote ne null and requestNoteDtl.prodAndServiceFlag or isViewOnly) or requestNoteDtl.showPurchaseInquiry}"
 						id="deliveryTerm" value="#{requestNoteDtl.deliverTerm}"
-						required="#{!requestNoteDtl.selected}" validator="#{webappBean.validateInteger}">
+						required="#{!requestNoteDtl.selected}">
 						<p:ajax partialSubmit="true" process="@this" update="@this" />
 					</p:inputText> #{lbl['lbl.sc.days']}
 					<p:message id="deliveryTermMsg" for="deliveryTerm" display="icon" />
@@ -301,6 +284,7 @@
 					<p:message id="procTypeCatTitleMsg" for="procTypeCatTitle"
 						display="icon" />
 				</p:column>
+
 			</p:dataTable>
 		</h:panelGrid>
 
@@ -485,12 +469,4 @@
 			</div>
 		</p:panel>
 	</p:dialog>
-	
-	<!-- 26284 Start -->
-	<ac:disciplinaryActionActiveDp voList="#{requestNoteBackingBean.managedBean.disciplineVOs}" 
-				startDate="#{requestNoteBackingBean.managedBean.disciplinaryActionStartDate}"
-				endDate="#{requestNoteBackingBean.managedBean.disciplinaryActionEndDate}"
-				isWarning="#{requestNoteBackingBean.managedBean.disciplinaryActionWarning}"/>
-	<!-- 26284 End -->
-				
 </ui:composition>

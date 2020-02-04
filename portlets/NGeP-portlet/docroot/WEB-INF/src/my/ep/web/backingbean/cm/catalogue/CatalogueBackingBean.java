@@ -32,7 +32,6 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -58,9 +57,6 @@ import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.circular.ICircularDetailSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
-import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
-import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
-import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
@@ -68,7 +64,6 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
-import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -91,10 +86,6 @@ import my.ep.dto.ct.circular.CircularDetailReqDTO;
 import my.ep.dto.ct.circular.CircularDetailResDTO;
 import my.ep.dto.ct.dtl.ContractItemReqDTO;
 import my.ep.dto.ct.dtl.ContractItemResDTO;
-import my.ep.dto.fl.FulfilmentReqDTO;
-import my.ep.dto.fl.FulfilmentResDTO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
@@ -106,13 +97,9 @@ import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
-import my.ep.dto.sm.personnel.PersonnelReqDTO;
-import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
-import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.exception.EpException;
-import my.ep.helper.EntityHelper;
 import my.ep.helper.Paginator;
 import my.ep.persistence.entity.cm.catalog.CmBrand;
 import my.ep.persistence.entity.cm.catalog.CmColor;
@@ -144,16 +131,12 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelItemSpec;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
-import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
-import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmUom;
-import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmGstSupplier;
-import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
@@ -170,24 +153,18 @@ import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;
 import my.ep.web.backingbean.sc.purchaseinquiry.PurchaseInquiryBackingBean;
 import my.ep.web.backingbean.sc.requestnote.RequestNoteBackingBean;
 import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
-import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
 import my.ep.web.constant.cm.CmHelper;
 import my.ep.web.managedbean.cm.catalogue.CatalogueManagedBean;
-import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.cm.helper.CmApplicationUtil;
 import my.ep.web.util.cm.helper.CmSupplierZoneSingleton;
 import my.ep.web.util.cm.helper.CmSupplierZoneStateDistrictDTO;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
-import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.AdvanceSearchVO;
-import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.ExtensionCodeVO;
 import my.ep.web.vo.PricingVO;
 
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -200,7 +177,6 @@ import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFDataFormat;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
@@ -214,10 +190,6 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
 
-import my.ep.web.vo.BlacklistOwnerDirectorVO;
-import my.ep.web.vo.DisciplinaryActionCategoryVO;
-import my.ep.persistence.entity.sc.directpurchase.ScQuoteSupplier;
-
 
 /**
  * 
@@ -230,11 +202,6 @@ import my.ep.persistence.entity.sc.directpurchase.ScQuoteSupplier;
 public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-
-	/*13984 Schedule/ Phase Information*/
-    private static List<ScheduleInfo> schInfo;
-    private static String orgCode;
-    private static String orgName;
 
 	/** The log. */
 	private static Logger log = Logger.getLogger(CatalogueBackingBean.class);
@@ -260,128 +227,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	/** The status filter bean. */
 	private SearchFilterBean statusFilterBean = new SearchFilterBean(
 			SearchOperator.OPERATOR_EQUALS.value());
-	
-	/*13984 schNo for table*/
-	private String schno;
 
-	//[#26282] disciplinary action - start
-	//Navigation Details
-	private static final String NAV_TO_DA = "/xhtml/cm/shared/applicationView/cmDisciplinaryActionViewOnly.xhtml";
-	//[#26282] disciplinary action - end
-	
+	/**
+	 * Instantiates a new CatalogueBackingBean.
+	 */
 	public CatalogueBackingBean() {
-		initSchPhaseTable();
-		
-
-	}
-	
-	/* 13984 Construct phase/ schedule table */
-	public List<ScheduleInfo> initSchPhaseTable(){
-		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-		IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
-
-		if (this.getManagedBean().getCtRequestList() != null && this.getManagedBean().getCtRequestList().size() > 0) {
-
-			VCmSupplierItem supplierItemView = this.getManagedBean().getCtRequestList().get(0);
-			ContractReqDTO reqDTO = new ContractReqDTO();
-			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
-
-			flReqDTO.setContractId(supplierItemView.getContractId());
-			reqDTO.setContractId(supplierItemView.getContractId());
-
-			ContractResDTO resDTO;
-			FulfilmentResDTO resfDTO;
-			
-			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			UserReqDTO userReqDTO = new UserReqDTO();
-			FacesScopes facesScopes = new FacesScopes();
-			if (facesScopes.getUserSessionBean().getUserId() == null) {
-				throw new IllegalArgumentException("userId cannot be null");
-			}	
-			userReqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
-			UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
-			Long orgProfileId = userResDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId();
-			
-			flReqDTO.setOrgProfileId(orgProfileId);
-			resfDTO = requestSO.retrieveFulfilmentRequestDocNosByContractId(flReqDTO);
-			
-			reqDTO.setOrgProfileId(orgProfileId);
-			resDTO = contractSO.retrieveAvailableSchedulePhaseNoByOrgProfileId(reqDTO);
-			
-			if (resDTO.getAvailableNoList() != null) {
-				getManagedBean().setAvailableNoList(resDTO.getAvailableNoList());
-			}
-			schInfo = new ArrayList<ScheduleInfo>();
-
-			for (int i = 0; i < resfDTO.getDocNos().size() ; i++) {
-				int j = i + 1;
-				if (j > resfDTO.getDocNos().size()) {
-
-					resfDTO.getDocNos().add("");
-				}
-				if (j > resfDTO.getFlOrderDocNos().size()) {
-
-					resfDTO.getFlOrderDocNos().add("");
-				}
-				if (j > resfDTO.getFlOrderDocNoStatus().size()) {
-
-					resfDTO.getFlOrderDocNoStatus().add("");
-				}
-				if (j > resfDTO.getDocNoStatus().size()) {
-
-					resfDTO.getDocNoStatus().add("");
-				}
-				if (j > resfDTO.getFlSchNos().size()) {
-					resfDTO.getFlSchNos().add("");
-				}
-	    			
-	    			schInfo.add(new ScheduleInfo(resfDTO.getFlSchNos().get(i), resfDTO.getDocNos().get(i), resfDTO
-							.getDocNoStatus().get(i), resfDTO.getFlOrderDocNos().get(i), resfDTO.getFlOrderDocNoStatus()
-							.get(i)));
-			}
-            resfDTO.getFlFulfilmentRequest();
-            
-            IOrgProfileSO profileSO = (IOrgProfileSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-            OrgProfileReqDTO orgReqDTO = new OrgProfileReqDTO();
-    		orgReqDTO.setOrgProfileId(orgProfileId);
-    		OrgProfileResDTO orgResDTO = profileSO.retrieveOrgProfileDtlByProfileId(orgReqDTO);
-            
-            String orgCode = orgResDTO.getPmOrgProfile().getOrgCode();
-			setOrgCode(orgCode);
-			
-			String orgName = orgResDTO.getPmOrgProfile().getOrgName();
-			setOrgName(orgName);
-		   
-		    getManagedBean().setFlRequest(resfDTO.getFlFulfilmentRequest());
-		
-		}
 
 		if (MDC.get(LogKey.USER_ID) == null) {
 			MDC.put(LogKey.USER_ID, 1L);
 		}
-		
-		setSchInfo(schInfo);
-		return schInfo;
-
-	}
-	
-
-	public String getOrgCode() {
-		return orgCode;
-	}
-
-	public void setOrgCode(String orgCode) {
-		this.orgCode = orgCode;
-	}
-	
-	public String getOrgName() {
-		return orgName;
-	}
-
-	public void setOrgName(String orgName) {
-		this.orgName = orgName;
 	}
 
 	/**
@@ -722,7 +576,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		facesContext.addMessage(
 				null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-						MessageUtils.getMessage(MessageConst.INFO_710014,  //20190830@emy - CR15028
+						MessageUtils.getMessage(MessageConst.INFO_710014,
 								MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
 
@@ -3045,17 +2899,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}else{
 			catImage.setImage(item.getContents());
 		}
-		String fileName = item.getFileName();
-	    if (fileName != null) {
-	    	String ts = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date());
-	    	fileName = ts.concat(FilenameUtils.getName(fileName).replaceAll("[:\\\\/*?|<>&~!@#$%^]", "_"));
-	    }
-		log.info("Sanitized file name : "+fileName.replace(' ', '_'));
+		log.info("************"+item.getFileName().replace(' ', '_'));
 
-		catImage.setImageName(fileName.replace(' ', '_'));
-		catImage.setImageDesc(fileName.replace(' ', '_'));
+		catImage.setImageName(item.getFileName().replace(' ', '_'));
+		catImage.setImageDesc(item.getFileName().replace(' ', '_'));
 		catImage.setImageType("jpg");
-		catImage.setImagePath(fileName.replace(' ', '_'));
+		catImage.setImagePath(item.getFileName().replace(' ', '_'));
 		catImage.setTempPath(uploadDir.toString());
 		log.info("catImage.TempPath()" + catImage.getTempPath());
 
@@ -4586,15 +4435,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 
-			// 20190830@emy - CR15028 - start
-			
 			if(this.getManagedBean().getSelectedMaintainItem().getItemStatus().equals("P")){
-				facesContext.addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-								MessageUtils.getMessage(MessageConst.ERROR_715059,
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
-			}else if(this.getManagedBean().getSelectedMaintainItem().getItemStatus().equals("U")){
 				facesContext.addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 								MessageUtils.getMessage(MessageConst.ERROR_715059,
@@ -4603,12 +4444,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			}else{
 				facesContext.addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-								MessageUtils.getMessage(MessageConst.INFO_710016,
+								MessageUtils.getMessage(MessageConst.INFO_710001,
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 			}
-			
-			//20190830@emy CR15028 - end
 
 			supplierReqDTO = new SupplierSearchReqDTO();
 
@@ -5139,7 +4978,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				FacesContext facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(null, new FacesMessage(
 						FacesMessage.SEVERITY_INFO, "",
-						MessageUtils.getMessage(MessageConst.INFO_710016, 			//20190830@emy CR15028
+						MessageUtils.getMessage(MessageConst.INFO_710001,
 								MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
 
@@ -5933,6 +5772,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 */
 	public void preRenderSupplierCatalogue() {
 
+
+
 		/*		this.getManagedBean().setItemNameFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value()));
 		this.getManagedBean().setItemCodeFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value()));
 		this.getManagedBean().setSupplierNameFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value()));
@@ -6025,18 +5866,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 			}
 			
-			//String nextNavigation = naviToMaintenancePage(false);
-			//[#26282 - start]
-			String nextNavigation = "";			
-			checkForDisciplinaryAction(smResDTO.getResultBean().getResultList().get(0).getSupplierId());
-			
-			if(this.getManagedBean().isDaCancelReg() || this.getManagedBean().isDaBlacklistOwner()) {
-				//disciplinary action page
-				nextNavigation = NAV_TO_DA;
-			} else {
-				nextNavigation = naviToMaintenancePage(false);
-			}
-			//[#26282 - end]
+			String nextNavigation = naviToMaintenancePage(false);
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
@@ -8985,7 +8815,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		this.getManagedBean().setTempSupplierList(null);
 		this.getManagedBean().getTempSupplierList().add(supplierItem);
-		
+
 		String contractNo = "";
 		boolean flag = false;
 
@@ -9123,7 +8953,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			if(resDTO.getAvailableNoList() != null){
 				getManagedBean().setAvailableNoList(resDTO.getAvailableNoList());
 			}
-           
+
 		}
 
 		return "contractRequestView";
@@ -9153,8 +8983,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	/**
 	 * navigate To CR.
-	 * @return 
-	 * @return 
 	 * 
 	 * @throws PortalException
 	 *             the portal exception
@@ -9177,12 +9005,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		externalContext.getApplicationMap().put(facesScope.getUserSessionBean().getUserId().toString()+getManagedBean().getCtRequestList().get(0)
 				.getContractId().toString(), getManagedBean().getCtRequestList());
 		String url = "contract-request-from-catalogue";
-		
-		/*13984 Schedule No. Information for table*/
-		schno = getManagedBean().getScheduleNo();
-		getschno();
-		
-	
+
 		try {
 			if(getManagedBean().getScheduleNo() != null){
 				externalContext.redirect(commonUrl
@@ -9206,8 +9029,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
 	}
+
 	/**
 	 * back To Public Catalogue.
 	 * 
@@ -10519,277 +10342,26 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 		return cal.getTime();
 	}
-	public void onDateSelectListener(CmStandardPricing stdPrice){
-		if(stdPrice!=null){
-			if(stdPrice.getStartDate()!=null){
-				stdPrice.setEndDate(this.getNextTwoYear(stdPrice.getStartDate()));
+	public void onDateSelectListener(Integer index){
+		Date startDate = index < 0 ? this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getStartDate():
+			this.getManagedBean().getDraftSearchDataModel().getList().get(index).getCmStandardPricing().getStartDate();
+		log.info("start date" + startDate);
+		log.info("start index" + index);
+
+		if(startDate!=null){
+			if(index < 0){
+				log.info("the 2 year date" + getNextTwoYear(startDate));
+				this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().setEndDate(getNextTwoYear(startDate));
 			}else{
-				stdPrice.setEndDate(null);
+				this.getManagedBean().getDraftSearchDataModel().getList().get(index).getCmStandardPricing().setEndDate(getNextTwoYear(startDate));
 			}
-		}
-	}
-	
-	
-	/*13984 Schedule info instance variables*/	
-	public List<ScheduleInfo> getSchInfo() {
-		if (schInfo == null)
-			schInfo = new ArrayList<ScheduleInfo>();
-		
-        log.info("schInfo is : "+schInfo);
-		return schInfo;
-	}
-
-	public void setSchInfo(List<ScheduleInfo> schInfo) {
-		this.schInfo = schInfo;
-	}
-	/*13984 Schedule No. instance variables for table*/
-	public String getschno() {
-		
-		String schNoSelected= "";
-		
-		if (null != getManagedBean().getAvailableNoList()) {
-			schNoSelected = getManagedBean().getScheduleNo();
-		}
-		
-		log.info("schNoSelected in getSchno() is " +schNoSelected);
-
-		setschno(schNoSelected);
-		return schno;
-	}
-
-
-	public void setschno(String schNo) {
-		log.info("schno in setSchno(String schno) is : " +schno);
-		this.schno = schNo;
-		
-		
-	}
-	//SSM INTEGRATION #27089
-	public void getMinDate(Date startDate,CmStandardPricing stdPrice){
-		if(startDate==null){
-			this.getManagedBean().setMinDate(this.getManagedBean().getCurrentDate());
 		}else{
-			Calendar c = new GregorianCalendar();
-			c.setTime(startDate);
-			c.add(Calendar.DATE, 1);
-			this.getManagedBean().setMinDate(c.getTime());
-		}
-		if(stdPrice != null){
-			onDateSelectListener(stdPrice);
+			if(index == null){
+				this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().setEndDate(null);
+			}else{
+				this.getManagedBean().getDraftSearchDataModel().getList().get(index).getCmStandardPricing().setEndDate(null);
+			}
 		}
 	}
 	
-	//[#26282]
-	public void onViewDisciplinaryAction(Long supplierId, String mofNo) {
-		log.info("[#26282] onViewDisciplinaryAction");
-		
-		SmSupplier smSupplier = null;
-		DisciplinaryActionVO voObj = null;
-		String daMsg = "";
-		FacesScopes facesScopes = new FacesScopes();
-		
-		if((facesScopes.hasRoleUser(RoleCode.REQUISITIONER.value()))) {
-			log.info("[#26282] is REQUISITIONER user...");			
-			
-			log.info("[#26282] Supplier Id: " + supplierId + ", MOF No: " + mofNo);
-			if(supplierId != null) {
-				smSupplier = new SmSupplier();
-				// set supplier id
-				smSupplier.setSupplierId(supplierId);
-			} else {
-				log.info("Invalid supplier id!!!");
-				throw new EpException(MessageConst.ERROR_760041);
-			}
-			
-			// set MOF supplier status
-			if(mofNo != null){
-				getManagedBean().setMofSupplier(true);
-			} else {
-				getManagedBean().setMofSupplier(false);
-			}			
-			
-			// get disicplinary action history
-			List<DisciplinaryActionVO> voList = ViewSuppProfileBackingBean.getDisciplinaryActionVO(smSupplier);
-			
-			if(!EntityHelper.isCollectionEmpty(voList) && voList.size() > 0){				
-				voObj = voList.get(0);
-				log.info("[#26282] DA effective date: " + voObj.getStartDate());
-				log.info("[#26282] DA expire date: " + voObj.getEndDate());				
-				daMsg =	ResourceBundleUtils.getMessage("lbl.cm.supplier.disciplinaryAction.warnmessage", new String[] { voObj.getStartDate(), voObj.getEndDate() }, ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale());
-				log.info("[#26282] DA message: " + daMsg);
-				// set disciplinary action message
-				getManagedBean().setDisciplinaryMsg(daMsg);
-				// set disicplinary action history
-				getManagedBean().setDisciplineVOs(voList);
-			} else {
-				getManagedBean().setDisciplineVOs(new ArrayList<DisciplinaryActionVO>());
-			}
-			
-			// show pop-up dialog						
-			RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show()");
-		}
-	}
-	
-	//[#26282]
-	public void checkForDisciplinaryAction(Long supplierId) {
-		log.info("[#26282] checkForDisciplinaryAction");
-		
-		//check for disciplinary action (DA)	
-		List<SmDisciplinaryAction> disciplinaryActList = CmApplicationUtil.checkForDisciplinaryAction(supplierId);
-		
-		if(disciplinaryActList != null && disciplinaryActList.size() > 0) {
-			SmDisciplinaryAction disciplinaryAct = disciplinaryActList.get(0);
-			
-			log.info("[#26282] - DA - Warning: " + disciplinaryAct.isWarning());
-			log.info("[#26282] - DA - Suspend Registration: " + disciplinaryAct.isSuspendRegistration());
-			log.info("[#26282] - DA - Cancel Registration: " + disciplinaryAct.isCancelRegistration());
-			log.info("[#26282] - DA - Blacklist  Owner/Director of Company: " + disciplinaryAct.isBlacklistOwner());
-			
-			//disciplinary action - Warning
-			if(disciplinaryAct.isWarning()) {
-				this.getManagedBean().setDaWarning(disciplinaryAct.isWarning());
-			}
-			//disciplinary action - Suspend Registration
-			if(disciplinaryAct.isSuspendRegistration()) {
-				this.getManagedBean().setDaSuspendReg(disciplinaryAct.isSuspendRegistration());
-			}
-			//disciplinary action - Cancel Registration
-			if(disciplinaryAct.isCancelRegistration()) {
-				this.getManagedBean().setDaCancelReg(disciplinaryAct.isCancelRegistration());
-			}
-			//disciplinary action - Blacklist  Owner/Director of Company
-			if(disciplinaryAct.isBlacklistOwner()) {
-				this.getManagedBean().setDaBlacklistOwner(disciplinaryAct.isBlacklistOwner());
-			}
-		} else {
-			log.info("[#26282] - Disciplinary action does not imposed on supplier");
-		}		 
-	}
-	
-	
-	
-	//26284 - Start
-	public void supplierDisciplinaryActionInfo(SmSupplier smSupplier){
-		SmSupplier currSupp = smSupplier;
-		if(currSupp != null){
-			List<DisciplinaryActionVO> voList = getDisciplinaryActionVO(currSupp);
-			if(!EntityHelper.isCollectionEmpty(voList)
-					&& voList.size() > 0){
-				getManagedBean().setDisciplineVOs(voList);
-			} else {
-				getManagedBean().setDisciplineVOs(new ArrayList<DisciplinaryActionVO>());
-			}
-		} else {
-			getManagedBean().setDisciplineVOs(new ArrayList<DisciplinaryActionVO>());
-		}
-		RequestContext.getCurrentInstance().execute(
-				"disciplinaryActionActiveDpDlg.show();");
-	}
-			
-	private List<DisciplinaryActionVO> getDisciplinaryActionVO(SmSupplier currSupp) {
-		ISupplierDataMaintenanceSO supplierDataMaintenanceSO = (ISupplierDataMaintenanceSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-						ISupplierDataMaintenanceSO.class);
-				
-		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
-		reqDTO.setSupplier(currSupp);
-		List<DisciplinaryActionVO> voList = new ArrayList<DisciplinaryActionVO>();
-		PersonnelReqDTO perReqDTO = new PersonnelReqDTO();
-		perReqDTO.setSmSupplierId(currSupp.getSupplierId());
-		StringBuilder str1 = new StringBuilder();
-		StringBuilder str2 = new StringBuilder();
-		PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelBySupplierId(perReqDTO);
-				
-		List<SmDisciplinaryAction> resultList = supplierDataMaintenanceSO.retrieveActiveDisciplinaryActionBySupplierDp(reqDTO).getSmDisciplinaryActions();
-		if (resultList != null
-				&& resultList.size() > 0) {
-			for(SmDisciplinaryAction disciplinaryAction: resultList){
-				if(disciplinaryAction.isWarning() || disciplinaryAction.isCancelCategory() 
-						|| disciplinaryAction.isSuspendRegistration() || disciplinaryAction.isCancelRegistration() 
-						|| disciplinaryAction.isBlacklistOwner() || disciplinaryAction.isManufacturerCancel()
-						|| disciplinaryAction.isBumiputeraCancel()){
-					DisciplinaryActionVO retVal = new DisciplinaryActionVO();
-					if(disciplinaryAction.getStartDate() != null)
-						retVal.setStartDate(DateUtils.dateToString("dd/MM/yyyy",disciplinaryAction.getStartDate()));
-						retVal.setEndDate(DateUtils.dateToString("dd/MM/yyyy",disciplinaryAction.getEndDate()));
-						str1.append(retVal.getStartDate()).append(" "); 
-						getManagedBean().setDisciplinaryActionStartDate(str1.toString());
-					if(disciplinaryAction.getEndDate() != null)
-						retVal.setEndDate(DateUtils.dateToString("dd/MM/yyyy",disciplinaryAction.getEndDate()));
-						str2.append(retVal.getEndDate()).append(".");
-						getManagedBean().setDisciplinaryActionEndDate(str2.toString());
-					if(disciplinaryAction.getRemark() != null)
-						retVal.setRemarks(disciplinaryAction.getRemark());
-							
-					if(disciplinaryAction.isWarning()){
-						retVal.setWarning(true);
-						getManagedBean().setDisciplinaryActionWarning(true);
-					}
-					if(disciplinaryAction.isCancelCategory())
-						retVal.setCancelCategory(true);
-					if(disciplinaryAction.isSuspendRegistration())
-						retVal.setSuspendRegistration(true);
-					if(disciplinaryAction.isCancelRegistration())
-						retVal.setCancelRegistration(true);
-					if(disciplinaryAction.isBumiputeraCancel())
-						retVal.setBumiputeraCancel(true);
-					if(disciplinaryAction.isManufacturerCancel())
-						retVal.setManufacturerCancel(true);
-					if(disciplinaryAction.isBlacklistOwner())
-						retVal.setBlacklistOwnerDirector(true);
-							
-					if(disciplinaryAction.isCancelCategory()){
-						List<DisciplinaryActionCategoryVO> catVoList = new ArrayList<DisciplinaryActionCategoryVO>();
-						List<Object[]> catList = SmApplicationUtil.retrieveCancelCategoryBySupplier(currSupp);
-								
-						if(!EntityHelper.isCollectionEmpty(catList)
-								&& catList.size() > 0){
-							for(Object[] arr : catList){
-								if(arr[7] != null && disciplinaryAction.getDisciplinaryActionId().toString().equalsIgnoreCase(arr[7].toString())){
-									DisciplinaryActionCategoryVO catVo = new DisciplinaryActionCategoryVO();
-									String catCode = StringUtils.EMPTY;
-									catCode = arr[3].toString() + arr[4].toString() + arr[5].toString() ;
-									catVo.setCategoryCode(catCode);	
-									catVoList.add(catVo);
-								}
-							}						
-							retVal.setCategoryCodeList(catVoList);
-						}
-					}	
-							
-					if(disciplinaryAction.isBlacklistOwner()
-							|| disciplinaryAction.isSuspendRegistration()
-								|| disciplinaryAction.isCancelRegistration()){
-						List<BlacklistOwnerDirectorVO> blacklistownerDirectorList = new ArrayList<BlacklistOwnerDirectorVO>();
-						if(personnelResDTO != null 
-								&& personnelResDTO.getSmPersonnelList().size() > 0){
-							for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
-								BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
-								if(personnel.isCancelRegistration()
-										|| personnel.isSuspendRegistration()
-											|| personnel.isBlacklisted()){
-									blacklistOwner.setIcNo(personnel.getIdentificationNo());
-									blacklistownerDirectorList.add(blacklistOwner);
-								}
-							}
-							retVal.setBlacklistownerDirectorList(blacklistownerDirectorList);
-						}
-					}
-				voList.add(retVal);
-				}				
-			}
-		}
-		return voList;
-	}
-			
-	public Boolean getDisciplinaryActionActive(SmSupplier supplier) {
-		ISupplierDataMaintenanceSO supplierDataMaintenanceSO = (ISupplierDataMaintenanceSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-						ISupplierDataMaintenanceSO.class);
-				
-		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
-		reqDTO.setSupplier(supplier);
-		return supplierDataMaintenanceSO.retrieveActiveDisciplinaryActionBySupplierDp(reqDTO).isDisciplinaryActionActiveDp();
-	}
-	//26284 - End
 }

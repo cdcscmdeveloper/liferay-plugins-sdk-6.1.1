@@ -13,51 +13,30 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
-import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
-import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.QTStatusConst;
-import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
-import my.ep.dto.sm.personnel.PersonnelReqDTO;
-import my.ep.dto.sm.personnel.PersonnelResDTO;
-import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
-import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
-import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
-import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
 import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
-import my.ep.persistence.entity.sm.SmDisciplinaryAction;
-import my.ep.persistence.entity.sm.SmPersonnel;
-import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.loa.DpLOAManagedBean;
-import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.sm.helper.SmApplicationUtil;
-import my.ep.web.util.sm.helper.SmServiceLookup;
-import my.ep.web.vo.BlacklistOwnerDirectorVO;
-import my.ep.web.vo.DisciplinaryActionCategoryVO;
-import my.ep.web.vo.DisciplinaryActionVO;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -113,6 +92,15 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 			retrieveLOAList(sourceId, true);
 
 			// retrieveLOAList(2122L);
+			
+			//Enhancement #12177			
+			addButton();
+			if(sqExpiredMessageFlag){
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+						MessageUtils.getMessage(MessageConst.ERROR_760481, 
+								null,MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			}
+
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, QTConstants.DP_LOA_LIST_PAGE);
@@ -121,7 +109,7 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 		}
 	}
 
-	/**c
+	/**
 	 * retrieving LOI LOA List from database.
 	 * 
 	 * @param requestNoteId the request note id
@@ -167,20 +155,19 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 					
 					for (ScPurchaseRequest scPurchaseRequest : purchaseRequestList) {
 						statusId = scPurchaseRequest.getScLoa().getPmStatus()
-								.getStatusId();			
+								.getStatusId();
 						
 						if (QTStatusConst.LOA_REJECTED.equals(statusId)) {
-							isCancelled = true;							
+							isCancelled = true;
+							
 						} else if (!QTStatusConst.LOA_PENDING_VERIFICATION.equals(statusId) && 
-								!QTStatusConst.LOA_COMPLETED.equals(statusId) && 
-								!QTStatusConst.LOA_CANCELLED_DUE_TO_SIMPLE_QUOTE_VALIDITY_EXPIRED.equals(statusId) &&
-								!QTStatusConst.LOA_REJECTED_DUE_TO_SIMPLE_QUOTE_VALIDITY_EXPIRED.equals(statusId) ) {
+								!QTStatusConst.LOA_COMPLETED.equals(statusId)) {
 							
 							continue;
 						}
 						
 						completeCount++;
-					}			
+					}
 					
 					if (isCancelled && completeCount == purchaseRequestList.size()) {
 						getManagedBean().setShowBPMButtons(true);
@@ -228,6 +215,12 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 							ParameterConst.DOCTYPE_SIMPLE_QUOTE,
 							getManagedBean().getScRequestNote().getQuote().getQuoteNo(), isAcknowledgeRequired);
 				}
+				//Enhancement #12177
+				if(BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)){
+					successMessage(MessageConst.INFO_700010, ParameterTypeConst.DOCUMENT_TYPES,
+							ParameterConst.DOCTYPE_REQUEST_NOTE,
+							requestNoteNo, Boolean.TRUE);
+				}
 				renewSesionObject();
 			}
 		} finally {
@@ -238,171 +231,53 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 	}
 	
 	/**
-	 * Check either SQ is valid or not (SQ only valid for 60 days after it closing date)
+	 * Add/display only cancel/reject button if SQ not valid 
 	 */
-	public boolean isSqStillValid(Long currentStatusId){		
-		
-		Boolean validDate = true;	
-		Integer sqTimeValidity = null;
-		ScQuote scQuote = getManagedBean().getScRequestNote().getQuote();
-		
-		// by default days
-		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);	
-		RuleReqDTO ruleReqDTO = new RuleReqDTO();
-		ruleReqDTO.setRuleType(ParameterConst.SIMPLE_QUOTE);
-		List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
-		if (ruleValueList != null && ruleValueList.size() > 0) {
-			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
-			sqTimeValidity = Integer.valueOf(configRuleValue.getRuleValue());
-		} else {
-			throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
-		}		
-		
-		if(scQuote != null){			
-			Date currentDate = new Date();
-			Date closingDate = scQuote.getEndDate();
-				
-			Calendar cal = Calendar.getInstance();
-			cal.clear(); 
-			cal.setTime(closingDate);
-			cal.add(Calendar.DATE, sqTimeValidity); //add 60days to closing/end date
-				
-			if(currentStatusId.equals(QTStatusConst.LOA_PENDING_SUBMISSION)
-			   || currentStatusId.equals(QTStatusConst.LOA_PENDING_APPROVAL)
-			   || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION)
-			   || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL)){
-				if(currentDate.compareTo(cal.getTime()) >= 0){
-					validDate = false;
-					sqExpiredMessageFlag = true;
-				}
-			}					
-		}							
-		return validDate;	
+	public void addButton(){
+		Long currentStatusId = getManagedBean().getCurrentStatusId();		
+		//checking if SQ still valid, if not valid thus cancel/reject button will be added
+		if(!isSqStillValid()){										
+			String[] addCancel = new String[]{BpmOutcomeConst.BPM_CANCEL};    		
+			getManagedBean().setOutComes(addCancel);
+			getManagedBean().setShowBPMButtons(true);									
+		}
+											        
 	}
 	
-	//26284 - Start
-	public void supplierDisciplinaryActionInfo(SmSupplier smSupplier){
-		SmSupplier currSupp = smSupplier;
-		if(currSupp != null){
-			List<DisciplinaryActionVO> voList = getDisciplinaryActionVO(currSupp);
-			if(!EntityHelper.isCollectionEmpty(voList)
-					&& voList.size() > 0){
-				getManagedBean().setDisciplineVOs(voList);
-			} else {
-				getManagedBean().setDisciplineVOs(new ArrayList<DisciplinaryActionVO>());
-			}
-		} else {
-			getManagedBean().setDisciplineVOs(new ArrayList<DisciplinaryActionVO>());
-		}
-		RequestContext.getCurrentInstance().execute(
-				"disciplinaryActionActiveDpDlg.show();");
-	}
+	/**
+	 * Check either SQ is valid or not (SQ only valid for 60 days after it closing date)
+	 */
+	public boolean isSqStillValid(){		
+		
+		ScRequestNote requestNote = getManagedBean().getScRequestNote();
+		Boolean validDate = true;	
+		Long currentStatusId = getManagedBean().getCurrentStatusId();
+		
+		if(requestNote != null){
+			ScQuote scQuote = requestNote.getQuote();
+			
+			EpPropertiesUtils prop = EpPropertiesUtils.getInstance();
+//			Integer sqTimeValidity = Integer.valueOf(prop.getProperty("sqTimeValidity"));
+			Integer sqTimeValidity = 60;
+
+			if(scQuote != null){
 				
-	private List<DisciplinaryActionVO> getDisciplinaryActionVO(SmSupplier currSupp) {
-		ISupplierDataMaintenanceSO supplierDataMaintenanceSO = (ISupplierDataMaintenanceSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-						ISupplierDataMaintenanceSO.class);
-					
-		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
-		reqDTO.setSupplier(currSupp);
-		List<DisciplinaryActionVO> voList = new ArrayList<DisciplinaryActionVO>();
-		PersonnelReqDTO perReqDTO = new PersonnelReqDTO();
-		perReqDTO.setSmSupplierId(currSupp.getSupplierId());
-		StringBuilder str1 = new StringBuilder();
-		StringBuilder str2 = new StringBuilder();
-		PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelBySupplierId(perReqDTO);
-					
-		List<SmDisciplinaryAction> resultList = supplierDataMaintenanceSO.retrieveActiveDisciplinaryActionBySupplierDp(reqDTO).getSmDisciplinaryActions();
-		if (resultList != null
-				&& resultList.size() > 0) {
-			for(SmDisciplinaryAction disciplinaryAction: resultList){
-				if(disciplinaryAction.isWarning() || disciplinaryAction.isCancelCategory() 
-						|| disciplinaryAction.isSuspendRegistration() || disciplinaryAction.isCancelRegistration() 
-						|| disciplinaryAction.isBlacklistOwner() || disciplinaryAction.isManufacturerCancel()
-						|| disciplinaryAction.isBumiputeraCancel()){
-					DisciplinaryActionVO retVal = new DisciplinaryActionVO();
-					if(disciplinaryAction.getStartDate() != null)
-						retVal.setStartDate(DateUtils.dateToString("dd/MM/yyyy",disciplinaryAction.getStartDate()));
-						retVal.setEndDate(DateUtils.dateToString("dd/MM/yyyy",disciplinaryAction.getEndDate()));
-						str1.append(retVal.getStartDate()).append(" "); 
-						getManagedBean().setDisciplinaryActionStartDate(str1.toString());
-					if(disciplinaryAction.getEndDate() != null)
-						retVal.setEndDate(DateUtils.dateToString("dd/MM/yyyy",disciplinaryAction.getEndDate()));
-						str2.append(retVal.getEndDate()).append(".");
-						getManagedBean().setDisciplinaryActionEndDate(str2.toString());
-					if(disciplinaryAction.getRemark() != null)
-						retVal.setRemarks(disciplinaryAction.getRemark());
-								
-					if(disciplinaryAction.isWarning()){
-						retVal.setWarning(true);
-						getManagedBean().setDisciplinaryActionWarning(true);
-					}
-					if(disciplinaryAction.isCancelCategory())
-						retVal.setCancelCategory(true);
-					if(disciplinaryAction.isSuspendRegistration())
-						retVal.setSuspendRegistration(true);
-					if(disciplinaryAction.isCancelRegistration())
-						retVal.setCancelRegistration(true);
-					if(disciplinaryAction.isBumiputeraCancel())
-						retVal.setBumiputeraCancel(true);
-					if(disciplinaryAction.isManufacturerCancel())
-						retVal.setManufacturerCancel(true);
-					if(disciplinaryAction.isBlacklistOwner())
-						retVal.setBlacklistOwnerDirector(true);
-								
-					if(disciplinaryAction.isCancelCategory()){
-						List<DisciplinaryActionCategoryVO> catVoList = new ArrayList<DisciplinaryActionCategoryVO>();
-						List<Object[]> catList = SmApplicationUtil.retrieveCancelCategoryBySupplier(currSupp);
-									
-						if(!EntityHelper.isCollectionEmpty(catList)
-								&& catList.size() > 0){
-							for(Object[] arr : catList){
-								if(arr[7] != null && disciplinaryAction.getDisciplinaryActionId().toString().equalsIgnoreCase(arr[7].toString())){
-									DisciplinaryActionCategoryVO catVo = new DisciplinaryActionCategoryVO();
-									String catCode = StringUtils.EMPTY;
-									catCode = arr[3].toString() + arr[4].toString() + arr[5].toString() ;
-									catVo.setCategoryCode(catCode);	
-									catVoList.add(catVo);
-								}
-							}						
-							retVal.setCategoryCodeList(catVoList);
-						}
-					}	
-								
-					if(disciplinaryAction.isBlacklistOwner()
-							|| disciplinaryAction.isSuspendRegistration()
-								|| disciplinaryAction.isCancelRegistration()){
-						List<BlacklistOwnerDirectorVO> blacklistownerDirectorList = new ArrayList<BlacklistOwnerDirectorVO>();
-						if(personnelResDTO != null 
-								&& personnelResDTO.getSmPersonnelList().size() > 0){
-							for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
-								BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
-								if(personnel.isCancelRegistration()
-										|| personnel.isSuspendRegistration()
-											|| personnel.isBlacklisted()){
-									blacklistOwner.setIcNo(personnel.getIdentificationNo());
-									blacklistownerDirectorList.add(blacklistOwner);
-								}
-							}
-							retVal.setBlacklistownerDirectorList(blacklistownerDirectorList);
-						}
-					}
-				voList.add(retVal);
-				}				
-			}
-		}
-		return voList;
-	}
+				Date currentDate = new Date();
+				Date closingDate = scQuote.getEndDate();
 				
-	public Boolean getDisciplinaryActionActive(SmSupplier supplier) {
-		ISupplierDataMaintenanceSO supplierDataMaintenanceSO = (ISupplierDataMaintenanceSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-						ISupplierDataMaintenanceSO.class);
-					
-		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
-		reqDTO.setSupplier(supplier);
-		return supplierDataMaintenanceSO.retrieveActiveDisciplinaryActionBySupplierDp(reqDTO).isDisciplinaryActionActiveDp();
+				Calendar cal = Calendar.getInstance();
+				cal.clear(); 
+				cal.setTime(closingDate);
+				cal.add(Calendar.HOUR, sqTimeValidity); //add 60 days to closing/end date
+				
+				if(currentStatusId.equals(QTStatusConst.LOA_PENDING_SUBMISSION)){
+					if(currentDate.compareTo(cal.getTime()) >= 0){
+						validDate = false;
+						sqExpiredMessageFlag = true;
+					}
+				}	
+			}						
+		}	
+		return validDate;
 	}
-	//26284 - End
 }
