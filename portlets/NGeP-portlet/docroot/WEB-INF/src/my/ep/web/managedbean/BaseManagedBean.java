@@ -74,6 +74,22 @@ public abstract class BaseManagedBean implements Serializable {
 	private boolean disableFields;
 	
 	private boolean disciplinaryAction; 
+	
+	// 18685 - Start
+	private String reportDownloadFileName;
+	private ScAttachment scAttachment;
+	private List<ScQtEvaluationReport> scQtEvaluationReportList;
+	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
+	private List<ScQtEvaluationReport> selectedScQtEvaluationReports;
+	private ScQtEvaluationReport selectedReport;
+	private List<ScQtFinalizationReport> evaluationReportList;
+	private List<ScQtEvaluationReport> reportsToBeRemovedList;
+	private boolean autoUpdate = Boolean.TRUE;
+	private List<ScQtFinalizationReport> newBriefingPaperReportList;
+	private ScQtFinalizationReport selectedBriefingReport;
+	private List<ScQtFinalizationReport> removeFinalizationReports;
+	// 18685 - End
+	
 	/**
 	 * @return the token
 	 */
@@ -450,6 +466,126 @@ public abstract class BaseManagedBean implements Serializable {
 	 */
 	public void setDisciplinaryAction(boolean disciplinaryAction) {
 		this.disciplinaryAction = disciplinaryAction;
+	}
+
+	public String getReportDownloadFileName() {
+		return reportDownloadFileName;
+	}
+
+	public void setReportDownloadFileName(String reportDownloadFileName) {
+		this.reportDownloadFileName = reportDownloadFileName;
+	}
+
+	public ScAttachment getScAttachment() {
+		return scAttachment;
+	}
+
+	public void setScAttachment(ScAttachment scAttachment) {
+		this.scAttachment = scAttachment;
+	}
+
+	public List<ScQtEvaluationReport> getScQtEvaluationReportList() {
+		return scQtEvaluationReportList;
+	}
+
+	public void setScQtEvaluationReportList(
+			List<ScQtEvaluationReport> scQtEvaluationReportList) {
+		this.scQtEvaluationReportList = scQtEvaluationReportList;
+	}
+
+	public TemplateSpecBean getTemplateSpecBean() {
+		return templateSpecBean;
+	}
+
+	public void setTemplateSpecBean(TemplateSpecBean templateSpecBean) {
+		this.templateSpecBean = templateSpecBean;
+	}
+
+	public List<ScQtEvaluationReport> getSelectedScQtEvaluationReports() {
+		return selectedScQtEvaluationReports;
+	}
+
+	public void setSelectedScQtEvaluationReports(
+			List<ScQtEvaluationReport> selectedScQtEvaluationReports) {
+		this.selectedScQtEvaluationReports = selectedScQtEvaluationReports;
+	}
+
+	public ScQtEvaluationReport getSelectedReport() {
+		return selectedReport;
+	}
+
+	public void setSelectedReport(ScQtEvaluationReport selectedReport) {
+		this.selectedReport = selectedReport;
+	}
+
+	public List<ScQtFinalizationReport> getEvaluationReportList() {
+		return evaluationReportList;
+	}
+
+	public void setEvaluationReportList(
+			List<ScQtFinalizationReport> evaluationReportList) {
+		this.evaluationReportList = evaluationReportList;
+	}
+
+	public List<ScQtEvaluationReport> getReportsToBeRemovedList() {
+		return reportsToBeRemovedList;
+	}
+
+	public void setReportsToBeRemovedList(
+			List<ScQtEvaluationReport> reportsToBeRemovedList) {
+		this.reportsToBeRemovedList = reportsToBeRemovedList;
+	}
+
+	public boolean isAutoUpdate() {
+		return autoUpdate;
+	}
+
+	public void setAutoUpdate(boolean autoUpdate) {
+		this.autoUpdate = autoUpdate;
+	}
+
+	/**
+	 * @return the newBriefingPaperReportList
+	 */
+	public List<ScQtFinalizationReport> getNewBriefingPaperReportList() {
+		return newBriefingPaperReportList;
+	}
+
+	/**
+	 * @param newBriefingPaperReportList the newBriefingPaperReportList to set
+	 */
+	public void setNewBriefingPaperReportList(
+			List<ScQtFinalizationReport> newBriefingPaperReportList) {
+		this.newBriefingPaperReportList = newBriefingPaperReportList;
+	}
+
+	/**
+	 * @return the selectedBriefingReport
+	 */
+	public ScQtFinalizationReport getSelectedBriefingReport() {
+		return selectedBriefingReport;
+	}
+
+	/**
+	 * @param selectedBriefingReport the selectedBriefingReport to set
+	 */
+	public void setSelectedBriefingReport(ScQtFinalizationReport selectedBriefingReport) {
+		this.selectedBriefingReport = selectedBriefingReport;
+	}
+
+	/**
+	 * @return the removeFinalizationReports
+	 */
+	public List<ScQtFinalizationReport> getRemoveFinalizationReports() {
+		return removeFinalizationReports;
+	}
+
+	/**
+	 * @param removeFinalizationReports the removeFinalizationReports to set
+	 */
+	public void setRemoveFinalizationReports(
+			List<ScQtFinalizationReport> removeFinalizationReports) {
+		this.removeFinalizationReports = removeFinalizationReports;
 	}
 	
 	

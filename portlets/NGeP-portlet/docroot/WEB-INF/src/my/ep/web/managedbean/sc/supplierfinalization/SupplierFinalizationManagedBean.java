@@ -244,6 +244,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private SelectItem[] justDropdown;
 	private String outcome;
 	
+	private int evaluationReportIndex;
+	
 	/**
 	 * @return the activeIndex
 	 */
@@ -2171,6 +2173,20 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setReversed(boolean isReversed) {
 		this.isReversed = isReversed;
+	}
+
+	/**
+	 * @return the evaluationReportIndex
+	 */
+	public int getEvaluationReportIndex() {
+		return evaluationReportIndex;
+	}
+
+	/**
+	 * @param evaluationReportIndex the evaluationReportIndex to set
+	 */
+	public void setEvaluationReportIndex(int evaluationReportIndex) {
+		this.evaluationReportIndex = evaluationReportIndex;
 	}
 	
 	
