@@ -207,12 +207,10 @@
 			<p:message id="answerComplianceMsg" for="answerCompliance" display="icon" rendered="#{isAnswerTypeDropdown}" />
 		
 <!-- FARID START -->
-			<h:panelGroup layout="div" rendered="#{templateSpecBean.specMaster ne null and 
-												   templateSpecBean.specMaster.scQtDoc ne null and 
-												   templateSpecBean.specMaster.scQtDoc.scQt ne null}">
+
 				<h:selectOneMenu id="answerOffer" style="width:calc(100% - 30px);" 
 						value="#{tplSpecAnswer.offer}"
-						rendered="#{templateSpecBean.specMaster.scQtDoc.scQt.partial and isZonal and !isSpecTypeFinancial and isQuestionTypeItem}" 
+						rendered="#{isZonal and !isSpecTypeFinancial and isQuestionTypeItem}" 
 						label="#{lbl[answerlbl]}">
 						 <f:selectItems value="#{templateSpecBackingBean.offerDetails}"></f:selectItems>
 						 <p:ajax event="change" partialSubmit="true" process="@this" 
@@ -222,7 +220,6 @@
 					
 							<ui:decorate template="specColumnAnswerOfferZone.xhtml" />
 				
-			</h:panelGroup>
 					
 <!-- END -->	
 		
