@@ -2749,11 +2749,6 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 				populateFinancialSpecDetailsByZone();
 
 			}
-// #21695 farid start add 4/2/2020			
-			if (scQt.isZonal() && scQt.isPartial() || scQt.isZonal() && !scQt.isPartial()) {
-				retrieveTemplateSpecBean();
-			}
-// #21695 farid end  4/2/2020 (troubleshoot)	
 			
 			if (!scQt.isZonal() && scQt.getMaxProposal() == 1) {
 				retrieveTemplateSpecBean();
