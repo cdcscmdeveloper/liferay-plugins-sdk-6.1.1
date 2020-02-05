@@ -453,7 +453,24 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			} else {
 				ctBB.getManagedBean().setDirectPurchase(false);
 			}
-
+				
+			if (ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getQtType() !=null) {				       		
+				if (ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getQtType().getParameterCode().equalsIgnoreCase(
+						ParameterTypeConst.QUOTATION_TENDER_TYPE) && ctBB.newProcurement()!= null){
+				ctBB.getManagedBean().setNewPk7(true);
+				} else {
+					ctBB.getManagedBean().setNewPk7(false);
+				}
+			} else {
+				if (ctBB.getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().
+						getRequestNote().getRequestNoteDtls().get(0).getProcurementType().getParameterType().equalsIgnoreCase(
+						ParameterTypeConst.PROCUREMENT_TYPE) && ctBB.newJustification()!= null) {
+					ctBB.getManagedBean().setNewPk7(true);
+				} else {
+					ctBB.getManagedBean().setNewPk7(false);
+				}
+			}
+			
 			if (getManagedBean().getUserMap().size() == 0) {
 				initializeApproverList();
 			}

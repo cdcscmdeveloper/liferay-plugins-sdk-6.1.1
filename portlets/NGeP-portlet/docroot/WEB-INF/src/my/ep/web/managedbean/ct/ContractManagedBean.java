@@ -66,6 +66,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	private boolean gstCheckingGUI;
 	private boolean staxCheckingGUI;
 	private boolean disableAgent = false;
+	private boolean newPk7;
 	private String branchInfoFilePath;
 	private List<CtAgreement> ctAgreementList;
 
@@ -357,6 +358,20 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.disableAgent = disableAgent;
 	}
 
+	/**
+	 * @return the pk7
+	 */
+	public boolean isNewPk7() {
+		return newPk7;
+	}
+
+	/**
+	 * @param pk7 the pk7 to set
+	 */
+	public void setNewPk7(boolean newPk7) {
+		this.newPk7 = newPk7;
+	}
+	
 	/**
 	 * @return the gstCheckingGUI
 	 */
@@ -799,6 +814,9 @@ public class ContractManagedBean extends BaseManagedBean {
 	 * @return the ctContractAmount
 	 */
 	public CtContractAmount getCtContractAmount() {
+		if(ctContractAmount == null){
+			ctContractAmount = new CtContractAmount();
+		}
 		return ctContractAmount;
 	}
 
