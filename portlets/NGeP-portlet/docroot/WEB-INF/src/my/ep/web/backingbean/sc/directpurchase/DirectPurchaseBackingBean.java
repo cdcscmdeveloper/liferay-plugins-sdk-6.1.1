@@ -22,7 +22,6 @@ import javax.naming.NamingException;
 import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
@@ -61,7 +60,6 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
-import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
@@ -254,6 +252,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 
 				for (PmStatusDesc statusDesc : statusDescs) {
 					if(statusDesc.getPmStatus().getStatusId().equals(DPStatusConstants.SQ_PENDING_SUPPLIER_RESPONSE)
+							|| statusDesc.getPmStatus().getStatusId().equals(DPStatusConstants.SQ_PENDING_SUBMISSION)
 							|| statusDesc.getPmStatus().getStatusId().equals(DPStatusConstants.SQ_COMPLETED)
 							|| statusDesc.getPmStatus().getStatusId().equals(DPStatusConstants.SQ_CANCELLED)
 							|| statusDesc.getPmStatus().getStatusId().equals(DPStatusConstants.SQ_CANCELLED_DUE_TO_PID_VALIDITY_EXPIRED)
@@ -1068,9 +1067,19 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			return getStatusDescById(DPStatusConstants.SQ_EXPIRED);
 		}
 		Long statusId = null;
+		String docType = null;
+		
+		if(dpObj[3] != null){
+			docType = (String) dpObj[3];
+		}
 		if(dpObj[4] != null){
 			statusId = (Long) dpObj[4];
 		}		
+		if(docType.equals("PD")){
+			if(statusId.equals(DPStatusConstants.PID_EXPIRED)){
+				return getStatusDescById(DPStatusConstants.PID_COMPLETED);
+			}
+		}
 		return getStatusDescById(statusId);
 	}
 	
@@ -1101,7 +1110,8 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		Long currentStatusId = docStatusId;
 		
 		if(docType.equals("SQ")){
-	    	if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION)){
+	    	if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION)
+	    			|| currentStatusId.equals(DPStatusConstants.SQ_PENDING_SUBMISSION) ){
 	    		
 	    		//scPID = (ScPurchaseInDefault)dpObj[8];
 	    		if(dpObj[8]!=null){
@@ -1109,7 +1119,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		    		scPID.setPurchaseInDefaultId((Long) dpObj[8]);
 		    		scPID.setPurchaseInDefaultNo((String) dpObj[9]);
 		    		scPID.setPidValidDays((Integer) dpObj[10]);
-		    		scPID.setCreatedDate((Timestamp) dpObj[11]);
+		    		scPID.setChangedDate((Timestamp) dpObj[11]);
 	    		}
 	    		
 			}								   
@@ -1161,7 +1171,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		 */
 		private void pidValidity(ScPurchaseInDefault purchaseInDefault) {
 			Date today  = DateUtils.getCurrentDate();
-			Date ExpDate = DateUtils.addDays(purchaseInDefault.getCreatedDate(), purchaseInDefault.getPidValidDays());
+			Date ExpDate = DateUtils.addDays(purchaseInDefault.getChangedDate(), purchaseInDefault.getPidValidDays());
 			log.info("pID validity begin");
 			if(today.after(ExpDate)){
 
@@ -1183,7 +1193,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			
 			if(purchaseInDefault!=null){
 				Date today  = DateUtils.getCurrentDate();
-				Date ExpDate = DateUtils.addDays(purchaseInDefault.getCreatedDate(), purchaseInDefault.getPidValidDays());
+				Date ExpDate = DateUtils.addDays(purchaseInDefault.getChangedDate(), purchaseInDefault.getPidValidDays());
 				
 				log.info("pID validity begin");
 				
@@ -1196,45 +1206,5 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		}
 		
 		//12183 - end
-		
-	//  Redmine 25396: remove duplication option view by adding new drop down field
-		
-			public SelectItem[] getFunctionType() {
-				List<String> typeList = new ArrayList<String>();
-				typeList.add(ParameterConst.ORG_TYPE_PTJ);
-				typeList.add(ParameterConst.ORG_TYPE_SUPPLIER); //ORG_TYPE_SUPPLIER
-
-				SearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterCode",
-								SearchOperator.OPERATOR_IN.value(), typeList));
-				
-				for (String string : typeList) {
-					log.debug("List function type: "+string);
-				}
-
-				return getDropdownCodeValuesBySearchBean(ParameterTypeConst.ORGANISATION_TYPES, searchBean);
-			}
-			
-			/**
-			 * Show function type if user have both ptj & supplier role
-			 * @return boolean
-			 */
-			public boolean showFunctionType() {
-				if(hasSupplierRole() && hasGovernmentUserRole()) {
-					if(getManagedBean().getSearchFunctionType()==null) {
-						getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_PTJ);
-					}
-					return true;
-				} else {
-					if(hasSupplierRole()) {
-						getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_SUPPLIER);
-					} else {
-						getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_PTJ);
-					}
-					return false;
-				}
-			}
-			
-			// end 25396
 }
 
