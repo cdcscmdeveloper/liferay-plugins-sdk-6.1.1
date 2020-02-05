@@ -313,7 +313,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				SmCommonUtil.redirectToPage(
 						CONTENT_PAGE,
 						w.getMessage(),
-						new String[] { SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null) },FacesMessage.SEVERITY_ERROR);				
+						new String[] { SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null) });				
 			}
 						
 		}
