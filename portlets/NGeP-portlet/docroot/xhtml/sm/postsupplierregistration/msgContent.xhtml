@@ -189,11 +189,11 @@
 												postSupplierRegBB.managedBean.successPayment == true}">
 													<c:choose>
 														<c:when test="#{postSupplierRegBB.managedBean.smSupplier.smAppl.smCompanyBasic.withFederal}">
-														5	<ui:include
+															<ui:include
 																src="/xhtml/sm/shared/postsupplierregistration/flowRejectedMofContractorFederal.xhtml"></ui:include>
 														</c:when>
 														<c:otherwise>
-															4<ui:include
+															<ui:include
 																src="/xhtml/sm/shared/postsupplierregistration/flowRejectedMofCommon.xhtml"></ui:include>
 														</c:otherwise>
 													</c:choose>
@@ -205,11 +205,11 @@
 															<c:choose>
 																<c:when
 																	test="#{postSupplierRegBB.managedBean.smSupplier.smAppl.smCompanyBasic.withFederal}">
-																3	<ui:include
+																	<ui:include
 																		src="/xhtml/sm/shared/postsupplierregistration/flowMofContractorFederal.xhtml"></ui:include>
 																</c:when>
 																<c:otherwise>
-																2
+																
 																	<ui:include
 																		src="/xhtml/sm/shared/postsupplierregistration/flowMofCommon.xhtml"></ui:include>
 																</c:otherwise>
@@ -217,7 +217,7 @@
 														</c:when>
 		
 														<c:otherwise>
-														1
+														
 															<ui:include
 																src="/xhtml/sm/shared/postsupplierregistration/flowMofCommon.xhtml"></ui:include>
 														</c:otherwise>
