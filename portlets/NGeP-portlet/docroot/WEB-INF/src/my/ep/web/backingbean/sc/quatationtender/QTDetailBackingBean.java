@@ -2469,33 +2469,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		return finalizationSecratary;
 	}
 
-	public SelectItem[] retrieveFinalizationCommitteeTypeQCB() {
-		ScQt scQt = getManagedBean().getQt();
-		SelectItem[] finalizationSecratary = getManagedBean().getFinalizationSecratary();
-		Long currentStatusId = scQt.getQtStatus().getStatusId();
-
-		if (finalizationSecratary == null && isQTStatusLessThanOrEquals(currentStatusId, QTStatusConst.QT_PENDING_LOA)) {
-			CommitteReqDTO reqDTO = new CommitteReqDTO();
-			reqDTO.setQtId(scQt.getQtId());
-			CommitteResDTO resDTO = getCommitteSO().retrieveFinalizationCommitteeType(reqDTO);
-
-			List<PmParameter> finalizationCommTypes = resDTO.getFinalizationSecratry();
-			if (CollectionUtils.isNotEmpty(finalizationCommTypes)) {
-				finalizationSecratary = new SelectItem[1];
-				for (int i = 0; i < finalizationCommTypes.size(); i++) {
-					PmParameter parameter = finalizationCommTypes.get(i);
-					String commTypeDesc = getParameterDesc(parameter, new FacesScopes().getUserLocale());
-					finalizationSecratary[0] = new SelectItem(parameter.getParameterId(), commTypeDesc);
-					if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(parameter.getParameterCode())) {
-						break;
-					}
-				}
-				getManagedBean().setFinalizationSecratary(finalizationSecratary);
-			}
-		}
-		return finalizationSecratary;
-	}
-
 	private ICommitteSO getCommitteSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 	}
