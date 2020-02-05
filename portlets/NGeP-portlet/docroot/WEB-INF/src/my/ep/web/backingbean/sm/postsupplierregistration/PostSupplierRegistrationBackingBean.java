@@ -312,12 +312,8 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 				SmCommonUtil.redirectToPage(
 						CONTENT_PAGE,
-						MessageConst.ERROR_721070,
-						new String[] { SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null) });
-				//FacesContext fc = FacesContext.getCurrentInstance();
-				//fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CONTENT_PAGE);
-				//RequestContext.getCurrentInstance().execute("blockWidget.hide()");
-				//throw new EpException(w.getMessage(),new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null)});
+						w.getMessage(),
+						new String[] { SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null) },FacesMessage.SEVERITY_ERROR);				
 			}
 						
 		}
