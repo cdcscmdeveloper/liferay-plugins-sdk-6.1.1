@@ -306,14 +306,16 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		boolean proceed = true;
 		if(supplier != null){
 			try{
+				log.info("Here done");
 				checkSSMValid(supplier);
 			}catch(Exception w){
+				log.info("Here done--"+w.getMessage());
 				proceed =false;
 				RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 				SmCommonUtil.redirectToPage(
 						CONTENT_PAGE,
 						w.getMessage(),
-						new String[] { SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null) },FacesMessage.SEVERITY_ERROR);				
+						new String[] { SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null) });				
 			}
 						
 		}
