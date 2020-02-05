@@ -208,15 +208,7 @@
 		
 <!-- FARID START -->
 
-				<h:selectOneMenu id="answerOffer" style="width:calc(100% - 30px);" 
-						value="#{tplSpecAnswer.offer}"
-						rendered="#{isZonal and !isSpecTypeFinancial and isQuestionTypeItem}" 
-						label="#{lbl[answerlbl]}">
-						 <f:selectItems value="#{templateSpecBackingBean.offerDetails}"></f:selectItems>
-						 <p:ajax event="change" partialSubmit="true" process="@this" 
-						 update="@this,questionTbl"
-		                 listener="#{templateSpecBackingBean.offerTypeChange(tplSpecAnswer.offer,tplSpecAnswer.tplSpecQuestion.specQuestionId,row)}"/>
-					</h:selectOneMenu>
+
 			
 					
 <!-- END -->	
