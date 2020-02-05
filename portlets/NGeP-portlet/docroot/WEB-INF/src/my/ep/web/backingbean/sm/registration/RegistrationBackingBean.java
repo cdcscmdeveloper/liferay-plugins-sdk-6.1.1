@@ -1109,7 +1109,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		setAdminSameAsOwner();
 		SmPersonnel smPersonnel = this.getManagedBean().getSmPersonnel();
 		//SSM INTEGRATION
-		if(this.getManagedBean().isCompanyValidWithSSM()){
+		//#27315
+		//disable this, no need to check other supplier owner
+		/*if(this.getManagedBean().isCompanyValidWithSSM()){
 			for(SmSupplierOwner suppOwner:this.getManagedBean().getSmSuppOwners()){
 				if(suppOwner.getIdentificationType().getParameterCode().equals(SupplierManagementConst.BASIC_IND_IDENT_TYPE)){
 					if(getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF)){
@@ -1123,7 +1125,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					}
 				}
 			}
-		}
+		}*/
 		validateNewIC(smPersonnel,false);
 		RequestContext.getCurrentInstance().execute("firstUserTncDialog.show()");
 	}
