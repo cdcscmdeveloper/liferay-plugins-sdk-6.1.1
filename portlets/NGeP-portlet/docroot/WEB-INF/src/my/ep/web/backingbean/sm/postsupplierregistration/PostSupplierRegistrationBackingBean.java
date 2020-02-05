@@ -306,8 +306,10 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		boolean proceed = true;
 		if(supplier != null){
 			try{
+				log.info("Here done");
 				checkSSMValid(supplier);
 			}catch(Exception w){
+				log.info("Here done--"+w.getMessage());
 				proceed =false;
 				RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 				SmCommonUtil.redirectToPage(
