@@ -122,12 +122,14 @@
 							oncomplete="blockWidget.hide()"
 							action="#{backingBean.assignSelShareHolder(shareBean)}"
 							update=":form" style="padding-right:5px;">
-							<p:outputPanel rendered="#{shareBean.prevApprovedEquityOwner}">
+							<!-- #START 27165 -->
+							<p:outputPanel rendered="#{shareBean.prevApprovedEquityOwner || backingBean.managedBean.disAllowOwnerEdit}">
 								<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
 							</p:outputPanel>
-							<p:outputPanel rendered="#{!shareBean.prevApprovedEquityOwner}">
+							<p:outputPanel rendered="#{!shareBean.prevApprovedEquityOwner and !backingBean.managedBean.disAllowOwnerEdit}">
 								<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
 							</p:outputPanel>
+							<!-- #END 27165 -->
 						</p:commandLink>
 						<ac:smFieldChangeTableAlert object="#{shareBean}" />
 					</p:column>
