@@ -67,6 +67,7 @@ public abstract class BaseManagedBean implements Serializable {
 	private SmSupplier smSupplierSsm;
 	private SmPersonnel smPersonnelSsm;
 		
+	private List<SmPersonnel> personnelsRole  = new ArrayList();
 	
 	// For sub title displayed in screen.
 	private String title;
@@ -586,6 +587,14 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setRemoveFinalizationReports(
 			List<ScQtFinalizationReport> removeFinalizationReports) {
 		this.removeFinalizationReports = removeFinalizationReports;
+	}
+
+	public List<SmPersonnel> getPersonnelsRole() {
+		return personnelsRole;
+	}
+
+	public void setPersonnelsRole(List<SmPersonnel> personnelsRole) {
+		this.personnelsRole = personnelsRole;
 	}
 	
 	

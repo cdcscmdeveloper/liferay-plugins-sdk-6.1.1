@@ -2172,13 +2172,21 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 								userSession.getIdentificationNo(), this.getManagedBean().getSmAppl()
 										.getSmPersonnels(), "identificationNo");
 						//START #27239
-						if (personnelOld.isEquityOwner() || personnelOld.isDirector()) {//END #27239
-							checkWithSSM = true;
-						} else {
-							checkWithSSM = false;
+						List<SmPersonnel> personnelsRole = this.getManagedBean().getPersonnelsRole();
+						personnelsRole.clear();
+						for(SmPersonnel personnel :  this.getManagedBean().getSmAppl().getSmPersonnels()){
+							if (personnel.isEquityOwner() || personnel.isDirector()) {
+								if(personnel.getEpRole() != null){
+									SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
+									SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelDirector(),"identificationNo");
+									if(personnelDirectorSSM == null || personnelSSM == null){
+										personnelsRole.add(personnel);
+									}
+								}
+							}
 						}
 						
-						if(userSession != null && checkWithSSM){
+						if(personnelsRole != null && personnelsRole.size() > 0) {
 							SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
 							SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelDirector(),"identificationNo");
 							if(personnelSSM == null && personnelDirectorSSM == null) {
