@@ -57,47 +57,32 @@
 			style="overflow-wrap: break-word;" 
 			header="#{lbl['lbl.sm.term.and.condition.checkowner.changerole']}"
 			widgetVar="#{cc.attrs.dialogId}ChangeWidgetVar" modal="true"
-			height="100" width="600" resizable="false" 
-			rendered="#{not empty cc.attrs.bBean.managedBean.smPersonnelSsm}">
+			height="100" width="600" resizable="false" >
 			<p:outputPanel id="popupRolePanelId">
-				<table style="width: 100 !important">
-					<tr>
-						<td><p:outputLabel style="float: right"
-								value="#{lbl['lbl.sm.person.composition.role']}" /></td>
-						<c:if
-							test="#{cc.attrs.bBean.managedBean.smSupplierSsm.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD or cc.attrs.bBean.managedBean.smSupplierSsm.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD}">
-							<td><p:selectBooleanCheckbox id="roledirector"
-									value="#{cc.attrs.bBean.managedBean.smPersonnelSsm.director}"
-									disabled="#{(cc.attrs.bBean.managedBean.smPersonnelSsm.directorSsm or cc.attrs.bBean.managedBean.smPersonnelSsm.clerical)}"
-									onstart="submissionDialog.show();" oncomplete="submissionDialog.hide();">
-									<p:ajax partialSubmit="true" listener="#{cc.attrs.bBean.listenerRolePopup(cc.attrs.bBean.managedBean.smPersonnelSsm)}" process="@this" update=":#{p:component('popupRolePanelId')}"></p:ajax>
-								</p:selectBooleanCheckbox></td>
-							<td><h:outputText style="float: left"
-									value="#{lbl['lbl.sm.person.dir']}" /></td>
-							<td><p:selectBooleanCheckbox id="rolehmanager"
-									value="#{cc.attrs.bBean.managedBean.smPersonnelSsm.higherManagement}"
-									disabled="#{cc.attrs.bBean.managedBean.smPersonnelSsm.clerical}">
-									<p:ajax partialSubmit="true" listener="#{cc.attrs.bBean.listenerRolePopup(cc.attrs.bBean.managedBean.smPersonnelSsm)}" process="@this" update=":#{p:component('popupRolePanelId')}"></p:ajax>
-								</p:selectBooleanCheckbox></td>
-							<td><h:outputText style="float: left"
-									value="#{lbl['lbl.sm.person.hghMngmt']}" /></td>
+				<p:dataTable var="person" widgetVar="personRolePopupVar"
+					value="#{cc.attrs.bBean.managedBean.personnelsRole}"
+					rowKey="#{person}" rowIndexVar="index" id="personDt" 
+					>
+					<p:column headerText="#{lbl['lbl.sm.person.composition.name']}"	>
+						<h:outputText value="#{person.name}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.roles']}">
+						<c:if test="#{cc.attrs.bBean.businessTypeIsROC(cc.attrs.bBean.managedBean.smSupplierSsm.businessType)}">
+							<p:selectBooleanCheckbox value="#{person.director}" itemLabel="#{lbl['lbl.sm.person.dir']}" disabled="#{(person.directorSsm or person.clerical)}">
+								<p:ajax update=":#{p:component('popupRolePanelId')}" listener="#{cc.attrs.bBean.listenerRolePopup(person)}" process="@this" onstart="submissionDialog.show();" oncomplete="submissionDialog.hide();" />
+							</p:selectBooleanCheckbox>
+							<p:selectBooleanCheckbox value="#{person.higherManagement}" itemLabel="#{lbl['lbl.sm.person.hghMngmt']}" disabled="#{(person.directorSsm or person.clerical)}">
+								<p:ajax update=":#{p:component('popupRolePanelId')}" listener="#{cc.attrs.bBean.listenerRolePopup(person)}" process="@this" onstart="submissionDialog.show();" oncomplete="submissionDialog.hide();" />
+							</p:selectBooleanCheckbox>
 						</c:if>
-						<td><p:selectBooleanCheckbox id="rolemanager"
-								value="#{cc.attrs.bBean.managedBean.smPersonnelSsm.management}"
-								disabled="#{cc.attrs.bBean.managedBean.smPersonnelSsm.clerical}">
-								<p:ajax partialSubmit="true" listener="#{cc.attrs.bBean.listenerRolePopup(cc.attrs.bBean.managedBean.smPersonnelSsm)}" process="@this" update=":#{p:component('popupRolePanelId')}"></p:ajax>
-							</p:selectBooleanCheckbox></td>
-						<td><h:outputText style="float: left"
-								value="#{lbl['lbl.sm.person.mngmt']}" /></td>
-						<td><p:selectBooleanCheckbox id="rolestaff"
-								value="#{cc.attrs.bBean.managedBean.smPersonnelSsm.clerical}"
-								disabled="#{(cc.attrs.bBean.managedBean.smPersonnelSsm.director or cc.attrs.bBean.managedBean.smPersonnelSsm.higherManagement or cc.attrs.bBean.managedBean.smPersonnelSsm.management)}">
-								<p:ajax partialSubmit="true" listener="#{cc.attrs.bBean.listenerRolePopup(cc.attrs.bBean.managedBean.smPersonnelSsm)}" process="@this" update=":#{p:component('popupRolePanelId')}"></p:ajax>
-							</p:selectBooleanCheckbox></td>
-						<td><h:outputText style="float: left"
-								value="#{lbl['lbl.sm.person.stf']}" /></td>
-					</tr>
-				</table>
+						<p:selectBooleanCheckbox value="#{person.management}" itemLabel="#{lbl['lbl.sm.person.mngmt']}" disabled="#{(person.directorSsm or person.clerical)}">
+							<p:ajax update=":#{p:component('popupRolePanelId')}" listener="#{cc.attrs.bBean.listenerRolePopup(person)}" process="@this" onstart="submissionDialog.show();" oncomplete="submissionDialog.hide();" />
+						</p:selectBooleanCheckbox>
+						<p:selectBooleanCheckbox value="#{person.clerical}" itemLabel="#{lbl['lbl.sm.person.stf']}" disabled="#{(person.director or person.higherManagement or person.management)}">
+							<p:ajax update=":#{p:component('popupRolePanelId')}" listener="#{cc.attrs.bBean.listenerRolePopup(person)}" process="@this" onstart="submissionDialog.show();" oncomplete="submissionDialog.hide();" />
+						</p:selectBooleanCheckbox>
+					</p:column>
+				</p:dataTable>
 			</p:outputPanel>
 			<div style="float: right;">
 				<p:commandButton value="#{cc.attrs.btnOkLabel}"
@@ -105,7 +90,7 @@
 					immediate="true" action="#{cc.attrs.bBean.changeRoleAndProceed()}"
 					update="#{cc.attrs.btnOkUpdate}" />
 				<p:commandButton value="#{cc.attrs.btnCancelLabel}"
-					oncomplete="#{cc.attrs.dialogId}ChangeWidgetVar.hide()" />
+					oncomplete="#{cc.attrs.dialogId}ChangeWidgetVar.hide()}" />
 			</div>
 		</p:dialog>
 		
