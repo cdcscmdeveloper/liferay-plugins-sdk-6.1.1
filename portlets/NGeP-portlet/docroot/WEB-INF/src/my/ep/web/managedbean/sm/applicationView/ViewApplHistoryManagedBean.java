@@ -137,6 +137,7 @@ public class ViewApplHistoryManagedBean extends
 				
 				reqDTO.setAccountType(getAccountType());
 			} else {
+				//#25792 START Changes Fix error Null Pointer
 				if(getSearchSupplier().getSmAppl() != null && SupplierManagementConst.SUPP_TYPE_BASIC.equalsIgnoreCase(getSearchSupplier().getSmAppl().getSupplierType())) {
 					reqDTO.setAccountType(SupplierManagementConst.SUPP_TYPE_BASIC);
 				} else if(getSearchSupplier().getSmAppl() != null && SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT.equalsIgnoreCase(getSearchSupplier().getSmAppl().getSupplierType())) {
@@ -145,7 +146,7 @@ public class ViewApplHistoryManagedBean extends
 				} else {
 					reqDTO.setAccountType("M");
 				}
-				
+				//#25792 END Changes Fix error Null Pointer
 				reqDTO.setEpNo(getSearchSupplier().getEpNo());
 			}
 			reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
