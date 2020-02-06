@@ -30,6 +30,7 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.sc.QtAmendMentBean;
@@ -197,8 +198,6 @@ public class QTDocumentsBackingBean extends
 
 	private boolean readOnly;
 	
-	private String hostUrl;
-
 	/**
 	 * Instantiates a new QT documents backing bean.
 	 */
@@ -2427,12 +2426,15 @@ public class QTDocumentsBackingBean extends
 				commonUtils
 						.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
 		VelocityContext context = new VelocityContext();
-	
-		String hostUrl = this.hostUrl;
-		if(StringUtils.isEmpty(this.hostUrl)){
+		boolean isFromWebService = (null!=FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("hostUrl"));
+
+		String hostUrl = "";
+		if(!isFromWebService){
 			FacesScopes fs = new FacesScopes();
 			hostUrl = fs.getRequest().getServerName() + ":"
 					+ fs.getRequest().getServerPort();
+		}else{
+			hostUrl = FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("hostUrl").toString();
 		}
 		
 		context.put("hostUrl", hostUrl);
@@ -2765,7 +2767,10 @@ public class QTDocumentsBackingBean extends
 			quationTenderReqDTO.setScReports(reports);
 			qtDocumentSO.saveReportAndAttachment(quationTenderReqDTO);
 			
-		} finally {
+		}catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
+		}finally {
 			qtDocumentSO = null;
 		}
 		
@@ -3150,9 +3155,4 @@ public class QTDocumentsBackingBean extends
 				
 				return tplDocMaster;
 	}
-	public void invokedReGenerateDocuments(Long qtId, String hostUrl, String... qtFields) {
-		this.hostUrl = hostUrl;
-		this.reGenerateDocuments(qtId, qtFields);
-	}
-
 }
