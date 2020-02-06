@@ -207,9 +207,25 @@
 			<p:message id="answerComplianceMsg" for="answerCompliance" display="icon" rendered="#{isAnswerTypeDropdown}" />
 		
 <!-- FARID START -->
-
-
-			
+			<h:panelGroup layout="div" rendered="#{templateSpecBean.specMaster ne null and 
+												   templateSpecBean.specMaster.scQtDoc ne null and 
+												   templateSpecBean.specMaster.scQtDoc.scQt ne null and 
+												   !isSpecTypeFinancial and isZonal}">
+				<h:selectOneMenu id="answerOffer" style="width:calc(100% - 30px);" 
+						value="#{tplSpecAnswer.offer}"
+						rendered="#{templateSpecBean.specMaster.scQtDoc.scQt.partial ne null and 
+						templateSpecBean.specMaster.scQtDoc.scQt.partial eq true and
+						isZonal and !isSpecTypeFinancial and isQuestionTypeItem}" 
+						label="#{lbl[answerlbl]}">
+						 <f:selectItems value="#{templateSpecBackingBean.offerDetails}"></f:selectItems>
+						 <p:ajax event="change" partialSubmit="true" process="@this" 
+						 update="@this,questionTbl"
+		                 listener="#{templateSpecBackingBean.offerTypeChange(tplSpecAnswer.offer,tplSpecAnswer.tplSpecQuestion.specQuestionId,row)}"/>
+					</h:selectOneMenu>
+					
+							<ui:decorate template="specColumnAnswerOfferZone.xhtml" />
+				
+		</h:panelGroup>
 					
 <!-- END -->	
 		
