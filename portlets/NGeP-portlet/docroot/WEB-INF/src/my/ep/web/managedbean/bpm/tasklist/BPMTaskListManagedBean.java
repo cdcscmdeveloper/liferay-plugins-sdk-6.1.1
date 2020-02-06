@@ -13,10 +13,18 @@ import org.apache.commons.lang.StringUtils;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
+import my.ep.biz.service.fl.adjustment.IAdjustmentSO;
+import my.ep.biz.service.fl.frn.IReceivedNoteSO;
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
+import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
+import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.access.application.IAccessApplSO;
 import my.ep.biz.service.pm.common.kpi.IPmKpiSO;
+import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
+import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
+import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sc.directpurchase.IPrInquirySO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -25,8 +33,10 @@ import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractStatusConst;
+import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.KPICodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.sm.SupplierManagementConst;
@@ -34,15 +44,31 @@ import my.ep.constants.BpmConstants;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
+import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.access.application.AccessApplReqDTO;
 import my.ep.dto.pm.access.application.AccessApplResDTO;
 import my.ep.dto.pm.common.kpi.KpiReqDTO;
-import my.ep.dto.sc.directpurchase.PrInquiryResDTO;
+import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
+import my.ep.dto.sc.directpurchase.QuoteResDTO;
+import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
+import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
+import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
+import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
+import my.ep.dto.sc.requestitem.RequestItemResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.jaxb.fl.dandata.FLDanDataType;
+import my.ep.jaxb.fl.frndata.FLFulFillmentReceivedNoteDataType;
+import my.ep.jaxb.fl.maintenace.cancel.dofulfillment.FLDOFulfillmentCancelReqType;
+import my.ep.jaxb.fl.maintenace.cancel.invoice.FLInvoiceCancelReqType;
+import my.ep.jaxb.fl.maintenace.modification.dofulfillment.FLDOFulfillmentModificationReqType;
+import my.ep.jaxb.fl.maintenace.modification.invoice.FLInvoiceModificationReqType;
+import my.ep.jaxb.fl.stopfullfillmentdata.FLStopFullfillmentDataType;
+import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
+import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmKPIValue;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
@@ -96,7 +122,12 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	Integer loiPreparationDays = null;
 	private boolean sdoWithMultipleRoles;
 	private String loginIc;
-		
+	
+	//start added for #24968
+	private FlFulfilmentRequest fulfilmentRequest;
+	private FlFulfilmentNote fulfilmentNote = new FlFulfilmentNote();
+	//end added for #24968
+
 	public List<WorklistItemVO> getTaskList() {
 		return taskList;
 	}
@@ -280,12 +311,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							}
 							// s1 module
 							if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE_DRAFT)) {
-								log.info("Doc number = " + worklistItemVO.getDocNumber());
+								
 								ScPrInquiry scPrInquiry = retrivePrInquiryByPrInquiryNo(worklistItemVO.getDocNumber());
 								if (scPrInquiry != null) {
 									worklistItemVO.setTitle(scPrInquiry.getTitle());
-									log.info("prno = " + scPrInquiry.getPrInquiryNo() + "title = "
-											+ scPrInquiry.getTitle());
 								}
 							} else if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
 								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
@@ -298,8 +327,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 								// worklistItemVO.setTitle(SmCommonUtil.getSmBpmTaskTitle(worklistItemVO.getTitle(),worklistItemVO.getProcess()));
 								// sm module
 								MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
-								System.out.println("***** The document Id for the workflow is ****** "
-												+ worklistItemVO.getDocId());
 								mofResDto = retriveCompanyNameByApplicationId(worklistItemVO.getDocId());
 								StringBuilder sb = new StringBuilder();
 								sb.append(ResourceBundleUtils.getMessage(
@@ -481,13 +508,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 
 							// s1 module
 							if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE_DRAFT)) {
-								log.info("Doc number = " + worklistItemVO.getDocNumber());
+								
 								ScPrInquiry scPrInquiry = retrivePrInquiryByPrInquiryNo(worklistItemVO
 										.getDocNumber());
 								if (scPrInquiry != null) {
 									worklistItemVO.setTitle(scPrInquiry.getTitle());
-									log.info("prno = " + scPrInquiry.getPrInquiryNo() + "title = "
-											+ scPrInquiry.getTitle());
 								}
 							} else if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
 								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
@@ -571,9 +596,46 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.CREATE_FRN_HT) 
 						    		   || worklistItemVO.getTaskName().equals(FLProcessNameConst.REVISE_FRN_HT)){
 						    	   worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId(),false) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
+							       //start added for #24968
+						    	   retrievePoCoNoForCreateFRN(worklistItemVO,worklistItemVO.getTaskId());
+						    	   //end added for #24968
 						       }
+						       //start added for #24968
+						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.ACK_MODIFIED_DO_HT)){
+							    	   retrievePoCoNoForAckModifyDo(worklistItemVO,worklistItemVO.getTaskId());
+							       }
+						       
+						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.REVIEW_CANCEL_DO_HT)){
+						    	   retrievePoCoNoForReviewCancelDo(worklistItemVO,worklistItemVO.getTaskId());
+						       }
+						       
+						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.REVIEW_DAN_HT)){
+						    	   retrievePoCoNoForReviewDan(worklistItemVO,worklistItemVO.getTaskId());
+						       }
+						       
+						       if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_STOP_FULFILMENT_REQ_HT)
+						    		   || worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_STOP_FULFILMENT_REQ_HT)){
+						    	   retrievePoCoNoForStopFulFilment(worklistItemVO,worklistItemVO.getTaskId());
+						       }
+						       
+						       if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_FAILED_CANCEL_FRN_HT)){
+						    	   retrievePoCoNoForSubmitFailedCancelFRN(worklistItemVO,worklistItemVO.getTaskId());
+						       }
+						       
+						       if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.ACK_MODIFIED_INVOICE_HT)){
+						    	   retrievePoCoNoForAckModifiedInvoice(worklistItemVO,worklistItemVO.getTaskId());
+						       }
+						       
+						       if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_CANCEL_INVOICE_HT)){
+						    	   retrievePoCoNoForCancelInvoice(worklistItemVO,worklistItemVO.getTaskId());
+						       }
+
+						       //end added for #24968
 						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.APPROVE_FRN_HT)){
 						    	   worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId(),true) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
+							       //start added for #24968
+						    	   retrievePoCoNoForApproveFRN(worklistItemVO,worklistItemVO.getTaskId());
+						    	   //end added for #24968
 						       }
 						       if(worklistItemVO.getTaskName().equals(CTProcessNameConst.REVIEW_CIRCULAR_CANCELLATION_RQUEST_HT_NAME)){
 						    	   if (worklistItemVO.getDocStatus() != null
@@ -707,13 +769,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 								}
 
 								if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE_DRAFT)) {
-									log.info("Doc number = " + worklistItemVO.getDocNumber());
 									ScPrInquiry scPrInquiry = retrivePrInquiryByPrInquiryNo(worklistItemVO
 											.getDocNumber());
 									if (scPrInquiry != null) {
 										worklistItemVO.setTitle(scPrInquiry.getTitle());
-										log.info("prno = " + scPrInquiry.getPrInquiryNo() + "title = "
-												+ scPrInquiry.getTitle());
 									}
 								}
 							// s1 module
@@ -790,11 +849,47 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.CREATE_FRN_HT) 
 						    		   || worklistItemVO.getTaskName().equals(FLProcessNameConst.REVISE_FRN_HT)){
 						    	   worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId(),false) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
+							       //start added for #24968
+						    	   retrievePoCoNoForCreateFRN(worklistItemVO,worklistItemVO.getTaskId());
+						    	   //end added for #24968
 						       }
 						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.APPROVE_FRN_HT)){
 						    	   worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId(),true) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
+							       //start added for #24968
+						    	   retrievePoCoNoForApproveFRN(worklistItemVO,worklistItemVO.getTaskId());
+						    	   //end added for #24968
 						       }
-							}catch(Exception ex){
+							   //start added for #24968
+						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.ACK_MODIFIED_DO_HT)){
+							    	   retrievePoCoNoForAckModifyDo(worklistItemVO,worklistItemVO.getTaskId());
+							       }
+						       
+						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.REVIEW_CANCEL_DO_HT)){
+						    	   retrievePoCoNoForReviewCancelDo(worklistItemVO,worklistItemVO.getTaskId());
+						       }
+						       
+						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.REVIEW_DAN_HT)){
+						    	   retrievePoCoNoForReviewDan(worklistItemVO,worklistItemVO.getTaskId());
+						       }
+						       
+						       if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_STOP_FULFILMENT_REQ_HT)
+						    		   || worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_STOP_FULFILMENT_REQ_HT)){
+						    	   retrievePoCoNoForStopFulFilment(worklistItemVO,worklistItemVO.getTaskId());
+						       }
+						       
+						       if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_FAILED_CANCEL_FRN_HT)){
+						    	   retrievePoCoNoForSubmitFailedCancelFRN(worklistItemVO,worklistItemVO.getTaskId());
+						       }
+						       
+						       if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.ACK_MODIFIED_INVOICE_HT)){
+						    	   retrievePoCoNoForAckModifiedInvoice(worklistItemVO,worklistItemVO.getTaskId());
+						       }
+						       
+						       if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_CANCEL_INVOICE_HT)){
+						    	   retrievePoCoNoForCancelInvoice(worklistItemVO,worklistItemVO.getTaskId());
+						       }
+						       //end added for #24968
+							} catch (Exception ex) {
 								worklistItemVO.setTitle("please check");
 								System.out.println("worklistItemVO.setTitle error:"+ex.getMessage());
 							}
@@ -854,8 +949,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				// String token = bpmSO.authenticate("roslan", "welcome1");
 				FacesScopes face = new FacesScopes();
 				Object token = face.getBPMAuthenticationCtxToken();
-
-				log.info("testing BPM auth******" + token);
 				BpmRequestDTO reqDTO = new BpmRequestDTO();
 				reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
 				reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
@@ -866,15 +959,12 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				if(getTaskDesc()!=null && getTaskDesc().trim().length()>0){
 					reqDTO.setTaskTitle(getTaskDesc());
 				}
-				
-				log.info("getDocNoGroup():"+getDocNo());
-				
+								
 				if(getDocNo()!= null && getDocNo().trim().length() > 0){
 					reqDTO.setDocNumber(getDocNo());
 				}
 			
 				if(getDocStatus() > 0){
-					log.info("getDocStatus"+getDocStatus());
 					reqDTO.setStatus(getDocStatus());
 				}
 				
@@ -890,12 +980,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
 				
 				if (responseDTO.getWorklistVO() != null) {
-					log.info("testing BPM******size="
-							+ responseDTO.getWorklistVO().getWorklistItem()
-									.size());
-					log.info("testing BPM******total="
-							+ responseDTO.getWorklistVO().getTotal());
-
 					if(responseDTO.getWorklistVO().getWorklistItem()!= null) {
 						
 						boolean viewGlpFlag = viewGlpFlag();
@@ -906,13 +990,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 									worklistItemVO.setTitle(worklistItemVO.getTitle().replaceAll("<", "&#60;"));
 								}
 								if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE_DRAFT)) {
-									log.info("Doc number = " + worklistItemVO.getDocNumber());
 									ScPrInquiry scPrInquiry = retrivePrInquiryByPrInquiryNo(worklistItemVO
 											.getDocNumber());
 									if (scPrInquiry != null) {
 										worklistItemVO.setTitle(scPrInquiry.getTitle());
-										log.info("prno = " + scPrInquiry.getPrInquiryNo() + "title = "
-												+ scPrInquiry.getTitle());
 									}
 								}
 							// s1 module
@@ -931,7 +1012,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							//sm module
 						       if(worklistItemVO.getTitle().startsWith("lbl.sm")) {
 						    		MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
-						    		log.info("***** The document Id for the workflow is ****** "+worklistItemVO.getDocId());
 									mofResDto = retriveCompanyNameByApplicationId(worklistItemVO.getDocId());
 						    	   StringBuilder sb = new StringBuilder();
 						    	   sb.append(ResourceBundleUtils.getMessage(worklistItemVO.getTitle(), ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
@@ -988,17 +1068,54 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.CREATE_FRN_HT) 
 						    		   || worklistItemVO.getTaskName().equals(FLProcessNameConst.REVISE_FRN_HT)){
 						    	   worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId(),false) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
+							       //start added for #24968
+						    	   retrievePoCoNoForCreateFRN(worklistItemVO,worklistItemVO.getTaskId());
+						    	   //end added for #24968
 						       }
 						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.APPROVE_FRN_HT)){
 						    	   worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId(),true) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
+						    	 //start added for #24968
+						    	   retrievePoCoNoForApproveFRN(worklistItemVO,worklistItemVO.getTaskId());
+						    	   //end added for #24968
 						       }
+						       
+						     //start added for #24968
+						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.ACK_MODIFIED_DO_HT)){
+							    	   retrievePoCoNoForAckModifyDo(worklistItemVO,worklistItemVO.getTaskId());
+							       }
+						       
+						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.REVIEW_CANCEL_DO_HT)){
+						    	   retrievePoCoNoForReviewCancelDo(worklistItemVO,worklistItemVO.getTaskId());
+						       }
+						       
+						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.REVIEW_DAN_HT)){
+						    	   retrievePoCoNoForReviewDan(worklistItemVO,worklistItemVO.getTaskId());
+						       }
+						       
+						       if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_STOP_FULFILMENT_REQ_HT)
+						    		   || worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_STOP_FULFILMENT_REQ_HT)){
+						    	   retrievePoCoNoForStopFulFilment(worklistItemVO,worklistItemVO.getTaskId());
+						       }
+						       
+						       if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_FAILED_CANCEL_FRN_HT)){
+						    	   retrievePoCoNoForSubmitFailedCancelFRN(worklistItemVO,worklistItemVO.getTaskId());
+						       }
+						       
+						       if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.ACK_MODIFIED_INVOICE_HT)){
+						    	   retrievePoCoNoForAckModifiedInvoice(worklistItemVO,worklistItemVO.getTaskId());
+						       }
+						       
+						       if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_CANCEL_INVOICE_HT)){
+						    	   retrievePoCoNoForCancelInvoice(worklistItemVO,worklistItemVO.getTaskId());
+						       }
+								// end added for #24968
+						       
 						       // Identify if it is a group or individual task
-						       log.info("getTaskType: "+worklistItemVO.getTaskType());
 						       worklistItemVO.getTaskType();
 						       
 							} catch(Exception ex) {
 								worklistItemVO.setTitle("please check");
-								log.info("worklistItemVO.setTitle error:"+ex.getMessage());
+								//log.info("worklistItemVO.setTitle error:"+ex.getMessage());
 							}
 						}
 						
@@ -1281,4 +1398,189 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		return deliveryOrderSO.retreiveSupplierDoRefNo(reqDTO).getSupplierDoRefNo();
 	}
 	
+	//start added for #24968
+	public FlFulfilmentRequest getFulfilmentRequest() {
+		return fulfilmentRequest;
+	}
+
+	public void setFulfilmentRequest(FlFulfilmentRequest fulfilmentRequest) {
+		this.fulfilmentRequest = fulfilmentRequest;
+	}
+
+	public FlFulfilmentNote getFulfilmentNote() {
+		return fulfilmentNote;
+	}
+
+	public void setFulfilmentNote(FlFulfilmentNote fulfilmentNote) {
+		this.fulfilmentNote = fulfilmentNote;
+	}
+	
+	public void retrievePoCoNoForCreateFRN(WorklistItemVO worklistItemVO,String taskId) {
+		IDeliveryOrderSO deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		
+		//#24968-start-bazlin
+		reqDTO.setDeliveryOrderId(worklistItemVO.getDocId());
+		resDTO = deliveryOrderSO.retrievePocoDOById(reqDTO);
+		String poCoNumber = resDTO.getDocNo();
+		//#24968-end-bazlin
+		
+		if(poCoNumber != null){
+			worklistItemVO.setPocoNo(poCoNumber);
+		}
+	}
+	
+	public void retrievePoCoNoForAckModifyDo(WorklistItemVO worklistItemVO,String taskId) {
+		
+		IDeliveryOrderSO deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		
+		//#24968-start-bazlin
+		reqDTO.setDeliveryOrderId(worklistItemVO.getDocId());
+		resDTO = deliveryOrderSO.retrievePocoDOById(reqDTO);
+		String poCoNumber = resDTO.getDocNo();		
+		//#24968-end-bazlin
+		
+		if(poCoNumber != null){
+			worklistItemVO.setPocoNo(poCoNumber);
+		}
+	}
+	
+	public void retrievePoCoNoForReviewCancelDo(WorklistItemVO worklistItemVO,String taskId) {
+		
+		IDeliveryOrderSO deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		
+		//#24968-start-bazlin
+		reqDTO.setDeliveryOrderId(worklistItemVO.getDocId());
+		resDTO = deliveryOrderSO.retrievePocoDOById(reqDTO);
+		String poCoNumber = resDTO.getDocNo();	
+		//#24968-end-bazlin
+		
+		if(poCoNumber != null){
+			worklistItemVO.setPocoNo(poCoNumber);
+		}
+	}
+	
+	public void retrievePoCoNoForApproveFRN(WorklistItemVO worklistItemVO,String taskId) {
+		
+		IReceivedNoteSO receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		
+		//#24968-start-bazlin
+		reqDTO.setFulfilmentNoteId(worklistItemVO.getDocId());
+		resDTO = receivedNoteSO.retrievePocoRNById(reqDTO);
+		String poCoNumber = resDTO.getDocNo();	
+		//#24968-end-bazlin
+
+		if(poCoNumber != null){
+			worklistItemVO.setPocoNo(poCoNumber);
+		}
+	}
+	
+	public void retrievePoCoNoForReviewDan(WorklistItemVO worklistItemVO,String taskId) {
+		
+		IAdjustmentSO adjustmentSO = (IAdjustmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IAdjustmentSO.class);
+		FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		
+		//#24968-start-bazlin
+		flReqDTO.setDanId(worklistItemVO.getDocId());
+		resDTO = adjustmentSO.retrievePoCoAdjNoById(flReqDTO);
+		String poCoNumber = resDTO.getDocNo();	
+		//#24968-end-bazlin
+		
+		if(poCoNumber != null){
+			worklistItemVO.setPocoNo(poCoNumber);
+		}
+	}
+	
+	public void retrievePoCoNoForStopFulFilment(WorklistItemVO worklistItemVO,String taskId) {
+		
+		IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+		FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		
+		//#24968-start-bazlin
+		flReqDTO.setDocId(Long.valueOf(worklistItemVO.getDocId()));
+		resDTO = orderSO.retrievePoCoStopInstruction(flReqDTO);
+		String poCoNumber = resDTO.getDocNo();
+		//#24968-end-bazlin
+		
+		
+		if(poCoNumber != null){
+			worklistItemVO.setPocoNo(poCoNumber);
+		}
+	}
+	
+	public void retrievePoCoNoForSubmitFailedCancelFRN(WorklistItemVO worklistItemVO,String taskId) {
+		
+		IReceivedNoteSO receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		
+		//#24968-start-bazlin
+		reqDTO.setDeliveryOrderId(worklistItemVO.getDocId());
+		resDTO = receivedNoteSO.retrievePocoRNByDOId(reqDTO);
+		String poCoNumber = resDTO.getDocNo();
+		//#24968-end-bazlin
+		
+		if(poCoNumber != null){
+			worklistItemVO.setPocoNo(poCoNumber);
+		}
+	}
+	
+	public void retrievePoCoNoForAckModifiedInvoice(WorklistItemVO worklistItemVO,String taskId) {
+		IInvoiceSO invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		
+		//#24968-start-bazlin
+		reqDTO.setInvoiceId(Long.valueOf(worklistItemVO.getDocId()));
+		resDTO = invoiceSO.retrievePocoInvoiceByInvoiceId(reqDTO);
+		String poCoNumber = resDTO.getDocNo();
+		//#24968-end-bazlin
+		
+		if(poCoNumber != null){
+			worklistItemVO.setPocoNo(poCoNumber);
+		}		
+	}
+	
+	public void retrievePoCoNoForCancelInvoice(WorklistItemVO worklistItemVO,String taskId) {		
+		IInvoiceSO invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		
+		//#24968-start-bazlin
+		reqDTO.setInvoiceId(Long.valueOf(worklistItemVO.getDocId()));
+		resDTO = invoiceSO.retrievePocoInvoiceByInvoiceId(reqDTO);
+		String poCoNumber = resDTO.getDocNo();
+		//#24968-end-bazlin
+		
+		if(poCoNumber != null){
+			worklistItemVO.setPocoNo(poCoNumber);
+		}		
+	}
+	
+	public Object getBpmTaskDetails(String taskId) {
+		FacesScopes facesScopes = new FacesScopes();
+
+		IBpmSO bpmSO;
+
+		bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+				.getServiceObject(IBpmSO.class);
+
+		BpmRequestDTO reqDTO = new BpmRequestDTO();
+		reqDTO.setCtxToken(facesScopes.getBPMAuthenticationCtxToken());
+		reqDTO.setTaskId(taskId);
+
+		BpmResponseDTO resDTO = bpmSO.getTaskDetails(reqDTO);
+		Object payLoad = resDTO.getPojo();
+		return payLoad;
+	}
+	//end added for #24968
 }
