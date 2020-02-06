@@ -35,8 +35,12 @@ public class DpLOAManagedBean extends BaseManagedBean {
 	/** The show bpm buttons. */
 	private Boolean showBPMButtons;
 	
+	/** The show cancel buttons. */
+	private Boolean showCancelDpLoa;
+	
 	/** The source id. */
 	private Long sourceId;
+	
 	
 	/**
 	 * Instantiates a new dp loa managed bean.
@@ -96,6 +100,24 @@ public class DpLOAManagedBean extends BaseManagedBean {
 	 */
 	public void setShowBPMButtons(Boolean showBPMButtons) {
 		this.showBPMButtons = showBPMButtons;
+	}
+	
+	/**
+	 * Gets the show cancel buttons.
+	 *
+	 * @return the show cancel buttons
+	 */
+	public Boolean getShowCancelDpLoa() {
+		return showCancelDpLoa;
+	}
+	
+	/**
+	 * Sets the show cancel buttons.
+	 *
+	 * @param showCancelDpLoa the new show cancel buttons
+	 */
+	public void setShowCancelDpLoa(Boolean showCancelDpLoa) {
+		this.showCancelDpLoa = showCancelDpLoa;
 	}
 
 	/**
