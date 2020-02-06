@@ -6,13 +6,12 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 			 
-    <p:dataTable var="tplSpecZoneOffer" id="specZoneTbl" rowIndexVar="rowIndex" value="#{question.tplSpecZoneQties}" 
-     	rendered="#{!tplSpecAnswer.offer and tplSpecAnswer.offer ne null and isQuestionTypeItem and !isSpecTypeFinancial and isZonal}">
+    <p:dataTable var="tplSpecZoneOffer" id="specZoneTbl" rowIndexVar="rowIndex" value="#{tplSpecAnswer.tplSpecQuestion.tplSpecZoneQties}" 
+     	rendered="#{isQuestionTypeItem and !isSpecTypeFinancial and isZonal}">
      
 	        <p:column headerText="#{lbl['lbl.tpl.spec.content.estimation.zone.name']}">
 	        	<h:outputText value="#{tplSpecZoneOffer.tplSpecZoneDtl.zoneName}" />
 	        </p:column>
-	       
 
         <f:facet name="footer"/>
     </p:dataTable>   
