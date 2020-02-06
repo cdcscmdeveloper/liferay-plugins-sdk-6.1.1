@@ -2284,6 +2284,8 @@ public class SmApplicationUtil {
 					} else {
 						throw new EpException(MessageConst.ERROR_722555, new String[] { s, sb.toString(), supType });
 					}
+				}else{//#27260
+					throw new EpException(MessageConst.ERROR_722555, new String[] { s, sb.toString(), supType });
 				}
 			}
 		}
