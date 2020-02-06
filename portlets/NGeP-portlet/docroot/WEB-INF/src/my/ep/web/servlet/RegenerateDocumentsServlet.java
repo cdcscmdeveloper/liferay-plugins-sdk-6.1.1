@@ -3,22 +3,30 @@ package my.ep.web.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import javax.faces.FactoryFinder;
+import javax.faces.context.FacesContext;
+import javax.faces.context.FacesContextFactory;
+import javax.faces.lifecycle.Lifecycle;
+import javax.faces.lifecycle.LifecycleFactory;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.sc.QTFieldConst;
+import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.util.PasswordUtils;
 import my.ep.web.backingbean.sc.quatationtender.QTDocumentsBackingBean;
-import my.ep.web.util.sm.helper.SmServiceLookup;
-
+import my.ep.web.util.lookupservice.BusinessDelegate;
 import org.apache.log4j.Logger;
 import org.picketbox.util.StringUtil;
-import org.primefaces.component.log.Log;
 
 /**
  * Servlet implementation class RegenerateDocumentsServlet
@@ -28,24 +36,56 @@ public class RegenerateDocumentsServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static Logger log = EpLogger
 			.getLogger(RegenerateDocumentsServlet.class);   
+	private static String token = "JgMfrR75RtsPNVb4Sk6msCpv488aS4Uq5VzKj4";
+    private FacesContextFactory facesContextFactory;
+    private Lifecycle lifecycle;
+    
+    @Override
+	public void init(ServletConfig config) throws ServletException {
+        super.init(config);
 
+        LifecycleFactory lifecycleFactory = (LifecycleFactory) FactoryFinder
+                .getFactory(FactoryFinder.LIFECYCLE_FACTORY);
+        facesContextFactory = (FacesContextFactory) FactoryFinder
+                .getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
+        lifecycle = lifecycleFactory
+                .getLifecycle(LifecycleFactory.DEFAULT_LIFECYCLE);
+    }
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		log.info("RegenerateDocumentsServlet begin..");
+		
+		facesContextFactory.getFacesContext(request.getSession().getServletContext(), request, response, lifecycle);
 		PrintWriter out = response.getWriter();
+
 		try {
 			String qtId = request.getParameter("qtId");
-			String token = request.getParameter("token");
-			String hostUrl = request.getServerName() + ":"+ request.getServerPort();
-			if(StringUtil.isNullOrEmpty(request.getParameter("token"))){
+			String tokenHash = request.getParameter("token");
+			String hostUrl = request.getServerName() + ":" + request.getServerPort();
+			FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("hostUrl", hostUrl);              
+
+			if(StringUtil.isNullOrEmpty(request.getParameter("token")) || !PasswordUtils.decrypt(tokenHash).equals(token)){
 				throw new EpException("Failed token validation.");
 			}
-			if(!PasswordUtils.decrypt(token).equals("JgMfrR75RtsPNVb4Sk6msCpv488aS4Uq5VzKj4")){
-				throw new EpException("Failed token validation.");
+			QTDocumentsBackingBean bb = new QTDocumentsBackingBean();
+			IQTDetailSO qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			reqDTO.setQtId(new Long(qtId));
+			ScQt qt = qtDetailSO.retriveQTDetails(reqDTO).getQtDetail();
+			if(qt!=null){
+				bb.getManagedBean().setQt(qt);
+				bb.reGenerateDocuments(qt.getQtId(), QTFieldConst.FIELD_QT_VALIDITY_PERIOD);
+			}else{
+				throw new EpException("Failed to obtain qt detail.");
 			}
-			new QTDocumentsBackingBean().invokedReGenerateDocuments(new Long(qtId), hostUrl ,QTFieldConst.FIELD_QT_VALIDITY_PERIOD);
 			out.print("Success");
 		} catch (Exception e) {
-			out.print(e.getMessage());
+			e.printStackTrace();
+			if(e.getMessage()==null){
+				out.print("Failed without message");
+			}else{
+				out.print(e.getMessage());
+			}
 		} finally {
 			out.close();
 		}
