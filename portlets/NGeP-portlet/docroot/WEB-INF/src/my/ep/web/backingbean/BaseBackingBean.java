@@ -2599,32 +2599,32 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	
 	public void changeRoleAndProceed() {
-		SmPersonnel personnel = this.getManagedBean().getSmPersonnelSsm();
-		personnel.setEquityOwner(false);
-		personnel.setDirector(false);
-		
-		IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject("sm", IPersonnelSO.class);
-		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-		//get latest personnel by supplier id
-		reqDTO.setSmSupplierId(this.getManagedBean().getSmSupplierSsm().getSupplierId());
-		PersonnelResDTO resDTO = personnelSO.retrieveLatestActivePersonnelBySupplierId(reqDTO);
-		//find supplier admin
-		SmPersonnel personnelActive = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(
-				personnel.getIdentificationNo(), resDTO.getSmPersonnelList(), "identificationNo");
-		if(personnelActive != null){
-			//copy latest data to supplier admin
-			String[] copyEquityOwner = {"equityOwner","director","clerical","higherManagement","management"};
-			EntityHelper.copyEntityPropertiesOnly(personnel,personnelActive,copyEquityOwner);
-			reqDTO.setSmPersonnel(personnelActive);
-			//update latest data to active supplier admin
-			resDTO = personnelSO.savePersonnelRecord(reqDTO);
-			if(!resDTO.isSuccessful()){
-				throw new EpException(MessageConst.ERROR_776106);
-			}else{
-				//close popup
+		//start loop list #27239
+		for(SmPersonnel personnel : this.getManagedBean().getPersonnelsRole()){
+			personnel.setEquityOwner(false);
+			personnel.setDirector(false);
+			
+			IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject("sm", IPersonnelSO.class);
+			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+			//get latest personnel by supplier id
+			reqDTO.setSmSupplierId(this.getManagedBean().getSmSupplierSsm().getSupplierId());
+			PersonnelResDTO resDTO = personnelSO.retrieveLatestActivePersonnelBySupplierId(reqDTO);
+			//find supplier admin
+			SmPersonnel personnelActive = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), resDTO.getSmPersonnelList(), "identificationNo");
+			if(personnelActive != null){
+				//copy latest data to supplier admin
+				String[] copyEquityOwner = {"equityOwner","director","clerical","higherManagement","management"};
+				EntityHelper.copyEntityPropertiesOnly(personnel,personnelActive,copyEquityOwner);
+				reqDTO.setSmPersonnel(personnelActive);
+				//update latest data to active supplier admin
+				resDTO = personnelSO.savePersonnelRecord(reqDTO);
+				if(!resDTO.isSuccessful()){
+					throw new EpException(MessageConst.ERROR_776106);
+				}else{
+					//close popup
+				}
 			}
 		}
-		
 	}
 
 	//SSM CHANGES #27201
