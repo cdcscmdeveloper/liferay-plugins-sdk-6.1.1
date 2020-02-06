@@ -22,7 +22,12 @@
 					readonly="#{requestNoteBackingBean.managedBean.bpkApprover}"
 					deleteFileUploadListener="requestNoteBackingBean.deleteApprovalDocUpload">
 				</ac:scSingleFileUploadButton>
-				<ac:iconTooltip value="#{lbl['lbl.sc.egpa.approval.doc.tootltip']}" />
+				&#160;
+				<p:graphicImage id="scApprovalDocttImg" value="/css/images/design/ico-tooltips.png" />
+				<p:tooltip id="scApprovalDoctt" for="scApprovalDocttImg">
+					<p:outputLabel escape="false" value="#{lbl['lbl.sc.egpa.approval.doc.tootltip']}"  />
+				</p:tooltip>
+				<!--  <ac:iconTooltip value="#{lbl['lbl.sc.egpa.approval.doc.tootltip']}" /> -->
 	</td>
 	</tr>
 	</table>
@@ -46,7 +51,12 @@
 				disabled="#{requestNoteBackingBean.managedBean.bpkApprover}">
 				<p:ajax partialSubmit="true" process="@this" update="@this" />
 			</p:inputTextarea>
-			<ac:iconTooltip value="#{lbl['lbl.sc.exceed.justification.tooltip']}" />
+			&#160;
+			<p:graphicImage id="scExceedjustificationttImg" value="/css/images/design/ico-tooltips.png" />
+				<p:tooltip id="scExceedjustificationtt" for="scExceedjustificationttImg">
+					<p:outputLabel escape="false" value="#{lbl['lbl.sc.exceed.justification.tooltip']}"  />
+				</p:tooltip>
+			<!--  <ac:iconTooltip value="#{lbl['lbl.sc.exceed.justification.tooltip']}" /> -->
 	</td>
 	</tr>
 	</table>
