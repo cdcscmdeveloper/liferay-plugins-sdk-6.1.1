@@ -10,13 +10,13 @@
 		<ac:scRemarkAndAttachment
 			remarkList="#{requestNoteBackingBean.managedBean.requestNote.remarks}"
 			showAttachment="false" readonly="#{!requestNoteBackingBean.managedBean.cancel}"
-			instruction="#{lbl['lbl.sc.requestnote.remarks.instruction']}" />
+			instruction="#{lbl['lbl.sc.requestnote.remarks.instruction']}" header="" />
 	</c:if>
 	<c:if test="#{!isPendingItemCodificationStatus}">
 		<ac:scRemarkAndAttachment
 			remarkList="#{requestNoteBackingBean.managedBean.requestNote.remarks}"
 			showAttachment="false"
 			readonly="#{requestNoteBackingBean.managedBean.viewOnly}"
-			instruction="#{isPendingApprovalStatus ? lbl['lbl.sc.requestnote.remarks.instruction'] : ''}" />
+			instruction="#{isPendingApprovalStatus ? lbl['lbl.sc.requestnote.remarks.instruction'] : ''}" header="" />
 	</c:if>
 </ui:composition>

@@ -47,8 +47,13 @@
 							src="/xhtml/sc/directpurchase/requestnote/requestNoteItemDetails.xhtml" />
 						<ui:include
 							src="/xhtml/sc/directpurchase/requestnote/requestNoteApprovalDetail.xhtml" />
-						<ui:include
-							src="/xhtml/sc/directpurchase/requestnote/requestNoteRemarks.xhtml" /></td>
+						<p:panel header="#{lbl['lbl.sc.remarks']}" toggleable="true" id="scRemarkPanelId">
+							<ui:include
+								src="/xhtml/sc/directpurchase/requestnote/requestNoteRemarks.xhtml" />
+							<ui:include
+								src="/xhtml/sc/directpurchase/requestnote/requestNoteExceedDPJustification.xhtml" />
+						</p:panel>
+						</td>
 					</td>
 				</tr>
 			</table>
