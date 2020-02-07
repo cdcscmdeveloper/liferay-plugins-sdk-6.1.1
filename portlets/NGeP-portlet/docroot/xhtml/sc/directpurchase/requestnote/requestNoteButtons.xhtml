@@ -128,6 +128,22 @@
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 					style="float:right;" process="@this" partialSubmit="true" />
 			</c:if>
+			<!-- 26059 start -->
+			<p:confirmDialog
+				message="#{requestNoteBackingBean.managedBean.exceedThresholdMessage}"
+				header="#{lbl['lbl.sc.dialog.cofirm.header']}" severity="alert"
+				widgetVar="dpExceedDlg"
+				rendered="#{!requestNoteBackingBean.managedBean.proceedWithDPExceedThreshold}">
+				<div class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.btn.yes']}"
+						actionListener="#{requestNoteBackingBean.proceedWithDPExceedThreshold}"
+						oncomplete="dpExceedDlg.hide(); blockWidget.hide();" id="dpExceed"
+						partialSubmit="true" process="@this" update="@([id$= scRemarkPanelId])" />
+					<p:commandButton value="#{lbl['lbl.btn.no']}"
+						oncomplete="dpExceedDlg.hide();" />
+				</div>
+			</p:confirmDialog>
+			<!-- 26059 end -->
 		</div>
 		<div>
 			<c:if test="#{!empty requestNoteBackingBean.managedBean.taskId}">
@@ -151,7 +167,7 @@
 									and isSqStillValid}"
 						action="#{requestNoteBackingBean.saveAction('Save')}"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-						process="@this" />
+						process="@this" update="@([id$= scRemarkPanelId])" />
 
 					<ui:repeat var="bpmAction"
 						value="#{requestNoteBackingBean.managedBean.outComes}">
