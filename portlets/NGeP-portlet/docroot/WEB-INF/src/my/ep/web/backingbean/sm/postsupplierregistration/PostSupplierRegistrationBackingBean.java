@@ -307,7 +307,10 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		if(supplier != null){
 			try{
 				log.info("Here done");
-				checkSSMValid(supplier);
+				String path1 = currentStatusAndPath();
+				if(MOF_REG_PATH.equalsIgnoreCase(path1)){
+					checkSSMValid(supplier);
+				}				
 			}catch(Exception w){
 				log.info("Here done--"+w.getMessage());
 				proceed =false;
@@ -1438,15 +1441,6 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ACKNOWLEDGEMENT_PAGE);
 
 	}
-	public void callUpgradeRole(){
-		log.info("START IN POSTSUPPLIER");
-		IUpgradeRoleSO tmpSO = (IUpgradeRoleSO) BusinessDelegate
-				.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IUpgradeRoleSO.class);
-		
-		SMOsbReqDTO reqqDTO = new SMOsbReqDTO();
-		reqqDTO.setUserId(439368L);
-		String a = tmpSO.finishButtonAction(439368L);
-		log.info("END IN POSTSUPPLIER==="+a);
-	}
+	//Remove Function callUpgradeRole
 	//END : LOG 12491
 }
