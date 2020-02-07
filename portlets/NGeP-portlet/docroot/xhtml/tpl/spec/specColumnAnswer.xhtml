@@ -222,10 +222,14 @@
 						 update="@this,questionTbl"
 		                 listener="#{templateSpecBackingBean.offerTypeChange(tplSpecAnswer.offer,tplSpecAnswer.tplSpecQuestion.specQuestionId,row)}"/>
 					</h:selectOneMenu>
-					
+			
+			<h:panelGroup layout="div" 
+			rendered="#{!tplSpecAnswer.offer and tplSpecAnswer.offer ne null and
+						templateSpecBean.specMaster.scQtDoc.scQt.partial ne null and
+						templateSpecBean.specMaster.scQtDoc.scQt.partial eq true}">	
 							<ui:decorate template="specColumnAnswerOfferZone.xhtml" />
-				
-		</h:panelGroup>
+			</h:panelGroup>		
+		</h:panelGroup>	
 					
 <!-- END -->	
 		
