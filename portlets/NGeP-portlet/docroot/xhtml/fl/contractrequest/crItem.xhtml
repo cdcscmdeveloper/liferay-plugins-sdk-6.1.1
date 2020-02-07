@@ -218,6 +218,24 @@
 				</p:column>
 				<p:column>
 					<f:facet name="header" style="width:8%;text-align:center">
+<!-- #16344 START-->	<h:outputText value="#{lbl['lbl.fl.item.details']}" />
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.item.details(a)']}" />
+					</f:facet>
+					<h:outputText rendered="#{item.scRequestItem.cmItem==null}"
+						value="#{item.scRequestItem.tempUnspscCode}" />
+					<h:outputText rendered="#{item.scRequestItem.cmItem!=null}"
+						value="#{item.scRequestItem.cmItem.extensionCode}" />
+					<span>(<h:outputText
+							value="#{item.scRequestItem.uom.uomName}" />)
+					</span>
+					<br />
+					<h:outputText value="#{item.scRequestItem.itemName}" />
+					<br />
+					<h:outputText value="#{item.skuNumber}" /> <!-- #16344 Farid updates-->
+<!-- #16344 END-->
+				</p:column>
+				<!--<p:column>
+					<f:facet name="header" style="width:8%;text-align:center">
 						<h:outputText value="#{lbl['lbl.fl.item.code']}" />
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.item.code']}"/>
 					</f:facet>
@@ -230,11 +248,12 @@
 				<p:column headerText="#{lbl['lbl.fl.uom']}" style="text-align:center">
 					<h:outputText value="#{item.scRequestItem.uom.uomName}" style="float:left;"/>
 				</p:column>				
-				<!-- <p:column headerText="#{lbl['lbl.fl.unit.price']}" style="white-space:normal;text-align:center">
+				<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="white-space:normal;text-align:center">
 					<h:outputText value="#{item.unitPrice}" disabled="true" size="6" id="unitPrice" style="float:right;">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
-				</p:column> -->
+				</p:column>-->
+				
 				<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="white-space:normal;text-align:center">
 					<p:inputText value="#{item.unitPrice}" size="5" id="unitPrice" label="#{lbl['lbl.fl.unit.price']}"
 					disabled="#{(empty contractRequestBackingBean.managedBean.selectedDelAddr or contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView 
@@ -781,7 +800,7 @@
 	</p:dialog>
 	<p:dialog id="addContractedItemDialog" header="#{lbl['lbl.fl.item.list']}" 
 		widgetVar="addItems" showEffect="fade" hideEffect="fade" modal="true"
-		width="600" resizable="false">
+		width="600" resizable="false" height="600" style="overflow:scroll">
 		<p:messages id="messages2" showSummary="false" showDetail="true" autoUpdate="#{contractRequestBackingBean.managedBean.itemAutoUpdate}" closable="true" severity="error,info,warn"  />
 		<p:panel id="searchPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.search.criteria']}" escape="false"/>
@@ -819,31 +838,150 @@
 		</p:panel>
 		
 		<p:panel id="resultPanel" header="#{lbl['lbl.fl.result']}" toggleable="true">
-			<p:dataTable id="itemListResultDt" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+<!-- #16344 START--><p:dataTable id="itemListResultDt" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{contractRequestBackingBean.contractItemPagingDataModel}" lazy="true"
 				var="item" rowIndexVar="rowIndex" rowKey="#{item}"
 				width="100%" 
 				selection="#{contractRequestBackingBean.managedBean.selectedContractedItemList}">
 				<ac:paginator for="itemListResultDt" />
-				<p:column selectionMode="multiple" styleClass="td-check-box-spacing" />
+				<p:column selectionMode="multiple" styleClass="td-check-box-spacing" ></p:column>
+				<p:ajax event="rowToggle" 
+					listener="#{contractRequestBackingBean.SetSelectedZone(item)}"
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"></p:ajax>
 				<p:ajax event="rowSelectCheckbox" update=":form:itemAddButton"></p:ajax>
 				<p:ajax event="rowUnselectCheckbox" update=":form:itemAddButton"></p:ajax>
 				<p:ajax event="rowSelect" update=":form:itemAddButton" ></p:ajax>
 				<p:ajax event="rowUnselect" update=":form:itemAddButton" ></p:ajax>
 				<p:ajax event="toggleSelect" update=":form:itemAddButton"></p:ajax>
+
+				<p:column style="width:2%"
+					rendered="#{!contractRequestBackingBean.managedBean.standardPrice}">
+					<p:rowToggler/>
+				</p:column>
 				<p:column
 					headerText="#{lbl['lbl.fl.item.type']}">
 					<h:outputText
 						value="#{contractRequestBackingBean.getParameterDesc(item.itemType)}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.fl.item.code']}">
-					<h:outputText rendered="#{item.scRequestItem.cmItem==null}" value="#{item.scRequestItem.tempUnspscCode}" />
-					<h:outputText rendered="#{item.scRequestItem.cmItem!=null}" value="#{item.scRequestItem.cmItem.extensionCode}" />
+				<p:column>
+					<f:facet name="header" style="width:8%;text-align:center">
+						<h:outputText value="#{lbl['lbl.fl.item.details']}" />
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.item.details(a)']}" />
+					</f:facet>
+					<h:outputText rendered="#{item.scRequestItem.cmItem==null}"
+						value="#{item.scRequestItem.tempUnspscCode}" />
+					<h:outputText rendered="#{item.scRequestItem.cmItem!=null}"
+						value="#{item.scRequestItem.cmItem.extensionCode}" />
+					<span>(<h:outputText
+							value="#{item.scRequestItem.uom.uomName}" />)
+					</span>
+					<br />
+					<h:outputText value="#{item.scRequestItem.itemName}" id="itemDesc"
+						title="#{item.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : item.scRequestItem.itemDesc}" />
+					<br />
+					<h:outputText value="#{item.sku}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.fl.item']}">
-					<h:outputText value="#{item.scRequestItem.itemName}" id="itemDesc" title="#{item.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : item.scRequestItem.itemDesc}"/>
+
+				<p:column headerText="#{lbl['lbl.fl.unit.price']}">
+					<h:outputText
+						value="#{contractRequestBackingBean.searchunitprice(item.ctItemPrices)}" rendered="#{contractRequestBackingBean.managedBean.standardPrice}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
 				</p:column>
-			</p:dataTable>
+
+				<p:rowExpansion>
+					<h:panelGroup
+						rendered="#{!contractRequestBackingBean.managedBean.standardPrice}">
+						<p:panel id="reqItemInfoPanel2"
+							header="#{lbl['lbl.fl.zone.tier.price.detail']}"
+							toggleable="false">
+							<p:dataTable id="reqItemInfoDt2" var="reqItemInfoList"
+								liveScroll="true"
+								value="#{contractRequestBackingBean.managedBean.supplierItemPriceList}"
+								rowKey="#{purchasedItem}">
+								<ac:paginator for="reqItemInfoDt2" />
+<!-- #16344 2/8/2019 START update rendered fix --> 			
+								<p:column headerText="#{lbl['lbl.fl.zone']}" rendered="#{contractRequestBackingBean.managedBean.zonalTierPrice or contractRequestBackingBean.managedBean.zonalPrice}">
+<!--  END  -->
+									<p:tree value="#{reqItemInfoList.itemZoneTree}" var="location">
+										<p:treeNode type="zone">
+											<h:outputText value="#{location.zoneName}" />
+										</p:treeNode>
+										<p:treeNode type="state">
+											<h:outputText value="#{location.state.stateName}" />
+										</p:treeNode>
+										<p:treeNode type="division">
+											<h:outputText value="#{location.division.divisionName}" />
+										</p:treeNode>
+										<p:treeNode type="district">
+											<h:outputText value="#{location.district.districtName}" />
+										</p:treeNode>
+									</p:tree>
+								</p:column>
+								<p:column headerText="#{lbl['lbl.fl.from.qty']}"
+									style="text-align:right"
+									rendered="#{!contractRequestBackingBean.managedBean.zonalPrice}">
+									<h:outputText
+										value="#{reqItemInfoList.supplierItemPrice.fromQty}"
+										styleClass="colFloatRight"
+										rendered="#{!contractRequestBackingBean.managedBean.zonalPrice}">
+										<f:converter converterId="dynamicNumberConverter" />
+										<f:attribute name="pattern"
+											value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, flItem.scRequestItem.uom.uomCode)}" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="#{lbl['lbl.fl.to.qty']}"
+									style="text-align:right"
+									rendered="#{!contractRequestBackingBean.managedBean.zonalPrice}">
+									<h:outputText
+										value="#{reqItemInfoList.supplierItemPrice.toQty}"
+										styleClass="colFloatRight"
+										rendered="#{!contractRequestBackingBean.managedBean.zonalPrice}">
+										<f:converter converterId="dynamicNumberConverter" />
+										<f:attribute name="pattern"
+											value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, flItem.scRequestItem.uom.uomCode)}" />
+									</h:outputText>
+								</p:column>
+									<p:column headerText="#{lbl['lbl.fl.qty']}"
+									style="text-align:right"
+									 rendered="#{contractRequestBackingBean.managedBean.zonalPrice}"> 
+<!--  END  -->
+									<h:outputText
+										value="#{reqItemInfoList.supplierItemPrice.maxQuantity}"
+										styleClass="colFloatRight"
+										rendered="#{contractRequestBackingBean.managedBean.zonalPrice}">
+										<f:converter converterId="dynamicNumberConverter" />
+										<f:attribute name="pattern"
+											value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, flItem.scRequestItem.uom.uomCode)}" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="#{lbl['lbl.fl.subsequence']}"
+									style="text-align:right"
+									rendered="#{contractRequestBackingBean.managedBean.tariffPrice}">
+									<h:outputText
+										value="#{reqItemInfoList.supplierItemPrice.subSequence}"
+										styleClass="colFloatRight"
+										rendered="#{contractRequestBackingBean.managedBean.tariffPrice}">
+										<f:converter converterId="dynamicNumberConverter" />
+										<f:attribute name="pattern"
+											value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, flItem.scRequestItem.uom.uomCode)}" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="#{lbl['lbl.fl.price.offered']}"
+									style="text-align:right">
+									<h:outputText
+										value="#{reqItemInfoList.supplierItemPrice.unitPrice}"
+										styleClass="colFloatRight">
+										<f:convertNumber
+											pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+									</h:outputText>
+								</p:column>
+							</p:dataTable>
+						</p:panel>
+					</h:panelGroup>
+				</p:rowExpansion>
+<!-- #16344 END-->			</p:dataTable>
 
 		
 		<p:spacer height="2px"></p:spacer>
