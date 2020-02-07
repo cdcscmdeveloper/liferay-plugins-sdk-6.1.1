@@ -87,7 +87,8 @@ public class QuestionnaireBackingBean extends
 		reqDTO.setAnswers(this.getManagedBean().getSmSuppAnswerLs());
 		reqDTO.setUserList(useList);
 		reqDTO.setToken(fs.getBPMAuthenticationCtxToken());
-
+		// #12491
+		reqDTO.setPmUser(loginUser);
 		QuestionnaireResDTO resDTO = SmServiceLookup.getQuestionnaireSO()
 				.questionnaireSubmission(reqDTO);
 		// check if need to init task for resubmit application
