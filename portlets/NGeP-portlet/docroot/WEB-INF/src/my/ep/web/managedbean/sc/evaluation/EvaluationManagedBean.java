@@ -509,6 +509,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	/** The total score. */
 	private String totalScore;
 	
+	private String maxScore;
+	
 	private ScQtProposalAmount qtProposalAmount; 
 	
  	/** The non-scoring compliance active index. */
@@ -536,9 +538,15 @@ public class EvaluationManagedBean extends BaseManagedBean {
     
     private Paginator detachedPaginator;
     
+    private Paginator detachedPaginatorTest;
+    
     private List<ScQtProposalChecklist> evaluationStgPkgPropCheckList;
     
     private List<ScQtCheckList> evaluationStgPkgTechnicalCheckList;
+    
+    private List<TplSpecQuestion> specQuestionList;
+    
+    private Integer supplierNo;
     //#25138-Ahmaa-End
 	
 	
@@ -3593,6 +3601,38 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 	public void setEvaluationStgPkgTechnicalCheckList(List<ScQtCheckList> evaluationStgPkgTechnicalCheckList) {
 		this.evaluationStgPkgTechnicalCheckList = evaluationStgPkgTechnicalCheckList;
+	}
+
+	public List<TplSpecQuestion> getSpecQuestionList() {
+		return specQuestionList;
+	}
+
+	public void setSpecQuestionList(List<TplSpecQuestion> specQuestionList) {
+		this.specQuestionList = specQuestionList;
+	}
+
+	public String getMaxScore() {
+		return maxScore;
+	}
+
+	public void setMaxScore(String maxScore) {
+		this.maxScore = maxScore;
+	}
+
+	public Paginator getDetachedPaginatorTest() {
+		return detachedPaginatorTest;
+	}
+
+	public void setDetachedPaginatorTest(Paginator detachedPaginatorTest) {
+		this.detachedPaginatorTest = detachedPaginatorTest;
+	}
+
+	public Integer getSupplierNo() {
+		return supplierNo;
+	}
+
+	public void setSupplierNo(Integer supplierNo) {
+		this.supplierNo = supplierNo;
 	}
 
 	//#25138-Ahmaa-End
