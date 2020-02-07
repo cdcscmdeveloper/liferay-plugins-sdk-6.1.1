@@ -1258,76 +1258,72 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			// Change Code #20997 Start
 			if (ctBackingBean.getManagedBean().getContractVer().getCtContractItems().size() > 0) {
 				ctBackingBean.getManagedBean().getContractVer().getCtContractItems().clear();
+				List<CtContractItem> ctItemList = new ArrayList<CtContractItem>();
+				List<CtContractItem> ctServiceList = new ArrayList<CtContractItem>();
 
-			if (getManagedBean().getContractListingPagingDataModel() != null && getManagedBean().getContractListingPagingDataModel().getList() != null) {
-				for (CtContractItem ctContractItem : getManagedBean().getContractListingPagingDataModel().getList()) {
-					for(CtContractItem ctItem : ctBackingBean.getManagedBean().getCtItemList() ){					
+				if (ctBackingBean.getManagedBean().getCtItemList().size() > 0 && !ctBackingBean.getManagedBean().getCtItemList().isEmpty()) {
+				for (CtContractItem ctContractItem :  ctBackingBean.getManagedBean().getCtItemList()) {
+					
 						if(ctBackingBean.getManagedBean().getContractVer().isBrandNew()){
-							ctContractItem.setContractItemId(ctItem.getContractItemId());
-					for(CtItemPrice ctItemPrice : ctItem.getCtItemPrices()){
+							ctContractItem.setContractItemId(null);
 						for(CtItemPrice ctItemPrice2 : ctContractItem.getCtItemPrices()){
-							ctItemPrice2.setItemPriceId(ctItemPrice.getItemPriceId());
+							ctItemPrice2.setItemPriceId(null);
 						}									
-					}
-					for(CtItemMaxQty itemMaxQty : ctItem.getCtItemMaxQties()){
-						for(CtItemMaxQty itemMaxQty2 : ctContractItem.getCtItemMaxQties()){
-							itemMaxQty2.setItemMaxQtyId(itemMaxQty.getItemMaxQtyId());
-						}									
-					}
-					for(CtItemCeilingQty ceilingQty : ctItem.getCtItemCeilingQties()){
-						for(CtItemCeilingQty ceilingQty2 : ctContractItem.getCtItemCeilingQties()){
-							ceilingQty2.setItemCeilingQtyId(ceilingQty.getItemCeilingQtyId());
-							}									
-						}
-					}
-				}
-				}
-				if(ctBackingBean.getManagedBean().getContractVer().isBrandNew()){
-					ctBackingBean.getManagedBean().getCtItemList().clear();
-					ctBackingBean.getManagedBean().getCtItemList().addAll(getManagedBean().getContractListingPagingDataModel().getList());
-				}else{
-					ctBackingBean.getManagedBean().getCtItemList().addAll(getManagedBean().getContractListingPagingDataModel().getList());
-				}
-						ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(ctBackingBean.getManagedBean().getCtItemList());
-			}else{
-				ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(ctBackingBean.getManagedBean().getCtItemList());
-			}
 
-			if (getManagedBean().getServiceListingPagingDataModel() != null && getManagedBean().getServiceListingPagingDataModel().getList() != null) {
-				for (CtContractItem ctContractService : getManagedBean().getServiceListingPagingDataModel().getList()) {
-					for(CtContractItem ctService : ctBackingBean.getManagedBean().getCtItemServiceList()){
-						if(ctBackingBean.getManagedBean().getContractVer().isBrandNew()){
-					ctContractService.setContractItemId(ctService.getContractItemId());
-					for(CtItemPrice ctItemPrice : ctService.getCtItemPrices()){
-						for(CtItemPrice ctItemPrice2 : ctContractService.getCtItemPrices()){
-							ctItemPrice2.setItemPriceId(ctItemPrice.getItemPriceId());
+						for(CtItemMaxQty itemMaxQty2 : ctContractItem.getCtItemMaxQties()){
+							itemMaxQty2.setItemMaxQtyId(null);
 						}									
-					}
-					for(CtItemMaxQty itemMaxQty : ctService.getCtItemMaxQties()){
-						for(CtItemMaxQty itemMaxQty2 : ctContractService.getCtItemMaxQties()){
-							itemMaxQty2.setItemMaxQtyId(itemMaxQty.getItemMaxQtyId());
-						}									
-					}
-					for(CtItemCeilingQty ceilingQty : ctService.getCtItemCeilingQties()){
-						for(CtItemCeilingQty ceilingQty2 : ctContractService.getCtItemCeilingQties()){
-							ceilingQty2.setItemCeilingQtyId(ceilingQty.getItemCeilingQtyId());
+
+						for(CtItemCeilingQty ceilingQty2 : ctContractItem.getCtItemCeilingQties()){
+							ceilingQty2.setItemCeilingQtyId(null);
 							}									
-						}
 					}
-				}					
-					}
+				}
+				
 				if(ctBackingBean.getManagedBean().getContractVer().isBrandNew()){
-					ctBackingBean.getManagedBean().getCtItemServiceList().clear();
-					ctBackingBean.getManagedBean().getCtItemServiceList().addAll(getManagedBean().getServiceListingPagingDataModel().getList());
+					ctItemList.clear();
+					ctItemList.addAll(ctBackingBean.getManagedBean().getCtItemList());
 				}else{
-					ctBackingBean.getManagedBean().getCtItemServiceList().addAll(getManagedBean().getServiceListingPagingDataModel().getList());
+					ctItemList.addAll(ctBackingBean.getManagedBean().getCtItemList());
 					}
-					ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(ctBackingBean.getManagedBean().getCtItemServiceList());
+					ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(ctItemList);
+				}else{
+					ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(ctBackingBean.getManagedBean().getCtItemList());
+				}	
+			
+				if (ctBackingBean.getManagedBean().getCtItemServiceList().size() > 0 && !ctBackingBean.getManagedBean().getCtItemServiceList().isEmpty()) {
+				for (CtContractItem ctContractItem :  ctBackingBean.getManagedBean().getCtItemServiceList()) {
+					
+					if(ctBackingBean.getManagedBean().getContractVer().isBrandNew()){
+						ctContractItem.setContractItemId(null);
+					for(CtItemPrice ctItemPrice2 : ctContractItem.getCtItemPrices()){
+						ctItemPrice2.setItemPriceId(null);
+					}									
+
+					for(CtItemMaxQty itemMaxQty2 : ctContractItem.getCtItemMaxQties()){
+						itemMaxQty2.setItemMaxQtyId(null);
+					}									
+
+					for(CtItemCeilingQty ceilingQty2 : ctContractItem.getCtItemCeilingQties()){
+						ceilingQty2.setItemCeilingQtyId(null);
+						}									
+				}
+			}
+				if(ctBackingBean.getManagedBean().getContractVer().isBrandNew()){
+					ctServiceList.clear();
+					ctServiceList.addAll(ctBackingBean.getManagedBean().getCtItemServiceList());
+				}else{
+					ctServiceList.addAll(ctBackingBean.getManagedBean().getCtItemServiceList());
+					}
+					ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(ctServiceList);
 				}else{
 					ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(ctBackingBean.getManagedBean().getCtItemServiceList());
-				}			
-			log.info("Check Putra CtContractItems :"+ctBackingBean.getManagedBean().getContractVer().getCtContractItems().size());
-			}
+				}
+				
+				
+			}		
+		log.info("Check Putra CtContractItems :"+ctBackingBean.getManagedBean().getContractVer().getCtContractItems().size());
+
 			// Change Code #20997 End
 			
 			ctBackingBean.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
@@ -3123,9 +3119,31 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					ctContractItem.getCtItemPrices().add(index - 1, priceOfItem);
 				}
 			}
-		}			
+		}
+		//#20997--Start
+		if(getManagedBean().getSelectedItem() != null){			
+			for(CtContractItem itemProduct : ctBackingBean.getManagedBean().getCtItemList()){
+					for(CtItemPrice itemPrice : getManagedBean().getSelectedItem().getCtItemPrices() ){
+			if(itemPrice.isBrandNew() && itemProduct.getCtItemPrices().get(0).getCtContractItem().getContractItemId().equals(getManagedBean().getSelectedItem().getContractItemId())){
+				itemProduct.getCtItemPrices().remove(itemPrice);
+				itemProduct.getCtItemPrices().add(itemPrice);
+				
+				}
+			}		
+		}
 	}
-
+		if(getManagedBean().getSelectedServiceItem() != null){
+			for(CtContractItem itemService : ctBackingBean.getManagedBean().getCtItemServiceList()){
+		for(CtItemPrice itemPrice : getManagedBean().getSelectedServiceItem().getCtItemPrices() ){
+			if(itemPrice.isBrandNew() && itemService.getCtItemPrices().get(0).getCtContractItem().getContractItemId().equals(getManagedBean().getSelectedServiceItem().getContractItemId())){
+				itemService.getCtItemPrices().remove(itemPrice);
+				itemService.getCtItemPrices().add(itemPrice);
+					}
+				}
+			}		
+		}
+	}
+	//#20997 -- End
 	/**
 	 * The method used to edit the product item price.
 	 * This method will creating a new records in the item price list
@@ -3413,8 +3431,20 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 			}
 		}
+		//#20997--Start
+		if(getManagedBean().getSelectedItem() != null){			
+			for(CtContractItem itemQtyProduct : ctBackingBean.getManagedBean().getCtItemList()){
+					for(CtItemMaxQty itemQtyPrice : getManagedBean().getSelectedItem().getCtItemMaxQties() ){
+			if(itemQtyPrice.isBrandNew() && itemQtyProduct.getCtItemPrices().get(0).getCtContractItem().getContractItemId().equals(getManagedBean().getSelectedItem().getContractItemId())){
+				itemQtyProduct.getCtItemMaxQties().remove(itemQtyPrice);
+				itemQtyProduct.getCtItemMaxQties().add(itemQtyPrice);
+				
+				}
+			}		
+		}
 	}
-
+}
+	//#20997--End
 	/**
 	 * The method used to retrieve the item ceiling quantity which in active status
 	 * to be displayed on screen.
