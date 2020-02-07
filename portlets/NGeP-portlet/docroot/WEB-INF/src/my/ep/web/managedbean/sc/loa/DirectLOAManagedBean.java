@@ -297,6 +297,10 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	private boolean buttonHideDedActive = true;
 	private boolean buttonHideSchActive = true;
 
+	//#24540 - start -
+	private SelectItem[] pk7Reasons;
+	//#24540 - end -
+
 	/**
 	 * Gets the spki backing bean.
 	 * 
@@ -1846,5 +1850,22 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	public void setButtonHideSchActive(boolean buttonHideSchActive) {
 		this.buttonHideSchActive = buttonHideSchActive;
 	}
+
+	//#24540 - start -
+	/**
+	 * @return the pk7Reasons
+	 */
+	public SelectItem[] getPk7Reasons() {
+		return pk7Reasons;
+	}
+
+	/**
+	 * @param pk7Reasons
+	 *            the pk7Reasons to set
+	 */
+	public void setPk7Reasons(SelectItem[] pk7Reasons) {
+		this.pk7Reasons = pk7Reasons;
+	}
+	//#24540 - end -
 	
 }
