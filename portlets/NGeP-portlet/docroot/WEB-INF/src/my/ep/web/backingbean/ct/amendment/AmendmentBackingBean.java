@@ -44,6 +44,7 @@ import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
@@ -70,6 +71,7 @@ import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
@@ -1226,6 +1228,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				ctBackingBean.getManagedBean().getContractVer().setCtPidReasons(null);
 			}
 			validateContractAmendment(outcome);
+			//#25890 - Start
+			/*Validation for deduction if Amount <=0*/
+			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)
+				&&	(ctBackingBean.getManagedBean().getContractVer().getCtDeductions() != null 
+					|| ctBackingBean.getManagedBean().getContractVer().getCtDeductions().size() > 0)){
+				for(CtDeduction deduction : ctBackingBean.getManagedBean().getContractVer().getCtDeductions()){
+						Long parameterId = deduction.getDeductionType().getParameterId();
+						PmParameter pmParameter = retrieveParameterById(parameterId);
+						if (ParameterConst.DEDUCTION_TYPE_FIXED.equalsIgnoreCase(pmParameter.getParameterCode())
+								&& deduction.getAmount() <= 0) {
+							throw new EpException(MessageConst.ERROR_740059);
+						}
+				}
+			}
+			//#25890 - End
 
 			// Generate Supplier Acknowledgement Receipt
 			if (getManagedBean().getTaskName() != null 
@@ -5921,5 +5938,24 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 
 		//Enhancement #26186 end - retrieve disciplinary info
+		
+		//#25890 - Start
+		private PmParameter retrieveParameterById(Long parameterId) {
+			if (parameterId == null) {
+				throw new EpException(MessageConst.ERROR_100022, 
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.deduction.type", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
 
+			ParameterReqDTO paramReqDTO = new ParameterReqDTO();
+			paramReqDTO.setParameterId(parameterId);
+
+			PmParameter pmParameter = getParameterSO().retrieveParameterById(paramReqDTO).getPmParameter();
+			return pmParameter;
+		}
+		
+		private IParameterSO getParameterSO() {
+			return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+		}
+		//#25890 - End
 	}
