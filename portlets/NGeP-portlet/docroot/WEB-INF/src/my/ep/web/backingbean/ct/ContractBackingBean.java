@@ -1136,14 +1136,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			int count = 0;
 			String parameterCode;
 			for(CtDeduction deId : getManagedBean().getContractVer().getCtDeductions()){
-				PmParameter deductionTypeById = deId.getDeductionType();
-				PmParameter deductionType = deduction.getDeductionType();
-				if (deductionTypeById == null || deductionType == null)
-					break;
-				if (deductionTypeById.getParameterId() != null && deductionType.getParameterId() != null
-						&& deductionType.getParameterId().intValue() == deductionTypeById.getParameterId().intValue()) {
+				if(deId.getDeductionType().getParameterId() != null && deduction.getDeductionType().getParameterId().intValue() == deId.getDeductionType().getParameterId().intValue()){
 					count++;
-					parameterCode =  getParameterCode(deductionTypeById);
+					parameterCode =  getParameterCode(deId.getDeductionType());
 					if(!parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_OTHERS) &&
 							!parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_FIXED)  && 
 							!parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_NON_FIXED) && count == 2)
