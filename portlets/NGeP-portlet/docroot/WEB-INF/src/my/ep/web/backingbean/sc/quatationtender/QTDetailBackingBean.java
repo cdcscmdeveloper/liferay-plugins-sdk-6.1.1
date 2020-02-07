@@ -332,6 +332,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	}
 	
 	
+	public Long[] getCmtOrderedStatuses(){
+		return QTStatusConst.CMT_ORDERED_STATUSES;
+	}
+	
 	//25201#52
 	private RoleCode[] deskOfficerRoleCodes = {
 			RoleCode.DESK_OFFICER, 
