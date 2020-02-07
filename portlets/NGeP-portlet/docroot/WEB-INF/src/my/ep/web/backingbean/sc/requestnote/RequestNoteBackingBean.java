@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -84,6 +85,7 @@ import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
+import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
@@ -100,9 +102,11 @@ import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScRequestItemAttachment;
+import my.ep.persistence.entity.sc.directpurchase.ScApprovalDocument;
 import my.ep.persistence.entity.sc.directpurchase.ScPIReportAttachment;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
+import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefaultAttachment;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
 import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sc.directpurchase.ScRNWorkFlowStatus;
@@ -133,6 +137,7 @@ import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
 import my.ep.web.backingbean.trackingdiary.TrackingDiarySearchBackingBean;
 import my.ep.web.bean.sc.directpurchase.MarketSummaryAndPIBean;
+import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.sc.requestnote.RequestNoteManagedBean;
 import my.ep.web.util.CommonUtils;
@@ -4968,4 +4973,40 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().setProceedWithDPExceedThreshold(Boolean.TRUE);
 		getManagedBean().setExceededAmountAlerted(Boolean.FALSE);
 	}
+	
+	/**
+	 * Delete Attachment for eGPA approval doc.
+	 */
+	public void deleteApprovalDocUpload(BaseEntity delEntity) {
+		debugLogger("deleteeGPAApprovalDoc - START");
+		getManagedBean().getRequestNote().setScApprovalDocument(null);
+		debugLogger("deleteeGPAApprovalDoc - END");
+	}
+	
+	/**
+	 * @return the approvalDocFileType
+	 */
+	public String getApprovalDocFileType() {
+		return approvalDocFileType;
+	}
+
+	/**
+	 * @param approvalDocFileType the approvalDocFileType to set
+	 */
+	public void setApprovalDocFileType(String approvalDocFileType) {
+		this.approvalDocFileType = approvalDocFileType;
+	}
+	public List<PmUser> getBpkApprovers() {
+		UserReqDTO reqDTO = new UserReqDTO();
+		List<PmUser> userlist = null;
+		 FacesScopes face = new FacesScopes();
+		 face.getUserSessionBean();
+		reqDTO.setRoleCode(RoleCode.BPK_APPROVER.value());
+
+		UserResDTO resDTO = getUserSO().retrieveUserListByRole(reqDTO);
+		userlist = resDTO.getUserList();
+		log.info("BPK Approvers: " + userlist.size());
+		return userlist;
+	}
+	//26059 - end
 }
