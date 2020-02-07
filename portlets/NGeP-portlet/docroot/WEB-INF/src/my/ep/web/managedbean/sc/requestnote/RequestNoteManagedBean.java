@@ -327,7 +327,20 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     /** The Clone and Re-Quote btn. */
     private boolean cloneReQuote = Boolean.FALSE;	
     	
-	private boolean cancel = Boolean.FALSE;
+	private boolean cancel = Boolean.FALSE; 
+	
+	// 12177 - Start
+	/** The SQ end date */
+	private Calendar sqEndDate;
+	// 12177 - End
+	
+	private	Object[] selectedPrDtls;
+	
+	//26059 - start
+	private boolean proceedWithDPExceedThreshold;
+	private String exceedThresholdMessage;
+	private boolean bpkApprover;
+	//26059 - end
 	
     /**
      * Instantiates a new request note managed bean.
@@ -1923,4 +1936,77 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setCancel(boolean cancel) {
 		this.cancel = cancel;
 	}
+	
+	// 12177 - Start
+	/**
+	 * @return the taskExpiryDate
+	 */
+	public Calendar getSqEndDate() {
+		return sqEndDate;
+	}
+
+	/**
+	 * @param taskExpiryDate the taskExpiryDate to set
+	 */
+	public void setSqEndDate(Calendar sqEndDate) {
+		this.sqEndDate = sqEndDate;
+	}
+	// 12177 - End
+
+	/**
+	 * @return the selectedPrDtls
+	 */
+	public Object[] getSelectedPrDtls() {
+		return selectedPrDtls;
+	}
+
+	/**
+	 * @param selectedPrDtls the selectedPrDtls to set
+	 */
+	public void setSelectedPrDtls(Object[] selectedPrDtls) {
+		this.selectedPrDtls = selectedPrDtls;
+	}
+	//26059 - start
+	/**
+	 * @return the proceedWithDPExceedThreshold
+	 */
+	public boolean isProceedWithDPExceedThreshold() {
+		return proceedWithDPExceedThreshold;
+	}
+
+	/**
+	 * @param proceedWithDPExceedThreshold the proceedWithDPExceedThreshold to set
+	 */
+	public void setProceedWithDPExceedThreshold(boolean proceedWithDPExceedThreshold) {
+		this.proceedWithDPExceedThreshold = proceedWithDPExceedThreshold;
+	}
+
+	/**
+	 * @return the exceedThresholdMessage
+	 */
+	public String getExceedThresholdMessage() {
+		return exceedThresholdMessage;
+	}
+
+	/**
+	 * @param exceedThresholdMessage the exceedThresholdMessage to set
+	 */
+	public void setExceedThresholdMessage(String exceedThresholdMessage) {
+		this.exceedThresholdMessage = exceedThresholdMessage;
+	}
+
+	/**
+	 * @return the bpkApprover
+	 */
+	public boolean isBpkApprover() {
+		return bpkApprover;
+	}
+
+	/**
+	 * @param bpkApprover the bpkApprover to set
+	 */
+	public void setBpkApprover(boolean bpkApprover) {
+		this.bpkApprover = bpkApprover;
+	}
+	//26059 - end
 }
