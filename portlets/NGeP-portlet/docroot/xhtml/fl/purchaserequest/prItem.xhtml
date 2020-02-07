@@ -163,16 +163,19 @@
 				<p:column style="width:25%;text-align:center">
 				<f:facet name="header" style="width:8%;text-align:center">
 					<h:outputText value="#{lbl['lbl.fl.item.code']}"/>
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.item.code']}"/>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.item.details(a)']}"/>
 				</f:facet>
-					<h:outputText rendered="#{flItem.scRequestItem.cmItem==null}" value="#{flItem.scRequestItem.tempUnspscCode}" title="Requested Quantity: #{flItem.scRequestItem.quantity eq null ? lbl['lbl.fl.supp.na'] : flItem.scRequestItem.quantity}" style="text-align:left;float:left;"/>
-					<h:outputText rendered="#{flItem.scRequestItem.cmItem!=null}" value="#{flItem.scRequestItem.cmItem.extensionCode}" title="Requested Quantity: #{flItem.scRequestItem.quantity eq null ? lbl['lbl.fl.supp.na'] : flItem.scRequestItem.quantity}" style="text-align:left;float:left;"/>
-				</p:column>
-				<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;text-align:center;width:20%">
-					<h:outputText value="#{flItem.scRequestItem.itemName}" id="itemDesc" style="text-align:left; float:left; white-space:pre-wrap;" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.fl.uom']}">
-					<h:outputText value="#{flItem.scRequestItem.uom.uomName}"/>
+				<h:panelGroup style="text-align:left; width:25%">	
+					<h:outputText rendered="#{flItem.scRequestItem.cmItem==null}" value="#{flItem.scRequestItem.tempUnspscCode}" title="Requested Quantity: #{flItem.scRequestItem.quantity eq null ? lbl['lbl.fl.supp.na'] : flItem.scRequestItem.quantity}" style="text-align:left; float:left;"/>
+					<h:outputText rendered="#{flItem.scRequestItem.cmItem!=null}" value="#{flItem.scRequestItem.cmItem.extensionCode}" title="Requested Quantity: #{flItem.scRequestItem.quantity eq null ? lbl['lbl.fl.supp.na'] : flItem.scRequestItem.quantity}" style="text-align:left; float:left;"/>
+					<span style="white-space:pre-wrap; text-align:left; float:left;">(<h:outputText value="#{flItem.scRequestItem.uom.uomName}" />)</span>
+							<br />
+					<h:outputText value="#{flItem.scRequestItem.itemName}" id="itemDesc" style="white-space:pre-wrap; text-align:left; float:left;" />
+							<br />
+<!--#16344 Display SKU-->
+					<h:outputText value="#{purchaseRequestBackingBean.getSkuDescription(flItem.scRequestItem)}"
+					style="white-space:pre-wrap; text-align:left; float:left;" />				
+				</h:panelGroup>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="white-space:normal;text-align:center">
 					<h:outputText disabled="true" size="6" value="#{flItem.unitPrice}" id="unitPrice" style="float:right;">
