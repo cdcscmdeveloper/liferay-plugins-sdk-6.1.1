@@ -52,46 +52,43 @@
 			              <h:outputText  rendered="#{ctBackingBean.managedBean.viewContract and 
 			      		          datas.deductionType.parameterCode != ParameterConst.deductionTypeAdvancePayment}" 
 			                     value="#{ctBackingBean.getParameterDesc(datas.deductionType)}" style="float:left;" />
-					</p:column> 
-					<p:column style="width:400px;text-align:center;">
-						<f:facet name="header">
-							<h:outputText value="#{lbl['lbl.ct.deduction.description']}" styleClass="required"/>
-						</f:facet>
-						<h:outputText rendered="#{datas.deductionType.parameterCode == ParameterConst.deductionTypeAdvancePayment}" 
-							value="#{ctBackingBean.getParameterDesc(datas.deductionType)}" style="float:left;" />
-						<p:spacer width="15"/>
-						<p:inputText  value="#{datas.deductionDesc}"  style="width:400px;float:left;" maxlength="255"
-							disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
-							rendered="#{!ctBackingBean.managedBean.viewContract and 
-								(ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeOthers
-								or ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeFixed
-								or ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeNonFixed)}" required="true" label="#{lbl['lbl.ct.deduction.description']}">
-							</p:inputText>
-							<h:outputText rendered="#{ctBackingBean.managedBean.viewContract}"
-								value="#{datas.deductionDesc}" style="float:left;" />
-					</p:column> 
-
-					<p:column style="width:150px;text-align:right;">
-						<f:facet name="header">
-							<h:outputText value="#{lbl['lbl.ct.amount']}" styleClass="required"/>
-						</f:facet>
-						<h:outputText value="#{datas.amount}" 
-							rendered="#{datas.deductionType.parameterCode eq ParameterConst.deductionTypeAdvancePayment}">
-							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-						</h:outputText>
-						<p:inputText  value="#{datas.amount}" styleClass="ppRightBtn" style="width:100px;" 
-							disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
-							rendered="#{!ctBackingBean.managedBean.viewContract and 
-							ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeFixed}" required="true" label="#{lbl['lbl.ct.amount']}">
-							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-							<p:ajax process="@this"></p:ajax>
-						</p:inputText>  
-						<h:outputText value="#{datas.amount}"  rendered="#{ctBackingBean.managedBean.viewContract and  
-							ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeFixed}">
-						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-						</h:outputText>
-					</p:column>
-
+			              </p:column> 
+			              
+			           <p:column  headerText="#{lbl['lbl.ct.deduction.description']}" style="width:400px;text-align:center;">
+			              <h:outputText rendered="#{datas.deductionType.parameterCode == ParameterConst.deductionTypeAdvancePayment}" 
+			                 value="#{ctBackingBean.getParameterDesc(datas.deductionType)}" style="float:left;" />
+			                 <p:spacer width="15"/>
+			                   <p:inputText  value="#{datas.deductionDesc}"  style="width:400px;float:left;" maxlength="255"
+		                           disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
+		                           rendered="#{!ctBackingBean.managedBean.viewContract and 
+		                              (ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeOthers
+		                           or ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeFixed
+		                           or ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeNonFixed)}">
+			                 </p:inputText>  
+			                 
+			                  <h:outputText rendered="#{ctBackingBean.managedBean.viewContract}"
+			                 value="#{datas.deductionDesc}" style="float:left;" />
+			           </p:column> 
+		       
+		              <p:column  headerText="#{lbl['lbl.ct.amount']}" style="width:150px;text-align:right;">
+	                       <h:outputText value="#{datas.amount}" 
+	                            rendered="#{datas.deductionType.parameterCode eq ParameterConst.deductionTypeAdvancePayment}">
+		                       <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+		                  </h:outputText>
+		                  <p:inputText  value="#{datas.amount}" styleClass="ppRightBtn" style="width:100px;" 
+		                      disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
+		                      rendered="#{!ctBackingBean.managedBean.viewContract and 
+		                        ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeFixed}">
+			                <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			                <p:ajax process="@this"></p:ajax>
+			                </p:inputText>  
+			                
+			                <h:outputText value="#{datas.amount}"  rendered="#{ctBackingBean.managedBean.viewContract and  
+	                             ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeFixed}">
+		                       <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+		                  </h:outputText>
+		              </p:column>  
+		   
 		   </p:dataTable>  
 		   <c:if test="#{!ctBackingBean.managedBean.viewContract }">
 		   <div class="ppRightBtn">
@@ -302,3 +299,4 @@
                    </p:confirmDialog>
 	</p:panel>		     
 </ui:composition>
+                                     
