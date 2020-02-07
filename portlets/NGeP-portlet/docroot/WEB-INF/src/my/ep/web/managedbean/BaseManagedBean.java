@@ -55,7 +55,11 @@ public abstract class BaseManagedBean implements Serializable {
 		
 	// For sub title displayed in screen.
 	private String title;
-
+	
+	//#24540 - start -
+	private boolean disableFields;
+	//#24540 - end -
+	
 	/**
 	 * @return the token
 	 */
@@ -336,6 +340,20 @@ public abstract class BaseManagedBean implements Serializable {
 		this.smPersonnelSsm = smPersonnelSsm;
 	}
 	
-	
+	//#24540 - start -
+	/**
+	 * @return the disableFields
+	 */
+	public boolean isDisableFields() {
+		return disableFields;
+	}
+
+	/**
+	 * @param disableFields the disableFields to set
+	 */
+	public void setDisableFields(boolean disableFields) {
+		this.disableFields = disableFields;
+	}
+	//#24540 - end -	
 	
 }

@@ -76,15 +76,21 @@ public abstract class LOABaseBackingBean<T extends LOABaseManagedBean> extends S
 		PmOrgProfile pmOrgProfile = contractAdminPmOrgProfile();
 		String roleCode = contractAdminRoleCode();
 		
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("pmUserOrgs.pmOrgProfile.pmOrgValidity.orgCode", SearchOperator.OPERATOR_LIKE
-						.value(), pmOrgProfile.getPmOrgValidity().getOrgCode()));
-
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("pmUserOrgs.pmOrgProfile."
-						+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
-						SearchOperator.OPERATOR_EQUALS.value(), retrieveMinistryOrgProfile(
-								pmOrgProfile.getOrgProfileId()).getOrgProfileId()));
+		//#24540 - start -
+		if (null != pmOrgProfile.getPmOrgValidity()) {
+		//#24540 - end -	
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmUserOrgs.pmOrgProfile.pmOrgValidity.orgCode", SearchOperator.OPERATOR_LIKE
+							.value(), pmOrgProfile.getPmOrgValidity().getOrgCode()));
+	
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmUserOrgs.pmOrgProfile."
+							+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
+							SearchOperator.OPERATOR_EQUALS.value(), retrieveMinistryOrgProfile(
+									pmOrgProfile.getOrgProfileId()).getOrgProfileId()));
+		//#24540 - start -
+		}
+		//#24540 - end -
 		
 		if (roleCode != null) {
 			searchBean.getDataFilterBeans().add(
@@ -132,4 +138,31 @@ public abstract class LOABaseBackingBean<T extends LOABaseManagedBean> extends S
 			}
 		}
 	}
+	
+	//#24540 - start -
+	/**
+	 * Set Performance Bond value opted by user.
+	 * @param bondReqVal
+	 */
+	public void performanceBondChanged(String bondReqVal) {
+		if (getManagedBean().getYesParameterId().equalsIgnoreCase(bondReqVal)) { 
+			getManagedBean().getScLoa().setBondReq(true);
+		} else {
+			getManagedBean().getScLoa().setBondReq(false);
+		}
+	}
+	
+	/**
+	 * Set Performance Bond value opted by user.
+	 * @param bondReqVal
+	 */
+	public void agreementChanged(String agreeReqVal) {
+		if (getManagedBean().getYesParameterId().equalsIgnoreCase(agreeReqVal)) { 
+			getManagedBean().getScLoa().setAgreementReq(true);
+		} else {
+			getManagedBean().getScLoa().setAgreementReq(false);
+		}
+	}
+	//#24540 - end -
+	
 }

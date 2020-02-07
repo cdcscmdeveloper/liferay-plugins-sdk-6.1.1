@@ -82,7 +82,8 @@
 						</p:menuitem>
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.perform.bond']}"
 							update="@form"
-							actionListener="#{directLOABackingBean.tabChangeAction(directLOABackingBean.managedBean.selectedTabIndex)}">
+							actionListener="#{directLOABackingBean.tabChangeAction(directLOABackingBean.managedBean.selectedTabIndex)}"
+							disabled="#{!directLOABackingBean.managedBean.scLoa.bondReq}">
 							<f:setPropertyActionListener
 								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
 								value="5" />

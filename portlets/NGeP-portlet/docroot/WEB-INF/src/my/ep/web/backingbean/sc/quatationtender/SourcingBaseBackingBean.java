@@ -1912,7 +1912,37 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		BigDecimal overallCtAmount = overallCtAmountWithSST(scLoa.getLoaAmt(), scLoa.getSstAmt());
 		
 		if(isDirectLoa) {
-			scLoa.setBondReq(PerformanceBondUtil.isPerformanceBondRequired(overallCtAmount, null));
+			//#24540 - start -
+			boolean setBondReq = true;
+			
+			if (null != scLoa.getQtType() 
+					&& null != scLoa.getQtType().getParameterId() 
+					&& scLoa.getQtType().getParameterCode().equals(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7)  
+					&& null != scLoa.getScQt() 
+					&& null != scLoa.getScQt().getFulfilmentType()
+					&& null != scLoa.getScQt().getFulfilmentType().getParameterId()
+					&& scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF)  
+					&& null != scLoa.getContractType() 
+					&& null != scLoa.getContractType().getParameterId()
+					&& scLoa.getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+				setBondReq = false;
+			}
+			
+			if (null != scLoa.getQtType() 
+					&& null != scLoa.getQtType().getParameterId() 
+					&& scLoa.getQtType().getParameterCode().equals(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7)  
+					&& null != scLoa.getScQt() 
+					&& null != scLoa.getScQt().getFulfilmentType()
+					&& null != scLoa.getScQt().getFulfilmentType().getParameterId()
+					&& (scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
+					|| scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN))) {
+				setBondReq = false;
+			}
+			
+			if (setBondReq) {
+				scLoa.setBondReq(PerformanceBondUtil.isPerformanceBondRequired(overallCtAmount, null));
+			}
+			//#24540 - end -
 		}
 		
 		System.out.println("____ calcBondAmountWithSST "+scLoa.getScLoiLoa().getDocId()+": "+scLoa.getScLoiLoa().getDocId() +"overallAmount: "+overallCtAmount+" scLoa.isBondReq():"+scLoa.isBondReq());

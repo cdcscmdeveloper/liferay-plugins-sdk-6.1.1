@@ -13,6 +13,20 @@ public abstract class LOABaseManagedBean extends BaseManagedBean {
 	private PmOrgProfile selectedPtj;
 
 	private ScLoa scLoa;
+	
+	//#24540 - start -
+	private String bondReqSelectedVal;
+	
+	private String agreemetSelectedVal;
+	
+	private String yesParameterId;
+	
+	private String noParameterId;
+	
+	private Long periodicAsAndWhenParamId;
+	
+	private Long periodicScheduleParamId;
+	//#24540 - end -
 
 	public PmParameter getSelectedOrgType() {
 		if (this.selectedOrgType == null) {
@@ -40,5 +54,69 @@ public abstract class LOABaseManagedBean extends BaseManagedBean {
 	public void setScLoa(ScLoa scLoa) {
 		this.scLoa = scLoa;
 	}
+	
+	//#24540 - start -
+	/**
+	 * @return the bondReqSelectedVal
+	 */
+	public String getBondReqSelectedVal() {
+		return bondReqSelectedVal;
+	}
 
+	/**
+	 * @param bondReqSelectedVal
+	 *            the bondReqSelectedVal to set
+	 */
+	public void setBondReqSelectedVal(String bondReqSelectedVal) {
+		this.bondReqSelectedVal = bondReqSelectedVal;
+	}
+	
+	/**
+	 * @return the agreemetSelectedVal
+	 */
+	public String getAgreemetSelectedVal() {
+		return agreemetSelectedVal;
+	}
+
+	/**
+	 * @param agreemetSelectedVal
+	 *            the agreemetSelectedVal to set
+	 */
+	public void setAgreemetSelectedVal(String agreemetSelectedVal) {
+		this.agreemetSelectedVal = agreemetSelectedVal;
+	}
+
+	public String getYesParameterId() {
+		return yesParameterId;
+	}
+
+	public void setYesParameterId(String yesParameterId) {
+		this.yesParameterId = yesParameterId;
+	}
+
+	public String getNoParameterId() {
+		return noParameterId;
+	}
+
+	public void setNoParameterId(String noParameterId) {
+		this.noParameterId = noParameterId;
+	}
+
+	public Long getPeriodicAsAndWhenParamId() {
+		return periodicAsAndWhenParamId;
+	}
+
+	public void setPeriodicAsAndWhenParamId(Long periodicAsAndWhenParamId) {
+		this.periodicAsAndWhenParamId = periodicAsAndWhenParamId;
+	}
+
+	public Long getPeriodicScheduleParamId() {
+		return periodicScheduleParamId;
+	}
+
+	public void setPeriodicScheduleParamId(Long periodicScheduleParamId) {
+		this.periodicScheduleParamId = periodicScheduleParamId;
+	}
+	//#24540 - end -
+	
 }
