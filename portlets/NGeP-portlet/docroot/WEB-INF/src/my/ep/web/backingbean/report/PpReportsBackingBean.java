@@ -2,6 +2,7 @@ package my.ep.web.backingbean.report;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -76,6 +77,35 @@ public class PpReportsBackingBean extends
 		resetAction();
 
 		if (StringUtils.isNotBlank(getManagedBean().getReportCode())) {
+			
+			//[#27197] - start
+			log.info("[#27197] Report code: " + getManagedBean().getReportCode());
+			log.info("[#27197] Is BPK_OFFICER? " + isBPKOfficer());
+			log.info("[#27197] Is BPK_AUDITOR? " + isBPKAuditor());
+			log.info("[#27197] Is AUDITOR_GENERAL? " + isGeneralAuditor());
+			/*
+			List<String> reportCodes = Arrays.asList(PpReportConst.PP_REPORTS_MINISTRY_IS_MANDATORY);
+			log.info("[#27197] Report code list : " + Arrays.toString(reportCodes.toArray()));
+			if(reportCodes.contains(getManagedBean().getReportCode())) {
+				log.info("[#27197] Report code exists...");
+				this.getManagedBean().setMinistryMandatory(true);
+			}
+			*/
+			//set mandatory for Ministry search field for role BPK_OFFICER, BPK_AUDITOR, AUDITOR_GENERAL
+			if(isBPKOfficer() || isBPKAuditor()	|| isGeneralAuditor()) {
+				
+				List<String> reportCodes = Arrays.asList(PpReportConst.PP_REPORTS_MINISTRY_IS_MANDATORY);
+				log.info("[#27197] Report code list : " + Arrays.toString(reportCodes.toArray()));
+				if(reportCodes.contains(getManagedBean().getReportCode())) {
+					log.info("[#27197] Report code exists...");
+					this.getManagedBean().setMinistryMandatory(true);
+				} else {
+					log.info("[#27197] Report code not exists...");
+				}
+			}
+			//this.getManagedBean().setMinistryMandatory(true);
+			//[#27197] - end
+			
 			retrieveReportValueFromDb();
 		}
 
@@ -97,6 +127,7 @@ public class PpReportsBackingBean extends
 		getManagedBean().setProcurementCatId(null);
 		getManagedBean().setProcurementTypeId(null);
 		getManagedBean().setStatus(null);
+		getManagedBean().setMinistryMandatory(false);	//[#27197]
 	}
 
 	/**
@@ -323,6 +354,19 @@ public class PpReportsBackingBean extends
 	public void generatePpReport() {
 		IRPTRequestSO rptRequestSO = null;
 		
+		//[#27197] - start
+		log.info("[#27197] Is BPK_OFFICER? " + getFacesScopes().hasRoleUser(RoleCode.BPK_OFFICER.value()));
+		log.info("[#27197] Is BPK_AUDITOR? " + getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value()));
+		log.info("[#27197] Is AUDITOR_GENERAL? " + getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value()));
+		//validate Ministry search field for role BPK_OFFICER, BPK_AUDITOR, AUDITOR_GENERAL
+		if(isBPKOfficer() || isBPKAuditor()	|| isGeneralAuditor()) {
+			
+			if(getManagedBean().getSelectedMinistry() == null) {
+				throw new EpException(MessageConst.ERROR_REPORT_780059);
+			}
+		}
+		//[#27197] - end
+		
 		if(StringUtils.isBlank(getManagedBean().getSelectedYear())){
 			throw new EpException(MessageConst.ERROR_REPORT_780030);
 		}
@@ -467,4 +511,18 @@ public class PpReportsBackingBean extends
 	private boolean isInternalAuditor(){
 		return getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value());
 	}
+	
+	//[#27197] - start
+	private boolean isBPKOfficer(){
+		return getFacesScopes().hasRoleUser(RoleCode.BPK_OFFICER.value());
+	}
+	
+	private boolean isBPKAuditor(){
+		return getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value());
+	}
+	
+	private boolean isGeneralAuditor(){
+		return getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value());
+	}
+	//[#27197] - end
 }
