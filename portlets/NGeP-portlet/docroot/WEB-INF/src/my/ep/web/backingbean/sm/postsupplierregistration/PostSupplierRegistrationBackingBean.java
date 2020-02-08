@@ -306,9 +306,10 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		boolean proceed = true;
 		if(supplier != null){
 			try{
-				log.info("Here done");
+				
 				String path1 = currentStatusAndPath();
-				if(MOF_REG_PATH.equalsIgnoreCase(path1)){
+				log.info("path1==================================="+path1);
+				if(MOF_REG_PATH.equalsIgnoreCase(path1) || RESUBMIT_APPLICATION.equalsIgnoreCase(path1)){
 					checkSSMValid(supplier);
 				}				
 			}catch(Exception w){
