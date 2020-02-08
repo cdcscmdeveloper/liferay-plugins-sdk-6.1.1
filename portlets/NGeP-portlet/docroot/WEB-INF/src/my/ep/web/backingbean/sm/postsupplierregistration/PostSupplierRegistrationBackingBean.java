@@ -316,10 +316,17 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				log.info("Here done--"+w.getMessage());
 				proceed =false;
 				RequestContext.getCurrentInstance().execute("blockWidget.hide()");
-				SmCommonUtil.redirectToPage(
-						CONTENT_PAGE,
-						w.getMessage(),
-						new String[] { SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null) });				
+				if(this.getManagedBean() != null && this.getManagedBean().getStatusDescFromSSM()!=null){
+					SmCommonUtil.redirectToPage(
+							CONTENT_PAGE,
+							w.getMessage(),
+							new String[] { SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null) });
+				}else{
+					SmCommonUtil.redirectToPage(
+							CONTENT_PAGE,
+							w.getMessage(),new String[] {""});
+				}
+								
 			}
 						
 		}
