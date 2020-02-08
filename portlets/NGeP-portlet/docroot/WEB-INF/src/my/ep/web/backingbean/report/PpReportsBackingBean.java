@@ -49,6 +49,8 @@ public class PpReportsBackingBean extends
 
 	private static final long serialVersionUID = 1L;
 	private static final String NAV_TO_PPREPORT = "/xhtml/reports/new/pp/ppreportsmain.xhtml";
+	// list of report where Ministry search field is mandatory
+	public static final List<String> reportCodes = Arrays.asList(PpReportConst.PP_REPORTS_MINISTRY_IS_MANDATORY);;	//[#27197]
 
 	/** The Constant log. */
 	private static final Logger log = EpLogger
@@ -94,7 +96,7 @@ public class PpReportsBackingBean extends
 			//set mandatory for Ministry search field for role BPK_OFFICER, BPK_AUDITOR, AUDITOR_GENERAL
 			if(isBPKOfficer() || isBPKAuditor()	|| isGeneralAuditor()) {
 				
-				List<String> reportCodes = Arrays.asList(PpReportConst.PP_REPORTS_MINISTRY_IS_MANDATORY);
+				//reportCodes = Arrays.asList(PpReportConst.PP_REPORTS_MINISTRY_IS_MANDATORY);
 				log.info("[#27197] Report code list : " + Arrays.toString(reportCodes.toArray()));
 				if(reportCodes.contains(getManagedBean().getReportCode())) {
 					log.info("[#27197] Report code exists...");
@@ -355,14 +357,16 @@ public class PpReportsBackingBean extends
 		IRPTRequestSO rptRequestSO = null;
 		
 		//[#27197] - start
-		log.info("[#27197] Is BPK_OFFICER? " + getFacesScopes().hasRoleUser(RoleCode.BPK_OFFICER.value()));
-		log.info("[#27197] Is BPK_AUDITOR? " + getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value()));
-		log.info("[#27197] Is AUDITOR_GENERAL? " + getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value()));
 		//validate Ministry search field for role BPK_OFFICER, BPK_AUDITOR, AUDITOR_GENERAL
 		if(isBPKOfficer() || isBPKAuditor()	|| isGeneralAuditor()) {
 			
-			if(getManagedBean().getSelectedMinistry() == null) {
-				throw new EpException(MessageConst.ERROR_REPORT_780059);
+			//reportCodes = Arrays.asList(PpReportConst.PP_REPORTS_MINISTRY_IS_MANDATORY);
+			log.info("[#27197] Report code list : " + Arrays.toString(reportCodes.toArray()));
+			if(reportCodes.contains(getManagedBean().getReportCode())) {
+				log.info("[#27197] Report code exists...");
+				if(getManagedBean().getSelectedMinistry() == null) {
+					throw new EpException(MessageConst.ERROR_REPORT_780059);
+				}
 			}
 		}
 		//[#27197] - end
