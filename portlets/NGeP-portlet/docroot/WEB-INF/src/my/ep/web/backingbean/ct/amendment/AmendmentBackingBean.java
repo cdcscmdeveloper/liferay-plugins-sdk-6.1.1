@@ -1228,21 +1228,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				ctBackingBean.getManagedBean().getContractVer().setCtPidReasons(null);
 			}
 			validateContractAmendment(outcome);
-			//#25890 - Start
-			/*Validation for deduction if Amount <=0*/
-			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)
-				&&	(ctBackingBean.getManagedBean().getContractVer().getCtDeductions() != null 
-					|| ctBackingBean.getManagedBean().getContractVer().getCtDeductions().size() > 0)){
-				for(CtDeduction deduction : ctBackingBean.getManagedBean().getContractVer().getCtDeductions()){
-						Long parameterId = deduction.getDeductionType().getParameterId();
-						PmParameter pmParameter = retrieveParameterById(parameterId);
-						if (ParameterConst.DEDUCTION_TYPE_FIXED.equalsIgnoreCase(pmParameter.getParameterCode())
-								&& deduction.getAmount() <= 0) {
-							throw new EpException(MessageConst.ERROR_740059);
-						}
-				}
-			}
-			//#25890 - End
 
 			// Generate Supplier Acknowledgement Receipt
 			if (getManagedBean().getTaskName() != null 
@@ -2247,6 +2232,22 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().setTextBeforeSign(sb.toString());	
 			getManagedBean().setButtonAction(action);
 		} 
+		
+		//#25890 - Start
+		/*Validation for deduction if Amount <=0*/
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)
+			&&	(ctBackingBean.getManagedBean().getContractVer().getCtDeductions() != null 
+				|| ctBackingBean.getManagedBean().getContractVer().getCtDeductions().size() > 0)){
+			for(CtDeduction deduction : ctBackingBean.getManagedBean().getContractVer().getCtDeductions()){
+					Long parameterId = deduction.getDeductionType().getParameterId();
+					PmParameter pmParameter = retrieveParameterById(parameterId);
+					if (ParameterConst.DEDUCTION_TYPE_FIXED.equalsIgnoreCase(pmParameter.getParameterCode())
+							&& deduction.getAmount() <= 0) {
+						throw new EpException(MessageConst.ERROR_740059);
+					}
+			}
+		}
+		//#25890 - End
 	}
 
 	/**
