@@ -220,7 +220,7 @@
 					        </p:menuitem>
 					        
 					        <p:menuitem id="menuItemId15" value="#{lbl['lbl.ct.notification.setting']}" icon="ui-icon-edit" 
-						          rendered="#{data.ctStatus == 1
+						          rendered="#{contractDetailsBackingBean.isContractAdmin() and data.ctStatus == 1
 									        and !contractDetailsBackingBean.managedBean.trackingDiarySearch
 									        and !data.allowAgreementCreation}"
 									        process="@this" partialSubmit="true"
