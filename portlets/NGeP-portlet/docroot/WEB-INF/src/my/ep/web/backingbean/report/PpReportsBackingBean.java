@@ -50,7 +50,7 @@ public class PpReportsBackingBean extends
 	private static final long serialVersionUID = 1L;
 	private static final String NAV_TO_PPREPORT = "/xhtml/reports/new/pp/ppreportsmain.xhtml";
 	// list of report where Ministry search field is mandatory
-	public static final List<String> reportCodes = Arrays.asList(PpReportConst.PP_REPORTS_MINISTRY_IS_MANDATORY);;	//[#27197]
+	public static final List<String> ppReportCodes = Arrays.asList(PpReportConst.PP_REPORTS_MINISTRY_IS_MANDATORY);	//[#27197]
 
 	/** The Constant log. */
 	private static final Logger log = EpLogger
@@ -89,9 +89,8 @@ public class PpReportsBackingBean extends
 			//set mandatory for Ministry search field for role BPK_OFFICER, BPK_AUDITOR, AUDITOR_GENERAL
 			if(isBPKOfficer() || isBPKAuditor()	|| isGeneralAuditor()) {
 				
-				//reportCodes = Arrays.asList(PpReportConst.PP_REPORTS_MINISTRY_IS_MANDATORY);
-				log.info("[#27197] Report code list : " + Arrays.toString(reportCodes.toArray()));
-				if(reportCodes.contains(getManagedBean().getReportCode())) {
+				log.info("[#27197] Report code list: " + Arrays.toString(ppReportCodes.toArray()));
+				if(ppReportCodes.contains(getManagedBean().getReportCode())) {
 					log.info("[#27197] Report code exists...");
 					this.getManagedBean().setMinistryMandatory(true);
 				} else {
@@ -127,8 +126,8 @@ public class PpReportsBackingBean extends
 		//set mandatory for Ministry search field for role BPK_OFFICER, BPK_AUDITOR, AUDITOR_GENERAL
 		if(isBPKOfficer() || isBPKAuditor()	|| isGeneralAuditor()) {
 			
-			log.info("[#27197] Report code list : " + Arrays.toString(reportCodes.toArray()));
-			if(reportCodes.contains(getManagedBean().getReportCode())) {
+			log.info("[#27197] Report code list: " + Arrays.toString(ppReportCodes.toArray()));
+			if(ppReportCodes.contains(getManagedBean().getReportCode())) {
 				log.info("[#27197] Report code exists...");
 				this.getManagedBean().setMinistryMandatory(true);
 			} else {
@@ -367,9 +366,8 @@ public class PpReportsBackingBean extends
 		//validate Ministry search field for role BPK_OFFICER, BPK_AUDITOR, AUDITOR_GENERAL
 		if(isBPKOfficer() || isBPKAuditor()	|| isGeneralAuditor()) {
 			
-			//reportCodes = Arrays.asList(PpReportConst.PP_REPORTS_MINISTRY_IS_MANDATORY);
-			log.info("[#27197] Report code list : " + Arrays.toString(reportCodes.toArray()));
-			if(reportCodes.contains(getManagedBean().getReportCode())) {
+			log.info("[#27197] Report code list: " + Arrays.toString(ppReportCodes.toArray()));
+			if(ppReportCodes.contains(getManagedBean().getReportCode())) {
 				log.info("[#27197] Report code exists...");
 				if(getManagedBean().getSelectedMinistry() == null) {
 					throw new EpException(MessageConst.ERROR_REPORT_780059);
