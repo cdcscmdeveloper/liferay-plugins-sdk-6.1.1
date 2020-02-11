@@ -2,8 +2,6 @@ package my.ep.web.backingbean.cm.codification;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +14,6 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
@@ -25,57 +22,37 @@ import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
-import my.ep.dto.pm.common.status.StatusReqDTO;
-import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.exception.EpException;
-import my.ep.persistence.entity.cm.catalog.CmBrand;
-import my.ep.persistence.entity.cm.catalog.CmColor;
-import my.ep.persistence.entity.cm.catalog.CmMeasurement;
-import my.ep.persistence.entity.cm.catalog.CmType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
-import my.ep.persistence.entity.cm.catalog.VCmPendingCodifiedItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmDigiSign;
-import my.ep.persistence.entity.pm.common.PmParameter;
-import my.ep.persistence.entity.pm.common.PmStatus;
-import my.ep.persistence.entity.sc.common.ScRequestItem;
-import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
-import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.ct.circular.cc.CentralContractBackingBean;
-import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
-import my.ep.web.backingbean.sc.loa.DirectLOABackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
-import my.ep.web.constant.cm.CmConst;
+import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.cm.codification.CodificationMaintenanceManagedBean;
 import my.ep.web.util.FacesScopes;
-import my.ep.web.util.cm.helper.CmApplicationUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.ClassesVO;
 import my.ep.web.vo.CommoditiesVO;
-import my.ep.web.vo.ExtensionCodeVO;
 import my.ep.web.vo.NameNode;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.log4j.MDC;
-import org.primefaces.context.RequestContext;
 import org.primefaces.event.NodeExpandEvent;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
+
 
 @ManagedBean(name = "codificationMaintenanceBackingBean")
 @ViewScoped
@@ -92,33 +69,37 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 	private SearchFilterBean codeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 	private SearchFilterBean titleFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 	private SearchFilterBean levelFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
-	private IPagingDataModel<CmUnspsc> searchDataModel = new SearchPagingDataModel();
-	private IPagingDataModel<Object[]> extensionSearchItemDataModel = new ExtensionSearchItemDataModel();
-
-
-	private SearchFilterBean colorFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
-	private SearchFilterBean typeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
-	private SearchFilterBean brandFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
-	private SearchFilterBean measurementFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 	private SearchFilterBean statusFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 	private SearchFilterBean titleEngFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+	private SearchFilterBean nameFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+	private SearchFilterBean statusExtensionFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 	
-		
+	
+	private IPagingDataModel<CmUnspsc> searchDataModel = new SearchPagingDataModel();
+	private IPagingDataModel<Object[]> extensionAttributeSearchData = new ExtensionAttributeSearchData();
 
 	private TreeNode rootNodes;
 	private TreeNode selectedNode;
 	private String itemTypeParameter;
+	private String EXTENSION_TYPE = "t";
+	private String EXTENSION_BRAND = "b";
+	private String EXTENSION_MEASUREMENT = "m";
+	private String EXTENSION_COLOR = "c";
+	private String RECORD_STATUS_NULL = null;
+	
+	
 
 	public CodificationMaintenanceBackingBean() {
-
-		if (this.getManagedBean().isRefreshPageNoFlag()) {
+		
+		if(this.getManagedBean().isRefreshPageNoFlag()){
 			System.out.println("****************************");
 
-			this.getManagedBean().initRefreshPageNoFlag();
+			this.initRefreshPageNoFlag();
 		}
-	}
-	
+
+
 		
+		}
 		/**
 		 * This method is used to reset the value of UNSPSC Search
 		 * 
@@ -127,97 +108,18 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 		public String resetAction() {
 			log.info("In reset action...................");
 
-			this.getManagedBean().reset();
+			this.reset();
 			log.info("after reset.........................");
 			return null;
 		}
 		
-		
-	
-	/**
-	 * Extension Search Data Model for displaying list of extension records.
-	 * 
-	 */
+		public String resetActionextension() {
+			log.info("In reset action...................");
 
-//	private class ExtensionSearchItemDataModel extends
-//	PagingDataModel<Object[]> {
-//
-//		public ExtensionSearchItemDataModel() {
-//			super("itemTableID");
-//		}
-//
-//		@Override
-//		protected ISearchResultBean<Object[]> pageChangeListener(
-//				ISearchBean<Object[]> searchBean) {
-//
-//
-//			if (StringUtils.isBlank((String) colorFilterBean.getSearchValue())
-//					&& StringUtils.isBlank((String) typeFilterBean.getSearchValue())
-//					&& StringUtils.isBlank((String) brandFilterBean.getSearchValue())
-//					&& StringUtils.isBlank((String) measurementFilterBean.getSearchValue())) {
-//				return new SearchResultBean();
-//			}
-//
-//
-//			System.out.println("........search extension combination 11.................");
-//			log.info("Unspsc Code:"+ getManagedBean().getSelectedUNSPSCObj().getUnspscCode());
-//
-//			ICodificationSO codificationSO = null;
-//			CodificationResDTO resDTO = null;
-//			try {
-//				codificationSO = (ICodificationSO) BusinessDelegate
-//						.getInstance().getServiceObject("cm",
-//								ICodificationSO.class);
-//
-//				CodificationReqDTO reqDTO = new CodificationReqDTO();
-//				reqDTO.setExtSearchBean(searchBean);
-//
-//				reqDTO.setUnspscCode(getManagedBean().getSelectedUNSPSCObj()
-//						.getUnspscCode());
-//				
-//				System.out.println("colorFilterBean.getSearchValue():"+colorFilterBean.getSearchValue());
-//				if (StringUtils.isNotBlank((String) colorFilterBean
-//						.getSearchValue())) {
-//					reqDTO.setColorId(Long.valueOf(colorFilterBean
-//							.getSearchValue().toString()));
-//				}
-//
-//				System.out.println("typeFilterBean.getSearchValue()"+ typeFilterBean.getSearchValue());
-//				if (StringUtils.isNotBlank((String) typeFilterBean
-//						.getSearchValue())) {
-//					reqDTO.setTypeId(Long.valueOf(typeFilterBean
-//							.getSearchValue().toString()));
-//
-//				}
-//
-//				if (StringUtils.isNotBlank((String) brandFilterBean
-//						.getSearchValue())) {
-//					reqDTO.setBrandId(Long.valueOf(brandFilterBean
-//							.getSearchValue().toString()));
-//
-//				}
-//
-//				if (StringUtils.isNotBlank((String) measurementFilterBean
-//						.getSearchValue())) {
-//					reqDTO.setMeasurementId(Long.valueOf(measurementFilterBean
-//							.getSearchValue().toString()));
-//				}
-//				System.out.println("*********in********");
-//				resDTO = codificationSO.searchExtension(reqDTO);
-//
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			} finally {
-//				codificationSO = null;
-//			}
-//			if (resDTO != null) {
-//				return resDTO.getExtensionResultBean();
-//			}
-//			return null;
-//		}
-//
-//	}
-//
+			this.reset();
+			log.info("after reset.........................");
+			return null;
+		}
 
 
 	private class SearchPagingDataModel extends PagingDataModel<CmUnspsc> {
@@ -299,11 +201,6 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 					}
 				}
 
-				/*
-				 * levelFilterBean.setSearchField("unspscLevel");
-				 * levelFilterBean.setSearchValue(3);
-				 * searchBean.getDataFilterBeans().add(levelFilterBean);
-				 */
 
 				System.out.println("this.getSortField():" + this.getSortField());
 				if (this.getSortField() == null) {
@@ -384,13 +281,11 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 			throw new EpException(MessageConst.ERROR_715060);
 		}
 
-		this.getManagedBean().getSearchDataModel().reloadData();
+		this.getSearchDataModel().reloadData();
 	}
 	
 	public void extensionCodeSearch() {
-		//this.getManagedBean().setExtensionSearchcheckBoxAll(false);
-		//this.getManagedBean().setCloneExtensionVOs(null);
-		this.getManagedBean().getExtensionSearchItemDataModel().reloadData();
+		extensionAttributeSearchData.reloadData();
 	}
 
 	private int compareFirstChoice(String code1, String code2, int last) {
@@ -480,7 +375,7 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 	}
 
 	public String backToPrevPortal() {
-		this.getManagedBean().initRefreshMainPageNoFlag();
+		this.initRefreshPageNoFlag();
 		return "codificationMaintenance";
 	}
 	
@@ -662,18 +557,23 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 
 	public boolean productCode(String unspscCode) {
 
-		boolean flag = true;
+		boolean flag = false;
 		String segmentCode = "";
 
 		if (unspscCode != null && unspscCode.trim().length() > 0) {
 			segmentCode = unspscCode.substring(0, 2);
 		}
-
-		if (segmentCode.compareTo(NO_69) > 0) {
-			flag = false;
+		
+		log.info("segmentCode " + segmentCode);
+		
+		if (Integer.parseInt(segmentCode) > 69) {
+			flag = true;
 		}
+		
+		log.info("flag " + flag);
 
 		return flag;
+		
 	}
 
 
@@ -761,72 +661,7 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 				.getInstance().getServiceObject("cm", ICodificationSO.class);
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 			
-//		Integer level = checkUnspscLevel(new Long(unspscObj.getUnspscCode()));
-//
-//		log.info("level:" + level);
-//
-//		if (level == 0) {
-//
-//			log.info("***********0000****************");
-//			reqDTO.setParentCode(unspscObj.getUnspscCode());
-//			CodificationResDTO familyDTO = unspscSO.searchFamily(reqDTO);
-//
-//			this.getManagedBean().setUnspscPopUpList(familyDTO.getFamilyList());
-//
-//			this.getManagedBean().setSegmentCode(unspscObj.getUnspscCode());
-//			this.getManagedBean().setSegmentTitle(unspscObj.getUnspscTitle());
-//			this.getManagedBean().setSegmentTitleEng(unspscObj.getUnspscTitleEng());
-//
-//		} else if (level == 1) {
-//			log.info("***********11111****************");
-//			reqDTO.setParentCode(unspscObj.getUnspscCode());
-//			CodificationResDTO ClassDTO = unspscSO.searchClass(reqDTO);
-//
-//			this.getManagedBean().setUnspscPopUpList(ClassDTO.getClassList());
-//
-//			this.getManagedBean().setFamilyCode(unspscObj.getUnspscCode());
-//			this.getManagedBean().setFamilyTitle(unspscObj.getUnspscTitle());
-//			this.getManagedBean().setFamilyTitleEng(unspscObj.getUnspscTitleEng());
-//
-//			String segmentCode = getParentCode(new Long(unspscObj.getUnspscCode()));
-//
-//			reqDTO.setUnspscCode(segmentCode);
-//			CodificationResDTO segmentDTO = unspscSO.searchUnspscObj(reqDTO);
-//
-//			this.getManagedBean().setSegmentCode(segmentDTO.getUnspscObj().getUnspscCode());
-//			this.getManagedBean().setSegmentTitle(segmentDTO.getUnspscObj().getUnspscTitle());
-//			this.getManagedBean().setSegmentTitleEng(segmentDTO.getUnspscObj().getUnspscTitleEng());
-//
-//		} else if (level == 2) {
-//			log.info("***********222****************" + unspscObj.getUnspscCode());
-//			reqDTO.setParentCode(unspscObj.getUnspscCode());
-//			CodificationResDTO CommodityDTO = unspscSO.searchCommodity(reqDTO);
-//
-//			this.getManagedBean().setUnspscPopUpList(CommodityDTO.getCommodityList());
-//
-//			this.getManagedBean().setClassCode(unspscObj.getUnspscCode());
-//			this.getManagedBean().setClassTitle(unspscObj.getUnspscTitle());
-//			this.getManagedBean().setClassTitleEng(unspscObj.getUnspscTitleEng());
-//
-//			String familyCode = getParentCode(new Long(unspscObj.getUnspscCode()));
-//			log.info("familyCode:" + familyCode);
-//			reqDTO.setUnspscCode(familyCode);
-//			CodificationResDTO familyDTO = unspscSO.searchUnspscObj(reqDTO);
-//
-//			this.getManagedBean().setFamilyCode(familyDTO.getUnspscObj().getUnspscCode());
-//			this.getManagedBean().setFamilyTitle(familyDTO.getUnspscObj().getUnspscTitleEng());
-//			this.getManagedBean().setFamilyTitleEng(familyDTO.getUnspscObj().getUnspscTitleEng());
-//
-//			String segmentCode = getParentCode(new Long(familyDTO.getUnspscObj().getUnspscCode()));
-//			log.info("segmentCode:" + segmentCode);
-//			reqDTO.setUnspscCode(segmentCode);
-//			CodificationResDTO segmentDTO = unspscSO.searchUnspscObj(reqDTO);
-//
-//			this.getManagedBean().setSegmentCode(segmentDTO.getUnspscObj().getUnspscCode());
-//			this.getManagedBean().setSegmentTitle(segmentDTO.getUnspscObj().getUnspscTitle());
-//			this.getManagedBean().setSegmentTitleEng(segmentDTO.getUnspscObj().getUnspscTitleEng());
-//
-//		}else if (level == 3) {
+
 			reqDTO.setUnspscCode(unspscObj.getUnspscCode());
 			CodificationResDTO resDTO = unspscSO
 					.retrieveUNSPSCByCommodityCode(reqDTO);
@@ -862,77 +697,12 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 				this.getManagedBean().setSegmentTitleEng(
 						commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc()
 						.getUnspscTitleEng());
-
-			}
-		Collections.sort(resDTO.getCommodityObj().getCmBrand(), new Comparator<CmBrand>() {
-		    @Override
-		    public int compare(CmBrand t1, CmBrand t2) {
-		        return compareFirstChoice(t1.getBrandCode(), t2.getBrandCode(), t1.getBrandName().trim().compareToIgnoreCase(t2.getBrandName().trim()));
-		    }
-		});
-		Collections.sort(resDTO.getCommodityObj().getCmType(), new Comparator<CmType>() {
-		    @Override
-		    public int compare(CmType t1, CmType t2) {
-		        return compareFirstChoice(t1.getTypeCode(), t2.getTypeCode(), t1.getTypeName().trim().compareToIgnoreCase(t2.getTypeName().trim()));
-		    }
-		});
-		Collections.sort(resDTO.getCommodityObj().getCmMeasurement(), new Comparator<CmMeasurement>() {
-		    @Override
-		    public int compare(CmMeasurement t1, CmMeasurement t2) {
-		        return compareFirstChoice(t1.getMeasurementCode(), t2.getMeasurementCode(), t1.getMeasurementName().trim().compareToIgnoreCase(t2.getMeasurementName().trim()));
-		    }
-		});
-		
-		for (CmBrand brand : resDTO.getCommodityObj().getCmBrand()) {
-			if (!StringUtils.isBlank(brand.getBrandName()) && brand.getRecordStatusFlg() ==1) {
-				this.getManagedBean()
-				.getBrandCriteria()
-				.add(new SelectItem(brand.getBrandId(), brand
-						.getBrandName()));
-			}
-		}
-
-		for (CmType type : resDTO.getCommodityObj().getCmType()) {
-			if (!StringUtils.isBlank(type.getTypeName()) && type.getRecordStatusFlg() ==1) {
-				this.getManagedBean()
-				.getTypeCriteria()
-				.add(new SelectItem(type.getTypeId(), type
-						.getTypeName()));
-			}
-		}
-
-		for (CmMeasurement measurement : resDTO.getCommodityObj()
-				.getCmMeasurement()) {
-			if (!StringUtils.isBlank(measurement.getMeasurementName()) && measurement.getRecordStatusFlg()==1) {
-				this.getManagedBean()
-				.getMeasurementCriteria()
-				.add(new SelectItem(measurement.getMeasurementId(),
-						measurement.getMeasurementName()));
-			}
-		}
-
-		resDTO = unspscSO.searchColor(reqDTO);
-		Collections.sort(resDTO.getColorList(), new Comparator<CmColor>() {
-		    @Override
-		    public int compare(CmColor t1, CmColor t2) {
-		        return compareFirstChoice(t1.getColorCode(), t2.getColorCode(), t1.getColorName().trim().compareToIgnoreCase(t2.getColorName().trim()));
-		    }
-		});
-		for (CmColor color : resDTO.getColorList()) {
-			if (!StringUtils.isBlank(color.getColorName()) && color.getRecordStatusFlg()==1) {
-				this.getManagedBean()
-				.getColorCriteria()
-				.add(new SelectItem(color.getColorId(), color
-						.getColorName()));
-		}
-			
-		this.getManagedBean().getExtensionSearchItemDataModel().reloadData();
-		this.getManagedBean().getExtensionSearchItemDataModel().resetData();
-		this.getManagedBean().getColorFilterBean().setSearchValue("");
-		this.getManagedBean().getTypeFilterBean().setSearchValue("");
-		this.getManagedBean().getMeasurementFilterBean().setSearchValue("");
-		this.getManagedBean().getBrandFilterBean().setSearchValue("");
-		
+				
+       
+		this.getManagedBean().setData("t");
+		this.getExtensionAttributeSearchData().resetData();
+		this.getManagedBean().setDisableSelectBtn(false);
+		rowSelectChangeStatus();
 		}
 		return "optionExtensionCodeMaintenance.xhtml?faces-redirect=true";
 	}
@@ -940,9 +710,8 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 		
 	// * End
 
-	// azza//
 
-	public void SubmitUpdateData() {
+	public String SubmitUpdateData() {
 
 		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",
 				ICodificationSO.class);
@@ -978,7 +747,7 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
 							MessageConst.ERROR_715050, MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale())));
-			return;
+			return null;
 
 		} else {
 			
@@ -1016,7 +785,7 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
 							MessageConst.ERROR_715050, MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale())));
-			return;
+			return null;
 
 		} else {
 			
@@ -1055,7 +824,7 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
 							MessageConst.ERROR_715050, MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale())));
-			return;
+			return null;
 
 		} else {
 
@@ -1093,7 +862,7 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
 							MessageConst.ERROR_715050, MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale())));
-			return;
+			return null;
 
 		} else {
 			
@@ -1124,20 +893,22 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 		}
 		
 		
-		FacesContext.getCurrentInstance().addMessage(
-				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
-								MessageConst.INFO_710023, MessageUtils.BUNDLE_COMMON_MESSAGES,
-						new FacesScopes().getUserLocale())));
+		renewSesionObject(); 
 		
-		this.getManagedBean().setEditMode(true);
-		this.getManagedBean().setEditModeFamily(true);
-		this.getManagedBean().setEditModeClass(true);
-
-				
-		return;
+		FacesMessage fm = new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+			MessageConst.INFO_710023, MessageUtils.BUNDLE_COMMON_MESSAGES,
+     		new FacesScopes().getUserLocale()));	
+		    FacesContext context = FacesContext.getCurrentInstance();
+		    context.getExternalContext().getFlash().setKeepMessages(true);
+		    context.addMessage(null, fm);
 		
+	  	FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), null,  CommonUIConst.ACKNOWLEDGE_PAGE);
+	  	
+		return null;			
+	
 	 }	
+	
+	
 
 
 
@@ -1160,13 +931,41 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 
 	}
 	
-	
-	
-	private class ExtensionSearchItemDataModel extends
-	PagingDataModel<Object[]> {
+	public SearchFilterBean getNameFilterBean() {
+		return nameFilterBean;
+	}
 
-		public ExtensionSearchItemDataModel() {
-			super("unspscTableID");
+	public void setNameFilterBean(SearchFilterBean nameFilterBean) {
+		this.nameFilterBean = nameFilterBean;
+	}
+	
+	public SearchFilterBean getStatusExtensionFilterBean() {
+		return statusExtensionFilterBean;
+	}
+
+	public void setStatusExtensionFilterBean(SearchFilterBean statusExtensionFilterBean) {
+		this.statusExtensionFilterBean = statusExtensionFilterBean;
+	}
+	
+	
+	public IPagingDataModel<Object[]> getExtensionAttributeSearchData() {
+		return extensionAttributeSearchData;
+	}
+
+	public void setExtensionAttributeSearchData(
+			IPagingDataModel<Object[]> extensionAttributeSearchData) {
+		this.extensionAttributeSearchData = extensionAttributeSearchData;
+	}
+	
+
+
+	private class ExtensionAttributeSearchData extends
+	PagingDataModel<Object[]> {
+		
+		private static final long serialVersionUID = 1L;
+
+		public ExtensionAttributeSearchData() {
+			super("extensionAttributeTableID");
 		}
 
 		@Override
@@ -1174,16 +973,13 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 				ISearchBean<Object[]> searchBean) {
 
 
-//			if (StringUtils.isBlank((String) colorFilterBean.getSearchValue())
-//					&& StringUtils.isBlank((String) typeFilterBean.getSearchValue())
-//					&& StringUtils.isBlank((String) brandFilterBean.getSearchValue())
-//					&& StringUtils.isBlank((String) measurementFilterBean.getSearchValue())) {
-//				return new SearchResultBean();
-//			}
 
-
-			System.out.println("........search extension combination 11.................");
+			System.out.println("........search extension.................");
 			log.info("Unspsc Code:"+ getManagedBean().getSelectedUNSPSCObj().getUnspscCode());
+			
+			
+			CodificationMaintenanceBackingBean bb = new CodificationMaintenanceBackingBean();
+
 
 			ICodificationSO codificationSO = null;
 			CodificationResDTO resDTO = null;
@@ -1197,108 +993,137 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 								ICodificationSO.class);
 
 				CodificationReqDTO reqDTO = new CodificationReqDTO();
-				reqDTO.setExtSearchBean(searchBean);
-
-				reqDTO.setUnspscCode(getManagedBean().getSelectedUNSPSCObj()
-						.getUnspscCode());
 				
+				
+				if (getManagedBean().getstatus() != null) {
+					log.info("*********statusFilterBean***********" + getManagedBean().getstatus());
+					statusExtensionFilterBean.setSearchField("b.record_status");
+					statusExtensionFilterBean.setSearchValue(getManagedBean().getstatus());
+					searchBean.getDataFilterBeans().add(statusExtensionFilterBean);
+				}
+				
+
+				System.out.println("this.getSortField():" + this.getSortField());
+				if (getManagedBean().getData() == "t"){
+				if (this.getSortField() == null) {
+					SearchOrderBean orderBean = new SearchOrderBean("type_code", true);
+
+					searchBean.getSortColumns().add(orderBean);
+				}
+			}else if (getManagedBean().getData() == "b"){
+				if (this.getSortField() == null) {
+					SearchOrderBean orderBean = new SearchOrderBean("brand_code", true);
+
+					searchBean.getSortColumns().add(orderBean);
+				}
+			}else if (getManagedBean().getData() == "m"){
+				if (this.getSortField() == null) {
+					SearchOrderBean orderBean = new SearchOrderBean("measurement_code", true);
+
+					searchBean.getSortColumns().add(orderBean);
+				}
+			}else if (getManagedBean().getData() == "c"){
+				if (this.getSortField() == null) {
+					SearchOrderBean orderBean = new SearchOrderBean("color_code", true);
+
+					searchBean.getSortColumns().add(orderBean);
+				}
+			}
+				
+
+				reqDTO.setSsearchBeanTypeearchBeanType(searchBean);
+				reqDTO.setUnspscCode(getManagedBean().getSelectedUNSPSCObj().getUnspscCode());
+				reqDTO.setExtensionName(getManagedBean().getExtension());
+				reqDTO.setExtension(getManagedBean().getData());
+				
+				
+
+				resDTO = codificationSO.searchUnspscObj(reqDTO);
+				
+				if (resDTO.getUnspscObj() != null) {
+					
+					log.info(" unspsc id " + resDTO.getUnspscObj().getUnspscId());
+					
+					reqDTO.setUnspscId(resDTO.getUnspscObj().getUnspscId());
+				}
 			
 				
-				
-//				System.out.println("colorFilterBean.getSearchValue():"+colorFilterBean.getSearchValue());
-//				if (StringUtils.isNotBlank((String) colorFilterBean
-//						.getSearchValue())) {
-//					reqDTO.setColorId(Long.valueOf(colorFilterBean
-//							.getSearchValue().toString()));
-//				}
-//
-//				System.out.println("typeFilterBean.getSearchValue()"+ typeFilterBean.getSearchValue());
-//				if (StringUtils.isNotBlank((String) typeFilterBean
-//						.getSearchValue())) {
-//					reqDTO.setTypeId(Long.valueOf(typeFilterBean
-//							.getSearchValue().toString()));
-//
-//				}
-//
-//				if (StringUtils.isNotBlank((String) brandFilterBean
-//						.getSearchValue())) {
-//					reqDTO.setBrandId(Long.valueOf(brandFilterBean
-//							.getSearchValue().toString()));
-//
-//				}
-//
-//				if (StringUtils.isNotBlank((String) measurementFilterBean
-//						.getSearchValue())) {
-//					reqDTO.setMeasurementId(Long.valueOf(measurementFilterBean
-//							.getSearchValue().toString()));
-//				}
 				System.out.println("*********in********");
+				
 				resDTO = codificationSO.SearchExtensionType(reqDTO);
+				
+						
+				Map tempMap = new HashMap();
+				for (int i = 0; i < resDTO.getResulttypeBeanType().getResultList().size(); i++) {
+					Object[] objects = (Object[]) resDTO.getResulttypeBeanType().getResultList().get(i);
+					
+					log.info(" objects " + String.valueOf(objects[0]) + String.valueOf(objects[1]) + String.valueOf(objects[2]) + String.valueOf(objects[3]));
+					
+				     bb.getManagedBean().setStatusextension(String.valueOf(objects[4]));
+					
+					tempMap.put(objects, objects);
+				}
 
+				
+				if (resDTO != null) {	
+					
+					log.info("*************End*****************");
+					return resDTO.getResulttypeBeanType();
+				}
+				
 			} catch (Exception e) {
 				e.printStackTrace();
-			} finally {
-				codificationSO = null;
-			}
-			if (resDTO != null) {
-				return resDTO.getResultBeanType();
-			}
+			} 
 			return null;
 		}
 
 	}
-	
-	public String data = "";
-
-	   public String getData() {
-	      return data;
-	   }
-
-	   public void setData(String data) {
-	      this.data = data;
-	   }
-	   
-		public String status = "0";
-
-		   public String getstatus() {
-		      return status;
-		   }
-
-		   public void setStatus(String status) {
-		      this.status = status;
-		   }
-	   
 	   
 	   /**
 		 * reset action after change search plan type
 		 * 
 		 * @param paramCode
 		 */
-		public void changeSearchPlanType(String data){
-			if(data != null){
-				log.info("DataType" + data);
-				this.getManagedBean().getExtensionSearchItemDataModel().reloadData();
+
+		
+		public void changeSearchPlanType(String data) {
+			log.info("++++++++changeSearchPlanType++++++" + data);
+			
+				if(data == "t"){
+					System.out.println("typeextension " +  data);
+				}else if(data == "b"){
+					System.out.println("typeextension " +  data);
+				}else if(data == "m"){
+					System.out.println("typeextension " +  data);
+				}else if(data == "c"){
+					System.out.println("typeextension " +  data);
+				}
 			}
-		}
 		
 		
 		public String unspscSearchPortal(CmUnspsc unspscObj) {
 			
 			this.getManagedBean().setAutoCompleteUnspscCode(unspscObj);	
 	
-			this.getManagedBean().getSearchDataModel().reloadData();
+			this.getSearchDataModel().reloadData();
 			
 			System.out.println("NAV_TO_CODIFICATION_MAINTENANCE");
 			return NAV_TO_CODIFICATION_MAINTENANCE + "?faces-redirect=true";
-				
+					
 		}
 		
 		
 		public void unspscPopUpSearch(CmUnspsc obj) {
+			
+			this.getManagedBean().setClassCode(null);
+			this.getManagedBean().setClassTitle(null);
 
-			this.getManagedBean().setAutoCompleteUnspscCode(null);
-			this.getManagedBean().setTitleFilterBean(null);
-			resetAction();	
+			this.getManagedBean().setFamilyCode(null);
+			this.getManagedBean().setFamilyTitle(null);
+
+			this.getManagedBean().setSegmentCode(null);
+			this.getManagedBean().setSegmentTitle(null);
+			
 
 			ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
 					.getInstance().getServiceObject("cm", ICodificationSO.class);
@@ -1374,11 +1199,332 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 				
 			
 			}
+			
 		}
 		
+		
+		public void goToAddServiceConfirmPopUp(CmUnspsc unspscObj) {
+			// set commodity
+			System.out
+			.println("...............goToAddServiceConfirmPopUp..............");
+			log.info("..............unspscObj.getUnspscCode()="
+					+ unspscObj.getUnspscCode());
+			this.getManagedBean().setSelectedUNSPSCObj(unspscObj);
+			
+		}
+				
+		
+		/**
+		 * get record status options
+		 * 
+		 * @return SelectItem[]
+		 * 
+		 */
+		
+		
+		public static SelectItem[] getStatusOptionsDefault() {
+			CodificationMaintenanceBackingBean bb = new CodificationMaintenanceBackingBean();
+			
+			SelectItem[] items = new SelectItem[3];
+			items[0] = new SelectItem(bb.RECORD_STATUS_NULL,
+					ResourceBundleUtils.getMessage("lbl.cm.selectOne",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()));
+			items[1] = new SelectItem(DbValueConst.RECORD_STATUS_ACTIVE,
+					ResourceBundleUtils.getMessage("lbl.cm.active",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()));
+			items[2] = new SelectItem(DbValueConst.RECORD_STATUS_DELETED,
+					ResourceBundleUtils.getMessage("lbl.cm.inactive",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()));
+			return items;
+		}
+		
+		
+		public static SelectItem[] getStatusExtensionOptionsDefault() {
+			SelectItem[] items = new SelectItem[2];
+			items[0] = new SelectItem(DbValueConst.RECORD_STATUS_ACTIVE,
+					ResourceBundleUtils.getMessage("lbl.cm.active",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()));
+			items[1] = new SelectItem(DbValueConst.RECORD_STATUS_SUSPENDED,
+					ResourceBundleUtils.getMessage("lbl.cm.inactive",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()));
+			return items;
+		}
+		
+		public static SelectItem[] getStatusExtensionDefault() {
+			
+		CodificationMaintenanceBackingBean bb = new CodificationMaintenanceBackingBean();
+	
+			
+			SelectItem[] items = new SelectItem[4];
+			items[0] = new SelectItem(bb.EXTENSION_TYPE,
+					ResourceBundleUtils.getMessage("lbl.cm.type",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()));
+			items[1] = new SelectItem(bb.EXTENSION_BRAND,
+					ResourceBundleUtils.getMessage("lbl.cm.brand",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()));
+			items[2] = new SelectItem(bb.EXTENSION_MEASUREMENT,
+					ResourceBundleUtils.getMessage("lbl.cm.measurement",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()));
+			items[3] = new SelectItem(bb.EXTENSION_COLOR,
+					ResourceBundleUtils.getMessage("lbl.cm.color",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()));
+			return items;
+		}
+		
+		
+		/**
+		 * get Status options
+		 * 
+		 * @return SelectItem[]
+		 */
+		public SelectItem[] getStatusOptions() {
+			log.info("getStatusOptions");
+			return CodificationMaintenanceBackingBean.getStatusOptionsDefault();
+		}
+		
+		public SelectItem[] getExtensionOptions() {
+			log.info("getExtensionOptions");
+			return CodificationMaintenanceBackingBean.getStatusExtensionDefault();
+		}
+		
+		
+		public SelectItem[] getStatusExtensionOptions(String SelectItem) {
+			log.info("getStatusExtensionOptions");
+			return CodificationMaintenanceBackingBean.getStatusExtensionOptionsDefault();
+		}
+	
+		
+		
+		//Submit button to update status for extension type..START
+		
+		public void SubmitUpdateStatusExtension(){
 
+		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm", ICodificationSO.class);
+			
+		CodificationReqDTO reqDTO = new CodificationReqDTO();
+
+		CodificationResDTO resDTO = null;
+		
+		log.info("Data Type " + this.getManagedBean().getData());
+		
+		if(this.getManagedBean().getData().equals("t")){
+	
+		for (int i = 0; i < getManagedBean().getUpdatedStatus().size(); i++) {
+		    Object[] objects = (Object[]) getManagedBean().getUpdatedStatus().get(i);
+		     
+			reqDTO.setTypeId(Long.parseLong(objects[2].toString()));
+			reqDTO.setUnspscId(Long.parseLong(objects[0].toString()));
+			
+				
+				resDTO = unspscSO.searchCmTypeObj(reqDTO);
+				
+				
+				if (resDTO.getCmType()!= null){
+					
+				 System.out.println("search " + resDTO.getCmType().getTypeId());
+							
+			     Integer result = Integer.valueOf(this.getManagedBean().getstatusextension());
+			     
+			     
+					
+				resDTO.getCmType().setRecordStatusFlg(result);
+				resDTO.getCmType().getTypeId();
+				resDTO.getCmType().getTypeCode();
+					
+				log.info("Type id for CmType " + resDTO.getCmType().getTypeId());
+				
+				
+				reqDTO.getExtensionStatusList().add(resDTO.getCmType());
+			    
+			}
+		}
+		
+		    log.info("------ start to update ------");
+		  
+		   resDTO = unspscSO.updateTypeExtensionStatus(reqDTO);
+		 	 
+	}
+		if(this.getManagedBean().getData().equals("b")){
+				
+			for (int i = 0; i < getManagedBean().getUpdatedStatus().size(); i++) {
+			    Object[] objects = (Object[]) getManagedBean().getUpdatedStatus().get(i);
+			     
+				reqDTO.setBrandId(Long.parseLong(objects[2].toString()));
+				reqDTO.setUnspscId(Long.parseLong(objects[0].toString()));
+				
+					
+					resDTO = unspscSO.searchCmBrandObj(reqDTO);
+					
+					
+					if (resDTO.getCmBrand()!= null){
+						
+					 System.out.println("search " + resDTO.getCmBrand().getBrandId());
+								
+				     Integer result = Integer.valueOf(this.getManagedBean().getstatusextension());
+				     
+				     
+						
+					resDTO.getCmBrand().setRecordStatusFlg(result);
+					resDTO.getCmBrand().getBrandId();
+					resDTO.getCmBrand().getBrandCode();
+						
+					log.info("Brand id for CmBrand " + resDTO.getCmBrand().getBrandId());
+					
+					
+					reqDTO.getBrandExtensionStatusList().add(resDTO.getCmBrand());
+				    
+				}
+			}
+			
+			  log.info("------ start to update Brand ------");
+			  
+			 resDTO = unspscSO.updateBrandExtensionStatus(reqDTO);
+			  
+        }
+
+		if(this.getManagedBean().getData().equals("m")){
+			
+		for (int i = 0; i < getManagedBean().getUpdatedStatus().size(); i++) {
+		    Object[] objects = (Object[]) getManagedBean().getUpdatedStatus().get(i);
+		     
+			reqDTO.setMeasurementId(Long.parseLong(objects[2].toString()));
+			reqDTO.setUnspscId(Long.parseLong(objects[0].toString()));
+			
+				
+				resDTO = unspscSO.searchCmMeasurementObj(reqDTO);
+				
+				
+				if (resDTO.getCmMeasurement()!= null){
+					
+				 System.out.println("search " + resDTO.getCmMeasurement().getMeasurementId());
+							
+			     Integer result = Integer.valueOf(this.getManagedBean().getstatusextension());
+			     
+			     
+					
+				resDTO.getCmMeasurement().setRecordStatusFlg(result);
+				resDTO.getCmMeasurement().getMeasurementId();
+				resDTO.getCmMeasurement().getMeasurementCode();
+					
+				log.info("Measurement id for CmMeasurement " + resDTO.getCmMeasurement().getMeasurementId());
+				
+				
+				reqDTO.getMeasurementExtensionStatusList().add(resDTO.getCmMeasurement());
+			    
+			}
+		}
+		
+		  log.info("------ start to update measurment ------");
+		  
+		 resDTO = unspscSO.updateMeasurementExtensionStatus(reqDTO);
+		 
+	   } 
+		   if(this.getManagedBean().getData().equals("c")){
+				
+			for (int i = 0; i < getManagedBean().getUpdatedStatus().size(); i++) {
+			    Object[] objects = (Object[]) getManagedBean().getUpdatedStatus().get(i);
+			     
+				reqDTO.setColorId(Long.parseLong(objects[2].toString()));
+				
+					
+					resDTO = unspscSO.searchCmColorObj(reqDTO);
+					
+					
+					if (resDTO.getCmColor()!= null){
+						
+					 System.out.println("search " + resDTO.getCmColor().getColorId());
+								
+				     Integer result = Integer.valueOf(this.getManagedBean().getstatusextension());
+				     
+				     
+						
+					resDTO.getCmColor().setRecordStatusFlg(result);
+					resDTO.getCmColor().getColorId();
+					resDTO.getCmColor().getColorCode();
+						
+					log.info("Color id for CmColor " + resDTO.getCmColor().getColorId());
+					
+					
+					reqDTO.getColorExtensionStatusList().add(resDTO.getCmColor());
+				    
+				}
+			}
+			
+			  log.info("------ start to update color ------");
+			  
+			 resDTO = unspscSO.updateColorExtensionStatus(reqDTO);
+		   }
+		   	 	
+				renewSesionObject(); 
+						
+				FacesMessage fm = new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+					MessageConst.INFO_710024, MessageUtils.BUNDLE_COMMON_MESSAGES,
+		     		new FacesScopes().getUserLocale()));	
+				    FacesContext context = FacesContext.getCurrentInstance();
+				    context.getExternalContext().getFlash().setKeepMessages(true);
+				    context.addMessage(null, fm);
+				
+			  	FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), null,  CommonUIConst.ACKNOWLEDGE_PAGE);			
+	}
+				
+		
+		public void initRefreshPageNoFlag(){
+			
+			if(this.getManagedBean().isRefreshPageNoFlag()){
+				System.out.println("****************************");
+				PagingDataModel paging = new ExtensionAttributeSearchData();
+				paging.setPageNo(0);
+				
+				this.getExtensionAttributeSearchData().resetData();
+				this.getManagedBean().setRefreshPageNoFlag(false);
+				System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+			}
+		}
+		
+		public void reset(){
+			
+			this.setTitleFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value()));
+			this.setCodeFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value()));
+			this.setSearchDataModel(new SearchPagingDataModel());
+			this.getManagedBean().setAutoCompleteUnspscCode(null);
+			
+		}
+		
+	public void resetExtension(){
+		
+		   log.info("reset Extension Data");
+		
+		    this.getManagedBean().setData("t");
+		    this.getManagedBean().setExtension(null);
+		    this.getManagedBean().setStatus(
+					ResourceBundleUtils.getMessage("lbl.cm.selectOne",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()));
+			extensionAttributeSearchData.resetData();
+			
+		}
+	
+	
+	public void rowSelectChangeStatus() {
+        System.out.println(this.getManagedBean().getUpdatedStatus().size());
+        if (this.getManagedBean().getUpdatedStatus().size() > 0) {
+        	this.getManagedBean().setDisableSelectBtn(false);
+            System.out.println("rowSelect is Enable Button !!:"+ this.getManagedBean().isDisableSelectBtn());
+        } else if (this.getManagedBean().getUpdatedStatus().size() == 0 || this.getManagedBean().getUpdatedStatus().size() < 0) {
+        	this.getManagedBean().setDisableSelectBtn(true);
+            System.out.println("unSelectRow is Disable Button !!:"+ this.getManagedBean().isDisableSelectBtn());
+        }
+    }
 }
-
 
 
 // end
