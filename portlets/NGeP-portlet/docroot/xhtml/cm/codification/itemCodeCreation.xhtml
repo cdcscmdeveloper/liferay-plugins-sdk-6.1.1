@@ -31,7 +31,7 @@
 					</p:commandButton></td>
 			<td style="text-align: right"><p:commandButton	
 			         value="#{lbl['lbl.cm.create.publish']}"
-                     onclick="groupCreatePublish.show()">
+                     onclick="createItem.show()">
               </p:commandButton>
 				  </td>
 				</tr>
@@ -181,26 +181,14 @@
 
 			</p:panel>
 			
-			 <p:confirmDialog                
-		           style="font-size:14px;height:20px"
-		           header="#{lbl['lbl.cm.dialog.cofirm.header']}" 
-		            icon="pi-question-circle"
-                   message="#{lbl['lbl.cm.dialog.message']}" 
-                   showEffect="fade"
-                   hideEffect="fade" 
-                   widgetVar="groupCreatePublish">
-        <div style="text-align: right;">
-            <p:commandButton 
-                     value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
-                     action="#{itemCodeCreationBackingBean.addNewUnspsc}"
-                     oncomplete="groupCreatePublish.hide()" 
-                     update=":form"/>
-            <p:commandButton
-                     value="#{lbl['lbl.btn.no']}"
-                     oncomplete="groupCreatePublish.hide()"/>
-                     </div>
-        </p:confirmDialog>
 			
+			<ac:confirmationPopup id="createItem" widget="createItem"
+				okAction="itemCodeCreationBackingBean.addNewUnspsc()"
+				width="400" height="100"
+				title="#{lbl['lbl.cm.dialog.cofirm.header']}"
+				content="#{lbl['lbl.cm.dialog.message']}"
+				update=":form"
+				oncomplete="createItem.hide();"/>
 			</h:panelGroup>
 
 	</ui:define>
