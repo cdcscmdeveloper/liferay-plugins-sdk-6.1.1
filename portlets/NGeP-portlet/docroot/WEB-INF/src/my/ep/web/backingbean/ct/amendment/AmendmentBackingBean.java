@@ -5844,7 +5844,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						CtDisciplinaryAction ctDisciplinaryActions = new CtDisciplinaryAction();
 						ctDisciplinaryActions.setApprove(false);
 						ctDisciplinaryActions.setApproveFlag(0);
-						ctDisciplinaryActions.setJustification("");
+						ctDisciplinaryActions.setJustification(null);
 						ctDisciplinaryActions.setCtContractVer(ctBackingBean.getManagedBean().getContractVer());
 						
 						ctBackingBean.getManagedBean().getContractVer().setCtDisciplinaryActions(ctDisciplinaryActions);
@@ -5955,8 +5955,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				throw new EpException(MessageConst.ERROR_770045, new String[] { e.getMessage() });
 			}
 		}	
-				
-		@SuppressWarnings("null")
+
 		public void setDisciplinaryDecisionValue() {
 			ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().setApproveFlag(0);
 			ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().setApprove(false);
