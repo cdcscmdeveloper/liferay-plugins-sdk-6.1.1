@@ -10363,5 +10363,19 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			}
 		}
 	}
+	//SSM INTEGRATION #27089
+		public void getMinDate(Date startDate,CmStandardPricing stdPrice){
+			if(startDate==null){
+				this.getManagedBean().setMinDate(this.getManagedBean().getCurrentDate());
+			}else{
+				Calendar c = new GregorianCalendar();
+				c.setTime(startDate);
+				c.add(Calendar.DATE, 1);
+				this.getManagedBean().setMinDate(c.getTime());
+			}
+			if(stdPrice != null){
+				onDateSelectListener(stdPrice);
+			}
+		}
 	
 }
