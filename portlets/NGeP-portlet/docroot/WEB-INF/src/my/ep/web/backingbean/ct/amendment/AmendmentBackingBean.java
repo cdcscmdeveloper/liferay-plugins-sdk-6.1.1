@@ -2759,16 +2759,24 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						&& getManagedBean().isPbConfirmMeeting()){
 					getManagedBean().setSelectedTabIndex(index + 2);					
 				}
-				
+				//#27409 - Start
 				if ((getManagedBean().isSignUpdateDecision() || getManagedBean().isSignOffDecision()) 
 						&& outputValue.equalsIgnoreCase("DCN")) {
 					getManagedBean().setConfirmMeeting(true);
-					if (getManagedBean().isPbConfirmMeeting()) {
-						getManagedBean().setSelectedTabIndex(index + 2);
-					} else {
-						getManagedBean().setSelectedTabIndex(index + 1);
-					}
+					log.info("Cek Tab Decision "+index + 2);
+					if (getManagedBean().isPbConfirmMeeting()){
+						if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
+								|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isBondReq() ) {
+					getManagedBean().setSelectedTabIndex(index + 3);
+				} else {
+					getManagedBean().setSelectedTabIndex(index + 2);
 				}
+			}else{
+				getManagedBean().setSelectedTabIndex(index + 1);
+		}
+							
+				}
+				//#27409 - End
 				
 				if (isApproverSetting() && !getManagedBean().isPrepareLOA()
 						&& outputValue.equalsIgnoreCase("SE")) {
