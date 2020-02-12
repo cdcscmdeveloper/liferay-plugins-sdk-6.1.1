@@ -1381,28 +1381,29 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						setTabValue("PB");
 						throwExceptions(MessageConst.ERROR_100022, "lbl.ct.pb.ref.letter");
 					} 
-				}//End for loop				 
-
-				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+				}//End for loop		
+				
+				/** Enhancement #24333: New Rules Changes to Original Bond**/
+				if ((action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))
+						&& (ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt() != null)) {
 					DecimalFormat df = new DecimalFormat("#.00");
-
+					
 					if (ctBB.getManagedBean().getCtContractAmount().getTotalBondAmt() == null) {
 						setTabValue("PB");
 						throw new EpException(MessageConst.ERROR_750021);
 					} else {
-						double oriBondAmount = 0;
-						for(CtContractAmount oriBondAmountList : ctBB.getManagedBean().getContractVer().getCtContractAmounts()){							 
-						bondAmount = Double.valueOf(df.format(bondAmount));
-						/** Enhancement #24333: New Rules Changes to Original Bond**/
+						double oriBondAmount = 0.0;
 						if(ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt() != null){
 							oriBondAmount = Double.valueOf(df.format(
-									ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt()));
-						}else{
-							oriBondAmount = Double.valueOf(df.format(
-									oriBondAmountList.getTotalBondAmt()));
+									ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt().doubleValue()));
+						}
+						for(CtContractAmount oriBondAmountList : ctBB.getManagedBean().getContractVer().getCtContractAmounts()){					
+						if(oriBondAmountList.getTotalBondAmt() != null){
+							bondAmount = Double.valueOf(df.format(
+									oriBondAmountList.getTotalBondAmt().doubleValue()));
 							}						
 						}
-						int retval = Double.compare(bondAmount , oriBondAmount);
+						int retval = Double.compare(oriBondAmount , bondAmount);
 						/** Enhancement #20025: Changes for GST in Contract Management
 						if (retval >0) {
 							setTabValue("PB");
