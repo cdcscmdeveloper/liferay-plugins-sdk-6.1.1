@@ -133,7 +133,7 @@
 		<p:dataTable id="typeTableID" tableStyleClass = "fixedTable"  emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"  lazy="true"
 		   value="#{codificationMaintenanceBackingBean.extensionAttributeSearchData}" var="cmunspsc"
 		   selection="#{codificationMaintenanceBackingBean.managedBean.updatedStatus}" rowKey="#{cmunspsc[0]}"
-		   rows="10" style="width:450px;">
+		   rows="10" style="width:650px;">
 		   
 		     <p:ajax event="rowSelectCheckbox" listener="#{codificationMaintenanceBackingBean.rowSelectChangeStatus}" update=":form:btnSelect"/>
           	 <p:ajax event="rowUnselectCheckbox" listener="#{codificationMaintenanceBackingBean.rowSelectChangeStatus}" update=":form:btnSelect"/>
@@ -148,16 +148,16 @@
 					<f:facet name="header">
 					<c:choose>
 					<c:when test="#{codificationMaintenanceBackingBean.managedBean.data eq 't'}">
-							<h:outputLabel value="#{lbl['lbl.cm.type']}"/>
+						#{lbl['lbl.cm.type']}
 					</c:when>
 					<c:when test="#{codificationMaintenanceBackingBean.managedBean.data eq 'b'}">
-							<h:outputLabel value="#{lbl['lbl.cm.brand']}"/>
+						#{lbl['lbl.cm.brand']}
 				    </c:when>
 				    <c:when test="#{codificationMaintenanceBackingBean.managedBean.data eq 'm'}">
-							<h:outputLabel value="#{lbl['lbl.cm.measurement']}"/>
+						#{lbl['lbl.cm.measurement']}
 				    </c:when>
 					<c:otherwise>
-						<h:outputLabel value="#{lbl['lbl.cm.color']}" />
+					    #{lbl['lbl.cm.color']}
 					</c:otherwise>
 				</c:choose>
 				</f:facet>
