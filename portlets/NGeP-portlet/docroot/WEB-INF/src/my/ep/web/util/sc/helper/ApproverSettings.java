@@ -1,4 +1,4 @@
-package my.ep.web.util.cm.helper;
+package my.ep.web.util.sc.helper;
 
 import java.util.ArrayList;
 import java.util.List;
