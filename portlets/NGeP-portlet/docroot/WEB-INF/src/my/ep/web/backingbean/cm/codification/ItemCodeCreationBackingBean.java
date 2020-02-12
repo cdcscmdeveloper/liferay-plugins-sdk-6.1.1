@@ -455,4 +455,8 @@ public class ItemCodeCreationBackingBean extends BaseBackingBean<UnspscCodeManag
 
 	}
 	
+	public void backToCodificationPortal() {
+	renewSesionObject(); 
+	FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), null,  "codificationMaintenance.xhtml?faces-redirect=true");			
+	}
 }
