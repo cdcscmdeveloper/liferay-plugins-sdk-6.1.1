@@ -22,8 +22,12 @@ import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.cm.codification.PendingCodifiedItemReqDTO;
 import my.ep.dto.cm.codification.PendingCodifiedItemResDTO;
+import my.ep.persistence.entity.cm.catalog.CmBrand;
+import my.ep.persistence.entity.cm.catalog.CmColor;
 import my.ep.persistence.entity.cm.catalog.CmItem;
+import my.ep.persistence.entity.cm.catalog.CmMeasurement;
 import my.ep.persistence.entity.cm.catalog.CmRequestCode;
+import my.ep.persistence.entity.cm.catalog.CmType;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.cm.catalog.VCmPendingCodifiedItem;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
@@ -46,7 +50,21 @@ import org.primefaces.context.RequestContext;
 @ManagedBean(name = "extensionCodeCreationMB")
 @SessionScoped
 public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
+	
+	private boolean editMode = false;
+	private int editModeIndex = 0;
+	
+	
+	private CmType selectedType;
+	private CmBrand selectedBrand;
+	private CmMeasurement selectedMeasurement;
+	private CmColor selectedColor;
 
+	
+	private List<CmBrand> brandList;
+	private List<CmColor> colorList;
+	private List<CmType> typeList;
+	private List<CmMeasurement> measurementList;
 	
 	private String cmNavigationURL;
 
@@ -56,6 +74,7 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 
 	private String unspscCode;
 	private String unspscTitle;
+
 
 	private List<SelectItem> typeCriteria;
 	private List<SelectItem> brandCriteria;
@@ -75,6 +94,9 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 	private CmUnspsc selectedLovUnspscSegment;
 	private CmUnspsc selectedLovUnspscFamily;
 	private CmUnspsc selectedLovUnspscClass;
+	private CmUnspsc selectedLovUnspsc;
+	private CmUnspsc selectedLovUnspscfamily;
+
 
 	private String itemCode;
 
@@ -120,8 +142,6 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 
 	private CmUnspsc autoCompleteUnspscCode;
 
-	private List<ExtensionCodeVO> extensionVoList;
-	private ExtensionCodeVO[] selectedExtensionVO;
 
 
 	private List<VCmPendingCodifiedItem> viewPendingCodifiedItemList;
@@ -214,8 +234,6 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 			paging.setPageNo(0);
 			
 			this.getExtensionSearchItemDataModel().resetData();
-			this.setExtensionSearchcheckBoxAll(false);
-			this.setCloneExtensionVOs(null);
 			this.setRefreshPageNoFlag(false);
 			System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 		}
@@ -257,67 +275,71 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 				reqDTO.setUnspscCode(getSelectedUNSPSCObj()
 						.getUnspscCode());
 
-				if (StringUtils.isNotBlank((String) colorFilterBean
-						.getSearchValue())) {
-					reqDTO.setColorId(Long.valueOf(colorFilterBean
-							.getSearchValue().toString()));
-				}
-
-				System.out.println("typeFilterBean.getSearchValue():"+typeFilterBean.getSearchValue());
-				if (StringUtils.isNotBlank((String) typeFilterBean
-						.getSearchValue())) {
-					reqDTO.setTypeId(Long.valueOf(typeFilterBean
-							.getSearchValue().toString()));
-
-				}
-
-				if (StringUtils.isNotBlank((String) brandFilterBean
-						.getSearchValue())) {
-					reqDTO.setBrandId(Long.valueOf(brandFilterBean
-							.getSearchValue().toString()));
-
-				}
-
-				if (StringUtils.isNotBlank((String) measurementFilterBean
-						.getSearchValue())) {
-					reqDTO.setMeasurementId(Long.valueOf(measurementFilterBean
-							.getSearchValue().toString()));
-				}
+//				if (StringUtils.isNotBlank((String) colorFilterBean
+//						.getSearchValue())) {
+//					reqDTO.setColorId(Long.valueOf(colorFilterBean
+//							.getSearchValue().toString()));
+//				}
+//
+//				System.out.println("typeFilterBean.getSearchValue():"+typeFilterBean.getSearchValue());
+//				if (StringUtils.isNotBlank((String) typeFilterBean
+//						.getSearchValue())) {
+//					reqDTO.setTypeId(Long.valueOf(typeFilterBean
+//							.getSearchValue().toString()));
+//
+//				}
+//
+//				if (StringUtils.isNotBlank((String) brandFilterBean
+//						.getSearchValue())) {
+//					reqDTO.setBrandId(Long.valueOf(brandFilterBean
+//							.getSearchValue().toString()));
+//
+//				}
+//
+//				if (StringUtils.isNotBlank((String) measurementFilterBean
+//						.getSearchValue())) {
+//					reqDTO.setMeasurementId(Long.valueOf(measurementFilterBean
+//							.getSearchValue().toString()));
+//				}
 
 				resDTO = codificationSO.searchExtension(reqDTO);
+				
+				
+				
 
-				//int count =0;
-				Map tempMap = new HashMap();
-				for (int i = 0; i < resDTO.getExtensionResultBean().getResultList().size(); i++) {
-					Object[] objects = (Object[]) resDTO.getExtensionResultBean().getResultList().get(i);
-
-					if(bb.getManagedBean().getCloneExtensionVOs()!=null && bb.getManagedBean().getCloneExtensionVOs().size()>0){
-
-						for(ExtensionCodeVO obj : bb.getManagedBean().getCloneExtensionVOs()){
-							if((String.valueOf(objects[4])+String.valueOf(objects[5])+String.valueOf(objects[6])+String.valueOf(objects[7])).equalsIgnoreCase(obj.getKey())) {
-
-								if(!tempMap.containsKey(obj.getKey())){
-									objects[8] = true;
-									//count = count + 1;
-									//System.out.println("**loop***"+count);
-									tempMap.put(obj.getKey(), obj.getKey());
-								}
-							}
-						}
-
-					}
-
-				}
-				/*System.out.println("count:"+count);
-				System.out.println("resDTO.getExtensionResultBean().getResultList().size():"+resDTO.getExtensionResultBean().getResultList().size());
-				if(count == resDTO.getExtensionResultBean().getResultList().size()){
-					bb.getManagedBean().setExtensionSearchcheckBoxAll(true);
-				}else{
-					bb.getManagedBean().setExtensionSearchcheckBoxAll(false);
-				}*/
-
-				RequestContext.getCurrentInstance().execute("refreshExtensionSearch();");
-
+//				//int count =0;
+//				Map tempMap = new HashMap();
+//				for (int i = 0; i < resDTO.getExtensionResultBean().getResultList().size(); i++) {	
+//					Object[] objects = (Object[]) resDTO.getExtensionResultBean().getResultList().get(i);
+//
+//					
+//					if(bb.getManagedBean().getCloneExtensionVOs()!=null && bb.getManagedBean().getCloneExtensionVOs().size()>0){
+//
+//						for(ExtensionCodeVO obj : bb.getManagedBean().getCloneExtensionVOs()){
+//							if((String.valueOf(objects[4])+String.valueOf(objects[5])+String.valueOf(objects[6])+String.valueOf(objects[7])).equalsIgnoreCase(obj.getKey())) {
+//
+//								if(!tempMap.containsKey(obj.getKey())){
+//									objects[8] = true;
+//									//count = count + 1;
+//									//System.out.println("**loop***"+count);
+//									tempMap.put(obj.getKey(), obj.getKey());
+//								}
+//							}
+//						}
+//
+//					}
+//
+//				}
+//				/*System.out.println("count:"+count);
+//				System.out.println("resDTO.getExtensionResultBean().getResultList().size():"+resDTO.getExtensionResultBean().getResultList().size());
+//				if(count == resDTO.getExtensionResultBean().getResultList().size()){
+//					bb.getManagedBean().setExtensionSearchcheckBoxAll(true);
+//				}else{
+//					bb.getManagedBean().setExtensionSearchcheckBoxAll(false);
+//				}*/
+//
+//				RequestContext.getCurrentInstance().execute("refreshExtensionSearch();");
+//
 
 				//System.out.println("isExtensionSearchcheckBoxAll:"+bb.getManagedBean().isExtensionSearchcheckBoxAll());
 
@@ -330,6 +352,8 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 			}
 			if (resDTO != null) {
 				System.out.println("*******end************");
+				System.out.println("size " +  resDTO.getExtensionResultBean().getResultList().size());
+				
 				return resDTO.getExtensionResultBean();
 			}
 			return null;
@@ -561,23 +585,7 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 		this.selectedExtenstionForItem = selectedExtenstionForItem;
 	}
 
-	public ExtensionCodeVO[] getSelectedExtensionVO() {
-		return selectedExtensionVO;
-	}
 
-	public void setSelectedExtensionVO(ExtensionCodeVO[] selectedExtensionVO) {
-		this.selectedExtensionVO = selectedExtensionVO;
-	}
-
-	public List<ExtensionCodeVO> getExtensionVoList() {
-		if (extensionVoList == null)
-			extensionVoList = new ArrayList<ExtensionCodeVO>();
-		return extensionVoList;
-	}
-
-	public void setExtensionVoList(List<ExtensionCodeVO> extensionVoList) {
-		this.extensionVoList = extensionVoList;
-	}
 
 	public CmUnspsc getAutoCompleteUnspscCode() {
 		if (autoCompleteUnspscCode == null)
@@ -967,19 +975,6 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 		this.commodityTitle = commodityTitle;
 	}
 
-	public CmUnspsc getSelectedLovUnspscSegment() {
-		if (selectedLovUnspscSegment == null)
-			selectedLovUnspscSegment = new CmUnspsc();
-
-		return selectedLovUnspscSegment;
-	}
-
-	public void setSelectedLovUnspscSegment(CmUnspsc selectedLovUnspscSegment) {
-
-		this.selectedLovUnspscSegment = selectedLovUnspscSegment;
-		System.out.println(">>>>>>>>>>seting unspscSegment="
-				+ selectedLovUnspscSegment);
-	}
 
 	public CmUnspsc getSelectedLovUnspscFamily() {
 		if (selectedLovUnspscFamily == null)
@@ -991,17 +986,6 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 		this.selectedLovUnspscFamily = selectedLovUnspscFamily;
 		System.out.println(">>>>>>>>>>seting selectedLovUnspscFamily="
 				+ selectedLovUnspscFamily);
-	}
-
-	public CmUnspsc getSelectedLovUnspscClass() {
-		if (selectedLovUnspscClass == null)
-			selectedLovUnspscClass = new CmUnspsc();
-		return selectedLovUnspscClass;
-	}
-
-	public void setSelectedLovUnspscClass(CmUnspsc selectedLovUnspscClass) {
-		this.selectedLovUnspscClass = selectedLovUnspscClass;
-
 	}
 
 	public ScRequestItem getSelectedRequestItem() {
@@ -1484,6 +1468,141 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 		this.tempBrandName = tempBrandName;
 	}
 	
+	public CmUnspsc getSelectedLovUnspscfamily() {
+		if (selectedLovUnspscfamily == null)
+			selectedLovUnspscfamily = new CmUnspsc();
+		return selectedLovUnspscfamily;
+	}
+
+	public void setSelectedLovUnspscfamily(CmUnspsc selectedLovUnspscfamily) {
+		this.selectedLovUnspscfamily = selectedLovUnspscfamily;
+	}
+
+	public CmUnspsc getSelectedLovUnspscClass() {
+		if (selectedLovUnspscClass == null)
+			selectedLovUnspscClass = new CmUnspsc();
+		return selectedLovUnspscClass;
+	}
+
+	public void setSelectedLovUnspscClass(CmUnspsc selectedLovUnspscClass) {
+		this.selectedLovUnspscClass = selectedLovUnspscClass;
+	}
+
+	public CmUnspsc getSelectedLovUnspscSegment() {
+		if (selectedLovUnspscSegment == null)
+			selectedLovUnspscSegment = new CmUnspsc();
+		return selectedLovUnspscSegment;
+	}
+
+	public void setSelectedLovUnspscSegment(CmUnspsc selectedLovUnspscSegment) {
+		this.selectedLovUnspscSegment = selectedLovUnspscSegment;
+	}
+
+	public CmUnspsc getSelectedLovUnspsc() {
+		if (selectedLovUnspsc == null)
+			selectedLovUnspsc = new CmUnspsc();
+		return selectedLovUnspsc;
+	}
+
+	public void setSelectedLovUnspsc(CmUnspsc selectedLovUnspsc) {
+		this.selectedLovUnspsc = selectedLovUnspsc;
+	}
+	
+	
+	//Additional...
+	
+	/**
+	 * @return the editMode
+	 */
+	public boolean isEditMode() {
+		return editMode;
+	}
+
+	/**
+	 * @param editMode the editMode to set
+	 */
+	public void setEditMode(boolean editMode) {
+		this.editMode = editMode;
+	}
+	
+	
+	public List<CmBrand> getBrandList() {
+		if (brandList == null)
+			brandList = new ArrayList<CmBrand>();
+		return brandList;
+	}
+
+	public void setBrandList(List<CmBrand> brandList) {
+		this.brandList = brandList;
+	}
+
+	public List<CmColor> getColorList() {
+		if (colorList == null)
+			colorList = new ArrayList<CmColor>();
+		return colorList;
+	}
+
+	public void setColorList(List<CmColor> colorList) {
+		this.colorList = colorList;
+	}
+
+	public List<CmType> getTypeList() {
+		if (typeList == null)
+			typeList = new ArrayList<CmType>();
+		return typeList;
+	}
+
+	public void setTypeList(List<CmType> typeList) {
+		this.typeList = typeList;
+	}
+
+	public List<CmMeasurement> getMeasurementList() {
+		if (measurementList == null)
+			measurementList = new ArrayList<CmMeasurement>();
+		return measurementList;
+	}
+
+	public void setMeasurementList(List<CmMeasurement> measurementList) {
+		this.measurementList = measurementList;
+	}
+	
+	
+
+	public CmBrand getSelectedBrand() {
+		return selectedBrand;
+	}
+
+	public void setSelectedBrand(CmBrand selectedBrand) {
+
+		this.selectedBrand = selectedBrand;
+	}
+
+	public CmMeasurement getSelectedMeasurement() {
+		return selectedMeasurement;
+	}
+
+	public void setSelectedMeasurement(CmMeasurement selectedMeasurement) {
+		this.selectedMeasurement = selectedMeasurement;
+	}
+
+	public CmColor getSelectedColor() {
+		return selectedColor;
+	}
+
+	public void setSelectedColor(CmColor selectedColor) {
+		if (selectedColor != null)
+			System.out.println("setter called for selectedColor..."
+					+ selectedColor.getColorId());
+		this.selectedColor = selectedColor;
+	}
+
+	public CmType getSelectedType() {
+		return selectedType;
+	}
+
+	public void setSelectedType(CmType selectedType) {
+		this.selectedType = selectedType;
+	}
 
 	
 }

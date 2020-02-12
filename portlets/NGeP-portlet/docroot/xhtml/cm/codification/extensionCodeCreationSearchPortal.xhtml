@@ -55,7 +55,10 @@
 			<div style="text-align: right;">
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
 					action="#{extensionCodeCreationBackingBean.unspscSearch}"
-					update="unspscTableID itemCodeSearchMsg" />					 	 
+					update="unspscTableID" />
+				<p:commandButton value="#{lbl['lbl.btn.reset']}" 
+				    action="#{extensionCodeCreationBackingBean.resetSearch}" 
+				     update="extensionCodeCreationsearchID,unspscTableID"/>						 	 
 			</div>
 		</p:panel>
 
@@ -75,12 +78,19 @@
 					<f:facet name="header">
 					#{lbl['lbl.cm.unspsc.code']}
 				   </f:facet>    
-	                     <p:commandLink
-							action="#{extensionCodeCreationBackingBean.unspscPopUpSearch(unspscObj)}"
-							onclick="extensionUnspscPopUp.show()" update=":form:extensionCodeCreationPopUpId"
-							rendered="#{unspscObj.unspscLevel ne 3}">
-							#{unspscObj.unspscCode}
-							</p:commandLink>							
+				      
+				      <p:commandLink
+					     action="#{extensionCodeCreationBackingBean.goToExtensionSearchPortal(unspscObj)}"
+					     rendered="#{unspscObj.unspscLevel eq 3}">
+							       #{unspscObj.unspscCode}
+					 </p:commandLink>	
+				   
+	                  <p:commandLink
+						 action="#{extensionCodeCreationBackingBean.unspscPopUpSearch(unspscObj)}"
+					     onclick="extensionUnspscPopUp.show()" update=":form:extensionCodeCreationPopUpId"
+						 rendered="#{unspscObj.unspscLevel ne 3}">
+						           #{unspscObj.unspscCode}
+					  </p:commandLink>						
 				</p:column>
 				<p:column  styleClass = "wrappedTd" sortBy="#{unspscObj.unspscTitle}">
 					<f:facet name="header">
