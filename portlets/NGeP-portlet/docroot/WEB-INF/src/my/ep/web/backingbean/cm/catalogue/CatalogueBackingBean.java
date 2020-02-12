@@ -10377,5 +10377,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				onDateSelectListener(stdPrice);
 			}
 		}
-	
+		public void onDateSelectListener(CmStandardPricing stdPrice){
+			if(stdPrice!=null){
+				if(stdPrice.getStartDate()!=null){
+					stdPrice.setEndDate(this.getNextTwoYear(stdPrice.getStartDate()));
+				}else{
+					stdPrice.setEndDate(null);
+				}
+			}
+		}
 }
