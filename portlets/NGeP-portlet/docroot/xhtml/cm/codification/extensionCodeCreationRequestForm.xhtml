@@ -15,11 +15,11 @@
 
 			<div style="text-align: right; min-height: 40px;">
 				<p:commandButton value="#{lbl['lbl.cm.submit']}"
-					action="#{ExtensionCodeCreationManagedBean.submitToBPM}" update="@form"></p:commandButton>
+					action="#{extensionCodeCreationBackingBean.submitToBPM}" update="@form"></p:commandButton>
 
 				<div style="float: left; clear: both;">
 					<p:commandButton value="#{lbl['lbl.cm.back']}"
-						action="#{ExtensionCodeCreationManagedBean.backToExtensionSearch}"
+						action="#{extensionCodeCreationBackingBean.backToExtensionSearch}"
 						update="@form">
 					</p:commandButton>
 				</div>
@@ -33,57 +33,58 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code.lov']}" /></td>
 						<td><p:inputText
-								value="#{ExtensionCodeCreationManagedBean.managedBean.selectedLovUnspsc.unspscCode}"
+								value="#{extensionCodeCreationBackingBean.managedBean.selectedLovUnspsc.unspscCode}"
 								size="50" disabled="true" /></td>
 					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title.lov']}"></p:outputLabel></td>
 						<td cosplan="1"><p:inputText
-								value="#{ExtensionCodeCreationManagedBean.managedBean.selectedLovUnspsc.unspscTitle}"
+								value="#{extensionCodeCreationBackingBean.managedBean.selectedLovUnspsc.unspscTitle}"
 								size="50" disabled="true" /></td>
 					</tr>
 				</table>
+				
+				<p:dataTable tableStyleClass="fixedTable" id="extCodeId" lazy="true" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				value="#{extensionCodeCreationBackingBean.extensionSearchItemDataModel}" var="ext"
+				width="100%" rows="10">
 
-				<p:dataTable id="extCodeId"
-					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" rowIndexVar="rowIndex"
-					value="#{ExtensionCodeCreationManagedBean.managedBean.requestExtCodeList}"
-					var="ext">
+				<ac:paginator for="itemTableID"></ac:paginator>
+
 					<p:column>
 						<f:facet name="header">
 						#{lbl['lbl.cm.type']}
 					</f:facet>
-						#{ext.typeName}
-
+						#{ext[4]}
 					</p:column>
 					<p:column>
 						<f:facet name="header">
 						#{lbl['lbl.cm.brand']}
 					</f:facet>
-						#{ext.brandName}
+						#{ext[5]}
 					</p:column>
 					<p:column>
 						<f:facet name="header">
 						#{lbl['lbl.cm.measurement']}
 					</f:facet>
-						#{ext.measurementName}
+						#{ext[6]}
 					</p:column>
 					<p:column>
 						<f:facet name="header">
 						#{lbl['lbl.cm.color']}
 					</f:facet>
-						#{ext.colorName}
+						#{ext[7]}
 					</p:column>
 					<p:column>
 						<f:facet name="header">
 						#{lbl['lbl.cm.action']}
 					</f:facet>
 						<p:commandLink title="#{lbl['lbl.cm.zm.edit']}" update=":form:requestExtPopUpId" onclick="extensionPopUp.show()"
-							action="#{ExtensionCodeCreationManagedBean.editExtensionRequest(rowIndex)}">
+							action="#{extensionCodeCreationBackingBean.editExtensionRequest(rowIndex)}">
 							<p:graphicImage value="/css/images/design/edit.png"></p:graphicImage>
 						</p:commandLink>
 						<p:commandLink style="margin-left: 10px;" update=":form:extCodeId"
 							title="#{lbl['lbl.btn.delete']}"
-							action="#{ExtensionCodeCreationManagedBean.deleteExtensionRequest(rowIndex)}">
+							action="#{extensionCodeCreationBackingBean.deleteExtensionRequest(rowIndex)}">
 							<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
 							<f:param name="index" value="#{rowIndex}"></f:param>
 						</p:commandLink>
@@ -94,7 +95,7 @@
 				<h:panelGroup id="addBtnId">
 					<div style="text-align: right;">
 						<p:commandButton value="#{lbl['lbl.btn.add']}"
-							action="#{ExtensionCodeCreationManagedBean.addMoreRequest}"
+							action="#{extensionCodeCreationBackingBean.addMoreRequest}"
 							update=":form:requestExtPopUpId" onclick="extensionPopUp.show()">
 						</p:commandButton>
 					</div>
@@ -104,7 +105,7 @@
 
 			<p:dialog id="extensionDialog" widgetVar="extensionPopUp"
 				header="#{lbl['lbl.cm.request.extension.code']}" width="auto" height="auto">
-				<ui:include src="requestExtensionPopUp.xhtml" />
+				<ui:include src="requestExtensionCodeCreationPopUp.xhtml" />
 			</p:dialog>
 		</h:panelGroup>
 	</ui:define>

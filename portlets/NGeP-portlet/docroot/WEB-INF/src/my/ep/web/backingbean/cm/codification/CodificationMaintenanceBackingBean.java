@@ -1059,7 +1059,7 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 					
 					log.info(" objects " + String.valueOf(objects[0]) + String.valueOf(objects[1]) + String.valueOf(objects[2]) + String.valueOf(objects[3]));
 					
-				     bb.getManagedBean().setStatusextension(String.valueOf(objects[4]));
+				     bb.getManagedBean().setStatusextension(String.valueOf(objects[5]));
 					
 					tempMap.put(objects, objects);
 				}
@@ -1115,14 +1115,16 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 		
 		public void unspscPopUpSearch(CmUnspsc obj) {
 			
-			this.getManagedBean().setClassCode(null);
-			this.getManagedBean().setClassTitle(null);
+			log.info("obj " + obj );
 
-			this.getManagedBean().setFamilyCode(null);
-			this.getManagedBean().setFamilyTitle(null);
+			this.getManagedBean().setClassCode("");
+			this.getManagedBean().setClassTitle("");
 
-			this.getManagedBean().setSegmentCode(null);
-			this.getManagedBean().setSegmentTitle(null);
+			this.getManagedBean().setFamilyCode("");
+			this.getManagedBean().setFamilyTitle("");
+
+			this.getManagedBean().setSegmentCode("");
+			this.getManagedBean().setSegmentTitle("");
 			
 
 			ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
@@ -1234,7 +1236,7 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 					ResourceBundleUtils.getMessage("lbl.cm.active",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale()));
-			items[2] = new SelectItem(DbValueConst.RECORD_STATUS_DELETED,
+			items[2] = new SelectItem(DbValueConst.RECORD_STATUS_SUSPENDED,
 					ResourceBundleUtils.getMessage("lbl.cm.inactive",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale()));
@@ -1254,6 +1256,7 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 							new FacesScopes().getUserLocale()));
 			return items;
 		}
+	
 		
 		public static SelectItem[] getStatusExtensionDefault() {
 			
@@ -1297,8 +1300,8 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 		}
 		
 		
-		public SelectItem[] getStatusExtensionOptions(String SelectItem) {
-			log.info("getStatusExtensionOptions");
+		public SelectItem[] getStatusExtensionOptions() {
+			log.info("getStatusExtensionOptions ");
 			return CodificationMaintenanceBackingBean.getStatusExtensionOptionsDefault();
 		}
 	
