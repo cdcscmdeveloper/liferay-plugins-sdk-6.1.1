@@ -93,13 +93,9 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 		
 		if(this.getManagedBean().isRefreshPageNoFlag()){
 			System.out.println("****************************");
-
 			this.initRefreshPageNoFlag();
 		}
-
-
-		
-		}
+	}
 		/**
 		 * This method is used to reset the value of UNSPSC Search
 		 * 
@@ -599,9 +595,7 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 	// 2019/08/27 - Start
 	public String PopupOption(CmUnspsc obj) {
 
-		this.getManagedBean().setCommodityCode("");
-		this.getManagedBean().setCommodityTitle("");
-		this.getManagedBean().setCommodityTitleEng("");
+		clearPopup();
 
 		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",
 				ICodificationSO.class);
@@ -1059,7 +1053,7 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 					
 					log.info(" objects " + String.valueOf(objects[0]) + String.valueOf(objects[1]) + String.valueOf(objects[2]) + String.valueOf(objects[3]));
 					
-				     bb.getManagedBean().setStatusextension(String.valueOf(objects[5]));
+				    // bb.getManagedBean().setStatusextension(String.valueOf(objects[5]));
 					
 					tempMap.put(objects, objects);
 				}
@@ -1117,16 +1111,9 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 			
 			log.info("obj " + obj );
 
-			this.getManagedBean().setClassCode("");
-			this.getManagedBean().setClassTitle("");
+			clearPopup();
 
-			this.getManagedBean().setFamilyCode("");
-			this.getManagedBean().setFamilyTitle("");
-
-			this.getManagedBean().setSegmentCode("");
-			this.getManagedBean().setSegmentTitle("");
 			
-
 			ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
 					.getInstance().getServiceObject("cm", ICodificationSO.class);
 			CodificationReqDTO reqDTO = new CodificationReqDTO();
@@ -1201,7 +1188,6 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 				
 			
 			}
-			
 		}
 		
 		
@@ -1323,38 +1309,37 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 	
 		for (int i = 0; i < getManagedBean().getUpdatedStatus().size(); i++) {
 		    Object[] objects = (Object[]) getManagedBean().getUpdatedStatus().get(i);
+			
+		     log.info("OBJECT " + getManagedBean().getUpdatedStatus().size());
 		     
 			reqDTO.setTypeId(Long.parseLong(objects[2].toString()));
 			reqDTO.setUnspscId(Long.parseLong(objects[0].toString()));
 			
+			resDTO = unspscSO.searchCmTypeObj(reqDTO);
 				
-				resDTO = unspscSO.searchCmTypeObj(reqDTO);
 				
-				
-				if (resDTO.getCmType()!= null){
+			if (resDTO.getCmType()!= null){
 					
 				 System.out.println("search " + resDTO.getCmType().getTypeId());
+				 System.out.println("search " + objects[5].toString());
 							
-			     Integer result = Integer.valueOf(this.getManagedBean().getstatusextension());
-			     
-			     
+			     Integer result = Integer.valueOf(objects[5].toString()); 
 					
 				resDTO.getCmType().setRecordStatusFlg(result);
 				resDTO.getCmType().getTypeId();
 				resDTO.getCmType().getTypeCode();
 					
 				log.info("Type id for CmType " + resDTO.getCmType().getTypeId());
-				
-				
-				reqDTO.getExtensionStatusList().add(resDTO.getCmType());
+							
+	           }	
 			    
-			}
-		}
-		
-		    log.info("------ start to update ------");
-		  
-		   resDTO = unspscSO.updateTypeExtensionStatus(reqDTO);
-		 	 
+			    reqDTO.getExtensionStatusList().add(resDTO.getCmType());
+				
+		     }
+	             
+		       log.info("------ start to update ------");
+		        
+			   resDTO = unspscSO.updateTypeExtensionStatus(reqDTO);
 	}
 		if(this.getManagedBean().getData().equals("b")){
 				
@@ -1379,19 +1364,19 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 					resDTO.getCmBrand().setRecordStatusFlg(result);
 					resDTO.getCmBrand().getBrandId();
 					resDTO.getCmBrand().getBrandCode();
-						
+					
 					log.info("Brand id for CmBrand " + resDTO.getCmBrand().getBrandId());
 					
-					
-					reqDTO.getBrandExtensionStatusList().add(resDTO.getCmBrand());
-				    
+						
+							  
 				}
+				    reqDTO.getBrandExtensionStatusList().add(resDTO.getCmBrand());
+						
+					
 			}
-			
-			  log.info("------ start to update Brand ------");
-			  
-			 resDTO = unspscSO.updateBrandExtensionStatus(reqDTO);
-			  
+			      log.info("------ start to update Brand ------");
+	  		  
+				 resDTO = unspscSO.updateBrandExtensionStatus(reqDTO);
         }
 
 		if(this.getManagedBean().getData().equals("m")){
@@ -1419,18 +1404,16 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 				resDTO.getCmMeasurement().getMeasurementCode();
 					
 				log.info("Measurement id for CmMeasurement " + resDTO.getCmMeasurement().getMeasurementId());
-				
-				
-				reqDTO.getMeasurementExtensionStatusList().add(resDTO.getCmMeasurement());
-			    
+				  
 			}
+				
 		}
 		
-		  log.info("------ start to update measurment ------");
-		  
+		 log.info("------ start to update measurment ------");
+		 reqDTO.getMeasurementExtensionStatusList().add(resDTO.getCmMeasurement());
+			
 		 resDTO = unspscSO.updateMeasurementExtensionStatus(reqDTO);
-		 
-	   } 
+	  } 
 		   if(this.getManagedBean().getData().equals("c")){
 				
 			for (int i = 0; i < getManagedBean().getUpdatedStatus().size(); i++) {
@@ -1448,7 +1431,6 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 								
 				     Integer result = Integer.valueOf(this.getManagedBean().getstatusextension());
 				     
-				     
 						
 					resDTO.getCmColor().setRecordStatusFlg(result);
 					resDTO.getCmColor().getColorId();
@@ -1456,16 +1438,16 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 						
 					log.info("Color id for CmColor " + resDTO.getCmColor().getColorId());
 					
-					
 					reqDTO.getColorExtensionStatusList().add(resDTO.getCmColor());
-				    
+					    
 				}
-			}
-			
-			  log.info("------ start to update color ------");
-			  
-			 resDTO = unspscSO.updateColorExtensionStatus(reqDTO);
-		   }
+					
+					 log.info("------ start to update color ------");
+					 
+				
+				     resDTO = unspscSO.updateColorExtensionStatus(reqDTO);
+			} 
+		  }
 		   	 	
 				renewSesionObject(); 
 						
@@ -1489,6 +1471,7 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 				
 				this.getExtensionAttributeSearchData().resetData();
 				this.getManagedBean().setRefreshPageNoFlag(false);
+				clearPopup();
 				System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 			}
 		}
@@ -1527,6 +1510,19 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
             System.out.println("unSelectRow is Disable Button !!:"+ this.getManagedBean().isDisableSelectBtn());
         }
     }
+	
+	public void clearPopup() {
+		log.info("...............clearPopup...................");
+		this.getManagedBean().setClassCode(null);
+		this.getManagedBean().setClassTitle(null);
+
+		this.getManagedBean().setFamilyCode(null);
+		this.getManagedBean().setFamilyTitle(null);
+
+		this.getManagedBean().setSegmentCode(null);
+		this.getManagedBean().setSegmentTitle(null);
+		
+	}
 }
 
 
