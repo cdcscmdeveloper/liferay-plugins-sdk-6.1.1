@@ -358,9 +358,13 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			getManagedBean().getContractVer().setPbqcDecisionLetterAttachment(attachment);
 		} else if (event.getComponent().getId().equalsIgnoreCase("mofDecisionLetterId")){
 			getManagedBean().getContractVer().setMofDecisionLetterAttachment(attachment);
-		} else if (event.getComponent().getId().equalsIgnoreCase("disciplinaryAttachmentId")){
-			getManagedBean().getContractVer().setDisciplinaryActionAttachment(attachment);
-		} else {
+		} 
+		//26186 start
+		else if (event.getComponent().getId().equalsIgnoreCase("disciplinaryAttachmentId")){
+			getManagedBean().getContractVer().getDisciplinaryActionAttachments().add(attachment);
+		} 
+		//26186 end
+		else {
 			getManagedBean().getAttachmentList().add(attachment);
 		}
 	}
@@ -487,6 +491,21 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 		getManagedBean().getContractVer().getScheduleAttachments().remove(index);
 	}
+	
+	//26186 start
+	/**
+	 * The method used to delete disciplinary action attachment from the list.
+	 * 
+	 * @param index  file index of attachment list
+	 */
+	public void deleteDisciplinaryAttachmentAction(int index) {
+		CtAttachment attachment = getManagedBean().getContractVer().getDisciplinaryActionAttachments().get(index);
+		if(attachment.getAttachmentId() != null){
+			getManagedBean().getDeleteAttachmentList().add(attachment);
+		}
+		getManagedBean().getContractVer().getDisciplinaryActionAttachments().remove(index);
+	}
+	//26186 end
 
 	/**
 	 * The method used to retrieve the address of supplier.
@@ -2341,6 +2360,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		if (getManagedBean().isViewContract()) {
 			return true;
 		} else if(getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT)){
+			return true;
+		} else if(getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_NOTIFICATION_SETTING)){
 			return true;
 		}
 		else if (!getManagedBean().getCtContractAmount().isAgreement() 
