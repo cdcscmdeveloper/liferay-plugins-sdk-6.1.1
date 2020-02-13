@@ -132,19 +132,19 @@
 		<p:panel header="#{lbl['lbl.cm.search.result']}" toggleable="true">
 		<p:dataTable id="typeTableID" tableStyleClass = "fixedTable"  emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"  lazy="true"
 		   value="#{codificationMaintenanceBackingBean.extensionAttributeSearchData}" var="cmunspsc"
-		   selection="#{codificationMaintenanceBackingBean.managedBean.updatedStatus}" rowKey="#{cmunspsc[0]}"
-		   rows="10" style="width:650px;">
+		   selection="#{codificationMaintenanceBackingBean.managedBean.updatedStatus}" rowKey="#{cmunspsc[2]}"
+		   rows="10" style="width:950px;" >
 		   
 		     <p:ajax event="rowSelectCheckbox" listener="#{codificationMaintenanceBackingBean.rowSelectChangeStatus}" update=":form:btnSelect"/>
           	 <p:ajax event="rowUnselectCheckbox" listener="#{codificationMaintenanceBackingBean.rowSelectChangeStatus}" update=":form:btnSelect"/>
              <p:ajax event="toggleSelect"  listener="#{codificationMaintenanceBackingBean.rowSelectChangeStatus}" update=":form:btnSelect" />		   
 		   
 				
-				<ac:paginator for="extensionAttributeTableID" style="width:auto;"></ac:paginator>
+				<ac:paginator for="extensionAttributeTableID"></ac:paginator>
 
 		        <p:column
 		        selectionMode="multiple" styleClass="selectionCheckBox" style="width:3%;text-align:center;"/>	
-			    <p:column style="min-width: 300px;">
+			    <p:column style="min-width: 500px;">
 					<f:facet name="header">
 					<c:choose>
 					<c:when test="#{codificationMaintenanceBackingBean.managedBean.data eq 't'}">
