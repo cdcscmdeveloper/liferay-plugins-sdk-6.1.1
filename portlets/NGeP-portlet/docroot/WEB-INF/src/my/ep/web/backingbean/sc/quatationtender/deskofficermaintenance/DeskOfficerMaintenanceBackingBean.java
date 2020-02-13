@@ -275,6 +275,22 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 		} else {
 			statusList = getStatusDropdownValues(moduleCode, docType);
 		}
+		if(statusList != null && statusList.length>0){
+			List<SelectItem> t = new ArrayList<SelectItem>(Arrays.asList(statusList));
+			for(int i = 0; t!=null && i<t.size(); i++){
+				try{
+					if(t.get(i).getValue()!=null && Long.parseLong(t.get(i).getValue().toString()) == 60039L){
+						t.remove(i);
+						i--;
+					}
+				}
+				catch(ClassCastException ex){}
+			}
+			statusList = new SelectItem[t.size()];
+			for(int i = 0; i < statusList.length; i++){
+				statusList[i] = t.get(i);
+			}
+		}
 		return statusList;
 	}
 	
