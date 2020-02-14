@@ -24,7 +24,6 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -40,8 +39,6 @@ import my.ep.persistence.entity.cm.catalog.CmRequestCode;
 import my.ep.persistence.entity.cm.catalog.CmType;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmDigiSign;
-import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
@@ -77,7 +74,7 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 
 
 	public static final String NAV_TO_EXTENSION_REQUEST_FORM = "extensionCodeCreationRequestForm";
-	public static final String NAV_TO_MAIN_PAGE = "extensionCodeCreation";
+	public static final String NAV_TO_MAIN_PAGE = "codificationMaintenance";
 	public static final String NAV_TO_EDIT_EXTENSION = "editExtension";
 	public static final String NAV_TO_DELETE_EXTENSION = "deleteExtension";
 	public static final String NO_69 = "69";
@@ -128,12 +125,11 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 
 		if(this.getManagedBean().isRefreshPageNoFlag()){
 			System.out.println("****************************");
-
-			this.getManagedBean().initRefreshPageNoFlag();
+			
+			
+			
+			this.initRefreshPageNoFlag();
 		}
-
-
-
 	}
 
 	/**
@@ -198,20 +194,6 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 		}
 
 	}
-
-	public void extensionCodeforRequestSearch() {
-
-		extensionSearchItemDataModel.reloadData();
-
-	}
-
-
-	public void extensionCodeSearch() {
-		this.getManagedBean().setExtensionSearchcheckBoxAll(false);
-		this.getManagedBean().setCloneExtensionVOs(null);
-		this.getManagedBean().getExtensionSearchItemDataModel().reloadData();
-	}
-
 
 	/**
 	 * Extension Search for Keywords.
@@ -422,11 +404,6 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 					}
 				}
 
-				/*
-				 * levelFilterBean.setSearchField("unspscLevel");
-				 * levelFilterBean.setSearchValue(3);
-				 * searchBean.getDataFilterBeans().add(levelFilterBean);
-				 */
 
 				System.out.println("this.getSortField():"+this.getSortField());
 				if(this.getSortField()==null){
@@ -576,12 +553,6 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 		return NAV_TO_EXTENSION_REQUEST_FORM + "?faces-redirect=true";
 	}
 
-
-//	public String requestExtensioncode() {
-//
-//		return NAV_TO_EXTENSION_REQUEST_FORM;
-//
-//	}
 
 	public String editExtension(int index) {
 
@@ -762,10 +733,10 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 
 	}
 
-	public String createExtCode() {
-
-		return "extensionCodeSingleCreation";
-	}
+//	public String createExtCode() {
+//
+//		return "extensionCodeSingleCreation";
+//	}
 
 	public String saveEditedCode() {
 
@@ -869,8 +840,9 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 
 	public String backToPrevPortal() {
 		this.initRefreshPageNoFlag();
+		renewSesionObject(); 
 		System.out.println("NAV_TO_MAIN_PAGE");
-		return NAV_TO_MAIN_PAGE + "?faces-redirect=true";
+		return NAV_TO_MAIN_PAGE + "?faces-redirect=true"; 
 	}
 
 	public String getParentCode(long code) {
@@ -912,14 +884,7 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 		
 		log.info("obj " + obj );
 
-		this.getManagedBean().setClassCode("");
-		this.getManagedBean().setClassTitle("");
-
-		this.getManagedBean().setFamilyCode("");
-		this.getManagedBean().setFamilyTitle("");
-
-		this.getManagedBean().setSegmentCode("");
-		this.getManagedBean().setSegmentTitle("");
+		clearPopup();
 
 		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", ICodificationSO.class);
@@ -935,7 +900,7 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 			reqDTO.setParentCode(obj.getUnspscCode());
 			CodificationResDTO familyDTO = unspscSO.searchFamily(reqDTO);
 
-			this.getManagedBean().setUnspscPopUpList(familyDTO.getFamilyList());
+			this.getManagedBean().setExtensionPopUpList(familyDTO.getFamilyList());
 
 			this.getManagedBean().setSegmentCode(obj.getUnspscCode());
 			this.getManagedBean().setSegmentTitle(obj.getUnspscTitle());
@@ -945,7 +910,7 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 			reqDTO.setParentCode(obj.getUnspscCode());
 			CodificationResDTO ClassDTO = unspscSO.searchClass(reqDTO);
 
-			this.getManagedBean().setUnspscPopUpList(ClassDTO.getClassList());
+			this.getManagedBean().setExtensionPopUpList(ClassDTO.getClassList());
 
 			this.getManagedBean().setFamilyCode(obj.getUnspscCode());
 			this.getManagedBean().setFamilyTitle(obj.getUnspscTitle());
@@ -966,7 +931,7 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 			reqDTO.setParentCode(obj.getUnspscCode());
 			CodificationResDTO CommodityDTO = unspscSO.searchCommodity(reqDTO);
 
-			this.getManagedBean().setUnspscPopUpList(
+			this.getManagedBean().setExtensionPopUpList(
 					CommodityDTO.getCommodityList());
 
 			this.getManagedBean().setClassCode(obj.getUnspscCode());
@@ -1031,7 +996,7 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 
 
 	public String backToExtensionSearch() {
-		return "extensionCodeCreationSearchPortal";
+		return "extensionCodeCreation.xhtml?faces-redirect=true";
 	}
 
 	public void onNodeSelect(NodeSelectEvent event) {
@@ -1825,15 +1790,15 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 		}
 	}
 
-	public void goToAddServiceConfirmPopUp(CmUnspsc unspscObj) {
-		// set commodity
-		System.out
-		.println("...............goToAddServiceConfirmPopUp..............");
-		log.info("..............unspscObj.getUnspscCode()="
-				+ unspscObj.getUnspscCode());
-		this.getManagedBean().setSelectedUNSPSCObj(unspscObj);
-
-	}
+//	public void goToAddServiceConfirmPopUp(CmUnspsc unspscObj) {
+//		// set commodity
+//		System.out
+//		.println("...............goToAddServiceConfirmPopUp..............");
+//		log.info("..............unspscObj.getUnspscCode()="
+//				+ unspscObj.getUnspscCode());
+//		this.getManagedBean().setSelectedUNSPSCObj(unspscObj);
+//
+//	}
 
 	/**
 	 * get faces scopes
@@ -1845,70 +1810,17 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 		return facesScopes;
 	}
 
-	public boolean productCode(String unspscCode) {
-
-		boolean flag = false;
-		String segmentCode = "";
-
-		if (unspscCode != null && unspscCode.trim().length() > 0) {
-			segmentCode = unspscCode.substring(0, 2);
-		}
-		
-		log.info("segmentCode " + segmentCode);
-		
-		if (Integer.parseInt(segmentCode) > 69) {
-			flag = true;
-		}
-		
-		log.info("flag " + flag);
-
-		return flag;
-		
-	}
 	
 
-	public boolean isSelectedRequestItemProduct() {
-		log.info(".................this.getManagedBean().getSelectedRequestItem()="
-				+ this.getManagedBean().getSelectedRequestItem());
-		if (this.getManagedBean().getSelectedRequestItem() != null) {
-			return isProduct(this.getManagedBean().getSelectedRequestItem()
-					.getItemType());
-		}
-		return true;
-	}
-
-	public boolean isProduct(PmParameter item) {
-		String itemType = item.getParameterCode();
-		log.info("...........itemType=" + itemType);
-		if(StringUtils.isNotBlank(itemType)){
-		if (itemType.equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
-			return true; // means less than
-		} else {
-			return false; // means greater than
-		}
-		}
-		return false; 
-	}
-
-	public int productOrServiceOperator() {
-		if (this.getManagedBean().getSelectedRequestItem() != null) {
-			if (isProduct(this.getManagedBean().getSelectedRequestItem()
-					.getItemType())) {
-				return 5; // means less than (76000000)
-			} else {
-				return 4; // means greater than (76000000)
-			}
-		}
-		return -1;
-	}
-	public void preRenderCodificationView() {
-		log.info(".................preRenderCodificationView................");
-		// this.renewSesionObject();
-		resetAction();
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-		.handleNavigation(fc, null, "codificationView");
-	}
+	
+//	public void preRenderCodificationView() {
+//		log.info(".................preRenderCodificationView................");
+//		// this.renewSesionObject();
+//		resetAction();
+//		FacesContext fc = FacesContext.getCurrentInstance();
+//		fc.getApplication().getNavigationHandler()
+//		.handleNavigation(fc, null, "codificationView");
+//	}
 
 	public String getItemTypeParameter() {
 		return itemTypeParameter;
@@ -1920,456 +1832,68 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 	}
 
 
-
+//	///////////////////GKPI testing
+//	public String gpkiSignAction() throws Exception{
 //
-//	public String backTokeyWordSearch() {
 //
-//		return "keywordMaintainSearch";
-//	}
+//		this.getManagedBean().setTextBeforeSign("gpki1234");
+//		// set action
 //
-//	public String backTokeyWordView() {
-//
-//		return "keywordMaintainView";
-//	}
-
-
-//
-//	/**
-//	 * Navigate to KeyWord Maintenance Search Screen
-//	 * 
-//	 * @return String(keywordMaintainSearch.xhtml)  
-//	 */
-//	public String goToKeywordExtensionSearch(CmUnspsc unspscObj) {
-//		log.debug("**********goToKeywordExtensionSearch************");
-//
-//		this.getManagedBean().setMeasurementCriteria(null);
-//		this.getManagedBean().setColorCriteria(null);
-//		this.getManagedBean().setBrandCriteria(null);
-//		this.getManagedBean().setTypeCriteria(null);
-//
-//		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
-//				.getInstance().getServiceObject("cm", ICodificationSO.class);
-//		CodificationReqDTO reqDTO = new CodificationReqDTO();
-//
-//		reqDTO.setUnspscCode(unspscObj.getUnspscCode());
-//		CodificationResDTO resDTO = unspscSO
-//				.retrieveUNSPSCByCommodityCode(reqDTO);
-//
-//		if (resDTO.isSuccessful()) {
-//			CmUnspsc commodity = resDTO.getCommodityObj();
-//
-//			// this.getManagedBean().getSelectedUNSPSCObj().setUnspscCode(commodity.getUnspscCode());
-//			// this.getManagedBean().getSelectedUNSPSCObj().setUnspscTitle(commodity.getUnspscTitle());
-//			this.getManagedBean().setSelectedUNSPSCObj(commodity);
-//
-//			this.getManagedBean().setClassCode(
-//					commodity.getCmUnspsc().getUnspscCode());
-//			this.getManagedBean().setClassTitle(
-//					commodity.getCmUnspsc().getUnspscTitle());
-//
-//			this.getManagedBean().setFamilyCode(
-//					commodity.getCmUnspsc().getCmUnspsc().getUnspscCode());
-//			this.getManagedBean().setFamilyTitle(
-//					commodity.getCmUnspsc().getCmUnspsc().getUnspscTitle());
-//
-//			this.getManagedBean().setSegmentCode(
-//					commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc()
-//					.getUnspscCode());
-//			this.getManagedBean().setSegmentTitle(
-//					commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc()
-//					.getUnspscTitle());
-//		}
-//
-//
-//		for (CmBrand brand : resDTO.getCommodityObj().getCmBrand()) {
-//			if (!StringUtils.isBlank(brand.getBrandName()) && brand.getRecordStatusFlg() ==1) {
-//				this.getManagedBean()
-//				.getBrandCriteria()
-//				.add(new SelectItem(brand.getBrandId(), brand
-//						.getBrandName()));
-//			}
-//		}
-//
-//		for (CmType type : resDTO.getCommodityObj().getCmType()) {
-//			if (!StringUtils.isBlank(type.getTypeName()) && type.getRecordStatusFlg() ==1) {
-//				this.getManagedBean()
-//				.getTypeCriteria()
-//				.add(new SelectItem(type.getTypeId(), type
-//						.getTypeName()));
-//			}
-//		}
-//
-//		for (CmMeasurement measurement : resDTO.getCommodityObj()
-//				.getCmMeasurement()) {
-//			if (!StringUtils.isBlank(measurement.getMeasurementName()) && measurement.getRecordStatusFlg()==1) {
-//				this.getManagedBean()
-//				.getMeasurementCriteria()
-//				.add(new SelectItem(measurement.getMeasurementId(),
-//						measurement.getMeasurementName()));
-//			}
-//		}
-//
-//		resDTO = unspscSO.searchColor(reqDTO);
-//
-//		for (CmColor color : resDTO.getColorList()) {
-//
-//			if (!StringUtils.isBlank(color.getColorName()) && color.getRecordStatusFlg()==1) {
-//				this.getManagedBean()
-//				.getColorCriteria()
-//				.add(new SelectItem(color.getColorId(), color
-//						.getColorName()));
-//			}
-//		}
-//
-//		return "keywordMaintainSearch?faces-redirect=true";
-//	}
-//
-//	/**
-//	 * This method is used to maintain keyword.
-//	 * 
-//	 * @return keywordMaintainSearch.xhtml
-//	 */
-//	public String saveKeyWord(){
-//
-//
-//		ICodificationSO codificationSO = null;
-//		try {
-//			codificationSO = (ICodificationSO) BusinessDelegate.getInstance()
-//					.getServiceObject("cm", ICodificationSO.class);
-//
-//			CodificationReqDTO reqDTO = new CodificationReqDTO();
-//
-//
-//			reqDTO.setCmItem(this.getManagedBean().getKeywordItem());
-//			codificationSO.saveKeyword(reqDTO);
-//
-//
-//			FacesContext facesContext = null;
-//
-//			facesContext = FacesContext.getCurrentInstance();
-//			facesContext.addMessage(
-//					null,
-//					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-//							MessageUtils.getMessage(
-//									MessageConst.INFO_711001,
-//									MessageUtils.BUNDLE_COMMON_MESSAGES,
-//									new FacesScopes().getUserLocale())));
-//
-//
-//
-//
-//
-//
-//		}catch (Exception e) {
-//			e.printStackTrace();
-//		} finally {
-//			codificationSO = null;
-//		}
-//
-//
-//		if(this.getManagedBean().isProductKeyword()){
-//			return "keywordMaintainSearch";
-//		}else if(this.getManagedBean().isServiceKeyword()){
-//			return "keywordMaintainView";
-//		}
-//
-//		return "keywordMaintainSearch";
-//	}
-//
-//	/**
-//	 * This method is used to hold the selection of extension Object.
-//	 * 
-//	 */
-//	public void cloneExtensionSelection(int i) {
-//
-//
-//		int index = i%10;
-//
-//		ExtensionCodeVO extCodeVO = new ExtensionCodeVO();
-//		Object[] objects = (Object[]) this.getManagedBean().getExtensionSearchItemDataModel().getList().get(index);
-//		System.out.println("objects1[8]"+objects[8]);
-//		extCodeVO.setTypeId(Long.valueOf(String.valueOf(objects[0])));
-//		extCodeVO.setBrandId(Long.valueOf(String.valueOf(objects[1])));
-//		extCodeVO
-//		.setMeasurementId(Long.valueOf(String.valueOf(objects[2])));
-//		extCodeVO.setColorId(Long.valueOf(String.valueOf(objects[3])));
-//
-//		extCodeVO.setTypeName(String.valueOf(objects[4]));
-//		extCodeVO.setBrandName(String.valueOf(objects[5]));
-//		extCodeVO.setMeasurementName(String.valueOf(objects[6]));
-//		extCodeVO.setColorName(String.valueOf(objects[7]));
-//		extCodeVO.setKey(String.valueOf(objects[4])+String.valueOf(objects[5])+String.valueOf(objects[6])+String.valueOf(objects[7]));
-//
-//		if(String.valueOf(objects[8]).equalsIgnoreCase("TRUE")){
-//			extCodeVO.setSelected(true);
-//		}else{
-//			extCodeVO.setSelected(false);
-//		}
-//
-//		if(this.getManagedBean().getCloneExtensionVOs()!=null && this.getManagedBean().getCloneExtensionVOs().size()>0){
-//
-//			boolean addInLs = true;
-//			for(ExtensionCodeVO obj : this.getManagedBean().getCloneExtensionVOs()){
-//				System.out.println("extCodeVO.isSelected():"+extCodeVO.isSelected());
-//				if(obj.getKey().equalsIgnoreCase(extCodeVO.getKey()) && !extCodeVO.isSelected()){
-//					this.getManagedBean().getCloneExtensionVOs().remove(obj);
-//					addInLs = false;
-//					break;
-//				}
-//
-//			}
-//
-//			if(addInLs){
-//				this.getManagedBean().getCloneExtensionVOs().add(extCodeVO);
-//			}
-//
-//		}else{
-//			this.getManagedBean().getCloneExtensionVOs().add(extCodeVO);
-//		}
-//
-//
-//
-//
-//
-//
-//		int count =0;
-//		Map tempMap = new HashMap();
-//		for (int j = 0; j < this.getManagedBean().getExtensionSearchItemDataModel().getList().size(); j++) {
-//			Object[] objectsJ = (Object[]) this.getManagedBean().getExtensionSearchItemDataModel().getList().get(j);
-//
-//			if(this.getManagedBean().getCloneExtensionVOs()!=null && this.getManagedBean().getCloneExtensionVOs().size()>0){
-//
-//				for(ExtensionCodeVO obj : this.getManagedBean().getCloneExtensionVOs()){
-//					if((String.valueOf(objectsJ[4])+String.valueOf(objectsJ[5])+String.valueOf(objectsJ[6])+String.valueOf(objectsJ[7])).equalsIgnoreCase(obj.getKey())) {
-//
-//						if(!tempMap.containsKey(obj.getKey())){
-//							count = count + 1;
-//							System.out.println("**loop***"+count);
-//							tempMap.put(obj.getKey(), obj.getKey());
-//						}
-//					}
-//				}
-//
-//			}
-//
-//		}
-//		if(count == this.getManagedBean().getExtensionSearchItemDataModel().getList().size()){
-//			this.getManagedBean().setExtensionSearchcheckBoxAll(true);
-//		}else{
-//			this.getManagedBean().setExtensionSearchcheckBoxAll(false);
-//		}
-//
-//
-//
-//		System.out.println("isExtensionSearchcheckBoxAll:"+this.getManagedBean().isExtensionSearchcheckBoxAll());
-//
-//
-//	}
-
-//	/**
-//	 * This method is used to hold all the selection of extension Object.
-//	 * 
-//	 */
-//	public void cloneAllExtensionSelection(){
-//
-//		Map checkDuplicateAdd = new HashMap();
-//		if(this.getManagedBean().getExtensionSearchItemDataModel()!=null 
-//				&& this.getManagedBean().getExtensionSearchItemDataModel().getList()!=null
-//				&& this.getManagedBean().getExtensionSearchItemDataModel().getList().size()>0){
-//			for (int i = 0; i < this.getManagedBean().getExtensionSearchItemDataModel().getList().size(); i++) {
-//
-//
-//				ExtensionCodeVO extCodeVO = new ExtensionCodeVO();
-//				Object[] objects = (Object[]) this.getManagedBean().getExtensionSearchItemDataModel().getList().get(i);
-//
-//				extCodeVO.setTypeId(Long.valueOf(String.valueOf(objects[0])));
-//				extCodeVO.setBrandId(Long.valueOf(String.valueOf(objects[1])));
-//				extCodeVO
-//				.setMeasurementId(Long.valueOf(String.valueOf(objects[2])));
-//				extCodeVO.setColorId(Long.valueOf(String.valueOf(objects[3])));
-//
-//				extCodeVO.setTypeName(String.valueOf(objects[4]));
-//				extCodeVO.setBrandName(String.valueOf(objects[5]));
-//				extCodeVO.setMeasurementName(String.valueOf(objects[6]));
-//				extCodeVO.setColorName(String.valueOf(objects[7]));
-//				extCodeVO.setKey(String.valueOf(objects[4])+String.valueOf(objects[5])+String.valueOf(objects[6])+String.valueOf(objects[7]));
-//
-//				if(this.getManagedBean().isExtensionSearchcheckBoxAll()){
-//					extCodeVO.setSelected(true);
-//					objects[8] = true;
-//				}else{
-//					extCodeVO.setSelected(false);
-//					objects[8] = false;
-//				}
-//
-//				if(this.getManagedBean().getCloneExtensionVOs()!=null && this.getManagedBean().getCloneExtensionVOs().size()>0){
-//
-//
-//					boolean addInLs = true;
-//					for(ExtensionCodeVO obj : this.getManagedBean().getCloneExtensionVOs()){
-//
-//						if(!checkDuplicateAdd.containsKey(obj.getKey())){
-//							checkDuplicateAdd.put(obj.getKey(), obj.getKey());
-//						}
-//
-//
-//
-//						if(!extCodeVO.isSelected() && extCodeVO.getKey().equalsIgnoreCase(obj.getKey())){
-//							this.getManagedBean().getCloneExtensionVOs().remove(obj);
-//							addInLs = false;
-//							break;
-//						}
-//
-//					}
-//
-//					if(addInLs){
-//						if(!checkDuplicateAdd.containsKey(extCodeVO.getKey())){
-//							this.getManagedBean().getCloneExtensionVOs().add(extCodeVO);
-//						}
-//					}
-//
-//				}else{
-//					if(extCodeVO.isSelected()){
-//						if(!checkDuplicateAdd.containsKey(extCodeVO.getKey())){
-//							this.getManagedBean().getCloneExtensionVOs().add(extCodeVO);
-//						}
-//					}
-//				}
-//
-//			}
-//
-//		}
-//		
+//		this.getManagedBean().setAutoUpdate(Boolean.FALSE);
+//		System.out.println("**********b4 pop up***********");
+//		RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+//		return null;
 //
 //	}
 //
-//
-//	/**
-//	 * This method is used to check/uncheck checkBox at extensionSearch Screen.
-//	 * 
-//	 */
-//	public void checkingCheckAll(){
-//
-//		int count =0;
-//		Map tempMap = new HashMap();
-//
-//		if(this.getManagedBean().getExtensionSearchItemDataModel()!=null 
-//				&& this.getManagedBean().getExtensionSearchItemDataModel().getList()!=null
-//				&& this.getManagedBean().getExtensionSearchItemDataModel().getList().size()>0){
-//			for (int i = 0; i < this.getManagedBean().getExtensionSearchItemDataModel().getList().size(); i++) {
-//				Object[] objects = (Object[]) this.getManagedBean().getExtensionSearchItemDataModel().getList().get(i);
-//
-//				if(this.getManagedBean().getCloneExtensionVOs()!=null && this.getManagedBean().getCloneExtensionVOs().size()>0){
-//
-//					for(ExtensionCodeVO obj : this.getManagedBean().getCloneExtensionVOs()){
-//						if((String.valueOf(objects[4])+String.valueOf(objects[5])+String.valueOf(objects[6])+String.valueOf(objects[7])).equalsIgnoreCase(obj.getKey())) {
-//
-//							if(!tempMap.containsKey(obj.getKey())){
-//								objects[8] = true;
-//								count = count + 1;
-//								System.out.println("**loop***"+count);
-//								tempMap.put(obj.getKey(), obj.getKey());
-//							}
-//						}
-//					}
-//
-//				}
-//
-//			}
-//
-//			if(count ==  this.getManagedBean().getExtensionSearchItemDataModel().getList().size()){
-//				this.getManagedBean().setExtensionSearchcheckBoxAll(true);
-//			}else{
-//				this.getManagedBean().setExtensionSearchcheckBoxAll(false);
-//			}
-//
-//		}
-//
+//	public void enableAutoUpdate(){
+//		getManagedBean().setAutoUpdate(Boolean.TRUE);
+//		RequestContext.getCurrentInstance().update("@form");
 //	}
 
-
-
-	///////////////////GKPI testing
-	public String gpkiSignAction() throws Exception{
-
-
-		this.getManagedBean().setTextBeforeSign("gpki1234");
-		// set action
-
-		this.getManagedBean().setAutoUpdate(Boolean.FALSE);
-		System.out.println("**********b4 pop up***********");
-		RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-		return null;
-
-	}
-
-	public void enableAutoUpdate(){
-		getManagedBean().setAutoUpdate(Boolean.TRUE);
-		RequestContext.getCurrentInstance().update("@form");
-	}
-
-	public String testGPKI(
-			PmDigiSign pmDigiSign) throws Exception {
-
-		System.out.println("***pmDigiSign**"+pmDigiSign);
-		if (pmDigiSign != null) {
-			this.getManagedBean().setPmDigiSign(pmDigiSign);
-		}
-
-
-		//getManagedBean().setValidated(Boolean.TRUE);
-		return null;
-	}
-
-
-	/////// SPKI testing
-
-	public void spkiSignAction(){
-
-		System.out.println("********spkiSignAction****************");
-		getManagedBean().setAutoUpdate(Boolean.FALSE);
-		getManagedBean().getSpkiBackingBean().getChallengeQuestions();
-
-		RequestContext.getCurrentInstance().execute("spki_dlg.show()");
-		System.out.println("********end****************");
-	}
-
-
-	public String updateSpkiDigiSignData() {
-
-
-		byte [] signedData =  getManagedBean().getSpkiBackingBean().SpkiTesting();
-		System.out.println("signedData:"+signedData);
-
-		return "";
-	}
-
-
-	public String testSkpi(PmDigiSign pmDigiSign) throws Exception {
-
-
-		System.out.println("pmDigiSign:"+pmDigiSign.getSpkiSignedData());
-		return null;
-	}
-
-	public String productServiceType(String unspscCode) {
-
-		String itemType = null;
-		String segmentCode = "";
-
-		if (unspscCode != null && unspscCode.trim().length() > 0) {
-			segmentCode = unspscCode.substring(0, 2);
-		}
-
-		if (segmentCode.compareTo(NO_69) > 0) {
-			itemType = ParameterConst.ITEM_TYPE_SERVICE;
-		} else {
-			itemType = ParameterConst.ITEM_TYPE_PRODUCT;
-		}
-
-		return itemType;
-	}
-	
+//	public String testGPKI(
+//			PmDigiSign pmDigiSign) throws Exception {
+//
+//		System.out.println("***pmDigiSign**"+pmDigiSign);
+//		if (pmDigiSign != null) {
+//			this.getManagedBean().setPmDigiSign(pmDigiSign);
+//		}
+//
+//
+//		//getManagedBean().setValidated(Boolean.TRUE);
+//		return null;
+//	}
+//
+//
+//	/////// SPKI testing
+//
+//	public void spkiSignAction(){
+//
+//		System.out.println("********spkiSignAction****************");
+//		getManagedBean().setAutoUpdate(Boolean.FALSE);
+//		getManagedBean().getSpkiBackingBean().getChallengeQuestions();
+//
+//		RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+//		System.out.println("********end****************");
+//	}
+//
+//
+//	public String updateSpkiDigiSignData() {
+//
+//
+//		byte [] signedData =  getManagedBean().getSpkiBackingBean().SpkiTesting();
+//		System.out.println("signedData:"+signedData);
+//
+//		return "";
+//	}
+//
+//
+//	public String testSkpi(PmDigiSign pmDigiSign) throws Exception {
+//
+//
+//		System.out.println("pmDigiSign:"+pmDigiSign.getSpkiSignedData());
+//		return null;
+//	}
 	
 	public void addMoreRequest() {
 		log.info(".................addMoreRequest...................");
@@ -2420,6 +1944,164 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 	}
 	
 	
+	
+	public void addNewRequest() {
+		log.info("...............addNewRequest...................");
+
+		// ///check that there be at least one new request
+		if (!this.getManagedBean().getRequestExtCode().isRequestType()
+				&& !this.getManagedBean().getRequestExtCode().isRequestBrand()
+				&& !this.getManagedBean().getRequestExtCode()
+				.isRequestMeasurement()
+				&& !this.getManagedBean().getRequestExtCode().isRequestColor()) {
+			throw new EpException(MessageConst.ERROR_716010);
+
+		}
+//		// //////////checking for redundancy
+//		if (this.getManagedBean().getRequestExtCode().isRequestType()
+//				&& !this.getManagedBean().getRequestExtCode().getTypeName()
+//				.isEmpty()) {
+//			checkingTypeRedundency(this.getManagedBean().getRequestExtCode()
+//					.getTypeName(), false);
+//		}
+//		if (this.getManagedBean().getRequestExtCode().isRequestBrand()
+//				&& !this.getManagedBean().getRequestExtCode().getBrandName()
+//				.isEmpty()) {
+//			checkingBrandRedundency(this.getManagedBean().getRequestExtCode()
+//					.getBrandName(), false);
+//		}
+//		if (this.getManagedBean().getRequestExtCode().isRequestMeasurement()
+//				&& !this.getManagedBean().getRequestExtCode()
+//				.getMeasurementName().isEmpty()) {
+//			checkingMeasurmentRedundency(this.getManagedBean()
+//					.getRequestExtCode().getMeasurementName(), false);
+//		}
+//		if (this.getManagedBean().getRequestExtCode().isRequestColor()
+//				&& !this.getManagedBean().getRequestExtCode().getColorName()
+//				.isEmpty()) {
+//			checkingColorRedundency(this.getManagedBean().getRequestExtCode()
+//					.getColorName(), false);
+//		}
+
+		// type
+		if ((!this.getManagedBean().getRequestExtCode().isRequestType() && this
+				.getManagedBean().getSelectedType() == null)
+				|| (this.getManagedBean().getRequestExtCode().isRequestType() && this
+						.getManagedBean().getRequestExtCode().getTypeName()
+						.isEmpty())) {
+
+			throw new EpException(MessageConst.ERROR_100022,
+					new String[] { ResourceBundleUtils.getMessage(
+							"lbl.cm.type",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()) });
+		} else {
+
+			if (!this.getManagedBean().getRequestExtCode().isRequestType()) {
+				this.getManagedBean()
+				.getRequestExtCode()
+				.setTypeName(
+						this.getManagedBean().getSelectedType()
+						.getTypeName());
+				this.getManagedBean()
+				.getRequestExtCode()
+				.setTypeId(
+						this.getManagedBean().getSelectedType()
+						.getTypeId());
+			}
+		}
+		// brand
+		if ((!this.getManagedBean().getRequestExtCode().isRequestBrand() && this
+				.getManagedBean().getSelectedBrand() == null)
+				|| (this.getManagedBean().getRequestExtCode().isRequestBrand() && this
+						.getManagedBean().getRequestExtCode().getBrandName()
+						.isEmpty())) {
+
+			throw new EpException(MessageConst.ERROR_100022,
+					new String[] { ResourceBundleUtils.getMessage(
+							"lbl.cm.brand",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()) });
+		} else {
+
+			if (!this.getManagedBean().getRequestExtCode().isRequestBrand()) {
+				this.getManagedBean()
+				.getRequestExtCode()
+				.setBrandName(
+						this.getManagedBean().getSelectedBrand()
+						.getBrandName());
+				this.getManagedBean()
+				.getRequestExtCode()
+				.setBrandId(
+						this.getManagedBean().getSelectedBrand()
+						.getBrandId());
+			}
+		}
+		// color
+		if ((!this.getManagedBean().getRequestExtCode().isRequestColor() && this
+				.getManagedBean().getSelectedColor() == null)
+				|| (this.getManagedBean().getRequestExtCode().isRequestColor() && this
+						.getManagedBean().getRequestExtCode().getColorName()
+						.isEmpty())) {
+
+			throw new EpException(MessageConst.ERROR_100022,
+					new String[] { ResourceBundleUtils.getMessage(
+							"lbl.cm.color",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()) });
+		} else {
+			if (!this.getManagedBean().getRequestExtCode().isRequestColor()) {
+				this.getManagedBean()
+				.getRequestExtCode()
+				.setColorName(
+						this.getManagedBean().getSelectedColor()
+						.getColorName());
+				this.getManagedBean()
+				.getRequestExtCode()
+				.setColorId(
+						this.getManagedBean().getSelectedColor()
+						.getColorId());
+			}
+		}
+		// measurement
+		if ((!this.getManagedBean().getRequestExtCode().isRequestMeasurement() && this
+				.getManagedBean().getSelectedMeasurement() == null)
+				|| (this.getManagedBean().getRequestExtCode()
+						.isRequestMeasurement() && this.getManagedBean()
+						.getRequestExtCode().getMeasurementName().isEmpty())) {
+
+			throw new EpException(MessageConst.ERROR_100022,
+					new String[] { ResourceBundleUtils.getMessage(
+							"lbl.cm.measurement",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()) });
+		} else {
+			if (!this.getManagedBean().getRequestExtCode()
+					.isRequestMeasurement()) {
+				this.getManagedBean()
+				.getRequestExtCode()
+				.setMeasurementId(
+						this.getManagedBean().getSelectedMeasurement()
+						.getMeasurementId());
+				this.getManagedBean()
+				.getRequestExtCode()
+				.setMeasurementName(
+						this.getManagedBean().getSelectedMeasurement()
+						.getMeasurementName());
+			}
+		}
+
+//		if(this.getManagedBean().isEditMode()){
+//			this.getManagedBean().getRequestExtCodeList().set(this.getManagedBean().getEditModeIndex(), this.getManagedBean().getRequestExtCode());
+//		}else{
+//			this.getManagedBean().getRequestExtCodeList().add(this.getManagedBean().getRequestExtCode());
+//		}
+		clearForm();
+
+		RequestContext.getCurrentInstance().execute("extensionPopUp.hide();");
+	}
+	
+	
 	public void clearForm() {
 		log.info("...............clearForm...................");
 		this.getManagedBean().setSelectedType(null);
@@ -2427,6 +2109,8 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 		this.getManagedBean().setSelectedColor(null);
 		this.getManagedBean().setSelectedMeasurement(null);
 	}
+	
+	
 	
 	
 	public void resetSearch() {
@@ -2448,6 +2132,20 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 			this.getManagedBean().setRefreshPageNoFlag(false);
 			System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 		}
+	}
+	
+	
+	public void clearPopup() {
+		log.info("...............clearPopup...................");
+		this.getManagedBean().setClassCode(null);
+		this.getManagedBean().setClassTitle(null);
+
+		this.getManagedBean().setFamilyCode(null);
+		this.getManagedBean().setFamilyTitle(null);
+
+		this.getManagedBean().setSegmentCode(null);
+		this.getManagedBean().setSegmentTitle(null);
+		
 	}
 	
 
