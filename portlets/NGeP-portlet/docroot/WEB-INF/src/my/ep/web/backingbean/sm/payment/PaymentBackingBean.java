@@ -430,11 +430,13 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		switch (status) {
 		case SupplierManagementConst.MOL_SUCCESS:
 			String msgCode = null;
+			String[] params = {};
 			if(billType==null){
 				if(getManagedBean().getPaymentType().equals(SupplierManagementConst.PROCESSING_PAYMENT)){
 					msgCode = MessageConst.INFO_721058;
 				}else if(getManagedBean().getPaymentType().equals(SupplierManagementConst.SOFTCERT_PAYMENT)){
 					msgCode = MessageConst.INFO_721065;
+					params = getSoftCertNameEmail(this.getManagedBean().getNewPyBillDtlLs().get(0));
 				}else{
 					msgCode = MessageConst.INFO_721064;
 				}
@@ -443,15 +445,15 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 					msgCode = MessageConst.INFO_721058;
 				}else if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)){
 					msgCode = MessageConst.INFO_721065;
+					params = getSoftCertNameEmail(this.getManagedBean().getNewPyBillDtlLs().get(0));
 				}else{
 					msgCode = MessageConst.INFO_721064;
 				}
 			}
 			fc.addMessage(
 					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(msgCode,MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(msgCode, params,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			paymentStatus = true;
 			break;
 
@@ -781,6 +783,23 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		SmPersonnel personnel = SmServiceLookup.getPersonnelSO().retrievePersonnelById(reqDTO).getSmPersonnel();
 		
 		return personnel;
+	}
+
+	/**
+	 * Retrieve the name and email for the soft cert registration
+	 * 
+	 * @param bill
+	 * @return
+	 */
+	private String[] getSoftCertNameEmail(PyBillDtl bill) {
+		SmPersonnel personnel = retrievePersonnelByPersonnelId(bill.getBillDtlRefId());
+
+		if (personnel != null) {
+			String[] strArr = new String[] { personnel.getName(), personnel.getEmail() };
+			return strArr;
+		}
+
+		return new String[]{};
 	}
 	
 	/**
