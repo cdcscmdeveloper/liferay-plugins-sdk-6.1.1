@@ -69,6 +69,7 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -113,6 +114,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	}
 	
 	public String currentStatusAndPath(){
+		log.info("Here Enter Funtion currentStatusAndPath ===>");
 		SmSupplier userSupplier = getSupplierProfileByUserId();
 		String path = null;
 		String desc = null;
@@ -300,15 +302,45 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	
 	public void pageNavigate() throws Exception{
 		SmSupplier supplier = getSupplierProfileByUserId();
-		
-		if(isHavePendingTaskList() && supplier.getRecordStatusFlg()!=SupplierManagementConst.SUPPLIER_SELF_REQUEST_ADMIN_STATUS){
-			pageRedirect(TASK_LIST_PATH);
-			
-		}else{
-			String path = currentStatusAndPath();
-			log.info("******xhtml*******" + path);
-			pageRedirect(path);
+		//START 27264
+		boolean proceed = true;
+		if(supplier != null){
+			try{
+				
+				String path1 = currentStatusAndPath();
+				log.info("path1==================================="+path1);
+				if(path1 != null && (MOF_REG_PATH.equalsIgnoreCase(path1) || path1.contains(RESUBMIT_APPLICATION))){
+					checkSSMValid(supplier);
+				}				
+			}catch(Exception w){
+				log.info("Here done--"+w.getMessage());
+				proceed =false;
+				RequestContext.getCurrentInstance().execute("blockWidget.hide()");
+				if(this.getManagedBean() != null && this.getManagedBean().getStatusDescFromSSM()!=null){
+					SmCommonUtil.redirectToPage(
+							CONTENT_PAGE,
+							w.getMessage(),
+							new String[] { SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null) });
+				}else{
+					SmCommonUtil.redirectToPage(
+							CONTENT_PAGE,
+							w.getMessage(),new String[] {""});
+				}
+								
+			}
+						
 		}
+		if(proceed){
+			if(isHavePendingTaskList() && supplier.getRecordStatusFlg()!=SupplierManagementConst.SUPPLIER_SELF_REQUEST_ADMIN_STATUS){
+				pageRedirect(TASK_LIST_PATH);
+				
+			}else{
+				String path = currentStatusAndPath();
+				log.info("******xhtml*******" + path);
+				pageRedirect(path);
+			}
+		}
+		//END 27264
 		
 	}
 	
@@ -1054,7 +1086,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 
 		return path;
 	}
-
+	
 	private String basicAccountFlow(SmSupplier supplier){
 		String path = null;
 		
@@ -1410,15 +1442,6 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ACKNOWLEDGEMENT_PAGE);
 
 	}
-	public void callUpgradeRole(){
-		log.info("START IN POSTSUPPLIER");
-		IUpgradeRoleSO tmpSO = (IUpgradeRoleSO) BusinessDelegate
-				.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IUpgradeRoleSO.class);
-		
-		SMOsbReqDTO reqqDTO = new SMOsbReqDTO();
-		reqqDTO.setUserId(439368L);
-		String a = tmpSO.finishButtonAction(439368L);
-		log.info("END IN POSTSUPPLIER==="+a);
-	}
+	//Remove Function callUpgradeRole
 	//END : LOG 12491
 }
