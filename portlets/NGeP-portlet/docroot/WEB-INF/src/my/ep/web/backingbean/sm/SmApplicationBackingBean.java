@@ -1549,11 +1549,13 @@ public class SmApplicationBackingBean extends
 									personnel.setSsmData(true);
 									personnel.setShareAmtSsmNull(true);
 									//SSM CHANGE 11012020
-									String[] copyEquityOwner = {"birthDate","nameInSsm","raceSsmNull","birthDateSsmNull","designationSsmNull","equityOwner","director","pmCountry","directorSsm","equityOwnerSsm","managementSsm","pmRace"};
+									//#27315
+									String[] copyEquityOwner = {"name","birthDate","nameInSsm","raceSsmNull","birthDateSsmNull","designationSsmNull","equityOwner","director","pmCountry","directorSsm","equityOwnerSsm","managementSsm","pmRace"};
 									EntityHelper.copyEntityPropertiesOnly(personnelSSM,personnel,copyEquityOwner);
 								}else{
 									personnel.setSsmData(true);
-									String[] copyEquityOwner = {"shareAmt","nameInSsm","raceSsmNull","birthDateSsmNull","shareAmtSsmNull","shareAmtSsm","designationSsmNull","equityOwner","director","pmCountry","directorSsm","equityOwnerSsm","managementSsm"};
+									//#27315
+									String[] copyEquityOwner = {"name","shareAmt","nameInSsm","raceSsmNull","birthDateSsmNull","shareAmtSsmNull","shareAmtSsm","designationSsmNull","equityOwner","director","pmCountry","directorSsm","equityOwnerSsm","managementSsm"};
 									EntityHelper.copyEntityPropertiesOnly(personnelSSM,personnel,copyEquityOwner);
 								}
 								validateRole(personnel);
@@ -12572,30 +12574,11 @@ public class SmApplicationBackingBean extends
 					this.getManagedBean().getSmAppl().getSmCompanyBasic().setAnnualRevenue(tempAnnualRevenue);
 				}*/
 				//SET ADDRESS
-				//START #27256
-				String[] copyPropAddress = {"address1","address2","address3","addressSsmNull","postcodeSsmNull","stateSsmNull","countrySsmNull","ssmData","postcode","pmState","pmCountry"};
-				EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmAddress(),this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress(),copyPropAddress);
-				//#27256
-				//this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPostcode(ssmResDTO.getSmAddress().getPostcode());						
-				if(ssmResDTO.getSmAddress().getPmCountry() != null && ssmResDTO.getSmAddress().getPmState() != null){
-					PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
-					this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setCountryId(defaultCountry.getCountryId());
+				String[] copyPropAddress = {"address1","address2","address3","addressSsmNull","postcodeSsmNull","stateSsmNull","countrySsmNull","ssmData","postcode"};
 
-				}
-				if(ssmResDTO.getSmAddress().getPmState() != null){
-					this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setStateId(ssmResDTO.getSmAddress().getPmState().getStateId());
-					//this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setCityId(null);
-					//this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setDistrictId(null);
-					//this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPmDistrict(null);
-					//this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPmCity(null);
-					if(this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmCountry() == null || this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmCountry().getCountryId() == null){
-						PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
-						this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPmCountry(defaultCountry);
-					}
-					this.getManagedBean().setBasicCompanyStates(SmCommonUtil.getStateList(this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmCountry().getCountryId()));
-					this.getManagedBean().setBasicCompanyDistricts(SmCommonUtil.getDistrictList(ssmResDTO.getSmAddress().getPmState().getStateId()));
-					
-				}
+				EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmAddress(),this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress(),copyPropAddress);
+				this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPostcode(ssmResDTO.getSmAddress().getPostcode());
+				this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPmState(ssmResDTO.getSmAddress().getPmState());
 				//END #27256
 				this.getManagedBean().getSmAppl().setApplValidWithSsm(true);
 				//set establish date
@@ -12638,11 +12621,13 @@ public class SmApplicationBackingBean extends
 							personnel.setSsmData(true);
 							personnel.setShareAmtSsmNull(true);
 							//SSM CHANGE 11012020
-							String[] copyEquityOwner = {"birthDate","nameInSsm","raceSsmNull","birthDateSsmNull","designationSsmNull","equityOwner","director","pmCountry","directorSsm","equityOwnerSsm","managementSsm","pmRace"};
+							//#27315
+							String[] copyEquityOwner = {"name","birthDate","nameInSsm","raceSsmNull","birthDateSsmNull","designationSsmNull","equityOwner","director","pmCountry","directorSsm","equityOwnerSsm","managementSsm","pmRace"};
 							EntityHelper.copyEntityPropertiesOnly(personnelSSM,personnel,copyEquityOwner);
 						}else{
 							personnel.setSsmData(true);
-							String[] copyEquityOwner = {"shareAmt","nameInSsm","raceSsmNull","birthDateSsmNull","shareAmtSsmNull","shareAmtSsm","designationSsmNull","equityOwner","director","pmCountry","directorSsm","equityOwnerSsm","managementSsm"};
+							//#27315
+							String[] copyEquityOwner = {"name","shareAmt","nameInSsm","raceSsmNull","birthDateSsmNull","shareAmtSsmNull","shareAmtSsm","designationSsmNull","equityOwner","director","pmCountry","directorSsm","equityOwnerSsm","managementSsm"};
 							EntityHelper.copyEntityPropertiesOnly(personnelSSM,personnel,copyEquityOwner);
 						}
 						validateRole(personnel);
