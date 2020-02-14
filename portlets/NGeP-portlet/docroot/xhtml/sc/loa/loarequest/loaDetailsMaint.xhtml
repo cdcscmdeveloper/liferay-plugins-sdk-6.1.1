@@ -19,7 +19,6 @@
 		
 		<ui:param name="isTrackingDairyView" value="#{lOADetailBackingBean.managedBean.trackingDairyView}" />
 		<ui:param name="isDocTypeQuotation" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.docType == ParameterConst.doctypeQuotation}" />
-		<ui:param name="enablePBForDP" value="#{lOADetailBackingBean.managedBean.enablePBForDP}" />
 		<ui:param name="isDocTypeDirectNego" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.docType == ParameterConst.doctypeDirectNego}" />
 		<ui:param name="isPendingSubmissionStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_SUBMISSION}" />
 		<ui:param name="isPendingApprovalStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_APPROVAL}" />
@@ -83,11 +82,11 @@
 					  disabled="#{!isFulfilmentTypeScheduled}">	
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="5" />
 					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.perform.bond']}" update="@form" rendered="#{isDocTypeQuotation || enablePBForDP}" disabled="#{!lOADetailBackingBean.managedBean.scLoa.bondReq}">
+					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.perform.bond']}" update="@form" rendered="#{isDocTypeQuotation}" disabled="#{!lOADetailBackingBean.managedBean.scLoa.bondReq}">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="6" />
 					</p:menuitem>
 					<p:menuitem value="#{lbl['lbl.sc.approval.details']}" update="@form" disabled="#{!lOADetailBackingBean.managedBean.scLoa.approvalReq}">
-						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="#{(isDocTypeQuotation || enablePBForDP) ? 7 : 6}" />
+						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="#{isDocTypeQuotation ? 7 : 6}" />
 					</p:menuitem>
 				</p:tabMenu>
 			</td>
@@ -117,11 +116,11 @@
 						<ui:include src="loaFulfilmentSchedule.xhtml" />
 					</c:if>
 					
-					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 6 and (isDocTypeQuotation || enablePBForDP)}">
+					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 6 and isDocTypeQuotation}">
 						<ui:include src="loaPerformanceBondMenu.xhtml" />
 					</c:if>
 					
-					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == ((isDocTypeQuotation || enablePBForDP) ? 7 : 6)}">
+					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == (isDocTypeQuotation ? 7 : 6)}">
 						<ui:include src="loaApprovalMenu.xhtml" />
 					</c:if>
 				</h:panelGroup>
