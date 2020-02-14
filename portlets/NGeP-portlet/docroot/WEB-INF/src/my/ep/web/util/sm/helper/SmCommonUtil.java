@@ -5782,6 +5782,9 @@ public class SmCommonUtil {
 			throw new EpException(MessageConst.ERROR_721071);
 		case "70061":
 			throw new EpException(MessageConst.ERROR_721078);
+			//27264
+		case MessageConst.ERROR_721084:
+			throw new EpException(MessageConst.ERROR_721084);
 		}
 	}
 		
