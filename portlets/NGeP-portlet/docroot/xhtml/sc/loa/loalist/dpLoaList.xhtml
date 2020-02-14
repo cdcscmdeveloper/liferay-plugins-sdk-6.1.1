@@ -86,16 +86,12 @@
 				<p:column headerText="#{lbl['lbl.sc.action']}" style="text-align: center;">
 					<p:commandButton value="#{lbl['lbl.sc.loiloa.create.loa']}"
 						action="#{lOADetailBackingBean.editLOAAction(scPurchaseRequest.scLoa)}"
-						rendered="#{scPurchaseRequest.scLoa.brandNew}" >
-						<f:param name="requestNoteDtlId" value="#{scPurchaseRequest.requestNoteDtls[0].requestNoteDtlId}"></f:param>
-					</p:commandButton>
+						rendered="#{scPurchaseRequest.scLoa.brandNew}" />
 
 					<p:commandButton icon="ui-icon-edit"
 						style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
 						action="#{lOADetailBackingBean.editLOAAction(scPurchaseRequest.scLoa)}"
-						rendered="#{!scPurchaseRequest.scLoa.brandNew and scPurchaseRequest.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_SUBMISSION}" >
-						<f:param name="requestNoteDtlId" value="#{scPurchaseRequest.requestNoteDtls[0].requestNoteDtlId}"></f:param>
-					</p:commandButton>
+						rendered="#{!scPurchaseRequest.scLoa.brandNew and scPurchaseRequest.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_SUBMISSION}" />
 
 					<p:commandLink
 						rendered="#{!scPurchaseRequest.scLoa.brandNew and scPurchaseRequest.scLoa.pmStatus.statusId ne QTStatusConst.LOA_PENDING_SUBMISSION}"
@@ -105,7 +101,6 @@
 							target="#{lOADetailBackingBean.managedBean.readOnly}" />
 						<p:graphicImage value="/css/images/design/document.png" />
 						<p:spacer width="5"></p:spacer>
-						<f:param name="requestNoteDtlId" value="#{scPurchaseRequest.requestNoteDtls[0].requestNoteDtlId}"></f:param>
 					</p:commandLink>
 				</p:column>
 
