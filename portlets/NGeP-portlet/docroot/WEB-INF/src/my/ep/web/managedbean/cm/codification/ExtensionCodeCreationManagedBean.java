@@ -133,7 +133,7 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 	private String tempMeasurementName;
 	private String tempBrandName;
 	
-	private List<CmUnspsc> unspscPopUpList;
+	private List<CmUnspsc> extensionPopUpList;
 
 	private String popUpUnspscCode;
 	private String popUpUnspscTitle;
@@ -496,6 +496,9 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 					
 					if(getAutoCompleteUnspscCode().getUnspscCode().equalsIgnoreCase("00000000")){
 						unspscCode = "notValid";
+					}else 
+					  if(productCode(getAutoCompleteUnspscCode().getUnspscCode())== true){
+						unspscCode = "notValid";
 					}else{
 						unspscCode = getAutoCompleteUnspscCode().getUnspscCode();
 					}
@@ -623,14 +626,14 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 		this.popUpUnspscTitle = popUpUnspscTitle;
 	}
 
-	public List<CmUnspsc> getUnspscPopUpList() {
-		if (unspscPopUpList == null)
-			unspscPopUpList = new ArrayList<CmUnspsc>();
-		return unspscPopUpList;
+	public List<CmUnspsc> getExtensionPopUpList() {
+		if (extensionPopUpList == null)
+			extensionPopUpList = new ArrayList<CmUnspsc>();
+		return extensionPopUpList;
 	}
 
-	public void setUnspscPopUpList(List<CmUnspsc> unspscPopUpList) {
-		this.unspscPopUpList = unspscPopUpList;
+	public void setExtensionPopUpList(List<CmUnspsc> extensionPopUpList) {
+		this.extensionPopUpList = extensionPopUpList;
 	}
 
 	public String getEditTypeName() {
@@ -1603,6 +1606,27 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 	public void setSelectedType(CmType selectedType) {
 		this.selectedType = selectedType;
 	}
-
 	
+	
+	public boolean productCode(String unspscCode) {
+
+		boolean flag = false;
+		String segmentCode = "";
+
+		if (unspscCode != null && unspscCode.trim().length() > 0) {
+			segmentCode = unspscCode.substring(0, 2);
+		}
+		
+		System.out.println("segmentCode " + segmentCode);
+		
+		if (Integer.parseInt(segmentCode) > 69) {
+			flag = true;
+		}
+		
+		System.out.println("flag " + flag);
+
+		return flag;
+		
+	}
+		
 }
