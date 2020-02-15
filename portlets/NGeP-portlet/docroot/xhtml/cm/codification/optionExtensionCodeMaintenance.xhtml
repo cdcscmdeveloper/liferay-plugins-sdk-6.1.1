@@ -8,8 +8,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
-			
-		
+	
+	
 		<ui:define name="contentSection">
 		<h:panelGroup id="optionExtensionCodeID">
 				
@@ -130,10 +130,10 @@
 		</p:panel>
 		
 		<p:panel header="#{lbl['lbl.cm.search.result']}" toggleable="true">
-		<p:dataTable id="typeTableID" styleClass="fixedTable" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"  lazy="true"
+		<p:dataTable id="typeTableID" tableStyleClass = "fixedTable"   emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"  lazy="true"
 		   value="#{codificationMaintenanceBackingBean.extensionAttributeSearchData}" var="cmunspsc"
 		   selection="#{codificationMaintenanceBackingBean.managedBean.updatedStatus}" rowKey="#{cmunspsc[2]}" 
-		   rows="10" width="50%" >
+		   rows="10" style="width: 50%">
 		   
 		     <p:ajax event="rowSelectCheckbox" listener="#{codificationMaintenanceBackingBean.rowSelectChangeStatus}" update=":form:btnSelect"/>
           	 <p:ajax event="rowUnselectCheckbox" listener="#{codificationMaintenanceBackingBean.rowSelectChangeStatus}" update=":form:btnSelect"/>
@@ -144,7 +144,7 @@
 
 		        <p:column
 		        selectionMode="multiple" styleClass="selectionCheckBox" style="width:3%;text-align:center;"/>	
-			    <p:column min-width="30%" style="white-space: normal" >
+			    <p:column  style="width : 40% !important; vertical-align:top;white-space: normal;">
 					<f:facet name="header">
 					<c:choose>
 					<c:when test="#{codificationMaintenanceBackingBean.managedBean.data eq 't'}">
@@ -161,15 +161,15 @@
 					</c:otherwise>
 				</c:choose>
 				</f:facet>
-				 #{cmunspsc[3]}
+				   #{cmunspsc[3]}
 				</p:column>
-				<p:column min-width="9%" style="white-space: normal" >
+				<p:column style="width : 5% !important; vertical-align:top;">
 					<f:facet name="header">
 					#{lbl['lbl.cm.code']}
 				</f:facet>
 				#{cmunspsc[4]}
 			</p:column>
-				<p:column headerText="#{lbl['lbl.cm.status.name']}" min-width="10%" style="white-space: normal" >
+				<p:column headerText="#{lbl['lbl.cm.status.name']}" style="width : 8% !important; vertical-align:top;">
                     <p:selectOneMenu style="width:100px;"  value="#{cmunspsc[5]}">
 						<f:selectItems value="#{codificationMaintenanceBackingBean.getStatusExtensionOptions()}"/>
 					</p:selectOneMenu>
@@ -185,6 +185,5 @@
 				update=":form:optionExtensionCodeID, :form:typeTableID"/>
 		
 		</h:panelGroup>
-		
   </ui:define> 
  </ui:composition>
