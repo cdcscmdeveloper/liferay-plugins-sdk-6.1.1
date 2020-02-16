@@ -1,9 +1,7 @@
 package my.ep.web.managedbean.cm.codification;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -17,11 +15,8 @@ import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cm.codification.ICodificationSO;
-import my.ep.biz.service.cm.codification.IPendingCodifiedItemSO;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
-import my.ep.dto.cm.codification.PendingCodifiedItemReqDTO;
-import my.ep.dto.cm.codification.PendingCodifiedItemResDTO;
 import my.ep.persistence.entity.cm.catalog.CmBrand;
 import my.ep.persistence.entity.cm.catalog.CmColor;
 import my.ep.persistence.entity.cm.catalog.CmItem;
@@ -29,7 +24,7 @@ import my.ep.persistence.entity.cm.catalog.CmMeasurement;
 import my.ep.persistence.entity.cm.catalog.CmRequestCode;
 import my.ep.persistence.entity.cm.catalog.CmType;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
-import my.ep.persistence.entity.cm.catalog.VCmPendingCodifiedItem;
+import my.ep.persistence.entity.cm.catalog.CmExtensionCode;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
@@ -42,10 +37,8 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.vo.ExtensionCodeVO;
 
 import org.apache.commons.lang.StringUtils;
-import org.primefaces.context.RequestContext;
 
 @ManagedBean(name = "extensionCodeCreationMB")
 @SessionScoped
@@ -144,8 +137,6 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 
 
 
-	private List<VCmPendingCodifiedItem> viewPendingCodifiedItemList;
-	private VCmPendingCodifiedItem selectedVPendingCodifiedItem;
 	private List<ScRequestItem> selectedVPendingRequestItemList;
 	private ScRequestItem selectedRequestItem;
 	private TplSpecQuestion tplSpecQuestion;
@@ -153,7 +144,7 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 
 	private CmRequestCode requestExtCode;
 	private List<CmRequestCode> requestExtCodeList;
-
+	
 	private boolean brandDisable = true;
 	private boolean typeDisable = true;
 	private boolean colorDisable = true;
@@ -170,6 +161,13 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 	private boolean serviceKeyword =false;
 	private boolean refreshPageNoFlag=false;
 	private boolean isSourcing = true;
+	
+	
+	private boolean typeRedundancy;
+	private boolean barndRedundancy;
+	private boolean measurRedundancy;
+	private boolean colorRedundancy;
+
 	
 
 	
@@ -204,8 +202,6 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 	private SearchFilterBean measurementFilterBean = new SearchFilterBean(
 			SearchOperator.OPERATOR_EQUALS.value());
 
-
-	private List<ExtensionCodeVO> cloneExtensionVOs;
 
 	private boolean extensionSearchcheckBoxAll = false;
 	
@@ -1007,23 +1003,6 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 		this.itemCode = itemCode;
 	}
 
-	public VCmPendingCodifiedItem getSelectedVPendingCodifiedItem() {
-		return selectedVPendingCodifiedItem;
-	}
-
-	public void setSelectedVPendingCodifiedItem(
-			VCmPendingCodifiedItem selectedVPendingCodifiedItem) {
-		this.selectedVPendingCodifiedItem = selectedVPendingCodifiedItem;
-	}
-
-	public List<VCmPendingCodifiedItem> getViewPendingCodifiedItemList() {
-		return viewPendingCodifiedItemList;
-	}
-
-	public void setViewPendingCodifiedItemList(
-			List<VCmPendingCodifiedItem> viewPendingCodifiedItemList) {
-		this.viewPendingCodifiedItemList = viewPendingCodifiedItemList;
-	}
 
 	public List<ScRequestItem> getSelectedVPendingRequestItemList() {
 		return selectedVPendingRequestItemList;
@@ -1112,86 +1091,7 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 		this.currentTaskName = currentTaskName;
 	}
 
-
-	private IPagingDataModel<VCmPendingCodifiedItem> vPendingCodifiedItemSearchDataModel = new PendingCodifiedSearchPagingDataModel();
-
-
-
-	public IPagingDataModel<VCmPendingCodifiedItem> getvPendingCodifiedItemSearchDataModel() {
-		return vPendingCodifiedItemSearchDataModel;
-	}
-
-	public void setvPendingCodifiedItemSearchDataModel(
-			IPagingDataModel<VCmPendingCodifiedItem> vPendingCodifiedItemSearchDataModel) {
-		this.vPendingCodifiedItemSearchDataModel = vPendingCodifiedItemSearchDataModel;
-	}
-
-	private class PendingCodifiedSearchPagingDataModel extends
-	PagingDataModel<VCmPendingCodifiedItem> {
-
-		private static final long serialVersionUID = 1L;
-
-		public PendingCodifiedSearchPagingDataModel() {
-			super("PendingCodifiedItemID");
-			// TODO Auto-generated constructor stub
-		}
-
-		@Override
-		protected ISearchResultBean<VCmPendingCodifiedItem> pageChangeListener(
-				ISearchBean<VCmPendingCodifiedItem> searchBean) {
-
-			IPendingCodifiedItemSO viewSO = null;
-
-			try {
-
-				viewSO = (IPendingCodifiedItemSO) BusinessDelegate
-						.getInstance().getServiceObject("cm",
-								IPendingCodifiedItemSO.class);
-
-				CodificationBackingBean bb = new CodificationBackingBean(); 	
-				PendingCodifiedItemReqDTO reqDTO = new PendingCodifiedItemReqDTO();
-				
-				if(bb.getManagedBean().getDocNo()!=null &&bb.getManagedBean().getDocNo().trim().length()>0){
-					reqDTO.setDocNo(bb.getManagedBean().getDocNo());
-				}
-				if(bb.getManagedBean().getDocTitle()!=null &&bb.getManagedBean().getDocTitle().trim().length()>0){
-					reqDTO.setDocTitle(bb.getManagedBean().getDocTitle());
-				}
-				
-				
-				
-				reqDTO.setViewSearchBean(searchBean);
-				FacesScopes facesScopes = new FacesScopes();
-				Long userId = facesScopes.getUserSessionBean().getUserId();
-				reqDTO.setUserId(userId);
-				PendingCodifiedItemResDTO resDTO = viewSO
-						.searchViewPendingCodifiedItems(reqDTO);
-				for (VCmPendingCodifiedItem vCmPendingItem : resDTO
-						.getViewPendingCodifiedItemList()) {
-					//					System.out.println(".................before calling");
-					//					System.out.println(".................vCmPendingItem.getPmOrgProfile()="+vCmPendingItem.getPmOrgProfile());
-					//					System.out.println(".................vCmPendingItem.getPmOrgProfile().getParentOrgProfile()="+vCmPendingItem.getPmOrgProfile().getParentOrgProfile());
-					//					System.out.println(".................vCmPendingItem.getPmOrgProfile().getParentOrgProfile().getPmOrgValidity()="+vCmPendingItem.getPmOrgProfile().getParentOrgProfile().getPmOrgValidity());
-					//					System.out.println(".................vCmPendingItem.getPmOrgProfile().getParentOrgProfile().getOrgName()="+vCmPendingItem.getPmOrgProfile().getParentOrgProfile().getOrgName());
-					//					if (vCmPendingItem.getOrgProfileId() != null) {
-					//						vCmPendingItem.setPmOrgProfile(CommonMethod
-					//								.retrieveOrgProfile(vCmPendingItem
-					//										.getOrgProfileId()));
-					//					}
-				}
-				setViewPendingCodifiedItemList(resDTO
-						.getViewPendingCodifiedItemList());
-				System.out.println("*********after***********");
-
-				return resDTO.getViewPendingItemResultBean();
-
-			} finally {
-				viewSO = null;
-			}
-		}
-
-	}
-
+	
 	public Object getSelectedKeywordObject() {
 		return selectedKeywordObject;
 	}
@@ -1296,15 +1196,6 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 		this.measurementFilterBean = measurementFilterBean;
 	}
 
-	public List<ExtensionCodeVO> getCloneExtensionVOs() {
-		if(cloneExtensionVOs==null)
-			cloneExtensionVOs = new ArrayList<ExtensionCodeVO>();
-		return cloneExtensionVOs;
-	}
-
-	public void setCloneExtensionVOs(List<ExtensionCodeVO> cloneExtensionVOs) {
-		this.cloneExtensionVOs = cloneExtensionVOs;
-	}
 
 	public boolean isExtensionSearchcheckBoxAll() {
 		return extensionSearchcheckBoxAll;
@@ -1627,6 +1518,53 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 
 		return flag;
 		
+	}
+	
+	
+	public boolean isTypeRedundancy() {
+		return typeRedundancy;
+	}
+
+	public void setTypeRedundancy(boolean typeRedundancy) {
+		this.typeRedundancy = typeRedundancy;
+	}
+
+	public boolean isBarndRedundancy() {
+		return barndRedundancy;
+	}
+
+	public void setBarndRedundancy(boolean barndRedundancy) {
+		this.barndRedundancy = barndRedundancy;
+	}
+
+	public boolean isMeasurRedundancy() {
+		return measurRedundancy;
+	}
+
+	public void setMeasurRedundancy(boolean measurRedundancy) {
+		this.measurRedundancy = measurRedundancy;
+	}
+
+	public boolean isColorRedundancy() {
+		return colorRedundancy;
+	}
+
+	public void setColorRedundancy(boolean colorRedundancy) {
+		this.colorRedundancy = colorRedundancy;
+	}
+	
+	/**
+	 * @return the editModeIndex
+	 */
+	public int getEditModeIndex() {
+		return editModeIndex;
+	}
+
+	/**
+	 * @param editModeIndex the editModeIndex to set
+	 */
+	public void setEditModeIndex(int editModeIndex) {
+		this.editModeIndex = editModeIndex;
 	}
 		
 }
