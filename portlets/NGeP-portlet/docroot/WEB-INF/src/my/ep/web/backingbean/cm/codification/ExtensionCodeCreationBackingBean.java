@@ -33,6 +33,7 @@ import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.cm.catalog.CmBrand;
 import my.ep.persistence.entity.cm.catalog.CmColor;
+import my.ep.persistence.entity.cm.catalog.CmExtensionCode;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmMeasurement;
 import my.ep.persistence.entity.cm.catalog.CmRequestCode;
@@ -546,7 +547,9 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 		}
 		
 		
-		extensionSearchItemDataModel.reloadData();
+		//extensionSearchItemDataModel.reloadData();
+		
+		this.getManagedBean().getRequestExtCodeList();  
 		
 
 		System.out.println("NAV_TO_EXTENSION_REQUEST_FORM");
@@ -1831,69 +1834,6 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 		this.itemTypeParameter = itemTypeParameter;
 	}
 
-
-//	///////////////////GKPI testing
-//	public String gpkiSignAction() throws Exception{
-//
-//
-//		this.getManagedBean().setTextBeforeSign("gpki1234");
-//		// set action
-//
-//		this.getManagedBean().setAutoUpdate(Boolean.FALSE);
-//		System.out.println("**********b4 pop up***********");
-//		RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-//		return null;
-//
-//	}
-//
-//	public void enableAutoUpdate(){
-//		getManagedBean().setAutoUpdate(Boolean.TRUE);
-//		RequestContext.getCurrentInstance().update("@form");
-//	}
-
-//	public String testGPKI(
-//			PmDigiSign pmDigiSign) throws Exception {
-//
-//		System.out.println("***pmDigiSign**"+pmDigiSign);
-//		if (pmDigiSign != null) {
-//			this.getManagedBean().setPmDigiSign(pmDigiSign);
-//		}
-//
-//
-//		//getManagedBean().setValidated(Boolean.TRUE);
-//		return null;
-//	}
-//
-//
-//	/////// SPKI testing
-//
-//	public void spkiSignAction(){
-//
-//		System.out.println("********spkiSignAction****************");
-//		getManagedBean().setAutoUpdate(Boolean.FALSE);
-//		getManagedBean().getSpkiBackingBean().getChallengeQuestions();
-//
-//		RequestContext.getCurrentInstance().execute("spki_dlg.show()");
-//		System.out.println("********end****************");
-//	}
-//
-//
-//	public String updateSpkiDigiSignData() {
-//
-//
-//		byte [] signedData =  getManagedBean().getSpkiBackingBean().SpkiTesting();
-//		System.out.println("signedData:"+signedData);
-//
-//		return "";
-//	}
-//
-//
-//	public String testSkpi(PmDigiSign pmDigiSign) throws Exception {
-//
-//
-//		System.out.println("pmDigiSign:"+pmDigiSign.getSpkiSignedData());
-//		return null;
-//	}
 	
 	public void addMoreRequest() {
 		log.info(".................addMoreRequest...................");
@@ -1902,39 +1842,23 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 
-		reqDTO.setUnspscCode(this.getManagedBean().getSelectedLovUnspsc()
-				.getUnspscCode());
+		reqDTO.setUnspscCode(this.getManagedBean().getSelectedLovUnspsc().getUnspscCode());
+		
 		CodificationResDTO resDTO = codificationSO.searchCommodityObj(reqDTO);
+		
 		this.getManagedBean().setEditMode(false);
-		this.getManagedBean()
-		.getRequestExtCode()
-		.setTempCode(
-				this.getManagedBean().getSelectedLovUnspsc()
-				.getUnspscCode());
-		this.getManagedBean()
-		.getRequestExtCode()
-		.setTempTitle(
-				this.getManagedBean().getSelectedLovUnspsc()
-				.getUnspscTitle());
+		this.getManagedBean().getRequestExtCode().setTempCode(this.getManagedBean().getSelectedLovUnspsc().getUnspscCode());
+		this.getManagedBean().getRequestExtCode().setTempTitle(this.getManagedBean().getSelectedLovUnspsc().getUnspscTitle());
 		this.getManagedBean().setTypeList(resDTO.getCommodityObj().getCmType());
-		this.getManagedBean().setBrandList(
-				resDTO.getCommodityObj().getCmBrand());
-		this.getManagedBean().setMeasurementList(
-				resDTO.getCommodityObj().getCmMeasurement());
+		this.getManagedBean().setBrandList(resDTO.getCommodityObj().getCmBrand());
+		this.getManagedBean().setMeasurementList(resDTO.getCommodityObj().getCmMeasurement());
+		
 		resDTO = codificationSO.searchColor(reqDTO);
 		this.getManagedBean().setColorList(resDTO.getColorList());
 
 		this.getManagedBean().setRequestExtCode(new CmRequestCode());
-		this.getManagedBean()
-		.getRequestExtCode()
-		.setTempCode(
-				this.getManagedBean().getSelectedLovUnspsc()
-				.getUnspscCode());
-		this.getManagedBean()
-		.getRequestExtCode()
-		.setTempTitle(
-				this.getManagedBean().getSelectedLovUnspsc()
-				.getUnspscTitle());
+		this.getManagedBean().getRequestExtCode().setTempCode(this.getManagedBean().getSelectedLovUnspsc().getUnspscCode());
+		this.getManagedBean().getRequestExtCode().setTempTitle(this.getManagedBean().getSelectedLovUnspsc().getUnspscTitle());
 		clearForm();
 		this.getManagedBean().setTypeDisable(true);
 		this.getManagedBean().setBrandDisable(true);
@@ -1957,35 +1881,34 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 			throw new EpException(MessageConst.ERROR_716010);
 
 		}
-//		// //////////checking for redundancy
-//		if (this.getManagedBean().getRequestExtCode().isRequestType()
-//				&& !this.getManagedBean().getRequestExtCode().getTypeName()
-//				.isEmpty()) {
-//			checkingTypeRedundency(this.getManagedBean().getRequestExtCode()
-//					.getTypeName(), false);
-//		}
-//		if (this.getManagedBean().getRequestExtCode().isRequestBrand()
-//				&& !this.getManagedBean().getRequestExtCode().getBrandName()
-//				.isEmpty()) {
-//			checkingBrandRedundency(this.getManagedBean().getRequestExtCode()
-//					.getBrandName(), false);
-//		}
-//		if (this.getManagedBean().getRequestExtCode().isRequestMeasurement()
-//				&& !this.getManagedBean().getRequestExtCode()
-//				.getMeasurementName().isEmpty()) {
-//			checkingMeasurmentRedundency(this.getManagedBean()
-//					.getRequestExtCode().getMeasurementName(), false);
-//		}
-//		if (this.getManagedBean().getRequestExtCode().isRequestColor()
-//				&& !this.getManagedBean().getRequestExtCode().getColorName()
-//				.isEmpty()) {
-//			checkingColorRedundency(this.getManagedBean().getRequestExtCode()
-//					.getColorName(), false);
-//		}
+		// //////////checking for redundancy
+		if (this.getManagedBean().getRequestExtCode().isRequestType()
+				&& !this.getManagedBean().getRequestExtCode().getTypeName()
+				.isEmpty()) {
+			checkingTypeRedundency(this.getManagedBean().getRequestExtCode()
+					.getTypeName());
+		}
+		if (this.getManagedBean().getRequestExtCode().isRequestBrand()
+				&& !this.getManagedBean().getRequestExtCode().getBrandName()
+				.isEmpty()) {
+			checkingBrandRedundency(this.getManagedBean().getRequestExtCode()
+					.getBrandName());
+		}
+		if (this.getManagedBean().getRequestExtCode().isRequestMeasurement()
+				&& !this.getManagedBean().getRequestExtCode()
+				.getMeasurementName().isEmpty()) {
+			checkingMeasurmentRedundency(this.getManagedBean()
+					.getRequestExtCode().getMeasurementName());
+		}
+		if (this.getManagedBean().getRequestExtCode().isRequestColor()
+				&& !this.getManagedBean().getRequestExtCode().getColorName()
+				.isEmpty()) {
+			checkingColorRedundency(this.getManagedBean().getRequestExtCode()
+					.getColorName());
+		}
 
 		// type
-		if ((!this.getManagedBean().getRequestExtCode().isRequestType() && this
-				.getManagedBean().getSelectedType() == null)
+		if ((!this.getManagedBean().getRequestExtCode().isRequestType())
 				|| (this.getManagedBean().getRequestExtCode().isRequestType() && this
 						.getManagedBean().getRequestExtCode().getTypeName()
 						.isEmpty())) {
@@ -1998,21 +1921,23 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 		} else {
 
 			if (!this.getManagedBean().getRequestExtCode().isRequestType()) {
+				
+				System.out.println("set TypeName");
+				
 				this.getManagedBean()
 				.getRequestExtCode()
 				.setTypeName(
-						this.getManagedBean().getSelectedType()
+						this.getManagedBean().getRequestExtCode()
 						.getTypeName());
-				this.getManagedBean()
-				.getRequestExtCode()
-				.setTypeId(
-						this.getManagedBean().getSelectedType()
-						.getTypeId());
+//				this.getManagedBean()
+//				.getRequestExtCode()
+//				.setTypeId(
+//						this.getManagedBean().getSelectedType()
+//						.getTypeId());
 			}
 		}
 		// brand
-		if ((!this.getManagedBean().getRequestExtCode().isRequestBrand() && this
-				.getManagedBean().getSelectedBrand() == null)
+		if ((!this.getManagedBean().getRequestExtCode().isRequestBrand())
 				|| (this.getManagedBean().getRequestExtCode().isRequestBrand() && this
 						.getManagedBean().getRequestExtCode().getBrandName()
 						.isEmpty())) {
@@ -2025,16 +1950,19 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 		} else {
 
 			if (!this.getManagedBean().getRequestExtCode().isRequestBrand()) {
+				
+				System.out.println("set BrandName");
+				
 				this.getManagedBean()
 				.getRequestExtCode()
 				.setBrandName(
-						this.getManagedBean().getSelectedBrand()
+						this.getManagedBean().getRequestExtCode()
 						.getBrandName());
-				this.getManagedBean()
-				.getRequestExtCode()
-				.setBrandId(
-						this.getManagedBean().getSelectedBrand()
-						.getBrandId());
+//				this.getManagedBean()
+//				.getRequestExtCode()
+//				.setBrandId(
+//						this.getManagedBean().getSelectedBrand()
+//						.getBrandId());
 			}
 		}
 		// color
@@ -2051,21 +1979,18 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 							new FacesScopes().getUserLocale()) });
 		} else {
 			if (!this.getManagedBean().getRequestExtCode().isRequestColor()) {
+				
+				System.out.println("set Color");
+				
 				this.getManagedBean()
 				.getRequestExtCode()
 				.setColorName(
 						this.getManagedBean().getSelectedColor()
 						.getColorName());
-				this.getManagedBean()
-				.getRequestExtCode()
-				.setColorId(
-						this.getManagedBean().getSelectedColor()
-						.getColorId());
 			}
 		}
 		// measurement
-		if ((!this.getManagedBean().getRequestExtCode().isRequestMeasurement() && this
-				.getManagedBean().getSelectedMeasurement() == null)
+		if ((!this.getManagedBean().getRequestExtCode().isRequestMeasurement())
 				|| (this.getManagedBean().getRequestExtCode()
 						.isRequestMeasurement() && this.getManagedBean()
 						.getRequestExtCode().getMeasurementName().isEmpty())) {
@@ -2078,11 +2003,10 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 		} else {
 			if (!this.getManagedBean().getRequestExtCode()
 					.isRequestMeasurement()) {
-				this.getManagedBean()
-				.getRequestExtCode()
-				.setMeasurementId(
-						this.getManagedBean().getSelectedMeasurement()
-						.getMeasurementId());
+				
+				System.out.println("set MeasurementName");
+				
+				
 				this.getManagedBean()
 				.getRequestExtCode()
 				.setMeasurementName(
@@ -2091,11 +2015,16 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 			}
 		}
 
-//		if(this.getManagedBean().isEditMode()){
-//			this.getManagedBean().getRequestExtCodeList().set(this.getManagedBean().getEditModeIndex(), this.getManagedBean().getRequestExtCode());
-//		}else{
-//			this.getManagedBean().getRequestExtCodeList().add(this.getManagedBean().getRequestExtCode());
-//		}
+		if(this.getManagedBean().isEditMode()){
+			this.getManagedBean().getRequestExtCodeList().set(this.getManagedBean().getEditModeIndex(), this.getManagedBean().getRequestExtCode());
+		}else{	
+			this.getManagedBean().getRequestExtCodeList().add(this.getManagedBean().getRequestExtCode());
+			System.out.println("size " + this.getManagedBean().getRequestExtCodeList().size());
+			
+			System.out.println("size " + this.getManagedBean().getRequestExtCodeList());
+			
+			
+		}
 		clearForm();
 
 		RequestContext.getCurrentInstance().execute("extensionPopUp.hide();");
@@ -2148,5 +2077,183 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 		
 	}
 	
+	
+	public void checkingTypeRedundency(String typeInput) {
+		log.info(".....checking redundancy for typeInput=" + typeInput);
+		this.getManagedBean().setTypeRedundancy(false);
+		if (typeInput != null && !typeInput.equals("")) {
+			for (CmType type : this.getManagedBean().getTypeList()) {
+				if (!StringUtils.isBlank(type.getTypeName())) {
+					if (type.getTypeName().toLowerCase()
+							.equals(typeInput.toLowerCase())) {
+						this.getManagedBean().setTypeRedundancy(true);						
+						throw new EpException(
+								MessageConst.ERROR_716009,
+								new String[] { ResourceBundleUtils
+										.getMessage(
+												"lbl.cm.type",
+												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+												new FacesScopes()
+												.getUserLocale()) });
+					}
+				}
+			}
+		}
+	}
+
+	public void checkingBrandRedundency(String brandInput) {
+		log.info(".....checking redundancy for brandInput=" + brandInput);
+		this.getManagedBean().setBarndRedundancy(false);
+		if (brandInput != null && !brandInput.equals("")) {
+			for (CmBrand brand : this.getManagedBean().getBrandList()) {
+				if (!StringUtils.isBlank(brand.getBrandName())) {
+					if (brand.getBrandName().toLowerCase()
+							.equals(brandInput.toLowerCase())) {
+
+						this.getManagedBean().setBarndRedundancy(true);
+						throw new EpException(
+								MessageConst.ERROR_716009,
+								new String[] { ResourceBundleUtils
+										.getMessage(
+												"lbl.cm.brand",
+												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+												new FacesScopes()
+												.getUserLocale()) });
+					}
+				}
+			}
+		}
+	}
+
+	public void checkingMeasurmentRedundency(String MeasurmentInput) {
+		log.info(".....checking redundancy for MeasurmentInput="
+				+ MeasurmentInput);
+		this.getManagedBean().setMeasurRedundancy(false);
+		if (MeasurmentInput != null && !MeasurmentInput.equals("")) {
+			for (CmMeasurement measur : this.getManagedBean()
+					.getMeasurementList()) {
+
+				if (!StringUtils.isBlank(measur.getMeasurementName())) {
+					if (measur.getMeasurementName().toLowerCase()
+							.equals(MeasurmentInput.toLowerCase())) {
+						this.getManagedBean().setMeasurRedundancy(true);
+						throw new EpException(
+								MessageConst.ERROR_716009,
+								new String[] { ResourceBundleUtils
+										.getMessage(
+												"lbl.cm.measurement",
+												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+												new FacesScopes()
+												.getUserLocale()) });
+					}
+				}
+			}
+		}
+	}
+
+
+	public void checkingColorRedundency(String colorInput) {
+		log.info(".....checking redundancy for colorInput=" + colorInput);
+		log.info("colorList " + this.getManagedBean().getColorList());
+		this.getManagedBean().setColorRedundancy(false);
+		if (colorInput != null && !colorInput.equals("")) {
+			for (CmColor color : this.getManagedBean().getColorList()) {
+				if (!StringUtils.isBlank(color.getColorName())) {
+					if (color.getColorName().toLowerCase()
+							.equals(colorInput.toLowerCase())) {
+						this.getManagedBean().setColorRedundancy(true);
+						log.info("this.getManagedBean().isColorRedundancy()="
+								+ this.getManagedBean().isColorRedundancy());
+						throw new EpException(
+								MessageConst.ERROR_716009,
+								new String[] { ResourceBundleUtils
+										.getMessage(
+												"lbl.cm.color",
+												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+												new FacesScopes()
+												.getUserLocale()) });
+
+					}
+				}
+			}
+			log.info("end no exception");
+		}
+	}
+	
+	
+	
+//	public List<CmType> autoCompleteType(String query) {
+//
+//		log.info("query:::::::::::::::::::::::::::::: " + query);
+//		List<CmType> suggestions = new ArrayList<CmType>();
+//
+//		log.info("this.getManagedBean().getTypeList() = "
+//				+ this.getManagedBean().getTypeList().size());
+//
+//		for (CmType type : this.getManagedBean().getTypeList()) {
+//			if (type.getTypeName() != null) {
+//
+//				if (type.getTypeName().toLowerCase()
+//						.startsWith(query.toLowerCase())) {
+//					suggestions.add(type);
+//				}
+//			}
+//		}
+//
+//		return suggestions;
+//	}
+//
+//	public List<CmBrand> autoCompleteBrand(String query) {
+//
+//		log.info("query:::::::::::::::::::::::::::::: " + query);
+//		List<CmBrand> suggestions = new ArrayList<CmBrand>();
+//
+//		for (CmBrand brand : this.getManagedBean().getBrandList()) {
+//			if (brand.getBrandName() != null) {
+//				if (brand.getBrandName().toLowerCase()
+//						.startsWith(query.toLowerCase())) {
+//					suggestions.add(brand);
+//				}
+//			}
+//		}
+//
+//		return suggestions;
+//	}
+//
+//	public List<CmMeasurement> autoCompleteMeasurement(String query) {
+//
+//		log.info("query:::::::::::::::::::::::::::::: " + query);
+//		List<CmMeasurement> suggestions = new ArrayList<CmMeasurement>();
+//
+//		for (CmMeasurement brand : this.getManagedBean().getMeasurementList()) {
+//			if (brand.getMeasurementName() != null) {
+//				if (brand.getMeasurementName().toLowerCase()
+//						.startsWith(query.toLowerCase())) {
+//					suggestions.add(brand);
+//				}
+//			}
+//		}
+//
+//		return suggestions;
+//	}
+//
+//	public List<CmColor> autoCompleteColor(String query) {
+//
+//		log.info("query:::::::::::::::::::::::::::::: " + query);
+//		List<CmColor> suggestions = new ArrayList<CmColor>();
+//
+//		for (CmColor color : this.getManagedBean().getColorList()) {
+//			if (color.getColorName() != null) {
+//				if (color.getColorName().toLowerCase()
+//						.startsWith(query.toLowerCase())) {
+//					suggestions.add(color);
+//				}
+//			}
+//		}
+//
+//		return suggestions;
+//	}
+//
+//	
 
 }
