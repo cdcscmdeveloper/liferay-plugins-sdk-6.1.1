@@ -376,7 +376,7 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setTitleChecker(Boolean.FALSE);
 
 			// procurement type event
-			procurementTypeEvent();
+			procurementTypeBackProcess();
 
 			// current page url for page navigation from sq to request note
 			getManagedBean().setNewableFlag(Boolean.FALSE);
@@ -1289,6 +1289,10 @@ public class SimpleQuoteBackingBean extends
 							IRequestNoteSO.class);
 			QuoteReqDTO reqDTO = new QuoteReqDTO();
 			ScQuote quote = getManagedBean().getScQuote();
+			
+			if(quote.getPanelItem()==null){
+				quote.setPanelItem(getTopPanelItem());
+			}
 
 			// validate start date and end date
 			if (quote.getStartDate() != null && quote.getEndDate() != null) {
@@ -1296,11 +1300,13 @@ public class SimpleQuoteBackingBean extends
 						|| quote.getStartDate().equals(quote.getEndDate())) {
 					throw new EpException(MessageConst.ERROR_760164);
 				}
-			} else {
-				if (null == quote.getStartDate() ||  null == quote.getEndDate()) {
-					throw new EpException(MessageConst.ERROR_760388);
-				}
-			}
+			} 
+			
+//			else {
+//				if (null == quote.getStartDate() ||  null == quote.getEndDate()) {
+//					throw new EpException(MessageConst.ERROR_760388);
+//				}
+//			}
 			
 			if (quote.getRequestItems() == null) {
 				List<ScRequestItem> requestItems = new ArrayList<ScRequestItem>();
@@ -1350,35 +1356,50 @@ public class SimpleQuoteBackingBean extends
 			}
 
 			// justification type
-			if (quote.getProcurementType().getParameterCode()
-					.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
-				if (quote.getJustificationType().getReasonCode() != null) {
-					quote.setJustificationType(getReasonByCategoryAndCode(
-							ReasonCategory.JUSTIFICATION_AD_HOC.value(), quote
-							.getJustificationType().getReasonCode()));
-
+			
+			if(quote.getJustificationType().getReasonCode() != null){
+				if (quote.getProcurementType().getParameterCode()
+						.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
+					if (quote.getJustificationType().getReasonCode() != null) {
+						quote.setJustificationType(getReasonByCategoryAndCode(
+								ReasonCategory.JUSTIFICATION_AD_HOC.value(), quote
+								.getJustificationType().getReasonCode()));
+	
+					}
+				}  else if (quote.getProcurementType().getParameterCode()
+						.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
+					if (quote.getJustificationType().getReasonCode() != null) {
+						quote.setJustificationType(getReasonByCategoryAndCode(
+								ReasonCategory.JUSTIFICATION_PK7.value(), quote
+								.getJustificationType().getReasonCode()));
+	
+					}
+					else {
+						quote.setJustificationType(null);
+					}
+				} else {
+					quote.setJustificationType(null);
 				}
-			}  else if (quote.getProcurementType().getParameterCode()
-					.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
-				if (quote.getJustificationType().getReasonCode() != null) {
-					quote.setJustificationType(getReasonByCategoryAndCode(
-							ReasonCategory.JUSTIFICATION_PK7.value(), quote
-							.getJustificationType().getReasonCode()));
-
-				}
-			} else {
-				quote.setJustificationType(null);
-			}
 
 			// procurement type category
 			if (null != quote.getProcurementTypeCategory()) {
 				ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+				
+				if(quote.getProcurementTypeCategory().getParameterId()!=null){
+				
 				parameterReqDTO.setParameterId(quote
 						.getProcurementTypeCategory().getParameterId());
 				PmParameter procTypeCategory = getParameterSO()
 						.retrieveParameterById(parameterReqDTO)
 						.getPmParameter();
 				quote.setProcurementTypeCategory(procTypeCategory);
+				}
+				else{
+					quote.setProcurementTypeCategory(null);
+				}
+				
+			}else{
+				quote.setProcurementTypeCategory(null);
 			}
 
 			// by business nature
@@ -1845,6 +1866,11 @@ public class SimpleQuoteBackingBean extends
 				&& scQuote.getRequestNotes().size() > 0) {
 			getManagedBean().setRequestNote(scQuote.getRequestNotes().get(0));
 		}
+		
+		// procurement  type category
+				if(null == scQuote.getProcurementTypeCategory()||null==scQuote.getProcurementTypeCategory().getParameterId()){
+					scQuote.setProcurementTypeCategory(new PmParameter());
+				}
 
 		// zone location level by default - district
 		if (scQuote.getZoneLocatonLevel() != null) {
@@ -1926,8 +1952,8 @@ public class SimpleQuoteBackingBean extends
 		getManagedBean().setScQuote(scQuote);
 		// duration calc
 		calculateDuration(scQuote);
-		procurementTypeEvent();
-		
+		procurementTypeBackProcess();
+		//implement here
 	}
 	
 
@@ -1994,8 +2020,8 @@ public class SimpleQuoteBackingBean extends
 				quote.setSupplierLocationLevel(null);
 			}
 			
-			if(outcome.equals(BpmOutcomeConst.BPM_SUBMIT)){
-				if (null == quote.getProcurementTypeCategory()) {
+			if(outcome.equals(BpmOutcomeConst.BPM_SUBMIT)||outcome.isEmpty()){
+				if (null == quote.getProcurementTypeCategory().getParameterId()) {
 					throw new EpException(
 							MessageConst.ERROR_760315,
 							new String[] {ResourceBundleUtils.getMessage("lbl.sc.procurment.type.category",
@@ -2023,6 +2049,12 @@ public class SimpleQuoteBackingBean extends
 									"lbl.sc.reason",
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 									new FacesScopes().getUserLocale()) });
+				} else if (quote.getJustificationRemark().isEmpty()) {
+					throw new EpException(MessageConst.ERROR_100022,
+							new String[] { ResourceBundleUtils.getMessage(
+									"lbl.sc.justification",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale()) });
 				}
 
 				quote.setJustificationType(getReasonByCategoryAndCode(
@@ -2034,6 +2066,12 @@ public class SimpleQuoteBackingBean extends
 					throw new EpException(MessageConst.ERROR_100022,
 							new String[] { ResourceBundleUtils.getMessage(
 									"lbl.sc.reason",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale()) });
+				}else if (quote.getJustificationRemark().isEmpty()) {
+					throw new EpException(MessageConst.ERROR_100022,
+							new String[] { ResourceBundleUtils.getMessage(
+									"lbl.sc.justification",
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 									new FacesScopes().getUserLocale()) });
 				}
@@ -2380,12 +2418,78 @@ public class SimpleQuoteBackingBean extends
 		templateSpecBackingBean.getManagedBean().setG2G(false);
 		
 		String procurementType = getManagedBean().getScQuote().getProcurementType().getParameterCode();
+		
 		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL)) {
 			getManagedBean().setProcTypeOption(Boolean.FALSE);
 			getManagedBean().setJustTypeOption(Boolean.FALSE);
 			getManagedBean().setG2GFlag(Boolean.FALSE);
 			getManagedBean().setLocAndBusinessFlag(Boolean.TRUE);
+			getManagedBean().getScQuote().setJustificationRemark("");
+		    getManagedBean().getScQuote().setJustificationType(null);
+		} else if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
+			getManagedBean().setProcTypeOption(Boolean.FALSE);
+			getManagedBean().setJustTypeOption(Boolean.FALSE);
+			getManagedBean().setG2GFlag(Boolean.TRUE);
+			getManagedBean().setLocAndBusinessFlag(Boolean.FALSE);
+			getManagedBean().setByBusinessNature(Boolean.FALSE);
+			getManagedBean().setByLocality(Boolean.FALSE);
+			templateSpecBackingBean.getManagedBean().setG2G(true);
+			getManagedBean().getScQuote().setJustificationRemark("");
+		    getManagedBean().getScQuote().setJustificationType(null);
+		} else if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)){
+			getManagedBean().setProcTypeOption(Boolean.TRUE);
+			getManagedBean().setG2GFlag(Boolean.FALSE);
+			getManagedBean().setLocAndBusinessFlag(Boolean.TRUE);
+		    getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_AD_HOC.value()));
+		    getManagedBean().getScQuote().setJustificationRemark("");
+		    getManagedBean().getScQuote().setJustificationType(null);
+		} else if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
+			getManagedBean().setProcTypeOption(Boolean.TRUE);
+			getManagedBean().setG2GFlag(Boolean.FALSE);
+			getManagedBean().setLocAndBusinessFlag(Boolean.TRUE);
+		    getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7.value()));
+		    getManagedBean().getScQuote().setJustificationRemark("");
+		    getManagedBean().getScQuote().setJustificationType(null);
+		} 
 
+		if (getManagedBean().getScQuote().isPanel()) {
+			getManagedBean().setLocAndBusinessFlag(Boolean.FALSE);
+			getManagedBean().setG2GFlag(Boolean.FALSE);
+			getManagedBean().setByBusinessNature(Boolean.FALSE);
+			getManagedBean().setByLocality(Boolean.FALSE);
+		}
+
+		if (getManagedBean().getScQuote().getJustificationType() == null) {
+			getManagedBean().getScQuote().setJustificationType(
+					new PmReason());
+		}
+		
+		debugLogger(getManagedBean().getScQuote().getProcurementType().getParameterCode());
+	}
+	
+	
+	/**
+	 * Back Process for procurement type drop down in SQ. to show justification drop
+	 * down and justification remark based on procurement type.
+	 */
+	public void procurementTypeBackProcess() {
+		debugLogger("procurementTypeBackProcess");
+		PortletSession portletSession = (PortletSession) FacesContext
+				.getCurrentInstance().getExternalContext().getSession(false);
+		TemplateSpecBackingBean templateSpecBackingBean = (TemplateSpecBackingBean) portletSession
+				.getAttribute("templateSpecBackingBean");
+		if (templateSpecBackingBean == null) {
+			templateSpecBackingBean = new TemplateSpecBackingBean();
+		}
+		templateSpecBackingBean.getManagedBean().setG2G(false);
+		
+		String procurementType = getManagedBean().getScQuote().getProcurementType().getParameterCode();
+		
+		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL)) {
+			getManagedBean().setProcTypeOption(Boolean.FALSE);
+			getManagedBean().setJustTypeOption(Boolean.FALSE);
+			getManagedBean().setG2GFlag(Boolean.FALSE);
+			getManagedBean().setLocAndBusinessFlag(Boolean.TRUE);
 		} else if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
 			getManagedBean().setProcTypeOption(Boolean.FALSE);
 			getManagedBean().setJustTypeOption(Boolean.FALSE);
@@ -2417,6 +2521,8 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().getScQuote().setJustificationType(
 					new PmReason());
 		}
+		
+		debugLogger(getManagedBean().getScQuote().getProcurementType().getParameterCode());
 	}
 
 	
@@ -3857,7 +3963,7 @@ public class SimpleQuoteBackingBean extends
 		} else if (activeIndex.equals(3)) {
 			getManagedBean().setActiveIndex(3);
 		}
-		procurementTypeEvent();
+		procurementTypeBackProcess();
 	}
 
 	/**
@@ -5721,7 +5827,7 @@ public class SimpleQuoteBackingBean extends
 		// procurement dropdown
 		getManagedBean().setProcurementTypes(
 				getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE));
-		procurementTypeEvent();
+		procurementTypeBackProcess();
 	}
 
 	/**
@@ -6527,7 +6633,7 @@ public class SimpleQuoteBackingBean extends
 		}
 		// duration calc
 		calculateDuration(scQuote);
-		procurementTypeEvent();
+		procurementTypeBackProcess();
 
 		
 		Long currentStatusId = getManagedBean().getCurrentStatusId();

@@ -128,8 +128,10 @@
 			<p:commandButton value="#{lbl['lbl.btn.save']}"
 				onclick="blockWidget.show();" oncomplete="blockWidget.hide();"
 				action="#{simpleQuoteBackingBean.saveSimpleQuote('Save')}"
-				rendered="#{!isPidExpired}" update="@form" process="@all" />
-
+				rendered="#{!isPidExpired}" update="@form" process="@all" >
+				
+				
+			</p:commandButton>
 			<ui:repeat var="bpmAction"
 				value="#{simpleQuoteBackingBean.managedBean.outComes}">
 				<ui:param name="buttonLabel"
@@ -143,7 +145,8 @@
 						update="@form">
 						<f:setPropertyActionListener
 							target="#{simpleQuoteBackingBean.managedBean.selectedAction}"
-							value="#{bpmAction}" />
+							value="#{bpmAction}"/>
+							<f:param name="submitBtnPressed" value="1" />
 					</p:commandButton>
 				</h:panelGroup>
 				<h:panelGroup rendered="#{bpmAction eq 'CANCEL'}">
