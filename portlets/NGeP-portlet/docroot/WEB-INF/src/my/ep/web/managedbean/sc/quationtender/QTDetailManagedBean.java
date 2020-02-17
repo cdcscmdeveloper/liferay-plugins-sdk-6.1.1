@@ -172,7 +172,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	/** The zone general trees. */
 	private List<TreeNode> zoneGeneralTrees = new ArrayList<TreeNode>();
-	
+	//20200210@asyrafhaziq_Bug #27381&#26694  - Start
+	/** The zone general trees. */
+	private List<TreeNode> zoneGeneralTreesPanel = new ArrayList<TreeNode>();
+	//20200210@asyrafhaziq_Bug #27381&#26694  - End
 	/** The zone supplier qualification trees. */
 	private List<TreeNode> zoneSuppQualTrees = null;
 
@@ -410,8 +413,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The supplier search bean. */
 	private SupplierSearchBean supplierSearchBean;
 
-	
-
 	/** The selected category list. */
 	private List<ScQtCategory> selectedCategoryList;
 
@@ -568,8 +569,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The briefing zone bean. */
 	private List<BriefingZoneBean> briefingZoneBean = new ArrayList<BriefingZoneBean>();
 
-	
-
 	/** The sc qt supplier. */
 	private ScQtSupplier scQtSupplier;
 
@@ -715,8 +714,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	/** The closing date. */
 	private Date closingDate;
-
-	
 
 	/** The pm document list. */
 	private List<PmDocument> pmDocumentList;
@@ -864,15 +861,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	private Object[] scTdObj;
 
-	
 	private boolean createQt;
 
 	private String statecode;
-	
 
-	
-	
-	
 	private List<ScQtApproval> toBeApprovalRemoveList;
 	
 	/** The sc qt remarks. */
@@ -910,8 +902,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	/** The evaluation type. */
 	private String evaluationType;
-
-	
 
 	/** The stage two tech compliance list. */
 	private List<PmDocument> stageTwoTechComplianceList;
@@ -973,8 +963,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The total progressive payment. */
 	private Integer totalProgressivePayment=0;
 
-	
-
 	/** The item name. */
 	private String itemName;
 
@@ -1006,8 +994,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<CtPanelSupplier> ctZoneSupplierList;
 
 	// supplier Qualification Criteria List and variables
-
-	
 
 	/** The supp criteriaopen select list. */
 	private List<ScQtCategory> suppCriteriaopenSelectList;
@@ -1116,7 +1102,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The fin points. */
 	private int finPoints;
 
-	
 	/** The year list. */
 	private List<SelectItem> yearList;
 
@@ -1269,8 +1254,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The delivery zones. */
 	private List<TplSpecZoneDtl> deliveryZones;
 
-	
-
 	/** The address zone bean. */
 	private List<BriefingZoneBean> addressZoneBean;
 
@@ -1285,8 +1268,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	/** The active index. */
 	private int activeIndex;
-
-	
 
 	/** The ct panel zones. */
 	private List<CtPanelZone> ctPanelZones;
@@ -1442,8 +1423,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The local out come. */
 	private String localOutCome;
 
-	
-
 	/** The specification remarks. */
 	private List<ScQtSpecificationRemark> specificationRemarks;
 
@@ -1528,8 +1507,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The search supplier data model. */
 	private IPagingDataModel<PmAddressType> searchDeliveryAddressDataModel;
 
-	
-
 	private Long ptjGroupId;
 	private int checkListYesIndex;
 	private boolean technicalOtherChecklistSubmit;
@@ -1585,7 +1562,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean buttonHideSchActive = true;
 	
 	private boolean isApprovalScreen = false;
-   
+
 	/**
 	 * Sets the panel suppliers.
 	 * 
@@ -10010,8 +9987,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.approvalEditableSection = approvalEditableSection;
 	}
 	
-	
-	
+	//20200210@asyrafhaziq_Bug #27381&#26694  - Start
+	public List<TreeNode> getZoneGeneralTreesPanel() {
+		return zoneGeneralTreesPanel;
+	}
+
+	public void setZoneGeneralTreesPanel(List<TreeNode> zoneGeneralTreesPanel) {
+		this.zoneGeneralTreesPanel = zoneGeneralTreesPanel;
+	}
+	//20200210@asyrafhaziq_Bug #27381&#26694  - End
+
 	/*basri 19637*/
 	public boolean isPanelZone() {
 		return isPanelZone;
