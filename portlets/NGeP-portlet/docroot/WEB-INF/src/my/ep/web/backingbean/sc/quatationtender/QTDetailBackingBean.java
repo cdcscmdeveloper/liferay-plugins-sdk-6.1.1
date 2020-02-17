@@ -7493,7 +7493,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION);
-		} else {
+		}else if(isMofSupplier()){
+			/*Bug #27412 START*/
+			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
+			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
+			qtLoaDoctypes.add(ParameterConst.DOCTYPE_SUPPLIER_PROPOSAL);
+			/*Bug #27412 END */
+		}else {
 			log.info(":::getDocTypeQtLOADropdownValues() -in false- pbbSecretaryOnly = "+ pbbSecretaryOnly +" :::");
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_BIDDING);
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
@@ -7502,9 +7508,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			
 			if (isDeskOfficer() || isAuditor()) {
 				qtLoaDoctypes.add(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION);
-			}			
-			if (isMofSupplier()) {
-				qtLoaDoctypes.add(ParameterConst.DOCTYPE_SUPPLIER_PROPOSAL);
 			}	
 		}
 		
