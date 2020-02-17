@@ -715,7 +715,14 @@ public class EvaluationBackingBean extends
 		} else if (StringUtils.equals(recommendBy,
 				QTConstants.FINANCIAL_EVALUATION_BY_ITEM)) {
 			return SourcingConstants.SCORE_SETTING_TYPE_FINANCIAL_BY_ITEM;
-		} else {
+		} 
+		//#21695 farid start
+		else if (StringUtils.equals(recommendBy,
+				QTConstants.TECHNICAL_EVALUATION)) {
+			return SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL;
+		} 
+		// #21695 farid end
+		else {
 			return SourcingConstants.SCORE_SETTING_TYPE_RECOMMENDATION_BY_ITEM;
 		}
 	}
