@@ -92,6 +92,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
+import org.python.core.exceptions;
 
 /**
  * Template Specification Backing Bean
@@ -968,44 +969,49 @@ public class TemplateSpecBackingBean extends
 	 */
 	public void calcTotalAmount(TemplateSpecBean templateSpecBean,
 			TplSpecAnswer specAnswer, boolean isItemTypeService) {
-		if (null != specAnswer) {
-			TplSpecQuestion specQuestion = specAnswer.getTplSpecQuestion();
-			BigDecimal quantity = null;
-			
-			if (specAnswer.getTplSpecZoneQty() != null) {
-				quantity = specAnswer.getTplSpecZoneQty().getQty();
-			} else {
-				quantity = specQuestion.getClQuantity();
-			}
-			
-			BigDecimal totalPrice = TemplateSpecHelper.getInstance()
-					.calcTotalAmount(specQuestion, specAnswer.getRatePerUom(),
-							quantity);
-
-			if (totalPrice != null && isItemTypeService) {
-				TplSpecMaster specMaster = specQuestion.getTplSpecMaster();
-				BigDecimal amountPerYear = BigDecimal.valueOf(totalPrice
-						.doubleValue());
-				BigDecimal itemDurationMonth = specQuestion
-						.getClDurationMonth();
-
-				if (itemDurationMonth != null) {
-					amountPerYear = amountPerYear.divide(itemDurationMonth, 2, RoundingMode.HALF_UP);
+		try{
+			if (null != specAnswer) {
+				TplSpecQuestion specQuestion = specAnswer.getTplSpecQuestion();
+				BigDecimal quantity = null;
+				
+				if (specAnswer.getTplSpecZoneQty() != null) {
+					quantity = specAnswer.getTplSpecZoneQty().getQty();
 				} else {
-					BigDecimal durationMonth = specMaster.getDurationMonth();
+					quantity = specQuestion.getClQuantity();
+				}
+				
+				BigDecimal totalPrice = TemplateSpecHelper.getInstance()
+						.calcTotalAmount(specQuestion, specAnswer.getRatePerUom(),
+								quantity);
 
-					if (durationMonth != null) {
-						amountPerYear = amountPerYear.divide(durationMonth, 2, RoundingMode.HALF_UP);
+				if (totalPrice != null && isItemTypeService) {
+					TplSpecMaster specMaster = specQuestion.getTplSpecMaster();
+					BigDecimal amountPerYear = BigDecimal.valueOf(totalPrice
+							.doubleValue());
+					BigDecimal itemDurationMonth = specQuestion
+							.getClDurationMonth();
+
+					if (itemDurationMonth != null) {
+						amountPerYear = amountPerYear.divide(itemDurationMonth, 2, RoundingMode.HALF_UP);
+					} else {
+						BigDecimal durationMonth = specMaster.getDurationMonth();
+
+						if (durationMonth != null) {
+							amountPerYear = amountPerYear.divide(durationMonth, 2, RoundingMode.HALF_UP);
+						}
 					}
+
+					specAnswer.setAmountPerYear(amountPerYear.multiply(BigDecimal
+							.valueOf(12)));
 				}
 
-				specAnswer.setAmountPerYear(amountPerYear.multiply(BigDecimal
-						.valueOf(12)));
+				specAnswer.setAnswerNumeric(totalPrice);
 			}
-
-			specAnswer.setAnswerNumeric(totalPrice);
+			calcGrandTotalAmount(templateSpecBean);
+		}catch(Exception e){
+			e.printStackTrace();
 		}
-		calcGrandTotalAmount(templateSpecBean);
+		
 	}
 	
 	public void deleteConfirmationAction(TemplateSpecBean templateSpecBean, TplSpecQuestion question) {
