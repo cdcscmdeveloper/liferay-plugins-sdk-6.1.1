@@ -18,12 +18,12 @@
  			<p:panelGrid style="margin-bottom: 0 !important; width: 100% !important;" id="panelGridId">
 				<f:facet name="header">
 					<p:row>
-						<p:column style="width:55%;white-space: normal;background-color:#F0EFEF;font-family: Arial;font-weight: bold !important;">#{lbl['lbl.sc.spec.checklist.title']}</p:column>
-						<p:column style="width:20%;white-space: normal;background-color:#F0EFEF;font-family: Arial;font-weight: bold !important;">#{lbl['lbl.sc.type']}
+						<p:column style="width:55%;white-space: normal;font-family: Arial;font-weight: bold !important;">#{lbl['lbl.sc.spec.checklist.title']}</p:column>
+						<p:column style="width:20%;white-space: normal;font-family: Arial;font-weight: bold !important;">#{lbl['lbl.sc.type']}
 							<ac:iconTooltip id="type#{row}TEC" value="#{lbl['lbl.sc.type.technical.tooltip']}" />
 						</p:column>
-						<p:column style="width:15%;white-space: normal;background-color:#F0EFEF;font-family: Arial;font-weight: bold !important;">#{lbl['lbl.sc.evalvation.status']}</p:column>
-						<p:column style="width:10%;text-align: center;background-color:#F0EFEF;font-family: Arial;font-weight: bold !important;">#{lbl['lbl.sc.action']}
+						<p:column style="width:15%;white-space: normal;font-family: Arial;font-weight: bold !important;">#{lbl['lbl.sc.evalvation.status']}</p:column>
+						<p:column style="width:10%;text-align: center;font-family: Arial;font-weight: bold !important;">#{lbl['lbl.sc.action']}
 							<ac:iconTooltip id="technicalEvaluationChecklistaction#{index}TSSOTSP"
 								value="#{lbl['lbl.sc.action.evaluation.tooltip']}" />
 						</p:column>	
@@ -51,10 +51,33 @@
 								
 							</p:column>
 						</p:row>
+					</c:forEach>
+					<c:forEach var="financialEvaluate" items="#{evaluationBackingBean.managedBean.getDetachedPaginatorTest().getModel()}" rowIndexVar="index">
+						<p:row>
+							<p:column>
+								<h:outputText value="#{financialEvaluate.title}"></h:outputText>
+							</p:column>
+							<p:column>
+								<h:outputText value="#{evaluationBackingBean.getParameterDesc(financialEvaluate.definationType)}">
+								</h:outputText>
+							</p:column>
+							<p:column>
+								<h:outputText value="#{evaluationBackingBean.getStatusDescById(financialEvaluate.pmEvalStatus.statusId)}"></h:outputText>
+							</p:column>
+							<p:column>		
+								<ui:fragment rendered="#{technicalEval.scoringReq ne 'false'}">
+									<p:commandButton value="#{lbl['lbl.btn.view']}"
+										process="@this" partialSubmit="true"
+										action="#{evaluationBackingBean.evaluatefinancialEvaluation(financialEvaluate,index,'EF')}" />
+								</ui:fragment>
+								
+							</p:column>
+						</p:row>
 					</c:forEach>				
 				</c:forEach>
 			</p:panelGrid>
 			
+			<ui:remove>
 			<p:dataTable var="financialEval" id="financialEvaluation"
 			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{evaluationBackingBean.managedBean.evaluationStgfinancialCheckList}"
@@ -101,7 +124,8 @@
 
 				</p:column>
 
-			</p:dataTable> 
+			</p:dataTable>
+			</ui:remove> 
 		</p:panel>
 	</h:panelGroup> 
 
