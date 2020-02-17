@@ -970,6 +970,7 @@ public class TemplateSpecBackingBean extends
 	public void calcTotalAmount(TemplateSpecBean templateSpecBean,
 			TplSpecAnswer specAnswer, boolean isItemTypeService) {
 		try{
+			log.info("===============================================calcTotalAmount");
 			if (null != specAnswer) {
 				TplSpecQuestion specQuestion = specAnswer.getTplSpecQuestion();
 				BigDecimal quantity = null;
@@ -1007,7 +1008,9 @@ public class TemplateSpecBackingBean extends
 
 				specAnswer.setAnswerNumeric(totalPrice);
 			}
+			log.info("end===============================================calcTotalAmount");
 			calcGrandTotalAmount(templateSpecBean);
+			log.info("calc===============================================calcTotalAmount");
 		}catch(Exception e){
 			e.printStackTrace();
 		}
