@@ -9,7 +9,8 @@
 	<p:panel header="#{lbl['lbl.sm.person.panHdr']}" toggleable="true"
 		id="equiPerDtlPan">
 		<c:if
-			test="#{(backingBean.managedBean.approverUser or backingBean.managedBean.poUser) and backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'I'}">
+			test="#{(backingBean.managedBean.approverUser or backingBean.managedBean.poUser) and 
+				(backingBean.managedBean.selectedShareHolder.identificationType.parameterCode != null and backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'I')}">
 			<h:outputText
 				style="float : left; font-size: 12px; font-weight: bold; padding-right:3px"
 				value="#{lbl['lbl.sm.person.myIdResp']} :" />
@@ -1444,7 +1445,10 @@
 						<p:outputLabel styleClass="outputLabel-view"
 							value="#{lbl['lbl.sm.person.non.residential.non.citizen']}"
 							rendered="#{backingBean.managedBean.selectedShareHolder.identityResidentStatus eq 'H' || backingBean.managedBean.selectedShareHolder.identityResidentStatus eq 'Q'
-					 || backingBean.managedBean.selectedShareHolder.identityResidentStatus eq 'X' || empty backingBean.managedBean.selectedShareHolder.identityResidentStatus}" />
+					 			|| backingBean.managedBean.selectedShareHolder.identityResidentStatus eq 'X'}" />
+						<p:outputLabel styleClass="outputLabel-view"
+							value="#{lbl['lbl.txt.na']}"
+							rendered="#{empty backingBean.managedBean.selectedShareHolder.identityResidentStatus}" />
 					</td>
 				</tr>
 			</table>
