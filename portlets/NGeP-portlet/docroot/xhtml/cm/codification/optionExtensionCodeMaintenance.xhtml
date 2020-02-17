@@ -163,13 +163,13 @@
 				</f:facet>
 				   #{cmunspsc[3]}
 				</p:column>
-				<p:column style="width : 5% !important; vertical-align:top;">
+				<p:column style="width : 5% !important;">
 					<f:facet name="header">
 					#{lbl['lbl.cm.code']}
 				</f:facet>
 				#{cmunspsc[4]}
 			</p:column>
-				<p:column headerText="#{lbl['lbl.cm.status.name']}" style="width : 8% !important; vertical-align:top;">
+				<p:column headerText="#{lbl['lbl.cm.status.name']}" style="width : 8% !important;">
                     <p:selectOneMenu style="width:100px;"  value="#{cmunspsc[5]}">
 						<f:selectItems value="#{codificationMaintenanceBackingBean.getStatusExtensionOptions()}"/>
 					</p:selectOneMenu>
