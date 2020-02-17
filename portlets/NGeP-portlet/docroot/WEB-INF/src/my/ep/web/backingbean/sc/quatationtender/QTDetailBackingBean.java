@@ -4670,15 +4670,30 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							specZoneLocs.add(specLoc);
 						}
 					}
-					zoneGeneralTrees.add(
-							LocationSingleton.getInstance().constuctTreeNode(
-									zone, specZoneLocs));
-					
-					if (zoneSuppQualTrees != null) {
-						zoneSuppQualTrees.add(
+					//20200210@asyrafhaziq_Bug #27381&#26694  - Start
+					if (scQt.isZonal() &&  scQt.isPanel() )
+					{
+						zoneGeneralTrees.add(
+								LocationSingleton.getInstance().constuctTreeNodeWithDisableChild(
+										zone, specZoneLocs));
+						
+						if (zoneSuppQualTrees != null) {
+							zoneSuppQualTrees.add(
+									LocationSingleton.getInstance().constuctTreeNodeWithDisableChild(
+											zone, zone.getTplSpecZoneLocs()));}
+				
+					}else{
+						zoneGeneralTrees.add(
 								LocationSingleton.getInstance().constuctTreeNode(
-										zone, zone.getTplSpecZoneLocs()));	
+										zone, specZoneLocs));
+						
+						if (zoneSuppQualTrees != null) {
+							zoneSuppQualTrees.add(
+									LocationSingleton.getInstance().constuctTreeNode(
+											zone, zone.getTplSpecZoneLocs()));	
+						}
 					}
+					//20200210@asyrafhaziq_Bug #27381&#26694  - End
 				}
 			}
 		}

@@ -14383,6 +14383,15 @@ public class SpecificationBackingBean extends
 						zoneLocal);
 
 			}
+			//20200214@asyrafhaziq_Bug #27381&#26694   - Start
+			else {
+				if (null != scQt.getScQtSupplierCriteria()
+						.getQtZoneCriterias()) {
+					qtSupplierCriteria.getQtZoneCriterias()
+							.setTplSpecZoneDtls(null);
+				}
+			}
+			//20200214@asyrafhaziq_Bug #27381&#26694   - End
 
 			// scQt.setZoneLocationLevel(null);
 			scQt.getScQtSupplierCriteria().setLocationLevel(null);

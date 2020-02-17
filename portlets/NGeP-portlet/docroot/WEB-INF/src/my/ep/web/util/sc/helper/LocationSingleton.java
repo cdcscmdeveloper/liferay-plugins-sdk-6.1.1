@@ -857,7 +857,77 @@ public class LocationSingleton {
 		}
 		return root;
 	}
-
+	
+	//20200210@asyrafhaziq_Bug #27381&#26694  - Start
+		/**
+		 * To construct TreeNode with disable child
+		 * 
+		 * @param tplSpecZoneDtl
+		 * @param specLocs
+		 * @return TreeNode instance
+		 */
+		public TreeNode constuctTreeNodeWithDisableChild(TplSpecZoneDtl tplSpecZoneDtl,
+				List<TplSpecZoneLoc> specLocs) {
+			TreeNode root = new DefaultTreeNode(QTConstants.NODE_ROOT, null);
+			if (tplSpecZoneDtl != null) {
+				TreeNode zoneNode = new DefaultTreeNode(QTConstants.NODE_ZONE,
+						tplSpecZoneDtl, root);
+				Map<Long, TreeNode> stateMap = new HashMap<Long, TreeNode>();
+				Map<Long, TreeNode> divisionMap = new HashMap<Long, TreeNode>();
+				List<PmDistrict> districts = new ArrayList<PmDistrict>();
+				TreeNode stateNode = null;
+				TreeNode divisonNode = null;
+				TreeNode district = null;
+				// List<TreeNode> locations = new ArrayList<TreeNode>();
+				for (TplSpecLoc locCriteria : specLocs) {
+					PmState pmState = locCriteria.getPmState();
+					if (null != pmState) {
+						stateNode = stateMap.get(pmState.getStateId());
+						if (stateNode == null) {
+							stateNode = new DefaultTreeNode(QTConstants.NODE_STATE,
+									locCriteria, zoneNode);
+							stateNode.setSelectable(false);
+							stateMap.put(pmState.getStateId(), stateNode);	
+						}
+					} else {
+						stateNode = null;
+					}
+					
+					PmDivision division = locCriteria.getPmDivision();
+					if (null != division) {
+						divisonNode = divisionMap.get(division.getDivisionId());
+						if (divisonNode == null) {
+							divisonNode = new DefaultTreeNode(
+									QTConstants.NODE_DIVISION, locCriteria, stateNode);
+							divisonNode.setSelectable(false);
+							divisionMap.put(division.getDivisionId(), divisonNode);	
+						}
+					} else {
+						divisonNode = null;
+					}
+					
+					PmDistrict pmDistrict = locCriteria.getPmDistrict();
+					if (null != pmDistrict && !districts.contains(pmDistrict)) {
+						if (divisonNode == null) {
+							district = new DefaultTreeNode(QTConstants.NODE_DISTRICT,
+									locCriteria, stateNode);
+							district.setSelectable(false);
+						} else {
+							district = new DefaultTreeNode(QTConstants.NODE_DISTRICT,
+									locCriteria, divisonNode);
+							district.setSelectable(false);
+						}
+						districts.add(pmDistrict);
+					}
+					else {
+						district = null;
+					}
+				}
+			} else {
+			}
+			return root;
+		}
+		//20200210@asyrafhaziq_Bug #27381&#26694  - End
 	/**
 	 * To construct TreeNode
 	 * 
