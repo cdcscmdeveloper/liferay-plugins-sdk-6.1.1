@@ -14,13 +14,13 @@
 		<h:panelGroup id="cmExtensionRequestFormID">
 
 			<div style="text-align: right; min-height: 40px;">
-				<p:commandButton value="#{lbl['lbl.cm.submit']}"
-					action="#{extensionCodeCreationBackingBean.submitToBPM}" update="@form"></p:commandButton>
+				<p:commandButton value="#{lbl['lbl.cm.create.publish']}"
+				     disable="extensionCodeCreationBackingBean.managedBean.disableSelectBtn"
+                     onclick="extensionCodeCreation.show()"></p:commandButton>
 
 				<div style="float: left; clear: both;">
 					<p:commandButton value="#{lbl['lbl.cm.back']}"
-						action="#{extensionCodeCreationBackingBean.backToExtensionSearch}"
-						update="@form">
+						action="#{extensionCodeCreationBackingBean.backToExtensionSearch}">
 					</p:commandButton>
 				</div>
 			</div>
@@ -44,35 +44,34 @@
 					</tr>
 				</table>
 				
-				<p:dataTable tableStyleClass="fixedTable" id="extCodeId" lazy="true" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-				value="#{extensionCodeCreationBackingBean.extensionSearchItemDataModel}" var="ext"
-				width="100%" rows="10">
-
-				<ac:paginator for="itemTableID"></ac:paginator>
-
+				<p:dataTable id="extCodeCreationId"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" rowIndexVar="rowIndex"
+					value="#{extensionCodeCreationBackingBeann.managedBean.requestExtCodeList}"
+					var="ext">
 					<p:column>
 						<f:facet name="header">
 						#{lbl['lbl.cm.type']}
 					</f:facet>
-						#{ext[4]}
+						#{ext.typeName}
+
 					</p:column>
 					<p:column>
 						<f:facet name="header">
 						#{lbl['lbl.cm.brand']}
 					</f:facet>
-						#{ext[5]}
+						#{ext.brandName}
 					</p:column>
 					<p:column>
 						<f:facet name="header">
 						#{lbl['lbl.cm.measurement']}
 					</f:facet>
-						#{ext[6]}
+						#{ext.measurementName}
 					</p:column>
 					<p:column>
 						<f:facet name="header">
 						#{lbl['lbl.cm.color']}
 					</f:facet>
-						#{ext[7]}
+						#{ext.colorName}
 					</p:column>
 					<p:column>
 						<f:facet name="header">
@@ -82,7 +81,7 @@
 							action="#{extensionCodeCreationBackingBean.editExtensionRequest(rowIndex)}">
 							<p:graphicImage value="/css/images/design/edit.png"></p:graphicImage>
 						</p:commandLink>
-						<p:commandLink style="margin-left: 10px;" update=":form:extCodeId"
+						<p:commandLink style="margin-left: 10px;" update=":form:extCodeCreationId"
 							title="#{lbl['lbl.btn.delete']}"
 							action="#{extensionCodeCreationBackingBean.deleteExtensionRequest(rowIndex)}">
 							<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
@@ -108,6 +107,16 @@
 				<ui:include src="requestExtensionCodeCreationPopUp.xhtml" />
 			</p:dialog>
 		</h:panelGroup>
+		
+		
+			<ac:confirmationPopup id="extensionCodeCreation" widget="extensionCodeCreation"
+				okAction="extensionCodeCreationBackingBean.submitToBPM"
+				width="400" height="100"
+				title="#{lbl['lbl.cm.dialog.cofirm.header']}"
+				content="#{lbl['lbl.cm.dialog.message.extension.code.creation']}"
+				update=":form"
+				oncomplete="extensionCodeCreation.hide();"/>
+		
 	</ui:define>
 
 </ui:composition>
