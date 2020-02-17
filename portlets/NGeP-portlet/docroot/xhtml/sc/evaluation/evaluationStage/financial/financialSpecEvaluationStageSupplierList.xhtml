@@ -30,7 +30,7 @@
 			<p:column headerText="#{lbl['lbl.tpl.spec.content.system.score']}"
 				style="width:20%;text-align:right;"
 				rendered="#{evaluationBackingBean.managedBean.scQtChecklist.scoringReq}">
-				<h:outputText value="#{finSpec.scQtProposal.proposalAmount.totalScore}"></h:outputText>
+				<h:outputText value="#{finSpec.totalAutoScore}"></h:outputText>
 
 			</p:column>
 
@@ -46,7 +46,7 @@
 			</p:column>
 
 
-			<p:column>  
+			<p:column headerText="#{lbl['lbl.sc.total.lbl.sc.action']}" style="width:20%;text-align:center;">  
 			        <p:commandButton value="#{lbl['lbl.btn.evaluate']}"
 						rendered="#{finSpec.scQtProposal.proposalAmount.pmSpecEvalStatus eq null or finSpec.scQtProposal.proposalAmount.pmSpecEvalStatus.statusId eq '61600'}"
 						process="@this"
