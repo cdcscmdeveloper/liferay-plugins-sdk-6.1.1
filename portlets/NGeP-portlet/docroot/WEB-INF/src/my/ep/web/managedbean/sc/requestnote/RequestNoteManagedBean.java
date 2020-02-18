@@ -325,7 +325,12 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	private Map<Long, List<TplSpecQuestion>> specificationMap = new HashMap<Long, List<TplSpecQuestion>>();
 	
     /** The Clone and Re-Quote btn. */
-    private boolean cloneReQuote = Boolean.FALSE;	
+    private boolean cloneReQuote = Boolean.FALSE;
+	
+	// 12177 - Start
+	/** The SQ end date */
+	private Calendar sqEndDate;
+	// 12177 - End
 	
     /**
      * Instantiates a new request note managed bean.
@@ -1913,4 +1918,20 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setCloneReQuote(boolean cloneReQuote) {
 		this.cloneReQuote = cloneReQuote;
 	}
+	
+	// 12177 - Start
+	/**
+	 * @return the taskExpiryDate
+	 */
+	public Calendar getSqEndDate() {
+		return sqEndDate;
+	}
+
+	/**
+	 * @param taskExpiryDate the taskExpiryDate to set
+	 */
+	public void setSqEndDate(Calendar sqEndDate) {
+		this.sqEndDate = sqEndDate;
+	}
+	// 12177 - End
 }
