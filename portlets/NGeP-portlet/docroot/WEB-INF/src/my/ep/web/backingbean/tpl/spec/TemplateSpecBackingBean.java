@@ -3185,4 +3185,19 @@ public class TemplateSpecBackingBean extends
 		
 	}
 /** #21695 FARID END */		
+	
+	public boolean offerQtyCheck(TplSpecQuestion specQuestion){
+		
+		boolean show = false;
+		
+		if(specQuestion != null){
+			
+			log.info(specQuestion+"==============specquestion===============");
+			log.info(specQuestion.getTplSpecZoneQties()+"================spec quantity=============");
+			if(specQuestion.getTplSpecZoneQties() != null && specQuestion.getTplSpecZoneQties().size()>0){
+				show = true;
+			}
+		}
+		return show;
+	}
 }
