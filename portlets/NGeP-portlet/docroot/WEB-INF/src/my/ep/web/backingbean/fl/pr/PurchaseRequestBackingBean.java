@@ -148,8 +148,9 @@ import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.persistence.entity.pm.common.VPmDo;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
-import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
+import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -194,6 +195,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	private static Logger log = Logger.getLogger(PurchaseRequestBackingBean.class);
 	public static final String NAV_TO_CREATE_PURCHASE_REQUEST = "/xhtml/fl/purchaserequest/prBasePage.xhtml";
 	private boolean checkFlg = false;
+	private boolean sqExpiredMessageFlag = false;
 	private boolean displayItemPnl;
 	private boolean selectedAllChargeItem;
 	private String className="@(.myPrClassName)";
@@ -286,6 +288,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			reqDTO.setUserLocale(getFacesScopes().getUserLocale());
 			reqDTO.setPidValidityExpired(getManagedBean().isPidValidityExpired());
 			reqDTO.setTaskDeadLine(getManagedBean().getTaskDeadLine());
+			// 12177 - Start
+			reqDTO.setSqExpiredStatus(getManagedBean().getSqExpiredStatus());
+			reqDTO.setSqNumber(getManagedBean().getSqNumber());
+			reqDTO.setRequestNoteId(getManagedBean().getRequestNoteId());
+			// 12177 - End
 			if(isFlFulfilmentRequisitioner()) {
 				reqDTO.setRequisitioner(Boolean.TRUE);
 				if(getManagedBean().getSelectedApprover() != null){
@@ -1410,6 +1417,14 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 					MessageUtils.getMessage(MessageConst.INFO_745085, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 			}
+		}
+		
+		//Redmine Enhancement #12177
+	    addButton();
+	    if(sqExpiredMessageFlag){
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+					MessageUtils.getMessage(MessageConst.ERROR_760481, 
+							null,MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 		}
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -4521,4 +4536,76 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			log.info(skuDesc+"=======AFTER IF ===================================="+scRequestItem.getCmItem().getCmSupplierItems());
 			return skuDesc;
 	}
+	
+	/**
+	 * Add/display only cancel/reject button if SQ not valid 
+	 */
+	public void addButton(){
+		Long currentStatusId = getManagedBean().getCurrentStatusId();
+		//checking if SQ still valid, if not valid thus cancel/reject button will be added
+		if(!isSqStillValid()){
+				if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL) || 
+				   currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL) ){
+					String[] addReject = new String[]{BpmOutcomeConst.BPM_REJECT};    		
+					getManagedBean().setOutComes(addReject);						
+				}else{
+					String[] addCancel = new String[]{BpmOutcomeConst.BPM_CANCEL};    		
+					getManagedBean().setOutComes(addCancel);
+				}
+						
+		}							        
+	}
+	
+	/**
+	 * Check either SQ is valid or not (SQ only valid for 60 days after it closing date)
+	 */
+	public boolean isSqStillValid(){		
+		
+		Boolean validDate = true;		
+		Long currentStatusId = getManagedBean().getFulfilmentRequest().getFlWorkflowStatus().getPmStatus().getStatusId();
+		Integer sqTimeValidity = null;
+		ScQuote scQuote = getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getRequestNote().getQuote();
+		ScRequestNote scRequestNote = getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getRequestNote();
+		
+		// by default days
+		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);	
+		RuleReqDTO ruleReqDTO = new RuleReqDTO();
+		ruleReqDTO.setRuleType(ParameterConst.SIMPLE_QUOTE);
+		List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
+		if (ruleValueList != null && ruleValueList.size() > 0) {
+			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
+			sqTimeValidity = Integer.valueOf(configRuleValue.getRuleValue());
+		} else {
+			throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
+		}
+				
+		if(scQuote != null){
+			if(getManagedBean().getFulfilmentRequest().getScPurchaseInDefault() == null){
+				Date currentDate = new Date();
+				Date closingDate = scQuote.getEndDate();
+				
+				Calendar cal = Calendar.getInstance();
+				cal.clear(); 
+				cal.setTime(closingDate);
+				cal.add(Calendar.DATE, sqTimeValidity); //add 60days to closing/end date
+				
+				if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)
+				  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL) 
+				  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION) 
+				  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL) 
+				  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION) ){
+					if(currentDate.compareTo(cal.getTime()) >= 0){
+						validDate = false;
+						sqExpiredMessageFlag = true;
+						getManagedBean().setSqExpiredStatus(true);
+						getManagedBean().setSqNumber(scQuote.getQuoteNo());
+						getManagedBean().setRequestNoteId(scRequestNote.getRequestNoteId());
+					}
+				}
+			}				
+		}	
+		return validDate;	
+	}
+	
 }
