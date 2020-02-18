@@ -281,6 +281,13 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private boolean prevHideRemarks;
 	
 	private boolean oldGstRateFlg = false;
+
+	// 12177 - Start
+	/** The flag of SQ expired */
+	private boolean sqExpiredStatus = Boolean.FALSE;
+	private String sqNumber;
+	private Long requestNoteId;
+	// 12177 - End	
 	
 /**
  * Gets the charge line item root.
@@ -3247,4 +3254,47 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 	//end added for #24353
 
+	// 12177 - Start
+	/**
+	 * @return the sqExpiredStatus
+	 */
+	public boolean getSqExpiredStatus() {
+		return sqExpiredStatus;
+	}
+	
+	/**
+	 * @param sqExpiredStatus the sqExpiredStatus to set
+	 */
+	public void setSqExpiredStatus(boolean sqExpiredStatus) {
+		this.sqExpiredStatus = sqExpiredStatus;
+	}
+	
+	/**
+	 * @return the sqNumber
+	 */
+	public String getSqNumber() {
+		return sqNumber;
+	}
+
+	/**
+	 * @param sqNumber the sqNumber to set
+	 */
+	public void setSqNumber(String sqNumber) {
+		this.sqNumber = sqNumber;
+	}
+	
+	/**
+	 * @return the requestNoteId
+	 */
+	public Long getRequestNoteId() {
+		return requestNoteId;
+	}
+
+	/**
+	 * @param requestNoteId the requestNoteId to set
+	 */
+	public void setRequestNoteId(Long requestNoteId) {
+		this.requestNoteId = requestNoteId;
+	}
+	// 12177 - End	
 }

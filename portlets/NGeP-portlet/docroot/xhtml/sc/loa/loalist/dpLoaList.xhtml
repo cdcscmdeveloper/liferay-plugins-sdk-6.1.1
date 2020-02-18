@@ -57,7 +57,14 @@
 
 				<p:column headerText="#{lbl['lbl.sc.status']}"
 					style="width:15%;white-space: normal;">
-					<h:outputText value="#{dpLOABackingBean.getStatusDescById(scPurchaseRequest.scLoa.pmStatus.statusId)}" />
+					<c:choose>
+						<c:when test="#{!dpLOABackingBean.isSqStillValid(scPurchaseRequest.scLoa.pmStatus.statusId)}">
+							<h:outputText value="#{dpLOABackingBean.getStatusDescById(DPStatusConstants.SQ_EXPIRED)}" />
+						</c:when>
+						<c:otherwise>
+							<h:outputText value="#{dpLOABackingBean.getStatusDescById(scPurchaseRequest.scLoa.pmStatus.statusId)}" />
+						</c:otherwise>
+					</c:choose>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%">

@@ -33,7 +33,14 @@
 				<td width="10%"><h:outputLabel value="#{lbl['lbl.sc.status']}" />
 				</td>
 				<td class="header-info-text">
-					#{lOADetailBackingBean.getStatusDescById(lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId)}
+					<c:choose>
+						<c:when test="#{!lOADetailBackingBean.isSqStillValid()}">
+							#{lOADetailBackingBean.getStatusDescById(DPStatusConstants.SQ_EXPIRED)}
+						</c:when>
+						<c:otherwise>
+							#{lOADetailBackingBean.getStatusDescById(lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId)}
+						</c:otherwise>
+					</c:choose>
 				</td>
 			</tr>
 			<tr>
