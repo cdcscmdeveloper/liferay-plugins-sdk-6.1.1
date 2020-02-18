@@ -137,6 +137,7 @@ public class ViewApplHistoryManagedBean extends
 				
 				reqDTO.setAccountType(getAccountType());
 			} else {
+				//#25792 START Changes Fix error Null Pointer
 				if(getSearchSupplier().getSmAppl() != null && SupplierManagementConst.SUPP_TYPE_BASIC.equalsIgnoreCase(getSearchSupplier().getSmAppl().getSupplierType())) {
 					reqDTO.setAccountType(SupplierManagementConst.SUPP_TYPE_BASIC);
 				} else if(getSearchSupplier().getSmAppl() != null && SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT.equalsIgnoreCase(getSearchSupplier().getSmAppl().getSupplierType())) {
@@ -145,7 +146,7 @@ public class ViewApplHistoryManagedBean extends
 				} else {
 					reqDTO.setAccountType("M");
 				}
-				
+				//#25792 END Changes Fix error Null Pointer
 				reqDTO.setEpNo(getSearchSupplier().getEpNo());
 			}
 			reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
@@ -157,7 +158,7 @@ public class ViewApplHistoryManagedBean extends
 					.retrieveApplicationHistoryUsingNativeQuery(reqDTO)
 					.getObjectArrResultBean();
 			//Bug #25601 :
-			int[] indexToCheck = new int[]{0, 10, 11, 12, 13}; 
+			int[] indexToCheck = new int[]{0, 10, 11, 12, 13,14,1}; 
 			List<Object[]> resultListTemp = new ArrayList();
 			String previousAppl="applno,";
 			try {
@@ -188,8 +189,12 @@ public class ViewApplHistoryManagedBean extends
 								if(resDto.getMofAccount() != null){
 									obj[8] = resDto.getMofAccount().getMofNo();
 								}else{
+									//2. For inprogress application which is New Supplier Registration/Upgrade MOF Account (application no start from KN-XXXXXX-XXXX / JN-XXXXXX-XXXX), the MOF No will display N/A. If this type of application has been reject, MOF No still display N/A due to the MOF registration not completed yet.
+									if(obj[14] != null && SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER.equalsIgnoreCase(obj[14].toString()) && "N".equalsIgnoreCase(obj[1].toString())){
+										obj[8] = SmCommonUtil.getMessage("lbl.sm.no.available", null);
+									}
 									//1.& 2. (SM_Appl : Is_Active_Appl = 1 and Record_Status = 1) except application no start from (KN-XXXXXX-XXXX / JN-XXXXXX-XXXX) will display based on active MOF Account (Record_Status = 1)
-									if(Integer.parseInt(obj[13].toString())==1 &&  Integer.parseInt(obj[12].toString())==1 && (!obj[0].toString().contains("KN") || !obj[0].toString().contains("JN"))){
+									else if(Integer.parseInt(obj[13].toString())==1 &&  Integer.parseInt(obj[12].toString())==1 && (!obj[0].toString().contains("KN") || !obj[0].toString().contains("JN"))){
 										obj[8] = getMofNo(Long.parseLong(obj[11].toString()),Long.parseLong(obj[10].toString()),
 												obj[8]==null?StringUtils.EMPTY: obj[8].toString());
 									}else if((obj[0].toString().contains("KN") || obj[0].toString().contains("JN"))){
