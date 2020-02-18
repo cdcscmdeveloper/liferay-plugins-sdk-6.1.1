@@ -5,6 +5,8 @@ package my.ep.web.backingbean.sc.directpurchase;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,14 +26,18 @@ import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
+import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.DPStatusConstants;
+import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
@@ -39,8 +45,10 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
+import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.SourcingIntegrationReqDTO;
 import my.ep.dto.sc.SourcingIntegrationResDTO;
+import my.ep.dto.sc.directpurchase.QuoteResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
@@ -50,6 +58,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
@@ -786,5 +795,130 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		sb.append(String.format("[%s=%s]", searchFilterBean2.getSearchField(), searchFilterBean2.getSearchValue()));
 		searchBean.setDescription("searchTrackingDiary" + sb.toString() + "[Caller:DirectPurchaseBackingBean.SearchTrackingDiaryPagingDataModel]");
 	}
+	
+	// 12177 - Start
+	public boolean checkStatusSqExpired(Object[] dpObj){
+		
+		String docNo = null;
+		Long docStatusId = null;
+		String docType = null;
+		
+		if(dpObj[1] != null){
+			docNo = (String) dpObj[1];
+		}
+		if(dpObj[4] != null){
+			docStatusId = (Long) dpObj[4];
+		}
+		if(dpObj[3] != null){
+			docType = (String) dpObj[3];
+		}
+			
+		IQuoteSO quoteSO;
+ 	    quoteSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
+ 	    QuoteResDTO quoteResDTO = null;
+	    Long currentStatusId = docStatusId;
+	    Boolean sqExpired = false;
+	       
+	    if(docType.equals("SQ")){
+	    	if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION)){
+	    		quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(docNo, docStatusId, docType);	
+	    		if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
+	    			if(!isSqStillValid(quoteResDTO.getEndDate())){
+	    				sqExpired = true;
+				    }
+	    		}
+			}								   
+	    }else if(docType.equals("RN")){
+	    	if(currentStatusId.equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION)
+	    	   || currentStatusId.equals(DPStatusConstants.RN_PENDING_APPROVAL)
+	    	   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION) 
+	    	   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL)
+	    	   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)){
+	    		quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(docNo, docStatusId, docType);	
+	    		if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
+	    			if(!isSqStillValid(quoteResDTO.getEndDate())){
+	    				sqExpired = true;
+				    }
+	    		}
+	    	}  	
+	    }else if(docType.equals("PR")){
+	    	if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL)
+	 		   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION)
+			   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
+			   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)){
+	    		quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(docNo, docStatusId, docType);	
+	    		if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
+	    			if(!isSqStillValid(quoteResDTO.getEndDate())){
+	    				sqExpired = true;
+				    }
+	    		}
+	    	}
+	    }else if(docType.equals("LA")){
+	    	if(currentStatusId.equals(QTStatusConst.LOA_PENDING_SUBMISSION)
+			   || currentStatusId.equals(QTStatusConst.LOA_PENDING_APPROVAL)
+		       || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION)
+		       || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL)){
+	    		quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(docNo, docStatusId, docType);	
+	    		if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
+	    			if(!isSqStillValid(quoteResDTO.getEndDate())){
+	    				sqExpired = true;
+				    }
+	    		}
+	    	}
+	    }
+	    
+		return sqExpired;
+	}
+	
+	public boolean isSqStillValid(Date sqEndDate){		
+		
+		Boolean validDate = true;	
+		Integer sqTimeValidity = null;
+			
+		// by default days
+		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);	
+		RuleReqDTO ruleReqDTO = new RuleReqDTO();
+		ruleReqDTO.setRuleType(ParameterConst.SIMPLE_QUOTE);
+		List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
+		if (ruleValueList != null && ruleValueList.size() > 0) {
+			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
+			sqTimeValidity = Integer.valueOf(configRuleValue.getRuleValue());
+		}	
+			
+		if(sqEndDate != null){
+				Date currentDate = new Date();
+				Date closingDate = sqEndDate;
+					
+				Calendar cal = Calendar.getInstance();
+				cal.clear(); 
+				cal.setTime(closingDate);
+				cal.add(Calendar.DATE, sqTimeValidity); //add 60days to closing/end date
+					
+				if(currentDate.compareTo(cal.getTime()) >= 0){
+						validDate = false;
+				}							
+			}						
+			return validDate;	
+	}
+	
+	public String getDocStatus(Object[] dpObj){
+		
+		if(dpObj == null){
+			return null;
+		}
+		
+		if(checkStatusSqExpired(dpObj)){
+			return getStatusDescById(DPStatusConstants.SQ_EXPIRED);
+		}
+		Long statusId = null;
+		if(dpObj[4] != null){
+			statusId = (Long) dpObj[4];
+		}		
+		return getStatusDescById(statusId);
+	}
+	
+	// 12177 - End
 }
 

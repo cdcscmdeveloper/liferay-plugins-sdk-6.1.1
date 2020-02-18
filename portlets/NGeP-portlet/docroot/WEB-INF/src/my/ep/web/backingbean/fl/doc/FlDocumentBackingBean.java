@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -38,12 +39,16 @@ import my.ep.biz.service.pm.authorization.orgprofile.IPtjReorgSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.DPStatusConstants;
+import my.ep.constant.sc.QTStatusConst;
 import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
 import my.ep.dto.ct.supplier.ContractSupplierResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
@@ -57,6 +62,8 @@ import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
+import my.ep.dto.sc.directpurchase.QuoteResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.exception.EpException;
@@ -78,6 +85,8 @@ import my.ep.persistence.entity.pm.authorization.PmPtjReorg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
+import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -1336,4 +1345,87 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	public String getUsername(Long userId) {
 		return PmCommonUtil.retriveUserName(userId);
 	}
+	
+	// 12177 - Start
+	
+	public boolean checkStatusSqExpired(String docNo, Long docStatusId, String docType ){		
+		
+		IQuoteSO quoteSO;
+ 	    quoteSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
+ 	    QuoteResDTO quoteResDTO = null;
+	    Long currentStatusId = docStatusId;
+	    Boolean sqExpired = false;
+	       
+	    if(docType.equals("PR")){
+	    	if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)
+	    	   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL)
+	 		   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION)
+			   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
+			   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)){
+	    		quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(docNo, docStatusId, docType);	
+	    		if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
+	    			if(!isSqStillValid(quoteResDTO.getEndDate())){
+	    				sqExpired = true;
+				    }
+	    		}
+	    	}
+	    }    
+		return sqExpired;
+	}
+	
+	/**
+	 * Check either SQ is valid or not (SQ only valid for 60 days after it closing date)
+	 */
+	public boolean isSqStillValid(Date endDate){		
+		
+		Boolean validDate = true;	
+		Integer sqTimeValidity = null;
+
+		// by default days
+		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);	
+		RuleReqDTO ruleReqDTO = new RuleReqDTO();
+		ruleReqDTO.setRuleType(ParameterConst.SIMPLE_QUOTE);
+		List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
+		if (ruleValueList != null && ruleValueList.size() > 0) {
+			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
+			sqTimeValidity = Integer.valueOf(configRuleValue.getRuleValue());
+		} else {
+			throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
+		}
+
+		if(endDate != null){
+			
+			Date currentDate = new Date();
+			Date closingDate = endDate;
+			
+			Calendar cal = Calendar.getInstance();
+			cal.clear(); 
+			cal.setTime(closingDate);
+			cal.add(Calendar.DATE, sqTimeValidity); //add 60days to closing/end date
+			
+		    if(currentDate.compareTo(cal.getTime()) >= 0){
+		    	validDate = false;			
+			}	
+		}			
+		return validDate;	
+	}
+	
+	public String getDocStatus(String docNo, Long docStatusId, String docType ){
+		
+		if(docNo == null || docStatusId == null || docType == null){
+			return null;
+		}
+		
+		if(checkStatusSqExpired(docNo, docStatusId, docType )){
+			return getStatusDescById(DPStatusConstants.SQ_EXPIRED);
+		}
+		Long statusId = null;
+		if(docStatusId != null){
+			statusId = docStatusId;
+		}		
+		return getStatusDescById(statusId);
+	}
+	// 12177 - End
 }

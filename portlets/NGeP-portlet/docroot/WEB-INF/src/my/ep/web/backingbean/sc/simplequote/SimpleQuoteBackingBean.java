@@ -7221,4 +7221,55 @@ public class SimpleQuoteBackingBean extends
 		}
 		return supplierId;
 	}
+	
+	//12177 - Start	
+		/**
+		 * Check either SQ is valid or not (SQ only valid for 60 days after it closing date)
+		 */
+		public boolean isSqStillValid(){		
+			
+			Boolean validDate = true;	
+			Integer sqTimeValidity = null;
+			Long currentStatusId = null;
+			ScQuote scQuote = getManagedBean().getScQuote();
+			
+			if(scQuote != null){
+				if(scQuote.getCurrentStatus() != null){
+					currentStatusId = scQuote.getCurrentStatus().getPmStatus().getStatusId();
+				}				
+			}
+			
+			// by default days
+			IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);	
+			RuleReqDTO ruleReqDTO = new RuleReqDTO();
+			ruleReqDTO.setRuleType(ParameterConst.SIMPLE_QUOTE);
+			List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
+			if (ruleValueList != null && ruleValueList.size() > 0) {
+				PmConfigRuleValue configRuleValue = ruleValueList.get(0);
+				sqTimeValidity = Integer.valueOf(configRuleValue.getRuleValue());
+			} else {
+				throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
+			}		
+			
+			if(scQuote != null && currentStatusId != null && scQuote.getEndDate() != null){
+				if(scQuote.getPurchaseInDefault() == null){
+					Date currentDate = new Date();
+					Date closingDate = scQuote.getEndDate();
+					
+					Calendar cal = Calendar.getInstance();
+					cal.clear(); 
+					cal.setTime(closingDate);
+					cal.add(Calendar.DATE, sqTimeValidity); //add 60days to closing/end date
+					
+					if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION)){
+						if(currentDate.compareTo(cal.getTime()) >= 0){
+							validDate = false;
+						}
+					}					
+				}				
+			}			
+			return validDate;	
+		}
+		//12177 - End
 }
