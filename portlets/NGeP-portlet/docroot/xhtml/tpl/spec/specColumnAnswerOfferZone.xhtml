@@ -5,7 +5,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-			 
+			
+	<c:if test="#{templateSpecBackingBean.offerQtyCheck(question)}">	 
     <p:dataTable var="tplSpecZoneOffer" id="specZoneTbl" rowIndexVar="rowIndex" value="#{question.tplSpecZoneQties}" 
      	rendered="#{question ne null and question.tplSpecZoneQties ne null and isQuestionTypeItem and !isSpecTypeFinancial and isZonal}">
      
@@ -19,7 +20,7 @@
 
         <f:facet name="footer"/>
     </p:dataTable>   
-	
+	</c:if>	
 </ui:composition>
 
 
