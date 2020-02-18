@@ -4659,6 +4659,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		} else {
 			getManagedBean().setZoneSuppQualTrees(null);
 		}
+		//20200210@asyrafhaziq_Bug #27381&#26694  - Start
+		//set  ZoneGeneral Trees Panel
+		if (scQt.isZonal() &&  scQt.isPanel() ){
+		  new CreateQtBackingBean().retrieveZoneGeneralTreesPanel(scQt, specZoneDtls);
+		}
+		//20200210@asyrafhaziq_Bug #27381&#26694  - End
 		
 		if (CollectionUtils.isNotEmpty(specZoneDtls)) {
 			for (TplSpecZoneDtl zone : specZoneDtls) {
