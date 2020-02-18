@@ -167,6 +167,17 @@
 								rendered="#{scQt.actionRender[9]}"
 								action="#{qTDetailBB.closeProposal(scQt)}"
 								partialSubmit="true" process="@this" update="searchQTs"/>
+							<ui:remove>
+								Bug #27412 START
+							</ui:remove>
+							<p:menuitem id="menuItem12" value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
+								oncomplete="blockWidget.hide();" 
+								rendered="#{scQt.actionRender[12]}"
+								icon="ui-icon-view" action="#{qTDetailBB.viewSupplierProposalDetails(scQt, view.viewId)}" 
+								partialSubmit="true" process="@this"/>
+							<ui:remove>
+								Bug #27412 END
+							</ui:remove>
 						    <p:menuitem id="menuItem11" value="#{lbl['lbl.btn.clone']}"
 								rendered="#{qTDetailBB.isQTMaintenanceScreen() and qTDetailBB.isQTStatusInBetween(scQt.qtStatus.statusId, QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL, QTStatusConst.QT_AWARDED)}" 
 								icon="ui-icon-edit" update=":form:displayk"
