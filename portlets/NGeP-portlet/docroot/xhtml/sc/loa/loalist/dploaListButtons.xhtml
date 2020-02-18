@@ -11,12 +11,24 @@
 			value="#{dpLOABackingBean.managedBean.outComes}">
 			<ui:param name="buttonLabel"
 				value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-				
-			<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
-				action="#{dpLOABackingBean.updateBpmTaskAction(bpmAction)}"
-				rendered="#{dpLOABackingBean.managedBean.showBPMButtons}"
-				partialSubmit="true" process="@form"
-				update="@form" />
+						
+			<h:panelGroup rendered="#{bpmAction == 'REQUOTE'}">
+				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
+					action="#{dpLOABackingBean.updateBpmTaskAction(bpmAction)}"
+					rendered="#{dpLOABackingBean.managedBean.showBPMButtons}"
+					partialSubmit="true" process="@form"
+					update="@form" />
+			</h:panelGroup>
+			
+			<h:panelGroup rendered="#{bpmAction == 'RERECOMMEND'}">
+				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
+					action="#{dpLOABackingBean.updateBpmTaskAction(bpmAction)}"
+					rendered="#{dpLOABackingBean.managedBean.showBPMButtons and
+								dpLOABackingBean.isSqStillValid(dpLOABackingBean.managedBean.currentStatusId)}"
+					partialSubmit="true" process="@form"
+					update="@form" />
+			</h:panelGroup>				
+			
 		</ui:repeat>
 	</div>
 </ui:composition>
