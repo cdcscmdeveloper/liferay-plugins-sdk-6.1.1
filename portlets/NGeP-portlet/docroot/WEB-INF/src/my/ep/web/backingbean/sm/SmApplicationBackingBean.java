@@ -117,6 +117,7 @@ import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
 import my.ep.persistence.entity.sm.SmCompanyExperienceCat;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmGstSupplier;
@@ -8440,6 +8441,26 @@ public class SmApplicationBackingBean extends
 	 */
 	public String finalDecisionApproveOrRejectAppln(String dialog,
 			String decision) {
+		//24964 - start
+		if (getManagedBean().getSmAppl().getApplType()
+				.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
+				&& decision.equalsIgnoreCase("REJECT")) {
+			
+			PmRegStatus pmRegStatus = new PmRegStatus();
+			PmStatus pmStatus = new PmStatus();
+			
+			pmStatus.setStatusId(SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED);
+			pmRegStatus.setPmStatus(pmStatus);
+			getManagedBean().getSmAppl().setPmRegStatus(pmRegStatus);
+			
+			if(getManagedBean().getSmAppl().getSmSupplier() != null){
+				SmApplicationUtil.rejectSmMofCertForSupplier(
+						getManagedBean().getSmAppl().getSmSupplier());
+			}
+		}
+		log.info("<<<<Appl type>>>>");
+		log.info(getManagedBean().getSmAppl().getApplType());
+		//24964 - end
 		List<String> updateIds = new ArrayList<String>();
 		updateIds.add(":form");
 		log.info("*** Submit Approve *** " + decision);
@@ -12572,30 +12593,11 @@ public class SmApplicationBackingBean extends
 					this.getManagedBean().getSmAppl().getSmCompanyBasic().setAnnualRevenue(tempAnnualRevenue);
 				}*/
 				//SET ADDRESS
-				//START #27256
-				String[] copyPropAddress = {"address1","address2","address3","addressSsmNull","postcodeSsmNull","stateSsmNull","countrySsmNull","ssmData","postcode","pmState","pmCountry"};
-				EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmAddress(),this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress(),copyPropAddress);
-				//#27256
-				//this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPostcode(ssmResDTO.getSmAddress().getPostcode());						
-				if(ssmResDTO.getSmAddress().getPmCountry() != null && ssmResDTO.getSmAddress().getPmState() != null){
-					PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
-					this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setCountryId(defaultCountry.getCountryId());
+				String[] copyPropAddress = {"address1","address2","address3","addressSsmNull","postcodeSsmNull","stateSsmNull","countrySsmNull","ssmData","postcode"};
 
-				}
-				if(ssmResDTO.getSmAddress().getPmState() != null){
-					this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setStateId(ssmResDTO.getSmAddress().getPmState().getStateId());
-					//this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setCityId(null);
-					//this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setDistrictId(null);
-					//this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPmDistrict(null);
-					//this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPmCity(null);
-					if(this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmCountry() == null || this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmCountry().getCountryId() == null){
-						PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
-						this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPmCountry(defaultCountry);
-					}
-					this.getManagedBean().setBasicCompanyStates(SmCommonUtil.getStateList(this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmCountry().getCountryId()));
-					this.getManagedBean().setBasicCompanyDistricts(SmCommonUtil.getDistrictList(ssmResDTO.getSmAddress().getPmState().getStateId()));
-					
-				}
+				EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmAddress(),this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress(),copyPropAddress);
+				this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPostcode(ssmResDTO.getSmAddress().getPostcode());
+				this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPmState(ssmResDTO.getSmAddress().getPmState());
 				//END #27256
 				this.getManagedBean().getSmAppl().setApplValidWithSsm(true);
 				//set establish date
