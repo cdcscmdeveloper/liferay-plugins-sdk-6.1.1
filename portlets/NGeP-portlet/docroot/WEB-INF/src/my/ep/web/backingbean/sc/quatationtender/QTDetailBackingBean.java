@@ -1113,14 +1113,24 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		ScLoaForQt scLoaForQt = null;
 		if(getManagedSearchBeanDocumentTypeIsLOA() || getManagedSearchBeanDocumentTypeIsLOI()){
 			if(obj instanceof ScLoiForQt ){
+				/* Bug #27412 START */
 				scLoiForQt = (ScLoiForQt)obj;
-				if (ParameterConst.DOCTYPE_LETTER_OF_INTENT.equals(docType)) {
-					LOIDetailBackingBean bb = new LOIDetailBackingBean();
-					//return bb.retrieveSupplierLOIDtl(
-							//scLoiForQt.getScLoiLoa().getScQt().getQtId(), scLoiForQt.getLoiId(), previousPageUrl, true, true);
-					bb.preRenderViewForQtMaintenenceScreen(scLoiForQt.getLoiId(), previousPageUrl);
+				LOIDetailBackingBean bb = new LOIDetailBackingBean();
+				scQt = scLoiForQt.getScLoiLoa()!=null?scLoiForQt.getScLoiLoa().getScQt():null;
+				if (ParameterConst.DOCTYPE_LETTER_OF_INTENT.equals(docType)) {					
+					if(isMofSupplier()){
+						//SUPPLIER
+						return bb.retrieveSupplierLOIDtl(
+								scLoiForQt.getScLoiLoa().getScQt().getQtId(), scLoiForQt.getLoiId(), previousPageUrl, true, true);
+					}else{
+						//DESK OFFICER						
+						//return bb.retrieveSupplierLOIDtl(
+								//scLoiForQt.getScLoiLoa().getScQt().getQtId(), scLoiForQt.getLoiId(), previousPageUrl, true, true);
+						bb.preRenderViewForQtMaintenenceScreen(scLoiForQt.getLoiId(), previousPageUrl);
+					}					
 					return null;
 				}
+				/* Bug #27412 END */
 			}
 			else if(obj instanceof ScLoaForQt){
 				scLoaForQt = (ScLoaForQt)obj;
@@ -8209,41 +8219,52 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	
 	/* ***17376#55 - start */
 	public boolean[] actionRender(ScQt scQt){
+		boolean[] resArr = new boolean[13];
 		
-		boolean[] resArr = new boolean[10];
-		resArr[0] = !ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO.equalsIgnoreCase(scQt.getProcurementMode().getParameterCode()); 
-		resArr[1] = ParameterConst.DOCTYPE_QUOTATION.equalsIgnoreCase(getManagedBean().getQtnTenderSearchBean().getResultDocType());
-		resArr[2] = ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO.equalsIgnoreCase(scQt.getProcurementMode().getParameterCode());
-		resArr[3] = !ParameterConst.DOCTYPE_BIDDING.equalsIgnoreCase(getManagedBean().getQtnTenderSearchBean().getResultDocType()) && !ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO.equalsIgnoreCase( scQt.getProcurementMode().getParameterCode());
-		resArr[4] = ParameterConst.DOCTYPE_BIDDING.equalsIgnoreCase(getManagedBean().getQtnTenderSearchBean().getResultDocType());
-		resArr[5] = getManagedSearchBeanDocumentTypeIsLOI();
-		resArr[6] = getManagedSearchBeanDocumentTypeIsLOA();
-		resArr[7] = getManagedSearchBeanDocumentTypeIsSuppFinal() && !ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO.equalsIgnoreCase(scQt.getProcurementMode().getParameterCode()) && isAllowQTViewSupplierFinalization(scQt);
-		
-		//only 1 is true
-		if(resArr[5] || resArr[6] || resArr[7]){
-			resArr = new boolean[]{false, false, false, false, false, resArr[5], resArr[6], resArr[7], false, false};
-		}
-		else{
-			boolean fnd = false;
-			resArr[1] = false;
-			for(int i = 0; i<resArr.length; i++){ 
-				if(i==1){continue;} //ignore resArr[1].
-				if(fnd){
-					resArr[i] = false;
+		if(isMofSupplier()){
+			/* Bug #27412 START */
+			resArr[10] = getManagedSearchBeanDocumentTypeIsLOI();
+			resArr[11] = getManagedSearchBeanDocumentTypeIsLOA();
+			resArr[12] = getManagedBean().getQtnTenderSearchBean().getResultDocType() != ParameterConst.DOCTYPE_BIDDING && scQt.getProcurementMode().getParameterCode() != ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO;
+			/* Bug #27412 END */
+			
+			
+		}else{
+			resArr[0] = !ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO.equalsIgnoreCase(scQt.getProcurementMode().getParameterCode()); 
+			resArr[1] = ParameterConst.DOCTYPE_QUOTATION.equalsIgnoreCase(getManagedBean().getQtnTenderSearchBean().getResultDocType());
+			resArr[2] = ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO.equalsIgnoreCase(scQt.getProcurementMode().getParameterCode());
+			resArr[3] = !ParameterConst.DOCTYPE_BIDDING.equalsIgnoreCase(getManagedBean().getQtnTenderSearchBean().getResultDocType()) && !ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO.equalsIgnoreCase( scQt.getProcurementMode().getParameterCode());
+			resArr[4] = ParameterConst.DOCTYPE_BIDDING.equalsIgnoreCase(getManagedBean().getQtnTenderSearchBean().getResultDocType());
+			resArr[5] = getManagedSearchBeanDocumentTypeIsLOI();
+			resArr[6] = getManagedSearchBeanDocumentTypeIsLOA();
+			resArr[7] = getManagedSearchBeanDocumentTypeIsSuppFinal() && !ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO.equalsIgnoreCase(scQt.getProcurementMode().getParameterCode()) && isAllowQTViewSupplierFinalization(scQt);
+			
+			//only 1 is true
+			if(resArr[5] || resArr[6] || resArr[7]){
+				resArr = new boolean[]{false, false, false, false, false, resArr[5], resArr[6], resArr[7], false, false};
+			}
+			else{
+				boolean fnd = false;
+				resArr[1] = false;
+				for(int i = 0; i<resArr.length; i++){ 
+					if(i==1){continue;} //ignore resArr[1].
+					if(fnd){
+						resArr[i] = false;
+					}
+					if(resArr[i]){
+						fnd = true;
+					}
 				}
-				if(resArr[i]){
-					fnd = true;
-				}
+				
+				qtEnableEditCheck(resArr);
 			}
 			
-			qtEnableEditCheck(resArr);
+			if(isQtTechSupportSearchScreen()){
+				resArr[8] = isAllowQTPublishBtn(scQt);
+				resArr[9] = isAllowQTClosedBtn(scQt);
+			}
 		}
 		
-		if(isQtTechSupportSearchScreen()){
-			resArr[8] = isAllowQTPublishBtn(scQt);
-			resArr[9] = isAllowQTClosedBtn(scQt);
-		}
 		return resArr;
 		
 	}
