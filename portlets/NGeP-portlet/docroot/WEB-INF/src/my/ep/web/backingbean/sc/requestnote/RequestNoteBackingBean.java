@@ -113,6 +113,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
@@ -160,6 +161,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	
 	/** The flag. */
 	private boolean flag;
+	private boolean sqExpiredMessageFlag = false;
 	
 	/** The Constant ZONE_SEPARATOR. */
 	public static final String ZONE_SEPARATOR = "_";
@@ -627,6 +629,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			setUserDetails(requestNote);
 			requestNoteReqDTO.setRequestNote(requestNote);
 			requestNoteReqDTO.setUserLocale(new FacesScopes().getUserLocale());
+			// 12177 - Start
+			requestNoteReqDTO.setSqEndDate(getManagedBean().getSqEndDate());
+			// 12177 - End
 			try {
 				if(outcome.isEmpty()) {	
 					requestNoteReqDTO.setToken(ctxToken);
@@ -1048,7 +1053,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		SCDirectPurchaseDataType directPurchaseDataType = super.getBpmTaskDetails(SCDirectPurchaseDataType.class, null);
 		Long dpId = null;
 		boolean zoneFlag = Boolean.FALSE;
-		ScRequestNote	requestNote = null;
+		ScRequestNote requestNote = null; 
 
 		if(directPurchaseDataType.getRnId() == null){
 			dpId = Long.valueOf(directPurchaseDataType.getDpId());
@@ -1080,6 +1085,15 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			retrieveRequestNoteDetails(requestNote, getManagedBean().getCurrentStatusId(), zoneFlag);
 			checkIsSupplierResponse(requestNote.getRequestNoteDtls(), getManagedBean().getCurrentStatusId());
 		}
+		
+		//Redmine Enhancement #12177
+		addButton();
+		if(sqExpiredMessageFlag){
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+				MessageUtils.getMessage(MessageConst.ERROR_760481, 
+					null,MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		}
+		
 		// title checker
 		getManagedBean().setTitleChecker(Boolean.FALSE);
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -1328,6 +1342,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNoteReqDTO.setPidId(getManagedBean().getPurchaseInDefaultId());
 			requestNoteReqDTO.setDeletedRequestNoteDtls(getManagedBean().getDeleteRequestNoteDtls());
 			requestNoteReqDTO.setUserLocale(new FacesScopes().getUserLocale());
+			// 12177 - Start
+			requestNoteReqDTO.setSqEndDate(getManagedBean().getSqEndDate());
+			// 12177 - End
 			try {
 				requestNoteResDTO = getRequestNoteSO().updateRequestNote(requestNoteReqDTO);
 			} catch(EpException e) {
@@ -4425,4 +4442,99 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return userlist;
 	}
 	//26221 - End
+	
+	/**
+	 * Add/display only cancel/reject button if SQ not valid 
+	 */
+	public void addButton(){
+		Long currentStatusId = getManagedBean().getCurrentStatusId();
+		//check if pid expired ovewrite sq
+		//checking if SQ still valid, if not valid thus cancel/reject button will be added
+		
+		if(!isSqStillValid()){
+			if(currentStatusId.equals(DPStatusConstants.RN_PENDING_APPROVAL)
+			   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL) ){
+			   String[] addReject = new String[]{BpmOutcomeConst.BPM_REJECT};    		
+			   getManagedBean().setOutComes(addReject);
+			}
+			else{
+			   String[] addCancel = new String[]{BpmOutcomeConst.BPM_CANCEL};    		
+			   getManagedBean().setOutComes(addCancel);
+			}						
+		}	
+	}
+	
+	/**
+	 * Check either SQ is valid or not (SQ only valid for 60 days after it closing date)
+	 */
+	public boolean isSqStillValid(){		
+		
+		Boolean validDate = true;	
+		Integer sqTimeValidity = null;
+		Long currentStatusId = null;
+		ScQuote scQuote = null;
+		
+		if(getManagedBean().getRequestNote() != null){
+			scQuote = getManagedBean().getRequestNote().getQuote();
+			if(getManagedBean().getRequestNote().getCurrentStatus() == null){
+				if(getManagedBean().getCurrentStatusId() != null){
+					currentStatusId = getManagedBean().getCurrentStatusId();
+				}
+					
+				if(scQuote != null && scQuote.getCurrentStatus() != null){
+					currentStatusId =  scQuote.getCurrentStatus().getPmStatus().getStatusId();
+				}			
+			}else{
+				currentStatusId = getManagedBean().getRequestNote().getCurrentStatus().getPmStatus().getStatusId();
+			}	
+		}	 
+		
+		// by default days
+		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);	
+		RuleReqDTO ruleReqDTO = new RuleReqDTO();
+		ruleReqDTO.setRuleType(ParameterConst.SIMPLE_QUOTE);
+		List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
+		if (ruleValueList != null && ruleValueList.size() > 0) {
+			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
+			sqTimeValidity = Integer.valueOf(configRuleValue.getRuleValue());
+		} else {
+			throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
+		}		
+		
+		if(scQuote != null && currentStatusId != null){
+			if(getManagedBean().getPurchaseInDefaultId() == null){
+				Date currentDate = new Date();
+				Date closingDate = scQuote.getEndDate();
+				
+				Calendar cal = Calendar.getInstance();
+				cal.clear(); 
+				cal.setTime(closingDate);
+				cal.add(Calendar.DATE, sqTimeValidity); //add 60days to closing/end date
+				
+				if(currentStatusId.equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION)
+				   || currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION) 
+				   || currentStatusId.equals(DPStatusConstants.RN_PENDING_APPROVAL)
+				   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION) 
+				   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL) ){
+					if(currentDate.compareTo(cal.getTime()) >= 0){
+						validDate = false;
+						sqExpiredMessageFlag = true;
+						// 12177 - Start
+						getManagedBean().setSqEndDate(toCalendar(scQuote.getEndDate()));
+						// 12177 - End
+					}
+				}					
+			}				
+		}			
+		return validDate;	
+	}
+	
+	// 12177 - Start
+	public static Calendar toCalendar(Date date){ 
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		return cal;
+	}
+	// 12177 - End
 }
