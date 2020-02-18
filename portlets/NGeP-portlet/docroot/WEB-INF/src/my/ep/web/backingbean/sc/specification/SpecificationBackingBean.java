@@ -5088,7 +5088,11 @@ public class SpecificationBackingBean extends
 					}
 
 				}
-
+				// #23059#67#76 - start
+				// To recalculate estimate amount (Item Total Indicative Price)
+					System.out.println("===========reCalculateEstimateAmount start============");
+					reCalculateEstimateAmount(templateSpecBean);
+				// #23059#67#76 - end
 				return "/xhtml/sc/boSctemplatespec/financialCommitteeTemplate.xhtml?faces-redirect=true";
 			} else {
 				setUserDetails(checkList);
@@ -16366,4 +16370,100 @@ public class SpecificationBackingBean extends
 		}
 	}
 	// #21695 END FARID
+
+	// #23059#67#76 - start
+	// To recalculate estimate amount (Item Total Indicative Price)
+	private void reCalculateEstimateAmount(TemplateSpecBean templateSpecBean){
+		log.info("===========reCalculateEstimateAmount============");
+	
+		Double indicativeUnitPrice = 0.00;  
+		BigDecimal clQuantity = new BigDecimal(0); 
+		BigDecimal clUomFrequency = new BigDecimal(0);  
+		BigDecimal clUomPerDay = new BigDecimal(0);  
+		BigDecimal clUomPerMonth = new BigDecimal(0); 
+		BigDecimal contractDuration = new BigDecimal(0);
+		long specEstimationId = 0;
+		long specZoneId = 0; 
+		BigDecimal questionId = new BigDecimal(0);
+		Boolean isItemTypeService = false;
+		Boolean isFulfilmentTypeScheduled = false;	
+		Boolean isZonal = false;
+		
+		if (templateSpecBean.getSpecMaster().getTplSpecZone() != null) {
+			isZonal = true;
+		}		
+		if (this.getManagedBean().getQt().getContractDuration() != null) {
+			contractDuration = BigDecimal.valueOf(this.getManagedBean().getQt().getContractDuration());
+		} 
+		if (this.getManagedBean().getFulfilmentType() == ParameterConst.FULFILMENT_TYPE_SCHEDULED) {
+			isFulfilmentTypeScheduled = true;
+		} 
+		if (templateSpecBean.getSpecMaster().getItemTypeCode().getParameterCode() == ParameterConst.ITEM_TYPE_SERVICE) {
+			isItemTypeService = true;
+		} 
+		for (int i = 0; i < templateSpecBean.getSpecMaster().getTplSpecQuestions().size(); i++) {
+			if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClQuantity() != null) {
+				clQuantity = templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClQuantity();
+			} 
+			if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClUomFrequency() != null) {
+				clUomFrequency = templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClUomFrequency();
+			} 
+			if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClUomPerDay() != null) {
+				clUomPerDay = templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClUomPerDay();
+			} 				
+			if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClUomPerMonth() != null) {
+				clUomPerMonth = templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClUomPerMonth();
+			} 
+			if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getTplSpecEstimations().size()!= 0){
+				for (int x = 0; x < templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getTplSpecEstimations().size(); x++) {
+	
+					if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getTplSpecEstimations().get(x).getIndicativeUnitPrice() != null) {
+						indicativeUnitPrice = templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getTplSpecEstimations().get(x).getIndicativeUnitPrice().doubleValue();
+					} 
+					else {
+						indicativeUnitPrice = 0.00 ;
+					}
+					
+					if (isZonal == true) {
+						if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getTplSpecZoneQties().get(x).getQty() != null) {
+							clQuantity = templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getTplSpecZoneQties().get(x).getQty() ;
+							specZoneId = templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getTplSpecZoneQties().get(x).getSpecZoneQtyId() ;
+						} 
+					}					
+					specEstimationId = templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getTplSpecEstimations().get(x).getSpecEstimationId() ;
+					questionId = BigDecimal.valueOf(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getSpecQuestionId());
+					 
+						log.info("i is : " + i + " x is "+ x );
+						log.info("clQuantity is : " + clQuantity);
+						log.info("clUomFrequency is : " + clUomFrequency);
+						log.info("clUomPerDay is : " + clUomPerDay);
+						log.info("clUomPerMonth is : " + clUomPerMonth);
+						log.info("contractDuration is : " + contractDuration);
+						log.info("isItemTypeService is : " + isItemTypeService);
+						log.info("isFulfilmentTypeScheduled is : " + isFulfilmentTypeScheduled);
+						log.info("specEstimationId is : " + specEstimationId);
+						log.info("specZoneId is : " + specZoneId);
+						log.info("questionId is : " + questionId);
+						log.info("indicativeUnitPrice is : " + indicativeUnitPrice);
+								
+					TemplateSpecBackingBean templateSpecBackingbean = new TemplateSpecBackingBean();
+					templateSpecBackingbean
+							.calcItemTotalIndicateUnitPrice(templateSpecBean,
+							indicativeUnitPrice, 
+							clQuantity, 
+							clUomFrequency, 
+							clUomPerDay, 
+							clUomPerMonth, 
+							contractDuration, 
+							specEstimationId, 
+							isItemTypeService,
+							isFulfilmentTypeScheduled, 
+							specZoneId, 
+							questionId); 
+				}
+			}
+		}
+	}
+	// #23059#67#76 - end
+
 }
