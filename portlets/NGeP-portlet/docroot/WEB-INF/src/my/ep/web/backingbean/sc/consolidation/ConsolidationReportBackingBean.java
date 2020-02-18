@@ -1706,7 +1706,9 @@ public class ConsolidationReportBackingBean extends
 		}
 		TplSpecZoneDtl specZoneDtl = this.getManagedBean().getSelectedZone();
 		log.info("specZoneDtl" + specZoneDtl);
+		if(evaluationStageId==2){ //#26440 Start
 		supplierFinalizationBB.getManagedBean().setCurrentZone(specZoneDtl);
+		} //#26440 End
 		supplierFinalizationBB.retrieveQualifiedSuppliersInfoByEvalStage();
 
 	}
