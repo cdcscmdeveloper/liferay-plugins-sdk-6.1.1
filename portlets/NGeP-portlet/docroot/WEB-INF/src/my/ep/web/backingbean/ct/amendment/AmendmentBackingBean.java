@@ -4729,6 +4729,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				
 				if (orgProfileId.longValue() == ctOwnerOrgProfileId.longValue()) {
 					allowChairpersonRole = true;
+				} else {
+					allowChairpersonRole = false;
 				}
 			}
 			
@@ -4738,18 +4740,23 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				//#26751 - start
 				PmOrgProfile pmOrgProfile = new PmOrgProfile();
 				OrgProfileReqDTO mofReqDTO = new OrgProfileReqDTO();
-				mofReqDTO.setOrgCode("103"); //KEMENTERIAN KEWANGAN MALAYSIA
 				
+				if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)){
+					mofReqDTO.setOrgCode("24010201");//LPPS Sabah
+				} else if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
+					mofReqDTO.setOrgCode("24010301");//LPPS Sarawak
+				}
+
 				OrgProfileResDTO mofResDTO = orgProfileSO.retrieveOrgProfileByCode(mofReqDTO);
 				pmOrgProfile = mofResDTO.getPmOrgProfile();
 				
-				PmOrgProfile ministryOrgProfile = retrieveMinistryOrgProfile(orgProfileId.longValue());
-
-				log.info(":::allowChairpersonRole() ministry id: "+ ministryOrgProfile.getOrgProfileId() +". MOF ministry id: "+ pmOrgProfile.getOrgProfileId());
+				log.info(":::allowChairpersonRole() user profile id: "+ orgProfileId.longValue() +". committee profile id: "+ pmOrgProfile.getOrgProfileId());
 				// FSB/FSW - open to MOF Procurement Board
-				if(pmOrgProfile.getOrgProfileId() == ministryOrgProfile.getOrgProfileId()) {
+				if(orgProfileId.longValue() == pmOrgProfile.getOrgProfileId().longValue()) {
 					allowChairpersonRole = true;
-				} 
+				} else {
+					allowChairpersonRole = false;
+				}
 				//#26751 -end
 			}
 			//Bug #26520 - end
