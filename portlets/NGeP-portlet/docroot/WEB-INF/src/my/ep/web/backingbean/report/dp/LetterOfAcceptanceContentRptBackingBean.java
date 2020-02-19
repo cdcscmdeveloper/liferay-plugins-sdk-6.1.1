@@ -321,9 +321,11 @@ public class LetterOfAcceptanceContentRptBackingBean extends
 
 	@Override
 	public void resetSearch() {
+		//Enhancement #25141 - start -
 		log.info("::: resetSearch() executed :::");
 		setScLOAIdNo(null);
 		this.getManagedBean().setLoaReportDocumentList(null);
+		//Enhancement #25141 - end -
 	}
 
 	@Override
