@@ -8113,7 +8113,7 @@ public class SpecificationBackingBean extends
 
 		try {
 
-			selectItems.add(new SelectItem(null, ResourceBundleUtils
+			selectItems.add(new SelectItem(0, ResourceBundleUtils
 					.getMessage("lbl.txt.select",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale())));
