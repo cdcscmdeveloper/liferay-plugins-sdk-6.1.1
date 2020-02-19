@@ -1374,12 +1374,12 @@ public class SimpleQuoteBackingBean extends
 								.getJustificationType().getReasonCode()));
 	
 					}
-					else {
-						quote.setJustificationType(null);
-					}
 				} else {
 					quote.setJustificationType(null);
 				}
+			}else {
+				quote.setJustificationType(null);
+			}
 
 			// procurement type category
 			if (null != quote.getProcurementTypeCategory()) {
