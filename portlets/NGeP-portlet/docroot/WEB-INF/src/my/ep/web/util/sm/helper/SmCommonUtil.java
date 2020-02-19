@@ -5793,13 +5793,14 @@ public class SmCommonUtil {
 	}
 	//SSM Integration
 	public static void ssmError(SsmResDTO resDTO){
+		//27382
 		switch (resDTO.getStatusCode()) {
 		case "70001":
-			throw new EpException(MessageConst.ERROR_SSM_70001);
+			throw new EpException(MessageConst.ERROR_721071);
 		case "70002":
-			throw new EpException(MessageConst.ERROR_SSM_70002);
+			throw new EpException(MessageConst.ERROR_721071);
 		case "70003":
-			throw new EpException(MessageConst.ERROR_SSM_70003);
+			throw new EpException(MessageConst.ERROR_721071);
 		case "70004":
 			//throw new EpException(MessageConst.ERROR_SSM_70004);
 			throw new EpException(MessageConst.ERROR_721071);
@@ -5810,10 +5811,14 @@ public class SmCommonUtil {
 //			throw new EpException(MessageConst.ERROR_SSM_70006);
 			throw new EpException(MessageConst.ERROR_721071);
 		case "70061":
-			throw new EpException(MessageConst.ERROR_721078);
+			throw new EpException(MessageConst.ERROR_721071);
 			//27264
 		case MessageConst.ERROR_721084:
-			throw new EpException(MessageConst.ERROR_721084);
+			throw new EpException(MessageConst.ERROR_721084);			
+		case "70067"://No SSM Data for requested BusinessRegistrationNo
+			throw new EpException(MessageConst.ERROR_721078);
+		case "70068"://Encounter Technical Error at SSM
+			throw new EpException(MessageConst.ERROR_721078);
 		}
 	}
 		

@@ -469,7 +469,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					case "C":
 					case "X":
 					case "Y":
-						throw new EpException(MessageConst.ERROR_721078);
+						//27382
+						throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
 					default:
 						break;
 				}
