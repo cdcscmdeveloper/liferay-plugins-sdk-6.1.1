@@ -38,7 +38,7 @@
 		</p:outputPanel>
 		
 		<p:outputPanel rendered="#{!registrationBackingBean.managedBean.viewMode}">
-			<h:outputText rendered="#{registrationBackingBean.managedBean.smAppl.applValidWithSsm}" value="#{lbl['lbl.sm.po.disclaimer']}" styleClass="splNotesFonts" />
+			<h:outputText rendered="#{registrationBackingBean.managedBean.smAppl.applValidWithSsm}" value="#{lbl['lbl.sm.po.disclaimer']}" styleClass="splNotesFonts" escape="false" />
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.declare']}" action="#{registrationBackingBean.updateBasicSupplier}" update="@([id$=Msg])" 
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
