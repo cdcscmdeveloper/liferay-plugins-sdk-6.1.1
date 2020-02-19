@@ -5796,7 +5796,7 @@ public class SmCommonUtil {
 		//27382
 		switch (resDTO.getStatusCode()) {
 		case "70001":
-			throw new EpException(MessageConst.ERROR_721071);
+			throw new EpException(MessageConst.ERROR_721078);
 		case "70002":
 			throw new EpException(MessageConst.ERROR_721071);
 		case "70003":
