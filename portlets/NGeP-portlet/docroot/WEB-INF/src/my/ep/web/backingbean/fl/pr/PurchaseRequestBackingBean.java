@@ -181,6 +181,7 @@ import my.ep.web.util.fl.helper.LocationSingleton;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.vo.FLSupplierItemVO;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 
 /**
  * Backing Bean for Create Purchase Order.
