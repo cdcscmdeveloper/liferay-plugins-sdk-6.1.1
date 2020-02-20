@@ -2226,6 +2226,11 @@ public class SupplierFinalizationBackingBean extends
 			if (reqDTO == null) {
 				reqDTO = validateInfo(activeIndex);
 			}			
+			
+			/* Enhancement #21694 START */
+			reqDTO.setScQtReverse(getManagedBean().getScQtReverse());
+			/* Enhancement #21694 END */
+			
 			reqDTO.setScQt(getManagedBean().getScQt());
 			reqDTO.setRefinalize(isQTRefinalized());
 			reqDTO.setOutcome(outcome);
