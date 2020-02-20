@@ -57,7 +57,7 @@
 
 		<p:dataTable id="extensionCodeCreationTablePopUpId"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			value="#{extensionCodeCreationBackingBean.managedBean.unspscPopUpList}"
+			value="#{extensionCodeCreationBackingBean.managedBean.extensionPopUpList}"
 			var="unspscObj1" width="100%" rows="10">
 
 			<ac:paginator for="unspscTablePopUpId"></ac:paginator>
@@ -75,17 +75,9 @@
 							</p:commandLink>
 
 				<p:commandLink
-					action="#{extensionCodeCreationBackingBean.goToAddServiceConfirmPopUp(unspscObj1)}"
-					disabled="true"
-					rendered="#{!(extensionCodeCreationBackingBean.productCode(unspscObj1.unspscCode)) and (unspscObj1.unspscLevel eq 3)}"
-					onclick="extensionUnspscPopUp.hide()" oncomplete="confirmationPopUp.show()"
-					update=":form:confirmationPopUpId">
-							#{unspscObj1.unspscCode}
-							</p:commandLink>
-
-				<p:commandLink
 					action="#{extensionCodeCreationBackingBean.unspscPopUpSearch(unspscObj1)}"
-					rendered="#{unspscObj1.unspscLevel ne 3}">
+					rendered="#{unspscObj1.unspscLevel ne 3}"
+				    update=":form:extensionCodeCreationPopUpId">
 							#{unspscObj1.unspscCode}
 							</p:commandLink>
 
@@ -106,15 +98,6 @@
 				
 
 		</p:dataTable>
-
-
-	    <p:dialog id="confirmationPopUp" widgetVar="confirmationPopUp"
-				modal="true" header="#{lbl['lbl.cm.add.to.catalogue']}" width="350"
-				height="150">
-
-				<ui:include src="addServiceConfirmationPopUp.xhtml"></ui:include>
-
-			</p:dialog>
 
 	</h:panelGroup>
 

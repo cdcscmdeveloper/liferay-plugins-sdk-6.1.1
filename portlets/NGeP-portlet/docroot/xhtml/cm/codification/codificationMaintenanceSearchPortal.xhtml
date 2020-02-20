@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-		<script>
+         <script>
 			$('#portlet_codificationMaintenance_WAR_NGePportlet').find('.portlet-title-text')
 					.html("#{lbl['lbl.cm.codification.maintenance.title']}");
 		</script>
@@ -46,35 +46,38 @@
 			<div style="text-align: right;">
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
 					action="#{codificationMaintenanceBackingBean.unspscSearch}"
-			       update="unspscTableID itemCodeSearchMsg" />
+					 update="unspscTableID itemCodeSearchMsg" />
 				<p:commandButton value="#{lbl['lbl.btn.reset']}" 
-				    action="#{codificationMaintenanceBackingBean.resetSearch}" 
+				    action="#{codificationMaintenanceBackingBean.resetAction}" 
 				     update="panel1,unspscTableID"/>					 	 
 			</div>
 		</p:panel>
 
-
-
 		<p:panel header="#{lbl['lbl.cm.search.result']}" toggleable="true">
 
-			<p:dataTable tableStyleClass = "fixedTable" id="unspscTableID" lazy="true" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-				value="#{codificationMaintenanceBackingBean.managedBean.searchDataModel}" var="unspscObj"
+			<p:dataTable tableStyleClass="fixedTable" id="unspscTableID" lazy="true" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				value="#{codificationMaintenanceBackingBean.searchDataModel}" var="unspscObj"
 				width="100%" rows="10">
-
-
 
 				<ac:paginator for="unspscTableID"></ac:paginator>
 
-
-				<p:column  styleClass = "wrappedTd" sortBy="#{unspscObj.unspscCode}">
+				<p:column  styleClass="wrappedTd" sortBy="#{unspscObj.unspscCode}">
 					<f:facet name="header">
 					#{lbl['lbl.cm.unspsc.code']}
 				</f:facet>
-					<p:commandLink
-							action="#{codificationMaintenanceBackingBean.unspscPopUpSearch(unspscObj)}"
-							onclick="codificationMaintenanceSearchPopUpPortal.show()" update=":form:unspscTablePopUpId">
-							#{unspscObj.unspscCode}
-							</p:commandLink>		
+				
+					<p:commandLink action="#{codificationMaintenanceBackingBean.goToAddServiceConfirmPopUp(unspscObj)}" disabled="true"
+						rendered="#{unspscObj.unspscLevel eq 3}">
+						#{unspscObj.unspscCode}
+					</p:commandLink>
+					
+					   <p:commandLink				
+						action="#{codificationMaintenanceBackingBean.unspscPopUpSearch(unspscObj)}"
+						onclick="codificationMaintenanceSearchPopUpPortal.show()" update=":form:unspscTablePopUpId"
+					    rendered="#{unspscObj.unspscLevel ne 3}">						
+						#{unspscObj.unspscCode}
+					</p:commandLink>
+					
 				</p:column>
 				<p:column  styleClass = "wrappedTd" sortBy="#{unspscObj.unspscTitle}">
 					<f:facet name="header">
@@ -93,8 +96,9 @@
 						<p:menuitem id="menuItemId1" value="#{lbl['lbl.cm.item.code.maintenance.title.option']}" icon="ui-icon-view"							  
 							action="#{codificationMaintenanceBackingBean.PopupOption(unspscObj)}">
 						</p:menuitem>						
-						  <p:menuitem id="menuItemId2" value="#{lbl['lbl.cm.extension.code.maintenance.title.option']}" icon="ui-icon-view"
-						             action="#{codificationMaintenanceBackingBean.PopupExtensionCode(unspscObj)}">
+						  <p:menuitem id="menuItemId2" value="#{lbl['lbl.cm.extension.code.maintenance.title.option']}" icon="ui-icon-view"	
+						              rendered="#{!(codificationMaintenanceBackingBean.productCode(unspscObj.unspscCode))}"					            
+						              action="#{codificationMaintenanceBackingBean.PopupExtensionCode(unspscObj)}">
 						</p:menuitem>
 					</p:menuButton>
 				</p:column>					
@@ -102,13 +106,10 @@
 		</p:panel>
 		
 		<p:dialog id="codificationMaintenanceSearchPopUpPortal" widgetVar="codificationMaintenanceSearchPopUpPortal" modal="true"
-			header="#{lbl['lbl.cm.item.code.search.title']}" width="800" height="500">
-			<ui:include src="codificationMaintenanceSearchPopUpPortal.xhtml"></ui:include>
+			header="#{lbl['lbl.cm.item.code.search.title']}" resizable="true"  styleClass="pop_up_top" width="800">
+			<ui:include src="codificationMaintenanceSearchPopUpPortal.xhtml"></ui:include>	
+			</p:dialog>
 
-		</p:dialog>
-		
 	</h:panelGroup>
-
-
-
+	
 </ui:composition>

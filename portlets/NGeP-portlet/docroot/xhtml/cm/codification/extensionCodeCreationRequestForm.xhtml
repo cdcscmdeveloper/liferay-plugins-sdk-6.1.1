@@ -14,13 +14,13 @@
 		<h:panelGroup id="cmExtensionRequestFormID">
 
 			<div style="text-align: right; min-height: 40px;">
-				<p:commandButton value="#{lbl['lbl.cm.submit']}"
-					action="#{ExtensionCodeCreationManagedBean.submitToBPM}" update="@form"></p:commandButton>
+				<p:commandButton value="#{lbl['lbl.cm.create.publish']}"
+				     disable="extensionCodeCreationBackingBean.managedBean.disableSelectBtn"
+                     onclick="extensionCodeCreation.show()"></p:commandButton>
 
 				<div style="float: left; clear: both;">
 					<p:commandButton value="#{lbl['lbl.cm.back']}"
-						action="#{ExtensionCodeCreationManagedBean.backToExtensionSearch}"
-						update="@form">
+						action="#{extensionCodeCreationBackingBean.backToExtensionSearch}">
 					</p:commandButton>
 				</div>
 			</div>
@@ -33,20 +33,20 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code.lov']}" /></td>
 						<td><p:inputText
-								value="#{ExtensionCodeCreationManagedBean.managedBean.selectedLovUnspsc.unspscCode}"
+								value="#{extensionCodeCreationBackingBean.managedBean.selectedLovUnspsc.unspscCode}"
 								size="50" disabled="true" /></td>
 					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title.lov']}"></p:outputLabel></td>
 						<td cosplan="1"><p:inputText
-								value="#{ExtensionCodeCreationManagedBean.managedBean.selectedLovUnspsc.unspscTitle}"
+								value="#{extensionCodeCreationBackingBean.managedBean.selectedLovUnspsc.unspscTitle}"
 								size="50" disabled="true" /></td>
 					</tr>
 				</table>
-
-				<p:dataTable id="extCodeId"
+				
+				<p:dataTable id="extCodeCreationId"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" rowIndexVar="rowIndex"
-					value="#{ExtensionCodeCreationManagedBean.managedBean.requestExtCodeList}"
+					value="#{extensionCodeCreationBackingBeann.managedBean.requestExtCodeList}"
 					var="ext">
 					<p:column>
 						<f:facet name="header">
@@ -78,12 +78,12 @@
 						#{lbl['lbl.cm.action']}
 					</f:facet>
 						<p:commandLink title="#{lbl['lbl.cm.zm.edit']}" update=":form:requestExtPopUpId" onclick="extensionPopUp.show()"
-							action="#{ExtensionCodeCreationManagedBean.editExtensionRequest(rowIndex)}">
+							action="#{extensionCodeCreationBackingBean.editExtensionRequest(rowIndex)}">
 							<p:graphicImage value="/css/images/design/edit.png"></p:graphicImage>
 						</p:commandLink>
-						<p:commandLink style="margin-left: 10px;" update=":form:extCodeId"
+						<p:commandLink style="margin-left: 10px;" update=":form:extCodeCreationId"
 							title="#{lbl['lbl.btn.delete']}"
-							action="#{ExtensionCodeCreationManagedBean.deleteExtensionRequest(rowIndex)}">
+							action="#{extensionCodeCreationBackingBean.deleteExtensionRequest(rowIndex)}">
 							<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
 							<f:param name="index" value="#{rowIndex}"></f:param>
 						</p:commandLink>
@@ -94,7 +94,7 @@
 				<h:panelGroup id="addBtnId">
 					<div style="text-align: right;">
 						<p:commandButton value="#{lbl['lbl.btn.add']}"
-							action="#{ExtensionCodeCreationManagedBean.addMoreRequest}"
+							action="#{extensionCodeCreationBackingBean.addMoreRequest}"
 							update=":form:requestExtPopUpId" onclick="extensionPopUp.show()">
 						</p:commandButton>
 					</div>
@@ -104,9 +104,19 @@
 
 			<p:dialog id="extensionDialog" widgetVar="extensionPopUp"
 				header="#{lbl['lbl.cm.request.extension.code']}" width="auto" height="auto">
-				<ui:include src="requestExtensionPopUp.xhtml" />
+				<ui:include src="requestExtensionCodeCreationPopUp.xhtml" />
 			</p:dialog>
 		</h:panelGroup>
+		
+		
+			<ac:confirmationPopup id="extensionCodeCreation" widget="extensionCodeCreation"
+				okAction="extensionCodeCreationBackingBean.submitToBPM"
+				width="400" height="100"
+				title="#{lbl['lbl.cm.dialog.cofirm.header']}"
+				content="#{lbl['lbl.cm.dialog.message.extension.code.creation']}"
+				update=":form"
+				oncomplete="extensionCodeCreation.hide();"/>
+		
 	</ui:define>
 
 </ui:composition>
