@@ -34,8 +34,16 @@
 			<td class="tdContent">
 				<ac:smReportDateFromTo bBean="#{colClassificationCodeBB}" required="false" />
 			</td>
-			<td class="tdTitle">&#160;</td>
-			<td class="tdContent">&#160;</td>
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.rpt.drpdown.documentTypelbl']}" />
+			</td>
+			<td class="tdContent">
+				<p:selectOneMenu value="#{colClassificationCodeBB.managedBean.documentType}" styleClass="ppDropDownWidthM" style="margin-bottom: 5px;">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
+						<f:selectItems value="#{colClassificationCodeBB.getDocumentTypeOptions()}" />
+				</p:selectOneMenu>
+			</td>
 		</tr>
 	</table>
 	
