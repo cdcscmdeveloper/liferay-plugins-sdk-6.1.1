@@ -3340,8 +3340,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
 				dafaltValue = "N/A";
 			}
-			for (ScQtCheckList scQtCheckList : resDto.getSpecResultBean()
-					.getResultList()) {
+			List<ScQtCheckList> scQtCheckLists = resDto.getSpecResultBean().getResultList();
+			if (CollectionUtils.isNotEmpty(scQtCheckLists)) {
+				scQtCheckLists.addAll(resDto.getFinSpecResultBean().getResultList());
+			} else {
+				scQtCheckLists = resDto.getFinSpecResultBean().getResultList();
+			}
+			
+			for (ScQtCheckList scQtCheckList : scQtCheckLists) {
 				List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
 				TplSpecMaster master = null;
 				master = scQtCheckList.getScQtDoc().getTplSpecMaster();
@@ -3352,6 +3358,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				master.setTplSpecQuestions(newTplSpecQuestionsList);
 				masters.add(master);
 			}
+			context.put("isZonal", scLoa.getScLoiLoa().isZonal());
 			context.put("serviceScope", dafaltValue);
 			context.put("masters", masters);
 			context.put("bean", this);
@@ -3674,6 +3681,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				}
 			}
 		}
+		context.put("isZonal", scLoa.getScLoiLoa().isZonal());
 		context.put("serviceScope", dafaltValue);
 		context.put("masters", masters);
 		context.put("bean", this);
