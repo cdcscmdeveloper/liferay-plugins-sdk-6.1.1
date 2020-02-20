@@ -183,6 +183,8 @@ import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jasper.compiler.SmapUtil;
 import org.apache.log4j.Logger;
+import org.apache.poi.hssf.record.PageBreakRecord.Break;
+import org.eclipse.jdt.internal.compiler.ast.BreakStatement;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.StreamedContent;
@@ -831,7 +833,7 @@ public class SmApplicationBackingBean extends
 				if (cannotProceedAlertMsg) {
 					throw new EpException(MessageConst.ERROR_722542);
 				}
-
+//#17906
 				boolean hasActiveTransactions = SmApplicationUtil
 						.hasActiveTransactions(currSupp);
 				boolean hasOtherActiveTransactions = SmApplicationUtil
@@ -884,15 +886,18 @@ public class SmApplicationBackingBean extends
 				
 				String labelNameVal = "";
 				if (rejectedAppl != null) {
-						FacesContext.getCurrentInstance().addMessage("rejectedExist", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-								SmCommonUtil.getMessage("lbl.sm.supplier.promo.rejected",
-										new String[] { labelNameVal })));
+					FacesContext.getCurrentInstance().addMessage("rejectedExist", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							SmCommonUtil.getMessage("lbl.sm.supplier.promo.rejected",
+									new String[] { labelNameVal })));
+					SmCommonUtil.redirectToPage(
+							"/xhtml/sm/payment/portletViewMode.xhtml", "", null, null);
 				}
-
+				
 				String currSuppType = currSupp.getSmAppl()
 						.getSupplierType();
-				
-				if(StringUtils.isBlank(currSuppType) || currSuppType.equals("B")){
+
+				if (StringUtils.isBlank(currSuppType)
+						|| currSuppType.equals("B")) {
 					currSuppType = "K";
 				}
 
@@ -6920,6 +6925,10 @@ public class SmApplicationBackingBean extends
 				.getAccountNo())) {
 			throw new EpException(MessageConst.ERROR_722616);
 		}
+		
+		if (getManagedBean().isPendingTransaction()){
+			getManagedBean().setPendingTransaction(false);			
+		}
 
 		if (SmApplicationUtil.checkValidBank(
 				getManagedBean().getSelectedBank(), getManagedBean()
@@ -7071,7 +7080,7 @@ public class SmApplicationBackingBean extends
 				}
 				getManagedBean().setSelectedSignatoryBankAccts(suppBanks);
 			}
-
+			getManagedBean().setPendingTransaction(false);
 			RequestContext.getCurrentInstance().execute("bankDialog.hide()");
 		}
 	}
@@ -7081,6 +7090,7 @@ public class SmApplicationBackingBean extends
 	 */
 	public void cancelSmBankFunctions() {
 		assignValReqdToFalse();
+		getManagedBean().setPendingTransaction(false);
 		RequestContext.getCurrentInstance().reset(":form:tt:bankDialog");
 		RequestContext.getCurrentInstance().execute("bankDialog.hide()");
 	}
@@ -7279,6 +7289,7 @@ public class SmApplicationBackingBean extends
 	 * Add or create a new SmSupplier bank object
 	 */
 	public void assignNewBank() {
+		getManagedBean().setPendingTransaction(false);
 		getManagedBean().setChequeSingPerId(null);
 		getManagedBean().setSelBankBranchId(null);
 		getManagedBean().setSelectedBankBranchIds(null);
@@ -9145,7 +9156,7 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setApprvrSecReview(
 					assignVerificationCount(getManagedBean()
 							.getApprvrSecReview(), isSectionVerified));
-		}
+		}		
 	}
 
 	/**
@@ -12834,5 +12845,171 @@ public class SmApplicationBackingBean extends
 		
 		}
 		//#27232 - END SSM CHANGES FOR RESUBMIT
+		
+//		17906	
+		public void itemRowSelectCheckbox(AjaxBehaviorEvent e){
+			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
+			if (getManagedBean().getSelectedBanks().size() > 0) {
+				for(SmSupplierBank bank : getManagedBean().getSelectedBanks()){
+					boolean hasActiveTransactionContractManagement = SmApplicationUtil
+							.hasActiveTransactionForContractManagement(currSupp, bank.getAccountNo());
+					boolean hasActiveTransactionFulfilment = SmApplicationUtil
+							.hasActiveTransactionForFulfilment(currSupp, bank.getAccountNo());				
+					
+					String labelNameVal = "";
+					if (hasActiveTransactionContractManagement) {
+						getManagedBean().setItemDeleteButtonShow(true);
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								SmCommonUtil.getMessage("lbl.sm.alert.active.transaction",
+										new String[] { labelNameVal })));
+					} 
+					
+					if (hasActiveTransactionFulfilment) {
+						getManagedBean().setItemDeleteButtonShow(true);
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							SmCommonUtil.getMessage("lbl.sm.alert.other.active.transaction",
+									new String[] { labelNameVal })));
+					} 
+					
+					if (!hasActiveTransactionContractManagement && !hasActiveTransactionFulfilment) {
+						getManagedBean().setItemDeleteButtonShow(false);
+					} 
+				}
+			} else {
+				getManagedBean().setItemDeleteButtonShow(false);
+			}
+		}
+		
+//		17906	
+		public void checkActiveAndPendingTransaction(){
+			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
+			if (getManagedBean().getSelectedBanks().size() > 0) {
+				for (int i = 0; i < getManagedBean().getSelectedBanks().size(); i++) {
+					SmSupplierBank bank = getManagedBean().getSelectedBanks().get(i);
+					boolean hasActiveTransactionContractManagement = SmApplicationUtil
+							.hasActiveTransactionForContractManagement(currSupp, bank.getAccountNo());
+					boolean hasActiveTransactionFulfilment = SmApplicationUtil
+							.hasActiveTransactionForFulfilment(currSupp, bank.getAccountNo());				
+					
+					String labelNameVal = "";
+					if (hasActiveTransactionContractManagement || hasActiveTransactionFulfilment) {
+						if (hasActiveTransactionContractManagement) {
+							getManagedBean().setItemDeleteButtonShow(true);
+							FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+									SmCommonUtil.getMessage("lbl.sm.alert.active.transaction",
+											new String[] { labelNameVal })));
+						} 
+						
+						if (hasActiveTransactionFulfilment) {
+							getManagedBean().setItemDeleteButtonShow(true);
+							FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								SmCommonUtil.getMessage("lbl.sm.alert.other.active.transaction",
+										new String[] { labelNameVal })));
+						} 
+					}
+				}
+				if(!getManagedBean().isItemDeleteButtonShow() ){
+					RequestContext.getCurrentInstance().execute("bankDeletePopUp.show()");
+				}
+			} else {
+				getManagedBean().setItemDeleteButtonShow(false);
+			}
+		}
+		
+		public void itemRowSelectCheckbox(AjaxBehaviorEvent e){
+			getManagedBean().setItemDeleteButtonShow(false);	
+		}
+		
+		public void itemRowUnselectCheckbox(AjaxBehaviorEvent e){
+			getManagedBean().setItemDeleteButtonShow(false);	
+		}
+		
+		public void assignSelBankWithPendingTransaction(SmSupplierBank shareBankBean) {
+			getManagedBean().setChequeSingPerId(null);
+			getManagedBean().setSelectedBankBranchIds(null);
+			
+			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
+			
+			boolean hasActiveTransactionContractManagement = SmApplicationUtil
+					.hasActiveTransactionForContractManagement(currSupp, shareBankBean.getAccountNo());
+			boolean hasActiveTransactionFulfilment = SmApplicationUtil
+					.hasActiveTransactionForFulfilment(currSupp, shareBankBean.getAccountNo());
+			
+			String labelNameVal = "";
+			if (hasActiveTransactionContractManagement) {
+				getManagedBean().setPendingTransaction(true);
+				FacesContext.getCurrentInstance().addMessage("activecontract", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+						SmCommonUtil.getMessage("lbl.sm.bankDtls.is.active.contract.tied",
+								new String[] { labelNameVal })));
+			} 
+			
+			if (hasActiveTransactionFulfilment) {
+				getManagedBean().setPendingTransaction(true);
+				FacesContext.getCurrentInstance().addMessage("pendingtransaction", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+					SmCommonUtil.getMessage("lbl.sm.bankDtls.is.other.active.contract.tied",
+							new String[] { labelNameVal })));
+			}
+
+			// assign cheque signatories
+			Long[] chequSigns = new Long[shareBankBean.getSmChequeSignatories()
+					.size()];
+			for (int i = 0; i < chequSigns.length; i++) {
+				chequSigns[i] = shareBankBean.getSmChequeSignatories().get(i)
+						.getSmPersonnel().getPersonnelId();
+
+			}
+			getManagedBean().setChequeSingPerId(chequSigns);
+
+			// assign associated branches
+			Long[] bankBranchesIds = null;
+			if (SmCommonUtil.isCollectionEmpty(shareBankBean
+					.getSmSupplierBranchBanks())) {
+				bankBranchesIds = new Long[0];
+			} else {
+				bankBranchesIds = new Long[shareBankBean.getSmSupplierBranchBanks()
+						.size()];
+				for (int i = 0; i < bankBranchesIds.length; i++) {
+					bankBranchesIds[i] = shareBankBean.getSmSupplierBranchBanks()
+							.get(i).getSmSupplierBranch().getSupplierBranchId();
+
+				}
+			}
+			getManagedBean().setSelectedBankBranchIds(bankBranchesIds);
+
+			if (shareBankBean.getSmAddress() != null
+					&& shareBankBean.getSmAddress().getPmCountry().getCountryId() != null
+					&& shareBankBean.getSmAddress().getPmState().getStateId() != null
+					&& shareBankBean.getSmAddress().getPmDistrict().getDistrictId() != null) {
+				SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
+						getManagedBean(), shareBankBean.getSmAddress(),
+						SupplierManagementConst.SM_BANK_INFO_PANEL);
+			} else {
+				shareBankBean.setSmAddress(SmApplicationUtil
+						.setDefaultAddr(getManagedBean().getDefPmCountry()));
+				SmApplicationUtil.getInstance().populateStateByCountry(
+						shareBankBean.getSmAddress(),
+						SupplierManagementConst.SM_BANK_INFO_PANEL,
+						getManagedBean());
+			}
+			getManagedBean().setSelectedBank(
+					(SmSupplierBank) SerializationUtils.clone(shareBankBean));
+			if (getManagedBean().getLatestAppl() != null) {
+				getManagedBean().setLatestBank(
+						(SmSupplierBank) EntityHelper
+								.getEntityByMultiplePropertiesFromList(
+										shareBankBean, getManagedBean()
+												.getLatestAppl()
+												.getSmSupplierBanks(),
+										new String[] { "accountNo",
+												"accountPurpose" }, null, null));
+			}
+			retrieveBankFinOrgListByType();
+			assignValReqdToTrue();
+			RequestContext.getCurrentInstance().execute("bankDialog.show()");
+		}
+		
+		public void assignBankAccountNo(SmSupplierBank bank){
+			this.getManagedBean().setAccountNo(bank.getAccountNo());
+		}
 
 }
