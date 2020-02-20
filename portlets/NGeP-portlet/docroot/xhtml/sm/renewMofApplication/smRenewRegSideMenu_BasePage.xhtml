@@ -69,6 +69,7 @@
 
 
 	<ui:define name="contentSection">
+		<h:outputText rendered="#{backingBean.managedBean.smAppl.applValidWithSsm and backingBean.managedBean.supplierUser}" styleClass="splNotesFonts" value="#{lbl['lbl.sm.po.disclaimer']}" escape="false" ></h:outputText>
 
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
