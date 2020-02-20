@@ -62,19 +62,17 @@
 				</h:panelGroup>
 			</p:column>
 		</p:dataTable>
-		<table width="100%;" style="text-align: left;">
-			<tr>
-				<td style="width: 90px;"></td>
-				<td><p:outputLabel value="#{lbl['lbl.ct.reverseMeeting']}" /></td>
-				<td><p:selectOneRadio disabled="#{!qTDetailBB.managedBean.editable}"
+		<h:panelGrid columns="2" border="1" style="text-align: right;">
+			<h:panelGroup><p:outputLabel value="#{lbl['lbl.ct.reverseMeeting']}" /></h:panelGroup>
+			<h:panelGroup><p:selectOneRadio disabled="#{!qTDetailBB.managedBean.editable}"
 						value="#{qTDetailBB.managedBean.scQtReverse.meeting}">
 						<f:selectItem itemLabel="#{lbl['lbl.btn.yes']}"
 							itemValue="true"></f:selectItem>
 						<f:selectItem itemLabel="#{lbl['lbl.btn.no']}"
 							itemValue="false" ></f:selectItem>
-					</p:selectOneRadio></td>
-			</tr>
-		</table>
+					</p:selectOneRadio></h:panelGroup>
+		</h:panelGrid>
+		
 	</p:panel>	
 	<c:if test="#{!empty qTDetailBB.managedBean.scLoiForQt}">
 		<ac:scRemarkAndAttachment
