@@ -4248,7 +4248,9 @@ public class SmCommonUtil {
 	 * @return responseCode
 	 */
 	public SsmResDTO validateWithSSM(SsmReqDTO ssmReqDTO) {
-		ISsmSO reqSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISsmSO.class);		
+		ISsmSO reqSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISsmSO.class);	
+		//27329
+		StringBuilder sb = new StringBuilder();
 		try {
 			BusinessRegNoValidator validate = new BusinessRegNoValidator();
 			validate.validateRegNo(ssmReqDTO.getBusinessType(), ssmReqDTO.getRegNo(),false);
@@ -4269,7 +4271,20 @@ public class SmCommonUtil {
 			}
 			if (!resDTO.getStatusCode().equalsIgnoreCase("") && !"70060".equalsIgnoreCase(resDTO.getStatusCode())){				
 				ssmError(resDTO);
-			}
+			}else{//START 27329
+				if(resDTO.getPersonnelIcIssues()!= null && resDTO.getPersonnelIcIssues().size()>0){
+					
+					sb.append("<br/>");
+					int i =0;
+					for(SmPersonnel per:resDTO.getPersonnelIcIssues()){
+						sb.append(++i + ". ");
+						sb.append(ResourceBundleUtils.getMessage("lbl.sm.ssm.myid.detail",new String []{per.getName(),per.getIdentificationNo()},ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+						//sb.append(",  ");
+						sb.append("<br/>");
+					}
+					throw new EpException(MessageConst.ERROR_721085,new String[] {sb.toString() });
+				}
+			}//END 27329
 
 			return resDTO;
 		} catch (Exception ex) {
@@ -4277,8 +4292,14 @@ public class SmCommonUtil {
 					MessageUtils.BUNDLE_COMMON_MESSAGES,
 					new FacesScopes().getUserLocale());
 			if (message != null) {
-				throw new EpException(message + "(ERR-"
-						+ ex.getMessage().toString() + ")");
+				//27329
+				if(MessageConst.ERROR_721085.equalsIgnoreCase(ex.getMessage()) && sb != null){
+					throw new EpException(MessageConst.ERROR_721085,new String[] { sb.toString() });
+				}else{
+					throw new EpException(message + "(ERR-"
+							+ ex.getMessage().toString() + ")");
+				}
+				
 			} else {
 				throw new EpException(ex.getMessage() + "(ERR-729999)");
 			}
@@ -5796,7 +5817,7 @@ public class SmCommonUtil {
 		//27382
 		switch (resDTO.getStatusCode()) {
 		case "70001":
-			throw new EpException(MessageConst.ERROR_721071);
+			throw new EpException(MessageConst.ERROR_721078);
 		case "70002":
 			throw new EpException(MessageConst.ERROR_721071);
 		case "70003":
