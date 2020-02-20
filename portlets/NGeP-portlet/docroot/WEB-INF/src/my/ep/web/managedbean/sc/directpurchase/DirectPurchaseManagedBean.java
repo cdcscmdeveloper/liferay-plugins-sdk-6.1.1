@@ -20,6 +20,7 @@ import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.sc.DPStatusConstants;
 import my.ep.dto.sc.SourcingIntegrationReqDTO;
 import my.ep.dto.sc.SourcingIntegrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -101,6 +102,8 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 	/** The is government. */
 	private boolean government;
 	
+	private boolean searchDPM;
+	
 
 	/**
 	 * The Class DocumentPagingDataModel.
@@ -135,8 +138,14 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 				
 				if(ParameterConst.DOCTYPE_REQUEST_NOTE.equals(getSearchDocumentType())){
 					paramPtj = "pmOrgProfile.orgProfileId";
-					paramPtjGroupAndMinistry = "pmOrgProfile";
 					paramTitle ="title";
+					if (isSearchDPM()) {
+						if (getSearchStatusId().equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION)) {
+							paramPtj = "requestNote.pmOrgProfile.orgProfileId";
+							paramTitle ="requestNote.title";
+						} 
+					} 
+					paramPtjGroupAndMinistry = "pmOrgProfile";
 				} else if(ParameterConst.DOCTYPE_SIMPLE_QUOTE.equals(getSearchDocumentType())){
 					paramPtj = "requestNotes.pmOrgProfile.orgProfileId";
 					paramPtjGroupAndMinistry = "requestNotes.pmOrgProfile";
@@ -230,8 +239,20 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 				}
 				
 				reqDTO.setSourcingDocSearchBean(searchBean);
-				SourcingIntegrationResDTO resDTO = sourcingIntegrationSO.searchSourcingDocument(reqDTO);
-				return resDTO.getSourcingDocSearchResultBean();
+				SourcingIntegrationResDTO resDTO = null;
+				if (isSearchDPM()) {
+					if (getSearchStatusId().equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION)) {
+						resDTO = sourcingIntegrationSO.searchSourcingDocumentForDPM(reqDTO);
+					} else {
+						resDTO = sourcingIntegrationSO.searchSourcingDocument(reqDTO);
+					}
+				} else {
+					resDTO = sourcingIntegrationSO.searchSourcingDocument(reqDTO);
+				}
+				
+				if (null != resDTO) {
+					return resDTO.getSourcingDocSearchResultBean();
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -472,4 +493,32 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 	public void setSearchPtjProfile(PmOrgProfile searchPtjProfile) {
 		this.searchPtjProfile = searchPtjProfile;
 	}
+
+	/**
+	 * @return the searchDPM
+	 */
+	public boolean isSearchDPM() {
+		return searchDPM;
+	}
+
+	/**
+	 * @param searchDPM the searchDPM to set
+	 */
+	public void setSearchDPM(boolean searchDPM) {
+		this.searchDPM = searchDPM;
+	}
+
+	/**
+	 * @return the dpmDocumentDataModel
+	 *//*
+	public IPagingDataModel<Object[]> getDpmDocumentDataModel() {
+		return dpmDocumentDataModel;
+	}
+
+	*//**
+	 * @param dpmDocumentDataModel the dpmDocumentDataModel to set
+	 *//*
+	public void setDpmDocumentDataModel(IPagingDataModel<Object[]> dpmDocumentDataModel) {
+		this.dpmDocumentDataModel = dpmDocumentDataModel;
+	}*/
 }
