@@ -995,6 +995,15 @@ public class SupplierFinalizationBackingBean extends
 			validateFinalizationReports(reqDTO);
 			
 			if (this.getManagedBean().getEndorsementReportActiveIndex() == activeIndex) {
+				//#27364 Start
+				String decisionTypeCode = scQtFinalization.getDecision().getParameterCode();
+				if (ParameterConst.DECISION_CANCEL
+						  .equals(decisionTypeCode) || ParameterConst.DECISION_RE_PUBLISH
+						  .equals(decisionTypeCode) || ParameterConst.DECISION_RE_EVALUATION
+						  .equals(decisionTypeCode)){
+					this.getManagedBean().setFinalizationMethod(null);
+				}
+				//#27364 End
 				if (this.getManagedBean().getFinalizationMethod() != null
 						&& (this.getManagedBean().getFinalizationMethod()
 								.equals(ParameterConst.RECOMMEND_BY_AWARD) || this
@@ -1864,7 +1873,14 @@ public class SupplierFinalizationBackingBean extends
 				navigateToBriefingPaperTab();
 				throw new EpException(MessageConst.ERROR_760452);
 			}*/
-			
+			//#27364 Start
+			if (ParameterConst.DECISION_CANCEL
+					  .equals(decisionTypeCode) || ParameterConst.DECISION_RE_PUBLISH
+					  .equals(decisionTypeCode) || ParameterConst.DECISION_RE_EVALUATION
+					  .equals(decisionTypeCode)){
+				this.getManagedBean().setFinalizationMethod(null);
+			}
+			//#27364 End
 			if (this.getManagedBean().getFinalizationMethod() != null
 					&& (this.getManagedBean().getFinalizationMethod()
 							.equals(ParameterConst.RECOMMEND_BY_AWARD) || this
@@ -1889,6 +1905,14 @@ public class SupplierFinalizationBackingBean extends
 		// before throwing exception
 		validateReEvaluation();
 		reqDTO = validateInfo(2);
+		//#27364 Start
+		if (ParameterConst.DECISION_CANCEL
+				  .equals(decisionTypeCode) || ParameterConst.DECISION_RE_PUBLISH
+				  .equals(decisionTypeCode) || ParameterConst.DECISION_RE_EVALUATION
+				  .equals(decisionTypeCode)){
+			this.getManagedBean().setFinalizationMethod(null);
+		}
+		//#27364 End
 		
 		reqDTO.setDeletedMeetingsList(
 				this.getManagedBean().getDeletedMeetingList());
