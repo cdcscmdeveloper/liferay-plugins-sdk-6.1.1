@@ -326,11 +326,15 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	
     /** The Clone and Re-Quote btn. */
     private boolean cloneReQuote = Boolean.FALSE;
+    
+    private boolean cancel = Boolean.FALSE;
 	
 	// 12177 - Start
 	/** The SQ end date */
 	private Calendar sqEndDate;
 	// 12177 - End
+	
+	private	Object[] selectedPrDtls;
 	
     /**
      * Instantiates a new request note managed bean.
@@ -1918,6 +1922,14 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setCloneReQuote(boolean cloneReQuote) {
 		this.cloneReQuote = cloneReQuote;
 	}
+
+	public boolean isCancel() {
+		return cancel;
+	}
+
+	public void setCancel(boolean cancel) {
+		this.cancel = cancel;
+	}
 	
 	// 12177 - Start
 	/**
@@ -1934,4 +1946,18 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 		this.sqEndDate = sqEndDate;
 	}
 	// 12177 - End
+
+	/**
+	 * @return the selectedPrDtls
+	 */
+	public Object[] getSelectedPrDtls() {
+		return selectedPrDtls;
+	}
+
+	/**
+	 * @param selectedPrDtls the selectedPrDtls to set
+	 */
+	public void setSelectedPrDtls(Object[] selectedPrDtls) {
+		this.selectedPrDtls = selectedPrDtls;
+	}
 }
