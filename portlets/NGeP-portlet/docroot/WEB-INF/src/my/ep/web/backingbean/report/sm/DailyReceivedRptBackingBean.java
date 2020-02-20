@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.model.SelectItem;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -13,6 +14,7 @@ import my.ep.constants.CommonConstants;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.DailyReceivedRptManagedBean;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 
 @ManagedBean(name = "dailyReceivedRptBB")
 @ViewScoped
@@ -45,6 +47,21 @@ public class DailyReceivedRptBackingBean extends
 		params.put(SmReportConst.PARAM_PAYMENT_TYPE, getManagedBean()
 				.getPaymentType());
 		generateSmReport(params);
+		
+		if(getManagedBean().getDocumentType() == null){
+			if(getManagedBean().getDefaultOutputType().equals("P")){
+				params.put(ReportConst.PARAM_REPORT_OUTPUT_FORMAT, "pdf");
+			}else{
+				params.put(ReportConst.PARAM_REPORT_OUTPUT_FORMAT, "enhancedspreadsheet");
+			}	
+		}else{
+			if(getManagedBean().getDocumentType().equals("P")){
+				params.put(ReportConst.PARAM_REPORT_OUTPUT_FORMAT, "pdf");
+			}else{
+				params.put(ReportConst.PARAM_REPORT_OUTPUT_FORMAT, "enhancedspreadsheet");
+			}			
+			getManagedBean().setDefaultOutputType(getManagedBean().getDocumentType());
+		}
 	}
 
 	public void resetSearch() {
@@ -55,4 +72,12 @@ public class DailyReceivedRptBackingBean extends
 		//end of Enhancement #19245
 	}
 
+	/**
+	 * document type options
+	 * @return SelectItem[]
+	 */
+	public static SelectItem[] getDocumentTypeOptions() {
+		log.info("getReportTypeOptions");
+		return PmCommonUtil.getDocumentTypeOption();
+	}
 }
