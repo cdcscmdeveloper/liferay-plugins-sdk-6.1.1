@@ -9,6 +9,7 @@
 	<ui:decorate template="specColumnQuestionViewHeader.xhtml">
 	<ui:define name="otherHeaderSection">
 	<ui:param name="specificationRequired" value="#{isSpecTypeTechnical or isSqSpec or (isSpecTypeFinancial and !isSpecificationReq)}"></ui:param>
+	<ui:param name="remarklbl" value="#{isSqSpec ? 'lbl.sc.supplier.offer' : 'lbl.tpl.spec.content.answer'}" />
 		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:80px;" rendered="#{isSpecTypeFinancial and isZonal}" headerText="#{lbl['lbl.sc.zone']}">
 		</p:column>
 		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:82px;white-space:normal;text-align:right;" rendered="#{isEstCostReq and isSpecTypeFinancial}">
@@ -25,7 +26,7 @@
 		</p:column>
 		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:82px; white-space:normal; text-align:right;" rendered="#{isItemTypeService and isSpecTypeFinancial and !isDurationByItem}" headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
 		</p:column>
-		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:82px; white-space:normal; #{isSpecTypeFinancial ? 'text-align:right;' : ''}" headerText="#{lbl[isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer']}">
+		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:82px; white-space:normal; #{isSpecTypeFinancial ? 'text-align:right;' : ''}" headerText="#{lbl[isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : remarklbl]}">
 		</p:column>
 	<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:100px;white-space:normal;" headerText="#{lbl['lbl.tpl.spec.content.supplier.note']}">
 	</p:column>
