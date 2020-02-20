@@ -37,7 +37,7 @@
 
 		<ui:param name="mandatoryflg" value="true" />
 		
-		<h:outputText rendered="#{backingBean.managedBean.smAppl.applValidWithSsm}" value="#{lbl['lbl.sm.po.disclaimer']}" styleClass="splNotesFonts" escape="false" />
+		<h:outputText rendered="#{backingBean.managedBean.smAppl.applValidWithSsm}" value="#{lbl['lbl.sm.po.disclaimer']}" styleClass="splNotesFonts" style="float: inherit" escape="false" />
 		
 		<ac:smPanel id="tt">
 			<c:if test="#{!backingBean.managedBean.redirectToPersonPage}">
