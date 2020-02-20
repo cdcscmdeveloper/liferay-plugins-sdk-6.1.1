@@ -57,7 +57,8 @@ public class SupplierBusinessNatureBackingBean extends BaseBackingBean<SupplierB
 	public void goToviewBusinessNature(){
 		fromtncProceed = true;
 		SmSupplier smSupp = SmApplicationUtil.getCurrentSupplier();
-		if(businessTypeTovalidateWithSSM(smSupp.getRegNo(),smSupp.getBusinessType())){
+		//27382
+		if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(smSupp.getRegNo(),smSupp.getBusinessType())){
 			this.getManagedBean().setCompanyValidWithSSM(true);
 			// maybe here to put method to check with ssm
 			//SmSupplier smSupp = SmApplicationUtil.getCurrentSupplier();
