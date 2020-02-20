@@ -232,6 +232,9 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 								flDelOrderItem.setFlFulfilmentItemAddr(itemAddress);
 								flDelOrderItem.setFlItem(itemAddress.getFlFulfilmentItem());
 								flDelOrderItem.setDeliveredQty(itemAddress.getDeliveredQty());
+								//26338-start
+								log.info("*****FulfilmentItemAddrId ["+ itemAddress.getFulfilmentItemAddrId()  +"] DeliveredQty ["+itemAddress.getDeliveredQty() + "] ");
+								//26338-end								
 								flDelOrderItem.setDeliveredAmt(itemAddress.getDeliveredAmt());
 								flDelOrderItem.setGstAmount(itemAddress.getDoGstAmt());
 								flDelOrderItem.setGstUnitPrice(itemAddress.getDoGstUnitPrice());
@@ -254,6 +257,9 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 					for(FlFulfilmentItemAddr itemAddress : flDeliveryAddress.getFlFulfilmentItemAddr()){
 						itemAddress.getFlTempDoItem().setFlFulfilmentItemAddr(itemAddress);
 						itemAddress.getFlTempDoItem().setDeliveryQty(itemAddress.getDeliveredQty());
+						//26338-start
+						log.info("*****FulfilmentItemAddrId ["+ itemAddress.getFulfilmentItemAddrId()  +"] DeliveredQty ["+itemAddress.getDeliveredQty() + "] ");
+						//26338-end		
 						itemAddress.getFlTempDoItem().setDeliveryAmt(itemAddress.getDeliveredAmt());
 					}
 				}
