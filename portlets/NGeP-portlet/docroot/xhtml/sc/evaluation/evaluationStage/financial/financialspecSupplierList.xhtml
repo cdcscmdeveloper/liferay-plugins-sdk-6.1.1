@@ -40,9 +40,9 @@
 			        </p:row>  
 			  
 			        <p:row>  
-			            <p:column headerText="#{lbl['lbl.tpl.spec.content.system.score']}" style="width:50%;text-align:center;"
+			            <p:column headerText="#{lbl['lbl.tpl.spec.content.system.score']}" style="width:20%;text-align:center;"
 						rendered="#{evaluationBackingBean.managedBean.scQtChecklist.scoringReq}"/>  
-			            <p:column style="width:50%;text-align:center;">
+			            <p:column style="width:20%;text-align:center;">
 				            <f:facet name="header">
 								<h:outputText value="#{lbl['lbl.tpl.spec.content.user.score']}"/>
 							</f:facet>
@@ -64,22 +64,26 @@
 			    </p:column>
 			    
 			    <p:column>  
-			        <h:outputText rendered="#{evaluationBackingBean.managedBean.offerScoreType eq '1'}" style="text-align:centre;"
+			        <h:outputText partialSubmit="true" rendered="#{evaluationBackingBean.managedBean.offerScoreType eq '1'}" style="text-align:centre;"
 			         value="#{finSpec.scQtProposal.proposalAmount.totalScore}"></h:outputText> 
 			    </p:column>
 			    
 			    <p:column>
-			        <p:inputText rendered="#{evaluationBackingBean.managedBean.offerScoreType eq '2'}" 
+			        <p:inputText partialSubmit="true" rendered="#{evaluationBackingBean.managedBean.offerScoreType eq '2'}" 
 			        	id="userScore" style="text-align:right;" maxlength="16" size="2" required="true"
 			        	value="#{finSpec.scQtProposal.proposalAmount.totalScore}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+						<f:attribute name="min" value="0" />
+						<f:attribute name="max" value="#{evaluationBackingBean.managedBean.withInVarieance.toString()}" />
+						<p:ajax partialSubmit="true" process="@this" update="@this, userScoreMsg, @(.calcScore)" />
 			        </p:inputText>
 			        <h:outputText rendered="#{evaluationBackingBean.managedBean.offerScoreType eq '2'}"
 			        	style="text-align:left; "
 						value="/ #{evaluationBackingBean.managedBean.withInVarieance}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</h:outputText> 	
+					</h:outputText>
+					<p:message id="userScoreMsg" for="userScore" display="icon" /> 	
 			    </p:column>
 			    
 			</p:dataTable>
