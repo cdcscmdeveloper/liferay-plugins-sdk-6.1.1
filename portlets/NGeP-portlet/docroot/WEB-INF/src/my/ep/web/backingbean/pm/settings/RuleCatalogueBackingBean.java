@@ -3102,22 +3102,24 @@ public class RuleCatalogueBackingBean extends
 			//#22113
 			String ruleType = this.getManagedBean()
 					.getSelectedRuleDescType().getRuleType().getRuleType();
-			Calendar forwardedEffDate = Calendar.getInstance();
-			Date nextDay;
+			/*Calendar forwardedEffDate = Calendar.getInstance();
+			Date nextDay;*/
 			
 			for (PmConfigRuleValue configRuleValue : configRuleType.getConfigRuleValues()) {
 				if (ruleType.equals("LOPO")) {
 					newRuleValue.setRuleNumberValue(configRuleValue.getRuleNumberValue());
-					if (configRuleValue.getExpDate() != null) {
+					/*if (configRuleValue.getExpDate() != null) {
 						forwardedEffDate.setTime(configRuleValue.getExpDate());
 					}
 					forwardedEffDate.add(Calendar.DATE, 
 							Integer.parseInt("1"));
 					nextDay = forwardedEffDate.getTime();
-					newRuleValue.setEffDate(nextDay);
-				} else {
+					newRuleValue.setEffDate(this.getManagedBean().getTomorrow());*/
+				} 
+				/*else {
 					newRuleValue.setEffDate(this.getManagedBean().getTomorrow());
-				}
+				}*/
+				newRuleValue.setEffDate(this.getManagedBean().getTomorrow());
 			}
 
 			// if
