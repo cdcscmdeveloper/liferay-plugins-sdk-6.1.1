@@ -84,25 +84,50 @@
 
 
 						</ui:fragment></td>
-					<td><p:inputText readonly="true" disabled="true"
-							value="#{noOfContracts.autoScore}" style="text-align:right"
-							rendered="#{ checklistScoreType eq '1'}"></p:inputText> <p:inputText
-							id="financialBankStatementsUserScoreId"
-							label="#{lbl['lbl.tpl.spec.content.user.score']}"
-							value="#{noOfContracts.userScore}" maxlength="18" required="true"
-							disabled="#{pageDisable}" style="text-align:right"
-							rendered="#{ checklistScoreType eq '2'}">
-							<ac:validateNumber
-								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
-								maxIntegerDigits="14" integerOnly="true" />
-							<f:attribute name="min" value="0" />
-							<f:attribute name="max" value="#{contractUserScore}" />
-						</p:inputText> <p:spacer width="5"></p:spacer> <h:outputText
+					<td>
+						<c:if test="#{ checklistScoreType eq '1' and evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq and evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '0'}">
+							<p:inputText readonly="true" disabled="true"
+								value="#{noOfContracts.autoScore}" style="text-align:right"></p:inputText>						
+						</c:if>
+ 						<c:if test="#{ checklistScoreType eq '2' and evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq and evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '0'}">	
+							<p:inputText
+								id="financialBankStatementsUserScoreId"
+								label="#{lbl['lbl.tpl.spec.content.user.score']}"
+								value="#{noOfContracts.userScore}" maxlength="18" required="true" 
+								disabled="#{pageDisable}" style="text-align:right">
+								<ac:validateNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
+									maxIntegerDigits="14" integerOnly="true" />
+								<f:attribute name="min" value="0" />
+								<f:attribute name="max" value="#{contractUserScore}" />
+							</p:inputText>						
+						</c:if>
+						<c:if test="#{ checklistScoreType eq '1' and evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq and evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '1'}">
+							<p:inputText readonly="true" disabled="true"
+								value="#{noOfContracts.autoScore}" style="text-align:right"></p:inputText>						
+						</c:if>
+ 						<c:if test="#{ checklistScoreType eq '2' and evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq and evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '1'}">	
+							<p:inputText
+								id="financialBankStatementsUserScoreId"
+								label="#{lbl['lbl.tpl.spec.content.user.score']}"
+								value="#{noOfContracts.userScore}" maxlength="18" required="true" readonly="true"
+								disabled="true" style="text-align:right">
+								<ac:validateNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
+									maxIntegerDigits="14" integerOnly="true" />
+								<f:attribute name="min" value="0" />
+								<f:attribute name="max" value="#{contractUserScore}" />
+							</p:inputText>						
+						</c:if> 
+						<p:spacer width="5"></p:spacer> 
+						<h:outputText
 							value="/#{contractUserScore}"
-							rendered="#{ checklistScoreType eq '2'}" /> <p:message
+							rendered="#{ checklistScoreType eq '2'}" /> 
+							<p:message
 							id="financialBankStatementsUserScoreMessage"
 							for="financialBankStatementsUserScoreId" display="icon">
-						</p:message></td>
+						</p:message>
+					</td>
 				</tr>
 			</table>
 		</h:panelGroup>
