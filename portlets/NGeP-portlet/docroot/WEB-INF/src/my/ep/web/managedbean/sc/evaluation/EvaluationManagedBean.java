@@ -506,6 +506,9 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	/** The total auto score. */
 	private String totalAutoScore;
 	
+	/** The financial user package score*/
+	private BigDecimal userPackageScore;
+	
 	/** The total score. */
 	private String totalScore;
 	
@@ -3633,6 +3636,14 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 	public void setSupplierNo(Integer supplierNo) {
 		this.supplierNo = supplierNo;
+	}
+
+	public BigDecimal getUserPackageScore() {
+		return userPackageScore;
+	}
+
+	public void setUserPackageScore(BigDecimal userPackageScore) {
+		this.userPackageScore = userPackageScore;
 	}
 
 	//#25138-Ahmaa-End
