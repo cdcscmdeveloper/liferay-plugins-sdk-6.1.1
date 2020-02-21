@@ -12969,29 +12969,61 @@ private void retriveCommitteeRemarksList(){
 		}
 	}
 	//#25138-Ahmaa-End
-
+	
+	//#25138 - Ahmaa- start
 	/**
-	 * Save templeate spec dtls.Event handle technical and financial specs
+	 * Save manual package score dtls.Event handle and financial specs
 	 * suppliers save in evaluation stage.
 	 * 
-	 * @return List<TplSpecAnswer>
+	 * @return List<ScQtProposalAmount>
 	 */
-	public EvaluationResDTO saveUserScoreDtls() {
+	public void saveUserScoreDtls() {
 		
-		List<ScQtProposalChecklist> proposalChecklist = this.getManagedBean()
-				.getFinSpecSupplierListDM().getList();
-		for(ScQtProposalChecklist list : proposalChecklist){
-			List<ScQtProposalAmount> amounts = list.getScQtProposal().getScQtProposalAmounts();
-			for(ScQtProposalAmount score : amounts){
-				System.out.println("amountId----"+score.getQtProposalAmtId());
-				score.setTotalScore(new BigDecimal(90));
-				System.out.println("totalScore----"+score.getTotalScore());
+		IQTEvaluationSO evaluationSO = null;
+		EvaluationReqDTO evalReqDTO = new EvaluationReqDTO();
+		EvaluationResDTO evalResDTO = new EvaluationResDTO();
+		try {
+			
+			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			List<ScQtProposalChecklist> scoreDtls = this.getManagedBean()
+					.getFinSpecSupplierListDM().getList();
+			evalReqDTO.setPropChecklist(scoreDtls);
+			evalReqDTO.setQtId(
+					this.getManagedBean().getScQt().getQtId());
+			evalReqDTO.setDocDefinationKey(
+					ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION);
+			evalReqDTO.setDocCategory(
+					ParameterConst.SPECIFICATION_TYPE_FINANCIAL);
+			evalReqDTO.setCheckListId(
+					this.getManagedBean().getScQtChecklist().getQtChecklistId());
+			
+			if(scoreDtls != null){
+				for(ScQtProposalChecklist list : scoreDtls){
+
+					ScQtProposalAmount amountScore = list.getScQtProposal().getProposalAmount();
+					if (null == amountScore) {
+						ScQtProposalAmount scQtProposalAmount = new ScQtProposalAmount();
+						scQtProposalAmount.setTotalScore(
+								list.getScQtProposal().getProposalAmount().getTotalScore());
+					}
+					else{
+						amountScore.setTotalScore(
+								list.getScQtProposal().getProposalAmount().getTotalScore());
+					}
+							
+				}	
 			}
+			evalResDTO = evaluationSO.saveUserScorePackageDetails(evalReqDTO);
+			
+			successMessage(MessageConst.INFO_700004,
+					getMessageCommon("lbl.sc.prepare.evaluation.evaluationStage.scores"), " ", Boolean.FALSE);
+			
+		} finally{
+			evaluationSO = null;
+			
 		}
-		successMessage(MessageConst.INFO_700004,
-				getMessageCommon("lbl.sc.prepare.evaluation.evaluationStage.scores"), " ", Boolean.FALSE);
-		return null;
 		
 	}
-
+	//#25138 - Ahmaa- end
 }
