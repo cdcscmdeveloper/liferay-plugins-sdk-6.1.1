@@ -9,15 +9,14 @@
 	<p:panel header="#{lbl['lbl.sm.person.panHdr']}" toggleable="true"
 		id="equiPerDtlPan">
 		<c:if
-			test="#{(backingBean.managedBean.approverUser or backingBean.managedBean.poUser) and 
-				(backingBean.managedBean.selectedShareHolder.identificationType.parameterCode != null and backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'I')}">
+			test="#{(backingBean.managedBean.approverUser or backingBean.managedBean.poUser) and backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'I'}">
 			<h:outputText
 				style="float : left; font-size: 12px; font-weight: bold; padding-right:3px"
 				value="#{lbl['lbl.sm.person.myIdResp']} :" />
 			<h:outputText
 				style="float : left; font-size: 12px; font-weight: bold; padding-right:3px"
 				value=" #{lbl['lbl.sm.myIdentityCode.active']}"
-				rendered="#{backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70018'}" />
+				rendered="#{backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70018' or backingBean.managedBean.selectedShareHolder.identityResponseCode eq null}" />
 			<h:outputText
 				style="float : left; font-size: 12px; font-weight: bold; color: #FF0000; padding-right:3px"
 				value=" #{lbl['lbl.sm.myIdentityCode.passed.away']}"
@@ -25,10 +24,12 @@
 			<h:outputText
 				style="float : left; font-size: 12px; font-weight: bold; padding-right:3px"
 				value="#{lbl['lbl.sm.person.myIdResp.please.click']}"
-				rendered="#{backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70018' || backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70019'}"
+				rendered="#{(backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70018' || backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70019') or 
+					(backingBean.managedBean.selectedShareHolder.identityResponseCode eq null)}"
 				escape="false" />
 			<p:commandLink value="#{lbl['lbl.sm.person.myIdResp.here']}"
-				rendered="#{backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70018' || backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70019'}"
+				rendered="#{(backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70018' || backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70019') or 
+					(backingBean.managedBean.selectedShareHolder.identityResponseCode eq null)}"
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 				action="#{backingBean.viewMyIdentityRespond()}" process="@this"
 				partialSubmit="true" update=":form" 
@@ -37,7 +38,8 @@
 			<h:outputText
 				style="float : left; font-size: 12px; font-weight: bold; padding-right:3px"
 				value="#{lbl['lbl.sm.person.myIdResp.jpn.info']}"
-				rendered="#{backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70018' || backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70019'}" />
+				rendered="#{(backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70018' || backingBean.managedBean.selectedShareHolder.identityResponseCode eq '70019') or 
+					(backingBean.managedBean.selectedShareHolder.identityResponseCode eq null)}" />
 		</c:if>
 		<br />
 		<table style="width: 100%">
