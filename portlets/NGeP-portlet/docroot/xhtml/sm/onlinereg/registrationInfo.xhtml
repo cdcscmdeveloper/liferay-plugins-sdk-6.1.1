@@ -17,7 +17,9 @@
 
 	<ui:define name="contentSection">
 		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" escape="false"/>
-		<h:outputText rendered="#{registrationBackingBean.managedBean.smAppl.applValidWithSsm}" value="#{lbl['lbl.sm.po.disclaimer']}" styleClass="splNotesFonts" style="float: inherit" />
+		
+		<h:outputText rendered="#{registrationBackingBean.managedBean.smAppl.applValidWithSsm}" value="#{lbl['lbl.sm.po.disclaimer']}" styleClass="splNotesFonts" style="float: inherit" escape="false"/>
+		
 		<p:outputPanel id="outPnlRegForm">
 		<ui:include src="/xhtml/sm/shared/onlinereg/accountInfo.xhtml" />
 			<c:choose>

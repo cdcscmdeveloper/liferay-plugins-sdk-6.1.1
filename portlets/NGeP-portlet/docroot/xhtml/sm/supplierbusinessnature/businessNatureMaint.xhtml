@@ -15,6 +15,7 @@
 	</ui:define>
 	
 	<ui:define name="contentSection">
+		<h:outputText rendered="#{supplierBusinessNatureBackingBean.managedBean.smSupplier.smAppl.applValidWithSsm}" styleClass="splNotesFonts" value="#{lbl['lbl.sm.po.disclaimer']}" style="float: inherit" escape="false" ></h:outputText>
 		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.declare']}"  onclick="submissionConfirmDlg.show();"/>

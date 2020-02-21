@@ -36,6 +36,9 @@
 		</p:blockUI>
 
 		<ui:param name="mandatoryflg" value="true" />
+		
+		<h:outputText rendered="#{backingBean.managedBean.smAppl.applValidWithSsm}" value="#{lbl['lbl.sm.po.disclaimer']}" styleClass="splNotesFonts" style="float: inherit" escape="false" />
+		
 		<ac:smPanel id="tt">
 			<c:if test="#{!backingBean.managedBean.redirectToPersonPage}">
 				<table style="width: 100%" id="wizardMofRegParentTable">
