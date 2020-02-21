@@ -9490,15 +9490,16 @@ public class SmApplicationUtil {
 //							: categoryTypeDesc;
 
 					if (bean.isShowMachineryEquipmentPanel()) {
-						
-						// SmManufacturingDtl
-						if (EntityHelper.isCollectionEmpty(appl.getSmManufacturingDtls())) {
-							categoryTypeDesc = desc != null ? SmCommonUtil.getMessage("lbl.sm.manufacture.panHdr", null) : categoryTypeDesc;
-							valid = false;
-							if (currentTab != -1) {
-								setNavigationBackToCurrentPage(currentTab, bean);
+						if (bean.isShowFactoryPanel()) {
+							// SmManufacturingDtl
+							if (EntityHelper.isCollectionEmpty(appl.getSmManufacturingDtls())) {
+								categoryTypeDesc = desc != null ? SmCommonUtil.getMessage("lbl.sm.manufacture.panHdr", null) : categoryTypeDesc;
+								valid = false;
+								if (currentTab != -1) {
+									setNavigationBackToCurrentPage(currentTab, bean);
+								}
+								throw new EpException(MessageConst.ERROR_722631, new String[] { cat.getPmCategoryL3().getFullCatcode(), categoryTypeDesc });
 							}
-							throw new EpException(MessageConst.ERROR_722631, new String[] { cat.getPmCategoryL3().getFullCatcode(), categoryTypeDesc });
 						}
 						
 						// SmMachineDtl
