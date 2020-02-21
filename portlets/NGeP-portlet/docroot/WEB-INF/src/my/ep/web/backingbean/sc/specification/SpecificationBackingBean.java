@@ -2082,7 +2082,8 @@ public class SpecificationBackingBean extends
 						for (ScQtScoreOfferPrice scoreOfferPrice : tmpCheckList
 								.getQtScoreWeightage()
 								.getScQtScoreOfferPrices()) {
-
+							this.getManagedBean().setOfferScoreType(
+									String.valueOf(scoreOfferPrice.getScoreType().intValue()));
 							if (ParameterConst.RECOMMEND_TYPE_PACKAGE
 									.equalsIgnoreCase(scoreOfferPrice
 											.getOfferPriceType())) {
