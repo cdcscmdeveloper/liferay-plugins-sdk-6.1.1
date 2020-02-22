@@ -5523,6 +5523,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
 					if (getFacesScopes().hasRoleUser(RoleCode.FPB_SECRETARY.value())) {
 						userRole = RoleCode.FPB_SECRETARY.value();
+					} else if (getFacesScopes().getUserRoleList().size() != 0) {
+						userRole = RoleCode.FPB_SECRETARY.value();
 					}
 				} else {
 					String roleCode = getManagedBean().getCommitteeType() + "_SECRETARY";
