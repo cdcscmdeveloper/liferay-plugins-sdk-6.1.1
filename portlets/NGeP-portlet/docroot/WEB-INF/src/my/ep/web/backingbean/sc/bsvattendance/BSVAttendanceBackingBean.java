@@ -861,6 +861,11 @@ public class BSVAttendanceBackingBean extends
 							.getBsvAttendance();	
 					
 					count = count + getAttandanceCount(bsvAttandance);
+					
+					// 26247 - Start
+					SmSupplier smSupplier = qTBriefingSO.retrieveActiveDisciplinaryActionBySupplier(registration.getSupplier());
+					registration.setSupplier(smSupplier);
+					// 26247 - End
 				}
 				/*
 				 * List<ScQtBsvRegistration> registrationList = new
@@ -932,7 +937,12 @@ public class BSVAttendanceBackingBean extends
 					List<ScQtBsvAttendance> bsvAttandance = registration
 							.getBsvAttendance();	
 					
-					count = count + getAttandanceCount(bsvAttandance);				
+					count = count + getAttandanceCount(bsvAttandance);	
+					
+					// 26247 - Start
+					SmSupplier smSupplier = qTBriefingSO.retrieveActiveDisciplinaryActionBySupplier(registration.getSupplier());
+					registration.setSupplier(smSupplier);
+					// 26247 - End
 					
 				}
 				
