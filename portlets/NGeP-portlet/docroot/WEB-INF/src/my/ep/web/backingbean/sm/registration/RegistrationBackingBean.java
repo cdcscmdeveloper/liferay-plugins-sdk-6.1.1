@@ -2255,6 +2255,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							for(SmPersonnel personnel : ssmResDTO.getSmPersonnelAll()){
 								if(EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), this.getManagedBean().getSmSupp().getSmAppl().getSmPersonnels(), "identificationNo") == null){
 									personnel.setSmAppl(this.getManagedBean().getSmAppl());
+									//27477
+									personnel.setSmPersonnelAddresses(null);
+									personnel.setSmPersonnelAdd(null);
 									this.getManagedBean().getSmSupp().getSmAppl().getSmPersonnels().add(personnel);
 								}
 							}
@@ -2276,7 +2279,41 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 								}
 							}
 						}
-						
+						//START 27477
+						//SET SM SUPPOWNER
+						if(this.getManagedBean().getSmSuppOwners() != null){
+							for(SmSupplierOwner owner:this.getManagedBean().getSmSuppOwners()){
+								if(owner.getSmSupplier() == null){
+									owner.setSmSupplier(this.getManagedBean().getSmSupp());
+								}
+							}
+						}
+						if(ssmResDTO.getSmSupplierBusinessList()!= null){
+							boolean existInOld=false;
+							//compare old data with ssm, if ssm has new data, add data into list
+							if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() > 0){
+								for(SmSupplierBusiness smSupplierBusiness:ssmResDTO.getSmSupplierBusinessList()){
+									if(smSupplierBusiness.getPmBusinessNature()!=null){
+										for(SmSupplierBusiness smSuppBussOld:this.getManagedBean().getSmSupp().getSmSupplierBusinesses()){
+											if(smSupplierBusiness.getPmBusinessNature().getLevelCode().equalsIgnoreCase(smSuppBussOld.getPmBusinessNature().getLevelCode())){
+												existInOld=true;
+											}
+										}
+									}
+									if(!existInOld){
+										smSupplierBusiness.setSmSupplier(this.getManagedBean().getSmSupp());
+										this.getManagedBean().getSmSupp().getSmSupplierBusinesses().add(smSupplierBusiness);
+									}
+								}
+							//if old data not exits,set all data from ssm into list
+							}else if(ssmResDTO.getSmSupplierBusinessList() != null && ssmResDTO.getSmSupplierBusinessList().size() > 0){
+								this.getManagedBean().getSmSupp().setSmSupplierBusinesses(ssmResDTO.getSmSupplierBusinessList());
+								for(SmSupplierBusiness business :this.getManagedBean().getSmSupp().getSmSupplierBusinesses()){
+									business.setSmSupplier(this.getManagedBean().getSmSupp());
+								}
+							}
+						}
+						//END 27477
 					}else{
 						this.getManagedBean().setCompanyValidWithSSM(false);
 					}
