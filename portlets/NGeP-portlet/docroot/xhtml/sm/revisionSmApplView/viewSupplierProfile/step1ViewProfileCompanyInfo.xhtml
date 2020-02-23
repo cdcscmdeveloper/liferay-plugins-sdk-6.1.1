@@ -21,8 +21,13 @@
 						rendered="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq 'J'}">
 						<ui:include
 							src="/xhtml/sm/shared/applViewOnlyPages/proffesionalBodyInfoFormViewOnly.xhtml" />
-					</ui:fragment> 
-					<ui:include src="/xhtml/sm/shared/applViewOnlyPages/transactionNetworksFormViewOnly.xhtml" />
+					</ui:fragment>
+					<!-- #27481 - start -->
+					<ui:fragment
+						rendered="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq 'K'}">
+						<ui:include src="/xhtml/sm/shared/applViewOnlyPages/transactionNetworksFormViewOnly.xhtml" />
+					</ui:fragment>
+					<!-- #27481 - end -->
 					<!-- 26238 -->
 					<ui:include src="/xhtml/sm/shared/applViewOnlyPages/disciplinaryActionInfo.xhtml" />
 				</td>
