@@ -68,7 +68,7 @@
 				</f:facet>
 				<!-- <h:outputText value="#{varOwner.nationality.countryName}" /> -->
 				<!-- 16052019 - SSM INTEGRATION CR - START -->
-				<p:selectOneMenu value="#{varOwner.tempCountryId}" disabled="#{!varOwner.nationalityNull}">
+				<p:selectOneMenu value="#{varOwner.tempCountryId}" disabled="#{!varOwner.nationalityNull and varOwner.tempCountryId ne 0}">
 					<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 					<f:selectItems var="counLs"
 						value="#{registrationBackingBean.managedBean.countryLs}" />
@@ -184,7 +184,7 @@
 				</f:facet>
 				<!-- <h:outputText value="#{varOwner.nationality.countryName}" /> -->
 				<!-- 16052019 - SSM INTEGRATION CR - START -->
-				<p:selectOneMenu value="#{varOwner.tempCountryId}" disabled="#{!varOwner.nationalityNull}">
+				<p:selectOneMenu value="#{varOwner.tempCountryId}" disabled="#{!varOwner.nationalityNull and varOwner.tempCountryId ne 0}">
 					<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 					<f:selectItems var="counLs"
 						value="#{registrationBackingBean.managedBean.countryLs}" />
