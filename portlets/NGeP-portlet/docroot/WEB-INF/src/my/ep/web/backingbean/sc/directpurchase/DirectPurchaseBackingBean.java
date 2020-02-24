@@ -201,10 +201,19 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			items.add(new SelectItem(null, ResourceBundleUtils.getMessage(
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					getFacesScopes().getUserLocale())));
-
+			
 			if (isMaintenance) {
 				docTypeList.add(ParameterConst.DOCTYPE_REQUEST_NOTE);
-			} else {
+				
+			} 
+			
+			else if (getManagedBean().getSearchFunctionType().equals(ParameterConst.ORG_TYPE_G2G_ROLECODE)){ //ORG_TYPE_G2G_ROLECODE
+				docTypeList.add(ParameterConst.DOCTYPE_SIMPLE_QUOTE);
+				docTypeList.add(ParameterConst.DOCTYPE_PURCHASE_INQUIRY);
+				
+			}
+			
+			else {
 				docTypeList.add(ParameterConst.DOCTYPE_SIMPLE_QUOTE);
 				docTypeList.add(ParameterConst.DOCTYPE_PURCHASE_INQUIRY);
 				if (isGovernament) {
@@ -535,6 +544,8 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		String docType = (String) dpObj[3];
 		long statusId = (long) dpObj[4];
 
+		debugLogger("docId"+docId+" | docNo"+docNo+" | docType"+docType+" | statusId"+statusId);
+		
 		TrackingDiarySearchBackingBean diarySearchBackingBean = new TrackingDiarySearchBackingBean();
 		diarySearchBackingBean.getManagedBean().setDocNo(docNo);
 		diarySearchBackingBean.getManagedBean().setDocType(docType);
@@ -1214,18 +1225,17 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			public SelectItem[] getFunctionType() {
 				List<String> typeList = new ArrayList<String>();
 				typeList.add(ParameterConst.ORG_TYPE_PTJ);
-				typeList.add(ParameterConst.ORG_TYPE_SUPPLIER); //ORG_TYPE_SUPPLIER
+				// typeList.add(ParameterConst.ORG_TYPE_SUPPLIER); 
+				typeList.add(ParameterConst.ORG_TYPE_G2G_ROLECODE);
 
 				SearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterCode",
 								SearchOperator.OPERATOR_IN.value(), typeList));
 				
-				for (String string : typeList) {
-					log.debug("List function type: "+string);
-				}
-
+				
 				return getDropdownCodeValuesBySearchBean(ParameterTypeConst.ORGANISATION_TYPES, searchBean);
 			}
+			
 			
 			/**
 			 * Show function type if user have both ptj & supplier role
@@ -1235,14 +1245,16 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 				if(hasSupplierRole() && hasGovernmentUserRole()) {
 					if(getManagedBean().getSearchFunctionType()==null) {
 						getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_PTJ);
+						getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_G2G_ROLECODE);
 					}
 					return true;
 				} else {
-					if(hasSupplierRole()) {
+					/* if(hasSupplierRole()) {
 						getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_SUPPLIER);
-					} else {
+						
+					} else {*/
 						getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_PTJ);
-					}
+					
 					return false;
 				}
 			}
