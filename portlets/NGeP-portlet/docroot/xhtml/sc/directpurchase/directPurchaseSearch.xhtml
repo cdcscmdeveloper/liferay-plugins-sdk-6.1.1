@@ -18,9 +18,10 @@
 		<ac:lovPopup />
 		<p:panel id="searchPanel" header="#{lbl['lbl.sc.search']}"
 			toggleable="true">
-			<table style="width: 100%;">
+			<h:panelGroup id="orgSearch" rendered="#{directPurchaseBackingBean.showFunctionType()}">
+			<table>
 				<tr>
-					<td><p:outputLabel id="searchMinistryLbL"
+					<td width="18%"><p:outputLabel id="searchMinistryLbL"
 							value="#{lbl['lbl.sc.ministry']}" /></td>
 					<td colspan="3"><ac:lov id="searchMinistry"
 							lovId="PM_ORG_PROFILE_MINSTRY" size="148" readonly="true"
@@ -33,7 +34,7 @@
 				</tr>
 
 				<tr>
-					<td><p:outputLabel id="searchPtjGroupLbL"
+					<td width="20%"><p:outputLabel id="searchPtjGroupLbL"
 							value="#{lbl['lbl.sc.kumpulan.ptj']}" /></td>
 					<td colspan="3"><ac:lov id="searchPtjGroup"
 							lovId="PM_ORG_PROFILE_PTJ_GROUP" size="148" readonly="true"
@@ -46,7 +47,7 @@
 				</tr>
 
 				<tr>
-					<td><p:outputLabel id="searchPtjLbL"
+					<td width="22%"><p:outputLabel id="searchPtjLbL"
 							value="#{lbl['lbl.sc.ptj']}" /></td>
 					<td colspan="3"><ac:lov id="searchPtj"
 							lovId="PM_ORG_PROFILE_PTJ" size="148" readonly="true"
@@ -57,19 +58,23 @@
 							saveObject="directPurchaseBackingBean.managedBean.searchPtjProfile"
 							conditionField="#{directPurchaseBackingBean.getPtjCondition()}">
 						</ac:lov></td>
-				</tr>
+				</tr></table>
+				</h:panelGroup>
+				<table>
 				<!-- Redmine 25396: remove duplication option view by adding new drop down field -->  
 				<tr>
 					<td width="22%"><p:outputLabel
 							value="#{lbl['lbl.sc.document.viewas']}" rendered="#{directPurchaseBackingBean.showFunctionType()}" /></td>
-					<td><p:selectOneMenu style="width: 250px;"
+					<td><p:selectOneMenu id="viewAs" style="width: 250px;"
 							value="#{directPurchaseBackingBean.managedBean.searchFunctionType}" 
 							rendered="#{directPurchaseBackingBean.showFunctionType()}">
 							<f:selectItems
 								value="#{directPurchaseBackingBean.getFunctionType()}" />
-							<p:ajax event="change" update="searchPanel" />
+							<p:ajax event="change" update="searchPanel" listener="#{directPurchaseBackingBean.preRenderDirectPurchaseSearch}" />
 						</p:selectOneMenu></td>
-				</tr><tr><td width="22%"></td></tr>
+					<td><p:tooltip for="viewAs"><p:outputLabel escape="false" value="#{lbl['lbl.tooltip.directpurchase.search.view.as']}" />
+						 </p:tooltip></td>	
+				</tr>
 				<!-- end 25396: -->
 				<tr>
 					<td width="22%"><p:outputLabel
@@ -186,12 +191,12 @@
 					
 						<p:menuitem id="viewBtnIconDualRole" value="#{lbl['lbl.btn.view']}"
 							icon="ui-icon-view"
-							rendered="#{directPurchaseBackingBean.managedBean.searchFunctionType eq ParameterConst.orgTypePtj and directPurchaseBackingBean.managedBean.searchDocumentType eq ParameterConst.doctypeSimpleQuote}"
+							rendered="#{directPurchaseBackingBean.isSupplier() and directPurchaseBackingBean.managedBean.searchFunctionType eq ParameterConst.orgTypePtj and directPurchaseBackingBean.managedBean.searchDocumentType eq ParameterConst.doctypeSimpleQuote}"
 							action="#{directPurchaseBackingBean.viewDoc(Obj)}" /> 
 							
 						<p:menuitem id="viewBtnIconSimpleQuoteDualRole" value="#{lbl['lbl.btn.view']}"
 							icon="ui-icon-view"
-							rendered="#{!directPurchaseBackingBean.isSupplier() and directPurchaseBackingBean.managedBean.searchFunctionType eq ParameterConst.orgTypeSupplier and directPurchaseBackingBean.managedBean.searchDocumentType eq ParameterConst.doctypeSimpleQuote}"
+							rendered="#{!directPurchaseBackingBean.isSupplier() and directPurchaseBackingBean.managedBean.searchFunctionType eq ParameterConst.orgTypeG2GRolecode and directPurchaseBackingBean.managedBean.searchDocumentType eq ParameterConst.doctypeSimpleQuote}"
 							action="#{directPurchaseBackingBean.viewDocSupplierSQ(Obj)}" />
 							
 						<p:menuitem id="viewBtnIcon" value="#{lbl['lbl.btn.view']}"
