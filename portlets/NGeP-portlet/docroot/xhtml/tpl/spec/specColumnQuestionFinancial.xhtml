@@ -90,7 +90,7 @@
 				disabled="true" />
 			<!--#25039#67 Begin-->
 			<p:commandButton id="indicativeBtn"			
-				icon="#{question.indicativePrice == null ? 'ui-icon-pencil' : 'ui-icon-evaluate'}" 
+				icon="#{question.tplSpecEstimations[0].indicativeUnitPrice == null ? 'ui-icon-pencil' : 'ui-icon-evaluate'}" 
  				style="background-color:transparent !important; border:0px none;"  
 				action="#{templateSpecBackingBean.zoneEstimationPopupAction(templateSpecBean)}"
 				oncomplete="#{zoneEstimationPopup}.show();"
