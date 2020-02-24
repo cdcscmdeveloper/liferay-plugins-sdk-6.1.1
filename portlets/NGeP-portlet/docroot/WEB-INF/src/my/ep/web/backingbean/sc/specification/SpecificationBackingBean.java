@@ -5089,11 +5089,6 @@ public class SpecificationBackingBean extends
 					}
 
 				}
-				// #23059#67#76 - start
-				// To recalculate estimate amount (Item Total Indicative Price)
-					System.out.println("===========reCalculateEstimateAmount start============");
-					reCalculateEstimateAmount(templateSpecBean);
-				// #23059#67#76 - end
 				return "/xhtml/sc/boSctemplatespec/financialCommitteeTemplate.xhtml?faces-redirect=true";
 			} else {
 				setUserDetails(checkList);
@@ -16417,12 +16412,7 @@ public class SpecificationBackingBean extends
 			} 
 			if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getTplSpecEstimations().size()!= 0){
 				for (int x = 0; x < templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getTplSpecEstimations().size(); x++) {
-					
-					templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
-						.setIndicativePrice(templateSpecBean.getSpecMaster()
-								.getTplSpecQuestions().get(i).getTplSpecEstimations()
-								.get(x).getIndicativeUnitPrice());
-									
+	
 					if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getTplSpecEstimations().get(x).getIndicativeUnitPrice() != null) {
 						indicativeUnitPrice = templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getTplSpecEstimations().get(x).getIndicativeUnitPrice().doubleValue();
 					} 
@@ -16451,7 +16441,6 @@ public class SpecificationBackingBean extends
 						log.info("specZoneId is : " + specZoneId);
 						log.info("questionId is : " + questionId);
 						log.info("indicativeUnitPrice is : " + indicativeUnitPrice);
-						log.info("setIndicativePrice is : " + templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getIndicativePrice());
 								
 					TemplateSpecBackingBean templateSpecBackingbean = new TemplateSpecBackingBean();
 					templateSpecBackingbean

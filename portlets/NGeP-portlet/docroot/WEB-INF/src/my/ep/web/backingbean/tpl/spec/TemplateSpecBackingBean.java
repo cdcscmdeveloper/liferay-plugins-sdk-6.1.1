@@ -2910,7 +2910,7 @@ public class TemplateSpecBackingBean extends
 		};
 
 		// #23059#67 - start
-		for (int i = 0; i < templateSpecBean.getSpecMaster().getTplSpecQuestions().size(); i++) {
+/*		for (int i = 0; i < templateSpecBean.getSpecMaster().getTplSpecQuestions().size(); i++) {
 			if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getTplSpecEstimations().size()!= 0){
 				for (int x = 0; x < templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getTplSpecEstimations().size(); x++) {
 					specMaster.getTplSpecQuestions().get(i)
@@ -2919,7 +2919,7 @@ public class TemplateSpecBackingBean extends
 							.get(x).getIndicativeUnitPrice());
 				}
 			}
-		}
+		}*/
 		// #23059#67 - end
 		specMaster.setTotalEstAmount(totalEstAmount);
 	}
@@ -3099,25 +3099,6 @@ public class TemplateSpecBackingBean extends
 	 */
 	public void zoneEstCostOkAction(TemplateSpecBean templateSpecBean) {
 		debugLogger("zoneEstCostOkAction");
-		// #25039#67 start
-		ITemplateSpecSO templateSpecSO = null;
-		try {
-			TplSpecQuestion selectedSpecQuestion = templateSpecBean
-					.getSelectedSpecQuestion();
-			List<TplSpecEstimation> specEstimations = selectedSpecQuestion.getTplSpecEstimations();
-
-			templateSpecSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
-
-			BigDecimal indicativePrice = templateSpecSO.validateIndicativePrice(
-					selectedSpecQuestion, specEstimations, new FacesScopes().getUserLocale());
-			
-			if (indicativePrice != null) {
-				selectedSpecQuestion.setIndicativePrice(indicativePrice);
-			}
-		} finally {
-			templateSpecSO = null;
-		}
 
 		templateSpecBean.setSelectedSpecQuestion(null);
 		getManagedBean().setTemplateSpecBean(templateSpecBean);
