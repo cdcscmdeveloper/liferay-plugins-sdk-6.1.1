@@ -5089,6 +5089,11 @@ public class SpecificationBackingBean extends
 					}
 
 				}
+				// #23059#67#76 - start
+				// To recalculate estimate amount (Item Total Indicative Price)
+					System.out.println("===========reCalculateEstimateAmount start============");
+					reCalculateEstimateAmount(templateSpecBean);
+				// #23059#67#76 - end
 				return "/xhtml/sc/boSctemplatespec/financialCommitteeTemplate.xhtml?faces-redirect=true";
 			} else {
 				setUserDetails(checkList);
