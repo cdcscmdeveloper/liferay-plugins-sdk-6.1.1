@@ -18,13 +18,13 @@
 		<ac:lovPopup />
 		<p:panel id="searchPanel" header="#{lbl['lbl.sc.search']}"
 			toggleable="true">
-			<h:panelGroup id="orgSearch" rendered="#{directPurchaseBackingBean.showFunctionType()}">
+			<h:panelGroup id="orgSearch" rendered="#{directPurchaseBackingBean.showFunctionType()==true or !directPurchaseBackingBean.isSupplier()}">
 			<table>
 				<tr>
-					<td width="18%"><p:outputLabel id="searchMinistryLbL"
+					<td width="25%"><p:outputLabel id="searchMinistryLbL"
 							value="#{lbl['lbl.sc.ministry']}" /></td>
 					<td colspan="3"><ac:lov id="searchMinistry"
-							lovId="PM_ORG_PROFILE_MINSTRY" size="148" readonly="true"
+							lovId="PM_ORG_PROFILE_MINSTRY" size="118" readonly="true"
 							headerText="#{lbl['lbl.sc.ministry']}"
 							value="#{directPurchaseBackingBean.managedBean.searchMinistryProfile.orgName}"
 							postUpdateListener="directPurchaseBackingBean.postUpdateOrgProfileListener"
@@ -34,10 +34,10 @@
 				</tr>
 
 				<tr>
-					<td width="20%"><p:outputLabel id="searchPtjGroupLbL"
+					<td width="25%"><p:outputLabel id="searchPtjGroupLbL"
 							value="#{lbl['lbl.sc.kumpulan.ptj']}" /></td>
 					<td colspan="3"><ac:lov id="searchPtjGroup"
-							lovId="PM_ORG_PROFILE_PTJ_GROUP" size="148" readonly="true"
+							lovId="PM_ORG_PROFILE_PTJ_GROUP" size="118" readonly="true"
 							headerText="#{lbl['lbl.sc.kumpulan.ptj']}"
 							value="#{directPurchaseBackingBean.managedBean.searchPtjGroupProfile.orgName}"
 							postUpdateListener="directPurchaseBackingBean.postUpdateOrgProfileListener"
@@ -47,10 +47,10 @@
 				</tr>
 
 				<tr>
-					<td width="22%"><p:outputLabel id="searchPtjLbL"
+					<td width="25%"><p:outputLabel id="searchPtjLbL"
 							value="#{lbl['lbl.sc.ptj']}" /></td>
 					<td colspan="3"><ac:lov id="searchPtj"
-							lovId="PM_ORG_PROFILE_PTJ" size="148" readonly="true"
+							lovId="PM_ORG_PROFILE_PTJ" size="118" readonly="true"
 							headerText="#{lbl['lbl.sc.ptj']}"
 							value="#{directPurchaseBackingBean.managedBean.searchPtjProfile.orgName}"
 							postUpdateListener="directPurchaseBackingBean.postUpdateOrgProfileListener"
