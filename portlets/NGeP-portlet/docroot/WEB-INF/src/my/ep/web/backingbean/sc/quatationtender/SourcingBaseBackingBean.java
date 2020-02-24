@@ -4424,6 +4424,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						if (reportTitleList.contains(finalizationReport.getPmDocument().getDocName())) {
 							getManagedBean().getNewBriefingPaperReportList().add(finalizationReport);
 							iterator.remove();
+						} else if (finalizationReport.getDefinationType().getParameterCode().equals("UI")) {
+							iterator.remove();
 						}
 					}
 				} else {
