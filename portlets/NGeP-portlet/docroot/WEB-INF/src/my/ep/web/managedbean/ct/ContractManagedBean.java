@@ -9,10 +9,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-
 import org.primefaces.model.TreeNode;
 import my.ep.constant.ct.ContractConst;
 import my.ep.persistence.entity.ct.CtAddress;
@@ -129,7 +127,8 @@ public class ContractManagedBean extends BaseManagedBean {
 
 	private boolean updateContract = false;
 	private boolean serviceTaxAlertFlg = false;
-
+	private boolean notificationSetting = false;
+		
 	private CtContractItem selectedItemForSpec;
 
 	// Change Log
@@ -417,6 +416,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	/**
 	 * @return the radioButtonSchedule
 	 */
+	
 	public Map<String, Object> getRadioButtonSchedule() {
 		/**	Enhancement #25657
 		 *  This is temporary solution until full version of progressive payment to be developed.
@@ -1220,5 +1220,16 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setCtAgreementList(List<CtAgreement> ctAgreementList) {
 		this.ctAgreementList = ctAgreementList;
 	}
+
+
+	public boolean isNotificationSetting() {
+		return notificationSetting;
+	}
+
+	public void setNotificationSetting(boolean notificationSetting) {
+		this.notificationSetting = notificationSetting;
+	}
+	
+	
 
 }
