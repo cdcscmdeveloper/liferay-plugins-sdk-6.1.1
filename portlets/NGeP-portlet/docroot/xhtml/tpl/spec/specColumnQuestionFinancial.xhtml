@@ -85,11 +85,13 @@
 
 <!-- 	#25039 Begin - version zonal -->
 		<c:if test="#{isZonal}">			
-			<p:inputText style="min-width:0px !important;width:86px;" rendered="#{isQuestionTypeItem}" disabled="true" />
+			<p:inputText style="min-width:0px !important;width:86px;" 
+				rendered="#{isQuestionTypeItem}" 
+				disabled="true" />
 			<!--#25039#67 Begin-->
-			<p:commandButton 
-				icon="#{isTotalEstimatedEqZero ? 'ui-icon-pencil' : 'ui-icon-evaluate'}" 
-				style="background-color:transparent !important; border:0px none;"  
+			<p:commandButton id="indicativeBtn"			
+				icon="#{question.indicativePrice == null ? 'ui-icon-pencil' : 'ui-icon-evaluate'}" 
+ 				style="background-color:transparent !important; border:0px none;"  
 				action="#{templateSpecBackingBean.zoneEstimationPopupAction(templateSpecBean)}"
 				oncomplete="#{zoneEstimationPopup}.show();"
 				partialSubmit="true" process="@this" update="@([id$=zoneEstimationPopup])"
