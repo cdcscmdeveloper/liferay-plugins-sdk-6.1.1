@@ -14,7 +14,6 @@
      .ui-menu.ui-menu-dynamic.ui-widget.ui-widget-content.ui-corner-all.ui-helper-clearfix.ui-shadow{  
               width:250px;
    }
-   
     </style>
    
     <p:blockUI block=":form" trigger="searchButtonId" widgetVar="blkContractSearchTable">
@@ -214,10 +213,21 @@
 					 		      rendered="#{contractDetailsBackingBean.isContractAdmin() and data.ctStatus == 1
 					 		      			  and data.ctContract.recordStatusFlg==1 and !data.pendingFinalistAgreement
 					 		      			  and !contractDetailsBackingBean.managedBean.trackingDiarySearch
-					 		      			  and !data.allowAgreementCreation }"  process="@this" partialSubmit="true"
+					 		      			  and !data.allowAgreementCreation }" 
+					 		      			  process="@this" partialSubmit="true"
                              	  action="#{contractDetailsBackingBean.gotoUpdatePage(data.ctContract.contractId, data.agStatus)}"
 								  onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
 					        </p:menuitem>
+					        
+					        <p:menuitem id="menuItemId15" value="#{lbl['lbl.ct.notification.setting']}" icon="ui-icon-edit" 
+						          rendered="#{contractDetailsBackingBean.isContractAdmin() and data.ctStatus == 1
+									        and !contractDetailsBackingBean.managedBean.trackingDiarySearch
+									        and !data.allowAgreementCreation}"
+									        process="@this" partialSubmit="true"
+						          action="#{contractDetailsBackingBean.gotoNotificationSetting(data.ctContract.contractId)}"
+						          onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
+						    </p:menuitem>
+
 				
 					   	 <p:menuitem id="menuItemId5" value="#{lbl['lbl.ct.view.termination.history']}"  
 					   	     icon="ui-icon-termination-history" 
