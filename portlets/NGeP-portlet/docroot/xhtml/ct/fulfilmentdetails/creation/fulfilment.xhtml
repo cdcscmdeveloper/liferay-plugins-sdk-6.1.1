@@ -131,11 +131,16 @@
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			actionListener="#{contractDetailsBackingBean.setTabValue('PY')}" update=":form" />
 		  	 
-		 <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.setting']}"
+		<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.approver.setting']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			 rendered="#{contractDetailsBackingBean.isApproverSetting()}"
 			actionListener="#{contractDetailsBackingBean.setTabValue('SE')}" update=":form" />
-		</p:tabMenu>
+				
+		<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.notification.setting']}"
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			rendered="#{ctBackingBean.managedBean.notificationSetting or ctBackingBean.managedBean.viewContract}"
+			actionListener="#{contractDetailsBackingBean.setTabValue('NS')}" update=":form" />
+			</p:tabMenu>
 		</p:outputPanel>
 		
 		<p:outputPanel id="menuCentral"  
@@ -143,42 +148,47 @@
 	         <p:tabMenu id="sidemenuId1" styleClass="sidemenu" 
 						activeIndex="#{contractDetailsBackingBean.managedBean.selectedTabIndex}" >
 		
-	           <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.fd']}"
-			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			actionListener="#{contractDetailsBackingBean.setTabCentralValue('FD')}" update=":form" />
-	
-	      	<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.zone']}"  onstart="blockWidget.show()" 
-		    oncomplete="blockWidget.hide()" rendered="#{ctBackingBean.managedBean.contractVer.ctContract.zonalPricing}"
-			actionListener="#{contractDetailsBackingBean.setTabCentralValue('ZO')}" update=":form" />
-		
-		    <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.item']}"
-			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			actionListener="#{contractDetailsBackingBean.setTabCentralValue('IT')}" update=":form" />
-			
-			<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.deduction']}" 
-			onstart="blockWidget.show()"   oncomplete="blockWidget.hide()"
-			 actionListener="#{contractDetailsBackingBean.setTabCentralValue('DE')}" update=":form" />
-			
-			<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.performance.bond']}"
-			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			rendered="#{ctBackingBean.isPerformanceBond()}"
-			actionListener="#{contractDetailsBackingBean.setTabCentralValue('PB')}" update=":form" />
-		
-		   <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.factoring']}"
-			    onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			    rendered="#{ctBackingBean.managedBean.contractVer.ctContract.factored and contractDetailsBackingBean.checkFactoringExpiryDate()}"
-			    actionListener="#{contractDetailsBackingBean.setTabCentralValue('FT')}" update=":form" />
-		
-		 <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.adv.payment.tracking']}"
-			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			rendered="#{ctBackingBean.managedBean.contractVer.ctContractValue.followLoaAmt}"
-			actionListener="#{contractDetailsBackingBean.setTabCentralValue('PY')}" update=":form" />
-		 
-	      <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.setting']}"
-			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			 rendered="#{contractDetailsBackingBean.isApproverSetting()}"
-			actionListener="#{contractDetailsBackingBean.setTabCentralValue('SE')}" update=":form" />
-		</p:tabMenu>
+				     <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.fd']}"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						actionListener="#{contractDetailsBackingBean.setTabCentralValue('FD')}" update=":form" />
+				
+				     <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.zone']}"  onstart="blockWidget.show()" 
+					    oncomplete="blockWidget.hide()" rendered="#{ctBackingBean.managedBean.contractVer.ctContract.zonalPricing}"
+						actionListener="#{contractDetailsBackingBean.setTabCentralValue('ZO')}" update=":form" />
+					
+					 <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.item']}"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						actionListener="#{contractDetailsBackingBean.setTabCentralValue('IT')}" update=":form" />
+						
+					 <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.deduction']}" 
+					     onstart="blockWidget.show()"   oncomplete="blockWidget.hide()"
+					     actionListener="#{contractDetailsBackingBean.setTabCentralValue('DE')}" update=":form" />
+						
+					 <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.performance.bond']}"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						rendered="#{ctBackingBean.isPerformanceBond()}"
+						actionListener="#{contractDetailsBackingBean.setTabCentralValue('PB')}" update=":form" />
+					
+					<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.factoring']}"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						rendered="#{ctBackingBean.managedBean.contractVer.ctContract.factored and contractDetailsBackingBean.checkFactoringExpiryDate()}"
+						actionListener="#{contractDetailsBackingBean.setTabCentralValue('FT')}" update=":form" />
+					
+					 <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.adv.payment.tracking']}"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						rendered="#{ctBackingBean.managedBean.contractVer.ctContractValue.followLoaAmt}"
+						actionListener="#{contractDetailsBackingBean.setTabCentralValue('PY')}" update=":form" />
+					 
+				   	<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.approver.setting']}"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						 rendered="#{contractDetailsBackingBean.isApproverSetting()}"
+						actionListener="#{contractDetailsBackingBean.setTabCentralValue('SE')}" update=":form" />
+					
+					<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.notification.setting']}"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						rendered="#{ctBackingBean.managedBean.notificationSetting or ctBackingBean.managedBean.viewContract}"
+						actionListener="#{contractDetailsBackingBean.setTabCentralValue('NS')}" update=":form" />
+			</p:tabMenu>
 		</p:outputPanel>
 		
 		 </td>
@@ -246,8 +256,15 @@
 				<p:outputPanel id="ctMenuId12"
 				    rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.settingIndex
 				     and contractDetailsBackingBean.isApproverSetting()}">
-					<ui:include	src="/xhtml/ct/fulfilmentdetails/shared/approverSetting.xhtml" />
-				   <ui:include	src="/xhtml/ct/common/fulfilmentSetting.xhtml" />
+					<ui:include	src="/xhtml/ct/fulfilmentdetails/shared/approverSetting.xhtml" />  
+					<ui:include src="/xhtml/ct/shared/remarkAppSetting.xhtml" />
+				</p:outputPanel>
+				
+				<p:outputPanel id="ctMenuId14"
+					rendered = "#{contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.notificationIndex}">
+					 <ui:include src="/xhtml/ct/common/fulfilmentSetting.xhtml" />
+					 <ui:include src="/xhtml/ct/shared/remarkNotiSetting.xhtml" /> 
+
 				</p:outputPanel>
 			 	</td>
 			 </tr>
