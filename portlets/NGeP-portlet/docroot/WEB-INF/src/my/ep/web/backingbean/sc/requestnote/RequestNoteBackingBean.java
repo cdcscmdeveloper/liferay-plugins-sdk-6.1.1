@@ -3265,14 +3265,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @param prObj
 	 */
 	@SuppressWarnings("unchecked")
-	private void cancelRN(Object[] prObj) {
+	private void cancelRN(Object[] prObj, int prSize) {
 		ScRequestNote requestNote = getManagedBean().getRequestNote();
 		
-		TrackingDiarySearchBackingBean diarySearchBackingBean = new TrackingDiarySearchBackingBean();
-		diarySearchBackingBean.getManagedBean().setDocNo((String)prObj[1]);
-		diarySearchBackingBean.getManagedBean().setDocType(ParameterConst.DOCTYPE_REQUEST_NOTE);
-		diarySearchBackingBean.getManagedBean().setStatusId((Long)prObj[4]);
-
 		log.info("cancelPendingItemCodification");
 		FacesScopes facesScopes = new FacesScopes();
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
@@ -3283,12 +3278,15 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		requestNote.setRequestNoteDtls((List<ScRequestNoteDtl>) prObj[6]);
 		requestNoteReqDTO.setRequestNote(requestNote);
 		requestNoteReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
-
-		RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().cancelPendingItemCodification(requestNoteReqDTO, getManagedBean().getSelectedPrDtls());
-		if (requestNoteResDTO.isSuccessful()) {
-			successMessage(MessageConst.INFO_776041, (String) prObj[1],
-					(String) prObj[3], Boolean.TRUE);
+		
+		RequestNoteResDTO requestNoteResDTO = null;
+		if (prSize == 1) {
+			requestNoteResDTO = getRequestNoteSO().cancelPendingItemCodification(requestNoteReqDTO, getManagedBean().getSelectedPrDtls());
 		} else {
+			requestNoteResDTO = getRequestNoteSO().prepareTrackingDiaryDPM(requestNoteReqDTO, getManagedBean().getSelectedPrDtls());
+		}
+		
+		if (!requestNoteResDTO.isSuccessful()) {
 			throw new EpException(MessageConst.ERROR_700020);
 		}
 	}
