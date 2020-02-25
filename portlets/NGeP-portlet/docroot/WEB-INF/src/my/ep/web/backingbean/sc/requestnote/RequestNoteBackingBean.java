@@ -3214,43 +3214,63 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	
 	public void cancelPendingItemCodificationDPM() {
 		
+		FacesScopes facesScopes = new FacesScopes();
+		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+		requestNoteReqDTO.setRequestNote(getManagedBean().getRequestNote());
+		requestNoteReqDTO.setUserLocale(facesScopes.getUserLocale());
+		List<String> loginIdAssignees = getRequestNoteSO().getSuppliersPendingAssignItemCode(requestNoteReqDTO);
+		
 		Object[] prObj = getManagedBean().getSelectedPrDtls();
 		if (null != prObj) {
-			int prSize = (int) prObj[8];
+			log.info("Getting count for docNo: " + getManagedBean().getRequestNote() + " status: " + DPStatusConstants.RN_PENDING_ITEM_CODIFICATION + " docType : " + ParameterConst.DOCTYPE_REQUEST_NOTE);
+		    ISearchBean<Object[]> prSearchBean =  new SearchBean<>();
+		    prSearchBean.getDataFilterBeans().add(new SearchFilterBean("docNo", SearchOperator.OPERATOR_EQUALS.value(), prObj[1]));
+		    prSearchBean.getDataFilterBeans().add(new SearchFilterBean("status", SearchOperator.OPERATOR_EQUALS.value(), DPStatusConstants.RN_PENDING_ITEM_CODIFICATION));
+		    prSearchBean.getDataFilterBeans().add(new SearchFilterBean("docType", SearchOperator.OPERATOR_EQUALS.value(), ParameterConst.DOCTYPE_REQUEST_NOTE));
+		    SourcingIntegrationReqDTO searchReqDTO = new SourcingIntegrationReqDTO();
+		    searchReqDTO.setSourcingDocSearchBean(prSearchBean);
+		    ISourcingIntegrationSO sourcingIntegrationSO = (ISourcingIntegrationSO) EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+		   
+			int prSize = sourcingIntegrationSO.getCountOfActivePR(searchReqDTO);
 				
-			if (prSize == 1) { 
-				cancelRN(prObj);
-			}
+			cancelRN(prObj, prSize);
 			
 			ScPurchaseRequest purchaseRequest = (ScPurchaseRequest) prObj[2];
+			List<ScRequestNoteDtl> requestNoteDtls = (List<ScRequestNoteDtl>) prObj[6];
 			IPurchaseRequestSO purchaseRequestSO = null;
+			IRequestNoteSO requestNoteSO = null;
 			try {
 				purchaseRequestSO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 								IPurchaseRequestSO.class);
+				
+				requestNoteSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IRequestNoteSO.class);
+				
 				if (null != purchaseRequest && null != purchaseRequestSO) {
+					
 					purchaseRequest.setRecordStatusFlg(2);
 					PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
 					reqDTO.setPurchaseRequest(purchaseRequest);
 					PurchaseRequestResDTO response = purchaseRequestSO.savePurchaseRequest(reqDTO );
 					if (response.isSuccessful()) {
-						ScRequestNote scRequestNote = (ScRequestNote) prObj[7];
-						if (null != scRequestNote && prSize > 1) {
-							successMessage(MessageConst.INFO_776041, (String) prObj[1],
-									(String) prObj[3], Boolean.TRUE);
-						}
+						successMessage(MessageConst.INFO_776041, (String) prObj[1],
+								(String) prObj[3], Boolean.TRUE);
 					} else {
 						throw new EpException(MessageConst.ERROR_700020);
+					}
+					
+					if (null != requestNoteSO) {
+						RequestNoteReqDTO reqNoteDTO = new RequestNoteReqDTO();
+						reqNoteDTO.setRequestNoteDtls(requestNoteDtls);
+						requestNoteSO.updateRequestNoteDtls(reqNoteDTO);
 					}
 				}
 			} finally {
 				purchaseRequestSO = null;
 			}
-			FacesScopes facesScopes = new FacesScopes();
-			RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
-			requestNoteReqDTO.setRequestNote(getManagedBean().getRequestNote());
-			requestNoteReqDTO.setUserLocale(facesScopes.getUserLocale());
-			List<String> loginIdAssignees = getRequestNoteSO().getSuppliersPendingAssignItemCode(requestNoteReqDTO);
+			
 			if (CollectionUtils.isNotEmpty(loginIdAssignees)) {
 				getRequestNoteSO().sendRequestNoteNotification(requestNoteReqDTO, loginIdAssignees);
 			} else {
