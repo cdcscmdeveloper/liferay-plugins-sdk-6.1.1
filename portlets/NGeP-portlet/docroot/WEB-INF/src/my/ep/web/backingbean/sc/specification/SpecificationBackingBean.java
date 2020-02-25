@@ -5089,11 +5089,11 @@ public class SpecificationBackingBean extends
 					}
 
 				}
-				// #23059#67#76 - start
+				// #25039#67#76 - start
 				// To recalculate estimate amount (Item Total Indicative Price)
 					System.out.println("===========reCalculateEstimateAmount start============");
 					reCalculateEstimateAmount(templateSpecBean);
-				// #23059#67#76 - end
+				// #25039#67#76 - end
 				return "/xhtml/sc/boSctemplatespec/financialCommitteeTemplate.xhtml?faces-redirect=true";
 			} else {
 				setUserDetails(checkList);
@@ -16372,7 +16372,7 @@ public class SpecificationBackingBean extends
 	}
 	// #21695 END FARID
 
-	// #23059#67#76 - start
+	// #25039#67#76 - start
 	// To recalculate estimate amount (Item Total Indicative Price)
 	private void reCalculateEstimateAmount(TemplateSpecBean templateSpecBean){
 		log.info("===========reCalculateEstimateAmount============");
@@ -16444,7 +16444,7 @@ public class SpecificationBackingBean extends
 						specEstimationId = templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getTplSpecEstimations().get(x).getSpecEstimationId() ;
 						questionId = BigDecimal.valueOf(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getSpecQuestionId());
 						 
-							log.info("i is : " + i + " x is "+ x );
+/*							log.info("i is : " + i + " x is "+ x );
 							log.info("clQuantity is : " + clQuantity);
 							log.info("clUomFrequency is : " + clUomFrequency);
 							log.info("clUomPerDay is : " + clUomPerDay);
@@ -16455,7 +16455,7 @@ public class SpecificationBackingBean extends
 							log.info("specEstimationId is : " + specEstimationId);
 							log.info("specZoneId is : " + specZoneId);
 							log.info("questionId is : " + questionId);
-							log.info("indicativeUnitPrice is : " + indicativeUnitPrice);
+							log.info("indicativeUnitPrice is : " + indicativeUnitPrice);*/
 									
 						TemplateSpecBackingBean templateSpecBackingbean = new TemplateSpecBackingBean();
 						templateSpecBackingbean
@@ -16476,6 +16476,6 @@ public class SpecificationBackingBean extends
 			}
 		}	
 	}
-	// #23059#67#76 - end
+	// #25039#67#76 - end
 
 }
