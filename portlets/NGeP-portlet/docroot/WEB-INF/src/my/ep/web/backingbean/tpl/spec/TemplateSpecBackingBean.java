@@ -2909,18 +2909,6 @@ public class TemplateSpecBackingBean extends
 				}
 		};
 
-		// #23059#67 - start
-/*		for (int i = 0; i < templateSpecBean.getSpecMaster().getTplSpecQuestions().size(); i++) {
-			if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getTplSpecEstimations().size()!= 0){
-				for (int x = 0; x < templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getTplSpecEstimations().size(); x++) {
-					specMaster.getTplSpecQuestions().get(i)
-					.setIndicativePrice(templateSpecBean.getSpecMaster()
-							.getTplSpecQuestions().get(i).getTplSpecEstimations()
-							.get(x).getIndicativeUnitPrice());
-				}
-			}
-		}*/
-		// #23059#67 - end
 		specMaster.setTotalEstAmount(totalEstAmount);
 	}
 	// #25039 end
@@ -3101,7 +3089,6 @@ public class TemplateSpecBackingBean extends
 		debugLogger("zoneEstCostOkAction");
 
 		templateSpecBean.setSelectedSpecQuestion(null);
-		getManagedBean().setTemplateSpecBean(templateSpecBean);
 		RequestContext.getCurrentInstance().execute(
 				templateSpecBean.getSpecComponentId()
 						+ "zoneEstimationPopup.hide()");
