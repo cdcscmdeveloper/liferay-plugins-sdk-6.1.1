@@ -37,19 +37,13 @@
 				<p:inputText id="estCost" value="#{tplSpecEstimation.estimatedCost}" style="width:165px; text-align:right;" 
 						styleClass="mandatory"
 						required="true" maxlength="19"
-						rendered="#{templateSpecBackingBean.checkValueGreaterThanZero(templateSpecBean.selectedSpecQuestion,rowIndex)}"
 						label="#{lbl['lbl.tpl.spec.content.estimate.cost']}"
-						disabled="#{editable}">
-					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
+						disabled="#{editable or tplSpecEstimation.estimatedCost eq 0}">
+				<c:if test="#{tplSpecEstimation.estimatedCost ne 0}">
+						<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
+				</c:if>
 					<p:ajax partialSubmit="true" process="@this" update="@this, estCostMsg" />
 				</p:inputText>
-					<p:inputText id="estCost1" value="#{tplSpecEstimation.estimatedCost}" style="width:165px; text-align:right;" 
-						required="true" maxlength="19"
-						rendered="#{!templateSpecBackingBean.checkValueGreaterThanZero(templateSpecBean.selectedSpecQuestion,rowIndex)}"
-						label="#{lbl['lbl.tpl.spec.content.estimate.cost']}"
-						disabled="#{editable}">
-					<p:ajax partialSubmit="true" process="@this" update="@this, estCostMsg" />
-					</p:inputText>
 			</c:if>
 			<c:if test="#{!isQT}">
 				<p:inputText id="estCost" value="#{tplSpecEstimation.estimatedCost}" style="width:165px; text-align:right;" 
