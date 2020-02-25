@@ -221,11 +221,6 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				</p:commandLink>
 	        </p:column>
 	        <p:column>
-	        	statusEnabled= #{ppItem.statusEnabled}
-	        	brandNew= #{ppItem.brandNew}
-	        	cloneEnabled= #{ppItem.cloneEnabled}
-	        	recordStatusFlg= #{ppItem.recordStatusFlg}
-	        	modeEditable= #{pPlanBackingBean.managedBean.modeEditable}
 	        	<p:selectOneMenu id="recordStatus" value="#{ppItem.recordStatusFlg}" style="width:99%"
 	        		disabled="#{ppItem.cloneEnabled or ppItem.statusEnabled}">  
 	            	<f:selectItems value="#{pPlanBackingBean.getStatusOptions()}" />
