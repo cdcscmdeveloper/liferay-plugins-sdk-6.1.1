@@ -8,6 +8,11 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="resourceSection">
+		<script type="text/javascript">
+			function clearInvalidFileMsg() {
+				fileUploadWidget.uploadContent.find("tr.ui-state-error").remove();
+			}
+		</script>
 	</ui:define>
 
 
@@ -149,12 +154,30 @@
 		    newable="#{specificationBackingBean.managedBean.specNewable}"
 		    removable="#{specificationBackingBean.managedBean.specNewable}"
 			templateSpecBean="#{specificationBackingBean.managedBean.templateSpecBean}" />
-
-
-
-
+	
+		<!-- START Added By: Haidah  for  CR:#25633 -->
+		<div style="text-align: right;">
+			<p:commandButton value="#{lbl['lbl.btn.import']}" onclick="excelDialog.show(); clearInvalidFileMsg();" 
+			rendered="#{specificationBackingBean.managedBean.standardTemplate eq ParameterConst.tplDocProcessTypeStandard}"/>
+			<p:commandButton id="downloadLink" value="#{lbl['lbl.btn.export']}" ajax="false" action="#{specificationBackingBean.getFileToDownload}"
+			rendered="#{specificationBackingBean.managedBean.standardTemplate eq ParameterConst.tplDocProcessTypeStandard}"/>
+			<ac:iconTooltip value="#{lbl['lbl.sc.spec.btn.import.export.tooltip']}" rendered="#{specificationBackingBean.managedBean.standardTemplate eq ParameterConst.tplDocProcessTypeStandard}"/>
+		</div>
+		<p:dialog id="excelDialog" widgetVar="excelDialog" modal="true"
+			width="550" onShow="singleUploadListener(fileUploadWidget);"
+			resizable="false" styleClass="pop_up_top">
+			<p:fileUpload fileUploadListener="#{specificationBackingBean.reloadFileImport}"
+				cancelLabel="#{lbl['lbl.btn.cancel']}" multiple="false"
+				uploadLabel="#{lbl['lbl.btn.upload']}" showButtons="false"
+				label="#{lbl['lbl.btn.choose']}" widgetVar="fileUploadWidget"
+				mode="advanced" id="upload" allowTypes="/(\.|\/)(xls|flv|xlsx|xlsm)$/"
+				update="@form" invalidFileMessage="#{lbl['lbl.cm.only.xls']}"
+				ajax="false">
+			</p:fileUpload>
+		</p:dialog>
+		<!-- END CR:#25633 -->
 
 	</ui:define>
-
+	
 
 </ui:composition>
