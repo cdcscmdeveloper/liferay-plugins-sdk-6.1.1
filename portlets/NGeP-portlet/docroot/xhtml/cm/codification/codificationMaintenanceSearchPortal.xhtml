@@ -32,7 +32,7 @@
 							</td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
 					<td><p:inputText title="#{lbl['lbl.cm.title.english']}"
-							value="#{codificationMaintenanceBackingBean.managedBean.titleFilterBean.searchValue}"
+							value="#{codificationMaintenanceBackingBean.titleFilterBean.searchValue}"
 							size="40" /><p:graphicImage id="itemCodeID"
 										value="/css/images/design/tooltips.png" /> <p:tooltip
 										for="itemCodeID">
@@ -106,7 +106,7 @@
 		</p:panel>
 		
 		<p:dialog id="codificationMaintenanceSearchPopUpPortal" widgetVar="codificationMaintenanceSearchPopUpPortal" modal="true"
-			header="#{lbl['lbl.cm.item.code.search.title']}" resizable="true"  styleClass="pop_up_top" width="800">
+			header="#{lbl['lbl.cm.item.code.search.title']}" resizable="false"  styleClass="pop_up_top" width="800" height="500">
 			<ui:include src="codificationMaintenanceSearchPopUpPortal.xhtml"></ui:include>	
 			</p:dialog>
 
