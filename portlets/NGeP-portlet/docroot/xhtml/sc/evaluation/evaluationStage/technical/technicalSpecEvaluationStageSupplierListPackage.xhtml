@@ -53,14 +53,9 @@
 		    </p:column>
 			
 			<p:column style="width:15%;text-align: center;">
-				<p:commandButton value="#{lbl['lbl.btn.view']}" process="@this"
-					partialSubmit="true"
-					rendered="#{templateSpec[6] eq '61601' and templateSpec[7] eq '1'}"
-					action="#{evaluationBackingBean.technicalSupplierEvaluatePackage(templateSpec[0],templateSpec[2],'T')}" />
 					
 				<p:commandButton value="#{lbl['lbl.btn.view']}" process="@this"
 					partialSubmit="true"
-					rendered="#{((templateSpec[6] eq '61600' and templateSpec[7] eq '0') or (templateSpec[6] eq '61601' and templateSpec[7] eq '0'))}"
 					action="#{evaluationBackingBean.technicalSupplierEvaluatePackage(templateSpec[0],templateSpec[2],'T')}" />
 				
 			</p:column>
