@@ -468,7 +468,7 @@
 												</p:confirmDialog>
 									</c:when>
 									<c:otherwise>
-											<p:selectOneRadio  value="#{scQt.partial}" disabled="true">
+											<p:selectOneRadio  value="#{scQt.partial}" disabled="true" readonly="true">
 												<f:selectItems
 													value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 											</p:selectOneRadio>
