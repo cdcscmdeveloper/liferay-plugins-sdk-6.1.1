@@ -540,16 +540,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			getManagedBean().setEditFlag(Boolean.FALSE);
 
 			// QT Proposal validity expired
-			getQtProposalValidExpiredMessage(getManagedBean().getScQt());
+			getQtProposalValidExpiredMessage(getManagedBean().getScQt());		
 			
-			//Enhancement #12177
-			addButton();
-			if(sqExpiredMessageFlag){
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-					MessageUtils.getMessage(MessageConst.ERROR_760481, 
-						null,MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-			}
-
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
 			.handleNavigation(fc, null, QTConstants.LOA_PAGE);
@@ -611,15 +603,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		String redirectUrl = retrieveSupplierLOADtl(sourceId, 
 				loaId, null, getManagedBean().isReadOnly());
-		
-		
-		//Enhancement #12177
-		addButton();
-		if(sqExpiredMessageFlag){
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-				MessageUtils.getMessage(MessageConst.ERROR_760481, 
-					null,MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-		}
 		
 		if (StringUtils.isNotBlank(redirectUrl)) {
 			FacesContext fc = FacesContext.getCurrentInstance();
