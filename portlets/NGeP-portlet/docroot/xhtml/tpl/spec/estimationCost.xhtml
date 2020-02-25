@@ -38,10 +38,7 @@
 						styleClass="mandatory"
 						required="true" maxlength="19"
 						label="#{lbl['lbl.tpl.spec.content.estimate.cost']}"
-						disabled="#{editable or tplSpecEstimation.estimatedCost eq 0}">
-				<c:if test="#{tplSpecEstimation.estimatedCost ne 0}">
-						<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
-				</c:if>
+						disabled="#{editable}">
 					<p:ajax partialSubmit="true" process="@this" update="@this, estCostMsg" />
 				</p:inputText>
 			</c:if>
