@@ -6,10 +6,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
-import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
-import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -77,15 +75,6 @@ public class CodificationMaintenanceManagedBean extends BaseManagedBean {
 	
 	/** The back to previous page. */
 	private String backToPreviousPage;
-
-
-
-	private SearchFilterBean codeFilterBean = new SearchFilterBean(
-			SearchOperator.OPERATOR_LIKE.value());
-	private SearchFilterBean titleFilterBean = new SearchFilterBean(
-			SearchOperator.OPERATOR_LIKE.value());
-	private SearchFilterBean levelFilterBean = new SearchFilterBean(
-			SearchOperator.OPERATOR_EQUALS.value());
 	
 	private boolean assignCodeFlg = false;
 	private boolean editMode = true;
@@ -420,30 +409,7 @@ public class CodificationMaintenanceManagedBean extends BaseManagedBean {
 		this.itemCode = itemCode;
 	}
 
-	public SearchFilterBean getCodeFilterBean() {
-		return codeFilterBean;
-	}
-
-	public void setCodeFilterBean(SearchFilterBean codeFilterBean) {
-		this.codeFilterBean = codeFilterBean;
-	}
-
-	public SearchFilterBean getTitleFilterBean() {
-		return titleFilterBean;
-	}
-
-	public void setTitleFilterBean(SearchFilterBean titleFilterBean) {
-		this.titleFilterBean = titleFilterBean;
-	}
-
-	public SearchFilterBean getLevelFilterBean() {
-		return levelFilterBean;
-	}
-
-	public void setLevelFilterBean(SearchFilterBean levelFilterBean) {
-		this.levelFilterBean = levelFilterBean;
-	}
-
+	
 	
 	public boolean isRefreshPageNoFlag() {
 		return refreshPageNoFlag;
@@ -494,14 +460,6 @@ public class CodificationMaintenanceManagedBean extends BaseManagedBean {
 		this.spkiBackingBean = spkiBackingBean;
 	}
 
-	public void reset(){
-		
-		this.setTitleFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value()));
-		this.setCodeFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value()));
-		//this.setSearchDataModel(new SearchPagingDataModel());
-		this.setAutoCompleteUnspscCode(null);
-		
-	}
 
 	/**
 	 * @return the backToPreviousPage
@@ -619,5 +577,7 @@ public class CodificationMaintenanceManagedBean extends BaseManagedBean {
 	public void setDisableSelectBtn(boolean disableSelectBtn) {
 		this.disableSelectBtn = disableSelectBtn;
 	}
+	
+
 	
 }
