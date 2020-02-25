@@ -88,9 +88,7 @@
 				value="#{tplSpecEstimation.indicativeUnitPrice}" style="width:165px; text-align:right;" 
 				required="#{empty tplSpecEstimation.estimatedCost}" maxlength="19"
 				disabled="#{!editable or templateSpecBean.selectedSpecQuestion.tplSpecZoneQties[rowIndex].qty eq 0}">
-				<c:when test="#{templateSpecBean.selectedSpecQuestion.tplSpecZoneQties[rowIndex].qty ne 0}">
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
-				</c:when>
 				<p:ajax 
 					update="@all, zoneEstCostMsg, @(.calcEstAmount), zoneEstCost1"
 					partialSubmit="true"
@@ -108,9 +106,7 @@
 						isFulfilmentTypeScheduled, 
 						templateSpecBean.selectedSpecQuestion.tplSpecZoneQties[rowIndex].tplSpecZoneDtl.specZoneId,
 						tplSpecEstimation.tplSpecQuestion.specQuestionId)}"></p:ajax>
-				<c:when test="#{templateSpecBean.selectedSpecQuestion.tplSpecZoneQties[rowIndex].qty ne 0}">
 					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
-				</c:when>
 			</p:inputText>
 			
 			<p:message id="zoneEstCostMsg" for="zoneEstCost" display="icon" />
