@@ -38,14 +38,11 @@
 			<c:if test="#{isQT}">
 				<p:inputText id="estCost" value="#{tplSpecEstimation.estimatedCost}" style="width:165px; text-align:right;" 
 						styleClass="mandatory"
-				required="true" maxlength="19"
-				label="#{lbl['lbl.tpl.spec.content.estimate.cost']}"
-				disabled="#{editable}">
-				
-				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
-				<p:ajax partialSubmit="true" process="@this" update="@this, estCostMsg" />
-			
-			</p:inputText>
+						required="true" maxlength="19"
+						label="#{lbl['lbl.tpl.spec.content.estimate.cost']}"
+						disabled="#{editable}">
+					<p:ajax partialSubmit="true" process="@this" update="@this, estCostMsg" />
+				</p:inputText>
 			</c:if>
 			<c:if test="#{!isQT}">
 				<p:inputText id="estCost" value="#{tplSpecEstimation.estimatedCost}" style="width:165px; text-align:right;" 

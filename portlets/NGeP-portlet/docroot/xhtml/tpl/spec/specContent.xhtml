@@ -207,7 +207,11 @@
 					</c:if>
 				</p:dialog>
 				<!-- 	#25039 Begin - version zonal -->
+				<!-- 	#25039#67 Begin 
 				<p:dialog id="zoneEstimationPopup" header="#{lbl['lbl.tpl.spec.content.estimation.title']}" widgetVar="#{zoneEstimationPopup}" modal="true" width="450" height="290" closable="false">				
+				-->
+				<p:dialog id="zoneEstimationPopup" header="#{lbl['lbl.tpl.spec.content.estimation.title']}" widgetVar="#{zoneEstimationPopup}" modal="true" width="800" height="auto" closable="false">				
+				<!-- 	#25039#67 End -->
 					<c:if test="#{!empty templateSpecBean.selectedSpecQuestion}">
 						<div style="height:250px;">
 							<h:panelGroup id="zoneEstimationPnl">
@@ -222,7 +226,7 @@
 								action="#{templateSpecBackingBean.zoneEstCostOkAction(templateSpecBean)}"
 								partialSubmit="true"
 								process="@this, zoneEstimationPnl"
-								update="zoneEstimationPnl, @(.calcEstAmount)">
+								update="zoneEstimationPnl, @(.calcEstAmount), @(.indicativeBtn)"> <!--#25039#67 add indicativeBtn -->
 								<f:setPropertyActionListener target="#{templateSpecBean.specComponentId}" value="#{templateSpecId}" />
 							</p:commandButton>
 							<p:commandButton value="#{lbl['lbl.btn.cancel']}" 
