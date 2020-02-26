@@ -34,8 +34,8 @@
 		
 		&#160;
 		
-		Y: <p:inputText id="plng" value="#{cc.attrs.longitude}" disabled="#{cc.attrs.disabled}" />
-		
+		Y: <p:inputText id="plng" value="#{cc.attrs.longitude}" disabled="#{cc.attrs.disabled}" required="true" label="#{lbl['lbl.sm.coordinate']}"/>
+				
 		<p:commandButton id="gmId" 
 			value="#{lbl['lbl.gmap.viewmap']}" 
 			onclick="codeAddress(#{cc.attrs.address}, this.previousSibling.previousSibling.previousSibling, this.previousSibling);"
@@ -49,6 +49,7 @@
 				value="#{true}" />
 				
 		</p:commandButton>		
+		<p:message id="plngMsg" for="plng" showSummary="true" showDetail="false" display="icon" />	
 
 		<p:remoteCommand 
 			id="updateGmap"

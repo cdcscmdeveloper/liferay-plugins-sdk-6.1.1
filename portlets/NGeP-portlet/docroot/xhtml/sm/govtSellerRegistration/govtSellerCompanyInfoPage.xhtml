@@ -212,7 +212,10 @@
 			
 			<p:outputPanel rendered="#{bb.isShowNewChanges()}">
 			<tr>
-				<td></td>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sm.coordinate']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
 				<td colspan="3">
 					<SCRIPT type="text/javascript">
 				      function getAddress() {
@@ -241,9 +244,7 @@
 						address="getAddress()"
 						locationName="#{bb.managedBean.smAppl.smCompanyBasic.companyName}"
 						latitude="#{bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.mapLatitude}"
-						longitude="#{bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.mapLongitude}"
-						disabled="#{bb.gmapDisabled}" />			
-				</td>
+						longitude="#{bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.mapLongitude}"/>
 			</tr>
 			</p:outputPanel>
 			
