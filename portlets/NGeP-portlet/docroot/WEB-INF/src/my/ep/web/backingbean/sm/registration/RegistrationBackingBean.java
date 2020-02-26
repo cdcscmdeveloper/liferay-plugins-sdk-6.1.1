@@ -1749,11 +1749,17 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							}else if(!getManagedBean().getSmAppl().getSupplierType().equals(supplier.getSmAppl().getSupplierType()) && resDTO.getSmSuppliers().size() == 1){
 								if(supplier.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE){
 									String labelText = null;
+									//START 27503
 									if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
 										labelText = SmCommonUtil.getMessage("lbl.sm.contractor", null);
-									}else{
+									}else if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)){
 										labelText = SmCommonUtil.getMessage("lbl.sm.consultant", null);
+									}else if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_BASIC)){
+										labelText = SmCommonUtil.getMessage("lbl.sm.basic", null);
+									}else{
+										labelText = SmCommonUtil.getMessage("lbl.sm.basic", null);
 									}
+									//END 27503
 									throw new EpException(MessageConst.ERROR_721083,new String[]{supplier.getRegNo(),labelText});
 								}
 								
