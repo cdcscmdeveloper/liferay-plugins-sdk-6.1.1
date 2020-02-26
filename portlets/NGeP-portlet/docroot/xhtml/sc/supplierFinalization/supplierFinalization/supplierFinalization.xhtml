@@ -31,14 +31,15 @@
 	<ui:param name="isTwoTier"
 			  value="#{suppFinalizationBackingBean.managedBean.scQt.evaluationType eq ParameterConst.evaluationTypesTwoTier}" />	
 	<ui:param name="hasPresentationDemo" value="#{suppFinalizationBackingBean.managedBean.scQt.demoRequired}" />
-			  			  													
 	<ui:param name="decisionSupplFinalOrFwdHighAuth"
 			  value="#{suppFinalizationBackingBean.managedBean.recommendSupplier or 
-							suppFinalizationBackingBean.managedBean.forwardToHigherAuthority}" />							
+							suppFinalizationBackingBean.managedBean.forwardToHigherAuthority}" />
+	<ui:param name="expectTotalIndPriceBelowThreshold" 
+			  value="#{suppFinalizationBackingBean.expectTotalIndPriceBelowThreshold(suppFinalizationBackingBean.managedBean.scQt)}" />																				
 			
 	<ui:include src="/xhtml/sc/common/supplierDetailsPopup.xhtml" />
 	<ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/qualifiedSuppliersByEvalStage.xhtml" />
-	 <ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/supplierPreferencemargin.xhtml" />
+	<ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/supplierPreferencemargin.xhtml" />
 	
 	<p:panel header="#{lbl['lbl.sc.sf.committee.decision']}" toggleable="true">
        <h:outputText styleClass="instruction" escape="false"
@@ -432,6 +433,26 @@
 		showAttachment="false" 
 		readonly="#{suppFinalizationBackingBean.isQTMaintenanceScreen()}" />
 	
+	<p:panel id="justify20kId" header="#{lbl['lbl.sc.sf.justification']}" toggleable="true"
+		rendered="#{expectTotalIndPriceBelowThreshold}">
+		<table style="width: 100%;">
+			<tr>
+				<td style="width: 30%; margin-left: 55px;">
+					<p:outputLabel value="#{lbl['lbl.sc.spec.justification.procurement.value']}" /> 
+				</td>
+				<td style="margin-left: 55px;">
+					<p:inputTextarea id="justify20kTxtId"
+						style="margin-bottom:5px; width: 250px;" maxlength="100" 
+						value="#{suppFinalizationBackingBean.managedBean.scQt.justificationProcValue}" 
+						label="#{lbl['lbl.sc.spec.justification.procurement.value']}" readonly="true" 
+						cols="110" rows="3">
+					</p:inputTextarea>
+					<p:message id="title2Msg" for="justify20kId" display="icon" />							
+				</td>
+			</tr>
+		</table>			
+	</p:panel>
+
 </ui:composition>
 
 
