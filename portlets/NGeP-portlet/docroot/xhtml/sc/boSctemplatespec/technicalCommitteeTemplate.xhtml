@@ -99,18 +99,8 @@
 								<td><p:selectOneRadio
 										disabled="#{!specificationBackingBean.managedBean.qt.techEvaluationReq or specificationBackingBean.managedBean.specItemWeightageRequired}"
 										value="#{specificationBackingBean.managedBean.templateSpecBean.specMaster.weightageReq}">
-<!--  #21695 FARID START -->								
-												<c:choose>
-													<c:when test="#{specificationBackingBean.managedBean.qt.partial}">
-														<f:selectItems
-															value="#{specificationBackingBean.getRadioButtonCodeValuesForPartial(ParameterTypeConst.itemWeightage,TRUE)}" />
-													</c:when>
-													<c:otherwise>
-														<f:selectItems
-															value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.itemWeightage)}" />
-													</c:otherwise>
-												</c:choose>
-<!--  #21695 FARID END -->												
+									<f:selectItems value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.itemWeightage)}" />
+												
 										<p:ajax event="change" partialSubmit="true" process="@this"
 											listener="#{templateSpecBackingBean.updateItemWeightageReq(specificationBackingBean.managedBean.templateSpecBean)}" />
 
