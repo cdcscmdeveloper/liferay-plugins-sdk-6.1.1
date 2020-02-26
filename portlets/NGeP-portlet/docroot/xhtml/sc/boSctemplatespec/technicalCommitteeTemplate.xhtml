@@ -161,7 +161,7 @@
 			rendered="#{specificationBackingBean.managedBean.standardTemplate eq ParameterConst.tplDocProcessTypeStandard}"/>
 			<p:commandButton id="downloadLink" value="#{lbl['lbl.btn.export']}" ajax="false" action="#{specificationBackingBean.getFileToDownload}"
 			rendered="#{specificationBackingBean.managedBean.standardTemplate eq ParameterConst.tplDocProcessTypeStandard}"/>
-			<ac:iconTooltip value="#{lbl['lbl.sc.spec.btn.import.export.tooltip']}" rendered="#{specificationBackingBean.managedBean.standardTemplate eq ParameterConst.tplDocProcessTypeStandard}"/>
+			
 		</div>
 		<p:dialog id="excelDialog" widgetVar="excelDialog" modal="true"
 			width="550" onShow="singleUploadListener(fileUploadWidget);"
