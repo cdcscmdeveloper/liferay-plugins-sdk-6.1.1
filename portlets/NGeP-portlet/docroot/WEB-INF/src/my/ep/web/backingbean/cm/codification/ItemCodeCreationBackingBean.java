@@ -1,11 +1,13 @@
 package my.ep.web.backingbean.cm.codification;
 
+import java.io.IOException;
 import java.io.Serializable;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+
 import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.constant.MessageConst;
 import my.ep.dto.cm.codification.CodificationReqDTO;
@@ -19,6 +21,7 @@ import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.cm.codification.UnspscCodeManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 
@@ -37,10 +40,10 @@ public class ItemCodeCreationBackingBean extends BaseBackingBean<UnspscCodeManag
 			MDC.put(LogKey.USER_ID, 1L);
 		}
 	}
-
-
+	
+	
 	public String addNewUnspsc() {
-		
+
 		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",
 				ICodificationSO.class);
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
@@ -77,13 +80,13 @@ public class ItemCodeCreationBackingBean extends BaseBackingBean<UnspscCodeManag
 			return null;
 
 		}
-		
+
 		reqDTO.setUnspscCode(this.getManagedBean().getSelectedLovUnspsc().getUnspscCode());
 		reqDTO.setUnspscTitle(this.getManagedBean().getSelectedLovUnspsc().getUnspscCode());
 		reqDTO.setUnspscTitleEng(this.getManagedBean().getSelectedLovUnspsc().getUnspscCode());
 		resDTO = unspscSO.searchUnspscObj(reqDTO);
 		if (resDTO.getUnspscObj() != null) {
-		
+
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 
 			facesContext.addMessage(
@@ -105,10 +108,10 @@ public class ItemCodeCreationBackingBean extends BaseBackingBean<UnspscCodeManag
 							new FacesScopes().getUserLocale())));
 			return null;
 
-		}else if
-		
-		(this.getManagedBean().getSelectedLovUnspscSegment().isBrandNew()){
-            
+		} else if
+
+		(this.getManagedBean().getSelectedLovUnspscSegment().isBrandNew()) {
+
 			reqDTO.setUnspscCode(this.getManagedBean().getSelectedLovUnspscSegment().getUnspscCode());
 			resDTO = unspscSO.searchUnspscObj(reqDTO);
 			if (resDTO.getUnspscObj() == null) {// so its new unspsc,
@@ -337,7 +340,6 @@ public class ItemCodeCreationBackingBean extends BaseBackingBean<UnspscCodeManag
 
 		System.out.println("...................	reqDTO.getCommodityList().size=" + reqDTO.getCommodityList().size());
 
-
 		reqDTO.setTempCode(this.getManagedBean().getSelectedLovUnspsc().getUnspscCode());
 
 		// checking hierarchy of segment, family, class and commodity
@@ -349,21 +351,21 @@ public class ItemCodeCreationBackingBean extends BaseBackingBean<UnspscCodeManag
 		}
 
 		resDTO = unspscSO.publishCodification(reqDTO);
-		
-			renewSesionObject(); 
-			
-			FacesMessage fm = new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
-				MessageConst.INFO_710022, MessageUtils.BUNDLE_COMMON_MESSAGES,
-	     		new FacesScopes().getUserLocale()));	
-			    FacesContext context = FacesContext.getCurrentInstance();
-			    context.getExternalContext().getFlash().setKeepMessages(true);
-			    context.addMessage(null, fm);
-			
-		  	FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), null,  CommonUIConst.ACKNOWLEDGE_PAGE);
-		  	
-     log.info("End Publish");
-     return null;
-}
+
+		renewSesionObject();
+
+		FacesMessage fm = new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+				MessageConst.INFO_710022, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()));
+		FacesContext context = FacesContext.getCurrentInstance();
+		context.getExternalContext().getFlash().setKeepMessages(true);
+		context.addMessage(null, fm);
+
+		FacesContext.getCurrentInstance().getApplication().getNavigationHandler()
+				.handleNavigation(FacesContext.getCurrentInstance(), null, CommonUIConst.ACKNOWLEDGE_PAGE);
+
+		log.info("End Publish");
+		return null;
+	}
 
 	public boolean validateUnspscCodeHierarchy(String segnment, String family, String classC, String comodity) {
 		String segmentIdentifier = segnment.substring(0, 2);
@@ -454,9 +456,19 @@ public class ItemCodeCreationBackingBean extends BaseBackingBean<UnspscCodeManag
 		return true;
 
 	}
-	
+
 	public void backToCodificationPortal() {
-	renewSesionObject(); 
-	FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), null,  "codificationMaintenance.xhtml?faces-redirect=true");			
+		log.info(".................codificationMaintenance................");
+
+		renewSesionObject();
+
+		FacesContext context = FacesContext.getCurrentInstance();
+		javax.faces.context.ExternalContext externalContext = context.getExternalContext();
+		try {
+			externalContext.redirect("codification-maintenance");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
