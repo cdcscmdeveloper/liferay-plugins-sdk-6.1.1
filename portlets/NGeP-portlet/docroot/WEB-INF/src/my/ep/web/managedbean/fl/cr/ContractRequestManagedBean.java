@@ -18,13 +18,17 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.fl.FulfilmentReqDTO;
+import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.persistence.entity.ct.CtContract;
@@ -107,6 +111,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private CtContract selectedContract;
 	private CtContract ctContract = new CtContract();
 	private GlAccountSearchBean glAccountSearchBean;
+	private FlFulfilmentRequest fulfilmentRequest;
 	
 	private List<FlRemark> previousRemarkList;
 	private List<FlAttachment> previousAttachmentList;	
@@ -300,6 +305,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	
 	/** The active contract list document data model. */
 	private IPagingDataModel<VCtActiveContract> activeContractDataModel = new ActiveContractPagingDataModel();
+	private List<String> availableNoList;
 	//13984-start
 	private static String orgCode;
     private static String orgName;
@@ -3024,7 +3030,24 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.radioCheckDeliveryDate = radioCheckDeliveryDate;
 	}
 	//13984-start
-	
+	public void setFulfilmentRequest(FlFulfilmentRequest fulfilmentRequest) {
+		this.fulfilmentRequest = fulfilmentRequest;
+	}
+
+	/**
+	 * @return the availableNoList
+	 */
+	public List<String> getAvailableNoList() {
+		return availableNoList;
+	}
+
+	/**
+	 * @param availableNoList the availableNoList to set
+	 */
+	public void setAvailableNoList(List<String> availableNoList) {
+		this.availableNoList = availableNoList;
+	}
+
 	public String getScheduleNo() {
 		return scheduleNo;
 	}

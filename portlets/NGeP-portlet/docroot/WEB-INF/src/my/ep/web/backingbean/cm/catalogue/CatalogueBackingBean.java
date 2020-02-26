@@ -10489,12 +10489,25 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 		return cal.getTime();
 	}
-	public void onDateSelectListener(CmStandardPricing stdPrice){
-		if(stdPrice!=null){
-			if(stdPrice.getStartDate()!=null){
-				stdPrice.setEndDate(this.getNextTwoYear(stdPrice.getStartDate()));
+	
+	public void onDateSelectListener(Integer index){
+		Date startDate = index < 0 ? this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getStartDate():
+			this.getManagedBean().getDraftSearchDataModel().getList().get(index).getCmStandardPricing().getStartDate();
+		log.info("start date" + startDate);
+		log.info("start index" + index);
+
+		if(startDate!=null){
+			if(index < 0){
+				log.info("the 2 year date" + getNextTwoYear(startDate));
+				this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().setEndDate(getNextTwoYear(startDate));
 			}else{
-				stdPrice.setEndDate(null);
+				this.getManagedBean().getDraftSearchDataModel().getList().get(index).getCmStandardPricing().setEndDate(getNextTwoYear(startDate));
+			}
+		}else{
+			if(index == null){
+				this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().setEndDate(null);
+			}else{
+				this.getManagedBean().getDraftSearchDataModel().getList().get(index).getCmStandardPricing().setEndDate(null);
 			}
 		}
 	}

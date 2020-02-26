@@ -203,6 +203,7 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
+import my.ep.web.backingbean.cm.catalogue.ScheduleInfo;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBaseBackingBean;
@@ -267,6 +268,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	/*13984 Schedule/ Phase Information*/
     private static List<ScheduleInfo> schInfo;
     /*13984 navigation & schedule number Information*/
+    private static String navi;
+    private static String schno;
+	
 	/**
 	 * Instantiates a new fulfilment backing bean.
 	 */
@@ -871,10 +875,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 		
 
-		if (MDC.get(LogKey.USER_ID) == null) {
-			MDC.put(LogKey.USER_ID, 1L);
-		}
-	
 		setSchInfo(schInfo);
 		return schInfo;
 
@@ -1216,6 +1216,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				getManagedBean().setMaxContractDate(ctContractAmount.getExpDate());
 			}
 			//end - #17087
+			
+			//13984-start
+			if(getManagedBean().getFlRequest().getCtContract().isFrequencySchedule()){
+				initSchPhaseTable(resDTO.getFlFulfilmentRequest().getCtContract().getContractId());
+			}else{
+				schInfo = new ArrayList<ScheduleInfo>();
+			}
+			//13984-end
 		}else if(contractId != null){
 			renewSesionObject();
 			new ContractRequestBackingBean();
@@ -1378,6 +1386,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				getManagedBean().setMaxContractDate(ctContractAmount.getExpDate());				
 			}
 			//end - #17087
+			
+			//13984-start
+			if(scheduleNo!=null && scheduleNo!=""){
+				initSchPhaseTable(Long.parseLong(contractId));
+			}else{
+				schInfo = new ArrayList<ScheduleInfo>();
+			}
+			//13984-end
 		}
 		
 		//Default procurement type category to Supply of Goods in case of null
