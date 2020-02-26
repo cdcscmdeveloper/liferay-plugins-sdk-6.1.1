@@ -1730,6 +1730,10 @@ public class SpecificationBackingBean extends
 					technicalItemScoresetting
 							.setPassingScore(retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_PASSING_SCORE));
 					this.getManagedBean().setTechnicalItemScoreSetting(technicalItemScoresetting);
+					
+					//set scoring item to default to 50
+					this.getManagedBean().getTechnicalItemScoreSetting().setOverallTechnical(new BigDecimal(50));
+					this.getManagedBean().getTechnicalItemScoreSetting().setPassingScore(new BigDecimal(50));
 
 				}
 				// #21695 END FARID
