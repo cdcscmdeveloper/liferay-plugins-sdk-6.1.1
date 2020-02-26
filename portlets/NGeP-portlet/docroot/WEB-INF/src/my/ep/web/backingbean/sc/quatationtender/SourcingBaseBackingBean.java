@@ -56,6 +56,7 @@ import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
@@ -67,7 +68,7 @@ import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.biz.service.sc.directpurchase.IQuoteSO;
+import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
@@ -92,6 +93,8 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
+import my.ep.dto.sc.directpurchase.QuoteReqDTO;
+import my.ep.dto.sc.directpurchase.QuoteResDTO;
 import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.EvaluationResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
@@ -157,15 +160,15 @@ import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
-import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
-import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.type.sc.EvaluationReport;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -185,10 +188,8 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
-import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.template.DocumentGenerator;
-import my.ep.dto.sc.directpurchase.QuoteReqDTO;
-import my.ep.dto.sc.directpurchase.QuoteResDTO;
+
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -211,7 +212,7 @@ import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
-import my.ep.type.sc.EvaluationReport;
+
 import com.liferay.portal.util.PortalUtil;
 
 /**
@@ -4464,4 +4465,22 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		
 	}
+
+	//Enhancement #25729 Allow create QT below threshold RM20k
+	public boolean expectTotalIndPriceBelowThreshold(ScQt scQt) {
+		BigDecimal tmpExpectedIntendedPrice = scQt.getTmpExpectedIntendedPrice();
+		
+		if (!scQt.isPanel() && tmpExpectedIntendedPrice != null) {
+			log.info(":::expectTotalIndPriceBelowThreshold() scQt.isPanel(): "+ scQt.isPanel() +" :::");
+			log.info(":::expectTotalIndPriceBelowThreshold() tmpExpectedIntendedPrice: "+ tmpExpectedIntendedPrice +" :::");
+			
+			if (FulfilmentConst.THRESHOLD >= tmpExpectedIntendedPrice.intValue()) {
+				return Boolean.TRUE;
+			}
+		}
+		
+		return Boolean.FALSE;
+	}
+	//Enhancement #25729 - end -
+	
 }
