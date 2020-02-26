@@ -19,7 +19,7 @@
 		<p:menuitem value="#{lbl['lbl.sm.sitevisit.section.d']}" update="outPnlSiteVisitReport,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(3,null)}" />
 		<p:menuitem value="#{lbl['lbl.sm.officeloc']}"  update="outPnlSiteVisitReport,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(4,null)}" />
 		<p:menuitem value="#{lbl['lbl.sm.sitevist.report.submission']}" 
-		update="outPnlSiteVisitReport,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(svoSiteVisitBackingBean.managedBean.lastIndex,null)}" />
+		update="outPnlSiteVisitReport,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(svoSiteVisitBackingBean.managedBean.lastIndex,svoSiteVisitBackingBean.managedBean.selectedSvTemplate)}" />
 	</p:tabMenu>
 	
 	<p:outputPanel id="outPnlSiteVisitReport">
