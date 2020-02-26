@@ -67,7 +67,7 @@
 		<td></td>
 		<td>
 			<p:outputPanel id="addr2InputId">
-				<p:inputText maxlength="100" value="#{cc.attrs.facility.smAddress.address2}" size="35" />
+				<p:inputText maxlength="100" value="#{cc.attrs.facility.smAddress.address2}" size="35" id="addr2Id"/>
 			</p:outputPanel>
 		</td>
 	</tr>
@@ -75,7 +75,7 @@
 		<td></td>
 		<td>
 			<p:outputPanel id="addr3InputId">
-				<p:inputText maxlength="100" value="#{cc.attrs.facility.smAddress.address3}" size="35" />
+				<p:inputText maxlength="100" value="#{cc.attrs.facility.smAddress.address3}" size="35" id="addr3Id"/>
 			</p:outputPanel>
 		</td>
 	</tr>
@@ -218,5 +218,34 @@
 			</p:outputPanel>
 		</td>
 	</tr>
-</cc:implementation>
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.sm.coordinate']}" /> <p:outputLabel
+					value="*" styleClass="mandatory" /></td>
+			<td colspan="3"><script>
+						
+					      function getAddress2() {
+					    	 // stateId,districtId,cityId,postCodeInputId"
+					    	  var addr1 = document.getElementById('#{p:component(&quot;addr1Id&quot;)}').value + ',';
+					    	  var addr2 = document.getElementById('#{p:component(&quot;addr2Id&quot;)}').value + ',';
+					    	  var addr3 = document.getElementById('#{p:component(&quot;addr3Id&quot;)}').value + ',';
+					    	  var postcode = document.getElementById('#{p:component(&quot;postCodeInputId&quot;)}').value + ' ';
+					    	  
+					    	  var cityName = document.getElementById('#{p:component(&quot;cityId&quot;)}_input').options[document.getElementById('#{p:component(&quot;cityId&quot;)}_input').selectedIndex].text;
+					    	  var districtName = document.getElementById('#{p:component(&quot;districtId&quot;)}_input').options[document.getElementById('#{p:component(&quot;districtId&quot;)}_input').selectedIndex].text;
+					    	  var stateName = document.getElementById('#{p:component(&quot;stateId&quot;)}_input').options[document.getElementById('#{p:component(&quot;stateId&quot;)}_input').selectedIndex].text;
+					    	  var countryName = document.getElementById('#{p:component(&quot;countryId&quot;)}_input').options[document.getElementById('#{p:component(&quot;countryId&quot;)}_input').selectedIndex].text;
+					    	  
+					    	  var address = addr1 + addr2 + addr3 + postcode + cityName + ',' + districtName + ',' + stateName + ',' + countryName;
+
+					      	return address;
+					      }
+						
+						</script> <ac:gmap id="acgmap" address="getAddress2()"
+					locationName="#{backingBean.managedBean.smAppl.smCompanyBasic.companyName}"
+					latitude="#{backingBean.managedBean.selectedFactoryFacility.smAddress.mapLatitude}"
+					longitude="#{backingBean.managedBean.selectedFactoryFacility.smAddress.mapLongitude}" />
+
+			</td>
+		</tr>
+	</cc:implementation>
 </ui:composition>
