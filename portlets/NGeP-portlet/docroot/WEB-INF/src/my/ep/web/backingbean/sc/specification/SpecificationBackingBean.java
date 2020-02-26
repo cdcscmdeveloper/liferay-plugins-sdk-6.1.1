@@ -16452,7 +16452,12 @@ public class SpecificationBackingBean extends
 									if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getTplSpecZoneQties().get(y).getQty() != null) {
 										clQuantity = templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getTplSpecZoneQties().get(y).getQty() ;
 										specZoneId = templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getTplSpecZoneQties().get(y).getSpecZoneQtyId() ;
+									} 
+									//#21695 FARID set input text indicative price to 0 if quantity set to 0 start
+										if(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getTplSpecZoneQties().get(y).getQty().equals(new BigDecimal(0))){
+											this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions().get(i).getTplSpecEstimations().get(x).setIndicativeUnitPrice(new BigDecimal(0));
 									}
+									//#21695 FARID END
 								}
 							}
 						}					
