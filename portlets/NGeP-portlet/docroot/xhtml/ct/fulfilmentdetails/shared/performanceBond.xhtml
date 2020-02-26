@@ -20,7 +20,7 @@
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.bond.waiver']}" escape="false"/><br/><br/>
 		<h:panelGrid columns="2" >
 			<p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.ctContractAmount.bondWaived}"
-				disabled="#{!ctBackingBean.managedBean.ctContractAmount.bondReq or ctBackingBean.managedBean.viewContract}">
+				disabled="#{!ctBackingBean.managedBean.ctContractAmount.bondReq or ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting}">
 				<p:ajax event="change" update=":form:fileBondWaiver" listener="#{ctBackingBean.chkBondWaiverAction}" process="@this"/> 
 	  		</p:selectBooleanCheckbox>
 	   		<h:outputFormat id="waiverId" value="#{lbl['lbl.ct.bond.waiver.chkbox']}" styleClass="instruction">
@@ -34,7 +34,7 @@
 			<td class="TableFieldRight" width="7%">
 				<p:commandButton oncomplete="uploadWaiverDlg.show();return false;"
 					update=":form:dataGridId, :form:uploadWaiverDlg" icon=" ui-icon-upload" process="@this" partialSubmit="true"
-					rendered="#{!ctBackingBean.managedBean.viewContract}"
+					rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}"
 					disabled="#{ctBackingBean.disableBondAttachmentBtn() 
 					   or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}" />
 			</td>
@@ -47,7 +47,7 @@
 					<h:commandLink value="#{attachFile.fileName}" 
 						styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
 					<p:commandLink onsuccess="deleteWaiverAttachDlg.show();" action="#{ctBackingBean.setAttachFileIndex(attachFileIndex)}"
-						rendered="#{!ctBackingBean.managedBean.viewContract}" process="@this" partialSubmit="true"
+						rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}" process="@this" partialSubmit="true"
 						disabled="#{(ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)
 							or (ctBackingBean.managedBean.contractVer.ctContract.latestContractVer != null and attachFile.bondWaivedTrue)
 							or !ctBackingBean.managedBean.ctContractAmount.bondReq}">
@@ -72,7 +72,7 @@
 		<p:dataTable id="tableBond" var="varBond" rowIndexVar="index" widgetVar="tableBondWidget"
 			value="#{ctBackingBean.managedBean.ctContractAmount.ctPerformanceBonds}"  rowKey="#{rowKeyObj}">
 			<ac:paginator for="tableBond" />
-			<p:column style="width:2%;"  rendered="#{!ctBackingBean.managedBean.viewContract
+			<p:column style="width:2%;"  rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting
 				and ctBackingBean.managedBean.ctContractAmount.bondReq}">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.selectAll}">
@@ -90,12 +90,12 @@
 					<h:outputText value="#{lbl['lbl.ct.ref.no']}"  styleClass="required"/>
 				</f:facet>
 				<p:inputText id="bondRefNoId" value="#{varBond.refNo}" maxlength="50" style="width:95%;" 
-					rendered="#{!ctBackingBean.managedBean.viewContract
+					rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting
 					and ctBackingBean.managedBean.ctContractAmount.bondReq}">
 					<p:ajax  process="@this"></p:ajax>
 				</p:inputText>			
 				<h:outputText value="#{varBond.refNo}" 
-				      style="float:left;text-align:left;"  rendered="#{ctBackingBean.managedBean.viewContract
+				      style="float:left;text-align:left;"  rendered="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting
 				      or !ctBackingBean.managedBean.ctContractAmount.bondReq}"/>
 			</p:column>
 				
@@ -105,27 +105,27 @@
 				</f:facet>
 				
 				<p:selectOneMenu id="orgName"  value="#{varBond.financialOrg.financialOrgId}"
-				    style="width:200px;" rendered="#{!ctBackingBean.managedBean.viewContract
+				    style="width:200px;" rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting
 				    and ctBackingBean.managedBean.ctContractAmount.bondReq}" >
 					   <f:selectItems value="#{ctBackingBean.retrieveFinancialOrgList()}" />
 					   <p:ajax  process="@this"></p:ajax>
 				</p:selectOneMenu>	  
 	
 				<h:outputText value="#{varBond.financialOrgName}"
-				   style="float:left;text-align:left;" rendered="#{ctBackingBean.managedBean.viewContract
+				   style="float:left;text-align:left;" rendered="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting
 				   or !ctBackingBean.managedBean.ctContractAmount.bondReq}"/>
 			</p:column>
 					
 			<p:column style="width:12%;" headerText="#{lbl['lbl.ct.amount']}" styleClass="column-align-center" >
 				<p:inputText value="#{varBond.bondAmount}" styleClass="ppRightBtn" maxlength="18" 
-				    rendered="#{!ctBackingBean.managedBean.viewContract
+				    rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting
 				    and ctBackingBean.managedBean.ctContractAmount.bondReq}" style="width:90px;" label="#{lbl['lbl.ct.amount']}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						<p:ajax process="@this"></p:ajax>
 				</p:inputText>
 				
-				<h:outputText value="#{varBond.bondAmount}" style="float:right;" rendered="#{ctBackingBean.managedBean.viewContract
+				<h:outputText value="#{varBond.bondAmount}" style="float:right;" rendered="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting
 					or !ctBackingBean.managedBean.ctContractAmount.bondReq}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -138,7 +138,7 @@
 				</f:facet>
 				
 				<p:calendar id="popupButtonCal4" value="#{varBond.effDate}"  styleClass="calendarDateField" size="9" 
-					rendered="#{!ctBackingBean.managedBean.viewContract and ctBackingBean.managedBean.ctContractAmount.bondReq}"
+					rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting and ctBackingBean.managedBean.ctContractAmount.bondReq}"
 					showOn="button" readonlyInput="true" navigator="true"
 					mindate="#{ctBackingBean.managedBean.contractVer.ctContractValue.effDate}"
 					maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}"
@@ -146,21 +146,21 @@
 					 <p:ajax event="dateSelect" update="@([id$=bondExpDateCalId])" process="@this" />
 				</p:calendar>
 				
-					<h:outputText value="#{varBond.effDate}" rendered="#{ctBackingBean.managedBean.viewContract
+					<h:outputText value="#{varBond.effDate}" rendered="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting
 						or !ctBackingBean.managedBean.ctContractAmount.bondReq}">
 		                <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></h:outputText>
 			</p:column>
 					
 			<p:column style="width:8%;" headerText="#{lbl['lbl.ct.expiry.date']}" styleClass="column-align-center">
 				<p:calendar id="bondExpDateCalId"  value="#{varBond.expDate}" styleClass="calendarDateField" showOn="button"
-				    readonlyInput="true" disabled="true"  navigator="true" rendered="#{!ctBackingBean.managedBean.viewContract
+				    readonlyInput="true" disabled="true"  navigator="true" rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting
 				    and ctBackingBean.managedBean.ctContractAmount.bondReq}"
 					size="9"  pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 				    <f:attribute name="startDate" value="#{varBond.effDate}" />
 	                   <f:validator validatorId="primeDateRangeValidator" />
 			    </p:calendar>
 			    
-			     <h:outputText value="#{varBond.expDate}" rendered="#{ctBackingBean.managedBean.viewContract
+			     <h:outputText value="#{varBond.expDate}" rendered="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting
 			     	or !ctBackingBean.managedBean.ctContractAmount.bondReq}">
 		            <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></h:outputText>
 			</p:column>
@@ -169,7 +169,7 @@
 				<h:panelGroup id="uploadBondPg" columns="2">
 					<p:commandButton oncomplete="uploadBondDlg.show();return false;" update=":form:uploadBondDlg"
 					   	process="@this" partialSubmit="true" actionListener="#{ctBackingBean.PerformanceBondValue(varBond)}"
-						rendered="#{!ctBackingBean.managedBean.viewContract and varBond.fileName == null
+						rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting and varBond.fileName == null
 						and ctBackingBean.managedBean.ctContractAmount.bondReq}"
 						style="float:left;" icon="ui-icon-upload">
 					</p:commandButton>
@@ -178,7 +178,7 @@
 						value="#{ctBackingBean.getShortFileName(varBond.fileName)}"						
 						style="float:left;" styleClass="blue_font"
 						action="#{ctBackingBean.commonDownload(varBond.filePath, varBond.fileName)}" />
-					<p:commandLink rendered="#{varBond.fileName != null and (!ctBackingBean.managedBean.viewContract
+					<p:commandLink rendered="#{varBond.fileName != null and (!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting
 						or !ctBackingBean.managedBean.ctContractAmount.bondReq)}" style="float:left;" 
 					  	action="#{ctBackingBean.setIndexProperty(index)}"
 					   	process="@this" partialSubmit="true"  onsuccess="deleteBondAttachmentDlg.show();">
@@ -190,7 +190,7 @@
 		<div class="ppRightBtn">
 				
 			<p:commandButton id="addPdBtn"  value="#{lbl['lbl.btn.add']}" process="@this" 
-			  rendered="#{!ctBackingBean.managedBean.viewContract
+			  rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting
 			  	and ctBackingBean.managedBean.contractVer.docType != ParameterConst.doctypeContractAmendment
 			  	and ctBackingBean.managedBean.ctContractAmount.bondReq}" 
 			     action="#{ctBackingBean.addBondDetails}" update=":form:tableBond" partialSubmit="true"
@@ -204,7 +204,7 @@
 		     <p:commandButton id="delPdBtn" value="#{lbl['lbl.ct.delete']}" 
 		          process="@this" partialSubmit="true" onsuccess="dlgPerformDel.show();"
 		          disabled="#{ctBackingBean.managedBean.buttonHideActive}"
-			      rendered="#{!ctBackingBean.managedBean.viewContract
+			      rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting
 			      	and ctBackingBean.managedBean.contractVer.docType != ParameterConst.doctypeContractAmendment
 			      	and ctBackingBean.managedBean.ctContractAmount.bondReq}" >
 				<p:tooltip for="delPdBtn">
@@ -285,6 +285,8 @@
 		<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteWaiverAttachDlg.hide();" type="button" />
 		</div>
 	</p:confirmDialog>
+	
+	
 </ui:composition>
 
 
