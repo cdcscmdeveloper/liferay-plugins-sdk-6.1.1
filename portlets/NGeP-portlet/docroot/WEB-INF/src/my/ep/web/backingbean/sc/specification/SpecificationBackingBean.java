@@ -1736,6 +1736,9 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().getTechnicalItemScoreSetting().setPassingScore(new BigDecimal(50));
 
 				}
+				if (this.getManagedBean().getQt().isPartial() == true){
+					this.getManagedBean().getTechnicalScoreSetting().setWeightageReq(false);
+				}
 				// #21695 END FARID
 			}
 
