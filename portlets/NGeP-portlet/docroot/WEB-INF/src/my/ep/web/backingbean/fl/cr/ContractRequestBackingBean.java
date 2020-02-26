@@ -262,7 +262,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	private Long disPmPrjSetia;
 	private Long disPmPrgActivity;
 	private boolean selectAllCheckbox;
-	
+	/*13984 Schedule/ Phase Information*/
+    private static List<ScheduleInfo> schInfo;
+    /*13984 navigation & schedule number Information*/
 	/**
 	 * Instantiates a new fulfilment backing bean.
 	 */
@@ -801,6 +803,82 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().setRequired(Boolean.FALSE);
 	}
 
+	/* 13984 Construct phase/ schedule table */
+	public List<ScheduleInfo> initSchPhaseTable(Long contractId){
+		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+		IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+
+	
+	
+		
+			ContractReqDTO reqDTO = new ContractReqDTO();
+			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+
+			flReqDTO.setContractId(contractId);
+			reqDTO.setContractId(contractId);
+
+			ContractResDTO resDTO;
+			FulfilmentResDTO resfDTO;
+			
+			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserReqDTO userReqDTO = new UserReqDTO();
+			FacesScopes facesScopes = new FacesScopes();
+			if (facesScopes.getUserSessionBean().getUserId() == null) {
+				throw new IllegalArgumentException("userId cannot be null");
+			}
+			userReqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
+			UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+			Long orgProfileId = userResDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId();
+			flReqDTO.setOrgProfileId(orgProfileId);
+			resfDTO = requestSO.retrieveFulfilmentRequestDocNosByContractId(flReqDTO);
+			
+			reqDTO.setOrgProfileId(orgProfileId);
+			resDTO = contractSO.retrieveAvailableSchedulePhaseNoByOrgProfileId(reqDTO);
+			
+			if (resDTO.getAvailableNoList() != null) {
+				getManagedBean().setAvailableNoList(resDTO.getAvailableNoList());
+			}
+			schInfo = new ArrayList<ScheduleInfo>();
+
+			for (int i = 0; i < resfDTO.getDocNos().size(); i++) {
+				int j = i + 1;
+				if (j > resfDTO.getDocNos().size()) {
+
+					resfDTO.getDocNos().add("");
+				}
+				if (j > resfDTO.getFlOrderDocNos().size()) {
+
+					resfDTO.getFlOrderDocNos().add("");
+				}
+				if (j > resfDTO.getFlOrderDocNoStatus().size()) {
+
+					resfDTO.getFlOrderDocNoStatus().add("");
+				}
+				if (j > resfDTO.getDocNoStatus().size()) {
+					resfDTO.getDocNoStatus().add("");
+				}
+				if (j > resfDTO.getFlSchNos().size()) {
+					resfDTO.getFlSchNos().add("");
+				}
+
+				schInfo.add(new ScheduleInfo(resfDTO.getFlSchNos().get(i), resfDTO.getDocNos().get(i), resfDTO
+						.getDocNoStatus().get(i), resfDTO.getFlOrderDocNos().get(i), resfDTO.getFlOrderDocNoStatus()
+						.get(i)));
+			}
+		
+
+		if (MDC.get(LogKey.USER_ID) == null) {
+			MDC.put(LogKey.USER_ID, 1L);
+		}
+	
+		setSchInfo(schInfo);
+		return schInfo;
+
+	}
+
+	
 	/**
 	 * Navigate to CR UI
 	 * 
@@ -819,6 +897,21 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				}
 			}
 		}
+		
+		/*13984 BEGINNING navigation sets and current schedule number Information*/
+		initSchPhaseTable(contractId);
+		List<ScheduleInfo> schInfoo = getSchInfo();
+		log.info("schInfoo is : "+schInfoo);
+		log.info("schInfo is : "+schInfo);
+	
+		String nav = "crlist";
+		setNavi(nav);
+		
+		String schNoSelected =scheduleNo;
+		setschno(schNoSelected);
+		/*13984 ENDING navigation sets and current schedule number Information*/
+
+		
 		
 		String commonUrl = themeDisplay.getURLCurrent().substring(0, themeDisplay.getURLCurrent().indexOf(themeDisplay.getLayout().getGroup().getFriendlyURL())+themeDisplay.getLayout().getGroup().getFriendlyURL().length());
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
@@ -6180,4 +6273,33 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			getManagedBean().setSupplierItemPriceList(supplierItems);
 		}
 	} /*END*/
+	
+	/*13984 Schedule/ Phase Information*/
+	public List<ScheduleInfo> getSchInfo() {
+		if (schInfo == null)
+			schInfo = new ArrayList<ScheduleInfo>();
+		
+        log.info("schInfo is,ln5983 : "+schInfo);
+		return schInfo;
+	}
+	@SuppressWarnings("static-access")
+	public void setSchInfo(List<ScheduleInfo> schInfo) {
+		this.schInfo = schInfo;
+	}
+	/*13984 navigation & scheduleNo Information sets and gets*/
+	public String getNavi() {
+		return navi;
+	}
+	@SuppressWarnings("static-access")
+	public void setNavi(String navi) {
+		this.navi = navi;
+	}
+	
+	public String getschno() {
+		return schno;
+	}
+	@SuppressWarnings("static-access")
+	public void setschno(String schNo) {
+		this.schno = schNo;
+	}
 }

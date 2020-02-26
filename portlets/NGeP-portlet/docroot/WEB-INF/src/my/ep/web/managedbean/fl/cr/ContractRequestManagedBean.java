@@ -165,6 +165,9 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private Date gstRegistrationDate;
 	private Date maxDate;
 	
+	private Date minContractDate;
+	private Date maxContractDate;
+	
 	private String tempLogin; //TODO: temp and to be removed
 	private String espkbCommitmentNo;
 	private String ptjCodeName;
@@ -290,10 +293,15 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private boolean espkb;
 	private boolean showCommitmentNo;
 	private boolean oldGstRateFlg = false;
+	/*13984 Current schedule number Information*/
+	private static String scheduleNo;
 	
 	/** The active contract list document data model. */
 	private IPagingDataModel<VCtActiveContract> activeContractDataModel = new ActiveContractPagingDataModel();
-	
+	//13984-start
+	private static String orgCode;
+    private static String orgName;
+    //13984-end
 	
 	private class ActiveContractPagingDataModel extends PagingDataModel<VCtActiveContract> {
 		
@@ -425,11 +433,74 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 				contractReqDTO.setOrgProfileId(orgProfileId);
 				ContractResDTO resDTO = contractSO.retrieveActiveContractList(contractReqDTO);
 				
+				//13984-start
+	    		OrgProfileResDTO orgResDTO = profileSO.retrieveOrgProfileDtlByProfileId(reqDTO);
+	            String orgCode = orgResDTO.getPmOrgProfile().getOrgCode();
+				String orgName = orgResDTO.getPmOrgProfile().getOrgName();
+				//13984-end
+				
+				IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+				FulfilmentResDTO resfDTO;
 				if(resDTO.isSuccessful()) {
 					for(VCtActiveContract vCtActiveContract : resDTO.getActiveContractResultBean().getResultList()) {
 						if(vCtActiveContract.getFulfilmentType().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+							/*13984 Schedule/ Phase info List BEGINNING*/
 							contractReqDTO.setContractId(vCtActiveContract.getContractId());
-							vCtActiveContract.setActiveContractSubList(contractSO.retrieveScheduleInfoForContract(contractReqDTO).getActiveContractList());
+							flReqDTO.setContractId(vCtActiveContract.getContractId());
+
+							flReqDTO.setOrgProfileId(orgProfileId);
+							resfDTO = requestSO.retrieveFulfilmentRequestDocNosByContractId(flReqDTO);
+
+							List<VCtActiveContract> InfoActiveContractList = contractSO
+									.retrieveScheduleInfoForContract(contractReqDTO).getActiveContractList();
+									
+							List<VCtActiveContract> activeContractScheduleList = contractSO
+									.retrieveScheduleInfoForContractByOrgProfileId(contractReqDTO).getActiveContractList();		
+						
+							for (int i = 0; i < resfDTO.getDocNos().size(); i++) {
+
+								int j = i + 1;
+								if (j > resfDTO.getDocNos().size()) {
+
+									resfDTO.getDocNos().add("");
+								}
+								if (j > resfDTO.getFlOrderDocNos().size()) {
+
+									resfDTO.getFlOrderDocNos().add("");
+								}
+								if (j > resfDTO.getFlOrderDocNoStatus().size()) {
+
+									resfDTO.getFlOrderDocNoStatus().add("");
+								}
+								if (j > resfDTO.getDocNoStatus().size()) {
+
+									resfDTO.getDocNoStatus().add("");
+								}
+								
+								InfoActiveContractList.get(i).setCrNo(resfDTO.getDocNos().get(i));
+								InfoActiveContractList.get(i).setCrNoStatus(resfDTO.getDocNoStatus().get(i));
+								InfoActiveContractList.get(i).setCoNo(resfDTO.getFlOrderDocNos().get(i));
+								InfoActiveContractList.get(i).setCoNoStatus(resfDTO.getFlOrderDocNoStatus().get(i));
+								
+								activeContractScheduleList.get(i).setScheduleNo(resfDTO.getFlSchNos().get(i));
+								activeContractScheduleList.get(i).setCrNo(resfDTO.getDocNos().get(i));
+								activeContractScheduleList.get(i).setCrNoStatus(resfDTO.getDocNoStatus().get(i));
+								activeContractScheduleList.get(i).setCoNo(resfDTO.getFlOrderDocNos().get(i));
+								activeContractScheduleList.get(i).setCoNoStatus(resfDTO.getFlOrderDocNoStatus().get(i));
+								
+							}
+							
+							vCtActiveContract.setActiveContractSubList(InfoActiveContractList);
+							
+							if(resfDTO.getDocNos().size()>0){
+								vCtActiveContract.setActiveContractScheduleList(activeContractScheduleList);
+							}
+							
+							setOrgCode(orgCode);
+							setOrgName(orgName);
+							/*13984 Schedule/ Phase info List ENDING*/
 						}
 					}
 					return resDTO.getActiveContractResultBean();
@@ -2943,4 +3014,33 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	}
 	//end added for #24353
 
+	//13984-start
+	
+	public String getScheduleNo() {
+		return scheduleNo;
+	}
+
+	/**
+	 * @param scheduleNo the scheduleNo to set
+	 */
+	public void setScheduleNo(String scheduleNo) {
+		this.scheduleNo = scheduleNo;
+	}
+	
+	public String getOrgCode() {
+		return orgCode;
+	}
+
+	public void setOrgCode(String orgCode) {
+		this.orgCode = orgCode;
+	}
+	
+	public String getOrgName() {
+		return orgName;
+	}
+
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
+	}
+	//13984-end
 }
