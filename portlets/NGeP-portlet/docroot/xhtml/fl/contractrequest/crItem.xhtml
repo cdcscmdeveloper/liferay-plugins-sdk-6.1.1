@@ -8,6 +8,39 @@
 	<p:panel id="delAddrPanel" header="#{lbl['lbl.fl.delivery.address']}"
 		toggleable="true">
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.add.address']}" escape="false"/>
+		<!--#17087 icon tooltip and select radio -->
+		<!-- #17087 zonal flag check -->
+		<c:if test="#{contractRequestBackingBean.zonalTest eq true}">
+		<table style="width: 100%">
+			 <tr>
+           		<br/>
+           		<br/>
+          
+           	</tr>
+           	<tr>
+           		<td>
+
+<p:selectBooleanCheckbox id="crGeneralRadio" required="true" value="#{contractRequestBackingBean.managedBean.flRequest.radioCheckDeliveryDate}">
+						<p:ajax event="change"
+							listener="#{contractRequestBackingBean.upDateStartDateFromBpm}" 
+							update="delStartDate"/>                   
+           			</p:selectBooleanCheckbox>
+          		</td>
+           		<td>
+           		
+           		<p:outputLabel style="float:left !important; color:red" value="#{lbl['lbl.fl.flag']}"/> 
+           			<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.flag']}"/>
+           			
+           		
+           			<br/>
+           
+            	</td>
+			</tr>
+
+		</table>
+		 </c:if>		
+
+		</p:panel>		
 		<p:dataTable id="addressDataTable" var="address"
 			value="#{contractRequestBackingBean.managedBean.flRequest.flDeliveryAddresses}"
 			rowIndexVar="index"
@@ -45,12 +78,21 @@
 				<h:outputText style="float:left;"
 					value="#{address.deliveryTerm} #{contractRequestBackingBean.getParameterDesc(address.pmUom)}" />
 			</p:column>
-
-			<p:column headerText="#{lbl['lbl.fl.delivery.start']}"  style="white-space:normal;text-align:center">
-				<p:calendar value="#{address.startDate}" id="calStartDate" style="float:right;"  
+			<!--#17087 calendarStartDate -->
+			<p:column style="white-space:normal;text-align:center">
+				<f:facet name="header" style="white-space:normal;">
+					<h:outputText value="#{lbl['lbl.fl.delivery.start']}"/>
+					<c:choose>
+							<c:when test="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}">
+						 		<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.delivery.start.date']}"/>
+						 	</c:when>
+						 </c:choose>
+				</f:facet>
+				<p:calendar id="calStartDate" value="#{address.startDate}" style="float:right;" mindate="#{contractRequestBackingBean.managedBean.minContractDate}"
+				 maxdate="#{contractRequestBackingBean.managedBean.maxContractDate}"
 					readonlyInput="true"
 					rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}"
-					size="8" 
+					size="6" 
 					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					<p:ajax event="dateSelect"
 						listener="#{contractRequestBackingBean.updateDeliveryAddrDate(address)}"
@@ -61,17 +103,17 @@
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 			</p:column>
-
-			<p:column headerText="#{lbl['lbl.fl.delivery.end']}"  style="white-space:normal;text-align:center">
+			<!--#17087 calendarEndDate -->
+			<p:column headerText="#{lbl['lbl.fl.delivery.end']}"  style="white-space:normal;text-align:center">				
 				<p:calendar value="#{address.endDate}" id="calEndDate" 
 					mindate="#{address.startDate}"
 					style="float:right;"
 					readonlyInput="true"
-					disabled="true"
 					rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing }"
-					size="8"
-					maxdate="#{contractRequestBackingBean.managedBean.maxDate}"
+					size="6"
+					maxdate="#{address.endDate}"
 					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				
 				<h:outputText value="#{address.endDate}" style="float:right;" rendered="#{!contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing or contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
@@ -272,6 +314,8 @@
 					</p:inputText>
 					
 				</p:column>
+				
+				
 				<p:column headerText="#{lbl['lbl.fl.gst.amt']}" style="white-space:normal;text-align:center">
 					<h:outputText value="#{item.gstAmount}" disabled="true" size="6" id="gstAmt" style="float:right;">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -339,7 +383,6 @@
 					onclick="delItemDlg.hide()" type="button" />
 			</div>
 		</p:confirmDialog>		
-	</p:panel>
 	<p:dialog id="addManualDelAddrDialog" header="#{lbl['lbl.fl.btn.other.address']}"
 		widgetVar="addManualDeliveryAddr" showEffect="fade" hideEffect="fade"
 		 modal="true" width="900px" resizable="false" position="top">

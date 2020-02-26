@@ -158,6 +158,54 @@
 				</p:inputText>
 				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.pr.submission.date']}" rendered="#{contractRequestBackingBean.managedBean.flRequest.submissionDate != null}"/></td>
 			</tr>
+
+
+			<!--#17087 icon tooltip -->
+			<!-- #17087 zonal flag check -->
+			<c:if test="#{contractRequestBackingBean.zonalTest eq false}">
+				<tr>
+
+					<!--#17087 radio select -->
+					<td colspan="15">
+
+						<table>
+							<tr>
+								<td>
+									<!-- <h:outputText value="#{contractRequestBackingBean.zonalTest}"/> -->
+
+									<p:selectBooleanCheckbox id="crGeneralRadio" required="true"
+										value="#{contractRequestBackingBean.managedBean.flRequest.radioCheckDeliveryDate}">
+
+										<p:ajax event="change"
+											listener="#{contractRequestBackingBean.upDateStartDateFromBpm}"
+											update="delStartDate" />
+									</p:selectBooleanCheckbox>
+
+								</td>
+								<td><p:outputLabel style="float:left !important; color:red"
+										value="#{lbl['lbl.fl.flag']}" /></td>
+								<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.flag']}" /></td>
+							</tr>
+						</table>
+
+					</td>
+
+
+
+
+
+
+
+
+				</tr>
+			</c:if>
+
+
+
+
+
+
+
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.start']}" rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing =='false'}" escape="false"/></td>
 				<td><p:calendar id="delStartDate" mode="popup" showOn="button" 

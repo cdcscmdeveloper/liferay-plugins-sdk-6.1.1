@@ -568,9 +568,7 @@ public class DateUtils {
 		}if(periodType.equals(ParameterConst.DELIVERY_TERM_YEARS)){
 			calendar.add(Calendar.YEAR, term);
 		}
-		
-		calendar.add(Calendar.DATE, -1);
-		
+
 		return calendar.getTime();
 		
 	}

@@ -281,7 +281,9 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private boolean prevHideRemarks;
 	
 	private boolean oldGstRateFlg = false;
-
+	//17087 -- radio button
+	private boolean radioCheckDeliveryDate;
+	
 	// 12177 - Start
 	/** The flag of SQ expired */
 	private boolean sqExpiredStatus = Boolean.FALSE;
@@ -3253,6 +3255,14 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 		this.searchDistrictList = searchDistrictList;
 	}
 	//end added for #24353
+
+	public boolean isRadioCheckDeliveryDate() {
+		return radioCheckDeliveryDate;
+	}
+
+	public void setRadioCheckDeliveryDate(boolean radioCheckDeliveryDate) {
+		this.radioCheckDeliveryDate = radioCheckDeliveryDate;
+	}
 
 	// 12177 - Start
 	/**

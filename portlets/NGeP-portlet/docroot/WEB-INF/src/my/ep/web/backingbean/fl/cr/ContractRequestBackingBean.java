@@ -262,6 +262,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	private Long disPmPrjSetia;
 	private Long disPmPrgActivity;
 	private boolean selectAllCheckbox;
+	/*#17087 zonal flag*/
+	private boolean zonalTest;
 	/*13984 Schedule/ Phase Information*/
     private static List<ScheduleInfo> schInfo;
     /*13984 navigation & schedule number Information*/
@@ -1144,6 +1146,13 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 			if(!getManagedBean().getFlRequest().getCtContract().isZonalPricing()){
 				updateDeliveryDate();
+				/*#17087 Get Zonal flag*/
+				getzonalTest();
+			}
+			if(getManagedBean().getFlRequest().getCtContract().isZonalPricing()){
+				/*#17087 Get Zonal flag*/
+				getzonalTest();
+				
 			}
 			if(coObj.getOrderDetails().getErrorId() != null && coObj.getOrderDetails().getErrorId() > 0){
 				getManagedBean().setAutoUpdate(Boolean.FALSE);
@@ -1195,7 +1204,18 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}else{
 				setFulfilmentItemAddr(getManagedBean().getFlRequest());
 			}
-				
+			
+			//start - #17087
+			if(getManagedBean().getFlRequest().getCtContract().isZonalPricing()){
+				IContractSO contractSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+				ContractReqDTO contractReqDTO = new ContractReqDTO();
+				contractReqDTO.setContractVerId(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getContractVerId());
+				contractReqDTO.setAsAtDate(new Date());
+				CtContractAmount ctContractAmount = contractSO.retrieveContractAmount(contractReqDTO).getCtContractAmount();
+				getManagedBean().setMinContractDate(ctContractAmount.getEffDate());
+				getManagedBean().setMaxContractDate(ctContractAmount.getExpDate());
+			}
+			//end - #17087
 		}else if(contractId != null){
 			renewSesionObject();
 			new ContractRequestBackingBean();
@@ -1229,6 +1249,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			if(!getManagedBean().getFlRequest().getCtContract().isZonalPricing()){
 				getManagedBean().getFlRequest().setStartDate(new Timestamp(System.currentTimeMillis()));
 				updateDeliveryDate();
+				/*#17087 Get Zonal flag*/
+				getzonalTest();
 			}
 			StatusReqDTO statusReqDTO = new StatusReqDTO();
 			statusReqDTO.setStatusId(FulfilmentStatusConst.CR_PENDING_SUBMISSION);
@@ -1345,6 +1367,17 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			checkMofAccountExpDate(getManagedBean().getFlRequest());
 			
 			getManagedBean().setButtonVal(FulfilmentConst.CONTRACT_REQUEST);
+			
+			//start - #17087
+			if(getManagedBean().getFlRequest().getCtContract().isZonalPricing()){
+				ContractReqDTO contractReqDTO = new ContractReqDTO();
+				contractReqDTO.setContractVerId(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getContractVerId());
+				contractReqDTO.setAsAtDate(new Date());
+				CtContractAmount ctContractAmount = contractSO.retrieveContractAmount(contractReqDTO).getCtContractAmount();
+				getManagedBean().setMinContractDate(ctContractAmount.getEffDate());
+				getManagedBean().setMaxContractDate(ctContractAmount.getExpDate());				
+			}
+			//end - #17087
 		}
 		
 		//Default procurement type category to Supply of Goods in case of null
@@ -3411,10 +3444,18 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		uomCode = getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getDeliveryTermUom().getParameterCode();
 		if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_DAYS)){
 			getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_DAYS));
-			getManagedBean().getFlRequest().setEndDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_DAYS));
+			if(getManagedBean().getTaskId() == null){
+				getManagedBean().getFlRequest().setEndDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_DAYS));
+			}else{
+				getManagedBean().getFlRequest().setEndDate(getManagedBean().getFlRequest().getEndDate());
+			}
 		}else if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_MONTHS)){
 			getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_MONTHS));
-			getManagedBean().getFlRequest().setEndDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_MONTHS));
+			if(getManagedBean().getTaskId() == null){
+				getManagedBean().getFlRequest().setEndDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_MONTHS));
+			}else{
+				getManagedBean().getFlRequest().setEndDate(getManagedBean().getFlRequest().getEndDate());
+			}
 		}
 		
 		if(getManagedBean().getFlRequest().getPmUom()==null) {
@@ -3428,6 +3469,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			flDeliveryAddress.setEndDate(getManagedBean().getFlRequest().getEndDate());
 			flDeliveryAddress.setDeliveryTerm(deliveryTerm);
 		}
+	}
+	
+	/*#17087 Get current zonal state flag */
+	public boolean getzonalTest(){
+		boolean zonalCheck = getManagedBean().getFlRequest().getCtContract().isZonalPricing();
+		setzonalTest(zonalCheck);
+		return zonalTest;
+		
 	}
 	
 	/**
@@ -6185,6 +6234,30 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		this.defaultPmAddressType = defaultPmAddressType;
 	}
 	//end added for #24353
+
+
+	/*
+	 * #17087
+	 * Ya - true - delivery start date remain the same
+	 * Tidak - false - delivery start date will get from approve 1GFMAS
+	 */
+	
+	public void upDateStartDateFromBpm() {
+	
+		boolean radioCheck = getManagedBean().getFlRequest().isRadioCheckDeliveryDate();
+		if(radioCheck==false){
+			getManagedBean().getFlRequest().setRadioCheckDeliveryDate(false);
+		}else{
+			getManagedBean().getFlRequest().setRadioCheckDeliveryDate(true);
+		}
+
+		
+	}
+
+	/*#17087 zonal set*/
+	public void setzonalTest(boolean zonalCheck) {
+		this.zonalTest = zonalCheck;
+	}	
 	
 	/*#16344 To retrive zonal tree, value & item price when search & expand while pop up*/
 	/*START*/
@@ -6302,4 +6375,42 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	public void setschno(String schNo) {
 		this.schno = schNo;
 	}
+	
+	//17087 - start
+	/**
+	 * Update delivery date based on delivery Term and uomCode.
+	 */
+	public void editDeliveryDate() {
+		if(getManagedBean().getFlRequest().getStartDate()==null) {
+			getManagedBean().getFlRequest().setStartDate(new Timestamp(System.currentTimeMillis()));
+		}
+		Date startDate = getManagedBean().getFlRequest().getStartDate();
+		int deliveryTerm = 0;
+		String uomCode = "";
+		deliveryTerm = getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getDeliveryTerm();
+
+		uomCode = getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getDeliveryTermUom().getParameterCode();
+		if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_DAYS)){
+			getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_DAYS));
+			getManagedBean().getFlRequest().setEndDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_DAYS));
+			
+		}else if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_MONTHS)){
+			getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_MONTHS));
+			getManagedBean().getFlRequest().setEndDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_MONTHS));
+			
+		}
+
+		if(getManagedBean().getFlRequest().getPmUom()==null) {
+			getManagedBean().getFlRequest().setPmUom(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getDeliveryTermUom());
+		}
+		
+		getManagedBean().getFlRequest().setDeliveryTerm(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getDeliveryTerm());
+		//update delivery address
+		for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()) {
+			flDeliveryAddress.setStartDate(getManagedBean().getFlRequest().getStartDate());
+			flDeliveryAddress.setEndDate(getManagedBean().getFlRequest().getEndDate());
+			flDeliveryAddress.setDeliveryTerm(deliveryTerm);
+		}
+	}
+	//17087- end
 }

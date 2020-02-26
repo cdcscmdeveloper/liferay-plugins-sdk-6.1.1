@@ -293,6 +293,8 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private boolean espkb;
 	private boolean showCommitmentNo;
 	private boolean oldGstRateFlg = false;
+	//17087 -- radio button
+	private boolean radioCheckDeliveryDate;
 	/*13984 Current schedule number Information*/
 	private static String scheduleNo;
 	
@@ -3014,6 +3016,13 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	}
 	//end added for #24353
 
+	public boolean isRadioCheckDeliveryDate() {
+		return radioCheckDeliveryDate;
+	}
+
+	public void setRadioCheckDeliveryDate(boolean radioCheckDeliveryDate) {
+		this.radioCheckDeliveryDate = radioCheckDeliveryDate;
+	}
 	//13984-start
 	
 	public String getScheduleNo() {
@@ -3026,7 +3035,36 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	public void setScheduleNo(String scheduleNo) {
 		this.scheduleNo = scheduleNo;
 	}
+	// start #17087
+	/**
+	 * @return the minContractDate
+	 */
+	public Date getMinContractDate() {
+		return minContractDate;
+	}
+
+	/**
+	 * @param minContractDate to set
+	 */
+	public void setMinContractDate(Date minContractDate) {
+		this.minContractDate = minContractDate;
+	}
+	/**
+	 * @return the maxContractDate
+	 */
+	public Date getMaxContractDate() {
+		return maxContractDate;
+	}
+
+	/**
+	 * @param maxContractDate to set
+	 */
+	public void setMaxContractDate(Date maxContractDate) {
+		this.maxContractDate = maxContractDate;
+	}
+	// End #17087
 	
+	//13984-start
 	public String getOrgCode() {
 		return orgCode;
 	}
