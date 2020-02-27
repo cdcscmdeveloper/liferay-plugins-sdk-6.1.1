@@ -327,6 +327,10 @@ public class WebappBean {
 			Object obj) {
 		Integer inputValue = (Integer) obj;
 
+		if (inputValue == null) {
+			return;
+		}
+		
 		if(inputValue <= 0) {
 			String errMsg = ResourceBundleUtils.getMessage(
 					"lbl.sc.validation.delivery.period", new Object[]{inputValue},
