@@ -257,18 +257,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 		}
 	}
-
-	// Redmine 25396: remove duplication option view by adding new drop down field
-		/** 
-		 * get faces scopes
-		 * 
-		 * @return FacesScopes
-		 */
-		private FacesScopes getFacesScopes() {
-			FacesScopes facesScopes = new FacesScopes();
-			return facesScopes;
-		}
-		// end of 25396
 		
 	/**
 	 * To populate details into ScAttachment instance.
@@ -3799,8 +3787,19 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	    	categoryCodeSO = null;
 	    }
 	}
-	
-// Redmine 25396: remove duplication option view by adding new drop down field
+
+	// Redmine 25396: remove duplication option view by adding new drop down field - start -
+	/** 
+	 * get faces scopes
+	 * 
+	 * @return FacesScopes
+	 */
+	private FacesScopes getFacesScopes() {
+		FacesScopes facesScopes = new FacesScopes();
+		
+		return facesScopes;
+	}
+		
 	/**
 	 * Checks if is supplier role.
 	 *
@@ -3827,7 +3826,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		
 		return Boolean.FALSE;
 	}
-	//Enhancement #25729 - end -
 	
 	/**
 	 * Check is it login user is Government User
@@ -3849,4 +3847,22 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			return false;		
 	}
 	// end of 25396
+
+	//Enhancement #25729 Allow create QT below threshold RM20k - start -
+	public boolean expectTotalIndPriceBelowThreshold(ScQt scQt) {
+		BigDecimal tmpExpectedIntendedPrice = scQt.getTmpExpectedIntendedPrice();
+		
+		if (!scQt.isPanel() && tmpExpectedIntendedPrice != null) {
+			log.info(":::expectTotalIndPriceBelowThreshold() scQt.isPanel(): "+ scQt.isPanel() +" :::");
+			log.info(":::expectTotalIndPriceBelowThreshold() tmpExpectedIntendedPrice: "+ tmpExpectedIntendedPrice +" :::");
+			
+			if (FulfilmentConst.THRESHOLD >= tmpExpectedIntendedPrice.intValue()) {
+				return Boolean.TRUE;
+			}
+		}
+		
+		return Boolean.FALSE;
+	}
+	//Enhancement #25729 - end -
+	
 }
