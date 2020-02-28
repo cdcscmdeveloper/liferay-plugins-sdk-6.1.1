@@ -165,6 +165,9 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private Date gstRegistrationDate;
 	private Date maxDate;
 	
+	private Date minContractDate;
+	private Date maxContractDate;
+	
 	private String tempLogin; //TODO: temp and to be removed
 	private String espkbCommitmentNo;
 	private String ptjCodeName;
@@ -290,10 +293,11 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private boolean espkb;
 	private boolean showCommitmentNo;
 	private boolean oldGstRateFlg = false;
+	//17087 -- radio button
+	private boolean radioCheckDeliveryDate;
 	
 	/** The active contract list document data model. */
 	private IPagingDataModel<VCtActiveContract> activeContractDataModel = new ActiveContractPagingDataModel();
-	
 	
 	private class ActiveContractPagingDataModel extends PagingDataModel<VCtActiveContract> {
 		
@@ -2942,5 +2946,42 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.searchDistrictList = searchDistrictList;
 	}
 	//end added for #24353
+	
+	public boolean isRadioCheckDeliveryDate() {
+		return radioCheckDeliveryDate;
+	}
 
+	public void setRadioCheckDeliveryDate(boolean radioCheckDeliveryDate) {
+		this.radioCheckDeliveryDate = radioCheckDeliveryDate;
+	}
+
+	// start #17087
+		/**
+		 * @return the minContractDate
+		 */
+		public Date getMinContractDate() {
+			return minContractDate;
+		}
+
+		/**
+		 * @param minContractDate to set
+		 */
+		public void setMinContractDate(Date minContractDate) {
+			this.minContractDate = minContractDate;
+		}
+		/**
+		 * @return the maxContractDate
+		 */
+		public Date getMaxContractDate() {
+			return maxContractDate;
+		}
+
+		/**
+		 * @param maxContractDate to set
+		 */
+		public void setMaxContractDate(Date maxContractDate) {
+			this.maxContractDate = maxContractDate;
+		}
+		// End #17087
+		
 }

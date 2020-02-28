@@ -281,6 +281,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private boolean prevHideRemarks;
 	
 	private boolean oldGstRateFlg = false;
+	//17087 -- radio button
+	private boolean radioCheckDeliveryDate;
 	
 /**
  * Gets the charge line item root.
@@ -3247,4 +3249,12 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 	//end added for #24353
 
+	public boolean isRadioCheckDeliveryDate() {
+		return radioCheckDeliveryDate;
+	}
+
+	public void setRadioCheckDeliveryDate(boolean radioCheckDeliveryDate) {
+		this.radioCheckDeliveryDate = radioCheckDeliveryDate;
+	}
+	
 }
