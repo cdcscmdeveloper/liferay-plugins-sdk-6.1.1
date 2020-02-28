@@ -138,6 +138,7 @@
 								<p:inputText size="12" style="text-align:right;"
 									disabled="true"
 									value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.deliveryTerm}" />
+								<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.delivery.service.period']}" />							
 							</td>
 							<ui:remove>
 							<td style="width: 208px;"><p:outputLabel styleClass="outputLabel-view"
@@ -155,10 +156,53 @@
 				</p:inputText>
 				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.pr.submission.date']}" rendered="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.submissionDate != null}"/></td>
 			</tr>
+			<!--#17087 icon tooltip -->
+			<c:if test="#{purchaseRequestBackingBean.zonalTest ne '298'}">
+
+				<!--#17087 radio select -->
+
+				<tr>
+					<td colspan="15">
+
+
+
+						<table>
+							<tr>
+								<td><p:selectBooleanCheckbox id="prGeneralRadio"
+										required="true"
+										value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.radioCheckDeliveryDate}"
+										style="margin-right: 0;">
+
+										<p:ajax event="change"
+											listener="#{purchaseRequestBackingBean.upDateStartDateFromBpm}"
+											update="delStartDate" />
+
+									</p:selectBooleanCheckbox></td>
+								<td><p:outputLabel style="float:right; color:red"
+										value="#{lbl['lbl.fl.flag']}" /></td>
+								<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.flag']}" /></td>
+
+							</tr>
+						</table>
+
+					</td>
+
+
+
+
+
+
+
+
+				</tr>
+			</c:if>
+
+			<!--#17087 calendar -->
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.start']}" /></td>
-				<td><p:calendar mode="popup" readonlyInput="true"
+				<td><p:calendar id="delStartDate" mode="popup" readonlyInput="true"
 						showOn="button"
+						mindate="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.startDate}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.startDate}">
@@ -175,7 +219,7 @@
 						mindate="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.startDate}" 
 						maxdate="#{purchaseRequestBackingBean.managedBean.maxDate}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-						disabled="true"
+						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.endDate}">
 						<p:ajax event="dateSelect"
 							listener="#{purchaseRequestBackingBean.updateDeliveryEndDate}" />
