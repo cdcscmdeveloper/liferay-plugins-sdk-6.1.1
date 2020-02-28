@@ -76,6 +76,11 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	/** The action. */
 	private String action;
 	
+	//#25095 - start -
+	/** The attandance count */	
+	private int attandance_count;
+	//#25095 - end -
+	
 	/**
 	 * @return the briefingRegistrationList
 	 */
@@ -463,5 +468,15 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	public void setAction(String action) {
 		this.action = action;
 	}
+
+	//#25095 - start -
+	public int getAttandance_count() {
+		return attandance_count;
+	}
+
+	public void setAttandance_count(int attandance_count) {
+		this.attandance_count = attandance_count;
+	}
+	//#25095 - end -	
 	
 }
