@@ -62,6 +62,7 @@ import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
+import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.BpmOutcomeConst;
@@ -110,6 +111,8 @@ import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
+import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
+import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -238,6 +241,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	private String queryItemCode;
 	private String queryItemName;
 	private String queryDesc;
+	/* #17087 zonal flag */
+	private String zonalTest = "";
 	
 	private static Map<Long, PmVotFund> votFundCodeMap = new HashMap<Long, PmVotFund>();
 
@@ -1399,6 +1404,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		}
 		initializePRBeans();
 		updateDeliveryDate();
+		/*#17087 Get Zonal flag*/
+		getzonalTest();
 		//Redmine #20011
 		getManagedBean().setOldGstRateFlg(checkOldGSTRate(getManagedBean().getFulfilmentRequest()));
 		if(!getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)){
@@ -2711,6 +2718,24 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			flDeliveryAddress.setEndDate(getManagedBean().getFulfilmentRequest().getEndDate());
 		}
 	}
+	
+	/* #17087 Get current zonal state flag */
+	public String getzonalTest() {
+		long requestNoteId = getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getRequestNote()
+				.getRequestNoteId();
+		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+		requestNoteReqDTO.setRequestNoteId(requestNoteId);
+
+		RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNote(requestNoteReqDTO);
+		ScRequestNote requestNotew = requestNoteResDTO.getRequestNoteDetail();
+
+		zonalTest = Long.toString(requestNotew.getRequestNoteDtls().get(0).getPriceType().getParameterId());
+
+		setzonalTest(zonalTest);
+		return zonalTest;
+
+	}
+
 	
 	/**
 	 * update delivery address based on endDate change
@@ -4520,5 +4545,30 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			}
 			log.info(skuDesc+"=======AFTER IF ===================================="+scRequestItem.getCmItem().getCmSupplierItems());
 			return skuDesc;
+	}
+	
+	
+	/*
+	 * #17087
+	 * Ya - true - delivery start date remain the same
+	 * Tidak - false - delivery start date will get from approve 1GFMAS
+	 */
+	
+	public void upDateStartDateFromBpm(){
+		boolean radioCheck = getManagedBean().getFulfilmentRequest().isRadioCheckDeliveryDate();
+		if (radioCheck == false) {
+			getManagedBean().getFulfilmentRequest().setRadioCheckDeliveryDate(false);
+		} else {
+			getManagedBean().getFulfilmentRequest().setRadioCheckDeliveryDate(true);
+		}
+	}
+	private IRequestNoteSO getRequestNoteSO() {
+		return BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestNoteSO.class);
+	}
+
+	/* #17087 zonal set */
+	public void setzonalTest(String zonalTest) {
+		this.zonalTest = zonalTest;
 	}
 }
