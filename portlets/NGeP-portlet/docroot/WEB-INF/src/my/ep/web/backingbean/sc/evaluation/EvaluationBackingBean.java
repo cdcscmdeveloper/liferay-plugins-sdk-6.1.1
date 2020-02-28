@@ -68,6 +68,7 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
+import my.ep.constants.BpmConstants;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
@@ -145,6 +146,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecScoring;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.EvaluationReport;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -166,6 +168,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.template.DocumentGenerator;
 
+import org.apache.batik.apps.svgbrowser.StatusBar;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
@@ -8286,7 +8289,7 @@ private void retriveCommitteeRemarksList(){
 	 */
 	public void reviseProposalEvaluation() {
 		EvaluationResDTO resDTO = updateEvaluationCommitteDtls(this
-				.getManagedBean().getLocalOutCome(), null);
+				.getManagedBean().getLocalOutCome(), null, ParameterConst.COMMITTEE_ROLE_CHAIRPERSON.equalsIgnoreCase(this.getManagedBean().getRoleCode()));
 		if (resDTO.isSuccessful()) {
 			ScQtCommittee qtCommittee = resDTO.getQtCommittee();
 			successMessage(getMessgeConstant(this.getManagedBean().getLocalOutCome()),
@@ -8448,7 +8451,7 @@ private void retriveCommitteeRemarksList(){
 		}
 	}
 	//25638 - End
-
+	
 	/**
 	 * Update evaluation committe dtls.
 	 * 
@@ -8459,7 +8462,23 @@ private void retriveCommitteeRemarksList(){
 	 * @return EvaluationResDTO (boolean successful,ScQtCommittee committee)
 	 */
 	private EvaluationResDTO updateEvaluationCommitteDtls(String action,
-			PmDigiSign digiSign) {
+			PmDigiSign digiSign){
+		return updateEvaluationCommitteDtls(action, digiSign, false);
+	}
+
+	/**
+	 * Update evaluation committe dtls.
+	 * 
+	 * @param action
+	 *            (Mandatory)
+	 * @param digiSign
+	 *            (optional)
+	 * @param setSignedOffAllMembers
+	 *           
+	 * @return EvaluationResDTO (boolean successful,ScQtCommittee committee)
+	 */
+	private EvaluationResDTO updateEvaluationCommitteDtls(String action,
+			PmDigiSign digiSign, boolean setSignedOffAllMembers) {
 		IQTEvaluationSO evaluationso = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTEvaluationSO.class);
@@ -8468,14 +8487,20 @@ private void retriveCommitteeRemarksList(){
 				.getManagedBean().getEndorscommitteeMemberList();
 		if (null != committeActivities) {
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
-			for (int i = 0; i < committeActivities.size(); i++) {
-				if (pmUser.getIdentificationNo().equals(
-						committeActivities.get(i).getScCommitteeMember()
-								.getPmUser().getIdentificationNo())) {
-					committeActivities.get(i).setSignedOff(true);
-					break;
+			boolean isRevise = BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action);
+			if(setSignedOffAllMembers && isRevise){
+				for (int i = 0; i < committeActivities.size(); i++){
+					committeActivities.get(i).setSignedOff(!isRevise);
 				}
-
+			}
+			else{
+				for (int i = 0; i < committeActivities.size(); i++) {
+					if (pmUser.getIdentificationNo().equals(
+							committeActivities.get(i).getScCommitteeMember()
+									.getPmUser().getIdentificationNo())) {
+						committeActivities.get(i).setSignedOff(true);			
+					}
+				}
 			}
 			reqDtO.getScQtCommitte().setCommitteeActivities(committeActivities);
 		}
@@ -8596,7 +8621,9 @@ private void retriveCommitteeRemarksList(){
 				|| QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL.equals(this
 						.getManagedBean().getCurrentStatusId())
 				|| QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL.equals(this
-						.getManagedBean().getCurrentStatusId())) {
+						.getManagedBean().getCurrentStatusId())
+				|| isStatusLessThanOrEquals(this.getManagedBean().getCurrentStatusId(), QTStatusConst.OC_PENDING_OPENING_REVISION, QTStatusConst.OC_ORDERED_STATUSES)		
+				) {
 			this.getManagedBean().setStatusOnly(false);
 
 		} else {

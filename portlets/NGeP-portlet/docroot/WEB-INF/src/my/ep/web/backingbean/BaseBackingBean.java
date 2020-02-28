@@ -2814,7 +2814,31 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		if(orderedStatuses.indexOf(currentStatusId)<0) return false;
 		if(orderedStatuses.indexOf(toStatusId)<0) return false;
 		return orderedStatuses.indexOf(currentStatusId) <= orderedStatuses.indexOf(toStatusId);
+	}
+	
+	
+	
+	/** #25638 - start **/
+	/**
+	 * Check if Status less than or equals from status.
+	 * 
+	 * @param currentStatusId
+	 * 		the current status id
+	 * @param toStatusId
+	 * 		the to status id
+	 * @param orderedStatusArr
+	 * 		ordered status array
+	 * @return	the indicator qt status less than from status.
+	 * 
+	 * @since #25638
+	 */
+	public boolean isStatusGreaterThanOrEquals(Long currentStatusId, Long fromStatusId, Long[] orderedStatusArr) {
+		List<Long> orderedStatuses = Arrays.asList(orderedStatusArr);
+		if(orderedStatuses.indexOf(currentStatusId)<0) return false;
+		if(orderedStatuses.indexOf(fromStatusId)<0) return false;
+		return orderedStatuses.indexOf(currentStatusId) >= orderedStatuses.indexOf(fromStatusId);
 	}	
+	/** #25638 - end **/
 }
 
 
