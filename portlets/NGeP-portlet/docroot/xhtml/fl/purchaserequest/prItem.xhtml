@@ -8,6 +8,38 @@
 
 	<p:panel id="delAddrPanel" header="#{lbl['lbl.fl.delivery.address']}" toggleable="true" >
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.add.address']}" escape="false"/>
+		<!--#17087 icon tooltip and select radio -->
+		<!-- #17087 zonal flag check -->
+		<c:if test="#{purchaseRequestBackingBean.zonalTest eq '298'}">
+		<table style="width: 100%">
+			 <tr>
+           		<br/>
+           		<br/>
+           	</tr>
+           	<tr>
+           		<td>
+           		 <p:selectBooleanCheckbox id="prGeneralRadio" required="true" value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.radioCheckDeliveryDate}">
+					
+						<p:ajax event="change"
+							listener="#{purchaseRequestBackingBean.upDateStartDateFromBpm}" 
+							update="delStartDate"/>                   
+           			</p:selectBooleanCheckbox>
+          			
+          		</td>
+           		<td>
+                <!--  <h:outputText value="#{purchaseRequestBackingBean.zonalTest}"/> -->
+               
+                            
+                <p:outputLabel style="float:left !important; color:red" value="#{lbl['lbl.fl.flag']}"/> 
+           			<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.flag']}"/>
+				
+					<br/>
+
+            	</td>
+			</tr>
+
+		</table>		
+		 </c:if>
 		<p:dataTable id="addressDataTable" var="address"
 			value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.flDeliveryAddresses}"
 			rowIndexVar="index"

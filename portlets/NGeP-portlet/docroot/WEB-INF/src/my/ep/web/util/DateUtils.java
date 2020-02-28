@@ -569,7 +569,8 @@ public class DateUtils {
 			calendar.add(Calendar.YEAR, term);
 		}
 		
-		calendar.add(Calendar.DATE, -1);
+		//Enhancement #17087
+		//calendar.add(Calendar.DATE, -1);
 		
 		return calendar.getTime();
 		
