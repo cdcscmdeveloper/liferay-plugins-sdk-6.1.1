@@ -162,6 +162,33 @@ public class BSVAttendanceBackingBean extends
 								specZoneDtl, briefingResDTO.getBriefingList(),
 								briefingResDTO.getSiteVisitList(),
 								briefingResDTO.getScQtBsv());
+						
+						//#25095 - start -
+						if (briefingResDTO.getBriefingList() != null) {
+							List<ScQtBsvDtl> newBriefingList = new ArrayList<ScQtBsvDtl>();
+							
+							for (ScQtBsvDtl scqtdtl : briefingResDTO.getBriefingList()) {
+								scqtdtl = getregistrationDetailsWithAttandance(scqtdtl, false);
+								
+								newBriefingList.add(scqtdtl);
+								
+								briefingZoneBean.setBriefingList(newBriefingList);								
+							}
+						}
+						
+						if (briefingResDTO.getSiteVisitList() != null) {
+							List<ScQtBsvDtl> newSiteVisitList = new ArrayList<ScQtBsvDtl>();
+							
+							for (ScQtBsvDtl scqtdtl : briefingResDTO.getSiteVisitList()) {
+								scqtdtl = getregistrationDetailsWithAttandance(scqtdtl, false);
+								
+								newSiteVisitList.add(scqtdtl);
+								
+								briefingZoneBean.setSitevisitList(newSiteVisitList);								
+							}
+						}
+						//#25095 - end -						
+						
 						bsvZoneBeans.add(briefingZoneBean);
 					}
 					// }
@@ -187,6 +214,32 @@ public class BSVAttendanceBackingBean extends
 					briefingZoneBean = new BriefingZoneBean(null,
 							resDTO.getBriefingList(),
 							resDTO.getSiteVisitList(), scQtBsv);
+					
+					//#25095 - start -
+					if(resDTO.getBriefingList() != null) {
+						List<ScQtBsvDtl> newBriefingList = new ArrayList<ScQtBsvDtl>();
+						
+						for (ScQtBsvDtl scqtdtl : resDTO.getBriefingList()) {
+							scqtdtl = getregistrationDetailsWithAttandance(scqtdtl, false);
+							
+							newBriefingList.add(scqtdtl);
+							
+							briefingZoneBean.setBriefingList(newBriefingList);							
+						}					
+					}
+					
+					if(resDTO.getSiteVisitList() != null) {
+						List<ScQtBsvDtl> newSiteVisitList = new ArrayList<ScQtBsvDtl>();
+						
+						for (ScQtBsvDtl scqtdtl : resDTO.getSiteVisitList()) {
+							scqtdtl = getregistrationDetailsWithAttandance(scqtdtl, false);
+							
+							newSiteVisitList.add(scqtdtl);
+							
+							briefingZoneBean.setSitevisitList(newSiteVisitList);						
+						}
+					}
+					//#25095 - end -					
 				} else {
 					throw new EpException("No Bsv Details Avalible For this");
 				}
@@ -609,7 +662,7 @@ public class BSVAttendanceBackingBean extends
 		this.getManagedBean().setScQtBriefingAttendance(null);
 		ScQtBsvRegistration briefingRegistration = (ScQtBsvRegistration) event
 				.getObject();
-this.getManagedBean().setSelectedbriefRegistrationEnableDisable(briefingRegistration);
+		this.getManagedBean().setSelectedbriefRegistrationEnableDisable(briefingRegistration);
 		getAttandanceDtlsBySelectedRegistartion(briefingRegistration);
 		setSlectedHeaderName(briefingRegistration.getSupplier()
 				.getCompanyName().concat("  ").concat(">"));
@@ -802,7 +855,21 @@ this.getManagedBean().setSelectedbriefRegistrationEnableDisable(briefingRegistra
 						
 					}
 				}
-
+				
+				//#25095 - start -
+				/*calculate attendance*/
+				int count = 0;
+				
+				for (ScQtBsvRegistration registration : briefRegList) {
+					List<ScQtBsvAttendance> bsvAttandance = registration.getBsvAttendance();	
+					
+					count = count + getAttandanceCount(bsvAttandance);
+				}
+				
+				this.getManagedBean().setAttandance_count(count);
+				
+				log.info("attandanceCount = "+count);
+				//#25095 - end -
 				/*
 				 * List<ScQtBsvRegistration> registrationList = new
 				 * ArrayList<ScQtBsvRegistration>(); for (ScQtBsvRegistration
@@ -811,13 +878,85 @@ this.getManagedBean().setSelectedbriefRegistrationEnableDisable(briefingRegistra
 				 * registrationList.add(scqtbriefReg); }
 				 */
 				this.getManagedBean().setBriefingRegistrationList(briefRegList);
-
+				
 			}
 
 		} finally {
 			qTBriefingSO = null;
 		}
 	}
+	
+	//#25095 - start -
+	/**
+	 * Get BSV Registration Details.
+	 * 
+	 * @param briefing
+	 * 		the ScQtBsvDtl instance
+	 * @param maintanceFlow
+	 * 		the maintenance flow flag.
+	 */
+	public ScQtBsvDtl getregistrationDetailsWithAttandance(ScQtBsvDtl briefing, boolean maintanceFlow) {			
+		this.getManagedBean().setBriefingAttendanceList(null);
+		
+		IQTBriefingSO qTBriefingSO = null;
+		
+		this.getManagedBean().setSelectedbriefRegistration(null);
+		
+		try {
+			qTBriefingSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
+			this.getManagedBean().setBriefingRegistrationList(null);
+
+			if (briefing != null) {				
+				this.getManagedBean().setScQtBriefing(briefing);
+				
+				BriefingReqDTO reqDTO = new BriefingReqDTO();
+				reqDTO.setQtBriefingId(briefing.getQtBsvDtlId());
+				reqDTO.setMaintanceFlow(maintanceFlow);
+
+				BriefingResDTO resDTO = qTBriefingSO.retrieveBriefingRegistrationList(reqDTO);
+
+				List<ScQtBsvRegistration> briefRegList = resDTO.getBriefingRegResultBean().getResultList();
+				
+				if(CollectionUtils.isNotEmpty(briefRegList)) {
+					for (ScQtBsvRegistration briefReg :briefRegList) {
+						if(briefReg.isRegisteredBySupplier()) {
+							retrieveAuthriozesPersonalBySupplierId(briefReg);
+						}						
+					}
+				}				
+				
+				/*calculate attendance*/
+				int count = 0;
+				
+				for (ScQtBsvRegistration registration : briefRegList) {
+
+					List<ScQtBsvAttendance> bsvAttandance = registration.getBsvAttendance();	
+					
+					count = count + getAttandanceCount(bsvAttandance);
+				}
+				
+				briefing.setToBeattand(count);
+				/*
+				 * List<ScQtBsvRegistration> registrationList = new
+				 * ArrayList<ScQtBsvRegistration>(); for (ScQtBsvRegistration
+				 * scqtbriefReg : briefRegList) { //
+				 * scqtbriefReg.setSmMofAccount(new SmMofAccount());
+				 * registrationList.add(scqtbriefReg); }
+				 */
+				this.getManagedBean().setAttandance_count(count);
+				this.getManagedBean().setBriefingRegistrationList(briefRegList);
+				
+				log.info("attandanceCount = "+count);
+			}
+
+		} finally {
+			qTBriefingSO = null;			
+		}
+		
+		return briefing;
+	}
+	//#25095 - end - 
 
 	/**
 	 * Method will be executed by Ajax call.
