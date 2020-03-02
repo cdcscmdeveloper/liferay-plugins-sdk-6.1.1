@@ -550,10 +550,15 @@ public class EvaluationManagedBean extends BaseManagedBean {
     private List<TplSpecQuestion> specQuestionList;
     
     private Integer supplierNo;
+    
+	private int tabTechnicalIndex;
+	
+	private int tabFinancialIndex;
+
     //#25138-Ahmaa-End
 	
 	
-	/**
+	/**tabIndex
 	 * Gets the today.
 	 * 
 	 * @return the today
@@ -3645,6 +3650,23 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setUserPackageScore(BigDecimal userPackageScore) {
 		this.userPackageScore = userPackageScore;
 	}
+
+	public int getTabTechnicalIndex() {
+		return tabTechnicalIndex;
+	}
+
+	public void setTabTechnicalIndex(int tabTechnicalIndex) {
+		this.tabTechnicalIndex = tabTechnicalIndex;
+	}
+
+	public int getTabFinancialIndex() {
+		return tabFinancialIndex;
+	}
+
+	public void setTabFinancialIndex(int tabFinancialIndex) {
+		this.tabFinancialIndex = tabFinancialIndex;
+	}
+
 
 	//#25138-Ahmaa-End
 }
