@@ -266,6 +266,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private String applicationStatusDesc;
 	//25792 - end
 	
+	private boolean basicAccountMaintenance; //27437 : Disciplinary action
 	private SmSupplierOwner smSuppOwner; //26238
 	private boolean viewSupplierMaintenancePage; // #26639
 
@@ -1936,5 +1937,13 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		this.viewSupplierMaintenancePage = viewSupplierMaintenancePage;
 	}
 	// #26639 - end
+
+	public boolean isBasicAccountMaintenance() {
+		return basicAccountMaintenance;
+	}
+
+	public void setBasicAccountMaintenance(boolean basicAccountMaintenance) {
+		this.basicAccountMaintenance = basicAccountMaintenance;
+	}
 	
 }

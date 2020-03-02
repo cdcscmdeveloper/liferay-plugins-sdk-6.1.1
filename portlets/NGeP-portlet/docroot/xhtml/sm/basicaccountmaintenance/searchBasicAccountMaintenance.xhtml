@@ -27,7 +27,7 @@
 		
 		<p:outputPanel id="dataMainTenanceMainId">
 		
-			<p:panel header="#{lbl['lbl.sm.search.basicprofile']}" toggleable="true" id="searchSupplierProfilePanelId" 
+			<p:panel header="#{lbl['lbl.sm.search.basicprofile']}" toggleable="true" id="searchBasicSupplierPanelId" 
 				rendered="#{supplierDataMaintenanceBackingBean.managedBean.displaySearchPage}">
 				<ui:include src="/xhtml/sm/shared/applViewOnlyPages/basicApplicationSearchCriteria.xhtml" />
 			</p:panel>
@@ -37,10 +37,9 @@
 			
 				<p:dataTable var="smSupplier" widgetVar="smApplWidgetVar"
 					editable="false" lazy="true" rows="10" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-					value="#{supplierDataMaintenanceBackingBean.managedBean.smSupplierDataModel}"
-					selection="#{supplierDataMaintenanceBackingBean.managedBean.selectedSupplier}"
-					rowKey="#{smSupplier}" rowIndexVar="index" id="supplierApplHistoryDtId">
-					<ac:paginator for="supplierApplHistoryDtId" />
+					value="#{supplierDataMaintenanceBackingBean.managedBean.basicSupplierDataModel}"
+					rowKey="#{smSupplier}" rowIndexVar="index" id="supplierBasicAccountDtId">
+					<ac:paginator for="supplierBasicAccountDtId" />
 					
 					<p:column headerText="#{lbl['lbl.sm.companyname']}" style="width :25%;white-space : normal">
 						<h:outputText value="#{smSupplier.companyName}" />
@@ -67,10 +66,12 @@
 							rendered="#{smSupplier.smAppl.applType eq 'C'}" />
 						<h:outputText value="#{lbl['lbl.sm.appltype.renewmof']}"
 							rendered="#{smSupplier.smAppl.applType eq 'R'}" />
+						<h:outputText value="#{lbl['lbl.sm.appltype.basic']}"
+							rendered="#{smSupplier.smAppl.applType eq 'O'}" />
 					</p:column>
 					
 					<p:column headerText="#{lbl['lbl.sm.applicationstatus']}" style="width :25%;white-space : normal">
-						<h:outputText value="#{smSupplier.smAppl.workflowStatusDesc}" rendered="#{not empty smSupplier.smAppl.pmRegStatus}" />
+						<h:outputText value="#{smSupplier.smAppl.workflowStatusDesc}" />
 					</p:column>
 					
 					<p:column headerText="#{lbl['lbl.sm.label.action']}">
