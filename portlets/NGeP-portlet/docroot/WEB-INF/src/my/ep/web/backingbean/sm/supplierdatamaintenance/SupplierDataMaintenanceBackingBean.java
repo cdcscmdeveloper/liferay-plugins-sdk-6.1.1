@@ -1248,12 +1248,23 @@ public class SupplierDataMaintenanceBackingBean extends
 	//26238 - end
 
 	public void onTickDiscipline() {
-		if (getManagedBean().isEditDisciplinaryAction()) {
+		//27426 & 27427 : Disciplinary Action
+		if (getManagedBean().isEditDisciplinaryAction()
+				&& !getManagedBean().isWarning() && !getManagedBean().isCancelCategoryCode()
+				&& !getManagedBean().isSuspendRegistration() && !getManagedBean().isCancelRegistration()
+				&& !getManagedBean().isBlacklistOwnerOrDirector() && !getManagedBean().isBumiputeraStatusCancel()
+				&& !getManagedBean().isManufacturerStatusCancel()) {
+			initSupplierDisciplinaryAction(getManagedBean().getSmSupplier());
+			getManagedBean().setEditDisciplinaryAction(true);
+		} else if (getManagedBean().isEditDisciplinaryAction()
+				|| getManagedBean().isWarning() || getManagedBean().isCancelCategoryCode()
+				|| getManagedBean().isSuspendRegistration() || getManagedBean().isCancelRegistration()
+				|| getManagedBean().isBlacklistOwnerOrDirector() || getManagedBean().isBumiputeraStatusCancel()
+				|| getManagedBean().isManufacturerStatusCancel()) { 
 			getManagedBean().setDisciplineVO(getInitDisciplinaryActionVO());
-		} //27426 : Disciplinary Action - start 
-		else {
+		} else {
 			initSupplierDisciplinaryAction(getManagedBean().getSmSupplier()); 
-		} //27426 : Disciplinary Action - end
+		}
 	}
 
 	/**
