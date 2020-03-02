@@ -471,6 +471,11 @@ public class SupplierDataMaintenanceBackingBean extends
 			
 			if(getManagedBean().isCancelCategoryCode()){
 				getManagedBean().getDisciplineVO().getSmDiscplinaryAction().setCancelCategory(true);
+				//27460 : Disciplinary Action
+				if(getManagedBean().getSelectedApprovedCategories() == null
+						|| getManagedBean().getSelectedApprovedCategories().size() <= 0){
+					throw new EpException(SmCommonUtil.getMessage("lbl.sm.mandatory.to.select.category",null));
+				}
 			}
 			
 			if(getManagedBean().isSuspendRegistration()){
