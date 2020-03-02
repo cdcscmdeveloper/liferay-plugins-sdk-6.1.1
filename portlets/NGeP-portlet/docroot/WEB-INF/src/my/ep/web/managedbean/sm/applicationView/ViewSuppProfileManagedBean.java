@@ -137,6 +137,12 @@ public class ViewSuppProfileManagedBean extends
 	private String remarks;
 	private boolean noDisciplinary;
 	private List<DisciplinaryActionCategoryVO> categoryCodeList;
+	//27437 : Disciplinary Action
+	private IPagingDataModel<SmSupplier> basicSupplierDataModel = new SmBasicSupplierPagingDataModel();
+	private String searchByCompanyName;
+	private String searchByRegNo;
+	private String searchByEpNo;
+	private List<SmSupplier> basicSupplierList;
 	//26238 - end
 	
 	private String disciplinaryActionMsg; 
@@ -198,6 +204,77 @@ public class ViewSuppProfileManagedBean extends
 					.getSupplierResultBean();
 		}
 	}
+	//27437 : Disciplinary action - Start
+	//Basic account maintenance by Approver
+	private class SmBasicSupplierPagingDataModel extends PagingDataModel<SmSupplier> { 
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		public SmBasicSupplierPagingDataModel() {
+			super("supplierBasicAccountDtId",true);//REFER TO DATATABLE ID - XHTML
+		}
+
+		@Override
+		protected ISearchResultBean<SmSupplier> pageChangeListener(
+				ISearchBean<SmSupplier> searchBean) {
+			SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
+			reqDTO.setSupplierSearchBean(searchBean);
+			reqDTO.setDisplaySearchPage(isDisplaySearchPage());
+			getSearchSupplier().getCompanyName();
+			getSearchSupplier().getRegNo();
+			getSearchSupplier().getEpNo();
+			reqDTO.setSmSupplier(getSearchSupplier());
+
+			try {
+				if(isBasicAccountMaintenance()){
+					return getBasicSupplierResultBean(reqDTO);
+				} else {
+					return new SearchResultBean();
+				}
+			} catch (Exception ex) {
+				return new SearchResultBean();
+			} finally {
+				reqDTO = null;
+			}
+		}
+		
+		private ISearchResultBean<SmSupplier> getBasicSupplierResultBean(
+				SmApplRevisionReqDTO reqDTO) {
+			reqDTO.setSmSupplier(getSearchSupplier());
+			if(getSearchSupplier().getCompanyName() != null)
+				reqDTO.getSmSupplier().setCompanyName(getSearchSupplier().getCompanyName());
+			if(getSearchSupplier().getRegNo() != null)
+				reqDTO.getSmSupplier().setRegNo(getSearchSupplier().getRegNo());
+			if(getSearchSupplier().getEpNo() != null)
+				reqDTO.getSmSupplier().setEpNo(getSearchSupplier().getEpNo());
+			
+			ISearchResultBean<SmSupplier> resultBean = SmServiceLookup.getSmApplRevisionSO()
+					.retrieveBasicSupplierForMaintenance(reqDTO)
+					.getSupplierResultBean();
+			return resultBean;
+		}
+	} 
+	
+	/**
+	 * Search supplier latest application
+	 */
+	public void searchBasicSupplier() {
+		validateAtLeastOneSearchCriteria();
+		//HERE WILL START PROCESS PAGING DATA MODEL
+		basicSupplierDataModel.reloadData();
+	}
+
+	public IPagingDataModel<SmSupplier> getBasicSupplierDataModel() {
+		return basicSupplierDataModel;
+	}
+
+	public void setBasicSupplierDataModel(
+			IPagingDataModel<SmSupplier> basicSupplierDataModel) {
+		this.basicSupplierDataModel = basicSupplierDataModel;
+	}
+	//27437 : Disciplinary Action - end
 
 	/**
 	 * Search supplier latest application
@@ -783,7 +860,17 @@ public class ViewSuppProfileManagedBean extends
 
 	public void setWarningExist(boolean warningExist) {
 		this.warningExist = warningExist;
-	} //26238 - END
+	} 
+	//27437 : Disciplinary Action 
+	/**
+	 * Search supplier latest application
+	 */
+	public void searchSupplierByApprover() {
+		validateAtLeastOneSearchCriteria();
+		//HERE WILL START PROCESS PAGING DATA MODEL
+		basicSupplierDataModel.reloadData();
+	}
+	//26238 - END
 
 	public boolean isMofNoExist() {
 		return mofNoExist;
@@ -853,6 +940,38 @@ public class ViewSuppProfileManagedBean extends
 	 */
 	public void setDisciplinaryActionMsg(String disciplinaryActionMsg) {
 		this.disciplinaryActionMsg = disciplinaryActionMsg;
+	}
+
+	public String getSearchByCompanyName() {
+		return searchByCompanyName;
+	}
+
+	public void setSearchByCompanyName(String searchByCompanyName) {
+		this.searchByCompanyName = searchByCompanyName;
+	}
+
+	public String getSearchByRegNo() {
+		return searchByRegNo;
+	}
+
+	public void setSearchByRegNo(String searchByRegNo) {
+		this.searchByRegNo = searchByRegNo;
+	}
+
+	public String getSearchByEpNo() {
+		return searchByEpNo;
+	}
+
+	public void setSearchByEpNo(String searchByEpNo) {
+		this.searchByEpNo = searchByEpNo;
+	}
+
+	public List<SmSupplier> getBasicSupplierList() {
+		return basicSupplierList;
+	}
+
+	public void setBasicSupplierList(List<SmSupplier> basicSupplierList) {
+		this.basicSupplierList = basicSupplierList;
 	}
 	
 }
