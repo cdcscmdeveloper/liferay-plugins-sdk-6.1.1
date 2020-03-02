@@ -35,6 +35,7 @@ import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
@@ -152,8 +153,17 @@ public class SupplierDataMaintenanceBackingBean extends
 	 */
 	public void navigateToMaintenance(SmAppl selectedSmAppl) {
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-		reqDTO.setApplNo(selectedSmAppl.getApplNo());
-		getManagedBean().setSmAppl(SmServiceLookup.getMofRegistrationSO().retrieveSmApplWithChildByApplNo(reqDTO).getSmAppl());
+		//27437 : Disciplinary Action - start
+		SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
+		if(selectedSmAppl.getApplNo() != null){
+			reqDTO.setApplNo(selectedSmAppl.getApplNo());
+			getManagedBean().setSmAppl(SmServiceLookup.getMofRegistrationSO().retrieveSmApplWithChildByApplNo(reqDTO).getSmAppl());
+		} else {
+			supplierSearchReqDTO.setApplId(selectedSmAppl.getApplId());
+			getManagedBean().setSmAppl(SmServiceLookup.getSupplierSearchSO().retrieveSmApplWithChildByApplID(supplierSearchReqDTO).getSmAppl());
+		}
+		log.info("Appl ID : " + getManagedBean().getSmAppl().getApplId());
+		//27437 : Disciplinary Action - end
 		initStep0BaseInfo(getManagedBean().getSmAppl());
 		initStep1CompanyInfo();
 		initStep6RegisterCategoryCode();
@@ -223,7 +233,11 @@ public class SupplierDataMaintenanceBackingBean extends
 		
 		//26238 - end
 		resetDisciplinaryActionSection(); //27426 : Disciplinary Action
-		setCategoryTypeConfirm();
+		//27437 : Disciplinary Action
+		if(getManagedBean().getSmSupplier().getSmAppl().getApplCategoryType() != null){
+			setCategoryTypeConfirm();
+		}
+		
 		getManagedBean().setDisplaySearchPage(false);
 		setLoginUserAllowedToDoMaintenance();
 		checkIfSupplierHasActiveTransaction(false);
@@ -236,11 +250,19 @@ public class SupplierDataMaintenanceBackingBean extends
 			List<Object[]> applList = SmApplicationUtil.getActiveApplList(getManagedBean().getSmSupplier());		
 			getManagedBean().setActiveApplList(applList);
 		}
-		getManagedBean().setExistingStatusId(getManagedBean().getSmAppl().getPmStatus().getStatusId());
-		
+		//27437 : Disciplinary Action - start
+		if(getManagedBean().getSmAppl().getPmStatus() != null
+				&& getManagedBean().getSmAppl().getPmStatus().getStatusId() != null
+				&& getManagedBean().getSmAppl().getPmRegStatus() != null
+				&& getManagedBean().getSmAppl().getPmRegStatus().getPmStatus() != null
+				&& getManagedBean().getSmAppl().getPmRegStatus().getPmStatus().getStatusId() != null) {
+			getManagedBean().setExistingStatusId(getManagedBean().getSmAppl().getPmStatus().getStatusId());
+			getManagedBean().setOldRegStatusId(getManagedBean().getSmAppl().getPmRegStatus().getPmStatus().getStatusId());
+		}
+		//27437 : Disciplinary Action - end
 		initPhysicalConsultingCatcode();
 		getManagedBean().setExistingRegStatus(getManagedBean().getSmAppl().getPmRegStatus());
-		getManagedBean().setOldRegStatusId(getManagedBean().getSmAppl().getPmRegStatus().getPmStatus().getStatusId());
+//		getManagedBean().setOldRegStatusId(getManagedBean().getSmAppl().getPmRegStatus().getPmStatus().getStatusId()); //27437 : Disciplinary Action
 		getManagedBean().setSmMofAccount(getSingleSmMofAccount());
 		if (getManagedBean().getSmMofAccount() != null) {
 			getManagedBean().setExistingMofExpiryDate(
@@ -288,7 +310,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	public void search() {
 		getManagedBean().searchSupplier();
 	}
-	//26238 - start
+	//26238 : Disciplinary action - start
 	public void submitBasicAccountMaintenance(){
 		validateDisciplinaryAction();
 		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
@@ -369,8 +391,27 @@ public class SupplierDataMaintenanceBackingBean extends
 		}
 		reqDTO = null;
 		getManagedBean().setDisplaySearchPage(true);
+		//27437 : Disciplinary Action
+		FacesContext fc = FacesContext.getCurrentInstance();
+		SmCommonUtil.showFacesMsg(fc, FacesMessage.SEVERITY_INFO, MessageUtils
+				.getMessage(MessageConst.INFO_721215,
+						MessageUtils.BUNDLE_COMMON_MESSAGES,
+						new FacesScopes().getUserLocale()), null);
 	}
 	//26238 - end - updateBasicAccountInfo
+	
+	//27437 : Disciplinary action - start
+	public void searchBasicAccount() {
+		getManagedBean().setBasicAccountMaintenance(true);
+		getManagedBean().searchBasicSupplier();
+	}
+	
+	public void resetSearch(){
+		getManagedBean().getSearchSupplier().setCompanyName(null);
+		getManagedBean().getSearchSupplier().setRegNo(null);
+		getManagedBean().getSearchSupplier().setEpNo(null);
+	}
+	//27437 : Disciplinary action - end
 	/**
 	 * Submit supplier maintenance
 	 */
@@ -973,7 +1014,13 @@ public class SupplierDataMaintenanceBackingBean extends
 		//end
 		trckVO.setActionedByRole(ePRole);
 		trckVO.setDocId(appl.getApplId());
-		trckVO.setDocNo(appl.getApplNo());
+		//27437 : Disciplinary Action - start
+		if(appl.getApplNo() != null){
+			trckVO.setDocNo(appl.getApplNo());
+		} else {
+			trckVO.setDocNo(appl.getSmSupplier().getRegNo());
+		}
+		
 		trckVO.setDocType("SR");
 		trckVO.setGroupId(null);
 		trckVO.setStatus(appl.getPmStatus());
