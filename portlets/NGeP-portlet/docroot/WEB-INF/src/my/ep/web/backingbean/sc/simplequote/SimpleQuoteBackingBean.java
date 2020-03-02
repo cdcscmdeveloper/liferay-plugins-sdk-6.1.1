@@ -1380,7 +1380,7 @@ public class SimpleQuoteBackingBean extends
 				} else {
 					quote.setJustificationType(null);
 				}
-
+			}
 			// procurement type category
 			if (null != quote.getProcurementTypeCategory()) {
 				ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
