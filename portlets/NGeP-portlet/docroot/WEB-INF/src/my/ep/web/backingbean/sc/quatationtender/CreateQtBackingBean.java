@@ -864,14 +864,22 @@ public class CreateQtBackingBean extends
 		}
 	}
 
-	//Enhancement #25729 - start -
+	public boolean expectTotalIndPriceBelowThreshold(ScQt scQt) {
+		BigDecimal tmpExpectedIntendedPrice = scQt.getTmpExpectedIntendedPrice();
+		if (!scQt.isPanel() && tmpExpectedIntendedPrice != null) {
+			if (FulfilmentConst.THRESHOLD >= tmpExpectedIntendedPrice.intValue()) {
+				return Boolean.TRUE;
+			}
+		}
+		return Boolean.FALSE;
+	}
+
 	public boolean enableJustificationProValue(boolean enable) {
 		if (!enable) {
 			this.getManagedBean().getQt().setTmpExpectedIntendedPrice(null);
 		}
 		return enable;
 	}
-	//Enhancement #25729 - end -
 
 	/**
 	 * Sets the evaluation type.based on Estimated Price set Evaluation Type.
