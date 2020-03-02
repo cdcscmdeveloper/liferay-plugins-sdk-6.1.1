@@ -1357,7 +1357,7 @@ public class SimpleQuoteBackingBean extends
 
 			// justification type
 			
-			if(quote.getJustificationType().getReasonCode() != null){
+			
 				if (quote.getProcurementType().getParameterCode()
 						.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
 					if (quote.getJustificationType().getReasonCode() != null) {
@@ -1365,6 +1365,9 @@ public class SimpleQuoteBackingBean extends
 								ReasonCategory.JUSTIFICATION_AD_HOC.value(), quote
 								.getJustificationType().getReasonCode()));
 	
+					}
+					else {
+						quote.setJustificationType(null);
 					}
 				}  else if (quote.getProcurementType().getParameterCode()
 						.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
@@ -1380,7 +1383,7 @@ public class SimpleQuoteBackingBean extends
 				} else {
 					quote.setJustificationType(null);
 				}
-			}
+
 			// procurement type category
 			if (null != quote.getProcurementTypeCategory()) {
 				ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
