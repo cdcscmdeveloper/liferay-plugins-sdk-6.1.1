@@ -62,7 +62,7 @@
 				</h:panelGroup>
 				<table>
 				<!-- Redmine 25396: remove duplication option view by adding new drop down field -->  
-				<tr>
+				<tr>Aa
 					<td width="22%"><p:outputLabel
 							value="#{lbl['lbl.sc.document.viewas']}" rendered="#{directPurchaseBackingBean.showFunctionType()}" /></td>
 					<td><p:selectOneMenu id="viewAs" style="width: 250px;"
@@ -72,8 +72,9 @@
 								value="#{directPurchaseBackingBean.getFunctionType()}" />
 							<p:ajax event="change" update="searchPanel" listener="#{directPurchaseBackingBean.preRenderDirectPurchaseSearch}" />
 						</p:selectOneMenu></td>
-					<td><p:tooltip for="viewAs"><p:outputLabel escape="false" value="#{lbl['lbl.tooltip.directpurchase.search.view.as']}" />
-						 </p:tooltip></td>	
+					<td><p:graphicImage id="viewAs" library="ep/images/design" name="tooltips.png" value="/css/images/design/tooltips.png" />
+						<p:tooltip for="viewAs" ><p:outputLabel escape="false" value="#{lbl['lbl.tooltip.directpurchase.search.view.as']}" /></p:tooltip>
+					</td>	
 				</tr>
 				<!-- end 25396: -->
 				<tr>
