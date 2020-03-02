@@ -19,7 +19,7 @@
 					</td>
 					<td>
 						<p:inputText label="#{lbl['lbl.sm.companyname']}"
-							value="#{viewSuppProfileBackingBean.managedBean.searchSupplier.companyName}"
+							value="#{supplierDataMaintenanceBackingBean.managedBean.searchSupplier.companyName}"
 							size="40" />
 					</td>
 				</tr>
@@ -29,7 +29,7 @@
 					</td>
 					<td>
 						<p:inputText label="#{lbl['lbl.sm.rocNo']}"
-							value="#{viewSuppProfileBackingBean.managedBean.searchSupplier.regNo}"
+							value="#{supplierDataMaintenanceBackingBean.managedBean.searchSupplier.regNo}"
 							size="35" />
 					</td>
 				</tr>
@@ -39,7 +39,7 @@
 					</td>
 					<td>
 						<p:inputText label="#{lbl['lbl.sm.ep.no']}"
-							value="#{viewSuppProfileBackingBean.managedBean.searchSupplier.epNo}"
+							value="#{supplierDataMaintenanceBackingBean.managedBean.searchSupplier.epNo}"
 							size="35" />
 					</td>
 				</tr>
@@ -48,13 +48,13 @@
 					<td colspan="2">
 						<div style="text-align: right;">
 							<p:commandButton value="#{lbl['lbl.btn.search']}" 
-								action="#{viewSuppProfileBackingBean.search}"
+								action="#{supplierDataMaintenanceBackingBean.searchBasicAccount}"
 								update="@form" 
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
 							</p:commandButton>
 							<p:commandButton value="#{lbl['lbl.btn.reset']}" 
-								action="#{viewSuppProfileBackingBean.resetSearch}"
-								update="searchSupplierProfilePanelId">
+								action="#{supplierDataMaintenanceBackingBean.resetSearch}"
+								update="@form">
 							</p:commandButton>
 						</div>
 					</td>
