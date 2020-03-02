@@ -6264,7 +6264,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			log.info("goCode " + goCode);
 			
 			if (Integer.parseInt(goCode) == 0000) {
-				this.getManagedBean().setDisableSelectRow(true);
 				flag = true;
 			}
 			
