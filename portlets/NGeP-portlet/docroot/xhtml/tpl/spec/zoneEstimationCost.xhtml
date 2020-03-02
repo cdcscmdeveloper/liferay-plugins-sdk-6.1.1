@@ -120,6 +120,7 @@
 				required="true" maxlength="19" 
 				label="#{lbl['lbl.tpl.spec.content.estimate.cost']}"
 				disabled="#{editable}">
+				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" /> <!--#25039# -->
 			</p:inputText>
 			<p:message id="zoneEstCostMsg1" for="zoneEstCost1" display="icon" />
 		</p:column>
