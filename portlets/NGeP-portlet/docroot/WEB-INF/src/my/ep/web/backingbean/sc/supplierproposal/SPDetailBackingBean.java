@@ -1095,9 +1095,12 @@ public class SPDetailBackingBean extends
 							List<TplSpecAnswer> toDeleteZoneAnswers = new ArrayList<TplSpecAnswer>();	
 							for (TplSpecAnswer specAnswer : templateSpecBean
 									.getSpecAnswerList()) {
+//farid #21695 start to add item which is has 0 quantity and 0 price								
 								if (specAnswer.getRatePerUom() != null
-										&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) > 0) {
+										&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) > 0
+										|| specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO)== 0 && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0) {
 									answers.add(specAnswer);
+//farid #21695 end									
 								}else{
 									specAnswer.setDeleted(true);
 									toDeleteZoneAnswers.add(specAnswer);
@@ -1127,13 +1130,21 @@ public class SPDetailBackingBean extends
 						.getSpecAnswerList();
 			}
             if(answers == null || answers.size() == 0){
-            	throw new EpException(MessageConst.ERROR_760463);	
+            	for(TplSpecAnswer answer:answers){
+//farid start #21695 to allow item has 0 qty and 0 price
+            	if(answer.getRatePerUom().equals(0) && answer.getTplSpecZoneQty()!= null){
+                	throw new EpException(MessageConst.ERROR_760463);
+            		}
+//farid end #21695            	
+            	}
 			} else {
             	for(TplSpecAnswer answer:answers){
 					if (isCompleted) {
-						if (answer.getRatePerUom() == null || answer.getRatePerUom().equals(0)) {
+//farid start #21695 to allow item has 0 qty and 0 price
+						if (answer.getRatePerUom() == null && answer.getTplSpecZoneQty()!= null || answer.getRatePerUom().equals(0) && answer.getTplSpecZoneQty()!= null) {
 							throw new EpException(MessageConst.ERROR_760464);
 						}
+//farid end #21695
 					}
             		//added because of Bug #17772, please do not remove or change the order of if statements
             		if(answer.getAnswerNumeric() == null || answer.getAnswerNumeric().equals(0)){
