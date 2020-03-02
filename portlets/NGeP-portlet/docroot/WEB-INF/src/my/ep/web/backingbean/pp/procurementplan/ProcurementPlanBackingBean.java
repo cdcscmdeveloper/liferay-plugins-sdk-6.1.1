@@ -4713,7 +4713,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    	if (this.getManagedBean().getSelectedPlan().getPlanYear() == null) {	
 	    		throw new EpException(MessageConst.ERROR_730028);
 	    	}
-	    	
+	    	 	
 	    	if (ppPlan.getPpProcurementItems() != null && 
 	    			!ppPlan.getPpProcurementItems().isEmpty()) {
 	    		
@@ -5571,7 +5571,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 								//set status [30009] - Approved						
 								reqDTO.setStatusId(ProcurementPlanConst.PPE_APPROVED);
 								//set document type - PE	
-								reqDTO.setDocType(ParameterConst.DOCTYPE_PLAN_EXPENDITURE);						
+								reqDTO.setDocType(ParameterConst.DOCTYPE_PLAN_EXPENDITURE);	
+								
+								
+
 								
 								IProcurementPlanSO reqSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROCUREMENT_PLAN, IProcurementPlanSO.class);
 								
@@ -5579,7 +5582,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 								log.info("[#25549] call retrieveEpItemClonePlanBySearchBean");
 								ProcurementPlanResDTO resDTO = reqSO.retrieveEpItemClonePlanBySearchBean(reqDTO);
 										
-					
+								//goCode
 								
 								if (resDTO.isSuccessful()) {	
 									
@@ -6114,6 +6117,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	                ppItem.setInvitationDate(new Date());
 	                ppItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 	                ppItem.setEditable(true);
+	                
+	                //add #25549 28/02/2020 - Start
+	                ppItem.setCloneEnabled(true);
+	                //add #25549 28/02/2020 - End
 	                
 	               System.out.println("size list " + j );
 	               this.getManagedBean().getSelectedPlan().addPpProcurementItems(ppItem);
