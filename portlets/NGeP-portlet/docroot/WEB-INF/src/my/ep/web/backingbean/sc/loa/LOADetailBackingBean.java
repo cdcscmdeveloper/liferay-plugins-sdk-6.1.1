@@ -3370,7 +3370,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				scLoa.setScLoaRemarks(finalizeRemarks(scLoa.getScLoaRemarks()));
 			}
 		}
-
+		//20200302@asyrafhaziq_#27525 - Start
+		//#25022
 		// check whether loa from s1 or s2.
 		if(scLoa.getScLoiLoa() != null){
 			if(ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())){
@@ -3389,14 +3390,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				saveScheduleList();
 			}
 		}
+		//20200302@asyrafhaziq_#27525 - End
 
 		PmUser contractSignerUser = getManagedBean().getContractSignerUser();
 		if (contractSignerUser != null
 				&& contractSignerUser.getUserId() != null) {
 			scLoa.setContractSigner(contractSignerUser);
 		}
+		//20200302@asyrafhaziq_#27525 - Start
 		//#25022
-		saveScheduleList();
+		//saveScheduleList();
+		//20200302@asyrafhaziq_#27525 - End
 	}
 
 	/**
