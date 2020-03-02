@@ -2450,6 +2450,12 @@ public class EvaluationBackingBean extends
 					evaluationSo
 							.prepareFinancialEvaluationSummary(summaryReqDTO);
 					getManagedBean().setFinancialSummaryGenerated(true);
+				}else{//#25138-start
+					financialCheckListStatusCheck();
+					evaluationSo
+							.prepareFinancialEvaluationSummary(summaryReqDTO);
+					getManagedBean().setFinancialSummaryGenerated(true);
+					//#25138-end
 				}
 			}
 		} finally {
@@ -3545,7 +3551,26 @@ public class EvaluationBackingBean extends
 					 * .getComplianceResultBean().getResultList(),
 					 * speczone.getScoreOfferPrices());
 					 */
-					this.getManagedBean()
+					//#25138-start
+					if(this.getManagedBean().getEvaluatioStageActiveIndex() == 0){
+						this.getManagedBean().setOneTierFinancialActiveIndex(0);	
+					
+					}
+					else if(this.getManagedBean().getEvaluatioStageActiveIndex() == 1 && 
+							this.getManagedBean().getOneTierFinancialActiveIndex() == 1){
+						
+						if(!this.getManagedBean().getEvaluationCheckListType()
+								.equalsIgnoreCase(ParameterConst
+										.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)){
+							this.getManagedBean().setOneTierFinancialActiveIndex(1);						
+							this.getManagedBean().setEvaluationCheckListType(
+								ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION);
+							
+						}
+						
+					}
+					//#25138-end
+						this.getManagedBean()
 							.setFinSpecSupplierListDM(
 									new FinancialSpecSupplierWithOutZonePagingDataModel(
 											"financialSpecEvaluationStage",
@@ -6415,6 +6440,7 @@ public class EvaluationBackingBean extends
 							.equalsIgnoreCase(this.getManagedBean()
 									.getCommitteeType())
 							&& !this.getManagedBean().isReadOnly()) {
+						retriveComplianceTechnical();//#25138
 						if (null == this.getManagedBean().getScQt()
 								.getTecEvaluationCheck()) {
 
@@ -6427,7 +6453,13 @@ public class EvaluationBackingBean extends
 							this.getManagedBean().setScQt(evalResDTO.getScQt());
 						}
 					}
-					retriveTechnicalEvaluationStage();
+					if(outputTab == 2){
+						retriveTechnicalEvaluationStage();
+						this.getManagedBean().setTabTechnicalIndex(1);
+						this.getManagedBean().setTabFinancialIndex(0);
+							
+					}
+					
 				}
 
 				if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
@@ -6462,7 +6494,9 @@ public class EvaluationBackingBean extends
 							this.getManagedBean().setScQt(evalResDTO.getScQt());
 						}
 					}
+					retriveComplianceFinancial(true);
 					retriveFinancialEvaluationStage();
+					this.getManagedBean().setTabFinancialIndex(1);
 				}
 
 			} else if (outputTab == 3) {
@@ -6482,6 +6516,11 @@ public class EvaluationBackingBean extends
 
 							if (this.getManagedBean()
 									.getEvaluatioStageActiveIndex() < 1) {
+								retriveTechnicalEvaluationStagePackage();
+								outputTab = 2;
+								this.getManagedBean().setTabTechnicalIndex(2);
+								
+							}else{
 								retriveSummaryEvaluationStage();
 								// this.getManagedBean().setComplianceActiveIndex(2);
 								outputTab = 2;
@@ -6541,8 +6580,17 @@ public class EvaluationBackingBean extends
 								retriveTechnicalEvaluationStagePackage();//#25138-Ahmaa
 								// this.getManagedBean().setComplianceActiveIndex(2);
 								outputTab = 2;
+								this.getManagedBean().setTabTechnicalIndex(2);
 
+							}else{
+								retriveSummaryEvaluationStage();
 							}
+
+						}if (currentTab == 3) {
+
+							evaluationStageStatusCheck();//#25138-Ahmaa
+							retriveOneTierFinancialSupplierSummary();
+							this.getManagedBean().setTabFinancialIndex(3);
 
 						}
 						if (null == this.getManagedBean().getScQt()
@@ -6557,9 +6605,12 @@ public class EvaluationBackingBean extends
 							this.getManagedBean().setScQt(evalResDTO.getScQt());
 						}
 					}
-
-					retriveFinancialEvaluationStage();
-
+					if(outputTab == 3){
+						retriveFinancialEvaluationStage();
+						this.getManagedBean().setTabFinancialIndex(1);
+	
+					}
+					
 				}
 
 			} else if (outputTab == 4) {
@@ -6635,6 +6686,12 @@ public class EvaluationBackingBean extends
 							// this.getManagedBean().setComplianceActiveIndex(2);
 							outputTab = 2;
 
+						}else if(this.getManagedBean()
+								.getEvaluatioStageActiveIndex() == 2){
+							retriveFinancialEvaluationStage();
+							outputTab = 3;
+							this.getManagedBean().setTabFinancialIndex(1);
+							
 						}
 
 					}
@@ -6644,13 +6701,21 @@ public class EvaluationBackingBean extends
 								.getOneTierFinancialActiveIndex() < 1) {
 							financialCheckListStatusCheck();//#25138
 							retriveFinancialEvaluationStagePackage();//#25138-Ahmaa
-//							retriveOneTierFinancialSupplierSummary();
+							this.getManagedBean().setTabFinancialIndex(2);
+
 							// this.getManagedBean().setComplianceActiveIndex(2);
 							outputTab = 3;
 
+						}else if(this.getManagedBean()
+								.getOneTierFinancialActiveIndex() == 1){
+							financialCheckListStatusCheck();//#25138
+							retriveOneTierFinancialSupplierSummary();
+							this.getManagedBean().setTabFinancialIndex(3);
+							outputTab = 3;
 						}
 
 					}
+//					this.getManagedBean().setTabTechnicalIndex(3);
 					checkMeetingDetailsAndStatus(this.getManagedBean()
 							.getScQtMeetings());
 				}
@@ -6667,9 +6732,10 @@ public class EvaluationBackingBean extends
 						if (currentTab == 2) {
 
 							if (this.getManagedBean()
-									.getEvaluatioStageActiveIndex() < 1) {
+									.getEvaluatioStageActiveIndex() == 1) {
 								retriveSummaryEvaluationStage();
 								// this.getManagedBean().setComplianceActiveIndex(2);
+								this.getManagedBean().setTabTechnicalIndex(2);
 								outputTab = 2;
 
 							}
@@ -6697,10 +6763,20 @@ public class EvaluationBackingBean extends
 
 						if (this.getManagedBean()
 								.getEvaluatioStageActiveIndex() < 1) {
+							
+							if(this.getManagedBean().getTabFinancialIndex() == 1 ){
+								retriveFinancialEvaluationStagePackage();
+								this.getManagedBean().setTabFinancialIndex(2);	
+								outputTab = 2;		
+							
+							}
+							
+						}else if (this.getManagedBean()
+								.getEvaluatioStageActiveIndex() == 1){
 							retriveSummaryEvaluationStage();
-							// this.getManagedBean().setComplianceActiveIndex(2);
+//							retriveOneTierFinancialSupplierSummary();
+							this.getManagedBean().setTabFinancialIndex(2);	
 							outputTab = 2;
-
 						}
 
 					}
@@ -6719,8 +6795,12 @@ public class EvaluationBackingBean extends
 				 * 
 				 * }
 				 */
-
-				retrieveReportTabDtl();
+				if (this.getManagedBean()
+						.getEvaluatioStageActiveIndex() > 1) {
+					retrieveReportTabDtl();	
+				
+				}
+				
 			} else if (outputTab == 5) {
 				retriveCommitteeEndorsment();
 				
