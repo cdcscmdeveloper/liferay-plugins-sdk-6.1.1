@@ -169,7 +169,7 @@
 			<p:inputTextarea id="answerText" style="width:calc(100% - 40px);" value="#{tplSpecAnswer.answerText}" 
 			onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);" onmouseout="limitTextArea(this,1000);"
 				rendered="#{isAnswerTypeText}" required="false" rows="1" 
-				label="#{lbl[answerlbl]}" disabled="#{!editable or tplSpecAnswer.offer ne null and !tplSpecAnswer.offer}"> 
+				label="#{lbl[answerlbl]}" disabled="#{!editable or tplSpecAnswer.offer ne null and !tplSpecAnswer.offer and !isZonal}"> 
 				<p:ajax partialSubmit="true" process="@this" update="@this, answerTextMsg" />
 				<f:validateLength for="answerText" maximum="1000" />
 			</p:inputTextarea>
@@ -177,7 +177,7 @@
 			<p:inputText id="answerNumeric" style="width:calc(100% - 40px); text-align:right;" 
 				value="#{tplSpecAnswer.answerNumeric}" maxlength="19"
 				rendered="#{isAnswerTypeNumeric and !isSpecTypeFinancial}" required="false"
-				label="#{lbl[answerlbl]}" disabled="#{!editable or tplSpecAnswer.offer ne null and !tplSpecAnswer.offer}"> 
+				label="#{lbl[answerlbl]}" disabled="#{!editable or tplSpecAnswer.offer ne null and !tplSpecAnswer.offer and !isZonal}"> 
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
 				<p:ajax partialSubmit="true" process="@this" update="@this, answerNumericMsg" />
 			</p:inputText>
@@ -185,43 +185,43 @@
 			<h:outputText id="answerNumText" 
 				value="#{tplSpecAnswer.answerNumeric}"
 				rendered="#{isAnswerTypeNumeric and (isSpecTypeFinancial and !isPriceTypeTier)}"
-				disabled="#{!editable or tplSpecAnswer.offer ne null and !tplSpecAnswer.offer}"> 
+				disabled="#{!editable or tplSpecAnswer.offer ne null and !tplSpecAnswer.offer and !isZonal}"> 
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</h:outputText>
 			<h:selectOneMenu id="answerCompliance" style="width:calc(100% - 30px);" 
 				value="#{tplSpecAnswer.answerCompliance}" 
 				rendered="#{isAnswerTypeDropdown}" required="false"
-				label="#{lbl[answerlbl]}" disabled="#{!editable or tplSpecAnswer.offer ne null and !tplSpecAnswer.offer}"> 
+				label="#{lbl[answerlbl]}" disabled="#{!editable or tplSpecAnswer.offer ne null and !tplSpecAnswer.offer and !isZonal}"> 
 				<f:selectItems value="#{templateSpecBackingBean.getDropdownCodeValues(ParameterTypeConst.yesNoFlag)}" />
 			</h:selectOneMenu>
 			<p:message id="answerComplianceMsg" for="answerCompliance" display="icon" rendered="#{isAnswerTypeDropdown}" />
 <!-- FARID START add condition at disabled END-->				
 <!-- FARID START -->
-<c:if test="#{isZonal}">
 			<h:panelGroup layout="div" rendered="#{templateSpecBean.specMaster ne null and 
 												   templateSpecBean.specMaster.scQtDoc ne null and 
 												   templateSpecBean.specMaster.scQtDoc.scQt ne null and 
-												   !isSpecTypeFinancial and isZonal}">
+												   !isSpecTypeFinancial}">
 				<h:selectOneMenu id="answerOffer" style="width:calc(100% - 30px);" 
 						value="#{tplSpecAnswer.offer}"
 						rendered="#{templateSpecBean.specMaster.scQtDoc.scQt.partial ne null and 
 						templateSpecBean.specMaster.scQtDoc.scQt.partial eq true and
-						isZonal and !isSpecTypeFinancial and isQuestionTypeItem}" 
+						!isSpecTypeFinancial and isQuestionTypeItem}" 
 						label="#{lbl[answerlbl]}">
 						 <f:selectItems value="#{templateSpecBackingBean.offerDetails}"></f:selectItems>
 						 <p:ajax event="change" partialSubmit="true" process="@this" 
 						 update="@this,questionTbl"
 		                 listener="#{templateSpecBackingBean.offerTypeChange(tplSpecAnswer.offer,tplSpecAnswer.tplSpecQuestion.specQuestionId,row)}"/>
 					</h:selectOneMenu>
-			
+		<c:if test="#{isZonal}">		
 			<h:panelGroup layout="div" 
 			rendered="#{!tplSpecAnswer.offer and tplSpecAnswer.offer ne null and
 						templateSpecBean.specMaster.scQtDoc.scQt.partial ne null and
-						templateSpecBean.specMaster.scQtDoc.scQt.partial eq true}">	
+						templateSpecBean.specMaster.scQtDoc.scQt.partial eq true and isZonal}">	
 							<ui:decorate template="specColumnAnswerOfferZone.xhtml" />
-			</h:panelGroup>		
+			</h:panelGroup>	
+		</c:if>					
 		</h:panelGroup>	
-</c:if>		
+
 					
 <!-- END -->	
 		
