@@ -804,10 +804,11 @@
 								<p:message id="title2Msg_1" for="justificationProcValueId_1" display="icon" />
 							</c:when>
 							<c:otherwise>
-								<p:inputText id="justificationProcValueId_2"
-									style="text-align:right; width:200px;"
-									value="#{scQt.justificationProcValue}" disabled="true">
-								</p:inputText>
+								<p:inputTextarea id="justificationProcValueId_2"
+									style="margin-bottom:5px; width: 250px;" maxlength="100" value="#{scQt.justificationProcValue}" 
+									label="#{lbl['lbl.sc.spec.justification.procurement.value']}" readonly="true" 
+									cols="110" rows="3">
+								</p:inputTextarea>
 								<p:message id="title2Msg_2" for="justificationProcValueId_2" display="icon" />
 							</c:otherwise>
 						</c:choose>
