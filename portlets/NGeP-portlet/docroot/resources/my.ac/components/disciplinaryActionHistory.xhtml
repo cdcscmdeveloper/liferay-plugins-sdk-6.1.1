@@ -35,13 +35,45 @@
 					style="float: left;white-space: normal;" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.disciplinary.jktt.punishment.type']}" style="width : 23% !important; vertical-align:top;">
-				<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.warning']}" rendered="#{disciplinaryAction.warning}" styleClass="outputLabel-view"/>
-				<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.cancel.cat.code']}" rendered="#{disciplinaryAction.cancelCategory}" styleClass="outputLabel-view"/>
-				<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.suspend.registration']}" rendered="#{disciplinaryAction.suspendRegistration}" styleClass="outputLabel-view"/>
-				<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.cancel.registration']}" rendered="#{disciplinaryAction.cancelRegistration}" styleClass="outputLabel-view"/>
-				<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']}" rendered="#{disciplinaryAction.blacklistOwnerDirector}" styleClass="outputLabel-view"/>
-				<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.cancel.of.bumiputera']}" rendered="#{disciplinaryAction.bumiputeraCancel}" styleClass="outputLabel-view"/>
-				<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.cancel.of.manufacturer']}" rendered="#{disciplinaryAction.manufacturerCancel}" styleClass="outputLabel-view"/>
+				<p:outputLabel rendered="#{disciplinaryAction.warning}" styleClass="outputLabel-view">
+					<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.warning']}"/>
+					<h:outputText value="," rendered="#{disciplinaryAction.warning and (disciplinaryAction.cancelCategory || 
+					disciplinaryAction.suspendRegistration || disciplinaryAction.cancelRegistration || disciplinaryAction.blacklistOwnerDirector ||
+					disciplinaryAction.bumiputeraCancel || disciplinaryAction.manufacturerCancel)}"/>
+				</p:outputLabel>
+				
+				
+				<p:outputLabel rendered="#{disciplinaryAction.cancelCategory}" styleClass="outputLabel-view">
+					<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.cancel.cat.code']}"/>
+					<h:outputText value="," rendered="#{disciplinaryAction.cancelCategory and (disciplinaryAction.suspendRegistration || disciplinaryAction.cancelRegistration || disciplinaryAction.blacklistOwnerDirector ||
+					disciplinaryAction.bumiputeraCancel || disciplinaryAction.manufacturerCancel)}"/>
+				</p:outputLabel>
+				
+				<p:outputLabel rendered="#{disciplinaryAction.suspendRegistration}" styleClass="outputLabel-view">
+					<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.suspend.registration']}"/>
+					<h:outputText value="," rendered="#{disciplinaryAction.suspendRegistration and (disciplinaryAction.cancelRegistration || disciplinaryAction.blacklistOwnerDirector ||
+					disciplinaryAction.bumiputeraCancel || disciplinaryAction.manufacturerCancel)}"/>
+				</p:outputLabel>
+				
+				<p:outputLabel rendered="#{disciplinaryAction.cancelRegistration}" styleClass="outputLabel-view">
+					<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.cancel.registration']}"/>
+					<h:outputText value="," rendered="#{disciplinaryAction.cancelRegistration and (disciplinaryAction.blacklistOwnerDirector ||
+					disciplinaryAction.bumiputeraCancel || disciplinaryAction.manufacturerCancel)}"/>
+				</p:outputLabel>
+				
+				<p:outputLabel rendered="#{disciplinaryAction.blacklistOwnerDirector}" styleClass="outputLabel-view">
+					<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']}"/>
+					<h:outputText value="," rendered="#{disciplinaryAction.blacklistOwnerDirector and (disciplinaryAction.bumiputeraCancel || disciplinaryAction.manufacturerCancel)}"/>
+				</p:outputLabel>
+				
+				<p:outputLabel rendered="#{disciplinaryAction.bumiputeraCancel}" styleClass="outputLabel-view">
+					<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.cancel.of.bumiputera']}"/>
+					<h:outputText value="," rendered="#{disciplinaryAction.bumiputeraCancel and disciplinaryAction.manufacturerCancel}"/>
+				</p:outputLabel>
+				
+				<p:outputLabel rendered="#{disciplinaryAction.manufacturerCancel}" styleClass="outputLabel-view">
+					<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.cancel.of.manufacturer']}"/>
+				</p:outputLabel>
 			</p:column>			
 			<p:column headerText="#{lbl['lbl.sm.disciplinary.jktt.start.date']}" style="width : 10% !important; vertical-align:top;">
 				<ac:labelDateTime styleClass="outputLabel-view" value="#{disciplinaryAction.startDate}"/>
