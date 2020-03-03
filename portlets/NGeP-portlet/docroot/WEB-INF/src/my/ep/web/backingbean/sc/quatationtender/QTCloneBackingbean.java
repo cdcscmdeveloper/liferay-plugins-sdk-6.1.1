@@ -54,7 +54,9 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmPtjSpecialApproval;
@@ -92,6 +94,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.PTJLocalityCode;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sc.common.ZonesBean;
@@ -299,6 +302,16 @@ public class QTCloneBackingbean extends
 				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 				bean.setSearchValue(this.getManagedBean().getPanel());
 				searchFilterBean.add(bean);
+			}
+			
+			if (null != this.getManagedBean().getQt()){
+				
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchField("isZonal");
+				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+				bean.setSearchValue(this.getManagedBean().getQt().isZonal());
+				searchFilterBean.add(bean);
+				
 			}
 				
 			String procurementMode = cloneQtnTenderSearchBean
@@ -538,7 +551,95 @@ public class QTCloneBackingbean extends
 		this.getManagedBean().setCloneCommitteeSelectQt(scQt);
 		this.showTree = true;
 	}
-
+	
+	
+	public void refreshCreation(){
+		FacesContext fc = FacesContext.getCurrentInstance();
+		super.renewSesionObject();
+		this.getManagedBean().setReadOnly(false);
+		this.getManagedBean().setCreateQt(true);
+		this.getManagedBean().setOutComes(
+				new String[] { ResourceBundleUtils.getMessage("lbl.btn.submit",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()) });
+		
+		ScQt scQt = new ScQt();
+		scQt.setCircularVer(new CtCircularVer());
+		scQt.setPanel(this.getManagedBean().getPanel());
+		PmOrgProfile pmOrgProfile = getPTJOrgProfileByLoginUser();
+		if (pmOrgProfile != null) {
+			scQt.setPmOrgProfile(pmOrgProfile);
+			scQt.setOwnerOrgProfile(pmOrgProfile);
+			scQt.setOrgProfileId(pmOrgProfile.getOrgProfileId());
+			scQt.setOwnerOrgProfileId(pmOrgProfile.getOrgProfileId());
+			// check whether ptj have the special approval or not for login user
+			PmPtjSpecialApproval ptjSpecialApproval = getPtjSpecialApprovalByOrgProfileId(pmOrgProfile
+					.getOrgProfileId());
+			if (ptjSpecialApproval != null) {
+				scQt.setCircularVer(null);
+				this.getManagedBean().setPanel(null);
+				scQt.setPanel(false);
+				this.getManagedBean().setPtjSpecialApproval(ptjSpecialApproval);
+				scQt.setObtainSpecialApproval(false);
+			}else{
+				scQt.setItemGroup(new CtPanelItemGroup());
+			}
+		}else{
+			addFacesMessage(fc, MessageConst.ERROR_760447, null);
+			this.getManagedBean().setPtjPresent(false);
+		}
+		
+		scQt.setProcurementMode(new PmParameter());
+		scQt.setProcurementTypeCatId(new PmParameter());
+		scQt.setFulfilmentType(new PmParameter());
+		scQt.setPmProcurementCategory(new PmParameter());
+		scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
+		
+		PmStatus status = getPmStatusByStatusId(QTStatusConst.QT_PENDING_QT_SUBMISSION);
+		scQt.setQtStatus(status);            
+		/* scQt.setQtNo(dto.getQtNo()); */
+		ScQtStatus qtStatus = new ScQtStatus();
+		qtStatus.setScQt(scQt);
+		qtStatus.setPmStatus(status);
+		qtStatus.setCurrent(Boolean.TRUE);
+		qtStatus.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+		scQt.setCurrentWorkFlowStatus(qtStatus);
+		List<ScQtStatus> qtStatuses = new ArrayList<ScQtStatus>();
+		qtStatuses.add(qtStatus);
+		scQt.setScQtStatus(qtStatuses);
+		ScQtSupplierCriteria supplierCriteria = new ScQtSupplierCriteria();
+		supplierCriteria.setScQt(scQt);
+		scQt.setScQtSupplierCriteria(supplierCriteria);
+						
+		
+		this.getManagedBean().setActiveIndex(0);
+		scQt.setContractType(new PmParameter());
+		
+		setUserDetails(scQt);
+		this.getManagedBean().setQt(scQt);
+		Long currentStatus = this.getManagedBean().getQt().getQtStatus()
+				.getStatusId();
+		this.getManagedBean().setCurrentStatusId(currentStatus);
+		
+		
+		if (pmOrgProfile != null && !isPtjAddressTypePresent(pmOrgProfile.getOrgProfileId())) {
+			addFacesMessage(fc, MessageConst.ERROR_760450, null);
+		}
+		
+	}
+	
+	private boolean isCreation(TreeNode[] nodes){
+		List<Long> list=new ArrayList<Long>();
+		for(TreeNode node:nodes){
+			QTSelectionNode selection=(QTSelectionNode) node.getData();
+			list.add(selection.getValue());
+		}
+		if(list.contains(1L)||list.contains(2L)||list.contains(3L)||list.contains(4L)){
+            return true;
+        }
+		return false;
+	}
+	
 	// public void addToClone(Long prevQtId,TreeNode[] selectedNodes){
 	public void addToClone() {
 		IQTDetailSO QtDetailsSO;
@@ -548,6 +649,9 @@ public class QTCloneBackingbean extends
 			throw new EpException(MessageConst.ERROR_760495);
 		}
 		try {
+			if(isCreation(nodes)){
+			//	refreshCreation();
+			}
 			QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
@@ -1730,7 +1834,7 @@ public class QTCloneBackingbean extends
 		scQt.setItemGroup(copyScqt.getItemGroup());
 		scQt.setQtTitle(copyScqt.getQtTitle());
 		scQt.setProcurementMode(copyScqt.getProcurementMode());
-		
+		scQt.setPartial(copyScqt.isPartial());
 		BigDecimal tmpExpectedIntendedPrice = QtDetailsSO
 				.getDecryptedExpectedIntendedPrice(copyScqt.getQtId());
 		
