@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,6 +32,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -59,6 +61,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCheckListScore;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListValue;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
+import my.ep.persistence.entity.sc.quationtender.ScQtScoreSetting;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
@@ -754,11 +757,173 @@ public class QtSpecCloneBackingBean extends
 		specificationBackingBean.retriveFinancialCheckList();
 		retrieveTechnicalChecklist(tenderResDTO.getQtDetail());
 		retrieveFinancialChecklist(tenderResDTO.getQtDetail());
+		retrieveTechnicalScoreSettings(tenderResDTO.getQtDetail());
 		specificationBackingBean.saveSpecificationCommitteeDtls();
+		
 		//retrieveDeliveryAddress(tenderResDTO.getQtDetail());
 		
 		
 		
+	}
+	
+	private void retrieveFinancialScoreSettings(ScQt scqt){
+		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+		reqDTO.setScQt(scqt);
+		SpecificationResDTO resDTO = null;
+		IQTSpecSO specSo = null;
+		try {
+		List<Integer> settinglist = new ArrayList<Integer>();
+		settinglist
+				.add(SourcingConstants.SCORE_SETTING_TYPE_FINANCIAL_BY_PACKAGE);
+		settinglist
+				.add(SourcingConstants.SCORE_SETTING_TYPE_FINANCIAL_BY_ITEM);
+
+		// reqDTO.setSpecType("T");
+		reqDTO.setSettingTypes(settinglist);
+		specSo = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+		resDTO = specSo
+				.retrieveScoreSettingDtls(reqDTO);
+		
+		if (null != resDTO.getScoreSettingResultBean().getResultList()
+				&& !resDTO.getScoreSettingResultBean().getResultList()
+						.isEmpty()) {
+			
+			
+			if (resDTO.getScoreSettingResultBean().getResultList().size() == 2) {
+				for (ScQtScoreSetting scoreSttting : resDTO
+						.getScoreSettingResultBean().getResultList()) {
+					if (scoreSttting.getSettingType() == SourcingConstants.SCORE_SETTING_TYPE_FINANCIAL_BY_PACKAGE) {
+						ScQtScoreSetting settings=copyScoreSettings(scoreSttting);
+							this.getManagedBean().setFinancialScoreSetting(
+									settings);
+						
+					}
+					if (scoreSttting.getSettingType() == SourcingConstants.SCORE_SETTING_TYPE_FINANCIAL_BY_ITEM) {
+						ScQtScoreSetting settings=copyScoreSettings(scoreSttting);
+							this.getManagedBean()
+									.setFinacialItemScoreSetting(settings);
+							calculateFinancialItemScore(this
+									.getManagedBean()
+									.getFinacialItemScoreSetting());
+						
+
+					}
+				}
+				
+				
+				
+			}else if(resDTO.getScoreSettingResultBean().getResultList()
+					.size() == 1) {
+				for (ScQtScoreSetting scoreSttting : resDTO
+						.getScoreSettingResultBean().getResultList()) {
+					if (scoreSttting.getSettingType() == SourcingConstants.SCORE_SETTING_TYPE_FINANCIAL_BY_PACKAGE) {
+						ScQtScoreSetting settings=copyScoreSettings(scoreSttting);
+							this.getManagedBean().setFinancialScoreSetting(
+									settings);
+						
+					}
+					if (scoreSttting.getSettingType() == SourcingConstants.SCORE_SETTING_TYPE_FINANCIAL_BY_ITEM) {
+						ScQtScoreSetting settings=copyScoreSettings(scoreSttting);
+							this.getManagedBean()
+									.setFinacialItemScoreSetting(settings);
+
+					}
+				}
+			}
+			
+		}
+		
+		}finally{
+			specSo = null;
+		}
+	}
+	
+	public void calculateFinancialItemScore(ScQtScoreSetting financialItem) {
+		try {
+			if (null != financialItem) {
+				int value1 = financialItem.getOverallFin() != null ? financialItem
+						.getOverallFin().intValue() : 0;
+				int value2 = financialItem.getOverallOtherFin() != null ? financialItem
+						.getOverallOtherFin().intValue() : 0;
+				int local = value1 + value2;
+				this.getManagedBean().setFinancialItemScore(
+						new BigDecimal(local));
+				if ((null != this.getManagedBean().getFinancialItemScore())
+						&& this.getManagedBean().getFinancialItemScore()
+								.intValue() > 100) {
+					throw new EpException(MessageConst.ERROR_760257);
+
+				}
+			}
+
+		} finally {
+
+		}
+	}
+	
+	private void retrieveTechnicalScoreSettings(ScQt scqt){
+		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+		reqDTO.setScQt(scqt);
+		SpecificationResDTO resDTO = null;
+		IQTSpecSO specSo = null;
+		try {
+			List<Integer> settinglist = new ArrayList<Integer>();
+			settinglist.add(SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL);
+			settinglist.add(SourcingConstants.SCORE_SETTING_TYPE_DEMO);
+			settinglist.add(SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM);
+			reqDTO.setSettingTypes(settinglist);
+			specSo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+			resDTO = specSo.retrieveScoreSettingDtls(reqDTO);
+			
+			if (null != resDTO.getScoreSettingResultBean().getResultList()
+					&& !resDTO.getScoreSettingResultBean().getResultList()
+							.isEmpty()) {
+				
+				for (ScQtScoreSetting recommnendationSetting : resDTO
+						.getScoreSettingResultBean().getResultList()) {
+					if (recommnendationSetting.getSettingType() == SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL) {
+							
+							ScQtScoreSetting settings=copyScoreSettings(recommnendationSetting);
+							this.getManagedBean().setTechnicalScoreSetting(
+									settings);
+						
+					}
+					if (recommnendationSetting.getSettingType() == SourcingConstants.SCORE_SETTING_TYPE_DEMO) {
+	
+							ScQtScoreSetting settings=copyScoreSettings(recommnendationSetting);
+							this.getManagedBean().setDemoScoreSetting(
+									settings);
+						
+					}
+					if (recommnendationSetting.getSettingType() == SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
+		
+							ScQtScoreSetting settings=copyScoreSettings(recommnendationSetting);
+							this.getManagedBean().setTechnicalItemScoreSetting(
+									settings);
+						
+					}
+					
+				}
+			}
+			
+			
+		} finally {
+			specSo = null;
+		}
+	}
+	
+	private ScQtScoreSetting copyScoreSettings(ScQtScoreSetting src){
+		ScQtScoreSetting copy=new ScQtScoreSetting();
+		copy.setBrandNew(true);
+		copy.setSettingType(src.getSettingType());
+		copy.setScQt(this.getManagedBean().getQt());
+		copy.setWeightageReq(src.isWeightageReq());
+		copy.setPassingScore(src.getPassingScore());
+		setUserDetails(copy);
+		
+		return copy;
 	}
 	
 	private List<ScQtCheckList> getToBeRemoveList() {
@@ -1133,6 +1298,16 @@ public class QtSpecCloneBackingBean extends
 				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 				bean.setSearchValue(this.getManagedBean().getPanel());
 				searchFilterBean.add(bean);
+			}
+			
+			if (null != this.getManagedBean().getQt()){
+				
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchField("isZonal");
+				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+				bean.setSearchValue(this.getManagedBean().getQt().isZonal());
+				searchFilterBean.add(bean);
+				
 			}
 
 			String procurementMode = cloneQtnTenderSearchBean

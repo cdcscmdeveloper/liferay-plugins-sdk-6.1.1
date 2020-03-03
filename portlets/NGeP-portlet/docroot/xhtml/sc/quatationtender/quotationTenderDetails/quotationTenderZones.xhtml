@@ -25,7 +25,7 @@
 								<c:otherwise>
 									<c:choose>
 										<c:when test="#{!zoneCoverageReadonly and !isReadOnly}">
-											<p:selectOneMenu id="locationLevels" required="true"
+											<p:selectOneMenu id="locationLevels" required="#{empty param['skipvalidation']}"
 												label="#{lbl['lbl.sc.zone.location.level']}"
 												value="#{scQt.zoneLocationLevel.parameterId}"
 												style="width: 205px;">
