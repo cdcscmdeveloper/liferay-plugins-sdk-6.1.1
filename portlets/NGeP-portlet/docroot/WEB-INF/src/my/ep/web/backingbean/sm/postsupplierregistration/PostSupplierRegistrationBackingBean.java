@@ -300,15 +300,45 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	
 	public void pageNavigate() throws Exception{
 		SmSupplier supplier = getSupplierProfileByUserId();
-		
-		if(isHavePendingTaskList() && supplier.getRecordStatusFlg()!=SupplierManagementConst.SUPPLIER_SELF_REQUEST_ADMIN_STATUS){
-			pageRedirect(TASK_LIST_PATH);
-			
-		}else{
-			String path = currentStatusAndPath();
-			log.info("******xhtml*******" + path);
-			pageRedirect(path);
+		//START 27264
+		boolean proceed = true;
+		if(supplier != null){
+			try{
+				
+				String path1 = currentStatusAndPath();
+				log.info("path1==================================="+path1);
+				if(path1 != null && (MOF_REG_PATH.equalsIgnoreCase(path1) || path1.contains(RESUBMIT_APPLICATION))){
+					checkSSMValid(supplier);
+				}				
+			}catch(Exception w){
+				log.info("Here done--"+w.getMessage());
+				proceed =false;
+				RequestContext.getCurrentInstance().execute("blockWidget.hide()");
+				if(this.getManagedBean() != null && this.getManagedBean().getStatusDescFromSSM()!=null){
+					SmCommonUtil.redirectToPage(
+							CONTENT_PAGE,
+							w.getMessage(),
+							new String[] { SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null) });
+				}else{
+					SmCommonUtil.redirectToPage(
+							CONTENT_PAGE,
+							w.getMessage(),new String[] {""});
+				}
+								
+			}
+						
 		}
+		if(proceed){
+			if(isHavePendingTaskList() && supplier.getRecordStatusFlg()!=SupplierManagementConst.SUPPLIER_SELF_REQUEST_ADMIN_STATUS){
+				pageRedirect(TASK_LIST_PATH);
+				
+			}else{
+				String path = currentStatusAndPath();
+				log.info("******xhtml*******" + path);
+				pageRedirect(path);
+			}
+		}
+		//END 27264
 		
 	}
 	
