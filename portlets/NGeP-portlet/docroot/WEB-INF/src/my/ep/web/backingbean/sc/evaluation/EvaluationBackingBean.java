@@ -2579,7 +2579,9 @@ public class EvaluationBackingBean extends
 	 */
 	private void financialCheckListStatusCheck() {
 		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
-				.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
+				.equalsIgnoreCase(this.getManagedBean().getCommitteeType()) || 
+					ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
+						.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
 			List<ScQtCheckList> financialcheckList = this.getManagedBean()
 					.getEvaluationStgfinancialCheckList();
 			if (null == financialcheckList || financialcheckList.isEmpty()) {
@@ -6765,6 +6767,7 @@ public class EvaluationBackingBean extends
 								.getEvaluatioStageActiveIndex() < 1) {
 							
 							if(this.getManagedBean().getTabFinancialIndex() == 1 ){
+								financialCheckListStatusCheck();
 								retriveFinancialEvaluationStagePackage();
 								this.getManagedBean().setTabFinancialIndex(2);	
 								outputTab = 2;		
