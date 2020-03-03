@@ -628,6 +628,55 @@ public class QTCloneBackingbean extends
 		
 	}
 	
+	
+	public void refreshQT(){
+		ScQt scQt = new ScQt();
+		scQt.setCircularVer(new CtCircularVer());
+		scQt.setPanel(this.getManagedBean().getPanel());
+		PmOrgProfile pmOrgProfile = getPTJOrgProfileByLoginUser();
+		if (pmOrgProfile != null) {
+			scQt.setPmOrgProfile(pmOrgProfile);
+			scQt.setOwnerOrgProfile(pmOrgProfile);
+			scQt.setOrgProfileId(pmOrgProfile.getOrgProfileId());
+			scQt.setOwnerOrgProfileId(pmOrgProfile.getOrgProfileId());
+			// check whether ptj have the special approval or not for login user
+			PmPtjSpecialApproval ptjSpecialApproval = getPtjSpecialApprovalByOrgProfileId(pmOrgProfile
+					.getOrgProfileId());
+			if (ptjSpecialApproval != null) {
+				scQt.setCircularVer(null);
+				scQt.setPanel(false);
+				scQt.setObtainSpecialApproval(false);
+			}else{
+				scQt.setItemGroup(new CtPanelItemGroup());
+			}
+		}
+		scQt.setProcurementMode(new PmParameter());
+		scQt.setProcurementTypeCatId(new PmParameter());
+		scQt.setFulfilmentType(new PmParameter());
+		scQt.setPmProcurementCategory(new PmParameter());
+		scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
+		
+		PmStatus status = getPmStatusByStatusId(QTStatusConst.QT_PENDING_QT_SUBMISSION);
+		scQt.setQtStatus(status);            
+		/* scQt.setQtNo(dto.getQtNo()); */
+		ScQtStatus qtStatus = new ScQtStatus();
+		qtStatus.setScQt(scQt);
+		qtStatus.setPmStatus(status);
+		qtStatus.setCurrent(Boolean.TRUE);
+		qtStatus.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+		scQt.setCurrentWorkFlowStatus(qtStatus);
+		List<ScQtStatus> qtStatuses = new ArrayList<ScQtStatus>();
+		qtStatuses.add(qtStatus);
+		scQt.setScQtStatus(qtStatuses);
+		ScQtSupplierCriteria supplierCriteria = new ScQtSupplierCriteria();
+		supplierCriteria.setScQt(scQt);
+		scQt.setScQtSupplierCriteria(supplierCriteria);
+		scQt.setContractType(new PmParameter());
+		
+		setUserDetails(scQt);
+		this.getManagedBean().setQt(scQt);
+	}
+	
 	private boolean isCreation(TreeNode[] nodes){
 		List<Long> list=new ArrayList<Long>();
 		for(TreeNode node:nodes){
@@ -650,7 +699,7 @@ public class QTCloneBackingbean extends
 		}
 		try {
 			if(isCreation(nodes)){
-			//	refreshCreation();
+				refreshQT();
 			}
 			QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
