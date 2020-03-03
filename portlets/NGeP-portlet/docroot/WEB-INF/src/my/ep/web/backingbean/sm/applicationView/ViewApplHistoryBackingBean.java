@@ -213,7 +213,10 @@ public class ViewApplHistoryBackingBean extends
 			throw new EpException(SmCommonUtil.getMessage(
 					"lbl.sm.resubmit.delete", null));
 		}
-
+		//#27250 - START SSM CHANGES FOR RESUBMIT
+		resubmitSSM();
+		//#27250 - END SSM CHANGES FOR RESUBMIT
+		
 		// #14832 - To cater if resubmit link already expired and supplier still
 		// in progress (Supplier Temp), so will call alert popup that will
 		// redirect to clone new application and start fresh
