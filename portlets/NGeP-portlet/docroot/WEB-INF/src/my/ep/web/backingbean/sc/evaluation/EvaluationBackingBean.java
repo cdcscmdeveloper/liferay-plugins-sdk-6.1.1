@@ -2042,6 +2042,7 @@ public class EvaluationBackingBean extends
 			else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
 					.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
 				this.getManagedBean().setEvaluatioStageActiveIndex(0);
+				this.getManagedBean().setOneTierFinancialActiveIndex(0);
 			}
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
@@ -2288,6 +2289,13 @@ public class EvaluationBackingBean extends
 					evaluationSo
 							.prepareFinancialEvaluationSummary(summaryReqDTO);
 					getManagedBean().setFinancialSummaryGenerated(true);
+				
+				}else{
+					evaluationStageStatusCheck();
+					evaluationSo
+							.prepareFinancialEvaluationSummary(summaryReqDTO);
+					getManagedBean().setFinancialSummaryGenerated(true);
+				
 				}
 
 			}
@@ -6766,7 +6774,7 @@ public class EvaluationBackingBean extends
 						if (this.getManagedBean()
 								.getEvaluatioStageActiveIndex() < 1) {
 							
-							if(this.getManagedBean().getTabFinancialIndex() == 1 ){
+							if(this.getManagedBean().getTabFinancialIndex() >= 1 ){
 								financialCheckListStatusCheck();
 								retriveFinancialEvaluationStagePackage();
 								this.getManagedBean().setTabFinancialIndex(2);	
@@ -6799,7 +6807,9 @@ public class EvaluationBackingBean extends
 				 * }
 				 */
 				if (this.getManagedBean()
-						.getEvaluatioStageActiveIndex() > 1) {
+						.getEvaluatioStageActiveIndex() >= 1 || ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
+								.equalsIgnoreCase(this.getManagedBean()
+										.getCommitteeType())) {
 					retrieveReportTabDtl();	
 				
 				}
@@ -12687,6 +12697,7 @@ private void retriveCommitteeRemarksList(){
 			else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
 					.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
 				this.getManagedBean().setEvaluatioStageActiveIndex(1);
+				this.getManagedBean().setOneTierFinancialActiveIndex(1);
 			}
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
