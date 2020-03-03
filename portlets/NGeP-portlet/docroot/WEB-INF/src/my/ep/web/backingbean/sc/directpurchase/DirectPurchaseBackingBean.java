@@ -207,7 +207,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 				
 			} 
 			
-			else if (getManagedBean().getSearchFunctionType().equals(ParameterConst.ORG_TYPE_G2G_ROLECODE)){ //ORG_TYPE_G2G_ROLECODE
+			else if (getManagedBean().getSearchFunctionType() != null && getManagedBean().getSearchFunctionType().equals(ParameterConst.ORG_TYPE_G2G_ROLECODE)){ //ORG_TYPE_G2G_ROLECODE
 				docTypeList.add(ParameterConst.DOCTYPE_SIMPLE_QUOTE);
 				docTypeList.add(ParameterConst.DOCTYPE_PURCHASE_INQUIRY);
 				
