@@ -27,21 +27,46 @@
 				<td style="vertical-align: top;">
 					<p:outputLabel rendered="#{viewSuppProfileBackingBean.managedBean.noDisciplinary}"
 						value="#{lbl['lbl.sm.no.available']}" styleClass="outputLabel-view"/>
+					<p:outputLabel rendered="#{viewSuppProfileBackingBean.managedBean.warning}" styleClass="outputLabel-view">
+						<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.warning']}"/>
+						<h:outputText value="," rendered="#{viewSuppProfileBackingBean.managedBean.warning and (viewSuppProfileBackingBean.managedBean.cancelCategoryCode || 
+						viewSuppProfileBackingBean.managedBean.suspendRegistration || viewSuppProfileBackingBean.managedBean.cancelRegistration || viewSuppProfileBackingBean.managedBean.blacklistOwnerOrDirector ||
+						viewSuppProfileBackingBean.managedBean.bumiputeraStatusCancel || viewSuppProfileBackingBean.managedBean.manufacturerStatusCancel)}"/>
+					</p:outputLabel>
 					
-					<p:outputLabel rendered="#{viewSuppProfileBackingBean.managedBean.warning}" styleClass="outputLabel-view"
-						value="#{lbl['lbl.sm.disciplinary.jktt.warning']}"/>
-					<p:outputLabel rendered="#{viewSuppProfileBackingBean.managedBean.cancelCategoryCode}" styleClass="outputLabel-view"
-						value="#{lbl['lbl.sm.disciplinary.jktt.cancel.cat.code']}"/>
-					<p:outputLabel rendered="#{viewSuppProfileBackingBean.managedBean.suspendRegistration}" styleClass="outputLabel-view"
-						value="#{lbl['lbl.sm.disciplinary.jktt.suspend.registration']}"/>
-					<p:outputLabel rendered="#{viewSuppProfileBackingBean.managedBean.cancelRegistration}" styleClass="outputLabel-view"
-						value="#{lbl['lbl.sm.disciplinary.jktt.cancel.registration']}"/>
-					<p:outputLabel rendered="#{viewSuppProfileBackingBean.managedBean.blacklistOwnerOrDirector}" styleClass="outputLabel-view"
-						value="#{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']}"/>
-					<p:outputLabel rendered="#{viewSuppProfileBackingBean.managedBean.bumiputeraStatusCancel}" styleClass="outputLabel-view"
-						value="#{lbl['lbl.sm.disciplinary.jktt.cancel.of.bumiputera']}"/>
-					<p:outputLabel rendered="#{viewSuppProfileBackingBean.managedBean.manufacturerStatusCancel}" styleClass="outputLabel-view"
-						value="#{lbl['lbl.sm.disciplinary.jktt.cancel.of.manufacturer']}"/>
+					<p:outputLabel rendered="#{viewSuppProfileBackingBean.managedBean.cancelCategoryCode}" styleClass="outputLabel-view">
+						<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.cancel.cat.code']}"/>
+						<h:outputText value="," rendered="#{viewSuppProfileBackingBean.managedBean.cancelCategoryCode and (viewSuppProfileBackingBean.managedBean.suspendRegistration || viewSuppProfileBackingBean.managedBean.cancelRegistration 
+						|| viewSuppProfileBackingBean.managedBean.blacklistOwnerOrDirector ||
+						viewSuppProfileBackingBean.managedBean.bumiputeraStatusCancel || viewSuppProfileBackingBean.managedBean.manufacturerStatusCancel)}"/>
+					</p:outputLabel>
+					
+					<p:outputLabel rendered="#{viewSuppProfileBackingBean.managedBean.suspendRegistration}" styleClass="outputLabel-view">
+						<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.suspend.registration']}"/>
+						<h:outputText value="," rendered="#{viewSuppProfileBackingBean.managedBean.suspendRegistration and (viewSuppProfileBackingBean.managedBean.cancelRegistration || viewSuppProfileBackingBean.managedBean.blacklistOwnerOrDirector ||
+						viewSuppProfileBackingBean.managedBean.bumiputeraStatusCancel || viewSuppProfileBackingBean.managedBean.manufacturerStatusCancel)}"/>
+					</p:outputLabel>
+					
+					<p:outputLabel rendered="#{viewSuppProfileBackingBean.managedBean.cancelRegistration}" styleClass="outputLabel-view">
+						<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.cancel.registration']}"/>
+						<h:outputText value="," rendered="#{viewSuppProfileBackingBean.managedBean.cancelRegistration and (viewSuppProfileBackingBean.managedBean.blacklistOwnerOrDirector ||
+						viewSuppProfileBackingBean.managedBean.bumiputeraStatusCancel || viewSuppProfileBackingBean.managedBean.manufacturerStatusCancel)}"/>
+					</p:outputLabel>
+					
+					<p:outputLabel rendered="#{viewSuppProfileBackingBean.managedBean.blacklistOwnerOrDirector}" styleClass="outputLabel-view">
+						<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']}"/>
+						<h:outputText value="," rendered="#{viewSuppProfileBackingBean.managedBean.blacklistOwnerOrDirector and (viewSuppProfileBackingBean.managedBean.bumiputeraStatusCancel 
+						|| viewSuppProfileBackingBean.managedBean.manufacturerStatusCancel)}"/>
+					</p:outputLabel>
+					
+					<p:outputLabel rendered="#{viewSuppProfileBackingBean.managedBean.bumiputeraStatusCancel}" styleClass="outputLabel-view">
+						<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.cancel.of.bumiputera']}"/>
+						<h:outputText value="," rendered="#{viewSuppProfileBackingBean.managedBean.bumiputeraStatusCancel and viewSuppProfileBackingBean.managedBean.manufacturerStatusCancel}"/>
+					</p:outputLabel>
+					
+					<p:outputLabel rendered="#{viewSuppProfileBackingBean.managedBean.manufacturerStatusCancel}" styleClass="outputLabel-view">
+						<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.cancel.of.manufacturer']}"/>
+					</p:outputLabel>
 				</td>
 			</tr>
 			<tr>
