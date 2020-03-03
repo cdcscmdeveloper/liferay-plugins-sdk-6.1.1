@@ -7,6 +7,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
 
 	<ui:define name="contentSection">
 
@@ -62,7 +63,7 @@
 				</h:panelGroup>
 				<table>
 				<!-- Redmine 25396: remove duplication option view by adding new drop down field -->  
-				<tr>Aa
+				<tr>
 					<td width="22%"><p:outputLabel
 							value="#{lbl['lbl.sc.document.viewas']}" rendered="#{directPurchaseBackingBean.showFunctionType()}" /></td>
 					<td><p:selectOneMenu id="viewAs" style="width: 250px;"
@@ -71,10 +72,7 @@
 							<f:selectItems
 								value="#{directPurchaseBackingBean.getFunctionType()}" />
 							<p:ajax event="change" update="searchPanel" listener="#{directPurchaseBackingBean.preRenderDirectPurchaseSearch}" />
-						</p:selectOneMenu></td>
-					<td><p:graphicImage id="viewAs" library="ep/images/design" name="tooltips.png" value="/css/images/design/tooltips.png" />
-						<p:tooltip for="viewAs" ><p:outputLabel escape="false" value="#{lbl['lbl.tooltip.directpurchase.search.view.as']}" /></p:tooltip>
-					</td>	
+						</p:selectOneMenu><ac:iconTooltip value="#{lbl['lbl.tooltip.directpurchase.search.view.as']}"/></td>	
 				</tr>
 				<!-- end 25396: -->
 				<tr>
