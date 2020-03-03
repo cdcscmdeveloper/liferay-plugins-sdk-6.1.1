@@ -257,12 +257,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				    	   || requestNote.getCurrentStatus().getPmStatus().getStatusId().equals(DPStatusConstants.RN_PENDING_REVISION) 
 				    	   || requestNote.getCurrentStatus().getPmStatus().getStatusId().equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL)
 				    	   || requestNote.getCurrentStatus().getPmStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)){
-					Date today  = DateUtils.getCurrentDateWithoutTime();
-					Date ExpDate = DateUtils.addDays(requestNote.getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault().getChangedDate(),requestNote.getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault().getPidValidDays() );
-					
-					if(ExpDate.before(today)){
-						requestNote.getCurrentStatus().getPmStatus().setStatusId(DPStatusConstants.PID_EXPIRED);							
-					} 
+					//12183 - start
+					if(requestNote.getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault() != null) {
+						Date today  = DateUtils.getCurrentDateWithoutTime();
+						Date ExpDate = DateUtils.addDays(requestNote.getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault().getChangedDate(),requestNote.getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault().getPidValidDays() );
+						
+						if(ExpDate.before(today)){
+							requestNote.getCurrentStatus().getPmStatus().setStatusId(DPStatusConstants.PID_EXPIRED);							
+						}
+					}
+					//12183 - end
 				}
 			
 				getCurrentStatus(requestNote.getCurrentStatus().getPmStatus());	
