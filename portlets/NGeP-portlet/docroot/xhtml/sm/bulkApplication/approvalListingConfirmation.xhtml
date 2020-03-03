@@ -24,19 +24,19 @@
 				<ac:paginator for="claimTaskListId" />
 
 				<p:ajax event="toggleSelect" 
-					update=":#{p:component('resultPanelId')},@([id$=approveBtnId]),:#{p:component('cancelBtnId')},:#{p:component('rejectBtnId')}"  
+					update=":#{p:component('approveBtnId')},:#{p:component('cancelBtnId')},:#{p:component('rejectBtnId')}"  
 					process="@this"/>
 				<p:ajax event="rowSelect" 
-					update=":#{p:component('resultPanelId')},@([id$=approveBtnId]),:#{p:component('cancelBtnId')},:#{p:component('rejectBtnId')}" 
+					update=":#{p:component('approveBtnId')},:#{p:component('cancelBtnId')},:#{p:component('rejectBtnId')}" 
 					process="@this" />
 				<p:ajax event="rowSelectCheckbox" 
-					update=":#{p:component('resultPanelId')},@([id$=approveBtnId]),:#{p:component('cancelBtnId')},:#{p:component('rejectBtnId')}" 
+					update=":#{p:component('approveBtnId')},:#{p:component('cancelBtnId')},:#{p:component('rejectBtnId')}" 
 					process="@this" />
 				<p:ajax event="rowUnselectCheckbox" 
-					update=":#{p:component('resultPanelId')},@([id$=approveBtnId]),:#{p:component('cancelBtnId')},:#{p:component('rejectBtnId')}" 
+					update=":#{p:component('approveBtnId')},:#{p:component('cancelBtnId')},:#{p:component('rejectBtnId')}" 
 					process="@this" />
 				<p:ajax event="rowUnselect" 
-					update=":#{p:component('resultPanelId')},@([id$=approveBtnId]),:#{p:component('cancelBtnId')},:#{p:component('rejectBtnId')}" 
+					update=":#{p:component('approveBtnId')},:#{p:component('cancelBtnId')},:#{p:component('rejectBtnId')}" 
 					process="@this" />
 					
 				<p:column selectionMode="multiple" style="width:2% !important;vertical-align:top;" rendered="#{not empty bulkApplicationBackingBean.managedBean.claimTasks}"
