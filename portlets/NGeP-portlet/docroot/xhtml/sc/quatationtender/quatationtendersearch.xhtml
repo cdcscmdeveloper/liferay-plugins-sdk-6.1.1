@@ -105,11 +105,16 @@
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
-
-					<p:column headerText="#{lbl['lbl.sc.status']}" style="width:200px;">
+					<ui:remove>
+						Bug #27412 START
+					</ui:remove>
+					<p:column headerText="#{lbl['lbl.sc.status']}" style="width:200px;" rendered="#{!qTDetailBB.isMofSupplier()}">
 						<h:outputText value="#{qTDetailBB.getStatusDescById(scQt.qtStatus.statusId)}" rendered="#{ParameterConst.doctypeSupplierFinalization ne qTDetailBB.managedBean.qtnTenderSearchBean.docType}"/>
 						<h:outputText value="#{scQt.statusDesc}" rendered="#{ParameterConst.doctypeSupplierFinalization eq qTDetailBB.managedBean.qtnTenderSearchBean.docType}"/>
 					</p:column>
+					<ui:remove>
+						Bug #27412 END
+					</ui:remove>
 					
 					
 					
@@ -244,8 +249,10 @@
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
-			
-					<p:column headerText="#{lbl['lbl.sc.status']}" style="white-space: normal;word-wrap: break-word; width:100px;">
+					<ui:remove>
+						Bug #27412 START
+					</ui:remove>
+					<p:column headerText="#{lbl['lbl.sc.status']}" rendered="#{!qTDetailBB.isMofSupplier()}" style="white-space: normal;word-wrap: break-word; width:100px;">
 						<c:choose>
 						<c:when test="#{listType eq 'loiList'}">
 							<h:outputText value="#{listItem.scLoiWorkflowStatusesSize gt 0?qTDetailBB.getStatusDescById(qTDetailBB.getStatusIdToDisplay(listItem.scLoiWorkFlowStatuses)):''}"/>
@@ -255,7 +262,10 @@
 						</c:when>
 						</c:choose>
 					</p:column>
-			
+					<ui:remove>
+						Bug #27412 END
+					</ui:remove>
+					<!-- Enhancement #21694 - LOA Cancellation START-->
 					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:6%;text-align: center;">
 						<p:menuButton value="#{lbl['lbl.btn.option']}">
 							<p:menuitem value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"

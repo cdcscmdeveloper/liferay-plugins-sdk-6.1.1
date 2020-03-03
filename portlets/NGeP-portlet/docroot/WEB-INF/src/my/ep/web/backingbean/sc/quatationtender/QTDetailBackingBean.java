@@ -1121,13 +1121,22 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					otherArgs.put(MapKeyEnum.loiLoaSelected, scLoaForQt);
 					scQt = scLoaForQt.getScLoiLoa()!=null?scLoaForQt.getScLoiLoa().getScQt():null;
 					QtLOABackingBean bb = new QtLOABackingBean();
-					if(ParameterConst.DOCTYPE_DIRECT_NEGO.equalsIgnoreCase(scLoaForQt.getScLoiLoa().getDocType())){
-						return viewDirectLOADetails(scQt, previousPageUrl);
-					}
-					else{
-						otherArgs.put(MapKeyEnum.showTrackingDiary, Boolean.TRUE);
-						bb.preRenderViewForQtMaintenance(scQt, previousPageUrl, otherArgs);
-						return null;
+					LOADetailBackingBean ldb = new LOADetailBackingBean();
+					if(isMofSupplier()){
+						/* Bug #27412 START */
+						//return viewDirectLOADetails(scQt, previousPageUrl);
+						return ldb.retrieveSupplierLOADtl(
+								scLoaForQt.getScLoiLoa().getScQt().getQtId(), scLoaForQt.getLoaId(), previousPageUrl, true);
+						/* Bug #27412 END */
+					}else{
+						if(ParameterConst.DOCTYPE_DIRECT_NEGO.equalsIgnoreCase(scLoaForQt.getScLoiLoa().getDocType())){
+							return viewDirectLOADetails(scQt, previousPageUrl);
+						}
+						else{
+							otherArgs.put(MapKeyEnum.showTrackingDiary, Boolean.TRUE);
+							bb.preRenderViewForQtMaintenance(scQt, previousPageUrl, otherArgs);
+							return null;
+						}
 					}
 				}
 			}
@@ -6037,7 +6046,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		return facesScopes.hasRoleUser(RoleCode.PBB_SECRETARY.value());
 	}
 	
-	private boolean isMofSupplier() {
+	/* Bug #27412 START - CHANGE PRIVATE TO PUBLIC TO ALLOWED METHOD CALLED FROM FRONT*/
+	public boolean isMofSupplier() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
 				|| facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value());
