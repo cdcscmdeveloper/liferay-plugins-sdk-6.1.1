@@ -136,6 +136,7 @@ public class SmReportConst implements Serializable {
 	public static final String SM_APPL_CLIENT_CHARTER_K = "SM_085";
 	public static final String SM_APPL_CLIENT_CHARTER_J = "SM_086";
 	public static final String SM_REG_COMPANY_IN_BASIC_G2G = "SM_087";
+	public static final String SM_SUPPLIER_PERFORMANCE_V_RPT_VAL = "SM_091";
 
 	// Screen fields constants
 	public static final String SM_ZONE_SEMENANJUNG = "Semenanjung";
@@ -193,6 +194,12 @@ public class SmReportConst implements Serializable {
 	
 	public static final String REG_ACC_TYPE_BASIC = "B";
 	public static final String REG_ACC_TYPE_G2G = "G";
+	
+	// #27199 - start
+	public static final String SM_SUPPLIER_PERFORMANCE_COMP_1 = "PHARMANIAGA LOGISTICS SDN BHD";
+	public static final String SM_SUPPLIER_PERFORMANCE_COMP_2 = "CCM PHARMACEUTICALS SDN BHD";
+	public static final String SM_SUPPLIER_PERFORMANCE_COMP_3 = "MS ALI ENTERPRISE";
+	// #27199 - end
 	
 	public String getSM_RESPONSE_REPORT() {
 		return SM_RESPONSE_REPORT;
@@ -632,5 +639,9 @@ public class SmReportConst implements Serializable {
 
 	public String getRegAccTypeG2g() {
 		return REG_ACC_TYPE_G2G;
+	}	
+	
+	public static String getSmSupplierPerformanceVRptVal() {
+		return SM_SUPPLIER_PERFORMANCE_V_RPT_VAL;
 	}
 }
