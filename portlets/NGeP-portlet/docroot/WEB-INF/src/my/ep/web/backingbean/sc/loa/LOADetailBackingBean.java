@@ -2022,23 +2022,41 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		JadualHargaItemBean jadualHargaItemBean = new JadualHargaItemBean();
 		List<ItemBean> productItemBeans = new ArrayList<ItemBean>();
 		List<ItemBean> serviceItemBeans = new ArrayList<ItemBean>();
+		ItemBean itembean= new ItemBean();
 		ItemBean jadualHarga = null;
 		String itemType = null;
+		String dafaltValue = "T/B";
+		if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
+			dafaltValue = "T/B";
+		}
+		
 
 		for (ScLoiLoaItem item : scLoa.getScLoiLoaItems()) {
-			jadualHarga = mappingJadualHarga(item);
+			
 			if(null != item.getScRequestItem().getItemType()){
 				itemType = item.getScRequestItem().getItemType().getParameterCode();
+				//log.info("Item Type --->"+itemType );
 				if (ParameterConst.ITEM_TYPE_PRODUCT.equals(itemType)) {
+					jadualHarga = mappingJadualHarga(item);
 					productItemBeans.add(jadualHarga);
 				} else if (itemType.equals(ParameterConst.ITEM_TYPE_SERVICE)) {
-					serviceItemBeans.add(jadualHarga);
+					//serviceItemBeans.add(jadualHarga);
+					TplSpecQuestion tplSpecQuestion=item.getScRequestItem().getTplSpecQuestion();
+					if(tplSpecQuestion.getQuestionType().equals("I"))
+					{
+						jadualHarga = mappingJadualHarga(item);
+				
+						serviceItemBeans.add(jadualHarga);
+					}
+					
 				}
 			}
 		}
 		jadualHargaItemBean.setProductItemBeans(productItemBeans);
 		jadualHargaItemBean.setServiceItemBeans(serviceItemBeans);
 		context.put("jadualHargaItemBean", jadualHargaItemBean);
+		context.put("serviceScope", dafaltValue);
+		context.put("itemType", itemType);
 	}
 
 	public void formSpecification(VelocityContext context, ScLoa scLoa)
@@ -2447,6 +2465,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * @param scLoa the sc loa
 	 * @throws Exception the exception
 	 */
+	@SuppressWarnings("unused")
 	private void generateNegotiationResultPdf(ScAttachment attachment) throws Exception {
 		attachment.setFileName("Negotiation_Result.pdf");
 		ScLoa scLoa = getManagedBean().getScLoa();
@@ -4449,6 +4468,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					: item.getTplSpecTierQty().getToQty().toString());
 		}
 
+		TplSpecQuestion tplSpecQuestion=item.getScRequestItem().getTplSpecQuestion();
+		itemBean.setItem(item.getScRequestItem().getItemName());
+		itemBean.setZoneName(item.getTplSpecZoneDtl() != null ? item.getTplSpecZoneDtl().getZoneName() : "");
+		itemBean.setClDeliveryTerm(tplSpecQuestion.getClDeliveryTerm().toString());
+		itemBean.setClDurationMonth(tplSpecQuestion.getClDurationMonth().toString());
+		
+		/*log.info("Item Name --->"+item.getScRequestItem().getItemName() );
+		log.info("Zone Name --->"+item.getTplSpecZoneDtl() != null ? item.getTplSpecZoneDtl().getZoneName() : "" );
+		log.info("Delivery Term --->"+tplSpecQuestion.getClDeliveryTerm().toString() );
+		log.info("Duration month --->"+tplSpecQuestion.getClDurationMonth().toString());*/
 		/*BigDecimal unitPrice = item.getUnitPrice().setScale(2, BigDecimal.ROUND_HALF_EVEN);
 		jadualHarga.setUnitPrice(unitPrice.toString());
 		jadualHarga.setFreqUom(null == item.getScRequestItem().getTplSpecQuestion()
@@ -4472,7 +4501,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				.toString());*/
 		itemBean.setQuantity(null == item.getQty()? "" : item.getQty()
 				.toString());
-
+		//itemBean.set
 		/*BigDecimal  totalAmount = BigDecimal.valueOf(0d);
 		BigDecimal subTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(item.getScRequestItem().getTplSpecQuestion(), 
 				item.getUnitPrice(), item.getQty());
