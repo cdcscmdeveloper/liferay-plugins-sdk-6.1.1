@@ -1223,17 +1223,19 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	//  Redmine 25396: remove duplication option view by adding new drop down field
 		
 			public SelectItem[] getFunctionType() {
+				
 				List<String> typeList = new ArrayList<String>();
 				typeList.add(ParameterConst.ORG_TYPE_PTJ);
-				// typeList.add(ParameterConst.ORG_TYPE_SUPPLIER); 
 				typeList.add(ParameterConst.ORG_TYPE_G2G_ROLECODE);
+				
+				ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 
-				SearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterCode",
-								SearchOperator.OPERATOR_IN.value(), typeList));
+								SearchOperator.OPERATOR_IN.value(),typeList));
+
+				return super.getDropdownValuesBySearchBean(ParameterTypeConst.ORGANISATION_TYPES, searchBean);
 				
 				
-				return getDropdownCodeValuesBySearchBean(ParameterTypeConst.ORGANISATION_TYPES, searchBean);
 			}
 			
 			
@@ -1249,10 +1251,6 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 					}
 					return true;
 				} else {
-					/* if(hasSupplierRole()) {
-						getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_SUPPLIER);
-						
-					} else {*/
 						getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_PTJ);
 					
 					return false;
