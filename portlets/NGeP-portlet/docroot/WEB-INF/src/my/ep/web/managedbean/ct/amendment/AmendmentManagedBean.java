@@ -121,6 +121,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private ScLoaReport selectedScLoaReports;
 	private PmDigiSign pmDigiSign;
 	private SelectItem[] secretaryList;
+	private List<PmUser> contractAdminlist;
 	
 	private String contractId;
 	private String itemname;
@@ -1361,6 +1362,19 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	public void setJustification(String justification) {
 		this.justification = justification;
 	}
+
+	//Enhancement #26186 end
+	
+	//#25956 Start
+	public List<PmUser> getContractAdminlist() {
+		return contractAdminlist;
+	}
+	public void setContractAdminlist(List<PmUser> contractAdminlist) {
+		this.contractAdminlist = contractAdminlist;
+	}
+	//#25956 End
+
+
 	//Enhancement #26186 end
 	//26753 - start
 	/**
@@ -1415,4 +1429,5 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	}	
 	//26753 - end
 	
+
 }
