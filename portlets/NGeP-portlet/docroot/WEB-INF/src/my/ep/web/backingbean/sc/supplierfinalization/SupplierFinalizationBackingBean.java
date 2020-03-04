@@ -822,11 +822,6 @@ public class SupplierFinalizationBackingBean extends
 			
 			this.getManagedBean().setCommitteeTabLabel(
 					getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE, committeeType));
-			//19287 #114
-			if(this.getManagedBean().getScQtFinalization()==null){
-				this.getManagedBean().setScQtFinalization(this.getCurrentFinalizationMethod());
-			}
-			//19287 #114
 		} finally {
 			meetingSO = null;
 		}
@@ -7635,6 +7630,9 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		return null;
 	}
 	public boolean getEndorsementType(ScQtCommitteeActivity act){
+		if(this.getManagedBean().getScQtFinalization()==null){
+			this.getManagedBean().setScQtFinalization(this.getCurrentFinalizationMethod());
+		}
 		if(this.getManagedBean().getScQtFinalization()!=null){
 			String method = this.getManagedBean().getScQtFinalization().getFinalizationMethod().getParameterCode();
 			if(method.equalsIgnoreCase("L")){

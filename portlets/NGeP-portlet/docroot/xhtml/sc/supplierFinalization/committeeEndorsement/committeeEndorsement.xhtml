@@ -8,7 +8,6 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
 	<p:panel header="#{lbl['lbl.sc.finalization.endorsement.status']}" toggleable="true">
-		<ui:param name="sfMethod" value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.finalizationMethod.parameterCode}"></ui:param>
 		<p:dataTable id="committeeEndorsement" var="endorsement"
 			value="#{suppFinalizationBackingBean.managedBean.committeeEndorsementList}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
