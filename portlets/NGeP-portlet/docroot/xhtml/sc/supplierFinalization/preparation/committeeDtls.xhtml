@@ -57,13 +57,14 @@
 			<p:column headerText="#{lbl['lbl.sc.attendance']}"
 					  style="width:10%;text-align:center;">
 				<p:selectBooleanCheckbox value="#{committeeDtl.attended}"
-					disabled="#{!isSecretaryUser}"  />
+					disabled="#{!isSecretaryUser or suppFinalizationBackingBean.managedBean.readOnly}"  />
 			</p:column>
 		</p:dataTable>
 	</p:panel>
 	
 	<ac:scRemarkAndAttachment
 		remarkList="#{suppFinalizationBackingBean.managedBean.committeeRemarkList}"
+		readonly="#{suppFinalizationBackingBean.managedBean.readOnly}"
 		showAttachment="false" />
 
 </ui:composition>
