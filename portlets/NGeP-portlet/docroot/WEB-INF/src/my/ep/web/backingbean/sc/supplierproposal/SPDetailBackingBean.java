@@ -1095,12 +1095,11 @@ public class SPDetailBackingBean extends
 							List<TplSpecAnswer> toDeleteZoneAnswers = new ArrayList<TplSpecAnswer>();	
 							for (TplSpecAnswer specAnswer : templateSpecBean
 									.getSpecAnswerList()) {
-//farid #21695 start to add item which is has 0 quantity and 0 price								
+							
 								if (specAnswer.getRatePerUom() != null
-										&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) > 0
-										|| specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO)== 0 && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0) {
+										&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) > 0) {
 									answers.add(specAnswer);
-//farid #21695 end									
+								
 								}else{
 									specAnswer.setDeleted(true);
 									toDeleteZoneAnswers.add(specAnswer);
@@ -1108,7 +1107,14 @@ public class SPDetailBackingBean extends
 							}
 							if(!toDeleteZoneAnswers.isEmpty() && (toDeleteZoneAnswers.size() != templateSpecBean
 									.getSpecAnswerList().size())){
-								throw new EpException(MessageConst.ERROR_760464);
+								for(TplSpecAnswer answerNullPrice : toDeleteZoneAnswers){
+//farid #21695 START add filter allow 0 price 0 qty proposal
+									if(answerNullPrice.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 ){
+//farid #21695 END
+										throw new EpException(MessageConst.ERROR_760464);
+									}
+								}
+								
 							} else if (!toDeleteZoneAnswers.isEmpty()) {
 								Set<TplSpecSuppAnswer> zoneSpecSuppAnswersSet = new HashSet<TplSpecSuppAnswer>();
 								for(TplSpecAnswer specAnswer :toDeleteZoneAnswers){
@@ -2311,7 +2317,8 @@ public class SPDetailBackingBean extends
 		this.getManagedBean().setDocDefinitionKey(definationType);
 		this.getManagedBean().setTechnicalQtProposalChecklist(scQtProposalChecklist);
 		this.getManagedBean().setTechnicalQtChecklist(scQtProposalChecklist.getScQtCheckList());
-		
+		this.getManagedBean().getTemplateSpecBean().getSpecAnswerList();
+
 		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION.equalsIgnoreCase(definationType)) {
 
 			pageUrl = retrieveTemplateSpecDtls(scQtProposalChecklist);
