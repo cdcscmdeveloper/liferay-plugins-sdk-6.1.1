@@ -68,7 +68,8 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 
 	private SearchFilterBean codeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 	private SearchFilterBean titleFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
-	private SearchFilterBean titleEngFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());	private SearchFilterBean levelFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+	private SearchFilterBean titleEngFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());	
+	private SearchFilterBean levelFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 	private SearchFilterBean statusFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 	private SearchFilterBean nameFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 	private SearchFilterBean statusExtensionFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
@@ -100,12 +101,6 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 	
 
 	public CodificationMaintenanceBackingBean() { 
-		
-		
-		if(this.getManagedBean().isRefreshPageNoFlag()){
-			System.out.println("Reload Page");
-			this.initRefreshPageNoFlag();
-		}
 	}
 		/**
 		 * This method is used to reset the value of UNSPSC Search
@@ -399,8 +394,7 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 		this.statusFilterBean = statusFilterBean;
 	}
 
-	public String backToPrevPortal() {
-		this.initRefreshPageNoFlag();
+	public String backToPrevPortal(){
 		return "codificationMaintenance";
 	}
 	
@@ -1006,6 +1000,7 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 
 				CodificationReqDTO reqDTO = new CodificationReqDTO();
 				
+				System.out.println("statusfilter " + getManagedBean().getstatus());
 				
 				if (getManagedBean().getstatus() != null) {
 					log.info("*********statusFilterBean***********" + getManagedBean().getstatus());
@@ -1013,8 +1008,7 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 					statusExtensionFilterBean.setSearchValue(getManagedBean().getstatus());
 					searchBean.getDataFilterBeans().add(statusExtensionFilterBean);
 				}
-				
-
+	
 				System.out.println("this.getSortField():" + this.getSortField());
 				if (getManagedBean().getData() == "t"){
 				if (this.getSortField() == null) {
@@ -1022,32 +1016,36 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 
 					searchBean.getSortColumns().add(orderBean);
 				}
-			}else if (getManagedBean().getData() == "b"){
+				
+			}else if (getManagedBean().getData() == "b"){				
 				if (this.getSortField() == null) {
 					SearchOrderBean orderBean = new SearchOrderBean("brand_code", true);
 
 					searchBean.getSortColumns().add(orderBean);
 				}
+				
 			}else if (getManagedBean().getData() == "m"){
 				if (this.getSortField() == null) {
 					SearchOrderBean orderBean = new SearchOrderBean("measurement_code", true);
 
 					searchBean.getSortColumns().add(orderBean);
 				}
+				
 			}else if (getManagedBean().getData() == "c"){
 				if (this.getSortField() == null) {
 					SearchOrderBean orderBean = new SearchOrderBean("color_code", true);
 
 					searchBean.getSortColumns().add(orderBean);
 				}
+				
 			}
 				
+			
 
 				reqDTO.setSsearchBeanTypeearchBeanType(searchBean);
 				reqDTO.setUnspscCode(getManagedBean().getSelectedUNSPSCObj().getUnspscCode());
 				reqDTO.setExtensionName(getManagedBean().getExtension());
 				reqDTO.setExtension(getManagedBean().getData());
-				
 				
 
 				resDTO = codificationSO.searchUnspscObj(reqDTO);
@@ -1232,9 +1230,10 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 			
 			SelectItem[] items = new SelectItem[3];
 			items[0] = new SelectItem(bb.RECORD_STATUS_NULL,
-					ResourceBundleUtils.getMessage("lbl.cm.selectOne",
+					ResourceBundleUtils.getMessage("lbl.txt.select",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale()));
+		
 			items[1] = new SelectItem(DbValueConst.RECORD_STATUS_ACTIVE,
 					ResourceBundleUtils.getMessage("lbl.cm.active",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -1482,7 +1481,7 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 		
 		public void initRefreshPageNoFlag(){
 			
-			if(this.getManagedBean().isRefreshPageNoFlag()== false){
+			if(this.getManagedBean().isRefreshPageNoFlag()){
 				System.out.println("start ReloadPage");
 				this.getManagedBean().setRefreshPageNoFlag(false);
 				clearPopup();
@@ -1504,12 +1503,9 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 		   log.info("reset Extension Data");
 		
 		    this.getManagedBean().setExtension(null);
-		    this.getManagedBean().setStatus(
-					ResourceBundleUtils.getMessage("lbl.cm.selectOne",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale()));
+		    this.getManagedBean().setStatus("null");
 			this.getManagedBean().setData("null");
-			this.getExtensionAttributeSearchData().resetData();
+			this.getExtensionAttributeSearchData().reloadData();
 			this.getManagedBean().setDisableSelectBtn(true);
 			
 		}
