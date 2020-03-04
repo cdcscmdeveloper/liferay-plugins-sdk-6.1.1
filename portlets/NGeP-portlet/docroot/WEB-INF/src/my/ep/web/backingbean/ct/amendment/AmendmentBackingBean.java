@@ -5786,6 +5786,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			FacesContext fc = FacesContext.getCurrentInstance();
 			ctDT.getManagedBean().setGotoPreviewPage(fc.getViewRoot().getViewId()+"?faces-redirect=true");
 			ctDT.getManagedBean().setBackPageAmendment(true);
+			//26753 - start
+			getManagedBean().setUpdateCommittee(Boolean.FALSE);
+			//26753 - end
 			return CONTRACT_COMMON_PAGE;
 		} finally {
 			ctDT = null;
@@ -6203,7 +6206,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 			}
 			
-			List<CtCommitteeMember> committeMember = new ArrayList<CtCommitteeMember>();
 			for (Map.Entry<Long, CtCommitteeMember> entry : duplicatePmUserMap.entrySet()) {
 				boolean chkDataDuplication = false;
 				for (CtCommitteeMember ctMember : getManagedBean().getUpdatedCommitteeMembers()) {
@@ -6211,25 +6213,20 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						chkDataDuplication = true;
 						if(ContractConst.REMOVE_FROM_ATTENDANCE_LIST.equalsIgnoreCase(ctMember.getUpdateType()) || ContractConst.REMOVE_NEW_MEMBER_FROM_ATTENDANCE_LIST.equalsIgnoreCase(ctMember.getUpdateType())) {
 							getManagedBean().getFilteredUpdatedCommitteeMembers().add(ctMember);
-							System.out.println("Add old member: " + ctMember.getPmUser().getUserName());
-							System.out.println("Add old member update type: " + ctMember.getUpdateType());
 							if(ContractConst.REMOVE_FROM_ATTENDANCE_LIST.equalsIgnoreCase(ctMember.getUpdateType())) {
 								ctMember.setUpdateType(null);
 							} else {
 								ctMember.setUpdateType(ContractConst.ADD_NEW_MEMBER);
 							}
-							System.out.println("Add old member new update type: " + ctMember.getUpdateType());
 						}
 						break;
 					}
 				}
-				if (!chkDataDuplication) {
-					//committeMember.add(entry.getValue());	
+				if (!chkDataDuplication) {	
 					entry.getValue().setUpdateType(ContractConst.ADD_NEW_MEMBER);
 					getManagedBean().getUpdatedCommitteeMembers().add(entry.getValue());
 				}	    
 			}
-			//getManagedBean().getUpdatedCommitteeMembers().addAll(committeMember);
 		}   
 		
 		
@@ -6371,7 +6368,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					isNew = false;
 				} else if(ContractConst.REMOVE_NEW_MEMBER_FROM_ATTENDANCE_LIST.equalsIgnoreCase(ctUpdatedMember.getUpdateType())){
 					isNew = false;
-					System.out.println("Remove new");
 				}
 				if(isNew) {
 					if(ctUpdatedMember.getMemberRole().getParameterId().equals(memberParameter.getParameterId())) {
@@ -6391,7 +6387,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 				
 			}
-			System.out.println("Count : " + countModified);
 			if(countModified > 0) {
 				getManagedBean().setHasChanges(Boolean.TRUE);
 			} else {
@@ -6403,14 +6398,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		public void validateLatestCommitteeMembers() {			
 			List<CtCommitteeMember> outer = getManagedBean().getUpdatedCommitteeMembers();
 			List<CtCommitteeMember> inner = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers();
-			int originalSize = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().size();
-			int updatedSize = getManagedBean().getUpdatedCommitteeMembers().size();
 			boolean isUpdateNeeded = false;
 			boolean isFound = false;
 			
-			for(CtCommitteeMember ctUpdatedMember: outer) {		
-				System.out.println("Member: " + ctUpdatedMember.getPmUser().getUserName());
-				System.out.println("Update type: " + ctUpdatedMember.getUpdateType());
+			for(CtCommitteeMember ctUpdatedMember: outer) {
 				for(CtCommitteeMember originalCtMember: inner) {
 					if(ctUpdatedMember.getPmUser().getUserId().equals(originalCtMember.getPmUser().getUserId())) {
 						if(!ContractConst.REMOVE_FROM_ATTENDANCE_LIST.equalsIgnoreCase(ctUpdatedMember.getUpdateType())) {
@@ -6428,9 +6419,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 									isUpdateNeeded = true;
 								}					
 							}
-
-							System.out.println("Is found: "+isFound);
-							System.out.println("Is update: "+isUpdateNeeded);
 							break;
 						} else {
 							isUpdateNeeded = true;
@@ -6448,8 +6436,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}										
 			}
 
-			System.out.println("Is found: "+isFound);
-			System.out.println("Is update: "+isUpdateNeeded);
 			if(isUpdateNeeded || !isFound) {
 				RequestContext.getCurrentInstance().execute("updLatestCommitteeDlg.show()");
 			} else {
