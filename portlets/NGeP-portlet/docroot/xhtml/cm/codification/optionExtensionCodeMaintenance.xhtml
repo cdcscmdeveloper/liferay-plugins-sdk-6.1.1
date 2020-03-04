@@ -11,18 +11,6 @@
 	
    <ui:define name="contentSection">
 		
-		
-    <style>	  
-      .styled {
-      margin: 50px;
-      width: 180px;
-      height: 34px;
-      border: 1px solid #111;
-      border-radius: 3px;
-      overflow: hidden;
-    }
-    </style>	
-		
 		<h:panelGroup id="optionExtensionCodeID">
 				
 	    <table width="100%">
@@ -195,7 +183,7 @@
 				width="400" height="100"
 				title="#{lbl['lbl.cm.dialog.cofirm.header']}"
 				content="#{lbl['lbl.cm.dialog.message.item.code.maintenance']}"
-				update=":form:optionExtensionCodeID, :form:typeTableID"/>
+				update=":form:optionExtensionCodeID,:form:typeTableID"/>
 		
 		</h:panelGroup>
 		
