@@ -26,6 +26,7 @@ import my.ep.web.vo.SpkiVO;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -49,7 +50,14 @@ public class TrustGateHelper {
 		String filePath = substring + SPKIConst.TRUSTGATE_CONFIG_FILE_PATH;
 
 		File f = new File(filePath);
-		KMCClient client = KMCClientFactory.getInstance(f);
+		KMCClient client=null;
+		try {
+			client = KMCClientFactory.getInstance(f);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			log.info("Error while getKMCClient");
+			e.printStackTrace();
+		}
 		return client;
 	}
 
@@ -59,11 +67,14 @@ public class TrustGateHelper {
 				+ "||" + selectedQuest);
 		List<String> retVal = new ArrayList<String>();
 		try {
+			log.info("Before Get Client=======================");
 			KMCClient client = getClient();
+			log.info("After Get Client======================="+client);
 			KMCRequestBuilder reqbuilder = getReqBuilder();
+			log.info("After Get reqbuilder======================="+reqbuilder);
 			IKMCAPIResponse.GetChallengeQuestionResponse res = reqbuilder
 					.getChallengeQuestions(identificationNo, 10, epNo);
-			
+			log.info("After Get GetChallengeQuestionResponse======================="+res);
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setUserId(pmUser.getUserId());
@@ -86,6 +97,7 @@ public class TrustGateHelper {
 
 			switch (res.getStatusCode()) {
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
+				log.info("#25061 OPERATION_SUCCESSFUL");
 				retVal = getChallQuest(selectedQuest, res.CHALLENGE_RESPONSES);
 
 				if (retVal.size() == 0) {
@@ -100,6 +112,7 @@ public class TrustGateHelper {
 		} catch (Exception ex) {
 			log.info("TRUSTGATE CHALL QUEST:" + identificationNo + "||" + epNo
 					+ "||" + selectedQuest + " ERROR MSG:" + ex.getMessage());
+			ex.printStackTrace();
 			throw new EpException(ex.getMessage());
 
 		}
@@ -108,8 +121,11 @@ public class TrustGateHelper {
 
 	private List<String> getChallQuest(String selectedQuest,
 			List<String> questions) {
+		log.info("#25061 getChallQuest");
+		log.info("#25061 selectedQuest " + selectedQuest);
 		List<String> retVal = new ArrayList<String>();
 		for (String quest : questions) {
+			log.info("#25061 quest " + quest);
 			if (!quest.equals(selectedQuest)) {
 				retVal.add(quest);
 				break;
@@ -219,7 +235,8 @@ public class TrustGateHelper {
 				.getExternalContext();
 		String url4 = getDns() + "/requestRevoke/requestRevoke.jsp?secTkn="
 				+ encodedtoken;
-		externalContext.redirect(url4);
+		RequestContext.getCurrentInstance().execute("window.open('"+url4+"', '_blank')");
+		//externalContext.redirect(url4);
 	}
 
 	public void resetPIN(String identificationNo, String epNo, String email)
@@ -271,22 +288,29 @@ public class TrustGateHelper {
 	}
 
 	public static KMCClient getClient() {
+		log.info("getClient=====================================START");
 		if (client == null) {
 			try {
 				client = getInstance().getKMCClient();
+				log.info("getClient====================================="+client);
 			} catch (Exception e) {
-
+				log.info("getClient=====================================Error");
+				e.printStackTrace();
 			}
 		}
 		return client;
 	}
 
 	public static KMCRequestBuilder getReqBuilder() {
+		log.info("reqBuilder=====================================START");
+
 		if (reqBuilder == null) {
 			try {
 				reqBuilder = new KMCRequestBuilder();
+				log.info("reqBuilder=====================================");
 			} catch (Exception e) {
-
+				log.info("reqBuilder=====================================Error");
+				e.printStackTrace();
 			}
 		}
 		return reqBuilder;

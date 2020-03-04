@@ -23,6 +23,9 @@
 			</tr>
 		</table>
 		
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.softcert.revoke.tnc']}" escape="false" 
+			rendered="#{softCertBackingBean.managedBean.renderRevokeButton}" />
+		
 		<p:outputPanel id="spkiRevokeOutPanel">
 			<ac:spkiPopup id="spkiRevokePopup"
 				password="#{softCertBackingBean.managedBean.spkiBackingBean.password}"
@@ -88,9 +91,6 @@
 				</p:column>
 
 			</p:dataTable>
-			
-			<h:outputText styleClass="warning" value="#{lbl['lbl.sm.softcert.revoke.remark']}" escape="false"
-				rendered="#{softCertBackingBean.managedBean.renderRevokeButton}">
-			</h:outputText>
+	
 		</p:panel>
 </ui:composition>

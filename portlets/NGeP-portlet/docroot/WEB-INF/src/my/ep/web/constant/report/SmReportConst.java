@@ -63,6 +63,9 @@ public class SmReportConst implements Serializable {
 	public static final String PARAM_DISC_STATUS = "PSTATUS";
 	public static final String PARAM_DISC_SUPP_TYPE = "PSUPPTYP";
 	public static final String PARAM_DISC_SUPP_ID = "PSUPPID";
+	public static final String PARAM_CERT_PROVIDER = "PISSUER";
+	public static final String PARAM_CERT_APPL_TYPE = "PAPPTYP";
+	public static final String PARAM_CERT_APPL_STATUS = "PAPPSTS";
 
 	public static final String SM_REG_COMPANY_IN_MOF_RPT_VAL = "SM_001";
 	public static final String SM_CATEGORY_STATISTIC_RPT_VAL = "SM_002";
@@ -156,9 +159,26 @@ public class SmReportConst implements Serializable {
 
 	public static final String CLASSIFICATION_CODE_1 = "H0171403";
 	public static final String CLASSIFICATION_CODE_2 = "L1121107";														
-	public static final String SOFTCERT_REQ_DATE = "R";
-	public static final String SOFTCERT_EXP_DATE = "E";
-	public static final String SOFTCERT_RENEW_DATE = "N";
+	public static final String SOFTCERT_ISSUED_DATE = "I";
+	public static final String SOFTCERT_REVOCATION_DATE = "K";
+	public static final String SOFTCERT_REQUEST_DATE = "R";
+	public static final String SOFTCERT_EXPIRY_DATE = "E";
+	//public static final String SOFTCERT_RENEW_DATE = "N";
+	
+	public static final String CERT_APP_NEW = "N";
+	public static final String CERT_APP_RENEW = "R";
+	public static final String CERT_APP_REAPPLY = "A";
+	public static final String CERT_APP_REVOKE = "K";
+	
+	private final int CERT_STATUS_PENDING_REQUEST = 4;
+	private final int CERT_STATUS_PENDING_PAYMENT = 2;
+	private final int CERT_STATUS_PENDING_ISSUANCE = 3;
+	private final int CERT_STATUS_RENEWAL_READY = 7;
+	private final int CERT_STATUS_ISSUED = 1;
+	private final int CERT_STATUS_REJECTED = 6;
+	
+	public static final String PROVIDER_TRUST_GATE = "T";
+	public static final String PROVIDER_DIGI_CERT = "D";
 	
 	public static final String REQUEST_BY_SUPP = "Requested By Supplier";
 	public static final String AUTO_BY_SYS = "Auto Cancelled by System";
@@ -502,18 +522,6 @@ public class SmReportConst implements Serializable {
 		return CLASSIFICATION_CODE_2;
 	}
 
-	public String getSoftcertReqDate() {
-		return SOFTCERT_REQ_DATE;
-	}
-
-	public String getSoftcertExpDate() {
-		return SOFTCERT_EXP_DATE;
-	}
-
-	public String getSoftcertRenewDate() {
-		return SOFTCERT_RENEW_DATE;
-	}
-
 	public String getRequestBySupp() {
 		return REQUEST_BY_SUPP;
 	}
@@ -532,5 +540,69 @@ public class SmReportConst implements Serializable {
 
 	public String getSmDiscActExecSummaryRptVal() {
 		return SM_DISC_ACT_EXEC_SUMMARY_RPT_VAL;
+	}
+
+	public String getCertAppNew() {
+		return CERT_APP_NEW;
+	}
+
+	public String getCertAppRenew() {
+		return CERT_APP_RENEW;
+	}
+	
+	public String getCertAppRevoke() {
+		return CERT_APP_REVOKE;
+	}
+
+	public String getCertAppReapply() {
+		return CERT_APP_REAPPLY;
+	}
+
+	public String getSoftcertIssuedDate() {
+		return SOFTCERT_ISSUED_DATE;
+	}
+
+	public String getSoftcertRevocationDate() {
+		return SOFTCERT_REVOCATION_DATE;
+	}
+
+	public String getSoftcertExpiryDate() {
+		return SOFTCERT_EXPIRY_DATE;
+	}
+
+	public String getSoftcertRequestDate() {
+		return SOFTCERT_REQUEST_DATE;
+	}
+
+	public String getProviderTrustGate() {
+		return PROVIDER_TRUST_GATE;
+	}
+
+	public String getProviderDigiCert() {
+		return PROVIDER_DIGI_CERT;
+	}
+
+	public int getCertStatusPendingRequest() {
+		return CERT_STATUS_PENDING_REQUEST;
+	}
+
+	public int getCertStatusPendingPayment() {
+		return CERT_STATUS_PENDING_PAYMENT;
+	}
+
+	public int getCertStatusPendingIssuance() {
+		return CERT_STATUS_PENDING_ISSUANCE;
+	}
+
+	public int getCertStatusRenewalReady() {
+		return CERT_STATUS_RENEWAL_READY;
+	}
+
+	public int getCertStatusIssued() {
+		return CERT_STATUS_ISSUED;
+	}
+
+	public int getCertStatusRejected() {
+		return CERT_STATUS_REJECTED;
 	}
 }
