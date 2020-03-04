@@ -19,7 +19,7 @@
 		<ac:lovPopup />
 		<p:panel id="searchPanel" header="#{lbl['lbl.sc.search']}"
 			toggleable="true">
-			<h:panelGroup id="orgSearch" rendered="#{directPurchaseBackingBean.showFunctionType()==true or !directPurchaseBackingBean.isSupplier()}">
+			<h:panelGroup id="orgSearch" rendered="#{directPurchaseBackingBean.showFunctionType()==true or !directPurchaseBackingBean.isSupplier()} ">
 			<table>
 				<tr>
 					<td width="25%"><p:outputLabel id="searchMinistryLbL"
@@ -72,7 +72,7 @@
 							<f:selectItems
 								value="#{directPurchaseBackingBean.getFunctionType()}" />
 							<p:ajax event="change" update="searchPanel" listener="#{directPurchaseBackingBean.preRenderDirectPurchaseSearch}" />
-						</p:selectOneMenu><ac:iconTooltip value="#{lbl['lbl.tooltip.directpurchase.search.view.as']}"/></td>	
+						</p:selectOneMenu><ac:iconTooltip value="#{lbl['lbl.tooltip.directpurchase.search.view.as']}" rendered="#{directPurchaseBackingBean.showFunctionType()}" /></td>	
 				</tr>
 				<!-- end 25396: -->
 				<tr>
