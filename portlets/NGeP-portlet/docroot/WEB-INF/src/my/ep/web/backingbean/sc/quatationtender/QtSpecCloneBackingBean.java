@@ -736,6 +736,11 @@ public class QtSpecCloneBackingBean extends
 			}
 
 		}
+		if(null!=copy.getDefinationType() && ParameterConst.DOCUMENT_DEFINITION_TYPE_SUPPLIER_UPLOAD_AND_DOWNLOAD
+			.equalsIgnoreCase(copy.getDefinationType()
+					.getParameterCode())){
+			copy.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
+		}
 		copy.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 		return copy;
 	}
