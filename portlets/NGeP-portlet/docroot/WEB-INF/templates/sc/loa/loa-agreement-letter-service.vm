@@ -1024,6 +1024,9 @@ u {
 	#if ($isZonal)
 		#set($colSpan = 4) 
 	#end	
+	
+#if($itemType =="1")
+
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
 	<tr>
 		<td align="right" colspan="$colSpan"><span class="text_family"> <b><i>Lampiran
@@ -1073,6 +1076,7 @@ u {
 		</td>
 	</tr>
 </table>
+#else
 <div class="break-after"><br/></div>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
 	<tr>
@@ -1107,22 +1111,35 @@ u {
 									 $serviceBean.zoneName
 								#end</td> 
 							#end
-							<td class="standard border-bottom left">$serviceBean.item</td>
-							<td class="standard border-bottom left alignRight">
-								#if($serviceBean.tier)
-									$serviceBean.fromQty - $serviceBean.toQty
-								#else
-									$serviceBean.quantity 
-								#end
-							</td>
-							<td class="standard border-bottom left"></td>
+							 
+								<td class="standard border-bottom left">$serviceBean.item</td>
+							 
+								<td class="standard border-bottom left alignRight">
+									#if($serviceBean.clDurationMonth)
+									 $serviceBean.clDurationMonth
+									 #else
+									 $serviceScope
+									 #end
+								</td>
+							
+							
+								<td class="standard border-bottom left">
+									#if($serviceBean.clDeliveryTerm)
+										$serviceBean.clDeliveryTerm
+									#else	
+									$serviceScope
+									#end	
+								</td>
+							
 						</tr>
-					#end
+					#end  
 				</table>
 			</span>
 		</td>
 	</tr>
 </table>
+#end
+#if($itemType =="1")
 <div class="break-after"><br/></div>
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
 	  <tr>
@@ -1135,7 +1152,7 @@ u {
 		</tr>
 
 	</table>
-	
+#end	
  #if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")	
 	#if ($scLoa.scLoiLoa.docType == "NG")
 		#foreach( $tplspecMaster in $masters )
@@ -1271,7 +1288,7 @@ u {
 			</span></td>
 		</tr>
 	#end
-	
+#else	
 <div class="break-after"><br/></div>
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
 	  <tr>
@@ -1684,14 +1701,14 @@ u {
 					    	
 
 					
-				      #end  //for loop close
+				      #end 
 						</tbody>
 					</table>
 					
 			#end
 			 #set($rowCount = $rowCount + 1)
 		#end
-   
+ #end  
 	 #else
      
 	 
