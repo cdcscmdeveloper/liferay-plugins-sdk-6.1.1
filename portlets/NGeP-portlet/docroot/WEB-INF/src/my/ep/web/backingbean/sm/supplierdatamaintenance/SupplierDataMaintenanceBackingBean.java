@@ -909,6 +909,13 @@ public class SupplierDataMaintenanceBackingBean extends
 	 * Show confirmation dialog
 	 */
 	public void showConfirmDialog() {
+		//27460 : Disciplinary Action
+		if(getManagedBean().isCancelCategoryCode()){			
+			if(getManagedBean().getSelectedApprovedCategories() == null
+					|| getManagedBean().getSelectedApprovedCategories().size() <= 0){
+				throw new EpException(SmCommonUtil.getMessage("lbl.sm.mandatory.to.select.category",null));
+			}
+		}
 		getManagedBean().setShowParentMsg(false);
 		RequestContext.getCurrentInstance().execute("confirmDialog.show()");
 	}
