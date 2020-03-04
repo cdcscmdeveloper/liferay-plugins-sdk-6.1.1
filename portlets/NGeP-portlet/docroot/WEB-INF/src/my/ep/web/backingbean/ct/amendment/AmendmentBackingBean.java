@@ -415,9 +415,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 								getManagedBean().setItemProductExist(true);
 							}else{
 								getManagedBean().setItemProductExist(false);
+								getManagedBean().setItemProductNotExist(true);
 							}
 							//getManagedBean().prodValue(true);
 							getManagedBean().setItemServiceExist(false);
+							getManagedBean().setItemServiceNotExist(false);
 							//log.info("Search function executed Prodcut"+ParameterConst.ITEM_TYPE_PRODUCT+"  "+getManagedBean().getItemtype()); 						
 						}else if(getManagedBean().getItemtype().equals(ParameterConst.ITEM_TYPE_SERVICE)){
 							  getManagedBean().getContractListingPagingDataModel().resetData();
@@ -426,9 +428,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 								getManagedBean().setItemServiceExist(true);  
 							  }else{
 								  getManagedBean().setItemServiceExist(false); 
+								  getManagedBean().setItemServiceNotExist(true);
 							  }
 							 // getManagedBean().serviceValue(true);
 								getManagedBean().setItemProductExist(false);
+								getManagedBean().setItemProductNotExist(false);
 								
 							//log.info("Search function executed Service"+ParameterConst.ITEM_TYPE_SERVICE+"  "+getManagedBean().getItemtype()); 
 						}else if(getManagedBean().getItemtype().equals(ParameterConst.ITEM_TYPE_PRODUCT_AND_SERVICE)){
@@ -439,12 +443,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 									getManagedBean().setItemProductExist(true);
 								}else{
 									getManagedBean().setItemProductExist(false);
+									getManagedBean().setItemProductNotExist(false);
 								}
 								
 								  if(getManagedBean().getServiceListingPagingDataModel().getList() !=null){
 										getManagedBean().setItemServiceExist(true);  
 									  }else{
-										  getManagedBean().setItemServiceExist(false); 
+										  getManagedBean().setItemServiceExist(false);
+										  getManagedBean().setItemServiceNotExist(false);
 									  }							 
 							  //log.info("Search function executed Product and Service"+ParameterConst.ITEM_TYPE_PRODUCT_AND_SERVICE+"  "+getManagedBean().getItemtype()); 
 						}					
