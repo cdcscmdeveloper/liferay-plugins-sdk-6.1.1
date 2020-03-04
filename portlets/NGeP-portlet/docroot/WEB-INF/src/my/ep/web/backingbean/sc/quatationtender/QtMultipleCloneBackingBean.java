@@ -122,6 +122,10 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 				throw new EpException(MessageConst.ERROR_760495);
 			}
 			
+			if(this.totalClone>=10){
+				throw new EpException(MessageConst.ERROR_775151);
+			}
+			
 			if(totalClone>0){
 				QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 				QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
@@ -494,7 +498,7 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 		scQt.setItemGroup(copyScqt.getItemGroup());
 		scQt.setQtTitle(copyScqt.getQtTitle());
 		scQt.setProcurementMode(copyScqt.getProcurementMode());
-		
+		scQt.setPartial(copyScqt.isPartial());
 		BigDecimal tmpExpectedIntendedPrice = QtDetailsSO
 				.getDecryptedExpectedIntendedPrice(copyScqt.getQtId());
 		
@@ -518,7 +522,7 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 			qtZoneCriterias.setBrandNew(true);
 			qtZoneCriterias.setScQtSupplierCriteria(supplierCriteria);
 			setUserDetails(qtZoneCriterias);
-			if(copyScqt.isPanel()){
+			if(!copyScqt.isPanel()){
 				if(cps!=null && cps.getQtZoneCriterias()!=null && cps.getQtZoneCriterias().getTplSpecZoneDtls()!=null){
 					List<TplSpecZoneDtl> listTpl=new ArrayList<TplSpecZoneDtl>();
 					for(TplSpecZoneDtl tpl:cps.getQtZoneCriterias().getTplSpecZoneDtls()){

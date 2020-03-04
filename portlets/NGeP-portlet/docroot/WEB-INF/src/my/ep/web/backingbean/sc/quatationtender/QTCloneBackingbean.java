@@ -83,6 +83,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
+import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtStatus;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
@@ -745,7 +746,9 @@ public class QTCloneBackingbean extends
 					if(selection.getValue().equals(6L)){
 						retrievePublishing(copyScqt);
 					}
-					
+					if(selection.getValue().equals(7L)){
+						retrieveDeductionPaymentTabDtl(scQt,copyScqt,QtDetailsSO);
+					}
 				}
 				
 			}
@@ -817,6 +820,56 @@ public class QTCloneBackingbean extends
 		return contactPerson;
 	}
 	
+	private BriefingZoneBean mapBrief(ScQt qt,ScQtBsv qtBsv){
+		ScQtBsv copy=new ScQtBsv();
+		copy.setScQt(qt);
+		copy.setBrandNew(true);
+		copy.setAllSiteVisitReq(qtBsv.isAllSiteVisitReq());
+		copy.setAllBriefingReq(qtBsv.isAllBriefingReq());
+		copy.setSameBsv(qtBsv.isSameBsv());
+		copy.setMinBriefingAttend(qtBsv.getMinBriefingAttend());
+		copy.setMinSiteVisitAttend(qtBsv.getMinSiteVisitAttend());
+		List<ScQtBsvDtl> listBsv=new ArrayList<ScQtBsvDtl>();
+		List<ScQtBsvDtl> listBrief=new ArrayList<ScQtBsvDtl>();
+		List<ScQtBsvDtl> listSiteVisit=new ArrayList<ScQtBsvDtl>();
+		if (null != qtBsv.getScQtBsvDtls()) {
+			for (ScQtBsvDtl bsvDtl : qtBsv.getScQtBsvDtls()) {
+				ScQtBsvDtl copydtl=new ScQtBsvDtl();
+				copydtl.setScQtBsv(copy);
+				copydtl.setBsvType(bsvDtl.getBsvType());
+				copydtl.setBsvDesc(bsvDtl.getBsvDesc());
+				copydtl.setBsvDate(bsvDtl.getBsvDate());
+				copydtl.setAddress(bsvDtl.getAddress());
+				copydtl.setCoordinatingOfficer(bsvDtl.getCoordinatingOfficer());
+				copydtl.setMaxNoOfAttendance(bsvDtl.getMaxNoOfAttendance());
+				if(SourcingConstants.BSV_TYPE_SITEVISIT.equals(bsvDtl.getBsvType())){
+					listSiteVisit.add(copydtl);
+				}else{
+					listBrief.add(copydtl);
+				}
+				
+				
+			}
+			listBsv.addAll(listSiteVisit);
+			listBsv.addAll(listBrief);
+			
+			copy.setScQtBsvDtls(listBsv);
+			
+		}
+		
+		copy.setBsvRemarks(initializeRemarks(copy, this
+				.getManagedBean().getQt()
+				.getCurrentWorkFlowStatus(), copy.getBsvRemarks(),
+				ScQtBSVRemark.class));
+		
+		BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
+				null, listBrief,
+				listSiteVisit, copy);
+		
+		
+		return briefingZoneBean;
+	}
+	
 	private void retrieveBrief(ScQt copyScqt){
 		ScQt qt = this.getManagedBean().getQt();
 		IQTBriefingSO qTBriefingSO = null;
@@ -837,52 +890,37 @@ public class QTCloneBackingbean extends
 					.getQtStatus().getStatusId();
 			this.getManagedBean().setCurrentStatusId(currentStatus);
 			
-			ScQtBsv qtBsv = resDTO.getScQtBsv();
-			
-			ScQtBsv copy=new ScQtBsv();
-			copy.setScQt(qt);
-			copy.setBrandNew(true);
-			copy.setAllSiteVisitReq(qtBsv.isAllSiteVisitReq());
-			copy.setAllBriefingReq(qtBsv.isAllBriefingReq());
-			copy.setSameBsv(qtBsv.isSameBsv());
-			copy.setMinBriefingAttend(qtBsv.getMinBriefingAttend());
-			copy.setMinSiteVisitAttend(qtBsv.getMinSiteVisitAttend());
-			List<ScQtBsvDtl> listBsv=new ArrayList<ScQtBsvDtl>();
-			List<ScQtBsvDtl> listBrief=new ArrayList<ScQtBsvDtl>();
-			List<ScQtBsvDtl> listSiteVisit=new ArrayList<ScQtBsvDtl>();
-			if (null != qtBsv.getScQtBsvDtls()) {
-				for (ScQtBsvDtl bsvDtl : qtBsv.getScQtBsvDtls()) {
-					ScQtBsvDtl copydtl=new ScQtBsvDtl();
-					copydtl.setScQtBsv(copy);
-					copydtl.setBsvType(bsvDtl.getBsvType());
-					copydtl.setBsvDesc(bsvDtl.getBsvDesc());
-					copydtl.setBsvDate(bsvDtl.getBsvDate());
-					copydtl.setAddress(bsvDtl.getAddress());
-					copydtl.setCoordinatingOfficer(bsvDtl.getCoordinatingOfficer());
-					copydtl.setMaxNoOfAttendance(bsvDtl.getMaxNoOfAttendance());
-					if(SourcingConstants.BSV_TYPE_SITEVISIT.equals(bsvDtl.getBsvType())){
-						listSiteVisit.add(copydtl);
-					}else{
-						listBrief.add(copydtl);
-					}
-					
-					
-				}
-				listBsv.addAll(listSiteVisit);
-				listBsv.addAll(listBrief);
+			if (!copyScqt.isZonal()) {
+				ScQtBsv qtBsv = resDTO.getScQtBsv();
+				BriefingZoneBean briefingZoneBean=mapBrief(qt,qtBsv);
+				this.getManagedBean().setBsvDtlBean(briefingZoneBean);
+			}else{
 				
-				copy.setScQtBsvDtls(listBsv);
-				
+//				List<TplSpecZoneDtl> zones = resDTO.getZonesList();
+//				List<BriefingZoneBean> zoneBeans = new ArrayList<BriefingZoneBean>();
+//				if(null!=zones){
+//					BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
+//					briefingReqDTO.setQtId(copyScqt
+//							.getQtId());
+//					briefingReqDTO.setScQt(getManagedBean().getQt());
+//					briefingReqDTO.setMaintanceFlow(true);
+//					//briefingReqDTO.setAmendMentBean(amendMentBean);
+//					for (TplSpecZoneDtl specZoneDtl : zones) {
+//						briefingReqDTO.setSpecZoneId(specZoneDtl
+//								.getSpecZoneId());
+//						BriefingResDTO briefingResDTO = qTBriefingSO
+//								.retrieveBriefingSiteVisitDtls(briefingReqDTO);
+//						ScQtBsv qtBsv = briefingResDTO.getScQtBsv();
+//						
+//						BriefingZoneBean briefingZoneBean=mapBrief(qt,qtBsv);
+//						zoneBeans.add(briefingZoneBean);
+//					}
+//					
+//				}
+//				this.getManagedBean().setBriefingZoneBean(zoneBeans);
+//				this.getManagedBean().setBsvDtlBean(zoneBeans.get(0));
 			}
-			//TODO visit list
-			BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
-					null, listBrief,
-					listSiteVisit, copy);
-			copy.setBsvRemarks(initializeRemarks(copy, this
-					.getManagedBean().getQt()
-					.getCurrentWorkFlowStatus(), copy.getBsvRemarks(),
-					ScQtBSVRemark.class));
-			this.getManagedBean().setBsvDtlBean(briefingZoneBean);
+			
 		}finally{
 			qTBriefingSO = null;
 		}
@@ -1011,6 +1049,53 @@ public class QTCloneBackingbean extends
 		
 		
 		return scQt;
+	}
+	
+	public void retrieveDeductionPaymentTabDtl(ScQt scQt,ScQt copyScqt,IQTDetailSO detailSO) {
+		
+		
+		debugLogger("retrieveDeductionPaymentTabDtl");
+		if (this.getManagedBean().getScQtDeductionList() == null || this.getManagedBean().getScQtDeductionList().isEmpty()) {
+			
+			try {
+				detailSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+				reqDTO.setQtId(copyScqt.getQtId());
+				QuationTenderResDTO resDTO = detailSO
+						.retriveQTDeductionPaymentDetails(reqDTO);
+				List<ScQtDeduction> copyList = resDTO
+						.getDeductionResultBean().getResultList();
+				
+				List<ScQtDeduction> deductionList = new ArrayList<ScQtDeduction>();
+				for(ScQtDeduction ded:copyList){
+					ScQtDeduction obj=new ScQtDeduction();
+					obj.setBrandNew(true);
+					obj.setDeductionAmount(ded.getDeductionAmount());
+					obj.setDeductionDesc(ded.getDeductionDesc());
+					obj.setDeductionType(ded.getDeductionType());
+					//obj.setScLoa(ded.getScLoa());
+					//obj.setScLoi(ded.getScLoi());
+					obj.setScQt(scQt);
+					setUserDetails(obj);
+					deductionList.add(obj);
+				}
+				
+				this.getManagedBean().setScQtDeductionList(deductionList);
+				this.getManagedBean().getQt().setScQtDeductions(deductionList);
+				getManagedBean().setSelectedScQtDeduction(null);
+				/*
+				 * if (null != deductionList && !deductionList.isEmpty()) {
+				 * this.
+				 * getManagedBean().setSelectedScQtDeduction(deductionList.get
+				 * (0)); this.getManagedBean().getSelectedScQtDeduction().
+				 * setScQtDeductionClauses
+				 * (deductionList.get(0).getScQtDeductionClauses()); }
+				 */
+			} finally {
+				detailSO = null;
+			}
+		}
 	}
 	
 	private void uploadAttachment(ScAttachment copy, ScAttachment origin)
