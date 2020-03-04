@@ -70,7 +70,7 @@
 				<p:commandLink
 					action="#{codificationMaintenanceBackingBean.unspscPopUpSearch(unspscObj1)}"
 					rendered="#{unspscObj1.unspscLevel ne 3}"
-				    update=":form:codificationPopUpId">
+				    update=":form:codificationPopUpId,:form:unspscTablePopUpId">
 							#{unspscObj1.unspscCode}
 				</p:commandLink>
 				
