@@ -12314,6 +12314,17 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void viewMyIdentityRespond() {
+		if (getManagedBean().getSelectedShareHolder() != null && getManagedBean().getSelectedShareHolder().getIdentityResponseCode() != null) {
+			String postCode = "";
+			for (SmPersonnelAddress addr : getManagedBean().getSelectedShareHolder().getSmPersonnelAddresses()) {
+				if (addr.getAddressType() != null && addr.getAddressType().equalsIgnoreCase(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM) && addr.getSmAddress() != null) {
+					postCode = addr.getSmAddress().getPostcode();
+					log.debug(" *** Perm Addr Post Code ****" + postCode);
+				}
+			}
+			SmCommonUtil.getInstance().verifyPersonnelWithMyIdentity(this.getManagedBean().getSelectedShareHolder(), postCode,
+					my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_ONLINE, null);
+		}
 		RequestContext.getCurrentInstance().execute("myIdentityDialog.show();");
 	}
 	//FIXME : 16052019 - SSM INTEGRATION CR - start
