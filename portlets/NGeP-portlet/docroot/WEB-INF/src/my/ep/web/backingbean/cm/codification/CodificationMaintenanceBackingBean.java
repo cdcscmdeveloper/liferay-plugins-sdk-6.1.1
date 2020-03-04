@@ -94,6 +94,7 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 	private String EXTENSION_BRAND = "b";
 	private String EXTENSION_MEASUREMENT = "m";
 	private String EXTENSION_COLOR = "c";
+	private String EXTENSION_NULL = null;
 	private String RECORD_STATUS_NULL = null;
 	
 	
@@ -303,8 +304,14 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 	}
 	
 	public void extensionCodeSearch() {
+	if (this.getManagedBean().getData()== null){
+        this.getManagedBean().setDisableSelectBtn(true);
+        extensionAttributeSearchData.resetData();
+	}else{
+	   	this.getManagedBean().setDisableSelectBtn(false);
 		extensionAttributeSearchData.reloadData();
 	}
+}
 
 	private int compareFirstChoice(String code1, String code2, int last) {
 		if ((code1.equals("000") || code1.equals("00")) && (code2.equals("000") || code2.equals("00"))) {
@@ -715,10 +722,9 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 						.getUnspscTitleEng());
 				
        
-		this.getManagedBean().setData("t");
+		this.getManagedBean().setData("null");
 		this.getExtensionAttributeSearchData().resetData();
-		this.getManagedBean().setDisableSelectBtn(false);
-		rowSelectChangeStatus();
+		this.getManagedBean().setDisableSelectBtn(true);
 		}
 		return "optionExtensionCodeMaintenance.xhtml?faces-redirect=true";
 	}
@@ -1260,20 +1266,24 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 		CodificationMaintenanceBackingBean bb = new CodificationMaintenanceBackingBean();
 	
 			
-			SelectItem[] items = new SelectItem[4];
-			items[0] = new SelectItem(bb.EXTENSION_TYPE,
+			SelectItem[] items = new SelectItem[5];
+			items[0] = new SelectItem(bb.EXTENSION_NULL,
+					ResourceBundleUtils.getMessage("lbl.txt.select",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()));
+			items[1] = new SelectItem(bb.EXTENSION_TYPE,
 					ResourceBundleUtils.getMessage("lbl.cm.type",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale()));
-			items[1] = new SelectItem(bb.EXTENSION_BRAND,
+			items[2] = new SelectItem(bb.EXTENSION_BRAND,
 					ResourceBundleUtils.getMessage("lbl.cm.brand",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale()));
-			items[2] = new SelectItem(bb.EXTENSION_MEASUREMENT,
+			items[3] = new SelectItem(bb.EXTENSION_MEASUREMENT,
 					ResourceBundleUtils.getMessage("lbl.cm.measurement",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale()));
-			items[3] = new SelectItem(bb.EXTENSION_COLOR,
+			items[4] = new SelectItem(bb.EXTENSION_COLOR,
 					ResourceBundleUtils.getMessage("lbl.cm.color",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale()));
@@ -1474,10 +1484,6 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 			
 			if(this.getManagedBean().isRefreshPageNoFlag()== false){
 				System.out.println("start ReloadPage");
-				//PagingDataModel paging = new ExtensionAttributeSearchData();
-				//paging.setPageNo(0);
-				
-				//this.getExtensionAttributeSearchData().resetData();
 				this.getManagedBean().setRefreshPageNoFlag(false);
 				clearPopup();
 				System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
@@ -1497,27 +1503,18 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 		
 		   log.info("reset Extension Data");
 		
-		    this.getManagedBean().setData("t");
 		    this.getManagedBean().setExtension(null);
 		    this.getManagedBean().setStatus(
 					ResourceBundleUtils.getMessage("lbl.cm.selectOne",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale()));
-			extensionAttributeSearchData.resetData();
+			this.getManagedBean().setData("null");
+			this.getExtensionAttributeSearchData().resetData();
+			this.getManagedBean().setDisableSelectBtn(true);
 			
 		}
 	
 	
-	public void rowSelectChangeStatus() {
-        System.out.println(this.getManagedBean().getUpdatedStatus().size());
-        if (this.getManagedBean().getUpdatedStatus().size() > 0) {
-        	this.getManagedBean().setDisableSelectBtn(false);
-            System.out.println("rowSelect is Enable Button !!:"+ this.getManagedBean().isDisableSelectBtn());
-        } else if (this.getManagedBean().getUpdatedStatus().size() == 0 || this.getManagedBean().getUpdatedStatus().size() < 0) {
-        	this.getManagedBean().setDisableSelectBtn(true);
-            System.out.println("unSelectRow is Disable Button !!:"+ this.getManagedBean().isDisableSelectBtn());
-        }
-    }
 	
 	public void clearPopup() {
 		log.info("...............clearPopup...................");
