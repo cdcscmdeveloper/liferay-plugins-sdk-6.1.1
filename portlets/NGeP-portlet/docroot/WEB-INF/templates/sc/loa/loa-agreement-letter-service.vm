@@ -1027,55 +1027,55 @@ u {
 	
 #if($itemType =="1")
 
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
-	<tr>
-		<td align="right" colspan="$colSpan"><span class="text_family"> <b><i>Lampiran
-					A2</i></b></span></td>
-	</tr>
-	<tr>
-		<td colspan="$colSpan"><span class="text_header_submenu">
-				<u style="text-decoration:underline;">*Tempoh
-				dan Jadual Pembekalan Barang/Penyempurnaan Perkhidmatan</u></span> <br />
-				<span class="text_header_submenu_red">* Senarai item, kuantiti, 
-				jenis perkhidmatan dan/atau tempoh serta jadual pembekalan yang ditetapkan.</span><br /></td>
-	</tr>
-	
-	<tr align='left'>
-			<td><span style='font-weight: bold; font-size: 10px; font-family: Times New Roman;'>
-				<table width='100%' border="1">
-					<tr bgcolor="#6d839b">
-						#if ($isZonal)
-							<th>Zone</th> 
-						#end
-						<th>Nama Item</th>
-						<th>Kuantiti</th>
-						<th>Jenis Perkhidmatan</th>
-					</tr>
-					#set($String = "formatter") 
-					#foreach($productBean in $jadualHargaItemBean.productItemBeans)
-						<tr class="ui-content">
+	<table width="100%" border="0" cellpadding="0" cellspacing="0">
+		<tr>
+			<td align="right" colspan="$colSpan"><span class="text_family"> <b><i>Lampiran
+						A2</i></b></span></td>
+		</tr>
+		<tr>
+			<td colspan="$colSpan"><span class="text_header_submenu">
+					<u style="text-decoration:underline;">*Tempoh
+					dan Jadual Pembekalan Barang/Penyempurnaan Perkhidmatan</u></span> <br />
+					<span class="text_header_submenu_red">* Senarai item, kuantiti, 
+					jenis perkhidmatan dan/atau tempoh serta jadual pembekalan yang ditetapkan.</span><br /></td>
+		</tr>
+		
+		<tr align='left'>
+				<td><span style='font-weight: bold; font-size: 10px; font-family: Times New Roman;'>
+					<table width='100%' border="1">
+						<tr bgcolor="#6d839b">
 							#if ($isZonal)
-								<td class="standard border-bottom left">
-								#if($productBean.zonal) 
-									$productBean.zoneName
-								#end</td> 
+								<th>Zone</th> 
 							#end
-							<td class="standard border-bottom left">$productBean.item</td>
-							<td class="standard border-bottom left alignRight">
-								#if($productBean.tier)
-									$productBean.fromQty - $productBean.toQty
-								#else
-									$productBean.quantity 
-								#end
-							</td>
-							<td class="standard border-bottom left"></td>
+							<th>Nama Item</th>
+							<th>Kuantiti</th>
+							<th>Jenis Perkhidmatan</th>
 						</tr>
-					#end
-				</table>
-			</span>
-		</td>
-	</tr>
-</table>
+						#set($String = "formatter") 
+						#foreach($productBean in $jadualHargaItemBean.productItemBeans)
+							<tr class="ui-content">
+								#if ($isZonal)
+									<td class="standard border-bottom left">
+									#if($productBean.zonal) 
+										$productBean.zoneName
+									#end</td> 
+								#end
+								<td class="standard border-bottom left">$productBean.item</td>
+								<td class="standard border-bottom left alignRight">
+									#if($productBean.tier)
+										$productBean.fromQty - $productBean.toQty
+									#else
+										$productBean.quantity 
+									#end
+								</td>
+								<td class="standard border-bottom left"></td>
+							</tr>
+						#end
+					</table>
+				</span>
+			</td>
+		</tr>
+	</table>
 #else
 <div class="break-after"><br/></div>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
@@ -1099,8 +1099,8 @@ u {
 							<th>Zone</th> 
 						#end
 						<th>Nama Item</th>
-						<th>Kuantiti</th>
-						<th>Jenis Perkhidmatan</th>
+						<th>Tempoh Bulan</th>
+						<th>Tempoh Penghantaran</th>
 					</tr>
 					#set($String = "formatter") 
 					#foreach( $serviceBean in $jadualHargaItemBean.serviceItemBeans)
@@ -1152,7 +1152,7 @@ u {
 		</tr>
 
 	</table>
-#end	
+
  #if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")	
 	#if ($scLoa.scLoiLoa.docType == "NG")
 		#foreach( $tplspecMaster in $masters )
@@ -1708,7 +1708,7 @@ u {
 			#end
 			 #set($rowCount = $rowCount + 1)
 		#end
- #end  
+ 
 	 #else
      
 	 
@@ -1743,7 +1743,7 @@ u {
 			</span></td>
 		</tr>
 	#end
-
+#end  
 
 <div class="break-after"><br/></div>
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
