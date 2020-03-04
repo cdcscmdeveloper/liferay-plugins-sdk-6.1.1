@@ -11,19 +11,21 @@
 		style="font-style:italic" process="@this"
 		action="#{ctBackingBean.downloadItemSpecGuideline()}"></p:commandLink><br/>
 		
-	<p:panel id="searchId" header="#{lbl['lbl.ct.search']}" toggleable="true" toggleSpeed="500">	
-	
-		<h:panelGrid columns="6" style="width:100%" columnClasses="columnWidth10"></h:panelGrid>		
-  		
+	<p:panel id="searchId" header="#{lbl['lbl.ct.search']}" toggleable="true" toggleSpeed="500">	  		
   <table style="width:100%">
 	<tr>
 		<td colspan="1" rowspan="1"><h:outputLabel value="#{lbl['lbl.ct.item.name']}"/></td>
 		<td colspan="1" rowspan="1">
 		<h:inputText value="#{amendmentBackingBean.managedBean.itemname}" style="width:270px;" maxlength="50"></h:inputText>	
 		</td>
+		<td colspan="1" rowspan="1">
+	    <h:outputLabel value="#{lbl['lbl.ct.item.code']}" style="float:center-left;"  />
+	    </td>
+		<td colspan="1" rowspan="1">
+		<h:inputText value="#{amendmentBackingBean.managedBean.itemcode}" style="width:270px; float:center;"  maxlength="20"  />
+			</td>
 	</tr>
-	<tr>
-	
+	<tr>	
 		   <td colspan="1" rowspan="1">
 		   				<h:outputLabel value="#{lbl['lbl.ct.item.type']}" />
 		   </td>
@@ -33,13 +35,13 @@
 							<f:selectItem itemLabel="#{lbl['lbl.ct.all']}" itemValue="3" >  </f:selectItem>      	
 				</h:selectOneMenu>
 			</td>
-	        <td colspan="1" rowspan="1">
-	            <h:outputLabel value="#{lbl['lbl.ct.item.code']}" style="float:center-left;"  />
-	        </td>
-			<td colspan="1" rowspan="1">
-			   <h:inputText value="#{amendmentBackingBean.managedBean.itemcode}" style="width:270px; float:center;"  maxlength="20"  />
-			</td>
 			
+			<td colspan="1" rowspan="1">
+	   		<h:outputLabel value="#{lbl['lbl.ct.item.skuno']}"/> 
+	   		</td>
+	  <td colspan="1" rowspan="1">
+	  		<h:inputText value="#{amendmentBackingBean.managedBean.skuno}" style="width:270px;" maxlength="50"></h:inputText>	
+	 </td>			
 	</tr>			
 	
 	<tr>
@@ -54,23 +56,13 @@
 			    	<f:selectItem itemLabel="#{lbl['lbl.ct.all']}" itemValue="2" />     	            	
 		       </h:selectOneMenu>  
        </td>
-	   <td colspan="1" rowspan="1">
-	   			<h:outputLabel value="#{lbl['lbl.ct.item.skuno']}"/> 
-	   </td>
-	  <td colspan="1" rowspan="1">
-	  		<h:inputText value="#{amendmentBackingBean.managedBean.skuno}" style="width:270px;" maxlength="50"></h:inputText>	
-	 </td>
-	</tr> 
-	<tr>
-		<td colspan="1" rowspan="1"></td>
-		<td colspan="1" rowspan="1"></td>
-		<td colspan="1" rowspan="1">
+       		<td colspan="1" rowspan="1">
 			<h:outputLabel value="#{lbl['lbl.ct.item.UOM']}"/>
 		</td>
 		<td colspan="1" rowspan="1"> 
 			<h:inputText value="#{amendmentBackingBean.managedBean.UOM}" style="width:270px;" maxlength="20"></h:inputText>
 	  </td>
-	 </tr>
+	</tr> 
 	
 	<tr >
 		<td colspan="1" rowspan="1"></td>
@@ -451,6 +443,12 @@
 		    </p:outputPanel>
 		</p:outputPanel>
 	</p:panel>
+	<p:panel width="700px" height="350px" rendered="#{amendmentBackingBean.managedBean.itemProductNotExist}" >
+	   	<h:panelGrid columns="1">
+	    <p:outputLabel value="#{lbl['lbl.datatable.msg.no.records.found']}" 
+	   	position = "left" styleClass="red_font" />
+	   	</h:panelGrid>
+	   	</p:panel> >
 	<p:panel id="serviceId" toggleable="true" toggleSpeed="500" rendered="#{amendmentBackingBean.managedBean.itemServiceExist}">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.ct.panel.service']}"/>
@@ -634,6 +632,12 @@
 		  	</p:outputPanel>
 		</p:outputPanel>
 	</p:panel>
+		<p:panel width="700px" height="350px" rendered="#{amendmentBackingBean.managedBean.itemServiceNotExist}" >
+	   	<h:panelGrid columns="1">
+	    <p:outputLabel value="#{lbl['lbl.datatable.msg.no.records.found']}" 
+	   	position = "left" styleClass="red_font" />
+	   	</h:panelGrid>
+	   	</p:panel> >
 	
 	<p:dialog id="itemSpecDlg" widgetVar="itemSpecDlg" header="#{lbl['lbl.ct.specification']}" 
    		styleClass="pop_up_top" modal="true" width="500" height="150" resizable="false">

@@ -146,6 +146,9 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private String justification;
 	//Enhancement #26186 end
 	
+	private boolean itemProductNotExist;
+	private boolean itemServiceNotExist;
+	
 	//26753 - start
 	private boolean updateCommittee;
 	private List<CtCommitteeMember> updatedCommitteeMembers;
@@ -253,10 +256,12 @@ private class ServiceListingPagingDataModel extends PagingDataModel<CtContractIt
 				}
 				if(getUOM()!=null && getUOM().length()>0) {					
 					SearchFilterBean filterBean = new SearchFilterBean("scRequestItem.uom.uomName", SearchOperator.OPERATOR_EQUALS.value(),getUOM());
+					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);
 				}
 				if(getSkuno()!=null && getSkuno().length()>0 ) {
 					SearchFilterBean filterBean = new SearchFilterBean("sku", SearchOperator.OPERATOR_EQUALS.value(),getSkuno());
+					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);
 				}
 				if(getTypeofgoods()!=null && getTypeofgoods().length()>0) {					
@@ -294,7 +299,7 @@ private class ServiceListingPagingDataModel extends PagingDataModel<CtContractIt
 							//readOnly=false;
 							return resDTO.getContractItemResultBean();
 					    }
-					  
+					    
 						
 	                }
                 }
@@ -416,6 +421,7 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 //			    	 readOnly=false;
 			    	 return resDTO.getContractItemResultBean();
 			    }
+
 				
 			}
           }
@@ -1428,6 +1434,18 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 		this.hasChanges = hasChanges;
 	}	
 	//26753 - end
+	public boolean isItemProductNotExist() {
+		return itemProductNotExist;
+	}
+	public void setItemProductNotExist(boolean itemProductNotExist) {
+		this.itemProductNotExist = itemProductNotExist;
+	}
+	public boolean isItemServiceNotExist() {
+		return itemServiceNotExist;
+	}
+	public void setItemServiceNotExist(boolean itemServiceNotExist) {
+		this.itemServiceNotExist = itemServiceNotExist;
+	}
 	
 
 }

@@ -11,13 +11,20 @@
 		style="font-style:italic ;color:#3c8bc2" process="@this"
 		action="#{ctBackingBean.downloadItemSpecGuideline()}"></p:commandLink><br/>
 	<p:panel id="searchId" header="#{lbl['lbl.ct.search']}" toggleable="true" toggleSpeed="500">
-		
-  	<h:panelGrid columns="6" style="width:100%" columnClasses="columnWidth10">
-  		<p:outputLabel value="#{lbl['lbl.ct.item.name']}"/>
-		<p:inputText value="#{contractItemSearchBackingBean.managedBean.itemname}" style="width:270px;" maxlength="50"></p:inputText>	
-	</h:panelGrid>		
-	
 	<table style="width:100%"  >
+	<tr >
+		<td colspan="1" rowspan="1"><h:outputLabel value="#{lbl['lbl.ct.item.name']}"/></td>
+		<td colspan="1" rowspan="1">
+		<h:inputText value="#{contractItemSearchBackingBean.managedBean.itemname}" style="width:270px;" maxlength="50"></h:inputText>	
+		</td>	
+		<td colspan="1" rowspan="1">
+	        <p:outputLabel value="#{lbl['lbl.ct.item.code']}" style="float:center-left;"  />
+	    </td>
+		<td colspan="1" rowspan="1">
+			<p:inputText value="#{contractItemSearchBackingBean.managedBean.itemcode}" style="width:270px; float:center;"  maxlength="20"  />
+		</td>	
+	</tr>
+
 	<tr >
 		   <td colspan="1" rowspan="1">
 		   				<p:outputLabel value="#{lbl['lbl.ct.item.type']}" />
@@ -28,12 +35,12 @@
 							<f:selectItem itemLabel="#{lbl['lbl.ct.all']}" itemValue="3" >  </f:selectItem>      	
 				</p:selectOneMenu>
 			</td>
-	        <td colspan="1" rowspan="1">
-	            <p:outputLabel value="#{lbl['lbl.ct.item.code']}" style="float:center-left;"  />
-	        </td>
 			<td colspan="1" rowspan="1">
-			   <p:inputText value="#{contractItemSearchBackingBean.managedBean.itemcode}" style="width:270px; float:center;"  maxlength="20"  />
-			</td>
+	   			<p:outputLabel value="#{lbl['lbl.ct.item.skuno']}"/> 
+	   		</td>
+	  		<td colspan="1" rowspan="1">
+	  		<p:inputText value="#{contractItemSearchBackingBean.managedBean.skuno}" style="width:270px;" maxlength="50"></p:inputText>	
+	 		</td>
 	</tr>			
 	
 	<tr>
@@ -48,24 +55,14 @@
 		    	<f:selectItem itemLabel="#{lbl['lbl.ct.all']}" itemValue="2" />     	            	
 		       </p:selectOneMenu>  
        </td>
-	   <td colspan="1" rowspan="1">
-	   			<p:outputLabel value="#{lbl['lbl.ct.item.skuno']}"/> 
-	   </td>
-	  <td colspan="1" rowspan="1">
-	  		<p:inputText value="#{contractItemSearchBackingBean.managedBean.skuno}" style="width:270px;" maxlength="50"></p:inputText>	
-	 </td>
-	</tr> 
-	<tr>
-		<td colspan="1" rowspan="1"></td>
-		<td colspan="1" rowspan="1"></td>
-		<td colspan="1" rowspan="1">
+       <td colspan="1" rowspan="1">
 			<p:outputLabel value="#{lbl['lbl.ct.item.UOM']}"/>
 		</td>
 		<td colspan="1" rowspan="1"> 
 			<p:inputText value="#{contractItemSearchBackingBean.managedBean.UOM}" style="width:270px;" maxlength="20"></p:inputText>
-	  </td>
-	 </tr>
-	
+	   </td>
+
+	</tr> 	
 	<tr >
 		<td colspan="1" rowspan="1"></td>
 		<td colspan="1" rowspan="1"></td>	
@@ -184,6 +181,12 @@
     	      </p:dataTable> 
           </h:panelGrid>
           </p:panel>
+		<p:panel width="700px" height="350px" rendered="#{contractItemSearchBackingBean.managedBean.itemProductNotExist}" >
+	   	<h:panelGrid columns="1">
+	    <p:outputLabel value="#{lbl['lbl.datatable.msg.no.records.found']}" 
+	   	position = "left" styleClass="red_font" />
+	   	</h:panelGrid>
+	   	</p:panel> >
           
           <p:panel id="itemId1" toggleable="true" toggleSpeed="500">
           <p:outputPanel id="changeField1">
@@ -704,7 +707,13 @@
  	      </p:dataTable> 
        </h:panelGrid>
        </p:panel>
-      
+
+		<p:panel width="700px" height="350px" rendered="#{contractItemSearchBackingBean.managedBean.itemServiceNotExist}" >
+	   	<h:panelGrid columns="1">
+	    <p:outputLabel value="#{lbl['lbl.datatable.msg.no.records.found']}" 
+	   	position = "left" styleClass="red_font" />
+	   	</h:panelGrid>
+	   	</p:panel> >
       
        <p:panel id="itemId3" toggleable="true" toggleSpeed="500">
           <p:outputPanel id="changeField">
@@ -1281,4 +1290,3 @@
 	</p:panel>
 
  </ui:composition>
-

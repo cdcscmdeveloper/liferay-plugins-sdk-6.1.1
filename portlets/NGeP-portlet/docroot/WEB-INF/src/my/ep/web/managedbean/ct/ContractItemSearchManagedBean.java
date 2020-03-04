@@ -71,6 +71,8 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 	private IPagingDataModel<CtContractItem> ServiceListingPagingDataModel =  new ServiceListingPagingDataModel();
 	private boolean itemProductExist;
 	private boolean itemServiceExist;
+	private boolean itemProductNotExist;
+	private boolean itemServiceNotExist;
 
 	
 	
@@ -151,6 +153,7 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 				if(getItemname()!=null && getItemname().length()>0) {
 					
 					SearchFilterBean filterBean = new SearchFilterBean("scRequestItem.itemName", SearchOperator.OPERATOR_LIKE.value(),getItemname());
+					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);
 				}
 				
@@ -182,10 +185,12 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 				if(getUOM()!=null && getUOM().length()>0) {
 					
 					SearchFilterBean filterBean = new SearchFilterBean("scRequestItem.uom.uomName", SearchOperator.OPERATOR_EQUALS.value(),getUOM());
+					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);
 				}
 				if(getSkuno()!=null && getSkuno().length()>0 ) {
 					SearchFilterBean filterBean = new SearchFilterBean("sku", SearchOperator.OPERATOR_EQUALS.value(),getSkuno());
+					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);
 				}
 				if(getTypeofgoods()!=null && getTypeofgoods().length()>0) {
@@ -297,6 +302,7 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 				if(getItemname()!=null && getItemname().length()>0) {
 						
 						SearchFilterBean filterBean = new SearchFilterBean("scRequestItem.itemName", SearchOperator.OPERATOR_LIKE.value(),getItemname());
+						filterBean.setCaseInsensitive(true);
 						searchBean.getDataFilterBeans().add(filterBean);
 					}
 				
@@ -779,6 +785,18 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 	 */
 	public void setItemServiceExist(boolean itemServiceExist) {
 		this.itemServiceExist = itemServiceExist;
+	}
+	public boolean isItemProductNotExist() {
+		return itemProductNotExist;
+	}
+	public void setItemProductNotExist(boolean itemProductNotExist) {
+		this.itemProductNotExist = itemProductNotExist;
+	}
+	public boolean isItemServiceNotExist() {
+		return itemServiceNotExist;
+	}
+	public void setItemServiceNotExist(boolean itemServiceNotExist) {
+		this.itemServiceNotExist = itemServiceNotExist;
 	}
 
 	
