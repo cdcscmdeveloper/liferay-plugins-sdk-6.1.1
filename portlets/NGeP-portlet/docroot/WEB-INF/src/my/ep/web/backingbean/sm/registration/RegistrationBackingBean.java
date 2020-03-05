@@ -2202,7 +2202,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 								fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlineAccount/accountMaintenanceTermAndCond.xhtml");
 								return;
 							//}
-						}
+						} 
 						// #26734 - END
 						// #27239 - END
 						
