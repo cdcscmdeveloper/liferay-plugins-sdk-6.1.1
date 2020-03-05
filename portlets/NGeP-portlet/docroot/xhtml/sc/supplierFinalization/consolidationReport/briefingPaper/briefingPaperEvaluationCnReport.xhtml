@@ -11,7 +11,7 @@
 		<p:dataTable var="scQtEvaluationReport" id="evaluationreport"
 			widgetVar="documentWidget" style="width:100%;" 
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			value="#{consolidationReportBackingBean.managedBean.scQtEvaluationReportList}"
+			value="#{consolidationReportBackingBean.managedBean.newBriefingPaperReportList}"
 			selection="#{consolidationReportBackingBean.managedBean.selectedScQtEvaluationReports}"
 			rowKey="#{scQtEvaluationReport}" rowIndexVar="rowIndex" rows="10">
 
@@ -20,7 +20,7 @@
 			<p:column style="width:2%" >
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selAllChk" value="#{consolidationReportBackingBean.managedBean.templateSpecBean.selectAll}" disabled="true">
-						<p:ajax partialSubmit="true" process="@this" update="@this" listener="#{consolidationReportBackingBean.selectAll(consolidationReportBackingBean.managedBean.templateSpecBean.selectAll, consolidationReportBackingBean.managedBean.scQtEvaluationReportList)}"/>
+						<p:ajax partialSubmit="true" process="@this" update="@this" listener="#{consolidationReportBackingBean.selectAll(consolidationReportBackingBean.managedBean.templateSpecBean.selectAll, consolidationReportBackingBean.managedBean.newBriefingPaperReportList)}"/>
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				
@@ -63,7 +63,7 @@
 					process="@this" update="@([id$=reportContentPopupDlgId])"
 					oncomplete="reportContentPopupDlg.show(); return false;">
 					<f:setPropertyActionListener value="#{scQtEvaluationReport}"
-						target="#{consolidationReportBackingBean.managedBean.selectedReport}" />
+						target="#{consolidationReportBackingBean.managedBean.selectedBriefingReport}" />
 					<h:graphicImage value="/css/images/design/edit.png" 
 						rendered="#{scQtEvaluationReport.definationType.parameterCode eq 'UI'}" />
 				</p:commandLink>
@@ -72,7 +72,7 @@
 					process="@this" update="@([id$=reportContentPopupDlgId])"
 					oncomplete="reportContentPopupDlg.show(); return false;">
 					<f:setPropertyActionListener value="#{scQtEvaluationReport}"
-						target="#{consolidationReportBackingBean.managedBean.selectedReport}" />
+						target="#{consolidationReportBackingBean.managedBean.selectedBriefingReport}" />
 					<h:graphicImage
 						value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png"
 						rendered="#{scQtEvaluationReport.definationType.parameterCode eq 'UI'}" />
@@ -82,13 +82,13 @@
 						rendered="#{scQtEvaluationReport.definationType.parameterCode eq 'UP'}">
 						<ac:scSingleFileUploadButton id="evaluationReportUploadBtn"
 							popupWidgetVar="evaluationManualReportUploadWidget"
-							attachment="#{scQtEvaluationReport.scQtEvaluationReportAttachment}"
+							attachment="#{scQtEvaluationReport.scQtFinalizationReportAttachment}"
 							readonly="#{consolidationReportBackingBean.managedBean.readOnly}"
 							deleteFileUploadListener="consolidationReportBackingBean.deleteReportsUploadFile"
 							rowIndex="#{index}">
 							<f:setPropertyActionListener for="actionEvent"
 								value="#{scQtEvaluationReport}"
-								target="#{consolidationReportBackingBean.managedBean.selectedReport}" />
+								target="#{consolidationReportBackingBean.managedBean.selectedBriefingReport}" />
 						</ac:scSingleFileUploadButton>
 					</ui:fragment>
 			</p:column>
@@ -96,7 +96,7 @@
 
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.download.all']}" ajax="false"
-			action="#{consolidationReportBackingBean.downloadAllReports(consolidationReportBackingBean.managedBean.scQt)}"
+			action="#{consolidationReportBackingBean.downloadBriefingPaperReport()}"
 				styleClass="BtnSpacing" />
 				
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
@@ -107,7 +107,7 @@
 				update="@([id$=evaluationreport])" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				styleClass="BtnSpacing"
-				disabled="#{consolidationReportBackingBean.deleteselectedList(consolidationReportBackingBean.managedBean.scQtEvaluationReportList)}"
+				disabled="#{consolidationReportBackingBean.deleteselectedList(consolidationReportBackingBean.managedBean.newBriefingPaperReportList)}"
 				process="@this,evaluationReportsFilesDownloadIds" partialSubmit="true"
 				oncomplete="evaluationReportsDeletePopUp.show();"
 				update="@([id$=#{evaluationReportListDeleteId}])"/>
@@ -117,15 +117,15 @@
 	
 	<p:dialog id="reportContentPopupDlgId" widgetVar="reportContentPopupDlg" closable="false"
 				  modal="true" resizable="false" width="875" height="400" styleClass="pop_up_top" 
-				  header="#{consolidationReportBackingBean.managedBean.selectedReport.title}">
+				  header="#{consolidationReportBackingBean.managedBean.selectedBriefingReport.title}">
 	
 			<table>
 				<tr>
 					<td align="center">
-						<p:inputTextarea value="#{consolidationReportBackingBean.managedBean.selectedReport.reportContent}" 
+						<p:inputTextarea value="#{consolidationReportBackingBean.managedBean.selectedBriefingReport.reportContent}" 
 								 		 scrollHeight="0" rows="15" cols="130" autoResize="false"
 								 		 disabled="#{consolidationReportBackingBean.managedBean.readOnly}"
-								 		 rendered="#{consolidationReportBackingBean.managedBean.selectedReport ne null}">
+								 		 rendered="#{consolidationReportBackingBean.managedBean.selectedBriefingReport ne null}">
 							<p:ajax partialSubmit="true" process="@this" update="@this" />
 						</p:inputTextarea>					
 					</td>

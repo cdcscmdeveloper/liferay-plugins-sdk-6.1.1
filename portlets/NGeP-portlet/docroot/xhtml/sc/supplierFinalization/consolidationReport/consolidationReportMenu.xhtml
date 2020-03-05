@@ -58,7 +58,7 @@
 
 		<p:tabMenu id="tab"
 			activeIndex="#{consolidationReportBackingBean.managedBean.activeIndex}">
-			<p:menuitem value="#{lbl['lbl.sc.briefing.paper.preparation']}"
+			<p:menuitem value="#{lbl['lbl.sc.evaluation.report']}"
 				actionListener="#{consolidationReportBackingBean.onTabMenuChangeAction(0)}"
 				process="@form" update="@form" partialSubmit="true"
 				style="width:150px;">
@@ -70,6 +70,11 @@
 			</p:menuitem>
 			<p:menuitem value="#{lbl['lbl.sc.consolidation.report.itemized']}"
 				actionListener="#{consolidationReportBackingBean.onTabMenuChangeAction(2)}"
+				process="@form" update="@form" partialSubmit="true"
+				style="width:150px;">
+			</p:menuitem>
+			<p:menuitem value="#{lbl['lbl.sc.briefing.paper.preparation']}"
+				actionListener="#{consolidationReportBackingBean.onTabMenuChangeAction(3)}"
 				process="@form" update="@form" partialSubmit="true"
 				style="width:150px;">
 			</p:menuitem>
@@ -90,6 +95,12 @@
 				<ui:include
 					src="#{consolidationReportFolderPath}/supplierRecommendation/supplierRecommendation.xhtml" />
 			</c:if>
+			<c:if
+				test="#{consolidationReportBackingBean.managedBean.activeIndex eq 
+								consolidationReportBackingBean.getEvaluationReportTabIndex()}">
+				<ui:include
+					src="#{consolidationReportFolderPath}/evaluationReport/evaluationReport.xhtml" />
+			</c:if>
 		</p:panel>
 		<ui:include
 			src="/xhtml/sc/supplierFinalization/supplierFinalization/supplierPreferencemargin.xhtml" />
@@ -98,15 +109,15 @@
 		<ui:include
 			src="#{consolidationReportFolderPath}/supplierRecommendation/boardofDirectorsDetails.xhtml" />
 
-		<ac:scSingleFileUploadPopup widgetVar="briefingReportAttWidget"
+		<ac:scSingleFileUploadPopup widgetVar="crBriefingReportAttWidget"
 			fileUploadListener="consolidationReportBackingBean.handleFileUpload"
 			update="@([id$=reportTbl])" />
 
-		<ac:scSingleFileUploadPopup widgetVar="kertasTaklimUploadAttWidget"
+		<!-- <ac:scSingleFileUploadPopup widgetVar="kertasTaklimUploadAttWidget"
 			fileUploadListener="consolidationReportBackingBean.handleKertasFileUpload"
 			update="@([id$=reportTbl])"
 			fileType="#{CommonConstants.FILE_UPLOAD_DOC_TYPE}"
-			invalidFileMessage="#{lbl['lbl.txt.upload.doc.file']}" />
+			invalidFileMessage="#{lbl['lbl.txt.upload.doc.file']}" /> -->
 
 
 		<p:dialog id="submissionPopupId" widgetVar="submissionPopup"

@@ -11,7 +11,7 @@
 		<p:dataTable var="scQtEvaluationReport" id="evaluationreport"
 			widgetVar="documentWidget" style="width:100%;" 
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			value="#{suppFinalizationBackingBean.managedBean.scQtEvaluationReportList}"
+			value="#{suppFinalizationBackingBean.managedBean.newBriefingPaperReportList}"
 			selection="#{suppFinalizationBackingBean.managedBean.selectedScQtEvaluationReports}"
 			rowKey="#{scQtEvaluationReport}" rowIndexVar="rowIndex" rows="10">
 
@@ -20,7 +20,7 @@
 			<p:column style="width:2%" >
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selAllChk" value="#{suppFinalizationBackingBean.managedBean.templateSpecBean.selectAll}" disabled="true">
-						<p:ajax partialSubmit="true" process="@this" update="@this" listener="#{suppFinalizationBackingBean.selectAll(suppFinalizationBackingBean.managedBean.templateSpecBean.selectAll, suppFinalizationBackingBean.managedBean.scQtEvaluationReportList)}"/>
+						<p:ajax partialSubmit="true" process="@this" update="@this" listener="#{suppFinalizationBackingBean.selectAll(suppFinalizationBackingBean.managedBean.templateSpecBean.selectAll, suppFinalizationBackingBean.managedBean.newBriefingPaperReportList)}"/>
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				
@@ -63,7 +63,7 @@
 					process="@this" update="@([id$=reportContentPopupDlgId])"
 					oncomplete="reportContentPopupDlg.show(); return false;">
 					<f:setPropertyActionListener value="#{scQtEvaluationReport}"
-						target="#{suppFinalizationBackingBean.managedBean.selectedReport}" />
+						target="#{suppFinalizationBackingBean.managedBean.selectedBriefingReport}" />
 					<h:graphicImage value="/css/images/design/edit.png"
 						rendered="#{scQtEvaluationReport.definationType.parameterCode eq 'UI'}" />
 				</p:commandLink>
@@ -72,7 +72,7 @@
 					process="@this" update="@([id$=reportContentPopupDlgId])"
 					oncomplete="reportContentPopupDlg.show(); return false;">
 					<f:setPropertyActionListener value="#{scQtEvaluationReport}"
-						target="#{suppFinalizationBackingBean.managedBean.selectedReport}" />
+						target="#{suppFinalizationBackingBean.managedBean.selectedBriefingReport}" />
 					<h:graphicImage
 						value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png"
 						rendered="#{scQtEvaluationReport.definationType.parameterCode eq 'UI'}" />
@@ -82,12 +82,12 @@
 						rendered="#{scQtEvaluationReport.definationType.parameterCode eq 'UP'}">
 						<ac:scSingleFileUploadButton id="evaluationReportUploadBtn"
 							popupWidgetVar="evaluationManualReportUploadWidget"
-							attachment="#{scQtEvaluationReport.scQtEvaluationReportAttachment}"
+							attachment="#{scQtEvaluationReport.scQtFinalizationReportAttachment}"
 							deleteFileUploadListener="suppFinalizationBackingBean.deleteReportsUploadFile"
 							rowIndex="#{index}">
 							<f:setPropertyActionListener for="actionEvent"
 								value="#{scQtEvaluationReport}"
-								target="#{suppFinalizationBackingBean.managedBean.selectedReport}" />
+								target="#{suppFinalizationBackingBean.managedBean.selectedBriefingReport}" />
 						</ac:scSingleFileUploadButton>
 					</ui:fragment>
 			</p:column>
@@ -95,7 +95,7 @@
 
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.download.all']}" ajax="false"
-			action="#{suppFinalizationBackingBean.downloadAllReports(suppFinalizationBackingBean.managedBean.scQt)}"
+			action="#{suppFinalizationBackingBean.downloadBriefingPaperReport()}"
 				styleClass="BtnSpacing" />
 			
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
@@ -106,7 +106,7 @@
 				update="@([id$=evaluationreport])" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				styleClass="BtnSpacing"
-				disabled="#{suppFinalizationBackingBean.deleteselectedList(suppFinalizationBackingBean.managedBean.scQtEvaluationReportList)}"
+				disabled="#{suppFinalizationBackingBean.deleteselectedList(suppFinalizationBackingBean.managedBean.newBriefingPaperReportList)}"
 				process="@this,evaluationReportsFilesDownloadIds" partialSubmit="true"
 				oncomplete="evaluationReportsDeletePopUp.show();"
 				update="@([id$=#{evaluationReportListDeleteId}])"/>
@@ -116,15 +116,15 @@
 	
 	<p:dialog id="reportContentPopupDlgId" widgetVar="reportContentPopupDlg" closable="false"
 				  modal="true" resizable="false" width="875" height="400" styleClass="pop_up_top" 
-				  header="#{suppFinalizationBackingBean.managedBean.selectedReport.title}">
+				  header="#{suppFinalizationBackingBean.managedBean.selectedBriefingReport.title}">
 	
 			<table>
 				<tr>
 					<td align="center">
-						<p:inputTextarea value="#{suppFinalizationBackingBean.managedBean.selectedReport.reportContent}" 
+						<p:inputTextarea value="#{suppFinalizationBackingBean.managedBean.selectedBriefingReport.reportContent}" 
 								 		 scrollHeight="0" rows="15" cols="130" autoResize="false"
 								 		 disabled="#{suppFinalizationBackingBean.managedBean.readOnly}"
-								 		 rendered="#{suppFinalizationBackingBean.managedBean.selectedReport ne null}">
+								 		 rendered="#{suppFinalizationBackingBean.managedBean.selectedBriefingReport ne null}">
 							<p:ajax partialSubmit="true" process="@this" update="@this" />
 						</p:inputTextarea>					
 					</td>
@@ -136,7 +136,7 @@
 					action="#{suppFinalizationBackingBean.saveEditTemplateDocContent(suppFinalizationBackingBean.managedBean.selectedReport)}"
 					oncomplete="reportContentPopupDlg.hide();" process="@this" partialSubmit="true" />
 					
-				<p:commandButton value="#{lbl['lbl.btn.close']}" style="width: 8%;" action="#{suppFinalizationBackingBean.saveEditTemplateDocContent(suppFinalizationBackingBean.managedBean.selectedReport)}"
+				<p:commandButton value="#{lbl['lbl.btn.close']}" style="width: 8%;" 
 					oncomplete="reportContentPopupDlg.hide();" process="@this" partialSubmit="true" />
 			</div>			
 		</p:dialog>
