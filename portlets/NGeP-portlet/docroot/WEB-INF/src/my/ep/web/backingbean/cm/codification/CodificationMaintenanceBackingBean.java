@@ -716,7 +716,7 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 						.getUnspscTitleEng());
 				
        
-		this.getManagedBean().setData("null");
+		this.getManagedBean().setData(null);
 		this.getExtensionAttributeSearchData().resetData();
 		this.getManagedBean().setDisableSelectBtn(true);
 		}
