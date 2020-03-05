@@ -2109,6 +2109,8 @@ public class SmApplicationBackingBean extends
 					.getSmSupplier())) {
 				throw new EpException(MessageConst.ERROR_722542);
 			}
+			//#27356
+			SmApplicationUtil.validateCoordinate(getManagedBean());
 			RequestContext.getCurrentInstance().execute(
 					"saveDraftConfirmDialog.show();");
 		} else {
@@ -2245,15 +2247,18 @@ public class SmApplicationBackingBean extends
 					}
 				}
 			} else if (currentPageType
-					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)
-					&& getManagedBean().isSupplierUser()) {
-				if (getManagedBean().getCompanyBasicGst() != null) {
-					SmCommonUtil.validateGstRegNoUniqueness(getManagedBean()
-							.getSmSupplier().getRegNo(), getManagedBean()
-							.getCompanyBasicGst().getGstRegNo());
+					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)) {
+				if (getManagedBean().isSupplierUser()) {
+					if (getManagedBean().getCompanyBasicGst() != null) {
+						SmCommonUtil.validateGstRegNoUniqueness(getManagedBean()
+								.getSmSupplier().getRegNo(), getManagedBean()
+								.getCompanyBasicGst().getGstRegNo());
+					}
+					SmApplicationUtil.validateGSt(getManagedBean(), currentTab,
+							ruleHelper);
 				}
-				SmApplicationUtil.validateGSt(getManagedBean(), currentTab,
-						ruleHelper);
+				//#27356
+				SmApplicationUtil.validateCoordinate(getManagedBean());
 			}
 			setSupplierChangeValues(currentPageType);
 			validateUpdateSmAppl(applType, currentPageType, outputPageType,
@@ -5174,6 +5179,8 @@ public class SmApplicationBackingBean extends
 				.getSmAppl().getSmFacilities());
 		EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
 				.getApplFactoryFacilities());
+		//#27356
+		SmApplicationUtil.validateCoordinate(getManagedBean());
 		if (smFac.getFacilityId() == null) {
 			RequestContext.getCurrentInstance().execute(
 					"smFacilityFactorDtWidVar.paginator.endLink.click()");
@@ -12353,7 +12360,7 @@ public class SmApplicationBackingBean extends
 		if (!EntityHelper.isObjectDifference(getManagedBean().getSmAppl()
 				.getSmCompanyBasic().getSmCompanyAddresses().get(0)
 				.getSmAddress(), facilityBean.getSmAddress(), new String[] {
-				"mapLatitude", "mapLongitude", "pmDivision" })) {
+				 "pmDivision" })) {
 			getManagedBean().setFacAddresSameAs("HQ");
 		} else if (!EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
 				.getSmSupplierBranches())) {
@@ -12361,7 +12368,7 @@ public class SmApplicationBackingBean extends
 					.getSmSupplierBranches()) {
 				if (!EntityHelper.isObjectDifference(br.getSmAddress(),
 						facilityBean.getSmAddress(), new String[] {
-								"mapLatitude", "mapLongitude", "pmDivision" })) {
+								"pmDivision" })) {
 					getManagedBean().setFacAddresSameAs(
 							br.getSupplierBranchId().toString());
 				}
