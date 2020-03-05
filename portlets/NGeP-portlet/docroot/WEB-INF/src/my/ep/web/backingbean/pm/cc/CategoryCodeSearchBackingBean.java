@@ -31,6 +31,7 @@ import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.ResourceBundleUtils;
@@ -40,6 +41,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.pm.cc.CategoryCodeSearchManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -696,8 +698,27 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL3ListByL2Id(reqDTO);
 
 		List<SelectItem> selectItems = new ArrayList<SelectItem>();
-		for(PmCategoryL3 l3 : resDTO.getCategoryL3List()) {
-			selectItems.add(new SelectItem(l3.getCategoryL3Id(), l3.getCategoryL3Code() + " - " + l3.getCategoryName()));
+		//27438 : Disciplinary Action - start
+		SelectItem item = new SelectItem();
+		for (PmCategoryL3 pmCategoryL3 : resDTO.getCategoryL3List()) {
+			item = new SelectItem(pmCategoryL3.getCategoryL3Id(),
+					pmCategoryL3.getCategoryL3Code() + " - " + pmCategoryL3.getCategoryName());
+			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
+			if(currSupp != null && currSupp.getSmAppl() != null){
+				List<Object[]> cancelCat = SmApplicationUtil.retrieveCancelCategoryBySupplier(currSupp);
+				
+				if(cancelCat != null
+						&& cancelCat.size() > 0){
+					for(Object[] arr : cancelCat){
+						if(item.getValue().toString().equalsIgnoreCase(arr[2].toString())){
+							item.setDisabled(true);
+							log.info("Disciplinary Action - disabled cancel category");
+						}
+					}
+				}
+			}
+			selectItems.add(item);
+			//27438 : Disciplinary Action - end
 		}
 		
 		return selectItems;
