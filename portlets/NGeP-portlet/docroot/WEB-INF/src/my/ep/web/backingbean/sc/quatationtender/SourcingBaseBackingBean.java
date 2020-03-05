@@ -269,6 +269,18 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 		}
 	}
+
+	// Redmine 25396: remove duplication option view by adding new drop down field
+		/** 
+		 * get faces scopes
+		 * 
+		 * @return FacesScopes
+		 */
+		private FacesScopes getFacesScopes() {
+			FacesScopes facesScopes = new FacesScopes();
+			return facesScopes;
+		}
+		// end of 25396
 		
 	/**
 	 * To populate details into ScAttachment instance.
