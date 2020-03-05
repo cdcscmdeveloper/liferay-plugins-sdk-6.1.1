@@ -371,10 +371,6 @@ public class SupplierFinalizationBackingBean extends
 			case 5:
 				navigateToEndorsementReportTab();	
 				break;
-			case 6:
-				//Enhancement #21694
-				navigateToViewReverseTab();
-				break;
 		}
 	}
 
