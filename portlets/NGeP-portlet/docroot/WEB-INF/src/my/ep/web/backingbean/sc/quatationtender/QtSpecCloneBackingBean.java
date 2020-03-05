@@ -29,6 +29,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
@@ -36,11 +37,13 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.quationtender.SpecificationReqDTO;
@@ -52,6 +55,7 @@ import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -62,6 +66,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCheckListValue;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtScoreSetting;
+import my.ep.persistence.entity.sc.quationtender.ScQtScoreWeightage;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
@@ -906,13 +911,82 @@ public class QtSpecCloneBackingBean extends
 					if (recommnendationSetting.getSettingType() == SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
 		
 							ScQtScoreSetting settings=copyScoreSettings(recommnendationSetting);
-							this.getManagedBean().setTechnicalItemScoreSetting(
-									settings);
+							this.getManagedBean().setTechnicalItemScoreSetting(settings);
+							
 						
 					}
-					
 				}
 			}
+			
+			settinglist = null;
+			this.getManagedBean().setTechnicalScoring(null);
+			this.getManagedBean().setTechnicalScoring(
+					new ArrayList<ScQtCheckList>());
+			List<ScQtCheckList> checkList = this.getManagedBean()
+					.getScQtCheckSt2techProposal();
+			if (null != checkList && !checkList.isEmpty()) {
+				// Collections.sort(checkList);
+				int score = 0;
+				float addScore = 0;
+				for (ScQtCheckList list : checkList) {
+					if (null == list.getQtScoreWeightage()) {
+						ScQtScoreWeightage scoreWeightage = new ScQtScoreWeightage();
+						scoreWeightage.setScore(new BigDecimal(0));
+						list.setQtScoreWeightage(scoreWeightage);
+						setUserDetails(list.getQtScoreWeightage());
+					}
+					if (null != list.getQtScoreWeightage()
+							&& null != list.getQtScoreWeightage().getScore()) {
+						addScore = addScore
+								+ list.getQtScoreWeightage().getScore()
+										.intValue();
+					}
+					score = (int) addScore;
+					if (list.isScoringReq()) {
+						this.getManagedBean().getTechnicalScoring().add(list);
+					} else {
+						list.getQtScoreWeightage().setScore(new BigDecimal(0));
+					}
+					if (null != list.getQtScoreWeightage()
+							&& null != list.getQtScoreWeightage().getScore()) {
+						list.getQtScoreWeightage().setScore(
+								list.getQtScoreWeightage().getScore());
+					}
+
+				}
+
+				this.getManagedBean().setTechPoints(score);
+				techWeightageSum();
+				techScoreSum();
+			}
+			
+			
+			if (null != this.getManagedBean().getTechnicalScoring()
+					&& !this.getManagedBean().getTechnicalScoring().isEmpty()) {
+				this.getManagedBean().setTechnicalUserScoringSchema(false);
+				for (ScQtCheckList technicalScoringChecklist : this
+						.getManagedBean().getTechnicalScoring()) {
+					if (null != technicalScoringChecklist.getPmStatus()
+							&& QTStatusConst.TS_COMPLETED
+									.equals(technicalScoringChecklist
+											.getPmStatus().getStatusId())
+							&& null != technicalScoringChecklist
+									.getPmEvalStatus()
+							&& QTStatusConst.TS_PENDING_SUBMISSION
+									.equals(technicalScoringChecklist
+											.getPmEvalStatus().getStatusId())) {
+						this.getManagedBean().setTechnicalUserScoringSchema(
+								true);
+						break;
+
+					}
+
+				}
+			}
+			checklistSorting(this.getManagedBean().getTechnicalScoring());
+			
+			
+			
 			
 			
 		} finally {
@@ -930,6 +1004,94 @@ public class QtSpecCloneBackingBean extends
 		setUserDetails(copy);
 		
 		return copy;
+	}
+	
+	private void techWeightageSum() {
+		try {
+			int total = 0;
+			List<ScQtCheckList> weightageList = this.getManagedBean()
+					.getTechnicalScoring();
+			if (weightageList == null) {
+				weightageList = new ArrayList<ScQtCheckList>();
+			}
+			for (int i = 0; i < weightageList.size(); i++) {
+				ScQtCheckList weight = (ScQtCheckList) weightageList.get(i);
+				if (null != weight.getQtScoreWeightage()
+						&& weight.getQtScoreWeightage().getWeightage() == null) {
+					weight.getQtScoreWeightage()
+							.setWeightage(new BigDecimal(0));
+				}
+				if (null != weight.getQtScoreWeightage()) {
+					total = total
+							+ weight.getQtScoreWeightage().getWeightage()
+									.intValue();
+				}
+				this.getManagedBean().setTechnicalWeightageScore(
+						new BigDecimal(total));
+				if (total > 100) {
+					throw new EpException(MessageConst.ERROR_760148);
+				}
+
+			}
+		} finally {
+
+		}
+
+	}
+	
+	private void techScoreSum() {
+		try {
+			int total = 0;
+			List<ScQtCheckList> weightageList = this.getManagedBean()
+					.getTechnicalScoring();
+			if (weightageList == null) {
+				weightageList = new ArrayList<ScQtCheckList>();
+			}
+			for (int i = 0; i < weightageList.size(); i++) {
+				ScQtCheckList weight = (ScQtCheckList) weightageList.get(i);
+				if (null != weight.getQtScoreWeightage()
+						&& weight.getQtScoreWeightage().getWeightage() == null) {
+					weight.getQtScoreWeightage()
+							.setWeightage(new BigDecimal(0));
+				}
+				if (null != weight.getQtScoreWeightage()) {
+					total = total
+							+ weight.getQtScoreWeightage().getScore()
+									.intValue();
+				}
+				BigDecimal techScore = new BigDecimal(total);
+				this.getManagedBean().setTechPoints(techScore.intValue());
+			}
+		} finally {
+
+		}
+
+	}
+	
+	private BigDecimal retrieveTechnicalEvalutionPassingScorePmrules(
+			String ruleType) {
+		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IRuleSO.class);
+		BigDecimal technicalPassingScore = new BigDecimal(0);
+		RuleReqDTO ruleReqDTO = new RuleReqDTO();
+		ruleReqDTO.setRuleType(ruleType);
+		List<PmConfigRuleValue> ruleValueList = ruleSO
+				.getRuleValuesByTypeInCurrentDate(ruleReqDTO)
+				.getRuleValueList();
+		if (ruleValueList != null && ruleValueList.size() > 0) {
+			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
+			if (configRuleValue != null
+					&& configRuleValue.getRuleValue() != null) {
+				technicalPassingScore = new BigDecimal(
+						configRuleValue.getRuleValue());
+			}
+		} else {
+			throw new EpException(MessageConst.ERROR_770222,
+					new String[] { getRuleTypeDesc(ruleReqDTO.getRuleType()) });
+		}
+		ruleSO = null;
+		return technicalPassingScore;
 	}
 	
 	private List<ScQtCheckList> getToBeRemoveList() {
