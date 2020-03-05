@@ -301,7 +301,7 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 	public void extensionCodeSearch() {
 	if (this.getManagedBean().getData()== null){
         this.getManagedBean().setDisableSelectBtn(true);
-        extensionAttributeSearchData.resetData();
+        extensionAttributeSearchData.reloadData();
 	}else{
 	   	this.getManagedBean().setDisableSelectBtn(false);
 		extensionAttributeSearchData.reloadData();
@@ -1503,8 +1503,8 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 		   log.info("reset Extension Data");
 		
 		    this.getManagedBean().setExtension(null);
-		    this.getManagedBean().setStatus("null");
-			this.getManagedBean().setData("null");
+		    this.getManagedBean().setStatus(null);
+			this.getManagedBean().setData(null);
 			this.getExtensionAttributeSearchData().reloadData();
 			this.getManagedBean().setDisableSelectBtn(true);
 			
