@@ -7633,7 +7633,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		if(this.getManagedBean().getScQtFinalization()==null){
 			this.getManagedBean().setScQtFinalization(this.getCurrentFinalizationMethod());
 		}
-		if(this.getManagedBean().getScQtFinalization()!=null){
+		if(this.getManagedBean().getScQtFinalization()!=null && act!=null){
 			String method = this.getManagedBean().getScQtFinalization().getFinalizationMethod().getParameterCode();
 			if(method.equalsIgnoreCase("L")){
 				return act.isMultiLoiSignedOff();
