@@ -2,6 +2,7 @@ package my.ep.web.backingbean.report.sm;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -12,6 +13,7 @@ import my.ep.constants.CommonConstants;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
+import my.ep.factory.EpLogger;
 import my.ep.web.constant.report.PmReportConst;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.SuppPerformRptManagedBean;
@@ -20,6 +22,7 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 @ManagedBean(name = "suppPerformRptBB")
 @ViewScoped
@@ -30,6 +33,7 @@ public class SuppPerformRptBackingBean extends
 	 * 
 	 */
 	private static final long serialVersionUID = -7400800649761552705L;
+	private static final Logger log = EpLogger.getLogger(SuppPerformRptBackingBean.class);
 
 	public SuppPerformRptBackingBean() {
 		//getManagedBean().setYearList(getYearList());
@@ -60,6 +64,12 @@ public class SuppPerformRptBackingBean extends
 						.getSelectedOrgProfile().getSmSupplier().getCompanyName());
 				supplierSearchReqDTO.setCompanyName(getManagedBean()
 						.getSelectedOrgProfile().getSmSupplier().getCompanyName());
+				
+				if (supplierSearchReqDTO.getCompanyName().equalsIgnoreCase(SmReportConst.SM_SUPPLIER_PERFORMANCE_COMP_1)
+						|| supplierSearchReqDTO.getCompanyName().equalsIgnoreCase(SmReportConst.SM_SUPPLIER_PERFORMANCE_COMP_2)
+						|| supplierSearchReqDTO.getCompanyName().equalsIgnoreCase(SmReportConst.SM_SUPPLIER_PERFORMANCE_COMP_2)) {
+					getManagedBean().setReportCode(SmReportConst.SM_SUPPLIER_PERFORMANCE_V_RPT_VAL);
+				}
 			}
 		}else{
 			if(getManagedBean().getMofNo() != null){
@@ -87,6 +97,11 @@ public class SuppPerformRptBackingBean extends
 		params.put(PmReportConst.PARAM_PM_TO_DATE, DateUtils.dateToString(
 				CommonConstants.DEFAULT_DATE_FORMAT_WITH_MONTH_NAME_NEW, getManagedBean()
 				.getDateTo()));
+		
+		for (Map.Entry<String, String> entry : params.entrySet()) {
+			log.info("Key : " + entry.getKey() + " Value : " + entry.getValue());
+		}
+		log.info("********Report Code************* after set newCode: " + getManagedBean().getReportCode());
 		generateSmReport(params);
 	}
 	
