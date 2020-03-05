@@ -2187,7 +2187,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 									SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
 									SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelDirector(),"identificationNo");
 									if(personnelDirectorSSM == null || personnelSSM == null){
-										personnelsRole.add(personnel);
+										//personnelsRole.add(personnel);
 									}
 								}
 							}
@@ -4208,8 +4208,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 		if(updatePersonnel){
 			SmPersonnel personnel = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(owner.getIdentificationNo(), this.getManagedBean().getSmPersonnelAll(), "identificationNo");
-			personnel.setPmCountry(owner.getNationality());
-			personnel.setName(owner.getOwnerName());
+			//27477
+			if(personnel != null){
+				personnel.setPmCountry(owner.getNationality());
+				personnel.setName(owner.getOwnerName());
+			}			
 		}
 	}
 }
