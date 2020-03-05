@@ -91,7 +91,7 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.action']}"
 						style="width:10%;text-align: center;"
-						rendered="#{!isReadOnly and !zoneCoverageReadonly and !createQtBB.isPanelZone()}">
+						rendered="#{!isReadOnly and !zoneCoverageReadonly and scQt.panel eq 'false'}">
 						<p:commandLink
 							actionListener="#{createQtBB.editZones(zoneTree,index,false)}"
 							process="@this" update="@([id$=dlgId])"
@@ -106,17 +106,18 @@
 				<p:selectBooleanCheckbox id="checkAllZonesList"
 					style="float:left;margin-top: 13px;margin-right: -4px;">
 					<p:ajax event="change" partialSubmit="true" process="@all"
-						update="zoneGeneralDataTable"
+						update="zoneGeneralDataTable,@([id$=quotationTndrorspecCommitteezonesBtnDeleteId])"
 						listener="#{createQtBB.checkAllZoneGeneral}" />
 				</p:selectBooleanCheckbox>
 				<p:spacer width="1" />
 				<h:outputText value="#{lbl['lbl.sc.spec.check.all']}"
 					style="float:left;margin-top: 12px;;margin-left: 10px;" />
-				    <p:commandButton value="#{lbl['lbl.btn.add']}" process="@this,qtdetailsid" rendered="#{createQtBB.isPanelZone()}"
+				  <p:commandButton value="#{lbl['lbl.btn.add']}" process="@this,qtdetailsid" rendered="#{(scQt.zonal eq 'true' and scQt.panel eq 'true')}"
+					id="quotationTndrorspecCommitteezonesBtnAddId"
 					styleClass="BtnSpacing" update="@([id$=zonePopupGeneral])"
 					actionListener="#{createQtBB.showGeneralZonesPopup}"
-					disabled="#{createQtBB.isPanelZone()}"/>
-					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this,qtdetailsid" rendered="#{!createQtBB.isPanelZone()}"
+					disabled="#{createQtBB.zoneLocationAddBtnDisable()}"/>
+					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this,locationLevels,qtdetailsid" rendered="#{scQt.panel eq 'false'}"
 					styleClass="BtnSpacing" update="@([id$=zonePopupGeneral])"
 					actionListener="#{createQtBB.showGeneralZonesPopup}" />
 				<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
@@ -144,9 +145,77 @@
 			showSummary="false" autoUpdate="true" closable="true"
 			severity="error, info" />
 		<h:panelGroup id="zonePopupGeneral">
-			<h:panelGroup rendered="#{!empty createQtBB.managedBean.rootZoanlTree}">
+			<h:panelGroup rendered="#{!empty createQtBB.managedBean.rootZoanlTree or !empty createQtBB.managedBean.zoneGeneralTreesPanel   }">
 			<table styleClass="noBorders tr,noBorders td" border="0">
-				<TR>
+				<c:choose>
+						<c:when test="#{scQt.zonal eq 'true' and scQt.panel eq 'true'}">
+					<TR>
+					<TD valign="top"><p:outputLabel
+							value="#{lbl['lbl.sc.zone.location']}"  /> <p:outputLabel value="*"
+							styleClass="mandatory" /></TD>
+					<TD>
+					<p:dataTable  id="treeZoneGeneralPopup" rows="10"
+					value="#{createQtBB.managedBean.zoneGeneralTreesPanel}"
+					var="zoneTreePanel" style="width:100%" rowIndexVar="index"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					rowKey="#{zoneTreePanel}">
+                    <ac:paginator for="treeZoneGeneralPopup" />
+                    <p:column style="width:250%;">
+						<p:tree value="#{zoneTreePanel}" var="locationPanel"
+							selectionMode="checkbox" style="width:500px;">
+							<p:ajax event="select" update="@([id$=quotationTndrorspecCommitteezonesBtnOKId])"
+								listener="#{createQtBB.selectZoneTreeNode}" />
+							<p:ajax event="unselect" update="@([id$=quotationTndrorspecCommitteezonesBtnOKId])"
+								listener="#{createQtBB.unSelectZoneTreeNode}" />
+							<p:treeNode type="zone">
+						    <h:outputText value="#{locationPanel.zoneName}" />
+							</p:treeNode>
+							<p:treeNode type="state">
+								<h:outputText value="#{locationPanel.pmState.stateName}" />
+							</p:treeNode>
+							<p:treeNode type="division">
+								<h:outputText value="#{locationPanel.pmDivision.divisionName}" />
+							</p:treeNode>
+							<p:treeNode type="district">
+								<h:outputText value="#{locationPanel.pmDistrict.districtName}" />
+							</p:treeNode>
+						</p:tree>
+						</p:column>
+				</p:dataTable>
+					</TD>
+				</TR>
+					<TR>
+					<TD></TD>
+					<TD><p:selectBooleanCheckbox id="checkAllZonesListPanel"
+					  style="float:left;margin-top: 13px;margin-right: -4px;">
+					<p:ajax event="change" partialSubmit="true" process="@all"
+						update="treeZoneGeneralPopup,@([id$=quotationTndrorspecCommitteezonesBtnOKId])"
+						listener="#{createQtBB.checkAllZoneGeneralPanel}" />
+				           </p:selectBooleanCheckbox>
+						<p:spacer width="1" /> 
+						<h:outputText
+							value="#{lbl['lbl.sc.spec.check.all']}"
+							style="float:left;margin-top: 12px;;margin-left: 10px;" /> 
+						<p:commandButton
+							value="#{lbl['lbl.btn.cancel']}" style="float:right;"
+							styleClass="BtnSpacing" onclick="ZoneGeneral.hide();" process="@this">
+							<f:setPropertyActionListener target="#{createQtBB.managedBean.zoneLocation}" value="false" />
+							<f:setPropertyActionListener target="#{createQtBB.managedBean.autoUpdate}" value="true" />
+						</p:commandButton>
+						&#160;&#160; 
+						<p:commandButton value="#{lbl['lbl.btn.ok']}"
+						id="quotationTndrorspecCommitteezonesBtnOKId"
+			         	disabled="#{createQtBB.zoneLocationOkBtnDisable()}"
+							style="float:right;" process="@all"
+							update="@this, zoneGeneralDataTable,zonePopupGeneral,quotationTndrorspecCommitteezonesBtnAddId"
+							styleClass="BtnSpacing"
+							action="#{createQtBB.addTreeNode}">
+						</p:commandButton>
+					</TD>
+				</TR>
+					</c:when>
+					<c:otherwise>
+					<TR>
 					<td style="width: 35%" valign="top"><p:outputLabel
 							value="#{lbl['lbl.sc.zone.name']}"></p:outputLabel> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
@@ -217,6 +286,8 @@
 						</p:commandButton>
 					</TD>
 				</TR>
+				</c:otherwise>
+				</c:choose>
 			</table>
 			</h:panelGroup>
 		</h:panelGroup>
