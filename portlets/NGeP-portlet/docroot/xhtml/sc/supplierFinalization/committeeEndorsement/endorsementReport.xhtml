@@ -9,7 +9,7 @@
 	<ui:param name="finalization"
 		value="#{suppFinalizationBackingBean.managedBean.scQtFinalization}" />
 	<ui:param name="readOnly"
-		value="#{suppFinalizationBackingBean.managedBean.secretaryUser}" />
+		value="#{!suppFinalizationBackingBean.managedBean.secretaryUser or suppFinalizationBackingBean.managedBean.readOnly}" />
 
 	<p:remoteCommand name="updateEndorsementReport" partialSubmit="true"
 		process="@form" update="@form"
@@ -32,7 +32,7 @@
 							<tr>
 								<td><p:selectOneRadio id="withConditionsId" required="true"
 										label="#{lbl['lbl.sc.sf.with.conditions']}"
-										value="#{finalization.withTerms}" disabled="#{!readOnly}">
+										value="#{finalization.withTerms}" disabled="#{readOnly}">
 										<f:selectItems
 											value="#{suppFinalizationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 										<p:ajax event="change" process="@this" partialSubmit="true"
@@ -61,7 +61,7 @@
 										<td style="float: right; margin-left: 55px;"><p:inputTextarea
 												id="withConditionTxtId" value="#{finalization.termsText}"
 												cols="80" rows="3" onkeydown="limitTextArea(this,1000);" onmouseout="limitTextArea(this,1000);"
-												required="#{readOnly}" disabled="#{!readOnly}"
+												required="#{readOnly}" disabled="#{readOnly}"
 												label="#{lbl['lbl.sc.sf.with.conditions.as.below']}" /> <p:message
 												id="withConditionTxtMsgId" for="withConditionTxtId"
 												display="icon" /></td>
@@ -78,7 +78,7 @@
 		<ac:scRemarkAndAttachment
 			remarkList="#{suppFinalizationBackingBean.managedBean.finalizationPengreysonremarks}"
 			showAttachment="false" header="#{lbl['lbl.sc.recommendation']}"
-			readonly="#{!readOnly}" numberOfCols="80" />
+			readonly="#{readOnly}" numberOfCols="80" />
 
 		<p:panel id="panelJustificationId"
 			header="#{lbl['lbl.sc.sf.justification']}" toggleable="true"
@@ -96,13 +96,13 @@
 							value="#{suppFinalizationBackingBean.managedBean.justification.reasonCode}"
 							style="width: 300px;margin-bottom: 5px;"
 							label="#{lbl['lbl.sc.sf.justification.selection']}"
-							disabled="#{!readOnly}">
+							disabled="#{readOnly}">
 							<f:selectItems
 								value="#{suppFinalizationBackingBean.managedBean.justDropdown}" />
 							<p:ajax event="change" process="@this" partialSubmit="true"
 								update="panelWithJustificationTxtId"
 								listener="#{suppFinalizationBackingBean.justificationChange}"
-								disabled="#{!readOnly}" />
+								disabled="#{readOnly}" />
 						</p:selectOneMenu> <p:message id="justificationDDMsgId" for="justificationDDId"
 							display="icon" /></td>
 				</tr>
@@ -116,7 +116,7 @@
 									id="justificationTxtId" required="#{readOnly}"
 									value="#{finalization.justificationText}" cols="80" rows="3"
 									onkeydown="limitTextArea(this,1000);" onmouseout="limitTextArea(this,1000);"
-									disabled="#{!readOnly}"
+									disabled="#{readOnly}"
 									label="#{lbl['lbl.sc.sf.justification']}" /> <p:message
 									id="justificationTxtMsgId" for="justificationTxtId"
 									display="icon" /></td>
@@ -140,7 +140,7 @@
 							popupWidgetVar="endorseReportAttWidget"
 							update="@([id$=endorseReportUploadBtnId],[id$=endorseReportTbl])"
 							attachment="#{suppFinalizationBackingBean.managedBean.endorsementReport.scQtFinalizationReportAttachment}"
-							readonly="#{!readOnly}" /></td>
+							readonly="#{readOnly}" /></td>
 				</tr>
 			</table>
 		</p:panel>

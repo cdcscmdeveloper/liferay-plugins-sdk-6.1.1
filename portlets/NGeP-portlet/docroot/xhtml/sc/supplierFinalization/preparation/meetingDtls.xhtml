@@ -17,12 +17,13 @@
 
 			<ui:param name="disableMeeting"
 				      value="#{!isSecretaryUser or 
-										meetingDtl.recordStatusFlg ne DbValueConst.recordStatusActive}" />
+										meetingDtl.recordStatusFlg ne DbValueConst.recordStatusActive
+										or suppFinalizationBackingBean.managedBean.readOnly}" />
 			<p:column styleClass="td-check-box-spacing">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selAllChk"
 						value="#{suppFinalizationBackingBean.managedBean.selectAllMeetings}"
-						disabled="#{suppFinalizationBackingBean.managedBean.hasPreviousMeeting}">
+						disabled="#{suppFinalizationBackingBean.managedBean.hasPreviousMeeting or suppFinalizationBackingBean.managedBean.readOnly}">
 
 						<p:ajax partialSubmit="true" process="@this"
 							update="@([id$=supplierFinalizationMeetingPreparationPnlId])"
@@ -102,10 +103,11 @@
 				process="@this,meetingDtlTbl" partialSubmit="true"
 				action="#{suppFinalizationBackingBean.addMeetingDtls}"
 				update="meetingDtlTbl"
-				rendered="#{isSecretaryUser}" />
+				rendered="#{isSecretaryUser}" 
+				disabled="#{suppFinalizationBackingBean.managedBean.readOnly}"/>
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this,meetingDtlTbl" partialSubmit="true"
-			disabled="#{suppFinalizationBackingBean.deleteselectedList(suppFinalizationBackingBean.managedBean.meetingList)}"
+				disabled="#{suppFinalizationBackingBean.deleteselectedList(suppFinalizationBackingBean.managedBean.meetingList) or suppFinalizationBackingBean.managedBean.readOnly}"
 				oncomplete="dlgPerformDel.show();" update="@([id$=#{supplierFinalizationPreparationMeetingDeleteId}])"
 				rendered="#{isSecretaryUser}" />
 

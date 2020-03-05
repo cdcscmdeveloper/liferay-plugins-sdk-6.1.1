@@ -1038,6 +1038,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		debugLogger("viewFinalizationSupplierDetails");
 		RoleCode[] justAllowRoleCodes = {RoleCode.BPK_AUDITOR};
 		SupplierFinalizationBackingBean sfbb =  new SupplierFinalizationBackingBean();
+		sfbb.renewSesionObject();
 		return sfbb.editSupplierFinalizationDetails(scQt, previousPageUrl, false, justAllowRoleCodes);
 	}
 	

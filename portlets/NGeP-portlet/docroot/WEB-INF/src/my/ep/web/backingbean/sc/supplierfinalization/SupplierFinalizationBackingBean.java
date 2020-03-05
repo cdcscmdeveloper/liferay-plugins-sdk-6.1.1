@@ -7385,6 +7385,40 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		}
 		newBPReportList.add(report);
 	}
+	//19287 #114
+	private ScQtFinalization getCurrentFinalizationMethod(){
+		if(this.getManagedBean().getScQt()!=null){
+			IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTSuppFinalizationSO.class);
+			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.retrieveSupplierFinalizationByQtId(reqDTO);
+			if(resDTO.getScQtFinalization()!=null){
+				return resDTO.getScQtFinalization();
+			}
+			return null;
+		}
+		return null;
+	}
+	public boolean getEndorsementType(ScQtCommitteeActivity act){
+		if(this.getManagedBean().getScQtFinalization()==null){
+			this.getManagedBean().setScQtFinalization(this.getCurrentFinalizationMethod());
+		}
+		if(this.getManagedBean().getScQtFinalization()!=null && act!=null){
+			String method = this.getManagedBean().getScQtFinalization().getFinalizationMethod().getParameterCode();
+			if(method.equalsIgnoreCase("L")){
+				return act.isMultiLoiSignedOff();
+			}else if(method.equalsIgnoreCase("B")){
+				return act.isBiddingSignedOff();
+			}else{
+				return act.isSignedOff();
+			}
+		}
+		return false;
+	}
+	//19287 #114
+
 }
 
 
