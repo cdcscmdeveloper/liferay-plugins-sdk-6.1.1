@@ -918,75 +918,75 @@ public class QtSpecCloneBackingBean extends
 				}
 			}
 			
-			settinglist = null;
-			this.getManagedBean().setTechnicalScoring(null);
-			this.getManagedBean().setTechnicalScoring(
-					new ArrayList<ScQtCheckList>());
-			List<ScQtCheckList> checkList = this.getManagedBean()
-					.getScQtCheckSt2techProposal();
-			if (null != checkList && !checkList.isEmpty()) {
-				// Collections.sort(checkList);
-				int score = 0;
-				float addScore = 0;
-				for (ScQtCheckList list : checkList) {
-					if (null == list.getQtScoreWeightage()) {
-						ScQtScoreWeightage scoreWeightage = new ScQtScoreWeightage();
-						scoreWeightage.setScore(new BigDecimal(0));
-						list.setQtScoreWeightage(scoreWeightage);
-						setUserDetails(list.getQtScoreWeightage());
-					}
-					if (null != list.getQtScoreWeightage()
-							&& null != list.getQtScoreWeightage().getScore()) {
-						addScore = addScore
-								+ list.getQtScoreWeightage().getScore()
-										.intValue();
-					}
-					score = (int) addScore;
-					if (list.isScoringReq()) {
-						this.getManagedBean().getTechnicalScoring().add(list);
-					} else {
-						list.getQtScoreWeightage().setScore(new BigDecimal(0));
-					}
-					if (null != list.getQtScoreWeightage()
-							&& null != list.getQtScoreWeightage().getScore()) {
-						list.getQtScoreWeightage().setScore(
-								list.getQtScoreWeightage().getScore());
-					}
-
-				}
-
-				this.getManagedBean().setTechPoints(score);
-				techWeightageSum();
-				techScoreSum();
-			}
-			
-			
-			if (null != this.getManagedBean().getTechnicalScoring()
-					&& !this.getManagedBean().getTechnicalScoring().isEmpty()) {
-				this.getManagedBean().setTechnicalUserScoringSchema(false);
-				for (ScQtCheckList technicalScoringChecklist : this
-						.getManagedBean().getTechnicalScoring()) {
-					if (null != technicalScoringChecklist.getPmStatus()
-							&& QTStatusConst.TS_COMPLETED
-									.equals(technicalScoringChecklist
-											.getPmStatus().getStatusId())
-							&& null != technicalScoringChecklist
-									.getPmEvalStatus()
-							&& QTStatusConst.TS_PENDING_SUBMISSION
-									.equals(technicalScoringChecklist
-											.getPmEvalStatus().getStatusId())) {
-						this.getManagedBean().setTechnicalUserScoringSchema(
-								true);
-						break;
-
-					}
-
-				}
-			}
-			checklistSorting(this.getManagedBean().getTechnicalScoring());
-			
-			
-			
+//			settinglist = null;
+//			this.getManagedBean().setTechnicalScoring(null);
+//			this.getManagedBean().setTechnicalScoring(
+//					new ArrayList<ScQtCheckList>());
+//			List<ScQtCheckList> checkList = this.getManagedBean()
+//					.getScQtCheckSt2techProposal();
+//			if (null != checkList && !checkList.isEmpty()) {
+//				// Collections.sort(checkList);
+//				int score = 0;
+//				float addScore = 0;
+//				for (ScQtCheckList list : checkList) {
+//					if (null == list.getQtScoreWeightage()) {
+//						ScQtScoreWeightage scoreWeightage = new ScQtScoreWeightage();
+//						scoreWeightage.setScore(new BigDecimal(0));
+//						list.setQtScoreWeightage(scoreWeightage);
+//						setUserDetails(list.getQtScoreWeightage());
+//					}
+//					if (null != list.getQtScoreWeightage()
+//							&& null != list.getQtScoreWeightage().getScore()) {
+//						addScore = addScore
+//								+ list.getQtScoreWeightage().getScore()
+//										.intValue();
+//					}
+//					score = (int) addScore;
+//					if (list.isScoringReq()) {
+//						this.getManagedBean().getTechnicalScoring().add(list);
+//					} else {
+//						list.getQtScoreWeightage().setScore(new BigDecimal(0));
+//					}
+//					if (null != list.getQtScoreWeightage()
+//							&& null != list.getQtScoreWeightage().getScore()) {
+//						list.getQtScoreWeightage().setScore(
+//								list.getQtScoreWeightage().getScore());
+//					}
+//
+//				}
+//
+//				this.getManagedBean().setTechPoints(score);
+//				techWeightageSum();
+//				techScoreSum();
+//			}
+//			
+//			
+//			if (null != this.getManagedBean().getTechnicalScoring()
+//					&& !this.getManagedBean().getTechnicalScoring().isEmpty()) {
+//				this.getManagedBean().setTechnicalUserScoringSchema(false);
+//				for (ScQtCheckList technicalScoringChecklist : this
+//						.getManagedBean().getTechnicalScoring()) {
+//					if (null != technicalScoringChecklist.getPmStatus()
+//							&& QTStatusConst.TS_COMPLETED
+//									.equals(technicalScoringChecklist
+//											.getPmStatus().getStatusId())
+//							&& null != technicalScoringChecklist
+//									.getPmEvalStatus()
+//							&& QTStatusConst.TS_PENDING_SUBMISSION
+//									.equals(technicalScoringChecklist
+//											.getPmEvalStatus().getStatusId())) {
+//						this.getManagedBean().setTechnicalUserScoringSchema(
+//								true);
+//						break;
+//
+//					}
+//
+//				}
+//			}
+//			checklistSorting(this.getManagedBean().getTechnicalScoring());
+//			
+//			
+//			
 			
 			
 		} finally {
