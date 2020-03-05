@@ -163,7 +163,7 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 				
 				if(getItemcode()!=null && getItemcode().length()>0 ) {
 					
-					SearchFilterBean filterBean = new SearchFilterBean("scRequestItem.cmItem.extensionCode",	SearchOperator.OPERATOR_EQUALS.value(),getItemcode());
+					SearchFilterBean filterBean = new SearchFilterBean("scRequestItem.cmItem.extensionCode",	SearchOperator.OPERATOR_LIKE.value(),getItemcode());
 					filterBean.setCaseInsensitive(true);   //scRequestItem.itemType.parameterId
 					searchBean.getDataFilterBeans().add(filterBean);	
 				}
@@ -184,12 +184,12 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 				}
 				if(getUOM()!=null && getUOM().length()>0) {
 					
-					SearchFilterBean filterBean = new SearchFilterBean("scRequestItem.uom.uomName", SearchOperator.OPERATOR_EQUALS.value(),getUOM());
+					SearchFilterBean filterBean = new SearchFilterBean("scRequestItem.uom.uomName", SearchOperator.OPERATOR_LIKE.value(),getUOM());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);
 				}
 				if(getSkuno()!=null && getSkuno().length()>0 ) {
-					SearchFilterBean filterBean = new SearchFilterBean("sku", SearchOperator.OPERATOR_EQUALS.value(),getSkuno());
+					SearchFilterBean filterBean = new SearchFilterBean("sku", SearchOperator.OPERATOR_LIKE.value(),getSkuno());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);
 				}
@@ -312,7 +312,7 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 
 				if(getItemcode()!=null && getItemcode().length()>0 ) {
 					
-					SearchFilterBean filterBean = new SearchFilterBean("scRequestItem.cmItem.extensionCode",	SearchOperator.OPERATOR_EQUALS.value(),getItemcode());
+					SearchFilterBean filterBean = new SearchFilterBean("scRequestItem.cmItem.extensionCode",	SearchOperator.OPERATOR_LIKE.value(),getItemcode());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);	
 				}
@@ -335,12 +335,12 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 				}
 				if(getUOM()!=null && getUOM().length()>0) {
 					
-					SearchFilterBean filterBean = new SearchFilterBean("scRequestItem.uom.uomName", SearchOperator.OPERATOR_EQUALS.value(),getUOM());
+					SearchFilterBean filterBean = new SearchFilterBean("scRequestItem.uom.uomName", SearchOperator.OPERATOR_LIKE.value(),getUOM());
 					searchBean.getDataFilterBeans().add(filterBean);
 				}
 				if(getSkuno()!=null && getSkuno().length()>0 ) {
 					
-					SearchFilterBean filterBean = new SearchFilterBean("sku", SearchOperator.OPERATOR_EQUALS.value(),getSkuno());
+					SearchFilterBean filterBean = new SearchFilterBean("sku", SearchOperator.OPERATOR_LIKE.value(),getSkuno());
 					searchBean.getDataFilterBeans().add(filterBean);
 				}
 				if(getTypeofgoods()!=null && getTypeofgoods().length()>0) {
