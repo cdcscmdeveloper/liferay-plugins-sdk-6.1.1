@@ -7,10 +7,10 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+
 	
-	
-	
-		<ui:define name="contentSection">
+   <ui:define name="contentSection">
+		
 		<h:panelGroup id="optionExtensionCodeID">
 				
 	    <table width="100%">
@@ -86,7 +86,7 @@
 				<p:selectOneMenu styleClass="custom-filter"
 				     style="width:200px" value="#{codificationMaintenanceBackingBean.managedBean.data}">
                      <f:selectItems value="#{codificationMaintenanceBackingBean.getExtensionOptions()}" /> 
-				 <p:ajax event="valueChange" process="@this" update="typeTableID,:form:extensionAttributeID"  listener="#{codificationMaintenanceBackingBean.extensionCodeSearch}"/>
+				 <p:ajax event="valueChange" process="@this" update=":form:typeTableID,:form:extensionAttributeID,:form:btnSelect"  listener="#{codificationMaintenanceBackingBean.extensionCodeSearch}"/>
                 </p:selectOneMenu></td>
 		   </tr>
 		    <tr>
@@ -101,8 +101,11 @@
 				    <c:when test="#{codificationMaintenanceBackingBean.managedBean.data eq 'm'}">
 							<h:outputLabel style="font-weight: bold;" value="#{lbl['lbl.cm.measurement']}"/>
 				    </c:when>
+				     <c:when test="#{codificationMaintenanceBackingBean.managedBean.data eq 'c'}">
+							<h:outputLabel style="font-weight: bold;" value="#{lbl['lbl.cm.color']}"/>
+				    </c:when>
 					<c:otherwise>
-						<h:outputLabel style="font-weiRght: bold;" value="#{lbl['lbl.cm.color']}" />
+						<h:outputLabel style="font-weiRght: bold;" value="#{lbl['lbl.cm.type']}" />
 					</c:otherwise>
 				</c:choose></td>
 				<td width="30%">			
@@ -121,10 +124,10 @@
 			<div style="text-align: right;">
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
 					 action="#{codificationMaintenanceBackingBean.extensionCodeSearch}"
-					 update="typeTableID" />
+					 update="typeTableID,:form:btnSelect" />
 				 <p:commandButton value="#{lbl['lbl.btn.reset']}" 
 				    action="#{codificationMaintenanceBackingBean.resetExtension}" 
-			        update="extensionAttributeID,typeTableID"/>
+			        update="extensionAttributeID,typeTableID,:form:btnSelect"/>
 			</div>
 
 		</p:panel>
@@ -132,19 +135,14 @@
 		<p:panel header="#{lbl['lbl.cm.search.result']}" toggleable="true">
 		<p:dataTable id="typeTableID" tableStyleClass = "fixedTable"   emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"  lazy="true"
 		   value="#{codificationMaintenanceBackingBean.extensionAttributeSearchData}" var="cmunspsc"
-		   selection="#{codificationMaintenanceBackingBean.managedBean.updatedStatus}" rowKey="#{cmunspsc[2]}" 
+		   selection="#{codificationMaintenanceBackingBean.managedBean.updatedStatus}" rowSelectMode="checkbox"  rowKey="#{cmunspsc[2]}" 
 		   rows="10" style="width: 50%">
-		   
-		     <p:ajax event="rowSelectCheckbox" listener="#{codificationMaintenanceBackingBean.rowSelectChangeStatus}" update=":form:btnSelect"/>
-          	 <p:ajax event="rowUnselectCheckbox" listener="#{codificationMaintenanceBackingBean.rowSelectChangeStatus}" update=":form:btnSelect"/>
-             <p:ajax event="toggleSelect" listener="#{codificationMaintenanceBackingBean.rowSelectChangeStatus}" update=":form:btnSelect" />		   
-		   
-				
+		   			
 				<ac:paginator for="extensionAttributeTableID"></ac:paginator>
 
 		        <p:column
-		        selectionMode="multiple" styleClass="selectionCheckBox" style="width:3%;text-align:center;"/>	
-			    <p:column  style="width : 40% !important; vertical-align:top;white-space: normal;">
+		         selectionMode="multiple" styleClass="selectionCheckBox" style="width:3%;text-align:center;"/>	
+			    <p:column  style="width : 45% !important; vertical-align:top;white-space: normal;">
 					<f:facet name="header">
 					<c:choose>
 					<c:when test="#{codificationMaintenanceBackingBean.managedBean.data eq 't'}">
@@ -156,21 +154,24 @@
 				    <c:when test="#{codificationMaintenanceBackingBean.managedBean.data eq 'm'}">
 						#{lbl['lbl.cm.measurement']}
 				    </c:when>
+				     <c:when test="#{codificationMaintenanceBackingBean.managedBean.data eq 'c'}">
+						#{lbl['lbl.cm.color']}
+				    </c:when>
 					<c:otherwise>
-					    #{lbl['lbl.cm.color']}
+					    #{lbl['lbl.cm.type']}
 					</c:otherwise>
 				</c:choose>
 				</f:facet>
 				   #{cmunspsc[3]}
 				</p:column>
-				<p:column style="width : 5% !important;">
+				<p:column style="width : 3% !important;">
 					<f:facet name="header">
 					#{lbl['lbl.cm.code']}
 				</f:facet>
 				#{cmunspsc[4]}
 			</p:column>
-				<p:column headerText="#{lbl['lbl.cm.status.name']}" style="width : 8% !important;">
-                    <p:selectOneMenu style="width:100px;"  value="#{cmunspsc[5]}">
+				<p:column headerText="#{lbl['lbl.cm.status.name']}" style="width : 5% !important;">
+                    <p:selectOneMenu style="width : 150px;"  value="#{cmunspsc[5]}">
 						<f:selectItems value="#{codificationMaintenanceBackingBean.getStatusExtensionOptions()}"/>
 					</p:selectOneMenu>
 				</p:column>					
@@ -182,8 +183,9 @@
 				width="400" height="100"
 				title="#{lbl['lbl.cm.dialog.cofirm.header']}"
 				content="#{lbl['lbl.cm.dialog.message.item.code.maintenance']}"
-				update=":form:optionExtensionCodeID, :form:typeTableID"/>
+				update=":form:optionExtensionCodeID,:form:typeTableID"/>
 		
 		</h:panelGroup>
+		
   </ui:define> 
  </ui:composition>
