@@ -4383,25 +4383,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	}
 	
-	/**
-	 * Check is it login user is Government User
-	 * 
-	 * @return true, if user is Government User
-	 */
-	protected boolean hasGovernmentUserRole() {
-		if (getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value()))
-			return true;
-		else if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()))
-			return true;
-		else if (getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value()))
-			return true;
-		else if (getFacesScopes().hasRoleUser(RoleCode.ACKNOWLEDGE_OFFICER.value()))
-			return true;		
-		else if (getFacesScopes().hasRoleUser(RoleCode.PAY_OFFICER.value()))
-			return true;		
-		else
-			return false;		
-	}
+	
 	// end of 25396
 
 	//Enhancement #25729 Allow create QT below threshold RM20k - start -
