@@ -4471,8 +4471,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		TplSpecQuestion tplSpecQuestion=item.getScRequestItem().getTplSpecQuestion();
 		itemBean.setItem(item.getScRequestItem().getItemName());
 		itemBean.setZoneName(item.getTplSpecZoneDtl() != null ? item.getTplSpecZoneDtl().getZoneName() : "");
-		itemBean.setClDeliveryTerm(tplSpecQuestion.getClDeliveryTerm().toString());
-		itemBean.setClDurationMonth(tplSpecQuestion.getClDurationMonth().toString());
+		itemBean.setClDeliveryTerm(null != tplSpecQuestion.getClDeliveryTerm() ? tplSpecQuestion.getClDeliveryTerm().toString() : "");
+		itemBean.setClDurationMonth(null != tplSpecQuestion.getClDurationMonth() ? tplSpecQuestion.getClDurationMonth().toString() : "");
 		
 		/*log.info("Item Name --->"+item.getScRequestItem().getItemName() );
 		log.info("Zone Name --->"+item.getTplSpecZoneDtl() != null ? item.getTplSpecZoneDtl().getZoneName() : "" );
