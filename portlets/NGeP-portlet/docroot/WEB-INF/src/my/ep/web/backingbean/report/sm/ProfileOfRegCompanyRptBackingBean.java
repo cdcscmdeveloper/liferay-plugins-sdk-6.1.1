@@ -33,7 +33,7 @@ public class ProfileOfRegCompanyRptBackingBean extends
 
 	public void generateReport() {
 		
-		// #27544 - start
+		// #27544 : Disciplinary Action - start #23080
 		if(getManagedBean().getRegType() != null ){
 			if( getManagedBean().getRegType().equalsIgnoreCase(SmReportConst.SM_REG_TYPE_MOF) ){
 				// #27397 - start
@@ -45,7 +45,7 @@ public class ProfileOfRegCompanyRptBackingBean extends
 				}
 			}
 		}
-		// #27544 - end
+		// #27544 : Disciplinary Action - end #23080
 		
 		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
 
