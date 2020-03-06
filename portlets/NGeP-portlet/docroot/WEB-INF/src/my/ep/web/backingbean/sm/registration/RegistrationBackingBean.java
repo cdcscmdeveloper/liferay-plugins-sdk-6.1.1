@@ -894,12 +894,18 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		smPermAdd.getSmPersonnelAddresses().add(personnelAddPerm);
 		smPersonnel.getSmPersonnelAddresses().add(personnelAddPerm);
 		smPersonnel.setSmAppl(smAppl);
+		//START SSM CHANGES #27201
+		smPersonnel = setDesignationSSM(smPersonnel);
+		//END SSM CHANGES #27201
 		smAppl.getSmPersonnels().add(smPersonnel);
 		//#16052019 - SSM INTEGRATION CR
 		//add list all personel & check if smPersonnel contain in this.getManagedBean().getSmPersonnelAll(), use smPersonnel to add into appl, otherwise use personnel
 		if(this.getManagedBean().isCompanyValidWithSSM()){
 			if(this.getManagedBean().getSmPersonnelAll()!= null){
 				for(SmPersonnel personnel : this.getManagedBean().getSmPersonnelAll()){
+					//START SSM CHANGES #27201
+					personnel = setDesignationSSM(personnel);
+					//END SSM CHANGES #27201
 					SmPersonnel personnelSSM = (SmPersonnel)personnel.cloneEntity();
 					//to check,personel is equity owner or not
 					SmPersonnel personnelAdmin = (SmPersonnel) EntityHelper.compareSingleEntityByProp(smPersonnel.getIdentificationNo(), personnelSSM,"identificationNo");
