@@ -1273,6 +1273,7 @@ public class SimpleQuoteBackingBean extends
 	 */
 	public String saveSimpleQuote(String outcome) {
 		debugLogger("saveSimpleQuote");
+		log.info(" >>>>>>>>>>>>>>>>> in saveSimpleQuote - START");
 		ScRequestNote requestNote = null;
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		String[] outcomes = getManagedBean().getOutComes();
@@ -1323,8 +1324,15 @@ public class SimpleQuoteBackingBean extends
 				setUserDetails(requestNote);
 				
 				if(StringUtils.isBlank(requestNote.getRequestNoteNo())){
+					log.info(" in saveSimpleQuote : requestNote.getRequestNoteNo() is blank");
 					requestNote.setRequestNoteNo(requestNoteSO
 							.generateRequestNoteNo());
+					log.info(" in saveSimpleQuote --- HERE 1 : requestNote.getRequestNoteNo() = " + requestNote.getRequestNoteNo());
+				}
+				if(requestNote != null && requestNote.getRequestNoteNo() != null) {
+					log.info(" in saveSimpleQuote --- HERE 2 : requestNote.getRequestNoteNo() = " + requestNote.getRequestNoteNo());
+				} else {
+					log.info(" in saveSimpleQuote --- HERE 2 : QuoteNo = " + quote.getQuoteNo());
 				}
 				requestNote.setTitle(quote.getTitle());
 				requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SQ);
@@ -1357,7 +1365,7 @@ public class SimpleQuoteBackingBean extends
 
 			// justification type
 			
-			
+			log.info(" in saveSimpleQuote --- HERE 3 : quote.getProcurementType().getParameterCode() = " + quote.getProcurementType().getParameterCode());
 				if (quote.getProcurementType().getParameterCode()
 						.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
 					if (quote.getJustificationType().getReasonCode() != null) {
@@ -1485,7 +1493,7 @@ public class SimpleQuoteBackingBean extends
 			if (suppliers != null && !suppliers.isEmpty()) {
 				quote.setScQuoteSuppliers(suppliers);
 			}
-			
+			log.info(" in saveSimpleQuote --- HERE 4 : QuoteNo = " + quote.getQuoteNo());
 			//update workflow status and remarks
 			updateWorkFlowAndRemarks(quote);
 			
@@ -1551,7 +1559,7 @@ public class SimpleQuoteBackingBean extends
 					}
 				}
 			}
-
+			
 			FacesScopes facesScopes = new FacesScopes();
 			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 			reqDTO.setSubmit(Boolean.FALSE);
@@ -1573,16 +1581,19 @@ public class SimpleQuoteBackingBean extends
 			reqDTO.setUserLocale(facesScopes.getUserLocale());
 			
 			QuoteResDTO quoteResDTO = null;
+			log.info(" in saveSimpleQuote --- HERE 5 : QuoteNo = " + quote.getQuoteNo() + " | outcome = " + outcome);
 			if (outcome.isEmpty()) {
+				log.info(" in saveSimpleQuote : --- HERE 6 : QuoteNo = " + quote.getQuoteNo());
 				quoteResDTO = getQuoteSO().saveQuoteDtlAndInvokeBpm(reqDTO);
 			} else if (BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)) {
+				log.info(" in saveSimpleQuote : --- HERE 7 : QuoteNo = " + quote.getQuoteNo());
 				quoteResDTO = getQuoteSO().updateSimpleQuote(reqDTO);
 				renewSesionObject();
 			}
 			if (quoteResDTO.isSuccessful()) {
 				ScQuote scQuote = quoteResDTO.getQuoteBidDtl();
-
-				if (BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)) {
+				log.info(" in saveSimpleQuote : --- HERE 8 : QuoteNo = " + scQuote.getQuoteNo() + " | outcome = "+ outcome);
+				if (BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)) {					
 					reqDTO.setQuoteId(scQuote.getQuoteId());
 					reqDTO.setFetchSubEntity(true);
 					reqDTO.setDoUserId(doUserId);
@@ -1609,9 +1620,11 @@ public class SimpleQuoteBackingBean extends
 			} else {
 				throw new EpException(MessageConst.ERROR_700020);
 			}
+			log.info(" in saveSimpleQuote : --- HERE 9 : QuoteNo = " + quote.getQuoteNo());
 		} finally {
 			// quoteSO = null;
 		}
+		log.info(" >>>>>>>>>>>>>>>>> in saveSimpleQuote - END");
 		return null;
 	}
 
@@ -1695,6 +1708,7 @@ public class SimpleQuoteBackingBean extends
 	 *            the sc quote
 	 */
 	public void reloadSimpleQuote(ScQuote scQuote) {
+		log.info(" >>>>>>>>>>>>>>>>> in reloadSimpleQuote - START");
 		TemplateSpecBean productTplSpecBean = getManagedBean()
 				.getProductTemplateSpecBean();
 		TemplateSpecBean serviceTplSpecBean = getManagedBean()
@@ -1709,6 +1723,7 @@ public class SimpleQuoteBackingBean extends
 		getManagedBean().setActiveIndex(0);
 
 		if (scQuote.getCurrentStatus() == null) {
+			log.info(" in reloadSimpleQuote : --- HERE 1 :  QuoteNo = " + scQuote.getQuoteNo() + " | scQuote.getCurrentStatus() == null ");
 			List<ScSQWorkFlowStatus> workFlowStatuses = new ArrayList<ScSQWorkFlowStatus>();
 			ScSQWorkFlowStatus scWorkFlowStatus = new ScSQWorkFlowStatus();
 			PmStatus currentStatus = getPmStatusByStatusId(DPStatusConstants.SQ_PENDING_SUBMISSION);
@@ -1720,7 +1735,9 @@ public class SimpleQuoteBackingBean extends
 			scQuote.setWorkflowStatuses(workFlowStatuses);
 
 		} else {
+			log.info(" in reloadSimpleQuote : --- HERE 2 :  QuoteNo = " + scQuote.getQuoteNo() + " | scQuote.getCurrentStatus() == null ");
 			getCurrentStatus(scQuote.getCurrentStatus().getPmStatus());
+			log.info(" in reloadSimpleQuote : --- HERE 3 : QuoteNo = " + scQuote.getQuoteNo() + " | scQuote.getCurrentStatus().getPmStatus() = " + scQuote.getCurrentStatus().getPmStatus().getStatusId());
 		}
 		
 		// service and product
@@ -1867,6 +1884,7 @@ public class SimpleQuoteBackingBean extends
 
 		if (scQuote.getRequestNotes() != null
 				&& scQuote.getRequestNotes().size() > 0) {
+			log.info(" in reloadSimpleQuote : --- HERE 4 :  QuoteNo = " + scQuote.getQuoteNo());
 			getManagedBean().setRequestNote(scQuote.getRequestNotes().get(0));
 		}
 		
@@ -1951,12 +1969,13 @@ public class SimpleQuoteBackingBean extends
 		// Initializing Remarks
 		scQuote.setRemarks(initializeRemarks(scQuote, null,
 				scQuote.getRemarks(), ScSQRemark.class));
-
+		log.info(" in reloadSimpleQuote : --- HERE 5 : QuoteNo = " + scQuote.getQuoteNo());
 		getManagedBean().setScQuote(scQuote);
 		// duration calc
 		calculateDuration(scQuote);
 		procurementTypeBackProcess();
 		//implement here
+		log.info(" >>>>>>>>>>>>>>>>> in reloadSimpleQuote - END");
 	}
 	
 
@@ -1970,6 +1989,8 @@ public class SimpleQuoteBackingBean extends
 	 */
 	public String submitSimpleQuote(String outcome) {
 		debugLogger("submitSimpleQuote");
+		log.info(" >>>>>>>>>>>>>>>>> in submitSimpleQuote - START");
+		log.info(" in submitSimpleQuote : --- HERE 1 : outcome = " + outcome);
 		try {
 			QuoteReqDTO reqDTO = new QuoteReqDTO();
 			IRequestNoteSO requestNoteSO = (IRequestNoteSO) BusinessDelegate
@@ -1988,6 +2009,7 @@ public class SimpleQuoteBackingBean extends
 			
 			if (quote.getRequestNotes() == null
 					|| quote.getRequestNotes().isEmpty()) {
+				log.info(" in submitSimpleQuote : --- HERE 2 : QuoteNo = " + quote.getQuoteNo() + " | Title = "+quote.getTitle());
 				List<ScRequestNote> requestNotes = new ArrayList<ScRequestNote>();
 				ScRequestNote requestNote = getManagedBean().getRequestNote();
 				requestNote.setTitle(quote.getTitle());
@@ -1999,13 +2021,14 @@ public class SimpleQuoteBackingBean extends
 				requestNote.setQuote(quote);
 				requestNotes.add(requestNote);
 				quote.setRequestNotes(requestNotes);
+				log.info(" in submitSimpleQuote : --- HERE 3 : QuoteNo = " + quote.getQuoteNo() + " | Title = "+quote.getTitle() + " | RequestNoteNo = "+ requestNote.getRequestNoteNo());
 			}
 
 			quote.setProcurementType(getParameterByTypeAndCode(
 					ParameterTypeConst.PROCUREMENT_TYPE, getManagedBean()
 							.getScQuote().getProcurementType()
 							.getParameterCode()));
-
+			log.info(" in submitSimpleQuote : --- HERE 4 : QuoteNo = " + quote.getQuoteNo() + " | Title = "+quote.getTitle() + " | quote.isZonal() = "+ quote.isZonal());
 			// location level
 			if (quote.isZonal()) {
 				quote.setZoneLocatonLevel(getParameterByTypeAndCode(
@@ -2024,6 +2047,7 @@ public class SimpleQuoteBackingBean extends
 			}
 			
 			if(outcome.equals(BpmOutcomeConst.BPM_SUBMIT)||outcome.isEmpty()){
+				log.info(" in submitSimpleQuote : --- HERE 5 : QuoteNo = " + quote.getQuoteNo() + " | Title = "+quote.getTitle());
 				if (null == quote.getProcurementTypeCategory().getParameterId()) {
 					throw new EpException(
 							MessageConst.ERROR_760315,
@@ -2041,7 +2065,7 @@ public class SimpleQuoteBackingBean extends
 				}
 			}	
 
-
+			log.info(" in submitSimpleQuote : --- HERE 6 : QuoteNo = " + quote.getQuoteNo() + " | Title = "+quote.getTitle());
 			// justification type
 			if (quote.getProcurementType().getParameterCode()
 					.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
@@ -2173,7 +2197,7 @@ public class SimpleQuoteBackingBean extends
 					}
 				}	
 			}
-
+			log.info(" in submitSimpleQuote : --- HERE 7 : QuoteNo = " + quote.getQuoteNo() + " | Title = "+quote.getTitle());
 			// product and service
 			List<ScQuoteDoc> quoteDocs = new ArrayList<ScQuoteDoc>();
 			if (quote.getQuoteDocs() != null && quote.getQuoteDocs().size() > 0) {
@@ -2256,18 +2280,21 @@ public class SimpleQuoteBackingBean extends
 			
 			QuoteResDTO quoteResDTO = null;
 			if (outcome.isEmpty()) {
+				log.info(" in submitSimpleQuote : --- HERE 8 : QuoteNo = " + quote.getQuoteNo() + " | Title = "+quote.getTitle() + " | outcome = "+ outcome);
 				reqDTO.setSubmit(Boolean.TRUE);
 				quoteResDTO = getQuoteSO().saveQuoteDtlAndInvokeBpm(reqDTO);
 			} else if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)
 					|| BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)) {
+				log.info(" in submitSimpleQuote : --- HERE 9 : QuoteNo = " + quote.getQuoteNo() + " | Title = "+quote.getTitle() + " | outcome = "+ outcome);
 				reqDTO.setOutcome(outcome);
 				quoteResDTO = getQuoteSO().updateSimpleQuote(reqDTO);
 			}
 			// submit prompt hiding
 			// RequestContext.getCurrentInstance().execute("promptWidget.hide()");
-
+			log.info(" in submitSimpleQuote : --- HERE 10 : QuoteNo = " + quote.getQuoteNo() + " | Title = "+quote.getTitle());
 			if (quoteResDTO.isSuccessful()) {
 				ScQuote scQuote = quoteResDTO.getQuoteBidDtl();
+				log.info(" in submitSimpleQuote : --- HERE 11 : QuoteNo = " + scQuote.getQuoteNo() + " | Title = "+quote.getTitle());
 				if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)
 						|| outcome.isEmpty()) {
 					successMessage(MessageConst.INFO_700026,
@@ -2289,6 +2316,7 @@ public class SimpleQuoteBackingBean extends
 		} finally {
 			// quoteSO = null;
 		}
+		log.info(" >>>>>>>>>>>>>>>>> in submitSimpleQuote - END");
 		return null;
 	}
 
