@@ -187,7 +187,6 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.start']}" /></td>
 				<td><p:calendar id="delStartDate" mode="popup" readonlyInput="true"
 						showOn="button"
-						mindate="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.startDate}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.startDate}">
