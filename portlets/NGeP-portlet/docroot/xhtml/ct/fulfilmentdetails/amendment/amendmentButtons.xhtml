@@ -24,7 +24,7 @@
 			padding: 3px;
 		}
 	</style>
-
+	
 	<ac:gpkiPopup
 			textBeforeSign="#{amendmentBackingBean.managedBean.textBeforeSign}"
 			postSignAction="#{amendmentBackingBean.preSubmitContractAmendment(gpkiBackingBean.pmDigiSign)}"
@@ -35,6 +35,8 @@
 			challengeQues1="#{amendmentBackingBean.managedBean.spkiBackingBean.challengeQues1}"
 			postSignAction="#{amendmentBackingBean.preSubmitContractAmendment(spkiBackingBean.pmDigiSign)}"
 			enableAutoUpdate="#{amendmentBackingBean.enableAutoUpdate()}" />
+		<c:choose>
+		<c:when test="#{!amendmentBackingBean.managedBean.updateCommittee}">
 		<table style="width: 100%;">
 			<tr>
 				<td colspan="2" valign="top" class="myProfile-title" style="color:blue;">
@@ -82,6 +84,28 @@
 				</td>
 			</tr>
 		</table>
+		</c:when>
+		<c:otherwise>
+		<table style="width: 100%;">
+		<tr>
+		<td class="ppRightBtn">
+		<p:commandButton value="#{lbl['lbl.btn.update']}"
+						immediate="true" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();"
+						rendered="#{amendmentBackingBean.managedBean.updateCommittee}"
+						actionListener="#{amendmentBackingBean.validateLatestCommitteeMembers}" 
+						partialSubmit="true"/>
+		<p:commandButton value="#{lbl['lbl.ct.btn.back']}"
+						immediate="true" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();"
+						rendered="#{amendmentBackingBean.managedBean.updateCommittee}"
+						actionListener="#{amendmentBackingBean.backToDecisionTab}" 
+						update="@form"/>
+		</td>
+		</tr>
+		</table>
+		</c:otherwise>
+		</c:choose>
 	<p:remoteCommand update=":form:panelHeaderException"
 		actionListener="#{amendmentBackingBean.showCompleteButton}"
 		name="showCompleteBtn" />
