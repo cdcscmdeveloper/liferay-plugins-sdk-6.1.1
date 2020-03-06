@@ -2179,32 +2179,32 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 								userSession.getIdentificationNo(), this.getManagedBean().getSmAppl()
 										.getSmPersonnels(), "identificationNo");
 						//START #27239
-						List<SmPersonnel> personnelsRole = this.getManagedBean().getPersonnelsRole();
-						personnelsRole.clear();
+						this.getManagedBean().setPersonnelsRole(new ArrayList());
 						for(SmPersonnel personnel :  this.getManagedBean().getSmAppl().getSmPersonnels()){
 							if (personnel.isEquityOwner() || personnel.isDirector()) {
 								if(personnel.getEpRole() != null){
 									SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
 									SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelDirector(),"identificationNo");
 									if(personnelDirectorSSM == null || personnelSSM == null){
-										personnelsRole.add(personnel);
+										this.getManagedBean().getPersonnelsRole().add(personnel);
 									}
 								}
 							}
 						}
 						
-						if(personnelsRole != null && personnelsRole.size() > 0) {
-							SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
-							SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelDirector(),"identificationNo");
-							if(personnelSSM == null && personnelDirectorSSM == null) {
-								getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupp());	
-								getManagedBean().setSmPersonnelSsm(personnelOld);
+						if(this.getManagedBean().getPersonnelsRole() != null && this.getManagedBean().getPersonnelsRole().size() > 0) {
+							//SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
+							//SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelDirector(),"identificationNo");
+							//if(personnelSSM == null && personnelDirectorSSM == null) {
+							getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupp());	
+							//	getManagedBean().setSmPersonnelSsm(personnelOld);
 								RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
 								fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlineAccount/accountMaintenanceTermAndCond.xhtml");
 								return;
-							}
-						}
+							//}
+						} 
 						// #26734 - END
+						// #27239 - END
 						
 						this.getManagedBean().setStatusDescFromSSM(setStatusMessageFromSSM(ssmResDTO.getStatusFromSSM()));
 						if(!ssmResDTO.getStatusFromSSM().equalsIgnoreCase("A") && !ssmResDTO.getStatusFromSSM().equalsIgnoreCase("E")){
@@ -2223,7 +2223,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmAddress(),this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress(),copyPropAddress);
 						this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPostcode(ssmResDTO.getSmAddress().getPostcode());
 						this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPmState(ssmResDTO.getSmAddress().getPmState());
-						//START 27488
+						//START 27488 
 						if(ssmResDTO.getSmAddress().getPmState()!= null){
 							this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setStateId(ssmResDTO.getSmAddress().getPmState().getStateId());
 							this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setDistrictId(new Long(0));
@@ -4210,8 +4210,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 		if(updatePersonnel){
 			SmPersonnel personnel = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(owner.getIdentificationNo(), this.getManagedBean().getSmPersonnelAll(), "identificationNo");
-			personnel.setPmCountry(owner.getNationality());
-			personnel.setName(owner.getOwnerName());
+			//27477
+			if(personnel != null){
+				personnel.setPmCountry(owner.getNationality());
+				personnel.setName(owner.getOwnerName());
+			}			
 		}
 	}
 }
