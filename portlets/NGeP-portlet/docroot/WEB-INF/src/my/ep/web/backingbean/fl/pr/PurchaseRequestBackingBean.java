@@ -4773,12 +4773,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	
 	public String getSkuDescription(ScRequestItem scRequestItem) {
 		String skuDesc = "";
-		log.info("BEFORE IF ===================================="+scRequestItem.getCmItem().getCmSupplierItems());
 			if(scRequestItem.getCmItem().getCmSupplierItems() != null && scRequestItem.getCmItem().getCmSupplierItems().size() > 0){
-				log.info("IN IF ===================================="+scRequestItem.getCmItem().getCmSupplierItems().size());
 				skuDesc = scRequestItem.getCmItem().getCmSupplierItems().get(0).getSkuNumber();	
 			}
-			log.info(skuDesc+"=======AFTER IF ===================================="+scRequestItem.getCmItem().getCmSupplierItems());
 			return skuDesc;
 	}
 	//26279 - start
