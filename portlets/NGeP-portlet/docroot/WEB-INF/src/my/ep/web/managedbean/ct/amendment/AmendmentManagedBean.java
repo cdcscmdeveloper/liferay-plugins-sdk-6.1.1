@@ -146,9 +146,12 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private String justification;
 	//Enhancement #26186 end
 	
-	private boolean itemProductNotExist;
-	private boolean itemServiceNotExist;
-	
+	//26753 - start
+	private boolean updateCommittee;
+	private List<CtCommitteeMember> updatedCommitteeMembers;
+	private List<CtCommitteeMember> filteredUpdatedCommitteeMembers;
+	private boolean hasChanges;
+	//26753 - end
 	@ManagedProperty(value="#{spkiBackingBean}")
 	private SpkiBackingBean spkiBackingBean;
 	
@@ -1364,19 +1367,58 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	public void setJustification(String justification) {
 		this.justification = justification;
 	}
-
 	//Enhancement #26186 end
+	//26753 - start
+	/**
+	 * @return the updateCommittee
+	 */
+	public boolean isUpdateCommittee() {
+		return updateCommittee;
+	}
+	/**
+	 * @param updateCommittee the updateCommittee to set
+	 */
+	public void setUpdateCommittee(boolean updateCommittee) {
+		this.updateCommittee = updateCommittee;
+	}
+	/**
+	 * @return the updatedCommitteeMembers
+	 */
+	public List<CtCommitteeMember> getUpdatedCommitteeMembers() {
+		return updatedCommitteeMembers;
+	}
+	/**
+	 * @param updatedCommitteeMembers the updatedCommitteeMembers to set
+	 */
+	public void setUpdatedCommitteeMembers(
+			List<CtCommitteeMember> updatedCommitteeMembers) {
+		this.updatedCommitteeMembers = updatedCommitteeMembers;
+	}
+	/**
+	 * @return the filteredUpdatedCommitteeMembers
+	 */
+	public List<CtCommitteeMember> getFilteredUpdatedCommitteeMembers() {
+		return filteredUpdatedCommitteeMembers;
+	}
+	/**
+	 * @param filteredUpdatedCommitteeMembers the filteredUpdatedCommitteeMembers to set
+	 */
+	public void setFilteredUpdatedCommitteeMembers(
+			List<CtCommitteeMember> filteredUpdatedCommitteeMembers) {
+		this.filteredUpdatedCommitteeMembers = filteredUpdatedCommitteeMembers;
+	}
+	/**
+	 * @return the hasChanges
+	 */
+	public boolean isHasChanges() {
+		return hasChanges;
+	}
+	/**
+	 * @param hasChanges the hasChanges to set
+	 */
+	public void setHasChanges(boolean hasChanges) {
+		this.hasChanges = hasChanges;
+	}	
+	//26753 - end
 	
-	public boolean isItemProductNotExist() {
-		return itemProductNotExist;
-	}
-	public void setItemProductNotExist(boolean itemProductNotExist) {
-		this.itemProductNotExist = itemProductNotExist;
-	}
-	public boolean isItemServiceNotExist() {
-		return itemServiceNotExist;
-	}
-	public void setItemServiceNotExist(boolean itemServiceNotExist) {
-		this.itemServiceNotExist = itemServiceNotExist;
-	}
 }
