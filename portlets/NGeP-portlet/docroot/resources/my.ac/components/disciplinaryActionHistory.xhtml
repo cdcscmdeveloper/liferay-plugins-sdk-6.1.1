@@ -15,7 +15,6 @@
 		<cc:attribute name="mofView" default="true" />
 		<cc:attribute name="dialogMessage" default=""/>
 	</cc:interface>
-	
 	<cc:implementation>
 	<p:dialog id="disciplinaryActionHistoryDlgId" header="#{cc.attrs.dialogHeader}" closable="true"
 		widgetVar="disciplinaryActionHistoryDlg" modal="true" width="#{cc.attrs.dialogWidth}" height="#{cc.attrs.dialogHeight}"
@@ -29,11 +28,12 @@
 		 sortBy="#{disciplinaryAction.endDate}" rowIndexVar="index" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" 
 		 style="table-layout: fixed;">
 			
+	/*  start : 27445 = Disciplinary Actions / history popup window*/
 			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2% !important; vertical-align:top;">
 				<p:outputLabel value="#{index + 1}"
 					style="float: left;white-space: normal !important;" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.disciplinary.jktt.punishment.type']}" style="width : 23% !important; vertical-align:top;">
+			<p:column headerText="#{lbl['lbl.sm.disciplinary.jktt.punishment.type']}" style="width : 23% !important; vertical-align:top;white-space: normal !important;">
 				<p:outputLabel rendered="#{disciplinaryAction.warning}" styleClass="outputLabel-view">
 					<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.warning']}"/>
 					<h:outputText value="," rendered="#{disciplinaryAction.warning and (disciplinaryAction.cancelCategory || 
@@ -85,7 +85,7 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.disciplinary.list.cancel.category.code']}" 
 				rendered="#{cc.attrs.mofView}"
-				style="width : 15% !important; vertical-align:top;">
+				style="white-space: normal !important;width : 15% !important; vertical-align:top;">
 				<h:dataTable value="#{disciplinaryAction.categoryCodeList}" var="suppCat" rendered="#{not empty disciplinaryAction.categoryCodeList}"
 					rowIndexVar="indexCat" emptyMessage="#{lbl['lbl.sm.no.available']}" style="border: none !important;">
 					<p:column style="border: none !important;">
@@ -94,7 +94,7 @@
 				</h:dataTable>
 				<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty disciplinaryAction.categoryCodeList}"/>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.disciplinary.list.of.ic.no.blacklist']}" style="width : 15% !important; vertical-align:top;">
+			<p:column headerText="#{lbl['lbl.sm.disciplinary.list.of.ic.no.blacklist']}" style="white-space: normal !important;width : 15% !important; vertical-align:top;">
 				<h:dataTable value="#{disciplinaryAction.blacklistownerDirectorList}" var="personnel" 
 					rowIndexVar="indexPer" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" rendered="#{not empty disciplinaryAction.blacklistownerDirectorList}">
 					<p:column style="border: none !important;">
@@ -103,6 +103,8 @@
 				</h:dataTable>
 				<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty disciplinaryAction.blacklistownerDirectorList}" />
 			</p:column>
+			
+	/*  end : 27445 = Disciplinary Actions / history popup window*/
 		</p:dataTable>
 	</p:dialog>
 	</cc:implementation>
