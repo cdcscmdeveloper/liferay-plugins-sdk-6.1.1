@@ -4725,12 +4725,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	public SelectItem[] getRepresentativeDropdown() {		
 		//26753 - start
 		if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())) {
-			for (CtCommitteeMember committeeMember : getManagedBean().getUpdatedCommitteeMembers()) {
-				if (committeeMember.getRepresentativeType() == null) {
-					committeeMember.setRepresentativeType(new PmParameter());
+			if(getManagedBean().isUpdateCommittee()) {
+				for (CtCommitteeMember committeeMember : getManagedBean().getUpdatedCommitteeMembers()) {
+					if (committeeMember.getRepresentativeType() == null) {
+						committeeMember.setRepresentativeType(new PmParameter());
+					}
 				}
-			}
+			}			
 		} 
+		//26753 - end
 		for (CtCommitteeMember committeeMember : ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
 			if (committeeMember.getRepresentativeType() == null) {
 				committeeMember.setRepresentativeType(new PmParameter());
