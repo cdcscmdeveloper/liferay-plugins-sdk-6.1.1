@@ -31,7 +31,9 @@ public class DisciplinaryActionRest {
 		log.info("Before success calling retrieve rest api....");
 		try {
 			//27426 : Disciplinary Action - start
+			//find data with end date less than current date
 			SupplierDataMaintenanceResDTO releaseDAList = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveDisciplinaryAction();
+			//find data pending DA, (data with active txn will update DA after complete all txn)
 			SupplierDataMaintenanceResDTO updateDAList = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryAction();
 			
 			if(releaseDAList.getSmDisciplinaryActions() != null
