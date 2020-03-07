@@ -37,7 +37,6 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
@@ -66,7 +65,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCheckListValue;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtScoreSetting;
-import my.ep.persistence.entity.sc.quationtender.ScQtScoreWeightage;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
@@ -911,10 +909,11 @@ public class QtSpecCloneBackingBean extends
 					if (recommnendationSetting.getSettingType() == SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
 		
 							ScQtScoreSetting settings=copyScoreSettings(recommnendationSetting);
-							this.getManagedBean().setTechnicalItemScoreSetting(settings);
-							
+							this.getManagedBean().setTechnicalItemScoreSetting(
+									settings);
 						
 					}
+					
 				}
 			}
 			
@@ -985,8 +984,7 @@ public class QtSpecCloneBackingBean extends
 //			}
 //			checklistSorting(this.getManagedBean().getTechnicalScoring());
 //			
-//			
-//			
+//
 			
 			
 		} finally {
@@ -1004,68 +1002,6 @@ public class QtSpecCloneBackingBean extends
 		setUserDetails(copy);
 		
 		return copy;
-	}
-	
-	private void techWeightageSum() {
-		try {
-			int total = 0;
-			List<ScQtCheckList> weightageList = this.getManagedBean()
-					.getTechnicalScoring();
-			if (weightageList == null) {
-				weightageList = new ArrayList<ScQtCheckList>();
-			}
-			for (int i = 0; i < weightageList.size(); i++) {
-				ScQtCheckList weight = (ScQtCheckList) weightageList.get(i);
-				if (null != weight.getQtScoreWeightage()
-						&& weight.getQtScoreWeightage().getWeightage() == null) {
-					weight.getQtScoreWeightage()
-							.setWeightage(new BigDecimal(0));
-				}
-				if (null != weight.getQtScoreWeightage()) {
-					total = total
-							+ weight.getQtScoreWeightage().getWeightage()
-									.intValue();
-				}
-				this.getManagedBean().setTechnicalWeightageScore(
-						new BigDecimal(total));
-				if (total > 100) {
-					throw new EpException(MessageConst.ERROR_760148);
-				}
-
-			}
-		} finally {
-
-		}
-
-	}
-	
-	private void techScoreSum() {
-		try {
-			int total = 0;
-			List<ScQtCheckList> weightageList = this.getManagedBean()
-					.getTechnicalScoring();
-			if (weightageList == null) {
-				weightageList = new ArrayList<ScQtCheckList>();
-			}
-			for (int i = 0; i < weightageList.size(); i++) {
-				ScQtCheckList weight = (ScQtCheckList) weightageList.get(i);
-				if (null != weight.getQtScoreWeightage()
-						&& weight.getQtScoreWeightage().getWeightage() == null) {
-					weight.getQtScoreWeightage()
-							.setWeightage(new BigDecimal(0));
-				}
-				if (null != weight.getQtScoreWeightage()) {
-					total = total
-							+ weight.getQtScoreWeightage().getScore()
-									.intValue();
-				}
-				BigDecimal techScore = new BigDecimal(total);
-				this.getManagedBean().setTechPoints(techScore.intValue());
-			}
-		} finally {
-
-		}
-
 	}
 	
 	private BigDecimal retrieveTechnicalEvalutionPassingScorePmrules(
