@@ -296,7 +296,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			resfDTO = requestSO.retrieveFulfilmentRequestDocNosByContractId(flReqDTO);
 			
 			reqDTO.setOrgProfileId(orgProfileId);
-			resDTO = contractSO.retrieveAvailableSchedulePhaseNoByOrgProfileId(reqDTO);
+			resDTO = contractSO.retrieveAvailableSchedulePhaseNo(reqDTO);
 			
 			if (resDTO.getAvailableNoList() != null) {
 				getManagedBean().setAvailableNoList(resDTO.getAvailableNoList());
@@ -335,6 +335,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
             OrgProfileReqDTO orgReqDTO = new OrgProfileReqDTO();
     		orgReqDTO.setOrgProfileId(orgProfileId);
     		OrgProfileResDTO orgResDTO = profileSO.retrieveOrgProfileDtlByProfileId(orgReqDTO);
+    		
+    		String orgCode = "";
+			String orgName = "";
+			if(orgResDTO != null && orgResDTO.getPmOrgProfile() !=null){
+    			orgCode = orgResDTO.getPmOrgProfile().getOrgCode();
+				orgName = orgResDTO.getPmOrgProfile().getOrgName();
+    		}
             
             String orgCode = orgResDTO.getPmOrgProfile().getOrgCode();
 			setOrgCode(orgCode);
