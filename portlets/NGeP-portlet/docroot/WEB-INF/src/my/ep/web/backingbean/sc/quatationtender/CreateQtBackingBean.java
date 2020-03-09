@@ -1339,10 +1339,14 @@ public class CreateQtBackingBean extends
 		ICountrySO countrySo = null;
 
 		try {
-			Long locationLevel = this.getManagedBean().getQt()
-					.getZoneLocationLevel().getParameterId();
-
-			countrySo = BusinessDelegate.getInstance().getServiceObject(
+			//20200210@asyrafhaziq_Bug #27381&#26694  - Start
+			if ( !this.getManagedBean().getQt().isPanel() )
+			{
+			//20200210@asyrafhaziq_Bug #27381&#26694  - End
+				Long locationLevel = this.getManagedBean().getQt()
+						.getZoneLocationLevel().getParameterId();
+			
+				countrySo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, ICountrySO.class);
 			if (locationLevel == null) {
 
@@ -1379,8 +1383,14 @@ public class CreateQtBackingBean extends
 					this.getManagedBean().setIndex(-1);
 					this.getManagedBean().setZoneName("");
 				}
-
+				
+			  }		
+			//20200210@asyrafhaziq_Bug #27381&#26694  - Start
 			}
+	        else{
+				this.getManagedBean().setIndex(-1);
+			}
+			//20200210@asyrafhaziq_Bug #27381&#26694  - End
 			this.getManagedBean().setAutoUpdate(false);
 			RequestContext.getCurrentInstance().execute("ZoneGeneral.show()");
 		} finally {
@@ -1422,6 +1432,21 @@ public class CreateQtBackingBean extends
 				this.getManagedBean().setBeans(zonBeansList);
 			}
 		}
+		//20200210@asyrafhaziq_Bug #27381&#26694  - Start
+		//set  ZoneGeneral Trees Panel
+		ScQt scQt = getManagedBean().getQt();
+		if (scQt.isZonal() &&  scQt.isPanel() ){
+			List<TplSpecZoneDtl> specZoneDtls = null;
+			
+			if (!rootTrees.isEmpty()){
+				specZoneDtls = convertTreeNodesToZoneCriteria(rootTrees, zoneDtl);
+			}
+			else{
+				specZoneDtls = new  ArrayList<TplSpecZoneDtl>();
+			}
+			 retrieveZoneGeneralTreesPanel(scQt, specZoneDtls);
+			}
+		//20200210@asyrafhaziq_Bug #27381&#26694  - End
 		ScQtSupplierCriteria zoneSupplierCriteria = getManagedBean().getQt()
 				.getScQtSupplierCriteria();
 		if (null != zoneSupplierCriteria
@@ -2251,6 +2276,9 @@ public class CreateQtBackingBean extends
 				if (isNotNullOREmpty(resPanelDTO.getCtPanelZones())) {
 					this.getManagedBean().setCtzones(true);
 					getManagedBean().setZoneGeneralTrees(new ArrayList<TreeNode>());
+					//20200210@asyrafhaziq_Bug #27381&#26694  - Start
+					getManagedBean().setCtPanelZones(resPanelDTO.getCtPanelZones());
+					//20200210@asyrafhaziq_Bug #27381&#26694  - End
 					if (null != getManagedBean().getZoneGeneralTrees() && getManagedBean().getZoneGeneralTrees().size() == 0) {
 
 						for (CtPanelZone panelZones : resPanelDTO.getCtPanelZones()) {
@@ -2262,12 +2290,13 @@ public class CreateQtBackingBean extends
 
 							List<PmState> states = SourcingLocationHelper.getStateFromCtPanelZone(panelZones.getPanelZoneDtls());
 							List<PmDistrict> districts = SourcingLocationHelper.getDistrictFromCtPanelZone(panelZones.getPanelZoneDtls());
-
+							//20200210@asyrafhaziq_Bug #27381&#26694  - Start
 							getManagedBean().getZoneGeneralTrees().add(LocationSingleton.getInstance().buildTreeWithDisabledChilds(
 													tplSpecZoneDtl, states,
 													districts, null, null,
-													true, TplSpecZoneLoc.class));
-
+													false, TplSpecZoneLoc.class));
+							
+							//20200210@asyrafhaziq_Bug #27381&#26694  - End
 						}
 					}
 				}
@@ -2306,6 +2335,12 @@ public class CreateQtBackingBean extends
 					}
 				}
 			}
+			//20200210@asyrafhaziq_Bug #27381&#26694  - Start
+			//reset  zoneGeneralTreesPanel 
+			if (isNotNullOREmpty(getManagedBean().getZoneGeneralTreesPanel())){
+				getManagedBean().setZoneGeneralTreesPanel(null);
+			}
+			//20200210@asyrafhaziq_Bug #27381&#26694  - End			
 		}finally{
 			panelSupplierSO = null;
 			circularDetailSO = null;
@@ -2375,6 +2410,10 @@ public class CreateQtBackingBean extends
 	private void setDataNull() {
 		getManagedBean().setZoneGeneralTrees(null);
 		getManagedBean().setZoneTrees(null);
+		//20200210@asyrafhaziq_Bug #27381&#26694  - Start
+		getManagedBean().setZoneGeneralTreesPanel(null);
+		getManagedBean().setBeans(new ArrayList<ZonesBean>());
+		//20200210@asyrafhaziq_Bug #27381&#26694  - End
 		this.getManagedBean().setScQtCheckSt2techProposal(null);
 		this.getManagedBean().setScQtCheckSt2financeProposalList(null);
 		this.getManagedBean().setQtCategoryList(null);
@@ -3111,5 +3150,323 @@ public class CreateQtBackingBean extends
 	public boolean isPanelZone(){
 		return this.getManagedBean().isPanelZone();
 	}
+	//20200210@asyrafhaziq_Bug #27381&#26694  - Start
+	 public boolean zoneLocationOkBtnDisable(){
+		List<TreeNode> list = getManagedBean().getZoneGeneralTreesPanel();
+		
+		if (CollectionUtils.isNotEmpty(list) ) {
+			for (TreeNode node : list) {
+				for (TreeNode childNode : node.getChildren()) {
+					if (childNode.getChildCount() > 0) {
+						
+						for (TreeNode state : childNode.getChildren()) {
+							
+							if(state.isSelected()){
+								return false;
+							}
+							for(TreeNode district : state.getChildren()){
+								
+								if(district.getChildCount()>0){
+									for(TreeNode division : district.getChildren()){
+										if(division.isSelected()){
+											return false;
+										}
+										if(division.getChildCount()>0){
+											for(TreeNode anotherDistrict : district.getChildren()){
+												if(anotherDistrict.isSelected()){
+													return false;
+												}
+										}
+									}
+								}
+								}else{
+								if(district.isSelected()){
+									return false;
+								}
+								}
+							}
+						}
+					}else{
+					if(childNode.isSelected()){
+						return false;
+					}
+					}
+				}
+			}
+		} else {
+			return true;
+		}
+	return true;
+	 }
+	//20200210@asyrafhaziq_Bug #27381&#26694  - End
+	 
+	//20200210@asyrafhaziq_Bug #27381&#26694  - Start
+	 public boolean zoneLocationAddBtnDisable(){
+			List<TreeNode> list = getManagedBean().getZoneGeneralTreesPanel();
+			
+			if (CollectionUtils.isEmpty(list) || list == null || list.size() == 0 ) 
+			{
+				return true;
+			}else {
+				return false;
+			}
+		 }
+	//20200210@asyrafhaziq_Bug #27381&#26694  - End
+	//20200210@asyrafhaziq_Bug #27381&#26694  - Start
+	public void checkAllZoneGeneralPanel(AjaxBehaviorEvent event) {
+		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
+		List<TreeNode> list = getManagedBean().getZoneGeneralTreesPanel();
+		
+		if (null != list) {
+			for (TreeNode node : list) {
+				for (TreeNode childNode : node.getChildren()) {
+					if (childNode.getChildCount() > 0) {
+						for (TreeNode node2 : childNode.getChildren()) {
+							node2.setSelected(flag);
+						}
+					}
+					childNode.setSelected(flag);
+				}
+			}
+		} else {
+		}
+	}
+	//20200210@asyrafhaziq_Bug #27381&#26694  - End
+	
+	//20200210@asyrafhaziq_Bug #27381&#26694  - Start
+		public void addTreeNode() {
+			getManagedBean().setSelectedFlag(true);
+			List<TreeNode> rootTreesPanel = getManagedBean().getZoneGeneralTreesPanel();
+			List<TreeNode> rootTrees = getManagedBean().getZoneGeneralTrees();
+
+			if (null == rootTrees) {
+				getManagedBean().setZoneGeneralTrees(new ArrayList<TreeNode>());
+			}
+			if (rootTreesPanel != null) {
+				if (null != this.getManagedBean().getQt()
+						.getScQtSupplierCriteria()
+						&& null != this.getManagedBean().getQt()
+								.getScQtSupplierCriteria().getQtZoneCriterias()) {
+					this.getManagedBean().getQt().getScQtSupplierCriteria()
+							.getQtZoneCriterias().setModified(true);
+				}
+				if (null != rootTreesPanel) {
+					for (TreeNode node : rootTreesPanel) {
+						boolean isInsert = false;
+						for (TreeNode childNode : node.getChildren()) {
+							if (childNode.getChildCount() > 0) {
+								for (TreeNode node2 : childNode.getChildren()) {
+									if ( node2.isSelected()  ){
+										isInsert = true;
+										break;
+									}
+								}
+								if (isInsert == true ){
+									break;
+								}
+							}
+							if (childNode.isSelected()){
+								isInsert = true;
+								break;
+							}	
+						}
+						if (isInsert == true){
+							if (getManagedBean().getIndex() == -1) {
+								rootTrees.add(node);		
+							}
+							else if (getManagedBean().getIndex() >= 0) {
+								rootTrees.remove(
+										getManagedBean().getIndex());
+								rootTrees.add(
+										getManagedBean().getIndex(),
+										node);
+							}
+						}
+					}
+				}
+				//set back tree node selected to false
+					if (null != rootTrees) {
+						for (TreeNode node : rootTrees) {
+							for (TreeNode childNode : node.getChildren()) {
+								if (childNode.getChildCount() > 0) {
+									for (TreeNode node2 : childNode.getChildren()) {
+										node2.setSelected(false);
+									}
+								}
+								childNode.setSelected(false);
+							}
+						}
+				}
+			}
+			
+			TplSpecZoneDtl zoneDtl = null;
+			
+			if (!rootTrees.isEmpty()) {
+				ScQtZoneCriteria zonCriteria =getManagedBean().getQt()
+						.getScQtSupplierCriteria().getQtZoneCriterias();
+				zonCriteria.setTplSpecZoneDtls(
+								convertTreeNodesToZoneCriteria(rootTrees, zoneDtl));
+				// setting into zones bean to validate zones while adding 
+				if (CollectionUtils.isNotEmpty(zonCriteria.getTplSpecZoneDtls())) {
+					List<ZonesBean> zonBeansList = new ArrayList<ZonesBean>();
+					for (TplSpecZoneDtl tplSpecZoneDtl : zonCriteria
+							.getTplSpecZoneDtls()) {
+						ZonesBean bean = new ZonesBean();
+						bean.setTplSpecZoneDtl(tplSpecZoneDtl);
+						zonBeansList.add(bean);
+					}
+					this.getManagedBean().setBeans(zonBeansList);
+				}
+			}
+			
+			//set  ZoneGeneral Trees Panel
+			ScQt scQt = getManagedBean().getQt();
+			if (scQt.isZonal() &&  scQt.isPanel() ){
+				List<TplSpecZoneDtl> specZoneDtls = null;
+				if (!rootTrees.isEmpty()){
+					specZoneDtls = convertTreeNodesToZoneCriteria(rootTrees, zoneDtl);
+				}
+				else{
+					specZoneDtls = new  ArrayList<TplSpecZoneDtl>();
+				}
+				 retrieveZoneGeneralTreesPanel(scQt, specZoneDtls);
+				}
+			this.getManagedBean().setIndex(-1);
+			this.getManagedBean().setAutoUpdate(true);	
+			ScQtSupplierCriteria zoneSupplierCriteria = getManagedBean().getQt()
+					.getScQtSupplierCriteria();
+			if (null != zoneSupplierCriteria
+					&& zoneSupplierCriteria.isBrandNew() == false&& null!=zoneSupplierCriteria.getQtZoneCriterias() && zoneSupplierCriteria.getQtZoneCriterias().isBrandNew()==false) {
+				if (null != this.getManagedBean().getLoginRoleType()
+						&& !"".equals(this.getManagedBean().getLoginRoleType())
+						&& "SC".equalsIgnoreCase(this.getManagedBean()
+								.getLoginRoleType())) {
+				updateFinacialSpecStatus();
+				 this.getManagedBean()
+					.setDeliveryLocRemoveList(null);
+				 this.getManagedBean().setDeliveryLocBean(
+							null);
+				deleteDeliveryAdreesZoneDetails(this.getManagedBean().getQt());
+				}
+			
+			}
+			RequestContext.getCurrentInstance().execute("ZoneGeneral.hide();");
+		}
+		//20200210@asyrafhaziq_Bug #27381&#26694  - End
+		
+		//20200210@asyrafhaziq_Bug #27381&#26694  - Start
+		public void retrieveZoneGeneralTreesPanel(ScQt scQt, List<TplSpecZoneDtl> specZoneDtls) {
+			log.info("retrieveZoneGeneralTreesPanel");
+			
+			IPanelSupplierSO panelSupplierSO;
+			ICircularDetailSO circularDetailSO;
+			
+			
+				List<CtPanelZone> ctPanelZones = new ArrayList<CtPanelZone>();
+				List<TreeNode> zoneGeneralTreesPanel = getManagedBean().getZoneGeneralTreesPanel();
+				
+				if ( null != getManagedBean().getCtPanelZones()
+						&& !getManagedBean().getCtPanelZones().isEmpty()){
+					ctPanelZones = getManagedBean().getCtPanelZones();
+				}
+				else{
+					try{
+					CircularDetailReqDTO reqDTO = new CircularDetailReqDTO();
+					circularDetailSO = (ICircularDetailSO) EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularDetailSO.class);
+			        
+					reqDTO.setCircularVerId(scQt.getCircularVer().getCircularVerId());
+					reqDTO.setPanelItemTypeGroup(true);
+					if (null != this.getManagedBean().getQt().getItemGroup()) {
+						reqDTO.setGroupItemId(scQt.getItemGroup().getPanelItemGroupId());
+					}
+					
+					CircularDetailResDTO resDTO = circularDetailSO.getPanelItemsByCircularVerId(reqDTO);
+					this.getManagedBean().setPanelItemList(resDTO.getPanelItemList());
+					
+					PanelSupplierReqDTO reqPanelDTO = new PanelSupplierReqDTO();
+					PanelSupplierResDTO resPanelDTO = new PanelSupplierResDTO();
+					panelSupplierSO = (IPanelSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IPanelSupplierSO.class);
+					for(CtPanelItem panelItem : this.getManagedBean().getPanelItemList()){
+						
+						reqPanelDTO.setPanelItem(panelItem);
+						resPanelDTO = panelSupplierSO.retrievePanelZonesByPanelItem(reqPanelDTO);
+						if(panelItem.getLocationLevelId() != null && panelItem.getLocationLevelId().getParameterId() != null)
+							scQt.setZoneLocationLevel(getPmParameter(panelItem.getLocationLevelId().getParameterId()));
+						break;
+					}
+					
+					if (null != resDTO && null != resPanelDTO.getCtPanelZones()
+							&& !resPanelDTO.getCtPanelZones().isEmpty()) {
+						ctPanelZones = resPanelDTO.getCtPanelZones();
+						getManagedBean().setCtPanelZones(ctPanelZones);
+					}
+					}finally{
+						panelSupplierSO = null;
+						circularDetailSO = null;
+					}
+				}
+				 /*set tree zonal information for panel*/
+				if (isNotNullOREmpty(ctPanelZones)) {
+					if (zoneGeneralTreesPanel == null) {
+						zoneGeneralTreesPanel = new ArrayList<TreeNode>();
+						getManagedBean().setZoneGeneralTreesPanel(zoneGeneralTreesPanel);
+					} else {
+						zoneGeneralTreesPanel.clear();	
+					}
+							for (CtPanelZone panelZones : ctPanelZones) {
+								boolean setData = true;
+								if (isNotNullOREmpty(specZoneDtls) ){
+								for (TplSpecZoneDtl zoneDtl : specZoneDtls){
+									if  ( zoneDtl.getZoneName().equalsIgnoreCase(panelZones.getName())){
+										setData = false;
+										break;
+									}
+								  }
+								}
+								if (setData == true ){
+									TplSpecZoneDtl tplSpecZoneDtl = new TplSpecZoneDtl();
+									tplSpecZoneDtl.setZoneName(panelZones.getName());
+									tplSpecZoneDtl.setPanelZone(panelZones);
+									
+									List<PmState> states = SourcingLocationHelper.getStateFromCtPanelZone(panelZones.getPanelZoneDtls());
+									List<PmDistrict> districts = SourcingLocationHelper.getDistrictFromCtPanelZone(panelZones.getPanelZoneDtls());
+
+									zoneGeneralTreesPanel.add(LocationSingleton.getInstance().buildTreeWithDisabledChilds(
+															tplSpecZoneDtl, states,
+															districts, null, null,
+															false, TplSpecZoneLoc.class));
+								}
+						}
+				}
+							
+	   }
+		//20200210@asyrafhaziq_Bug #27381&#26694  - End
+
+	public boolean isQTStatusInProposalValidPeriodExtApproval(Long currentStatusId) {
+		List<Long> validPeriodExts = Arrays.asList(QTStatusConst.QT_PENDING_PUBLICATION,
+				QTStatusConst.QT_BRIEFING_SITE_VISIT, QTStatusConst.QT_PROPOSAL_PREPARATION,
+				QTStatusConst.QT_EVALUATION_PROPOSAL, QTStatusConst.QT_SUPPLIER_FINALIZATION,
+				QTStatusConst.QT_PENDING_LOI, QTStatusConst.QT_PENDING_LOA, QTStatusConst.QT_AWARDED,
+				QTStatusConst.QT_CLOSED, QTStatusConst.QT_CONSOLIDATION_REPORT);
+
+		for (int i = 0; i < validPeriodExts.size(); i++) {
+			if (validPeriodExts.get(i).longValue() == currentStatusId)
+				return Boolean.TRUE;
+		}
+
+		return Boolean.FALSE;
+	}
+	
+	/*:::Enhancement #25638 #29 - start:::*/
+	public boolean isStatusInQTReviseGroupStatus(Long currentStatusId) {
+		List<Long> allowReviseStatus = Arrays.asList(QTStatusConst.QT_REVISE_GROUP_STATUS);
+		
+		if (allowReviseStatus.contains(currentStatusId)) {
+			return Boolean.TRUE;
+		}
+		
+		return Boolean.FALSE;
+	}
+	/*:::Enhancement #25638 #29 - end:::*/
 	
 }

@@ -166,7 +166,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	/** The zone general trees. */
 	private List<TreeNode> zoneGeneralTrees = new ArrayList<TreeNode>();
-	
+	//20200210@asyrafhaziq_Bug #27381&#26694  - Start
+	/** The zone general trees. */
+	private List<TreeNode> zoneGeneralTreesPanel = new ArrayList<TreeNode>();
+	//20200210@asyrafhaziq_Bug #27381&#26694  - End
 	/** The zone supplier qualification trees. */
 	private List<TreeNode> zoneSuppQualTrees = null;
 
@@ -9891,5 +9894,15 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setButtonHideSchActive(boolean buttonHideSchActive) {
 		this.buttonHideSchActive = buttonHideSchActive;
 	}
+	
+	//20200210@asyrafhaziq_Bug #27381&#26694  - Start
+	public List<TreeNode> getZoneGeneralTreesPanel() {
+		return zoneGeneralTreesPanel;
+	}
+
+	public void setZoneGeneralTreesPanel(List<TreeNode> zoneGeneralTreesPanel) {
+		this.zoneGeneralTreesPanel = zoneGeneralTreesPanel;
+	}
+	//20200210@asyrafhaziq_Bug #27381&#26694  - End
 
 }

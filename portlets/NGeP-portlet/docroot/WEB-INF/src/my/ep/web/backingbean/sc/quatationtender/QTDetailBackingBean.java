@@ -3472,6 +3472,13 @@ public class QTDetailBackingBean extends
 			getManagedBean().setZoneSuppQualTrees(null);
 		}
 		
+		//20200210@asyrafhaziq_Bug #27381&#26694  - Start
+		//set  ZoneGeneral Trees Panel
+		if (scQt.isZonal() &&  scQt.isPanel() ){
+		  new CreateQtBackingBean().retrieveZoneGeneralTreesPanel(scQt, specZoneDtls);
+		}
+		//20200210@asyrafhaziq_Bug #27381&#26694  - End
+		
 		if (CollectionUtils.isNotEmpty(specZoneDtls)) {
 			for (TplSpecZoneDtl zone : specZoneDtls) {
 				if (CollectionUtils.isNotEmpty(zone.getTplSpecZoneLocs())) {
@@ -3482,15 +3489,30 @@ public class QTDetailBackingBean extends
 							specZoneLocs.add(specLoc);
 						}
 					}
-					zoneGeneralTrees.add(
-							LocationSingleton.getInstance().constuctTreeNode(
-									zone, specZoneLocs));
-					
-					if (zoneSuppQualTrees != null) {
-						zoneSuppQualTrees.add(
+					//20200210@asyrafhaziq_Bug #27381&#26694  - Start
+					if (scQt.isZonal() &&  scQt.isPanel() )
+					{
+						zoneGeneralTrees.add(
+								LocationSingleton.getInstance().constuctTreeNodeWithDisableChild(
+										zone, specZoneLocs));
+						
+						if (zoneSuppQualTrees != null) {
+							zoneSuppQualTrees.add(
+									LocationSingleton.getInstance().constuctTreeNodeWithDisableChild(
+											zone, zone.getTplSpecZoneLocs()));}
+				
+					}else{
+						zoneGeneralTrees.add(
 								LocationSingleton.getInstance().constuctTreeNode(
-										zone, zone.getTplSpecZoneLocs()));	
+										zone, specZoneLocs));
+						
+						if (zoneSuppQualTrees != null) {
+							zoneSuppQualTrees.add(
+									LocationSingleton.getInstance().constuctTreeNode(
+											zone, zone.getTplSpecZoneLocs()));	
+						}
 					}
+					//20200210@asyrafhaziq_Bug #27381&#26694  - End
 				}
 			}
 		}
