@@ -531,6 +531,56 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 
 	}
 	
+	private void resetPpProcurementItems(List<PpProcurementItem> ppItems) {
+		log.info("Resetting PpItems...");
+		
+		List<Long> fromPpItemList = new ArrayList<Long>();
+		List<Long> procurementItemIdList = new ArrayList<Long>();
+		
+		for (PpProcurementItem ppItem : ppItems) {
+			fromPpItemList.add(ppItem.getFromPpItem());
+			procurementItemIdList.add(ppItem.getProcurementItemId());
+		}
+		
+		List<Long> commonProcurementItemIdList = new ArrayList<Long>(fromPpItemList);
+		commonProcurementItemIdList.retainAll(procurementItemIdList);
+		
+		for (PpProcurementItem ppItem : ppItems) {
+			if (commonProcurementItemIdList != null && !commonProcurementItemIdList.isEmpty()) {
+				for (Long commonProcurementItemId : commonProcurementItemIdList) {
+					log.info("common= "+commonProcurementItemId);
+					// Disable isClonedEnabled for original ppItem
+					if (ppItem.getProcurementItemId().equals(commonProcurementItemId)) {
+						ppItem.setDisableForPindaan(true);
+					}
+					// Also, disable isClonedEnabled for the cloned ppItem
+					if (ppItem.isOriginal() && 
+							(ppItem.getFromPpItem().equals(commonProcurementItemId))) {
+						ppItem.setDisableForPindaan(true);
+					}
+				}
+			}
+			log.info(ppItem.getProcurementItemId()+" disableForPindaan=  "+ppItem.isDisableForPindaan());
+		}
+	}
+	
+	private void resetPpProcurementItemFields(List<PpProcurementItem> ppItems) {
+		
+		for (PpProcurementItem pp: ppItems) {
+			//For cloning
+			pp.setCloneEnabled(false);
+			pp.setDisableForPindaan(false);
+			//For update reason
+			pp.setReasonForUpdateEnabled(true);
+			pp.setBrandNew(false);
+			//For status
+			pp.setStatusEnabled(false);
+			pp.setCloneEnabled(false);
+			pp.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+		}
+		
+	}
+	
 
 	/**
 	 * Load plan details by id
@@ -672,7 +722,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					}else if(ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())){
 						calculatePpGrandTotal();
 					}
-					updatePlanYearControl();					
+					updatePlanYearControl();
+					
+					if (ppPlan.getPpProcurementItems() != null && !ppPlan.getPpProcurementItems().isEmpty()) {
+						this.resetPpProcurementItems(ppPlan.getPpProcurementItems());
+					}
 					
 				}else{
 					throw new EpException(MessageConst.ERROR_730001);
@@ -3229,8 +3283,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 
 		//remove deleted item from list
 		for(PpProcurementItem procurementItem: this.getManagedBean().getDeletePpItems()){
-			this.getManagedBean().getSelectedPlan().getPpProcurementItems().remove(procurementItem);			
+			this.getManagedBean().getSelectedPlan().getPpProcurementItems().remove(procurementItem);
 		}
+		resetPpProcurementItemFields(this.getManagedBean().getSelectedPlan().getPpProcurementItems());
 		calculatePpGrandTotal();
 		
 		
@@ -4748,6 +4803,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    		newPpItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 	    		newPpItem.setBrandNew(true);
 	    		newPpItem.setCloneEnabled(true);
+	    		newPpItem.setFromPpItem(clonedPpItem.getProcurementItemId());
 	    		newPpItem.setReasonForUpdateEnabled(false);
 	    		newPpItem.setStatusEnabled(true);
 	    		
