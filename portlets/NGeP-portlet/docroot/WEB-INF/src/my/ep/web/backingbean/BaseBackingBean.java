@@ -2784,11 +2784,15 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				ssmReqDTO.setBusinessType(smSupplier.getBusinessType());
 				ssmReqDTO.setCheckOnly(true);
 				SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
+				//27214
+				ssmResDTO.setPreRegistration(true);
 				if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
 					//check the business/company registration status in ssm
 					this.getManagedBean().setStatusDescFromSSM(setStatusMessageFromSSM(ssmResDTO.getStatusFromSSM()));
 					if(!ssmResDTO.getStatusFromSSM().equalsIgnoreCase("A") && !ssmResDTO.getStatusFromSSM().equalsIgnoreCase("E")){
-						throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null)});
+						//27214
+						throw new EpException(MessageConst.ERROR_721086);
+						//throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null)});
 					}
 				} else{					
 					SmCommonUtil.ssmError(ssmResDTO);
