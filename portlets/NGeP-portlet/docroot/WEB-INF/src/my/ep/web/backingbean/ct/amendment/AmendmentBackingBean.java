@@ -1523,7 +1523,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					}else{
 					messageId = MessageConst.INFO_700010;
 				}
-
+			}
 				//SIR#14189: Replace the doc type in acknowledge message for Supplemental Contract Letter process
 				if (getManagedBean().getTaskName() != null
 						&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)
