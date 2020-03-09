@@ -2458,7 +2458,60 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				}
 			}
 			//SSM #27264
+			//SSM CHANGES #27201
+			public SmPersonnel setDesignationSSM(SmPersonnel personnel){
+				if(personnel.getDesignation() != null){
+					String designation = populateDesignationSSM(personnel.getDesignation());
+					if(personnel.isSsmData()){
+						if(personnel.isEquityOwner()){
+							personnel.setDesignation(designation);
+						}else if(personnel.isDirector()){
+							personnel.setDesignation(designation);
+						}else if(personnel.isManagement()){
+							personnel.setDesignation(designation);
+						}
+					}
+				}
+				return personnel;
+			}
 			
+			public String populateDesignationSSM(String designnationCode){
+				 String designation = "";
+				 switch(designnationCode.toUpperCase()){
+				 case "Q":
+					 designation = SmCommonUtil.getMessage("lbl.sm.register.desingnation.altdirector", null);
+					 break;
+				 case "D":
+					 designation = SmCommonUtil.getMessage("lbl.sm.register.desingnation.director",null);
+					 break;
+				 case "M":
+					 designation = SmCommonUtil.getMessage("lbl.sm.register.desingnation.manager", null);
+					 break;
+				 case "S":
+					 designation = SmCommonUtil.getMessage("lbl.sm.register.desingnation.secretary", null);
+					 break;
+				 case "A":
+					 designation = SmCommonUtil.getMessage("lbl.sm.register.desingnation.agent", null);
+					 break;
+				 case "P":
+					 designation = SmCommonUtil.getMessage("lbl.sm.register.desingnation.subscriber", null);
+					 break;
+				 case "L":
+					 designation = SmCommonUtil.getMessage("lbl.sm.register.desingnation.liquidator", null);
+					 break;
+				 case "R":
+					 designation = SmCommonUtil.getMessage("lbl.sm.register.desingnation.receiver", null);
+					 break;
+				 case "T":
+					 designation = SmCommonUtil.getMessage("lbl.sm.register.desingnation.authperson", null);
+					 break;
+				 default:
+					 designation = designnationCode;
+					 break;
+				 }
+				 return designation;
+			 }
+			//SSM CHANGES END #27201
 }
 
 
