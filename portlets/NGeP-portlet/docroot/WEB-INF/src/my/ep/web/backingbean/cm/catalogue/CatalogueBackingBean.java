@@ -343,10 +343,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				orgName = orgResDTO.getPmOrgProfile().getOrgName();
     		}
             
-            String orgCode = orgResDTO.getPmOrgProfile().getOrgCode();
 			setOrgCode(orgCode);
-			
-			String orgName = orgResDTO.getPmOrgProfile().getOrgName();
 			setOrgName(orgName);
 		   
 		    getManagedBean().setFlRequest(resfDTO.getFlFulfilmentRequest());
