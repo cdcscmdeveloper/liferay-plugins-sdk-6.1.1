@@ -1892,8 +1892,8 @@ public class SupplierDataMaintenanceBackingBean extends
 						retVal.setManufacturerCancel(true);
 					if(disciplinaryAction.isBlacklistOwner())
 						retVal.setBlacklistOwnerDirector(true);
-					
-					if(disciplinaryAction.isCancelCategory()){
+					//27576: Disciplinary Action - start
+					if(disciplinaryAction.isCancelCategory() || disciplinaryAction.isManufacturerCancel()){
 						List<DisciplinaryActionCategoryVO> catVoList = new ArrayList<DisciplinaryActionCategoryVO>();
 						List<Object[]> catList = SmApplicationUtil.retrieveCancelCategoryBySupplier(currSupp);
 						
@@ -1912,7 +1912,9 @@ public class SupplierDataMaintenanceBackingBean extends
 							}						
 							retVal.setCategoryCodeList(catVoList);
 						}
-					}	
+					}
+
+					//27576: Disciplinary Action - end
 					
 					if(disciplinaryAction.isBlacklistOwner()
 							|| disciplinaryAction.isSuspendRegistration()
