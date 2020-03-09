@@ -524,8 +524,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					//SmSupplierOwner suppOwner = this.getManagedBean().getSmSuppOwner();
 					if(SmCommonUtil.isSupplierOwnerIndividualAcc(suppOwner.getIdentificationType().getParameterCode(),suppOwner.getIdentificationNo(),
 							my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL)){
-						throw new EpException(MessageConst.ERROR_SSM_70062);
-						//throw new EpException(MessageConst.ERROR_721050);
+						//throw new EpException(MessageConst.ERROR_SSM_70062);
+						//#27315
+						throw new EpException(MessageConst.ERROR_721050);
 					}
 					validateIDFormat(suppOwner.getIdentificationNo(),suppOwner.getIdentificationType().getParameterCode());
 					/*if(suppOwner.getIdentificationType().getParameterCode().equals(SupplierManagementConst.BASIC_IND_IDENT_TYPE)){
@@ -893,12 +894,18 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		smPermAdd.getSmPersonnelAddresses().add(personnelAddPerm);
 		smPersonnel.getSmPersonnelAddresses().add(personnelAddPerm);
 		smPersonnel.setSmAppl(smAppl);
+		//START SSM CHANGES #27201
+		smPersonnel = setDesignationSSM(smPersonnel);
+		//END SSM CHANGES #27201
 		smAppl.getSmPersonnels().add(smPersonnel);
 		//#16052019 - SSM INTEGRATION CR
 		//add list all personel & check if smPersonnel contain in this.getManagedBean().getSmPersonnelAll(), use smPersonnel to add into appl, otherwise use personnel
 		if(this.getManagedBean().isCompanyValidWithSSM()){
 			if(this.getManagedBean().getSmPersonnelAll()!= null){
 				for(SmPersonnel personnel : this.getManagedBean().getSmPersonnelAll()){
+					//START SSM CHANGES #27201
+					personnel = setDesignationSSM(personnel);
+					//END SSM CHANGES #27201
 					SmPersonnel personnelSSM = (SmPersonnel)personnel.cloneEntity();
 					//to check,personel is equity owner or not
 					SmPersonnel personnelAdmin = (SmPersonnel) EntityHelper.compareSingleEntityByProp(smPersonnel.getIdentificationNo(), personnelSSM,"identificationNo");
@@ -1091,7 +1098,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		setAdminSameAsOwner();
 		SmPersonnel smPersonnel = this.getManagedBean().getSmPersonnel();
 		//SSM INTEGRATION
-		if(this.getManagedBean().isCompanyValidWithSSM()){
+		//#27315
+		//disable this, no need to check other supplier owner
+		/*if(this.getManagedBean().isCompanyValidWithSSM()){
 			for(SmSupplierOwner suppOwner:this.getManagedBean().getSmSuppOwners()){
 				if(suppOwner.getIdentificationType().getParameterCode().equals(SupplierManagementConst.BASIC_IND_IDENT_TYPE)){
 					if(getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF)){
@@ -1105,7 +1114,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					}
 				}
 			}
-		}
+		}*/
 		validateNewIC(smPersonnel,false);
 		RequestContext.getCurrentInstance().execute("firstUserTncDialog.show()");
 	}
@@ -2218,6 +2227,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							for(SmPersonnel personnel : ssmResDTO.getSmPersonnelAll()){
 								if(EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), this.getManagedBean().getSmSupp().getSmAppl().getSmPersonnels(), "identificationNo") == null){
 									personnel.setSmAppl(this.getManagedBean().getSmAppl());
+									//27477
+									personnel.setSmPersonnelAddresses(null);
+									personnel.setSmPersonnelAdd(null);
 									this.getManagedBean().getSmSupp().getSmAppl().getSmPersonnels().add(personnel);
 								}
 							}
@@ -2239,7 +2251,41 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 								}
 							}
 						}
-						
+						//START 27477
+						//SET SM SUPPOWNER
+						if(this.getManagedBean().getSmSuppOwners() != null){
+							for(SmSupplierOwner owner:this.getManagedBean().getSmSuppOwners()){
+								if(owner.getSmSupplier() == null){
+									owner.setSmSupplier(this.getManagedBean().getSmSupp());
+								}
+							}
+						}
+						if(ssmResDTO.getSmSupplierBusinessList()!= null){
+							boolean existInOld=false;
+							//compare old data with ssm, if ssm has new data, add data into list
+							if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() > 0){
+								for(SmSupplierBusiness smSupplierBusiness:ssmResDTO.getSmSupplierBusinessList()){
+									if(smSupplierBusiness.getPmBusinessNature()!=null){
+										for(SmSupplierBusiness smSuppBussOld:this.getManagedBean().getSmSupp().getSmSupplierBusinesses()){
+											if(smSupplierBusiness.getPmBusinessNature().getLevelCode().equalsIgnoreCase(smSuppBussOld.getPmBusinessNature().getLevelCode())){
+												existInOld=true;
+											}
+										}
+									}
+									if(!existInOld){
+										smSupplierBusiness.setSmSupplier(this.getManagedBean().getSmSupp());
+										this.getManagedBean().getSmSupp().getSmSupplierBusinesses().add(smSupplierBusiness);
+									}
+								}
+							//if old data not exits,set all data from ssm into list
+							}else if(ssmResDTO.getSmSupplierBusinessList() != null && ssmResDTO.getSmSupplierBusinessList().size() > 0){
+								this.getManagedBean().getSmSupp().setSmSupplierBusinesses(ssmResDTO.getSmSupplierBusinessList());
+								for(SmSupplierBusiness business :this.getManagedBean().getSmSupp().getSmSupplierBusinesses()){
+									business.setSmSupplier(this.getManagedBean().getSmSupp());
+								}
+							}
+						}
+						//END 27477
 					}else{
 						this.getManagedBean().setCompanyValidWithSSM(false);
 					}
@@ -4073,8 +4119,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 		if(updatePersonnel){
 			SmPersonnel personnel = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(owner.getIdentificationNo(), this.getManagedBean().getSmPersonnelAll(), "identificationNo");
-			personnel.setPmCountry(owner.getNationality());
-			personnel.setName(owner.getOwnerName());
+			//27477
+			if(personnel != null){
+				personnel.setPmCountry(owner.getNationality());
+				personnel.setName(owner.getOwnerName());
+			}			
 		}
 	}
 }
