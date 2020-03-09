@@ -1534,8 +1534,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 								this.ctBackingBean.getManagedBean().getContractVer().getDocType()),
 								this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo(),
 								RoleHelper.getInstance().getRoleDescByCode(RoleCode.MIN_CONTRACT_ADMIN.value()).getRoleName()};
-					}
-					if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)) {
+					}else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)) {
 						messageId = MessageConst.INFO_700083;
 						params = new String[] { getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,
 								this.ctBackingBean.getManagedBean().getContractVer().getDocType()),
