@@ -132,6 +132,7 @@ public class SmReportConst implements Serializable {
 	public static final String SM_LIST_OF_SOFTCERT_PAYMENT_RPT_VAL = "SM_078";
 	public static final String SM_REJECTED_SOFTCERT_RPT_VAL = "SM_079";
 	public static final String SM_DISC_ACT_EXEC_SUMMARY_RPT_VAL = "SM_083";
+	public static final String SM_SUPPLIER_PERFORMANCE_V_RPT_VAL = "SM_091";
 
 	// Screen fields constants
 	public static final String SM_ZONE_SEMENANJUNG = "Semenanjung";
@@ -185,6 +186,12 @@ public class SmReportConst implements Serializable {
 	
 	public static final String PENDING_SV_STATUS = "Pending Prepare Site Visit Report";
 	public static final String SV_COMPLETED_STATUS = "Site Visit Report Completed";
+	
+	// #27199 - start
+	public static final String SM_SUPPLIER_PERFORMANCE_COMP_1 = "PHARMANIAGA LOGISTICS SDN BHD";
+	public static final String SM_SUPPLIER_PERFORMANCE_COMP_2 = "CCM PHARMACEUTICALS SDN BHD";
+	public static final String SM_SUPPLIER_PERFORMANCE_COMP_3 = "MS ALI ENTERPRISE";
+	// #27199 - end
 	
 	public String getSM_RESPONSE_REPORT() {
 		return SM_RESPONSE_REPORT;
@@ -604,5 +611,9 @@ public class SmReportConst implements Serializable {
 
 	public int getCertStatusRejected() {
 		return CERT_STATUS_REJECTED;
+	}
+	
+	public static String getSmSupplierPerformanceVRptVal() {
+		return SM_SUPPLIER_PERFORMANCE_V_RPT_VAL;
 	}
 }
