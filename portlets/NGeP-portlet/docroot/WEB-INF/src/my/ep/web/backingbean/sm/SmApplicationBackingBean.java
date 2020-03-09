@@ -1548,6 +1548,12 @@ public class SmApplicationBackingBean extends
 						int i = 0;
 						for(SmPersonnel personnel : this.getManagedBean().getSmAppl().getSmPersonnels()){
 							validateRole(personnel);
+							// SET DESINGATION SSM #27201
+							if(personnel.getDesignation() != null){
+								String designation = populateDesignationSSM(personnel.getDesignation());
+								personnel.setDesignation(designation);
+							}
+							
 							SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelAll(),"identificationNo");
 							if(personnelSSM != null){								
 								//if rob no need to copy shareamt.
@@ -1555,11 +1561,13 @@ public class SmApplicationBackingBean extends
 									personnel.setSsmData(true);
 									personnel.setShareAmtSsmNull(true);
 									//SSM CHANGE 11012020
-									String[] copyEquityOwner = {"birthDate","nameInSsm","raceSsmNull","birthDateSsmNull","designationSsmNull","equityOwner","director","pmCountry","directorSsm","equityOwnerSsm","managementSsm","pmRace"};
+									//#27315
+									String[] copyEquityOwner = {"name","birthDate","nameInSsm","raceSsmNull","birthDateSsmNull","designationSsmNull","equityOwner","director","pmCountry","directorSsm","equityOwnerSsm","managementSsm","pmRace"};
 									EntityHelper.copyEntityPropertiesOnly(personnelSSM,personnel,copyEquityOwner);
 								}else{
 									personnel.setSsmData(true);
-									String[] copyEquityOwner = {"shareAmt","nameInSsm","raceSsmNull","birthDateSsmNull","shareAmtSsmNull","shareAmtSsm","designationSsmNull","equityOwner","director","pmCountry","directorSsm","equityOwnerSsm","managementSsm"};
+									//#27315
+									String[] copyEquityOwner = {"name","shareAmt","nameInSsm","raceSsmNull","birthDateSsmNull","shareAmtSsmNull","shareAmtSsm","designationSsmNull","equityOwner","director","pmCountry","directorSsm","equityOwnerSsm","managementSsm"};
 									EntityHelper.copyEntityPropertiesOnly(personnelSSM,personnel,copyEquityOwner);
 								}
 								validateRole(personnel);
@@ -1695,6 +1703,9 @@ public class SmApplicationBackingBean extends
 							Iterator<SmPersonnel> iterPersonnel = this.getManagedBean().getSmAppl().getSmPersonnels().iterator();
 							while(iterPersonnel.hasNext()){
 								SmPersonnel personnel = iterPersonnel.next();
+								//START SSM CHANGES #27201 - SET DESIGNATION
+								personnel = setDesignationSSM(personnel);
+								//END SSM CHANGES #27201 - SET DESIGNATION
 								if(personnel.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_DELETED){
 									if (this.getManagedBean().getSmAppl().getSmSupplierBanks() != null && !this.getManagedBean().getSmAppl().getSmSupplierBanks().isEmpty()) {
 										
@@ -12325,6 +12336,17 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void viewMyIdentityRespond() {
+		if (getManagedBean().getSelectedShareHolder() != null && getManagedBean().getSelectedShareHolder().getIdentityResponseCode() != null) {
+			String postCode = "";
+			for (SmPersonnelAddress addr : getManagedBean().getSelectedShareHolder().getSmPersonnelAddresses()) {
+				if (addr.getAddressType() != null && addr.getAddressType().equalsIgnoreCase(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM) && addr.getSmAddress() != null) {
+					postCode = addr.getSmAddress().getPostcode();
+					log.debug(" *** Perm Addr Post Code ****" + postCode);
+				}
+			}
+			SmCommonUtil.getInstance().verifyPersonnelWithMyIdentity(this.getManagedBean().getSelectedShareHolder(), postCode,
+					my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_ONLINE, null);
+		}
 		RequestContext.getCurrentInstance().execute("myIdentityDialog.show();");
 	}
 	//FIXME : 16052019 - SSM INTEGRATION CR - start
@@ -12632,11 +12654,13 @@ public class SmApplicationBackingBean extends
 							personnel.setSsmData(true);
 							personnel.setShareAmtSsmNull(true);
 							//SSM CHANGE 11012020
-							String[] copyEquityOwner = {"birthDate","nameInSsm","raceSsmNull","birthDateSsmNull","designationSsmNull","equityOwner","director","pmCountry","directorSsm","equityOwnerSsm","managementSsm","pmRace"};
+							//#27315
+							String[] copyEquityOwner = {"name","birthDate","nameInSsm","raceSsmNull","birthDateSsmNull","designationSsmNull","equityOwner","director","pmCountry","directorSsm","equityOwnerSsm","managementSsm","pmRace"};
 							EntityHelper.copyEntityPropertiesOnly(personnelSSM,personnel,copyEquityOwner);
 						}else{
 							personnel.setSsmData(true);
-							String[] copyEquityOwner = {"shareAmt","nameInSsm","raceSsmNull","birthDateSsmNull","shareAmtSsmNull","shareAmtSsm","designationSsmNull","equityOwner","director","pmCountry","directorSsm","equityOwnerSsm","managementSsm"};
+							//#27315
+							String[] copyEquityOwner = {"name","shareAmt","nameInSsm","raceSsmNull","birthDateSsmNull","shareAmtSsmNull","shareAmtSsm","designationSsmNull","equityOwner","director","pmCountry","directorSsm","equityOwnerSsm","managementSsm"};
 							EntityHelper.copyEntityPropertiesOnly(personnelSSM,personnel,copyEquityOwner);
 						}
 						validateRole(personnel);
@@ -12772,6 +12796,9 @@ public class SmApplicationBackingBean extends
 					Iterator<SmPersonnel> iterPersonnel = this.getManagedBean().getSmAppl().getSmPersonnels().iterator();
 					while(iterPersonnel.hasNext()){
 						SmPersonnel personnel = iterPersonnel.next();
+						//START SSM CHANGES #27201 - SET DESIGNATION
+						personnel = setDesignationSSM(personnel);
+						//END SSM CHANGES #27201 - SET DESIGNATION
 						if(personnel.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_DELETED){
 							if (this.getManagedBean().getSmAppl().getSmSupplierBanks() != null && !this.getManagedBean().getSmAppl().getSmSupplierBanks().isEmpty()) {
 								
