@@ -5815,7 +5815,12 @@ public class SmCommonUtil {
 		//27382
 		switch (resDTO.getStatusCode()) {
 		case "70001":
-			throw new EpException(MessageConst.ERROR_721078);
+			//27214
+			if(resDTO.isPreRegistration()){
+				throw new EpException(MessageConst.ERROR_721086);
+			}else{
+				throw new EpException(MessageConst.ERROR_721078);
+			}			
 		case "70002":
 			throw new EpException(MessageConst.ERROR_721071);
 		case "70003":
@@ -5835,9 +5840,19 @@ public class SmCommonUtil {
 		case MessageConst.ERROR_721084:
 			throw new EpException(MessageConst.ERROR_721084);			
 		case "70067"://No SSM Data for requested BusinessRegistrationNo
-			throw new EpException(MessageConst.ERROR_721078);
+			//27214
+			if(resDTO.isPreRegistration()){
+				throw new EpException(MessageConst.ERROR_721086);
+			}else{
+				throw new EpException(MessageConst.ERROR_721078);
+			}
 		case "70068"://Encounter Technical Error at SSM
-			throw new EpException(MessageConst.ERROR_721078);
+			//27214
+			if(resDTO.isPreRegistration()){
+				throw new EpException(MessageConst.ERROR_721086);
+			}else{
+				throw new EpException(MessageConst.ERROR_721078);
+			}
 		}
 	}
 		
