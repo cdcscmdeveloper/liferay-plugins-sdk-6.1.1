@@ -306,8 +306,10 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 		boolean isValidOrgProfile = false;
 		log.info("MIN_CONTRACT_ADMIN role: " + facesScopes.hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()));
 		log.info("BPK_CCA role: " + facesScopes.hasRoleUser(RoleCode.BPK_CCA.value()));
+		log.info("BPK_CCA role: " + facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value()));
 		if (facesScopes.hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) 
-				|| facesScopes.hasRoleUser(RoleCode.BPK_CCA.value())) {
+				|| facesScopes.hasRoleUser(RoleCode.BPK_CCA.value())
+				|| facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value())) {
 			IUserSO userSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO userReqDTO = new UserReqDTO();
 			userReqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());

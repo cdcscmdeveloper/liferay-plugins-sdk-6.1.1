@@ -146,6 +146,9 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private String justification;
 	//Enhancement #26186 end
 	
+	private boolean itemProductNotExist;
+	private boolean itemServiceNotExist;
+	
 	//26753 - start
 	private boolean updateCommittee;
 	private List<CtCommitteeMember> updatedCommitteeMembers;
@@ -1367,6 +1370,19 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	public void setJustification(String justification) {
 		this.justification = justification;
 	}
+
+	//Enhancement #26186 end
+	
+	//#25956 Start
+	public List<PmUser> getContractAdminlist() {
+		return contractAdminlist;
+	}
+	public void setContractAdminlist(List<PmUser> contractAdminlist) {
+		this.contractAdminlist = contractAdminlist;
+	}
+	//#25956 End
+
+
 	//Enhancement #26186 end
 	//26753 - start
 	/**
@@ -1420,5 +1436,18 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 		this.hasChanges = hasChanges;
 	}	
 	//26753 - end
+	public boolean isItemProductNotExist() {
+		return itemProductNotExist;
+	}
+	public void setItemProductNotExist(boolean itemProductNotExist) {
+		this.itemProductNotExist = itemProductNotExist;
+	}
+	public boolean isItemServiceNotExist() {
+		return itemServiceNotExist;
+	}
+	public void setItemServiceNotExist(boolean itemServiceNotExist) {
+		this.itemServiceNotExist = itemServiceNotExist;
+	}
 	
+
 }
