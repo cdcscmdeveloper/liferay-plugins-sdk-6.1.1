@@ -4386,8 +4386,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		boolean representativeSecretary = true;
 		boolean representativeOfficer = true;
 		boolean representativeDirector = true;
-
-		for (CtCommitteeMember committeMember : ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
+		//26753 - start
+		List<CtCommitteeMember> ctCommitteeMembers = null;
+		if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())) {
+			ctCommitteeMembers = getManagedBean().getUpdatedCommitteeMembers();
+		} else {
+			ctCommitteeMembers = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers();
+		}
+		//26753 - end
+		for (CtCommitteeMember committeMember : ctCommitteeMembers) {//26753
 			if (committeMember.getMemberRole() != null && committeMember.getMemberRoleId() != null) {
 				String representativeCode = "";
 				String parameterCode = ParameterHelper.getInstance().getPmParameterById(committeMember.getMemberRoleId()).getParameterCode();
