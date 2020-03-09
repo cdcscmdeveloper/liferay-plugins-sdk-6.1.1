@@ -798,9 +798,9 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		return ipmReportSO.retrieveParameterCodeNameByParamCodeParamTypeAndLanguageCode(ReportConst.MALAY_LANGUAGE_CODE, "SPI", paramCode);
 	}
 	
-	public List<Object[]> generateSMCollectionReportBasedClassificationCode(LinkedHashMap<String, String> params){
+	public List<Object[]> generateSMCollectionReportBasedClassificationCode(LinkedHashMap<String, String> params, String type){
 		IRPTRequestSO irptRequestSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IRPTRequestSO.class);
-		return irptRequestSO.generateReportSMCollectionBasedClassificationCode(params);
+		return irptRequestSO.generateReportSMCollectionBasedClassificationCode(params, type);
 	}
 	
 	public List<Object[]> generateSMCollectionReportBasedReceiptAndTransactionDate(LinkedHashMap<String, String> params, String type){
@@ -965,9 +965,10 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 				+ " BAGI TAHUN KEWANGAN "+ DateUtils.dateToString("yyyy",new Date());
 		
 		String[] rowHeaderItems = {"Kod PTJ","Nama PTJ","Kaedah Bayaran","Nama Pembekal","Jenis Bayaran"};
+		//Update Func By Include label RM inside column Caj Perkhidmatan & GST Caj Perkhidmatan
 		ArrayList<String> columnHeaderList = new ArrayList<String>(Arrays.asList(
 				"Bil", "Tarikh Transaksi", "Tarikh Resit", "No Resit","Nama Pembekal","No Permohonan","No Rujukan","Jenis Terimaan-Kod", "Jenis Terimaan-Perihal",
-				"Harga (RM)","GST (RM)","Caj Perkhidmatan","GST Caj Perkhidmatan","Amaun Bersih (RM)","Jumlah Keseluruhan (RM)","Status"
+				"Harga (RM)","GST (RM)","Caj Perkhidmatan (RM)","GST Caj Perkhidmatan (RM)","Amaun Bersih (RM)","Jumlah Keseluruhan (RM)","Status"
 		));
 		String[] columnsRingkasan = {reportType,"Bil","Harga (RM)","GST (RM)","Caj Perkhidmatan (RM)","GST Caj Perkhidmatan (RM)","Amaun Bersih (RM)"};
 		
@@ -1118,8 +1119,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		            	else if(i==7)sheetList.setColumnWidth(i, 29*256); //Col : Jenis Terimaan-Perihal
 		            	else if(i==8)sheetList.setColumnWidth(i, 15*256); //Col : Harga(RM)
 		            	else if(i==9)sheetList.setColumnWidth(i, 15*256); //Col : GST (RM)
-		            	else if(i==10)sheetList.setColumnWidth(i, 26*256); //Col : Caj Perkhidmatan
-		            	else if(i==11)sheetList.setColumnWidth(i, 26*256); //Col : GST Caj Perkhidmatan
+		            	else if(i==10)sheetList.setColumnWidth(i, 30*256); //Col : Caj Perkhidmatan
+		            	else if(i==11)sheetList.setColumnWidth(i, 30*256); //Col : GST Caj Perkhidmatan
 		            	else if(i==12)sheetList.setColumnWidth(i, 28*256); //Col : Amaun Bersih
 		            	else if(i==13)sheetList.setColumnWidth(i, 28*256); //Col : Jumlah Keseluruhan       
 		            	else if(i==14)sheetList.setColumnWidth(i, 22*256); //Col : Status       
@@ -1135,8 +1136,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		            	else if(i==8)sheetList.setColumnWidth(i, 29*256); //Col : Jenis Terimaan-Perihal
 		            	else if(i==9)sheetList.setColumnWidth(i, 15*256); //Col : Harga(RM)
 		            	else if(i==10)sheetList.setColumnWidth(i, 15*256); //Col : GST (RM)
-		            	else if(i==11)sheetList.setColumnWidth(i, 26*256); //Col : Caj Perkhidmatan
-		            	else if(i==12)sheetList.setColumnWidth(i, 26*256); //Col : GST Caj Perkhidmatan
+		            	else if(i==11)sheetList.setColumnWidth(i, 30*256); //Col : Caj Perkhidmatan
+		            	else if(i==12)sheetList.setColumnWidth(i, 30*256); //Col : GST Caj Perkhidmatan
 		            	else if(i==13)sheetList.setColumnWidth(i, 28*256); //Col : Amaun Bersih
 		            	else if(i==14)sheetList.setColumnWidth(i, 28*256); //Col : Jumlah Keseluruhan       
 		            	else if(i==15)sheetList.setColumnWidth(i, 22*256); //Col : Status       
@@ -1218,8 +1219,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	        	else if(i==1)sheetSummary.setColumnWidth(i, 8*256); //Col : Bil
 	        	else if(i==2)sheetSummary.setColumnWidth(i, 16*256); //Col : Harga (RM)
 	        	else if(i==3)sheetSummary.setColumnWidth(i, 16*256); //Col : GST (RM)
-	        	else if(i==4)sheetSummary.setColumnWidth(i, 26*256); //Col : Caj Perkhidmatan (RM)
-	        	else if(i==5)sheetSummary.setColumnWidth(i, 26*256); //Col : GST Caj Perkhidmatan (RM)
+	        	else if(i==4)sheetSummary.setColumnWidth(i, 28*256); //Col : Caj Perkhidmatan (RM)
+	        	else if(i==5)sheetSummary.setColumnWidth(i, 28*256); //Col : GST Caj Perkhidmatan (RM)
 	        	else if(i==6)sheetSummary.setColumnWidth(i, 26*256); //Col : Amaun Bersih (RM)
 	        }
 	        log.info("DONE GENERATE RINGKASAN !!!");
@@ -1238,7 +1239,6 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	    }catch(Exception e){
 	    	e.printStackTrace();
 	    }
-		
 	    log.info("DONE GENERATE REPORT COLLECTION REPORT BASED ON Payment Method !!");
 	}
 	
@@ -1247,7 +1247,9 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		Map<Integer, Object[]> creditList = new TreeMap<Integer, Object[]>();
 		Map<Integer, Object[]> summaryList = new TreeMap<Integer, Object[]>();
 		List<Object[]> reportList = new ArrayList<Object[]>();
+		List<Object[]> summaryReportList = new ArrayList<Object[]>();
 		int fpxCount = 0, creditCount = 0; 
+		int totalCount = 0;
 		BigDecimal totalPrice = new BigDecimal(0);
 		BigDecimal totalGst = new BigDecimal(0); 
 		BigDecimal totalServiceCharge = new BigDecimal(0);
@@ -1262,9 +1264,10 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		
 		String[] sheetName = {"Senarai_FPX", "Senarai_Kad Kredit","Ringkasan"};
 		String[] rowHeaderItems = {"Kod PTJ","Nama PTJ","Kod Penjenisan","Kaedah Bayaran"};
+		//Update Func By Include label RM inside column Caj Perkhidmatan & GST Caj Perkhidmatan
 		String[] columnsList = {
 				"Bil","Tarikh","No Resit","No Permohonan","Jenis Terimaan-Kod","Jenis Terimaan-Perihal",
-				"Harga (RM)","GST (RM)","Caj Perkhidmatan","GST Caj Perkhidmatan","Amaun Bersih (RM)","Jumlah Keseluruhan (RM)","Status"
+				"Harga (RM)","GST (RM)","Caj Perkhidmatan (RM)","GST Caj Perkhidmatan (RM)","Amaun Bersih (RM)","Jumlah Keseluruhan (RM)","Status"
 		};
 		
 		String[] columnsSummaryList = {
@@ -1272,10 +1275,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		};
 		
 		try{
-			reportList = generateSMCollectionReportBasedClassificationCode(params);
+			reportList = generateSMCollectionReportBasedClassificationCode(params,"L");
 			if(!reportList.isEmpty()){
-				String receiptNoList = "";
-				String referenceNoList = "";
 				for(int m=0; m<reportList.size(); m++){
 					Object[] row = (Object[]) reportList.get(m);
 					BigDecimal priceAmt = row[13] != null ? (BigDecimal)row[13] : BigDecimal.ZERO;
@@ -1297,41 +1298,35 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 						});
 						creditCount++;
 					}
-					
-					if(receiptNoList == ""){
-						totalPrice = totalPrice.add(priceAmt);
-						totalGst = totalGst.add(gstAmt);
-						totalServiceCharge = totalServiceCharge.add(serviceCharge);
-						totalGstServiceCharge = totalGstServiceCharge.add(gstServiceCharge);
-						totalNetAmount = totalNetAmount.add(netPrice);
-						
-					}else if(receiptNoList.equalsIgnoreCase(row[2].toString())){
-						if(referenceNoList.equalsIgnoreCase(row[6].toString())){
-							totalPrice = totalPrice.add(priceAmt);
-							totalGst = totalGst.add(gstAmt);
-							totalServiceCharge = totalServiceCharge.add(serviceCharge);
-							totalGstServiceCharge = totalGstServiceCharge.add(gstServiceCharge);
-							totalNetAmount = totalNetAmount.add(netPrice);
-						}
-					}else{
-						totalPrice = totalPrice.add(priceAmt);
-						totalGst = totalGst.add(gstAmt);
-						totalServiceCharge = totalServiceCharge.add(serviceCharge);
-						totalGstServiceCharge = totalGstServiceCharge.add(gstServiceCharge);
-						totalNetAmount = totalNetAmount.add(netPrice);
-					}
-					receiptNoList = row[2].toString();
-					referenceNoList = row[6].toString();
 				}
-				summaryList.put(0, new Object[] {
-						params.get(SmReportConst.PARAM_CODE),(fpxCount+creditCount),totalPrice,totalGst,totalServiceCharge,totalGstServiceCharge,totalNetAmount
-				});
-				summaryList.put(1, new Object[] {
-						"Keseluruhan",(fpxCount+creditCount),totalPrice,totalGst,totalServiceCharge,totalGstServiceCharge,totalNetAmount
-				});
 			}			
 		}catch(Exception ex){
 			ex.printStackTrace();
+		}
+		/*Update #15990 : Include query to get summary of the collection report based on classification code */
+		summaryReportList = generateSMCollectionReportBasedClassificationCode(params,"R");
+		if(!summaryReportList.isEmpty()){
+			for(int x=0; x<summaryReportList.size(); x++){
+				Object[] row = (Object[]) summaryReportList.get(x);
+				Integer total = row[1] != null ? Integer.parseInt(row[1].toString()) : 0;
+				BigDecimal priceAmt = row[2] != null ? (BigDecimal)row[2] : BigDecimal.ZERO;
+				BigDecimal gstAmt = row[3] != null ? (BigDecimal)row[3] : BigDecimal.ZERO;
+				BigDecimal serviceCharge = row[4] != null ? (BigDecimal)row[4] : BigDecimal.ZERO;
+				BigDecimal gstServiceCharge = row[5] != null ? (BigDecimal)row[5] : BigDecimal.ZERO;
+				BigDecimal netPrice = (priceAmt.add(gstAmt).subtract(serviceCharge).subtract(gstServiceCharge)).setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE,BigDecimal.ROUND_HALF_UP);
+				
+				summaryList.put(x, new Object[]{row[0].toString(),total,priceAmt,gstAmt, serviceCharge,gstServiceCharge,netPrice});
+				totalCount+= total;
+				totalPrice = totalPrice.add(priceAmt);
+				totalGst = totalGst.add(gstAmt);
+				totalServiceCharge = totalServiceCharge.add(serviceCharge);
+				totalGstServiceCharge = totalGstServiceCharge.add(gstServiceCharge);
+				totalNetAmount = totalNetAmount.add(netPrice);
+			}
+			
+			summaryList.put(summaryReportList.size(), new Object[] {
+					"Keseluruhan",totalCount,totalPrice,totalGst,totalServiceCharge,totalGstServiceCharge,totalNetAmount
+			});
 		}
 		
 		Workbook wb = new XSSFWorkbook();
@@ -1373,22 +1368,13 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	        Set<Integer> keyIdFpx = fpxList.keySet();
 			int rowid = sheetFPX.getLastRowNum()+1;
 			int countRowFpx = 1;
-			String receiptNo = "";
 			for (Integer key : keyIdFpx) {
 				Row row = sheetFPX.createRow(rowid++);
 				Object[] objectArr = fpxList.get(key);
 				int cellid = 1;
 				Cell cellBil = row.createCell(0);
-				if(receiptNo == ""){
-					cellBil.setCellValue(countRowFpx++);
-				}else if(!receiptNo.equalsIgnoreCase((String)objectArr[1])){
-					cellBil.setCellValue(countRowFpx++);
-				}else{
-					fpxCount = fpxCount - 1;
-					sheetFPX.addMergedRegion(new CellRangeAddress(rowid-2,rowid-1,0,0)); 
-				}
+				cellBil.setCellValue(countRowFpx++);
 				cellBil.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,false));
-				receiptNo = (String)objectArr[1];
 				
 				for (Object obj : objectArr) {
 					Cell cell = row.createCell(cellid);
@@ -1421,8 +1407,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	        	else if(i==5)sheetFPX.setColumnWidth(i, 29*256);//Column : Jenis Terimaan - Perihal
 	        	else if(i==6)sheetFPX.setColumnWidth(i, 15*256);//Column : Harga (RM)
 	        	else if(i==7)sheetFPX.setColumnWidth(i, 15*256);//Column : GST (RM)
-	        	else if(i==8)sheetFPX.setColumnWidth(i, 22*256);//Column : Caj Perkhidmatan 
-	        	else if(i==9)sheetFPX.setColumnWidth(i, 27*256);//Column : GST Caj Perkhidmatan
+	        	else if(i==8)sheetFPX.setColumnWidth(i, 27*256);//Column : Caj Perkhidmatan 
+	        	else if(i==9)sheetFPX.setColumnWidth(i, 30*256);//Column : GST Caj Perkhidmatan
 	        	else if(i==10)sheetFPX.setColumnWidth(i, 23*256);//Column : Amaun Bersih
 	        	else if(i==11)sheetFPX.setColumnWidth(i, 29*256);//Column : Jumlah Keseluruhan
 	        	else if(i==12)sheetFPX.setColumnWidth(i, 22*256);//Column : Status
@@ -1466,22 +1452,13 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			Set<Integer> keyIdCredit = creditList.keySet();
 			int rowid = sheetCC.getLastRowNum()+1;
 			int countRowCC = 1;
-			String receiptNoCC = "";
 			for (Integer key : keyIdCredit) {
 				Row row = sheetCC.createRow(rowid++);
 				Object[] objectArr = creditList.get(key);
 				int cellid = 1;
 				Cell cellBil = row.createCell(0);
-				if(receiptNoCC == ""){
-					cellBil.setCellValue(countRowCC++);
-				}else if(!receiptNoCC.equalsIgnoreCase((String)objectArr[1])){
-					cellBil.setCellValue(countRowCC++);
-				}else{
-					creditCount = creditCount - 1;
-					sheetCC.addMergedRegion(new CellRangeAddress(rowid-2,rowid-1,0,0)); 
-				}
+				cellBil.setCellValue(countRowCC++);
 				cellBil.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,false));
-				receiptNoCC = (String)objectArr[1];
 				
 				for (Object obj : objectArr) {
 					Cell cell = row.createCell(cellid);
@@ -1513,8 +1490,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	        	else if(i==5)sheetCC.setColumnWidth(i, 29*256);//Column : Jenis Terimaan - Perihal
 	        	else if(i==6)sheetCC.setColumnWidth(i, 15*256);//Column : Harga (RM)
 	        	else if(i==7)sheetCC.setColumnWidth(i, 15*256);//Column : GST (RM)
-	        	else if(i==8)sheetCC.setColumnWidth(i, 22*256);//Column : Caj Perkhidmatan 
-	        	else if(i==9)sheetCC.setColumnWidth(i, 27*256);//Column : GST Caj Perkhidmatan
+	        	else if(i==8)sheetCC.setColumnWidth(i, 25*256);//Column : Caj Perkhidmatan 
+	        	else if(i==9)sheetCC.setColumnWidth(i, 30*256);//Column : GST Caj Perkhidmatan
 	        	else if(i==10)sheetCC.setColumnWidth(i, 23*256);//Column : Amaun Bersih
 	        	else if(i==11)sheetCC.setColumnWidth(i, 29*256);//Column : Jumlah Keseluruhan
 	        	else if(i==12)sheetCC.setColumnWidth(i, 22*256);//Column : Status
@@ -1545,7 +1522,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
             cell.setCellStyle(columnStyle(wb,createHelper,true,true,true,false,false,false,true));
         }
         
-        if(!summaryList.isEmpty()){
+        if(!summaryReportList.isEmpty()){
 			log.info("SUMMARY LIST IS NOT NULL !!!");
 			Set<Integer> keyIdSummary = summaryList.keySet();
 			int rowid = sheetSummary.getLastRowNum()+1;
@@ -1560,7 +1537,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 						if(key == 0)cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,true));
 						else cell.setCellStyle(columnStyle(wb,createHelper,false,true,false,false,true,false,true));
 					}else if(obj instanceof Integer){
-						cell.setCellValue(fpxCount+creditCount);
+						cell.setCellValue(((Integer) obj).intValue());
 						if(key == 0)cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,true,true));
 						else cell.setCellStyle(columnStyle(wb,createHelper,false,true,false,false,false,true,true));
 					}else{
@@ -1607,10 +1584,13 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
         
         // Resize all columns to fit the content size
         for(int i = 0; i < columnsSummaryList.length; i++) {  
-        	if(i==1)sheetSummary.setColumnWidth(i, 8*256);//Column : Bil
+        	if(i==0)sheetSummary.setColumnWidth(i, 17*256);//Column : Kod Penjenisan
+        	else if(i==1)sheetSummary.setColumnWidth(i, 8*256);//Column : Bil
         	else if(i==2)sheetSummary.setColumnWidth(i, 15*256);//Column : Harga
         	else if(i==3)sheetSummary.setColumnWidth(i, 15*256);//Column : GST
-        	else sheetSummary.autoSizeColumn(i);
+        	else if(i==4)sheetSummary.setColumnWidth(i, 24*256);//Column : Caj Perkhidmatan
+        	else if(i==5)sheetSummary.setColumnWidth(i, 29*256);//Column : GST Caj Perkhidmatan
+        	else if(i==6)sheetSummary.setColumnWidth(i, 24*256);//Column : GST Caj Perkhidmatan
         }
         try{
         	String path = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_REPORT_DIR);
@@ -1624,7 +1604,6 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
         }catch(Exception e){
         	e.printStackTrace();
         }
-        
 	    log.info("DONE GENERATE Collection Report Based on Classification Code !!");
 	}
 	
@@ -1645,9 +1624,10 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		
 		String[] sheetName = {"Senarai_FPX", "Senarai_Kad Kredit","Ringkasan"};
 		String[] rowHeaderItems = {"Kod PTJ","Nama PTJ","Kaedah Bayaran","Nama Pembekal","Jenis Bayaran"};	
+		//Update Func By Include label RM inside column Caj Perkhidmatan & GST Caj Perkhidmatan
 		ArrayList<String> columnHeaderList = new ArrayList<String>(Arrays.asList(
 				"Bil","Tarikh Transaksi","Tarikh Resit","No Resit","Nama Pembekal","No Permohonan","No Rujukan","Jenis Terimaan-Kod","Jenis Terimaan-Perihal",
-				"Harga (RM)","GST (RM)","Caj Perkhidmatan","GST Caj Perkhidmatan","Amaun Bersih (RM)","Jumlah Keseluruhan (RM)","Status"
+				"Harga (RM)","GST (RM)","Caj Perkhidmatan (RM)","GST Caj Perkhidmatan (RM)","Amaun Bersih (RM)","Jumlah Keseluruhan (RM)","Status"
 		));
 		
 		if("Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE)))reportType = "Tarikh Resit";
@@ -1882,8 +1862,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	            	else if(i==7)sheetFPX.setColumnWidth(i, 29*256); //Col : Jenis Terimaan-Perihal
 	            	else if(i==8)sheetFPX.setColumnWidth(i, 15*256); //Col : Harga(RM)
 	            	else if(i==9)sheetFPX.setColumnWidth(i, 15*256); //Col : GST (RM)
-	            	else if(i==10)sheetFPX.setColumnWidth(i, 26*256); //Col : Caj Perkhidmatan
-	            	else if(i==11)sheetFPX.setColumnWidth(i, 26*256); //Col : GST Caj Perkhidmatan
+	            	else if(i==10)sheetFPX.setColumnWidth(i, 30*256); //Col : Caj Perkhidmatan
+	            	else if(i==11)sheetFPX.setColumnWidth(i, 30*256); //Col : GST Caj Perkhidmatan
 	            	else if(i==12)sheetFPX.setColumnWidth(i, 28*256); //Col : Amaun Bersih
 	            	else if(i==13)sheetFPX.setColumnWidth(i, 28*256); //Col : Jumlah Keseluruhan       
 	            	else if(i==14)sheetFPX.setColumnWidth(i, 22*256); //Col : Status       
@@ -1899,8 +1879,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	            	else if(i==8)sheetFPX.setColumnWidth(i, 29*256); //Col : Jenis Terimaan-Perihal
 	            	else if(i==9)sheetFPX.setColumnWidth(i, 15*256); //Col : Harga(RM)
 	            	else if(i==10)sheetFPX.setColumnWidth(i, 15*256); //Col : GST (RM)
-	            	else if(i==11)sheetFPX.setColumnWidth(i, 26*256); //Col : Caj Perkhidmatan
-	            	else if(i==12)sheetFPX.setColumnWidth(i, 26*256); //Col : GST Caj Perkhidmatan
+	            	else if(i==11)sheetFPX.setColumnWidth(i, 30*256); //Col : Caj Perkhidmatan
+	            	else if(i==12)sheetFPX.setColumnWidth(i, 30*256); //Col : GST Caj Perkhidmatan
 	            	else if(i==13)sheetFPX.setColumnWidth(i, 28*256); //Col : Amaun Bersih
 	            	else if(i==14)sheetFPX.setColumnWidth(i, 28*256); //Col : Jumlah Keseluruhan       
 	            	else if(i==15)sheetFPX.setColumnWidth(i, 22*256); //Col : Status       
@@ -2004,8 +1984,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	            	else if(i==7)sheetCC.setColumnWidth(i, 29*256); //Col : Jenis Terimaan-Perihal
 	            	else if(i==8)sheetCC.setColumnWidth(i, 15*256); //Col : Harga(RM)
 	            	else if(i==9)sheetCC.setColumnWidth(i, 15*256); //Col : GST (RM)
-	            	else if(i==10)sheetCC.setColumnWidth(i, 26*256); //Col : Caj Perkhidmatan
-	            	else if(i==11)sheetCC.setColumnWidth(i, 26*256); //Col : GST Caj Perkhidmatan
+	            	else if(i==10)sheetCC.setColumnWidth(i, 30*256); //Col : Caj Perkhidmatan
+	            	else if(i==11)sheetCC.setColumnWidth(i, 30*256); //Col : GST Caj Perkhidmatan
 	            	else if(i==12)sheetCC.setColumnWidth(i, 28*256); //Col : Amaun Bersih
 	            	else if(i==13)sheetCC.setColumnWidth(i, 28*256); //Col : Jumlah Keseluruhan  
 	            	else if(i==14)sheetCC.setColumnWidth(i, 22*256); //Col : Status 
@@ -2021,8 +2001,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	            	else if(i==8)sheetCC.setColumnWidth(i, 29*256); //Col : Jenis Terimaan-Perihal
 	            	else if(i==9)sheetCC.setColumnWidth(i, 15*256); //Col : Harga(RM)
 	            	else if(i==10)sheetCC.setColumnWidth(i, 15*256); //Col : GST (RM)
-	            	else if(i==11)sheetCC.setColumnWidth(i, 26*256); //Col : Caj Perkhidmatan
-	            	else if(i==12)sheetCC.setColumnWidth(i, 26*256); //Col : GST Caj Perkhidmatan
+	            	else if(i==11)sheetCC.setColumnWidth(i, 30*256); //Col : Caj Perkhidmatan
+	            	else if(i==12)sheetCC.setColumnWidth(i, 30*256); //Col : GST Caj Perkhidmatan
 	            	else if(i==13)sheetCC.setColumnWidth(i, 28*256); //Col : Amaun Bersih
 	            	else if(i==14)sheetCC.setColumnWidth(i, 28*256); //Col : Jumlah Keseluruhan  
 	            	else if(i==15)sheetCC.setColumnWidth(i, 22*256); //Col : Status 
@@ -2102,12 +2082,12 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
         	else if(i==1)sheetSummary.setColumnWidth(i, 8*256); //Col : Bil
         	else if(i==2)sheetSummary.setColumnWidth(i, 16*256); //Col : Harga (RM)
         	else if(i==3)sheetSummary.setColumnWidth(i, 16*256); //Col : GST (RM)
-        	else if(i==4)sheetSummary.setColumnWidth(i, 26*256); //Col : Caj Perkhidmatan (RM)
-        	else if(i==5)sheetSummary.setColumnWidth(i, 26*256); //Col : GST Caj Perkhidmatan (RM)
+        	else if(i==4)sheetSummary.setColumnWidth(i, 27*256); //Col : Caj Perkhidmatan (RM)
+        	else if(i==5)sheetSummary.setColumnWidth(i, 27*256); //Col : GST Caj Perkhidmatan (RM)
         	else if(i==6)sheetSummary.setColumnWidth(i, 26*256); //Col : Amaun Bersih (RM)
         }
         
-       try{
+        try{
 	    	String path = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_REPORT_DIR);
 	    	String fullPath = path+"/"+requestId+".xlsx";
 	    	//String fullPath = "D://reports//dev//"+requestId+".xlsx";
@@ -2119,7 +2099,6 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	    }catch(Exception e){
 	    	e.printStackTrace();
 	    }
-        
 	    log.info("DONE GENERATE REPORT COLLECTION REPORT BASED ON RECEIPT AND TRANSACTION DATE !!");
 	}
 	
@@ -2534,7 +2513,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
         	else if(i==14)sheetReportList.setColumnWidth(i, 30*256); //Col : Mothn : Jumlah Keseluruhan (RM)
         }
         
-        try{
+        /*try{
 	    	String path = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_REPORT_DIR);
 	    	String fullPath = path+"/"+requestId+".xlsx";
 	    	//String fullPath = "D://reports//dev//"+requestId+".xlsx";
@@ -2545,7 +2524,11 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	        wb.close();
 	    }catch(Exception e){
 	    	e.printStackTrace();
-	    }
+	    }*/
+        FileOutputStream fileOut = new FileOutputStream("D:\\report\\RevenueCollectionReport.xlsx");
+	    wb.write(fileOut);
+	    fileOut.close();
+	    wb.close();
 	    log.info("DONE GENERATE Revenue Collection Report !!!");
 	}
 	
