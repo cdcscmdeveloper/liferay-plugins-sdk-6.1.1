@@ -250,6 +250,8 @@ import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 import org.primefaces.util.Constants;
 
+import com.bea.common.security.xacml.context.StatusCode;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class QTDetailBackingBean.
@@ -296,6 +298,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	
 	private static final String menuItemCommitteeApprovalEcOcTecFec = "MenuItemCommitteeApprovalEcOcTecFec";
 	private static final String menuItemPublicationApproverAssignment = "MenuItemPublicationApproverAssignment";
+	
+	
+	public static final String TEMP_MB_KEY = "___823452381_76";
 	
 	public String getMenuItemDetails() {
 		return menuItemDetails;
@@ -8303,6 +8308,33 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						getManagedBean().getViewOriginalUrl());
 	}
 	/* ***19287#86 - end */
+	
+	
+	/* ***25692#95 - start */
+	public boolean isAllowedToViewSpec(){
+		
+		if(this.getManagedBean().getQt()!=null
+			&& this.getManagedBean().getCurrentStatusId()!=null){
+				Long currStatus = this.getManagedBean().getCurrentStatusId();
+			 	if(	QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(currStatus)
+					||	QTStatusConst.QT_REVISION_PUBLICATION.equals(currStatus)
+					||	QTStatusConst.QT_PENDING_DOCUMENT_REVISION.equals(currStatus)
+			 	){
+			 		if(userHasRole(new RoleCode[]{RoleCode.DESK_OFFICER})){
+			 			return true;
+			 		}
+			 	}
+			 	if( QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL.equals(currStatus)){
+			 		if(userHasRole(new RoleCode[]{RoleCode.SC_SECRETARY})){
+			 			return true;
+			 		}
+			 	}
+			
+		}
+		return false;
+		
+	}
+	/* ***25692#95 - end */
 
 }
 
