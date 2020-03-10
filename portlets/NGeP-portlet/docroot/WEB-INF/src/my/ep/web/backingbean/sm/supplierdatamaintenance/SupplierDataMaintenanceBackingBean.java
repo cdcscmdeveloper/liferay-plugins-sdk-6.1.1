@@ -264,10 +264,16 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setExistingRegStatus(getManagedBean().getSmAppl().getPmRegStatus());
 //		getManagedBean().setOldRegStatusId(getManagedBean().getSmAppl().getPmRegStatus().getPmStatus().getStatusId()); //27437 : Disciplinary Action
 		getManagedBean().setSmMofAccount(getSingleSmMofAccount());
+		//START 27465 : Disciplinary Action 26238
 		if (getManagedBean().getSmMofAccount() != null) {
 			getManagedBean().setExistingMofExpiryDate(
 					getManagedBean().getSmMofAccount().getExpDate());
+		}else if(getManagedBean().getSmSupplier()!= null && getManagedBean().getSmSupplier().getSmMofAccounts()!= null && getManagedBean().getSmSupplier().getSmMofAccounts().size()>0){
+			getManagedBean().setSmMofAccount(getManagedBean().getSmSupplier().getSmMofAccounts().get(0));
+			getManagedBean().setExistingMofExpiryDate(
+					getManagedBean().getSmMofAccount().getExpDate());
 		}
+		//END 27465 : Disciplinary Action 26238
 		if (getManagedBean().getSmAppl().getPmRegStatus() == null) {
 			getManagedBean().getSmAppl().setPmRegStatus(new PmRegStatus());
 		}
