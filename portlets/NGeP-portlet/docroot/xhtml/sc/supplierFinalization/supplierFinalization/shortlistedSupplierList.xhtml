@@ -403,10 +403,12 @@
 				<p:column style="text-align:left;">
 					<h:outputText value="#{shortlistedSupp.deskOfficerRemark}"/>
 				</p:column>				
-								
+				<ui:remove>
+					Enhancement #19336 START #142
+				</ui:remove>				
 				<p:column style="text-align:center;" rendered="#{showSelectionColumn}">
 					<p:selectBooleanCheckbox id="selectShortlistSupplier" value="#{shortlistedSupp.shortListed}" 
-						disabled="#{!(isSecretaryUser or isBPKTaskAndClaimed) or shortlistedSupp.suppSelectionDisabled or 
+						disabled="#{suppFinalizationBackingBean.isQTMaintenanceScreen() or !(isSecretaryUser or isBPKTaskAndClaimed) or shortlistedSupp.suppSelectionDisabled or 
 											suppFinalizationBackingBean.managedBean.disableSupplierSelection or isBidding}">
 						<p:ajax partialSubmit="true" process="@this" update="@([id$=itemListTbl],[id$=supplierListTblMultiple])" 
 								listener="#{suppFinalizationBackingBean.selectSupplierEvent(shortlistedSupp, false)}" />
