@@ -447,7 +447,7 @@
 						<tr>
 							<td>
 							<c:choose>
-								<c:when test="#{qtStatusChecklistScoringAndBefore and !isReadOnly and scQt.brandNew}">
+								<c:when test="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION}">
 										<p:outputPanel id="partialPop">
 													<p:selectOneRadio  value="#{scQt.partial}">
 														<f:selectItems
