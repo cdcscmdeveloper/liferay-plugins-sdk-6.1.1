@@ -29,6 +29,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.selfrequestsupplieradmin.SelfRequestSupplierAdminManagedBean;
@@ -117,7 +118,23 @@ public class SelfRequestSupplierAdminBackingBean extends
 										""));
 						throw new EpException(MessageConst.ERROR_721081,new String[]{SmCommonUtil.getOutputMsgBundle(this.getManagedBean().getStatusDescFromSSM(),null), ""});
 					}else{
-						SmCommonUtil.ssmError(ssmResDTO);
+						//SSM CHANGES START #27541 - 10/03/2020
+						try{
+							SmCommonUtil.ssmError(ssmResDTO);
+						}catch(Exception e){
+							String message = MessageUtils.getMessage(e.getMessage(),MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale());
+							fc.addMessage("ssmInvalid",
+									new FacesMessage(FacesMessage.SEVERITY_ERROR, SmCommonUtil.getMessage(message,null),
+											""));
+
+							if (message != null) {
+								throw new EpException(message + "(ERR-"
+										+ e.getMessage().toString() + ")");
+							} else {
+								throw new EpException(e.getMessage() + "(ERR-729999)");
+							}
+						}
+						//SSM CHANGES END #27541 - 10/03/2020
 					}
 				}
 			}
