@@ -17,12 +17,24 @@
 		<table width="100%">
 			<tr>
 				<td align="right">
-				
+				<!-- 25692#95 - start -->
+				<c:choose>
+				<c:when test="#{specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance() and specificationBackingBean.managedBean.taskId eq null and empty specMaintenanceBB.managedBean.previousPage}">
 				<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-					action="#{specMaintenanceBB.gotoSpecMaintenanceSearchPage}" rendered="#{specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance() and specificationBackingBean.managedBean.taskId eq null}"
+					action="#{specMaintenanceBB.gotoSpecMaintenanceSearchPage}" rendered="#{specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance() and specificationBackingBean.managedBean.taskId eq null and empty specMaintenanceBB.managedBean.previousPage}"
 					partialSubmit="true"
 					process="@this"
 					update="@this" />
+				</c:when>
+				<c:when test="#{(not empty specMaintenanceBB.managedBean.previousPage)}" >
+				<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
+					action="#{specMaintenanceBB.backToQtScreen()}" rendered="#{(not empty specMaintenanceBB.managedBean.previousPage)}"
+					partialSubmit="true"
+					process="@this"
+					update="@this" />
+				</c:when>
+				</c:choose>
+				<!-- 25692#95 - end -->
 				<p:commandButton value="#{lbl['lbl.sc.clone.specification']}" style="float:right;" id="cloneButton"
 											process="@this" partialSubmit="true" update="pnlid2" rendered="#{isClone and !specificationBackingBean.managedBean.readOnly}"
 											action="#{qtSpecCloneBackingBean.cloneCommitteePopupAction}"
