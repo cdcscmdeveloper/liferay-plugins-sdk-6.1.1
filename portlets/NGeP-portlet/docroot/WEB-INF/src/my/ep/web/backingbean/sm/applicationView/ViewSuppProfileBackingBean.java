@@ -138,6 +138,12 @@ public class ViewSuppProfileBackingBean extends
 	}
 	
 	//26238 - start
+	//27437 : Disciplinary action
+	public void searchBasicAccount() {
+		getManagedBean().searchSupplier();
+		getManagedBean().setBasicAccountMaintenance(true);
+	}
+	
 	/**
 	 * get faces scopes
 	 * 
@@ -254,8 +260,8 @@ public class ViewSuppProfileBackingBean extends
 							retVal.setManufacturerCancel(true);
 						if(disciplinaryAction.isBlacklistOwner())
 							retVal.setBlacklistOwnerDirector(true);
-						
-						if(disciplinaryAction.isCancelCategory()){
+						//27617 : Disciplinary Action
+						if(disciplinaryAction.isCancelCategory()  || disciplinaryAction.isManufacturerCancel()){
 							List<DisciplinaryActionCategoryVO> catVoList = new ArrayList<DisciplinaryActionCategoryVO>();
 							List<Object[]> catList = SmApplicationUtil.retrieveCancelCategory();
 							
