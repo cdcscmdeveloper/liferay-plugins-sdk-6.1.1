@@ -7,6 +7,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
 
 	<ui:define name="contentSection">
 
@@ -18,24 +19,23 @@
 		<ac:lovPopup />
 		<p:panel id="searchPanel" header="#{lbl['lbl.sc.search']}"
 			toggleable="true">
-			<h:panelGroup id="orgSearch" rendered="#{directPurchaseBackingBean.showFunctionType()==true or !directPurchaseBackingBean.isSupplier()}">
-			<table>
+					<table>
 				<tr>
 					<td width="25%"><p:outputLabel id="searchMinistryLbL"
-							value="#{lbl['lbl.sc.ministry']}" /></td>
+							value="#{lbl['lbl.sc.ministry']}" rendered="#{directPurchaseBackingBean.showRoleType()}" /></td>
 					<td colspan="3"><ac:lov id="searchMinistry"
 							lovId="PM_ORG_PROFILE_MINSTRY" size="118" readonly="true"
 							headerText="#{lbl['lbl.sc.ministry']}"
 							value="#{directPurchaseBackingBean.managedBean.searchMinistryProfile.orgName}"
 							postUpdateListener="directPurchaseBackingBean.postUpdateOrgProfileListener"
 							update="@form"
-							saveObject="directPurchaseBackingBean.managedBean.searchMinistryProfile">
+							saveObject="directPurchaseBackingBean.managedBean.searchMinistryProfile" rendered="#{directPurchaseBackingBean.showRoleType()}">
 						</ac:lov></td>
 				</tr>
 
 				<tr>
 					<td width="25%"><p:outputLabel id="searchPtjGroupLbL"
-							value="#{lbl['lbl.sc.kumpulan.ptj']}" /></td>
+							value="#{lbl['lbl.sc.kumpulan.ptj']}" rendered="#{directPurchaseBackingBean.showRoleType()}" /></td>
 					<td colspan="3"><ac:lov id="searchPtjGroup"
 							lovId="PM_ORG_PROFILE_PTJ_GROUP" size="118" readonly="true"
 							headerText="#{lbl['lbl.sc.kumpulan.ptj']}"
@@ -43,23 +43,23 @@
 							postUpdateListener="directPurchaseBackingBean.postUpdateOrgProfileListener"
 							update="@form"
 							saveObject="directPurchaseBackingBean.managedBean.searchPtjGroupProfile"
-							conditionField="#{directPurchaseBackingBean.getPTJGroupCondition()}"></ac:lov></td>
+							conditionField="#{directPurchaseBackingBean.getPTJGroupCondition()}" rendered="#{directPurchaseBackingBean.showRoleType()}"></ac:lov></td>
 				</tr>
 
 				<tr>
 					<td width="25%"><p:outputLabel id="searchPtjLbL"
-							value="#{lbl['lbl.sc.ptj']}" /></td>
+							value="#{lbl['lbl.sc.ptj']}" rendered="#{directPurchaseBackingBean.showRoleType()}" /></td>
 					<td colspan="3"><ac:lov id="searchPtj"
 							lovId="PM_ORG_PROFILE_PTJ" size="118" readonly="true"
 							headerText="#{lbl['lbl.sc.ptj']}"
 							value="#{directPurchaseBackingBean.managedBean.searchPtjProfile.orgName}"
 							postUpdateListener="directPurchaseBackingBean.postUpdateOrgProfileListener"
 							update="@form"
-							saveObject="directPurchaseBackingBean.managedBean.searchPtjProfile"
-							conditionField="#{directPurchaseBackingBean.getPtjCondition()}">
+							saveObjectshowRoleType="directPurchaseBackingBean.managedBean.searchPtjProfile"
+							conditionField="#{directPurchaseBackingBean.getPtjCondition()}" rendered="#{directPurchaseBackingBean.showRoleType()}">
 						</ac:lov></td>
 				</tr></table>
-				</h:panelGroup>
+				
 				<table>
 				<!-- Redmine 25396: remove duplication option view by adding new drop down field -->  
 				<tr>
@@ -70,21 +70,19 @@
 							rendered="#{directPurchaseBackingBean.showFunctionType()}">
 							<f:selectItems
 								value="#{directPurchaseBackingBean.getFunctionType()}" />
-							<p:ajax event="change" update="searchPanel" listener="#{directPurchaseBackingBean.preRenderDirectPurchaseSearch}" />
-						</p:selectOneMenu></td>
-					<td><p:tooltip for="viewAs"><p:outputLabel escape="false" value="#{lbl['lbl.tooltip.directpurchase.search.view.as']}" />
-						 </p:tooltip></td>	
+							<p:ajax event="change" update=":form:seldoctype" listener="#{directPurchaseBackingBean.preRenderDirectPurchaseSearch}" />
+						</p:selectOneMenu><ac:iconTooltip value="#{lbl['lbl.tooltip.directpurchase.search.view.as']}" rendered="#{directPurchaseBackingBean.showFunctionType()}" /></td>	
 				</tr>
 				<!-- end 25396: -->
 				<tr>
 					<td width="22%"><p:outputLabel
 							value="#{lbl['lbl.sc.document.type']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu style="width: 250px;"
+					<td><p:selectOneMenu id="seldoctype" style="width: 250px;"
 							value="#{directPurchaseBackingBean.managedBean.searchDocumentType}">
 							<f:selectItems
 								value="#{directPurchaseBackingBean.managedBean.documentTypes}" />
-							<p:ajax event="change" update="searchPanel"
+							<p:ajax event="change" update=":form:selstatus"
 								listener="#{directPurchaseBackingBean.searchStatusDesc}" />
 						</p:selectOneMenu></td>
 				</tr>
@@ -116,7 +114,7 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
-					<td><p:selectOneMenu style="width: 250px;"
+					<td><p:selectOneMenu id="selstatus" style="width: 250px;"
 							value="#{directPurchaseBackingBean.managedBean.searchStatusId}">
 							<f:selectItems
 								value="#{directPurchaseBackingBean.searchStatusDesc()}" />
