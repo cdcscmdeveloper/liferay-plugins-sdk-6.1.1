@@ -166,6 +166,8 @@ import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoiReverseAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoiReverseRemark;
 import my.ep.persistence.entity.sc.loaloi.ScLoiWorkFlowStatus;
+import my.ep.persistence.entity.sc.quationtender.ScCloseQTAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScCloseQTRemark;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -8336,6 +8338,219 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	}
 	/* ***25692#95 - end */
 
+	// 26095@hatta - start
+			/**
+			 * will be called in close QT only..
+			 * @return the string go to page
+			 */
+			public String closeQtDetails() { 
+				debugLogger("closeQtDetails");
+				
+				IQTDetailSO detailSO;
+				try {
+					detailSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+					QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+					ScQt scQt = this.getManagedBean().getQt();
+					
+						quationTenderReqDTO.setQtId(scQt.getQtId());
+						QuationTenderResDTO resDTO = detailSO.retrieveCloseQTByQtIdNType(quationTenderReqDTO);
+						this.getManagedBean().setQt(resDTO.getQtDetail());
+						ScQt QtDetail = resDTO.getQtDetail();
+						
+					    List<ScCloseQTRemark> qtRemarks =  initializeRemarks(
+					    		                           QtDetail, 
+								                           this.getManagedBean().getQt().getCurrentWorkFlowStatus(),
+								                           QtDetail.getScCloseQTRemark(),
+								                           ScCloseQTRemark.class);
+			
+						for(ScCloseQTRemark qtRemark : qtRemarks) {
+							qtRemark.setEditable(false);
+						}
+						
+						this.getManagedBean().getQt().setScCloseQTRemark(qtRemarks);
+
+					return "/xhtml/sc/quatationtender/closeQuotationTender.xhtml";
+
+				
+					
+				} finally {
+					detailSO=null;
+				}
+			}
+			
+			
+			/**
+			 * Check in the validity period expired and status related. 
+			 * 
+			 * @return the true or false.
+			 */
+			public boolean closeQTIfValidityPeriodExpiredAndStatusRelated(){
+				ScQt scQt = this.getManagedBean().getQt();
+				Long parentstatusId = this.getManagedBean().getQt().getQtStatus().getStatusId();
+				boolean isCloseQT = false;
+				
+				if (scQt.getProposalStartDate() != null && this.getManagedBean().getCurrentDate() != null 
+						&& this.getManagedBean().getCurrentDate().after(scQt.getProposalValidityEndDate())) {
+					IScWorkFlowStatusSO workFlowStatusSO;
+					try {
+						workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+								ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+						    ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+						    
+						    if (QTStatusConst.QT_SUPPLIER_FINALIZATION.equals(parentstatusId)) {
+						    	reqDTO.setDocId(scQt.getQtId());
+								reqDTO.setDocType(ParameterConst.DOCTYPE_COMMITTE_APROVAL);
+								ScWorkFlowStatus childStatus = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+								if(QTStatusConst.CMT_PENDING_SUBMISSION.equals(childStatus.getPmStatus().getStatusId()) ||
+								   QTStatusConst.CMT_PENDING_APPROVAL.equals(childStatus.getPmStatus().getStatusId()) ||
+								   QTStatusConst.CMT_PENDING_REVISION.equals(childStatus.getPmStatus().getStatusId()) || 
+								   QTStatusConst.CMT_PENDING_REVISION_APPROVAL.equals(childStatus.getPmStatus().getStatusId()) || 
+								   QTStatusConst.CMT_PENDING_ASSIGN_FC_SECRETARY.equals(childStatus.getPmStatus().getStatusId())){   
+									isCloseQT = true;
+								}
+						    	
+						    }else if(QTStatusConst.QT_PENDING_LOI.equals(parentstatusId)){
+					    	        isCloseQT = true;
+					        }else if(QTStatusConst.QT_PENDING_LOA.equals(parentstatusId)){
+						    	    isCloseQT = true;
+						    }else if(QTStatusConst.QT_RE_FINALIZATION.equals(parentstatusId)){
+				    	            isCloseQT = true;
+					        }else if(QTStatusConst.QT_CLOSE_PERMANENTLY.equals(parentstatusId)){
+						    	    isCloseQT = true;
+						    }
+						    
+					}
+					finally {
+						workFlowStatusSO = null;
+					}	    
+						  
+				}
+				
+			   return isCloseQT;	
+			}
+			
+			/**
+			 * check Close QT Dialog Pop Up
+			 * @return true 
+			 */
+			public void closeQTDialogPopUp() {
+			   RequestContext.getCurrentInstance().execute("closeQTDlg.show()");
+			}	
+
+			/**
+			 * Upload attachment for Close QT 
+			 */
+			public void handleCloseQTFileUpload(FileUploadEvent event)
+					throws FileNotFoundException, IOException {
+				if(event.getFile() != null){
+						ScAttachment scAttachment = null;
+						ScCloseQTAttachment attachment = new ScCloseQTAttachment();
+						ScQt scQt = this.getManagedBean().getQt();
+						
+						List<ScCloseQTAttachment> attachments = scQt.getScCloseQTAttachment();
+						attachment.setScQt(scQt);
+						attachment.setDocNo(scQt.getQtNo());
+						
+						 if(attachments == null){
+						   attachments = new ArrayList<>();
+					     }
+						
+						 attachments.add(attachment);
+						    
+						 if(attachments.size() == 1){
+				    	    scQt.setScCloseQTAttachment(attachments);
+							scAttachment = attachment;
+							uploadAttachment(event.getFile(), scAttachment);
+							this.getManagedBean().setQt(scQt);
+					     }else{
+				    	    attachments.remove(attachment);	 
+				    	    attachments.clear();
+				    	    if(attachments.isEmpty()){
+				    	    	throw new EpException(MessageConst.ERROR_100063);
+				    	    }
+					     }
+				}
+			}
+			
+			/**
+			 * Delete attachment for Close QT by index
+			 * @param index  file index to delete
+			 */
+			public void deleteCloseQTAttachmentAction(int index){
+				this.getManagedBean().getQt().getScCloseQTAttachment().remove(index);
+			}
+			
+			/**
+			 * The method used to set the file index of attachment list.
+			 * @param index  file index of attachment list
+			 */
+			public void setAttachFileIndex(int index) {
+				this.getManagedBean().setAttachFileIndex(index);
+			}
+
+			
+			/**
+			 * Submit close QT details is succesful.
+			 */
+			public void submitCloseQTDetail() { 
+				IQTDetailSO detailSO;
+				try {
+					this.getManagedBean().setSaveFlow(false);
+					detailSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class); 
+					
+						QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+						ScQt qt = this.getManagedBean().getQt();
+						
+						validationCloseQT(qt.getScCloseQTRemark(),qt.getScCloseQTAttachment());
+						
+					    if (isQTStatusPublished(qt.getQtStatus().getStatusId())) {
+							quationTenderReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+							finalizeRemarks(qt.getScCloseQTRemark());
+							qt.setScQtCommittees(null);
+							qt.setScQtBriefings(null);
+							qt.setScQtStatus(null);
+							qt.setScQtApprovals(null);
+							quationTenderReqDTO.setQtdetail(qt);
+						    quationTenderReqDTO.setQtClose(true);
+						
+						}
+						
+						QuationTenderResDTO quationTenderResDTO = detailSO.closeQT(quationTenderReqDTO);
+						
+						if (quationTenderResDTO.isSuccessful()) {
+							successMessage(MessageConst.INFO_700036, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION,
+									qt.getQtNo(), Boolean.TRUE);
+						}
+				        
+				} finally {
+					detailSO = null;
+				}
+			}
+			
+			/**
+			 * Validation for close QT detail.
+			 * @return the list remark and list attachment
+			 */
+			private void validationCloseQT(List<ScCloseQTRemark> remark,List<ScCloseQTAttachment> attachment) {
+				if (null != remark) {
+					for (int i = 0; i < remark.size(); i++) {
+						String userRemark = remark.get(i).getRemark();
+						if (null == userRemark || "".equals(userRemark)) {
+							throw new EpException(MessageConst.ERROR_100022,new String[] { 
+								ResourceBundleUtils.getMessage("lbl.sc.sf.justification", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()) });
+						}
+					}
+				}
+			    if(CollectionUtils.isEmpty(attachment)){
+		    			throw new EpException(MessageConst.ERROR_100022,new String[] { 
+						        ResourceBundleUtils.getMessage("lbl.sc.supporting.document", 
+								    ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()) });
+			    }
+			}
+			// 26095@hatta - end
 }
 
 
