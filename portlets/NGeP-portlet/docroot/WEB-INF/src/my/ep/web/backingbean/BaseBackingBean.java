@@ -101,6 +101,7 @@ import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
@@ -2764,5 +2765,16 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	/** #25638 - end **/
 }
 
-
-// ***25201
+	// #27398 11/03/2020 START
+	public Boolean specialDescriptionMandatory(List<SmSupplierCategory> listCategory){
+		Boolean mandatory = false;
+		for(SmSupplierCategory smSupplierCategory : listCategory){
+			if(smSupplierCategory.getPmCategoryL3() != null && smSupplierCategory.getPmCategoryL3().getOtherDescReq() != null && smSupplierCategory.getPmCategoryL3().getOtherDescReq() == 1){
+				mandatory = true;
+				break;
+			}
+		}
+		return mandatory;
+	}
+	// #27398 11/03/2020 END
+}
