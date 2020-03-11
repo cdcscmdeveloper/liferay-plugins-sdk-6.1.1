@@ -1591,8 +1591,15 @@ public class SupplierDataMaintenanceBackingBean extends
 					discipline.getSmDiscplinaryAction().setEndDate(
 							disc.getEndDate());
 					discipline.setSuspend(true);
-					break;
+					
+//					break;
 				}
+				//27534 : Disciplinary Action - start
+				if(disc.isWarning()){
+					discipline.getSmDiscplinaryAction().setWarning(true);
+				}
+				break;
+				//27534 : Disciplinary Action - end
 			}
 		}
 		getManagedBean().setDisciplineVO(discipline);
