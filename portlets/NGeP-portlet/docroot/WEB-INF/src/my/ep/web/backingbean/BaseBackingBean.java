@@ -2763,7 +2763,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return orderedStatuses.indexOf(currentStatusId) >= orderedStatuses.indexOf(fromStatusId);
 	}	
 	/** #25638 - end **/
-}
 
 	// #27398 11/03/2020 START
 	public Boolean specialDescriptionMandatory(List<SmSupplierCategory> listCategory){
