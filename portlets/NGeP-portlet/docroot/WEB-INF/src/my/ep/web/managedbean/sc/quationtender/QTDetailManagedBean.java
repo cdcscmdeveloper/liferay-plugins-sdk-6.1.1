@@ -1612,6 +1612,12 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean buttonHideSchActive = true;
 	
 	private boolean isApprovalScreen = false;
+	
+    // 26095@hatta - start
+	private Date currentDate = new Date(); 
+	private int attachFileIndex; 
+	private String fileDirectory;
+	// 26095@hatta*** - end
 
 	/**
 	 * Sets the panel suppliers.
@@ -10236,6 +10242,32 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setRoleCode(String roleCode) {
 		this.roleCode = roleCode;
 	}
+	
+	// 26095@hatta - start
+		public Date getCurrentDate() {
+			return currentDate;
+		}
+
+		public void setCurrentDate(Date currentDate) {
+			this.currentDate = currentDate;
+		}
+
+		public int getAttachFileIndex() {
+			return attachFileIndex;
+		}
+
+		public void setAttachFileIndex(int attachFileIndex) {
+			this.attachFileIndex = attachFileIndex;
+		}
+
+		public String getFileDirectory() {
+			return fileDirectory;
+		}
+
+		public void setFileDirectory(String fileDirectory) {
+			this.fileDirectory = fileDirectory;
+		}
+		// 26095@hatta - end
 	
 	
 }
