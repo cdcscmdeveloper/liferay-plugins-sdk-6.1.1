@@ -463,7 +463,46 @@ public class SupplierDataMaintenanceBackingBean extends
 			//26238 - start
 			if(getManagedBean().getSelectedApprovedCategories() != null 
 					|| getManagedBean().getSelectedApprovedCategories().size() > 0){
-				reqDTO.setSelectedCategories(getManagedBean().getSelectedApprovedCategories());
+				//27446 : Disciplinary Action - start
+				List<SmSupplierCategory> selectedCategory = new ArrayList<SmSupplierCategory>();
+				boolean basicCategoryExist = false;
+				for(SmSupplierCategory category : getManagedBean().getSelectedApprovedCategories()){
+					selectedCategory.add(category);
+					//check for basic category code 
+					//used to auto cancel MTO code
+					if(category.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+							&& category.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+							&& (category.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("04")
+									|| category.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("05")
+									|| category.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("06"))){
+						basicCategoryExist = true;
+					}
+				}
+				
+				if(basicCategoryExist){						
+					if(getManagedBean().getApprovedCategoryList() != null){
+						for(SmSupplierCategory regCat : getManagedBean().getApprovedCategoryList()){
+							if(regCat.getPmCategoryL1() != null
+									&& regCat.getPmCategoryL1().getCategoryL1Code()
+									.equalsIgnoreCase("22")){
+								if(regCat.getPmCategoryL2() != null
+										&& regCat.getPmCategoryL2().getCategoryL2Code()
+										.equalsIgnoreCase("17")){
+									if(regCat.getPmCategoryL3() != null){
+										if(regCat.getPmCategoryL3().getCategoryL3Code() != null
+												&& regCat.getPmCategoryL3().getCategoryL3Code()
+												.equalsIgnoreCase("09")){
+											log.info("MTO Code exist");
+											selectedCategory.add(regCat);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				reqDTO.setSelectedCategories(selectedCategory);
+				//27446 : Disciplinary Action - end
 			} 
 			
 			if(getManagedBean().getOwnerAndDirectorList() != null
