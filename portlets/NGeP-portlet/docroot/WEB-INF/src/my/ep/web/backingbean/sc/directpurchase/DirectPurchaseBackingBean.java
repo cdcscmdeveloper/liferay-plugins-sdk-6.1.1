@@ -93,6 +93,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.StatusHelper;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 // TODO: Auto-generated Javadoc
 
@@ -127,6 +128,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			// show default Ministry, Kumpulan PTJ and PTJ
 			getDefaultPtjAndMinistryValues();
 			getDefaultDocumentValues();
+			
 		} else if (isSupplier()) {
 			getDocumentTypes(Boolean.FALSE, Boolean.TRUE);
 			getManagedBean().setGovernment(Boolean.FALSE);
@@ -201,13 +203,18 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			items.add(new SelectItem(null, ResourceBundleUtils.getMessage(
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					getFacesScopes().getUserLocale())));
+
+			PmParameter pmParameter = null;
+			if (StringUtils.isNotEmpty(getManagedBean().getSearchFunctionType())) {
+				pmParameter = retrieveParameterById(Long.valueOf(getManagedBean().getSearchFunctionType()));
+			}
 			
 			if (isMaintenance) {
 				docTypeList.add(ParameterConst.DOCTYPE_REQUEST_NOTE);
 				
 			} 
 			
-			else if (getManagedBean().getSearchFunctionType() != null && getManagedBean().getSearchFunctionType().equals(ParameterConst.ORG_TYPE_G2G_ROLECODE)){ //ORG_TYPE_G2G_ROLECODE
+			else if (pmParameter != null && pmParameter.getParameterCode().equals(ParameterConst.ORG_TYPE_G2G_ROLECODE)){ //ORG_TYPE_G2G_ROLECODE
 				docTypeList.add(ParameterConst.DOCTYPE_SIMPLE_QUOTE);
 				docTypeList.add(ParameterConst.DOCTYPE_PURCHASE_INQUIRY);
 				
@@ -816,8 +823,9 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 				orgTypeCode.setParameterCode(ParameterConst.ORG_TYPE_PTJ_GROUP);
 				ministryOrgProfile.setOrgTypeCode(orgTypeCode);
 				getManagedBean().setSearchPtjGroupProfile(ministryOrgProfile);
-				
 				postUpdateOrgProfileListener(ministryOrgProfile);
+				
+				//showRoleType();
 				
 			} else { 
 				if (getManagedBean().getSearchMinistryProfile() == null || 
@@ -836,6 +844,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 								pmOrgProfile.getOrgProfileId()));	
 					}
 				}
+				//showRoleType();
 			}
 				
 		}
@@ -1251,11 +1260,29 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 						getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_G2G_ROLECODE);
 					}
 					return true;
-				} else {
+				} else  
 						getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_PTJ);
-					
-					return false;
+						return false;
+				
+			}
+			
+			/**
+			 * Show function type if user have both ptj & supplier role
+			 * @return boolean
+			 */
+			public boolean showRoleType() {
+				if(hasSupplierRole() && hasGovernmentUserRole()) {
+					if(getManagedBean().getSearchFunctionType()==null) {
+						getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_PTJ);
+						getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_G2G_ROLECODE);
+					}
+					return true;
+				} 		
+				 else if(hasGovernmentUserRole()){
+						getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_PTJ);
+						return true;
 				}
+				return false;
 			}
 			
 			// end 25396
