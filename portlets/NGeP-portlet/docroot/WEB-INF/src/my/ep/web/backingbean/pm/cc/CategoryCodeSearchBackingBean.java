@@ -31,6 +31,7 @@ import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
@@ -698,28 +699,47 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL3ListByL2Id(reqDTO);
 
 		List<SelectItem> selectItems = new ArrayList<SelectItem>();
-		//27438 : Disciplinary Action - start
+		//27438; 27613: Disciplinary Action - start
 		SelectItem item = new SelectItem();
-		for (PmCategoryL3 pmCategoryL3 : resDTO.getCategoryL3List()) {
-			item = new SelectItem(pmCategoryL3.getCategoryL3Id(),
-					pmCategoryL3.getCategoryL3Code() + " - " + pmCategoryL3.getCategoryName());
-			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
-			if(currSupp != null && currSupp.getSmAppl() != null){
-				List<Object[]> cancelCat = SmApplicationUtil.retrieveCancelCategoryBySupplier(currSupp);
-				
-				if(cancelCat != null
-						&& cancelCat.size() > 0){
-					for(Object[] arr : cancelCat){
-						if(item.getValue().toString().equalsIgnoreCase(arr[2].toString())){
-							item.setDisabled(true);
-							log.info("Disciplinary Action - disabled cancel category");
+		SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
+		List<Object[]> cancelCat = SmApplicationUtil.retrieveCancelCategoryBySupplier(currSupp);
+		
+		if(currSupp != null && currSupp.getSmAppl() != null){
+			List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
+			
+			if(resultList != null && resultList.size() > 0){
+				for(SmDisciplinaryAction disciplinaryAction: resultList){
+					if(disciplinaryAction.isCancelCategory() || disciplinaryAction.isManufacturerCancel()){
+						
+						for (PmCategoryL3 pmCategoryL3 : resDTO.getCategoryL3List()) {
+							item = new SelectItem(pmCategoryL3.getCategoryL3Id(),
+									pmCategoryL3.getCategoryL3Code() + " - " + pmCategoryL3.getCategoryName());
+							
+							if(disciplinaryAction.isCancelCategory()){								
+								if(cancelCat != null
+										&& cancelCat.size() > 0){
+									for(Object[] arr : cancelCat){
+										if(item.getValue().toString().equalsIgnoreCase(arr[2].toString())){
+											item.setDisabled(true);
+											log.info("Disciplinary Action - disabled cancel category");
+										}
+									}
+								}
+							}
+							
+							if(disciplinaryAction.isManufacturerCancel()){
+								if(item.getLabel().contains("99")){
+									item.setDisabled(true);
+								}
+							}
+							selectItems.add(item);
 						}
+						
 					}
 				}
 			}
-			selectItems.add(item);
-			//27438 : Disciplinary Action - end
 		}
+		//27438 : Disciplinary Action - end
 		
 		return selectItems;
 	}
