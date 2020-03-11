@@ -2463,7 +2463,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
         	else if(i==14)sheetReportList.setColumnWidth(i, 30*256); //Col : Mothn : Jumlah Keseluruhan (RM)
         }
         
-        /*try{
+        try{
 	    	String path = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_REPORT_DIR);
 	    	String fullPath = path+"/"+requestId+".xlsx";
 	    	//String fullPath = "D://reports//dev//"+requestId+".xlsx";
@@ -2474,11 +2474,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	        wb.close();
 	    }catch(Exception e){
 	    	e.printStackTrace();
-	    }*/
-        FileOutputStream fileOut = new FileOutputStream("D:\\report\\RevenueCollectionReport.xlsx");
-	    wb.write(fileOut);
-	    fileOut.close();
-	    wb.close();
+	    }
 	    log.info("DONE GENERATE Revenue Collection Report !!!");
 	}
 	
