@@ -2685,6 +2685,13 @@ public class EvaluationBackingBean extends
 									this.getManagedBean()
 											.setOneTierFinancialActiveIndex(0);
 								}
+								if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
+										.equalsIgnoreCase(this.getManagedBean()
+												.getCommitteeType())) {
+									this.getManagedBean()
+											.setOneTierFinancialActiveIndex(0);
+									retriveFinancialEvaluationStage();
+								}
 								throw new EpException(MessageConst.ERROR_760241);
 							}
 						}
@@ -12956,7 +12963,13 @@ private void retriveCommitteeRemarksList(){
 //				}
 			innerCheckList=null;
 			evalstage=null;
-		} finally {
+		
+		}
+		catch(Exception e){
+			retriveFinancialEvaluationStage();
+			
+		}
+		finally {
 			evaluationSO = null;
 
 		}
@@ -13265,10 +13278,22 @@ private void retriveCommitteeRemarksList(){
 						ScQtProposalAmount scQtProposalAmount = new ScQtProposalAmount();
 						scQtProposalAmount.setTotalScore(
 								list.getScQtProposal().getProposalAmount().getTotalScore());
+						
+						if(scQtProposalAmount.getTotalScore().intValue() > this.getManagedBean()
+								.getWithInVarieance().intValue()){
+							throw new EpException(MessageConst.ERROR_760201);
+						
+						}
 					}
 					else{
 						amountScore.setTotalScore(
 								list.getScQtProposal().getProposalAmount().getTotalScore());
+						
+						if(amountScore.getTotalScore().intValue() > this.getManagedBean()
+								.getWithInVarieance().intValue()){
+							throw new EpException(MessageConst.ERROR_760201);
+						
+						}
 					}
 							
 				}	
