@@ -168,7 +168,7 @@
 			or amendmentBackingBean.managedBean.decisionPbQcLOA}"
 			actionListener="#{amendmentBackingBean.setTabValue('DCN')}" update=":form" />
 	
-	        <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.setting']}"
+	        <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.approver.setting']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{amendmentBackingBean.isApproverSetting() and !amendmentBackingBean.managedBean.prepareLOA}"
 			actionListener="#{amendmentBackingBean.setTabValue('SE')}" update=":form" />
@@ -269,7 +269,8 @@
 				
 				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.setting'] }">
 					<ui:include	src="approverSetting.xhtml" />
-					<ui:include	src="/xhtml/ct/common/fulfilmentSetting.xhtml" />
+					<ui:include src="/xhtml/ct/shared/remarkAppSetting.xhtml" />
+					<!-- <ui:include	src="/xhtml/ct/common/fulfilmentSetting.xhtml" /> -->
 				</p:outputPanel>				
 			</td>
 		</tr>
