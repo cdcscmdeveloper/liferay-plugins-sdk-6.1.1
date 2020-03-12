@@ -52,7 +52,7 @@
              	<h:panelGrid columns="2" style="width:30%;" styleClass="zone-tree-node">
 	                <p:inputText value="#{zoneTree.deliveryTerm}"  rendered="#{zoneTree.zone != null}"  required="true" maxlength="4"
 	                     style="width:40px;" styleClass="ppRightBtn"  label="#{lbl['lbl.ct.delivery.term']}"
-	                     disabled="#{ctBackingBean.managedBean.viewContract or 
+	                     disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting or
 	                      ctBackingBean.getValueFromAmendment() or ctBackingBean.managedBean.disableAmendDetails}">
 	                     <p:ajax event="change" update="@this" listener="#{ctBackingBean.onChangeDeliveryTerm(zoneTree)}"/>
 	                </p:inputText>
@@ -64,7 +64,7 @@
  	 </h:panelGrid>
 	</p:panel>
 	<p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true"
-	      rendered="#{!ctBackingBean.managedBean.viewContract}">
+	      rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}">
 		<table style="width: 100%">
 			<tr>
 				<td width="50%" valign="top">
@@ -90,7 +90,7 @@
 											<td></td>
 											<td>
 												<p:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" maxlength="1000" 
-													disabled="#{ctBackingBean.managedBean.viewContract}"
+													disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting}"
 													style="width:70%;" autoResize="false"/> 
 												<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.remark']}" rendered="#{remarkIndex==0}" />
 												<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
