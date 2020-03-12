@@ -4249,7 +4249,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 								}
 							}
 						} else if (scQtFinalizationReport.getScQtFinalizationReportAttachment() == null){
-							throw new EpException(MessageConst.ERROR_775150, new String[] { scQtFinalizationReport.getTitle() });
+							//throw new EpException(MessageConst.ERROR_775150, new String[] { scQtFinalizationReport.getTitle() });
 						}
 					} else if (taskType.equals(SourcingConstants.SUPPLIER_FINALIZATION_TASK)) {
 						if (SourcingConstants.UDPUPBM_REPORT.equals(scQtFinalizationReport.getTitle())) {
@@ -4261,7 +4261,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 								}
 							}
 						} else if (scQtFinalizationReport.getScQtFinalizationReportAttachment() == null){
-							throw new EpException(MessageConst.ERROR_775150, new String[] { scQtFinalizationReport.getTitle() });
+							//throw new EpException(MessageConst.ERROR_775150, new String[] { scQtFinalizationReport.getTitle() });
 						}
 					}
 			} 
@@ -4395,26 +4395,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	}
 	
-	
-	// end of 25396
-
-	//Enhancement #25729 Allow create QT below threshold RM20k - start -
-	public boolean expectTotalIndPriceBelowThreshold(ScQt scQt) {
-		BigDecimal tmpExpectedIntendedPrice = scQt.getTmpExpectedIntendedPrice();
-		
-		if (!scQt.isPanel() && tmpExpectedIntendedPrice != null) {
-			log.info(":::expectTotalIndPriceBelowThreshold() scQt.isPanel(): "+ scQt.isPanel() +" :::");
-			log.info(":::expectTotalIndPriceBelowThreshold() tmpExpectedIntendedPrice: "+ tmpExpectedIntendedPrice +" :::");
-			
-			if (FulfilmentConst.THRESHOLD >= tmpExpectedIntendedPrice.intValue()) {
-				return Boolean.TRUE;
-			}
-		}
-		
-		return Boolean.FALSE;
-	}
-	//Enhancement #25729 - end -
-	
 	/**
 	 * checkKertasTaklimat Uploaded report
 	 * 
@@ -4423,7 +4403,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param reportTitleList 
 	 * 
 	 */
-	protected void checkKertasTaklimatReports(List<ScQtFinalizationReport> finalizationReports, List<String> reportTitleList){
+	protected void checkKertasTaklimatReports(List<ScQtFinalizationReport> finalizationReports, List<String> reportTitleList, String taskType){
 		if(CollectionUtils.isNotEmpty(finalizationReports)){
 			int count=0;
 			Iterator<ScQtFinalizationReport> iterator = finalizationReports.iterator();
@@ -4440,18 +4420,26 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						if (reportTitleList.contains(finalizationReport.getPmDocument().getDocName())) {
 							getManagedBean().getNewBriefingPaperReportList().add(finalizationReport);
 							iterator.remove();
-						} else if (finalizationReport.getDefinationType().getParameterCode().equals("UI")) {
-							iterator.remove();
-						}
+							continue;
+						} 
+					} 
+					
+					if (taskType.equals(SourcingConstants.CONSOLIDATION_TASK) && finalizationReport.getPmDocument().getDocName().equals(SourcingConstants.UDPUPBM_REPORT)) {
+						iterator.remove();
+						continue;
 					}
-				} else {
-					if (null == getManagedBean().getNewBriefingPaperReportList()) {
-						List<ScQtFinalizationReport> newBriefingPaperReportList = new ArrayList<>();
-						getManagedBean().setNewBriefingPaperReportList(newBriefingPaperReportList );
+					
+					if (taskType.equals(SourcingConstants.SUPPLIER_FINALIZATION_TASK) && 
+							(finalizationReport.getPmDocument().getDocName().equals(SourcingConstants.LATAR_BELAKANG_REPORT)
+									|| finalizationReport.getPmDocument().getDocName().equals(SourcingConstants.TUJUAN_REPORT)
+									|| finalizationReport.getPmDocument().getDocName().equals(SourcingConstants.METODOLOGI_PENILAIAN_REPORT)
+									|| finalizationReport.getPmDocument().getDocName().equals(SourcingConstants.UDPUP_REPORT))) {
+						iterator.remove(); 
+						continue;
+						
 					}
-					getManagedBean().getNewBriefingPaperReportList().add(finalizationReport);
-					iterator.remove();
-				}
+					
+				} 
 			}
 			log.info("checkKertasTaklimatReports count"+count);
 			if(count==1){
@@ -4480,4 +4468,22 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		
 	}
+
+	//Enhancement #25729 Allow create QT below threshold RM20k
+	public boolean expectTotalIndPriceBelowThreshold(ScQt scQt) {
+		BigDecimal tmpExpectedIntendedPrice = scQt.getTmpExpectedIntendedPrice();
+		
+		if (!scQt.isPanel() && tmpExpectedIntendedPrice != null) {
+			log.info(":::expectTotalIndPriceBelowThreshold() scQt.isPanel(): "+ scQt.isPanel() +" :::");
+			log.info(":::expectTotalIndPriceBelowThreshold() tmpExpectedIntendedPrice: "+ tmpExpectedIntendedPrice +" :::");
+			
+			if (FulfilmentConst.THRESHOLD >= tmpExpectedIntendedPrice.intValue()) {
+				return Boolean.TRUE;
+			}
+		}
+		
+		return Boolean.FALSE;
+	}
+	//Enhancement #25729 - end -
+	
 }

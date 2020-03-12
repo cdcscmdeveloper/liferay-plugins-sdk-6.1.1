@@ -839,7 +839,7 @@ public class ConsolidationReportBackingBean extends
 			reportTitleList.add(SourcingConstants.TUJUAN_REPORT);
 			reportTitleList.add(SourcingConstants.METODOLOGI_PENILAIAN_REPORT);
 			reportTitleList.add(SourcingConstants.UDPUP_REPORT);
-			checkKertasTaklimatReports(finalizationReports, reportTitleList);
+			checkKertasTaklimatReports(finalizationReports, reportTitleList, SourcingConstants.CONSOLIDATION_TASK);
 			scQtFinalization.setScQtFinalizationReports(finalizationReports);
 
 			if (finalizationReports != null) {
