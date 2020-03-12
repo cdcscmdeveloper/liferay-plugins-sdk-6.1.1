@@ -3930,6 +3930,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			personnel.setIdentificationTypeId(null);
 			personnel.setBirthDateSsmNull(true);
 			personnel.setBirthDate(null);
+			//START 27609
+			personnel.setEquityOwner(false);
+			personnel.setDirector(false);
+			personnel.setClerical(false);
+			listenerChangeRole();
+			//END 27609
 			this.getManagedBean().setSmPersonnelSelected(new SmPersonnel());
 			//#16052019 - SSM INTEGRATION CR
 			//SmAddress address = new SmAddress();
