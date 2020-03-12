@@ -6933,12 +6933,26 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		*/
 		Long[] statusList = {
 				QTStatusConst.QT_PENDING_LOA, //i
+				QTStatusConst.QT_RE_FINALIZATION,//viii
+				QTStatusConst.QT_AWARDED, //ix Bug #27412 #33 #35
+				QTStatusConst.QT_SUPPLIER_FINALIZATION, //x Bug #27412 #33 #35
+				QTStatusConst.QT_CANCELLED, // Bug #27412 #33 #35
+				QTStatusConst.QT_RE_EVALUATION, //Bug #27412 #33 #35
+				QTStatusConst.QT_RE_FINALIZATION, //Bug #27412 #33 #35
 				QTStatusConst.LOA_PENDING_SUBMISSION, //ii 
 				QTStatusConst.LOA_PENDING_APPROVAL, //iii
 				QTStatusConst.LOA_PENDING_REVISION, //iv
 				QTStatusConst.LOA_PENDING_REVISION_APPROVAL, //v
 				QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT, //vi
-				QTStatusConst.LOA_PENDING_VERIFICATION //vii
+				QTStatusConst.LOA_PENDING_VERIFICATION, //vii
+				QTStatusConst.LOA_COMPLETED, //xi Bug #27412 #33 #35
+				QTStatusConst.LOA_PENDING_CONTRACT_SIGNING,//xi Bug #27412 #33 #35
+				QTStatusConst.LOA_REJECTED, //xi Bug #27412 #33 #35
+				QTStatusConst.LOA_CANCELLED, //xi Bug #27412 #33 #35
+				QTStatusConst.LOA_VERIFY,//xi Bug #27412 #33 #35
+				QTStatusConst.LOA_REVERSED,//xi Bug #27412 #33 #35
+				QTStatusConst.LOA_REVISE_DOC,//xi Bug #27412 #33 #35
+				QTStatusConst.LOA_CANCELLED_REVERSE //xi Bug #27412 #33 #35
 				};
 		if(getManagedBean()!=null && getManagedBean().getScLoa()!=null && getManagedBean().getScLoa().getPmStatus()!=null && getManagedBean().getScLoa().getPmStatus().getStatusId()!=null){
 			for(Long s : statusList){
