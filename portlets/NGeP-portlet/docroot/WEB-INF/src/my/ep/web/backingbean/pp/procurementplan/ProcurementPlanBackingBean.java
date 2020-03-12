@@ -548,7 +548,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		if (commonProcurementItemIdList != null && !commonProcurementItemIdList.isEmpty()) {
 			for (Long commonProcurementItemId : commonProcurementItemIdList) {
 				for (PpProcurementItem ppItem : ppItems) {
-					ppItem.setBrandNew(false);
 					/* Always disable Pindaan for cloned ppItem
 					   Always disable Reason For Update for original ppItem*/
 					if (ppItem.isOriginal()) {
@@ -556,6 +555,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							ppItem.setCloneEnabled(true);
 							ppItem.setDisableForPindaan(true);
 							ppItem.setReasonForUpdateEnabled(false);
+							ppItem.setBrandNew(true);
 						}
 					} else {
 						/* Always disable Pindaan for original ppItem
