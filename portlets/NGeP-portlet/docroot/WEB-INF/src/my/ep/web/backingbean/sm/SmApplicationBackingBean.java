@@ -1451,6 +1451,9 @@ public class SmApplicationBackingBean extends
 					&& businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupplier().getRegNo(),this.getManagedBean().getSmSupplier().getBusinessType())){
 				//SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
 				if(businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupplier().getRegNo(),this.getManagedBean().getSmSupplier().getBusinessType())){
+					//#27165
+					boolean dontGetSsmData = this.getManagedBean().isDisAllowOwnerEdit();
+					//SSM CHANGES #27214
 					SsmReqDTO ssmReqDTO = new SsmReqDTO();
 					ssmReqDTO.setRegNo(this.getManagedBean().getSmSupplier().getRegNo());
 					ssmReqDTO.setBusinessType(this.getManagedBean().getSmSupplier().getBusinessType());
@@ -1479,6 +1482,11 @@ public class SmApplicationBackingBean extends
 						}else{
 							String[] copyProp = {"companyName","robExpiryDate","authorizedCapital","nonBumiEquity","annualRevenue","bumiEquity","localCompanyEquity","foreignCompanyEquity","foreignerEquity","govtEquity","govtUnitrustEquity","businessDesc","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus","annualRevenueSSM","paidUpCapitalSSM"};
 							EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(),this.getManagedBean().getSmAppl().getSmCompanyBasic(),copyProp);							
+						}
+						//#27165
+						if(dontGetSsmData){	
+							String[] copyProp = {"companyName","robExpiryDate","businessDesc","annualRevenue","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus","annualRevenueSSM"};
+							EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(),this.getManagedBean().getSmAppl().getSmCompanyBasic(),copyProp);														
 						}
 						/*if((ssmResDTO.getSmCompanyBasic().getAnnualRevenue() == null || ssmResDTO.getSmCompanyBasic().getAnnualRevenue()==0) && tempAnnualRevenue > 0){
 							this.getManagedBean().getSmAppl().getSmCompanyBasic().setAnnualRevenue(tempAnnualRevenue);
@@ -1541,6 +1549,10 @@ public class SmApplicationBackingBean extends
 						//CHECK EQUITY OWNER EXIST IN SSM TO DISABLE CHECKBOX
 						int i = 0;
 						for(SmPersonnel personnel : this.getManagedBean().getSmAppl().getSmPersonnels()){
+							//#27165
+							if(dontGetSsmData){
+								break;
+							}
 							validateRole(personnel);
 							// SET DESINGATION SSM #27201
 							if(personnel.getDesignation() != null){
@@ -1622,8 +1634,11 @@ public class SmApplicationBackingBean extends
 								this.getManagedBean().getSmAppl().setSmPersonnels(new ArrayList());
 							}
 							for(SmPersonnel personnel : ssmResDTO.getSmPersonnelAll()){
+								//#27165
+								if(dontGetSsmData){
+									break;
+								}
 								SmPersonnel oldPersonnel = (SmPersonnel)EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), this.getManagedBean().getSmAppl().getSmPersonnels(), "identificationNo");
-								
 								if(oldPersonnel == null){
 									personnel.setBrandNew(true);
 									personnel.setSmAppl(this.getManagedBean().getSmAppl());
@@ -12340,17 +12355,54 @@ public class SmApplicationBackingBean extends
 	//FIXME : 16052019 - SSM INTEGRATION CR - start
 		public void redirectToViewSSMInfo() {
 			clearPersonnelList();
-			for(SmPersonnel personnel:getManagedBean().getSmAppl().getSmPersonnels()){
-				if(personnel.isSsmData()){
-					if(personnel.isEquityOwner()){
-						this.getManagedBean().getPersonnelsOwner().add(personnel);
-					}
-					if(personnel.isDirector()){
-						this.getManagedBean().getPersonnelsDirector().add(personnel);
-					}
-					this.getManagedBean().getPersonnelsSsm().add(personnel);
+			//#27165
+			boolean showOld = true;
+			if (!this.getManagedBean().getSmAppl().getApplType()
+					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+					&& !this.getManagedBean().getSmAppl().getApplType()
+							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)
+					&& !this.getManagedBean().getSmAppl().getApplType()
+							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
+				SmApplicationUtil.checkEquityOwnerUpdateAllowance(getManagedBean());
+			}
+			if(getManagedBean().isDisAllowOwnerEdit()){
+				SsmReqDTO ssmReqDTO = new SsmReqDTO();
+				ssmReqDTO.setRegNo(this.getManagedBean().getSmSupplier().getRegNo());
+				ssmReqDTO.setBusinessType(this.getManagedBean().getSmSupplier().getBusinessType());
+				if(SupplierManagementConst.ACC_BASIC.equalsIgnoreCase(this.getManagedBean().getSmAppl().getApplType())){
+					ssmReqDTO.setBasicAcc(true);
+				}else{
+					ssmReqDTO.setBasicAcc(false);
 				}
-				
+				SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
+				this.getManagedBean().setCompanyValidWithSSM(false);
+				this.getManagedBean().setValidateWithSSM(true);
+				if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
+					for(SmPersonnel personnel:ssmResDTO.getSmPersonnelAll()){
+						personnel = setDesignationSSM(personnel);
+						if(personnel.isEquityOwner()){
+							this.getManagedBean().getPersonnelsOwner().add(personnel);
+						}
+						if(personnel.isDirector()){
+							this.getManagedBean().getPersonnelsDirector().add(personnel);
+						}
+						this.getManagedBean().getPersonnelsSsm().add(personnel);									
+					}
+					showOld = false;
+				}
+			}
+			if(showOld){
+				for(SmPersonnel personnel:getManagedBean().getSmAppl().getSmPersonnels()){
+					if(personnel.isSsmData()){
+						if(personnel.isEquityOwner()){
+							this.getManagedBean().getPersonnelsOwner().add(personnel);
+						}
+						if(personnel.isDirector()){
+							this.getManagedBean().getPersonnelsDirector().add(personnel);
+						}
+						this.getManagedBean().getPersonnelsSsm().add(personnel);
+					}				
+				}			
 			}
 			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 			reqDTO.setApplNo(getManagedBean().getSmAppl().getApplNo());
@@ -12376,6 +12428,7 @@ public class SmApplicationBackingBean extends
 						this.getManagedBean().getSmEquityCompaniesSsm().add(company);
 				}
 			}
+			//#27165
 			
 			SmCommonUtil.redirectToExternalUrl(SupplierManagementConst.VIEW_SSM_INFOMATION);
 		}
@@ -12563,7 +12616,8 @@ public class SmApplicationBackingBean extends
 	
 	//#27232 - START SSM CHANGES FOR RESUBMIT
 		public void ssmIntegrationResubmit(){
-
+			//#27165
+			boolean dontGetSsmData = this.getManagedBean().isDisAllowOwnerEdit();
 			SsmReqDTO ssmReqDTO = new SsmReqDTO();
 			ssmReqDTO.setRegNo(this.getManagedBean().getSmSupplier().getRegNo());
 			ssmReqDTO.setBusinessType(this.getManagedBean().getSmSupplier().getBusinessType());
@@ -12572,6 +12626,9 @@ public class SmApplicationBackingBean extends
 			}else{
 				ssmReqDTO.setBasicAcc(false);
 			}
+			//#27165
+			this.getManagedBean().setCompanyValidWithSSM(false);
+			this.getManagedBean().setValidateWithSSM(true);
 			SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
 			if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
 				this.getManagedBean().setStatusDescFromSSM(setStatusMessageFromSSM(ssmResDTO.getStatusFromSSM()));
@@ -12590,6 +12647,11 @@ public class SmApplicationBackingBean extends
 				}else{
 					String[] copyProp = {"companyName","robExpiryDate","authorizedCapital","nonBumiEquity","annualRevenue","bumiEquity","localCompanyEquity","foreignCompanyEquity","foreignerEquity","govtEquity","govtUnitrustEquity","businessDesc","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus","annualRevenueSSM","paidUpCapitalSSM"};
 					EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(),this.getManagedBean().getSmAppl().getSmCompanyBasic(),copyProp);							
+				}
+				//#27165
+				if(dontGetSsmData){	
+					String[] copyProp = {"companyName","robExpiryDate","businessDesc","annualRevenue","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus","annualRevenueSSM"};
+					EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(),this.getManagedBean().getSmAppl().getSmCompanyBasic(),copyProp);														
 				}
 				/*if((ssmResDTO.getSmCompanyBasic().getAnnualRevenue() == null || ssmResDTO.getSmCompanyBasic().getAnnualRevenue()==0) && tempAnnualRevenue > 0){
 					this.getManagedBean().getSmAppl().getSmCompanyBasic().setAnnualRevenue(tempAnnualRevenue);
@@ -12634,6 +12696,10 @@ public class SmApplicationBackingBean extends
 				//CHECK EQUITY OWNER EXIST IN SSM TO DISABLE CHECKBOX
 				int i = 0;
 				for(SmPersonnel personnel : this.getManagedBean().getSmAppl().getSmPersonnels()){
+					//#27165
+					if(dontGetSsmData){
+						break;
+					}
 					validateRole(personnel);
 					SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelAll(),"identificationNo");
 					if(personnelSSM != null){								
@@ -12709,6 +12775,10 @@ public class SmApplicationBackingBean extends
 						this.getManagedBean().getSmAppl().setSmPersonnels(new ArrayList());
 					}
 					for(SmPersonnel personnel : ssmResDTO.getSmPersonnelAll()){
+						//#27165
+						if(dontGetSsmData){
+							break;
+						}
 						SmPersonnel oldPersonnel = (SmPersonnel)EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), this.getManagedBean().getSmAppl().getSmPersonnels(), "identificationNo");
 						
 						if(oldPersonnel == null){
