@@ -545,22 +545,33 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		List<Long> commonProcurementItemIdList = new ArrayList<Long>(fromPpItemList);
 		commonProcurementItemIdList.retainAll(procurementItemIdList);
 		
-		for (PpProcurementItem ppItem : ppItems) {
-			if (commonProcurementItemIdList != null && !commonProcurementItemIdList.isEmpty()) {
-				for (Long commonProcurementItemId : commonProcurementItemIdList) {
-					log.info("common= "+commonProcurementItemId);
-					// Disable isClonedEnabled for original ppItem
-					if (ppItem.getProcurementItemId().equals(commonProcurementItemId)) {
-						ppItem.setDisableForPindaan(true);
-					}
-					// Also, disable isClonedEnabled for the cloned ppItem
-					if (ppItem.isOriginal() && 
-							(ppItem.getFromPpItem().equals(commonProcurementItemId))) {
-						ppItem.setDisableForPindaan(true);
+		if (commonProcurementItemIdList != null && !commonProcurementItemIdList.isEmpty()) {
+			for (Long commonProcurementItemId : commonProcurementItemIdList) {
+				for (PpProcurementItem ppItem : ppItems) {
+					ppItem.setBrandNew(false);
+					/* Always disable Pindaan for cloned ppItem
+					   Always disable Reason For Update for original ppItem*/
+					if (ppItem.isOriginal()) {
+						if (ppItem.getFromPpItem().equals(commonProcurementItemId)) {
+							ppItem.setCloneEnabled(true);
+							ppItem.setDisableForPindaan(true);
+							ppItem.setReasonForUpdateEnabled(false);
+						}
+					} else {
+						/* Always disable Pindaan for original ppItem
+						   Always enable Reason For Update for original ppItem*/
+						if (ppItem.getProcurementItemId().equals(commonProcurementItemId)) {
+							ppItem.setCloneEnabled(true);
+							ppItem.setDisableForPindaan(true);
+							ppItem.setReasonForUpdateEnabled(true);
+						} else {
+							// The rest should retain the existing field logics
+							ppItem.setDisableForPindaan(false);
+							ppItem.setReasonForUpdateEnabled(true);
+						}
 					}
 				}
 			}
-			log.info(ppItem.getProcurementItemId()+" disableForPindaan=  "+ppItem.isDisableForPindaan());
 		}
 	}
 	
@@ -4803,6 +4814,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    		newPpItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 	    		newPpItem.setBrandNew(true);
 	    		newPpItem.setCloneEnabled(true);
+	    		newPpItem.setDisableForPindaan(true);
 	    		newPpItem.setFromPpItem(clonedPpItem.getProcurementItemId());
 	    		newPpItem.setReasonForUpdateEnabled(false);
 	    		newPpItem.setStatusEnabled(true);
