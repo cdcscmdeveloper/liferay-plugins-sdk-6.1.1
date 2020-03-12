@@ -150,6 +150,14 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			}
 		}
 	}
+	
+	// #27397 - start
+	public void validateMofRegNo(String mofNo) {
+		if (StringUtils.isEmpty(mofNo)) {
+			throw new EpException(MessageConst.ERROR_REPORT_780029);
+		}
+	}
+	// #27397 - end
 
 	public void onChangeZone() {
 
