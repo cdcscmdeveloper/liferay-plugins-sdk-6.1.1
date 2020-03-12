@@ -5,6 +5,8 @@ package my.ep.web.backingbean.sc.directpurchase;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,14 +26,18 @@ import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
+import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.DPStatusConstants;
+import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
@@ -39,8 +45,10 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
+import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.SourcingIntegrationReqDTO;
 import my.ep.dto.sc.SourcingIntegrationResDTO;
+import my.ep.dto.sc.directpurchase.QuoteResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
@@ -48,8 +56,15 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
+import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
+import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
@@ -83,9 +98,39 @@ import org.springframework.util.CollectionUtils;
 @ManagedBean(name = "directPurchaseBackingBean")
 @RequestScoped
 public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPurchaseManagedBean> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private IPagingDataModel<PmTrackingDiary> searchTrackingDiaryDataModel 	= new SearchTrackingDiaryPagingDataModel();
 	/** The direct purchase search page nav. */
 	private String DIRECT_PURCHASE_SEARCH_PAGE_NAV = "directPurchaseSearch";
+	private String DIRECT_PURCHASE_MAINTENANCE_PAGE_NAV = "directPurchaseMaintenance";
+	
+	public void preRenderDirectPurchaseMaintenance() {
+		debugLogger("preRenderDirectPurchaseMaintenance");
+		FacesContext fc = FacesContext.getCurrentInstance();
+		// reset search info
+		reset(Boolean.TRUE);
+
+		if (isGovernment()) {
+			getDocumentTypes(Boolean.TRUE, Boolean.TRUE);
+			getManagedBean().setGovernment(Boolean.TRUE);
+
+			// show default Ministry, Kumpulan PTJ and PTJ
+			getDefaultPtjAndMinistryValues();
+			getDefaultDocumentValues();
+		} else if (isSupplier()) {
+			getDocumentTypes(Boolean.FALSE, Boolean.TRUE);
+			getManagedBean().setGovernment(Boolean.FALSE);
+		}
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, DIRECT_PURCHASE_MAINTENANCE_PAGE_NAV);
+	}
+
+	private void getDefaultDocumentValues() {
+		getManagedBean().setSearchDocumentType(ParameterConst.DOCTYPE_REQUEST_NOTE);
+		getManagedBean().setSearchStatusId(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION);
+	}
 
 	/**
 	 * Pre render direct purchase search.
@@ -94,17 +139,17 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		debugLogger("preRenderDirectPurchaseSearch");
 		FacesContext fc = FacesContext.getCurrentInstance();
 		// reset search info
-		reset();
+		reset(Boolean.FALSE);
 		
 		if(isGovernment()){
-			getDocumentTypes(Boolean.TRUE);
+			getDocumentTypes(Boolean.TRUE, Boolean.FALSE);
 			getManagedBean().setGovernment(Boolean.TRUE);
 			
 			// show default Ministry, Kumpulan PTJ and PTJ
 			getDefaultPtjAndMinistryValues();
 
 		} else if(isSupplier()){
-			getDocumentTypes(Boolean.FALSE);
+			getDocumentTypes(Boolean.FALSE, Boolean.FALSE);
 			getManagedBean().setGovernment(Boolean.FALSE);
 		}
 		fc.getApplication()
@@ -139,7 +184,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	 * @param isGovernament the is governament
 	 * @return the document types
 	 */
-	private void getDocumentTypes(boolean isGovernament) {
+	private void getDocumentTypes(boolean isGovernament, boolean isMaintenance) {
 		List<SelectItem> items = null;
 		List<String> docTypeList = null;
 		try {
@@ -150,19 +195,22 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					getFacesScopes().getUserLocale())));
 
-			docTypeList.add(ParameterConst.DOCTYPE_SIMPLE_QUOTE);
-			docTypeList.add(ParameterConst.DOCTYPE_PURCHASE_INQUIRY);
-			if(isGovernament){
-				docTypeList.add(ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT);
-			}
-			
-			//Redmine 20311: remove RN search for Supplier
-			if(isGovernment()){
+			if (isMaintenance) {
 				docTypeList.add(ParameterConst.DOCTYPE_REQUEST_NOTE);
-			}
-			
-			docTypeList.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
+			} else {
+				docTypeList.add(ParameterConst.DOCTYPE_SIMPLE_QUOTE);
+				docTypeList.add(ParameterConst.DOCTYPE_PURCHASE_INQUIRY);
+				if (isGovernament) {
+					docTypeList.add(ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT);
+				}
 
+				// Redmine 20311: remove RN search for Supplier
+				if (isGovernment()) {
+					docTypeList.add(ParameterConst.DOCTYPE_REQUEST_NOTE);
+				}
+
+				docTypeList.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
+			}
 			for (String docType : docTypeList) {
 				items.add(new SelectItem(docType, ResourceBundleUtils.getMessage(
 						getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, docType), ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -252,9 +300,18 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 				getManagedBean().setDocumentTypeDesc(ParameterConst.LA_TITLE);
 			}
 		}
+		getManagedBean().setSearchDPM(false);
 		getManagedBean().getDpDocumentDataModel().reloadData();
 	}
-
+	
+	public void searchDPM() {
+		debugLogger("Entered: " + this.getClass().getName() + ".searchDPM()"); 
+		getManagedBean().setSearchDPM(true);
+		if(getManagedBean().getSearchDocumentType().equals(ParameterConst.DOCTYPE_REQUEST_NOTE)){
+			getManagedBean().setDocumentTypeDesc(ParameterConst.RN_TITLE);
+		}
+		getManagedBean().getDpDocumentDataModel().reloadData();
+	}
 
 	private class SearchTrackingDiaryPagingDataModel extends PagingDataModel<PmTrackingDiary> {
 		private static final long serialVersionUID = 1L;
@@ -317,6 +374,102 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	 *
 	 * @param dpObj the dp obj
 	 */
+	public void viewMaintenance(Object[] dpObj, boolean isCancel) {
+		
+		if (getManagedBean().isSearchDPM() && getManagedBean().getSearchStatusId().equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION)) {
+			this.viewDpMaintenance(dpObj);
+		} else {
+			log.info("viewMaintenance");
+			long docId = (long) dpObj[0];
+			String docNo = (String) dpObj[1];
+			String docType = (String) dpObj[3];
+			long statusId = (long) dpObj[4];
+			
+			TrackingDiarySearchBackingBean diarySearchBackingBean = new TrackingDiarySearchBackingBean();
+			diarySearchBackingBean.getManagedBean().setDocNo(docNo);
+			diarySearchBackingBean.getManagedBean().setDocType(docType);
+			diarySearchBackingBean.getManagedBean().setStatusId(statusId);
+			
+			if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_REQUEST_NOTE)) {
+				RequestNoteBackingBean rnBackingBean = new RequestNoteBackingBean();
+				rnBackingBean.viewRequestNote(docId);
+				rnBackingBean.getManagedBean().setDpObj(dpObj);
+				rnBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
+				rnBackingBean.getManagedBean().setCancel(isCancel);
+			} else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_INQUIRY)) {
+				PurchaseInquiryBackingBean prInqBackingBean = new PurchaseInquiryBackingBean();
+				prInqBackingBean.viewPurchaseInquiry(docId);
+				prInqBackingBean.getManagedBean().setDpObj(dpObj);
+				prInqBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
+			} else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT)) {
+				PurchaseInDefaultBackingBean pidBackingBean = new PurchaseInDefaultBackingBean();
+				pidBackingBean.viewPurchaseInDefault(docId);
+				pidBackingBean.getManagedBean().setDpObj(dpObj);
+				pidBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
+				
+			} else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_SIMPLE_QUOTE)) {
+				SimpleQuoteBackingBean sqBackingBean = new SimpleQuoteBackingBean();
+				sqBackingBean.viewQuote(docId);
+				sqBackingBean.getManagedBean().setDpObj(dpObj);
+				sqBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
+				
+			} else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_LETTER_OF_AWARD)) {
+				LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
+				loaDetailBackingBean.viewLOA(docId);
+				loaDetailBackingBean.getManagedBean().setDpObj(dpObj);
+				loaDetailBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
+			}
+			
+		}
+	}
+	
+	/**
+	 * @param prObj
+	 */
+	@SuppressWarnings("unchecked")
+	public void viewDpMaintenance(Object[] prObj) {
+		ScPurchaseRequest purchaseRequest =  (ScPurchaseRequest) prObj[2];
+		if (null != purchaseRequest) {
+			Long purchaseRequestId = purchaseRequest.getPurchaseRequestId();
+			List<ScRequestNoteDtl> requestNoteDtls = null;
+			ScRequestNote requestNote = null;
+			if (null != purchaseRequestId && null != getManagedBean().getDpDocumentDataModel()) {
+				requestNote = (ScRequestNote) prObj[7];
+				List<Object[]> objList = getManagedBean().getDpDocumentDataModel().getList();
+				if (!CollectionUtils.isEmpty(objList)) {
+					for (Object[] obj : objList) {
+						ScPurchaseRequest purchaseRequestFromModel =  (ScPurchaseRequest) obj[2];
+						if (purchaseRequestId == purchaseRequestFromModel.getPurchaseRequestId()) {
+							requestNoteDtls = (List<ScRequestNoteDtl>) obj[6];
+							break;
+						}
+					}
+				}
+			}
+			
+			if (!CollectionUtils.isEmpty(requestNoteDtls)) { 
+				RequestNoteBackingBean rnBackingBean = new RequestNoteBackingBean();
+				rnBackingBean.getManagedBean().setSelectedPrDtls(prObj);
+				rnBackingBean.getManagedBean().setRequestNoteDtls(requestNoteDtls);
+				rnBackingBean.getManagedBean().setCancel(true);
+				rnBackingBean.getManagedBean().setViewOnly(true);
+				rnBackingBean.getManagedBean().setReadOnly(true);
+				if (null != requestNote.getCreatedBy()) {
+					rnBackingBean.getManagedBean().setCreatedBy(rnBackingBean.getUserById(requestNote.getCreatedBy()).getUserName());
+				}
+				SmSupplier smSupplier = new SmSupplier();
+				smSupplier.setCompanyName((String) prObj[3]);
+				rnBackingBean.getManagedBean().setSmSupplier(smSupplier);
+				
+				PmStatus requestNoteStatus = new PmStatus();
+				requestNoteStatus.setStatusId((Long) prObj[4]);
+				rnBackingBean.getManagedBean().setRequestNoteStatus(requestNoteStatus );
+				rnBackingBean.getManagedBean().setRequestNote(requestNote);
+				rnBackingBean.viewRequestNote();
+			}
+		}
+	}
+
 	public void viewDoc(Object[] dpObj){
 		debugLogger("viewDoc");
 		long docId = (long) dpObj[0];
@@ -443,16 +596,18 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	/**
 	 * Reset direct purchase search.
 	 */
-	public void reset(){
+	public void reset(boolean isMaintenance){
 		this.getManagedBean().setSearchDocumentNo(null);
 		this.getManagedBean().setSearchDocumentType(null);
 		this.getManagedBean().setSearchStatusId(null);
 		this.getManagedBean().setSearchDocumentTitle(null);
 		this.getManagedBean().setSearchDocumentToDuration(null);
 		this.getManagedBean().setSearchDocumentFromDuration(null);
-		getManagedBean().setSearchMinistryProfile(null);
-		getManagedBean().setSearchPtjGroupProfile(null);
-		getManagedBean().setSearchPtjProfile(null);
+		if (!isMaintenance) {
+			getManagedBean().setSearchMinistryProfile(null);
+			getManagedBean().setSearchPtjGroupProfile(null);
+			getManagedBean().setSearchPtjProfile(null);
+		}
 		this.getManagedBean().resetDocumentDataModel();
 	}
 

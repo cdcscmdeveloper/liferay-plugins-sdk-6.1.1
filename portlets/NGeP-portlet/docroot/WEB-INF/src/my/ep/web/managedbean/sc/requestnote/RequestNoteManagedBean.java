@@ -325,7 +325,11 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	private Map<Long, List<TplSpecQuestion>> specificationMap = new HashMap<Long, List<TplSpecQuestion>>();
 	
     /** The Clone and Re-Quote btn. */
-    private boolean cloneReQuote = Boolean.FALSE;	
+    private boolean cloneReQuote = Boolean.FALSE;
+    
+    private boolean cancel = Boolean.FALSE;
+	
+	private	Object[] selectedPrDtls;
 	
     /**
      * Instantiates a new request note managed bean.
@@ -1912,5 +1916,27 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setCloneReQuote(boolean cloneReQuote) {
 		this.cloneReQuote = cloneReQuote;
+	}
+
+	public boolean isCancel() {
+		return cancel;
+	}
+
+	public void setCancel(boolean cancel) {
+		this.cancel = cancel;
+	}
+
+	/**
+	 * @return the selectedPrDtls
+	 */
+	public Object[] getSelectedPrDtls() {
+		return selectedPrDtls;
+	}
+
+	/**
+	 * @param selectedPrDtls the selectedPrDtls to set
+	 */
+	public void setSelectedPrDtls(Object[] selectedPrDtls) {
+		this.selectedPrDtls = selectedPrDtls;
 	}
 }
