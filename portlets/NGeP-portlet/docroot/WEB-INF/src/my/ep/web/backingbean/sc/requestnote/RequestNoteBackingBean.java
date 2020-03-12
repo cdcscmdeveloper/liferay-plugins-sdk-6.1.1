@@ -122,6 +122,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
+import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -137,6 +138,7 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
 import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;
@@ -5200,4 +5202,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 	//26284 - End
+	
+	//26221-Start
+	public String constructConditionForUserSearch(){
+		StringBuilder sb = new StringBuilder();
+        sb.append("pmUserOrgs.pmOrgProfile.orgProfileId^");
+    	sb.append(this.getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
+    	sb.append("|pmUserOrgs.pmUserRoles.pmRole.roleCode^");
+		sb.append(RoleCode.REQUISITIONER.value());
+		sb.append("|pmUserOrgs.pmUserRoles.recordStatus^1");
+		return sb.toString();
+	}
+	//26221-End
 }
