@@ -12,8 +12,12 @@
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.sc.panel.title.item.detail']}" />
 		</f:facet>
-		<h:outputText styleClass="instruction"
-			value="#{lbl['lbl.sc.item.codification.instruction']}" />
+		<c:if test="#{requestNoteBackingBean.managedBean.selectedPrDtls == null}">
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sc.rn.supplier.instruction']}" /><br></br>
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sc.item.codification.instruction']}" />
+		</c:if>
 			
 		<ac:lovPopup />
 

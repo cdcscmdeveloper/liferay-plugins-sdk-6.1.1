@@ -41,7 +41,9 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sc.ISourcingIntegrationSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
+import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.osb.sc.IDPOsbSO;
@@ -66,8 +68,11 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
+import my.ep.dto.sc.SourcingIntegrationReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultResDTO;
+import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
+import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
 import my.ep.dto.osb.sc.DPOsbReqDTO;
@@ -96,6 +101,7 @@ import my.ep.persistence.entity.sc.common.ScRequestItemAttachment;
 import my.ep.persistence.entity.sc.directpurchase.ScPIReportAttachment;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
+import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
 import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sc.directpurchase.ScRNWorkFlowStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScRNZone;
@@ -115,12 +121,14 @@ import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
 import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;
 import my.ep.web.backingbean.sc.purchaseinquiry.PurchaseInquiryBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
+import my.ep.web.backingbean.trackingdiary.TrackingDiarySearchBackingBean;
 import my.ep.web.bean.sc.directpurchase.MarketSummaryAndPIBean;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.sc.requestnote.RequestNoteManagedBean;
@@ -166,6 +174,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	
 	/** The request note page. */
 	private String REQUEST_NOTE_PAGE = "requestNoteMain";
+	
+	/** The request note page. */
+	private String PURCHASE_REQUEST_PAGE = "purchaseRequestMain";
 	
 	/** The request note codification page. */
 	private String REQUEST_NOTE_CODIFICARION_PAGE = "/xhtml/sc/directpurchase/requestnote/codification/requestNoteCodificationMain.xhtml";
@@ -236,6 +247,24 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		
 		// page navigation 
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, REQUEST_NOTE_PAGE);
+	}
+
+	/**
+	 * view the request note.
+	 *
+	 * @param requestNoteId the request note id
+	 * @return the string
+	 */
+	public void viewRequestNote() {
+		debugLogger("viewRequestNote");
+		
+		
+		FacesContext fc = FacesContext.getCurrentInstance();
+		getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+		getManagedBean().setViewOnly(Boolean.TRUE);
+		
+		// page navigation 
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, PURCHASE_REQUEST_PAGE);
 	}
 
 	/**
@@ -3137,8 +3166,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		 super.renewSesionObject();
 		return "catalogueSearch";
 	}
-	/*
+
 	public void cancelPendingItemCodification() {
+		
 		ScRequestNote requestNote = getManagedBean().getRequestNote();
 
 		log.info("cancelPendingItemCodification");
@@ -3151,7 +3181,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		requestNoteReqDTO.setRequestNote(requestNote);
 		requestNoteReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 
-		RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().cancelPendingItemCodification(requestNoteReqDTO);
+		RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().cancelPendingItemCodification(requestNoteReqDTO, null);
 		if (requestNoteResDTO.isSuccessful()) {
 			ScRequestNote scRequestNote = requestNoteResDTO.getRequestNoteDetail();
 			successMessage(MessageConst.INFO_700010, ParameterTypeConst.DOCUMENT_TYPES,
@@ -3160,7 +3190,106 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		} else {
 			throw new EpException(MessageConst.ERROR_700020);
 		}
-	}*/
+	}
+
+	public void cancelPendingItemCodificationDPM() {
+		
+		FacesScopes facesScopes = new FacesScopes();
+		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+		requestNoteReqDTO.setRequestNote(getManagedBean().getRequestNote());
+		requestNoteReqDTO.setUserLocale(facesScopes.getUserLocale());
+		List<String> loginIdAssignees = getRequestNoteSO().getSuppliersPendingAssignItemCode(requestNoteReqDTO);
+		
+		Object[] prObj = getManagedBean().getSelectedPrDtls();
+		if (null != prObj) {
+			log.info("Getting count for docNo: " + getManagedBean().getRequestNote() + " status: " + DPStatusConstants.RN_PENDING_ITEM_CODIFICATION + " docType : " + ParameterConst.DOCTYPE_REQUEST_NOTE);
+		    ISearchBean<Object[]> prSearchBean =  new SearchBean<>();
+		    prSearchBean.getDataFilterBeans().add(new SearchFilterBean("docNo", SearchOperator.OPERATOR_EQUALS.value(), prObj[1]));
+		    prSearchBean.getDataFilterBeans().add(new SearchFilterBean("status", SearchOperator.OPERATOR_EQUALS.value(), DPStatusConstants.RN_PENDING_ITEM_CODIFICATION));
+		    prSearchBean.getDataFilterBeans().add(new SearchFilterBean("docType", SearchOperator.OPERATOR_EQUALS.value(), ParameterConst.DOCTYPE_REQUEST_NOTE));
+		    SourcingIntegrationReqDTO searchReqDTO = new SourcingIntegrationReqDTO();
+		    searchReqDTO.setSourcingDocSearchBean(prSearchBean);
+		    ISourcingIntegrationSO sourcingIntegrationSO = (ISourcingIntegrationSO) EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+		   
+			int prSize = sourcingIntegrationSO.getCountOfActivePR(searchReqDTO);
+				
+			cancelRN(prObj, prSize);
+			
+			ScPurchaseRequest purchaseRequest = (ScPurchaseRequest) prObj[2];
+			List<ScRequestNoteDtl> requestNoteDtls = (List<ScRequestNoteDtl>) prObj[6];
+			IPurchaseRequestSO purchaseRequestSO = null;
+			IRequestNoteSO requestNoteSO = null;
+			try {
+				purchaseRequestSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IPurchaseRequestSO.class);
+				
+				requestNoteSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IRequestNoteSO.class);
+				
+				if (null != purchaseRequest && null != purchaseRequestSO) {
+					
+					purchaseRequest.setRecordStatusFlg(2);
+					PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
+					reqDTO.setPurchaseRequest(purchaseRequest);
+					PurchaseRequestResDTO response = purchaseRequestSO.savePurchaseRequest(reqDTO );
+					if (response.isSuccessful()) {
+						successMessage(MessageConst.INFO_776041, (String) prObj[1],
+								(String) prObj[3], Boolean.TRUE);
+					} else {
+						throw new EpException(MessageConst.ERROR_700020);
+					}
+					
+					if (null != requestNoteSO) {
+						RequestNoteReqDTO reqNoteDTO = new RequestNoteReqDTO();
+						reqNoteDTO.setRequestNoteDtls(requestNoteDtls);
+						requestNoteSO.updateRequestNoteDtls(reqNoteDTO);
+					}
+				}
+			} finally {
+				purchaseRequestSO = null;
+			}
+			
+			if (CollectionUtils.isNotEmpty(loginIdAssignees)) {
+				getRequestNoteSO().sendRequestNoteNotification(requestNoteReqDTO, loginIdAssignees);
+			} else {
+				log.error(this.getClass().getName() + ".cancelPendingItemCodificationDPM(): receipeints not found to send a notification");
+			}
+			facesScopes.removeFromSession("directPurchaseManagedBean");
+			super.renewSesionObject();
+		}
+	}
+
+	/**
+	 * @param prObj
+	 */
+	@SuppressWarnings("unchecked")
+	private void cancelRN(Object[] prObj, int prSize) {
+		ScRequestNote requestNote = getManagedBean().getRequestNote();
+		
+		log.info("cancelPendingItemCodification");
+		FacesScopes facesScopes = new FacesScopes();
+		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+		requestNoteReqDTO.setRoleCode(RoleCode.RN_APPROVER.value());
+		requestNoteReqDTO.setPmUser(facesScopes.getUserSessionBean());
+		requestNoteReqDTO.setOutcome(BpmOutcomeConst.BPM_COMPLETE);
+		requestNoteReqDTO.setUserLocale(facesScopes.getUserLocale());
+		requestNote.setRequestNoteDtls((List<ScRequestNoteDtl>) prObj[6]);
+		requestNoteReqDTO.setRequestNote(requestNote);
+		requestNoteReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
+		
+		RequestNoteResDTO requestNoteResDTO = null;
+		if (prSize == 1) {
+			requestNoteResDTO = getRequestNoteSO().cancelPendingItemCodification(requestNoteReqDTO, getManagedBean().getSelectedPrDtls());
+		} else {
+			requestNoteResDTO = getRequestNoteSO().prepareTrackingDiaryDPM(requestNoteReqDTO, getManagedBean().getSelectedPrDtls());
+		}
+		
+		if (!requestNoteResDTO.isSuccessful()) {
+			throw new EpException(MessageConst.ERROR_700020);
+		}
+	}
 
 	
 	/**
@@ -4225,8 +4354,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		ScRequestItem requestItem = scRequestNoteDtl.getRequestItem();
 		List<TplSpecQuestion> specificationList = getManagedBean().getSpecificationMap().
 				get(requestItem.getRequestNoteItemId());
-		TplSpecQuestion parentSpecQuestion = requestItem.getTplSpecQuestion();
-		if(specificationList == null) {
+		if(specificationList == null && null != requestItem.getTplSpecQuestion()) {	
+			TplSpecQuestion parentSpecQuestion = requestItem.getTplSpecQuestion();
 			TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
 			reqDTO.setSpecQuestionId(parentSpecQuestion.getSpecQuestionId());
 			TemplateSpecResDTO resDTO = getTemplateSpecSO().getSpecificationsByQuestionId(reqDTO);
