@@ -96,7 +96,10 @@
 			style="float:right;"
 			action="#{pmTrackingDiaryBackingBean.redirectToSupplierTrackingDiary(ParameterConst.doctypeRequestNote, requestNoteBackingBean.managedBean.requestNote.requestNoteId, requestNoteBackingBean.isSupplier())}"
 			immediate="true" 
-			rendered="#{requestNoteBackingBean.managedBean.trackingDairyView}" />
+			rendered="#{requestNoteBackingBean.managedBean.trackingDairyView or (bpmTasklistBackingBean.managedBean.groupTask eq 'true' and !bpmTasklistBackingBean.managedBean.claim)}" /><!-- 26059 start -->
+			<c:if test="#{bpmTasklistBackingBean.managedBean.groupTask eq 'true' and !bpmTasklistBackingBean.managedBean.claim}">
+			<br />
+			</c:if><!-- 26059 end -->	
 	</div>
 	<h:panelGroup
 		rendered="#{!isViewOnly}">
@@ -147,7 +150,9 @@
 		</div>
 		<div>
 			<c:if test="#{!empty requestNoteBackingBean.managedBean.taskId}">
-				<div class="ppRightBtn">
+				<!-- 26059 start --><div class="ppRightBtn" style="float:right;">
+				<ui:decorate template="/xhtml/fl/shared/claim_template.xhtml">
+					<ui:define name="outComeSection">				
 					<c:if test="#{isPendingSubmissionStatus or isPendingRevisionStatus}">
 						<p:commandButton value="#{lbl['lbl.btn.item.search']}"
 							process="@this" partialSubmit="true" style="float:left;"
@@ -185,7 +190,9 @@
 							update="#{isCancel ? '@this,  @([id$= remark])' : '@form'}"
 							actionListener="#{requestNoteBackingBean.cancelRejectAction(bpmAction)}" />	
 					</ui:repeat>
-				</div>
+				</ui:define>
+			</ui:decorate>
+			</div><!-- 26059 end -->
 			</c:if>
 		</div>
 	</h:panelGroup>

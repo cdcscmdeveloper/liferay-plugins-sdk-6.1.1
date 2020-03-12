@@ -946,7 +946,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		
 		if(getManagedBean().isExceededAmountAlerted()){
 			//26059 - start			
-			if(!getManagedBean().isProceedWithDPExceedThreshold()) {
+			if(!getManagedBean().isProceedWithDPExceedThreshold() && !BpmOutcomeConst.BPM_REVISE.equals(outcome)) {
 				// refresh remarks
 				getManagedBean().getRequestNote().setRemarks(initializeRemarks(
 						getManagedBean().getRequestNote(),
