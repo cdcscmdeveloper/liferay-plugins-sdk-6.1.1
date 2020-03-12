@@ -1169,6 +1169,9 @@ public class SupplierFinalizationBackingBean extends
 				}
 				reqDTO = validateInfo(2);
 			}
+			if (CollectionUtils.isNotEmpty(scQtFinalization.getScQtFinalizationReports())) {
+				scQtFinalization.getScQtFinalizationReports().addAll(getManagedBean().getEvaluationReportList());
+			}
 			reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
 			validateFinalizationReports(reqDTO);
 			validateEvaluationReports(SourcingConstants.SUPPLIER_FINALIZATION_TASK);
@@ -2396,7 +2399,7 @@ public class SupplierFinalizationBackingBean extends
 	        					= new ArrayList<ScQtFinalizationReport>(_scQtFinalization.getScQtFinalizationReports());
 			List<String> reportTitleList = new ArrayList<>();
 			reportTitleList.add(SourcingConstants.UDPUPBM_REPORT);
-			checkKertasTaklimatReports(finalizationReports, reportTitleList);
+			checkKertasTaklimatReports(finalizationReports, reportTitleList, SourcingConstants.SUPPLIER_FINALIZATION_TASK);
 			int endorsementReportCount = 0;
 			ScQtFinalizationReport coverReport = null;
 			List<ScQtFinalizationReport> endorsementReports = 
