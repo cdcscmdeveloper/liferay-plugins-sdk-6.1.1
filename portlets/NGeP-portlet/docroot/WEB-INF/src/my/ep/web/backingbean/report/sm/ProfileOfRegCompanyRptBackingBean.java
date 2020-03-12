@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.report.sm;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -18,8 +19,12 @@ import org.apache.commons.lang.StringUtils;
 public class ProfileOfRegCompanyRptBackingBean extends
 		SmReportBackingBean<ProfileOfRegCompanyRptManagedBean> {
 	private static final long serialVersionUID = 1L;
+	private static final Logger log = EpLogger.getLogger(ProfileOfRegCompanyRptBackingBean.class);
 
 	public void generateReport() {
+		// #27397 - start
+		validateMofRegNo(getManagedBean().getMofNo());
+		// #27397 - end
 		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
 		retrieveReportValueFromDb();
 
@@ -29,6 +34,10 @@ public class ProfileOfRegCompanyRptBackingBean extends
 						: getManagedBean().getZone());
 		params.put(SmReportConst.PARAM_SUPPLIER_TYPE, getManagedBean()
 				.getSupplierType());
+		
+		for (Map.Entry<String, String> entry : params.entrySet()) {
+			log.info("Key : " + entry.getKey() + " Value : " + entry.getValue());
+		}
 
 		generateSmReport(params);
 	}
