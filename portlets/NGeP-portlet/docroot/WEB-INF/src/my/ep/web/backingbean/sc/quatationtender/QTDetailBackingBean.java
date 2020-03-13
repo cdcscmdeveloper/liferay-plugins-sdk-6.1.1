@@ -8397,6 +8397,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				Long parentstatusId = this.getManagedBean().getQt().getQtStatus().getStatusId();
 				boolean isCloseQT = false;
 				
+		     
 				if (scQt.getProposalStartDate() != null && this.getManagedBean().getCurrentDate() != null 
 						&& this.getManagedBean().getCurrentDate().after(scQt.getProposalValidityEndDate())) {
 					IScWorkFlowStatusSO workFlowStatusSO;
@@ -8404,34 +8405,74 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
 								ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
 						    ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+						    reqDTO.setDocId(scQt.getQtId());
 						    
-						    if (QTStatusConst.QT_SUPPLIER_FINALIZATION.equals(parentstatusId)) {
-						    	reqDTO.setDocId(scQt.getQtId());
-								reqDTO.setDocType(ParameterConst.DOCTYPE_COMMITTE_APROVAL);
-								ScWorkFlowStatus childStatus = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
-								if(QTStatusConst.CMT_PENDING_SUBMISSION.equals(childStatus.getPmStatus().getStatusId()) ||
-								   QTStatusConst.CMT_PENDING_APPROVAL.equals(childStatus.getPmStatus().getStatusId()) ||
-								   QTStatusConst.CMT_PENDING_REVISION.equals(childStatus.getPmStatus().getStatusId()) || 
-								   QTStatusConst.CMT_PENDING_REVISION_APPROVAL.equals(childStatus.getPmStatus().getStatusId()) || 
-								   QTStatusConst.CMT_PENDING_ASSIGN_FC_SECRETARY.equals(childStatus.getPmStatus().getStatusId())){   
-									isCloseQT = true;
+						    if (QTStatusConst.QT_SUPPLIER_FINALIZATION.equals(parentstatusId)) { // (P)60011
+								reqDTO.setDocType(ParameterConst.DOCTYPE_COMMITTE_APROVAL); // CMT
+								ScWorkFlowStatus childStatusCA = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+								if(QTStatusConst.CMT_PENDING_SUBMISSION.equals(childStatusCA.getPmStatus().getStatusId()) ||
+								   QTStatusConst.CMT_PENDING_APPROVAL.equals(childStatusCA.getPmStatus().getStatusId()) ||
+								   QTStatusConst.CMT_PENDING_REVISION.equals(childStatusCA.getPmStatus().getStatusId()) || 
+								   QTStatusConst.CMT_PENDING_REVISION_APPROVAL.equals(childStatusCA.getPmStatus().getStatusId()) || 
+								   QTStatusConst.CMT_PENDING_ASSIGN_FC_SECRETARY.equals(childStatusCA.getPmStatus().getStatusId())){   
+									isCloseQT = true; // 60200 | 60201 | 60203 | 60204 | 60205 | 
 								}
-						    	
-						    }else if(QTStatusConst.QT_PENDING_LOI.equals(parentstatusId)){
-					    	        isCloseQT = true;
-					        }else if(QTStatusConst.QT_PENDING_LOA.equals(parentstatusId)){
-						    	    isCloseQT = true;
-						    }else if(QTStatusConst.QT_RE_FINALIZATION.equals(parentstatusId)){
-				    	            isCloseQT = true;
-					        }else if(QTStatusConst.QT_CLOSE_PERMANENTLY.equals(parentstatusId)){
-						    	    isCloseQT = true;
+						        reqDTO.setDocType(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION); // SF
+								ScWorkFlowStatus childStatusSF = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+								if(QTStatusConst.SF_PENDING_CONFIRMATION_COMMITTEE.equals(childStatusSF.getPmStatus().getStatusId()) ||
+					    	       QTStatusConst.SF_PENDING_ESCALATION_TO_BPK.equals(childStatusSF.getPmStatus().getStatusId()) ||
+					    		   QTStatusConst.SF_PENDING_SCHEDULE_BIDDING.equals(childStatusSF.getPmStatus().getStatusId()) ||
+					    		   QTStatusConst.SF_PENDING_BIDDING_FINALIZATION.equals(childStatusSF.getPmStatus().getStatusId()) ||
+					    		   QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION.equals(childStatusSF.getPmStatus().getStatusId()) ||
+					    		   QTStatusConst.SF_PENDING_ENDORSEMENT.equals(childStatusSF.getPmStatus().getStatusId()) ||
+					    		   QTStatusConst.SF_PENDING_SIGN_OFF.equals(childStatusSF.getPmStatus().getStatusId()) ||
+					    		   QTStatusConst.SF_PENDING_SCHEDULE_BIDDING.equals(childStatusSF.getPmStatus().getStatusId())) {
+							    	isCloseQT = true; // 62200 | 62202 | 62204 | 62208 | 62209 | 62210 | 62211 | 62213
+							    }
+							}
+						    if(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH.equals(parentstatusId) || 
+						    		 QTStatusConst.QT_PENDING_SPECIFICATION_COMMITTEE_APPOINTMENT.equals(parentstatusId)){
+				    	            isCloseQT = true; // (P)60034 | (P)60033 
+				    	    }
+				    	            
+				    	    if(QTStatusConst.QT_RE_FINALIZATION.equals(parentstatusId)){ // (P)60017
+						    	reqDTO.setDocType(ParameterConst.DOCTYPE_BIDDING); // BD
+						    	ScWorkFlowStatus childStatusBid = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+						    	if(BidStatusConst.BID_PENDING_BIDDING.equals(childStatusBid.getPmStatus().getStatusId()) ||
+						    		 BidStatusConst.BID_RESCHEDULE_BIDDING.equals(childStatusBid.getPmStatus().getStatusId())) {
+						    		isCloseQT = true; // 63350 | 63355
+						    	}}
+				    	   
+				    	    if(QTStatusConst.QT_PENDING_LOI.equals(parentstatusId)){ // (P)60012
+				            	reqDTO.setDocType(ParameterConst.DOCTYPE_LETTER_OF_INTENT); // LI
+								ScWorkFlowStatus childStatusLI = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+								if(QTStatusConst.LOI_PENDING_SUBMISSION.equals(childStatusLI.getPmStatus().getStatusId()) ||
+								   QTStatusConst.LOI_PENDING_APPROVAL.equals(childStatusLI.getPmStatus().getStatusId()) ||
+								   QTStatusConst.LOI_PENDING_SUBMISSION.equals(childStatusLI.getPmStatus().getStatusId()) ||
+								   QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(childStatusLI.getPmStatus().getStatusId()) || 
+								   QTStatusConst.LOI_PENDING_REVISION_APPROVAL.equals(childStatusLI.getPmStatus().getStatusId())){   
+									isCloseQT = true; // 62400 | 62401 | 62402 | 62403 | 62407
+								}}
+				    	   
+				    	   if(QTStatusConst.QT_PENDING_LOA.equals(parentstatusId)){ // (P)60013
+					        	reqDTO.setDocType(ParameterConst.DOCTYPE_LETTER_OF_AWARD); // LA
+								ScWorkFlowStatus childStatusLA = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+								if(QTStatusConst.LOA_PENDING_SUBMISSION.equals(childStatusLA.getPmStatus().getStatusId()) ||
+								   QTStatusConst.LOA_PENDING_APPROVAL.equals(childStatusLA.getPmStatus().getStatusId()) ||
+								   QTStatusConst.LOA_PENDING_REVISION.equals(childStatusLA.getPmStatus().getStatusId()) || 
+								   QTStatusConst.LOA_PENDING_REVISION_APPROVAL.equals(childStatusLA.getPmStatus().getStatusId())){   
+									isCloseQT = true; // 60500 | 60501 | 60502 | 60508
+								}}
+				    	   
+				    	    if(QTStatusConst.QT_CLOSE_PERMANENTLY.equals(parentstatusId)){ 
+						    	    isCloseQT = true; // (P)60045
 						    }
 						    
 					}
 					finally {
 						workFlowStatusSO = null;
 					}	    
-						  
+					  
 				}
 				
 			   return isCloseQT;	
@@ -8556,6 +8597,52 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						        ResourceBundleUtils.getMessage("lbl.sc.supporting.document", 
 								    ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()) });
 			    }
+			}
+			
+			public List<ScCloseQTRemark> findCloseQTRemarksByReqDTO(QuationTenderReqDTO reqDTO) {
+				IQTDetailSO qtDetailSO;
+				try {
+					qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);	
+					return qtDetailSO.findScCloseQTRemarks(reqDTO).getScCloseQTRemark();
+				} finally {
+					qtDetailSO = null;
+				}
+			}
+			
+            public String getUsername(){
+            	String userName = null;
+				QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+				List<ScCloseQTRemark> remarks = new ArrayList<>();
+				
+				ScQt qt = this.getManagedBean().getQt();
+				quationTenderReqDTO.setQtId(qt.getQtId());
+				quationTenderReqDTO.setDocType(ParameterConst.DOCTYPE_QT_CLOSE);
+				
+				remarks = findCloseQTRemarksByReqDTO(quationTenderReqDTO);
+				
+				for(ScRemark remark:remarks){
+					userName = remark.getCreatedUser().getUserName();
+				}
+				
+			    return userName;   
+			}
+            
+            public String getUserLoginId(){
+            	String userLoginId = null;
+				QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+				List<ScCloseQTRemark> remarks = new ArrayList<>();
+				
+				ScQt qt = this.getManagedBean().getQt();
+				quationTenderReqDTO.setQtId(qt.getQtId());
+				quationTenderReqDTO.setDocType(ParameterConst.DOCTYPE_QT_CLOSE);
+				
+				remarks = findCloseQTRemarksByReqDTO(quationTenderReqDTO);
+				
+				for(ScRemark remark:remarks){
+					userLoginId = remark.getCreatedUser().getLoginId();
+				}
+			    return userLoginId;   
 			}
 			// 26095@hatta - end
 }

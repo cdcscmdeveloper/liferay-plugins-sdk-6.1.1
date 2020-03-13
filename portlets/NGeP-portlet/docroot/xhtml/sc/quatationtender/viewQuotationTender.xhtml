@@ -1,48 +1,40 @@
 <!-- 26095@hatta - start -->
-<ui:composition
-	template="/WEB-INF/facelets/templates/basic_template.xhtml"
-	xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<ui:define name="contentSection">
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 			          <p:panel id="closeQTViewOnly" header="#{lbl['lbl.sc.qt.close.panel']}" toggleable="true">	
-			            
 			                      <table style="width: 100%">
 			                            <tr>
 										     <td>
 												<table style="width: 100%">
 													<tr>
-														<td class="TableFieldLeft" width="28%"> <p:outputLabel value="#{lbl['lbl.sc.created.date']}" /></td>
-														<td class="TableFieldRight">
-				                                         	 <p:dataGrid value="#{qTDetailBB.managedBean.qt.scCloseQTRemark}" 
-																    var="dateCreated" rowIndexVar="remarkIndex" columns="1"
-																    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" >
-																		<h:outputText id="dateCreatedId" value="#{dateCreated.changedDate}">
-																			<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
-																		</h:outputText>
-															 </p:dataGrid>	
-													   </td>
-													</tr>
-												</table>    					
-										      </td>
-										 </tr>
-										<tr>
-										     <td>
-												<table style="width: 100%">
-													<tr>
 														<td class="TableFieldLeft" width="28%"><p:outputLabel value="#{lbl['lbl.sc.sf.justification']}" /></td>
 														<td class="TableFieldRight">
-				                                         	 <p:dataGrid value="#{qTDetailBB.managedBean.qt.scCloseQTRemark}" 
-																    var="remarkVar" rowIndexVar="remarkIndex" columns="1"
-																    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" >
-																    <p:inputTextarea cols="40" value="#{remarkVar.remark}" disabled="true"/>
+														     <p:dataGrid value="#{qTDetailBB.managedBean.qt.scCloseQTRemark}" 
+															    var="remarkVar" rowIndexVar="remarkIndex" columns="1"
+															    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" >
+															        <table>
+																		<tr>
+																			<td rowspan="2" valign="top"><h:graphicImage
+																					value="#{qTDetailBB.userImagePath(qTDetailBB.getUserLoginId())}"
+																					height="30" width="30" /></td>
+																			<td width="5"></td>
+																			<td><h:outputText value="#{qTDetailBB.getUsername()}" />,
+																				<h:outputText id="remarkDates" value="#{remarkVar.changedDate}">
+																					<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+																				</h:outputText></td>
+																		</tr>
+																		<tr>
+																			<td></td>
+																			<td><p:inputTextarea cols="40" value="#{remarkVar.remark}" disabled="true"/></td>
+																		</tr>
+																	</table>
 															</p:dataGrid>
-																
 													   </td>
 													</tr>
 												</table>    					
@@ -54,12 +46,21 @@
 													<tr>
 														<td class="TableFieldLeft" width="28%"><p:outputLabel value="#{lbl['lbl.sc.supporting.document']}" /> </td>
 														<td class="TableFieldRight">
-														      <p:dataGrid value="#{qTDetailBB.managedBean.qt.scCloseQTAttachment}"
-																var="attachFile" rowIndexVar="attachFileIndex" columns="1" style="width:100%"
-																emptyMessage ="#{lbl['lbl.datatable.msg.no.records.found']}">	
-																<h:commandLink value="#{attachFile.fileName}" styleClass="blue_font" process="@this" action="#{qTDetailBB.downloadFile(attachFile.filePath)}" />
-														 	 	<ac:iconTooltip value="#{lbl['lbl.sc.approval.letter.tooltip']}" />
-															  </p:dataGrid>	
+															  <p:dataGrid
+															 		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+																	var="attachFile"
+																	value="#{qTDetailBB.managedBean.qt.scCloseQTAttachment}"
+																	rowIndexVar="attachFileIndex" columns="1" style="width:100%">
+																	<table>
+																		<tr>
+																			<td>
+																			     <h:commandLink value="#{attachFile.fileName}"
+																					styleClass="blue_font" immediate="true"
+																					action="#{qTDetailBB.downloadFile(attachFile)}" />
+																			</td>
+																		</tr>
+																	</table>
+																</p:dataGrid>
 														</td>
 													</tr>
 												</table>
@@ -67,6 +68,5 @@
 										</tr>
 									</table>
 			          </p:panel>  
-	</ui:define>
 </ui:composition>
 <!-- 26095@hatta - end -->
