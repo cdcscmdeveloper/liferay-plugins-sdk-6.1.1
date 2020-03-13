@@ -152,11 +152,6 @@
 				showDetail="true" autoUpdate="true" closable="true" />
 			<table style="width: 100%">
 				<tr>
-					<td colspan="2">
-						<p:outputLabel  styleClass="splNotesFonts" style="overflow-wrap: break-word;"  value="#{lbl['lbl.sm.equiComp.warnInfo']}" rendered="#{backingBean.managedBean.selectedEquityCompany.ssmData and backingBean.businessTypeIsROC(backingBean.managedBean.smSupplier.businessType) and backingBean.managedBean.selectedEquityCompany.shareAmt == 0}" escape="false"></p:outputLabel>
-					</td>
-				</tr>
-				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.compName']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td><p:inputText
