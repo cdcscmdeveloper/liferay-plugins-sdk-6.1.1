@@ -1980,23 +1980,26 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					jadualHarga = mappingJadualHarga(item);
 					productItemBeans.add(jadualHarga);
 				} else if (itemType.equals(ParameterConst.ITEM_TYPE_SERVICE)) {
-					//serviceItemBeans.add(jadualHarga);
+					//26226 Start   
+					//serviceItemBeans.add(jadualHarga);  
 					TplSpecQuestion tplSpecQuestion=item.getScRequestItem().getTplSpecQuestion();
-					if(tplSpecQuestion.getQuestionType().equals("I"))
+					if(tplSpecQuestion.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM))
 					{
 						jadualHarga = mappingJadualHarga(item);
 				
 						serviceItemBeans.add(jadualHarga);
-					}
+					}//End
 					
-				}
+				}   
 			}
 		}
 		jadualHargaItemBean.setProductItemBeans(productItemBeans);
 		jadualHargaItemBean.setServiceItemBeans(serviceItemBeans);
 		context.put("jadualHargaItemBean", jadualHargaItemBean);
+		//26226 Start
 		context.put("serviceScope", dafaltValue);
 		context.put("itemType", itemType);
+		// End
 	}
 
 	public void formSpecification(VelocityContext context, ScLoa scLoa)
@@ -4318,12 +4321,18 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			itemBean.setToQty(null == item.getTplSpecTierQty().getToQty()? "" 
 					: item.getTplSpecTierQty().getToQty().toString());
 		}
-
+        //26226 Start
 		TplSpecQuestion tplSpecQuestion=item.getScRequestItem().getTplSpecQuestion();
 		itemBean.setItem(item.getScRequestItem().getItemName());
 		itemBean.setZoneName(item.getTplSpecZoneDtl() != null ? item.getTplSpecZoneDtl().getZoneName() : "");
-		itemBean.setClDeliveryTerm(null != tplSpecQuestion.getClDeliveryTerm() ? tplSpecQuestion.getClDeliveryTerm().toString() : "");
-		itemBean.setClDurationMonth(null != tplSpecQuestion.getClDurationMonth() ? tplSpecQuestion.getClDurationMonth().toString() : "");
+		
+		if (null != tplSpecQuestion.getClDeliveryTerm()) {
+			itemBean.setClDeliveryTerm(tplSpecQuestion.getClDeliveryTerm().toString());
+		}
+		if (null != tplSpecQuestion.getClDurationMonth()) {
+			itemBean.setClDurationMonth(tplSpecQuestion.getClDurationMonth().toString());
+		}
+		//End
 		
 		/*log.info("Item Name --->"+item.getScRequestItem().getItemName() );
 		log.info("Zone Name --->"+item.getTplSpecZoneDtl() != null ? item.getTplSpecZoneDtl().getZoneName() : "" );
