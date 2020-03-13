@@ -2763,6 +2763,32 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return orderedStatuses.indexOf(currentStatusId) >= orderedStatuses.indexOf(fromStatusId);
 	}	
 	/** #25638 - end **/
+	
+	
+	
+	/*** 25692#95 - start ***/
+	public String getTempManagedBeanName(){
+		return managedBeanName+"_Temp";
+	}
+	
+	/**
+	 * set reference of managedBean to null. Not removing managedBean from session.
+	 */
+	public void nullifyManagedBean(){
+		this.managedBean = null;
+	}
+	
+	protected String getManagedBeanName(){
+		return managedBeanName;
+	}
+	
+	/*** 25692#95 - end ***/
+	
+	
+	
+	
+}
+
 
 	// #27398 11/03/2020 START
 	public Boolean specialDescriptionMandatory(List<SmSupplierCategory> listCategory){
