@@ -230,7 +230,6 @@ import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 import org.primefaces.util.Constants;
 
-import com.bea.common.security.xacml.context.StatusCode;
 
 // TODO: Auto-generated Javadoc
 /**
