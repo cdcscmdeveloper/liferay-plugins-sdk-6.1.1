@@ -4635,6 +4635,16 @@ public class SmApplicationBackingBean extends
 			RequestContext.getCurrentInstance().execute(
 					"suppEquiCompDtWidVar.paginator.endLink.click()");
 		}
+		BigDecimal test = BigDecimal.ZERO;
+		//#27308 - 13/03/2020 START
+		if(businessTypeIsROC(getManagedBean().getSmSupplier().getBusinessType())  
+				&& getManagedBean().getSelectedEquityCompany().isSsmData() 
+				&& getManagedBean().getSelectedEquityCompany().getShareAmt() != null 
+				&& test.compareTo(BigDecimal.ZERO) == 0){
+			throw new EpException(MessageConst.ERROR_722680);
+		}
+		//#27308 - 13/03/2020 END
+		
 		saveOrUpdateAppl();
 		calculateCapital();
 		assignValReqdToFalse();
