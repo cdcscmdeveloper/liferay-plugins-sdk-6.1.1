@@ -75,6 +75,7 @@ import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
+import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
@@ -4794,4 +4795,53 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		return getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value());
 	}
 	//24893 - end
+	
+	//12183 - Start
+	public String getDocStatus(FlFulfilmentRequest flFulfilmentRequest){
+		
+		if(checkStatusPidExpired(flFulfilmentRequest)){
+			return getStatusDescById(DPStatusConstants.PID_EXPIRED);
+		}else if(!isSqStillValid()){
+			return getStatusDescById(DPStatusConstants.SQ_EXPIRED);
+		}else{
+			return getStatusDescById(getManagedBean().getFulfilmentRequest().getFlWorkflowStatus().getPmStatus().getStatusId());
+		}
+		
+	}
+	
+	public boolean checkStatusPidExpired(FlFulfilmentRequest flFulfilmentRequest){
+		
+		Long currentStatusId = null;
+	    Boolean pidExpired = false;
+		
+		IFulfilmentRequestSO flRequestSO;
+	 	   flRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
+		
+		if(flFulfilmentRequest != null){
+			
+			currentStatusId = flFulfilmentRequest.getFlWorkflowStatus().getPmStatus().getStatusId();
+			
+			if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)
+				|| currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL)
+				|| currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION)
+				|| currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
+				|| currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)){
+				
+				 if(flFulfilmentRequest.getScPurchaseInDefault()!=null){
+					 	Date today  = DateUtils.getCurrentDate();
+						Date ExpDate = DateUtils.addDays(flFulfilmentRequest.getScPurchaseInDefault().getChangedDate(), flFulfilmentRequest.getScPurchaseInDefault().getPidValidDays());
+
+						log.info("pID validity begin");
+						
+							if(ExpDate.before(today)){
+								pidExpired = true;
+							}  
+						
+						log.info("pID validity end");
+				 }	
+			}	
+		}	
+		return pidExpired;
+	}
+	//12183 - End
 }
