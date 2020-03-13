@@ -150,7 +150,11 @@
 		</div>
 		<div>
 			<c:if test="#{!empty requestNoteBackingBean.managedBean.taskId}">
-				<!-- 26059 start --><div class="ppRightBtn" style="float:right;">
+				<!-- 26059 start -->
+				<table style="width: 100%;"> 
+				<tr>
+				<td align="right">
+				<div class="ppRightBtn">
 				<ui:decorate template="/xhtml/fl/shared/claim_template.xhtml">
 					<ui:define name="outComeSection">				
 					<c:if test="#{isPendingSubmissionStatus or isPendingRevisionStatus}">
@@ -192,7 +196,10 @@
 					</ui:repeat>
 				</ui:define>
 			</ui:decorate>
-			</div><!-- 26059 end -->
+			</div>
+			</td>
+			</tr>
+			</table><!-- 26059 end -->
 			</c:if>
 		</div>
 	</h:panelGroup>
