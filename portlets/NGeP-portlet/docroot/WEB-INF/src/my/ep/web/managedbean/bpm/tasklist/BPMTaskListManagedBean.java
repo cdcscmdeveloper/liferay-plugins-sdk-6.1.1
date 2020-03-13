@@ -1,8 +1,6 @@
 package my.ep.web.managedbean.bpm.tasklist;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -24,10 +22,10 @@ import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.access.application.IAccessApplSO;
 import my.ep.biz.service.pm.common.kpi.IPmKpiSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sc.directpurchase.IPrInquirySO;
-import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -51,21 +49,29 @@ import my.ep.dto.pm.access.application.AccessApplReqDTO;
 import my.ep.dto.pm.access.application.AccessApplResDTO;
 import my.ep.dto.pm.common.kpi.KpiReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
-import my.ep.dto.sc.directpurchase.QuoteReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
+import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
+import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
+import my.ep.dto.sc.requestitem.RequestItemResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.jaxb.fl.dandata.FLDanDataType;
+import my.ep.jaxb.fl.frndata.FLFulFillmentReceivedNoteDataType;
+import my.ep.jaxb.fl.maintenace.cancel.dofulfillment.FLDOFulfillmentCancelReqType;
+import my.ep.jaxb.fl.maintenace.cancel.invoice.FLInvoiceCancelReqType;
+import my.ep.jaxb.fl.maintenace.modification.dofulfillment.FLDOFulfillmentModificationReqType;
+import my.ep.jaxb.fl.maintenace.modification.invoice.FLInvoiceModificationReqType;
+import my.ep.jaxb.fl.stopfullfillmentdata.FLStopFullfillmentDataType;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmKPIValue;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
-import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
@@ -73,10 +79,10 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.PagingConst;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 @ManagedBean(name = "bpmTasklistMB")
@@ -569,9 +575,20 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 										worklistItemVO.setTitle(sb.toString());
 									}
 								}
-								} else {
-									processTitleWithDocStatus(worklistItemVO, face);
+							} else if (worklistItemVO.getDocStatus() != null
+									&& QTStatusConst.SF_PENDING_LOI_PREPARATION.intValue() == worklistItemVO.getDocStatus().intValue()) {
+								if (loiPreparationDays == null) {
+									loiPreparationDays = retrieveKpiValueByModuleCodeAndKpiCode(
+											ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(), KPICodeConst.SC_LOI_PREPARATION);
 								}
+								
+								worklistItemVO.setTitle(worklistItemVO.getTitle() + "<br/> - "
+												+ ResourceBundleUtils.getMessage(
+														"lbl.sc.loiloa.loi.preparation.due.date.message",
+														new String[] { loiPreparationDays != null ? loiPreparationDays.toString() : "" },
+														ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+														face.getUserLocale()));
+							}
 							 if(worklistItemVO.getTaskName().equals(FLProcessNameConst.PERFORM_PAYMNET_MATCH_HT)){
 						    	   worklistItemVO.setTitle(retreiveSupplierInvoiceNo(worklistItemVO.getDocId()) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
 						       }
@@ -658,29 +675,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 			}
 		}
 
-	}
-
-	private void processTitleWithDocStatus(WorklistItemVO worklistItemVO, FacesScopes face) {
-		if (worklistItemVO.getDocStatus() != null) {
-			int docStatus = worklistItemVO.getDocStatus().intValue();
-
-			if (QTStatusConst.SF_PENDING_LOI_PREPARATION.intValue() == docStatus) {
-				if (loiPreparationDays == null) {
-					loiPreparationDays = retrieveKpiValueByModuleCodeAndKpiCode(
-							ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(), KPICodeConst.SC_LOI_PREPARATION);
-				}
-				worklistItemVO.setTitle(worklistItemVO.getTitle()
-						+ "<br/> - "
-						+ ResourceBundleUtils.getMessage("lbl.sc.loiloa.loi.preparation.due.date.message",
-								new String[] { loiPreparationDays != null ? loiPreparationDays.toString() : "" },
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-			} else if (QTStatusConst.EPV_PENDING_SUPPLIER_ACCEPTANCE.intValue() == docStatus) {
-				worklistItemVO.setTitle(worklistItemVO.getTitle()
-						+ "<br/> - "
-						+ ResourceBundleUtils.getMessage("lbl.sc.proposal.validity.period.extension.response.supplier",
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-			}
-		}
 	}
 
 	public PagingDataModel<WorklistItemVO> getTaskListMyTaskDataModel() {
