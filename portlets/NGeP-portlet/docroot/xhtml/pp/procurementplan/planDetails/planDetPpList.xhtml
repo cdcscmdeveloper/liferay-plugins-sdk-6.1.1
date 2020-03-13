@@ -123,6 +123,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				     style="float:left; padding-left: 5px;" process="@this">
 				      <p:ajax event="click"
 				      		listener="#{pPlanBackingBean.addUpdateInfo(pPlanBackingBean.managedBean.selectedPlan, index)}"
+				      		disabled="#{ppItem.cloneEnabled or ppItem.disableForPindaan}"
 				      		update="@form" />
 				      </h:graphicImage>
 				</p:commandLink>
