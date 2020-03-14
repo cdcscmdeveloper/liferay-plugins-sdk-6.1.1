@@ -4232,6 +4232,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 									LocationSingleton.getInstance().constuctTreeNode(
 											zone, zone.getTplSpecZoneLocs()));	
 						}
+						
+						/*Bug #27412*/
+						reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+						reqDTO.putToArgs(MapKeyEnum.userID, new FacesScopes().getUserSessionBean().getUserId());
+						/*Bug #27412*/
 					}
 					//20200210@asyrafhaziq_Bug #27381&#26694  - End
 				}
@@ -4383,6 +4388,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							isApproverExists = true;
 							break;
 						}
+						/*Bug #27412*/
+						reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+						reqDTO.putToArgs(MapKeyEnum.userID, new FacesScopes().getUserSessionBean().getUserId());
+						/*Bug #27412*/
 					}
 					if (!isApproverExists) {
 						ScQtApproverSettings qtApproverSettings = new ScQtApproverSettings();
