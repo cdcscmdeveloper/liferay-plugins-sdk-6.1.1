@@ -1567,7 +1567,8 @@ public class SmApplicationBackingBean extends
 								}else{
 									personnel.setSsmData(true);
 									//#27315
-									String[] copyEquityOwner = {"name","shareAmt","nameInSsm","raceSsmNull","birthDateSsmNull","shareAmtSsmNull","shareAmtSsm","designationSsmNull","equityOwner","director","pmCountry","directorSsm","equityOwnerSsm","managementSsm"};
+									//27408 - Remove Pmcountry for ROC
+									String[] copyEquityOwner = {"name","shareAmt","nameInSsm","raceSsmNull","birthDateSsmNull","shareAmtSsmNull","shareAmtSsm","designationSsmNull","equityOwner","director","directorSsm","equityOwnerSsm","managementSsm"};
 									EntityHelper.copyEntityPropertiesOnly(personnelSSM,personnel,copyEquityOwner);
 								}
 								validateRole(personnel);
@@ -1640,16 +1641,32 @@ public class SmApplicationBackingBean extends
 										personnel.getSmPersonnelAddresses().add(personnel.getSmPersonnelAdd());
 									}
 									if(personnel.getPmCountry() == null || personnel.getPmCountry().getCountryId() == null){
-										PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
-										personnel.setPmCountry(defaultCountry);
+										if(personnel.getPmCountry() == null || personnel.getPmCountry().getCountryId() == null){
+											//#27408
+											if(personnel.getIdentificationType() != null && ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(personnel.getIdentificationType().getParameterCode())){
+												PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(ParameterConst.COUNTRY_UNKNOWN_CODE);
+												personnel.setPmCountry(defaultCountry);
+											}else{
+												PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+												personnel.setPmCountry(defaultCountry);
+											}
+										}
 									}
 									
 									this.getManagedBean().getSmAppl().getSmPersonnels().add(personnel);
 								}else{
 									validateRole(oldPersonnel);
 									if(personnel.getPmCountry() == null || personnel.getPmCountry().getCountryId() == null){
-										PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
-										oldPersonnel.setPmCountry(defaultCountry);
+										//#27408
+										if(personnel.getPmCountry() == null || personnel.getPmCountry().getCountryId() == null){
+											if(personnel.getIdentificationType() != null && ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(personnel.getIdentificationType().getParameterCode())){
+												PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(ParameterConst.COUNTRY_UNKNOWN_CODE);
+												oldPersonnel.setPmCountry(defaultCountry);
+											}else{
+												PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+												oldPersonnel.setPmCountry(defaultCountry);
+											}
+										}
 									}
 								}
 							}
@@ -12660,7 +12677,8 @@ public class SmApplicationBackingBean extends
 						}else{
 							personnel.setSsmData(true);
 							//#27315
-							String[] copyEquityOwner = {"name","shareAmt","nameInSsm","raceSsmNull","birthDateSsmNull","shareAmtSsmNull","shareAmtSsm","designationSsmNull","equityOwner","director","pmCountry","directorSsm","equityOwnerSsm","managementSsm"};
+							//27408 - Remove Pmcountry for ROC
+							String[] copyEquityOwner = {"name","shareAmt","nameInSsm","raceSsmNull","birthDateSsmNull","shareAmtSsmNull","shareAmtSsm","designationSsmNull","equityOwner","director","directorSsm","equityOwnerSsm","managementSsm"};
 							EntityHelper.copyEntityPropertiesOnly(personnelSSM,personnel,copyEquityOwner);
 						}
 						validateRole(personnel);
@@ -12733,16 +12751,28 @@ public class SmApplicationBackingBean extends
 								personnel.getSmPersonnelAddresses().add(personnel.getSmPersonnelAdd());
 							}
 							if(personnel.getPmCountry() == null || personnel.getPmCountry().getCountryId() == null){
-								PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
-								personnel.setPmCountry(defaultCountry);
+								//#27408
+								if(personnel.getIdentificationType() != null && ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(personnel.getIdentificationType().getParameterCode())){
+									PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(ParameterConst.COUNTRY_UNKNOWN_CODE);
+									personnel.setPmCountry(defaultCountry);
+								}else{
+									PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+									personnel.setPmCountry(defaultCountry);
+								}	
 							}
 							
 							this.getManagedBean().getSmAppl().getSmPersonnels().add(personnel);
 						}else{
 							validateRole(oldPersonnel);
 							if(personnel.getPmCountry() == null || personnel.getPmCountry().getCountryId() == null){
-								PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
-								oldPersonnel.setPmCountry(defaultCountry);
+								//#27408
+								if(personnel.getIdentificationType() != null && ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(personnel.getIdentificationType().getParameterCode())){
+									PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(ParameterConst.COUNTRY_UNKNOWN_CODE);
+									personnel.setPmCountry(defaultCountry);
+								}else{
+									PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+									personnel.setPmCountry(defaultCountry);
+								}	
 							}
 						}
 					}
