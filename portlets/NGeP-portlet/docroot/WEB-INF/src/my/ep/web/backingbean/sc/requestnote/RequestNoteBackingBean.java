@@ -5203,6 +5203,79 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 	//26284 - End
 	
+	//12183 - Start
+	public String getDocStatus(ScRequestNote requestNote){
+			
+		if(checkStatusPidExpired(requestNote)){
+			return getStatusDescById(DPStatusConstants.PID_EXPIRED);
+		}else if(!isSqStillValid()){
+			return getStatusDescById(DPStatusConstants.SQ_EXPIRED);
+		}else{
+			return getStatusDescById(getManagedBean().getRequestNoteStatus().getStatusId());
+		}
+	}
+	
+	public boolean checkStatusPidExpired(ScRequestNote requestNote){
+		
+		String docNo = null;
+		Long currentStatusId = null;
+		ScPurchaseInDefault scPID = null;
+		
+		if(requestNote != null){
+			docNo = requestNote.getRequestNoteNo();
+			
+			if(requestNote.getCurrentStatus() == null){
+				if(getManagedBean().getCurrentStatusId() != null){
+					currentStatusId = getManagedBean().getCurrentStatusId();
+				}			
+			}else{
+				currentStatusId = requestNote.getCurrentStatus().getPmStatus().getStatusId();
+			}	
+		
+		    if(currentStatusId.equals(DPStatusConstants.RN_PENDING_SUBMISSION)
+		    	  || currentStatusId.equals(DPStatusConstants.RN_PENDING_APPROVAL)
+		    	  || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION) 
+		    	  || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL)
+		    	  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)){
+		    		
+		    	RequestNoteReqDTO reqDTO = new RequestNoteReqDTO();
+		    	RequestNoteResDTO resDTO = new RequestNoteResDTO();
+		    	IRequestNoteSO reqSO = null;
+		    	reqSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IRequestNoteSO.class);
+		    		
+		    	reqDTO.setRequestNoteId(requestNote.getRequestNoteId());
+		    	reqDTO.setRequestNoteNo(docNo);
+		    	
+		    	resDTO = reqSO.getRequestNote(reqDTO);
+		    		
+		    	if(resDTO.getRequestNoteDetail().getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault()!=null){
+		    		scPID = resDTO.getRequestNoteDetail().getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault();
+		    	} 		
+		    }  
+		}
+		
+		return pidValidityBoolean(scPID);
+	}
+	
+	private boolean pidValidityBoolean(ScPurchaseInDefault purchaseInDefault){
+		boolean valid = false;
+		
+		if(purchaseInDefault!=null){
+			Date today  = DateUtils.getCurrentDate();
+			Date ExpDate = DateUtils.addDays(purchaseInDefault.getChangedDate(), purchaseInDefault.getPidValidDays());
+			
+			log.info("pID validity begin");
+			
+			if(today.after(ExpDate)){
+				valid = true;
+			}
+			log.info("pID validity end");
+		}
+		return valid;
+	}
+	//12183 - End
+	
 	//26221-Start
 	public String constructConditionForUserSearch(){
 		StringBuilder sb = new StringBuilder();
