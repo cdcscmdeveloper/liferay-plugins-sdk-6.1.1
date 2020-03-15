@@ -23,6 +23,7 @@ public class PpReportsManagedBean extends ReportBaseManagedBean {
 	private Long procurementCatId;
 	private Long procurementTypeId;
 	private Integer status;
+	private boolean ministryMandatory;	//[#27197]
 
 	public PpReportsManagedBean() {
 	}
@@ -192,6 +193,18 @@ public class PpReportsManagedBean extends ReportBaseManagedBean {
 
 	public void setDisabledPTJLov(boolean disabledPTJLov) {
 		this.disabledPTJLov = disabledPTJLov;
+	}
+
+	public boolean isMinistryMandatory() {
+		return ministryMandatory;
+	}
+
+	public void setMinistryMandatory(boolean ministryMandatory) {
+		this.ministryMandatory = ministryMandatory;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 	
 	

@@ -13,6 +13,8 @@ public class PpReportConst implements Serializable {
 	public static final String PP_EXPENDITURE_DETAIL_RPT_VAL = "PP_004";
 	public static final String PP_EXPENDITURE_PERFORMANCE_RPT_VAL = "PP_005";	//[#24976]
 	
+	public static final String [] PP_REPORTS_MINISTRY_IS_MANDATORY = {PP_PROCUREMENT_SUMM_RPT_VAL,PP_PROCUREMENT_DETAIL_RPT_VAL,PP_EXPENDITURE_SUMM_RPT_VAL,PP_EXPENDITURE_DETAIL_RPT_VAL};	//[#27197]
+	
 	public static final String PARAM_PP_MINISTRY = "PMINIS";
 	public static final String PARAM_PP_PEGAWAI_PEGAWAL = "PFPP";
 	public static final String PARAM_PP_KUMPULAN_PTJ = "PFJA";

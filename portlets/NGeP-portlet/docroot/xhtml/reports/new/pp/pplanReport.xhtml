@@ -16,7 +16,10 @@
 	<c:if test="#{not isPPPerformanceReport}">	<!--[#24976]-->
 	<table style="width: 100%;">
 		<tr>
-			<td width="20%"><p:outputLabel value="#{lbl['lbl.pp.ministry']}" /></td>
+			<td width="20%">
+				<p:outputLabel value="#{lbl['lbl.pp.ministry']}" /> 
+				<p:outputLabel id="ministryMandatory" rendered="#{ppReportsBackingBean.managedBean.ministryMandatory}" value="*" styleClass="mandatory" /> <!-- [#27197] -->
+			</td>
 			<td colspan="3"><ac:lov id="lovPpMinistry"
 					lovId="PM_ORG_PROFILE_REPORT" size="100" update="@form"
 					disabled="#{ppReportsBackingBean.managedBean.disabledMinistryLov}"
