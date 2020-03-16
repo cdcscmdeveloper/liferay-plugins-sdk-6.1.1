@@ -1906,6 +1906,7 @@ public class EvaluationBackingBean extends
 		IQTEvaluationSO evaluationSO = null;
 		EvaluationResDTO resDTO = new EvaluationResDTO();
 		this.getManagedBean().setNonScoringActiveIndex(1);//#25138
+		this.getManagedBean().setTabTechnicalIndex(1);
 		try {
 
 			if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
@@ -2163,7 +2164,6 @@ public class EvaluationBackingBean extends
 									.getCommitteeType())) {
 				this.getManagedBean().setEvaluatioStageActiveIndex(2);//#25138
 				this.getManagedBean().setTabFinancialIndex(3);
-				this.getManagedBean().setTabTechnicalIndex(3);
 			}
 			this.getManagedBean().setSummaryViewBy("");
 			this.getManagedBean().setFinancialSummaryView("");
@@ -6478,7 +6478,7 @@ public class EvaluationBackingBean extends
 					}
 					if(outputTab == 2){
 						retriveTechnicalEvaluationStage();
-						this.getManagedBean().setTabTechnicalIndex(1);
+						retriveComplianceTechnical();
 						this.getManagedBean().setTabFinancialIndex(0);
 							
 					}
@@ -6538,16 +6538,21 @@ public class EvaluationBackingBean extends
 						if (currentTab == 2) {
 
 							if (this.getManagedBean()
-									.getEvaluatioStageActiveIndex() < 1) {
+									.getEvaluatioStageActiveIndex() < 1 || this.getManagedBean()
+									.getEvaluatioStageActiveIndex() == 2) {
 								retriveTechnicalEvaluationStagePackage();
-								outputTab = 2;
 								this.getManagedBean().setTabTechnicalIndex(2);
+								outputTab = 2;
 								
-							}else{
+							}else if( this.getManagedBean()
+									.getPresentationDemoActiveIndex() < 0){
 								retriveSummaryEvaluationStage();
 								// this.getManagedBean().setComplianceActiveIndex(2);
 								outputTab = 2;
 
+							}else{
+								retrivePresentationDemo();
+								
 							}
 
 						}else if (this.getManagedBean()
@@ -6645,6 +6650,24 @@ public class EvaluationBackingBean extends
 							}
 						}
 					}
+					if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
+							.equalsIgnoreCase(this.getManagedBean()
+									.getCommitteeType())
+							&& this.getManagedBean()
+									.getCurrentStatusId()
+									.equals(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL)
+							&& this.getManagedBean().isReadOnly()
+							&& this.getManagedBean().getScQt().isDemoRequired()) {
+						
+						if(this.getManagedBean().getEvaluatioStageActiveIndex() == 2){
+							retrivePresentationDemo();
+						}else{
+							retriveTechnicalEvaluationStagePackage();
+							outputTab = 2;
+							this.getManagedBean().setTabTechnicalIndex(2);
+							
+						}
+					}
 				} else if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 						.equalsIgnoreCase(this.getManagedBean()
 								.getCommitteeType())) {
@@ -6688,7 +6711,7 @@ public class EvaluationBackingBean extends
 							this.getManagedBean().setScQt(evalResDTO.getScQt());
 						}
 					}
-					if(outputTab == 3){
+					if(outputTab == 3 && this.getManagedBean().getEvaluatioStageActiveIndex() != 2){
 						retriveFinancialEvaluationStage();
 						this.getManagedBean().setTabFinancialIndex(1);
 	
@@ -6828,12 +6851,77 @@ public class EvaluationBackingBean extends
 							}
 
 						}
-					} else {
-						if (currentTab == 3) {
+					}else if(this.getManagedBean().getScQt().isDemoRequired()){	
+						if (currentTab == 2) {
+
+							if (this.getManagedBean()
+									.getEvaluatioStageActiveIndex() == 1) {
+								retriveSummaryEvaluationStage();
+								this.getManagedBean().setTabTechnicalIndex(3);
+								outputTab = 2;
+
+							}else{
+								retrivePresentationDemo();
+								outputTab = 3;
+								this.getManagedBean().setPresentationDemoActiveIndex(0);
+							}
+						}
+						else if(currentTab == 3) {
 							if (this.getManagedBean()
 									.getPresentationDemoActiveIndex() < 1) {
 								retrivePresentationDemoSummary();
+								checkDemoStatusForQtCheckList();
 								outputTab = 3;
+								
+							}
+						}
+					}
+					checkMeetingDetailsAndStatus(this.getManagedBean()
+							.getScQtMeetings());
+				}
+				else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
+						.equalsIgnoreCase(this.getManagedBean()
+								.getCommitteeType())
+						&& this.getManagedBean()
+								.getCurrentStatusId()
+								.equals(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL)
+						&& this.getManagedBean().isReadOnly()) {
+
+					if (!this.getManagedBean().getScQt().isDemoRequired()) {
+						if (currentTab == 2) {
+
+							if (this.getManagedBean()
+									.getEvaluatioStageActiveIndex() == 1) {
+								retriveSummaryEvaluationStage();
+								// this.getManagedBean().setComplianceActiveIndex(2);
+								this.getManagedBean().setTabTechnicalIndex(2);
+								outputTab = 2;
+
+							}
+
+						}
+					}else if(this.getManagedBean().getScQt().isDemoRequired()){	
+						if (currentTab == 2) {
+
+							if (this.getManagedBean()
+									.getEvaluatioStageActiveIndex() == 1) {
+								retriveSummaryEvaluationStage();
+								this.getManagedBean().setTabTechnicalIndex(3);
+								outputTab = 2;
+
+							}else{
+								retrivePresentationDemo();
+								outputTab = 3;
+								this.getManagedBean().setPresentationDemoActiveIndex(0);
+							}
+						}
+						else if(currentTab == 3) {
+							if (this.getManagedBean()
+									.getPresentationDemoActiveIndex() < 1) {
+								retrivePresentationDemoSummary();
+								checkDemoStatusForQtCheckList();
+								outputTab = 3;
+								
 							}
 						}
 					}
@@ -6951,11 +7039,15 @@ public class EvaluationBackingBean extends
 				 * }
 				 */
 				if (this.getManagedBean()
-						.getEvaluatioStageActiveIndex() >= 1 || ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
+						.getEvaluatioStageActiveIndex() >= 1 && !this.getManagedBean().getScQt().isDemoRequired()|| ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
 								.equalsIgnoreCase(this.getManagedBean()
-										.getCommitteeType())) {
+										.getCommitteeType())&& !this.getManagedBean().getScQt().isDemoRequired()) {
 					retrieveReportTabDtl();	
 				
+				}
+				else if(this.getManagedBean().getScQt().isDemoRequired() 
+						&& this.getManagedBean().getPresentationDemoActiveIndex() == 1){
+					retrieveReportTabDtl();	
 				}
 				
 			} else if (outputTab == 5) {
@@ -12710,7 +12802,6 @@ private void retriveCommitteeRemarksList(){
 							.equalsIgnoreCase(this.getManagedBean()
 									.getCommitteeType())) {
 				this.getManagedBean().setEvaluatioStageActiveIndex(1);
-				this.getManagedBean().setTabTechnicalIndex(2);
 				evaluationStageStatusCheck();//#25138
 			}
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
@@ -12941,15 +13032,10 @@ private void retriveCommitteeRemarksList(){
 				}//last group
 				this.getManagedBean().setDetachedPaginator(new Paginator(localCheckList));
 				log.info("paging--" + this.getManagedBean().getDetachedPaginator());
-				/*
-				 * this.getManagedBean().setEvaluationStgfinancialCheckList(
-				 * resDTO.getCheckListResultBean().getResultList());
-				 */
-
+			
 			}
 			this.getManagedBean().setDetachedPaginatorTest(new Paginator(outerCheckList));
-//			this.getManagedBean().setEvaluationStgfinancialCheckList(
-//					outerCheckList);
+			
 			if (ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
 					.getManagedBean().getScQt().getEvaluationType())
 					|| (ParameterConst.EVALUATION_TYPES_ONE_TIER.equalsIgnoreCase(this
@@ -12958,9 +13044,6 @@ private void retriveCommitteeRemarksList(){
 				checkFinancialSuppliersQualified();
 
 			}
-//			if(CollectionUtils.isNotEmpty(this.getManagedBean().getEvaluationStgfinancialCheckList())){
-//				checklistSorting(this.getManagedBean().getEvaluationStgfinancialCheckList());
-//				}
 			innerCheckList=null;
 			evalstage=null;
 		
@@ -13299,7 +13382,6 @@ private void retriveCommitteeRemarksList(){
 				}	
 			}
 			evalResDTO = evaluationSO.saveUserScorePackageDetails(evalReqDTO);
-			
 			successMessage(MessageConst.INFO_700004,
 					getMessageCommon("lbl.sc.prepare.evaluation.evaluationStage.scores"), " ", Boolean.FALSE);
 			
