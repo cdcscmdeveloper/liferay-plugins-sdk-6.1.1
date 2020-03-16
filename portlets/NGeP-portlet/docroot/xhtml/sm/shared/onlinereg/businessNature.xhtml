@@ -17,14 +17,14 @@
 			id="suppBizNatureId" rowKey="#{suppBizNature}" rows="10">
 			<ac:paginator for="suppBizNatureId" />
 			<p:column selectionMode="multiple" style="width:2%" rendered="#{not empty registrationBackingBean.managedBean.smSupp.smSupplierBusinesses}" 
-				disabledSelection="#{!registrationBackingBean.managedBean.smSupp.brandNew and registrationBackingBean.managedBean.smSupp.smSupplierBusinesses.size() le 1}" />
+				disabledSelection="#{(!registrationBackingBean.managedBean.smSupp.brandNew and registrationBackingBean.managedBean.smSupp.smSupplierBusinesses.size() le 1) or suppBizNature.ssmData}" />
 			<p:ajax event="rowSelectCheckbox" update=":#{p:component('btnRemove')}" />
 			<p:ajax event="rowUnselectCheckbox" update=":#{p:component('btnRemove')}" />
 			<p:ajax event="rowSelect" update=":#{p:component('btnRemove')}" />   
             <p:ajax event="rowUnselect" update=":#{p:component('btnRemove')}" />  
             <p:ajax event="toggleSelect" update=":#{p:component('btnRemove')}" />     
 
-			<p:column>
+			<p:column disabledSelection="#{suppBizNature.ssmData}">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sm.businessnature.code']}" />
@@ -37,7 +37,7 @@
 				<h:outputText value="#{registrationBackingBean.getBusinessNatureSection(suppBizNature)} - #{suppBizNature.pmBusinessNature.levelCode}" />
 			</p:column>
 			
-			<p:column>
+			<p:column disabledSelection="#{suppBizNature.ssmData}">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sm.natureofbusiness']}" />
@@ -50,7 +50,7 @@
 				#{suppBizNature.pmBusinessNature.levelName}
 			</p:column>
 			<ui:remove>
-			<p:column>
+			<p:column disabledSelection="#{suppBizNature.ssmData}">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.action']}" />
 				</f:facet>
@@ -74,7 +74,7 @@
 			<a href="#{DocumentRepositoryUtils.baseRepo}shared/SM/Piawaian_Klasifikasi_Industri_Malaysia_2008.pdf">#{lbl['lbl.sm.payment.here']}</a>
 			#{lbl['lbl.sm.download.natureofbusiness']}
 			
-		    <ac:lov id="busiNatureId" lovId="PM_BUSINESS_NATURE"  rendered="#{!registrationBackingBean.managedBean.companyValidWithSSM or registrationBackingBean.managedBean.smSupp.smSupplierBusinesses.size() le 0}" 
+		    <ac:lov id="busiNatureId" lovId="PM_BUSINESS_NATURE"  
 				postUpdateListener="registrationBackingBean.postUpdateBizNature"
 				headerText="#{lbl['lbl.sm.natureofbusiness']}" buttonLabel="#{lbl['lbl.btn.add']}"
 			    selectionMode="multiple" disabled="#{registrationBackingBean.managedBean.viewMode}"
@@ -82,7 +82,7 @@
 				conditionField="recordStatus^1|businessLevel^#{ParameterConst.businessNatureLevel}"
 				update=":form:suppBizNatureId :form:bnmsg" />
 
-			<p:commandButton id="btnRemove" update="natureBusinessId" rendered="#{!registrationBackingBean.managedBean.companyValidWithSSM or registrationBackingBean.managedBean.smSupp.smSupplierBusinesses.size() le 0 }"  partialSubmit="true" process="@this,suppBizNatureId"
+			<p:commandButton id="btnRemove" update="natureBusinessId"  partialSubmit="true" process="@this,suppBizNatureId"
 				value="#{lbl['lbl.btn.delete']}" 
 				disabled="#{registrationBackingBean.managedBean.viewMode or empty registrationBackingBean.managedBean.selectedBusinessNatureLs}"
 				oncomplete="businessNatureDeletePopUp.show();" />
