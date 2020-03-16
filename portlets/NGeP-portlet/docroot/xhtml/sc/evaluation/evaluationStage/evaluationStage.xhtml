@@ -191,15 +191,29 @@
 
 
 				</ui:fragment> <ui:fragment
-					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.scQt.demoRequired eq 'false'
-					and evaluationBackingBean.managedBean.tabTechnicalIndex eq '1'}">
+					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'
+					and evaluationBackingBean.managedBean.tabTechnicalIndex eq '2'}">
 
 
 
 					<p:commandButton value="#{lbl['lbl.btn.next']}"
 						style="float:right;" styleClass="BtnSpacing"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','3')}"
+						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','4')}"
+						action="#{evaluationBackingBean.updateSmAppl}" iconPos="right"
+						update=":form" />
+
+
+				</ui:fragment><ui:fragment
+					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'
+					and evaluationBackingBean.managedBean.tabTechnicalIndex eq '3'}">
+
+
+
+					<p:commandButton value="#{lbl['lbl.btn.next']}"
+						style="float:right;" styleClass="BtnSpacing"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','4')}"
 						action="#{evaluationBackingBean.updateSmAppl}" iconPos="right"
 						update=":form" />
 
@@ -213,7 +227,7 @@
 					<p:commandButton value="#{lbl['lbl.btn.next']}"
 						style="float:right;" styleClass="BtnSpacing"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','4')}"
+						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','3')}"
 						action="#{evaluationBackingBean.updateSmAppl}" iconPos="right"
 						update=":form" />
 
