@@ -1095,9 +1095,10 @@ public class SPDetailBackingBean extends
 							List<TplSpecAnswer> toDeleteZoneAnswers = new ArrayList<TplSpecAnswer>();	
 							for (TplSpecAnswer specAnswer : templateSpecBean
 									.getSpecAnswerList()) {
-							
+//FARID #21695 IN MONITORING !!					
 								if (specAnswer.getRatePerUom() != null
-										&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) > 0) {
+										&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) > 0 
+										|| specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0 && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0) {
 									answers.add(specAnswer);
 								
 								}else{
@@ -1109,8 +1110,9 @@ public class SPDetailBackingBean extends
 									.getSpecAnswerList().size())){
 								for(TplSpecAnswer answerNullPrice : toDeleteZoneAnswers){
 //farid #21695 START add filter allow 0 price 0 qty proposal
-									if(answerNullPrice.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 ){
+									if(answerNullPrice.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0 && answerNullPrice.getRatePerUom().compareTo(BigDecimal.ZERO) > 0 ){
 //farid #21695 END
+//FARID #21695 IN MONITORING !!	
 										throw new EpException(MessageConst.ERROR_760464);
 									}
 								}
