@@ -16417,9 +16417,12 @@ public class SpecificationBackingBean extends
 		if (this.getManagedBean().getFulfilmentType() == ParameterConst.FULFILMENT_TYPE_SCHEDULED) {
 			isFulfilmentTypeScheduled = true;
 		} 
-		if (templateSpecBean.getSpecMaster().getItemTypeCode().getParameterCode() == ParameterConst.ITEM_TYPE_SERVICE) {
+		
+		// #25039#67#92 - start
+		if(getManagedBean().getTemplateSpecBean().getSpecMaster().getItemTypeCode().getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE)){
 			isItemTypeService = true;
-		} 
+		}
+		// #25039#67#92 - end
 		
 		int questionSize = templateSpecBean.getSpecMaster().getTplSpecQuestions().size();
 		
