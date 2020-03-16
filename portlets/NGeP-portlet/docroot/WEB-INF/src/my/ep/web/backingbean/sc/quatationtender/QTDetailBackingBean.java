@@ -3809,6 +3809,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							reqDTO.setSupplierIds(supplierIds);
 							reqDTO.putToArgs(MapKeyEnum.supplierIds, supplierIds);
 						}
+						/*Bug #27412*/
+						reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+						reqDTO.putToArgs(MapKeyEnum.userID, new FacesScopes().getUserSessionBean().getUserId());
+						/*Bug #27412*/
 					}
 					finally{
 						supplierSearchSO = null;
@@ -3924,6 +3928,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							reqDTO.setSupplierIds(supplierIds);
 							reqDTO.putToArgs(MapKeyEnum.supplierIds, supplierIds);
 						}
+						/*Bug #27412*/
+						reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+						reqDTO.putToArgs(MapKeyEnum.userID, new FacesScopes().getUserSessionBean().getUserId());
+						/*Bug #27412*/
 					}
 					finally{
 						supplierSearchSO = null;
