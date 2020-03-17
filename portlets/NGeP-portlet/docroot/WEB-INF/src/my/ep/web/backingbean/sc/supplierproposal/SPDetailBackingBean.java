@@ -1095,12 +1095,20 @@ public class SPDetailBackingBean extends
 							List<TplSpecAnswer> toDeleteZoneAnswers = new ArrayList<TplSpecAnswer>();	
 							for (TplSpecAnswer specAnswer : templateSpecBean
 									.getSpecAnswerList()) {
-							
+//#21695 farid IN MONITORING START						
 								if (specAnswer.getRatePerUom() != null
 										&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) > 0) {
 									answers.add(specAnswer);
 								
-								}else{
+								}else if (specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
+											&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0) {
+									answers.add(specAnswer);
+								
+								}else if (specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
+										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0) {
+								answers.add(specAnswer);
+//#21695 farid IN MONITORING END	
+							}else{
 									specAnswer.setDeleted(true);
 									toDeleteZoneAnswers.add(specAnswer);
 								}
@@ -1108,11 +1116,7 @@ public class SPDetailBackingBean extends
 							if(!toDeleteZoneAnswers.isEmpty() && (toDeleteZoneAnswers.size() != templateSpecBean
 									.getSpecAnswerList().size())){
 								for(TplSpecAnswer answerNullPrice : toDeleteZoneAnswers){
-//farid #21695 START add filter allow 0 price 0 qty proposal
-									if(answerNullPrice.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 ){
-//farid #21695 END
 										throw new EpException(MessageConst.ERROR_760464);
-									}
 								}
 								
 							} else if (!toDeleteZoneAnswers.isEmpty()) {
@@ -1147,7 +1151,7 @@ public class SPDetailBackingBean extends
             	for(TplSpecAnswer answer:answers){
 					if (isCompleted) {
 //farid start #21695 to allow item has 0 qty and 0 price
-						if (answer.getRatePerUom() == null && answer.getTplSpecZoneQty()!= null || answer.getRatePerUom().equals(0) && answer.getTplSpecZoneQty()!= null) {
+						if (answer.getRatePerUom() == null && answer.getTplSpecZoneQty()!= null) {
 							throw new EpException(MessageConst.ERROR_760464);
 						}
 //farid end #21695
