@@ -1467,7 +1467,7 @@ u {
 								</tr>
 								
 								<tr>	
-									<td valign="top"  bgcolor="#6d839b" class="title border left" colspan="6" style="text-align: center; padding-left: 5px; font-size:10px;">Spesifikasi</td>
+									<td valign="top"  bgcolor="#6d839b" class="title border left" colspan="7" style="text-align: center; padding-left: 5px; font-size:10px;">Spesifikasi</td>
 								</tr>
 							#else
 							<tr>
