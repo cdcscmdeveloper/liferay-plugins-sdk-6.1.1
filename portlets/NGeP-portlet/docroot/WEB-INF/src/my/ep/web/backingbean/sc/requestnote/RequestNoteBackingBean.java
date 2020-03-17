@@ -5277,14 +5277,15 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	//12183 - End
 	
 	//26221-Start
-	public String constructConditionForUserSearch(){
-		StringBuilder sb = new StringBuilder();
-        sb.append("pmUserOrgs.pmOrgProfile.orgProfileId^");
-    	sb.append(this.getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
-    	sb.append("|pmUserOrgs.pmUserRoles.pmRole.roleCode^");
-		sb.append(RoleCode.REQUISITIONER.value());
-		sb.append("|pmUserOrgs.pmUserRoles.recordStatus^1");
-		return sb.toString();
-	}
-	//26221-End
+		public String constructConditionForUserSearch(ScRequestNoteDtl requestNoteDtl){
+			StringBuilder sb = new StringBuilder();
+	        sb.append("pmUserOrgs.pmOrgProfile.orgProfileId^");
+	    	sb.append(this.getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
+	    	sb.append("|pmUserOrgs.pmUserRoles.pmRole.roleCode^");
+			sb.append(RoleCode.REQUISITIONER.value());
+			sb.append("|pmUserOrgs.pmUserRoles.recordStatus^1");
+	     	this.getManagedBean().setAvailableUsers(getPreparedByApprove(requestNoteDtl));	
+			return sb.toString();
+		}
+		//26221-End
 }
