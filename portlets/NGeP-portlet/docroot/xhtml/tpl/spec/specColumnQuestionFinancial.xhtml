@@ -57,12 +57,13 @@
 				style="min-width:0px !important;width:86px;" 
 				rendered="#{isQuestionTypeItem}" 
 				disabled="false"
-				onkeypress="if (event.keyCode == 13) {return false; }">				
+				onkeypress="if (event.keyCode == 13) {return false; }">		
+				<!-- #25039#92 change ajax below to event="keyup" -->		
 				<p:ajax 
 					update="@all, estimatedCostMsg, @(.calcEstAmount), estimatedCost,totalEstAmount"
 					partialSubmit="true"
 					process="@this" 
-					event="change"
+					event="keyup"
 					listener="#{templateSpecBackingBean.calcItemTotalIndicateUnitPrice(
 						templateSpecBean,
 						question.tplSpecEstimations[0].indicativeUnitPrice, 
