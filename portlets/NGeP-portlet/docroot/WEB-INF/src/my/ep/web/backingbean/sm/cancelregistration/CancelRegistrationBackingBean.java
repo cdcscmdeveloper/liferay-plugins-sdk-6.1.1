@@ -6,9 +6,13 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -18,12 +22,15 @@ import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.cancelregistration.CancelRegistartionManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
@@ -74,7 +81,7 @@ public class CancelRegistrationBackingBean extends
 					&& resDTO.getSmSupplier().getSmAppl() != null
 					&& !EntityHelper.isCollectionEmpty(resDTO.getSmSupplier()
 							.getSmAppl().getSmPersonnels())) {
-
+				
 				getManagedBean().setSmAppl(resDTO.getSmSupplier().getSmAppl());
 				selectedPersonnel = getAdminPersonnel(resDTO.getSmSupplier());
 				getManagedBean().setSmSupplier(resDTO.getSmSupplier());
@@ -87,19 +94,18 @@ public class CancelRegistrationBackingBean extends
 
 						throw new EpException(MessageConst.ERROR_721091);
 					}
+					boolean activeAppl = SmApplicationUtil.checkActiveSmApplForSupp(resDTO.getSmSupplier());
 					// check new MOF Account (Contractor/Consultant) pending
 					// supplier application
-					if (resDTO.getSmSupplier().getSmAppl().getRecordStatusFlg() == (DbValueConst.RECORD_STATUS_EXPIRED)) {
-
+					if(activeAppl){
+						PmStatusDesc pmStatusDesc = getPmStatusDesc(resDTO.getSmSupplier().getSmAppl()
+								.getPmStatus().getStatusId());
 						throw new EpException(MessageConst.ERROR_721092,
 								new String[] {
-										resDTO.getSmSupplier().getSmAppl()
-												.getApplNo(),
-										resDTO.getSmSupplier().getSmAppl()
-												.getPmStatus()
-												.getPmStatusDescs().get(0)
-												.getLanguageCode() });
-
+								resDTO.getSmSupplier().getSmAppl().getApplNo(),
+								pmStatusDesc.getStatusName()
+								});
+						
 					}
 
 					if (selectedPersonnel.getIdentificationNo().equals(
@@ -145,8 +151,7 @@ public class CancelRegistrationBackingBean extends
 
 						RequestContext.getCurrentInstance().execute(
 								"confirmDialog.show();");
-
-					} else {
+					}else {
 						throw new EpException(MessageConst.ERROR_721090);
 					}
 				}
@@ -291,5 +296,26 @@ public class CancelRegistrationBackingBean extends
 	    resDTO = SmServiceLookup.getSmRemarksSO()
 				.updateSupplierReason(reqDTO);
 
+	}
+	
+	/**
+	 * Sets the pm status desc.
+	 * 
+	 * @param statusId
+	 *            - pm status id passed as String
+	 */
+	private PmStatusDesc getPmStatusDesc(Long docStatus) {
+
+		StatusReqDTO reqDTO = new StatusReqDTO();
+		reqDTO.setStatusId(new Long(docStatus));
+		reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+		IStatusSO reqSO = (IStatusSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IStatusSO.class);
+		StatusResDTO resDTO = reqSO.retrieveStatusDescById(reqDTO);
+		if (resDTO != null && resDTO.getPmStatusDesc() != null) {
+			return resDTO.getPmStatusDesc();
+		}
+		return null;
 	}
 }
