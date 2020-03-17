@@ -16414,13 +16414,12 @@ public class SpecificationBackingBean extends
 		if (this.getManagedBean().getQt().getContractDuration() != null) {
 			contractDuration = BigDecimal.valueOf(this.getManagedBean().getQt().getContractDuration());
 		} 
-		
-		System.out.println("this.getManagedBean().getFulfilmentType() "+this.getManagedBean().getFulfilmentType()+" ParameterConst.FULFILMENT_TYPE_SCHEDULED "+ParameterConst.FULFILMENT_TYPE_SCHEDULED);
+
+		// #25039#67#92 - start
 		if (this.getManagedBean().getFulfilmentType().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
 			isFulfilmentTypeScheduled = true;
 		} 
-		
-		// #25039#67#92 - start
+
 		if(getManagedBean().getTemplateSpecBean().getSpecMaster().getItemTypeCode().getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE)){
 			isItemTypeService = true;
 		}
