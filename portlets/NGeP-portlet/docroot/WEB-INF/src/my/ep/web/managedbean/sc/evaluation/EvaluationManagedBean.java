@@ -554,6 +554,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private int tabTechnicalIndex;
 	
 	private int tabFinancialIndex;
+	
+	private Boolean finPackageScore;
 
     //#25138-Ahmaa-End
 	
@@ -3665,6 +3667,14 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 	public void setTabFinancialIndex(int tabFinancialIndex) {
 		this.tabFinancialIndex = tabFinancialIndex;
+	}
+
+	public Boolean getFinPackageScore() {
+		return finPackageScore;
+	}
+
+	public void setFinPackageScore(Boolean finPackageScore) {
+		this.finPackageScore = finPackageScore;
 	}
 
 
