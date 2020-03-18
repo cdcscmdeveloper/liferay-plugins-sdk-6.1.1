@@ -7113,6 +7113,10 @@ public class EvaluationBackingBean extends
 						&& this.getManagedBean().getPresentationDemoActiveIndex() == 1){
 					retrieveReportTabDtl();	
 				}
+				else if(this.getManagedBean().getComplianceActiveIndex() == 3){
+					retrieveReportTabDtl();	
+				}
+				
 				
 			} else if (outputTab == 5) {
 				retriveCommitteeEndorsment();
