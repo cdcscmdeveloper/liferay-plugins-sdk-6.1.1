@@ -20,7 +20,7 @@ public class PendingPaymentRest {
 	@GET
 	@Path("smpendingprocess") 
 	public Response retrievePending(@Context HttpServletRequest req) {
-		log.info("Before success calling retrieve rest api....");
+		log.info("Before success calling retrieve rest api....PendingPaymentRestTesting");
 		String remoteHost = req.getRemoteHost();
 	    String remoteAddr = req.getRemoteAddr();
 	    int remotePort = req.getRemotePort();
