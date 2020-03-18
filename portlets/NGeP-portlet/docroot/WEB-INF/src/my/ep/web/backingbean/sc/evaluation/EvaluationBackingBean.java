@@ -7026,6 +7026,70 @@ public class EvaluationBackingBean extends
 					checkMeetingDetailsAndStatus(this.getManagedBean()
 							.getScQtMeetings());
 				}
+				else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
+						.equalsIgnoreCase(this.getManagedBean()
+								.getCommitteeType())
+						&& this.getManagedBean()
+								.getCurrentStatusId()
+								.equals(QTStatusConst.FEC_PENDING_ENDORSEMENT)
+						&& this.getManagedBean().isReadOnly()) {
+					if (currentTab == 2) {
+
+						if (this.getManagedBean()
+								.getEvaluatioStageActiveIndex() < 1) {
+							
+							if(this.getManagedBean().getTabFinancialIndex() >= 1 ){
+								financialCheckListStatusCheck();
+								retriveFinancialEvaluationStagePackage();
+								this.getManagedBean().setTabFinancialIndex(2);	
+								outputTab = 2;		
+							
+							}
+							
+						}else if (this.getManagedBean()
+								.getEvaluatioStageActiveIndex() == 1){
+							retriveSummaryEvaluationStage();
+//							retriveOneTierFinancialSupplierSummary();
+							this.getManagedBean().setTabFinancialIndex(2);	
+							outputTab = 2;
+						}
+
+					}
+					checkMeetingDetailsAndStatus(this.getManagedBean()
+							.getScQtMeetings());
+				}
+				else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
+						.equalsIgnoreCase(this.getManagedBean()
+								.getCommitteeType())
+						&& this.getManagedBean()
+								.getCurrentStatusId()
+								.equals(QTStatusConst.FEC_PENDING_SIGN_OFF)
+						&& this.getManagedBean().isReadOnly()) {
+					if (currentTab == 2) {
+
+						if (this.getManagedBean()
+								.getEvaluatioStageActiveIndex() < 1) {
+							
+							if(this.getManagedBean().getTabFinancialIndex() >= 1 ){
+								financialCheckListStatusCheck();
+								retriveFinancialEvaluationStagePackage();
+								this.getManagedBean().setTabFinancialIndex(2);	
+								outputTab = 2;		
+							
+							}
+							
+						}else if (this.getManagedBean()
+								.getEvaluatioStageActiveIndex() == 1){
+							retriveSummaryEvaluationStage();
+//							retriveOneTierFinancialSupplierSummary();
+							this.getManagedBean().setTabFinancialIndex(2);	
+							outputTab = 2;
+						}
+
+					}
+					checkMeetingDetailsAndStatus(this.getManagedBean()
+							.getScQtMeetings());
+				}
 				/*
 				 * if
 				 * (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
@@ -13361,9 +13425,11 @@ private void retriveCommitteeRemarksList(){
 						ScQtProposalAmount scQtProposalAmount = new ScQtProposalAmount();
 						scQtProposalAmount.setTotalScore(
 								list.getScQtProposal().getProposalAmount().getTotalScore());
+						this.getManagedBean().setFinPackageScore(true);
 						
 						if(scQtProposalAmount.getTotalScore().intValue() > this.getManagedBean()
 								.getWithInVarieance().intValue()){
+							this.getManagedBean().setFinPackageScore(false);
 							throw new EpException(MessageConst.ERROR_760201);
 						
 						}
@@ -13371,9 +13437,11 @@ private void retriveCommitteeRemarksList(){
 					else{
 						amountScore.setTotalScore(
 								list.getScQtProposal().getProposalAmount().getTotalScore());
-						
+								this.getManagedBean().setFinPackageScore(true);
+								
 						if(amountScore.getTotalScore().intValue() > this.getManagedBean()
 								.getWithInVarieance().intValue()){
+							this.getManagedBean().setFinPackageScore(false);
 							throw new EpException(MessageConst.ERROR_760201);
 						
 						}
