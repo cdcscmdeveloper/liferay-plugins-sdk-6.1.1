@@ -265,6 +265,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				smSupplierOwner.setIdentificationNo(smSupplierOwner.getIdentificationNo());
 				smSupplierOwner.setIdentificationType(identificationType);
 				smSupplierOwner.setIdentificationTypeId(identificationType.getParameterId());
+				//SSM CHANGES #27214
+				smSupplierOwner.setTempCountryId(indNationality.getCountryId());
+				smSupplierOwner.setNationalityNull(true);
 				smSupplierOwner.setShowTextField(true);
 				this.getManagedBean().getSmSuppOwners().add(smSupplierOwner);
 			}
@@ -4014,23 +4017,25 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	
 	//16052019 - SSM INTEGRATION CR START
 	public void validateBusinessType() {
-		String businessType = getManagedBean().getSmSupp().getBusinessType().toUpperCase();
-		switch(businessType){
-			//ROB PARTNERSHIP must > 1 owners
-			case SupplierManagementConst.BUSINESS_TYPE_ROB_PARTNERSHIP:
-				if(getManagedBean().getSmSuppOwners().size() <= 1) {
-					throw new EpException(MessageConst.ERROR_721077);
-				}
-				break;
-			//ROB SOLE PROPRIETOSHIP must <= 1 owner
-			case SupplierManagementConst.BUSINESS_TYPE_ROB_SOLE_PROPRIETORSHIP:
-				if(getManagedBean().getSmSuppOwners().size() > 1) {
-					throw new EpException(MessageConst.ERROR_721077);
-				}
-				break;
-			default:
-				break;
-		}
+			if(SmCommonUtil.getInstance().ssmActive()){
+				String businessType = getManagedBean().getSmSupp().getBusinessType().toUpperCase();
+				switch(businessType){
+					//ROB PARTNERSHIP must > 1 owners
+					case SupplierManagementConst.BUSINESS_TYPE_ROB_PARTNERSHIP:
+						if(getManagedBean().getSmSuppOwners().size() <= 1) {
+							throw new EpException(MessageConst.ERROR_721077);
+						}
+						break;
+					//ROB SOLE PROPRIETOSHIP must <= 1 owner
+					case SupplierManagementConst.BUSINESS_TYPE_ROB_SOLE_PROPRIETORSHIP:
+						if(getManagedBean().getSmSuppOwners().size() > 1) {
+							throw new EpException(MessageConst.ERROR_721077);
+						}
+						break;
+					default:
+						break;
+				}	
+			}				
 	}
 	//16052019 - SSM INTEGRATION CR END
 	
