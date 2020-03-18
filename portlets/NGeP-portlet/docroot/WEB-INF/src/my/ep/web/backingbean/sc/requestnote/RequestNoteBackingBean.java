@@ -5285,6 +5285,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			sb.append(RoleCode.REQUISITIONER.value());
 			sb.append("|pmUserOrgs.pmUserRoles.recordStatus^1");
 	     	this.getManagedBean().setAvailableUsers(getPreparedByApprove(requestNoteDtl));	
+	     	log.info("Available Users");
 			return sb.toString();
 		}
 		//26221-End
