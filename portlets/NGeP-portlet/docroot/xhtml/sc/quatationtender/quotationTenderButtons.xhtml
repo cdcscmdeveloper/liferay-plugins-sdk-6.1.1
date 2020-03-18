@@ -10,7 +10,11 @@
 	<ui:param name="isQTStatusPendingQtSubmission" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_QT_SUBMISSION}" />
 	<ui:param name="isQTStatusPendingScheduleAndBefore" value="#{qTDetailBB.isQTStatusLessThanOrEquals(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
 	<ui:param name="isClone1" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_QT_SUBMISSION}" />
-	<ui:param name="isClone2" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT}" />		
+	<ui:param name="isClone2" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT}" />	
+	<!-- 26095@hatta - start -->
+	<ui:param name="isQTClosePermanently" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_CLOSE_PERMANENTLY}" />
+	<ui:param name="iscloseQTIfValidityPeriodExpiredAndStatusRelated" value="#{qTDetailBB.closeQTIfValidityPeriodExpiredAndStatusRelated()}" />
+	<!-- 26095@hatta - end -->
 		<table width="100%">
 		<tr>
 		<td style="vertical-align: bottom;" align="right"><p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
@@ -111,14 +115,16 @@
 								disabled="#{qTDetailBB.isQTStatusPublished(qTDetailBB.managedBean.qt.qtStatus.statusId) and 
 								(empty qTDetailBB.managedBean.amendMentBean or !qTDetailBB.managedBean.amendMentBean.brandNew) and !qTDetailBB.managedBean.changesOnQTMaintenance}" />
 						</c:otherwise>
-				</c:choose>
-				
-										
-				
-				
+				</c:choose> 
+				<!-- 26095@hatta - start -->
+				<c:if test="#{iscloseQTIfValidityPeriodExpiredAndStatusRelated}">
+					<p:commandButton value="#{lbl['lbl.sc.qt.close']}" process="@this" style="float:right;"
+			  	       action="#{qTDetailBB.closeQTDialogPopUp}" disabled="#{isQTClosePermanently}" />	
+			  	</c:if>		
+			  	<!-- 26095@hatta - end -->
 				<c:if test="#{qTDetailBB.isQTStatusInBetween(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_QT_SUBMISSION, QTStatusConst.QT_PENDING_LOA)}">
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
-						style="float:right;margin-right: 12px;" 
+						style="float:right;" 
 						action="#{qTDetailBB.checkIsQTAllowCancel}" disabled="#{qTDetailBB.managedBean.qt.brandNew}"/>
 				</c:if>
 			</c:if>
@@ -145,5 +151,24 @@
 					onclick="cancelQTDlg.hide();" type="button" partialSubmit="true"  process="@this"/>
 			</div>
 		</p:dialog>
-	
+		<!-- 26095@hatta - start -->
+		<p:dialog id="closeQTDlg" widgetVar="closeQTDlg"
+			header="#{lbl['lbl.sc.qt.close.confirmation']}" resizable="false"
+			width="auto" height="100" closable="false">
+			<table>
+				<tr>
+					<td align="center"><p:outputLabel
+							value="#{lbl['lbl.sc.qt.close.dialog.confirmation']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
+					oncomplete="closeQTDlg.hide();" partialSubmit="true" process="@this"
+					action="#{qTDetailBB.closeQtDetails}" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" 
+					onclick="closeQTDlg.hide();" type="button" partialSubmit="true"  process="@this"/>
+			</div>
+		</p:dialog>
+		<!-- 26095@hatta - end -->
 </ui:composition>

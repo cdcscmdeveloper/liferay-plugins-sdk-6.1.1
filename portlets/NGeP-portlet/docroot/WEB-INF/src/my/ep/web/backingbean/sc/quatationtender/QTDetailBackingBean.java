@@ -7375,6 +7375,292 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	}
 	/* ***25692#95 - end */
 
+	// 26095@hatta - start
+			/**
+			 * will be called in close QT only..
+			 * @return the string go to page
+			 */
+			public String closeQtDetails() { 
+				debugLogger("closeQtDetails");
+				
+				IQTDetailSO detailSO;
+				try {
+					detailSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+					QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+					ScQt scQt = this.getManagedBean().getQt();
+					
+						quationTenderReqDTO.setQtId(scQt.getQtId());
+						QuationTenderResDTO resDTO = detailSO.retrieveCloseQTByQtIdNType(quationTenderReqDTO);
+						this.getManagedBean().setQt(resDTO.getQtDetail());
+						ScQt QtDetail = resDTO.getQtDetail();
+						
+					    List<ScCloseQTRemark> qtRemarks =  initializeRemarks(
+					    		                           QtDetail, 
+								                           this.getManagedBean().getQt().getCurrentWorkFlowStatus(),
+								                           QtDetail.getScCloseQTRemark(),
+								                           ScCloseQTRemark.class);
+			
+						for(ScCloseQTRemark qtRemark : qtRemarks) {
+							qtRemark.setEditable(false);
+						}
+						
+						this.getManagedBean().getQt().setScCloseQTRemark(qtRemarks);
+
+					return "/xhtml/sc/quatationtender/closeQuotationTender.xhtml";
+
+				
+					
+				} finally {
+					detailSO=null;
+				}
+			}
+			
+			
+			/**
+			 * Check in the validity period expired and status related. 
+			 * 
+			 * @return the true or false.
+			 */
+			public boolean closeQTIfValidityPeriodExpiredAndStatusRelated(){
+				ScQt scQt = this.getManagedBean().getQt();
+				Long parentstatusId = this.getManagedBean().getQt().getQtStatus().getStatusId();
+				boolean isCloseQT = false;
+				
+		     
+				if (scQt.getProposalStartDate() != null && this.getManagedBean().getCurrentDate() != null 
+						&& this.getManagedBean().getCurrentDate().after(scQt.getProposalValidityEndDate())) {
+					IScWorkFlowStatusSO workFlowStatusSO;
+					try {
+						workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+								ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+						    ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+						    reqDTO.setDocId(scQt.getQtId());
+						    
+						    if (QTStatusConst.QT_SUPPLIER_FINALIZATION.equals(parentstatusId)) { // (P)60011
+								reqDTO.setDocType(ParameterConst.DOCTYPE_COMMITTE_APROVAL); // CMT
+								ScWorkFlowStatus childStatusCA = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+								if(QTStatusConst.CMT_COMPLETED.equals(childStatusCA.getPmStatus().getStatusId()) ||
+								   QTStatusConst.CMT_PENDING_ASSIGN_FC_MEMBER.equals(childStatusCA.getPmStatus().getStatusId())){   
+									isCloseQT = false; // 60202 | 60206
+							    }else{
+							    	isCloseQT = true;  // 60200 | 60201 | 60203 | 60204 | 60205 
+							}}
+						    if (QTStatusConst.QT_RE_FINALIZATION.equals(parentstatusId)) { // (P)60017
+//							    reqDTO.setDocType(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION); // SF
+//								ScWorkFlowStatus childStatusSF = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+//								if(QTStatusConst.SF_PENDING_CONFIRMATION_COMMITTEE.equals(childStatusSF.getPmStatus().getStatusId()) ||
+//					    	       QTStatusConst.SF_PENDING_ESCALATION_TO_BPK.equals(childStatusSF.getPmStatus().getStatusId()) ||
+//					    		   QTStatusConst.SF_PENDING_SCHEDULE_BIDDING.equals(childStatusSF.getPmStatus().getStatusId()) ||
+//					    		   QTStatusConst.SF_PENDING_BIDDING_FINALIZATION.equals(childStatusSF.getPmStatus().getStatusId()) ||
+//					    		   QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION.equals(childStatusSF.getPmStatus().getStatusId()) ||
+//					    		   QTStatusConst.SF_PENDING_ENDORSEMENT.equals(childStatusSF.getPmStatus().getStatusId()) ||
+//					    		   QTStatusConst.SF_PENDING_SIGN_OFF.equals(childStatusSF.getPmStatus().getStatusId()) ||
+//					    		   QTStatusConst.SF_PENDING_SCHEDULE_BIDDING.equals(childStatusSF.getPmStatus().getStatusId())) {
+							    	isCloseQT = true; // 62200 | 62202 | 62204 | 62208 | 62209 | 62210 | 62211 | 62213 |
+//						        }
+							}
+				    	    if(QTStatusConst.QT_PENDING_LOI.equals(parentstatusId)){ // (P)60012
+				            	reqDTO.setDocType(ParameterConst.DOCTYPE_LETTER_OF_INTENT); // LI
+								ScWorkFlowStatus childStatusLI = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+								if(QTStatusConst.LOI_PENDING_SUBMISSION.equals(childStatusLI.getPmStatus().getStatusId()) ||
+								   QTStatusConst.LOI_PENDING_APPROVAL.equals(childStatusLI.getPmStatus().getStatusId()) ||
+								   QTStatusConst.LOI_PENDING_SUBMISSION.equals(childStatusLI.getPmStatus().getStatusId()) ||
+								   QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(childStatusLI.getPmStatus().getStatusId()) || 
+								   QTStatusConst.LOI_PENDING_REVISION_APPROVAL.equals(childStatusLI.getPmStatus().getStatusId())){   
+									isCloseQT = true; // 62400 | 62401 | 62402 | 62403 | 62407
+						    }}
+				    	    if(QTStatusConst.QT_PENDING_LOA.equals(parentstatusId)){ // (P)60013
+					        	reqDTO.setDocType(ParameterConst.DOCTYPE_LETTER_OF_AWARD); // LA
+								ScWorkFlowStatus childStatusLA = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+								if(QTStatusConst.LOA_PENDING_SUBMISSION.equals(childStatusLA.getPmStatus().getStatusId()) ||
+								   QTStatusConst.LOA_PENDING_APPROVAL.equals(childStatusLA.getPmStatus().getStatusId()) ||
+								   QTStatusConst.LOA_PENDING_REVISION.equals(childStatusLA.getPmStatus().getStatusId()) || 
+								   QTStatusConst.LOA_PENDING_REVISION_APPROVAL.equals(childStatusLA.getPmStatus().getStatusId())){   
+									isCloseQT = true; // 60500 | 60501 | 60502 | 60508
+						    }}
+				    	    if(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH.equals(parentstatusId) || 
+						    	   QTStatusConst.QT_PENDING_SPECIFICATION_COMMITTEE_APPOINTMENT.equals(parentstatusId) ||
+						    	   QTStatusConst.QT_CLOSE_PERMANENTLY.equals(parentstatusId) ){
+				    	            isCloseQT = true; // (P)60034 | (P)60033 | (P)60045
+				    	    }    
+					}
+					finally {
+						workFlowStatusSO = null;
+					}	    
+					  
+				}
+				
+			   return isCloseQT;	
+			}
+			
+			/**
+			 * check Close QT Dialog Pop Up
+			 * @return true 
+			 */
+			public void closeQTDialogPopUp() {
+			   RequestContext.getCurrentInstance().execute("closeQTDlg.show()");
+			}	
+
+			/**
+			 * Upload attachment for Close QT 
+			 */
+			public void handleCloseQTFileUpload(FileUploadEvent event)
+					throws FileNotFoundException, IOException {
+				if(event.getFile() != null){
+						ScAttachment scAttachment = null;
+						ScCloseQTAttachment attachment = new ScCloseQTAttachment();
+						ScQt scQt = this.getManagedBean().getQt();
+						
+						List<ScCloseQTAttachment> attachments = scQt.getScCloseQTAttachment();
+						attachment.setScQt(scQt);
+						attachment.setDocNo(scQt.getQtNo());
+						
+						 if(attachments == null){
+						   attachments = new ArrayList<>();
+					     }
+						
+						 attachments.add(attachment);
+						    
+						 if(attachments.size() == 1){
+				    	    scQt.setScCloseQTAttachment(attachments);
+							scAttachment = attachment;
+							uploadAttachment(event.getFile(), scAttachment);
+							this.getManagedBean().setQt(scQt);
+					     }else{
+				    	    attachments.remove(attachment);	 
+				    	    attachments.clear();
+				    	    if(attachments.isEmpty()){
+				    	    	throw new EpException(MessageConst.ERROR_100063);
+				    	    }
+					     }
+				}
+			}
+			
+			/**
+			 * Delete attachment for Close QT by index
+			 * @param index  file index to delete
+			 */
+			public void deleteCloseQTAttachmentAction(int index){
+				this.getManagedBean().getQt().getScCloseQTAttachment().remove(index);
+			}
+			
+			/**
+			 * The method used to set the file index of attachment list.
+			 * @param index  file index of attachment list
+			 */
+			public void setAttachFileIndex(int index) {
+				this.getManagedBean().setAttachFileIndex(index);
+			}
+
+			
+			/**
+			 * Submit close QT details is succesful.
+			 */
+			public void submitCloseQTDetail() { 
+				IQTDetailSO detailSO;
+				try {
+					this.getManagedBean().setSaveFlow(false);
+					detailSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class); 
+					
+						QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+						ScQt qt = this.getManagedBean().getQt();
+						
+						validationCloseQT(qt.getScCloseQTRemark(),qt.getScCloseQTAttachment());
+						
+					    if (isQTStatusPublished(qt.getQtStatus().getStatusId())) {
+							quationTenderReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+							finalizeRemarks(qt.getScCloseQTRemark());
+							qt.setScQtCommittees(null);
+							qt.setScQtBriefings(null);
+							qt.setScQtStatus(null);
+							qt.setScQtApprovals(null);
+							quationTenderReqDTO.setQtdetail(qt);
+						    quationTenderReqDTO.setQtClose(true);
+						
+						}
+						
+						QuationTenderResDTO quationTenderResDTO = detailSO.closeQT(quationTenderReqDTO);
+						
+						if (quationTenderResDTO.isSuccessful()) {
+							successMessage(MessageConst.INFO_700036, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION,
+									qt.getQtNo(), Boolean.TRUE);
+						}
+				        
+				} finally {
+					detailSO = null;
+				}
+			}
+			
+			/**
+			 * Validation for close QT detail.
+			 * @return the list remark and list attachment
+			 */
+			private void validationCloseQT(List<ScCloseQTRemark> remark,List<ScCloseQTAttachment> attachment) {
+				if (null != remark) {
+					for (int i = 0; i < remark.size(); i++) {
+						String userRemark = remark.get(i).getRemark();
+						if (null == userRemark || "".equals(userRemark)) {
+							throw new EpException(MessageConst.ERROR_100022,new String[] { 
+								ResourceBundleUtils.getMessage("lbl.sc.sf.justification", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()) });
+						}
+					}
+				}
+			    if(CollectionUtils.isEmpty(attachment)){
+		    			throw new EpException(MessageConst.ERROR_100022,new String[] { 
+						        ResourceBundleUtils.getMessage("lbl.sc.supporting.document", 
+								    ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()) });
+			    }
+			}
+			
+			public List<ScCloseQTRemark> findCloseQTRemarksByReqDTO(QuationTenderReqDTO reqDTO) {
+				IQTDetailSO qtDetailSO;
+				try {
+					qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);	
+					return qtDetailSO.findScCloseQTRemarks(reqDTO).getScCloseQTRemark();
+				} finally {
+					qtDetailSO = null;
+				}
+			}
+			
+            public String getUsername(){
+            	String userName = null;
+				QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+				List<ScCloseQTRemark> remarks = new ArrayList<>();
+				
+				ScQt qt = this.getManagedBean().getQt();
+				quationTenderReqDTO.setQtId(qt.getQtId());
+				quationTenderReqDTO.setDocType(ParameterConst.DOCTYPE_QT_CLOSE);
+				
+				remarks = findCloseQTRemarksByReqDTO(quationTenderReqDTO);
+				
+				for(ScRemark remark:remarks){
+					userName = remark.getCreatedUser().getUserName();
+				}
+				
+			    return userName;   
+			}
+            
+            public String getUserLoginId(){
+            	String userLoginId = null;
+				QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+				List<ScCloseQTRemark> remarks = new ArrayList<>();
+				
+				ScQt qt = this.getManagedBean().getQt();
+				quationTenderReqDTO.setQtId(qt.getQtId());
+				quationTenderReqDTO.setDocType(ParameterConst.DOCTYPE_QT_CLOSE);
+				
+				remarks = findCloseQTRemarksByReqDTO(quationTenderReqDTO);
+				
+				for(ScRemark remark:remarks){
+					userLoginId = remark.getCreatedUser().getLoginId();
+				}
+			    return userLoginId;   
+			}
+			// 26095@hatta - end
 }
 
 
