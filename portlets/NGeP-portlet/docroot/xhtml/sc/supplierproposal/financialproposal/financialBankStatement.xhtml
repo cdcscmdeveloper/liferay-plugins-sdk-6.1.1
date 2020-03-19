@@ -9,15 +9,16 @@
 
 	<p:panel id="finBankStatementPanel" header="#{lbl['lbl.sc.spec.bank.statement']}"
 		toggleable="true">
+		
 		<h:outputText styleClass="instruction"
-			value="1. #{lbl['lbl.sc.sp.btn.complete.instruction']}"
+			value="1. #{lbl['lbl.sc.sp.btn.complete.instruction1']}"
 			escape="false"
-			rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly}" />
+			rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly}"  />
 		<br></br>
 		<h:outputText styleClass="instruction"
 			value="2. #{lbl['lbl.sc.spec.bank.statement.supplier.instruction']}"
 			escape="false"
-			rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly}" />
+			 rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly}" />
 
 		<p:dataTable id="bankstatmentsid" var="bankstmt"
 			value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPBankStmts}"
