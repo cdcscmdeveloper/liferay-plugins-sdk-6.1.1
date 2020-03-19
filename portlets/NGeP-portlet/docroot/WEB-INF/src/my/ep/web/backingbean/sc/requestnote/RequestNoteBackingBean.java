@@ -5224,14 +5224,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		if(requestNote != null){
 			docNo = requestNote.getRequestNoteNo();
 			
-			if(requestNote.getCurrentStatus() == null){
-				if(getManagedBean().getCurrentStatusId() != null){
-					currentStatusId = getManagedBean().getCurrentStatusId();
-				}			
+			if(requestNote.getCurrentStatus() != null){
+				currentStatusId = requestNote.getCurrentStatus().getPmStatus().getStatusId();		
 			}else{
-				currentStatusId = requestNote.getCurrentStatus().getPmStatus().getStatusId();
+				currentStatusId = getManagedBean().getCurrentStatusId();
 			}	
-		
+			
+			if(currentStatusId == null){
+				return false;
+			}
+			
 		    if(currentStatusId.equals(DPStatusConstants.RN_PENDING_SUBMISSION)
 		    	  || currentStatusId.equals(DPStatusConstants.RN_PENDING_APPROVAL)
 		    	  || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION) 
