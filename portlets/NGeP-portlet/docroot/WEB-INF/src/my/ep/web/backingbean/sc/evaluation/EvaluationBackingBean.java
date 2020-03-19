@@ -1170,7 +1170,7 @@ public class EvaluationBackingBean extends
 		} finally {
 
 		}/*#25138-Ahmaa- Start*/
-		if(this.getManagedBean().getNonScoringActiveIndex() == 0){
+		if(this.getManagedBean().getNonScoringActiveIndex() != 1){
 			if (SourcingConstants.TECHINICAL_STAGE.equals(checkListType)) {
 				
 				return "/xhtml/sc/evaluation/compliance/technicalComplianceEditSuppliers.xhtml";
@@ -1574,7 +1574,7 @@ public class EvaluationBackingBean extends
 		IQTEvaluationSO evaluationSO = null;
 		EvaluationResDTO resDTO = null;
 		this.getManagedBean().setComplianceActiveIndex(0);
-		this.getManagedBean().setNonScoringActiveIndex(0);//#25138
+//		this.getManagedBean().setNonScoringActiveIndex(0);//#25138
 		try {
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
@@ -6480,6 +6480,7 @@ public class EvaluationBackingBean extends
 						retriveTechnicalEvaluationStage();
 						retriveComplianceTechnical();
 						this.getManagedBean().setTabFinancialIndex(0);
+						this.getManagedBean().setTabTechnicalIndex(1);
 							
 					}
 					
