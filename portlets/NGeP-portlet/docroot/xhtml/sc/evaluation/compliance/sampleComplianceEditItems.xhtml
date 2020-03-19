@@ -24,7 +24,7 @@
 						immediate="true"
 						action="#{evaluationBackingBean.evaluationBackaction}" /> <p:commandButton
 						value="#{lbl['lbl.btn.save']}"
-						disabled="#{evaluationBackingBean.managedBean.statusOnly or evaluationBackingBean.managedBean.complianceReEvaluateRequired}"
+						disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.statusOnly or evaluationBackingBean.managedBean.complianceReEvaluateRequired}"
 						style="float:right;" update="@all" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();"
 						action="#{evaluationBackingBean.saveComplianceSample}" /></td>
@@ -93,7 +93,7 @@
 						<h:outputText value="#{lbl['lbl.sc.submission.status']}"></h:outputText>
 					</f:facet>
 					<p:selectOneMenu id="sampleSubmissionId"
-						disabled="#{evaluationBackingBean.managedBean.statusOnly or evaluationBackingBean.managedBean.complianceReEvaluateRequired}"
+						disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.statusOnly or evaluationBackingBean.managedBean.complianceReEvaluateRequired}"
 						label="#{lbl['lbl.sc.submission.status']}"
 						value="#{sampleItem. submissionStatus.parameterId}">
 
