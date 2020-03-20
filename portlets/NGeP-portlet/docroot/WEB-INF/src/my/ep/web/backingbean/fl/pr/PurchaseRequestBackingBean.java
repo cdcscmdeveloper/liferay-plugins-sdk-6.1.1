@@ -3329,7 +3329,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				IRuleSO ruleSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
 				RuleReqDTO ruleReqDTO = new RuleReqDTO();
 				RuleResDTO roleResDTO = null;
-				ruleReqDTO.setRuleType(RuleTypeConst.LOA_RESPONSE_PERIOD);
+				ruleReqDTO.setRuleType(RuleTypeConst.LO_PO_ACKNOWLEDGMENT_PERIOD); //#25147
 				roleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
 				if(roleResDTO.isSuccessful() && roleResDTO.getRuleValueList()!=null && roleResDTO.getRuleValueList().size()>0) {
 					getManagedBean().setTaskDeadLine(roleResDTO.getRuleValueList().get(0).getRuleValue());
