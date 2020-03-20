@@ -83,10 +83,9 @@
 				<td><p:outputLabel styleClass="outputLabel-view-label"
 						value="#{lbl['lbl.sm.disciplinary.jktt.punishment.type']}" /></td>
 				<td><p:spacer width="5" />
-					<!-- Warning is only allowed once per supplier and cannot be selected again -->
+					<!-- 26238 : Disciplinary Action -->
 					<p:selectBooleanCheckbox  value="#{supplierDataMaintenanceBackingBean.managedBean.warning}"
-						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance 
-						or supplierDataMaintenanceBackingBean.managedBean.warningExist}" style="float:left">
+						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}" style="float:left">
 			            <p:ajax event="change" partialSubmit="true" process="@this"
 							listener="#{supplierDataMaintenanceBackingBean.onTickPunishmentType()}"
 							update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
