@@ -105,12 +105,29 @@
 							<h:outputLabel style="font-weight: bold;" value="#{lbl['lbl.cm.color']}"/>
 				    </c:when>
 					<c:otherwise>
-						<h:outputLabel style="font-weiRght: bold;" value="#{lbl['lbl.cm.type']}" />
-					</c:otherwise>
+				</c:otherwise>
 				</c:choose></td>
-				<td width="30%">			
-			 	<p:inputText style="width:190px;"
-						     value="#{codificationMaintenanceBackingBean.managedBean.extension}"></p:inputText></td>
+				<td width="30%">
+				<c:choose>
+					<c:when test="#{codificationMaintenanceBackingBean.managedBean.data eq 't'}">
+					  <p:inputText id="extensionName" style="width:190px;"
+						 value="#{codificationMaintenanceBackingBean.managedBean.extension}"></p:inputText>
+					</c:when>
+					<c:when test="#{codificationMaintenanceBackingBean.managedBean.data eq 'b'}">
+					   <p:inputText id="extensionName" style="width:190px;"
+					      value="#{codificationMaintenanceBackingBean.managedBean.extension}"></p:inputText>				
+				    </c:when>
+				    <c:when test="#{codificationMaintenanceBackingBean.managedBean.data eq 'm'}">
+					   <p:inputText id="extensionName" style="width:190px;"
+					      value="#{codificationMaintenanceBackingBean.managedBean.extension}"></p:inputText>				
+				    </c:when>
+				     <c:when test="#{codificationMaintenanceBackingBean.managedBean.data eq 'c'}">
+						<p:inputText id="extensionName" style="width:190px;"
+					       value="#{codificationMaintenanceBackingBean.managedBean.extension}"></p:inputText>	
+				    </c:when>
+					<c:otherwise>
+				</c:otherwise>
+				</c:choose></td>			
 		     </tr>
 		     <tr>
 				<td width="15%"><p:outputLabel style="font-weight: bold;"
@@ -158,7 +175,7 @@
 						#{lbl['lbl.cm.color']}
 				    </c:when>
 					<c:otherwise>
-					    #{lbl['lbl.cm.type']}
+					   #{lbl['lbl.cm.extension.attr']}
 					</c:otherwise>
 				</c:choose>
 				</f:facet>
