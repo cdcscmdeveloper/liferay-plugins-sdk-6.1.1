@@ -415,9 +415,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 								getManagedBean().setItemProductExist(true);
 							}else{
 								getManagedBean().setItemProductExist(false);
+								getManagedBean().setItemProductNotExist(true);
 							}
 							//getManagedBean().prodValue(true);
 							getManagedBean().setItemServiceExist(false);
+							getManagedBean().setItemServiceNotExist(false);
 							//log.info("Search function executed Prodcut"+ParameterConst.ITEM_TYPE_PRODUCT+"  "+getManagedBean().getItemtype()); 						
 						}else if(getManagedBean().getItemtype().equals(ParameterConst.ITEM_TYPE_SERVICE)){
 							  getManagedBean().getContractListingPagingDataModel().resetData();
@@ -426,9 +428,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 								getManagedBean().setItemServiceExist(true);  
 							  }else{
 								  getManagedBean().setItemServiceExist(false); 
+								  getManagedBean().setItemServiceNotExist(true);
 							  }
 							 // getManagedBean().serviceValue(true);
 								getManagedBean().setItemProductExist(false);
+								getManagedBean().setItemProductNotExist(false);
 								
 							//log.info("Search function executed Service"+ParameterConst.ITEM_TYPE_SERVICE+"  "+getManagedBean().getItemtype()); 
 						}else if(getManagedBean().getItemtype().equals(ParameterConst.ITEM_TYPE_PRODUCT_AND_SERVICE)){
@@ -439,12 +443,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 									getManagedBean().setItemProductExist(true);
 								}else{
 									getManagedBean().setItemProductExist(false);
+									getManagedBean().setItemProductNotExist(false);
 								}
 								
 								  if(getManagedBean().getServiceListingPagingDataModel().getList() !=null){
 										getManagedBean().setItemServiceExist(true);  
 									  }else{
-										  getManagedBean().setItemServiceExist(false); 
+										  getManagedBean().setItemServiceExist(false);
+										  getManagedBean().setItemServiceNotExist(false);
 									  }							 
 							  //log.info("Search function executed Product and Service"+ParameterConst.ITEM_TYPE_PRODUCT_AND_SERVICE+"  "+getManagedBean().getItemtype()); 
 						}					
@@ -2494,6 +2500,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}			
 			//24333 - Start
 			if ((ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
+					&& ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq()
 					&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
 					&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
 							ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))){
@@ -2549,14 +2556,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					getManagedBean().setSelectedTabIndex(index + 1);				
 			}
 			
-			// 24333
+			// #24333 - Start
 			if(outputValue.equalsIgnoreCase("SE")){
 				if (isApproverSetting() && !getManagedBean().isPrepareLOA() 
-						&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq() ){
+						&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
+						&& ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq()
+						&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
+						&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+								ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE) ){
+					getManagedBean().setSelectedTabIndex(3);
+				}else{
 					getManagedBean().setSelectedTabIndex(2);
 				}
 			}
-
+			// #24333 - End
+			
 			if(!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange() || 
 					ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)){
 				if(ctBackingBean.getManagedBean().getContractVer() != null && ctBackingBean.getManagedBean().getContractVer().getCtAmendment() != null
@@ -2693,12 +2707,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 				//#20997- End
 
+				// #24333 - Start
 				if (isApproverSetting() && !getManagedBean().isPrepareLOA() && outputValue.equalsIgnoreCase("SE")
 					&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
+					&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
 					&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()) {
 					    getManagedBean().setSelectedTabIndex(index + 2);	
 					}			
 			} 
+			// #24333 - End
 			/*Menu for other started*/
 			else if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
 					&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY) ){
@@ -2828,7 +2845,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				if ((getManagedBean().isSignUpdateDecision() || getManagedBean().isSignOffDecision()) 
 						&& outputValue.equalsIgnoreCase("DCN")) {
 					getManagedBean().setConfirmMeeting(true);
-
+					//#24333 - Start for fix Decision TabValue
 					if (getManagedBean().isPbConfirmMeeting()){
 							if ((ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa() != null && ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq())
 									|| (ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq())) {
@@ -6098,7 +6115,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 
 		//Enhancement #26186 end - retrieve disciplinary info
-		
 		//#25890 - Start
 		private PmParameter retrieveParameterById(Long parameterId) {
 			if (parameterId == null) {
@@ -6113,7 +6129,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			PmParameter pmParameter = getParameterSO().retrieveParameterById(paramReqDTO).getPmParameter();
 			return pmParameter;
 		}
-		
+
 		private IParameterSO getParameterSO() {
 			return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 		}
