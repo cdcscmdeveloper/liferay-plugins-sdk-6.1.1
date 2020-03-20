@@ -1100,11 +1100,23 @@ public class SPDetailBackingBean extends
 										&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) > 0) {
 									answers.add(specAnswer);
 								
-								}else if (specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
-											&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0) {
+								}else if (specAnswer.getRatePerUom() != null
+											&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0) {
 									answers.add(specAnswer);
 								
-								}else if (specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
+								}else if (specAnswer.getRatePerUom() == null
+										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0) {
+								answers.add(specAnswer);
+							
+								}else if (specAnswer.getRatePerUom() == null
+										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0) {
+								answers.add(specAnswer);
+							
+								}else if (specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
+										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0) {
+								answers.add(specAnswer);
+							
+								}else if (specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
 										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0) {
 								answers.add(specAnswer);
 //#21695 farid IN MONITORING END	
