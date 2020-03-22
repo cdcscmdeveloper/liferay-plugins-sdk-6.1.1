@@ -235,7 +235,8 @@
 						  disabledSelection="#{!(isSecretaryUser or isBPKTaskAndClaimed) or 
 													shortlistedSupp.suppSelectionDisabled or 
 														suppFinalizationBackingBean.managedBean.disableSupplierSelection or isBidding 
-														or shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}" />
+														or (shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions
+														and !shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.warningDA)}" />
 			</p:dataTable>							 	    
 
 			<p:dataTable id="supplierListTblMultiple" var="shortlistedSupp" 
