@@ -1136,7 +1136,7 @@ u {
 				</table>
 			</span>
 		</td>
-	</tr>
+	</tr>  
 </table>
 #end
 #if($itemType =="1")
@@ -1302,13 +1302,15 @@ u {
 	 
 	 </table>
 	 
-	 #if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG" )	
+	 #if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")	
+	 	#set($rowCount = 0)
 		#if ($scLoa.scLoiLoa.docType == "NG")
 			#foreach( $tplspecMaster in $masters )
 				#set($itemType = $bean.getParameterDescForReport($tplspecMaster.itemTypeCode)) 
+				#set($specType = $bean.getParameterDescForReport($tplspecMaster.specTypeCode)) 
 				#if ($itemType == "Perkhidmatan" || $itemType == "Service")
 					#set($rowCount = 0)
-					<table width="100%" border="1" cellpadding="0" cellspacing="0">
+					<table width="110%" border="1" cellpadding="0" cellspacing="0">
 							<tbody>
 							
 								<tr>
@@ -1317,19 +1319,32 @@ u {
 									<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px;">Kekerapan / <br/>Unit Ukuran</th>
 									<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px;">Bil. Unit <br/>Ukuran Sehari</th>
 									<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px;">Bil. Unit <br/>Ukuran Sebulan</th>
+									
+									#if ($isZonal)
+										<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px;">Zon</th>
+									#end
+									
 									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px;">Kuantiti</th>
 									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px;">Skop Perkhidmatan / SLA</th>
 								</tr>
 								<tr>
-									<th bgcolor="#6d839b" class="title border left" colspan="5" style="text-align: center;">Spesifikasi</th>
+									#if ($isZonal)
+										<th bgcolor="#6d839b" class="title border left" colspan="6" style="text-align: center;">Spesifikasi</th>
+									#else
+										<th bgcolor="#6d839b" class="title border left" colspan="5" style="text-align: center;">Spesifikasi</th>
+									#end
 								</tr>
 								#foreach( $tplspecQuestion in $tplspecMaster.tplSpecQuestions )
 									<tr>
-										#if ($tplspecQuestion.specCount != "")
-										<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$tplspecQuestion.specCount">$tplspecQuestion.clItem</td>
+										#if ($tplspecQuestion.questionType == "I" )
+										<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$tplspecQuestion.specCount"><strong>$tplspecQuestion.clItem</strong></td>
 										#end
 										#if ($tplspecQuestion.questionType == "S")
-											<td bgcolor="#d0eaee"  class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;" colspan="7">$tplspecQuestion.clSpecDetail</td>
+											#if ($isZonal)
+												<td bgcolor="#d0eaee"  class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;" colspan="6">$tplspecQuestion.clSpecDetail</td>
+											#else
+												<td bgcolor="#d0eaee"  class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;" colspan="5">$tplspecQuestion.clSpecDetail</td>
+											#end
 										#else			
 											<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clUom.uomName</td>
 									<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">
@@ -1347,7 +1362,78 @@ u {
 											$tplspecQuestion.clUomPerMonth
 										#end
 									</td>
-									<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="$tplspecQuestion.specCount" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clQuantity</td>
+									
+									#if ($isZonal)
+										#if ($specType == "Financial" || $specType == "Kewangan")
+										<td bgcolor="#d0eaee">
+											#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
+											<table width="100%" border="1" cellpadding="0" cellspacing="0">
+												<tbody>
+												<tr style="border-bottom: 1px solid black;" >
+													#if ($tplSpecAnswer.tplSpecZoneQty.tplSpecZoneDtl.zoneName) 
+														<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$tplSpecAnswer.tplSpecZoneQty.tplSpecZoneDtl.zoneName</td>
+													#else
+														<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+													#end
+												</tr>
+												</tbody>
+												</table>
+											#end
+										</td>
+										
+										<td bgcolor="#d0eaee">
+											#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
+											<table width="100%"  border="1" cellpadding="0" cellspacing="0">
+												<tbody>
+												<tr style="border-bottom: 1px solid black;" >
+													#if ($tplSpecAnswer.tplSpecZoneQty.qty) 
+														<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$tplSpecAnswer.tplSpecZoneQty.qty</td>
+													#else
+														<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+													#end
+												</tr>
+												</tbody>
+												</table>
+											#end
+										</td>
+										
+										
+											
+									#else 
+									
+									  #if ($specType == "Techincal" || $specType == "Teknikal")
+											<td bgcolor="#d0eaee">
+												#foreach( $tplSpecZoneQtie in $tplspecQuestion.tplSpecZoneQties )
+												<table width="100%" border="1" cellpadding="0" cellspacing="0">
+													<tbody>
+													<tr style="border-bottom: 1px solid black;" >
+														<td rowspan="$tplSpecZoneQtie.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$tplSpecZoneQtie.tplSpecZoneDtl.zoneName</td>
+													</tr>
+													</tbody>
+													</table>
+												#end
+											</td>
+											
+											<td bgcolor="#d0eaee">
+												#foreach( $tplSpecZoneQtie in $tplspecQuestion.tplSpecZoneQties )
+												<table width="100%"  border="1" cellpadding="0" cellspacing="0">
+													<tbody>
+													<tr style="border-bottom: 1px solid black;" >
+														<td rowspan="$tplSpecZoneQtie.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$tplSpecZoneQtie.qty</td>
+													</tr>
+													</tbody>
+													</table>
+												#end
+											</td>
+											#else
+												<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+												<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+											#end
+										#end
+									#else 		
+										<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="$tplspecQuestion.specCount" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clQuantity</td>
+									#end
+									
 									<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="$tplspecQuestion.specCount" style="text-align: left; padding-left: 5px;">$serviceScope</td>
 										#end
 									</tr>
@@ -1362,9 +1448,9 @@ u {
 	  #else 
 	  	#foreach( $tplspecMaster in $masters )
 			#set($itemType = $bean.getParameterDescForReport($tplspecMaster.itemTypeCode)) 
+			#set($specType = $bean.getParameterDescForReport($tplspecMaster.specTypeCode)) 
 				#if ($itemType == "Perkhidmatan" || $itemType == "Service")
-					#set($rowCount = 0)
-					<table width="100%" border="1" cellpadding="0" cellspacing="0">
+					<table width="110%" border="1" cellpadding="0" cellspacing="0">
 						<tbody>
 						 #if ($rowCount == 0)
 							<tr>
@@ -1382,65 +1468,146 @@ u {
 							<tr>
 								<td bgcolor="#d0eaee" class="title border left" colspan="10" style="text-align: left;">&nbsp;</td>
 							</tr>
-						#end   
+						
 							<tr>
 								<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px;">Item</th>
 								<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px;">UOM</th>
 								<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px;">Kekerapan / <br/>Unit Ukuran</th>
 								<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px;">Bil. Unit <br/>Ukuran Sehari</th>
 								<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px;">Bil. Unit <br/>Ukuran Sebulan</th>
+								
+								#if ($isZonal)
+									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px;">Zon</th>
+								#end
+									
 								<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px;">Kuantiti</th>
 								<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px;">Maklumbalas</th>
 								<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px;">Catatan</th>
 								<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px;">Skop Perkhidmatan / SLA</th>
 							</tr>
 							<tr>
-								<th bgcolor="#6d839b" class="title border left" colspan="3" style="text-align: center;">Spesifikasi</th>
+								#if ($isZonal)
+									<th bgcolor="#6d839b" class="title border left" colspan="6" style="text-align: center;">Spesifikasi</th>
+								#else
+									<th bgcolor="#6d839b" class="title border left" colspan="5" style="text-align: center;">Spesifikasi</th>
+								#end
 							</tr>
+							
+						#end
+							
 							#foreach( $tplspecQuestion in $tplspecMaster.tplSpecQuestions )
 							<tr>
-								#if ($tplspecQuestion.specCount > 0)
-								<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$tplspecQuestion.specCount">$tplspecQuestion.clItem</td>
+								#if ($tplspecQuestion.questionType == "I" )
+								<td width="19%" valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$tplspecQuestion.specCount"><strong>$tplspecQuestion.clItem</strong></td>
 								#end
 								#if ($tplspecQuestion.questionType == "S")
-									<td bgcolor="#d0eaee"  class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;" colspan="3">$tplspecQuestion.clSpecDetail</td>
+									#if ($isZonal)
+										<td bgcolor="#d0eaee"  class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;" colspan="6">$tplspecQuestion.clSpecDetail</td>
+									#else
+										<td bgcolor="#d0eaee"  class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;" colspan="5">$tplspecQuestion.clSpecDetail</td>
+									#end
 								#else			
-									<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clUom.uomName</td>
-									<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">
+									<td width="10%" bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clUom.uomName</td>
+									<td width="10%" bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">
 										#if ($tplspecQuestion.clUomFrequency)
 											$tplspecQuestion.clUomFrequency
 										#end
 									</td>
-									<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">
+									<td width="10%" bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">
 										#if ($tplspecQuestion.clUomPerDay)
 											$tplspecQuestion.clUomPerDay
 										#end
 									</td>
-									<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">
+									<td width="10%" bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">
 										#if ($tplspecQuestion.clUomPerMonth)
 											$tplspecQuestion.clUomPerMonth
 										#end
 									</td>
-									<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="$tplspecQuestion.specCount" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clQuantity</td>
-									<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="$tplspecQuestion.specCount" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clAnswerRequired</td>
-									<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="$tplspecQuestion.specCount" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clReviewRemark</td>
-									<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="$tplspecQuestion.specCount" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+									
+									#if ($isZonal)
+										#if ($specType == "Financial" || $specType == "Kewangan")
+										<td bgcolor="#d0eaee">
+											#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
+											<table width="100%" border="1" cellpadding="0" cellspacing="0">
+												<tbody>
+												<tr style="border-bottom: 1px solid black;" >
+													#if ($tplSpecAnswer.tplSpecZoneQty.tplSpecZoneDtl.zoneName) 
+														<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$tplSpecAnswer.tplSpecZoneQty.tplSpecZoneDtl.zoneName</td>
+													#else
+														<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+													#end
+												</tr>
+												</tbody>
+												</table>
+											#end
+										</td>
+										
+										<td bgcolor="#d0eaee">
+											#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
+											<table width="100%"  border="1" cellpadding="0" cellspacing="0">
+												<tbody>
+												<tr style="border-bottom: 1px solid black;" >
+													#if ($tplSpecAnswer.tplSpecZoneQty.qty) 
+														<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$tplSpecAnswer.tplSpecZoneQty.qty</td>
+													#else
+														<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+													#end
+												</tr>
+												</tbody>
+												</table>
+											#end
+										</td>
+									#else 
+									
+									  #if ($specType == "Techincal" || $specType == "Teknikal")
+											<td bgcolor="#d0eaee">
+												#foreach( $tplSpecZoneQtie in $tplspecQuestion.tplSpecZoneQties )
+												<table width="100%" border="1" cellpadding="0" cellspacing="0">
+													<tbody>
+													<tr style="border-bottom: 1px solid black;" >
+														<td rowspan="$tplSpecZoneQtie.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$tplSpecZoneQtie.tplSpecZoneDtl.zoneName</td>
+													</tr>
+													</tbody>
+													</table>
+												#end
+											</td>
+											
+											<td bgcolor="#d0eaee">
+												#foreach( $tplSpecZoneQtie in $tplspecQuestion.tplSpecZoneQties )
+												<table width="100%"  border="1" cellpadding="0" cellspacing="0">
+													<tbody>
+													<tr style="border-bottom: 1px solid black;" >
+														<td rowspan="$tplSpecZoneQtie.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$tplSpecZoneQtie.qty</td>
+													</tr>
+													</tbody>
+													</table>
+												#end
+											</td>
+											#else
+												<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+												<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+											#end
+										#end
+									#else 		
+										<td width="10%" valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="$tplspecQuestion.specCount" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clQuantity</td>
+									#end
+									
+									<td width="10%" valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="$tplspecQuestion.specCount" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clAnswerRequired</td>
+									<td width="10%" valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="$tplspecQuestion.specCount" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clReviewRemark</td>
+									<td width="20%" valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="$tplspecQuestion.specCount" style="text-align: left; padding-left: 5px;">$serviceScope</td>
 								#end
-								</tr>
 								#end
 							</tbody>
 						</table>
-					<br/>
-					<br/>
 					#set($rowCount = $rowCount + 1)
 				#end
 			#end
 			
 		#end
 		
-	#end	
+		
 
-
+    #else 
 				
 	#if ($scLoa.scLoiLoa.docType == "PR")
 	  #set($rowCount = 0)
@@ -1567,39 +1734,40 @@ u {
 									</td>
 									
 									<td valign="top" bgcolor="#d0eaee" style="text-align: left; padding-left: 5px; font-size:12px;">
-									    #set($bol = true)
-													#foreach( $tplSpecZoneQties in $tplspecQuestion.tplSpecZoneQties )
-													<table width="100%" border="0" cellpadding="0" cellspacing="0">
+												#if($tplspecQuestion.tplSpecZoneQties)
+														  #if($tplspecQuestion.clQuantity)
+															$tplspecQuestion.clQuantity
+														  #else
+														   $serviceScope
+														  #end
+												
+												#else
+												#foreach( $tplSpecZoneQtie in $tplspecQuestion.tplSpecZoneQties )
+												<table width="100%"  border="1" cellpadding="0" cellspacing="0">
 													<tbody>
-													<tr style="border-bottom: 1px solid black; font-size:12px;" >
-													#set($bol = false)
-																			#if($tplSpecZoneQties.qty)
-																				  $serviceScope 
-																			#else
-																				 $tplSpecZoneQties.qty
-																			#end
+													<tr style="text-align: left; padding-left: 5px;" >
+														<td rowspan="$tplSpecZoneQtie.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">
+													       #if(($tplSpecZoneQtie.qty))
+															$tplSpecZoneQtie.qty 
+														   #else
+																$serviceScope  
+																 
+														    #end;
+														</td>
 													</tr>
 													</tbody>
 													</table>
-													#end
-													<table width="100%" border="0" cellpadding="0" cellspacing="0">
-													<tbody>
-													<tr style="border-bottom: 1px solid black; font-size:12px;" >
-													#if($bol)
-													 $serviceScope 
-													#end 
-													</tr>
-													</tbody>
-													</table>
-									</td>
+												#end
+												#end
+											</td>
 
 
 								<td  valign="top" bgcolor="#d0eaee" style="text-align: left; padding-left: 5px; font-size:12px;" >
 										
 										<table width="100%" border="0" cellpadding="0" cellspacing="0">
 											<tbody>
-											<tr style="border-bottom: 1px solid black;  font-size:12px;" >
-											
+											<tr style="text-align: left; padding-left: 5px; font-size:12px;" >
+										
 											#if(($tplspecQuestion.answerRemarks == "" ))
 												 $serviceScope 
 												#else
@@ -1759,6 +1927,7 @@ u {
 		</tr>
 	#end
 #end  
+#end
 
 <div class="break-after"><br/></div>
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
