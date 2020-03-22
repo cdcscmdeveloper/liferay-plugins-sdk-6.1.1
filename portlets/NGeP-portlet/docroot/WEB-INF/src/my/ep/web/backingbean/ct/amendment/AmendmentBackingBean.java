@@ -37,6 +37,7 @@ import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.agreement.IAgreementSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
@@ -60,6 +61,8 @@ import my.ep.dto.ct.agreement.ContractAgreementReqDTO;
 import my.ep.dto.ct.agreement.ContractAgreementResDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
@@ -4064,6 +4067,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	private boolean allowChairpersonRole(CtCommitteeMember committeeMember) {
 		boolean allowChairpersonRole = false;
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		//#26751
+		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 		
 		UserReqDTO userReqDTO = new UserReqDTO();
 		userReqDTO.setUserId(committeeMember.getPmUser().getUserId());
@@ -4123,13 +4128,35 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				
 				if (orgProfileId.longValue() == ctOwnerOrgProfileId.longValue()) {
 					allowChairpersonRole = true;
+				} else {
+					allowChairpersonRole = false;
 				}
 			}
 			
 			//Bug #26520 - start
 			if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)
 					|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)){
-				allowChairpersonRole = true;
+				//#26751 - start
+				PmOrgProfile pmOrgProfile = new PmOrgProfile();
+				OrgProfileReqDTO mofReqDTO = new OrgProfileReqDTO();
+				
+				if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)){
+					mofReqDTO.setOrgCode("24010201");//LPPS Sabah
+				} else if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
+					mofReqDTO.setOrgCode("24010301");//LPPS Sarawak
+				}
+
+				OrgProfileResDTO mofResDTO = orgProfileSO.retrieveOrgProfileByCode(mofReqDTO);
+				pmOrgProfile = mofResDTO.getPmOrgProfile();
+				
+				log.info(":::allowChairpersonRole() user profile id: "+ orgProfileId.longValue() +". committee profile id: "+ pmOrgProfile.getOrgProfileId());
+				// FSB/FSW - open to MOF Procurement Board
+				if(orgProfileId.longValue() == pmOrgProfile.getOrgProfileId().longValue()) {
+					allowChairpersonRole = true;
+				} else {
+					allowChairpersonRole = false;
+				}
+				//#26751 -end
 			}
 			//Bug #26520 - end
 			
@@ -4894,6 +4921,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) 
 						|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
 					if (getFacesScopes().hasRoleUser(RoleCode.FPB_SECRETARY.value())) {
+						userRole = RoleCode.FPB_SECRETARY.value();
+					} else if (getFacesScopes().getUserRoleList().size() != 0) {
 						userRole = RoleCode.FPB_SECRETARY.value();
 					}
 				} else {
