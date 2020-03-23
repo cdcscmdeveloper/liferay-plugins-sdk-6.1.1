@@ -546,7 +546,7 @@ public class CommonApplBackingBean extends
 			smApplBB.getManagedBean().setTaskId(taskId);
 			smApplBB.getManagedBean().setDraftedAppl(true);
 			
-			//27641 : Disciplinary Action - 26238 - start
+			//27641,27736 : Disciplinary Action - 26238 - start
 			SmSupplier currentSupplier = SmApplicationUtil.getCurrentSupplier();
 			List<SmDisciplinaryAction> activeDisc = new ArrayList<SmDisciplinaryAction>();
 			if(currentSupplier != null){
@@ -555,9 +555,13 @@ public class CommonApplBackingBean extends
 			
 			if(activeDisc != null && activeDisc.size() > 0){
 				log.info("***Navigate to bank info***");
-				smApplBB.getManagedBean().getEditVO().setDisciplinary(true);
+				for(SmDisciplinaryAction disc : activeDisc){
+					if(disc.isSuspendRegistration()){
+						smApplBB.getManagedBean().getEditVO().setDisciplinary(true);
+					}
+				}				
 			}			
-			//27641 : Disciplinary Action - 26238 - end
+			//27641,27736 : Disciplinary Action - 26238 - end
 			setNavigationForDraftAppl(appl.getApplType());
 			// }
 
