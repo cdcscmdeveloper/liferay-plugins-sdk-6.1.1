@@ -7302,6 +7302,15 @@ private void retriveCommitteeRemarksList(){
 			this.getManagedBean().setPayLoad(evaluationDataType);
 			this.getManagedBean().setCurrentTime(currentTime);
 			this.getManagedBean().setStatusOnly(evaluationStatus);
+			/* ***#25638#99 - start */
+			if(userHasRole(new RoleCode[]{RoleCode.SC_SECRETARY, RoleCode.EC_SECRETARY, RoleCode.TEC_SECRETARY, RoleCode.OC_SECRETARY})
+					&& (QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL.equals(this
+							.getManagedBean().getCurrentStatusId())
+						||QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION.equals(this
+								.getManagedBean().getCurrentStatusId()	))){
+				this.getManagedBean().setStatusOnly(false);
+			}
+			/* ***#25638#99 - end */
 			retriveMeetingDtls(qtId, committeeType, index);
 			// getStatusDropdownValues("SC", "MS");
 			if (save == true) {
