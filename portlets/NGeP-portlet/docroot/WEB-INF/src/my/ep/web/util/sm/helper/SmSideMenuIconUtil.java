@@ -42,17 +42,21 @@ public class SmSideMenuIconUtil {
 			String sectionType) {
 		if (sectionType.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)) {
 			if (bean.isSupplierUser()) {
-				//27641 : Disciplinary Action - #26238 - start 
+				//27641, 27736 : Disciplinary Action - #26238 - start 
 				if(bean.getSmSupplier() != null){
 					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier());
 					
 					if(activeDisc != null && activeDisc.size() > 0){
-						bean.getEditVO().setDisciplinary(true);
+						for(SmDisciplinaryAction disc : activeDisc){
+							if(disc.isSuspendRegistration()){
+								bean.getEditVO().setDisciplinary(true);
+							}
+						}						
 					} else {
 						bean.getEditVO().setDisciplinary(false);
 					}
 				}				
-				//27641 : Disciplinary Action - #26238 - end
+				//27641, 27736 : Disciplinary Action - #26238 - end
 				
 				bean.getEditVO().setSuppEditCompBasic(false);
 				if (step1CompanyBasicHasDifference(bean.getLatestAppl(),
@@ -98,17 +102,21 @@ public class SmSideMenuIconUtil {
 		} else if (sectionType
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH)) {
 			if (bean.isSupplierUser()) {
-				//27641 : Disciplinary Action - #26238 - start 
+				//27641, 27736 : Disciplinary Action - #26238 - start 
 				if(bean.getSmSupplier() != null){
 					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier());
 					
 					if(activeDisc != null && activeDisc.size() > 0){
-						bean.getEditVO().setDisciplinary(true);
+						for(SmDisciplinaryAction disc : activeDisc){
+							if(disc.isSuspendRegistration()){
+								bean.getEditVO().setDisciplinary(true);
+							}
+						}						
 					} else {
 						bean.getEditVO().setDisciplinary(false);
 					}
 				}				
-				//27641 : Disciplinary Action - #26238 - end
+				//27641, 27736 : Disciplinary Action - #26238 - end
 				bean.getEditVO().setSuppEditAssocProj(false);
 				if (step2AssocCompProjExpHasDifference(true,
 						bean.getLatestAppl(), bean.getSmAppl())) {
@@ -152,17 +160,21 @@ public class SmSideMenuIconUtil {
 		} else if (sectionType
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)) {
 			if (bean.isSupplierUser()) {
-				//27641 : Disciplinary Action - #26238 - start 
+				//27641, 27736 : Disciplinary Action - #26238 - start 
 				if(bean.getSmSupplier() != null){
 					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier());
 					
 					if(activeDisc != null && activeDisc.size() > 0){
-						bean.getEditVO().setDisciplinary(true);
+						for(SmDisciplinaryAction disc : activeDisc){
+							if(disc.isSuspendRegistration()){
+								bean.getEditVO().setDisciplinary(true);
+							}
+						}						
 					} else {
 						bean.getEditVO().setDisciplinary(false);
 					}
 				}				
-				//27641 : Disciplinary Action - #26238 - end
+				//27641, 27736 : Disciplinary Action - #26238 - end
 				bean.getEditVO().setSuppEditPersonnel(false);
 				if (step3PersonnelHasDifference(true, bean.getLatestAppl(),
 						bean.getSmAppl(), bean.getDowngradeMofAcc())) {
@@ -210,17 +222,21 @@ public class SmSideMenuIconUtil {
 		} else if (sectionType
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
 			if (bean.isSupplierUser()) {
-				//27641 : Disciplinary Action - #26238 - start 
+				//27641, 27736 : Disciplinary Action - #26238 - start 
 				if(bean.getSmSupplier() != null){
 					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier());
 					
 					if(activeDisc != null && activeDisc.size() > 0){
-						bean.getEditVO().setDisciplinary(true);
+						for(SmDisciplinaryAction disc : activeDisc){
+							if(disc.isSuspendRegistration()){
+								bean.getEditVO().setDisciplinary(true);
+							}
+						}						
 					} else {
-						bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
+						bean.getEditVO().setDisciplinary(false);
 					}
 				}				
-				//27641 : Disciplinary Action - #26238 - end
+				//27641, 27736 : Disciplinary Action - #26238 - end
 				bean.getEditVO().setSuppEditEquity(false);
 				if (step4EquityHasDifference(true, bean.getLatestAppl(),
 						bean.getSmAppl())) {
@@ -264,17 +280,21 @@ public class SmSideMenuIconUtil {
 		} else if (sectionType
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)) {
 			if (bean.isSupplierUser()) {
-				//27641 : Disciplinary Action - #26238 - start 
+				//27641, 27736 : Disciplinary Action - #26238 - start 
 				if(bean.getSmSupplier() != null){
 					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier());
 					
 					if(activeDisc != null && activeDisc.size() > 0){
-						bean.getEditVO().setDisciplinary(true);
+						for(SmDisciplinaryAction disc : activeDisc){
+							if(disc.isSuspendRegistration()){
+								bean.getEditVO().setDisciplinary(true);
+							}
+						}						
 					} else {
 						bean.getEditVO().setDisciplinary(false);
 					}
 				}				
-				//27641 : Disciplinary Action - #26238 - end
+				//27641, 27736 : Disciplinary Action - #26238 - end
 				bean.getEditVO().setSuppEditBank(false);
 				if (step5BankHasDifference(true, bean.getLatestAppl(),
 						bean.getSmAppl())) {
@@ -316,17 +336,21 @@ public class SmSideMenuIconUtil {
 		} else if (sectionType
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
 			if (bean.isSupplierUser()) {
-				//27641 : Disciplinary Action - #26238 - start 
+				//27641, 27736 : Disciplinary Action - #26238 - start 
 				if(bean.getSmSupplier() != null){
 					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier());
 					
 					if(activeDisc != null && activeDisc.size() > 0){
-						bean.getEditVO().setDisciplinary(true);
+						for(SmDisciplinaryAction disc : activeDisc){
+							if(disc.isSuspendRegistration()){
+								bean.getEditVO().setDisciplinary(true);
+							}
+						}						
 					} else {
 						bean.getEditVO().setDisciplinary(false);
 					}
 				}				
-				//27641 : Disciplinary Action - #26238 - end
+				//27641, 27736 : Disciplinary Action - #26238 - end
 				bean.getEditVO().setSuppEditCategory(false);
 				if (step6CatCodeHasDifference(true, bean.getLatestAppl(),
 						bean.getSmAppl())) {
