@@ -1807,9 +1807,22 @@ public class SpecificationBackingBean extends
 
 				}
 
+				
 				this.getManagedBean().setTechPoints(score);
 				techWeightageSum();
 				techScoreSum();
+				
+				//#25635 danial 11/3/2020
+				if(null!=this.getManagedBean().getTechnicalItemScoreSetting()){
+					if(null!=this.getManagedBean().getTechnicalItemScoreSetting().getOverallOtherTechnical()
+							&&
+					   null!=this.getManagedBean().getTechnicalItemScoreSetting().getOverallTechnical()
+							){
+						technicalItemScoreCalculate(this.getManagedBean().getTechnicalItemScoreSetting());
+					}
+				}
+					
+				
 			}
 
 			if (null != this.getManagedBean().getTechnicalScoring()
@@ -10369,6 +10382,25 @@ public class SpecificationBackingBean extends
 				}
 
 			}
+			
+			//start #25635 danial
+			List<ScQtScoreSetting> toBeRemoveScoreSettings=new ArrayList<ScQtScoreSetting>();
+			if(null!=this.getManagedBean().getMarkDeletedScQtScoreSettingTechnical() && 
+					!this.getManagedBean().getMarkDeletedScQtScoreSettingTechnical().isEmpty()){
+				toBeRemoveScoreSettings=this.getManagedBean().getMarkDeletedScQtScoreSettingTechnical();
+			}
+			if(null!=this.getManagedBean().getMarkDeletedScQtScoreSettingFinancial() && 
+					!this.getManagedBean().getMarkDeletedScQtScoreSettingFinancial().isEmpty()){
+				toBeRemoveScoreSettings.addAll(this.getManagedBean().getMarkDeletedScQtScoreSettingFinancial());
+			}
+			if(null!=this.getManagedBean().getMarkDeletedScQtScoreSettingOverall() && 
+					!this.getManagedBean().getMarkDeletedScQtScoreSettingOverall().isEmpty()){
+				toBeRemoveScoreSettings.addAll(this.getManagedBean().getMarkDeletedScQtScoreSettingOverall());
+			}
+			
+			specReqDTO.setToBeRemoveScoreSettingList(toBeRemoveScoreSettings);
+			//#25635 danial end
+			
 			specReqDTO.setTobeRemoveList(checklistRemoveList);
 			specReqDTO.setTobeRemoveDeliveryLocs(deliveryRemoveList);
 			specReqDTO.setToBeRemoveSchedulesList(this.getManagedBean()
