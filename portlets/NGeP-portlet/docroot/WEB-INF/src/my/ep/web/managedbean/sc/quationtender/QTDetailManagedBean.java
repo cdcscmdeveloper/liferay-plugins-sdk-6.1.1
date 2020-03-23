@@ -920,6 +920,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	/** The mark deleted tech checklist. */
 	private List<ScQtCheckList> markDeletedTechChecklist;
+	
+	/** The mark deleted tech checklist. */
+	//#25635 danial
+	private List<ScQtScoreSetting> markDeletedScQtScoreSettingTechnical;
+	
+	//#25635 danial
+	private List<ScQtScoreSetting> markDeletedScQtScoreSettingFinancial;
+	
+	//#25635 danial
+	private List<ScQtScoreSetting> markDeletedScQtScoreSettingOverall;
 
 	/** The sc qt check st2finance proposal list. */
 	private List<ScQtCheckList> scQtCheckSt2financeProposalList;
@@ -10268,7 +10278,36 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			this.fileDirectory = fileDirectory;
 		}
 		// 26095@hatta - end
-	
+
+		//#25635 danial
+		public List<ScQtScoreSetting> getMarkDeletedScQtScoreSettingTechnical() {
+			return markDeletedScQtScoreSettingTechnical;
+		}
+
+		public void setMarkDeletedScQtScoreSettingTechnical(
+				List<ScQtScoreSetting> markDeletedScQtScoreSettingTechnical) {
+			this.markDeletedScQtScoreSettingTechnical = markDeletedScQtScoreSettingTechnical;
+		}
+
+		//#25635 danial start
+		public List<ScQtScoreSetting> getMarkDeletedScQtScoreSettingFinancial() {
+			return markDeletedScQtScoreSettingFinancial;
+		}
+
+		public void setMarkDeletedScQtScoreSettingFinancial(
+				List<ScQtScoreSetting> markDeletedScQtScoreSettingFinancial) {
+			this.markDeletedScQtScoreSettingFinancial = markDeletedScQtScoreSettingFinancial;
+		}
+
+		public List<ScQtScoreSetting> getMarkDeletedScQtScoreSettingOverall() {
+			return markDeletedScQtScoreSettingOverall;
+		}
+
+		public void setMarkDeletedScQtScoreSettingOverall(
+				List<ScQtScoreSetting> markDeletedScQtScoreSettingOverall) {
+			this.markDeletedScQtScoreSettingOverall = markDeletedScQtScoreSettingOverall;
+		}
+		//#25635 danial end
 	
 }
 
