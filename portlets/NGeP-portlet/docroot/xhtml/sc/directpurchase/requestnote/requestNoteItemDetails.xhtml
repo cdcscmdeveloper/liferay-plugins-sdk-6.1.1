@@ -185,7 +185,7 @@
 							rendered="#{requestNoteBackingBean.getDisciplinaryActionActive(requestNoteDtl.scRequestSupplierItem.smSupplier)}"
 							action="#{requestNoteBackingBean.supplierDisciplinaryActionInfo(requestNoteDtl.scRequestSupplierItem.smSupplier)}" 
 							process="@this" partialSubmit="true" update=":form">
-							<h:outputText value="#{lbl['lbl.txt.yes']}"/>
+							<h:outputText value="#{lbl['lbl.txt.yes']}" style="color:red;"/>
 						</p:commandLink>
 						<h:outputText rendered="#{!requestNoteBackingBean.getDisciplinaryActionActive(requestNoteDtl.scRequestSupplierItem.smSupplier)}" value="#{lbl['lbl.txt.no']}"/>	
 					</h:panelGroup>	
