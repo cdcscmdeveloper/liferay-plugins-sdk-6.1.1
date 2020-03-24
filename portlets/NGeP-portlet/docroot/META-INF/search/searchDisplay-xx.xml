@@ -2330,7 +2330,7 @@
 		<property name="pk" value="userId" />
 		<property name="daoClass"
 			value="my.ep.persistence.dao.pm.authorization.user.UserDAO" />
-		<property name="searchMethod" value="retrieveUserLoList" />
+		<property name="searchMethod" value="retrieveUserList" />
 		<property name="columns">
 			<list>
 				<bean class="my.ep.web.bean.LovColumnBean">
