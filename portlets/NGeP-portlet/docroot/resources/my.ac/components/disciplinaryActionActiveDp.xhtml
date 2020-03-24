@@ -26,19 +26,19 @@
 			<tr>
 				<td>
 					<h:outputText value="#{lbl['lbl.sc.company.has.been.imposed']}" 
-							style="font-size:15px; vertical-align:top;"/>
+							style="font-size:15px; vertical-align:top; color:red;"/>
 					<c:if test="#{cc.attrs.isWarning}"><h:outputText value="#{lbl['lbl.sc.da.warning']}" 
-							style="font-weight:bold; font-size:15px; vertical-align:top;"/></c:if>
+							style="font-weight:bold; font-size:15px; vertical-align:top; color:red;"/></c:if>
 				    <c:if test="#{!cc.attrs.isWarning}"><h:outputText value="#{lbl['lbl.sc.da.disciplinary.action']}" 
-							style="font-weight:bold; font-size:15px; vertical-align:top;"/></c:if>
+							style="font-weight:bold; font-size:15px; vertical-align:top; color:red;"/></c:if>
 					<h:outputText value="#{lbl['lbl.sc.da.from']}" 
-							style="font-size:15px; vertical-align:top;"/>
+							style="font-size:15px; vertical-align:top; color:red;"/>
 					<h:outputText value="#{cc.attrs.startDate}" 
-							style="font-weight:bold; font-size:15px; vertical-align:top;"/>
+							style="font-weight:bold; font-size:15px; vertical-align:top; color:red;"/>
 					<h:outputText value="#{lbl['lbl.sc.da.to']}" 
-							style="font-size:15px; vertical-align:top;"/>
+							style="font-size:15px; vertical-align:top; color:red;"/>
 					<h:outputText value="#{cc.attrs.endDate}" 
-							style="font-weight:bold; font-size:15px; vertical-align:top;"/>
+							style="font-weight:bold; font-size:15px; vertical-align:top; color:red;"/>
 				</td>
 			</tr>
 			<tr>

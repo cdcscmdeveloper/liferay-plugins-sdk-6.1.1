@@ -186,7 +186,7 @@
 												rendered="#{supplierItem.smSupplier ne null and catalogueBackingBean.getDisciplinaryActionActive(supplierItem.smSupplier)}"
 												action="#{catalogueBackingBean.supplierDisciplinaryActionInfo(supplierItem.smSupplier)}" 
 												process="@this" partialSubmit="true" update=":form">
-												<h:outputText value="#{lbl['lbl.txt.yes']}"/>
+												<h:outputText value="#{lbl['lbl.txt.yes']}" style="color:red;"/>
 												</p:commandLink>
 												<h:outputText rendered="#{supplierItem.smSupplier ne null and !catalogueBackingBean.getDisciplinaryActionActive(supplierItem.smSupplier)}" value="#{lbl['lbl.txt.no']}"/>&#160;</td>
 									</tr>
