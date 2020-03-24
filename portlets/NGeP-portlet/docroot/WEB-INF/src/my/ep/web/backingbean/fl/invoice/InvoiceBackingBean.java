@@ -256,6 +256,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				BigDecimal sumItemAmt = fulfilmentSO.getSumTotalItemsAmtByReqId(invoice.getFlRequest().getFulfilmentReqId());
 				reqDTO.setGroupId(invoice.getFlRequest().getPmUserGroup().getUserGroupId());
 				reqDTO.setApproverLimit(sumItemAmt);
+				log.info("retrieveApproverListByGroupId reqId ["+invoice.getFlRequest().getFulfilmentReqId()+"] GroupId ["+reqDTO.getGroupId()+"] ApproverLimit ["+reqDTO.getApproverLimit()+"] ");			
 				try {
 					resDTO = requestSO.retrieveApproverListByGroupId(reqDTO);
 				} catch (Exception e) {
