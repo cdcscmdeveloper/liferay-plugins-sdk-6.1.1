@@ -2748,8 +2748,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		reqDTO.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
 		ISiteVisitSO reqSO = (ISiteVisitSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISiteVisitSO.class);
 		reqSO.saveOrSubmitSiteVisitReport(reqDTO);
-		
-		refreshPage();
+		retrieveSiteVisitInfo("V");
 		RequestContext.getCurrentInstance().execute("poReportDlg.hide()");
 	} 
 	// #24964 - end
