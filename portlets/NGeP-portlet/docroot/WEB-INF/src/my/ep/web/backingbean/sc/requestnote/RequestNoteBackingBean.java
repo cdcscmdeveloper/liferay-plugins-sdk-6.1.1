@@ -4911,49 +4911,47 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	// 12177 - End
 	
 	
-	
-	public List<PmUser> getPreparedByApprove(ScRequestNoteDtl requestNoteDtl) {
+	//26221 - Start
+	public String getPreparedByApprove(ScRequestNoteDtl requestNoteDtl) {
 		debugLogger("getPreparedByApprove");
+		StringBuilder sb = new StringBuilder();
 		UserReqDTO reqDTO = new UserReqDTO();
 		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-		List<PmUser> userlist = null;
+
 		if (requestNoteDtl.getFulfilmentType() != null) {
 			if (requestNoteDtl.getFulfilmentType().getParameterCode()
 					.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
 				reqDTO.setRoleCode(RoleCode.REQUISITIONER.value());
-
 			} else {
 				reqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
 			}
-			
-		    OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
-			orgProfileReqDTO.setOrgProfileId(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
-			orgProfileReqDTO.setGroupOrgType("N");
-			OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveProfileGroupByGroupOrgType(orgProfileReqDTO);
-				
-				
-			
-				List<Long> orgProfileIds = new ArrayList<Long>();
-				
-				orgProfileIds.add(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
-				if (CollectionUtils.isNotEmpty(orgProfileResDTO.getProfileGroups())) {
 
-				for(PmProfileGroup group: orgProfileResDTO.getProfileGroups()  ){
-					orgProfileIds.add(group.getMainOrgProfile().getOrgProfileId());
-				}
-				}
-				reqDTO.setOrgProfileIds(orgProfileIds );
-				UserResDTO resDTO = getUserSO().retrieveUserListByRole(reqDTO);
-				userlist = resDTO.getUserList();
-				if (CollectionUtils.isNotEmpty(userlist)) {
-					Collections.sort(userlist, new usersComparator());
+			OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+			orgProfileReqDTO.setOrgProfileId(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
+			orgProfileReqDTO.setGroupOrgType(ParameterConst.ORG_AUTH_TYPE_ORG_GROUP);
+			OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveProfileGroupByGroupOrgType(orgProfileReqDTO);
+	
+			String orgProfileIds = String.valueOf(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
+					
+			if (CollectionUtils.isNotEmpty(orgProfileResDTO.getProfileGroups())) {
+				for(PmProfileGroup group: orgProfileResDTO.getProfileGroups()){
+					orgProfileIds = orgProfileIds + "," + group.getMainOrgProfile().getOrgProfileId();
 				}
 			}
-		
-		getManagedBean().setPreparedBys(userlist);
-		return userlist;
+
+			sb.append("pmUserOrgs.pmOrgProfile.orgProfileId^");				
+			sb.append(orgProfileIds);
+			sb.append("^9");
+			sb.append("|pmUserOrgs.pmUserRoles.pmRole.roleCode^");
+			sb.append(reqDTO.getRoleCode());
+			sb.append("|pmUserOrgs.pmUserRoles.recordStatus^1");
+		}
+		System.out.println("------------------shams in getPreparedByApprove - end ");
+		return sb.toString();
 	}
+	//26221-end
+	
 	//26059 - start
 	/**
 	 * Checks if is BPK Approver.
@@ -5277,18 +5275,4 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return valid;
 	}
 	//12183 - End
-	
-	//26221-Start
-		public String constructConditionForUserSearch(ScRequestNoteDtl requestNoteDtl){
-			StringBuilder sb = new StringBuilder();
-	        sb.append("pmUserOrgs.pmOrgProfile.orgProfileId^");
-	    	sb.append(this.getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
-	    	sb.append("|pmUserOrgs.pmUserRoles.pmRole.roleCode^");
-			sb.append(RoleCode.REQUISITIONER.value());
-			sb.append("|pmUserOrgs.pmUserRoles.recordStatus^1");
-	     	this.getManagedBean().setAvailableUsers(getPreparedByApprove(requestNoteDtl));	
-	     	log.info("Available Users");
-			return sb.toString();
-		}
-		//26221-End
 }
