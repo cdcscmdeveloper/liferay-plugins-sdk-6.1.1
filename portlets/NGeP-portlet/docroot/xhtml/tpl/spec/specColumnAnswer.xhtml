@@ -32,8 +32,13 @@
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.delivery.term']}"/>
 		</f:facet>
-		</p:column>
-		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:50px;text-align:right;" rendered="#{isSpecTypeFinancial and isEstCostReq and !isScoringReq}">
+	</p:column>
+	<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:8%;" rendered="#{isItemTypeService and isDeliveryTermReq and isSqSpec}">
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.tpl.spec.content.service.term']}"/>
+		</f:facet>
+	</p:column>
+	<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:50px;text-align:right;" rendered="#{isSpecTypeFinancial and isEstCostReq and !isScoringReq}">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.ranking']}"/>
 			<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.ranking.tooltip']}" />
@@ -190,6 +195,18 @@
 				rendered="#{isQuestionTypeItem}" />
 			&#160;
 			<h:outputText id="delTermType" 
+				value="#{templateSpecBackingBean.getParameterDesc(question.clDeliveryTermTypeCode)}"  
+				rendered="#{isQuestionTypeItem}" />
+		</h:panelGroup>
+	</p:column>
+	<p:column style="width:8%;" rendered="#{isItemTypeService and isDeliveryTermReq and isSqSpec}">
+		
+		<h:panelGroup rendered="#{!isRepeated}">
+			<h:outputText id="serviceTerm" 
+				value="#{question.clDeliveryTerm}" 
+				rendered="#{isQuestionTypeItem}" />
+			&#160;
+			<h:outputText id="servTermType" 
 				value="#{templateSpecBackingBean.getParameterDesc(question.clDeliveryTermTypeCode)}"  
 				rendered="#{isQuestionTypeItem}" />
 		</h:panelGroup>

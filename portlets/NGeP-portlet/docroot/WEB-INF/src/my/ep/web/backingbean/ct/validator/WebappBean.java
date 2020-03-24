@@ -9,6 +9,9 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
+
+import org.apache.commons.lang3.StringUtils;
+
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.util.FacesScopes;
 
@@ -326,14 +329,14 @@ public class WebappBean {
 	public void validateInteger(FacesContext ctx, UIComponent fieldName,
 			Object obj) {
 		Integer inputValue = (Integer) obj;
-
+		String labelNameVal = (String) fieldName.getAttributes().get("label");
 		if (inputValue == null) {
 			return;
 		}
 		
-		if(inputValue <= 0) {
+		if((inputValue <= 0) && (!StringUtils.isBlank(labelNameVal))) {
 			String errMsg = ResourceBundleUtils.getMessage(
-					"lbl.sc.validation.delivery.period", new Object[]{inputValue},
+					"lbl.sc.validation.delivery.period", new Object[]{labelNameVal, inputValue},
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, 
 					new FacesScopes().getUserLocale());
 				throw new ValidatorException(new FacesMessage(
