@@ -1296,6 +1296,7 @@ u {
 								#end
 								<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="$tplspecQuestion.specCount" style="text-align: left; padding-left: 5px;">$serviceScope</td>
 							#end
+							</tr>
 							#end
 						<br/>
 						<br/>
@@ -1470,6 +1471,7 @@ u {
 								<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="$tplspecQuestion.specCount" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clReviewRemark</td>
 								<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="$tplspecQuestion.specCount" style="text-align: left; padding-left: 5px;">$serviceScope</td>
 							#end
+							</tr>
 							#end
 						<br/>
 						<br/>
@@ -1659,6 +1661,7 @@ u {
 									
 									<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="$tplspecQuestion.specCount" style="text-align: left; padding-left: 5px;">$serviceScope</td>
 										#end
+										</tr>
 									#end
 								<br/>
 								<br/>
@@ -1817,6 +1820,7 @@ u {
 									<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="$tplspecQuestion.specCount" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clReviewRemark</td>
 									<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="$tplspecQuestion.specCount" style="text-align: left; padding-left: 5px;">$serviceScope</td>
 								#end
+								</tr>
 								#end
 							<br/>
 							<br/>
