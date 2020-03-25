@@ -201,6 +201,7 @@ import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.sc.helper.ApproverSettings;
 import my.ep.web.util.sc.helper.LocationSingleton;
 import my.ep.web.util.sc.helper.QTFieldMapper;
 import my.ep.web.util.sc.helper.SourcingLocationHelper;
@@ -2595,15 +2596,14 @@ public class QTDetailBackingBean extends
 							tabBeans.add(new TabBean(titleName,
 									approvalCategoryCode, qtApproval,
 									retrieveFinalizationCommitteeType()));
-						} else if (ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT
-								.equals(approvalCategoryCode)) {
-							tabBeans.add(new TabBean(titleName,
-									approvalCategoryCode, qtApproval,
-									approverSettingDtls(
-											RoleCode.COMMITTEE_APPROVER, scQt
-													.getPmOrgProfile()
-													.getOrgProfileId(),
-											qtApproval)));
+						} else if (ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT.equals(approvalCategoryCode)) {
+							//Enhancement #26146 - start -
+							Long[] orgIds = { scQt.getOwnerOrgProfile().getOrgProfileId(),scQt.getPmOrgProfile().getOrgProfileId() };
+							
+							DualListModel<ScQtApproverSettings> budgetApprovalUsers = ApproverSettings.getDetails(
+									RoleCode.COMMITTEE_APPROVER,orgIds, qtApproval);
+							tabBeans.add(new TabBean(titleName, approvalCategoryCode, qtApproval, budgetApprovalUsers));
+							//Enhancement #26146 - end -
 						} else if (ParameterConst.APPROVAL_CATEGORY_OTHERS
 								.equals(approvalCategoryCode)) {
 							List<ScQtApprovalRequest> approvalRequest = qtApproval
@@ -3185,9 +3185,14 @@ public class QTDetailBackingBean extends
 			} 
 			
 			// set up approval pick list
-			dualListModel = approverSettingDtls(
-					RoleCode.PUBLICATION_APPROVER, scQt.getPmOrgProfile()
-							.getOrgProfileId(), publicationApproval);
+			//Enhancement #26146 - start -
+//			dualListModel = approverSettingDtls(
+//					RoleCode.PUBLICATION_APPROVER, scQt.getPmOrgProfile()
+//							.getOrgProfileId(), publicationApproval);
+			Long[] orgIds = { scQt.getOwnerOrgProfile().getOrgProfileId(), scQt.getPmOrgProfile().getOrgProfileId() };
+			dualListModel = ApproverSettings.getDetails(RoleCode.PUBLICATION_APPROVER,orgIds, publicationApproval);
+			//Enhancement #26146 - end -
+			
 			this.getManagedBean().setPublicationApprovals(dualListModel);
 			
 			// set up remark.
