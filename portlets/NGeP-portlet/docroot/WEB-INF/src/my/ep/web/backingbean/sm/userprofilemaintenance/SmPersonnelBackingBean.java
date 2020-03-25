@@ -100,6 +100,23 @@ public class SmPersonnelBackingBean extends
 		resetUserLimitMsg();
 		getManagedBean().setDisableAddNewUser(validatePersonLimit(smSupplier));
 		getManagedBean().setSalutationItems(SmCommonUtil.getSalutationItems());
+		
+		//27536 : Disciplinary Action - start also fix 27537
+		String labelNameVal = "";
+		SupplierDataMaintenanceReqDTO supReqDTO = new SupplierDataMaintenanceReqDTO();
+		supReqDTO.setSupplier(smSupplier);
+		SupplierDataMaintenanceResDTO activeDisc = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionBySupplier(supReqDTO);
+		if(activeDisc != null
+				&& activeDisc.getSmDisciplinaryActions() != null){
+			FacesContext.getCurrentInstance().addMessage("imposedDisciplinary", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+					SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
+							new String[] { labelNameVal })));
+			getManagedBean().setDisableAddNewUser(true);
+			SmCommonUtil.redirectToPage(
+					"/xhtml/sm/userProfileMaintenance/userProfileSearch.xhtml", "", null, null);
+		}
+		//27536 : Disciplinary Action - end also fix 27537
+				
 		SmCommonUtil.redirectToPage("userProfileSearch.xhtml", "", null, null);
 	}
 
