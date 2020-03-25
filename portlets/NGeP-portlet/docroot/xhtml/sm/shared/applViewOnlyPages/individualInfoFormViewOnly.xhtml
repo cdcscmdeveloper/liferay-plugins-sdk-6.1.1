@@ -88,7 +88,7 @@
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.religion']}" /></td>
 						<td>
 						<p:outputLabel styleClass="outputLabel-view" value="#{!viewSmApplBackingBean.managedBean.smAppl.smPersonnels.isEmpty() ? 
-						(viewSmApplBackingBean.managedBean.smAppl.smPersonnels.get(0).muslim ? lbl['lbl.sm.person.religion.muslim'] : 
+						(viewSmApplBackingBean.managedBean.smAppl.smPersonnels.get(0).isMuslim().booleanValue() ? lbl['lbl.sm.person.religion.muslim'] : 
 						lbl['lbl.sm.person.religion.non.muslim']) : ''}" />
 						</td>	
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.dob']}" /></td>
@@ -102,7 +102,7 @@
 					<tr>						
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.bumi']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{!viewSmApplBackingBean.managedBean.smAppl.smPersonnels.isEmpty() ? 
-						(viewSmApplBackingBean.managedBean.smAppl.smPersonnels.get(0).bumi ? lbl['lbl.txt.yes'] : lbl['lbl.txt.no']) 
+						(viewSmApplBackingBean.managedBean.smAppl.smPersonnels.get(0).isBumi().booleanValue() ? lbl['lbl.txt.yes'] : lbl['lbl.txt.no']) 
 						: ''}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.telno']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{!viewSmApplBackingBean.managedBean.smAppl.smPersonnels.isEmpty() ? 
