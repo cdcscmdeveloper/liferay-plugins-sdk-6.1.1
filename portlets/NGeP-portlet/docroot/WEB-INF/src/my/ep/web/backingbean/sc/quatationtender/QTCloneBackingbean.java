@@ -118,6 +118,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.persistence.indirection.IndirectList;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultTreeNode;
@@ -700,7 +701,7 @@ public class QTCloneBackingbean extends
 		}
 		try {
 			if(isCreation(nodes)){
-				refreshQT();
+				//refreshQT();
 			}
 			QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
@@ -1292,7 +1293,24 @@ public class QTCloneBackingbean extends
 		return copyScqt;
 	}
 	
-	
+	private ScQtCommittee getScQtCommitteeByQt(ScQt scQt){
+		String commType = ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE;
+		ICommitteSO committeSO;
+		CommitteReqDTO reqDTO = new CommitteReqDTO();
+		reqDTO.setCommitteeType(commType);
+		reqDTO.setQtId(scQt.getQtId());
+		CommitteResDTO resDTO = null;
+		ScQtCommittee qtCommitte =null;
+		try {
+			committeSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+			resDTO = committeSO.retrieveCommitteByQtIdNCommType(reqDTO);
+			qtCommitte = resDTO.getScQtCommittee();
+		}finally{
+			committeSO =null;
+		}
+		return qtCommitte;
+	}
 	private ScQt retrieveCommitteeMembers(ScQt scQt,ScQt copyScqt){
 		String commType = ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE;
 		ICommitteSO committeSO;
@@ -1321,14 +1339,21 @@ public class QTCloneBackingbean extends
 				parameterResDTO = parameterSO
 						.retrieveParameterByTypeAndCode(parameterReqDTO);
 				List<ScQtCommittee> qtCommitteList = new ArrayList<ScQtCommittee>();
-				ScQtCommittee clonedQtCom = new ScQtCommittee();
-				clonedQtCom.setScQt(scQt);
+				ScQtCommittee clonedQtCom = getScQtCommitteeByQt(scQt);
+				if(null==clonedQtCom){
+					clonedQtCom = new ScQtCommittee();
+					clonedQtCom.setScQt(scQt);
+				}
 				setUserDetails(clonedQtCom);
 				clonedQtCom.setCommitteeActivities(null);
 				clonedQtCom.setQtCommitteRemarks(null);
 				clonedQtCom.setScQtMeetings(null);
 				
 				ScCommittee committee = new ScCommittee();
+				if(null!=clonedQtCom.getScCommittee()){
+					committee = clonedQtCom.getScCommittee();
+				}
+				
 				committee.setCommitteStatus(getPmStatusByStatusId(QTStatusConst.CMT_PENDING_SUBMISSION));
 				committee.setCommitteeType(parameterResDTO.getPmParameter());
 				if (ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE
@@ -1336,6 +1361,16 @@ public class QTCloneBackingbean extends
 					committee.setApprovalReq(true);
 				}
 				setUserDetails(committee);
+				
+				List<ScCommitteeMember> toDeleteMember=new ArrayList<ScCommitteeMember>();
+				if(null!=committee.getScCommitteeMembers() && !committee.getScCommitteeMembers().isEmpty()){
+					for(ScCommitteeMember toDel:committee.getScCommitteeMembers()){
+						toDel.setDeleted(true);
+						toDeleteMember.add(toDel);
+					}
+					this.getManagedBean().setToBeDelCommitteMemebers(toDeleteMember);
+				}
+				
 				committee
 						.setScCommitteeMembers(new ArrayList<ScCommitteeMember>());
 				
@@ -1389,6 +1424,16 @@ public class QTCloneBackingbean extends
 		
 		
 		return scQt;
+	}
+	
+	private boolean isIndirectWithInstantiated(Object o){
+		
+		if(o instanceof IndirectList) {
+		    boolean inst = ((IndirectList)o).isInstantiated();
+		    return inst;
+		}
+		
+		return true;
 	}
 	
 	private void retrieveCommitteeMembers2(ScQt copyScqt){
@@ -1490,7 +1535,7 @@ public class QTCloneBackingbean extends
 		tenderReqDTO.setQtdetail(copyScqt);
 		QuationTenderResDTO resDTO =QtDetailsSO.retriveQTSuppQulCriDetails(tenderReqDTO);
 		
-		this.getManagedBean().setSupplierCriteria(scQt.getScQtSupplierCriteria());
+		
 		this.getManagedBean().setAllStateCode(resDTO.getStateCode());
 		
 		
@@ -1521,22 +1566,61 @@ public class QTCloneBackingbean extends
 				retriveZonesByCircularNo();
 			}
 		}else{
+			//quationTenderReqDTO.setToBeRemoveRestrictedSupplierList(this.getManagedBean().getToBeRemoveRestrictedSupplierList());
+			//quationTenderReqDTO
+					//.setTobeRemoveLocCriteriaList(qtLocCriteriaRemoveList);
+			//this.getManagedBean().getTobeRemoveCategoryCodes();
+			
 			ScQtSupplierCriteria cps =copyScqt.getScQtSupplierCriteria();
 			
 			ScQtSupplierCriteria supplierCriteria = new ScQtSupplierCriteria();
+			if(null!=scQt.getScQtSupplierCriteria()){
+				supplierCriteria =scQt.getScQtSupplierCriteria();
+			}
+			
 			supplierCriteria.setScQt(scQt);
 			supplierCriteria.setBrandNew(true);
 			if(cps!=null){
 				if(cps.getLocationLevel()!=null){
 					supplierCriteria.setLocationLevel(cps.getLocationLevel());
 				}
+				
+				//to Delete
+				List<ScQtLocCriteria> tobeRemoveLocCriteriaList=new ArrayList<ScQtLocCriteria>();
+				if(null!=supplierCriteria.getScQtLocCriteria() && !supplierCriteria.getScQtLocCriteria().isEmpty()){
+					for(ScQtLocCriteria cloc:cps.getScQtLocCriteria()){
+						cloc.setDeleted(true);
+						tobeRemoveLocCriteriaList.add(cloc);
+					}
+					this.getManagedBean().setSupplierLocationList(tobeRemoveLocCriteriaList);
+				}
+				
 				if(cps.getScQtLocCriteria()!=null){
-					supplierCriteria.setScQtLocCriteria(cps.getScQtLocCriteria());
+					List<ScQtLocCriteria> toAdd=new ArrayList<ScQtLocCriteria>();
+					for(ScQtLocCriteria cloc:cps.getScQtLocCriteria()){
+						ScQtLocCriteria loc=new ScQtLocCriteria();
+						loc.setScQtSupplierCriteria(supplierCriteria);
+						loc.setBrandNew(true);
+						loc.setDocId(cloc.getDocId());
+						loc.setDocType(cloc.getDocType());
+						loc.setPmDistrict(cloc.getPmDistrict());
+						loc.setPmDivision(cloc.getPmDivision());
+						loc.setPmState(cloc.getPmState());
+						loc.setReasonForUpdateEnabled(cloc.isReasonForUpdateEnabled());
+						loc.setRecordStatus(cloc.isRecordStatus());
+						loc.setRecordStatusFlg(cloc.getRecordStatusFlg());
+						loc.setSpecLocId(cloc.getSpecLocId());
+						loc.setZonalLocation(cloc.isZonalLocation());
+						toAdd.add(loc);
+					}
+					supplierCriteria.setScQtLocCriteria(toAdd);
 				}
 				supplierCriteria.setAllState(cps.isAllState());
 				
 				
 			}
+			
+
 			if(copyScqt.isZonal()){
 				ScQtZoneCriteria qtZoneCriterias =new ScQtZoneCriteria();
 				qtZoneCriterias.setBrandNew(true);
@@ -1548,9 +1632,21 @@ public class QTCloneBackingbean extends
 			}
 			
 			scQt.setScQtSupplierCriteria(supplierCriteria);
+			this.getManagedBean().setSupplierCriteria(scQt.getScQtSupplierCriteria());
 			List<ScQtCategory> categoryResults = resDTO
 					.getCategories();
 			List<ScQtSupplier> restrictResults=resDTO.getRestrictedSuppliers();
+			
+			
+			//to Delete
+			List<ScQtCategory> tobeRemoveCategoryCodes=new ArrayList<ScQtCategory>();
+			if(scQt.getScQtCategorys()!=null && !scQt.getScQtCategorys().isEmpty()){
+				for(ScQtCategory toDel:scQt.getScQtCategorys()){
+					toDel.setDeleted(true);
+					tobeRemoveCategoryCodes.add(toDel);
+				}
+				this.getManagedBean().setTobeRemoveCategoryCodes(tobeRemoveCategoryCodes);
+			}
 			
 			if(categoryResults!=null){
 				List<ScQtCategory> qtCategoryList = new ArrayList<ScQtCategory>();
@@ -1568,6 +1664,18 @@ public class QTCloneBackingbean extends
 				scQt.setScQtCategorys(qtCategoryList);
 				this.getManagedBean().setQtCategoryList(qtCategoryList);
 			}
+			
+			
+			//to Delete
+			List<ScQtSupplier> removeSupplierList = new ArrayList<ScQtSupplier>();
+			if(scQt.getScQtSuppliers()!=null && !scQt.getScQtSuppliers().isEmpty()){
+				for(ScQtSupplier toDel:scQt.getScQtSuppliers()){
+					toDel.setDeleted(true);
+					removeSupplierList.add(toDel);
+				}
+				this.getManagedBean().setToBeRemoveRestrictedSupplierList(removeSupplierList);
+			}
+						
 			if(restrictResults!=null){
 				List<ScQtSupplier> listSupplier=new ArrayList<ScQtSupplier>();
 				for(ScQtSupplier supp:restrictResults){
@@ -1959,8 +2067,11 @@ public class QTCloneBackingbean extends
 	
 	private void retrieveQtnDetails(ScQt scQt,ScQt copyScqt,IQTDetailSO QtDetailsSO){
 		//ScQt scQt=new ScQt();
-		scQt.setFileNo(null);
-		scQt.setBrandNew(true);
+		if(null==scQt.getFileNo()){
+			scQt.setFileNo(null);
+			scQt.setBrandNew(true);
+		}
+		
 		scQt.setObtainSpecialApproval(copyScqt
 				.getObtainSpecialApproval());
 		scQt.setPanel(copyScqt.isPanel());
