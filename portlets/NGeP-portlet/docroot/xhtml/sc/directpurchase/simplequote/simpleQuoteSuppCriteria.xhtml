@@ -212,9 +212,9 @@
 								rendered="#{quoteSupplier.smSupplier ne null and simpleQuoteBackingBean.getDisciplinaryActionActive(quoteSupplier.smSupplier)}"
 								action="#{simpleQuoteBackingBean.supplierDisciplinaryActionInfo(quoteSupplier)}" 
 								process="@this" partialSubmit="true" update=":form">
-								<h:outputText value="#{lbl['lbl.txt.yes']}"/>
+								<h:outputText value="#{lbl['lbl.sc.da.yes']}" style="color:red;"/>
 							</p:commandLink>
-							<h:outputText rendered="#{quoteSupplier.smSupplier ne null and !simpleQuoteBackingBean.getDisciplinaryActionActive(quoteSupplier.smSupplier)}" value="#{lbl['lbl.txt.no']}"/>									   
+							<h:outputText rendered="#{quoteSupplier.smSupplier ne null and !simpleQuoteBackingBean.getDisciplinaryActionActive(quoteSupplier.smSupplier)}" value="#{lbl['lbl.sc.da.no']}"/>									   
 						</p:column>
 					</p:dataTable>
 

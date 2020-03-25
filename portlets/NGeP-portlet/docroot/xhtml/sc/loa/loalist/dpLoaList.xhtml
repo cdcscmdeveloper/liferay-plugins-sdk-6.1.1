@@ -78,9 +78,9 @@
 						rendered="#{scPurchaseRequest.requestNoteDtls[0].scRequestSupplierItem.smSupplier ne null and dpLOABackingBean.getDisciplinaryActionActive(scPurchaseRequest.requestNoteDtls[0].scRequestSupplierItem.smSupplier)}"
 						action="#{dpLOABackingBean.supplierDisciplinaryActionInfo(scPurchaseRequest.requestNoteDtls[0].scRequestSupplierItem.smSupplier)}" 
 						process="@this" partialSubmit="true" update=":form">
-						<h:outputText value="#{lbl['lbl.txt.yes']}"/>
+						<h:outputText value="#{lbl['lbl.sc.da.yes']}" style="color:red;"/>
 					</p:commandLink>
-					<h:outputText rendered="#{scPurchaseRequest.requestNoteDtls[0].scRequestSupplierItem.smSupplier ne null and !dpLOABackingBean.getDisciplinaryActionActive(scPurchaseRequest.requestNoteDtls[0].scRequestSupplierItem.smSupplier)}" value="#{lbl['lbl.txt.no']}"/>									   
+					<h:outputText rendered="#{scPurchaseRequest.requestNoteDtls[0].scRequestSupplierItem.smSupplier ne null and !dpLOABackingBean.getDisciplinaryActionActive(scPurchaseRequest.requestNoteDtls[0].scRequestSupplierItem.smSupplier)}" value="#{lbl['lbl.sc.da.no']}"/>									   
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.action']}" style="text-align: center;">
