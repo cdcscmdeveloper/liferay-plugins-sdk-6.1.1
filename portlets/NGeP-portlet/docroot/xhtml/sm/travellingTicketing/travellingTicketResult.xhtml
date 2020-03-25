@@ -1,0 +1,47 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<p:panel header="#{lbl['lbl.pm.po.task.result']}" toggleable="true" id="machineResult">			
+			<p:dataTable value="#{travellingTicketBB.searchMachine}" lazy="true"
+			var="travellingTicket" id="ttTravellingListDt" rowIndexVar="rowIndex" width="100%" rows="10">
+			
+			<ac:paginator for="ttTravellingListDt" />
+			
+			<p:column headerText="#{lbl['lbl.sm.travelling.ticketing.system.code']}">
+					<h:outputText value="#{travellingTicket.pmMachine.machineCode}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sm.travelling.ticketing.system.name']}">
+					<h:outputText value="#{travellingTicket.pmMachine.machineDesc}"></h:outputText>
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sm.travelling.ticketing.system.category']}">
+					<h:outputText value="#{travellingTicketBB.getCategoryTypeDescById(travellingTicket.categoryType)}"></h:outputText>
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sm.travelling.ticketing.system.status']}">			
+					<h:outputText value="#{(travellingTicket.pmMachine.recordStatusFlg == 1) ? lbl['lbl.txt.active'] : lbl['lbl.txt.inactive']}"></h:outputText>
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sm.label.action']}">
+						<p:commandLink onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()"
+							action="#{travellingTicketBB.navigateToMaintenance(travellingTicket,travellingTicket.pmMachine)}"
+							process="@this" partialSubmit="true" update="@form"
+							style="padding-right:5px;">
+							<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.btn.update']}" />
+						</p:commandLink>
+				</p:column>
+				
+		</p:dataTable>
+		
+	</p:panel>
+	<div align="right">
+		<p:commandButton value="#{lbl['lbl.btn.create']}" action="#{travellingTicketBB.navigateToMaintenance(null,null)}" partialSubmit="true" process="@this"/>
+	</div>
+</ui:composition>
