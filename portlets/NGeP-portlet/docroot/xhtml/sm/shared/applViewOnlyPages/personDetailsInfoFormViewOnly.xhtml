@@ -57,9 +57,9 @@
 					</tr>
 					<tr>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.bumi']}" /></td>
-						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedPersonnel.bumi ? lbl['lbl.txt.yes'] : lbl['lbl.txt.no']}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedPersonnel.isBumi().booleanValue() ? lbl['lbl.txt.yes'] : lbl['lbl.txt.no']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.religion']}" /></td>
-						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedPersonnel.muslim ? lbl['lbl.sm.person.religion.muslim'] : lbl['lbl.sm.person.religion.non.muslim']}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedPersonnel.isMuslim().booleanValue() ? lbl['lbl.sm.person.religion.muslim'] : lbl['lbl.sm.person.religion.non.muslim']}" /></td>
 					</tr>
 				</p:outputPanel>
 			</table>				
