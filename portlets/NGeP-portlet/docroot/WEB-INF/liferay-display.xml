@@ -357,6 +357,7 @@
 		<portlet id="rejectionAcknowledgementLetter"></portlet>
 		<portlet id="supplierTaskReassignment"></portlet>
 		<portlet id="smOnScreenSql"></portlet>
+		<portlet id="travellingTicketingSystemMaintenance"></portlet>
 		<!-- SSM INTEGRATION -->
 		<portlet id="profileRobExpire"></portlet>
 		<!-- LOG :12491 Finish Button -->
