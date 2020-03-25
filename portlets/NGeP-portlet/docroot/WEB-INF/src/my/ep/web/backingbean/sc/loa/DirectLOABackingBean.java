@@ -251,7 +251,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				validateSupplierWitnessDetails(scLoa, loaSupplierWitness, outcome);
 			}
 			parseLOADetails(scLoa, outcome, reqDTO);
-
+			//20200325@asyrafhaziq _ Bug #27740 - Start
+			validateLoaAmount(scLoa);
+			//20200325@asyrafhaziq _ Bug #27740 - End
 			validateSupplierDetails(scLoa);
 			validateDeductionPaymentDtls(scLoa);
 			validateLOAReportAttachments(scLoa);
@@ -410,6 +412,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			parseLOADetails(scLoa, outcome, reqDTO);
 
 			validateSupplierDetails(scLoa);
+			//20200325@asyrafhaziq _ Bug #27740 - Start
+			validateLoaAmount(scLoa);
+			//20200325@asyrafhaziq _ Bug #27740 - End
 			validateLOAReportAttachments(scLoa);
 			validateLOADetails(scLoa, outcome);
 
@@ -1246,6 +1251,23 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
 		}		
 	}
+	
+	//20200325@asyrafhaziq _ Bug #27740 - Start
+		/**
+		 * Validate Loa Amount
+		 * 
+		 * @param scLoa
+		 *          the scLoa
+		 */	
+		private void validateLoaAmount(ScLoa scLoa) {
+			Locale locale = new FacesScopes().getUserLocale();
+			if (scLoa.getLoaAmt() != null && scLoa.getLoaAmt().compareTo(BigDecimal.valueOf(0)) <= 0) {
+				throw new EpException(MessageConst. ERROR_760501,
+						new String[] { ResourceBundleUtils.getMessage("lbl.sc.loiloa.loa.off.price", 
+					 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+			}
+		}
+		//20200325@asyrafhaziq _ Bug #27740 - End
 	
 	/**
 	 * Validate Report attachments
