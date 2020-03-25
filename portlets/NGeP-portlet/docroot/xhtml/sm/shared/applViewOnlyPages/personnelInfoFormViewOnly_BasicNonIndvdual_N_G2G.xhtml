@@ -42,7 +42,7 @@
 					<p:column headerText="#{lbl['lbl.sm.contract.signer']}">
 						<h:outputText value="#{personBean.contractSigner ? lbl['lbl.txt.yes'] : lbl['lbl.txt.no']}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sm.ind.personnel.status']}">
+					<p:column headerText="#{lbl['lbl.sm.activation.status']}">
 						<h:outputText value="#{lbl['lbl.sm.ind.personnnel.status.inactive']}" rendered="#{personBean.recordStatusFlg == 0}" />
 						<h:outputText value="#{lbl['lbl.sm.ind.personnnel.status.active']}" rendered="#{personBean.recordStatusFlg == 1}" />
 						<h:outputText value="#{lbl['lbl.sm.ind.personnnel.status.pending']}" rendered="#{personBean.recordStatusFlg == 8}" />
