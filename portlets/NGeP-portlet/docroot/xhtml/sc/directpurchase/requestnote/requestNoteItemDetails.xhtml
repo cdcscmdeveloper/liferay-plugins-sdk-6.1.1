@@ -185,9 +185,9 @@
 							rendered="#{requestNoteBackingBean.getDisciplinaryActionActive(requestNoteDtl.scRequestSupplierItem.smSupplier)}"
 							action="#{requestNoteBackingBean.supplierDisciplinaryActionInfo(requestNoteDtl.scRequestSupplierItem.smSupplier)}" 
 							process="@this" partialSubmit="true" update=":form">
-							<h:outputText value="#{lbl['lbl.txt.yes']}" style="color:red;"/>
+							<h:outputText value="#{lbl['lbl.sc.da.yes']}" style="color:red;"/>
 						</p:commandLink>
-						<h:outputText rendered="#{!requestNoteBackingBean.getDisciplinaryActionActive(requestNoteDtl.scRequestSupplierItem.smSupplier)}" value="#{lbl['lbl.txt.no']}"/>	
+						<h:outputText rendered="#{!requestNoteBackingBean.getDisciplinaryActionActive(requestNoteDtl.scRequestSupplierItem.smSupplier)}" value="#{lbl['lbl.sc.da.no']}"/>	
 					</h:panelGroup>	
 					<h:outputText rendered="#{requestNoteDtl.scRequestSupplierItem.smSupplier.supplierId eq null}" value="#{lbl['lbl.sc.no.available']}"/>																			   
 				</p:column>
