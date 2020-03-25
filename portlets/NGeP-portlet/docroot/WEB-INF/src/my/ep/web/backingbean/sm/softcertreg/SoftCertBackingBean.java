@@ -1256,7 +1256,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					throw new EpException(MessageConst.ERROR_721056, new String[] { selectedPersonnel.getName() });
 				}
 
-				if (StringUtils.isBlank(selectedPersonnel.getMobileNo()) || StringUtils.isBlank(selectedPersonnel.getPhoneNo())) {
+				if (StringUtils.isBlank(selectedPersonnel.getMobileNo()) && StringUtils.isBlank(selectedPersonnel.getPhoneNo())) {
 					throw new EpException(MessageConst.ERROR_721057, new String[] { selectedPersonnel.getName() });
 				}
 			}
