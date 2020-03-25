@@ -23,6 +23,7 @@ import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -80,7 +81,7 @@ public class CancelRegistrationBackingBean extends
 			if (resDTO.getSmSupplier() != null
 					&& resDTO.getSmSupplier().getSmAppl() != null
 					&& !EntityHelper.isCollectionEmpty(resDTO.getSmSupplier()
-							.getSmAppl().getSmPersonnels())) {
+							.getSmAppl().getSmPersonnels()) && resDTO.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_IN_PROGRESS) {
 				
 				getManagedBean().setSmAppl(resDTO.getSmSupplier().getSmAppl());
 				selectedPersonnel = getAdminPersonnel(resDTO.getSmSupplier());
@@ -94,15 +95,17 @@ public class CancelRegistrationBackingBean extends
 
 						throw new EpException(MessageConst.ERROR_721091);
 					}
-					boolean activeAppl = SmApplicationUtil.checkActiveSmApplForSupp(resDTO.getSmSupplier());
+					//boolean activeAppl = SmApplicationUtil.checkActiveSmApplForSupp(resDTO.getSmSupplier());
+					SmAppl activeAppl = SmCommonUtil
+							.getActiveApplBySupplier(getManagedBean().getSmSupplier());
 					// check new MOF Account (Contractor/Consultant) pending
 					// supplier application
-					if(activeAppl){
-						PmStatusDesc pmStatusDesc = getPmStatusDesc(resDTO.getSmSupplier().getSmAppl()
+					if(activeAppl != null){
+						PmStatusDesc pmStatusDesc = getPmStatusDesc(activeAppl
 								.getPmStatus().getStatusId());
 						throw new EpException(MessageConst.ERROR_721092,
 								new String[] {
-								resDTO.getSmSupplier().getSmAppl().getApplNo(),
+								activeAppl.getApplNo(),
 								pmStatusDesc.getStatusName()
 								});
 						
@@ -156,7 +159,22 @@ public class CancelRegistrationBackingBean extends
 					}
 				}
 			} else {
-				throw new EpException(MessageConst.ERROR_721090);
+				if(resDTO.getSmSupplier() != null && resDTO.getSmSupplier().getSmAppl()!= null && resDTO.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE){
+					String labelText = null;
+					if(resDTO.getSmSupplier().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
+						labelText = SmCommonUtil.getMessage("lbl.sm.contractor", null);
+					}else if(resDTO.getSmSupplier().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)){
+						labelText = SmCommonUtil.getMessage("lbl.sm.consultant", null);
+					}else if(resDTO.getSmSupplier().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_BASIC)){
+						labelText = SmCommonUtil.getMessage("lbl.sm.basic", null);
+					}else{
+						labelText = SmCommonUtil.getMessage("lbl.sm.basic", null);
+					}
+					throw new EpException(MessageConst.ERROR_721093,new String[]{labelText,resDTO.getSmSupplier().getEpNo()});
+				}else{
+					throw new EpException(MessageConst.ERROR_721090);
+				}
+				
 			}
 
 		} finally {
