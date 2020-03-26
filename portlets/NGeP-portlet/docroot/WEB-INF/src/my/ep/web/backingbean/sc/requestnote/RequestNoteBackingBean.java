@@ -1133,8 +1133,15 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 												MessageUtils.getMessage(MessageConst.ERROR_760036, 
 														new String[]{requestNoteDtl.getRequestItem().getItemName(),requestNoteDtl.getRequestItem().getCmItem().getExtensionCode()}, 
 														MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));*/
+										String language = new FacesScopes().getUserLocale().getLanguage();
+										String itemTitle = null;
+										if(CommonConstants.DEFAULT_USER_LANGUAGE_CODE.equalsIgnoreCase(language)) {
+											itemTitle = requestNoteDtl.getRequestItem().getCmItem().getCmUnspsc().getUnspscTitleEng();
+										} else {
+											itemTitle = requestNoteDtl.getRequestItem().getCmItem().getCmUnspsc().getUnspscTitle();
+										}
 										String message = MessageUtils.getMessage(MessageConst.ERROR_760036, 
-												new String[]{requestNoteDtl.getRequestItem().getCmItem().getCmUnspsc().getUnspscTitle(),""}, 
+												new String[]{itemTitle, ""}, 
 												MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
 										getManagedBean().setExceedThresholdMessage(message);
 										//26059 - end
