@@ -947,7 +947,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}
 		
 		/*13984 BEGINNING navigation sets and current schedule number Information*/
-		initSchPhaseTable(contractId);
+		if(scheduleNo !=null && scheduleNo.length() > 0) {
+			initSchPhaseTable(contractId);
+		}
+		
 		List<ScheduleInfo> schInfoo = getSchInfo();
 		log.info("schInfoo is : "+schInfoo);
 		log.info("schInfo is : "+schInfo);
