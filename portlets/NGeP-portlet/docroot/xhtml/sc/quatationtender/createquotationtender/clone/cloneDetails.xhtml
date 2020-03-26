@@ -189,11 +189,12 @@
 				</ui:fragment>
 
 				<p:tree value="#{qTCloneBackingbean.root}" var="node" rendered="#{qTCloneBackingbean.showTree}"
+						showUnselectableCheckbox="true"
                         selection="#{qTCloneBackingbean.selectedNodes}"
 					selectionMode="checkbox">
 					<p:treeNode>
-			<h:outputText value="#{node.label}"/>
-		</p:treeNode>
+						<h:outputText value="#{node.label}"/>
+					</p:treeNode>
 					
 				</p:tree>
 
