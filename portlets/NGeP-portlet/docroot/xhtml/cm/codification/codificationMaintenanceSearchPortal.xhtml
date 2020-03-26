@@ -32,7 +32,7 @@
 							</td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
 					<td><p:inputText title="#{lbl['lbl.cm.title.english']}"
-							value="#{codificationMaintenanceBackingBean.titleFilterBean.searchValue}"
+							value="#{codificationMaintenanceBackingBean.managedBean.titleFilterBean.searchValue}"
 							size="40" /><p:graphicImage id="itemCodeID"
 										value="/css/images/design/tooltips.png" /> <p:tooltip
 										for="itemCodeID">
@@ -46,20 +46,20 @@
 			<div style="text-align: right;">
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
 					action="#{codificationMaintenanceBackingBean.unspscSearch}"
-					 update="unspscTableID itemCodeSearchMsg" />
+					 update="unspscObjectTableID itemCodeSearchMsg" />
 				<p:commandButton value="#{lbl['lbl.btn.reset']}" 
-				    action="#{codificationMaintenanceBackingBean.resetAction}" 
-				     update="panel1,unspscTableID"/>					 	 
+				    action="#{codificationMaintenanceBackingBean.resetSearch}" 
+				     update="panel1,unspscObjectTableID"/>					 	 
 			</div>
 		</p:panel>
 
 		<p:panel header="#{lbl['lbl.cm.search.result']}" toggleable="true">
 
-			<p:dataTable tableStyleClass="fixedTable" id="unspscTableID" lazy="true" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			<p:dataTable tableStyleClass="fixedTable" id="unspscObjectTableID" lazy="true" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{codificationMaintenanceBackingBean.searchDataModel}" var="unspscObj"
 				width="100%" rows="10">
 
-				<ac:paginator for="unspscTableID"></ac:paginator>
+				<ac:paginator for="unspscObjectTableID"></ac:paginator>
 
 				<p:column  styleClass="wrappedTd" sortBy="#{unspscObj.unspscCode}">
 					<f:facet name="header">
