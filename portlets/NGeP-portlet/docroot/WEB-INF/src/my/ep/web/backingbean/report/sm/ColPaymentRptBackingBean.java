@@ -1,23 +1,64 @@
 package my.ep.web.backingbean.report.sm;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
+import javax.portlet.PortletResponse;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.DataFormat;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xwpf.usermodel.VerticalAlign;
 
+import com.liferay.portal.util.PortalUtil;
+
+import my.ep.biz.service.rpt.IRPTRequestSO;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.pm.common.report.RPTRequestReqDTO;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.ColPaymentRptManagedBean;
+import my.ep.web.util.DateUtils;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 
 @ManagedBean(name = "colPaymentRptBB")
 @ViewScoped
 public class ColPaymentRptBackingBean extends SmReportBackingBean<ColPaymentRptManagedBean>{
 	private static final long serialVersionUID = 1L;
+	private static Logger log = Logger.getLogger(ColPaymentRptBackingBean.class);
 	
 	public ColPaymentRptBackingBean(){
 		getManagedBean().setPaymentTypeMethodLs(getPaymentTypeMethodList());
@@ -56,7 +97,44 @@ public class ColPaymentRptBackingBean extends SmReportBackingBean<ColPaymentRptM
 					StringUtils.upperCase(getManagedBean().getPaymentMethod()));
 		}
 
-		generateSmReport(params);
+		if(getManagedBean().getDocumentType() == null){
+			if(getManagedBean().getDefaultOutputType().equals("P")){
+				params.put(ReportConst.PARAM_REPORT_OUTPUT_FORMAT, "pdf");
+			}else{
+				params.put(ReportConst.PARAM_REPORT_OUTPUT_FORMAT, "enhancedspreadsheet");
+			}	
+		}else{
+			if(getManagedBean().getDocumentType().equals("P")){
+				params.put(ReportConst.PARAM_REPORT_OUTPUT_FORMAT, "pdf");
+			}else{
+				params.put(ReportConst.PARAM_REPORT_OUTPUT_FORMAT, "enhancedspreadsheet");
+			}			
+			getManagedBean().setDefaultOutputType(getManagedBean().getDocumentType());
+		}
+		
+		//Enhancement #15990
+		//If Document Type - Excel will bypass runJob from oracle report.
+		if(getManagedBean().getDocumentType() == null){
+			if("P".equals(getManagedBean().getDefaultOutputType())){
+				generateSmReport(params);
+			}else{
+				try{
+					generateSMReportInExcel(getManagedBean().getReportCode(), params);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		}else{
+			if("P".equals(getManagedBean().getDocumentType())){
+				generateSmReport(params);
+			}else{
+				try{
+					generateSMReportInExcel(getManagedBean().getReportCode(), params);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		}		
 	}
 	
 	public void resetSearch(){
@@ -68,5 +146,10 @@ public class ColPaymentRptBackingBean extends SmReportBackingBean<ColPaymentRptM
 		//Enhancement #19245
 		setDateFromAndDateTo();
 		//end of Enhancement #19245
+	}
+	
+	public static SelectItem[] getDocumentTypeOptions() {
+		log.info("getReportTypeOptions");
+		return PmCommonUtil.getDocumentTypeOption();
 	}
 }
