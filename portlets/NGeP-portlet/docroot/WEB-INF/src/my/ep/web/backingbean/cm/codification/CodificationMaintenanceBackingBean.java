@@ -247,14 +247,6 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 		this.codeFilterBean = codeFilterBean;
 	}
 
-//	public SearchFilterBean getTitleFilterBean() {
-//		return titleFilterBean;
-//	}
-//
-//	public void setTitleFilterBean(SearchFilterBean titleFilterBean) {
-//		this.titleFilterBean = titleFilterBean;
-//	}
-
 	public SearchFilterBean getLevelFilterBean() {
 		return levelFilterBean;
 	}
