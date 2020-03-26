@@ -6,8 +6,11 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
+
+import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -89,8 +92,10 @@ public class CodificationMaintenanceManagedBean extends BaseManagedBean {
 	private List<Object[]> updatedStatus;
 	private boolean disableSelectBtn = false;
 	
-	
+	private SearchFilterBean titleFilterBean = new SearchFilterBean(
+			SearchOperator.OPERATOR_LIKE.value());
 
+	
 	public CmUnspsc getAutoCompleteUnspscCode() {
 		if (autoCompleteUnspscCode == null)
 			autoCompleteUnspscCode = new CmUnspsc();
@@ -579,5 +584,12 @@ public class CodificationMaintenanceManagedBean extends BaseManagedBean {
 	}
 	
 
-	
+	public SearchFilterBean getTitleFilterBean() {
+		return titleFilterBean;
+	}
+
+	public void setTitleFilterBean(SearchFilterBean titleFilterBean) {
+		this.titleFilterBean = titleFilterBean;
+	}
+
 }
