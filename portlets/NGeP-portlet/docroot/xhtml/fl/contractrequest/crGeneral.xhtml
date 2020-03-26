@@ -218,8 +218,8 @@
 				<td></td>
 				<td></td>
 				<td><p:outputLabel
-						value="#{lbl['lbl.fl.fulfilment.SchNo']}" /></td>
-				<td><p:inputText size="25" disabled="true"
+						value="#{lbl['lbl.fl.fulfilment.SchNo']}"  rendered="#{contractRequestBackingBean.managedBean.flRequest.scheduleNo gt 0}"/></td>
+				<td><p:inputText size="25" disabled="true" rendered="#{contractRequestBackingBean.managedBean.flRequest.scheduleNo gt 0}"
 						value="#{contractRequestBackingBean.managedBean.flRequest.scheduleNo}">
 					</p:inputText>
 					
@@ -231,7 +231,7 @@
 							
 								<td>&#160;<p:commandLink
 										value="#{lbl['lbl.quartz.scheduled.jobs.info']}"
-										update="display" oncomplete="sample.show()"
+										update="display" oncomplete="sample.show()" rendered="#{contractRequestBackingBean.managedBean.flRequest.scheduleNo gt 0}"
 										style="color: blue;display: inline;text-align: right;font-size: 12px;"/></td>
 							
 						</table>
