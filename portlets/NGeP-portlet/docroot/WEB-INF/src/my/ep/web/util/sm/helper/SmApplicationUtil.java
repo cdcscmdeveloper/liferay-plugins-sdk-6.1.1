@@ -13305,6 +13305,22 @@ public class SmApplicationUtil {
 	}
 	//26238 - end
 	
+	//27617 : Disciplinary Action - 26238 - start
+	@SuppressWarnings("unchecked")
+	public static List<Object[]> retrieveCancelCategoryByDisciplinaryActionId(Long disciplinaryActionId) {
+		ISupplierCategorySO supplierCategorySO = (ISupplierCategorySO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierCategorySO.class);
+		
+		SupplierCategoryReqDTO reqDTO = new SupplierCategoryReqDTO();
+		SupplierCategoryResDTO resDTO = new SupplierCategoryResDTO();
+		
+		reqDTO.setDisciplinaryActionId(disciplinaryActionId);
+		
+		resDTO = supplierCategorySO.retrieveCancelCategoryByDisciplinaryActionId(reqDTO);
+		return resDTO.getResultList();
+	} 
+	//27617 : Disciplinary Action - 26238 - end
+	
 	public static void removeEquityCompanyFromList(
 			List<SmEquityCompany> equityCompanyList) {
 		if (equityCompanyList != null) {
