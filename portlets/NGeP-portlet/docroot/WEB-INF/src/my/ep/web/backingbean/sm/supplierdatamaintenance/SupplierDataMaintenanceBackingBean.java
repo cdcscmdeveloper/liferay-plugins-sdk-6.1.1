@@ -1941,7 +1941,8 @@ public class SupplierDataMaintenanceBackingBean extends
 					//27576: Disciplinary Action - start
 					if(disciplinaryAction.isCancelCategory() || disciplinaryAction.isManufacturerCancel()){
 						List<DisciplinaryActionCategoryVO> catVoList = new ArrayList<DisciplinaryActionCategoryVO>();
-						List<Object[]> catList = SmApplicationUtil.retrieveCancelCategoryBySupplier(currSupp);
+						//27617 : Disciplinary Action - 26238
+						List<Object[]> catList = SmApplicationUtil.retrieveCancelCategoryByDisciplinaryActionId(disciplinaryAction.getDisciplinaryActionId());
 						
 						if(!EntityHelper.isCollectionEmpty(catList)
 								&& catList.size() > 0){
