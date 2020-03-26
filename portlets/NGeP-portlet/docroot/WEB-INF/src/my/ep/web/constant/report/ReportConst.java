@@ -962,6 +962,8 @@ public class ReportConst implements Serializable{
 	public static final String PARAM_REMARK = "PREMARK";
 	public static final String PARAM_RECOM = "PRECOM";
 	public static final String PARAM_REPORT_OUTPUT_FORMAT = "desformat";
+	public static final String ENHANCED_SPREAD_SHEET = "enhancedspreadsheet";
+	
 
 	// Report parameter key for s1 market research report
 	public static final String PARAM_BIZ_REG_NO = "PBIZREGNO";
@@ -1017,6 +1019,10 @@ public class ReportConst implements Serializable{
 	public static final String UNDERSCORE = "_";
 	public static final String DOTPDFEIFON = ".pdf\"";
 	public static final String DOTXLSEIFON = ".xls\"";
+	public static final String PDF = "P";
+	public static final String RTF = "W";
+	public static final String XLS = "X";
+	
 	public static final String CONTENT_TRANSFER_ENCODING = "Content-Transfer-Encoding";
 	public static final String BINARY = "binary";
 	public static final String APPLICATIONEIFONPDF = "application/pdf";
