@@ -263,7 +263,8 @@ public class ViewSuppProfileBackingBean extends
 						//27617 : Disciplinary Action
 						if(disciplinaryAction.isCancelCategory()  || disciplinaryAction.isManufacturerCancel()){
 							List<DisciplinaryActionCategoryVO> catVoList = new ArrayList<DisciplinaryActionCategoryVO>();
-							List<Object[]> catList = SmApplicationUtil.retrieveCancelCategory();
+							//27617 : Disciplinary Action - 26238
+							List<Object[]> catList = SmApplicationUtil.retrieveCancelCategoryByDisciplinaryActionId(disciplinaryAction.getDisciplinaryActionId());
 							
 							if(!EntityHelper.isCollectionEmpty(catList)
 									&& catList.size() > 0){
