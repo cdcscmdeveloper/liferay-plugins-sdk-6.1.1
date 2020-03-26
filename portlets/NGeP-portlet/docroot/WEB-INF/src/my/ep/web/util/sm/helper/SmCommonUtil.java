@@ -4310,9 +4310,8 @@ public class SmCommonUtil {
 									.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
 						throw new EpException(
 								MessageConst.ERROR_MYIDENTITY_70032_G2G);
-					} else {
-						throw new EpException(
-								MessageConst.ERROR_MYIDENTITY_70032);
+					} else if (supplierType != null && supplierType.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_BASIC)) {
+						throw new EpException(MessageConst.ERROR_MYIDENTITY_70032);
 					}
 				case "70004":
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70004);
@@ -4345,9 +4344,8 @@ public class SmCommonUtil {
 										.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
 							throw new EpException(
 									MessageConst.ERROR_MYIDENTITY_70032_G2G);
-						} else {
-							throw new EpException(
-									MessageConst.ERROR_MYIDENTITY_70032);
+						} else if (supplierType != null && supplierType.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_BASIC)) {
+							throw new EpException(MessageConst.ERROR_MYIDENTITY_70032);
 						}
 					}
 				}
