@@ -57,6 +57,8 @@
 				style="min-width:0px !important;width:86px;" 
 				rendered="#{isQuestionTypeItem}" 
 				disabled="false"
+				required="true" 
+				label="#{lbl['lbl.tpl.spec.content.Indicative.unit.price']}"
 				onkeypress="if (event.keyCode == 13) {return false; }">		
 				<!-- #25039#92 change ajax below to event="keyup" -->		
 				<p:ajax 
@@ -64,6 +66,7 @@
 					partialSubmit="true"
 					process="@this" 
 					event="keyup"
+					required="true"
 					listener="#{templateSpecBackingBean.calcItemTotalIndicateUnitPrice(
 						templateSpecBean,
 						question.tplSpecEstimations[0].indicativeUnitPrice, 
@@ -79,6 +82,7 @@
 						question.getSpecQuestionId())}"></p:ajax>
 					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
 			</p:inputText>	
+			<p:message id="unitPriceServiceScheduleId" for="unitPriceServiceSchedule" display="icon"></p:message>
 						
 		</c:if>
 
