@@ -944,7 +944,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 		debugLogger("RequestNoteBackingBean >> submitAction ---- isExceededAmountAlerted() = "+ getManagedBean().isExceededAmountAlerted());
 		
-		if(getManagedBean().isExceededAmountAlerted()){
+		if(getManagedBean().isExceededAmountAlerted() && !BpmOutcomeConst.BPM_REVISE.equals(outcome)){//26059
 			//26059 - start			
 			if(!getManagedBean().isProceedWithDPExceedThreshold() && !BpmOutcomeConst.BPM_REVISE.equals(outcome)) {
 				// refresh remarks
@@ -954,7 +954,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						getManagedBean().getRequestNote().getRemarks(),
 						ScRequestNoteRemark.class));
 				RequestContext.getCurrentInstance().execute("dpExceedDlg.show()");			
-			}			
+			}		
 			//26059 - end
 		} else{
 			if(!isDeliveryTermPrompt){
@@ -1134,7 +1134,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 														new String[]{requestNoteDtl.getRequestItem().getItemName(),requestNoteDtl.getRequestItem().getCmItem().getExtensionCode()}, 
 														MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));*/
 										String message = MessageUtils.getMessage(MessageConst.ERROR_760036, 
-												new String[]{requestNoteDtl.getRequestItem().getItemName(),requestNoteDtl.getRequestItem().getCmItem().getExtensionCode()}, 
+												new String[]{requestNoteDtl.getRequestItem().getCmItem().getCmUnspsc().getUnspscTitle(),""}, 
 												MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
 										getManagedBean().setExceedThresholdMessage(message);
 										//26059 - end
@@ -1557,6 +1557,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNoteReqDTO.setSqEndDate(getManagedBean().getSqEndDate());
 			// 12177 - End
 			//26059 - start
+			System.out.println("Is exceed: " + getManagedBean().isProceedWithDPExceedThreshold());
 			requestNoteReqDTO.setExceedThreshold(getManagedBean().isProceedWithDPExceedThreshold());
 			if(getManagedBean().isProceedWithDPExceedThreshold() && isRNApprover()) {
 				log.info("get BPK Approvers");
