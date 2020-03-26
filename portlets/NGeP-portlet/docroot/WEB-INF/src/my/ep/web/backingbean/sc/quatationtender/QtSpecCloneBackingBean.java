@@ -542,8 +542,13 @@ public class QtSpecCloneBackingBean extends
 		
 		copy.setPmDocument(origin.getPmDocument());
 		copy.setChecklistSeq(origin.getChecklistSeq());
-		if (origin.getScQtCheckListAttachment() != null)
-			copy.setScQtCheckListAttachment(copyAttachment(origin, copy));
+		if (origin.getScQtCheckListAttachment() != null){
+			ScQtCheckListAttachment att=copyAttachment(origin, copy);
+			if(null!=att){
+				copy.setScQtCheckListAttachment(att);
+			}
+		}
+			
 		return copy;
 	}
 
@@ -899,6 +904,10 @@ public class QtSpecCloneBackingBean extends
 					if (list.isScoringReq()) {
 						localChecklist.add(list);
 					} else {
+						if(null==list.getQtScoreWeightage()){
+							ScQtScoreWeightage scoreWeightage = new ScQtScoreWeightage();
+							list.setQtScoreWeightage(scoreWeightage);
+						}
 						list.getQtScoreWeightage().setScore(
 								new BigDecimal(0));
 					}
