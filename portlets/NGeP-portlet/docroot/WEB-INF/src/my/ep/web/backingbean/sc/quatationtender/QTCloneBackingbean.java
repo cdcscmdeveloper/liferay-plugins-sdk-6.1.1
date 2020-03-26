@@ -784,18 +784,49 @@ public class QTCloneBackingbean extends
 			QuationTenderResDTO resDTO = detailSO
 					.retriveQTScheduleDetails(reqDTO);
 			
+			ScQt copyQt=reqDTO.getQtdetail();
+			qt.setNewPublishDate(copyQt.getNewPublishDate());
+			qt.setNewClosingDate(copyQt.getNewClosingDate());
+			
 			ISearchResultBean<ScQtContactPerson> contactPersons = resDTO
 					.getContactPersons();
 			List<ScQtContactPerson> qtContactPersons = contactPersons
 					.getResultList();
+			
+			//this.getManagedBean().setToBeRemovalContactPersonList(contactPersonList);
+			
+			if (qt.getScQtContactPersons() != null || !qt.getScQtContactPersons().isEmpty()) {
+				List<ScQtContactPerson> listDel=new ArrayList<ScQtContactPerson>();
+				for(ScQtContactPerson p:qt.getScQtContactPersons()){
+					p.setDeleted(true);
+					listDel.add(p);
+				}
+				this.getManagedBean().setToBeRemovalContactPersonList(listDel);
+			}
 			if (qtContactPersons != null || !qtContactPersons.isEmpty()) {
 				List<ScQtContactPerson> persons=new ArrayList<ScQtContactPerson>();
+				PmUser user = new FacesScopes().getUserSessionBean();
+				ScQtContactPerson contactPerson = new ScQtContactPerson();
+				contactPerson.setPhoneNo(user.getPhoneNo());
+				contactPerson.setUser(user);
+				contactPerson.setEmail(user.getEmail());
+				contactPerson.setFaxNo(user.getFaxNo());
+				contactPerson
+						.setOfficerType(SourcingConstants.OFFICER_TYPE_QT);
+				contactPerson.setName(user.getUserName());
+				contactPerson.setScQt(this.getManagedBean().getQt());
+				persons.add(contactPerson);
 				for(ScQtContactPerson origin:qtContactPersons){
-					ScQtContactPerson copy=populateContact(origin,SourcingConstants.OFFICER_TYPE_QT);
-					persons.add(copy);
+					boolean different=true;
+					if(user.getEmail().equals(origin.getEmail()) && user.getUserName().equals(origin.getName())){
+						different=false;
+					}
+					if(different){
+						ScQtContactPerson copy=populateContact(origin,SourcingConstants.OFFICER_TYPE_QT);
+						persons.add(copy);
+					}
 				}
 			   this.getManagedBean().setScQtContactPersons(persons);
-				
 			}
 			List<ScQtContactPerson> desks=resDTO.getDeskOfficers().getResultList();
 			if (desks != null || !desks.isEmpty()) {
@@ -821,15 +852,65 @@ public class QTCloneBackingbean extends
 		contactPerson.setFaxNo(origin.getFaxNo());
 		contactPerson
 				.setOfficerType(type);
-		if(SourcingConstants.OFFICER_TYPE_DOAA.equals(type)){
-			contactPerson.setUser(origin.getUser());
-		}else{
-			contactPerson.setUser(new PmUser());
-		}
+		contactPerson.setUser(origin.getUser());
+//		if(SourcingConstants.OFFICER_TYPE_DOAA.equals(type)){
+//			contactPerson.setUser(origin.getUser());
+//		}else{
+//			contactPerson.setUser(new PmUser());
+//		}
 		
 		contactPerson.setName(origin.getName());
 		contactPerson.setScQt(this.getManagedBean().getQt());
 		return contactPerson;
+	}
+	
+	private BriefingZoneBean updateBrief(ScQtBsv toUpdate,ScQtBsv qtBsv){
+		toUpdate.setAllSiteVisitReq(qtBsv.isAllSiteVisitReq());
+		toUpdate.setAllBriefingReq(qtBsv.isAllBriefingReq());
+		toUpdate.setSameBsv(qtBsv.isSameBsv());
+		toUpdate.setMinBriefingAttend(qtBsv.getMinBriefingAttend());
+		toUpdate.setMinSiteVisitAttend(qtBsv.getMinSiteVisitAttend());
+		List<ScQtBsvDtl> listBsv=new ArrayList<ScQtBsvDtl>();
+		List<ScQtBsvDtl> listBrief=new ArrayList<ScQtBsvDtl>();
+		List<ScQtBsvDtl> listSiteVisit=new ArrayList<ScQtBsvDtl>();
+		if (null != qtBsv.getScQtBsvDtls()) {
+			for (ScQtBsvDtl bsvDtl : qtBsv.getScQtBsvDtls()) {
+				ScQtBsvDtl copydtl=new ScQtBsvDtl();
+				copydtl.setScQtBsv(toUpdate);
+				copydtl.setBsvType(bsvDtl.getBsvType());
+				copydtl.setBsvDesc(bsvDtl.getBsvDesc());
+				copydtl.setBsvDate(bsvDtl.getBsvDate());
+				copydtl.setAddress(bsvDtl.getAddress());
+				copydtl.setCoordinatingOfficer(bsvDtl.getCoordinatingOfficer());
+				copydtl.setMaxNoOfAttendance(bsvDtl.getMaxNoOfAttendance());
+				if(SourcingConstants.BSV_TYPE_SITEVISIT.equals(bsvDtl.getBsvType())){
+					listSiteVisit.add(copydtl);
+				}else{
+					listBrief.add(copydtl);
+				}
+				
+				
+			}
+			listBsv.addAll(listSiteVisit);
+			listBsv.addAll(listBrief);
+			toUpdate.getScQtBsvDtls().clear();
+			toUpdate.setScQtBsvDtls(listBsv);
+		}
+			
+//		toUpdate.setBsvRemarks(initializeRemarks(toUpdate, this
+//				.getManagedBean().getQt()
+//				.getCurrentWorkFlowStatus(), toUpdate.getBsvRemarks(),
+//				ScQtBSVRemark.class));
+		
+		BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
+				null, listBrief,
+				listSiteVisit, toUpdate);
+		
+		
+		return briefingZoneBean;
+		
+		
+		
 	}
 	
 	private BriefingZoneBean mapBrief(ScQt qt,ScQtBsv qtBsv){
@@ -905,7 +986,16 @@ public class QTCloneBackingbean extends
 			if(!qt.isZonal()){
 				if (!copyScqt.isZonal()) {
 					ScQtBsv qtBsv = resDTO.getScQtBsv();
-					BriefingZoneBean briefingZoneBean=mapBrief(qt,qtBsv);
+					BriefingZoneBean briefingZoneBean=null;
+					if(qt.isBsvRequired()){
+						if(qt.getScQtBriefings()!=null && !qt.getScQtBriefings().isEmpty()){
+							ScQtBsv ori=qt.getScQtBriefings().get(0);
+							briefingZoneBean=updateBrief(ori,qtBsv);
+						}
+					}else{
+						qt.setBsvRequired(copyScqt.isBsvRequired());
+						briefingZoneBean=mapBrief(qt,qtBsv);
+					}
 					this.getManagedBean().setBsvDtlBean(briefingZoneBean);
 				}else{
 					
