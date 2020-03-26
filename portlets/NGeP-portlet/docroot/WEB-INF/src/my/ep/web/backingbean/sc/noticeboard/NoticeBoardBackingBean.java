@@ -1246,6 +1246,39 @@ public class NoticeBoardBackingBean extends
 				} else if (ParameterConst.NOTICE_BOARD_STATUS_AWARDED
 						.equals(selectedTab)) {
 					statusIds.add(QTStatusConst.QT_AWARDED);
+					//#27604 start
+					Calendar calendar = Calendar.getInstance();
+					 calendar.set(Calendar.SECOND, 0);
+				        calendar.set(Calendar.MINUTE, 0);
+				        calendar.set(Calendar.HOUR, 0);
+				        //calendar.set(Calendar.AM_PM, Calendar.AM);
+				        calendar.set(Calendar.MONTH, Calendar.JANUARY);
+				        calendar.set(Calendar.DAY_OF_MONTH, 1);
+				        calendar.set(Calendar.YEAR, 2018);
+				        calendar.set(Calendar.MILLISECOND, 0);
+					Date	fromCreatedDate = calendar.getTime();
+					 log.debug("fromCreatedDateAwarde " + fromCreatedDate);
+					//SearchFilterBean bean = new SearchFilterBean();
+					//bean.setSearchField("wfStatus.CREATED_DATE");
+					//bean.setSearchOperator(SearchOperator.OPERATOR_GREATER_EQUAL.value());
+					//bean.setSearchValue(fromCreatedDate);
+					//searchBean.getDataFilterBeans().add(bean);
+					 Calendar toDate = Calendar.getInstance();
+					 log.info("tocreatedDate"+toDate);
+					//toDate.set(Calendar.YEAR, Calendar.MONTH,
+							//Calendar.DAY_OF_MONTH, 23, 59, 59);
+					toDate.set(Calendar.MILLISECOND, 0);
+					 Date tocreatedDate = toDate.getTime();
+					 log.info("tocreatedDate"+tocreatedDate);
+					 SearchFilterBean bean = new SearchFilterBean();
+						bean.setSearchField("qt.CREATED_DATE");
+						bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
+						SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
+								fromCreatedDate, tocreatedDate);
+						bean.setSearchValue(betweenVal);
+						//searchFilterBean.add(bean);
+						searchBean.getDataFilterBeans().add(bean);
+					//#27604 End
 				} else if (ParameterConst.NOTICE_BOARD_STATUS_CANCELLED
 						.equals(selectedTab)) {
 					statusIds.add(QTStatusConst.QT_CANCELLED);
