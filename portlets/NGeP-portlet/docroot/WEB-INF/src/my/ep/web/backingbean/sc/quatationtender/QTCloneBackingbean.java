@@ -173,6 +173,7 @@ public class QTCloneBackingbean extends
 			TreeNode descendent1 = new DefaultTreeNode(new QTSelectionNode(getLabel(QT_DETAILS),1L), child);
 			descendent1.setParent(child);
 			descendent1.setSelected(true);
+			descendent1.setSelectable(false);
 			TreeNode descendent2 = new DefaultTreeNode(new QTSelectionNode(getLabel(SUPPLIER_QUALIFICATION_CRITERIA),2L), child);
 			descendent2.setParent(child);
 			TreeNode descendent3 = new DefaultTreeNode(new QTSelectionNode(getLabel(COMMITTEE_APPOINTMENT),3L), child);
@@ -186,12 +187,16 @@ public class QTCloneBackingbean extends
 			descendent5.setSelected(true);
 			TreeNode descendent6 = new DefaultTreeNode(new QTSelectionNode(getLabel(PUBLISHING),6L), child);
 			descendent6.setParent(child);
+			descendent6.setSelected(true);
 			TreeNode descendent7 = new DefaultTreeNode(new QTSelectionNode(getLabel(PAYMENT),7L), child);
 			descendent7.setParent(child);
+			descendent7.setSelected(true);
 			TreeNode descendent8 = new DefaultTreeNode(new QTSelectionNode(getLabel(DOCUMENT),8L), child);
 			descendent8.setParent(child);
+			descendent8.setSelected(true);
 			TreeNode descendent9 = new DefaultTreeNode(new QTSelectionNode(getLabel(PUBLICATION_APPROVAL),9L), child);
 			descendent9.setParent(child);
+			descendent9.setSelected(true);
 		}
 		
 		if (null == this.getManagedBean().getCommitteMember()) {
@@ -551,7 +556,13 @@ public class QTCloneBackingbean extends
 		Long qtId = scQt.getQtId();
 		String evaluationType = scQt.getEvaluationType();
 		this.getManagedBean().setCloneCommitteeSelectQt(scQt);
-		this.showTree = true;
+		
+		Long statusId=this.getManagedBean().getQt().getQtStatus().getStatusId();
+		if(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId)){
+			this.showTree = false;
+		}else{
+			this.showTree = true;
+		}
 	}
 	
 	
@@ -694,10 +705,14 @@ public class QTCloneBackingbean extends
 	// public void addToClone(Long prevQtId,TreeNode[] selectedNodes){
 	public void addToClone() {
 		IQTDetailSO QtDetailsSO;
+		Long statusId=this.getManagedBean().getQt().getQtStatus().getStatusId();
+		
 		ScQt selected=this.getManagedBean().getSelectedCloneTender();
 		TreeNode[] nodes=this.selectedNodes;
-		if(nodes.length==0){
-			throw new EpException(MessageConst.ERROR_760495);
+		if(!QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId)){
+			if(nodes.length==0){
+				throw new EpException(MessageConst.ERROR_760495);
+			}
 		}
 		try {
 			if(isCreation(nodes)){
@@ -741,15 +756,11 @@ public class QTCloneBackingbean extends
 						retrieveApproval(scQt,copyScqt,QtDetailsSO);
 					}
 					
-					if(selection.getValue().equals(5L)){
-						retrieveBrief(copyScqt);
-					}
-					if(selection.getValue().equals(6L)){
-						retrievePublishing(copyScqt);
-					}
-					if(selection.getValue().equals(7L)){
-						retrieveDeductionPaymentTabDtl(scQt,copyScqt,QtDetailsSO);
-					}
+				}
+				if(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId)){
+					retrieveBrief(copyScqt);
+					retrievePublishing(copyScqt);
+					retrieveDeductionPaymentTabDtl(scQt,copyScqt,QtDetailsSO);
 				}
 				
 			}
@@ -891,36 +902,40 @@ public class QTCloneBackingbean extends
 					.getQtStatus().getStatusId();
 			this.getManagedBean().setCurrentStatusId(currentStatus);
 			
-			if (!copyScqt.isZonal()) {
-				ScQtBsv qtBsv = resDTO.getScQtBsv();
-				BriefingZoneBean briefingZoneBean=mapBrief(qt,qtBsv);
-				this.getManagedBean().setBsvDtlBean(briefingZoneBean);
-			}else{
-				
-//				List<TplSpecZoneDtl> zones = resDTO.getZonesList();
-//				List<BriefingZoneBean> zoneBeans = new ArrayList<BriefingZoneBean>();
-//				if(null!=zones){
-//					BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
-//					briefingReqDTO.setQtId(copyScqt
-//							.getQtId());
-//					briefingReqDTO.setScQt(getManagedBean().getQt());
-//					briefingReqDTO.setMaintanceFlow(true);
-//					//briefingReqDTO.setAmendMentBean(amendMentBean);
-//					for (TplSpecZoneDtl specZoneDtl : zones) {
-//						briefingReqDTO.setSpecZoneId(specZoneDtl
-//								.getSpecZoneId());
-//						BriefingResDTO briefingResDTO = qTBriefingSO
-//								.retrieveBriefingSiteVisitDtls(briefingReqDTO);
-//						ScQtBsv qtBsv = briefingResDTO.getScQtBsv();
+			if(!qt.isZonal()){
+				if (!copyScqt.isZonal()) {
+					ScQtBsv qtBsv = resDTO.getScQtBsv();
+					BriefingZoneBean briefingZoneBean=mapBrief(qt,qtBsv);
+					this.getManagedBean().setBsvDtlBean(briefingZoneBean);
+				}else{
+					
+//					List<TplSpecZoneDtl> zones = resDTO.getZonesList();
+//					List<BriefingZoneBean> zoneBeans = new ArrayList<BriefingZoneBean>();
+//					if(null!=zones){
+//						BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
+//						briefingReqDTO.setQtId(copyScqt
+//								.getQtId());
+//						briefingReqDTO.setScQt(getManagedBean().getQt());
+//						briefingReqDTO.setMaintanceFlow(true);
+//						//briefingReqDTO.setAmendMentBean(amendMentBean);
+//						for (TplSpecZoneDtl specZoneDtl : zones) {
+//							briefingReqDTO.setSpecZoneId(specZoneDtl
+//									.getSpecZoneId());
+//							BriefingResDTO briefingResDTO = qTBriefingSO
+//									.retrieveBriefingSiteVisitDtls(briefingReqDTO);
+//							ScQtBsv qtBsv = briefingResDTO.getScQtBsv();
+//							
+//							BriefingZoneBean briefingZoneBean=mapBrief(qt,qtBsv);
+//							zoneBeans.add(briefingZoneBean);
+//						}
 //						
-//						BriefingZoneBean briefingZoneBean=mapBrief(qt,qtBsv);
-//						zoneBeans.add(briefingZoneBean);
 //					}
-//					
-//				}
-//				this.getManagedBean().setBriefingZoneBean(zoneBeans);
-//				this.getManagedBean().setBsvDtlBean(zoneBeans.get(0));
+//					this.getManagedBean().setBriefingZoneBean(zoneBeans);
+//					this.getManagedBean().setBsvDtlBean(zoneBeans.get(0));
+				}
 			}
+			
+
 			
 		}finally{
 			qTBriefingSO = null;
