@@ -67,7 +67,6 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 	private static Logger log = Logger.getLogger(CodificationMaintenanceBackingBean.class);
 
 	private SearchFilterBean codeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
-	private SearchFilterBean titleFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 	private SearchFilterBean titleEngFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());	
 	private SearchFilterBean levelFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 	private SearchFilterBean statusFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
@@ -110,7 +109,7 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 		public String resetAction() {
 			log.info("In reset action...................");
 
-			this.reset();
+			
 			log.info("after reset.........................");
 			return null;
 		}
@@ -118,7 +117,7 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 		public String resetActionextension() {
 			log.info("In reset action...................");
 
-			this.reset();
+			
 			log.info("after reset.........................");
 			return null;
 		}
@@ -129,7 +128,7 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 			private static final long serialVersionUID = 1L;
 
 			public SearchPagingDataModel() {
-				super("unspscTableID");
+				super("unspscObjectTableID");
 				// TODO Auto-generated constructor stub
 			}
 
@@ -144,7 +143,7 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 				}
 				
 				if (StringUtils.isBlank((String) codeFilterBean.getSearchValue())
-						&& StringUtils.isBlank((String) titleFilterBean
+						&& StringUtils.isBlank((String) getManagedBean().getTitleFilterBean()
 								.getSearchValue())) {
 					return new SearchResultBean();
 				}
@@ -172,19 +171,19 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 						searchBean.getDataFilterBeans().add(codeFilterBean);
 					}
 
-					if (StringUtils.isNotBlank((String) titleFilterBean
+					if (StringUtils.isNotBlank((String) getManagedBean().getTitleFilterBean()
 							.getSearchValue())) {
-
-						titleFilterBean.setSearchField("unspscTitle");
-						titleFilterBean.setCaseInsensitive(true);
-						titleFilterBean.setAndOr(SearchCondition.CONDITION_OR.value());
+						log.info("*********titleFilterBean***********");
+						getManagedBean().getTitleFilterBean().setSearchField("unspscTitle");
+						getManagedBean().getTitleFilterBean().setCaseInsensitive(true);
+						getManagedBean().getTitleFilterBean().setAndOr(SearchCondition.CONDITION_OR.value());
 
 						titleEngFilterBean.setSearchField("unspscTitleEng");
 						titleEngFilterBean.setCaseInsensitive(true);
-						titleEngFilterBean.setSearchValue(titleFilterBean.getSearchValue());
+						titleEngFilterBean.setSearchValue(getManagedBean().getTitleFilterBean().getSearchValue());
 						titleEngFilterBean.setAndOr(SearchCondition.CONDITION_OR.value());
 						
-						SearchMultiFilterBean bilingualFilter = new SearchMultiFilterBean(titleFilterBean,titleEngFilterBean);
+						SearchMultiFilterBean bilingualFilter = new SearchMultiFilterBean(getManagedBean().getTitleFilterBean(),titleEngFilterBean);
 						
 						searchBean.getDataFilterBeans().add(bilingualFilter);
 					}
@@ -248,13 +247,13 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 		this.codeFilterBean = codeFilterBean;
 	}
 
-	public SearchFilterBean getTitleFilterBean() {
-		return titleFilterBean;
-	}
-
-	public void setTitleFilterBean(SearchFilterBean titleFilterBean) {
-		this.titleFilterBean = titleFilterBean;
-	}
+//	public SearchFilterBean getTitleFilterBean() {
+//		return titleFilterBean;
+//	}
+//
+//	public void setTitleFilterBean(SearchFilterBean titleFilterBean) {
+//		this.titleFilterBean = titleFilterBean;
+//	}
 
 	public SearchFilterBean getLevelFilterBean() {
 		return levelFilterBean;
@@ -279,8 +278,8 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 
 	public void unspscSearch() {
 		String unspscCode = getManagedBean().getAutoCompleteUnspscCode().getUnspscCode();
-		String unspscTitle = getTitleFilterBean().getSearchValue().toString();
-		
+		String unspscTitle = this.getManagedBean().getTitleFilterBean().getSearchValue().toString();
+
 		if ((unspscCode == null && (unspscTitle == null || unspscTitle.isEmpty()))
 				|| ((unspscCode != null && unspscCode.isEmpty()) && (unspscTitle != null && unspscTitle.isEmpty()))) {
 			throw new EpException(MessageConst.ERROR_716006);
@@ -395,7 +394,7 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 	}
 
 	public String backToPrevPortal(){
-		return "codificationMaintenance";
+		return "codificationMaintenance.xhtml?faces-redirect=true";
 	}
 	
 
@@ -609,9 +608,10 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 
 	// 20190821- Start
 	public void resetSearch() {
+		this.getManagedBean().setTitleFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value()));
+		this.setCodeFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value()));
+		this.setSearchDataModel(new SearchPagingDataModel());
 		this.getManagedBean().setAutoCompleteUnspscCode(null);
-		this.setTitleFilterBean(null);
-		resetAction();
 		// 20190821- End
 	}
 
@@ -682,8 +682,8 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 			reqDTO.setUnspscCode(unspscObj.getUnspscCode());
 			CodificationResDTO resDTO = unspscSO
 					.retrieveUNSPSCByCommodityCode(reqDTO);
-
 			
+		
 			if (resDTO.isSuccessful()) {
 				CmUnspsc commodity = resDTO.getCommodityObj();
 
@@ -1008,39 +1008,6 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 					statusExtensionFilterBean.setSearchValue(getManagedBean().getstatus());
 					searchBean.getDataFilterBeans().add(statusExtensionFilterBean);
 				}
-	
-				System.out.println("this.getSortField():" + this.getSortField());
-				if (getManagedBean().getData() == "t"){
-				if (this.getSortField() == null) {
-					SearchOrderBean orderBean = new SearchOrderBean("type_code", true);
-
-					searchBean.getSortColumns().add(orderBean);
-				}
-				
-			}else if (getManagedBean().getData() == "b"){				
-				if (this.getSortField() == null) {
-					SearchOrderBean orderBean = new SearchOrderBean("brand_code", true);
-
-					searchBean.getSortColumns().add(orderBean);
-				}
-				
-			}else if (getManagedBean().getData() == "m"){
-				if (this.getSortField() == null) {
-					SearchOrderBean orderBean = new SearchOrderBean("measurement_code", true);
-
-					searchBean.getSortColumns().add(orderBean);
-				}
-				
-			}else if (getManagedBean().getData() == "c"){
-				if (this.getSortField() == null) {
-					SearchOrderBean orderBean = new SearchOrderBean("color_code", true);
-
-					searchBean.getSortColumns().add(orderBean);
-				}
-				
-			}
-				
-			
 
 				reqDTO.setSsearchBeanTypeearchBeanType(searchBean);
 				reqDTO.setUnspscCode(getManagedBean().getSelectedUNSPSCObj().getUnspscCode());
@@ -1114,6 +1081,7 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 		public String unspscSearchPortal(CmUnspsc unspscObj) {
 			
 			this.getManagedBean().setAutoCompleteUnspscCode(unspscObj);	
+			
 	
 			this.getSearchDataModel().reloadData();
 			
@@ -1478,25 +1446,7 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 			  	FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), null,  CommonUIConst.ACKNOWLEDGE_PAGE);			
 	}
 				
-		
-		public void initRefreshPageNoFlag(){
-			
-			if(this.getManagedBean().isRefreshPageNoFlag()){
-				System.out.println("start ReloadPage");
-				this.getManagedBean().setRefreshPageNoFlag(false);
-				clearPopup();
-				System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-			}
-		}
-		
-		public void reset(){
-			
-			this.setTitleFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value()));
-			this.setCodeFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value()));
-			this.setSearchDataModel(new SearchPagingDataModel());
-			this.getManagedBean().setAutoCompleteUnspscCode(null);
-			
-		}
+	
 		
 	public void resetExtension(){
 		
