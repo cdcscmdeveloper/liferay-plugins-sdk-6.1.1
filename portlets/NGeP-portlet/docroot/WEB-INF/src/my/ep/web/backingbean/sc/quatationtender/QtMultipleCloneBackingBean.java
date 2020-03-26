@@ -96,6 +96,7 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 		child.setExpanded(true);
 		TreeNode descendent1 = new DefaultTreeNode(new QTSelectionNode(getLabel(QT_DETAILS),1L), child);
 		descendent1.setSelected(true);
+		descendent1.setSelectable(true);
 		descendent1.setParent(child);
 		TreeNode descendent2 = new DefaultTreeNode(new QTSelectionNode(getLabel(SUPPLIER_QUALIFICATION_CRITERIA),2L), child);
 		descendent2.setParent(child);
