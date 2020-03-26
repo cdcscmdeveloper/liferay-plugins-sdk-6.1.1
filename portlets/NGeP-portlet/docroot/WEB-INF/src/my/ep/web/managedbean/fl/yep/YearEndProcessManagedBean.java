@@ -1,5 +1,6 @@
 package my.ep.web.managedbean.fl.yep;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -16,9 +17,12 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.fl.FlYepReqDTO;
 import my.ep.dto.fl.FlYepResDTO;
 import my.ep.persistence.entity.fl.yep.FlYepTasklist;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.type.pm.RoleCode;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 @ManagedBean(name = "yepMB")
@@ -35,6 +39,7 @@ public class YearEndProcessManagedBean extends BaseManagedBean {
 			.getLogger(YearEndProcessManagedBean.class);
 
 	private String searchDocType;
+	private String searchFunctionType;
 	private String searchOrderNo;
 	private String searchTitle;
 	private int searchFinancialYear;
@@ -62,7 +67,9 @@ public class YearEndProcessManagedBean extends BaseManagedBean {
 	private Boolean checkDocNo;
 	private Long statusDescId;
 
-
+	private PmOrgProfile ptj;
+	private PmOrgProfile ministry;
+	private PmOrgProfile ptjGroup;
 
 	/**
 	 * Gets the check doc type.
@@ -460,6 +467,113 @@ public class YearEndProcessManagedBean extends BaseManagedBean {
 		this.searchNonAction = searchNonAction;
 	}
 
+	private FacesScopes getFacesScopes() {
+		return new FacesScopes();
+	}
+	
+	
+	
+	public String getSearchFunctionType() {
+		return searchFunctionType;
+	}
+
+	public void setSearchFunctionType(String searchFunctionType) {
+		this.searchFunctionType = searchFunctionType;
+	}
+
+	
+	public PmOrgProfile getPtj() {
+		return ptj;
+	}
+
+	public void setPtj(PmOrgProfile ptj) {
+		this.ptj = ptj;
+	}
+
+	public PmOrgProfile getMinistry() {
+		return ministry;
+	}
+
+	public void setMinistry(PmOrgProfile ministry) {
+		this.ministry = ministry;
+	}
+
+	public PmOrgProfile getPtjGroup() {
+		return ptjGroup;
+	}
+
+	public void setPtjGroup(PmOrgProfile ptjGroup) {
+		this.ptjGroup = ptjGroup;
+	}
+
+	/**
+	 * Checks if is Auditor General/Internal user.
+	 *
+	 * @return true, if is Auditor General/Internal user
+	 */
+	public boolean isAuditor() {
+		return getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value()) || 
+				getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value()) || 
+				getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value());
+	}
+	
+	/**
+	 * Checks if is fl fulfilment requisitioner.
+	 *
+	 * @return true, if is fl fulfilment requisitioner
+	 */
+	public boolean isFlFulfilmentRequisitioner() {
+		return getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value());
+	}
+	
+	/**
+	 * Checks if is fl fulfilment approver.
+	 *
+	 * @return true, if is fl fulfilment approver
+	 */
+	public boolean isFlFulfilmentApprover() {
+		return getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value());
+	}
+	
+	/**
+	 * Checks if is fl fulfilment approver.
+	 *
+	 * @return true, if is fl fulfilment approver
+	 */
+	public boolean isBPKApprover() {
+		return getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value());
+	}
+	
+	/**
+	 * Checks if is acknowledge officer
+	 *
+	 * @return true, if is acknowledge officer
+	 */
+	public boolean isAcknowledgeOfficer() {
+		return getFacesScopes().hasRoleUser(RoleCode.ACKNOWLEDGE_OFFICER.value());
+	}
+	
+	/**
+	 * Checks if is fl fulfilment receving officer.
+	 *
+	 * @return true, if is fl fulfilment receving officer
+	 */
+	public boolean isFlFulfilmentRecevingOfficer() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.RECEIVING_OFFICER.value());
+	}
+	
+	/**
+	 * Checks if is fl fulfilment payment officer.
+	 *
+	 * @return true, if is fl fulfilment payment officer
+	 */
+	public boolean isFlFulfilmentPaymentOfficer() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.PAY_OFFICER.value());
+	}
+	
+	
 	/**
 	 * Gets the fl YEP data model.
 	 * 
@@ -467,6 +581,63 @@ public class YearEndProcessManagedBean extends BaseManagedBean {
 	 */
 	public IPagingDataModel<FlYepTasklist> getFlYepDataModel() {
 		return flYepDataModel;
+	}
+	
+	private List<String> getUserRoles() {
+		List<String> roleList = new ArrayList<String>();
+		if(isBPKApprover()) {
+			roleList.add(RoleCode.BPK_APPROVER.value()); 
+		} else if(isAuditor()) {
+			if(getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value())) {
+				roleList.add(RoleCode.BPK_AUDITOR.value()); 
+			} else if(getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())) {
+				roleList.add(RoleCode.AUDITOR_GENERAL.value());
+			} else {
+				roleList.add(RoleCode.AUDITOR_INTERNAL.value()); 
+			}
+		} else {
+			// PTJ User
+			if(isFlFulfilmentRequisitioner()) {
+				roleList.add(RoleCode.REQUISITIONER.value()); 
+			}
+			if(isFlFulfilmentApprover()) {
+				roleList.add(RoleCode.FL_APPROVER.value()); 
+			}
+			if(isFlFulfilmentPaymentOfficer()) {
+				roleList.add(RoleCode.PAY_OFFICER.value()); 
+			}
+			if(isFlFulfilmentRecevingOfficer()) {
+				roleList.add(RoleCode.RECEIVING_OFFICER.value()); 
+			}
+			if(isAcknowledgeOfficer()) {
+				roleList.add(RoleCode.ACKNOWLEDGE_OFFICER.value()); 
+			}
+			// Supplier User
+			if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
+				roleList.add(RoleCode.MOF_SUPPLIER_ADMIN.value());
+			} else if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+				roleList.add(RoleCode.MOF_SUPPLIER_USER.value());
+			} else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
+				roleList.add(RoleCode.BASIC_SUPPLIER_ADMIN.value());
+			} else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
+				roleList.add(RoleCode.BASIC_SUPPLIER_USER.value());
+			} else if(getFacesScopes().hasRoleUser(RoleCode.FL_USER.value())) {
+				roleList.add(RoleCode.FL_USER.value());				
+			} else if (getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value())) {
+				roleList.add(RoleCode.GOVT_SELLER.value());		
+			} else if(getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())) { 
+				roleList.add(RoleCode.G2G_SUPPLIER_ADMIN.value());
+			} else if(getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())) { 
+				roleList.add(RoleCode.G2G_SUPPLIER_USER.value());	
+			}
+			// Factoring User
+			if(getFacesScopes().hasRoleUser(RoleCode.FACTORING_ADMIN.value())) {
+				roleList.add(RoleCode.FACTORING_ADMIN.value());
+			} else if(getFacesScopes().hasRoleUser(RoleCode.FACTORING_USER.value())) {
+				roleList.add(RoleCode.FACTORING_USER.value());
+			}
+		}
+		return roleList;
 	}
 
 	private class FlYepPagingDataModel extends PagingDataModel<FlYepTasklist> {
@@ -494,6 +665,10 @@ public class YearEndProcessManagedBean extends BaseManagedBean {
 				searchBean.setUseEntityClass(true);
 				
 				reqDTO.setSearchBean(searchBean);
+				
+				if(getSearchFunctionType()!=null) {
+					reqDTO.setFunctionType(getSearchFunctionType());
+				}
 				
 				/*purchase order*/
 				if(getSearchOrderNo()!=null && getSearchOrderNo()!="") {
@@ -594,6 +769,19 @@ public class YearEndProcessManagedBean extends BaseManagedBean {
 				if(getSearchContractToDuration()!=null) {
 					reqDTO.setContractEndDate(getSearchContractToDuration());
 				}
+				
+				if( getPtj() != null){
+					reqDTO.setPtj(getPtj());
+				}
+				if(getMinistry() != null){
+					reqDTO.setMinistry(getMinistry());
+				}
+				if(getPtjGroup() != null){
+					reqDTO.setPtjGroup(getPtjGroup());
+				}
+				
+				reqDTO.setUserRoleList(getUserRoles());
+				reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 				
 				
 				IFulfilmentYepSO flYepSO = (IFulfilmentYepSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentYepSO.class);
