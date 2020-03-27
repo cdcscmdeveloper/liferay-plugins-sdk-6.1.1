@@ -266,7 +266,7 @@ public class ViewSuppProfileBackingBean extends
 							//27617 : Disciplinary Action - 26238
 							List<Object[]> catList = SmApplicationUtil.retrieveCancelCategoryByDisciplinaryActionId(disciplinaryAction.getDisciplinaryActionId());
 							
-							if(!EntityHelper.isCollectionEmpty(catList)
+							if(catList != null
 									&& catList.size() > 0){
 								for(Object[] arr : catList){
 									//27426 : Disciplinary Action - start
