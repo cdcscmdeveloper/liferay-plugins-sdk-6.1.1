@@ -699,7 +699,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL3ListByL2Id(reqDTO);
 
 		List<SelectItem> selectItems = new ArrayList<SelectItem>();
-		//27438; 27613: Disciplinary Action - start
+		//27438, 27613, 27673: Disciplinary Action - start
 		SelectItem item = new SelectItem();
 		SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
 		List<Object[]> cancelCat = SmApplicationUtil.retrieveCancelCategoryBySupplier(currSupp);
@@ -715,21 +715,17 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 							item = new SelectItem(pmCategoryL3.getCategoryL3Id(),
 									pmCategoryL3.getCategoryL3Code() + " - " + pmCategoryL3.getCategoryName());
 							
-							if(disciplinaryAction.isCancelCategory()){								
+							if(disciplinaryAction.isCancelCategory() || disciplinaryAction.isManufacturerCancel()){								
 								if(cancelCat != null
 										&& cancelCat.size() > 0){
 									for(Object[] arr : cancelCat){
-										if(item.getValue().toString().equalsIgnoreCase(arr[2].toString())){
-											item.setDisabled(true);
-											log.info("Disciplinary Action - disabled cancel category");
-										}
+										if(arr[7].toString().equalsIgnoreCase(disciplinaryAction.getDisciplinaryActionId().toString())){
+											if(item.getValue().toString().equalsIgnoreCase(arr[2].toString())){
+												item.setDisabled(true);
+												log.info("Disciplinary Action - disabled cancel category");
+											}
+										}										
 									}
-								}
-							}
-							
-							if(disciplinaryAction.isManufacturerCancel()){
-								if(item.getLabel().contains("99")){
-									item.setDisabled(true);
 								}
 							}
 							selectItems.add(item);
@@ -744,7 +740,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 				}
 			}
 		}
-		//27438 : Disciplinary Action - end
+		//27438, 27613, 27673: Disciplinary Action - end
 		
 		return selectItems;
 	}
