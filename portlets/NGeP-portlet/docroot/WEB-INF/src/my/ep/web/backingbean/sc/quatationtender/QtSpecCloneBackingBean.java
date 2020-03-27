@@ -1730,6 +1730,26 @@ public class QtSpecCloneBackingBean extends
 
 	}
 	
+	private List<ScQtDeliveryLoc> getDeliveryByQt(ScQt copy){
+		IQTSpecSO specSo = null;
+		List<ScQtDeliveryLoc> list=null;
+		try {
+		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+		specSo = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+		reqDTO.setQtId(copy.getQtId());
+		SpecificationResDTO resDTO = specSo
+				.retrieveDeliverSeriviceAddress(reqDTO);
+		list=resDTO.getAddressResultBean();
+		
+		}finally{
+			specSo=null;
+		}
+		
+		return list;
+		
+	}
+	
 	private void retrieveDeliveryAddress(ScQt copy){
 		IQTSpecSO specSo = null;
 		try {
@@ -1742,6 +1762,19 @@ public class QtSpecCloneBackingBean extends
 			
 			if (resDTO.getSpecZoneDtls() == null
 					|| resDTO.getSpecZoneDtls().isEmpty()) {
+				
+				//this.getManagedBean().setDeliveryLocRemoveList();
+				ScQt qt=this.getManagedBean().getQt();
+				List<ScQtDeliveryLoc> list=getDeliveryByQt(qt);
+				if(list!=null && !list.isEmpty()){
+					List<ScQtDeliveryLoc> listDelete=new ArrayList<ScQtDeliveryLoc>();
+					for(ScQtDeliveryLoc loc:list){
+						loc.setDeleted(true);
+						listDelete.add(loc);
+					}
+					this.getManagedBean().setDeliveryLocRemoveList(listDelete);
+				}
+				
 				List<ScQtDeliveryLoc> locs=new ArrayList<ScQtDeliveryLoc>();
 				for(ScQtDeliveryLoc copyLoc:resDTO.getAddressResultBean()){
 					ScQtDeliveryLoc loc = new ScQtDeliveryLoc();
