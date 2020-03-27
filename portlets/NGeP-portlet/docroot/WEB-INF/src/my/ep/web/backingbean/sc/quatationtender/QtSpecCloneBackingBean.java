@@ -789,7 +789,7 @@ public class QtSpecCloneBackingBean extends
 		retrieveOverallScoreSettings(tenderResDTO.getQtDetail());
 		specificationBackingBean.saveSpecificationCommitteeDtls();
 		
-		//retrieveDeliveryAddress(tenderResDTO.getQtDetail());
+		retrieveDeliveryAddress(tenderResDTO.getQtDetail());
 		
 		
 		
@@ -1758,43 +1758,6 @@ public class QtSpecCloneBackingBean extends
 				}
 				
 				this.getManagedBean().setDeliveryNonZoneList(locs);
-			}else {
-				this.getManagedBean().setDeliveryZones(
-						resDTO.getSpecZoneDtls());
-
-				for (TplSpecZoneDtl tplSpecZoneDtl : this.getManagedBean()
-						.getDeliveryZones()) {
-					this.getManagedBean()
-							.setTplSpecZoneDtl(
-									this.getManagedBean()
-											.getDeliveryZones().get(0));
-					reqDTO.setQtId(copy.getQtId());
-					reqDTO.setZoneId(tplSpecZoneDtl.getSpecZoneId());
-					resDTO = specSo.retrieveDeliveryAddressDtls(reqDTO);
-					if (this.getManagedBean().getDeliveryLocBean() == null) {
-						this.getManagedBean().setDeliveryLocBean(
-								new ArrayList<BriefingZoneBean>());
-					}
-					
-					List<ScQtDeliveryLoc> locs=new ArrayList<ScQtDeliveryLoc>();
-					for(ScQtDeliveryLoc copyLoc:resDTO.getAddressResultBean()){
-						ScQtDeliveryLoc loc = new ScQtDeliveryLoc();
-						ScAddress deliveryAddress = populateDeliveryAddress(copyLoc.getPmAddressType());
-						loc.setScDeliveryAddress(deliveryAddress);
-						loc.setDeliveryAddress(getDeliveryAddressString(deliveryAddress));
-						loc.setPmAddressType(copyLoc.getPmAddressType());
-						loc.setTplSpecZoneDtl(this.getManagedBean()
-								.getTplSpecZoneDtl());
-						loc.setScQt(this.getManagedBean().getQt());
-
-						setUserDetails(loc);
-						locs.add(loc);
-					}
-					
-					BriefingZoneBean bean = new BriefingZoneBean(
-							tplSpecZoneDtl, locs);
-					this.getManagedBean().getDeliveryLocBean().add(bean);
-				}
 			}
 			
 		}finally{
