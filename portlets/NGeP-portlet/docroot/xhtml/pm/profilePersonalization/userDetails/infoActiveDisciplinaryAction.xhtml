@@ -54,10 +54,10 @@
 						<h:outputText rendered="#{not empty profilePersonalizationBackingBean.managedBean.disciplinaryActionMsg}"
 							value="#{profilePersonalizationBackingBean.managedBean.disciplinaryActionMsg}"/>
 						
-						<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-							rendered="#{not empty profilePersonalizationBackingBean.managedBean.disciplinaryActionMsg}"
+						<p:commandLink rendered="#{not empty profilePersonalizationBackingBean.managedBean.disciplinaryActionMsg}"			
 							action="#{viewSuppProfileBackingBean.onViewDisciplinaryAction}" 
-							process="@this" partialSubmit="true" update=":form">
+							update=":form" process="@this"
+							onclick="blockWidget.show()" onsuccess="blockWidget.hide()">
 								<u><h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" styleClass="warning" /></u>
 						</p:commandLink><p:spacer width="2"/>
 						
@@ -66,7 +66,7 @@
 					</td>
 				</tr>
 		</table>
-		<ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" />
+		<ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" mofView="#{viewSuppProfileBackingBean.managedBean.mofSupplier}"/>
 		
 	</ui:define>
 </ui:composition>
