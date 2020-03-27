@@ -206,7 +206,12 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 
 			PmParameter pmParameter = null;
 			if (StringUtils.isNotEmpty(getManagedBean().getSearchFunctionType())) {
-				pmParameter = retrieveParameterById(Long.valueOf(getManagedBean().getSearchFunctionType()));
+				try {
+					pmParameter = retrieveParameterById(Long.valueOf(getManagedBean().getSearchFunctionType()));
+					//pmParameter = retrieveParameterByTypeAndCode(parameterType, parameterCode)
+				 } catch (NumberFormatException  e) {
+					 log.info("-->getSearchFunctionType() is null ");
+				}
 			}
 			
 			if (isMaintenance) {
@@ -214,7 +219,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 				
 			} 
 			
-			else if (pmParameter != null && pmParameter.getParameterCode().equals(ParameterConst.ORG_TYPE_G2G_ROLECODE)){ //ORG_TYPE_G2G_ROLECODE
+			else if (pmParameter != null && pmParameter.getParameterCode().equals(ParameterConst.ORG_TYPE_G2G_ROLECODE)){
 				docTypeList.add(ParameterConst.DOCTYPE_SIMPLE_QUOTE);
 				docTypeList.add(ParameterConst.DOCTYPE_PURCHASE_INQUIRY);
 				
