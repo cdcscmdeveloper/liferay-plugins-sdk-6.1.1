@@ -787,9 +787,10 @@ public class QtSpecCloneBackingBean extends
 		retrieveTechnicalScoreSettings(tenderResDTO.getQtDetail());
 		retrieveFinancialScoreSettings(tenderResDTO.getQtDetail());
 		retrieveOverallScoreSettings(tenderResDTO.getQtDetail());
+		retrieveDeliveryAddress(tenderResDTO.getQtDetail());
 		specificationBackingBean.saveSpecificationCommitteeDtls();
 		
-		retrieveDeliveryAddress(tenderResDTO.getQtDetail());
+		
 		
 		
 		
