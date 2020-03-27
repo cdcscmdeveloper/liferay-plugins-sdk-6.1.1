@@ -861,6 +861,23 @@ public class SmApplicationBackingBean extends
 				}
 			} 
 			//26238 - end
+			
+			//27748 : Disciplinary Action - #26238 - start 
+			if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
+				if(currSupp != null){
+					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
+					
+					if(activeDisc != null && activeDisc.size() > 0){
+						for(SmDisciplinaryAction disc : activeDisc){
+							if(disc.isSuspendRegistration()){
+								getManagedBean().getEditVO().setDisciplinary(true);
+							}
+						}
+					}
+				}	
+			}				
+			//27748 : Disciplinary Action - #26238 - end
+			
 			if (applicationType
 					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 
@@ -1222,19 +1239,7 @@ public class SmApplicationBackingBean extends
 				.getApplCategoryType())) {
 			getManagedBean().getSmAppl().setApplCategoryType("N");
 		}
-		//27748 : Disciplinary Action - #26238 - start 
-		if(getManagedBean().isSupplierUser()){
-			List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(getManagedBean().getSmSupplier());
-			
-			if(activeDisc != null && activeDisc.size() > 0){
-				for(SmDisciplinaryAction disc : activeDisc){
-					if(disc.isSuspendRegistration()){
-						getManagedBean().getEditVO().setDisciplinary(true);
-					}
-				}
-			}
-		}		
-		//27748 : Disciplinary Action - #26238 - end
+		
 		getManagedBean().setCurrentPageType(
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC);
 		if (SmCommonUtil.isCollectionEmpty(smAppl.getSmFacilities())
