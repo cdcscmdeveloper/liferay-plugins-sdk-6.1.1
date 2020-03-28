@@ -1505,14 +1505,14 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		
 		// #25703 start
 		// check status from PM_ORG_VALIDITY
-		if (ctAgency.getOrgProfile().getOrgValidity().getRecordStatusFlg() == 0) {
-			if (ctAgency.getOrgProfile().getOrgValidity().getEffDate().after(DateUtils.getCurrentDateWithoutTime())) {
+		if (ctAgency.getOrgProfile().getPmOrgValidity().getRecordStatusFlg() == 0) {
+			if (ctAgency.getOrgProfile().getPmOrgValidity().getEffDate().after(DateUtils.getCurrentDateWithoutTime())) {
 				ctAgency.setChkStatusPmOrgValidity(true);
 			} else {
 				ctAgency.setChkStatusPmOrgValidity(false);
 			}
 		} else {
-			if (ctAgency.getOrgProfile().getOrgValidity().getEffDate().after(DateUtils.getCurrentDateWithoutTime())) {
+			if (ctAgency.getOrgProfile().getPmOrgValidity().getEffDate().after(DateUtils.getCurrentDateWithoutTime())) {
 				ctAgency.setChkStatusPmOrgValidity(false);
 			} else {
 				ctAgency.setChkStatusPmOrgValidity(true);
