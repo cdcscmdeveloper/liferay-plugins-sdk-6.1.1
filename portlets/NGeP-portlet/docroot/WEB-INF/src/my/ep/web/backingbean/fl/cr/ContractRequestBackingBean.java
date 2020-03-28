@@ -1300,6 +1300,13 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}else{
 				getManagedBean().setFactored(false);
 			}
+			
+			//13984-start
+			if(!getManagedBean().getFlRequest().getCtContract().isFrequencySchedule()){
+				scheduleNo = null;
+			}
+			//13984-end
+			
 			getManagedBean().getFlRequest().setScheduleNo(scheduleNo);
 			getManagedBean().getFlRequest().setSmSupplier(contractResDTO.getContract().getSmSupplier());
 			getManagedBean().getFlRequest().setFinancialYear(Calendar.getInstance().get(Calendar.YEAR));
