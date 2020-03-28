@@ -12076,56 +12076,57 @@ private void retriveCommitteeRemarksList(){
 	* @return the Status values
 	*/
 	public SelectItem[] statusDropdownCodeValues(String itemType,ScQtProposalChecklistAttachment scQtProposalChecklistAttachment) {
-	List<Integer> types = new ArrayList<Integer>();
-	// 26339  -venkat start
-	PmDocument pmdoc=this.getManagedBean().getScQtChecklist().getPmDocument();
-	if(pmdoc!= null && pmdoc.getDocGroupId()!=null && pmdoc.getDocGroupId().equals(ParameterConst.ASSET_LIABILITIES_GROUP_ID) 
-			&& pmdoc.getDocGroupId().equals(ParameterConst.CREDIT_FACILITIES_GROUP_ID) )
-	{
-		this.getManagedBean().setFP_Compliance(true);
-	}else{
-		this.getManagedBean().setFP_Compliance(false);
-	}
-	 
-	 if(null!=scQtProposalChecklistAttachment && scQtProposalChecklistAttachment.getAttachmentId()!=null)
-	{
-		types.add(ParameterConst.COMPLIANCE_STATUS_NONCOMPLIANCE);
-		types.add(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
-	}else if(null==scQtProposalChecklistAttachment && this.getManagedBean().isFP_Compliance())
-	{
-		types.add(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
-	}else{
-		types.add(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
-		types.add(ParameterConst.COMPLIANCE_STATUS_NONCOMPLIANCE);
-		types.add(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
-	}    // 26339  -venkat End
-	SelectItem[] items = null;
-	try {
-		
-		items = new SelectItem[types.size() + 1];
-		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
-				"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-				new FacesScopes().getUserLocale()));
-		int i = 1;
-		for (Integer location : types) {
-			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(itemType);
-
-			for (PmParameterDesc paramDesc : localParamDesc) {
-				log.info("ParamerterDesc Code "+paramDesc.getPmParameter().getParameterCode());
-				if (paramDesc.getPmParameter().getParameterCode()
-						.equals(String.valueOf(location.intValue()))) {   
-
-					items[i++] = new SelectItem(paramDesc.getPmParameter()
-							.getParameterCode(), paramDesc.getCodeName());
-				}
-			}
-			
+		List<Integer> types = new ArrayList<Integer>();
+		// 26339  -venkat start
+		PmDocument pmdoc=this.getManagedBean().getScQtChecklist().getPmDocument();
+		if(pmdoc!= null && pmdoc.getDocGroupId()!=null && pmdoc.getDocGroupId().equals(ParameterConst.ASSET_LIABILITIES_GROUP_ID) 
+				&& pmdoc.getDocGroupId().equals(ParameterConst.CREDIT_FACILITIES_GROUP_ID) )
+		{
+			this.getManagedBean().setFP_Compliance(true);
+		}else{
+			this.getManagedBean().setFP_Compliance(false);
 		}
-	} finally {
+		 
+		 if(null!=scQtProposalChecklistAttachment && scQtProposalChecklistAttachment.getAttachmentId()!=null)
+		{
+			types.add(ParameterConst.COMPLIANCE_STATUS_NONCOMPLIANCE);
+			types.add(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
+		}else if(null==scQtProposalChecklistAttachment && this.getManagedBean().isFP_Compliance())
+		{
+			types.add(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
+		}else{
+			types.add(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
+			types.add(ParameterConst.COMPLIANCE_STATUS_NONCOMPLIANCE);
+			types.add(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
 
-	}
-	return items;
-	}
+		}    // 26339  -venkat End
+		SelectItem[] items = null;
+		try {
+			
+			items = new SelectItem[types.size() + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
+			int i = 1;
+			for (Integer location : types) {
+				List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(itemType);
+
+				for (PmParameterDesc paramDesc : localParamDesc) {
+					log.info("ParamerterDesc Code "+paramDesc.getPmParameter().getParameterCode());
+					if (paramDesc.getPmParameter().getParameterCode()
+							.equals(String.valueOf(location.intValue()))) {   
+
+						items[i++] = new SelectItem(paramDesc.getPmParameter()
+								.getParameterCode(), paramDesc.getCodeName());
+					}
+				}
+				
+			}
+		} finally {
+
+		}
+		return items;
+		}
 
 	
 	
