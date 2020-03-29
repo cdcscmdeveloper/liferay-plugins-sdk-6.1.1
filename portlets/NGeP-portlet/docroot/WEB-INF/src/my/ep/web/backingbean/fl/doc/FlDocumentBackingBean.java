@@ -73,6 +73,7 @@ import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.fl.FlActor;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
+import my.ep.persistence.entity.fl.VFlDocument;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.order.FlStopInstr;
@@ -107,6 +108,7 @@ import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.report.CommonMethod;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.fl.doc.FlDocumentManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
@@ -326,6 +328,23 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 				flBB.getManagedBean().setHideRemarks(true);
 				PrBB.getManagedBean().setDeclarationCheck(true);
 			}
+			
+			 if(resDTO.getFlFulfilmentRequest().getScPurchaseInDefault()!=null){
+				 	Date today  = DateUtils.getCurrentDateWithoutTime();
+					Date ExpDate = DateUtils.addDays(resDTO.getFlFulfilmentRequest().getScPurchaseInDefault().getCreatedDate(), resDTO.getFlFulfilmentRequest().getScPurchaseInDefault().getPidValidDays());
+					log.info("pID validity begin");
+					if(resDTO.getFlFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_APPROVAL)
+					 		   || resDTO.getFlFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_REVISION)
+							   || resDTO.getFlFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
+							   || resDTO.getFlFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)
+							   || resDTO.getFlFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)){
+						if(ExpDate.before(today)){
+							resDTO.getFlFulfilmentRequest().getStatus().setStatusId(DPStatusConstants.PID_EXPIRED);
+						}  
+					}
+					log.info("pID validity end");
+			 }
+			
 			PrBB.setFulfilmentRequestField(resDTO);
 			PrBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			PrBB.getManagedBean().setBackToDocument(null);
@@ -1354,6 +1373,10 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
  	    quoteSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
  	    QuoteResDTO quoteResDTO = null;
+ 	    
+ 	   IFulfilmentRequestSO flRequestSO;
+ 	   flRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
+ 	    
 	    Long currentStatusId = docStatusId;
 	    Boolean sqExpired = false;
 	       
@@ -1372,6 +1395,53 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	    	}
 	    }    
 		return sqExpired;
+	}
+	
+	
+public boolean checkStatusPIDExpired(String docNo, Long docStatusId, String docType ){		
+	
+//		IQuoteSO quoteSO;
+// 	    quoteSO = BusinessDelegate.getInstance().getServiceObject(
+//					ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
+// 	    QuoteResDTO quoteResDTO = null;
+ 	    
+ 	   IFulfilmentRequestSO flRequestSO;
+ 	   flRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
+ 	    
+	    Long currentStatusId = docStatusId;
+	    Boolean pidExpired = false;
+	       
+	    if(docType.equals("PR")){
+	    	if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)
+	    	   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL)
+	 		   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION)
+			   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
+			   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)){
+
+	    		 FulfilmentReqDTO ffReqDTO = new FulfilmentReqDTO();
+				 FulfilmentResDTO ffResDTO = new FulfilmentResDTO();
+				 ffReqDTO.setFlDocNo(docNo);
+				 ffResDTO= flRequestSO.retrieveFulfilmentRequestByDocNo(ffReqDTO);
+
+	    		if (ffResDTO.getFlFulfilmentRequest().getScPurchaseInDefault()!=null){
+
+	    			//start search fulfilmenrequest based on doctype is PR
+					
+						 if(ffResDTO.getFlFulfilmentRequest().getScPurchaseInDefault()!=null){
+							 	Date today  = DateUtils.getCurrentDate();
+								Date ExpDate = DateUtils.addDays(ffResDTO.getFlFulfilmentRequest().getScPurchaseInDefault().getChangedDate(), ffResDTO.getFlFulfilmentRequest().getScPurchaseInDefault().getPidValidDays());
+								log.info("pID validity begin");
+								
+									if(ExpDate.before(today)){
+										pidExpired = true;
+									}  
+								
+								log.info("pID validity end");
+						 }	
+	    		}
+	    	}
+	    }    
+		return pidExpired;
 	}
 	
 	/**
@@ -1418,7 +1488,10 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			return null;
 		}
 		
-		if(checkStatusSqExpired(docNo, docStatusId, docType )){
+		if(checkStatusPIDExpired(docNo,docStatusId,docType)){
+			return getStatusDescById(DPStatusConstants.PID_EXPIRED);
+		}
+		else if(checkStatusSqExpired(docNo, docStatusId, docType )){
 			return getStatusDescById(DPStatusConstants.SQ_EXPIRED);
 		}
 		Long statusId = null;
