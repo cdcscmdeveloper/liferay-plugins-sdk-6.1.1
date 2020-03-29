@@ -105,6 +105,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScBusinessNatureQuoteCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScLocationDistrictCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScLocationDivisionCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScLocationStateCriteria;
+import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
 import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sc.directpurchase.ScQuoteAttachment;
 import my.ep.persistence.entity.sc.directpurchase.ScQuoteDoc;
@@ -345,7 +346,17 @@ public class SimpleQuoteBackingBean extends
 
 				// status
 				if(scQuote.getCurrentStatus() != null){
+					if((scQuote.getCurrentStatus().getPmStatus().getStatusId().equals(DPStatusConstants.SQ_PENDING_RN_CREATION)||scQuote.getCurrentStatus().getPmStatus().getStatusId().equals(DPStatusConstants.SQ_PENDING_SUBMISSION))&&scQuote.getPurchaseInDefault()!=null){
+						Date today  = DateUtils.getCurrentDateWithoutTime();
+						Date ExpDate = DateUtils.addDays(scQuote.getPurchaseInDefault().getChangedDate(),scQuote.getPurchaseInDefault().getPidValidDays() );
+						
+						if(ExpDate.before(today)){
+							scQuote.getCurrentStatus().getPmStatus().setStatusId(DPStatusConstants.PID_EXPIRED);							
+						} 
+					}
+				
 					getCurrentStatus(scQuote.getCurrentStatus().getPmStatus());
+				
 				}
 				// remarks
 				scQuote.setRemarks(initializeRemarks(
@@ -1281,6 +1292,7 @@ public class SimpleQuoteBackingBean extends
 		Long defaultCountryId = getManagedBean().getDefaultCountryId();
 		boolean autoUpdate = getManagedBean().isAutoUpdate();
 		Calendar pidExpDate = getManagedBean().getTaskExpiryDate();
+		Date pidExpiryDate = getManagedBean().getPidExpiryDate();
 		String pidApprovers = getManagedBean().getPidApprovers();
 		Long doUserId = getManagedBean().getDoUserId();
 		try {
@@ -1580,6 +1592,13 @@ public class SimpleQuoteBackingBean extends
 			reqDTO.setEndLoaRN(getManagedBean().getEndLoaRN());
 			reqDTO.setUserLocale(facesScopes.getUserLocale());
 			
+			//pid requote
+			if(quote.getPurchaseInDefault()!=null){
+				reqDTO.setPidNo(quote.getPurchaseInDefault().getPurchaseInDefaultNo());
+				reqDTO.setPidExpiryPeriod(quote.getPurchaseInDefault().getPidValidDays());
+				reqDTO.setPurchaseInDefaultId(quote.getPurchaseInDefault().getPurchaseInDefaultId());
+			}
+			
 			QuoteResDTO quoteResDTO = null;
 			log.info(" in saveSimpleQuote --- HERE 5 : QuoteNo = " + quote.getQuoteNo() + " | outcome = " + outcome);
 			if (outcome.isEmpty()) {
@@ -1606,6 +1625,7 @@ public class SimpleQuoteBackingBean extends
 					getManagedBean().setAutoUpdate(autoUpdate);
 					getManagedBean().setTaskExpiryDate(pidExpDate);
 					getManagedBean().setPidApprovers(pidApprovers);
+					getManagedBean().setPidExpiryDate(pidExpiryDate);
 					reloadSimpleQuote(scQuote);
 					successMessage(MessageConst.INFO_700025, ParameterTypeConst.DOCUMENT_TYPES, 
 							ParameterConst.DOCTYPE_SIMPLE_QUOTE,scQuote.getQuoteNo(), Boolean.FALSE);
@@ -2281,6 +2301,11 @@ public class SimpleQuoteBackingBean extends
 			reqDTO.setEndLoaToken(getManagedBean().getEndLoaToken());
 			reqDTO.setEndLoaRN(getManagedBean().getEndLoaRN());
 			reqDTO.setUserLocale(facesScopes.getUserLocale());
+			
+			//#12183
+			if(quote.getPurchaseInDefault()!=null){
+				reqDTO.setPurchaseInDefaultId(quote.getPurchaseInDefault().getPurchaseInDefaultId());
+			}
 			
 			QuoteResDTO quoteResDTO = null;
 			if (outcome.isEmpty()) {
@@ -4788,16 +4813,17 @@ public class SimpleQuoteBackingBean extends
 	 */
 	public void preRenderView() {
 		QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
+		TemplateSpecBackingBean templateSpecBackingBean = new TemplateSpecBackingBean();
 		SCDirectPurchaseDataType directPurchaseDataType = super.getBpmTaskDetails(SCDirectPurchaseDataType.class, null);
 
 		// pid expiry date
 		if(directPurchaseDataType.getPidExpiryDate() != null){
 			getManagedBean().setPidExpiryDate(directPurchaseDataType.getPidExpiryDate().getTime());	
 			getManagedBean().setTaskExpiryDate(directPurchaseDataType.getPidExpiryDate());
-			TemplateSpecBackingBean templateSpecBackingBean = new TemplateSpecBackingBean();
+			//TemplateSpecBackingBean templateSpecBackingBean = new TemplateSpecBackingBean();
 			templateSpecBackingBean.getManagedBean().setPidSQ(Boolean.TRUE);
 		} else{
-			TemplateSpecBackingBean templateSpecBackingBean = new TemplateSpecBackingBean();
+			//TemplateSpecBackingBean templateSpecBackingBean = new TemplateSpecBackingBean();
 			templateSpecBackingBean.getManagedBean().setPidSQ(Boolean.FALSE);
 		}
 		
@@ -4820,6 +4846,23 @@ public class SimpleQuoteBackingBean extends
 		QuoteResDTO quoteResDTO = getQuoteSO().getQuoteDtl((quoteReqDTO));
 		ScQuote scQuote = quoteResDTO.getQuoteBidDtl();
 		getManagedBean().setScQuote(scQuote);
+		
+		//#25095 repatch for scquote pid clone
+		
+		if(scQuote.getPurchaseInDefault()!=null && scQuote.getParentQuoteId()!=null){
+			templateSpecBackingBean.getManagedBean().setPidSQ(Boolean.TRUE);
+			ScPurchaseInDefault scpid = scQuote.getPurchaseInDefault();
+			
+			Date today  = DateUtils.getCurrentDateWithoutTime();
+			Date ExpDate = DateUtils.addDays(scQuote.getPurchaseInDefault().getChangedDate(),scQuote.getPurchaseInDefault().getPidValidDays() );
+			
+			 Calendar cal = Calendar.getInstance(); 
+			 cal.setTime(ExpDate);
+			
+			
+			getManagedBean().setPidExpiryDate(ExpDate);	
+			getManagedBean().setTaskExpiryDate(cal);
+		}
 
 		preRenderScQuote(scQuote);
 
