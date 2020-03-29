@@ -135,9 +135,12 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private String status;
 	private boolean disableSelectBtn = false;
 	private boolean disableSelectExpBtn = false;
-	private boolean disableSelectRow = false;
 	
 	//End
+	
+	//#24975 17/03/20 - start
+	private boolean editable;
+	//#24975 17/03/20 - end
 	
 	public ProcurementPlanManagedBean(){}
 
@@ -1307,14 +1310,18 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 		this.disableSelectExpBtn = disableSelectExpBtn;
 	}
 
-	public boolean isDisableSelectRow() {
-		return disableSelectRow;
+	//[#25549] add .. End
+	
+	//#24975 17/03/20 - start
+	public boolean isEditable() {
+		return editable;
 	}
 
-	public void setDisableSelectRow(boolean disableSelectRow) {
-		this.disableSelectRow = disableSelectRow;
+	
+	public void setEditable(boolean editable) {
+		this.editable = editable;
 	}
-		
-		//[#25549] add .. End
+	
+	//#24975 17/03/20 - end
 
 }
