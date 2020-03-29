@@ -35,9 +35,7 @@ import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
-import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.fl.VFlDocument;
-import my.ep.persistence.entity.fl.order.FlReliefOrder;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -164,7 +162,8 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				log.debug("pageChangeListener");
 			}
 			try {
-				if(null == getSearchOrderType()){ 
+				//#21150 - Document type become mandatory 
+				if(null == getSearchOrderType() || null ==getSearchDocType()){ 
 					throw new EpException(MessageConst.ERROR_740023);
 				}else if((null ==getSearchDocType() &&  "".equalsIgnoreCase(getSearchOrderNo()) && "".equalsIgnoreCase(getSearchDocNo()))){
 					throw new EpException(MessageConst.ERROR_740023);
@@ -299,6 +298,12 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 		for(VFlDocument docsearchResult:searchResultList){
 			if(isTrackingDiarySearch()) {
 				docsearchResult.setViewAction(true);
+				FLOrderInfo orderInfo=null;
+				orderInfo=getStatusInfo(docsearchResult.getDocId(),docsearchResult.getDocType());
+				if(orderInfo.isCoGSTR()){
+					docsearchResult.setCoGSTR(orderInfo.isCoGSTR);
+					docsearchResult.setCoGSTRNo(orderInfo.getCoGSTRNo());
+				}
 				continue;
 			}
 				docsearchResult.setUpdateAction(false);
@@ -494,7 +499,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 		        	if(null != resDTO.getFlOrder().getStatus()){
 		        		if(null !=resDTO.getFlOrder().getStatus().getStatusId()){
 		        			orderInfo.setOrderStatusId(resDTO.getFlOrder().getStatus().getStatusId());
-		        			if(isFlFulfilmentApprover()){
+		        			if(isFlFulfilmentApprover() && getSearchFunctionType().equalsIgnoreCase(ParameterConst.ORG_TYPE_PTJ)){
 		        				orderInfo.setRole(RoleCode.FL_APPROVER.value());
 		        			}else if(isFlFulfilmentSupplier()){
 		        				orderInfo.setRole(RoleCode.BASIC_SUPPLIER_USER.value());
@@ -509,7 +514,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 		        	reqDTO.setFulfilmentOrderId(resDTO.getFlOrder().getFulfilmentOrderId());
 		        	resDTO = reliefOrderSO.retrieveReliefOrderByOrderId(reqDTO);
 		        	if(resDTO.getReliefOrder() != null){
-		        		if(isFlFulfilmentApprover() || isFlFulfilmentSupplier() || isAcknowledgeOfficer()) {
+		        		if(isFlFulfilmentApprover() || isFlFulfilmentSupplier() || isAcknowledgeOfficer() || isAuditor()) {
 		        			orderInfo.setCoGSTR(true);
 		        			orderInfo.setCoGSTRNo(resDTO.getReliefOrder().getReliefOrderNo());
 		        		}
