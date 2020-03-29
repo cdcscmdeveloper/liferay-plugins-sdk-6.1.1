@@ -75,6 +75,7 @@ import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
+import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
@@ -176,6 +177,7 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.GlAccountSearchBean;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.converter.pm.PmUserConverter;
 import my.ep.web.managedbean.fl.pr.PurchaseRequestManagedBean;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
@@ -1389,6 +1391,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			getSupplierGst(getManagedBean().getFulfilmentRequest(), getManagedBean().isGstRateChange());
 			
 			// in case of PID
+			log.info("Begin PID validity process");
 			if(getManagedBean().getFulfilmentRequest().getScPurchaseInDefault()!=null) {
 				int pidValidDays = getManagedBean().getFulfilmentRequest().getScPurchaseInDefault().getPidValidDays();
 				Date pidExpiredDate = new Date(); 
@@ -1410,6 +1413,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				}
 			}
 		}
+		log.info("End PID validity process");
 		initializePRBeans();
 		updateDeliveryDate();
 		/*#17087 Get Zonal flag*/
@@ -3700,6 +3704,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				} else {
 					throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
 				}
+				log.info("SumAmt: " + sumAmt);
+				log.info("ThresholdAmt: " + thresoldAmt);
 				if(sumAmt.doubleValue() > thresoldAmt){
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 							MessageUtils.getMessage(MessageConst.ERROR_740004, 
@@ -4594,17 +4600,35 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	public void addButton(){
 		Long currentStatusId = getManagedBean().getCurrentStatusId();
 		//checking if SQ still valid, if not valid thus cancel/reject button will be added
-		if(!isSqStillValid()){
+		
+		
+		if(getManagedBean().isPidValidityExpired()){
+			//purchaseRequestBackingBean.managedBean.fulfilmentRequest.status.statusId
+			getManagedBean().getFulfilmentRequest().getStatus().setStatusId(60755L);
+			if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL) || 
+					   currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)){
+						String[] addReject = new String[]{BpmOutcomeConst.BPM_REJECT};    		
+						getManagedBean().setOutComes(addReject);	
+						
+					}else if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION) || 
+							   currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION)){
+						String[] addCancel = new String[]{BpmOutcomeConst.BPM_CANCEL};    		
+						getManagedBean().setOutComes(addCancel);
+					}
+		}else{
+			if(!isSqStillValid()){
 				if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL) || 
 				   currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL) ){
 					String[] addReject = new String[]{BpmOutcomeConst.BPM_REJECT};    		
-					getManagedBean().setOutComes(addReject);						
+					getManagedBean().setOutComes(addReject);	
+					
 				}else{
 					String[] addCancel = new String[]{BpmOutcomeConst.BPM_CANCEL};    		
 					getManagedBean().setOutComes(addCancel);
 				}
 						
-		}							        
+			}		
+		}
 	}
 	
 	/**
@@ -4659,4 +4683,52 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		return validDate;	
 	}
 	
+	//12183 - Start
+	public String getDocStatus(FlFulfilmentRequest flFulfilmentRequest){
+		
+		if(checkStatusPidExpired(flFulfilmentRequest)){
+			return getStatusDescById(DPStatusConstants.PID_EXPIRED);
+		}else if(!isSqStillValid()){
+			return getStatusDescById(DPStatusConstants.SQ_EXPIRED);
+		}else{
+			return getStatusDescById(getManagedBean().getFulfilmentRequest().getFlWorkflowStatus().getPmStatus().getStatusId());
+		}
+		
+	}
+	
+	public boolean checkStatusPidExpired(FlFulfilmentRequest flFulfilmentRequest){
+		
+		Long currentStatusId = null;
+	    Boolean pidExpired = false;
+		
+		IFulfilmentRequestSO flRequestSO;
+	 	   flRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
+		
+		if(flFulfilmentRequest != null){
+			
+			currentStatusId = flFulfilmentRequest.getFlWorkflowStatus().getPmStatus().getStatusId();
+			
+			if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)
+				|| currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL)
+				|| currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION)
+				|| currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
+				|| currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)){
+				
+				 if(flFulfilmentRequest.getScPurchaseInDefault()!=null){
+					 	Date today  = DateUtils.getCurrentDate();
+						Date ExpDate = DateUtils.addDays(flFulfilmentRequest.getScPurchaseInDefault().getChangedDate(), flFulfilmentRequest.getScPurchaseInDefault().getPidValidDays());
+
+						log.info("pID validity begin");
+						
+							if(ExpDate.before(today)){
+								pidExpired = true;
+							}  
+						
+						log.info("pID validity end");
+				 }	
+			}	
+		}	
+		return pidExpired;
+	}
+	//12183 - End
 }
