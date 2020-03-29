@@ -11115,6 +11115,22 @@ public class SmApplicationUtil {
 										bean.getShareHolderResdAddr()
 												.getSmAddress(),
 										SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
+						//START 27495
+						//to check, if district state not equal to pm state set district to null & City
+						if(bean.getShareHolderResdAddr().getSmAddress().isSsmData()){
+							SmAddress address = bean.getShareHolderResdAddr().getSmAddress();
+							if(address != null){
+								if(address.getPmState()!= null && address.getPmDistrict() != null){
+									if(address.getPmDistrict().getPmState() != null){
+										if(address.getPmDistrict().getPmState().getStateId() != address.getPmState().getStateId()){
+											address.setPmDistrict(new PmDistrict());
+											address.setPmCity(new PmCity());
+										}
+									}
+								}
+							}
+						}
+						//END 27495
 
 					}
 					if (addr.getAddressType()
