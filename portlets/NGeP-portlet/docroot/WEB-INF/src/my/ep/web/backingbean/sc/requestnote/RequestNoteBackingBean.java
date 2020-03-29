@@ -171,6 +171,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	/** The flag. */
 	private boolean flag;
 	private boolean sqExpiredMessageFlag = false;
+	private boolean pidExpiredFlag = false;
 	
 	/** The Constant ZONE_SEPARATOR. */
 	public static final String ZONE_SEPARATOR = "_";
@@ -241,6 +242,22 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			ScRequestNote requestNote = requestNoteResDTO.getRequestNoteDetail();
 			retrieveRequestNoteDetails(requestNote, null, Boolean.FALSE);
 			if(requestNote.getCurrentStatus() != null) {
+				if(requestNote.getCurrentStatus().getPmStatus().getStatusId().equals(DPStatusConstants.RN_PENDING_APPROVAL)
+				    	   || requestNote.getCurrentStatus().getPmStatus().getStatusId().equals(DPStatusConstants.RN_PENDING_REVISION) 
+				    	   || requestNote.getCurrentStatus().getPmStatus().getStatusId().equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL)
+				    	   || requestNote.getCurrentStatus().getPmStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)){
+					//12183 - start
+					if(requestNote.getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault() != null) {
+						Date today  = DateUtils.getCurrentDateWithoutTime();
+						Date ExpDate = DateUtils.addDays(requestNote.getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault().getChangedDate(),requestNote.getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault().getPidValidDays() );
+						
+						if(ExpDate.before(today)){
+							requestNote.getCurrentStatus().getPmStatus().setStatusId(DPStatusConstants.PID_EXPIRED);							
+						}
+					}
+					//12183 - end
+				}
+			
 				getCurrentStatus(requestNote.getCurrentStatus().getPmStatus());	
 			}
 		}
@@ -284,6 +301,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		String taskId  = getManagedBean().getTaskId();
 		Object payLoad  = getManagedBean().getPayLoad();
 		RequestNoteResDTO requestNoteResDTO = null;
+		Boolean isAssignedState = getManagedBean().isAssignedState();
     try {
     	
     	parseRequestNote(requestNote, outcome);
@@ -361,7 +379,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    		getManagedBean().setOutComes(outcomes);
 	    		getManagedBean().setTaskId(taskId);
 	    		getManagedBean().setPayLoad(payLoad);
+	    		getManagedBean().setAssignedState(isAssignedState);
 	    		reloadRequestNote(scRequestNote);
+	    		
 	    		successMessage(MessageConst.INFO_700025,ParameterTypeConst.DOCUMENT_TYPES,
 	    				ParameterConst.DOCTYPE_REQUEST_NOTE,scRequestNote.getRequestNoteNo(), Boolean.FALSE);
 	    	} else{
@@ -616,10 +636,52 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 		getCurrentStatus(getPmStatusByStatusId(getManagedBean().getCurrentStatusId()));
 		
-		// title checker
-		getManagedBean().setRequestNote(requestNote);
-		getManagedBean().setRequestNoteDtls(requestNoteDtlList);
-		getManagedBean().setTitleChecker(Boolean.FALSE);
+		//CHECK VALIDITY PID
+		IPurchaseInDefaultSO purchaseInDefaultSO  = null;
+		try {
+			// Based on ptj selection have to get pid for request note 
+			purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
+			PurchaseInDefaultReqDTO purchaseInDefaultReqDTO = new PurchaseInDefaultReqDTO();
+			// fetch pid item for request note item	
+			List<ScRequestItem>	requestNoteItems = getManagedBean().getRequestNoteItems();
+			List<ScRequestNoteDtl>	requestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();
+			if(requestNoteDtlList != null && requestNoteDtlList.size() >0){
+				for (ScRequestNoteDtl scRequestNoteDtl : requestNoteDtlList) {
+					ScRequestSupplierItem requestSupplierItem = scRequestNoteDtl.getScRequestSupplierItem();
+					ScRequestItem requestItem = scRequestNoteDtl.getRequestItem();
+					
+					
+					if(requestItem.getPurchaseInDefault() != null){
+						// selected ptj id for non contract item for pid
+						purchaseInDefaultReqDTO.setOrgProfileId(requestNote.getPmOrgProfile().getOrgProfileId());
+						purchaseInDefaultReqDTO.setPurchaseInDefaultId(requestItem.getPurchaseInDefault().getPurchaseInDefaultId());
+						PurchaseInDefaultResDTO defaultResDTO = purchaseInDefaultSO.getPurchaseInDefaultByPidNo(purchaseInDefaultReqDTO);
+
+						// pid to request note
+						if(defaultResDTO.getPurchaseInDefaultDtl() != null){
+							ScPurchaseInDefault  purchaseInDefault = defaultResDTO.getPurchaseInDefaultDtl();
+							requestItem.setPurchaseInDefault(purchaseInDefault);
+							pidExpiredFlag = pidValidityBoolean(purchaseInDefault, requestNote);
+						} else {
+							requestItem.setPurchaseInDefault(null);
+						}
+					}
+					
+				}
+			}
+			this.getManagedBean().setRequestNoteDtls(requestNoteDtls);
+			getManagedBean().getRequestNote().setRequestNoteDtls(requestNoteDtls);
+			getManagedBean().getRequestNote().setRequestNoteItems(requestNoteItems);
+			
+		} finally {
+//			purchaseInDefaultSO = null;
+//			// title checker
+			getManagedBean().setRequestNote(requestNote);
+			getManagedBean().setRequestNoteDtls(requestNoteDtlList);
+			//getManagedBean().setTitleChecker(Boolean.FALSE);
+			
+			getManagedBean().setTitleChecker(Boolean.FALSE);
+		}
 	}
 	
 	
@@ -1156,6 +1218,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().
 				getRequestNoteDtlForCodificationBySupplier(requestNoteReqDTO);
 		reloadRequestNoteForCodification(requestNoteResDTO);
+		
+		if(!pidExpiredFlag){
+			//getPurchaseInDefaultExpiredMessageCodification(getManagedBean().getRequestNoteStatus().getStatusId());
+			
+		}
+		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		// page nav. to request note codification page
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, REQUEST_NOTE_CODIFICARION_PAGE);
@@ -3507,13 +3575,35 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 */
 	private void pidValidity(ScPurchaseInDefault purchaseInDefault, ScRequestNote scRequestNote) {
 		Date today  = DateUtils.getCurrentDateWithoutTime();
-		Date ExpDate = DateUtils.addDays(scRequestNote.getCreatedDate(), purchaseInDefault.getPidValidDays());
+		Date ExpDate = DateUtils.addDays(purchaseInDefault.getChangedDate(), purchaseInDefault.getPidValidDays());
+		log.info("pID validity begin");
 		if(ExpDate.before(today)){
 
 			throw new EpException(
 					MessageConst.ERROR_760355,
 					new String[] {purchaseInDefault.getPurchaseInDefaultNo()});
 		}  
+		log.info("pID validity end");
+	}
+	
+	/**
+	 * Pid validity.
+	 *
+	 * @param purchaseInDefault the purchase in default
+	 * @param scRequestNote the sc request note
+	 */
+	private boolean pidValidityBoolean(ScPurchaseInDefault purchaseInDefault, ScRequestNote scRequestNote) {
+		Date today  = DateUtils.getCurrentDateWithoutTime();
+		Date ExpDate = DateUtils.addDays(purchaseInDefault.getChangedDate(), purchaseInDefault.getPidValidDays());
+		boolean valid = true;
+		if(ExpDate.before(today)){
+			valid = false;
+			getManagedBean().getRequestNoteStatus().setStatusId(DPStatusConstants.PID_EXPIRED);
+			//throw new EpException(
+			//		MessageConst.ERROR_760355,
+			//		new String[] {purchaseInDefault.getPurchaseInDefaultNo()});
+		}
+		return valid;
 	}
 
 
@@ -4219,6 +4309,26 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 	
 	/**
+	 * Gets the purchase in default expired message.
+	 *
+	 * @param statusId the status id
+	 * @return the purchase in default expired message
+	 */
+	private void getPurchaseInDefaultExpiredMessageCodification(Long statusId){
+		if(DPStatusConstants.PID_EXPIRED.equals(statusId)){
+			Locale locale = new FacesScopes().getUserLocale();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+							.getMessage(
+									ResourceBundleUtils.getMessage("lbl.sc.purchase.in.default.exp.msg2",
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale),
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+		}
+	}
+	
+	/**
 	 * Update work flow and remarks.
 	 *
 	 * @param requestNote the request note
@@ -4578,7 +4688,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 */
 	public void addButton(){
 		Long currentStatusId = getManagedBean().getCurrentStatusId();
-		//check if pid expired ovewrite sq
 		//checking if SQ still valid, if not valid thus cancel/reject button will be added
 		
 		if(!isSqStillValid()){
@@ -4667,4 +4776,79 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return cal;
 	}
 	// 12177 - End
+	
+	//12183 - Start
+	public String getDocStatus(ScRequestNote requestNote){
+			
+		if(checkStatusPidExpired(requestNote)){
+			return getStatusDescById(DPStatusConstants.PID_EXPIRED);
+		}else if(!isSqStillValid()){
+			return getStatusDescById(DPStatusConstants.SQ_EXPIRED);
+		}else{
+			return getStatusDescById(getManagedBean().getRequestNoteStatus().getStatusId());
+		}
+	}
+	
+	public boolean checkStatusPidExpired(ScRequestNote requestNote){
+		
+		String docNo = null;
+		Long currentStatusId = null;
+		ScPurchaseInDefault scPID = null;
+		
+		if(requestNote != null){
+			docNo = requestNote.getRequestNoteNo();
+			
+			if(requestNote.getCurrentStatus() != null){
+				currentStatusId = requestNote.getCurrentStatus().getPmStatus().getStatusId();		
+			}else{
+				currentStatusId = getManagedBean().getCurrentStatusId();
+			}	
+			
+			if(currentStatusId == null){
+				return false;
+			}
+			
+		    if(currentStatusId.equals(DPStatusConstants.RN_PENDING_SUBMISSION)
+		    	  || currentStatusId.equals(DPStatusConstants.RN_PENDING_APPROVAL)
+		    	  || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION) 
+		    	  || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL)
+		    	  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)){
+		    		
+		    	RequestNoteReqDTO reqDTO = new RequestNoteReqDTO();
+		    	RequestNoteResDTO resDTO = new RequestNoteResDTO();
+		    	IRequestNoteSO reqSO = null;
+		    	reqSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IRequestNoteSO.class);
+		    		
+		    	reqDTO.setRequestNoteId(requestNote.getRequestNoteId());
+		    	reqDTO.setRequestNoteNo(docNo);
+		    	
+		    	resDTO = reqSO.getRequestNote(reqDTO);
+		    		
+		    	if(resDTO.getRequestNoteDetail().getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault()!=null){
+		    		scPID = resDTO.getRequestNoteDetail().getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault();
+		    	} 		
+		    }  
+		}
+		
+		return pidValidityBoolean(scPID);
+	}
+	
+	private boolean pidValidityBoolean(ScPurchaseInDefault purchaseInDefault){
+		boolean valid = false;
+		
+		if(purchaseInDefault!=null){
+			Date today  = DateUtils.getCurrentDate();
+			Date ExpDate = DateUtils.addDays(purchaseInDefault.getChangedDate(), purchaseInDefault.getPidValidDays());
+			
+			log.info("pID validity begin");
+			
+			if(today.after(ExpDate)){
+				valid = true;
+			}
+			log.info("pID validity end");
+		}
+		return valid;
+	}
+	//12183 - End
 }
