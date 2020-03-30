@@ -1156,7 +1156,7 @@ public class EvaluationBackingBean extends
 			// 26339  -venkat start
 			String title =this.getManagedBean().getScQtChecklist().getTitle();
 			if(title.equals(ParameterConst.CREDIT_FACILITIES_TITLE) ||
-					title.equals(ParameterConst.ASSET_FACILITIES_TITLE))
+					title.equals(ParameterConst.ASSET_FACILITIES_TITLE) || title.equals(ParameterConst.BANK_STATEMENT_GROUP_ID))
 			{
 				this.getManagedBean().setFP_Compliance(true);
 			}else{
