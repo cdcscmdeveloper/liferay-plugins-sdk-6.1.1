@@ -1502,6 +1502,23 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				ctAgency.setChkStatus(true);
 			}
 		}
+		
+		// #25703 start
+		// check status from PM_ORG_VALIDITY
+		if (ctAgency.getOrgProfile().getPmOrgValidity().getRecordStatusFlg() == 0) {
+			if (ctAgency.getOrgProfile().getPmOrgValidity().getEffDate().after(DateUtils.getCurrentDateWithoutTime())) {
+				ctAgency.setChkStatusPmOrgValidity(true);
+			} else {
+				ctAgency.setChkStatusPmOrgValidity(false);
+			}
+		} else {
+			if (ctAgency.getOrgProfile().getPmOrgValidity().getEffDate().after(DateUtils.getCurrentDateWithoutTime())) {
+				ctAgency.setChkStatusPmOrgValidity(false);
+			} else {
+				ctAgency.setChkStatusPmOrgValidity(true);
+			}
+		}
+		// #25703 end
 	}
 
 	/**
@@ -2111,7 +2128,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			attachment.setCreatedUser(facesScopes.getUserSessionBean());
 			attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			attachment.setSectionId(ContractConst.ATTACHMENT_AGENCY_CONTRACT_SHARING);
-			getManagedBean().getContractVer().setAgencyContractSharingAttachements(attachment);
+			//#25703 start
+			getManagedBean().getContractVer().getAgencyContractSharingAttachements().add(attachment);
+			//#25703 end
 			RequestContext.getCurrentInstance().execute("ctSharingAttachDlg.hide()");
 		}
 		else if(event.getComponent().getId().equalsIgnoreCase("uploadWaiver")){
@@ -2271,22 +2290,39 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * The method used to delete the uploaded agency file.
 	 */    
-	public void delCtMinstrySharringAttach(){
-		CtAttachment attachment =  getManagedBean().getContractVer().getAgencyContractSharingAttachements();
-		if(attachment.getAttachmentId() != null){
+	// #25703 start
+	public void delCtMinstrySharringAttach(int index) {
+
+		/*
+		 * CtAttachment attachment =
+		 * getManagedBean().getContractVer().getAgencyContractSharingAttachements
+		 * (); if(attachment.getAttachmentId() != null){
+		 * getManagedBean().getDeleteAttachmentList().add(attachment); }
+		 * getManagedBean
+		 * ().getContractVer().getAgencyContractSharingAttachements
+		 * ().setFileName(null);
+		 * getManagedBean().getContractVer().getAgencyContractSharingAttachements
+		 * ().setFilePath(null);
+		 */
+
+		CtAttachment attachment = getManagedBean().getContractVer().getAgencyContractSharingAttachements().get(index);
+		if (attachment.getAttachmentId() != null) {
 			getManagedBean().getDeleteAttachmentList().add(attachment);
 		}
-		getManagedBean().getContractVer().getAgencyContractSharingAttachements().setFileName(null);
-		getManagedBean().getContractVer().getAgencyContractSharingAttachements().setFilePath(null); 
+		getManagedBean().getContractVer().getAgencyContractSharingAttachements().remove(index);
+
 		Long minstryId = retrieveMinistryOrgProfile(
-				getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId();
-		for(CtAgency agencies : getManagedBean().getContractVer().getCtAgencies()){
-			if(!minstryId.equals(agencies.getOrgProfile().getMinstryId())){
+				getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId())
+				.getOrgProfileId();
+		for (CtAgency agencies : getManagedBean().getContractVer().getCtAgencies()) {
+			if (!minstryId.equals(agencies.getOrgProfile().getMinstryId())) {
 				getManagedBean().setOwnerOrgProfile(false);
 				break;
 			}
 		}
 	}
+
+	// #25703 end
 
 	/**
 	 * The method used for generating a list of available ministry

@@ -1,5 +1,5 @@
 /**
- * Copyright © 2013 Archisoft. All rights reserved. 
+ * Copyright © 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.ct.amendment;
 
@@ -1742,11 +1742,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							|| ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getAp178RefNo().isEmpty()){
 						setTabValue("AG");
 						throw new EpException(MessageConst.ERROR_750045);
-					}else if(ctBackingBean.getManagedBean().getContractVer().getAgencyContractSharingAttachements() == null ||
-							ctBackingBean.getManagedBean().getContractVer().getAgencyContractSharingAttachements().getFilePath() == null){
+					}
+					//#25703 start
+					else if(ctBackingBean.getManagedBean().getContractVer().getAgencyContractSharingAttachements() == null ||
+							ctBackingBean.getManagedBean().getContractVer().getAgencyContractSharingAttachements().isEmpty()){
 						setTabValue("AG");
 						throw new EpException(MessageConst.ERROR_750046);
 					}
+					//#25703 end
 				}
 			}
 
