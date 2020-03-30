@@ -1971,6 +1971,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				ctAgency.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
 				ctAgency.setCeilingAmount(new BigDecimal(0));
 				ctAgency.setChkStatus(true);
+				//#25703 start
+				ctAgency.setChkStatusPmOrgValidity(true);
+				//#25703 end
 				pmOrgProfiles.setMinstryId(getManagedBean().getMinistryProfileId());
 				ctAgency.setOrgProfile(pmOrgProfiles);
 				ctAgency.setMinistryName(retrieveMinistryByOrgProfileId(pmOrgProfiles.getOrgProfileId()));
@@ -2049,6 +2052,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				ctAgency.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
 				ctAgency.setCeilingAmount(new BigDecimal(0));
 				ctAgency.setChkStatus(true);  	
+				//#25703 start
+				ctAgency.setChkStatusPmOrgValidity(true);
+				//#25703 end
 				ctAgency.setCtContractVer(this.getManagedBean().getContractVer());
 				ctAgencyList.add(ctAgency);
 
