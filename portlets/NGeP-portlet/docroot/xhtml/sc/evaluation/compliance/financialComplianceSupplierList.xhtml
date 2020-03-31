@@ -52,7 +52,7 @@
 				<!-- 26339  Removed from disabled attribute  'or evaluationBackingBean.managedBean.FP_Compliance'-->
 				<p:selectOneMenu
 					disabled="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'false' or evaluationBackingBean.managedBean.statusOnly or evaluationBackingBean.managedBean.complianceReEvaluateRequired 
-					 or !evaluationBackingBean.getManagedBean().isFP_Compliance()}"  
+					or evaluationBackingBean.managedBean.readOnly or !evaluationBackingBean.getManagedBean().isFP_Compliance()}"  
 					value="#{complianceTechnicalSupplier.compliance}">
                   <!-- 26339 End-->
 					<f:selectItems
