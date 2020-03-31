@@ -1067,7 +1067,7 @@ public class SmApplicationUtil {
 					.getSmAddress().getMapLatitude())
 					|| StringUtils.isBlank(companyBasic.getSmCompanyAddresses()
 							.get(0).getSmAddress().getMapLongitude())) {
-				throw new EpException(SmCommonUtil.getMessage("lbl.sm.required.msg",
+				throw new EpException(SmCommonUtil.getMessage("lbl.sm.coordinate.required.msg",
 						new String[] { SmCommonUtil.getMessage("lbl.sm.coordinate", null) }));
 			}
 		}
@@ -1076,7 +1076,7 @@ public class SmApplicationUtil {
 				if (fac.getSmAddress().getMapLatitude() != null || fac.getSmAddress().getMapLongitude() != null) {
 					if (StringUtils.isBlank(fac.getSmAddress().getMapLatitude())
 							|| StringUtils.isBlank(fac.getSmAddress().getMapLongitude())) {
-						throw new EpException(SmCommonUtil.getMessage("lbl.sm.required.msg",
+						throw new EpException(SmCommonUtil.getMessage("lbl.sm.coordinate.required.msg",
 								new String[] { SmCommonUtil.getMessage("lbl.sm.coordinate", null) }));
 					}
 				}
