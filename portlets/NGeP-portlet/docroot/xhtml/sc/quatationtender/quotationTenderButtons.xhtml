@@ -84,6 +84,7 @@
 					update="@form"
 					rendered="#{isQTStatusPendingScheduleAndBefore or !qTDetailBB.managedBean.maintanceFlow}" 
 					disabled="#{!qTDetailBB.managedBean.ptjPresent}"/>
+					
 
 				<c:choose>
 					<c:when test="#{qTDetailBB.managedBean.taskId ne null}">
@@ -91,10 +92,17 @@
 							value="#{qTDetailBB.managedBean.outComes}">
 							<ui:param name="buttonLabel"
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+							<ui:param name="bpAction" value="SUBMIT" />
+							<p:commandButton value="#{lbl[buttonLabel]}"
+								styleClass="ui-button"
+								onclick="submitConfirmPopUp2.show();"
+								update="@([id$=#{submitConfirmId2}])" 
+								rendered="#{isClone2}" />
 							<p:commandButton value="#{lbl[buttonLabel]}"
 								styleClass="ui-button"
 								onclick="blockWidget.show();"
 								oncomplete="blockWidget.hide();"
+								rendered="#{!isClone2}" 
 								action="#{qTDetailBB.updateBpmTask(bpmAction)}" />
 						</ui:repeat>
 					</c:when>
@@ -103,15 +111,25 @@
 							action="#{qTDetailBB.submitQTDetailsAction}" process="@form"
 							update="@all"
 							onclick="blockWidget.show();"
+							rendered="#{!isClone1 and !isClone2}" 
 							oncomplete="blockWidget.hide();" disabled="#{!qTDetailBB.managedBean.ptjPresent}"/>
+							
+						<p:commandButton value="#{lbl['lbl.btn.submit']}"
+							onclick="submitConfirmPopUp.show();"
+							update="@([id$=#{submitConfirmId}])" 
+							rendered="#{isClone1}" 
+							disabled="#{!qTDetailBB.managedBean.ptjPresent}"/>
+							
+						
 					</c:when>
 					<c:otherwise>
+							
 							<p:commandButton value="#{lbl['lbl.btn.submit']}"
 								styleClass="amendButton"
 								action="#{qTDetailBB.submitQtDetailsFormMaintanace}"
 								process="@form" update="@all" onclick="blockWidget.show();"
 								oncomplete="blockWidget.hide();"
-								rendered="#{qTDetailBB.isQTStatusInBetween(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_PB_APPROVAL, QTStatusConst.QT_PENDING_LOA)}"
+								rendered="#{!isClone2 and (qTDetailBB.isQTStatusInBetween(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_PB_APPROVAL, QTStatusConst.QT_PENDING_LOA))}"
 								disabled="#{qTDetailBB.isQTStatusPublished(qTDetailBB.managedBean.qt.qtStatus.statusId) and 
 								(empty qTDetailBB.managedBean.amendMentBean or !qTDetailBB.managedBean.amendMentBean.brandNew) and !qTDetailBB.managedBean.changesOnQTMaintenance}" />
 						</c:otherwise>
@@ -132,6 +150,50 @@
 			</td>
 		</tr>
 		</table>
+		
+		
+		<p:dialog id="submitConfirmId2" widgetVar="submitConfirmPopUp2"
+			header="#{lbl['lbl.sc.approval.confirm']}" resizable="false"
+			width="30%" height="100" closable="false">
+			<table>
+				<tr>
+					<td align="center"><p:outputLabel
+							value="#{lbl['lbl.sc.approval.dialog.confirm']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
+				    onclick="submitConfirmPopUp.hide(); blockWidget.show();"
+					oncomplete="blockWidget.hide();"
+					 partialSubmit="true" process="@form" update="@form" 
+					action="#{qTDetailBB.updateBpmTask(bpAction)}" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" 
+					onclick="submitConfirmPopUp2.hide();" type="button" partialSubmit="true"  process="@this"/>
+			</div>
+		</p:dialog>
+		
+		<p:dialog id="submitConfirmId" widgetVar="submitConfirmPopUp"
+			header="#{lbl['lbl.sc.approval.confirm']}" resizable="false"
+			width="30%" height="100" closable="false">
+			<table>
+				<tr>
+					<td align="center"><p:outputLabel
+							value="#{lbl['lbl.sc.approval.dialog.confirm']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
+				    onclick="submitConfirmPopUp.hide(); blockWidget.show();"
+					oncomplete="blockWidget.hide();"
+					 partialSubmit="true" process="@form" update="@form" 
+					action="#{qTDetailBB.submitQTDetailsAction}" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" 
+					onclick="submitConfirmPopUp.hide();" type="button" partialSubmit="true"  process="@this"/>
+			</div>
+		</p:dialog>
+		
 			
 		<p:dialog id="cancelQTDlg" widgetVar="cancelQTDlg"
 			header="#{lbl['lbl.sc.cancel.confirm']}" resizable="false"

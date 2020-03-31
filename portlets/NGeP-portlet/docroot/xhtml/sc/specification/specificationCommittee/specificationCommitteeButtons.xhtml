@@ -45,10 +45,16 @@
 						<ui:fragment rendered="#{bpmAction ne '~'}">
 							<ui:param name="buttonLabel"
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+							<ui:param name="bpAction" value="SUBMIT" />	
+							<p:commandButton value="#{lbl[buttonLabel]}"
+								styleClass="ui-button"
+								onclick="submitConfirmPopUp2.show();"
+								update="@([id$=#{submitConfirmId2}])" 
+								rendered="#{isClone}" />
 
 							<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
 								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-								styleClass="ui-button" style="float:right;"
+								styleClass="ui-button" style="float:right;" rendered="#{!isClone}"
 								action="#{specificationBackingBean.specCommitteBpmTask(bpmAction)}" />
 						</ui:fragment>
 					</ui:repeat>
@@ -95,6 +101,27 @@
 					
 			</tr>
 		</table>
+
+		<p:dialog id="submitConfirmId2" widgetVar="submitConfirmPopUp2"
+			header="#{lbl['lbl.sc.approval.confirm']}" resizable="false"
+			width="30%" height="100" closable="false">
+			<table>
+				<tr>
+					<td align="center"><p:outputLabel
+							value="#{lbl['lbl.sc.approval.dialog.confirm']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
+				    onclick="submitConfirmPopUp.hide(); blockWidget.show();"
+					oncomplete="blockWidget.hide();"
+					 partialSubmit="true" process="@form" update="@form" 
+					action="#{specificationBackingBean.specCommitteBpmTask(bpAction)}" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" 
+					onclick="submitConfirmPopUp2.hide();" type="button" partialSubmit="true"  process="@this"/>
+			</div>
+		</p:dialog>
 
 		<p:dialog id="reviseSCDlgs" widgetVar="reviseSCDlgs"
 			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
