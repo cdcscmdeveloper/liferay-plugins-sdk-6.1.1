@@ -12078,14 +12078,28 @@ private void retriveCommitteeRemarksList(){
 	*/
 	public SelectItem[] statusDropdownCodeValues(String itemType,ScQtProposalChecklistAttachment scQtProposalChecklistAttachment) {
 		List<Integer> types = new ArrayList<Integer>();
+		
 		// 26339  -venkat start
 		PmDocument pmdoc=this.getManagedBean().getScQtChecklist().getPmDocument();
-		if(pmdoc!= null && pmdoc.getDocGroupId()!=null && pmdoc.getDocGroupId().equals(ParameterConst.ASSET_LIABILITIES_GROUP_ID) 
-				&& pmdoc.getDocGroupId().equals(ParameterConst.CREDIT_FACILITIES_GROUP_ID) )
-		{
-			this.getManagedBean().setFP_Compliance(true);
-		}else{
-			this.getManagedBean().setFP_Compliance(false);
+		
+		log.info("Group id ------> :"+pmdoc.getDocGroupId());
+		
+		if(pmdoc!= null && pmdoc.getDocGroupId()!=null ) { 
+			if(pmdoc.getDocGroupId().toString().equals(ParameterConst.ASSET_LIABILITIES_GROUP_ID)) 
+			{
+				this.getManagedBean().setFP_Compliance(true);
+			}
+			else if(pmdoc.getDocGroupId().toString().equals(ParameterConst.CREDIT_FACILITIES_GROUP_ID)) 
+			{
+				this.getManagedBean().setFP_Compliance(true);
+			}
+			else if(pmdoc.getDocGroupId().toString().equals(ParameterConst.BANK_STATEMENT_GROUP_ID))
+			{
+				this.getManagedBean().setFP_Compliance(true);
+			}
+			else{
+				this.getManagedBean().setFP_Compliance(false);
+			}
 		}
 		 
 		 if(null!=scQtProposalChecklistAttachment && scQtProposalChecklistAttachment.getAttachmentId()!=null)
@@ -12095,19 +12109,30 @@ private void retriveCommitteeRemarksList(){
 		}else if(null==scQtProposalChecklistAttachment && this.getManagedBean().isFP_Compliance())
 		{
 			types.add(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
+			this.getManagedBean().setFP_Compliance(false);
 		}else{
 			types.add(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
 			types.add(ParameterConst.COMPLIANCE_STATUS_NONCOMPLIANCE);
 			types.add(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
 
-		}    // 26339  -venkat End
+		}
+		// 26339  -venkat End
+
 		SelectItem[] items = null;
 		try {
 			
 			items = new SelectItem[types.size() + 1];
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
-					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+
+			if(null==scQtProposalChecklistAttachment && !this.getManagedBean().isFP_Compliance())
+			{  //lbl.ct.not.applicable 
+				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+						"lbl.ct.not.applicable", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale()));
+			} else {
+				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+						"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
+			}
 			int i = 1;
 			for (Integer location : types) {
 				List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(itemType);
@@ -12126,9 +12151,8 @@ private void retriveCommitteeRemarksList(){
 		} finally {
 
 		}
+		
 		return items;
-		}
-
-	
+	}
 	
 }
