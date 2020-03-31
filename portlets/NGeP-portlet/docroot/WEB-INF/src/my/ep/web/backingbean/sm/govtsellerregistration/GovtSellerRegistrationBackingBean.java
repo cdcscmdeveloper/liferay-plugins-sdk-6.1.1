@@ -882,7 +882,7 @@ public class GovtSellerRegistrationBackingBean extends
 				.getSmAddress().getMapLatitude())
 				|| StringUtils.isBlank(this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses()
 						.get(0).getSmAddress().getMapLongitude())) {
-			throw new EpException(SmCommonUtil.getMessage("lbl.sm.required.msg",
+			throw new EpException(SmCommonUtil.getMessage("lbl.sm.coordinate.required.msg",
 					new String[] { SmCommonUtil.getMessage("lbl.sm.coordinate", null) }));
 		}
 
