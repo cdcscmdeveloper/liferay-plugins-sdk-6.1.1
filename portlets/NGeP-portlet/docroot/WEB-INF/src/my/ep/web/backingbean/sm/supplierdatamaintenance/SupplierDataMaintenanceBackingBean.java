@@ -2,6 +2,7 @@ package my.ep.web.backingbean.sm.supplierdatamaintenance;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -72,6 +73,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.sm.applicationView.BaseReviewApplicationBackingBean;
 import my.ep.web.backingbean.sm.registration.RegistrationBackingBean;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
 import my.ep.web.util.DateUtils;
@@ -2464,5 +2466,21 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setEditDisciplinaryAction(false);
 	}
 	//27426 : Disciplinary Action - end
+	
+	//26238 : Disciplinary Action - start
+	public void downloadDAHistory() throws Exception {
+		String language = new FacesScopes().getUserLocale().getLanguage();
+		SmSupplier supplier = getManagedBean().getSmSupplier();
+		if (language.equals("en")) {
+			Map<String, String> paramMap = new HashMap<String, String>();
+			paramMap.put("PSUPPLIERID", supplier.getSupplierId().toString());
+			generateReport(ReportConst.SM_DISCIPLINARY_ACTION_HISTORY_ENG, paramMap);
+		} else {
+			Map<String, String> paramMap = new HashMap<String, String>();
+			paramMap.put("PSUPPLIERID", supplier.getSupplierId().toString());
+			generateReport(ReportConst.SM_DISCIPLINARY_ACTION_HISTORY_MALAY, paramMap);
+		}
+	}
+	//26238 : Disciplinary Action - end
 
 }

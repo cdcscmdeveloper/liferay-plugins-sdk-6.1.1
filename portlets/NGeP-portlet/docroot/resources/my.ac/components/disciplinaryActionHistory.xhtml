@@ -107,6 +107,11 @@
 			
 	/*  end : 27445 = Disciplinary Actions / history popup window*/
 		</p:dataTable>
+		<p:commandButton value="#{lbl['lbl.btn.download']}" style="float:right;"
+			action="#{supplierDataMaintenanceBackingBean.downloadDAHistory}"
+			ajax="false">
+			<p:fileDownload value="#{supplierDataMaintenanceBackingBean.file}" />
+		</p:commandButton>
 	</p:dialog>
 	</cc:implementation>
 </ui:composition>
