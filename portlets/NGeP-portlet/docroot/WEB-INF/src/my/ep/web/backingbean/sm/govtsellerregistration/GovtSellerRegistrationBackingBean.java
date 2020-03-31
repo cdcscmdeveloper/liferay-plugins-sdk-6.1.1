@@ -876,6 +876,15 @@ public class GovtSellerRegistrationBackingBean extends
 			getManagedBean().setSmResAdd(
 					(SmAddress) SerializationUtils.clone(defaultAddr));
 		}
+		
+		//#27356
+		if (StringUtils.isBlank(this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0)
+				.getSmAddress().getMapLatitude())
+				|| StringUtils.isBlank(this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses()
+						.get(0).getSmAddress().getMapLongitude())) {
+			throw new EpException(SmCommonUtil.getMessage("lbl.sm.required.msg",
+					new String[] { SmCommonUtil.getMessage("lbl.sm.coordinate", null) }));
+		}
 
 		getManagedBean().getSmPersonnel().setIdentificationType(icNoType);
 		initUserPermanentAddressSelectItems(getManagedBean()
