@@ -1,5 +1,7 @@
 package my.ep.web.backingbean.sm.travellingTicket;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -212,14 +214,20 @@ public class TravellingTicketBackingBean extends BaseBackingBean<TravellingTicke
 							machineSearchBean.getCategoryId()));	
 		}
 		
-		if (machineSearchBean.getTtStatus() != 0 ) {
-		
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmMachine.recordStatus",
-							SearchOperator.OPERATOR_EQUALS.value(),
-							machineSearchBean.getTtStatus()));
-			
-		}
+		if (machineSearchBean.getTtStatus() != null
+				&& machineSearchBean.getTtStatus().trim().length() > 0) {
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmMachine.recordStatus", SearchOperator.OPERATOR_EQUALS
+						.value(), machineSearchBean
+						.getTtStatus()));
+		 }
+			 else{
+					SearchFilterBean codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_IN.value());
+					codesSearchBean	.setSearchField("pmMachine.recordStatus");
+					codesSearchBean.setSearchValue(new ArrayList<String>(Arrays.asList(ParameterConst.RECORD_STATUS_INACTIVE, ParameterConst.RECORD_STATUS_ACTIVE)));
+					searchBean.getDataFilterBeans().add(codesSearchBean);
+					
+				}
 
 		return searchBean;
 	}
