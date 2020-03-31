@@ -82,12 +82,15 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
+import my.ep.web.backingbean.ct.circular.CircularBackingBean;
 import my.ep.web.backingbean.ct.supplier.SupplierBackingBean;
 import my.ep.web.backingbean.ct.suspension.SuspensionBackingBean;
 import my.ep.web.backingbean.ct.termination.TerminationBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.ct.ContractManagementConst;
 import my.ep.web.managedbean.ct.ContractDetailsManagedBean;
+import my.ep.web.managedbean.ct.circular.CircularManagedBean;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.DocumentRepositoryUtils;
@@ -105,6 +108,10 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
+import my.ep.web.managedbean.ct.circular.CircularManagedBean.ServiceListingPagingDataModel;
+import my.ep.web.managedbean.ct.circular.CircularManagedBean.CircularListingPagingDataModel;
+
+
 /**
  * Backing Bean For Contract Details
  * 
@@ -368,6 +375,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 
 			// Retrieve Items
+			ContractItemSearchBackingBean cisbb = new ContractItemSearchBackingBean();
+			cisbb.getManagedBean().setItemProductExist(false);
+			cisbb.getManagedBean().setItemServiceExist(false);
 			ctBB.getManagedBean().getCtItemList().clear();
 			ctBB.getManagedBean().getCtItemServiceList().clear();	        	   
 			ctBB.getManagedBean().setShowItem(null);
@@ -392,9 +402,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					}
 
 					if (item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
+						cisbb.getManagedBean().setItemServiceExist(true);
 						Collections.sort(item.getCtItemPrices(), new CtItemPrice());
 						ctBB.getManagedBean().getCtItemServiceList().add(item);			           
 					} else if (item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
+						cisbb.getManagedBean().setItemProductExist(true);
 						Collections.sort(item.getCtItemPrices(), new CtItemPrice());
 						if (item.getCtItemCeilingQties() != null && item.getCtItemCeilingQties().size() > 0) {
 							for (CtItemCeilingQty ceilingQty : item.getCtItemCeilingQties()) {			        	        	    	   
@@ -1481,7 +1493,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			} else if (outputTab.equalsIgnoreCase(ContractConst.ITEM_DETAIL)) {
 				getManagedBean().setSelectedTabIndex(2);
 				getManagedBean().setItemIndex(2);
-
+				ContractItemSearchBackingBean cmbb=new ContractItemSearchBackingBean();
+				cmbb.getManagedBean().reassignValue(true);
+				
+				//cmbb.getManagedBean().allValue(true);
+				//cmbb.getManagedBean().setResetval(true);
+				cmbb.getManagedBean().getContractListingPagingDataModel().reloadData();
+				cmbb.getManagedBean().getServiceListingPagingDataModel().reloadData();
+				cmbb.getManagedBean().allValue(true);
+				log.info("Value from the Cental Tab ********>>>>>>>>>>>>>>>>>>>>>>>>>>>>>..");
 			} else if (outputTab.equalsIgnoreCase(ContractConst.DEDUCTION_DETAIL)) {
 				getManagedBean().setSelectedTabIndex(3);
 				getManagedBean().setDeductionIndex(3);
@@ -1659,6 +1679,12 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			if (outputTab.equalsIgnoreCase(ContractConst.ITEM_DETAIL)) {
 				getManagedBean().setSelectedTabIndex(3);
 				getManagedBean().setItemIndex(3);
+				ContractItemSearchBackingBean cmbb=new ContractItemSearchBackingBean();
+				ContractBackingBean ccBB = new ContractBackingBean();
+				cmbb.getManagedBean().reassignValue(true);
+				cmbb.getManagedBean().getContractListingPagingDataModel().reloadData();
+				cmbb.getManagedBean().getServiceListingPagingDataModel().reloadData();
+				//cmbb.getManagedBean().allValue(true);
 			}
 			if (outputTab.equalsIgnoreCase(ContractConst.DEDUCTION_DETAIL)) {
 				getManagedBean().setSelectedTabIndex(4);
@@ -1753,6 +1779,12 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			if (outputTab.equalsIgnoreCase(ContractConst.ITEM_DETAIL)) {
 				getManagedBean().setSelectedTabIndex(2);
 				getManagedBean().setItemIndex(2);
+			
+				ContractItemSearchBackingBean contractBb= new ContractItemSearchBackingBean();
+				contractBb.getManagedBean().reassignValue(true);
+				contractBb.getManagedBean().getContractListingPagingDataModel().reloadData();
+				contractBb.getManagedBean().getServiceListingPagingDataModel().reloadData();
+				
 			}
 			if (outputTab.equalsIgnoreCase(ContractConst.DEDUCTION_DETAIL)) {
 				getManagedBean().setSelectedTabIndex(3);
@@ -2270,6 +2302,23 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	public String backAction() {
 		ctBB.getManagedBean().setViewContract(false);
 		getManagedBean().setLoaContractVerList(null);
+		ContractItemSearchBackingBean  contractBB= new ContractItemSearchBackingBean();
+		contractBB.getManagedBean().setItemcode(null);
+		contractBB.getManagedBean().setItemname(null);
+		contractBB.getManagedBean().setItemstatus(null);
+		contractBB.getManagedBean().setItemtype(null);
+		contractBB.getManagedBean().setUOM(null);
+		contractBB.getManagedBean().setSkuno(null);
+		contractBB.getManagedBean().setTypeofgoods(null);
+	
+		ContractBackingBean ccBB = new ContractBackingBean();
+		ctBB.getManagedBean().setSelectedItem(null);
+		ctBB.getManagedBean().setServiceselectedItem(null);
+		
+		contractBB.getManagedBean().getContractListingPagingDataModel().resetData();
+		contractBB.getManagedBean().getServiceListingPagingDataModel().resetData();
+		contractBB.getManagedBean().setResetval(true);
+	
 		return (getManagedBean().getExternalPageUrl() != null) ? getManagedBean().getExternalPageUrl() : CONTRACT_MAINT_PAGE;
 	}
 
