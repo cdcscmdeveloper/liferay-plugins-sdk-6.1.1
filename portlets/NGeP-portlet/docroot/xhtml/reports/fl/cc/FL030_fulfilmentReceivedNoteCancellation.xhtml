@@ -131,7 +131,7 @@
 					<f:selectItems
 						value="#{frnCancelRptBB.retrieveReceivingOfficerList()}"></f:selectItems>
 					<p:ajax event="change" partialSubmit="true"
-						update="@([id$=Msg])" />
+						update="@([id$=Msg])" /> 
 				</p:selectOneMenu></td>
 			<td><p:outputLabel value="#{lbl['lbl.fl.frn.no']}"></p:outputLabel> </td>
 			<td><p:inputText value="#{frnCancelRptBB.managedBean.frnNo}">
