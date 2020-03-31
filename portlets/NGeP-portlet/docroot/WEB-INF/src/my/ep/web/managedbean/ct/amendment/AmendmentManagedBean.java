@@ -4,18 +4,31 @@
 package my.ep.web.managedbean.ct.amendment;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-
+import org.apache.log4j.Logger;
 import org.primefaces.model.DualListModel;
-
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.ct.dtl.IContractItemSO;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.dto.ct.ContractReqDTO;
+import my.ep.dto.ct.dtl.ContractItemReqDTO;
+import my.ep.dto.ct.dtl.ContractItemResDTO;
+import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
@@ -28,9 +41,15 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.type.aut.SearchOperator;
+import my.ep.web.backingbean.ct.ContractBackingBean;
+import my.ep.web.backingbean.ct.circular.CircularBackingBean;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.ct.CtLetterOfAcceptance;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 
 /**
  * ManagedBean For Contract Amendment
@@ -43,6 +62,9 @@ import my.ep.web.managedbean.BaseManagedBean;
 public class AmendmentManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
+	private  boolean readOnly = true;
+	private  boolean resetval = true;
+	
 	private String taskName;
 	private String ackFA;
 	private String committeeName = null;
@@ -98,6 +120,22 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private PmDigiSign pmDigiSign;
 	private SelectItem[] secretaryList;
 
+	private String contractId;
+	private String itemname;
+	private String itemtype;
+	private String itemcode;
+	private String itemstatus;
+	private String skuno;
+	private String UOM;
+	private String typeofgoods;
+	private  boolean servicecollapse=false;
+	private  boolean prodcollapse=false;
+	private IPagingDataModel<CtContractItem> contractListingPagingDataModel = new ContractListingPagingDataModel();
+	private IPagingDataModel<CtContractItem> ServiceListingPagingDataModel =  new ServiceListingPagingDataModel();
+	
+	private boolean itemProductNotExist;
+	private boolean itemServiceNotExist;
+	
 	//26753 - start
 	private boolean updateCommittee;
 	private List<CtCommitteeMember> updatedCommitteeMembers;
@@ -106,6 +144,283 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	//26753 - end
 	@ManagedProperty(value="#{spkiBackingBean}")
 	private SpkiBackingBean spkiBackingBean;
+	
+	public void reassignValue(boolean value) 
+	{
+		readOnly = value;	
+		resetval= value;
+		servicecollapse=value;
+		prodcollapse=value;
+
+	}
+	public void prodValue(boolean value) 
+	{
+		servicecollapse=false;
+		prodcollapse=value;
+		
+	}
+	public void serviceValue(boolean value) 
+	{
+		servicecollapse=value;
+		prodcollapse=false;
+		
+	}
+	public void allValue(boolean value) 
+	{
+		servicecollapse=value;
+		prodcollapse=value;
+		
+	}
+	
+private class ServiceListingPagingDataModel extends PagingDataModel<CtContractItem> {
+		
+		private static final long serialVersionUID = 1L;
+		
+		private  Logger log = EpLogger.getLogger(ServiceListingPagingDataModel.class);
+		
+		public ServiceListingPagingDataModel() {
+			super("amenditemServiceTable");
+		}
+		
+		public ServiceListingPagingDataModel(String table) {
+			super(table, false);
+		}
+		@Override
+		public ISearchResultBean<CtContractItem> pageChangeListener(ISearchBean<CtContractItem> searchBean) {
+			try {		
+					
+				IContractItemSO contractItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
+				ContractItemResDTO resDTO = new ContractItemResDTO();
+				ContractItemReqDTO reqDTO = new ContractItemReqDTO();
+				
+				ContractBackingBean contractBb=new ContractBackingBean();
+				Long contId=contractBb.getManagedBean().getContractVer().getCtContract().getContractId();
+				
+				Long contractVerId=null;
+				if(contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId()
+				.equals(contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId())){
+					contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();	
+				}else {
+					contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId();	
+				}
+				  if(contractVerId!=null ){						
+						SearchFilterBean filterBean = new SearchFilterBean("ctContractVer.contractVerId", SearchOperator.OPERATOR_EQUALS.value(),contractVerId);
+						searchBean.getDataFilterBeans().add(filterBean);
+					}
+				
+			  if(contId!=null ) {
+					SearchFilterBean filterBean = new SearchFilterBean("ctContractVer.ctContract.contractId", SearchOperator.OPERATOR_EQUALS.value(),contId);
+					searchBean.getDataFilterBeans().add(filterBean);
+				}
+
+				if(getItemname()!=null && getItemname().length()>0) {					
+					SearchFilterBean filterBean = new SearchFilterBean("scRequestItem.itemName", SearchOperator.OPERATOR_LIKE.value(),getItemname());
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);
+				}
+				
+				SearchFilterBean filterBean1 = new SearchFilterBean("itemType.parameterCode", SearchOperator.OPERATOR_LIKE.value(),ParameterConst.ITEM_TYPE_SERVICE);
+				filterBean1.setCaseInsensitive(true);
+				searchBean.getDataFilterBeans().add(filterBean1);
+
+				if(getItemcode()!=null && getItemcode().length()>0 ) {					
+					SearchFilterBean filterBean = new SearchFilterBean("scRequestItem.cmItem.extensionCode",	SearchOperator.OPERATOR_LIKE.value(),getItemcode());
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);	
+				}
+				if(getItemstatus()!=null && getItemstatus().length()>0) {				
+					if(getItemstatus().equals(ParameterConst.RECORD_STATUS_INACTIVE) || getItemstatus().equals(ParameterConst.RECORD_STATUS_ACTIVE)){
+						SearchFilterBean filterBean = new SearchFilterBean("scRequestItem.recordStatus", SearchOperator.OPERATOR_LIKE.value(),getItemstatus());
+						filterBean.setCaseInsensitive(true);
+						searchBean.getDataFilterBeans().add(filterBean);
+					}
+					if(getItemstatus().equals(ParameterConst.RECORD_STATUS_ALL)){
+						SearchFilterBean filterBean = new SearchFilterBean(SearchOperator.OPERATOR_IN.value());
+						filterBean.setSearchField("scRequestItem.recordStatusFlg");
+						filterBean.setSearchValue(new ArrayList<String>(Arrays.asList(ParameterConst.RECORD_STATUS_INACTIVE, ParameterConst.RECORD_STATUS_ACTIVE)));
+						searchBean.getDataFilterBeans().add(filterBean);
+					}
+				}
+				if(getUOM()!=null && getUOM().length()>0) {					
+					SearchFilterBean filterBean = new SearchFilterBean("scRequestItem.uom.uomName", SearchOperator.OPERATOR_LIKE.value(),getUOM());
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);
+				}
+				if(getSkuno()!=null && getSkuno().length()>0 ) {
+					SearchFilterBean filterBean = new SearchFilterBean("sku", SearchOperator.OPERATOR_LIKE.value(),getSkuno());
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);
+				}
+				if(getTypeofgoods()!=null && getTypeofgoods().length()>0) {					
+					if(getTypeofgoods().equals(ParameterConst.LOCAL_GOODS_ID) || getTypeofgoods().equals(ParameterConst.IMPORTED_GOODS_ID)){
+						SearchFilterBean filterBean = new SearchFilterBean("itemOrigin.parameterId", SearchOperator.OPERATOR_EQUALS.value(),getTypeofgoods());
+						searchBean.getDataFilterBeans().add(filterBean);					
+					}
+					if(getTypeofgoods().equals(ParameterConst.BOTH_GOODS_ID)){
+						SearchFilterBean filterBean = new SearchFilterBean(SearchOperator.OPERATOR_IN.value());
+						filterBean.setSearchField("itemOrigin.parameterId");
+						filterBean.setSearchValue(new ArrayList<String>(Arrays.asList(ParameterConst.LOCAL_GOODS_ID, ParameterConst.IMPORTED_GOODS_ID)));
+						searchBean.getDataFilterBeans().add(filterBean);
+					}
+				}
+			
+				reqDTO.setContractItemSearchBean(searchBean);
+				
+				if(isResetval()){
+					if(contractBb.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_CENTRAL)){
+						if(getItemtype()!=null && getItemtype().length()>0){
+	                		if(getItemtype().equals(ParameterConst.ITEM_TYPE_SERVICE)){
+								setServicecollapse(isResetval());
+	                		}
+                		}else{
+                			setServicecollapse(isResetval());
+                		}
+                	}
+					
+					if(isServicecollapse()){
+				
+						resDTO=contractItemSO.searchProductServiceItemDtls(reqDTO);
+					    resDTO.getContractItemResultBean();
+
+					    if(resDTO.getContractItemResultBean().getResultList().size()>0){
+							//readOnly=false;
+							return resDTO.getContractItemResultBean();
+					    }
+					  
+						
+	                }
+                }
+			} catch (Exception e) {
+				e.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+			}
+			return null;
+		}
+	}
+
+
+private class ContractListingPagingDataModel extends PagingDataModel<CtContractItem> {
+	private static final long serialVersionUID = 1L;
+	
+	private Logger log = EpLogger.getLogger(ContractListingPagingDataModel.class);
+	public ContractListingPagingDataModel() {
+		super("amenditemTable");
+	}
+	public ContractListingPagingDataModel(String table) {
+		super(table, false);
+	}
+
+	@Override
+	public ISearchResultBean<CtContractItem> pageChangeListener(ISearchBean<CtContractItem> searchBean) {
+		try {			
+			
+			IContractItemSO contractItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
+			ContractItemResDTO resDTO = new ContractItemResDTO();
+			ContractItemReqDTO reqDTO = new ContractItemReqDTO();
+			
+			ContractBackingBean contractBb=new ContractBackingBean();
+			Long contId=contractBb.getManagedBean().getContractVer().getCtContract().getContractId();
+			
+			Long contractVerId=null;
+			if(contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId()
+			.equals(contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId())){
+				contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();	
+			}else {
+				contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId();	
+			}
+			  if(contractVerId!=null ){					
+					SearchFilterBean filterBean = new SearchFilterBean("ctContractVer.contractVerId", SearchOperator.OPERATOR_EQUALS.value(),contractVerId);
+					searchBean.getDataFilterBeans().add(filterBean);
+				}
+			
+		  if(contId!=null ) {
+				SearchFilterBean filterBean = new SearchFilterBean("ctContractVer.ctContract.contractId", SearchOperator.OPERATOR_EQUALS.value(),contId);
+				searchBean.getDataFilterBeans().add(filterBean);
+			}
+			if(getItemname()!=null && getItemname().length()>0) {					
+					SearchFilterBean filterBean = new SearchFilterBean("scRequestItem.itemName", SearchOperator.OPERATOR_LIKE.value(),getItemname());
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);
+				}
+	
+			 SearchFilterBean filterBean1 = new SearchFilterBean("itemType.parameterCode", SearchOperator.OPERATOR_LIKE.value(),ParameterConst.ITEM_TYPE_PRODUCT);
+			 filterBean1.setCaseInsensitive(true);
+			 searchBean.getDataFilterBeans().add(filterBean1);
+			
+			if(getItemcode()!=null && getItemcode().length()>0 ) {				
+				SearchFilterBean filterBean = new SearchFilterBean("scRequestItem.cmItem.extensionCode",	SearchOperator.OPERATOR_LIKE.value(),getItemcode());
+				filterBean.setCaseInsensitive(true);
+				searchBean.getDataFilterBeans().add(filterBean);	
+			}
+			if(getItemstatus()!=null && getItemstatus().length()>0) {				
+				if(getItemstatus().equals(ParameterConst.RECORD_STATUS_INACTIVE) || getItemstatus().equals(ParameterConst.RECORD_STATUS_ACTIVE)){					
+					SearchFilterBean filterBean = new SearchFilterBean("scRequestItem.recordStatus", SearchOperator.OPERATOR_LIKE.value(),getItemstatus());
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);
+				}
+				if(getItemstatus().equals(ParameterConst.RECORD_STATUS_ALL)){					
+					SearchFilterBean filterBean = new SearchFilterBean(SearchOperator.OPERATOR_IN.value());
+					filterBean.setSearchField("scRequestItem.recordStatusFlg");
+					filterBean.setSearchValue(new ArrayList<String>(Arrays.asList(ParameterConst.RECORD_STATUS_INACTIVE, ParameterConst.RECORD_STATUS_ACTIVE)));
+					searchBean.getDataFilterBeans().add(filterBean);
+				}
+			}
+			if(getUOM()!=null && getUOM().length()>0) {				
+				SearchFilterBean filterBean = new SearchFilterBean("scRequestItem.uom.uomName", SearchOperator.OPERATOR_LIKE.value(),getUOM());
+				filterBean.setCaseInsensitive(true);
+				searchBean.getDataFilterBeans().add(filterBean);
+			}
+			if(getSkuno()!=null && getSkuno().length()>0 ) {				
+				SearchFilterBean filterBean = new SearchFilterBean("sku", SearchOperator.OPERATOR_LIKE.value(),getSkuno());
+				filterBean.setCaseInsensitive(true);
+				searchBean.getDataFilterBeans().add(filterBean);
+			}
+			if(getTypeofgoods()!=null && getTypeofgoods().length()>0) {				
+				if(getTypeofgoods().equals(ParameterConst.LOCAL_GOODS_ID) || getTypeofgoods().equals(ParameterConst.IMPORTED_GOODS_ID)){					
+					SearchFilterBean filterBean = new SearchFilterBean("itemOrigin.parameterId", SearchOperator.OPERATOR_EQUALS.value(),getTypeofgoods());
+					searchBean.getDataFilterBeans().add(filterBean);
+				
+				}
+				if(getTypeofgoods().equals(ParameterConst.BOTH_GOODS_ID)){
+					SearchFilterBean filterBean = new SearchFilterBean(SearchOperator.OPERATOR_IN.value());
+					filterBean.setSearchField("itemOrigin.parameterId");
+					filterBean.setSearchValue(new ArrayList<String>(Arrays.asList(ParameterConst.LOCAL_GOODS_ID, ParameterConst.IMPORTED_GOODS_ID)));
+					searchBean.getDataFilterBeans().add(filterBean);
+				}
+			}
+		
+
+			reqDTO.setContractItemSearchBean(searchBean);
+
+            if(isResetval()){
+            	if(contractBb.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_CENTRAL)){
+            		if(getItemtype()!=null && getItemtype().length()>0){
+                		if(getItemtype().equals(ParameterConst.ITEM_TYPE_PRODUCT)){
+	                		setProdcollapse(isResetval());
+                		}	
+            		}else{
+            			setProdcollapse(isResetval());
+            		}
+            	}
+            	
+            	if(isProdcollapse()){
+				
+				resDTO=contractItemSO.searchProductServiceItemDtls(reqDTO);
+				if(resDTO.getContractItemResultBean().getResultList().size()>0) {
+//			    	 readOnly=false;
+			    	 return resDTO.getContractItemResultBean();
+			    }
+				
+			}
+          }
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+		return null;
+	}
+}
+
 
 	/**
 	 * @return the taskName
@@ -870,6 +1185,118 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	 */
 	public void setSecretaryList(SelectItem[] secretaryList) {
 		this.secretaryList = secretaryList;
+	}	
+	
+	
+	public boolean isReadOnly() {
+		return readOnly;
+	}
+	public void setReadOnly(boolean readOnly) {
+		this.readOnly = readOnly;
+	}
+	public boolean isResetval() {
+		return resetval;
+	}
+	public void setResetval(boolean resetval) {
+		this.resetval = resetval;
+	}
+
+	public String getContractId() {
+		return contractId;
+	}
+
+	public void setContractId(String contractId) {
+		this.contractId = contractId;
+	}
+
+	public String getItemname() {
+		return itemname;
+	}
+
+	public void setItemname(String itemname) {
+		this.itemname = itemname;
+	}
+
+	public String getItemtype() {
+		return itemtype;
+	}
+
+	public void setItemtype(String itemtype) {
+		this.itemtype = itemtype;
+	}
+
+	public String getItemcode() {
+		return itemcode;
+	}
+
+	public void setItemcode(String itemcode) {
+		this.itemcode = itemcode;
+	}
+
+	public String getItemstatus() {
+		return itemstatus;
+	}
+
+	public void setItemstatus(String itemstatus) {
+		this.itemstatus = itemstatus;
+	}
+
+	public String getSkuno() {
+		return skuno;
+	}
+
+	public void setSkuno(String skuno) {
+		this.skuno = skuno;
+	}
+
+	public String getUOM() {
+		return UOM;
+	}
+
+	public void setUOM(String uOM) {
+		UOM = uOM;
+	}
+
+	public String getTypeofgoods() {
+		return typeofgoods;
+	}
+
+	public void setTypeofgoods(String typeofgoods) {
+		this.typeofgoods = typeofgoods;
+	}
+
+	public boolean isServicecollapse() {
+		return servicecollapse;
+	}
+
+	public void setServicecollapse(boolean servicecollapse) {
+		this.servicecollapse = servicecollapse;
+	}
+
+	public boolean isProdcollapse() {
+		return prodcollapse;
+	}
+
+	public void setProdcollapse(boolean prodcollapse) {
+		this.prodcollapse = prodcollapse;
+	}
+
+	public IPagingDataModel<CtContractItem> getContractListingPagingDataModel() {
+		return contractListingPagingDataModel;
+	}
+
+	public void setContractListingPagingDataModel(
+			IPagingDataModel<CtContractItem> contractListingPagingDataModel) {
+		this.contractListingPagingDataModel = contractListingPagingDataModel;
+	}
+
+	public IPagingDataModel<CtContractItem> getServiceListingPagingDataModel() {
+		return ServiceListingPagingDataModel;
+	}
+
+	public void setServiceListingPagingDataModel(
+			IPagingDataModel<CtContractItem> serviceListingPagingDataModel) {
+		ServiceListingPagingDataModel = serviceListingPagingDataModel;
 	}
 	
 	//26753 - start
@@ -878,7 +1305,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	 */
 	public boolean isUpdateCommittee() {
 		return updateCommittee;
-	}
+	}	
 	/**
 	 * @param updateCommittee the updateCommittee to set
 	 */
@@ -925,4 +1352,18 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	}	
 	//26753 - end
 	
+	public boolean isItemProductNotExist() {
+		return itemProductNotExist;
+	}
+	public void setItemProductNotExist(boolean itemProductNotExist) {
+		this.itemProductNotExist = itemProductNotExist;
+	}
+	public boolean isItemServiceNotExist() {
+		return itemServiceNotExist;
+	}
+	public void setItemServiceNotExist(boolean itemServiceNotExist) {
+		this.itemServiceNotExist = itemServiceNotExist;
+	}
+	
+
 }
