@@ -175,14 +175,15 @@
 						<td><p:outputLabel styleClass="outputLabel-view-label"
 								value="#{lbl['lbl.sm.disciplinary.jktt.punishment.type']}" /></td>
 						<td><p:spacer width="5" />
-						<!-- #27534 : Disciplinary Action - 26238 - start -->
+						<!-- #27724 : Disciplinary Action - edit 27534 26238 - start -->
 							<p:selectBooleanCheckbox  value="#{supplierDataMaintenanceBackingBean.managedBean.warning}"
-								disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}" style="float:left">
+								disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance
+								or supplierDataMaintenanceBackingBean.managedBean.warningExist}" style="float:left">
 					            <p:ajax event="change" partialSubmit="true" process="@this"
 									listener="#{supplierDataMaintenanceBackingBean.onTickPunishmentType()}"
 									update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 					        </p:selectBooleanCheckbox> <p:spacer width="5" />
-					    <!-- #27534 : Disciplinary Action - end -->
+					    <!-- #27724 : Disciplinary Action - end -->
 					        <p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.warning']}" styleClass="outputLabel-view"/>
 						</td>
 						<td>
