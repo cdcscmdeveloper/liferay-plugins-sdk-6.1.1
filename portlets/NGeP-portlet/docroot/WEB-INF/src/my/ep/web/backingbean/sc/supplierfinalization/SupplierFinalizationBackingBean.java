@@ -1174,7 +1174,7 @@ public class SupplierFinalizationBackingBean extends
 			}
 			reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
 			validateFinalizationReports(reqDTO);
-			validateEvaluationReports(SourcingConstants.SUPPLIER_FINALIZATION_TASK);
+			//validateEvaluationReports(SourcingConstants.SUPPLIER_FINALIZATION_TASK);
 			//saveEvaluationReportsDetaills();
 			if (this.getManagedBean().getEndorsementReportActiveIndex() == activeIndex) {
 				//#27364 Start
