@@ -144,6 +144,7 @@ import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
 import org.primefaces.model.StreamedContent;
@@ -5273,4 +5274,20 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 	}
 	/* 27368 - end */
 	
+	//#25089@hatta - start
+		public void onTabChange(TabChangeEvent event){
+			if(event.getTab().getId().equals("tab1")){
+				try {
+					Thread.sleep(500);
+					RequestContext.getCurrentInstance().execute("popUpInfoDlg.show()");
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		public void dafaultPopUpSupplierInfo(){
+		   RequestContext.getCurrentInstance().execute("popUpInfoDlg.show()");
+		}
+	//#25089@hatta - end
 }
