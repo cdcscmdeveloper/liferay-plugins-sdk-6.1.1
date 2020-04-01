@@ -16,6 +16,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -88,6 +89,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
+import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.RoleCode;
@@ -114,6 +116,7 @@ import my.ep.web.vo.BlacklistOwnerDirectorVO;
 import org.apache.bcel.generic.Select;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
@@ -2359,7 +2362,29 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					}
 				}
 				//END CHANGES SSM
-
+				//START 17906
+				if(this.getManagedBean().getSmSupp().getSmAppl() != null && this.getManagedBean().getSmSupp().getSmAppl().getSmSupplierBanks() != null){
+					StringBuilder sb = new StringBuilder();
+					for(SmSupplierBank bank:this.getManagedBean().getSmSupp().getSmAppl().getSmSupplierBanks()){
+						if(bank.getAccountNo() != null){
+							sb = new StringBuilder();
+							sb.append("<font color='red'>");
+							bank.setHasActiveTransactionContractManagement(SmApplicationUtil.hasActiveTransactionForContractManagement(this.getManagedBean().getSmSupp(), bank.getAccountNo()));
+							bank.setHasActiveTransactionFulfilment(SmApplicationUtil.hasActiveTransactionForFulfilment(this.getManagedBean().getSmSupp(), bank.getAccountNo()));
+							if(bank.isHasActiveTransactionContractManagement()){
+								sb.append(SmCommonUtil.getMessage("lbl.sm.bankDtls.is.active.contract.tied",null));
+								sb.append("<br/>");
+							}
+							if(bank.isHasActiveTransactionFulfilment()){
+								bank.setDisplayMessageBank(SmCommonUtil.getMessage("lbl.sm.bankDtls.is.other.active.contract.tied",	null));
+							}
+							sb.append("</font>");
+							bank.setDisplayMessageBank(sb.toString());
+						}
+					}
+					
+				}
+				//END 17906
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlineAccount/accountMaintenanceDet.xhtml");
 			}
 			
@@ -4230,6 +4255,42 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			}			
 		}
 	}
+	//Start 17906
+
+	/**
+	 * Removed selected approved categories from the list.
+	 * 
+	 * @param e
+	 *            -AjaxBehaviorEvent
+	 */
+	public void unSelectRow(AjaxBehaviorEvent e) {
+		
+		if (getManagedBean().getSelectedSuppBanks() != null) {
+			SmSupplierBank[] selectedSuppBanks = getManagedBean().getSelectedSuppBanks();
+			for(int i = 0;i<getManagedBean().getSelectedSuppBanks().length;i++){
+				SmSupplierBank bank = getManagedBean().getSelectedSuppBanks()[i];
+				if(bank.isHasActiveTransactionContractManagement() || bank.isHasActiveTransactionFulfilment()){
+					selectedSuppBanks = ArrayUtils.remove(selectedSuppBanks, i);
+				}
+			}			
+			getManagedBean().setSelectedSuppBanks(selectedSuppBanks);
+		}		
+	}
+	
+	public void checkingBeforeRemoveSupplierBank() {
+		if(this.getManagedBean().getSelectedSuppBanks() != null && this.getManagedBean().getSelectedSuppBanks().length > 0){
+			this.getManagedBean().setDisplayMessageBank("");
+			for (SmSupplierBank suppBank : this.getManagedBean().getSelectedSuppBanks()) {
+				if(suppBank.isHasActiveTransactionContractManagement() || suppBank.isHasActiveTransactionFulfilment()){
+					this.getManagedBean().setDisplayMessageBank(suppBank.getDisplayMessageBank());
+					RequestContext.getCurrentInstance().execute("bankAlertPopUp.show()");
+					return;
+				}
+			}
+		}
+		RequestContext.getCurrentInstance().execute("bankDeletePopUp.show()");
+	}
+	//End 17906
 }
 
 
