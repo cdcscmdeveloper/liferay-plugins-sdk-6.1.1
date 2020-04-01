@@ -158,6 +158,9 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private List<BlacklistOwnerDirectorVO> blacklistownerDirectorList;
 	private boolean noDisciplinary;
 	private String regIcCheckSSM;
+	//17906
+	private String displayMessageBank;
+
 	
 	private boolean showOwnerPersonnel = false;
 	
@@ -973,5 +976,13 @@ public class RegistrationManagedBean extends BaseManagedBean {
 
 	public void setRegAccountMaintainance(boolean regAccountMaintainance) {
 		this.regAccountMaintainance = regAccountMaintainance;
+	}
+	//17906
+	public String getDisplayMessageBank() {
+		return displayMessageBank;
+	}
+
+	public void setDisplayMessageBank(String displayMessageBank) {
+		this.displayMessageBank = displayMessageBank;
 	}
 }

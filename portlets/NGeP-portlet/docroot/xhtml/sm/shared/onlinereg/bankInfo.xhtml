@@ -9,27 +9,30 @@
 	<p:panel header="#{lbl['lbl.sm.bankinformation']}" toggleable="true" id="pnlBankInfo">
 		<p:dataTable var="bankInfo" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{registrationBackingBean.managedBean.smAppl.smSupplierBanks}"
-			selection="#{registrationBackingBean.managedBean.selectedSuppBanks}"
-			id="bankInfoId" rowKey="#{bankInfo}">
+			selection="#{registrationBackingBean.managedBean.selectedSuppBanks}" 
+			id="bankInfoId" rowKey="#{bankInfo}" >
 			
 			<p:ajax event="rowSelectCheckbox" update=":#{p:component('deleteBnkBtnId')}" />
 			<p:ajax event="rowUnselectCheckbox" update=":#{p:component('deleteBnkBtnId')}" />
 			<p:ajax event="rowSelect" update=":#{p:component('deleteBnkBtnId')}" />   
             <p:ajax event="rowUnselect" update=":#{p:component('deleteBnkBtnId')}" />  
-            <p:ajax event="toggleSelect" update=":#{p:component('deleteBnkBtnId')}" />     
+            <p:ajax event="toggleSelect" update=":#{p:component('deleteBnkBtnId')}" />  
+               
                 
-			<p:column selectionMode="multiple" style="width:2%"  
-			rendered="#{not empty registrationBackingBean.managedBean.smAppl.smSupplierBanks}"  />
+			<p:column selectionMode="multiple" style="width:2%"	
+			rendered="#{not empty registrationBackingBean.managedBean.smAppl.smSupplierBanks}" />
 
-			<p:column>
+			<p:column style="white-space:normal;">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
 					#{lbl['lbl.sm.bankname']}
 				</f:facet>
-			
+				<p:outputPanel>
+				<h:outputText value="#{bankInfo.displayMessageBank}" styleClass="splNotesFonts" style="float: inherit;width : 70% !important;" escape="false" />
+				
 				<p:selectOneMenu id="bankNameId" value="#{bankInfo.pmFinancialOrg.financialOrgId}"
 					style="width: 80% !important;margin-bottom: 5px !important;"
-					disabled="#{registrationBackingBean.managedBean.viewMode}">
+					disabled="#{registrationBackingBean.managedBean.viewMode or bankInfo.hasActiveTransactionContractManagement or bankInfo.hasActiveTransactionFulfilment}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems
 						value="#{registrationBackingBean.managedBean.financialOrgLs}"
@@ -37,6 +40,8 @@
 						itemLabel="#{finOrg.finOrgName}" />
 					<p:ajax event="change" process="@this" update="@this" />
 				</p:selectOneMenu>
+				</p:outputPanel>
+				
 			</p:column>
 			<p:column>
 			
@@ -49,7 +54,7 @@
 					</p:tooltip>
 				</f:facet>
 			
-				<p:inputText id="bankAccNoId" value="#{bankInfo.accountNo}" maxlength="18" disabled="#{registrationBackingBean.managedBean.viewMode}">
+				<p:inputText id="bankAccNoId" value="#{bankInfo.accountNo}" maxlength="18" disabled="#{registrationBackingBean.managedBean.viewMode or bankInfo.hasActiveTransactionContractManagement or bankInfo.hasActiveTransactionFulfilment}">
 					<p:ajax event="blur" process="@this" update="@this" />
 				</p:inputText>
 				<p:message id="bankAccNoIdMsg" for="bankAccNoId" display="icon" />
@@ -97,8 +102,8 @@
 					registrationBackingBean.managedBean.smAppl.smSupplierBanks.size() eq SupplierManagementConst.MAX_PAYMENT_BANK}"
 					update="deleteBnkBtnId,bankInfoId,@this" />
 				<p:commandButton value="#{lbl['lbl.btn.delete']}"  partialSubmit="true" process="@this,bankInfoId"
-					disabled="#{empty registrationBackingBean.managedBean.selectedSuppBanks}"
-					update="bankInfoId,addBnkBtnId,@this" id="deleteBnkBtnId" oncomplete="bankDeletePopUp.show();"/>
+					disabled="#{empty registrationBackingBean.managedBean.selectedSuppBanks}" 
+					update=":#{p:component('bankAlertPopUpId')},bankInfoId,addBnkBtnId,@this" id="deleteBnkBtnId" action="#{registrationBackingBean.checkingBeforeRemoveSupplierBank}"/>
 			</div>
 		</p:outputPanel>
 	</p:panel>
@@ -110,4 +115,17 @@
 		title="#{lbl['lbl.msg.confirm.delete.header']}"
 		content="#{lbl['lbl.msg.confirm.delete']}" 
 		update=":#{p:component('pnlBankInfo')}"/>
+		
+		 <p:confirmDialog id="bankAlertPopUpId" widgetVar="bankAlertPopUp" 
+			severity="alert"  closable="true"  header="#{lbl['lbl.txt.alert']}"  styleClass="splNotesFonts" style="width: 800px;height: auto;left: 400px;top: 261px;right: 400px;">
+			<div class="ppLeftBtn">
+			<f:facet name="message">
+                   <h:outputText value="#{registrationBackingBean.managedBean.displayMessageBank}" styleClass="splNotesFonts"  escape="false"/>
+          </f:facet>
+			</div>
+		<div class="ppRightBtn">		    
+		 	<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"  onclick="bankAlertPopUp.hide();" type="button" />
+		</div>
+		</p:confirmDialog>
+		
 </ui:composition>
