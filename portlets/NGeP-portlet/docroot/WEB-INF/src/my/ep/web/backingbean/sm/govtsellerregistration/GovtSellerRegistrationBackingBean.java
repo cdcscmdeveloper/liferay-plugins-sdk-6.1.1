@@ -149,17 +149,13 @@ public class GovtSellerRegistrationBackingBean extends
 		//START 17906
 		if(this.getManagedBean().getSmSupp().getSmAppl() != null && this.getManagedBean().getSmSupp().getSmAppl().getSmSupplierBanks() != null){
 			StringBuilder sb = new StringBuilder();
-			int i = 0;
 			for(SmSupplierBank bank:this.getManagedBean().getSmSupp().getSmAppl().getSmSupplierBanks()){
 				if(bank.getAccountNo() != null){
 					sb = new StringBuilder();
 					sb.append("<font color='red'>");
 					bank.setHasActiveTransactionContractManagement(SmApplicationUtil.hasActiveTransactionForContractManagement(this.getManagedBean().getSmSupp(), bank.getAccountNo()));
 					bank.setHasActiveTransactionFulfilment(SmApplicationUtil.hasActiveTransactionForFulfilment(this.getManagedBean().getSmSupp(), bank.getAccountNo()));
-					if(i ==0){
-						bank.setHasActiveTransactionContractManagement(true);
-						bank.setHasActiveTransactionFulfilment(true);
-					}
+					
 					if(bank.isHasActiveTransactionContractManagement()){
 						sb.append(SmCommonUtil.getMessage("lbl.sm.bankDtls.is.active.contract.tied",null));
 						sb.append("<br/>");
@@ -170,7 +166,6 @@ public class GovtSellerRegistrationBackingBean extends
 					sb.append("</font>");
 					bank.setDisplayMessageBank(sb.toString());
 				}
-				i++;
 			}
 			
 		}
