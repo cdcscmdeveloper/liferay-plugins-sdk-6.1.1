@@ -68,7 +68,6 @@ import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
@@ -4481,8 +4480,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		if (!scQt.isPanel() && tmpExpectedIntendedPrice != null) {
 			log.info(":::expectTotalIndPriceBelowThreshold() scQt.isPanel(): "+ scQt.isPanel() +" :::");
 			log.info(":::expectTotalIndPriceBelowThreshold() tmpExpectedIntendedPrice: "+ tmpExpectedIntendedPrice +" :::");
-			
-			if (FulfilmentConst.THRESHOLD >= tmpExpectedIntendedPrice.intValue()) {
+			log.info(":::expectTotalIndPriceBelowThreshold() tmpExpectedIntendedPrice.doubleValue: "+ tmpExpectedIntendedPrice.doubleValue() +" :::");
+
+			if (SourcingConstants.QT_BELOW_20K >= tmpExpectedIntendedPrice.doubleValue()) {
 				return Boolean.TRUE;
 			}
 		}
