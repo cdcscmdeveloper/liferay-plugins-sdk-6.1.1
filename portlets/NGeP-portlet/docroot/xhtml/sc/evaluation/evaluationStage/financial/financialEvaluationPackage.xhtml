@@ -43,13 +43,13 @@
 								<h:outputText value="#{evaluationBackingBean.getStatusDescById(financialEval.pmEvalStatus.statusId)}"></h:outputText>
 							</p:column>
 							<p:column rowspan="#{reasonGroup.size()}" rendered="#{st.index==0}">		
-								<ui:fragment rendered="#{evaluationBackingBean.managedBean.finPackageScore eq 'true'}"
+								<ui:fragment rendered="#{technicalEval.scoringReq ne false}"
 								align="center">
 									<p:commandButton value="#{lbl['lbl.btn.view']}"
 										process="@this" partialSubmit="true"
 										action="#{evaluationBackingBean.evaluatefinancialEvaluation(financialEval,index,'EF')}" />
 								</ui:fragment>
-								<ui:fragment rendered="#{null eq evaluationBackingBean.managedBean.finPackageScore or evaluationBackingBean.managedBean.finPackageScore eq 'false'}"
+								<ui:fragment rendered="#{technicalEval.scoringReq eq false}"
 								align="center">
 									<p:commandButton value="#{lbl['lbl.btn.evaluate']}"
 										process="@this" partialSubmit="true"
