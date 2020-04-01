@@ -564,7 +564,7 @@ public class ConsolidationReportBackingBean extends
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 
 		try {
-			validateEvaluationReports(SourcingConstants.CONSOLIDATION_TASK);
+			//validateEvaluationReports(SourcingConstants.CONSOLIDATION_TASK);
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
 			qtSuppFinalizationSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
