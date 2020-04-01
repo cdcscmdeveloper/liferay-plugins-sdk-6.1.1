@@ -1052,12 +1052,23 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 					ITrackingDiarySO trackingDiarySO = (ITrackingDiarySO) BusinessDelegate.getInstance()
 							.getServiceObject("cc", ITrackingDiarySO.class);
 
-					// CR 25790 - Start
+					// CR 25790 - Start					
 					if (isReqOrApprover()) {
-						Long docId = getSelectedDocId();
-						String docType = getSelectedDocType();
-						resDTO = trackingDiarySO.retrieveTrackingDiaryByGroupDocAndGroupId(docId, docType, reqDTO,
-								searchBean, searchFilterBeanAnd1);
+						if (!ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT.equalsIgnoreCase(getSelectedDocType())
+								&& !ParameterConst.DOCTYPE_PURCHASE_INQUIRY.equals(getSelectedDocType())) {
+
+							String docType = getSelectedDocType();
+							Long docId = getSelectedDocId();
+							resDTO = trackingDiarySO.retrieveTrackingDiaryByGroupDocAndGroupId(docId, docType, reqDTO,
+									searchBean, searchFilterBeanAnd1);
+						} else {
+							searchBean.getDataFilterBeans().add(
+									new SearchMultiFilterBean(searchFilterBeanAnd1, searchFilterBeanAnd2));
+							reqDTO.setSearchBean(searchBean);
+
+							setSearchBeanDescription(searchBean, searchFilterBean1, searchFilterBean2);
+							resDTO = trackingDiarySO.retrieveTrackingDiaryBySearchBean(reqDTO);
+						}
 
 					} else {
 						searchBean.getDataFilterBeans().add(
