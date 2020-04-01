@@ -30,19 +30,19 @@
 			<p:column headerText="#{lbl['lbl.tpl.spec.content.system.score']}"
 				style="width:20%;text-align:right;"
 				rendered="#{evaluationBackingBean.managedBean.scQtChecklist.scoringReq}">
-				<h:outputText value="#{finSpec.totalAutoScore}"></h:outputText>
+				<h:outputText value="#{finSpec.specAutoScore}"></h:outputText>
 
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.tpl.spec.content.user.score']}"
 				style="width:20%;text-align:right;"
 				rendered="#{evaluationBackingBean.managedBean.scQtChecklist.scoringReq}">
-				<h:outputText value="#{finSpec.totalUserScore}"></h:outputText>
+				<h:outputText value="#{finSpec.specUserScore}"></h:outputText>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.total.score']}" style="width:20%;text-align:right;"
 				rendered="#{evaluationBackingBean.managedBean.scQtChecklist.scoringReq}">
-				<h:outputText value="#{finSpec.totalScore}"></h:outputText>
+				<h:outputText value="#{finSpec.specTotalScore}"></h:outputText>
 			</p:column>
 
 
