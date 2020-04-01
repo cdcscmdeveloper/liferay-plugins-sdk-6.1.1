@@ -2442,7 +2442,10 @@ public class SupplierDataMaintenanceBackingBean extends
 		SmSupplier supplier = getManagedBean().getSmSupplier();
 		getManagedBean().setWarningExist(false); //27426 : Disciplinary Action
 		if(supplier != null){
-			List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(supplier);
+			//27724 : Disciplinary Action - start
+//			List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(supplier);
+			List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
+			//27724 : Disciplinary Action - end
 			if(discList != null && discList.size() > 0){
 				for(SmDisciplinaryAction disc : discList){
 					if(disc.isWarning()){
