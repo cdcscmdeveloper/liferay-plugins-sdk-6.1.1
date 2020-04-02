@@ -59,8 +59,14 @@
 			<p:outputLabel value="#{lbl['lbl.ct.item.UOM']}"/>
 		</td>
 		<td colspan="1" rowspan="1"> 
-			<p:inputText value="#{contractItemSearchBackingBean.managedBean.UOM}" style="width:270px;" maxlength="20"></p:inputText>
-	   </td>
+						
+			<p:autoComplete panelStyleClass="uomAuto" id="uomDetId" scrollHeight="250" size="40" var="pmUom" converter="PmUomConverter"
+							itemLabel="#{contractItemSearchBackingBean.retriveUomCodeDesc(pmUom)}"
+							itemValue="#{pmUom}" 
+							value="#{contractItemSearchBackingBean.managedBean.selectedSearchItem}"
+							completeMethod="#{contractItemSearchBackingBean.autoCompleteUom}"
+							maxResults="50" dropdown="false" forceSelection="true" />						
+		</td>
 
 	</tr> 	
 	<tr >
@@ -181,12 +187,6 @@
     	      </p:dataTable> 
           </h:panelGrid>
           </p:panel>
-		<p:panel width="700px" height="350px" rendered="#{contractItemSearchBackingBean.managedBean.itemProductNotExist}" >
-	   	<h:panelGrid columns="1">
-	    <p:outputLabel value="#{lbl['lbl.datatable.msg.no.records.found']}" 
-	   	position = "left" styleClass="red_font" />
-	   	</h:panelGrid>
-	   	</p:panel> >
           
           <p:panel id="itemId1" toggleable="true" toggleSpeed="500">
           <p:outputPanel id="changeField1">
@@ -213,7 +213,7 @@
 			        rendered="#{ctBackingBean.managedBean.selectedItem != null and ctBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypePrice}">
 		   	   
 		         <p:dataTable id="itemPriceTier1" var="itemPrice1" 
-		                value="#{ctBackingBean.managedBean.selectedItem.ctItemPrices}">
+		                value="#{ctBackingBean.managedBean.selectedItem.ctItemPrices}" sortBy="#{itemPrice1.ctContractZone.zoneName}">
 			            <ac:paginator for="itemPriceTier1"/>
 			      
 			             <c:if test="#{ctBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeStandard}">
@@ -514,9 +514,8 @@
 			        rendered="#{ctBackingBean.managedBean.selectedItem != null and (ctBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypeQty or ctBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypeMaxQty)}">
 		     
 		           <p:dataTable id="itemMaxQtyTbl1" var="itemMaxQty1" 
-		                value="#{ctBackingBean.managedBean.selectedItem.ctItemMaxQties}">
+		                value="#{ctBackingBean.managedBean.selectedItem.ctItemMaxQties}"  sortBy="#{itemMaxQty1.ctContractZone.zoneName}">
 			            <ac:paginator for="itemMaxQtyTbl1"/>
-			            
 			            <p:column headerText="#{lbl['lbl.ct.zone']}" style="width:30%; white-space:normal;"
 				             rendered="#{ctBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalStandard or ctBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTier or ctBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTariff}">
 				               <h:outputText value="#{itemMaxQty1.ctContractZone.zoneName}" style="float:left;" rendered="#{!itemMaxQty1.changeZoneLabel}" />
@@ -707,13 +706,6 @@
  	      </p:dataTable> 
        </h:panelGrid>
        </p:panel>
-
-		<p:panel width="700px" height="350px" rendered="#{contractItemSearchBackingBean.managedBean.itemServiceNotExist}" >
-	   	<h:panelGrid columns="1">
-	    <p:outputLabel value="#{lbl['lbl.datatable.msg.no.records.found']}" 
-	   	position = "left" styleClass="red_font" />
-	   	</h:panelGrid>
-	   	</p:panel> >
       
        <p:panel id="itemId3" toggleable="true" toggleSpeed="500">
           <p:outputPanel id="changeField">
@@ -1290,3 +1282,4 @@
 	</p:panel>
 
  </ui:composition>
+

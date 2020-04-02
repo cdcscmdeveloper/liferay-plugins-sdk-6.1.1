@@ -19,6 +19,7 @@ import my.ep.dto.ct.dtl.ContractItemReqDTO;
 import my.ep.dto.ct.dtl.ContractItemResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
+import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -73,6 +74,7 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 	private boolean itemServiceExist;
 	private boolean itemProductNotExist;
 	private boolean itemServiceNotExist;
+	private PmUom selectedSearchItem;
 
 	
 	
@@ -333,12 +335,15 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 						searchBean.getDataFilterBeans().add(filterBean);
 					}
 				}
-				if(getUOM()!=null && getUOM().length()>0) {
+				//#20997 - Start-Fixing
+				if(getSelectedSearchItem().getUomName()!=null && getSelectedSearchItem().getUomName().trim().length()>0) {
 					
-					SearchFilterBean filterBean = new SearchFilterBean("scRequestItem.uom.uomName", SearchOperator.OPERATOR_LIKE.value(),getUOM());
+					SearchFilterBean filterBean = new SearchFilterBean("scRequestItem.uom.uomName", SearchOperator.OPERATOR_LIKE.value(),getSelectedSearchItem().getUomName());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);
 				}
+				//#20997 - End-Fixing
+				
 				if(getSkuno()!=null && getSkuno().length()>0 ) {
 					
 					SearchFilterBean filterBean = new SearchFilterBean("sku", SearchOperator.OPERATOR_LIKE.value(),getSkuno());
@@ -800,6 +805,17 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 	public void setItemServiceNotExist(boolean itemServiceNotExist) {
 		this.itemServiceNotExist = itemServiceNotExist;
 	}
-
+	
+	//#20997 - Start
+	// For Searching Autocomplete type UOM
+	public PmUom getSelectedSearchItem() {
+		if (selectedSearchItem == null)
+			selectedSearchItem = new PmUom();
+		return selectedSearchItem;
+	}
+	public void setSelectedSearchItem(PmUom selectedSearchItem) {
+		this.selectedSearchItem = selectedSearchItem;
+	}
+	//#20997 - End
 	
 }
