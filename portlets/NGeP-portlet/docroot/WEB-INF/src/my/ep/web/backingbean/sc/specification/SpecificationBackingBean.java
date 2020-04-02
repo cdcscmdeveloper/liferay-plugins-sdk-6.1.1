@@ -12617,6 +12617,12 @@ public class SpecificationBackingBean extends
 			} else {
 				this.getManagedBean().setSpecItemWeightageRequired(false);
 			}
+			
+// #21695 farid, if partial set weightage to false		
+			if (this.getManagedBean().getQt().isPartial() == true){
+				this.getManagedBean().setSpecItemWeightageRequired(true);
+			}
+//END #21695				
 			templateSpecBean.setSpecMaster(specMaster);
 
 			this.getManagedBean().setScQtChecklist(qtCheckList);
