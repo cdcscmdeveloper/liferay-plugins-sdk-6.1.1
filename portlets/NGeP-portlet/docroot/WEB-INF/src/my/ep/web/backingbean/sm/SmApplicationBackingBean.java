@@ -674,6 +674,25 @@ public class SmApplicationBackingBean extends
 					task.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 				}
 			}
+			
+			//Bug 27022 - start 			
+			SmAppl latestAppl = supplierProfile.getSmAppl();
+			 if(latestAppl != null 
+					 && latestAppl.getSmSupplierCategories() != null
+					 	&& getManagedBean().getSmAppl().getSmSupplierCategories() != null){
+				 for(SmSupplierCategory categoryRejectedAppl : latestAppl.getSmSupplierCategories()){
+					 if(categoryRejectedAppl.getRecordStatusFlg() == SupplierManagementConst.DELETED_RECORD_STATUS){
+						 for(SmSupplierCategory categoryResubmitAppl: getManagedBean().getSmAppl().getSmSupplierCategories()){
+							 if(categoryRejectedAppl.getPmCategoryL3().getCategoryL3Id()
+									 .equals(categoryResubmitAppl.getPmCategoryL3().getCategoryL3Id())){
+								 categoryResubmitAppl.setRecordStatusFlg(SupplierManagementConst.DELETED_RECORD_STATUS);
+							 }
+						 }
+					 }
+				 }
+			 }
+			//Bug 27022 - end
+			 
 			if (getManagedBean().getSmAppl().getSmSupplierCategories() != null
 					&& !getManagedBean().getSmAppl().getSmSupplierCategories()
 							.isEmpty()) {
