@@ -2265,8 +2265,8 @@ public class SmApplicationBackingBean extends
 					}
 				}
 			} else if (currentPageType
-					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)
-					&& getManagedBean().isSupplierUser()) {
+					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)) {
+				if (getManagedBean().isSupplierUser()) {
 					if (getManagedBean().getCompanyBasicGst() != null) {
 						SmCommonUtil.validateGstRegNoUniqueness(getManagedBean()
 								.getSmSupplier().getRegNo(), getManagedBean()
@@ -2274,8 +2274,9 @@ public class SmApplicationBackingBean extends
 					}
 					SmApplicationUtil.validateGSt(getManagedBean(), currentTab,
 							ruleHelper);
-					//#27356
-					SmApplicationUtil.validateCoordinate(getManagedBean());
+				}
+				//#27356
+				SmApplicationUtil.validateCoordinate(getManagedBean());
 			}
 			setSupplierChangeValues(currentPageType);
 			validateUpdateSmAppl(applType, currentPageType, outputPageType,
@@ -6537,6 +6538,24 @@ public class SmApplicationBackingBean extends
 		}
 		// set personnel field change value
 		SmFieldChangeUtil.initPersonnelChangeField(getManagedBean());
+		//START 27821
+		if(shareHolderBean.getIdentificationType() != null && ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(shareHolderBean.getIdentificationType().getParameterCode())){
+			List<PmCountry> countryLs = SmApplicationUtil.retrievePmCountryList();			
+			
+			for (Iterator<PmCountry> iterator = countryLs.iterator(); iterator.hasNext(); ) {
+				PmCountry country = iterator.next();
+				if(country.getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)){
+			        iterator.remove();
+			        break;
+			    }
+			}
+			getManagedBean().setCountryLs(countryLs);
+			
+		}else{
+			getManagedBean().setCountryLs(SmApplicationUtil.retrievePmCountryList());
+		}
+		//END 27821
+		
 
 	}
 
@@ -12381,7 +12400,7 @@ public class SmApplicationBackingBean extends
 			}
 		}
 	}
-	//#27356
+
 	private void setFacilityAddressSameAs(SmFacility facilityBean) {
 		getManagedBean().setFacAddresSameAs(StringUtils.EMPTY);
 		if (!EntityHelper.isObjectDifference(getManagedBean().getSmAppl()
