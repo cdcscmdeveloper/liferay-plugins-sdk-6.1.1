@@ -114,14 +114,14 @@
 		</p:outputPanel>
 
 	</p:panel>
-	<p:dialog width="500px" height="500px"
+	<p:dialog width="700px" height="500px"
 		header="#{lbl['lbl.sm.factory.information']}"
 		widgetVar="factoryDialog" resizable="false" showEffect="fade"
 		closable="false" hideEffect="fade" modal="true" id="factoryDialog">
 		
 		<p:outputPanel layout="block" id="factoryBlockPanel">
 			<p:messages id="factoryDialogMsg" showSummary="false"
-				showDetail="true" autoUpdate="true" closable="true" />
+				showDetail="true" autoUpdate="false" closable="true" />
 			<table style="width: 100%">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.facility.factory.name']}" /> <p:outputLabel
