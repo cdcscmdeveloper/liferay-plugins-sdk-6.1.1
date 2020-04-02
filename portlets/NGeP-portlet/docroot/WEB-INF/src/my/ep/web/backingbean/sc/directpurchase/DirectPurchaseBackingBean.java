@@ -78,6 +78,7 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
+import my.ep.web.backingbean.sc.loacancelation.LOACancelDetailBackingBean;
 import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;
 import my.ep.web.backingbean.sc.purchaseinquiry.PurchaseInquiryBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -216,8 +217,8 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			
 			if (isMaintenance) {
 				docTypeList.add(ParameterConst.DOCTYPE_REQUEST_NOTE);
-				
-			} 
+				docTypeList.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
+			}
 			
 			else if (pmParameter != null && pmParameter.getParameterCode().equals(ParameterConst.ORG_TYPE_G2G_ROLECODE)){
 				docTypeList.add(ParameterConst.DOCTYPE_SIMPLE_QUOTE);
@@ -339,6 +340,9 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		if(getManagedBean().getSearchDocumentType().equals(ParameterConst.DOCTYPE_REQUEST_NOTE)){
 			getManagedBean().setDocumentTypeDesc(ParameterConst.RN_TITLE);
 		}
+		else if(getManagedBean().getSearchDocumentType().equals(ParameterConst.DOCTYPE_LETTER_OF_AWARD)){
+			getManagedBean().setDocumentTypeDesc(ParameterConst.LOA_TITLE);
+		}
 		getManagedBean().getDpDocumentDataModel().reloadData();
 	}
 
@@ -444,7 +448,18 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 				
 			} else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_LETTER_OF_AWARD)) {
 				LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
-				loaDetailBackingBean.viewLOA(docId);
+				LOACancelDetailBackingBean loaCancelDetailBackingBean = new LOACancelDetailBackingBean();
+				
+				// Start 22211 - redirect to LOA cancellation page
+				if (getManagedBean().getSearchStatusId().equals(DPStatusConstants.LOA_PENDING_SUBMISSION) ||
+						getManagedBean().getSearchStatusId().equals(DPStatusConstants.LOA_PENDING_APPROVAL) ||
+						getManagedBean().getSearchStatusId().equals(DPStatusConstants.LOA_PENDING_REVISION) ||
+						getManagedBean().getSearchStatusId().equals(DPStatusConstants.LOA_PENDING_REVISION_APPROVAL))
+					loaCancelDetailBackingBean.cancelationLOA(docId);
+				// End 22211
+				else
+					loaDetailBackingBean.viewLOA(docId);
+				
 				loaDetailBackingBean.getManagedBean().setDpObj(dpObj);
 				loaDetailBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
 			}
