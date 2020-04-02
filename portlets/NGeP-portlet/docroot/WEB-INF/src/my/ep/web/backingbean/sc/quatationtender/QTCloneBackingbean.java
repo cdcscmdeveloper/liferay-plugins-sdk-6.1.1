@@ -777,6 +777,7 @@ public class QTCloneBackingbean extends
 					retrievePublishing(copyScqt);
 					retrieveDeductionPaymentTabDtl(scQt,copyScqt,QtDetailsSO);
 					retrieveDocs(copyScqt);
+					retrievePublicationApprovalTabDtl(copyScqt);
 				}
 				
 			}
@@ -1399,6 +1400,136 @@ public class QTCloneBackingbean extends
 		}
 	}
 	
+	
+	private ScQtApproval retrievePublicApprovalByQt(ScQt copyQt){
+		IQTDetailSO detailSO;
+		ScQtApproval app=null;
+		try {
+			detailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			reqDTO.setQtId(copyQt.getQtId());
+			reqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_PTJ);
+			QuationTenderResDTO resDTO = detailSO
+					.retrieveApprovalDtlsByQtIdNType(reqDTO);
+			app = resDTO.getQtApproval();
+		}finally{
+			detailSO=null;
+		}
+		
+		return app;
+	}
+	public void retrievePublicationApprovalTabDtl(ScQt copyQt) {
+		ScQt scQt = this.getManagedBean().getQt();
+		IQTDetailSO detailSO;
+		DualListModel<ScQtApproverSettings> dualListModel = null;
+		try {
+			detailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			reqDTO.setQtId(copyQt.getQtId());
+			reqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_PTJ);
+			QuationTenderResDTO resDTO = detailSO
+					.retrieveApprovalDtlsByQtIdNType(reqDTO);
+			ScQtApproval copyApproval = resDTO.getQtApproval();
+			
+			ScQtApproval prevApp =retrievePublicApprovalByQt(scQt);
+			List<ScQtApproval> toBeApprovalRemoveList = new ArrayList<ScQtApproval>();
+			if(prevApp!=null){
+				prevApp.setDeleted(true);
+				toBeApprovalRemoveList.add(prevApp);
+			}
+			this.getManagedBean().setToBeApprovalRemoveList(toBeApprovalRemoveList);
+			
+			if(copyApproval!=null){
+				ScQtApproval publicationApproval = new ScQtApproval();
+				publicationApproval
+						.setScQtApprovalRemarks(initializeRemarks(
+								publicationApproval, scQt
+										.getCurrentWorkFlowStatus(),
+								publicationApproval
+										.getScQtApprovalRemarks(),
+								ScQtApprovalRemark.class));
+				publicationApproval.setScQt(scQt);
+				publicationApproval.setApprovalCategory(getParameterByTypeAndCode(ParameterTypeConst.APPROVAL_CATEGORY, 
+						ParameterConst.APPROVAL_CATEGORY_PTJ));
+				publicationApproval.setBrandNew(true);
+				publicationApproval.setRecordStatusFlg(copyApproval.getRecordStatusFlg());
+				publicationApproval.setRecordStatus(copyApproval.isRecordStatus());
+				setUserDetails(publicationApproval);
+				if(copyApproval.getApproverSettings()!=null && !copyApproval.getApproverSettings().isEmpty()){
+					List<ScQtApproverSettings> approverSettings=new ArrayList<ScQtApproverSettings>();
+					for(ScQtApproverSettings setting:copyApproval.getApproverSettings()){
+						ScQtApproverSettings aps=new ScQtApproverSettings();
+						aps.setBrandNew(true);
+						setUserDetails(aps);
+						aps.setCommitteeType(setting.getCommitteeType());
+						aps.setDocType(setting.getDocType());
+						aps.setPmUser(setting.getPmUser());
+						aps.setRecordStatus(setting.isRecordStatus());
+						aps.setRecordStatusFlg(setting.getRecordStatusFlg());
+						aps.setScQtApproval(publicationApproval);
+						aps.setSelectable(setting.isSelectable());
+						aps.setSelected(setting.isSelected());
+						aps.setUserSequence(setting.getUserSequence());
+						approverSettings.add(aps);
+					}
+					publicationApproval.setApproverSettings(approverSettings);
+				}
+				
+				if(copyApproval.getScQtApprovalAttachments()!=null && !copyApproval.getScQtApprovalAttachments().isEmpty()){
+					List<ScQtApprovalAttachment> approverAttachments=new ArrayList<ScQtApprovalAttachment>();
+					for(ScQtApprovalAttachment attachment:copyApproval.getScQtApprovalAttachments()){
+						ScQtApprovalAttachment att=new ScQtApprovalAttachment();
+						setUserDetails(att);
+						att.setBrandNew(true);
+						att.setDocNo(scQt.getQtNo());
+						att.setDocType(attachment.getDocType());
+						att.setScQtApproval(publicationApproval);
+						try {
+							uploadAttachment(att,attachment);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						approverAttachments.add(att);
+					}
+					publicationApproval.setScQtApprovalAttachments(approverAttachments);
+				}
+				
+				if(copyApproval.getScQtApprovalDtls()!=null && !copyApproval.getScQtApprovalDtls().isEmpty()){
+					List<ScQtApprovalRequest> approverRequest=new ArrayList<ScQtApprovalRequest>();
+					for(ScQtApprovalRequest request:copyApproval.getScQtApprovalDtls()){
+						ScQtApprovalRequest req=new ScQtApprovalRequest();
+						req.setBrandNew(true);
+						setUserDetails(req);
+						req.setRecordStatus(request.isRecordStatus());
+						req.setRecordStatusFlg(request.getRecordStatusFlg());
+						req.setApprovalType(getParameterByTypeAndCode(ParameterTypeConst.APPROVAL_REQUEST_TYPES, 
+								ParameterConst.APPROVAL_REQUEST_PUBLICATION_APPROVAL));
+						req.setScQtApproval(publicationApproval);
+						req.setSelectable(request.isSelectable());
+						req.setSelected(request.isSelected());
+						approverRequest.add(req);
+					}
+					publicationApproval.setScQtApprovalDtls(approverRequest);
+				}
+				
+				this.getManagedBean().setPublicationApproval(
+						publicationApproval);
+				
+				Long[] orgIds={scQt.getOwnerOrgProfile().getOrgProfileId(),scQt.getPmOrgProfile().getOrgProfileId()};
+				dualListModel = ApproverSettings.getDetails(
+						RoleCode.PUBLICATION_APPROVER,orgIds, publicationApproval);
+				this.getManagedBean().setPublicationApprovals(dualListModel);
+				
+			}
+		}finally{
+			detailSO=null;
+		}
+	}
 	
 	private ScQt retrieveApproval(ScQt scQt,ScQt copyScqt,IQTDetailSO QtDetailsSO){
 		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
