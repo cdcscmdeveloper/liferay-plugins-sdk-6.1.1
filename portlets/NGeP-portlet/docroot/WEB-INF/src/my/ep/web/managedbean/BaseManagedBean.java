@@ -90,6 +90,8 @@ public abstract class BaseManagedBean implements Serializable {
 	private ScQtFinalizationReport selectedBriefingReport;
 	private List<ScQtFinalizationReport> removeFinalizationReports;
 	// 18685 - End
+	//17906
+	private String displayMessageBank;
 	
 	/**
 	 * @return the token
@@ -595,6 +597,14 @@ public abstract class BaseManagedBean implements Serializable {
 
 	public void setPersonnelsRole(List<SmPersonnel> personnelsRole) {
 		this.personnelsRole = personnelsRole;
+	}
+
+	public String getDisplayMessageBank() {
+		return displayMessageBank;
+	}
+
+	public void setDisplayMessageBank(String displayMessageBank) {
+		this.displayMessageBank = displayMessageBank;
 	}
 	
 	
