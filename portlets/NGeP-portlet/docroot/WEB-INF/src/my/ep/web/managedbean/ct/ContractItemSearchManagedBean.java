@@ -184,12 +184,14 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 						searchBean.getDataFilterBeans().add(filterBean);
 					}
 				}
-				if(getUOM()!=null && getUOM().length()>0) {
+				//#20997 - Start-Fixing
+				if(getSelectedSearchItem().getUomName()!=null && getSelectedSearchItem().getUomName().trim().length()>0) {
 					
-					SearchFilterBean filterBean = new SearchFilterBean("scRequestItem.uom.uomName", SearchOperator.OPERATOR_LIKE.value(),getUOM());
+					SearchFilterBean filterBean = new SearchFilterBean("scRequestItem.uom.uomName", SearchOperator.OPERATOR_LIKE.value(),getSelectedSearchItem().getUomName());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);
 				}
+				//#20997 - End-Fixing
 				if(getSkuno()!=null && getSkuno().length()>0 ) {
 					SearchFilterBean filterBean = new SearchFilterBean("sku", SearchOperator.OPERATOR_LIKE.value(),getSkuno());
 					filterBean.setCaseInsensitive(true);
