@@ -392,12 +392,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		 * @see    Exception
 		 */
 		public void searchCircular() throws Exception {
+			//20997 - Start - Fixing
 			try {		 
 						if( getManagedBean().getItemcode().equals("") && 
 								getManagedBean().getItemname().equals("") &&
 								getManagedBean().getItemstatus() == null &&
 								getManagedBean().getItemtype()== null &&
-								getManagedBean().getUOM().equals("") &&	
+								getManagedBean().getSelectedSearchItem() == null &&	
 								getManagedBean().getSkuno().equals("") &&
 								getManagedBean().getTypeofgoods()== null  ){
 						
@@ -405,57 +406,36 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						
 					}else if(getManagedBean().getItemtype()!=null){
 						getManagedBean().setResetval(true);
-						AmendmentBackingBean amendBB = new AmendmentBackingBean();
-						amendBB.getManagedBean().setSelectedItem(null);
-						amendBB.getManagedBean().setSelectedServiceItem(null);
+						ContractBackingBean ccBB = new ContractBackingBean();
+						ccBB.getManagedBean().setSelectedItem(null);
+						ccBB.getManagedBean().setServiceselectedItem(null);
 						if(getManagedBean().getItemtype().equals(ParameterConst.ITEM_TYPE_PRODUCT)){
-							getManagedBean().getServiceListingPagingDataModel().resetData();
 							getManagedBean().getContractListingPagingDataModel().reloadData();
-							if(getManagedBean().getContractListingPagingDataModel().getList() != null){
 								getManagedBean().setItemProductExist(true);
-							}else{
-								getManagedBean().setItemProductExist(false);
-								getManagedBean().setItemProductNotExist(true);
-							}
-							//getManagedBean().prodValue(true);
-							getManagedBean().setItemServiceExist(false);
-							getManagedBean().setItemServiceNotExist(false);
-							//log.info("Search function executed Prodcut"+ParameterConst.ITEM_TYPE_PRODUCT+"  "+getManagedBean().getItemtype()); 						
+								getManagedBean().setItemServiceExist(false);
+						
 						}else if(getManagedBean().getItemtype().equals(ParameterConst.ITEM_TYPE_SERVICE)){
-							  getManagedBean().getContractListingPagingDataModel().resetData();
 							  getManagedBean().getServiceListingPagingDataModel().reloadData();
-							  if(getManagedBean().getServiceListingPagingDataModel().getList() !=null){
-								getManagedBean().setItemServiceExist(true);  
-							  }else{
-								  getManagedBean().setItemServiceExist(false); 
-								  getManagedBean().setItemServiceNotExist(true);
-							  }
-							 // getManagedBean().serviceValue(true);
-								getManagedBean().setItemProductExist(false);
-								getManagedBean().setItemProductNotExist(false);
-								
-							//log.info("Search function executed Service"+ParameterConst.ITEM_TYPE_SERVICE+"  "+getManagedBean().getItemtype()); 
+									getManagedBean().setItemServiceExist(true);
+									getManagedBean().setItemProductExist(false);
+ 
 						}else if(getManagedBean().getItemtype().equals(ParameterConst.ITEM_TYPE_PRODUCT_AND_SERVICE)){
 							  getManagedBean().getContractListingPagingDataModel().reloadData();
-							  getManagedBean().getServiceListingPagingDataModel().reloadData(); 
-							 // getManagedBean().allValue(true);
-								if(getManagedBean().getContractListingPagingDataModel().getList() != null){
+							  getManagedBean().getServiceListingPagingDataModel().reloadData();
+								if(ccBB.getManagedBean().getCtItemList().size() > 0 || !ccBB.getManagedBean().getCtItemList().isEmpty()){
 									getManagedBean().setItemProductExist(true);
 								}else{
 									getManagedBean().setItemProductExist(false);
-									getManagedBean().setItemProductNotExist(false);
 								}
 								
-								  if(getManagedBean().getServiceListingPagingDataModel().getList() !=null){
-										getManagedBean().setItemServiceExist(true);  
-									  }else{
-										  getManagedBean().setItemServiceExist(false);
-										  getManagedBean().setItemServiceNotExist(false);
-									  }							 
-							  //log.info("Search function executed Product and Service"+ParameterConst.ITEM_TYPE_PRODUCT_AND_SERVICE+"  "+getManagedBean().getItemtype()); 
+								if(ccBB.getManagedBean().getCtItemServiceList().size() > 0 || !ccBB.getManagedBean().getCtItemServiceList().isEmpty()){
+									getManagedBean().setItemServiceExist(true);
+								}else{
+									getManagedBean().setItemServiceExist(false);
+								}
+						//20997 - End-Fixing
 						}					
 					}else{
-
 						throw new EpException(MessageConst.ERROR_750051);
 					} 
 			} finally{

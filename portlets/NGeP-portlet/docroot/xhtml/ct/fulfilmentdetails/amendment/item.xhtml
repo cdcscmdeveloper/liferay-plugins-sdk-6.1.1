@@ -60,7 +60,12 @@
 			<h:outputLabel value="#{lbl['lbl.ct.item.UOM']}"/>
 		</td>
 		<td colspan="1" rowspan="1"> 
-			<h:inputText value="#{amendmentBackingBean.managedBean.UOM}" style="width:270px;" maxlength="20"></h:inputText>
+					<p:autoComplete panelStyleClass="uomAuto" id="uomDetId" scrollHeight="250" size="40" var="pmUom" converter="PmUomConverter"
+							itemLabel="#{amendmentBackingBean.retriveUomCodeDesc(pmUom)}"
+							itemValue="#{pmUom}" 
+							value="#{amendmentBackingBean.managedBean.selectedSearchItem}"
+							completeMethod="#{amendmentBackingBean.autoCompleteUom}"
+							maxResults="50" dropdown="false" forceSelection="true" />
 	  </td>
 	</tr> 
 	
@@ -174,8 +179,8 @@
 			    	   ctBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypePrice
 				       and (ctBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or  ctBackingBean.managedBean.contractVer.ctAmendment.otherChange)}">
 				
-				            <p:dataTable id="itemPriceTable" var="itemPriceVar" 
-					             value="#{amendmentBackingBean.managedBean.selectedItem.ctItemPrices}" >
+				            <p:dataTable id="itemPriceTable" var="itemPriceVar" sortBy="#{itemPriceVar.ctContractZone.zoneName}"
+					             value="#{amendmentBackingBean.managedBean.selectedItem.ctItemPrices}">
 					             <ac:paginator for="itemPriceTable" />
 					 
 					             <p:column headerText="#{lbl['lbl.ct.zone']}" style="width:40%; white-space:normal;" styleClass="column-align-center"
@@ -371,7 +376,7 @@
 		    	   ctBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypeMaxQty
 			       and (ctBackingBean.managedBean.contractVer.ctAmendment.quantityChange or ctBackingBean.managedBean.contractVer.ctAmendment.otherChange)}">
 			
-			            <p:dataTable id="itemMaxQtyTable" var="itemMaxQtyVar" 
+			            <p:dataTable id="itemMaxQtyTable" var="itemMaxQtyVar" sortBy="#{itemMaxQtyVar.ctContractZone.zoneName}"
 				             value="#{amendmentBackingBean.managedBean.selectedItem.ctItemMaxQties}" >
 				             <ac:paginator for="itemMaxQtyTable" />
 				 
@@ -443,12 +448,6 @@
 		    </p:outputPanel>
 		</p:outputPanel>
 	</p:panel>
-	<p:panel width="700px" height="350px" rendered="#{amendmentBackingBean.managedBean.itemProductNotExist}" >
-	   	<h:panelGrid columns="1">
-	    <p:outputLabel value="#{lbl['lbl.datatable.msg.no.records.found']}" 
-	   	position = "left" styleClass="red_font" />
-	   	</h:panelGrid>
-	   	</p:panel> >
 	<p:panel id="serviceId" toggleable="true" toggleSpeed="500" rendered="#{amendmentBackingBean.managedBean.itemServiceExist}">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.ct.panel.service']}"/>
@@ -632,12 +631,6 @@
 		  	</p:outputPanel>
 		</p:outputPanel>
 	</p:panel>
-		<p:panel width="700px" height="350px" rendered="#{amendmentBackingBean.managedBean.itemServiceNotExist}" >
-	   	<h:panelGrid columns="1">
-	    <p:outputLabel value="#{lbl['lbl.datatable.msg.no.records.found']}" 
-	   	position = "left" styleClass="red_font" />
-	   	</h:panelGrid>
-	   	</p:panel> >
 	
 	<p:dialog id="itemSpecDlg" widgetVar="itemSpecDlg" header="#{lbl['lbl.ct.specification']}" 
    		styleClass="pop_up_top" modal="true" width="500" height="150" resizable="false">
