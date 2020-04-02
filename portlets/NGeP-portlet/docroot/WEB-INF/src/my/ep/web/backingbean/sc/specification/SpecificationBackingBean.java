@@ -9653,6 +9653,17 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		ScQtScoreSetting demoScoreSetting = this.getManagedBean()
 				.getDemoScoreSetting();
 		if (null != demoScoreSetting && demoScoreSetting.getSettingType() == 3) {
+			//#26440 Start
+			if (null != scQt.getEvaluationType()
+					&& ParameterConst.EVALUATION_TYPES_TWO_TIER
+							.equalsIgnoreCase(scQt.getEvaluationType())) {
+				if(null!=technicalScoreSetting){
+			demoScoreSetting.setWeightageReq(technicalScoreSetting.isWeightageReq()); 
+				}
+			}else{
+				demoScoreSetting.setWeightageReq(Boolean.FALSE); 
+			}
+			//#26440 End
 			scoreSetting.add(demoScoreSetting);
 			scQt.setScQtScoreSettings(scoreSetting);
 
