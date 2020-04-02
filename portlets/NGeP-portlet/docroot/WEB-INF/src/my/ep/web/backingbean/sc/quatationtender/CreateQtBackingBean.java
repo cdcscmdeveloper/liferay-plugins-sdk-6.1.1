@@ -856,7 +856,7 @@ public class CreateQtBackingBean extends
 			}
 			//Start - 25729
 			log.info(":::setProcurementMode() amount.doubleValue: "+ amount.doubleValue());
-			if (!isPanel && enable.length > 0 && amount.doubleValue() < SourcingConstants.QT_BELOW_20K) {
+			if (!isPanel && enable.length > 0 && amount.doubleValue() <= SourcingConstants.QT_BELOW_20K) {
 				RequestContext.getCurrentInstance().execute("proceedBelowQtValueDlgs.show()");
 			}
 			//End - 25729
@@ -2486,7 +2486,7 @@ public class CreateQtBackingBean extends
 			BigDecimal amount = scQt.getTmpExpectedIntendedPrice();
 			//Start - 25729
 			if (null != amount) {
-				if (amount.doubleValue() < SourcingConstants.QT_BELOW_20K) {
+				if (amount.doubleValue() <= SourcingConstants.QT_BELOW_20K) {
 					setProcurementMode(scQt, amount, "Y");
 				} else {
 					setProcurementMode(scQt, amount);
