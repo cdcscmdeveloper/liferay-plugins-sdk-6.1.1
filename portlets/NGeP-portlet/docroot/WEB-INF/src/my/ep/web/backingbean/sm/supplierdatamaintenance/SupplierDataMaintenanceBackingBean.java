@@ -2485,5 +2485,21 @@ public class SupplierDataMaintenanceBackingBean extends
 		}
 	}
 	//26238 : Disciplinary Action - end
+	
+	//START 17906
+	public void checkingBeforeRemoveSupplierBank() {
+		if(this.getManagedBean().getSelectedSuppBanks() != null && this.getManagedBean().getSelectedSuppBanks().length > 0){
+			this.getManagedBean().setDisplayMessageBank("");
+			for (SmSupplierBank suppBank : this.getManagedBean().getSelectedSuppBanks()) {
+				if(suppBank.isHasActiveTransactionContractManagement() || suppBank.isHasActiveTransactionFulfilment()){
+					this.getManagedBean().setDisplayMessageBank(suppBank.getDisplayMessageBank());
+					RequestContext.getCurrentInstance().execute("bankAlertPopUp.show()");
+					return;
+				}
+			}
+		}
+		RequestContext.getCurrentInstance().execute("bankDeletePopUp.show()");
+	}
+	//End 17906
 
 }
