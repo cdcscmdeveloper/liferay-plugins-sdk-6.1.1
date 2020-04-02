@@ -111,6 +111,8 @@ public class SupplierBusinessNatureBackingBean extends BaseBackingBean<SupplierB
 				//compare old data with ssm, if ssm has new data, add data into list
 				if(getManagedBean().getSmSupplier().getSmSupplierBusinesses().size() > 0){
 					for(SmSupplierBusiness smSupplierBusiness:this.getManagedBean().getSsmResDTO().getSmSupplierBusinessList()){
+						//27828
+						existInOld=false;
 						if(smSupplierBusiness.getPmBusinessNature()!=null){
 							for(SmSupplierBusiness smSuppBussOld:getManagedBean().getSmSupplier().getSmSupplierBusinesses()){
 								if(smSupplierBusiness.getPmBusinessNature().getLevelCode().equalsIgnoreCase(smSuppBussOld.getPmBusinessNature().getLevelCode())){
