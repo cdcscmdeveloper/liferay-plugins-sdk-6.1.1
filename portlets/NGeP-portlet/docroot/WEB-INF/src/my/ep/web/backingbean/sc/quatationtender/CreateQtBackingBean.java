@@ -44,7 +44,6 @@ import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
@@ -734,6 +733,7 @@ public class CreateQtBackingBean extends
 
 		debugLogger("setProcurementMode,@qtNo = " + scQt.getQtNo());
 		IParameterSO parameterSo = null;
+		
 		try {
 			parameterSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
@@ -855,7 +855,8 @@ public class CreateQtBackingBean extends
 				}
 			}
 			//Start - 25729
-			if (!isPanel && enable.length > 0 && amount.intValue() < FulfilmentConst.THRESHOLD) {
+			log.info(":::setProcurementMode() amount.doubleValue: "+ amount.doubleValue());
+			if (!isPanel && enable.length > 0 && amount.doubleValue() < SourcingConstants.QT_BELOW_20K) {
 				RequestContext.getCurrentInstance().execute("proceedBelowQtValueDlgs.show()");
 			}
 			//End - 25729
@@ -2485,7 +2486,7 @@ public class CreateQtBackingBean extends
 			BigDecimal amount = scQt.getTmpExpectedIntendedPrice();
 			//Start - 25729
 			if (null != amount) {
-				if (amount.intValue() < FulfilmentConst.THRESHOLD) {
+				if (amount.doubleValue() < SourcingConstants.QT_BELOW_20K) {
 					setProcurementMode(scQt, amount, "Y");
 				} else {
 					setProcurementMode(scQt, amount);
