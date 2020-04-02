@@ -11754,6 +11754,10 @@ public class SmApplicationUtil {
 					}else{
 						retVal = false;
 					}
+					//27821
+					if(smPersonnel.getIdentificationType() != null && ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(smPersonnel.getIdentificationType().getParameterCode())){
+						retVal = false;
+					}
 				}
 			}
 			//END  #27230
