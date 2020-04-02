@@ -9,7 +9,7 @@ public class MachineSearchBean implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private int ttStatus;
+	private String ttStatus;
 	private String code;
 	private String name;
 	private Long categoryId;
@@ -33,10 +33,10 @@ public class MachineSearchBean implements Serializable {
 	public void setCategoryId(Long categoryId) {
 		this.categoryId = categoryId;
 	}
-	public int getTtStatus() {
+	public String getTtStatus() {
 		return ttStatus;
 	}
-	public void setTtStatus(int ttStatus) {
+	public void setTtStatus(String ttStatus) {
 		this.ttStatus = ttStatus;
 	}
 

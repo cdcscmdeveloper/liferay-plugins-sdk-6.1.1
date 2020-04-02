@@ -452,13 +452,11 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				 * .parseInt(getManagedBean().getSearchOperatorValue()[i]),
 				 * getManagedBean().getSearchValue()[i])); }
 				 */
-/*
+
 				for (int i = 0; i < 2; i++) {
 					if (getManagedBean().getSearchValue()[i] != null
 							&& !getManagedBean().getSearchValue()[i].equals("")) {
-						if (getManagedBean().getSearchFieldValue()[i] != null
-								&& !getManagedBean().getSearchFieldValue()[i]
-										.equals("")) {
+					 {
 							if (getManagedBean().getSearchFieldValue()[i]
 									.equals("1"))
 								searchBean.getDataFilterBeans().add(
@@ -481,7 +479,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 					}
 				}
 
-				searchBean.getDataFilterBeans().add(
+				/*searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("recordStatusFlg",
 								SearchOperator.OPERATOR_EQUALS.value(),
 								DbValueConst.RECORD_STATUS_ACTIVE));*/
