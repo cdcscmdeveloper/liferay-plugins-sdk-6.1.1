@@ -1469,6 +1469,10 @@ public class QtSpecCloneBackingBean extends
 					if (list.isScoringReq()) {
 						this.getManagedBean().getTechnicalScoring().add(list);
 					} else {
+						if(null==list.getQtScoreWeightage()){
+							ScQtScoreWeightage scoreWeightage = new ScQtScoreWeightage();
+							list.setQtScoreWeightage(scoreWeightage);
+						}
 						list.getQtScoreWeightage().setScore(new BigDecimal(0));
 					}
 					if (null != list.getQtScoreWeightage()
