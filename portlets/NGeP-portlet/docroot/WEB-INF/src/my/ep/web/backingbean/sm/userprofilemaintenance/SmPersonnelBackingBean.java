@@ -54,6 +54,7 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.userprofilemaintenance.SmPersonnelManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmRuleHelper;
@@ -1191,6 +1192,9 @@ public class SmPersonnelBackingBean extends
 	 */
 	public void save() {
 		if (getManagedBean().getBasicSmPersonnel() != null) {
+			//#26050 - start
+			validatePendingTask(getManagedBean().getBasicSmPersonnel());
+			//#26050 - end
 			SmCommonUtil.checkEmailDomainWithExceptionMsg(getManagedBean()
 					.getBasicSmPersonnel().getName(), getManagedBean()
 					.getBasicSmPersonnel().getEmail());
@@ -1238,6 +1242,16 @@ public class SmPersonnelBackingBean extends
 		}
 		resetUserLimitMsg();
 	}
+	
+	//#26050 - start
+	public void validatePendingTask(SmPersonnel smPersonnel) {
+		if (PmCommonUtil.isAnyPendingTask(getManagedBean().getBasicSmPersonnel().getPmUser().getLoginId())
+				|| smPersonnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING) {
+			throw new EpException(MessageConst.ERROR_770231);
+		}
+
+	}
+	//#26050 - end
 
 	/**
 	 * Deactivate or terminate authorized personnel
