@@ -2318,6 +2318,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							//compare old data with ssm, if ssm has new data, add data into list
 							if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() > 0){
 								for(SmSupplierBusiness smSupplierBusiness:ssmResDTO.getSmSupplierBusinessList()){
+									//27828
+									existInOld=false;
 									if(smSupplierBusiness.getPmBusinessNature()!=null){
 										for(SmSupplierBusiness smSuppBussOld:this.getManagedBean().getSmSupp().getSmSupplierBusinesses()){
 											if(smSupplierBusiness.getPmBusinessNature().getLevelCode().equalsIgnoreCase(smSuppBussOld.getPmBusinessNature().getLevelCode())){
