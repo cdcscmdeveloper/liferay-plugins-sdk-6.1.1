@@ -5020,6 +5020,12 @@ public class SmApplicationBackingBean extends
 							.getCategoryL3Id(), getManagedBean().getSmAppl()
 							.getSmSupplierCategories(), "pmCategoryL3");
 			if (cat != null) {
+				// #25794 & #26031 - start
+				// update applRefId to NULL if previous data is deleted (9)
+				if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED) {
+					cat.setApplRefId(null);
+				}
+				// #25794 & #26031 - end
 				cat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
 				cat.setPoDecFlg(null);
 				cat.setApprvrDecFlg(null);
@@ -5073,6 +5079,11 @@ public class SmApplicationBackingBean extends
 							.after(cancelDate)) {
 				retVal = true;
 			}
+			// #26031 - start
+			if (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
+				retVal = true;
+			}
+			// #26031 - end
 		}
 		return retVal;
 	}
