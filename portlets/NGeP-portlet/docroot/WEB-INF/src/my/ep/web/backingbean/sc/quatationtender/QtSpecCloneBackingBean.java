@@ -72,13 +72,11 @@ import my.ep.persistence.entity.sc.quationtender.ScQtScoreSetting;
 import my.ep.persistence.entity.sc.quationtender.ScQtScoreWeightage;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
-import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.specification.SpecificationBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
-import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.sc.QTConstants;
@@ -1547,15 +1545,35 @@ public class QtSpecCloneBackingBean extends
 	
 	private ScQtScoreSetting copyScoreSettings(ScQtScoreSetting src){
 		ScQtScoreSetting copy=new ScQtScoreSetting();
+		BigDecimal passingScore=new BigDecimal(0);
+		BigDecimal overallTechnical=new BigDecimal(0);
+		BigDecimal overallFin=new BigDecimal(0);
+		BigDecimal overallOtherTechnical=new BigDecimal(0);
+		BigDecimal overallOtherFin=new BigDecimal(0);
 		copy.setBrandNew(true);
 		copy.setSettingType(src.getSettingType());
 		copy.setScQt(this.getManagedBean().getQt());
 		copy.setWeightageReq(src.isWeightageReq());
-		copy.setPassingScore(src.getPassingScore());
-		copy.setOverallTechnical(src.getOverallTechnical());
-		copy.setOverallFin(src.getOverallFin());
-		copy.setOverallOtherTechnical(src.getOverallOtherTechnical());
-		copy.setOverallOtherFin(src.getOverallOtherFin());
+		if(null!=src.getPassingScore()){
+			passingScore=src.getPassingScore();
+		}
+		if(null!=src.getOverallTechnical()){
+			overallTechnical=src.getOverallTechnical();
+		}
+		if(null!=src.getOverallFin()){
+			overallFin=src.getOverallFin();
+		}
+		if(null!=src.getOverallOtherTechnical()){
+			overallOtherTechnical=src.getOverallOtherTechnical();
+		}
+		if(null!=src.getOverallOtherFin()){
+			overallOtherFin=src.getOverallOtherFin();
+		}
+		copy.setPassingScore(passingScore);
+		copy.setOverallTechnical(overallTechnical);
+		copy.setOverallFin(overallFin);
+		copy.setOverallOtherTechnical(overallOtherTechnical);
+		copy.setOverallOtherFin(overallOtherFin);
 		setUserDetails(copy);
 		
 		return copy;
@@ -1781,19 +1799,22 @@ public class QtSpecCloneBackingBean extends
 				}
 				
 				List<ScQtDeliveryLoc> locs=new ArrayList<ScQtDeliveryLoc>();
-				for(ScQtDeliveryLoc copyLoc:resDTO.getAddressResultBean()){
-					ScQtDeliveryLoc loc = new ScQtDeliveryLoc();
-					ScAddress deliveryAddress = populateDeliveryAddress(copyLoc.getPmAddressType());
-					loc.setScDeliveryAddress(deliveryAddress);
-					loc.setDeliveryAddress(getDeliveryAddressString(deliveryAddress));
-					loc.setPmAddressType(copyLoc.getPmAddressType());
-					loc.setTplSpecZoneDtl(this.getManagedBean()
-							.getTplSpecZoneDtl());
-					loc.setScQt(this.getManagedBean().getQt());
+				if(null!=resDTO.getAddressResultBean()){
+					for(ScQtDeliveryLoc copyLoc:resDTO.getAddressResultBean()){
+						ScQtDeliveryLoc loc = new ScQtDeliveryLoc();
+						ScAddress deliveryAddress = populateDeliveryAddress(copyLoc.getPmAddressType());
+						loc.setScDeliveryAddress(deliveryAddress);
+						loc.setDeliveryAddress(getDeliveryAddressString(deliveryAddress));
+						loc.setPmAddressType(copyLoc.getPmAddressType());
+						loc.setTplSpecZoneDtl(this.getManagedBean()
+								.getTplSpecZoneDtl());
+						loc.setScQt(this.getManagedBean().getQt());
 
-					setUserDetails(loc);
-					locs.add(loc);
+						setUserDetails(loc);
+						locs.add(loc);
+					}	
 				}
+				
 				
 				this.getManagedBean().setDeliveryNonZoneList(locs);
 			}
