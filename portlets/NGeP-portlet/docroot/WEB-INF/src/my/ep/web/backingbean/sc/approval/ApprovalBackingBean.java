@@ -63,6 +63,7 @@ import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
@@ -732,7 +733,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			/*
 			 * copying required(called in xhtml) fields in this.getManagedBean() to qtDetailBB.getManagedBean()
 			 */
-			qtDetailBB.getManagedBean().setApprovalType(this.getManagedBean().getApprovalType());
+		    qtDetailBB.getManagedBean().setApprovalType(this.getManagedBean().getApprovalType());
 			qtDetailBB.getManagedBean().setAutoUpdate(this.getManagedBean().isAutoUpdate());
 			qtDetailBB.getManagedBean().setCurrentStatusId(this.getManagedBean().getCurrentStatusId());
 			qtDetailBB.getManagedBean().setOutComes(this.getManagedBean().getOutComes());
@@ -748,6 +749,15 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			qtDetailBB.getManagedBean().setTaskName(this.getManagedBean().getTaskName());
 			qtDetailBB.getManagedBean().setApprovalEditableSection(true);
 			qtDetailBB.getManagedBean().setApprovalScreen(true);
+			
+			/* ***#25692#111 - start */
+			PmStatus sts = getQTDetailSO().retrieveLatestStatus(qtDetailBB.getManagedBean().getQt().getQtId());
+			if(sts != null){
+				qtDetailBB.getManagedBean().setCurrentStatusId(sts.getStatusId());
+			}
+			/* ***#25692#111 - end */
+			
+			
 			
 			boolean readOnlyOri = qtDetailBB.getManagedBean().isReadOnly();
 			this.getManagedBean().copyBPMTaskDetails(qtDetailBB.getManagedBean());
