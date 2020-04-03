@@ -87,24 +87,7 @@
 				</ui:fragment>	
 			</p:column>
 		</p:dataTable>
-		
-		<div class="ppRightBtn BtnSpacing">
-			<p:commandButton value="#{lbl['lbl.btn.download.all']}" ajax="false"	
-				action="#{consolidationReportBackingBean.downloadAllReports}" />
 				
-			<p:commandButton value="#{lbl['lbl.btn.add']}"
-				process="@this, reportTbl" partialSubmit="true"
-				action="#{consolidationReportBackingBean.addFinalizationReportAction}"
-				oncomplete="reportWidget.paginator.endLink.click();" 
-				update="@([id$=reportTbl])"/>
-
-			<p:commandButton value="#{lbl['lbl.btn.delete']}" 
-				process="@this, reportTbl" partialSubmit="true"
-				oncomplete="deleteReportPopup.show();"
-				update="@([id$=#{deleteReportPopupId}])" 
-				disabled="#{empty consolidationReportBackingBean.managedBean.selectedFinalizationReports}" />				
-		</div>
-		
 		<ui:include	src="/xhtml/sc/supplierFinalization/consolidationReport/briefingPaper/briefingPaperEvaluationCnReport.xhtml" />
 		
 		<ac:confirmationPopup id="deleteReportPopupId" title="#{lbl['lbl.msg.confirm.delete.header']}"
