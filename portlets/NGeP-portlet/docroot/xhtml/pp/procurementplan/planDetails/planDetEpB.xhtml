@@ -44,7 +44,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	    	<p:columnGroup type="header">
 				<p:row>
 				<!-- #24975 -->
-				 	<p:column width="7%">
+				 	<p:column width="5%">
 					    <f:facet name="header">
 					     	<h:outputText value="* " styleClass="mandatory" />
 					     	<h:outputText value="#{lbl['lbl.pp.action']}" />
@@ -227,22 +227,22 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			    	 id="clEpJustification">
 					<p:graphicImage value="#{!(pPlanBackingBean.managedBean.modeEditable) or epItem.justificationEnabled ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"
 					 disabled="#{pPlanBackingBean.managedBean.modeEditable or epItem.justificationEnabled}" update="@form" />
-					<!--<f:param name="disableValidation" value="" />-->
+					<f:param name="disableValidation" value="" />
 				</p:commandLink>
 	        </p:column>
 	        <p:column style="white-space:nowrap;" rendered="#{pPlanBackingBean.managedBean.modeEditable and (pPlanBackingBean.managedBean.selectedPlan.updatable or pPlanBackingBean.managedBean.approvedPlan)}">
 		      	<p:commandLink oncomplete="dlItemRemarkWv.show();" action="#{pPlanBackingBean.retrieveEpItemRemark(epItem)}"
-			    	update="@form"  immediate="true"  id="clEpRemark"
+			    	update=":form:dlItemRemark"  immediate="true"  id="clEpRemark"
 			    	disabled="#{epItem.brandNew}">
 					<p:graphicImage value="#{!pPlanBackingBean.managedBean.selectedPlan.updatable ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"
 					 disabled="#{(pPlanBackingBean.managedBean.modeEditable) or !epItem.reasonForUpdateEnabled}" update="@form" />
-						<!--<f:param name="disableValidation" value="" />-->
+					<f:param name="disableValidation" value="" />
 				</p:commandLink>
 	        </p:column>
 	        <p:column>
 	        	<p:selectOneMenu value="#{epItem.recordStatusFlg}" style="width:99%"
-	        		disabled="#{epItem.cloneEnabled or epItem.statusEnabled or pPlanBackingBean.managedBean.editable}">   
-	            	<f:selectItems value="#{pPlanBackingBean.getStatusOptions()}" />
+	        		disabled="#{epItem.cloneEnabled or epItem.statusEnabled or pPlanBackingBean.managedBean.editable}"> 
+	        		<f:selectItems value="#{pPlanBackingBean.getStatusOptions()}" />
 	            	
 	          	</p:selectOneMenu> 
 	        </p:column>
