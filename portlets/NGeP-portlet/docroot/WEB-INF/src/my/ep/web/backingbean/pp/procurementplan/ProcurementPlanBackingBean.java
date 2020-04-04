@@ -232,6 +232,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	public void preRenderView() {
 		log.info("preRenderView");
 		this.resetManagedBean();
+		//#24975 azza - start
+		this.getManagedBean().setResetExpItemforPindaan(true);
+		//#24975 azza - end
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
@@ -291,6 +294,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	public String redirectToMaintainPlan(Long id,String action,boolean isTrackingDiary) throws Exception{
 		log.info("redirectToMaintainPlan");
 		this.resetManagedBean();
+		//#24975 azza - start
+		this.getManagedBean().setResetExpItemforPindaan(true);
+		//#24975 azza - end
 		this.getManagedBean().setBtnValue(action);
 		this.getManagedBean().setTrackingDiary(isTrackingDiary);
 		this.retrievePlanTypeMapper();
@@ -302,11 +308,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		
 		//#24975 azza - start
 		if (action == "VIEW"){
-			   this.getManagedBean().setEditable(true);
-		    } 
-		if (action == "UPDATE"){
-			   this.getManagedBean().setEditable(false);
-			   this.getManagedBean().setResetExpItemforPindaan(true);
+			 this.getManagedBean().setEditable(true);
+		    }else{ 
+			 this.getManagedBean().setEditable(false);
 		   }
 		//#24975 azza - end
 		
@@ -2686,6 +2690,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			if(count > 0) {
 				//log.info("[SIR#12802] - Remove deleted item from expenditureItem");
 				for(PpExpenditureItem expenditureItem: this.getManagedBean().getDeleteEpItemsB()){
+					resetPpExpenditureItemFields(this.getManagedBean().getDeleteEpItemsB());
 					epItems.remove(expenditureItem);
 				}
 			}
@@ -2718,6 +2723,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			if(count > 0) {
 				//log.info("[SIR#12802] - Remove deleted item from expenditureItem");
 				for(PpExpenditureItem expenditureItem: this.getManagedBean().getDeleteEpItemsT()){
+					resetPpExpenditureItemFields(this.getManagedBean().getDeleteEpItemsT());
 					epItems.remove(expenditureItem);
 				}
 			}
@@ -2750,6 +2756,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			if(count > 0) {
 				//log.info("[SIR#12802] - Remove deleted item from expenditureItem");
 				for(PpExpenditureItem expenditureItem: this.getManagedBean().getDeleteEpItemsP()){
+					resetPpExpenditureItemFields(this.getManagedBean().getDeleteEpItemsP());
 					epItems.remove(expenditureItem);
 				}
 			}
@@ -2782,6 +2789,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			if(count > 0) {
 				//log.info("[SIR#12802] - Remove deleted item from expenditureItem");
 				for(PpExpenditureItem expenditureItem: this.getManagedBean().getDeleteEpItemsS()){
+					resetPpExpenditureItemFields(this.getManagedBean().getDeleteEpItemsS());
 					epItems.remove(expenditureItem);
 				}
 			}
@@ -2814,6 +2822,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			if(count > 0) {
 				//log.info("[SIR#12802] - Remove deleted item from expenditureItem");
 				for(PpExpenditureItem expenditureItem: this.getManagedBean().getDeleteEpItemsH()){
+					resetPpExpenditureItemFields(this.getManagedBean().getDeleteEpItemsH());
 					epItems.remove(expenditureItem);
 				}
 			}
@@ -2830,24 +2839,18 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		//VOT-B
 		if(ParameterConst.VOT_MENGURUS.equals(paramCode)){
 			this.getManagedBean().setEpItemsB(epItems);
-			
-			resetPpExpenditureItemFields(this.getManagedBean().getEpItemsB());
 		}else if(ParameterConst.VOT_TANGGUNGAN.equals(paramCode)){
 		//VOT-T
 			this.getManagedBean().setEpItemsT(epItems);
-			resetPpExpenditureItemFields(this.getManagedBean().getEpItemsT());
 		}else if(ParameterConst.VOT_PEMBANGUNAN.equals(paramCode)){
 		//VOT-P
 			this.getManagedBean().setEpItemsP(epItems);
-			resetPpExpenditureItemFields(this.getManagedBean().getEpItemsP());
 		}else if(ParameterConst.VOT_SETIA.equals(paramCode)){
 		//VOT-S
 			this.getManagedBean().setEpItemsS(epItems);
-			resetPpExpenditureItemFields(this.getManagedBean().getEpItemsS());
 		}else if(ParameterConst.VOT_AMANAH.equals(paramCode)){
 		//VOT-H
 			this.getManagedBean().setEpItemsH(epItems);
-			resetPpExpenditureItemFields(this.getManagedBean().getEpItemsH());
 		}
 		//[SIR#12802] - end		
 		calculateEpGrandTotal(paramCode);
@@ -6608,6 +6611,21 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							    pp.setJustificationEnabled(false);
 								pp.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 							  }
+							}else{
+								if (pp.getFromPpItem().equals(ppExpItems.get(i).getExpenditureItemId())){
+									//For cloning
+									pp.setCloneEnabled(false);
+									pp.setDisableForPindaan(false);
+									//For update reason
+									pp.setReasonForUpdateEnabled(true);
+									pp.setBrandNew(false);
+									//For status
+									pp.setStatusEnabled(false);
+									pp.setCloneEnabled(false);
+									pp.setEditable(true);
+								    pp.setJustificationEnabled(false);
+									pp.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+								  }
 							}
 					     }
 				      }
@@ -6709,40 +6727,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		
 	}
 	
-//	private void resetPpProcurementEpItems(List<PpExpenditureItem> ppItems) {
-//		log.info("Resetting PpItems...");
-//		
-//		 
-//		 for (int i = 0; i < ppItems.size(); i++) {
-//				for (PpExpenditureItem ppItem : ppItems) {
-//					/* Always disable Pindaan for cloned ppItem
-//					   Always disable Reason For Update for original ppItem*/
-//					if (ppItem.isOriginal()) {
-//						if (ppItem.getFromPpItem().equals(ppItems.get(i).getExpenditureItemId())) {
-//							ppItem.setCloneEnabled(true);
-//							ppItem.setDisableForPindaan(true);
-//							ppItem.setReasonForUpdateEnabled(false);
-//							ppItem.setJustificationEnabled(true);
-//							ppItem.setBrandNew(true);
-//						}
-//					} else {
-//						/* Always disable Pindaan for original ppItem
-//						   Always enable Reason For Update for original ppItem*/
-//						if (ppItem.getExpenditureItemId().equals(ppItems.get(i).getExpenditureItemId())) {
-//							ppItem.setCloneEnabled(true);
-//							ppItem.setDisableForPindaan(true);
-//							ppItem.setJustificationEnabled(false);
-//							ppItem.setReasonForUpdateEnabled(true);
-//						} else {
-//							// The rest should retain the existing field logics
-//							ppItem.setDisableForPindaan(false);
-//							ppItem.setReasonForUpdateEnabled(true);
-//						}
-//					}	
-//				}
-//			}
-//     	}
-//	
 	
 	
 	private void resetPpExpenditureItems(List<PpExpenditureItem> ppItems) {

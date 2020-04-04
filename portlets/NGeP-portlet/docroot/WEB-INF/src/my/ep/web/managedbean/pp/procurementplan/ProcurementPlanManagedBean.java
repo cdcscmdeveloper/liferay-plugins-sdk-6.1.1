@@ -142,7 +142,7 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	
 	//#24975 17/03/20 - start
 	private boolean editable;
-	private boolean resetExpItemforPindaan = true;
+	private boolean resetExpItemforPindaan;
 	//#24975 17/03/20 - end
 	
 	public ProcurementPlanManagedBean(){}
