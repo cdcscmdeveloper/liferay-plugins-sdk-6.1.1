@@ -29,6 +29,7 @@ public class PrimeDateRangeValidatorForLopo implements Validator{
     		throws ValidatorException {
         
         Object startDateValue = component.getAttributes().get("startDate");
+        Object ruleNumberValue = component.getAttributes().get("ruleNumberValue");
         
         if (startDateValue == null || startDateValue == "") {
             return;
@@ -45,6 +46,7 @@ public class PrimeDateRangeValidatorForLopo implements Validator{
 		Date endDate;
 		boolean dateValidation = true;
 		long days = 0;
+		long ruleValue = 0;
 		
 		try {
 			startDate = DateUtils.convertStringToDate(CommonConstants.DEFAULT_DATE_FORMAT, sdate);
@@ -54,7 +56,9 @@ public class PrimeDateRangeValidatorForLopo implements Validator{
 			days = TimeUnit.MILLISECONDS.toDays(diff);
 			System.out.println("days= "+days);
 			
-			if (days != 14) {
+			ruleValue = Long.parseLong(String.valueOf(ruleNumberValue));
+			
+			if (days != ruleValue) {
 				
 				dateValidation = false;
 				
@@ -70,8 +74,10 @@ public class PrimeDateRangeValidatorForLopo implements Validator{
 		
 		if (!dateValidation) {
 			throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR,((Calendar)component).getLabel(), 
-        		  ResourceBundleUtils.getMessage("lbl.ct.validation.expiry.date",
-        				  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+        		  ResourceBundleUtils.getMessage("",
+        				  ResourceBundleUtils.BUNDLE_COMMON_LABELS, 
+        				  new FacesScopes().getUserLocale())));
+			
 		}
         
     }
