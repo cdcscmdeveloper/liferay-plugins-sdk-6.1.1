@@ -204,7 +204,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		initialSearchPlan();
 		this.resetPlanSearchBean();
 		generateSearchOptions();
-		setupOrgProfile();	
+		setupOrgProfile();
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
 	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_SEARCH);
@@ -2095,6 +2095,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	
 	private void addEpItemToPlan(PpPlan plan, List<PpExpenditureItem> epItems){
 		log.info("addEpItemToPlan");
+		//#24975 azza - start
+		ChekDuplicatePpItemClone(epItems);
+		//#24975 azza - end
 		if(plan.getPpExpenditureItems()==null){
 			plan.setPpExpenditureItems(new ArrayList<PpExpenditureItem>());
 		}
@@ -2676,6 +2679,28 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				//if(expenditureItem.isBrandNew() && expenditureItem.isDeleted()){
 				//[SIR#12802] - start
 				if(expenditureItem.isDeleted()){
+					
+					//[#24975] - azza - start
+					for(PpExpenditureItem expItem: epItems){
+						if (expItem.getExpenditureItemId() != null){
+						if (expItem.getExpenditureItemId().equals(expenditureItem.getFromPpItem())){
+							//For cloning
+							expItem.setCloneEnabled(false);
+							expItem.setDisableForPindaan(false);
+							//For update reason
+							expItem.setReasonForUpdateEnabled(true);
+							expItem.setBrandNew(false);
+							//For status
+							expItem.setStatusEnabled(false);
+							expItem.setCloneEnabled(false);
+							expItem.setEditable(false);
+							expItem.setJustificationEnabled(false);
+							expItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+					}
+				  }
+				}
+				//[#24975] - azza - end
+					
 				//[SIR#12802] - end	
 					//Set to status 2 - Cancelled
 					//log.info("[SIR#12802] - Set item status to 2");
@@ -2690,7 +2715,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			if(count > 0) {
 				//log.info("[SIR#12802] - Remove deleted item from expenditureItem");
 				for(PpExpenditureItem expenditureItem: this.getManagedBean().getDeleteEpItemsB()){
-					resetPpExpenditureItemFields(this.getManagedBean().getDeleteEpItemsB());
 					epItems.remove(expenditureItem);
 				}
 			}
@@ -2709,6 +2733,28 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				//if(expenditureItem.isBrandNew() && expenditureItem.isDeleted()){
 				//[SIR#12802] - start
 				if(expenditureItem.isDeleted()){
+					
+					//[#24975] - azza - start
+					for(PpExpenditureItem expItem: epItems){
+						if (expItem.getExpenditureItemId() != null){
+						if (expItem.getExpenditureItemId().equals(expenditureItem.getFromPpItem())){
+							//For cloning
+							expItem.setCloneEnabled(false);
+							expItem.setDisableForPindaan(false);
+							//For update reason
+							expItem.setReasonForUpdateEnabled(true);
+							expItem.setBrandNew(false);
+							//For status
+							expItem.setStatusEnabled(false);
+							expItem.setCloneEnabled(false);
+							expItem.setEditable(false);
+							expItem.setJustificationEnabled(false);
+							expItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+					}
+				  }
+				}
+				//[#24975] - azza - end
+					
 				//[SIR#12802] - end	
 					//Set to status 2 - Cancelled
 					//log.info("[SIR#12802] - Set item status to 2");
@@ -2723,7 +2769,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			if(count > 0) {
 				//log.info("[SIR#12802] - Remove deleted item from expenditureItem");
 				for(PpExpenditureItem expenditureItem: this.getManagedBean().getDeleteEpItemsT()){
-					resetPpExpenditureItemFields(this.getManagedBean().getDeleteEpItemsT());
 					epItems.remove(expenditureItem);
 				}
 			}
@@ -2742,6 +2787,28 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				//if(expenditureItem.isBrandNew() && expenditureItem.isDeleted()){
 				//[SIR#12802] - start
 				if(expenditureItem.isDeleted()){
+					
+					//[#24975] - azza - start
+					for(PpExpenditureItem expItem: epItems){
+						if (expItem.getExpenditureItemId() != null){
+						if (expItem.getExpenditureItemId().equals(expenditureItem.getFromPpItem())){
+							//For cloning
+							expItem.setCloneEnabled(false);
+							expItem.setDisableForPindaan(false);
+							//For update reason
+							expItem.setReasonForUpdateEnabled(true);
+							expItem.setBrandNew(false);
+							//For status
+							expItem.setStatusEnabled(false);
+							expItem.setCloneEnabled(false);
+							expItem.setEditable(false);
+							expItem.setJustificationEnabled(false);
+							expItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+					}
+				  }
+				}
+				//[#24975] - azza - end
+					
 				//[SIR#12802] - end	
 					//Set to status 2 - Cancelled
 					//log.info("[SIR#12802] - Set item status to 2");
@@ -2756,7 +2823,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			if(count > 0) {
 				//log.info("[SIR#12802] - Remove deleted item from expenditureItem");
 				for(PpExpenditureItem expenditureItem: this.getManagedBean().getDeleteEpItemsP()){
-					resetPpExpenditureItemFields(this.getManagedBean().getDeleteEpItemsP());
 					epItems.remove(expenditureItem);
 				}
 			}
@@ -2769,12 +2835,35 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				this.getManagedBean().setDeleteEpItemsS(new ArrayList<PpExpenditureItem>());
 			}
 			
+		
 			//add deleted item to list
 			for(PpExpenditureItem expenditureItem: epItems){
 				//log.info("[SIR#12802] - VOT-S: Expenditure item delete status:" + expenditureItem.isDeleted());
 				//if(expenditureItem.isBrandNew() && expenditureItem.isDeleted()){
 				//[SIR#12802] - start
 				if(expenditureItem.isDeleted()){
+					
+					//[#24975] - azza - start
+					for(PpExpenditureItem expItem: epItems){
+						if (expItem.getExpenditureItemId() != null){
+						if (expItem.getExpenditureItemId().equals(expenditureItem.getFromPpItem())){
+							//For cloning
+							expItem.setCloneEnabled(false);
+							expItem.setDisableForPindaan(false);
+							//For update reason
+							expItem.setReasonForUpdateEnabled(true);
+							expItem.setBrandNew(false);
+							//For status
+							expItem.setStatusEnabled(false);
+							expItem.setCloneEnabled(false);
+							expItem.setEditable(false);
+							expItem.setJustificationEnabled(false);
+							expItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+					}
+				  }
+				}
+				//[#24975] - azza - end
+					
 				//[SIR#12802] - end	
 					//Set to status 2 - Cancelled
 					//log.info("[SIR#12802] - Set item status to 2");
@@ -2789,7 +2878,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			if(count > 0) {
 				//log.info("[SIR#12802] - Remove deleted item from expenditureItem");
 				for(PpExpenditureItem expenditureItem: this.getManagedBean().getDeleteEpItemsS()){
-					resetPpExpenditureItemFields(this.getManagedBean().getDeleteEpItemsS());
 					epItems.remove(expenditureItem);
 				}
 			}
@@ -2808,11 +2896,32 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				//if(expenditureItem.isBrandNew() && expenditureItem.isDeleted()){
 				//[SIR#12802] - start
 				if(expenditureItem.isDeleted()){
+					
+					//[#24975] - azza - start
+					for(PpExpenditureItem expItem: epItems){
+						if (expItem.getExpenditureItemId() != null){
+						if (expItem.getExpenditureItemId().equals(expenditureItem.getFromPpItem())){
+							//For cloning
+							expItem.setCloneEnabled(false);
+							expItem.setDisableForPindaan(false);
+							//For update reason
+							expItem.setReasonForUpdateEnabled(true);
+							expItem.setBrandNew(false);
+							//For status
+							expItem.setStatusEnabled(false);
+							expItem.setCloneEnabled(false);
+							expItem.setEditable(false);
+							expItem.setJustificationEnabled(false);
+							expItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+					}
+				  }
+				}
+				//[#24975] - azza - end
+					
 				//[SIR#12802] - end	
 					//Set to status 2 - Cancelled
 					//log.info("[SIR#12802] - Set item status to 2");
 					expenditureItem.setRecordStatusFlg(Integer.valueOf(DbValueConst.RECORD_STATUS_CANCELLED));		
-					
 					this.getManagedBean().getDeleteEpItemsH().add(expenditureItem);
 					count++;
 				}
@@ -2822,7 +2931,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			if(count > 0) {
 				//log.info("[SIR#12802] - Remove deleted item from expenditureItem");
 				for(PpExpenditureItem expenditureItem: this.getManagedBean().getDeleteEpItemsH()){
-					resetPpExpenditureItemFields(this.getManagedBean().getDeleteEpItemsH());
 					epItems.remove(expenditureItem);
 				}
 			}
@@ -6569,6 +6677,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				 cloned.setDisableEditAccount(true);
 				 cloned.setReasonForUpdateEnabled(false);
 				 cloned.setJustificationEnabled(false);
+				 cloned.setEditable(true);
 			 }
 			 
 			 idx -= 1;
@@ -6582,90 +6691,42 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				 original.setReasonForUpdateEnabled(true);
 				 original.setDisableEditAccount(true);
 				 original.setJustificationEnabled(true);
+				 original.setEditable(false);
 			      
 			 }
 		}
-		   
-		  
-		   
-			private void resetPpExpenditureItemFields(List<PpExpenditureItem> ppExpItems) {
-				
-				for (int i = 0; i < ppExpItems.size(); i++) {
-					for (PpExpenditureItem pp: ppExpItems) {
-						
-						log.info("fromppItem" + pp.getFromPpItem());
-						log.info("ppExpenditureItem" + ppExpItems.get(i).getExpenditureItemId());
-						    
-						if (pp.isOriginal()) {
-							if (pp.getFromPpItem().equals(ppExpItems.get(i).getExpenditureItemId())){
-								//For cloning
-								pp.setCloneEnabled(false);
-								pp.setDisableForPindaan(false);
-								//For update reason
-								pp.setReasonForUpdateEnabled(true);
-								pp.setBrandNew(false);
-								//For status
-								pp.setStatusEnabled(false);
-								pp.setCloneEnabled(false);
-								pp.setEditable(true);
-							    pp.setJustificationEnabled(false);
-								pp.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-							  }
-							}else{
-								if (pp.getFromPpItem().equals(ppExpItems.get(i).getExpenditureItemId())){
-									//For cloning
-									pp.setCloneEnabled(false);
-									pp.setDisableForPindaan(false);
-									//For update reason
-									pp.setReasonForUpdateEnabled(true);
-									pp.setBrandNew(false);
-									//For status
-									pp.setStatusEnabled(false);
-									pp.setCloneEnabled(false);
-									pp.setEditable(true);
-								    pp.setJustificationEnabled(false);
-									pp.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-								  }
-							}
-					     }
-				      }
-			        }
-				
 
-	public void ChekDuplicatePpItemClone(List<PpExpenditureItem> epItems) {
+	   public void ChekDuplicatePpItemClone(List<PpExpenditureItem> epItems) {
 	
-    List<PpExpenditureItem> expenditureItems = null;
-    Map<PpExpenditureItem, PpExpenditureItem> clonedEpItems = 
-    new HashMap<PpExpenditureItem, PpExpenditureItem>();
+         List<PpExpenditureItem> expenditureItems = null;
+         Map<PpExpenditureItem, PpExpenditureItem> clonedEpItems = 
+         new HashMap<PpExpenditureItem, PpExpenditureItem>();
    
-   if (epItems != null && !epItems.isEmpty()) {
+         if (epItems != null && !epItems.isEmpty()) {
     
-	 expenditureItems = epItems;
+	         expenditureItems = epItems;
 	    
-	 log.info("Size of expenditureItems= "+epItems.size());
+	        log.info("Size of expenditureItems= "+epItems.size());
 	 
-	 List<Long> numberOfClones = new ArrayList<Long>();
+	        List<Long> numberOfClones = new ArrayList<Long>();
 	 
-	 if (expenditureItems.size() > 1) {
-		 
-		 
-		 
-		 for (int i = 0; i < expenditureItems.size(); i++) {
+	    if (expenditureItems.size() > 1) {
+		    for (int i = 0; i < expenditureItems.size(); i++) {
 			 
-			 log.info("expenditureId clone " + expenditureItems.get(i).isCloned());
+			   log.info("expenditureId clone " + expenditureItems.get(i).isCloned());
 				
-			 if (expenditureItems.get(i).isCloned()== true){
+			   if (expenditureItems.get(i).isCloned()== true){
 			 
-			 log.info("Cloned procurementItemId= "+expenditureItems.get(i).
+			   log.info("Cloned procurementItemId= "+expenditureItems.get(i).
 					 getExpenditureItemId()+", brandNew= "+expenditureItems.get(i).isBrandNew());
 
-			 log.info("Original expenditureItems= "+expenditureItems.get(i - 1).
+			   log.info("Original expenditureItems= "+expenditureItems.get(i - 1).
 					 getExpenditureItemId()+", brandNew= "+expenditureItems.get(i - 1).isBrandNew());
-			 numberOfClones.add(expenditureItems.get(i).getExpenditureItemId());
-			 clonedEpItems.put(expenditureItems.get(i),
+			   numberOfClones.add(expenditureItems.get(i).getExpenditureItemId());
+			   clonedEpItems.put(expenditureItems.get(i),
 					 expenditureItems.get(i - 1));
-		   }
-		}
+		    }
+		 }
 	 
 
 		 PpExpenditureItem clonedEpItem = new PpExpenditureItem();
