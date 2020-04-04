@@ -12155,4 +12155,32 @@ private void retriveCommitteeRemarksList(){
 		return items;
 	}
 	
+	
+	/**
+	 * @param scQtProposalChecklist
+	 * @return
+	 */
+	public boolean isComplianceStatusDisabled(ScQtProposalChecklist scQtProposalChecklist) {
+		
+		if(!this.getManagedBean().isFP_Compliance()) {
+			String title =this.getManagedBean().getScQtChecklist().getTitle();
+			if(title.equals(ParameterConst.CREDIT_FACILITIES_TITLE) ||
+					title.equals(ParameterConst.ASSET_FACILITIES_TITLE) || title.equals(ParameterConst.BANK_STATEMENT_GROUP_ID))
+			{	
+				if (null != scQtProposalChecklist.getScQtProposalChecklistAttachment()) {
+					this.getManagedBean().setFP_Compliance(true);
+				}
+			}else{
+				this.getManagedBean().setFP_Compliance(false);
+			}
+		}
+		
+		if (!scQtProposalChecklist.getScQtProposal().isSubmitted() || this.getManagedBean().isStatusOnly() 
+				|| this.getManagedBean().isComplianceReEvaluateRequired() 
+				|| this.getManagedBean().isReadOnly()  || !this.getManagedBean().isFP_Compliance()) {
+			return true;
+		}
+		return false;
+	}
+	
 }
