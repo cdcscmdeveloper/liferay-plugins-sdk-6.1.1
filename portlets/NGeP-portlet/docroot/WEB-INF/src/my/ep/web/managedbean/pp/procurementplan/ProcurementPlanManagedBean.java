@@ -5,6 +5,7 @@ package my.ep.web.managedbean.pp.procurementplan;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -135,11 +136,13 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private String status;
 	private boolean disableSelectBtn = false;
 	private boolean disableSelectExpBtn = false;
-	
+	private boolean disableSelectRow = false;
+
 	//End
 	
 	//#24975 17/03/20 - start
 	private boolean editable;
+	private boolean resetExpItemforPindaan = true;
 	//#24975 17/03/20 - end
 	
 	public ProcurementPlanManagedBean(){}
@@ -148,9 +151,10 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	 * @return the epItemsB
 	 */
 	public List<PpExpenditureItem> getEpItemsB() {
+		if (epItemsB == null)
+			epItemsB = new ArrayList<PpExpenditureItem>();
 		return epItemsB;
 	}
-
 	/**
 	 * @param epItemsB the epItemsB to set
 	 */
@@ -1309,6 +1313,14 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	public void setDisableSelectExpBtn(boolean disableSelectExpBtn) {
 		this.disableSelectExpBtn = disableSelectExpBtn;
 	}
+	
+	public boolean isDisableSelectRow() {
+		return disableSelectRow;
+	}
+
+	public void setDisableSelectRow(boolean disableSelectRow) {
+		this.disableSelectRow = disableSelectRow;
+	}
 
 	//[#25549] add .. End
 	
@@ -1321,6 +1333,16 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	public void setEditable(boolean editable) {
 		this.editable = editable;
 	}
+	
+	public boolean isResetExpItemforPindaan() {
+		return resetExpItemforPindaan;
+	}
+
+	
+	public void setResetExpItemforPindaan(boolean resetExpItemforPindaan) {
+		this.resetExpItemforPindaan = resetExpItemforPindaan;
+	}
+
 	
 	//#24975 17/03/20 - end
 
