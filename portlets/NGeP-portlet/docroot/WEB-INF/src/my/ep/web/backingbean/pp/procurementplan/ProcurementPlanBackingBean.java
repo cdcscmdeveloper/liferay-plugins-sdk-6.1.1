@@ -2210,12 +2210,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							!updateReasons.isEmpty()) {
 						reqDTO.setUpdateReasonList(updateReasons);
 					}
-//						else{
-//					    throw new EpException(MessageConst.ERROR_730035);
-//				    	}
-//						
-					}
+					
+//					else{
+//					   throw new EpException(MessageConst.ERROR_730035);
+//				    }
 				}
+			}
 
 			
 //			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
@@ -2455,6 +2455,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		epItem.setVotFundType(new PmParameter());
 		epItem.setEditable(true);
 		epItem.setPpPlan(this.getManagedBean().getSelectedPlan());
+		//#25479 13/3/2020 - start
+		epItem.setCloneEnabled(true);
+		//#25479 13/3/2020 - End
 		
 		//B
 		if(ParameterConst.VOT_MENGURUS.equals(paramCode)){
@@ -6658,7 +6661,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				 cloned.setDisableEditAccount(true);
 				 cloned.setReasonForUpdateEnabled(false);
 				 cloned.setJustificationEnabled(false);
-				 cloned.setEditable(true);
 			 }
 			 
 			 idx -= 1;
@@ -6672,8 +6674,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				 original.setReasonForUpdateEnabled(true);
 				 original.setDisableEditAccount(true);
 				 original.setJustificationEnabled(true);
-				 original.setEditable(false);
-			      
 			 }
 		}
 
@@ -6775,39 +6775,43 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		log.info("Resetting PpItems...");
 		
 		List<Long> fromPpItemList = new ArrayList<Long>();
-		List<Long> procurementItemIdList = new ArrayList<Long>();
+		List<Long> expenditureIItemIdList = new ArrayList<Long>();
 		
 		for (PpExpenditureItem ppItem : ppItems) {
 			fromPpItemList.add(ppItem.getFromPpItem());
-			procurementItemIdList.add(ppItem.getExpenditureItemId());
+			expenditureIItemIdList.add(ppItem.getExpenditureItemId());
 		}
 	
-		List<Long> commonProcurementItemIdList = new ArrayList<Long>(fromPpItemList);
-		commonProcurementItemIdList.retainAll(procurementItemIdList);
+		List<Long> commonExpenditureItemIdList = new ArrayList<Long>(fromPpItemList);
+		commonExpenditureItemIdList.retainAll(expenditureIItemIdList);
 		
-		if (commonProcurementItemIdList != null && !commonProcurementItemIdList.isEmpty()) {
-			for (Long commonProcurementItemId : commonProcurementItemIdList) {
+		if (commonExpenditureItemIdList != null && !commonExpenditureItemIdList.isEmpty()) {
+			for (Long commonExpenditureItemId : commonExpenditureItemIdList) {
 				for (PpExpenditureItem ppItem : ppItems) {
 					/* Always disable Pindaan for cloned ppItem
 					   Always disable Reason For Update for original ppItem*/
 					if (ppItem.isOriginal()) {
-						if (ppItem.getFromPpItem().equals(commonProcurementItemId)) {
+						if (ppItem.getFromPpItem().equals(commonExpenditureItemId)) {
 							ppItem.setCloneEnabled(true);
 							ppItem.setDisableForPindaan(true);
 							ppItem.setReasonForUpdateEnabled(false);
-							//ppItem.setBrandNew(true);
+							ppItem.setDisableEditAccount(true);
+							ppItem.setJustificationEnabled(false);
 						}
 					} else {
 						/* Always disable Pindaan for original ppItem
 						   Always enable Reason For Update for original ppItem*/
-						if (ppItem.getExpenditureItemId().equals(commonProcurementItemId)) {
+						if (ppItem.getExpenditureItemId().equals(commonExpenditureItemId)) {
 							ppItem.setCloneEnabled(true);
 							ppItem.setDisableForPindaan(true);
 							ppItem.setReasonForUpdateEnabled(true);
-						} else {
+							ppItem.setDisableEditAccount(true);
+							ppItem.setJustificationEnabled(true);
+						}else {
 							// The rest should retain the existing field logics
 							ppItem.setDisableForPindaan(false);
 							ppItem.setReasonForUpdateEnabled(true);
+							ppItem.setJustificationEnabled(true);
 						}
 					}        
 				}
