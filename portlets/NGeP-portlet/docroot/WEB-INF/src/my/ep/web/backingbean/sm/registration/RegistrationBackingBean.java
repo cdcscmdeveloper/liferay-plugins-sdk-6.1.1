@@ -629,6 +629,47 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			}
 			
 			//END 16052019 - SSM INTEGRATION CR - Validation for owner name n ident no 
+			
+			//27537 : Disciplinary Action - start - fixed together for 27536 & 27520
+			if(this.getManagedBean().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_BASIC) || 
+				this.getManagedBean().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF) ){
+				if(this.getManagedBean().getSmPersonnel() != null ){
+					if(suppOwner.getIdentificationNo() != null){
+						IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject("sm", IPersonnelSO.class);
+						PersonnelReqDTO personneleqDTO = new PersonnelReqDTO();
+						
+						personneleqDTO.setIdentificationNo(suppOwner.getIdentificationNo());
+						PersonnelResDTO personnelResDTO = personnelSO.retrievePersonnelByIdNo(personneleqDTO);
+						
+						if(personnelResDTO != null && personnelResDTO.getSmPersonnelList().size() > 0){
+							for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
+								
+								if(null != personnel.getSmAppl()){
+									
+									SmAppl latestAppl = new SmAppl();
+									latestAppl.setSmSupplier(personnel.getSmAppl().getSmSupplier());
+									
+									SmSupplier supplier = latestAppl.getSmSupplier();
+									
+									List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
+									
+									if(discList != null && discList.size() > 0){
+										for(SmDisciplinaryAction disc : discList){
+											if(( disc.getDisciplinaryActionId() != null && disc.isRecordStatus() && disc.isBlacklistOwner() ) ||
+													disc.getDisciplinaryActionId() != null && disc.isRecordStatus() && disc.isCancelRegistration() ){
+												throw new EpException(SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",null));
+												
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			//27537 : Disciplinary Action - end
+			
 			if(SmCommonUtil.isSupplierOwnerIndividualAcc(suppOwner.getIdentificationType().getParameterCode(),suppOwner.getIdentificationNo(),
 					my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL)){
 				throw new EpException(MessageConst.ERROR_721050);
