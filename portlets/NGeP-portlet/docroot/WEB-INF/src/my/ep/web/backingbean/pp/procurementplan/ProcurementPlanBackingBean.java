@@ -232,9 +232,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	public void preRenderView() {
 		log.info("preRenderView");
 		this.resetManagedBean();
-		//#24975 azza - start
-		this.getManagedBean().setResetExpItemforPindaan(true);
-		//#24975 azza - end
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
@@ -294,9 +291,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	public String redirectToMaintainPlan(Long id,String action,boolean isTrackingDiary) throws Exception{
 		log.info("redirectToMaintainPlan");
 		this.resetManagedBean();
-		//#24975 azza - start
-		this.getManagedBean().setResetExpItemforPindaan(true);
-		//#24975 azza - end
 		this.getManagedBean().setBtnValue(action);
 		this.getManagedBean().setTrackingDiary(isTrackingDiary);
 		this.retrievePlanTypeMapper();
@@ -542,11 +536,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setEpTotalBudgetH(null);
 		this.getManagedBean().setEpTotalPlanH(null);
 		this.getManagedBean().setEpTotalNonEpAllocH(null);
-		
-		//#24975 azza - start
-		this.getManagedBean().setResetExpItemforPindaan(true);
-		//#24975 azza - end
-
 	}
 	
 	private void resetPpProcurementItems(List<PpProcurementItem> ppItems) {
@@ -748,7 +737,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					//load plan det
 					if(ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())){
 						loadEpItems(ppPlan);
-						
 					}else if(ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())){
 						calculatePpGrandTotal();
 					}
@@ -793,44 +781,43 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			//B
 			if(ParameterConst.VOT_MENGURUS.equals(ppExpenditureItem.getVotFundType().getParameterCode())){
 				this.getManagedBean().getEpItemsB().add(ppExpenditureItem);
-				
-				if (this.getManagedBean().isResetExpItemforPindaan()== true){
-				    this.resetPpExpenditureItems(this.getManagedBean().getEpItemsB());
-			  }
+				//#24975 azza - start
+			    this.resetPpExpenditureItems(this.getManagedBean().getEpItemsB());
+			  //#24975 azza - end
 			}
 			//T
 			if(ParameterConst.VOT_TANGGUNGAN.equals(ppExpenditureItem.getVotFundType().getParameterCode())){
 				this.getManagedBean().getEpItemsT().add(ppExpenditureItem);
-				
-				  if (this.getManagedBean().isResetExpItemforPindaan()==true){
-				    this.resetPpExpenditureItems(this.getManagedBean().getEpItemsT());
-			  }
+				//#24975 azza - start
+			    this.resetPpExpenditureItems(this.getManagedBean().getEpItemsT());
+			  //#24975 azza - end
 			}
 			//P
 			if(ParameterConst.VOT_PEMBANGUNAN.equals(ppExpenditureItem.getVotFundType().getParameterCode())){
 				this.getManagedBean().getEpItemsP().add(ppExpenditureItem);
-	
-				  if (this.getManagedBean().isResetExpItemforPindaan()==true){
-				     this.resetPpExpenditureItems(this.getManagedBean().getEpItemsP());
-			  }
+				
+				//#24975 azza - start
+	            this.resetPpExpenditureItems(this.getManagedBean().getEpItemsP());
+	          //#24975 azza - end
 			}
 			//S
 			if(ParameterConst.VOT_SETIA.equals(ppExpenditureItem.getVotFundType().getParameterCode())){
 				this.getManagedBean().getEpItemsS().add(ppExpenditureItem);
 				
-				 if (this.getManagedBean().isResetExpItemforPindaan()==true){
-				     this.resetPpExpenditureItems(this.getManagedBean().getEpItemsS());
-			  }
+				//#24975 azza - start
+			     this.resetPpExpenditureItems(this.getManagedBean().getEpItemsS());
+			   //#24975 azza - end
 			}
 			//H
 			if(ParameterConst.VOT_AMANAH.equals(ppExpenditureItem.getVotFundType().getParameterCode())){
 				this.getManagedBean().getEpItemsH().add(ppExpenditureItem);
 				
-				  if (this.getManagedBean().isResetExpItemforPindaan()==true){
-				  this.resetPpExpenditureItems(this.getManagedBean().getEpItemsH());
-			  }
+				//#24975 azza - start
+				this.resetPpExpenditureItems(this.getManagedBean().getEpItemsH());
+				//#24975 azza - end
 			}
 		}
+		
 		
 		calculateEpGrandTotal(ParameterConst.VOT_MENGURUS);
 		calculateEpGrandTotal(ParameterConst.VOT_TANGGUNGAN);
@@ -2257,14 +2244,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						"ProcurementPlanBackingBean.savePlan", startTime);
 				log.info("Record saved successfully"); 
 				if(this.getManagedBean().getTaskId()!=null){
-					//#24975 azza - start
-					this.getManagedBean().setResetExpItemforPindaan(false);
-					//#24975 azza - end
 					loadPlanDetails(resDTO.getPlan().getPlanId(), false);
 				}else{
-					//#24975 azza - start
-					this.getManagedBean().setResetExpItemforPindaan(false);
-					//#24975 azza - end
 					loadPlanDetails(resDTO.getPlan().getPlanId(), true);
 				}
 				
@@ -6800,7 +6781,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			fromPpItemList.add(ppItem.getFromPpItem());
 			procurementItemIdList.add(ppItem.getExpenditureItemId());
 		}
-		
+	
 		List<Long> commonProcurementItemIdList = new ArrayList<Long>(fromPpItemList);
 		commonProcurementItemIdList.retainAll(procurementItemIdList);
 		
@@ -6814,7 +6795,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							ppItem.setCloneEnabled(true);
 							ppItem.setDisableForPindaan(true);
 							ppItem.setReasonForUpdateEnabled(false);
-							ppItem.setBrandNew(true);
+							//ppItem.setBrandNew(true);
 						}
 					} else {
 						/* Always disable Pindaan for original ppItem
@@ -6828,8 +6809,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							ppItem.setDisableForPindaan(false);
 							ppItem.setReasonForUpdateEnabled(true);
 						}
-					}
-				
+					}        
 				}
 			}
 		}
