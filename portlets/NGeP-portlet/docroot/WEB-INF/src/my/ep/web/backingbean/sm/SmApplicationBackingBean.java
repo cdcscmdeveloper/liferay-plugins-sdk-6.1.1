@@ -677,6 +677,25 @@ public class SmApplicationBackingBean extends
 					task.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 				}
 			}
+			
+			//Bug 27022 - start 			
+			SmAppl latestAppl = supplierProfile.getSmAppl();
+			 if(latestAppl != null 
+					 && latestAppl.getSmSupplierCategories() != null
+					 	&& getManagedBean().getSmAppl().getSmSupplierCategories() != null){
+				 for(SmSupplierCategory categoryRejectedAppl : latestAppl.getSmSupplierCategories()){
+					 if(categoryRejectedAppl.getRecordStatusFlg() == SupplierManagementConst.DELETED_RECORD_STATUS){
+						 for(SmSupplierCategory categoryResubmitAppl: getManagedBean().getSmAppl().getSmSupplierCategories()){
+							 if(categoryRejectedAppl.getPmCategoryL3().getCategoryL3Id()
+									 .equals(categoryResubmitAppl.getPmCategoryL3().getCategoryL3Id())){
+								 categoryResubmitAppl.setRecordStatusFlg(SupplierManagementConst.DELETED_RECORD_STATUS);
+							 }
+						 }
+					 }
+				 }
+			 }
+			//Bug 27022 - end
+			 
 			if (getManagedBean().getSmAppl().getSmSupplierCategories() != null
 					&& !getManagedBean().getSmAppl().getSmSupplierCategories()
 							.isEmpty()) {
@@ -8502,7 +8521,6 @@ public class SmApplicationBackingBean extends
 	 */
 	public String finalDecisionApproveOrRejectAppln(String dialog,
 			String decision) {
-		
 		List<String> updateIds = new ArrayList<String>();
 		updateIds.add(":form");
 		log.info("*** Submit Approve *** " + decision);
@@ -9187,7 +9205,7 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setApprvrSecReview(
 					assignVerificationCount(getManagedBean()
 							.getApprvrSecReview(), isSectionVerified));
-		}		
+		}
 	}
 
 	/**
@@ -12205,7 +12223,7 @@ public class SmApplicationBackingBean extends
 			}
 		}
 	}
-
+	//#27356
 	private void setFacilityAddressSameAs(SmFacility facilityBean) {
 		getManagedBean().setFacAddresSameAs(StringUtils.EMPTY);
 		if (!EntityHelper.isObjectDifference(getManagedBean().getSmAppl()
@@ -12219,7 +12237,7 @@ public class SmApplicationBackingBean extends
 					.getSmSupplierBranches()) {
 				if (!EntityHelper.isObjectDifference(br.getSmAddress(),
 						facilityBean.getSmAddress(), new String[] {
-								"mapLatitude", "mapLongitude", "pmDivision" })) {
+								"pmDivision" })) {
 					getManagedBean().setFacAddresSameAs(
 							br.getSupplierBranchId().toString());
 				}
