@@ -262,7 +262,7 @@
 					</tr>
 					<tr>
 						<td></td>
-						<td><p:inputText size="35" maxlength="100"
+						<td><p:inputText id="companyAdd2" size="35" maxlength="100"
 								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address2}" >
 								<p:ajax partialSubmit="true" process="@this" />
 							</p:inputText>
@@ -301,7 +301,7 @@
 					</tr>
 					<tr>
 						<td></td>
-						<td><p:inputText size="35" maxlength="100"
+						<td><p:inputText id="companyAdd3" size="35" maxlength="100"
 								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address3}" />
 							
 							<ac:smFieldChangeAlert 
@@ -408,6 +408,40 @@
 							</p:outputPanel></td>
 						<td colspan="2"></td>
 					</tr>
+					<tr>
+					<td>
+					<p:outputLabel value="#{lbl['lbl.sm.coordinate']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+					</td>
+					<td colspan="3"  >
+						<script>
+						
+					      function getAddress2() {
+					    	  
+					    	  var addr1 = document.getElementById('#{p:component(&quot;companyAdd1&quot;)}').value + ',';
+					    	  var addr2 = document.getElementById('#{p:component(&quot;companyAdd2&quot;)}').value + ',';
+					    	  var addr3 = document.getElementById('#{p:component(&quot;companyAdd3&quot;)}').value + ',';
+					    	  var postcode = document.getElementById('#{p:component(&quot;companyPostMyCode&quot;)}').value + ' ';
+					    	  
+					    	  var cityName = document.getElementById('#{p:component(&quot;basicOffFacCity&quot;)}_input').options[document.getElementById('#{p:component(&quot;basicOffFacCity&quot;)}_input').selectedIndex].text;
+					    	  var districtName = document.getElementById('#{p:component(&quot;basicOffFacDist&quot;)}_input').options[document.getElementById('#{p:component(&quot;basicOffFacDist&quot;)}_input').selectedIndex].text;
+					    	  var stateName = document.getElementById('#{p:component(&quot;basicOffFacCity&quot;)}_input').options[document.getElementById('#{p:component(&quot;basicOffFacCity&quot;)}_input').selectedIndex].text;
+					    	  var countryName = document.getElementById('#{p:component(&quot;companyCntry&quot;)}_input').options[document.getElementById('#{p:component(&quot;companyCntry&quot;)}_input').selectedIndex].text;
+					    	  
+					    	  var address = addr1 + addr2 + addr3 + postcode + cityName + ',' + districtName + ',' + stateName + ',' + countryName;
+
+					      	return address;
+					      }
+						
+						</script>
+									 
+						<ac:gmap id="acgmap2" 
+							address="getAddress2()"
+							locationName="#{backingBean.managedBean.smAppl.smCompanyBasic.companyName}"
+							latitude="#{backingBean.managedBean.smAppl.smFacilities[0].smAddress.mapLatitude}"
+							longitude="#{backingBean.managedBean.smAppl.smFacilities[0].smAddress.mapLongitude}" />					
+					</td>
+				</tr>
 				</p:outputPanel>
 				
 				<p:outputPanel rendered="#{backingBean.managedBean.poUser or (backingBean.managedBean.smAppl.resubmit and backingBean.managedBean.supplierUser)}">

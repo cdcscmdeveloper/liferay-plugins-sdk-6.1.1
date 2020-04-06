@@ -1052,6 +1052,32 @@ public class SmApplicationUtil {
 		}
 		return i;
 	}
+	
+	//#27356
+	public static void validateCoordinate(SmApplicationManagedBean managedBean){
+		SmCompanyBasic companyBasic = managedBean.getSmAppl().getSmCompanyBasic();
+		List<SmFacility> facility =managedBean.getSmAppl().getSmFacilities();
+		if (companyBasic != null) {
+			if (StringUtils.isBlank(companyBasic.getSmCompanyAddresses().get(0)
+					.getSmAddress().getMapLatitude())
+					|| StringUtils.isBlank(companyBasic.getSmCompanyAddresses()
+							.get(0).getSmAddress().getMapLongitude())) {
+				throw new EpException(SmCommonUtil.getMessage("lbl.sm.coordinate.required.msg",
+						new String[] { SmCommonUtil.getMessage("lbl.sm.coordinate", null) }));
+			}
+		}
+		if (facility != null) {
+			for (SmFacility fac : facility) {
+				if (fac.getSmAddress().getMapLatitude() != null || fac.getSmAddress().getMapLongitude() != null) {
+					if (StringUtils.isBlank(fac.getSmAddress().getMapLatitude())
+							|| StringUtils.isBlank(fac.getSmAddress().getMapLongitude())) {
+						throw new EpException(SmCommonUtil.getMessage("lbl.sm.coordinate.required.msg",
+								new String[] { SmCommonUtil.getMessage("lbl.sm.coordinate", null) }));
+					}
+				}
+			}
+		}
+	}
 
 	public static void validateGSt(SmApplicationManagedBean managedBean,
 			int currentTab, SmRuleHelper ruleHelper) {
@@ -5367,6 +5393,9 @@ public class SmApplicationUtil {
 		desAddr.setAddress2(srcAddr.getAddress2());
 		desAddr.setAddress3(srcAddr.getAddress3());
 		desAddr.setPostcode(srcAddr.getPostcode());
+		//#27356
+		desAddr.setMapLatitude(srcAddr.getMapLatitude());
+		desAddr.setMapLongitude(srcAddr.getMapLongitude());
 		if (srcAddr.getPmCountry() != null
 				&& srcAddr.getPmCountry().getCountryId() != null) {
 			desAddr.setPmCountry(SmCommonUtil.getInstance().getCountryById(

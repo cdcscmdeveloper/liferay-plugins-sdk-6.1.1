@@ -510,6 +510,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		validateSstRegNo();
 		validateSstServRegNo();
 		
+		//#27356
+		if (StringUtils.isBlank(this.getManagedBean().getSmBusinessAdd().getMapLatitude())
+				|| StringUtils.isBlank(this.getManagedBean().getSmBusinessAdd().getMapLongitude())) {
+			throw new EpException(SmCommonUtil.getMessage("lbl.sm.coordinate.required.msg",
+					new String[] { SmCommonUtil.getMessage("lbl.sm.coordinate", null) }));
+		}
+		
 		if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1){
 			throw new EpException(MessageConst.ERROR_721011);
 

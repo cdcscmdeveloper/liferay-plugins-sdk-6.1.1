@@ -30,11 +30,11 @@
   		
   		<div class="ui-fieldset-content">
   		
-		X: <p:inputText id="plat" value="#{cc.attrs.latitude}" disabled="#{cc.attrs.disabled}" />
+		X: <p:inputText id="plat" value="#{cc.attrs.latitude}" disabled="#{cc.attrs.disabled}" maxlength="20" />
 		
 		&#160;
 		
-		Y: <p:inputText id="plng" value="#{cc.attrs.longitude}" disabled="#{cc.attrs.disabled}" />
+		Y: <p:inputText id="plng" value="#{cc.attrs.longitude}" disabled="#{cc.attrs.disabled}" maxlength="20"/>
 		
 		<p:commandButton id="gmId" 
 			value="#{lbl['lbl.gmap.viewmap']}" 

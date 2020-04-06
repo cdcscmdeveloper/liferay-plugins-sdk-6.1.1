@@ -33,7 +33,7 @@
 					listener="#{cc.attrs.backingBean.onChangeFacAddrSameAs(cc.attrs.facility,cc.attrs.facilityPanel)}"
 					update="addr1LabelId,addr1InputId,addr2InputId,addr3InputId,
 					countryLabelId,countryInputId,stateLabelId,stateInputId,districtLabelId,districtInputId,
-					cityLabelId,cityInputId,postCodeLabelId,postCodeInputId,:#{p:component(cc.attrs.panelId)}" />
+					cityLabelId,cityInputId,postCodeLabelId,postCodeInputId,coordinateLabelId,coordinateInputId,:#{p:component(cc.attrs.panelId)}" />
 			</p:selectOneMenu>
 			&#160; 
 			<p:graphicImage id="sameAsAddrGraphicId"
@@ -218,5 +218,34 @@
 			</p:outputPanel>
 		</td>
 	</tr>
-</cc:implementation>
+	<tr>
+			<td><p:outputPanel id="coordinateLabelId">
+					<p:outputLabel value="#{lbl['lbl.sm.coordinate']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</p:outputPanel></td>
+			<td colspan="3"><p:outputPanel id="coordinateInputId">
+					<script>
+						function getAddress2(addr1, addr2, addr3, cityName,
+								districtName, stateName, countryName) {
+
+							var address = addr1 + addr2 + addr3 + cityName
+									+ ',' + districtName + ',' + stateName
+									+ ',' + countryName;
+
+							return address;
+						}
+					</script>
+					<ac:gmapInput id="gmapInput"
+						address="getAddress2('#{cc.attrs.facility.smAddress.address1}', 
+						'#{cc.attrs.facility.smAddress.address2}', '#{cc.attrs.facility.smAddress.address3}',
+						'#{cc.attrs.facility.smAddress.pmCity.cityName}', '#{cc.attrs.facility.smAddress.pmDistrict.districtName}', 
+						'#{cc.attrs.facility.smAddress.pmState.stateName}', '#{cc.attrs.facility.smAddress.pmCountry.countryName}')"
+						locationName="#{cc.attrs.backingBean.managedBean.smAppl.smCompanyBasic.companyName}"
+						latitude="#{cc.attrs.facility.smAddress.mapLatitude}"
+						longitude="#{cc.attrs.facility.smAddress.mapLongitude}" 
+						showButton="true"
+						disabled="false" />
+				</p:outputPanel></td>
+		</tr>
+	</cc:implementation>
 </ui:composition>
