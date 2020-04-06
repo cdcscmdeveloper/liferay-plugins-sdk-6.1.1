@@ -95,8 +95,7 @@
 				<p:inputText value="#{typeValueObj.ruleNumberValue}" size="30"
 					label="#{lbl['lbl.pm.value']}"
 					maxlength="4" id="numberValueId" style="text-align:right"
-					disabled="#{!(typeValueObj.brandNew) or 
-					(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType == 'LOPO')}" 
+					disabled="#{!(typeValueObj.brandNew)}" 
 					required="true"
 					requiredMessage="#{lbl['lbl.pm.settings.value.required']}"	>
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
@@ -245,7 +244,7 @@
 				<f:facet name="header">
 						#{lbl['lbl.pm.as.expdate']}
 			                	</f:facet>
-	    		<p:calendar  navigator="true"
+				 <p:calendar  navigator="true"
 					yearRange="#{DateUtils.getCalendarMaxYearRange(typeValueObj.expDate)}"	
 					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 1 and typeValueObj.showFlag)}"
 					disabled="#{typeValueObj.expDate lt DateUtils.getCurrentDateWithoutTime()}"
