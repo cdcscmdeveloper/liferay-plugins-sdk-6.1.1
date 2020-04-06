@@ -32,7 +32,8 @@
 					<tr>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.sap.vendor.code']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.sapVendorCode}" /></td>
-						<td></td>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.country']}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCountry.countryName}"/></td>
 					</tr>
 					<c:if test="#{not empty viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses}">
 					<tr>				
@@ -88,8 +89,8 @@
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.coordinate']}" /></td>
 						<td>
 						<c:choose>
-						<c:when test="X: #{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.mapLatitude != null} 
-						Y: #{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.mapLongitude != null}">
+						<c:when test="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.mapLatitude != null and 
+						viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.mapLongitude != null}">
 						<p:outputLabel styleClass="outputLabel-view" value=
 						"X: #{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.mapLatitude} 
 						Y: #{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.mapLongitude}" />
@@ -124,8 +125,8 @@
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.coordinate']}" /></td>
 						<td>
 						<c:choose>
-						<c:when test="X: #{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.mapLatitude != null} 
-						Y: #{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.mapLongitude != null}">
+						<c:when test="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.mapLatitude != null and 
+						viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.mapLongitude != null}">
 						<p:outputLabel styleClass="outputLabel-view" value=
 						"X: #{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.mapLatitude} 
 						Y: #{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.mapLongitude}" />
@@ -161,8 +162,8 @@
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.coordinate']}" /></td>
 						<td>
 						<c:choose>
-						<c:when test="X: #{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.mapLatitude != null} 
-						Y: #{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.mapLongitude != null}">
+						<c:when test="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.mapLatitude != null and 
+						viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.mapLongitude != null}">
 						<p:outputLabel styleClass="outputLabel-view" value=
 						"X: #{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.mapLatitude} 
 						Y: #{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.mapLongitude}" />

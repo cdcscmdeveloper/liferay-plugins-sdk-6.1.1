@@ -26,6 +26,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.codification.IRequestCodeSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.sm.vendorcode.IVendorCodeSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -70,6 +71,7 @@ import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
+import my.ep.persistence.entity.sm.SmSapVendorCode;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
@@ -1202,7 +1204,7 @@ public class ViewApplHistoryBackingBean extends
 		String uomCodeDesc="";
 		if(null!=pmUom){
 			if(null!=pmUom.getUomName()){
-				pmUom.getUomName();
+				uomCodeDesc = pmUom.getUomName();//25792
 			}
 		}
 		
@@ -1358,6 +1360,19 @@ public class ViewApplHistoryBackingBean extends
 		getManagedBean().setAgencyName(StringUtils.EMPTY);
 		getManagedBean().setSearchEpNo(StringUtils.EMPTY);
 		super.resetSearch();
+	}
+	
+	public String getSAPVendorCode(Long branchCode) {
+		
+		IVendorCodeSO vendorCodeSO = (IVendorCodeSO) BusinessDelegate.getInstance()
+		.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+				IVendorCodeSO.class);
+		
+		SmSapVendorCode smSAPVendorCode = vendorCodeSO.retrieveSapVendorCodeByEpNoAndBranchCode(null, branchCode);
+		if(smSAPVendorCode != null) {
+			return smSAPVendorCode.getSapVendorCode();
+		}
+		return "";
 	}
 	// 25792 - end
 	

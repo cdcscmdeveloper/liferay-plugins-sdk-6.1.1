@@ -2289,7 +2289,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					if (!StringUtils.isBlank(getManagedBean().getAgencyName())
 							&& getManagedBean().getAgencyName().length() < 3) {
 						throw new EpException(SmCommonUtil.getMessage(
-								"lbl.sm.tt.search.prefix.three.char", null));
+								"lbl.sm.tt.agency.search.prefix.three.char", null));
 					}
 				}
 
