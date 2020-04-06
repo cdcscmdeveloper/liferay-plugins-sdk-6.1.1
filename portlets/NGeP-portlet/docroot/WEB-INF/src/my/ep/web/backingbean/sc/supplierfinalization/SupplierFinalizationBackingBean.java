@@ -946,7 +946,7 @@ public class SupplierFinalizationBackingBean extends
 			 		 break;
 		}
 		getManagedBean().setEvaluationHeader(evaluationHeader);
-		if (getManagedBean().getCurrentZone() != null) {
+		if (getManagedBean().getCurrentZone() != null && evaluationStageId==2) { //#26440
 			 selectedZoneId = getManagedBean().getCurrentZone().getSpecZoneId();
 		 }
 		getManagedBean().setQualifiedSuppliersByEvalStage(
