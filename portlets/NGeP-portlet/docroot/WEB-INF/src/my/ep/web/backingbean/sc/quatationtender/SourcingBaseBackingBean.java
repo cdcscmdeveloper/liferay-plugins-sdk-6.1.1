@@ -3363,6 +3363,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 
+	// #26226 - Start
 	/**
 	 * @param context
 	 * @param scLoa
@@ -3400,6 +3401,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		
 			List<ScLoiLoaItem> items = scLoa.getScLoiLoaItems();
 			log.info("ScLoiLoaItem Item size  -->"+items.size());
+			String dafaltValue = "T/B";
+			if(masters.size() > 0)
+			{	
+				masters.clear();
+				log.info("Master Record List Size I -->"+masters.size());
+			}
 			for (ScLoiLoaItem item :items)	
 			{	
 				Long  itemId =item.getScRequestItem().getTplSpecQuestion().getSpecQuestionId();
@@ -3409,15 +3416,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				//	Long requestItemId=item.getScRequestItem().getRequestNote().getRequestNoteId();
 				log.info("Loa id +"   +"+ItemId"+"    "+loaid+"  --->   " +itemId);
 				
-			if(masters.size() > 0)
-			{	
-				masters.clear();
-				log.info("Master Record List Size I -->"+masters.size());
-			}
 			
-			String dafaltValue = "T/B";
 			if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
-				dafaltValue = "T/B";
+				dafaltValue = "N/A";
 			}
 			
 			if (CollectionUtils.isNotEmpty(quoteResDTO.getServiceAnswersTpl())) {
@@ -3434,6 +3435,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					}else{
 						zoneId=0l;  //Long Object initialization
 					}
+					
 					if(answer.getTplSpecQuestion().getClFulfilmentTypeCode() == null)
 					{
 						answer.getTplSpecQuestion().setClFulfilmentTypeCode(scLoa.getScLoiLoa().getFulfilmentTypeCode()); 
@@ -3485,6 +3487,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					else{
 						answer.getTplSpecQuestion().setAnswerRemarks(dafaltValue);
 					}
+					
 					if((days.equals(answer.getTplSpecQuestion().getClDeliveryTerm())) && (answer.getTplSpecQuestion().getClItem()!=null))
 					{ 
 						/**  This code is for LOA with Single Item Details  **/
@@ -3568,10 +3571,25 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				}
 				if(master !=null)
 				{
-					masters.add(master);
+					if (masters.size() == 0) {
+						masters.add(master);
+					} else {
+						boolean itemFound = false;
+						for (TplSpecMaster tplSpecMaster : masters) {
+							if (tplSpecMaster.getSpecMasterId() == master.getSpecMasterId()) {
+								itemFound = true;
+								break;
+							}
+						}
+						if (!itemFound) {
+							masters.add(master);
+						}
+					}
 					
 				}
 			}
+			
+		}	
 			log.info("Master Record List Size II -->"+masters.size());
 			context.put("serviceScope", dafaltValue);
 			context.put("supplierName", supplierName);
@@ -3580,14 +3598,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			context.put("bean", this);
 			context.put("isZonal", scLoa.getScLoiLoa().isZonal());
 			
-		}	
-			
 		} finally {
 			quoteSO = null;
 			days=null;
 			//masters.clear();
 		}
 	}
+	// #26226 - End
+	
 
 	/**  
 	 * CR Enhancement 26226 Nov 2019   End of the method 
@@ -3706,8 +3724,28 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			parentQuestion.setSpecCount(specCount + 1);
 		}
 		question.setTplSpecMaster(master);
-		newTplSpecQuestionsList.add(question);
+		// #26226 - Start
+		if(newTplSpecQuestionsList !=null)
+		{
+			if (newTplSpecQuestionsList.size() == 0) {
+				newTplSpecQuestionsList.add(question);
+			} else {
+				boolean itemFound = false;
+				for (TplSpecQuestion tplSpecQuestion : newTplSpecQuestionsList) {
+					if (tplSpecQuestion.getSpecQuestionId() == question.getSpecQuestionId()) {
+						itemFound = true;
+						break;
+					}
+				}
+				if (!itemFound) {
+					newTplSpecQuestionsList.add(question);
+				}
+			}
+			
+		}
+		// #26226 - End
 	}
+	
 	
 	/**
 	 * @param context
