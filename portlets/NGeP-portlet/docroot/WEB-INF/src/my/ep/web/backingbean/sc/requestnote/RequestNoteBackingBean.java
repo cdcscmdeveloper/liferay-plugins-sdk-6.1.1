@@ -1194,6 +1194,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 								new String[] {ResourceBundleUtils.getMessage("lbl.sc.quantity",
 										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 					}
+
+					//26221 - Start
+					if (requestNoteDtl.getAssignedUser() == null || (requestNoteDtl.getAssignedUser() != null && requestNoteDtl.getAssignedUser().getUserId()==null)) {
+						throw new EpException(MessageConst.ERROR_100022, new String[]{
+							ResourceBundleUtils.getMessage(
+									"lbl.sc.request.note.loa.prepare.by", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale())});
+					//26221 - end
+					}
 				}
 			}
 		}
@@ -1414,7 +1424,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 				//#26221
 				if(scRequestNoteDtl.getAssignedUser() == null){
-					if(requestNote.getCreatedBy() != null) {
+					if((requestNote.getCreatedBy() != null) && (scRequestNoteDtl.getFulfilmentType().getParameterCode()
+							.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF))) {
 						scRequestNoteDtl.setAssignedUser(getUserById(requestNote.getCreatedBy()));
 					} else {
 						scRequestNoteDtl.setAssignedUser(new PmUser());
@@ -4955,7 +4966,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			sb.append(reqDTO.getRoleCode());
 			sb.append("|pmUserOrgs.pmUserRoles.recordStatus^1");
 		}
-		System.out.println("------------------shams in getPreparedByApprove - end ");
 		return sb.toString();
 	}
 	//26221-end
