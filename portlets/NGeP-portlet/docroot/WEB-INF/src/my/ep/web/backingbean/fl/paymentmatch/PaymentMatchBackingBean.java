@@ -1088,6 +1088,15 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 						getManagedBean().setProjectCode(childData.getPmSubSetia().getProjectCode());
 						getManagedBean().setFinancingTypeCode(childData.getPmSubSetia().getFinancingTypeValue());
 					}
+					//24893 - start
+					if(null != childData.getFlFulfilmentItemAddr().get(0).getChargePTJOrg()) {
+						getManagedBean().setChargePTJOrg(childData.getFlFulfilmentItemAddr().get(0).getChargePTJOrg());
+						System.out.println("Item Charge PTJ");
+					} else {
+						getManagedBean().setChargePTJOrg(getManagedBean().getPaymentAdvice().getFlRequest().getChargeOrgProfile());
+						System.out.println("FL Request Charge PTJ");
+					}
+					//24893 - end
 				}
 			}
 			
@@ -1105,7 +1114,10 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 		getManagedBean().setProjectCode("");
 		getManagedBean().setSetiaCode("");
 		getManagedBean().setSubSetiaCode("");
-		getManagedBean().setFinancingTypeCode("");		
+		getManagedBean().setFinancingTypeCode("");
+		//24893 - start
+		getManagedBean().setChargePTJOrg(new PmOrgProfile());
+		//24893 - end
 	}
 	
 	/**

@@ -305,20 +305,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
-			//24893 - start
-			//to handle WIP task
-			for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()){
-				for(FlFulfilmentItemAddr itemAddr : flDeliveryAddress.getFlFulfilmentItemAddr()){
-					if(null == itemAddr.getChargePTJOrg()) {
-						if(null != getManagedBean().getFlRequest().getChargeOrgProfile()) {
-							itemAddr.setChargePTJOrg(getManagedBean().getFlRequest().getChargeOrgProfile());
-						} else if(null != getManagedBean().getFlRequest().getIssuedOrgProfile()) {
-							itemAddr.setChargePTJOrg(getManagedBean().getFlRequest().getIssuedOrgProfile());
-						}
-					}
-				}
-			}
-			//24893 - end
 			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlFulfilmentRequest flRequest = getManagedBean().getFlRequest();
@@ -3016,11 +3002,17 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				//24893 - start
 				if(null != childData.getChargePTJOrg()) {
 					getManagedBean().setChargePTJOrg(childData.getChargePTJOrg());
+					System.out.println("Item Charge PTJ");
 				} else {
-					if(null != getManagedBean().getFlRequest().getChargeOrgProfile()) {
-						getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getChargeOrgProfile());
-					} else {
+					if(getManagedBean().getFlRequest().getStatus().equals(FulfilmentStatusConst.CR_PENDING_SUBMISSION) 
+							|| getManagedBean().getFlRequest().getStatus().equals(FulfilmentStatusConst.CR_PENDING_APPROVAL) 
+							|| getManagedBean().getFlRequest().getStatus().equals(FulfilmentStatusConst.CR_PENDING_REVISION) 
+							|| getManagedBean().getFlRequest().getStatus().equals(FulfilmentStatusConst.CR_PENDING_REVISION_APPROVAL)) {
 						getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getIssuedOrgProfile());
+						System.out.println("PTJ Pembayar");
+					} else {
+						getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getChargeOrgProfile());
+						System.out.println("FL Request Charge PTJ");
 					}					
 				}
 				//24893 - end
@@ -3810,11 +3802,17 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				//24893 - start
 				if(null != childData.getChargePTJOrg()) {
 					getManagedBean().setChargePTJOrg(childData.getChargePTJOrg());
+					System.out.println("Item Charge PTJ");
 				} else {
-					if(null != getManagedBean().getFlRequest().getChargeOrgProfile()) {
-						getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getChargeOrgProfile());
-					} else {
+					if(getManagedBean().getFlRequest().getStatus().equals(FulfilmentStatusConst.CR_PENDING_SUBMISSION) 
+							|| getManagedBean().getFlRequest().getStatus().equals(FulfilmentStatusConst.CR_PENDING_APPROVAL) 
+							|| getManagedBean().getFlRequest().getStatus().equals(FulfilmentStatusConst.CR_PENDING_REVISION) 
+							|| getManagedBean().getFlRequest().getStatus().equals(FulfilmentStatusConst.CR_PENDING_REVISION_APPROVAL)) {
 						getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getIssuedOrgProfile());
+						System.out.println("PTJ Pembayar");
+					} else {
+						getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getChargeOrgProfile());
+						System.out.println("FL Request Charge PTJ");
 					}					
 				}
 				//24893 - end
@@ -6553,7 +6551,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	//26279 - end
 	//24893 - start
 	/**
-	 * check role user is fl_approver
+	 * check role user is requisitioner
 	 */
 	public boolean isRequisitioner() {
 		return getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value());
