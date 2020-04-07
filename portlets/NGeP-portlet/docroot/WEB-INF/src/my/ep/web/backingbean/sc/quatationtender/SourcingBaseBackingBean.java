@@ -3404,6 +3404,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		
 			List<ScLoiLoaItem> items = scLoa.getScLoiLoaItems();
 			log.info("ScLoiLoaItem Item size  -->"+items.size());
+			String dafaltValue = "T/B";
+			if(masters.size() > 0)
+			{	
+				masters.clear();
+				log.info("Master Record List Size I -->"+masters.size());
+			}
 			for (ScLoiLoaItem item :items)	
 			{	
 				Long  itemId =item.getScRequestItem().getTplSpecQuestion().getSpecQuestionId();
@@ -3413,15 +3419,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				//	Long requestItemId=item.getScRequestItem().getRequestNote().getRequestNoteId();
 				log.info("Loa id +"   +"+ItemId"+"    "+loaid+"  --->   " +itemId);
 				
-			if(masters.size() > 0)
-			{	
-				masters.clear();
-				log.info("Master Record List Size I -->"+masters.size());
-			}
 			
-			String dafaltValue = "T/B";
 			if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
-				dafaltValue = "T/B";
+				dafaltValue = "N/A";
 			}
 			
 			if (CollectionUtils.isNotEmpty(quoteResDTO.getServiceAnswersTpl())) {
@@ -3438,6 +3438,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					}else{
 						zoneId=0l;  //Long Object initialization
 					}
+					
 					if(answer.getTplSpecQuestion().getClFulfilmentTypeCode() == null)
 					{
 						answer.getTplSpecQuestion().setClFulfilmentTypeCode(scLoa.getScLoiLoa().getFulfilmentTypeCode()); 
@@ -3489,6 +3490,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					else{
 						answer.getTplSpecQuestion().setAnswerRemarks(dafaltValue);
 					}
+					
 					if((days.equals(answer.getTplSpecQuestion().getClDeliveryTerm())) && (answer.getTplSpecQuestion().getClItem()!=null))
 					{ 
 						/**  This code is for LOA with Single Item Details  **/
@@ -3572,10 +3574,25 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				}
 				if(master !=null)
 				{
-					masters.add(master);
+					if (masters.size() == 0) {
+						masters.add(master);
+					} else {
+						boolean itemFound = false;
+						for (TplSpecMaster tplSpecMaster : masters) {
+							if (tplSpecMaster.getSpecMasterId() == master.getSpecMasterId()) {
+								itemFound = true;
+								break;
+							}
+						}
+						if (!itemFound) {
+							masters.add(master);
+						}
+					}
 					
 				}
 			}
+			
+		}	
 			log.info("Master Record List Size II -->"+masters.size());
 			context.put("serviceScope", dafaltValue);
 			context.put("supplierName", supplierName);
@@ -3583,8 +3600,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			context.put("masters", masters);
 			context.put("bean", this);
 			context.put("isZonal", scLoa.getScLoiLoa().isZonal());
-			
-		}	
 			
 		} finally {
 			quoteSO = null;
@@ -3710,7 +3725,25 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			parentQuestion.setSpecCount(specCount + 1);
 		}
 		question.setTplSpecMaster(master);
-		newTplSpecQuestionsList.add(question);
+		
+		if(newTplSpecQuestionsList !=null)
+		{
+			if (newTplSpecQuestionsList.size() == 0) {
+				newTplSpecQuestionsList.add(question);
+			} else {
+				boolean itemFound = false;
+				for (TplSpecQuestion tplSpecQuestion : newTplSpecQuestionsList) {
+					if (tplSpecQuestion.getSpecQuestionId() == question.getSpecQuestionId()) {
+						itemFound = true;
+						break;
+					}
+				}
+				if (!itemFound) {
+					newTplSpecQuestionsList.add(question);
+				}
+			}
+			
+		}
 	}
 	
 	/**
@@ -4474,21 +4507,21 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 
 	//Enhancement #25729 Allow create QT below threshold RM20k
-	public boolean expectTotalIndPriceBelowThreshold(ScQt scQt) {
-		BigDecimal tmpExpectedIntendedPrice = scQt.getTmpExpectedIntendedPrice();
-		
-		if (!scQt.isPanel() && tmpExpectedIntendedPrice != null) {
-			log.info(":::expectTotalIndPriceBelowThreshold() scQt.isPanel(): "+ scQt.isPanel() +" :::");
-			log.info(":::expectTotalIndPriceBelowThreshold() tmpExpectedIntendedPrice: "+ tmpExpectedIntendedPrice +" :::");
-			log.info(":::expectTotalIndPriceBelowThreshold() tmpExpectedIntendedPrice.doubleValue: "+ tmpExpectedIntendedPrice.doubleValue() +" :::");
+		public boolean expectTotalIndPriceBelowThreshold(ScQt scQt) {
+			BigDecimal tmpExpectedIntendedPrice = scQt.getTmpExpectedIntendedPrice();
+			
+			if (!scQt.isPanel() && tmpExpectedIntendedPrice != null) {
+				log.info(":::expectTotalIndPriceBelowThreshold() scQt.isPanel(): "+ scQt.isPanel() +" :::");
+				log.info(":::expectTotalIndPriceBelowThreshold() tmpExpectedIntendedPrice: "+ tmpExpectedIntendedPrice +" :::");
+				log.info(":::expectTotalIndPriceBelowThreshold() tmpExpectedIntendedPrice.doubleValue: "+ tmpExpectedIntendedPrice.doubleValue() +" :::");
 
-			if (SourcingConstants.QT_BELOW_20K >= tmpExpectedIntendedPrice.doubleValue()) {
-				return Boolean.TRUE;
+				if (SourcingConstants.QT_BELOW_20K >= tmpExpectedIntendedPrice.doubleValue()) {
+					return Boolean.TRUE;
+				}
 			}
+			
+			return Boolean.FALSE;
 		}
-		
-		return Boolean.FALSE;
-	}
-	//Enhancement #25729 - end -
+		//Enhancement #25729 - end -
 	
 }
