@@ -707,7 +707,10 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 						commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc()
 						.getUnspscTitleEng());
 				
-       
+       //#25551 04062020 -start
+		this.getManagedBean().setExtension(null);
+		this.getManagedBean().setStatus(null);
+		 //#25551 04062020 -end
 		this.getManagedBean().setData(null);
 		this.getExtensionAttributeSearchData().resetData();
 		this.getManagedBean().setDisableSelectBtn(true);
@@ -994,17 +997,11 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 				
 				System.out.println("statusfilter " + getManagedBean().getstatus());
 				
-				if (getManagedBean().getstatus() != null) {
-					log.info("*********statusFilterBean***********" + getManagedBean().getstatus());
-					statusExtensionFilterBean.setSearchField("b.record_status");
-					statusExtensionFilterBean.setSearchValue(getManagedBean().getstatus());
-					searchBean.getDataFilterBeans().add(statusExtensionFilterBean);
-				}
-
 				reqDTO.setSsearchBeanTypeearchBeanType(searchBean);
 				reqDTO.setUnspscCode(getManagedBean().getSelectedUNSPSCObj().getUnspscCode());
 				reqDTO.setExtensionName(getManagedBean().getExtension());
 				reqDTO.setExtension(getManagedBean().getData());
+				reqDTO.setStatus(getManagedBean().getstatus());
 				
 
 				resDTO = codificationSO.searchUnspscObj(reqDTO);
