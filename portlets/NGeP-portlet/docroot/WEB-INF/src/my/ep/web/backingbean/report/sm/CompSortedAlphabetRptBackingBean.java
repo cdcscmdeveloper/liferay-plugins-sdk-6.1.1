@@ -1,15 +1,12 @@
 package my.ep.web.backingbean.report.sm;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.LinkedHashMap;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import my.ep.constant.MessageConst;
 import my.ep.constants.CommonConstants;
-import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.web.backingbean.report.ReportBaseBackingBean;
 import my.ep.web.constant.report.SmReportConst;
@@ -35,7 +32,7 @@ public class CompSortedAlphabetRptBackingBean extends
 	}
 
 	public void generateReport() {
-		validateMofRegNo();
+		validateParameterValue(getManagedBean().getReportCode());
 		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
 		SimpleDateFormat df = new SimpleDateFormat(
 				CommonConstants.DEFAULT_DATE_FORMAT);
@@ -45,13 +42,11 @@ public class CompSortedAlphabetRptBackingBean extends
 		// #21331 - start
 		if (getManagedBean().getSearchDate().equalsIgnoreCase("mofRegisteredDate")) {
 			if (getManagedBean().getDateFrom() != null && getManagedBean().getDateTo() != null) {
-				checkOneYearDifferent(getManagedBean().getDateFrom(), getManagedBean().getDateTo(), getManagedBean().getSearchDate());
 				params.put(SmReportConst.PARAM_DATE_FROM, df.format(getManagedBean().getDateFrom()));
 				params.put(SmReportConst.PARAM_DATE_TO, df.format(getManagedBean().getDateTo()));
 			}
 		} else if (getManagedBean().getSearchDate().equalsIgnoreCase("mofEndDate")) {
 			if (getManagedBean().getDateExpFrom() != null && getManagedBean().getDateExpTo() != null) {
-				checkOneYearDifferent(getManagedBean().getDateExpFrom(), getManagedBean().getDateExpTo(), getManagedBean().getSearchDate());			
 			}
 			if (getManagedBean().getDateExpFrom() != null) {
 				params.put(SmReportConst.PARAM_DATE_EXP_FROM,
@@ -101,48 +96,5 @@ public class CompSortedAlphabetRptBackingBean extends
 		getManagedBean().setDateExpTo(null);
 		// #21331 - end
 	}
-	
-	// #21331 - start
-	public void checkOneYearDifferent(Date fromDate, Date toDate, String searchDate) {
-		log.info("********checkOneYearDifferent********| searchDate = " + searchDate);
-		SimpleDateFormat outputDateFormat = new SimpleDateFormat(
-				CommonConstants.DEFAULT_DATE_FORMAT);
-		String yearFrom = outputDateFormat.format(fromDate).substring(6, 10);
-		String yearTo = outputDateFormat.format(toDate).substring(6, 10);
-		String monthFrom = outputDateFormat.format(fromDate).substring(3, 5);
-		String monthTo = outputDateFormat.format(toDate).substring(3, 5);
-		String dayFrom = outputDateFormat.format(fromDate).substring(0, 2);
-		String dayTo = outputDateFormat.format(toDate).substring(0, 2);
-		int yearFromInt = Integer.parseInt(yearFrom);
-		int yearToInt = Integer.parseInt(yearTo);
-		int monthFromInt = Integer.parseInt(monthFrom);
-		int monthToInt = Integer.parseInt(monthTo);
-		int dayFromInt = Integer.parseInt(dayFrom);
-		int dayToInt = Integer.parseInt(dayTo);
-		if (yearToInt == yearFromInt + 1) {
-			if (monthToInt == monthFromInt) {
-				if (dayToInt > dayFromInt) {
-					if (searchDate.equalsIgnoreCase("mofRegisteredDate")) {
-						throw new EpException(MessageConst.ERROR_REPORT_780057);
-					} else {
-						throw new EpException(MessageConst.ERROR_REPORT_780058);
-					}					
-				}
-			} else if (monthToInt > monthFromInt) {
-				if (searchDate.equalsIgnoreCase("mofRegisteredDate")) {
-					throw new EpException(MessageConst.ERROR_REPORT_780057);
-				} else {
-					throw new EpException(MessageConst.ERROR_REPORT_780058);
-				}				
-			}
-		} else if (yearToInt > yearFromInt + 1) {
-			if (searchDate.equalsIgnoreCase("mofRegisteredDate")) {
-				throw new EpException(MessageConst.ERROR_REPORT_780057);
-			} else {
-				throw new EpException(MessageConst.ERROR_REPORT_780058);
-			}			
-		}
-	}
-	// #21331 - end
 
 }
