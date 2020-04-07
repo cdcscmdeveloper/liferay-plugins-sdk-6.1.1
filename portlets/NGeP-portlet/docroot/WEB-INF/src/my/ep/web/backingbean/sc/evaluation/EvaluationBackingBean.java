@@ -1115,6 +1115,13 @@ public class EvaluationBackingBean extends
 						 * if (null == proposalCheckList.getCompliance()) { //
 						 * throw new EpException(MessageConst.ERROR_760204); }
 						 */
+						
+						// #26339 - Start
+						if (proposalCheckList.getCompliance() == null && proposalCheckList.getScQtProposalChecklistAttachment() == null) {
+							proposalCheckList.setCompliance(new Integer(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE));
+						}
+						// #26339 - End
+						
 						if (null != proposalCheckList.getCompliance()
 								&&ParameterConst.COMPLIANCE_STATUS_NONCOMPLIANCE==proposalCheckList.getCompliance()) {
 							if (null == proposalCheckList.getRemark()
