@@ -167,8 +167,8 @@ public class CancelRegistrationBackingBean extends
 						labelText = SmCommonUtil.getMessage("lbl.sm.consultant", null);
 					}else if(resDTO.getSmSupplier().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_BASIC)){
 						labelText = SmCommonUtil.getMessage("lbl.sm.basic", null);
-					}else{
-						labelText = SmCommonUtil.getMessage("lbl.sm.basic", null);
+					}else if(resDTO.getSmSupplier().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_GOVT_SELLER)){
+						labelText = SmCommonUtil.getMessage("lbl.sm.g2g", null);
 					}
 					throw new EpException(MessageConst.ERROR_721093,new String[]{labelText,resDTO.getSmSupplier().getEpNo()});
 				}else{
