@@ -1852,7 +1852,7 @@ u {
 									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">Bil. Unit <br/>Ukuran Sehari</th>
 									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">Bil. Unit <br/>Ukuran Sebulan</th>
 									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">Tempoh (Bulan)</th>
-									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; font-size:10px;">Zon</th>
+									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">Zon</th>
 									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">Kuantiti</th>
 									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; font-size:10px;">Tawaran Pembekal</th>
 									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; font-size:10px;">Catatan</th>
@@ -1890,7 +1890,7 @@ u {
 							#if ($tplspecQuestion.questionType == "I")
 							  
 								
-								<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="1" style="text-align: left; padding-left: 5px; font-size:12px;" >
+								<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:12px;" >
 									
 										$tplspecQuestion.clItem
 									
@@ -1987,7 +1987,7 @@ u {
 								</td>
 
 
-								<td  valign="top" bgcolor="#d0eaee" style="text-align: left; padding-left: 5px; font-size:12px;" >
+								<td  valign="top" bgcolor="#d0eaee" rowspan="2" style="text-align: left; padding-left: 5px; font-size:12px;" >
 										
 										<table width="100%" border="0" cellpadding="0" cellspacing="0">
 											<tbody>
@@ -2005,7 +2005,7 @@ u {
 									
 								</td>	
 								
-								<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="1"  style="text-align: left; padding-left: 5px; font-size:12px;">
+								<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2"  style="text-align: left; padding-left: 5px; font-size:12px;">
 										#if(($tplspecQuestion.clReviewRemark == "" ))
 										 $serviceScope 
 										#else
@@ -2013,7 +2013,7 @@ u {
 										#end
 								</td>
 								
-								<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="1"  style="text-align: left; padding-left: 5px; font-size:12px;">
+								<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2"  style="text-align: left; padding-left: 5px; font-size:12px;">
 								#if($serviceScope)
 								 $serviceScope 
 								 #end
@@ -2021,19 +2021,19 @@ u {
 								
 								
 
-							</tr>
+							
 							
 								
 							
 								#end
 								#if ($tplspecQuestion.questionType == "S")
-								<tr>
-									<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="1" style="text-align: center; padding-left: 5px; font-size:12px;"></td>
+								
+									
 									<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="8" style="text-align: center; padding-left: 5px; font-size:12px;">$tplspecQuestion.clSpecDetail</td>
-									<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="3" style="text-align: center; padding-left: 5px; font-size:12px;"></td>
-							</tr>
-								#end
+									
 							
+								#end
+							</tr>
 						#else
 							#if ($tplspecQuestion.questionType == "I")
 						 
@@ -2109,13 +2109,14 @@ u {
 								#end	
 								#if ($tplspecQuestion.questionType == "S")
 							
-									<tr>
+									
 									
 									<td valign="top" bgcolor="#d0eaee" class="title border left" colspan="7" style="text-align: center; padding-left: 5px; font-size:12px;">$tplspecQuestion.clSpecDetail</td>
 									
-									</tr>
+									
 							
 								#end
+								</tr>	
 						#end
 					    	
 
