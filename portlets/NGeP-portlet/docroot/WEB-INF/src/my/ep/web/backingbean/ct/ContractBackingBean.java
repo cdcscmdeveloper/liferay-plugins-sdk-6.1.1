@@ -148,6 +148,8 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 
+import org.apache.log4j.Logger;
+
 /**
  * Backing Bean For Contract
  * 
@@ -2776,6 +2778,36 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			ex.printStackTrace();
 		}
 	}
+	
+	/**
+	 * The method used to refresh the ceiling quantity information of Product details listing in UI.
+	 */
+	private void refreshAgencyCeilingQuantityList() {
+		Map<Long, CtItemCeilingQty> itemCeilingQtyMap = new HashMap<Long, CtItemCeilingQty>();
+		for (CtItemCeilingQty ctItemCeilingQty : getManagedBean().getSelectedItem().getCtItemCeilingQties()) {
+			itemCeilingQtyMap.put(ctItemCeilingQty.getCtAgency().getOrgProfile().getOrgProfileId(), ctItemCeilingQty);
+		}
+		
+		getManagedBean().getSelectedItem().getCtItemCeilingQties().clear();
+		//getManagedBean().getServiceselectedItem().getCtItemCeilingQties().clear();
+		for (CtAgency ctAgency : getManagedBean().getContractVer().getCtAgencies()) {
+			if (!itemCeilingQtyMap.containsKey(ctAgency.getOrgProfile().getOrgProfileId())) {
+				CtItemCeilingQty ctItemCeilingQty = new CtItemCeilingQty();
+				ctItemCeilingQty.setCtAgency(ctAgency);
+				ctItemCeilingQty.setCtContractItem(getManagedBean().getSelectedItem());
+				
+				
+				ctItemCeilingQty.setCeilingQuantity(new BigDecimal(0));
+				ctItemCeilingQty.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
+				ctItemCeilingQty.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
+				getManagedBean().getSelectedItem().getCtItemCeilingQties().add(ctItemCeilingQty);
+				
+			} else {
+				getManagedBean().getSelectedItem().getCtItemCeilingQties().add(itemCeilingQtyMap.get(ctAgency.getOrgProfile().getOrgProfileId()));
+				
+			}
+		}
+	}
 
 	/**
 	 * The method used to refresh the ceiling quantity information of Service Details listing in UI.
@@ -2911,7 +2943,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 	}
 	
-	**
+	/**
 	* The method used to render the selected service item information.
 	*/
 	public void changeServiceShowItem() {
@@ -2996,30 +3028,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					getManagedBean().getUpdateZoneMap().put(locationDTO.getZone(), ctContractZone);
 					break;
 				}
-			}
-		}
-	}	
-
-	/**
-	 * The method used to indicate the label flag for new price of service item.
-	 */
-	public void onSelectServiceItem() {
-		if (getManagedBean().getSelectedServiceItem() != null) {
-			if (getManagedBean().getShowServiceItem() != null
-					&& getManagedBean().getShowServiceItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
-				getManagedBean().setShowServiceItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
-			} else if (getManagedBean().getShowServiceItem() != null
-					&& getManagedBean().getShowServiceItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_QTY)) {
-				getManagedBean().setShowServiceItem(ParameterConst.ITEM_DISPLAY_TYPE_QTY);
-			} else {
-				getManagedBean().setShowServiceItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
-			}
-			// retrieve zone label for new price
-			if (getManagedBean().getSelectedServiceItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)
-					|| getManagedBean().getSelectedServiceItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
-					|| getManagedBean().getSelectedServiceItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
-				itemPriceZoneLabelList(getManagedBean().getSelectedServiceItem());
-				itemMaxQtyZoneLabelList(getManagedBean().getSelectedServiceItem());
 			}
 		}
 	}
