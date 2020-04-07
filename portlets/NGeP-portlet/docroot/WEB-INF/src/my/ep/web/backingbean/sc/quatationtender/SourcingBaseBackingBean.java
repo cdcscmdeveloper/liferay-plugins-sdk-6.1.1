@@ -3367,6 +3367,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 
+	// #26226 - Start
 	/**
 	 * @param context
 	 * @param scLoa
@@ -3607,6 +3608,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			//masters.clear();
 		}
 	}
+	// #26226 - End
+	
 
 	/**  
 	 * CR Enhancement 26226 Nov 2019   End of the method 
@@ -3725,7 +3728,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			parentQuestion.setSpecCount(specCount + 1);
 		}
 		question.setTplSpecMaster(master);
-		
+		// #26226 - Start
 		if(newTplSpecQuestionsList !=null)
 		{
 			if (newTplSpecQuestionsList.size() == 0) {
@@ -3744,7 +3747,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 			
 		}
+		// #26226 - End
 	}
+	
 	
 	/**
 	 * @param context
