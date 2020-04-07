@@ -7206,6 +7206,16 @@ public class EvaluationBackingBean extends
 				else if(this.getManagedBean().getTabFinancialIndex() == 3){
 					retrieveReportTabDtl();	
 				}
+				else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
+						.equalsIgnoreCase(this.getManagedBean()
+								.getCommitteeType())
+						&& this.getManagedBean()
+								.getCurrentStatusId()
+								.equals(QTStatusConst.FEC_PENDING_ENDORSEMENT)
+						&& this.getManagedBean().isReadOnly() 
+						&& this.getManagedBean().getEvaluatioStageActiveIndex() > 1) {
+					retrieveReportTabDtl();
+				}
 				
 				
 			} else if (outputTab == 5) {
@@ -12893,7 +12903,6 @@ private void retriveCommitteeRemarksList(){
 		// 26339  -venkat start
 		
 		PmDocument pmdoc=this.getManagedBean().getScQtChecklist().getPmDocument();
-		log.info("Group id ------> :"+pmdoc.getDocGroupId());
 		if(pmdoc!= null && pmdoc.getDocGroupId()!=null ) 
 		{
 			
