@@ -53,6 +53,9 @@ import my.ep.persistence.entity.fl.adjust.FlAdjustment;
 import my.ep.persistence.entity.fl.adjust.FlAdjustmentItem;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
+import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
+import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
@@ -345,6 +348,17 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 					}
 					getManagedBean().setFinancingTypeCode(adjustmentItemNodeVO.getFlAdjustmentItem().getFlItem().getPmSubSetia().getFinancingTypeValue());
 				}
+				//24893 - start				
+				if(null != adjustmentItemNodeVO.getFlAdjustmentItem().getFlItem().getFlFulfilmentItemAddr().get(0)) {
+					if(null != adjustmentItemNodeVO.getFlAdjustmentItem().getFlItem().getFlFulfilmentItemAddr().get(0).getChargePTJOrg()) {
+						getManagedBean().setChargePTJOrg(adjustmentItemNodeVO.getFlAdjustmentItem().getFlItem().getFlFulfilmentItemAddr().get(0).getChargePTJOrg());
+						System.out.println("Item Charge PTJ");
+					} else {
+						getManagedBean().setChargePTJOrg(getManagedBean().getAdjustment().getFlRequest().getChargeOrgProfile());					
+						System.out.println("FL Request Charge PTJ");
+					}
+				}
+				//24893 - end
 			}
 		}
 	}
@@ -360,7 +374,10 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 		getManagedBean().setProjectCode("");
 		getManagedBean().setSetiaCode("");
 		getManagedBean().setSubSetiaCode("");
-		getManagedBean().setFinancingTypeCode("");		
+		getManagedBean().setFinancingTypeCode("");
+		//24893 - start
+		getManagedBean().setChargePTJOrg(new PmOrgProfile());
+		//24893 - end
 	}
 	
 	/**

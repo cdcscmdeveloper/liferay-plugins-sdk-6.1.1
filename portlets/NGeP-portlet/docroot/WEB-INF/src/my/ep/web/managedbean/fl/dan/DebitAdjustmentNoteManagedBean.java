@@ -14,6 +14,7 @@ import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.adjust.FlAdjustment;
 import my.ep.persistence.entity.fl.adjust.FlAdjustmentItem;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -95,7 +96,9 @@ public class DebitAdjustmentNoteManagedBean extends BaseManagedBean{
 	private List<DisciplinaryActionVO> disciplineVOs;
 	private SmDisciplinaryAction smDisciplinaryAction;
 	//26279 - end
-	
+	//24893 - start
+	private PmOrgProfile chargePTJOrg;
+	//24893 - end
 	/**
 	 * Gets the adjustment.
 	 *
@@ -777,4 +780,13 @@ public class DebitAdjustmentNoteManagedBean extends BaseManagedBean{
 		this.smDisciplinaryAction = smDisciplinaryAction;
 	}
 	//26279 - end
+	//24893 - start
+	public PmOrgProfile getChargePTJOrg() {
+		return chargePTJOrg;
+	}
+
+	public void setChargePTJOrg(PmOrgProfile chargePTJOrg) {
+		this.chargePTJOrg = chargePTJOrg;
+	}
+	//24893 - end
 }

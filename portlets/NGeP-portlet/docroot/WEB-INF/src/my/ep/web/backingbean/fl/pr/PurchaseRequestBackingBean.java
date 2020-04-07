@@ -277,20 +277,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		IFulfilmentRequestSO fulfilmentRequestSO = null;
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
-			//24893 - start
-			//to handle WIP task
-			for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
-				for(FlFulfilmentItemAddr itemAddr : flDeliveryAddress.getFlFulfilmentItemAddr()){
-					if(null == itemAddr.getChargePTJOrg()) {
-						if(null != getManagedBean().getFulfilmentRequest().getChargeOrgProfile()) {
-							itemAddr.setChargePTJOrg(getManagedBean().getFulfilmentRequest().getChargeOrgProfile());
-						} else if(null != getManagedBean().getFulfilmentRequest().getIssuedOrgProfile()) {
-							itemAddr.setChargePTJOrg(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile());
-						}
-					}
-				}
-			}
-			//24893 - end
 			if(!getManagedBean().isValidated()){
 			   validateFulfilmentRequest(action);
 			}
@@ -1916,11 +1902,17 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				//24893 - start
 				if(null != childData.getChargePTJOrg()) {
 					getManagedBean().setChargePTJOrg(childData.getChargePTJOrg());
+					System.out.println("Item Charge PTJ");
 				} else {
-					if(null != getManagedBean().getFulfilmentRequest().getChargeOrgProfile()) {
-						getManagedBean().setChargePTJOrg(getManagedBean().getFulfilmentRequest().getChargeOrgProfile());
-					} else {
+					if(getManagedBean().getFulfilmentRequest().getStatus().equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION) 
+							|| getManagedBean().getFulfilmentRequest().getStatus().equals(FulfilmentStatusConst.PR_PENDING_APPROVAL) 
+							|| getManagedBean().getFulfilmentRequest().getStatus().equals(FulfilmentStatusConst.PR_PENDING_REVISION) 
+							|| getManagedBean().getFulfilmentRequest().getStatus().equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)) {
 						getManagedBean().setChargePTJOrg(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile());
+						System.out.println("PTJ Pembayar");
+					} else {
+						getManagedBean().setChargePTJOrg(getManagedBean().getFulfilmentRequest().getChargeOrgProfile());
+						System.out.println("FL Request Charge PTJ");
 					}					
 				}
 				//24893 - end
@@ -2024,6 +2016,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 							itemDelAddress.setPmGlAccount(pmGlAccount);
 							itemDelAddress.setPmPrgActivity(pmPrgActivity);
 							itemDelAddress.setPmSubSetia(pmSubSetia);
+							//24893 - start
+							itemDelAddress.setChargePTJOrg(getManagedBean().getChargePTJOrg());
+							//24893 - end
 						}
 					}
 				}
@@ -2205,6 +2200,12 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			throw new EpException(MessageConst.ERROR_100022, new String[]{
 					ResourceBundleUtils.getMessage("lbl.fl.gosodo",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 		}
+		//24893 - start
+		if(null == getManagedBean().getChargePTJOrg() || null == getManagedBean().getChargePTJOrg().getOrgProfileId()) {
+			throw new EpException(MessageConst.ERROR_100022, new String[]{
+					ResourceBundleUtils.getMessage("lbl.fl.charge.ptj",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+		}
+		//24893 - end
 		List<Long> selectedItemAddressList = new ArrayList<Long>();
 		updateSelectedTreeNodes();
 		FlFulfilmentItemAddr flTemp = null;
@@ -3037,11 +3038,17 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					//24893 - start
 					if(null != childData.getChargePTJOrg()) {
 						getManagedBean().setChargePTJOrg(childData.getChargePTJOrg());
+						System.out.println("Item Charge PTJ");
 					} else {
-						if(null != getManagedBean().getFulfilmentRequest().getChargeOrgProfile()) {
-							getManagedBean().setChargePTJOrg(getManagedBean().getFulfilmentRequest().getChargeOrgProfile());
-						} else {
+						if(getManagedBean().getFulfilmentRequest().getStatus().equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION) 
+								|| getManagedBean().getFulfilmentRequest().getStatus().equals(FulfilmentStatusConst.PR_PENDING_APPROVAL) 
+								|| getManagedBean().getFulfilmentRequest().getStatus().equals(FulfilmentStatusConst.PR_PENDING_REVISION) 
+								|| getManagedBean().getFulfilmentRequest().getStatus().equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)) {
 							getManagedBean().setChargePTJOrg(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile());
+							System.out.println("PTJ Pembayar");
+						} else {
+							getManagedBean().setChargePTJOrg(getManagedBean().getFulfilmentRequest().getChargeOrgProfile());
+							System.out.println("FL Request Charge PTJ");
 						}					
 					}
 					//24893 - end
@@ -3056,6 +3063,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	public void selectAllCheckboxes(){
 		if(getManagedBean().getChargeLineItemRoot().getChildren().size() > 1){
 			onNodeUnSelect();
+			getManagedBean().setChargePTJOrg(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile());//24893
 		}
 		getManagedBean().setSelectChargeLineRow(false);
 		getManagedBean().setProgramLov(false);
@@ -4807,7 +4815,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	//26279 - end
 	//24893 - start
 	/**
-	 * check role user is fl_approver
+	 * check role user is requisitioner
 	 */
 	public boolean isRequisitioner() {
 		return getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value());

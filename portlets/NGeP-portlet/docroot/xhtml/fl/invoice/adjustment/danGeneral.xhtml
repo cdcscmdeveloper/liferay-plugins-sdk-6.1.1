@@ -61,31 +61,23 @@
 							value="#{lbl['lbl.fl.tooltip.supp.inv.no']}" /></td>
 				</tr>
 				<tr>
-					<td valign="top"><p:outputLabel
-							value="#{lbl['lbl.fl.charge.ptj']}" /></td>
-					<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:396px;" 
-						value="#{danBackingBean.managedBean.adjustment.flRequest.chargeOrgProfile.orgCode} #{danBackingBean.managedBean.adjustment.flRequest.chargeOrgProfile eq null ? '' : danBackingBean.managedBean.adjustment.flRequest.chargeOrgProfile.orgName}"/>
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}"/></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.do.requisitioner']}" /></td>
+					<td><p:inputText size="66"
+							value="#{danBackingBean.managedBean.adjustment.flRequest.requistioner.userName}"
+							disabled="true" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.invoice.no']}" /></td>
 					<td><p:commandLink value="#{danBackingBean.managedBean.adjustment.flInvoice.invoiceNo}" immediate="true"
 							action="#{danBackingBean.navigateDocument(ParameterConst.doctypeInvoice)}"/>
 							<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.invoice.no']}"/></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.fl.do.requisitioner']}" /></td>
-					<td><p:inputText size="66"
-							value="#{danBackingBean.managedBean.adjustment.flRequest.requistioner.userName}"
-							disabled="true" /></td>
-					<td><h:outputLabel value="#{lbl['lbl.fl.dan.factored']}" /></td>
-					<td><p:selectBooleanCheckbox value="#{danBackingBean.managedBean.adjustment.flOrder.factored}" disabled="true" />
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.factored']}"/></td>
-				</tr>
-				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.contract.no']}" /></td>
 					<td><p:inputText size="25"
 							value="#{danBackingBean.managedBean.adjustment.flRequest.ctContract.contractNo}"
 							disabled="true" /></td>
-					
+					<td><h:outputLabel value="#{lbl['lbl.fl.dan.factored']}" /></td>
+					<td><p:selectBooleanCheckbox value="#{danBackingBean.managedBean.adjustment.flOrder.factored}" disabled="true" />
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.factored']}"/></td>
 				</tr>
 			</table>
 		</p:panel>
