@@ -2685,7 +2685,12 @@ public class TemplateSpecBackingBean extends
 					}
 				}
 				else {
-					if (specZoneId == specEstimation.getTplSpecZoneDtl().getSpecZoneId()){
+					// #25039#114 start
+					// if (specZoneId == specEstimation.getTplSpecZoneDtl().getSpecZoneId()){
+					if (null!= specEstimation.getTplSpecZoneDtl()
+							&& null!=specEstimation.getTplSpecZoneDtl().getSpecZoneId()
+							&& specZoneId==specEstimation.getTplSpecZoneDtl().getSpecZoneId()){
+					// #25039#114 end
 						if (questionId == specEstimation.getTplSpecQuestion().getSpecQuestionId()){
 							specEstimation.setEstimatedCost(totalIndicativePrice); ///update value  Item Total Indicative Price (RM)
 						}
