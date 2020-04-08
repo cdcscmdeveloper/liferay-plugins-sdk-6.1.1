@@ -489,7 +489,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 
 /*		gfmasEnable="false";
 		log.info("gfmasEnable is : " +gfmasEnable);*/
-		if(!gfmasEnable.equalsIgnoreCase("true")){
+		if(!"true".equalsIgnoreCase(gfmasEnable)){
 
 			getManagedBean().setEspkb(true);
 		}
@@ -1904,10 +1904,10 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					getManagedBean().setChargePTJOrg(childData.getChargePTJOrg());
 					System.out.println("Item Charge PTJ");
 				} else {
-					if(getManagedBean().getFulfilmentRequest().getStatus().equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION) 
-							|| getManagedBean().getFulfilmentRequest().getStatus().equals(FulfilmentStatusConst.PR_PENDING_APPROVAL) 
-							|| getManagedBean().getFulfilmentRequest().getStatus().equals(FulfilmentStatusConst.PR_PENDING_REVISION) 
-							|| getManagedBean().getFulfilmentRequest().getStatus().equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)) {
+					if(getManagedBean().getFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION) 
+							|| getManagedBean().getFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_APPROVAL) 
+							|| getManagedBean().getFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_REVISION) 
+							|| getManagedBean().getFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)) {
 						getManagedBean().setChargePTJOrg(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile());
 						System.out.println("PTJ Pembayar");
 					} else {
@@ -3040,10 +3040,10 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 						getManagedBean().setChargePTJOrg(childData.getChargePTJOrg());
 						System.out.println("Item Charge PTJ");
 					} else {
-						if(getManagedBean().getFulfilmentRequest().getStatus().equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION) 
-								|| getManagedBean().getFulfilmentRequest().getStatus().equals(FulfilmentStatusConst.PR_PENDING_APPROVAL) 
-								|| getManagedBean().getFulfilmentRequest().getStatus().equals(FulfilmentStatusConst.PR_PENDING_REVISION) 
-								|| getManagedBean().getFulfilmentRequest().getStatus().equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)) {
+						if(getManagedBean().getFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION) 
+								|| getManagedBean().getFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_APPROVAL) 
+								|| getManagedBean().getFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_REVISION) 
+								|| getManagedBean().getFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)) {
 							getManagedBean().setChargePTJOrg(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile());
 							System.out.println("PTJ Pembayar");
 						} else {

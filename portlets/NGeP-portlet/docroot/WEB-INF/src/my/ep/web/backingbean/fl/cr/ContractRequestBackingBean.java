@@ -3004,10 +3004,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					getManagedBean().setChargePTJOrg(childData.getChargePTJOrg());
 					System.out.println("Item Charge PTJ");
 				} else {
-					if(getManagedBean().getFlRequest().getStatus().equals(FulfilmentStatusConst.CR_PENDING_SUBMISSION) 
-							|| getManagedBean().getFlRequest().getStatus().equals(FulfilmentStatusConst.CR_PENDING_APPROVAL) 
-							|| getManagedBean().getFlRequest().getStatus().equals(FulfilmentStatusConst.CR_PENDING_REVISION) 
-							|| getManagedBean().getFlRequest().getStatus().equals(FulfilmentStatusConst.CR_PENDING_REVISION_APPROVAL)) {
+					if(getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_SUBMISSION) 
+							|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_APPROVAL) 
+							|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_REVISION) 
+							|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_REVISION_APPROVAL)) {
 						getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getIssuedOrgProfile());
 						System.out.println("PTJ Pembayar");
 					} else {
@@ -3804,10 +3804,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					getManagedBean().setChargePTJOrg(childData.getChargePTJOrg());
 					System.out.println("Item Charge PTJ");
 				} else {
-					if(getManagedBean().getFlRequest().getStatus().equals(FulfilmentStatusConst.CR_PENDING_SUBMISSION) 
-							|| getManagedBean().getFlRequest().getStatus().equals(FulfilmentStatusConst.CR_PENDING_APPROVAL) 
-							|| getManagedBean().getFlRequest().getStatus().equals(FulfilmentStatusConst.CR_PENDING_REVISION) 
-							|| getManagedBean().getFlRequest().getStatus().equals(FulfilmentStatusConst.CR_PENDING_REVISION_APPROVAL)) {
+					if(getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_SUBMISSION) 
+							|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_APPROVAL) 
+							|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_REVISION) 
+							|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_REVISION_APPROVAL)) {
 						getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getIssuedOrgProfile());
 						System.out.println("PTJ Pembayar");
 					} else {
