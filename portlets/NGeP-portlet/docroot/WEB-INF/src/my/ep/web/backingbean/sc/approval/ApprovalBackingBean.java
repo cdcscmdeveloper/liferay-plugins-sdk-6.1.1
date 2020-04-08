@@ -398,6 +398,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		String approvalCategoryCode = null;
 		ScWorkFlowStatus currentStatus = null;
 		List<ScQtApprovalRequest> approvalRequests = null;
+		
+		String docType = null; //#25692#128
 
 		if (SCProcessNameConst.APPROVE_BUDGET.equalsIgnoreCase(taskName)) {
 			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_BUDGET;
@@ -405,6 +407,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					ParameterConst.DOCTYPE_BGT_APPROVAL, paramTypes, null);
 
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
+			docType = ParameterConst.DOCTYPE_BGT_APPROVAL; //#25692#128
 
 		} else if (SCProcessNameConst.APPROVE_BPK.equalsIgnoreCase(taskName)
 				|| SCProcessNameConst.BPK_APPROVE_QT_CHANGE
@@ -420,7 +423,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//                                             my.ep.web.constant.BpmOutcomeConst.BPM_REJECT});
 			// ***25692 - end
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
-
+			docType = ParameterConst.DOCTYPE_BPK_APPROVAL; //#25692#128	
+			
 			if (CollectionUtils.isNotEmpty(approvalRequests)) {
 
 				for (ScQtApprovalRequest approvalRequest : approvalRequests) {
@@ -455,6 +459,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			currentStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_PTJ_APPROVAL,
 					getManagedBean().getQt().getQtId());
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
+			docType = ParameterConst.DOCTYPE_PTJ_APPROVAL; //#25692#128
 
 		} else if (SCProcessNameConst.FC_APPROVE_QT_CHANGE.equalsIgnoreCase(taskName)) { //valid
 			
@@ -466,6 +471,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					getManagedBean().getQt().getQtId());
 
 			setFCApproveQTChangeValues(approvalRequests);
+			docType = ParameterConst.DOCTYPE_PCB_APPROVAL; //#25692#128
 
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
 			
@@ -491,6 +497,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					getManagedBean().getQt().getQtId());
 
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
+			docType = ParameterConst.DOCTYPE_PCB_APPROVAL; //#25692#128
 
 		} else if (SCProcessNameConst.REVISE_BPK.equalsIgnoreCase(taskName)) {
 			paramTypes = getRequestTypes(((SCQuotationTenderDataType) obj)
@@ -500,6 +507,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					ParameterConst.DOCTYPE_BPK_APPROVAL, paramTypes, null);
 
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
+			docType = ParameterConst.DOCTYPE_BPK_APPROVAL; //#25692#128
 
 		} else if (SCProcessNameConst.APPROVE_COMMITTEE
 				.equalsIgnoreCase(taskName)) {
@@ -509,6 +517,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					ParameterConst.DOCTYPE_COMMITTE_APROVAL, paramTypes, null);
 
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
+			docType = ParameterConst.DOCTYPE_COMMITTE_APROVAL; //#25692#128
 
 			List<Long> cmtStatus = new ArrayList<Long>(3);
 			cmtStatus.add(QTStatusConst.CMT_PENDING_SUBMISSION);
@@ -556,6 +565,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (CollectionUtils.isNotEmpty(paramTypes)) {
 				this.getManagedBean().setApprovalType(paramTypes.get(0));
 			}
+			docType = ParameterConst.DOCTYPE_QUOTATION; //#25692#128
 			
 			approvalRequests = getApprovalRequests(qtId,
 					ParameterConst.APPROVAL_CATEGORY_PTJ,
@@ -591,6 +601,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					ParameterConst.DOCTYPE_PCB_APPROVAL, paramTypes, null);
 
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
+			docType = ParameterConst.DOCTYPE_PCB_APPROVAL; //#25692#128
 
 			if (ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER
 					.equalsIgnoreCase(this.getManagedBean().getQt().getQtType())) {
@@ -609,6 +620,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					ParameterConst.DOCTYPE_PCB_APPROVAL, paramTypes, null);
 
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
+			docType = ParameterConst.DOCTYPE_PCB_APPROVAL; //#25692#128
 			IScWorkFlowStatusSO workFlowStatusSO;
 			try {
 				workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
@@ -751,7 +763,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			qtDetailBB.getManagedBean().setApprovalScreen(true);
 			
 			/* ***#25692#111 - start */
-			PmStatus sts = getQTDetailSO().retrieveLatestStatus(qtDetailBB.getManagedBean().getQt().getQtId());
+			PmStatus sts = getQTDetailSO().retrieveActiveStatusByDoctype(qtDetailBB.getManagedBean().getQt().getQtId(), docType==null?ParameterConst.DOCTYPE_QUOTATION:docType);
 			if(sts != null){
 				qtDetailBB.getManagedBean().setCurrentStatusId(sts.getStatusId());
 			}
