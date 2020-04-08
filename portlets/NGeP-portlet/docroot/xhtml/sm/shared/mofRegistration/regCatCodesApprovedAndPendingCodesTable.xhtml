@@ -42,8 +42,13 @@
 					<p:column style="width :350px;white-space : normal"
 						headerText="#{lbl['lbl.sm.catCodes.cate']}"
 						disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
-					<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}"
-						disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
+					<p:column 
+						disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
+						<f:facet name="header">
+							<h:outputText value="* " styleClass="mandatory" rendered="#{backingBean.specialDescriptionMandatory(backingBean.managedBean.activeCategoryList)}"/>
+							<h:outputText value="#{lbl['lbl.sm.catCodes.othDesc']}" />
+						</f:facet>
+					</p:column>
 					<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}"
 						disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
 					<p:column headerText="#{lbl['lbl.sm.status']}"
@@ -87,7 +92,8 @@
 					value="#{catBean.pmCategoryL3.categoryL3Code} -  #{catBean.pmCategoryL3.categoryName}" />
 			</p:column>
 			<p:column
-				disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
+				disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS
+					or catBean.cancelCategory}">
 				<p:inputTextarea id="otherDesc" maxlength="100"
 					style="width : 95%;" label="#{lbl['lbl.sm.catCodes.othDesc']}"
 					value="#{catBean.otherDesc}" rows="5" cols="20"
