@@ -407,7 +407,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 				flStopInstrItemList = new ArrayList<FlStopInstrItem>();
 			}
 			flStopInstrItemList.add(flStopInstrItem);
-			siItemsMap.put(flStopInstrItem.getFlFulfilmentItem().getItemCode()+flStopInstrItem.getFlFulfilmentItem().getPmUomId(), flStopInstrItemList);
+			siItemsMap.put(flStopInstrItem.getFlFulfilmentItem().getItemCode()+flStopInstrItem.getFlFulfilmentItem().getPmUomId()+flStopInstrItem.getFlFulfilmentItem().getFulfilmentItemId(), flStopInstrItemList); //#26559
 		}
 		
 		BigDecimal totalRecalledAmt = new BigDecimal(0);
