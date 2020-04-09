@@ -3828,6 +3828,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().setSelectChargeLineRow(false);
 		if(getManagedBean().getChargeLineItemRoot().getChildren().size() > 1){
 			onNodeUnSelect();
+			getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getIssuedOrgProfile());//24893
 		}
 		
 		getManagedBean().setProgramLov(false);
