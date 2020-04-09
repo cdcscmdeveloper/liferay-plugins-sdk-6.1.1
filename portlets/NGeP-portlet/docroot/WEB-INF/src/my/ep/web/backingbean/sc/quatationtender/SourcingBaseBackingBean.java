@@ -3337,23 +3337,31 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				dafaltValue = "N/A";
 			}
 			List<ScQtCheckList> scQtCheckLists = resDto.getSpecResultBean().getResultList();
-			if (CollectionUtils.isNotEmpty(scQtCheckLists)) {
+			
+			// #26130 - Start
+			
+			/*if (CollectionUtils.isNotEmpty(scQtCheckLists)) {
 				scQtCheckLists.addAll(resDto.getFinSpecResultBean().getResultList());
 			} else {
 				scQtCheckLists = resDto.getFinSpecResultBean().getResultList();
+			}*/
+			
+			if (CollectionUtils.isNotEmpty(scQtCheckLists)) {
+				for (ScQtCheckList scQtCheckList : scQtCheckLists) {
+					List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
+					TplSpecMaster master = null;
+					master = scQtCheckList.getScQtDoc().getTplSpecMaster();
+					for (TplSpecQuestion question : master.getTplSpecQuestions()) {
+						constructTplSpecQuestion(dafaltValue,
+								newTplSpecQuestionsList, master, question);
+					}
+					master.setTplSpecQuestions(newTplSpecQuestionsList);
+					masters.add(master);
+				}
 			}
 			
-			for (ScQtCheckList scQtCheckList : scQtCheckLists) {
-				List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
-				TplSpecMaster master = null;
-				master = scQtCheckList.getScQtDoc().getTplSpecMaster();
-				for (TplSpecQuestion question : master.getTplSpecQuestions()) {
-					constructTplSpecQuestion(dafaltValue,
-							newTplSpecQuestionsList, master, question);
-				}
-				master.setTplSpecQuestions(newTplSpecQuestionsList);
-				masters.add(master);
-			}
+			// #26130 - End
+			
 			context.put("isZonal", scLoa.getScLoiLoa().isZonal());
 			context.put("serviceScope", dafaltValue);
 			context.put("masters", masters);
