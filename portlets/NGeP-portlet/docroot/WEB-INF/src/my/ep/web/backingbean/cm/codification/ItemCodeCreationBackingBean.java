@@ -41,7 +41,6 @@ public class ItemCodeCreationBackingBean extends BaseBackingBean<UnspscCodeManag
 		}
 	}
 	
-	
 	public String addNewUnspsc() {
 
 		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",
@@ -458,7 +457,7 @@ public class ItemCodeCreationBackingBean extends BaseBackingBean<UnspscCodeManag
 	}
 
 	public void backToCodificationPortal() {
-		log.info(".................codificationMaintenance................");
+		log.info(".................codification................");
 
 		renewSesionObject();
 
