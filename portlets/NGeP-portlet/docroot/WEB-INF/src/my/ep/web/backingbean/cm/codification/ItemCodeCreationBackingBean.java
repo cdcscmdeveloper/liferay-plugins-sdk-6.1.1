@@ -41,7 +41,6 @@ public class ItemCodeCreationBackingBean extends BaseBackingBean<UnspscCodeManag
 		}
 	}
 	
-	
 	public String addNewUnspsc() {
 
 		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",
@@ -59,7 +58,7 @@ public class ItemCodeCreationBackingBean extends BaseBackingBean<UnspscCodeManag
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
-							MessageConst.ERROR_715002, MessageUtils.BUNDLE_COMMON_MESSAGES,
+							MessageConst.ERROR_715008, MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale())));
 			return null;
 
@@ -305,7 +304,7 @@ public class ItemCodeCreationBackingBean extends BaseBackingBean<UnspscCodeManag
 				unspsc.setUnspscParentCode(this.getManagedBean().getSelectedLovUnspscClass().getUnspscCode());
 
 				reqDTO.setCmUnspsc(unspsc);
-				reqDTO.getCommodityList().add(reqDTO.getCmUnspsc());
+     			reqDTO.getCommodityList().add(reqDTO.getCmUnspsc());
 			} else {
 
 				FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -353,7 +352,7 @@ public class ItemCodeCreationBackingBean extends BaseBackingBean<UnspscCodeManag
 		resDTO = unspscSO.publishCodification(reqDTO);
 
 		renewSesionObject();
-
+		
 		FacesMessage fm = new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
 				MessageConst.INFO_710022, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()));
 		FacesContext context = FacesContext.getCurrentInstance();
@@ -458,14 +457,14 @@ public class ItemCodeCreationBackingBean extends BaseBackingBean<UnspscCodeManag
 	}
 
 	public void backToCodificationPortal() {
-		log.info(".................codificationMaintenance................");
+		log.info(".................codification................");
 
 		renewSesionObject();
 
 		FacesContext context = FacesContext.getCurrentInstance();
 		javax.faces.context.ExternalContext externalContext = context.getExternalContext();
 		try {
-			externalContext.redirect("codification-maintenance");
+			externalContext.redirect("codification");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
