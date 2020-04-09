@@ -1520,39 +1520,45 @@ public class RuleCatalogueBackingBean extends
 						// hit error and return
 						switch (ruleTypeDesc.getRuleType().getValidationType()) {
 						case '1':
-							if (ruleTypeDesc.getRuleType().getRangeType() == 1
-									&& baseValueToCompare.getGroupValueId()
-											.equals(value.getGroupValueId())) {
-
-								throw new EpException(
-										MessageConst.ERROR_770110,
-										new String[] { ruleTypeDesc
-												.getRuleDesc() });
-							} else {
-
-								throw new EpException(
-										MessageConst.ERROR_770109,
-										new String[] { ruleTypeDesc
-												.getRuleDesc() });
+							if (!ruleTypeDesc.getRuleType().getRuleType().equals("LOPO")) {
+								if (ruleTypeDesc.getRuleType().getRangeType() == 1
+										&& baseValueToCompare.getGroupValueId()
+												.equals(value.getGroupValueId())) {
+	
+									throw new EpException(
+											MessageConst.ERROR_770110,
+											new String[] { ruleTypeDesc
+													.getRuleDesc() });
+								} else {
+	
+									throw new EpException(
+											MessageConst.ERROR_770109,
+											new String[] { ruleTypeDesc
+													.getRuleDesc() });
+								}
 							}
 						case '2':
-							if (ruleTypeDesc.getRuleType().getRuleDataTypeId()
-									.getParameterCode().equalsIgnoreCase("c")) {
-								throw new EpException(
-										MessageConst.ERROR_770199,
-										new String[] {
-												ruleTypeDesc.getRuleDesc(),
-												value.getCategoryDisplayValue() });
-							} else {
-								throw new EpException(
-										MessageConst.ERROR_770110,
-										new String[] { ruleTypeDesc
-												.getRuleDesc() });
+							if (!ruleTypeDesc.getRuleType().getRuleType().equals("LOPO")) {
+								if (ruleTypeDesc.getRuleType().getRuleDataTypeId()
+										.getParameterCode().equalsIgnoreCase("c")) {
+									throw new EpException(
+											MessageConst.ERROR_770199,
+											new String[] {
+													ruleTypeDesc.getRuleDesc(),
+													value.getCategoryDisplayValue() });
+								} else {
+									throw new EpException(
+											MessageConst.ERROR_770110,
+											new String[] { ruleTypeDesc
+													.getRuleDesc() });
+								}
 							}
 
 						case '3':
-							throw new EpException(MessageConst.ERROR_770154,
-									new String[] { ruleTypeDesc.getRuleDesc() });
+							if (!ruleTypeDesc.getRuleType().getRuleType().equals("LOPO")) {
+								throw new EpException(MessageConst.ERROR_770154,
+										new String[] { ruleTypeDesc.getRuleDesc() });
+							}
 
 						}
 
@@ -3104,23 +3110,22 @@ public class RuleCatalogueBackingBean extends
 					.getSelectedRuleDescType().getRuleType().getRuleType();
 			/*Calendar forwardedEffDate = Calendar.getInstance();
 			Date nextDay;*/
+			BigDecimal lopoDefaultValue = new BigDecimal(14);
 			
-			for (PmConfigRuleValue configRuleValue : configRuleType.getConfigRuleValues()) {
-				if (ruleType.equals("LOPO")) {
-					newRuleValue.setRuleNumberValue(configRuleValue.getRuleNumberValue());
-					/*if (configRuleValue.getExpDate() != null) {
-						forwardedEffDate.setTime(configRuleValue.getExpDate());
-					}
-					forwardedEffDate.add(Calendar.DATE, 
-							Integer.parseInt("1"));
-					nextDay = forwardedEffDate.getTime();
-					newRuleValue.setEffDate(this.getManagedBean().getTomorrow());*/
-				} 
-				/*else {
-					newRuleValue.setEffDate(this.getManagedBean().getTomorrow());
-				}*/
+			if (ruleType.equals("LOPO")) {
+				newRuleValue.setRuleNumberValue(lopoDefaultValue);
+				/*if (configRuleValue.getExpDate() != null) {
+					forwardedEffDate.setTime(configRuleValue.getExpDate());
+				}
+				forwardedEffDate.add(Calendar.DATE, 
+						Integer.parseInt("1"));
+				nextDay = forwardedEffDate.getTime();
+				newRuleValue.setEffDate(this.getManagedBean().getTomorrow());*/
+			} 
+			/*else {
 				newRuleValue.setEffDate(this.getManagedBean().getTomorrow());
-			}
+			}*/
+			newRuleValue.setEffDate(this.getManagedBean().getTomorrow());
 
 			// if
 			// (this.getManagedBean().getSelectedRuleType().getRuleDataTypeId()
