@@ -1055,8 +1055,8 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 					// CR 25790 - Start					
 					if (isReqOrApprover()) {
 						if (!ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT.equalsIgnoreCase(getSelectedDocType())
-								&& !ParameterConst.DOCTYPE_PURCHASE_INQUIRY.equals(getSelectedDocType())) {
-
+								&& !ParameterConst.DOCTYPE_PURCHASE_INQUIRY.equals(getSelectedDocType())
+								&& !ParameterConst.EP_DOC_MINISTRY_CONTRACT.equals(getSelectedDocType())) {
 							String docType = getSelectedDocType();
 							Long docId = getSelectedDocId();
 							resDTO = trackingDiarySO.retrieveTrackingDiaryByGroupDocAndGroupId(docId, docType, reqDTO,
