@@ -103,7 +103,7 @@ public class ItemCodeCreationBackingBean extends BaseBackingBean<UnspscCodeManag
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
-							MessageConst.ERROR_715050, MessageUtils.BUNDLE_COMMON_MESSAGES,
+							MessageConst.ERROR_715008, MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale())));
 			return null;
 
@@ -161,7 +161,7 @@ public class ItemCodeCreationBackingBean extends BaseBackingBean<UnspscCodeManag
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
-							MessageConst.ERROR_715050, MessageUtils.BUNDLE_COMMON_MESSAGES,
+							MessageConst.ERROR_715008, MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale())));
 			return null;
 
@@ -222,7 +222,7 @@ public class ItemCodeCreationBackingBean extends BaseBackingBean<UnspscCodeManag
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
-							MessageConst.ERROR_715050, MessageUtils.BUNDLE_COMMON_MESSAGES,
+							MessageConst.ERROR_715008, MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale())));
 			return null;
 
@@ -286,7 +286,7 @@ public class ItemCodeCreationBackingBean extends BaseBackingBean<UnspscCodeManag
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
-							MessageConst.ERROR_715050, MessageUtils.BUNDLE_COMMON_MESSAGES,
+							MessageConst.ERROR_715008, MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale())));
 			return null;
 
