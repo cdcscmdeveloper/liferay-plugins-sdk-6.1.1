@@ -3119,6 +3119,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 							itemDelAddress.setPmGlAccount(pmGlAccount);
 							itemDelAddress.setPmPrgActivity(pmPrgActivity);
 							itemDelAddress.setPmSubSetia(pmSubSetia);
+							itemDelAddress.setChargePTJOrg(getManagedBean().getChargePTJOrg());//24893
 						}
 					}
 				}
