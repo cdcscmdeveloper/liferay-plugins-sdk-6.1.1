@@ -1547,7 +1547,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					setAmendmentContractVer(ctReqDTO);
 					ConstructTabSideMenu();
 					//26753 - start
-					getManagedBean().getFilteredUpdatedCommitteeMembers().clear();
+					if(getManagedBean().getFilteredUpdatedCommitteeMembers() != null){
+						getManagedBean().getFilteredUpdatedCommitteeMembers().clear();						
+					}
 					//26753 - end
 				}
 			} else {
