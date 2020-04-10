@@ -45,7 +45,7 @@
                  <p:outputLabel value="#{lbl['lbl.ct.list.comm.members']}" />
                 
                  <p:dataTable id="memberTable" var="data" rowIndexVar="index"
-                     value="#{ctBackingBean.managedBean.contractVer.ctAmendment.ctCommitteeMembers}" filteredValue="#{amendmentBackingBean.getFilteredSignedCommitteeMembers()}">
+                     value="#{ctBackingBean.managedBean.contractVer.ctAmendment.ctCommitteeMembers}">
                      <ac:paginator for="decisionTable" />
             	   
             	     <p:column style="width:50%;white-space:normal;" 
