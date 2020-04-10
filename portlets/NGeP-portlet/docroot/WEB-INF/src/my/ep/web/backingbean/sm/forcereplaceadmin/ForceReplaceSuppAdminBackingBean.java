@@ -152,6 +152,14 @@ public class ForceReplaceSuppAdminBackingBean extends
 			}
 		} else {
 			validate();
+			//START 27239
+			if(SmApplicationUtil.isMofAccEffDatePassedCurrDate(getManagedBean().getSmSupplier())){
+				if (!getManagedBean().isExistingUser()) {
+					throw new EpException(MessageConst.ERROR_721087);
+				}
+			}
+			
+			//END 27239
 			executeDecision();
 			
 			// redirectToNonExistNewAdminPage();
