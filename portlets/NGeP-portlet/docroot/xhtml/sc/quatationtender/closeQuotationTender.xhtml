@@ -104,16 +104,16 @@
 										</tr>
 									</table>
 									<p:dialog id="uploadCloseQTAttachDlg" widgetVar="uploadCloseQTAttachDlg" modal="true"  resizable="false"
-								     width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}">
+								     width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.txt.attach.file']}">
 											<p:ajax event="close" />
-				                            	<p:fileUpload style="display:inline;" 
+				                            	<p:fileUpload style="display:inline;" oncomplete="uploadCloseQTAttachDlg.hide();"
 													fileUploadListener="#{qTDetailBB.handleCloseQTFileUpload}"  
-													mode="advanced" id="uploadCloseQTAttachId" multiple="false" 
+													mode="advanced" id="uploadCloseQTAttachId" multiple="false"
 													sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
 													allowTypes="#{CommonConstants.FILE_UPLOAD_PDF_TYPE}"
 													invalidFileMessage="#{lbl['lbl.txt.upload.pdf.file']}"
 													invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
-													label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload.all']}" cancelLabel="#{lbl['lbl.btn.remove.all']}" 
+													label="#{lbl['lbl.btn.choose']}"  
 													update="reportAttachment" >
 												</p:fileUpload>
 											<f:facet name="footer">
