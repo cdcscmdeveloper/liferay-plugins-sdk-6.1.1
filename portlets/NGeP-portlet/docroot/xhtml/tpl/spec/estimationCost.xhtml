@@ -39,6 +39,9 @@
 						required="true" maxlength="19"
 						label="#{lbl['lbl.tpl.spec.content.estimate.cost']}"
 						disabled="#{editable}">
+					<!-- #25039#123 start  -->	
+					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
+					<!-- #25039#123 end -->
 					<p:ajax partialSubmit="true" process="@this" update="@this, estCostMsg" />
 				</p:inputText>
 			</c:if>
