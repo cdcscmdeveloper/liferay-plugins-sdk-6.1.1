@@ -2603,9 +2603,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	public void changeRoleAndProceed() {
 		//start loop list #27239
 		for(SmPersonnel personnel : this.getManagedBean().getPersonnelsRole()){
-			personnel.setEquityOwner(false);
-			personnel.setDirector(false);
-			
+			//personnel.setEquityOwner(false);
+			//personnel.setDirector(false);
+			personnel.setDowngradeRoleSsm(true);
 			IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject("sm", IPersonnelSO.class);
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			//get latest personnel by supplier id
@@ -2615,7 +2615,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			SmPersonnel personnelActive = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), resDTO.getSmPersonnelList(), "identificationNo");
 			if(personnelActive != null){
 				//copy latest data to supplier admin
-				String[] copyEquityOwner = {"equityOwner","director","clerical","higherManagement","management"};
+				String[] copyEquityOwner = {"equityOwner","director","clerical","higherManagement","management","downgradeRoleSsm"};
 				EntityHelper.copyEntityPropertiesOnly(personnel,personnelActive,copyEquityOwner);
 				reqDTO.setSmPersonnel(personnelActive);
 				//update latest data to active supplier admin
@@ -2787,7 +2787,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	
 	
 	
-}
+
 
 
 	// #27398 11/03/2020 START
