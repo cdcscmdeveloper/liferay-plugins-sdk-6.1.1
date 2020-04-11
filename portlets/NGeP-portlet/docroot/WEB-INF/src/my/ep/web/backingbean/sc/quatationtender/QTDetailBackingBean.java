@@ -8406,7 +8406,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							  statusId.equals(QTStatusConst.QT_SUPPLIER_FINALIZATION) || 
 								 statusId.equals(QTStatusConst.QT_RE_FINALIZATION) ||
 								    statusId.equals(QTStatusConst.QT_PENDING_SPECIFICATION_COMMITTEE_APPOINTMENT) ||
-								      statusId.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH)){
+								      statusId.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH) ||
+								         statusId.equals(QTStatusConst.QT_CLOSE_PERMANENTLY)){
 							isCloseQT = true;
 						}else if(statusId.equals(QTStatusConst.QT_SUPPLIER_FINALIZATION)){
 							isCloseQT = checkIsBiddingActiveForStatusCloseQT(scQt);
