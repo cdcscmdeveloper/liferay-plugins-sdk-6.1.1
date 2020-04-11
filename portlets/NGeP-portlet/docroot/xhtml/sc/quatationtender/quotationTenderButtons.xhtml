@@ -218,12 +218,9 @@
 			header="#{lbl['lbl.sc.qt.close.confirmation']}" resizable="false"
 			width="auto" height="100" closable="false">
 			<table>
-				<tr>
-					<td align="center"><p:outputLabel
-							value="#{lbl['lbl.sc.qt.close.dialog.confirmation']}" /></td>
-				</tr>
+				<tr><td style="float:left;"><p:outputLabel value="#{lbl['lbl.sc.qt.close.dialog.confirmation.first']}" /></td></tr>
+				<tr><td style="float:left;"><p:outputLabel value="#{lbl['lbl.sc.qt.close.dialog.confirmation.second']}" /></td></tr>
 			</table>
-			<p:spacer height="1" />
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
 					oncomplete="closeQTDlg.hide();" partialSubmit="true" process="@this"
