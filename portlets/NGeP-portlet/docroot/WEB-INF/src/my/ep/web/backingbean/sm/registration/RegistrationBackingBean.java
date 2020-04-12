@@ -652,11 +652,14 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 									
 									if(discList != null && discList.size() > 0){
 										for(SmDisciplinaryAction disc : discList){
+											//27861:  Disciplinary Action - start
 											if(( disc.getDisciplinaryActionId() != null && disc.isRecordStatus() && disc.isBlacklistOwner() ) ||
-													disc.getDisciplinaryActionId() != null && disc.isRecordStatus() && disc.isCancelRegistration() ){
+													disc.getDisciplinaryActionId() != null && disc.isRecordStatus() && disc.isCancelRegistration() ||
+													disc.getDisciplinaryActionId() != null && disc.isRecordStatus() && disc.isSuspendRegistration() ){
 												throw new EpException(SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",null));
 												
 											}
+											//27861:  Disciplinary Action - end
 										}
 									}
 								}
