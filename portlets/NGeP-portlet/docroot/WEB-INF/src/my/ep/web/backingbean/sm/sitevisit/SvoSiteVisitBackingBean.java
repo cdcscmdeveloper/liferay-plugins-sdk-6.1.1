@@ -2650,7 +2650,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		DocumentReqDTO reqDTO = new DocumentReqDTO();
 		reqDTO.setApplId(getManagedBean().getSmSvTask().getSmAppl().getApplId());
 		//#25158: checking null
-		if(getManagedBean().getSupplierCategory().getPmCategoryL3().getCategoryL3Id()!=null){
+		if(getManagedBean().getSupplierCategory() != null && getManagedBean().getSupplierCategory().getPmCategoryL3() != null){
 			reqDTO.setCategoryL3Id(getManagedBean().getSupplierCategory().getPmCategoryL3().getCategoryL3Id());
 		}
 		List<PmDocument> documentLs = SmServiceLookup.getDocumentSO().retrieveLicenseSupportDocByCategoryL3AndApplId(reqDTO).getDocumentList();
