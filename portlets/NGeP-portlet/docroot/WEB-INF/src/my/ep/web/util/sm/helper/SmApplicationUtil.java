@@ -11132,15 +11132,23 @@ public class SmApplicationUtil {
 							.getStateId());
 					smAddress.setPmState(state);
 					smAddress.setStateId(state.getStateId());
-					PmDistrict district = new PmDistrict();
-					district.setDistrictId(addr.getSmAddress().getPmDistrict()
-							.getDistrictId());
-					smAddress.setPmDistrict(district);
-					smAddress.setDistrictId(district.getDistrictId());
-					PmCity city = new PmCity();
-					city.setCityId(addr.getSmAddress().getPmCity().getCityId());
-					smAddress.setPmCity(city);
-					smAddress.setCityId(city.getCityId());
+					//START 27879
+					if(addr.getSmAddress().getPmDistrict() != null){
+						PmDistrict district = new PmDistrict();
+
+						district.setDistrictId(addr.getSmAddress().getPmDistrict()
+								.getDistrictId());
+						smAddress.setPmDistrict(district);
+						smAddress.setDistrictId(district.getDistrictId());
+					}
+					
+					if(addr.getSmAddress().getPmCity() != null){
+						PmCity city = new PmCity();
+						city.setCityId(addr.getSmAddress().getPmCity().getCityId());
+						smAddress.setPmCity(city);
+						smAddress.setCityId(city.getCityId());
+					}
+					//END 27879
 					smAddress.setPostcode(addr.getSmAddress().getPostcode());
 					addr.setSmAddress(smAddress);
 
