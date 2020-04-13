@@ -522,7 +522,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			prInqBackingBean.viewPurchaseInquiry(docId);
 			prInqBackingBean.getManagedBean().setDpObj(dpObj);
 			prInqBackingBean.getManagedBean().setTrackingDairyView(Boolean.TRUE);
-
+			reset(false); //  Redmine 25396: remove duplication option view by adding new drop down field
 		} else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT)){
 			PurchaseInDefaultBackingBean pidBackingBean = new PurchaseInDefaultBackingBean();
 			pidBackingBean.viewPurchaseInDefault(docId);
@@ -628,6 +628,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	 * Reset direct purchase search.
 	 */
 	public void reset(boolean isMaintenance){
+		this.getManagedBean().setSearchFunctionType(null);  //  Redmine 25396: remove duplication option view by adding new drop down field
 		this.getManagedBean().setSearchDocumentNo(null);
 		this.getManagedBean().setSearchDocumentType(null);
 		this.getManagedBean().setSearchStatusId(null);
