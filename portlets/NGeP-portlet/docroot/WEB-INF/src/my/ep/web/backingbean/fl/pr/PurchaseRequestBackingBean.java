@@ -42,6 +42,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
+import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.fl.itemsummary.IFlItemSummarySO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
@@ -77,6 +78,8 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.cm.codification.CodificationReqDTO;
+import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.fl.itemsummary.FlItemSummaryReqDTO;
@@ -123,6 +126,8 @@ import my.ep.jaxb.fl.common.user.FLUserDataType;
 import my.ep.jaxb.fl.podata.FLPurchaseOrderDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
+import my.ep.persistence.entity.cm.catalog.CmItem;
+import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.fl.FlAddress;
 import my.ep.persistence.entity.fl.FlSupplierDtl;
@@ -3704,12 +3709,26 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				} else {
 					throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
 				}
+				
+				//#27377 - start
+				ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT,ICodificationSO.class);
+				CodificationReqDTO reqDTO = new CodificationReqDTO();
+				reqDTO.setItemId(requestItemMap.get(map.getKey()).getCmItem().getItemId());
+				CodificationResDTO cResDTO = unspscSO.findUnspcObj(reqDTO);
+				
+				CmUnspsc cmUnspsc = new CmUnspsc();
+				cmUnspsc = cResDTO.getUnspscObj();
+				
+				String languageCode = new FacesScopes().getUserLocale().getLanguage();
+				//#27377 - End
+				
 				log.info("SumAmt: " + sumAmt);
 				log.info("ThresholdAmt: " + thresoldAmt);
 				if(sumAmt.doubleValue() > thresoldAmt){
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 							MessageUtils.getMessage(MessageConst.ERROR_740004, 
-									new String[]{requestItemMap.get(map.getKey()).getItemName(),requestItemMap.get(map.getKey()).getCmItem().getExtensionCode(), amountDF.format(thresoldAmt)}, 
+									new String[]{CommonConstants.DEFAULT_LANGUAGE_CODE.equals(languageCode) ? cmUnspsc.getUnspscTitleEng() : cmUnspsc.getUnspscTitle() , StringUtils.EMPTY, //#27377
+											amountDF.format(thresoldAmt)}, 
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 									//#26047 -- end
 				}
