@@ -1925,71 +1925,65 @@ u {
 									#end
 								</td>
 								
-								<td valign="top" bgcolor="#d0eaee" style="text-align: left; padding-left: 5px; font-size:12px;" >
-							
-								#foreach( $tplSpecZoneDtls in $tplspecQuestion.tplSpecMaster.tplSpecZone.tplSpecZoneDtls )
-								<table width="100%" border="0" cellpadding="0" cellspacing="0">
-									<tbody>
-									<tr style="border-bottom: 1px solid black; font-size:12px;" >
-									<td  class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">
-										#if ($tplSpecZoneDtls.zoneName)
-											$tplSpecZoneDtls.zoneName
-										#else	
-											$serviceScope 
-										#end;
-									</td>	
-									</tr>
-									</tbody>
-									</table>
+								<td bgcolor="#d0eaee">
+									#foreach( $tplSpecZoneDtls in $tplspecQuestion.tplSpecMaster.tplSpecZone.tplSpecZoneDtls )
+									<table width="100%">
+										<tbody>
+										<tr >
+											#if ($tplSpecZoneDtls.zoneName) 
+												<td rowspan="$tplSpecZoneDtls.specCount" class="standard border-bottom left-right" style="border-bottom: 1px solid black; height: 60px;">$tplSpecZoneDtls.zoneName</td>
+											#else
+												<td rowspan="$tplSpecZoneDtls.specCount" class="standard border-bottom left-right" style="border-bottom: 1px solid black; height: 60px;">$serviceScope</td>
+											#end
+										</tr>
+										</tbody>
+										</table>
 									#end
 								</td>
 								
-								<td valign="top" bgcolor="#d0eaee" style="text-align: left; padding-left: 5px; font-size:12px;">
+								<td bgcolor="#d0eaee" >
 								
-									#if($tplspecQuestion.tplSpecZoneQties)
+									
+									#foreach(  $tplSpecZoneDtls in $tplspecQuestion.tplSpecMaster.tplSpecZone.tplSpecZoneDtls )
+									
+									<table width="100%">
+										<tbody>
+										<tr>
+											
 											  #if($tplspecQuestion.clQuantity)
-												$tplspecQuestion.clQuantity
-											  #else
-											   $serviceScope
-											  #end
+													<td rowspan="$tplSpecZoneDtls.specCount" class="standard border-bottom left-right" style="border-bottom: 1px solid black; height: 60px;">$tplspecQuestion.clQuantity</td>
 									
 									#else
-									#foreach( $tplSpecZoneQtie in $tplspecQuestion.tplSpecZoneQties )
-									<table width="100%"  border="1" cellpadding="0" cellspacing="0">
-										<tbody>
-										<tr style="text-align: left; padding-left: 5px;" >
-											<td class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">
 										       #if(($tplSpecZoneQtie.qty))
-												$tplSpecZoneQtie.qty 
+													<td rowspan="$tplSpecZoneDtls.specCount" class="standard border-bottom left-right" style="border-bottom: 1px solid black; height: 60px;">$tplSpecZoneQtie.qty</td>
 											   #else
-													$serviceScope  
+													<td rowspan="$tplSpecZoneDtls.specCount" class="standard border-bottom left-right" style="border-bottom: 1px solid black; height: 60px;">$serviceScope</td>
 													 
 											    #end;
+											   #end
 											</td>
 										</tr>
 										</tbody>
 										</table>
 									#end
-									#end
 								</td>
 
 
-								<td  valign="top" bgcolor="#d0eaee" rowspan="2" style="text-align: left; padding-left: 5px; font-size:12px;" >
 										
-										<table width="100%" border="0" cellpadding="0" cellspacing="0">
+								<td bgcolor="#d0eaee">
+									#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
+									<table width="100%">
 											<tbody>
 											<tr >
-										<td  class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">
-											#if(($tplspecQuestion.answerRemarks == "" ))
-												 $serviceScope 
+											#if ($tplSpecAnswer.answerRemark) 
+												<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="border-bottom: 1px solid black; height: 60px;">$tplSpecAnswer.answerRemark</td>
 												#else
-													 $tplspecQuestion.answerRemarks							
+												<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="border-bottom: 1px solid black; height: 60px;">$serviceScope</td>
 												#end
-										</td>
 										</tr>
 										</tbody>
 									</table>	
-									
+									#end
 								</td>	
 								
 								<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2"  style="text-align: left; padding-left: 5px; font-size:12px;">
@@ -2016,7 +2010,7 @@ u {
 								#if ($tplspecQuestion.questionType == "S")
 								
 									
-									<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="8" style="text-align: center; padding-left: 5px; font-size:12px;">$tplspecQuestion.clSpecDetail</td>
+									<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="9" style="text-align: center; padding-left: 5px; font-size:12px;">$tplspecQuestion.clSpecDetail</td>
 									
 							
 								#end

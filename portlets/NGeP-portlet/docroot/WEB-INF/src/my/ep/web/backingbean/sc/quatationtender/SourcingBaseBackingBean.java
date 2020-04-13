@@ -3521,6 +3521,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 									}
 								}
 								constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master, answer.getTplSpecQuestion());
+								// #26226 - Start
+								populateSpecAnswers(answer);
+								// #26226 - End
 								master.setTplSpecQuestions(newTplSpecQuestionsList);
 								isSpecificationEnable=true;
 							}
@@ -3541,6 +3544,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 									}
 								}
 								constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master, answer.getTplSpecQuestion());
+								// #26226 - Start
+								populateSpecAnswers(answer);
+								// #26226 - End
 								master.setTplSpecQuestions(newTplSpecQuestionsList);
 								isSpecificationEnable=true;
 							}
@@ -3558,6 +3564,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			
 							master = answer.getTplSpecQuestion().getTplSpecMaster();
 							constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master, answer.getTplSpecQuestion());
+							// #26226 - Start
+							populateSpecAnswers(answer);
+							// #26226 - End
 							master.setTplSpecQuestions(newTplSpecQuestionsList);
 							isSpecificationEnable=false;
 							
@@ -3570,6 +3579,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							{
 								master = answer.getTplSpecQuestion().getTplSpecMaster();
 								constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master, answer.getTplSpecQuestion());
+								// #26226 - Start
+								populateSpecAnswers(answer);
+								// #26226 - End
 								master.setTplSpecQuestions(newTplSpecQuestionsList);
 								isSpecificationEnable=false;
 								
@@ -3617,7 +3629,30 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 	// #26226 - End
-	
+
+	// #26226 - Start
+	/**
+	 * @param answer
+	 */
+	private void populateSpecAnswers(TplSpecAnswer answer) {
+		try {
+			boolean itemFound = false;
+			for (TplSpecAnswer tplSpecAnswer : answer.getTplSpecQuestion().getTplSpecAnswers()) {
+				if (tplSpecAnswer.getSpecAnswerId() == answer.getSpecAnswerId()) {
+					itemFound = true;
+					break;
+				}
+			}
+			if (!itemFound) {
+				answer.getTplSpecQuestion().getTplSpecAnswers().add(answer);
+			}
+		} catch (Exception e) {
+			List<TplSpecAnswer> answers = new ArrayList<>();
+			answers.add(answer);
+			answer.getTplSpecQuestion().setTplSpecAnswers(answers);
+		}
+	}
+	// #26226 - End
 
 	/**  
 	 * CR Enhancement 26226 Nov 2019   End of the method 
