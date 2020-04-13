@@ -527,14 +527,20 @@ public class OrganisationBackingBean extends
 						SearchOperator.OPERATOR_LESS_EQUAL.value(), currentDate));
 
 		// Filter By - expDate
-		searchBean.getDataFilterBeans().add(
-				new SearchMultiFilterBean(new SearchFilterBean(
-						"pmOrgValidity.expDate",
-						SearchOperator.OPERATOR_GREATER_EQUAL.value(),
-						currentDate), new SearchFilterBean(
-						"pmOrgValidity.expDate",
-						SearchOperator.OPERATOR_IS_NULL.value(), null,
-						SearchCondition.CONDITION_OR.value())));
+		// [#27747] - start
+		if (oSearchBean.getOrgStatus() != null
+				&& oSearchBean.getOrgStatus().trim().length() > 0
+					&& ParameterConst.RECORD_STATUS_ACTIVE.equals(oSearchBean.getOrgStatus().trim())) {
+		// [#27747] - end
+			searchBean.getDataFilterBeans().add(
+					new SearchMultiFilterBean(new SearchFilterBean(
+							"pmOrgValidity.expDate",
+							SearchOperator.OPERATOR_GREATER_EQUAL.value(),
+							currentDate), new SearchFilterBean(
+							"pmOrgValidity.expDate",
+							SearchOperator.OPERATOR_IS_NULL.value(), null,
+							SearchCondition.CONDITION_OR.value())));
+		}	// [#27747]
 
 		searchBean.getSortColumns().add(
 				new SearchOrderBean("pmOrgValidity.orgName", true));
