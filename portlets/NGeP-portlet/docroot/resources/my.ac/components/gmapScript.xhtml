@@ -50,7 +50,8 @@
             updateGmap([{name:'lat',value:results[0].geometry.location.lat()},{name:'lng',value:results[0].geometry.location.lng()}]);
 
           } else {
-            alert('Geocode was not successful for the following reason: ' + status);
+        	//#27853
+            alert('The Map failed to get the coordinate, Please get the coordinate from Google Map or Waze');
           }
         });
       }
