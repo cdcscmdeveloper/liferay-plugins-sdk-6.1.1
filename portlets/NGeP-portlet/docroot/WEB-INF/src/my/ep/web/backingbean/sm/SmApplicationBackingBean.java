@@ -5325,6 +5325,8 @@ public class SmApplicationBackingBean extends
 				.getSmAppl().getSmFacilities());
 		EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
 				.getApplDockyardFacilities());
+		//#27853
+		SmApplicationUtil.validateCoordinate(getManagedBean());
 		if (smFac.getFacilityId() == null) {
 			RequestContext.getCurrentInstance().execute(
 					"smFacilityDockDtWidVar.paginator.endLink.click()");
@@ -5439,6 +5441,8 @@ public class SmApplicationBackingBean extends
 				.getSmAppl().getSmFacilities());
 		EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
 				.getApplWorkShopFacilities());
+		//#27853
+		SmApplicationUtil.validateCoordinate(getManagedBean());
 		if (smFac.getFacilityId() == null) {
 			RequestContext.getCurrentInstance().execute(
 					"smWorkShopDtWidVar.paginator.endLink.click()");
@@ -5551,6 +5555,8 @@ public class SmApplicationBackingBean extends
 				.getSmAppl().getSmFacilities());
 		EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
 				.getApplStoreFacilities());
+		//#27853
+		SmApplicationUtil.validateCoordinate(getManagedBean());
 		if (smFac.getFacilityId() == null) {
 			RequestContext.getCurrentInstance().execute(
 					"smFacStoreDtWidVar.paginator.endLink.click()");
