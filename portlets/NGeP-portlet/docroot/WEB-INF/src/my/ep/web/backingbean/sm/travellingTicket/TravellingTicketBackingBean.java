@@ -131,6 +131,8 @@ public class TravellingTicketBackingBean extends BaseBackingBean<TravellingTicke
 	}
 	
 	public List<SelectItem> getListOfCategories() {
+		ParameterReqDTO paramReq = new ParameterReqDTO();
+		
 		
 		if(CollectionUtils.isNotEmpty(this.getManagedBean().getListOfCategories())){
 			return this.getManagedBean().getListOfCategories();
@@ -144,9 +146,9 @@ public class TravellingTicketBackingBean extends BaseBackingBean<TravellingTicke
 						.getInstance().getServiceObject(
 								ModuleCodeConst.PROFILE_MANAGEMENT,
 								IParameterSO.class);
-
-				ParameterResDTO resDTO = listOfCategoriesSO.retrieveListOfTravelCategoryType();
-
+				
+				paramReq.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+				ParameterResDTO resDTO = listOfCategoriesSO.retrieveListOfTravelCategoryType(paramReq);
 				List<Object[]> obj = resDTO.getTravelCategoryTypeList();
 
 				for (int i=0; i<obj.size(); i++){	
