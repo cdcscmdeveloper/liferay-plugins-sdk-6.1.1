@@ -64,6 +64,8 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	private List<String> selectedPaymentTypes;
 	private List<CategoryRptVO> categoryLs;
 	private List<CategoryRptVO> selectedCategoryLs;
+	
+	public String searchDate;
 
 	
 
@@ -417,4 +419,13 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	public void setCdcCollector(boolean isCdcCollector) {
 		this.isCdcCollector = isCdcCollector;
 	}
+
+	public String getSearchDate() {
+		return searchDate;
+	}
+
+	public void setSearchDate(String searchDate) {
+		this.searchDate = searchDate;
+	}
+	
 }
