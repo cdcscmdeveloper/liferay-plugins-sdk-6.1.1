@@ -1944,9 +1944,9 @@ u {
 										<tbody>
 										<tr >
 											#if ($tplSpecZoneDtls.zoneName) 
-												<td rowspan="$tplSpecZoneDtls.specCount" class="standard border-bottom left-right" style="border-bottom: 1px solid black; height: 60px;">$tplSpecZoneDtls.zoneName</td>
+												<td rowspan="$tplSpecZoneDtls.specCount" class="standard border-bottom left" style="text-align: top; border-bottom: 1px solid black; height: 80px; font-size:12px;">$tplSpecZoneDtls.zoneName</td>
 											#else
-												<td rowspan="$tplSpecZoneDtls.specCount" class="standard border-bottom left-right" style="border-bottom: 1px solid black; height: 60px;">$serviceScope</td>
+												<td rowspan="$tplSpecZoneDtls.specCount" class="standard border-bottom left" style="text-align: top; border-bottom: 1px solid black; height: 80px; font-size:12px;">$serviceScope</td>
 											#end
 										</tr>
 										</tbody>
@@ -1964,13 +1964,13 @@ u {
 										<tr>
 											
 											   #if($tplspecQuestion.clQuantity)
-													<td rowspan="$tplSpecZoneDtls.specCount" class="standard border-bottom left-right" style="border-bottom: 1px solid black; height: 60px;">$tplspecQuestion.clQuantity</td>
+													<td rowspan="$tplSpecZoneDtls.specCount" class="standard border-bottom left" style="text-align: top; border-bottom: 1px solid black; height: 80px; font-size:12px;">$tplspecQuestion.clQuantity</td>
 												
 											   #else
 												   #if(($tplSpecZoneQtie.qty))
-													<td rowspan="$tplSpecZoneDtls.specCount" class="standard border-bottom left-right" style="border-bottom: 1px solid black; height: 60px;">$tplSpecZoneQtie.qty</td>
+													<td rowspan="$tplSpecZoneDtls.specCount" class="standard border-bottom left" style="text-align: top; border-bottom: 1px solid black; height: 80px; font-size:12px;">$tplSpecZoneQtie.qty</td>
 												   #else
-													<td rowspan="$tplSpecZoneDtls.specCount" class="standard border-bottom left-right" style="border-bottom: 1px solid black; height: 60px;">$serviceScope</td>
+													<td rowspan="$tplSpecZoneDtls.specCount" class="standard border-bottom left" style="text-align: top; border-bottom: 1px solid black; height: 80px; font-size:12px;">$serviceScope</td>
 														 
 													#end;
 											   #end
@@ -1990,9 +1990,9 @@ u {
 										<tbody>
 										<tr>
 											#if ($tplSpecAnswer.answerRemark) 
-												<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="border-bottom: 1px solid black; height: 60px;">$tplSpecAnswer.answerRemark</td>
+												<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left" style="text-align: top; border-bottom: 1px solid black; height: 80px; font-size:12px;">$tplSpecAnswer.answerRemark</td>
 											#else
-												<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="border-bottom: 1px solid black; height: 60px;">$serviceScope</td>
+												<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left" style="text-align: top; border-bottom: 1px solid black; height: 80px; font-size:12px;">$serviceScope</td>
 											#end
 										</tr>
 										</tbody>
