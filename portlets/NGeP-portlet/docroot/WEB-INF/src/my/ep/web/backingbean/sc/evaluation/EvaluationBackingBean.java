@@ -1020,8 +1020,31 @@ public class EvaluationBackingBean extends
 				sampleLabel = sampleCompliance.get(0).getScQtSampleLable();
 				reqDTO.setSampleComplianceList(sampleCompliance);
 			}
-
-			evaluationSo.saveOrUpdateSampleComplianceDtls(reqDTO);
+			
+			// #26226 - Start
+			EvaluationResDTO evaluationResDTO = evaluationSo.saveOrUpdateSampleComplianceDtls(reqDTO);
+			if (null != evaluationResDTO && CollectionUtils.isNotEmpty(evaluationResDTO.getSampleItemList())) {
+				if (null != getManagedBean().getComplianceSampleLblsupplierDM() && CollectionUtils.isNotEmpty(getManagedBean().getComplianceSampleLblsupplierDM().getList())) {
+					for (ScQtSampleLable qtSampleLable : getManagedBean().getComplianceSampleLblsupplierDM().getList()) {
+						if (sampleLabel.getSampleLableId().longValue() == qtSampleLable.getSampleLableId().longValue()) {
+							for (ScQtSampleItem sampleItem : this.getManagedBean()
+									.getComplianceSampleItemListDM().getList()) {
+								for (ScQtSampleItem lblSampleItem : qtSampleLable.getSampleItems()) {
+									if (lblSampleItem.getSampleItemId().longValue() == sampleItem.getSampleItemId().longValue()) {
+										lblSampleItem.setSubmissionStatus(sampleItem.getSubmissionStatus());
+										break;
+									}
+								}
+								
+							}
+							break;
+						}
+					}
+					
+				}
+			}
+			// #26226 - End
+			
 			if (null != sampleLabel) {
 				this.getManagedBean()
 						.setComplianceSampleItemListDM(
@@ -12190,4 +12213,34 @@ private void retriveCommitteeRemarksList(){
 		return false;
 	}
 	
+	// #26226 - Start
+	/**
+	 * @param qtSampleLable
+	 * @return
+	 */
+	public boolean sampleChecklistCompleted(ScQtSampleLable qtSampleLable) {
+		try {
+			if (null != qtSampleLable) {
+				log.debug(this.getClass().getName() + ".sampleChecklistCompleted(): checking status for label ID: " + qtSampleLable.getSampleLableId());
+				List<ScQtSampleItem> sampleItemList = qtSampleLable.getSampleItems();
+				boolean statusCompleted = true;
+				if (CollectionUtils.isNotEmpty(sampleItemList)) {
+					for (ScQtSampleItem sampleItem : sampleItemList) {
+						if (null != sampleItem && null == sampleItem.getSubmissionStatus()) {
+							statusCompleted = false;
+							break;
+						}
+					}
+				}
+				log.info(this.getClass().getName() + ".sampleChecklistCompleted(): status of label ID: " + qtSampleLable.getSampleLableId() + " : is : " + statusCompleted);
+				return statusCompleted;
+			}
+		} catch (Exception e) {
+			log.error(this.getClass().getName() + ".sampleChecklistCompleted(): Error while checking status for label ID: " + qtSampleLable.getSampleLableId());
+			log.error(this.getClass().getName() + ".sampleChecklistCompleted(): Error message is: " + e.getMessage());
+			return false;
+		}
+		return false;
+	}
+	// #26226 - End
 }
