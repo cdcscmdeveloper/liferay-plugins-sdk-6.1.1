@@ -1440,6 +1440,26 @@ public class SmApplicationBackingBean extends
 		// set section editor VO
 		SmSideMenuIconUtil.setAllSectionEditorVO(getManagedBean(), true,
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC);
+		
+		//27805: Disciplinary Action - start
+		if(!fromBpm){
+			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
+			
+			if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
+				if(currSupp != null){
+					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
+					
+					if(activeDisc != null && activeDisc.size() > 0){
+						for(SmDisciplinaryAction disc : activeDisc){
+							if(disc.isSuspendRegistration() || disc.isCancelRegistration() || disc.isBlacklistOwner()){
+								getManagedBean().getEditVO().setDisciplinary(true);
+							}
+						}
+					}
+				}	
+			}
+		}
+		//27805: Disciplinary Action - end
 
 		// show or hide travel software panel
 		SmApplicationUtil.showOrHideTravelSoftwarePanel(getManagedBean());
@@ -2117,21 +2137,27 @@ public class SmApplicationBackingBean extends
 		if (!StringUtils.isBlank(applType)
 				&& !getManagedBean().getSmAppl().isActiveAppl()
 				&& getManagedBean().isSupplierUser()) {
-			if (getManagedBean().getCompanyBasicGst() != null) {
-				SmCommonUtil.validateGstRegNoUniqueness(getManagedBean()
-						.getSmSupplier().getRegNo(), getManagedBean()
-						.getCompanyBasicGst().getGstRegNo());
-				SmApplicationUtil.validateGSt(getManagedBean(), currentTab,
-						ruleHelper);
+			//27805: Disciplinary Action - start
+			if(!getManagedBean().getEditVO().isDisciplinary()){
+				if (getManagedBean().getCompanyBasicGst() != null) {
+					SmCommonUtil.validateGstRegNoUniqueness(getManagedBean()
+							.getSmSupplier().getRegNo(), getManagedBean()
+							.getCompanyBasicGst().getGstRegNo());
+					SmApplicationUtil.validateGSt(getManagedBean(), currentTab,
+							ruleHelper);
+				}
+				if (SmApplicationUtil.checkActiveSmApplForSupp(getManagedBean()
+						.getSmSupplier())) {
+					throw new EpException(MessageConst.ERROR_722542);
+				}
+				//#27356
+				SmApplicationUtil.validateCoordinate(getManagedBean());
+				RequestContext.getCurrentInstance().execute(
+						"saveDraftConfirmDialog.show();");
+			} else if(getManagedBean().getEditVO().isDisciplinary()) {
+				validateUpdateSmAppl(applType, currentPageType, outputPageType,false);
 			}
-			if (SmApplicationUtil.checkActiveSmApplForSupp(getManagedBean()
-					.getSmSupplier())) {
-				throw new EpException(MessageConst.ERROR_722542);
-			}
-			//#27356
-			SmApplicationUtil.validateCoordinate(getManagedBean());
-			RequestContext.getCurrentInstance().execute(
-					"saveDraftConfirmDialog.show();");
+			//27805: Disciplinary Action - end
 		} else {
 			if ((getManagedBean().isApproverUser() || getManagedBean()
 					.isPoUser())
