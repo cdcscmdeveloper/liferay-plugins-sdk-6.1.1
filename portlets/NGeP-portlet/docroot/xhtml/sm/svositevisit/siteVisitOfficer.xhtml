@@ -6,10 +6,10 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
-	<p:panel header="#{lbl['lbl.sm.visiting.officer']}" toggleable="true" id="pnlSiteVisitOffer">
+	<p:panel header="#{lbl['lbl.sm.site.visit.officer']}" toggleable="true" id="pnlSiteVisitOffer">
 		<table class="customTbl">
 			<tr valign="top">
-				<td class="tdTitle"><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.application.no']}" /></td>
+				<td class="tdTitle"><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.visiting.officer']}" /></td>
 				<td class="tdContent">
 					<ui:repeat var="svOfficer" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOfficers}" varStatus="svOfficerVarStatus">
 						<h:outputText styleClass="outputLabel-view" value="#{svOfficerVarStatus.index + 1}. #{svOfficer.pmUser.userName}" /><br />
