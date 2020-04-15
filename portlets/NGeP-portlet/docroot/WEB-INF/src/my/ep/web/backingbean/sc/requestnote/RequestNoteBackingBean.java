@@ -1116,6 +1116,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 								new String[] {ResourceBundleUtils.getMessage("lbl.sc.quantity",
 										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 					}
+
+					//26221 - Start
+					if (requestNoteDtl.getAssignedUser() == null || (requestNoteDtl.getAssignedUser() != null && requestNoteDtl.getAssignedUser().getUserId()==null)) {
+						throw new EpException(MessageConst.ERROR_100022, new String[]{
+							ResourceBundleUtils.getMessage(
+									"lbl.sc.request.note.loa.prepare.by", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale())});
+					//26221 - end
+					}
 				}
 			}
 		}
@@ -1295,7 +1305,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 				//#26221
 				if(scRequestNoteDtl.getAssignedUser() == null){
-					if(requestNote.getCreatedBy() != null) {
+					if((requestNote.getCreatedBy() != null) && (scRequestNoteDtl.getFulfilmentType().getParameterCode()
+							.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF))) {
 						scRequestNoteDtl.setAssignedUser(getUserById(requestNote.getCreatedBy()));
 					} else {
 						scRequestNoteDtl.setAssignedUser(new PmUser());
@@ -4644,43 +4655,40 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	//26221 - Start
 	public List<PmUser> getPreparedByApprove(ScRequestNoteDtl requestNoteDtl) {
 		debugLogger("getPreparedByApprove");
+		StringBuilder sb = new StringBuilder();
 		UserReqDTO reqDTO = new UserReqDTO();
 		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-		List<PmUser> userlist = null;
+
 		if (requestNoteDtl.getFulfilmentType() != null) {
 			if (requestNoteDtl.getFulfilmentType().getParameterCode()
 					.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
 				reqDTO.setRoleCode(RoleCode.REQUISITIONER.value());
-
 			} else {
 				reqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
 			}
-			
-		    OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
-			orgProfileReqDTO.setOrgProfileId(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
-			orgProfileReqDTO.setGroupOrgType("N");
-			OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveProfileGroupByGroupOrgType(orgProfileReqDTO);
-				
-				List<Long> orgProfileIds = new ArrayList<Long>();
-				
-				orgProfileIds.add(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
-				if (CollectionUtils.isNotEmpty(orgProfileResDTO.getProfileGroups())) {
 
-				for(PmProfileGroup group: orgProfileResDTO.getProfileGroups()  ){
-					orgProfileIds.add(group.getMainOrgProfile().getOrgProfileId());
-				}
-				}
-				reqDTO.setOrgProfileIds(orgProfileIds );
-				UserResDTO resDTO = getUserSO().retrieveUserListByRole(reqDTO);
-				userlist = resDTO.getUserList();
-				if (CollectionUtils.isNotEmpty(userlist)) {
-					Collections.sort(userlist, new usersComparator());
+			OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+			orgProfileReqDTO.setOrgProfileId(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
+			orgProfileReqDTO.setGroupOrgType(ParameterConst.ORG_AUTH_TYPE_ORG_GROUP);
+			OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveProfileGroupByGroupOrgType(orgProfileReqDTO);
+	
+			String orgProfileIds = String.valueOf(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
+					
+			if (CollectionUtils.isNotEmpty(orgProfileResDTO.getProfileGroups())) {
+				for(PmProfileGroup group: orgProfileResDTO.getProfileGroups()){
+					orgProfileIds = orgProfileIds + "," + group.getMainOrgProfile().getOrgProfileId();
 				}
 			}
-		
-		getManagedBean().setPreparedBys(userlist);
-		return userlist;
+
+			sb.append("pmUserOrgs.pmOrgProfile.orgProfileId^");				
+			sb.append(orgProfileIds);
+			sb.append("^9");
+			sb.append("|pmUserOrgs.pmUserRoles.pmRole.roleCode^");
+			sb.append(reqDTO.getRoleCode());
+			sb.append("|pmUserOrgs.pmUserRoles.recordStatus^1");
+		}
+		return sb.toString();
 	}
 	//26221 - End
 	
