@@ -221,6 +221,7 @@
 				<p:calendar  navigator="true"
 					yearRange="#{DateUtils.getCalendarMaxYearRange(typeValueObj.effDate)}"					
 					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 1 and typeValueObj.showFlag)}"
+					disabled="#{typeValueObj.effDate le DateUtils.getCurrentDateWithoutTime()}"
 					showOn="button" id="ruleValeffDateId"
 					mindate="#{ruleCatalogueBackingBean.managedBean.tomorrow}"
 					maxdate="#{ruleCatalogueBackingBean.managedBean.maxDate}"
