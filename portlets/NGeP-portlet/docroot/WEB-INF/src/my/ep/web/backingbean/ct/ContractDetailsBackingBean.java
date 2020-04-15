@@ -354,14 +354,18 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					ctBB.getManagedBean().setSelectedAgency(null);
 					ctBB.getManagedBean().setMinistryProfileId(retrieveMinistryOrgProfile(
 							ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId());
+					//Bug #27579
+					ctBB.getManagedBean().setDisableAgent(true);
+					ctBB.getManagedBean().setOwnerOrgProfile(true);
 					for (CtAgency ctAgency : ctBB.getManagedBean().getContractVer().getCtAgencies()) {
 						ctBB.checkAgencyStatus(ctAgency);
 						if (ctBB.getManagedBean().getMinistryProfileId().equals(ctAgency.getOrgProfile().getMinstryId())) {
 							ctAgency.setAp178(false);
-							ctBB.getManagedBean().setDisableAgent(true);
+							//ctBB.getManagedBean().setDisableAgent(true); //Bug #27579
 						} else {
 							ctAgency.setAp178(true);
 							ctBB.getManagedBean().setDisableAgent(false);
+							ctBB.getManagedBean().setOwnerOrgProfile(false); //Bug #27579
 						}
 					}
 				}
