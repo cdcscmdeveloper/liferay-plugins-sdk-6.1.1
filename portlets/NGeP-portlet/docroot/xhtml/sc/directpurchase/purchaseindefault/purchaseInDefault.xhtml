@@ -385,7 +385,7 @@
 							label="#{lbl['lbl.sc.purchase.in.default.valid.period']}"
 							value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.pidValidDays}"
 							size="51" style="text-align:right;margin-right: 5px;"
-							disabled="#{isPendingSubmissionStatus or purchaseInDefaultBackingBean.managedBean.trackingDairyView}">
+							disabled="true">
 							<p:ajax partialSubmit="true" process="@this" update="@this" />
 						</p:inputText> <p:message id="pidvalidDaysMsg" for="pidvalidDays" display="icon" /></td>
 				</tr>
