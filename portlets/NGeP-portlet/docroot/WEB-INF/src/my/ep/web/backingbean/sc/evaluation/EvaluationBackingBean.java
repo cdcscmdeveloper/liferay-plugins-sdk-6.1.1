@@ -1021,7 +1021,7 @@ public class EvaluationBackingBean extends
 				reqDTO.setSampleComplianceList(sampleCompliance);
 			}
 			
-			// #26226 - Start
+			// #26339 - Start
 			EvaluationResDTO evaluationResDTO = evaluationSo.saveOrUpdateSampleComplianceDtls(reqDTO);
 			if (null != evaluationResDTO && CollectionUtils.isNotEmpty(evaluationResDTO.getSampleItemList())) {
 				if (null != getManagedBean().getComplianceSampleLblsupplierDM() && CollectionUtils.isNotEmpty(getManagedBean().getComplianceSampleLblsupplierDM().getList())) {
@@ -1043,7 +1043,7 @@ public class EvaluationBackingBean extends
 					
 				}
 			}
-			// #26226 - End
+			// #26339 - End
 			
 			if (null != sampleLabel) {
 				this.getManagedBean()
@@ -12213,7 +12213,7 @@ private void retriveCommitteeRemarksList(){
 		return false;
 	}
 	
-	// #26226 - Start
+	// #26339 - Start
 	/**
 	 * @param qtSampleLable
 	 * @return
@@ -12242,5 +12242,5 @@ private void retriveCommitteeRemarksList(){
 		}
 		return false;
 	}
-	// #26226 - End
+	// #26339 - End
 }
