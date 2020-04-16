@@ -4265,14 +4265,15 @@ public class SmCommonUtil {
 			ssmReqDTO.setRegNo(regNo);
 			SsmResDTO resDTO = reqSO.ssmValidation(ssmReqDTO);
 			//only return company valid or not
-			if(ssmReqDTO.isCheckOnly()){
+			//27329
+			if(ssmReqDTO.isCheckOnly() || ssmReqDTO.isPreRegistration()){
 				
 				return resDTO;
 			}
 			if (!resDTO.getStatusCode().equalsIgnoreCase("") && !"70060".equalsIgnoreCase(resDTO.getStatusCode())){				
 				ssmError(resDTO);
 			}else{//START 27329
-				if(resDTO.getPersonnelIcIssues()!= null && resDTO.getPersonnelIcIssues().size()>0){
+				if(!ssmReqDTO.isFromRegistration() && resDTO.getPersonnelIcIssues()!= null && resDTO.getPersonnelIcIssues().size()>0){
 					
 					sb.append("<br/>");
 					int i =0;
