@@ -147,7 +147,7 @@
 				
 				<p:column width="22%">
 					<f:facet name="header">
-						<h:outputText value="Supplier" />
+						<h:outputText value="#{lbl['lbl.sc.supplier.name']}" />
 					</f:facet>
 
 					<h:outputText value="#{Obj[3]}" rendered="#{Obj[4] eq DPStatusConstants.rnPendingItemCodification}"
@@ -171,6 +171,19 @@
 							icon="ui-icon-cancel"
 							action="#{directPurchaseBackingBean.viewMaintenance(Obj, true)}" />
 					</p:menuButton>
+					
+					<p:menuButton value="#{lbl['lbl.btn.option']}" rendered="#{Obj[4] eq DPStatusConstants.loaPendingSubmission
+					or Obj[4] eq DPStatusConstants.loaPendingApproval
+					or Obj[4] eq DPStatusConstants.loaPendingRevision
+					or Obj[4] eq DPStatusConstants.loaPendingRevisionApproval}">
+						<p:menuitem id="cancelLoaBtnIcon" value="#{lbl['lbl.btn.cancel']}"
+								icon="ui-icon-cancel"
+								action="#{directPurchaseBackingBean.viewMaintenance(Obj, true)}" />					
+					</p:menuButton>	
+					
+					<p:tooltip for="cancelLoaBtnIcon">
+						<h:outputText value="#{lbl['lbl.sc.loa.cancel.btn.tooltip']}" escape="false" />
+					</p:tooltip>				
 				</p:column>
 
 			</p:dataTable>
