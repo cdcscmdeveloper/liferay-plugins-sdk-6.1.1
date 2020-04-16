@@ -158,7 +158,7 @@ public class ViewApplHistoryManagedBean extends
 					.retrieveApplicationHistoryUsingNativeQuery(reqDTO)
 					.getObjectArrResultBean();
 			//Bug #25601 :
-			int[] indexToCheck = new int[]{0, 10, 11, 12, 13,14,1}; 
+			int[] indexToCheck = new int[]{0, 10, 11, 12, 13,1}; 
 			List<Object[]> resultListTemp = new ArrayList();
 			String previousAppl="applno,";
 			try {
@@ -190,7 +190,7 @@ public class ViewApplHistoryManagedBean extends
 									obj[8] = resDto.getMofAccount().getMofNo();
 								}else{
 									//2. For inprogress application which is New Supplier Registration/Upgrade MOF Account (application no start from KN-XXXXXX-XXXX / JN-XXXXXX-XXXX), the MOF No will display N/A. If this type of application has been reject, MOF No still display N/A due to the MOF registration not completed yet.
-									if(obj[14] != null && SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER.equalsIgnoreCase(obj[14].toString()) && "N".equalsIgnoreCase(obj[1].toString())){
+									if(obj[14] != null && (SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER.equalsIgnoreCase(obj[14].toString()) || SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER.equalsIgnoreCase(obj[14].toString())) && "N".equalsIgnoreCase(obj[1].toString())){
 										obj[8] = SmCommonUtil.getMessage("lbl.sm.no.available", null);
 									}
 									//1.& 2. (SM_Appl : Is_Active_Appl = 1 and Record_Status = 1) except application no start from (KN-XXXXXX-XXXX / JN-XXXXXX-XXXX) will display based on active MOF Account (Record_Status = 1)
