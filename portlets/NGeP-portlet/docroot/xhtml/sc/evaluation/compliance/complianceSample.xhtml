@@ -77,9 +77,14 @@
 					style="width:10%;text-align: center;">
 
 					<p:commandButton value="#{lbl['lbl.sc.btn.compliance']}"
+						rendered="#{!evaluationBackingBean.sampleChecklistCompleted(complianceSample)}"
 						process="@this" partialSubmit="true"
 						action="#{evaluationBackingBean.complianceSampleItems(complianceSample)}" />
-
+						
+					<p:commandButton value="#{lbl['lbl.btn.view']}"
+						rendered="#{evaluationBackingBean.sampleChecklistCompleted(complianceSample)}"
+						process="@this" partialSubmit="true"
+						action="#{evaluationBackingBean.complianceSampleItems(complianceSample)}" />
 
 				</p:column>
 
