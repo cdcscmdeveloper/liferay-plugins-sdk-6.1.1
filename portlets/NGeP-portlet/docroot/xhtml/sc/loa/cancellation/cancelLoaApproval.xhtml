@@ -7,7 +7,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<ui:define name="contentSection">
-		<p:outputPanel id="requestNoteId">
+	<p:messages id="messages" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="false" />
+		<p:outputPanel id="loaId">
 			<ui:include
 				src="/xhtml/sc/loa/cancellation/cancelLoaApprovalButtons.xhtml" />
 			<table style="border: 0px; align: center;" width="100%"></table>
@@ -37,16 +39,19 @@
 							value="#{lOACancelDetailBackingBean.showPreparedBy(lOACancelDetailBackingBean.managedBean.scLoa.createdBy)}"
 							disabled="true" readonly="true" style="width:350px;" /></td>
 
-					<td style="width: 200px;"><p:outputLabel
-							value="#{lbl['lbl.sc.request.date']}" /></td>
-					<td></td>
+					<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.request.date']}" /></td>
+					<td><p:inputText						
+						disabled="true" readonly="true" style="width:212px;">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.no']}" /></td>
 					<td><p:inputText
 							value="#{lOACancelDetailBackingBean.managedBean.scLoa.loaNo}"
 							disabled="true" readonly="true" style="width:350px;" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
 					<td><p:inputText
 							value="#{lOACancelDetailBackingBean.getStatusDescById(lOACancelDetailBackingBean.managedBean.scLoa.pmStatus.statusId)}"
 							disabled="true" readonly="true" style="width:212px;" /></td>
@@ -55,7 +60,7 @@
 					<td valign="top"><p:outputLabel
 							value="#{lbl['lbl.sc.loiloa.loa.title']}" /></td>
 					<td colspan="3"><p:inputTextarea
-							value="#{lOACancelDetailBackingBean.managedBean.scLoa.scQt.qtTitle}"
+							value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.title}"
 							cols="170" rows="3" style=" margin-bottom:5px; width:866px;"
 							disabled="true" /></td>
 				</tr>
