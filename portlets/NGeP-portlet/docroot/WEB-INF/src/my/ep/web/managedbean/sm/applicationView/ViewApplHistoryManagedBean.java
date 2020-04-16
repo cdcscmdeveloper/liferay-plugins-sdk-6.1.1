@@ -190,7 +190,7 @@ public class ViewApplHistoryManagedBean extends
 									obj[8] = resDto.getMofAccount().getMofNo();
 								}else{
 									//2. For inprogress application which is New Supplier Registration/Upgrade MOF Account (application no start from KN-XXXXXX-XXXX / JN-XXXXXX-XXXX), the MOF No will display N/A. If this type of application has been reject, MOF No still display N/A due to the MOF registration not completed yet.
-									if(obj[14] != null && (SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER.equalsIgnoreCase(obj[14].toString()) || SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER.equalsIgnoreCase(obj[14].toString())) && "N".equalsIgnoreCase(obj[1].toString())){
+									if(obj[14] != null && (SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM_PROCESSING_FEE.equalsIgnoreCase(obj[14].toString()) || SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM_PAYMENT.equalsIgnoreCase(obj[14].toString()) || SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM.equalsIgnoreCase(obj[14].toString()) || SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER.equalsIgnoreCase(obj[14].toString()) || SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER.equalsIgnoreCase(obj[14].toString())) && "N".equalsIgnoreCase(obj[1].toString())){
 										obj[8] = SmCommonUtil.getMessage("lbl.sm.no.available", null);
 									}
 									//1.& 2. (SM_Appl : Is_Active_Appl = 1 and Record_Status = 1) except application no start from (KN-XXXXXX-XXXX / JN-XXXXXX-XXXX) will display based on active MOF Account (Record_Status = 1)
@@ -214,7 +214,7 @@ public class ViewApplHistoryManagedBean extends
 									}
 									//4. For registered application from migrated Supplier (from old eP) that has application no start with K-XXXXXX-XXXX/J-XXXXXX-XXXX, the MOF No will pointing to the old eP MOF No (as per migrated MOF No).
 									 //Read record status 9
-									else if(!obj[0].toString().contains("KN") && !obj[0].toString().contains("JN") && (obj[0].toString().contains("K") || obj[0].toString().contains("J"))){
+									else if(!checkNotMigratedAppl(obj[0].toString()) && (obj[0].toString().contains("K") || obj[0].toString().contains("J"))){
 										obj[8] = getMofNoPrevious(Long.parseLong(obj[11].toString()),Long.parseLong(obj[10].toString()),
 												obj[8]==null?StringUtils.EMPTY: obj[8].toString(),DbValueConst.RECORD_STATUS_DELETED); 
 										//IF NULL CHECK MOF STATUS EXPIRED
@@ -270,6 +270,14 @@ public class ViewApplHistoryManagedBean extends
 			}
 			return StringUtils.isBlank(mofNo) ? SmCommonUtil.getMessage(
 					"lbl.sm.no.available", null) : mofNo;
+		}
+		//Bug #25601 : SM SHOWSTOPPER: Duplicate MOF Account for New Supplier Registration
+		public boolean checkNotMigratedAppl(String applNo){
+			boolean newePAppl = false;
+			if(applNo.contains("KN") || applNo.contains("KU") || applNo.contains("KB")|| applNo.contains("KA") || applNo.contains("JN") || applNo.contains("JU") || applNo.contains("JA")){
+				newePAppl = true;
+			}
+			return newePAppl;
 		}
 
 	/**
