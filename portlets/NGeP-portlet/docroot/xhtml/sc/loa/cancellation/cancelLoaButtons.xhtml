@@ -20,8 +20,8 @@
 			severity="alert" widgetVar="cd">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}"
-					actionListener="#{lOACancelDetailBackingBean.backToPrevious}"
-					oncomplete="cd.hide();" id="cancelPendingItemCodification"
+					actionListener="#{lOACancelDetailBackingBean.cancelPrepareLoaAction}"
+					oncomplete="cd.hide();" id="cancelLoaAction"
 					partialSubmit="true" process="@this" immediate="true" />
 				<p:commandButton value="#{lbl['lbl.btn.no']}"
 					oncomplete="cd.hide();" />
