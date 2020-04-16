@@ -182,14 +182,14 @@
 			<p:column rendered="#{backingBean.managedBean.poUser}"
 				style="width : 25%;"
 				disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
-				<p:inputTextarea value="#{catBean.poRemarks}" maxlength="200"
-					style="width : auto;" rows="5" cols="20"
+				<p:inputTextarea autoResize="false" value="#{catBean.poRemarks}" maxlength="2000"
+					style="white-space:normal;" rows="6" cols="30"
 					rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and backingBean.managedBean.poUser}"
 					label="#{lbl['lbl.sm.catCodes.rejRemarks']} #{catBean.pmCategoryL1.categoryL1Code} #{catBean.pmCategoryL2.categoryL2Code} #{catBean.pmCategoryL3.categoryL3Code} "
 					id="poCatDecisionRmrk">
-					<f:validateLength maximum="200" />
-					<p:ajax process="@this" update=":form:tt:catCodeInfPan" />
-				</p:inputTextarea>
+					<f:validateLength maximum="2000"/>
+					<p:ajax process="@this" update=":form:tt:catCodeInfPan"/>
+					</p:inputTextarea>
 			</p:column>
 			<p:column rendered="#{backingBean.managedBean.approverUser}"
 				disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
@@ -210,13 +210,13 @@
 			</p:column>
 			<p:column rendered="#{backingBean.managedBean.approverUser}"
 				disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
-				<p:inputTextarea value="#{catBean.approverRemarks}" maxlength="200"
-					style="width : auto;" rows="5" cols="20"
+				<p:inputTextarea autoResize="false" value="#{catBean.approverRemarks}" maxlength="2000"
+					style="white-space:normal;" rows="5" cols="20"
 					rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}"
 					label="#{lbl['lbl.sm.catCodes.rejRemarks']} #{catBean.pmCategoryL1.categoryL1Code} #{catBean.pmCategoryL2.categoryL2Code} #{catBean.pmCategoryL3.categoryL3Code} "
 					id="apprvrCatDecisionRmrk">
 					<p:ajax process="@this" update=":form:tt:catCodeInfPan" />
-					<f:validateLength maximum="200" />
+					<f:validateLength maximum="2000" />
 				</p:inputTextarea>
 			</p:column>
 			<p:column rendered="#{backingBean.managedBean.smAppl.resubmit}"
