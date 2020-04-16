@@ -3230,6 +3230,10 @@ input[type="submit"]:hover,input[type="button"]:hover,input[type="reset"]:hover,
 	width: 20%;
 }
 
+.columnWidth23 {
+	width: 23%;
+}
+
 .columnWidth20AlignTop {
 	width: 20%;
 	vertical-align: top;

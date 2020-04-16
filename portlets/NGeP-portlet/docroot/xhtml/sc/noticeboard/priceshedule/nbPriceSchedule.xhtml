@@ -21,7 +21,7 @@
 		
 		<p:panel id="qtPricePanelId" header="#{lbl['lbl.sc.notice.board.pricingheader']}" toggleable="true">
 			<h:panelGrid border="0" width="100%" columns="2"
-				columnClasses="columnWidth20" style="text-align:left;">
+				columnClasses="columnWidth23" style="text-align:left;">
 
 				<h:outputLabel value="#{lbl['lbl.sc.ministry']}" styleClass="outputLabel-view-label"></h:outputLabel>
 				<h:outputText
@@ -66,8 +66,9 @@
 
 			</h:panelGrid>
 		</p:panel>
+			<!-- #21693 - Start -->
 			<!-- Committee Members table -->   <!-- CR 21639 added render condition Evaluation type -->
-			<p:panel header="#{noticeBoardBackingBean.managedBean.committeeName}" toggleable="true" 
+			<!-- <p:panel header="#{noticeBoardBackingBean.managedBean.committeeName}" toggleable="true" 
 			rendered="#{(noticeBoardBackingBean.managedBean.committeeName ne null?'true':'false') and (noticeBoardBackingBean.managedBean.scQt.evaluationType != 1)}">
 							
 				<p:dataTable id="committeeId"
@@ -93,8 +94,9 @@
 					</p:column>
 
 				</p:dataTable>
-			</p:panel>
+			</p:panel> -->
 			<!-- End of Committee members -->
+			<!-- #21693 - End -->
 		<p:panel id="offerPricePnlId" header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
 			<c:if test="#{!noticeBoardBackingBean.managedBean.scQt.zonal}">
 				<ui:include
