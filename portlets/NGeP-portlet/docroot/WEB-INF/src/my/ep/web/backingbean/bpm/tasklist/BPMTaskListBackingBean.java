@@ -607,6 +607,11 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					+ SCProcessNameConst.APPROVE_DO_REASSIGNMENT,
 					SourcingConstants.NAV_PAGE_DO_REASSIGNMENT_APPROVAL);
 			// 25627
+			//START - 22211
+			temp.put(SCProcessNameConst.SUPPLIER_DP_ACCEPTANCE_PROCESS_NAME
+					+ SCProcessNameConst.APPROVE_CANCELATION,
+					SourcingConstants.NAV_PAGE_CANCELLATION_LOA_APPROVAL);
+			//END - 22211
 			this.getManagedBean().setBpmMap(temp);
 		}
 
