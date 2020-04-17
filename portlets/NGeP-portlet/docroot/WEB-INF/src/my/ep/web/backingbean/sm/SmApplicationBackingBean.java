@@ -2292,8 +2292,8 @@ public class SmApplicationBackingBean extends
 					}
 				}
 			} else if (currentPageType
-					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)) {
-				if (getManagedBean().isSupplierUser()) {
+					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)
+					&& getManagedBean().isSupplierUser()) {
 					if (getManagedBean().getCompanyBasicGst() != null) {
 						SmCommonUtil.validateGstRegNoUniqueness(getManagedBean()
 								.getSmSupplier().getRegNo(), getManagedBean()
@@ -2301,9 +2301,8 @@ public class SmApplicationBackingBean extends
 					}
 					SmApplicationUtil.validateGSt(getManagedBean(), currentTab,
 							ruleHelper);
-				}
-				//#27356
-				SmApplicationUtil.validateCoordinate(getManagedBean());
+					//#27356
+					SmApplicationUtil.validateCoordinate(getManagedBean());
 			}
 			setSupplierChangeValues(currentPageType);
 			validateUpdateSmAppl(applType, currentPageType, outputPageType,
