@@ -110,7 +110,7 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 			loaDetailBackingBean.getManagedBean().setSourceId(sourceId);
 			loaDetailBackingBean.getManagedBean().setPayLoad(dpDataType);
 
-			retrieveLOAList(sourceId, true);
+			retrieveLOAList(sourceId);
 
 			// retrieveLOAList(2122L);
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -126,7 +126,7 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 	 * 
 	 * @param requestNoteId the request note id
 	 */
-	public void retrieveLOAList(Long requestNoteId, boolean userIdRequired) {
+	public void retrieveLOAList(Long requestNoteId) {
 		debugLogger("retrieveLOAList");
 
 		IPurchaseRequestSO purchaseRequestSO = null;
@@ -142,12 +142,10 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 			fulfilmentTypes.add(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
 			fulfilmentTypes.add(ParameterConst.FULFILMENT_TYPE_SCHEDULED);
 			reqDTO.setFulfillmentTypes(fulfilmentTypes);
-			if (userIdRequired) {
-				reqDTO.setAssignedTo(userId);
-			}
+			reqDTO.setAssignedTo(userId);
 
 			PurchaseRequestResDTO resDTO = purchaseRequestSO
-					.retrievePurchaseRequestsByReqNote(reqDTO, userIdRequired);
+					.retrievePurchaseRequestsByReqNote(reqDTO);
 
 			if (resDTO.isSuccessful()) {
 				List<ScPurchaseRequest> purchaseRequestList = resDTO
