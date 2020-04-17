@@ -2702,10 +2702,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				SsmReqDTO ssmReqDTO = new SsmReqDTO();
 				ssmReqDTO.setRegNo(smSupplier.getRegNo());
 				ssmReqDTO.setBusinessType(smSupplier.getBusinessType());
-				ssmReqDTO.setCheckOnly(true);
+				//27329
+				ssmReqDTO.setPreRegistration(true);
+				//ssmReqDTO.setCheckOnly(true);
+				StringBuilder sb = new StringBuilder();
 				SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
 				//27214
-				ssmResDTO.setPreRegistration(true);
+				ssmResDTO.setPreRegistration(true);				
 				if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
 					//check the business/company registration status in ssm
 					this.getManagedBean().setStatusDescFromSSM(setStatusMessageFromSSM(ssmResDTO.getStatusFromSSM()));
@@ -2713,7 +2716,21 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 						//27214
 						throw new EpException(MessageConst.ERROR_721086);
 						//throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null)});
+					//START 27329
+					}else if(ssmResDTO.getPersonnelIcIssues()!= null && ssmResDTO.getPersonnelIcIssues().size()>0){
+						
+						sb.append("<br/>");
+						int i =0;
+						for(SmPersonnel per:ssmResDTO.getPersonnelIcIssues()){
+							sb.append(++i + ". ");
+							sb.append(ResourceBundleUtils.getMessage("lbl.sm.ssm.myid.detail",new String []{per.getName(),per.getIdentificationNo()},ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+							//sb.append(",  ");
+							sb.append("<br/>");
+						}
+						this.getManagedBean().setStatusDescFromSSM(sb.toString());
+						throw new EpException(MessageConst.ERROR_721085,new String[] {sb.toString() });
 					}
+					//END 27329
 				} else{					
 					SmCommonUtil.ssmError(ssmResDTO);
 				}
@@ -2783,12 +2800,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	
 	/*** 25692#95 - end ***/
-	
-	
-	
-	
-
-
 
 	// #27398 11/03/2020 START
 	public Boolean specialDescriptionMandatory(List<SmSupplierCategory> listCategory){
