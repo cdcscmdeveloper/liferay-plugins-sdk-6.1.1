@@ -7,10 +7,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	
 
 	<ui:define name="contentSection">
-
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>
@@ -19,11 +17,11 @@
 		<ac:lovPopup />
 		<p:panel id="searchPanel" header="#{lbl['lbl.sc.search']}"
 			toggleable="true">
-					<table>
+			<table style="width: 100%;">
 				<tr>
-					<td width="25%"><p:outputLabel id="searchMinistryLbL"
-							value="#{lbl['lbl.sc.ministry']}" rendered="#{directPurchaseBackingBean.showRoleType()}" /></td>
-					<td colspan="3"><ac:lov id="searchMinistry"
+					<td><p:outputLabel id="searchMinistryLbL1"
+							value="#{lbl['lbl.sc.ministry']}" rendered="#{directPurchaseBackingBean.showRoleType()}"/></td>
+					<td colspan="3"><ac:lov id="searchMinistry1" 
 							lovId="PM_ORG_PROFILE_MINSTRY" size="118" readonly="true"
 							headerText="#{lbl['lbl.sc.ministry']}"
 							value="#{directPurchaseBackingBean.managedBean.searchMinistryProfile.orgName}"
@@ -32,11 +30,10 @@
 							saveObject="directPurchaseBackingBean.managedBean.searchMinistryProfile" rendered="#{directPurchaseBackingBean.showRoleType()}">
 						</ac:lov></td>
 				</tr>
-
 				<tr>
-					<td width="25%"><p:outputLabel id="searchPtjGroupLbL"
-							value="#{lbl['lbl.sc.kumpulan.ptj']}" rendered="#{directPurchaseBackingBean.showRoleType()}" /></td>
-					<td colspan="3"><ac:lov id="searchPtjGroup"
+					<td><p:outputLabel id="searchPtjGroupLbL1"
+							value="#{lbl['lbl.sc.kumpulan.ptj']}" rendered="#{directPurchaseBackingBean.showRoleType()}"/></td>
+					<td colspan="3"><ac:lov id="searchPtjGroup1" 
 							lovId="PM_ORG_PROFILE_PTJ_GROUP" size="118" readonly="true"
 							headerText="#{lbl['lbl.sc.kumpulan.ptj']}"
 							value="#{directPurchaseBackingBean.managedBean.searchPtjGroupProfile.orgName}"
@@ -47,24 +44,21 @@
 				</tr>
 
 				<tr>
-					<td width="25%"><p:outputLabel id="searchPtjLbL"
-							value="#{lbl['lbl.sc.ptj']}" rendered="#{directPurchaseBackingBean.showRoleType()}" /></td>
-					<td colspan="3"><ac:lov id="searchPtj"
+					<td><p:outputLabel id="searchPtjLbL1"
+							value="#{lbl['lbl.sc.ptj']}" rendered="#{directPurchaseBackingBean.showRoleType()}"/></td>
+					<td colspan="3"><ac:lov id="searchPtj1" 
 							lovId="PM_ORG_PROFILE_PTJ" size="118" readonly="true"
 							headerText="#{lbl['lbl.sc.ptj']}"
 							value="#{directPurchaseBackingBean.managedBean.searchPtjProfile.orgName}"
 							postUpdateListener="directPurchaseBackingBean.postUpdateOrgProfileListener"
 							update="@form"
-							saveObjectshowRoleType="directPurchaseBackingBean.managedBean.searchPtjProfile"
+							saveObject="directPurchaseBackingBean.managedBean.searchPtjProfile"
 							conditionField="#{directPurchaseBackingBean.getPtjCondition()}" rendered="#{directPurchaseBackingBean.showRoleType()}">
 						</ac:lov></td>
-				</tr></table>
-				
-				<table>
+				</tr>
 				<!-- Redmine 25396: remove duplication option view by adding new drop down field -->  
 				<tr>
-					<td width="22%"><p:outputLabel
-							value="#{lbl['lbl.sc.document.viewas']}" rendered="#{directPurchaseBackingBean.showFunctionType()}" /></td>
+					<td width="22%"><p:outputLabel value="#{lbl['lbl.sc.document.viewas']}" rendered="#{directPurchaseBackingBean.showFunctionType()}" /></td>
 					<td><p:selectOneMenu id="viewAs" style="width: 250px;"
 							value="#{directPurchaseBackingBean.managedBean.searchFunctionType}" 
 							rendered="#{directPurchaseBackingBean.showFunctionType()}">
@@ -124,9 +118,9 @@
 
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
-					action="#{directPurchaseBackingBean.search}" update="resultPanel" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
+					action="#{directPurchaseBackingBean.search}" update="resultPanel" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 				<p:commandButton value="#{lbl['lbl.btn.reset']}"
-					action="#{directPurchaseBackingBean.reset(false)}" update=":form" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
+					action="#{directPurchaseBackingBean.reset(false)}" update=":form" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 			</div>
 		</p:panel>
 		<p:panel id="resultPanel" header="#{lbl['lbl.sc.result']}"
@@ -179,6 +173,7 @@
 						<h:outputText value="#{directPurchaseBackingBean.getDocStatus(Obj)}"
 							style="white-space: normal;word-wrap: break-word;" />						
 				</p:column>
+				
 				<p:column width="10%" style="text-align: center;">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.action']}" />
@@ -189,17 +184,17 @@
 					
 						<p:menuitem id="viewBtnIconDualRole" value="#{lbl['lbl.btn.view']}"
 							icon="ui-icon-view"
-							rendered="#{directPurchaseBackingBean.isSupplier() and directPurchaseBackingBean.managedBean.searchFunctionType eq ParameterConst.orgTypePtj and directPurchaseBackingBean.managedBean.searchDocumentType eq ParameterConst.doctypeSimpleQuote}"
+							rendered="#{directPurchaseBackingBean.showFunctionType() == true and directPurchaseBackingBean.managedBean.searchDocumentType ne ParameterConst.doctypeSimpleQuote}"
 							action="#{directPurchaseBackingBean.viewDoc(Obj)}" /> 
-							
-						<p:menuitem id="viewBtnIconSimpleQuoteDualRole" value="#{lbl['lbl.btn.view']}"
+																			
+						<p:menuitem id="viewBtnIconDualRole2" value="#{lbl['lbl.btn.view']}"
 							icon="ui-icon-view"
-							rendered="#{!directPurchaseBackingBean.isSupplier() and directPurchaseBackingBean.managedBean.searchFunctionType eq ParameterConst.orgTypeG2GRolecode and directPurchaseBackingBean.managedBean.searchDocumentType eq ParameterConst.doctypeSimpleQuote}"
-							action="#{directPurchaseBackingBean.viewDocSupplierSQ(Obj)}" />
+							rendered="#{directPurchaseBackingBean.showFunctionType() == true and directPurchaseBackingBean.managedBean.searchDocumentType eq ParameterConst.doctypeSimpleQuote}"
+							action="#{directPurchaseBackingBean.viewDocSupplierSQ(Obj)}" /> 
 							
 						<p:menuitem id="viewBtnIcon" value="#{lbl['lbl.btn.view']}"
 							icon="ui-icon-view"
-							rendered="#{!directPurchaseBackingBean.isSupplier() or (directPurchaseBackingBean.isSupplier() and directPurchaseBackingBean.managedBean.searchDocumentType ne ParameterConst.doctypeSimpleQuote)}"
+							rendered="#{directPurchaseBackingBean.showFunctionType() == false and !directPurchaseBackingBean.isSupplier() or (directPurchaseBackingBean.isSupplier() and directPurchaseBackingBean.managedBean.searchDocumentType ne ParameterConst.doctypeSimpleQuote)}"
 							action="#{directPurchaseBackingBean.viewDoc(Obj)}" />
 
 						<p:menuitem id="printBtnIcon" value="#{lbl['lbl.btn.print']}"
@@ -210,9 +205,9 @@
 							
 						<p:menuitem id="viewBtnIconSimpleQuote" value="#{lbl['lbl.btn.view']}"
 							icon="ui-icon-view"
-							rendered="#{directPurchaseBackingBean.managedBean.searchFunctionType ne ParameterConst.orgTypePtj and directPurchaseBackingBean.isSupplier() ? directPurchaseBackingBean.managedBean.searchDocumentType eq ParameterConst.doctypeSimpleQuote : false}"
+							rendered="#{directPurchaseBackingBean.showFunctionType() == false and directPurchaseBackingBean.isSupplier() ? directPurchaseBackingBean.managedBean.searchDocumentType eq ParameterConst.doctypeSimpleQuote : false}"
 							action="#{directPurchaseBackingBean.viewDocSupplierSQ(Obj)}" />
-							
+
 					</p:menuButton>
 					<!-- end 25396: -->
 				</p:column>
