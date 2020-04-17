@@ -27,13 +27,13 @@ import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
-import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+
 
 import org.apache.commons.lang.StringUtils;
 
@@ -44,12 +44,6 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 	private boolean editMode = false;
 	private int editModeIndex = 0;
 	
-	
-	private CmType selectedType;
-	private CmBrand selectedBrand;
-	private CmMeasurement selectedMeasurement;
-	private CmColor selectedColor;
-
 	
 	private List<CmBrand> brandList;
 	private List<CmColor> colorList;
@@ -148,7 +142,7 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 	private boolean colorRedundancy;
 	
 	
-	private boolean disableSelectBtn = false;
+	private boolean disableSelectBtn;
 	
 
 	
@@ -174,7 +168,7 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 
 	//private IPagingDataModel<Object[]> extensionSearchItemDataModel = new ExtensionSearchItemDataModel();
 	
-	private IPagingDataModel<Object[]> keywordExtensionSearchItemDataModel = new KeywordExtensionSearchItemDataModel();
+	//private IPagingDataModel<Object[]> keywordExtensionSearchItemDataModel = new KeywordExtensionSearchItemDataModel();
 
 	private SearchFilterBean colorFilterBean = new SearchFilterBean(
 			SearchOperator.OPERATOR_EQUALS.value());
@@ -195,14 +189,6 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 	private boolean assignCodeFlg = false;
 
 
-//	public IPagingDataModel<Object[]> getExtensionSearchItemDataModel() {
-//		return extensionSearchItemDataModel;
-//	}
-//
-//	public void setExtensionSearchItemDataModel(
-//			IPagingDataModel<Object[]> extensionSearchItemDataModel) {
-//		this.extensionSearchItemDataModel = extensionSearchItemDataModel;
-//	}
 
 	
 	public void initRefreshPageNoFlag(){
@@ -217,224 +203,6 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 			System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 		}
 	}
-
-//	private class ExtensionSearchItemDataModel extends
-//	PagingDataModel<Object[]> {
-//
-//		public ExtensionSearchItemDataModel() {
-//			super("itemTableID");
-//		}
-//
-//		@Override
-//		protected ISearchResultBean<Object[]> pageChangeListener(
-//				ISearchBean<Object[]> searchBean) {
-//			
-//			
-//			if (StringUtils.isBlank((String) colorFilterBean.getSearchValue())
-//					&& StringUtils.isBlank((String) typeFilterBean.getSearchValue())
-//					&& StringUtils.isBlank((String) brandFilterBean.getSearchValue())
-//					&& StringUtils.isBlank((String) measurementFilterBean.getSearchValue())) {
-//				return new SearchResultBean();
-//			}
-//
-//			System.out.println("........search extension combination.................");
-//
-//			CodificationBackingBean bb = new CodificationBackingBean();
-//
-//			ICodificationSO codificationSO = null;
-//			CodificationResDTO resDTO = null;
-//			try {
-//				codificationSO = (ICodificationSO) BusinessDelegate
-//						.getInstance().getServiceObject("cm",
-//								ICodificationSO.class);
-//
-//				CodificationReqDTO reqDTO = new CodificationReqDTO();
-//				reqDTO.setExtSearchBean(searchBean);
-//
-//				reqDTO.setUnspscCode(getSelectedUNSPSCObj()
-//						.getUnspscCode());
-//
-////				if (StringUtils.isNotBlank((String) colorFilterBean
-////						.getSearchValue())) {
-////					reqDTO.setColorId(Long.valueOf(colorFilterBean
-////							.getSearchValue().toString()));
-////				}
-////
-////				System.out.println("typeFilterBean.getSearchValue():"+typeFilterBean.getSearchValue());
-////				if (StringUtils.isNotBlank((String) typeFilterBean
-////						.getSearchValue())) {
-////					reqDTO.setTypeId(Long.valueOf(typeFilterBean
-////							.getSearchValue().toString()));
-////
-////				}
-////
-////				if (StringUtils.isNotBlank((String) brandFilterBean
-////						.getSearchValue())) {
-////					reqDTO.setBrandId(Long.valueOf(brandFilterBean
-////							.getSearchValue().toString()));
-////
-////				}
-////
-////				if (StringUtils.isNotBlank((String) measurementFilterBean
-////						.getSearchValue())) {
-////					reqDTO.setMeasurementId(Long.valueOf(measurementFilterBean
-////							.getSearchValue().toString()));
-////				}
-//
-//				resDTO = codificationSO.searchExtension(reqDTO);
-//				
-//				
-//				
-//
-////				//int count =0;
-////				Map tempMap = new HashMap();
-////				for (int i = 0; i < resDTO.getExtensionResultBean().getResultList().size(); i++) {	
-////					Object[] objects = (Object[]) resDTO.getExtensionResultBean().getResultList().get(i);
-////
-////					
-////					if(bb.getManagedBean().getCloneExtensionVOs()!=null && bb.getManagedBean().getCloneExtensionVOs().size()>0){
-////
-////						for(ExtensionCodeVO obj : bb.getManagedBean().getCloneExtensionVOs()){
-////							if((String.valueOf(objects[4])+String.valueOf(objects[5])+String.valueOf(objects[6])+String.valueOf(objects[7])).equalsIgnoreCase(obj.getKey())) {
-////
-////								if(!tempMap.containsKey(obj.getKey())){
-////									objects[8] = true;
-////									//count = count + 1;
-////									//System.out.println("**loop***"+count);
-////									tempMap.put(obj.getKey(), obj.getKey());
-////								}
-////							}
-////						}
-////
-////					}
-////
-////				}
-////				/*System.out.println("count:"+count);
-////				System.out.println("resDTO.getExtensionResultBean().getResultList().size():"+resDTO.getExtensionResultBean().getResultList().size());
-////				if(count == resDTO.getExtensionResultBean().getResultList().size()){
-////					bb.getManagedBean().setExtensionSearchcheckBoxAll(true);
-////				}else{
-////					bb.getManagedBean().setExtensionSearchcheckBoxAll(false);
-////				}*/
-////
-////				RequestContext.getCurrentInstance().execute("refreshExtensionSearch();");
-////
-//
-//				//System.out.println("isExtensionSearchcheckBoxAll:"+bb.getManagedBean().isExtensionSearchcheckBoxAll());
-//
-//
-//
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			} finally {
-//				codificationSO = null;
-//			}
-//			if (resDTO != null) {
-//				System.out.println("*******end************");
-//				System.out.println("size " +  resDTO.getExtensionResultBean().getResultList().size());
-//				
-//				return resDTO.getExtensionResultBean();
-//			}
-//			return null;
-//		}
-//
-//	}
-//	
-//	
-	
-	private class KeywordExtensionSearchItemDataModel extends
-	PagingDataModel<Object[]> {
-
-		public KeywordExtensionSearchItemDataModel() {
-			super("keywordId");
-		}
-
-		@Override
-		protected ISearchResultBean<Object[]> pageChangeListener(
-				ISearchBean<Object[]> searchBean) {
-
-			if (StringUtils.isBlank((String) colorFilterBean.getSearchValue())
-					&& StringUtils.isBlank((String) typeFilterBean.getSearchValue())
-					&& StringUtils.isBlank((String) brandFilterBean.getSearchValue())
-					&& StringUtils.isBlank((String) measurementFilterBean.getSearchValue())) {
-				return new SearchResultBean();
-			}
-
-			System.out.println("........KeywordExtensionSearchItemDataModel.................");
-
-			CodificationBackingBean bb = new CodificationBackingBean();
-
-			ICodificationSO codificationSO = null;
-			CodificationResDTO resDTO = null;
-			try {
-				codificationSO = (ICodificationSO) BusinessDelegate
-						.getInstance().getServiceObject("cm",
-								ICodificationSO.class);
-
-				CodificationReqDTO reqDTO = new CodificationReqDTO();
-				reqDTO.setExtSearchBean(searchBean);
-
-				reqDTO.setUnspscCode(getSelectedUNSPSCObj()
-						.getUnspscCode());
-
-				if (StringUtils.isNotBlank((String) colorFilterBean
-						.getSearchValue())) {
-					reqDTO.setColorId(Long.valueOf(colorFilterBean
-							.getSearchValue().toString()));
-				}
-
-
-				if (StringUtils.isNotBlank((String) typeFilterBean
-						.getSearchValue())) {
-					reqDTO.setTypeId(Long.valueOf(typeFilterBean
-							.getSearchValue().toString()));
-
-				}
-
-				if (StringUtils.isNotBlank((String) brandFilterBean
-						.getSearchValue())) {
-					reqDTO.setBrandId(Long.valueOf(brandFilterBean
-							.getSearchValue().toString()));
-
-				}
-
-				if (StringUtils.isNotBlank((String) measurementFilterBean
-						.getSearchValue())) {
-					reqDTO.setMeasurementId(Long.valueOf(measurementFilterBean
-							.getSearchValue().toString()));
-				}
-
-				resDTO = codificationSO.searchExtension(reqDTO);
-				
-
-		
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				codificationSO = null;
-			}
-			if (resDTO != null) {
-				System.out.println("*******end************");
-				return resDTO.getExtensionResultBean();
-			}
-			return null;
-		}
-
-	}
-	
-	
-
-
-	public IPagingDataModel<Object[]> getKeywordExtensionSearchItemDataModel() {
-		return keywordExtensionSearchItemDataModel;
-	}
-
-	public void setKeywordExtensionSearchItemDataModel(
-			IPagingDataModel<Object[]> keywordExtensionSearchItemDataModel) {
-		this.keywordExtensionSearchItemDataModel = keywordExtensionSearchItemDataModel;
-	}
-
 
 	private class SearchPagingDataModel extends PagingDataModel<CmUnspsc> {
 
@@ -1344,45 +1112,6 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 	public void setMeasurementList(List<CmMeasurement> measurementList) {
 		this.measurementList = measurementList;
 	}
-	
-	
-
-	public CmBrand getSelectedBrand() {
-		return selectedBrand;
-	}
-
-	public void setSelectedBrand(CmBrand selectedBrand) {
-
-		this.selectedBrand = selectedBrand;
-	}
-
-	public CmMeasurement getSelectedMeasurement() {
-		return selectedMeasurement;
-	}
-
-	public void setSelectedMeasurement(CmMeasurement selectedMeasurement) {
-		this.selectedMeasurement = selectedMeasurement;
-	}
-
-	public CmColor getSelectedColor() {
-		return selectedColor;
-	}
-
-	public void setSelectedColor(CmColor selectedColor) {
-		if (selectedColor != null)
-			System.out.println("setter called for selectedColor..."
-					+ selectedColor.getColorId());
-		this.selectedColor = selectedColor;
-	}
-
-	public CmType getSelectedType() {
-		return selectedType;
-	}
-
-	public void setSelectedType(CmType selectedType) {
-		this.selectedType = selectedType;
-	}
-	
 	
 	public boolean productCode(String unspscCode) {
 
