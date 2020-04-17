@@ -251,17 +251,13 @@
 			 </td>
 			<td colspan="3">
 				<p:inputText disabled="#{isDocTypeQuotation || !isEditableStatus || lOADetailBackingBean.managedBean.readOnly}"
-					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fileNo}" size="29" maxlength="50">
-					<p:ajax event="blur" update="@form" />
-				</p:inputText>
+					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fileNo}" size="29" maxlength="50"/>
 				<p:inputText id="fileExtNo"  style="margin-left: 2px;width: 28px; text-align:right;"
 					value="#{lOADetailBackingBean.managedBean.scLoa.fileExtNo}" size="6"
 					required="true"
 					label="#{lbl['lbl.sc.qt.fileno']}"
 					maxlength="3"
-					disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}" >
-					<p:ajax event="blur" update="@form" />
-				</p:inputText>
+					disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}" />
 				<p:message id="fileExtNoMsg" for="fileExtNo" display="icon" />
 			</td>
 		</tr>
@@ -274,18 +270,6 @@
 					value="#{lOADetailBackingBean.managedBean.scLoa.loaAmt}"
 					disabled="true" size="35" style="text-align:right;">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</p:inputText>
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.fullfillent.type']}" />
-			</td>
-			<td>
-				<p:inputText 
-					value="#{lOADetailBackingBean.getParameterDesc(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode)}"
-					disabled="true" size="35" style="text-align:right;">
 				</p:inputText>
 			</td>
 		</tr>
@@ -303,7 +287,7 @@
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						<p:ajax event="blur"
 						listener="#{lOADetailBackingBean.calculateOverallAmount(lOADetailBackingBean.managedBean.scLoa.sstAmt)}"
-							update="ContractAmtId,agreementReqPG,@([id$=bondReq]),menuTab"></p:ajax>
+							update="ContractAmtId,agreementReq,@([id$=bondReq]),menuTab"></p:ajax>
 					</p:inputText>
 				</td>
 		</tr>
@@ -342,7 +326,7 @@
 				</p:inputText>
 			</td>
 		</tr>
-		<c:if test="#{isDocTypeQuotation || enablePBForDP}">
+		<c:if test="#{isDocTypeQuotation}">
 		<tr>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.req.ins.war']}" />
@@ -367,31 +351,15 @@
 				<table>
 					<tr>
 						<td>
-							<c:choose>
-								<c:when test="#{enablePBForDP}">
-									<p:selectOneMenu id="bondReqPk7Per" required="true"
-										style="margin-bottom:5px;width:175px;"
-										value="#{lOADetailBackingBean.managedBean.bondReqSelectedVal}"
-										label="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}">
-										<f:selectItems
-											value="#{lOADetailBackingBean.getDropdownValues(ParameterTypeConst.yesNoFlag)}" />
-											
-										 <p:ajax partialSubmit="true" process="@this" update="menuTab" 
-										 listener="#{lOADetailBackingBean.performanceBondChanged(lOADetailBackingBean.managedBean.bondReqSelectedVal)}"/>
-									</p:selectOneMenu>
-								</c:when>
-								<c:otherwise>
-									<p:selectOneRadio id="bondReq" styleClass="commonLabel"
-										value="#{lOADetailBackingBean.managedBean.scLoa.bondReq}"
-										required="true"
-										label="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}"
-										disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.performanceBondMandatory or lOADetailBackingBean.managedBean.readOnly or lOADetailBackingBean.managedBean.disablePerformanceBondForDP}">
-										<f:selectItems value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-										<p:ajax partialSubmit="true" process="@this" update="menuTab" />
-									</p:selectOneRadio>
-									<p:message id="bondReqMsg" for="bondReq" display="icon" />
-								</c:otherwise>
-							</c:choose>
+							<p:selectOneRadio id="bondReq" styleClass="commonLabel"
+								value="#{lOADetailBackingBean.managedBean.scLoa.bondReq}"
+								required="true"
+								label="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}"
+								disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.performanceBondMandatory or lOADetailBackingBean.managedBean.readOnly}">
+								<f:selectItems value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+								<p:ajax partialSubmit="true" process="@this" update="menuTab" />
+							</p:selectOneRadio>
+							<p:message id="bondReqMsg" for="bondReq" display="icon" />
 						</td>
 						<td style="margin-top: -3px">
 							<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.req.perform.bond.tooltip']}" />
@@ -610,32 +578,14 @@
 					<table>
 						<tr>
 							<td>
-							<h:panelGroup id="agreementReqPG">
-								<c:choose>
-									<c:when test="#{enablePBForDP}">
-										<p:selectOneMenu id="agreementReqPk7Per" required="true"
-											style="margin-bottom:5px;width:246px;"
-											value="#{lOADetailBackingBean.managedBean.agreemetSelectedVal}"
-											label="#{lbl['lbl.sc.loiloa.loa.req.agree']}">
-											<f:selectItems
-												value="#{lOADetailBackingBean.getDropdownValues(ParameterTypeConst.yesNoFlag)}" />
-												
-											 <p:ajax partialSubmit="true" process="@this" update="menuTab" 
-											 listener="#{lOADetailBackingBean.agreementChanged(lOADetailBackingBean.managedBean.agreemetSelectedVal)}"/>
-										</p:selectOneMenu>
-									</c:when>
-									<c:otherwise>
-										<p:selectOneRadio id="agreementReq" styleClass="commonLabel"
-											value="#{lOADetailBackingBean.managedBean.scLoa.agreementReq}"
-											required="true" label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
-											disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.agreementMandatory or lOADetailBackingBean.managedBean.readOnly}">
-											<f:selectItems
-												value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-										</p:selectOneRadio>
-										<p:message id="agreementReqMsg" for="agreementReq" display="icon" />
-									</c:otherwise>
-								</c:choose>
-							</h:panelGroup>
+								<p:selectOneRadio id="agreementReq" styleClass="commonLabel"
+									value="#{lOADetailBackingBean.managedBean.scLoa.agreementReq}"
+									required="true" label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
+									disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.agreementMandatory or lOADetailBackingBean.managedBean.readOnly}">
+									<f:selectItems
+										value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+								</p:selectOneRadio>
+								<p:message id="agreementReqMsg" for="agreementReq" display="icon" />
 							</td>
 							<td style="margin-top: -3px">
 								<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.req.agree.tooltip']}" />
