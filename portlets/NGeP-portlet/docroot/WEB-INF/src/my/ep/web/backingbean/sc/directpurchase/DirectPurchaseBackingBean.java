@@ -522,7 +522,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			prInqBackingBean.viewPurchaseInquiry(docId);
 			prInqBackingBean.getManagedBean().setDpObj(dpObj);
 			prInqBackingBean.getManagedBean().setTrackingDairyView(Boolean.TRUE);
-
+			reset(false);
 		} else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT)){
 			PurchaseInDefaultBackingBean pidBackingBean = new PurchaseInDefaultBackingBean();
 			pidBackingBean.viewPurchaseInDefault(docId);
@@ -628,18 +628,23 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	 * Reset direct purchase search.
 	 */
 	public void reset(boolean isMaintenance){
+		this.getManagedBean().setSearchFunctionType(null);
 		this.getManagedBean().setSearchDocumentNo(null);
 		this.getManagedBean().setSearchDocumentType(null);
 		this.getManagedBean().setSearchStatusId(null);
 		this.getManagedBean().setSearchDocumentTitle(null);
 		this.getManagedBean().setSearchDocumentToDuration(null);
 		this.getManagedBean().setSearchDocumentFromDuration(null);
-		if (!isMaintenance) {
+		/*if (!isMaintenance) {
 			getManagedBean().setSearchMinistryProfile(null);
 			getManagedBean().setSearchPtjGroupProfile(null);
 			getManagedBean().setSearchPtjProfile(null);
-		}
+		}*/
+		/*if(getManagedBean().getSearchMinistryProfile() != null){
+			System.out.println("---> getSearchMinistryProfile is not null");
+		}*/
 		this.getManagedBean().resetDocumentDataModel();
+		//preRenderDirectPurchaseMaintenance();
 	}
 
 	/**
