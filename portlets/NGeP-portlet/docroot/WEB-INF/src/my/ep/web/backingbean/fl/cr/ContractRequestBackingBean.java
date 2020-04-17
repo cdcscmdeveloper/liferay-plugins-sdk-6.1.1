@@ -283,6 +283,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
     /*13984 navigation & schedule number Information*/
     private static String navi;
     private static String schno;
+    
+    /*Start- 13984 - CrList - Back Button*/
+    private static Long CrListSearchContractListDD;
+    private static String CrListSearchContractCriteria;
+    private static String CrListSearchTypesDD;
+    /*End- 13984 - CrList - Back Button*/
 	
 	/**
 	 * Instantiates a new fulfilment backing bean.
@@ -1275,7 +1281,11 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 			//13984-end
 		}else if(contractId != null){
-			renewSesionObject();
+			/*Start- 13984 - CrList - Back Button*/
+			if(getManagedBean().getBackFlag()!= 1){
+				renewSesionObject();
+			}
+			/*end- 13984 - CrList - Back Button*/
 			new ContractRequestBackingBean();
 			FacesScopes facesScopes = new FacesScopes();
 			getManagedBean().setContractId(Long.parseLong(contractId));
@@ -3961,8 +3971,34 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	/**
 	 * Page navigation to FLDoc search page in CR
 	 */
-	public void backToCrList() {
-		preRenderContractList();
+	public String backToCrList() {
+		
+		//start-13984 - CrList - Back Button
+		getManagedBean().setBackFlag(1);
+		if(getCrListSearchContractListDD()!=null){
+			getManagedBean().setSearchContractListDD(getCrListSearchContractListDD());
+			
+			if(getCrListSearchContractListDD() == 7 || getCrListSearchContractListDD() == 8){
+				 getManagedBean().setTypes(true);
+			 }
+			 if(getCrListSearchContractListDD() == 7){
+				 getManagedBean().setFulfilmentTypes(true);
+			 }
+			 if(getCrListSearchContractListDD() == 8){
+				 getManagedBean().setFulfilmentTypes(false);
+			 }
+		}
+		if(getCrListSearchContractCriteria()!=null){
+			getManagedBean().setSearchContractCriteria(getCrListSearchContractCriteria());
+			getManagedBean().setTypes(false);
+		}
+		if(getCrListSearchTypesDD()!=null){
+			getManagedBean().setSearchTypesDD(getCrListSearchTypesDD());
+			getManagedBean().setTypes(true);
+		}
+		return "crList?faces-redirect=true";
+		//preRenderContractList();
+		//end-13984 - CrList - Back Button
 
 	}
 
@@ -5880,7 +5916,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		SelectItem[] items = null;
 		FacesScopes face = new FacesScopes();
 		try {
-			getManagedBean().setSearchContractCriteria(null);
+			//start-13984 - CrList - Back Button
+			if(getManagedBean().getBackFlag() !=1){
+				getManagedBean().setSearchContractCriteria(null);
+				getManagedBean().setSearchTypesDD(null);				
+			}else{
+				getManagedBean().setBackFlag(0);
+			}
+			//start-13984 - CrList - Back Button
 			List<String> contractCriteriaList = new ArrayList<String>();
 			contractCriteriaList.add(ResourceBundleUtils.getMessage(
 					"lbl.fl.physical.contract.no", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -6017,6 +6060,28 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 * 
 	 */
 	public void searchContract(){
+		//start-13984 - CrList - Back Button
+		if(getManagedBean().getSearchContractListDD()!=null){
+			setCrListSearchContractListDD(getManagedBean().getSearchContractListDD());
+			
+			if(getManagedBean().getSearchContractListDD() == 7 || getManagedBean().getSearchContractListDD() == 8){
+				if(getManagedBean().getSearchTypesDD()!=null){
+					setCrListSearchTypesDD(getManagedBean().getSearchTypesDD());
+					setCrListSearchContractCriteria(null);
+				}
+			 }else{
+				 if(getManagedBean().getSearchContractCriteria()!=null){
+						setCrListSearchContractCriteria(getManagedBean().getSearchContractCriteria());
+						setCrListSearchTypesDD(null);
+					}
+			 } 
+		}else{
+			setCrListSearchContractListDD(null);
+			setCrListSearchContractCriteria(null);
+			setCrListSearchTypesDD(null);
+			
+		}
+		//end-13984 - CrList - Back Button
 		getManagedBean().getActiveContractDataModel().reloadData();
 	}
 	
@@ -6557,6 +6622,32 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	public void setschno(String schNo) {
 		this.schno = schNo;
 	}
+	
+	//start-13984 - CrList - Back Button
+	public Long getCrListSearchContractListDD() {
+		return CrListSearchContractListDD;
+	}
+	@SuppressWarnings("static-access")
+	public void setCrListSearchContractListDD(Long CrListSearchContractListDD) {
+		this.CrListSearchContractListDD = CrListSearchContractListDD;
+	}
+	
+	public String getCrListSearchContractCriteria() {
+		return CrListSearchContractCriteria;
+	}
+	@SuppressWarnings("static-access")
+	public void setCrListSearchContractCriteria(String CrListSearchContractCriteria) {
+		this.CrListSearchContractCriteria = CrListSearchContractCriteria;
+	}
+	
+	public String getCrListSearchTypesDD() {
+		return CrListSearchTypesDD;
+	}
+	@SuppressWarnings("static-access")
+	public void setCrListSearchTypesDD(String CrListSearchTypesDD) {
+		this.CrListSearchTypesDD = CrListSearchTypesDD;
+	}
+	//end-13984 - CrList - Back Button
 	
 	//26279 - start
 	public void viewDisciplinaryAction() {
