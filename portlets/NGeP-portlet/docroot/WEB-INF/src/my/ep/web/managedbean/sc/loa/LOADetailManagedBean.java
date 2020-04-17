@@ -273,10 +273,6 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private String suppConfirmMsgAccept;
 	private String suppConfirmMsgReject;
 	
-	// Flag to enable Performance Bond for Direct Purchase.
-	private boolean enablePBForDP;
-	private boolean disablePerformanceBondForDP;
-	
 	private PmOrgProfile ministryOrgProfile;
 
 	private boolean selectAll;
@@ -1557,25 +1553,9 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 		this.suppConfirmMsgReject = suppConfirmMsgReject;
 	}
 
-	/**
-	 * @return the enablePBForDP
-	 */
-	public boolean isEnablePBForDP() {
-		return enablePBForDP;
-	}
-
-	/**
-	 * @param enablePBForDP the enablePBForDP to set
-	 */
-	public void setEnablePBForDP(boolean enablePBForDP) {
-		this.enablePBForDP = enablePBForDP;
-	}
-
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-
-	
 
 	public PmOrgProfile getMinistryOrgProfile() {
 		return ministryOrgProfile;
@@ -1583,20 +1563,6 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 
 	public void setMinistryOrgProfile(PmOrgProfile ministryOrgProfile) {
 		this.ministryOrgProfile = ministryOrgProfile;
-	}
-
-	/**
-	 * @return the disablePerformanceBondForDP
-	 */
-	public boolean isDisablePerformanceBondForDP() {
-		return disablePerformanceBondForDP;
-	}
-
-	/**
-	 * @param disablePerformanceBondForDP the disablePerformanceBondForDP to set
-	 */
-	public void setDisablePerformanceBondForDP(boolean disablePerformanceBondForDP) {
-		this.disablePerformanceBondForDP = disablePerformanceBondForDP;
 	}
 
 	public boolean isSelectAll() {

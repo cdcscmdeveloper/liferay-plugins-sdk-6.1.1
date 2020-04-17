@@ -422,9 +422,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 			ScLoa scLoa = resDTO.getScLoa();
 			getManagedBean().setScLoa(scLoa);
-			
-			checkDpIsElisibleForPB(scLoa, false);
-			
+							
 			// Supplier Bank Account
 			getManagedBean().setBankList(resDTO.getSmSupplierBanks());
 
@@ -887,13 +885,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				scLoa.getCurrentStatus(),
 				scLoa.getScLoaRemarks(), ScLoaRemark.class));
 
+		// check agreement
+		checkAgreementMandatory();
+
 		// check performance bond
 		checkPerformanceBondMandatory();
-
-		// check agreement
-		if (!getManagedBean().isEnablePBForDP()) {
-			checkAgreementMandatory();
-		}
 		
 		//Enhancement #24259 #24269
 //		scLoa = calcBondAmount(scLoa, false);
@@ -5034,7 +5030,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			// back to dp loa list
 			if(getManagedBean().getSourceId() != null){
 				DpLOABackingBean dpLOABackingBean = new DpLOABackingBean();
-				dpLOABackingBean.retrieveLOAList(getManagedBean().getSourceId(), true);
+				dpLOABackingBean.retrieveLOAList(getManagedBean().getSourceId());
 			}
 		}
 
@@ -5090,118 +5086,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		System.out.println("____ checkPerformanceBondMandatory docId: "+loa.getScLoiLoa().getDocId()
 				+" docType: " +loa.getScLoiLoa().getDocType() +" isBondReq: "+isBondReq+" overallContractAmtOrLoaAmt: "+overallContractAmtOrLoaAmt);
 		
-		//To enable Performance Bond for Direct Purchase - Enhancement #25144- Starte.
-		checkDpIsElisibleForPB(loa, true);
-		//To enable Performance Bond for Direct Purchase - Enhancement #25144 - End.
-		
 		if(loa.isBrandNew()){
-			if (getManagedBean().isEnablePBForDP()) {
-				getManagedBean().setBondReqSelectedVal(null);
-				getManagedBean().setAgreemetSelectedVal(null);
-			} else {
-				loa.setBondReq(isBondReq);
-			}
-		} else {
-			if (getManagedBean().isEnablePBForDP()) {
-				if (getManagedBean().getScLoa().isBondReq()) {
-					getManagedBean().setBondReqSelectedVal(getManagedBean().getYesParameterId());
-				} else {
-					getManagedBean().setBondReqSelectedVal(getManagedBean().getNoParameterId());
-				}
-				
-				if (getManagedBean().getScLoa().isAgreementReq()) {
-					getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());
-				} else {
-					getManagedBean().setAgreemetSelectedVal(getManagedBean().getNoParameterId());
-				}
-			}
+			loa.setBondReq(isBondReq);
 		}
 		getManagedBean().setPerformanceBondMandatory(isBondReq);
-	}
-
-	/**
-	 * To check whether Direct Purchase is eligible or not to enable Perofrmance Bond.
-	 * @param loa
-	 */
-	private void checkDpIsElisibleForPB(ScLoa loa, boolean userIdRequired) {
-		log.info("Entered " + this.getClass().getName() + ".checkDpIsElisibleForPB(): loaNo is: " + loa.getLoaNo() + "Doc Type is: " + loa.getScLoiLoa());
-		if(loa.getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_PURCHASE_REQUEST)) {
-			log.info(this.getClass().getName() + ".checkDpIsElisibleForPB(): loaNo is: " + loa.getLoaNo());
-			log.info(this.getClass().getName() + ".checkDpIsElisibleForPB(): DocType is: " + ParameterConst.DOCTYPE_PURCHASE_REQUEST);
-			log.info(this.getClass().getName() + ".checkDpIsElisibleForPB(): Source ID is: " + getManagedBean().getSourceId());
-			DpLOABackingBean dpLOABackingBean = new DpLOABackingBean();
-			Map<String,String> params = FacesContext.getCurrentInstance()
-					.getExternalContext().getRequestParameterMap();
-			String requestNoteDtlId = params.get("requestNoteDtlId");
-			if (null == getManagedBean().getSourceId() || StringUtils.isEmpty(requestNoteDtlId)) {
-				if (null != loa.getScLoiLoa() 
-					&& null != loa.getScLoiLoa().getFulfilmentTypeCode()
-					&& (loa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
-					|| loa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN))
-					&& null != loa.getScQuote() && null != loa.getScQuote().getProcurementType() 
-					&& ParameterTypeConst.PROCUREMENT_TYPE.equals(loa.getScQuote().getProcurementType().getParameterType()) 
-						&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(loa.getScQuote().getProcurementType().getParameterCode())) {
-						log.info(this.getClass().getName() + ".checkDpIsElisibleForPB(): condition satisfied to enable PB."); 
-						getManagedBean().setEnablePBForDP(true);
-						if (StringUtils.isEmpty(getManagedBean().getYesParameterId())) {
-							getManagedBean().setYesParameterId(String.valueOf(getParameterIdByTypeAndCode(ParameterTypeConst.YES_NO_FLAG, ParameterConst.COMPLIANCE_STATUS_COMPLIANCE.toUpperCase())));
-						}
-						
-						if (StringUtils.isEmpty(getManagedBean().getNoParameterId())) {
-							getManagedBean().setNoParameterId(String.valueOf(getParameterIdByTypeAndCode(ParameterTypeConst.YES_NO_FLAG, ParameterConst.COMPLIANCE_STATUS_NOT_COMPLIANCE.toUpperCase())));
-						}
-					}
-			}
-			
-			if (getManagedBean().isEnablePBForDP() || null == getManagedBean().getSourceId()) {
-				return;
-			}
-			
-			log.info(this.getClass().getName() + ".checkDpIsElisibleForPB(): requestNoteDtlId is: " + requestNoteDtlId);
-			dpLOABackingBean.retrieveLOAList(getManagedBean().getSourceId(), userIdRequired);
-			if (StringUtils.isNotEmpty(requestNoteDtlId) && null != dpLOABackingBean.getManagedBean() && null != dpLOABackingBean.getManagedBean().getPurchaseRequestList()
-					&& dpLOABackingBean.getManagedBean().getPurchaseRequestList().size() > 0) {
-					
-				purchaseRequestLoop: for (ScPurchaseRequest scPurchaseRequest : dpLOABackingBean.getManagedBean().getPurchaseRequestList()) {
-					if (null != scPurchaseRequest.getRequestNoteDtls()
-							&& scPurchaseRequest.getRequestNoteDtls().size() > 0) {
-						for (ScRequestNoteDtl scRequestNoteDtl : scPurchaseRequest.getRequestNoteDtls()) {
-							if (scRequestNoteDtl.getRequestNoteDtlId().equals(Long.valueOf(requestNoteDtlId))) {
-								log.info(this.getClass().getName() + ".checkDpIsElisibleForPB(): results found ");
-								PmParameterDesc procurementType = getParameterDescByParamTypeAndParamCode(scRequestNoteDtl.getProcurementType());
-								PmParameterDesc fulfilmentType = getParameterDescByParamTypeAndParamCode(scRequestNoteDtl.getFulfilmentType());
-								if (null != procurementType 
-										&& null != procurementType.getPmParameter() 
-										&& null != procurementType.getPmParameter().getParameterId()
-										&& null != fulfilmentType 
-										&& null != fulfilmentType.getPmParameter() 
-										&& null != fulfilmentType.getPmParameter().getParameterId()
-										) {
-									log.info(this.getClass().getName() + ".checkDpIsElisibleForPB(): procurementType ID is: " + procurementType.getPmParameter().getParameterId());
-									log.info(this.getClass().getName() + ".checkDpIsElisibleForPB(): fulfilmentType ID is: " + fulfilmentType.getPmParameter().getParameterId());
-									if (ParameterTypeConst.PROCUREMENT_TYPE.equals(procurementType.getPmParameter().getParameterType()) 
-											&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(procurementType.getPmParameter().getParameterCode()) 
-											&& (fulfilmentType.getPmParameter().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
-													|| fulfilmentType.getPmParameter().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN))) {
-										getManagedBean().setEnablePBForDP(true);
-										if (StringUtils.isEmpty(getManagedBean().getYesParameterId())) {
-											getManagedBean().setYesParameterId(String.valueOf(getParameterIdByTypeAndCode(ParameterTypeConst.YES_NO_FLAG, ParameterConst.COMPLIANCE_STATUS_COMPLIANCE.toUpperCase())));
-										}
-										
-										if (StringUtils.isEmpty(getManagedBean().getNoParameterId())) {
-											getManagedBean().setNoParameterId(String.valueOf(getParameterIdByTypeAndCode(ParameterTypeConst.YES_NO_FLAG, ParameterConst.COMPLIANCE_STATUS_NOT_COMPLIANCE.toUpperCase())));
-										}
-										log.info(this.getClass().getName() + ".checkDpIsElisibleForPB(): Enabled Performance Bond for loaNo is: " + loa.getLoaNo());
-									}
-								}
-								break purchaseRequestLoop;
-							}
-						}
-					}
-				}
-			}
-		}
-		log.info("Exit " + this.getClass().getName() + ".checkDpIsElisibleForPB(): loaNo is: " + loa.getLoaNo());
 	}
 
 	/**
