@@ -322,6 +322,8 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private static String orgCode;
     private static String orgName;
     //13984-end
+    private static int backFlag; //13984 - CrList - Back Button
+    
 	private class ActiveContractPagingDataModel extends PagingDataModel<VCtActiveContract> {
 		
 		/** The Constant serialVersionUID. */
@@ -453,9 +455,13 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 				ContractResDTO resDTO = contractSO.retrieveActiveContractList(contractReqDTO);
 				
 				//13984-start
+				String orgCode = "";
+				String orgName = "";
 	    		OrgProfileResDTO orgResDTO = profileSO.retrieveOrgProfileDtlByProfileId(reqDTO);
-	            String orgCode = orgResDTO.getPmOrgProfile().getOrgCode();
-				String orgName = orgResDTO.getPmOrgProfile().getOrgName();
+	    		if(orgResDTO != null && orgResDTO.getPmOrgProfile() !=null){
+	    			orgCode = orgResDTO.getPmOrgProfile().getOrgCode();
+					orgName = orgResDTO.getPmOrgProfile().getOrgName();
+	    		}
 				//13984-end
 				
 				IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(
@@ -3155,4 +3161,14 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.orgName = orgName;
 	}
 	//13984-end
+
+	//start-13984 - CrList - Back Button
+	public int getBackFlag() {
+		return backFlag;
+	}
+
+	public void setBackFlag(int backFlag) {
+		this.backFlag = backFlag;
+	}
+	//start-13984 - CrList - Back Button
 }
