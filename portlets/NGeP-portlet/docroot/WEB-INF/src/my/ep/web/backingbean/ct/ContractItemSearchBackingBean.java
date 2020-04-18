@@ -105,7 +105,7 @@ public class ContractItemSearchBackingBean extends BaseBackingBean<ContractItemS
 							getManagedBean().getItemname().equals("") &&
 							getManagedBean().getItemstatus() == null &&
 							getManagedBean().getItemtype()== null &&
-							getManagedBean().getUOM().equals("") &&	
+							getManagedBean().getSelectedSearchItem() == null &&	
 							getManagedBean().getSkuno().equals("") &&
 							getManagedBean().getTypeofgoods()== null  )
 				{
@@ -118,40 +118,23 @@ public class ContractItemSearchBackingBean extends BaseBackingBean<ContractItemS
 					ContractBackingBean ccBB = new ContractBackingBean();
 					ccBB.getManagedBean().setSelectedItem(null);
 					ccBB.getManagedBean().setServiceselectedItem(null);
-					if(getManagedBean().getItemtype().equals(ParameterConst.ITEM_TYPE_PRODUCT))
-					{
-						getManagedBean().getServiceListingPagingDataModel().resetData();
+					if(getManagedBean().getItemtype().equals(ParameterConst.ITEM_TYPE_PRODUCT)){
 						getManagedBean().getContractListingPagingDataModel().reloadData();
-						//getManagedBean().prodValue(true);
-						if(ccBB.getManagedBean().getCtItemList().size() > 0 || !ccBB.getManagedBean().getCtItemList().isEmpty()){
+
 							getManagedBean().setItemProductExist(true);
-						}else{
-							getManagedBean().setItemProductExist(false);
-							getManagedBean().setItemProductNotExist(true);
-						}
-						getManagedBean().setItemServiceExist(false);
-						getManagedBean().setItemServiceNotExist(false);
-						//log.info("Search function executed Prodcut"+ParameterConst.ITEM_TYPE_PRODUCT+"  "+getManagedBean().getItemtype()); 						
-					}else if(getManagedBean().getItemtype().equals(ParameterConst.ITEM_TYPE_SERVICE))
-					{
-						  getManagedBean().getContractListingPagingDataModel().resetData();
-						 // getManagedBean().resetCircularListingPagingDataModel();
+							getManagedBean().setItemServiceExist(false);
+							
+					}else if(getManagedBean().getItemtype().equals(ParameterConst.ITEM_TYPE_SERVICE)){
+
 						  getManagedBean().getServiceListingPagingDataModel().reloadData();
-						  //getManagedBean().serviceValue(true);
-							if(ccBB.getManagedBean().getCtItemServiceList().size() > 0 || !ccBB.getManagedBean().getCtItemServiceList().isEmpty()){
+
 								getManagedBean().setItemServiceExist(true);
-							}else{
-								getManagedBean().setItemServiceExist(false);
-								getManagedBean().setItemServiceNotExist(true);
-							}
-							getManagedBean().setItemProductExist(false);
-							getManagedBean().setItemProductNotExist(false);
-						//log.info("Search function executed Service"+ParameterConst.ITEM_TYPE_SERVICE+"  "+getManagedBean().getItemtype()); 
+
+							getManagedBean().setItemProductExist(false); 
 					}else if(getManagedBean().getItemtype().equals(ParameterConst.ITEM_TYPE_PRODUCT_AND_SERVICE))
 					{
 						  getManagedBean().getContractListingPagingDataModel().reloadData();
 						  getManagedBean().getServiceListingPagingDataModel().reloadData(); 
-						  //getManagedBean().allValue(true);
 						  
 							if(ccBB.getManagedBean().getCtItemList().size() > 0 || !ccBB.getManagedBean().getCtItemList().isEmpty()){
 								getManagedBean().setItemProductExist(true);
@@ -165,9 +148,7 @@ public class ContractItemSearchBackingBean extends BaseBackingBean<ContractItemS
 							}else{
 								getManagedBean().setItemServiceExist(false);
 								getManagedBean().setItemServiceNotExist(false);
-							}
-						 
-						  //log.info("Search function executed Product and Service"+ParameterConst.ITEM_TYPE_PRODUCT_AND_SERVICE+"  "+getManagedBean().getItemtype()); 
+							} 
 					}				
 				}else if(getManagedBean().getItemtype()== null)
 				{
