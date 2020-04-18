@@ -352,8 +352,6 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	private boolean bpkApprover;
 	//26059 - end
 	
-	private List<PmUser> availableUsers;//26221
-	
     /**
      * Instantiates a new request note managed bean.
      */
@@ -2064,12 +2062,4 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 		this.bpkApprover = bpkApprover;
 	}
 	//26059 - end
-
-	public List<PmUser> getAvailableUsers() {
-		return availableUsers;
-	}
-
-	public void setAvailableUsers(List<PmUser> availableUsers) {
-		this.availableUsers = availableUsers;
-	}
 }
