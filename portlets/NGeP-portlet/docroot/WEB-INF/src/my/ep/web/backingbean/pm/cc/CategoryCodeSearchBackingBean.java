@@ -739,6 +739,15 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 							pmCategoryL3.getCategoryL3Code() + " - " + pmCategoryL3.getCategoryName()));
 				}
 			}
+		} else { 
+			//27859 Start - 3rd level category didnot appear
+			
+			for(PmCategoryL3 pmCategoryL3 : resDTO.getCategoryL3List()) {
+				log.info("out pmCategoryL3.getCategoryName(): " + pmCategoryL3.getCategoryName());
+				selectItems.add(new SelectItem(pmCategoryL3.getCategoryL3Id(), 
+						pmCategoryL3.getCategoryL3Code() + " - " + pmCategoryL3.getCategoryName()));
+			}
+			//27859 end - 3rd level category didnot appear
 		}
 		//27438, 27613, 27673: Disciplinary Action - end
 		
