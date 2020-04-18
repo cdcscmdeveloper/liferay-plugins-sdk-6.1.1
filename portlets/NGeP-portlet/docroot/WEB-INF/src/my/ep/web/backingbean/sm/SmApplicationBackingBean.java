@@ -6441,6 +6441,24 @@ public class SmApplicationBackingBean extends
 		// end #21946
 		// set personnel field change value
 		SmFieldChangeUtil.initPersonnelChangeField(getManagedBean());
+		//START 27821
+		if(shareHolderBean.getIdentificationType() != null && ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(shareHolderBean.getIdentificationType().getParameterCode())){
+			List<PmCountry> countryLs = SmApplicationUtil.retrievePmCountryList();			
+			
+			for (Iterator<PmCountry> iterator = countryLs.iterator(); iterator.hasNext(); ) {
+				PmCountry country = iterator.next();
+				if(country.getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)){
+			        iterator.remove();
+			        break;
+			    }
+			}
+			getManagedBean().setCountryLs(countryLs);
+			
+		}else{
+			getManagedBean().setCountryLs(SmApplicationUtil.retrievePmCountryList());
+		}
+		//END 27821
+		
 
 	}
 
