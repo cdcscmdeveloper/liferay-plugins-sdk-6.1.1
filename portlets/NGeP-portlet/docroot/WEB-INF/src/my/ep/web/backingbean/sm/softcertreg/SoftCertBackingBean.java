@@ -1194,6 +1194,10 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				}
 			}
 		}
+		
+		//#27371 - start
+		validateSelectedPersonnelInfo();
+		//#27371 - end
 
 		if (softcertSuppDocList == null || softcertSuppDocList.isEmpty()) {
 			getManagedBean().setSuppDocMode("H");
@@ -1240,6 +1244,25 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			}
 		}
 	}
+	
+	// #27371 - start
+	public void validateSelectedPersonnelInfo() {
+		if (getManagedBean().getSoftCertSelectList() != null) {
+			for (SmPersonnel selectedPersonnel : getManagedBean().getSoftCertSelectList()) {
+				log.info("selectedPersonnel: " + selectedPersonnel.getSmAppl().getApplId() + " || " + selectedPersonnel.getPersonnelId() + " || " + selectedPersonnel.getName()
+						+ " || " + selectedPersonnel.getIdentificationNo());
+
+				if (StringUtils.isBlank(selectedPersonnel.getEmail())) {
+					throw new EpException(MessageConst.ERROR_721056, new String[] { selectedPersonnel.getName() });
+				}
+
+				if (StringUtils.isBlank(selectedPersonnel.getMobileNo()) && StringUtils.isBlank(selectedPersonnel.getPhoneNo())) {
+					throw new EpException(MessageConst.ERROR_721057, new String[] { selectedPersonnel.getName() });
+				}
+			}
+		}
+	}
+	// #27371 - end
 
 	/**
 	 * Set selected doc to be uploaded to main list
