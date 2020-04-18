@@ -39,6 +39,7 @@ import my.ep.persistence.entity.ct.dtl.item.CtItemMaxQty;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.type.aut.SearchOperator;
@@ -145,6 +146,9 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	@ManagedProperty(value="#{spkiBackingBean}")
 	private SpkiBackingBean spkiBackingBean;
 	
+	//20997
+	private PmUom selectedSearchItem;
+	
 	public void reassignValue(boolean value) 
 	{
 		readOnly = value;	
@@ -241,11 +245,15 @@ private class ServiceListingPagingDataModel extends PagingDataModel<CtContractIt
 						searchBean.getDataFilterBeans().add(filterBean);
 					}
 				}
-				if(getUOM()!=null && getUOM().length()>0) {					
-					SearchFilterBean filterBean = new SearchFilterBean("scRequestItem.uom.uomName", SearchOperator.OPERATOR_LIKE.value(),getUOM());
+
+				//#20997 - Start-Fixing
+				if(getSelectedSearchItem().getUomName()!=null && getSelectedSearchItem().getUomName().trim().length()>0) {
+					
+					SearchFilterBean filterBean = new SearchFilterBean("scRequestItem.uom.uomName", SearchOperator.OPERATOR_LIKE.value(),getSelectedSearchItem().getUomName());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);
 				}
+				//#20997 - End -Fixing
 				if(getSkuno()!=null && getSkuno().length()>0 ) {
 					SearchFilterBean filterBean = new SearchFilterBean("sku", SearchOperator.OPERATOR_LIKE.value(),getSkuno());
 					filterBean.setCaseInsensitive(true);
@@ -365,11 +373,15 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 					searchBean.getDataFilterBeans().add(filterBean);
 				}
 			}
-			if(getUOM()!=null && getUOM().length()>0) {				
-				SearchFilterBean filterBean = new SearchFilterBean("scRequestItem.uom.uomName", SearchOperator.OPERATOR_LIKE.value(),getUOM());
+			
+			//#20997 - Start-Fixing
+			if(getSelectedSearchItem().getUomName()!=null && getSelectedSearchItem().getUomName().trim().length()>0) {
+				
+				SearchFilterBean filterBean = new SearchFilterBean("scRequestItem.uom.uomName", SearchOperator.OPERATOR_LIKE.value(),getSelectedSearchItem().getUomName());
 				filterBean.setCaseInsensitive(true);
 				searchBean.getDataFilterBeans().add(filterBean);
 			}
+			//#20997 - End -Fixing
 			if(getSkuno()!=null && getSkuno().length()>0 ) {				
 				SearchFilterBean filterBean = new SearchFilterBean("sku", SearchOperator.OPERATOR_LIKE.value(),getSkuno());
 				filterBean.setCaseInsensitive(true);
@@ -1365,5 +1377,16 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 		this.itemServiceNotExist = itemServiceNotExist;
 	}
 	
+	//#20997 - Start
+	// For Searching Autocomplete type UOM
+	public PmUom getSelectedSearchItem() {
+		if (selectedSearchItem == null)
+			selectedSearchItem = new PmUom();
+		return selectedSearchItem;
+	}
+	public void setSelectedSearchItem(PmUom selectedSearchItem) {
+		this.selectedSearchItem = selectedSearchItem;
+	}
+	//#20997 - End
 
 }
