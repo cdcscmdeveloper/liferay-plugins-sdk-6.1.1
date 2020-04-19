@@ -20,18 +20,10 @@
 			<ui:include
 				src="/xhtml/sc/loa/cancellation/cancelLoaInfo.xhtml" />
 			<table style="border: 0px; align: center;" width="100%">
-
 			</table>
-
 		</p:outputPanel>
-
 		<ui:include
 			src="/xhtml/sc/loa/cancellation/cancelLoaReqDetail.xhtml" />
-
-
-
-
-
 
 		<p:panel header="#{lbl['lbl.sc.approve.list']}" id="approverId"
 			toggleable="true" toggleSpeed="500">
@@ -59,15 +51,10 @@
 				</tr>
 			</table>
 		</p:panel>
-
-
 		<ac:scRemarkAndAttachment
 			remarkList="#{lOACancelDetailBackingBean.managedBean.scLoa.scLoaRemarks}"
 			showAttachment="true"
 			readonly="false" />
-
-
-
 
 		<p:panel header="#{lbl['lbl.sc.history']}" toggleable="true">
 			<p:dataTable id="apprHistTbl" var="scLoaApproval"
@@ -81,7 +68,6 @@
 					<h:outputText value="#{scLoaApproval.approver.userName}"
 						rendered="#{scLoaApproval.approverActionDate != null}" />
 				</p:column>
-
 				<p:column headerText="#{lbl['lbl.sc.status']}" style="width:35%">
 				#{lOACancelDetailBackingBean.getApprovalActionDisplayName(scLoaApproval.approverAction)}
 			</p:column>
@@ -95,40 +81,5 @@
 			</p:dataTable>
 		</p:panel>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	</ui:define>
-
 </ui:composition>
