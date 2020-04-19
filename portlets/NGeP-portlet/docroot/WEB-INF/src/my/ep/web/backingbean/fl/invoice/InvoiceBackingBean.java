@@ -711,7 +711,14 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 							}
 							//Factoring company
 							finOrgReqDTO.setFinancialOrgId(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialOrgId());
-							finOrgResDTO = financialOrgSO.retriveFinAccDtlByFinOrgId(finOrgReqDTO);
+							//Start #27880
+							String accountNo = contractSupplierResDTO.getFactoring().getBankAccountNo();	
+
+							finOrgReqDTO.setAccountNo(accountNo);
+							//finOrgResDTO = financialOrgSO.retriveFinAccDtlByFinOrgId(finOrgReqDTO);
+							finOrgResDTO = financialOrgSO.retriveFinAccDtlByFinOrgIdAccNo(finOrgReqDTO);
+							//End #27880
+
 							if(finOrgResDTO.isSuccessful()) {
 								if(finOrgResDTO.getPmAddressType()!=null){
 									getManagedBean().getInvoice().setPaymentBankAddress(convertFinAccAddressToFlAddress(finOrgResDTO.getPmAddressType())); 
