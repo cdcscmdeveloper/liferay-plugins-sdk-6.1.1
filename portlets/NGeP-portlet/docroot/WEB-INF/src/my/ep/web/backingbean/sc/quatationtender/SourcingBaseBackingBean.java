@@ -3448,9 +3448,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							//+ "|" + answer.getTplSpecZoneQty()
 							//+ "|" + answer.getTplSpecQuestion().getTplSpecMaster().getTplSpecZone().getSpecZoneId()
 							);
-					if(answer.getTplSpecZoneDtls()!=null)
+					if(master.getTplSpecZone().getTplSpecZoneDtls()!=null)
 					{
-						log.info("Size of the Zone Dtls" +answer.getTplSpecZoneDtls().size());
+						log.info("Size of the Zone Dtls" +master.getTplSpecZone().getTplSpecZoneDtls().size());
 						log.info("Size of the Zone Qty" +answer.getTplSpecZoneQty());
 					}
 					//log.info("TplSpecQuestion for Delivery Term:-------> "+answer.getTplSpecQuestion().getClDeliveryTerm());
