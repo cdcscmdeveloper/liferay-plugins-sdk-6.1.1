@@ -944,7 +944,7 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 
 	public void requestNewColor() {
 
-		if (this.getManagedBean().getRequestExtCode().isRequestColor()) {
+		if (this.getManagedBean().isRequestColor()) {
 			this.getManagedBean().setColorDisable(false);
 		} else {
 			this.getManagedBean().setColorDisable(true);
@@ -953,7 +953,7 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 
 	public void requestNewType() {
 
-		if (this.getManagedBean().getRequestExtCode().isRequestType()) {
+		if (this.getManagedBean().isRequestType()) {
 			this.getManagedBean().setTypeDisable(false);
 		} else {
 			this.getManagedBean().setTypeDisable(true);
@@ -962,7 +962,7 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 
 	public void requestNewBrand() {
 
-		if (this.getManagedBean().getRequestExtCode().isRequestBrand()) {
+		if (this.getManagedBean().isRequestBrand()) {
 			this.getManagedBean().setBrandDisable(false);
 		} else {
 			this.getManagedBean().setBrandDisable(true);
@@ -971,7 +971,7 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 
 	public void requestNewMeasurement() {
 
-		if (this.getManagedBean().getRequestExtCode().isRequestMeasurement()) {
+		if (this.getManagedBean().isRequestMeasurement()) {
 			this.getManagedBean().setMeasurementDisable(false);
 		} else {
 			this.getManagedBean().setMeasurementDisable(true);
@@ -1002,10 +1002,10 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 		log.info(".................addMoreRequest...................");
 			
 		this.getManagedBean().setEditMode(false);
-		this.getManagedBean().getRequestExtCode().setRequestType(false);
-		this.getManagedBean().getRequestExtCode().setRequestBrand(false);
-		this.getManagedBean().getRequestExtCode().setRequestMeasurement(false);
-		this.getManagedBean().getRequestExtCode().setRequestColor(false);
+		this.getManagedBean().setRequestType(false);
+		this.getManagedBean().setRequestBrand(false);
+		this.getManagedBean().setRequestMeasurement(false);
+		this.getManagedBean().setRequestColor(false);
 
 		this.getManagedBean().getRequestExtCode().setTempCode(this.getManagedBean().getSelectedLovUnspsc().getUnspscCode());
 		this.getManagedBean().getRequestExtCode().setTempTitle(this.getManagedBean().getSelectedLovUnspsc().getUnspscTitle());
@@ -1027,11 +1027,11 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 		//this.getManagedBean().setRequestExtCode(new CmRequestCode());
 
 		// ///check that there be at least one new request
-		if (!this.getManagedBean().getRequestExtCode().isRequestType()
-				&& !this.getManagedBean().getRequestExtCode().isRequestBrand()
-				&& !this.getManagedBean().getRequestExtCode()
-				.isRequestMeasurement()
-				&& !this.getManagedBean().getRequestExtCode().isRequestColor()) {
+		if (!this.getManagedBean().isRequestType()
+				&& !this.getManagedBean().isRequestBrand()
+				&& !this.getManagedBean().
+			     isRequestMeasurement()
+				&& !this.getManagedBean().isRequestColor()) {
 			throw new EpException(MessageConst.ERROR_716010);
 
 		}
@@ -1050,8 +1050,8 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 		}
 	
 		// type
-	 if (this.getManagedBean().getRequestExtCode().isRequestType()== true) {
-		if (this.getManagedBean().getTempTypeName()== null) {
+	 if (this.getManagedBean().isRequestType()== true) {     
+		 if (this.getManagedBean().getTempTypeName().isEmpty()) {
 		
 			throw new EpException(MessageConst.ERROR_100022,
 					new String[] { ResourceBundleUtils.getMessage(
@@ -1075,8 +1075,8 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 			}
 	 }
 		// brand
-	if (this.getManagedBean().getRequestExtCode().isRequestBrand()== true) {
-		if (this.getManagedBean().getTempBrandName()== null) {
+	if (this.getManagedBean().isRequestBrand()== true) {
+		if (this.getManagedBean().getTempBrandName().isEmpty()) {
 			
 
 			throw new EpException(MessageConst.ERROR_100022,
@@ -1100,8 +1100,8 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 		}
 	}
 		// color
-	if (this.getManagedBean().getRequestExtCode().isRequestColor()== true) {	
-		 if (this.getManagedBean().getTempColorName()== null) {
+	if (this.getManagedBean().isRequestColor()== true) {	
+		 if (this.getManagedBean().getTempColorName().isEmpty()) {
 			
 
 			throw new EpException(MessageConst.ERROR_100022,
@@ -1125,8 +1125,8 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 		}	
 	}
 		// measurement
-	if (this.getManagedBean().getRequestExtCode().isRequestMeasurement()== true) {
-		if (this.getManagedBean().getTempMeasurementName()== null) {
+	if (this.getManagedBean().isRequestMeasurement()== true) {
+		if (this.getManagedBean().getTempMeasurementName().isEmpty()) {
 			
 
 			throw new EpException(MessageConst.ERROR_100022,
@@ -1179,6 +1179,10 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 		this.getManagedBean().setBrandDisable(false);
 		this.getManagedBean().setMeasurementDisable(false);
 		this.getManagedBean().setColorDisable(false);
+		this.getManagedBean().setRequestType(false);
+		this.getManagedBean().setRequestBrand(false);
+		this.getManagedBean().setRequestMeasurement(false);
+		this.getManagedBean().setRequestColor(false);
 		
 
 		RequestContext.getCurrentInstance().execute("extensionPopUp.hide();");
@@ -1187,11 +1191,7 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 	
 	public void editExtensionRequest(int index){
 		
-		this.getManagedBean().getRequestExtCode().setRequestType(false);
-		this.getManagedBean().getRequestExtCode().setRequestBrand(false);
-		this.getManagedBean().getRequestExtCode().setRequestMeasurement(false);
-		this.getManagedBean().getRequestExtCode().setRequestColor(false);
-		
+
 		this.getManagedBean().setEditMode(true);
 		this.getManagedBean().setEditModeIndex(index);
 		if(this.getManagedBean().getRequestExtCodeList()!=null && this.getManagedBean().getRequestExtCodeList().size()>0){
@@ -1372,24 +1372,32 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 	}
 	
 	
-	
-	
 	public String submitIntoDB() {
 
 		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",
 				ICodificationSO.class);
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 		CodificationResDTO resDTO = null;
-					
-	   for(CmRequestCode code : this.getManagedBean().getRequestExtCodeList()){
-		   
-		reqDTO.getRequestExtList().add(code);
-	   
+		
+		for (CmRequestCode code :  this.getManagedBean().getRequestExtCodeList()){
+		
+		reqDTO.setUnspscCode(this.getManagedBean().getSelectedLovUnspsc().
+				getUnspscCode());
+		resDTO = unspscSO.searchUnspscObj(reqDTO);
+		
+		if (resDTO.getUnspscObj() != null) {
+			
+			log.info("unspscId" + resDTO.getUnspscObj().getUnspscId());
+			log.info("title" + resDTO.getUnspscObj().getUnspscTitle());
+			log.info("titleEng" + resDTO.getUnspscObj().getUnspscTitleEng());
+			log.info("level" + resDTO.getUnspscObj().getUnspscLevel());
+			
+		reqDTO.getCommodityList().add(resDTO.getUnspscObj());
 	   }
-	   
-	   resDTO = unspscSO.publishExtension(reqDTO);
-	
-	
+		reqDTO.getRequestExtList().add(code);
+	   }
+		resDTO = unspscSO.publishExtension(reqDTO);
+					
 		renewSesionObject();
 		
 		FacesMessage fm = new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
