@@ -6443,6 +6443,11 @@ public class SmApplicationBackingBean extends
 			reqDto.setBranchGst(getManagedBean().getSelectedBranch().getGst());
 			reqDto.setSameAsHq(getManagedBean().getSelectedBranch()
 					.isSameAsHq());
+			// #27802 - start
+			if (getManagedBean().isSupplierUser() && getManagedBean().getSelectedShareHolder() != null && getManagedBean().getSelectedShareHolder().getPmUser() != null) {
+				reqDto.setPersonnel(getManagedBean().getSelectedShareHolder());
+			}
+			// #27802 - end
 			SmServiceLookup.getMofRegistrationSO().updateApplication(reqDto);
 		} catch (Exception e) {
 			log.info("error to save appl no:"
