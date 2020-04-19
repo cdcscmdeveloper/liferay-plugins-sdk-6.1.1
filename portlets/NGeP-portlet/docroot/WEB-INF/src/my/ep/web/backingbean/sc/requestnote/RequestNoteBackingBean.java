@@ -4653,7 +4653,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 	
 	//26221 - Start
-	public List<PmUser> getPreparedByApprove(ScRequestNoteDtl requestNoteDtl) {
+	public String getPreparedByApprove(ScRequestNoteDtl requestNoteDtl) {
 		debugLogger("getPreparedByApprove");
 		StringBuilder sb = new StringBuilder();
 		UserReqDTO reqDTO = new UserReqDTO();
