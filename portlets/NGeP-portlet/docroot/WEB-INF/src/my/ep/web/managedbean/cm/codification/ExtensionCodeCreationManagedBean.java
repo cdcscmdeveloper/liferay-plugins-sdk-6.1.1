@@ -144,8 +144,12 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 	
 	private boolean disableSelectBtn;
 	
-
-	
+	//#25551 18042020 - azza - start
+	private boolean requestType = true;
+	private boolean requestBrand = true;
+	private boolean requestMeasurement = true;
+	private boolean requestColor = true;
+	//#25551 18042020 - azza - end
 
 	
 	/** The back to previous page. */
@@ -164,11 +168,6 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 	private IPagingDataModel<CmUnspsc> searchDataModel = new SearchPagingDataModel();
 
 	private String itemTypeParameter;
-
-
-	//private IPagingDataModel<Object[]> extensionSearchItemDataModel = new ExtensionSearchItemDataModel();
-	
-	//private IPagingDataModel<Object[]> keywordExtensionSearchItemDataModel = new KeywordExtensionSearchItemDataModel();
 
 	private SearchFilterBean colorFilterBean = new SearchFilterBean(
 			SearchOperator.OPERATOR_EQUALS.value());
@@ -1189,5 +1188,40 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 		public void setDisableSelectBtn(boolean disableSelectBtn) {
 			this.disableSelectBtn = disableSelectBtn;
 		}
+		
+	//#25551 18042020 - azza - start
+	public boolean isRequestType() {
+	    return requestType;
+	}
+
+	public void setRequestType(boolean requestType) {
+		this.requestType = requestType;
+	}
+	
+	public boolean isRequestBrand() {
+	    return requestBrand;
+	}
+
+	public void setRequestBrand(boolean requestBrand) {
+		this.requestBrand = requestBrand;
+	}
+	
+	public boolean isRequestMeasurement() {
+	    return requestMeasurement;
+	}
+
+	public void setRequestMeasurement(boolean requestMeasurement) {
+		this.requestMeasurement = requestMeasurement;
+	}
+	
+	public boolean isRequestColor() {
+	    return requestColor;
+	}
+
+	public void setRequestColor(boolean requestColor) {
+		this.requestColor = requestColor;
+	}
+	
+	//#25551 18042020 - azza - end
 	
 }
