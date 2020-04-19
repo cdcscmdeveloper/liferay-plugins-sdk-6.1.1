@@ -34,7 +34,7 @@
 						disabled="#{extensionCodeCreationBackingBean.managedBean.typeDisable}">
 						</p:inputText></td>
 				<td><p:selectBooleanCheckbox
-						value="#{extensionCodeCreationBackingBean.managedBean.requestExtCode.requestType}">
+						value="#{extensionCodeCreationBackingBean.managedBean.requestType}">
 						<p:ajax listener="#{extensionCodeCreationBackingBean.requestNewType}"
 							update="requestTypeId"></p:ajax>
 					</p:selectBooleanCheckbox></td>
@@ -47,7 +47,7 @@
 						disabled="#{extensionCodeCreationBackingBean.managedBean.brandDisable}">
 						</p:inputText></td>
 				<td><p:selectBooleanCheckbox
-						value="#{extensionCodeCreationBackingBean.managedBean.requestExtCode.requestBrand}">
+						value="#{extensionCodeCreationBackingBean.managedBean.requestBrand}">
 						<p:ajax listener="#{extensionCodeCreationBackingBean.requestNewBrand}"
 							update="requestBrandId"></p:ajax>
 					</p:selectBooleanCheckbox></td>
@@ -60,7 +60,7 @@
 						disabled="#{extensionCodeCreationBackingBean.managedBean.measurementDisable}">
 						</p:inputText></td>
 				<td><p:selectBooleanCheckbox
-						value="#{extensionCodeCreationBackingBean.managedBean.requestExtCode.requestMeasurement}">
+						value="#{extensionCodeCreationBackingBean.managedBean.requestMeasurement}">
 						<p:ajax listener="#{extensionCodeCreationBackingBean.requestNewMeasurement}"
 							update="requestMeasurementId"></p:ajax>
 					</p:selectBooleanCheckbox></td>
@@ -73,7 +73,7 @@
 						disabled="#{extensionCodeCreationBackingBean.managedBean.colorDisable}">
 						</p:inputText></td>
 				<td><p:selectBooleanCheckbox
-						value="#{extensionCodeCreationBackingBean.managedBean.requestExtCode.requestColor}">
+						value="#{extensionCodeCreationBackingBean.managedBean.requestColor}">
 						<p:ajax listener="#{extensionCodeCreationBackingBean.requestNewColor}"
 							update="requestColorId"></p:ajax>
 					</p:selectBooleanCheckbox></td>
@@ -87,7 +87,7 @@
 
 			<p:commandButton value="#{lbl['lbl.cm.ok']}" 
 				action="#{extensionCodeCreationBackingBean.addNewRequest}"
-				update=":form:addBtnId :form:extCodeCreationId :form:requestExtPopUpId" />
+				update=":form:addBtnId :form:extCodeCreationId :form:requestExtPopUpId :form:btnSubmit" />
 
 			<p:commandButton value="#{lbl['lbl.cm.cancel']}"
 				 immediate="true"

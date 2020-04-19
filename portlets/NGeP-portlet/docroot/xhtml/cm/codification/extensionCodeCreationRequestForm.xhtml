@@ -15,7 +15,8 @@
 
 			<div style="text-align: right; min-height: 40px;">
 				<p:commandButton value="#{lbl['lbl.cm.create.publish']}"
-				     disable="extensionCodeCreationBackingBean.managedBean.disableSelectBtn"
+				     id="btnSubmit"
+				     disabled="#{extensionCodeCreationBackingBean.managedBean.disableSelectBtn}"
                      onclick="extensionCodeCreation.show()"></p:commandButton>
 
 				<div style="float: left; clear: both;">
@@ -46,7 +47,7 @@
 				
 				<p:dataTable id="extCodeCreationId"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" rowIndexVar="rowIndex"
-					value="#{extensionCodeCreationBackingBeann.managedBean.requestExtCodeList}"
+					value="#{extensionCodeCreationBackingBean.managedBean.requestExtCodeList}"
 					var="ext">
 					<p:column>
 						<f:facet name="header">
@@ -81,7 +82,7 @@
 							action="#{extensionCodeCreationBackingBean.editExtensionRequest(rowIndex)}">
 							<p:graphicImage value="/css/images/design/edit.png"></p:graphicImage>
 						</p:commandLink>
-						<p:commandLink style="margin-left: 10px;" update=":form:extCodeCreationId"
+						<p:commandLink style="margin-left: 10px;" update=":form:extCodeCreationId,:form:cmExtensionRequestFormID :form:btnSubmit"
 							title="#{lbl['lbl.btn.delete']}"
 							action="#{extensionCodeCreationBackingBean.deleteExtensionRequest(rowIndex)}">
 							<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
@@ -95,7 +96,7 @@
 					<div style="text-align: right;">
 						<p:commandButton value="#{lbl['lbl.btn.add']}"
 							action="#{extensionCodeCreationBackingBean.addMoreRequest}"
-							update=":form:requestExtPopUpId" onclick="extensionPopUp.show()">
+							update=":form:requestExtPopUpId, :form:btnSubmit" onclick="extensionPopUp.show()">
 						</p:commandButton>
 					</div>
 				</h:panelGroup>
@@ -110,7 +111,7 @@
 		
 		
 			<ac:confirmationPopup id="extensionCodeCreation" widget="extensionCodeCreation"
-				okAction="extensionCodeCreationBackingBean.submitToBPM"
+				okAction="extensionCodeCreationBackingBean.submitIntoDB"
 				width="400" height="100"
 				title="#{lbl['lbl.cm.dialog.cofirm.header']}"
 				content="#{lbl['lbl.cm.dialog.message.extension.code.creation']}"
