@@ -1305,7 +1305,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						filename.append(".docx");
 						scLoaReportAttachment.setFileName(filename.toString());
 						generateAgreementLetterDocFromVelocity(
-								(ScAttachment) scLoaReportAttachment, scLoa, this.getManagedBean().getScQt())
+								(ScAttachment) scLoaReportAttachment, scLoa, this.getManagedBean().getScQt());
 					}else if (SourcingConstants.DOC_DEF_KEY_ACKNOWLEDGEMENT_LOA_RECEIPT
 							.equals(docDefinitionKey)) {
 						filename.append(".pdf");
