@@ -7067,6 +7067,43 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		return validDate;	
 	}
 	
+	//#22211 - show LOA Cancellation Approver Detail
+	public boolean isLOACancelByApprover(){
+		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);		
+		
+		Boolean loaCancelled = false;	
+		Long currentStatusId = getManagedBean().getScLoa().getPmStatus().getStatusId();
+		ScLoa scloa = getManagedBean().getScLoa();		
+		
+		ScLoaApproval scLoaApproval = scloa.getScLoaApproval();
+		PmUser approverUser = null;
+		if (scLoaApproval != null) {
+			approverUser = scLoaApproval.getApprover();
+		}
+		if (approverUser == null) { 
+			approverUser = new PmUser();
+		}
+		getManagedBean().setLoacancelapproverUser(approverUser);
+				
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setRoleCode(getUserRoleCode(scloa.getScLoiLoa().getDocType()));
+		userReqDTO.setOrgProfileId(scloa.getScLoiLoa().getPmOrgProfile().getOrgProfileId());
+		
+		UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
+		getManagedBean().setLoacancelapproverList(userResDTO.getUserList());	
+		
+		scloa.setScLoaRemarks(initializeRemarks(scloa, 
+				scloa.getCurrentStatus(),
+				scloa.getScLoaRemarks(), ScLoaRemark.class));
+		
+		
+		if(currentStatusId.equals(QTStatusConst.LOA_CANCELLATION_APPROVED)){
+			loaCancelled = true;
+		}
+		return loaCancelled;
+	}
+	
 	public void cancelLoa(String outcome) {
 		debugLogger("cancelLoa");
 		this.getManagedBean().setAction(outcome);
