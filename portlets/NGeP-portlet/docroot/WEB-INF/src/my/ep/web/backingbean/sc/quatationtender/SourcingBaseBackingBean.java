@@ -3747,7 +3747,24 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		// #26226 - End
 	}
-	
+
+	/**
+	 * Get Parameter description by parameter for report.
+	 * 
+	 * @param parameter
+	 *            the PmParameter instance.
+	 * @return parameter description
+	 */
+	public String getParameterDescForReport(PmParameter parameter) {
+		if (parameter != null
+				&& StringUtils.isNotBlank(parameter.getParameterType())) {
+			return getParameterDesc(
+					parameter,
+					new FacesScopes().getUserLocale());
+		} else {
+			return null;
+		}
+	}
 	
 	/**
 	 * Get Parameter description by parameter for report.
