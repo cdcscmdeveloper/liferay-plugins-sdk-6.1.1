@@ -55,11 +55,13 @@
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sm.userprofile.action']}" style="text-align: center  !important;">
+					<!-- START 27912 -  Disciplinary Action - 26238 -->
 						<p:commandLink title="#{lbl['lbl.sm.userprofile.edit']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 							action="#{smPersonnelBackingBean.navigateToUpdateUserPage(personnel.personnelId)}" update="@form">
-							<p:graphicImage value="/css/images/design/edit.png" rendered="#{personnel.recordStatusFlg eq 1}" title="#{lbl['lbl.sm.edit']}"></p:graphicImage>
-							<p:graphicImage value="/css/images/design/ico-view.png" rendered="#{personnel.recordStatusFlg eq 8}" title="#{lbl['lbl.sm.view']}"/>
+							<p:graphicImage value="/css/images/design/edit.png" rendered="#{personnel.recordStatusFlg eq 1 and !smPersonnelBackingBean.managedBean.suppInPunishment}" title="#{lbl['lbl.sm.edit']}"></p:graphicImage>
+							<p:graphicImage value="/css/images/design/ico-view.png" rendered="#{personnel.recordStatusFlg eq 8 or smPersonnelBackingBean.managedBean.suppInPunishment}" title="#{lbl['lbl.sm.view']}"/>
 						</p:commandLink>
+						<!-- END 27912 -  Disciplinary Action - 26238 -->
 					</p:column>
 				</p:dataTable>
 			</p:panel>
