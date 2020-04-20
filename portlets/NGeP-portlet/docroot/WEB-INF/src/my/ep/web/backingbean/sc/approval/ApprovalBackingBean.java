@@ -711,7 +711,8 @@ public class ApprovalBackingBean extends
 					committeSO.validateAppointCommitteDtls(committeReqDTO);
 				}
 				
-				if(SCProcessNameConst.APPROVE_CANCELATION.equalsIgnoreCase(taskName)) {
+				if(SCProcessNameConst.APPROVE_CANCELATION.equalsIgnoreCase(taskName) || 
+						SCProcessNameConst.FC_APPROVE_QT_CHANGE.equalsIgnoreCase(taskName)) {
 					FacesContext fc = FacesContext.getCurrentInstance();
 					fc.getApplication().getNavigationHandler()
 							.handleNavigation(fc, null, gpkiSignAction(null));
