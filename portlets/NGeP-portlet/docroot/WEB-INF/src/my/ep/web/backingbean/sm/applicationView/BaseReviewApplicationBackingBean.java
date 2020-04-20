@@ -3134,7 +3134,10 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				getManagedBean().setSelectedSignatoryBankAcct(
 						new SmSupplierBank());
 				removeDeletedFromList(getManagedBean().getSmSupplierBankList());
-				setPersonnelInfo();				
+				setPersonnelInfo();
+				if(getManagedBean().getSmAppl().getSmPersonnels() != null && !getManagedBean().getSmAppl().getSmPersonnels().isEmpty()) {
+					getManagedBean().setSelectedPersonnel(getManagedBean().getSmAppl().getSmPersonnels().get(0));
+				}
 			} else {
 				if (getManagedBean().getSmAppl().getSmCompanyBasic() == null) {
 					getManagedBean().getSmAppl().setSmCompanyBasic(
@@ -3328,6 +3331,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			SupplierSearchResDTO resDTO = getSupplierSearchSO().retrieveSmSupplierBankByAppl(reqDTO);
 			List<SmSupplierBank> smSupplierBankList = resDTO.getSmSupplierBankList();
 			getManagedBean().setSmSupplierBankList(smSupplierBankList);
+			removeDeletedFromList(getManagedBean().getSmSupplierBankList());
 		}	
 	}
 	
