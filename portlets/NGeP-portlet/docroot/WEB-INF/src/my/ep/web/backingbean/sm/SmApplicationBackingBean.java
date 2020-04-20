@@ -3170,6 +3170,8 @@ public class SmApplicationBackingBean extends
 					.equals(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 				validSave = SmApplicationUtil.validateBasicInfoBeforeSave(
 						validSave, getManagedBean(), currentTab);
+				//#27853
+				SmApplicationUtil.validateCoordinate(getManagedBean());
 			}
 			break;
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL:
