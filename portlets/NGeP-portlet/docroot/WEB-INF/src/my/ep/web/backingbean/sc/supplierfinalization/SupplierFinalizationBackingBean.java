@@ -37,6 +37,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
+import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
@@ -49,6 +50,7 @@ import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.comparator.WorklistItemVOComparator;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
+import my.ep.constant.MapKeyEnum;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -1043,6 +1045,12 @@ public class SupplierFinalizationBackingBean extends
 			if (CollectionUtils.isNotEmpty(scQtFinalization.getScQtFinalizationReports())) {
 				scQtFinalization.getScQtFinalizationReports().addAll(getManagedBean().getEvaluationReportList());
 			}
+			// #18685 - Start
+			if (CollectionUtils.isNotEmpty(getManagedBean().getNewBriefingPaperReportList())
+					&& CollectionUtils.isNotEmpty(getManagedBean().getConsolidationBriefingPaperReportList())) {
+				getManagedBean().getNewBriefingPaperReportList().addAll(getManagedBean().getConsolidationBriefingPaperReportList());
+			}
+			// #18685 - End
 			reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
 			validateFinalizationReports(reqDTO);
 			//validateEvaluationReports(SourcingConstants.SUPPLIER_FINALIZATION_TASK);
@@ -7422,7 +7430,134 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		return false;
 	}
 	//19287 #114
+	
+	// #18685 - Start
+	/**
+	 * To download all reports under Evaluation Report tab.
+	 * 
+	 * @throws Exception
+	 *             the exception that would be thrown in case of any error while
+	 *             downloading the report(s)
+	 */
+	public void downloadAllEvaluationReports() throws Exception {
+		debugLogger("downloadAllEvaluationReports");
 
+		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean().getEvaluationReportList();
+		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<ScQtFinalizationReportAttachment>();
+
+		for (int i = 0; i < scQtFinalizationReports.size(); i++) {
+			ScQtFinalizationReportAttachment attachment = scQtFinalizationReports
+					.get(i).getScQtFinalizationReportAttachment();
+			if (attachment == null) {
+				attachment = generateDocumentAttachment(scQtFinalizationReports
+						.get(i));
+				scQtFinalizationReports.get(i)
+						.setScQtFinalizationReportAttachment(attachment);
+			}
+			scAttachments.add(attachment);
+		}
+
+		// Generate all the reports before submission
+		if (!getManagedBean().isSubmit()) {
+			downloadAllFiles("NGeP-Evaluation-Report", scAttachments);
+		}
+	}
+
+	/**
+	 * @param scQtFinalizationReport
+	 * @return
+	 * @throws Exception
+	 */
+	private ScQtFinalizationReportAttachment generateDocumentAttachment(
+			ScQtFinalizationReport scQtFinalizationReport) throws Exception {
+		String definitionType = scQtFinalizationReport.getDefinationType()
+				.getParameterCode();
+		ScQtFinalization scQtFinalization = getManagedBean()
+				.getScQtFinalization();
+
+		ScQtFinalizationReportAttachment reportAttachment = null;
+		// Commented this condition for #18685.
+		/*if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED
+				.equals(definitionType)) {*/
+			String docDefinitionKey = scQtFinalizationReport.getPmDocument()
+					.getDocDefinitionKey();
+			ScQt scQt = getManagedBean().getScQt();
+			reportAttachment = new ScQtFinalizationReportAttachment();
+			reportAttachment.setScQtFinalizationReport(scQtFinalizationReport);
+			reportAttachment.setDocNo(scQtFinalization.getScQt().getQtNo());
+			StringBuilder filename = new StringBuilder();
+			// replace white space due to firefox
+			filename.append(scQtFinalizationReport
+					.getTitle()
+					.replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE,
+							SourcingConstants.UNDER_SCORE)
+					.replaceAll(SourcingConstants.REG_EXP_BACK_SLASH,
+							SourcingConstants.UNDER_SCORE));
+
+			if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT
+					.equals(docDefinitionKey)) {
+				filename.append(".rtf");
+				reportAttachment.setFileName(filename.toString());
+				generateKertasTaklimatPdf(scQt, reportAttachment);
+				// scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
+			} else {
+				debugLogger("No document type exists with the key "
+						+ docDefinitionKey);
+				reportAttachment = null;
+			}
+
+		/*}*/
+		return reportAttachment;
+	}
+
+	private void generateKertasTaklimatPdf(ScQt qt,
+			ScQtFinalizationReportAttachment attachment) throws Exception {
+		debugLogger("generateKertasTaklimatPdf");
+		populateAttachmentDetails(attachment);
+
+		FacesScopes facesScopes = new FacesScopes();
+		long qtId = qt.getQtId();
+		String reportName = ReportConst.SC_SUPPLIER_FINALIZATION_RPT_JSP;
+
+		String estimatedAmountStr = null;
+
+		if (qt.getEstimatedAmount() != null) {
+			estimatedAmountStr = qt.getEstimatedAmount().toString();
+		} else {
+			IQTDetailSO qtDetailSO = null;
+			try {
+				qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+				BigDecimal estimatedAmount = qtDetailSO
+						.getdecryptedEstAmount(qtId);
+				estimatedAmountStr = estimatedAmount.toPlainString();
+			} finally {
+				qtDetailSO = null;
+			}
+		}
+		Map<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put(ReportConst.PARAM_QUOTE_ID_EQ, qtId + "");
+		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes
+				.getUserSessionBean().getUserId() + "");
+		paramMap.put(ReportConst.PARAM_ESTIMATED_AMOUNT, estimatedAmountStr);
+		StringBuilder ulasan = new StringBuilder();
+		List<ScQtRecommendationUlasanRemarks> ulasanRemarks = this.getManagedBean().getScQtFinalization().getScQtRecommendationUlasanRemarks();
+		if (CollectionUtils.isNotEmpty(ulasanRemarks)) {
+			log.info("ulasanremarknotempty");
+			for (ScQtRecommendationUlasanRemarks remark : ulasanRemarks) {
+				if (StringUtils.isNotBlank(remark.getRemark())) {
+					log.info("ulasanremark" + remark.getRemark());
+					ulasan.append(remark.getRemark() + "\n");
+				}
+			}
+		}
+		paramMap.put(ReportConst.PARAM_REMARK,
+				ulasan.length() == 0 ? StringUtils.EMPTY : ulasan.toString());
+		paramMap.put(ReportConst.PARAM_REPORT_OUTPUT_FORMAT, "rtf");
+		generatePdfFromOracle(reportName, paramMap, attachment, false);
+	}
+	
+	// #18685 - End
 }
 
 

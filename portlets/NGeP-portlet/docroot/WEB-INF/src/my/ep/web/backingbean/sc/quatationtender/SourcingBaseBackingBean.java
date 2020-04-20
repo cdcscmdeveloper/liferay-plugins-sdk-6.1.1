@@ -4516,6 +4516,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 									|| finalizationReport.getPmDocument().getDocName().equals(SourcingConstants.TUJUAN_REPORT)
 									|| finalizationReport.getPmDocument().getDocName().equals(SourcingConstants.METODOLOGI_PENILAIAN_REPORT)
 									|| finalizationReport.getPmDocument().getDocName().equals(SourcingConstants.UDPUP_REPORT))) {
+						// #18685 - Start
+						if (null == getManagedBean().getConsolidationBriefingPaperReportList()) {
+							List<ScQtFinalizationReport> consolidationBriefingPaperReportList = new ArrayList<>();
+							getManagedBean().setConsolidationBriefingPaperReportList(consolidationBriefingPaperReportList );
+						}
+						getManagedBean().getConsolidationBriefingPaperReportList().add(finalizationReport);
+						// #18685 - End
 						iterator.remove(); 
 						continue;
 						
