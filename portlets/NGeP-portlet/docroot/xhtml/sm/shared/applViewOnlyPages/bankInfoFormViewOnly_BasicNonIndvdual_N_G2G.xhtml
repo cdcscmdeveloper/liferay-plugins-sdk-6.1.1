@@ -35,7 +35,7 @@
 				</c:if>				
 				<p:column headerText="#{lbl['lbl.sm.bank.status']}">
 					<h:outputText
-						value="#{bankBean.recordStatusFlg == 0 ? lbl['lbl.txt.active'] : lbl['lbl.txt.inactive']}"/>
+						value="#{bankBean.recordStatusFlg == 1 ? lbl['lbl.txt.active'] : lbl['lbl.txt.inactive']}"/>
 				</p:column>
 			</p:dataTable>
 			<p:spacer height="2px;" />			
