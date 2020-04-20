@@ -113,6 +113,9 @@ public class SmPersonnelBackingBean extends
 					SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
 							new String[] { labelNameVal })));
 			getManagedBean().setDisableAddNewUser(true);
+			//START 27912 -  Disciplinary Action - 26238
+			getManagedBean().setSuppInPunishment(true);
+			//END 27912 -  Disciplinary Action - 26238
 			SmCommonUtil.redirectToPage(
 					"/xhtml/sm/userProfileMaintenance/userProfileSearch.xhtml", "", null, null);
 		}
@@ -480,6 +483,11 @@ public class SmPersonnelBackingBean extends
 			getManagedBean().setTempAddress(
 					getManagedBean().getBasicSmPersonnelMailingAddress()
 							.getSmAddress());
+		//START 27912 -  Disciplinary Action - 26238
+		if(getManagedBean().isSuppInPunishment()){
+			getManagedBean().setViewOnlyPersonnel(true);
+		}
+		//END 27912 -  Disciplinary Action - 26238
 		if (getManagedBean().isViewOnlyPersonnel()) {
 			return "basicUserProfileViewOnly.xhtml";
 		} else {
