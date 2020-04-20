@@ -529,7 +529,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		if (StringUtils.isBlank(this.getManagedBean().getSmBusinessAdd().getMapLatitude())
 				|| StringUtils.isBlank(this.getManagedBean().getSmBusinessAdd().getMapLongitude())) {
 			throw new EpException(SmCommonUtil.getMessage("lbl.sm.coordinate.required.msg",
-					new String[] { SmCommonUtil.getMessage("lbl.sm.coordinate", null) }));
+					new String[] { SmCommonUtil.getMessage("lbl.sm.coordinate.company.info", null) }));
 		}
 		
 		if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1){
