@@ -169,16 +169,19 @@
 			<p:column headerText="#{lbl['lbl.sc.purchase.in.default.zone']}"
 				style="width:25%">
 				<h:outputText value="#{itemPrice.ctContractZone.zoneName}" />
+				<h:outputText value="#{lbl['lbl.txt.na']}" rendered="#{itemPrice.ctContractZone.zoneName eq null}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.purchase.in.default.from.qty']}"
 				style="width:10%">
 				<h:outputText value="#{itemPrice.fromQty}" style="float:right" />
+				<h:outputText value="#{lbl['lbl.txt.na']}" rendered="#{itemPrice.fromQty eq null}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.purchase.in.default.to.qty']}"
 				style="width:10%">
 				<h:outputText value="#{itemPrice.toQty}" style="float:right" />
+				<h:outputText value="#{lbl['lbl.txt.na']}" rendered="#{itemPrice.toQty eq null}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.unit.price']}" style="width:15%">
