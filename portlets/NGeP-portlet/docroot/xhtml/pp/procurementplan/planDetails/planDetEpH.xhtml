@@ -120,7 +120,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			<!-- [SIR#12802] - start -->
 			<p:column>
 				<p:selectBooleanCheckbox 
-					disabled="#{!(epItem.brandNew ? epItem.brandNew : epItem.selectable)}" 
+					disabled="#{!(epItem.brandNew ? epItem.brandNew : epItem.selectable) or pPlanBackingBean.managedBean.editable}" 
 					value="#{epItem.deleted}"/>
 			<!-- #24975 -->
 				<p:commandLink id="addUpdateEpHInfo" 
