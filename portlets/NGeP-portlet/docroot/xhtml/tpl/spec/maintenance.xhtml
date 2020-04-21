@@ -203,8 +203,7 @@
 				<p:commandButton id="exportTechSpec" value="#{lbl['lbl.btn.export']}"
 					action="#{templateSpecBackingBean.getTechnicalTemplateSpecFileToExport}"
 					disabled="#{!templateSpecBackingBean.managedBean.enableImportExport or facesContext.validationFailed}" 
-					ajax="false" rendered="#{specMaster.brandNew}"/>
-				<ac:iconTooltip value="#{lbl['lbl.sc.spec.btn.import.export.tooltip']}" rendered="#{specMaster.brandNew}"/> 
+					ajax="false" rendered="#{specMaster.brandNew}"/>				
 			</div>
 			<p:dialog header="#{lbl['lbl.txt.choose.files']}" id="excelDialog" widgetVar="excelDialog" modal="true"
 				width="550" onShow="singleUploadListener(fileUploadWidget);"
