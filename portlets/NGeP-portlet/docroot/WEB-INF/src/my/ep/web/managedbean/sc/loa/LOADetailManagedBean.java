@@ -288,6 +288,8 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 
 	private Boolean flowamt=null;
 
+	//#19336
+		private boolean isValidatewitness=false;
     /**
      * Gets the spki backing bean.
      *
@@ -1625,6 +1627,20 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 
 	public void setLoacancelapproverUser(PmUser loacancelapproverUser) {
 		this.loacancelapproverUser = loacancelapproverUser;
+	}
+
+	/**
+	 * @return the isValidatewitness
+	 */
+	public boolean isValidatewitness() {
+		return isValidatewitness;
+	}
+
+	/**
+	 * @param isValidatewitness the isValidatewitness to set
+	 */
+	public void setValidatewitness(boolean isValidatewitness) {
+		this.isValidatewitness = isValidatewitness;
 	}
 
 }
