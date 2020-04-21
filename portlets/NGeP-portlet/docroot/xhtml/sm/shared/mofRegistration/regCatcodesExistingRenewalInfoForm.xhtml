@@ -152,7 +152,7 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.catCodes.remark']}" rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}" disabledSelection="#{aprvdCatBean.cancelCategory}">
 					<p:inputTextarea autoResize="false" value="#{aprvdCatBean.poRemarks}" maxlength="2000" disabled="#{aprvdCatBean.cancelCategory}"
-						rendered="#{backingBean.managedBean.poUser}" style="white-space:normal;"
+						rendered="#{backingBean.managedBean.poUser}" style="white-space:normal; width: 95%"
 						rows="6" cols="30"
 						label="#{lbl['lbl.sm.catCodes.rejRemarks']} #{aprvdCatBean.pmCategoryL1.categoryL1Code} 
 						#{aprvdCatBean.pmCategoryL2.categoryL2Code} #{aprvdCatBean.pmCategoryL3.categoryL3Code} "
