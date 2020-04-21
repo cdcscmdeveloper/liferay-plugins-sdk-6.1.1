@@ -160,6 +160,9 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	/** The evaluatio stage active index. */
 	private int evaluatioStageActiveIndex;//#25138
 	
+	/** Import & Export */
+	private boolean enableImportExport;//#25633
+	
 	/**
 	 * @return the statecode
 	 */
@@ -960,6 +963,16 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	public void setEvaluatioStageActiveIndex(int evaluatioStageActiveIndex) {
 		this.evaluatioStageActiveIndex = evaluatioStageActiveIndex;
 	}
+	
+/* #21695 END */	
+	
+	//#25633
+	public boolean isEnableImportExport() {
+		return enableImportExport;
+	}
 
-/* #21695 END */		
+	public void setEnableImportExport(boolean enableImportExport) {
+		this.enableImportExport = enableImportExport;
+	}
+	//#25633 - END
 }
