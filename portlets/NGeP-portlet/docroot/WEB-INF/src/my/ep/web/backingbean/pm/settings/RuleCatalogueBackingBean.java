@@ -3105,26 +3105,8 @@ public class RuleCatalogueBackingBean extends
 			PmConfigRuleValue newRuleValue = new PmConfigRuleValue();
 			newRuleValue.setRuleType(configRuleType);
 						
-			//#22113
-			String ruleType = this.getManagedBean()
-					.getSelectedRuleDescType().getRuleType().getRuleType();
 			/*Calendar forwardedEffDate = Calendar.getInstance();
 			Date nextDay;*/
-			BigDecimal lopoDefaultValue = new BigDecimal(14);
-			
-			if (ruleType.equals("LOPO")) {
-				newRuleValue.setRuleNumberValue(lopoDefaultValue);
-				/*if (configRuleValue.getExpDate() != null) {
-					forwardedEffDate.setTime(configRuleValue.getExpDate());
-				}
-				forwardedEffDate.add(Calendar.DATE, 
-						Integer.parseInt("1"));
-				nextDay = forwardedEffDate.getTime();
-				newRuleValue.setEffDate(this.getManagedBean().getTomorrow());*/
-			} 
-			/*else {
-				newRuleValue.setEffDate(this.getManagedBean().getTomorrow());
-			}*/
 			newRuleValue.setEffDate(this.getManagedBean().getTomorrow());
 
 			// if
