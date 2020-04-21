@@ -9,16 +9,15 @@
 		header="#{lbl['lbl.sc.assest.liabilities']}" toggleable="true">
 
 		<h:outputText styleClass="instruction"
-			value="#{lbl['lbl.sc.sp.btn.complete.instruction']}" escape="false"
+			value="#{lbl['lbl.sc.sp.btn.complete.instruction2']}" escape="false"
 			rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly}" />
 
 		<table>
 			<tr>
 				<td><LABEL><ui:fragment rendered="#{!statusHide}">
-							<span class="mandatory">* </span>
 						</ui:fragment>#{lbl['lbl.sc.current.asset']}</LABEL></td>
 				<td colspan="3"><p:inputText id="currentAsset"
-						style="text-align:right;margin-bottom: 5px;" required="true"
+						style="text-align:right;margin-bottom: 5px;"
 						label="#{lbl['lbl.sc.current.asset']}" disabled="#{statusHide}"
 						maxlength="14"
 						value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPAssetLiability.currentAssets}"
@@ -32,10 +31,9 @@
 			</tr>
 			<tr>
 				<td><LABEL><ui:fragment rendered="#{!statusHide}">
-							<span class="mandatory">* </span>
 						</ui:fragment>#{lbl['lbl.sc.current.liability']}</LABEL></td>
 				<td colspan="3"><p:inputText id="currentLiabilities"
-						style="text-align:right;margin-bottom: 5px;" required="true"
+						style="text-align:right;margin-bottom: 5px;"
 						disabled="#{statusHide}"
 						label="#{lbl['lbl.sc.current.liability']}" maxlength="14"
 						value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPAssetLiability.currentLiabilities}"
@@ -51,10 +49,9 @@
 
 			<tr>
 				<td><LABEL><ui:fragment rendered="#{!statusHide}">
-							<span class="mandatory">* </span>
 						</ui:fragment>#{lbl['lbl.sc.total.cash.hand']}</LABEL></td>
 				<td colspan="3"><p:inputText id="totalCashInHand"
-						style="text-align:right;margin-bottom: 5px;" required="true"
+						style="text-align:right;margin-bottom: 5px;"
 						label="#{lbl['lbl.sc.total.cash.hand']}" disabled="#{statusHide}"
 						maxlength="14"
 						value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPAssetLiability.totalCashInHand}"
@@ -68,10 +65,9 @@
 			</tr>
 			<tr>
 				<td><ui:fragment rendered="#{!statusHide}">
-						<h:outputText value="* " styleClass="mandatory" />
 					</ui:fragment> <h:outputLabel value="#{lbl['lbl.sc.total.account.receivable']}" /></td>
 				<td colspan="3"><p:inputText id="totalAccountReceivable"
-						style="text-align:right;margin-bottom: 5px;" required="true"
+						style="text-align:right;margin-bottom: 5px;"
 						disabled="#{statusHide}"
 						label="#{lbl['lbl.sc.total.account.receivable']}" maxlength="14"
 						value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPAssetLiability.totalAccountReceivable}"
