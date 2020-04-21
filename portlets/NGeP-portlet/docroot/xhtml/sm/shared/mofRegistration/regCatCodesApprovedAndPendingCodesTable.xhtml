@@ -192,7 +192,7 @@
 				disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS
 					or catBean.cancelCategory}">
 				<p:inputTextarea autoResize="false" value="#{catBean.poRemarks}" maxlength="2000"
-					style="white-space:normal;" rows="6" cols="30"
+					style="white-space:normal; width: 95%" rows="6" cols="30"
 					rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and backingBean.managedBean.poUser}"
 					label="#{lbl['lbl.sm.catCodes.rejRemarks']} #{catBean.pmCategoryL1.categoryL1Code} #{catBean.pmCategoryL2.categoryL2Code} #{catBean.pmCategoryL3.categoryL3Code} "
 					id="poCatDecisionRmrk">
