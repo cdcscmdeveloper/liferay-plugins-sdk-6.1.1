@@ -710,7 +710,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			String url = "";
 
 			if (!this.getManagedBean().getBpmMap().isEmpty() && this.getManagedBean().getBpmMap().size() > 0) {
-
+				log.info("********do Bpm Map********");
 				url = (String) this.getManagedBean().getBpmMap().get(process);
 				if (url == null || url.isEmpty()) {
 					url = (String) this.getManagedBean().getBpmMap().get(process + taskName);
