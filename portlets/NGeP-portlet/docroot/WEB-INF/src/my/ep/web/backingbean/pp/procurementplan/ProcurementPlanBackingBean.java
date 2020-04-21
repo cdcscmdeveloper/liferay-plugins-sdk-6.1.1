@@ -2458,6 +2458,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		//#25479 13/3/2020 - start
 		epItem.setCloneEnabled(true);
 		//#25479 13/3/2020 - End
+		//add #25549 21/04/2020 - Start
+		epItem.setDisableForPindaan(true);
+        //add #25549 21/04/2020 - end
 		
 		//B
 		if(ParameterConst.VOT_MENGURUS.equals(paramCode)){
@@ -3321,6 +3324,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		ppItem.setProcurementCat(new PmParameter());
 		ppItem.setProcurementType(new PmParameter());
 		ppItem.setEditable(true);
+		
+		//add #25549 21/04/2020 - Start
+        ppItem.setCloneEnabled(true);
+        ppItem.setDisableForPindaan(true);
+        //add #25549 21/04/2020 - end
+       
+		
 		if(Calendar.getInstance().get(Calendar.YEAR) == this.getManagedBean().getSelectedPlan().getPlanYear()){ 
 			//current year
 			ppItem.setInvitationDate(new Date());
@@ -6343,6 +6353,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	                ppItem.setCloneEnabled(true);
 	                //add #25549 28/02/2020 - End
 	                
+	                //add #25549 21/04/2020 - Start
+	                ppItem.setDisableForPindaan(true);
+	                //add #25549 21/04/2020 - End
+	                
 	               System.out.println("size list " + j );
 	               this.getManagedBean().getSelectedPlan().addPpProcurementItems(ppItem);
 	               }
@@ -6401,6 +6415,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	                //add #25549 16/03/2020 - Start
 	                ppExItem.setCloneEnabled(true);
 	                //add #25549 16/03/2020 - End
+	                
+	                //add #25549 21/04/2020 - Start
+	                ppExItem.setDisableForPindaan(true);
+	                //add #25549 21/04/2020 - End
 	                
 					// B
 					if (ParameterConst.VOT_MENGURUS.equals(this.getManagedBean().getParamExpenditure())) {
