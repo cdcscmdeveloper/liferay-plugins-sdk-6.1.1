@@ -15,9 +15,14 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.common.notify.INotifySO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.NotificationTextConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.notify.NotifyReqDTO;
 import my.ep.dto.pm.common.notify.NotifyResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmNotifyUser;
@@ -29,7 +34,8 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.pm.notify.NotifyManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
@@ -380,4 +386,56 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 		}
 		//logger.info(message);
 	}
+	
+	// #14291 - Start
+	/**
+	 * @param pmNotifyUser
+	 * @return
+	 */
+	public String getNotifyDashboardContent(PmNotifyUser pmNotifyUser) {
+		logger.debug("Entered: " + this.getClass().getName() + ".getNotifyDashboardContent()");
+		if (null != pmNotifyUser && null != pmNotifyUser.getPmNotifyDashboard()
+				&& StringUtils.isNotEmpty(pmNotifyUser.getPmNotifyDashboard().getContent())) {
+			String notificationId = String.valueOf(pmNotifyUser.getPmNotification().getNotificationId());
+			logger.info(this.getClass().getName() + ".getNotifyDashboardContent(): notificationId is: " + notificationId);
+			if (NotificationTextConst.TEMPLATE_ID_400048.equals(notificationId)
+					|| NotificationTextConst.TEMPLATE_ID_401048.equals(notificationId)
+					|| NotificationTextConst.TEMPLATE_ID_400050.equals(notificationId)
+					|| NotificationTextConst.TEMPLATE_ID_401050.equals(notificationId)){
+				
+				String companyName = null;
+				if (pmNotifyUser.getPmNotifyDashboard().getContent().contains(CommonConstants.TEMPLATE_COMPANY_NAME)) { 
+					ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
+							.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
+					try {
+						SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
+						PmUser pmUser = new FacesScopes().getUserSessionBean();
+						supplierReqDTO.setUserId(pmUser.getUserId());
+						supplierReqDTO.setAllStatuses(true);
+
+						SupplierSearchResDTO smResDTO = supplierSearchSO
+								.retriveSupplierProfiles(supplierReqDTO);
+						
+						if (null != smResDTO && null != smResDTO.getResultBean() 
+								&& CollectionUtils.isNotEmpty(smResDTO.getResultBean().getResultList())) {
+							companyName = smResDTO.getResultBean().getResultList().get(0).getCompanyName();
+							logger.info(this.getClass().getName() + ".getNotifyDashboardContent(): companyName is: " + companyName);
+						}
+						
+						if (StringUtils.isNotEmpty(companyName)) {
+							return pmNotifyUser.getPmNotifyDashboard().getContent().replace(CommonConstants.TEMPLATE_COMPANY_NAME, companyName);
+						} else {
+							return pmNotifyUser.getPmNotifyDashboard().getContent().replace(CommonConstants.TEMPLATE_COMPANY_NAME, "");
+						}
+					} finally {
+						supplierSearchSO = null;
+					}
+				}
+			}
+			return pmNotifyUser.getPmNotifyDashboard().getContent();
+		}
+		return "";
+	}
+	// #14291 - End
+	
 }
