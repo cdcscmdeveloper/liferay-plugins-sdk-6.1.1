@@ -7103,7 +7103,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				scloa.getScLoaRemarks(), ScLoaRemark.class));
 		
 		
-		if(currentStatusId.equals(QTStatusConst.LOA_CANCELLATION_APPROVED)){
+		if(currentStatusId.equals(QTStatusConst.LOA_CANCELLED)){
 			loaCancelled = true;
 		}
 		return loaCancelled;
