@@ -579,18 +579,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					}
 				}
 			}
-		}else{
-			//set action edit button to disable for new Pplan item..
-			//#25549 21/04/2020 - Start
-		   for (PpProcurementItem ppItem : ppItems) {
-			     if (ppItem.isBrandNew()){
-			         ppItem.setCloneEnabled(true);
-			         ppItem.setDisableForPindaan(true);
-			}
-		}
-		//#25549 21/04/2020 - end
-	}
-}
+	    }
+    }
 	
 	private void resetPpProcurementItemFields(List<PpProcurementItem> ppItems) {
 		
@@ -6844,17 +6834,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					}        
 				}
 			}
-		}else{
-			//set action edit button to disable for new Pplan item..
-			//#25549 21/04/2020 - Start
-			 for (PpExpenditureItem ppItem : ppItems) {
-			     if (ppItem.isBrandNew()){
-			         ppItem.setCloneEnabled(true);
-			         ppItem.setDisableForPindaan(true);
-			     }
-			}
 		}
-		 //#25549 21/04/2020 - End
 	}
 }
   	
