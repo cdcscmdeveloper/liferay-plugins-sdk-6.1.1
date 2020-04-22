@@ -3171,7 +3171,9 @@ public class SmApplicationBackingBean extends
 				validSave = SmApplicationUtil.validateBasicInfoBeforeSave(
 						validSave, getManagedBean(), currentTab);
 				//#27853
-				SmApplicationUtil.validateCoordinate(getManagedBean());
+				if (!getManagedBean().isApproverUser() && !getManagedBean().isPoUser()) {
+					SmApplicationUtil.validateCoordinate(getManagedBean());
+				}
 			}
 			break;
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL:
@@ -6421,6 +6423,11 @@ public class SmApplicationBackingBean extends
 	 * Save or update the latest information of the application i.e. SmAppl .
 	 */
 	private void saveOrUpdateAppl() {
+		//checkin if coordinate null #27853
+		if(!getManagedBean().isApproverUser() && !getManagedBean().isPoUser()){
+		SmApplicationUtil.validateCoordinate(getManagedBean());
+		}
+		
 		// checking if suddenly premise information is missing (#21955)
 		SmApplicationUtil.validateDontHavePremise(getManagedBean().getSmAppl());
 
