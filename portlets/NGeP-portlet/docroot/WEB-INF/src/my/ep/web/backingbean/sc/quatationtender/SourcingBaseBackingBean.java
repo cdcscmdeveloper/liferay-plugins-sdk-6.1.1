@@ -98,6 +98,7 @@ import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.EvaluationResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.SpecificationReqDTO;
+import my.ep.dto.sc.quationtender.SpecificationResDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
@@ -3783,5 +3784,106 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			return null;
 		}
 	}
+
+	//Enhancement #26130 -start-
+	/**
+	 * @param context
+	 * @param scLoa
+	 */
+	public void constructSupplierSpecificationAndRemarks(VelocityContext context, ScLoa scLoa) {
+		List<TplSpecMaster> masters = new ArrayList<TplSpecMaster>();
+		IQTSpecSO specSO;
+		
+		try {
+			specSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+			
+			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+			reqDTO.setQtId(scLoa.getScLoiLoa().getDocId());
+			reqDTO.setSpecType(ParameterConst.SPECIFICATION_TYPE_TECHNICAL);
+			reqDTO.setPrepareSpec(true);
+			
+			SpecificationResDTO resDto = specSO.retrieveSpecDetails(reqDTO);
+			
+			String dafaltValue = "T/B";
+			
+			if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
+				dafaltValue = "N/A";
+			}
+			
+			List<ScQtCheckList> scQtCheckLists = resDto.getSpecResultBean().getResultList();
+			
+			// #26130 #97 - Start			
+			/*if (CollectionUtils.isNotEmpty(scQtCheckLists)) {
+				scQtCheckLists.addAll(resDto.getFinSpecResultBean().getResultList());
+			} else {
+				scQtCheckLists = resDto.getFinSpecResultBean().getResultList();
+			}*/
+			
+			if (CollectionUtils.isNotEmpty(scQtCheckLists)) {
+			// #26130 #97 - End
+				for (ScQtCheckList scQtCheckList : scQtCheckLists) {
+					List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
+					
+					TplSpecMaster master = null;
+					master = scQtCheckList.getScQtDoc().getTplSpecMaster();
+					
+					for (TplSpecQuestion question : master.getTplSpecQuestions()) {
+						constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master, question);
+					}
+					
+					master.setTplSpecQuestions(newTplSpecQuestionsList);
+					
+					masters.add(master);
+				}
+			}
+			
+			context.put("isZonal", scLoa.getScLoiLoa().isZonal());
+			context.put("serviceScope", dafaltValue);
+			context.put("masters", masters);
+			context.put("bean", this);
+		} finally {
+			specSO = null;
+		}
+	}
+	
+	/**
+	 * @param context
+	 * @param scLoa
+	 * @param specMasters 
+	 */
+	public void constructSupplierSpecificationAndRemarks(VelocityContext context, ScLoa scLoa, List<TplSpecMaster> specMasters) {
+		List<TplSpecMaster> masters = new ArrayList<TplSpecMaster>();
+		
+		String dafaltValue = "T/B";
+		
+		if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
+			dafaltValue = "N/A";
+		}
+		
+		if (CollectionUtils.isNotEmpty(specMasters)) {
+			
+			for (TplSpecMaster master : specMasters) {
+				if (CollectionUtils.isNotEmpty(master.getTplSpecQuestions())) {
+					List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
+					
+					for (TplSpecQuestion question : master.getTplSpecQuestions()) {
+						constructTplSpecQuestion(dafaltValue,
+								newTplSpecQuestionsList, master, question);
+					}
+					
+					master.setTplSpecQuestions(newTplSpecQuestionsList);
+					
+					masters.add(master);
+				}
+			}
+		}
+
+		context.put("isZonal", scLoa.getScLoiLoa().isZonal());
+		context.put("serviceScope", dafaltValue);
+		context.put("masters", masters);
+		context.put("bean", this);
+	}
+	//Enhancement #26130 -end-
 	
 }
