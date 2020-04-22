@@ -23,7 +23,9 @@
 	</p:tabMenu>
 	
 	<p:outputPanel id="outPnlSiteVisitReport">
-		
+		<p:messages id="messages1" showDetail="true" escape="false"
+				autoUpdate="#{backingBean.managedBean.showParentMsg}"
+				closable="true" showSummary="false" />
 		<ui:param name="template"
 			value="#{svoSiteVisitBackingBean.managedBean.smSvTask.pmCategoryL3.categoryTypeCode.parameterCode}" />
 		<c:if test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 0}">
