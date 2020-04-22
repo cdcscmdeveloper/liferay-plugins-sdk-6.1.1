@@ -4297,7 +4297,8 @@ public class SmCommonUtil {
 				if(MessageConst.ERROR_721085.equalsIgnoreCase(ex.getMessage()) && sb != null){
 					throw new EpException(MessageConst.ERROR_721085,new String[] { sb.toString() });
 				}else{
-					throw new EpException(message + "(ERR-"
+					//27225
+					throw new EpException(message + "("
 							+ ex.getMessage().toString() + ")");
 				}
 				
@@ -5816,12 +5817,16 @@ public class SmCommonUtil {
 		//27382
 		switch (resDTO.getStatusCode()) {
 		case "70001":
-			//27214
-			if(resDTO.isPreRegistration()){
-				throw new EpException(MessageConst.ERROR_721086);
-			}else{
-				throw new EpException(MessageConst.ERROR_721078);
-			}			
+			//27214 -> this changes is remove in this case. replace with  27225
+			if(resDTO.getStatusDesc() != null){
+				if(resDTO.getStatusDesc().contains("Nationality")){
+					throw new EpException(MessageConst.ERROR_721094);
+				}else if(resDTO.getStatusDesc().contains("Nature")){
+					throw new EpException(MessageConst.ERROR_721095);
+				}else{
+					throw new EpException(MessageConst.ERROR_721096);
+				}
+			}
 		case "70002":
 			throw new EpException(MessageConst.ERROR_721071);
 		case "70003":
@@ -5848,12 +5853,13 @@ public class SmCommonUtil {
 				throw new EpException(MessageConst.ERROR_721078);
 			}
 		case "70068"://Encounter Technical Error at SSM
-			//27214
-			if(resDTO.isPreRegistration()){
-				throw new EpException(MessageConst.ERROR_721086);
-			}else{
-				throw new EpException(MessageConst.ERROR_721078);
-			}
+			//27214  -> this changes is remove in this case. replace with  27225
+			//27225			
+			throw new EpException(MessageConst.ERROR_721096);
+			//27225	
+			default:
+				throw new EpException(MessageConst.ERROR_721071);
+			
 		}
 	}
 		
