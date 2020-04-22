@@ -3172,7 +3172,7 @@ public class SmApplicationBackingBean extends
 						validSave, getManagedBean(), currentTab);
 				//#27853
 				if (!getManagedBean().isApproverUser() && !getManagedBean().isPoUser()) {
-					//START 27748
+					//START 27748 - SM Disciplinary action - 26238
 					if(getManagedBean().getEditVO()!=null && !getManagedBean().getEditVO().isDisciplinary()){
 						SmApplicationUtil.validateCoordinate(getManagedBean());
 					}
