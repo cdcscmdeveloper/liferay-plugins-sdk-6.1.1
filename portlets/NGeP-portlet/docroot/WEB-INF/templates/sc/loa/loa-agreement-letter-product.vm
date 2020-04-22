@@ -1123,6 +1123,9 @@ u {
 		</td>
 	</tr>
 </table>
+
+
+#if ($scLoa.scLoiLoa.docType != "PR")
 <div class="break-after"><br/></div>
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
 	  <tr>
@@ -1500,6 +1503,7 @@ u {
 			</span></td>
 		</tr>
 	#end
+#end
 	
 <div class="break-after"><br/></div>
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
