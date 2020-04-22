@@ -34,14 +34,13 @@
 		</c:choose>
 	</table>
 	<c:if test="#{backingBean.managedBean.smAppl.pmStatus.statusId.longValue() == SupplierMgmtConst.pmStatusPendingApplicationDeclaration}">
-	<br />
 	<table>
 		<tr>
-			<td style="color: #0070c0">
-				<p:outputLabel value="#{lbl['lbl.sm.rmo.online']}" style="font-weight: bold;"></p:outputLabel>
+			<td style="color: #0070c0; font-weight: bold; font-size: 12px;">
+				<span>#{lbl['lbl.sm.rmo.online']}</span>
 			</td>
 		</tr>
-	</table><br />
+	</table>
 	</c:if>
 	<p:panel toggleable="true" id="onSupTblPan">
 		<f:facet name="header">
