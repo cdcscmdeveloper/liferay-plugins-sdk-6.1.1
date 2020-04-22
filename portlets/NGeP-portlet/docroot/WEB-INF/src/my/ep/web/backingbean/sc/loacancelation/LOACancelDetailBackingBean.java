@@ -643,6 +643,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			Long sourceId = Long.valueOf(dpDataType.getSourceId());			
 			Long loaId = Long.valueOf(dpDataType.getAwardId()!=null?dpDataType.getAwardId():0);       
 			getManagedBean().setPayLoad(dpDataType);
+			String language = new FacesScopes().getUserLocale().getLanguage();
 			
 			//hardcode***********
 //			SCAwardSupplierDataType awardDataType  = new SCAwardSupplierDataType();		
@@ -665,33 +666,26 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setLoaId(loaId);
-			AwardSupplierResDTO resDTO = getQtAwardSO()
+			AwardSupplierResDTO resDT = getQtAwardSO()
 					.retrieveLOADtlByLoaId(reqDTO);
+			
+			reqDTO.setScLoa(resDT.getScLoa());
+			reqDTO.setLanguageCode(language);
+			
+			AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOADtl(reqDTO);
+			ScLoa scLoa = resDTO.getScLoa();
 
-			ScLoa scLoa = resDTO.getScLoa();			
-			String language = new FacesScopes().getUserLocale().getLanguage();
+			resDTO.setScLoa(scLoa);
 
-			AwardSupplierReqDTO reqDTO2 = new AwardSupplierReqDTO();
-			reqDTO2.setScLoa(scLoa);
-			reqDTO2.setLanguageCode(language);			
-			
-			AwardSupplierResDTO resDTO2 = getQtAwardSO().retrieveLOADtl(reqDTO2);
-			ScLoa scLoa2 = resDTO2.getScLoa();
-			
-			resDTO2.setScLoa(scLoa2);
-			
-			ScLoa scLoa3 = resDTO2.getScLoa();
-			getManagedBean().setScLoa(scLoa3);
-			getManagedBean().setScQt(resDTO2.getScQt());
+			populateLOADetails(resDTO);
 
 			
-			// Remarks
-			scLoa3.setScLoaRemarks(initializeRemarks(scLoa3, 
-					scLoa3.getCurrentStatus(),
-					scLoa3.getScLoaRemarks(), ScLoaRemark.class));
+			getManagedBean().setScLoa(scLoa);
+			getManagedBean().setScQt(resDTO.getScQt());
+
 			
 			//set approval	
-			ScLoaApproval scLoaApproval = scLoa3.getScLoaApproval();
+			ScLoaApproval scLoaApproval = scLoa.getScLoaApproval();
 			PmUser approverUser = null;
 			if (scLoaApproval != null) {
 				approverUser = scLoaApproval.getApprover();
@@ -702,13 +696,13 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			getManagedBean().setApproverUser(approverUser);
 					
 			UserReqDTO userReqDTO = new UserReqDTO();
-			userReqDTO.setRoleCode(getUserRoleCode(scLoa3.getScLoiLoa().getDocType()));
-			userReqDTO.setOrgProfileId(scLoa3.getScLoiLoa().getPmOrgProfile().getOrgProfileId());
+			userReqDTO.setRoleCode(getUserRoleCode(scLoa.getScLoiLoa().getDocType()));
+			userReqDTO.setOrgProfileId(scLoa.getScLoiLoa().getPmOrgProfile().getOrgProfileId());
 			
 			UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
 			getManagedBean().setApproverList(userResDTO.getUserList());	
 			
-			getManagedBean().setScLoa(scLoa3);
+			getManagedBean().setScLoa(scLoa);
 			getManagedBean().setScQt(scLoa.getScQt());			
 			
 			getManagedBean().setSourceId(sourceId);
@@ -3314,6 +3308,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
 			reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
+			getQtAwardSO().validateCancelLoaRequiredRemark(reqDTO);	
 			AwardSupplierResDTO resDTO = getQtAwardSO().saveLOADtl(reqDTO);
 			
 			if (resDTO.isSuccessful()) {
@@ -3370,7 +3365,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			ScLoa scLoa = this.getManagedBean().getScLoa();
 			Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 		
-			parseLOADetails(scLoa, outcome);
+			//parseLOADetails(scLoa, outcome);
 
 			// if reject, remove the new witness
 			if (BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
@@ -3430,6 +3425,22 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			}
 
 			validateLOADetails(scLoa, outcome);
+			scLoa.setScLoaRemarks(scLoa.getScLoaRemarks());
+			
+			boolean newRemark = false;
+			if (scLoa != null) {
+				for (ScLoaRemark remark : scLoa.getScLoaRemarks()) {
+					// no new remark being insert
+					if (remark.getRemark() == null
+							|| remark.getRemark().isEmpty()) {
+						newRemark = true;
+					}
+				}
+			}
+
+			if (newRemark) {
+				throw new EpException(MessageConst.ERROR_100022, new String[] { "Remark" });
+			}
 
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setScLoa(scLoa);
@@ -3445,6 +3456,16 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
 			reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
+			
+			updateCancelLoaCurrentWorkflowStatus(scLoa,outcome);
+			
+			//---set loa to cancel status
+			updateCancelLoaCurrentWorkflowStatus(scLoa,BpmOutcomeConst.BPM_CANCEL);
+			//----
+			
+			if(!BpmOutcomeConst.BPM_LOA_CANCEL.equals(outcome)){
+					getQtAwardSO().prepareCancelLoaTrackingDiary(reqDTO);
+			}
 			resDTO = getQtAwardSO().saveLOADtl(reqDTO);
 
 			if (resDTO.isSuccessful()) {
@@ -7307,7 +7328,32 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 		}
 	}//#25022-end	
 	
-	
+	protected void updateCancelLoaCurrentWorkflowStatus(ScLoa scLoa, String outcome) {		
+		IScWorkFlowStatusSO workFlowStatusSO;
+					workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+
+
+		ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+		reqDTO.setDocType(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
+		reqDTO.setDocId(scLoa.getLoaId());
+
+		ScLoaWorkFlowStatus workFlowStatus = new ScLoaWorkFlowStatus();
+		if (outcome.contains(BpmOutcomeConst.BPM_APPROVE))
+			workFlowStatus.setPmStatus(getPmStatusByStatusId(QTStatusConst.LOA_CANCELLATION_APPROVED));
+		else if(outcome.contains(BpmOutcomeConst.BPM_REJECT))
+			workFlowStatus.setPmStatus(getPmStatusByStatusId(QTStatusConst.LOA_CANCELLATION_REJECTED));
+		else
+			workFlowStatus.setPmStatus(getPmStatusByStatusId(QTStatusConst.LOA_CANCELLED));
+		workFlowStatus.setScLoa(scLoa);
+		workFlowStatus.setCurrent(true);
+		scLoa.setCurrentStatus(workFlowStatus);
+
+		reqDTO.setScWorkFlowStatus(workFlowStatus);
+		
+		workFlowStatusSO.updateCurrentWorkflowStatus(reqDTO);	
+	}
+		
 	/**
 	 * @param awardSupplierDataType
 	 */
