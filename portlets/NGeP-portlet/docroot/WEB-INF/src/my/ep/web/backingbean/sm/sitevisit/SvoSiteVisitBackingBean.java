@@ -2746,6 +2746,18 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		if(StringUtils.isBlank(svTask.getSmSvAssistantOfficer().getName())){
 			svTask.setSmSvAssistantOfficer(null);
 		}
+		if(svTask.getSmSvTemplate()!=null){
+			if(svTask.getSmSvTemplate().getSmSvInterviewees()== null || svTask.getSmSvTemplate().getSmSvInterviewees().size()<=0){
+				throw new EpException(SmCommonUtil.getMessage("lbl.sm.required.msg",
+						new String[] { SmCommonUtil.getMessage("lbl.sm.sv.templ.interview.representative", null) }));
+			}else{
+				for(SmSvInterviewee interviewee : svTask.getSmSvTemplate().getSmSvInterviewees()){
+					if(StringUtils.isBlank(interviewee.getName()) || StringUtils.isBlank(interviewee.getDesignation())){
+						return;
+					}
+				}
+			}
+		}
 
 		reqDTO.setSmSvTask(svTask);
 		reqDTO.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
