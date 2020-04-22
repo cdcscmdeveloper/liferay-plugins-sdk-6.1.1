@@ -3172,7 +3172,11 @@ public class SmApplicationBackingBean extends
 						validSave, getManagedBean(), currentTab);
 				//#27853
 				if (!getManagedBean().isApproverUser() && !getManagedBean().isPoUser()) {
-					SmApplicationUtil.validateCoordinate(getManagedBean());
+					//START 27748
+					if(getManagedBean().getEditVO()!=null && !getManagedBean().getEditVO().isDisciplinary()){
+						SmApplicationUtil.validateCoordinate(getManagedBean());
+					}
+					//END 27748
 				}
 			}
 			break;
@@ -6425,7 +6429,11 @@ public class SmApplicationBackingBean extends
 	private void saveOrUpdateAppl() {
 		//checkin if coordinate null #27853
 		if(!getManagedBean().isApproverUser() && !getManagedBean().isPoUser()){
-		SmApplicationUtil.validateCoordinate(getManagedBean());
+			//START 27748
+			if(getManagedBean().getEditVO()!=null && !getManagedBean().getEditVO().isDisciplinary()){
+				SmApplicationUtil.validateCoordinate(getManagedBean());
+			}
+			//END 27748		
 		}
 		
 		// checking if suddenly premise information is missing (#21955)
