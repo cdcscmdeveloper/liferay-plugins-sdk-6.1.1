@@ -23,7 +23,7 @@
 					<td>
 						<p:selectOneRadio id="onLnSuppDocs" value="#{backingBean.managedBean.smAppl.supportingDocMode}">
 							<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.offline']}"
-								itemValue="H" />
+								itemValue="H" itemDisabled="true"/>
 							<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.online']}"
 								itemValue="S" />
 							<p:ajax update="supDocPan" event="change" />
@@ -33,6 +33,15 @@
 			</c:otherwise>
 		</c:choose>
 	</table>
+	<c:if test="#{backingBean.managedBean.smAppl.pmStatus.statusId.longValue() == SupplierMgmtConst.pmStatusPendingApplicationDeclaration}">
+	<table>
+		<tr>
+			<td style="color: #0070c0; font-weight: bold; font-size: 12px;">
+				<span>#{lbl['lbl.sm.rmo.online']}</span>
+			</td>
+		</tr>
+	</table>
+	</c:if>
 	<p:panel toggleable="true" id="onSupTblPan">
 		<f:facet name="header">
 			<h:outputText
