@@ -83,9 +83,10 @@
 				<td><p:outputLabel styleClass="outputLabel-view-label"
 						value="#{lbl['lbl.sm.disciplinary.jktt.punishment.type']}" /></td>
 				<td><p:spacer width="5" />
-					<!-- 26238 : Disciplinary Action -->
+					<!-- 27857: Disciplinary Action - start - 26238 -->
 					<p:selectBooleanCheckbox  value="#{supplierDataMaintenanceBackingBean.managedBean.warning}"
-						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}" style="float:left">
+						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance
+						or supplierDataMaintenanceBackingBean.managedBean.warningExist}" style="float:left">
 			            <p:ajax event="change" partialSubmit="true" process="@this"
 							listener="#{supplierDataMaintenanceBackingBean.onTickPunishmentType()}"
 							update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
@@ -95,7 +96,8 @@
 				<td>	
 					<p:spacer width="5" />
 					<p:selectBooleanCheckbox value="#{supplierDataMaintenanceBackingBean.managedBean.cancelCategoryCode}" 
-						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}" style="float:left">
+						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance
+						or supplierDataMaintenanceBackingBean.managedBean.cancelCategoryCodeExist}" style="float:left">
 			            <p:ajax event="change" partialSubmit="true" process="@this"
 							listener="#{supplierDataMaintenanceBackingBean.onTickPunishmentType()}"
 							update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
@@ -105,7 +107,8 @@
 				<td>
 					<p:spacer width="5" />
 					<p:selectBooleanCheckbox value="#{supplierDataMaintenanceBackingBean.managedBean.suspendRegistration}" 
-						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}" style="float:left">
+						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance
+						or supplierDataMaintenanceBackingBean.managedBean.suspendRegistrationExist}" style="float:left">
 			            <p:ajax event="change" partialSubmit="true" process="@this"
 							listener="#{supplierDataMaintenanceBackingBean.onTickPunishmentType()}"
 							update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
@@ -118,7 +121,8 @@
 				<td>
 					<p:spacer width="5" />
 					<p:selectBooleanCheckbox value="#{supplierDataMaintenanceBackingBean.managedBean.cancelRegistration}" 
-						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}" style="float:left">
+						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance
+						or supplierDataMaintenanceBackingBean.managedBean.cancelRegistrationExist}" style="float:left">
 			            <p:ajax event="change" partialSubmit="true" process="@this"
 							listener="#{supplierDataMaintenanceBackingBean.onTickPunishmentType()}"
 							update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
@@ -128,7 +132,8 @@
 				<td>	
 					<p:spacer width="5" />
 					<p:selectBooleanCheckbox value="#{supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirector}" 
-						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}" style="float:left">
+						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance
+						or supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirectorExist}" style="float:left">
 			            <p:ajax event="change" partialSubmit="true" process="@this"
 							listener="#{supplierDataMaintenanceBackingBean.onTickPunishmentType()}"
 							update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
@@ -138,13 +143,15 @@
 				<td>
 					<p:spacer width="5" />
 					<p:selectBooleanCheckbox value="#{supplierDataMaintenanceBackingBean.managedBean.bumiputeraStatusCancel}" 
-						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}" style="float:left">
+						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance
+						or supplierDataMaintenanceBackingBean.managedBean.bumiputeraStatusCancelExist}" style="float:left">
 			            <p:ajax event="change" partialSubmit="true" process="@this"
 							listener="#{supplierDataMaintenanceBackingBean.onTickPunishmentType()}"
 							update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 			        </p:selectBooleanCheckbox> <p:spacer width="5" />
 			        <p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.cancel.of.bumiputera']}" styleClass="outputLabel-view"/>
 				</td>
+				<!-- 27857: Disciplinary Action - end - 26238 -->
 			</tr>
 			
 			<tr>
