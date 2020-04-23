@@ -24,6 +24,7 @@ import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCategoryRestr;
 import my.ep.persistence.entity.pm.common.PmMachine;
 import my.ep.persistence.entity.pm.common.PmMachineCategory;
+import my.ep.persistence.entity.pm.common.PmMachineSection;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.web.bean.pm.CategoryCodePublicSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -72,7 +73,6 @@ public class CategoryManagedBean extends BaseManagedBean {
 	private List<PmCategoryRestr> deletedPmPmCategoryRestrList;
 	
 	private List<PmMachineCategory> deletedPmMachineCategoryList;
-	
 	/** The tobe added pm basic category list. */
 	private List<PmBasicCategory> oldPmBasicCategoryList;
 	
@@ -210,6 +210,17 @@ public class CategoryManagedBean extends BaseManagedBean {
 	private List<String> machineList;
 	
 	private CategoryCodePublicSearchBean categoryCodePublicSearchBean;
+	
+	private PmMachineSection pmMachineSection;
+	private List<PmMachineSection> pmMachineSectionList;
+	
+	private boolean disabledVal;
+	
+	private List<String> section;
+	
+	public long machineSection;
+	
+	
 	
 	/**
 	 * Instantiates a new category managed bean.
@@ -1269,7 +1280,60 @@ public class CategoryManagedBean extends BaseManagedBean {
 	public void setFacilityTypeChoosable(boolean facilityTypeChoosable) {
 		this.facilityTypeChoosable = facilityTypeChoosable;
 	}
-	
+
 	
 
+	
+	public PmMachineSection getPmMachineSection() {
+		if(pmMachineSection == null){
+			pmMachineSection = new PmMachineSection();
+		}
+		return pmMachineSection;
+	}
+
+	/**
+	 * @param categoryCodePublicSearchBean the categoryCodePublicSearchBean to set
+	 */
+	public void setPmMachineSection(
+			PmMachineSection pmMachineSection) {
+		this.pmMachineSection = pmMachineSection;
+	}
+
+
+	public boolean isDisabledVal() {
+		return disabledVal;
+	}
+
+	public void setDisabledVal(boolean disabledVal) {
+		this.disabledVal = disabledVal;
+	}
+
+	public List<PmMachineSection> getPmMachineSectionList() {
+		return pmMachineSectionList;
+	}
+
+	public void setPmMachineSectionList(List<PmMachineSection> pmMachineSectionList) {
+		this.pmMachineSectionList = pmMachineSectionList;
+	}
+
+	public List<String> getSection() {
+		List<String> a = new ArrayList<String>();
+		a.add("818");
+		a.add("819");
+
+		return a;
+	}
+
+	public void setSection(List<String> section) {
+		this.section = section;
+	}
+
+	public long getMachineSection(long section) {
+		return machineSection;
+	}
+
+	public void setMachineSection(long machineSection) {
+		this.machineSection = machineSection;
+	}
+	
 }
