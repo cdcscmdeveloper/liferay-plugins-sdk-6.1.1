@@ -213,7 +213,7 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private ScQtCheckList technicalQtChecklist;
 	private ScQtProposalChecklist financialQtProposalChecklist;
 	private ScQtCheckList financialQtChecklist;
-	
+	private int supplierInfoActiveIndex; //25089@hatta
 	
 	/** report download filename. */
 	private String reportDownloadFileName = "NGeP-QT-Supplier-Proposal-Report";
@@ -1897,6 +1897,14 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		this.financialQtChecklist = financialQtChecklist;
 	}
 
-	
+	//25089@hatta - start 
+	public int getSupplierInfoActiveIndex() {
+		return supplierInfoActiveIndex;
+	}
+
+	public void setSupplierInfoActiveIndex(int supplierInfoActiveIndex) {
+		this.supplierInfoActiveIndex = supplierInfoActiveIndex;
+	}
+	//25089@hatta - end
 
 }
