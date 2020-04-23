@@ -147,6 +147,15 @@ public class ViewSuppProfileManagedBean extends
 	
 	private String disciplinaryActionMsg; 
 	
+	//27857: Disciplinary Action - start - 26238
+	private boolean cancelCategoryCodeExist;
+	private boolean suspendRegistrationExist;
+	private boolean cancelRegistrationExist;
+	private boolean blacklistOwnerOrDirectorExist;
+	private boolean bumiputeraStatusCancelExist;
+	private boolean manufacturerStatusCancelExist;
+	//27857: Disciplinary Action - end - 26238
+	
 	public ViewSuppProfileManagedBean() {
 
 	}
@@ -973,5 +982,54 @@ public class ViewSuppProfileManagedBean extends
 	public void setBasicSupplierList(List<SmSupplier> basicSupplierList) {
 		this.basicSupplierList = basicSupplierList;
 	}
-	
+
+	//27857: Disciplinary Action - start - 26238
+	public boolean isCancelCategoryCodeExist() {
+		return cancelCategoryCodeExist;
+	}
+
+	public void setCancelCategoryCodeExist(boolean cancelCategoryCodeExist) {
+		this.cancelCategoryCodeExist = cancelCategoryCodeExist;
+	}
+
+	public boolean isSuspendRegistrationExist() {
+		return suspendRegistrationExist;
+	}
+
+	public void setSuspendRegistrationExist(boolean suspendRegistrationExist) {
+		this.suspendRegistrationExist = suspendRegistrationExist;
+	}
+
+	public boolean isCancelRegistrationExist() {
+		return cancelRegistrationExist;
+	}
+
+	public void setCancelRegistrationExist(boolean cancelRegistrationExist) {
+		this.cancelRegistrationExist = cancelRegistrationExist;
+	}
+
+	public boolean isBlacklistOwnerOrDirectorExist() {
+		return blacklistOwnerOrDirectorExist;
+	}
+
+	public void setBlacklistOwnerOrDirectorExist(boolean blacklistOwnerOrDirectorExist) {
+		this.blacklistOwnerOrDirectorExist = blacklistOwnerOrDirectorExist;
+	}
+
+	public boolean isBumiputeraStatusCancelExist() {
+		return bumiputeraStatusCancelExist;
+	}
+
+	public void setBumiputeraStatusCancelExist(boolean bumiputeraStatusCancelExist) {
+		this.bumiputeraStatusCancelExist = bumiputeraStatusCancelExist;
+	}
+
+	public boolean isManufacturerStatusCancelExist() {
+		return manufacturerStatusCancelExist;
+	}
+
+	public void setManufacturerStatusCancelExist(boolean manufacturerStatusCancelExist) {
+		this.manufacturerStatusCancelExist = manufacturerStatusCancelExist;
+	}
+	//27857: Disciplinary Action - end - 26238
 }
