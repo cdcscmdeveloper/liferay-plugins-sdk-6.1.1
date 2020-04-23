@@ -172,7 +172,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		initStep8_9PoApproverDefaultDecision();
 		initBumiRecommendNote();
 		initSupplierDisciplinaryAction(getManagedBean().getSmSupplier()); //27426 : Disciplinary Action
-		assignApplActiveAndApprovedCategoryList();
+ 		assignApplActiveAndApprovedCategoryList();
 		//Redmine #18959 - no need to check overlapping category
 		//setOverLappingCategories();
 		getManagedBean().setOverLappedCategoryMsg("");
@@ -234,7 +234,22 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setGstFlag(false);
 		
 		//26238 - end
-		resetDisciplinaryActionSection(); //27426 : Disciplinary Action
+		//27857: Disciplinary Action - start - 26238
+		if(EntityHelper.isCollectionEmpty(getManagedBean().getSmSupplier().getSmDisciplinaryActions())){
+			resetDisciplinaryActionSection(); //27426 : Disciplinary Action
+			resetDisciplinaryActionSectionExist();
+		}else{
+			for (SmDisciplinaryAction disc : getManagedBean().getSmSupplier().getSmDisciplinaryActions()) {
+				if (disc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+					initSupplierDisciplinaryAction(getManagedBean().getSmSupplier());
+					break;
+				} else if(disc.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE){
+					resetDisciplinaryActionSection();
+					resetDisciplinaryActionSectionExist();
+				}
+			}
+		}
+		//27857: Disciplinary Action - start - 26238
 		//27437 : Disciplinary Action
 		if(getManagedBean().getSmSupplier().getSmAppl().getApplCategoryType() != null){
 			setCategoryTypeConfirm();
@@ -1333,22 +1348,30 @@ public class SupplierDataMaintenanceBackingBean extends
 
 	public void onTickDiscipline() {
 		//27426 & 27427 : Disciplinary Action
-		if (getManagedBean().isEditDisciplinaryAction()
-				&& !getManagedBean().isWarning() && !getManagedBean().isCancelCategoryCode()
-				&& !getManagedBean().isSuspendRegistration() && !getManagedBean().isCancelRegistration()
-				&& !getManagedBean().isBlacklistOwnerOrDirector() && !getManagedBean().isBumiputeraStatusCancel()
-				&& !getManagedBean().isManufacturerStatusCancel()) {
+		//27857: Disciplinary Action - start - change checking condition - 26238
+		if (
+//				getManagedBean().isEditDisciplinaryAction()
+//				&& !getManagedBean().isWarning() && !getManagedBean().isCancelCategoryCode()
+//				&& !getManagedBean().isSuspendRegistration() && !getManagedBean().isCancelRegistration()
+//				&& !getManagedBean().isBlacklistOwnerOrDirector() && !getManagedBean().isBumiputeraStatusCancel()
+//				&& !getManagedBean().isManufacturerStatusCancel() ||
+				!EntityHelper.isCollectionEmpty(getManagedBean().getSmSupplier().getSmDisciplinaryActions()) &&
+				getManagedBean().isEditDisciplinaryAction()) {
 			initSupplierDisciplinaryAction(getManagedBean().getSmSupplier());
 			getManagedBean().setEditDisciplinaryAction(true);
-		} else if (getManagedBean().isEditDisciplinaryAction()
-				|| getManagedBean().isWarning() || getManagedBean().isCancelCategoryCode()
-				|| getManagedBean().isSuspendRegistration() || getManagedBean().isCancelRegistration()
-				|| getManagedBean().isBlacklistOwnerOrDirector() || getManagedBean().isBumiputeraStatusCancel()
-				|| getManagedBean().isManufacturerStatusCancel()) { 
+		} else if (
+				EntityHelper.isCollectionEmpty(getManagedBean().getSmSupplier().getSmDisciplinaryActions())
+//				getManagedBean().isEditDisciplinaryAction()
+//				|| getManagedBean().isWarning() || getManagedBean().isCancelCategoryCode()
+//				|| getManagedBean().isSuspendRegistration() || getManagedBean().isCancelRegistration()
+//				|| getManagedBean().isBlacklistOwnerOrDirector() || getManagedBean().isBumiputeraStatusCancel()
+//				|| getManagedBean().isManufacturerStatusCancel()
+				) { 
 			getManagedBean().setDisciplineVO(getInitDisciplinaryActionVO());
 		} else {
 			initSupplierDisciplinaryAction(getManagedBean().getSmSupplier()); 
 		}
+		//27857: Disciplinary Action - end - 26238
 	}
 
 	/**
@@ -1592,13 +1615,48 @@ public class SupplierDataMaintenanceBackingBean extends
 	 *            supplier
 	 */
 	private void initSupplierDisciplinaryAction(SmSupplier supplier) {
-		getManagedBean().setEditDisciplinaryAction(false);
+		//getManagedBean().setEditDisciplinaryAction(false); //27857: Disciplinary Action - disabled hardcoded value - 26238
 		DisciplinaryActionVO discipline = getInitDisciplinaryActionVO();
 		if (!EntityHelper
 				.isCollectionEmpty(supplier.getSmDisciplinaryActions())) {
 			for (SmDisciplinaryAction disc : supplier
 					.getSmDisciplinaryActions()) {
 				if (disc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+					//27857: Disciplinary Action - start - 26238
+					if(!getManagedBean().isEditDisciplinaryAction()){
+						if(disc.isBlacklistOwner()){
+							getManagedBean().setBlacklistOwnerOrDirector(true);
+							getManagedBean().setBlacklistOwnerOrDirectorExist(true);
+						}
+						if(disc.isCancelCategory()){
+							getManagedBean().setCancelCategoryCode(true);
+							getManagedBean().setCancelCategoryCodeExist(true);
+						}
+						if(disc.isSuspendRegistration()){
+							getManagedBean().setSuspendRegistration(true);
+							getManagedBean().setSuspendRegistrationExist(true);
+						}
+						if(disc.isWarning()){
+							getManagedBean().setWarning(true);
+							getManagedBean().setWarningExist(true);
+						}
+						if(disc.isCancelRegistration()){
+							getManagedBean().setCancelRegistration(true);
+							getManagedBean().setCancelRegistrationExist(true);
+						}
+						if(disc.isBumiputeraCancel()){
+							getManagedBean().setBumiputeraStatusCancel(true);
+							getManagedBean().setBumiputeraStatusCancelExist(true);
+						}
+						if(disc.isManufacturerCancel()){
+							getManagedBean().setManufacturerStatusCancel(true);
+							getManagedBean().setManufacturerStatusCancelExist(true);
+						}
+					}else{
+						resetDisciplinaryActionSectionExist();
+						getManagedBean().setEditDisciplinaryAction(true);
+					}
+					//27857: Disciplinary Action - end - 26238
 					discipline.getSmDiscplinaryAction().setRemark(
 							disc.getRemark());
 					discipline.getSmDiscplinaryAction().setStartDate(
@@ -1936,6 +1994,7 @@ public class SupplierDataMaintenanceBackingBean extends
 					retVal.setEndDate(DateUtils.dateToString("dd/MM/yyyy",disciplinaryAction.getEndDate()));
 					if(disciplinaryAction.getEndDate() != null)
 						retVal.setEndDate(DateUtils.dateToString("dd/MM/yyyy",disciplinaryAction.getEndDate()));
+					
 					if(disciplinaryAction.getRemark() != null)
 						retVal.setRemarks(disciplinaryAction.getRemark());
 					
@@ -2482,6 +2541,18 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setEditDisciplinaryAction(false);
 	}
 	//27426 : Disciplinary Action - end
+	
+	//27857: Disciplinary Action - start - 26238
+	public void resetDisciplinaryActionSectionExist(){
+		getManagedBean().setWarningExist(false);
+		getManagedBean().setCancelCategoryCodeExist(false);
+		getManagedBean().setSuspendRegistrationExist(false);
+		getManagedBean().setCancelRegistrationExist(false);
+		getManagedBean().setBlacklistOwnerOrDirectorExist(false);
+		getManagedBean().setManufacturerStatusCancelExist(false);
+		getManagedBean().setBumiputeraStatusCancelExist(false);
+	}
+	//27857: Disciplinary Action - end - 26238
 	
 	//26238 : Disciplinary Action - start
 	public void downloadDAHistory() throws Exception {
