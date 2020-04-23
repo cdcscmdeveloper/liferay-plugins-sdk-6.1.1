@@ -501,6 +501,16 @@ public class SmPersonnelBackingBean extends
 	 * @return String page
 	 */
 	public String cancel() {
+		//27912 : Disciplinary Action - 26238
+		if(getManagedBean().isSuppInPunishment()){
+			String labelNameVal = "";
+			FacesContext.getCurrentInstance().addMessage("imposedDisciplinary", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+					SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
+							new String[] { labelNameVal })));			
+			SmCommonUtil.redirectToPage(
+					"/xhtml/sm/userProfileMaintenance/userProfileSearch.xhtml", "", null, null);		
+		}		
+		//27912 : Disciplinary Action - end also fix 26238
 		return "userProfileSearch.xhtml";
 
 	}
