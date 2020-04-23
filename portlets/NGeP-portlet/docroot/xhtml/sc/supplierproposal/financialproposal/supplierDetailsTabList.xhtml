@@ -7,7 +7,12 @@
 
 	<table style="width: 100%;">
 		<tr>
-			<td><p:tabView id="supplierinfotabViewid" dynamic="true">
+			<td>
+					<!-- #25089@hatta - start -->
+				<p:tabView id="supplierinfotabViewid" dynamic="true" 
+			         activeIndex="#{supplierProposalDetailBackingBean.managedBean.supplierInfoActiveIndex}"> 
+					<p:ajax event="tabChange" listener="#{supplierProposalDetailBackingBean.onTabChange}" />
+					<!-- #25089@hatta - end -->
 					<ui:param name="smSupplier"
 						value="#{supplierProposalDetailBackingBean.managedBean.smSupplier}" />
 					<ui:param name="smAppl"
@@ -60,4 +65,21 @@
 				</p:tabView></td>
 		</tr>
 	</table>
+	<!-- #25089@hatta - start -->
+	<c:if test="#{supplierProposalDetailBackingBean.managedBean.supplierInfoActiveIndex eq 0}">
+            <p:poll interval="1" listener="#{supplierProposalDetailBackingBean.dafaultPopUpSupplierInfo}" widgetVar="stopPoller"/>
+    </c:if> 
+	<p:dialog id="popUpInfoDlg" widgetVar="popUpInfoDlg"
+			header="#{lbl['lbl.sc.reminder']}" resizable="false"
+			width="auto" height="100" closable="false">
+			<table>
+				<tr><td style="float: left;"><p:outputLabel value="#{lbl['lbl.sc.qt.dialog.popup.supplier.first']}" /></td></tr>
+				<tr><td style="float: left;"><p:outputLabel value="#{lbl['lbl.sc.qt.dialog.popup.supplier.second']}" /></td></tr>
+			</table>
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.ok']}" 
+					onclick="popUpInfoDlg.hide();stopPoller.stop();" type="button" partialSubmit="true" process="@this"/>
+			</div>
+	</p:dialog>
+	<!-- #25089@hatta - end -->
 </ui:composition>
