@@ -1063,6 +1063,11 @@ public class SmApplicationUtil {
 	public static void validateCoordinate(SmApplicationManagedBean managedBean){
 		SmCompanyBasic companyBasic = managedBean.getSmAppl().getSmCompanyBasic();
 		List<SmFacility> facility =managedBean.getSmAppl().getSmFacilities();
+		//START 27748 -  SM Disciplinary Action - 26238
+		if(managedBean.getEditVO()!=null && managedBean.getEditVO().isDisciplinary()){
+			return;
+		}
+		//END 27748 -  SM Disciplinary Action - 26238 
 		if (companyBasic != null) {
 			if (StringUtils.isBlank(companyBasic.getSmCompanyAddresses().get(0)
 					.getSmAddress().getMapLatitude())
