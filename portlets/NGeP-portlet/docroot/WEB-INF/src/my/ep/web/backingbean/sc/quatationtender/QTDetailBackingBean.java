@@ -7367,7 +7367,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			 		}
 			 	}
 			 	if( QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL.equals(currStatus)){
-			 		if(userHasRole(new RoleCode[]{RoleCode.SC_SECRETARY})){
+			 		if(userHasRole(new RoleCode[]{RoleCode.PUBLICATION_APPROVER})){ //#25692 
 			 			return true;
 			 		}
 			 	}
