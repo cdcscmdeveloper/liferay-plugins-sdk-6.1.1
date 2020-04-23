@@ -300,13 +300,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			loadDefaultButtons();
 		}
 		
-		//#24975 azza - start
-		if (action == "VIEW"){
-			 this.getManagedBean().setEditable(true);
-		    }else{ 
-			 this.getManagedBean().setEditable(false);
-		   }
-		//#24975 azza - end
+//		//#24975 azza - start
+//		if (action == "VIEW"){
+//			 this.getManagedBean().setEditable(true);
+//		    }else{ 
+//			 this.getManagedBean().setEditable(false);
+//		   }
+//		//#24975 azza - end
 		
 		RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
 		return NAV_TO_MAINTAIN;
@@ -781,40 +781,40 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			//B
 			if(ParameterConst.VOT_MENGURUS.equals(ppExpenditureItem.getVotFundType().getParameterCode())){
 				this.getManagedBean().getEpItemsB().add(ppExpenditureItem);
-				//#24975 azza - start
+				//24975 - start
 			    this.resetPpExpenditureItems(this.getManagedBean().getEpItemsB());
-			  //#24975 azza - end
+			    //24975 - end
 			}
 			//T
 			if(ParameterConst.VOT_TANGGUNGAN.equals(ppExpenditureItem.getVotFundType().getParameterCode())){
 				this.getManagedBean().getEpItemsT().add(ppExpenditureItem);
-				//#24975 azza - start
+				//24975 - start
 			    this.resetPpExpenditureItems(this.getManagedBean().getEpItemsT());
-			  //#24975 azza - end
+			    //24975 - end
 			}
 			//P
 			if(ParameterConst.VOT_PEMBANGUNAN.equals(ppExpenditureItem.getVotFundType().getParameterCode())){
 				this.getManagedBean().getEpItemsP().add(ppExpenditureItem);
 				
-				//#24975 azza - start
+				//24975 - start
 	            this.resetPpExpenditureItems(this.getManagedBean().getEpItemsP());
-	          //#24975 azza - end
+	            //24975 - end
 			}
 			//S
 			if(ParameterConst.VOT_SETIA.equals(ppExpenditureItem.getVotFundType().getParameterCode())){
 				this.getManagedBean().getEpItemsS().add(ppExpenditureItem);
 				
-				//#24975 azza - start
+				 //24975 - start
 			     this.resetPpExpenditureItems(this.getManagedBean().getEpItemsS());
-			   //#24975 azza - end
+			    //24975 - end
 			}
 			//H
 			if(ParameterConst.VOT_AMANAH.equals(ppExpenditureItem.getVotFundType().getParameterCode())){
 				this.getManagedBean().getEpItemsH().add(ppExpenditureItem);
 				
-				//#24975 azza - start
+				//24975 - start
 				this.resetPpExpenditureItems(this.getManagedBean().getEpItemsH());
-				//#24975 azza - end
+				//24975 - end
 			}
 		}
 		
@@ -2456,11 +2456,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		epItem.setEditable(true);
 		epItem.setPpPlan(this.getManagedBean().getSelectedPlan());
 		//#25479 13/3/2020 - start
-		epItem.setCloneEnabled(true);
-		//#25479 13/3/2020 - End
-		//add #25549 21/04/2020 - Start
-		epItem.setDisableForPindaan(true);
-        //add #25549 21/04/2020 - end
+//		epItem.setCloneEnabled(true);
+//		//#25479 13/3/2020 - End
+//		//add #25549 21/04/2020 - Start
+//		epItem.setDisableForPindaan(true);
+//        //add #25549 21/04/2020 - end
 		
 		//B
 		if(ParameterConst.VOT_MENGURUS.equals(paramCode)){
@@ -2681,7 +2681,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							expItem.setStatusEnabled(false);
 							expItem.setCloneEnabled(false);
 							expItem.setEditable(false);
-							expItem.setJustificationEnabled(false);
+							//expItem.setJustificationEnabled(false);
 							expItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 					}
 				  }
@@ -2735,7 +2735,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							expItem.setStatusEnabled(false);
 							expItem.setCloneEnabled(false);
 							expItem.setEditable(false);
-							expItem.setJustificationEnabled(false);
+							//expItem.setJustificationEnabled(false);
 							expItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 					}
 				  }
@@ -2789,7 +2789,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							expItem.setStatusEnabled(false);
 							expItem.setCloneEnabled(false);
 							expItem.setEditable(false);
-							expItem.setJustificationEnabled(false);
+							//expItem.setJustificationEnabled(false);
 							expItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 					}
 				  }
@@ -2844,7 +2844,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							expItem.setStatusEnabled(false);
 							expItem.setCloneEnabled(false);
 							expItem.setEditable(false);
-							expItem.setJustificationEnabled(false);
+							//expItem.setJustificationEnabled(false);
 							expItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 					}
 				  }
@@ -2898,7 +2898,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							expItem.setStatusEnabled(false);
 							expItem.setCloneEnabled(false);
 							expItem.setEditable(false);
-							expItem.setJustificationEnabled(false);
+							//expItem.setJustificationEnabled(false);
 							expItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 					}
 				  }
@@ -3324,12 +3324,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		ppItem.setProcurementCat(new PmParameter());
 		ppItem.setProcurementType(new PmParameter());
 		ppItem.setEditable(true);
-		
-		//add #25549 21/04/2020 - Start
-        ppItem.setCloneEnabled(true);
-        ppItem.setDisableForPindaan(true);
-        //add #25549 21/04/2020 - end
-       
 		
 		if(Calendar.getInstance().get(Calendar.YEAR) == this.getManagedBean().getSelectedPlan().getPlanYear()){ 
 			//current year
@@ -6627,7 +6621,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		    		newPpExItem.setFromPpItem(clonedPpExpItem.getExpenditureItemId());
 		    		newPpExItem.setReasonForUpdateEnabled(false);
 		    		newPpExItem.setStatusEnabled(false);
-		    		newPpExItem.setJustificationEnabled(false);
+		    		//newPpExItem.setJustificationEnabled(false);
 		    		newPpExItem.setDisableEditAccount(true);
 		    		
 		    		log.info("Plan Id " + newPpExItem.getPpPlan().getPlanId());
@@ -6678,7 +6672,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				 cloned.setStatusEnabled(false);
 				 cloned.setDisableEditAccount(true);
 				 cloned.setReasonForUpdateEnabled(false);
-				 cloned.setJustificationEnabled(false);
+				// cloned.setJustificationEnabled(false);
 			 }
 			 
 			 idx -= 1;
@@ -6691,7 +6685,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				 original.setStatusEnabled(true);
 				 original.setReasonForUpdateEnabled(true);
 				 original.setDisableEditAccount(true);
-				 original.setJustificationEnabled(true);
+				// original.setJustificationEnabled(true);
 			 }
 		}
 
@@ -6814,7 +6808,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							ppItem.setDisableForPindaan(true);
 							ppItem.setReasonForUpdateEnabled(false);
 							ppItem.setDisableEditAccount(true);
-							ppItem.setJustificationEnabled(false);
+							//ppItem.setJustificationEnabled(false);
 						}
 					} else {
 						/* Always disable Pindaan for original ppItem
@@ -6824,12 +6818,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							ppItem.setDisableForPindaan(true);
 							ppItem.setReasonForUpdateEnabled(true);
 							ppItem.setDisableEditAccount(true);
-							ppItem.setJustificationEnabled(true);
+							//ppItem.setJustificationEnabled(true);
 						}else {
 							// The rest should retain the existing field logics
 							ppItem.setDisableForPindaan(false);
 							ppItem.setReasonForUpdateEnabled(true);
-							ppItem.setJustificationEnabled(true);
+							//ppItem.setJustificationEnabled(true);
 						}
 					}        
 				}
