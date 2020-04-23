@@ -87,6 +87,7 @@ import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
+import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
@@ -1047,6 +1048,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 								new String[] {ResourceBundleUtils.getMessage("lbl.sc.quantity",
 										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 					}
+
+					//26221 - Start
+					if (requestNoteDtl.getAssignedUser() == null || (requestNoteDtl.getAssignedUser() != null && requestNoteDtl.getAssignedUser().getUserId()==null)) {
+						throw new EpException(MessageConst.ERROR_100022, new String[]{
+							ResourceBundleUtils.getMessage(
+									"lbl.sc.request.note.loa.prepare.by", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale())});
+					//26221 - end
+					}
 				}
 			}
 		}
@@ -1077,7 +1088,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		SCDirectPurchaseDataType directPurchaseDataType = super.getBpmTaskDetails(SCDirectPurchaseDataType.class, null);
 		Long dpId = null;
 		boolean zoneFlag = Boolean.FALSE;
-		ScRequestNote	requestNote = null;
+		ScRequestNote requestNote = null; 
 
 		if(directPurchaseDataType.getRnId() == null){
 			dpId = Long.valueOf(directPurchaseDataType.getDpId());
@@ -1209,8 +1220,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					scRequestNoteDtl.setPriceTypeId(scRequestNoteDtl.getPriceType().getParameterId());
 				}
 
-				if(null == scRequestNoteDtl.getAssignedUser()){
-					scRequestNoteDtl.setAssignedUser(new PmUser());	
+				//#26221
+				if(scRequestNoteDtl.getAssignedUser() == null){
+					if((requestNote.getCreatedBy() != null) && (scRequestNoteDtl.getFulfilmentType().getParameterCode()
+							.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF))) {
+						scRequestNoteDtl.setAssignedUser(getUserById(requestNote.getCreatedBy()));
+					} else {
+						scRequestNoteDtl.setAssignedUser(new PmUser());
+					}
 				}
 
 				if(null == scRequestNoteDtl.getProcurementTypeCategory()){
@@ -4505,5 +4522,45 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 */
 	private IDPOsbSO getDPOsbSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDPOsbSO.class);
-	}	
+	}
+	
+	//26221 - Start
+	public String getPreparedByApprove(ScRequestNoteDtl requestNoteDtl) {
+		debugLogger("getPreparedByApprove");
+		StringBuilder sb = new StringBuilder();
+		UserReqDTO reqDTO = new UserReqDTO();
+		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+
+		if (requestNoteDtl.getFulfilmentType() != null) {
+			if (requestNoteDtl.getFulfilmentType().getParameterCode()
+					.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
+				reqDTO.setRoleCode(RoleCode.REQUISITIONER.value());
+			} else {
+				reqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
+			}
+
+			OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+			orgProfileReqDTO.setOrgProfileId(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
+			orgProfileReqDTO.setGroupOrgType(ParameterConst.ORG_AUTH_TYPE_ORG_GROUP);
+			OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveProfileGroupByGroupOrgType(orgProfileReqDTO);
+	
+			String orgProfileIds = String.valueOf(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
+					
+			if (CollectionUtils.isNotEmpty(orgProfileResDTO.getProfileGroups())) {
+				for(PmProfileGroup group: orgProfileResDTO.getProfileGroups()){
+					orgProfileIds = orgProfileIds + "," + group.getMainOrgProfile().getOrgProfileId();
+				}
+			}
+
+			sb.append("pmUserOrgs.pmOrgProfile.orgProfileId^");				
+			sb.append(orgProfileIds);
+			sb.append("^9");
+			sb.append("|pmUserOrgs.pmUserRoles.pmRole.roleCode^");
+			sb.append(reqDTO.getRoleCode());
+			sb.append("|pmUserOrgs.pmUserRoles.recordStatus^1");
+		}
+		return sb.toString();
+	}
+	//26221 - End
 }
