@@ -6622,7 +6622,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		    		newPpExItem.setReasonForUpdateEnabled(false);
 		    		newPpExItem.setStatusEnabled(false);
 		    		//newPpExItem.setJustificationEnabled(false);
-		    		newPpExItem.setDisableEditAccount(true);
+		    		//newPpExItem.setDisableEditAccount(true);
 		    		
 		    		log.info("Plan Id " + newPpExItem.getPpPlan().getPlanId());
 		    		log.info("FromPpItem " + newPpExItem.getFromPpItem());
@@ -6670,7 +6670,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			 if ((cloned.isCloned() && cloned.isBrandNew())) {
 				 cloned.setCloneEnabled(false);
 				 cloned.setStatusEnabled(false);
-				 cloned.setDisableEditAccount(true);
+				 //cloned.setDisableEditAccount(true);
 				 cloned.setReasonForUpdateEnabled(false);
 				// cloned.setJustificationEnabled(false);
 			 }
@@ -6684,7 +6684,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				 original.setCloneEnabled(true);
 				 original.setStatusEnabled(true);
 				 original.setReasonForUpdateEnabled(true);
-				 original.setDisableEditAccount(true);
+				// original.setDisableEditAccount(true);
 				// original.setJustificationEnabled(true);
 			 }
 		}
@@ -6807,7 +6807,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							ppItem.setCloneEnabled(true);
 							ppItem.setDisableForPindaan(true);
 							ppItem.setReasonForUpdateEnabled(false);
-							ppItem.setDisableEditAccount(true);
+							//ppItem.setDisableEditAccount(true);
 							//ppItem.setJustificationEnabled(false);
 						}
 					} else {
@@ -6817,7 +6817,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							ppItem.setCloneEnabled(true);
 							ppItem.setDisableForPindaan(true);
 							ppItem.setReasonForUpdateEnabled(true);
-							ppItem.setDisableEditAccount(true);
+							//ppItem.setDisableEditAccount(true);
 							//ppItem.setJustificationEnabled(true);
 						}else {
 							// The rest should retain the existing field logics
