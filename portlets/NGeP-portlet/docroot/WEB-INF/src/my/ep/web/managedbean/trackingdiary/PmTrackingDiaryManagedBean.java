@@ -1052,23 +1052,17 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 					ITrackingDiarySO trackingDiarySO = (ITrackingDiarySO) BusinessDelegate.getInstance()
 							.getServiceObject("cc", ITrackingDiarySO.class);
 
-					// CR 25790 - Start					
-					if (isReqOrApprover()) {
-						if (!ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT.equalsIgnoreCase(getSelectedDocType())
-								&& !ParameterConst.DOCTYPE_PURCHASE_INQUIRY.equals(getSelectedDocType())
-								&& !ParameterConst.EP_DOC_MINISTRY_CONTRACT.equals(getSelectedDocType())) {
-							String docType = getSelectedDocType();
-							Long docId = getSelectedDocId();
-							resDTO = trackingDiarySO.retrieveTrackingDiaryByGroupDocAndGroupId(docId, docType, reqDTO,
-									searchBean, searchFilterBeanAnd1);
-						} else {
-							searchBean.getDataFilterBeans().add(
-									new SearchMultiFilterBean(searchFilterBeanAnd1, searchFilterBeanAnd2));
-							reqDTO.setSearchBean(searchBean);
-
-							setSearchBeanDescription(searchBean, searchFilterBean1, searchFilterBean2);
-							resDTO = trackingDiarySO.retrieveTrackingDiaryBySearchBean(reqDTO);
-						}
+					// #25790 - Start
+					if (isReqOrApprover() && ParameterConst.DOCTYPE_SIMPLE_QUOTE.equals(getSelectedDocType())
+							|| isReqOrApprover() && ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT.equals(getSelectedDocType())
+							|| isReqOrApprover() && ParameterConst.DOCTYPE_REQUEST_NOTE.equals(getSelectedDocType())
+							|| isReqOrApprover() && ParameterConst.DOCTYPE_LETTER_OF_AWARD.equals(getSelectedDocType())
+							|| isReqOrApprover() && ParameterConst.DOCTYPE_PURCHASE_INQUIRY.equals(getSelectedDocType())
+							|| isReqOrApprover() && ParameterConst.DOCTYPE_QUOTATION.equals(getSelectedDocType())) {
+						String docType = getSelectedDocType();
+						Long docId = getSelectedDocId();
+						resDTO = trackingDiarySO.retrieveTrackingDiaryByGroupDocAndGroupId(docId, docType, reqDTO,
+								searchBean, searchFilterBeanAnd1);
 
 					} else {
 						searchBean.getDataFilterBeans().add(
@@ -1078,7 +1072,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 						setSearchBeanDescription(searchBean, searchFilterBean1, searchFilterBean2);
 						resDTO = trackingDiarySO.retrieveTrackingDiaryBySearchBean(reqDTO);
 					}
-					// CR 25790 - End
+					// #25790 - End
 
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
