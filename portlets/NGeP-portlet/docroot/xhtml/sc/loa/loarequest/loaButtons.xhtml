@@ -148,8 +148,20 @@
 								action="#{lOADetailBackingBean.cancelLoa(bpmAction)}" process="@form"
 								update="@form" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();" />
-							</h:panelGroup>					
-
+							</h:panelGroup>	
+							Enhancement #22211 START
+							<h:panelGroup rendered="#{bpmAction == 'CANCEL'}">
+								<p:commandButton value="#{lbl['lbl.btn.cancel']}" id="cancelLoaBtn"
+								rendered="#{!isSqStillValid}"
+								action="#{LOACancelDetailBackingBean.cancelationLOA(lOADetailBackingBean.managedBean.scLoa.loaId)}" process="@form"
+								update="@form" onstart="blockWidget.show();"
+								oncomplete="blockWidget.hide();" />
+							</h:panelGroup>
+							<p:tooltip for="cancelLoaBtn">
+								<h:outputText value="#{lbl['lbl.sc.loa.cancel.btn.tooltip']}"
+									escape="false" />
+							</p:tooltip>				
+							Enhancement #22211 END
 						</ui:repeat>
 					</ui:define>
 				</ui:decorate>
