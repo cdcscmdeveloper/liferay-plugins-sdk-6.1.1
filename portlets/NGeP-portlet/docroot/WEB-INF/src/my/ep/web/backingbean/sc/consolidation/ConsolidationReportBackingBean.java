@@ -30,6 +30,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
@@ -513,16 +514,39 @@ public class ConsolidationReportBackingBean extends
 		downloadFile(reportAttachment);
 	}
 	
+	// #18685 - Start
 	/**
 	 * @throws Exception
 	 */
-	public void downloadBriefingPaperReport() throws Exception {
+	public void downloadAllBriefingPaperReports() throws Exception {
 		List<ScQtFinalizationReport> finalizationReports = getManagedBean().getFinalizationReports();
 		if (CollectionUtils.isNotEmpty(finalizationReports)) {
-			this.downloadReport(finalizationReports.get(0));
+			this.downloadBriefingPaperReport(finalizationReports.get(0));
 		}
 	}
+	
+	/**
+	 * @param scQtFinalizationReport
+	 * @throws Exception
+	 */
+	public void downloadBriefingPaperReport(ScQtFinalizationReport scQtFinalizationReport) throws Exception {
+		ScQtFinalizationReportAttachment reportAttachment = null;
+		if (null != getManagedBean().getCurrentStatusId() 
+				&& getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_CONSOLIDATION_REPORT.longValue()) {
+			reportAttachment = generateDocumentAttachment(scQtFinalizationReport);
+			scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
+		} else {
+			reportAttachment = scQtFinalizationReport.getScQtFinalizationReportAttachment();
 
+			if (reportAttachment == null) {
+				reportAttachment = generateDocumentAttachment(scQtFinalizationReport);
+				scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
+			}
+		}
+		downloadFile(reportAttachment);
+	}
+	// #18685 - End
+	
 	/**
 	 * To download all reports under Evaluation Report tab.
 	 * 
