@@ -2491,7 +2491,9 @@ public class QTDetailBackingBean extends
 			QuationTenderResDTO resDTO = null;
 
 			reqDTO.setQtdetail(scQt);
-			reqDTO.setAvaliableApprovals(scQt.getScQtApprovals());
+			//Enhancement #26130 -start-
+//			reqDTO.setAvaliableApprovals(scQt.getScQtApprovals());
+			//Enhancement #26130 -end-
 			reqDTO.setAmendMentBean(this.getManagedBean().getAmendMentBean());
 			reqDTO.setDeskOfficer(new FacesScopes().getUserSessionBean());
 			// reqDTO.setRuleDataBean(this.getManagedBean().getRuleDataBean());
