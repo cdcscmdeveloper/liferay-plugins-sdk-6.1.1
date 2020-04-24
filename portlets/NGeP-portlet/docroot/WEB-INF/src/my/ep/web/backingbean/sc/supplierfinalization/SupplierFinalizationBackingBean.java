@@ -2465,16 +2465,39 @@ public class SupplierFinalizationBackingBean extends
 		}
 		downloadFile(reportAttachment);
 	}
-
+	
+	// #18685 - Start
 	/**
 	 * @throws Exception
 	 */
-	public void downloadBriefingPaperReport() throws Exception {
+	public void downloadAllBriefingPaperReports() throws Exception {
 		List<ScQtFinalizationReport> finalizationReports = getManagedBean().getDocumentList();
 		if (CollectionUtils.isNotEmpty(finalizationReports)) {
-			this.downloadReport(finalizationReports.get(0));
+			this.downloadBriefingPaperReport(finalizationReports.get(0));
 		}
 	}
+	
+	/**
+	 * @param scQtFinalizationReport
+	 * @throws Exception
+	 */
+	public void downloadBriefingPaperReport(ScQtFinalizationReport scQtFinalizationReport) throws Exception {
+		ScQtFinalizationReportAttachment reportAttachment = null;
+		if (null != getManagedBean().getCurrentStatusId() 
+				&& getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION.longValue()) {
+			reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
+			scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
+		} else {
+			reportAttachment = scQtFinalizationReport.getScQtFinalizationReportAttachment();
+
+			if (reportAttachment == null) {
+				reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
+				scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
+			}
+		}
+		downloadFile(reportAttachment);
+	}
+	// #18685 - End
 	
 	/**
 	 * To download all reports under Briefing Paper/Kertas Taklimat tab
