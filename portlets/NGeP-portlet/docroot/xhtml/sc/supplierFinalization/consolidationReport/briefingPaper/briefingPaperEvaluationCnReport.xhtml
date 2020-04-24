@@ -96,7 +96,7 @@
 
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.download.all']}" ajax="false"
-			action="#{consolidationReportBackingBean.downloadBriefingPaperReport()}"
+			action="#{consolidationReportBackingBean.downloadAllBriefingPaperReports()}"
 				styleClass="BtnSpacing" />
 				
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
@@ -134,7 +134,6 @@
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.cm.save']}" style="width: 8%;" 
-					action="#{consolidationReportBackingBean.saveEditTemplateDocContent(consolidationReportBackingBean.managedBean.selectedReport)}"
 					oncomplete="reportContentPopupDlg.hide();" process="@this" partialSubmit="true" />
 			
 				<p:commandButton value="#{lbl['lbl.btn.close']}" style="width: 8%;" 
