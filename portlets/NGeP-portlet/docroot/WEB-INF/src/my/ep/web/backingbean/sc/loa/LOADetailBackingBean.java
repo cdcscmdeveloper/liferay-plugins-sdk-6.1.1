@@ -443,7 +443,15 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * @return the supplier loa page
 	 */
 	public String retrieveSupplierLOADtl(Long sourceId, Long loaId, String previousPageUrl, boolean isReadonly) {
-		return retrieveSupplierLOADtlPriv(sourceId, loaId, previousPageUrl, isReadonly, null);
+		// #26226 - Start
+		Map<MapKeyEnum, Object> otherArgs = null;
+		if (null != getManagedBean().getCurrentStatusId() 
+				&& getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.longValue()) {
+			otherArgs = new HashMap<>();
+			otherArgs.put(MapKeyEnum.enableDownloadAllDocuments, Boolean.TRUE);
+		}
+		return retrieveSupplierLOADtlPriv(sourceId, loaId, previousPageUrl, isReadonly, otherArgs);
+		// #26226 - End
 	}
 	
 	/**
