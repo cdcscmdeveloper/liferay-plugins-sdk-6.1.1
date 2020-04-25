@@ -5703,7 +5703,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 		// #25426#36 ruzaimah - Start
 		if ((this.getManagedBean().isMaintanceFlow()
-				&& this.isDeskOfficer())
+				&& isDeskOfficer()) // #25426#85 ruzaimah - remove this.
 				&& !this.getManagedBean().isReadOnly()) {
 			return false;
 		}
