@@ -930,7 +930,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					&& (deductionRemark == null || deductionRemark.length() == 0)
 					&& (scheduleRemark == null || scheduleRemark.length() == 0) 
 					&& (settingRemark == null || settingRemark.length() == 0)
-					&& (notificationRemark == null) || notificationRemark.length()== 0) {/*#26083 start - basri*/
+					&& (notificationRemark == null || notificationRemark.length() == 0)) {/*#26083 start - basri*/
 				getManagedBean().setSelectedTabIndex(0);
 				throwExceptions(MessageConst.ERROR_100022, "lbl.ct.remark");
 			}
