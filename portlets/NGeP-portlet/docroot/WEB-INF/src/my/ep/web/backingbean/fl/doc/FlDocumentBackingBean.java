@@ -1386,7 +1386,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	 		   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION)
 			   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
 			   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)){
-	    		quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(docNo, docStatusId, docType);	
+	    		quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(docNo, docStatusId, docType, false);	
 	    		if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 	    			if(!isSqStillValid(quoteResDTO.getEndDate())){
 	    				sqExpired = true;
