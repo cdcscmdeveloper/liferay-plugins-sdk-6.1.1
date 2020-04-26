@@ -510,6 +510,13 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		this.getManagedBean().setHmGroupUserFlagStatDb(hmGrpUsrStat);		
 		//[#26037] - end		
 		
+		//#27629 start
+		this.getManagedBean().setUserSearch(false);
+		this.getManagedBean().setUserName(null);
+		this.getManagedBean().setIdentificationNo(null);
+		this.getManagedBean().setRecordSearchStatusFlg(null);
+		//#27629 end
+		
 		return "/xhtml/pm/usergroupsearch/userGroupMaintenance.xhtml";
 	}
 
@@ -1245,4 +1252,119 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		}
 		return anyPendingTask;
 	}
+	
+	//#27629 start
+	public void userGroupUserSearch() {
+		logger.info("[#27629] userGroupSearch");
+		String userName = getManagedBean().getUserName();
+		String identificationNo = getManagedBean().getIdentificationNo();
+		String statusFlag = getManagedBean().getRecordSearchStatusFlg();
+		PmUserGroupUser groupUser = null;
+		
+		logger.info("status : " + statusFlag);
+		
+		List<PmUserGroupUser> groupUsers = new ArrayList<PmUserGroupUser>();;
+		if (!userName.isEmpty() || !identificationNo.isEmpty() || statusFlag!=null){
+			if (this.getManagedBean().isUserSearch()){
+				this.getManagedBean().setUserGroups(this.getManagedBean().getUserGroupUserSearch());
+			}else{
+				this.getManagedBean().setUserGroupUserSearch(this.getManagedBean().getUserGroups());
+			}
+			
+			for (PmUserGroupUser groupUserSearch : this.getManagedBean().getUserGroups()) {
+				logger.info("status satu2 "+groupUserSearch.getPmUser().getRecordStatusFlg().toString());
+				groupUser = new PmUserGroupUser();
+				if (groupUserSearch.getPmUser().getUserName() != null && !userName.isEmpty()
+						&& groupUserSearch.getPmUser().getUserName().toLowerCase().contains(userName.toLowerCase())) {
+					logger.info("masuk name berjaya jumpa");
+					if (!identificationNo.isEmpty() && statusFlag!=null) {
+						if (groupUserSearch.getPmUser().getIdentificationNo().toLowerCase().contains(identificationNo.toLowerCase())
+								&& groupUserSearch.getPmUser().getRecordStatusFlg().toString().equals(statusFlag)) {
+							groupUser.setPmUser(groupUserSearch.getPmUser());
+						} 	
+					} 
+					else if(!identificationNo.isEmpty() && statusFlag==null){
+						if (groupUserSearch.getPmUser().getIdentificationNo().toLowerCase().contains(identificationNo.toLowerCase())) {
+							groupUser.setPmUser(groupUserSearch.getPmUser());
+						}
+					}else {
+						groupUser.setPmUser(groupUserSearch.getPmUser());
+					}
+				}
+				if (groupUserSearch.getPmUser().getIdentificationNo() != null && !identificationNo.isEmpty()
+						&& userName.isEmpty()) {
+					if(statusFlag!=null){
+						if (groupUserSearch.getPmUser().getIdentificationNo().toLowerCase()
+								.contains(identificationNo.toLowerCase())
+								&& groupUserSearch.getPmUser().getRecordStatusFlg().toString().equals(statusFlag)) {
+							logger.info("masuk id berjaya jumpa");
+							groupUser.setPmUser(groupUserSearch.getPmUser());
+
+						}
+					}else {
+						if (groupUserSearch.getPmUser().getIdentificationNo().toLowerCase()
+								.contains(identificationNo.toLowerCase())) {
+							logger.info("masuk id berjaya jumpa");
+							groupUser.setPmUser(groupUserSearch.getPmUser());
+
+						}
+					}
+
+				}
+				if (groupUserSearch.getPmUser().getRecordStatusFlg().toString() != null && identificationNo.isEmpty()
+						&& userName.isEmpty() && statusFlag!=null) {
+					if (groupUserSearch.getPmUser().getRecordStatusFlg().toString().equals(statusFlag.toLowerCase())) {
+						logger.info("masuk status berjaya jumpa");
+						groupUser.setPmUser(groupUserSearch.getPmUser());
+
+					}
+				}
+				
+				if (groupUser.getPmUser()!=null) {
+					groupUser.setPmUserGroup(this.getManagedBean().getUserGroup());
+					groupUser.setPmUserRole(groupUserSearch.getPmUserRole());
+					groupUsers.add(groupUser);	
+				}
+			}
+			this.getManagedBean().setUserSearch(true);
+			this.getManagedBean().setUserGroups(groupUsers);
+		}
+
+		
+		
+		/*
+		List<PmUserGroupUser> groupUsers = this.getManagedBean().getUserGroups();
+		if (null != users) {
+			// getManagedBean().setBrandNew(true);
+			PmUserGroupUser groupUser = null;
+			for (int i = 0; i < users.size(); i++) {
+				PmUser pmUser = (PmUser) users.get(i);
+				groupUser = new PmUserGroupUser();
+				for (PmUserGroupUser userGroupUser : groupUsers) {
+					if (userGroupUser.getPmUser().getIdentificationNo().equalsIgnoreCase(pmUser.getIdentificationNo()))
+						throw new EpException(MessageConst.ERR_900002);
+				}
+
+				groupUser.setPmUser(pmUser);
+				groupUser.setPmUserGroup(this.getManagedBean().getUserGroup());
+				// retrieve pm user roles
+				groupUser.setPmUserRole(retrieveUserGroup(pmUser.getUserId()));
+				groupUsers.add(groupUser);
+			}
+		}
+		this.getManagedBean().setUserGroups(groupUsers);*/
+	}
+	public void userGroupUserReset() {
+		
+		if(this.getManagedBean().isUserSearch()){
+			this.getManagedBean().setUserGroups(this.getManagedBean().getUserGroupUserSearch());
+		}	
+		this.getManagedBean().setUserSearch(false);
+		this.getManagedBean().setUserName(null);
+		this.getManagedBean().setIdentificationNo(null);
+		this.getManagedBean().setRecordSearchStatusFlg(null);
+		
+	}
+	
+	//#27629 end
 }
