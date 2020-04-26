@@ -342,6 +342,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		}
 		else if(getManagedBean().getSearchDocumentType().equals(ParameterConst.DOCTYPE_LETTER_OF_AWARD)){
 			getManagedBean().setDocumentTypeDesc(ParameterConst.LOA_TITLE);
+			getManagedBean().setSearchDPM(false);
 		}
 		getManagedBean().getDpDocumentDataModel().reloadData();
 	}
