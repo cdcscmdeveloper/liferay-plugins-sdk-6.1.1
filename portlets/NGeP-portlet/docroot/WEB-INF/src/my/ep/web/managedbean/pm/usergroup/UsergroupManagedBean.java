@@ -46,6 +46,14 @@ public class UsergroupManagedBean extends BaseManagedBean {
 	private boolean selectGrp = false;
 	private boolean disabledOrg;
 	private HashMap<Long,Integer> hmGroupUserFlagStatDb = null;
+	
+	//#27629 start
+	private String userName;
+	private String identificationNo;
+	private List<PmUserGroupUser> userGroupUserSearch;
+	private boolean isUserSearch;
+	private String recordSearchStatusFlg;
+	//27629 end
 
 	public UsergroupManagedBean() {
 	}
@@ -336,5 +344,71 @@ public class UsergroupManagedBean extends BaseManagedBean {
 			HashMap<Long, Integer> hmGroupUserFlagStatDb) {
 		this.hmGroupUserFlagStatDb = hmGroupUserFlagStatDb;
 	}
+	
+	//#27628 start
+	/**
+	 * @return the userName
+	 */
+	public String getUserName() {
+		return userName;
+	}
+
+	/**
+	 * @param userName the userName to set
+	 */
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	/**
+	 * @return the identificationNo
+	 */
+	public String getIdentificationNo() {
+		return identificationNo;
+	}
+
+	/**
+	 * @param identificationNo the identificationNo to set
+	 */
+	public void setIdentificationNo(String identificationNo) {
+		this.identificationNo = identificationNo;
+	}
+	
+	/**
+	 * @return the userGroupUserSearch
+	 */
+	public List<PmUserGroupUser> getUserGroupUserSearch() {
+		return userGroupUserSearch;
+	}
+
+	/**
+	 * @param userGroupUserSearch the userGroupUserSearch to set
+	 */
+	public void setUserGroupUserSearch(List<PmUserGroupUser> userGroupUserSearch) {
+		this.userGroupUserSearch = userGroupUserSearch;
+	}
+	
+	/**
+	 * @return the isUserSearch
+	 */
+	public boolean isUserSearch() {
+		return isUserSearch;
+	}
+
+	/**
+	 * @param isUserSearch the isUserSearch to set
+	 */
+	public void setUserSearch(boolean isUserSearch) {
+		this.isUserSearch = isUserSearch;
+	}
+	
+	public String getRecordSearchStatusFlg() {
+		return recordSearchStatusFlg;
+	}
+
+	public void setRecordSearchStatusFlg(String recordSearchStatusFlg) {
+		this.recordSearchStatusFlg = recordSearchStatusFlg;
+	}
+	
+	//#27629 end
 
 }
