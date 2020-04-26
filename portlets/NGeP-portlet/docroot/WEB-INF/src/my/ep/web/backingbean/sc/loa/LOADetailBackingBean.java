@@ -323,19 +323,21 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			getManagedBean().setEditFlag(Boolean.TRUE);
 			
 			//Enhancement #12177
-			if(scLoa.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_SUBMISSION)){
-				if(!scLoa.isBrandNew() && !isSqStillValid() && sqExpiredMessageFlag ){
+			if(!getManagedBean().isTrackingDairyView()){
+				if(scLoa.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_SUBMISSION)){
+					if(!scLoa.isBrandNew() && !isSqStillValid() && sqExpiredMessageFlag ){
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(MessageConst.ERROR_760481, 
+								null,MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					}
+				}
+				else if(!isSqStillValid() && sqExpiredMessageFlag ){
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 						MessageUtils.getMessage(MessageConst.ERROR_760481, 
 							null,MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				}
 			}
-			else if(!isSqStillValid() && sqExpiredMessageFlag ){
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-					MessageUtils.getMessage(MessageConst.ERROR_760481, 
-						null,MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-			}
-
+			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			if(getManagedBean().getBackToPreviousPage() == null || getManagedBean().getBackToPreviousPage().isEmpty()){
 				getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
