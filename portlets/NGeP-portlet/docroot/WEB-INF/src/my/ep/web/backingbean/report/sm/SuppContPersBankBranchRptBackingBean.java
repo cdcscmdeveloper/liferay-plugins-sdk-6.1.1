@@ -6,11 +6,12 @@ import java.util.LinkedHashMap;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import org.apache.commons.lang.StringUtils;
-
 import my.ep.constants.CommonConstants;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.SuppContPersBankBranchRptManagedBean;
+
+import org.apache.commons.lang.StringUtils;
 
 @ManagedBean(name = "suppContPersBankBranchRptBB")
 @ViewScoped
@@ -24,6 +25,9 @@ public class SuppContPersBankBranchRptBackingBean extends
 
 	public SuppContPersBankBranchRptBackingBean() {
 		setDefaultDateFromAndDateTo();
+		//#28115 - start
+		getSupplierInfo();
+		//#28115 - end
 	}
 
 	public void generateReport() {
@@ -46,6 +50,10 @@ public class SuppContPersBankBranchRptBackingBean extends
 		if (!StringUtils.isBlank(getManagedBean().getRegType())) {
 			params.put(SmReportConst.PARAM_REG_TYPE, getManagedBean()
 					.getRegType());
+		} else {
+			//#28115 - start
+			params.put(SmReportConst.PARAM_REG_TYPE, ReportConst.SUPPL_ALL_TYPE);
+			//#28115 - end
 		}
 		if (getManagedBean().getSelectedOrgProfile() != null
 				&& getManagedBean().getSelectedOrgProfile().getSmSupplier() != null) {
