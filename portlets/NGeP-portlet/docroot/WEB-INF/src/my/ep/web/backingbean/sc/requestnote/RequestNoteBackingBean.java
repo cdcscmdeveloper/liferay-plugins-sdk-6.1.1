@@ -4494,7 +4494,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			Locale locale = new FacesScopes().getUserLocale();
 			FacesContext.getCurrentInstance().addMessage(
 					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils
 							.getMessage(
 									ResourceBundleUtils.getMessage("lbl.sc.purchase.in.default.exp.msg",
 											ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale),
@@ -4515,7 +4515,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			Locale locale = new FacesScopes().getUserLocale();
 			FacesContext.getCurrentInstance().addMessage(
 					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils
 							.getMessage(
 									ResourceBundleUtils.getMessage("lbl.sc.purchase.in.default.exp.msg2",
 											ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale),
