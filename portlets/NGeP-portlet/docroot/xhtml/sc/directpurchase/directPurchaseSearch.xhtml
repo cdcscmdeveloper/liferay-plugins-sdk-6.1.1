@@ -15,6 +15,7 @@
 		<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="true"></p:messages>
 		<ac:lovPopup />
+		<div>C5</div>
 		<p:panel id="searchPanel" header="#{lbl['lbl.sc.search']}"
 			toggleable="true">
 			<table style="width: 100%;">
@@ -64,7 +65,7 @@
 							rendered="#{directPurchaseBackingBean.showFunctionType()}">
 							<f:selectItems
 								value="#{directPurchaseBackingBean.getFunctionType()}" />
-							<p:ajax event="change" update=":form:seldoctype" listener="#{directPurchaseBackingBean.preRenderDirectPurchaseSearch}" />
+							<p:ajax event="change" update=":form:seldoctype" listener="#{directPurchaseBackingBean.getDocTypesByViewAs}" />
 						</p:selectOneMenu><ac:iconTooltip value="#{lbl['lbl.tooltip.directpurchase.search.view.as']}" rendered="#{directPurchaseBackingBean.showFunctionType()}" /></td>	
 				</tr>
 				<!-- end 25396: -->
@@ -184,29 +185,13 @@
 					
 						<p:menuitem id="viewBtnIconDualRole" value="#{lbl['lbl.btn.view']}"
 							icon="ui-icon-view"
-							rendered="#{directPurchaseBackingBean.showFunctionType() == true and directPurchaseBackingBean.managedBean.searchDocumentType ne ParameterConst.doctypeSimpleQuote}"
-							action="#{directPurchaseBackingBean.viewDoc(Obj)}" /> 
-																			
-						<p:menuitem id="viewBtnIconDualRole2" value="#{lbl['lbl.btn.view']}"
-							icon="ui-icon-view"
-							rendered="#{directPurchaseBackingBean.showFunctionType() == true and directPurchaseBackingBean.managedBean.searchDocumentType eq ParameterConst.doctypeSimpleQuote}"
-							action="#{directPurchaseBackingBean.viewDocSupplierSQ(Obj)}" /> 
-							
-						<p:menuitem id="viewBtnIcon" value="#{lbl['lbl.btn.view']}"
-							icon="ui-icon-view"
-							rendered="#{directPurchaseBackingBean.showFunctionType() == false and !directPurchaseBackingBean.isSupplier() or (directPurchaseBackingBean.isSupplier() and directPurchaseBackingBean.managedBean.searchDocumentType ne ParameterConst.doctypeSimpleQuote)}"
-							action="#{directPurchaseBackingBean.viewDoc(Obj)}" />
+							action="#{directPurchaseBackingBean.performViewDoc(Obj)}" /> 
 
 						<p:menuitem id="printBtnIcon" value="#{lbl['lbl.btn.print']}"
 							ajax="false"
 							rendered="#{directPurchaseBackingBean.isSupplier() ? directPurchaseBackingBean.managedBean.searchDocumentType eq ParameterConst.doctypeLetterOfAward : true}"
 							icon="ui-icon-print"
 							action="#{directPurchaseBackingBean.generateReport(Obj)}" />
-							
-						<p:menuitem id="viewBtnIconSimpleQuote" value="#{lbl['lbl.btn.view']}"
-							icon="ui-icon-view"
-							rendered="#{directPurchaseBackingBean.showFunctionType() == false and directPurchaseBackingBean.isSupplier() ? directPurchaseBackingBean.managedBean.searchDocumentType eq ParameterConst.doctypeSimpleQuote : false}"
-							action="#{directPurchaseBackingBean.viewDocSupplierSQ(Obj)}" />
 
 					</p:menuButton>
 					<!-- end 25396: -->
