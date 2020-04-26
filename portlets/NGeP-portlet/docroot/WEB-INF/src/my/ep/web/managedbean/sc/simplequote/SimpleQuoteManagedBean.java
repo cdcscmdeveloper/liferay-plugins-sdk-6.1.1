@@ -154,6 +154,10 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 
 	/** The zone name. */
 	private String zoneName;
+	
+	// 27632 - declare variable
+	/** The pid btn flag. */
+	private boolean pidBtnFlag = Boolean.TRUE;
 
 	/** The zone trees. */
 	private List<TreeNode> zoneTrees = new ArrayList<TreeNode>();
@@ -2712,4 +2716,25 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 		this.disciplinaryActionWarning = disciplinaryActionWarning;
 	}
 	//26284 - End
+	
+	//27632 - Start
+	/**
+	 * Checks if is pid btn flag.
+	 * 
+	 * @return the pidBtnFlag
+	 */
+	public boolean isPidBtnFlag() {
+		return pidBtnFlag;
+	}
+
+	/**
+	 * Sets the pid btn flag.
+	 * 
+	 * @param pidBtnFlag
+	 *            the pidBtnFlag to set
+	 */
+	public void setPidBtnFlag(boolean pidBtnFlag) {
+		this.pidBtnFlag = pidBtnFlag;
+	}
+	// 27632 - End
 }
