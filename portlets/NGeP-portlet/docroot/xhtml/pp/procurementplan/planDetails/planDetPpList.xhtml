@@ -117,13 +117,14 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				<p:commandLink id="addUpdateInfo" 
 						immediate="true" 
 						update="dtProcurementPlan" 
-						partialSubmit="true" 
-						disabled="#{ppItem.cloneEnabled or ppItem.disableForPindaan or ppItem.brandNew or pPlanBackingBean.managedBean.editable}">
+						partialSubmit="true"
+						rendered="#{!(ppItem.brandNew ? ppItem.brandNew : ppItem.selectable)}"
+						disabled="#{ppItem.cloneEnabled or ppItem.disableForPindaan or pPlanBackingBean.managedBean.editable}">
 				     <h:graphicImage value="/css/images/design/ico-viewnedit.png"  
 				     style="float:left; padding-left: 5px;" process="@this">
 				      <p:ajax event="click"
 				      		listener="#{pPlanBackingBean.addUpdateInfo(pPlanBackingBean.managedBean.selectedPlan, index)}"
-				      		disabled="#{ppItem.cloneEnabled or ppItem.disableForPindaan or ppItem.brandNew or pPlanBackingBean.managedBean.editable}"
+				      		disabled="#{ppItem.cloneEnabled or ppItem.disableForPindaan or pPlanBackingBean.managedBean.editable}"
 				      		update="@form" />
 				      </h:graphicImage>
 				</p:commandLink>
