@@ -12,6 +12,11 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
+		<p:commandButton
+			immediate="true" value="#{lbl['lbl.btn.back']}" style="float:left;"
+			action="#{simpleQuoteBackingBean.backMenuToPrevious}" />
+			
+		<div></div>
 		<p:outputPanel id="spkiOutputPanel">
 			<ac:spkiPopup id="spkiPopup"
 				password="#{simpleQuoteBackingBean.managedBean.spkiBackingBean.password}"
@@ -27,8 +32,8 @@
 
 		</p:outputPanel>
 		<div class="ppRightBtn">
-			<p:outputPanel autoUpdate="true">
-				<p:commandButton value="#{lbl['lbl.btn.save']}" process="@form"
+			<p:outputPanel autoUpdate="true">					
+				<!-- <p:commandButton value="#{lbl['lbl.btn.save']}" process="@form"
 					partialSubmit="true" onclick="blockWidget.show();"
 					oncomplete="blockWidget.hide();"
 					rendered="#{simpleQuoteBackingBean.managedBean.saveButtonFlg}"
@@ -40,7 +45,7 @@
 					update="spkiOutputPanel" onclick="blockWidget.show();"
 					oncomplete="blockWidget.hide();"
 					rendered="#{simpleQuoteBackingBean.managedBean.submitButtonFlg}">
-				</p:commandButton>
+				</p:commandButton> -->
 			</p:outputPanel>
 		</div>
 		<ui:include src="/xhtml/sc/directpurchase/simplequoteresponse/simpleQuoteRespHeader.xhtml" />
