@@ -234,6 +234,19 @@ public class SupplierDataMaintenanceBackingBean extends
 						.getDisciplineVO().getSmDiscplinaryAction());
 			}
 			
+			//#26340-start
+			//to check if Category Description Changed
+			boolean isCategoryDescriptionHasChanged =false;
+			if (getManagedBean().getSmAppl().getSmSupplierCategories() != null) {
+				for (SmSupplierCategory cat : getManagedBean().getSmAppl().getSmSupplierCategories()) {
+					if (cat.getOtherDesc() != null) {
+						isCategoryDescriptionHasChanged = true;
+					}
+				}
+			}
+			reqDTO.setUpdatedOtherDescChanged(isCategoryDescriptionHasChanged);
+			//#26340-end
+			
 			String oriPoApprOverlappedRemark = getManagedBean().getOriPoApprOverlappedRemark();
 			reqDTO.setCurrentOverlapCategoryRemark(oriPoApprOverlappedRemark);
 			String poApprOverlappedRemark = getManagedBean().getPoApprOverlappedRemark();
