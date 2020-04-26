@@ -3720,6 +3720,16 @@ public class SimpleQuoteBackingBean extends
 	/**
 	 * Page navigation to catalogue search page from simpleQuote.
 	 */
+	
+	/**
+	 * Page navigation to Direct Purchase Search.
+	 */
+	// additional back menu
+	public String backMenuToPrevious() {
+		log.info("backMenuToPrevious");
+		return "directPurchaseSearch";
+	}
+	
 	public void backToPrevious() {
 		debugLogger("backToPrevious");
 		FacesContext fc = FacesContext.getCurrentInstance();
