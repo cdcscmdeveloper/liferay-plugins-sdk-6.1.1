@@ -167,6 +167,19 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		.handleNavigation(fc, null, DIRECT_PURCHASE_SEARCH_PAGE_NAV);
 	}
 	
+	/**
+	 *  Get document types based on View As selected.
+	 */
+	public void getDocTypesByViewAs() {
+		getManagedBean().setSearchDocumentType(null);
+		if(isGovernment()){
+			getDocumentTypes(Boolean.TRUE, Boolean.FALSE);
+			getManagedBean().setGovernment(Boolean.TRUE);
+		} else if(isSupplier()){
+			getDocumentTypes(Boolean.FALSE, Boolean.FALSE);
+			getManagedBean().setGovernment(Boolean.FALSE);
+		}
+	}
 	
 	/**
 	 * Checks if is government.
@@ -209,6 +222,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			if (StringUtils.isNotEmpty(getManagedBean().getSearchFunctionType())) {
 				try {
 					pmParameter = retrieveParameterById(Long.valueOf(getManagedBean().getSearchFunctionType()));
+					getManagedBean().setG2G(false);
 					//pmParameter = retrieveParameterByTypeAndCode(parameterType, parameterCode)
 				 } catch (NumberFormatException  e) {
 					 log.info("-->getSearchFunctionType() is null ");
@@ -223,7 +237,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			else if (pmParameter != null && pmParameter.getParameterCode().equals(ParameterConst.ORG_TYPE_G2G_ROLECODE)){
 				docTypeList.add(ParameterConst.DOCTYPE_SIMPLE_QUOTE);
 				docTypeList.add(ParameterConst.DOCTYPE_PURCHASE_INQUIRY);
-				
+				getManagedBean().setG2G(true);
 			}
 			
 			else {
@@ -587,6 +601,33 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		sqBackingBean.supplierViewSearch(docIdStr);
 		sqBackingBean.getManagedBean().setDpObj(dpObj);
 		sqBackingBean.getManagedBean().setTrackingDairyView(Boolean.TRUE);
+	}
+	
+	/**
+	 * @param dpObj
+	 */
+	public void performViewDoc(Object[] dpObj) {
+		if (showFunctionType()) {
+			if (ParameterConst.DOCTYPE_SIMPLE_QUOTE.equals(getManagedBean().getSearchDocumentType())) {
+                if (!getManagedBean().isG2G()) {
+                	this.viewDoc(dpObj);
+                } else {
+                	this.viewDocSupplierSQ(dpObj);
+                }
+			} else {
+				this.viewDoc(dpObj);
+			}
+		} else {
+			if (ParameterConst.ORG_TYPE_PTJ.equals(getManagedBean().getSearchFunctionType())) {
+				this.viewDoc(dpObj);
+			} else {
+				if (ParameterConst.DOCTYPE_SIMPLE_QUOTE.equals(getManagedBean().getSearchDocumentType())) {
+					this.viewDocSupplierSQ(dpObj);
+				} else {
+					this.viewDoc(dpObj);
+				}
+			}
+		}
 	}
 	
 	/**
