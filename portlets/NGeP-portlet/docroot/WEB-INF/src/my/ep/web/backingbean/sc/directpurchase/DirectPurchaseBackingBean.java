@@ -537,9 +537,12 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 
 		} else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_LETTER_OF_AWARD)){
 			LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
-			loaDetailBackingBean.viewLOA(docId);
+			//12177 - Start
 			loaDetailBackingBean.getManagedBean().setDpObj(dpObj);
 			loaDetailBackingBean.getManagedBean().setTrackingDairyView(Boolean.TRUE);
+			//12177 - End
+			loaDetailBackingBean.viewLOA(docId);
+			
 		}
 	}
 	
@@ -1003,10 +1006,10 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
  	    QuoteResDTO quoteResDTO = null;
 	    Long currentStatusId = docStatusId;
 	    Boolean sqExpired = false;
-	       
+	    
 	    if(docType.equals("SQ")){
 	    	if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION)){
-	    		quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(docNo, docStatusId, docType);	
+	    		quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(docNo, docStatusId, docType, false);	
 	    		if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 	    			if(!isSqStillValid(quoteResDTO.getEndDate())){
 	    				sqExpired = true;
@@ -1019,7 +1022,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	    	   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION) 
 	    	   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL)
 	    	   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)){
-	    		quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(docNo, docStatusId, docType);	
+	    		quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(docNo, docStatusId, docType, false);	
 	    		if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 	    			if(!isSqStillValid(quoteResDTO.getEndDate())){
 	    				sqExpired = true;
@@ -1031,7 +1034,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	 		   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION)
 			   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
 			   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)){
-	    		quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(docNo, docStatusId, docType);	
+	    		quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(docNo, docStatusId, docType, false);	
 	    		if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 	    			if(!isSqStillValid(quoteResDTO.getEndDate())){
 	    				sqExpired = true;
@@ -1043,7 +1046,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			   || currentStatusId.equals(QTStatusConst.LOA_PENDING_APPROVAL)
 		       || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION)
 		       || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL)){
-	    		quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(docNo, docStatusId, docType);	
+	    		quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(docNo, docStatusId, docType, false);	
 	    		if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 	    			if(!isSqStillValid(quoteResDTO.getEndDate())){
 	    				sqExpired = true;
