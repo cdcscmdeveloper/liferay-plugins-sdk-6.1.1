@@ -1608,8 +1608,9 @@ public class GovtSellerRegistrationBackingBean extends
 										brMain.getBranchCode(),
 										bk.getBranches(), "branchCode");
 						if (brTmp == null) {
-							SmSupplierBranch brNew = (SmSupplierBranch) SerializationUtils
-									.clone(brMain);
+							// #27283 - START
+							SmSupplierBranch brNew = (SmSupplierBranch) brMain.cloneEntity();
+							// #27283 - END
 							brNew.setSelected(false);
 							bk.getBranches().add(brNew);
 						}
