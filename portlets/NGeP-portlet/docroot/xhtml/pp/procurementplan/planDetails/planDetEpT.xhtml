@@ -127,7 +127,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				        rendered="#{!(epItem.brandNew ? epItem.brandNew : epItem.selectable) and pPlanBackingBean.managedBean.modeEditable}"
 				        id="addUpdateEpBInfo" 
 						immediate="true" 
-						update="dtExpenditurePlanS" 
+						update="dtExpenditurePlanT" 
 						partialSubmit="true"
 						disabled="#{epItem.cloneEnabled or epItem.disableForPindaan}">
 				     <h:graphicImage value="/css/images/design/ico-viewnedit.png"  
@@ -255,7 +255,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        </p:column>
 	        <p:column>
 	        	<p:selectOneMenu value="#{epItem.recordStatusFlg}" style="width:99%"
-	        	    disabled="#{epItem.cloneEnabled or epItem.statusEnabled}">  
+	        	   	disabled="#{epItem.cloneEnabled or epItem.statusEnabled}"> 
 	            	<f:selectItems value="#{pPlanBackingBean.getStatusOptions()}" />
 	          	</p:selectOneMenu> 
 	        </p:column>

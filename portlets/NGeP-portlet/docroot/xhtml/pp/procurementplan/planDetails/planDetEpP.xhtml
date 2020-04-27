@@ -256,7 +256,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        </p:column>
 	        <p:column>
 	        	<p:selectOneMenu value="#{epItem.recordStatusFlg}" style="width:99%"
-	        		disabled="#{epItem.cloneEnabled or epItem.statusEnabled}"> 
+	        		   disabled="#{epItem.cloneEnabled or epItem.statusEnabled}">  
 	            	<f:selectItems value="#{pPlanBackingBean.getStatusOptions()}" />
 	          	</p:selectOneMenu> 
 	        </p:column>
