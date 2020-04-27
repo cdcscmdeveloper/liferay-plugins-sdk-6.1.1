@@ -2450,12 +2450,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		epItem.setVotFundType(new PmParameter());
 		epItem.setEditable(true);
 		epItem.setPpPlan(this.getManagedBean().getSelectedPlan());
-		//#25479 13/3/2020 - start
-//		epItem.setCloneEnabled(true);
-//		//#25479 13/3/2020 - End
-//		//add #25549 21/04/2020 - Start
-//		epItem.setDisableForPindaan(true);
-//        //add #25549 21/04/2020 - end
+		
 		
 		//B
 		if(ParameterConst.VOT_MENGURUS.equals(paramCode)){
@@ -3089,9 +3084,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			newRemark = false;
 		}
 		
-		if(!epItem.isEditable()){
-			newRemark = false;
-		}
+//		if(!epItem.isEditable()){
+//			newRemark = false;
+//		}
 		
 	
 		/* enable for phase 2
@@ -6667,8 +6662,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				 cloned.setStatusEnabled(false);
 				 cloned.setJustificationEnabled(false);
 				 cloned.setDisableEditAccount(true);
-				 cloned.setEditable(false);
-				 
 			 }
 			 
 			 idx -= 1;
@@ -6682,7 +6675,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				 original.setStatusEnabled(true);
 				 original.setDisableEditAccount(true);
 				 original.setJustificationEnabled(true);
-				 original.setEditable(true);
 			 }
 		}
 
