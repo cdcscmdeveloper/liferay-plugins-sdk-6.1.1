@@ -300,13 +300,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			loadDefaultButtons();
 		}
 		
-//		//#24975 azza - start
-//		if (action == "VIEW"){
-//			 this.getManagedBean().setEditable(true);
-//		    }else{ 
-//			 this.getManagedBean().setEditable(false);
-//		   }
-//		//#24975 azza - end
 		
 		RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
 		return NAV_TO_MAINTAIN;
@@ -901,7 +894,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						if(ppPlan.getLastApprovedDt().equals(epItem.getCreatedDate()) 
 								|| ppPlan.getLastApprovedDt().after(epItem.getCreatedDate())){
 							log.info("[SIR#12802] - item has an approval history");
-							epItem.setSelectable(false); //disabled checkbox							
+							epItem.setSelectable(false); //disabled checkbox	
+							//#25975
+							epItem.setEditable(false); 
 						} else {
 							log.info("[SIR#12802] - item pending for approval");
 							epItem.setSelectable(true); //enabled checkbox
@@ -2576,6 +2571,21 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							throw new EpException(MessageConst.ERROR_730007);
 						}
 					}
+					
+//					// #25479 
+//					// Mandatory fields for update Reason
+//					if(epItem.getPpUpdateReason()==null 
+//							|| (epItem.getPpUpdateReason()!=null && epItem.getPpUpdateReason().isEmpty())
+//							|| (epItem.getPpUpdateReason()!=null 
+//								&& epItem.getPpUpdateReason().isEmpty() 
+//								&& epItem.getPpUpdateReason().get(0)==null)  
+//							|| (epItem.getPpUpdateReason()!=null &&(
+//								 epItem.getPpUpdateReason().isEmpty() 
+//								|| epItem.getPpUpdateReason().get(0)==null
+//								|| StringUtils.isBlank(epItem.getJustifications().get(0).getRemark())))){
+//						throw new EpException(MessageConst.ERROR_730035);
+//					}
+					
 					soIds.add(epItem.getPmGlAccount().getGlAccountId());
 				}
 			}
@@ -2681,7 +2691,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							expItem.setStatusEnabled(false);
 							expItem.setCloneEnabled(false);
 							expItem.setEditable(false);
-							//expItem.setJustificationEnabled(false);
+							expItem.setJustificationEnabled(false);
 							expItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 					}
 				  }
@@ -2735,7 +2745,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							expItem.setStatusEnabled(false);
 							expItem.setCloneEnabled(false);
 							expItem.setEditable(false);
-							//expItem.setJustificationEnabled(false);
+							expItem.setJustificationEnabled(false);
 							expItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 					}
 				  }
@@ -2789,7 +2799,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							expItem.setStatusEnabled(false);
 							expItem.setCloneEnabled(false);
 							expItem.setEditable(false);
-							//expItem.setJustificationEnabled(false);
+							expItem.setJustificationEnabled(false);
 							expItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 					}
 				  }
@@ -2844,7 +2854,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							expItem.setStatusEnabled(false);
 							expItem.setCloneEnabled(false);
 							expItem.setEditable(false);
-							//expItem.setJustificationEnabled(false);
+							expItem.setJustificationEnabled(false);
 							expItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 					}
 				  }
@@ -2898,7 +2908,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							expItem.setStatusEnabled(false);
 							expItem.setCloneEnabled(false);
 							expItem.setEditable(false);
-							//expItem.setJustificationEnabled(false);
+							expItem.setJustificationEnabled(false);
 							expItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 					}
 				  }
@@ -3036,7 +3046,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 * @param epItem
 	 */
 	public void retrieveEpItemRemark(PpExpenditureItem epItem){
-		log.info("retrieveEpItemRemark");
+		log.info("retrieveEpItemRemark" + epItem.isBrandNew() );
 		if(!epItem.isBrandNew()){
 			if(epItem.getPpRemarks()==null){
 				epItem.setPpRemarks(new ArrayList<PpRemark>());
@@ -6343,13 +6353,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	                ppItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 	                ppItem.setEditable(true);
 	                
-	                //add #25549 28/02/2020 - Start
-	                ppItem.setCloneEnabled(true);
-	                //add #25549 28/02/2020 - End
-	                
-	                //add #25549 21/04/2020 - Start
-	                ppItem.setDisableForPindaan(true);
-	                //add #25549 21/04/2020 - End
 	                
 	               System.out.println("size list " + j );
 	               this.getManagedBean().getSelectedPlan().addPpProcurementItems(ppItem);
@@ -6405,14 +6408,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	                ppExItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 	                ppExItem.setEditable(true);
 	                
-	                
-	                //add #25549 16/03/2020 - Start
-	                ppExItem.setCloneEnabled(true);
-	                //add #25549 16/03/2020 - End
-	                
-	                //add #25549 21/04/2020 - Start
-	                ppExItem.setDisableForPindaan(true);
-	                //add #25549 21/04/2020 - End
 	                
 					// B
 					if (ParameterConst.VOT_MENGURUS.equals(this.getManagedBean().getParamExpenditure())) {
@@ -6584,7 +6579,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					// H
 					  PpExpenditureItemList = this.getManagedBean().getEpItemsH();
 				}
-
 				
 				log.info("getlist " + PpExpenditureItemList.size());	
 		    	
@@ -6603,7 +6597,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		    		validateEpItem(paramCode); //Disabled this if no validation required at this stage
 		    		
 		    	    newPpExItem.setCloned(true);
-
 		    		newPpExItem.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 		    		newPpExItem.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		    		newPpExItem.setChangedDate(new Timestamp(new Date().getTime()));
@@ -6620,10 +6613,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		    		newPpExItem.setDisableForPindaan(true);
 		    		newPpExItem.setFromPpItem(clonedPpExpItem.getExpenditureItemId());
 		    		newPpExItem.setReasonForUpdateEnabled(false);
-		    		newPpExItem.setStatusEnabled(false);
-		    		//newPpExItem.setJustificationEnabled(false);
-		    		//newPpExItem.setDisableEditAccount(true);
+		    		newPpExItem.setStatusEnabled(true);
+		    		newPpExItem.setJustificationEnabled(false);
+		    		newPpExItem.setDisableEditAccount(true);
 		    		
+		    			
 		    		log.info("Plan Id " + newPpExItem.getPpPlan().getPlanId());
 		    		log.info("FromPpItem " + newPpExItem.getFromPpItem());
 		    		
@@ -6669,23 +6663,25 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			 
 			 if ((cloned.isCloned() && cloned.isBrandNew())) {
 				 cloned.setCloneEnabled(false);
-				 cloned.setStatusEnabled(false);
-				 //cloned.setDisableEditAccount(true);
 				 cloned.setReasonForUpdateEnabled(false);
-				// cloned.setJustificationEnabled(false);
+				 cloned.setStatusEnabled(false);
+				 cloned.setJustificationEnabled(false);
+				 cloned.setDisableEditAccount(true);
+				 
 			 }
 			 
 			 idx -= 1;
 			 PpExpenditureItem original = items.get(idx);
 			 
 			 
-			 if (!(original.isCloned() && original.isBrandNew())) {
+			 if (!(original.isCloned() && original.isBrandNew())) {	 
 				 original.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 				 original.setCloneEnabled(true);
-				 original.setStatusEnabled(true);
 				 original.setReasonForUpdateEnabled(true);
-				// original.setDisableEditAccount(true);
-				// original.setJustificationEnabled(true);
+				 original.setStatusEnabled(true);
+				 cloned.setDisableEditAccount(true);
+				 original.setJustificationEnabled(true);
+					
 			 }
 		}
 
@@ -6726,9 +6722,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		 
 		 //Should not allow multiple updates
 		 log.info("Saiz numberOfClones= "+numberOfClones.size());
-		 if (numberOfClones.size() > 1) {
-			 throw new EpException(MessageConst.ERROR_730034);
-		 } else {
 			 for (Map.Entry<PpExpenditureItem, PpExpenditureItem> clonedExpItem : clonedEpItems.entrySet()) {
 				 
 				 clonedEpItem = clonedExpItem.getKey();
@@ -6740,7 +6733,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	       }
 	     }
 	  }
-  }
 
    
    
@@ -6807,8 +6799,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							ppItem.setCloneEnabled(true);
 							ppItem.setDisableForPindaan(true);
 							ppItem.setReasonForUpdateEnabled(false);
-							//ppItem.setDisableEditAccount(true);
-							//ppItem.setJustificationEnabled(false);
+							ppItem.setDisableEditAccount(true);
+							ppItem.setJustificationEnabled(false);
 						}
 					} else {
 						/* Always disable Pindaan for original ppItem
@@ -6817,13 +6809,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							ppItem.setCloneEnabled(true);
 							ppItem.setDisableForPindaan(true);
 							ppItem.setReasonForUpdateEnabled(true);
-							//ppItem.setDisableEditAccount(true);
-							//ppItem.setJustificationEnabled(true);
+							ppItem.setDisableEditAccount(true);
+							ppItem.setJustificationEnabled(true);
 						}else {
 							// The rest should retain the existing field logics
 							ppItem.setDisableForPindaan(false);
 							ppItem.setReasonForUpdateEnabled(true);
-							//ppItem.setJustificationEnabled(true);
+							ppItem.setJustificationEnabled(true);
 						}
 					}        
 				}
