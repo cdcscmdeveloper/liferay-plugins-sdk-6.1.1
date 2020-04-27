@@ -8396,23 +8396,31 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				boolean isCloseQT = false;
 				ScQt scQt = this.getManagedBean().getQt();
 				Long statusId = scQt.getQtStatus().getStatusId();
+				
+				if(scQt.getProposalValidityEndDate() == null && this.getManagedBean().isMaintanceFlow() == true &&
+						statusId.equals(QTStatusConst.QT_PENDING_SPECIFICATION_COMMITTEE_APPOINTMENT)){ 
+					isCloseQT = true; 
+				}
+				if(scQt.getProposalValidityEndDate() == null && this.getManagedBean().isMaintanceFlow() == true &&
+						statusId.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH)){ 
+					isCloseQT = true;
+				}
 						
 				if (scQt.getProposalValidityEndDate() != null && this.getManagedBean().getCurrentDate() != null 
 						 && this.getManagedBean().getCurrentDate().after(scQt.getProposalValidityEndDate())
 						 && this.getManagedBean().isMaintanceFlow() == true ) {
 					
-						if(statusId.equals(QTStatusConst.QT_PENDING_LOI) || 
-							statusId.equals(QTStatusConst.QT_PENDING_LOA) ||
-							  statusId.equals(QTStatusConst.QT_SUPPLIER_FINALIZATION) || 
-								 statusId.equals(QTStatusConst.QT_RE_FINALIZATION) ||
-								    statusId.equals(QTStatusConst.QT_PENDING_SPECIFICATION_COMMITTEE_APPOINTMENT) ||
-								      statusId.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH) ||
-								         statusId.equals(QTStatusConst.QT_CLOSE_PERMANENTLY)){
-							isCloseQT = true;
-						}else if(statusId.equals(QTStatusConst.QT_SUPPLIER_FINALIZATION)){
-							isCloseQT = checkIsBiddingActiveForStatusCloseQT(scQt);
+						if(statusId.equals(QTStatusConst.QT_PROPOSAL_PREPARATION) ||
+						   statusId.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL) ||
+						   statusId.equals(QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL) ||
+						   statusId.equals(QTStatusConst.QT_SUPPLIER_FINALIZATION) || 
+						   statusId.equals(QTStatusConst.QT_RE_FINALIZATION) ||
+						   statusId.equals(QTStatusConst.QT_PENDING_LOI) || 
+						   statusId.equals(QTStatusConst.QT_PENDING_LOA) || 
+						   statusId.equals(QTStatusConst.QT_CLOSE_PERMANENTLY)){
+							 isCloseQT = true; 
 						}else{
-							isCloseQT = false;
+							 isCloseQT = false;
 						}
 				}	
 						
