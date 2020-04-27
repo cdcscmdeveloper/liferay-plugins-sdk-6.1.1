@@ -1849,33 +1849,47 @@ public class SPDetailBackingBean extends
 				}
 			}      	// #26339 Venkat End
 			
-			if (scQtPRPAssetLiability.getCurrentAssets() != null) {
-				EncryptDataBean currentAsset = new EncryptDataBean();
-				currentAsset
-						.setTableName(EncryptTableName.SC_QT_PRP_ASSET_LIABILITY
-								.toString());
-				currentAsset.setColumnName(EncryptColumnName.CURRENT_ASSETS
-						.toString());
+			// #26339 - Start
+			//Current Asset - Start
+			EncryptDataBean currentAsset = new EncryptDataBean();
+			currentAsset
+					.setTableName(EncryptTableName.SC_QT_PRP_ASSET_LIABILITY
+							.toString());
+			currentAsset.setColumnName(EncryptColumnName.CURRENT_ASSETS
+					.toString());
+			if (null != scQtPRPAssetLiability.getCurrentAssets()) {
 				currentAsset.setValue(scQtPRPAssetLiability.getCurrentAssets()
 						.toString());
-				prpAssetLiabilityList.add(currentAsset);
-				scQtPRPAssetLiability.setCurrentAssets(null);
+			} else {
+				currentAsset.setValue(null);
 			}
-			if (scQtPRPAssetLiability.getCurrentLiabilities() != null) {
-				EncryptDataBean currentLiabilities = new EncryptDataBean();
-				currentLiabilities
-						.setTableName(EncryptTableName.SC_QT_PRP_ASSET_LIABILITY
-								.toString());
-				currentLiabilities
-						.setColumnName(EncryptColumnName.CURRENT_LIABILITIES
-								.toString());
+			prpAssetLiabilityList.add(currentAsset);
+			scQtPRPAssetLiability.setCurrentAssets(null);
+			// Current Asset - End
+			
+			// Current Liabilities - Start
+			EncryptDataBean currentLiabilities = new EncryptDataBean();
+			currentLiabilities
+					.setTableName(EncryptTableName.SC_QT_PRP_ASSET_LIABILITY
+							.toString());
+			currentLiabilities
+					.setColumnName(EncryptColumnName.CURRENT_LIABILITIES
+							.toString());
+			
+			if (null != scQtPRPAssetLiability.getCurrentLiabilities()) {
 				currentLiabilities.setValue(scQtPRPAssetLiability
 						.getCurrentLiabilities().toString());
 				prpAssetLiabilityList.add(currentLiabilities);
 				reqDTO.setCurrentLiability(scQtPRPAssetLiability
 						.getCurrentLiabilities().intValue());
-				scQtPRPAssetLiability.setCurrentLiabilities(null);
+			} else {
+				currentLiabilities.setValue(null);
+				prpAssetLiabilityList.add(currentLiabilities);
+				reqDTO.setCurrentLiability(0);
 			}
+			scQtPRPAssetLiability.setCurrentLiabilities(null);
+			// Current Liabilities - End
+			// #26339 - End
 			
 			reqDTO.setEncryptDataList(prpAssetLiabilityList);
 			scQtProposalChecklist.setPrpAssetLiabilities(scQtPRPAssetLiability);
