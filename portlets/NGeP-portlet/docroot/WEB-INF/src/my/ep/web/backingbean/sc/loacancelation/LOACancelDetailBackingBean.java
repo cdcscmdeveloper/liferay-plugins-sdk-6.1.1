@@ -686,6 +686,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			
 			//set approval	
 			ScLoaApproval scLoaApproval = scLoa.getScLoaApproval();
+			getManagedBean().setScLoaApproval(scLoa.getScLoaApproval());
 			PmUser approverUser = null;
 			if (scLoaApproval != null) {
 				approverUser = scLoaApproval.getApprover();
@@ -893,6 +894,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			
 			//set approval	
 			ScLoaApproval scLoaApproval = scLoa3.getScLoaApproval();
+			getManagedBean().setScLoaApproval(scLoa3.getScLoaApproval());
 			PmUser approverUser = null;
 			if (scLoaApproval != null) {
 				approverUser = scLoaApproval.getApprover();
@@ -3463,10 +3465,6 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 					getQtAwardSO().prepareCancelLoaTrackingDiary(reqDTO);
 			}
 			
-			//---set loa to cancel status
-			updateCancelLoaCurrentWorkflowStatus(scLoa,BpmOutcomeConst.BPM_CANCEL);
-			//----
-			
 			resDTO = getQtAwardSO().saveLOADtl(reqDTO);
 
 			if (resDTO.isSuccessful()) {
@@ -3474,6 +3472,9 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 				ScLoiLoa loiLoa = scLoa.getScLoiLoa();
 				Long loaDocId = loiLoa.getDocId();
 				String requestNoteNo = null;
+				//---set loa to cancel status
+				updateCancelLoaCurrentWorkflowStatus(scLoa,BpmOutcomeConst.BPM_CANCEL);
+				//----				
 				RenameTempLoaNoRepoDirByLoaNo(scLoa);
 				renewSesionObject();
 				if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
@@ -7344,7 +7345,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			workFlowStatus.setPmStatus(getPmStatusByStatusId(QTStatusConst.LOA_CANCELLATION_APPROVED));
 		else if(outcome.contains(BpmOutcomeConst.BPM_REJECT))
 			workFlowStatus.setPmStatus(getPmStatusByStatusId(QTStatusConst.LOA_CANCELLATION_REJECTED));
-		else
+		else if(outcome.contains(BpmOutcomeConst.BPM_CANCEL))
 			workFlowStatus.setPmStatus(getPmStatusByStatusId(QTStatusConst.LOA_CANCELLED));
 		workFlowStatus.setScLoa(scLoa);
 		workFlowStatus.setCurrent(true);
