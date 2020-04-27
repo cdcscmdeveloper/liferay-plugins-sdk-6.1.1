@@ -16557,18 +16557,19 @@ public class SpecificationBackingBean extends
 		String templateFileName = "";
 		if (this.getManagedBean().getQt().isZonal()) {// Valid condition QT item by zonal
 			if (this.getManagedBean().getScQtChecklist().getScQtDoc().getTplSpecMaster().getItemTypeCode()
-					.getParameterId() == 198) {
+					.getParameterCode().equals(ParameterConst.ITEM_TYPE_PRODUCT)) {
 				templateFileName = "Technical Specification Template Zonal (Product).xlsm"; // Product
-			} else {
+			} else if (this.getManagedBean().getScQtChecklist().getScQtDoc().getTplSpecMaster().getItemTypeCode()
+					.getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE)){
 				templateFileName = "Technical Specification Template Zonal (Service).xlsm";// Service
 			}
 		} else {// Valid condition QT item without zonal
 			if (this.getManagedBean().getScQtChecklist().getScQtDoc().getTplSpecMaster().getItemTypeCode()
-					.getParameterId() == 198) {
+					.getParameterCode().equals(ParameterConst.ITEM_TYPE_PRODUCT)) {
 				templateFileName = "Technical Specification Template Non Zonal (Product).xlsm";// Product
-			} else {
-				//templateFileName = "Technical Specification Template Non Zonal (Service).xlsx";// Service
-				templateFileName = "Technical Specification Template Non Zonal (Service).xlsm";
+			} else if (this.getManagedBean().getScQtChecklist().getScQtDoc().getTplSpecMaster().getItemTypeCode()
+					.getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE)){
+				templateFileName = "Technical Specification Template Non Zonal (Service).xlsm";//Service
 			}
 		}
 
@@ -16585,43 +16586,26 @@ public class SpecificationBackingBean extends
 		String tempDir = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/excelUpload");
 		FileInputStream input_document = new FileInputStream(new File(tempDir + "/" + templateFileName));
 
-		List<String> item = new ArrayList<String>();
-		List<String> specification = new ArrayList<String>();
-		List<String> uom = new ArrayList<String>();
-		List<String> priceType = new ArrayList<String>();
-		List<String> quantity = new ArrayList<String>();
-		List<String> scoreSetting = new ArrayList<String>();
-
-		// Service
-		List<String> freqPerUOM = new ArrayList<String>();
-		List<String> uomPerDay = new ArrayList<String>();
-		List<String> uomPerMonth = new ArrayList<String>();
-
-		// Inside popup action
-		List<String> scoreType = new ArrayList<String>();// Score Type
-		List<String> score = new ArrayList<String>();// Max Score/score
-		List<String> rangeFrom = new ArrayList<String>();// Range From
-		List<String> rangeTo = new ArrayList<String>();// Range To
-		List<String> scoreYes = new ArrayList<String>();// Score for YES
-		List<String> scoreNo = new ArrayList<String>();// Score for No
-		List<String> tierQuantityFrom = new ArrayList<String>();// Tier Quantity From
-		List<String> tierQuantityTo = new ArrayList<String>();// Tier Quantity To
-		List<String> specWeightage = new ArrayList<String>();// Specification Weightage
-
+		TemplateSpecBackingBean templateSpecBackingbean = new TemplateSpecBackingBean();
 		TemplateSpecBean templateSpecBean = getManagedBean().getTemplateSpecBean();
-		specInfo = new ArrayList<SpecInfo>();
+		Map<Integer, Object[]> technicalSpecList = new TreeMap<Integer, Object[]>();
+		Map<Integer, Object[]> uomList = new TreeMap<Integer, Object[]>();
 
-		if (this.getManagedBean().getScQtChecklist().getScQtDoc().getTplSpecMaster().getItemTypeCode().getParameterId() == 198) {
-			getDataSpecificationForItemTypeProduct(templateSpecBean, this.getManagedBean().getQt().isZonal(), item,
-					specification, uom, priceType, quantity, scoreSetting, scoreType, score, rangeFrom, rangeTo,
-					scoreYes, scoreNo, tierQuantityFrom, tierQuantityTo);
-		} else {
-			getDataSpecificationForItemTypeService(templateSpecBean, this.getManagedBean().getQt().isZonal(), item,
-					specification, uom, freqPerUOM, uomPerDay, uomPerMonth, quantity, scoreSetting, scoreType, score,
-					rangeFrom, rangeTo, scoreYes, scoreNo);
+		if((ParameterConst.ITEM_TYPE_PRODUCT).equalsIgnoreCase(this.getManagedBean().getScQtChecklist().getScQtDoc().
+				getTplSpecMaster().getItemTypeCode().getParameterCode())){
+			technicalSpecList = templateSpecBackingbean.exportDataTechnicalSpecForItemTypeProduct(templateSpecBean, technicalSpecList, 
+					this.getManagedBean().getQt().isZonal(), 
+					this.getManagedBean().getScQtChecklist().getScQtDoc().getTplSpecMaster().isWeightageReq());
+			
+		}else if((ParameterConst.ITEM_TYPE_SERVICE).equalsIgnoreCase(this.getManagedBean().getScQtChecklist().getScQtDoc().
+				getTplSpecMaster().getItemTypeCode().getParameterCode())){
+			technicalSpecList = templateSpecBackingbean.exportDataTechnicalSpecForItemTypeService(templateSpecBean, 
+					technicalSpecList, this.getManagedBean().getQt().isZonal(),
+					this.getManagedBean().getScQtChecklist().getScQtDoc().getTplSpecMaster().isWeightageReq());
 		}
 
 		XSSFWorkbook workbook = new XSSFWorkbook(input_document);
+		XSSFSheet assumptionSheet = workbook.getSheetAt(0);
 		XSSFSheet spreadsheet = workbook.getSheetAt(1);
 		XSSFSheet UOMSheet = workbook.getSheetAt(2);
 		XSSFRow row;
@@ -16649,52 +16633,17 @@ public class SpecificationBackingBean extends
 
 			int noOfColumns = spreadsheet.getRow(0).getLastCellNum();
 			row = spreadsheet.getRow(0);
-			Cell cellTitle = row.createCell(noOfColumns);
+			Cell cellTitle = row.createCell(noOfColumns-1);
 			cellTitle.setCellValue("Specification Weightage");
 			cellTitle.setCellStyle(cellStyle);
 		}
 
-		Map<Integer, Object[]> empinfo = new TreeMap<Integer, Object[]>();
-		Map<Integer, Object[]> uomList = new TreeMap<Integer, Object[]>();
-
-		for (int k = 0; k < specInfo.size(); k++) {
-			if (this.getManagedBean().getScQtChecklist().getScQtDoc().getTplSpecMaster().getItemTypeCode()
-					.getParameterId() == 198) {
-				if (this.getManagedBean().getQt().isZonal()) {
-					empinfo.put(k, new Object[] { item.get(k), specification.get(k), uom.get(k), priceType.get(k),
-							scoreSetting.get(k), scoreType.get(k), rangeFrom.get(k), rangeTo.get(k), scoreYes.get(k),
-							scoreNo.get(k), score.get(k) });
-				} else {
-					empinfo.put(
-							k,
-							new Object[] { item.get(k), specification.get(k), uom.get(k), priceType.get(k),
-									quantity.get(k), tierQuantityFrom.get(k), tierQuantityTo.get(k),
-									scoreSetting.get(k), scoreType.get(k), rangeFrom.get(k), rangeTo.get(k),
-									scoreYes.get(k), scoreNo.get(k), score.get(k) });
-				}
-			} else {
-				if (this.getManagedBean().getQt().isZonal()) {
-					empinfo.put(
-							k,
-							new Object[] { item.get(k), specification.get(k), uom.get(k), freqPerUOM.get(k),
-									uomPerDay.get(k), uomPerMonth.get(k), scoreSetting.get(k), scoreType.get(k),
-									rangeFrom.get(k), rangeTo.get(k), scoreYes.get(k), scoreNo.get(k), score.get(k) });
-				} else {
-					empinfo.put(
-							k,
-							new Object[] { item.get(k), specification.get(k), uom.get(k), freqPerUOM.get(k),
-									uomPerDay.get(k), uomPerMonth.get(k), quantity.get(k), scoreSetting.get(k),
-									scoreType.get(k), rangeFrom.get(k), rangeTo.get(k), scoreYes.get(k),
-									scoreNo.get(k), score.get(k) });
-				}
-			}
-		}
-
-		Set<Integer> keyid = empinfo.keySet();
+		assumptionSheet.enableLocking();
+		Set<Integer> keyid = technicalSpecList.keySet();
 		int rowid = 1;
 		for (Integer key : keyid) {
 			row = spreadsheet.createRow(rowid++);
-			Object[] objectArr = empinfo.get(key);
+			Object[] objectArr = technicalSpecList.get(key);
 			int cellid = 0;
 			for (Object obj : objectArr) {
 				Cell cell = row.createCell(cellid++);
@@ -16708,7 +16657,7 @@ public class SpecificationBackingBean extends
 		spreadsheet.lockInsertColumns(true);
 		spreadsheet.lockDeleteRows(true);
 		spreadsheet.lockInsertRows(false);
-		spreadsheet.lockFormatCells(false);
+		spreadsheet.lockFormatCells(true);
 		spreadsheet.enableLocking();
 
 		IUomSO uomSO = (IUomSO) BusinessDelegate.getInstance().getServiceObject("pm", IUomSO.class);
@@ -16744,520 +16693,14 @@ public class SpecificationBackingBean extends
 		return null;
 	}
 
-	public void getDataSpecificationForItemTypeService(TemplateSpecBean templateSpecBean, Boolean isZonal,
-			List<String> item, List<String> specification, List<String> uom, List<String> freqPerUOM,
-			List<String> uomPerDay, List<String> uomPerMonth, List<String> quantity, List<String> scoreSetting,
-			List<String> scoreType, List<String> score, List<String> rangeFrom, List<String> rangeTo,
-			List<String> scoreYes, List<String> scoreNo) {
-
-		for (int i = 0; i < templateSpecBean.getSpecMaster().getTplSpecQuestions().size(); i++) {
-			int j = i + 1;
-			if (j > templateSpecBean.getSpecMaster().getTplSpecQuestions().size()) {
-				item.add("");
-				specification.add("");
-				if (!isZonal)
-					quantity.add("");
-				uom.add("");
-				freqPerUOM.add("");
-				uomPerDay.add("");
-				uomPerMonth.add("");
-				scoreSetting.add("");
-				scoreType.add("");
-				rangeFrom.add("");
-				rangeTo.add("");
-				scoreYes.add("");
-				scoreNo.add("");
-				score.add("");
-			} else {
-				// FIELD: Item
-				if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClItem() != null) {
-					item.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClItem());
-				} else
-					item.add("");
-
-				// FIELD: Specification
-				if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClSpecDetail() != null) {
-					specification.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClSpecDetail());
-				} else
-					specification.add("");
-
-				// FIELD: UOM
-				if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClUom() != null) {
-					uom.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClUom().getUomId()
-							.toString()
-							+ " - "
-							+ templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClUom().getUomCode()
-							+ " - "
-							+ templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClUom().getUomName());
-				} else
-					uom.add("");
-
-				// FIELD: Frequency per UOM
-				if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClUomFrequency() != null) {
-					freqPerUOM.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClUomFrequency()
-							.toString());
-				} else
-					freqPerUOM.add("");
-
-				// FIELD: UOM per Day
-				if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClUomPerDay() != null) {
-					uomPerDay.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClUomPerDay()
-							.toString());
-				} else
-					uomPerDay.add("");
-
-				// FIELD: UOM per month
-				if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClUomPerMonth() != null) {
-					uomPerMonth.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClUomPerMonth()
-							.toString());
-				} else
-					uomPerMonth.add("");
-
-				// FIELD: Quantity
-				if (!isZonal) {
-					if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClQuantity() != null) {
-						quantity.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClQuantity()
-								.toString());
-					} else {
-						quantity.add("");
-					}
-				}
-
-				// FIELD: Score Setting (Answer Type)
-				if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getAnswerTypeCode() != null) {
-					if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getAnswerTypeCode()
-							.getParameterId().toString().equals("164")) {
-						scoreSetting.add("Yes/No");
-					} else if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getAnswerTypeCode()
-							.getParameterId().toString().equals("163")) {
-						scoreSetting.add("Numeric");
-					} else if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getAnswerTypeCode()
-							.getParameterId().toString().equals("162")) {
-						scoreSetting.add("Text");
-
-					}
-				} else {
-					scoreSetting.add("");
-				}
-
-				if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getScoreTypeCode() != null) {
-					if ("323".equals(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getScoreTypeCode()
-							.getParameterId().toString())) {
-						scoreType.add("Auto");
-						if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getAnswerTypeCode()
-								.getParameterId().toString().equals("164")) {// Answer Type = Yes/No
-							if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getTplSpecScorings() != null) {
-								int scoringListSize = templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
-										.getTplSpecScorings().size();
-								for (int m = 0; m < scoringListSize; m++) {
-									if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
-											.getTplSpecScorings().get(m).getRangeFrom() == null
-											&& templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
-													.getTplSpecScorings().get(m).getRangeTo() == null) {
-										if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
-												.getTplSpecScorings().get(m).isCompliance()) {
-											if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
-													.getTplSpecScorings().get(m).getScore() != null) {
-												scoreYes.add(templateSpecBean.getSpecMaster().getTplSpecQuestions()
-														.get(i).getTplSpecScorings().get(m).getScore().toString());
-											} else {
-												scoreYes.add("");
-											}
-										} else {
-											if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
-													.getTplSpecScorings().get(m).getScore() != null) {
-												scoreNo.add(templateSpecBean.getSpecMaster().getTplSpecQuestions()
-														.get(i).getTplSpecScorings().get(m).getScore().toString());
-											} else {
-												scoreNo.add("");
-											}
-										}
-									} else {
-										scoreYes.add("");
-										scoreNo.add("");
-									}
-								}
-								rangeFrom.add("");
-								rangeTo.add("");
-								score.add("");
-							} else {
-								rangeFrom.add("");
-								rangeTo.add("");
-								scoreYes.add("");
-								scoreNo.add("");
-								score.add("");
-							}
-						} else {
-							if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getTplSpecScorings() != null) {
-								int scoringListSize = templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
-										.getTplSpecScorings().size();
-								for (int m = 0; m < scoringListSize; m++) {
-									if (m != 0) {
-										item.add("");
-										specification.add("");
-										if (!isZonal)
-											quantity.add("");
-										uom.add("");
-										freqPerUOM.add("");
-										uomPerDay.add("");
-										uomPerMonth.add("");
-										scoreSetting.add("");
-										scoreType.add("");
-									}
-									if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
-											.getTplSpecScorings().get(m).getRangeFrom() != null) {
-										rangeFrom.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
-												.getTplSpecScorings().get(m).getRangeFrom().toString());
-									} else {
-										rangeFrom.add("");
-									}
-
-									if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
-											.getTplSpecScorings().get(m).getRangeTo() != null) {
-										rangeTo.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
-												.getTplSpecScorings().get(m).getRangeTo().toString());
-									} else {
-										rangeTo.add("");
-									}
-									scoreYes.add("");
-									scoreNo.add("");
-
-									if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
-											.getTplSpecScorings().get(m).getScore() != null) {
-										score.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
-												.getTplSpecScorings().get(m).getScore().toString());
-									} else {
-										score.add("");
-									}
-								}
-							} else {
-								rangeFrom.add("");
-								rangeTo.add("");
-								scoreYes.add("");
-								scoreNo.add("");
-								score.add("");
-							}
-						}
-					} else if ("324".equals(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
-							.getScoreTypeCode().getParameterId().toString())) {
-						scoreType.add("User");
-						if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getMaxScore() != null) {
-							rangeFrom.add("");
-							rangeTo.add("");
-							scoreYes.add("");
-							scoreNo.add("");
-							score.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getMaxScore()
-									.toString());
-						} else {
-							rangeFrom.add("");
-							rangeTo.add("");
-							scoreYes.add("");
-							scoreNo.add("");
-							score.add("");
-						}
-					}
-				} else {
-					scoreType.add("");
-					rangeFrom.add("");
-					rangeTo.add("");
-					scoreYes.add("");
-					scoreNo.add("");
-					score.add("");
-				}
-
-			}
-		}
-
-		for (int x = 0; x < item.size(); x++) {
-			if (isZonal) {
-				specInfo.add(new SpecInfo(item.get(x), specification.get(x), "", uom.get(x), "", scoreSetting.get(x),
-						scoreType.get(x), rangeFrom.get(x), rangeTo.get(x), scoreYes.get(x), scoreNo.get(x), score
-								.get(x), "", "", freqPerUOM.get(x), uomPerDay.get(x), uomPerMonth.get(x), ""));
-			} else {
-				specInfo.add(new SpecInfo(item.get(x), specification.get(x), quantity.get(x), uom.get(x), "",
-						scoreSetting.get(x), scoreType.get(x), rangeFrom.get(x), rangeTo.get(x), scoreYes.get(x),
-						scoreNo.get(x), score.get(x), "", "", freqPerUOM.get(x), uomPerDay.get(x), uomPerMonth.get(x),
-						""));
-			}
-
-		}
-
-	}
-
-	public void getDataSpecificationForItemTypeProduct(TemplateSpecBean templateSpecBean, Boolean isZonal,
-			List<String> item, List<String> specification, List<String> uom, List<String> priceType,
-			List<String> quantity, List<String> scoreSetting, List<String> scoreType, List<String> score,
-			List<String> rangeFrom, List<String> rangeTo, List<String> scoreYes, List<String> scoreNo,
-			List<String> tierQuantityFrom, List<String> tierQuantityTo) {
-
-		for (int i = 0; i < templateSpecBean.getSpecMaster().getTplSpecQuestions().size(); i++) {
-			int j = i + 1;
-			if (j > templateSpecBean.getSpecMaster().getTplSpecQuestions().size()) {
-				item.add("");
-				specification.add("");
-				uom.add("");
-				priceType.add("");
-				if (!isZonal) {
-					quantity.add("");
-					tierQuantityFrom.add("");
-					tierQuantityTo.add("");
-				}
-				scoreSetting.add("");
-				scoreType.add("");
-				rangeFrom.add("");
-				rangeTo.add("");
-				scoreYes.add("");
-				scoreNo.add("");
-				score.add("");
-
-			} else {
-
-				if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClItem() != null) {
-					item.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClItem());
-				} else {
-					item.add("");
-				}
-
-				if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClSpecDetail() != null) {
-					specification.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClSpecDetail());
-				} else {
-					specification.add("");
-				}
-
-				if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClUom() != null) {
-					uom.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClUom().getUomId()
-							.toString()
-							+ " - "
-							+ templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClUom().getUomCode()
-							+ " - "
-							+ templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClUom().getUomName());
-				} else {
-					uom.add("");
-				}
-
-				if (!isZonal) {
-					if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClQuantity() != null) {
-						quantity.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClQuantity()
-								.toString());
-					} else {
-						quantity.add("");
-					}
-				}
-
-				if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClPriceTypeCode() != null) {
-					priceType.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClPriceTypeCode()
-							.getPmParameterDescsSpecCallOnly().get(0).getCodeName());
-					if ("Tier Standard".equalsIgnoreCase(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
-							.getClPriceTypeCode().getPmParameterDescsSpecCallOnly().get(0).getCodeName())
-							&& !isZonal) {
-						if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getTplSpecTierQties() != null) {
-							for (int y = 0; y < templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
-									.getTplSpecTierQties().size(); y++) {
-								if (y != 0) {
-									item.add("");
-									specification.add("");
-									quantity.add("");
-									uom.add("");
-									priceType.add("");
-									scoreSetting.add("");
-									scoreType.add("");
-									rangeFrom.add("");
-									rangeTo.add("");
-									scoreYes.add("");
-									scoreNo.add("");
-									score.add("");
-								}
-								tierQuantityFrom.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
-										.getTplSpecTierQties().get(y).getFromQty().toString());
-								tierQuantityTo.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
-										.getTplSpecTierQties().get(y).getToQty().toString());
-							}
-						} else {
-							tierQuantityFrom.add("");
-							tierQuantityTo.add("");
-						}
-					} else {
-						if (!isZonal) {
-							tierQuantityFrom.add("");
-							tierQuantityTo.add("");
-						}
-					}
-				} else {
-					priceType.add("");
-					if (!isZonal) {
-						tierQuantityFrom.add("");
-						tierQuantityTo.add("");
-					}
-				}
-
-				if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getAnswerTypeCode() != null) {
-					if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getAnswerTypeCode()
-							.getParameterId().toString().equals("164")) {
-						scoreSetting.add("Yes/No");
-					} else if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getAnswerTypeCode()
-							.getParameterId().toString().equals("163")) {
-						scoreSetting.add("Numeric");
-					} else if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getAnswerTypeCode()
-							.getParameterId().toString().equals("162")) {
-						scoreSetting.add("Text");
-
-					}
-				} else {
-					scoreSetting.add("");
-				}
-
-				if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getScoreTypeCode() != null) {
-					if ("323".equals(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getScoreTypeCode()
-							.getParameterId().toString())) {
-						scoreType.add("Auto");
-						if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getAnswerTypeCode()
-								.getParameterId().toString().equals("164")) {
-							if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getTplSpecScorings() != null) {
-								int scoringListSize = templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
-										.getTplSpecScorings().size();
-								for (int m = 0; m < scoringListSize; m++) {
-									if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
-											.getTplSpecScorings().get(m).getRangeFrom() == null
-											&& templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
-													.getTplSpecScorings().get(m).getRangeTo() == null) {
-										if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
-												.getTplSpecScorings().get(m).isCompliance()) {
-											if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
-													.getTplSpecScorings().get(m).getScore() != null) {
-												scoreYes.add(templateSpecBean.getSpecMaster().getTplSpecQuestions()
-														.get(i).getTplSpecScorings().get(m).getScore().toString());
-											} else {
-												scoreYes.add("");
-											}
-										} else {
-											if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
-													.getTplSpecScorings().get(m).getScore() != null) {
-												scoreNo.add(templateSpecBean.getSpecMaster().getTplSpecQuestions()
-														.get(i).getTplSpecScorings().get(m).getScore().toString());
-											} else {
-												scoreNo.add("");
-											}
-										}
-									} else {
-										scoreYes.add("");
-										scoreNo.add("");
-									}
-								}
-								rangeFrom.add("");
-								rangeTo.add("");
-								score.add("");
-							} else {
-								rangeFrom.add("");
-								rangeTo.add("");
-								scoreYes.add("");
-								scoreNo.add("");
-								score.add("");
-							}
-						} else {
-							if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getTplSpecScorings() != null) {
-								int scoringListSize = templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
-										.getTplSpecScorings().size();
-								for (int m = 0; m < scoringListSize; m++) {
-									if (m != 0) {
-										item.add("");
-										specification.add("");
-										if (!isZonal) {
-											quantity.add("");
-											tierQuantityFrom.add("");
-											tierQuantityTo.add("");
-										}
-										uom.add("");
-										priceType.add("");
-										scoreSetting.add("");
-										scoreType.add("");
-									}
-									if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
-											.getTplSpecScorings().get(m).getRangeFrom() != null) {
-										rangeFrom.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
-												.getTplSpecScorings().get(m).getRangeFrom().toString());
-									} else {
-										rangeFrom.add("");
-									}
-
-									if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
-											.getTplSpecScorings().get(m).getRangeTo() != null) {
-										rangeTo.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
-												.getTplSpecScorings().get(m).getRangeTo().toString());
-									} else {
-										rangeTo.add("");
-									}
-									scoreYes.add("");
-									scoreNo.add("");
-
-									if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
-											.getTplSpecScorings().get(m).getScore() != null) {
-										score.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
-												.getTplSpecScorings().get(m).getScore().toString());
-									} else {
-										score.add("");
-									}
-								}
-							} else {
-								rangeFrom.add("");
-								rangeTo.add("");
-								scoreYes.add("");
-								scoreNo.add("");
-								score.add("");
-							}
-						}
-
-					} else if ("324".equals(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
-							.getScoreTypeCode().getParameterId().toString())) {
-						scoreType.add("User");
-						if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getMaxScore() != null) {
-							rangeFrom.add("");
-							rangeTo.add("");
-							scoreYes.add("");
-							scoreNo.add("");
-							score.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getMaxScore()
-									.toString());
-						} else {
-							rangeFrom.add("");
-							rangeTo.add("");
-							scoreYes.add("");
-							scoreNo.add("");
-							score.add("");
-						}
-					}
-				} else {
-					scoreType.add("");
-					rangeFrom.add("");
-					rangeTo.add("");
-					scoreYes.add("");
-					scoreNo.add("");
-					score.add("");
-				}
-			}
-		}
-
-		for (int x = 0; x < item.size(); x++) {
-			if (!isZonal) {
-				specInfo.add(new SpecInfo(item.get(x), specification.get(x), quantity.get(x), uom.get(x), priceType
-						.get(x), scoreSetting.get(x), scoreType.get(x), rangeFrom.get(x), rangeTo.get(x), scoreYes
-						.get(x), scoreNo.get(x), score.get(x), tierQuantityFrom.get(x), tierQuantityTo.get(x), "", "",
-						"", ""));
-			} else {
-				specInfo.add(new SpecInfo(item.get(x), specification.get(x), "", uom.get(x), priceType.get(x),
-						scoreSetting.get(x), scoreType.get(x), rangeFrom.get(x), rangeTo.get(x), scoreYes.get(x),
-						scoreNo.get(x), score.get(x), "", "", "", "", "", ""));
-			}
-		}
-	}
-	
 	public String reloadFileImport(FileUploadEvent event) throws FileNotFoundException, IOException,
 		EncryptedDocumentException, InvalidFormatException {
 	
 		log.info("reloadFileImport - BEGIN");
 		boolean isZonal = this.getManagedBean().getQt().isZonal();
-		long itemTypeId = this.getManagedBean().getScQtChecklist().getScQtDoc().getTplSpecMaster().getItemTypeCode()
-				.getParameterId();
-		
+		String itemTypeCode = this.getManagedBean().getScQtChecklist().getScQtDoc().getTplSpecMaster().getItemTypeCode().getParameterCode();
 		boolean hasDataFlag = true;
+		
 		List<String> item = new ArrayList<String>();
 		List<String> specification = new ArrayList<String>();
 		List<String> uom = new ArrayList<String>();
@@ -17275,34 +16718,65 @@ public class SpecificationBackingBean extends
 		List<String> scoreMark = new ArrayList<String>();
 		List<String> scoreSchemaYes = new ArrayList<String>();
 		List<String> scoreSchemaNo = new ArrayList<String>();
+		List<String> specificationWeightage = new ArrayList<String>();
 		
-		UploadedFile contentFile = event.getFile();
-		log.debug("item.getFileName()" + contentFile.getFileName());
-		
+		UploadedFile contentFile = event.getFile();		
 		FileInputStream file = (FileInputStream) contentFile.getInputstream();
 		XSSFWorkbook workbookxlsx = null;
 		log.info("File Upload - BEGIN");
-		log.info("FILE NAME === " + contentFile.getFileName());
+		try {
+			workbookxlsx = new XSSFWorkbook(file);
+			workbookxlsx.setMissingCellPolicy(MissingCellPolicy.CREATE_NULL_AS_BLANK);
+		} catch (IOException e) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			e.printStackTrace();
+		}
 		
-		//if (contentFile.getFileName().endsWith("xlsx")) {
-			try {
-				// file = event.getFile().getInputstream();
-				workbookxlsx = new XSSFWorkbook(file);
-				workbookxlsx.setMissingCellPolicy(MissingCellPolicy.CREATE_NULL_AS_BLANK);
-			} catch (IOException e) {
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
-				e.printStackTrace();
-			}
+		//SECTION - Validate/checking type of template either it uploaded the right template
+		//Type of Spec Template : 1] Product Non-Zonal 2] Product Zonal 3] Service Non-Zonal 4] Service Zonal
+		XSSFSheet assumptionSheet = workbookxlsx.getSheetAt(0);
+		Row rowItemType = assumptionSheet.getRow(0);
+		Row rowIsZonal = assumptionSheet.getRow(1);
+		String templateItemTypeCode = "";
+		Boolean proceedProcess = false;
+		Boolean chkCellIsZonal = rowIsZonal.getCell(1).getStringCellValue().equalsIgnoreCase("YES") ? true : false;
 		
+		if((rowItemType.getCell(1).getStringCellValue()).equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT_STRING)){
+			templateItemTypeCode = ParameterConst.ITEM_TYPE_PRODUCT;
+		}else if((rowItemType.getCell(1).getStringCellValue()).equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE_STRING)){
+			templateItemTypeCode = ParameterConst.ITEM_TYPE_SERVICE;
+		}
+		
+		if("".equalsIgnoreCase(templateItemTypeCode) || !templateItemTypeCode.equalsIgnoreCase(itemTypeCode) || chkCellIsZonal != isZonal){
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, 
+							MessageUtils.getMessage(
+									MessageConst.ERROR_760503,
+									new String[] {ResourceBundleUtils.getMessage(
+											(isZonal) ? "lbl.sc.spec.import.technical.template.zonal" : "lbl.sc.spec.import.technical.template.nonzonal",
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+											new FacesScopes().getUserLocale()),
+											ResourceBundleUtils.getMessage(
+													itemTypeCode.equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT) ? "lbl.txt.product" : "lbl.txt.service", 
+													ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+													new FacesScopes().getUserLocale())},
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+			workbookxlsx.close();
+			file.close();
+		}else{
+			proceedProcess=true;
+		}
+		//End Checking Uploaded file Type of template
+	
+		if(proceedProcess){
 			XSSFSheet sheetxlsx = workbookxlsx.getSheetAt(1);
-			
 			Iterator<Row> rowIterator = sheetxlsx.rowIterator();
 			while (rowIterator.hasNext()) {
 				Row row = rowIterator.next();
-				log.info("ROW NUM === "+row.getRowNum());
-				if (row.getRowNum() == 0)
-					continue;
+				if (row.getRowNum() == 0)continue;
 				hasDataFlag = (row != null);
 				
 				if (row.getCell(0).toString() != "" || row.getCell(0).toString() != null) {
@@ -17317,20 +16791,12 @@ public class SpecificationBackingBean extends
 					specification.add("");
 				}
 				if (row.getCell(2).toString() != "" || row.getCell(2).toString() != null) {
-					String tempUom = row.getCell(2).toString();
-					String firstThreeChars = "";
-		
-					if (tempUom.length() > 3) {
-						firstThreeChars = tempUom.substring(0, 3);
-					} else {
-						firstThreeChars = tempUom;
-					}
-					uom.add(firstThreeChars);
+					uom.add(row.getCell(2).toString());
 				} else {
 					uom.add("");
 				}
 		
-				if (itemTypeId == 198) {// product
+				if (itemTypeCode.equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {// product
 					if (row.getCell(3).toString() != "" || row.getCell(3).toString() != null)
 						priceType.add(row.getCell(3).toString());
 					else
@@ -17355,7 +16821,7 @@ public class SpecificationBackingBean extends
 						// END SECTION POPUP TIEW QUANTITY
 					}
 		
-				} else if (itemTypeId == 199) {// service
+				} else if (itemTypeCode.equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {// service
 					log.info("ITEM TYPE IS SERVICE !! ");
 					if (row.getCell(3).toString() != "" || row.getCell(3).toString() != null) {
 						freqPerUom.add(row.getCell(3).toString());
@@ -17420,10 +16886,15 @@ public class SpecificationBackingBean extends
 						scoreMark.add(row.getCell(13).toString());
 					else
 						scoreMark.add("");
+					
+					if (row.getCell(14).toString() != "" || row.getCell(14).toString() != null)
+						specificationWeightage.add(row.getCell(14).toString());
+					else
+						specificationWeightage.add("");
 					// END POPUP: SCORE SETTING
 		
 				} else {// Zonal
-					if (itemTypeId == 198) {// Product
+					if (itemTypeCode.equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {// Product
 						if (row.getCell(4).toString() != "" || row.getCell(4).toString() != null)
 							score.add(row.getCell(4).toString());
 						else
@@ -17458,6 +16929,11 @@ public class SpecificationBackingBean extends
 							scoreMark.add(row.getCell(10).toString());
 						else
 							scoreMark.add("");
+						
+						if (row.getCell(11).toString() != "" || row.getCell(11).toString() != null)
+							specificationWeightage.add(row.getCell(11).toString());
+						else
+							specificationWeightage.add(row.getCell(11).toString());
 		
 					} else {// Service
 						if (row.getCell(6).toString() != "" || row.getCell(6).toString() != null)
@@ -17494,22 +16970,39 @@ public class SpecificationBackingBean extends
 							scoreMark.add(row.getCell(12).toString());
 						else
 							scoreMark.add("");
+						
+						if (row.getCell(13).toString() != "" || row.getCell(13).toString() != null)
+							specificationWeightage.add(row.getCell(13).toString());
+						else
+							specificationWeightage.add(row.getCell(13).toString());
 						// END POPUP: SCORE SETTING
 					}
 				}
-		
 			}
-		//}
-		workbookxlsx.close();
-		file.close();
-		
-		int index = 0;
-		String specType = "T";
-		ScQtCheckList checkList = this.getManagedBean().getScQtChecklist();
-		technicalChecklistReloadActionImport(item, specification, uom, priceType, quantity, tierQuantityFrom,
-				tierQuantityTo, score, scoreType, scoreSchemaFrom, scoreSchemaTo, scoreSchemaYes, scoreSchemaNo,
-				scoreMark, freqPerUom, uomPerDay, uomPerMonth, index, checkList, specType);
-		
+			workbookxlsx.close();
+			file.close();
+			int index = -1;
+			String specType = "T";
+			ScQtCheckList checkList = this.getManagedBean().getScQtChecklist();
+			try{
+				technicalChecklistReloadActionImport(item, specification, uom, priceType, quantity, tierQuantityFrom,
+						tierQuantityTo, score, scoreType, scoreSchemaFrom, scoreSchemaTo, scoreSchemaYes, scoreSchemaNo,
+						scoreMark, freqPerUom, uomPerDay, uomPerMonth,specificationWeightage, index, checkList, specType);
+				
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(
+										MessageConst.INFO_760502,
+										new String[] {},
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+			}catch(Exception e){
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+				e.printStackTrace();
+			}
+		}
 		log.info("handleFileUploadExport - END");
 		return "/xhtml/sc/boSctemplatespec/technicalCommitteeTemplate.xhtml?faces-redirect=true";
 	}
@@ -17518,24 +17011,25 @@ public class SpecificationBackingBean extends
 		List<String> priceType, List<String> quantity, List<String> tierQtyFrom, List<String> tierQtyTo,
 		List<String> score, List<String> scoreType,List<String> scoreSchemaFrom, List<String> scoreSchemaTo, 
 		List<String> scoreSchemaYes, List<String> scoreSchemaNo, List<String> scoreMark,
-		List<String> freqPerUom, List<String> uomPerDay, List<String> uomPerMonth,
+		List<String> freqPerUom, List<String> uomPerDay, List<String> uomPerMonth,List<String> specificationWeightage,
 		int index, ScQtCheckList checkList,String specType) {
 		log.info("START technicalChecklistReloadActionImport !!!");
-		
+				
 		//PRICE TYPE
-		PmParameter paramPriceTypeNormal = retrieveParameterById(Long.valueOf(294));
-		PmParameter paramPriceTypeTier = retrieveParameterById(Long.valueOf(296));
-		PmParameter paramPriceTypeZonal = retrieveParameterById(Long.valueOf(298));
-		PmParameter paramPriceTypeZonalTier = retrieveParameterById(Long.valueOf(300));
+		PmParameter paramPriceTypeNormal = getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE,ParameterConst.PRICE_TYPE_STANDARD);
+		PmParameter paramPriceTypeTier = getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE,ParameterConst.PRICE_TYPE_TIER);
+		PmParameter paramPriceTypeZonal = getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE,ParameterConst.PRICE_TYPE_ZONAL_STANDARD);
+		PmParameter paramPriceTypeZonalTier = getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE,ParameterConst.PRICE_TYPE_ZONAL_TIER);
 		//ANSWER TYPE
-		PmParameter paramAnswerTypeText = retrieveParameterById(Long.valueOf(162));
-		PmParameter paramAnswerTypeNumeric = retrieveParameterById(Long.valueOf(163));
-		PmParameter paramAnswerTypeYesNo = retrieveParameterById(Long.valueOf(164));
+		PmParameter paramAnswerTypeText = getParameterByTypeAndCode(ParameterTypeConst.ANSWER_TYPE,ParameterConst.ANSWER_TYPE_TEXT);
+		PmParameter paramAnswerTypeNumeric = getParameterByTypeAndCode(ParameterTypeConst.ANSWER_TYPE,ParameterConst.ANSWER_TYPE_NUMERIC);
+		PmParameter paramAnswerTypeYesNo = getParameterByTypeAndCode(ParameterTypeConst.ANSWER_TYPE,ParameterConst.ANSWER_TYPE_DROPDOWN);
 		//SCORE TYPE
-		PmParameter paramScoreTypeAuto = retrieveParameterById(Long.valueOf(323));
-		PmParameter paramScoreTypeUser = retrieveParameterById(Long.valueOf(324));
+		PmParameter paramScoreTypeAuto = getParameterByTypeAndCode(ParameterTypeConst.SCORE_TYPE,ParameterConst.SCORE_TYPE_AUTO);
+		PmParameter paramScoreTypeUser = getParameterByTypeAndCode(ParameterTypeConst.SCORE_TYPE,ParameterConst.SCORE_TYPE_USER);
 		//Delivery Item Type Code
 		PmParameter paramDeliveryItemType = getParameterByTypeAndCode(ParameterTypeConst.DELIVERY_TERM,ParameterConst.SQ_DURATION_DAY);
+		PmParameter paramFulfillmentType = getParameterByTypeAndCode(ParameterTypeConst.FULFILMENT_TYPE,ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 				
 		this.getManagedBean().setScQtChecklist(checkList);
 		this.getManagedBean().setIndex(index);
@@ -17558,13 +17052,12 @@ public class SpecificationBackingBean extends
 				specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
 		
 				TemplateSpecBean templateSpecBean = getManagedBean().getTemplateSpecBean();
-		
 				List<TplSpecQuestion> tplBacker = new ArrayList<TplSpecQuestion>();
 				TplSpecQuestion tpmQuest = new TplSpecQuestion();
 				
 				int rowIndex = 0;
+				BigDecimal maxScore = null;
 				for (int i = 0; i < item.size(); i++) {
-					log.info("@@@ INDEX [ "+i+" ] @@@ ");
 					List<TplSpecTierQty> tplSpecTierStandartQty = new ArrayList<TplSpecTierQty>();
 					List<TplSpecScoring> tplSpecScoring = new ArrayList<TplSpecScoring>();
 					if (!"".equalsIgnoreCase(item.get(i)) || !"".equalsIgnoreCase(specification.get(i))) {
@@ -17575,24 +17068,34 @@ public class SpecificationBackingBean extends
 						
 						if (!"".equalsIgnoreCase(item.get(i))) {
 							tpmQuest.setClItem(item.get(i));
-							tpmQuest.setQuestionType("I");
+							tpmQuest.setQuestionType(TemplateSpecConst.QUESTION_TYPE_ITEM);
 							tpmQuest.setQuestionOrder(rowIndex + 1);
 							tpmQuest.setClDeliveryTermTypeCode(paramDeliveryItemType);
+							tpmQuest.setClFulfilmentTypeCode(paramFulfillmentType);
 						}
 						
 						if (!"".equalsIgnoreCase(specification.get(i))) {
 							tpmQuest.setClSpecDetail(specification.get(i));
-							tpmQuest.setQuestionType("S");
+							tpmQuest.setQuestionType(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC);
 							tpmQuest.setQuestionOrder(rowIndex + 1);
+							if(templateSpecBean.getSpecMaster().isWeightageReq()){
+								tpmQuest.setWeightageReq(Boolean.TRUE);
+								if(!"".equalsIgnoreCase(specificationWeightage.get(i)))tpmQuest.setWeightage(new BigDecimal(specificationWeightage.get(i)));
+							}else{
+								tpmQuest.setWeightageReq(Boolean.FALSE);
+							}
 						}
 						
 						if (!"".equalsIgnoreCase(uom.get(i))) {
-							String[] uomInfo = uom.get(i).split("-");
-							PmUom find = retrieveUomById(Long.parseLong(uomInfo[0].trim()));
-							tpmQuest.setClUom(find);
+							String[] uomDtl = uom.get(i).split("-");
+							PmUom pmUom = new PmUom();
+							pmUom.setUomId(Long.parseLong(uomDtl[0].trim()));
+							pmUom.setUomCode(uomDtl[1].trim());
+							pmUom.setUomName(uomDtl[2].trim());
+							tpmQuest.setClUom(pmUom);
 						}
 						
-						if(checkList.getScQtDoc().getTplSpecMaster().getItemTypeCode().getParameterId() == 198){
+						if(checkList.getScQtDoc().getTplSpecMaster().getItemTypeCode().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)){
 							if (!"".equalsIgnoreCase(priceType.get(i))) {
 								if (priceType.get(i).equals("Normal Standard") || priceType.get(i).equals("Biasa Standard")) {
 									tpmQuest.setClPriceTypeCode(paramPriceTypeNormal);
@@ -17604,6 +17107,12 @@ public class SpecificationBackingBean extends
 									tpmQuest.setClPriceTypeCode(paramPriceTypeZonalTier);
 								}
 							}
+						}
+						
+						if(checkList.getScQtDoc().getTplSpecMaster().getItemTypeCode().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)){
+							if(!"".equalsIgnoreCase(freqPerUom.get(i)))tpmQuest.setClUomFrequency(new BigDecimal(freqPerUom.get(i)));
+							if(!"".equalsIgnoreCase(uomPerDay.get(i)))tpmQuest.setClUomPerDay(new BigDecimal(uomPerDay.get(i)));
+							if(!"".equalsIgnoreCase(uomPerMonth.get(i)))tpmQuest.setClUomPerMonth(new BigDecimal(uomPerMonth.get(i)));
 						}
 						
 						if(!checkList.getScQt().isZonal()){
@@ -17630,13 +17139,20 @@ public class SpecificationBackingBean extends
 							}
 						}
 						
-						if(checkList.getScQtDoc().getTplSpecMaster().getItemTypeCode().getParameterId() == 199){
-							if(!"".equalsIgnoreCase(freqPerUom.get(i)))tpmQuest.setClUomFrequency(new BigDecimal(freqPerUom.get(i)));
-							if(!"".equalsIgnoreCase(uomPerDay.get(i)))tpmQuest.setClUomPerDay(new BigDecimal(uomPerDay.get(i)));
-							if(!"".equalsIgnoreCase(uomPerMonth.get(i)))tpmQuest.setClUomPerMonth(new BigDecimal(uomPerMonth.get(i)));
-						}
-						
 						tpmQuest.setClAnswerRequired(true);
+						if(rowIndex !=0){
+							if (TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC.equals(tpmQuest.getQuestionType()) 
+									&& rowIndex < tplBacker.size()) {
+								TplSpecQuestion prevSpecQuestion = tplBacker.get(rowIndex-1);
+								String prevQuestionType = prevSpecQuestion.getQuestionType();
+								if (TemplateSpecConst.QUESTION_TYPE_ITEM.equals(prevQuestionType)) {
+									tpmQuest.setParentSpecQuestion(prevSpecQuestion);
+								} else if (TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC
+										.equals(prevQuestionType)) {
+									tpmQuest.setParentSpecQuestion(prevSpecQuestion.getParentSpecQuestion());
+								}
+							}
+						}
 						rowIndex++;
 					}
 					if((!"".equalsIgnoreCase(item.get(i)) || !"".equalsIgnoreCase(specification.get(i))) ||
@@ -17660,7 +17176,7 @@ public class SpecificationBackingBean extends
 						
 						templateSpecBean.setSelectedSpecQuestion(tpmQuest);
 						
-						if(checkList.getScQtDoc().getTplSpecMaster().getItemTypeCode().getParameterId() == 198 &&
+						if(checkList.getScQtDoc().getTplSpecMaster().getItemTypeCode().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT) &&
 								!checkList.getScQt().isZonal()){
 							if(!"".equalsIgnoreCase(tierQtyFrom.get(i))){
 								TplSpecTierQty tierQty = new TplSpecTierQty();
@@ -17680,25 +17196,38 @@ public class SpecificationBackingBean extends
 							specScoring.setTplSpecQuestion(tpmQuest);
 							tplSpecScoring.add(specScoring);
 							templateSpecBean.getSelectedSpecQuestion().setTplSpecScorings(tplSpecScoring);
+							
+							if(tplSpecScoring.size() == 1){
+								maxScore = new BigDecimal(scoreMark.get(i));
+							}else{
+								if(maxScore.compareTo(new BigDecimal(scoreMark.get(i))) < 0){
+									maxScore = new BigDecimal(scoreMark.get(i));
+								}
+							}
+							tpmQuest.setMaxScore(maxScore);
 						}
 						
-						if(!"".equalsIgnoreCase(scoreSchemaYes.get(i))){
-							TplSpecScoring specScoring = new TplSpecScoring();
-							specScoring.setCompliance(true);
-							specScoring.setScore(new BigDecimal(scoreSchemaYes.get(i)));
-							specScoring.setTplSpecQuestion(tpmQuest);
-							tplSpecScoring.add(specScoring);
+						if(!"".equalsIgnoreCase(scoreSchemaYes.get(i)) && !"".equalsIgnoreCase(scoreSchemaNo.get(i))){
+							TplSpecScoring specScoringYes = new TplSpecScoring();
+							specScoringYes.setCompliance(true);
+							specScoringYes.setScore(new BigDecimal(scoreSchemaYes.get(i)));
+							specScoringYes.setTplSpecQuestion(tpmQuest);
+							tplSpecScoring.add(specScoringYes);
+							
+							TplSpecScoring specScoringNo = new TplSpecScoring();
+							specScoringNo.setCompliance(false);
+							specScoringNo.setScore(new BigDecimal(scoreSchemaNo.get(i)));
+							specScoringNo.setTplSpecQuestion(tpmQuest);
+							tplSpecScoring.add(specScoringNo);
+							
+							if((new BigDecimal(scoreSchemaYes.get(i))).compareTo(new BigDecimal(scoreSchemaNo.get(i))) < 0){
+								tpmQuest.setMaxScore(new BigDecimal(scoreSchemaNo.get(i)));
+							}else{
+								tpmQuest.setMaxScore(new BigDecimal(scoreSchemaYes.get(i)));
+							}
+							
 							templateSpecBean.getSelectedSpecQuestion().setTplSpecScorings(tplSpecScoring);
-						}
-						
-						if(!"".equalsIgnoreCase(scoreSchemaNo.get(i))){
-							TplSpecScoring specScoring = new TplSpecScoring();
-							specScoring.setCompliance(false);
-							specScoring.setScore(new BigDecimal(scoreSchemaNo.get(i)));
-							specScoring.setTplSpecQuestion(tpmQuest);
-							tplSpecScoring.add(specScoring);
-							templateSpecBean.getSelectedSpecQuestion().setTplSpecScorings(tplSpecScoring);
-						}
+						}	
 					}
 				} 
 				templateSpecBean.getSpecMaster().setTplSpecQuestions(tplBacker);
@@ -17737,7 +17266,7 @@ public class SpecificationBackingBean extends
 				return "/xhtml/sc/boSctemplatespec/technicalCommitteeTemplate.xhtml?faces-redirect=true";
 			}
 		}catch(Exception e){
-			
+			e.printStackTrace();
 		}finally{
 			specSo = null;
 		}
