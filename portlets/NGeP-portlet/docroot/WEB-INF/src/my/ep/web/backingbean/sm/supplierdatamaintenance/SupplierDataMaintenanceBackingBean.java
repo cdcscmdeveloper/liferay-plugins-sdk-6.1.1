@@ -1978,7 +1978,9 @@ public class SupplierDataMaintenanceBackingBean extends
 		PersonnelReqDTO perReqDTO = new PersonnelReqDTO();
 		perReqDTO.setSmSupplierId(currSupp.getSupplierId());
 		
-		PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelBySupplierId(perReqDTO);
+		//27915: Disciplinary Action - start - 26238
+		PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelDABySupplierId(perReqDTO);
+		//27915: Disciplinary Action - end - 26238
 		
 		List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(currSupp);
 		if (resultList != null
