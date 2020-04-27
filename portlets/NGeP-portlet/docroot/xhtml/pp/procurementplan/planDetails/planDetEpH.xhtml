@@ -123,16 +123,18 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					disabled="#{!(epItem.brandNew ? epItem.brandNew : epItem.selectable)}" 
 					value="#{epItem.deleted}"/>
 			<!-- #24975 -->
-				<p:commandLink id="addUpdateEpHInfo" 
+				<p:commandLink
+				        rendered="#{!(epItem.brandNew ? epItem.brandNew : epItem.selectable) and pPlanBackingBean.managedBean.modeEditable}"
+				        id="addUpdateEpBInfo" 
 						immediate="true" 
 						update="dtExpenditurePlanH" 
 						partialSubmit="true"
-						disabled="#{epItem.cloneEnabled or epItem.disableForPindaan or pPlanBackingBean.managedBean.editable}">
+						disabled="#{epItem.cloneEnabled or epItem.disableForPindaan}">
 				     <h:graphicImage value="/css/images/design/ico-viewnedit.png"  
 				     style="float:left; padding-left: 5px;" process="@this">
 				      <p:ajax event="click"
 				      		listener="#{pPlanBackingBean.addUpdateEpAllInfo(ParameterConst.votAmanah, pPlanBackingBean.managedBean.selectedPlan, index)}"
-				      		disabled="#{epItem.cloneEnabled or epItem.disableForPindaan or pPlanBackingBean.managedBean.editable}"
+				      		disabled="#{epItem.cloneEnabled or epItem.disableForPindaan}"
 				      		update="@form"/>
 				      </h:graphicImage>
 				</p:commandLink>
@@ -251,7 +253,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        </p:column>
 	        <p:column>
 	        	<p:selectOneMenu value="#{epItem.recordStatusFlg}" style="width:99%"
-	        		 disabled="#{epItem.cloneEnabled or epItem.statusEnabled or pPlanBackingBean.managedBean.editable}"> 
+	        		 disabled="#{epItem.cloneEnabled or epItem.statusEnabled}">  
 	            	<f:selectItems value="#{pPlanBackingBean.getStatusOptions()}" />
 	          	</p:selectOneMenu> 
 	        </p:column>
