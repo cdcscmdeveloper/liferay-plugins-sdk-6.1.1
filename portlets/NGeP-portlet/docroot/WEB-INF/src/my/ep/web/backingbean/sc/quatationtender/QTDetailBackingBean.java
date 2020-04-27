@@ -8385,11 +8385,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					detailSO=null;
 				}
 			}
-			
-			
+				
 		   /**
 			 * Check in the validity period expired and status related. 
-			 * 
 			 * @return the true or false.
 			 */
 			public boolean closeQTIfValidityPeriodExpiredAndStatusRelated(){
@@ -8425,40 +8423,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}	
 						
 			   return isCloseQT;	
-			}
-		
-			
-			private boolean checkIsBiddingActiveForStatusCloseQT(ScQt scQt) {
-				IBiddingSO biddingSO;
-				try {
-					boolean isBiddingActive = false;
-					biddingSO = BusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
-					
-					BiddingReqDTO reqDTO = new BiddingReqDTO();	
-					
-					List<Long> statusIds = new ArrayList<Long>();
-					statusIds.add(BidStatusConst.BID_PENDING_BIDDING);
-					statusIds.add(BidStatusConst.BID_RESCHEDULE_BIDDING);
-					
-					ISearchBean<ScBidSchedule> bidSchSearchBean = new SearchBean<ScBidSchedule>();
-					bidSchSearchBean.getDataFilterBeans().add(new SearchFilterBean(
-							"scBid.docType", SearchOperator.OPERATOR_EQUALS.value(), ParameterConst.DOCTYPE_QUOTATION));
-					bidSchSearchBean.getDataFilterBeans().add(new SearchFilterBean(
-							"scBid.docId", SearchOperator.OPERATOR_EQUALS.value(), scQt.getQtId()));
-					bidSchSearchBean.getDataFilterBeans().add(new SearchFilterBean(
-							"pmStatus.statusId", SearchOperator.OPERATOR_IN.value(), statusIds));
-					reqDTO.setBidSchSearchBean(bidSchSearchBean);
-
-					BiddingResDTO resDTO = biddingSO.searchBiddingScheduleList(reqDTO);
-					List<ScBidSchedule> list = resDTO.getBidSchResultBean().getResultList();
-					if(list.size() > 0 ) {
-						isBiddingActive = true;
-					}
-					return isBiddingActive;
-				} finally {
-					biddingSO = null;
-				}
 			}
 			
 			/**
