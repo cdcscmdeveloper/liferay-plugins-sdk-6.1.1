@@ -6667,6 +6667,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				 cloned.setStatusEnabled(false);
 				 cloned.setJustificationEnabled(false);
 				 cloned.setDisableEditAccount(true);
+				 cloned.setEditable(false);
 				 
 			 }
 			 
@@ -6679,9 +6680,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				 original.setCloneEnabled(true);
 				 original.setReasonForUpdateEnabled(true);
 				 original.setStatusEnabled(true);
-				 cloned.setDisableEditAccount(true);
+				 original.setDisableEditAccount(true);
 				 original.setJustificationEnabled(true);
-					
+				 original.setEditable(true);
 			 }
 		}
 
