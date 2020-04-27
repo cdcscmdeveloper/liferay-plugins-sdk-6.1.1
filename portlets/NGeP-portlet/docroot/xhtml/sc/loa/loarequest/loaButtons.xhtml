@@ -152,7 +152,7 @@
 							Enhancement #22211 START
 							<h:panelGroup rendered="#{bpmAction == 'CANCEL'}">
 								<p:commandButton value="#{lbl['lbl.btn.cancel']}" id="cancelLoaBtn"
-								rendered="#{!isSqStillValid}"
+								rendered="#{!empty lOADetailBackingBean.managedBean.scLoa.loaId}"
 								action="#{LOACancelDetailBackingBean.cancelationLOA(lOADetailBackingBean.managedBean.scLoa.loaId)}" process="@form"
 								update="@form" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();" />
