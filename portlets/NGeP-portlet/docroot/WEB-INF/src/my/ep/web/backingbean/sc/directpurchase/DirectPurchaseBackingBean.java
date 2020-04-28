@@ -1336,38 +1336,39 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			
 			
 			/**
-			 * Show function type if user have both ptj & supplier role
+			 * Return boolean TRUE for dual role only, else FALSE
 			 * @return boolean
 			 */
 			public boolean showFunctionType() {
-				if(hasSupplierRole() && hasGovernmentUserRole()) {
-					if(getManagedBean().getSearchFunctionType()==null) {
+				if (hasSupplierRole() && hasGovernmentUserRole()) {
+					if (getManagedBean().getSearchFunctionType() == null && !getManagedBean().isG2G()) {
 						getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_PTJ);
+					} else
 						getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_G2G_ROLECODE);
-					}
 					return true;
-				} else  
-						getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_PTJ);
-						return false;
-				
+				} else if (hasGovernmentUserRole()) {
+					getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_PTJ);
+				} else
+					getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_SUPPLIER);
+				return false;
 			}
 			
 			/**
-			 * Show function type if user have both ptj & supplier role
+			 * Return boolean TRUE for dual role and PTJ, else FALSE
 			 * @return boolean
 			 */
 			public boolean showRoleType() {
 				if(hasSupplierRole() && hasGovernmentUserRole()) {
-					if(getManagedBean().getSearchFunctionType()==null) {
+					if (getManagedBean().getSearchFunctionType() == null && !getManagedBean().isG2G()) {
 						getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_PTJ);
+					} else
 						getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_G2G_ROLECODE);
-					}
 					return true;
-				} 		
-				 else if(hasGovernmentUserRole()){
-						getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_PTJ);
+				} else if (hasGovernmentUserRole()) {
+					getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_PTJ);
 						return true;
-				}
+				} else
+					getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_SUPPLIER);
 				return false;
 			}
 			
