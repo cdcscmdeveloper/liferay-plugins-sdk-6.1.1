@@ -23,7 +23,7 @@
 					<td class="columnDateFromClass">
 						<p:calendar label="#{lbl['lbl.rpt.frmdate']}"
 							id="calDtFrm" showOn="button" navigator="true"
-							display="inline" readonlyInput="true" size="9" update="calDtTo" 
+							display="inline" readonlyInput="true" size="9" update="calDtTo" yearRange="-99"
 							value="#{cc.attrs.bBean.managedBean.dateFrom}" required="#{cc.attrs.required}"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 							<p:ajax event="dateSelect"  update="calDtTo" process="@this" listener="#{cc.attrs.bBean.setDateToByDateRange(cc.attrs.dateRange)}" />
@@ -38,7 +38,7 @@
 					</td>
 					<td><p:calendar label="#{lbl['lbl.rpt.todate']}"
 						id="calDtTo" showOn="button" navigator="true" disabled="#{empty cc.attrs.bBean.managedBean.dateFrom}"
-						display="inline" readonlyInput="true" size="9" mindate="#{cc.attrs.bBean.managedBean.dateFrom}"
+						display="inline" readonlyInput="true" size="9" mindate="#{cc.attrs.bBean.managedBean.dateFrom}" yearRange="-99"
 						value="#{cc.attrs.bBean.managedBean.dateTo}" required="#{!empty cc.attrs.bBean.managedBean.dateFrom or cc.attrs.required}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 						</p:calendar>

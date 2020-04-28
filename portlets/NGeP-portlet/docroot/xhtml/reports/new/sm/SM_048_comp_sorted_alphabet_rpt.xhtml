@@ -102,7 +102,7 @@
 							<td class="columnDateFromClass">
 								<p:calendar label="#{lbl['lbl.rpt.frmdate']}"
 									id="calDtFrm" showOn="button" navigator="true"
-									display="inline" readonlyInput="true" size="9" update="calDtTo" 
+									display="inline" readonlyInput="true" size="9" update="calDtTo" yearRange="-99"
 									value="#{compSortedAlphabetRptBB.managedBean.dateExpFrom}" 
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 									<p:ajax event="dateSelect"  update="calDtTo" process="@this"/>
@@ -113,7 +113,7 @@
 							<td class="columnDateToClass"><p:outputLabel value="#{lbl['lbl.rpt.dtRangeTo']}" /></td>
 							<td><p:calendar label="#{lbl['lbl.rpt.todate']}"
 								id="calDtTo" showOn="button" navigator="true" disabled="#{empty compSortedAlphabetRptBB.managedBean.dateExpFrom}"
-								display="inline" readonlyInput="true" size="9" mindate="#{compSortedAlphabetRptBB.managedBean.dateExpFrom}"
+								display="inline" readonlyInput="true" size="9" mindate="#{compSortedAlphabetRptBB.managedBean.dateExpFrom}" yearRange="-99"
 								value="#{compSortedAlphabetRptBB.managedBean.dateExpTo}"
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 								</p:calendar>
