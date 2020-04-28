@@ -48,6 +48,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtStatus;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
+import my.ep.persistence.entity.sc.quationtender.ScQtSupplierZone;
 import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
@@ -431,31 +432,31 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 		
 		ScQtSupplierCriteria cps =copyScqt.getScQtSupplierCriteria();
 		
-		ScQtSupplierCriteria supplierCriteria = new ScQtSupplierCriteria();
-		supplierCriteria.setScQt(scQt);
-		supplierCriteria.setBrandNew(true);
-		setUserDetails(supplierCriteria);
-		if(cps!=null){
-			if(cps.getLocationLevel()!=null){
-				supplierCriteria.setLocationLevel(cps.getLocationLevel());
-			}
-			if(cps.getScQtLocCriteria()!=null){
-				supplierCriteria.setScQtLocCriteria(cps.getScQtLocCriteria());
-			}
-			supplierCriteria.setAllState(cps.isAllState());
-		}
-		if(copyScqt.isZonal()){
-			ScQtZoneCriteria qtZoneCriterias =new ScQtZoneCriteria();
-			qtZoneCriterias.setBrandNew(true);
-			qtZoneCriterias.setScQtSupplierCriteria(supplierCriteria);
-			
-			if(cps!=null && cps.getQtZoneCriterias()!=null && cps.getQtZoneCriterias().getTplSpecZoneDtls()!=null){
-				qtZoneCriterias.setTplSpecZoneDtls(cps.getQtZoneCriterias().getTplSpecZoneDtls());
-			}
-			supplierCriteria.setQtZoneCriterias(qtZoneCriterias);
-		}
-		
-		scQt.setScQtSupplierCriteria(supplierCriteria);
+//		ScQtSupplierCriteria supplierCriteria = new ScQtSupplierCriteria();
+//		supplierCriteria.setScQt(scQt);
+//		supplierCriteria.setBrandNew(true);
+//		setUserDetails(supplierCriteria);
+//		if(cps!=null){
+//			if(cps.getLocationLevel()!=null){
+//				supplierCriteria.setLocationLevel(cps.getLocationLevel());
+//			}
+//			if(cps.getScQtLocCriteria()!=null){
+//				supplierCriteria.setScQtLocCriteria(cps.getScQtLocCriteria());
+//			}
+//			supplierCriteria.setAllState(cps.isAllState());
+//		}
+//		if(copyScqt.isZonal()){
+//			ScQtZoneCriteria qtZoneCriterias =new ScQtZoneCriteria();
+//			qtZoneCriterias.setBrandNew(true);
+//			qtZoneCriterias.setScQtSupplierCriteria(supplierCriteria);
+//			
+//			if(cps!=null && cps.getQtZoneCriterias()!=null && cps.getQtZoneCriterias().getTplSpecZoneDtls()!=null){
+//				qtZoneCriterias.setTplSpecZoneDtls(cps.getQtZoneCriterias().getTplSpecZoneDtls());
+//			}
+//			supplierCriteria.setQtZoneCriterias(qtZoneCriterias);
+//		}
+//		
+//		scQt.setScQtSupplierCriteria(supplierCriteria);
 		
 		List<ScQtCategory> categoryResults = resDTO
 				.getCategories();
@@ -479,6 +480,62 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 		if(restrictResults!=null){
 			List<ScQtSupplier> listSupplier=new ArrayList<ScQtSupplier>();
 			for(ScQtSupplier supp:restrictResults){
+				ScQtSupplier supplier=new ScQtSupplier();
+				supplier.setBrandNew(true);
+				supplier.setBumi(supp.isBumi());
+				supplier.setDisableEditAccount(supp.isDisableEditAccount());
+				supplier.setDisableForPindaan(supp.isDisableForPindaan());
+				supplier.setDisqualifiedStage(supp.getDisqualifiedStage());
+				supplier.setInvitationType(supp.getInvitationType());
+				supplier.setJustificationEnabled(supp.isJustificationEnabled());
+				supplier.setMofAccountExpDate(supp.getMofAccountExpDate());
+				supplier.setReasonForUpdateEnabled(supp.isReasonForUpdateEnabled());
+				supplier.setScQt(scQt);
+				
+//				if(supp.getScQtProposals()!=null && !supp.getScQtProposals().isEmpty()){
+//					for(ScQtProposal proposal:supp.getScQtProposals()){
+//						
+//					}
+//				}
+				//supplier.setScQtProposals(scQtProposals);
+				if(supp.getScQtSupplierZones()!=null && !supp.getScQtSupplierZones().isEmpty()){
+					List<ScQtSupplierZone> scQtSupplierZones=new ArrayList<ScQtSupplierZone>();
+					for(ScQtSupplierZone zone:supp.getScQtSupplierZones()){
+						ScQtSupplierZone z=new ScQtSupplierZone();
+						z.setBrandNew(true);
+						setUserDetails(z);
+						z.setDisableEditAccount(zone.isDisableEditAccount());
+						z.setDisableForPindaan(zone.isDisableForPindaan());
+						z.setDisqualifiedStage(zone.getDisqualifiedStage());
+						z.setJustificationEnabled(zone.isJustificationEnabled());
+						z.setReasonForUpdateEnabled(zone.isReasonForUpdateEnabled());
+						z.setScQtSupplier(supplier);
+						if(scQt.getScQtSupplierCriteria()!=null){
+							if(scQt.getScQtSupplierCriteria().getQtZoneCriterias()!=null){
+								for(TplSpecZoneDtl tpl:scQt.getScQtSupplierCriteria().getQtZoneCriterias().getTplSpecZoneDtls()){
+									if(tpl.getZoneName().equals(zone.getTplSpecZoneDtl().getZoneName())){
+										z.setTplSpecZoneDtl(tpl);
+									}
+								}
+							}
+						}
+						scQtSupplierZones.add(z);
+					}
+					supplier.setScQtSupplierZones(scQtSupplierZones);
+				}
+				
+				
+				
+				supplier.setSmMofAccount(supp.getSmMofAccount());
+				supplier.setSmSupplier(supp.getSmSupplier());
+				supplier.setStatusEnabled(supp.isStatusEnabled());
+				supplier.setSupplierAddress(supp.getSupplierAddress());
+				supplier.setSupplierMofNo(supp.getSupplierMofNo());
+				supplier.setSupplierName(supp.getSupplierName());
+				setUserDetails(supplier);
+				
+				
+				
 				supp.setScQt(scQt);
 				listSupplier.add(supp);
 			}
@@ -531,6 +588,7 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 						tplSpecZoneDtl.setZoneName(tpl.getZoneName());
 						tplSpecZoneDtl.setPanelZone(tpl.getPanelZone());
 						tplSpecZoneDtl.setTplSpecZone(qtZoneCriterias);
+						tplSpecZoneDtl.setBrandNew(true);
 						setUserDetails(tplSpecZoneDtl);
 						if(tpl.getTplSpecZoneLocs()!=null){
 							List<TplSpecZoneLoc> listLoc=new ArrayList<TplSpecZoneLoc>();
