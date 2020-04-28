@@ -946,8 +946,10 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 
 		if (this.getManagedBean().isRequestColor()) {
 			this.getManagedBean().setColorDisable(false);
+			this.getManagedBean().setTempColorName(null);
 		} else {
 			this.getManagedBean().setColorDisable(true);
+			this.getManagedBean().setTempColorName("N/A");
 		}
 	}
 
@@ -955,8 +957,10 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 
 		if (this.getManagedBean().isRequestType()) {
 			this.getManagedBean().setTypeDisable(false);
+			this.getManagedBean().setTempTypeName(null);
 		} else {
 			this.getManagedBean().setTypeDisable(true);
+			this.getManagedBean().setTempTypeName("N/A");
 		}
 	}
 
@@ -964,8 +968,10 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 
 		if (this.getManagedBean().isRequestBrand()) {
 			this.getManagedBean().setBrandDisable(false);
+			this.getManagedBean().setTempBrandName(null);
 		} else {
 			this.getManagedBean().setBrandDisable(true);
+			this.getManagedBean().setTempBrandName("N/A");
 		}
 	}
 
@@ -973,8 +979,10 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 
 		if (this.getManagedBean().isRequestMeasurement()) {
 			this.getManagedBean().setMeasurementDisable(false);
+			this.getManagedBean().setTempMeasurementName(null);
 		} else {
 			this.getManagedBean().setMeasurementDisable(true);
+			this.getManagedBean().setTempMeasurementName("N/A");
 		}
 	}
 
@@ -1398,7 +1406,7 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 	   }
 		resDTO = unspscSO.publishExtension(reqDTO);
 					
-		renewSesionObject();
+		renewSesionObject(); 
 		
 		FacesMessage fm = new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
 				MessageConst.INFO_710025 , MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()));
