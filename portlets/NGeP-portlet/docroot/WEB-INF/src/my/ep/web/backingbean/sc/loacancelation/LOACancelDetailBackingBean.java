@@ -3459,8 +3459,12 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
 			reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
 			
-			updateCancelLoaCurrentWorkflowStatus(scLoa,outcome);		
-		
+			if (outcome.contains(BpmOutcomeConst.BPM_REJECT)){
+				updateCancelLoaCurrentWorkflowStatus(scLoa,outcome);	
+			}else if (outcome.contains(BpmOutcomeConst.BPM_APPROVE)){
+				updateCancelLoaCurrentWorkflowStatus(scLoa,BpmOutcomeConst.BPM_CANCEL);
+			}
+
 			if(!BpmOutcomeConst.BPM_LOA_CANCEL.equals(outcome)){
 					getQtAwardSO().prepareCancelLoaTrackingDiary(reqDTO);
 			}
@@ -3471,10 +3475,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 				scLoa = resDTO.getScLoa();	
 				ScLoiLoa loiLoa = scLoa.getScLoiLoa();
 				Long loaDocId = loiLoa.getDocId();
-				String requestNoteNo = null;
-				//---set loa to cancel status
-				updateCancelLoaCurrentWorkflowStatus(scLoa,BpmOutcomeConst.BPM_CANCEL);
-				//----				
+				String requestNoteNo = null;						
 				RenameTempLoaNoRepoDirByLoaNo(scLoa);
 				renewSesionObject();
 				if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
