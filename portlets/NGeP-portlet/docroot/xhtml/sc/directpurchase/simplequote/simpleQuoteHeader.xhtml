@@ -39,15 +39,7 @@
 					<td style="width:5%"><h:outputLabel
 							value="#{lbl['lbl.sc.status']}" /></td>
 					<td style="width:14%" class="header-info-text">
-						<c:choose>
-						<c:when test="#{!simpleQuoteBackingBean.isSqStillValid()}">
-							#{simpleQuoteBackingBean.getStatusDescById(DPStatusConstants.SQ_EXPIRED)}
-						</c:when>
-						<c:otherwise>
-							#{simpleQuoteBackingBean.getStatusDescById(simpleQuoteBackingBean.managedBean.simpleQuoteStatus.statusId)}
-						</c:otherwise>
-					</c:choose>
-						
+						#{simpleQuoteBackingBean.getDocStatus()}						
 					</td>
 				</tr>
 			</table>
