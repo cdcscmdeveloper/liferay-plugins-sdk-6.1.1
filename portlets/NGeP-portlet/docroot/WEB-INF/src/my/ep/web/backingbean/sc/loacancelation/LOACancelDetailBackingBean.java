@@ -686,7 +686,6 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			
 			//set approval	
 			ScLoaApproval scLoaApproval = scLoa.getScLoaApproval();
-			getManagedBean().setScLoaApproval(scLoa.getScLoaApproval());
 			PmUser approverUser = null;
 			if (scLoaApproval != null) {
 				approverUser = scLoaApproval.getApprover();
@@ -894,7 +893,6 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			
 			//set approval	
 			ScLoaApproval scLoaApproval = scLoa3.getScLoaApproval();
-			getManagedBean().setScLoaApproval(scLoa3.getScLoaApproval());
 			PmUser approverUser = null;
 			if (scLoaApproval != null) {
 				approverUser = scLoaApproval.getApprover();
@@ -3459,15 +3457,16 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
 			reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
 			
-			if (outcome.contains(BpmOutcomeConst.BPM_REJECT)){
-				updateCancelLoaCurrentWorkflowStatus(scLoa,outcome);	
-			}else if (outcome.contains(BpmOutcomeConst.BPM_APPROVE)){
-				updateCancelLoaCurrentWorkflowStatus(scLoa,BpmOutcomeConst.BPM_CANCEL);
-			}
-
+			updateCancelLoaCurrentWorkflowStatus(scLoa,outcome);		
+		
 			if(!BpmOutcomeConst.BPM_LOA_CANCEL.equals(outcome)){
 					getQtAwardSO().prepareCancelLoaTrackingDiary(reqDTO);
 			}
+			
+			log.info("reqDTO object inside updateBPMTask " + reqDTO);
+			log.info("letter creator is " + ((SCAwardSupplierDataType) reqDTO.getPayLoad()).getLetterCreator());
+			log.info("loa id is " + reqDTO.getScLoa().getLoaId());
+			log.info("role code is " + reqDTO.getRoleCode());															
 			
 			resDTO = getQtAwardSO().saveLOADtl(reqDTO);
 
@@ -7343,11 +7342,9 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 
 		ScLoaWorkFlowStatus workFlowStatus = new ScLoaWorkFlowStatus();
 		if (outcome.contains(BpmOutcomeConst.BPM_APPROVE))
-			workFlowStatus.setPmStatus(getPmStatusByStatusId(QTStatusConst.LOA_CANCELLATION_APPROVED));
+			workFlowStatus.setPmStatus(getPmStatusByStatusId(QTStatusConst.LOA_CANCELLED));
 		else if(outcome.contains(BpmOutcomeConst.BPM_REJECT))
 			workFlowStatus.setPmStatus(getPmStatusByStatusId(QTStatusConst.LOA_CANCELLATION_REJECTED));
-		else if(outcome.contains(BpmOutcomeConst.BPM_CANCEL))
-			workFlowStatus.setPmStatus(getPmStatusByStatusId(QTStatusConst.LOA_CANCELLED));
 		workFlowStatus.setScLoa(scLoa);
 		workFlowStatus.setCurrent(true);
 		scLoa.setCurrentStatus(workFlowStatus);
