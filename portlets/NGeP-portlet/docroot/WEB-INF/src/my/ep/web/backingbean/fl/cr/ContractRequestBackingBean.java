@@ -319,7 +319,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 						if(getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_SUBMISSION) 
 								|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_APPROVAL) 
 								|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_REVISION) 
-								|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_REVISION_APPROVAL)) {
+								|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_REVISION_APPROVAL)
+								|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_QUERY_VERIFICATION)) {
 							itemAddr.setChargePTJOrg(getManagedBean().getFlRequest().getIssuedOrgProfile());
 						}
 					}
@@ -3032,7 +3033,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					if(getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_SUBMISSION) 
 							|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_APPROVAL) 
 							|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_REVISION) 
-							|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_REVISION_APPROVAL)) {
+							|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_REVISION_APPROVAL)
+							|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_QUERY_VERIFICATION)) {
 						getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getIssuedOrgProfile());
 						System.out.println("PTJ Pembayar");
 					} else {
@@ -3833,7 +3835,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					if(getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_SUBMISSION) 
 							|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_APPROVAL) 
 							|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_REVISION) 
-							|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_REVISION_APPROVAL)) {
+							|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_REVISION_APPROVAL)
+							|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_QUERY_VERIFICATION)) {
 						getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getIssuedOrgProfile());
 						System.out.println("PTJ Pembayar");
 					} else {
@@ -3843,7 +3846,11 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				}
 				//24893 - end
 			}
-		}	 
+		}//24893 - start 
+		else if(null != selectedNodes && selectedNodes.length > 1) {
+			getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getIssuedOrgProfile());
+		}
+		//24893 - end	 
 	}
 	
 	/**
