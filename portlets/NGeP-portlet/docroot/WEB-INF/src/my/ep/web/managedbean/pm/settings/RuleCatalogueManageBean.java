@@ -141,6 +141,8 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private List<PmOrgProfile> ptjList;
 	private BigDecimal qtLimit;
 	private Date minDate = null; //[#22119]
+	private String ruleType;  //#22113
+	private boolean LOPOSelected;
 
 	public RuleCatalogueManageBean() {
 
@@ -1463,6 +1465,20 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		this.minDate = minDate;
 	}
 	
+	public String getRuleType() {
+		return ruleType;
+	}
 
+	public void setRuleType(String ruleType) {
+		this.ruleType = ruleType;
+	}
+	
+	public boolean isLOPOSelected() {
+		return LOPOSelected;
+	}
+
+	public void setLOPOSelected(boolean LOPOSelected) {
+		this.LOPOSelected = LOPOSelected;
+	}
 
 }
