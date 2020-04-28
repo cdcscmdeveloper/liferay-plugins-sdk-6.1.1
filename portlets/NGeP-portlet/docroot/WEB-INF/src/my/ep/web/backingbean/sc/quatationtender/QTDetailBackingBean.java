@@ -6565,6 +6565,15 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		
 		Long statusId = this
 				.getManagedBean().getQt().getQtStatus().getStatusId();
+		
+		// #25426#36#95 ruzaimah - Start
+		if ((this.getManagedBean().isMaintanceFlow()
+				&& isDeskOfficer()) // #25426#85 ruzaimah - remove this.
+				&& !this.getManagedBean().isReadOnly()) {
+			return false;
+		}
+		// end	
+		
 		if (this.getManagedBean().isMaintanceFlow()
 				&& QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL.equals(statusId)) {
 			return true;
@@ -6591,13 +6600,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 			}
 		}
-		// #25426#36 ruzaimah - Start
-		if ((this.getManagedBean().isMaintanceFlow()
-				&& isDeskOfficer()) // #25426#85 ruzaimah - remove this.
-				&& !this.getManagedBean().isReadOnly()) {
-			return false;
-		}
-		// end		
 		return true;
 	}
 	
