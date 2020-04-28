@@ -285,7 +285,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 						if(getManagedBean().getFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION) 
 								|| getManagedBean().getFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_APPROVAL) 
 								|| getManagedBean().getFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_REVISION) 
-								|| getManagedBean().getFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)) {
+								|| getManagedBean().getFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
+								|| getManagedBean().getFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)) {
 							itemAddr.setChargePTJOrg(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile());
 						}
 					}
@@ -1922,7 +1923,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					if(getManagedBean().getFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION) 
 							|| getManagedBean().getFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_APPROVAL) 
 							|| getManagedBean().getFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_REVISION) 
-							|| getManagedBean().getFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)) {
+							|| getManagedBean().getFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
+							|| getManagedBean().getFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)) {
 						getManagedBean().setChargePTJOrg(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile());
 						System.out.println("PTJ Pembayar");
 					} else {
@@ -3058,7 +3060,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 						if(getManagedBean().getFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION) 
 								|| getManagedBean().getFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_APPROVAL) 
 								|| getManagedBean().getFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_REVISION) 
-								|| getManagedBean().getFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)) {
+								|| getManagedBean().getFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
+								|| getManagedBean().getFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)) {
 							getManagedBean().setChargePTJOrg(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile());
 							System.out.println("PTJ Pembayar");
 						} else {
@@ -3068,7 +3071,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					}
 					//24893 - end
 				}
-		} 
+		}//24893 - start 
+		else if(null != selectedNodes && selectedNodes.length > 1) {
+			getManagedBean().setChargePTJOrg(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile());
+		}
+		//24893 - end
 	}
 	
 	/**
