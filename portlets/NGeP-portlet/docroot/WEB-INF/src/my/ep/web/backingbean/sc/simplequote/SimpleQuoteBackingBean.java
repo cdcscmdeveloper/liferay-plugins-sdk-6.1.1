@@ -7551,4 +7551,49 @@ public class SimpleQuoteBackingBean extends
 			return supplierDataMaintenanceSO.retrieveActiveDisciplinaryActionBySupplierDp(reqDTO).isDisciplinaryActionActiveDp();
 		}
 		//26284 - End
+		
+		//12183 - Start
+		public String getDocStatus(){
+				
+			if(checkStatusPidExpired()){
+				return getStatusDescById(DPStatusConstants.PID_EXPIRED);
+			}else if(!isSqStillValid()){
+				return getStatusDescById(DPStatusConstants.SQ_EXPIRED);
+			}else{
+				return getStatusDescById(getManagedBean().getSimpleQuoteStatus().getStatusId());
+			}
+		}
+		
+		public boolean checkStatusPidExpired(){
+			
+			Boolean valid = false;
+			Long currentStatusId = null;
+			ScPurchaseInDefault scPID = null; 
+			ScQuote scQuote = getManagedBean().getScQuote();
+									
+			if(scQuote != null){
+				if(scQuote.getCurrentStatus() != null){
+					currentStatusId = scQuote.getCurrentStatus().getPmStatus().getStatusId();
+				}		
+				scPID = getManagedBean().getScQuote().getPurchaseInDefault();
+			}
+			
+			if(scPID != null){			
+			    if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_SUBMISSION)
+			       || currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION)){
+		
+					Date today  = DateUtils.getCurrentDate();
+					Date ExpDate = DateUtils.addDays(scPID.getChangedDate(), scPID.getPidValidDays());
+					
+					log.info("pID validity begin");
+					
+					if(today.after(ExpDate)){
+						valid = true;
+					}
+					log.info("pID validity end");
+				}				
+			}
+			return valid;
+		}
+		//12183 - End
 }
