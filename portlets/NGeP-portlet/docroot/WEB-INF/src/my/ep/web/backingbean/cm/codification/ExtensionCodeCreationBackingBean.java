@@ -339,7 +339,8 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 			log.info("unspscCode " + this.getManagedBean().getSelectedLovUnspsc().getUnspscCode());
 			log.info("unspscTitle " + this.getManagedBean().getSelectedLovUnspsc().getUnspscTitle());
 		}
-
+		
+		this.getManagedBean().getRequestExtCodeList().clear();
 		System.out.println("NAV_TO_EXTENSION_REQUEST_FORM");
 		return NAV_TO_EXTENSION_REQUEST_FORM + "?faces-redirect=true";
 	}
@@ -946,8 +947,10 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 
 		if (this.getManagedBean().isRequestColor()) {
 			this.getManagedBean().setColorDisable(false);
+			this.getManagedBean().setTempColorName(null);
 		} else {
 			this.getManagedBean().setColorDisable(true);
+			this.getManagedBean().setTempColorName("N/A");
 		}
 	}
 
@@ -955,8 +958,10 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 
 		if (this.getManagedBean().isRequestType()) {
 			this.getManagedBean().setTypeDisable(false);
+			this.getManagedBean().setTempTypeName(null);
 		} else {
 			this.getManagedBean().setTypeDisable(true);
+			this.getManagedBean().setTempTypeName("N/A");
 		}
 	}
 
@@ -964,8 +969,10 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 
 		if (this.getManagedBean().isRequestBrand()) {
 			this.getManagedBean().setBrandDisable(false);
+			this.getManagedBean().setTempBrandName(null);
 		} else {
 			this.getManagedBean().setBrandDisable(true);
+			this.getManagedBean().setTempBrandName("N/A");
 		}
 	}
 
@@ -973,8 +980,10 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 
 		if (this.getManagedBean().isRequestMeasurement()) {
 			this.getManagedBean().setMeasurementDisable(false);
+			this.getManagedBean().setTempMeasurementName(null);
 		} else {
 			this.getManagedBean().setMeasurementDisable(true);
+			this.getManagedBean().setTempMeasurementName("N/A");
 		}
 	}
 
@@ -1023,8 +1032,6 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 		
 	
 		CmRequestCode cmRequestCode = new CmRequestCode();
-
-		//this.getManagedBean().setRequestExtCode(new CmRequestCode());
 
 		// ///check that there be at least one new request
 		if (!this.getManagedBean().isRequestType()
@@ -1203,24 +1210,53 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 		
 			this.getManagedBean().setRequestExtCode(code);
 			
- 			this.getManagedBean().setTempBrandName(code.getBrandName());
-			this.getManagedBean().setBrandDisable(true);  //text box
 			
 			
-			this.getManagedBean().setTempTypeName(code.getTypeName());
-			this.getManagedBean().setTypeDisable(true);  //text box
-
-	
-			this.getManagedBean().setTempColorName(code.getColorName());
-			this.getManagedBean().setColorDisable(true);  //text box
-
-			
-			this.getManagedBean().setMeasurementDisable(true);  //text box
-			this.getManagedBean().setTempMeasurementName(code.getMeasurementName());
-
+			if(code.getBrandName()!= "N/A"){
+ 			   this.getManagedBean().setTempBrandName(code.getBrandName());
+ 			   this.getManagedBean().setRequestBrand(true);
+ 			   this.getManagedBean().setBrandDisable(false);  //text box
+			}else{
+			   this.getManagedBean().setTempBrandName(code.getBrandName());
+	 		   this.getManagedBean().setRequestBrand(false);
+	 		   this.getManagedBean().setBrandDisable(true);  //text box	
 			}
-
-		}
+			
+			
+			if(code.getTypeName()!= "N/A"){
+			   this.getManagedBean().setTempTypeName(code.getTypeName());
+			   this.getManagedBean().setRequestType(true);
+			   this.getManagedBean().setTypeDisable(false);  //text box
+			}else{
+			   this.getManagedBean().setTempTypeName(code.getTypeName());
+			   this.getManagedBean().setRequestType(false);
+			   this.getManagedBean().setTypeDisable(true);  //text box
+			}
+			
+			
+			if(code.getColorName()!= "N/A"){
+			   this.getManagedBean().setTempColorName(code.getColorName());
+			   this.getManagedBean().setRequestColor(true);
+			   this.getManagedBean().setColorDisable(false);  //text box
+			}else{
+			   this.getManagedBean().setTempColorName(code.getColorName());
+			   this.getManagedBean().setRequestColor(false);
+			   this.getManagedBean().setColorDisable(true);  //text box
+			}
+		
+			
+			if(code.getMeasurementName()!= "N/A"){
+			   this.getManagedBean().setTempMeasurementName(code.getMeasurementName());
+			   this.getManagedBean().setRequestMeasurement(true);
+			   this.getManagedBean().setMeasurementDisable(false);  //text box
+			}else{
+			    this.getManagedBean().setTempMeasurementName(code.getMeasurementName());
+			    this.getManagedBean().setRequestMeasurement(false);
+				this.getManagedBean().setMeasurementDisable(true);  //text box
+				
+			}
+	   	}
+	}
 
 	
 	public void deleteExtensionRequest(int index){
@@ -1398,7 +1434,7 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 	   }
 		resDTO = unspscSO.publishExtension(reqDTO);
 					
-		renewSesionObject();
+		renewSesionObject(); 
 		
 		FacesMessage fm = new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
 				MessageConst.INFO_710025 , MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()));

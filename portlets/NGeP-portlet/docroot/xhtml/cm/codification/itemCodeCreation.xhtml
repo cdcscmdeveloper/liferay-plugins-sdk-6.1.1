@@ -18,6 +18,8 @@
 	
 	<ui:define name="contentSection">
 	
+	   <ac:lovPopup />
+	
 		<h:panelGroup id="cmUNSPSCSingleUploadID">
 		
 		 <p:messages id="form" showDetail="true" autoUpdate="true" closable="true"
@@ -77,7 +79,6 @@
 								value="#{itemCodeCreationBackingBean.managedBean.selectedLovUnspscSegment.unspscCode}"
 								conditionField="recordStatus^1|unspscLevel^0">
 							</ac:lov>
-							<ac:lovPopup />
 
 						</p:column>
 						<p:column>
@@ -103,7 +104,6 @@
 								value="#{itemCodeCreationBackingBean.managedBean.selectedLovUnspscfamily.unspscCode}"
 								conditionField="recordStatus^1|unspscLevel^1|unspscParentCode^#{itemCodeCreationBackingBean.managedBean.selectedLovUnspscSegment.unspscCode}">
 							</ac:lov>
-							<ac:lovPopup />
 
 						</p:column>
 						<p:column>
@@ -130,7 +130,6 @@
 								value="#{itemCodeCreationBackingBean.managedBean.selectedLovUnspscClass.unspscCode}"
 								conditionField="recordStatus^1|unspscLevel^2|unspscParentCode^#{unspscCodeBackingBean.managedBean.selectedLovUnspscfamily.unspscCode}">
 							</ac:lov>
-							<ac:lovPopup />
 
 						</p:column>
 						<p:column>
@@ -159,8 +158,6 @@
 								value="#{itemCodeCreationBackingBean.managedBean.selectedLovUnspsc.unspscCode}"
 								conditionField="recordStatus^1|unspscLevel^3|unspscParentCode^#{itemCodeCreationBackingBean.managedBean.selectedLovUnspscClass.unspscCode}">
 							</ac:lov>
-							<ac:lovPopup />
-
 
 						</p:column>
 						<p:column>
