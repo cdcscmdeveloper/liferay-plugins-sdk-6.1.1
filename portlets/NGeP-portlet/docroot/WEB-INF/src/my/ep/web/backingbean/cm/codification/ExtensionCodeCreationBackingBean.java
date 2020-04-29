@@ -1210,41 +1210,50 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 		
 			this.getManagedBean().setRequestExtCode(code);
 			
-			this.getManagedBean().setRequestBrand(true);
-			this.getManagedBean().setBrandDisable(false);  //text box
+			
 			
 			if(code.getBrandName()!= "N/A"){
  			   this.getManagedBean().setTempBrandName(code.getBrandName());
+ 			   this.getManagedBean().setRequestBrand(true);
+ 			   this.getManagedBean().setBrandDisable(false);  //text box
 			}else{
-			   this.getManagedBean().setTempBrandName(null);	
+			   this.getManagedBean().setTempBrandName(code.getBrandName());
+	 		   this.getManagedBean().setRequestBrand(false);
+	 		   this.getManagedBean().setBrandDisable(true);  //text box	
 			}
 			
-			this.getManagedBean().setRequestType(true);
-			this.getManagedBean().setTypeDisable(false);  //text box
 			
 			if(code.getTypeName()!= "N/A"){
 			   this.getManagedBean().setTempTypeName(code.getTypeName());
+			   this.getManagedBean().setRequestType(true);
+			   this.getManagedBean().setTypeDisable(false);  //text box
 			}else{
-			   this.getManagedBean().setTempTypeName(null);
+			   this.getManagedBean().setTempTypeName(code.getTypeName());
+			   this.getManagedBean().setRequestType(false);
+			   this.getManagedBean().setTypeDisable(true);  //text box
 			}
 			
-			this.getManagedBean().setRequestColor(true);
-			this.getManagedBean().setColorDisable(false);  //text box
 			
 			if(code.getColorName()!= "N/A"){
 			   this.getManagedBean().setTempColorName(code.getColorName());
+			   this.getManagedBean().setRequestColor(true);
+			   this.getManagedBean().setColorDisable(false);  //text box
 			}else{
-			   this.getManagedBean().setTempColorName(null);
+			   this.getManagedBean().setTempColorName(code.getColorName());
+			   this.getManagedBean().setRequestColor(false);
+			   this.getManagedBean().setColorDisable(true);  //text box
 			}
 		
 			
-			this.getManagedBean().setRequestMeasurement(true);
-			this.getManagedBean().setMeasurementDisable(false);  //text box
-			
 			if(code.getMeasurementName()!= "N/A"){
 			   this.getManagedBean().setTempMeasurementName(code.getMeasurementName());
+			   this.getManagedBean().setRequestMeasurement(true);
+			   this.getManagedBean().setMeasurementDisable(false);  //text box
 			}else{
-			    this.getManagedBean().setTempMeasurementName(null);
+			    this.getManagedBean().setTempMeasurementName(code.getMeasurementName());
+			    this.getManagedBean().setRequestMeasurement(false);
+				this.getManagedBean().setMeasurementDisable(true);  //text box
+				
 			}
 	   	}
 	}
