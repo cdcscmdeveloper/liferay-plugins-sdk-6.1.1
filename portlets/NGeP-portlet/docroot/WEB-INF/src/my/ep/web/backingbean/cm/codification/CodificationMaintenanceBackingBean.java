@@ -597,17 +597,16 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 	}
 
 
-
-	// 20190821- Start
+	//20190821@azza - CR25551 - Start
 	public void resetSearch() {
 		this.getManagedBean().setTitleFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value()));
 		this.setCodeFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value()));
 		this.setSearchDataModel(new SearchPagingDataModel());
 		this.getManagedBean().setAutoCompleteUnspscCode(null);
-		// 20190821- End
+		//20190821@azza - CR25551 - End
 	}
 
-	// 2019/08/27 - Start
+	//20190827@azza - CR25551 - Start
 	public String PopupOption(CmUnspsc obj) {
 
 		clearPopup();
@@ -706,11 +705,11 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 				this.getManagedBean().setSegmentTitleEng(
 						commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc()
 						.getUnspscTitleEng());
-				
-       //#25551 04062020 -start
+				 		
+		//20200406@azza - CR25551 - Start
 		this.getManagedBean().setExtension(null);
 		this.getManagedBean().setStatus(null);
-		 //#25551 04062020 -end
+		//20200406@azza - CR25551 - End
 		this.getManagedBean().setData(null);
 		this.getExtensionAttributeSearchData().resetData();
 		this.getManagedBean().setDisableSelectBtn(true);
@@ -719,7 +718,7 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 	}
 
 		
-	// * End
+	  //20190827@azza - CR25551 - End
 
 
 	public String SubmitUpdateData() {
@@ -1024,9 +1023,7 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 					Object[] objects = (Object[]) resDTO.getResulttypeBeanType().getResultList().get(i);
 					
 					log.info(" objects " + String.valueOf(objects[0]) + String.valueOf(objects[1]) + String.valueOf(objects[2]) + String.valueOf(objects[3]));
-					
-				    // bb.getManagedBean().setStatusextension(String.valueOf(objects[5]));
-					
+							
 					tempMap.put(objects, objects);
 				}
 
@@ -1071,7 +1068,12 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 			
 			this.getManagedBean().setAutoCompleteUnspscCode(unspscObj);	
 			
-	
+			log.info("unspscTitle " + unspscObj.getUnspscTitle());
+			
+			//20200529@azza - CR25551 - Start 
+			this.getManagedBean().getTitleFilterBean().setSearchValue(unspscObj.getUnspscTitle());	
+			//20200529@azza - CR25551 - End 
+			
 			this.getSearchDataModel().reloadData();
 			
 			System.out.println("NAV_TO_CODIFICATION_MAINTENANCE");
