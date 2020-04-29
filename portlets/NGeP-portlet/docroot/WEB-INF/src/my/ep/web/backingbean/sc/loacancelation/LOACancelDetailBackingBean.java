@@ -3466,7 +3466,9 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			log.info("reqDTO object inside updateBPMTask " + reqDTO);
 			log.info("letter creator is " + ((SCAwardSupplierDataType) reqDTO.getPayLoad()).getLetterCreator());
 			log.info("loa id is " + reqDTO.getScLoa().getLoaId());
-			log.info("role code is " + reqDTO.getRoleCode());															
+			log.info("role code is " + reqDTO.getRoleCode());
+			log.info("user is " + reqDTO.getPmUser().getUserId());
+			log.info("desk officer is " + ((SCAwardSupplierDataType) reqDTO.getPayLoad()).getDeskOfficer());		
 			
 			resDTO = getQtAwardSO().saveLOADtl(reqDTO);
 
