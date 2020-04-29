@@ -33,6 +33,7 @@
 		<ui:param name="isSqStillValid" value="#{lOADetailBackingBean.isSqStillValid()}" />
 		<ui:param name="isSaveHideSqExpired" value="#{!lOADetailBackingBean.managedBean.scLoa.brandNew and !isSqStillValid}" />
 		<ui:param name="isLOACancelByApprover" value="#{lOADetailBackingBean.isLOACancelByApprover()}" />	
+		<ui:param name="isLoaGenerated" value="#{lOADetailBackingBean.isLoaGenerated()}" />	
 		<ui:include src="loaButtons.xhtml" />
 		<ui:include src="loaHeader.xhtml" />
 		
