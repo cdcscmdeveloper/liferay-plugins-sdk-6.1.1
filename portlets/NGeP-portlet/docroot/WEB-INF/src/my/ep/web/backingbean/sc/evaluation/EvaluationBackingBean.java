@@ -7060,6 +7060,12 @@ public class EvaluationBackingBean extends
 								retrivePresentationDemoSummary();
 								outputTab = 3;
 							}
+						}else if (currentTab == 2) {
+							if (this.getManagedBean()
+									.getPresentationDemoActiveIndex() == 1) {
+								retrivePresentationDemoSummary();
+								outputTab = 3;
+							}
 						}
 						else{
 							retriveSummaryEvaluationStage();
