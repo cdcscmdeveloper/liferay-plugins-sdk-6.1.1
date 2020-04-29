@@ -681,6 +681,18 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		    if(SCProcessNameConst.APPROVE_BPK.equalsIgnoreCase(taskName)){
 				qtDetailBB.getManagedBean().addAdditionalPages(UserTasks.BPKApproval.toString(), pageAppr);
 				qtDetailBB.getManagedBean().addUserTasks(UserTasks.BPKApproval);
+				//#25692-start
+				ScWorkFlowStatus workFlowStatus = retrieveStatusByTypeAndId(
+						ParameterConst.DOCTYPE_QUOTATION,qtDetailBB.getManagedBean().getQt().getQtId());
+				if(null!=workFlowStatus){
+				     qtDetailBB.getManagedBean().getQt().setQtStatus(workFlowStatus.getPmStatus());
+				     statusId = qtDetailBB.getManagedBean().getQt().getQtStatus().getStatusId();
+				     isQTStatusScheduleDocAndAfter = qtDetailBB.isQTStatusGreaterThanOrEquals(statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT);
+				     isQTStatusBtwScheduleDocAndPendingPublication = qtDetailBB.isQTStatusInBetween(statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT, QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION);
+				     isQTStatusSCApprovalAndBefore = qtDetailBB.isQTStatusLessThanOrEquals(statusId, QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL);
+				     isCmtStatusCompletedAndBefore = qtDetailBB.isStatusLessThanOrEquals(statusId, QTStatusConst.CMT_COMPLETED, QTStatusConst.CMT_ORDERED_STATUSES);
+				}
+				//#25692-End   
 				if(isQTStatusScheduleDocAndAfter){
 					qtDetailBB.getManagedBean().setActiveIndex(9);
 				}
@@ -981,6 +993,15 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			
 			for (ScQtApprovalRequest approvalRequest : this.getManagedBean().getScQtApprovalRequestList()) {
 				String approverAction = approvalRequest.getApproverAction().getParameterCode();
+				//#25692-start
+				if(null==approverAction){
+				String	approverActionmsg = ResourceBundleUtils.getMessage(
+							"lbl.sc.decision",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale());
+				    this.getManagedBean().setActiveIndex(9);
+					throw new EpException(approverActionmsg);
+				} //#25692-End
 				
 				if (ParameterConst.APPROVAL_DECISION_TYPE_REVISED.equalsIgnoreCase(approverAction) ||
 						ParameterConst.RESTR_APPROVAL_DECISION_TYPE_REVISE.equalsIgnoreCase(approverAction)) {
