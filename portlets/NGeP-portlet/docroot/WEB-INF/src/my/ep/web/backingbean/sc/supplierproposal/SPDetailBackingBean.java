@@ -1329,6 +1329,12 @@ public class SPDetailBackingBean extends
 			finProposalChecklist = findProposalChecklistByDocDefKey(
 					getManagedBean().getFinanceCheckDetailsList(),
 					ParameterConst.DOCUMENT_DEFINITION_KEY_FOR_CREDIT_FACILITY_UPLOAD);
+			
+			// #26339 - Start
+			if (null != finProposalChecklist) {
+				finProposalChecklist.setSubmitted(isCompleted);
+			}
+			// #26339 - End
 			int index = getManagedBean().getFinanceCheckDetailsList().indexOf(
 					finProposalChecklist);
 			if (isCompleted && finProposalChecklist!= null) {
@@ -1370,7 +1376,8 @@ public class SPDetailBackingBean extends
 			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
 
 			if (resDTO.isSuccessful()) {
-				if (isCompleted) {
+				// #26339 - Start
+				/*if (isCompleted) {*/
 					reqDTO.setMultiEncryptBeanList(null);
 					reqDTO.setTobeRemovedCreditFacilities(null);
 					if(finProposalChecklist != null){
@@ -1380,7 +1387,8 @@ public class SPDetailBackingBean extends
 						getManagedBean().getFinanceCheckDetailsList().set(index,
 								resDto.getProposalChecklist());
 					}
-				}
+				/*}*/
+				// #26339 - End
 				getManagedBean().setToBeDeletedCreditFacilities(null);
 				return navigatePrepareFinProposalCheckList(
 						scQtProposalChecklist, resDTO.getProposalChecklist(),
@@ -1808,6 +1816,11 @@ public class SPDetailBackingBean extends
 			assetProposalChecklist = findProposalChecklistByGroupID(
 					getManagedBean().getFinanceCheckDetailsList(),
 					ParameterConst.DOCUMENT_DEFINITION_KEY_FOR_ASSET_LIABILITIES_UPLOAD,ParameterConst.ASSET_LIABILITIES_GROUP_ID);
+			// #26339 - Start
+			if (null != assetProposalChecklist) {
+				assetProposalChecklist.setSubmitted(isCompleted);
+			}
+			// #26339 - End
 			int index = getManagedBean().getFinanceCheckDetailsList().indexOf(
 					assetProposalChecklist);
 			if (isCompleted && scQtPRPAssetLiability != null) {
@@ -1901,8 +1914,8 @@ public class SPDetailBackingBean extends
 			// #26339 Venkat start
 			 
 			if (resDTO.isSuccessful()) {
-				
-				if (isCompleted) {
+				// #26339 - Start
+				/*if (isCompleted) {*/
 					reqDTO.setMultiEncryptBeanList(null);
 					reqDTO.setTobeRemovedCreditFacilities(null);
 					if(assetProposalChecklist != null){
@@ -1912,8 +1925,8 @@ public class SPDetailBackingBean extends
 						getManagedBean().getFinanceCheckDetailsList().set(index,
 								resDto.getProposalChecklist());
 					}
-				}
-				
+			/*	}*/
+				// #26339 - End
 				// #26339 Venkat End	
 				
 		
