@@ -1290,6 +1290,10 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 								.contains(identificationNo.toLowerCase())) {
 							groupUser.setPmUser(groupUserSearch.getPmUser());
 						}
+					} else if (identificationNo.isEmpty() && statusFlag != null) {
+						if (groupUserSearch.getRecordStatusFlg().toString().equals(statusFlag)) {
+							groupUser.setPmUser(groupUserSearch.getPmUser());
+						}
 					} else {
 						groupUser.setPmUser(groupUserSearch.getPmUser());
 					}
