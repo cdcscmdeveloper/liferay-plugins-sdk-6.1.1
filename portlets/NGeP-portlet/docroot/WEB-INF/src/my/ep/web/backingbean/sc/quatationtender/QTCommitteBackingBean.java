@@ -2031,6 +2031,15 @@ public class QTCommitteBackingBean extends
 		
 		Long currentQtStatus = this.getManagedBean().getQt().getQtStatus()
 				.getStatusId();
+		
+		// #25426#36#95 ruzaimah - Start
+		if ((this.getManagedBean().isMaintanceFlow()
+				&& isDeskOfficer()) // #25426#85 ruzaimah - remove this.
+				&& !this.getManagedBean().isReadOnly()) {
+			return true;
+		}
+		// end
+		
 		if (this.getManagedBean().isMaintanceFlow()) {
 			if (isQTStatusInBetween(currentQtStatus,
 					QTStatusConst.QT_PENDING_PB_APPROVAL,
@@ -2046,14 +2055,6 @@ public class QTCommitteBackingBean extends
 				}
 			}
 		}
-		
-		// #25426#36 ruzaimah - Start
-		if ((this.getManagedBean().isMaintanceFlow()
-				&& isDeskOfficer()) // #25426#85 ruzaimah - remove this.
-				&& !this.getManagedBean().isReadOnly()) {
-			return true;
-		}
-		// end
 		
 		return false;
 	}
