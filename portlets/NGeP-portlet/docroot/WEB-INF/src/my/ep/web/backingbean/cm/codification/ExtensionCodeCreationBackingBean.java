@@ -339,7 +339,8 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 			log.info("unspscCode " + this.getManagedBean().getSelectedLovUnspsc().getUnspscCode());
 			log.info("unspscTitle " + this.getManagedBean().getSelectedLovUnspsc().getUnspscTitle());
 		}
-
+		
+		this.getManagedBean().getRequestExtCodeList().clear();
 		System.out.println("NAV_TO_EXTENSION_REQUEST_FORM");
 		return NAV_TO_EXTENSION_REQUEST_FORM + "?faces-redirect=true";
 	}
@@ -1032,8 +1033,6 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 	
 		CmRequestCode cmRequestCode = new CmRequestCode();
 
-		//this.getManagedBean().setRequestExtCode(new CmRequestCode());
-
 		// ///check that there be at least one new request
 		if (!this.getManagedBean().isRequestType()
 				&& !this.getManagedBean().isRequestBrand()
@@ -1211,24 +1210,44 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 		
 			this.getManagedBean().setRequestExtCode(code);
 			
- 			this.getManagedBean().setTempBrandName(code.getBrandName());
-			this.getManagedBean().setBrandDisable(true);  //text box
+			this.getManagedBean().setRequestBrand(true);
+			this.getManagedBean().setBrandDisable(false);  //text box
 			
-			
-			this.getManagedBean().setTempTypeName(code.getTypeName());
-			this.getManagedBean().setTypeDisable(true);  //text box
-
-	
-			this.getManagedBean().setTempColorName(code.getColorName());
-			this.getManagedBean().setColorDisable(true);  //text box
-
-			
-			this.getManagedBean().setMeasurementDisable(true);  //text box
-			this.getManagedBean().setTempMeasurementName(code.getMeasurementName());
-
+			if(code.getBrandName()!= "N/A"){
+ 			   this.getManagedBean().setTempBrandName(code.getBrandName());
+			}else{
+			   this.getManagedBean().setTempBrandName(null);	
 			}
-
-		}
+			
+			this.getManagedBean().setRequestType(true);
+			this.getManagedBean().setTypeDisable(false);  //text box
+			
+			if(code.getTypeName()!= "N/A"){
+			   this.getManagedBean().setTempTypeName(code.getTypeName());
+			}else{
+			   this.getManagedBean().setTempTypeName(null);
+			}
+			
+			this.getManagedBean().setRequestColor(true);
+			this.getManagedBean().setColorDisable(false);  //text box
+			
+			if(code.getColorName()!= "N/A"){
+			   this.getManagedBean().setTempColorName(code.getColorName());
+			}else{
+			   this.getManagedBean().setTempColorName(null);
+			}
+		
+			
+			this.getManagedBean().setRequestMeasurement(true);
+			this.getManagedBean().setMeasurementDisable(false);  //text box
+			
+			if(code.getMeasurementName()!= "N/A"){
+			   this.getManagedBean().setTempMeasurementName(code.getMeasurementName());
+			}else{
+			    this.getManagedBean().setTempMeasurementName(null);
+			}
+	   	}
+	}
 
 	
 	public void deleteExtensionRequest(int index){
