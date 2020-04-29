@@ -45,7 +45,7 @@
 					<h:outputText value="#{lbl['lbl.sc.decision']}" />
 				</f:facet>
 				
-				<p:selectOneMenu id="decisiontypeid" value="#{requestdetails.approverAction.parameterId}" required="true"
+				<p:selectOneMenu id="decisiontypeid" value="#{requestdetails.approverAction.parameterId}" required="false"
 					label="#{lbl['lbl.sc.decision']}" disabled="#{approvalBackingBean.managedBean.readOnly and !approvalBackingBean.managedBean.approvalEditableSection}"
 					style="width: 178px;margin-bottom: 5px;" rendered="#{requestdetails.approvalType.parameterCode ne 'RT'}">
 					<f:selectItems value="#{approvalBackingBean.getDropdownValues(ParameterTypeConst.approvalDecisionType)}" />
@@ -53,7 +53,7 @@
 				</p:selectOneMenu><p:message id="decisiontypeidhMsg" for="decisiontypeid"
 										display="icon" />
 				
-				<p:selectOneMenu id="decisiontypeids" value="#{requestdetails.approverAction.parameterId}" required="true"
+				<p:selectOneMenu id="decisiontypeids" value="#{requestdetails.approverAction.parameterId}" required="false"
 					label="#{lbl['lbl.sc.decision']}" disabled="#{approvalBackingBean.managedBean.readOnly and !approvalBackingBean.managedBean.approvalEditableSection}"
 					style="width: 250px;margin-bottom: 5px;" rendered="#{requestdetails.approvalType.parameterCode eq 'RT'}">
 					<f:selectItems value="#{approvalBackingBean.getDropdownValues(ParameterTypeConst.restrictedApprovalDecisionType)}" />
