@@ -1067,11 +1067,9 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 		public String unspscSearchPortal(CmUnspsc unspscObj) {
 			
 			this.getManagedBean().setAutoCompleteUnspscCode(unspscObj);	
-			
-			log.info("unspscTitle " + unspscObj.getUnspscTitle());
-			
+						
 			//20200529@azza - CR25551 - Start 
-			this.getManagedBean().getTitleFilterBean().setSearchValue(unspscObj.getUnspscTitle());	
+			this.getManagedBean().setTitleFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value()));
 			//20200529@azza - CR25551 - End 
 			
 			this.getSearchDataModel().reloadData();
