@@ -7119,6 +7119,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		return loaCancelled;
 	}
 	
+	//#22211 - Check if Loa already generated
+	public boolean isLoaGenerated(){
+		Boolean loaGenerated = false;	
+		ScLoa scloa = this.getManagedBean().getScLoa();
+		
+		if(scloa != null) {
+			loaGenerated = true;	
+		}
+		return loaGenerated;
+	}
+	
 	public void cancelLoa(String outcome) {
 		debugLogger("cancelLoa");
 		this.getManagedBean().setAction(outcome);
