@@ -5636,6 +5636,36 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						userRole = roleCode;
 					}
 				}
+			//#25956 - Start - Fixing for _Secretary Role		
+					if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A) 
+							|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)) {
+						if (getFacesScopes().hasRoleUser(RoleCode.QCA_SECRETARY.value())) {
+							userRole = RoleCode.QCA_SECRETARY.value();
+						} else if (getFacesScopes().hasRoleUser(RoleCode.QCB_SECRETARY.value())) {
+							userRole = RoleCode.QCB_SECRETARY.value();
+						}
+					} else {
+						String roleCode = getManagedBean().getCommitteeType() + "_SECRETARY";
+						if (getFacesScopes().hasRoleUser(roleCode)) {
+							userRole = roleCode;
+						}
+					}
+					
+					if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD) 
+							|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)
+							|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)) {
+						if (getFacesScopes().hasRoleUser(RoleCode.PBB_SECRETARY.value())) {
+							userRole = RoleCode.PBB_SECRETARY.value();
+						} else if (getFacesScopes().hasRoleUser(RoleCode.PPB_SECRETARY.value())) {
+							userRole = RoleCode.PPB_SECRETARY.value();
+						}
+					} else {
+						String roleCode = getManagedBean().getCommitteeType() + "_SECRETARY";
+						if (getFacesScopes().hasRoleUser(roleCode)) {
+							userRole = roleCode;
+						}
+					}
+			//#25956 - End - Fixing for _Secretary Role	
 					
 				if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) 
 						|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
