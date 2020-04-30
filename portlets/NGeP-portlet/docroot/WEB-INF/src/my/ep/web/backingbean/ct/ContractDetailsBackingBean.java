@@ -85,6 +85,7 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
+import my.ep.web.backingbean.ct.request.ctadmin.RequestCtAdminBackingBean;
 import my.ep.web.backingbean.ct.supplier.SupplierBackingBean;
 import my.ep.web.backingbean.ct.suspension.SuspensionBackingBean;
 import my.ep.web.backingbean.ct.termination.TerminationBackingBean;
@@ -135,6 +136,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	private static final String PROCESS_SUSPEND_PAGE = "/xhtml/ct/fulfilmentdetails/suspension/suspendTab.xhtml?faces-redirect=true";
 	private static final String CHANGE_BANK_ACCOUNT_PAGE = "/xhtml/ct/supplier/bank/changeBankAccount.xhtml?faces-redirect=true";
 	private static final String REQUEST_FACTORING_PAGE = "/xhtml/ct/supplier/factoring/requestOfFactoring.xhtml?faces-redirect=true";
+	private static final String REQUEST_CONTRACT_ADMIN = "/xhtml/ct/fulfilmentdetails/contractadmin/requestContractAdmin.xhtml";/*#21387-basri*/
 
 	private String proceedForFulfilmentMsg;
 	private ContractBackingBean ctBB = null;
@@ -2028,6 +2030,41 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		return false;
 	}
 
+	/**
+	 * The method ised to navigate to request or remove contract admin
+	 * @param contractId
+	 * @return the navigate URL
+	 */
+	
+	/*#21387-basri*/
+	 public String goToRequestCtAdmin(Long contractId){
+		 
+		IContractSO contractSO = null;
+		try{
+			 contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+			ContractReqDTO reqDTO = new ContractReqDTO();
+			reqDTO.setContractId(contractId);
+			reqDTO.setContractVerId(contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId());
+			
+			reqDTO.setUpdateAction(true);
+			/*reqDTO.setDocType(ParameterConst.DOCTYPE_NOTIFICATION_SETTING); */
+			ctBB.getManagedBean().setViewContract(false);
+			ctBB.getManagedBean().setUpdateContract(true);
+			ctBB.getManagedBean().setNotificationSetting(false);
+			ctBB.getManagedBean().setCtAddress(null);
+			setValidateContractField(reqDTO);
+			getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
+			ctBB.chkServiceTaxAlert();
+			getManagedBean().setExternalPageUrl(null);
+			getManagedBean().setSelectedTabIndex(0);	
+			return REQUEST_CONTRACT_ADMIN;
+		}finally{
+			contractSO = null;
+		}
+		
+	 }
+	
 	/**
 	 * The method used to navigate to contract termination screen
 	 * for termination purpose.
