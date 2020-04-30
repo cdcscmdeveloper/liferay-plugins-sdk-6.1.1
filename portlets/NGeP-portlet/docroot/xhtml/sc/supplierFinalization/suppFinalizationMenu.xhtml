@@ -35,7 +35,9 @@
 		     				
 		<p:messages id="supplierFinalization" showDetail="true" showSummary="false" 
 					autoUpdate="#{suppFinalizationBackingBean.managedBean.autoUpdate}" closable="true" severity="error, info" />
-
+		
+		<ui:include src="/xhtml/sc/supplierFinalization/upload.xhtml" />
+		
 		<ac:gpkiPopup
 			textBeforeSign="#{suppFinalizationBackingBean.textBeforeSign}"
 			postSignAction="#{suppFinalizationBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" 
@@ -130,11 +132,6 @@
 		<ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/boardofDirectorsDetails.xhtml" />
 		<ui:include src="/xhtml/sc/supplierFinalization/committeeEndorsement/signOff.xhtml" />
 		
-		<ui:remove>
-			Removed as part of #18685.
-			<ui:include src="/xhtml/sc/supplierFinalization/upload.xhtml" />			
-		</ui:remove>
-		
 		<p:dialog id="reviseSuppFinalizationDlgs" widgetVar="reviseSuppFinalizationDlgs"
 			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
 			resizable="false" width="400" height="75" closable="false">
@@ -181,10 +178,6 @@
 			</div>
 		</p:dialog>
 		
-		<ac:scSingleFileUploadPopup widgetVar="sfBriefingReportAttWidget"
-			fileUploadListener="consolidationReportBackingBean.handleFileUpload"
-			update="@([id$=reportTbl])" />
-			
 	</ui:define>
 
 </ui:composition>
