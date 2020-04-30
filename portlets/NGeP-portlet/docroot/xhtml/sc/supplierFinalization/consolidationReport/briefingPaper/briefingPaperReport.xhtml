@@ -68,23 +68,26 @@
 					</ui:fragment>
 
 				</ui:fragment>
-				<ui:fragment rendered="#{(report.pmDocument ne null and
-											!consolidationReportBackingBean.managedBean.getDirectdownloaddocdefkeys()
-												.contains(report.pmDocument.docDefinitionKey)) or report.pmDocument eq null}">						
-					<ac:scSingleFileUploadButton id="briefingReportUploadBtn"
-						popupWidgetVar="crBriefingReportAttWidget" update="@([id$=reportTbl])"
-						attachment="#{report.scQtFinalizationReportAttachment}" 
-						readonly="#{!empty report.pmDocument or 
-						  				report.docCategory eq ParameterConst.documentCategoryEndorsementReport}" 
-						rowIndex="#{rowIndex}">
-	
-						<f:setPropertyActionListener for="actionEvent" value="#{report}"
-							target="#{consolidationReportBackingBean.managedBean.selectedFinalizationReport}" />
-	
-						<f:setPropertyActionListener for="actionEvent" value="KTR"
-							target="#{consolidationReportBackingBean.managedBean.attachmentDocType}" />
-					</ac:scSingleFileUploadButton>
-				</ui:fragment>	
+				
+				<h:panelGroup id="uploadCBP">
+					<ui:fragment rendered="#{(report.pmDocument ne null and
+												!consolidationReportBackingBean.managedBean.getDirectdownloaddocdefkeys()
+													.contains(report.pmDocument.docDefinitionKey)) or report.pmDocument eq null}">						
+						<ac:scSingleFileUploadButton id="briefingReportUploadBtn"
+							popupWidgetVar="crBriefingReportAttWidget" update="@([id$=reportTbl])"
+							attachment="#{report.scQtFinalizationReportAttachment}" 
+							readonly="#{!empty report.pmDocument or 
+							  				report.docCategory eq ParameterConst.documentCategoryEndorsementReport}" 
+							rowIndex="#{rowIndex}">
+		
+							<f:setPropertyActionListener for="actionEvent" value="#{report}"
+								target="#{consolidationReportBackingBean.managedBean.selectedFinalizationReport}" />
+		
+							<f:setPropertyActionListener for="actionEvent" value="KTR"
+								target="#{consolidationReportBackingBean.managedBean.attachmentDocType}" />
+						</ac:scSingleFileUploadButton>
+					</ui:fragment>	
+				</h:panelGroup>
 			</p:column>
 		</p:dataTable>
 		
