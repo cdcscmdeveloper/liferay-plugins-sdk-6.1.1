@@ -7337,14 +7337,14 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 					workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
 
-
+		int count = 0;			
 		ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
 		reqDTO.setDocType(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
 		reqDTO.setDocId(scLoa.getLoaId());
 
 		ScLoaWorkFlowStatus workFlowStatus = new ScLoaWorkFlowStatus();
 		if (outcome.contains(BpmOutcomeConst.BPM_APPROVE))
-			workFlowStatus.setPmStatus(getPmStatusByStatusId(62509L));
+			workFlowStatus.setPmStatus(getPmStatusByStatusId(QTStatusConst.LOA_CANCELLATION_APPROVED));
 		else if(outcome.contains(BpmOutcomeConst.BPM_REJECT))
 			workFlowStatus.setPmStatus(getPmStatusByStatusId(QTStatusConst.LOA_CANCELLATION_REJECTED));
 		workFlowStatus.setScLoa(scLoa);
@@ -7354,9 +7354,10 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 		reqDTO.setScWorkFlowStatus(workFlowStatus);
 		
 		log.info("=== Enter updateCancelLoaCurrentWorkflowStatus ===");
-		if (workFlowStatus.getPmStatus().equals(getPmStatusByStatusId(62509L)) ||
-				workFlowStatus.getPmStatus().equals(getPmStatusByStatusId(QTStatusConst.LOA_CANCELLATION_REJECTED)))
-		workFlowStatusSO.updateCurrentWorkflowStatus(reqDTO);	
+		log.info("=== workFlowStatus.getPmStatus === " + workFlowStatus.getPmStatus());
+		
+		workFlowStatusSO.updateCurrentWorkflowStatus(reqDTO);
+		log.info("=== count === " + count++);
 	}
 		
 	/**
