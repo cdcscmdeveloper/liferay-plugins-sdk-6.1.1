@@ -845,8 +845,8 @@ public class SmApplicationBackingBean extends
 		if (!fromBpm) {
 			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
 			boolean cannotProceedAlertMsg = false;
-			//26238 - start
-			if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)){
+			//26238 - start 28144
+			if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI) || applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)){
 				if (currSupp != null){
 					List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
 					
@@ -855,12 +855,17 @@ public class SmApplicationBackingBean extends
 							if(disc.isBumiputeraCancel()){
 								throw new EpException(SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
 										null));
+							}else if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)){
+								if(disc.isSuspendRegistration() || disc.isCancelRegistration() || disc.isBlacklistOwner()){
+									throw new EpException(SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
+											null));
+								}
 							}
 						}
 					}
 				}
 			} 
-			//26238 - end
+			//26238 - end 28144
 			
 			//27748 : Disciplinary Action - #26238 - start 
 			if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
@@ -3176,7 +3181,7 @@ public class SmApplicationBackingBean extends
 						validSave, getManagedBean(), currentTab);
 				//#27853
 				if (!getManagedBean().isApproverUser() && !getManagedBean().isPoUser()) {
-					//START 27748
+					//START 27748 - SM Disciplinary action - 26238
 					if(getManagedBean().getEditVO()!=null && !getManagedBean().getEditVO().isDisciplinary()){
 						SmApplicationUtil.validateCoordinate(getManagedBean());
 					}
