@@ -8499,16 +8499,24 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						
 						validationCloseQT(qt.getScCloseQTRemark(),qt.getScCloseQTAttachment());
 						
-					    if (isQTStatusPublished(qt.getQtStatus().getStatusId())) {
+						if (isQTStatusPublished(qt.getQtStatus().getStatusId())) {
 							quationTenderReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
 							finalizeRemarks(qt.getScCloseQTRemark());
-							qt.setScQtCommittees(null);
-							qt.setScQtBriefings(null);
 							qt.setScQtStatus(null);
+							qt.setScQtCommittees(null);
 							qt.setScQtApprovals(null);
+							qt.setScQtBriefings(null);
 							quationTenderReqDTO.setQtdetail(qt);
 						    quationTenderReqDTO.setQtClose(true);
-						
+						}else{
+							quationTenderReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+							finalizeRemarks(qt.getScCloseQTRemark());
+							qt.setScQtStatus(null);
+							qt.setScQtCommittees(null);
+							qt.setScQtApprovals(null);
+							qt.setScQtBriefings(null);
+							quationTenderReqDTO.setQtdetail(qt);
+						    quationTenderReqDTO.setQtClose(true);
 						}
 						
 						QuationTenderResDTO quationTenderResDTO = detailSO.closeQT(quationTenderReqDTO);
