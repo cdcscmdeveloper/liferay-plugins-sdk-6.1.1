@@ -1920,7 +1920,11 @@ public class SmApplicationBackingBean extends
 		
 		// set Personnel List Count
 		calcPersonnelListCount();
-				
+		//27900 - start
+		if(my.ep.constant.sm.SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION == getManagedBean().getSmAppl().getPmStatus().getStatusId()) {
+			smAppl.setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
+		}		
+		//27900 - end		
 		return SmApplicationUtil.setNavigationForAppl(applicationType);
 
 	}
