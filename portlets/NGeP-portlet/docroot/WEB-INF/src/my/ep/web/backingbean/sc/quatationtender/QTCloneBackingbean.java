@@ -95,6 +95,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
+import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.persistence.entity.sc.quationtender.ScQtStatus;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
@@ -778,7 +779,7 @@ public class QTCloneBackingbean extends
 					retrieveBrief(copyScqt);
 					retrievePublishing(copyScqt);
 					retrieveDeductionPaymentTabDtl(scQt,copyScqt,QtDetailsSO);
-					//retrieveDocs(copyScqt);
+					retrieveDocs(copyScqt);
 					retrievePublicationApprovalTabDtl(copyScqt);
 				}
 				
@@ -791,8 +792,7 @@ public class QTCloneBackingbean extends
 		RequestContext.getCurrentInstance().execute("screen3.hide()");
 	}
 	
-	
-	public List<ScQtDocReport> retrieveDocumentByQt(ScQt scQt) {
+	public List<ScQtDocReport> retrieveAllDocumentsByQt(ScQt scQt) {
 		List<ScQtDocReport> list=null;
 		IQTDocumentSO qtDocumentSO;
 		
@@ -805,6 +805,7 @@ public class QTCloneBackingbean extends
 				reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 				resDTO = qtDocumentSO.retriveQTDocDetails(reqDTO);
 				list= resDTO.getQtDocReports();
+				
 			} finally {
 				qtDocumentSO = null;
 				resDTO=null;
@@ -813,26 +814,66 @@ public class QTCloneBackingbean extends
 		return list;
 	}
 	
+	public List<ScQtDocReport> retrieveDocumentByQt(ScQt scQt) {
+		List<ScQtDocReport> list=null;
+		List<ScQtDocReport> listRet=new ArrayList<ScQtDocReport>();
+		IQTDocumentSO qtDocumentSO;
+		
+			QTDocumentResDTO resDTO = new QTDocumentResDTO();
+			try {
+				qtDocumentSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDocumentSO.class);
+				QTDocumentReqDTO reqDTO = new QTDocumentReqDTO();
+				reqDTO.setQtId(scQt.getQtId());
+				reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+				resDTO = qtDocumentSO.retriveCloneQTDocDetails(reqDTO);
+				
+				
+				list= resDTO.getQtDocReports();
+				for(ScQtDocReport toRet:list){
+					if(null==toRet.getPmDocument()){
+						listRet.add(toRet);
+					}else{
+					   String docDefinitionKey=toRet.getPmDocument().getDocDefinitionKey();
+						if (SourcingConstants.DOC_DEF_KEY_RULES_REGULATION
+								.equals(docDefinitionKey)) {
+							listRet.add(toRet);
+						}
+					}
+					
+					
+				}
+				
+				
+			} finally {
+				qtDocumentSO = null;
+				resDTO=null;
+			}
+		
+		return listRet;
+	}
+	
 	private void retrieveDocs(ScQt copyQt){
 		debugLogger("addDocumentCloneAction");
 		ScQt scQt = this.getManagedBean().getQt();
 		
-		List<ScQtDocReport> docInDBList = retrieveDocumentByQt(scQt);
-		if(null!=docInDBList && !docInDBList.isEmpty()){
-			List<ScQtDocReport> listDel=new ArrayList<ScQtDocReport>();
-			for(ScQtDocReport toDel:docInDBList){
-				toDel.setDeleted(true);
-				listDel.add(toDel);
-			}
-			this.getManagedBean().setRemoveDocReports(listDel);
-		}
-		
-		List<ScQtDocReport> reportList = new ArrayList<ScQtDocReport>();
-				//getManagedBean()
-				//.getScQtDocReportList();
-//		if (null == reportList) {
-//			reportList = new ArrayList<ScQtDocReport>();
+//		List<ScQtDocReport> docInDBList = retrieveDocumentByQt(scQt);
+//		if(null!=docInDBList && !docInDBList.isEmpty()){
+//			List<ScQtDocReport> listDel=new ArrayList<ScQtDocReport>();
+//			for(ScQtDocReport toDel:docInDBList){
+//				if(null==toDel.getPmDocument()){
+//					toDel.setDeleted(true);
+//					listDel.add(toDel);
+//				}
+//			}
+//			this.getManagedBean().setRemoveDocReports(listDel);
 //		}
+		
+		List<ScQtDocReport> reportList = getManagedBean()
+				.getScQtDocReportList();
+		if (null == reportList) {
+			reportList = retrieveAllDocumentsByQt(scQt);
+		}
 		List<String> existedDocumets=new ArrayList<String>();
 		ScQtDocReport templetDoc=null;
 		if(CollectionUtils.isNotEmpty(reportList)){
@@ -1200,6 +1241,39 @@ public class QTCloneBackingbean extends
 			}
 			
 			
+			
+			
+			QTScheduleDetailBackingBean backingBean = new QTScheduleDetailBackingBean();
+//			if (this.getManagedBean().getQt().isSampleReq()
+//					&& (null == this.getManagedBean()
+//							.getScQtSampleSubmission() && isEmptyOrNull(this
+//							.getManagedBean().getScQtSampleSubmissionList()))) {
+//				
+//			}
+			
+			if(qt.isSampleReq()){
+				if (!qt.isZonal()){
+					ScQtSampleSubmission srcSub=resDTO.getSampleSubmissionResultBean().get(0);
+					if(null!=srcSub){
+						ScQtSampleSubmission sbs=new ScQtSampleSubmission();
+						sbs.setBrandNew(true);
+						setUserDetails(sbs);
+						sbs.setScQt(qt);
+						sbs.setScAddress(srcSub.getScAddress());
+						this.getManagedBean().setScQtSampleSubmission(sbs);
+					}
+					
+					
+					
+					if (!getManagedBean().isSubmit()) {
+						backingBean.retrievePmStateList();
+					}
+				}
+			}
+			
+			
+
+			backingBean.getDeskOfficerAdminAssistant();	
 			//
 		}finally{
 			detailSO=null;
@@ -2070,11 +2144,11 @@ public class QTCloneBackingbean extends
 
 			tabType = ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE;
 			ScQtCommittee specCommitte = getQtCommiteDtlsByQtIdNType(tabType,
-					copyScqt.getQtId());
+					scQt.getQtId());
 			committeTabs.add(new TabBean(parameterHelper.getParameterDesc(
 					parameterType, tabType), tabType, specCommitte));
 			
-		//	scQt.setFinalizationCommitte(copyScqt.getFinalizationCommitte());
+			scQt.setFinalizationCommitte(copyScqt.getFinalizationCommitte());
 			scQt.setFinalizationSecratery(copyScqt.getFinalizationSecratery());
 			if (null == this.getManagedBean().getQt().getFinalizationCommitte()) {
 				scQt.setFinalizationCommitte(new PmParameter());
