@@ -765,6 +765,21 @@ public class QtSpecCloneBackingBean extends
 						.getParameterCode())){
 				copy.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
 			}
+		if(null!=copy.getDefinationType() && ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_DOCUMENT
+				.equalsIgnoreCase(copy.getDefinationType()
+						.getParameterCode())){
+				copy.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+			}
+		if(null!=copy.getDefinationType() && ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED
+				.equalsIgnoreCase(copy.getDefinationType()
+						.getParameterCode())){
+				copy.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+			}
+		if(null!=copy.getDefinationType() && ParameterConst.DOCUMENT_DEFINITION_TYPE_WEB_FORM
+				.equalsIgnoreCase(copy.getDefinationType()
+						.getParameterCode())){
+				copy.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+			}
 		
 		copy.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 		return copy;
