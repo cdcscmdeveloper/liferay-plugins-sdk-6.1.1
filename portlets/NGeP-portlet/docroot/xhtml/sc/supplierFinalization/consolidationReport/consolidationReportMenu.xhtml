@@ -32,7 +32,11 @@
 		<p:messages id="consolidationReportErr" showDetail="true"
 			showSummary="false" autoUpdate="true" closable="true"
 			severity="error, info" />
-
+		
+		<ac:scSingleFileUploadPopup widgetVar="crBriefingReportAttWidget"
+			fileUploadListener="consolidationReportBackingBean.handleFileUpload"
+			update="@([id$=briefingReportUploadBtn],[id$=uploadCBP])"  />
+			
 		<div align="right" class="BtnSpacing">
 			<p:commandButton value="#{lbl['lbl.btn.save']}" process="@all"
 				partialSubmit="true" update="@form"
@@ -108,10 +112,6 @@
 			src="/xhtml/sc/supplierFinalization/supplierFinalization/qualifiedSuppliersByEvalStage.xhtml" />
 		<ui:include
 			src="#{consolidationReportFolderPath}/supplierRecommendation/boardofDirectorsDetails.xhtml" />
-
-		<ac:scSingleFileUploadPopup widgetVar="crBriefingReportAttWidget"
-			fileUploadListener="consolidationReportBackingBean.handleFileUpload"
-			update="@([id$=reportTbl])" />
 
 		<!-- <ac:scSingleFileUploadPopup widgetVar="kertasTaklimUploadAttWidget"
 			fileUploadListener="consolidationReportBackingBean.handleKertasFileUpload"

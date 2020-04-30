@@ -38,24 +38,27 @@
 						ajax="false" immediate="true"
 						action="#{suppFinalizationBackingBean.downloadBriefingPaperReport(report)}" />
 				</ui:fragment>
-				<ui:fragment
-					rendered="#{(report.pmDocument ne null and
-											!suppFinalizationBackingBean.managedBean.getDirectdownloaddocdefkeys()
-												.contains(report.pmDocument.docDefinitionKey)) or report.pmDocument eq null}">
-					<ac:scSingleFileUploadButton id="sfBriefingReportUploadBtn"
-						popupWidgetVar="sfBriefingReportAttWidget"
-						attachment="#{report.scQtFinalizationReportAttachment}"
-						readonly="#{!(isSecretaryUser and report.selected)}"
-						rowIndex="#{rowIndex}">
-
-						<f:setPropertyActionListener for="actionEvent" value="#{report}"
-							target="#{suppFinalizationBackingBean.managedBean.selectedFinalizationReport}" />
-
-						<f:setPropertyActionListener for="actionEvent" value="KTR"
-							target="#{suppFinalizationBackingBean.managedBean.attachmentDocType}" />
-
-					</ac:scSingleFileUploadButton>
-				</ui:fragment>
+				
+				<h:panelGroup id="uploadBP">
+					<ui:fragment
+						rendered="#{(report.pmDocument ne null and
+												!suppFinalizationBackingBean.managedBean.getDirectdownloaddocdefkeys()
+													.contains(report.pmDocument.docDefinitionKey)) or report.pmDocument eq null}">
+						<ac:scSingleFileUploadButton id="sfBriefingReportUploadBtn"
+							popupWidgetVar="sfBriefingReportAttWidget"
+							attachment="#{report.scQtFinalizationReportAttachment}"
+							readonly="#{!(isSecretaryUser and report.selected)}"
+							rowIndex="#{rowIndex}">
+	
+							<f:setPropertyActionListener for="actionEvent" value="#{report}"
+								target="#{suppFinalizationBackingBean.managedBean.selectedFinalizationReport}" />
+	
+							<f:setPropertyActionListener for="actionEvent" value="KTR"
+								target="#{suppFinalizationBackingBean.managedBean.attachmentDocType}" />
+	
+						</ac:scSingleFileUploadButton>
+					</ui:fragment>
+				</h:panelGroup>
 			</p:column>
 		</p:dataTable>
 		
