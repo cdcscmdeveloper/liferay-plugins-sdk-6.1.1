@@ -237,6 +237,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			else if (pmParameter != null && pmParameter.getParameterCode().equals(ParameterConst.ORG_TYPE_G2G_ROLECODE)){
 				docTypeList.add(ParameterConst.DOCTYPE_SIMPLE_QUOTE);
 				docTypeList.add(ParameterConst.DOCTYPE_PURCHASE_INQUIRY);
+				docTypeList.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
 				getManagedBean().setG2G(true);
 			}
 			
@@ -608,38 +609,22 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	 */
 	public void performViewDoc(Object[] dpObj) {
 		if (showFunctionType()) {
-			log.info("-----> showFunctionType() - Dual Role ");
 			if (ParameterConst.DOCTYPE_SIMPLE_QUOTE.equals(getManagedBean().getSearchDocumentType())) {
-				log.info("-----> getManagedBean().getSearchDocumentType() == DOCTYPE_SIMPLE_QUOTE ");
                 if (!getManagedBean().isG2G()) {
-                	log.info("-----> NOT isG2G()");
-                	log.info("-----> viewDoc()");
                 	this.viewDoc(dpObj);
                 } else {
-                	log.info("-----> isG2G()");
-                	log.info("-----> viewDocSupplierSQ()");
                 	this.viewDocSupplierSQ(dpObj);
                 }
 			} else {
-				log.info("-----> getManagedBean().getSearchDocumentType() != DOCTYPE_SIMPLE_QUOTE ");
-				log.info("-----> viewDoc()");
 				this.viewDoc(dpObj);
 			}
 		} else {
-			log.info("-----> NOT showFunctionType() - NOT Dual Role");
 			if (ParameterConst.ORG_TYPE_PTJ.equals(getManagedBean().getSearchFunctionType())) {
-				log.info("-----> getManagedBean().getSearchFunctionType() == ORG_TYPE_PTJ");
-				log.info("-----> viewDoc()");
 				this.viewDoc(dpObj);
 			} else {
-				log.info("-----> getManagedBean().getSearchFunctionType() != ORG_TYPE_PTJ() ");
 				if (ParameterConst.DOCTYPE_SIMPLE_QUOTE.equals(getManagedBean().getSearchDocumentType())) {
-					log.info("-----> getManagedBean().getSearchDocumentType() == DOCTYPE_SIMPLE_QUOTE");
-					log.info("-----> viewDocSupplierSQ()");
 					this.viewDocSupplierSQ(dpObj);
 				} else {
-					log.info("-----> getManagedBean().getSearchDocumentType() != DOCTYPE_SIMPLE_QUOTE");
-					log.info("-----> viewDoc()");
 					this.viewDoc(dpObj);
 				}
 			}
