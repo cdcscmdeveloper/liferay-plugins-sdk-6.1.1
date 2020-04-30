@@ -88,7 +88,7 @@
 							label="#{lbl['lbl.sc.document.type']}" required="true">
 							<f:selectItems
 								value="#{qTDetailBB.getDocTypeQtLOADropdownValues()}" />
-								<p:ajax update="@form" process="@this"/>
+								<p:ajax event="change" listener="#{qTDetailBB.resetSearchDataResults}" update="@form" process="@this"/>
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>

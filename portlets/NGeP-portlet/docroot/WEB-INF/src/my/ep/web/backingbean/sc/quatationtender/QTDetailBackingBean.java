@@ -7652,6 +7652,35 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			    return userLoginId;   
 			}
 			// 26095@hatta - end
+            
+            
+          //Start 19287      
+            public void resetSearchDataResults(){
+            	log.info("==========resetSearchDataResults========");
+            	if(isQTSearchScreen()){
+            		IPagingDataModel<ScQt> searchQTDataModel = getManagedBean()
+            				.getSearchQTDataModel();
+            		
+            			searchQTDataModel = new QTPagingDataModel("searchQTs", getManagedBean()
+            					.getQtnTenderSearchBean());
+            			getManagedBean().setSearchQTDataModel(searchQTDataModel);
+            			getManagedBean().getSearchQTDataModel().resetData();
+            			IPagingDataModel<ScLoaForQt> searchLoaDataModel = getManagedBean()
+            					.getSearchLoaForQtDataModel();          			
+            				searchLoaDataModel = new LOAPagingDataModel("searchQTLoaLois", getManagedBean()
+            						.getQtnTenderSearchBean());
+            				getManagedBean().setSearchLoaForQtDataModel(searchLoaDataModel);
+            				getManagedBean().getSearchLoaForQtDataModel().resetData();
+            				IPagingDataModel<ScLoiForQt> searchLoiDataModel = getManagedBean()
+            						.getSearchLoiForQtDataModel();
+            					searchLoiDataModel = new LOIPagingDataModel("searchQTLoaLois", getManagedBean()
+            							.getQtnTenderSearchBean());
+            					getManagedBean().setSearchLoiForQtDataModel(searchLoiDataModel);
+            					getManagedBean().getSearchLoiForQtDataModel().resetData();
+            		
+            	}
+            }
+            //End 19287 
 }
 
 
