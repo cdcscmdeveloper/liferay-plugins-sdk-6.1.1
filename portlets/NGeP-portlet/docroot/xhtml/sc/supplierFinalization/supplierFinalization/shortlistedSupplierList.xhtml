@@ -53,7 +53,7 @@
 		
 		<p:outputPanel id="supplierListTblPanel" styleClass="header-spacing">
 			<ui:param name="canShowSupplierProposal" 
-					value="#{suppFinalizationBackingBean.canShowSupplierProposal() or isSecretaryUser}" />
+					value="#{suppFinalizationBackingBean.canShowSupplierProposal() or isSecretaryUser or !empty suppFinalizationBackingBean.managedBean.previousPageUrl}" />
 			<ui:param name="showSelectionColumn" value="#{empty suppFinalizationBackingBean.managedBean.finalizationMethod or 
 		               			  			 				!suppFinalizationBackingBean.managedBean.itemCancelled}" />
 		               			  			 				
