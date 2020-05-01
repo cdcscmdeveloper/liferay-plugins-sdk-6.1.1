@@ -96,6 +96,8 @@ import my.ep.web.util.pm.helper.StatusHelper;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
+
+import org.primefaces.context.RequestContext;
 // TODO: Auto-generated Javadoc
 
 /**
@@ -122,7 +124,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		// reset search info
 		reset(Boolean.TRUE);
 
-		if (isGovernment()) {
+		if (isGovernment() || isDeskOfficer()) {
 			getDocumentTypes(Boolean.TRUE, Boolean.TRUE);
 			getManagedBean().setGovernment(Boolean.TRUE);
 
@@ -426,60 +428,71 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	public void viewMaintenance(Object[] dpObj, boolean isCancel) {
 		
 		if (getManagedBean().isSearchDPM() && getManagedBean().getSearchStatusId().equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION)) {
-			this.viewDpMaintenance(dpObj);
-		} else {
-			log.info("viewMaintenance");
-			long docId = (long) dpObj[0];
-			String docNo = (String) dpObj[1];
-			String docType = (String) dpObj[3];
-			long statusId = (long) dpObj[4];
-			
-			TrackingDiarySearchBackingBean diarySearchBackingBean = new TrackingDiarySearchBackingBean();
-			diarySearchBackingBean.getManagedBean().setDocNo(docNo);
-			diarySearchBackingBean.getManagedBean().setDocType(docType);
-			diarySearchBackingBean.getManagedBean().setStatusId(statusId);
-			
-			if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_REQUEST_NOTE)) {
-				RequestNoteBackingBean rnBackingBean = new RequestNoteBackingBean();
-				rnBackingBean.viewRequestNote(docId);
-				rnBackingBean.getManagedBean().setDpObj(dpObj);
-				rnBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
-				rnBackingBean.getManagedBean().setCancel(isCancel);
-			} else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_INQUIRY)) {
-				PurchaseInquiryBackingBean prInqBackingBean = new PurchaseInquiryBackingBean();
-				prInqBackingBean.viewPurchaseInquiry(docId);
-				prInqBackingBean.getManagedBean().setDpObj(dpObj);
-				prInqBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
-			} else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT)) {
-				PurchaseInDefaultBackingBean pidBackingBean = new PurchaseInDefaultBackingBean();
-				pidBackingBean.viewPurchaseInDefault(docId);
-				pidBackingBean.getManagedBean().setDpObj(dpObj);
-				pidBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
-				
-			} else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_SIMPLE_QUOTE)) {
-				SimpleQuoteBackingBean sqBackingBean = new SimpleQuoteBackingBean();
-				sqBackingBean.viewQuote(docId);
-				sqBackingBean.getManagedBean().setDpObj(dpObj);
-				sqBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
-				
-			} else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_LETTER_OF_AWARD)) {
-				LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
-				LOACancelDetailBackingBean loaCancelDetailBackingBean = new LOACancelDetailBackingBean();
-				
-				// Start 22211 - redirect to LOA cancellation page
-				if (getManagedBean().getSearchStatusId().equals(DPStatusConstants.LOA_PENDING_SUBMISSION) ||
-						getManagedBean().getSearchStatusId().equals(DPStatusConstants.LOA_PENDING_APPROVAL) ||
-						getManagedBean().getSearchStatusId().equals(DPStatusConstants.LOA_PENDING_REVISION) ||
-						getManagedBean().getSearchStatusId().equals(DPStatusConstants.LOA_PENDING_REVISION_APPROVAL))
-					loaCancelDetailBackingBean.cancelationLOA(docId);
-				// End 22211
-				else
-					loaDetailBackingBean.viewLOA(docId);
-				
-				loaDetailBackingBean.getManagedBean().setDpObj(dpObj);
-				loaDetailBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
+			if(isRnApprover()){
+				this.viewDpMaintenance(dpObj);
 			}
-			
+			else{
+				RequestContext.getCurrentInstance().execute("RnAppAlert.show()");
+			}			
+		} else {
+			if(isDeskOfficer()){
+				log.info("viewMaintenance");
+				long docId = (long) dpObj[0];
+				String docNo = (String) dpObj[1];
+				String docType = (String) dpObj[3];
+				long statusId = (long) dpObj[4];
+				
+				getManagedBean().setSearchStatusId(statusId);
+				
+				TrackingDiarySearchBackingBean diarySearchBackingBean = new TrackingDiarySearchBackingBean();
+				diarySearchBackingBean.getManagedBean().setDocNo(docNo);
+				diarySearchBackingBean.getManagedBean().setDocType(docType);
+				diarySearchBackingBean.getManagedBean().setStatusId(statusId);
+				
+				if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_REQUEST_NOTE)) {
+					RequestNoteBackingBean rnBackingBean = new RequestNoteBackingBean();
+					rnBackingBean.viewRequestNote(docId);
+					rnBackingBean.getManagedBean().setDpObj(dpObj);
+					rnBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
+					rnBackingBean.getManagedBean().setCancel(isCancel);
+				} else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_INQUIRY)) {
+					PurchaseInquiryBackingBean prInqBackingBean = new PurchaseInquiryBackingBean();
+					prInqBackingBean.viewPurchaseInquiry(docId);
+					prInqBackingBean.getManagedBean().setDpObj(dpObj);
+					prInqBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
+				} else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT)) {
+					PurchaseInDefaultBackingBean pidBackingBean = new PurchaseInDefaultBackingBean();
+					pidBackingBean.viewPurchaseInDefault(docId);
+					pidBackingBean.getManagedBean().setDpObj(dpObj);
+					pidBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
+					
+				} else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_SIMPLE_QUOTE)) {
+					SimpleQuoteBackingBean sqBackingBean = new SimpleQuoteBackingBean();
+					sqBackingBean.viewQuote(docId);
+					sqBackingBean.getManagedBean().setDpObj(dpObj);
+					sqBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
+					
+				} else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_LETTER_OF_AWARD)) {
+					LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
+					LOACancelDetailBackingBean loaCancelDetailBackingBean = new LOACancelDetailBackingBean();
+					
+					// Start 22211 - redirect to LOA cancellation page
+					if (getManagedBean().getSearchStatusId().equals(DPStatusConstants.LOA_PENDING_SUBMISSION) ||
+							getManagedBean().getSearchStatusId().equals(DPStatusConstants.LOA_PENDING_APPROVAL) ||
+							getManagedBean().getSearchStatusId().equals(DPStatusConstants.LOA_PENDING_REVISION) ||
+							getManagedBean().getSearchStatusId().equals(DPStatusConstants.LOA_PENDING_REVISION_APPROVAL))
+						loaCancelDetailBackingBean.cancelationLOA(docId);
+					// End 22211
+					else
+						loaDetailBackingBean.viewLOA(docId);
+					
+					loaDetailBackingBean.getManagedBean().setDpObj(dpObj);
+					loaDetailBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
+				}
+			}
+			else{
+				RequestContext.getCurrentInstance().execute("DOAlert.show()");
+			}
 		}
 	}
 	
@@ -1318,6 +1331,30 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 				
 				
 			}
+			
+
+			/**
+			 * Validate if user is RN Approver
+			 * @return boolean
+			 */
+			public boolean isRnApprover() {
+				if (getFacesScopes().hasRoleUser(RoleCode.RN_APPROVER.value())) {		
+					return Boolean.TRUE;
+				}
+				return Boolean.FALSE;
+			}
+		
+			/**
+			 * Validate if user is Desk Officer
+			 * @return boolean
+			 */
+			public boolean isDeskOfficer() {
+				if (getFacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value())) {		
+					return Boolean.TRUE;
+				}
+				return Boolean.FALSE;
+			}
+			
 			
 			
 			/**
