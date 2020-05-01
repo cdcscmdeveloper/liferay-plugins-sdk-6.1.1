@@ -2560,6 +2560,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	public void downloadDAHistory() throws Exception {
 		String language = new FacesScopes().getUserLocale().getLanguage();
 		SmSupplier supplier = getManagedBean().getSmSupplier();
+		log.info(supplier.getSupplierId().toString()+"-----------------Supplier ID-------------------------------");
 		if (language.equals("en")) {
 			Map<String, String> paramMap = new HashMap<String, String>();
 			paramMap.put("PSUPPLIERID", supplier.getSupplierId().toString());
