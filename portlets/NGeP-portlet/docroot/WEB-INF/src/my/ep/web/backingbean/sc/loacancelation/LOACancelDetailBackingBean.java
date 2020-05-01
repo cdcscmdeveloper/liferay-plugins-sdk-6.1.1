@@ -3479,6 +3479,8 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 				reqDTO_.setScWorkFlowStatus(workFlowStatus);
 				workFlowStatusSO.updateCurrentWorkflowStatus(reqDTO_);
 				
+				workFlowStatusSO.updateApprovedLOACancellationStatus(reqDTO_,QTStatusConst.LOA_CANCELLED);
+				
 			}
 		
 			if(!BpmOutcomeConst.BPM_LOA_CANCEL.equals(outcome)){
