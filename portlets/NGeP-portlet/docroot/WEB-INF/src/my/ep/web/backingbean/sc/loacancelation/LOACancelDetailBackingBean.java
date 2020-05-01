@@ -3444,6 +3444,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setScLoa(scLoa);
+			reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
 			reqDTO.setSourceId(getManagedBean().getSourceId());
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
 			reqDTO.setOutcome(outcome.concat(BpmOutcomeConst.BPM_LOA_CANCEL));
