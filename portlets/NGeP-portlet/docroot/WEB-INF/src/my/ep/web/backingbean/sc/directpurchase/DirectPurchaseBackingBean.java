@@ -354,6 +354,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	public void searchDPM() {
 		debugLogger("Entered: " + this.getClass().getName() + ".searchDPM()"); 
 		getManagedBean().setSearchDPM(true);
+		getManagedBean().setSearchLoaByRN(false);
 		if(getManagedBean().getSearchDocumentType().equals(ParameterConst.DOCTYPE_REQUEST_NOTE)){
 			getManagedBean().setDocumentTypeDesc(ParameterConst.RN_TITLE);
 		}
