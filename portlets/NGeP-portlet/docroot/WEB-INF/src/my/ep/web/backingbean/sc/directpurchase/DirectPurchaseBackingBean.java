@@ -360,6 +360,17 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		else if(getManagedBean().getSearchDocumentType().equals(ParameterConst.DOCTYPE_LETTER_OF_AWARD)){
 			getManagedBean().setDocumentTypeDesc(ParameterConst.LOA_TITLE);
 			getManagedBean().setSearchDPM(false);
+			
+			//#22211 - search loa by rn no - start
+			if(getManagedBean().getSearchDocumentNo()!= null && getManagedBean().getSearchDocumentNo() != ""){
+				log.info("docNo not null--");
+				if(getManagedBean().getSearchDocumentNo().toUpperCase().startsWith("R")){
+					getManagedBean().setSearchLoaByRN(true);
+					List<String> loaList = getRequestNoteSO().retrieveLoaListByReqNote(getManagedBean().getSearchDocumentNo(), getFacesScopes().getUserSessionBean().getUserId());	
+					getManagedBean().setLoaList(loaList);
+				}
+			}
+			//#22211 - search loa by rn no - end
 		}
 		getManagedBean().getDpDocumentDataModel().reloadData();
 	}
@@ -787,6 +798,11 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 
 	private ISourcingIntegrationSO getSourcingIntegrationSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+	}
+	
+	private IRequestNoteSO getRequestNoteSO() {
+		return BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestNoteSO.class);
 	}
 
 	private FacesScopes getFacesScopes() {
