@@ -3359,6 +3359,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 	 */
 	private AwardSupplierResDTO updateBPMTask(String outcome, PmDigiSign digiSign) {
 		debugLogger("updateBPMTask");
+		FacesScopes facesScopes = new FacesScopes();
 		AwardSupplierResDTO resDTO = null;
 		try {
 
@@ -3439,7 +3440,8 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			}
 
 			if (newRemark) {
-				throw new EpException(MessageConst.ERROR_100022, new String[] { "Remark" });
+				throw new EpException(MessageConst.ERROR_100022, new String[] {ResourceBundleUtils.getMessage("lbl.sc.remark",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});
 			}
 
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
@@ -3488,7 +3490,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 				workFlowStatus_.setPmStatus(getPmStatusByStatusId(QTStatusConst.LOA_CANCELLED));
 				workFlowStatus_.setScLoa(scLoa);
 				workFlowStatus_.setCurrent(true);
-				scLoa.setCurrentStatus(workFlowStatus_);
+				//scLoa.setCurrentStatus(workFlowStatus_);
 
 				reqDT.setScWorkFlowStatus(workFlowStatus_);
 				workFlowStatusSO.updateApprovedLOACancellationStatus(reqDT,QTStatusConst.LOA_CANCELLED);				
