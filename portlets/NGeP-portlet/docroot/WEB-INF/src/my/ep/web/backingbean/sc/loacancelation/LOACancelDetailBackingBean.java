@@ -3478,11 +3478,12 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 				workFlowStatus.setScLoa(scLoa);
 				workFlowStatus.setCurrent(true);
 				scLoa.setCurrentStatus(workFlowStatus);
+				scLoa.setPmStatus(workFlowStatus.getPmStatus());
 
 				reqDTO_.setScWorkFlowStatus(workFlowStatus);
 				workFlowStatusSO.updateCurrentWorkflowStatus(reqDTO_);
 				//------------------------------------------//
-				ScWorkFlowStatusReqDTO reqDT = new ScWorkFlowStatusReqDTO();
+				/*ScWorkFlowStatusReqDTO reqDT = new ScWorkFlowStatusReqDTO();
 				reqDT.setDocType(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
 				reqDT.setDocId(scLoa.getLoaId());
 
@@ -3493,7 +3494,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 				//scLoa.setCurrentStatus(workFlowStatus_);
 
 				reqDT.setScWorkFlowStatus(workFlowStatus_);
-				workFlowStatusSO.updateApprovedLOACancellationStatus(reqDT,QTStatusConst.LOA_CANCELLED);				
+				workFlowStatusSO.updateApprovedLOACancellationStatus(reqDT,QTStatusConst.LOA_CANCELLED);			*/	
 			}
 		
 			if(!BpmOutcomeConst.BPM_LOA_CANCEL.equals(outcome)){
