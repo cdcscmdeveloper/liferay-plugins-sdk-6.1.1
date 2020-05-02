@@ -1371,26 +1371,18 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 				return Boolean.FALSE;
 			}
 			
-			
-			
 			/**
 			 * Return boolean TRUE for dual role only, else FALSE
 			 * @return boolean
 			 */
 			public boolean showFunctionType() {
 				if (hasSupplierRole() && hasGovernmentUserRole()) {
-					if (getManagedBean().getSearchFunctionType() == null && !getManagedBean().isG2G()) {
-						getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_PTJ);
-					} else
-						getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_G2G_ROLECODE);
 					return true;
-				} else if (hasGovernmentUserRole()) {
-					getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_PTJ);
-				} else
-					getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_SUPPLIER);
+				} 
 				return false;
 			}
 			
+						
 			/**
 			 * Return boolean TRUE for dual role and PTJ, else FALSE
 			 * @return boolean
