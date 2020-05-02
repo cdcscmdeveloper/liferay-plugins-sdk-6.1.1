@@ -104,6 +104,11 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 	
 	private boolean searchDPM;
 	
+	//#22211 - start
+	private List<String> loaList;
+	
+	private boolean searchLoaByRN;
+	//#22211 - end
 	// Redmine 25396:
 	private String searchFunctionType;
 	
@@ -196,7 +201,11 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 				}
 				
 				if(getSearchDocumentNo() != null && getSearchDocumentNo() != "") {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo", SearchOperator.OPERATOR_EQUALS.value(), getSearchDocumentNo()));
+					if (isSearchLoaByRN()) {
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo", SearchOperator.OPERATOR_IN.value(), getLoaList()));
+					}else{
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo", SearchOperator.OPERATOR_EQUALS.value(), getSearchDocumentNo()));
+					}
 				}
 				if(getSearchStatusId() != null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("status", SearchOperator.OPERATOR_EQUALS.value(), getSearchStatusId()));
@@ -511,7 +520,7 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 	public void setSearchDPM(boolean searchDPM) {
 		this.searchDPM = searchDPM;
 	}
-	
+		
 	// Redmine 25396: remove duplication option view by adding new drop down field
 	public String getSearchFunctionType() {
 		return searchFunctionType;
@@ -534,6 +543,22 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 	 */
 	public void setG2G(boolean isG2G) {
 		this.isG2G = isG2G;
+	}
+
+	public boolean isSearchLoaByRN() {
+		return searchLoaByRN;
+	}
+
+	public void setSearchLoaByRN(boolean searchLoaByRN) {
+		this.searchLoaByRN = searchLoaByRN;
+	}
+
+	public List<String> getLoaList() {
+		return loaList;
+	}
+
+	public void setLoaList(List<String> loaList) {
+		this.loaList = loaList;
 	}
 
 	/**
