@@ -57,6 +57,11 @@
 		<h:outputText styleClass="instruction" rendered="#{isPendingVerification}"
 			value="#{lbl['lbl.sc.loiloa.loa.verify.instruction']}">
 		</h:outputText>
+		<!-- #22211 Start -->
+		<h:outputText styleClass="instruction" rendered="#{isPendingVerification and isSqStillValid}"
+			value="#{lbl['lbl.sc.loa.supplier.reviseDocument.instruction']}">
+		</h:outputText>
+		<!-- #22211 End -->
 		
 	    <table border="0" cellspacing="0" cellpadding="0" width="100%">
 		  <tr>
