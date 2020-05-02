@@ -27,9 +27,17 @@
 
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.prepare.ptj']}" /></td>
-					<td colspan="3"><p:inputText
-							value="#{lOACancelDetailBackingBean.managedBean.scLoa.scLoiLoa.pmOrgProfile.orgName}"
-							disabled="true" readonly="true" style="width:866px;" /></td>
+					<td colspan="3">
+							<c:if test="#{lOACancelDetailBackingBean.managedBean.scLoa.isBrandNew()}">
+								<p:inputText
+								value="#{lOACancelDetailBackingBean.managedBean.scLoa.scLoiLoa.pmOrgProfile.orgName}"
+								disabled="true" readonly="true" style="width:866px;" />
+				     		</c:if>
+				     		<c:if test="#{!lOACancelDetailBackingBean.managedBean.scLoa.isBrandNew()}">
+				     			<p:inputText
+								value="#{lOACancelDetailBackingBean.retrievePTJByOrgProfileId(lOACancelDetailBackingBean.managedBean.scLoa.scLoiLoa.pmOrgProfile.orgProfileId, lOACancelDetailBackingBean.managedBean.scLoa.scQt.createdDate)}"
+								disabled="true" readonly="true" style="width:866px;" />								
+				     		</c:if></td>
 				</tr>
 
 				<tr>
