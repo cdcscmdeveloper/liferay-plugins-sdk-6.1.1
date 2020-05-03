@@ -795,8 +795,22 @@ public class SmBulkApplicationBackingBean extends
 						bulkApplicationVO.setCurrentRegStatusId(statusDesc
 								.getPmStatus().getStatusId());
 					}
+				//21937 - start
+				}else{
+					// init current registration status description
+					PmStatusDesc currentStatusDesc = SmApplicationUtil
+							.getCurrRegStatusDesc(appl);
+					if (currentStatusDesc != null
+							&& !appl.getApplType()
+									.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+						bulkApplicationVO.setCurrentRegStatus(currentStatusDesc
+								.getStatusName());
+						bulkApplicationVO.setCurrentRegStatusId(currentStatusDesc
+								.getPmStatus().getStatusId());
+					}
+					
 				}
-
+				//21937 - END
 				bulkApplicationVO.setRegStatusDescList(SmApplicationUtil
 						.getInstance().retrieveRegistrationStatusList(
 								appl.getSupplierType(), appl.getApplType()));
@@ -909,7 +923,8 @@ public class SmBulkApplicationBackingBean extends
 						} else {
 							pendingRejectedCategories.add(cat);
 						}
-					} else {
+						//21937 - start
+					} else if(cat.getRecordStatusFlg().compareTo(SupplierManagementConst.DELETED_RECORD_STATUS) != 0) {
 						bulkApplicationVO.getApprovedCategories().add(cat);
 						//21937 - start
 						if(cat.isApprovedByPo()){
