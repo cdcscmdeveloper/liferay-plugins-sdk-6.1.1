@@ -94,7 +94,7 @@
 					update="@all, zoneEstCostMsg, @(.calcEstAmount), zoneEstCost1"
 					partialSubmit="true"
 					process="@this" 
-					event="keyup"
+					event="change"
 					listener="#{templateSpecBackingBean.calcItemTotalIndicateUnitPrice(templateSpecBean,
 						tplSpecEstimation.indicativeUnitPrice, 
 						templateSpecBean.selectedSpecQuestion.tplSpecZoneQties[rowIndex].qty, 
