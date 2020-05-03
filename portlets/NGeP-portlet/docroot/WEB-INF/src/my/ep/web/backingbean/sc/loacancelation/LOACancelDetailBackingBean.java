@@ -3462,10 +3462,10 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			
 			updateCancelLoaCurrentWorkflowStatus(scLoa,outcome);	
 			
-			if (outcome.contains(BpmOutcomeConst.BPM_APPROVE)){
+	/*		if (outcome.contains(BpmOutcomeConst.BPM_APPROVE)){
 				updateApprovedLOACancellationStatus(scLoa,outcome);
 				updateApprovedLOACancellationStatus(scLoa,outcome);
-			}	
+			}	*/
 			
 			if(!BpmOutcomeConst.BPM_LOA_CANCEL.equals(outcome)){
 					getQtAwardSO().prepareCancelLoaTrackingDiary(reqDTO);
@@ -3487,6 +3487,8 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 				String requestNoteNo = null;						
 				RenameTempLoaNoRepoDirByLoaNo(scLoa);
 				renewSesionObject();
+				if (outcome.contains(BpmOutcomeConst.BPM_APPROVE))
+					updateApprovedLOACancellationStatus(scLoa,outcome);
 				if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
 					successMessage(MessageConst.INFO_700038, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_LETTER_OF_AWARD, 
 							scLoa.getLoaNo(), Boolean.TRUE);
