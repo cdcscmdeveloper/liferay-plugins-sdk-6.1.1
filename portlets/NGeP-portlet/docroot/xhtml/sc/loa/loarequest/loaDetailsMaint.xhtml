@@ -32,7 +32,7 @@
 			value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeScheduled}" />
 		<ui:param name="isSqStillValid" value="#{lOADetailBackingBean.isSqStillValid()}" />
 		<ui:param name="isSaveHideSqExpired" value="#{!lOADetailBackingBean.managedBean.scLoa.brandNew and !isSqStillValid}" />
-		<!-- <ui:param name="isLOACancelByApprover" value="#{lOADetailBackingBean.isLOACancelByApprover()}" />	 -->
+		<ui:param name="isLOACancelByApprover" value="#{lOADetailBackingBean.isLOACancelByApprover()}" />	
 		<ui:param name="isLoaGenerated" value="#{lOADetailBackingBean.isLoaGenerated()}" />	
 		<ui:include src="loaButtons.xhtml" />
 		<ui:include src="loaHeader.xhtml" />
@@ -95,7 +95,7 @@
 					<p:menuitem value="#{lbl['lbl.sc.approval.details']}" update="@form" disabled="#{!lOADetailBackingBean.managedBean.scLoa.approvalReq}">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="#{isDocTypeQuotation ? 7 : 6}" />
 					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.approval']}" update="@form"  disabled="true">
+					<p:menuitem value="#{lbl['lbl.sc.approval']}" update="@form"  disabled="#{!isLOACancelByApprover}">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="8" />
 					</p:menuitem>				
 				</p:tabMenu>
