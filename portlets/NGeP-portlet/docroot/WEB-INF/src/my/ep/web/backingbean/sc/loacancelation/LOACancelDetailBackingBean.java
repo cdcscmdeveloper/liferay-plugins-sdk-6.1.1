@@ -3460,46 +3460,13 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
 			reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
 			
-			if (outcome.contains(BpmOutcomeConst.BPM_REJECT))
-				updateCancelLoaCurrentWorkflowStatus(scLoa,outcome);	
+			updateCancelLoaCurrentWorkflowStatus(scLoa,outcome);	
 			
 			if (outcome.contains(BpmOutcomeConst.BPM_APPROVE)){
-				IScWorkFlowStatusSO workFlowStatusSO;
-				workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-						IScWorkFlowStatusSO.class);
-
-				ScWorkFlowStatusReqDTO reqDTO_ = new ScWorkFlowStatusReqDTO();
-				reqDTO_.setDocType(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
-				reqDTO_.setDocId(scLoa.getLoaId());
-
-				ScLoaWorkFlowStatus workFlowStatus = new ScLoaWorkFlowStatus();
-				workFlowStatus.setPmStatus(getPmStatusByStatusId(QTStatusConst.LOA_CANCELLED));		
-				log.info("-----Check 62509L------ " + workFlowStatus.getPmStatus().getStatusId());
-				workFlowStatus.setScLoa(scLoa);
-				workFlowStatus.setCurrent(true);
-				scLoa.setCurrentStatus(workFlowStatus);
-				scLoa.setPmStatus(workFlowStatus.getPmStatus());
-
-				reqDTO_.setScWorkFlowStatus(workFlowStatus);
-				workFlowStatusSO.updateCurrentWorkflowStatus(reqDTO_);
-				//------------------------------------------//
-				ScLoa scLoa_ = this.getManagedBean().getScLoa();
-				
-				ScWorkFlowStatusReqDTO reqDT = new ScWorkFlowStatusReqDTO();
-				reqDT.setDocType(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
-				reqDT.setDocId(scLoa.getLoaId());
-
-				ScLoaWorkFlowStatus workFlowStatus_ = new ScLoaWorkFlowStatus();
-				workFlowStatus_.setPmStatus(getPmStatusByStatusId(QTStatusConst.LOA_CANCELLED));
-				workFlowStatus_.setScLoa(scLoa);
-				workFlowStatus_.setCurrent(true);
-				scLoa_.setCurrentStatus(workFlowStatus_);
-				scLoa_.setPmStatus(workFlowStatus.getPmStatus());
-
-				reqDT.setScWorkFlowStatus(workFlowStatus_);
-				workFlowStatusSO.updateApprovedLOACancellationStatus(reqDT,QTStatusConst.LOA_CANCELLED);			
-			}
-		
+				updateApprovedLOACancellationStatus(scLoa,outcome);
+				updateApprovedLOACancellationStatus(scLoa,outcome);
+			}	
+			
 			if(!BpmOutcomeConst.BPM_LOA_CANCEL.equals(outcome)){
 					getQtAwardSO().prepareCancelLoaTrackingDiary(reqDTO);
 			}
@@ -7383,14 +7350,39 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 		reqDTO.setDocId(scLoa.getLoaId());
 
 		ScLoaWorkFlowStatus workFlowStatus = new ScLoaWorkFlowStatus();
-		workFlowStatus.setPmStatus(getPmStatusByStatusId(QTStatusConst.LOA_CANCELLATION_REJECTED));
+		if (outcome.contains(BpmOutcomeConst.BPM_REJECT)){			
+			workFlowStatus.setPmStatus(getPmStatusByStatusId(QTStatusConst.LOA_CANCELLATION_REJECTED));
+			log.info("-----Check 62523L------ " + workFlowStatus.getPmStatus().getStatusId());
+		}else if (outcome.contains(BpmOutcomeConst.BPM_APPROVE)){			
+			workFlowStatus.setPmStatus(getPmStatusByStatusId(QTStatusConst.LOA_CANCELLED));	
+			log.info("-----Check 62509L------ " + workFlowStatus.getPmStatus().getStatusId());
+		}
+		workFlowStatus.setScLoa(scLoa);
+		workFlowStatus.setCurrent(true);
+		scLoa.setCurrentStatus(workFlowStatus);
+
+		reqDTO.setScWorkFlowStatus(workFlowStatus);		
+		workFlowStatusSO.updateCurrentWorkflowStatus(reqDTO);
+
+	}
+	
+	protected void updateApprovedLOACancellationStatus(ScLoa scLoa, String outcome) {		
+		IScWorkFlowStatusSO workFlowStatusSO;
+					workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+			
+		ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+		reqDTO.setDocType(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
+		reqDTO.setDocId(scLoa.getLoaId());
+
+		ScLoaWorkFlowStatus workFlowStatus = new ScLoaWorkFlowStatus();			
+		workFlowStatus.setPmStatus(getPmStatusByStatusId(QTStatusConst.LOA_CANCELLED));
 		workFlowStatus.setScLoa(scLoa);
 		workFlowStatus.setCurrent(true);
 		scLoa.setCurrentStatus(workFlowStatus);
 
 		reqDTO.setScWorkFlowStatus(workFlowStatus);
-		
-		workFlowStatusSO.updateCurrentWorkflowStatus(reqDTO);
+		workFlowStatusSO.updateApprovedLOACancellationStatus(reqDTO,QTStatusConst.LOA_CANCELLED);	
 
 	}
 		
