@@ -106,6 +106,8 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 	
 	// Redmine 25396:
 	private String searchFunctionType;
+	
+	private boolean isG2G;
 
 	/**
 	 * The Class DocumentPagingDataModel.
@@ -519,6 +521,20 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 		this.searchFunctionType = searchFunctionType;
 	}
 	// end 25396:
+
+	/**
+	 * @return the isG2G
+	 */
+	public boolean isG2G() {
+		return isG2G;
+	}
+
+	/**
+	 * @param isG2G the isG2G to set
+	 */
+	public void setG2G(boolean isG2G) {
+		this.isG2G = isG2G;
+	}
 
 	/**
 	 * @return the dpmDocumentDataModel
