@@ -3488,7 +3488,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 				RenameTempLoaNoRepoDirByLoaNo(scLoa);
 				renewSesionObject();
 				if (outcome.contains(BpmOutcomeConst.BPM_APPROVE))
-					updateApprovedLOACancellationStatus(outcome);
+					updateApprovedLOACancellationStatus(outcome,reqDTO);
 				if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
 					successMessage(MessageConst.INFO_700038, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_LETTER_OF_AWARD, 
 							scLoa.getLoaNo(), Boolean.TRUE);
@@ -7368,11 +7368,12 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 
 	}
 	
-	protected void updateApprovedLOACancellationStatus(String outcome) {		
+	protected void updateApprovedLOACancellationStatus(String outcome, AwardSupplierReqDTO reqDT) {		
 		IScWorkFlowStatusSO workFlowStatusSO;
 					workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
-		ScLoa scLoa = getManagedBean().getScLoa();
+		AwardSupplierResDTO resDTO =  getQtAwardSO().retrieveLOADtl(reqDT);
+		ScLoa scLoa = resDTO.getScLoa();		
 					
 		ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
 		reqDTO.setDocType(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
