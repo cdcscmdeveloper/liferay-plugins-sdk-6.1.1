@@ -7106,12 +7106,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		userReqDTO.setOrgProfileId(scloa.getScLoiLoa().getPmOrgProfile().getOrgProfileId());
 		
 		UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
-		getManagedBean().setLoacancelapproverList(userResDTO.getUserList());	
-		
-		scloa.setScLoaRemarks(initializeRemarks(scloa, 
-				scloa.getCurrentStatus(),
-				scloa.getScLoaRemarks(), ScLoaRemark.class));
-		
+		getManagedBean().setLoacancelapproverList(userResDTO.getUserList());		
 		
 		if(currentStatusId.equals(QTStatusConst.LOA_CANCELLED)){
 			loaCancelled = true;
