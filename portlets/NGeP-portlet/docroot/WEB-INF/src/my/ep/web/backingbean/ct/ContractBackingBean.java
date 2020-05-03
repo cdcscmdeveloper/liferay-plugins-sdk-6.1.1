@@ -1890,7 +1890,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				if (this.getManagedBean().getContractVer().getCtAgencies().size() == 1) {
 					this.getManagedBean().getContractVer().getCtAgencies().get(0).setCeilingAmount(BigDecimal.ZERO);
 					for (CtContractItem contractItem: this.getManagedBean().getCtItemList()) {
-						contractItem.getCtItemCeilingQties().get(0).setCeilingQuantity(BigDecimal.ZERO);
+						if (contractItem.getCtItemCeilingQties() != null && contractItem.getCtItemCeilingQties().size() > 0) {//25703
+							contractItem.getCtItemCeilingQties().get(0).setCeilingQuantity(BigDecimal.ZERO);
+						}
 					}
 				}
 				//Reset show item
@@ -4158,13 +4160,23 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	
 	public boolean isContractExtend() {
 		//#24333 - Start
-		String currentPeriod = BigDecimal.valueOf(getManagedBean().getContractVer().getCtContract().getLoa().getContractDuration().longValue()).toString();
-		String extendPeriod = Integer.toString(getManagedBean().getContractVer().getCtContractValue().getContractPeriod()); 
+		String currentPeriod = null;
+		String extendPeriod = null;
 		boolean isContractExtend = false;
+		log.info("isContractExtend");
+		
+		if(getManagedBean().getContractVer().getCtContract().getLoa().getContractDuration() != null) {
+			currentPeriod = BigDecimal.valueOf(getManagedBean().getContractVer().getCtContract().getLoa().getContractDuration().longValue()).toString();
+		}
+		if(getManagedBean().getContractVer().getCtContractValue().getContractPeriod() > 0) {
+			extendPeriod = Integer.toString(getManagedBean().getContractVer().getCtContractValue().getContractPeriod()); 
+		}		
 		getManagedBean().setExtendContract(false);
-		if(!extendPeriod.equals(currentPeriod)){
-			isContractExtend = true;
-			getManagedBean().setExtendContract(true);
+		if(currentPeriod != null && extendPeriod != null) {
+			if(!extendPeriod.equals(currentPeriod)){
+				isContractExtend = true;
+				getManagedBean().setExtendContract(true);
+			}
 		}
 		return isContractExtend;
 		//#24333 - End	
