@@ -73,31 +73,15 @@
 				</table>
 			</c:if>
 			<c:if test="#{evaluationBackingBean.managedBean.evaluationCheckListType != ParameterConst.documentDefinitionTypeTemplateSpecification}">
-				
-				<c:if test="#{evaluationBackingBean.managedBean.tabFinancialIndex == 2}">
-					<table border="0" cellspacing="0" cellpadding="0">
-						<tr>
-							<td><h:outputLabel
-									value="#{lbl['lbl.sc.spec.checklist.title']}" /></td>
-							<td style="font-size: 12px;">:
-							#{lbl['lbl.sc.eva.all.template']}</td>				
-						</tr>
-						
-					</table>
-				</c:if>
-				
-				<c:if test="#{evaluationBackingBean.managedBean.tabFinancialIndex eq null or evaluationBackingBean.managedBean.tabFinancialIndex != 2}">
-					<table border="0" cellspacing="0" cellpadding="0">
-						<tr>
-							<td><h:outputLabel
-									value="#{lbl['lbl.sc.spec.checklist.title']}" /></td>
-							<td style="font-size: 12px;">:
-							#{evaluationBackingBean.managedBean.scQtChecklist.title}</td>				
-						</tr>
-						
-					</table>
-				</c:if>
-			
+				<table border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td><h:outputLabel
+								value="#{lbl['lbl.sc.spec.checklist.title']}" /></td>
+						<td style="font-size: 12px;">:
+						#{evaluationBackingBean.managedBean.scQtChecklist.title}</td>				
+					</tr>
+					
+				</table>
 			</c:if> 
 		</p:panel>
 	</div>
