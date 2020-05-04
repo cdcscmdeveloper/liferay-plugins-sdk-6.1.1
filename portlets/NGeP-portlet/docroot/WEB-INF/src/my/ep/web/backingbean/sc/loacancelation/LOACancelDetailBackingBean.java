@@ -3476,19 +3476,15 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			resDTO = getQtAwardSO().saveLOADtl(reqDTO);
 
 			if (resDTO.isSuccessful()) {
-				scLoa = resDTO.getScLoa();	
-				ScLoiLoa loiLoa = scLoa.getScLoiLoa();
-				Long loaDocId = loiLoa.getDocId();
-				String requestNoteNo = null;						
+				String RequestNoteNo = getQtAwardSO().retrieveRequestNoteNoByLoa(reqDTO);
+				scLoa = resDTO.getScLoa();								
 				RenameTempLoaNoRepoDirByLoaNo(scLoa);
 				renewSesionObject();
 				if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
-					successMessage(MessageConst.INFO_700038, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_LETTER_OF_AWARD, 
-							scLoa.getLoaNo(), Boolean.TRUE);
+					successMessage(MessageConst.INFO_700038, scLoa.getLoaNo(), RequestNoteNo, Boolean.TRUE);
 				}
 				else if(BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)){
-					successMessage(MessageConst.INFO_700039, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_LETTER_OF_AWARD, 
-							scLoa.getLoaNo(), Boolean.TRUE);
+					successMessage(MessageConst.INFO_700039, scLoa.getLoaNo(), RequestNoteNo, Boolean.TRUE);
 				}
 				
 			}
