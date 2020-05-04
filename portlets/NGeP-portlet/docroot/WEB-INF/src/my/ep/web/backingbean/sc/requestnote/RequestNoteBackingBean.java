@@ -1123,9 +1123,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 							List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
 
 							if (ruleValueList != null && ruleValueList.size() > 0) {
-								PmConfigRuleValue configRuleValue = ruleValueList.get(0);								
+								PmConfigRuleValue configRuleValue = ruleValueList.get(0);
+								//26059 - start
+								ScQuote quote = null;
+								String sourceMethod = requestNote.getSourceMethod();
+								if(sourceMethod.equals(ParameterConst.REQUEST_NOTE_SQ)) {
+									quote = requestNote.getQuote();
+								}								
 								//Rule : ITEM_THRESHOLD For 20k
-								if(totalAmt.compareTo(new BigDecimal(configRuleValue.getRuleValue())) > 0) {
+								if(totalAmt.compareTo(new BigDecimal(configRuleValue.getRuleValue())) > 0 && quote != null && !quote.isPanel()) {
+									//26059 - end
 									//26059 - start
 									if(!alreadyProceedWithDPExceedThreshold){										
 										getManagedBean().setExceededAmountAlerted(Boolean.TRUE);									
