@@ -2140,6 +2140,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
 		AmendmentBackingBean amendBB = new AmendmentBackingBean();
 		amendBB.getManagedBean().setSelectedTabIndex(0);
+		amendBB.getManagedBean().setViewOnly(false); /*#25956 notification setting*/
 		amendBB.setAmendmentContractVer(reqDTO);
 		return PROCESS_AMEND_PAGE;
 	}
