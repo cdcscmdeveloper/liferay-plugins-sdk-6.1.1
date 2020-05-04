@@ -3462,11 +3462,6 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			
 			updateCancelLoaCurrentWorkflowStatus(scLoa,outcome);	
 			
-	/*		if (outcome.contains(BpmOutcomeConst.BPM_APPROVE)){
-				updateApprovedLOACancellationStatus(scLoa,outcome);
-				updateApprovedLOACancellationStatus(scLoa,outcome);
-			}	*/
-			
 			if(!BpmOutcomeConst.BPM_LOA_CANCEL.equals(outcome)){
 					getQtAwardSO().prepareCancelLoaTrackingDiary(reqDTO);
 			}
@@ -7366,28 +7361,6 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 
 	}
 	
-	protected void updateApprovedLOACancellationStatus(String outcome, AwardSupplierReqDTO reqDT) {		
-		IScWorkFlowStatusSO workFlowStatusSO;
-					workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
-		AwardSupplierResDTO resDTO =  getQtAwardSO().retrieveLOADtl(reqDT);
-		ScLoa scLoa = resDTO.getScLoa();		
-					
-		ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
-		reqDTO.setDocType(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
-		reqDTO.setDocId(scLoa.getLoaId());
-
-		ScLoaWorkFlowStatus workFlowStatus = new ScLoaWorkFlowStatus();			
-		workFlowStatus.setPmStatus(getPmStatusByStatusId(QTStatusConst.LOA_CANCELLED));
-		workFlowStatus.setScLoa(scLoa);
-		workFlowStatus.setCurrent(true);
-		scLoa.setCurrentStatus(workFlowStatus);
-
-		reqDTO.setScWorkFlowStatus(workFlowStatus);
-		workFlowStatusSO.updateApprovedLOACancellationStatus(reqDTO,QTStatusConst.LOA_CANCELLED);	
-
-	}
-		
 	/**
 	 * @param awardSupplierDataType
 	 */
