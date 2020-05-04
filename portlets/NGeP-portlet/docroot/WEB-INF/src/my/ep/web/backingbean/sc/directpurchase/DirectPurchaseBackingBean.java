@@ -1321,6 +1321,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		
 		//START #22211- Set Approved Cancel Status LOA to Cancel Status
 		protected void searchApprovedCancelLoa() {
+			log.info("Enter searchApprovedCancelLoa");
 			IScWorkFlowStatusSO workFlowStatusSO;
 			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 					IScWorkFlowStatusSO.class);
