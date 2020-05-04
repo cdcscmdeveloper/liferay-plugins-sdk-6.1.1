@@ -32,7 +32,9 @@ import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
+import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
+import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -54,6 +56,7 @@ import my.ep.dto.sc.SourcingIntegrationResDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
+import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
@@ -70,6 +73,8 @@ import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
+import my.ep.persistence.entity.sc.loaloi.ScLoa;
+import my.ep.persistence.entity.sc.loaloi.ScLoaWorkFlowStatus;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
@@ -123,6 +128,10 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		FacesContext fc = FacesContext.getCurrentInstance();
 		// reset search info
 		reset(Boolean.TRUE);
+		
+		//#22211 - Start - Set Approved Cancel Status LOA to Cancel Status
+		searchApprovedCancelLoa();
+		//#22211 - End
 
 		if (isGovernment() || isDeskOfficer()) {
 			getDocumentTypes(Boolean.TRUE, Boolean.TRUE);
@@ -152,6 +161,10 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		FacesContext fc = FacesContext.getCurrentInstance();
 		// reset search info
 		reset(Boolean.FALSE);
+		
+		//#22211 - Start - Set Approved Cancel Status LOA to Cancel Status
+		searchApprovedCancelLoa();
+		//#22211 - Start 
 		
 		if(isGovernment()){
 			getDocumentTypes(Boolean.TRUE, Boolean.FALSE);
@@ -1305,6 +1318,22 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			}  
 			log.info("pID validity end");
 		}
+		
+		//START #22211- Set Approved Cancel Status LOA to Cancel Status
+		protected void searchApprovedCancelLoa() {
+			IScWorkFlowStatusSO workFlowStatusSO;
+			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IScWorkFlowStatusSO.class);
+
+			ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+			ScLoaWorkFlowStatus workFlowStatus = new ScLoaWorkFlowStatus();
+			
+			workFlowStatus.setPmStatus(getPmStatusByStatusId(QTStatusConst.LOA_CANCELLED));
+			reqDTO.setScWorkFlowStatus(workFlowStatus);
+			workFlowStatusSO.updataApprovedCancelledLoaToCancelled(reqDTO);
+	
+		}
+		//END #22211
 		
 		/**
 		 * Pid validity.
