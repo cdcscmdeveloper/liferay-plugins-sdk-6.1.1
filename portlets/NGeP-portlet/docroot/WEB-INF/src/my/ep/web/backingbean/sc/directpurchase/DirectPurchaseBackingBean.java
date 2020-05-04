@@ -793,7 +793,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
 			orgProfileReqDTO.setOrgProfileId(orgProfileId);
 			OrgProfileResDTO orgProfileResDTO = orgProfileSO
-					.retrieveOrgProfileDtlByProfileId(orgProfileReqDTO);
+					.retrieveOrgProfileDtlByID(orgProfileReqDTO); //#27440
 			if(orgProfileResDTO.getPmOrgProfile() != null){
 				orgName = orgProfileResDTO.getPmOrgProfile().getOrgName();
 			}
