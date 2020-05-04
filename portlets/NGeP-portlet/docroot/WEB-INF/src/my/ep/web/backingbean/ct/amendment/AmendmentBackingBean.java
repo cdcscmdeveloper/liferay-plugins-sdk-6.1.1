@@ -164,6 +164,8 @@ import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.UploadedFile;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.util.PortalUtil;
 
 /**
@@ -202,6 +204,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if (getManagedBean().getUserMap().size() == 0) {
 			initializeApproverList();
 		}
+		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);	          
+		if(originalServletRequest.getParameter(ContractConst.PARAMETER_ID) != null)
+			getManagedBean().setViewOnly(true);
 	}
 
 	/**
@@ -626,6 +632,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().setPrepareLOA(false);
 			getManagedBean().setDecisionPbQcLOA(false);
 			getManagedBean().setSignOffDecision(false);
+			
+			getManagedBean().setViewOnly(true); /*#25956 notification setting*/
 
 			contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class); 
 			if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)
@@ -783,9 +791,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * 
 	 * @return the navigate URL 
 	 */
-	public String backAction() {
+	public String backAction() throws PortalException, SystemException, IOException {
 		this.getManagedBean().setSecretaryList(null);
-		return CONTRACT_MAINT_PAGE;
+		if (!getManagedBean().isViewOnly()) { /*#25956 notification setting*/
+			return CONTRACT_MAINT_PAGE;
+		} else { // view Contract Amendment from notification
+			FacesContext.getCurrentInstance().getExternalContext().redirect(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL + "notifications"));
+			return null;
+		}
 	}
 
 	/**
