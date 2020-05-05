@@ -92,10 +92,10 @@
 						#{ctBackingBean.managedBean.contractVer.ctContract.contractNo}
 					</td>
 					<td style="width: 10%">
-						<h:outputLabel value="#{lbl['lbl.ct.ptj.name']}" />
+						<h:outputLabel value="#{lbl['lbl.fl.doc.maintain.business.company.name']}" />
 					</td>
 					<td style="width: 25%" class="header-info-text">
-						#{ctBackingBean.managedBean.contractVer.ctContract.ownerOrgProfile.orgName}
+						#{ctBackingBean.managedBean.supplierCompanyName}
 					</td>
 					<td style="width: 5%">
 						<h:outputLabel value="#{lbl['lbl.ct.status']}" />
@@ -183,19 +183,20 @@
 		<p:panel id="adminPanel" toggleable="true" toggleSpeed="500">
 			<f:facet name="header">
 				<h:outputText value="#{lbl['lbl.ct.panel.requestCtAdmin']}" />
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.reqctadmin']}"/>
 			</f:facet>
 			<h:panelGrid columns="4" style="width:100%;"
 				columnClasses="columnWidth200,columnWidth400,columnWidth300,columnWidth300">
 
 					<p:outputLabel value="#{lbl['lbl.ct.contract.admin.list']}" styleClass="required" />
 				    <h:panelGrid columns="2">
-						<p:selectOneMenu id="factoringId" label="#{lbl['lbl.ct.contract.admin.list']}" required="true"
-							rendered="true"
-							style="width:360px;" value="true">
-							   <!--  <f:selectItems value="#{supplierBackingBean.retrieveFinancialOrgList()}" />
-							    <p:ajax event="change" process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-								     update=":form:bankName,:form:clausePanel, :form:notificationBtn" listener="#{supplierBackingBean.resetFactoringCompany}" /> -->
-						</p:selectOneMenu>
+						<p:selectOneMenu id="contAdminId" styleClass="ppDropDownWidthM"
+						disabled="false" label="#{lbl['lbl.sc.loiloa.loa.cont.admin']}"
+						value=""
+						style="width: 275px;margin-bottom: 5px;">
+						<f:selectItems
+							value="#{ctBackingBean.getUsersByAgency()}" />
+					</p:selectOneMenu>
 						<!-- <p:inputText style="width:360px;"
 							rendered="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.managedBean.viewOnly
 								or supplierBackingBean.isContractAdmin() or supplierBackingBean.isApproverRole()}"
