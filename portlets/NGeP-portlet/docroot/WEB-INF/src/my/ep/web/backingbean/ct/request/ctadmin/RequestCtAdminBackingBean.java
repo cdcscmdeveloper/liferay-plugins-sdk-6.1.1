@@ -10,6 +10,7 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
@@ -24,6 +25,7 @@ import com.liferay.portal.util.PortalUtil;
 
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
+import my.ep.biz.service.ct.reqctadmin.IRequestContractAdminSO;
 import my.ep.biz.service.ct.suspension.IContractSuspensionSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
@@ -64,7 +66,7 @@ import my.ep.web.util.pm.helper.RoleHelper;
 
 
 @ManagedBean (name = "requestCtAdminBackingBean")
-@RequestScoped
+@ViewScoped
 public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCtAdminManagedBean>{
 
 	
@@ -73,6 +75,27 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 	private static Logger log = Logger.getLogger(RequestCtAdminBackingBean.class);
 	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
 
+	/**
+	 * This constructor method used to initialize the variable on start up
+	 * Setting button if user not call from BPM
+	 * Method used to initialize approver list
+	 * Method used to check view able mode
+	 */
+	public RequestCtAdminBackingBean() {
+		if(ctBB == null){
+			ctBB = new ContractBackingBean();
+		}
+		/*Initialization of button*/
+		if(getManagedBean().getOutComes() == null) 
+			getManagedBean().setOutComes(new String[] {BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});		
+		if(getManagedBean().getUserMap().size()==0) {
+			initializeApproverList();
+		}
+		/*HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);	          
+		if(originalServletRequest.getParameter(ContractConst.PARAMETER_ID) != null)
+			getManagedBean().setViewOnly(true);*/
+	}
 	
 	
 	/**
@@ -128,19 +151,19 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public String backAction() throws PortalException, SystemException, IOException {
-		SuspensionBackingBean  supoendBB= new SuspensionBackingBean();
-		supoendBB.getManagedBean().setItemcode(null);
-		supoendBB.getManagedBean().setItemstatus(null);
-		supoendBB.getManagedBean().setItemtype(null);
-		supoendBB.getManagedBean().setUOM(null);
-		supoendBB.getManagedBean().setSkuno(null);
-		supoendBB.getManagedBean().setTypeofgoods(null);
+		RequestCtAdminBackingBean  reqCtAdBB= new RequestCtAdminBackingBean();
+		/*reqCtAdBB.getManagedBean().setItemcode(null);
+		reqCtAdBB.getManagedBean().setItemstatus(null);
+		reqCtAdBB.getManagedBean().setItemtype(null);
+		reqCtAdBB.getManagedBean().setUOM(null);
+		reqCtAdBB.getManagedBean().setSkuno(null);
+		reqCtAdBB.getManagedBean().setTypeofgoods(null);*/
 	
 		ContractBackingBean ccBB = new ContractBackingBean();
 		ctBB.getManagedBean().setSelectedItem(null);
 		ctBB.getManagedBean().setServiceselectedItem(null);
 		
-		supoendBB.getManagedBean().getSuspensionProductListingPagingDataModel().resetData();
+		/*reqCtAdBB.getManagedBean().getSuspensionProductListingPagingDataModel().resetData();*/
 		if (!getManagedBean().isViewOnly()) {
 			return CONTRACT_MAINT_PAGE;
 		} else { // view suspension from notification
@@ -314,19 +337,19 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 	 */
 	public void setRequestCtAdminContractVer(ContractReqDTO reqDTO){
 		ctBB.renewSesionObject();
-		IContractSuspensionSO contractSuspensionSO= null;
+		IRequestContractAdminSO reqCtAdminSO= null;
 		ContractResDTO resDTO = null;
 		if(ctBB.getManagedBean().getDeleteAttachmentList() != null ){
 			ctBB.getManagedBean().getDeleteAttachmentList().clear();
 		}
 
 		try{
-			contractSuspensionSO = (IContractSuspensionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSuspensionSO.class);
-			resDTO = contractSuspensionSO.retrieveSuspensionContractVerDtls(reqDTO);
+			reqCtAdminSO = (IRequestContractAdminSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IRequestContractAdminSO.class);
+			resDTO = reqCtAdminSO.retrieveReqCtAdminContractVerDtls(reqDTO);
 			getManagedBean().setContractVer(resDTO.getCtContractVer());	
 			getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
 			getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
-					ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE, getManagedBean().getCtContract().getContractNo()));
+					ParameterConst.DOCTYPE_REQUEST_CT_ADMIN, getManagedBean().getCtContract().getContractNo()));
 			ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());	  
 
 			//CT_CHANGE_LOG
@@ -336,38 +359,6 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 			//Retrieve agreement contract version for physical no & signed date
 			retrieveContractVerOfAgreement();
 			
-			// Clear for search item
-			getManagedBean().setSearchItemString("");
-			getManagedBean().getContractItemList().clear();
-			
-			/*If statement  for check contact item start*/
-			if(getManagedBean().getContractVer().getCtContractItems() != null && getManagedBean().getContractVer().getCtContractItems().size() > 0 ) {
-				Collections.sort(getManagedBean().getContractVer().getCtContractItems(), new CtContractItem());
-
-				for (CtContractItem contractItem : getManagedBean().getContractVer().getCtContractItems()) {
-					getManagedBean().getContractItemList().add(contractItem);
-					/*Get latest contract item and map with the sc request item*/
-					for (CtContractItem latestContractItem : getManagedBean().getCtContract().getLatestContractVer().getCtContractItems()) {
-						if (contractItem.getScRequestItem().getRequestNoteItemId().equals(latestContractItem.getScRequestItem().getRequestNoteItemId())) {
-							getManagedBean().getItemMap().put(contractItem.getScRequestItem().getRequestNoteItemId(), latestContractItem);
-							break;
-						}
-					}
-				}
-			}/*If statement for contract item end*/			
-
-			/*If statement  to check agency start*/
-			if(getManagedBean().getContractVer().getCtAgencies() != null && getManagedBean().getContractVer().getCtAgencies().size() > 0 )  {	
-				for (CtAgency ctAgency : getManagedBean().getContractVer().getCtAgencies()) {
-					/*Get latest agency and map with the org profile*/
-					for (CtAgency latestAgency : getManagedBean().getCtContract().getLatestContractVer().getCtAgencies()) {
-						if(ctAgency.getOrgProfile().getOrgProfileId().equals(latestAgency.getOrgProfile().getOrgProfileId())) {
-							getManagedBean().getAgencyMap().put(ctAgency.getOrgProfile().getOrgProfileId(), latestAgency);
-							break;
-						}
-					}			 		
-				}
-			}/*If statement for agency end*/    
 
 			if(getManagedBean().getUserMap().size()==0) {
 				initializeApproverList();
@@ -408,35 +399,24 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 			/*Setting to list of remark and attachement of document*/
 			getManagedBean().setRemarkList(resDTO.getCtRemarks());
 			getManagedBean().setAttachmentList(resDTO.getCtAttachments());
+			ctBB.getManagedBean().setContractVer(resDTO.getCtContractVer());
+			String status = ctBB.getStatusDescById(ctBB.getManagedBean().getContractVer().getStatus().getStatusId());
+			ctBB.getManagedBean().setSupplierCompanyName(ctBB.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
+			ctBB.getManagedBean().setSupplierBranchName(ctBB.getManagedBean().getContractVer().getCtContractValue().getSupplierBranch());
+			ctBB.getManagedBean().setSupplierRegNo(ctBB.getManagedBean().getContractVer().getCtContractValue().getSupplierRegNo());
+			ctBB.getManagedBean().setSupplierMofNo(ctBB.getManagedBean().getContractVer().getCtContractValue().getSupplierMofNo());
+			
 			ctBB.getManagedBean().setViewContract(getManagedBean().isViewOnly());
 			ctBB.getManagedBean().setContractVer(getManagedBean().getContractVer());
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 			/*End remark setting*/
-
-			// Enable or Disable GST field
-			if (!ctBB.isLoaContractWithGst(getManagedBean().getCtContract().getLoa().getGstEffDate())
-					&& !ctBB.isLoaContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
-				ctBB.getManagedBean().setGstCheckingGUI(false);	// Display N/A
-			} else {
-				if (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() == null) {
-					getManagedBean().getContractVer().getCtContractAmount().setGstAmount(BigDecimal.ZERO);
-				}
-				ctBB.getManagedBean().setGstCheckingGUI(true);
-			}
-			
-			// Enable or Disable STAX field
-
-				if (getManagedBean().getContractVer().getCtContractAmount().getStaxAmount() == null) {
-					getManagedBean().getContractVer().getCtContractAmount().setStaxAmount(BigDecimal.ZERO);
-				}
-				ctBB.getManagedBean().setStaxCheckingGUI(true);
 			
 			
 		}catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		} finally {
-			contractSuspensionSO = null;
+			reqCtAdminSO = null;
 			resDTO = null;
 		}
 	}
@@ -486,21 +466,27 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 			resDTO = null;
 		}
 	}
-	
+
+	/**
+	 * This  method call once user call suspension page from task list
+	 * Method used to retrieve all information from BPM
+	 * Method used to retrieve contract information from BPM
+	 * Method return null if task id null
+	 */
 	public void preRenderView(){
 		ContractReqDTO reqDTO = null;
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter(ContractConst.TASK_ID);
 		String contractVerId = originalServletRequest.getParameter(ContractConst.PARAMETER_ID);
-		log.info("SuspensionManagedBean preRenderView contractVerId*******"+contractVerId);
-		log.info("SuspensionManagedBean preRenderView Task Name*******"+getManagedBean().getTaskName());
+		log.info("RequestCtAdminManagedBean preRenderView contractVerId*******"+contractVerId);
+		log.info("RequestCtAdminManagedBean preRenderView Task Name*******"+getManagedBean().getTaskName());
 		
 		/*Start if statement to check login user*/
 		if(contractVerId!=null) {
 			reqDTO = new ContractReqDTO();
 			reqDTO.setContractVerId(Long.parseLong(contractVerId));
-			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE);
+			reqDTO.setDocType(ParameterConst.DOCTYPE_REQUEST_CT_ADMIN);
 			reqDTO.setUpdateAction(false);
 			setRequestCtAdminContractVer(reqDTO);
 
@@ -531,10 +517,7 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 			getManagedBean().setTaskId(taskId);
 			return;
 		}/*End if statement to check  login user */
-		// 20997 - start : to reset search list after save
-		if(getManagedBean().getTaskId()!=null) {
-			/*getManagedBean().getSuspensionProductListingPagingDataModel().reloadData();*/
-		}
+	
 		// 20997 - end
 		/*Return when not call from tasklist*/
 		if(taskId==null) 
