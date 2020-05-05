@@ -729,6 +729,93 @@ public class QtSpecCloneBackingBean extends
 	}
 	
 	private ScQtCheckList setStatus(ScQtCheckList copy){
+		Long statusId = null;
+		if(null!=copy.getDefinationType() && ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
+				.equalsIgnoreCase(copy.getDefinationType()
+						.getParameterCode())){
+				copy.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+		}
+		
+		if (null!=copy.getDefinationType() && ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
+				.equalsIgnoreCase(copy.getDefinationType()
+						.getParameterCode())) {
+			copy.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
+		}
+		
+		if (null!=copy.getDefinationType() && ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
+					.equalsIgnoreCase(copy.getDefinationType()
+							.getParameterCode())) {
+			copy.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
+		}
+		
+		if (null!=copy.getDefinationType() && ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD_AND_DOWNLOAD
+				.equalsIgnoreCase(copy.getDefinationType()
+						.getParameterCode())) {
+		copy.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
+		}
+		
+		if (null!=copy.getDefinationType() && ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION
+				.equalsIgnoreCase(copy.getDefinationType()
+						.getParameterCode())) {
+		copy.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
+		}
+		
+
+		if(null!=copy.getDefinationType() && ParameterConst.DOCUMENT_DEFINITION_TYPE_SUPPLIER_UPLOAD_AND_DOWNLOAD
+			.equalsIgnoreCase(copy.getDefinationType()
+					.getParameterCode())){
+			copy.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
+		}
+		if(null!=copy.getDefinationType() && ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO
+				.equalsIgnoreCase(copy.getDefinationType()
+						.getParameterCode())){
+				copy.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
+			}
+		if(null!=copy.getDefinationType() && ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_DOCUMENT
+				.equalsIgnoreCase(copy.getDefinationType()
+						.getParameterCode())){
+				copy.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+			}
+		
+		
+		if(null!=copy.getDefinationType() && ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED
+				.equalsIgnoreCase(copy.getDefinationType()
+						.getParameterCode())){
+				statusId = null;
+				if(copy.getPmDocument().getDocumentId().equals(309L) || copy.getPmDocument().getDocumentId().equals(317L)){
+					if (!copy.isScoringReq()) {
+						statusId = QTStatusConst.TS_COMPLETED;
+					} else {
+						statusId = QTStatusConst.TS_PENDING_SUBMISSION;
+					}
+					copy.setPmStatus(getPmStatusByStatusId(statusId));
+				}else{
+					copy.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+				}
+				
+				
+			}
+		if(null!=copy.getDefinationType() && ParameterConst.DOCUMENT_DEFINITION_TYPE_WEB_FORM
+				.equalsIgnoreCase(copy.getDefinationType()
+						.getParameterCode())){
+			statusId = null;
+			if(copy.getPmDocument().getDocumentId().equals(314L) || copy.getPmDocument().getDocumentId().equals(313L)){
+				if (!copy.isScoringReq()) {
+					statusId = QTStatusConst.TS_COMPLETED;
+				} else {
+					statusId = QTStatusConst.TS_PENDING_SUBMISSION;
+				}
+				copy.setPmStatus(getPmStatusByStatusId(statusId));
+			}else{
+				copy.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+			}
+		}
+		
+		copy.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+		return copy;
+	}
+	
+	private ScQtCheckList setStatus2(ScQtCheckList copy){
 		if (null != copy.getDefinationType()
 				&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
 						.equalsIgnoreCase(copy.getDefinationType()
