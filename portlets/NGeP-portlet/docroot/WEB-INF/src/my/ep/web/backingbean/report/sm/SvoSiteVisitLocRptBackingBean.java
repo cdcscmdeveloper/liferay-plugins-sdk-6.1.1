@@ -72,7 +72,7 @@ public class SvoSiteVisitLocRptBackingBean extends
 		params.put(SmReportConst.PARAM_DATE_TO,
 				df.format(getManagedBean().getDateTo()));
 
-		addCategoryParam(params);
+//		addCategoryParam(params);
 
 		generateSmReport(params);
 	}
