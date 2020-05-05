@@ -5490,7 +5490,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	}
 	
 
-	//[#25549]- Start
+	//25549 - start
 	
 	
 	public SelectItem[] getPlanPreviousYearOptions() {
@@ -5536,7 +5536,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				return ppCloneProcurementDataModel;
 			}
 
-			//[#25549]
+			//25549 - start
 			/**
 			 * @param ppCloneProcurementDataModel the ppCloneProcurementDataModel to set
 			 */
@@ -5545,7 +5545,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			}
 			
 			
-			//[#25549]
+			//25549 - end
 			
 			
 			/**
@@ -5714,7 +5714,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			
 			//EPItemBDataModel
 			
-			//[#25549]
+			//25549 - start
 					/**
 					 * @return the ppEpItemsBDataModel
 					 */
@@ -5723,7 +5723,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					
 					}
 
-					//[#25549]
+					//25549 - start
 					/**
 					 * @param ppEpItemsBDataModel the ppEpItemsBDataModel to set
 					 */
@@ -6534,9 +6534,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	
 	
     
-		//[#25549]-End
+		//25549 - end
 
-		//[#24795] 13/3/2020-Start
+		//24795 - start
 		
 		 public void addUpdateEpAllInfo(String paramCode, PpPlan ppPlan, Integer index) {
 		    	log.info("addUpdateExpenditureInfo");
@@ -6680,9 +6680,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	        List<Long> numberOfClones = new ArrayList<Long>();
 	 
 	    if (expenditureItems.size() > 1) {
-		    for (int i = 0; i < expenditureItems.size(); i++) {
-			 
-			   log.info("expenditureId clone " + expenditureItems.get(i).isCloned());
+		    for (int i = 0; i < expenditureItems.size(); i++) {		    	
+		    	
+			   log.info("expenditureId clone " + expenditureItems.get(i).isCloned());	
 				
 			   if (expenditureItems.get(i).isCloned()== true){
 			 
@@ -6695,15 +6695,21 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			   clonedEpItems.put(expenditureItems.get(i),
 					 expenditureItems.get(i - 1));
 			   
-			//#25479 - Start
+			 //25479 - start
 			   log.info("Original getRemarks = "+expenditureItems.get(i - 1).
 						 getExpenditureItemId()+", Remarks= "+
-					   expenditureItems.get(i - 1).getPpRemarks());
-			   if(expenditureItems.get(i - 1).getPpRemarks() == null ||
-			      expenditureItems.get(i - 1).getPpRemarks().isEmpty()){
-			   throw new EpException(MessageConst.ERROR_730035);
-		    }
-			 //#25479 - End
+						 expenditureItems.get(i- 1).getPpRemarks().get(0).getRemark());
+			   if(expenditureItems.get(i - 1).getPpRemarks()!=null && 
+					   expenditureItems.get(i - 1).getPpRemarks().isEmpty()
+					|| expenditureItems.get(i - 1).getPpRemarks().get(0)==null
+					|| StringUtils.isBlank(expenditureItems.get(i- 1).getPpRemarks().get(0).getRemark())){
+				   throw new EpException(MessageConst.ERROR_730035);
+			   }
+			   
+
+			 //25479 - end
+	    	
+			
 		 }
 	 
 
@@ -6817,7 +6823,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			}
 		}
 	}
-	
+	//25479 - end
+	//25479 - start
 	private void CheckDuplicatePpExpenditureItems(List<PpExpenditureItem> ppItems) {
 		log.info("Resetting PpItems...");
 		
@@ -6842,21 +6849,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							
 							ppItem.setBrandNew(false);
 						}
-					    if (ppItem.getExpenditureItemId().equals(commonExpenditureItemId)) {
-							ppItem.setCloneEnabled(true);
-							ppItem.setDisableForPindaan(true);
-							ppItem.setReasonForUpdateEnabled(true);
-							ppItem.setDisableEditAccount(true);
-							ppItem.setJustificationEnabled(true);
-						}
 					}
 				}
 			}
 		}
 	}
+	//25479 - end
 }
 
 
-  	
-		//[#25479 13/3/2020 - End ]
 			
