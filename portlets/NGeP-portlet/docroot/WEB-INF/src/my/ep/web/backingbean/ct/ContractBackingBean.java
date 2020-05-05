@@ -41,6 +41,7 @@ import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.ct.dtl.IContractZoneSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
@@ -4212,5 +4213,55 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		return getManagedBean().getContractVer().getCtContract().getCtFactoring().getAttachement();
 	}
 	
+	/*#21387 - basri start*/
+	public SelectItem[] getUsersByAgency() {
+		ISearchBean<PmUser> searchBean = contractAdminSearchBean();
+		IUserSO uSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 
+		ISearchResultBean<PmUser> resultBean = uSO.retrieveMinistryUserList(searchBean);
+		List<PmUser> pmUsers = resultBean.getResultList();
+		log.info("Number of Users = " + pmUsers.size());
+
+		SelectItem[] items = getDropdownUsers(pmUsers);
+		return items;
+	}
+
+	protected ISearchBean<PmUser> contractAdminSearchBean() {
+		ISearchBean<PmUser> searchBean = new SearchBean<PmUser>();
+
+		PmOrgProfile pmOrgProfile = this.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile();
+		String roleCode = contractAdminRoleCode();
+		
+		if (null != pmOrgProfile.getPmOrgValidity()) {
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmUserOrgs.pmOrgProfile.pmOrgValidity.orgCode", SearchOperator.OPERATOR_LIKE
+						.value(), pmOrgProfile.getPmOrgValidity().getOrgCode()));
+
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmUserOrgs.pmOrgProfile."
+						+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
+						SearchOperator.OPERATOR_EQUALS.value(), retrieveMinistryOrgProfile(
+								pmOrgProfile.getOrgProfileId()).getOrgProfileId()));
+		}
+		if (roleCode != null) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmUserOrgs.pmUserRoles.pmRole.roleCode", SearchOperator.OPERATOR_EQUALS
+							.value(), roleCode));
+		}
+
+		return searchBean;
+	}
+	
+
+	private String contractAdminRoleCode() {
+		String contractType = getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode();
+		String roleCode = null;
+		if (ParameterConst.CONTRACT_TYPE_MINISTRY.equals(contractType)) {
+			roleCode = RoleCode.MIN_CONTRACT_ADMIN.value();
+		} else if (ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType)) {
+			roleCode = RoleCode.BPK_CCA.value();
+		}
+		return roleCode;
+	}
+	/*#21387 - basri end*/
 }  
