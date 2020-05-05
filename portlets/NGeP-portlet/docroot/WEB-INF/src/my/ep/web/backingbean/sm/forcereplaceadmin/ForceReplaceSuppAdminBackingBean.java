@@ -373,10 +373,10 @@ public class ForceReplaceSuppAdminBackingBean extends
 		SmAppl activeAppl = SmServiceLookup.getMofRegistrationSO()
 				.retrieveActiveSmApplBySupp(mofReqDTO).getSmAppl();
 
-		/*if (activeAppl != null) {
-			throw new EpException(MessageConst.ERROR_722669,
+		if (activeAppl != null) {
+			throw new EpException(MessageConst.ERROR_722681,
 					new String[] { activeAppl.getApplNo() });
-		}*/
+		}
 
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setSmSupplierId(getManagedBean().getSmSupplier().getSupplierId());
@@ -475,18 +475,6 @@ public class ForceReplaceSuppAdminBackingBean extends
 			}
 		}
 		
-		//#26050 - start
-		if (getManagedBean().getOldAdmin() != null && !StringUtils.isBlank(getManagedBean().getOldAdmin().getPmUser().getLoginId())
-				&& PmCommonUtil.isAnyPendingTask(getManagedBean().getOldAdmin().getPmUser().getLoginId())) {
-			if (activeAppl != null) {
-				throw new EpException(MessageConst.ERROR_722681, new String[] { activeAppl.getApplNo() });
-			} else {
-				throw new EpException(MessageConst.ERROR_770167);
-			}
-		}
-		//#26050 - start
-		
-		/*
 		// [#26050] check if selected old admin does have any pending task
 		if (getManagedBean().getOldAdmin() != null) {
 			//log.info("[#26050] Old Admin login Id: " + getManagedBean().getOldAdmin().getPmUser().getLoginId());
@@ -495,8 +483,6 @@ public class ForceReplaceSuppAdminBackingBean extends
 				throw new EpException(MessageConst.ERROR_770167);
 			}				
 		}
-		*/
-		
 		listenerChangeRole();
 	}
 
