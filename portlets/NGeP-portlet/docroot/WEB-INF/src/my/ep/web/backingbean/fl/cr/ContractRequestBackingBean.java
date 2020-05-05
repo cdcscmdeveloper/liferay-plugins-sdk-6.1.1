@@ -3984,7 +3984,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().setBackFlag(1);
 		if(getCrListSearchContractListDD()!=null){
 			getManagedBean().setSearchContractListDD(getCrListSearchContractListDD());
-			
+			/**getCrListSearchContractListDD() == 7 is Fulfillment Type 
+			 * getCrListSearchContractListDD() == 8 is Contract Type**/
 			if(getCrListSearchContractListDD() == 7 || getCrListSearchContractListDD() == 8){
 				 getManagedBean().setTypes(true);
 			 }
@@ -5930,7 +5931,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}else{
 				getManagedBean().setBackFlag(0);
 			}
-			//start-13984 - CrList - Back Button
+			//end-13984 - CrList - Back Button
 			List<String> contractCriteriaList = new ArrayList<String>();
 			contractCriteriaList.add(ResourceBundleUtils.getMessage(
 					"lbl.fl.physical.contract.no", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -6050,6 +6051,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().setTypes(false);
 		getManagedBean().setSearchTypesDD(null);
 		if(getManagedBean().getSearchContractListDD() != null){
+			/**getSearchContractListDD() == 7 is Fulfillment Type 
+			 * getSearchContractListDD() == 8 is Contract Type**/
 			 if(getManagedBean().getSearchContractListDD() == 7 || getManagedBean().getSearchContractListDD() == 8){
 				 getManagedBean().setTypes(true);
 			 }
@@ -6070,7 +6073,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		//start-13984 - CrList - Back Button
 		if(getManagedBean().getSearchContractListDD()!=null){
 			setCrListSearchContractListDD(getManagedBean().getSearchContractListDD());
-			
+			/**getSearchContractListDD() == 7 is Fulfillment Type 
+			 * getSearchContractListDD() == 8 is Contract Type**/
 			if(getManagedBean().getSearchContractListDD() == 7 || getManagedBean().getSearchContractListDD() == 8){
 				if(getManagedBean().getSearchTypesDD()!=null){
 					setCrListSearchTypesDD(getManagedBean().getSearchTypesDD());
