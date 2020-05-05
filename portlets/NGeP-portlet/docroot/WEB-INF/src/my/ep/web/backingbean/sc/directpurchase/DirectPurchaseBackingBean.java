@@ -646,26 +646,10 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	 * @param dpObj
 	 */
 	public void performViewDoc(Object[] dpObj) {
-		if (showFunctionType()) {
-			if (ParameterConst.DOCTYPE_SIMPLE_QUOTE.equals(getManagedBean().getSearchDocumentType())) {
-                if (!getManagedBean().isG2G()) {
-                	this.viewDoc(dpObj);
-                } else {
-                	this.viewDocSupplierSQ(dpObj);
-                }
-			} else {
-				this.viewDoc(dpObj);
-			}
+		if (getManagedBean().isG2G()) { 
+			this.viewDocSupplierSQ(dpObj);
 		} else {
-			if (ParameterConst.ORG_TYPE_PTJ.equals(getManagedBean().getSearchFunctionType())) {
-				this.viewDoc(dpObj);
-			} else {
-				if (ParameterConst.DOCTYPE_SIMPLE_QUOTE.equals(getManagedBean().getSearchDocumentType())) {
-					this.viewDocSupplierSQ(dpObj);
-				} else {
-					this.viewDoc(dpObj);
-				}
-			}
+			this.viewDoc(dpObj);
 		}
 	}
 	
