@@ -11,7 +11,6 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -76,7 +75,6 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
-import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.type.pm.OrganizationType;
@@ -136,8 +134,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	private static final String PROCESS_SUSPEND_PAGE = "/xhtml/ct/fulfilmentdetails/suspension/suspendTab.xhtml?faces-redirect=true";
 	private static final String CHANGE_BANK_ACCOUNT_PAGE = "/xhtml/ct/supplier/bank/changeBankAccount.xhtml?faces-redirect=true";
 	private static final String REQUEST_FACTORING_PAGE = "/xhtml/ct/supplier/factoring/requestOfFactoring.xhtml?faces-redirect=true";
-	private static final String REQUEST_CONTRACT_ADMIN = "/xhtml/ct/fulfilmentdetails/contractadmin/requestContractAdmin.xhtml";/*#21387-basri*/
-
+	/*#21387-basri start*/
+	private static final String REQUEST_CONTRACT_ADMIN = "/xhtml/ct/fulfilmentdetails/contractadmin/requestContractAdmin.xhtml?faces-redirect=true";/*#21387-basri*/
+	/*#21387-basri end*/
 	private String proceedForFulfilmentMsg;
 	private ContractBackingBean ctBB = null;
 
@@ -2030,40 +2029,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		return false;
 	}
 
-	/**
-	 * The method ised to navigate to request or remove contract admin
-	 * @param contractId
-	 * @return the navigate URL
-	 */
 	
-	/*#21387-basri*/
-	 public String goToRequestCtAdmin(Long contractId){
-		 
-		IContractSO contractSO = null;
-		try{
-			 contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-			ContractReqDTO reqDTO = new ContractReqDTO();
-			reqDTO.setContractId(contractId);
-			reqDTO.setContractVerId(contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId());
-			
-			reqDTO.setUpdateAction(true);
-			/*reqDTO.setDocType(ParameterConst.DOCTYPE_NOTIFICATION_SETTING); */
-			ctBB.getManagedBean().setViewContract(false);
-			ctBB.getManagedBean().setUpdateContract(true);
-			ctBB.getManagedBean().setNotificationSetting(false);
-			ctBB.getManagedBean().setCtAddress(null);
-			setValidateContractField(reqDTO);
-			getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
-			ctBB.chkServiceTaxAlert();
-			getManagedBean().setExternalPageUrl(null);
-			getManagedBean().setSelectedTabIndex(0);	
-			return REQUEST_CONTRACT_ADMIN;
-		}finally{
-			contractSO = null;
-		}
-		
-	 }
 	
 	/**
 	 * The method used to navigate to contract termination screen
@@ -2099,6 +2065,34 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 		return PROCESS_TERMINATE_PAGE;
 	} 
+	
+	/**
+	 * The method ised to navigate to request or remove contract admin
+	 * @param contractId
+	 * @return the navigate URL
+	 */
+	
+	/*#21387-basri start*/
+	 public String goToRequestCtAdmin(Long contractId){
+		 
+		 	IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+			ContractReqDTO reqDTO = new ContractReqDTO();
+			reqDTO.setContractId(contractId);
+			Long contractVerId = contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId();
+			
+			reqDTO.setContractVerId(contractVerId);
+			reqDTO.setDocType(ParameterConst.DOCTYPE_REQUEST_CT_ADMIN);
+			reqDTO.setUpdateAction(true);
+			ctBB.getManagedBean().setNotificationSetting(false);
+			RequestCtAdminBackingBean	rcaBB = new RequestCtAdminBackingBean();
+			rcaBB.getManagedBean().setViewOnly(false);
+			rcaBB.getManagedBean().setExternalPageUrl(null);
+			rcaBB.setRequestCtAdminContractVer(reqDTO);
+			return REQUEST_CONTRACT_ADMIN;
+		
+		
+	 }
+	 /*#21387-basri end*/
 
 	/**
 	 * The method used to navigate to contract suspension screen
