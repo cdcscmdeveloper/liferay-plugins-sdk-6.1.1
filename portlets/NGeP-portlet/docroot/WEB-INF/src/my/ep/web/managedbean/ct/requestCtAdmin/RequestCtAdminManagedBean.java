@@ -1,5 +1,6 @@
 package my.ep.web.managedbean.ct.requestCtAdmin;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
+import my.ep.persistence.entity.ct.terminate.CtTermination;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -24,195 +26,342 @@ import my.ep.web.managedbean.BaseManagedBean;
 @SessionScoped
 public class RequestCtAdminManagedBean extends BaseManagedBean{
 	
-	private  boolean readOnly=true;
+	
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String taskName;
+	private String userLoginId;
+	private String externalPageUrl;
 	private String fileDirectory;
 	private String textBeforeSign;
 	private String buttonAction;
-	private String searchItemString;
-	private String contractId;
-	private String itemtype;
-	private String itemcode;
-	private String itemstatus;
-	private String skuno;
-	private String UOM;
-	private String typeofgoods;
+	private String ptjCodeName;
+	private String noticeTypelbl;
+	private String ptjCodeNameSearchValue;
 
+	
+	private boolean remedy;
 	private boolean autoUpdate = true;
 	private boolean viewOnly = false;
-	
+	private boolean  buttonHideActive = true;
+	private boolean  selectAll;
+	private boolean  disableField;
+
+	private List<CtRemark> remarkList;
+	private List<CtAttachment> attachmentList;
+	private DualListModel<PmUser> approverModel;
+	private Map<Long, PmUser> userMap;
+
 	private PmDigiSign pmDigiSign;
 	private CtContract ctContract;
 	private CtContractVer contractVer;
-	private CtContractItem selectedItemForSpec;
-	private List<CtRemark> remarkList;
-	private List<CtAttachment> attachmentList;
-	private List<CtContractItem> contractItemList;
-	private HashMap<Long, CtAgency> agencyMap;
-	private HashMap<Long, CtContractItem> itemMap;	
-	private DualListModel<PmUser> approverModel;
-	private Map<Long, PmUser> userMap;
 	
-	
-	public PmDigiSign getPmDigiSign() {
-		return pmDigiSign;
-	}
-	public void setPmDigiSign(PmDigiSign pmDigiSign) {
-		this.pmDigiSign = pmDigiSign;
-	}
-	public CtContract getCtContract() {
-		return ctContract;
-	}
-	public void setCtContract(CtContract ctContract) {
-		this.ctContract = ctContract;
-	}
-	public CtContractVer getContractVer() {
-		return contractVer;
-	}
-	public void setContractVer(CtContractVer contractVer) {
-		this.contractVer = contractVer;
-	}
-	public CtContractItem getSelectedItemForSpec() {
-		return selectedItemForSpec;
-	}
-	public void setSelectedItemForSpec(CtContractItem selectedItemForSpec) {
-		this.selectedItemForSpec = selectedItemForSpec;
-	}
-	public List<CtRemark> getRemarkList() {
-		return remarkList;
-	}
-	public void setRemarkList(List<CtRemark> remarkList) {
-		this.remarkList = remarkList;
-	}
-	public List<CtAttachment> getAttachmentList() {
-		return attachmentList;
-	}
-	public void setAttachmentList(List<CtAttachment> attachmentList) {
-		this.attachmentList = attachmentList;
-	}
-	public List<CtContractItem> getContractItemList() {
-		return contractItemList;
-	}
-	public void setContractItemList(List<CtContractItem> contractItemList) {
-		this.contractItemList = contractItemList;
-	}
-	public HashMap<Long, CtAgency> getAgencyMap() {
-		return agencyMap;
-	}
-	public void setAgencyMap(HashMap<Long, CtAgency> agencyMap) {
-		this.agencyMap = agencyMap;
-	}
-	public HashMap<Long, CtContractItem> getItemMap() {
-		return itemMap;
-	}
-	public void setItemMap(HashMap<Long, CtContractItem> itemMap) {
-		this.itemMap = itemMap;
-	}
-	public DualListModel<PmUser> getApproverModel() {
-		return approverModel;
-	}
-	public void setApproverModel(DualListModel<PmUser> approverModel) {
-		this.approverModel = approverModel;
-	}
-	public Map<Long, PmUser> getUserMap() {
-		return userMap;
-	}
-	public void setUserMap(Map<Long, PmUser> userMap) {
-		this.userMap = userMap;
-	}
-	public boolean isReadOnly() {
-		return readOnly;
-	}
-	public void setReadOnly(boolean readOnly) {
-		this.readOnly = readOnly;
-	}
+	/**
+	 * @return the taskName
+	 */
 	public String getTaskName() {
 		return taskName;
 	}
+
+	/**
+	 * @param taskName the taskName to set
+	 */
 	public void setTaskName(String taskName) {
 		this.taskName = taskName;
 	}
-	public String getFileDirectory() {
-		return fileDirectory;
+
+	/**
+	 * @return the ctContract
+	 */
+	public CtContract getCtContract() {
+		return ctContract;
 	}
-	public void setFileDirectory(String fileDirectory) {
-		this.fileDirectory = fileDirectory;
+
+	/**
+	 * @param ctContract the ctContract to set
+	 */
+	public void setCtContract(CtContract ctContract) {
+		this.ctContract = ctContract;
 	}
-	public String getTextBeforeSign() {
-		return textBeforeSign;
+
+	/**
+	 * @return the contractVer
+	 */
+	public CtContractVer getContractVer() {
+		return contractVer;
 	}
-	public void setTextBeforeSign(String textBeforeSign) {
-		this.textBeforeSign = textBeforeSign;
+
+	/**
+	 * @param contractVer the contractVer to set
+	 */
+	public void setContractVer(CtContractVer contractVer) {
+		this.contractVer = contractVer;
 	}
-	public String getButtonAction() {
-		return buttonAction;
+
+	/**
+	 * @return the userLoginId
+	 */
+	public String getUserLoginId() {
+		return userLoginId;
 	}
-	public void setButtonAction(String buttonAction) {
-		this.buttonAction = buttonAction;
+
+	/**
+	 * @param userLoginId the userLoginId to set
+	 */
+	public void setUserLoginId(String userLoginId) {
+		this.userLoginId = userLoginId;
 	}
-	public String getSearchItemString() {
-		return searchItemString;
+
+	/**
+	 * @return the remarkList
+	 */
+	public List<CtRemark> getRemarkList() {
+		if (remarkList == null)
+			remarkList = new ArrayList<CtRemark>();
+		return remarkList;
 	}
-	public void setSearchItemString(String searchItemString) {
-		this.searchItemString = searchItemString;
+
+	/**
+	 * @param remarkList the remarkList to set
+	 */
+	public void setRemarkList(List<CtRemark> remarkList) {
+		this.remarkList = remarkList;
 	}
-	public String getContractId() {
-		return contractId;
+
+	/**
+	 * @return the attachmentList
+	 */
+	public List<CtAttachment> getAttachmentList() {
+		if (attachmentList == null)
+			attachmentList = new ArrayList<CtAttachment>();
+		return attachmentList;
 	}
-	public void setContractId(String contractId) {
-		this.contractId = contractId;
+
+	/**
+	 * @param attachmentList the attachmentList to set
+	 */
+	public void setAttachmentList(List<CtAttachment> attachmentList) {
+		this.attachmentList = attachmentList;
 	}
-	public String getItemtype() {
-		return itemtype;
+
+	/**
+	 * @return the remedy
+	 */
+	public boolean isRemedy() {
+		return remedy;
 	}
-	public void setItemtype(String itemtype) {
-		this.itemtype = itemtype;
+
+	/**
+	 * @param remedy the remedy to set
+	 */
+	public void setRemedy(boolean remedy) {
+		this.remedy = remedy;
 	}
-	public String getItemcode() {
-		return itemcode;
-	}
-	public void setItemcode(String itemcode) {
-		this.itemcode = itemcode;
-	}
-	public String getItemstatus() {
-		return itemstatus;
-	}
-	public void setItemstatus(String itemstatus) {
-		this.itemstatus = itemstatus;
-	}
-	public String getSkuno() {
-		return skuno;
-	}
-	public void setSkuno(String skuno) {
-		this.skuno = skuno;
-	}
-	public String getUOM() {
-		return UOM;
-	}
-	public void setUOM(String uOM) {
-		UOM = uOM;
-	}
-	public String getTypeofgoods() {
-		return typeofgoods;
-	}
-	public void setTypeofgoods(String typeofgoods) {
-		this.typeofgoods = typeofgoods;
-	}
-	public boolean isAutoUpdate() {
-		return autoUpdate;
-	}
-	public void setAutoUpdate(boolean autoUpdate) {
-		this.autoUpdate = autoUpdate;
-	}
+
+
+	/**
+	 * @return the viewOnly
+	 */
 	public boolean isViewOnly() {
 		return viewOnly;
 	}
+
+	/**
+	 * @param viewOnly the viewOnly to set
+	 */
 	public void setViewOnly(boolean viewOnly) {
 		this.viewOnly = viewOnly;
 	}
-	
-	
-	
-	
+
+
+	/**
+	 * @return the externalPageUrl
+	 */
+	public String getExternalPageUrl() {
+		return externalPageUrl;
+	}
+
+	/**
+	 * @param externalPageUrl the externalPageUrl to set
+	 */
+	public void setExternalPageUrl(String externalPageUrl) {
+		this.externalPageUrl = externalPageUrl;
+	}
+
+	/**
+	 * @return the fileDirectory
+	 */
+	public String getFileDirectory() {
+		return fileDirectory;
+	}
+
+	/**
+	 * @param fileDirectory the fileDirectory to set
+	 */
+	public void setFileDirectory(String fileDirectory) {
+		this.fileDirectory = fileDirectory;
+	}
+
+	/**
+	 * @return the pmDigiSign
+	 */
+	public PmDigiSign getPmDigiSign() {
+		return pmDigiSign;
+	}
+
+	/**
+	 * @param pmDigiSign the pmDigiSign to set
+	 */
+	public void setPmDigiSign(PmDigiSign pmDigiSign) {
+		this.pmDigiSign = pmDigiSign;
+	}
+
+	/**
+	 * @return the autoUpdate
+	 */
+	public boolean isAutoUpdate() {
+		return autoUpdate;
+	}
+
+	/**
+	 * @param autoUpdate the autoUpdate to set
+	 */
+	public void setAutoUpdate(boolean autoUpdate) {
+		this.autoUpdate = autoUpdate;
+	}
+
+	/**
+	 * @return the textBeforeSign
+	 */
+	public String getTextBeforeSign() {
+		return textBeforeSign;
+	}
+
+	/**
+	 * @param textBeforeSign the textBeforeSign to set
+	 */
+	public void setTextBeforeSign(String textBeforeSign) {
+		this.textBeforeSign = textBeforeSign;
+	}
+
+	/**
+	 * @return the buttonAction
+	 */
+	public String getButtonAction() {
+		return buttonAction;
+	}
+
+	/**
+	 * @param buttonAction the buttonAction to set
+	 */
+	public void setButtonAction(String buttonAction) {
+		this.buttonAction = buttonAction;
+	}
+
+	/**
+	 * @return the approverModel
+	 */
+	public DualListModel<PmUser> getApproverModel() {
+		return approverModel;
+	}
+
+	/**
+	 * @param approverModel the approverModel to set
+	 */
+	public void setApproverModel(DualListModel<PmUser> approverModel) {
+		this.approverModel = approverModel;
+	}
+
+	/**
+	 * @return the userMap
+	 */
+	public Map<Long, PmUser> getUserMap() {
+		if(userMap==null) {
+			userMap = new HashMap<Long, PmUser>();
+		}
+		return userMap;
+	}
+
+	/**
+	 * @param userMap the userMap to set
+	 */
+	public void setUserMap(Map<Long, PmUser> userMap) {
+		this.userMap = userMap;
+	}
+
+	/**
+	 * @return the ptjCodeName
+	 */
+	public String getPtjCodeName() {
+		return ptjCodeName;
+	}
+
+	/**
+	 * @param ptjCodeName the ptjCodeName to set
+	 */
+	public void setPtjCodeName(String ptjCodeName) {
+		this.ptjCodeName = ptjCodeName;
+	}
+
+	/**
+	 * @return the ptjCodeNameSearchValue
+	 */
+	public String getPtjCodeNameSearchValue() {
+		return ptjCodeNameSearchValue;
+	}
+
+	/**
+	 * @param ptjCodeNameSearchValue the ptjCodeNameSearchValue to set
+	 */
+	public void setPtjCodeNameSearchValue(String ptjCodeNameSearchValue) {
+		this.ptjCodeNameSearchValue = ptjCodeNameSearchValue;
+	}
+
+	/**
+	 * @return the buttonHideActive
+	 */
+	public boolean isButtonHideActive() {
+		return buttonHideActive;
+	}
+
+	/**
+	 * @param buttonHideActive the buttonHideActive to set
+	 */
+	public void setButtonHideActive(boolean buttonHideActive) {
+		this.buttonHideActive = buttonHideActive;
+	}
+
+	/**
+	 * @return the selectAll
+	 */
+	public boolean isSelectAll() {
+		return selectAll;
+	}
+
+	/**
+	 * @param selectAll the selectAll to set
+	 */
+	public void setSelectAll(boolean selectAll) {
+		this.selectAll = selectAll;
+	}
+
+	public String getNoticeTypelbl() {
+		return noticeTypelbl;
+	}
+
+	public void setNoticeTypelbl(String noticeTypelbl) {
+		this.noticeTypelbl = noticeTypelbl;
+	}
+
+	public boolean isDisableField() {
+		return disableField;
+	}
+
+	public void setDisableField(boolean disableField) {
+		this.disableField = disableField;
+	}
 
 }
