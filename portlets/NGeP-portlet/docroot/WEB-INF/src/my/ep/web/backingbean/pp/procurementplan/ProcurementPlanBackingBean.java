@@ -6698,7 +6698,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			 //25479 - start
 			   log.info("Original getRemarks = "+expenditureItems.get(i - 1).
 						 getExpenditureItemId()+", Remarks= "+
-						 expenditureItems.get(i- 1).getPpRemarks().get(0).getRemark());
+						 expenditureItems.get(i - 1).getPpRemarks());
 			   if(expenditureItems.get(i - 1).getPpRemarks()!=null && 
 					   expenditureItems.get(i - 1).getPpRemarks().isEmpty()
 					|| expenditureItems.get(i - 1).getPpRemarks().get(0)==null
