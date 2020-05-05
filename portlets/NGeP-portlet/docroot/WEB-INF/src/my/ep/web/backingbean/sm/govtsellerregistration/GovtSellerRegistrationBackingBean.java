@@ -161,7 +161,8 @@ public class GovtSellerRegistrationBackingBean extends
 						sb.append("<br/>");
 					}
 					if(bank.isHasActiveTransactionFulfilment()){
-						bank.setDisplayMessageBank(SmCommonUtil.getMessage("lbl.sm.bankDtls.is.other.active.contract.tied",	null));
+						sb.append(SmCommonUtil.getMessage("lbl.sm.bankDtls.is.other.active.contract.tied",null));
+						sb.append("<br/>");
 					}
 					sb.append("</font>");
 					bank.setDisplayMessageBank(sb.toString());
