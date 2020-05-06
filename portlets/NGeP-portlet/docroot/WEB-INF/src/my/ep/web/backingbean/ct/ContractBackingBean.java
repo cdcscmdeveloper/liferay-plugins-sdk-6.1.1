@@ -1917,6 +1917,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			Long minstryId = retrieveMinistryOrgProfile(
 					getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId();
 			getManagedBean().setOwnerOrgProfile(true);
+			//#25703 start - testing dev, delete agency not working.
+			/*
 			for(CtAgency agencies : getManagedBean().getContractVer().getCtAgencies()){
 				if(!minstryId.equals(agencies.getOrgProfile().getMinstryId())){
 					getManagedBean().setOwnerOrgProfile(false);
@@ -1924,6 +1926,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					break;
 				}
 			}
+			*/
+			//#25703 end - testing dev, delete agency not working.
 
 			if(getManagedBean().isSelectAll()){
 				getManagedBean().setSelectAll(false);
