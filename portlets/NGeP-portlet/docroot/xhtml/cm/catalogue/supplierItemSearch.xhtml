@@ -317,7 +317,7 @@
 									<p:ajax event="toggleSelect"
 										update="@(.ui-button[id$=compareButton])" />
 								</ui:remove>
-
+								<!-- # 2020/05/05 - 27626 - start -->
 								<p:column headerText="#{lbl['lbl.cm.item.code']}" width="8%">
 									<h:panelGroup rendered="#{supplierItem.imagePath == null}">
 
@@ -326,9 +326,9 @@
 								#{lbl['lbl.cm.no.image.available']}
 								
 								</p:outputPanel>
-
-										<h:outputText value="#{supplierItem.itemCode}"></h:outputText>
-
+											
+											
+															
 									</h:panelGroup>
 									<h:panelGroup rendered="#{supplierItem.imagePath != null}">
 										<img
@@ -336,10 +336,12 @@
 											style="height: 80px; left: 0px !important;" />
 										
 										<br />
-											
-											<h:outputText value="#{supplierItem.itemCode}"></h:outputText>
+										
+										
 									</h:panelGroup>
+									<h:outputText value="#{supplierItem.itemCode.charAt(0) != '0' ? supplierItem.itemCode : null }"></h:outputText>
 								</p:column>
+								<!-- # 2020/05/05 - 27626 - end -->
 
 								<p:column headerText="#{lbl['lbl.cm.item.name']}"
 									style="white-space: normal">
