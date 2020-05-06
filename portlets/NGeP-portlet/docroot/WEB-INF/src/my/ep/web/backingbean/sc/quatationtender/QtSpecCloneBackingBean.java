@@ -1849,6 +1849,7 @@ public class QtSpecCloneBackingBean extends
 						if(null!=check.getQtScoreWeightage()){
 							ScQtScoreWeightage scoreWeightage = new ScQtScoreWeightage();
 							scoreWeightage.setScore(check.getQtScoreWeightage().getScore());
+							scoreWeightage.setWeightage(check.getQtScoreWeightage().getWeightage());
 							val.setQtScoreWeightage(scoreWeightage);
 							setUserDetails(val.getQtScoreWeightage());
 						}
