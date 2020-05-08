@@ -44,7 +44,9 @@
 				
 				<td width="10%"><h:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
 				<td class="header-info-text">
-					#{qTDetailBB.getStatusDescById(qTDetailBB.managedBean.currentStatusId)}
+				<ui:param name="statusId" value="#{qTDetailBB.retirveStatusId()}" />
+				#{qTDetailBB.getStatusDescById(statusId)}
+					
 				</td>
 			</tr>
 		</table>
