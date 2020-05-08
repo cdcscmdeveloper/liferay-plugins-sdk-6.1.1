@@ -190,7 +190,11 @@ public class SupplierDataMaintenanceBackingBean extends
 		RegistrationResDTO regResDTO = reqSO.retrieveSuppOnlineAcc(regReqDTO);
 		getManagedBean().setSmSuppOwner(new SmSupplierOwner());
 		getManagedBean().setApplType(getManagedBean().getSmAppl().getApplType());
-		
+		//START 28166 - Disciplinary Action - 26238
+		if(regResDTO.getSmSupp().getSmAppl() !=null && regResDTO.getSmSupp().getSmAppl().getSmAssociationBodies() != null){
+			getManagedBean().getSmAppl().setSmAssociationBodies(regResDTO.getSmSupp().getSmAppl().getSmAssociationBodies());
+		}
+		//END 28166 - Disciplinary Action - 26238
 		if(regResDTO.getSmSupp().getSmSupplierOwners()!=null && CollectionUtils.isNotEmpty(regResDTO.getSmSupp().getSmSupplierOwners())){
 			getManagedBean().setSmSuppOwner(regResDTO.getSmSupp().getSmSupplierOwners().get(0));
 			getManagedBean().setSmSuppOwners(regResDTO.getSmSupp().getSmSupplierOwners());
