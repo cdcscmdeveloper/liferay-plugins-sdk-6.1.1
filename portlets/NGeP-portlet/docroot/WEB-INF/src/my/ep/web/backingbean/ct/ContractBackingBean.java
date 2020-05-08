@@ -1863,6 +1863,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					CtAgency agency = agencyIterator.next();
 					if (agency.isSelectedCheckBox()) {
 						agencyIterator.remove();
+						//#25703 start - testing dev, delete agency not working.
+						/* 
 						if (getManagedBean().getCtItemList() != null && getManagedBean().getCtItemList().size() > 0) {
 							for (CtContractItem contractItem: this.getManagedBean().getCtItemList()) {
 								Iterator<CtItemCeilingQty> ctItemCeilingQtyIterator =  contractItem.getCtItemCeilingQties().iterator();
@@ -1875,6 +1877,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 								}
 							}	
 						}
+						*/
+						//#25703 end - testing dev, delete agency not working.
 						//CT_CHANGE_LOG
 						if((agency.isBrandNew() && !agency.isCloned()) || 
 								getManagedBean().getNewAgencyMap().containsKey(agency.getOrgProfile().getOrgCode())) {
@@ -1913,12 +1917,12 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			this.getManagedBean().setSelectedAgency(null);
 			getManagedBean().setButtonHideActive(true);
 			
-
+			//#25703 start - testing dev, delete agency not working.
+			/*
 			Long minstryId = retrieveMinistryOrgProfile(
 					getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId();
 			getManagedBean().setOwnerOrgProfile(true);
-			//#25703 start - testing dev, delete agency not working.
-			/*
+			
 			for(CtAgency agencies : getManagedBean().getContractVer().getCtAgencies()){
 				if(!minstryId.equals(agencies.getOrgProfile().getMinstryId())){
 					getManagedBean().setOwnerOrgProfile(false);
