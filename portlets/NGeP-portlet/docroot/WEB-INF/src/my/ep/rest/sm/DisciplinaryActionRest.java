@@ -1,5 +1,9 @@
 package my.ep.rest.sm;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Date;
 import java.util.List;
 
@@ -28,6 +32,37 @@ public class DisciplinaryActionRest {
 	@GET
 	@Path("smdisciplinaryaction") 
 	public Response retrieveDisciplinaryAction() {
+		String url = "https://www.eperolehan.gov.my/NGeP-portlet/rest/pm/createliferay";
+		try {
+			log.info("sending 'GET' request to URL : " + url);
+
+			URL obj = new URL(url);
+			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+			// optional default is GET
+			con.setRequestMethod("GET");
+
+			int responseCode = con.getResponseCode();
+			log.info("Response Code : " + responseCode);
+
+			BufferedReader in = new BufferedReader(new InputStreamReader(
+					con.getInputStream()));
+			String inputLine;
+			StringBuffer response = new StringBuffer();
+
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine);
+			}
+			in.close();
+
+			// print result
+			log.info(response.toString());
+
+		} catch (Exception ex) {
+			log.error(ex);
+		} finally {
+			log.info("Update Disciplinary Action - after call UpdateDisciplinaryActionJob");
+		}
 		log.info("Before success calling retrieve rest api....");
 		try {
 			//27426 : Disciplinary Action - start
@@ -38,11 +73,16 @@ public class DisciplinaryActionRest {
 			
 			if(releaseDAList.getSmDisciplinaryActions() != null
 					&& releaseDAList.getSmDisciplinaryActions().size() > 0){
+				log.info("releaseDAList.getSmDisciplinaryActions()=============="+releaseDAList.getSmDisciplinaryActions().size());
+				int i = 0;
 				for (SmDisciplinaryAction disc : releaseDAList.getSmDisciplinaryActions()) {
 					if(disc != null
 							&& disc.getSmSupplier() != null){
 						disc.getSmSupplier();
+						log.info("-----------Bilangan------------------"+i);
 						SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(disc);	
+						log.info("-----------After------------------"+i);
+						i++;
 					}										
 				}
 			}
