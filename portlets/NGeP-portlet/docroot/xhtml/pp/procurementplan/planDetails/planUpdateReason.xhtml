@@ -29,7 +29,9 @@
 						<p:inputTextarea cols="40" value="#{reason.reasonDesc}" rendered="#{reason.editable or reason.brandNew}"
 							 maxlength="200"
 							 onkeyup="limitTextArea(this,200);"
-							onkeydown="limitTextArea(this,200);">
+							onkeydown="limitTextArea(this,200);"
+							required="#{!empty param['disableValidation']}">
+							<p:ajax event="change" process="@this" />
 						</p:inputTextarea>
 						<!-- enable this for phase 2 and disable phase 1 section to test 
 						<p:inputTextarea id="itaReason" cols="40" value="#{reason.reasonDesc}" 
