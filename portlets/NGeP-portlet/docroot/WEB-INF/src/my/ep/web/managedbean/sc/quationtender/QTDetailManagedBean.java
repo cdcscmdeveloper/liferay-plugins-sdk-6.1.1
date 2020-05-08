@@ -1628,7 +1628,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private int attachFileIndex; 
 	private String fileDirectory;
 	// 26095@hatta*** - end
-
+	
+	//#25692-start
+	private Long subStatusId;
+	private List<String> paramTypes = null;
+	//#25692-End
 	/**
 	 * Sets the panel suppliers.
 	 * 
@@ -10308,6 +10312,40 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			this.markDeletedScQtScoreSettingOverall = markDeletedScQtScoreSettingOverall;
 		}
 		//#25635 danial end
+		
+		//#25692 start
+
+		/**
+		 * @return the subStatusId
+		 */
+		public Long getSubStatusId() {
+			return subStatusId;
+		}
+
+		/**
+		 * @param subStatusId the subStatusId to set
+		 */
+		public void setSubStatusId(Long subStatusId) {
+			this.subStatusId = subStatusId;
+		}
+
+		/**
+		 * @return the paramTypes
+		 */
+		public List<String> getParamTypes() {
+			return paramTypes;
+		}
+
+		/**
+		 * @param paramTypes the paramTypes to set
+		 */
+		public void setParamTypes(List<String> paramTypes) {
+			this.paramTypes = paramTypes;
+		}
+		
+		
+		//#25692 End
+		
 	
 }
 
