@@ -212,6 +212,7 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
+import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
 import my.ep.web.backingbean.sc.loa.DirectLOABackingBean;
 import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
 import my.ep.web.backingbean.sc.loa.QtLOABackingBean;
@@ -2755,6 +2756,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 		List<TabBean> committeTabs = this.getManagedBean()
 				.getScCommitteeMemberTabList();
+		 if(getUserTaskIsCommitteeAppointmentApprovalEcOcTecFec() && isApprovalScreen()){
+			 log.debug("====mangaNewCodesExecuted========");
+			 committeTabs=null;
+		 }
 		Long qtId = scQt.getQtId();
 		if (null == committeTabs) {
 			String evaluationType = this.getManagedBean().getQt()
@@ -3036,6 +3041,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			Long qtId = null;
 			Object payLoad = getBpmTaskDetails(Object.class, null);
 			String taskName = this.getManagedBean().getTaskName();
+			this.getManagedBean().setSubStatusId(null); //#25692
 			if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)
 					|| SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
 							.equalsIgnoreCase(taskName)
@@ -3158,7 +3164,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					.getManagedBean().getTaskName())) {
 				this.getManagedBean().setPcbProcess(true);
 			}
-
+			//#25692-start
+			if (SCProcessNameConst.REVISE_BPK.equalsIgnoreCase(this
+					.getManagedBean().getTaskName())) {
+				PmStatus sts = getQTDetailSO().retrieveActiveStatusByDoctype(this.getManagedBean().getQt().getQtId(), ParameterConst.DOCTYPE_BPK_APPROVAL);
+				this.getManagedBean().setSubStatusId(sts.getStatusId());
+			}
+			//#25692-End
 			
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, QTConstants.MAINTANANCE_PAGE);
@@ -5196,6 +5208,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		boolean isCommitteeAppointmentRemark = this.getManagedBean().isCommitteeAppointmentRemark();
 		boolean isPanel = this.getManagedBean().getPanel();
 		boolean isdropdownPresent  = this.getManagedBean().isProcMethodDropdownPresent();
+		Long subStatus = this.getManagedBean().getSubStatusId(); //#25692
 		
 		QuationTenderResDTO resDTO = null;
 		String taskId = this.getManagedBean().getTaskId();
@@ -5368,6 +5381,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		this.getManagedBean().setReadOnly(readOnly);
 		this.getManagedBean().setPanel(isPanel);
 		this.getManagedBean().setProcMethodDropdownPresent(isdropdownPresent);
+		this.getManagedBean().setSubStatusId(subStatus); //#25692
 		if (isCreateQt) {
 			this.getManagedBean().setOutComes(
 					new String[] { ResourceBundleUtils.getMessage(
@@ -5518,6 +5532,18 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				if (!QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(getManagedBean().getQt().getQtStatus().getStatusId())) {
 					retrievePublicationApprovalTabDtl();
 				}
+				//#25692-start
+				 if(getUserTaskIsCommitteeAppointmentApprovalEcOcTecFec() && isApprovalScreen()){
+					 ApprovalBackingBean approvalbean=new ApprovalBackingBean();
+					 approvalbean.retriveCommiteeApprovalTabDetails();
+				 }
+				 else if(getUserTaskIsBPKApproval() && isApprovalScreen()){
+					 this.getManagedBean().setPublicationApproval(null);	
+				 }
+				 else if(getUserTaskIsPublicationApproval() && isApprovalScreen()){
+					 this.getManagedBean().setPublicationApproval(null);	
+				 }
+				//#25692-End
 				break;
 			case 50: //BPK Approval
 				
@@ -8628,6 +8654,19 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
             	}
             }
             //End 19287 
+   //#25692-start         
+    public Long retirveStatusId() {
+    	if(((null!=this.getManagedBean().getTaskName()&&SCProcessNameConst.REVISE_BPK.equalsIgnoreCase(this
+				.getManagedBean().getTaskName()))|| (getUserTaskIsCommitteeAppointmentApprovalEcOcTecFec() && isApprovalScreen()) || (getUserTaskIsBPKApproval() && isApprovalScreen())  || (getUserTaskIsCommitteeAppointmentApproval() && isApprovalScreen()))){
+    		log.debug("=====returnif====");
+    	return this.getManagedBean().getSubStatusId();	
+    	}else{
+    		log.debug("=====returnelse====");
+    		return this.getManagedBean().getCurrentStatusId();	
+    	}
+    	
+    }
+    //#25692-End  
 }
 
 
