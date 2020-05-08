@@ -78,6 +78,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecScoring;
 import my.ep.persistence.entity.tpl.spec.TplSpecTierQty;
 import my.ep.persistence.entity.tpl.spec.TplSpecZone;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneOffer;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
@@ -3143,6 +3144,7 @@ public class TemplateSpecBackingBean extends
 		if(this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()!=null && this.getManagedBean().getTemplateSpecBean().getSpecAnswerList().size()>0){
 			for(TplSpecAnswer tplSpecAnswer: this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
 				if(tplSpecAnswer.getTplSpecQuestion().getParentSpecQuestion()!=null){
+					
 					/*
 					 * IF CHILD
 					 */
@@ -5004,4 +5006,52 @@ public class TemplateSpecBackingBean extends
 
 	/** #25633 HAIDAH END  */
 	
+// FARID #21695 START	
+	public Boolean finZoneOfferCheck(TplSpecAnswer tplSpecAnswer) {
+		boolean finZoneOfferCheck = false;
+		ITemplateSpecSO templateSpecSO = null;
+		
+		templateSpecSO = (ITemplateSpecSO) BusinessDelegate.getInstance()
+				.getServiceObject("cc", ITemplateSpecSO.class);
+		
+		TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
+
+		TplSpecAnswer answerList = tplSpecAnswer;
+		
+		reqDTO.setTplSpecAnswer(answerList);
+		reqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
+		
+		TemplateSpecResDTO resDTO = templateSpecSO.retriveTechSuppAnswerZonesOfferBySupplierId(reqDTO);
+
+		for(TplSpecZoneOffer specOffers : resDTO.getSpecZoneOffer()){
+			if(specOffers!=null){
+				
+					if (answerList != null) {
+						if(answerList.getTplSpecQuestion().getSpecQuestionId()!=null && 
+								answerList.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId().equals(specOffers.getTplSpecQuestion().getSpecQuestionId())
+								&& answerList.getTplSpecZoneQty().getTplSpecZoneDtl().getSpecZoneId().equals(specOffers.getTplSpecZoneDtl().getSpecZoneId())
+								&& answerList.getTplSpecSuppAnswer().getSmSupplier().getSupplierId().equals(specOffers.getTplSpecSuppAnswer().getSmSupplier().getSupplierId())
+								&& specOffers.isOffer() == true){
+//							log.info("===================masuk sini==");
+//							log.info("===================PARENT==="+answerList.getTplSpecQuestion());
+//							log.info("===================PARENT==="+answerList.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId());
+//							log.info("===================EQUAL SPEC ID SPECZONEOFFER==="+specOffers.getTplSpecQuestion().getSpecQuestionId());
+//							log.info("===================SPEC ZONE DTL ID FROM SPEC ANS=="+answerList.getTplSpecZoneQty().getTplSpecZoneDtl().getSpecZoneId());
+//							log.info("===================SPEC ZONE DTL ID FROM ZONE OFFER=="+specOffers.getTplSpecZoneDtl().getSpecZoneId());
+//							log.info("===================specoffer==="+specOffers.isOffer());
+//							log.info("===================specanswer qty id==="+answerList.getTplSpecZoneQty().getSpecZoneQtyId());
+//							log.info("===================specoffer qty id==="+specOffers.getTplSpecZoneQty().getSpecZoneQtyId());
+//							
+							finZoneOfferCheck = true;
+							break;
+						}
+						
+					}
+				
+			}
+		}		
+			
+		return finZoneOfferCheck;
+	}
+// FARID #21695 END
 }
