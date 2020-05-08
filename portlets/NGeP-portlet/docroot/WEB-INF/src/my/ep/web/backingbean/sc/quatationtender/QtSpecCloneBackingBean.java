@@ -1771,9 +1771,9 @@ public class QtSpecCloneBackingBean extends
 				reqDTO.setScQt(scqt);
 				resDTO = specSo.retrieveCheckLists(reqDTO);
 				for (ScQtCheckList list : checkList) {
-					if (null == list.getQtScoreWeightage()) {
+				//	if (null == list.getQtScoreWeightage()) {
 						list=cloneScoreWeightage(list,resDTO.getTechnicalCheckList());
-					}
+					//}
 					
 					if (null != list.getQtScoreWeightage()
 							&& null != list.getQtScoreWeightage().getScore()) {
@@ -1840,6 +1840,32 @@ public class QtSpecCloneBackingBean extends
 	
 	
 	private ScQtCheckList cloneScoreWeightage(ScQtCheckList val,List<ScQtCheckList> checkList){
+		String[] deftypes={"UP","PD","SP","NA","SD"};
+		List<String> dtypes=Arrays.asList(deftypes);
+		for(ScQtCheckList check:checkList){
+			
+			
+			String title1=check.getTitle().trim();
+			String title2=val.getTitle().trim();
+			if(title1.contains(title2)){
+				//if(dtypes.contains(check.getDefinationType().getParameterCode())){
+					if(check.getDocCategory().equals(val.getDocCategory())){
+						if(null!=check.getQtScoreWeightage()){
+							ScQtScoreWeightage scoreWeightage = new ScQtScoreWeightage();
+							scoreWeightage.setScore(check.getQtScoreWeightage().getScore());
+							scoreWeightage.setWeightage(check.getQtScoreWeightage().getWeightage());
+							val.setQtScoreWeightage(scoreWeightage);
+							setUserDetails(val.getQtScoreWeightage());
+						}
+					}
+				//}
+			}		
+		}
+		
+		return val;
+	}
+	
+	private ScQtCheckList cloneScoreWeightage2(ScQtCheckList val,List<ScQtCheckList> checkList){
 		String[] deftypes={"UP","PD","SP","NA","SD"};
 		List<String> dtypes=Arrays.asList(deftypes);
 		for(ScQtCheckList check:checkList){
