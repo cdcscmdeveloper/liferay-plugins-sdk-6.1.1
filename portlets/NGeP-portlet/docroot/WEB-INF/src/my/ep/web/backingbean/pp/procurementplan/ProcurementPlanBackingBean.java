@@ -3400,6 +3400,19 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					if(ppItem.getEstimatedAmt()==null || ppItem.getEstimatedAmt().intValue()<=0){
 						throw new EpException(MessageConst.ERROR_730014);
 					}
+					// Set Reason For Update to be mandatory
+					this.retrievePpUpdateReasons(ppItem);
+					
+					if(this.getManagedBean().getSelectedUpdateReasons() != null && 
+							!this.getManagedBean().getSelectedUpdateReasons().isEmpty()) {
+						String reasonDesc = this.getManagedBean().getSelectedUpdateReasons().get(0).getReasonDesc();
+						log.info("reasonDesc= "+reasonDesc);
+						
+						if (reasonDesc == null) {
+							throw new EpException(MessageConst.ERROR_730035);
+						}
+					}
+					
 				}
 			}
 		}else{
