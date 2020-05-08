@@ -1816,11 +1816,11 @@ public class SPDetailBackingBean extends
 			assetProposalChecklist = findProposalChecklistByGroupID(
 					getManagedBean().getFinanceCheckDetailsList(),
 					ParameterConst.DOCUMENT_DEFINITION_KEY_FOR_ASSET_LIABILITIES_UPLOAD,ParameterConst.ASSET_LIABILITIES_GROUP_ID);
-			// #26339 - Start
+			// #26339 - Start 
 			if (null != assetProposalChecklist) {
 				assetProposalChecklist.setSubmitted(isCompleted);
 			}
-			// #26339 - End
+			
 			int index = getManagedBean().getFinanceCheckDetailsList().indexOf(
 					assetProposalChecklist);
 			if (isCompleted && scQtPRPAssetLiability != null) {
@@ -1861,6 +1861,7 @@ public class SPDetailBackingBean extends
 					}
 				}
 			}      	// #26339 Venkat End
+			// #26339 - End
 			
 			// #26339 - Start
 			//Current Asset - Start
@@ -1950,6 +1951,37 @@ public class SPDetailBackingBean extends
 		}
 		return null;
 	}
+	
+	// #26339 - Start
+	/**
+	 * @param scQtPRPAssetLiability
+	 */
+	private void setDefaultValToAssetAndLiabilities(
+			ScQtPRPAssetLiability scQtPRPAssetLiability) {
+		if (null != scQtPRPAssetLiability) {
+				
+			if (null ==scQtPRPAssetLiability.getCurrentAssets()) {
+				scQtPRPAssetLiability.setCurrentAssets(new BigDecimal(0));
+			}
+			if (null ==scQtPRPAssetLiability.getCurrentLiabilities()) {
+				scQtPRPAssetLiability.setCurrentLiabilities(new BigDecimal(0));
+			}
+			if (null ==scQtPRPAssetLiability.getTotalCashInHand()) {
+				scQtPRPAssetLiability.setTotalCashInHand(new BigDecimal(0));
+			}
+			if (null ==scQtPRPAssetLiability.getTotalAccountReceivable()) {
+				scQtPRPAssetLiability.setTotalAccountReceivable(new BigDecimal(0));
+			}
+			if (null ==scQtPRPAssetLiability.getAcidRatio()) {
+				scQtPRPAssetLiability.setAcidRatio(new BigDecimal(0));
+			}
+			if (null ==scQtPRPAssetLiability.getCurrentRatio()) {
+				scQtPRPAssetLiability.setCurrentRatio(new BigDecimal(0));
+			}
+				
+		}
+	}
+	// #26339 - End
 
 	/**
 	 * Method to save Paid Up Capital details
@@ -3153,7 +3185,11 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 				getManagedBean().getScQtPRPAssetLiability().setCurrentRatio(
 						assetLiabilityCurrentRatioScore.getCriteriaValue());
 			}
-
+			
+			// #26339 - Start
+			setDefaultValToAssetAndLiabilities(assetLiability);
+			// #26339 - End
+			
 			return NAV_TO_ASSET_LIABILITY_PAGE;
 
 		} finally {
@@ -3581,8 +3617,10 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 				.getTotalAccountReceivable();
 
 		if (liabilities == null || liabilities.intValue() <= 0) {
-			assetLiability.setAcidRatio(null);
-			assetLiability.setCurrentRatio(null);
+			// #26339 - Start
+			assetLiability.setAcidRatio(new BigDecimal(0));
+			assetLiability.setCurrentRatio(new BigDecimal(0));
+			// #26339 - End
 		} else {
 			BigDecimal totalAmount;
 			if (null != totalCashInHand && null != totalAccountReceivable) {
