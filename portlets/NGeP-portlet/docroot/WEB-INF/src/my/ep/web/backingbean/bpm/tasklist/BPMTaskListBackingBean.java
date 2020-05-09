@@ -605,6 +605,11 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					+ SCProcessNameConst.APPROVE_DO_REASSIGNMENT,
 					SourcingConstants.NAV_PAGE_DO_REASSIGNMENT_APPROVAL);
 			// 25627
+			//START - 22211
+			temp.put(SCProcessNameConst.SUPPLIER_DP_ACCEPTANCE_PROCESS_NAME
+					+ ParameterConst.DOCTYPE_LETTER_OF_AWARD,
+					SourcingConstants.NAV_PAGE_CANCELLATION_LOA_APPROVAL);
+			//END - 22211
 			this.getManagedBean().setBpmMap(temp);
 		}
 
@@ -703,7 +708,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			String url = "";
 
 			if (!this.getManagedBean().getBpmMap().isEmpty() && this.getManagedBean().getBpmMap().size() > 0) {
-
+				log.info("********do Bpm Map********");
 				url = (String) this.getManagedBean().getBpmMap().get(process);
 				if (url == null || url.isEmpty()) {
 					url = (String) this.getManagedBean().getBpmMap().get(process + taskName);
