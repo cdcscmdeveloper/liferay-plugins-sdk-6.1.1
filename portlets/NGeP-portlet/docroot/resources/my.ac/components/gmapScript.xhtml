@@ -51,17 +51,19 @@
 
           } else {
         	//#27853
-            alert('The Map failed to get the coordinate, Please get the coordinate from Google Map or Waze');
+        	
+            alert('Geocode was not successful for the following reason: ' + status);
+            
           }
         });
       }
       <!--  google credential for the google map api key  -->
-      <!--  archisoft.ep@gmail.com / ngep_welcome1  -->
+      <!--  Username : cdc.eperolehan@gmail.com / Password : ngep_welcome1  -->
       <!--  url: https://developers.google.com/maps/documentation/javascript/get-api-key  -->
       function loadScript() {
     	    var script = document.createElement('script');
     	    script.type = 'text/javascript';
-    	    script.src = '//maps.googleapis.com/maps/api/js?key=AIzaSyAWaiJBXD-xfM9UzIChZfZhli1QzlIx4Mk';
+    	    script.src = '//maps.googleapis.com/maps/api/js?key=AIzaSyBqLJrFGH_S1q19bnLpDTRVnCzcgRgYQnE';
     	    document.body.appendChild(script);
     	}
 
