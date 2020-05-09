@@ -67,6 +67,12 @@ public interface QTConstants {
 	public static final String ONLINE_BIDDING_MAIN_PAGE = "/xhtml/sc/bidding/onlineBidding/onlineBiddingMain.xhtml";
 	public static final String LOI_LIST_PAGE = "/xhtml/sc/loi/loilist/loiList.xhtml";
 	public static final String LOI_PAGE = "/xhtml/sc/loi/loirequest/loiDetailsMaint.xhtml";
+	
+	/* Enhancement #22211-START */
+	public static final String LOA_CANCEL_MAIN_PAGE = "/xhtml/sc/loa/cancellation/cancelLoaMain.xhtml";	
+	public static final String LOA_CANCEL_APPROVAL_PAGE = "/xhtml/sc/loa/cancellation/cancelLoaApproval.xhtml";
+	/* Enhancement #22211-END */
+
 	public static final String SUPPLIER_LOI_PAGE = "/xhtml/sc/loi/supplierresponse/loiSupplierMaint.xhtml";
 	public static final String MULTI_LOI_PAGE = "loiNegotiationResultMenu.xhtml";
 	public static final String QT_LOA_LIST_PAGE = "/xhtml/sc/loa/qtLoaList/qtLoaList.xhtml";
