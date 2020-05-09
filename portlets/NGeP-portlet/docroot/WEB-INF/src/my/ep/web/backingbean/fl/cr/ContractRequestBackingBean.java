@@ -62,6 +62,7 @@ import my.ep.biz.service.ct.dtl.IContractZoneSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.fl.IFulfilmentSO;
+import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.itemsummary.IFlItemSummarySO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
@@ -443,7 +444,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				else {
 					reqDTO.setFlRequestId(resDTO.getFlRequestId());
 					resDTO = iFulfilmentRequestSO.retrieveFulfilmentRequest(reqDTO);
-					setFulfilmentRequestField(resDTO);
+		            setFulfilmentRequestField(resDTO);
 				}
 			} else {
 				throw new EpException(MessageConst.ERROR_700020);
@@ -1143,8 +1144,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 
 			resDTO = requestSO.retrieveFulfilmentRequest(flReqDTO);
-
-			IContractSupplierSO contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
+            IContractSupplierSO contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
 			ContractSupplierReqDTO contractSupplierReqDTO = new ContractSupplierReqDTO();
 			if(null != resDTO.getFlFulfilmentRequest()){
 				Long supplieContractId=resDTO.getFlFulfilmentRequest().getCtContract().getContractId();
@@ -1369,8 +1369,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				}
 			}
 			IFulfilmentRequestSO fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+			IInvoiceSO invoiceRequestSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IInvoiceSO.class);
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
+			FulfilmentReqDTO resDTOInvoice = new FulfilmentReqDTO();
 			reqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
 			resDTO = fulfilmentRequestSO.retrievePmOrgProfileDtls(reqDTO);
 			getManagedBean().getFlRequest().setPreparedOrgProfile(resDTO.getPmOrgProfile());
@@ -1410,6 +1412,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 						scheduleNo = ctSchedule.getScheduleNo().toString();
 						reqDTO.setScheduleNo(scheduleNo);
 						if(!fulfilmentRequestSO.isContractRequestInUsed(reqDTO)) {
+							//#14650 - Alert message if contract incomplete
+							FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+									MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 							break;
 						}
 					}
@@ -1424,6 +1429,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				}
 				getManagedBean().getFlRequest().setScheduleNo(scheduleNo);
 			}
+
 			updateGstRate(getManagedBean().getFlRequest());
 			getManagedBean().getFlRequest().setProcurementTypeCategory(contractResDTO.getContract().getLatestContractVer().getCtContractValue().getProcurementTypeCategory());
 			
@@ -1463,6 +1469,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 			//13984-end
 		}
+		//#14650 - Alert message if contract incomplete - Start
+		if(getManagedBean().getFlRequest().getStatus().getStatusId().longValue() != FulfilmentStatusConst.CR_COMPLETE.longValue()){
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+					MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+		}
+		//#14650 - End
 		
 		//26279 - start
 		if(getManagedBean().getFlRequest().getStatus().getStatusId().longValue() == FulfilmentStatusConst.CR_PENDING_SUBMISSION.longValue() 
