@@ -91,6 +91,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				    		(pPlanBackingBean.managedBean.selectedPlan.updatable or 
 				    		pPlanBackingBean.managedBean.approvedPlan)}">
 				    	<f:facet name="header">
+				    		<h:outputText value="* " styleClass="mandatory" />
 					     	<h:outputText value="#{lbl['lbl.pp.reason.for.update']}" />
 					    </f:facet>
 				    </p:column>			      	
@@ -110,7 +111,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			<p:column>
 				<!-- [SIR#12802] - start -->				
 				<p:selectBooleanCheckbox 
-					disabled="#{!(ppItem.brandNew ? ppItem.brandNew : ppItem.selectable)}" 
+					disabled="#{!(ppItem.brandNew ? ppItem.brandNew : ppItem.selectable) or pPlanBackingBean.managedBean.editable}" 
 					value="#{ppItem.deleted}" title="#{lbl['lbl.pp.make.amendment']}" />
 				<!-- [SIR#12802] - end -->
 				<!-- #24975 -->
@@ -224,7 +225,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 	        </p:column>
 	        <p:column>
 	        	<p:selectOneMenu id="recordStatus" value="#{ppItem.recordStatusFlg}" style="width:99%"
-	        		disabled="#{ppItem.cloneEnabled or ppItem.statusEnabled}">  
+	        		disabled="#{ppItem.cloneEnabled or ppItem.statusEnabled or pPlanBackingBean.managedBean.editable}">  
 	            	<f:selectItems value="#{pPlanBackingBean.getStatusOptions()}" />
 	          	</p:selectOneMenu> 
 	        </p:column>
