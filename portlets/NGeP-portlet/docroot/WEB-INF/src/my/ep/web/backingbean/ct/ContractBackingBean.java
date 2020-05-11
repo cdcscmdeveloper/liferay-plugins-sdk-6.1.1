@@ -1859,6 +1859,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		try {
 			if (this.getManagedBean().getContractVer().getCtAgencies() != null) {
 				Iterator<CtAgency> agencyIterator = this.getManagedBean().getContractVer().getCtAgencies().iterator();
+				//#25703 test
+				/*
 				while (agencyIterator.hasNext()) {
 					CtAgency agency = agencyIterator.next();
 					if (agency.isSelectedCheckBox()) {
@@ -1886,9 +1888,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 							getManagedBean().getDeleteAgencyMap().put(agency.getOrgProfile().getOrgCode(), agency);
 						}
 					}
-				}
-				//#25703 start - testing dev, delete agency not working.
-				/*
+				}*/
+				
 				//Reset ceiling amount and ceiling quantity to Zero if only single agency
 				if (this.getManagedBean().getContractVer().getCtAgencies().size() == 1) {
 					this.getManagedBean().getContractVer().getCtAgencies().get(0).setCeilingAmount(BigDecimal.ZERO);
@@ -1904,8 +1905,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 							&& getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)) {
 						getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
 					}
-				}*/
-				//#25703 start - testing dev, delete agency not working.
+				}
 
 			}
 			
@@ -1916,8 +1916,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			this.getManagedBean().setSelectedAgency(null);
 			getManagedBean().setButtonHideActive(true);
 			
-			//#25703 start - testing dev, delete agency not working.
-			/*
 			Long minstryId = retrieveMinistryOrgProfile(
 					getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId();
 			getManagedBean().setOwnerOrgProfile(true);
@@ -1929,8 +1927,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					break;
 				}
 			}
-			*/
-			//#25703 end - testing dev, delete agency not working.
 
 			if(getManagedBean().isSelectAll()){
 				getManagedBean().setSelectAll(false);
