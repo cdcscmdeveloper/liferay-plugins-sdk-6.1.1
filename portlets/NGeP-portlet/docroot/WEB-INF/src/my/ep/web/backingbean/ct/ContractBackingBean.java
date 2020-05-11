@@ -1860,10 +1860,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			if (this.getManagedBean().getContractVer().getCtAgencies() != null) {
 				Iterator<CtAgency> agencyIterator = this.getManagedBean().getContractVer().getCtAgencies().iterator();
 				while (agencyIterator.hasNext()) {
-
-					//#25703 start - testing dev, delete agency not working.
-					/*
-					
 					CtAgency agency = agencyIterator.next();
 					if (agency.isSelectedCheckBox()) {
 						agencyIterator.remove();
@@ -1890,10 +1886,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 							getManagedBean().getDeleteAgencyMap().put(agency.getOrgProfile().getOrgCode(), agency);
 						}
 					}
-					
-				*/
-				//#25703 start - testing dev, delete agency not working.
 				}
+				//#25703 start - testing dev, delete agency not working.
+				/*
 				//Reset ceiling amount and ceiling quantity to Zero if only single agency
 				if (this.getManagedBean().getContractVer().getCtAgencies().size() == 1) {
 					this.getManagedBean().getContractVer().getCtAgencies().get(0).setCeilingAmount(BigDecimal.ZERO);
@@ -1903,15 +1898,14 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 						}
 					}
 				}
-				
-				
 				//Reset show item
 				if (this.getManagedBean().getContractVer().getCtAgencies().size() <= 1) {
 					if (getManagedBean().getShowItem() != null
 							&& getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)) {
 						getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
 					}
-				}
+				}*/
+				//#25703 start - testing dev, delete agency not working.
 
 			}
 			
