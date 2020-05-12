@@ -1263,11 +1263,10 @@ public class SmPersonnelBackingBean extends
 	
 	//#26050 - start
 	public void validatePendingTask(SmPersonnel smPersonnel) {
-		if (PmCommonUtil.isAnyPendingTask(getManagedBean().getBasicSmPersonnel().getPmUser().getLoginId())
+		if (getManagedBean().getBasicSmPersonnel().getPmUser() != null && PmCommonUtil.isAnyPendingTask(getManagedBean().getBasicSmPersonnel().getPmUser().getLoginId())
 				|| smPersonnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING) {
 			throw new EpException(MessageConst.ERROR_770231);
 		}
-
 	}
 	//#26050 - end
 
