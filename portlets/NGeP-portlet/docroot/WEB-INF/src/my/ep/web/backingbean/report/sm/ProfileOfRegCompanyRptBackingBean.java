@@ -27,6 +27,7 @@ public class ProfileOfRegCompanyRptBackingBean extends
 	private static final Logger log = EpLogger.getLogger(ProfileOfRegCompanyRptBackingBean.class);
 	
 	public ProfileOfRegCompanyRptBackingBean() {
+		resetSearch();
 		onChangeBussType();
 		retrieveAgencyTypes();
 	}
