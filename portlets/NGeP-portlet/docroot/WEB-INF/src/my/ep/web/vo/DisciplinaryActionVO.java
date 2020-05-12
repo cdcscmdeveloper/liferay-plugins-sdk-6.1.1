@@ -28,6 +28,10 @@ public class DisciplinaryActionVO implements Serializable {
 	private List<DisciplinaryActionCategoryVO> categoryCodeList;
 	private List<BlacklistOwnerDirectorVO> blacklistownerDirectorList;
 	private boolean mofNoExist;
+	
+	//27796: Disciplinary Action - start - 26238
+	private List<DisciplinaryActionVO> remarksList;
+	//27796: Disciplinary Action - end - 26238
 
 	public SmDisciplinaryAction getSmDiscplinaryAction() {
 		return smDiscplinaryAction;
@@ -180,5 +184,15 @@ public class DisciplinaryActionVO implements Serializable {
 	public void setMofNoExist(boolean mofNoExist) {
 		this.mofNoExist = mofNoExist;
 	}
+
+	//27796: Disciplinary Action - start - 26238
+	public List<DisciplinaryActionVO> getRemarksList() {
+		return remarksList;
+	}
+
+	public void setRemarksList(List<DisciplinaryActionVO> remarksList) {
+		this.remarksList = remarksList;
+	}
+	//27796: Disciplinary Action - end - 26238
 
 }

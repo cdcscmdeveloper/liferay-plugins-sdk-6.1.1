@@ -80,9 +80,17 @@
 			<p:column headerText="#{lbl['lbl.sm.disciplinary.jktt.end.date']}" style="width : 10% !important; vertical-align:top;">
 				<ac:labelDateTime styleClass="outputLabel-view" value="#{disciplinaryAction.endDate}"/>
 			</p:column>
+			<!-- 27796: Disciplinary Action - start - 26238 -->
 			<p:column headerText="#{lbl['lbl.sm.disciplinary.jktt.remarks']}" style="white-space: normal !important; width : 25% !important; vertical-align:top;word-break: break-all;">
-				<h:outputText value="#{disciplinaryAction.remarks}"/>
+				<h:dataTable value="#{disciplinaryAction.remarksList}" var="remarksList" rendered="#{not empty disciplinaryAction.remarksList}"
+					rowIndexVar="indexCat" emptyMessage="#{lbl['lbl.sm.no.available']}" style="border: none !important;">
+					<p:column style="border: none !important;">
+						<h:outputText value="#{remarksList.remarks}"/>
+					</p:column>
+				</h:dataTable>
+				<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty disciplinaryAction.remarksList}"/>
 			</p:column>
+			<!-- 27796: Disciplinary Action - end - 26238 -->
 			<p:column headerText="#{lbl['lbl.sm.disciplinary.list.cancel.category.code']}" 
 				rendered="#{cc.attrs.mofView}"
 				style="white-space: normal !important;width : 15% !important; vertical-align:top;">
