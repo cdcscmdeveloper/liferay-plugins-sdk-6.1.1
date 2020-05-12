@@ -4225,9 +4225,18 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * The method used to retreive the factoring attachment from the list.
 	 */
+	@SuppressWarnings("null")
 	public List<CtAttachment> retrieveAttachmentList()
-	{
-		return getManagedBean().getContractVer().getCtContract().getCtFactoring().getAttachement();
+	{	log.info("test error 25703 - enter retrieveAttachmentList");
+		if (getManagedBean().getContractVer().getCtContract().getCtFactoring().getAttachement() != null){
+			log.info("if retrieveAttachmentList");
+			return getManagedBean().getContractVer().getCtContract().getCtFactoring().getAttachement();
+		}
+		
+		else{
+			log.info("else retrieveAttachmentList");
+			return null;
+		}
 	}
 	
 	/*#21387 - basri start*/
