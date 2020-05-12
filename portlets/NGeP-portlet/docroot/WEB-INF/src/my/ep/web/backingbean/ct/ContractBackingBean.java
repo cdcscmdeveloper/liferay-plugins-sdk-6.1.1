@@ -4228,12 +4228,20 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	@SuppressWarnings("null")
 	public List<CtAttachment> retrieveAttachmentList()
 	{	log.info("test error 25703 - enter retrieveAttachmentList");
-		if (getManagedBean().getContractVer().getCtContract().getCtFactoring().getAttachement() != null){
-			log.info("if retrieveAttachmentList");
-			return getManagedBean().getContractVer().getCtContract().getCtFactoring().getAttachement();
+	
+		if (getManagedBean().getContractVer().getCtContract().getCtFactoring() != null) {
+			log.info("if retrieveAttachmentList > getCtFactoring");
+			if (getManagedBean().getContractVer().getCtContract().getCtFactoring().getAttachement() != null) {
+				log.info("if retrieveAttachmentList > if getAttachement");
+				return getManagedBean().getContractVer().getCtContract().getCtFactoring().getAttachement();
+			}
+			else{
+				log.info("if retrieveAttachmentList > else getAttachement");
+				return null;
+			}
 		}
-		
-		else{
+
+		else {
 			log.info("else retrieveAttachmentList");
 			return null;
 		}
