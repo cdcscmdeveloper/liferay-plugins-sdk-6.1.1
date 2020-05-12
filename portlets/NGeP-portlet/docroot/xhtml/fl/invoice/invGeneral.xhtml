@@ -318,7 +318,7 @@
 			</tr>
 		</table>
 	</p:panel>
-	<p:panel header="#{lbl['lbl.txt.catatankajisemula']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.txt.catatankajisemula']}" toggleable="true" rendered="#{invoiceBackingBean.managedBean.remarkRevise !=null}">
 	<table style="width: 50%">
 		<tr>
 			<td class="TableFieldLeft" width="24%"><h:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
