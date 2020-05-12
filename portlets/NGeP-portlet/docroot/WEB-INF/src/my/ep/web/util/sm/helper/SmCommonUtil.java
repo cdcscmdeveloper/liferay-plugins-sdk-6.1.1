@@ -4252,7 +4252,8 @@ public class SmCommonUtil {
 					MessageUtils.BUNDLE_COMMON_MESSAGES,
 					new FacesScopes().getUserLocale());
 			if (message != null) {
-				throw new EpException(message + "(ERR-"
+				//27225
+				throw new EpException(message + "("
 						+ ex.getMessage().toString() + ")");
 			} else {
 				throw new EpException(ex.getMessage() + "(ERR-729999)");
@@ -5783,6 +5784,14 @@ public class SmCommonUtil {
 			//27264
 		case MessageConst.ERROR_721084:
 			throw new EpException(MessageConst.ERROR_721084);
+		case "70068"://Encounter Technical Error at SSM
+			//27214  -> this changes is remove in this case. replace with  27225
+			//27225			
+			throw new EpException(MessageConst.ERROR_721096);
+			//27225	
+			default:
+				throw new EpException(MessageConst.ERROR_721071);
+			
 		}
 	}
 		
