@@ -87,8 +87,6 @@ import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
 import my.ep.dto.sm.common.myidentity.MyIdentityReqDTO;
 import my.ep.dto.sm.common.myidentity.MyIdentityResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
-import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
-import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
@@ -13387,5 +13385,64 @@ public class SmApplicationUtil {
 		}
 	}
 	//24964 - end
+	
+	//27796: Disciplinary Action - start - 26238
+	public static List<SmDisciplinaryAction> retrieveDisciplinaryActionHistoryBySupplier(SmSupplier supplier) {
+		ISupplierDataMaintenanceSO supplierDataMaintenanceSO = (ISupplierDataMaintenanceSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						ISupplierDataMaintenanceSO.class);
+		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+		SupplierDataMaintenanceResDTO resDTO = new SupplierDataMaintenanceResDTO();
+		reqDTO.setSupplier(supplier);
+		
+		resDTO = supplierDataMaintenanceSO.retrieveDisciplinaryActionHistoryBySupplier(reqDTO);
+		
+		List<SmDisciplinaryAction> daHistoryList = new ArrayList<SmDisciplinaryAction>();
+		
+		if(resDTO.getResultStrList() != null && resDTO.getResultStrList().size() > 0){
+			for(Object[] resultArr : resDTO.getResultStrList()){
+				
+				SmDisciplinaryAction smDisciplinaryAction = new SmDisciplinaryAction();
+				
+				try {
+					
+					Long daId = Long.valueOf(resultArr[0].toString());
+					smDisciplinaryAction.setDisciplinaryActionId(daId);
+					smDisciplinaryAction.setBlacklistOwner(resultArr[1].toString().contentEquals("1"));
+					smDisciplinaryAction.setBumiputeraCancel(resultArr[2].toString().contentEquals("1"));
+					smDisciplinaryAction.setBumiputeraPending(resultArr[3].toString().contentEquals("1"));
+					smDisciplinaryAction.setCancelCategory(resultArr[4].toString().contentEquals("1"));
+					smDisciplinaryAction.setCancelRegistration(resultArr[5].toString().contentEquals("1"));
+					smDisciplinaryAction.setChangedBy(Long.valueOf(resultArr[6].toString()));
+					smDisciplinaryAction.setChangedDate(DateUtils.convertStringToTimestamp("yyyy-MM-dd", resultArr[7].toString()));
+					smDisciplinaryAction.setCreatedBy(Long.valueOf(resultArr[8].toString()));
+					smDisciplinaryAction.setCreatedDate(DateUtils.convertStringToTimestamp("yyyy-MM-dd", resultArr[9].toString()));
+					smDisciplinaryAction.setEndDate(DateUtils.convertStringToTimestamp("yyyy-MM-dd", resultArr[10].toString()));
+					smDisciplinaryAction.setManufacturerCancel(resultArr[11].toString().contentEquals("1"));
+					smDisciplinaryAction.setManufacturerPending(resultArr[12].toString().contentEquals("1"));
+					smDisciplinaryAction.setMofNo(resultArr[13].toString());
+					smDisciplinaryAction.setPendingBlacklist(resultArr[14].toString().contentEquals("1"));
+					smDisciplinaryAction.setPendingCancel(resultArr[15].toString().contentEquals("1"));
+					smDisciplinaryAction.setPendingSuspend(resultArr[16].toString().contentEquals("1"));
+					smDisciplinaryAction.setRecordStatus(resultArr[17].toString().contentEquals("1"));
+					smDisciplinaryAction.setRecordStatusFlg(Integer.valueOf(resultArr[17].toString()));
+					smDisciplinaryAction.setRemark(resultArr[18].toString());
+					smDisciplinaryAction.setStartDate(DateUtils.convertStringToTimestamp("yyyy-MM-dd", resultArr[19].toString()));
+					smDisciplinaryAction.setSuspendCategory(resultArr[20].toString().contentEquals("1"));
+					smDisciplinaryAction.setSuspendRegistration(resultArr[21].toString().contentEquals("1"));
+					smDisciplinaryAction.setWarning(resultArr[22].toString().contentEquals("1"));
+					smDisciplinaryAction.setEditNo(Long.valueOf(resultArr[24].toString()));
+					
+				} catch(Exception e){
+					log.info("***ERROR at set retrieve DA history*** ");
+					e.printStackTrace();
+				}
+				daHistoryList.add(smDisciplinaryAction);
+			}
+		}
+
+		return daHistoryList;
+	}
+	//27796: Disciplinary Action - end - 26238
 
 }
