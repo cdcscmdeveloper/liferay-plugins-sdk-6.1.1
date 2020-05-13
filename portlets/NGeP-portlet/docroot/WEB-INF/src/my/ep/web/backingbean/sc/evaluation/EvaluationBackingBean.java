@@ -6622,56 +6622,29 @@ public class EvaluationBackingBean extends
 							&& this.getManagedBean()
 									.getCurrentStatusId()
 									.equals(QTStatusConst.TEC_PENDING_ENDORSEMENT)
-							&& this.getManagedBean().isReadOnly()
-							&& !this.getManagedBean().getScQt().isDemoRequired()) {
+							&& this.getManagedBean().isReadOnly()) {
 						if (currentTab == 2) {
-
 							if (this.getManagedBean()
-									.getEvaluatioStageActiveIndex() < 1) {
+									.getEvaluatioStageActiveIndex() < 1 ) {
 								retriveTechnicalEvaluationStagePackage();
-								outputTab = 2;
 								this.getManagedBean().setTabTechnicalIndex(2);
+								outputTab = 2;
 								
-							}else{
+							}else if( this.getManagedBean()
+									.getPresentationDemoActiveIndex() < 0 ||
+									this.getManagedBean().getTabTechnicalIndex() == 2){
 								retriveSummaryEvaluationStage();
+								this.getManagedBean().setTabTechnicalIndex(3);
 								// this.getManagedBean().setComplianceActiveIndex(2);
 								outputTab = 2;
 
-							}
-
-						}else if (this.getManagedBean()
-								.getScQt().isDemoRequired()){
-							retrivePresentationDemo();
-							
-						}
-					}
-					if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
-							.equalsIgnoreCase(this.getManagedBean()
-									.getCommitteeType())
-							&& this.getManagedBean()
-									.getCurrentStatusId()
-									.equals(QTStatusConst.TEC_PENDING_ENDORSEMENT)
-							&& this.getManagedBean().isReadOnly()
-							&& this.getManagedBean().getScQt().isDemoRequired()) {
-						if (currentTab == 2) {
-
-							if (this.getManagedBean()
-									.getEvaluatioStageActiveIndex() < 1) {
-								retriveTechnicalEvaluationStagePackage();
-								outputTab = 2;
-								this.getManagedBean().setTabTechnicalIndex(2);
-								
+							}else if (this.getManagedBean()
+									.getScQt().isDemoRequired()){
+								retrivePresentationDemo();
 							}else{
-								retriveSummaryEvaluationStage();
-								// this.getManagedBean().setComplianceActiveIndex(2);
-								outputTab = 2;
-
+								retrieveReportTabDtl();
+								outputTab = 3;
 							}
-
-						}else if (this.getManagedBean()
-								.getScQt().isDemoRequired()){
-							retrivePresentationDemo();
-							
 						}
 					}
 					if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
@@ -6691,6 +6664,7 @@ public class EvaluationBackingBean extends
 								
 							}else{
 								retriveSummaryEvaluationStage();
+								this.getManagedBean().setTabTechnicalIndex(3);
 								// this.getManagedBean().setComplianceActiveIndex(2);
 								outputTab = 2;
 
