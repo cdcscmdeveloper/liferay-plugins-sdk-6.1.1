@@ -7199,7 +7199,7 @@ public class EvaluationBackingBean extends
 						&& this.getManagedBean().getPresentationDemoActiveIndex() == 1){
 					retrieveReportTabDtl();	
 				}
-				else if(this.getManagedBean().getComplianceActiveIndex() == 3){
+				else if(this.getManagedBean().getComplianceActiveIndex() == 3 || this.getManagedBean().getComplianceActiveIndex() == 2 ){
 					retrieveReportTabDtl();	
 				}
 				else if(this.getManagedBean().getTabFinancialIndex() == 3){
