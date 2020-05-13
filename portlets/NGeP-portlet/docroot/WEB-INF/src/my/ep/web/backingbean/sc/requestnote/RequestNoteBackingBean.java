@@ -1131,7 +1131,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 									quote = requestNote.getQuote();
 								}								
 								//Rule : ITEM_THRESHOLD For 20k
-								if(totalAmt.compareTo(new BigDecimal(configRuleValue.getRuleValue())) > 0 && quote != null && !quote.isPanel()) {
+								if(totalAmt.compareTo(new BigDecimal(configRuleValue.getRuleValue())) > 0 && ((quote != null && !quote.isPanel())
+										|| !sourceMethod.equals(ParameterConst.REQUEST_NOTE_SQ))) {
 									//26059 - end
 									//26059 - start
 									if(!alreadyProceedWithDPExceedThreshold){										
