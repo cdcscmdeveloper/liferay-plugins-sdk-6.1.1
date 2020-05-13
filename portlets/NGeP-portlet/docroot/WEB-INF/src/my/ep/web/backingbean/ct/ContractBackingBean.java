@@ -1857,22 +1857,16 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public void deleteAgencyDetails() {
 		try {
-			log.info("start deleteAgencyDetails");
 			if (this.getManagedBean().getContractVer().getCtAgencies() != null) {
-				log.info("Enter if agencies not null");
 				Iterator<CtAgency> agencyIterator = this.getManagedBean().getContractVer().getCtAgencies().iterator();
 				while (agencyIterator.hasNext()) {
-					log.info("Enter while");
 					CtAgency agency = agencyIterator.next();
 					if (agency.isSelectedCheckBox()) {
-						log.info("Enter while > if (isSelectedCheckBox)");
 						agencyIterator.remove();
 						if (getManagedBean().getCtItemList() != null && getManagedBean().getCtItemList().size() > 0) {
 							for (CtContractItem contractItem: this.getManagedBean().getCtItemList()) {
-								log.info("Enter while > if (isSelectedCheckBox) > if(getCtItemList not null)> for");
 								Iterator<CtItemCeilingQty> ctItemCeilingQtyIterator =  contractItem.getCtItemCeilingQties().iterator();
 								while (ctItemCeilingQtyIterator.hasNext()) {
-									log.info("Enter while > if (isSelectedCheckBox) > if(getCtItemList not null)> for > while");
 									CtItemCeilingQty ctItemCeilingQty = ctItemCeilingQtyIterator.next();
 									if (ctItemCeilingQty.getCtAgency().getOrgProfile().getOrgProfileId().equals(
 											agency.getOrgProfile().getOrgProfileId())) {
@@ -1884,11 +1878,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 						//CT_CHANGE_LOG
 						if((agency.isBrandNew() && !agency.isCloned()) || 
 								getManagedBean().getNewAgencyMap().containsKey(agency.getOrgProfile().getOrgCode())) {
-							log.info("Enter while > if (isSelectedCheckBox) > agency remove (new)");
 							getManagedBean().getNewAgencyMap().remove(agency.getOrgProfile().getOrgCode());
 						} else {
 							if(getManagedBean().getUpdateAgencyMap().containsKey(agency.getOrgProfile().getOrgCode())) {
-								log.info("Enter while > if (isSelectedCheckBox) > agency remove (old)");
 								getManagedBean().getUpdateAgencyMap().remove(agency.getOrgProfile().getOrgCode());
 							}
 							getManagedBean().getDeleteAgencyMap().put(agency.getOrgProfile().getOrgCode(), agency);
@@ -1897,10 +1889,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}
 				//Reset ceiling amount and ceiling quantity to Zero if only single agency
 				if (this.getManagedBean().getContractVer().getCtAgencies().size() == 1) {
-					log.info("Enter reset ceiling amount");
 					this.getManagedBean().getContractVer().getCtAgencies().get(0).setCeilingAmount(BigDecimal.ZERO);
 					for (CtContractItem contractItem: this.getManagedBean().getCtItemList()) {
-						log.info("Enter loop reset ceiling amount");
 						if (contractItem.getCtItemCeilingQties() != null && contractItem.getCtItemCeilingQties().size() > 0) {//25703
 							contractItem.getCtItemCeilingQties().get(0).setCeilingQuantity(BigDecimal.ZERO);
 						}
@@ -1910,7 +1900,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				if (this.getManagedBean().getContractVer().getCtAgencies().size() <= 1) {
 					if (getManagedBean().getShowItem() != null
 							&& getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)) {
-						log.info("Enter reset show item");
 						getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
 					}
 				}
@@ -1918,7 +1907,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 			
 			if(this.getManagedBean().getContractVer().getCtAgencies() == null  || this.getManagedBean().getContractVer().getCtAgencies().isEmpty() ){
-				log.info("Enter disable agent");
 				getManagedBean().setDisableAgent(true);
 			}
 			
@@ -1930,21 +1918,16 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			getManagedBean().setOwnerOrgProfile(true);
 			
 			for(CtAgency agencies : getManagedBean().getContractVer().getCtAgencies()){
-				log.info("Enter for loop agencies");
 				if(!minstryId.equals(agencies.getOrgProfile().getMinstryId())){
-					log.info("Enter if checking ministry");
 					getManagedBean().setOwnerOrgProfile(false);
 					getManagedBean().setDisableAgent(false);
-					log.info("break if checking ministry");
 					break;
 				}
 			}
 
 			if(getManagedBean().isSelectAll()){
-				log.info("reset select");
 				getManagedBean().setSelectAll(false);
 			}
-			log.info("End deleteAgencyDetails");
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -4227,24 +4210,20 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	@SuppressWarnings("null")
 	public List<CtAttachment> retrieveAttachmentList()
-	{	log.info("test error 25703 - enter retrieveAttachmentList");
-	
+	{	//#25703 start
 		if (getManagedBean().getContractVer().getCtContract().getCtFactoring() != null) {
-			log.info("if retrieveAttachmentList > getCtFactoring");
 			if (getManagedBean().getContractVer().getCtContract().getCtFactoring().getAttachement() != null) {
-				log.info("if retrieveAttachmentList > if getAttachement");
 				return getManagedBean().getContractVer().getCtContract().getCtFactoring().getAttachement();
 			}
 			else{
-				log.info("if retrieveAttachmentList > else getAttachement");
 				return null;
 			}
 		}
 
 		else {
-			log.info("else retrieveAttachmentList");
 			return null;
 		}
+		//#25703 end
 	}
 	
 	/*#21387 - basri start*/
