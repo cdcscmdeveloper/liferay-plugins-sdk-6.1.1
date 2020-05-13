@@ -21,19 +21,15 @@
 
 			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
 				style="width:25%; text-align:center;">
-
 				<h:outputText value="#{finSpec.scQtProposal.supplierNo}"></h:outputText>
-
-
 			</p:column>
-
+            
+            <c:if test="#{evaluationBackingBean.managedBean.scQt.zonal}">
 			<p:column headerText="#{lbl['lbl.tpl.spec.content.system.score']}"
 				style="width:20%;text-align:right;"
 				rendered="#{evaluationBackingBean.managedBean.scQtChecklist.scoringReq}">
 				<h:outputText value="#{finSpec.specAutoScore}"></h:outputText>
-
 			</p:column>
-
 			<p:column headerText="#{lbl['lbl.tpl.spec.content.user.score']}"
 				style="width:20%;text-align:right;"
 				rendered="#{evaluationBackingBean.managedBean.scQtChecklist.scoringReq}">
@@ -43,8 +39,24 @@
 			<p:column headerText="#{lbl['lbl.sc.total.score']}" style="width:20%;text-align:right;"
 				rendered="#{evaluationBackingBean.managedBean.scQtChecklist.scoringReq}">
 				<h:outputText value="#{finSpec.specTotalScore}"></h:outputText>
+			</p:column></c:if>
+			
+			<c:if test="#{!evaluationBackingBean.managedBean.scQt.zonal}">
+			<p:column headerText="#{lbl['lbl.tpl.spec.content.system.score']}"
+				style="width:20%;text-align:right;"
+				rendered="#{evaluationBackingBean.managedBean.scQtChecklist.scoringReq}">
+				<h:outputText value="#{finSpec.totalAutoScore}"></h:outputText>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.tpl.spec.content.user.score']}"
+				style="width:20%;text-align:right;"
+				rendered="#{evaluationBackingBean.managedBean.scQtChecklist.scoringReq}">
+				<h:outputText value="#{finSpec.totalUserScore}"></h:outputText>
 			</p:column>
 
+			<p:column headerText="#{lbl['lbl.sc.total.score']}" style="width:20%;text-align:right;"
+				rendered="#{evaluationBackingBean.managedBean.scQtChecklist.scoringReq}">
+				<h:outputText value="#{finSpec.totalScore}"></h:outputText>
+			</p:column></c:if>
 
 			<p:column headerText="#{lbl['lbl.sc.action']}" style="width:20%;text-align:center;">  
 			        <p:commandButton value="#{lbl['lbl.btn.evaluate']}"

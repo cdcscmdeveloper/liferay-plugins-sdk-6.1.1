@@ -11867,13 +11867,6 @@ private void retriveCommitteeRemarksList(){
 					
 				EvaluationResDTO resDTO=evaluationSO.retrievProposalCheckListByCheckListNZone(
 						reqDTO);
-				if (resDTO.getComplianceResultBean().getResultList() != null ){
-				for (ScQtProposalChecklist qtProposalChecklist : resDTO.getComplianceResultBean().getResultList() ){
-					qtProposalChecklist.setSpecAutoScore(qtProposalChecklist.getTotalAutoScore());
-					qtProposalChecklist.setSpecUserScore(qtProposalChecklist.getTotalUserScore());
-					qtProposalChecklist.setSpecTotalScore(qtProposalChecklist.getTotalScore());
-				}
-			}
 				return resDTO.getComplianceResultBean();
 				
 				
