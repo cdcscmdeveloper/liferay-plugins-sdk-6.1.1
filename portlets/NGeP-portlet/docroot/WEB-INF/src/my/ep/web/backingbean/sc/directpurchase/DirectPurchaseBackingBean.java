@@ -649,7 +649,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	 * @param dpObj
 	 */
 	public void performViewDoc(Object[] dpObj) {
-		if (getManagedBean().isG2G() || (isSupplier() && getManagedBean().getSearchDocumentType().equals(ParameterConst.DOCTYPE_SIMPLE_QUOTE))) { 
+		if (getManagedBean().isG2G() || (isSupplier() && !isGovernment() && getManagedBean().getSearchDocumentType().equals(ParameterConst.DOCTYPE_SIMPLE_QUOTE))) { 
 			this.viewDocSupplierSQ(dpObj);
 		} else {
 			this.viewDoc(dpObj);
