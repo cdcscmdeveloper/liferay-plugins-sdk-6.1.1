@@ -254,6 +254,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 				docTypeList.add(ParameterConst.DOCTYPE_PURCHASE_INQUIRY);
 				docTypeList.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
 				getManagedBean().setG2G(true);
+				getManagedBean().setGovernment(Boolean.FALSE);
 			}
 			
 			else {
