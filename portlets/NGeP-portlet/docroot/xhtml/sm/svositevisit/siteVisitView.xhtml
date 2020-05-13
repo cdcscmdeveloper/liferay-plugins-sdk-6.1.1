@@ -63,8 +63,7 @@
 				value="#{svTask.smSvAddress.facilityType}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sm.address']}"
-				style="width: 50%;white-space: normal;">
+			<p:column headerText="#{lbl['lbl.sm.address']}">
 				<h:outputText value="#{svoSiteVisitBackingBean.getSMFullAddress(svTask.smSvAddress.address)}"
 					escape="false" style="float : left" />
 			</p:column>
