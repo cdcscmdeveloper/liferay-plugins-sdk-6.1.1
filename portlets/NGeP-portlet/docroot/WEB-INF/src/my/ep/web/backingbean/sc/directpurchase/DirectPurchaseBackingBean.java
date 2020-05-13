@@ -189,7 +189,9 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		getManagedBean().setSearchDocumentType(null);
 		if(isGovernment()){
 			getDocumentTypes(Boolean.TRUE, Boolean.FALSE);
-			getManagedBean().setGovernment(Boolean.TRUE);
+			if (!getManagedBean().isG2G()) {
+				getManagedBean().setGovernment(Boolean.TRUE);
+			}
 		} else if(isSupplier()){
 			getDocumentTypes(Boolean.FALSE, Boolean.FALSE);
 			getManagedBean().setGovernment(Boolean.FALSE);
@@ -253,7 +255,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 				docTypeList.add(ParameterConst.DOCTYPE_SIMPLE_QUOTE);
 				docTypeList.add(ParameterConst.DOCTYPE_PURCHASE_INQUIRY);
 				docTypeList.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
-				getManagedBean().setG2G(true);
+				getManagedBean().setG2G(Boolean.TRUE);
 				getManagedBean().setGovernment(Boolean.FALSE);
 			}
 			
