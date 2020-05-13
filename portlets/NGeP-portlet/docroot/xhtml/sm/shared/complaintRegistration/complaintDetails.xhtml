@@ -14,6 +14,7 @@
 						value="#{lbl['lbl.sm.complaint.against.supplier']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td class="tdContent"><ac:lov id="supplier" lovId="SM_SUPPLIER" 
+						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.complaint.against.supplier']}"
 						headerText="#{lbl['lbl.sm.supplov']}" readonly="#{complDtlViewFLag}"
 						saveObject="complaintBackingBean.managedBean.smComplaint.smSupplier"
 						value="#{complaintBackingBean.managedBean.smComplaint.smSupplier.companyName}"
