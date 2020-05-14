@@ -27,10 +27,6 @@ public class CompSortedAlphabetRptBackingBean extends
 	
 	private static final Logger log = EpLogger.getLogger(ReportBaseBackingBean.class);
 
-	public CompSortedAlphabetRptBackingBean() {
-		setDefaultDateFromAndDateTo();
-	}
-
 	public void generateReport() {
 		validateParameterValue(getManagedBean().getReportCode());
 		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
@@ -84,7 +80,6 @@ public class CompSortedAlphabetRptBackingBean extends
 		getManagedBean().setSupplierType("all");
 		getManagedBean().setMofRegNoFrom(StringUtils.EMPTY);
 		getManagedBean().setMofRegNoTo(StringUtils.EMPTY);
-		setDefaultDateFromAndDateTo();
 		if (getManagedBean().getSelectedOrgProfile() != null
 				&& getManagedBean().getSelectedOrgProfile().getSmSupplier() != null) {
 			getManagedBean().getSelectedOrgProfile().getSmSupplier()
@@ -94,6 +89,8 @@ public class CompSortedAlphabetRptBackingBean extends
 		getManagedBean().setSearchDate(null);
 		getManagedBean().setDateExpFrom(null);
 		getManagedBean().setDateExpTo(null);
+		getManagedBean().setDateFrom(null);
+		getManagedBean().setDateTo(null);
 		// #21331 - end
 	}
 
