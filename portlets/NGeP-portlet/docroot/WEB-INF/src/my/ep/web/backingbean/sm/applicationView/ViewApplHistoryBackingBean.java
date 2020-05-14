@@ -333,9 +333,7 @@ public class ViewApplHistoryBackingBean extends
 		boolean proceed = true;
 		smApplBB.getManagedBean().setPersonnelsRole(this.getManagedBean().getPersonnelsRole());
 		this.getManagedBean().setPreRegistration(true);
-		log.info("-----------------------------------------redirectToReapplyNewAppl");
 		if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(getManagedBean().getSmAppl().getSmSupplier().getRegNo(),getManagedBean().getSmAppl().getSmSupplier().getBusinessType()) && this.getManagedBean().getSsmResDTO() != null && !this.getManagedBean().isCheckRoleSSM()){			
-			log.info("------------------in IF-----------------------redirectToReapplyNewAppl");
 			List<SmPersonnel> personnelsRole = this.getManagedBean().getPersonnelsRole();
 			personnelsRole.clear();
 			for(SmPersonnel personnel :  this.getManagedBean().getSmAppl().getSmPersonnels()){
@@ -349,23 +347,17 @@ public class ViewApplHistoryBackingBean extends
 					}
 				}
 			}
-			log.info("------------------in IF-----------------------redirectToReapplyNewAppl-----------"+personnelsRole.size());
 			if(personnelsRole != null && personnelsRole.size() > 0) {
 					proceed = false;
 					getManagedBean().setPreRegistration(true);
 					getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupplier());	
 					this.getManagedBean().setPersonnelsRole(personnelsRole);
-					//RequestContext.getCurrentInstance().execute("blockWidget.hide()");
-					//RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
-					RequestContext.getCurrentInstance().execute(
-							"confirmDialog.show()");
-					return;
+					RequestContext.getCurrentInstance().execute("blockWidget.hide()");
+					RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
 			}
 			
 		}
-		log.info(proceed+"------------------in IF-----proceed------------------redirectToReapplyNewAppl");
 		if(proceed){
-			log.info(proceed+"------------------in proceed-----proceed------------------proceed");
 			// #24923
 			smApplBB.getManagedBean().setNewSupplierType(
 					getManagedBean().getSmAppl().getSupplierType());
@@ -375,9 +367,7 @@ public class ViewApplHistoryBackingBean extends
 			String page = my.ep.web.constant.sm.SupplierManagementConst.APPLICATION_BASE_PAGE_BY_TYPE
 					.get("RE");
 			SmCommonUtil.redirectToPage(page, null, null, null);
-		}
-		
-		log.info(proceed+"------------------in AFTER-----proceed------------------proceed");
+		}		
 		//END 27951
 	}
 
