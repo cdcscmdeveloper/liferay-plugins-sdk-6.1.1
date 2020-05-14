@@ -70,7 +70,7 @@
 			    
 			    <p:column>
 			        <p:inputText partialSubmit="true" rendered="#{evaluationBackingBean.managedBean.offerScoreType eq '2'}" 
-			        	id="userScore" style="text-align:right;" maxlength="16" size="2" required="true"
+			        	id="userScore" label="#{lbl['lbl.tpl.spec.content.user.score']}" style="text-align:right;" maxlength="16" size="2" required="true"
 			        	value="#{finSpec.scQtProposal.proposalAmount.totalScore}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 						<f:attribute name="min" value="0" />
