@@ -107,11 +107,20 @@
 					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
-						<td><p:selectOneMenu style="width: 283px;margin-bottom: 5px;"
+						<td>
+						<p:selectOneMenu style="width: 283px;margin-bottom: 5px;" rendered="#{qTCloneBackingbean.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_QT_SUBMISSION}"
 								value="#{qTCloneBackingbean.managedBean.cloneQtnTenderSearchBean.qtStatus}">
 								<f:selectItems
 									value="#{qTDetailBB.getStatusDropdownValuesWithExclusions('SC', 'QT',60002)}" />
-							</p:selectOneMenu></td>
+						</p:selectOneMenu>
+						
+						<p:selectOneMenu style="width: 283px;margin-bottom: 5px;" rendered="#{qTCloneBackingbean.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT}"
+								value="#{qTCloneBackingbean.managedBean.cloneQtnTenderSearchBean.qtStatus}">
+								<f:selectItems
+									value="#{qTDetailBB.getStatusDropdownValuesWithExclusions('SC', 'QT',60002,60033,60024,60003,60025,60026,60028,60037,60027,60034,60004)}" />
+						</p:selectOneMenu>
+						
+						</td>
 						<td />
 						<td />
 					</tr>
