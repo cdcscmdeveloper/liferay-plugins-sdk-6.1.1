@@ -100,6 +100,8 @@ public abstract class BaseManagedBean implements Serializable {
 	private boolean preRegistration=false;
 	private SsmResDTO ssmResDTO;
 	private boolean checkRoleSSM=false;
+	//27239
+	private boolean dontGetSsmData = false;
 
 	/**
 	 * @return the token
@@ -654,6 +656,14 @@ public abstract class BaseManagedBean implements Serializable {
 
 	public void setCheckRoleSSM(boolean checkRoleSSM) {
 		this.checkRoleSSM = checkRoleSSM;
+	}
+
+	public boolean isDontGetSsmData() {
+		return dontGetSsmData;
+	}
+
+	public void setDontGetSsmData(boolean dontGetSsmData) {
+		this.dontGetSsmData = dontGetSsmData;
 	}
 	
 	
