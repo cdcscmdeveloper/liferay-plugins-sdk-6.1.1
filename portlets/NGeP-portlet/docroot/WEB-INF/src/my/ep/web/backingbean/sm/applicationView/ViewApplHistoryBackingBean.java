@@ -333,7 +333,9 @@ public class ViewApplHistoryBackingBean extends
 		boolean proceed = true;
 		smApplBB.getManagedBean().setPersonnelsRole(this.getManagedBean().getPersonnelsRole());
 		this.getManagedBean().setPreRegistration(true);
+		log.info("-----------------------------------------redirectToReapplyNewAppl");
 		if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(getManagedBean().getSmAppl().getSmSupplier().getRegNo(),getManagedBean().getSmAppl().getSmSupplier().getBusinessType()) && this.getManagedBean().getSsmResDTO() != null && !this.getManagedBean().isCheckRoleSSM()){			
+			log.info("------------------in IF-----------------------redirectToReapplyNewAppl");
 			List<SmPersonnel> personnelsRole = this.getManagedBean().getPersonnelsRole();
 			personnelsRole.clear();
 			for(SmPersonnel personnel :  this.getManagedBean().getSmAppl().getSmPersonnels()){
@@ -357,7 +359,7 @@ public class ViewApplHistoryBackingBean extends
 			}
 			proceed = false;
 		}
-		
+		log.info(proceed+"------------------in IF-----proceed------------------redirectToReapplyNewAppl");
 		if(proceed){
 			// #24923
 			smApplBB.getManagedBean().setNewSupplierType(
