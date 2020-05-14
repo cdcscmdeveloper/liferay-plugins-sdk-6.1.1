@@ -602,10 +602,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				}
 			}
 		}else{
-			if(getManagedBean().getSmPersonnel()!=null){
+			//STARt 27802
+			/*if(getManagedBean().getSmPersonnel()!=null){
 				getManagedBean().getSmPersonnel().setDirector(this.getManagedBean().isOwnerIsDirector());
 				getManagedBean().getSmPersonnel().setEquityOwner(this.getManagedBean().isOwnerIsEquity());
-			}
+			}*/
+			//END 27802
 			SmSupplierOwner suppOwner = this.getManagedBean().getSmSuppOwner();
 			if(this.getManagedBean().getSmSuppOwners().size()>0){
 				suppOwner = this.getManagedBean().getSmSuppOwners().get(0);
@@ -3998,6 +4000,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				personnel.setName(suppOwner.getOwnerName());
 				personnel.setIdentificationNo(suppOwner.getIdentificationNo());
 				personnel.setIdentificationTypeId(suppOwner.getIdentificationTypeId());
+				//27802
+				personnel.setEquityOwner(true);
 			}else{
 				this.getManagedBean().setSmPersonnelSelected(new SmPersonnel());				
 			}
