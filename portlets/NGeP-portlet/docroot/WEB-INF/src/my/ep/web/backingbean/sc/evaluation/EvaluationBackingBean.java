@@ -13563,37 +13563,23 @@ private void retriveCommitteeRemarksList(){
 				for(ScQtProposalChecklist list : scoreDtls){
 
 					ScQtProposalAmount amountScore = list.getScQtProposal().getProposalAmount();
-					if (null == amountScore) {
-						ScQtProposalAmount scQtProposalAmount = new ScQtProposalAmount();
-						scQtProposalAmount.setTotalScore(
-								list.getScQtProposal().getProposalAmount().getTotalScore());
-						this.getManagedBean().setFinPackageScore(true);
-						
-						if(scQtProposalAmount.getTotalScore().intValue() > this.getManagedBean()
-								.getWithInVarieance().intValue()){
-							this.getManagedBean().setFinPackageScore(false);
-							throw new EpException(MessageConst.ERROR_760201);
-						
-						}
-					}
-					else{
-						amountScore.setTotalScore(
-								list.getScQtProposal().getProposalAmount().getTotalScore());
+					System.out.println(" amountScore "+amountScore);
+					if (null != amountScore) {
 								this.getManagedBean().setFinPackageScore(true);
-								
+						System.out.println(" amountScore.getTotalScore() "+amountScore.getTotalScore());		
 						if(amountScore.getTotalScore().intValue() > this.getManagedBean()
 								.getWithInVarieance().intValue()){
 							this.getManagedBean().setFinPackageScore(false);
 							throw new EpException(MessageConst.ERROR_760201);
-						
 						}
-					}
-							
+					}		
 				}	
 			}
 			evalResDTO = evaluationSO.saveUserScorePackageDetails(evalReqDTO);
+			
+			if (evalResDTO.isSuccessful()){
 			successMessage(MessageConst.INFO_700004,
-					getMessageCommon("lbl.sc.prepare.evaluation.evaluationStage.scores"), " ", Boolean.FALSE);
+					getMessageCommon("lbl.sc.prepare.evaluation.evaluationStage.scores"), " ", Boolean.FALSE);}
 			
 		} finally{
 			evaluationSO = null;
