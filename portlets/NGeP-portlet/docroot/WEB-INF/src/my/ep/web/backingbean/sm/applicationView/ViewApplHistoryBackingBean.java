@@ -349,8 +349,9 @@ public class ViewApplHistoryBackingBean extends
 					}
 				}
 			}
-			
+			log.info("------------------in IF-----------------------redirectToReapplyNewAppl-----------"+personnelsRole.size());
 			if(personnelsRole != null && personnelsRole.size() > 0) {
+					proceed = false;
 					getManagedBean().setPreRegistration(true);
 					getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupplier());	
 					this.getManagedBean().setPersonnelsRole(personnelsRole);
@@ -360,10 +361,11 @@ public class ViewApplHistoryBackingBean extends
 							"confirmDialog.show()");
 					return;
 			}
-			proceed = false;
+			
 		}
 		log.info(proceed+"------------------in IF-----proceed------------------redirectToReapplyNewAppl");
 		if(proceed){
+			log.info(proceed+"------------------in proceed-----proceed------------------proceed");
 			// #24923
 			smApplBB.getManagedBean().setNewSupplierType(
 					getManagedBean().getSmAppl().getSupplierType());
@@ -374,6 +376,8 @@ public class ViewApplHistoryBackingBean extends
 					.get("RE");
 			SmCommonUtil.redirectToPage(page, null, null, null);
 		}
+		
+		log.info(proceed+"------------------in AFTER-----proceed------------------proceed");
 		//END 27951
 	}
 
