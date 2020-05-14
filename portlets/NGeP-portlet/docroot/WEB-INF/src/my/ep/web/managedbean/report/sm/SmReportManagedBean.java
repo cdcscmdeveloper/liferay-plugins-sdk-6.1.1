@@ -64,8 +64,8 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	private List<String> selectedPaymentTypes;
 	private List<CategoryRptVO> categoryLs;
 	private List<CategoryRptVO> selectedCategoryLs;
+	public String searchDate;
 
-	
 
 	public String getDocumentType() {
 		return documentType;
@@ -74,6 +74,7 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	public void setDocumentType(String documentType) {
 		this.documentType = documentType;
 	}
+	
 	public Date getDateFrom() {
 		return dateFrom;
 	}
@@ -417,4 +418,13 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	public void setCdcCollector(boolean isCdcCollector) {
 		this.isCdcCollector = isCdcCollector;
 	}
+	
+	public String getSearchDate() {
+		return searchDate;
+	}
+
+	public void setSearchDate(String searchDate) {
+		this.searchDate = searchDate;
+	}
+	
 }
