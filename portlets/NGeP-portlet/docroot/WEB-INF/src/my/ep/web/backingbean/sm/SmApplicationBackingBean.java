@@ -949,7 +949,8 @@ public class SmApplicationBackingBean extends
 						currSupp.getSupplierId(), applicationType);
 				
 				String labelNameVal = "";
-				if (rejectedAppl != null) {
+				//27951 - If from resubmit appl history/status no need display message
+				if (rejectedAppl != null && !this.getManagedBean().isPreRegistration()) {
 					FacesContext.getCurrentInstance().addMessage("rejectedExist", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 							SmCommonUtil.getMessage("lbl.sm.supplier.promo.rejected",
 									new String[] { labelNameVal })));
@@ -1661,6 +1662,7 @@ public class SmApplicationBackingBean extends
 								}
 								
 								if(personnelsRole != null && personnelsRole.size() > 0) {
+									getManagedBean().setDontGetSsmData(dontGetSsmData);
 									getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupplier());	
 									RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
 									return SmApplicationUtil.setStringNavigationForApplTnCPage(applicationType);								
