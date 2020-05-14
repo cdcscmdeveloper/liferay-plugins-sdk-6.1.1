@@ -194,6 +194,60 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		}
 	}
 	// #27397 - end
+	
+	// #21331 - start
+	public void validateParameterValue(String reportCode) {
+		log.info("************** SmReportBackingBean.validateParameterValue() | reportCode: " + reportCode);
+		if (StringUtils.isNotEmpty(reportCode) && (reportCode.trim().equalsIgnoreCase(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL))) {
+			// search date
+			if (StringUtils.isEmpty(getManagedBean().getSearchDate())) {
+				throw new EpException(MessageConst.ERROR_REPORT_780060);
+			} else {
+				if (getManagedBean().getSearchDate().equalsIgnoreCase("mofRegisteredDate")) {
+					checkOneMonthDifferent(getManagedBean().getDateFrom(), getManagedBean().getDateTo(), getManagedBean().getSearchDate());
+				} else {
+					checkOneMonthDifferent(getManagedBean().getDateExpFrom(), getManagedBean().getDateExpTo(), getManagedBean().getSearchDate());
+				}
+			}
+			// MOF Reg No
+			if (StringUtils.isEmpty(getManagedBean().getMofRegNoFrom()) || StringUtils.isEmpty(getManagedBean().getMofRegNoTo())) {
+				validateMofRegNo();
+			}
+		}
+	}
+
+	public void checkOneMonthDifferent(Date fromDate, Date toDate, String searchDate) {
+		SimpleDateFormat outputDateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+		String yearFrom = outputDateFormat.format(fromDate).substring(6, 10);
+		String yearTo = outputDateFormat.format(toDate).substring(6, 10);
+		String monthFrom = outputDateFormat.format(fromDate).substring(3, 5);
+		String monthTo = outputDateFormat.format(toDate).substring(3, 5);
+		String dayFrom = outputDateFormat.format(fromDate).substring(0, 2);
+		String dayTo = outputDateFormat.format(toDate).substring(0, 2);
+		int yearFromInt = Integer.parseInt(yearFrom);
+		int yearToInt = Integer.parseInt(yearTo);
+		int monthFromInt = Integer.parseInt(monthFrom);
+		int monthToInt = Integer.parseInt(monthTo);
+		int dayFromInt = Integer.parseInt(dayFrom);
+		int dayToInt = Integer.parseInt(dayTo);
+
+		log.info("********checkOneYearDifferent********| searchDate = " + searchDate);
+		log.info("** yearFromInt=" + yearFromInt + " | yearToInt=" + yearToInt + " | monthFromInt=" + monthFromInt + " | monthToInt=" + monthToInt + " | dayFromInt=" + dayFromInt
+				+ " | dayToInt=" + dayToInt);
+
+		if (yearFromInt == yearToInt) {
+			if (monthFromInt != monthToInt) {
+				if (searchDate.equalsIgnoreCase("mofRegisteredDate")) {
+					throw new EpException(MessageConst.ERROR_REPORT_780057);
+				} else {
+					throw new EpException(MessageConst.ERROR_REPORT_780058);
+				}
+			}
+		} else {
+			throw new EpException(MessageConst.ERROR_REPORT_780061);
+		}
+	}
+	// #21331 - end
 
 	public void onChangeZone() {
 
