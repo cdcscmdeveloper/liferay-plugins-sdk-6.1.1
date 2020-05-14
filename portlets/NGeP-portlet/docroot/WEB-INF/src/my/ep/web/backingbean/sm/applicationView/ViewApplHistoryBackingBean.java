@@ -334,6 +334,7 @@ public class ViewApplHistoryBackingBean extends
 		smApplBB.getManagedBean().setPreRegistration(this.getManagedBean().isPreRegistration());
 		smApplBB.getManagedBean().setPersonnelsRole(this.getManagedBean().getPersonnelsRole());
 		this.getManagedBean().setPreRegistration(true);
+		log.info("-------------------------------------------------------------------"+SmCommonUtil.getInstance().ssmActive());
 		if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(getManagedBean().getSmAppl().getSmSupplier().getRegNo(),getManagedBean().getSmAppl().getSmSupplier().getBusinessType()) && this.getManagedBean().getSsmResDTO() != null && !this.getManagedBean().isCheckRoleSSM()){			
 			List<SmPersonnel> personnelsRole = this.getManagedBean().getPersonnelsRole();
 			personnelsRole.clear();
@@ -348,6 +349,7 @@ public class ViewApplHistoryBackingBean extends
 					}
 				}
 			}
+			log.info("--------------------------------personnelsRole.size()-----------------------------------"+personnelsRole.size());
 			if(personnelsRole != null && personnelsRole.size() > 0) {
 					proceed = false;
 					getManagedBean().setPreRegistration(true);
