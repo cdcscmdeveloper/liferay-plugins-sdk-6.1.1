@@ -189,7 +189,9 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		getManagedBean().setSearchDocumentType(null);
 		if(isGovernment()){
 			getDocumentTypes(Boolean.TRUE, Boolean.FALSE);
-			getManagedBean().setGovernment(Boolean.TRUE);
+			if (!getManagedBean().isG2G()) {
+				getManagedBean().setGovernment(Boolean.TRUE);
+			}
 		} else if(isSupplier()){
 			getDocumentTypes(Boolean.FALSE, Boolean.FALSE);
 			getManagedBean().setGovernment(Boolean.FALSE);
@@ -253,7 +255,8 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 				docTypeList.add(ParameterConst.DOCTYPE_SIMPLE_QUOTE);
 				docTypeList.add(ParameterConst.DOCTYPE_PURCHASE_INQUIRY);
 				docTypeList.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
-				getManagedBean().setG2G(true);
+				getManagedBean().setG2G(Boolean.TRUE);
+				getManagedBean().setGovernment(Boolean.FALSE);
 			}
 			
 			else {
@@ -505,12 +508,11 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 					if (getManagedBean().getSearchStatusId().equals(DPStatusConstants.LOA_PENDING_SUBMISSION) ||
 							getManagedBean().getSearchStatusId().equals(DPStatusConstants.LOA_PENDING_APPROVAL) ||
 							getManagedBean().getSearchStatusId().equals(DPStatusConstants.LOA_PENDING_REVISION) ||
-							getManagedBean().getSearchStatusId().equals(DPStatusConstants.LOA_PENDING_REVISION_APPROVAL)) {
+							getManagedBean().getSearchStatusId().equals(DPStatusConstants.LOA_PENDING_REVISION_APPROVAL))
 						loaCancelDetailBackingBean.cancelationLOA(docId);
 					// End 22211
-					} else {
+					else
 						loaDetailBackingBean.viewLOA(docId);
-					}
 					
 					loaDetailBackingBean.getManagedBean().setDpObj(dpObj);
 					loaDetailBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
@@ -647,26 +649,10 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	 * @param dpObj
 	 */
 	public void performViewDoc(Object[] dpObj) {
-		if (showFunctionType()) {
-			if (ParameterConst.DOCTYPE_SIMPLE_QUOTE.equals(getManagedBean().getSearchDocumentType())) {
-                if (!getManagedBean().isG2G()) {
-                	this.viewDoc(dpObj);
-                } else {
-                	this.viewDocSupplierSQ(dpObj);
-                }
-			} else {
-				this.viewDoc(dpObj);
-			}
+		if (getManagedBean().isG2G() || (isSupplier() && !isGovernment() && getManagedBean().getSearchDocumentType().equals(ParameterConst.DOCTYPE_SIMPLE_QUOTE))) { 
+			this.viewDocSupplierSQ(dpObj);
 		} else {
-			if (ParameterConst.ORG_TYPE_PTJ.equals(getManagedBean().getSearchFunctionType())) {
-				this.viewDoc(dpObj);
-			} else {
-				if (ParameterConst.DOCTYPE_SIMPLE_QUOTE.equals(getManagedBean().getSearchDocumentType())) {
-					this.viewDocSupplierSQ(dpObj);
-				} else {
-					this.viewDoc(dpObj);
-				}
-			}
+			this.viewDoc(dpObj);
 		}
 	}
 	

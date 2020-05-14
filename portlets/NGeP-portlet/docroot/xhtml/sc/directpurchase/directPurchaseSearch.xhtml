@@ -191,6 +191,12 @@
 							rendered="#{directPurchaseBackingBean.isSupplier() ? directPurchaseBackingBean.managedBean.searchDocumentType eq ParameterConst.doctypeLetterOfAward : true}"
 							icon="ui-icon-print"
 							action="#{directPurchaseBackingBean.generateReport(Obj)}" />
+							
+						<p:menuitem id="printBtnIconDualRole" value="#{lbl['lbl.btn.print']}"
+							ajax="false"
+							rendered="#{directPurchaseBackingBean.showFunctionType() and !directPurchaseBackingBean.managedBean.isG2G()}"
+							icon="ui-icon-print"
+							action="#{directPurchaseBackingBean.generateReport(Obj)}" />
 
 					</p:menuButton>
 					<!-- end 25396: -->
