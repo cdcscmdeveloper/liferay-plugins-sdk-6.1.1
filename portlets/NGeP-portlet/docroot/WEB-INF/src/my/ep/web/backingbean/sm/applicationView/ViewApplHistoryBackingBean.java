@@ -354,8 +354,8 @@ public class ViewApplHistoryBackingBean extends
 					getManagedBean().setPreRegistration(true);
 					getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupplier());	
 					this.getManagedBean().setPersonnelsRole(personnelsRole);
-					RequestContext.getCurrentInstance().execute("blockWidget.hide()");
-					RequestContext.getCurrentInstance().execute("ownerChecking.show()");
+					//RequestContext.getCurrentInstance().execute("blockWidget.hide()");
+					RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
 					return;
 			}
 			proceed = false;
