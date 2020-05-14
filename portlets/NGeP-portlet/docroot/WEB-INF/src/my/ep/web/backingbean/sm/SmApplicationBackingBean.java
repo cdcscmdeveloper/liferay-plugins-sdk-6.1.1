@@ -1641,43 +1641,42 @@ public class SmApplicationBackingBean extends
 						//set establish date
 						this.getManagedBean().getSmAppl().getSmCompanyBasic().setEstablishDate(ssmResDTO.getSmCompanyBasic().getEstablishDate());
 						//START #27239
-						//POPUP USER NOT SSM OWNER #26734 
+						//POPUP USER NOT SSM OWNER #26734 //ANY CHANGES HERE PLEASE CHANGES IN ViewApplHistoryBackingBean.redirectToReapplyNewAppl & viewOnlineAccount.RegistrationBackingBean & SmApplicationBackingBean.proceedToApplication
 						FacesScopes facesScope = new FacesScopes();
-						PmUser userSession = facesScope.getUserSessionBean();
 						if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF) || applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW) || applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
 							
-							//START NEW CHANGES POPUP OWNER UPDATE ROLE
-							SmPersonnel personnelOld = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(
-									userSession.getIdentificationNo(), this.getManagedBean().getSmAppl()
-											.getSmPersonnels(), "identificationNo");
-							
+							//START NEW CHANGES POPUP OWNER UPDATE ROLE							
 							List<SmPersonnel> personnelsRole = this.getManagedBean().getPersonnelsRole();
-							personnelsRole.clear();
-							for(SmPersonnel personnel :  this.getManagedBean().getSmAppl().getSmPersonnels()){
-								if (!personnel.isDowngradeRoleSsm() && (personnel.isEquityOwner() || personnel.isDirector())) {
-									if(personnel.getEpRole() != null){
-										SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
-										SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelDirector(),"identificationNo");
-										if(personnelDirectorSSM == null && personnelSSM == null){
-											personnelsRole.add(personnel);
+							if(personnelsRole != null && personnelsRole.size() <=0){
+								for(SmPersonnel personnel :  this.getManagedBean().getSmAppl().getSmPersonnels()){
+									if (personnel.isEquityOwner() || personnel.isDirector()) {
+										if(personnel.getEpRole() != null){
+											SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
+											SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelDirector(),"identificationNo");
+											if(personnelDirectorSSM == null && personnelSSM == null){
+												personnelsRole.add(personnel);
+											}
 										}
 									}
-								}else if (personnel.isDowngradeRoleSsm() && personnel.getEpRole() != null && (personnel.isEquityOwner() || personnel.isDirector())) {
-									personnel.setEquityOwner(false);
-									personnel.setDirector(false);
+								}
+								
+								if(personnelsRole != null && personnelsRole.size() > 0) {
+									getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupplier());	
+									RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
+									return SmApplicationUtil.setStringNavigationForApplTnCPage(applicationType);								
+								}
+							}else{
+								//set latest role to personnel
+								for(SmPersonnel personnel :  personnelsRole){
+									SmPersonnel personnelActive = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), this.getManagedBean().getSmAppl().getSmPersonnels(), "identificationNo");
+									if(personnelActive != null){
+										//copy latest data to supplier admin
+										String[] copyEquityOwner = {"equityOwner","director","clerical","higherManagement","management","downgradeRoleSsm"};
+										EntityHelper.copyEntityPropertiesOnly(personnel,personnelActive,copyEquityOwner);
+									}
 								}
 							}
 							
-							if(personnelsRole != null && personnelsRole.size() > 0) {
-								//SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
-								//SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelDirector(),"identificationNo");
-								//if(personnelSSM == null && personnelDirectorSSM == null) {
-									getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupplier());	
-									getManagedBean().setSmPersonnelSsm(personnelOld);
-									RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
-									return SmApplicationUtil.setStringNavigationForApplTnCPage(applicationType);
-								//}
-							}
 						}
 						// #26734 END
 						//END #27239
