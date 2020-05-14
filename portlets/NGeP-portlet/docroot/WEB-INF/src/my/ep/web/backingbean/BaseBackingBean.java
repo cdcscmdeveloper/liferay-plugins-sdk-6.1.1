@@ -2684,7 +2684,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	public void changeRoleAndProceed() {
 		//start loop list #27239
 		for(SmPersonnel personnel : this.getManagedBean().getPersonnelsRole()){
-			personnel.setDowngradeRoleSsm(true);			
 				//27951
 				if(!personnel.isClerical() && !personnel.isHigherManagement() && !personnel.isManagement()){
 					this.getManagedBean().getPersonnelsRole().clear();
