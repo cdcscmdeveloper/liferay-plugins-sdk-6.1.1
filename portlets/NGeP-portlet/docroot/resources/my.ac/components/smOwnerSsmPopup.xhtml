@@ -24,7 +24,9 @@
 			resizable="false">
 			<div id="#{cc.attrs.dialogId}ContentDiv"
 				style="overflow-wrap: break-word;">
-				<h:outputText value="#{lbl['lbl.sm.term.and.condition.checkowner']}"
+				<h:outputText value="#{lbl['lbl.sm.term.and.condition.checkowner']}" rendered="#{!cc.attrs.bBean.managedBean.preRegistration}"
+					escape="false" />
+				<h:outputText value="#{lbl['lbl.sm.term.and.condition.pre.checkowner']}" rendered="#{cc.attrs.bBean.managedBean.preRegistration}"
 					escape="false" />
 				<br /> &#160;&#160;&#160;&#160;&#160;a.
 				<p:commandLink update="#{cc.attrs.btnOkUpdate}"
@@ -34,15 +36,24 @@
 					<h:outputFormat value="#{lbl['lbl.txt.clickhere']}" escape="false"></h:outputFormat>
 				</p:commandLink>
 				<h:outputText
-					value="#{lbl['lbl.sm.term.and.condition.checkowner.a']}"
+					value="#{lbl['lbl.sm.term.and.condition.checkowner.a']}" rendered="#{!cc.attrs.bBean.managedBean.preRegistration}"
+					escape="false" />
+				<h:outputText
+					value="#{lbl['lbl.sm.term.and.condition.pre.checkowner.a']}" rendered="#{cc.attrs.bBean.managedBean.preRegistration}"
 					escape="false" />
 				<br /> &#160;&#160;&#160;&#160;&#160;b.
 				<h:outputText
-					value="#{lbl['lbl.sm.term.and.condition.checkowner.b']}"
+					value="#{lbl['lbl.sm.term.and.condition.checkowner.b']}" rendered="#{!cc.attrs.bBean.managedBean.preRegistration}"
+					escape="false" />
+				<h:outputText
+					value="#{lbl['lbl.sm.term.and.condition.pre.checkowner.b']}" rendered="#{cc.attrs.bBean.managedBean.preRegistration}"
 					escape="false" />
 				<br /> &#160;&#160;&#160;&#160;&#160;c.
 				<h:outputText
-					value="#{lbl['lbl.sm.term.and.condition.checkowner.c']}"
+					value="#{lbl['lbl.sm.term.and.condition.checkowner.c']}" rendered="#{!cc.attrs.bBean.managedBean.preRegistration}"
+					escape="false" />
+				<h:outputText
+					value="#{lbl['lbl.sm.term.and.condition.pre.checkowner.c']}" rendered="#{cc.attrs.bBean.managedBean.preRegistration}"
 					escape="false" />
 				<br />
 			</div>
@@ -68,17 +79,17 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sm.roles']}">
 						<c:if test="#{cc.attrs.bBean.businessTypeIsROC(cc.attrs.bBean.managedBean.smSupplierSsm.businessType)}">
-							<p:selectBooleanCheckbox value="#{person.director}" itemLabel="#{lbl['lbl.sm.person.dir']}" disabled="#{(person.directorSsm or person.clerical)}">
+							<!-- #27951 p:selectBooleanCheckbox value="#{person.director}" itemLabel="#{lbl['lbl.sm.person.dir']}" disabled="#{(person.directorSsm or person.clerical)}">
 								<p:ajax update=":#{p:component('popupRolePanelId')}" listener="#{cc.attrs.bBean.listenerRolePopup(person)}" process="@this" onstart="submissionDialog.show();" oncomplete="submissionDialog.hide();" />
-							</p:selectBooleanCheckbox>
-							<p:selectBooleanCheckbox value="#{person.higherManagement}" itemLabel="#{lbl['lbl.sm.person.hghMngmt']}" disabled="#{(person.directorSsm or person.clerical)}">
+							</p:selectBooleanCheckbox> -->
+							<p:selectBooleanCheckbox value="#{person.higherManagement}" itemLabel="#{lbl['lbl.sm.person.hghMngmt']}" disabled="#{(person.clerical)}">
 								<p:ajax update=":#{p:component('popupRolePanelId')}" listener="#{cc.attrs.bBean.listenerRolePopup(person)}" process="@this" onstart="submissionDialog.show();" oncomplete="submissionDialog.hide();" />
 							</p:selectBooleanCheckbox>
 						</c:if>
-						<p:selectBooleanCheckbox value="#{person.management}" itemLabel="#{lbl['lbl.sm.person.mngmt']}" disabled="#{(person.directorSsm or person.clerical)}">
+						<p:selectBooleanCheckbox value="#{person.management}" itemLabel="#{lbl['lbl.sm.person.mngmt']}" disabled="#{(person.clerical)}">
 							<p:ajax update=":#{p:component('popupRolePanelId')}" listener="#{cc.attrs.bBean.listenerRolePopup(person)}" process="@this" onstart="submissionDialog.show();" oncomplete="submissionDialog.hide();" />
 						</p:selectBooleanCheckbox>
-						<p:selectBooleanCheckbox value="#{person.clerical}" itemLabel="#{lbl['lbl.sm.person.stf']}" disabled="#{(person.director or person.higherManagement or person.management)}">
+						<p:selectBooleanCheckbox value="#{person.clerical}" itemLabel="#{lbl['lbl.sm.person.stf']}" disabled="#{(person.higherManagement or person.management)}">
 							<p:ajax update=":#{p:component('popupRolePanelId')}" listener="#{cc.attrs.bBean.listenerRolePopup(person)}" process="@this" onstart="submissionDialog.show();" oncomplete="submissionDialog.hide();" />
 						</p:selectBooleanCheckbox>
 					</p:column>
