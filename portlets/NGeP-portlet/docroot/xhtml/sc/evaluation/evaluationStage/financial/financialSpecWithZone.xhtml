@@ -27,13 +27,40 @@
 				<tr>
 					<td align="right"><p:commandButton
 							value="#{lbl['lbl.btn.back']}" style="float:left;"
-							action="#{evaluationBackingBean.evaluationBackaction}" /><p:commandButton
-							value="#{lbl['lbl.btn.save']}"
-							disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.offerScoreType eq '1' 
-							or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired}"
-							style="float:right;" update="@all" onstart="blockWidget.show();"
-							oncomplete="blockWidget.hide();"
-							action="#{evaluationBackingBean.saveUserScoreDtls}" /></td>
+							action="#{evaluationBackingBean.evaluationBackaction}" />
+				<c:if test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and 
+							evaluationBackingBean.managedBean.scQt.techEvaluationReq and 
+							evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '1'}">
+				<p:commandButton
+						value="#{lbl['lbl.btn.save']}"
+						disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.offerScoreType eq '1'
+						or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired}"
+						style="float:right;" update="@all" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();"
+						action="#{evaluationBackingBean.saveUserScoreDtls}" />
+				</c:if>
+			
+				<c:if test="#{evaluationBackingBean.managedBean.committeeType eq 'FEC' and 
+							evaluationBackingBean.managedBean.scQt.techEvaluationReq and 
+							evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1'}">
+					<p:commandButton
+						value="#{lbl['lbl.btn.save']}"
+						disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.offerScoreType eq '1'
+						or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired}"
+						style="float:right;" update="@all" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();"
+						action="#{evaluationBackingBean.saveUserScoreDtls}" />	
+				</c:if>
+				<c:if test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and 
+							!evaluationBackingBean.managedBean.scQt.techEvaluationReq}">
+						<p:commandButton
+						value="#{lbl['lbl.btn.save']}"
+						disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.offerScoreType eq '1'
+						or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired}"
+						style="float:right;" update="@all" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();"
+						action="#{evaluationBackingBean.saveUserScoreDtls}" /> 		
+				</c:if>
 				</tr>
 			</table>
 		</h:panelGroup><!-- #25138-Ahmaa-End-->
