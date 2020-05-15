@@ -54,7 +54,7 @@
 				<p:commandButton value="#{lbl['lbl.sm.proceed']}" id="updCmdBtn"
 					action="#{backingBean.proceedToApplication('U')}"
 					disabled="#{!backingBean.managedBean.termsAccepted}" 
-					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+					onstart="blockWidget.show()" update="@form" oncomplete="blockWidget.hide()" />
 			</div>
 			<ac:smOwnerSsmPopup bBean="#{backingBean}" title="#{lbl['lbl.sm.term.and.condition.header']}" dialogId="ownerChecking" 
 				btnOkLabel="#{lbl['lbl.btn.change']}" 

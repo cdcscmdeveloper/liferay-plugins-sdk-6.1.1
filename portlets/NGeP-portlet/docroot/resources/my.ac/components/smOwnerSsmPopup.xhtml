@@ -13,8 +13,8 @@
 		<cc:attribute name="btnOkProcess" required="false" default="@this" />
 		<cc:attribute name="btnOkUpdate" required="false" default="@form" />
 		<cc:attribute name="btnCancelLabel" required="true" />
-		<cc:attribute name="height" default="200" />
-		<cc:attribute name="width" default="900" />
+		<cc:attribute name="height" default="150" />
+		<cc:attribute name="width" default="500" />
 	</cc:interface>
 
 	<cc:implementation>
@@ -24,43 +24,55 @@
 			resizable="false">
 			<div id="#{cc.attrs.dialogId}ContentDiv"
 				style="overflow-wrap: break-word;">
-				<h:outputText value="#{lbl['lbl.sm.term.and.condition.checkowner']}" rendered="#{!cc.attrs.bBean.managedBean.preRegistration}"
-					escape="false" />
-				<h:outputText value="#{lbl['lbl.sm.term.and.condition.pre.checkowner']}" rendered="#{cc.attrs.bBean.managedBean.preRegistration}"
-					escape="false" />
-				<br /> &#160;&#160;&#160;&#160;&#160;a.
-				<p:commandLink update="#{cc.attrs.btnOkUpdate}"
-					style="margin-right:20px;"
-					onclick="#{cc.attrs.dialogId}WidgetVar.hide()"
-					oncomplete="#{cc.attrs.dialogId}ChangeWidgetVar.show()">
-					<h:outputFormat value="#{lbl['lbl.txt.clickhere']}" escape="false"></h:outputFormat>
-				</p:commandLink>
-				<h:outputText
-					value="#{lbl['lbl.sm.term.and.condition.checkowner.a']}" rendered="#{!cc.attrs.bBean.managedBean.preRegistration}"
-					escape="false" />
-				<h:outputText
-					value="#{lbl['lbl.sm.term.and.condition.pre.checkowner.a']}" rendered="#{cc.attrs.bBean.managedBean.preRegistration}"
-					escape="false" />
-				<br /> &#160;&#160;&#160;&#160;&#160;b.
-				<h:outputText
-					value="#{lbl['lbl.sm.term.and.condition.checkowner.b']}" rendered="#{!cc.attrs.bBean.managedBean.preRegistration}"
-					escape="false" />
-				<h:outputText
-					value="#{lbl['lbl.sm.term.and.condition.pre.checkowner.b']}" rendered="#{cc.attrs.bBean.managedBean.preRegistration}"
-					escape="false" />
-				<br /> &#160;&#160;&#160;&#160;&#160;c.
-				<h:outputText
-					value="#{lbl['lbl.sm.term.and.condition.checkowner.c']}" rendered="#{!cc.attrs.bBean.managedBean.preRegistration}"
-					escape="false" />
-				<h:outputText
-					value="#{lbl['lbl.sm.term.and.condition.pre.checkowner.c']}" rendered="#{cc.attrs.bBean.managedBean.preRegistration}"
-					escape="false" />
-				<br />
+				
+				<c:choose>
+					<c:when test="#{!cc.attrs.bBean.managedBean.dontGetSsmData}">
+						<h:outputText value="#{lbl['lbl.sm.term.and.condition.checkowner']}" rendered="#{!cc.attrs.bBean.managedBean.preRegistration}"
+							escape="false" />
+						<h:outputText value="#{lbl['lbl.sm.term.and.condition.pre.checkowner']}" rendered="#{cc.attrs.bBean.managedBean.preRegistration}"
+							escape="false" />
+						<br /> &#160;&#160;&#160;&#160;&#160;a.
+						<p:commandLink update="#{cc.attrs.btnOkUpdate}"
+							style="margin-right:20px;"
+							onclick="#{cc.attrs.dialogId}WidgetVar.hide()"
+							oncomplete="#{cc.attrs.dialogId}ChangeWidgetVar.show()">
+							<h:outputFormat value="#{lbl['lbl.txt.clickhere']}" escape="false"></h:outputFormat>
+						</p:commandLink>
+						<h:outputText
+							value="#{lbl['lbl.sm.term.and.condition.checkowner.a']}" rendered="#{!cc.attrs.bBean.managedBean.preRegistration}"
+							escape="false" />
+						<h:outputText
+							value="#{lbl['lbl.sm.term.and.condition.pre.checkowner.a']}" rendered="#{cc.attrs.bBean.managedBean.preRegistration}"
+							escape="false" />
+						<br /> &#160;&#160;&#160;&#160;&#160;b.
+						<h:outputText
+							value="#{lbl['lbl.sm.term.and.condition.checkowner.b']}" rendered="#{!cc.attrs.bBean.managedBean.preRegistration}"
+							escape="false" />
+						<h:outputText
+							value="#{lbl['lbl.sm.term.and.condition.pre.checkowner.b']}" rendered="#{cc.attrs.bBean.managedBean.preRegistration}"
+							escape="false" />
+						<br /> &#160;&#160;&#160;&#160;&#160;c.
+						<h:outputText
+							value="#{lbl['lbl.sm.term.and.condition.checkowner.c']}" rendered="#{!cc.attrs.bBean.managedBean.preRegistration}"
+							escape="false" />
+						<h:outputText
+							value="#{lbl['lbl.sm.term.and.condition.pre.checkowner.c']}" rendered="#{cc.attrs.bBean.managedBean.preRegistration}"
+							escape="false" />
+						<br />
+				</c:when>
+				<c:otherwise>
+					<h:outputText
+							value="#{lbl['lbl.sm.term.and.condition.checkowner.new']}" rendered="#{!cc.attrs.bBean.managedBean.preRegistration}"
+							escape="false" />
+				</c:otherwise>
+				</c:choose>
+				
 			</div>
 
 			<div style="float: right;">
 				<p:commandButton value="#{cc.attrs.btnCancelLabel}"
-					oncomplete="#{cc.attrs.dialogId}WidgetVar.hide()" />
+					oncomplete="#{cc.attrs.dialogId}WidgetVar.hide()" immediate="true" partialSubmit="true" action="#{cc.attrs.bBean.resetRoleValue()}"
+					/>
 			</div>
 		</p:dialog>
 
@@ -100,7 +112,8 @@
 					process="#{cc.attrs.btnOkProcess}" partialSubmit="true"
 					immediate="true" action="#{cc.attrs.bBean.changeRoleAndProceed()}"
 					update="#{cc.attrs.btnOkUpdate}" />
-				<p:commandButton value="#{cc.attrs.btnCancelLabel}"
+					
+				<p:commandButton value="#{cc.attrs.btnCancelLabel}" immediate="true" partialSubmit="true" action="#{cc.attrs.bBean.resetRoleValue()}"
 					oncomplete="#{cc.attrs.dialogId}ChangeWidgetVar.hide()}" />
 			</div>
 		</p:dialog>
