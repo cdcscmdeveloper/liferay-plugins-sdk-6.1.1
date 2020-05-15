@@ -158,6 +158,7 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private List<BlacklistOwnerDirectorVO> blacklistownerDirectorList;
 	private boolean noDisciplinary;
 	private String regIcCheckSSM;
+	private boolean activeDisicplinaryAction;
 	
 	// 27691 - Add/Delete Supplier Owner
 	private SmSupplierOwner[] selectedSuppOwners;
@@ -986,5 +987,13 @@ public class RegistrationManagedBean extends BaseManagedBean {
 
 	public void setRegAccountMaintainance(boolean regAccountMaintainance) {
 		this.regAccountMaintainance = regAccountMaintainance;
+	}
+
+	public boolean isActiveDisicplinaryAction() {
+		return activeDisicplinaryAction;
+	}
+
+	public void setActiveDisicplinaryAction(boolean activeDisicplinaryAction) {
+		this.activeDisicplinaryAction = activeDisicplinaryAction;
 	}
 }
