@@ -25,11 +25,20 @@
 						immediate="true"
 						action="#{evaluationBackingBean.evaluationBackaction}" />
 				
-				<c:if test="#{(evaluationBackingBean.managedBean.committeeType eq 'FEC' or 
-				evaluationBackingBean.managedBean.committeeType eq 'EC') and 
+				<c:if test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and 
 				evaluationBackingBean.managedBean.scQt.techEvaluationReq and 
-				(evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1' or
-				evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '1')}">
+				evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '1'}">
+				<p:commandButton
+						value="#{lbl['lbl.btn.save']}"
+						disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.offerScoreType eq '1'
+						or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired}"
+						style="float:right;" update="@all" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();"
+						action="#{evaluationBackingBean.saveUserScoreDtls}" />
+				</c:if>
+				<c:if test="#{evaluationBackingBean.managedBean.committeeType eq 'FEC' and 
+				evaluationBackingBean.managedBean.scQt.techEvaluationReq and 
+				evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1'}">
 				<p:commandButton
 						value="#{lbl['lbl.btn.save']}"
 						disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.offerScoreType eq '1'
@@ -64,25 +73,30 @@
 
 			<!-- <ui:include src="finSpecSupplierOfferPriceList.xhtml"></ui:include>  -->
 			<!-- #25138-Ahmaa-Start -->
-	
-			<c:if test="#{(evaluationBackingBean.managedBean.committeeType eq 'FEC' or 
-				evaluationBackingBean.managedBean.committeeType eq 'EC') and 
+			<c:if test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and 
 				evaluationBackingBean.managedBean.scQt.techEvaluationReq and 
-				(evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '0' or
-				evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '0')}">
+				evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '0'}">
 				<ui:include src="financialSpecEvaluationStageSupplierList.xhtml"></ui:include>
 				
 			</c:if>
-			
-			<c:if test="#{(evaluationBackingBean.managedBean.committeeType eq 'FEC' or 
-				evaluationBackingBean.managedBean.committeeType eq 'EC') and 
+			<c:if test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and 
 				evaluationBackingBean.managedBean.scQt.techEvaluationReq and 
-				(evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1' or
-				evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '1')}">
+				evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '1'}">
 				<ui:include src="finSpecSupplierOfferPriceList.xhtml"></ui:include> 
 			
 			</c:if>
-		
+			<c:if test="#{evaluationBackingBean.managedBean.committeeType eq 'FEC' and 
+				evaluationBackingBean.managedBean.scQt.techEvaluationReq and 
+				evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '0'}">
+				<ui:include src="financialSpecEvaluationStageSupplierList.xhtml"></ui:include>
+				
+			</c:if>
+			<c:if test="#{evaluationBackingBean.managedBean.committeeType eq 'FEC' and 
+				evaluationBackingBean.managedBean.scQt.techEvaluationReq and 
+				evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1'}">
+				<ui:include src="finSpecSupplierOfferPriceList.xhtml"></ui:include> 
+			
+			</c:if>
 			<!-- #25138-Ahmaa-End -->
 		</h:panelGroup>
 
