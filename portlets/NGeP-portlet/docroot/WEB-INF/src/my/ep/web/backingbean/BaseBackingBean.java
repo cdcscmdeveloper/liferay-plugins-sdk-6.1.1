@@ -2882,4 +2882,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return mandatory;
 	}
 	// #27398 11/03/2020 END
+	//START 27239
+	public void resetRoleValue() {
+		if(this.getManagedBean().getPersonnelsRole() != null){
+			this.getManagedBean().getPersonnelsRole().clear();
+		}
+		
+	}
+	//END 27239
 }
