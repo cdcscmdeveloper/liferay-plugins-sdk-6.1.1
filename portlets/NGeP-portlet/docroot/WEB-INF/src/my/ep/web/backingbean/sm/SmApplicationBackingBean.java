@@ -1697,7 +1697,9 @@ public class SmApplicationBackingBean extends
 							}
 							
 							SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelAll(),"identificationNo");
-							if(personnelSSM != null){								
+							log.info("personnelSSM-------------------------------------------------------"+personnelSSM);
+							if(personnelSSM != null){		
+								log.info("personnelSSM-----------NAME--------------------------------------------"+personnelSSM.getName());
 								//if rob no need to copy shareamt.
 								if(businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())){
 									personnel.setSsmData(true);
@@ -13470,7 +13472,7 @@ public class SmApplicationBackingBean extends
 	//START : #27239 
 	public void setDeletePersonnel(SmPersonnel personnel){
 		if(personnel.getEpRole() != null && (personnel.isEquityOwner() ||personnel.isDirector())){
-			log.info("Personnel Id = "+personnel.getPersonnelId()+"=APPL ID="+personnel.getSmAppl().getApplId()+"--Deleted : "+personnel.getName());									
+			log.info(personnel.getEpRole()+"eprol-----Personnel Id = "+personnel.getPersonnelId()+"=APPL ID="+personnel.getSmAppl().getApplId()+"--Deleted : "+personnel.getName());									
 			personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 		}
 	}
