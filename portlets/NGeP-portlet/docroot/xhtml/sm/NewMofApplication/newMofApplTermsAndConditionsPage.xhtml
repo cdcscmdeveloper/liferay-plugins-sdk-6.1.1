@@ -40,7 +40,7 @@
 					action="#{backingBean.proceedToApplication('N')}" 
 					update="defNewMofApplMsgs" 
 					disabled="#{!backingBean.managedBean.termsAccepted}" 
-					onclick="blockWidget.show()" oncomplete="blockWidget.hide()" />
+					onclick="blockWidget.show()" update="@form" oncomplete="blockWidget.hide()" />
 			</div>
 			
 			<ac:smOwnerSsmPopup bBean="#{backingBean}" title="#{lbl['lbl.sm.term.and.condition.header']}" dialogId="ownerChecking" 

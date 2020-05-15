@@ -1662,7 +1662,7 @@ public class SmApplicationBackingBean extends
 								}
 								
 								if(personnelsRole != null && personnelsRole.size() > 0) {
-									getManagedBean().setDontGetSsmData(dontGetSsmData);
+									this.getManagedBean().setDontGetSsmData(dontGetSsmData);
 									getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupplier());	
 									RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
 									return SmApplicationUtil.setStringNavigationForApplTnCPage(applicationType);								
