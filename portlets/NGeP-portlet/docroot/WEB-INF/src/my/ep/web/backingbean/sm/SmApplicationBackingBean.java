@@ -13471,7 +13471,7 @@ public class SmApplicationBackingBean extends
 	
 	//START : #27239 
 	public void setDeletePersonnel(SmPersonnel personnel){
-		if(personnel.getEpRole() != null && (personnel.isEquityOwner() ||personnel.isDirector())){
+		if(personnel.getEpRole() == null && (personnel.isEquityOwner() ||personnel.isDirector())){
 			log.info(personnel.getEpRole()+"eprol-----Personnel Id = "+personnel.getPersonnelId()+"=APPL ID="+personnel.getSmAppl().getApplId()+"--Deleted : "+personnel.getName());									
 			personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 		}
