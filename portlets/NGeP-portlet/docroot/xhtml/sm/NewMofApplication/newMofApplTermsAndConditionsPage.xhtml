@@ -38,9 +38,9 @@
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.proceed']}" id="basCmdBtn"
 					action="#{backingBean.proceedToApplication('N')}" 
-					update="defNewMofApplMsgs" 
+					update="defNewMofApplMsgs,@form" 
 					disabled="#{!backingBean.managedBean.termsAccepted}" 
-					onclick="blockWidget.show()" update="@form" oncomplete="blockWidget.hide()" />
+					onclick="blockWidget.show()" oncomplete="blockWidget.hide()" />
 			</div>
 			
 			<ac:smOwnerSsmPopup bBean="#{backingBean}" title="#{lbl['lbl.sm.term.and.condition.header']}" dialogId="ownerChecking" 
