@@ -3672,7 +3672,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	public boolean isGmapDisabled() {
 		gmapDisabled = false;
 		
-		if(getManagedBean().getSmBusinessAdd() != null){
+		//if DA are Cancel Registration  or Black List
+		if(this.getManagedBean().isActiveDisicplinaryAction()){
+			gmapDisabled = true;
+		}else if(getManagedBean().getSmBusinessAdd() != null){
 			SmAddress bizAddress = getManagedBean().getSmBusinessAdd();
 
 			if(bizAddress.getPmCountry() == null || bizAddress.getPmDistrict() == null || 
@@ -4146,6 +4149,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		if(this.getManagedBean().isCompanyValidWithSSM()){
 			this.getManagedBean().setDisableRole(true);
 		}
+		//if DA is active
+		if(this.getManagedBean().isActiveDisicplinaryAction()){
+			this.getManagedBean().setDisableRole(true);
+		}
 	}
 	
 	//16052019 - SSM INTEGRATION CR START
@@ -4243,6 +4250,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					this.getManagedBean().setEndDate(DateUtils.dateToString("dd/MM/yyyy",disc.getEndDate()));
 					this.getManagedBean().setRemarks(disc.getRemark());
 				}
+			}
+			
+			//26238
+			this.getManagedBean().setActiveDisicplinaryAction(false);
+			if(this.getManagedBean().isSuspendRegistration() || this.getManagedBean().isCancelRegistration() 
+					|| this.getManagedBean().isBlacklistowner()){
+				this.getManagedBean().setActiveDisicplinaryAction(true);
 			}
 		} else {
 			this.getManagedBean().setNoDisciplinary(true);
