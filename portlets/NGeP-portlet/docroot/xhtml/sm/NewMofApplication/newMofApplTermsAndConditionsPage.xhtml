@@ -38,7 +38,7 @@
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.proceed']}" id="basCmdBtn"
 					action="#{backingBean.proceedToApplication('N')}" 
-					update="defNewMofApplMsgs" 
+					update="defNewMofApplMsgs,@form" 
 					disabled="#{!backingBean.managedBean.termsAccepted}" 
 					onclick="blockWidget.show()" oncomplete="blockWidget.hide()" />
 			</div>

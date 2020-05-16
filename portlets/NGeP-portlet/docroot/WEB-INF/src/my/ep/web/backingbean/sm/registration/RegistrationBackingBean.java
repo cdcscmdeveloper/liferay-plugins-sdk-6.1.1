@@ -2228,38 +2228,40 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					this.getManagedBean().setShowOwnerPersonnel(false);
 					this.getManagedBean().setValidateWithSSM(true);
 					if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
-						//POPUP USER NOT SSM OWNER #26734  START
-						FacesScopes facesScope = new FacesScopes();
-						PmUser userSession = facesScope.getUserSessionBean();
-						
-						boolean checkWithSSM = true;
-						SmPersonnel personnelOld = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(
-								userSession.getIdentificationNo(), this.getManagedBean().getSmAppl()
-										.getSmPersonnels(), "identificationNo");
+						//POPUP USER NOT SSM OWNER #26734  START			
 						//START #27239
-						this.getManagedBean().setPersonnelsRole(new ArrayList());
-						for(SmPersonnel personnel :  this.getManagedBean().getSmAppl().getSmPersonnels()){
-							if (personnel.isEquityOwner() || personnel.isDirector()) {
-								if(personnel.getEpRole() != null){
-									SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
-									SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelDirector(),"identificationNo");
-									if(personnelDirectorSSM == null && personnelSSM == null){
-										this.getManagedBean().getPersonnelsRole().add(personnel);
+						//START NEW CHANGES POPUP OWNER UPDATE ROLE		
+						//ANY CHANGES HERE PLEASE CHANGES IN ViewApplHistoryBackingBean.redirectToReapplyNewAppl & viewOnlineAccount.RegistrationBackingBean & SmApplicationBackingBean.proceedToApplication
+						List<SmPersonnel> personnelsRole = this.getManagedBean().getPersonnelsRole();
+						if(personnelsRole != null && personnelsRole.size() <=0){
+							for(SmPersonnel personnel :  this.getManagedBean().getSmAppl().getSmPersonnels()){
+								if (personnel.isEquityOwner() || personnel.isDirector()) {
+									if(personnel.getEpRole() != null){
+										SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
+										SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelDirector(),"identificationNo");
+										if(personnelDirectorSSM == null && personnelSSM == null){
+											personnelsRole.add(personnel);
+										}
 									}
 								}
 							}
-						}
-						
-						if(this.getManagedBean().getPersonnelsRole() != null && this.getManagedBean().getPersonnelsRole().size() > 0) {
-							//SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
-							//SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelDirector(),"identificationNo");
-							//if(personnelSSM == null && personnelDirectorSSM == null) {
-							getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupp());	
-							//	getManagedBean().setSmPersonnelSsm(personnelOld);
+							
+							if(personnelsRole != null && personnelsRole.size() > 0) {
+								getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupp());	
 								RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
 								fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlineAccount/accountMaintenanceTermAndCond.xhtml");
-								return;
-							//}
+								return;								
+							}
+						}else{
+							//set latest role to personnel
+							for(SmPersonnel personnel :  personnelsRole){
+								SmPersonnel personnelActive = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), this.getManagedBean().getSmAppl().getSmPersonnels(), "identificationNo");
+								if(personnelActive != null){
+									//copy latest data to supplier admin
+									String[] copyEquityOwner = {"equityOwner","director","clerical","higherManagement","management","downgradeRoleSsm"};
+									EntityHelper.copyEntityPropertiesOnly(personnel,personnelActive,copyEquityOwner);
+								}
+							}
 						} 
 						// #26734 - END
 						// #27239 - END
