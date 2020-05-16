@@ -19,6 +19,7 @@ import org.apache.commons.collections.CollectionUtils;
 
 import org.apache.commons.lang3.StringUtils;
 
+import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
@@ -95,6 +96,13 @@ public abstract class BaseManagedBean implements Serializable {
 	//17906
 	private String displayMessageBank;
 	
+	//27951
+	private boolean preRegistration=false;
+	private SsmResDTO ssmResDTO;
+	private boolean checkRoleSSM=false;
+	//27239
+	private boolean dontGetSsmData = false;
+
 	/**
 	 * @return the token
 	 */
@@ -624,6 +632,38 @@ public abstract class BaseManagedBean implements Serializable {
 
 	public void setDisplayMessageBank(String displayMessageBank) {
 		this.displayMessageBank = displayMessageBank;
+	}
+	//27951
+	public boolean isPreRegistration() {
+		return preRegistration;
+	}
+
+	public void setPreRegistration(boolean preRegistration) {
+		this.preRegistration = preRegistration;
+	}
+
+	public SsmResDTO getSsmResDTO() {
+		return ssmResDTO;
+	}
+
+	public void setSsmResDTO(SsmResDTO ssmResDTO) {
+		this.ssmResDTO = ssmResDTO;
+	}
+
+	public boolean isCheckRoleSSM() {
+		return checkRoleSSM;
+	}
+
+	public void setCheckRoleSSM(boolean checkRoleSSM) {
+		this.checkRoleSSM = checkRoleSSM;
+	}
+
+	public boolean isDontGetSsmData() {
+		return dontGetSsmData;
+	}
+
+	public void setDontGetSsmData(boolean dontGetSsmData) {
+		this.dontGetSsmData = dontGetSsmData;
 	}
 	
 	

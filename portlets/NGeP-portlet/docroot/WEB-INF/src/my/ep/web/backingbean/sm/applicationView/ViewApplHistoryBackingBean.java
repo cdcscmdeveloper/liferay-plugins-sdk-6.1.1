@@ -14,7 +14,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -313,8 +312,16 @@ public class ViewApplHistoryBackingBean extends
 				SmCommonUtil.redirectToExternalUrl(getManagedBean()
 						.getResubmitUrl());
 			} else {
-				RequestContext.getCurrentInstance().execute(
-						"confirmDialog.show()");
+				//START 27951
+				if(!this.getManagedBean().isCheckRoleSSM()){
+					this.getManagedBean().getPersonnelsRole().clear();
+					this.getManagedBean().setPreRegistration(true);
+					RequestContext.getCurrentInstance().execute(
+							"confirmDialog.show()");
+				}else{
+					redirectToReapplyNewAppl();
+				}
+				//END 27951
 			}
 		} else {			
 			if (SmApplicationUtil
@@ -334,15 +341,50 @@ public class ViewApplHistoryBackingBean extends
 	 */
 	public void redirectToReapplyNewAppl() {
 		SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
-		// #24923
-		smApplBB.getManagedBean().setNewSupplierType(
-				getManagedBean().getSmAppl().getSupplierType());
-		smApplBB.proceedToApplication(ParameterConst.NEW_SM_APPLN_FOR_MOF);
-
-		// Enhancement #20467 - point to new appl page with bullet
-		String page = my.ep.web.constant.sm.SupplierManagementConst.APPLICATION_BASE_PAGE_BY_TYPE
-				.get("RE");
-		SmCommonUtil.redirectToPage(page, null, null, null);
+		//START 27951
+		//ANY CHANGES HERE PLEASE CHANGES IN ViewApplHistoryBackingBean.redirectToReapplyNewAppl & viewOnlineAccount.RegistrationBackingBean & SmApplicationBackingBean.proceedToApplication
+		boolean proceed = true;
+		smApplBB.getManagedBean().setPreRegistration(this.getManagedBean().isPreRegistration());
+		smApplBB.getManagedBean().setPersonnelsRole(this.getManagedBean().getPersonnelsRole());
+		this.getManagedBean().setPreRegistration(true);
+		log.info("-------------------------------------------------------------------"+SmCommonUtil.getInstance().ssmActive());
+		if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(getManagedBean().getSmAppl().getSmSupplier().getRegNo(),getManagedBean().getSmAppl().getSmSupplier().getBusinessType()) && this.getManagedBean().getSsmResDTO() != null && !this.getManagedBean().isCheckRoleSSM()){			
+			List<SmPersonnel> personnelsRole = this.getManagedBean().getPersonnelsRole();
+			personnelsRole.clear();
+			for(SmPersonnel personnel :  this.getManagedBean().getSmAppl().getSmPersonnels()){
+				if (personnel.isEquityOwner() || personnel.isDirector()) {
+					if(personnel.getEpRole() != null){
+						SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),this.getManagedBean().getSsmResDTO().getSmPersonnelOwners(),"identificationNo");
+						SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),this.getManagedBean().getSsmResDTO().getSmPersonnelDirector(),"identificationNo");
+						if(personnelDirectorSSM == null && personnelSSM == null){
+							personnelsRole.add(personnel);
+						}
+					}
+				}
+			}
+			log.info("--------------------------------personnelsRole.size()-----------------------------------"+personnelsRole.size());
+			if(personnelsRole != null && personnelsRole.size() > 0) {
+					proceed = false;
+					getManagedBean().setPreRegistration(true);
+					getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupplier());	
+					this.getManagedBean().setPersonnelsRole(personnelsRole);
+					RequestContext.getCurrentInstance().execute("blockWidget.hide()");
+					RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
+			}
+			
+		}
+		if(proceed){
+			// #24923
+			smApplBB.getManagedBean().setNewSupplierType(
+					getManagedBean().getSmAppl().getSupplierType());
+			smApplBB.proceedToApplication(ParameterConst.NEW_SM_APPLN_FOR_MOF);
+	
+			// Enhancement #20467 - point to new appl page with bullet
+			String page = my.ep.web.constant.sm.SupplierManagementConst.APPLICATION_BASE_PAGE_BY_TYPE
+					.get("RE");
+			SmCommonUtil.redirectToPage(page, null, null, null);
+		}		
+		//END 27951
 	}
 
 	/**
@@ -1383,8 +1425,10 @@ public class ViewApplHistoryBackingBean extends
 			SsmReqDTO ssmReqDTO = new SsmReqDTO();
 			ssmReqDTO.setRegNo(getManagedBean().getSmAppl().getSmSupplier().getRegNo());
 			ssmReqDTO.setBusinessType(getManagedBean().getSmAppl().getSmSupplier().getBusinessType());
-			ssmReqDTO.setCheckOnly(true);
+			//ssmReqDTO.setCheckOnly(true);
 			SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
+			//27951
+			this.getManagedBean().setSsmResDTO(ssmResDTO);
 			if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
 				//check the business/company registration status in ssm
 				this.getManagedBean().setStatusDescFromSSM(setStatusMessageFromSSM(ssmResDTO.getStatusFromSSM()));

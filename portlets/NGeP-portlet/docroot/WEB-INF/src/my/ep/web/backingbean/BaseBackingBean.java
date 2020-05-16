@@ -2603,29 +2603,17 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	public void changeRoleAndProceed() {
 		//start loop list #27239
 		for(SmPersonnel personnel : this.getManagedBean().getPersonnelsRole()){
-			//personnel.setEquityOwner(false);
-			//personnel.setDirector(false);
-			personnel.setDowngradeRoleSsm(true);
-			IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject("sm", IPersonnelSO.class);
-			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-			//get latest personnel by supplier id
-			reqDTO.setSmSupplierId(this.getManagedBean().getSmSupplierSsm().getSupplierId());
-			PersonnelResDTO resDTO = personnelSO.retrieveLatestActivePersonnelBySupplierId(reqDTO);
-			//find supplier admin
-			SmPersonnel personnelActive = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), resDTO.getSmPersonnelList(), "identificationNo");
-			if(personnelActive != null){
-				//copy latest data to supplier admin
-				String[] copyEquityOwner = {"equityOwner","director","clerical","higherManagement","management","downgradeRoleSsm"};
-				EntityHelper.copyEntityPropertiesOnly(personnel,personnelActive,copyEquityOwner);
-				reqDTO.setSmPersonnel(personnelActive);
-				//update latest data to active supplier admin
-				resDTO = personnelSO.savePersonnelRecord(reqDTO);
-				if(!resDTO.isSuccessful()){
-					throw new EpException(MessageConst.ERROR_776106);
+				//27951
+				if(!personnel.isClerical() && !personnel.isHigherManagement() && !personnel.isManagement()){
+					this.getManagedBean().getPersonnelsRole().clear();
+					this.getManagedBean().setCheckRoleSSM(false);
+					throw new EpException(MessageConst.ERROR_722535); 
 				}else{
-					//close popup
+					//27951
+					personnel.setEquityOwner(false);
+					personnel.setDirector(false);
+					this.getManagedBean().setCheckRoleSSM(true);
 				}
-			}
 		}
 	}
 
@@ -2685,8 +2673,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	//SSM CHANGES END #27201
 	
 	public void listenerRolePopup(SmPersonnel smPersonnelSSm){
+		//27951 & 27239
 		if(smPersonnelSSm.isClerical()){
-			smPersonnelSSm.setDirector(false);
 			smPersonnelSSm.setHigherManagement(false);
 			smPersonnelSSm.setManagement(false);
 		}else{
@@ -2813,4 +2801,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return mandatory;
 	}
 	// #27398 11/03/2020 END
+	//START 27239
+	public void resetRoleValue() {
+		if(this.getManagedBean().getPersonnelsRole() != null){
+			this.getManagedBean().getPersonnelsRole().clear();
+		}
+		
+	}
+	//END 27239
 }
