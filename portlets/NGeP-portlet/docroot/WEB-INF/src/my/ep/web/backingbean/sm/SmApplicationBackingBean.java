@@ -7747,7 +7747,11 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		if (!this.getManagedBean().isPoInquiryRespond()) {
-			validateBeforeSubmit();
+			//26238 -  Disciplonary action - 27748
+			if(getManagedBean().getEditVO()!=null && !getManagedBean().getEditVO().isDisciplinary()){
+				validateBeforeSubmit();
+			}
+			//26238 -  Disciplonary action - 27748
 
 			// validate if no SDO exist then dont allowed to submit
 			SmAddress hqAddr = getManagedBean().getSmAppl().getSmCompanyBasic()
