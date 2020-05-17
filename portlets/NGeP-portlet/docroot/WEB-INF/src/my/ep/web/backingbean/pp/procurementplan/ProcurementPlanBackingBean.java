@@ -2203,12 +2203,15 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					updateReasons = getAllUpdateReasons(ppPlan);
 					if (updateReasons != null && 
 							!updateReasons.isEmpty()) {
+						log.info("size of allUpdateReasons= "+updateReasons.size());
 						reqDTO.setUpdateReasonList(updateReasons);
 					}
 					
-					else{
+					/*else{
 					   throw new EpException(MessageConst.ERROR_730035);
-				    }
+				    }*/
+					
+					
 				}
 			}
 
@@ -3401,12 +3404,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						throw new EpException(MessageConst.ERROR_730014);
 					}
 					// Set Reason For Update to be mandatory
-					this.retrievePpUpdateReasons(ppItem);
 					
-					if(this.getManagedBean().getSelectedUpdateReasons() != null && 
-							!this.getManagedBean().getSelectedUpdateReasons().isEmpty()) {
-						String reasonDesc = this.getManagedBean().getSelectedUpdateReasons().get(0).getReasonDesc();
-						log.info("reasonDesc= "+reasonDesc);
+					if(ppItem.getPpUpdateReasons() != null && 
+							!ppItem.getPpUpdateReasons().isEmpty()) {
+						String reasonDesc = ppItem.getPpUpdateReasons().get(0).getReasonDesc();
+						log.info("original reasonDesc for ppItemId "
+								+ppItem.getProcurementItemId()+" = "+reasonDesc);
 						
 						if (reasonDesc == null) {
 							throw new EpException(MessageConst.ERROR_730035);
@@ -4977,8 +4980,14 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    		newPpItem.setDisableForPindaan(true);
 	    		newPpItem.setFromPpItem(clonedPpItem.getProcurementItemId());
 	    		newPpItem.setReasonForUpdateEnabled(false);
+	    		newPpItem.setPpUpdateReasons(clonedPpItem.getPpUpdateReasons());
 	    		newPpItem.setStatusEnabled(true);
 	    		
+	    		if (newPpItem.getPpUpdateReasons() != null && 
+						!newPpItem.getPpUpdateReasons().isEmpty()) {
+	    			log.info("newPpItem reasonDesc= "+newPpItem.getPpUpdateReasons()
+	    					.get(0).getReasonDesc());
+	    		}
 	    		index += 1;
 	    		procurementList.add(index,newPpItem);
 	    		
@@ -5104,10 +5113,15 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					if (ppProcurementItem.getPpUpdateReasons()!= null && !ppProcurementItem.getPpUpdateReasons().isEmpty()) {
 						PpUpdateReason updateReason = ppProcurementItem.getPpUpdateReasons().get(0);
 						if (updateReason != null && 
-								!StringUtils.isBlank(updateReason.getReasonDesc())) { //&& rejectReason.isBrandNew() add this for phase 2
+								updateReason.getReasonDesc() != null) { //&& rejectReason.isBrandNew() add this for phase 2
+							log.info("updateReason for ppItemId "+ppProcurementItem.getProcurementItemId()
+									+" = "+updateReason.getReasonDesc());
 							updateReason.setDocId(ppProcurementItem.getProcurementItemId());
 							updateReason.setDocType(ParameterConst.DOCTYPE_PLAN_PROCUREMENT);
 							updateReasons.add(updateReason);
+						} else {
+							log.info("updateReason for ppItemId "+ppProcurementItem.getProcurementItemId()
+									+" = null");
 						}
 					}
 				}
