@@ -1824,13 +1824,20 @@ public class SPDetailBackingBean extends
 			int index = getManagedBean().getFinanceCheckDetailsList().indexOf(
 					assetProposalChecklist);
 			if (isCompleted && scQtPRPAssetLiability != null) {
-				if( (scQtPRPAssetLiability.getCurrentAssets() == null)
+				if( ((scQtPRPAssetLiability.getCurrentAssets() == null)
 						&& (scQtPRPAssetLiability.getCurrentLiabilities() == null) 
 						&& (scQtPRPAssetLiability.getTotalCashInHand() == null)
-						&& (scQtPRPAssetLiability.getTotalAccountReceivable() == null)
-						&& (scQtPRPAssetLiability.getAcidRatio() == null )
-						&& (scQtPRPAssetLiability.getCurrentRatio() == null)) 
-				{
+						&& (scQtPRPAssetLiability.getTotalAccountReceivable() == null))
+						
+						|| 
+						
+						( (null != scQtPRPAssetLiability.getCurrentAssets() && scQtPRPAssetLiability.getCurrentAssets().compareTo(BigDecimal.ZERO) == 0)
+						&& (null != scQtPRPAssetLiability.getCurrentLiabilities() && scQtPRPAssetLiability.getCurrentLiabilities().compareTo(BigDecimal.ZERO) == 0) 
+						&& (null != scQtPRPAssetLiability.getTotalCashInHand() && scQtPRPAssetLiability.getTotalCashInHand().compareTo(BigDecimal.ZERO) == 0)
+						&& (null != scQtPRPAssetLiability.getTotalAccountReceivable() && scQtPRPAssetLiability.getTotalAccountReceivable().compareTo(BigDecimal.ZERO) == 0)
+						&& (null != scQtPRPAssetLiability.getAcidRatio() && scQtPRPAssetLiability.getAcidRatio().compareTo(BigDecimal.ZERO) == 0 )
+						&& (null != scQtPRPAssetLiability.getCurrentRatio() && scQtPRPAssetLiability.getCurrentRatio().compareTo(BigDecimal.ZERO) == 0))) 
+					 {
 					assetProposalChecklist.setScQtProposalChecklistAttachment(null);
 					assetProposalChecklist.setSubmitted(true);
 					//this.getManagedBean().setReadOnly(true);
