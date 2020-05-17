@@ -1582,6 +1582,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			// 12177 - Start
 			requestNoteReqDTO.setSqEndDate(getManagedBean().getSqEndDate());
 			// 12177 - End
+			//12183 - Start
+			requestNoteReqDTO.setPidValidityExpired(getManagedBean().isPidValidityExpired());
+			//12183 - End
+			
 			//26059 - start
 			System.out.println("Is exceed: " + getManagedBean().isProceedWithDPExceedThreshold());
 			requestNoteReqDTO.setExceedThreshold(getManagedBean().isProceedWithDPExceedThreshold());
@@ -5294,6 +5298,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			log.info("pID validity begin");
 			
 			if(today.after(ExpDate)){
+				getManagedBean().setPidValidityExpired(true);
 				valid = true;
 			}
 			log.info("pID validity end");
