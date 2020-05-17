@@ -352,6 +352,10 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	private boolean bpkApprover;
 	//26059 - end
 	
+	//12183 - Start
+	private boolean pidValidityExpired = false;
+	//12183 - End
+	
     /**
      * Instantiates a new request note managed bean.
      */
@@ -2062,4 +2066,14 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 		this.bpkApprover = bpkApprover;
 	}
 	//26059 - end
+	
+	//12183 - Start
+	public boolean isPidValidityExpired() {
+		return pidValidityExpired;
+	}
+
+	public void setPidValidityExpired(boolean pidValidityExpired) {
+		this.pidValidityExpired = pidValidityExpired;
+	}
+	//12183 - End
 }
