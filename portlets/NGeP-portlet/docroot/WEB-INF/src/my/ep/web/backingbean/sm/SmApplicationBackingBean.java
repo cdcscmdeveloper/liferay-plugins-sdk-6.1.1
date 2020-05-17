@@ -3277,7 +3277,25 @@ public class SmApplicationBackingBean extends
 	}
 
 	private void validateBeforeSubmit() {
-
+		//START 26238 -  Disciplonary action - 27748
+		if(getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
+			if(this.getManagedBean().getSmAppl().getSmSupplier() != null){
+				List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(this.getManagedBean().getSmAppl().getSmSupplier());
+				
+				if(activeDisc != null && activeDisc.size() > 0){
+					for(SmDisciplinaryAction disc : activeDisc){
+						if(disc.isSuspendRegistration() || disc.isCancelRegistration() || disc.isBlacklistOwner()){
+							getManagedBean().getEditVO().setDisciplinary(true);
+						}
+					}
+				}
+			}	
+		}
+	
+		if(getManagedBean().getEditVO()!=null && getManagedBean().getEditVO().isDisciplinary()){
+			return;
+		}
+		//START END -  Disciplonary action - 27748
 		// validate dont have facility
 		SmApplicationUtil.validateDontHavePremise(getManagedBean().getSmAppl());
 
