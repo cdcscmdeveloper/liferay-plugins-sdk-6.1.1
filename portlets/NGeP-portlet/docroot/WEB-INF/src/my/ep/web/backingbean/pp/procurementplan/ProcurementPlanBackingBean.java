@@ -2206,9 +2206,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						reqDTO.setUpdateReasonList(updateReasons);
 					}
 					
-//					else{
-//					   throw new EpException(MessageConst.ERROR_730035);
-//				    }
+					else{
+					   throw new EpException(MessageConst.ERROR_730035);
+				    }
 				}
 			}
 
