@@ -5075,11 +5075,11 @@ public class TemplateSpecBackingBean extends
 		for(TplSpecAnswer specAnswerOffers : resDTO.getSpecAnswerOffer()){
 			if(specAnswerOffers!=null){
 				
-					if (answerList != null) {
+					if (answerList != null && specAnswerOffers !=null) {
 						if(answerList.getTplSpecQuestion().getSpecQuestionId()!=null && 
 								answerList.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId().equals(specAnswerOffers.getTplSpecQuestion().getSpecQuestionId())
 								&& answerList.getTplSpecSuppAnswer().getSmSupplier().getSupplierId().equals(specAnswerOffers.getTplSpecSuppAnswer().getSmSupplier().getSupplierId())
-								&& specAnswerOffers.getOffer() == false){
+								&& specAnswerOffers.getOffer() !=null && specAnswerOffers.getOffer() == false){
 
 							finZoneOfferCheckNonZonal = true;
 							break;
