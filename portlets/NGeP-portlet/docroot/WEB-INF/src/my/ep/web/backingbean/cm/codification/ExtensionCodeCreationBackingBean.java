@@ -1285,6 +1285,7 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 	public void resetSearch() {
 		this.getManagedBean().setAutoCompleteUnspscCode(null);
 		this.getManagedBean().setTitleFilterBean(null);
+		this.getManagedBean().setTypeName(null);
 		resetAction();
 		
 	}

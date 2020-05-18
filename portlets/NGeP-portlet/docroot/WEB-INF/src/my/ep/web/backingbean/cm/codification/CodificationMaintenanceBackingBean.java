@@ -187,9 +187,23 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 						
 						searchBean.getDataFilterBeans().add(bilingualFilter);
 					}
-					FacesScopes fs = new FacesScopes();
-					String itemType = fs.getParameter("itemType");
+					
+					/*[#27625] begin*/
+					String itemType;
+					if(StringUtils.isNotBlank(getManagedBean().getTypeName())){
+						itemType = getManagedBean().getTypeName();
+					}else{
+						FacesScopes fs = new FacesScopes();
+						itemType = fs.getParameter("itemType");
+					}
 
+					if (itemType != null) {// save parameter first time it come from
+						// search button
+						setItemTypeParameter(itemType);
+					}else
+						setItemTypeParameter(null);
+					/*[#27625] end*/
+					
 
 					if (itemType != null) {// save parameter first time it come from
 						// search button

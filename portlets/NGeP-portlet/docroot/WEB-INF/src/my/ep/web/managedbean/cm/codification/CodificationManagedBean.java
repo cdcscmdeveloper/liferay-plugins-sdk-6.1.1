@@ -12,6 +12,7 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
@@ -31,6 +32,7 @@ import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -55,11 +57,13 @@ public class CodificationManagedBean extends BaseManagedBean {
 
 	private String unspscCode;
 	private String unspscTitle;
+	private String typeName; /*[#27625]*/
 
 	private List<SelectItem> typeCriteria;
 	private List<SelectItem> brandCriteria;
 	private List<SelectItem> measurementCriteria;
 	private List<SelectItem> colorCriteria;
+	private List<SelectItem> typeList; /*[#27625]*/
 
 	private List<CmUnspsc> contractedItem;
 
@@ -219,10 +223,11 @@ public class CodificationManagedBean extends BaseManagedBean {
 			this.setExtensionSearchcheckBoxAll(false);
 			this.setCloneExtensionVOs(null);
 			this.setRefreshPageNoFlag(false);
+			
 			System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 		}
 	}
-
+	
 	private class ExtensionSearchItemDataModel extends
 	PagingDataModel<Object[]> {
 
@@ -499,14 +504,22 @@ public class CodificationManagedBean extends BaseManagedBean {
 					
 					searchBean.getDataFilterBeans().add(bilingualFilter);
 				}
-				FacesScopes fs = new FacesScopes();
-				String itemType = fs.getParameter("itemType");
-
+				
+				/*[#27625] begin*/
+				String itemType;
+				if(StringUtils.isNotBlank(typeName)){
+					itemType = typeName;
+				}else{
+					FacesScopes fs = new FacesScopes();
+					itemType = fs.getParameter("itemType");
+				}
 
 				if (itemType != null) {// save parameter first time it come from
 					// search button
 					setItemTypeParameter(itemType);
-				}
+				}else
+					setItemTypeParameter(null);
+				/*[#27625] end*/
 
 				// get parameter from backup property whenever table be reloaded
 				if (getItemTypeParameter() != null
@@ -1517,5 +1530,30 @@ public class CodificationManagedBean extends BaseManagedBean {
 	public void setDaBlacklistOwner(boolean daBlacklistOwner) {
 		this.daBlacklistOwner = daBlacklistOwner;
 	}
-	
+
+	/*[#27625] begin*/
+	public String getTypeName() {
+		return typeName;
+	}
+
+	public void setTypeName(String typeName) {
+		this.typeName = typeName;
+	}
+
+	public List<SelectItem> getTypeList() {
+		typeList = new ArrayList<SelectItem>();
+		typeList.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.all", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale())));
+		typeList.add(new SelectItem("P", ResourceBundleUtils.getMessage("lbl.txt.product",ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale())));
+		typeList.add(new SelectItem("S", ResourceBundleUtils.getMessage("lbl.txt.service",ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale())));
+		
+		return typeList;
+	}
+
+	public void setTypeList(List<SelectItem> typeList) {
+		this.typeList = typeList;
+	}
+	/*[#27625] end*/
 }
