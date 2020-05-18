@@ -13405,34 +13405,34 @@ public class SmApplicationUtil {
 				SmDisciplinaryAction smDisciplinaryAction = new SmDisciplinaryAction();
 				
 				try {
-					
-					Long daId = Long.valueOf(resultArr[0].toString());
+					//28137 : Disciplinary Action - start - 26238
+					Long daId = Long.valueOf(resultArr[0]==null?"0":resultArr[0].toString());
 					smDisciplinaryAction.setDisciplinaryActionId(daId);
-					smDisciplinaryAction.setBlacklistOwner(resultArr[1].toString().contentEquals("1"));
-					smDisciplinaryAction.setBumiputeraCancel(resultArr[2].toString().contentEquals("1"));
-					smDisciplinaryAction.setBumiputeraPending(resultArr[3].toString().contentEquals("1"));
-					smDisciplinaryAction.setCancelCategory(resultArr[4].toString().contentEquals("1"));
-					smDisciplinaryAction.setCancelRegistration(resultArr[5].toString().contentEquals("1"));
-					smDisciplinaryAction.setChangedBy(Long.valueOf(resultArr[6].toString()));
-					smDisciplinaryAction.setChangedDate(DateUtils.convertStringToTimestamp("yyyy-MM-dd", resultArr[7].toString()));
-					smDisciplinaryAction.setCreatedBy(Long.valueOf(resultArr[8].toString()));
-					smDisciplinaryAction.setCreatedDate(DateUtils.convertStringToTimestamp("yyyy-MM-dd", resultArr[9].toString()));
-					smDisciplinaryAction.setEndDate(DateUtils.convertStringToTimestamp("yyyy-MM-dd", resultArr[10].toString()));
-					smDisciplinaryAction.setManufacturerCancel(resultArr[11].toString().contentEquals("1"));
-					smDisciplinaryAction.setManufacturerPending(resultArr[12].toString().contentEquals("1"));
-					smDisciplinaryAction.setMofNo(resultArr[13].toString());
-					smDisciplinaryAction.setPendingBlacklist(resultArr[14].toString().contentEquals("1"));
-					smDisciplinaryAction.setPendingCancel(resultArr[15].toString().contentEquals("1"));
-					smDisciplinaryAction.setPendingSuspend(resultArr[16].toString().contentEquals("1"));
-					smDisciplinaryAction.setRecordStatus(resultArr[17].toString().contentEquals("1"));
-					smDisciplinaryAction.setRecordStatusFlg(Integer.valueOf(resultArr[17].toString()));
-					smDisciplinaryAction.setRemark(resultArr[18].toString());
-					smDisciplinaryAction.setStartDate(DateUtils.convertStringToTimestamp("yyyy-MM-dd", resultArr[19].toString()));
-					smDisciplinaryAction.setSuspendCategory(resultArr[20].toString().contentEquals("1"));
-					smDisciplinaryAction.setSuspendRegistration(resultArr[21].toString().contentEquals("1"));
-					smDisciplinaryAction.setWarning(resultArr[22].toString().contentEquals("1"));
-					smDisciplinaryAction.setEditNo(Long.valueOf(resultArr[24].toString()));
-					
+					smDisciplinaryAction.setBlacklistOwner(resultArr[1]==null?false:resultArr[1].toString().contentEquals("1"));
+					smDisciplinaryAction.setBumiputeraCancel(resultArr[2]==null?false:resultArr[2].toString().contentEquals("1"));
+					smDisciplinaryAction.setBumiputeraPending(resultArr[3]==null?false:resultArr[3].toString().contentEquals("1"));
+					smDisciplinaryAction.setCancelCategory(resultArr[4]==null?false:resultArr[4].toString().contentEquals("1"));
+					smDisciplinaryAction.setCancelRegistration(resultArr[5]==null?false:resultArr[5].toString().contentEquals("1"));
+					smDisciplinaryAction.setChangedBy(Long.valueOf(resultArr[6]==null?"0":resultArr[6].toString()));
+					smDisciplinaryAction.setChangedDate(resultArr[7]==null?null:DateUtils.convertStringToTimestamp("yyyy-MM-dd", resultArr[7].toString()));
+					smDisciplinaryAction.setCreatedBy(Long.valueOf(resultArr[8]==null?"0":resultArr[8].toString()));
+					smDisciplinaryAction.setCreatedDate(resultArr[9]==null?null:DateUtils.convertStringToTimestamp("yyyy-MM-dd", resultArr[9].toString()));
+					smDisciplinaryAction.setEndDate(resultArr[10]==null?null:DateUtils.convertStringToTimestamp("yyyy-MM-dd", resultArr[10].toString()));
+					smDisciplinaryAction.setManufacturerCancel(resultArr[11]==null?false:resultArr[11].toString().contentEquals("1"));
+					smDisciplinaryAction.setManufacturerPending(resultArr[12]==null?false:resultArr[12].toString().contentEquals("1"));
+					smDisciplinaryAction.setMofNo(resultArr[13]==null?null:resultArr[13].toString());
+					smDisciplinaryAction.setPendingBlacklist(resultArr[14]==null?false:resultArr[14].toString().contentEquals("1"));
+					smDisciplinaryAction.setPendingCancel(resultArr[15]==null?false:resultArr[15].toString().contentEquals("1"));
+					smDisciplinaryAction.setPendingSuspend(resultArr[16]==null?false:resultArr[16].toString().contentEquals("1"));
+					smDisciplinaryAction.setRecordStatus(resultArr[17]==null?false:resultArr[17].toString().contentEquals("1"));
+					smDisciplinaryAction.setRecordStatusFlg(Integer.valueOf(resultArr[17]==null?"0":resultArr[17].toString()));
+					smDisciplinaryAction.setRemark(resultArr[18]==null?"":resultArr[18].toString());
+					smDisciplinaryAction.setStartDate(resultArr[19]==null?null:DateUtils.convertStringToTimestamp("yyyy-MM-dd", resultArr[19].toString()));
+					smDisciplinaryAction.setSuspendCategory(resultArr[20]==null?false:resultArr[20].toString().contentEquals("1"));
+					smDisciplinaryAction.setSuspendRegistration(resultArr[21]==null?false:resultArr[21].toString().contentEquals("1"));
+					smDisciplinaryAction.setWarning(resultArr[22]==null?false:resultArr[22].toString().contentEquals("1"));
+					smDisciplinaryAction.setEditNo(Long.valueOf(resultArr[24]==null?"0":resultArr[24].toString()));
+					//28137 : Disciplinary Action - end - 26238
 				} catch(Exception e){
 					log.info("***ERROR at set retrieve DA history*** ");
 					e.printStackTrace();
