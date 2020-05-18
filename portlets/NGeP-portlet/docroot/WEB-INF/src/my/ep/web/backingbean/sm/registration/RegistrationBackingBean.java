@@ -3132,6 +3132,14 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 * @return String
 	 */
 	public String updateBasicSupplier(){
+		// 27691 - start -  Add/Delete Supplier Owner - log only for dev server debugging
+		log.info("---After declare button clicked Supplier Owner size: " + this.getManagedBean().getSmSupp().getSmSupplierOwners().size() + "---");
+		for (int i = 0; i < this.getManagedBean().getSmSupp().getSmSupplierOwners().size(); i++) {
+			log.info("---" + this.getManagedBean().getSmSupp().getSmSupplierOwners().get(i).getOwnerName() 
+					+ ": " + this.getManagedBean().getSmSupp().getSmSupplierOwners().get(i).getIdentificationNo() + "---");
+		}
+		// 27691 - end -  Add/Delete Supplier Owner - log only for dev server debugging
+		
 		if(!this.getManagedBean().getSmSupp().getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)){
 			if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1){
 				throw new EpException(MessageConst.ERROR_721011);
