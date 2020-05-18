@@ -2557,6 +2557,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				if (selectedItem.getScRequestItem().getRequestNoteItemId().equals(flItemAddr.getScRequestItem().getRequestNoteItemId())) {
 					selectedItem.setOrderedAmt(flItemAddr.getOrderedAmt());
 					selectedItem.setOrderedQty(flItemAddr.getOrderedQty());
+					selectedItem.setUnitPrice(flItemAddr.getUnitPrice());//#28171
 					itemExisted=true;
 					break;
 				}
