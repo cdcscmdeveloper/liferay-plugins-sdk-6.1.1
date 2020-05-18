@@ -1867,6 +1867,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 
 	public String backToReviewUnspsc() {
 		FacesScopes fs = new FacesScopes();
+		this.getManagedBean().reset();
 
 		log.info("CD_ADMIN" + fs.hasRoleUser("CM_ADMIN"));
 		log.info("Current Task Name: " + fs.getParameter("currentTaskName"));
@@ -1891,6 +1892,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	}
 
 	public String backToPendingCodified() {
+		this.getManagedBean().reset();
 		return getManagedBean().getBackToPreviousPage();
 		//return "assignProductCode?faces-redirect=true";
 	}
