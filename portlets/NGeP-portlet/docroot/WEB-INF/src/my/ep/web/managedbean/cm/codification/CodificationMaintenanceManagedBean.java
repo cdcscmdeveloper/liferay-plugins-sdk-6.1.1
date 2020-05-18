@@ -11,8 +11,10 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.type.aut.SearchOperator;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.FacesScopes;
 
 
 @ManagedBean(name = "codificationMaintenanceMB")
@@ -27,6 +29,7 @@ public class CodificationMaintenanceManagedBean extends BaseManagedBean {
 
 	private String unspscCode;
 	private String unspscTitle;
+	private String typeName; /*[#27625]*/
 
 	private List<CmUnspsc> contractedItem;
 
@@ -48,6 +51,7 @@ public class CodificationMaintenanceManagedBean extends BaseManagedBean {
 	private List<SelectItem> familyCriteria;
 	private List<SelectItem> classCriteria;
 	private List<SelectItem> commodityCriteria;
+	private List<SelectItem> typeList; /*[#27625]*/
 
 	private String segmentCode;
 	private String familyCode;
@@ -591,5 +595,31 @@ public class CodificationMaintenanceManagedBean extends BaseManagedBean {
 	public void setTitleFilterBean(SearchFilterBean titleFilterBean) {
 		this.titleFilterBean = titleFilterBean;
 	}
+
+	/*[#27625] begin*/
+	public String getTypeName() {
+		return typeName;
+	}
+
+	public void setTypeName(String typeName) {
+		this.typeName = typeName;
+	}
+
+	public List<SelectItem> getTypeList() {
+		typeList = new ArrayList<SelectItem>();
+		typeList.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.all", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale())));
+		typeList.add(new SelectItem("P", ResourceBundleUtils.getMessage("lbl.txt.product",ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale())));
+		typeList.add(new SelectItem("S", ResourceBundleUtils.getMessage("lbl.txt.service",ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale())));
+		
+		return typeList;
+	}
+
+	public void setTypeList(List<SelectItem> typeList) {
+		this.typeList = typeList;
+	}
+	/*[#27625] end*/
 
 }

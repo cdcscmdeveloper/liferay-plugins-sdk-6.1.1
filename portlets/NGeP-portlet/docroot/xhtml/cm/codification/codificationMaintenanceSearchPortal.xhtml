@@ -18,6 +18,14 @@
 		<p:panel id="panel1" header="#{lbl['lbl.cm.define.search']}" toggleable="true">
 			<table style="width: 100%;">
 				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.itype']}"></p:outputLabel></td>
+					<td>
+						<p:selectOneMenu id="itemType" value="#{codificationMaintenanceBackingBean.managedBean.typeName}" style="width:30%">
+							<f:selectItems value="#{codificationMaintenanceBackingBean.managedBean.typeList}"></f:selectItems>
+						</p:selectOneMenu>
+					</td>
+				</tr>
+				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
 					<td colspan="1"><p:autoComplete size="40"
 							title="#{lbl['lbl.cm.eight.digits']}" maxlength="8"

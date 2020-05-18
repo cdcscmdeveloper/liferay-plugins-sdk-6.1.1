@@ -15,8 +15,16 @@
 
 	<h:panelGroup id="cmUNSPSCsearchID">
 	
-		<p:panel header="#{lbl['lbl.cm.define.search']}" toggleable="true">
+		<p:panel header="#{lbl['lbl.cm.define.search']}" toggleable="true" id="panelPortal">
 			<table style="width: 100%;">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.itype']}"></p:outputLabel></td>
+					<td>
+						<p:selectOneMenu id="itemType" value="#{codificationBackingBean.managedBean.typeName}" style="width:30%">
+							<f:selectItems value="#{codificationBackingBean.managedBean.typeList}"></f:selectItems>
+						</p:selectOneMenu>
+					</td>
+				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
 					<td colspan="1"><p:autoComplete size="40"
@@ -47,6 +55,9 @@
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
 					action="#{codificationBackingBean.unspscSearch}"
 					update="unspscTableID itemCodeSearchMsg" />
+				<p:commandButton value="#{lbl['lbl.btn.reset']}" process="@this" update="panelPortal"> 
+					<p:resetInput target="panelPortal"/>
+				</p:commandButton>
 			</div>
 		</p:panel>
 

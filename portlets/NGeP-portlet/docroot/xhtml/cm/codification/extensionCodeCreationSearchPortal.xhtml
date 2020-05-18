@@ -24,8 +24,16 @@
 			</table> 
 			<br />
 	
-		<p:panel header="#{lbl['lbl.cm.define.search']}" toggleable="true">
+		<p:panel header="#{lbl['lbl.cm.define.search']}" toggleable="true" id="panelExt">
 			<table style="width: 100%;">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.itype']}"></p:outputLabel></td>
+					<td>
+						<p:selectOneMenu id="itemType" value="#{extensionCodeCreationBackingBean.managedBean.typeName}" style="width:30%">
+							<f:selectItems value="#{extensionCodeCreationBackingBean.managedBean.typeListSI}"></f:selectItems>
+						</p:selectOneMenu>
+					</td>
+				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
 					<td colspan="1"><p:autoComplete size="40"
@@ -58,13 +66,9 @@
 					update="unspscTableID" />
 				<p:commandButton value="#{lbl['lbl.btn.reset']}" 
 				    action="#{extensionCodeCreationBackingBean.resetSearch}" 
-				     update="extensionCodeCreationsearchID,unspscTableID"/>						 	 
+				     update="panelExt,extensionCodeCreationsearchID,unspscTableID"/>			 	 
 			</div>
 		</p:panel>
-
-
-
-
 
 		<p:panel header="#{lbl['lbl.cm.search.result']}" toggleable="true">
 
