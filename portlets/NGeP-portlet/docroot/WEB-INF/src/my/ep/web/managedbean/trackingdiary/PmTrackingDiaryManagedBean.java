@@ -1052,7 +1052,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 					ITrackingDiarySO trackingDiarySO = (ITrackingDiarySO) BusinessDelegate.getInstance()
 							.getServiceObject("cc", ITrackingDiarySO.class);
 
-					// #25790 - Start
+					// #25790 - Start and #25791
 					if (isReqOrApprover() && ParameterConst.DOCTYPE_SIMPLE_QUOTE.equals(getSelectedDocType())
 							|| isReqOrApprover() && ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT.equals(getSelectedDocType())
 							|| isReqOrApprover() && ParameterConst.DOCTYPE_REQUEST_NOTE.equals(getSelectedDocType())
