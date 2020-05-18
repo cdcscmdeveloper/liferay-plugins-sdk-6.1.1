@@ -5107,6 +5107,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						|| ProcurementPlanConst.PPP_PENDING_REVISION_APPROVAL.equals(ppPlan.getStatus().getStatusId())
 						|| ProcurementPlanConst.PPP_PENDING_REVISION_VERIFICATION.equals(ppPlan.getStatus().getStatusId())
 						|| ProcurementPlanConst.PPE_PENDING_REVISION_APPROVAL.equals(ppPlan.getStatus().getStatusId())
+						|| ProcurementPlanConst.PPP_APPROVED.equals(ppPlan.getStatus().getStatusId())
 				) {
 			if (ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())) {
 				for (PpProcurementItem ppProcurementItem : ppPlan.getPpProcurementItems()) {
@@ -5114,14 +5115,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						PpUpdateReason updateReason = ppProcurementItem.getPpUpdateReasons().get(0);
 						if (updateReason != null && 
 								updateReason.getReasonDesc() != null) { //&& rejectReason.isBrandNew() add this for phase 2
-							log.info("updateReason for ppItemId "+ppProcurementItem.getProcurementItemId()
-									+" = "+updateReason.getReasonDesc());
 							updateReason.setDocId(ppProcurementItem.getProcurementItemId());
 							updateReason.setDocType(ParameterConst.DOCTYPE_PLAN_PROCUREMENT);
 							updateReasons.add(updateReason);
-						} else {
-							log.info("updateReason for ppItemId "+ppProcurementItem.getProcurementItemId()
-									+" = null");
 						}
 					}
 				}
