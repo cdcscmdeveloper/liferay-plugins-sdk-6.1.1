@@ -264,7 +264,7 @@
 		
 		<!-- 27691 - start - Add/Delete Supplier Owner -->
 		<p:outputPanel id="suppOwnersActionPanel" 
-			rendered="#{!registrationBackingBean.managedBean.showOwnerPersonnel or !registrationBackingBean.managedBean.viewMode}">
+			rendered="#{registrationBackingBean.showSupplierOwnersActionPanel}">
 			<div align="right">
 				<p:commandButton id="addOwnerBtnId" value="#{lbl['lbl.btn.add']}" partialSubmit="true"
 					action="#{registrationBackingBean.addSupplierOwner}"
