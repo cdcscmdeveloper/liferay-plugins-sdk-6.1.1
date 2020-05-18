@@ -55,17 +55,11 @@
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
 					action="#{codificationBackingBean.unspscSearch}"
 					update="unspscTableID itemCodeSearchMsg" />
-				<p:commandButton value="#{lbl['lbl.btn.reset']}" process="@this" update="panelPortal"> 
-					<p:resetInput target="panelPortal"/>
-				</p:commandButton>
+				<p:commandButton value="#{lbl['lbl.btn.reset']}" 
+					action="#{codificationBackingBean.resetAction}"
+					update="panelPortal"/>
 			</div>
 		</p:panel>
-
-
-
-
-
-
 
 		<p:panel header="#{lbl['lbl.cm.search.result']}" toggleable="true">
 

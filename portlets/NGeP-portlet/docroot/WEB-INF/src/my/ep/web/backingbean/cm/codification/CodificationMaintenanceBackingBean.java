@@ -618,6 +618,7 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 		this.setSearchDataModel(new SearchPagingDataModel());
 		this.getManagedBean().setAutoCompleteUnspscCode(null);
 		//20190821@azza - CR25551 - End
+		this.getManagedBean().setTypeName(null);
 	}
 
 	//20190827@azza - CR25551 - Start
