@@ -155,9 +155,6 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 
 			this.getManagedBean().initRefreshPageNoFlag();
 		}
-
-
-
 	}
 
 	/**
@@ -545,7 +542,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	public void setSearchDataModel(IPagingDataModel<CmUnspsc> searchDataModel) {
 		this.searchDataModel = searchDataModel;
 	}
-
+	
 	/**
 	 * UNSPSC Search Data Model for displaying list of UNSPSC records.
 	 * 
@@ -557,16 +554,13 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				.getUnspscCode();
 		String unspscTitle = this.getManagedBean().getTitleFilterBean().getSearchValue().toString();
 
-
-		if ((unspscCode == null && (unspscTitle == null || unspscTitle
-				.isEmpty()))
-				|| ((unspscCode != null && unspscCode.isEmpty()) && (unspscTitle != null && unspscTitle
-				.isEmpty()))) {
+		if ((unspscCode == null && (unspscTitle == null || unspscTitle.isEmpty()))
+				|| ((unspscCode != null && unspscCode.isEmpty()) 
+				&& (unspscTitle != null && unspscTitle.isEmpty()))) {
 			throw new EpException(MessageConst.ERROR_716006);
 		}
 
-		if ((unspscCode != null && !unspscCode.isEmpty())
-				&& (unspscCode.length() != 8 || !StringUtils.isNumeric(unspscCode))){
+		if ((unspscCode != null && !unspscCode.isEmpty()) && (unspscCode.length() != 8 || !StringUtils.isNumeric(unspscCode))){
 			throw new EpException(MessageConst.ERROR_715026);
 		}
 
