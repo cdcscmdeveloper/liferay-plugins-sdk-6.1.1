@@ -94,11 +94,11 @@
 				<p:commandButton
 					value="#{lbl['lbl.btn.search']}"
 					action="#{codificationBackingBean.unspscSearch}"
-					update="cmUNSPSCsearchID">
+					update="unspscTableID">
 				</p:commandButton>
-				<p:commandButton value="#{lbl['lbl.btn.reset']}" process="@this" update="panelSearch"> 
-					<p:resetInput target="panelSearch"/>
-				</p:commandButton>
+				<p:commandButton value="#{lbl['lbl.btn.reset']}" 
+					action="#{codificationBackingBean.resetAction}"
+					update="panelSearch"/>
 				<p:commandButton value="#{lbl['lbl.btn.back']}"
 					action="#{codificationBackingBean.backToPendingCodified}">
 				</p:commandButton>

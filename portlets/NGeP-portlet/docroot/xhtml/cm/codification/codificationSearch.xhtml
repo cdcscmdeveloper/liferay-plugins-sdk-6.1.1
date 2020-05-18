@@ -100,9 +100,9 @@
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
 					action="#{codificationBackingBean.unspscSearch}"
 					update="unspscTableID itemCodeSearchMsg" />
-				<p:commandButton value="#{lbl['lbl.btn.reset']}" process="@this" update="panel"> 
-					<p:resetInput target="panel"/>
-				</p:commandButton>
+				<p:commandButton value="#{lbl['lbl.btn.reset']}" 
+					action="#{codificationBackingBean.resetAction}"
+					update="panel"/> 
 			</div>
 		</p:panel>
 

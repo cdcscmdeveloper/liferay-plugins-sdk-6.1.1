@@ -1414,7 +1414,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 		this.setCodeFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value()));
 		this.setSearchDataModel(new SearchPagingDataModel());
 		this.setAutoCompleteUnspscCode(null);
-		
+		this.setTypeName(null);
 	}
 
 	/**
