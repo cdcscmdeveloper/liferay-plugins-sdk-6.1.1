@@ -94,7 +94,7 @@ public class ResendAccountActivationEmailBackingBean extends
 								"", null, null);
 			}
 		}
-		//26238 - END 27848
+		// 26238 - END 27848
 	}
 
 	public void onClickResend() {
