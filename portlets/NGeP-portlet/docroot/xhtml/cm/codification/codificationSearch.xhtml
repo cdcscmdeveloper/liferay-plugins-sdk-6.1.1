@@ -50,7 +50,7 @@
 			</table>
 		</h:panelGroup>
 		<br />
-		<p:panel header="#{lbl['lbl.cm.define.search']}" toggleable="true">
+		<p:panel header="#{lbl['lbl.cm.define.search']}" toggleable="true" id="panel">
 			<table style="width: 100%; height: 100%;">
 				<tr>
 					<td width="100%"><h:outputText styleClass="instruction"
@@ -59,7 +59,16 @@
 				</tr>
 			</table>
 			<p:remoteCommand name="updateAutoComplete" update=":form:autocompleteId"></p:remoteCommand>
+			<br/>
 			<table style="width: 100%;">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.itype']}"></p:outputLabel></td>
+					<td>
+						<p:selectOneMenu id="itemType" value="#{codificationBackingBean.managedBean.typeName}" style="width:30%">
+							<f:selectItems value="#{codificationBackingBean.managedBean.typeList}"></f:selectItems>
+						</p:selectOneMenu>
+					</td>
+				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
 					<td colspan="1"><p:autoComplete id="autocompleteId" size="40"
@@ -75,7 +84,7 @@
 								value="#{lbl['lbl.tooltip.item.code']}" />
 						</p:tooltip></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
-					<td><p:inputText title="#{lbl['lbl.cm.title.english']}"
+					<td><p:inputText title="#{lbl['lbl.cm.title.english']}" id="itemTitle"
 							value="#{codificationBackingBean.managedBean.titleFilterBean.searchValue}"
 							size="40" />
 						<p:graphicImage id="itemCodeID"
@@ -91,6 +100,9 @@
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
 					action="#{codificationBackingBean.unspscSearch}"
 					update="unspscTableID itemCodeSearchMsg" />
+				<p:commandButton value="#{lbl['lbl.btn.reset']}" 
+					action="#{codificationBackingBean.resetAction}"
+					update="panel"/> 
 			</div>
 		</p:panel>
 

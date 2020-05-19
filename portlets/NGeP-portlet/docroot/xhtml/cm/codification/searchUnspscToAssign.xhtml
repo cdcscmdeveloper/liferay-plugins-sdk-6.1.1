@@ -51,8 +51,16 @@
 
 			</p:panel>
 
-			<p:panel header="#{lbl['lbl.cm.define.search']}" toggleable="true">
+			<p:panel header="#{lbl['lbl.cm.define.search']}" toggleable="true" id="panelSearch">
 				<table style="width: 100%;">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.itype']}"></p:outputLabel></td>
+						<td>
+							<p:selectOneMenu id="itemType" value="#{codificationBackingBean.managedBean.typeName}" style="width:30%">
+								<f:selectItems value="#{codificationBackingBean.managedBean.typeList}"></f:selectItems>
+							</p:selectOneMenu>
+						</td>
+					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
 						<td colspan="1"><p:autoComplete size="40"
@@ -66,12 +74,12 @@
 							<p:outputLabel escape="false"
 								style="text-align: left;"
 								value="#{lbl['lbl.tooltip.item.code']}" /></p:tooltip>
-</td>
+						</td>
 						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
 						<td><p:inputText title="#{lbl['lbl.cm.title.english']}"
 								value="#{codificationBackingBean.managedBean.titleFilterBean.searchValue}"
 								size="40" />
-																	<p:graphicImage id="itemCodeID"
+							<p:graphicImage id="itemCodeID"
 							value="/css/images/design/tooltips.png" /> <p:tooltip
 							for="itemCodeID">
 							<p:outputLabel escape="false"
@@ -86,8 +94,11 @@
 				<p:commandButton
 					value="#{lbl['lbl.btn.search']}"
 					action="#{codificationBackingBean.unspscSearch}"
-					update="cmUNSPSCsearchID">
+					update="unspscTableID">
 				</p:commandButton>
+				<p:commandButton value="#{lbl['lbl.btn.reset']}" 
+					action="#{codificationBackingBean.resetAction}"
+					update="panelSearch"/>
 				<p:commandButton value="#{lbl['lbl.btn.back']}"
 					action="#{codificationBackingBean.backToPendingCodified}">
 				</p:commandButton>

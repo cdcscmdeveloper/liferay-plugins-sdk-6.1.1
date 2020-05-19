@@ -170,19 +170,27 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 					
 					searchBean.getDataFilterBeans().add(bilingualFilter);
 				}
-				FacesScopes fs = new FacesScopes();
-				String itemType = fs.getParameter("itemType");
-
+				/*[#27625] begin*/
+				String itemType;
+				if(StringUtils.isNotBlank(getManagedBean().getTypeName())){
+					itemType = getManagedBean().getTypeName();
+				}else{
+					FacesScopes fs = new FacesScopes();
+					itemType = fs.getParameter("itemType");
+				}
 				log.info("............itemType=" + itemType);
+
 				if (itemType != null) {// save parameter first time it come from
 					// search button
 					setItemTypeParameter(itemType);
-				}
-				log.info("............getItemTypeParameter="
-						+ getItemTypeParameter());
+				}else
+					setItemTypeParameter(null);
+				/*[#27625] end*/
+
+				log.info("............getItemTypeParameter="+ getItemTypeParameter());
 				log.info("............ isAssignCodeFlg ="+ getManagedBean().isAssignCodeFlg());
 				// get parameter from backup property whenever table be reloaded
-				if(!getManagedBean().isAssignCodeFlg()) {
+				//if(!getManagedBean().isAssignCodeFlg()) { /*[#27625]
 					if (getItemTypeParameter() != null
 							&& !getItemTypeParameter().isEmpty()) {
 	
@@ -200,7 +208,7 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 											"70000000"));
 						}
 					}
-				}
+				//}
 
 
 				System.out.println("this.getSortField():"+this.getSortField());
@@ -1285,6 +1293,7 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 	public void resetSearch() {
 		this.getManagedBean().setAutoCompleteUnspscCode(null);
 		this.getManagedBean().setTitleFilterBean(null);
+		this.getManagedBean().setTypeName(null);
 		resetAction();
 		
 	}
