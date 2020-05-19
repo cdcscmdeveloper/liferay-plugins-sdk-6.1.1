@@ -2838,8 +2838,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	
 	// 27691 - start -  Add/Delete Supplier Owner
 	public boolean isShowSupplierOwnersActionPanel() {
-		if (this.getManagedBean().getSmSupp() == null 
-				|| this.getManagedBean().getSmSupp().getSupplierId() == null) {
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		if (pmUser == null || (pmUser != null && pmUser.getUserId() == null)) {
 			// User not logged in yet
 			return false;
 		} else {
