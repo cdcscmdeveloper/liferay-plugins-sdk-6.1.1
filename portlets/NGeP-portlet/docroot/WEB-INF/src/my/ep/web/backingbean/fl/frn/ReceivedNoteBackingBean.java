@@ -455,6 +455,14 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			getAcknowledgeOfficerDropdown();
 			
 			// Set evaluation
+			//#14650 - Alert message if contract incomplete - Start
+			if(getManagedBean().getFulfilmentNote().getStatus().getStatusId().longValue() != FulfilmentStatusConst.CR_COMPLETE.longValue()){
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+						MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+			}
+			//#14650 - End
+			
+			
 			if(this.getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.APPROVE_FRN_HT)){
 				getManagedBean().setDisableEvaluation(Boolean.TRUE);
 			}
