@@ -79,11 +79,14 @@
 				</f:facet>
 				<!-- <h:outputText value="#{varOwner.nationality.countryName}" /> -->
 				<!-- 16052019 - SSM INTEGRATION CR - START -->
-				<p:selectOneMenu value="#{varOwner.tempCountryId}" disabled="#{!varOwner.nationalityNull and varOwner.tempCountryId ne 0}">
+				<p:selectOneMenu value="#{varOwner.tempCountryId}"
+					disabled="#{registrationBackingBean.managedBean.smAppl.applType==SupplierManagementConst.ACC_BASIC or (!varOwner.nationalityNull and varOwner.tempCountryId ne 0)}">
 					<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 					<f:selectItems var="counLs"
 						value="#{registrationBackingBean.managedBean.countryLs}" />
-						<p:ajax event="change" listener="#{registrationBackingBean.setOwnerNationality(varOwner,true)}" update=":form:tableOwner" />
+					<p:ajax event="change"
+						listener="#{registrationBackingBean.setOwnerNationality(varOwner,true)}"
+						update=":form:tableOwner" />
 				</p:selectOneMenu>
 				<!-- 16052019 - SSM INTEGRATION CR  - END -->
 			</p:column>
