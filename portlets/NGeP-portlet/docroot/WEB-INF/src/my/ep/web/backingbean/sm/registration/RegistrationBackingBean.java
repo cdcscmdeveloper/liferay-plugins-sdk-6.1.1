@@ -2841,9 +2841,15 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	
 	// 27691 - start -  Add/Delete Supplier Owner
 	public boolean isShowSupplierOwnersActionPanel() {
-		return !this.getManagedBean().isShowOwnerPersonnel() && 
-				(!this.getManagedBean().isViewMode()
-						&& !businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupp().getRegNo(), this.getManagedBean().getSmSupp().getBusinessType()));
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		if (pmUser == null || (pmUser != null && pmUser.getUserId() == null)) {
+			// User not logged in yet
+			return false;
+		} else {
+			return !this.getManagedBean().isShowOwnerPersonnel() && 
+					(!this.getManagedBean().isViewMode()
+							&& !businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupp().getRegNo(), this.getManagedBean().getSmSupp().getBusinessType()));
+		}		
 	}
 	
 	public void addSupplierOwner() {
