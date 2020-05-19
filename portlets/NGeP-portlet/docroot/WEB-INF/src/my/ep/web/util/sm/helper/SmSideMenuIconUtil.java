@@ -336,6 +336,10 @@ public class SmSideMenuIconUtil {
 		} else if (sectionType
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
 			if (bean.isSupplierUser()) {
+				
+                // #27883 - Define param
+				boolean flagSmDisciplinaryActionIsCancelCategory = false;
+				
 				//27641, 27736 : Disciplinary Action - #26238 - start 
 				if(bean.getSmSupplier() != null){
 					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier());
@@ -345,6 +349,10 @@ public class SmSideMenuIconUtil {
 							if(disc.isSuspendRegistration()){
 								bean.getEditVO().setDisciplinary(true);
 							}
+							// #27883 - check DA isCancelCategory
+							if(disc.isCancelCategory()){
+								flagSmDisciplinaryActionIsCancelCategory = true;
+							}
 						}						
 					} else {
 						bean.getEditVO().setDisciplinary(false);
@@ -353,7 +361,7 @@ public class SmSideMenuIconUtil {
 				//27641, 27736 : Disciplinary Action - #26238 - end
 				bean.getEditVO().setSuppEditCategory(false);
 				if (step6CatCodeHasDifference(true, bean.getLatestAppl(),
-						bean.getSmAppl())) {
+						bean.getSmAppl()) && !flagSmDisciplinaryActionIsCancelCategory) {
 					bean.getEditVO().setSuppEditCategory(true);
 				}
 				// used to check got changes to display supporting doc
