@@ -13,20 +13,9 @@
 			emptyMessage="No Equity Owner (Individual) is found in SSM for this company."
 			rendered="#{!registrationBackingBean.managedBean.showOwnerPersonnel and registrationBackingBean.managedBean.labelDataTable eq 'en_US'}"
 			value="#{registrationBackingBean.managedBean.smSuppOwners}"
-			selection="#{registrationBackingBean.managedBean.selectedSuppOwners}"
-			rowKey="#{varOwner}"
+			rowKey="#{rowKeyObj}"
 			sortBy="#{varOwner.ownerName}"	>
-			<ac:paginator for="tableOwner" />
-			<p:ajax event="rowSelectCheckbox" update=":#{p:component('deleteOwnerBtnId')}" />
-			<p:ajax event="rowUnselectCheckbox" update=":#{p:component('deleteOwnerBtnId')}" />
-			<p:ajax event="rowSelect" update=":#{p:component('deleteOwnerBtnId')}" />   
-			<p:ajax event="rowUnselect" update=":#{p:component('deleteOwnerBtnId')}" />  
-			<p:ajax event="toggleSelect" update=":#{p:component('deleteOwnerBtnId')}" /> 
-			
-			<p:column
-				selectionMode="multiple"
-				style="width:2%"	
-				rendered="#{not empty registrationBackingBean.managedBean.smSuppOwners}" />
+			<ac:paginator for="tableOwner" />	
 				
 			<p:column style="width:3%" styleClass="column-align-center">
 				<f:facet name="header">
@@ -142,21 +131,10 @@
 			widgetVar="tableOwnerbmWidget"
 			emptyMessage="Tiada Pemilik Ekuiti (Individu) dijumpai dalam SSM bagi syarikat ini."
 			rendered="#{!registrationBackingBean.managedBean.showOwnerPersonnel and registrationBackingBean.managedBean.labelDataTable ne 'en_US'}"
-			value="#{registrationBackingBean.managedBean.smSuppOwners}"
-			selection="#{registrationBackingBean.managedBean.selectedSuppOwners}"
-			rowKey="#{tableOwnerbm}"
+			value="#{registrationBackingBean.managedBean.smSuppOwners}"			
+			rowKey="#{rowKeyObj}"
 			sortBy="#{varOwner.ownerName}"	>
-			<ac:paginator for="tableOwner" />
-			<p:ajax event="rowSelectCheckbox" update=":#{p:component('deleteOwnerBtnId')}" />
-			<p:ajax event="rowUnselectCheckbox" update=":#{p:component('deleteOwnerBtnId')}" />
-			<p:ajax event="rowSelect" update=":#{p:component('deleteOwnerBtnId')}" />   
-			<p:ajax event="rowUnselect" update=":#{p:component('deleteOwnerBtnId')}" />  
-			<p:ajax event="toggleSelect" update=":#{p:component('deleteOwnerBtnId')}" />
-
-			<p:column
-				selectionMode="multiple"
-				style="width:2%"	
-				rendered="#{not empty registrationBackingBean.managedBean.smSuppOwners}" />
+			<ac:paginator for="tableOwner" />		
 
 			<p:column style="width:3%" styleClass="column-align-center">
 				<f:facet name="header">
@@ -265,22 +243,6 @@
 
 		</p:dataTable>
 		
-		<!-- 27691 - start - Add/Delete Supplier Owner -->
-		<p:outputPanel id="suppOwnersActionPanel" 
-			rendered="#{registrationBackingBean.showSupplierOwnersActionPanel}">
-			<div align="right">
-				<p:commandButton id="addOwnerBtnId" value="#{lbl['lbl.btn.add']}" partialSubmit="true"
-					action="#{registrationBackingBean.addSupplierOwner}"
-					process="@this,tableOwner,tableOwnerbm"
-					update="@this,tableOwner,tableOwnerbm,deleteOwnerBtnId"/>
-				<p:commandButton id="deleteOwnerBtnId" value="#{lbl['lbl.btn.delete']}" partialSubmit="true"
-					disabled="#{empty registrationBackingBean.managedBean.selectedSuppOwners}"
-					process="@this,tableOwner,tableOwnerbm"
-					onclick="ownerDeletePopUp.show();"/>
-			</div>
-		</p:outputPanel>
-		<!-- 27691 - end - Add/Delete Supplier Owner -->
-		
 		<p:dataTable id="tableOwnerPersonnel" var="varOwnerPersonnel" rowIndexVar="index"
 			widgetVar="tableOwnerPersonnelWidget"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -373,13 +335,5 @@
 		</p:dataTable>
 		
 	</p:panel>
-	
-	<ac:confirmationPopup id="ownerDeletePopUpId"
-		widget="ownerDeletePopUp"
-		okAction="registrationBackingBean.removeSupplierOwner"
-		width="400" height="100"
-		title="#{lbl['lbl.msg.confirm.delete.header']}"
-		content="#{lbl['lbl.msg.confirm.delete']}" 
-		update=":#{p:component('ownerBusiness')}"/>
 	
 	</ui:composition>
