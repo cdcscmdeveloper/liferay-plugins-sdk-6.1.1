@@ -2264,6 +2264,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 		List<TabBean> committeTabs = this.getManagedBean()
 				.getScCommitteeMemberTabList();
+		 if(getUserTaskIsCommitteeAppointmentApprovalEcOcTecFec() && isApprovalScreen()){
+			 log.debug("====mangaNewCodesExecuted========");
+			 committeTabs=null;
+		 }
 		Long qtId = scQt.getQtId();
 		if (null == committeTabs) {
 			String evaluationType = this.getManagedBean().getQt()
