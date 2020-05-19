@@ -4465,14 +4465,18 @@ public class SupplierFinalizationBackingBean extends
 					.equals(decision)) {
 				isDecisionFwdToHighAuthority = true;
 				
+				/* Bug_28157 - Start */
 				if (scQtFinalization.getHigherCommitte() != null && 
-						committeeType.equals(scQtFinalization
-							.getHigherCommitte().getParameterCode())) {
+						committeeType.equals(scQtFinalization.getHigherCommitte().getParameterCode()) &&
+							!scQtFinalization.getCurrentStatus().getPmStatus().getStatusId().equals(QTStatusConst.SF_PENDING_ENDORSEMENT) &&
+							!scQtFinalization.getCurrentStatus().getPmStatus().getStatusId().equals(QTStatusConst.SF_PENDING_SIGN_OFF)) {	
 					resetForwardToHigherAuthorityParams(scQtFinalization);
 					scQtFinalization.setHigherCommitte(new PmParameter());
 					scQtFinalization.setHigherSecretary(new PmUser());
 					scQtFinalization.setReason(new PmReason());
 				}
+				/* Bug_28157 - End */
+				
 				if (!isInitialDecisionFwdToBPK && 
 						scQtFinalization.getReason() != null) {
 					changeReasonEvent(null);
