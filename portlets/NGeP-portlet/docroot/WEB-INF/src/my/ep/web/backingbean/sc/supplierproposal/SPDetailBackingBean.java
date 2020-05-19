@@ -2924,6 +2924,10 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 				templateSpecBean.setContentType(reqDTO.getContentType());
 				templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
 				templateSpecBean.setSelectedSpecQuestion(null);
+//#21695 Farid start(calculation rate per uom reset to 0 if partial offer				
+				this.getManagedBean().getTemplateSpecBackingBean()
+				.calcAllSpecAnswerTotalAmount(templateSpecBean);
+//#21695 Farid end				
 				this.getManagedBean().getTemplateSpecBackingBean()
 						.calcGrandTotalAmount(templateSpecBean);
 				if (getManagedBean().getQt().isZonal()) {
