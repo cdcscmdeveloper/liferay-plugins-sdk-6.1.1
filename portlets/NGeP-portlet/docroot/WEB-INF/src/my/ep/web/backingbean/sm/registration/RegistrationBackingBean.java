@@ -2839,6 +2839,35 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		return SmCommonUtil.getParamDescriptionByLanguageAndPmParameter(parameter);
 	}
 	
+	// 27691 - start -  Add/Delete Supplier Owner
+	public boolean isShowSupplierOwnersActionPanel() {
+		return !this.getManagedBean().isShowOwnerPersonnel() && 
+				(!this.getManagedBean().isViewMode()
+						&& !businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupp().getRegNo(), this.getManagedBean().getSmSupp().getBusinessType()));
+	}
+	
+	public void addSupplierOwner() {
+		if (this.getManagedBean().getSmSuppOwners() == null) {
+			this.getManagedBean().setSmSuppOwners(new ArrayList<SmSupplierOwner>());
+		}
+		
+		SmSupplierOwner smSupplierOwner = new SmSupplierOwner();
+		PmParameter identificationType = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_IC);
+		smSupplierOwner.setSmSupplier(this.getManagedBean().getSmSupp());
+		smSupplierOwner.setIdentificationType(identificationType);
+		smSupplierOwner.setShowTextField(true);
+		this.getManagedBean().getSmSuppOwners().add(smSupplierOwner);
+	}
+	
+	public void removeSupplierOwner() {
+		if (this.getManagedBean().getSelectedSuppOwners() != null && this.getManagedBean().getSelectedSuppOwners().length > 0) {
+			for (SmSupplierOwner smSupplierOwner : this.getManagedBean().getSelectedSuppOwners()) {
+				this.getManagedBean().getSmSuppOwners().remove(smSupplierOwner);
+			}
+		}
+		this.getManagedBean().setSelectedSuppOwners(null);
+	}
+	// 27691 - end -  Add/Delete Supplier Owner
 	
 	/**
 	 * set supplier owner mask based on selected id type
@@ -3112,6 +3141,14 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 * @return String
 	 */
 	public String updateBasicSupplier(){
+		// 27691 - start -  Add/Delete Supplier Owner - log only for dev server debugging
+		log.info("---After declare button clicked Supplier Owner size: " + this.getManagedBean().getSmSupp().getSmSupplierOwners().size() + "---");
+		for (int i = 0; i < this.getManagedBean().getSmSupp().getSmSupplierOwners().size(); i++) {
+			log.info("---" + this.getManagedBean().getSmSupp().getSmSupplierOwners().get(i).getOwnerName() 
+					+ ": " + this.getManagedBean().getSmSupp().getSmSupplierOwners().get(i).getIdentificationNo() + "---");
+		}
+		// 27691 - end -  Add/Delete Supplier Owner - log only for dev server debugging
+		
 		if(!this.getManagedBean().getSmSupp().getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)){
 			if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1){
 				throw new EpException(MessageConst.ERROR_721011);
