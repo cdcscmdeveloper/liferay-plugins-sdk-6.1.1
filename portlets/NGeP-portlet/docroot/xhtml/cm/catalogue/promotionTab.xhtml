@@ -72,7 +72,8 @@
 			<p:column>
 				<p:commandLink style="margin-left: 10px;"
 					title="#{lbl['lbl.btn.delete']}" oncomplete="confirmationDelete.show();"
-					action="#{catalogueBackingBean.setItemToDelete(selectedSuppCat.supplierItemId, rowIndex)}">
+					action="#{catalogueBackingBean.setSingleItemToDelete(selectedSuppCat.supplierItemId)}"
+					disabled="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}">
 					<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
 					<f:param name="index" value="#{rowIndex}"></f:param>
 				</p:commandLink>
@@ -98,7 +99,8 @@
 			<p:commandButton id="addPromoButton" 
 				value="#{lbl['lbl.cm.add']}"
 				action="#{catalogueBackingBean.addNewPromotionPricing()}"
-				disabled="#{catalogueBackingBean.isPromotionPriceExist(catalogueBackingBean.managedBean.selectedMaintainItem)}"
+				disabled="#{catalogueBackingBean.isPromotionPriceExist(catalogueBackingBean.managedBean.selectedMaintainItem) or
+					unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"
 				update=":form" 
 				process="@this"></p:commandButton>
 	</div>
