@@ -254,7 +254,6 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			else if (pmParameter != null && pmParameter.getParameterCode().equals(ParameterConst.ORG_TYPE_G2G_ROLECODE)){
 				docTypeList.add(ParameterConst.DOCTYPE_SIMPLE_QUOTE);
 				docTypeList.add(ParameterConst.DOCTYPE_PURCHASE_INQUIRY);
-				docTypeList.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
 				getManagedBean().setG2G(Boolean.TRUE);
 				getManagedBean().setGovernment(Boolean.FALSE);
 			}
