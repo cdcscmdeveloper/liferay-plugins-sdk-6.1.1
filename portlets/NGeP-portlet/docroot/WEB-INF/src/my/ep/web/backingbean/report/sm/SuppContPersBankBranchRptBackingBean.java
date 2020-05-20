@@ -2,16 +2,22 @@ package my.ep.web.backingbean.report.sm;
 
 import java.text.SimpleDateFormat;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import my.ep.constants.CommonConstants;
+import my.ep.factory.EpLogger;
+import my.ep.type.pm.RoleCode;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.report.SmReportConst;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.report.sm.SuppContPersBankBranchRptManagedBean;
+import my.ep.web.util.FacesScopes;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 @ManagedBean(name = "suppContPersBankBranchRptBB")
 @ViewScoped
@@ -22,12 +28,28 @@ public class SuppContPersBankBranchRptBackingBean extends
 	 * 
 	 */
 	private static final long serialVersionUID = 8780162065038924664L;
+	private static final Logger log = EpLogger.getLogger(ProfileOfRegCompanyRptBackingBean.class);
 
 	public SuppContPersBankBranchRptBackingBean() {
 		setDefaultDateFromAndDateTo();
 		//#28115 - start
-		getSupplierInfo();
+		if (getFacesScopes().hasRoleUser(SupplierManagementConst.BASIC_SUPPLIER_ADMIN)
+				|| getFacesScopes().hasRoleUser(SupplierManagementConst.BASIC_SUPPLIER_USER)
+				|| getFacesScopes().hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_ADMIN)
+				|| getFacesScopes().hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_USER)
+				|| getFacesScopes().hasRoleUser(SupplierManagementConst.SUPPLIER_ADMIN)
+				|| getFacesScopes().hasRoleUser(SupplierManagementConst.SUPPLIER_USER)
+				|| getFacesScopes().hasRoleUser(RoleCode.FL_USER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())) {
+			getManagedBean().setSupplier(true);
+			getSupplierInfo();
+		}
 		//#28115 - end
+	}
+	
+	public FacesScopes getFacesScopes() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
 	}
 
 	public void generateReport() {
@@ -59,6 +81,14 @@ public class SuppContPersBankBranchRptBackingBean extends
 				&& getManagedBean().getSelectedOrgProfile().getSmSupplier() != null) {
 			params.put(SmReportConst.PARAM_COMPANY_NAME, getManagedBean()
 					.getSelectedOrgProfile().getSmSupplier().getCompanyName());
+		} else {
+			if (getManagedBean().isSupplier()){
+				params.put(SmReportConst.PARAM_COMPANY_NAME, getManagedBean().getCompanyName());
+			}
+		}
+		
+		for (Map.Entry<String, String> entry : params.entrySet()) {
+			log.info("Key : " + entry.getKey() + "=" + entry.getValue() + "&");
 		}
 		generateSmReport(params);
 	}
