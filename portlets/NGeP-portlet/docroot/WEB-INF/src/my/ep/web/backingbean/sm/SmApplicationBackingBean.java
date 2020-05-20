@@ -971,8 +971,9 @@ public class SmApplicationBackingBean extends
 								FacesContext.getCurrentInstance().addMessage("imposedDisciplinary", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 										SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
 												new String[] { labelNameVal })));
-								SmCommonUtil.redirectToPage(
-										"/xhtml/sm/payment/portletViewMode.xhtml", "", null, null);
+								
+								//27848
+								return SmApplicationUtil.setStringNavigationForApplTnCPage(applicationType);
 							}
 						}					
 					}
