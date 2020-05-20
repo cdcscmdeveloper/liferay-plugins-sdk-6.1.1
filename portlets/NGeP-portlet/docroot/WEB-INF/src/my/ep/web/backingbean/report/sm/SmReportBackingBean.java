@@ -2678,6 +2678,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 
 				if (supplier != null) {
 					getManagedBean().setRegNo(supplier.getRegNo());
+					getManagedBean().setCompanyName(supplier.getCompanyName());
 
 					MofAccountReqDTO reqDTO = new MofAccountReqDTO();
 					reqDTO.setSupplierId(supplier.getSupplierId());
@@ -2685,6 +2686,11 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 
 					if (mofAccount != null) {
 						getManagedBean().setMofNo(mofAccount.getMofNo());
+						getManagedBean().setSupplierType(mofAccount.getSupplierType());
+						getManagedBean().setRegType("MOF");
+						getManagedBean().setDateFrom(mofAccount.getEffDate());
+					} else {
+						getManagedBean().setRegType("Basic");
 					}
 				}
 			}
