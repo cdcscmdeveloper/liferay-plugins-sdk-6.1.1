@@ -1299,6 +1299,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		this.getManagedBean().setItemToDelete(supplierItemIdToDelete);
 	}
 	
+	//20200520@akmal - Enhancement27627 - Start
+	public void setSingleItemToDelete(Long supplierItemIdToDelete) {
+		log.info("Supplier item id to delete: " + supplierItemIdToDelete);
+
+		this.getManagedBean().setItemToDelete(supplierItemIdToDelete);
+	}
+	//20200520@akmal - Enhancement27627 - End
+	
 	public void setItemToDeleteApprovedTab(Long supplierItemIdToDelete, int i) {
 		log.info("Supplier item id to delete: " + supplierItemIdToDelete);
 		log.info("this.getManagedBean().getApprovedTabPageSize():"+this.getManagedBean().getApprovedTabPageSize());
