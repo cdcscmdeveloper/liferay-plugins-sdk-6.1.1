@@ -2206,6 +2206,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		.getCmPromotionTierPricings().add(price);
 	}
 	
+	//20200520@akmal - Enhancement27627 - Start
 	/**
 	 * Adds the new promotion pricing.
 	 */
@@ -2221,7 +2222,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		this.getManagedBean().getSelectedMaintainItem()
 		.setCmPromotionPricing(price);
 	}
-
+	//20200520@akmal - Enhancement27627 - End
+	
 	/**
 	 * Adds the new zonal tier pricing.
 	 */
@@ -6437,6 +6439,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	//20200520@akmal - Enhancement27627 - Start
 
 	/**
 	 * delete Normal Promotion Price.
@@ -6449,6 +6452,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 	
+	//20200520@akmal - Enhancement27627 - End
 
 	/**
 	 * delete Tier Price.
@@ -9484,6 +9488,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 	}
 	
+	//20200520@akmal - Enhancement27627 - Start
 	public boolean isPromotionPriceExist(CmSupplierItem cmSupplierItem){
 		log.info("isPromotionPriceExist");
 		log.info(cmSupplierItem.getCmPromotionPricing().getPrice());
@@ -9494,6 +9499,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		else
 			return false;
 	}
+	//20200520@akmal - Enhancement27627 - End
 
 	/**
 	 * This method is used to navigate the pending task page.
