@@ -2205,6 +2205,22 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		this.getManagedBean().getSelectedMaintainItem()
 		.getCmPromotionTierPricings().add(price);
 	}
+	
+	/**
+	 * Adds the new promotion pricing.
+	 */
+	public void addNewPromotionPricing() {
+
+		log.debug("*****addNewPromotionPricing*****");
+		CmPromotionPricing price = new CmPromotionPricing();
+		Date startDate = new Date();
+		price.setStartDate(startDate);
+		price.setEndDate(startDate);
+		price.setPrice(BigDecimal.ZERO);
+		
+		this.getManagedBean().getSelectedMaintainItem()
+		.setCmPromotionPricing(price);
+	}
 
 	/**
 	 * Adds the new zonal tier pricing.
@@ -6423,6 +6439,18 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 
 	/**
+	 * delete Normal Promotion Price.
+	 *
+	 */
+	public void deletePromotionPrice() {
+
+		log.debug("*****deletePromotionPrice*****");
+		this.getManagedBean().getSelectedMaintainItem().setCmPromotionPricing(null);
+
+	}
+	
+
+	/**
 	 * delete Tier Price.
 	 */
 	public void deleteTierPrice() {
@@ -9454,6 +9482,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}else{
 			return false;
 		}
+	}
+	
+	public boolean isPromotionPriceExist(CmSupplierItem cmSupplierItem){
+		log.info("isPromotionPriceExist");
+		log.info(cmSupplierItem.getCmPromotionPricing().getPrice());
+		log.info(cmSupplierItem.getCmPromotionPricing().getStartDate());
+		log.info(cmSupplierItem.getCmPromotionPricing().getEndDate());
+		if(cmSupplierItem.getCmPromotionPricing().getStartDate()!=null || cmSupplierItem.getCmPromotionPricing().getEndDate()!=null || cmSupplierItem.getCmPromotionPricing().getPrice() !=null )
+			return true;
+		else
+			return false;
 	}
 
 	/**
