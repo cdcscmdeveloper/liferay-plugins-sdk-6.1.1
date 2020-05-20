@@ -45,7 +45,7 @@
 		}
 	</style>
 	
-		<p:blockUI block=":form" widgetVar="blockWidget">
+		<p:blockUI block=":form" widgetVar="blockWidgetDA">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 		<table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -57,7 +57,7 @@
 						<p:commandLink rendered="#{not empty profilePersonalizationBackingBean.managedBean.disciplinaryActionMsg}"			
 							action="#{viewSuppProfileBackingBean.onViewDisciplinaryAction}" 
 							update=":form" process="@this"
-							onclick="blockWidget.show()" onsuccess="blockWidget.hide()">
+							onclick="blockWidgetDA.show()" onsuccess="blockWidgetDA.hide()">
 								<u><h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" styleClass="warning" /></u>
 						</p:commandLink><p:spacer width="2"/>
 						
