@@ -2858,9 +2858,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 		
 		SmSupplierOwner smSupplierOwner = new SmSupplierOwner();
+		PmCountry defaultNationality = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 		PmParameter identificationType = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_IC);
 		smSupplierOwner.setSmSupplier(this.getManagedBean().getSmSupp());
+		smSupplierOwner.setNationality(defaultNationality);
+		smSupplierOwner.setTempCountryId(defaultNationality.getCountryId());
 		smSupplierOwner.setIdentificationType(identificationType);
+		smSupplierOwner.setIdentificationTypeId(identificationType.getParameterId());
 		smSupplierOwner.setShowTextField(true);
 		this.getManagedBean().getSmSuppOwners().add(smSupplierOwner);
 	}
