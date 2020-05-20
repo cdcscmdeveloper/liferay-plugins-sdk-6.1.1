@@ -449,12 +449,17 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					ParameterConst.DOCTYPE_QUOTATION, paramTypes, null);
 
 			if (CollectionUtils.isNotEmpty(paramTypes)) {
-				if (ParameterConst.APPROVAL_REQUEST_UPDATE_BSV_DETAILS.equals(paramTypes.get(0))) {
-					approvalCategoryCode = ParameterConst.APPROVAL_REQUEST_PUBLICATION_APPROVAL;
-					
-					QTDetailBackingBean qTDetailBackingBean = new QTDetailBackingBean();
-					qTDetailBackingBean.retrieveBriefingSitevisitTabDtl();
+		//200520@asyrafhaziq_27839 - Start
+				for (String paramType : paramTypes){
+					if (ParameterConst.APPROVAL_REQUEST_UPDATE_BSV_DETAILS.equals(paramType)) {
+						approvalCategoryCode = ParameterConst.APPROVAL_REQUEST_PUBLICATION_APPROVAL;
+	
+						QTDetailBackingBean qTDetailBackingBean = new QTDetailBackingBean();
+						qTDetailBackingBean.retrieveBriefingSitevisitTabDtl();
+						break;
+					}
 				}
+		//200520@asyrafhaziq_27839 - End
 			}
 			currentStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_PTJ_APPROVAL,
 					getManagedBean().getQt().getQtId());
