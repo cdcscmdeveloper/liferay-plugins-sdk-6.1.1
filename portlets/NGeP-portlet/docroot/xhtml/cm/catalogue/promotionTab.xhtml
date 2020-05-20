@@ -28,13 +28,16 @@
 				<p:column>
 							#{lbl['lbl.cm.end.date']}
 						</p:column>
+				<p:column>
+							#{lbl['lbl.cm.action']}
+						</p:column>
 				
 			</p:row>
 
 		</f:facet>
 
 
-		<p:row>
+		<p:row rendered="#{catalogueBackingBean.isPromotionPriceExist(catalogueBackingBean.managedBean.selectedMaintainItem)}">
 			
 			<p:column>
 				<p:inputText id="promotionPriceId" disabled="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"
@@ -60,17 +63,50 @@
 					</p:calendar>
 
 			</p:column>
+			<p:column>
+				<p:commandLink style="margin-left: 10px;"
+					title="#{lbl['lbl.btn.delete']}" oncomplete="confirmationDelete.show();"
+					action="#{catalogueBackingBean.setItemToDelete(selectedSuppCat.supplierItemId, rowIndex)}">
+					<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+					<f:param name="index" value="#{rowIndex}"></f:param>
+				</p:commandLink>
+
+			</p:column>
 
 		</p:row>
-
+		
+		<p:row rendered="#{!catalogueBackingBean.isPromotionPriceExist(catalogueBackingBean.managedBean.selectedMaintainItem)}">
+			<p:column colspan="4">
+				#{lbl['lbl.datatable.msg.no.records.found']}
+			</p:column>
+		</p:row>
 
 
 	</p:panelGrid>
 
+	<div align="right">
+			<p:commandButton id="addPromoButton" 
+				value="#{lbl['lbl.cm.add']}"
+				action="#{catalogueBackingBean.addNewPromotionPricing()}"
+				disabled="#{catalogueBackingBean.isPromotionPriceExist(catalogueBackingBean.managedBean.selectedMaintainItem)}"
+				update=":form" 
+				process="@this"></p:commandButton>
+	</div>
+	
+	<p:confirmDialog id="confirmDeleteId"
+			message="#{lbl['lbl.cm.dialog.cofirm.delete.msg']}"
+			header="#{lbl['lbl.cm.dialog.cofirm.header']}"
+			widgetVar="confirmationDelete">
 
+			<p:commandButton id="confirmID"
+				value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
+				actionListener="#{catalogueBackingBean.deletePromotionPrice()}"
+				update=":form" oncomplete="confirmationDelete.hide()" />
+			<p:commandButton id="declineID"
+				value="#{lbl['lbl.cm.dialog.cofirm.no']}"
+				onclick="confirmationDelete.hide()" />
 
-
-
+		</p:confirmDialog>
 
 
 </ui:composition>
