@@ -253,7 +253,7 @@
 							styleClass="blue_font"
 							action="#{ctBackingBean.downloadFile(attachFile)}" />
 						<p:commandLink onsuccess="delCtSharingAttachDlg.show();"
-							action="#{ctBackingBean.setAttachFileIndex(attachFileIndex)}"
+							action="#{ctBackingBean.setAttachFileIndex(index)}"
 							disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.notificationSetting}"
 							rendered="#{!ctBackingBean.managedBean.disableAgent}">
 							<h:graphicImage value="/css/images/design/icon_trash.png"
