@@ -1299,6 +1299,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		this.getManagedBean().setItemToDelete(supplierItemIdToDelete);
 	}
 	
+	//20200520@akmal - Enhancement27627 - Start
+	public void setSingleItemToDelete(Long supplierItemIdToDelete) {
+		log.info("Supplier item id to delete: " + supplierItemIdToDelete);
+
+		this.getManagedBean().setItemToDelete(supplierItemIdToDelete);
+	}
+	//20200520@akmal - Enhancement27627 - End
+	
 	public void setItemToDeleteApprovedTab(Long supplierItemIdToDelete, int i) {
 		log.info("Supplier item id to delete: " + supplierItemIdToDelete);
 		log.info("this.getManagedBean().getApprovedTabPageSize():"+this.getManagedBean().getApprovedTabPageSize());
@@ -2205,7 +2213,25 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		this.getManagedBean().getSelectedMaintainItem()
 		.getCmPromotionTierPricings().add(price);
 	}
+	
+	//20200520@akmal - Enhancement27627 - Start
+	/**
+	 * Adds the new promotion pricing.
+	 */
+	public void addNewPromotionPricing() {
 
+		log.debug("*****addNewPromotionPricing*****");
+		CmPromotionPricing price = new CmPromotionPricing();
+		Date startDate = new Date();
+		price.setStartDate(startDate);
+		price.setEndDate(startDate);
+		price.setPrice(BigDecimal.ZERO);
+		
+		this.getManagedBean().getSelectedMaintainItem()
+		.setCmPromotionPricing(price);
+	}
+	//20200520@akmal - Enhancement27627 - End
+	
 	/**
 	 * Adds the new zonal tier pricing.
 	 */
@@ -6421,6 +6447,20 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	//20200520@akmal - Enhancement27627 - Start
+
+	/**
+	 * delete Normal Promotion Price.
+	 *
+	 */
+	public void deletePromotionPrice() {
+
+		log.debug("*****deletePromotionPrice*****");
+		this.getManagedBean().getSelectedMaintainItem().setCmPromotionPricing(null);
+
+	}
+	
+	//20200520@akmal - Enhancement27627 - End
 
 	/**
 	 * delete Tier Price.
@@ -9455,6 +9495,19 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			return false;
 		}
 	}
+	
+	//20200520@akmal - Enhancement27627 - Start
+	public boolean isPromotionPriceExist(CmSupplierItem cmSupplierItem){
+		log.info("isPromotionPriceExist");
+		log.info(cmSupplierItem.getCmPromotionPricing().getPrice());
+		log.info(cmSupplierItem.getCmPromotionPricing().getStartDate());
+		log.info(cmSupplierItem.getCmPromotionPricing().getEndDate());
+		if(cmSupplierItem.getCmPromotionPricing().getStartDate()!=null || cmSupplierItem.getCmPromotionPricing().getEndDate()!=null || cmSupplierItem.getCmPromotionPricing().getPrice() !=null )
+			return true;
+		else
+			return false;
+	}
+	//20200520@akmal - Enhancement27627 - End
 
 	/**
 	 * This method is used to navigate the pending task page.
