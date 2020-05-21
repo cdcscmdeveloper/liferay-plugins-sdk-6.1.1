@@ -668,6 +668,11 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				} else {
 					getManagedBean().setInvoice(resDTO.getInvoice());
 					flBB.initializeRemarkAndAttachement(resDTO.getInvoice().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
+					//27098- start
+					if(FLProcessNameConst.REVISE_INVOICE.equals(this.getManagedBean().getTaskName())){
+						getManagedBean().getInvoice().getStatus().setStatusId(FulfilmentStatusConst.PA_INVOICE_REVISION);		
+					}
+					//27098- end
 				}
 				
 				getManagedBean().setChargeLineItemRoot(null);
