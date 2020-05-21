@@ -6536,6 +6536,9 @@ public class SimpleQuoteBackingBean extends
 			scQuote.setJustificationType(new PmReason());
 		}
 
+		// #28199 - Remove back btn in Screen Direct Purchase
+		isResponSQ();
+		
 		// service and product
 		if (scQuote.getQuoteDocs() != null) {
 			for (ScQuoteDoc scQuoteDoc : scQuote.getQuoteDocs()) {
@@ -7596,4 +7599,17 @@ public class SimpleQuoteBackingBean extends
 			return valid;
 		}
 		//12183 - End
+		
+		// #28199 - Start 
+		/**
+		 * Return boolean TRUE for currentInstance Response Simple Quote 
+		 */
+	public boolean isResponSQ() {
+		if (FacesContext.getCurrentInstance() != null) {
+			return true;
+		}
+		return false;
+	}
+		// #28199 - End 
+		
 }
