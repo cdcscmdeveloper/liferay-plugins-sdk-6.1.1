@@ -133,7 +133,7 @@
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.cm.save']}" style="width: 8%;" 
-					action="#{suppFinalizationBackingBean.saveEditTemplateDocContent(suppFinalizationBackingBean.managedBean.selectedReport)}"
+					action="#{suppFinalizationBackingBean.saveScQtFinalizationReport(suppFinalizationBackingBean.managedBean.selectedBriefingReport)}"
 					oncomplete="reportContentPopupDlg.hide();" process="@this" partialSubmit="true" />
 					
 				<p:commandButton value="#{lbl['lbl.btn.close']}" style="width: 8%;" 
