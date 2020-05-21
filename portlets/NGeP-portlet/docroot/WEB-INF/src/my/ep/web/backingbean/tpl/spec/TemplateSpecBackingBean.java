@@ -2694,7 +2694,11 @@ public class TemplateSpecBackingBean extends
 						if (questionId == specEstimation.getTplSpecQuestion().getSpecQuestionId()){
 							specEstimation.setEstimatedCost(totalIndicativePrice); ///update value  Item Total Indicative Price (RM)
 						}
-					}
+					} else{ //#25039-start
+						if (null== specEstimation.getTplSpecZoneDtl() && questionId == specEstimation.getTplSpecQuestion().getSpecQuestionId()){
+							specEstimation.setEstimatedCost(totalIndicativePrice); ///update value  Item Total Indicative Price (RM)
+						}
+					} //#25039-End
 
 					if (specEstimation.getEstimatedCost() != null) { // bugs #26234 
 						totalEstAmount = totalEstAmount.add(specEstimation
