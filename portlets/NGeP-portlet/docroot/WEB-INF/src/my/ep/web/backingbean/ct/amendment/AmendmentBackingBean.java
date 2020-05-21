@@ -828,6 +828,23 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				
 			}
 			//Enhancement #26186 end - retrieve disciplinary info
+			
+			//#25956 - Start Button Cancel If not isDisciplinaryAction
+			String[] outcomecancel = new String[getManagedBean().getOutComes().length];
+			int a = 0; 
+			if (ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FA_PENDING_MOF_MEETING_DECISION.longValue()
+					&& !getManagedBean().isDisciplinaryAction()){
+				
+				outcomecancel = new String[getManagedBean().getOutComes().length+1];
+				outcomecancel[a++] = BpmOutcomeConst.BPM_CANCEL;
+			}
+			for (String action : getManagedBean().getOutComes()) {
+				outcomecancel[a++] = action;
+			}
+				getManagedBean().setOutComes(outcomecancel);
+				//#25956 - Start Button End If not isDisciplinaryAction	
+
+
 		}catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -2057,7 +2074,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 		}
 
-		if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+		if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && !action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 			if (getManagedBean().getTaskName() != null
 					&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)
 							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME))){
