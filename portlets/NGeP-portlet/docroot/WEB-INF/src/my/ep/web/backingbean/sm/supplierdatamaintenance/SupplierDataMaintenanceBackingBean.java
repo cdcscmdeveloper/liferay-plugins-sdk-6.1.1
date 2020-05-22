@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sm.supplierdatamaintenance;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -2614,5 +2615,20 @@ public class SupplierDataMaintenanceBackingBean extends
 		RequestContext.getCurrentInstance().execute("bankDeletePopUp.show()");
 	}
 	//End 17906
+	
+	//Start 27815
+	public void checkingDACategoryCodes() {
+		if(CollectionUtils.isNotEmpty(getManagedBean().getSelectedApprovedCategories())) {
+			for (SmSupplierCategory cat:getManagedBean().getSelectedApprovedCategories()) {
+				if (cat.getDisciplinaryActionId() != null) {
+					getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(true);
+					return;
+				} else {
+					getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(false);
+				}
+			}
+		}
+	}
+	//End 27815
 
 }
