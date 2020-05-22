@@ -468,13 +468,25 @@ public class SupplierFinalizationBackingBean extends
 		
 		switch (selectedTabIndex) {
 			case 0:
+				if (getManagedBean().isInitialDecisionFwdToBPK()) { //#28240-start
+					navigateToEvaluationReportTab();	
+				}else{
 				navigateToPreparationTab();
+				}//#28240-End
 				break;
 			case 1:
+				if (getManagedBean().isInitialDecisionFwdToBPK()) {//#28240-start
+					navigateToBriefingPaperTab();	
+				}else{
 				navigateToEvaluationReportTab();
+				}//#28240-End
 				break;
 			case 2:
+				if (getManagedBean().isInitialDecisionFwdToBPK()) {//#28240-start
+					navigateToSupplierFinalizationTab();	
+				}else{
 				navigateToBriefingPaperTab();
+				}//#28240-End
 				break;
 			case 3:
 				navigateToSupplierFinalizationTab();
@@ -4698,8 +4710,9 @@ public class SupplierFinalizationBackingBean extends
 		menuItem.setPartialSubmit(true);
 		menuItem.setProcess("@form");
 		menuItem.setUpdate("@form");
+		//#28240-issued fixed
 		menuItem.setOncomplete(tabMenuChangeCommonAction
-				+ (isBPKUser ? 1 : (tabIndex++)) + "}]); ");
+				+ (isBPKUser ? 0 : (tabIndex++)) + "}]); ");
 		mainMenuModel.addMenuItem(menuItem);
 		
 		// Briefing Paper Menu Item
