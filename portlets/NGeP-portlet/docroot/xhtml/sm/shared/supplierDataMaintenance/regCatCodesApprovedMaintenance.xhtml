@@ -16,14 +16,19 @@
 		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 		<ac:paginator for="catApprDt" />
 			<p:ajax event="rowSelect" partialSubmit="true" process="@this"
+			listener="#{supplierDataMaintenanceBackingBean.checkingDACategoryCodes}"
 				update=":form:catCodeInfPan,@([id$=deletedApprBtnId])"></p:ajax>
 			<p:ajax event="rowUnselect"
+			listener="#{supplierDataMaintenanceBackingBean.checkingDACategoryCodes}"
 				update=":form:catCodeInfPan,@([id$=deletedApprBtnId])"></p:ajax>
 			<p:ajax event="rowSelectCheckbox"
+			listener="#{supplierDataMaintenanceBackingBean.checkingDACategoryCodes}"
 				update=":form:catCodeInfPan,@([id$=deletedApprBtnId])"></p:ajax>
 			<p:ajax event="rowUnselectCheckbox"
+			listener="#{supplierDataMaintenanceBackingBean.checkingDACategoryCodes}"
 				update=":form:catCodeInfPan,@([id$=deletedApprBtnId])"></p:ajax>
 			<p:ajax event="rowDblselect"
+			listener="#{supplierDataMaintenanceBackingBean.checkingDACategoryCodes}"
 				update=":form:catCodeInfPan,@([id$=deletedApprBtnId])"></p:ajax>
 		<p:columnGroup type="header">
 			<p:row>
@@ -86,7 +91,7 @@
 	<div align="right">
 
 		<p:commandButton value="#{lbl['lbl.sm.button.delete']}" id="deletedApprBtnId" 
-			disabled="#{empty supplierDataMaintenanceBackingBean.managedBean.selectedApprovedCategories or 
+			disabled="#{supplierDataMaintenanceBackingBean.managedBean.disableDeleteButtonAprrovedCategoryCodePanel or empty supplierDataMaintenanceBackingBean.managedBean.selectedApprovedCategories or 
 				!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}"
 			action="#{supplierDataMaintenanceBackingBean.deleteSelectedPendingApprovalCategoryCodes(supplierDataMaintenanceBackingBean.managedBean.selectedApprovedCategories)}" 
 			update=":#{p:component('catcodeMainPanelId')}" partialSubmit="true" 

@@ -156,6 +156,10 @@ public class ViewSuppProfileManagedBean extends
 	private boolean manufacturerStatusCancelExist;
 	//27857: Disciplinary Action - end - 26238
 	
+	//Start - 27815
+	private boolean disableDeleteButtonAprrovedCategoryCodePanel;
+	//End - 27815
+	
 	public ViewSuppProfileManagedBean() {
 
 	}
@@ -1032,4 +1036,12 @@ public class ViewSuppProfileManagedBean extends
 		this.manufacturerStatusCancelExist = manufacturerStatusCancelExist;
 	}
 	//27857: Disciplinary Action - end - 26238
+
+	public boolean isDisableDeleteButtonAprrovedCategoryCodePanel() {
+		return disableDeleteButtonAprrovedCategoryCodePanel;
+	}
+
+	public void setDisableDeleteButtonAprrovedCategoryCodePanel(boolean disableDeleteButtonAprrovedCategoryCodePanel) {
+		this.disableDeleteButtonAprrovedCategoryCodePanel = disableDeleteButtonAprrovedCategoryCodePanel;
+	}
 }
