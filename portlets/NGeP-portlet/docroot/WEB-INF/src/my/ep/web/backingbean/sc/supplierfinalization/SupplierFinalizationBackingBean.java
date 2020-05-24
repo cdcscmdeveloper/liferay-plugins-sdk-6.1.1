@@ -1985,7 +1985,10 @@ public class SupplierFinalizationBackingBean extends
 		if (QTStatusConst.SF_PENDING_SIGN_OFF.equals(currentStatusId)) {
 			if (CollectionUtils.isNotEmpty(
 					this.getManagedBean().getCommitteeList())
-					&& !BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
+					// #25638 - Start
+					&& !BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)
+					// #25638 - End
+					) {
 				int totalMembersEndorsed = 0;
 				int totalMembersAttended = 0;
 				boolean isChairperson = false;
