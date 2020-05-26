@@ -2023,11 +2023,26 @@ public class SupplierFinalizationBackingBean extends
 			PmUser secretaryUser = null;
 			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
 				
-				if (CollectionUtils.isEmpty(getManagedBean().getFinalizationRemarks())) {
-					throw new EpException(MessageConst.ERR_775152);
+				if (null != getManagedBean().getCurrentStatusId() 
+						&& (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_ENDORSEMENT.longValue()
+						|| getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_SIGN_OFF.longValue())) {
+					boolean remarksNotFound = true;
+					if (!CollectionUtils.isEmpty(getManagedBean().getFinalizationRemarks())) {
+						for (ScQtFinalizationRemarks finalizationRemark : getManagedBean().getFinalizationRemarks()) {
+							if (StringUtils.isNotEmpty(finalizationRemark.getRemark()) && (null != finalizationRemark.getCreatedUser() && null != finalizationRemark.getCreatedUser().getUserId()
+									&& finalizationRemark.getCreatedUser().getUserId().longValue() == new FacesScopes().getUserSessionBean().getUserId().longValue())) {
+								remarksNotFound = false;
+								break;
+							}
+						}
+					}
+					
+					if (remarksNotFound) {
+						throw new EpException(MessageConst.ERR_775152);
+					}
 				}
 				
-				 for (ScQtCommitteeActivity committeeActivity : getManagedBean().getCommitteeList()) {
+				for (ScQtCommitteeActivity committeeActivity : getManagedBean().getCommitteeList()) {
 					 if (null != committeeActivity && null != committeeActivity.getScCommitteeMember()
 							 && null != committeeActivity.getScCommitteeMember().getMemberRole()
 							 && "S".equalsIgnoreCase(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())) {
