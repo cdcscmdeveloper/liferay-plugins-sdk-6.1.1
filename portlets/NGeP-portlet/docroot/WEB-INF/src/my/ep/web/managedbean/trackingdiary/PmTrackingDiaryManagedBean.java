@@ -58,6 +58,7 @@ import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -1037,13 +1038,8 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 
 			searchFilterBeanAnd1.setAndOr(SearchCondition.CONDITION_OR.value());
 			searchFilterBeanAnd2.setAndOr(SearchCondition.CONDITION_OR.value());
-			searchBean.getDataFilterBeans().add(new SearchMultiFilterBean(searchFilterBeanAnd1, searchFilterBeanAnd2));
- 
-			setSearchBeanDescription(searchBean, searchFilterBean1, searchFilterBean2);
-			
+
 			if (isSearchBeanEmpty) {
-				reqDTO.setSearchBean(searchBean);
-				
 				if (isFilterBySupplier()) {
 					PmOrgProfile pmOrgProfile = getOrgProfileByLoginUser(true);
 					if (ParameterConst.ORG_TYPE_SUPPLIER.equals(pmOrgProfile.getOrgTypeCode().getParameterCode())) {
@@ -1053,13 +1049,31 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 				
 				TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
 				try {
-					ITrackingDiarySO trackingDiarySO = (ITrackingDiarySO) BusinessDelegate
-							.getInstance().getServiceObject("cc",
-									ITrackingDiarySO.class);
-					
-					resDTO = trackingDiarySO
-							.retrieveTrackingDiaryBySearchBean(reqDTO);
-					
+					ITrackingDiarySO trackingDiarySO = (ITrackingDiarySO) BusinessDelegate.getInstance()
+							.getServiceObject("cc", ITrackingDiarySO.class);
+
+					// #25790 - Start and #25791
+					if (isReqOrApprover() && ParameterConst.DOCTYPE_SIMPLE_QUOTE.equals(getSelectedDocType())
+							|| isReqOrApprover() && ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT.equals(getSelectedDocType())
+							|| isReqOrApprover() && ParameterConst.DOCTYPE_REQUEST_NOTE.equals(getSelectedDocType())
+							|| isReqOrApprover() && ParameterConst.DOCTYPE_LETTER_OF_AWARD.equals(getSelectedDocType())
+							|| isReqOrApprover() && ParameterConst.DOCTYPE_PURCHASE_INQUIRY.equals(getSelectedDocType())
+							|| isReqOrApprover() && ParameterConst.DOCTYPE_QUOTATION.equals(getSelectedDocType())) {
+						String docType = getSelectedDocType();
+						Long docId = getSelectedDocId();
+						resDTO = trackingDiarySO.retrieveTrackingDiaryByGroupDocAndGroupId(docId, docType, reqDTO,
+								searchBean, searchFilterBeanAnd1);
+
+					} else {
+						searchBean.getDataFilterBeans().add(
+								new SearchMultiFilterBean(searchFilterBeanAnd1, searchFilterBeanAnd2));
+						reqDTO.setSearchBean(searchBean);
+
+						setSearchBeanDescription(searchBean, searchFilterBean1, searchFilterBean2);
+						resDTO = trackingDiarySO.retrieveTrackingDiaryBySearchBean(reqDTO);
+					}
+					// #25790 - End
+
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -1113,4 +1127,12 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 		sb.append(String.format("[%s=%s]", searchFilterBean2.getSearchField(), searchFilterBean2.getSearchValue()));
 		searchBean.setDescription("searchTrackingDiary" + sb.toString() + "[Caller:PmTrackingDiaryManagedBean.SearchTrackingDiaryPagingDataModel]");
 	}
+	
+	// CR 25790 - Start
+	public boolean isReqOrApprover() {
+		FacesScopes fc = new FacesScopes();
+		return (fc.hasRoleUser(RoleCode.REQUISITIONER.value()) || fc.hasRoleUser(RoleCode.RN_APPROVER.value()) || fc
+				.hasRoleUser(RoleCode.BPK_AUDITOR.value()));
+	}
+	// CR 25790 - End
 }
