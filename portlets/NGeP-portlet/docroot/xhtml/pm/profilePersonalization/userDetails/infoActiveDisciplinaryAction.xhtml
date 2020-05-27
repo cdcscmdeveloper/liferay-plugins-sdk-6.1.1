@@ -54,7 +54,7 @@
 						<h:outputText rendered="#{not empty profilePersonalizationBackingBean.managedBean.disciplinaryActionMsg}"
 							value="#{profilePersonalizationBackingBean.managedBean.disciplinaryActionMsg}"/>
 						
-						</p:commandLink rendered="#{not empty profilePersonalizationBackingBean.managedBean.disciplinaryActionMsg and profilePersonalizationBackingBean.managedBean.smSupplier eq null}"			
+						<p:commandLink rendered="#{not empty profilePersonalizationBackingBean.managedBean.disciplinaryActionMsg and profilePersonalizationBackingBean.managedBean.smSupplier eq null}"			
 							action="#{viewSuppProfileBackingBean.onViewDisciplinaryAction}" 
 							update=":form" process="@this"
 							onclick="blockWidgetDA.show()" onsuccess="blockWidgetDA.hide()">
