@@ -413,5 +413,22 @@ public class ViewSuppProfileBackingBean extends
 		}
 	} 
 	//26238 - end
-
+	//26238 -  STATR Disciplinary Action - 28111
+	public void onViewDisciplinaryActionSupp(SmSupplier currSupp) {		
+		if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())){
+			getManagedBean().setMofSupplier(true);
+		}
+		
+		List<DisciplinaryActionVO> voList = getDisciplinaryActionVO(currSupp);
+		if(!EntityHelper.isCollectionEmpty(voList)
+				&& voList.size() > 0){
+			getManagedBean().setDisciplineVOs(voList);
+		} else {
+			getManagedBean().setDisciplineVOs(new ArrayList<DisciplinaryActionVO>());
+		}
+		RequestContext.getCurrentInstance().execute(
+				"disciplinaryActionHistoryDlg.show();");
+	} 
+	//26238 -  END Disciplinary Action - 28111
 }
