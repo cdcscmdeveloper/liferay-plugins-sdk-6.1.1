@@ -165,6 +165,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 	public boolean isAllSupplier() {
 
 		FacesScopes fs = new FacesScopes();
+		//20200527@Jacky - Enhancement27626 - Start  
+		if (!fs.hasRoleUser("REQUISITIONER")){
 		return fs.hasRoleUser("SUPPLIER_ADMIN")
 				|| fs.hasRoleUser("SUPPLIER_USER")
 				|| fs.hasRoleUser("MOF_SUPPLIER_USER")
@@ -176,6 +178,9 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				|| fs.hasRoleUser("G2G_ADMIN")
 				|| fs.hasRoleUser("GOVT_SELLER")
 				|| fs.hasRoleUser("CM_USER");
+		}
+		return false;
+		//20200527@Jacky - Enhancement27626 - End
 	}
 
 	public boolean isAllSupplierWithoutTemp() {
