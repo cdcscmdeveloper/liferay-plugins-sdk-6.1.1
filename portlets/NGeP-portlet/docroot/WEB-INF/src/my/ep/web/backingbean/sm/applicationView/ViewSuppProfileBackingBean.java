@@ -161,7 +161,8 @@ public class ViewSuppProfileBackingBean extends
 		} else {
 			currSupp = getManagedBean().getSearchSupplier();
 		}
-		
+		log.info(currSupp+"-------");
+		log.info(currSupp.getSupplierId()+"-------");
 		if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())){
 			getManagedBean().setMofSupplier(true);
@@ -415,6 +416,8 @@ public class ViewSuppProfileBackingBean extends
 	//26238 - end
 	//26238 -  STATR Disciplinary Action - 28111
 	public void onViewDisciplinaryActionSupp(SmSupplier currSupp) {		
+		log.info(currSupp+"-------");
+		log.info(currSupp.getSupplierId()+"-------");
 		if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())){
 			getManagedBean().setMofSupplier(true);
