@@ -2583,10 +2583,17 @@ public class SupplierDataMaintenanceBackingBean extends
 	}
 	//27857: Disciplinary Action - end - 26238
 	
-	//26238 : Disciplinary Action - start
-	public void downloadDAHistory() throws Exception {
+	//26238 : Disciplinary Action - start 28111
+	public void downloadDAHistory(SmSupplier supplier) throws Exception {
 		String language = new FacesScopes().getUserLocale().getLanguage();
-		SmSupplier supplier = getManagedBean().getSmSupplier();
+		if(supplier == null){
+			supplier = getManagedBean().getSmSupplier();
+		}
+		
+		if(supplier == null){
+			supplier = SmApplicationUtil.getCurrentSupplier();
+		}
+		
 		log.info(supplier.getSupplierId().toString()+"-----------------Supplier ID-------------------------------");
 		if (language.equals("en")) {
 			Map<String, String> paramMap = new HashMap<String, String>();
@@ -2598,7 +2605,7 @@ public class SupplierDataMaintenanceBackingBean extends
 			generateReport(ReportConst.SM_DISCIPLINARY_ACTION_HISTORY_MALAY, paramMap);
 		}
 	}
-	//26238 : Disciplinary Action - end
+	//26238 : Disciplinary Action - end 28111
 	
 	//START 17906
 	public void checkingBeforeRemoveSupplierBank() {
