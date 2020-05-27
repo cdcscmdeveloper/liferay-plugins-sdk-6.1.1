@@ -2138,8 +2138,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			attachment.setSectionId(ContractConst.ATTACHMENT_AGENCY_CONTRACT_SHARING);
 			//#25703 start
 			getManagedBean().getContractVer().getAgencyContractSharingAttachements().add(attachment);
+			//RequestContext.getCurrentInstance().execute("ctSharingAttachDlg.hide()");
 			//#25703 end
-			RequestContext.getCurrentInstance().execute("ctSharingAttachDlg.hide()");
 		}
 		else if(event.getComponent().getId().equalsIgnoreCase("uploadWaiver")){
 			//LOG : 13847, by Fahmi 22032019
