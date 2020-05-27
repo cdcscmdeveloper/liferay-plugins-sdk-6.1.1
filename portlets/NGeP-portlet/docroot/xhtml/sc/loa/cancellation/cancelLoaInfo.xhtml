@@ -13,11 +13,14 @@
 				<table border="0" cellspacing="0" cellpadding="0" width="100%">
 					<tr>
 						<td width="10%"><h:outputLabel
-								value="#{lbl['lbl.sc.loiloa.loa.no']}" /></td>
-						<td class="header-info-text">
-							#{lOACancelDetailBackingBean.managedBean.scLoa.brandNew ?
+								value="#{lbl['lbl.sc.loiloa.loa.no']}" /></td>						
+						<td style="width: 10%">
+				  			<p:commandLink value="#{lOACancelDetailBackingBean.managedBean.scLoa.brandNew ?
 							lbl['lbl.sc.system.generated'] :
-							lOACancelDetailBackingBean.managedBean.scLoa.loaNo}</td>
+							lOACancelDetailBackingBean.managedBean.scLoa.loaNo}" 
+				       			process="@this" partialSubmit="true" styleClass="blue_font"
+				       			action="#{ctBackingBean.goToLoaView(lOACancelDetailBackingBean.managedBean.scLoa)}"/>
+						</td>	
 						<td width="10%"><h:outputLabel value="#{lbl['lbl.sc.ptj']}" />
 						</td>
 						<td class="header-info-text">
