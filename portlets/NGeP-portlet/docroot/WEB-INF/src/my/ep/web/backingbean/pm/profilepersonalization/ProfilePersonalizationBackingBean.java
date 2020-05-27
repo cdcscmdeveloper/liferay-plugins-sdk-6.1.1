@@ -1666,7 +1666,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 					return;
 				}
 				retrieveDisciplinaryAction(srcAppl.getSmSupplier());
-				getManagedBean().setSmSupplier(srcAppl.getSmSupplier());
+				this.getManagedBean().setSmSupplier(srcAppl.getSmSupplier());
 				reqDTO.setSupplier(srcAppl.getSmSupplier());
 				
 			}else{
@@ -1690,7 +1690,8 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 				if(getManagedBean().getCurrentProfile() != null){
 					if(getManagedBean().getCurrentProfile().getSmSupplier() != null)
 						reqDTO.setSupplier(getManagedBean().getCurrentProfile().getSmSupplier());
-					getManagedBean().setSmSupplier(getManagedBean().getCurrentProfile().getSmSupplier());
+					this.getManagedBean().setSmSupplier(getManagedBean().getCurrentProfile().getSmSupplier());
+					System.out.println("-----------------------"+getManagedBean().getCurrentProfile().getSmSupplier());
 				}
 				
 				SupplierDataMaintenanceResDTO resDTO = suppDataSO.retrieveDisciplinaryActionMsg(reqDTO);
@@ -1700,6 +1701,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 					this.getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
 				}
 			}
+			System.out.println("----------LATS-------------"+this.getManagedBean().getSmSupplier());
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_INFO_DISC_ACTION);
 		} catch (Exception e) {
 			fc.addMessage(
@@ -1715,7 +1717,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		if(currSupp == null){
 			currSupp = SmApplicationUtil.getCurrentSupplier();
 		}
-		getManagedBean().setSmSupplier(currSupp);
+		this.getManagedBean().setSmSupplier(currSupp);
 		if(currSupp != null){
 			List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(currSupp);
 			logger.info(resultList);
