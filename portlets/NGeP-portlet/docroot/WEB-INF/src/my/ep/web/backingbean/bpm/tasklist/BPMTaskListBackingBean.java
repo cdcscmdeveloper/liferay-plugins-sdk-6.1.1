@@ -686,6 +686,8 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		String taskName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
 				.get("taskName");
 		String docType = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docType");
+		//26238 -  Disciplinary Action - 28111
+		String docNo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docNo");
 
 		String claim = FacesContext.getCurrentInstance().getExternalContext()
 				.getRequestParameterMap().get("isClaim");
@@ -736,10 +738,10 @@ BaseBackingBean<BPMTaskListManagedBean> {
 
 			ExternalContext externalContext = FacesContext.getCurrentInstance()
 					.getExternalContext();
-
+			//26238 -  Disciplinary Action - 28111
 			// externalContext.redirect("/web/guest/" +url +"?taskId="+taskId);
 			externalContext.redirect(commonUrl + "/" + url + "?taskId="
-					+ taskId + "&claim=" + claim);
+					+ taskId + "&claim=" + claim+"&docNo="+docNo);
 			// externalContext.redirect("http://localhost:8080/web/guest/" +url
 			// +"?taskId="+taskId);
 		} catch (IOException e) {
