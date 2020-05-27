@@ -1857,7 +1857,11 @@ public class SupplierFinalizationBackingBean extends
 		reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
 		if (QTStatusConst.SF_PENDING_SIGN_OFF.equals(currentStatusId)) {
 			if (CollectionUtils.isNotEmpty(
-					this.getManagedBean().getCommitteeList())) {
+					this.getManagedBean().getCommitteeList())
+					// #25638 - Start
+					&& !BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)
+					// #25638 - End
+					) {
 				int totalMembersEndorsed = 0;
 				int totalMembersAttended = 0;
 				boolean isChairperson = false;
@@ -1888,7 +1892,40 @@ public class SupplierFinalizationBackingBean extends
 					throw new EpException(MessageConst.ERROR_760265);
 				}
 			}
-
+			// #25638 - Start
+			PmUser secretaryUser = null;
+			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
+				
+				if (null != getManagedBean().getCurrentStatusId() 
+						&& (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_ENDORSEMENT.longValue()
+						|| getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_SIGN_OFF.longValue())) {
+					boolean remarksNotFound = true;
+					if (!CollectionUtils.isEmpty(getManagedBean().getFinalizationRemarks())) {
+						for (ScQtFinalizationRemarks finalizationRemark : getManagedBean().getFinalizationRemarks()) {
+							if (StringUtils.isNotEmpty(finalizationRemark.getRemark()) && (null != finalizationRemark.getCreatedUser() && null != finalizationRemark.getCreatedUser().getUserId()
+									&& finalizationRemark.getCreatedUser().getUserId().longValue() == new FacesScopes().getUserSessionBean().getUserId().longValue())) {
+								remarksNotFound = false;
+								break;
+							}
+						}
+					}
+					
+					if (remarksNotFound) {
+						throw new EpException(MessageConst.ERR_775152);
+					}
+				}
+				
+				for (ScQtCommitteeActivity committeeActivity : getManagedBean().getCommitteeList()) {
+					 if (null != committeeActivity && null != committeeActivity.getScCommitteeMember()
+							 && null != committeeActivity.getScCommitteeMember().getMemberRole()
+							 && "S".equalsIgnoreCase(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())) {
+						 secretaryUser = committeeActivity.getScCommitteeMember().getPmUser();
+						 reqDTO.setPmUser(secretaryUser);
+						 break;
+					 }
+				 }
+			} 
+			// #25638 - End
 			String committeeType = getManagedBean().getCommitteeType();
 			CommitteResDTO committeeResDTO = getCommitteMemberByUserId();
 			ScCommitteeMember committeeMember = committeeResDTO.getCommMember();
@@ -2123,7 +2160,11 @@ public class SupplierFinalizationBackingBean extends
 			reqDTO.setRoleCode(QTStatusConst.SF_PENDING_ESCALATION_TO_BPK
 				       .equals(getManagedBean().getCurrentStatusId()) ? 
 										RoleCode.BPK_APPROVER.value() : getCommitteeRoleCode());
-			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			// #25638 - Start
+			if (null != reqDTO.getPmUser()) {
+				reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			}
+			// #25638 - End
 			reqDTO.setCurrentFinalizationStatus(
 					getManagedBean().getCurrentStatusId());
 			reqDTO.setInitialDecisionFwdHighAuth(
@@ -2234,14 +2275,20 @@ public class SupplierFinalizationBackingBean extends
 
 			if (resDTO.isSuccessful()) {
 				String msgCode = null;
+				// #25638 - Start
+				String label = "lbl.sc.sf.supplier.finalization";
 				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 					msgCode = MessageConst.INFO_700067;
+				} else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+					msgCode = MessageConst.INFO_776042;
+					label = "lbl.sc.quotation.tender";
 				} else {
 					msgCode = getMessgeConstant(outcome);
 				}
-				successMessage(msgCode, getMessageCommon("lbl.sc.sf.supplier.finalization"), getManagedBean().getScQt()
+				successMessage(msgCode, getMessageCommon(label), getManagedBean().getScQt()
 						.getQtNo(), Boolean.TRUE);
 				super.renewSesionObject();
+				// #25638 - End
 			}
 		} finally {
 			qtSuppFinalizationSO = null;
