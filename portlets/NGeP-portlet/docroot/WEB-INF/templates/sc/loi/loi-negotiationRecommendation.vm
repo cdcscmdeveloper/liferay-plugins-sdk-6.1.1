@@ -109,7 +109,7 @@
 											<table width="100%" border="0" cellpadding="0" cellspacing="0">
 												<tbody>
 													<tr>
-														#if ($evalResultDtl.awareded)
+													<!--#if ($evalResultDtl.awareded) -->
 															<td width="11%" class="standard left">$evalResultDtl.qtEvaluationResult.scQtProposal.supplierNo</td>
 															<td width="12%" class="standard left">
 																#if ($evalResultDtl.qtEvaluationResult.scQtProposal.bumi == "true")
@@ -125,7 +125,7 @@
 															<td width="17%" class="standard left alignRight">$numberFormatter.format($evalResultDtl.qtEvaluationResult.offeredPrice)</td>
 														#else 
 															#set ($count = $count + 1)
-														#end														
+													<!--	#end		-->												
 													</tr>
 												</tbody>
 											</table>
@@ -154,7 +154,7 @@
 							</tr>
 							#foreach($supplierDtl in $zoneReportDTO.awardedSuppliers)
 								#set($String = "formatter")
-								#if($supplierDtl.awareded)
+					<!--		#if($supplierDtl.awareded) -->
 								<tr class="ui-content">
 									<td width="15%" class="standard border-bottom left">$supplierDtl.qtEvaluationResult.scQtProposal.supplierNo</td>
 									<td width="12%" class="standard border-bottom left">
@@ -168,7 +168,7 @@
 									<td width="12%" class="standard border-bottom left">$String.format("%.2f", $supplierDtl.totalScore)</td>
 									<td width="10%" class="standard border-bottom left-right">$supplierDtl.evalRank</td>
 								</tr>
-								#end
+						<!-- #end -->
 							#end
 						</tbody>
 					</table>
@@ -256,7 +256,7 @@
 									<table width="100%" border="0" cellpadding="0" cellspacing="0">
 										<tbody>
 											<tr>
-												#if ($evalResultDtl.awareded)
+										<!--	#if ($evalResultDtl.awareded) -->
 													<td width="11%" class="standard left">$evalResultDtl.qtEvaluationResult.scQtProposal.supplierNo</td>
 													<td width="12%" class="standard left">
 														#if ($evalResultDtl.qtEvaluationResult.scQtProposal.bumi == "true")
@@ -272,7 +272,7 @@
 													<td width="17%" class="standard left alignRight">$numberFormatter.format($evalResultDtl.qtEvaluationResult.offeredPrice)</td>											
 												#else 
 													#set ($count = $count + 1)
-												#end
+										<!-- #end -->
 											</tr>
 										</tbody>
 									</table>
@@ -304,7 +304,7 @@
 					</tr>
 					#foreach($supplierDtl in $reportDTO.awardedSuppliers)
 						#set($String = "formatter")
-						#if($supplierDtl.awareded)
+					<!--	#if($supplierDtl.awareded) -->
 						<tr class="ui-content">
 							<td width="15%" class="standard border-bottom left">$supplierDtl.qtEvaluationResult.scQtProposal.supplierNo</td>
 							<td width="12%" class="standard border-bottom left">
@@ -318,7 +318,7 @@
 							<td width="12%" class="standard border-bottom left">$String.format("%.2f", $supplierDtl.totalScore)</td>
 							<td width="10%" class="standard border-bottom left-right">$supplierDtl.evalRank</td>
 						</tr>
-						#end
+					<!--	#end -->
 					#end
 				</tbody>
 			</table>
