@@ -1704,7 +1704,9 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			System.out.println("----------LATS-------------"+reqDTO.getSupplier());
 			System.out.println("----------LATS-------------"+this.getManagedBean().getDisciplinaryActionMsg());
 			System.out.println("----------LATS-------------"+this.getManagedBean().getSmSupplier());
-			//this.getManagedBean().setSmSupplier(reqDTO.getSupplier());
+			if(this.getManagedBean().getSmSupplier() == null){
+				this.getManagedBean().setSmSupplier(reqDTO.getSupplier());
+			}
 			System.out.println("---22-------LATS-------------"+this.getManagedBean().getSmSupplier());
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_INFO_DISC_ACTION);
 		} catch (Exception e) {
