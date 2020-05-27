@@ -1691,7 +1691,6 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 					if(getManagedBean().getCurrentProfile().getSmSupplier() != null)
 						reqDTO.setSupplier(getManagedBean().getCurrentProfile().getSmSupplier());
 					this.getManagedBean().setSmSupplier(getManagedBean().getCurrentProfile().getSmSupplier());
-					System.out.println("-----------------------"+getManagedBean().getCurrentProfile().getSmSupplier());
 				}
 				
 				SupplierDataMaintenanceResDTO resDTO = suppDataSO.retrieveDisciplinaryActionMsg(reqDTO);
@@ -1701,13 +1700,9 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 					this.getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
 				}
 			}
-			System.out.println("----------LATS-------------"+reqDTO.getSupplier());
-			System.out.println("----------LATS-------------"+this.getManagedBean().getDisciplinaryActionMsg());
-			System.out.println("----------LATS-------------"+this.getManagedBean().getSmSupplier());
 			if(this.getManagedBean().getSmSupplier() == null){
 				this.getManagedBean().setSmSupplier(reqDTO.getSupplier());
 			}
-			System.out.println("---22-------LATS-------------"+this.getManagedBean().getSmSupplier());
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_INFO_DISC_ACTION);
 		} catch (Exception e) {
 			fc.addMessage(
