@@ -479,17 +479,20 @@
 					<p:outputPanel>
 						<table>
 							<tr>
-								<td><!-- 27609 -->
-									<p:selectBooleanCheckbox disabled="#{registrationBackingBean.managedBean.disableEquity or registrationBackingBean.managedBean.smPersonnel.equityOwnerSsm or !registrationBackingBean.managedBean.smPersonnel.equityOwnerSsm}" value="#{registrationBackingBean.managedBean.smPersonnel.equityOwner}">
-									<p:ajax event="change" update="@([id$=pnlUsrInfo])" listener="#{registrationBackingBean.listenerChangeRole}"
-									partialSubmit="true" 
-									process="@form" /></p:selectBooleanCheckbox>
-									
-									
-								</td>
-								<td>
-									<h:outputText style="float: left" value="#{lbl['lbl.sm.person.equiOwner']}" />
-								</td>
+								<!-- 27691 -->
+								<c:if test="#{registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN}">
+									<td><!-- 27609 -->
+										<p:selectBooleanCheckbox disabled="#{registrationBackingBean.managedBean.disableEquity or registrationBackingBean.managedBean.smPersonnel.equityOwnerSsm or !registrationBackingBean.managedBean.smPersonnel.equityOwnerSsm}" value="#{registrationBackingBean.managedBean.smPersonnel.equityOwner}">
+										<p:ajax event="change" update="@([id$=pnlUsrInfo])" listener="#{registrationBackingBean.listenerChangeRole}"
+										partialSubmit="true" 
+										process="@form" /></p:selectBooleanCheckbox>
+										
+										
+									</td>
+									<td>
+										<h:outputText style="float: left" value="#{lbl['lbl.sm.person.equiOwner']}" />
+									</td>
+								</c:if>
 								<c:if test="#{registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG and registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG and registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK and registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH and registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK and registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH}">
 									<td><!-- 27609 -->
 										<p:selectBooleanCheckbox disabled="true" value="#{registrationBackingBean.managedBean.smPersonnel.director}"/>
