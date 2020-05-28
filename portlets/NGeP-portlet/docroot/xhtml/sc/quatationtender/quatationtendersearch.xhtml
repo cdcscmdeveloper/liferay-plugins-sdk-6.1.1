@@ -117,7 +117,6 @@
 					</ui:remove>
 					
 					
-					
 					<!-- ***17376#55 - start -->
 					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:6%;text-align: center;">
 						<p:menuButton value="#{lbl['lbl.btn.option']}">
@@ -129,7 +128,7 @@
 							
 							<p:menuitem id="menuItem2" value="#{lbl['lbl.btn.update']}" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();" 
-								rendered="#{scQt.actionRender[1]}"
+								rendered="#{!qTDetailBB.isAuditor() and scQt.actionRender[1]}"
 								icon="ui-icon-edit" action="#{qTDetailBB.editQuationTenderDetails(scQt, true)}" 
 								partialSubmit="true" process="@this"/>
 							<p:menuitem id="menuItem3" value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
@@ -184,8 +183,8 @@
 								Bug #27412 END
 							</ui:remove>
 						    <p:menuitem id="menuItem11" value="#{lbl['lbl.btn.clone']}"
-								rendered="#{qTDetailBB.isQTMaintenanceScreen() and qTDetailBB.isQTStatusInBetween(scQt.qtStatus.statusId, QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL, QTStatusConst.QT_AWARDED)}" 
-								icon="ui-icon-edit" update=":form:displayk"
+								rendered="#{!qTDetailBB.isAuditor() and qTDetailBB.isQTMaintenanceScreen() and qTDetailBB.isQTStatusInBetween(scQt.qtStatus.statusId, QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL, QTStatusConst.QT_AWARDED)}" 
+								icon="ui-icon-edit" update=":form:displayk" title="#{lbl['lbl.sc.qt.create.btn.clone.tooltip']}"
 								action="#{qtMultipleCloneBackingBean.clonePopupAction(scQt)}" 
 								partialSubmit="true" process="@this"/>
 						</p:menuButton>

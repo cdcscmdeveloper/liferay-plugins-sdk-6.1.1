@@ -196,6 +196,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
+import my.ep.web.backingbean.sc.bidding.BiddingBackingBean;
 import my.ep.web.backingbean.sc.loa.DirectLOABackingBean;
 import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
 import my.ep.web.backingbean.sc.loa.QtLOABackingBean;
@@ -1069,7 +1070,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				ParameterConst.DOCTYPE_SUPPLIER_PROPOSAL.equals(docType)) {
 			return new SPDetailBackingBean().retriveSupplierProposalDtl(qtId, previousPageUrl, true);
 		} else if (ParameterConst.DOCTYPE_BIDDING.equals(docType)) {
-			return QTConstants.ONLINE_BIDDING_MAIN_PAGE; 
+			return viewOnlineBidding(scQt,previousPageUrl); //#17376-144
+			//return QTConstants.ONLINE_BIDDING_MAIN_PAGE; //#17376-144
 		} else {
 			Long docId = findDocIdByDocType(qtId, null);			
 			if (docId != null) {
@@ -1183,7 +1185,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				return new SPDetailBackingBean().retriveSupplierProposalDtl(scQt.getQtId(), previousPageUrl, true);
 			}
 			else if(ParameterConst.DOCTYPE_BIDDING.equals(docType)) {
-				return QTConstants.ONLINE_BIDDING_MAIN_PAGE;
+				//return QTConstants.ONLINE_BIDDING_MAIN_PAGE;//#17376-144
+				return viewOnlineBidding(scQt,previousPageUrl); //#17376-144
 			}
 		}
 		else;
@@ -6073,7 +6076,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * 
 	 * @return true, if is Auditor General/Internal user
 	 */
-	private boolean isAuditor() {
+	public boolean isAuditor() { //#17376-144
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
 				|| facesScopes.hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())
@@ -7328,7 +7331,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//only 1 is true
 			if(resArr[5] || resArr[6] || resArr[7]){
 				resArr = new boolean[]{false, false, false, false, false, resArr[5], resArr[6], resArr[7], false, false};
-			}
+			}else if(resArr[4]){ //#17376-144
+				resArr = new boolean[]{false, false, false, false, resArr[4], false, false, false, false, false};	
+			} //#17376-144
 			else{
 				boolean fnd = false;
 				resArr[1] = false;
@@ -7728,6 +7733,23 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
     	
     }
     //#25692-End  
+    //#17376-start onlineBiddingcodes
+    public String viewOnlineBidding(ScQt scQt, String previousPageUrl){
+    	//ScQt qt=resDTO.getQtResultBean().getResultList().get(i);
+    	log.info("============viewOnlineBidding============");
+    	IQTDetailSO detailSO;
+			detailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+		QuationTenderReqDTO qtReqDTo=new QuationTenderReqDTO();
+		qtReqDTo.setQtdetail(scQt);
+		QuationTenderResDTO qtResDTO=detailSO.retriveScheduleDetailStatus(qtReqDTo);
+		BiddingBackingBean biddingBB=new BiddingBackingBean();
+		if(null!=qtResDTO && null!=qtResDTO.getBidSchedule()){
+			biddingBB.renewSesionObject();
+			return biddingBB.bidManagementQuotationTenderAction(qtResDTO.getBidSchedule(),previousPageUrl);
+		}
+    	return "/xhtml/sc/bidding/bidManagement/bidManagementMain.xhtml?faces-redirect=true";	
+    	} //#17376-End onlineBiddingcodes
 }
 
 
