@@ -2701,10 +2701,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	public void onSelectProductItem() {
 		try{
 			ContractItemSearchBackingBean cisbb = new ContractItemSearchBackingBean();
-			//log.info("Selected Item ***"+getManagedBean().getSelectedItem());
-			//log.info("Show Item ****"+getManagedBean().getShowItem());
 			if (getManagedBean().getSelectedItem() != null || getManagedBean().getServiceselectedItem()!=null) {
-				//cisbb.getManagedBean().setItemServiceExist(false);
 				if (getManagedBean().getShowItem() != null
 						&& getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
 					getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
@@ -2715,7 +2712,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}  else if (getManagedBean().getShowItem() != null
 						&& getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY)) {
 					getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY);
-					//refreshAgencyCeilingQuantityServiceList();
 				} else {
 					getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
 				}
@@ -2746,10 +2742,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	public void onSelectServiceItem() {
 		try{
 			ContractItemSearchBackingBean cisbb = new ContractItemSearchBackingBean();
-			log.info("Selected Item onSelectServiceItem ***"+getManagedBean().getServiceselectedItem());
-			log.info("Show Item  onSelectServiceItem ****"+getManagedBean().getShowItem());
 			if (getManagedBean().getSelectedItem() != null || getManagedBean().getServiceselectedItem()!=null) {
-				//cisbb.getManagedBean().setItemProductExist(false);
 				if (getManagedBean().getShowServiceItem() != null
 						&& getManagedBean().getShowServiceItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
 					getManagedBean().setShowServiceItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
