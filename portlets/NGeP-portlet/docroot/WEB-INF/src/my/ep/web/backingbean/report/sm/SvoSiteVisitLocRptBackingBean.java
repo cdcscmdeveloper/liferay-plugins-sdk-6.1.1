@@ -73,7 +73,7 @@ public class SvoSiteVisitLocRptBackingBean extends
 				df.format(getManagedBean().getDateTo()));
 
 //		addCategoryParam(params);
-
+		
 		generateSmReport(params);
 	}
 
