@@ -289,13 +289,46 @@ public class PmReportsBackingBean extends
 					.getSelectedOrgType().getParameterId().toString());
 		}
 
-		if (getManagedBean().getSelectedOrgProfile() != null) {
-			map.put(PmReportConst.PARAM_PM_ORG_NAME, getManagedBean()
-					.getSelectedOrgProfile().getPmOrgValidity().getOrgName());
-			map.put(PmReportConst.PARAM_PM_ORG_CODE, getManagedBean()
-					.getSelectedOrgProfile().getPmOrgValidity().getOrgCode());
-		}
+		
+		// 28239 - start
+		
+		   if (getManagedBean().getSelectedOrgProfile().getSmSupplier() != null){
+				
+				log.info("test1" + getManagedBean()
+						.getSelectedOrgProfile().getSmSupplier().getCompanyName());
+			
+				
+				map.put(PmReportConst.PARAM_PM_COMPANY_NAME, getManagedBean()
+						.getSelectedOrgProfile().getSmSupplier().getCompanyName());
+				
+				
+				if (StringUtils.isNotBlank(getManagedBean().getBizRegNo())) {
+					map.put(PmReportConst.PARAM_PM_BIZREG_NO, getManagedBean()
+							.getBizRegNo());
+				}
 
+				if (StringUtils.isNotBlank(getManagedBean().getEpNo())) {
+					map.put(PmReportConst.PARAM_PM_EP_NO, getManagedBean().getEpNo());
+				}
+				
+		       }else{
+
+				if (getManagedBean().getSelectedOrgProfile().getPmOrgValidity().getOrgName()!= null) {
+					
+					log.info("test2" + getManagedBean()
+							.getSelectedOrgProfile().getPmOrgValidity().getOrgName());
+				
+					
+					map.put(PmReportConst.PARAM_PM_ORG_NAME, getManagedBean()
+							.getSelectedOrgProfile().getPmOrgValidity().getOrgName());
+					map.put(PmReportConst.PARAM_PM_ORG_CODE, getManagedBean()
+							.getSelectedOrgProfile().getPmOrgValidity().getOrgCode());
+				}
+		   }
+		
+		
+		// 28239 - end
+		
 		if (StringUtils.isNotBlank(getManagedBean().getSelectedRoleCode())) {
 			map.put(PmReportConst.PARAM_PM_ROLE_CODE, getManagedBean()
 					.getSelectedRoleCode());
