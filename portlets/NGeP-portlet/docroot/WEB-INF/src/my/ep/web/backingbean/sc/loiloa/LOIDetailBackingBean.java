@@ -4267,7 +4267,7 @@ public class LOIDetailBackingBean extends
 		ScLoiSupportingDoc scLoiSuppDoc = new ScLoiSupportingDoc();
 		scLoiSuppDoc.setScLoi(scLoi);
 		scLoiSuppDoc.setDocId(scLoi.getLoiId().toString());
-		scLoiSuppDoc.setDocType(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
+		scLoiSuppDoc.setDocType(ParameterConst.DOCTYPE_LETTER_OF_INTENT_SUPPORTING_DOC);
 		scLoiSuppDoc
 				.setDocCategory(ParameterConst.DOCUMENT_CATEGORY_LOI_SUPPORTING_DOC);
 		scLoiSuppDoc.setPmDocument(null);
