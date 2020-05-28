@@ -26,7 +26,9 @@
 			<c:when test="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT}">
 				<ui:include	src="/xhtml/sm/shared/applViewOnlyPages/agencyInfoFormViewOnly.xhtml" />
 			</c:when>
-			</c:choose>			
+			</c:choose>
+			<!-- #28237 -->
+			<ui:include src="/xhtml/sm/shared/applViewOnlyPages/disciplinaryActionInfo.xhtml" />
 			</td>
 		</tr>
 	</p:outputPanel>	
