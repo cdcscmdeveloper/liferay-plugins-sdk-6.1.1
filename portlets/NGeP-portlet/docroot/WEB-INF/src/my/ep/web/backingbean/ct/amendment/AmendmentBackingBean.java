@@ -14,12 +14,15 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -137,6 +140,7 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.RoleHelper;
 import my.ep.web.util.template.DocumentGenerator;
 
+import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
@@ -325,6 +329,185 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		committeDataModel.resetData();
 	}
 
+	// #20997 - start	
+	 /**
+		 * The method used to reset the search criteria for circular.
+		 */
+		public void searchReset(){
+			
+			AmendmentBackingBean ccBB = new AmendmentBackingBean();
+
+			getManagedBean().setItemcode(null);
+			getManagedBean().setItemname(null);
+			getManagedBean().setItemstatus(null);
+			getManagedBean().setItemtype(null);
+			getManagedBean().setUOM(null);
+			getManagedBean().setSkuno(null);
+			getManagedBean().setTypeofgoods(null);
+			ccBB.getManagedBean().setSelectedItem(null);
+			ccBB.getManagedBean().setSelectedServiceItem(null);
+			
+
+			if(getManagedBean().isReadOnly()) {
+				getManagedBean().getContractListingPagingDataModel().resetData();
+				getManagedBean().getServiceListingPagingDataModel().resetData();
+				
+	      		getManagedBean().setResetval(false);
+				getManagedBean().setReadOnly(true);
+				
+			} else {
+				getManagedBean().getContractListingPagingDataModel().resetData();
+				getManagedBean().getServiceListingPagingDataModel().resetData();
+	      		getManagedBean().setResetval(false);
+				getManagedBean().setReadOnly(true);
+			}
+		}
+		
+		/**
+		 * The method used for searching the circular list.
+		 * A warning message will display on screen when searching
+		 * with empty search criteria.
+		 * 
+		 * @throws Exception  if an exception occurred
+		 * @see    Exception
+		 */
+		public void searchCircular() throws Exception {
+			//20997 - Start - Fixing
+			try {		 
+						if( getManagedBean().getItemcode().equals("") && 
+								getManagedBean().getItemname().equals("") &&
+								getManagedBean().getItemstatus() == null &&
+								getManagedBean().getItemtype()== null &&
+								getManagedBean().getSelectedSearchItem() == null &&	
+								getManagedBean().getSkuno().equals("") &&
+								getManagedBean().getTypeofgoods()== null  ){
+						
+						throw new EpException(MessageConst.ERROR_750049);
+						
+					}else if(getManagedBean().getItemtype()!=null){
+						getManagedBean().setResetval(true);
+						ContractBackingBean ccBB = new ContractBackingBean();
+						ccBB.getManagedBean().setSelectedItem(null);
+						ccBB.getManagedBean().setServiceselectedItem(null);
+						if(getManagedBean().getItemtype().equals(ParameterConst.ITEM_TYPE_PRODUCT)){
+							getManagedBean().getContractListingPagingDataModel().reloadData();
+								getManagedBean().setItemProductExist(true);
+								getManagedBean().setItemServiceExist(false);
+						
+						}else if(getManagedBean().getItemtype().equals(ParameterConst.ITEM_TYPE_SERVICE)){
+							  getManagedBean().getServiceListingPagingDataModel().reloadData();
+									getManagedBean().setItemServiceExist(true);
+									getManagedBean().setItemProductExist(false);
+ 
+						}else if(getManagedBean().getItemtype().equals(ParameterConst.ITEM_TYPE_PRODUCT_AND_SERVICE)){
+							  getManagedBean().getContractListingPagingDataModel().reloadData();
+							  getManagedBean().getServiceListingPagingDataModel().reloadData();
+								if(ccBB.getManagedBean().getCtItemList().size() > 0 || !ccBB.getManagedBean().getCtItemList().isEmpty()){
+									getManagedBean().setItemProductExist(true);
+								}else{
+									getManagedBean().setItemProductExist(false);
+								}
+								
+								if(ccBB.getManagedBean().getCtItemServiceList().size() > 0 || !ccBB.getManagedBean().getCtItemServiceList().isEmpty()){
+									getManagedBean().setItemServiceExist(true);
+								}else{
+									getManagedBean().setItemServiceExist(false);
+								}
+						//20997 - End-Fixing
+						}					
+					}else{
+						throw new EpException(MessageConst.ERROR_750051);
+					} 
+			} finally{
+				    // Do nothing
+				}
+		}
+
+		/** to concat Itemcode and Item Name */
+
+		public String contactItem(CtContractItem ctItem) {
+			
+			String itemcode=ctItem.getScRequestItem().getCmItem().getExtensionCode();
+			String itemName=ctItem.getScRequestItem().getItemName();
+			if(itemcode==null)
+			{
+				itemcode=ParameterConst.ITEM_CODE;
+			}
+			if(itemName==null)
+			{
+				itemName=ParameterConst.ITEM_NAME;
+			}
+			String result = itemName +","+ itemcode;
+			
+			return result;		     
+		}
+		
+		public String contactItemProd(CtContractItem ctItem) {
+			
+			String itemcode=ctItem.getScRequestItem().getCmItem().getExtensionCode();
+			String itemName=ctItem.getScRequestItem().getItemName();
+			String sKuNo=ctItem.getSku();
+			if(itemcode==null)
+			{
+				itemcode=ParameterConst.ITEM_CODE;
+			}
+			if(itemName==null)
+			{
+				itemName=ParameterConst.ITEM_NAME;
+			}
+			if(sKuNo==null)
+			{
+				sKuNo=ParameterConst.SKUNO;
+			}
+			String result = itemName +","+ itemcode+","+sKuNo;
+		
+			return result;		     
+		}
+		
+		/**
+		* Gets the local goods radio values.
+		* 
+		* @param itemType
+		* the item type
+		* @return the local goods radio values
+		*/
+		public SelectItem[] getLocalGoodsRadioValues(String itemType) {
+		List<String> types = new ArrayList<String>();
+		types.add(ParameterConst.LOCAL_GOODS);
+		types.add(ParameterConst.IMPORTED_GOODS);
+		SelectItem[] items = null;
+		try {
+		items = new SelectItem[types.size()];
+		int i = 0;
+		for (String location : types) {
+		List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(itemType);
+		for (PmParameterDesc paramDesc : localParamDesc) {
+		if (paramDesc.getPmParameter().getParameterCode()
+		.equals(location)) {
+		items[i++] = new SelectItem(paramDesc.getPmParameter()
+		.getParameterId(), paramDesc.getCodeName());
+		}
+		}
+		}
+		} finally {
+
+		}
+		return items;
+		}
+		
+		/**
+		 * Retrieve parameter desc by type.
+		 * 
+		 * @param type
+		 *            (String type)
+		 * @returnList<PmParameterDesc>
+		 */
+		public List<PmParameterDesc> retrieveParameterDescByType(String type) {
+			return ParameterHelper.getInstance().getParameterDescList(type);
+
+		}
+		// #20997 - end
+		
 	/**
 	 * The method used to retrieve the information and render it on screen.
 	 */
@@ -972,11 +1155,75 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 
+			// Change Code #20997 Start
 			if (ctBackingBean.getManagedBean().getContractVer().getCtContractItems().size() > 0) {
 				ctBackingBean.getManagedBean().getContractVer().getCtContractItems().clear();
+				List<CtContractItem> ctItemList = new ArrayList<CtContractItem>();
+				List<CtContractItem> ctServiceList = new ArrayList<CtContractItem>();
+
+				if (ctBackingBean.getManagedBean().getCtItemList().size() > 0 && !ctBackingBean.getManagedBean().getCtItemList().isEmpty()) {
+				for (CtContractItem ctContractItem :  ctBackingBean.getManagedBean().getCtItemList()) {
+					
+						if(ctBackingBean.getManagedBean().getContractVer().isBrandNew()){
+							ctContractItem.setContractItemId(null);
+						for(CtItemPrice ctItemPrice2 : ctContractItem.getCtItemPrices()){
+							ctItemPrice2.setItemPriceId(null);
+						}									
+
+						for(CtItemMaxQty itemMaxQty2 : ctContractItem.getCtItemMaxQties()){
+							itemMaxQty2.setItemMaxQtyId(null);
+						}									
+
+						for(CtItemCeilingQty ceilingQty2 : ctContractItem.getCtItemCeilingQties()){
+							ceilingQty2.setItemCeilingQtyId(null);
+							}									
+					}
+				}
+				
+				if(ctBackingBean.getManagedBean().getContractVer().isBrandNew()){
+					ctItemList.clear();
+					ctItemList.addAll(ctBackingBean.getManagedBean().getCtItemList());
+				}else{
+					ctItemList.addAll(ctBackingBean.getManagedBean().getCtItemList());
+					}
+					ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(ctItemList);
+				}else{
+					ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(ctBackingBean.getManagedBean().getCtItemList());
+				}	
+			
+				if (ctBackingBean.getManagedBean().getCtItemServiceList().size() > 0 && !ctBackingBean.getManagedBean().getCtItemServiceList().isEmpty()) {
+				for (CtContractItem ctContractItem :  ctBackingBean.getManagedBean().getCtItemServiceList()) {
+					
+					if(ctBackingBean.getManagedBean().getContractVer().isBrandNew()){
+						ctContractItem.setContractItemId(null);
+					for(CtItemPrice ctItemPrice2 : ctContractItem.getCtItemPrices()){
+						ctItemPrice2.setItemPriceId(null);
+					}									
+
+					for(CtItemMaxQty itemMaxQty2 : ctContractItem.getCtItemMaxQties()){
+						itemMaxQty2.setItemMaxQtyId(null);
+					}									
+
+					for(CtItemCeilingQty ceilingQty2 : ctContractItem.getCtItemCeilingQties()){
+						ceilingQty2.setItemCeilingQtyId(null);
+						}									
+				}
 			}
-			ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(ctBackingBean.getManagedBean().getCtItemList());
-			ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(ctBackingBean.getManagedBean().getCtItemServiceList());
+				if(ctBackingBean.getManagedBean().getContractVer().isBrandNew()){
+					ctServiceList.clear();
+					ctServiceList.addAll(ctBackingBean.getManagedBean().getCtItemServiceList());
+				}else{
+					ctServiceList.addAll(ctBackingBean.getManagedBean().getCtItemServiceList());
+					}
+					ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(ctServiceList);
+				}else{
+					ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(ctBackingBean.getManagedBean().getCtItemServiceList());
+				}
+				
+				
+			}
+			// Change Code #20997 End
+			
 			ctBackingBean.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
 
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend() 
@@ -2082,12 +2329,22 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						}
 						if (outputValue.equalsIgnoreCase("IT")) {
 							getManagedBean().setSelectedTabIndex(3);
+							// Enhancement 20977
+							AmendmentBackingBean abb=new AmendmentBackingBean();
+							abb.getManagedBean().reassignValue(true);
+							abb.getManagedBean().getServiceListingPagingDataModel().reloadData();
+							abb.getManagedBean().getContractListingPagingDataModel().reloadData();
 						}
 						if(outputValue.equalsIgnoreCase(ContractConst.DEDUCTION_DETAIL)){
 							getManagedBean().setSelectedTabIndex(4);
 						}
 					} else if(outputValue.equalsIgnoreCase("IT")) {
 						getManagedBean().setSelectedTabIndex(2);
+						// Enhancement 20977
+							AmendmentBackingBean abb=new AmendmentBackingBean();
+							abb.getManagedBean().reassignValue(true);
+							abb.getManagedBean().getServiceListingPagingDataModel().reloadData();
+							abb.getManagedBean().getContractListingPagingDataModel().reloadData();
 					}else if(outputValue.equalsIgnoreCase(ContractConst.DEDUCTION_DETAIL)){
 						getManagedBean().setSelectedTabIndex(3);
 					}
@@ -2166,12 +2423,22 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						getManagedBean().setSelectedTabIndex(3);
 					} else if (outputValue.equalsIgnoreCase("IT")) {
 						getManagedBean().setSelectedTabIndex(4);
+						// Enhancement 20977
+							AmendmentBackingBean abb=new AmendmentBackingBean();
+							abb.getManagedBean().reassignValue(true);
+							abb.getManagedBean().getServiceListingPagingDataModel().reloadData();
+							abb.getManagedBean().getContractListingPagingDataModel().reloadData();
 					}
 				} else {
 					if (outputValue.equalsIgnoreCase("AG")) {
 						getManagedBean().setSelectedTabIndex(2);
 					}else if(outputValue.equalsIgnoreCase("IT")) {
 						getManagedBean().setSelectedTabIndex(3);
+						// Enhancement 20977
+							AmendmentBackingBean abb=new AmendmentBackingBean();
+							abb.getManagedBean().reassignValue(true);
+							abb.getManagedBean().getServiceListingPagingDataModel().reloadData();
+							abb.getManagedBean().getContractListingPagingDataModel().reloadData();
 					}
 				}
 				if (outputValue.equalsIgnoreCase(ContractConst.DEDUCTION_DETAIL)) {
@@ -2593,9 +2860,32 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					ctContractItem.getCtItemPrices().add(index - 1, priceOfItem);
 				}
 			}
-		}			
+		}
+		//#20997--Start
+		if(getManagedBean().getSelectedItem() != null){			
+			for(CtContractItem itemProduct : ctBackingBean.getManagedBean().getCtItemList()){
+					for(CtItemPrice itemPrice : getManagedBean().getSelectedItem().getCtItemPrices() ){
+			if(itemPrice.isBrandNew() && itemProduct.getCtItemPrices().get(0).getCtContractItem().getContractItemId().equals(getManagedBean().getSelectedItem().getContractItemId())){
+				itemProduct.getCtItemPrices().remove(itemPrice);
+				itemProduct.getCtItemPrices().add(itemPrice);
+				
+				}
+			}
+		}
 	}
-
+		if(getManagedBean().getSelectedServiceItem() != null){
+			for(CtContractItem itemService : ctBackingBean.getManagedBean().getCtItemServiceList()){
+		for(CtItemPrice itemPrice : getManagedBean().getSelectedServiceItem().getCtItemPrices() ){
+			if(itemPrice.isBrandNew() && itemService.getCtItemPrices().get(0).getCtContractItem().getContractItemId().equals(getManagedBean().getSelectedServiceItem().getContractItemId())){
+				itemService.getCtItemPrices().remove(itemPrice);
+				itemService.getCtItemPrices().add(itemPrice);
+					}
+				}
+			}		
+		}
+	}
+	//#20997 -- End
+	
 	/**
 	 * The method used to edit the product item price.
 	 * This method will creating a new records in the item price list
@@ -2697,7 +2987,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		ctItemPriceList.clear();
 
 		//CT_CHANGE_LOG
-		ctBackingBean.getManagedBean().getUpdateItemMap().put(getManagedBean().getSelectedItem().getScRequestItem().getRequestNoteItemId(), getManagedBean().getSelectedItem());
+		ctBackingBean.getManagedBean().getUpdateItemMap().put(getManagedBean().getSelectedServiceItem().getScRequestItem().getRequestNoteItemId(), getManagedBean().getSelectedServiceItem());
 	}
 
 	/**
@@ -2882,9 +3172,22 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					ctContractItem.getCtItemMaxQties().add(index-1, maxQtyOfItem);
 				}
 			}
-		}			
+		}
+		//#20997--Start
+		if(getManagedBean().getSelectedItem() != null){			
+			for(CtContractItem itemQtyProduct : ctBackingBean.getManagedBean().getCtItemList()){
+					for(CtItemMaxQty itemQtyPrice : getManagedBean().getSelectedItem().getCtItemMaxQties() ){
+			if(itemQtyPrice.isBrandNew() && itemQtyProduct.getCtItemPrices().get(0).getCtContractItem().getContractItemId().equals(getManagedBean().getSelectedItem().getContractItemId())){
+				itemQtyProduct.getCtItemMaxQties().remove(itemQtyPrice);
+				itemQtyProduct.getCtItemMaxQties().add(itemQtyPrice);
+				
+				}
+			}
+		}
 	}
-
+}
+	//#20997--End
+	
 	/**
 	 * The method used to retrieve the item ceiling quantity which in active status
 	 * to be displayed on screen.
@@ -2921,6 +3224,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				ctBackingBean.getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY);				
 			} else {
 				ctBackingBean.getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
+			}
+			
+			if (ctBackingBean.getManagedBean().getShowItem() == null){
+				getManagedBean().setItemProductExist(false);
 			}
 
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()) {
@@ -2995,6 +3302,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				ctBackingBean.getManagedBean().setShowServiceItem(ParameterConst.ITEM_DISPLAY_TYPE_QTY);
 			} else {
 				ctBackingBean.getManagedBean().setShowServiceItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
+			}
+			
+			if (ctBackingBean.getManagedBean().getShowServiceItem() == null){
+				getManagedBean().setItemServiceExist(false);
 			}
 
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()) {
