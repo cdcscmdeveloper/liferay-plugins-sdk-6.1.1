@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
+import my.ep.factory.EpLogger;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -148,6 +148,8 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 
+import org.apache.log4j.Logger;
+
 /**
  * Backing Bean For Contract
  * 
@@ -157,6 +159,8 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 @ManagedBean(name="ctBackingBean")
 @ViewScoped
 public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
+
+	private static Logger log = EpLogger.getLogger(ContractBackingBean.class);
 
 	private static final long serialVersionUID = 1L;
 	private CtSchedule[] selectedSchedule;
@@ -2695,38 +2699,95 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * of the selected product item.
 	 */
 	public void onSelectProductItem() {
-		if (getManagedBean().getSelectedItem() != null) {
-			if (getManagedBean().getShowItem() != null
-					&& getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
-				getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
-			} else if (getManagedBean().getShowItem() != null
-					&& getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)) {
-				getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY);
-				refreshAgencyCeilingQuantityList();
-			}  else if (getManagedBean().getShowItem() != null
-					&& getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY)) {
-				getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY);
-			} else {
-				getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
-			}
-			// retrieve zone label for new price
-			if (getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)
-					|| getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
-					|| getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
-				itemPriceZoneLabelList(getManagedBean().getSelectedItem());
-				itemMaxQtyZoneLabelList(getManagedBean().getSelectedItem());
+		try{
+			ContractItemSearchBackingBean cisbb = new ContractItemSearchBackingBean();
+			//log.info("Selected Item ***"+getManagedBean().getSelectedItem());
+			//log.info("Show Item ****"+getManagedBean().getShowItem());
+			if (getManagedBean().getSelectedItem() != null || getManagedBean().getServiceselectedItem()!=null) {
+				//cisbb.getManagedBean().setItemServiceExist(false);
+				if (getManagedBean().getShowItem() != null
+						&& getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
+					getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
+				} else if (getManagedBean().getShowItem() != null
+						&& getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)) {
+					getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY);
+					refreshAgencyCeilingQuantityList();
+				}  else if (getManagedBean().getShowItem() != null
+						&& getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY)) {
+					getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY);
+					//refreshAgencyCeilingQuantityServiceList();
+				} else {
+					getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
+				}
+				
+				if(getManagedBean().getShowItem() == null){
+					cisbb.getManagedBean().setItemProductExist(false);
+				}
+				
+				// retrieve zone label for new price
+				if (getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)
+						|| getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
+						|| getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
+					itemPriceZoneLabelList(getManagedBean().getSelectedItem());
+					itemMaxQtyZoneLabelList(getManagedBean().getSelectedItem());
+				}
 			}
 		}
+		catch(Exception ex )
+		{
+			ex.printStackTrace();
+		}
 	}
-
+	
 	/**
-	 * The method used to refresh the ceiling quantity information.
+	 * The method used to render the ceiling quantity information
+	 * of the selected product item.
+	 */
+	public void onSelectServiceItem() {
+		try{
+			ContractItemSearchBackingBean cisbb = new ContractItemSearchBackingBean();
+			log.info("Selected Item onSelectServiceItem ***"+getManagedBean().getServiceselectedItem());
+			log.info("Show Item  onSelectServiceItem ****"+getManagedBean().getShowItem());
+			if (getManagedBean().getSelectedItem() != null || getManagedBean().getServiceselectedItem()!=null) {
+				//cisbb.getManagedBean().setItemProductExist(false);
+				if (getManagedBean().getShowServiceItem() != null
+						&& getManagedBean().getShowServiceItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
+					getManagedBean().setShowServiceItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
+				} else if (getManagedBean().getShowServiceItem() != null
+						&& getManagedBean().getShowServiceItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)) {
+					getManagedBean().setShowServiceItem(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY);
+					refreshAgencyCeilingQuantityServiceList();
+				}  else if (getManagedBean().getShowServiceItem() != null
+						&& getManagedBean().getShowServiceItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY)) {
+					getManagedBean().setShowServiceItem(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY);
+					refreshAgencyCeilingQuantityServiceList();
+				} else {
+					getManagedBean().setShowServiceItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
+				}
+				// retrieve zone label for new price
+				if (getManagedBean().getServiceselectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)
+						|| getManagedBean().getServiceselectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
+						|| getManagedBean().getServiceselectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
+					itemPriceZoneLabelList(getManagedBean().getServiceselectedItem());
+					itemMaxQtyZoneLabelList(getManagedBean().getServiceselectedItem());
+				}
+			}
+		}
+		catch(Exception ex )
+		{
+			ex.printStackTrace();
+		}
+	}
+	
+	/**
+	 * The method used to refresh the ceiling quantity information of Product details listing in UI.
 	 */
 	private void refreshAgencyCeilingQuantityList() {
 		Map<Long, CtItemCeilingQty> itemCeilingQtyMap = new HashMap<Long, CtItemCeilingQty>();
 		for (CtItemCeilingQty ctItemCeilingQty : getManagedBean().getSelectedItem().getCtItemCeilingQties()) {
 			itemCeilingQtyMap.put(ctItemCeilingQty.getCtAgency().getOrgProfile().getOrgProfileId(), ctItemCeilingQty);
 		}
+		
 		getManagedBean().getSelectedItem().getCtItemCeilingQties().clear();
 		for (CtAgency ctAgency : getManagedBean().getContractVer().getCtAgencies()) {
 			if (!itemCeilingQtyMap.containsKey(ctAgency.getOrgProfile().getOrgProfileId())) {
@@ -2739,6 +2800,37 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				getManagedBean().getSelectedItem().getCtItemCeilingQties().add(ctItemCeilingQty);
 			} else {
 				getManagedBean().getSelectedItem().getCtItemCeilingQties().add(itemCeilingQtyMap.get(ctAgency.getOrgProfile().getOrgProfileId()));
+			}
+		}
+	}
+
+	/**
+	 * The method used to refresh the ceiling quantity information of Service Details listing in UI.
+	 */
+	private void refreshAgencyCeilingQuantityServiceList() {
+		Map<Long, CtItemCeilingQty> itemCeilingQtyMap = new HashMap<Long, CtItemCeilingQty>();
+		
+		for (CtItemCeilingQty ctItemCeilingQty : getManagedBean().getServiceselectedItem().getCtItemCeilingQties()) {
+			itemCeilingQtyMap.put(ctItemCeilingQty.getCtAgency().getOrgProfile().getOrgProfileId(), ctItemCeilingQty);
+		}
+		
+		getManagedBean().getServiceselectedItem().getCtItemCeilingQties().clear();
+		
+		for (CtAgency ctAgency : getManagedBean().getContractVer().getCtAgencies()) {
+			if (!itemCeilingQtyMap.containsKey(ctAgency.getOrgProfile().getOrgProfileId())) {
+				CtItemCeilingQty ctItemCeilingQty = new CtItemCeilingQty();
+				ctItemCeilingQty.setCtAgency(ctAgency);
+				
+				ctItemCeilingQty.setCtContractItem(getManagedBean().getServiceselectedItem());
+				
+				ctItemCeilingQty.setCeilingQuantity(new BigDecimal(0));
+				ctItemCeilingQty.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
+				ctItemCeilingQty.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
+				
+				getManagedBean().getServiceselectedItem().getCtItemCeilingQties().add(ctItemCeilingQty);
+			} else {
+		
+				getManagedBean().getServiceselectedItem().getCtItemCeilingQties().add(itemCeilingQtyMap.get(ctAgency.getOrgProfile().getOrgProfileId()));
 			}
 		}
 	}
@@ -2835,12 +2927,36 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public void changeShowItem() {
 		try {
-			if (getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)) {
+			
+			if (getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_QTY)) {
 				refreshAgencyCeilingQuantityList();
-			}
-		} catch (Exception e) {}
+			}else if (getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY)) {
+				refreshAgencyCeilingQuantityList();
+			}	
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
-
+	
+	/**
+	* The method used to render the selected service item information.
+	*/
+	public void changeServiceShowItem() {
+		try {
+			
+			if(getManagedBean().getShowServiceItem()!=null)
+			{
+				if (getManagedBean().getShowServiceItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_QTY)) {
+					refreshAgencyCeilingQuantityServiceList();
+				}else if (getManagedBean().getShowServiceItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY)) {
+					refreshAgencyCeilingQuantityServiceList();
+				}	
+			}	
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * The method used to retrieve the item ceiling quantity which in active status
 	 * to be displayed on screen.
@@ -2850,10 +2966,12 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	public List<CtItemCeilingQty> getActiveItemCeilingQty() {
 		List<CtItemCeilingQty> activeList = new ArrayList<CtItemCeilingQty>();
 		if (getManagedBean().getSelectedItem() != null) {
-			for (CtItemCeilingQty ctItemCeilingQty : getManagedBean().getSelectedItem().getCtItemCeilingQties()) {
+			if(getManagedBean().getSelectedItem().getCtItemCeilingQties().size()>0){
+			  for (CtItemCeilingQty ctItemCeilingQty : getManagedBean().getSelectedItem().getCtItemCeilingQties()) {
 				if (ctItemCeilingQty.getCtAgency().isChkStatus()) {
 					activeList.add(ctItemCeilingQty);
 				}
+			  }
 			}
 		}
 		return activeList;
@@ -2905,30 +3023,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					getManagedBean().getUpdateZoneMap().put(locationDTO.getZone(), ctContractZone);
 					break;
 				}
-			}
-		}
-	}	
-
-	/**
-	 * The method used to indicate the label flag for new price of service item.
-	 */
-	public void onSelectServiceItem() {
-		if (getManagedBean().getSelectedServiceItem() != null) {
-			if (getManagedBean().getShowServiceItem() != null
-					&& getManagedBean().getShowServiceItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
-				getManagedBean().setShowServiceItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
-			} else if (getManagedBean().getShowServiceItem() != null
-					&& getManagedBean().getShowServiceItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_QTY)) {
-				getManagedBean().setShowServiceItem(ParameterConst.ITEM_DISPLAY_TYPE_QTY);
-			} else {
-				getManagedBean().setShowServiceItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
-			}
-			// retrieve zone label for new price
-			if (getManagedBean().getSelectedServiceItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)
-					|| getManagedBean().getSelectedServiceItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
-					|| getManagedBean().getSelectedServiceItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
-				itemPriceZoneLabelList(getManagedBean().getSelectedServiceItem());
-				itemMaxQtyZoneLabelList(getManagedBean().getSelectedServiceItem());
 			}
 		}
 	}
@@ -3396,7 +3490,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 
 		List<String> itemDisplayTypeList = new ArrayList<String> ();
-		itemDisplayTypeList.add(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);			
+			itemDisplayTypeList.add(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);	
 
 		if (itemType.equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
 			if (this.getManagedBean().getContractVer().getCtAgencies() != null
@@ -3405,7 +3499,12 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 			itemDisplayTypeList.add(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY);
 		} else if (itemType.equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
-			itemDisplayTypeList.add(ParameterConst.ITEM_DISPLAY_TYPE_QTY);				
+			itemDisplayTypeList.add(ParameterConst.ITEM_DISPLAY_TYPE_QTY);	
+			if (this.getManagedBean().getContractVer().getCtAgencies() != null
+					&& this.getManagedBean().getContractVer().getCtAgencies().size() > 1){
+				itemDisplayTypeList.add(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY);
+			}
+			
 		}			
 
 		searchBean.getDataFilterBeans().add(
