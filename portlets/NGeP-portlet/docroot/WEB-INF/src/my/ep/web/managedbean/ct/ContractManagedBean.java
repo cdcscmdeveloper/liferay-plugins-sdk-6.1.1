@@ -117,6 +117,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	private CtPerformanceBond ctPerformanceBond;
 
 	private CtContractItem selectedItem;
+	private CtContractItem serviceselectedItem;
 	private String showItem;
 	private String showServiceItem;
 	private List<CtContractItem> ctItemServiceList;
@@ -1230,6 +1231,12 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.notificationSetting = notificationSetting;
 	}
 	
-	
+	public CtContractItem getServiceselectedItem() {
+		return serviceselectedItem;
+	}
+
+	public void setServiceselectedItem(CtContractItem serviceselectedItem) {
+		this.serviceselectedItem = serviceselectedItem;
+	}
 
 }
