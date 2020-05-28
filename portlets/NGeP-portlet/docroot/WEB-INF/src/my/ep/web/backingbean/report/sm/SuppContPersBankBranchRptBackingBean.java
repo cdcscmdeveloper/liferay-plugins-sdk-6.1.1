@@ -57,8 +57,11 @@ public class SuppContPersBankBranchRptBackingBean extends
 				CommonConstants.DEFAULT_DATE_FORMAT);
 		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
 		retrieveReportValueFromDb();
-		params.put(SmReportConst.PARAM_DATE_FROM,
-				df.format(getManagedBean().getDateFrom()));
+		
+		if (!getManagedBean().getRegType().equalsIgnoreCase(ReportConst.RPT_REG_BASIC)) {
+			params.put(SmReportConst.PARAM_DATE_FROM,
+					df.format(getManagedBean().getDateFrom()));
+		}
 		params.put(SmReportConst.PARAM_DATE_TO,
 				df.format(getManagedBean().getDateTo()));
 		params.put(SmReportConst.PARAM_ZONE,
