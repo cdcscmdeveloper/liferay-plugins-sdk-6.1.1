@@ -373,6 +373,14 @@ public class SupplierFinalizationBackingBean extends
 		}
 		loadSupplierFinalizationTabDetails();
 		retrieveBriefingPaper();
+		//#17376-start
+		if(isQTMaintenanceScreen()){
+			if(getManagedBean().isInitialDecisionFwdToBPK()){
+			getManagedBean().setInitialDecisionFwdToBPK(Boolean.FALSE);
+			getManagedBean().setCommitteeType(dataType.getCommitteeType());
+			loadPreparationTabDetails();
+			}
+		} //#17376-End
 		
 		int tabIndex = 0;
 		if (getManagedBean().isInitialDecisionFwdToBPK()) {

@@ -178,7 +178,7 @@
 						value="#{lOIDetailBackingBean.managedBean.scLoi.loiResponseDate}"
 						style="width: 100px;margin-bottom: 10px;"
 						label="#{lbl['lbl.sc.days']}"
-						disabled="#{!isEditableStatus}" >
+						disabled="#{!isEditableStatus or lOIDetailBackingBean.managedBean.readOnly}" >
 						<f:selectItems 
 							value="#{lOIDetailBackingBean.getDropdownCodeValues(ParameterTypeConst.loiResponsePeriod)}" />
 						<p:ajax event="change"
