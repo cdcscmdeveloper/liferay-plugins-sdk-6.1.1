@@ -2687,10 +2687,10 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					if (mofAccount != null) {
 						getManagedBean().setMofNo(mofAccount.getMofNo());
 						getManagedBean().setSupplierType(mofAccount.getSupplierType());
-						getManagedBean().setRegType("MOF");
+						getManagedBean().setRegType(ReportConst.RPT_REG_MOF);
 						getManagedBean().setDateFrom(mofAccount.getEffDate());
 					} else {
-						getManagedBean().setRegType("Basic");
+						getManagedBean().setRegType(ReportConst.RPT_REG_BASIC);
 					}
 				}
 			}
