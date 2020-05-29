@@ -3056,6 +3056,10 @@ public class SmApplicationBackingBean extends
 					.equals(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 				validSave = SmApplicationUtil.validateBasicInfoBeforeSave(
 						validSave, getManagedBean(), currentTab);
+				//#27853
+				if (!getManagedBean().isApproverUser() && !getManagedBean().isPoUser()) {
+					SmApplicationUtil.validateCoordinate(getManagedBean());
+				}
 			}
 			break;
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL:
@@ -5219,6 +5223,8 @@ public class SmApplicationBackingBean extends
 				.getSmAppl().getSmFacilities());
 		EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
 				.getApplDockyardFacilities());
+		//#27853
+		SmApplicationUtil.validateCoordinate(getManagedBean());
 		if (smFac.getFacilityId() == null) {
 			RequestContext.getCurrentInstance().execute(
 					"smFacilityDockDtWidVar.paginator.endLink.click()");
@@ -5333,6 +5339,8 @@ public class SmApplicationBackingBean extends
 				.getSmAppl().getSmFacilities());
 		EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
 				.getApplWorkShopFacilities());
+		//#27853
+		SmApplicationUtil.validateCoordinate(getManagedBean());
 		if (smFac.getFacilityId() == null) {
 			RequestContext.getCurrentInstance().execute(
 					"smWorkShopDtWidVar.paginator.endLink.click()");
@@ -5445,6 +5453,8 @@ public class SmApplicationBackingBean extends
 				.getSmAppl().getSmFacilities());
 		EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
 				.getApplStoreFacilities());
+		//#27853
+		SmApplicationUtil.validateCoordinate(getManagedBean());
 		if (smFac.getFacilityId() == null) {
 			RequestContext.getCurrentInstance().execute(
 					"smFacStoreDtWidVar.paginator.endLink.click()");
@@ -6282,6 +6292,11 @@ public class SmApplicationBackingBean extends
 	 * Save or update the latest information of the application i.e. SmAppl .
 	 */
 	private void saveOrUpdateAppl() {
+		//checkin if coordinate null #27853
+		if(!getManagedBean().isApproverUser() && !getManagedBean().isPoUser()){
+		SmApplicationUtil.validateCoordinate(getManagedBean());
+		}
+		
 		// checking if suddenly premise information is missing (#21955)
 		SmApplicationUtil.validateDontHavePremise(getManagedBean().getSmAppl());
 
