@@ -2237,14 +2237,20 @@ public class SupplierFinalizationBackingBean extends
 						}
 						
 						if (!committeeSet.contains(committeeType)) {
-							for (String committee : committeeSet) {
-								isCurrentCommitteeAuthorisedToSubmit = 
-										isCurrentCommitteeGreaterThanOrEquals(
-													 committeeType, committee);
-								if (isCurrentCommitteeAuthorisedToSubmit) {
-									break;
+							//Bug #28235 - start
+							if(committeeType.equals(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)){
+								isCurrentCommitteeAuthorisedToSubmit = true;
+							}else{
+								for (String committee : committeeSet) {
+									isCurrentCommitteeAuthorisedToSubmit = 
+											isCurrentCommitteeGreaterThanOrEquals(
+														 committeeType, committee);
+									if (isCurrentCommitteeAuthorisedToSubmit) {
+										break;
+									}
 								}
 							}
+							//Bug #28235 - end
 						} else {
 							isCurrentCommitteeAuthorisedToSubmit = true;
 						}
