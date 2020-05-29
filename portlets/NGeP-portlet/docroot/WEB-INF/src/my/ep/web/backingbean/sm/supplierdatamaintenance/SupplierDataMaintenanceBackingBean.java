@@ -408,7 +408,13 @@ public class SupplierDataMaintenanceBackingBean extends
 						getTrackingActionDesc(reqDTO,"DA"));
 				listSmTrackingDiary.add(smTrackingDairyVO);
 			}			
+			
 			reqDTO.setSmTrackingDiaryVOList(listSmTrackingDiary);
+			
+			//27906: Disciplinary Action - start - 
+			// set portalPath
+			reqDTO.setPortalBaseUrl(SmCommonUtil.getEpBaseUrl());
+			//27906: Disciplinary Action - end - 
 			
 			resDTO = SmServiceLookup.getSupplierDataMaintenanceSO()
 					.updateBasicAccountInfo(reqDTO);
