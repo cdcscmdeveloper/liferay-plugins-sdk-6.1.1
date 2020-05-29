@@ -88,10 +88,16 @@
 				value="#{tplSpecEstimation.indicativeUnitPrice}" style="width:165px; text-align:right;" 
 				required="true" maxlength="19"
 				label="#{lbl['lbl.tpl.spec.content.Indicative.unit.price']}"
-				disabled="#{!editable}">
-				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
+				disabled="#{!editable or templateSpecBean.selectedSpecQuestion.tplSpecZoneQties[rowIndex].qty eq 0}">
+
+				<!-- #25039#152 start -->	
+				<f:converter converterId="dynamicNumberConverter" />
+				<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />						
+				<f:validator validatorId="quantityDoubleRangeValidator" />
+				<!-- #25039#152 end -->
+				<!-- #25039#152 ajax update add  zoneEstCost -->
 				<p:ajax 
-					update="@all, zoneEstCostMsg, @(.calcEstAmount), zoneEstCost1"
+					update="@all, zoneEstCostMsg, @(.calcEstAmount), zoneEstCost1, zoneEstCost"
 					partialSubmit="true"
 					process="@this" 
 					event="change"
@@ -107,10 +113,10 @@
 						isFulfilmentTypeScheduled, 
 						templateSpecBean.selectedSpecQuestion.tplSpecZoneQties[rowIndex].tplSpecZoneDtl.specZoneId,
 						tplSpecEstimation.tplSpecQuestion.specQuestionId)}"></p:ajax>
-					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
 			</p:inputText>
 			
 			<p:message id="zoneEstCostMsg" for="zoneEstCost" display="icon" />
+	
 		</p:column>		
 		
 		<p:column style="width:80px;">

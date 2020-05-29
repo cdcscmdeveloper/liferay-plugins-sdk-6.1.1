@@ -59,10 +59,16 @@
 				disabled="false"
 				required="true" 
 				label="#{lbl['lbl.tpl.spec.content.Indicative.unit.price']}"
-				onkeypress="if (event.keyCode == 13) {return false; }">		
-				<!-- #25039#92 change ajax below to event="keyup" -->		
+				onkeypress="if (event.keyCode == 13) {return false; }">	
+				<!-- #25039#152 start -->	
+				<f:converter converterId="dynamicNumberConverter" />
+				<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />						
+				<f:validator validatorId="quantityDoubleRangeValidator" />
+				<!-- #25039#152 end -->
+				<!-- #25039#92 change ajax below to event="keyup" -->	
+				<!-- #25039#152 ajax update add  unitPriceServiceSchedule -->	
 				<p:ajax 
-					update="@all, estimatedCostMsg, @(.calcEstAmount), estimatedCost,totalEstAmount"
+					update="@all, estimatedCostMsg, @(.calcEstAmount), estimatedCost,totalEstAmount,unitPriceServiceSchedule"
 					partialSubmit="true"
 					process="@this" 
 					event="change"
@@ -80,7 +86,8 @@
 						isFulfilmentTypeScheduled, 
 						templateSpecBean.selectedSpecQuestion.tplSpecZoneQties[rowIndex].tplSpecZoneDtl.specZoneId,
 						question.getSpecQuestionId())}"></p:ajax>
-					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
+						<!-- #25039#152 comment
+						<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />  -->
 			</p:inputText>	
 			<p:message id="unitPriceServiceScheduleId" for="unitPriceServiceSchedule" display="icon"></p:message>
 						
