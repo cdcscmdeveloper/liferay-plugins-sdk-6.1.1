@@ -499,10 +499,13 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 */
 	public void initStep0BaseInfo(SmAppl smAppl) {
 		getManagedBean().setSmAppl(smAppl);
-
-		getManagedBean().setSmSupplier(
-				getManagedBean().getSmAppl().getSmSupplier());
-
+		
+		// 28155 - start
+		smAppl.getSmSupplier().setSmDisciplinaryActions(
+				SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(smAppl.getSmSupplier()));
+		getManagedBean().setSmSupplier(smAppl.getSmSupplier());
+		// 28155 - end
+		
 		getManagedBean().setBusinessTypeVal(
 				SmApplicationUtil.assignSupplierBusinessType(getManagedBean()
 						.getSmSupplier()));
