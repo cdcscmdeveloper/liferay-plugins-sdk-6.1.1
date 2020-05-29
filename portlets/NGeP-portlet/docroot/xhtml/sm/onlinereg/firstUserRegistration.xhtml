@@ -164,6 +164,7 @@
 						<p:outputLabel value="#{lbl['lbl.sm.nationality']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
+					<!-- #27878 disable when choose applType = SupplierManagementConst.ACC_BASIC-->
 					<td class="tdContent"><p:selectOneMenu id="nationalityId"
 							required="#{!empty param['disableValidation']}"
 							label="#{lbl['lbl.sm.nationality']}"
