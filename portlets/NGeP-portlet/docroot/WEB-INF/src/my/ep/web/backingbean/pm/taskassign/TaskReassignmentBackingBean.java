@@ -2265,6 +2265,12 @@ public class TaskReassignmentBackingBean extends
 				reqDTO.setTaskRoleCode(vo.getRoleList() !=null && !vo.getRoleList().isEmpty() ? vo.getRoleList().get(0) : null);
 				//log.info("[#25018] TaskRoleCode: " + reqDTO.getTaskRoleCode());
 				//For Tracking Diary List (CT)
+				//Start #26319
+				reqDTO.setRoleQT(PmCommonUtil.getRoleDescByRoleCodeAndLanguage(reqDTO.getTaskRoleCode(),getFacesScopes().getUserLocale().toLanguageTag()) != null ? 
+						PmCommonUtil.getRoleDescByRoleCodeAndLanguage(reqDTO.getTaskRoleCode(),getFacesScopes().getUserLocale().toLanguageTag()): PmCommonUtil.getRoleDescByRoleCode(reqDTO.getTaskRoleCode()));
+				reqDTO.setCommitteeType(getManagedBean().getCommitteeType());
+				//End #26319
+				
 				if(vo.getTrackingDiaryList() != null && !vo.getTrackingDiaryList().isEmpty()){
 					reqDTO.setTrackingDiaryList(vo.getTrackingDiaryList());
 				}
@@ -2609,6 +2615,7 @@ public class TaskReassignmentBackingBean extends
 			 ISearchBean<PmUser> searchBean,WorklistItemVO task ,int reassignType,List<String> roleList,PmTaskReassignmentVO vo){
 		PmOrgProfile orgProfile = null;
 		ISearchResultBean<PmUser> resultBean = null;
+		String commTypeResult = null;
 		boolean isSearched = false;
 		Long orgProfileId = getManagedBean()
 						.getTaskAssignmentSearchBean().getOrgProfile()
@@ -2682,9 +2689,12 @@ public class TaskReassignmentBackingBean extends
 			
 			resultBean = generateCommitteAssignees(searchBean, vo.getDocId(), vo.getDocType(), roleList, orgProfileId);
 			//Bug #25021
+			getManagedBean().setCommitteeUpdate(true);
 			
-			getManagedBean().setCommitteeUpdate(true);		
-					
+			//Start #26319
+			commTypeResult = generateCommitteType(searchBean, vo.getDocId(), vo.getDocType(), roleList, orgProfileId);
+			getManagedBean().setCommitteeType(commTypeResult);
+			//End ##26319		
 			isSearched = true;
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_CROSS_PTJ:
@@ -3100,12 +3110,40 @@ public class TaskReassignmentBackingBean extends
 			//Bug #25021
 			committeReqDTO.setOrgProfileId(orgProfileId);
 			//end Bug #25021
-			
 			return committeSO.retrieveUserListByCommType(committeReqDTO).getUserResultBean();
 		} finally {
 			committeSO = null;
 		}
 	}
+	
+	//Start #26319
+	private String generateCommitteType(ISearchBean<PmUser> searchBean,
+			Long docId, String docType, List<String> roleCodeList, Long orgProfileId){
+		ICommitteSO committeSO;
+		try {
+			committeSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+			CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+			committeReqDTO.setDocId(docId);
+			committeReqDTO.setDocType(docType);
+			committeReqDTO.setRoleCode(roleCodeList != null && !roleCodeList.isEmpty() ? roleCodeList.get(0) : "");
+			committeReqDTO.setUserSearchBean(searchBean);
+			committeReqDTO.setOrgProfileId(orgProfileId);
+			
+			//getpmparam, //buat method baru
+			PmParameter pmParameter = null;
+			pmParameter = getParameterByTypeAndCode(ParameterConst.COMMITTE_TYPE, committeSO.retrieveUserListByCommType(committeReqDTO).getCommitteeType());
+			String parameterDesc = null;
+			parameterDesc = getParameterDesc(pmParameter, getFacesScopes().getUserLocale());
+			if(parameterDesc == null){
+			parameterDesc = getParameterDesc(pmParameter);
+			}
+			return parameterDesc;
+		} finally {
+			committeSO = null;
+		}
+	}
+	//End #26319
 	
 	private PmStatusDesc retrieveStatusDesc(Long statusId){
 		IStatusSO statusSO;
