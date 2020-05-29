@@ -65,7 +65,7 @@
 						
 					      function getDocAddress2(addr1, addr2, addr3, cityName, districtName, stateName, countryName) {
 	
-					    	  var address = addr1 + addr2 + addr3 + cityName + ',' + districtName + ',' + stateName + ',' + countryName;
+					    	  var address = addr1 + ','+ addr2 + ','+ addr3 + ','+ cityName + ',' + districtName + ',' + stateName + ',' + countryName;
 	
 					      	return address;
 					      }
@@ -108,14 +108,14 @@
 		</p:outputPanel>
 
 	</p:panel>
-	<p:dialog width="500px" height="500px"
+	<p:dialog width="700px" height="500px"
 		header="#{lbl['lbl.sm.dockyard.information']}"
 		widgetVar="dockYardDialog" resizable="false" showEffect="fade"
 		closable="false" hideEffect="fade" modal="true" id="dockYardDialog">
 		
 		<p:outputPanel id="dockYardBlockPanelId" layout="block">
 			<p:messages id="dockYardDialogMsg" showSummary="false"
-				showDetail="true" autoUpdate="true" closable="true" />
+				showDetail="true" autoUpdate="false" closable="true" />
 			<table style="width: 100%">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.facility.dockyard.name']}" /> <p:outputLabel
