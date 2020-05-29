@@ -883,7 +883,7 @@ public class GovtSellerRegistrationBackingBean extends
 				|| StringUtils.isBlank(this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses()
 						.get(0).getSmAddress().getMapLongitude())) {
 			throw new EpException(SmCommonUtil.getMessage("lbl.sm.coordinate.required.msg",
-					new String[] { SmCommonUtil.getMessage("lbl.sm.coordinate", null) }));
+					new String[] { SmCommonUtil.getMessage("lbl.sm.coordinate.company.info", null) }));
 		}
 
 		getManagedBean().getSmPersonnel().setIdentificationType(icNoType);
