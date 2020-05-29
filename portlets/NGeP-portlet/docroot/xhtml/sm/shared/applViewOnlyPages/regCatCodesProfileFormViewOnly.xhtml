@@ -75,7 +75,7 @@
 					<tr>
 						<td style="border: none !important; white-space: normal;"><b><h:outputText value="#{lbl['lbl.sm.po']} :" /></b></td>
 						<td style="border: none !important; white-space: normal; word-wrap: break-word !important;">
-						<p:scrollPanel mode="native" style="height:200px; width:auto%;">
+						<p:scrollPanel mode="native" style="height:200px;">
 							<h:outputText value="#{aprvdCatBean.poRemarks}" rendered="#{not empty aprvdCatBean.poDecFlg}" />
 							<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty aprvdCatBean.poDecFlg}" />
 						</p:scrollPanel></td>
@@ -83,7 +83,7 @@
 					<tr>
 						<td style="border: none !important; white-space: normal;"><b><h:outputText value="#{lbl['lb.sm.approver']} :" /></b></td>
 						<td style="border: none !important; white-space: normal; word-wrap: break-word !important;">
-						<p:scrollPanel mode="native" style="height:200px; width:auto%;">
+						<p:scrollPanel mode="native" style="height:200px;">
 							<h:outputText value="#{aprvdCatBean.approverRemarks}" rendered="#{not empty aprvdCatBean.apprvrDecFlg}"/>
 							<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty aprvdCatBean.apprvrDecFlg}" />
 						</p:scrollPanel></td>
