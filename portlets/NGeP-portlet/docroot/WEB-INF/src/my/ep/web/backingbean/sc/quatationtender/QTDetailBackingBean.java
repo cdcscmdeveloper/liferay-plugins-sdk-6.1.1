@@ -8366,7 +8366,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			 			return true;
 			 		}
 			 	}
-			 	if( QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL.equals(currStatus)){
+			 	if( QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL.equals(currStatus)&&(getUserTaskIsPublicationApproval() && isApprovalScreen())){ //#25692 -163
 			 		if(userHasRole(new RoleCode[]{RoleCode.PUBLICATION_APPROVER})){ //#25692 
 			 			return true;
 			 		}
