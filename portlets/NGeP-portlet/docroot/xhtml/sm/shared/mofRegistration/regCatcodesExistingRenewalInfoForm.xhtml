@@ -129,9 +129,10 @@
 							</tr>
 							<tr>
 								<td
-									style="border: none !important; white-space: normal; word-wrap: break-word !important;"><h:outputText
-										value="#{aprvdCatBean.poRemarks}"
-										rendered="#{not empty aprvdCatBean.poRemarks}" /></td>
+									style="border: none !important; white-space: normal; word-wrap: break-word !important;">
+									<p:inputTextarea style="height:200px; overflow:auto" readonly="true"  value="#{catBean.poRemarks}"
+										rendered="#{not empty catBean.poRemarks}"> </p:inputTextarea>
+								</td>
 							</tr>
 						</table>
 					</p:outputPanel>
