@@ -32,7 +32,7 @@
 			<p:outputPanel id="backBtnPanel" >
 				<p:commandButton
 					immediate="true" value="#{lbl['lbl.btn.back']}" style="float:left;"
-					rendered="#{!simpleQuoteBackingBean.isResponSQ()}"
+					rendered="#{simpleQuoteBackingBean.isAuditSQ()}"
 					action="#{simpleQuoteBackingBean.backMenuToPrevious}" />
 			</p:outputPanel>
 		</div>	
