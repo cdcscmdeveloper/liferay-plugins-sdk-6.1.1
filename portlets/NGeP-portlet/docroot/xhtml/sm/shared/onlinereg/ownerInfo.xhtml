@@ -79,6 +79,7 @@
 				</f:facet>
 				<!-- <h:outputText value="#{varOwner.nationality.countryName}" /> -->
 				<!-- 16052019 - SSM INTEGRATION CR - START -->
+				<!-- #27878 disable when choose applType = SupplierManagementConst.ACC_BASIC-->
 				<p:selectOneMenu value="#{varOwner.tempCountryId}"
 					disabled="#{registrationBackingBean.managedBean.smAppl.applType==SupplierManagementConst.ACC_BASIC or (!varOwner.nationalityNull and varOwner.tempCountryId ne 0)}">
 					<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
