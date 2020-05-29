@@ -5130,7 +5130,10 @@ public class SimpleQuoteBackingBean extends
 				.getServiceTemplateSpecBean();
 
 		if (StringUtils.isNotBlank(quoteIdStr)) {
-
+			// #28199 - Remove back btn in Screen Direct Purchase
+			isAuditSQ();
+			// #28199 - End
+			
 			try {
 				FacesScopes facesScopes = new FacesScopes();
 				QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
@@ -6536,9 +6539,6 @@ public class SimpleQuoteBackingBean extends
 			scQuote.setJustificationType(new PmReason());
 		}
 
-		// #28199 - Remove back btn in Screen Direct Purchase
-		isResponSQ();
-		
 		// service and product
 		if (scQuote.getQuoteDocs() != null) {
 			for (ScQuoteDoc scQuoteDoc : scQuote.getQuoteDocs()) {
@@ -7604,11 +7604,9 @@ public class SimpleQuoteBackingBean extends
 		/**
 		 * Return boolean TRUE for currentInstance Response Simple Quote 
 		 */
-	public boolean isResponSQ() {
-		if (FacesContext.getCurrentInstance() != null) {
-			return true;
-		}
-		return false;
+	public boolean isAuditSQ() {
+		return true;
+		
 	}
 		// #28199 - End 
 		
