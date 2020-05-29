@@ -83,6 +83,9 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	//[#22117 - start]
 	private boolean bpkAdminUser;
 	//[#22117 - stop]
+	
+	//#26319
+	private String committeeType;
 
 	
 	public TaskReassignmentManagedBean(){}
@@ -638,6 +641,14 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 
 	public void setBpkAdminUser(boolean bpkAdminUser) {
 		this.bpkAdminUser = bpkAdminUser;
+	}
+
+	public String getCommitteeType() {
+		return committeeType;
+	}
+
+	public void setCommitteeType(String committeeType) {
+		this.committeeType = committeeType;
 	}
 
 		
