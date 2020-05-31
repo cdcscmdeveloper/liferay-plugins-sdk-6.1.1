@@ -1114,6 +1114,13 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		String taskId = originalServletRequest.getParameter("taskId");
 		String contractId = originalServletRequest.getParameter("contractId");
 		String scheduleNo = originalServletRequest.getParameter("scheduleNo");
+		//start-13984
+		String catalogueFlag = originalServletRequest.getParameter("catalogueFlag"); //13984 - CrList - Back Button
+ 
+		if(catalogueFlag != null){
+			getManagedBean().setCatalogueFlag(catalogueFlag);
+		}
+		//end-13984
 	
 		if (taskId != null) {
 			renewSesionObject();
@@ -4017,7 +4024,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			getManagedBean().setSearchTypesDD(getCrListSearchTypesDD());
 			getManagedBean().setTypes(true);
 		}
-		return "crList?faces-redirect=true";
+		
+		String url ="crList?faces-redirect=true";
+		
+		if(getManagedBean().getCatalogueFlag().equalsIgnoreCase("true")){
+			getManagedBean().setCatalogueFlag("false");
+			url ="/xhtml/cm/catalogue/contractRequestView?faces-redirect=true";
+		}
+		return url;
 		//preRenderContractList();
 		//end-13984 - CrList - Back Button
 
