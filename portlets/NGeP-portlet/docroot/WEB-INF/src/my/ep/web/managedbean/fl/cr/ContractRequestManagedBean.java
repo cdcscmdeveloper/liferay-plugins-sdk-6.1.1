@@ -321,9 +321,9 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	//13984-start
 	private static String orgCode;
     private static String orgName;
+    private static int backFlag;
+    private static String catalogueFlag;
     //13984-end
-    private static int backFlag; //13984 - CrList - Back Button
-    
 	private class ActiveContractPagingDataModel extends PagingDataModel<VCtActiveContract> {
 		
 		/** The Constant serialVersionUID. */
@@ -3170,5 +3170,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	public void setBackFlag(int backFlag) {
 		this.backFlag = backFlag;
 	}
-	//start-13984 - CrList - Back Button
+	public String getCatalogueFlag() {
+		return catalogueFlag;
+	}
+
+	public void setCatalogueFlag(String catalogueFlag) {
+		this.catalogueFlag = catalogueFlag;
+	}
+	//end-13984 - CrList - Back Button
 }
