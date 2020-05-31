@@ -1063,7 +1063,8 @@ public class SmApplicationUtil {
 					|| StringUtils.isBlank(companyBasic.getSmCompanyAddresses()
 							.get(0).getSmAddress().getMapLongitude())) {
 				throw new EpException(SmCommonUtil.getMessage("lbl.sm.coordinate.required.msg",
-						new String[] { SmCommonUtil.getMessage("lbl.sm.coordinate", null) }));
+						//#27853
+						new String[] { SmCommonUtil.getMessage("lbl.sm.coordinate.company.info", null) }));
 			}
 		}
 		if (facility != null) {
@@ -1072,7 +1073,8 @@ public class SmApplicationUtil {
 					if (StringUtils.isBlank(fac.getSmAddress().getMapLatitude())
 							|| StringUtils.isBlank(fac.getSmAddress().getMapLongitude())) {
 						throw new EpException(SmCommonUtil.getMessage("lbl.sm.coordinate.required.msg",
-								new String[] { SmCommonUtil.getMessage("lbl.sm.coordinate", null) }));
+								//#27853
+								new String[] { SmCommonUtil.getMessage("lbl.sm.coordinate.permise.type", null) }));
 					}
 				}
 			}
