@@ -723,6 +723,9 @@ public class SupplierDataMaintenanceBackingBean extends
 				}
 			} 
 			//26238 - end
+			
+			//Untick after save
+			getManagedBean().setEditDisciplinaryAction(false);
 
 		} catch (OptimisticLockException opt) {
 			throw new EpException(opt.getMessage());
