@@ -130,8 +130,10 @@
 							<tr>
 								<td
 									style="border: none !important; white-space: normal; word-wrap: break-word !important;">
-									<p:inputTextarea style="height:200px; overflow:auto" readonly="true"  value="#{catBean.poRemarks}"
-										rendered="#{not empty catBean.poRemarks}"> </p:inputTextarea>
+									<p:scrollPanel mode="native" style="height:100px; width:auto;">
+										<h:outputText value="#{catBean.poRemarks}"
+											rendered="#{not empty catBean.poRemarks}" />
+									</p:scrollPanel>
 								</td>
 							</tr>
 						</table>
