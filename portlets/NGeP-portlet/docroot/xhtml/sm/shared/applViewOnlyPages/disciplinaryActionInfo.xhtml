@@ -5,13 +5,14 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-
+	
+	<!-- 28237 - start -->
 	<p:panel header="#{lbl['lbl.sm.disciplinary.action.info.headerlbl']}" toggleable="true" id="discActionPanelId" 
-		rendered="#{viewSuppProfileBackingBean.managedBean.disciplinaryAction}">
+		rendered="#{viewApplHistoryBackingBean.managedBean.disciplinaryAction}">
 		<p:outputPanel>
 			<h:outputText value="#{lbl['lbl.sm.disciplinary.click']}" escape="false"/>
 			<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-				action="#{viewSuppProfileBackingBean.onViewDisciplinaryAction}"
+				action="#{viewApplHistoryBackingBean.onViewDisciplinaryAction}"
 				process="@this" partialSubmit="true" update=":form">
 					<u><h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" style="color:blue;" escape="false"/></u>
 			</p:commandLink><p:spacer width="2"/>
@@ -25,46 +26,46 @@
 					<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.punishment.type']}" styleClass="outputLabel-view-label"/>
 				</td>
 				<td style="vertical-align: top;">
-					<p:outputLabel rendered="#{viewSuppProfileBackingBean.managedBean.noDisciplinary}"
+					<p:outputLabel rendered="#{viewApplHistoryBackingBean.managedBean.noDisciplinary}"
 						value="#{lbl['lbl.sm.no.available']}" styleClass="outputLabel-view"/>
-					<p:outputLabel rendered="#{viewSuppProfileBackingBean.managedBean.warning}" styleClass="outputLabel-view">
+					<p:outputLabel rendered="#{viewApplHistoryBackingBean.managedBean.warning}" styleClass="outputLabel-view">
 						<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.warning']}"/>
-						<h:outputText value="," rendered="#{viewSuppProfileBackingBean.managedBean.warning and (viewSuppProfileBackingBean.managedBean.cancelCategoryCode || 
-						viewSuppProfileBackingBean.managedBean.suspendRegistration || viewSuppProfileBackingBean.managedBean.cancelRegistration || viewSuppProfileBackingBean.managedBean.blacklistOwnerOrDirector ||
-						viewSuppProfileBackingBean.managedBean.bumiputeraStatusCancel || viewSuppProfileBackingBean.managedBean.manufacturerStatusCancel)}"/>
+						<h:outputText value="," rendered="#{viewApplHistoryBackingBean.managedBean.warning and (viewApplHistoryBackingBean.managedBean.cancelCategoryCode || 
+						viewApplHistoryBackingBean.managedBean.suspendRegistration || viewApplHistoryBackingBean.managedBean.cancelRegistration || viewApplHistoryBackingBean.managedBean.blacklistOwnerOrDirector ||
+						viewApplHistoryBackingBean.managedBean.bumiputeraStatusCancel || viewApplHistoryBackingBean.managedBean.manufacturerStatusCancel)}"/>
 					</p:outputLabel>
 					
-					<p:outputLabel rendered="#{viewSuppProfileBackingBean.managedBean.cancelCategoryCode}" styleClass="outputLabel-view">
+					<p:outputLabel rendered="#{viewApplHistoryBackingBean.managedBean.cancelCategoryCode}" styleClass="outputLabel-view">
 						<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.cancel.cat.code']}"/>
-						<h:outputText value="," rendered="#{viewSuppProfileBackingBean.managedBean.cancelCategoryCode and (viewSuppProfileBackingBean.managedBean.suspendRegistration || viewSuppProfileBackingBean.managedBean.cancelRegistration 
-						|| viewSuppProfileBackingBean.managedBean.blacklistOwnerOrDirector ||
-						viewSuppProfileBackingBean.managedBean.bumiputeraStatusCancel || viewSuppProfileBackingBean.managedBean.manufacturerStatusCancel)}"/>
+						<h:outputText value="," rendered="#{viewApplHistoryBackingBean.managedBean.cancelCategoryCode and (viewApplHistoryBackingBean.managedBean.suspendRegistration || viewApplHistoryBackingBean.managedBean.cancelRegistration 
+						|| viewApplHistoryBackingBean.managedBean.blacklistOwnerOrDirector ||
+						viewApplHistoryBackingBean.managedBean.bumiputeraStatusCancel || viewApplHistoryBackingBean.managedBean.manufacturerStatusCancel)}"/>
 					</p:outputLabel>
 					
-					<p:outputLabel rendered="#{viewSuppProfileBackingBean.managedBean.suspendRegistration}" styleClass="outputLabel-view">
+					<p:outputLabel rendered="#{viewApplHistoryBackingBean.managedBean.suspendRegistration}" styleClass="outputLabel-view">
 						<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.suspend.registration']}"/>
-						<h:outputText value="," rendered="#{viewSuppProfileBackingBean.managedBean.suspendRegistration and (viewSuppProfileBackingBean.managedBean.cancelRegistration || viewSuppProfileBackingBean.managedBean.blacklistOwnerOrDirector ||
-						viewSuppProfileBackingBean.managedBean.bumiputeraStatusCancel || viewSuppProfileBackingBean.managedBean.manufacturerStatusCancel)}"/>
+						<h:outputText value="," rendered="#{viewApplHistoryBackingBean.managedBean.suspendRegistration and (viewApplHistoryBackingBean.managedBean.cancelRegistration || viewApplHistoryBackingBean.managedBean.blacklistOwnerOrDirector ||
+						viewApplHistoryBackingBean.managedBean.bumiputeraStatusCancel || viewApplHistoryBackingBean.managedBean.manufacturerStatusCancel)}"/>
 					</p:outputLabel>
 					
-					<p:outputLabel rendered="#{viewSuppProfileBackingBean.managedBean.cancelRegistration}" styleClass="outputLabel-view">
+					<p:outputLabel rendered="#{viewApplHistoryBackingBean.managedBean.cancelRegistration}" styleClass="outputLabel-view">
 						<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.cancel.registration']}"/>
-						<h:outputText value="," rendered="#{viewSuppProfileBackingBean.managedBean.cancelRegistration and (viewSuppProfileBackingBean.managedBean.blacklistOwnerOrDirector ||
-						viewSuppProfileBackingBean.managedBean.bumiputeraStatusCancel || viewSuppProfileBackingBean.managedBean.manufacturerStatusCancel)}"/>
+						<h:outputText value="," rendered="#{viewApplHistoryBackingBean.managedBean.cancelRegistration and (viewApplHistoryBackingBean.managedBean.blacklistOwnerOrDirector ||
+						viewApplHistoryBackingBean.managedBean.bumiputeraStatusCancel || viewApplHistoryBackingBean.managedBean.manufacturerStatusCancel)}"/>
 					</p:outputLabel>
 					
-					<p:outputLabel rendered="#{viewSuppProfileBackingBean.managedBean.blacklistOwnerOrDirector}" styleClass="outputLabel-view">
+					<p:outputLabel rendered="#{viewApplHistoryBackingBean.managedBean.blacklistOwnerOrDirector}" styleClass="outputLabel-view">
 						<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']}"/>
-						<h:outputText value="," rendered="#{viewSuppProfileBackingBean.managedBean.blacklistOwnerOrDirector and (viewSuppProfileBackingBean.managedBean.bumiputeraStatusCancel 
-						|| viewSuppProfileBackingBean.managedBean.manufacturerStatusCancel)}"/>
+						<h:outputText value="," rendered="#{viewApplHistoryBackingBean.managedBean.blacklistOwnerOrDirector and (viewApplHistoryBackingBean.managedBean.bumiputeraStatusCancel 
+						|| viewApplHistoryBackingBean.managedBean.manufacturerStatusCancel)}"/>
 					</p:outputLabel>
 					
-					<p:outputLabel rendered="#{viewSuppProfileBackingBean.managedBean.bumiputeraStatusCancel}" styleClass="outputLabel-view">
+					<p:outputLabel rendered="#{viewApplHistoryBackingBean.managedBean.bumiputeraStatusCancel}" styleClass="outputLabel-view">
 						<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.cancel.of.bumiputera']}"/>
-						<h:outputText value="," rendered="#{viewSuppProfileBackingBean.managedBean.bumiputeraStatusCancel and viewSuppProfileBackingBean.managedBean.manufacturerStatusCancel}"/>
+						<h:outputText value="," rendered="#{viewApplHistoryBackingBean.managedBean.bumiputeraStatusCancel and viewApplHistoryBackingBean.managedBean.manufacturerStatusCancel}"/>
 					</p:outputLabel>
 					
-					<p:outputLabel rendered="#{viewSuppProfileBackingBean.managedBean.manufacturerStatusCancel}" styleClass="outputLabel-view">
+					<p:outputLabel rendered="#{viewApplHistoryBackingBean.managedBean.manufacturerStatusCancel}" styleClass="outputLabel-view">
 						<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.cancel.of.manufacturer']}"/>
 					</p:outputLabel>
 				</td>
@@ -74,10 +75,10 @@
 					<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.start.date']}" styleClass="outputLabel-view-label"/>
 				</td>
 				<td>
-					<p:outputLabel rendered="#{viewSuppProfileBackingBean.managedBean.noDisciplinary}"
+					<p:outputLabel rendered="#{viewApplHistoryBackingBean.managedBean.noDisciplinary}"
 						value="#{lbl['lbl.sm.no.available']}" styleClass="outputLabel-view"/>
-					<p:outputLabel rendered="#{!viewSuppProfileBackingBean.managedBean.noDisciplinary}"
-						value="#{viewSuppProfileBackingBean.managedBean.startDate}" styleClass="outputLabel-view"/>
+					<p:outputLabel rendered="#{!viewApplHistoryBackingBean.managedBean.noDisciplinary}"
+						value="#{viewApplHistoryBackingBean.managedBean.startDate}" styleClass="outputLabel-view"/>
 				</td>
 			</tr>
 			<tr>
@@ -85,10 +86,10 @@
 					<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.end.date']}" styleClass="outputLabel-view-label"/>
 				</td>
 				<td>
-					<p:outputLabel rendered="#{viewSuppProfileBackingBean.managedBean.noDisciplinary}"
+					<p:outputLabel rendered="#{viewApplHistoryBackingBean.managedBean.noDisciplinary}"
 						value="#{lbl['lbl.sm.no.available']}" styleClass="outputLabel-view"/>
-					<p:outputLabel rendered="#{!viewSuppProfileBackingBean.managedBean.noDisciplinary}"
-						value="#{viewSuppProfileBackingBean.managedBean.endDate}" styleClass="outputLabel-view"/>
+					<p:outputLabel rendered="#{!viewApplHistoryBackingBean.managedBean.noDisciplinary}"
+						value="#{viewApplHistoryBackingBean.managedBean.endDate}" styleClass="outputLabel-view"/>
 				</td>
 			</tr>
 			<tr>
@@ -96,10 +97,10 @@
 					<p:outputLabel value="#{lbl['lbl.sm.disciplinary.jktt.remarks']}" styleClass="outputLabel-view-label"/>
 				</td>
 				<td>
-					<p:outputLabel rendered="#{viewSuppProfileBackingBean.managedBean.noDisciplinary}"
+					<p:outputLabel rendered="#{viewApplHistoryBackingBean.managedBean.noDisciplinary}"
 						value="#{lbl['lbl.sm.no.available']}" styleClass="outputLabel-view"/>
-					<p:outputLabel rendered="#{!viewSuppProfileBackingBean.managedBean.noDisciplinary}"
-						value="#{viewSuppProfileBackingBean.managedBean.remarks}" styleClass="outputLabel-view"/>
+					<p:outputLabel rendered="#{!viewApplHistoryBackingBean.managedBean.noDisciplinary}"
+						value="#{viewApplHistoryBackingBean.managedBean.remarks}" styleClass="outputLabel-view"/>
 				</td>
 			</tr>
 			<tr>
@@ -107,10 +108,10 @@
 					<p:outputLabel value="#{lbl['lbl.sm.disciplinary.list.cancel.category.code']}" styleClass="outputLabel-view-label"/>
 				</td>
 				<td>
-					<p:outputLabel rendered="#{empty viewSuppProfileBackingBean.managedBean.categoryCodeList}"
+					<p:outputLabel rendered="#{empty viewApplHistoryBackingBean.managedBean.categoryCodeList}"
 						value="#{lbl['lbl.sm.no.available']}" styleClass="outputLabel-view"/>
-					<p:outputLabel rendered="#{not empty viewSuppProfileBackingBean.managedBean.categoryCodeList}" styleClass="outputLabel-view">
-						<h:dataTable value="#{viewSuppProfileBackingBean.managedBean.categoryCodeList}"
+					<p:outputLabel rendered="#{not empty viewApplHistoryBackingBean.managedBean.categoryCodeList}" styleClass="outputLabel-view">
+						<h:dataTable value="#{viewApplHistoryBackingBean.managedBean.categoryCodeList}"
 							var="categoryCodeList" style="border: none !important;">
 								<p:column style="border: none !important;">
 									<h:outputText value="#{categoryCodeList.categoryCode}"/>
@@ -124,10 +125,10 @@
 					<p:outputLabel value="#{lbl['lbl.sm.disciplinary.list.of.ic.no.blacklist']}" styleClass="outputLabel-view-label"/>
 				</td>
 				<td>
-					<p:outputLabel rendered="#{empty viewSuppProfileBackingBean.managedBean.blacklistownerDirectorList}"
+					<p:outputLabel rendered="#{empty viewApplHistoryBackingBean.managedBean.blacklistownerDirectorList}"
 						value="#{lbl['lbl.sm.no.available']}" styleClass="outputLabel-view"/>
-					<p:outputLabel rendered="#{not empty viewSuppProfileBackingBean.managedBean.blacklistownerDirectorList}" styleClass="outputLabel-view">
-						<h:dataTable value="#{viewSuppProfileBackingBean.managedBean.blacklistownerDirectorList}"
+					<p:outputLabel rendered="#{not empty viewApplHistoryBackingBean.managedBean.blacklistownerDirectorList}" styleClass="outputLabel-view">
+						<h:dataTable value="#{viewApplHistoryBackingBean.managedBean.blacklistownerDirectorList}"
 							var="blacklist" style="border: none !important;">
 								<p:column style="border: none !important;">
 									<h:outputText value="#{blacklist.icNo}"/>
@@ -138,5 +139,6 @@
 			</tr>
 		</table>
 	</p:panel>
-	<ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" /> 
+	<ac:disciplinaryActionHistory voList="#{viewApplHistoryBackingBean.managedBean.disciplineVOs}" /> 
+	<!-- 28237 - end -->
 </ui:composition>
