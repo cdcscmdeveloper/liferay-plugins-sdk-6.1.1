@@ -3362,7 +3362,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}else if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
 			// Enhancement #21694 START
 			//REVISE DOCUMENT FROM VERIFIER TO SUPPLIER AGAIN FOR REUPLOAD DOCUMENT
-			updateReviseBPMTaskAction(outcome);
+			if(this.getManagedBean().getScLoa().getPmStatus().getStatusId() == QTStatusConst.LOA_PENDING_VERIFICATION){
+				updateReviseBPMTaskAction(outcome);
+			}else{
+				updateBpmTaskAction(outcome);
+			}
 			//Enhancement #21694 END
 		}else {
 			updateBpmTaskAction(outcome);
