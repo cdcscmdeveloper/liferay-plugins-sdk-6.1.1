@@ -2265,10 +2265,14 @@ public class TaskReassignmentBackingBean extends
 				reqDTO.setTaskRoleCode(vo.getRoleList() !=null && !vo.getRoleList().isEmpty() ? vo.getRoleList().get(0) : null);
 				//log.info("[#25018] TaskRoleCode: " + reqDTO.getTaskRoleCode());
 				//For Tracking Diary List (CT)
+				
 				//Start #26319
-				reqDTO.setRoleQT(PmCommonUtil.getRoleDescByRoleCodeAndLanguage(reqDTO.getTaskRoleCode(),getFacesScopes().getUserLocale().toLanguageTag()) != null ? 
-						PmCommonUtil.getRoleDescByRoleCodeAndLanguage(reqDTO.getTaskRoleCode(),getFacesScopes().getUserLocale().toLanguageTag()): PmCommonUtil.getRoleDescByRoleCode(reqDTO.getTaskRoleCode()));
-				reqDTO.setCommitteeType(getManagedBean().getCommitteeType());
+				String comType = getCommitteeTypeByStatusAndDocTypeAndNo(reqDTO);
+				if(getManagedBean().isCommitteeUpdate() && StringUtils.isNotBlank(comType)){
+					reqDTO.setRoleQT(PmCommonUtil.getRoleDescByRoleCode(reqDTO.getTaskRoleCode()));
+					if(StringUtils.isNotBlank(comType))
+						reqDTO.setCommitteeType(getParamByCommittee(comType));
+				}
 				//End #26319
 				
 				if(vo.getTrackingDiaryList() != null && !vo.getTrackingDiaryList().isEmpty()){
@@ -2330,6 +2334,30 @@ public class TaskReassignmentBackingBean extends
 		}
 
 	}
+	
+	//Start #26319
+	private String getCommitteeTypeByStatusAndDocTypeAndNo(TaskAssignmentReqDTO reqDTO){
+		ISourcingIntegrationSO isSO;
+		Long statusId = reqDTO.getDocStatus().longValue();
+		String docType = reqDTO.getTaskDocType();
+		String docNo = reqDTO.getDocNumber();
+		isSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+		return isSO.getCommitteeTypeByStatusAndDocTypeAndNo(statusId,docType,docNo);		
+	}
+
+	private String getParamByCommittee(String code){
+		PmParameter pmParameter = null;
+		pmParameter = getParameterByTypeAndCode(ParameterConst.COMMITTE_TYPE, code);
+		String parameterDesc = null;
+		parameterDesc = getParameterDesc(pmParameter);
+		if(parameterDesc == null){
+			parameterDesc = getParameterDesc(pmParameter);
+		}
+		return parameterDesc;
+	}
+	
+	//End #26319
 	
 	/**
 	 * To Retieve USer Group User List By User Group Id
@@ -2690,11 +2718,6 @@ public class TaskReassignmentBackingBean extends
 			resultBean = generateCommitteAssignees(searchBean, vo.getDocId(), vo.getDocType(), roleList, orgProfileId);
 			//Bug #25021
 			getManagedBean().setCommitteeUpdate(true);
-			
-			//Start #26319
-			commTypeResult = generateCommitteType(searchBean, vo.getDocId(), vo.getDocType(), roleList, orgProfileId);
-			getManagedBean().setCommitteeType(commTypeResult);
-			//End ##26319		
 			isSearched = true;
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_CROSS_PTJ:
@@ -3115,36 +3138,7 @@ public class TaskReassignmentBackingBean extends
 			committeSO = null;
 		}
 	}
-	
-	//Start #26319
-	private String generateCommitteType(ISearchBean<PmUser> searchBean,
-			Long docId, String docType, List<String> roleCodeList, Long orgProfileId){
-		ICommitteSO committeSO;
-		try {
-			committeSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
-			CommitteReqDTO committeReqDTO = new CommitteReqDTO();
-			committeReqDTO.setDocId(docId);
-			committeReqDTO.setDocType(docType);
-			committeReqDTO.setRoleCode(roleCodeList != null && !roleCodeList.isEmpty() ? roleCodeList.get(0) : "");
-			committeReqDTO.setUserSearchBean(searchBean);
-			committeReqDTO.setOrgProfileId(orgProfileId);
-			
-			//getpmparam, //buat method baru
-			PmParameter pmParameter = null;
-			pmParameter = getParameterByTypeAndCode(ParameterConst.COMMITTE_TYPE, committeSO.retrieveUserListByCommType(committeReqDTO).getCommitteeType());
-			String parameterDesc = null;
-			parameterDesc = getParameterDesc(pmParameter, getFacesScopes().getUserLocale());
-			if(parameterDesc == null){
-			parameterDesc = getParameterDesc(pmParameter);
-			}
-			return parameterDesc;
-		} finally {
-			committeSO = null;
-		}
-	}
-	//End #26319
-	
+		
 	private PmStatusDesc retrieveStatusDesc(Long statusId){
 		IStatusSO statusSO;
 		PmStatusDesc statusDesc;
