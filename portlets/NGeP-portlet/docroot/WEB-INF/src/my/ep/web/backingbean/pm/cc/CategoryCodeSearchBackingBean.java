@@ -790,7 +790,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 										&& pmCategoryL3.getCategoryL3Code()
 										.equalsIgnoreCase("09")){
 									log.info("MTO Code exist"); 
-									if( checkBasic == 3 ){
+									if( checkBasic != 3 ){
 
 										item.setDisabled(true);
 										log.info("Disciplinary Action - disabled by basic category");
@@ -801,7 +801,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 										&& pmCategoryL3.getCategoryL3Code()
 										.equalsIgnoreCase("09")){
 									log.info("MTO Code exist"); 
-									if( checkBasic == 3 ){
+									if( checkBasic != 3 ){
 
 										item.setDisabled(true);
 										log.info("Disciplinary Action - disabled by basic category");
@@ -810,7 +810,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 							}
 							selectItems.add(item);
 						}
-						
+						checkBasic = 0;
 					}
 				}
 			} else {   
@@ -869,7 +869,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 							&& pmCategoryL3.getCategoryL3Code()
 							.equalsIgnoreCase("09")){
 						log.info("MTO Code exist"); 
-						if( checkBasic == 3 ){
+						if( checkBasic != 3 ){
 
 							item.setDisabled(true);
 							log.info("Disciplinary Action - disabled by basic category");
@@ -877,6 +877,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 					} 
 					selectItems.add(item);
 				} 
+				checkBasic = 0;
 			}
 			//27738 end 
 		} else { 
