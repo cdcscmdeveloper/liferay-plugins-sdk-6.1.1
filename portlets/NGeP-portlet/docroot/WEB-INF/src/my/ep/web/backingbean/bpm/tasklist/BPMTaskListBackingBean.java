@@ -134,7 +134,8 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					+ ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR,
 					"central-contract-circular");
 			temp.put(CTProcessNameConst.CIRCULAR_MAINTENANCE_PROCESS_NAME
-					+ ParameterConst.DOCTYPE_PANEL_CIRCULAR, "panel-circular");
+					+ ParameterConst.DOCTYPE_PANEL_CIRCULAR,
+					"panel-circular");
 			temp.put(CTProcessNameConst.CIRCULAR_CANCELLATION_PROCESS_NAME,
 					"cancel-circular-approval");
 			temp.put(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME
@@ -151,15 +152,22 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					"contract-suspension");
 			temp.put(CTProcessNameConst.CONTRACT_SUSPEND_ACTIVE_PROCESS_NAME,
 					"contract-suspension");
+			temp.put(CTProcessNameConst.REQUEST_CONTRACT_ADMIN_INIT_PROCESS_NAME,
+					"contract-reqadmin");
+			temp.put(CTProcessNameConst.REQUEST_CONTRACT_ADMIN_PROCESS_NAME, 
+					"contract-reqadmin");
 			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME
 					+ ParameterConst.DOCTYPE_CONTRACT_AMENDMENT,
 					"contract-amendment");
 			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME
-					+ ParameterConst.DOCTYPE_CONTRACT_UPDATE, "fulfilment-details");
+					+ ParameterConst.DOCTYPE_CONTRACT_UPDATE,
+					"fulfilment-details");
 			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME
-					+ ParameterConst.DOCTYPE_NOTIFICATION_SETTING, "fulfilment-details");
+					+ ParameterConst.DOCTYPE_NOTIFICATION_SETTING,
+					"fulfilment-details");
 			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME
-					+ ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT, "fulfilment-details");
+					+ ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT, 
+					"fulfilment-details");
 			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME
 					+ ParameterConst.DOCTYPE_CONTRACT_AMENDMENT,
 					"contract-amendment");
