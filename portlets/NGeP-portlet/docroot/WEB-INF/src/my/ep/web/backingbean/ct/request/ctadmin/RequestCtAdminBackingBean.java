@@ -1,15 +1,12 @@
 package my.ep.web.backingbean.ct.request.ctadmin;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +23,6 @@ import com.liferay.portal.util.PortalUtil;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.ct.reqctadmin.IRequestContractAdminSO;
-import my.ep.biz.service.ct.suspension.IContractSuspensionSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -41,10 +37,9 @@ import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.exception.EpException;
-import my.ep.jaxb.ct.suspension.CTContractSuspensionDataType;
+import my.ep.jaxb.ct.requestCtAdmin.CTContractReqadminDataType;
 import my.ep.persistence.entity.ct.CtActor;
-import my.ep.persistence.entity.ct.dtl.CtAgency;
-import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
+import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
@@ -54,7 +49,6 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.ContractBaseBackingBean;
-import my.ep.web.backingbean.ct.suspension.SuspensionBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.ct.requestCtAdmin.RequestCtAdminManagedBean;
 import my.ep.web.util.DocumentRepositoryUtils;
@@ -113,9 +107,8 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 	 */
 	public boolean isApproverSetting() {
 		if(isContractAdmin() && (getManagedBean().getTaskName() == null ||
-				getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_FS_HT_NAME) ||
-				getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_FS_HT_NAME) ||
-				getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FS_HT_NAME)))
+				getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_RA_HT_NAME) ||
+				getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_RA_HT_NAME) ))
 			return true;
 		else 
 			return false;
@@ -152,39 +145,32 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 	 */
 	public String backAction() throws PortalException, SystemException, IOException {
 		RequestCtAdminBackingBean  reqCtAdBB= new RequestCtAdminBackingBean();
-		/*reqCtAdBB.getManagedBean().setItemcode(null);
-		reqCtAdBB.getManagedBean().setItemstatus(null);
-		reqCtAdBB.getManagedBean().setItemtype(null);
-		reqCtAdBB.getManagedBean().setUOM(null);
-		reqCtAdBB.getManagedBean().setSkuno(null);
-		reqCtAdBB.getManagedBean().setTypeofgoods(null);*/
 	
 		ContractBackingBean ccBB = new ContractBackingBean();
 		ctBB.getManagedBean().setSelectedItem(null);
 		ctBB.getManagedBean().setServiceselectedItem(null);
 		
-		/*reqCtAdBB.getManagedBean().getSuspensionProductListingPagingDataModel().resetData();*/
 		if (!getManagedBean().isViewOnly()) {
 			return CONTRACT_MAINT_PAGE;
-		} else { // view suspension from notification
+		} else { // view  requestCtadmin from notification
 			FacesContext.getCurrentInstance().getExternalContext().redirect(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL + "notifications"));
 			return null;
 		}
 	}
 	
 	/**
-	 * Method to authenticate user during submit of suspension
+	 * Method to authenticate user during submit of requestCtadmin
+	 * Call save requestCtadmin method once authentication done
 	 * Navigate confirmation dialog for authenticate of login user
-	 * Call save suspension method once authentication done
 	 */
 	public String gpkiSignAction(String outcome) throws Exception{
 		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome) || BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
-		/*	validateSuspensionDetails(outcome);*/
+			validateRequestCtAdminDetails(outcome);
 			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
 			StringBuilder sb = new StringBuilder();
 			sb.append(getManagedBean().getContractVer().getCtContract().getContractNo());
 			sb.append(ContractConst.SEPRATE_LINE);
-			sb.append(ContractConst.DOC_TYPE_CONTRACT_SUSPEND_ACTIVE);
+			sb.append(ContractConst.DOC_TYPE_REQUEST_CONTRACT_ADMIN);
 			sb.append(ContractConst.SEPRATE_LINE);
 			sb.append(outcome);			
 			sb.append(ContractConst.SEPRATE_LINE);
@@ -214,48 +200,32 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 	
 	
 	public String saveRequestCtAdmin(String outcome) throws Exception{
-		IContractSuspensionSO contractSuspensionSO = null;
+		IRequestContractAdminSO contractReqAdminSO = null;
 		ContractReqDTO reqDTO = null;
 		ContractResDTO resDTO = null;
 		try{
 			/*Validation for login user's org profile before initiate contract task*/
 			if (!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)
 					&& getManagedBean().getContractVer().getStatus() != null
-					&& getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FS_PENDING_SUBMISSION.longValue()) {
+					&& getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.RA_PENDING_SUBMISSION.longValue()) {
 				validateOwnerOrgProfile(
 						getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 			}
 			
-//			validateSuspensionDetails(outcome);		
-			contractSuspensionSO = (IContractSuspensionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSuspensionSO.class);
-			//#20997 - to copy from searching list to items list
-			/*if (getManagedBean().getSuspensionProductListingPagingDataModel() != null && getManagedBean().getSuspensionProductListingPagingDataModel().getList() != null) {
-				for (CtContractItem ctContractItem : getManagedBean().getSuspensionProductListingPagingDataModel().getList()) {			
-					for(CtContractItem ctItem : this.getManagedBean().getContractVer().getCtContractItems()){
-						if(ctContractItem.getContractItemId().equals(ctItem.getContractItemId())
-								|| ctItem.getScRequestItem().getRequestNoteItemId().equals(ctContractItem.getScRequestItem().getRequestNoteItemId())) {
-							ctItem.setEffDate(ctContractItem.getEffDate());
-							ctItem.setExpDate(ctContractItem.getExpDate());
-							if(ctContractItem.getRecordStatusFlg() != null) {
-								ctItem.setRecordStatusFlg(ctContractItem.getRecordStatusFlg().intValue());
-							}
-						}
-					}
-				}
-			}*/
-			//#20997 - end
+			validateRequestCtAdminDetails(outcome);		
+			contractReqAdminSO = (IRequestContractAdminSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IRequestContractAdminSO.class);
 
 			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 			reqDTO = new ContractReqDTO();
 			reqDTO.setToken(token);
 			reqDTO.setOutcome(outcome);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
-			this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_SUSPEND_ACTIVE);
+			this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_REQUEST_CONTRACT_ADMIN);
 
 			reqDTO.setCtContract(getManagedBean().getContractVer().getCtContract());
 			reqDTO.setCtContractVer(getManagedBean().getContractVer());
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-			/*reqDTO.setUserRole(getUserRole());
+			reqDTO.setUserRole(getUserRole());
 			reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
 			reqDTO.setAttachments(getManagedBean().getAttachmentList());
 			reqDTO.setDeleteAttachments(ctBB.getManagedBean().getDeleteAttachmentList());
@@ -263,13 +233,13 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
 			reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
 			reqDTO.setUpdateAgencyMap(ctBB.getManagedBean().getUpdateAgencyMap());
-			reqDTO.setUpdateItemMap(ctBB.getManagedBean().getUpdateItemMap());*/
+			reqDTO.setUpdateItemMap(ctBB.getManagedBean().getUpdateItemMap());
 			
 
 			if(this.getManagedBean().getPmDigiSign() !=null){
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 			}
-			resDTO = contractSuspensionSO.saveContractSuspensionDetails(reqDTO);
+			resDTO = contractReqAdminSO.saveReqCtAdminDetails(reqDTO);
 			if(resDTO.isSuccessful()) {
 				log.debug("Record saved successfully");
 				String messageId = MessageConst.INFO_700005;
@@ -277,12 +247,12 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 
 				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 					messageId = MessageConst.INFO_700021;
-					/*if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
 							ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 						nextRole = RoleCode.CT_APPROVER.value();
 					} else { // Central Contract
 						nextRole = RoleCode.BPK_CC_APPROVER.value();
-					}*/
+					}
 				} else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700025;
 				} else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
@@ -319,13 +289,13 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 					ContractReqDTO ctReqDTO = new ContractReqDTO();
 					ctReqDTO.setContractVerId(resDTO.getCtContractVer().getContractVerId());
 					ctReqDTO.setDocType(resDTO.getCtContractVer().getDocType());
-					/*setSuspensionContractVer(ctReqDTO);*/
+					setRequestCtAdminContractVer(ctReqDTO);
 				}
 			} else {
 				throw new EpException(MessageConst.ERROR_700020);
 			}
 		} finally {
-			contractSuspensionSO = null;
+			contractReqAdminSO = null;
 			reqDTO = null;
 			resDTO = null;
 		}
@@ -358,6 +328,19 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 
 			//Retrieve agreement contract version for physical no & signed date
 			retrieveContractVerOfAgreement();
+			
+			/*initialize value for assignedCtAdmin*/
+			if(getManagedBean().getContractVer().getCtContract().getAssignedCtAdmin() == null){
+				getManagedBean().getContractVer().getCtContract().setAssignedCtAdmin(new PmUser());
+				
+			}
+			if (BpmOutcomeConst.BPM_REJECT.equals(reqDTO.getOutcome())
+					&& (getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_APPROVAL))){
+				getManagedBean().getContractVer().getCtContract().setAssignedCtAdminFlag(false);
+			}else if(BpmOutcomeConst.BPM_APPROVE.equals(reqDTO.getOutcome())
+					&& (getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_APPROVAL))){
+				getManagedBean().getContractVer().getCtContract().setAssignedCtAdminFlag(true);
+			}
 			
 
 			if(getManagedBean().getUserMap().size()==0) {
@@ -468,7 +451,7 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 	}
 
 	/**
-	 * This  method call once user call suspension page from task list
+	 * This  method call once user call request admin page from task list
 	 * Method used to retrieve all information from BPM
 	 * Method used to retrieve contract information from BPM
 	 * Method return null if task id null
@@ -513,27 +496,90 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 				return;
 			}/*end if statement*/
 
+			
 			getManagedBean().setViewOnly(true);
 			getManagedBean().setTaskId(taskId);
 			return;
 		}/*End if statement to check  login user */
-	
+
 		// 20997 - end
 		/*Return when not call from tasklist*/
 		if(taskId==null) 
 			return;
 
 		getManagedBean().setViewOnly(false);
-		CTContractSuspensionDataType dataType =  super.getBpmTaskDetails(CTContractSuspensionDataType.class, new String[]{BpmOutcomeConst.BPM_SAVE});		
+		CTContractReqadminDataType dataType =  super.getBpmTaskDetails(CTContractReqadminDataType.class, new String[]{BpmOutcomeConst.BPM_SAVE});		
 
 		/*Retrieve contract id from BPM  */
 		ContractReqDTO ctReqDTO = new ContractReqDTO();
 		ctReqDTO.setUpdateAction(false);
 		ctReqDTO.setContractId(new Long(dataType.getContractId()));
 		ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
-		ctReqDTO.setDocType(ContractConst.DOC_TYPE_CONTRACT_SUSPEND_ACTIVE);
+		ctReqDTO.setDocType(ContractConst.DOC_TYPE_REQUEST_CONTRACT_ADMIN);
 		setRequestCtAdminContractVer(ctReqDTO);
 		/*End*/
 	}
 	
+	
+	
+	/**
+	 * This method used to validate suspend item and agency as per rule
+	 */
+	public void validateRequestCtAdminDetails(String outcome){
+		getManagedBean().setAutoUpdate(true);
+		/*Remark is mandatory during revise and reject*/
+		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+			CtRemark remark = getManagedBean().getRemarkList().get(0);
+			if(remark.getRemark()==null || remark.getRemark().equalsIgnoreCase("")){
+				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks", 
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())}); 
+			}
+		}
+
+		/*Approver is mandatory for document submission. Please select at least one approver. */
+		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && isApproverSetting()
+				&& getManagedBean().getApproverModel().getTarget().size()==0) {
+			throw new EpException(MessageConst.ERROR_750010); 
+		}
+		
+		/*Approver is mandatory for document submission. Please select at least one approver. */
+		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)
+				&& getManagedBean().getCtContract().getAssignedCtAdmin().getUserId() == null) {
+			throw new EpException(MessageConst.ERROR_750053); 
+		}
+	}
+	
+	/*
+	 * Method to set user role as per user login
+	 * User role used in BPM to identify the task
+	 */
+	private String getUserRole() {
+		String userRole = null;		
+		if (getManagedBean().getTaskName() == null
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_RA_HT_NAME)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_RA_HT_NAME)) {
+			if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_MINISTRY) && getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) {
+				userRole = RoleCode.MIN_CONTRACT_ADMIN.value();
+			} else if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_CENTRAL)&& getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) {
+				userRole = RoleCode.BPK_CCA.value();
+			}
+		} else if (getManagedBean().getTaskName() != null
+				&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_RA_HT_NAME)) {
+			if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_MINISTRY)&& getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())) {
+				userRole = RoleCode.CT_APPROVER.value();
+			} else if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_CENTRAL)&& getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())) {
+				userRole = RoleCode.BPK_CC_APPROVER.value();
+			}
+		}
+
+		if (userRole == null) {
+			throw new EpException(MessageConst.ERROR_750040);
+		} else {
+			return userRole;
+		}
+	}
 }
