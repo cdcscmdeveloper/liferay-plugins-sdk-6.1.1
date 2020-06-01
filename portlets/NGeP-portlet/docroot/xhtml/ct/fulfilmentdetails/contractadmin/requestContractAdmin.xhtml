@@ -191,17 +191,11 @@
 					<p:outputLabel value="#{lbl['lbl.ct.contract.admin.list']}" styleClass="required" />
 				    <h:panelGrid columns="2">
 						<p:selectOneMenu id="contAdminId" styleClass="ppDropDownWidthM"
-						disabled="false" label="#{lbl['lbl.sc.loiloa.loa.cont.admin']}"
-						value=""
+						disabled="false" label="#{lbl['lbl.sc.loiloa.loa.cont.admin']}"  value="#{ctBackingBean.managedBean.contractVer.ctContract.assignedCtAdmin.userId}"
 						style="width: 275px;margin-bottom: 5px;">
-						<f:selectItems
-							value="#{ctBackingBean.getUsersByAgency()}" />
-					</p:selectOneMenu>
-						<!-- <p:inputText style="width:360px;"
-							rendered="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.managedBean.viewOnly
-								or supplierBackingBean.isContractAdmin() or supplierBackingBean.isApproverRole()}"
-							value="#{supplierBackingBean.managedBean.factoring.financialOrgName}" disabled="true" />
-						<p:message for="factoringId" display="icon"></p:message> -->
+						<f:selectItems value="#{ctBackingBean.getUsersByAgency()}" />
+					    </p:selectOneMenu>
+						
 				   </h:panelGrid>			
 	
 			</h:panelGrid>
@@ -209,13 +203,13 @@
 		<!-- end butiran pentadbir kontrak -->
 		<ui:include src="approverSetting.xhtml" />
 		<ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
-		<p:confirmDialog message="#{suspensionBackingBean.getCancelConfirmationContent(suspensionBackingBean.managedBean.contractVer.docType)}"
+		<p:confirmDialog message="#{requestCtAdminBackingBean.getCancelConfirmationContent(requestCtAdminBackingBean.managedBean.contractVer.docType)}"
 			severity="alert" widgetVar="cancelConfirmDlg" closable="true"
 			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
 					partialSubmit="true" process="@this"
-					action="#{suspensionBackingBean.saveContractSuspension('CANCEL')}"
+					action="#{requestCtAdminBackingBean.saveRequestCtAdmin('CANCEL')}"
 					onstart="cancelConfirmDlg.hide();blockWidget.show();"
 					oncomplete="blockWidget.hide();"   />
 				<p:commandButton value="#{lbl['lbl.btn.no']}"
