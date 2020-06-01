@@ -4938,6 +4938,10 @@ public class SimpleQuoteBackingBean extends
 
 		if (StringUtils.isNotBlank(quoteIdStr)) {
 
+			// #28199 - Start : Remove back button from SQ Response Screen
+				getManagedBean().setSqAuditFlg(Boolean.FALSE);
+			// #28199 - End
+			
 			try {
 				FacesScopes facesScopes = new FacesScopes();
 				QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
@@ -5130,8 +5134,9 @@ public class SimpleQuoteBackingBean extends
 				.getServiceTemplateSpecBean();
 
 		if (StringUtils.isNotBlank(quoteIdStr)) {
-			// #28199 - Remove back btn in Screen Direct Purchase
-			isAuditSQ();
+			
+			// #28199 - Start : Remove back button from SQ Response Screen
+				getManagedBean().setSqAuditFlg(Boolean.TRUE);
 			// #28199 - End
 			
 			try {
@@ -5238,7 +5243,7 @@ public class SimpleQuoteBackingBean extends
 						ScSQRemark.class));
 
 				getQuoteSO().validateSupplierResponse(quoteReqDTO);
-
+				
 			} catch (EpException e) {
 				String message = e.getMessage();
 				if (MessageConst.ERROR_760390.equals(message)) {
@@ -7600,14 +7605,5 @@ public class SimpleQuoteBackingBean extends
 		}
 		//12183 - End
 		
-		// #28199 - Start 
-		/**
-		 * Return boolean TRUE for currentInstance Response Simple Quote 
-		 */
-	public boolean isAuditSQ() {
-		return true;
-		
-	}
-		// #28199 - End 
 		
 }
