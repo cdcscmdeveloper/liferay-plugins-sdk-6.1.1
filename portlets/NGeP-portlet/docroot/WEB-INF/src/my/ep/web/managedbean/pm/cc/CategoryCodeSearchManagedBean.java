@@ -3,11 +3,14 @@
  */
 package my.ep.web.managedbean.pm.cc;
 
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.constant.pm.ParameterConst;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
+import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -33,6 +36,7 @@ public class CategoryCodeSearchManagedBean extends BaseManagedBean {
 	private PmCategoryL3 selectedCategoryL3;
 	private IPagingDataModel<PmCategoryL3> categoryDescrDataModel;
 	private IPagingDataModel<PmCategoryL3> categoryDataModel;
+	private List<SmSupplierCategory> approvedCategoryList;
 	
 	private String supplierType = null;
 	private String facilityType = null;
@@ -221,4 +225,12 @@ public class CategoryCodeSearchManagedBean extends BaseManagedBean {
 		this.catcodeL1 = catcodeL1;
 	}
 	
+	public List<SmSupplierCategory> getApprovedCategoryList() {
+		return approvedCategoryList;
+	}
+
+	public void setApprovedCategoryList(
+			List<SmSupplierCategory> approvedCategoryList) {
+		this.approvedCategoryList = approvedCategoryList;
+	}
 }

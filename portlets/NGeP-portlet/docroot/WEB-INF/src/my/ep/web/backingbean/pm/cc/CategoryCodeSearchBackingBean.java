@@ -25,24 +25,30 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
+import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
+import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.pm.cc.CategoryCodeSearchManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.backingbean.sm.applicationView.BaseReviewApplicationBackingBean;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -116,6 +122,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 	
 	public void okAction(String methodActionStr) {
 		debugLogger("okAction");
+		log.info("methodActionStr: " + methodActionStr);
 		
 		if (StringUtils.isNotBlank(methodActionStr)) {
 			MethodExpression methodExp = FacesScopes
@@ -706,11 +713,63 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		
 		if(currSupp != null && currSupp.getSmAppl() != null){
 			List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
+
+			//27738 Start - System allow to add 221709 without basic category
+			MofRegistrationReqDTO reqDTO1 = new MofRegistrationReqDTO();
+			reqDTO1.setApplNo(currSupp.getSmAppl().getApplNo());
+			SmAppl srcAppl = SmServiceLookup.getMofRegistrationSO()
+					.retrieveSmApplWithChildByApplNo(reqDTO1).getSmAppl();
+			currSupp.setSmAppl(srcAppl);
 			
 			if(resultList != null && resultList.size() > 0){
 				for(SmDisciplinaryAction disciplinaryAction: resultList){
 					if(disciplinaryAction.isCancelCategory() || disciplinaryAction.isManufacturerCancel()){
+
+						int checkBasic = 0; 
+
+						List<SmSupplierCategory> apprvList = new ArrayList<SmSupplierCategory>();
+						for (SmSupplierCategory cat : currSupp.getSmAppl()
+								.getSmSupplierCategories()) {
+							 if (cat.getRecordStatusFlg().compareTo(
+									SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
+								cat.setEntryMode(cat.getOtherDesc()); 
+								if(!cat.isCancelCategory()){
+									apprvList.add(cat);
+								}
+							}
+						}  
+						SmApplicationUtil.sortSupplierCategory(apprvList);
+						getManagedBean().setApprovedCategoryList(apprvList); 
 						
+						//check approved basic category 
+						for(SmSupplierCategory categ : getManagedBean().getApprovedCategoryList()){ 
+							log.info("getCategoryL1Id() ="+categ.getPmCategoryL1().getCategoryL1Code()); 
+							log.info("getCategoryL2Id() ="+categ.getPmCategoryL2().getCategoryL2Code()); 
+							log.info("getCategoryL3Id() ="+categ.getPmCategoryL3().getCategoryL3Code()); 
+							if(categ.getPmCategoryL1() != null
+									&& categ.getPmCategoryL1().getCategoryL1Code()
+									.equalsIgnoreCase("22")){
+								if(categ.getPmCategoryL2() != null
+										&& categ.getPmCategoryL2().getCategoryL2Code()
+										.equalsIgnoreCase("17")){
+									if(categ.getPmCategoryL3() != null){
+										if(categ.getPmCategoryL3().getCategoryL3Code() != null
+												&& categ.getPmCategoryL3().getCategoryL3Code()
+												.equalsIgnoreCase("04")){ 
+											checkBasic = checkBasic + 1;
+										}else if(categ.getPmCategoryL3().getCategoryL3Code() != null
+												&& categ.getPmCategoryL3().getCategoryL3Code()
+												.equalsIgnoreCase("05")){ 
+											checkBasic = checkBasic + 1;
+										}else if(categ.getPmCategoryL3().getCategoryL3Code() != null
+												&& categ.getPmCategoryL3().getCategoryL3Code()
+												.equalsIgnoreCase("06")){ 
+											checkBasic = checkBasic + 1;
+										} 
+									}
+								}
+							}
+						} 
 						for (PmCategoryL3 pmCategoryL3 : resDTO.getCategoryL3List()) {
 							item = new SelectItem(pmCategoryL3.getCategoryL3Id(),
 									pmCategoryL3.getCategoryL3Code() + " - " + pmCategoryL3.getCategoryName());
@@ -727,18 +786,100 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 										}										
 									}
 								}
+								if(pmCategoryL3.getCategoryL3Code() != null
+										&& pmCategoryL3.getCategoryL3Code()
+										.equalsIgnoreCase("09")){
+									log.info("MTO Code exist"); 
+									if( checkBasic != 3 ){
+
+										item.setDisabled(true);
+										log.info("Disciplinary Action - disabled by basic category");
+									}
+								} 
+							} else { 
+								if(pmCategoryL3.getCategoryL3Code() != null
+										&& pmCategoryL3.getCategoryL3Code()
+										.equalsIgnoreCase("09")){
+									log.info("MTO Code exist"); 
+									if( checkBasic != 3 ){
+
+										item.setDisabled(true);
+										log.info("Disciplinary Action - disabled by basic category");
+									}
+								} 
 							}
 							selectItems.add(item);
 						}
-						
+						checkBasic = 0;
 					}
 				}
-			} else {
-				for(PmCategoryL3 pmCategoryL3 : resDTO.getCategoryL3List()) {
-					selectItems.add(new SelectItem(pmCategoryL3.getCategoryL3Id(), 
-							pmCategoryL3.getCategoryL3Code() + " - " + pmCategoryL3.getCategoryName()));
+			} else {   
+				int checkBasic = 0; 
+
+				List<SmSupplierCategory> apprvList = new ArrayList<SmSupplierCategory>();
+				for (SmSupplierCategory cat : currSupp.getSmAppl()
+						.getSmSupplierCategories()) {
+					 if (cat.getRecordStatusFlg().compareTo(
+							SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
+						cat.setEntryMode(cat.getOtherDesc()); 
+						if(!cat.isCancelCategory()){
+							apprvList.add(cat);
+						}
+					}
+				}  
+				SmApplicationUtil.sortSupplierCategory(apprvList);
+				getManagedBean().setApprovedCategoryList(apprvList); 
+				
+				//check approved basic category 
+				for(SmSupplierCategory categ : getManagedBean().getApprovedCategoryList()){ 
+					log.info("getCategoryL1Id() ="+categ.getPmCategoryL1().getCategoryL1Code()); 
+					log.info("getCategoryL2Id() ="+categ.getPmCategoryL2().getCategoryL2Code()); 
+					log.info("getCategoryL3Id() ="+categ.getPmCategoryL3().getCategoryL3Code()); 
+					if(categ.getPmCategoryL1() != null
+							&& categ.getPmCategoryL1().getCategoryL1Code()
+							.equalsIgnoreCase("22")){
+						if(categ.getPmCategoryL2() != null
+								&& categ.getPmCategoryL2().getCategoryL2Code()
+								.equalsIgnoreCase("17")){
+							if(categ.getPmCategoryL3() != null){
+								if(categ.getPmCategoryL3().getCategoryL3Code() != null
+										&& categ.getPmCategoryL3().getCategoryL3Code()
+										.equalsIgnoreCase("04")){ 
+									checkBasic = checkBasic + 1;
+								}else if(categ.getPmCategoryL3().getCategoryL3Code() != null
+										&& categ.getPmCategoryL3().getCategoryL3Code()
+										.equalsIgnoreCase("05")){ 
+									checkBasic = checkBasic + 1;
+								}else if(categ.getPmCategoryL3().getCategoryL3Code() != null
+										&& categ.getPmCategoryL3().getCategoryL3Code()
+										.equalsIgnoreCase("06")){ 
+									checkBasic = checkBasic + 1;
+								} 
+							}
+						}
+					}
 				}
+				 
+				
+				for (PmCategoryL3 pmCategoryL3 : resDTO.getCategoryL3List()) {
+					item = new SelectItem(pmCategoryL3.getCategoryL3Id(),
+							pmCategoryL3.getCategoryL3Code() + " - " + pmCategoryL3.getCategoryName());
+							
+					if(pmCategoryL3.getCategoryL3Code() != null
+							&& pmCategoryL3.getCategoryL3Code()
+							.equalsIgnoreCase("09")){
+						log.info("MTO Code exist"); 
+						if( checkBasic != 3 ){
+
+							item.setDisabled(true);
+							log.info("Disciplinary Action - disabled by basic category");
+						}
+					} 
+					selectItems.add(item);
+				} 
+				checkBasic = 0;
 			}
+			//27738 end 
 		} else { 
 			//27859 Start - 3rd level category didnot appear
 			
@@ -753,7 +894,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		
 		return selectItems;
 	}
-	
+ 
 	public void resetL2L3CategoryCode() {
 		this.getManagedBean().setCategoryCodeIdLvl2(null);
 		this.getManagedBean().setCategoryCodeIdLvl3(null);
