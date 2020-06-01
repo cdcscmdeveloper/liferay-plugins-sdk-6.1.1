@@ -125,6 +125,13 @@
 											oncomplete="cd.hide();" />
 									</div>
 								</p:confirmDialog>
+								<p:commandButton value="#{lbl[buttonLabel]}"
+									styleClass="ui-button" onstart="blockWidget.show();"
+									rendered="#{!isPendingVerification and isSqStillValid}"
+									oncomplete="blockWidget.hide();"
+									action="#{lOADetailBackingBean.approveBeforeupdateBpmTaskAction(bpmAction)}"
+									partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
+									update="#{isReject ? '@this' : '@form'}" />
 							</h:panelGroup>
 							<ui:remove>
 							Enhancement #21694 END
