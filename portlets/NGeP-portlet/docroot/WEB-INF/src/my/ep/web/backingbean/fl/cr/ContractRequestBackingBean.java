@@ -1418,7 +1418,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					for(CtSchedule ctSchedule : contractResDTO.getContract().getLatestContractVer().getCtSchedules()) {
 						scheduleNo = ctSchedule.getScheduleNo().toString();
 						reqDTO.setScheduleNo(scheduleNo);
-						if(!fulfilmentRequestSO.isContractRequestInUsed(reqDTO)) {
+						if(!fulfilmentRequestSO.isContractRequestInUsed(reqDTO).getHaveFlRecord()) {//13984
 							//#14650 - Alert message if contract incomplete
 							FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 									MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
@@ -1429,7 +1429,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					for(CtProgressivePayment ctProgressivePayment : contractResDTO.getContract().getLatestContractVer().getCtProgressivePayments()) {
 						scheduleNo = ctProgressivePayment.getPhaseNo().toString();
 						reqDTO.setScheduleNo(scheduleNo);
-						if(!fulfilmentRequestSO.isContractRequestInUsed(reqDTO)) {
+						if(!fulfilmentRequestSO.isContractRequestInUsed(reqDTO).getHaveFlRecord()) {//13984
 							break;
 						}						
 					}
@@ -4600,7 +4600,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			reqDTO.setOrgProfileId(flRequest.getPreparedOrgProfile().getOrgProfileId());
 			reqDTO.setContractId(flRequest.getCtContract().getContractId());
 			if(flRequest.getFulfilmentReqId() == null){
-				haveFlRecord = fulfilmentRequestSO.isContractRequestInUsed(reqDTO);
+				haveFlRecord = fulfilmentRequestSO.isContractRequestInUsed(reqDTO).getHaveFlRecord();//13984
 			}
 			if(haveFlRecord){
 				throw new EpException(MessageConst.ERROR_740030);
@@ -4619,7 +4619,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					reqDTO.setScheduleNo(flRequest.getScheduleNo());
 					reqDTO.setContractId(flRequest.getCtContract().getContractId());
 					if(flRequest.getFulfilmentReqId() == null){
-						haveFlRecord = fulfilmentRequestSO.isContractRequestInUsed(reqDTO);
+						haveFlRecord = fulfilmentRequestSO.isContractRequestInUsed(reqDTO).getHaveFlRecord();//13984
 					}
 					if(haveFlRecord){
 						throw new EpException(MessageConst.ERROR_740031, new String[]{ResourceBundleUtils.getMessage("lbl.ct.schedule.no",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+flRequest.getScheduleNo()});
@@ -4630,7 +4630,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				reqDTO.setScheduleNo(flRequest.getScheduleNo());
 				reqDTO.setContractId(flRequest.getCtContract().getContractId());
 				if(flRequest.getFulfilmentReqId() == null){
-					haveFlRecord = fulfilmentRequestSO.isContractRequestInUsed(reqDTO);
+					haveFlRecord = fulfilmentRequestSO.isContractRequestInUsed(reqDTO).getHaveFlRecord();//13984
 				}
 				/* Close for #21489
 				if(haveFlRecord == true){
