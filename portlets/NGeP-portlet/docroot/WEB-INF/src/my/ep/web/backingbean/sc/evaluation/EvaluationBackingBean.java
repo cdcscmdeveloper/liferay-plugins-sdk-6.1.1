@@ -1059,6 +1059,7 @@ public class EvaluationBackingBean extends
 				}
 
 			}
+			prepareUpdateCommitteeMember();//#25037
 
 		} finally {
 			meetingSO = null;
@@ -13704,4 +13705,18 @@ private void retriveCommitteeRemarksList(){
 		return false;
 	}
 	// #26339 - End
+	
+	//#25037-START
+	public void prepareUpdateCommitteeMember(){
+		ScQt scQt = this.getManagedBean().getScQt();
+		ScQtCommittee qtCommittee = this.getManagedBean().getScQtCommittee();
+		EvaluationMeetingBackingBean meetingBB = new EvaluationMeetingBackingBean();
+		meetingBB.retriveMeetingDetails(scQt.getQtId(), qtCommittee.getScCommittee().getCommitteeType().getParameterCode());
+		meetingBB.getManagedBean().setEvalBB(this);
+		meetingBB.getManagedBean().setTaskName(this.getManagedBean().getTaskName());
+		meetingBB.getManagedBean().setToken(this.getManagedBean().getToken());
+		meetingBB.getManagedBean().setPayLoad(this.getManagedBean().getPayLoad());
+		meetingBB.getManagedBean().setTaskId(this.getManagedBean().getTaskId());
+	}
+	//#25037-END
 }
