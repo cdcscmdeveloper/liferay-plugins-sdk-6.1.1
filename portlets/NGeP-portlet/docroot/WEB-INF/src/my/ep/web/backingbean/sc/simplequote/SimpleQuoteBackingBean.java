@@ -1534,6 +1534,26 @@ public class SimpleQuoteBackingBean extends
 					} else if (doc.getSpecMaster().getItemTypeCode()
 							.getParameterCode()
 							.equals(ParameterConst.ITEM_TYPE_SERVICE)) {
+						
+						//28225 - Start
+						for(TplSpecQuestion tplSpecQuestion : getManagedBean()
+								.getServiceTemplateSpecBean().getSpecMaster().getTplSpecQuestions()){
+							if((tplSpecQuestion.getAnswerTypeCode() != null) 
+									&& (tplSpecQuestion.getAnswerTypeCode().getParameterCode()
+										.equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_NORMAL))){
+								if(tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
+										.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF) ){
+									if(tplSpecQuestion.getClUomFrequency() != null){
+										tplSpecQuestion.setClUomFrequency(null);
+									}
+									if(tplSpecQuestion.getClDurationMonth() != null){
+										tplSpecQuestion.setClDurationMonth(null);
+									}
+								}
+							}
+						}				
+						//28225 - End
+						
 						doc.setSpecMaster(getManagedBean()
 								.getServiceTemplateSpecBean().getSpecMaster());
 						quoteDocs.add(doc);
@@ -2231,6 +2251,26 @@ public class SimpleQuoteBackingBean extends
 					} else if (doc.getSpecMaster().getItemTypeCode()
 							.getParameterCode()
 							.equals(ParameterConst.ITEM_TYPE_SERVICE)) {
+						
+						//28225 - Start
+						for(TplSpecQuestion tplSpecQuestion : getManagedBean()
+								.getServiceTemplateSpecBean().getSpecMaster().getTplSpecQuestions()){
+							if((tplSpecQuestion.getAnswerTypeCode() != null) 
+									&& (tplSpecQuestion.getAnswerTypeCode().getParameterCode()
+										.equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_NORMAL))){
+								if(tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
+										.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF) ){
+									if(tplSpecQuestion.getClUomFrequency() != null){
+										tplSpecQuestion.setClUomFrequency(null);
+									}
+									if(tplSpecQuestion.getClDurationMonth() != null){
+										tplSpecQuestion.setClDurationMonth(null);
+									}
+								}
+							}
+						}				
+						//28225 - End
+						
 						doc.setSpecMaster(getManagedBean()
 								.getServiceTemplateSpecBean().getSpecMaster());
 						quoteDocs.add(doc);
