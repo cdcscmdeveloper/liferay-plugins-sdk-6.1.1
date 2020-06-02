@@ -1242,17 +1242,20 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 		this.typeName = typeName;
 	}
 
+	//#25551 02062020 - azza - start
 	public List<SelectItem> getTypeListSI() {
 		typeListSI = new ArrayList<SelectItem>();
-		typeListSI.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.all", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-				new FacesScopes().getUserLocale())));
 		typeListSI.add(new SelectItem("P", ResourceBundleUtils.getMessage("lbl.txt.product",ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-				new FacesScopes().getUserLocale())));
-		typeListSI.add(new SelectItem("S", ResourceBundleUtils.getMessage("lbl.txt.service",ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-				new FacesScopes().getUserLocale())));
+				new FacesScopes().getUserLocale())));   
+		//extension code screen only show selected Item Type 'Product'..
+//		typeListSI.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.all", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+//				new FacesScopes().getUserLocale())));
+//		typeListSI.add(new SelectItem("S", ResourceBundleUtils.getMessage("lbl.txt.service",ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+//				new FacesScopes().getUserLocale())));
 		
 		return typeListSI;
 	}
+	//#25551 02062020 - azza - end
 
 	public void setTypeListSI(List<SelectItem> typeListSI) {
 		this.typeListSI = typeListSI;
