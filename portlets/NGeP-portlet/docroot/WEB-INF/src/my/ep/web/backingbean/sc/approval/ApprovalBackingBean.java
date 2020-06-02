@@ -13,6 +13,7 @@ package my.ep.web.backingbean.sc.approval;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -24,6 +25,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.sc.QtAmendMentValueBean;
+import my.ep.biz.bean.sc.QtCommitteeMemberBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -67,6 +69,7 @@ import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMemberHistory;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
@@ -376,7 +379,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	}
 	/*:::Enhancement #21692 #135 - end:::*/
 
-	public void preRenderView() {
+	public void preRenderView() throws IOException {//#25037
 		Object obj = getBpmTaskDetails(Object.class, null);
 		String taskName = getManagedBean().getTaskName();
 
@@ -518,8 +521,17 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				.equalsIgnoreCase(taskName)) {
 
 			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT;
+			paramTypes = Arrays.asList(new String[]{"SC","OC","EC", "TEC", "FEC"});//#25037
 			approvalRequests = getApprovalRequests(qtId, approvalCategoryCode,
 					ParameterConst.DOCTYPE_COMMITTE_APROVAL, paramTypes, null);
+			//#25037-start
+			paramTypes = new ArrayList<String>();
+			if(CollectionUtils.isNotEmpty(approvalRequests)){
+				for(ScQtApprovalRequest req: approvalRequests){
+					paramTypes.add(req.getApprovalType().getParameterCode());
+				}
+			}
+			//#25037-end
 
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
 			docType = ParameterConst.DOCTYPE_COMMITTE_APROVAL; //#25692#128
@@ -563,6 +575,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			
 			if (tabBeans.size() > 0) {
 				getManagedBean().setSelectedTabBean(tabBeans.get(0));
+			}
+			if(CollectionUtils.isNotEmpty(paramTypes)){//#25037
+				prepareEvalCommiteeApproval(paramTypes, approvalRequests);
 			}
 		} else if (SCProcessNameConst.APPROVE_PUBLICATION
 				.equalsIgnoreCase(taskName)) {
@@ -715,8 +730,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				//#25692-End
 			}
 			else if(SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName) ){
-				
-				
+				if(this.getManagedBean().isCommitteeReviseFlow()){
+					page = "/xhtml/sc/quatationtender/Approver/approverMain.xhtml";				
+				}//#25037
 				List<ScQtCommittee> cmts = null;
 				if(this.getManagedBean().getQt()!=null) { cmts = this.getManagedBean().getQt().getScQtCommittees();}
 				boolean isEcOcTecFec = false;
@@ -1118,16 +1134,32 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 */
 	public void gpkiSignAction(PmDigiSign digiSign) {
 		QuationTenderResDTO tenderResDTO = updateBpmTask(this.getManagedBean().getAction(), digiSign);
-		
 		if (tenderResDTO.isSuccessful()) {
 			ScQt qt = tenderResDTO.getQtDetail();
-			
 			if (ParameterConst.APPROVAL_REQUEST_PUBLICATION_APPROVAL.equalsIgnoreCase(this.getManagedBean().getApprovalType())) {
 				log.info("Publication Approval executed");
 				successMessage(MessageConst.INFO_700069, getMessageCommon("lbl.sc.qt.public.approval.approve.message"),
 						qt.getQtNo(), Boolean.TRUE);
-
-			}else{
+			}
+			//#25037-START
+			else if (ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT.equalsIgnoreCase(this.getManagedBean().getApprovalType())) {
+				String committeeType = "";
+				if(CollectionUtils.isNotEmpty(qt.getScQtCommittees())){
+					int count = 0;
+					for(ScQtCommittee c: qt.getScQtCommittees()){
+						count++;
+						committeeType = committeeType.concat(c.getScCommittee().getCommitteeType().getParameterCode());
+						if(count<qt.getScQtCommittees().size()){
+							committeeType.concat("/");
+						}
+					}
+				}
+				String procurementMode = this.getParameterDesc(qt.getProcurementMode());
+				String qtNo = qt.getQtNo();
+				successMessage(MessageConst.INFO_760505, new String[]{committeeType, procurementMode, qtNo}, true);
+			}
+			//#25037-END
+			else{
 				log.info("Other Approval executed");
 				successMessage(getMessgeConstant(this.getManagedBean().getAction()),
 						getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION),
@@ -1408,10 +1440,26 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				.getAction(), null);
 		if (tenderResDTO.isSuccessful()) {
 			ScQt qt = tenderResDTO.getQtDetail();
-
+			if (ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT.equalsIgnoreCase(this.getManagedBean().getApprovalType())) {
+				String committeeType = null;
+				if(CollectionUtils.isNotEmpty(qt.getScQtCommittees())){
+					int count = 0;
+					for(ScQtCommittee c: qt.getScQtCommittees()){
+						count++;
+						committeeType = c.getScCommittee().getCommitteeType().getParameterCode();
+						if(count<qt.getScQtCommittees().size()){
+							committeeType.concat("/");
+						}
+					}
+				}
+				String procurementMode = this.getParameterDesc(qt.getProcurementMode());
+				String qtNo = qt.getQtNo();
+				successMessage(MessageConst.INFO_760510, new String[]{committeeType, procurementMode, qtNo}, true);
+			}else{
 			successMessage(getMessgeConstant(this.getManagedBean().getAction()),
 					getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION),
 					qt.getQtNo(), Boolean.TRUE);
+			}
 		}
 	}
 	
@@ -2148,6 +2196,43 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		this.getManagedBean().setPublicationApproval(null);
 	}
 	//#25692-End
+	
+	//#25037-START
+	@SuppressWarnings("unchecked")
+	private void prepareEvalCommiteeApproval(List<String> paramTypes, List<ScQtApprovalRequest> approvalRequests) throws IOException{
+		IScWorkFlowStatusSO workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+		ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+		reqDTO.setDocId(this.getManagedBean().getQt().getQtId());
+		reqDTO.setDocType(paramTypes.get(0));
+
+		ScWorkFlowStatus  wfStatus = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+		if(wfStatus!=null){
+			PmStatus status = wfStatus.getPmStatus();
+			log.info("the status " + status.getStatusId());
+			if(Arrays.asList(QTStatusConst.QT_EVAL_PREPARATION_GROUP).contains(status.getStatusId())
+					|| Arrays.asList(QTStatusConst.QT_EVAL_FINALIZATION_GROUP).contains(status.getStatusId())){
+				if(CollectionUtils.isNotEmpty(approvalRequests)){
+					this.getManagedBean().setScQtApprovalRequest(approvalRequests.get(0));
+				}
+				this.getManagedBean().setCommitteeReviseFlow(true);
+			}
+		}
+		if(this.getManagedBean().isCommitteeReviseFlow()){
+			ICommitteSO committeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+			ScQtCommittee qtCommittee = this.getManagedBean().getQt().getScQtCommittees().get(0);
+			this.getManagedBean().setCurrentCommitteeDesc(this.getParameterDesc(qtCommittee.getScCommittee().getCommitteeType()));
+
+			List<ScCommitteeMemberHistory> histories = committeSO.getMergedHistory(qtCommittee, false);
+			
+			if(CollectionUtils.isNotEmpty(histories)){
+				ScCommitteeMemberHistory h= histories.get(0);
+				List<QtCommitteeMemberBean> list = (List<QtCommitteeMemberBean>)(Object)h.deserializeList(h.getCommitteeMembers());
+				this.getManagedBean().setMemberHistoryList(list);
+			}
+		}
+	}
+	//#25037-END
 }
 
 // ***25692
