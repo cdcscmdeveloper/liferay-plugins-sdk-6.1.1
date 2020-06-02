@@ -83,7 +83,7 @@
 						headerText="#{lbl['lbl.sm.supplov']}" 
 						saveObject="profileOfRegCompanyRptBB.managedBean.smSupplier"
 						value="#{profileOfRegCompanyRptBB.managedBean.mofNo}"
-						conditionField="recordStatus^1|smMofAccounts.recordStatus^3*smMofAccounts.recordStatus^1#{profileOfRegCompanyRptBB.mofNoCriteria}"
+						conditionField="#{profileOfRegCompanyRptBB.mofNoCriteria}"
 						postUpdateListener="profileOfRegCompanyRptBB.populateMofNo"
 						tooltip="#{lbl['lbl.sm.rpt.profile.tooltip']}" >
 					</ac:lov>
