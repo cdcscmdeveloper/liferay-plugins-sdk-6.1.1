@@ -1203,11 +1203,13 @@ public class SupplierDataMaintenanceBackingBean extends
 			} else if (cat.getRecordStatusFlg().compareTo(
 					SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
 				cat.setEntryMode(cat.getOtherDesc());
-				//apprvList.add(cat);
+				//26238: Disciplinary Action - start - 28219
+				apprvList.add(cat);
+				//26238: Disciplinary Action - End- 28219
 				//26238 - start
-				if(!cat.isCancelCategory()){
-					apprvList.add(cat);
-				}
+				//if(!cat.isCancelCategory()){
+				//	apprvList.add(cat);
+				//}
 				//26238 - end
 			}
 		}
