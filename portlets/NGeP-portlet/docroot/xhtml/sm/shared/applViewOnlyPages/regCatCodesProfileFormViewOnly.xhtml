@@ -99,6 +99,8 @@
 					rendered="#{aprvdCatBean.recordStatusFlg eq 0}" />
 				<h:outputText value="#{lbl['lbl.sm.deleted']}"
 					rendered="#{aprvdCatBean.recordStatusFlg eq 9}" />
+				<h:outputText value="#{lbl['lbl.sm.status.cancel']}"
+					rendered="#{aprvdCatBean.recordStatusFlg eq 2}" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>
