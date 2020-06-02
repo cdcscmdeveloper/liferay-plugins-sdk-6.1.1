@@ -1116,7 +1116,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		String scheduleNo = originalServletRequest.getParameter("scheduleNo");
 		//start-13984
 		String catalogueFlag = originalServletRequest.getParameter("catalogueFlag"); //13984 - CrList - Back Button
- 
+		FulfilmentResDTO resDTOInvoice = new FulfilmentResDTO();
 		if(catalogueFlag != null){
 			getManagedBean().setCatalogueFlag(catalogueFlag);
 		}
@@ -1379,7 +1379,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			IInvoiceSO invoiceRequestSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IInvoiceSO.class);
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
-			FulfilmentReqDTO resDTOInvoice = new FulfilmentReqDTO();
+			
 			reqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
 			resDTO = fulfilmentRequestSO.retrievePmOrgProfileDtls(reqDTO);
 			getManagedBean().getFlRequest().setPreparedOrgProfile(resDTO.getPmOrgProfile());
@@ -1413,6 +1413,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			// No schedule no is defined if this is coming from Search Catalogue. Need to assign available scheduleNo for it.
 			reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
 			reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
+			resDTOInvoice=fulfilmentRequestSO.validateAP59(reqDTO);
 			if(scheduleNo==null && contractResDTO.getContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
 				if(contractResDTO.getContract().isFrequencySchedule() && contractResDTO.getContract().getLatestContractVer().getCtSchedules()!=null) {
 					for(CtSchedule ctSchedule : contractResDTO.getContract().getLatestContractVer().getCtSchedules()) {
@@ -1420,6 +1421,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 						reqDTO.setScheduleNo(scheduleNo);
 						if(!fulfilmentRequestSO.isContractRequestInUsed(reqDTO).getHaveFlRecord()) {//13984
 							//#14650 - Alert message if contract incomplete
+							if(resDTOInvoice.isSubmitInvoice()==false)
 							FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 									MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 							break;
@@ -1477,7 +1479,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			//13984-end
 		}
 		//#14650 - Alert message if contract incomplete - Start
-		if(getManagedBean().getFlRequest().getStatus().getStatusId().longValue() != FulfilmentStatusConst.CR_COMPLETE.longValue()){
+		if(resDTOInvoice.isSubmitInvoice()==false){
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 					MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 		}
