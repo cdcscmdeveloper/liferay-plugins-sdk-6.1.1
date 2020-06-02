@@ -58,7 +58,7 @@ public class SuppContPersBankBranchRptBackingBean extends
 		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
 		retrieveReportValueFromDb();
 		
-		if (!getManagedBean().getRegType().equalsIgnoreCase(ReportConst.RPT_REG_BASIC)) {
+		if (!getManagedBean().isSupplier()) {
 			params.put(SmReportConst.PARAM_DATE_FROM,
 					df.format(getManagedBean().getDateFrom()));
 		}
