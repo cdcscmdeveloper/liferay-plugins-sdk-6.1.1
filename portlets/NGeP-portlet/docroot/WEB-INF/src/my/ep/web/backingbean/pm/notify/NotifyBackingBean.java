@@ -406,7 +406,11 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 				if( null != pmNotifyUser.getPmNotifyDashboardQt()
 						&& StringUtils.isNotEmpty(pmNotifyUser.getPmNotifyDashboardQt().getContent())){
 					return pmNotifyUser.getPmNotifyDashboardQt().getContent();
-				}		
+				}
+				else if( null != pmNotifyUser.getPmNotifyDashboard()
+							&& StringUtils.isNotEmpty(pmNotifyUser.getPmNotifyDashboard().getContent())){
+					return pmNotifyUser.getPmNotifyDashboard().getContent();
+				}
 		  }else {
 			  
 			  if( null != pmNotifyUser.getPmNotifyDashboard()
