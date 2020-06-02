@@ -1116,6 +1116,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 					changeRoleForSupplierTemp(currentPersonnel.getPersonnelId(),supplier);
 				}				
 			}
+		//26238 - Basic account skip upload catalogue
 		}else if(!isG2G && isWithFederal && !isPublishedCatalogue(supplier.getSupplierId())){
 			if(getCmSupplierItems(supplier.getSupplierId()).size() > 0){
 				path = CATALOGUE_MAINT;
