@@ -70,9 +70,20 @@
 							rendered="#{smSupplier.smAppl.applType eq 'O'}" />
 					</p:column>
 					
-					<p:column headerText="#{lbl['lbl.sm.applicationstatus']}" style="width :25%;white-space : normal">
+					<!--#28273 & #28278 -start -->
+					<!-- <p:column headerText="#{lbl['lbl.sm.applicationstatus']}" style="width :25%;white-space : normal">
 						<h:outputText value="#{smSupplier.smAppl.workflowStatusDesc}" />
-					</p:column>
+					</p:column> -->
+									
+					<p:column headerText="#{lbl['lbl.sm.accountstatus']}" style="width :25%;white-space : normal">
+						<h:outputText value="#{lbl['lbl.sm.status.active']}"
+							rendered="#{smSupplier.recordStatusFlg eq 1}" />
+						<h:outputText value="#{lbl['lbl.sm.status.inactive']}"
+							rendered="#{smSupplier.recordStatusFlg eq 0}" />
+						<h:outputText value="#{lbl['lbl.sm.delete']}"
+							rendered="#{smSupplier.recordStatusFlg eq 9}" />
+					</p:column> 
+					<!--#28273 & #28278 -end -->
 					
 					<p:column headerText="#{lbl['lbl.sm.label.action']}">
 						<p:commandLink onstart="blockWidget.show()"
