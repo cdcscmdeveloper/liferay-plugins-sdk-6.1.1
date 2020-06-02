@@ -75,12 +75,16 @@
 			
 			<p:column  styleClass="column-align-center">
 				<f:facet name="header">
+					<!-- #27826 start --><h:outputText value="*" styleClass="mandatory" /><!-- #27826 end -->
 					<h:outputText value="#{lbl['lbl.sm.person.nationality.origin']}" />
 				</f:facet>
 				<!-- <h:outputText value="#{varOwner.nationality.countryName}" /> -->
 				<!-- 16052019 - SSM INTEGRATION CR - START -->
 				<!-- #27878 disable when choose applType = SupplierManagementConst.ACC_BASIC-->
-				<p:selectOneMenu value="#{varOwner.tempCountryId}"
+				<!-- #27826 start -->
+				<p:selectOneMenu 
+					required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.person.nationality.origin']}" 
+					value="#{varOwner.tempCountryId}"
 					disabled="#{registrationBackingBean.managedBean.smAppl.applType==SupplierManagementConst.ACC_BASIC or (!varOwner.nationalityNull and varOwner.tempCountryId ne 0)}">
 					<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 					<f:selectItems var="counLs"
@@ -89,6 +93,7 @@
 						listener="#{registrationBackingBean.setOwnerNationality(varOwner,true)}"
 						update=":form:tableOwner" />
 				</p:selectOneMenu>
+				<!-- #27826 end start -->
 				<!-- 16052019 - SSM INTEGRATION CR  - END -->
 			</p:column>
 			
