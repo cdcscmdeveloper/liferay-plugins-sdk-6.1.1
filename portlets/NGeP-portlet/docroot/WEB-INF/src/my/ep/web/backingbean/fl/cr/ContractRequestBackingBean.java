@@ -1113,6 +1113,13 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		String taskId = originalServletRequest.getParameter("taskId");
 		String contractId = originalServletRequest.getParameter("contractId");
 		String scheduleNo = originalServletRequest.getParameter("scheduleNo");
+		//start-13984
+		String catalogueFlag = originalServletRequest.getParameter("catalogueFlag"); //13984 - CrList - Back Button
+ 
+		if(catalogueFlag != null){
+			getManagedBean().setCatalogueFlag(catalogueFlag);
+		}
+		//end-13984
 	
 		if (taskId != null) {
 			renewSesionObject();
@@ -1409,7 +1416,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					for(CtSchedule ctSchedule : contractResDTO.getContract().getLatestContractVer().getCtSchedules()) {
 						scheduleNo = ctSchedule.getScheduleNo().toString();
 						reqDTO.setScheduleNo(scheduleNo);
-						if(!fulfilmentRequestSO.isContractRequestInUsed(reqDTO)) {
+						if(!fulfilmentRequestSO.isContractRequestInUsed(reqDTO).getHaveFlRecord()) {//13984
 							break;
 						}
 					}
@@ -1417,7 +1424,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					for(CtProgressivePayment ctProgressivePayment : contractResDTO.getContract().getLatestContractVer().getCtProgressivePayments()) {
 						scheduleNo = ctProgressivePayment.getPhaseNo().toString();
 						reqDTO.setScheduleNo(scheduleNo);
-						if(!fulfilmentRequestSO.isContractRequestInUsed(reqDTO)) {
+						if(!fulfilmentRequestSO.isContractRequestInUsed(reqDTO).getHaveFlRecord()) {//13984
 							break;
 						}						
 					}
@@ -3985,7 +3992,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().setBackFlag(1);
 		if(getCrListSearchContractListDD()!=null){
 			getManagedBean().setSearchContractListDD(getCrListSearchContractListDD());
-			
+			/**getCrListSearchContractListDD() == 7 is Fulfillment Type 
+			 * getCrListSearchContractListDD() == 8 is Contract Type**/
 			if(getCrListSearchContractListDD() == 7 || getCrListSearchContractListDD() == 8){
 				 getManagedBean().setTypes(true);
 			 }
@@ -4004,7 +4012,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			getManagedBean().setSearchTypesDD(getCrListSearchTypesDD());
 			getManagedBean().setTypes(true);
 		}
-		return "crList?faces-redirect=true";
+		
+		String url ="crList?faces-redirect=true";
+		
+		if(getManagedBean().getCatalogueFlag().equalsIgnoreCase("true")){
+			getManagedBean().setCatalogueFlag("false");
+			url ="/xhtml/cm/catalogue/contractRequestView?faces-redirect=true";
+		}
+		return url;
 		//preRenderContractList();
 		//end-13984 - CrList - Back Button
 
@@ -4573,7 +4588,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			reqDTO.setOrgProfileId(flRequest.getPreparedOrgProfile().getOrgProfileId());
 			reqDTO.setContractId(flRequest.getCtContract().getContractId());
 			if(flRequest.getFulfilmentReqId() == null){
-				haveFlRecord = fulfilmentRequestSO.isContractRequestInUsed(reqDTO);
+				haveFlRecord = fulfilmentRequestSO.isContractRequestInUsed(reqDTO).getHaveFlRecord();//13984
 			}
 			if(haveFlRecord){
 				throw new EpException(MessageConst.ERROR_740030);
@@ -4592,7 +4607,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					reqDTO.setScheduleNo(flRequest.getScheduleNo());
 					reqDTO.setContractId(flRequest.getCtContract().getContractId());
 					if(flRequest.getFulfilmentReqId() == null){
-						haveFlRecord = fulfilmentRequestSO.isContractRequestInUsed(reqDTO);
+						haveFlRecord = fulfilmentRequestSO.isContractRequestInUsed(reqDTO).getHaveFlRecord();//13984
 					}
 					if(haveFlRecord){
 						throw new EpException(MessageConst.ERROR_740031, new String[]{ResourceBundleUtils.getMessage("lbl.ct.schedule.no",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+flRequest.getScheduleNo()});
@@ -4603,7 +4618,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				reqDTO.setScheduleNo(flRequest.getScheduleNo());
 				reqDTO.setContractId(flRequest.getCtContract().getContractId());
 				if(flRequest.getFulfilmentReqId() == null){
-					haveFlRecord = fulfilmentRequestSO.isContractRequestInUsed(reqDTO);
+					haveFlRecord = fulfilmentRequestSO.isContractRequestInUsed(reqDTO).getHaveFlRecord();//13984
 				}
 				/* Close for #21489
 				if(haveFlRecord == true){
@@ -5931,7 +5946,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}else{
 				getManagedBean().setBackFlag(0);
 			}
-			//start-13984 - CrList - Back Button
+			//end-13984 - CrList - Back Button
 			List<String> contractCriteriaList = new ArrayList<String>();
 			contractCriteriaList.add(ResourceBundleUtils.getMessage(
 					"lbl.fl.physical.contract.no", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -6051,6 +6066,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().setTypes(false);
 		getManagedBean().setSearchTypesDD(null);
 		if(getManagedBean().getSearchContractListDD() != null){
+			/**getSearchContractListDD() == 7 is Fulfillment Type 
+			 * getSearchContractListDD() == 8 is Contract Type**/
 			 if(getManagedBean().getSearchContractListDD() == 7 || getManagedBean().getSearchContractListDD() == 8){
 				 getManagedBean().setTypes(true);
 			 }
@@ -6071,7 +6088,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		//start-13984 - CrList - Back Button
 		if(getManagedBean().getSearchContractListDD()!=null){
 			setCrListSearchContractListDD(getManagedBean().getSearchContractListDD());
-			
+			/**getSearchContractListDD() == 7 is Fulfillment Type 
+			 * getSearchContractListDD() == 8 is Contract Type**/
 			if(getManagedBean().getSearchContractListDD() == 7 || getManagedBean().getSearchContractListDD() == 8){
 				if(getManagedBean().getSearchTypesDD()!=null){
 					setCrListSearchTypesDD(getManagedBean().getSearchTypesDD());
