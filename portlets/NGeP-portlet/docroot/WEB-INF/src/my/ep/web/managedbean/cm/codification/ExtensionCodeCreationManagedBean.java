@@ -273,19 +273,9 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 				}
 				
 				/*[#27625] begin*/
-				String itemType;
-				if(StringUtils.isNotBlank(typeName)){
-					itemType = typeName;
-				}else{
-					FacesScopes fs = new FacesScopes();
-					itemType = fs.getParameter("itemType");
-				}
-
-				if (itemType != null) {// save parameter first time it come from
-					// search button
-					setItemTypeParameter(itemType);
-				}else
-					setItemTypeParameter(null);
+					setItemTypeParameter("P");
+					
+					System.out.println("getItemTypeParameter " + getItemTypeParameter());
 				/*[#27625] end*/
 				
 				// get parameter from backup property whenever table be reloaded
@@ -1132,8 +1122,10 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 		
 		System.out.println("segmentCode " + segmentCode);
 		
-		if (Integer.parseInt(segmentCode) > 69) {
+		//#25551 01062020 - azza - start
+		if (Integer.parseInt(segmentCode) > 60) {
 			flag = true;
+		//#25551 01062020 - azza - end
 		}
 		
 		System.out.println("flag " + flag);
@@ -1240,17 +1232,20 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 		this.typeName = typeName;
 	}
 
+	//#25551 02062020 - azza - start
 	public List<SelectItem> getTypeListSI() {
 		typeListSI = new ArrayList<SelectItem>();
-		typeListSI.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.all", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-				new FacesScopes().getUserLocale())));
 		typeListSI.add(new SelectItem("P", ResourceBundleUtils.getMessage("lbl.txt.product",ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-				new FacesScopes().getUserLocale())));
-		typeListSI.add(new SelectItem("S", ResourceBundleUtils.getMessage("lbl.txt.service",ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-				new FacesScopes().getUserLocale())));
+				new FacesScopes().getUserLocale())));   
+		//extension code screen only show selected Item Type 'Product'..
+//		typeListSI.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.all", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+//				new FacesScopes().getUserLocale())));
+//		typeListSI.add(new SelectItem("S", ResourceBundleUtils.getMessage("lbl.txt.service",ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+//				new FacesScopes().getUserLocale())));
 		
 		return typeListSI;
 	}
+	//#25551 02062020 - azza - end
 
 	public void setTypeListSI(List<SelectItem> typeListSI) {
 		this.typeListSI = typeListSI;
