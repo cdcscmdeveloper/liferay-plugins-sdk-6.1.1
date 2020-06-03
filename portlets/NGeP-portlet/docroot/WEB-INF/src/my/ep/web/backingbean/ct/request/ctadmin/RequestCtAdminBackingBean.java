@@ -242,7 +242,7 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 			resDTO = contractReqAdminSO.saveReqCtAdminDetails(reqDTO);
 			if(resDTO.isSuccessful()) {
 				log.debug("Record saved successfully");
-				String messageId = MessageConst.INFO_700005;
+				String messageId = MessageConst.INFO_700041;
 				String nextRole = null;
 
 				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
