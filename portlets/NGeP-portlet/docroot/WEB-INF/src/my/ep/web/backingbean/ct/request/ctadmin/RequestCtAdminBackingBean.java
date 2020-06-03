@@ -37,7 +37,7 @@ import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.exception.EpException;
-import my.ep.jaxb.ct.requestCtAdmin.CTContractReqadminDataType;
+import my.ep.jaxb.ct.requestctadmin.CTContractReqadminDataType;
 import my.ep.persistence.entity.ct.CtActor;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
