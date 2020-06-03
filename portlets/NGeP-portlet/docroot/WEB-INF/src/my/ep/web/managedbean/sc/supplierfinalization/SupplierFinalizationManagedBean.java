@@ -15,6 +15,7 @@ import javax.faces.model.SelectItem;
 import my.ep.bean.sc.QtEvaluationResultDtlBean;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.persistence.entity.pm.common.PmReason;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
@@ -35,6 +36,7 @@ import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationMeetingBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.constant.sc.QTConstants;
@@ -246,6 +248,11 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	
 	private int evaluationReportIndex;
 	
+	//#25037-start
+	private boolean committeModified;
+	private List<ScCommitteeMember> deletedMemberList;
+	private SupplierFinalizationMeetingBackingBean meetingBB;
+	//#25037-end
 	/**
 	 * @return the activeIndex
 	 */
@@ -2188,6 +2195,32 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setEvaluationReportIndex(int evaluationReportIndex) {
 		this.evaluationReportIndex = evaluationReportIndex;
 	}
+	//#25037-start
+	public boolean isCommitteModified() {
+		return committeModified;
+	}
+
+	public void setCommitteModified(boolean committeModified) {
+		this.committeModified = committeModified;
+	}
+
+	public List<ScCommitteeMember> getDeletedMemberList() {
+		return deletedMemberList;
+	}
+
+	public void setDeletedMemberList(List<ScCommitteeMember> deletedMemberList) {
+		this.deletedMemberList = deletedMemberList;
+	}
+
+	public SupplierFinalizationMeetingBackingBean getMeetingBB() {
+		return meetingBB;
+	}
+
+	public void setMeetingBB(SupplierFinalizationMeetingBackingBean meetingBB) {
+		this.meetingBB = meetingBB;
+	}
+	//#25037-end
+
 	
 	
 

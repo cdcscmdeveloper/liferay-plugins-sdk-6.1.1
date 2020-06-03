@@ -54,6 +54,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecScoring;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.web.backingbean.sc.evaluation.EvaluationMeetingBackingBean;
 import my.ep.web.backingbean.sc.supplierproposal.TechnicalStaffBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.tpl.TemplateSpecBean;
@@ -559,6 +560,9 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
     //#25138-Ahmaa-End
 	
+	//#25037-START
+	private EvaluationMeetingBackingBean meetingBB;
+	//#25037-END
 	
 	/**tabIndex
 	 * Gets the today.
@@ -3677,6 +3681,15 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.finPackageScore = finPackageScore;
 	}
 
+	//#25037
+	public EvaluationMeetingBackingBean getMeetingBB() {
+		return meetingBB;
+	}
+
+	public void setMeetingBB(EvaluationMeetingBackingBean meetingBB) {
+		this.meetingBB = meetingBB;
+	}
+	//#25037-end
 
 	//#25138-Ahmaa-End
 }

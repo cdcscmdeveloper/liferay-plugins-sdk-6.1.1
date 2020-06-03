@@ -40,6 +40,10 @@
 			disabled="#{evaluationBackingBean.managedBean.readOnly}"
 			style="float:right;" process="@form" update="@form"
 			action="#{evaluationBackingBean.saveMeetingDtls(true)}" />
+		<p:commandButton value="#{lbl['lbl.btn.submit']}" rendered="#{evaluationBackingBean.managedBean.tabActiveIndex == 0}" disabled="#{!evaluationMeetingBackingBean.managedBean.committeeModified}"
+			styleClass="ui-button" oncomplete="confirmSubmitMeetingPopup.show();"
+			style="float:right;" process="@all" partialSubmit="true">
+		</p:commandButton>
 
 		<p:dialog id="reviseApprovalDlgs" widgetVar="reviseApprovalDlgs"
 			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
@@ -154,6 +158,11 @@
 		</c:if>
 
 		<ui:include src="/xhtml/sc/evaluation/uploadEvaluation.xhtml"></ui:include>
+		<ac:confirmationPopup id="confirmSubmitMeetingId"
+			widget="confirmSubmitMeetingPopup" width="490" height="100"
+			title="#{lbl['lbl.sc.confirmation']}"
+			okAction="evaluationMeetingBackingBean.submitMettingDetails()"
+			content="#{lbl['lbl.sc.popup.sendproposaleval']}" />
 	</ui:define>
 
 </ui:composition>

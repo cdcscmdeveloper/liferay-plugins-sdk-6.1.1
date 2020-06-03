@@ -11,10 +11,8 @@
 		toggleable="true">
 
 		<p:dataTable id="evaluationpreparecommittee" var="committeeMember"
-		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			rows="10" rowKey="#{committeeMember.qtCommitteeActivityId}"
-			value="#{evaluationBackingBean.managedBean.committeeMemberList}"
-			selection="#{evaluationBackingBean.managedBean.committeeActivitymultiSelect}" rowIndexVar="index">
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" rows="10" 
+			value="#{evaluationBackingBean.managedBean.committeeMemberList}" rowIndexVar="index">
 			<ac:paginator for="evaluationpreparecommittee" />
 
 			<p:column style="width:18%;white-space: normal" headerText="#{lbl['lbl.sc.name']}">
@@ -48,7 +46,11 @@
 				<h:outputText
 					value="#{evaluationBackingBean.getParameterDesc(committeeMember.scCommitteeMember.memberRole)}"></h:outputText>
 			</p:column>
-			<p:column style="width:2%;text-align: center;" headerText="#{lbl['lbl.sc.attendance']}">
+			<p:column style="width:2%;text-align: center;">
+				<f:facet name="header">
+					<h:outputText  value="#{lbl['lbl.sc.lbl.attendandendorse']}" />
+					<ac:iconTooltip id="attendanceTooltip" value="#{lbl['lbl.sc.tooltip.attendandendorse']}" />
+				</f:facet>
 				<p:selectBooleanCheckbox
 					disabled="#{evaluationBackingBean.managedBean.readOnly}"
 					value="#{committeeMember.attended}" />
@@ -56,6 +58,10 @@
 
 
 		</p:dataTable>
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.sc.btn.update.committee']}"
+				styleClass="BtnSpacing" action="#{evaluationMeetingBackingBean.navigateToUpdateMember('update')}"/>
+		</div>
 
 	</p:panel>
 	

@@ -9,6 +9,7 @@
 	
 	<ui:param name="isQTStatusPendingQtSubmission" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_QT_SUBMISSION}" />
 	<ui:param name="isQTStatusPendingScheduleAndBefore" value="#{qTDetailBB.isQTStatusLessThanOrEquals(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
+	<ui:param name="isQTStatusPendingSpecCommitteeApprovalAndBefore" value="#{qTDetailBB.isQTStatusLessThanOrEquals(qTDetailBB.managedBean.qt.qtStatus.statusId, QT_PENDING_SC_COMMITTEE_APPROVAL)}" />
 	<ui:param name="isClone1" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_QT_SUBMISSION}" />
 	<ui:param name="isClone2" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT}" />	
 	<!-- 26095@hatta - start -->
@@ -82,7 +83,7 @@
 					onclick="blockWidget.show();"
 					oncomplete="blockWidget.hide();"
 					update="@form"
-					rendered="#{isQTStatusPendingScheduleAndBefore or !qTDetailBB.managedBean.maintanceFlow}" 
+					rendered="#{isQTStatusPendingSpecCommitteeApprovalAndBefore or !qTDetailBB.managedBean.maintanceFlow}" 
 					disabled="#{!qTDetailBB.managedBean.ptjPresent}"/>
 					
 
@@ -129,7 +130,7 @@
 								action="#{qTDetailBB.submitQtDetailsFormMaintanace}"
 								process="@form" update="@all" onclick="blockWidget.show();"
 								oncomplete="blockWidget.hide();"
-								rendered="#{!isClone2 and (qTDetailBB.isQTStatusInBetween(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_PB_APPROVAL, QTStatusConst.QT_PENDING_LOA))}"
+								rendered="#{!isClone2 and (qTDetailBB.isQTStatusInBetween(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING, QTStatusConst.QT_PENDING_LOA))}"
 								disabled="#{qTDetailBB.isQTStatusPublished(qTDetailBB.managedBean.qt.qtStatus.statusId) and 
 								(empty qTDetailBB.managedBean.amendMentBean or !qTDetailBB.managedBean.amendMentBean.brandNew) and !qTDetailBB.managedBean.changesOnQTMaintenance}" />
 						</c:otherwise>
