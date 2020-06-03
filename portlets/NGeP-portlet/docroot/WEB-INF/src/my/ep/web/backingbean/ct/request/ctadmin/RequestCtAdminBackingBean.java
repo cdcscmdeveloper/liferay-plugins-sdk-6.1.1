@@ -246,7 +246,7 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 				String nextRole = null;
 
 				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-					messageId = MessageConst.INFO_700021;
+					messageId = MessageConst.INFO_700040;
 					if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
 							ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 						nextRole = RoleCode.CT_APPROVER.value();
@@ -254,9 +254,7 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 						nextRole = RoleCode.BPK_CC_APPROVER.value();
 					}
 				} else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
-					messageId = MessageConst.INFO_700025;
-				} else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
-					messageId = MessageConst.INFO_700009;
+					messageId = MessageConst.INFO_700040;
 				} else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 					messageId = MessageConst.INFO_700007;
 				} else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
