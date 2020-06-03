@@ -1435,7 +1435,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	private void validateRequestSoftcert() {
 		if (getManagedBean().getSoftCertPayList() != null) {
 			for (SmPersonnel personnel : getManagedBean().getSoftCertPayList()) {
-				if (personnel.getSmPersonnelAddresses() == null || personnel.getSmPersonnelAdd() == null
+				if (personnel.getSmPersonnelAddresses() == null 
 						|| personnel.getSmPersonnelAddresses().isEmpty()) {
 					throw new EpException(MessageConst.ERROR_722614,
 							new String[] { personnel.getName() });
