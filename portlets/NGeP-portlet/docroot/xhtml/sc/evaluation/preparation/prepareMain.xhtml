@@ -60,21 +60,24 @@
 						styleClass="BtnSpacing" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();" style="float:right;"
 						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex(0,1)}"
-						action="#{evaluationBackingBean.updateSmAppl}" update=":form" />
+						action="#{evaluationBackingBean.updateSmAppl}" update=":form"  
+						disabled="#{evaluationMeetingBackingBean.managedBean.committeeModified}"/>
 				</ui:fragment> <ui:fragment
 					rendered="#{((evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.evaluationStageStatusHide) or (evaluationBackingBean.managedBean.committeeType eq 'FEC' and evaluationBackingBean.managedBean.evaluationStageStatusHide))}">
 					<p:commandButton value="#{lbl['lbl.btn.next']}" iconPos="right"
 						styleClass="BtnSpacing" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();" style="float:right;"
 						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex(0,2)}"
-						action="#{evaluationBackingBean.updateSmAppl}" update=":form" />
+						action="#{evaluationBackingBean.updateSmAppl}" update=":form" 
+						disabled="#{evaluationMeetingBackingBean.managedBean.committeeModified}"/>
 				</ui:fragment> <ui:fragment
 					rendered="#{((evaluationBackingBean.managedBean.committeeType eq 'TEC' and !evaluationBackingBean.managedBean.evaluationStageStatusHide) or (evaluationBackingBean.managedBean.committeeType eq 'FEC' and !evaluationBackingBean.managedBean.evaluationStageStatusHide))}">
 					<p:commandButton value="#{lbl['lbl.btn.next']}" iconPos="right"
 						styleClass="BtnSpacing" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();" style="float:right;"
 						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex(0,4)}"
-						action="#{evaluationBackingBean.updateSmAppl}" update=":form" />
+						action="#{evaluationBackingBean.updateSmAppl}" update=":form" 
+						disabled="#{evaluationMeetingBackingBean.managedBean.committeeModified}"/>
 				</ui:fragment></td>
 		</tr>
 	</table>
