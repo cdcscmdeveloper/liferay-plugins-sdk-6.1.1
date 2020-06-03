@@ -20,7 +20,7 @@
 			<table style="width: 100%">
 				<tr>
 					<td><p:commandLink
-							value="#{lbl['lbl.quartz.scheduled.jobs.info']}" rendered="#{not empty catalogueBackingBean.managedBean.availableNoList}"
+							value="#{lbl['lbl.quartz.scheduled.jobs.info']}" rendered="#{not empty catalogueBackingBean.availableNoListCR}"
 							
 							update="display" oncomplete="sample.show()"
 							style="color: blue;display: inline-block;text-align: right;float: left;font-size: 12px;padding: 0 400px 0 0;width: 72.1%" /></td>
@@ -104,11 +104,11 @@
 			<tr>
 				<td style="text-align: left;width:60%"><p:commandButton	value="#{lbl['lbl.cm.back']}"
 						action="#{catalogueBackingBean.backTocatalogueSearch}" /></td>
-				<td style="width:10%"><p:outputLabel value="#{lbl['lbl.fl.fs.no']}" rendered="#{not empty catalogueBackingBean.managedBean.availableNoList}" /></td>
-				<td style="text-align: right; width: 5%"><p:selectOneMenu id="schedule" value="#{catalogueBackingBean.managedBean.scheduleNo}" rendered="#{not empty catalogueBackingBean.managedBean.availableNoList}">
-						<f:selectItems	value="#{catalogueBackingBean.managedBean.availableNoList}" />
+				<td style="width:10%"><p:outputLabel value="#{lbl['lbl.fl.fs.no']}" rendered="#{not empty catalogueBackingBean.availableNoListCR}" /></td>
+				<td style="text-align: right; width: 5%"><p:selectOneMenu id="schedule" value="#{catalogueBackingBean.managedBean.scheduleNo}" rendered="#{not empty catalogueBackingBean.availableNoListCR}">
+						<f:selectItems	value="#{catalogueBackingBean.availableNoListCR}" />
 					</p:selectOneMenu></td>
-				<td style="text-align: right; width: 12%"><p:commandButton id="navigateCR" style="white-space:nowrap;" disabled="#{empty catalogueBackingBean.managedBean.ctRequestList}"
+				<td style="text-align: right; width: 12%"><p:commandButton id="navigateCR" style="white-space:nowrap;" disabled="#{empty catalogueBackingBean.ctRequestListCR}"
 						value="#{lbl['lbl.cm.contract.request']}" action="#{catalogueBackingBean.navigateToCR}" /></td>
 			</tr>
 		</table>
@@ -116,7 +116,7 @@
 		<p:panel header="#{lbl['lbl.cm.list.of.items']}" toggleable="true">
 
 			<p:dataTable emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-				value="#{catalogueBackingBean.managedBean.ctRequestList}"
+				value="#{catalogueBackingBean.ctRequestListCR}"
 				id="contractRequestId" rowIndexVar="rowIndex" var="contractObj"
 				width="100%">
 
