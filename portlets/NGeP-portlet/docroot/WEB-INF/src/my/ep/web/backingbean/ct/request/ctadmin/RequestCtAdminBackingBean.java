@@ -269,7 +269,7 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
 							MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, this.getManagedBean().getContractVer().getDocType()), 
 									this.getManagedBean().getContractVer().getCtContract().getContractNo(),
-									roleDesc.getRoleName()}, 
+									getFacesScopes().getUserSessionBean().getUserName()}, 
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 
 				} else {
