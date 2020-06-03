@@ -4608,4 +4608,38 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 		}
 		// #28215 - End
+		
+		//#25729 #142 start - checking total indicative price <= 20k
+		/**
+		 * Get Total Indicative Price threshold amount
+		 * 
+		 * @return	the panel Total Indicative Price amount
+		 */
+		protected BigDecimal getTotalIndPriceThresholdAmount() {
+			IRuleSO ruleSO = null;
+			BigDecimal indPriceThreshold = new BigDecimal(0);
+
+			try {
+				ruleSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+
+				RuleReqDTO ruleReqDTO = new RuleReqDTO();
+				ruleReqDTO.setRuleType(RuleTypeConst.QTOTAL_INDI_PRICE_THRESHOLD);
+				RuleResDTO ruleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
+				
+				if (ruleResDTO.isSuccessful()) {
+					if(ruleResDTO.getRuleValueList()!=null && ruleResDTO.getRuleValueList().size()>0) {
+						indPriceThreshold = new BigDecimal(ruleResDTO.getRuleValueList().get(0).getRuleValue());
+					} else {
+						throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
+					}	
+				}
+				
+			} finally {
+				ruleSO = null;
+			}
+
+			return indPriceThreshold;
+		}
+		//#25729 #142 end
 }
