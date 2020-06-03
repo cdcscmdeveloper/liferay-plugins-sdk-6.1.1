@@ -350,6 +350,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	private boolean proceedWithDPExceedThreshold;
 	private String exceedThresholdMessage;
 	private boolean bpkApprover;
+	private List<Long> itemListExceedThreshold;
 	//26059 - end
 	
 	//12183 - Start
@@ -2064,6 +2065,20 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setBpkApprover(boolean bpkApprover) {
 		this.bpkApprover = bpkApprover;
+	}
+	
+	/**
+	 * @return the itemListExceedThreshold
+	 */
+	public List<Long> getItemListExceedThreshold() {
+		return itemListExceedThreshold;
+	}
+
+	/**
+	 * @param itemListExceedThreshold the itemListExceedThreshold to set
+	 */
+	public void setItemListExceedThreshold(List<Long> itemListExceedThreshold) {
+		this.itemListExceedThreshold = itemListExceedThreshold;
 	}
 	//26059 - end
 	
