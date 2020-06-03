@@ -246,7 +246,7 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 				String nextRole = null;
 
 				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-					messageId = MessageConst.INFO_700040;
+					messageId = MessageConst.INFO_700041;
 					if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
 							ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 						nextRole = RoleCode.CT_APPROVER.value();
