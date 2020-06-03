@@ -123,6 +123,29 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 
 		return PmCommonUtil.getCommonStatusOptions();
 	}
+	
+	//#27629 start
+	/**
+	 * get search user group status record list
+	 * 
+	 */
+	public SelectItem[] getSearchUserGroupStatus() {
+
+		SelectItem[] items = new SelectItem[3];
+		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+				"lbl.txt.all", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
+		items[1] = new SelectItem(DbValueConst.RECORD_STATUS_ACTIVE,
+				ResourceBundleUtils.getMessage("lbl.pm.active",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
+		items[2] = new SelectItem(DbValueConst.RECORD_STATUS_SUSPENDED,
+				ResourceBundleUtils.getMessage("lbl.pm.inactive",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
+		return items;
+	}
+	//#27629 end
 
 	/**
 	 * pagination for user search list
@@ -1335,6 +1358,13 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 			}
 			this.getManagedBean().setUserSearch(true);
 			this.getManagedBean().setUserGroups(groupUsers);
+		}
+		else if (userName.isEmpty() && identificationNo.isEmpty() && statusFlag==null){
+			if (this.getManagedBean().isUserSearch()){
+				this.getManagedBean().setUserGroups(this.getManagedBean().getUserGroupUserSearch());
+			}else{
+				this.getManagedBean().setUserGroupUserSearch(this.getManagedBean().getUserGroups());
+			}
 		}
 	}
 	public void userGroupUserReset() {
