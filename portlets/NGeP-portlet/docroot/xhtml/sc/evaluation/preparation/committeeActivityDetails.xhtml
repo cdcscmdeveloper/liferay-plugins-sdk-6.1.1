@@ -10,29 +10,29 @@
 	<p:panel header="#{lbl['lbl.sc.committee.member.list']}"
 		toggleable="true">
 
-		<p:dataTable id="evaluationpreparecommittee" var="committeeMember"
+		<p:dataTable id="evaluationpreparecommittee" var="activity"
 		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" rows="10" 
 			value="#{evaluationBackingBean.managedBean.committeeMemberList}" rowIndexVar="index">
 			<ac:paginator for="evaluationpreparecommittee" />
 
 			<p:column style="width:18%;white-space: normal" headerText="#{lbl['lbl.sc.name']}">
 				<h:outputText
-					value="#{committeeMember.scCommitteeMember.memberName}"></h:outputText>
+					value="#{activity.scCommitteeMember.memberName}"></h:outputText>
 			</p:column>
 
 			<p:column style="width:15%;white-space: normal" headerText="#{lbl['lbl.sc.identification.no']}">
 				<h:outputText
-					value="#{committeeMember.scCommitteeMember.icPassport}"></h:outputText>
+					value="#{activity.scCommitteeMember.icPassport}"></h:outputText>
 			</p:column>
 			<p:column style="width:15%;white-space: normal" headerText="#{lbl['lbl.sc.designation']}">
 				<h:outputText
-					value="#{committeeMember.scCommitteeMember.designation}"></h:outputText>
+					value="#{activity.scCommitteeMember.designation}"></h:outputText>
 			</p:column>
 			<p:column style="width:17%;white-space: normal" headerText="#{lbl['lbl.sc.email']}">
-				<h:outputText value="#{committeeMember.scCommitteeMember.email}"></h:outputText>
+				<h:outputText value="#{activity.scCommitteeMember.email}"></h:outputText>
 			</p:column>
 			<p:column style="width:10%" headerText="#{lbl['lbl.sc.grade']}">
-				<h:outputText value="#{committeeMember.scCommitteeMember.grade}"></h:outputText>
+				<h:outputText value="#{activity.scCommitteeMember.grade}"></h:outputText>
 			</p:column>
 			<p:column style="width:8%">
 				<f:facet name="header">
@@ -40,11 +40,11 @@
 					<ac:iconTooltip id="pnp#{index}OC" value="#{lbl['lbl.sc.pnp.tooltip']}" />
 				</f:facet>
 				<h:outputText
-					value="#{lbl[committeeMember.scCommitteeMember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"></h:outputText>
+					value="#{lbl[activity.scCommitteeMember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"></h:outputText>
 			</p:column>
 			<p:column style="width:15%" headerText="#{lbl['lbl.sc.role']}">
 				<h:outputText
-					value="#{evaluationBackingBean.getParameterDesc(committeeMember.scCommitteeMember.memberRole)}"></h:outputText>
+					value="#{evaluationBackingBean.getParameterDesc(activity.scCommitteeMember.memberRole)}"></h:outputText>
 			</p:column>
 			<p:column style="width:2%;text-align: center;">
 				<f:facet name="header">
@@ -53,7 +53,7 @@
 				</f:facet>
 				<p:selectBooleanCheckbox
 					disabled="#{evaluationBackingBean.managedBean.readOnly}"
-					value="#{committeeMember.attended}" />
+					value="#{activity.attended}" />
 			</p:column>
 
 
