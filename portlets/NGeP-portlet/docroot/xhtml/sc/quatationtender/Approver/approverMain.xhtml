@@ -12,6 +12,7 @@
 	<ui:define name="contentSection">
 		<ui:param name="scQt" value="#{approvalBackingBean.managedBean.qt}" />
 		<ui:param name="scQtApproval" value="#{approvalBackingBean.managedBean.scQtApproval}" />
+		<ui:param name="approvalRequest" value="#{approvalBackingBean.managedBean.scQtApprovalRequest}" />
 
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/icon_loadingLarge.gif" />
@@ -64,13 +65,20 @@
 			<ui:include src="ptjApprovalextendcls.xhtml" />
 			<ui:include src="approveremarksdetails.xhtml" />
 		</c:if>
-		<c:if
-			test="${approvalBackingBean.managedBean.approvalType == ParameterConst.approvalCategoryCommitteeeApointment}">
-			<ui:include src="requestPTJdetails.xhtml" />
-			<ui:include src="approverCommittee.xhtml" />
-			<ui:include src="approveremarksdetails.xhtml" />
-		</c:if>
-		<c:if
+		<c:if test="${approvalBackingBean.managedBean.approvalType == ParameterConst.approvalCategoryCommitteeeApointment}">
+			<c:choose>
+				<c:when
+					test="${approvalBackingBean.managedBean.committeeReviseFlow}">
+					<ui:include src="committeUpdateApprover.xhtml" />
+				</c:when>
+				<c:otherwise>
+					<ui:include src="requestPTJdetails.xhtml" />
+					<ui:include src="approverCommittee.xhtml" />
+					<ui:include src="approveremarksdetails.xhtml" />
+				</c:otherwise>
+			</c:choose>
+			</c:if>
+			<c:if
 			test="${approvalBackingBean.managedBean.approvalType == ParameterConst.approvalRequestPublicationApproval}">
 			<ui:include src="requestPTJdetails.xhtml" />
 			<ui:include src="publicApproval.xhtml" />

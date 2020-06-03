@@ -20,10 +20,12 @@ import javax.faces.model.SelectItem;
 
 import my.ep.constant.pm.ParameterConst;
 import my.ep.factory.EpLogger;
+import my.ep.helper.Paginator;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMemberHistory;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
@@ -249,6 +251,12 @@ public class CommitteManagedBean extends BaseManagedBean {
 	/** Flag to indicate selection of all committee members **/
 	private boolean selectAllMembers;
     
+	//25037-START
+	private Paginator historyPaginator;
+	private Paginator memberHistoryPaginator;
+	private ScCommitteeMemberHistory selectedCommitteeHistory;
+	private String currentCommitteeType;
+	//25037-END
 	/**
 	 * Instantiates a new committe managed bean.
 	 */
@@ -1441,6 +1449,39 @@ public class CommitteManagedBean extends BaseManagedBean {
 				return this.getScCommittee().isRecordStatus();
 			}
 
+		}
+
+		public Paginator getHistoryPaginator() {
+			return historyPaginator;
+		}
+
+		public void setHistoryPaginator(Paginator historyPaginator) {
+			this.historyPaginator = historyPaginator;
+		}
+
+		public Paginator getMemberHistoryPaginator() {
+			return memberHistoryPaginator;
+		}
+
+		public void setMemberHistoryPaginator(Paginator memberHistoryPaginator) {
+			this.memberHistoryPaginator = memberHistoryPaginator;
+		}
+
+		public ScCommitteeMemberHistory getSelectedCommitteeHistory() {
+			return selectedCommitteeHistory;
+		}
+
+		public void setSelectedCommitteeHistory(
+				ScCommitteeMemberHistory selectedCommitteeHistory) {
+			this.selectedCommitteeHistory = selectedCommitteeHistory;
+		}
+
+		public String getCurrentCommitteeType() {
+			return currentCommitteeType;
+		}
+
+		public void setCurrentCommitteeType(String currentCommitteeType) {
+			this.currentCommitteeType = currentCommitteeType;
 		}
 
 

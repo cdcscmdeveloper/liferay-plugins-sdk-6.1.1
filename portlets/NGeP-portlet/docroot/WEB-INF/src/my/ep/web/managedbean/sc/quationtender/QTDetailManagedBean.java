@@ -22,9 +22,11 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.sc.QTActivityBean;
 import my.ep.biz.bean.sc.QtAmendMentBean;
+import my.ep.biz.bean.sc.QtCommitteeMemberBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.factory.EpLogger;
+import my.ep.helper.Paginator;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
@@ -62,6 +64,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoiForQt;
 import my.ep.persistence.entity.sc.loaloi.ScLoiReverseRemark;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMemberHistory;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
@@ -1664,6 +1667,18 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/**
 	 * Instantiates a new QT detail managed bean.
 	 */
+	//#25037-START
+	private boolean showHistory;
+	private Paginator committeeHistories;
+	private String currentCommitteeDesc;
+	private ScCommitteeMemberHistory selectedCommitteeHistory;
+	private Paginator selectedHistoryMember;
+	private boolean committeeReviseFlow;
+	private List<QtCommitteeMemberBean>memberHistoryList;
+	private ScQtApprovalRequest scQtApprovalRequest;
+
+	//#25037-END
+
 	public QTDetailManagedBean() {
 		log.info("inside ");
 
@@ -10342,6 +10357,73 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		public void setParamTypes(List<String> paramTypes) {
 			this.paramTypes = paramTypes;
 		}
+
+		//#25037-start
+		public boolean isShowHistory() {
+			return showHistory;
+		}
+
+		public void setShowHistory(boolean showHistory) {
+			this.showHistory = showHistory;
+		}
+
+		public Paginator getCommitteeHistories() {
+			return committeeHistories;
+		}
+
+		public void setCommitteeHistories(Paginator committeeHistories) {
+			this.committeeHistories = committeeHistories;
+		}
+
+		public String getCurrentCommitteeDesc() {
+			return currentCommitteeDesc;
+		}
+
+		public void setCurrentCommitteeDesc(String currentCommitteeDesc) {
+			this.currentCommitteeDesc = currentCommitteeDesc;
+		}
+
+		public ScCommitteeMemberHistory getSelectedCommitteeHistory() {
+			return selectedCommitteeHistory;
+		}
+
+		public void setSelectedCommitteeHistory(ScCommitteeMemberHistory selectedCommitteeHistory) {
+			this.selectedCommitteeHistory = selectedCommitteeHistory;
+		}
+
+		public Paginator getSelectedHistoryMember() {
+			return selectedHistoryMember;
+		}
+
+		public void setSelectedHistoryMember(Paginator selectedHistoryMember) {
+			this.selectedHistoryMember = selectedHistoryMember;
+		}
+
+		public boolean isCommitteeReviseFlow() {
+			return committeeReviseFlow;
+		}
+
+		public void setCommitteeReviseFlow(boolean committeeReviseFlow) {
+			this.committeeReviseFlow = committeeReviseFlow;
+		}
+
+		public List<QtCommitteeMemberBean> getMemberHistoryList() {
+			return memberHistoryList;
+		}
+
+		public void setMemberHistoryList(List<QtCommitteeMemberBean> memberHistoryList) {
+			this.memberHistoryList = memberHistoryList;
+		}
+
+		public ScQtApprovalRequest getScQtApprovalRequest() {
+			return scQtApprovalRequest;
+		}
+
+		public void setScQtApprovalRequest(ScQtApprovalRequest scQtApprovalRequest) {
+			this.scQtApprovalRequest = scQtApprovalRequest;
+		}
+		//#25037-end
+
 		
 		
 		//#25692 End

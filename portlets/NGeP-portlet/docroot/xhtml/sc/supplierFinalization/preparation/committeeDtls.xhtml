@@ -53,13 +53,21 @@
 				<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(
 									  	 committeeDtl.scCommitteeMember.representativeType)}" />
 			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.attendance']}"
-					  style="width:10%;text-align:center;">
+				
+			<p:column style="width:10%;text-align:center;">
+				<f:facet name="header">
+					<h:outputText  value="#{lbl['lbl.sc.lbl.attendandendorse']}" />
+					<ac:iconTooltip id="attendanceTooltip" value="#{lbl['lbl.sc.tooltip.attendandendorse']}" />
+				</f:facet>	
 				<p:selectBooleanCheckbox value="#{committeeDtl.attended}"
 					disabled="#{!isSecretaryUser or suppFinalizationBackingBean.managedBean.readOnly}"  />
 			</p:column>
 		</p:dataTable>
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.sc.btn.update.committee']}"
+				styleClass="BtnSpacing"
+				action="#{suppFinalMeetingBackingBean.navigateToUpdateMember('update')}" />
+		</div>
 	</p:panel>
 	
 	<ac:scRemarkAndAttachment
