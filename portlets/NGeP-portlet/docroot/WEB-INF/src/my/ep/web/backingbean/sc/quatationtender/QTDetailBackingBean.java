@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -37,6 +38,7 @@ import javax.persistence.criteria.JoinType;
 
 import my.ep.biz.bean.sc.QtAmendMentBean;
 import my.ep.biz.bean.sc.QtAmendMentValueBean;
+import my.ep.biz.bean.sc.QtCommitteeMemberBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -124,6 +126,7 @@ import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.helper.Paginator;
 import my.ep.jaxb.sc.committeedata.SCCommitteeDataType;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
@@ -170,6 +173,7 @@ import my.ep.persistence.entity.sc.quationtender.ScCloseQTAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScCloseQTRemark;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMemberHistory;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtAppRequestRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
@@ -207,6 +211,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.PTJLocalityCode;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.CustomUtils;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -5798,8 +5803,25 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				} else {
 					msgCode = MessageConst.INFO_700004;
 				}
-				successMessage(msgCode, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION,
-						scQt.getQtNo(), Boolean.TRUE);
+				//#25037
+				if(CollectionUtils.isNotEmpty(quationTenderResDTO.getCmtModififationRequests())){
+					int count = 0;
+					String committeeType = "";
+					List<ScQtApprovalRequest> list = quationTenderResDTO.getCmtModififationRequests();
+					for(ScQtApprovalRequest r: list){
+						count++;
+						committeeType = committeeType.concat(r.getApprovalType().getParameterCode());
+						if(count<list.size()){
+							committeeType.concat("/");
+						}
+					}
+					String procurementMode = this.getParameterDesc(scQt.getProcurementMode());
+					String qtNo = scQt.getQtNo();
+					successMessage(MessageConst.INFO_760504, new String[]{committeeType, procurementMode, qtNo}, true);
+				}else{
+					successMessage(msgCode, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION,
+							scQt.getQtNo(), Boolean.TRUE);
+				}
 			}
 		} finally {
 			detailSO = null;
@@ -8689,6 +8711,29 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
     	return "/xhtml/sc/bidding/bidManagement/bidManagementMain.xhtml?faces-redirect=true";	
     	} //#17376-End onlineBiddingcodes
+    
+    //#25037-start
+    public void navigateToViewHistory(ScQtCommittee scQtCommittee, boolean showHistory){
+    	this.getManagedBean().setShowHistory(showHistory);
+    	if(this.getManagedBean().isShowHistory()){
+    		ICommitteSO committeSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+    		List<ScCommitteeMemberHistory> histories = committeSO.getMergedHistory(scQtCommittee, true);
+    		this.getManagedBean().setCommitteeHistories(new Paginator(histories));
+    		this.getManagedBean().setCurrentCommitteeDesc(this.getParameterDesc(scQtCommittee.getScCommittee().getCommitteeType(), new FacesScopes().getUserLocale()));
+    		this.getManagedBean().setSelectedHistoryMember(new Paginator(new ArrayList<QtCommitteeMemberBean>()));
+    	}
+    }
+    
+	@SuppressWarnings("unchecked")
+    public void onSelectHistory() throws IOException{
+    	ScCommitteeMemberHistory history= this.getManagedBean().getSelectedCommitteeHistory();
+		List<QtCommitteeMemberBean> list =(List<QtCommitteeMemberBean>)(Object)history.deserializeList(history.getCommitteeMembers());
+		CustomUtils.sortQtCommitteeMemberRole(list);
+    	this.getManagedBean().setSelectedHistoryMember(new Paginator(list));
+    }
+    //#25037-end
+
 }
 
 
