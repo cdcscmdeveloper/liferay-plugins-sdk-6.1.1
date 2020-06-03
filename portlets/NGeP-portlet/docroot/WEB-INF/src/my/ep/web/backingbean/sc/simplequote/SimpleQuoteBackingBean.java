@@ -1538,19 +1538,21 @@ public class SimpleQuoteBackingBean extends
 						//28225 - Start
 						for(TplSpecQuestion tplSpecQuestion : getManagedBean()
 								.getServiceTemplateSpecBean().getSpecMaster().getTplSpecQuestions()){
-							if((tplSpecQuestion.getAnswerTypeCode() != null) 
-									&& (tplSpecQuestion.getAnswerTypeCode().getParameterCode()
-										.equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_NORMAL))){
-								if(tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
-										.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF) ){
-									if(tplSpecQuestion.getClUomFrequency() != null){
-										tplSpecQuestion.setClUomFrequency(null);
-									}
-									if(tplSpecQuestion.getClDurationMonth() != null){
-										tplSpecQuestion.setClDurationMonth(null);
+							if(tplSpecQuestion.getSpecQuestionId() != null){
+								if((tplSpecQuestion.getAnswerTypeCode() != null) 
+										&& (tplSpecQuestion.getAnswerTypeCode().getParameterCode()
+											.equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_NORMAL))){
+									if(tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
+											.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF) ){
+										if(tplSpecQuestion.getClUomFrequency() != null){
+											tplSpecQuestion.setClUomFrequency(null);
+										}
+										if(tplSpecQuestion.getClDurationMonth() != null){
+											tplSpecQuestion.setClDurationMonth(null);
+										}
 									}
 								}
-							}
+							}			
 						}				
 						//28225 - End
 						
@@ -2255,19 +2257,21 @@ public class SimpleQuoteBackingBean extends
 						//28225 - Start
 						for(TplSpecQuestion tplSpecQuestion : getManagedBean()
 								.getServiceTemplateSpecBean().getSpecMaster().getTplSpecQuestions()){
-							if((tplSpecQuestion.getAnswerTypeCode() != null) 
-									&& (tplSpecQuestion.getAnswerTypeCode().getParameterCode()
-										.equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_NORMAL))){
-								if(tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
-										.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF) ){
-									if(tplSpecQuestion.getClUomFrequency() != null){
-										tplSpecQuestion.setClUomFrequency(null);
-									}
-									if(tplSpecQuestion.getClDurationMonth() != null){
-										tplSpecQuestion.setClDurationMonth(null);
+							if(tplSpecQuestion.getSpecQuestionId() != null){
+								if((tplSpecQuestion.getAnswerTypeCode() != null) 
+										&& (tplSpecQuestion.getAnswerTypeCode().getParameterCode()
+											.equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_NORMAL))){
+									if(tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
+											.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF) ){
+										if(tplSpecQuestion.getClUomFrequency() != null){
+											tplSpecQuestion.setClUomFrequency(null);
+										}
+										if(tplSpecQuestion.getClDurationMonth() != null){
+											tplSpecQuestion.setClDurationMonth(null);
+										}
 									}
 								}
-							}
+							}			
 						}				
 						//28225 - End
 						
