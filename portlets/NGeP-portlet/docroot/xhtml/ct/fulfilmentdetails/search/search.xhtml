@@ -245,14 +245,13 @@
 					 		 action="#{contractDetailsBackingBean.setContractId(data.ctContract.contractId)}"
 							   	process="@this" partialSubmit="true"  oncomplete="proceedMigratedDlg.show()">
 					     </p:menuitem>
-					   <p:menuitem id="menuItemId16" value="#{(data.agStatus != 1) ? lbl['lbl.ct.request.design.ct.admin'] : lbl['lbl.ct.remove.design.ct.admin']}"
+	<!-- #21387-basri --><p:menuitem id="menuItemId16" value="#{(data.assignedCtAdminFlag == 0) ? lbl['lbl.ct.request.design.ct.admin'] : lbl['lbl.ct.remove.design.ct.admin']}"
 					     		icon="ui-icon-edit"
 					     		process="@this" partialSubmit="true"
 					     		rendered="#{(contractDetailsBackingBean.isContractAdmin() or ctBackingBean.isApprover()) and data.ctStatus == 1
 					     				and  !data.allowAgreementCreation}" action="#{contractDetailsBackingBean.goToRequestCtAdmin(data.ctContract.contractId)}"
 					     		onStart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
 					     </p:menuitem>  
-					   		           
                        </p:menuButton>
 					</p:column>
 					<!-- Supplier's action -->
