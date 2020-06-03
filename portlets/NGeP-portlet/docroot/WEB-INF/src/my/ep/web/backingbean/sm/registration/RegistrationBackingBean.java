@@ -329,6 +329,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			}else{
 				ssmReqDTO.setBasicAcc(false);
 			}
+			//27329
+			ssmReqDTO.setFromRegistration(true);
 			SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
 			this.getManagedBean().setCompanyValidWithSSM(false);
 			this.getManagedBean().getDummy().clear();
