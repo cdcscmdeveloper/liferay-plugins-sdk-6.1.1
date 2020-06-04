@@ -1421,7 +1421,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 						reqDTO.setScheduleNo(scheduleNo);
 						if(!fulfilmentRequestSO.isContractRequestInUsed(reqDTO).getHaveFlRecord()) {//13984
 							//#14650 - Alert message if contract incomplete
-							if(resDTOInvoice.isSubmitInvoice()==false)
+							if(resDTOInvoice.isCrComplete()==false)
 							FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 									MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 							break;
@@ -1479,7 +1479,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			//13984-end
 		}
 		//#14650 - Alert message if contract incomplete - Start
-		if(resDTOInvoice.isSubmitInvoice()==false){
+		if(resDTOInvoice.isCrComplete()==false){
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 					MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 		}
