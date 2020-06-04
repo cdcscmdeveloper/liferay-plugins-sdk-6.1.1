@@ -379,7 +379,7 @@
 								itemValue="#{counLs.countryId}" />
 							<p:ajax event="change"
 								listener="#{registrationBackingBean.populateStateByAddType('permenant',false)}"
-								update="cmbPermState,cmbPermDistrict,cmbPermCity,txtPermPostcodePanelId" />
+								update="cmbPermState,cmbPermDivision,cmbPermDistrict,cmbPermCity,txtPermPostcodePanelId" />
 						</p:selectOneMenu> <p:message id="cmbPermCounrtyMsg" for="cmbPermCounrty"
 							display="icon" /></td>
 				</tr>
@@ -401,9 +401,34 @@
 								itemValue="#{state.stateId}" itemLabel="#{state.stateName}" />
 							<p:ajax event="change"
 								listener="#{registrationBackingBean.populateDistrictByAddType('permenant',false)}"
-								update="cmbPermDistrict,cmbPermCity" />
+								update="cmbPermDivision,cmbPermDistrict,cmbPermCity" />
 						</p:selectOneMenu>
 						<p:message id="cmbPermStateMsg" for="cmbPermState" display="icon" /></td>
+				</tr>
+				<!-- 13320 -->
+				
+				<tr>
+					<td class="tdTitle"></td>
+					<td class="tdContent"><p:inputText size="40"
+							 id="txtPermAdd4" maxlength="100" /></td>
+							
+					<td class="tdTitle">
+						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</td>
+					<td class="tdContent"><p:selectOneMenu id="cmbPermDivision" 
+					label="#{lbl['lbl.sm.division']}"
+							value="#{registrationBackingBean.managedBean.divisionId}" 
+							disabled="#{registrationBackingBean.managedBean.divisionBox}" 
+							style="width:80%">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItems var="division"
+								value="#{registrationBackingBean.managedBean.permenantDivisionLs}"
+								itemValue="#{division.divisionId}" itemLabel="#{division.divisionName}" />
+							<p:ajax event="change"
+								listener="#{registrationBackingBean.populateDivisionByAddType('permenant',false)}"
+								update="cmbPermDistrict,cmbPermCity" />
+						</p:selectOneMenu></td>
 				</tr>
 
 				<tr>

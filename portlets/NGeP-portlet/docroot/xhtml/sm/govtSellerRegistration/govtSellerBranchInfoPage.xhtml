@@ -189,11 +189,30 @@
 								value="#{bb.managedBean.branchCompanyStates}" />
 							<p:ajax event="change" process="@this"
 								listener="#{bb.onChangeState(bb.managedBean.selectedBranch.smAddress.pmState,'BRANCH_ADDRESS')}"
-								update="branchState,branchDist,branchCity" />
+								update="branchState,branchDivision,branchDist,branchCity" />
 						</p:selectOneMenu>
 						<p:message id="branchStateMsg" for="branchState" showSummary="true"
 							showDetail="false" display="icon" /></td>
 				</tr>
+				<!-- 13320 -->
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.division']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+							label="#{lbl['lbl.sm.division']}"
+							value="#{bb.managedBean.divisionIds}"
+							disabled="#{bb.managedBean.divisionBox}"
+							id="branchDivision">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItems var="brnDivision"
+								value="#{bb.managedBean.branchCompanyDivisions}" />
+							<p:ajax event="change" process="@this"
+							listener="#{bb.onChangeDivision('BRANCH_ADDRESS')}"
+								update="branchDist,branchCity" />
+						</p:selectOneMenu></td>
+				</tr>
+				
+				
 		
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
