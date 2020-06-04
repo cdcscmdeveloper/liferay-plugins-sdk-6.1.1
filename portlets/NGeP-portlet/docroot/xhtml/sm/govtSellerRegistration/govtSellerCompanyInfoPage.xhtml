@@ -105,7 +105,7 @@
 							value="#{bb.managedBean.countryLs}" />
 						<p:ajax event="change"
 							listener="#{bb.onChangeCountry(registrationBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCountry,'COMPANY_ADDRESS')}"
-							update="busState,busDistrict,busCity,compPostCodePanelId,:form:acgmap:gmapInput:gmapInput" />
+							update="busState,busDivision,busDistrict,busCity,compPostCodePanelId,:form:acgmap:gmapInput:gmapInput" />
 					</p:selectOneMenu> <p:message id="compCountryIdMsg" for="compCountryId"
 						display="icon" /></td>
 			</tr>
@@ -130,9 +130,35 @@
 							value="#{bb.managedBean.businessStateLs}" />
 						<p:ajax event="change" process="@this"
 							listener="#{bb.onChangeState(bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState,'COMPANY_ADDRESS')}"
-							update="busDistrict,busCity,:form:acgmap:gmapInput:gmapInput" />
+							update="busDistrict,busDivision,busCity,:form:acgmap:gmapInput:gmapInput" />
 					</p:selectOneMenu> <p:message id="busStateMsg" for="busState" display="icon" /></td>
 			</tr>
+			<!-- 13320 -->
+			<tr>
+				<td></td>
+				<td class="tdContent"><p:inputText size="40"
+						id="compAdd4" maxlength="100"
+						/></td>
+
+				<td class="tdTitle">
+					<p:outputLabel value="#{lbl['lbl.sm.division']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td class="tdContent">
+					<p:selectOneMenu id="busDivision"
+						 label="#{lbl['lbl.sm.division']}"
+						value="#{bb.managedBean.divisionIds}"
+						disabled="#{bb.managedBean.divisionBox}"
+						style="width:80%">
+						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
+						<f:selectItems var="state"
+							value="#{bb.managedBean.businessDivisionLs}" />
+						<p:ajax event="change" process="@this"
+							listener="#{bb.onChangeDivision('COMPANY_ADDRESS')}"
+							update="busDistrict,busCity" />
+					</p:selectOneMenu></td>
+			</tr>
+			
 
 			<tr>
 				<td></td>
