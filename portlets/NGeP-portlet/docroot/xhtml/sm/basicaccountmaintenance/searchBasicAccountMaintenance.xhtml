@@ -526,7 +526,7 @@
 									itemLabel="#{counLs.countryName}" itemValue="#{counLs.countryId}" />
 								<p:ajax event="change"
 									listener="#{supplierDataMaintenanceBackingBean.populateStateByAddType('business',true)}"
-									update="busState,busDistrict,busCity,compPostCodePanelId" />
+									update="busState,busDivision,busDistrict,busCity,compPostCodePanelId" />
 							</p:selectOneMenu> <p:message id="compCountryIdMsg" for="compCountryId"
 								display="icon" /></td>
 					</tr>
@@ -551,8 +551,33 @@
 									itemValue="#{state.stateId}" itemLabel="#{state.stateName}" />
 								<p:ajax event="change" process="@this"
 									listener="#{supplierDataMaintenanceBackingBean.populateDistrictByAddType('business', true)}"
-									update="busDistrict,busCity" />
+									update="busDistrict,busDivision,busCity" />
 							</p:selectOneMenu> <p:message id="busStateMsg" for="busState" display="icon" /></td>
+					</tr>
+					<!-- 13320 -->
+					
+					<tr>
+						<td></td>
+						<td class="tdContent"><p:inputText size="40"
+								id="compAdd4" maxlength="100"/></td>
+		
+						<td class="tdTitle">
+							<p:outputLabel value="#{lbl['lbl.sm.division']}" />
+							<p:outputLabel value="*" styleClass="mandatory" />
+						</td>
+						<td class="tdContent"><p:selectOneMenu id="busDivision"
+						        label="#{lbl['lbl.sm.division']}"
+								value="#{supplierDataMaintenanceBackingBean.managedBean.divisionId}"
+								disabled="#{supplierDataMaintenanceBackingBean.managedBean.divisionBox}"
+								style="width:80%">
+								<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
+								<f:selectItems var="division"
+									value="#{supplierDataMaintenanceBackingBean.managedBean.businessDivisionLs}"
+									itemValue="#{division.divisionId}" itemLabel="#{division.divisionName}" />
+								<p:ajax event="change" process="@this"
+									listener="#{supplierDataMaintenanceBackingBean.populateDivisionByAddType}"
+									update="busDistrict,busCity" />
+							</p:selectOneMenu></td>
 					</tr>
 		
 					<tr>
