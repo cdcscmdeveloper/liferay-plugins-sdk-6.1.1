@@ -75,8 +75,6 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
-import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
-import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
@@ -160,7 +158,6 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.pp.common.PpCommonUtil;
 import my.ep.web.util.sm.helper.SmApplicationNotificationUtil;
@@ -181,7 +178,6 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.jasper.compiler.SmapUtil;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -2397,6 +2393,10 @@ public class SmApplicationBackingBean extends
 	 */
 	public String getStateLabelById(Long stateId) {
 		return SmCommonUtil.getStateLabelById(stateId);
+	}
+	//13320
+	public String getDivisionLabelById(Long divisionId) {
+		return SmCommonUtil.getDivisionLabelById(divisionId);
 	}
 
 	/**
@@ -10172,9 +10172,27 @@ public class SmApplicationBackingBean extends
 	 *            panelName
 	 */
 	public void onChangeState(SmAddress addr, String panelName) {
-		SmApplicationUtil.getInstance().populateDistrictsByState(addr,
+		/*SmApplicationUtil.getInstance().populateDistrictsByState(addr,
 				panelName, getManagedBean());
-		setRoleStaffAddrReqd();
+		setRoleStaffAddrReqd();*/
+		
+		Long stateId = addr.getStateId();
+		if (stateId != null) {
+			addr.setPmState(SmCommonUtil.getInstance()
+					.getStateById(stateId));
+		}
+		if(addr.getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
+			SmApplicationUtil.getInstance().populateDivisionsByState(addr,
+					panelName, getManagedBean());
+			/*SmApplicationUtil.getInstance().populateDistrictsByUsingDivision(addr,
+					panelName, getManagedBean());*/
+			setRoleStaffAddrReqd();
+			
+		}else{
+			SmApplicationUtil.getInstance().populateDistrictsByState(addr,
+					panelName, getManagedBean());
+			setRoleStaffAddrReqd();
+	}
 	}
 
 	/**
@@ -13500,4 +13518,13 @@ public class SmApplicationBackingBean extends
 		}
 	}
 	//END : #27239 
+	
+	//13320-Start
+	
+	public void onChangeDistrictByDivision(SmAddress addr, String panelName) {
+		SmApplicationUtil.getInstance().populateDistrictsByUsingDivision(addr,
+				panelName, getManagedBean());
+		setRoleStaffAddrReqd();
+	}
+	//13320-End	
 }
