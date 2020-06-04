@@ -3688,7 +3688,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			if (ParameterConst.ORG_TYPE_SUPPLIER.equals(user.getOrgTypeCode().getParameterCode())) {
 				reqDTO.setSupplierUser(true);
 			}
-			
+
+			new LogKey(reqDTO.getPmUser().getUserId());
 			UserResDTO resDTO = userSO.saveUserAndUserOrg(reqDTO);
 			logger.info("save user -END");
 			if (resDTO.isSuccessful()) {
