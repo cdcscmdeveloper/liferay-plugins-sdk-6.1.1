@@ -30,7 +30,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.itype']}"></p:outputLabel></td>
 					<td>
-						<p:selectOneMenu id="itemType" value="#{extensionCodeCreationBackingBean.managedBean.typeName}" style="width:30%">
+						<p:selectOneMenu id="itemType" value="#{extensionCodeCreationBackingBean.managedBean.typeName}" style="width:30%" disabled="true">
 							<f:selectItems value="#{extensionCodeCreationBackingBean.managedBean.typeListSI}"></f:selectItems>
 						</p:selectOneMenu>
 					</td>
