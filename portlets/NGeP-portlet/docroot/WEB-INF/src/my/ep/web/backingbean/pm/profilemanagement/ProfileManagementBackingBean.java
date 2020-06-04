@@ -97,6 +97,7 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
@@ -3554,7 +3555,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		logger.info("..............saveUserProfile.................isNewUser=" + isNewUser);
 
 		try {
-
 			user = this.getManagedBean().getSelectedUser();
 			userOrg = this.getManagedBean().getSelectedUserOrg();
 			// Validation
@@ -3607,7 +3607,9 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 																		// for
 																		// each
 																		// user
-			Long loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
+//			Long loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
+			Long loginSessionUserId = (MDC.get(LogKey.USER_ID) == null) ? getFacesScopes().getUserSessionBean().getUserId() : Long.valueOf(String.valueOf(MDC.get(LogKey.USER_ID)));
+			
 			if (!userOrg.isBrandNew()) {
 				userOrg.setChangedBy(loginSessionUserId);
 			} else {
@@ -3689,7 +3691,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				reqDTO.setSupplierUser(true);
 			}
 
-			new LogKey(reqDTO.getPmUser().getUserId());
 			UserResDTO resDTO = userSO.saveUserAndUserOrg(reqDTO);
 			logger.info("save user -END");
 			if (resDTO.isSuccessful()) {
