@@ -48,9 +48,17 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private List<SelectItem> residentialDistrictLs;
 	private List<SelectItem> permenantDistrictLs;
 
+	
 	private List<SelectItem> businessCityLs;
 	private List<SelectItem> residentialCityLs;
 	private List<SelectItem> permenantCityLs;
+	
+	
+	//13320-Start
+	private List<SelectItem> businessDivisionLs;
+	private List<SelectItem> residentialDivisionLs;
+	private List<SelectItem> permenantDivisionLs;
+	//13320-End
 
 	private List<SelectItem> salutationItems;
 	
@@ -159,6 +167,8 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private boolean noDisciplinary;
 	private String regIcCheckSSM;
 	private boolean activeDisicplinaryAction;
+	private boolean divisionBox=true;//13320
+	private Long divisionId;//13320
 	
 	// 27691 - Add/Delete Supplier Owner
 	private SmSupplierOwner[] selectedSuppOwners;
@@ -995,5 +1005,45 @@ public class RegistrationManagedBean extends BaseManagedBean {
 
 	public void setActiveDisicplinaryAction(boolean activeDisicplinaryAction) {
 		this.activeDisicplinaryAction = activeDisicplinaryAction;
+	}
+
+	public boolean isDivisionBox() {
+		return divisionBox;
+	}
+
+	public void setDivisionBox(boolean divisionBox) {
+		this.divisionBox = divisionBox;
+	}
+
+	public List<SelectItem> getBusinessDivisionLs() {
+		return businessDivisionLs;
+	}
+
+	public void setBusinessDivisionLs(List<SelectItem> businessDivisionLs) {
+		this.businessDivisionLs = businessDivisionLs;
+	}
+
+	public Long getDivisionId() {
+		return divisionId;
+	}
+
+	public void setDivisionId(Long divisionId) {
+		this.divisionId = divisionId;
+	}
+
+	public List<SelectItem> getResidentialDivisionLs() {
+		return residentialDivisionLs;
+	}
+
+	public void setResidentialDivisionLs(List<SelectItem> residentialDivisionLs) {
+		this.residentialDivisionLs = residentialDivisionLs;
+	}
+
+	public List<SelectItem> getPermenantDivisionLs() {
+		return permenantDivisionLs;
+	}
+
+	public void setPermenantDivisionLs(List<SelectItem> permenantDivisionLs) {
+		this.permenantDivisionLs = permenantDivisionLs;
 	}
 }
