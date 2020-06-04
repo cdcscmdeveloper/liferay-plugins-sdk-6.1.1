@@ -363,6 +363,26 @@
 											for="basicPermAddStateList" showSummary="true"
 											showDetail="false" display="icon" /></td>
 								</tr>
+								
+								<!-- 13320 -->
+								<tr>
+									<td><p:outputLabel
+											value="#{lbl['lbl.sm.division']}" /> <p:outputLabel value="*"
+											styleClass="mandatory" /></td>
+									<td ><p:selectOneMenu required="true"
+											label="#{lbl['lbl.sm.division']}" id="basicPermAddDivisionList"
+											value="#{smPersonnelBackingBean.managedBean.divisionId}"
+											disabled="#{smPersonnelBackingBean.managedBean.divisionBox}"
+											style="width: 207px;margin-bottom: 5px;">
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+											<f:selectItems
+												value="#{smPersonnelBackingBean.managedBean.permAddDivisionList}" />
+											<p:ajax event="change"
+												update="basicPermAddDistrictList, basicPermAddCityList"/>
+										</p:selectOneMenu></td>
+								</tr>
+								
+								
 								<tr>
 									<td><p:outputLabel
 											value="#{lbl['lbl.sm.district']}" /> <p:outputLabel value="*"
@@ -535,6 +555,26 @@
 											for="basicMailAddStateList" showSummary="true"
 											showDetail="false" display="icon" /></td>
 								</tr>
+								<!-- 13320 -->
+									<tr>
+									<td><p:outputLabel
+											value="#{lbl['lbl.sm.division']}" /> <p:outputLabel value="*"
+											styleClass="mandatory" /></td>
+									<td ><p:selectOneMenu
+											id="basicMailAddDivisionList" 
+											label="#{lbl['lbl.sm.division']}"
+											value="#{smPersonnelBackingBean.managedBean.divisionId}"
+											disabled="#{smPersonnelBackingBean.managedBean.divisionBox}"
+											style="width: 207px;margin-bottom: 5px;">
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+											<f:selectItems
+												value="#{smPersonnelBackingBean.managedBean.mailAddDivisionList}" />
+											<p:ajax event="change" update="basicMailAddDistrictList,basicMailAddCityList"/>
+										</p:selectOneMenu></td>
+								</tr>
+								
+								
+								
 								<tr>
 									<td><p:outputLabel
 											value="#{lbl['lbl.sm.district']}" /> <p:outputLabel value="*"

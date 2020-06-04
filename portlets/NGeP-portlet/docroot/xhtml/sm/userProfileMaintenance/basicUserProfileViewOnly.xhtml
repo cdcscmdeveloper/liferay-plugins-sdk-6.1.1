@@ -135,7 +135,11 @@
 								<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.state']}" /></td>
 								<td><p:outputLabel styleClass="outputLabel-view" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.pmState.stateName}"/></td>
 							</tr>
-	
+							<!-- 13320 -->
+							<tr>
+								<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.division']}" /></td>
+								<td><p:outputLabel styleClass="outputLabel-view" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.pmDivision.divisionName}"/></td>
+							</tr>	
 							<tr>
 								<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.district']}" /></td>
 								<td><p:outputLabel styleClass="outputLabel-view" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.pmDistrict.districtName}"/></td>
@@ -176,6 +180,11 @@
 								<tr>
 									<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.state']}" /></td>
 									<td><p:outputLabel styleClass="outputLabel-view" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.pmState.stateName}"/></td>
+								</tr>
+								<!-- 13320 -->
+								<tr>
+									<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.division']}" /></td>
+									<td><p:outputLabel styleClass="outputLabel-view" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.pmDivision.divisionName}"/></td>
 								</tr>
 		
 								<tr>
