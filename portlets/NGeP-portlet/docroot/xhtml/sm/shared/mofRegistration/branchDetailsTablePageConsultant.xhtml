@@ -43,7 +43,7 @@
 						value="#{backingBean.managedBean.countryItems}" />
 					<p:ajax event="change" process="@this"
 						listener="#{backingBean.onChangeCountry(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
-						update="branchesCountry,branchesState,branchesDist,branchesCity,postCodeBranchConsPanelId" />
+						update="branchesCountry,branchesState,branchesDivision,branchesDist,branchesCity,postCodeBranchConsPanelId" />
 				</p:selectOneMenu></td>
 		</tr>
 
@@ -57,7 +57,22 @@
 						value="#{backingBean.managedBean.branchCompanyStates}" />
 					<p:ajax event="change" process="@this"
 						listener="#{backingBean.onChangeState(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
-						update="branchesState,branchesDist,branchesCity" />
+						update="branchesState,branchesDivision,branchesDist,branchesCity" />
+				</p:selectOneMenu></td>
+		</tr>
+		<!-- 13320 -->
+		
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.sm.division']}" /></td>
+			<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+					value="#{backingBean.managedBean.selectedBranch.smAddress.divisionId}"
+					disabled="#{backingBean.managedBean.divisionBox}"
+					id="branchesDivision">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+					<f:selectItems var="brnDivision"
+						value="#{backingBean.managedBean.branchCompanyDivisions}" />
+					<p:ajax event="change" process="@this"
+						update="branchesDist,branchesCity" />
 				</p:selectOneMenu></td>
 		</tr>
 
