@@ -445,7 +445,6 @@ public class ViewSuppProfileBackingBean extends
 	
 	//28281 - start
 	public void viewApplication(SmAppl selectedSmAppl){
-		log.info("karmo: ange");
 		super.viewApplication(selectedSmAppl);
 		SmSupplier supplier = null;
 		if(getManagedBean().isSupplierUser()){
