@@ -297,7 +297,7 @@
 								value="#{backingBean.managedBean.countryItems}" />
 							<p:ajax event="change" process="@this"
 								listener="#{backingBean.onChangeCountry(backingBean.managedBean.selectedEquityCompany.smAddress,SupplierManagementConst.SM_EQUI_COMPANY_PANEL)}"
-								update="equiState,equiDist,equiCity,postCodeSuppEquiPanelId" />
+								update="equiState,equiDivision,equiDist,equiCity,postCodeSuppEquiPanelId" />
 						</p:selectOneMenu> 
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges
@@ -326,7 +326,7 @@
 								value="#{backingBean.managedBean.equiCompanyStates}" />
 							<p:ajax event="change" process="@this"
 								listener="#{backingBean.onChangeState(backingBean.managedBean.selectedEquityCompany.smAddress,SupplierManagementConst.SM_EQUI_COMPANY_PANEL)}"
-								update="equiDist,equiCity" />
+								update="equiDivision,equiDist,equiCity" />
 						</p:selectOneMenu> 
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -339,6 +339,28 @@
 						<p:message id="equiStateMsg" for="equiState" showSummary="true"
 							showDetail="false" display="icon" /></td>
 				</tr>
+				
+				<!-- 13320 -->
+				
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.division']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+	
+					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+							label="#{lbl['lbl.sm.division']}"
+							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.divisionId}"
+							disabled="#{backingBean.managedBean.divisionBox}"
+							id="equiDivision">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItems var="equiDivision"
+								value="#{backingBean.managedBean.equiCompanyDivisions}" />
+							<p:ajax event="change" process="@this"
+							update="equiDist,equiCity" />
+						</p:selectOneMenu> </td>
+				</tr>
+	
+				
+				
 	
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel

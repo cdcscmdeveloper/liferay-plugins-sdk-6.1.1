@@ -286,7 +286,7 @@
 								<p:ajax event="change" process="@this"
 									listener="#{backingBean.onChangeState(backingBean.managedBean.basicCompanyFacility.smAddress, 
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
-									update="basicOffFacDist,basicOffFacCity" />
+									update="basicOffFacDist,basicOffFacDivision,basicOffFacCity" />
 
 							</p:selectOneMenu> 
 							
@@ -299,6 +299,28 @@
 							<p:message id="basicOffFacStateMsg" for="basicOffFacState"
 								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
+					<!-- 13320 -->
+					<tr>
+						<td></td>
+						<td><p:inputText id="companyAdd4" size="35" maxlength="100"/>
+						</td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.division']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+								id="basicOffFacDivision" required="true"
+								label="#{lbl['lbl.sm.division']}"
+								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.divisionId}"
+								disabled="#{backingBean.managedBean.divisionBox}">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+								<f:selectItems var="offDivision"
+									value="#{backingBean.managedBean.basicOffFacDivisions}" />
+								<p:ajax event="change" process="@this"
+								listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.basicCompanyFacility.smAddress, 
+								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
+								update="basicOffFacDist,basicOffFacCity" />
+							</p:selectOneMenu> </td>
+					</tr>
+					
 					<tr>
 						<td></td>
 						<td><p:inputText id="companyAdd3" size="35" maxlength="100"

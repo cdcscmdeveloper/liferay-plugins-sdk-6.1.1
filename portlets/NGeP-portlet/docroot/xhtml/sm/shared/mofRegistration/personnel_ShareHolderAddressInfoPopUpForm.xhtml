@@ -74,10 +74,31 @@
 								SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL,
 								backingBean.managedBean.shareHolderPermAddr.smAddress.pmDistrict,
 								backingBean.managedBean.shareHolderPermAddr.smAddress.pmCity)}"
+										update="prsShrPermDivision,prsShrPermDist,prsShrPermCity" />
+
+								</p:selectOneMenu></td>
+						</tr>
+						
+						<!-- 13320 -->
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.division']}" /></td>
+							<td><p:selectOneMenu
+									style="width: 207px;margin-bottom: 5px;"
+									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmDivision.divisionId}"
+									disabled="#{backingBean.managedBean.divisionBox}"
+									id="prsShrPermDivision">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems var="prsShrPermDivision"
+										value="#{backingBean.managedBean.shrHldrPermDivisions}"
+										itemValue="#{prsShrPermDivision.divisionId}"
+										itemLabel="#{prsShrPermDivision.divisionName}" />
+									<p:ajax event="change"
+									listener="#{backingBean.populateDivisionByState}"
 										update="prsShrPermDist,prsShrPermCity" />
 
 								</p:selectOneMenu></td>
 						</tr>
+						
 
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
@@ -176,7 +197,7 @@
 								backingBean.managedBean.shareHolderMailAddr.smAddress.pmState,
 								backingBean.managedBean.shareHolderMailAddr.smAddress.pmDistrict,
 								backingBean.managedBean.shareHolderMailAddr.smAddress.pmCity)}"
-										update="prsShrMailState,prsShrMailDist,prsShrMailCity" />
+										update="prsShrMailDivision,prsShrMailDist,prsShrMailCity" />
 								</p:selectOneMenu></td>
 						</tr>
 
@@ -196,6 +217,25 @@
 								SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL,
 								backingBean.managedBean.shareHolderMailAddr.smAddress.pmDistrict,
 								backingBean.managedBean.shareHolderMailAddr.smAddress.pmCity)}"
+										update="prsShrMailDivision,prsShrMailDist,prsShrMailCity" />
+
+								</p:selectOneMenu></td>
+						</tr>
+						<!-- 13320 -->
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.division']}" /></td>
+							<td><p:selectOneMenu
+									style="width: 207px;margin-bottom: 5px;"
+									value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmDivision.divisionId}"
+									disabled="#{backingBean.managedBean.divisionBox}"
+									id="prsShrMailDivision">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems var="prsShrMailDivision"
+										value="#{backingBean.managedBean.shrHldrMailDivisions}"
+										itemValue="#{prsShrMailDivision.divisionId}"
+										itemLabel="#{prsShrMailDivision.divisionName}" />
+									<p:ajax event="change"
+										listener="#{backingBean.populateDivisionByState}"
 										update="prsShrMailDist,prsShrMailCity" />
 
 								</p:selectOneMenu></td>
@@ -304,7 +344,7 @@
 								backingBean.managedBean.shareHolderResdAddr.smAddress.pmState,
 								backingBean.managedBean.shareHolderResdAddr.smAddress.pmDistrict,
 								backingBean.managedBean.shareHolderResdAddr.smAddress.pmCity)}"
-										update="prsShrResState,prsShrResDist,prsShrResCity" />
+										update="prsShrResState,prsShrResDivision,prsShrResDist,prsShrResCity" />
 								</p:selectOneMenu></td>
 						</tr>
 
@@ -324,6 +364,25 @@
 								SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL,
 								backingBean.managedBean.shareHolderResdAddr.smAddress.pmDistrict,
 								backingBean.managedBean.shareHolderResdAddr.smAddress.pmCity)}"
+										update="prsShrResDivision,prsShrResDist,prsShrResCity" />
+
+								</p:selectOneMenu></td>
+						</tr>
+						<!-- 13320 -->
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.division']}" /></td>
+							<td><p:selectOneMenu
+									style="width: 207px;margin-bottom: 5px;"
+									value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.pmDivision.divisionId}"
+									disabled="#{backingBean.managedBean.divisionBox}"
+									id="prsShrResDivision">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems var="prsShrResDivision"
+										value="#{backingBean.managedBean.shrHldrResdDivisions}"
+										itemValue="#{prsShrResDivision.divisionId}"
+										itemLabel="#{prsShrResDivision.divisionName}" />
+									<p:ajax event="change"
+										listener="#{backingBean.populateDivisionsByState}"
 										update="prsShrResDist,prsShrResCity" />
 
 								</p:selectOneMenu></td>
@@ -423,9 +482,10 @@
 										listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.shareHolderOffAddr.smAddress.pmCountry.countryId, 
 								SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL,
 								backingBean.managedBean.shareHolderOffAddr.smAddress.pmState,
+								backingBean.managedBean.shareHolderOffAddr.smAddress.pmDivisiion,
 								backingBean.managedBean.shareHolderOffAddr.smAddress.pmDistrict,
 								backingBean.managedBean.shareHolderOffAddr.smAddress.pmCity)}"
-										update="prsShrOffState,prsShrOffDist,prsShrOffCity" />
+										update="prsShrOffState,prsShrOffDivision,prsShrOffDist,prsShrOffCity" />
 								</p:selectOneMenu></td>
 						</tr>
 
@@ -444,7 +504,29 @@
 										listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.shareHolderOffAddr.smAddress.pmState.stateId, 
 								SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL,
 								backingBean.managedBean.shareHolderOffAddr.smAddress.pmDistrict,
+								backingBean.managedBean.shareHolderOffAddr.smAddress.pmDivision,
 								backingBean.managedBean.shareHolderOffAddr.smAddress.pmCity)}"
+										update="prsShrOffDivision,prsShrOffDist,prsShrOffCity" />
+
+								</p:selectOneMenu></td>
+						</tr>
+						
+						<!-- 13320 -->
+						
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.division']}" /></td>
+							<td><p:selectOneMenu
+									style="width: 207px;margin-bottom: 5px;"
+									value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmDivision.divisionId}"
+									disabled="#{backingBean.managedBean.divisionBox}"
+									id="prsShrOffDivision">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems var="prsShrOffDivision"
+										value="#{backingBean.managedBean.shrHldrOffDivisions}"
+										itemValue="#{prsShrOffDivision.divisionId}"
+										itemLabel="#{prsShrOffDivision.divisionName}" />
+									<p:ajax event="change"
+										listener="#{backingBean.populateDivisionsByState}"
 										update="prsShrOffDist,prsShrOffCity" />
 
 								</p:selectOneMenu></td>
