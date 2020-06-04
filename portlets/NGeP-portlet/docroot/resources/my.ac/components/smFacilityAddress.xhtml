@@ -99,7 +99,7 @@
 						value="#{cc.attrs.countryItems}" />
 					<p:ajax event="change" process="@this"
 						listener="#{cc.attrs.backingBean.onChangeCountry(cc.attrs.facility.smAddress,cc.attrs.facilityPanel)}"
-						update="stateId,districtId,cityId,postCodeInputId" />
+						update="stateId,divisionId,districtId,cityId,postCodeInputId" />
 				</p:selectOneMenu> 
 				<p:message id="countryIdMsg" for="countryId" showSummary="true" showDetail="false" display="icon" />
 			</p:outputPanel>
@@ -125,13 +125,38 @@
 						value="#{cc.attrs.stateItems}" />
 					<p:ajax event="change" process="@this"
 						listener="#{cc.attrs.backingBean.onChangeState(cc.attrs.facility.smAddress,cc.attrs.facilityPanel)}"
-						update="districtId,cityId" />
+						update="divisionId,districtId,cityId" />
 	
 				</p:selectOneMenu> 
 				<p:message id="stateIdMsg" for="stateId" showSummary="true" showDetail="false" display="icon" />
 			</p:outputPanel>
 		</td>
 	</tr>
+	<!-- 13320 -->
+		<tr>
+		<td>
+			<p:outputPanel id="divisionLabelId">
+				<p:outputLabel value="#{lbl['lbl.sm.division']}" /> 
+				<p:outputLabel value="*" styleClass="mandatory" />
+			</p:outputPanel>
+		</td>
+		<td>
+			<p:outputPanel id="divisionInputId">
+				<p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+					id="divisionId" 
+					label="#{lbl['lbl.sm.division']}"
+					value="#{cc.attrs.facility.smAddress.divisionId}">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+					<f:selectItems 
+						value="#{cc.attrs.divisionItems}" />
+					<p:ajax event="change" process="@this"
+					listener="#{cc.attrs.backingBean.onChangeDistrictByDivision(cc.attrs.facility.smAddress,cc.attrs.facilityPanel)}"				
+	                 update="divisionId,districtId"/>
+				</p:selectOneMenu>
+			</p:outputPanel>
+		</td>
+	</tr>
+	
 
 	<tr>
 		<td>
