@@ -17,6 +17,7 @@ import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -85,7 +86,8 @@ public class ViewSuppProfileBackingBean extends
 			getManagedBean().setRenderedBackButton(false);
 			//26238 - start
 			if(supplier != null){
-				retrieveActiveDisicplinaryAction(supplier);
+				//28281
+				retrieveActiveDisciplinaryAction(supplier);
 			}
 			
 			List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(supplier);
@@ -159,7 +161,9 @@ public class ViewSuppProfileBackingBean extends
 		if(getManagedBean().isSupplierUser()){
 			currSupp = SmApplicationUtil.getCurrentSupplier();
 		} else {
-			currSupp = getManagedBean().getSearchSupplier();
+			//28281
+			//currSupp = getManagedBean().getSearchSupplier();
+			currSupp = getManagedBean().getSmSupplier();
 		}
 		log.info(currSupp+"-------");
 		log.info(currSupp.getSupplierId()+"-------");
@@ -223,6 +227,8 @@ public class ViewSuppProfileBackingBean extends
 				"disciplinaryActionHistoryDlg.show();");
 	} 
 	
+	//28281
+	/*
 	public static List<DisciplinaryActionVO> getDisciplinaryActionVO(SmSupplier currSupp) {
 		List<DisciplinaryActionVO> voList = new ArrayList<DisciplinaryActionVO>();
 		PersonnelReqDTO perReqDTO = new PersonnelReqDTO();
@@ -339,7 +345,8 @@ public class ViewSuppProfileBackingBean extends
 		}
 		return voList;
 	}
-		
+
+
 	public void retrieveActiveDisicplinaryAction(SmSupplier supplier){
 		List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
 		PersonnelReqDTO perReqDTO = new PersonnelReqDTO();
@@ -412,7 +419,8 @@ public class ViewSuppProfileBackingBean extends
 		} else {
 			this.getManagedBean().setNoDisciplinary(true);
 		}
-	} 
+	}
+	*/
 	//26238 - end
 	//26238 -  STATR Disciplinary Action - 28111
 	public void onViewDisciplinaryActionSupp(SmSupplier currSupp) {		
@@ -434,4 +442,25 @@ public class ViewSuppProfileBackingBean extends
 				"disciplinaryActionHistoryDlg.show();");
 	} 
 	//26238 -  END Disciplinary Action - 28111
+	
+	//28281 - start
+	public void viewApplication(SmAppl selectedSmAppl){
+		log.info("karmo: ange");
+		super.viewApplication(selectedSmAppl);
+		SmSupplier supplier = null;
+		if(getManagedBean().isSupplierUser()){
+			supplier = SmApplicationUtil.getCurrentSupplier();
+		} else {
+			supplier = getManagedBean().getSmSupplier();
+		}
+		List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
+		if(!EntityHelper.isCollectionEmpty(resultList)
+				&& resultList.size() > 0){
+			getManagedBean().setDisciplinaryAction(true);
+		} else {
+			getManagedBean().setDisciplinaryAction(false);
+		}
+		retrieveActiveDisciplinaryAction(supplier);
+	}
+	//28281 - end
 }
