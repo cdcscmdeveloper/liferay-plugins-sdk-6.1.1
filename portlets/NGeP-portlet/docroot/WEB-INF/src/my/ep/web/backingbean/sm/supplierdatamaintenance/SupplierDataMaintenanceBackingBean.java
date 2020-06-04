@@ -2116,12 +2116,6 @@ public class SupplierDataMaintenanceBackingBean extends
 		return voList;
 	}
 	*/
-	
-	private List<DisciplinaryActionVO> getDisciplinaryActionVO(SmSupplier currSupp) {//commented
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	/**
 	 * Retrieve owner and director list
 	 */
