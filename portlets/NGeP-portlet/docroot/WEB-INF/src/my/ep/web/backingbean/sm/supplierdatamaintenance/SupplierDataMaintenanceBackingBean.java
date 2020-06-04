@@ -2117,6 +2117,11 @@ public class SupplierDataMaintenanceBackingBean extends
 	}
 	*/
 	
+	private List<DisciplinaryActionVO> getDisciplinaryActionVO(SmSupplier currSupp) {//commented
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	/**
 	 * Retrieve owner and director list
 	 */
@@ -2355,21 +2360,73 @@ public class SupplierDataMaintenanceBackingBean extends
 	 */
 	public void populateDistrictByAddType(String typeAdd, boolean reset) {
 		if (typeAdd.equals("business")) {
-			if(reset){
+			/*if(reset){
 				getManagedBean().getSmBusinessAdd().setPmDistrict(new PmDistrict());
 				getManagedBean().getSmBusinessAdd().getPmCity().setCityId(null);
 			}
 			this.getManagedBean().getSmBusinessAdd().setPmState(SmCommonUtil.getInstance().getStateById(this.getManagedBean().getSmBusinessAdd().getPmState().getStateId()));
 			List<SelectItem> districtLs = SmCommonUtil.getDistrictList(this.getManagedBean().getSmBusinessAdd().getPmState().getStateId());
 			this.getManagedBean().setBusinessDistrictLs(districtLs);
-			this.getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
+			this.getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());*/
+			
+			PmState state = (SmCommonUtil.getInstance().getStateById(this.getManagedBean().getSmBusinessAdd().getPmState().getStateId()));
+
+			if(state !=null && state.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
+				this.getManagedBean().setDivisionId(null);
+				this.getManagedBean().getSmBusinessAdd().getPmDistrict().setDistrictId(null);
+				this.getManagedBean().getSmBusinessAdd().getPmCity().setCityId(null);
+				
+				List<SelectItem> divisionLs = SmCommonUtil.getDivisionList(this.getManagedBean().getSmBusinessAdd().getPmState().getStateId());
+				this.getManagedBean().setBusinessDivisionLs(divisionLs);
+				getManagedBean().setBusinessDistrictLs(new ArrayList<SelectItem>());
+				this.getManagedBean().setBusinessCityLs(null);	
+				
+			}
+				if(state !=null && state.getAdoptDivision()) {
+					getManagedBean().setDivisionBox(false);	
+				}
+				else{	
+					getManagedBean().setDivisionBox(true);
+					List<SelectItem> divisionLs = SmCommonUtil.getDistrictList(this.getManagedBean().getSmBusinessAdd().getPmState().getStateId());
+					//this.getManagedBean().setDivisionId(null);
+					this.getManagedBean().setBusinessDistrictLs(divisionLs);
+					this.getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());	
+				}
+			
 		} else if (typeAdd.equals("residential")) {
-			log.info("------------residential----------------");
+			/*log.info("------------residential----------------");
 			List<SelectItem> districtLs = SmCommonUtil.getDistrictList(this.getManagedBean().getSmResAdd().getPmState().getStateId());
 			this.getManagedBean().setResidentialDistrictLs(districtLs);
-			this.getManagedBean().setResidentialCityLs(new ArrayList<SelectItem>());
+			this.getManagedBean().setResidentialCityLs(new ArrayList<SelectItem>());*/
+			PmState state = (SmCommonUtil.getInstance().getStateById(this.getManagedBean().getSmResAdd().getPmState().getStateId()));
+
+			if(state !=null && state.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
+				this.getManagedBean().setDivisionId(null);
+				this.getManagedBean().getSmResAdd().getPmDistrict().setDistrictId(null);
+				this.getManagedBean().getSmResAdd().getPmCity().setCityId(null);
+				
+				List<SelectItem> divisionLs = SmCommonUtil.getDivisionList(this.getManagedBean().getSmResAdd().getPmState().getStateId());
+				this.getManagedBean().setResidentialDivisionLs(divisionLs);
+				getManagedBean().setResidentialDistrictLs(new ArrayList<SelectItem>());
+				this.getManagedBean().setResidentialCityLs(null);	
+				
+			}
+				if(state !=null && state.getAdoptDivision()) {
+					getManagedBean().setDivisionBox(false);	
+				}
+				else{	
+					getManagedBean().setDivisionBox(true);
+					List<SelectItem> divisionLs = SmCommonUtil.getDistrictList(this.getManagedBean().getSmResAdd().getPmState().getStateId());
+					//this.getManagedBean().setDivisionId(null);
+					this.getManagedBean().setResidentialDistrictLs(divisionLs);
+					this.getManagedBean().setResidentialCityLs(new ArrayList<SelectItem>());	
+				}
+			
+			
+			
+			
 		} else if (typeAdd.equals("permenant")) {
-			log.info("------------permenant----------------"
+			/*log.info("------------permenant----------------"
 					+ this.getManagedBean().getSmPermenantAdd().getPmState()
 					.getStateId());
 			List<SelectItem> districtLs = SmCommonUtil.getDistrictList(this.getManagedBean().getSmPermenantAdd().getPmState().getStateId());
@@ -2377,7 +2434,32 @@ public class SupplierDataMaintenanceBackingBean extends
 			this.getManagedBean().setPermenantCityLs(new ArrayList<SelectItem>());
 
 			log.info("------permenant LS-------------"
-					+ this.getManagedBean().getPermenantDistrictLs().size());
+					+ this.getManagedBean().getPermenantDistrictLs().size());*/
+			PmState state = (SmCommonUtil.getInstance().getStateById(this.getManagedBean().getSmPermenantAdd().getPmState().getStateId()));
+
+			if(state !=null && state.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
+				this.getManagedBean().setDivisionId(null);
+				this.getManagedBean().getSmPermenantAdd().getPmDistrict().setDistrictId(null);
+				this.getManagedBean().getSmPermenantAdd().getPmCity().setCityId(null);
+				
+				List<SelectItem> divisionLs = SmCommonUtil.getDivisionList(this.getManagedBean().getSmPermenantAdd().getPmState().getStateId());
+				this.getManagedBean().setPermenantDivisionLs(divisionLs);
+				getManagedBean().setPermenantDistrictLs(new ArrayList<SelectItem>());
+				this.getManagedBean().setPermenantCityLs(null);	
+				
+			}
+				if(state !=null && state.getAdoptDivision()) {
+					getManagedBean().setDivisionBox(false);	
+				}
+				else{	
+					getManagedBean().setDivisionBox(true);
+					List<SelectItem> divisionLs = SmCommonUtil.getDistrictList(this.getManagedBean().getSmPermenantAdd().getPmState().getStateId());
+					//this.getManagedBean().setDivisionId(null);
+					this.getManagedBean().setPermenantDistrictLs(divisionLs);
+					this.getManagedBean().setPermenantCityLs(new ArrayList<SelectItem>());	
+				}	
+			
+			
 		}
 	}
 
