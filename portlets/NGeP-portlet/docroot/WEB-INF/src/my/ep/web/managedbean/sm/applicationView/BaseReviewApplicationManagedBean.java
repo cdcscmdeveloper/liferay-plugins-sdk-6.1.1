@@ -71,6 +71,9 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SmCancelMofRemarksVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
+import my.ep.web.vo.BlacklistOwnerDirectorVO;
+import my.ep.web.vo.DisciplinaryActionCategoryVO;
+import my.ep.web.vo.DisciplinaryActionVO;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -269,6 +272,35 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private boolean basicAccountMaintenance; //27437 : Disciplinary action
 	private SmSupplierOwner smSuppOwner; //26238
 	private boolean viewSupplierMaintenancePage; // #26639
+	
+	//28281 - start
+	private boolean warningExist;
+	private boolean warning;
+	private boolean cancelCategoryCode;
+	private boolean suspendRegistration;
+	private boolean cancelRegistration;
+	private boolean blacklistOwnerOrDirector;
+	private boolean bumiputeraStatusCancel;
+	private boolean manufacturerStatusCancel;
+	private List<DisciplinaryActionVO> disciplinaryActionVoList;
+	private List<SmPersonnel> ownerAndDirectorList; 
+	private List<SmPersonnel> selectedOwnerAndDirectorList; 
+	private String applType; 
+	private boolean viewFlag; 
+	private SmSupplier smSupp; 
+	private boolean viewMode; 
+	private boolean mofNoExist;
+	
+	private List<BlacklistOwnerDirectorVO> blacklistownerDirectorList;
+	private String startDate;
+	private String endDate;
+	private String remarks;
+	private boolean noDisciplinary;
+	private List<DisciplinaryActionCategoryVO> categoryCodeList;
+	
+	private List<DisciplinaryActionVO> disciplineVOs; 
+	private boolean disciplinaryAction;
+	//28281 - end 
 
 	public BaseReviewApplicationManagedBean() {
 		selectedCert = new SmSupplierCert();
@@ -1946,4 +1978,188 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		this.basicAccountMaintenance = basicAccountMaintenance;
 	}
 	
+	//28281 - start
+	public boolean isWarning() {
+		return warning;
+	}
+
+	public void setWarning(boolean warning) {
+		this.warning = warning;
+	}
+
+	public boolean isCancelCategoryCode() {
+		return cancelCategoryCode;
+	}
+
+	public void setCancelCategoryCode(boolean cancelCategoryCode) {
+		this.cancelCategoryCode = cancelCategoryCode;
+	}
+
+	public boolean isSuspendRegistration() {
+		return suspendRegistration;
+	}
+
+	public void setSuspendRegistration(boolean suspendRegistration) {
+		this.suspendRegistration = suspendRegistration;
+	}
+
+	public boolean isCancelRegistration() {
+		return cancelRegistration;
+	}
+
+	public void setCancelRegistration(boolean cancelRegistration) {
+		this.cancelRegistration = cancelRegistration;
+	}
+
+	public boolean isBlacklistOwnerOrDirector() {
+		return blacklistOwnerOrDirector;
+	}
+
+	public void setBlacklistOwnerOrDirector(boolean blacklistOwnerOrDirector) {
+		this.blacklistOwnerOrDirector = blacklistOwnerOrDirector;
+	}
+
+	public boolean isBumiputeraStatusCancel() {
+		return bumiputeraStatusCancel;
+	}
+
+	public void setBumiputeraStatusCancel(boolean bumiputeraStatusCancel) {
+		this.bumiputeraStatusCancel = bumiputeraStatusCancel;
+	}
+
+	public boolean isManufacturerStatusCancel() {
+		return manufacturerStatusCancel;
+	}
+
+	public void setManufacturerStatusCancel(boolean manufacturerStatusCancel) {
+		this.manufacturerStatusCancel = manufacturerStatusCancel;
+	}
+
+	public List<DisciplinaryActionVO> getDisciplinaryActionVoList() {
+		return disciplinaryActionVoList;
+	}
+
+	public void setDisciplinaryActionVoList(List<DisciplinaryActionVO> disciplinaryActionVoList) {
+		this.disciplinaryActionVoList = disciplinaryActionVoList;
+	}
+
+	public List<SmPersonnel> getOwnerAndDirectorList() {
+		return ownerAndDirectorList;
+	}
+
+	public void setOwnerAndDirectorList(List<SmPersonnel> ownerAndDirectorList) {
+		this.ownerAndDirectorList = ownerAndDirectorList;
+	}
+
+	public List<SmPersonnel> getSelectedOwnerAndDirectorList() {
+		return selectedOwnerAndDirectorList;
+	}
+
+	public void setSelectedOwnerAndDirectorList(List<SmPersonnel> selectedOwnerAndDirectorList) {
+		this.selectedOwnerAndDirectorList = selectedOwnerAndDirectorList;
+	}
+
+	public String getApplType() {
+		return applType;
+	}
+
+	public void setApplType(String applType) {
+		this.applType = applType;
+	} 
+
+	public boolean isViewFlag() {
+		return viewFlag;
+	}
+
+	public void setViewFlag(boolean viewFlag) {
+		this.viewFlag = viewFlag;
+	}
+
+	public SmSupplier getSmSupp() {
+		return smSupp;
+	}
+
+	public void setSmSupp(SmSupplier smSupp) {
+		this.smSupp = smSupp;
+	}
+
+	public boolean isViewMode() {
+		return viewMode;
+	}
+
+	public void setViewMode(boolean viewMode) {
+		this.viewMode = viewMode;
+	}
+	
+	public void setMofNoExist(boolean mofNoExist) {
+		this.mofNoExist = mofNoExist;
+	}
+
+	public List<BlacklistOwnerDirectorVO> getBlacklistownerDirectorList() {
+		return blacklistownerDirectorList;
+	}
+
+	public void setBlacklistownerDirectorList(List<BlacklistOwnerDirectorVO> blacklistownerDirectorList) {
+		this.blacklistownerDirectorList = blacklistownerDirectorList;
+	}
+
+	public String getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+
+	public boolean isNoDisciplinary() {
+		return noDisciplinary;
+	}
+
+	public void setNoDisciplinary(boolean noDisciplinary) {
+		this.noDisciplinary = noDisciplinary;
+	}
+
+	public List<DisciplinaryActionCategoryVO> getCategoryCodeList() {
+		return categoryCodeList;
+	}
+
+	public void setCategoryCodeList(List<DisciplinaryActionCategoryVO> categoryCodeList) {
+		this.categoryCodeList = categoryCodeList;
+	}
+	public boolean isWarningExist() {
+		return warningExist;
+	}
+	public void setWarningExist(boolean warningExist) {
+		this.warningExist = warningExist;
+	}
+	
+	public boolean isMofNoExist() {
+		return mofNoExist;
+	}
+
+	public List<DisciplinaryActionVO> getDisciplineVOs() {
+		return disciplineVOs;
+	}
+
+	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
+		this.disciplineVOs = disciplineVOs;
+	}
+	
+	//28281 - end
 }
