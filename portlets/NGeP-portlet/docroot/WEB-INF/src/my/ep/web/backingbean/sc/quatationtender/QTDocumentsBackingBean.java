@@ -2197,8 +2197,26 @@ public class QTDocumentsBackingBean extends
 					if (question.getClSpecDetail() == null) {
 						question.setClSpecDetail("");
 					} else{
-						 String clSpecDetail = question.getClSpecDetail()
-								.replaceAll(QTConstants.NEW_LINE_CHARACTER,TemplateDocConst.PARAM_SPACE);
+						//Start Bug #28274
+						 String clSpecDetail = question.getClSpecDetail();
+						 String[] words = clSpecDetail.split(" ");
+						 StringBuilder sb = new StringBuilder();
+						 StringBuilder subSb = new StringBuilder();
+						 for(String word : words){
+							 int length = word.length();
+						      if ( length >= 20){
+						    	  String subWord;
+						            for (int i = 0; i < length; i += 20) {
+						            	subWord = word.substring(i, Math.min(length, i + 20));
+						            	subSb.append(subWord).append(TemplateDocConst.PARAM_SPACE);
+						            }
+						    		word = subSb.toString();	
+						      }
+						      sb.append(word).append(TemplateDocConst.PARAM_SPACE);
+						 }
+						 clSpecDetail=sb.toString();
+						 clSpecDetail=clSpecDetail.replaceAll(QTConstants.NEW_LINE_CHARACTER,TemplateDocConst.PARAM_SPACE);
+						 //end Bug #28274
 						 clSpecDetail=clSpecDetail.replaceAll(QTConstants.AMBRA_SENT,TemplateDocConst.PARAM_SPACE);
 						 clSpecDetail=clSpecDetail.replaceAll(QTConstants.LESS_THEN,TemplateDocConst.PARAM_SPACE);
 						 clSpecDetail=clSpecDetail.replaceAll(QTConstants.GREATER_THEN,TemplateDocConst.PARAM_SPACE);
