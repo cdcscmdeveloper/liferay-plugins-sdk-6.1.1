@@ -214,6 +214,23 @@
 										for="updatePermAddStateList" showSummary="true"
 										showDetail="false" display="icon" /></td>
 							</tr>
+							<!-- 13320 -->
+							<tr>
+								<td><p:outputLabel
+										value="#{lbl['lbl.sm.division']}" /> <p:outputLabel value="*"
+										styleClass="mandatory" /></td>
+								<td ><p:selectOneMenu required="true"
+										label="#{lbl['lbl.sm.state']}" id="updatePermAddDivisionList"
+										value="#{smPersonnelBackingBean.managedBean.divisionId}"
+										disabled="#{smPersonnelBackingBean.managedBean.divisionBox}"
+										style="width: 207px;margin-bottom: 5px;">
+										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+										<f:selectItems
+											value="#{smPersonnelBackingBean.managedBean.permAddDivisionList}" />
+										<p:ajax event="change"
+											update="updatePermAddDistrictList, updatePermAddCityList"/>
+									</p:selectOneMenu></td>
+							</tr>
 							<tr>
 								<td><p:outputLabel
 										value="#{lbl['lbl.sm.district']}" /> <p:outputLabel value="*"
@@ -361,6 +378,23 @@
 											<p:message id="updateMailAddStateListMsg"
 												for="updateMailAddStateList" showSummary="true"
 												showDetail="false" display="icon" /></td>
+									</tr>
+									<!-- 13320 -->
+									<tr>
+										<td><p:outputLabel
+												value="#{lbl['lbl.sm.division']}" /> <p:outputLabel value="*"
+												styleClass="mandatory" /></td>
+										<td ><p:selectOneMenu
+												label="#{lbl['lbl.sm.state']}" id="updateMailAddDivisionList"
+												value="#{smPersonnelBackingBean.managedBean.divisionId}"
+												disabled="#{smPersonnelBackingBean.managedBean.divisionBox}"
+												style="width: 207px;margin-bottom: 5px;">
+												<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+												<f:selectItems
+													value="#{smPersonnelBackingBean.managedBean.mailAddDivisionList}" />
+												<p:ajax event="change"
+													update="updateMailAddDistrictList, updateMailAddCityList"/>
+											</p:selectOneMenu></td>
 									</tr>
 									<tr>
 										<td><p:outputLabel
