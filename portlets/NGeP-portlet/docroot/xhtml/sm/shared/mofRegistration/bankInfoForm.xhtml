@@ -345,7 +345,7 @@
 								value="#{backingBean.managedBean.countryItems}" />
 							<p:ajax event="change" process="@this"
 								listener="#{backingBean.onChangeCountry(backingBean.managedBean.selectedBank.smAddress,SupplierManagementConst.SM_BANK_INFO_PANEL)}"
-								update="smBankCntryId,smBankState,smBankDist,smBankCity,postCodeBankPanelId" />
+								update="smBankCntryId,smBankState,smBankDivision,smBankDist,smBankCity,postCodeBankPanelId" />
 						</p:selectOneMenu> 
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges
@@ -371,7 +371,7 @@
 								value="#{backingBean.managedBean.bankStates}" />
 							<p:ajax event="change" process="@this"
 								listener="#{backingBean.onChangeState(backingBean.managedBean.selectedBank.smAddress,SupplierManagementConst.SM_BANK_INFO_PANEL)}"
-								update="smBankState,smBankDist,smBankCity" />
+								update="smBankState,smBankDivision,smBankDist,smBankCity" />
 						</p:selectOneMenu> 
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges
@@ -382,6 +382,25 @@
 								lbl['lbl.txt.na'] : backingBean.getStateLabelById(backingBean.managedBean.latestBank.smAddress.pmState.stateId)}"/>
 						<p:message id="smBankStateMsg" for="smBankState"
 							showSummary="true" showDetail="false" display="icon" /></td>
+				</tr>
+				<!-- 13320 -->
+				
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.division*123']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+							label="#{lbl['lbl.sm.division']}"
+							value="#{backingBean.managedBean.selectedBank.smAddress.divisionId}"
+							disabled="#{backingBean.managedBean.divisionBox}"
+							id="smBankDivision">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItems var="smBankDivision"
+								value="#{backingBean.managedBean.bankDivisions}" />
+							<p:ajax event="change" process="@this"
+								listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.selectedBank.smAddress,SupplierManagementConst.SM_BANK_INFO_PANEL)}"
+								update="smBankDist,smBankCity" />
+						</p:selectOneMenu> 
+						</td>
 				</tr>
 
 				<tr>

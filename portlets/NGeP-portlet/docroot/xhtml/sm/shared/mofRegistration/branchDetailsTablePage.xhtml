@@ -87,7 +87,7 @@
 						value="#{backingBean.managedBean.countryItems}" />
 					<p:ajax event="change" process="@this"
 						listener="#{backingBean.onChangeCountry(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
-						update="supBrnCntry,branchState,branchDist,branchCity,postCodeBranchPanelId" />
+						update="supBrnCntry,branchState,branchDivision,branchDist,branchCity,postCodeBranchPanelId" />
 				</p:selectOneMenu> 
 				<ac:smFieldChangeAlert 
 					isShow="#{backingBean.managedBean.showFieldChanges
@@ -116,7 +116,7 @@
 						value="#{backingBean.managedBean.branchCompanyStates}" />
 					<p:ajax event="change" process="@this"
 						listener="#{backingBean.onChangeState(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
-						update="branchState,branchDist,branchCity" />
+						update="branchState,branchDivision,branchDist,branchCity" />
 				</p:selectOneMenu> 
 				<ac:smFieldChangeAlert 
 					isShow="#{backingBean.managedBean.showFieldChanges
@@ -130,6 +130,25 @@
 				<p:message id="branchStateMsg" for="branchState" showSummary="true"
 					showDetail="false" display="icon" /></td>
 		</tr>
+		<!-- 13320 -->
+		
+			<tr>
+			<td><p:outputLabel value="#{lbl['lbl.sm.division']}" /> <p:outputLabel
+					value="*" styleClass="mandatory" /></td>
+			<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+					label="#{lbl['lbl.sm.state']}"
+					value="#{backingBean.managedBean.selectedBranch.smAddress.divisionId}"
+					disabled="#{backingBean.managedBean.divisionBox}"	
+					id="branchDivision">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+					<f:selectItems var="brnDivision"
+						value="#{backingBean.managedBean.branchCompanyDivisions}" />
+					<p:ajax event="change" process="@this"
+					listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
+						update="branchDist,branchCity" />
+				</p:selectOneMenu></td>
+		</tr>
+		
 
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
