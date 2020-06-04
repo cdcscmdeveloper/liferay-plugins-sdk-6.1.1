@@ -51,7 +51,7 @@
 								backingBean.managedBean.personnelPermAddr.smAddress.pmState,
 								backingBean.managedBean.personnelPermAddr.smAddress.pmDistrict,
 								backingBean.managedBean.personnelPermAddr.smAddress.pmCity)}"
-										update="prsPermState,prsPermDist,prsPermCity" />
+										update="prsPermState,prsPermDivision,prsPermDist,prsPermCity" />
 								</p:selectOneMenu></td>
 						</tr>
 
@@ -71,6 +71,25 @@
 								SupplierManagementConst.SM_PERSNL_PERM_ADDR_PANEL,
 								backingBean.managedBean.personnelPermAddr.smAddress.pmDistrict,
 								backingBean.managedBean.personnelPermAddr.smAddress.pmCity)}"
+										update="prsPermDivision,prsPermDist,prsPermCity" />
+
+								</p:selectOneMenu></td>
+						</tr>
+						<!-- 13320 -->
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.division']}" /></td>
+							<td><p:selectOneMenu
+									style="width: 207px;margin-bottom: 5px;"
+									value="#{backingBean.managedBean.personnelPermAddr.smAddress.pmDivision.divisionId}"
+									disabled="#{backingBean.managedBean.divisionBox}"
+									id="prsPermDivision">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems var="prsPermDivision"
+										value="#{backingBean.managedBean.persnlPermDivisions}"
+										itemValue="#{prsPermDivision.divisionId}"
+										itemLabel="#{prsPermDivision.divisionName}" />
+									<p:ajax event="change"
+										listener="#{backingBean.populateDivisionsByState}"
 										update="prsPermDist,prsPermCity" />
 
 								</p:selectOneMenu></td>
@@ -170,7 +189,7 @@
 								backingBean.managedBean.personnelMailAddr.smAddress.pmState,
 								backingBean.managedBean.personnelMailAddr.smAddress.pmDistrict,
 								backingBean.managedBean.personnelMailAddr.smAddress.pmCity)}"
-										update="prsMailState,prsMailDist,prsMailCity" />
+										update="prsMailState,prsMailDivision,prsMailDist,prsMailCity" />
 								</p:selectOneMenu></td>
 						</tr>
 
@@ -190,6 +209,25 @@
 								SupplierManagementConst.SM_PERSNL_MAIL_ADDR_PANEL,
 								backingBean.managedBean.personnelMailAddr.smAddress.pmDistrict,
 								backingBean.managedBean.personnelMailAddr.smAddress.pmCity)}"
+										update="prsMailDivision,prsMailDist,prsMailCity" />
+
+								</p:selectOneMenu></td>
+						</tr>
+						<!-- 13320 -->
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.division']}" /></td>
+							<td><p:selectOneMenu
+									style="width: 207px;margin-bottom: 5px;"
+									value="#{backingBean.managedBean.personnelMailAddr.smAddress.pmDivision.divisionId}"
+									disabled="#{backingBean.managedBean.divisionBox}"
+									id="prsMailDivision">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems var="prsMailDivision"
+										value="#{backingBean.managedBean.persnlMailDivisions}"
+										itemValue="#{prsMailDivision.divisionId}"
+										itemLabel="#{prsMailDivision.divisionName}" />
+									<p:ajax event="change"
+										listener="#{backingBean.populateDivisionsByState}"
 										update="prsMailDist,prsMailCity" />
 
 								</p:selectOneMenu></td>
@@ -295,7 +333,7 @@
 								backingBean.managedBean.personnelResdAddr.smAddress.pmState,
 								backingBean.managedBean.personnelResdAddr.smAddress.pmDistrict,
 								backingBean.managedBean.personnelResdAddr.smAddress.pmCity)}"
-										update="prsResState,prsResDist,prsResCity" />
+										update="prsResState,prsResDivision,prsResDist,prsResCity" />
 								</p:selectOneMenu></td>
 						</tr>
 
@@ -315,6 +353,25 @@
 								SupplierManagementConst.SM_PERSNL_RESD_ADDR_PANEL,
 								backingBean.managedBean.personnelResdAddr.smAddress.pmDistrict,
 								backingBean.managedBean.personnelResdAddr.smAddress.pmCity)}"
+										update="prsResDivision,prsResDist,prsResCity" />
+
+								</p:selectOneMenu></td>
+						</tr>
+						<!-- 13320 -->
+						
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.division']}" /></td>
+							<td><p:selectOneMenu
+									style="width: 207px;margin-bottom: 5px;"
+									value="#{backingBean.managedBean.personnelResdAddr.smAddress.pmDivision.divisionId}"
+									id="prsResDivision">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems var="prsResDivision"
+										value="#{backingBean.managedBean.persnlResdDivisions}"
+										itemValue="#{prsResDivision.divisionId}"
+										itemLabel="#{prsResDivision.divisionName}" />
+									<p:ajax event="change"
+										listener="#{backingBean.populateDivisionsByState}"
 										update="prsResDist,prsResCity" />
 
 								</p:selectOneMenu></td>
@@ -413,7 +470,7 @@
 								backingBean.managedBean.personnelOffAddr.smAddress.pmState,
 								backingBean.managedBean.personnelOffAddr.smAddress.pmDistrict,
 								backingBean.managedBean.personnelOffAddr.smAddress.pmCity)}"
-										update="prsOffState,prsOffDist,prsOffCity" />
+										update="prsOffState,prsOffDivision,prsOffDist,prsOffCity" />
 								</p:selectOneMenu></td>
 						</tr>
 
@@ -433,10 +490,31 @@
 								SupplierManagementConst.SM_PERSNL_OFF_ADDR_PANEL,
 								backingBean.managedBean.personnelOffAddr.smAddress.pmDistrict,
 								backingBean.managedBean.personnelOffAddr.smAddress.pmCity)}"
+										update="prsOffDivision,prsOffDist,prsOffCity" />
+
+								</p:selectOneMenu></td>
+						</tr>
+						
+						<!-- 13320 -->
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.division']}" /></td>
+							<td><p:selectOneMenu
+									style="width: 207px;margin-bottom: 5px;"
+									value="#{backingBean.managedBean.personnelOffAddr.smAddress.pmDivision.divisionId}"
+									disabled="#{backingBean.managedBean.divisionBox}"
+									id="prsOffDivision">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems var="prsOffDivision"
+										value="#{backingBean.managedBean.persnlOffDivisions}"
+										itemValue="#{prsOffDivision.divisionId}"
+										itemLabel="#{prsOffDivision.divisionName}" />
+									<p:ajax event="change"
+										listener="#{backingBean.populateDivisionsByState}"
 										update="prsOffDist,prsOffCity" />
 
 								</p:selectOneMenu></td>
 						</tr>
+						
 
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
