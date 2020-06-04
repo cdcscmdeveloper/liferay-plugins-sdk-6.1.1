@@ -5085,8 +5085,15 @@ public class SmApplicationUtil {
 						.readApplicationHist(reqDto);
 				if (resDTO != null) {
 					appl = resDTO.getSmAppl();
-				}
+				}				
 			}
+			//START 24964
+			if(appl == null && managedBean.getSmAppl().getSmSupplier() != null){
+				reqDto.setSupplierId(managedBean.getSmAppl().getSmSupplier().getSupplierId());
+				appl = revisionSO
+						.retrieveLatestPreviousApproveAppl(reqDto).getSmAppl();
+			}
+			//END 24964
 		} finally {
 			revisionSO = null;
 		}
