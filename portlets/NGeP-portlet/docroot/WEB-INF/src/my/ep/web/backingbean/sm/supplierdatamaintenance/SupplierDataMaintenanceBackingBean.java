@@ -2001,6 +2001,8 @@ public class SupplierDataMaintenanceBackingBean extends
 				"disciplinaryActionHistoryDlg.show();");
 	} 
 	
+	//28281
+	/*
 	private static List<DisciplinaryActionVO> getDisciplinaryActionVO(SmSupplier currSupp) {
 		List<DisciplinaryActionVO> voList = new ArrayList<DisciplinaryActionVO>();
 		PersonnelReqDTO perReqDTO = new PersonnelReqDTO();
@@ -2113,6 +2115,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		}
 		return voList;
 	}
+	*/
 	
 	/**
 	 * Retrieve owner and director list
