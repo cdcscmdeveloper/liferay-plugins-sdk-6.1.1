@@ -12,6 +12,8 @@
 
 	<ui:param name="validityDaysExpiredQt"
 		value="#{lOADetailBackingBean.checkProposalValidityDateReachByQt(lOADetailBackingBean.managedBean.scQt)}" />
+		
+	<ui:param name="procumentMode" value="#{lOADetailBackingBean.managedBean.scQt.procurementMode.parameterCode}" />
 
 	<h:panelGroup rendered="#{isTrackingDairyView}">
 		<table style="width: 100%">
@@ -40,7 +42,7 @@
 				</ui:remove>
 				<h:panelGroup rendered="#{!lOADetailBackingBean.managedBean.scLoa.brandNew}">
 					<p:commandButton value="#{lbl['lbl.btn.reverse']}" id="btnReverse" action="#{lOADetailBackingBean.reverseAction()}"
-						rendered="#{isEditableStatus and !isSaveHideSqExpired}" process="@form" update="@form"
+						rendered="#{isEditableStatus and !isSaveHideSqExpired and (procumentMode =='Q' or procumentMode == 'T') }" process="@form" update="@form"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
 						<p:tooltip id="toolTipFade" for="btnReverse" value="#{lbl['lbl.btn.reverse.tooltip']}" position="top"/>
 					</p:commandButton>
