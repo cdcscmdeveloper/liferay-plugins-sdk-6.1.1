@@ -9323,7 +9323,13 @@ public class SmApplicationBackingBean extends
 			PmZone zone = SmServiceLookup.getZoneSO()
 					.retrieveZoneByStateId(zoneReqDTO).getPmZone();
 			ReviewApplicationReqDTO reviewApplicationReqDTO = new ReviewApplicationReqDTO();
-			reviewApplicationReqDTO.setZoneCode(zone.getZoneCode());
+			/*#28154 - start*/
+			if (getManagedBean().getSmSupplier().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONSULTANT)){
+				reviewApplicationReqDTO.setZoneCode("1");
+			} else {
+				reviewApplicationReqDTO.setZoneCode(zone.getZoneCode());
+			}
+			/*#28154 - end*/
 			List<PmUser> approverList = SmServiceLookup
 					.getReviewApplicationSO()
 					.getApproversByZoneAfterEscalate(reviewApplicationReqDTO)
