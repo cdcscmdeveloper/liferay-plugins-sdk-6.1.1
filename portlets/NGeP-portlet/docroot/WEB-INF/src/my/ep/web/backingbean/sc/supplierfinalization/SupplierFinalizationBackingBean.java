@@ -4107,7 +4107,7 @@ public class SupplierFinalizationBackingBean extends
 		boolean expectTotalIndPriceBetweenThreshold = expectTotalIndPriceBetweenThreshold(getManagedBean().getScQt());																				
 		String CommType = getManagedBean().getCommitteeType();
 		if (expectTotalIndPriceBetweenThreshold=true && 
-				"QCA".equals(CommType)) {
+				SourcingConstants.QCA_COMMITTEE.equals(CommType)) {
 			if (excludedDecisionList == null) {
 				excludedDecisionList = new ArrayList<String>();
 			}
@@ -4253,6 +4253,19 @@ public class SupplierFinalizationBackingBean extends
 		log.info(":::retrieveCommitteeSecretary() commType: "+ commType);
 		ICommitteSO committeSO = null;
 		
+		//#25729 #142 start
+		boolean expectTotalIndPriceBelowThreshold = false;
+		String CurrentCommType = "";
+		
+		expectTotalIndPriceBelowThreshold = expectTotalIndPriceBelowThreshold(getManagedBean().getScQt());																				
+		CurrentCommType = getManagedBean().getCommitteeType();
+		
+		if (expectTotalIndPriceBelowThreshold=true && 
+				SourcingConstants.QCB_COMMITTEE.equals(CurrentCommType)) {
+					commType=SourcingConstants.QCA_COMMITTEE;
+		}
+		//#25729 #142 END
+		
 		try {
 			committeSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
@@ -4310,7 +4323,7 @@ public class SupplierFinalizationBackingBean extends
 			for (PmReasonDesc reasonDescSize : reasonList) {	
 				if (ParameterConst.AWARDED_PRICE_EXCEEDED_COMMITTEE_AUTHORITY.equals(reasonDescSize.getReasonDesc())) {
 					if (expectTotalIndPriceBelowThreshold=true && 
-							"QCB".equals(CommType)) {
+							SourcingConstants.QCB_COMMITTEE.equals(CommType)) {
 							sizeItems++;
 					}
 				}
@@ -4325,7 +4338,7 @@ public class SupplierFinalizationBackingBean extends
 			for (PmReasonDesc reasonDesc : reasonList) {	
 				if (ParameterConst.AWARDED_PRICE_EXCEEDED_COMMITTEE_AUTHORITY.equals(reasonDesc.getReasonDesc())) {
 					if (expectTotalIndPriceBelowThreshold=true && 
-							"QCB".equals(CommType)) {
+							SourcingConstants.QCB_COMMITTEE.equals(CommType)) {
 							items[i++] = new SelectItem(reasonDesc.getPmReason()
 									.getReasonId(), reasonDesc.getReasonDesc());
 							reasonDescMap.put(reasonDesc.getPmReason().getReasonId(),
@@ -4415,8 +4428,11 @@ public class SupplierFinalizationBackingBean extends
 					higherCommittees = higherAuthoritiesMap.get(committeeType + 
 							SourcingConstants.FORWARD_TO_HIGHER_AUTHORITY_DECISION_NON_UNANIMOUS);
 				} else {
-					higherCommittees = higherAuthoritiesMap.get(committeeType + 
+					
+/*					higherCommittees = higherAuthoritiesMap.get(committeeType + 
 							SourcingConstants.FORWARD_TO_HIGHER_AUTHORITY_DECISION_OTHERS);
+*/					higherCommittees = higherAuthoritiesMap.get(committeeType + 
+							SourcingConstants.FORWARD_TO_HIGHER_AUTHORITY_DECISION_NON_UNANIMOUS);
 				}
 			}
 		}
