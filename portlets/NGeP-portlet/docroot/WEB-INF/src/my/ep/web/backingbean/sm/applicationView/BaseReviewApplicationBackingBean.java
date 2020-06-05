@@ -90,6 +90,7 @@ import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
 import my.ep.persistence.entity.sm.SmCompanyExperienceCat;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
+import my.ep.persistence.entity.sm.SmDisciplinaryActionRemarks;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmGstSupplier;
@@ -3618,8 +3619,24 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						retVal.setStartDate(DateUtils.dateToString("dd/MM/yyyy",disciplinaryAction.getStartDate()));
 					if(disciplinaryAction.getEndDate() != null)
 						retVal.setEndDate(DateUtils.dateToString("dd/MM/yyyy",disciplinaryAction.getEndDate()));
-					if(disciplinaryAction.getRemark() != null)
-						retVal.setRemarks(disciplinaryAction.getRemark());
+					
+					//28198: Disciplinary Action - start - 26238
+					List<DisciplinaryActionVO> remList = new ArrayList<DisciplinaryActionVO>();
+					
+					List<SmDisciplinaryActionRemarks> remarksList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionRemarksByDA(disciplinaryAction);
+					
+					if(remarksList != null && remarksList.size() > 0){
+						for (SmDisciplinaryActionRemarks remarks : remarksList) {
+							DisciplinaryActionVO rem1 = new DisciplinaryActionVO();
+							rem1.setRemarks(remarks.getRemark());
+							remList.add(rem1);
+						}
+					}
+					DisciplinaryActionVO rem = new DisciplinaryActionVO();
+					rem.setRemarks(disciplinaryAction.getRemark());
+					remList.add(rem);
+					retVal.setRemarksList(remList);
+					//28198: Disciplinary Action - end - 26238
 					
 					if(disciplinaryAction.isWarning())
 						retVal.setWarning(true);
@@ -3778,7 +3795,18 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					}
 					this.getManagedBean().setStartDate(DateUtils.dateToString("dd/MM/yyyy",disc.getStartDate()));
 					this.getManagedBean().setEndDate(DateUtils.dateToString("dd/MM/yyyy",disc.getEndDate()));
-					this.getManagedBean().setRemarks(disc.getRemark());
+					//28198: Disciplinary Action - start - 26238
+					List<SmDisciplinaryActionRemarks> remarksList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionRemarksByDA(disc);
+					
+					if(remarksList != null && remarksList.size() > 0){
+						for (SmDisciplinaryActionRemarks remarks : remarksList) {
+							this.getManagedBean().setRemarks(remarks.getRemark());
+							break;
+						}
+					}else{
+						this.getManagedBean().setRemarks(disc.getRemark());
+					}
+					//28198: Disciplinary Action - end - 26238
 				}
 			}
 		} else {
