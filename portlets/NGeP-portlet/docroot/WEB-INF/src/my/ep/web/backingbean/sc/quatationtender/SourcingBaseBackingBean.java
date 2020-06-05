@@ -4660,5 +4660,23 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 			return indPriceThreshold;
 		}
+		
+		//QT threshold RM20k - 50k
+		public boolean expectTotalIndPriceBetweenThreshold(ScQt scQt) {
+			BigDecimal tmpExpectedIntendedPrice = scQt.getTmpExpectedIntendedPrice();
+			
+			if (!scQt.isPanel() && tmpExpectedIntendedPrice != null) {
+				log.info(":::expectTotalIndPriceBelowThreshold() scQt.isPanel(): "+ scQt.isPanel() +" :::");
+				log.info(":::expectTotalIndPriceBelowThreshold() tmpExpectedIntendedPrice: "+ tmpExpectedIntendedPrice +" :::");
+				log.info(":::expectTotalIndPriceBelowThreshold() tmpExpectedIntendedPrice.doubleValue: "+ tmpExpectedIntendedPrice.doubleValue() +" :::");
+
+				if (SourcingConstants.QT_BELOW_20K >= tmpExpectedIntendedPrice.doubleValue() &&
+						SourcingConstants.QT_BELOW_50K <= tmpExpectedIntendedPrice.doubleValue()) {
+					return Boolean.TRUE;
+				}
+			}
+			
+			return Boolean.FALSE;
+		}
 		//#25729 #142 end
 }
