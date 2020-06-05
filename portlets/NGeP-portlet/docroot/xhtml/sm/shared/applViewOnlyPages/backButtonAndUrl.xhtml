@@ -21,7 +21,7 @@
 					and viewSmApplBackingBean.managedBean.supplierUser 
 					and viewSmApplBackingBean.managedBean.smAppl.pmStatus.statusId ne SupplierMgmtConst.pmStatusRejectedBySystemPayment 
 					and viewSmApplBackingBean.managedBean.smAppl.pmStatus.statusId ne SupplierMgmtConst.pmStatusRejectedBySystemProcessingFee
-					and viewSmApplBackingBean.managedBean.smMofAccount!=null and viewSmApplBackingBean.managedBean.smMofAccount.expDate gt CommonConstants.CURRENT_DATE}">
+					and viewSmApplBackingBean.managedBean.smMofAccount!=null and viewSmApplBackingBean.managedBean.smMofAccount.expDate gt CommonConstants.THREE_MONTHS_LATER_DATE}">
 					<p:commandLink onclick="blockWidget.show()"
 						action="#{viewSmApplBackingBean.redirectToResubmit()}"
 						process="@this" partialSubmit="true" update=":form"
