@@ -62,6 +62,7 @@ import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
+import my.ep.persistence.entity.sm.SmDisciplinaryActionRemarks;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
@@ -1693,8 +1694,19 @@ public class SupplierDataMaintenanceBackingBean extends
 						getManagedBean().setEditDisciplinaryAction(true);
 					}
 					//27857: Disciplinary Action - end - 26238
-					discipline.getSmDiscplinaryAction().setRemark(
-							disc.getRemark());
+					
+					//28198: Disciplinary Action - start - 26238
+					List<SmDisciplinaryActionRemarks> remarksList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionRemarksByDA(disc);
+					
+					if(remarksList != null && remarksList.size() > 0){
+						for (SmDisciplinaryActionRemarks remarks : remarksList) {
+							discipline.getSmDiscplinaryAction().setRemark(remarks.getRemark());
+							break;
+						}
+					}else{
+						discipline.getSmDiscplinaryAction().setRemark(disc.getRemark());
+					}
+					//28198: Disciplinary Action - end - 26238
 					discipline.getSmDiscplinaryAction().setStartDate(
 							disc.getStartDate());
 					discipline.getSmDiscplinaryAction().setEndDate(
