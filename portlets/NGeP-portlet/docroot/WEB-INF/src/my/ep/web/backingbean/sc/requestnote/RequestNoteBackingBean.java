@@ -775,6 +775,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			// 12177 - Start
 			requestNoteReqDTO.setSqEndDate(getManagedBean().getSqEndDate());
 			// 12177 - End
+			//26059 - start
+			requestNoteReqDTO.setExceedThreshold(getManagedBean().isProceedWithDPExceedThreshold());
+			//26059 - end
 			try {
 				if(outcome.isEmpty()) {	
 					requestNoteReqDTO.setToken(ctxToken);
@@ -1076,6 +1079,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		// show message for first submission, skip the message for second time submission
 		if(requestNote.getRequestNoteDtls() != null && !requestNote.getRequestNoteDtls().isEmpty()){
 			//26059 - start
+			int count = 1;
 			if(getManagedBean().getItemListExceedThreshold() == null) {
 				getManagedBean().setItemListExceedThreshold(new ArrayList<Long>());
 			}
@@ -1172,12 +1176,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 										getManagedBean().getRequestNote().setDpExceedJustification(null);
 										getManagedBean().getItemListExceedThreshold().remove(itemId);
 										break;
-									} else if(alreadyProceedWithDPExceedThreshold && !getManagedBean().getItemListExceedThreshold().contains(itemId)) {
+									} else if(alreadyProceedWithDPExceedThreshold && !getManagedBean().getItemListExceedThreshold().contains(itemId) 
+											&& count == requestNote.getRequestNoteDtls().size()) {
 										getManagedBean().setExceededAmountAlerted(Boolean.FALSE);
 										getManagedBean().setProceedWithDPExceedThreshold(Boolean.FALSE);
 										getManagedBean().getRequestNote().setScApprovalDocument(null);
 										getManagedBean().getRequestNote().setDpExceedJustification(null);
-										getManagedBean().getItemListExceedThreshold().remove(itemId);
 										break;
 									}
 								}
@@ -1232,6 +1236,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					//26221 - end
 					}
 				}
+				count++;//26059
 			}
 		}
 		
