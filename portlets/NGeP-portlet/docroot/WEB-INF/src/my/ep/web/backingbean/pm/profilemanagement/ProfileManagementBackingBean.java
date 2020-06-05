@@ -3607,10 +3607,11 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 																		// for
 																		// each
 																		// user
-//			Long loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
-			Long loginSessionUserId = (new LogKey().getUserId() == null) ? 
-					getFacesScopes().getUserSessionBean().getUserId() 
-					: Long.valueOf(String.valueOf(new LogKey().getUserId()));
+			Long loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
+			new LogKey(loginSessionUserId);
+//			Long loginSessionUserId = (new LogKey().getUserId() == null) ? 
+//					getFacesScopes().getUserSessionBean().getUserId() 
+//					: Long.valueOf(String.valueOf(new LogKey().getUserId()));
 			
 			if (!userOrg.isBrandNew()) {
 				userOrg.setChangedBy(loginSessionUserId);
