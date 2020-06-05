@@ -16,19 +16,14 @@
 		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 		<ac:paginator for="catApprDt" />
 			<p:ajax event="rowSelect" partialSubmit="true" process="@this"
-			listener="#{supplierDataMaintenanceBackingBean.checkingDACategoryCodes}"
 				update=":form:catCodeInfPan,@([id$=deletedApprBtnId])"></p:ajax>
 			<p:ajax event="rowUnselect"
-			listener="#{supplierDataMaintenanceBackingBean.checkingDACategoryCodes}"
 				update=":form:catCodeInfPan,@([id$=deletedApprBtnId])"></p:ajax>
 			<p:ajax event="rowSelectCheckbox"
-			listener="#{supplierDataMaintenanceBackingBean.checkingDACategoryCodes}"
 				update=":form:catCodeInfPan,@([id$=deletedApprBtnId])"></p:ajax>
 			<p:ajax event="rowUnselectCheckbox"
-			listener="#{supplierDataMaintenanceBackingBean.checkingDACategoryCodes}"
 				update=":form:catCodeInfPan,@([id$=deletedApprBtnId])"></p:ajax>
 			<p:ajax event="rowDblselect"
-			listener="#{supplierDataMaintenanceBackingBean.checkingDACategoryCodes}"
 				update=":form:catCodeInfPan,@([id$=deletedApprBtnId])"></p:ajax>
 		<p:columnGroup type="header">
 			<p:row>
