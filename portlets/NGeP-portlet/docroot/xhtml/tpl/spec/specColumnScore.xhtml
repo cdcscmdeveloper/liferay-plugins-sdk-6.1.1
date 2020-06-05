@@ -14,15 +14,7 @@
 		</h:outputText>
 	</p:column>
 <!-- Farid start -->	
-	<c:choose>
-		<c:when test="#{tplSpecAnswer.offer}">
-			<p:column style="width:50px; white-space:normal; text-align:right;"  rendered="#{isScoringReq}">
-				<h:panelGroup rendered="#{isScoring and !isRepeated}">
-					<h:outputText value="#{lbl['lbl.sc.no.available']}"></h:outputText>	 
-				</h:panelGroup>
-			</p:column>
-		</c:when>
-		<c:otherwise>
+
 				<p:column style="width:50px; white-space:normal; text-align:right;"  rendered="#{isScoringReq}">
 					<h:panelGroup rendered="#{isScoring and !isRepeated}">
 						<h:outputText value="#{tplSpecAnswer.autoScore}">
@@ -34,15 +26,17 @@
 						</h:outputText>
 					</h:panelGroup>
 				</p:column>
-		</c:otherwise>
-	</c:choose>
-<!-- Farid end -->	
+
+
 	<p:column style="width:50px; white-space:normal; text-align:right;"  rendered="#{isScoringReq}">
 		<h:panelGroup rendered="#{!empty question.scoreTypeCode and !isScoring and !isRepeated}">
 			<p:inputText id="userScore" style="min-width:0px !important;width:30px; text-align:right;"
 				value="#{tplSpecAnswer.userScore}"
 				required="false" maxlength="14"
-				label="#{lbl['lbl.tpl.spec.content.user.score']}">
+				label="#{lbl['lbl.tpl.spec.content.user.score']}"
+				disabled="#{tplSpecAnswer.ratePerUom eq 0 or tplSpecAnswer ne null and 
+			tplSpecAnswer.tplSpecZoneQty ne null and 
+			tplSpecAnswer.tplSpecZoneQty.qty eq 0}">
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="14" integerOnly="true" />
 				<f:attribute name="min" value="0" />
 				<f:attribute name="max" value="#{(tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)).toString()}" />
@@ -55,6 +49,8 @@
 			<p:message id="userScoreMsg" for="userScore" display="icon" />
 		</h:panelGroup>
 	</p:column>
+	
+<!-- Farid end -->	
 	<p:column style="width:130px;">
 		<p:inputTextarea style="width:calc(100% - 15px);" value="#{tplSpecAnswer.userRemark}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);"/>
 	</p:column>
