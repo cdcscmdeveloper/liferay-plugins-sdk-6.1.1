@@ -775,6 +775,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			// 12177 - Start
 			requestNoteReqDTO.setSqEndDate(getManagedBean().getSqEndDate());
 			// 12177 - End
+			//26059 - start
+			requestNoteReqDTO.setExceedThreshold(getManagedBean().isProceedWithDPExceedThreshold());
+			//26059 - end
 			try {
 				if(outcome.isEmpty()) {	
 					requestNoteReqDTO.setToken(ctxToken);
@@ -1075,7 +1078,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		//26059 - end
 		// show message for first submission, skip the message for second time submission
 		if(requestNote.getRequestNoteDtls() != null && !requestNote.getRequestNoteDtls().isEmpty()){
-
+			//26059 - start
+			int count = 1;
+			if(getManagedBean().getItemListExceedThreshold() == null) {
+				getManagedBean().setItemListExceedThreshold(new ArrayList<Long>());
+			}
+			//26059 - end
 			for (ScRequestNoteDtl requestNoteDtl : requestNote.getRequestNoteDtls()) {
 				if(!requestNoteDtl.isDeleted()) {
 					String pType = requestNoteDtl.getProcurementType()
@@ -1133,8 +1141,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 								//Rule : ITEM_THRESHOLD For 20k
 								if(totalAmt.compareTo(new BigDecimal(configRuleValue.getRuleValue())) > 0 && ((quote != null && !quote.isPanel())
 										|| !sourceMethod.equals(ParameterConst.REQUEST_NOTE_SQ))) {
-									//26059 - end
-									//26059 - start
+									
+									if(!getManagedBean().getItemListExceedThreshold().contains(itemId)) {
+										getManagedBean().getItemListExceedThreshold().add(itemId);
+									}
 									if(!alreadyProceedWithDPExceedThreshold){										
 										getManagedBean().setExceededAmountAlerted(Boolean.TRUE);									
 										/*FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
@@ -1156,11 +1166,24 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 //										throw new EpException(MessageConst.ERROR_760036,
 //												new String[] {requestNoteDtl.getRequestItem().getItemName(), requestNoteDtl.getRequestItem().getCmItem().getExtensionCode()});
 									}
-								} else {//26059 - start
-									getManagedBean().setExceededAmountAlerted(Boolean.FALSE);
-									getManagedBean().setProceedWithDPExceedThreshold(Boolean.FALSE);
-									getManagedBean().getRequestNote().setScApprovalDocument(null);
-									getManagedBean().getRequestNote().setDpExceedJustification(null);
+									//26059 - start
+									break;
+								} else {
+									if(alreadyProceedWithDPExceedThreshold && getManagedBean().getItemListExceedThreshold().contains(itemId)) {
+										getManagedBean().setExceededAmountAlerted(Boolean.FALSE);
+										getManagedBean().setProceedWithDPExceedThreshold(Boolean.FALSE);
+										getManagedBean().getRequestNote().setScApprovalDocument(null);
+										getManagedBean().getRequestNote().setDpExceedJustification(null);
+										getManagedBean().getItemListExceedThreshold().remove(itemId);
+										break;
+									} else if(alreadyProceedWithDPExceedThreshold && !getManagedBean().getItemListExceedThreshold().contains(itemId) 
+											&& count == requestNote.getRequestNoteDtls().size()) {
+										getManagedBean().setExceededAmountAlerted(Boolean.FALSE);
+										getManagedBean().setProceedWithDPExceedThreshold(Boolean.FALSE);
+										getManagedBean().getRequestNote().setScApprovalDocument(null);
+										getManagedBean().getRequestNote().setDpExceedJustification(null);
+										break;
+									}
 								}
 								//26059 - end
 							} else {
@@ -1213,6 +1236,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					//26221 - end
 					}
 				}
+				count++;//26059
 			}
 		}
 		
