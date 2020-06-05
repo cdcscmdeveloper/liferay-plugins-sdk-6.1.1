@@ -9324,7 +9324,7 @@ public class SmApplicationBackingBean extends
 					.retrieveZoneByStateId(zoneReqDTO).getPmZone();
 			ReviewApplicationReqDTO reviewApplicationReqDTO = new ReviewApplicationReqDTO();
 			/*#28154 - start*/
-			if (getManagedBean().getSmSupplier().getSmAppl().getSupplierType().equals("J")){
+			if (getManagedBean().getSmSupplier().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONSULTANT)){
 				reviewApplicationReqDTO.setZoneCode("1");
 			} else {
 				reviewApplicationReqDTO.setZoneCode(zone.getZoneCode());
