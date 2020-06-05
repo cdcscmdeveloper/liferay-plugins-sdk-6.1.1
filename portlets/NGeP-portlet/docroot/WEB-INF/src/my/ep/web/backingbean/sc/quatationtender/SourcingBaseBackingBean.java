@@ -32,6 +32,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -4497,11 +4498,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				if(null!=finalizationReport.getPmDocument()){
 					if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equalsIgnoreCase(finalizationReport.getPmDocument().getDocDefinitionKey())) {
 						++count;
-						
+						// #18685 - Start
 						if (null == getManagedBean().getNewBriefingPaperReportList()) {
-							List<ScQtFinalizationReport> newBriefingPaperReportList = new ArrayList<>();
+							List<ScQtFinalizationReport> newBriefingPaperReportList = new LinkedList<>();
 							getManagedBean().setNewBriefingPaperReportList(newBriefingPaperReportList );
 						}
+						// #18685 - End
 						if (reportTitleList.contains(finalizationReport.getPmDocument().getDocName())) {
 							getManagedBean().getNewBriefingPaperReportList().add(finalizationReport);
 							iterator.remove();
@@ -4533,6 +4535,23 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					
 				} 
 			}
+			
+			// #18685 - Start
+			if (taskType.equals(SourcingConstants.CONSOLIDATION_TASK) && CollectionUtils.isNotEmpty(getManagedBean().getNewBriefingPaperReportList())) {
+				List<ScQtFinalizationReport>  tempList = new ArrayList<>();
+				for (String reportName : reportTitleList) {
+					for (ScQtFinalizationReport report : getManagedBean().getNewBriefingPaperReportList()) {
+						if (reportName.equals(report.getPmDocument().getDocName())) {
+							tempList.add(report);
+							break;
+						}
+					}
+				}
+				getManagedBean().getNewBriefingPaperReportList().clear();
+				getManagedBean().getNewBriefingPaperReportList().addAll(tempList);
+			}
+			// #18685 - End
+			
 			log.info("checkKertasTaklimatReports count"+count);
 			if(count==1){
 				log.info("enter count1"+count);
