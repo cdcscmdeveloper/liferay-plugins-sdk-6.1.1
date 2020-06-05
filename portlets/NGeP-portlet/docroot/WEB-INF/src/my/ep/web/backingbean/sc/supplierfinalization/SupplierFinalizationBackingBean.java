@@ -4100,6 +4100,22 @@ public class SupplierFinalizationBackingBean extends
 					ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY);
 		}
 		
+		/*#25729#142 Start
+		 	If Desk Officer QCA & indicative price 20-50k
+				hide forward to higher authority
+		*/		
+		boolean expectTotalIndPriceBetweenThreshold = expectTotalIndPriceBetweenThreshold(getManagedBean().getScQt());																				
+		String CommType = getManagedBean().getCommitteeType();
+		if (expectTotalIndPriceBetweenThreshold=true && 
+				"QCA".equals(CommType)) {
+			if (excludedDecisionList == null) {
+				excludedDecisionList = new ArrayList<String>();
+			}
+			excludedDecisionList.add(
+					ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY);
+		}
+		//#25729#142 End
+		
 		if (CollectionUtils.isNotEmpty(
 					excludedDecisionList)) {
 			searchBean = new SearchBean<PmParameterDesc>();
@@ -4278,13 +4294,52 @@ public class SupplierFinalizationBackingBean extends
 					.retrieveReasonDescListByCategory(reqDTO);
 
 			List<PmReasonDesc> reasonList = resDTO.getReasonDescList();
-			items = new SelectItem[reasonList.size()];
+
+			/*#25729#142 Start
+		 		If Desk Officer QCB & indicative price below 20k & offer price>50k
+				hide rEASON Awarded Price Exceeded Committee Authority
+			*/	
+			int x = 0;
+			int sizeItems = 0;
+			boolean expectTotalIndPriceBelowThreshold = false;
+			String CommType = "";
+			
+			expectTotalIndPriceBelowThreshold = expectTotalIndPriceBelowThreshold(getManagedBean().getScQt());																				
+			CommType = getManagedBean().getCommitteeType();
+			
+			for (PmReasonDesc reasonDescSize : reasonList) {	
+				if (ParameterConst.AWARDED_PRICE_EXCEEDED_COMMITTEE_AUTHORITY.equals(reasonDescSize.getReasonDesc())) {
+					if (expectTotalIndPriceBelowThreshold=true && 
+							"QCB".equals(CommType)) {
+							sizeItems++;
+					}
+				}
+				else {
+					sizeItems++;
+				}
+			}
+			
+		
+			items = new SelectItem[sizeItems];
 			int i = 0;
-			for (PmReasonDesc reasonDesc : reasonList) {
-				items[i++] = new SelectItem(reasonDesc.getPmReason()
-						.getReasonId(), reasonDesc.getReasonDesc());
-				reasonDescMap.put(reasonDesc.getPmReason().getReasonId(),
-						reasonDesc.getReasonDesc());
+			for (PmReasonDesc reasonDesc : reasonList) {	
+				if (ParameterConst.AWARDED_PRICE_EXCEEDED_COMMITTEE_AUTHORITY.equals(reasonDesc.getReasonDesc())) {
+					if (expectTotalIndPriceBelowThreshold=true && 
+							"QCB".equals(CommType)) {
+							items[i++] = new SelectItem(reasonDesc.getPmReason()
+									.getReasonId(), reasonDesc.getReasonDesc());
+							reasonDescMap.put(reasonDesc.getPmReason().getReasonId(),
+									reasonDesc.getReasonDesc());
+					}
+				}
+				else {
+					items[i++] = new SelectItem(reasonDesc.getPmReason()
+							.getReasonId(), reasonDesc.getReasonDesc());
+					reasonDescMap.put(reasonDesc.getPmReason().getReasonId(),
+							reasonDesc.getReasonDesc());
+				}
+				//#25729#142 End
+				
 			}
 		} finally {
 			reasonSO = null;
