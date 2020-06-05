@@ -1129,7 +1129,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 			}	
 
-			if(!ctBB.getManagedBean().isOwnerOrgProfile()){
+			//#28289 - During Notification Setting, no need to validate
+			if(!ctBB.getManagedBean().isOwnerOrgProfile() && !(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_NOTIFICATION_SETTING))){
 				if(ctBB.getManagedBean().getContractVer().getCtContractValue().getAp178RefNo() == null
 						|| ctBB.getManagedBean().getContractVer().getCtContractValue().getAp178RefNo().isEmpty()){
 					setTabValue("AG");
