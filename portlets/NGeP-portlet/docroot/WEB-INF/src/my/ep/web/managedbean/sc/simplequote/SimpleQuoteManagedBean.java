@@ -327,7 +327,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	private boolean saveButtonFlg = Boolean.TRUE;
 	
 	/** The SQ Audit flg. */
-	private boolean sqAuditFlg = Boolean.FALSE;
+	private boolean sqAuditFlg;
 
 	/** The required. */
 	private boolean required;
