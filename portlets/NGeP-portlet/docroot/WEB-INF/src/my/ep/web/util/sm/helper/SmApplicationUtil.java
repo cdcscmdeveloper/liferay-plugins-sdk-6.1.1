@@ -157,6 +157,7 @@ import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
+import my.ep.persistence.entity.sm.SmDisciplinaryActionRemarks;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmGstSupplier;
@@ -13453,5 +13454,21 @@ public class SmApplicationUtil {
 		return daHistoryList;
 	}
 	//27796: Disciplinary Action - end - 26238
+	//28198: Disciplinary Action - start - 26238
+			public static List<SmDisciplinaryActionRemarks> retrieveActiveSmDisciplinaryActionRemarksByDA(SmDisciplinaryAction smDisciplinaryAction){
+				
+				ISupplierDataMaintenanceSO supplierDataMaintenanceSO = (ISupplierDataMaintenanceSO) BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+								ISupplierDataMaintenanceSO.class);
+				SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+				SupplierDataMaintenanceResDTO resDTO = new SupplierDataMaintenanceResDTO();
+				reqDTO.setSmDisciplinaryAction(smDisciplinaryAction);
+				
+				resDTO = supplierDataMaintenanceSO.retrieveDisciplinaryActionRemarksByDAId(reqDTO);
+				
+				return resDTO.getSmDisciplinaryActionsRemarks();
+			}
+			
+			//28198: Disciplinary Action - end - 26238
 
 }
