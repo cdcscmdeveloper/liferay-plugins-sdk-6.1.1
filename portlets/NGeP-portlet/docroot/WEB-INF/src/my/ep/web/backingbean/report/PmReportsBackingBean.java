@@ -278,14 +278,14 @@ public class PmReportsBackingBean extends
 	// User Profile List
 	private void constructPm003Map(LinkedHashMap<String, String> map) {
 		
-		if (getManagedBean().getSelectedPmUser() != null) {
+		if (getManagedBean().getSelectedPmUser() != null) {			
 			map.put(PmReportConst.PARAM_PM_USERNAME, getManagedBean()
 					.getSelectedPmUser().getUserName());
 			map.put(PmReportConst.PARAM_PM_IDENTIFICATION_NO, getManagedBean()
 					.getSelectedPmUser().getIdentificationNo());
 		}
 		
-		if (getManagedBean().getSelectedOrgType() != null) {
+		if (getManagedBean().getSelectedOrgType() != null) {			
 			map.put(PmReportConst.PARAM_PM_ORG_TYPE_PARAM_ID, getManagedBean()
 					.getSelectedOrgType().getParameterId().toString());
 		}
@@ -305,15 +305,17 @@ public class PmReportsBackingBean extends
 					.getSelectedOrgProfile().getPmFinancialOrg()
 					.getBizRegNumber());
 		}
-		
+
 	}else
 		
 	if (this.getManagedBean().getSelectedOrgType().getParameterCode().equals("SUP")){
 		log.info("ORG_TYPE_SUPPLIER");
 		if (getManagedBean().getSelectedOrgProfile() != null
-				&& getManagedBean().getSelectedOrgProfile().getSmSupplier() != null) {
+				&& getManagedBean().getSelectedOrgProfile().getSmSupplier() != null){
 			map.put(PmReportConst.PARAM_PM_COMPANY_NAME, getManagedBean()
 					.getSelectedOrgProfile().getSmSupplier().getCompanyName());
+			map.put(PmReportConst.PARAM_PM_BIZREG_NO, getManagedBean()
+					.getBizRegNo());
 		}
 		
 	}else{	
