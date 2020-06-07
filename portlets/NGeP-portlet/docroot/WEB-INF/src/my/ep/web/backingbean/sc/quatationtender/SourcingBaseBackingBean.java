@@ -4666,12 +4666,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			BigDecimal tmpExpectedIntendedPrice = scQt.getTmpExpectedIntendedPrice();
 			
 			if (!scQt.isPanel() && tmpExpectedIntendedPrice != null) {
-				log.info(":::expectTotalIndPriceBelowThreshold() scQt.isPanel(): "+ scQt.isPanel() +" :::");
-				log.info(":::expectTotalIndPriceBelowThreshold() tmpExpectedIntendedPrice: "+ tmpExpectedIntendedPrice +" :::");
-				log.info(":::expectTotalIndPriceBelowThreshold() tmpExpectedIntendedPrice.doubleValue: "+ tmpExpectedIntendedPrice.doubleValue() +" :::");
+				log.info(":::expectTotalIndPriceBetweenThreshold() scQt.isPanel(): "+ scQt.isPanel() +" :::");
+				log.info(":::expectTotalIndPriceBetweenThreshold() tmpExpectedIntendedPrice: "+ tmpExpectedIntendedPrice +" :::");
+				log.info(":::expectTotalIndPriceBetweenThreshold() tmpExpectedIntendedPrice.doubleValue: "+ tmpExpectedIntendedPrice.doubleValue() +" :::");
 
-				if (SourcingConstants.QT_BELOW_20K >= tmpExpectedIntendedPrice.doubleValue() &&
-						SourcingConstants.QT_BELOW_50K <= tmpExpectedIntendedPrice.doubleValue()) {
+				if (SourcingConstants.QT_BELOW_20K <= tmpExpectedIntendedPrice.doubleValue() &&
+						SourcingConstants.QT_BELOW_50K >= tmpExpectedIntendedPrice.doubleValue()) {
+
 					return Boolean.TRUE;
 				}
 			}
