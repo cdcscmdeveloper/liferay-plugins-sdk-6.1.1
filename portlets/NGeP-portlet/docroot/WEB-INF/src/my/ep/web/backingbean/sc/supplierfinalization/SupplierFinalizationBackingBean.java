@@ -4106,7 +4106,7 @@ public class SupplierFinalizationBackingBean extends
 		*/		
 		boolean expectTotalIndPriceBetweenThreshold = expectTotalIndPriceBetweenThreshold(getManagedBean().getScQt());																				
 		String CommType = getManagedBean().getCommitteeType();
-		if (expectTotalIndPriceBetweenThreshold=true && 
+		if (expectTotalIndPriceBetweenThreshold==true && 
 				SourcingConstants.QCA_COMMITTEE.equals(CommType)) {
 			if (excludedDecisionList == null) {
 				excludedDecisionList = new ArrayList<String>();
