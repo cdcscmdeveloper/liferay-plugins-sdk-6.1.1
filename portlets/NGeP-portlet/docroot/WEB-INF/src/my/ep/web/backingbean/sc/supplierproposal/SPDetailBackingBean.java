@@ -1869,9 +1869,11 @@ public class SPDetailBackingBean extends
 			if (null != assetProposalChecklist) {
 				assetProposalChecklist.setSubmitted(isCompleted);
 			}
-			
-			int index = getManagedBean().getFinanceCheckDetailsList().indexOf(
-					assetProposalChecklist);
+			// #26339 - Start
+			/*int index = getManagedBean().getFinanceCheckDetailsList().indexOf(
+					assetProposalChecklist) - 1;*/
+			boolean removeAttachment = false;
+			// #26339 - End
 			if (isCompleted && scQtPRPAssetLiability != null) {
 				if( ((scQtPRPAssetLiability.getCurrentAssets() == null)
 						&& (scQtPRPAssetLiability.getCurrentLiabilities() == null) 
@@ -1887,7 +1889,10 @@ public class SPDetailBackingBean extends
 						&& (null != scQtPRPAssetLiability.getAcidRatio() && scQtPRPAssetLiability.getAcidRatio().compareTo(BigDecimal.ZERO) == 0 )
 						&& (null != scQtPRPAssetLiability.getCurrentRatio() && scQtPRPAssetLiability.getCurrentRatio().compareTo(BigDecimal.ZERO) == 0))) 
 					 {
-					assetProposalChecklist.setScQtProposalChecklistAttachment(null);
+					// #26339 - Start
+					//assetProposalChecklist.setScQtProposalChecklistAttachment(null);
+					removeAttachment = true;
+					// #26339 - End
 					assetProposalChecklist.setSubmitted(true);
 					//this.getManagedBean().setReadOnly(true);
 					assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
@@ -1973,14 +1978,45 @@ public class SPDetailBackingBean extends
 			if (resDTO.isSuccessful()) {
 				// #26339 - Start
 				/*if (isCompleted) {*/
+					// #26339 - Start
+					int index = 0;
+					for (ScQtProposalChecklist finCheckList : getManagedBean().getFinanceCheckDetailsList()) {
+						if (finCheckList.getQtProposalChecklistId().longValue() == scQtProposalChecklist.getQtProposalChecklistId().longValue()) {
+							getManagedBean().getFinanceCheckDetailsList().set(index,
+									resDTO.getProposalChecklist());
+							index = 0;
+							break;
+						}
+						index++;
+					}
+					// #26339 - End
 					reqDTO.setMultiEncryptBeanList(null);
 					reqDTO.setTobeRemovedCreditFacilities(null);
 					if(assetProposalChecklist != null){
 						reqDTO.setScQtProposalChecklist(assetProposalChecklist);
+						// #26339 - Start
+						if (removeAttachment) {
+							List<ScQtProposalChecklistAttachment> removeAttachmentList = new ArrayList<>();
+							removeAttachmentList.add(assetProposalChecklist.getScQtProposalChecklistAttachment());
+							reqDTO.setTobeRemovedProposalChecklistAttachments(removeAttachmentList);
+							assetProposalChecklist.setScQtProposalChecklistAttachment(null);
+						}
+						// #26339 - End
 						ProposalResDTO resDto = proposalSO
 								.saveProposalDetails(reqDTO);
-						getManagedBean().getFinanceCheckDetailsList().set(index,
-								resDto.getProposalChecklist());
+						// #26339 - Start
+						/*getManagedBean().getFinanceCheckDetailsList().set(index,
+								resDto.getProposalChecklist());*/
+						
+						for (ScQtProposalChecklist finCheckList : getManagedBean().getFinanceCheckDetailsList()) {
+							if (finCheckList.getQtProposalChecklistId().longValue() == assetProposalChecklist.getQtProposalChecklistId().longValue()) {
+								getManagedBean().getFinanceCheckDetailsList().set(index,
+										resDto.getProposalChecklist());
+								break;
+							}
+							index++;
+						}
+						// #26339 - End
 					}
 			/*	}*/
 				// #26339 - End
