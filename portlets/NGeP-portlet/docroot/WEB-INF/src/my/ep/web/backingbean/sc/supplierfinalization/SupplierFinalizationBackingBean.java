@@ -4260,7 +4260,7 @@ public class SupplierFinalizationBackingBean extends
 		expectTotalIndPriceBelowThreshold = expectTotalIndPriceBelowThreshold(getManagedBean().getScQt());																				
 		CurrentCommType = getManagedBean().getCommitteeType();
 		
-		if (expectTotalIndPriceBelowThreshold=true && 
+		if (expectTotalIndPriceBelowThreshold==true && 
 				SourcingConstants.QCB_COMMITTEE.equals(CurrentCommType)) {
 					commType=SourcingConstants.QCA_COMMITTEE;
 		}
@@ -4316,14 +4316,17 @@ public class SupplierFinalizationBackingBean extends
 			int sizeItems = 0;
 			boolean expectTotalIndPriceBelowThreshold = false;
 			String CommType = "";
+			boolean isOfferPriceAbove50k = false;
 			
 			expectTotalIndPriceBelowThreshold = expectTotalIndPriceBelowThreshold(getManagedBean().getScQt());																				
 			CommType = getManagedBean().getCommitteeType();
 			
+			isOfferPriceAbove50k = true;
 			for (PmReasonDesc reasonDescSize : reasonList) {	
 				if (ParameterConst.AWARDED_PRICE_EXCEEDED_COMMITTEE_AUTHORITY.equals(reasonDescSize.getReasonDesc())) {
-					if (expectTotalIndPriceBelowThreshold=true && 
-							SourcingConstants.QCB_COMMITTEE.equals(CommType)) {
+					if (expectTotalIndPriceBelowThreshold==true && 
+							SourcingConstants.QCB_COMMITTEE.equals(CommType) &&
+							isOfferPriceAbove50k==true) {
 							sizeItems++;
 					}
 				}
@@ -4332,13 +4335,14 @@ public class SupplierFinalizationBackingBean extends
 				}
 			}
 			
-		
+			
 			items = new SelectItem[sizeItems];
 			int i = 0;
 			for (PmReasonDesc reasonDesc : reasonList) {	
 				if (ParameterConst.AWARDED_PRICE_EXCEEDED_COMMITTEE_AUTHORITY.equals(reasonDesc.getReasonDesc())) {
-					if (expectTotalIndPriceBelowThreshold=true && 
-							SourcingConstants.QCB_COMMITTEE.equals(CommType)) {
+					if (expectTotalIndPriceBelowThreshold==true && 
+							SourcingConstants.QCB_COMMITTEE.equals(CommType) &&
+							isOfferPriceAbove50k==true) {
 							items[i++] = new SelectItem(reasonDesc.getPmReason()
 									.getReasonId(), reasonDesc.getReasonDesc());
 							reasonDescMap.put(reasonDesc.getPmReason().getReasonId(),
@@ -4429,10 +4433,8 @@ public class SupplierFinalizationBackingBean extends
 							SourcingConstants.FORWARD_TO_HIGHER_AUTHORITY_DECISION_NON_UNANIMOUS);
 				} else {
 					
-/*					higherCommittees = higherAuthoritiesMap.get(committeeType + 
+					higherCommittees = higherAuthoritiesMap.get(committeeType + 
 							SourcingConstants.FORWARD_TO_HIGHER_AUTHORITY_DECISION_OTHERS);
-*/					higherCommittees = higherAuthoritiesMap.get(committeeType + 
-							SourcingConstants.FORWARD_TO_HIGHER_AUTHORITY_DECISION_NON_UNANIMOUS);
 				}
 			}
 		}
