@@ -845,10 +845,7 @@ public class SmApplicationBackingBean extends
 			//26238 - start 28144
 			if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI) || applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)){
 				if (currSupp != null){
-					
-					//27876: Disciplinary Action - start - <27876>
-					List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp, false);
-					//27876: Disciplinary Action - end - <27876>
+					List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
 					
 					if(discList != null && discList.size() > 0){
 						for(SmDisciplinaryAction disc : discList){
@@ -870,7 +867,7 @@ public class SmApplicationBackingBean extends
 			//27748 : Disciplinary Action - #26238 - start 
 			if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
 				if(currSupp != null){
-					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp, false);
+					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
 					
 					if(activeDisc != null && activeDisc.size() > 0){
 						for(SmDisciplinaryAction disc : activeDisc){
@@ -961,7 +958,7 @@ public class SmApplicationBackingBean extends
 				//26238 - start
 				//check disciplinary action on supplier
 				if (currSupp != null){
-					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp, false);
+					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
 //					SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionBySupplier(supReqDTO);
 					if(activeDisc != null && activeDisc.size() > 0){
 						for(SmDisciplinaryAction disciplinary : activeDisc){
@@ -1460,7 +1457,7 @@ public class SmApplicationBackingBean extends
 			
 			if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
 				if(currSupp != null){
-					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp, true);
+					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
 					
 					if(activeDisc != null && activeDisc.size() > 0){
 						for(SmDisciplinaryAction disc : activeDisc){
@@ -3291,11 +3288,7 @@ public class SmApplicationBackingBean extends
 		//START 26238 -  Disciplonary action - 27748
 		if(getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
 			if(this.getManagedBean().getSmAppl().getSmSupplier() != null){
-				
-				//27876: Disciplinary Action - start - <27876>
-				List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(
-						this.getManagedBean().getSmAppl().getSmSupplier(), true);
-				//27876: Disciplinary Action - end - <27876>
+				List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(this.getManagedBean().getSmAppl().getSmSupplier());
 				
 				if(activeDisc != null && activeDisc.size() > 0){
 					for(SmDisciplinaryAction disc : activeDisc){
