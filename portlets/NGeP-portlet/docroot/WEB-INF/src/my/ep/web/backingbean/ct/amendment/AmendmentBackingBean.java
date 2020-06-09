@@ -6135,7 +6135,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						+ ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier().getSupplierId());
 				this.getManagedBean().setDisciplinaryAction(false);
 				List<SmDisciplinaryAction> resultList = null;
-				resultList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier());
+			resultList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(ctBackingBean.getManagedBean()
+					.getContractVer().getCtContract().getSmSupplier()); //27876: Disciplinary Action - 27876 *add new parameter
 
 				if(resultList == null){
 					this.getManagedBean().setDisciplinaryAction(false);
