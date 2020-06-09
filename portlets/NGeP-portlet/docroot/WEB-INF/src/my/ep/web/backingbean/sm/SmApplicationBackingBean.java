@@ -3291,7 +3291,11 @@ public class SmApplicationBackingBean extends
 		//START 26238 -  Disciplonary action - 27748
 		if(getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
 			if(this.getManagedBean().getSmAppl().getSmSupplier() != null){
-				List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(this.getManagedBean().getSmAppl().getSmSupplier(), true);
+				
+				//27876: Disciplinary Action - start - <27876>
+				List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(
+						this.getManagedBean().getSmAppl().getSmSupplier(), true);
+				//27876: Disciplinary Action - end - <27876>
 				
 				if(activeDisc != null && activeDisc.size() > 0){
 					for(SmDisciplinaryAction disc : activeDisc){
