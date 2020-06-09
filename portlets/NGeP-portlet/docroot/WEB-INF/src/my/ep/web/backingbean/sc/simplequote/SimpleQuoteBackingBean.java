@@ -4982,6 +4982,10 @@ public class SimpleQuoteBackingBean extends
 
 		if (StringUtils.isNotBlank(quoteIdStr)) {
 
+			// #28199 - Start : Remove back button from SQ Response Screen
+				getManagedBean().setSqAuditFlg(Boolean.FALSE);
+			// #28199 - End
+			
 			try {
 				FacesScopes facesScopes = new FacesScopes();
 				QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
@@ -5174,7 +5178,11 @@ public class SimpleQuoteBackingBean extends
 				.getServiceTemplateSpecBean();
 
 		if (StringUtils.isNotBlank(quoteIdStr)) {
-
+			
+			// #28199 - Start : Remove back button from SQ Response Screen
+				getManagedBean().setSqAuditFlg(Boolean.TRUE);
+			// #28199 - End
+			
 			try {
 				FacesScopes facesScopes = new FacesScopes();
 				QuoteReqDTO quoteReqDTO = new QuoteReqDTO();

@@ -325,6 +325,9 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 
 	/** The save button flg. */
 	private boolean saveButtonFlg = Boolean.TRUE;
+	
+	/** The SQ Audit flg. */
+	private boolean sqAuditFlg;
 
 	/** The required. */
 	private boolean required;
@@ -2441,6 +2444,25 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	 */
 	public void setSaveButtonFlg(boolean saveButtonFlg) {
 		this.saveButtonFlg = saveButtonFlg;
+	}
+	
+	/**
+	 * Checks if is sqAuditFlg flg.
+	 * 
+	 * @return true, if SQAuditFlag
+	 */
+	public boolean isSqAuditFlg() {
+		return sqAuditFlg;
+	}
+
+	/**
+	 * Sets the sqAuditFlg.
+	 * 
+	 * @param sqAuditFlg
+	 *            
+	 */
+	public void setSqAuditFlg(boolean sqAuditFlg) {
+		this.sqAuditFlg = sqAuditFlg;
 	}
 
 	/**
