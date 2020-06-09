@@ -702,7 +702,7 @@ public class SupplierDataMaintenanceBackingBean extends
 					SupplierDataMaintenanceReqDTO supplierDataMaintenanceReqDTO = new SupplierDataMaintenanceReqDTO();
 					SmAppl latestAppl = resDTO.getSmAppl();
 					SmSupplier supplier = latestAppl.getSmSupplier();
-					List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
+					List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier,false);
 					
 					if(discList != null){
 						for(SmDisciplinaryAction disc : discList){
@@ -2007,7 +2007,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	public void onViewDisciplinaryAction() {
 		SmSupplier currSupp = getManagedBean().getSmSupplier();
 		if(currSupp != null){
-			List<DisciplinaryActionVO> voList = getDisciplinaryActionVO(currSupp);
+			List<DisciplinaryActionVO> voList = getDisciplinaryActionVO(currSupp, false);
 			if(!EntityHelper.isCollectionEmpty(voList)
 					&& voList.size() > 0){
 				getManagedBean().setDisciplineVOs(voList);
@@ -2667,7 +2667,11 @@ public class SupplierDataMaintenanceBackingBean extends
 		if(supplier != null){
 			//27724 : Disciplinary Action - start
 //			List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(supplier);
-			List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
+			
+			//27876: Disciplinary Action - start - <27876>
+			List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier, false);
+			//27876: Disciplinary Action - end - <27876>
+			
 			//27724 : Disciplinary Action - end
 			if(discList != null && discList.size() > 0){
 				for(SmDisciplinaryAction disc : discList){
