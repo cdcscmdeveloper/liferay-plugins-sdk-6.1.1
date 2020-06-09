@@ -81,6 +81,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.UserProfilesSearchBean;
@@ -101,6 +102,9 @@ import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
+
+import com.liferay.portal.model.User;
+import com.liferay.portal.service.UserServiceUtil;
 
 /**
  * Backing Bean for User Profiles (Management)
@@ -3607,11 +3611,10 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 																		// for
 																		// each
 																		// user
-			Long loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
+			
+			SpkiBackingBean spkiBackingBean = new SpkiBackingBean();
+			Long loginSessionUserId = spkiBackingBean.getLoginUser().getUserId();
 			new LogKey(loginSessionUserId);
-//			Long loginSessionUserId = (new LogKey().getUserId() == null) ? 
-//					getFacesScopes().getUserSessionBean().getUserId() 
-//					: Long.valueOf(String.valueOf(new LogKey().getUserId()));
 			
 			if (!userOrg.isBrandNew()) {
 				userOrg.setChangedBy(loginSessionUserId);
