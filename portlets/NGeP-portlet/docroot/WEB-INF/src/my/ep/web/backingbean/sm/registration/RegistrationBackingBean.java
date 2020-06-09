@@ -652,7 +652,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 									
 									SmSupplier supplier = latestAppl.getSmSupplier();
 									
-									List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
+									//27876: Disciplinary Action - start - <27876>
+									List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier, false);
+									//27876: Disciplinary Action - end - <27876>
 									
 									if(discList != null && discList.size() > 0){
 										for(SmDisciplinaryAction disc : discList){
@@ -4340,7 +4342,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	
 	//26238 - start 
 	public void retrieveActiveDisicplinaryAction(SmSupplier supplier){
-		List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
+		List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier, true);
 		PersonnelReqDTO perReqDTO = new PersonnelReqDTO();
 		perReqDTO.setSmSupplierId(supplier.getSupplierId());
 		

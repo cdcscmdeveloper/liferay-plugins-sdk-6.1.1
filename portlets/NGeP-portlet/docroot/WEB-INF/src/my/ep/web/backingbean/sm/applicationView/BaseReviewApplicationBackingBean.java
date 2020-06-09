@@ -507,8 +507,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().setSmAppl(smAppl);
 		
 		// 28155 - start
+		//27876: Disciplinary Action - 27876 *add new parameter
 		smAppl.getSmSupplier().setSmDisciplinaryActions(
-				SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(smAppl.getSmSupplier()));
+				SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(smAppl.getSmSupplier(),true)); 
 		getManagedBean().setSmSupplier(smAppl.getSmSupplier());
 		// 28155 - end
 		
@@ -3599,14 +3600,16 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	// 25792 - end
 	
 	//28281 - start
-	public static List<DisciplinaryActionVO> getDisciplinaryActionVO(SmSupplier currSupp) {
+	public static List<DisciplinaryActionVO> getDisciplinaryActionVO(SmSupplier currSupp, boolean flagSupplier) {
 		List<DisciplinaryActionVO> voList = new ArrayList<DisciplinaryActionVO>();
 		PersonnelReqDTO perReqDTO = new PersonnelReqDTO();
 		perReqDTO.setSmSupplierId(currSupp.getSupplierId());
 		
 		PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelBySupplierId(perReqDTO);
 		
-		List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(currSupp);
+		List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(currSupp,
+				flagSupplier); //27876: Disciplinary Action - 27876 *add new parameter
+		
 		if (resultList != null
 				&& resultList.size() > 0) {
 			for(SmDisciplinaryAction disciplinaryAction: resultList){
@@ -3730,7 +3733,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	
 	
 	public void retrieveActiveDisciplinaryAction(SmSupplier supplier){
-		List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
+		
+		//27876: Disciplinary Action - start - <27876>
+		List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier, true);
+		//27876: Disciplinary Action - end - <27876>
+		
 		PersonnelReqDTO perReqDTO = new PersonnelReqDTO();
 		perReqDTO.setSmSupplierId(supplier.getSupplierId());
 		

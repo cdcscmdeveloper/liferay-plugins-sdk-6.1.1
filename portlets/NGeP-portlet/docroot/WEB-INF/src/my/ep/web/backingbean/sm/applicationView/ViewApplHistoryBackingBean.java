@@ -230,7 +230,10 @@ public class ViewApplHistoryBackingBean extends
 		//26238 - start
 		else {			
 			SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
+			//27876: Disciplinary Action - start - <27876>
 			List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier, false);
+			//27876: Disciplinary Action - End- <27876>
+			
 			if(!EntityHelper.isCollectionEmpty(resultList)
 					&& resultList.size() > 0){
 				getManagedBean().setDisciplinaryAction(true);
