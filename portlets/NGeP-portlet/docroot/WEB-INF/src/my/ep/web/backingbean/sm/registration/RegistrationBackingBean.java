@@ -4342,7 +4342,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	
 	//26238 - start 
 	public void retrieveActiveDisicplinaryAction(SmSupplier supplier){
+		
+		//27876: Disciplinary Action - start - <27876>
 		List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier, true);
+		//27876: Disciplinary Action - end - <27876>
+		
 		PersonnelReqDTO perReqDTO = new PersonnelReqDTO();
 		perReqDTO.setSmSupplierId(supplier.getSupplierId());
 		
