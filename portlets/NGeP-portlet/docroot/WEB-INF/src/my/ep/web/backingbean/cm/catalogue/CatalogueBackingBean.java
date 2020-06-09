@@ -10959,7 +10959,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			}			
 			
 			// get disicplinary action history
-			List<DisciplinaryActionVO> voList = ViewSuppProfileBackingBean.getDisciplinaryActionVO(smSupplier);
+			
+			//27876: Disciplinary Action - start - <27876>
+			List<DisciplinaryActionVO> voList = ViewSuppProfileBackingBean.getDisciplinaryActionVO(smSupplier, true);
+			//27876: Disciplinary Action - end - <27876>
 			
 			if(!EntityHelper.isCollectionEmpty(voList) && voList.size() > 0){				
 				voObj = voList.get(0);
