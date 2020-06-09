@@ -712,12 +712,8 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		List<Object[]> cancelCat = SmApplicationUtil.retrieveCancelCategoryBySupplier(currSupp);
 		
 		if(currSupp != null && currSupp.getSmAppl() != null){
-			
-			//27876: Disciplinary Action - start - <27876>
-			List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp, false);
-			//27876: Disciplinary Action - end - <27876>
-			
-			
+			List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
+
 			//27738 Start - System allow to add 221709 without basic category
 			MofRegistrationReqDTO reqDTO1 = new MofRegistrationReqDTO();
 			reqDTO1.setApplNo(currSupp.getSmAppl().getApplNo());
