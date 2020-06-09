@@ -3609,7 +3609,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 																		// user
 			
 //			SpkiBackingBean spkiBackingBean = new SpkiBackingBean();
-//			
+			
+			Long loginSessionUserId = 1L;
 			//
 			userSO = (IUserSO) BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -3619,11 +3620,14 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			logger.info("#26766 getLoginId : " + userReqDTO.getLoginId());
 			PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
 			if (pmUser == null) {
-				throw new EpException("PM User is null");
+				loginSessionUserId = getFacesScopesGen().getUserSessionBean().getUserId();
+//				throw new EpException("PM User is null");
+			}
+			else{
+				loginSessionUserId = pmUser.getUserId();
 			}
 			
 			//
-			Long loginSessionUserId = pmUser.getUserId();
 //			Long loginSessionUserId = spkiBackingBean.getLoginUser().getUserId();
 			new LogKey(loginSessionUserId);
 			
