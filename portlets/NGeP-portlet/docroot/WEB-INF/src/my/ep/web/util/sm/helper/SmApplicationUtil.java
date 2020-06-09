@@ -4051,7 +4051,10 @@ public class SmApplicationUtil {
 			}
 			//26238 - start
 			SupplierDataMaintenanceResDTO resDTO = new SupplierDataMaintenanceResDTO();
-			retrieveActiveSmDisciplinaryActionBySupplier(smSupplier);
+			
+			//27876: Disciplinary Action - start - <27876>
+			retrieveActiveSmDisciplinaryActionBySupplier(smSupplier, false);
+			//27876: Disciplinary Action - end - <27876>
 			
 			if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)){
 				if(resDTO.getSmDisciplinaryActions() != null
@@ -13267,7 +13270,8 @@ public class SmApplicationUtil {
 	 * Param - supplierId
 	 * @return SmDisciplinaryAction
 	 */
-	public static List<SmDisciplinaryAction> retrieveSmDisciplinaryActionBySupplier(SmSupplier supplier) {
+	//27876: Disciplinary Action - 27876 *add new parameter on this method
+	public static List<SmDisciplinaryAction> retrieveSmDisciplinaryActionBySupplier(SmSupplier supplier, boolean flagSupplier) {
 		ISupplierDataMaintenanceSO supplierDataMaintenanceSO = (ISupplierDataMaintenanceSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
 						ISupplierDataMaintenanceSO.class);
@@ -13275,12 +13279,13 @@ public class SmApplicationUtil {
 		SupplierDataMaintenanceResDTO resDTO = new SupplierDataMaintenanceResDTO();
 		reqDTO.setSupplier(supplier);
 		
-		resDTO = supplierDataMaintenanceSO.retrieveDisciplinaryActionBySupplier(reqDTO);
-
+		//27876: Disciplinary Action - 27876 *add new parameter
+		resDTO = supplierDataMaintenanceSO.retrieveDisciplinaryActionBySupplier(reqDTO, flagSupplier); 
+		
 		return resDTO.getSmDisciplinaryActions();
 	} 
 	
-	public static List<SmDisciplinaryAction> retrieveActiveSmDisciplinaryActionBySupplier(SmSupplier supplier) {
+	public static List<SmDisciplinaryAction> retrieveActiveSmDisciplinaryActionBySupplier(SmSupplier supplier, boolean flagSupplier) {
 		ISupplierDataMaintenanceSO supplierDataMaintenanceSO = (ISupplierDataMaintenanceSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
 						ISupplierDataMaintenanceSO.class);
@@ -13288,7 +13293,7 @@ public class SmApplicationUtil {
 		SupplierDataMaintenanceResDTO resDTO = new SupplierDataMaintenanceResDTO();
 		reqDTO.setSupplier(supplier);
 		
-		resDTO = supplierDataMaintenanceSO.retrieveActiveDisciplinaryActionBySupplier(reqDTO);
+		resDTO = supplierDataMaintenanceSO.retrieveActiveDisciplinaryActionBySupplier(reqDTO, flagSupplier);
 
 		return resDTO.getSmDisciplinaryActions();
 	} 
