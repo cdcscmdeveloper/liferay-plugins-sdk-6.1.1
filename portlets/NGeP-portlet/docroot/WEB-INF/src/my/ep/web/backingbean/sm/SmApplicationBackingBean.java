@@ -146,6 +146,7 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.backingbean.sm.applicationView.ViewApplHistoryBackingBean;
 import my.ep.web.backingbean.sm.outputmsg.SmOutputMsgBackingBean;
@@ -1336,7 +1337,13 @@ public class SmApplicationBackingBean extends
 							.getSmAppl().getSmSupplier().getSmAppl()
 							.getPmRegStatus().getPmStatus().getStatusId(),
 							getManagedBean().getRegStatusDescList(), "pmStatus");
-			getManagedBean().getRegStatusDescList().remove(regStatusToExclude);
+			// 27877 - start - if it is pending site review after approval, registration status can follow what was recommended
+			BPMTaskListBackingBean bpmBean = new BPMTaskListBackingBean();
+			String pendingSiteVisitReviewAfterApprovedStatus = bpmBean.applicationStatus((int) SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED);
+			if (!getManagedBean().getCurrentStatus().equals(pendingSiteVisitReviewAfterApprovedStatus)) {
+				getManagedBean().getRegStatusDescList().remove(regStatusToExclude);
+			}
+			// 27877 - end
 		}
 
 		getManagedBean()
@@ -8567,7 +8574,15 @@ public class SmApplicationBackingBean extends
 		//Bug #26705
 		getlatestPoOverlappingRemarks();
 		
-		assignValReqdToTrue();
+		// 27877 - start - not required when pending site visit
+		BPMTaskListBackingBean bpmBean = new BPMTaskListBackingBean();
+		String pendingSiteVisitReviewAfterApprovedStatus = bpmBean.applicationStatus((int) SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED);
+		if (!getManagedBean().getCurrentStatus().equals(pendingSiteVisitReviewAfterApprovedStatus)) {
+			assignValReqdToTrue();
+		} else {
+			assignValReqdToFalse();
+		}
+		// 27877 - end
 		getManagedBean().getSmAppl().setBumi(
 				getManagedBean().getSmAppl().getSmSupplier().isBumi());
 		if (getManagedBean().getSmAppl().getApplType()
