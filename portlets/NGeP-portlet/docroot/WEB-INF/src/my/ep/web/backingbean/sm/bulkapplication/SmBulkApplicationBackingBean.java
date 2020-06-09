@@ -181,8 +181,8 @@ public class SmBulkApplicationBackingBean extends
 
 			try {
 				//21937 - start
-				if(bulkAppl.getRejectionRemarks() == null
-						&& StringUtils.isBlank(bulkAppl.getRejectionRemarks())){
+				if(bulkAppl.getSelectedReasonDescs() == null
+						|| bulkAppl.getSelectedReasonDescs().size() == 0){
 					throw new EpException(
 							SmCommonUtil.getMessage("lbl.sm.mandatory.rejection.remark", null));
 				}

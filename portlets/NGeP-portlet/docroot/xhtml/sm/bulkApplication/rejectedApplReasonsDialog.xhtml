@@ -59,6 +59,8 @@
 						rowKey="#{reason}" rowIndexVar="index" id="reasonDtId">
 						
 						<ac:paginator for="reasonDtId" />
+						<!-- 29137 -->
+						<!-- 
 						<p:ajax event="rowSelect" update=":#{p:component('rejectBlockPanel')}" 
 							listener="#{bulkApplicationBackingBean.onTickOrUnTickReason}" />
 						<p:ajax event="rowUnselect" update=":#{p:component('rejectBlockPanel')}" 
@@ -69,7 +71,8 @@
 							listener="#{bulkApplicationBackingBean.onTickOrUnTickReason}" />
 						<p:ajax event="rowDblselect" update=":#{p:component('rejectBlockPanel')}" 
 							listener="#{bulkApplicationBackingBean.onTickOrUnTickReason}" />
-						
+							
+						<f:param name="applId" value="#{bulk.appl.applId}" />  -->
 						<p:column selectionMode="multiple" width="1%" />
 						
 						<p:column headerText="#{lbl['lbl.sm.rejection.reasons']}">
