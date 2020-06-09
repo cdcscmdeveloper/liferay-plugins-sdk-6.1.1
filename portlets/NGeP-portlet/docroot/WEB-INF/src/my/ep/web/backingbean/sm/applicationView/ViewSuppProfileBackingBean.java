@@ -90,7 +90,7 @@ public class ViewSuppProfileBackingBean extends
 				retrieveActiveDisciplinaryAction(supplier);
 			}
 			
-			List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(supplier,true);
+			List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(supplier);
 			if(resultList != null
 					&& resultList.size() > 0){
 				for(SmDisciplinaryAction disciplinaryAction : resultList){
@@ -172,9 +172,7 @@ public class ViewSuppProfileBackingBean extends
 			getManagedBean().setMofSupplier(true);
 		}
 		
-		//27876: Disciplinary Action - 27876 *add new parameter
-		List<DisciplinaryActionVO> voList = getDisciplinaryActionVO(currSupp, getManagedBean().isSupplierUser());
-		
+		List<DisciplinaryActionVO> voList = getDisciplinaryActionVO(currSupp);
 		if(!EntityHelper.isCollectionEmpty(voList)
 				&& voList.size() > 0){
 			getManagedBean().setDisciplineVOs(voList);
@@ -190,9 +188,7 @@ public class ViewSuppProfileBackingBean extends
 	 */
 	public void onViewDisciplinaryAction(SmSupplier smSupplier) {
 		
-		//27876: Disciplinary Action - 27876 *add new parameter
-		List<DisciplinaryActionVO> voList = getDisciplinaryActionVO(smSupplier, getManagedBean().isSupplierUser());
-		
+		List<DisciplinaryActionVO> voList = getDisciplinaryActionVO(smSupplier);
 		if(!EntityHelper.isCollectionEmpty(voList)
 				&& voList.size() > 0){
 			getManagedBean().setDisciplineVOs(voList);
@@ -242,7 +238,7 @@ public class ViewSuppProfileBackingBean extends
 		PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelDABySupplierId(perReqDTO);
 		//27915: Disciplinary Action - end - 26238
 		
-		List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(currSupp, true);
+		List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(currSupp);
 		if (resultList != null
 				&& resultList.size() > 0) {
 			for(SmDisciplinaryAction disciplinaryAction: resultList){
@@ -352,7 +348,7 @@ public class ViewSuppProfileBackingBean extends
 
 
 	public void retrieveActiveDisicplinaryAction(SmSupplier supplier){
-		List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier, true);
+		List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
 		PersonnelReqDTO perReqDTO = new PersonnelReqDTO();
 		perReqDTO.setSmSupplierId(supplier.getSupplierId());
 		
@@ -435,9 +431,7 @@ public class ViewSuppProfileBackingBean extends
 			getManagedBean().setMofSupplier(true);
 		}
 		
-		//27876: Disciplinary Action - 27876 *add new parameter
-		List<DisciplinaryActionVO> voList = getDisciplinaryActionVO(currSupp, getManagedBean().isSupplierUser());
-		
+		List<DisciplinaryActionVO> voList = getDisciplinaryActionVO(currSupp);
 		if(!EntityHelper.isCollectionEmpty(voList)
 				&& voList.size() > 0){
 			getManagedBean().setDisciplineVOs(voList);
@@ -458,9 +452,8 @@ public class ViewSuppProfileBackingBean extends
 		} else {
 			supplier = getManagedBean().getSmSupplier();
 		}
-		List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(
-				supplier, getManagedBean().isSupplierUser()); //27876: Disciplinary Action - 27876 *add new parameter
-		if (!EntityHelper.isCollectionEmpty(resultList)
+		List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
+		if(!EntityHelper.isCollectionEmpty(resultList)
 				&& resultList.size() > 0){
 			getManagedBean().setDisciplinaryAction(true);
 		} else {
