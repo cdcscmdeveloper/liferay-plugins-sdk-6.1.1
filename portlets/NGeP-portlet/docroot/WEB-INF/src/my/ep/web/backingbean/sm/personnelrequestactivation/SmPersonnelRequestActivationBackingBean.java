@@ -33,7 +33,7 @@ public class SmPersonnelRequestActivationBackingBean extends
 		renewSesionObject();
 		//27848 - start
 		SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
-		List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
+		List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp, true);
 		if(activeDisc != null){
 			String labelNameVal = "";
 			FacesContext.getCurrentInstance().addMessage("imposedDisciplinary", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
