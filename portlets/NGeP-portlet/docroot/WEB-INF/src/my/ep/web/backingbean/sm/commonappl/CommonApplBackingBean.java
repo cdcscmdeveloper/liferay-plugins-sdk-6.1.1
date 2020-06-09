@@ -550,7 +550,9 @@ public class CommonApplBackingBean extends
 			SmSupplier currentSupplier = SmApplicationUtil.getCurrentSupplier();
 			List<SmDisciplinaryAction> activeDisc = new ArrayList<SmDisciplinaryAction>();
 			if(currentSupplier != null){
-				activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currentSupplier);
+				//27876: Disciplinary Action - start - <27876>
+				activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currentSupplier, false);
+				//27876: Disciplinary Action - End- <27876>
 			}
 			
 			if(activeDisc != null && activeDisc.size() > 0){
