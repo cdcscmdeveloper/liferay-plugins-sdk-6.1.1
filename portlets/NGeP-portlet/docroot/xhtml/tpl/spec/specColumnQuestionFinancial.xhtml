@@ -5,13 +5,32 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
-	
-	<ui:decorate template="specColumnQuestionViewHeader.xhtml">
+
+<!-- 	#25039 Begin to check Fulfillment Type-->	
+	<ui:param name="isFulfilmentTypeScheduled" 
+		value="#{specificationBackingBean.managedBean.fulfilmentType == ParameterConst.fulfilmentTypeScheduled}" />
+<!-- 	#25039 end -->
+<!-- 	#25039#67 Begin	-->
+	<ui:param name="isTotalEstimatedEqZero" 
+		value="#{templateSpecBackingBean.calcGrandTotalEstAmount(templateSpecBean)==0}" />
+<!-- 	#25039#67 end -->
+
+<!-- #25039 change from specColumnQuestionViewHeader.xhtml to specColumnQuestionFinancialHeader.xhtml-->
+	<ui:decorate template="specColumnQuestionFinancialHeader.xhtml">
 	<ui:define name="otherHeaderSection">
-	<ui:param name="specificationRequired" value="#{isSpecTypeTechnical or isSqSpec or (isSpecTypeFinancial and !isSpecificationReq)}"></ui:param>
-	<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:97px;" rendered="#{isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.unit.price']}">
+	<ui:param name="specificationRequired" value="#{isSpecTypeTechnical or isSqSpec or (isSpecTypeFinancial and !isSpecificationReq)}"></ui:param> 
+<!-- 	#25039 Begin to change indicative label -->	
+	<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:97px;" rendered="#{isSpecTypeFinancial}" >
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.tpl.spec.content.Indicative.unit.price']}"/>
+		</f:facet>
 	</p:column>
-	<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:115px;white-space:normal;" rendered="#{isItemTypeService and isSpecTypeFinancial and !isDurationByItem}" headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
+<!-- 	#25039 end -->
+	<p:column style="width:95px;" rendered="#{isItemTypeService and isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
+		<p:inputText style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign"
+			rendered="#{isQuestionTypeItem}" disabled="true">
+			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+		</p:inputText>
 	</p:column>
 	<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:115px;white-space:normal;" rendered="#{isEstCostReq}">
 		<f:facet name="header">
@@ -31,8 +50,69 @@
 		<f:facet name="footer">
 			<h:outputText value="#{lbl['lbl.tpl.spec.specification.total']}" rendered="#{isSpecTypeFinancial}" />
 		</f:facet>
-		
-		<p:inputText style="min-width:0px !important;width:86px;" rendered="#{isQuestionTypeItem}" disabled="true" />
+
+<!-- 	#25039 Begin Non Zonal Product - input indicative unit price and autocalculate estimated cost -->
+		<c:if test="#{!isZonal}">
+			<p:inputText 
+				id="unitPriceServiceSchedule"
+				value="#{question.tplSpecEstimations[0].indicativeUnitPrice}"
+				style="min-width:0px !important;width:86px;" 
+				rendered="#{isQuestionTypeItem}" 
+				disabled="false"
+				required="true" 
+				label="#{lbl['lbl.tpl.spec.content.Indicative.unit.price']}"
+				onkeypress="if (event.keyCode == 13) {return false; }">	
+				<!-- #25039#152 start -->	
+				<f:converter converterId="dynamicNumberConverter" />
+				<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />						
+				<f:validator validatorId="quantityDoubleRangeValidator" />
+				<!-- #25039#152 end -->
+				<!-- #25039#92 change ajax below to event="keyup" -->	
+				<!-- #25039#152 ajax update add  unitPriceServiceSchedule -->	
+				<p:ajax 
+					update="@all, estimatedCostMsg, @(.calcEstAmount), estimatedCost,totalEstAmount,unitPriceServiceSchedule"
+					partialSubmit="true"
+					process="@this" 
+					event="change"
+					required="true"
+					listener="#{templateSpecBackingBean.calcItemTotalIndicateUnitPrice(
+						templateSpecBean,
+						question.tplSpecEstimations[0].indicativeUnitPrice, 
+						question.clQuantity, 
+						question.clUomFrequency, 
+						question.clUomPerDay, 
+						question.clUomPerMonth, 
+						specificationBackingBean.managedBean.qt.contractDuration, 
+						question.tplSpecEstimations[0].specEstimationId, 
+						isItemTypeService,
+						isFulfilmentTypeScheduled, 
+						templateSpecBean.selectedSpecQuestion.tplSpecZoneQties[rowIndex].tplSpecZoneDtl.specZoneId,
+						question.getSpecQuestionId())}"></p:ajax>
+						<!-- #25039#152 comment
+						<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />  -->
+			</p:inputText>
+			<p:message id="unitPriceServiceScheduleId" for="unitPriceServiceSchedule" display="icon"></p:message>
+
+		</c:if>
+
+<!-- 	#25039 Begin - version zonal -->
+		<c:if test="#{isZonal}">
+			<p:inputText style="min-width:0px !important;width:86px;" 
+				rendered="#{isQuestionTypeItem}" 
+				disabled="true" />
+			<!--#25039#67 Begin-->
+			<p:commandButton id="indicativeBtn"	
+				icon="#{question.tplSpecEstimations[0].indicativeUnitPrice == null ? 'ui-icon-pencil' : 'ui-icon-evaluate'}" 
+ 				style="background-color:transparent !important; border:0px none;"  
+				action="#{templateSpecBackingBean.zoneEstimationPopupAction(templateSpecBean)}"
+				oncomplete="#{zoneEstimationPopup}.show();"
+				partialSubmit="true" process="@this" update="@([id$=zoneEstimationPopup])"
+				title="#{lbl['lbl.tpl.spec.content.estimate.cost.tooltip']}">
+				<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
+			</p:commandButton>
+			<!--#25039#67 end-->
+		</c:if>
+<!-- 	#25039 end - version zonal -->
 	</p:column>
 	<p:column style="width:115px;white-space:normal;" rendered="#{isItemTypeService and isSpecTypeFinancial and !isDurationByItem}" headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
 		<p:inputText style="min-width:0px !important;width:104px; text-align:right;"
@@ -47,16 +127,20 @@
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</h:outputText>
 		</f:facet>
+<!-- 	#25039 Begin to display non zonal estimated cost-->		
 		<c:if test="#{!isZonal}">
 			<p:inputText id="estimatedCost" style="min-width:0px !important;width:95px; text-align:right;" 
-				value="#{question.tplSpecEstimations[0].estimatedCost}" 
+			 	disabled="true" 
 				required="false" maxlength="19"
-				label="#{lbl['lbl.tpl.spec.content.estimate.cost']}">
-				<p:ajax partialSubmit="true" process="@this" update="@this, estimatedCostMsg, @(.calcEstAmount)" />
+				rendered="#{isQuestionTypeItem}" 
+				label="#{lbl['lbl.tpl.spec.content.estimate.cost']}"
+				value="#{question.tplSpecEstimations[0].estimatedCost}">
+				<p:ajax partialSubmit="true" process="@this" update="@all, estimatedCostMsg, @(.calcEstAmount), totalEstAmount)" />
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
 			</p:inputText>
 			<p:message id="estimatedCostMsg" for="estimatedCost" display="icon" />
 		</c:if>
+<!-- 	#25039 end -->
 		<c:if test="#{isZonal}">
 		<div style="text-align:center;">
 			<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;"  
