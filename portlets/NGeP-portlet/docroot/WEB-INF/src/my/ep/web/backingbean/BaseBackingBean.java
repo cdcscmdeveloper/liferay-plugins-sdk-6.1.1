@@ -2439,25 +2439,43 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		
 	}
 	//SSM #27264
-			public void checkSSMValid(SmSupplier smSupplier){
-				if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(smSupplier.getRegNo(),smSupplier.getBusinessType())){
-					//checking with ssm
-					SsmReqDTO ssmReqDTO = new SsmReqDTO();
-					ssmReqDTO.setRegNo(smSupplier.getRegNo());
-					ssmReqDTO.setBusinessType(smSupplier.getBusinessType());
-					ssmReqDTO.setCheckOnly(true);
-					SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
-					if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
-						//check the business/company registration status in ssm
-						this.getManagedBean().setStatusDescFromSSM(setStatusMessageFromSSM(ssmResDTO.getStatusFromSSM()));
-						if(!ssmResDTO.getStatusFromSSM().equalsIgnoreCase("A") && !ssmResDTO.getStatusFromSSM().equalsIgnoreCase("E")){
-							throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null)});
+		public void checkSSMValid(SmSupplier smSupplier){
+			if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(smSupplier.getRegNo(),smSupplier.getBusinessType())){
+				//checking with ssm
+				SsmReqDTO ssmReqDTO = new SsmReqDTO();
+				ssmReqDTO.setRegNo(smSupplier.getRegNo());
+				ssmReqDTO.setBusinessType(smSupplier.getBusinessType());
+				//27329
+				ssmReqDTO.setPreRegistration(true);
+				//ssmReqDTO.setCheckOnly(true);
+				StringBuilder sb = new StringBuilder();
+				SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
+								
+				if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
+					//check the business/company registration status in ssm
+					this.getManagedBean().setStatusDescFromSSM(setStatusMessageFromSSM(ssmResDTO.getStatusFromSSM()));
+					if(!ssmResDTO.getStatusFromSSM().equalsIgnoreCase("A") && !ssmResDTO.getStatusFromSSM().equalsIgnoreCase("E")){
+						throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null)});
+					//START 27329
+					}else if(ssmResDTO.getPersonnelIcIssues()!= null && ssmResDTO.getPersonnelIcIssues().size()>0){
+						
+						sb.append("<br/>");
+						int i =0;
+						for(SmPersonnel per:ssmResDTO.getPersonnelIcIssues()){
+							sb.append(++i + ". ");
+							sb.append(ResourceBundleUtils.getMessage("lbl.sm.ssm.myid.detail",new String []{per.getName(),per.getIdentificationNo()},ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+							//sb.append(",  ");
+							sb.append("<br/>");
 						}
-					} else{					
-						SmCommonUtil.ssmError(ssmResDTO);
+						this.getManagedBean().setStatusDescFromSSM(sb.toString());
+						throw new EpException(MessageConst.ERROR_721085,new String[] {sb.toString() });
 					}
+					//END 27329
+				} else{					
+					SmCommonUtil.ssmError(ssmResDTO);
 				}
 			}
+		}
 			//SSM #27264
 			//SSM CHANGES #27201
 			public SmPersonnel setDesignationSSM(SmPersonnel personnel){
