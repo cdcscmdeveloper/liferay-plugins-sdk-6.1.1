@@ -98,13 +98,9 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
-
-import com.liferay.portal.model.User;
-import com.liferay.portal.service.UserServiceUtil;
 
 /**
  * Backing Bean for User Profiles (Management)
@@ -3612,8 +3608,23 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 																		// each
 																		// user
 			
-			SpkiBackingBean spkiBackingBean = new SpkiBackingBean();
-			Long loginSessionUserId = spkiBackingBean.getLoginUser().getUserId();
+//			SpkiBackingBean spkiBackingBean = new SpkiBackingBean();
+//			
+			//
+			userSO = (IUserSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IUserSO.class);
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setLoginId(getFacesScopes().getUserScreenName());
+			logger.info("#26766 getLoginId : " + userReqDTO.getLoginId());
+			PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
+			if (pmUser == null) {
+				throw new EpException("PM User is null");
+			}
+			
+			//
+			Long loginSessionUserId = pmUser.getUserId();
+//			Long loginSessionUserId = spkiBackingBean.getLoginUser().getUserId();
 			new LogKey(loginSessionUserId);
 			
 			if (!userOrg.isBrandNew()) {
@@ -3684,8 +3695,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyValues(user,
 						getActionDesc(messageId, msgParam), userOrg.getRecordStatusFlg().longValue()));
 			}
-			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					IUserSO.class);
+//			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+//					IUserSO.class);
 			reqDTO.setPmUser(user);
 			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
 
