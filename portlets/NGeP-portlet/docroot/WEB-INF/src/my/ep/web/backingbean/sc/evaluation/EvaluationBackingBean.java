@@ -12118,8 +12118,11 @@ private void retriveCommitteeRemarksList(){
 		// 26339  -venkat start
 		PmDocument pmdoc=this.getManagedBean().getScQtChecklist().getPmDocument();
 		
-		log.info("Group id ------> :"+pmdoc.getDocGroupId());
-		
+		/*
+		 * Bug #28308 START 
+		 * REMOVE log.info("Group id ------> :"+pmdoc.getDocGroupId());
+		 * END
+		 */
 		if(pmdoc!= null && pmdoc.getDocGroupId()!=null ) { 
 			if(pmdoc.getDocGroupId().toString().equals(ParameterConst.ASSET_LIABILITIES_GROUP_ID)) 
 			{
