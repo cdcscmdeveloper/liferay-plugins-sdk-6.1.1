@@ -1435,11 +1435,15 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	private void validateRequestSoftcert() {
 		if (getManagedBean().getSoftCertPayList() != null) {
 			for (SmPersonnel personnel : getManagedBean().getSoftCertPayList()) {
-				if (personnel.getSmPersonnelAddresses() == null 
-						|| personnel.getSmPersonnelAddresses().isEmpty()) {
-					throw new EpException(MessageConst.ERROR_722614,
+				/*#28201 - Start*/
+				if (personnel.getSmPersonnelAddresses() == null || personnel.getSmPersonnelAddresses().isEmpty()
+						|| personnel.getEmail() == null || personnel.getEmail().isEmpty()
+						|| personnel.getPhoneNo() == null || personnel.getPhoneNo().isEmpty()
+						|| personnel.getMobileNo() == null || personnel.getMobileNo().isEmpty()) {
+					throw new EpException(MessageConst.ERROR_722682,
 							new String[] { personnel.getName() });
 				}
+				/*#28201 - End*/
 			}
 		}
 	}
