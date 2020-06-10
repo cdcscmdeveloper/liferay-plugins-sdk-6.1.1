@@ -10203,7 +10203,7 @@ public class SmApplicationBackingBean extends
 					.getStateById(stateId));
 		}
 		if(addr.getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
-			SmApplicationUtil.getInstance().populateDivisionsByState(addr,
+			SmApplicationUtil.getInstance().populateDistrictsByState(addr,
 					panelName, getManagedBean());
 			/*SmApplicationUtil.getInstance().populateDistrictsByUsingDivision(addr,
 					panelName, getManagedBean());*/
@@ -13543,7 +13543,7 @@ public class SmApplicationBackingBean extends
 	//13320-Start
 	
 	public void onChangeDistrictByDivision(SmAddress addr, String panelName) {
-		SmApplicationUtil.getInstance().populateDistrictsByUsingDivision(addr,
+		SmApplicationUtil.getInstance().populateDistrictsByState(addr,
 				panelName, getManagedBean());
 		setRoleStaffAddrReqd();
 	}
