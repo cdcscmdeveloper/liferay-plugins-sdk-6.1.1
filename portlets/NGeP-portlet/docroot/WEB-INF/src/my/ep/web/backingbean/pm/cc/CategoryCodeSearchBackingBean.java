@@ -47,6 +47,7 @@ import my.ep.web.managedbean.pm.cc.CategoryCodeSearchManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.backingbean.sm.applicationView.BaseReviewApplicationBackingBean;
 
@@ -716,6 +717,8 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 
 			//27738 Start - System allow to add 221709 without basic category
 			MofRegistrationReqDTO reqDTO1 = new MofRegistrationReqDTO();
+			SmAppl activeAppl = SmCommonUtil.getActiveApplBySupplier(currSupp);
+			currSupp.setSmAppl(activeAppl);
 			reqDTO1.setApplNo(currSupp.getSmAppl().getApplNo());
 			SmAppl srcAppl = SmServiceLookup.getMofRegistrationSO()
 					.retrieveSmApplWithChildByApplNo(reqDTO1).getSmAppl();
@@ -731,7 +734,8 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 						for (SmSupplierCategory cat : currSupp.getSmAppl()
 								.getSmSupplierCategories()) {
 							 if (cat.getRecordStatusFlg().compareTo(
-									SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
+										SupplierManagementConst.APPROVED_RECORD_STATUS) == 0 || cat.getRecordStatusFlg().compareTo(
+												SupplierManagementConst.PENDING_ACT_STATUS) == 0){
 								cat.setEntryMode(cat.getOtherDesc()); 
 								if(!cat.isCancelCategory()){
 									apprvList.add(cat);
@@ -742,10 +746,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 						getManagedBean().setApprovedCategoryList(apprvList); 
 						
 						//check approved basic category 
-						for(SmSupplierCategory categ : getManagedBean().getApprovedCategoryList()){ 
-							log.info("getCategoryL1Id() ="+categ.getPmCategoryL1().getCategoryL1Code()); 
-							log.info("getCategoryL2Id() ="+categ.getPmCategoryL2().getCategoryL2Code()); 
-							log.info("getCategoryL3Id() ="+categ.getPmCategoryL3().getCategoryL3Code()); 
+						for(SmSupplierCategory categ : getManagedBean().getApprovedCategoryList()){
 							if(categ.getPmCategoryL1() != null
 									&& categ.getPmCategoryL1().getCategoryL1Code()
 									.equalsIgnoreCase("22")){
@@ -820,7 +821,8 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 				for (SmSupplierCategory cat : currSupp.getSmAppl()
 						.getSmSupplierCategories()) {
 					 if (cat.getRecordStatusFlg().compareTo(
-							SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
+								SupplierManagementConst.APPROVED_RECORD_STATUS) == 0 || cat.getRecordStatusFlg().compareTo(
+										SupplierManagementConst.PENDING_ACT_STATUS) == 0)  {
 						cat.setEntryMode(cat.getOtherDesc()); 
 						if(!cat.isCancelCategory()){
 							apprvList.add(cat);
