@@ -3608,6 +3608,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 																		// each
 																		// user
 			
+			// Bug #26766 - START
 			Long loginSessionUserId = 1L;
 			userSO = (IUserSO) BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -3622,6 +3623,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				loginSessionUserId = pmUser.getUserId();
 			}
 			new LogKey(loginSessionUserId);
+			// Bug #26766 - END
+			
 			if (!userOrg.isBrandNew()) {
 				userOrg.setChangedBy(loginSessionUserId);
 			} else {
