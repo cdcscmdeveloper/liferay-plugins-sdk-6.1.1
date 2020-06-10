@@ -81,7 +81,6 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.UserProfilesSearchBean;
@@ -525,6 +524,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			logger.info("pmUserOrg=" + pmUserOrg);
 			pmUserOrg.setPMP(pmUserOrg.isPMP() ? true : false);
 			PmUser pmUser = pmUserOrg.getPmUser();
+			logger.info("#26766 loadUserProfile - fetched pmUser.CHANGED_BY ID: " + pmUser.getChangedBy());
 			pmUser.setIdentificationCode(
 					pmUser.getIdentificationCode() == null ? new PmParameter() : pmUser.getIdentificationCode());
 			pmUser.setSalutationCode(
@@ -3608,10 +3608,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 																		// each
 																		// user
 			
-//			SpkiBackingBean spkiBackingBean = new SpkiBackingBean();
-			
 			Long loginSessionUserId = 1L;
-			//
+			logger.info("#26766 loginSessionUserId (BEFORE fetch) : " + loginSessionUserId);
 			userSO = (IUserSO) BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IUserSO.class);
@@ -3620,17 +3618,16 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			logger.info("#26766 getLoginId : " + userReqDTO.getLoginId());
 			PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
 			if (pmUser == null) {
-				loginSessionUserId = getFacesScopesGen().getUserSessionBean().getUserId();
-//				throw new EpException("PM User is null");
+				loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
+				logger.info("#26766 pmUser is null");
 			}
 			else{
 				loginSessionUserId = pmUser.getUserId();
 			}
-			
-			//
-//			Long loginSessionUserId = spkiBackingBean.getLoginUser().getUserId();
+			logger.info("#26766 loginSessionUserId (AFTER fetch) : " + loginSessionUserId);
+//			Long loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
 			new LogKey(loginSessionUserId);
-			
+			logger.info("#26766 LogKey UserId(ProfileManagementBackingBean) : " + new LogKey().getUserId());
 			if (!userOrg.isBrandNew()) {
 				userOrg.setChangedBy(loginSessionUserId);
 			} else {
@@ -3711,9 +3708,10 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			if (ParameterConst.ORG_TYPE_SUPPLIER.equals(user.getOrgTypeCode().getParameterCode())) {
 				reqDTO.setSupplierUser(true);
 			}
-
+			logger.info("#26766 CHANGED_BY ID in reqDTO.getPmUser: " + reqDTO.getPmUser().getChangedBy());
 			UserResDTO resDTO = userSO.saveUserAndUserOrg(reqDTO);
 			logger.info("save user -END");
+			logger.info("#26766 returned CHANGED_BY ID in resDTO.getPmUser: " + resDTO.getPmUser().getChangedBy());
 			if (resDTO.isSuccessful()) {
 
 				uploadAttachments();
