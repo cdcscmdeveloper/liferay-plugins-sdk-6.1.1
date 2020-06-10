@@ -4135,7 +4135,7 @@ public class LOIDetailBackingBean extends
 										awardedSupplierId = awardedSupplier.getQtEvaluationResult()
 												.getScQtProposal().getScQtSupplier()
 												.getSmSupplier().getSupplierId();											
-										break;
+										//break;
 									}
 								}			
 								
