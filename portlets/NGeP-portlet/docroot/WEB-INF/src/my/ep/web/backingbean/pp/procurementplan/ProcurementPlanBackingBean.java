@@ -2207,9 +2207,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						reqDTO.setUpdateReasonList(updateReasons);
 					}
 					
-					/*else{
+					else {
 					   throw new EpException(MessageConst.ERROR_730035);
-				    }*/
+				    }
 					
 					
 				}
@@ -3289,14 +3289,55 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 */
 	public void calculatePpGrandTotal(){
 		log.info("calculatePpGrandTotal");
-		BigDecimal ppTotalEst = new BigDecimal(0);
+		/*BigDecimal ppTotalEst = new BigDecimal(0);
 		
 		for(PpProcurementItem ppItem: this.getManagedBean().getSelectedPlan().getPpProcurementItems()){
-			if (ppItem.isOriginal()) {
+			if (ppItem.getFromPpItem() == null) {
 				ppTotalEst = PpCommonUtil.addBigDecimalNullable(ppTotalEst, ppItem.getEstimatedAmt());
 			}
+		}*/
+		this.getManagedBean().setPpTotalEst(
+				defineCalculatedPpItems(this.getManagedBean().getSelectedPlan().getPpProcurementItems()));
+	}
+	
+	public BigDecimal defineCalculatedPpItems(List<PpProcurementItem> ppItems) {
+		
+		log.info("defineCalculatedPpItems..");
+		
+		BigDecimal ppTotalEst = new BigDecimal(0);
+		List<Long> ppItemIdList = new ArrayList<Long>();
+		List<Long> excludedPpItemIdList = new ArrayList<Long>();
+		List<PpProcurementItem> ppItemList = new ArrayList<PpProcurementItem>();
+		
+		for (PpProcurementItem ppItem : ppItems) {
+			ppItemIdList.add(ppItem.getProcurementItemId());
 		}
-		this.getManagedBean().setPpTotalEst(ppTotalEst);
+		
+		for (PpProcurementItem ppItem : ppItems) {
+			if (ppItem.getFromPpItem() != null) {
+				if (ppItemIdList.contains(ppItem.getFromPpItem())) {
+					log.info("("+ppItem.getProcurementItemId()+
+							" cloned from "+ppItem.getFromPpItem()+")");
+					excludedPpItemIdList.add(ppItem.getFromPpItem()); // Won't be calculated
+				}
+			}
+			ppItemList.add(ppItem);
+		}
+		
+		log.info("Size ppItemIdList= "+ppItemIdList.size()
+				+", Size ppItemList= "+ppItemList.size()
+				+", Size excludedPpItemIdList= "+excludedPpItemIdList.size());
+		
+		// Second time filter
+		for (int i = 0; i < ppItemList.size(); i++) {
+			if (!excludedPpItemIdList.contains(ppItemList.get(i).getProcurementItemId())) {
+				log.info("To be calculated= "+ppItemList.get(i).getProcurementItemId()+" - "
+						+ppItemList.get(i).getEstimatedAmt());
+				ppTotalEst = PpCommonUtil.addBigDecimalNullable(ppTotalEst, ppItemList.get(i).getEstimatedAmt());
+			}
+		}
+		log.info("TotalEst= "+ppTotalEst);
+		return ppTotalEst;
 	}
 	
 	/**
@@ -4950,7 +4991,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    		
 	    		PpProcurementItem clonedPpItem =  procurementList.get(index);
 	    		
-	    		validatePpItem(); //Disabled this if no validation required at this stage
+	    		//validatePpItem(); //Disabled this if no validation required at this stage
 	    		
 	    		/*newPpItem = (PpProcurementItem) procurementList.
 	    				get(index).cloneEntity();*/
@@ -4987,6 +5028,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						!newPpItem.getPpUpdateReasons().isEmpty()) {
 	    			log.info("newPpItem reasonDesc= "+newPpItem.getPpUpdateReasons()
 	    					.get(0).getReasonDesc());
+	    		} else {
+	    			throw new EpException(MessageConst.ERROR_730035);
 	    		}
 	    		index += 1;
 	    		procurementList.add(index,newPpItem);
