@@ -3609,25 +3609,19 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 																		// user
 			
 			Long loginSessionUserId = 1L;
-			logger.info("#26766 loginSessionUserId (BEFORE fetch) : " + loginSessionUserId);
 			userSO = (IUserSO) BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IUserSO.class);
 			UserReqDTO userReqDTO = new UserReqDTO();
 			userReqDTO.setLoginId(getFacesScopes().getUserScreenName());
-			logger.info("#26766 getLoginId : " + userReqDTO.getLoginId());
 			PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
 			if (pmUser == null) {
 				loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
-				logger.info("#26766 pmUser is null");
 			}
 			else{
 				loginSessionUserId = pmUser.getUserId();
 			}
-			logger.info("#26766 loginSessionUserId (AFTER fetch) : " + loginSessionUserId);
-//			Long loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
 			new LogKey(loginSessionUserId);
-			logger.info("#26766 LogKey UserId(ProfileManagementBackingBean) : " + new LogKey().getUserId());
 			if (!userOrg.isBrandNew()) {
 				userOrg.setChangedBy(loginSessionUserId);
 			} else {
@@ -3696,8 +3690,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyValues(user,
 						getActionDesc(messageId, msgParam), userOrg.getRecordStatusFlg().longValue()));
 			}
-//			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-//					IUserSO.class);
 			reqDTO.setPmUser(user);
 			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
 
@@ -3708,10 +3700,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			if (ParameterConst.ORG_TYPE_SUPPLIER.equals(user.getOrgTypeCode().getParameterCode())) {
 				reqDTO.setSupplierUser(true);
 			}
-			logger.info("#26766 CHANGED_BY ID in reqDTO.getPmUser: " + reqDTO.getPmUser().getChangedBy());
 			UserResDTO resDTO = userSO.saveUserAndUserOrg(reqDTO);
 			logger.info("save user -END");
-			logger.info("#26766 returned CHANGED_BY ID in resDTO.getPmUser: " + resDTO.getPmUser().getChangedBy());
 			if (resDTO.isSuccessful()) {
 
 				uploadAttachments();
