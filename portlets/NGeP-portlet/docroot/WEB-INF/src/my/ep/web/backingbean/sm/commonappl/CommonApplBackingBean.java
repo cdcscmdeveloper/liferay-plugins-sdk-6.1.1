@@ -551,7 +551,7 @@ public class CommonApplBackingBean extends
 			List<SmDisciplinaryAction> activeDisc = new ArrayList<SmDisciplinaryAction>();
 			if(currentSupplier != null){
 				//27876: Disciplinary Action - start - <27876>
-				activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currentSupplier, false);
+				activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currentSupplier);
 				//27876: Disciplinary Action - End- <27876>
 			}
 			
