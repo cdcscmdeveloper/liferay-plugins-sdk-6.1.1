@@ -1,15 +1,24 @@
 package my.ep.web.util.cm.helper;
 
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
 import my.ep.constant.cm.CmConst;
 import my.ep.dto.cm.catalogue.CmTrackingDairyVO;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
 
 public class CmApplicationUtil {
+	
+	private static Logger log = Logger.getLogger(CmApplicationUtil.class);	//[#26282]
 	
 	public static CmTrackingDairyVO assignTrackingDairyValues(CmSupplierItem cmSupplierItem, String actionDesc,
 			PmStatus status) {
@@ -62,5 +71,36 @@ public class CmApplicationUtil {
 				return RoleCode.MOF_SUPPLIER_USER.value();
 			}
 	return null;	
+	}
+	
+	//[#26282]	
+	public static List<SmDisciplinaryAction> checkForDisciplinaryAction(Long supplierId) {
+		
+		SmSupplier smSupplier = null;
+		
+		if(supplierId == null) {
+			//get supplier details base on user login		
+			SmApplicationUtil.getInstance();		
+			smSupplier = SmApplicationUtil.getCurrentSupplier();
+			
+			//Test DA for supplier id: 64099
+			//smSupplier.setSupplierId(new Long("64099"));
+			
+		} else {
+			smSupplier = new SmSupplier();
+			smSupplier.setSupplierId(supplierId);
+			
+			//Test DA for supplier id: 64099
+			//smSupplier.setSupplierId(new Long("64099"));			
+		}
+		
+		log.info("[#26282] - Supplier ID is: " + smSupplier.getSupplierId());
+		
+		List<SmDisciplinaryAction> disciplinaryActList = null;
+		
+		if(smSupplier != null) {
+			disciplinaryActList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(smSupplier);			
+		}
+		return disciplinaryActList;		
 	}
 }
