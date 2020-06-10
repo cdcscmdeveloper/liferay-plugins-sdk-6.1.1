@@ -26,6 +26,7 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	private String supplierType;
 	private String regType;
 	private String regNo;
+	private String companyName;
 	private String applNo;
 	private String applType;
 	private String documentType;
@@ -50,7 +51,7 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	private String softCert;
 	
 	private Long regStatus;
-
+	private boolean isSupplier;
 	private boolean isCdcCollector;
 	
 	private List<SelectItem> regStatusLs;
@@ -137,6 +138,14 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 
 	public void setRegNo(String regNo) {
 		this.regNo = regNo;
+	}
+
+	public String getCompanyName() {
+		return companyName;
+	}
+
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
 	}
 
 	public String getApplNo() {
@@ -409,6 +418,14 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 
 	public void setSoftCert(String softCert) {
 		this.softCert = softCert;
+	}
+
+	public boolean isSupplier() {
+		return isSupplier;
+	}
+
+	public void setSupplier(boolean isSupplier) {
+		this.isSupplier = isSupplier;
 	}
 
 	public boolean isCdcCollector() {
