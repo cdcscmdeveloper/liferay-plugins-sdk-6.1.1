@@ -66,8 +66,11 @@
 					<p:outputPanel rendered="#{cc.attrs.smAppl.applType eq 'N' or cc.attrs.smAppl.applType eq 'B'
 							or cc.attrs.changeCurrRegStatus}">
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.rpt.rgstStatus']}" /> <p:outputLabel
-									value="*" styleClass="mandatory" /></td>
+							<td><p:outputLabel value="#{lbl['lbl.rpt.rgstStatus']}" />
+								<c:if test="#{cc.attrs.valueReqd}">
+									<p:outputLabel value="*" styleClass="mandatory" />
+								</c:if>
+							</td>
 			
 							<td>
 								<p:outputPanel rendered="#{!cc.attrs.poRecommend}">
