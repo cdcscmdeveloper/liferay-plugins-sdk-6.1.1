@@ -3655,7 +3655,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					
 					if(disciplinaryAction.isCancelCategory()){
 						List<DisciplinaryActionCategoryVO> catVoList = new ArrayList<DisciplinaryActionCategoryVO>();
-						List<Object[]> catList = SmApplicationUtil.retrieveCancelCategory();
+						//28281
+						List<Object[]> catList = SmApplicationUtil.retrieveCancelCategoryByDisciplinaryActionId(disciplinaryAction.getDisciplinaryActionId());
 						
 						if(!EntityHelper.isCollectionEmpty(catList)
 								&& catList.size() > 0){
