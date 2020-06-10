@@ -27,6 +27,7 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.biz.service.rpt.IRPTRequestSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -39,16 +40,22 @@ import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.sm.SmMofAccount;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.OrganizationType;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -2613,6 +2620,41 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	}
 	
 	//End - Enhancement #15990
+	
+	// #28115 - start
+	public void getSupplierInfo() {
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+
+		if (pmUser != null) {
+			SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
+			supplierSearchReqDTO.setUserId(pmUser.getUserId());
+			ISupplierSearchSO supplierSearchSO = SmServiceLookup.getSupplierSearchSO();
+			SupplierSearchResDTO smResDTO = supplierSearchSO.retriveSupplierProfiles(supplierSearchReqDTO);
+
+			if (smResDTO.getResultBean().getResultList().size() > 0) {
+				SmSupplier supplier = (SmSupplier) smResDTO.getResultBean().getResultList().get(0);
+
+				if (supplier != null) {
+					getManagedBean().setRegNo(supplier.getRegNo());
+					getManagedBean().setCompanyName(supplier.getCompanyName());
+
+					MofAccountReqDTO reqDTO = new MofAccountReqDTO();
+					reqDTO.setSupplierId(supplier.getSupplierId());
+					SmMofAccount mofAccount = SmServiceLookup.getMofAccountSO().retrieveMOFAccBySupplierId(reqDTO).getMofAccount();
+
+					if (mofAccount != null) {
+						getManagedBean().setMofNo(mofAccount.getMofNo());
+						getManagedBean().setSupplierType(mofAccount.getSupplierType());
+//						getManagedBean().setRegType(ReportConst.RPT_REG_MOF);
+						getManagedBean().setDateFrom(mofAccount.getEffDate());
+					} else {
+//						getManagedBean().setRegType(ReportConst.RPT_REG_BASIC);
+					}
+				}
+			}
+		}
+	}
+	// #28115 - end
 	
 	
 }
