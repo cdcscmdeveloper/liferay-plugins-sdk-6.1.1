@@ -2223,15 +2223,21 @@ public class TemplateSpecBackingBean extends
 					totalScore = totalScore.add(userScore);
 				}
 
-				if (specAnswer.getTplSpecQuestion().getMaxScore() != null
-						&& (autoScore != null || userScore != null)) {
-					totalMaxScore = totalMaxScore.add(specAnswer
-							.getTplSpecQuestion().getMaxScore());
-				}
+//				if (specAnswer.getTplSpecQuestion().getMaxScore() != null
+//						&& (autoScore != null || userScore != null)) {
+//					totalMaxScore = totalMaxScore.add(specAnswer
+//							.getTplSpecQuestion().getMaxScore());
+//				}
 //#21695 Farid Start ...
 //Set total score to default amount based on offer, not offer or quantity 0..quantity 0 total max score must exclude				
 				if (specAnswer.getTplSpecQuestion().getMaxScore() != null
 						&& specAnswer.getTplSpecZoneQty().getQty().intValue() > 0 && (userScore == null)) {
+					totalMaxScore = totalMaxScore.add(specAnswer
+							.getTplSpecQuestion().getMaxScore());
+				}
+				if (specAnswer.getTplSpecQuestion().getMaxScore() != null
+						&& specAnswer.getTplSpecZoneQty().getQty().intValue() > 0 && specAnswer.getRatePerUom().intValue() > 0 && (autoScore != null)) {
+					autoScore = null;
 					totalMaxScore = totalMaxScore.add(specAnswer
 							.getTplSpecQuestion().getMaxScore());
 				}
