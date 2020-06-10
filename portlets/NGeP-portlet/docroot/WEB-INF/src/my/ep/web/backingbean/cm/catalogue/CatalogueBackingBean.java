@@ -10698,12 +10698,24 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 		return cal.getTime();
 	}
-	public void onDateSelectListener(CmStandardPricing stdPrice){
-		if(stdPrice!=null){
-			if(stdPrice.getStartDate()!=null){
-				stdPrice.setEndDate(this.getNextTwoYear(stdPrice.getStartDate()));
+	public void onDateSelectListener(Integer index){
+		Date startDate = index < 0 ? this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getStartDate():
+			this.getManagedBean().getDraftSearchDataModel().getList().get(index).getCmStandardPricing().getStartDate();
+		log.info("start date" + startDate);
+		log.info("start index" + index);
+
+		if(startDate!=null){
+			if(index < 0){
+				log.info("the 2 year date" + getNextTwoYear(startDate));
+				this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().setEndDate(getNextTwoYear(startDate));
 			}else{
-				stdPrice.setEndDate(null);
+				this.getManagedBean().getDraftSearchDataModel().getList().get(index).getCmStandardPricing().setEndDate(getNextTwoYear(startDate));
+			}
+		}else{
+			if(index == null){
+				this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().setEndDate(null);
+			}else{
+				this.getManagedBean().getDraftSearchDataModel().getList().get(index).getCmStandardPricing().setEndDate(null);
 			}
 		}
 	}
@@ -10928,6 +10940,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			onDateSelectListener(stdPrice);
 		}
 	}
+	public void onDateSelectListener(CmStandardPricing stdPrice){
+		if(stdPrice!=null){
+			if(stdPrice.getStartDate()!=null){
+				stdPrice.setEndDate(this.getNextTwoYear(stdPrice.getStartDate()));
+			}else{
+				stdPrice.setEndDate(null);
+			}
+		}
+	}
 	
 	//[#26282]
 	public void onViewDisciplinaryAction(Long supplierId, String mofNo) {
@@ -10959,10 +10980,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			}			
 			
 			// get disicplinary action history
-			
-			//27876: Disciplinary Action - start - <27876>
-			List<DisciplinaryActionVO> voList = ViewSuppProfileBackingBean.getDisciplinaryActionVO(smSupplier, true);
-			//27876: Disciplinary Action - end - <27876>
+			List<DisciplinaryActionVO> voList = ViewSuppProfileBackingBean.getDisciplinaryActionVO(smSupplier);
 			
 			if(!EntityHelper.isCollectionEmpty(voList) && voList.size() > 0){				
 				voObj = voList.get(0);
