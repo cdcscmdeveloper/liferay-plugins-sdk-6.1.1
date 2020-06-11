@@ -1340,7 +1340,7 @@ public class SmApplicationBackingBean extends
 			// 27877 - start - if it is pending site review after approval, registration status can follow what was recommended
 			BPMTaskListBackingBean bpmBean = new BPMTaskListBackingBean();
 			String pendingSiteVisitReviewAfterApprovedStatus = bpmBean.applicationStatus((int) SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED);
-			if (!getManagedBean().getCurrentStatus().equals(pendingSiteVisitReviewAfterApprovedStatus)) {
+			if (getManagedBean().getCurrentStatus() != null && !getManagedBean().getCurrentStatus().equals(pendingSiteVisitReviewAfterApprovedStatus)) {
 				getManagedBean().getRegStatusDescList().remove(regStatusToExclude);
 			}
 			// 27877 - end
