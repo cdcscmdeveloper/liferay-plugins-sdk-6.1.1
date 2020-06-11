@@ -48,12 +48,12 @@
 					<p:column headerText="#{lbl['lbl.sm.rocNo']}" style="width :25%;white-space : normal">
 						<h:outputText value="#{smSupplier.regNo}" />
 					</p:column>
-					
-					<p:column headerText="#{lbl['lbl.sm.ep.no']}" style="width :25%;white-space : normal">
+					                                                <!--#28273-->
+					<p:column headerText="#{lbl['lbl.sm.ep.no']}" style="width :20%;white-space : normal">
 						<h:outputText value="#{smSupplier.epNo}" />
 					</p:column>
-					
-					<p:column headerText="#{lbl['lbl.sm.applicationtype']}" style="width :25%;white-space : normal">
+					                                                         <!--#28273-->
+					<p:column headerText="#{lbl['lbl.sm.applicationtype']}" style="width :20%;white-space : normal">
 						<h:outputText value="#{lbl['lbl.sm.appltype.newmof']}"
 							rendered="#{smSupplier.smAppl.applType eq 'N'}" />
 						<h:outputText value="#{lbl['lbl.sm.appltype.bumiputera']}"
@@ -74,15 +74,16 @@
 					<!-- <p:column headerText="#{lbl['lbl.sm.applicationstatus']}" style="width :25%;white-space : normal">
 						<h:outputText value="#{smSupplier.smAppl.workflowStatusDesc}" />
 					</p:column> -->
-									
-					<p:column headerText="#{lbl['lbl.sm.accountstatus']}" style="width :25%;white-space : normal">
+					<!--#28273 -START 110620-->                                                        
+					<p:column headerText="#{lbl['lbl.sm.accountstatus']}" style="width :15%;white-space : normal">
 						<h:outputText value="#{lbl['lbl.sm.status.active']}"
 							rendered="#{smSupplier.recordStatusFlg eq 1}" />
 						<h:outputText value="#{lbl['lbl.sm.status.inactive']}"
 							rendered="#{smSupplier.recordStatusFlg eq 0}" />
-						<h:outputText value="#{lbl['lbl.sm.delete']}"
-							rendered="#{smSupplier.recordStatusFlg eq 9}" />
+						<h:outputText value="#{lbl['lbl.sm.deleted1']}"
+							rendered="#{smSupplier.recordStatusFlg eq 9 or smSupplier.recordStatusFlg eq 2}" />
 					</p:column> 
+					<!--#28273 -END 110620-->   
 					<!--#28273 & #28278 -end -->
 					
 					<p:column headerText="#{lbl['lbl.sm.label.action']}">
