@@ -15,13 +15,13 @@
 					</p:commandButton>
 				</td>
 			<td style="text-align: right;">
-			<!-- #28212 - expDate gt new Date() -->
-			<p:outputPanel
+				<!-- #28212 --> <p:outputPanel
 					rendered="#{not empty viewSmApplBackingBean.managedBean.resubmitUrl 
 					and viewSmApplBackingBean.managedBean.supplierUser 
 					and viewSmApplBackingBean.managedBean.smAppl.pmStatus.statusId ne SupplierMgmtConst.pmStatusRejectedBySystemPayment 
 					and viewSmApplBackingBean.managedBean.smAppl.pmStatus.statusId ne SupplierMgmtConst.pmStatusRejectedBySystemProcessingFee
-					and viewSmApplBackingBean.managedBean.smMofAccount!=null and viewSmApplBackingBean.managedBean.smMofAccount.expDate gt CommonConstants.THREE_MONTHS_LATER_DATE}">
+					and ((viewSmApplBackingBean.managedBean.smAppl.applType eq 'B' and viewSmApplBackingBean.managedBean.smMofAccount!=null and viewSmApplBackingBean.managedBean.smMofAccount.expDate gt CommonConstants.THREE_MONTHS_LATER_DATE
+					) or (viewSmApplBackingBean.managedBean.smAppl.applType ne 'B'))}">
 					<p:commandLink onclick="blockWidget.show()"
 						action="#{viewSmApplBackingBean.redirectToResubmit()}"
 						process="@this" partialSubmit="true" update=":form"
@@ -36,7 +36,8 @@
 				<p:commandLink value="#{lbl['lbl.btn.print']}" ajax="false">
 					<p:fileDownload
 						value="#{viewSmApplBackingBean.printSupplierProfile()}" />
-				</p:commandLink></td>
+				</p:commandLink>
+			</td>
 		</tr>
 		</table>
 		
@@ -44,7 +45,6 @@
 			message="#{lbl['lbl.sm.resubmit.url.expired.inprogress.msg']}"
 			header="#{lbl['lbl.sm.resubmit.url.expired.inprogress.header']}" severity="alert"
 			widgetVar="confirmDialog">
-			
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.ok']}" onclick="confirmDialog.hide();" update="@form"
 					action="#{viewSmApplBackingBean.redirectToReapplyNewAppl()}" process="@this" partialSubmit="true"
