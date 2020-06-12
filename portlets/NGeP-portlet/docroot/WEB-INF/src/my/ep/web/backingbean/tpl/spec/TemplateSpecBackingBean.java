@@ -2221,8 +2221,7 @@ public class TemplateSpecBackingBean extends
 						totalScore = totalScore.add(autoScore);	
 				}
 				if (autoScore != null && specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0) {
-					autoScore = BigDecimal.valueOf(0);
-					totalScore = totalScore.add(autoScore);	
+					specAnswer.setAutoScore(BigDecimal.valueOf(0));	
 			}
 //#21695 End
 				if (userScore != null) {
