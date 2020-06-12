@@ -2217,10 +2217,14 @@ public class TemplateSpecBackingBean extends
 
 //#21695 Farid Start ...
 //Set total score to default amount based on offer, not offer or quantity 0..quantity 0 total max score must exclude									
-				if (autoScore != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) > 0) {
+				if (autoScore != null && specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) > 0) {
 						totalScore = totalScore.add(autoScore);	
 				}
-
+				if (autoScore != null && specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0) {
+					autoScore = BigDecimal.valueOf(0);
+					totalScore = totalScore.add(autoScore);	
+			}
+//#21695 End
 				if (userScore != null) {
 					totalScore = totalScore.add(userScore);
 				}
