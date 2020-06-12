@@ -56,21 +56,8 @@
 									value="#{lOADetailBackingBean.managedBean.outComes}">
 									<ui:param name="buttonLabel"
 										value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-									<h:panelGroup rendered="#{bpmAction == 'RESUBMIT' and lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_REVISE_DOC}">
-										<p:commandButton value="#{lbl[buttonLabel]}"
-											rendered="#{!lOADetailBackingBean.managedBean.qtCancelRequested}"
-											styleClass="ui-button" update="@form"
-											partialSubmit="true" process="@all"
-											action="#{lOADetailBackingBean.updateReviseBPMTaskAction(bpmAction)}"
-											onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
-											<f:setPropertyActionListener value="#{bpmAction}"
-												target="#{lOADetailBackingBean.managedBean.action}" />
-											<f:setPropertyActionListener value="false"
-												target="#{lOADetailBackingBean.managedBean.autoUpdate}" />										
-										</p:commandButton>
-									</h:panelGroup>
 									<!-- Enhancement #21573 -->
-									<h:panelGroup rendered="#{bpmAction == 'ACCEPT' and lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId ne QTStatusConst.LOA_REVISE_DOC}">
+									<h:panelGroup rendered="#{bpmAction == 'ACCEPT'}">
 										<p:commandButton value="#{lbl[buttonLabel]}"
 											rendered="#{!lOADetailBackingBean.managedBean.qtCancelRequested}"
 											styleClass="ui-button" update="@form"
@@ -84,7 +71,7 @@
 										</p:commandButton>
 									</h:panelGroup>
 		
-									<h:panelGroup rendered="#{bpmAction == 'REJECT' and lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId ne QTStatusConst.LOA_REVISE_DOC}">
+									<h:panelGroup rendered="#{bpmAction == 'REJECT'}">
 										<p:commandButton value="#{lbl[buttonLabel]}"
 											rendered="#{!isMultipleLOI}"
 											styleClass="ui-button" onstart="blockWidget.show();"
@@ -93,15 +80,13 @@
 											partialSubmit="true" process="@all" update="@form" />
 									</h:panelGroup>
 								</ui:repeat>
-								<h:panelGroup rendered="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId ne QTStatusConst.LOA_REVISE_DOC}">
-									<ac:spkiPopup id="spkiPopup"
+								
+								<ac:spkiPopup id="spkiPopup"
 									password="#{lOADetailBackingBean.managedBean.spkiBackingBean.password}"
 									challengeAns1="#{lOADetailBackingBean.managedBean.spkiBackingBean.challengeAns1}"
 									challengeQues1="#{lOADetailBackingBean.managedBean.spkiBackingBean.challengeQues1}"
 									postSignAction="#{lOADetailBackingBean.spkiSignAction(spkiBackingBean.pmDigiSign)}" 
 									enableAutoUpdate="#{lOADetailBackingBean.enableAutoUpdate()}" />
-								</h:panelGroup>
-								
 							</c:when>
 						</c:choose>
 							
