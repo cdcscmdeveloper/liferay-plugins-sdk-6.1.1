@@ -812,7 +812,93 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 							selectItems.add(item);
 						}
 						checkBasic = 0;
+					} else {  //26238: Disciplinary Action - start - 28344 Cancel Bumiputera Status (Dropdown stuck at Sub Category Division)
+						int checkBasic = 0; 
+
+						List<SmSupplierCategory> apprvList = new ArrayList<SmSupplierCategory>();
+						for (SmSupplierCategory cat : currSupp.getSmAppl()
+								.getSmSupplierCategories()) {
+							 if (cat.getRecordStatusFlg().compareTo(
+										SupplierManagementConst.APPROVED_RECORD_STATUS) == 0 || cat.getRecordStatusFlg().compareTo(
+												SupplierManagementConst.PENDING_ACT_STATUS) == 0){
+								cat.setEntryMode(cat.getOtherDesc()); 
+								if(!cat.isCancelCategory()){
+									apprvList.add(cat);
+								}
+							}
+						}  
+						SmApplicationUtil.sortSupplierCategory(apprvList);
+						getManagedBean().setApprovedCategoryList(apprvList); 
+						
+						//check approved basic category 
+						for(SmSupplierCategory categ : getManagedBean().getApprovedCategoryList()){
+							if(categ.getPmCategoryL1() != null
+									&& categ.getPmCategoryL1().getCategoryL1Code()
+									.equalsIgnoreCase("22")){
+								if(categ.getPmCategoryL2() != null
+										&& categ.getPmCategoryL2().getCategoryL2Code()
+										.equalsIgnoreCase("17")){
+									if(categ.getPmCategoryL3() != null){
+										if(categ.getPmCategoryL3().getCategoryL3Code() != null
+												&& categ.getPmCategoryL3().getCategoryL3Code()
+												.equalsIgnoreCase("04")){ 
+											checkBasic = checkBasic + 1;
+										}else if(categ.getPmCategoryL3().getCategoryL3Code() != null
+												&& categ.getPmCategoryL3().getCategoryL3Code()
+												.equalsIgnoreCase("05")){ 
+											checkBasic = checkBasic + 1;
+										}else if(categ.getPmCategoryL3().getCategoryL3Code() != null
+												&& categ.getPmCategoryL3().getCategoryL3Code()
+												.equalsIgnoreCase("06")){ 
+											checkBasic = checkBasic + 1;
+										} 
+									}
+								}
+							}
+						} 
+						for (PmCategoryL3 pmCategoryL3 : resDTO.getCategoryL3List()) {
+							item = new SelectItem(pmCategoryL3.getCategoryL3Id(),
+									pmCategoryL3.getCategoryL3Code() + " - " + pmCategoryL3.getCategoryName());
+							
+							if(disciplinaryAction.isCancelCategory() || disciplinaryAction.isManufacturerCancel()){								
+								if(cancelCat != null
+										&& cancelCat.size() > 0){
+									for(Object[] arr : cancelCat){
+										if(arr[7].toString().equalsIgnoreCase(disciplinaryAction.getDisciplinaryActionId().toString())){
+											if(item.getValue().toString().equalsIgnoreCase(arr[2].toString())){
+												item.setDisabled(true);
+												log.info("Disciplinary Action - disabled cancel category");
+											}
+										}										
+									}
+								}
+								if(pmCategoryL3.getCategoryL3Code() != null
+										&& pmCategoryL3.getCategoryL3Code()
+										.equalsIgnoreCase("09")){
+									log.info("MTO Code exist"); 
+									if( checkBasic != 3 ){
+
+										item.setDisabled(true);
+										log.info("Disciplinary Action - disabled by basic category");
+									}
+								} 
+							} else { 
+								if(pmCategoryL3.getCategoryL3Code() != null
+										&& pmCategoryL3.getCategoryL3Code()
+										.equalsIgnoreCase("09")){
+									log.info("MTO Code exist"); 
+									if( checkBasic != 3 ){
+
+										item.setDisabled(true);
+										log.info("Disciplinary Action - disabled by basic category");
+									}
+								} 
+							}
+							selectItems.add(item);
+						}
+						checkBasic = 0; 
 					}
+					  //26238: Disciplinary Action - END - 28344 Cancel Bumiputera Status (Dropdown stuck at Sub Category Division)
 				}
 			} else {   
 				int checkBasic = 0; 
