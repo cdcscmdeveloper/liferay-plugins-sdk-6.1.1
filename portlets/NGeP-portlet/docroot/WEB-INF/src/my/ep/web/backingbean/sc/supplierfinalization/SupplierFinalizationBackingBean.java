@@ -4310,54 +4310,40 @@ public class SupplierFinalizationBackingBean extends
 
 			/*#25729#142 Start
 		 		If Desk Officer QCB & indicative price below 20k & offer price>50k
-				hide rEASON Awarded Price Exceeded Committee Authority
+					enable REASON Awarded Price Exceeded Committee Authority
+				else
+					disable REASON Awarded Price Exceeded Committee Authority
 			*/	
-			int x = 0;
-			int sizeItems = 0;
+			int i = 0;
+			items = new SelectItem[reasonList.size()];
 			boolean expectTotalIndPriceBelowThreshold = false;
 			String CommType = "";
 			boolean isOfferPriceAbove50k = false;
 			
 			expectTotalIndPriceBelowThreshold = expectTotalIndPriceBelowThreshold(getManagedBean().getScQt());																				
 			CommType = getManagedBean().getCommitteeType();
-			
 			isOfferPriceAbove50k = true;
-			for (PmReasonDesc reasonDescSize : reasonList) {	
-				if (ParameterConst.AWARDED_PRICE_EXCEEDED_COMMITTEE_AUTHORITY.equals(reasonDescSize.getReasonDesc())) {
-					if (expectTotalIndPriceBelowThreshold==true && 
-							SourcingConstants.QCB_COMMITTEE.equals(CommType) &&
-							isOfferPriceAbove50k==true) {
-							sizeItems++;
-					}
-				}
-				else {
-					sizeItems++;
-				}
-			}
-			
-			
-			items = new SelectItem[sizeItems];
-			int i = 0;
-			for (PmReasonDesc reasonDesc : reasonList) {	
-				if (ParameterConst.AWARDED_PRICE_EXCEEDED_COMMITTEE_AUTHORITY.equals(reasonDesc.getReasonDesc())) {
-					if (expectTotalIndPriceBelowThreshold==true && 
-							SourcingConstants.QCB_COMMITTEE.equals(CommType) &&
-							isOfferPriceAbove50k==true) {
+			for (PmReasonDesc reasonDesc : reasonList) {
+					if(reasonDesc.getReasonDesc().equalsIgnoreCase(ParameterConst.FINALIZATION_REASON_CODE_EXCEED_COMMITTEE_AUTHORITY)){
+						if (expectTotalIndPriceBelowThreshold==true && 
+								SourcingConstants.QCB_COMMITTEE.equals(CommType) &&
+								isOfferPriceAbove50k==true){
 							items[i++] = new SelectItem(reasonDesc.getPmReason()
-									.getReasonId(), reasonDesc.getReasonDesc());
-							reasonDescMap.put(reasonDesc.getPmReason().getReasonId(),
-									reasonDesc.getReasonDesc());
+									.getReasonId(), reasonDesc.getReasonDesc(),"",false);
+							this.getManagedBean().getScQtFinalization().getReason().setReasonId(reasonDesc.getPmReason().getReasonId());
+						} else {
+							items[i++] = new SelectItem(reasonDesc.getPmReason()
+									.getReasonId(), reasonDesc.getReasonDesc(),"",true);	
+						}
+					} else {
+						items[i++] = new SelectItem(reasonDesc.getPmReason()
+								.getReasonId(), reasonDesc.getReasonDesc(),"",false);
+						this.getManagedBean().getScQtFinalization().getReason().setReasonId(reasonDesc.getPmReason().getReasonId());
 					}
-				}
-				else {
-					items[i++] = new SelectItem(reasonDesc.getPmReason()
-							.getReasonId(), reasonDesc.getReasonDesc());
-					reasonDescMap.put(reasonDesc.getPmReason().getReasonId(),
+						reasonDescMap.put(reasonDesc.getPmReason().getReasonId(),
 							reasonDesc.getReasonDesc());
 				}
-				//#25729#142 End
-				
-			}
+				//#25729#142 End				
 		} finally {
 			reasonSO = null;
 		}
