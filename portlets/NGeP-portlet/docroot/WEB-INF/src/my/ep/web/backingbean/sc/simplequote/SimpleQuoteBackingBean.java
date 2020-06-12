@@ -5161,6 +5161,10 @@ public class SimpleQuoteBackingBean extends
 				// quoteSO = null;
 			}
 
+			// #28199 - Start : Remove back button from SQ Response Screen
+						getManagedBean().setSqAuditFlg(Boolean.FALSE);
+			// #28199 - End
+			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, "supplerView");
@@ -5357,6 +5361,10 @@ public class SimpleQuoteBackingBean extends
 			} finally {
 				// quoteSO = null;
 			}
+			
+			// #28199 - Start : Remove back button from SQ Response Screen
+						getManagedBean().setSqAuditFlg(Boolean.TRUE);
+			// #28199 - End
 
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
