@@ -160,6 +160,10 @@ public class ViewSuppProfileBackingBean extends
 		SmSupplier currSupp = null;
 		if(getManagedBean().isSupplierUser()){
 			currSupp = SmApplicationUtil.getCurrentSupplier();
+			
+			//27876: Disciplinary Action - start - <27876>
+			currSupp.setFlagSupplier(getManagedBean().isSupplierUser());
+			//27876: Disciplinary Action - start - <27876>
 		} else {
 			//28281
 			//currSupp = getManagedBean().getSearchSupplier();
@@ -187,6 +191,10 @@ public class ViewSuppProfileBackingBean extends
 	 * @param smSupplier
 	 */
 	public void onViewDisciplinaryAction(SmSupplier smSupplier) {
+		
+		//27876: Disciplinary Action - start - <27876>
+		smSupplier.setFlagSupplier(getManagedBean().isSupplierUser());
+		//27876: Disciplinary Action - start - <27876>
 		
 		List<DisciplinaryActionVO> voList = getDisciplinaryActionVO(smSupplier);
 		if(!EntityHelper.isCollectionEmpty(voList)
@@ -430,6 +438,9 @@ public class ViewSuppProfileBackingBean extends
 				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())){
 			getManagedBean().setMofSupplier(true);
 		}
+		//27876: Disciplinary Action - start - <27876>
+		currSupp.setFlagSupplier(getManagedBean().isSupplierUser());
+		//27876: Disciplinary Action - start - <27876>
 		
 		List<DisciplinaryActionVO> voList = getDisciplinaryActionVO(currSupp);
 		if(!EntityHelper.isCollectionEmpty(voList)
