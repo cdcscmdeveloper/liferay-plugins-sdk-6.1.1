@@ -4580,23 +4580,23 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		
 	}
 
-	//Enhancement #25729 Allow create QT below threshold RM20k
+	// #25729 #142 Start - Allow create QT below threshold RM20k
 		public boolean expectTotalIndPriceBelowThreshold(ScQt scQt) {
-			BigDecimal tmpExpectedIntendedPrice = scQt.getTmpExpectedIntendedPrice();
+			BigDecimal actualIntendedPrice = scQt.getEstimatedAmount();
 			
-			if (!scQt.isPanel() && tmpExpectedIntendedPrice != null) {
+			if (!scQt.isPanel() && actualIntendedPrice != null) {
 				log.info(":::expectTotalIndPriceBelowThreshold() scQt.isPanel(): "+ scQt.isPanel() +" :::");
-				log.info(":::expectTotalIndPriceBelowThreshold() tmpExpectedIntendedPrice: "+ tmpExpectedIntendedPrice +" :::");
-				log.info(":::expectTotalIndPriceBelowThreshold() tmpExpectedIntendedPrice.doubleValue: "+ tmpExpectedIntendedPrice.doubleValue() +" :::");
+				log.info(":::expectTotalIndPriceBelowThreshold() ExpectedIntendedPrice: "+ actualIntendedPrice +" :::");
+				log.info(":::expectTotalIndPriceBelowThreshold() ExpectedIntendedPrice.doubleValue: "+ actualIntendedPrice.doubleValue() +" :::");
 
-				if (SourcingConstants.QT_BELOW_20K >= tmpExpectedIntendedPrice.doubleValue()) {
+				if (SourcingConstants.QT_BELOW_20K >= actualIntendedPrice.doubleValue()) {
 					return Boolean.TRUE;
 				}
 			}
 			
 			return Boolean.FALSE;
 		}
-		//Enhancement #25729 - end -
+		//#25729 - end -
 	
 		// #28215 - Start
 		/**
