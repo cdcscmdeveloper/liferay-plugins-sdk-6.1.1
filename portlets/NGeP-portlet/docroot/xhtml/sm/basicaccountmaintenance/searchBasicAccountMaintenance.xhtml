@@ -81,8 +81,9 @@
 						<h:outputText value="#{lbl['lbl.sm.status.inactive']}"
 							rendered="#{smSupplier.recordStatusFlg eq 0}" />
 					    <h:outputText value="#{lbl['lbl.sm.status.deleted1']}"
-							rendered="#{smSupplier.recordStatusFlg eq 9 
-							or (smSupplier.recordStatusFlg eq 2)}" /> 
+							rendered="#{smSupplier.recordStatusFlg eq 9}" /> 
+						<h:outputText value="#{lbl['lbl.sm.status.deleted1']}"
+							rendered="#{smSupplier.recordStatusFlg eq 2}" /> 
 					</p:column> 
 					<!--#28273 -END 110620-->   
 					<!--#28273 & #28278 -end -->
