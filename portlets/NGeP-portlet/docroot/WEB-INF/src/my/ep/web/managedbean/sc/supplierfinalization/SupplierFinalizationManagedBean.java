@@ -2244,14 +2244,14 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 	
 	/**
-	 * @return the tmpExpectedIntendedPrice
+	 * @return the maxAmountCommitteeAuthority
 	 */
 	public BigDecimal getMaxAmountCommitteeAuthority() {
 		return maxAmountCommitteeAuthority;
 	}
 
 	/**
-	 * @param tmpExpectedIntendedPrice the tmpExpectedIntendedPrice to set
+	 * @param maxAmountCommitteeAuthority the maxAmountCommitteeAuthority to set
 	 */
 	public void setMaxAmountCommitteeAuthority(BigDecimal maxAmountCommitteeAuthority) {
 		this.maxAmountCommitteeAuthority = maxAmountCommitteeAuthority;
