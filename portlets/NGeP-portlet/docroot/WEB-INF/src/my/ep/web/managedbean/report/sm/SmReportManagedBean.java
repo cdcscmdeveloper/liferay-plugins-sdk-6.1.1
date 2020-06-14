@@ -26,6 +26,7 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	private String supplierType;
 	private String regType;
 	private String regNo;
+	private String companyName;
 	private String applNo;
 	private String applType;
 	private String documentType;
@@ -50,7 +51,7 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	private String softCert;
 	
 	private Long regStatus;
-
+	private boolean isSupplier;
 	private boolean isCdcCollector;
 	
 	private List<SelectItem> regStatusLs;
@@ -64,10 +65,8 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	private List<String> selectedPaymentTypes;
 	private List<CategoryRptVO> categoryLs;
 	private List<CategoryRptVO> selectedCategoryLs;
-	
 	public String searchDate;
 
-	
 
 	public String getDocumentType() {
 		return documentType;
@@ -76,6 +75,7 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	public void setDocumentType(String documentType) {
 		this.documentType = documentType;
 	}
+	
 	public Date getDateFrom() {
 		return dateFrom;
 	}
@@ -138,6 +138,14 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 
 	public void setRegNo(String regNo) {
 		this.regNo = regNo;
+	}
+
+	public String getCompanyName() {
+		return companyName;
+	}
+
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
 	}
 
 	public String getApplNo() {
@@ -412,6 +420,14 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 		this.softCert = softCert;
 	}
 
+	public boolean isSupplier() {
+		return isSupplier;
+	}
+
+	public void setSupplier(boolean isSupplier) {
+		this.isSupplier = isSupplier;
+	}
+
 	public boolean isCdcCollector() {
 		return isCdcCollector;
 	}
@@ -419,7 +435,7 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	public void setCdcCollector(boolean isCdcCollector) {
 		this.isCdcCollector = isCdcCollector;
 	}
-
+	
 	public String getSearchDate() {
 		return searchDate;
 	}
