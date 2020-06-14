@@ -260,6 +260,10 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private BigDecimal maxAmountCommitteeAuthority;
 	//#25729#142 & #26169 - End
 	
+	//#26169 #38 - Start
+	private boolean isHasSupplierQualified;
+	//#26169 #38 - End
+	
 	/**
 	 * @return the activeIndex
 	 */
@@ -2256,9 +2260,17 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setMaxAmountCommitteeAuthority(BigDecimal maxAmountCommitteeAuthority) {
 		this.maxAmountCommitteeAuthority = maxAmountCommitteeAuthority;
 	}
-	
-	//#25729#142 & #26169 - End
 
+	//#25729#142 & #26169 - End
+	//#26169 #38 - Start
+	public boolean isHasSupplierQualified() {
+		return isHasSupplierQualified;
+	}
+
+	public void setHasSupplierQualified(boolean isHasSupplierQualified) {
+		this.isHasSupplierQualified = isHasSupplierQualified;
+	}
+	//#26169 #38 - End
 }
 
 
