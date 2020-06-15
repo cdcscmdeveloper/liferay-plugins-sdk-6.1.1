@@ -162,7 +162,7 @@ public class ViewSuppProfileBackingBean extends
 			currSupp = SmApplicationUtil.getCurrentSupplier();
 			
 			//27876: Disciplinary Action - start - <27876>
-			currSupp.setFlagSupplier(getManagedBean().isSupplierUser());
+			currSupp.setFlagSupplier(true);
 			//27876: Disciplinary Action - start - <27876>
 		} else {
 			//28281
@@ -193,7 +193,7 @@ public class ViewSuppProfileBackingBean extends
 	public void onViewDisciplinaryAction(SmSupplier smSupplier) {
 		
 		//27876: Disciplinary Action - start - <27876>
-		smSupplier.setFlagSupplier(getManagedBean().isSupplierUser());
+		smSupplier.setFlagSupplier(true);
 		//27876: Disciplinary Action - start - <27876>
 		
 		List<DisciplinaryActionVO> voList = getDisciplinaryActionVO(smSupplier);
@@ -439,7 +439,7 @@ public class ViewSuppProfileBackingBean extends
 			getManagedBean().setMofSupplier(true);
 		}
 		//27876: Disciplinary Action - start - <27876>
-		currSupp.setFlagSupplier(getManagedBean().isSupplierUser());
+		currSupp.setFlagSupplier(true);
 		//27876: Disciplinary Action - start - <27876>
 		
 		List<DisciplinaryActionVO> voList = getDisciplinaryActionVO(currSupp);
