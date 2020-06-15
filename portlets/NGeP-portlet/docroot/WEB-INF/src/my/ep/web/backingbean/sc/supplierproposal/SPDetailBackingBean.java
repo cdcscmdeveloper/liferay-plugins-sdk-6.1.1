@@ -58,6 +58,8 @@ import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
@@ -131,6 +133,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 import my.ep.web.vo.SmPersonnleCalcVO;
@@ -5308,13 +5311,23 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 	public boolean checkDisciplinaryActionForQTCat() {
 		if (StringUtils.isEmpty(this.getManagedBean().getQt().getDisciplinaryActionPresent())) {
 			if (null != getManagedBean().getQtProposal().getScQtSupplier().getSmSupplier()) {
-				List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(getManagedBean().getQtProposal()
-						.getScQtSupplier().getSmSupplier());
-				if(resultList != null && resultList.size() > 0){
+				// #28338 - Start.
+				List<SmDisciplinaryAction> resultList = null;
+				SupplierDataMaintenanceReqDTO supReqDTO = new SupplierDataMaintenanceReqDTO();
+				supReqDTO.setSupplier(getManagedBean().getQtProposal().getScQtSupplier().getSmSupplier());
+				SupplierDataMaintenanceResDTO dataRes = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionBySupplier(supReqDTO);
+				
+				if(null != dataRes && dataRes.getSmDisciplinaryActions() != null && dataRes.getSmDisciplinaryActions().size() > 0){
+					resultList = dataRes.getSmDisciplinaryActions();
 					List<String> catCodeList = null;
 					
 					for(SmDisciplinaryAction disciplinaryAction: resultList){
-						if(disciplinaryAction.isCancelCategory()){
+						if(disciplinaryAction.isSuspendRegistration() || disciplinaryAction.isCancelRegistration() 
+								|| disciplinaryAction.isBlacklistOwner() || disciplinaryAction.isManufacturerCancel()
+								|| disciplinaryAction.isBumiputeraCancel()){
+							this.getManagedBean().getQt().setDisciplinaryActionPresent("true");
+							return true;
+						} else if(disciplinaryAction.isCancelCategory()){
 							if (null == catCodeList) {
 								catCodeList = new ArrayList<>();
 							}
@@ -5364,7 +5377,10 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 							QtDetailsSO=null;
 						}
 					}
+				} else {
+					this.getManagedBean().getQt().setDisciplinaryActionPresent("false");
 				}
+				// #28338 - End.
 			}
 		} else if ("true".equals(this.getManagedBean().getQt().getDisciplinaryActionPresent())) {
 			return true;
