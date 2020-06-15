@@ -1996,7 +1996,9 @@ public class SupplierFinalizationBackingBean extends
 
 		SuppFinalizationReqDTO reqDTO = preSubmitValidation();
 		reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
-		if (QTStatusConst.SF_PENDING_SIGN_OFF.equals(currentStatusId)) {
+		// #25638 - Start.
+		if (QTStatusConst.SF_PENDING_SIGN_OFF.equals(currentStatusId) || QTStatusConst.SF_PENDING_ENDORSEMENT.equals(currentStatusId)) {
+		// #25638 - End.
 			if (CollectionUtils.isNotEmpty(
 					this.getManagedBean().getCommitteeList())
 					// #25638 - Start
@@ -2049,7 +2051,11 @@ public class SupplierFinalizationBackingBean extends
 								break;
 							}
 						}
+					// #25638 - Start.
+					} else {
+						initializeFinalizationRemarks();
 					}
+					// #25638 - End.
 					
 					if (remarksNotFound) {
 						throw new EpException(MessageConst.ERR_775152);
@@ -2071,7 +2077,8 @@ public class SupplierFinalizationBackingBean extends
 			String committeeType = getManagedBean().getCommitteeType();
 			CommitteResDTO committeeResDTO = getCommitteMemberByUserId();
 			ScCommitteeMember committeeMember = committeeResDTO.getCommMember();
-			if (StringUtils.isNotBlank(committeeType) && 
+			// #25638 - Start.
+			if (!BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome) && StringUtils.isNotBlank(committeeType) && 
 					ParameterConst.COMMITTEE_ROLE_CHAIRPERSON.equalsIgnoreCase(committeeMember.getMemberRole().getParameterCode()) && 
 					isDigiSigningRequired(committeeResDTO.getRoleCode(),
 											this.getManagedBean().getCommitteeList())) {
@@ -2080,6 +2087,7 @@ public class SupplierFinalizationBackingBean extends
 			} else {
 				updateBPMTask(outcome, null, reqDTO);
 			}
+			// #25638 - End.
 		} else {
 			signOff();
 			updateBPMTask(outcome, null, reqDTO);
