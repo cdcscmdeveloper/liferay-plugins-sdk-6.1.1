@@ -790,9 +790,12 @@ public class SmApplicationUtil {
 	 */
 	public static boolean manageEquityLimit(SmPersonnel personnel,
 			String businessTypeVal, List<SmPersonnel> shrHldrs,SmSupplier smSupplier) {//change by fahmi, log : 23858 13/03/2019 : add smSupplier
-		if (personnel.isEquityOwner()
-				&& !businessTypeVal
-						.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT)) {
+		
+		// 		if (personnel.isEquityOwner()
+		//		&& !businessTypeVal
+		//		.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT)) {
+		
+		if (personnel.isEquityOwner()) { // start - end = Bug #28313
 			return true;
 		} else if(smSupplier != null && smSupplier.getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_PROFESSIONAL_BODY)){//change by fahmi, log : 23858 13/03/2019
 			return true;
