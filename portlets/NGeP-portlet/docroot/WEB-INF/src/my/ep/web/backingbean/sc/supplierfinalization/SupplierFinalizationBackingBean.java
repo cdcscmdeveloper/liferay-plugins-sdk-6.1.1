@@ -4257,7 +4257,7 @@ public class SupplierFinalizationBackingBean extends
 		boolean expectTotalIndPriceBelowThreshold = false;
 		String CurrentCommType = "";
 		
-		expectTotalIndPriceBelowThreshold = expectTotalIndPriceBelowThreshold(getManagedBean().getScQt());																				
+		expectTotalIndPriceBelowThreshold = expectTotalIndPriceBelowThreshold(getManagedBean().getScQt(),"SF");																				
 		CurrentCommType = getManagedBean().getCommitteeType();
 		
 		if (expectTotalIndPriceBelowThreshold==true && 
@@ -4318,7 +4318,7 @@ public class SupplierFinalizationBackingBean extends
 			items = new SelectItem[reasonList.size()];
 			boolean expectTotalIndPriceBelowThreshold = false;
 			String CommType = "";
-			expectTotalIndPriceBelowThreshold = expectTotalIndPriceBelowThreshold(getManagedBean().getScQt());																				
+			expectTotalIndPriceBelowThreshold = expectTotalIndPriceBelowThreshold(getManagedBean().getScQt(),"SF");																				
 			CommType = getManagedBean().getCommitteeType();
 			
 			for (PmReasonDesc reasonDesc : reasonList) {
