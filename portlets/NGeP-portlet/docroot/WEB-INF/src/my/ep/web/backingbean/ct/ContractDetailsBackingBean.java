@@ -1688,7 +1688,27 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					getManagedBean().setSelectedTabIndex(4);
 				}
 				getManagedBean().setSettingIndex(getManagedBean().getSelectedTabIndex());
-			}	  
+				
+			}else if(outputTab.equalsIgnoreCase(ContractConst.NOTIFICATION_DETAIL)){/*#26083 /bug 28314 start - basri*/
+				if(bondRequired){
+					getManagedBean().setSelectedTabIndex(6);
+					if (typeFactoring && typeLoaAmt) {
+						getManagedBean().setSelectedTabIndex(8);
+					}else if(typeLoaAmt || typeFactoring){
+						getManagedBean().setSelectedTabIndex(7);
+					}
+				}else if(typeFactoring){
+					getManagedBean().setSelectedTabIndex(6);
+					if(typeLoaAmt){
+						getManagedBean().setSelectedTabIndex(7);
+					}
+				} else if(typeLoaAmt){
+					getManagedBean().setSelectedTabIndex(6);
+				}else {
+					getManagedBean().setSelectedTabIndex(5);
+				}
+				getManagedBean().setNotificationIndex(getManagedBean().getSelectedTabIndex());
+			}	  /*#26083 /bug 28314 end - basri*/
 
 			/*Set tab value if contract is not zonal*/	 
 		} else {
