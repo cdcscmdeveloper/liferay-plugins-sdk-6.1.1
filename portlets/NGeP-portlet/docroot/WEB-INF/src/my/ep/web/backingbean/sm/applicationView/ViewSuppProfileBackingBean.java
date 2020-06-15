@@ -162,12 +162,13 @@ public class ViewSuppProfileBackingBean extends
 			currSupp = SmApplicationUtil.getCurrentSupplier();
 			
 			//27876: Disciplinary Action - start - <27876>
-			currSupp.setFlagSupplier(false);
+			currSupp.setFlagSupplier(true);
 			//27876: Disciplinary Action - start - <27876>
 		} else {
 			//28281
 			//currSupp = getManagedBean().getSearchSupplier();
 			currSupp = getManagedBean().getSmSupplier();
+			currSupp.setFlagSupplier(false);
 		}
 		log.info(currSupp+"-------");
 		log.info(currSupp.getSupplierId()+"-------");
