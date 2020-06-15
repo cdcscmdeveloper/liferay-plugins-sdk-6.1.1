@@ -1249,10 +1249,12 @@ public class ViewApplHistoryBackingBean extends
 		if(currSupp != null){
 			
 			//27876: Disciplinary Action - start - <27876>
-			currSupp.setFlagSupplier(true);
+			SmSupplier newCurrSupp =  new SmSupplier();
+			newCurrSupp = currSupp;
+			newCurrSupp.setFlagSupplier(true);
 			//27876: Disciplinary Action - start - <27876>
 			
-			List<DisciplinaryActionVO> voList = getDisciplinaryActionVO(currSupp);
+			List<DisciplinaryActionVO> voList = getDisciplinaryActionVO(newCurrSupp);
 			if(!EntityHelper.isCollectionEmpty(voList)
 					&& voList.size() > 0){
 				getManagedBean().setDisciplineVOs(voList);
