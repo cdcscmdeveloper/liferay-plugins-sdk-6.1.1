@@ -4581,8 +4581,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 
 	// #25729 #142 Start - Allow create QT below threshold RM20k
-		public boolean expectTotalIndPriceBelowThreshold(ScQt scQt) {
-			BigDecimal actualIntendedPrice = scQt.getEstimatedAmount();
+		public boolean expectTotalIndPriceBelowThreshold(ScQt scQt, String ScreenType) {
+			
+			BigDecimal actualIntendedPrice = new BigDecimal(0);
+			if ("createQt".equals(ScreenType)) {
+				actualIntendedPrice = scQt.getTmpExpectedIntendedPrice();
+			}
+			else {
+				actualIntendedPrice = scQt.getEstimatedAmount();
+			}
+			
 			
 			if (!scQt.isPanel() && actualIntendedPrice != null) {
 				log.info(":::expectTotalIndPriceBelowThreshold() scQt.isPanel(): "+ scQt.isPanel() +" :::");
