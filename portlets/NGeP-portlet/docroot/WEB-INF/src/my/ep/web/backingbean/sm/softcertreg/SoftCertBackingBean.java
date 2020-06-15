@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -36,13 +37,16 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSoftcertDoc;
 import my.ep.persistence.entity.sm.SmSoftcertDocFile;
 import my.ep.persistence.entity.sm.SmSoftcertRequest;
+import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.backingbean.sm.payment.PaymentBackingBean;
+import my.ep.web.bean.sm.PersonnelBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.softcertreg.SoftCertManagedBean;
 import my.ep.web.util.DateUtils;
@@ -59,6 +63,7 @@ import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 
+import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
@@ -1435,11 +1440,46 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	private void validateRequestSoftcert() {
 		if (getManagedBean().getSoftCertPayList() != null) {
 			for (SmPersonnel personnel : getManagedBean().getSoftCertPayList()) {
-				/*#28201 - Start*/
-				if (personnel.getSmPersonnelAddresses() == null || personnel.getSmPersonnelAddresses().isEmpty()
-						|| personnel.getEmail() == null || personnel.getEmail().isEmpty()
+				/*#28201 - Start*/		
+				int count = 0;
+				List<String> address = new ArrayList<>();
+				address.add("R");
+				address.add("M");
+				address.add("I");
+				address.add("O");
+				if (personnel.getSmPersonnelAddresses() == null || personnel.getSmPersonnelAddresses().isEmpty()){
+					throw new EpException(MessageConst.ERROR_722614,
+							new String[] { personnel.getName() });
+				}
+				boolean ctrR = false;
+				boolean ctrO = false;
+				boolean ctrI = false;
+				boolean ctrM = false;
+				boolean error = false;
+				for (SmPersonnelAddress personnelAddress : personnel.getSmPersonnelAddresses()){
+					if (address.contains(personnelAddress.getAddressType())){
+						switch (personnelAddress.getAddressType()){
+						case("R") : if(ctrR) error = true;
+						else ctrR = true; break;
+						case("O") : if(ctrO) error = true;
+						else ctrO = true; break;
+						case("I") : if(ctrI) error = true;
+						else ctrI = true; break;
+						case("M") : if(ctrM) error = true;
+						else ctrM = true; break;
+						}
+						if(error == true){
+							throw new IllegalArgumentException("Error - Address cant be duplicated");
+						}
+						count++;
+					}
+				}
+				if (count != 4){
+					throw new EpException(MessageConst.ERROR_722614,
+							new String[] { personnel.getName() });
+				} else if(personnel.getEmail() == null || personnel.getEmail().isEmpty()
 						|| personnel.getPhoneNo() == null || personnel.getPhoneNo().isEmpty()
-						|| personnel.getMobileNo() == null || personnel.getMobileNo().isEmpty()) {
+						|| personnel.getMobileNo() == null || personnel.getMobileNo().isEmpty()){
 					throw new EpException(MessageConst.ERROR_722682,
 							new String[] { personnel.getName() });
 				}
