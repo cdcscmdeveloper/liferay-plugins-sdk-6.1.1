@@ -2167,27 +2167,29 @@ public class QTDocumentsBackingBean extends
 						question.setClItem("");
 					}else{
 					    String clItem = question.getClItem();
-                    //20190513@asyrafhaziq - 25812 - Start
-					// add a condition to filter the character (character after space and before space) length for data 'ITEM'.
-					    String[] words = clItem.split(" "); //get array of words
-					    StringBuilder sb = new StringBuilder();
-					    StringBuilder subSb = new StringBuilder();//this is for perfomance
-					    for(String word : words) //affect each word in string
-					    {
-					      int length = word.length();
-					      if ( length >= 20)
-					    	{
-					    	  String subWord;
-					            for (int i = 0; i < length; i += 20) {
-					            	subWord = word.substring(i, Math.min(length, i + 20));
-					            	subSb.append(subWord).append(TemplateDocConst.PARAM_SPACE);
-					            }
-					    		word = subSb.toString();	
-					    	}
-					        sb.append(word).append(TemplateDocConst.PARAM_SPACE);
-					    }
-					    clItem =  sb.toString();
-					    //20190513@asyrafhaziq - 25812 - End
+					  //20190513@asyrafhaziq - 25812 - Start
+						// add a condition to filter the character (character after space and before space) length for data 'ITEM'.
+						    String[] words = clItem.split(" "); //get array of words
+						    StringBuilder sb = new StringBuilder(); 
+						    for(String word : words) //affect each word in string
+						    {
+						      int length = word.length();
+						      if ( length >= 20){
+						    	  StringBuilder subSb = new StringBuilder();//this is for perfomance
+								  String newWord = new String();	
+						    	  String subWord = new String();	
+						            for (int i = 0; i < length; i += 20) {
+						            	subWord = word.substring(i, Math.min(length, i + 20));
+						            	subSb.append(subWord).append(TemplateDocConst.PARAM_SPACE);
+						            }
+						    		newWord = subSb.toString();	
+									sb.append(newWord).append(TemplateDocConst.PARAM_SPACE);
+						    	}else{
+									sb.append(word).append(TemplateDocConst.PARAM_SPACE);
+								}
+						    }
+						    clItem =  sb.toString();
+						    //20190513@asyrafhaziq - 25812 - End
 						clItem=clItem.replaceAll(QTConstants.NEW_LINE_CHARACTER,TemplateDocConst.PARAM_SPACE);
 						clItem=clItem.replaceAll(QTConstants.AMBRA_SENT,TemplateDocConst.PARAM_SPACE);
 						clItem=clItem.replaceAll(QTConstants.LESS_THEN,TemplateDocConst.PARAM_SPACE);
@@ -2201,18 +2203,21 @@ public class QTDocumentsBackingBean extends
 						 String clSpecDetail = question.getClSpecDetail();
 						 String[] words = clSpecDetail.split(" ");
 						 StringBuilder sb = new StringBuilder();
-						 StringBuilder subSb = new StringBuilder();
 						 for(String word : words){
 							 int length = word.length();
-						      if ( length >= 20){
-						    	  String subWord;
-						            for (int i = 0; i < length; i += 20) {
-						            	subWord = word.substring(i, Math.min(length, i + 20));
+							 if ( length >= 20){
+								 StringBuilder subSb = new StringBuilder();
+								  String newWord = new String();	
+						    	  String subWord = new String();	
+						            for (int i = 0; i < length; i += 70) {
+						            	subWord = word.substring(i, Math.min(length, i + 70));
 						            	subSb.append(subWord).append(TemplateDocConst.PARAM_SPACE);
 						            }
-						    		word = subSb.toString();	
-						      }
-						      sb.append(word).append(TemplateDocConst.PARAM_SPACE);
+						    		newWord = subSb.toString();	
+									sb.append(newWord).append(TemplateDocConst.PARAM_SPACE);
+						    	}else{
+									sb.append(word).append(TemplateDocConst.PARAM_SPACE);
+							 }
 						 }
 						 clSpecDetail=sb.toString();
 						 clSpecDetail=clSpecDetail.replaceAll(QTConstants.NEW_LINE_CHARACTER,TemplateDocConst.PARAM_SPACE);
