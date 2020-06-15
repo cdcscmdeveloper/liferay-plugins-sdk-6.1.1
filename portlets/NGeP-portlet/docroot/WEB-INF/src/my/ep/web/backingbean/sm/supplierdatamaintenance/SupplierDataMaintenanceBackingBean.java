@@ -533,11 +533,16 @@ public class SupplierDataMaintenanceBackingBean extends
 				reqDTO.setSelectedCategories(selectedCategory);
 				//27446 : Disciplinary Action - end
 			} 
-			
-			if(getManagedBean().getOwnerAndDirectorList() != null
-					&& getManagedBean().getOwnerAndDirectorList().size() > 0){
-				reqDTO.setSelectedOwnerAndDirector(getManagedBean().getOwnerAndDirectorList());
+//			28147: Disciplinary Action - start -
+			if (getManagedBean().getOwnerAndDirectorList() != null
+					&& getManagedBean().getOwnerAndDirectorList().size() > 0) {
+				if (getManagedBean().isBlacklistOwnerOrDirector()) {
+					reqDTO.setSelectedOwnerAndDirector(getManagedBean().getSelectedOwnerAndDirectorList());
+				} else {
+					reqDTO.setSelectedOwnerAndDirector(getManagedBean().getOwnerAndDirectorList());
+				}
 			}
+//			28147: Disciplinary Action - end -
 			
 			if(getManagedBean().isWarning()) {
 				getManagedBean().getDisciplineVO().getSmDiscplinaryAction().setWarning(true);			
@@ -1370,9 +1375,11 @@ public class SupplierDataMaintenanceBackingBean extends
 			getManagedBean().setEditDisciplinaryAction(false);
 			onTickDiscipline();
 		} else {
-			//27815: Disciplinary Action - start - checking condition
-			if(getManagedBean().isCancelCategoryCode() || getManagedBean().isManufacturerStatusCancel()){
+			// 27815: Disciplinary Action - start - checking condition
+			if (getManagedBean().isCancelCategoryCode() || getManagedBean().isManufacturerStatusCancel()) {
 				getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(true);
+			} else if (getManagedBean().isBlacklistOwnerOrDirector()) {
+				
 			} else {
 				getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(false);
 			}
