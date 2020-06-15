@@ -35,7 +35,7 @@
 			  value="#{suppFinalizationBackingBean.managedBean.recommendSupplier or 
 							suppFinalizationBackingBean.managedBean.forwardToHigherAuthority}" />
 	<ui:param name="expectTotalIndPriceBelowThreshold" 
-			  value="#{suppFinalizationBackingBean.expectTotalIndPriceBelowThreshold(suppFinalizationBackingBean.managedBean.scQt)}" />																				
+			  value="#{suppFinalizationBackingBean.expectTotalIndPriceBelowThreshold(suppFinalizationBackingBean.managedBean.scQt,'SP')}" />																				
 			
 	<ui:include src="/xhtml/sc/common/supplierDetailsPopup.xhtml" />
 	<ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/qualifiedSuppliersByEvalStage.xhtml" />
