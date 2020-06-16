@@ -2217,6 +2217,7 @@ public class TemplateSpecBackingBean extends
 
 //#21695 Farid Start ...
 //Set total score to default amount based on offer, not offer or quantity 0..quantity 0 total max score must exclude									
+
 				if (autoScore != null && specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) > 0) {
 						totalScore = totalScore.add(autoScore);	
 				}
@@ -2227,7 +2228,18 @@ public class TemplateSpecBackingBean extends
 				if (userScore != null) {
 					totalScore = totalScore.add(userScore);
 				}
-
+// add total max score for non zonal 
+				if (specAnswer.getTplSpecQuestion().getMaxScore() != null
+						&& (autoScore != null && specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) > 0)) {
+					totalMaxScore = totalMaxScore.add(specAnswer
+							.getTplSpecQuestion().getMaxScore());
+				}
+				if (specAnswer.getTplSpecQuestion().getMaxScore() != null
+						&& (autoScore != null && specAnswer.getTplSpecQuestion().getClQuantity().compareTo(BigDecimal.ZERO) > 0&& specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0)) {
+					totalMaxScore = totalMaxScore.add(specAnswer
+							.getTplSpecQuestion().getMaxScore());
+				}
+// add total max score for Zonal 				
 				if (specAnswer.getTplSpecQuestion().getMaxScore() != null
 						&& (autoScore != null && specAnswer.getTplSpecZoneQty() !=null && specAnswer.getTplSpecZoneQty().getQty().intValue() > 0 && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) >= 0 || userScore != null)) {
 					totalMaxScore = totalMaxScore.add(specAnswer
@@ -2239,7 +2251,7 @@ public class TemplateSpecBackingBean extends
 					totalMaxScore = totalMaxScore.add(specAnswer
 							.getTplSpecQuestion().getMaxScore());
 				}
-//		
+		
 //#21695 End				
 			}
 
@@ -3150,7 +3162,7 @@ public class TemplateSpecBackingBean extends
 /** #21695 FARID START */
 	/**
 	 * Item type change.Change Item Type(product/Service) Dropdown in Template
-	 * Spec Popup.
+	 * 
 	 * 
 	 * @param event
 	 *            (Long itemType)
