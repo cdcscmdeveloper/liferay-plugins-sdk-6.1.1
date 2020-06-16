@@ -2230,12 +2230,12 @@ public class TemplateSpecBackingBean extends
 				}
 // add total max score for non zonal 
 				if (specAnswer.getTplSpecQuestion().getMaxScore() != null
-						&& (autoScore != null && specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) > 0)) {
+						&& (autoScore != null && specAnswer.getTplSpecQuestion().getClQuantity() != null && specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) > 0)) {
 					totalMaxScore = totalMaxScore.add(specAnswer
 							.getTplSpecQuestion().getMaxScore());
 				}
 				if (specAnswer.getTplSpecQuestion().getMaxScore() != null
-						&& (autoScore != null && specAnswer.getTplSpecQuestion().getClQuantity().compareTo(BigDecimal.ZERO) > 0&& specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0)) {
+						&& (autoScore != null && specAnswer.getTplSpecQuestion().getClQuantity() != null && specAnswer.getTplSpecQuestion().getClQuantity().compareTo(BigDecimal.ZERO) > 0&& specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0)) {
 					totalMaxScore = totalMaxScore.add(specAnswer
 							.getTplSpecQuestion().getMaxScore());
 				}
