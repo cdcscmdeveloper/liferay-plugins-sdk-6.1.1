@@ -298,12 +298,9 @@ public class PmReportsBackingBean extends
 		log.info("ORG_TYPE_FACTORING");
 		if (getManagedBean().getSelectedOrgProfile() != null
 				&& getManagedBean().getSelectedOrgProfile().getPmFinancialOrg() != null) {
-			map.put(PmReportConst.PARAM_PM_FINORG_NAME, getManagedBean()
+			map.put(PmReportConst.PARAM_PM_ORG_NAME, getManagedBean()
 					.getSelectedOrgProfile().getPmFinancialOrg()
 					.getFinOrgName());
-			map.put(PmReportConst.PARAM_PM_BIZREG_NO, getManagedBean()
-					.getSelectedOrgProfile().getPmFinancialOrg()
-					.getBizRegNumber());
 		}
 
 	}else
@@ -312,10 +309,8 @@ public class PmReportsBackingBean extends
 		log.info("ORG_TYPE_SUPPLIER");
 		if (getManagedBean().getSelectedOrgProfile() != null
 				&& getManagedBean().getSelectedOrgProfile().getSmSupplier() != null){
-			map.put(PmReportConst.PARAM_PM_COMPANY_NAME, getManagedBean()
+			map.put(PmReportConst.PARAM_PM_ORG_NAME, getManagedBean()
 					.getSelectedOrgProfile().getSmSupplier().getCompanyName());
-			map.put(PmReportConst.PARAM_PM_BIZREG_NO, getManagedBean()
-					.getBizRegNo());
 		}
 		
 	}else{	
