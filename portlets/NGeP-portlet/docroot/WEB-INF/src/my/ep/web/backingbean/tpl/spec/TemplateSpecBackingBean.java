@@ -2241,17 +2241,12 @@ public class TemplateSpecBackingBean extends
 				}
 // add total max score for Zonal 				
 				if (specAnswer.getTplSpecQuestion().getMaxScore() != null
-						&& (autoScore != null && specAnswer.getTplSpecZoneQty() !=null && specAnswer.getTplSpecZoneQty().getQty().intValue() > 0 && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) >= 0 || userScore != null)) {
+						&& (autoScore != null && specAnswer.getTplSpecZoneQty() !=null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) >= 0 || userScore != null)) {
 					totalMaxScore = totalMaxScore.add(specAnswer
 							.getTplSpecQuestion().getMaxScore());
 				}
 			
-				if (specAnswer.getTplSpecQuestion().getMaxScore() != null
-						&& specAnswer.getTplSpecZoneQty() !=null && specAnswer.getTplSpecZoneQty().getQty().intValue() > 0 && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0 && (userScore == null)) {
-					totalMaxScore = totalMaxScore.add(specAnswer
-							.getTplSpecQuestion().getMaxScore());
-				}
-		
+
 //#21695 End				
 			}
 
