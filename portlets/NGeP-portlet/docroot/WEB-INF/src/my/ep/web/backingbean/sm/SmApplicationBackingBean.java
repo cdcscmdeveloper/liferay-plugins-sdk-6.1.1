@@ -10188,10 +10188,7 @@ public class SmApplicationBackingBean extends
 	 *            panelName
 	 */
 	public void onChangeState(SmAddress addr, String panelName) {
-		/*SmApplicationUtil.getInstance().populateDistrictsByState(addr,
-				panelName, getManagedBean());
-		setRoleStaffAddrReqd();*/
-		
+		//13320-start
 		Long stateId = addr.getStateId();
 		if (stateId != null) {
 			addr.setPmState(SmCommonUtil.getInstance()
@@ -10200,15 +10197,14 @@ public class SmApplicationBackingBean extends
 		if(addr.getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
 			SmApplicationUtil.getInstance().populateDistrictsByState(addr,
 					panelName, getManagedBean());
-			/*SmApplicationUtil.getInstance().populateDistrictsByUsingDivision(addr,
-					panelName, getManagedBean());*/
 			setRoleStaffAddrReqd();
 			
-		}else{
-			SmApplicationUtil.getInstance().populateDistrictsByState(addr,
-					panelName, getManagedBean());
-			setRoleStaffAddrReqd();
-	}
+		}else{//13320-end
+		SmApplicationUtil.getInstance().populateDistrictsByState(addr,
+				panelName, getManagedBean());
+		setRoleStaffAddrReqd();
+		}
+		
 	}
 
 	/**
