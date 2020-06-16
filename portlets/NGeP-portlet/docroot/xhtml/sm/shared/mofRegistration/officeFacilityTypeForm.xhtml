@@ -302,15 +302,22 @@
 					<!-- 13320 -->
 					<tr>
 						<td></td>
-						<td><p:inputText id="companyAdd4" size="35" maxlength="100"/>
-						</td>
-						<td><p:outputLabel value="#{lbl['lbl.sm.division']}" /> <p:outputLabel
-								value="*" styleClass="mandatory" /></td>
+						<td></td>
+						<td  class="tdTitle">
+				<p:outputPanel id="divisionLabelPanelId" >
+					<ui:fragment rendered="#{!backingBean.managedBean.divisionBox}">
+						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+						</ui:fragment>
+					</p:outputPanel>
+					</td>
+					<td>
+				<p:outputPanel id="divisionDropdownPanelId">
+				<ui:fragment rendered="#{!backingBean.managedBean.divisionBox}">
 						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 								id="basicOffFacDivision" required="true"
 								label="#{lbl['lbl.sm.division']}"
-								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.divisionId}"
-								disabled="#{backingBean.managedBean.divisionBox}">
+								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.divisionId}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems var="offDivision"
 									value="#{backingBean.managedBean.basicOffFacDivisions}" />
@@ -319,6 +326,9 @@
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
 								update="basicOffFacDist,basicOffFacCity" />
 							</p:selectOneMenu> </td>
+							</ui:fragment>
+							</p:outputPanel>
+							</td>
 					</tr>
 					
 					<tr>

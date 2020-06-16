@@ -130,25 +130,28 @@
 							value="#{bb.managedBean.businessStateLs}" />
 						<p:ajax event="change" process="@this"
 							listener="#{bb.onChangeState(bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState,'COMPANY_ADDRESS')}"
-							update="busDistrict,busDivision,busCity,:form:acgmap:gmapInput:gmapInput" />
+							update="busDistrict,divisionLabelPanelId,divisionDropdownPanelId,busCity,:form:acgmap:gmapInput:gmapInput" />
 					</p:selectOneMenu> <p:message id="busStateMsg" for="busState" display="icon" /></td>
 			</tr>
 			<!-- 13320 -->
 			<tr>
 				<td></td>
-				<td class="tdContent"><p:inputText size="40"
-						id="compAdd4" maxlength="100"
-						/></td>
-
-				<td class="tdTitle">
-					<p:outputLabel value="#{lbl['lbl.sm.division']}" />
-					<p:outputLabel value="*" styleClass="mandatory" />
-				</td>
+				<td/></td>
+              <td  class="tdTitle">
+				<p:outputPanel id="divisionLabelPanelId" >
+					<ui:fragment rendered="#{!bb.managedBean.divisionBox}">
+						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+						</ui:fragment>
+					</p:outputPanel>
+					<td>
+				<p:outputPanel id="divisionDropdownPanelId">
+				<ui:fragment rendered="#{!registrationBackingBean.managedBean.divisionBox}">
+					</td>
 				<td class="tdContent">
 					<p:selectOneMenu id="busDivision"
 						 label="#{lbl['lbl.sm.division']}"
 						value="#{bb.managedBean.divisionIds}"
-						disabled="#{bb.managedBean.divisionBox}"
 						style="width:80%">
 						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 						<f:selectItems var="state"
@@ -157,6 +160,9 @@
 							listener="#{bb.onChangeDivision('COMPANY_ADDRESS')}"
 							update="busDistrict,busCity" />
 					</p:selectOneMenu></td>
+					</ui:fragment>
+					</p:outputPanel>
+					</td>
 			</tr>
 			
 

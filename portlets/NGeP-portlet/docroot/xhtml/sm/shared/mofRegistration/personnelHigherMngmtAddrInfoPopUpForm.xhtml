@@ -71,17 +71,27 @@
 								SupplierManagementConst.SM_PERSNL_PERM_ADDR_PANEL,
 								backingBean.managedBean.personnelPermAddr.smAddress.pmDistrict,
 								backingBean.managedBean.personnelPermAddr.smAddress.pmCity)}"
-										update="prsPermDivision,prsPermDist,prsPermCity" />
+										update="divisionLabelPanelId,divisionDropdownPanelId,prsPermDist,prsPermCity" />
 
 								</p:selectOneMenu></td>
 						</tr>
 						<!-- 13320 -->
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.division']}" /></td>
+							<td  class="tdTitle">
+				<p:outputPanel id="divisionLabelPanelId" >
+					<ui:fragment rendered="#{!backingBean.managedBean.divisionBox}">
+						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+						</ui:fragment>
+					</p:outputPanel>
+					</td>
+					<td>
+				<p:outputPanel id="divisionDropdownPanelId">
+				<ui:fragment rendered="#{!backingBean.managedBean.divisionBox}">
+					
 							<td><p:selectOneMenu
 									style="width: 207px;margin-bottom: 5px;"
 									value="#{backingBean.managedBean.personnelPermAddr.smAddress.pmDivision.divisionId}"
-									disabled="#{backingBean.managedBean.divisionBox}"
 									id="prsPermDivision">
 									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 									<f:selectItems var="prsPermDivision"
@@ -93,6 +103,9 @@
 										update="prsPermDist,prsPermCity" />
 
 								</p:selectOneMenu></td>
+								</ui:fragment>
+								</p:outputPanel>
+								</td>
 						</tr>
 
 						<tr>
@@ -289,7 +302,7 @@
 
 					<table style="width: 100%">
 						<tr>
-							<td><u><b><h:outputText value="#{lbl['lbl.sm.person.resiAddr']} : " /></b></u></td>
+							<td><u><b><h:outputText value="#{lbl['lbl.sm.person.resiAddr*5']} : " /></b></u></td>
 							<td><table style="width: 100%">
 									<tr>
 										<td width="10px"><p:selectBooleanCheckbox /></td>

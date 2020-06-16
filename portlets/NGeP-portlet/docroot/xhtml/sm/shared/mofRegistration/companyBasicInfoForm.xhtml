@@ -214,8 +214,14 @@
 							<!-- 13320 -->
 							<tr>
 
-								<td><p:outputLabel value="#{lbl['lbl.sm.division']}" /> <p:outputLabel
-										value="*" styleClass="mandatory" /></td>
+								<td  class="tdTitle">
+				<p:outputPanel id="divisionLabelPanelId" >
+					<ui:fragment rendered="#{!backingBean.managedBean.divisionBox}">
+						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+						</ui:fragment>
+					</p:outputPanel>
+					</td>
 							</tr>
 							
 							<tr>
@@ -273,7 +279,7 @@
 										<p:ajax event="change" process="@this"
 											listener="#{backingBean.onChangeState(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress, 
 											SupplierManagementConst.SM_BASIC_INFO_PANEL)}"
-											update="basicCompDivision,basicCompDist,basicCompCity" />
+											update="divisionLabelPanelId,divisionDropdownPanelId,basicCompDist,basicCompCity" />
 									</p:selectOneMenu> 
 									<ac:ssmShowIconAlertGreen 
 										greenIcon="#{backingBean.showGreenIconSsm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.stateSsmNull)}" 
@@ -290,12 +296,13 @@
 										showSummary="true" showDetail="false" display="icon" /></td>
 							</tr>
 							<!-- 13320 -->
-							<tr>
+							<tr><td>
+				                <p:outputPanel id="divisionDropdownPanelId">
+				               <ui:fragment rendered="#{!backingBean.managedBean.divisionBox}">
 								<td><p:selectOneMenu
 										style="width: 250px;margin-bottom: 5px;" id="basicCompDivision"
 										 label="#{lbl['lbl.sm.division']}"
-										value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.divisionId}"
-										disabled="#{backingBean.managedBean.divisionBox}">
+										value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.divisionId}">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 											itemValue="" />
 										<f:selectItems var="division"
@@ -306,6 +313,9 @@
 								
 											update="basicCompDist,basicCompCity" />
 									</p:selectOneMenu></td>
+									</ui:fragment>
+									</p:outputPanel>
+									</td>
 
 							</tr>
 							
