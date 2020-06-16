@@ -337,7 +337,7 @@
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.permAddCountryList}" />
 											<p:ajax event="change"
-												update="basicPermAddStateList, basicPermAddDistrictList, basicPermAddCityList,basicPermAddPostCodePanelId"
+												update="basicPermAddStateList, basicPermAddDivisionList, basicPermAddDistrictList, basicPermAddCityList,basicPermAddPostCodePanelId"
 												listener="#{smPersonnelBackingBean.updatePermAddLists(smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.pmCountry.countryId,null,null)}" />
 										</p:selectOneMenu>
 										<p:message id="basicPermAddCountryListMsg"
@@ -356,7 +356,7 @@
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.permAddStateList}" />
 											<p:ajax event="change"
-												update="basicPermAddDistrictList, basicPermAddCityList"
+												update="basicPermAddDivisionList,basicPermAddDistrictList, basicPermAddCityList"
 												listener="#{smPersonnelBackingBean.updatePermAddLists(null,smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.pmState.stateId,null)}" />
 										</p:selectOneMenu>
 										<p:message id="basicPermAddStateListMsg"
@@ -366,13 +366,21 @@
 								
 								<!-- 13320 -->
 								<tr>
-									<td><p:outputLabel
-											value="#{lbl['lbl.sm.division']}" /> <p:outputLabel value="*"
-											styleClass="mandatory" /></td>
+									<td  class="tdTitle">
+				<p:outputPanel id="divisionLabelPanelId" >
+					<ui:fragment rendered="#{!smPersonnelBackingBean.managedBean.divisionBox}">
+						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+						</ui:fragment>
+					</p:outputPanel>
+					</td>
+					<td>
+				<p:outputPanel id="divisionDropdownPanelId">
+				<ui:fragment rendered="#{!smPersonnelBackingBean.managedBean.divisionBox}">
+					
 									<td ><p:selectOneMenu required="true"
 											label="#{lbl['lbl.sm.division']}" id="basicPermAddDivisionList"
 											value="#{smPersonnelBackingBean.managedBean.divisionId}"
-											disabled="#{smPersonnelBackingBean.managedBean.divisionBox}"
 											style="width: 207px;margin-bottom: 5px;">
 											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 											<f:selectItems
@@ -380,6 +388,9 @@
 											<p:ajax event="change"
 												update="basicPermAddDistrictList, basicPermAddCityList"/>
 										</p:selectOneMenu></td>
+										</ui:fragment>
+										</p:outputPanel>
+										</td>
 								</tr>
 								
 								
@@ -526,7 +537,7 @@
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.mailAddCountryList}" />
 											<p:ajax event="change"
-												update="basicMailAddStateList, basicMailAddDistrictList, basicMailAddCityList,basicMailAddPostCodePanelId"
+												update="basicMailAddStateList, basicMailAddDivisionList, basicMailAddDistrictList, basicMailAddCityList,basicMailAddPostCodePanelId"
 												listener="#{smPersonnelBackingBean.updateMailAddLists(smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.pmCountry.countryId,null,null)}" />
 										</p:selectOneMenu>
 										<p:message id="basicMailAddCountryListMsg"
@@ -548,8 +559,8 @@
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.mailAddStateList}" />
 											<p:ajax event="change"
-												update="basicMailAddDistrictList, basicMailAddCityList"
-												listener="#{smPersonnelBackingBean.updateMailAddLists(null,smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.pmState.stateId,null)}" />
+												update="divisionLabelPanelId, divisionDropdownPanelId, basicMailAddDistrictList, basicMailAddCityList"
+												listener="#{smPersonnelBackingBean.updateMailAddLists(null,smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.pmState.stateId,null,null)}" />
 										</p:selectOneMenu>
 										<p:message id="basicMailAddStateListMsg"
 											for="basicMailAddStateList" showSummary="true"
@@ -557,20 +568,31 @@
 								</tr>
 								<!-- 13320 -->
 									<tr>
-									<td><p:outputLabel
-											value="#{lbl['lbl.sm.division']}" /> <p:outputLabel value="*"
-											styleClass="mandatory" /></td>
-									<td ><p:selectOneMenu
-											id="basicMailAddDivisionList" 
-											label="#{lbl['lbl.sm.division']}"
-											value="#{smPersonnelBackingBean.managedBean.divisionId}"
-											disabled="#{smPersonnelBackingBean.managedBean.divisionBox}"
-											style="width: 207px;margin-bottom: 5px;">
-											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-											<f:selectItems
-												value="#{smPersonnelBackingBean.managedBean.mailAddDivisionList}" />
-											<p:ajax event="change" update="basicMailAddDistrictList,basicMailAddCityList"/>
-										</p:selectOneMenu></td>
+									<td class="tdTitle"><p:outputPanel
+											id="divisionLabelPanelId">
+											<ui:fragment
+												rendered="#{!smPersonnelBackingBean.managedBean.divisionBox}">
+												<p:outputLabel value="#{lbl['lbl.sm.division']}" />
+												<p:outputLabel value="*" styleClass="mandatory" />
+											</ui:fragment>
+										</p:outputPanel></td>
+									<td><p:outputPanel id="divisionDropdownPanelId">
+											<ui:fragment
+												rendered="#{!registrationBackingBean.managedBean.divisionBox}">
+												<td><p:selectOneMenu id="basicMailAddDivisionList"
+														label="#{lbl['lbl.sm.division']}"
+														value="#{smPersonnelBackingBean.managedBean.divisionId}"
+														style="width: 207px;margin-bottom: 5px;">
+														<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+															itemValue="" />
+														<f:selectItems
+															value="#{smPersonnelBackingBean.managedBean.mailAddDivisionList}" />
+														<p:ajax event="change"
+															update="basicMailAddDistrictList,basicMailAddCityList" />
+													</p:selectOneMenu></td>
+													</ui:fragment>
+													</p:outputPanel>
+													</td>
 								</tr>
 								
 								

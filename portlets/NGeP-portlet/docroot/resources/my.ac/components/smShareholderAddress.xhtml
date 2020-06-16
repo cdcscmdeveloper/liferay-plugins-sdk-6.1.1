@@ -150,7 +150,7 @@
 							<f:selectItems value="#{cc.attrs.stateItems}" />
 							<p:ajax event="change" process="@this"
 								listener="#{cc.attrs.bBean.onChangeState(cc.attrs.addrObj.smAddress,cc.attrs.addressType)}"
-								update="#{cc.attrs.divisionId},#{cc.attrs.districtId},#{cc.attrs.cityId}" />
+								update="divisionLabelPanelId,divisionDropdownPanelId,#{cc.attrs.districtId},#{cc.attrs.cityId}" />
 
 						</p:selectOneMenu> 
 						<ac:smFieldChangeAlert 
@@ -165,9 +165,18 @@
 				<!-- 13320-AddressInfo -->
 				
 					<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.division']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu
+					<td  class="tdTitle">
+				<p:outputPanel id="divisionLabelPanelId" >
+					<ui:fragment rendered="#{!cc.attrs.bBean.managedBean.divisionBox}">
+						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+						</ui:fragment>
+					</p:outputPanel>
+					</td>
+					<td>
+					<p:outputPanel id="divisionDropdownPanelId">
+				<ui:fragment rendered="#{!cc.attrs.bBean.managedBean.divisionBox}">
+					<td class="tdContent"><p:selectOneMenu
 							label="#{cc.attrs.addressTitle} - #{lbl['lbl.sm.division']}"
 							disabled="#{cc.attrs.addrObj.sameAsPerm}"
 							required="#{!cc.attrs.addrObj.sameAsPerm}"
@@ -181,6 +190,9 @@
 								update="#{cc.attrs.districtId},#{cc.attrs.cityId}" />
 						</p:selectOneMenu> 
 					</td>
+					</ui:fragment>
+					</p:outputPanel></td>
+					
 				</tr>
 				
 

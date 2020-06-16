@@ -144,7 +144,7 @@
 							itemValue="#{state.stateId}" itemLabel="#{state.stateName}" />
 						<p:ajax event="change"
 							listener="#{registrationBackingBean.populateDistrictByAddType('permenant', false)}"
-							update="cmbPermDivision,cmbPermDistrict,cmbPermCity" />
+							update="divisionLabelPanelId,divisionDropdownPanelId,cmbPermDistrict,cmbPermCity" />
 					</p:selectOneMenu> <p:message id="cmbPermStateMsg" for="cmbPermState" display="icon" /></td>
 			</tr>
 			
@@ -152,17 +152,22 @@
 			
 				<tr>
 				<td></td>
-				<td class="tdContent"><p:inputText size="40"
-						id="txtPermAdd4" maxlength="100"/></td>
+				<td></td>
 
-				<td class="tdTitle">
-					<p:outputLabel value="#{lbl['lbl.sm.division']}" />
-					<p:outputLabel value="*" styleClass="mandatory" />
-				</td>
+				<td  class="tdTitle">
+				<p:outputPanel id="divisionLabelPanelId" >
+					<ui:fragment rendered="#{!registrationBackingBean.managedBean.divisionBox}">
+						<p:outputLabel value="#{lbl['lbl.sm.division*Indi']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+						</ui:fragment>
+					</p:outputPanel>
+					</td>
+					<td>
+				<p:outputPanel id="divisionDropdownPanelId">
+				<ui:fragment rendered="#{!registrationBackingBean.managedBean.divisionBox}">
 				<td class="tdContent"><p:selectOneMenu id="cmbPermDivision" style="width:80%"
 						 label="#{lbl['lbl.sm.division']}"
-						value="#{registrationBackingBean.managedBean.divisionId}"
-						disabled="#{registrationBackingBean.managedBean.divisionBox}">
+						value="#{registrationBackingBean.managedBean.divisionId}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="division"
 							value="#{registrationBackingBean.managedBean.permenantDivisionLs}"
@@ -171,6 +176,9 @@
 							listener="#{registrationBackingBean.populateDivisionByAddType('permenant',false)}"
 							update="cmbPermDistrict,cmbPermCity" />
 					</p:selectOneMenu></td>
+					</ui:fragment>
+					</p:outputPanel>
+					</td>
 			</tr>
 			
 			

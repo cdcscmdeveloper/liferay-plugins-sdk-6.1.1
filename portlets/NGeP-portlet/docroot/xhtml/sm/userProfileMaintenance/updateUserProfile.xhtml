@@ -207,7 +207,7 @@
 										<f:selectItems
 											value="#{smPersonnelBackingBean.managedBean.permAddStateList}" />
 										<p:ajax event="change"
-											update="updatePermAddDistrictList, updatePermAddCityList"
+											update="divisionLabelPanelId,divisionDropdownPanelId,updatePermAddDistrictList, updatePermAddCityList"
 											listener="#{smPersonnelBackingBean.updatePermAddLists(null,smPersonnelBackingBean.managedBean.updateSmPersonnelPermanentAddress.smAddress.pmState.stateId,null)}" />
 									</p:selectOneMenu>
 									<p:message id="updatePermAddStateListMsg"
@@ -216,13 +216,20 @@
 							</tr>
 							<!-- 13320 -->
 							<tr>
-								<td><p:outputLabel
-										value="#{lbl['lbl.sm.division']}" /> <p:outputLabel value="*"
-										styleClass="mandatory" /></td>
+								<td  class="tdTitle">
+				<p:outputPanel id="divisionLabelPanelId" >
+					<ui:fragment rendered="#{!smPersonnelBackingBean.managedBean.divisionBox}">
+						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+						</ui:fragment>
+					</p:outputPanel>
+					</td>
+					<td>
+				<p:outputPanel id="divisionDropdownPanelId">
+				<ui:fragment rendered="#{!smPersonnelBackingBean.managedBean.divisionBox}">
 								<td ><p:selectOneMenu required="true"
 										label="#{lbl['lbl.sm.state']}" id="updatePermAddDivisionList"
 										value="#{smPersonnelBackingBean.managedBean.divisionId}"
-										disabled="#{smPersonnelBackingBean.managedBean.divisionBox}"
 										style="width: 207px;margin-bottom: 5px;">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 										<f:selectItems
@@ -230,6 +237,9 @@
 										<p:ajax event="change"
 											update="updatePermAddDistrictList, updatePermAddCityList"/>
 									</p:selectOneMenu></td>
+									</ui:fragment>
+									</p:outputPanel>
+									</td>
 							</tr>
 							<tr>
 								<td><p:outputLabel
@@ -350,7 +360,7 @@
 												<f:selectItems
 													value="#{smPersonnelBackingBean.managedBean.mailAddCountryList}" />
 												<p:ajax event="change"
-													update="updateMailAddStateList, updateMailAddDistrictList, updateMailAddCityList"
+													update="updateMailAddStateList, updateMailAddDivisionList, updateMailAddDistrictList, updateMailAddCityList"
 													listener="#{smPersonnelBackingBean.updateMailAddLists(smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.smAddress.pmCountry.countryId,null,null)}" />
 											</p:selectOneMenu>
 											<p:message id="updateMailAddCountryListMsg"
@@ -372,7 +382,7 @@
 												<f:selectItems
 													value="#{smPersonnelBackingBean.managedBean.mailAddStateList}" />
 												<p:ajax event="change"
-													update="updateMailAddDistrictList, updateMailAddCityList"
+													update="divisionLabelPanelId,divisionDropdownPanelId,updateMailAddDistrictList, updateMailAddCityList"
 													listener="#{smPersonnelBackingBean.updateMailAddLists(null,smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.smAddress.pmState.stateId,null)}" />
 											</p:selectOneMenu>
 											<p:message id="updateMailAddStateListMsg"
@@ -381,21 +391,32 @@
 									</tr>
 									<!-- 13320 -->
 									<tr>
-										<td><p:outputLabel
-												value="#{lbl['lbl.sm.division']}" /> <p:outputLabel value="*"
-												styleClass="mandatory" /></td>
-										<td ><p:selectOneMenu
-												label="#{lbl['lbl.sm.state']}" id="updateMailAddDivisionList"
-												value="#{smPersonnelBackingBean.managedBean.divisionId}"
-												disabled="#{smPersonnelBackingBean.managedBean.divisionBox}"
-												style="width: 207px;margin-bottom: 5px;">
-												<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-												<f:selectItems
-													value="#{smPersonnelBackingBean.managedBean.mailAddDivisionList}" />
-												<p:ajax event="change"
-													update="updateMailAddDistrictList, updateMailAddCityList"/>
-											</p:selectOneMenu></td>
-									</tr>
+									<td class="tdTitle"><p:outputPanel
+											id="divisionLabelPanelId">
+											<ui:fragment
+												rendered="#{!smPersonnelBackingBean.managedBean.divisionBox}">
+												<p:outputLabel value="#{lbl['lbl.sm.division']}" />
+												<p:outputLabel value="*" styleClass="mandatory" />
+											    </ui:fragment>
+										        </p:outputPanel></td>
+								               	<td>
+								               	<p:outputPanel id="divisionDropdownPanelId">
+											     <ui:fragment
+												  rendered="#{!smPersonnelBackingBean.managedBean.divisionBox}">
+												    <td><p:selectOneMenu label="#{lbl['lbl.sm.division']}"
+														id="updateMailAddDivisionList"
+														value="#{smPersonnelBackingBean.managedBean.divisionId}"
+														style="width: 207px;margin-bottom: 5px;">
+														<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+															itemValue="" />
+														<f:selectItems
+															value="#{smPersonnelBackingBean.managedBean.mailAddDivisionList}" />
+														<p:ajax event="change"
+															update="updateMailAddDistrictList, updateMailAddCityList" />
+													</p:selectOneMenu></td>
+											</ui:fragment>
+										</p:outputPanel></td>
+								</tr>
 									<tr>
 										<td><p:outputLabel
 												value="#{lbl['lbl.sm.district']}" /> <p:outputLabel value="*"
