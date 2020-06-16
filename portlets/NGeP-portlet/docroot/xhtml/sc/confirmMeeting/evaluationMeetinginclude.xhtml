@@ -89,8 +89,7 @@
 		
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
-			styleClass="BtnSpacing"
-				process="@this,evaluationmeetingDetails" partialSubmit="true"
+				styleClass="BtnSpacing"
 				action="#{evaluationMeetingBackingBean.addMeetingAction}"
 				oncomplete="meetingDtls.paginator.endLink.click();"
 				update="evaluationmeetingDetails" />
