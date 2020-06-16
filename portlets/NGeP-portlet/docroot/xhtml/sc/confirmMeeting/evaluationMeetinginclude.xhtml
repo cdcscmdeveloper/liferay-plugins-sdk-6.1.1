@@ -178,7 +178,8 @@
 	<ac:scRemarkAndAttachment
 		remarkList="#{evaluationMeetingBackingBean.managedBean.qtCommitteeRemarks}"
 		showAttachment="false" />
-	<ac:confirmationPopup id="confirmSubmitMeetingId"
+	<ui:param name="confirmSubmitMeetingId" value="confirmSubmitMeetingId"></ui:param>
+	<ac:confirmationPopup id="#{confirmSubmitMeetingId}"
 		widget="confirmSubmitMeetingPopup" width="490"
 		height="100"
 		title="#{lbl['lbl.sc.confirmation']}"
