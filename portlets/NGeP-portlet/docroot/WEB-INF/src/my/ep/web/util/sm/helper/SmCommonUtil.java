@@ -5906,17 +5906,23 @@ public class SmCommonUtil {
 			
 		}
 	}
-	//13320
-	public static PmState retrieveStateCode(String stateCode) {
-		StateReqDTO reqDTO = new StateReqDTO();
-		reqDTO.setStateCode(stateCode);
-
-		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IStateSO.class);
-		StateResDTO resDTO = reqSO.retrieveStateByCode(reqDTO);
-
-		return resDTO.getPmState();
+	
+//13220
+	public static List<SelectItem> getDistrictListByID(Long divisionId) {
+		IDistrictSO districtSO = (IDistrictSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IDistrictSO.class);
+		DistrictReqDTO reqDTO = new DistrictReqDTO();
+		reqDTO.setDivisionId(divisionId);
+		DistrictResDTO resDTO = districtSO.retriveDistrictListByDivision(reqDTO);
+		List<SelectItem> districtList = new ArrayList<SelectItem>();
+		for (PmDistrict district : resDTO.getDistrictList()) {
+			SelectItem si = new SelectItem();
+			si.setLabel(district.getDistrictName());
+			si.setValue(district.getDistrictId());
+			districtList.add(si);
+		}
+		return districtList;
 	}
-
 		
 }
