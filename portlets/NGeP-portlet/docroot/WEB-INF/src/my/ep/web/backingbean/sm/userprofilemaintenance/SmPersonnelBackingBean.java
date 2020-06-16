@@ -834,6 +834,29 @@ public class SmPersonnelBackingBean extends
 			getManagedBean().setMailAddDistrictList(null);
 			getManagedBean().setMailAddCityList(null);
 		}
+		//13320-Start
+		PmState state = (SmCommonUtil.getInstance().getStateById(this.getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmState().getStateId()));
+		if(state !=null && state.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)){
+			this.getManagedBean().setDivisionId(null);
+			this.getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmDistrict().setDistrictId(null);
+			this.getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmCity().setCityId(null);
+			
+			List<SelectItem> divisionLs = SmCommonUtil.getDivisionList(this.getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmState().getStateId());
+			this.getManagedBean().setMailAddDivisionList(divisionLs);
+			getManagedBean().setMailAddDistrictList(new ArrayList<SelectItem>());
+			this.getManagedBean().setMailAddCityList(null);	
+			
+		}
+			if(state !=null && state.getAdoptDivision()) {
+				getManagedBean().setDivisionBox(false);	
+			}
+			else{	
+				getManagedBean().setDivisionBox(true);
+				List<SelectItem> divisionLs = SmCommonUtil.getDistrictList(this.getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmState().getStateId());
+				this.getManagedBean().setMailAddDistrictList(divisionLs);
+				this.getManagedBean().setMailAddCityList(new ArrayList<SelectItem>());	
+			}
+			//13320-End
 		if (!stateId.isEmpty() || stateId.equalsIgnoreCase("null")) {
 			getManagedBean()
 					.getBasicSmPersonnelMailingAddress()
@@ -842,7 +865,7 @@ public class SmPersonnelBackingBean extends
 							SmCommonUtil.getInstance().getStateById(
 									Long.valueOf(stateId)));
 			getManagedBean().setMailAddDistrictList(
-					SmCommonUtil.getDistrictList(Long.valueOf(stateId)));
+					SmCommonUtil.getDistrictListByID(Long.valueOf(stateId)));
 			getManagedBean().setMailAddCityList(null);
 		}
 		if (!districtId.isEmpty() || districtId.equalsIgnoreCase("null")) {
@@ -876,6 +899,29 @@ public class SmPersonnelBackingBean extends
 			getManagedBean().setPermAddDistrictList(null);
 			getManagedBean().setPermAddCityList(null);
 		}
+		//13320-Start
+		PmState state = (SmCommonUtil.getInstance().getStateById(this.getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress().getPmState().getStateId()));
+		if(state !=null && state.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)){
+			this.getManagedBean().setDivisionId(null);
+			this.getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress().getPmDistrict().setDistrictId(null);
+			this.getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress().getPmCity().setCityId(null);
+			
+			List<SelectItem> divisionLs = SmCommonUtil.getDivisionList(this.getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress().getPmState().getStateId());
+			this.getManagedBean().setPermAddDivisionList(divisionLs);
+			getManagedBean().setPermAddDistrictList(new ArrayList<SelectItem>());
+			this.getManagedBean().setPermAddCityList(null);	
+			
+		}
+			if(state !=null && state.getAdoptDivision()) {
+				getManagedBean().setDivisionBox(false);	
+			}
+			else{
+				getManagedBean().setDivisionBox(true);
+				List<SelectItem> divisionLs = SmCommonUtil.getDistrictList(this.getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress().getPmState().getStateId());
+				this.getManagedBean().setPermAddDistrictList(divisionLs);
+				this.getManagedBean().setPermAddCityList(new ArrayList<SelectItem>());	
+			}
+			//13320-End
 		if (!stateId.isEmpty() || stateId.equalsIgnoreCase("null")) {
 			getManagedBean()
 					.getBasicSmPersonnelPermanentAddress()
@@ -884,7 +930,7 @@ public class SmPersonnelBackingBean extends
 							SmCommonUtil.getInstance().getStateById(
 									Long.valueOf(stateId)));
 			getManagedBean().setPermAddDistrictList(
-					SmCommonUtil.getDistrictList(Long.valueOf(stateId)));
+					SmCommonUtil.getDistrictListByID(Long.valueOf(stateId)));
 			getManagedBean().setPermAddCityList(null);
 		}
 		if (!districtId.isEmpty() || districtId.equalsIgnoreCase("null")) {

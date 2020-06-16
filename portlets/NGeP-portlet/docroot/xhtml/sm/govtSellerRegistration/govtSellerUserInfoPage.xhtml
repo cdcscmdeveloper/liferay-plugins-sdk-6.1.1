@@ -300,25 +300,31 @@
 								value="#{bb.managedBean.permenantStateLs}" />
 							<p:ajax event="change"
 								listener="#{bb.onChangeState(bb.managedBean.smPermenantAdd.pmState,'USER_PERMANENT_ADDRESS')}"
-								update="cmbPermDistrict,cmbPermDivision,cmbPermCity" />
+								update="cmbPermDistrict,divisionLabelPanelId,divisionDropdownPanelId,cmbPermCity" />
 						</p:selectOneMenu>
 						<p:message id="cmbPermStateMsg" for="cmbPermState" display="icon" /></td>
 				</tr>
 				<!-- 13320 -->
 				
 				<tr>
-					<td class="tdTitle"></td>
-					<td class="tdContent"><p:inputText size="40" 
-							id="txtPermAdd4" maxlength="100" /></td>
+					<td></td>
+					<td></td>
 							
-					<td class="tdTitle">
+					<td  class="tdTitle">
+				<p:outputPanel id="divisionLabelPanelId" >
+					<ui:fragment rendered="#{!bb.managedBean.divisionBox}">
 						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
+						</ui:fragment>
+					</p:outputPanel>
 					</td>
+					<td>
+				<p:outputPanel id="divisionDropdownPanelId">
+				<ui:fragment rendered="#{!bb.managedBean.divisionBox}">
 					<td class="tdContent"><p:selectOneMenu id="cmbPermDivision" 
 					 label="#{lbl['lbl.sm.division']}"
 							value="#{bb.managedBean.divisionIds}"
-							disabled="#{bb.managedBean.divisionBox}" style="width:80%">
+							style="width:80%">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="division"
 								value="#{bb.managedBean.permenantDivisionLs}" />
@@ -326,6 +332,9 @@
 							listener="#{bb.onChangeDivision('USER_PERMANENT_ADDRESS')}"
 								update="cmbPermDistrict,cmbPermCity" />
 						</p:selectOneMenu>
+						</td>
+						</ui:fragment>
+						</p:outputPanel>
 						</td>
 				</tr>
 				

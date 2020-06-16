@@ -189,19 +189,27 @@
 								value="#{bb.managedBean.branchCompanyStates}" />
 							<p:ajax event="change" process="@this"
 								listener="#{bb.onChangeState(bb.managedBean.selectedBranch.smAddress.pmState,'BRANCH_ADDRESS')}"
-								update="branchState,branchDivision,branchDist,branchCity" />
+								update="branchState,divisionLabelPanelId,divisionDropdownPanelId,branchDist,branchCity" />
 						</p:selectOneMenu>
 						<p:message id="branchStateMsg" for="branchState" showSummary="true"
 							showDetail="false" display="icon" /></td>
 				</tr>
 				<!-- 13320 -->
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.division']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
+					<td  class="tdTitle">
+				<p:outputPanel id="divisionLabelPanelId" >
+					<ui:fragment rendered="#{!bb.managedBean.divisionBox}">
+						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+						</ui:fragment>
+					</p:outputPanel>
+					</td>
+					<td>
+				<p:outputPanel id="divisionDropdownPanelId">
+				<ui:fragment rendered="#{!bb.managedBean.divisionBox}">
 					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 							label="#{lbl['lbl.sm.division']}"
 							value="#{bb.managedBean.divisionIds}"
-							disabled="#{bb.managedBean.divisionBox}"
 							id="branchDivision">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="brnDivision"
@@ -210,6 +218,9 @@
 							listener="#{bb.onChangeDivision('BRANCH_ADDRESS')}"
 								update="branchDist,branchCity" />
 						</p:selectOneMenu></td>
+						</ui:fragment>
+						</p:outputPanel>
+						</td>
 				</tr>
 				
 				

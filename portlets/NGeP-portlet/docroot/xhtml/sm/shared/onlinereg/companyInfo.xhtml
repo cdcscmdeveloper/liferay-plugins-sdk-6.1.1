@@ -275,7 +275,7 @@
 							itemLabel="#{counLs.countryName}" itemValue="#{counLs.countryId}"/>
 						<p:ajax event="change"
 							listener="#{registrationBackingBean.populateStateByAddType('business',true)}"
-							update="busState,busDistrict,busDivision,busCity,compPostCodePanelId,:form:acgmap:gmapInput:gmapInput" />
+							update="busState,busDistrict,busCity,compPostCodePanelId,:form:acgmap:gmapInput:gmapInput" />
 					</p:selectOneMenu> <p:message id="compCountryIdMsg" for="compCountryId"
 						display="icon" /></td>
 			</tr>
@@ -304,25 +304,28 @@
 							itemValue="#{state.stateId}" itemLabel="#{state.stateName}" />
 						<p:ajax event="change" process="@this"
 							listener="#{registrationBackingBean.populateDistrictByAddType('business', true)}"
-							update="busDistrict,busDivision,busCity,:form:acgmap:gmapInput:gmapInput" />
+							update="divisionLabelPanelId,divisionDropdownPanelId,busDistrict,busCity,:form:acgmap:gmapInput:gmapInput" />
 					</p:selectOneMenu> <p:message id="busStateMsg" for="busState" display="icon" /></td>
-			</tr>
-			<!-- 13320 -->
+					</tr>
+					<!-- 13320 -->
 			<tr>
 				<td></td>
+				<td></td>
+				<td  class="tdTitle">
+				<p:outputPanel id="divisionLabelPanelId" >
+					<ui:fragment rendered="#{!registrationBackingBean.managedBean.divisionBox}">
+						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+						</ui:fragment>
+					</p:outputPanel>
+					</td>
+				<td>
+				<p:outputPanel id="divisionDropdownPanelId">
+				<ui:fragment rendered="#{!registrationBackingBean.managedBean.divisionBox}">
 				<td class="tdContent">
-					<p:inputText size="60"
-						id="compAdd4" maxlength="100" 
-						/></td>
-
-				<td class="tdTitle">
-					<p:outputLabel value="#{lbl['lbl.sm.division']}" />
-					<p:outputLabel value="*" styleClass="mandatory" />
-				</td>
-				<td class="tdContent"><p:selectOneMenu id="busDivision"
+					<p:selectOneMenu id="busDivision"
 						 label="#{lbl['lbl.sm.division']}"
 						value="#{registrationBackingBean.managedBean.divisionId}"
-						disabled="#{registrationBackingBean.managedBean.divisionBox}"
 						style="width:80%">
 						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 						<f:selectItems var="division"
@@ -331,9 +334,12 @@
 							<p:ajax event="change" process="@this"
 							listener="#{registrationBackingBean.populateDivisionByAddType('business', true)}"
 							update="busDistrict,busCity" />
-					</p:selectOneMenu></td>
-			</tr>
-
+					</p:selectOneMenu>
+					</td>
+					 </ui:fragment>
+					 </p:outputPanel>
+					 </td>
+                </tr>
 			<tr>
 				<td></td>
 				<td class="tdContent">

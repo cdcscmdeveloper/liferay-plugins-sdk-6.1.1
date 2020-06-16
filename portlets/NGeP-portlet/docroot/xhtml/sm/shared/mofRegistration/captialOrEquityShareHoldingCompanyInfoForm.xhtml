@@ -326,7 +326,7 @@
 								value="#{backingBean.managedBean.equiCompanyStates}" />
 							<p:ajax event="change" process="@this"
 								listener="#{backingBean.onChangeState(backingBean.managedBean.selectedEquityCompany.smAddress,SupplierManagementConst.SM_EQUI_COMPANY_PANEL)}"
-								update="equiDivision,equiDist,equiCity" />
+								update="divisionLabelPanelId,divisionDropdownPanelId,equiDist,equiCity" />
 						</p:selectOneMenu> 
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -343,13 +343,20 @@
 				<!-- 13320 -->
 				
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.division']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
-	
+					<td  class="tdTitle">
+				<p:outputPanel id="divisionLabelPanelId" >
+					<ui:fragment rendered="#{!backingBean.managedBean.divisionBox}">
+						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+						</ui:fragment>
+					</p:outputPanel>
+					</td>
+					<td>
+				<p:outputPanel id="divisionDropdownPanelId">
+				<ui:fragment rendered="#{!backingBean.managedBean.divisionBox}">
 					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 							label="#{lbl['lbl.sm.division']}"
 							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.divisionId}"
-							disabled="#{backingBean.managedBean.divisionBox}"
 							id="equiDivision">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="equiDivision"
@@ -357,6 +364,9 @@
 							<p:ajax event="change" process="@this"
 							update="equiDist,equiCity" />
 						</p:selectOneMenu> </td>
+						</ui:fragment>
+						</p:outputPanel>
+						</td>
 				</tr>
 	
 				

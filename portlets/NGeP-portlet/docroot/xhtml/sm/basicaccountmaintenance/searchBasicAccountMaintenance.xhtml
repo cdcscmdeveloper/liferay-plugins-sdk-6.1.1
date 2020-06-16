@@ -1,3 +1,4 @@
+
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
@@ -553,24 +554,28 @@
 									itemValue="#{state.stateId}" itemLabel="#{state.stateName}" />
 								<p:ajax event="change" process="@this"
 									listener="#{supplierDataMaintenanceBackingBean.populateDistrictByAddType('business', true)}"
-									update="busDistrict,busDivision,busCity" />
+									update="divisionLabelPanelId,divisionDropdownPanelId,busDistrict,busCity" />
 							</p:selectOneMenu> <p:message id="busStateMsg" for="busState" display="icon" /></td>
 					</tr>
 					<!-- 13320 -->
 					
 					<tr>
 						<td></td>
-						<td class="tdContent"><p:inputText size="40"
-								id="compAdd4" maxlength="100"/></td>
-		
-						<td class="tdTitle">
-							<p:outputLabel value="#{lbl['lbl.sm.division']}" />
-							<p:outputLabel value="*" styleClass="mandatory" />
-						</td>
+						<td></td>
+		<td  class="tdTitle">
+				<p:outputPanel id="divisionLabelPanelId" >
+					<ui:fragment rendered="#{!supplierDataMaintenanceBackingBean.managedBean.divisionBox}">
+						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+						</ui:fragment>
+					</p:outputPanel>
+					<td>
+				<p:outputPanel id="divisionDropdownPanelId">
+				<ui:fragment rendered="#{!supplierDataMaintenanceBackingBean.managedBean.divisionBox}">
+					</td>
 						<td class="tdContent"><p:selectOneMenu id="busDivision"
 						        label="#{lbl['lbl.sm.division']}"
 								value="#{supplierDataMaintenanceBackingBean.managedBean.divisionId}"
-								disabled="#{supplierDataMaintenanceBackingBean.managedBean.divisionBox}"
 								style="width:80%">
 								<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 								<f:selectItems var="division"
@@ -580,6 +585,9 @@
 									listener="#{supplierDataMaintenanceBackingBean.populateDivisionByAddType}"
 									update="busDistrict,busCity" />
 							</p:selectOneMenu></td>
+							</ui:fragment>
+							</p:outputPanel>
+							</td>
 					</tr>
 		
 					<tr>
