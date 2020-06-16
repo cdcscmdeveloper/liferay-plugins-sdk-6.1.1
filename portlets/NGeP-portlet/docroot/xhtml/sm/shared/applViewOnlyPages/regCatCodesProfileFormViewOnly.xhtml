@@ -19,9 +19,9 @@
 						style="width : 2%;" />
 					<p:column style="width :350px;white-space : normal"
 						headerText="#{lbl['lbl.sm.catCodes.cate']}" />
-					<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" />
-					<p:column headerText="#{lbl['lbl.sm.officer.decision']}" />
-					<p:column headerText="#{lbl['lbl.sm.remark']}" />
+					<p:column style="width :100px;white-space : normal" headerText="#{lbl['lbl.sm.catCodes.catType']}" />
+					<p:column style="width :200px;white-space : normal" headerText="#{lbl['lbl.sm.officer.decision']}" />
+					<p:column style="width :450px;white-space : normal" headerText="#{lbl['lbl.sm.remark']}" />
 					<p:column headerText="#{lbl['lbl.sm.status']}" />
 				</p:row>
 			</p:columnGroup>
@@ -49,7 +49,7 @@
 			<p:column>
 				<table style="width: 100%; border: none !important; table-layout: fixed !important;">
 					<tr>
-						<td style="border: none !important; white-space: normal;"><b><h:outputText value="#{lbl['lbl.sm.po']} :" /></b></td>
+						<td style="border: none !important; white-space: normal; width:70px"><b><h:outputText value="#{lbl['lbl.sm.po']} :" /></b></td>
 						<td style="border: none !important; white-space: normal; word-wrap: break-word !important;">
 							<p:outputPanel rendered="#{not empty aprvdCatBean.poDecFlg}">
 								<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}" rendered="#{aprvdCatBean.poDecFlg eq 1}" />
@@ -59,7 +59,7 @@
 						</td>
 					</tr>
 					<tr>
-						<td style="border: none !important; white-space: normal;"><b><h:outputText value="#{lbl['lb.sm.approver']} :" /></b></td>
+						<td style="border: none !important; white-space: normal; width:70px"><b><h:outputText value="#{lbl['lb.sm.approver']} :" /></b></td>
 						<td style="border: none !important; white-space: normal; word-wrap: break-word !important;">
 							<p:outputPanel rendered="#{not empty aprvdCatBean.apprvrDecFlg}">
 								<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}" rendered="#{aprvdCatBean.apprvrDecFlg eq 1}" />
@@ -73,7 +73,7 @@
 			<p:column>
 				<table style="width: 100%; border: none !important; table-layout: fixed !important;">
 					<tr>
-						<td style="border: none !important; white-space: normal;"><b><h:outputText value="#{lbl['lbl.sm.po']} :" /></b></td>
+						<td style="border: none !important; white-space: normal; width:70px;"><b><h:outputText value="#{lbl['lbl.sm.po']} :" /></b></td>
 						<td style="border: none !important; white-space: normal; word-wrap: break-word !important;">
 						<p:scrollPanel mode="native" style="height:100px;">
 							<h:outputText value="#{aprvdCatBean.poRemarks}" rendered="#{not empty aprvdCatBean.poDecFlg}" />
@@ -81,7 +81,7 @@
 						</p:scrollPanel></td>
 					</tr>
 					<tr>
-						<td style="border: none !important; white-space: normal;"><b><h:outputText value="#{lbl['lb.sm.approver']} :" /></b></td>
+						<td style="border: none !important; white-space: normal; width:70px;"><b><h:outputText value="#{lbl['lb.sm.approver']} :" /></b></td>
 						<td style="border: none !important; white-space: normal; word-wrap: break-word !important;">
 						<p:scrollPanel mode="native" style="height:100px;">
 							<h:outputText value="#{aprvdCatBean.approverRemarks}" rendered="#{not empty aprvdCatBean.apprvrDecFlg}"/>
