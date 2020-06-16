@@ -2426,10 +2426,11 @@ public class SupplierDataMaintenanceBackingBean extends
 					getManagedBean().setDivisionBox(false);	
 				}
 				else{	
-					getManagedBean().setDivisionBox(true);//13320-End
-			List<SelectItem> districtLs = SmCommonUtil.getDistrictList(this.getManagedBean().getSmResAdd().getPmState().getStateId());
-			this.getManagedBean().setResidentialDistrictLs(districtLs);
-			this.getManagedBean().setResidentialCityLs(new ArrayList<SelectItem>());
+				getManagedBean().setDivisionBox(true);// 13320-End
+				List<SelectItem> districtLs = SmCommonUtil.getDistrictList(this.getManagedBean().getSmResAdd()
+						.getPmState().getStateId());
+				this.getManagedBean().setResidentialDistrictLs(districtLs);
+				this.getManagedBean().setResidentialCityLs(new ArrayList<SelectItem>());
 				}
 		} else if (typeAdd.equals("permenant")) {
 			log.info("------------permenant----------------"
