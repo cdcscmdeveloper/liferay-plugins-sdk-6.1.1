@@ -5383,14 +5383,15 @@ public class RuleCatalogueBackingBean extends
 		log.info("addPTJCRValues");
 		
 		retrievePmZoneList();
-		PmConfigRuleValue newRuleValue = new PmConfigRuleValue();
 		PmConfigRule configRuleType = this.getManagedBean().getSelectedRuleDescType().getRuleType();
 		PmPtjSpecialApproval approval = null;
+		PmConfigRuleValue newRuleValue  = null;
 		int index = 0;
 		
 		for(PmOrgProfile orgProfile : getManagedBean().getPtjList()){
 			if(orgProfile.isSelected()){
 				approval = new PmPtjSpecialApproval();
+				newRuleValue = new PmConfigRuleValue();
 				approval.setPmOrgProfile(orgProfile);	
 				newRuleValue.setEffDate(this.getManagedBean().getTomorrow());
 				newRuleValue.setRuleValue(approval.getPmOrgProfile().getOrgCode());
