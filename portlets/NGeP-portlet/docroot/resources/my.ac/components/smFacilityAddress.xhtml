@@ -125,7 +125,7 @@
 						value="#{cc.attrs.stateItems}" />
 					<p:ajax event="change" process="@this"
 						listener="#{cc.attrs.backingBean.onChangeState(cc.attrs.facility.smAddress,cc.attrs.facilityPanel)}"
-						update="divisionLabelPanelId,divisionDropdownPanelId,districtId,cityId" />
+						update="divisionAddressLabelPanelId,divisionAddressDropdownPanelId,districtId,cityId" />
 	
 				</p:selectOneMenu> 
 				<p:message id="stateIdMsg" for="stateId" showSummary="true" showDetail="false" display="icon" />
@@ -135,7 +135,7 @@
 	<!-- 13320 -->
 		<tr>
 		<td  class="tdTitle">
-				<p:outputPanel id="divisionLabelPanelId" >
+				<p:outputPanel id="divisionAddressLabelPanelId" >
 					<ui:fragment rendered="#{!cc.attrs.backingBean.managedBean.divisionBox}">
 						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
@@ -143,7 +143,7 @@
 					</p:outputPanel>
 					</td>
 		<td>
-				<p:outputPanel id="divisionDropdownPanelId">
+				<p:outputPanel id="divisionAddressDropdownPanelId">
 				<ui:fragment rendered="#{!registrationBackingBean.managedBean.divisionBox}">
 				<p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 					id="divisionId" 

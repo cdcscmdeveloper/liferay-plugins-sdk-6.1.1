@@ -71,14 +71,14 @@
 								SupplierManagementConst.SM_PERSNL_PERM_ADDR_PANEL,
 								backingBean.managedBean.personnelPermAddr.smAddress.pmDistrict,
 								backingBean.managedBean.personnelPermAddr.smAddress.pmCity)}"
-										update="divisionLabelPanelId,divisionDropdownPanelId,prsPermDist,prsPermCity" />
+										update="divisionPrsnlHighLabelPanelId,divisionPrsnlHighDropdownPanelId,prsPermDist,prsPermCity" />
 
 								</p:selectOneMenu></td>
 						</tr>
 						<!-- 13320 -->
 						<tr>
 							<td  class="tdTitle">
-				<p:outputPanel id="divisionLabelPanelId" >
+				<p:outputPanel id="divisionPrsnlHighLabelPanelId" >
 					<ui:fragment rendered="#{!backingBean.managedBean.divisionBox}">
 						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
@@ -86,7 +86,7 @@
 					</p:outputPanel>
 					</td>
 					<td>
-				<p:outputPanel id="divisionDropdownPanelId">
+				<p:outputPanel id="divisionPrsnlHighDropdownPanelId">
 				<ui:fragment rendered="#{!backingBean.managedBean.divisionBox}">
 					
 							<td><p:selectOneMenu

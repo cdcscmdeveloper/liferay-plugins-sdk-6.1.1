@@ -130,7 +130,7 @@
 							value="#{bb.managedBean.businessStateLs}" />
 						<p:ajax event="change" process="@this"
 							listener="#{bb.onChangeState(bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState,'COMPANY_ADDRESS')}"
-							update="busDistrict,divisionLabelPanelId,divisionDropdownPanelId,busCity,:form:acgmap:gmapInput:gmapInput" />
+							update="busDistrict,divisionCompInfoLabelPanelId,divisionCompInfoDropdownPanelId,busCity,:form:acgmap:gmapInput:gmapInput" />
 					</p:selectOneMenu> <p:message id="busStateMsg" for="busState" display="icon" /></td>
 			</tr>
 			<!-- 13320 -->
@@ -138,14 +138,14 @@
 				<td></td>
 				<td/></td>
               <td  class="tdTitle">
-				<p:outputPanel id="divisionLabelPanelId" >
+				<p:outputPanel id="divisionCompInfoLabelPanelId" >
 					<ui:fragment rendered="#{!bb.managedBean.divisionBox}">
 						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
 						</ui:fragment>
 					</p:outputPanel>
 					<td>
-				<p:outputPanel id="divisionDropdownPanelId">
+				<p:outputPanel id="divisionCompInfoDropdownPanelId">
 				<ui:fragment rendered="#{!registrationBackingBean.managedBean.divisionBox}">
 					</td>
 				<td class="tdContent">

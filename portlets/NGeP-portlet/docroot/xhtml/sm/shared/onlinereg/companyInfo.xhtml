@@ -304,7 +304,7 @@
 							itemValue="#{state.stateId}" itemLabel="#{state.stateName}" />
 						<p:ajax event="change" process="@this"
 							listener="#{registrationBackingBean.populateDistrictByAddType('business', true)}"
-							update="divisionLabelPanelId,divisionDropdownPanelId,busDistrict,busCity,:form:acgmap:gmapInput:gmapInput" />
+							update="divisionCompInfoLabelPanelId,divisionCompInfoDropdownPanelId,busDistrict,busCity,:form:acgmap:gmapInput:gmapInput" />
 					</p:selectOneMenu> <p:message id="busStateMsg" for="busState" display="icon" /></td>
 					</tr>
 					<!-- 13320 -->
@@ -312,7 +312,7 @@
 				<td></td>
 				<td></td>
 				<td  class="tdTitle">
-				<p:outputPanel id="divisionLabelPanelId" >
+				<p:outputPanel id="divisionCompInfoLabelPanelId" >
 					<ui:fragment rendered="#{!registrationBackingBean.managedBean.divisionBox}">
 						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
@@ -320,7 +320,7 @@
 					</p:outputPanel>
 					</td>
 				<td>
-				<p:outputPanel id="divisionDropdownPanelId">
+				<p:outputPanel id="divisionCompInfoDropdownPanelId">
 				<ui:fragment rendered="#{!registrationBackingBean.managedBean.divisionBox}">
 				<td class="tdContent">
 					<p:selectOneMenu id="busDivision"
