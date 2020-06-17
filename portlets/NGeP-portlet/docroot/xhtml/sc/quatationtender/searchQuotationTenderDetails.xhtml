@@ -169,12 +169,13 @@
 						</p:calendar></td>
 				</tr>
 				<tr>
-					<td><h:outputLabel   value="#{lbl['lbl.sc.status']}" /></td>
+					<td><h:outputLabel rendered="#{!qTDetailBB.isMofSupplier()}"  value="#{lbl['lbl.sc.status']}" /></td>
 					<td>						
 						<ui:remove>
 							Enhancement #19287 #122
+							Bug #27412 #59 
 						</ui:remove>
-							<p:selectOneMenu 
+							<p:selectOneMenu rendered="#{!qTDetailBB.isMofSupplier()}"
 								value="#{qTDetailBB.managedBean.qtnTenderSearchBean.qtStatus}"
 								style="width: 297px;margin-bottom: 5px;">
 								<f:selectItems
