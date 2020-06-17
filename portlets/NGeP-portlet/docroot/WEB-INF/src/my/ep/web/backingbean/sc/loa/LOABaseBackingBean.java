@@ -63,17 +63,20 @@ public abstract class LOABaseBackingBean<T extends LOABaseManagedBean> extends S
 			RequestContext.getCurrentInstance().update("usergrouping");
 		}
 	}
-
-	public SelectItem[] getUsersByAgency() {
+	
+	//#26475 - start
+	public List<PmUser> getUsersByAgency() {
 		ISearchBean<PmUser> searchBean = contractAdminSearchBean();
-
+		
 		ISearchResultBean<PmUser> resultBean = getUserSOGlobal().retrieveMinistryUserList(searchBean);
 		List<PmUser> pmUsers = resultBean.getResultList();
 		log.info("Number of Users = " + pmUsers.size());
 
-		SelectItem[] items = getDropdownUsers(pmUsers);
-		return items;
+//		SelectItem[] items = getDropdownUsers(pmUsers);
+		
+		return pmUsers;
 	}
+	//#26475 - end
 
 	protected ISearchBean<PmUser> contractAdminSearchBean() {
 		ISearchBean<PmUser> searchBean = new SearchBean<PmUser>();
