@@ -32,6 +32,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IPtjSpecialApprovalSO;
 import my.ep.biz.service.pm.common.confgeneral.IConfigGeneralSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.biz.service.pm.fee.settings.IFeeExemptionSO;
 import my.ep.biz.service.pm.general.settings.designatedarea.IDesignatedAreaSO;
 import my.ep.biz.service.pm.general.settings.gstitem.IGstItemSO;
@@ -57,6 +58,7 @@ import my.ep.dto.pm.common.confgeneral.ConfigGeneralReqDTO;
 import my.ep.dto.pm.common.confgeneral.ConfigGeneralResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.pm.common.zone.ZoneResDTO;
 import my.ep.dto.pm.fee.settings.FeeExemptionReqDTO;
 import my.ep.dto.pm.fee.settings.FeeExemptionResDTO;
 import my.ep.dto.pm.general.settings.designatedarea.DesignatedAreaReqDTO;
@@ -5375,5 +5377,38 @@ public class RuleCatalogueBackingBean extends
         }
         
 	}
+	
+	/* 27827 - START */
+	public void addPTJCRValues(){
+		log.info("addPTJCRValues");
+		
+		retrievePmZoneList();
+		PmConfigRuleValue newRuleValue = new PmConfigRuleValue();
+		PmConfigRule configRuleType = this.getManagedBean().getSelectedRuleDescType().getRuleType();
+		PmPtjSpecialApproval approval = null;
+		int index = 0;
+		
+		for(PmOrgProfile orgProfile : getManagedBean().getPtjList()){
+			if(orgProfile.isSelected()){
+				approval = new PmPtjSpecialApproval();
+				approval.setPmOrgProfile(orgProfile);	
+				newRuleValue.setEffDate(this.getManagedBean().getTomorrow());
+				newRuleValue.setRuleValue(approval.getPmOrgProfile().getOrgCode());
+				newRuleValue.setRuleDescription(approval.getPmOrgProfile().getOrgName());
+				index = configRuleType.getConfigRuleValues().size();
+				configRuleType.getConfigRuleValues().add(index, newRuleValue);
+			}
+		}
+		RequestContext.getCurrentInstance().execute("ptjCRPopup.hide();");
+		
+		log.info("end addPTJCRValues");
+	}
+	
+	public void retrievePmZoneList() {
+		IZoneSO zoneSO = (IZoneSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);
+		ZoneResDTO resDTO = zoneSO.retrieveActiveZoneList();
+		this.getManagedBean().setZoneList(resDTO.getZoneList());
+	}
+	/* 27827 - END */
 	
 }

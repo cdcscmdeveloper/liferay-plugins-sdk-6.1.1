@@ -25,6 +25,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmPtjSpecialApproval;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmConfigGeneral;
+import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.pm.fee.settings.PmFeeExemption;
 import my.ep.persistence.entity.pm.general.settings.gst.PmDaGst;
 import my.ep.persistence.entity.pm.general.settings.gst.PmDaValidity;
@@ -143,6 +144,9 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private Date minDate = null; //[#22119]
 	private String ruleType;  //#22113
 	private boolean LOPOSelected;
+	/* 27827 - START */
+	private List<PmZone> zoneList;
+	/* 27827 - END */
 
 	public RuleCatalogueManageBean() {
 
@@ -1479,6 +1483,14 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 
 	public void setLOPOSelected(boolean LOPOSelected) {
 		this.LOPOSelected = LOPOSelected;
+	}
+	
+	public List<PmZone> getZoneList() {
+		return zoneList;
+	}
+
+	public void setZoneList(List<PmZone> zoneList) {
+		this.zoneList = zoneList;
 	}
 
 }
