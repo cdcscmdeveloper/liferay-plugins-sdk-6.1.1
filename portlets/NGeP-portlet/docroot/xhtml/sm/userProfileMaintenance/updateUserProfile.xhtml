@@ -207,7 +207,7 @@
 										<f:selectItems
 											value="#{smPersonnelBackingBean.managedBean.permAddStateList}" />
 										<p:ajax event="change"
-											update="divisionLabelPanelId,divisionDropdownPanelId,updatePermAddDistrictList, updatePermAddCityList"
+											update="divisionUpdateLabelPanelId,divisionUpdateDropdownPanelId,updatePermAddDistrictList, updatePermAddCityList"
 											listener="#{smPersonnelBackingBean.updatePermAddLists(null,smPersonnelBackingBean.managedBean.updateSmPersonnelPermanentAddress.smAddress.pmState.stateId,null)}" />
 									</p:selectOneMenu>
 									<p:message id="updatePermAddStateListMsg"
@@ -217,7 +217,7 @@
 							<!-- 13320 -->
 							<tr>
 								<td  class="tdTitle">
-				<p:outputPanel id="divisionLabelPanelId" >
+				<p:outputPanel id="divisionUpdateLabelPanelId" >
 					<ui:fragment rendered="#{!smPersonnelBackingBean.managedBean.divisionBox}">
 						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
@@ -225,7 +225,7 @@
 					</p:outputPanel>
 					</td>
 					<td>
-				<p:outputPanel id="divisionDropdownPanelId">
+				<p:outputPanel id="divisionUpdateDropdownPanelId">
 				<ui:fragment rendered="#{!smPersonnelBackingBean.managedBean.divisionBox}">
 								<td ><p:selectOneMenu required="true"
 										label="#{lbl['lbl.sm.state']}" id="updatePermAddDivisionList"

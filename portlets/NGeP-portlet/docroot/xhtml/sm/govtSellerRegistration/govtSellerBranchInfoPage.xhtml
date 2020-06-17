@@ -189,7 +189,7 @@
 								value="#{bb.managedBean.branchCompanyStates}" />
 							<p:ajax event="change" process="@this"
 								listener="#{bb.onChangeState(bb.managedBean.selectedBranch.smAddress.pmState,'BRANCH_ADDRESS')}"
-								update="branchState,divisionLabelPanelId,divisionDropdownPanelId,branchDist,branchCity" />
+								update="branchState,divisionBranchInfoLabelPanelId,divisionBranchInfoDropdownPanelId,branchDist,branchCity" />
 						</p:selectOneMenu>
 						<p:message id="branchStateMsg" for="branchState" showSummary="true"
 							showDetail="false" display="icon" /></td>
@@ -197,7 +197,7 @@
 				<!-- 13320 -->
 				<tr>
 					<td  class="tdTitle">
-				<p:outputPanel id="divisionLabelPanelId" >
+				<p:outputPanel id="divisionBranchInfoLabelPanelId" >
 					<ui:fragment rendered="#{!bb.managedBean.divisionBox}">
 						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
@@ -205,7 +205,7 @@
 					</p:outputPanel>
 					</td>
 					<td>
-				<p:outputPanel id="divisionDropdownPanelId">
+				<p:outputPanel id="divisionBranchInfoDropdownPanelId">
 				<ui:fragment rendered="#{!bb.managedBean.divisionBox}">
 					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 							label="#{lbl['lbl.sm.division']}"

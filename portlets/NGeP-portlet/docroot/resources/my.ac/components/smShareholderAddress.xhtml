@@ -150,7 +150,7 @@
 							<f:selectItems value="#{cc.attrs.stateItems}" />
 							<p:ajax event="change" process="@this"
 								listener="#{cc.attrs.bBean.onChangeState(cc.attrs.addrObj.smAddress,cc.attrs.addressType)}"
-								update="divisionLabelPanelId,divisionDropdownPanelId,#{cc.attrs.districtId},#{cc.attrs.cityId}" />
+								update="divisionSharLabelPanelId,divisionSharDropdownPanelId,#{cc.attrs.districtId},#{cc.attrs.cityId}" />
 
 						</p:selectOneMenu> 
 						<ac:smFieldChangeAlert 
@@ -166,7 +166,7 @@
 				
 					<tr>
 					<td  class="tdTitle">
-				<p:outputPanel id="divisionLabelPanelId" >
+				<p:outputPanel id="divisionSharLabelPanelId" >
 					<ui:fragment rendered="#{!cc.attrs.bBean.managedBean.divisionBox}">
 						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
@@ -174,7 +174,7 @@
 					</p:outputPanel>
 					</td>
 					<td>
-					<p:outputPanel id="divisionDropdownPanelId">
+					<p:outputPanel id="divisionSharDropdownPanelId">
 				<ui:fragment rendered="#{!cc.attrs.bBean.managedBean.divisionBox}">
 					<td class="tdContent"><p:selectOneMenu
 							label="#{cc.attrs.addressTitle} - #{lbl['lbl.sm.division']}"

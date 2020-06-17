@@ -215,7 +215,7 @@
 							<tr>
 
 								<td  class="tdTitle">
-				<p:outputPanel id="divisionLabelPanelId" >
+				<p:outputPanel id="divisionBasicLabelPanelId" >
 					<ui:fragment rendered="#{!backingBean.managedBean.divisionBox}">
 						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
@@ -279,7 +279,7 @@
 										<p:ajax event="change" process="@this"
 											listener="#{backingBean.onChangeState(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress, 
 											SupplierManagementConst.SM_BASIC_INFO_PANEL)}"
-											update="divisionLabelPanelId,divisionDropdownPanelId,basicCompDist,basicCompCity" />
+											update="divisionBasicLabelPanelId,divisionBasicDropdownPanelId,basicCompDist,basicCompCity" />
 									</p:selectOneMenu> 
 									<ac:ssmShowIconAlertGreen 
 										greenIcon="#{backingBean.showGreenIconSsm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.stateSsmNull)}" 
@@ -297,7 +297,7 @@
 							</tr>
 							<!-- 13320 -->
 							<tr><td>
-				                <p:outputPanel id="divisionDropdownPanelId">
+				                <p:outputPanel id="divisionBasicDropdownPanelId">
 				               <ui:fragment rendered="#{!backingBean.managedBean.divisionBox}">
 								<td><p:selectOneMenu
 										style="width: 250px;margin-bottom: 5px;" id="basicCompDivision"

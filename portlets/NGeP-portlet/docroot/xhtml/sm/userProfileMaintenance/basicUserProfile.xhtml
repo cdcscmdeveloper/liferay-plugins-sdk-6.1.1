@@ -356,7 +356,7 @@
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.permAddStateList}" />
 											<p:ajax event="change"
-												update="basicPermAddDivisionList,basicPermAddDistrictList, basicPermAddCityList"
+												update="divisionBasicProLabelPanelId,divisionBasicProDropdownPanelId,basicPermAddDistrictList, basicPermAddCityList"
 												listener="#{smPersonnelBackingBean.updatePermAddLists(null,smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.pmState.stateId,null)}" />
 										</p:selectOneMenu>
 										<p:message id="basicPermAddStateListMsg"
@@ -367,7 +367,7 @@
 								<!-- 13320 -->
 								<tr>
 									<td  class="tdTitle">
-				<p:outputPanel id="divisionLabelPanelId" >
+				<p:outputPanel id="divisionBasicProLabelPanelId" >
 					<ui:fragment rendered="#{!smPersonnelBackingBean.managedBean.divisionBox}">
 						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
@@ -375,7 +375,7 @@
 					</p:outputPanel>
 					</td>
 					<td>
-				<p:outputPanel id="divisionDropdownPanelId">
+				<p:outputPanel id="divisionBasicProDropdownPanelId">
 				<ui:fragment rendered="#{!smPersonnelBackingBean.managedBean.divisionBox}">
 					
 									<td ><p:selectOneMenu required="true"

@@ -285,7 +285,7 @@
 								value="#{backingBean.managedBean.assocCompanyStates}"/>
 							<p:ajax event="change" process="@this"
 								listener="#{backingBean.onChangeState(backingBean.managedBean.selectedAssocCompany.smAddress,SupplierManagementConst.SM_ASSOC_COMPANY_PANEL)}"
-								update="divisionLabelPanelId,divisionDropdownPanelId,assocDist,assocCity" />
+								update="divisionLabelAssocPanelId,divisionAssocDropdownPanelId,assocDist,assocCity" />
 						</p:selectOneMenu> 
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges 
@@ -302,7 +302,7 @@
 				<!-- 13320 -->
 				<tr>
 					<td  class="tdTitle">
-				<p:outputPanel id="divisionLabelPanelId" >
+				<p:outputPanel id="divisionLabelAssocPanelId" >
 					<ui:fragment rendered="#{!backingBean.managedBean.divisionBox}">
 						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
@@ -310,7 +310,7 @@
 					</p:outputPanel>
 					</td>
 					<td>
-				<p:outputPanel id="divisionDropdownPanelId">
+				<p:outputPanel id="divisionAssocDropdownPanelId">
 				<ui:fragment rendered="#{!backingBean.managedBean.divisionBox}">
 					<td>
 					<p:selectOneMenu style="width: 207px;margin-bottom: 5px;"

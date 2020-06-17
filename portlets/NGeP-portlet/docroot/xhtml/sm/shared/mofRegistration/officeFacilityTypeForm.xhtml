@@ -286,7 +286,7 @@
 								<p:ajax event="change" process="@this"
 									listener="#{backingBean.onChangeState(backingBean.managedBean.basicCompanyFacility.smAddress, 
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
-									update="basicOffFacDist,basicOffFacDivision,basicOffFacCity" />
+									update="basicOffFacDist,divisionOfficeLabelPanelId,divisionOfficeDropdownPanelId,basicOffFacCity" />
 
 							</p:selectOneMenu> 
 							
@@ -304,7 +304,7 @@
 						<td></td>
 						<td></td>
 						<td  class="tdTitle">
-				<p:outputPanel id="divisionLabelPanelId" >
+				<p:outputPanel id="divisionOfficeLabelPanelId" >
 					<ui:fragment rendered="#{!backingBean.managedBean.divisionBox}">
 						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
@@ -312,7 +312,7 @@
 					</p:outputPanel>
 					</td>
 					<td>
-				<p:outputPanel id="divisionDropdownPanelId">
+				<p:outputPanel id="divisionOfficeDropdownPanelId">
 				<ui:fragment rendered="#{!backingBean.managedBean.divisionBox}">
 						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 								id="basicOffFacDivision" required="true"
