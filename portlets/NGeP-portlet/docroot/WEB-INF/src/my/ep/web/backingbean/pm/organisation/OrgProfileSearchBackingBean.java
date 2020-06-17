@@ -76,7 +76,8 @@ public class OrgProfileSearchBackingBean extends
 
 	public void initPtjPopupDefaultMinistry(Long orgProfileId) {
 		initPtjPopup();
-		if (getFacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value())) {
+		if (getFacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.APPROVER.value())) {	//#26475 - add Approver value
 			getManagedBean().setMinistryProfileId(orgProfileId);
 			getManagedBean().setDisabledMinistry(true);
 		}
@@ -172,8 +173,20 @@ public class OrgProfileSearchBackingBean extends
 	}
 	
 	public void resetOrgProfiles(){
+		Long ministryId = this.getManagedBean().getMinistryProfileId(); //#26475
 		this.renewSesionObject();
 		getOrgProfileDataModel().resetData();
+		//#26475 - start
+		String portletName = (String) this.getFacesScopes().getRequest().getAttribute("PORTLET_ID");
+		if (StringUtils.isNotBlank(portletName) && portletName.toLowerCase().contains("loa")){
+			this.getManagedBean().setMinistryProfileId(ministryId);
+			if (ministryId != null){
+				this.getManagedBean().setDisabledMinistry(true);
+			}else{
+				this.getManagedBean().setDisabledMinistry(false);
+			}
+		}
+		//#26475 - end
 	}
 
 	public IPagingDataModel<PmOrgProfile> getOrgProfileDataModel() {
@@ -200,7 +213,6 @@ public class OrgProfileSearchBackingBean extends
 					FacesContext.getCurrentInstance().getELContext(), 
 					new Object[]{getManagedBean().getSelectedPtj()});
 			}
-			
 			
 			RequestContext.getCurrentInstance().execute("ptjPopup.hide();");
 		}
