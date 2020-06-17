@@ -4264,20 +4264,7 @@ public class SupplierFinalizationBackingBean extends
 	public List<PmUser> retrieveCommitteeSecretary(String commType) {
 		log.info(":::retrieveCommitteeSecretary() commType: "+ commType);
 		ICommitteSO committeSO = null;
-		
-		//#25729 #142 start
-/*		boolean expectTotalIndPriceBelowThreshold = false;
-		String CurrentCommType = "";
-		
-		expectTotalIndPriceBelowThreshold = expectTotalIndPriceBelowThreshold(getManagedBean().getScQt(),"SF");																				
-		CurrentCommType = getManagedBean().getCommitteeType();
-		
-		if (expectTotalIndPriceBelowThreshold==true && 
-				SourcingConstants.QCB_COMMITTEE.equals(CurrentCommType)) {
-					commType=SourcingConstants.QCA_COMMITTEE;
-		}*/
-		//#25729 #142 END
-		
+				
 		try {
 			committeSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
