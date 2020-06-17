@@ -4266,7 +4266,7 @@ public class SupplierFinalizationBackingBean extends
 		ICommitteSO committeSO = null;
 		
 		//#25729 #142 start
-		boolean expectTotalIndPriceBelowThreshold = false;
+/*		boolean expectTotalIndPriceBelowThreshold = false;
 		String CurrentCommType = "";
 		
 		expectTotalIndPriceBelowThreshold = expectTotalIndPriceBelowThreshold(getManagedBean().getScQt(),"SF");																				
@@ -4275,7 +4275,7 @@ public class SupplierFinalizationBackingBean extends
 		if (expectTotalIndPriceBelowThreshold==true && 
 				SourcingConstants.QCB_COMMITTEE.equals(CurrentCommType)) {
 					commType=SourcingConstants.QCA_COMMITTEE;
-		}
+		}*/
 		//#25729 #142 END
 		
 		try {
