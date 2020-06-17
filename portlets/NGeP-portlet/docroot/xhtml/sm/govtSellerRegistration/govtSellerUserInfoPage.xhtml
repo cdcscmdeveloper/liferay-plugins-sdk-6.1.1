@@ -300,7 +300,7 @@
 								value="#{bb.managedBean.permenantStateLs}" />
 							<p:ajax event="change"
 								listener="#{bb.onChangeState(bb.managedBean.smPermenantAdd.pmState,'USER_PERMANENT_ADDRESS')}"
-								update="cmbPermDistrict,divisionLabelPanelId,divisionDropdownPanelId,cmbPermCity" />
+								update="cmbPermDistrict,divisionUserInfoLabelPanelId,divisionUserInfoDropdownPanelId,cmbPermCity" />
 						</p:selectOneMenu>
 						<p:message id="cmbPermStateMsg" for="cmbPermState" display="icon" /></td>
 				</tr>
@@ -311,7 +311,7 @@
 					<td></td>
 							
 					<td  class="tdTitle">
-				<p:outputPanel id="divisionLabelPanelId" >
+				<p:outputPanel id="divisionUserInfoLabelPanelId" >
 					<ui:fragment rendered="#{!bb.managedBean.divisionBox}">
 						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
@@ -319,7 +319,7 @@
 					</p:outputPanel>
 					</td>
 					<td>
-				<p:outputPanel id="divisionDropdownPanelId">
+				<p:outputPanel id="divisionUserInfoDropdownPanelId">
 				<ui:fragment rendered="#{!bb.managedBean.divisionBox}">
 					<td class="tdContent"><p:selectOneMenu id="cmbPermDivision" 
 					 label="#{lbl['lbl.sm.division']}"
