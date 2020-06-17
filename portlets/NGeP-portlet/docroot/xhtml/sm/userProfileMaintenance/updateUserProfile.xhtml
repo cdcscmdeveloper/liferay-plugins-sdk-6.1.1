@@ -382,7 +382,7 @@
 												<f:selectItems
 													value="#{smPersonnelBackingBean.managedBean.mailAddStateList}" />
 												<p:ajax event="change"
-													update="divisionLabelPanelId,divisionDropdownPanelId,updateMailAddDistrictList, updateMailAddCityList"
+													update="divisionProfileLabelPanelId,divisionProfileDropdownPanelId,updateMailAddDistrictList, updateMailAddCityList"
 													listener="#{smPersonnelBackingBean.updateMailAddLists(null,smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.smAddress.pmState.stateId,null)}" />
 											</p:selectOneMenu>
 											<p:message id="updateMailAddStateListMsg"
@@ -392,7 +392,7 @@
 									<!-- 13320 -->
 									<tr>
 									<td class="tdTitle"><p:outputPanel
-											id="divisionLabelPanelId">
+											id="divisionProfileLabelPanelId">
 											<ui:fragment
 												rendered="#{!smPersonnelBackingBean.managedBean.divisionBox}">
 												<p:outputLabel value="#{lbl['lbl.sm.division']}" />
@@ -400,7 +400,7 @@
 											    </ui:fragment>
 										        </p:outputPanel></td>
 								               	<td>
-								               	<p:outputPanel id="divisionDropdownPanelId">
+								               	<p:outputPanel id="divisionProfileDropdownPanelId">
 											     <ui:fragment
 												  rendered="#{!smPersonnelBackingBean.managedBean.divisionBox}">
 												    <td><p:selectOneMenu label="#{lbl['lbl.sm.division']}"
