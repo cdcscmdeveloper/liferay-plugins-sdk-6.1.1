@@ -102,9 +102,7 @@ import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
-import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
 import my.ep.persistence.entity.sc.directpurchase.ScQuote;
-import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
 import my.ep.persistence.entity.sc.loaloi.ScLoaAttachment;
@@ -115,7 +113,6 @@ import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
-import my.ep.persistence.entity.sc.loaloi.ScLoiForQt;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.loaloi.ScPbAttachment;
@@ -123,6 +120,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
@@ -162,6 +160,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
@@ -321,6 +320,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 			populateLOADetails(resDTO);
 			getManagedBean().setEditFlag(Boolean.TRUE);
+			//#26475 - start
+			if (getManagedBean().getSelectedPtj() == null){
+				getManagedBean().setSelectedPtj(scLoa.getContractAgency());
+			}
+			//#26475 - end
 			
 			//Enhancement #12177
 			if(!getManagedBean().isTrackingDairyView()){
@@ -2934,7 +2938,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 
 	}
-
+	
 	/**
 	 * save the LOA details.
 	 * save - save data into database and initiate task for LOA details.
@@ -2955,6 +2959,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 					String outcome = BpmOutcomeConst.BPM_SAVE;
 					ScLoa scLoa = this.getManagedBean().getScLoa();
+					//#26475					scLoa.setContractAdmin(null);	
 					boolean validateWitness=this.getManagedBean().isValidatewitness(); //#19336
 					if((scLoa!=null) && (this.getManagedBean().getFlowamt()!=null))
 					{
@@ -2969,7 +2974,20 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					}
 					parseLOADetails(scLoa, outcome);
 					validateLOADetails(scLoa, outcome);
-					validateContractDetails(scLoa);
+					//#26475 - start
+//					validateContractDetails(scLoa);
+					List<PmUser> pmUserList = getUsersByAgency();
+					if(CollectionUtils.isEmpty(pmUserList)){
+						Locale locale = new FacesScopes().getUserLocale();
+						String currentLanguage = locale.getLanguage();
+						String errorMessage = StringUtils.equals(currentLanguage, "ms") ? "Tiada Pentadbir Kontrak yang aktif di Agensi yang dipilih. Sila pastikan terdapat sekurang-kurangnya satu (1) Pentadbir Kontrak yang aktif bagi Agensi yang dipilih di modul Pengurusan Profil."
+								: "There are no active Contract Administrators in the selected Agency. Please ensure there is at least one (1) active Contract Administrator in the Profile Management module for the selected Agency.";
+						
+						throw new EpException(errorMessage);
+					}else{
+						scLoa.setContractAdmin(pmUserList.get(0));
+					}
+					//#26475 - end
 					if (!supplier) {
 						updateContractDetails(scLoa);
 					}
@@ -2983,6 +3001,20 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 					reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
 					reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
+					
+					//#26475 - start
+					if (StringUtils.equals(outcome, BpmOutcomeConst.BPM_VERIFY)){
+						String ministryParamSescCodeName = SmCommonUtil.getParamDescByParameterIdAndLanguage(scLoa
+								.getContractType().getParameterId(), getManagedBean().getScLoa().getContractAdmin()
+								.getPreferredLanguage());
+						if(StringUtils.isNotBlank(ministryParamSescCodeName)){
+							reqDTO.setSpec(ministryParamSescCodeName);
+						}else {
+							reqDTO.setSpec(this.getManagedBean().getMinistryOrgProfile().getPmOrgValidity().getOrgName());
+						}
+					}
+					//#26475 - end
+					
 					AwardSupplierResDTO resDTO = getQtAwardSO().saveLOADtl(reqDTO);
 		
 					if (resDTO.isSuccessful()) {
@@ -3039,8 +3071,20 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				parseLOADetails(scLoa, outcome);
 				validateLOADetails(scLoa, outcome);
 				updateContractDetails(scLoa);
-				validateContractDetails(scLoa);
-	
+				//#26475 - start
+//				validateContractDetails(scLoa);
+				List<PmUser> pmUserList = getUsersByAgency();
+				if(CollectionUtils.isEmpty(pmUserList)){
+					Locale locale = new FacesScopes().getUserLocale();
+					String currentLanguage = locale.getLanguage();
+					String errorMessage = StringUtils.equals(currentLanguage, "ms") ? "Tiada Pentadbir Kontrak yang aktif di Agensi yang dipilih. Sila pastikan terdapat sekurang-kurangnya satu (1) Pentadbir Kontrak yang aktif bagi Agensi yang dipilih di modul Pengurusan Profil."
+							: "There are no active Contract Administrators in the selected Agency. Please ensure there is at least one (1) active Contract Administrator in the Profile Management module for the selected Agency.";
+					
+					throw new EpException(errorMessage);
+				}else{
+					scLoa.setContractAdmin(pmUserList.get(0));
+				}
+				//#26475 - end
 				scLoa.setScLoaWorkFlowStatuses(null);
 				// To avoid insert workflow status when direct submit without save.
 				if (scLoa.isBrandNew()) {
@@ -3063,6 +3107,18 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 				reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
 				reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
+				//#26475 - start
+				if (StringUtils.equals(outcome, BpmOutcomeConst.BPM_VERIFY)){
+					String ministryParamSescCodeName = SmCommonUtil.getParamDescByParameterIdAndLanguage(scLoa
+							.getContractType().getParameterId(), getManagedBean().getScLoa().getContractAdmin()
+							.getPreferredLanguage());
+					if(StringUtils.isNotBlank(ministryParamSescCodeName)){
+						reqDTO.setSpec(ministryParamSescCodeName);
+					}else {
+						reqDTO.setSpec(this.getManagedBean().getMinistryOrgProfile().getPmOrgValidity().getOrgName());
+					}
+				}
+				//#26475 - end
 				AwardSupplierResDTO resDTO = getQtAwardSO().saveLOADtl(reqDTO);
 	
 				if (resDTO.isSuccessful()) {
@@ -3217,8 +3273,20 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
 			reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
+			//#26475 - start
+			if (StringUtils.equals(outcome, BpmOutcomeConst.BPM_VERIFY)){
+				String ministryParamSescCodeName = SmCommonUtil.getParamDescByParameterIdAndLanguage(scLoa
+						.getContractType().getParameterId(), getManagedBean().getScLoa().getContractAdmin()
+						.getPreferredLanguage());
+				if(StringUtils.isNotBlank(ministryParamSescCodeName)){
+					reqDTO.setSpec(ministryParamSescCodeName);
+				}else {
+					reqDTO.setSpec(this.getManagedBean().getMinistryOrgProfile().getPmOrgValidity().getOrgName());
+				}
+			}
+			//#26475 - end
 			resDTO = getQtAwardSO().saveLOADtl(reqDTO);
-
+			
 			if (resDTO.isSuccessful()) {
 				scLoa = resDTO.getScLoa();
 				String messageCode = null;
@@ -3355,10 +3423,24 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 */
 	public void approveBeforeupdateBpmTaskAction(String outcome) {
 		debugLogger("approveBeforeupdateBpmTaskAction");
+		//#26475 - start
+		ScLoa scLoa = this.getManagedBean().getScLoa();
+		List<PmUser> pmUserList = getUsersByAgency();
+		if(CollectionUtils.isEmpty(pmUserList)){
+			Locale locale = new FacesScopes().getUserLocale();
+			String currentLanguage = locale.getLanguage();
+			String errorMessage = StringUtils.equals(currentLanguage, "ms") ? "Tiada Pentadbir Kontrak yang aktif di Agensi yang dipilih. Sila pastikan terdapat sekurang-kurangnya satu (1) Pentadbir Kontrak yang aktif bagi Agensi yang dipilih di modul Pengurusan Profil."
+					: "There are no active Contract Administrators in the selected Agency. Please ensure there is at least one (1) active Contract Administrator in the Profile Management module for the selected Agency.";
+					
+			throw new EpException(errorMessage);
+		}else{
+			scLoa.setContractAdmin(pmUserList.get(0));
+		}
+		//#26475 - end
 		this.getManagedBean().setAction(outcome);
 		 		
 		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
-				RequestContext.getCurrentInstance().execute("loaApprovalPopUp.show()");
+			RequestContext.getCurrentInstance().execute("loaApprovalPopUp.show()");
 		}else if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
 			// Enhancement #21694 START
 			//REVISE DOCUMENT FROM VERIFIER TO SUPPLIER AGAIN FOR REUPLOAD DOCUMENT
@@ -3388,7 +3470,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		/*******************
 		 * INITIATE BPM REVISE
 		 */
-		PmParameter procurementMode = this.getManagedBean().getScQt().getProcurementMode();
+//		PmParameter procurementMode = this.getManagedBean().getScQt().getProcurementMode();
+		PmParameter procurementMode = this.getManagedBean().getScQt() != null ? this.getManagedBean().getScQt()
+				.getProcurementMode() : this.getManagedBean().getScLoa().getProcurementMode();
+				this.getManagedBean().setScQt(new ScQt());
+				this.getManagedBean().getScQt().setFinalization(new ScQtFinalization());
+				this.getManagedBean().getScQt().getFinalization().setLoiLoaBy(ParameterConst.LOILOA_PREPARED_BY_DO);
+				this.getManagedBean().getScQt().setCreatedBy(this.getManagedBean().getScLoa().getCreatedBy());
 		IScActorSO actorSO;
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 		ScActorReqDTO actorReqDTO=new ScActorReqDTO();
@@ -3399,11 +3487,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		reqDTO.setSourceId(getManagedBean().getSourceId());
 		reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 		reqDTO.setTaskId(this.getManagedBean().getTaskId());
-		reqDTO.setScQt(this.getManagedBean().getScQt());
+//		reqDTO.setScQt(this.getManagedBean().getScQt());
+		reqDTO.setScQt(this.getManagedBean().getScLoa().getScQt());
 		reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
 		reqDTO.setQuotation(null!=procurementMode && procurementMode.getParameterCode().equals(ParameterConst.PROCUREMENT_MODE_QUOTATION)?true:false);
 		
-		actorReqDTO.setDocId(this.getManagedBean().getScQt().getQtId());
+//		actorReqDTO.setDocId(this.getManagedBean().getScQt().getQtId());
+		actorReqDTO.setDocId(this.getManagedBean().getScQt().getCreatedBy());
 		actorReqDTO.setDocTypes(Arrays.asList(ParameterConst.DOCTYPE_QUOTATION));
 		switch(this.getManagedBean().getScQt().getFinalization().getLoiLoaBy()){
 			case ParameterConst.LOILOA_PREPARED_BY_DO	:	//DESK OFFICER
@@ -3463,6 +3553,20 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 */
 	public void updateBpmTaskAction(String outcome) {
 		debugLogger("updateBpmTaskAction");
+		//#26475 - start
+		ScLoa scLoa = this.getManagedBean().getScLoa();
+		List<PmUser> pmUserList = getUsersByAgency();
+		if(CollectionUtils.isEmpty(pmUserList)){
+			Locale locale = new FacesScopes().getUserLocale();
+			String currentLanguage = locale.getLanguage();
+			String errorMessage = StringUtils.equals(currentLanguage, "ms") ? "Tiada Pentadbir Kontrak yang aktif di Agensi yang dipilih. Sila pastikan terdapat sekurang-kurangnya satu (1) Pentadbir Kontrak yang aktif bagi Agensi yang dipilih di modul Pengurusan Profil."
+					: "There are no active Contract Administrators in the selected Agency. Please ensure there is at least one (1) active Contract Administrator in the Profile Management module for the selected Agency.";
+			
+			throw new EpException(errorMessage);
+		}else{
+			scLoa.setContractAdmin(pmUserList.get(0));
+		}
+		//#26475 - end
 		this.getManagedBean().setAction(outcome);
 		validateLOADetails(getManagedBean().getScLoa(), outcome);
 		if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
