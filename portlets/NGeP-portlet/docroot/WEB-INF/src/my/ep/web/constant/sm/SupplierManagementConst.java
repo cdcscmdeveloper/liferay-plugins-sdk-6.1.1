@@ -422,7 +422,10 @@ public class SupplierManagementConst {
 	public static final String MOF_STATUS_ACTIVE = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_ACTIVE;
 	public static final String MOF_STATUS_EXPIRED = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_EXPIRED;
 	public static final String MOF_STATUS_NOT_AVAILABLE = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_NOT_AVAILABLE;
-
+	// bug #28278 -START
+	public static final String MOF_STATUS_CANCELLED = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_CANCELLED;
+	public static final String MOF_STATUS_DELETED = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_DELETED;
+	// bug #28278 -END
 	public static final String RESUBMIT_APPL_PATH = "resubmit-application?";
 
 	public static final String APPL_PM_STATUS_REJECT = "20109";
@@ -1183,4 +1186,13 @@ public class SupplierManagementConst {
 		return SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL;
 	}
 //25792 - end	
+
+	//28278 -START
+	public String getMOF_STATUS_DELETED() {
+		return MOF_STATUS_DELETED;
+	}
+	public String getMOF_STATUS_CANCELLED() {
+		return MOF_STATUS_CANCELLED;
+	}
+	//28278 -END	
 }
