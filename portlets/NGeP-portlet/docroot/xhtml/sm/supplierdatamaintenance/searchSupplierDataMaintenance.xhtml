@@ -55,6 +55,10 @@
 						<h:outputText value="#{lbl['lbl.sm.mof.status.active']}" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_ACTIVE}" />
 						<h:outputText value="#{lbl['lbl.sm.mof.status.expired']}" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_EXPIRED}" />
 						<h:outputText value="#{lbl['lbl.sm.mof.status.not.applicable']}" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_NOT_AVAILABLE}" />
+						<!-- bug #28278 -START -->
+						<h:outputText value="#{lbl['lbl.sm.mof.status.deleted1']}" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED
+						or(smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_CANCELLED)}" />					
+					    <!-- bug #28278 -END -->
 					</p:column>
 					
 					<p:column headerText="#{lbl['lbl.rpt.supplierType']}">
