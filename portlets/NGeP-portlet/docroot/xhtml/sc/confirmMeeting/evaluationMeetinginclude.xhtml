@@ -1,5 +1,4 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	template="/WEB-INF/facelets/templates/basic_template.xhtml" 
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -7,8 +6,6 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
-
-	<ui:define name="contentSection">
 		
 	<p:blockUI block=":form" widgetVar="blockWidget">
 		<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
@@ -89,7 +86,7 @@
 		
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
-				styleClass="BtnSpacing"
+				styleClass="BtnSpacing"  partialSubmit="true"
 				action="#{evaluationMeetingBackingBean.addMeetingAction}"
 				oncomplete="meetingDtls.paginator.endLink.click();"
 				update="evaluationmeetingDetails" />
@@ -184,5 +181,4 @@
 		title="#{lbl['lbl.sc.confirmation']}"
 		okAction="evaluationMeetingBackingBean.submitMettingDetails()"
 		content="#{lbl['lbl.sc.popup.sendproposaleval']}"/>
-	</ui:define>
 </ui:composition>
