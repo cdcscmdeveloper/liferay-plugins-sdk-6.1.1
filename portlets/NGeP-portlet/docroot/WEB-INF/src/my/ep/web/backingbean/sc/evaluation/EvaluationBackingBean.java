@@ -93,7 +93,7 @@ import my.ep.dto.tpl.doc.TemplateDocResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
-import my.ep.helper.Paginator;
+import my.ep.helper.Paginator;//25138
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -11870,6 +11870,10 @@ private void retriveCommitteeRemarksList(){
 					
 				EvaluationResDTO resDTO=evaluationSO.retrievProposalCheckListByCheckListNZone(
 						reqDTO);
+				//Calculate totalitemscore
+				for(int i=0;i<resDTO.getComplianceResultBean().getResultList().size();i++){
+					calculateItemScores(resDTO.getComplianceResultBean().getResultList().get(i));
+				}
 				return resDTO.getComplianceResultBean();
 				
 				
