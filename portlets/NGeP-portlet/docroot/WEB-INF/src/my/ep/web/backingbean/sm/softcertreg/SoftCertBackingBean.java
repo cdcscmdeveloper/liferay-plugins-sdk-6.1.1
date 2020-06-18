@@ -1478,8 +1478,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					throw new EpException(MessageConst.ERROR_722614,
 							new String[] { personnel.getName() });
 				} else if(personnel.getEmail() == null || personnel.getEmail().isEmpty()
-						|| personnel.getPhoneNo() == null || personnel.getPhoneNo().isEmpty()
-						|| personnel.getMobileNo() == null || personnel.getMobileNo().isEmpty()){
+						|| (personnel.getMobileNo() == null && personnel.getPhoneNo() == null)){
 					throw new EpException(MessageConst.ERROR_722682,
 							new String[] { personnel.getName() });
 				}
