@@ -2007,7 +2007,7 @@ public class EvaluationMeetingBackingBean extends
 	public void navigateToUpdateMember(String action){
 		FacesContext fc = FacesContext.getCurrentInstance();
 		EvaluationBackingBean evalBB = this.getManagedBean().getEvalBB();
-		String mainPage = evalBB!=null ? "/xhtml/sc/evaluation/evaluationMain.xhtml?faces-redirect=true" :  "/xhtml/sc/confirmMeeting/evaluationMeetinginclude.xhtml";
+		String mainPage = evalBB!=null ? "/xhtml/sc/evaluation/evaluationMain.xhtml?faces-redirect=true" :  "/xhtml/sc/confirmMeeting/confirmMeetingView.xhtml?faces-redirect=true";
 		if(action.equalsIgnoreCase("back")){
 			restoreUnconfirmChanges();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, mainPage);
@@ -2018,6 +2018,7 @@ public class EvaluationMeetingBackingBean extends
 	    	}
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sc/confirmMeeting/memberUpdate.xhtml");
 		}else if(action.equalsIgnoreCase("confirm")){
+			this.getManagedBean().setCommitteeModified(true);
     		if(evalBB!=null){
     			List<ScQtCommitteeActivity> removeList = new ArrayList<ScQtCommitteeActivity>();
     			List<ScQtCommitteeActivity> list  = evalBB.getManagedBean().getCommitteeMemberList();
@@ -2075,7 +2076,7 @@ public class EvaluationMeetingBackingBean extends
   
     }
 	private void prepareCommitteeHistory(ScQtCommittee qtCommittee){
-		List<ScCommitteeMemberHistory> histories = this.getCommitteeSO().getMergedHistory(qtCommittee, false);
+		List<ScCommitteeMemberHistory> histories = this.getCommitteeSO().getMergedHistory(qtCommittee, true);
 		this.getManagedBean().setCurrentCommitteeType(this.getParameterDesc(qtCommittee.getScCommittee().getCommitteeType()));
 		this.getManagedBean().setHistoryPaginator(new Paginator(histories));
 		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
@@ -2118,7 +2119,6 @@ public class EvaluationMeetingBackingBean extends
 		this.checkCommitteeFormation(reqDTO);
 
 		if(this.getCommitteeSO().checkIfCommitteeIsModified(scCommittee, scCommittee.getCommitteeId())){
-			this.getManagedBean().setCommitteeModified(true);
 			if(StringUtils.isEmpty(this.getManagedBean().getScQtApprovalRemarks().get(0).getRemark())){
 				String message = MessageUtils.getMessage(MessageConst.ERROR_716025, null, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
 				throw new EpException(message);
