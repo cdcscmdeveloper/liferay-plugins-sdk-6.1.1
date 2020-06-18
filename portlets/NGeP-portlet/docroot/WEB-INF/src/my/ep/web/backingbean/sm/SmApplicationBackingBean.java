@@ -9349,7 +9349,7 @@ public class SmApplicationBackingBean extends
 			} else {
 				List<PmUser> displayApproverList = new ArrayList<>();
 				for (PmUser user : approverList) {
-					if (!user.getUserId().equals(getManagedBean().getSmSupplier().getSmAppl().getPoUserId())) {
+					if (!user.getUserId().equals(getManagedBean().getSmAppl().getPoUserId())) {
 						displayApproverList.add(user);
 					}
 				}
