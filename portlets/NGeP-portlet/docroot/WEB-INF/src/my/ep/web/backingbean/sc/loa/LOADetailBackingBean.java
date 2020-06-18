@@ -2978,12 +2978,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 //					validateContractDetails(scLoa);
 					List<PmUser> pmUserList = getUsersByAgency();
 					if(CollectionUtils.isEmpty(pmUserList)){
-						Locale locale = new FacesScopes().getUserLocale();
-						String currentLanguage = locale.getLanguage();
-						String errorMessage = StringUtils.equals(currentLanguage, "ms") ? "Tiada Pentadbir Kontrak yang aktif di Agensi yang dipilih. Sila pastikan terdapat sekurang-kurangnya satu (1) Pentadbir Kontrak yang aktif bagi Agensi yang dipilih di modul Pengurusan Profil."
-								: "There are no active Contract Administrators in the selected Agency. Please ensure there is at least one (1) active Contract Administrator in the Profile Management module for the selected Agency.";
-						
-						throw new EpException(errorMessage);
+						throw new EpException(ResourceBundleUtils.getMessage("lbl.sc.loiloa.loa.admin",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 					}else{
 						scLoa.setContractAdmin(pmUserList.get(0));
 					}
@@ -3075,12 +3071,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 //				validateContractDetails(scLoa);
 				List<PmUser> pmUserList = getUsersByAgency();
 				if(CollectionUtils.isEmpty(pmUserList)){
-					Locale locale = new FacesScopes().getUserLocale();
-					String currentLanguage = locale.getLanguage();
-					String errorMessage = StringUtils.equals(currentLanguage, "ms") ? "Tiada Pentadbir Kontrak yang aktif di Agensi yang dipilih. Sila pastikan terdapat sekurang-kurangnya satu (1) Pentadbir Kontrak yang aktif bagi Agensi yang dipilih di modul Pengurusan Profil."
-							: "There are no active Contract Administrators in the selected Agency. Please ensure there is at least one (1) active Contract Administrator in the Profile Management module for the selected Agency.";
-					
-					throw new EpException(errorMessage);
+					throw new EpException(ResourceBundleUtils.getMessage("lbl.sc.loiloa.loa.admin",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 				}else{
 					scLoa.setContractAdmin(pmUserList.get(0));
 				}
@@ -3427,12 +3419,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		ScLoa scLoa = this.getManagedBean().getScLoa();
 		List<PmUser> pmUserList = getUsersByAgency();
 		if(CollectionUtils.isEmpty(pmUserList)){
-			Locale locale = new FacesScopes().getUserLocale();
-			String currentLanguage = locale.getLanguage();
-			String errorMessage = StringUtils.equals(currentLanguage, "ms") ? "Tiada Pentadbir Kontrak yang aktif di Agensi yang dipilih. Sila pastikan terdapat sekurang-kurangnya satu (1) Pentadbir Kontrak yang aktif bagi Agensi yang dipilih di modul Pengurusan Profil."
-					: "There are no active Contract Administrators in the selected Agency. Please ensure there is at least one (1) active Contract Administrator in the Profile Management module for the selected Agency.";
-					
-			throw new EpException(errorMessage);
+			throw new EpException(ResourceBundleUtils.getMessage("lbl.sc.loiloa.loa.admin",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 		}else{
 			scLoa.setContractAdmin(pmUserList.get(0));
 		}
@@ -3557,12 +3545,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		ScLoa scLoa = this.getManagedBean().getScLoa();
 		List<PmUser> pmUserList = getUsersByAgency();
 		if(CollectionUtils.isEmpty(pmUserList)){
-			Locale locale = new FacesScopes().getUserLocale();
-			String currentLanguage = locale.getLanguage();
-			String errorMessage = StringUtils.equals(currentLanguage, "ms") ? "Tiada Pentadbir Kontrak yang aktif di Agensi yang dipilih. Sila pastikan terdapat sekurang-kurangnya satu (1) Pentadbir Kontrak yang aktif bagi Agensi yang dipilih di modul Pengurusan Profil."
-					: "There are no active Contract Administrators in the selected Agency. Please ensure there is at least one (1) active Contract Administrator in the Profile Management module for the selected Agency.";
-			
-			throw new EpException(errorMessage);
+			throw new EpException(ResourceBundleUtils.getMessage("lbl.sc.loiloa.loa.admin",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 		}else{
 			scLoa.setContractAdmin(pmUserList.get(0));
 		}
