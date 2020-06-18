@@ -139,7 +139,7 @@
 				<td></td>
              <td  class="tdTitle">
 				<p:outputPanel id="divisiongvtLabelPanelId" >
-					<ui:fragment rendered="#{!registrationBackingBean.managedBean.divisionBox}">
+					<ui:fragment rendered="#{!bb.managedBean.divisionBox}">
 						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
 						</ui:fragment>
@@ -147,7 +147,7 @@
 					</td>
 					<td>
 					<p:outputPanel id="divisiongvtDropdownPanelId">
-				<ui:fragment rendered="#{!registrationBackingBean.managedBean.divisionBox}">
+				<ui:fragment rendered="#{!bb.managedBean.divisionBox}">
 				<td class="tdContent">
 					<p:selectOneMenu id="busDivision"
 						 label="#{lbl['lbl.sm.division']}"
