@@ -15210,33 +15210,34 @@ public class SpecificationBackingBean extends
 					break;
 				}
 			}
-			log.debug("checkFinancialSpecEstimations count" + count);
-			if (count == 0) {
-				BigDecimal totalSpecEstimatedAmount = null;
-				if (totalSpecEstimatedAmount == null) {
-					totalSpecEstimatedAmount = BigDecimal.valueOf(0);
-				}
+			log.info("checkFinancialSpecEstimations count" + count);
+			//#25729 #142 start - checking total indicative price <= 20k
+			//Intended Price
+			BigDecimal totalSpecEstimatedAmount = null;
+			if (totalSpecEstimatedAmount == null) {
+				totalSpecEstimatedAmount = BigDecimal.valueOf(0);
+			}
 
-				if (qtChecklist != null
-						&& null != qtChecklist.getScQtDoc()
-						&& null != qtChecklist.getScQtDoc().getTplSpecMaster()
-						&& qtChecklist.getScQtDoc().getTplSpecMaster()
-								.getTplSpecQuestions() != null) {
-					for (TplSpecQuestion tplSpecQuestion : qtChecklist
-							.getScQtDoc().getTplSpecMaster()
-							.getTplSpecQuestions()) {
-						for (TplSpecEstimation tplSpecEstimation : tplSpecQuestion
-								.getTplSpecEstimations()) {
-							if (tplSpecEstimation.getEstimatedCost() != null) {
-								totalSpecEstimatedAmount = totalSpecEstimatedAmount
-										.add(tplSpecEstimation
-												.getEstimatedCost());
-							}
+			if (qtChecklist != null
+					&& null != qtChecklist.getScQtDoc()
+					&& null != qtChecklist.getScQtDoc().getTplSpecMaster()
+					&& qtChecklist.getScQtDoc().getTplSpecMaster()
+							.getTplSpecQuestions() != null) {
+				for (TplSpecQuestion tplSpecQuestion : qtChecklist
+						.getScQtDoc().getTplSpecMaster()
+						.getTplSpecQuestions()) {
+					for (TplSpecEstimation tplSpecEstimation : tplSpecQuestion
+							.getTplSpecEstimations()) {
+						if (tplSpecEstimation.getEstimatedCost() != null) {
+							totalSpecEstimatedAmount = totalSpecEstimatedAmount
+									.add(tplSpecEstimation
+											.getEstimatedCost());
 						}
 					}
 				}
-				log.debug("totalSpecEstimatedAmount" + totalSpecEstimatedAmount);
-
+			}
+			log.debug("totalSpecEstimatedAmount" + totalSpecEstimatedAmount);
+			if (count == 0) {
 				// Intended Price
 				if (qt.isPanel()) {
 					BigDecimal panelThreshold = getPanelThresholdAmount();
@@ -15256,8 +15257,21 @@ public class SpecificationBackingBean extends
 				}
 				qt.setEstimatedAmount(totalSpecEstimatedAmount);
 			}
+			// Check Intended Price
+			BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
+			if (null == qt.getTmpExpectedIntendedPrice()
+						|| (qt.getTmpExpectedIntendedPrice()
+								.compareTo(indPriceThreshold) <= 0)) {
+				if (null == totalSpecEstimatedAmount
+						|| (totalSpecEstimatedAmount
+								.compareTo(indPriceThreshold) > 0)) {
+					throw new EpException(MessageConst.ERROR_760504,
+							new String[] { SourcingConstants.DF_AMOUNT
+								.format(indPriceThreshold) });
+				}
+			}
 		}
-
+		//#25729 #142 end
 	}
 
 	private void checkTechnicalFinancialItemCount(

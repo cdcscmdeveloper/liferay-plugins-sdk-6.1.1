@@ -26,7 +26,7 @@
 	<ui:param name="qtExtensionResponseDueDate"
 		value="#{qTDetailBB.getExtensionResponseDueDate(scQt.qtId)}" />
 	<ui:param name="expectTotalIndPriceBelowThreshold"
-		value="#{createQtBB.expectTotalIndPriceBelowThreshold(scQt)}" />
+		value="#{createQtBB.expectTotalIndPriceBelowThreshold(scQt,'createQt')}" />
 	<ui:param name="isStatusInQTReviseGroupStatus" 
 		value="#{createQtBB.isStatusInQTReviseGroupStatus(scQt.qtStatus.statusId)}" />
 	<ui:param name="isMaintenanceFlow"  
@@ -783,41 +783,56 @@
 						</c:otherwise>
 					</c:choose></td>
 			</tr>
-			<c:if test="#{expectTotalIndPriceBelowThreshold}">
+			
 				<tr>
 					<td>
 						<p:outputLabel value="#{lbl['lbl.sc.spec.justification.procurement.value']}" /> 
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
-					<td>
-						<c:choose>
-							<c:when test="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION}">
-								<p:inputTextarea id="justificationProcValueId_1"
-									style="margin-bottom:5px; width: 250px;" maxlength="100" value="#{scQt.justificationProcValue}" required="true" 
-									label="#{lbl['lbl.sc.spec.justification.procurement.value']}" disabled="#{isReadOnly}" 
-									cols="110" rows="3"
-									onkeyup="limitTextArea(this,100);"
-									onkeydown="limitTextArea(this,100);"
-									onmouseout="limitTextArea(this,100);">
-									<f:ajax></f:ajax>
-								</p:inputTextarea>
-								<p:message id="title2Msg_1" for="justificationProcValueId_1" display="icon" />
-							</c:when>
-							<c:otherwise>
-								<p:inputTextarea id="justificationProcValueId_2"
-									style="margin-bottom:5px; width: 250px;" maxlength="100" value="#{scQt.justificationProcValue}" 
-									label="#{lbl['lbl.sc.spec.justification.procurement.value']}" readonly="true" 
-									cols="110" rows="3">
-								</p:inputTextarea>
-								<p:message id="title2Msg_2" for="justificationProcValueId_2" display="icon" />
-							</c:otherwise>
-						</c:choose>
-					</td>
+					<!--#25729 #142 START -->
+					<c:if test="#{expectTotalIndPriceBelowThreshold}">
+
+						<td>
+							<c:choose>
+								<c:when test="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION}">
+									<p:inputTextarea id="justificationProcValueId_1"
+										style="margin-bottom:5px; width: 250px;" maxlength="100" value="#{scQt.justificationProcValue}" required="true" 
+										label="#{lbl['lbl.sc.spec.justification.procurement.value']}" disabled="#{isReadOnly}" 
+										cols="110" rows="3"
+										onkeyup="limitTextArea(this,100);"
+										onkeydown="limitTextArea(this,100);"
+										onmouseout="limitTextArea(this,100);">
+										<f:ajax></f:ajax>
+									</p:inputTextarea>
+									<p:message id="title2Msg_1" for="justificationProcValueId_1" display="icon" />
+								</c:when>
+								<c:otherwise>
+									<p:inputTextarea id="justificationProcValueId_2"
+										style="margin-bottom:5px; width: 250px;" maxlength="100" value="#{scQt.justificationProcValue}" 
+										label="#{lbl['lbl.sc.spec.justification.procurement.value']}" readonly="true" 
+										cols="110" rows="3"
+										disabled="true">
+									</p:inputTextarea>
+									<p:message id="title2Msg_2" for="justificationProcValueId_2" display="icon" />
+								</c:otherwise>
+							</c:choose>
+						</td>
+					</c:if>
+					<c:if test="#{!expectTotalIndPriceBelowThreshold}">
+						<td>
+							<p:inputTextarea id="justificationProcValueId_2"
+										style="margin-bottom:5px; width: 250px;" maxlength="100" value="#{scQt.justificationProcValue}" 
+										label="#{lbl['lbl.sc.spec.justification.procurement.value']}" readonly="true" 
+										cols="110" rows="3"
+										disabled="true" >
+							</p:inputTextarea>
+						</td>
+				</c:if>
+				<!--#25729 #142 END -->
 					<td style="margin-top: -3px">
 						<ac:iconTooltip value="#{lbl['lbl.sc.spec.justification.procurement.value.tooltip']}" />
 					</td>
 				</tr>
-			</c:if>
 		</table>
 	</p:panel>
 	
