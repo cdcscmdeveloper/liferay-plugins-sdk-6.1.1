@@ -1818,25 +1818,25 @@ public class GovtSellerRegistrationBackingBean extends
 	public void onChangeDivision(String addrType){
 		if((addrType.equals("COMPANY_ADDRESS"))){
 		
-		List<SelectItem> divisionLs = SmCommonUtil.getDistrictList(this.getManagedBean().getDivisionIds());
+		List<SelectItem> divisionLs = SmCommonUtil.getDistrictListByID(this.getManagedBean().getDivisionIds());
 		this.getManagedBean().setBusinessDistrictLs(divisionLs);
 		this.getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());	
 	}
 		if((addrType.equals("USER_RESIDENTIAL_ADDRESS"))){
 			
-			List<SelectItem> divisionLs = SmCommonUtil.getDistrictList(this.getManagedBean().getDivisionIds());
+			List<SelectItem> divisionLs = SmCommonUtil.getDistrictListByID(this.getManagedBean().getDivisionIds());
 			this.getManagedBean().setResidentialDistrictLs(divisionLs);
 			this.getManagedBean().setResidentialCityLs(new ArrayList<SelectItem>());	
 		}
        if((addrType.equals("USER_PERMANENT_ADDRESS"))){
 			
-			List<SelectItem> divisionLs = SmCommonUtil.getDistrictList(this.getManagedBean().getDivisionIds());
+			List<SelectItem> divisionLs = SmCommonUtil.getDistrictListByID(this.getManagedBean().getDivisionIds());
 			this.getManagedBean().setPermenantDistrictLs(divisionLs);
 			this.getManagedBean().setPermenantCityLs(new ArrayList<SelectItem>());	
 		}
        if((addrType.equals("BRANCH_ADDRESS"))){
 			
-			List<SelectItem> divisionLs = SmCommonUtil.getDistrictList(this.getManagedBean().getDivisionIds());
+			List<SelectItem> divisionLs = SmCommonUtil.getDistrictListByID(this.getManagedBean().getDivisionIds());
 			this.getManagedBean().setBranchCompanyDistricts(divisionLs);
 			this.getManagedBean().setBranchCompanyCities(new ArrayList<SelectItem>());	
 		}
