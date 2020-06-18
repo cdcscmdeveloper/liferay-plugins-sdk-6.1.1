@@ -164,22 +164,28 @@
 						<p:outputLabel value="#{lbl['lbl.sm.nationality']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
-					<td class="tdContent">
-						<p:selectOneMenu id="nationalityId" required="#{!empty param['disableValidation']}"  
-							label="#{lbl['lbl.sm.nationality']}" value="#{registrationBackingBean.managedBean.smPersonnel.pmCountry.countryId}" 
-							style="width:80%" disabled="#{registrationBackingBean.managedBean.sameAsOwner}" 
+					<!-- #27878 disable when choose applType = SupplierManagementConst.ACC_BASIC-->
+					<td class="tdContent"><p:selectOneMenu id="nationalityId"
+							required="#{!empty param['disableValidation']}"
+							label="#{lbl['lbl.sm.nationality']}"
+							value="#{registrationBackingBean.managedBean.smPersonnel.pmCountry.countryId}"
+							style="width:80%"
+							disabled="#{registrationBackingBean.managedBean.sameAsOwner or registrationBackingBean.managedBean.smAppl.applType==SupplierManagementConst.ACC_BASIC}"
 							rendered="#{!registrationBackingBean.managedBean.sameAsOwner}">
-							<ui:param name="unknownCountry" value="#{registrationBackingBean.getUnknownCountry()}" />
+							<ui:param name="unknownCountry"
+								value="#{registrationBackingBean.getUnknownCountry()}" />
 							<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 							<f:selectItems var="counLs"
 								value="#{registrationBackingBean.managedBean.countryLs}"
 								itemLabel="#{counLs.countryName}"
 								itemValue="#{counLs.countryId}" />
-							<f:selectItem itemValue="#{unknownCountry.countryId}" itemLabel="#{unknownCountry.countryName}" />
-							<p:ajax event="change" listener="#{registrationBackingBean.personnelNationalityOnChange}" process="@form"
-							update="cmbUsrIdenType,txtIdNumber,pnlFirstUserIdenType,pnlPersonnelAddress,pnlUsrInfo" />
-						</p:selectOneMenu>
-						<p:message id="nationalityIdMsg" for="nationalityId" display="icon" />
+							<f:selectItem itemValue="#{unknownCountry.countryId}"
+								itemLabel="#{unknownCountry.countryName}" />
+							<p:ajax event="change"
+								listener="#{registrationBackingBean.personnelNationalityOnChange}"
+								process="@form"
+								update="cmbUsrIdenType,txtIdNumber,pnlFirstUserIdenType,pnlPersonnelAddress,pnlUsrInfo" />
+						</p:selectOneMenu> <p:message id="nationalityIdMsg" for="nationalityId" display="icon" />
 						
 						<h:outputText value="#{registrationBackingBean.managedBean.smPersonnel.pmCountry.countryName}" 
 							rendered="#{registrationBackingBean.managedBean.sameAsOwner}"/>
