@@ -13466,6 +13466,16 @@ public class SmApplicationUtil {
 
 		return daHistoryList;
 	}
+	
+	//28281 - start
+	public static List<Long> retrieveBumiCodeList(){
+		ISupplierCategorySO supplierCategorySO = (ISupplierCategorySO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierCategorySO.class);
+		return supplierCategorySO.retrieveBumiCodeList();
+	}
+	//28281 - end
+	
+	
 	//27796: Disciplinary Action - end - 26238
 	//28198: Disciplinary Action - start - 26238
 			public static List<SmDisciplinaryActionRemarks> retrieveActiveSmDisciplinaryActionRemarksByDA(SmDisciplinaryAction smDisciplinaryAction){
@@ -13712,5 +13722,7 @@ public class SmApplicationUtil {
 
 			
 		//13320-end
+			
+	
 			
 }

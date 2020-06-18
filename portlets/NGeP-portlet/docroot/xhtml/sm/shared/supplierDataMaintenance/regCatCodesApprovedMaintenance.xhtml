@@ -7,11 +7,12 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
 	<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.supp.data.maintenance.delete.approved.cat.instruction']}" />
-	
+	<!-- 28281 - added listener -->
 	<p:dataTable var="aprvdCatBean"
 		widgetVar="smApprvdCatCodesNonRenewApplDtWidVar"
 		value="#{supplierDataMaintenanceBackingBean.managedBean.approvedCategoryList}" 
 		selection="#{supplierDataMaintenanceBackingBean.managedBean.selectedApprovedCategories}"
+		listener="#{supplierDataMaintenanceBackingBean.onTickPunishmentType()}"
 		rowKey="#{aprvdCatBean}" rowIndexVar="index" id="catApprDt"
 		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 		<ac:paginator for="catApprDt" />
