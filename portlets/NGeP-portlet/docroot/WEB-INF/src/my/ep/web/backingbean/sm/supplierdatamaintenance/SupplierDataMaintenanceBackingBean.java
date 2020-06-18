@@ -1373,6 +1373,14 @@ public class SupplierDataMaintenanceBackingBean extends
 				&& !getManagedBean().isManufacturerStatusCancel()){
 			getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(false);
 			getManagedBean().setEditDisciplinaryAction(false);
+			//28281 - start
+			getManagedBean().setSelectedApprovedCategories(new ArrayList<SmSupplierCategory>());
+			List<SmSupplierCategory> catList = getManagedBean().getApprovedCategoryList();
+			for(SmSupplierCategory cat: catList){
+				cat.setSelected(false);
+			}
+			getManagedBean().setApprovedCategoryList(catList);
+			//28281 - end
 			onTickDiscipline();
 		} else {
 			// 27815: Disciplinary Action - start - checking condition
@@ -1383,6 +1391,13 @@ public class SupplierDataMaintenanceBackingBean extends
 			} else {
 				getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(false);
 			}
+			
+			
+			//28281 - start (bumi code)
+			if(getManagedBean().isBumiputeraStatusCancel())
+				autoTickBumiCode();
+			//28281 - end
+			
 			//27815: Disciplinary Action - end -checking condition
 			getManagedBean().setEditDisciplinaryAction(true);
 			onTickDiscipline();
@@ -2732,5 +2747,28 @@ public class SupplierDataMaintenanceBackingBean extends
 		RequestContext.getCurrentInstance().execute("bankDeletePopUp.show()");
 	}
 	//End 17906
+	
+	
+	//28281: auto-tick bumi code when bumi status DA is ticked
+	private void autoTickBumiCode(){
+		List<SmSupplierCategory> catList = getManagedBean().getApprovedCategoryList();
+		if(catList == null || catList.isEmpty()) return;		
+		List<Long> bumiList = getManagedBean().getBumiCodeList();
+		if(bumiList == null || bumiList.isEmpty()){
+			bumiList = SmApplicationUtil.retrieveBumiCodeList();
+			getManagedBean().setBumiCodeList(bumiList);
+		}
+		
+		List<SmSupplierCategory> selectList = getManagedBean().getSelectedApprovedCategories();
+		for(SmSupplierCategory cat: catList){
+			if(bumiList.contains(cat.getPmCategoryL3().getCategoryL3Id())){
+				if(!cat.isSelected()) selectList.add(cat);
+				cat.setSelected(true);
+			}
+		}		
+		getManagedBean().setApprovedCategoryList(catList);
+		getManagedBean().setSelectedApprovedCategories(selectList);
+	}
+	//28281 end
 	
 }
