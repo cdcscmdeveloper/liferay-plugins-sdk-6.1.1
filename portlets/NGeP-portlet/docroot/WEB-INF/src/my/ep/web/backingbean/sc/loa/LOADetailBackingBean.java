@@ -2990,6 +2990,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		
 					AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 					reqDTO.setPayLoad(getManagedBean().getPayLoad());
+					scLoa.setContractAgency(this.getManagedBean().getSelectedPtj()); //#26475
 					reqDTO.setScLoa(scLoa);
 					reqDTO.setOutcome(outcome);
 					reqDTO.setRoleCode(getUserRoleCode(scLoa.getScLoiLoa().getDocType()));
@@ -3089,6 +3090,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				}
 	
 				AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+				scLoa.setContractAgency(this.getManagedBean().getSelectedPtj()); //#26475
 				reqDTO.setScLoa(scLoa);
 				reqDTO.setPayLoad(getManagedBean().getPayLoad());
 				reqDTO.setOutcome(outcome);
@@ -3252,6 +3254,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			validateLOADetails(scLoa, outcome);
 
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			scLoa.setContractAgency(this.getManagedBean().getSelectedPtj()); //#26475
 			reqDTO.setScLoa(scLoa);
 			reqDTO.setSourceId(getManagedBean().getSourceId());
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
@@ -3470,6 +3473,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		ScActorReqDTO actorReqDTO=new ScActorReqDTO();
 		actorSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IScActorSO.class);
 		reqDTO.setScLoa(this.getManagedBean().getScLoa());
+		reqDTO.getScLoa().setContractAgency(this.getManagedBean().getSelectedPtj()); //#26475
 		reqDTO.setPayLoad(getManagedBean().getPayLoad());
 		reqDTO.setOutcome(outcome);
 		reqDTO.setSourceId(getManagedBean().getSourceId());
