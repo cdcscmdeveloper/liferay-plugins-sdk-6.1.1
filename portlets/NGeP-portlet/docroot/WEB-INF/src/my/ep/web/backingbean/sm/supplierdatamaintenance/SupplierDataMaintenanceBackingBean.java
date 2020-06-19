@@ -2740,6 +2740,9 @@ public class SupplierDataMaintenanceBackingBean extends
 		}		
 		getManagedBean().setApprovedCategoryList(catList);
 		getManagedBean().setSelectedApprovedCategories(selectList);
+		// Start 27815
+		getManagedBean().setDisabledApprovedCategories(CollectionUtils.isNotEmpty(selectList) ? true : false);
+		// End 27815
 	}
 	//28281 end
 	
