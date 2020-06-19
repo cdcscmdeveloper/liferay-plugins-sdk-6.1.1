@@ -84,9 +84,10 @@
 			<!-- 27796: Disciplinary Action - start - 26238 -->
 			<p:column headerText="#{lbl['lbl.sm.disciplinary.jktt.remarks']}" style="white-space: normal !important; width : 25% !important; vertical-align:top;word-break: break-all;">
 				<h:dataTable value="#{disciplinaryAction.remarksList}" var="remarksList" rendered="#{not empty disciplinaryAction.remarksList}"
-					rowIndexVar="indexCat" emptyMessage="#{lbl['lbl.sm.no.available']}" style="border: none !important;">
+					rowIndexVar="indexCat" emptyMessage="#{lbl['lbl.sm.no.available']}" 
+					style="border: none !important; table-layout: fixed;">
 					<p:column style="border: none !important;">
-						<h:outputText value="#{remarksList.remarks}"/>
+						<h:outputText value="#{remarksList.remarks}" escape="false" style="white-space:pre-line;"/>
 					</p:column>
 				</h:dataTable>
 				<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty disciplinaryAction.remarksList}"/>
