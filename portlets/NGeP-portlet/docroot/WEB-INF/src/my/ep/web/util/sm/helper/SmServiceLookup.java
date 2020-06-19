@@ -1,5 +1,6 @@
 package my.ep.web.util.sm.helper;
 
+import my.ep.biz.service.intg.gfmas.IGfmasServiceSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.role.IRoleSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -646,4 +647,10 @@ public class SmServiceLookup {
 						IUpgradeRoleSO.class);
 	}
 	//END LOG 12491
+	
+	public static IGfmasServiceSO getGfmasServiceSO() {
+		return (IGfmasServiceSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.INTEGRATION,
+						IGfmasServiceSO.class);
+	}
 }

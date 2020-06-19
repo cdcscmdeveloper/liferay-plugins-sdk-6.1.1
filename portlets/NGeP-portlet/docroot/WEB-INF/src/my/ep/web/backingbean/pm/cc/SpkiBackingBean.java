@@ -185,7 +185,7 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 		challenges.put(challengeQues1, challengeAns1);
 
 		String dataForSigning = originalText;
-
+		//NOTE TRANSGATE : ini nk beza kan nk guna y mane
 		if (getCertIssuer(identificationNo).equals(SupplierManagementConst.CERT_TRUSTGATE)) {
 			vo = TrustGateHelper.getInstance().getSignedData(identificationNo,
 					getSupplier().getEpNo(), pin, challenges, dataForSigning);
