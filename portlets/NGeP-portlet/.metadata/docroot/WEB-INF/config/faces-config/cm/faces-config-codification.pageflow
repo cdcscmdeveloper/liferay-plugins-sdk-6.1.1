@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pageflow:Pageflow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pageflow="http://www.sybase.com/suade/pageflow" id="pf15415660724610" configfile="/NGeP-portlet/docroot/WEB-INF/config/faces-config/cm/faces-config-codification.xml">
+  <nodes xsi:type="pageflow:PFPage" name="*" x="122" y="2674" id="pf15415661353881" referenceLink="//@navigationRule.0/@fromViewId|" outlinks="pf15415661353882 pf15415661353883 pf15415661353884 pf15415661353885 pf15415661353886 pf15415661353887 pf15415661353888 pf15415661353889 pf154156613538810 pf154156613538812 pf154156613538813 pf154156613538814 pf154166612380915" path="*"/>
+  <nodes xsi:type="pageflow:PFPage" name="xhtml/cm/codification/extensionSearch.xhtml" x="338" y="178" id="pf154156613538816" referenceLink="//@navigationRule.0/@navigationCase.0/@toViewId|" inlinks="pf15415661353882" path="/xhtml/cm/codification/extensionSearch.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="xhtml/cm/codification/searchUnspscToAssign.xhtml" x="338" y="562" id="pf154156613538817" referenceLink="//@navigationRule.0/@navigationCase.1/@toViewId|" inlinks="pf15415661353883" path="/xhtml/cm/codification/searchUnspscToAssign.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="xhtml/cm/codification/codificationView.xhtml" x="338" y="946" id="pf154156613538818" referenceLink="//@navigationRule.0/@navigationCase.2/@toViewId|" inlinks="pf15415661353884" path="/xhtml/cm/codification/codificationView.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="xhtml/cm/codification/preRenderCodificationView.xhtml" x="338" y="1330" id="pf154156613538819" referenceLink="//@navigationRule.0/@navigationCase.3/@toViewId|" inlinks="pf15415661353885" path="/xhtml/cm/codification/preRenderCodificationView.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="xhtml/cm/catalogue/addCatalogView.xhtml" x="338" y="1714" id="pf154156613538820" referenceLink="//@navigationRule.0/@navigationCase.4/@toViewId|" inlinks="pf15415661353886" path="/xhtml/cm/catalogue/addCatalogView.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="xhtml/cm/catalogue/addCatalogEdit.xhtml" x="338" y="2098" id="pf154156613538821" referenceLink="//@navigationRule.0/@navigationCase.5/@toViewId|" inlinks="pf15415661353887" path="/xhtml/cm/catalogue/addCatalogEdit.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="xhtml/cm/catalogue/catalogMaintenanceFile.xhtml" x="338" y="2482" id="pf154156613538822" referenceLink="//@navigationRule.0/@navigationCase.6/@toViewId|" inlinks="pf15415661353888" path="/xhtml/cm/catalogue/catalogMaintenanceFile.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="xhtml/bpmtasklist/taskListView.xhtml" x="338" y="2866" id="pf154156613538823" referenceLink="//@navigationRule.0/@navigationCase.7/@toViewId|" inlinks="pf15415661353889" path="/xhtml/bpmtasklist/taskListView.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="xhtml/common/acknowledge.xhtml" x="338" y="3250" id="pf154156613538824" referenceLink="//@navigationRule.0/@navigationCase.8/@toViewId|" inlinks="pf154156613538810" path="/xhtml/common/acknowledge.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="xhtml/cm/codification/reviewBeforeCreateTempCode.xhtml" x="338" y="4018" id="pf154156613538826" referenceLink="//@navigationRule.0/@navigationCase.9/@toViewId|" inlinks="pf154156613538812" path="/xhtml/cm/codification/reviewBeforeCreateTempCode.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="xhtml/cm/codification/reviewBeforeCreateExtCode.xhtml" x="338" y="4402" id="pf154156613538827" referenceLink="//@navigationRule.0/@navigationCase.12/@toViewId|" inlinks="pf154156613538813" path="/xhtml/cm/codification/reviewBeforeCreateExtCode.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="xhtml/cm/zm/zmHome.xhtml" x="338" y="4786" id="pf154156613538828" referenceLink="//@navigationRule.0/@navigationCase.13/@toViewId|" inlinks="pf154156613538814" path="/xhtml/cm/zm/zmHome.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="xhtml/cm/codification/reviewUnspscCode.xhtml" id="pf154165917865211" referenceLink="//@navigationRule.0/@navigationCase.9/@toViewId|" inlinks="pf154166612380915" path="/xhtml/cm/codification/reviewUnspscCode.xhtml"/>
+  <links id="pf15415661353882" target="pf154156613538816" source="pf15415661353881" outcome="extensionSearch"/>
+  <links id="pf15415661353883" target="pf154156613538817" source="pf15415661353881" outcome="searchUnspscToAssign" redirect="true"/>
+  <links id="pf15415661353884" target="pf154156613538818" source="pf15415661353881" outcome="codificationView" redirect="true"/>
+  <links id="pf15415661353885" target="pf154156613538819" source="pf15415661353881" outcome="preRenderCodificationView" redirect="true"/>
+  <links id="pf15415661353886" target="pf154156613538820" source="pf15415661353881" outcome="addCatalogItem"/>
+  <links id="pf15415661353887" target="pf154156613538821" source="pf15415661353881" outcome="editCatalogItem"/>
+  <links id="pf15415661353888" target="pf154156613538822" source="pf15415661353881" outcome="catalogueMaintenanceFile" redirect="true"/>
+  <links id="pf15415661353889" target="pf154156613538823" source="pf15415661353881" outcome="taskListView"/>
+  <links id="pf154156613538810" target="pf154156613538824" source="pf15415661353881" outcome="BPMtesting"/>
+  <links id="pf154156613538812" target="pf154156613538826" source="pf15415661353881" outcome="reviewBeforeCreateTempCode"/>
+  <links id="pf154156613538813" target="pf154156613538827" source="pf15415661353881" outcome="reviewBeforeCreateExtCode"/>
+  <links id="pf154156613538814" target="pf154156613538828" source="pf15415661353881" outcome="cmSupplierZoneMaintenance" redirect="true"/>
+  <links id="pf154166612380915" target="pf154165917865211" source="pf15415661353881" outcome="reviewUnspscCode"/>
+</pageflow:Pageflow>

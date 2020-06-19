@@ -2,6 +2,7 @@ package my.ep.rest.pm;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -22,6 +23,24 @@ public class LiferayOIMRest {
 		UserReqDTO reqDTO = new UserReqDTO();
 		try {
 			SmServiceLookup.getUserSO().createPendingLiferay(reqDTO);
+
+			return Response.status(200)
+					.entity("success calling create liferay!!").build();
+		} catch (Exception e) {
+			return Response.status(406).entity(e.getMessage()).build();
+		}
+
+	}
+	
+	@GET
+	@Path("/createliferaysingle/{loginId}")
+	public Response createLiferaySingle(@PathParam("loginId") String loginId) {
+		log.info("Before success calling createLiferay rest api....");
+
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setLoginId(loginId);
+		try {
+			SmServiceLookup.getUserSO().createPendingLiferaySingle(reqDTO);
 
 			return Response.status(200)
 					.entity("success calling create liferay!!").build();

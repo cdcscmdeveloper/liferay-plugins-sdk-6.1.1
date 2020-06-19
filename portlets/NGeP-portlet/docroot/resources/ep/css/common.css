@@ -10,13 +10,7 @@
 	width: 45% !important;
 }
 
-.wrappedTd:first-child{
+.wrappedTd:first-child {
 	width: 10% !important;
 	text-align: center !important;	
-}
-
-.wrappedTd label{
-	text-align: center !important;
-	float: none !important;
-	padding: 0 !important;
 }
