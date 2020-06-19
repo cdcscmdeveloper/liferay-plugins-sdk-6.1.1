@@ -38,7 +38,7 @@
 				<p:column headerText="#{lbl['lbl.sm.status']}" />
 			</p:row>
 		</p:columnGroup>
-		<p:column selectionMode="multiple" style="width:2%" />
+		<p:column selectionMode="multiple" disabledSelection="#{supplierDataMaintenanceBackingBean.managedBean.disabledApprovedCategories}" style="width:2%" />
 		<p:column style="width : 2%;">
 			<p:outputLabel value="#{index + 1}"
 				style="float: left;white-space: normal;" />
