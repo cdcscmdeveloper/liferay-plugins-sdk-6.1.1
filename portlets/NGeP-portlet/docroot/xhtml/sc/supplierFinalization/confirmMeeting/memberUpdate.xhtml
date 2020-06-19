@@ -19,7 +19,32 @@
 				styleClass="BtnSpacing"
 				action="#{suppFinalMeetingBackingBean.navigateToUpdateMember('back')}" />
 		</div>
-		<ui:include src="/xhtml/sc/supplierFinalization/confirmMeeting/suppFinalizationHeader.xhtml"></ui:include>
+		<div align="left" class="header-info header-spacing">
+			<ui:param name="scQt" value="#{suppFinalMeetingBackingBean.managedBean.scQt}" />
+			<table style="width: 100%;">
+				<tr>
+					<td style="width: 10%;"><h:outputLabel
+							value="#{lbl['lbl.sc.qtn.no']}" /></td>
+					<td style="width: 27%;" class="header-info-text"><p:commandLink
+							process="@this" partialSubmit="true"
+							action="#{ViewQtDetailsGeneralInfoBB.navigatetoViewQtDetailsGeneralInfo(view.viewId,scQt,true)}">
+							<h:outputText value="#{scQt.qtNo}" escape="false" />
+						</p:commandLink></td>
+					<td style="width: 5%;"><h:outputLabel
+							value="#{lbl['lbl.sc.ptj']}" /></td>
+					<td style="width: 32%;" class="header-info-text">
+						#{suppFinalMeetingBackingBean.retrievePTJByOrgProfileId
+						(scQt.ownerOrgProfileId,
+						suppFinalMeetingBackingBean.isQTStatusPublished(suppFinalMeetingBackingBean.managedBean.currentStatusId)?scQt.publishDate
+						: scQt.createdDate)}</td>
+					<td style="width: 5%;"><h:outputLabel
+							value="#{lbl['lbl.sc.status']}" /></td>
+					<td style="width: 32%;" class="header-info-text">
+						#{(suppFinalMeetingBackingBean.managedBean.scQtCommittee.recordStatusFlg==1)?lbl['lbl.txt.active'] : lbl['lbl.txt.inactive']}
+					</td>
+				</tr>
+			</table>
+		</div>
 		<p:panel id="committeeHistoryId"
 			header="#{lbl['lbl.sc.header.committeelist']}" toggleable="true">
 			<ac:committeeHistoryPanel
@@ -31,7 +56,7 @@
 				backingBean="#{suppFinalMeetingBackingBean}" 
 				isSFCommittee="true"/>
 		</p:panel>
-		<p:panel header="#{lbl['lbl.sc.committee.member.list']}"
+		<p:panel header="#{lbl['lbl.sc.header.update.committee']}"
 			styleClass="header-spacing" id="memberListPanel" toggleable="true">
 			<h:outputText styleClass="instruction"
 				value="#{lbl['lbl.sc.committee.member.list.instruction']}"
@@ -99,8 +124,20 @@
 						value="#{committeeMember.PNP ? lbl['lbl.txt.yes'] : lbl['lbl.txt.no']}"></h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.role']}">
-					<h:outputText
-						value="#{suppFinalMeetingBackingBean.getFCMemberRole(committeeMember.memberRole)}" />
+				<ui:fragment	rendered="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleSecretary}">
+					<h:outputText value="#{suppFinalMeetingBackingBean.getFCMemberRole(committeeMember.memberRole)}" />
+				</ui:fragment>
+				<ui:fragment rendered="#{committeeMember.memberRole.parameterCode ne ParameterConst.committeeRoleSecretary}">
+				<p:selectOneMenu id="meetingRoleId" required="true"
+						label="#{lbl['lbl.sc.role']}"
+						value="#{committeeMember.memberRoleId}"
+						style="width: 110px;margin-bottom: 5px;">
+						<f:selectItems
+							value="#{suppFinalMeetingBackingBean.getRoleTypeDropdownValues(committeeMember.PNP,suppFinalMeetingBackingBean.managedBean.scQt,committeeMember.pmUser)}" />
+						<p:ajax event="change" update="memberListTbl" process="@this" partialSubmit="true" listener="#{suppFinalMeetingBackingBean.changeMemberRole(index,suppFinalMeetingBackingBean.managedBean.committeeMembersList)}"></p:ajax>
+					</p:selectOneMenu>
+					<p:message id="meetingRoleMsg" for="meetingRoleId" display="icon"></p:message>
+				</ui:fragment>					
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.representative.type']}">

@@ -98,8 +98,13 @@
 								value="#{lbl[existingMember.PMP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sc.role']}">
-							<h:outputText value="#{suppFinalMeetingBackingBean.getRoleDesc(existingMember)}" />
-						</p:column>
+								<p:selectOneMenu id="appaction"
+										value="#{existingMember.memberRoleId}"
+										style="width: 110px;margin-bottom: 5px;">
+										<f:selectItems
+											value="#{suppFinalMeetingBackingBean.getRoleTypeDropdownValues(existingMember.PMP,suppFinalMeetingBackingBean.managedBean.scQt, existingMember)}" />
+									</p:selectOneMenu>
+					</p:column>
 					</p:dataTable>
 				</p:panel>
 		</h:panelGroup>
