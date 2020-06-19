@@ -5139,6 +5139,9 @@ public class SupplierFinalizationBackingBean extends
 			
 			createShortlistedSuppliersDataModel();
 		}
+		//#26169 #38 #25729#142 - Start 
+		checkSupplierOfferPriceByItemIsExceedCommitteeAuthority();
+		//#26169 #38 #25729#142 - End
 	}
 	
 	private void setSelectedSupplierCodesByItem() {
@@ -5180,9 +5183,11 @@ public class SupplierFinalizationBackingBean extends
 		// #28250 - Start
 		}
 		// #28250 - End
+		//#26169 Start comment this line
 		// #25729#142 & #26169 - Start
-		checkSupplierOfferPriceByItemIsExceedCommitteeAuthority();
+		//checkSupplierOfferPriceByItemIsExceedCommitteeAuthority();
 		// #25729#142 & #26169 - End
+		//#26169 - End comment
 	}
 	
 	private void setSelectionMode(String finalizationMethod) {
@@ -8095,7 +8100,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 							log.info("Inside qualified Supplier package == ");
 							BigDecimal suppOfferPrice = qualSupplierByPackage.getProposalAmount().getProposalAmt();
 							log.info("OFFER PRICE BY PACKAGE == "+suppOfferPrice);
-							if(actualTotalIntendedPrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_50K)) < 1){
+							if(actualTotalIntendedPrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_50MILL)) < 1){
 								if(!getManagedBean().isRefinalizedAndBiddingAward()){
 									if(suppOfferPrice.compareTo(committeeAuthorityAmount) == 1){
 										countSuppOfferPriceExceedCommitteAuthority++;
@@ -8113,6 +8118,8 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		log.info("countSuppOfferPriceExceedCommitteAuthority == "+countSuppOfferPriceExceedCommitteAuthority);
 		if(countSuppOfferPriceExceedCommitteAuthority > 0){
 			this.getManagedBean().setSuppOfferPriceExceedCommunityAuthority(true);
+		}else{
+			this.getManagedBean().setSuppOfferPriceExceedCommunityAuthority(false);
 		}
 		
 	}
