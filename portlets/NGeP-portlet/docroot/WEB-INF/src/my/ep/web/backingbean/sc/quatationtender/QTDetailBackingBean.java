@@ -7462,30 +7462,71 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				boolean isCloseQT = false;
 				ScQt scQt = this.getManagedBean().getQt();
 				Long statusId = scQt.getQtStatus().getStatusId();
+				boolean isBiddingCloseQT = false; 
+				
+				if(scQt.getProposalValidityEndDate() == null && this.getManagedBean().isMaintanceFlow() == true &&
+						statusId.equals(QTStatusConst.QT_PENDING_SPECIFICATION_COMMITTEE_APPOINTMENT)){ 
+					isCloseQT = true; 
+				}
+				if(scQt.getProposalValidityEndDate() == null && this.getManagedBean().isMaintanceFlow() == true &&
+						statusId.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH)){ 
+					isCloseQT = true;
+				}
 						
 				if (scQt.getProposalValidityEndDate() != null && this.getManagedBean().getCurrentDate() != null 
 						 && this.getManagedBean().getCurrentDate().after(scQt.getProposalValidityEndDate())
 						 && this.getManagedBean().isMaintanceFlow() == true ) {
-					
-						if(statusId.equals(QTStatusConst.QT_PENDING_LOI) || 
-							statusId.equals(QTStatusConst.QT_PENDING_LOA) ||
-							  statusId.equals(QTStatusConst.QT_SUPPLIER_FINALIZATION) || 
-								 statusId.equals(QTStatusConst.QT_RE_FINALIZATION) ||
-								    statusId.equals(QTStatusConst.QT_PENDING_SPECIFICATION_COMMITTEE_APPOINTMENT) ||
-								      statusId.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH) ||
-								         statusId.equals(QTStatusConst.QT_CLOSE_PERMANENTLY)){
-							isCloseQT = true;
-						}else if(statusId.equals(QTStatusConst.QT_SUPPLIER_FINALIZATION)){
-							isCloseQT = checkIsBiddingActiveForStatusCloseQT(scQt);
-						}else{
-							isCloseQT = false;
+						    
+						if(statusId.equals(QTStatusConst.QT_PROPOSAL_PREPARATION) || statusId.equals(QTStatusConst.QT_CLOSED) ||
+						   statusId.equals(QTStatusConst.QT_BRIEFING_SITE_VISIT) || statusId.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL) ||
+						   statusId.equals(QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL) ||  statusId.equals(QTStatusConst.QT_CLOSE_PERMANENTLY)){
+							  isCloseQT = true; 
+						}
+						if(statusId.equals(QTStatusConst.QT_SUPPLIER_FINALIZATION) || statusId.equals(QTStatusConst.QT_RE_FINALIZATION)){
+							IQTDetailSO detailSO = BusinessDelegate.getInstance()
+						    .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+						    QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+							quationTenderReqDTO.setQtdetail(scQt);
+							QuationTenderResDTO resDTO = detailSO.retriveScheduleDetailStatus(quationTenderReqDTO);
+							if(null!=resDTO && null!=resDTO.getBidSchedule()){
+								isBiddingCloseQT = checkIsBiddingActiveForStatusCloseQT(scQt);
+								if(isBiddingCloseQT){
+									isCloseQT = true; 
+								}else{
+									isCloseQT = false;
+								}
+							}else{
+								isCloseQT = true;
+							}
+						}
+						if(statusId.equals(QTStatusConst.QT_PENDING_LOI)){
+						    IQTDetailSO detailSO = BusinessDelegate.getInstance()
+						    .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+						    QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+							quationTenderReqDTO.setQtId(scQt.getQtId());
+							QuationTenderResDTO resDTO = detailSO.closeQTstatusForLOI(quationTenderReqDTO);
+							if(resDTO.isCloseQT() == true){
+							  isCloseQT = true; 
+							}
+						}
+                        if(statusId.equals(QTStatusConst.QT_PENDING_LOA)){
+                        	IQTDetailSO detailSO = BusinessDelegate.getInstance()
+						    .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+						    QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+							quationTenderReqDTO.setQtId(scQt.getQtId());
+							QuationTenderResDTO resDTO = detailSO.closeQTstatusForLOA(quationTenderReqDTO);
+							if(resDTO.isCloseQT() == true){
+							  isCloseQT = true; 
+							}
 						}
 				}	
-						
 			   return isCloseQT;	
 			}
-		
 			
+			/**
+			 * check for available status in active bidding for close QT 
+			 * @return the true or false.
+			 */
 			private boolean checkIsBiddingActiveForStatusCloseQT(ScQt scQt) {
 				IBiddingSO biddingSO;
 				try {
@@ -7494,10 +7535,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
 					
 					BiddingReqDTO reqDTO = new BiddingReqDTO();	
-					
 					List<Long> statusIds = new ArrayList<Long>();
-					statusIds.add(BidStatusConst.BID_PENDING_BIDDING);
-					statusIds.add(BidStatusConst.BID_RESCHEDULE_BIDDING);
+					statusIds.add(BidStatusConst.BID_PENDING_BIDDING);     // (C)63350
+					statusIds.add(BidStatusConst.BID_RESCHEDULE_BIDDING);  // (C)63355
 					
 					ISearchBean<ScBidSchedule> bidSchSearchBean = new SearchBean<ScBidSchedule>();
 					bidSchSearchBean.getDataFilterBeans().add(new SearchFilterBean(
