@@ -173,6 +173,10 @@ public class ViewSuppProfileManagedBean extends
 	//28281
 	private List<Long> bumiCodeList;
 	
+	// Start 27815
+	private boolean disabledApprovedCategories;
+	// End 27815
+	
 	public ViewSuppProfileManagedBean() {
 
 	}
@@ -930,4 +934,13 @@ public class ViewSuppProfileManagedBean extends
 	public void setBumiCodeList(List<Long> bumiCodeList) {
 		this.bumiCodeList = bumiCodeList;
 	}
+
+	public boolean isDisabledApprovedCategories() {
+		return disabledApprovedCategories;
+	}
+
+	public void setDisabledApprovedCategories(boolean disabledApprovedCategories) {
+		this.disabledApprovedCategories = disabledApprovedCategories;
+	}
+
 }
