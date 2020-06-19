@@ -536,7 +536,7 @@ public class SupplierDataMaintenanceBackingBean extends
 //			28147: Disciplinary Action - start -
 			if (getManagedBean().getOwnerAndDirectorList() != null
 					&& getManagedBean().getOwnerAndDirectorList().size() > 0) {
-				if (getManagedBean().isBlacklistOwnerOrDirector()) {
+				if (getManagedBean().isBlacklistOwnerOrDirector() && !getManagedBean().getSelectedOwnerAndDirectorList().isEmpty()) {
 					reqDTO.setSelectedOwnerAndDirector(getManagedBean().getSelectedOwnerAndDirectorList());
 				} else {
 					reqDTO.setSelectedOwnerAndDirector(getManagedBean().getOwnerAndDirectorList());
@@ -1011,6 +1011,12 @@ public class SupplierDataMaintenanceBackingBean extends
 				throw new EpException(SmCommonUtil.getMessage("lbl.sm.mandatory.to.select.category",null));
 			}
 		}
+		//#28147 - start
+		if (getManagedBean().isBlacklistOwnerOrDirector()
+				&& getManagedBean().getSelectedOwnerAndDirectorList().isEmpty()) {
+			throw new EpException(SmCommonUtil.getMessage("lbl.sm.mandatory.to.select.owner", null));
+		}
+		//#28147 - end
 
 		//27919 - start
 		if(getManagedBean().isManufacturerStatusCancel()){
@@ -1786,60 +1792,26 @@ public class SupplierDataMaintenanceBackingBean extends
 	private void validateDisciplinaryAction() {
 		if (getManagedBean().isEditDisciplinaryAction()) {
 			if (getManagedBean().getDisciplineVO() != null
-					&& getManagedBean().getDisciplineVO()
-							.getSmDiscplinaryAction() != null) {
-				if (getManagedBean().getDisciplineVO().getSmDiscplinaryAction()
-						.getStartDate() == null
-						&& (getManagedBean().getDisciplineVO()
-								.getSmDiscplinaryAction().getEndDate() != null || !StringUtils
-								.isBlank(getManagedBean().getDisciplineVO()
-										.getSmDiscplinaryAction().getRemark()))) {
-					throw new EpException(
-							SmCommonUtil
-									.getMessage(
-											"lbl.sm.is.required",
-											new String[] { SmCommonUtil
-													.getMessage(
-															"lbl.sm.disciplinary.jktt.start.date",
-															null) }));
-				} else if (getManagedBean().getDisciplineVO()
-						.getSmDiscplinaryAction().getEndDate() == null
-						&& (getManagedBean().getDisciplineVO()
-								.getSmDiscplinaryAction().getStartDate() != null || !StringUtils
-								.isBlank(getManagedBean().getDisciplineVO()
-										.getSmDiscplinaryAction().getRemark()))) {
-					throw new EpException(
-							SmCommonUtil
-									.getMessage(
-											"lbl.sm.is.required",
-											new String[] { SmCommonUtil
-													.getMessage(
-															"lbl.sm.disciplinary.jktt.end.date",
-															null) }));
-				} else if (StringUtils
-						.isBlank(getManagedBean().getDisciplineVO()
-								.getSmDiscplinaryAction().getRemark())
-						&& (getManagedBean().getDisciplineVO()
-								.getSmDiscplinaryAction().getStartDate() != null || getManagedBean()
-								.getDisciplineVO().getSmDiscplinaryAction()
-								.getEndDate() != null)) {
-					throw new EpException(SmCommonUtil.getMessage(
-							"lbl.sm.is.required", new String[] { SmCommonUtil
-									.getMessage(
-											"lbl.sm.disciplinary.jktt.remarks",
-											null) }));
-				} else if (getManagedBean().getDisciplineVO()
-						.getSmDiscplinaryAction().getStartDate() != null
-						&& getManagedBean().getDisciplineVO()
-								.getSmDiscplinaryAction().getEndDate() != null
-						&& getManagedBean()
-								.getDisciplineVO()
-								.getSmDiscplinaryAction()
-								.getStartDate()
-								.compareTo(
-										getManagedBean().getDisciplineVO()
-												.getSmDiscplinaryAction()
-												.getEndDate()) > 0) {
+					&& getManagedBean().getDisciplineVO().getSmDiscplinaryAction() != null) {
+				if (getManagedBean().getDisciplineVO().getSmDiscplinaryAction().getStartDate() == null
+						&& (getManagedBean().getDisciplineVO().getSmDiscplinaryAction().getEndDate() != null || !StringUtils
+								.isBlank(getManagedBean().getDisciplineVO().getSmDiscplinaryAction().getRemark()))) {
+					throw new EpException(SmCommonUtil.getMessage("lbl.sm.is.required",
+							new String[] { SmCommonUtil.getMessage("lbl.sm.disciplinary.jktt.start.date", null) }));
+				} else if (getManagedBean().getDisciplineVO().getSmDiscplinaryAction().getEndDate() == null
+						&& (getManagedBean().getDisciplineVO().getSmDiscplinaryAction().getStartDate() != null || !StringUtils
+								.isBlank(getManagedBean().getDisciplineVO().getSmDiscplinaryAction().getRemark()))) {
+					throw new EpException(SmCommonUtil.getMessage("lbl.sm.is.required",
+							new String[] { SmCommonUtil.getMessage("lbl.sm.disciplinary.jktt.end.date", null) }));
+				} else if (StringUtils.isBlank(getManagedBean().getDisciplineVO().getSmDiscplinaryAction().getRemark())
+						&& (getManagedBean().getDisciplineVO().getSmDiscplinaryAction().getStartDate() != null || getManagedBean()
+								.getDisciplineVO().getSmDiscplinaryAction().getEndDate() != null)) {
+					throw new EpException(SmCommonUtil.getMessage("lbl.sm.is.required",
+							new String[] { SmCommonUtil.getMessage("lbl.sm.disciplinary.jktt.remarks", null) }));
+				} else if (getManagedBean().getDisciplineVO().getSmDiscplinaryAction().getStartDate() != null
+						&& getManagedBean().getDisciplineVO().getSmDiscplinaryAction().getEndDate() != null
+						&& getManagedBean().getDisciplineVO().getSmDiscplinaryAction().getStartDate()
+								.compareTo(getManagedBean().getDisciplineVO().getSmDiscplinaryAction().getEndDate()) > 0) {
 					throw new EpException(MessageConst.ERROR_722538);
 				}
 			}
