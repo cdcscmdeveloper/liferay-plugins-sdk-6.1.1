@@ -4052,13 +4052,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				personnel.setName(suppOwner.getOwnerName());
 				personnel.setIdentificationNo(suppOwner.getIdentificationNo());
 				personnel.setIdentificationTypeId(suppOwner.getIdentificationTypeId());
-				//27691
-				if (getManagedBean().getSmSupp().getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN)) {
-					personnel.setDirector(true);
-				} else {
-					//27802
-					personnel.setEquityOwner(true);
-				}
+				// 27691 - Check box follow first screen info
+				personnel.setDirector(getManagedBean().isOwnerIsDirector());
+				//27802
+				personnel.setEquityOwner(getManagedBean().isOwnerIsEquity());
 			}else{
 				this.getManagedBean().setSmPersonnelSelected(new SmPersonnel());				
 			}
