@@ -163,6 +163,9 @@ public class ViewSuppProfileManagedBean extends
 	private boolean disableDeleteButtonAprrovedCategoryCodePanel;
 	//End - 27815
 	
+	//28281
+	private List<Long> bumiCodeList;
+	
 	public ViewSuppProfileManagedBean() {
 
 	}
@@ -871,5 +874,13 @@ public class ViewSuppProfileManagedBean extends
 
 	public void setDisableDeleteButtonAprrovedCategoryCodePanel(boolean disableDeleteButtonAprrovedCategoryCodePanel) {
 		this.disableDeleteButtonAprrovedCategoryCodePanel = disableDeleteButtonAprrovedCategoryCodePanel;
+	}
+	
+	public List<Long> getBumiCodeList() {
+		return bumiCodeList;
+	}
+
+	public void setBumiCodeList(List<Long> bumiCodeList) {
+		this.bumiCodeList = bumiCodeList;
 	}
 }
