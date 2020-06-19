@@ -1863,7 +1863,9 @@ public class SupplierFinalizationBackingBean extends
 
 		SuppFinalizationReqDTO reqDTO = preSubmitValidation();
 		reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
-		if (QTStatusConst.SF_PENDING_SIGN_OFF.equals(currentStatusId)) {
+		// #25638 - Start.
+		if (QTStatusConst.SF_PENDING_SIGN_OFF.equals(currentStatusId) || QTStatusConst.SF_PENDING_ENDORSEMENT.equals(currentStatusId)) {
+		// #25638 - End.
 			if (CollectionUtils.isNotEmpty(
 					this.getManagedBean().getCommitteeList())
 					// #25638 - Start
@@ -1916,7 +1918,11 @@ public class SupplierFinalizationBackingBean extends
 								break;
 							}
 						}
+					// #25638 - Start.
+					} else {
+						initializeFinalizationRemarks();
 					}
+					// #25638 - End.
 					
 					if (remarksNotFound) {
 						throw new EpException(MessageConst.ERR_775152);

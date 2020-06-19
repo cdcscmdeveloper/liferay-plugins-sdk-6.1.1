@@ -8042,12 +8042,14 @@ private void retriveCommitteeRemarksList(){
 	 * @return navigate to acknowledge page.
 	 */
 	public void reviseProposalEvaluation() {
+		// #25638 - Start.
 		EvaluationResDTO resDTO = updateEvaluationCommitteDtls(this
-				.getManagedBean().getLocalOutCome(), null, ParameterConst.COMMITTEE_ROLE_CHAIRPERSON.equalsIgnoreCase(this.getManagedBean().getRoleCode()));
+				.getManagedBean().getLocalOutCome(), null, true);
 		if (resDTO.isSuccessful()) {
 			ScQtCommittee qtCommittee = resDTO.getQtCommittee();
-			successMessage(getMessgeConstant(this.getManagedBean().getLocalOutCome()),
-					getMessageCommon("lbl.sc.prepare.evaluation"), qtCommittee.getScQt().getQtNo(), Boolean.TRUE);
+			successMessage(MessageConst.INFO_776043,
+					getMessageCommon("lbl.sc.quotation.tender"), qtCommittee.getScQt().getQtNo(), Boolean.TRUE);
+		// #25638 - End.
 		}
 	}
 
