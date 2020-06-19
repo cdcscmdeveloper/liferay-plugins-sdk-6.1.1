@@ -12149,8 +12149,9 @@ private void retriveCommitteeRemarksList(){
 			types.add(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
 		}else if(null==scQtProposalChecklistAttachment && this.getManagedBean().isFP_Compliance())
 		{
+			// #28308 Fix - Start (#26339)
 			types.add(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
-			this.getManagedBean().setFP_Compliance(false);
+			// #28308 Fix - End (#26339)
 		}else{
 			types.add(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
 			types.add(ParameterConst.COMPLIANCE_STATUS_NONCOMPLIANCE);
@@ -12202,7 +12203,7 @@ private void retriveCommitteeRemarksList(){
 	 * @return
 	 */
 	public boolean isComplianceStatusDisabled(ScQtProposalChecklist scQtProposalChecklist) {
-		
+		// #28308 Fix - Start (#26339)
 		if(!this.getManagedBean().isFP_Compliance()) {
 			String title =this.getManagedBean().getScQtChecklist().getTitle();
 			if(title.equals(ParameterConst.CREDIT_FACILITIES_TITLE) ||
@@ -12214,14 +12215,19 @@ private void retriveCommitteeRemarksList(){
 			}else{
 				this.getManagedBean().setFP_Compliance(false);
 			}
+		} else {
+			if (null == scQtProposalChecklist.getScQtProposalChecklistAttachment()) {
+				return true;
+			}
 		}
 		
 		if (!scQtProposalChecklist.getScQtProposal().isSubmitted() || this.getManagedBean().isStatusOnly() 
 				|| this.getManagedBean().isComplianceReEvaluateRequired() 
-				|| this.getManagedBean().isReadOnly()  || !this.getManagedBean().isFP_Compliance()) {
+				|| this.getManagedBean().isReadOnly()) {
 			return true;
 		}
 		return false;
+		// #28308 Fix - End (#26339)
 	}
 	
 	// #26339 - Start
