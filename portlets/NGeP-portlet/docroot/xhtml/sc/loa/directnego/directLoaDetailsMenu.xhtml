@@ -773,14 +773,15 @@
 							<ac:ptjPopup 
 								id="orgProfileCcId"
 								orgTypeParamCode="#{directLOABackingBean.managedBean.selectedOrgType.parameterCode}"
-								okAction="directLOABackingBean.userListener" update=":form:opPtjOrgCode,:form:itSelectedPtj,:form:contAdminId"/>
+								okAction="directLOABackingBean.userListener" update=":form:opPtjOrgCode,:form:itSelectedPtj"/>
 						</h:panelGroup>
 					</c:if>
 					<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.agency.tooltip']}" />
 				</td>
 			</tr>
 
-			<tr>
+			<!-- #26474 - start -->
+			<!-- <tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.cont.admin']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
@@ -804,7 +805,8 @@
 						</c:otherwise>
 					</c:choose>
 				</td>
-			</tr>
+			</tr> -->
+			<!-- #26474 - start -->
 			<tr>
 				<td>
 				<ui:param name="lblContractDuration" 
