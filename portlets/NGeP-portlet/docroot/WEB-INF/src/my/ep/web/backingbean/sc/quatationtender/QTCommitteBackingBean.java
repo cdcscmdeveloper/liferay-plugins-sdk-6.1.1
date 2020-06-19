@@ -2514,13 +2514,15 @@ public class QTCommitteBackingBean extends
 	}
 	public boolean isCommitteeRoleEditable(PmParameter role ){
 		String committeeType = this.getManagedBean().getSelectedTabBean().getScQtCommittee().getScCommittee().getCommitteeType().getParameterCode();
-		if(committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE)){
-			Long status = getCurrentQtStatusId();
-			if(status.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) 
-					|| status.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT) ){
-				return Arrays.asList(new String[]{"C","M"}).contains(role.getParameterCode());
-			}else if(status.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF)){
-				return Arrays.asList(new String[]{"C"}).contains(role.getParameterCode());
+		if(role!=null && StringUtils.isNotEmpty(committeeType)){
+			if(committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE)){
+				Long status = getCurrentQtStatusId();
+				if(status.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) 
+						|| status.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT) ){
+					return Arrays.asList(new String[]{"C","M"}).contains(role.getParameterCode());
+				}else if(status.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF)){
+					return Arrays.asList(new String[]{"C"}).contains(role.getParameterCode());
+				}
 			}
 		}
 		return true;
