@@ -3,6 +3,7 @@
  */
 package my.ep.web.managedbean.sc.supplierfinalization;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -238,6 +239,12 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	
 	private int evaluationReportIndex;
 	
+	//#25729#142 & #26169 - Start
+		private boolean isSuppOfferPriceExceedCommunityAuthority;
+		private BigDecimal maxAmountCommitteeAuthority;
+		//#25729#142 & #26169 - End
+		
+		
 	/**
 	 * @return the activeIndex
 	 */
@@ -2124,7 +2131,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setPreviousPageUrl(String previousPageUrl) {
 		this.previousPageUrl = previousPageUrl;
 	}
-	
 
 	/**
 	 * @return the evaluationReportIndex
@@ -2139,6 +2145,37 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setEvaluationReportIndex(int evaluationReportIndex) {
 		this.evaluationReportIndex = evaluationReportIndex;
 	}
+	
+	/** #25729#142 & #26169 - Start
+	 * @return the isSuppOfferPriceExceedCommunityAuthority
+	 */
+	public boolean isSuppOfferPriceExceedCommunityAuthority() {
+		return isSuppOfferPriceExceedCommunityAuthority;
+	}
+
+	/**
+	 * @param isSuppOfferPriceExceedCommunityAuthority 
+	 * 				the isSuppOfferPriceExceedCommunityAuthority to set
+	 */
+	public void setSuppOfferPriceExceedCommunityAuthority(boolean isSuppOfferPriceExceedCommunityAuthority) {
+		this.isSuppOfferPriceExceedCommunityAuthority = isSuppOfferPriceExceedCommunityAuthority;
+	}
+	
+	/**
+	 * @return the maxAmountCommitteeAuthority
+	 */
+	public BigDecimal getMaxAmountCommitteeAuthority() {
+		return maxAmountCommitteeAuthority;
+	}
+
+	/**
+	 * @param maxAmountCommitteeAuthority the maxAmountCommitteeAuthority to set
+	 */
+	public void setMaxAmountCommitteeAuthority(BigDecimal maxAmountCommitteeAuthority) {
+		this.maxAmountCommitteeAuthority = maxAmountCommitteeAuthority;
+	}
+	
+	//#25729#142 & #26169 - End
 }
 
 
