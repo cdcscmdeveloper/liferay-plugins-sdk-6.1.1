@@ -40,7 +40,7 @@ public class LiferayOIMRest {
 		UserReqDTO reqDTO = new UserReqDTO();
 		reqDTO.setLoginId(loginId);
 		try {
-			SmServiceLookup.getUserSO().createPendingLiferaySingle(reqDTO);
+			//SmServiceLookup.getUserSO().createPendingLiferaySingle(reqDTO);
 
 			return Response.status(200)
 					.entity("success calling create liferay!!").build();
