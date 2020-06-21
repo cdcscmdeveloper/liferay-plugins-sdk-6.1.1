@@ -107,11 +107,11 @@
 									rendered="#{backingBean.managedBean.rejectReasonReqd}"
 									value="#{backingBean.managedBean.applnRejectionRemarks}"
 									id="rmrksForRejectTxtArea" rows="5"
-									validatorMessage="#{lbl['lbl.sm.remarks.rejection']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit']}"
+									validatorMessage="#{lbl['lbl.sm.remarks.rejection']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit.po']}"
 									label="#{lbl['lbl.sm.remarks.rejection']}"
 									required="#{backingBean.managedBean.valueReqd and backingBean.managedBean.rejectReasonReqd}"
-									maxlength="2500">
-									<f:validateLength maximum="2500" />
+									maxlength="4000">
+									<f:validateLength maximum="4000" />
 								</p:inputTextarea> <p:message id="rmrksForRejectTxtAreaMsg"
 									for="rmrksForRejectTxtArea" showSummary="true" showDetail="false"
 									display="icon" /></td>
