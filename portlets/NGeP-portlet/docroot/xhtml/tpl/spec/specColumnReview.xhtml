@@ -39,6 +39,12 @@
 			</p:commandButton>
 		</c:if>
 	</p:column>
+		<p:column style="width:95px;" rendered="#{isItemTypeService and isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
+		<p:inputText style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign"
+			rendered="#{isQuestionTypeItem}" disabled="true">
+			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+		</p:inputText>
+	</p:column>
 <!-- #25039 #162 End -->	
 	<p:column style="width:120px;text-align:right;" rendered="#{isEstCostReq and isSpecTypeFinancial}">
 		<f:facet name="footer">
