@@ -33,12 +33,14 @@
 			</f:facet>
 <!-- START #21695 farid -->
 			<!-- #25039 ruzaimah (REOPEN 51) Begin - only editable for non QT tranx -->	
+			<!-- #25039 #162 - Begin - disabled QT tranx 
+				disabled="#{editable}" change to "true"-->
 			<c:if test="#{isQT}">
 				<p:inputText id="estCost" value="#{tplSpecEstimation.estimatedCost}" style="width:165px; text-align:right;" 
 						styleClass="mandatory"
 						required="true" maxlength="19"
 						label="#{lbl['lbl.tpl.spec.content.estimate.cost']}"
-						disabled="#{editable}">
+						disabled="true">
 					<!-- #25039#123 start  -->	
 					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
 					<!-- #25039#123 end -->
@@ -54,6 +56,7 @@
 					<p:ajax partialSubmit="true" process="@this" update="@this, estCostMsg" />
 				</p:inputText>
 			</c:if>
+			<!--#25039 ruzaimah (REOPEN 162) End -->
 			<!--#25039 ruzaimah (REOPEN 51) End -->
 <!--END #21695 farid -->	
 			<p:message id="estCostMsg" for="estCost" display="icon" />
