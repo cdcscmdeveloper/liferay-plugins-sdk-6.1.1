@@ -123,13 +123,15 @@
 			<f:facet name="header">
 				<h:outputText value="#{lbl['lbl.tpl.spec.content.estimate.cost']}"/>
 			</f:facet>
+			<!-- #25039 #162 - Begin - disabled QT tranx 
+				disabled="#{editable or templateSpecBean.selectedSpecQuestion.tplSpecZoneQties[rowIndex].qty eq 0} change to "true"-->
 			<p:inputText id="zoneEstCost1" value="#{tplSpecEstimation.estimatedCost}" style="width:165px; text-align:right;" 
 				required="true" maxlength="19" 
 				label="#{lbl['lbl.tpl.spec.content.estimate.cost']}"
-				disabled="#{editable}">
-				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" /> <!--#25039# -->
+				disabled="true">
+					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" /> <!--#25039# -->
 			</p:inputText>
-			<p:message id="zoneEstCostMsg1" for="zoneEstCost1" display="icon" />
+			<!-- #25039#162 end -->
 		</p:column>
 	</p:dataTable>
 </ui:composition>
