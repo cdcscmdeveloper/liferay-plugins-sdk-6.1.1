@@ -13,6 +13,8 @@
 <!-- #25039 #162 Begin to add indicative column -->	
 		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:120px;text-align:right;" rendered="#{isEstCostReq and isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.Indicative.unit.price']}">
 		</p:column>
+		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:120px;text-align:right;" rendered="#{isItemTypeService and isSpecTypeFinancial}"  headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
+		</p:column>
 <!-- #25039 #162 End -->
 	
 		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:120px;text-align:right;" rendered="#{isEstCostReq and isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.estimate.cost']}">
