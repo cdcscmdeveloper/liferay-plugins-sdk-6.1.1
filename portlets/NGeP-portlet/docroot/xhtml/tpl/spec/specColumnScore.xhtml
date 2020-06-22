@@ -27,14 +27,17 @@
 					</h:panelGroup>
 				</p:column>
 
-
+	<ui:remove>
+		Bug #28312
+		ADDED : disabled="#{evaluationBackingBean.managedBean.readOnly}
+	</ui:remove>
 	<p:column style="width:50px; white-space:normal; text-align:right;"  rendered="#{isScoringReq}">
 		<h:panelGroup rendered="#{!empty question.scoreTypeCode and !isScoring and !isRepeated}">
 			<p:inputText id="userScore" style="min-width:0px !important;width:30px; text-align:right;"
 				value="#{tplSpecAnswer.userScore}"
 				required="false" maxlength="14"
 				label="#{lbl['lbl.tpl.spec.content.user.score']}"
-				disabled="#{tplSpecAnswer.ratePerUom eq 0 or tplSpecAnswer ne null and 
+				disabled="#{evaluationBackingBean.managedBean.readOnly or tplSpecAnswer.ratePerUom eq 0 or tplSpecAnswer ne null and 
 							tplSpecAnswer.tplSpecZoneQty ne null and 
 							tplSpecAnswer.tplSpecZoneQty.qty eq 0}">
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="14" integerOnly="true" />
@@ -52,6 +55,6 @@
 	
 <!-- Farid end -->	
 	<p:column style="width:130px;">
-		<p:inputTextarea style="width:calc(100% - 15px);" value="#{tplSpecAnswer.userRemark}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);"/>
+		<p:inputTextarea disabled="#{evaluationBackingBean.managedBean.readOnly}" style="width:calc(100% - 15px);" value="#{tplSpecAnswer.userRemark}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);"/>
 	</p:column>
 </ui:composition>
