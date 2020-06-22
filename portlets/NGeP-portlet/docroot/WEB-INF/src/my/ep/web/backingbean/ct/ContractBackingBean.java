@@ -3329,12 +3329,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 //Bug #28356 - End		
 		
 		
-		IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractItemSO.class);
-		
-		contractItemSO.updateItemSearchService(reqDTO);
-		
-	
-		
 	}
 
 	/**
