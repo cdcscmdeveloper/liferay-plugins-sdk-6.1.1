@@ -12260,4 +12260,27 @@ private void retriveCommitteeRemarksList(){
 		return false;
 	}
 	// #26339 - End
+	
+	// #25638 - Start
+		/**
+		 * @return
+		 */
+		public boolean displayReviseInstrn() {
+			long currentStatus = getManagedBean().getCurrentStatusId().longValue();
+			if ((currentStatus == QTStatusConst.EC_PENDING_ENDORSEMENT.longValue())
+					|| (currentStatus == QTStatusConst.TEC_PENDING_ENDORSEMENT.longValue())
+					|| (currentStatus == QTStatusConst.FEC_PENDING_ENDORSEMENT.longValue())
+					|| (currentStatus == QTStatusConst.SE_PENDING_ENDORSMENT.longValue())
+					|| (currentStatus == QTStatusConst.OC_PENDING_ENDORSEMENT.longValue())
+					
+					|| (currentStatus == QTStatusConst.EC_PENDING_SIGN_OFF.longValue())
+					|| (currentStatus == QTStatusConst.TEC_PENDING_SIGN_OFF.longValue())
+					|| (currentStatus == QTStatusConst.FEC_PENDING_SIGN_OFF.longValue())
+					|| (currentStatus == QTStatusConst.SE_PENDING_SIGNOFF.longValue())
+					|| (currentStatus == QTStatusConst.OC_PENDING_SIGN_OFF.longValue())) {
+				return true;
+			}
+			return false;
+		}
+		// #25638 - End
 }
