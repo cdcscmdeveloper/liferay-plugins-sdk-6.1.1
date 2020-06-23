@@ -8677,7 +8677,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				try {
 					qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);	
-					return null;//qtDetailSO.findScCloseQTRemarks(reqDTO).getScCloseQTRemark();
+					return qtDetailSO.findScCloseQTRemarks(reqDTO).getScCloseQTRemark();
 				} finally {
 					qtDetailSO = null;
 				}
