@@ -11,7 +11,7 @@
 
 	<p:panel header="#{lbl['lbl.sc.committee.endorsement.evaluation']}"
 		toggleable="true">
-		<h:outputText value="#{lbl['lbl.sc.committee.endorsement.evaluation.instruction']}" 
+		<h:outputText value="#{lbl['lbl.sc.committee.endorsement.evaluation.instruction']}" rendered="#{evaluationBackingBean.displayReviseInstrn()}"
 				style="color:#0054a6;font-size:12px;font-family:Arial,helvetica,sans-serif;font-weight:normal;font-style:italic;margin-left:10px "/>
 		<p:dataTable id="evaluationSignOff" var="committeActivity" rows="10"
 		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
