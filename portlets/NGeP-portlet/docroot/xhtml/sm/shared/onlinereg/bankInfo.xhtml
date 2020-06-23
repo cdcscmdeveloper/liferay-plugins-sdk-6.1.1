@@ -103,7 +103,7 @@
 					update="deleteBnkBtnId,bankInfoId,@this" />
 				<p:commandButton value="#{lbl['lbl.btn.delete']}"  partialSubmit="true" process="@this,bankInfoId"
 					disabled="#{empty registrationBackingBean.managedBean.selectedSuppBanks}" 
-					update=":#{p:component('bankAlertPopUpId')},bankInfoId,addBnkBtnId,@this" id="deleteBnkBtnId" action="#{registrationBackingBean.checkingBeforeRemoveSupplierBank()}"/>
+					update=":#{p:component('bankAlertPopUpId')},bankInfoId,addBnkBtnId,@this" id="deleteBnkBtnId" action="#{registrationBackingBean.checkingBeforeRemoveSupplierBank}"/>
 			</div>
 		</p:outputPanel>
 	</p:panel>
