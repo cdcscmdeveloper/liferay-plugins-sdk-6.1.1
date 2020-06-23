@@ -96,7 +96,6 @@ public class UpgradeRoleFinishButtonRest {
 			//END 12491
 			return Response.status(200).entity("success calling upgradeRoleFinishButtonBulk!!").build();
 		} catch (Exception ex) {
-			log.info("error calling upgradeRoleFinishButtonBulk rest api....");
 			return Response.status(406).entity(ex.getMessage()).build();
 		}
 	}
