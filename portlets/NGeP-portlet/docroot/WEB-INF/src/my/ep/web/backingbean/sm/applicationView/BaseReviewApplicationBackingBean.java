@@ -1611,17 +1611,17 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	public void managePersonnelRoles() {
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
-			if (getManagedBean().getSelectedShareHolder().isEquityOwner()
-					|| getManagedBean().getSelectedShareHolder().isDirector()
+			/*#28256 - Start*/
+			if (getManagedBean().getSelectedShareHolder().isDirector()
 					|| getManagedBean().getSelectedShareHolder()
-							.isHigherManagement()
-					|| getManagedBean().getSelectedShareHolder().isManagement()) {
+							.isHigherManagement()) {
 				getManagedBean().getSelectedShareHolder().setClerical(false);
 				getManagedBean().getSelectedShareHolder().setDisableStaff(true);
 			} else {
 				getManagedBean().getSelectedShareHolder()
 						.setDisableStaff(false);
 			}
+			/*#28256 - End*/
 
 		} else if (getManagedBean().getSmAppl().getSupplierType()
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
