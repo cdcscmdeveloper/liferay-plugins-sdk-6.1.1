@@ -113,7 +113,7 @@
 				<p:remoteCommand name="#{templateSpecId}SpecReRender" 
 					partialSubmit="true" process="@this" update="@(.ac-paginator)"
 					oncomplete="#{templateSpecId}specBlockWidget.hide();" />
-				2	
+					
 				<ac:dataTable id="questionTbl" converter="PositionMetricConverter" value="#{templateSpecBean.specMaster.tplSpecQuestions}" widgetVar="#{templateSpecId}questionTblWidget" var="question" rowIndexVar="row"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					scrollable1="true" scrollWidth1="#{scrollWidth}">
@@ -242,27 +242,8 @@
 				
 			</c:if>
 			
-				3	
-			<c:if test="#{isContentTypeAnswer or isContentTypeScore or (isContentTypeUpdateSpec and isUpdateSpecByAnswers)}">
-			3.1
-					1 : #{row > 0 ? templateSpecBean.specAnswerList[row-1].tplSpecQuestion : null}
 					
-					3 : #{question.questionType == TplSpecConst.questionTypeItem}
-					4 : #{question.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard}
-					5 : #{isPriceTypeStandard or question.clPriceTypeCode.parameterCode == ParameterConst.priceTypeZonalStandard}
-					6 : #{question.clPriceTypeCode.parameterCode == ParameterConst.priceTypeTariff or question.clPriceTypeCode.parameterCode == ParameterConst.priceTypeZonalTariff}"
-					7 : #{question.clPriceTypeCode.parameterCode == ParameterConst.priceTypeTier 
-						or question.clPriceTypeCode.parameterCode == ParameterConst.priceTypePromotionTier
-						or question.clPriceTypeCode.parameterCode == ParameterConst.priceTypeZonalTier 
-						or question.clPriceTypeCode.parameterCode == ParameterConst.priceTypeZonalPromotionTier 
-						or isPriceTypeTariff}"
-					8 : #{question.answerTypeCode.parameterCode == ParameterConst.answerTypeDropdown}
-					9 : #{question.answerTypeCode.parameterCode == ParameterConst.answerTypeText}
-					10 : #{question.answerTypeCode.parameterCode == ParameterConst.answerTypeNumeric}
-					11 : #{question.scoreTypeCode.parameterCode == ParameterConst.scoreTypeAuto}
-					12 : #{!empty processValidationId ? param[p:component(processValidationId)]==null : true}
-					13
-					14
+			<c:if test="#{isContentTypeAnswer or isContentTypeScore or (isContentTypeUpdateSpec and isUpdateSpecByAnswers)}">
 				<p:dataTable id="questionTbl" var="tplSpecAnswer" rowIndexVar="row"
 					value="#{templateSpecBean.specAnswerList}" 	emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					scrollable1="true" scrollWidth1="#{scrollWidth}">
@@ -353,7 +334,7 @@
 				<p:remoteCommand name="#{templateSpecId}SpecReRender" 
 					partialSubmit="true" process="@this" update="@(.ac-paginator)"
 					oncomplete="#{templateSpecId}specBlockWidget.hide();" />
-				1	
+					
 				<ac:dataTable id="questionTbl" widgetVar="#{templateSpecId}questionTblWidget" var="question" rowIndexVar="row"
 					value="#{templateSpecBean.specMaster.tplSpecQuestions}"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
