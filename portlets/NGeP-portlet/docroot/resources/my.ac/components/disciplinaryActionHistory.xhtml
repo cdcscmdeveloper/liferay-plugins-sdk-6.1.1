@@ -15,6 +15,7 @@
 		<cc:attribute name="mofView" default="true" />
 		<cc:attribute name="dialogMessage" default=""/>
 		<cc:attribute name="smSupplier" type="my.ep.persistence.entity.sm.SmSupplier" />
+		<cc:attribute name="btnView" default="false" />
 	</cc:interface>
 	<cc:implementation>
 	<p:dialog id="disciplinaryActionHistoryDlgId" header="#{cc.attrs.dialogHeader}" closable="true"
@@ -117,6 +118,7 @@
 	/*  end : 27445 = Disciplinary Actions / history popup window*/
 		</p:dataTable>
 		<p:commandButton value="#{lbl['lbl.btn.download']}" style="float:right;"
+		    rendered="#{!cc.attrs.btnView}"
 			action="#{supplierDataMaintenanceBackingBean.downloadDAHistory(cc.attrs.smSupplier)}"
 			ajax="false">
 			<p:fileDownload value="#{supplierDataMaintenanceBackingBean.file}" />

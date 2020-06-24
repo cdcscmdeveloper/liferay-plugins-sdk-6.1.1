@@ -301,7 +301,11 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private List<DisciplinaryActionVO> disciplineVOs; 
 	private boolean disciplinaryAction;
 	//28281 - end 
-
+	
+	// 28342 : Disciplinary Action - start
+	private boolean disableDownloadButtonDAHistory;
+	// 28342 : Disciplinary Action - end
+	
 	public BaseReviewApplicationManagedBean() {
 		selectedCert = new SmSupplierCert();
 		selectedCert.setPmCertBody(new PmCertBody());
@@ -2159,6 +2163,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
 		this.disciplineVOs = disciplineVOs;
+	}
+
+	public boolean isDisableDownloadButtonDAHistory() {
+		return disableDownloadButtonDAHistory;
+	}
+
+	public void setDisableDownloadButtonDAHistory(boolean disableDownloadButtonDAHistory) {
+		this.disableDownloadButtonDAHistory = disableDownloadButtonDAHistory;
 	}
 	
 	//28281 - end
