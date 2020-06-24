@@ -34,7 +34,7 @@
 			<p:inputText id="userScore" style="min-width:0px !important;width:30px; text-align:right;"
 				value="#{tplSpecAnswer.userScore}"
 				required="false" maxlength="14"
-				label="#{lbl['lbl.tpl.spec.content.user.score']}">
+				label="#{lbl['lbl.tpl.spec.content.user.score']}"
 				disabled="#{evaluationBackingBean.managedBean.readOnly or tplSpecAnswer.ratePerUom eq 0 or tplSpecAnswer ne null and 
 							tplSpecAnswer.tplSpecZoneQty ne null and 
 							tplSpecAnswer.tplSpecZoneQty.qty eq 0}">
