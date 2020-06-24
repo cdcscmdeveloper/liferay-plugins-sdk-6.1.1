@@ -3317,7 +3317,22 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				item.setMinimumOrderQty(ctContractItem.getMinimumOrderQty());
 			}
 			
-		} 
+		}
+		// Start - 28292
+		if (!ctContractItem.getCtItemMaxQties().isEmpty()) {
+			Double maxValue = new Double(0);							
+			for (CtItemMaxQty maxQty : ctContractItem.getCtItemMaxQties()) {
+				maxValue = maxQty.getMaxQuantity().doubleValue();				
+			}
+			if (ctContractItem.getMinimumOrderQty() > maxValue) {
+				throw new EpException(MessageConst.ERROR_100034,
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				
+			}
+			
+		}
+		// End - 28292
 		getManagedBean().getUpdateItemMap().put(ctContractItem.getScRequestItem().getRequestNoteItemId(), ctContractItem);
 		
 //		ContractItemReqDTO reqDTO =  new ContractItemReqDTO();
