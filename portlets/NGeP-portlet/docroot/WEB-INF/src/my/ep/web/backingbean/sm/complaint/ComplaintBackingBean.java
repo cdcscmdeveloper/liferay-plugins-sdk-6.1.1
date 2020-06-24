@@ -653,7 +653,8 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 			newStatus = DisciplinaryActionConst.REVIEW_SUPP_RESP;
 
 		}else if(currentStatus.longValue() == DisciplinaryActionConst.REVIEW_SUPP_RESP.longValue()){
-			if(getManagedBean().getSmComplReview().getDecisionTaken().equalsIgnoreCase(String.valueOf(DbValueConst.RECORD_STATUS_ACTIVE))){
+			// 26151 - Check 2nd Round PTPK Review Decision
+			if(getManagedBean().getSecondReview().getDecisionTaken().equalsIgnoreCase(String.valueOf(DbValueConst.RECORD_STATUS_ACTIVE))){
 				newStatus = DisciplinaryActionConst.PREPARE_AC_LETTER;
 			}else{
 				newStatus = DisciplinaryActionConst.REVIEW_SUPP_RESP_REJECT;
@@ -1155,6 +1156,12 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 						getManagedBean().getSecondReview().setSmComplaint(getManagedBean().getSmComplaint());
 					}
 					
+					// 26151 - start - Load 2nd Round PTPK Review
+					if(currentStatus.longValue() == DisciplinaryActionConst.REVIEW_SUPP_RESP_REJECT.longValue()){
+						getManagedBean().setSecondReview(getSecondReview());
+					}
+					// 26151 - end - Load 2nd Round PTPK Review
+					
 					if(currentStatus.longValue() >= DisciplinaryActionConst.PREPARE_AC_LETTER.longValue()){
 						SmComplaintReview secondReview = getSecondReview();
 						getManagedBean().setSecondReview(secondReview);
@@ -1215,7 +1222,12 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 			getManagedBean().setPtpkDecisionDocs(getDocumentsByTypeAndId(DisciplinaryActionConst.FIRST_PTPK_REVIEW_DOC_TYPE, reviewId));
 			getManagedBean().setShowCauseLetters(getDocumentsByTypeAndId(DisciplinaryActionConst.SHOW_CAUSE_LETTER_DOC_TYPE, reviewId));
 			getManagedBean().setShowCauseResponseDocs(getDocumentsByTypeAndId(DisciplinaryActionConst.SHOW_CAUSE_RESP_DOC_TYPE, reviewId));
-			
+		}else if(statusId.longValue() == DisciplinaryActionConst.REVIEW_SUPP_RESP_REJECT.longValue()){
+			// 26151 - 2nd Round PTPK Rejected Documents
+			getManagedBean().setPtpkDecisionDocs(getDocumentsByTypeAndId(DisciplinaryActionConst.FIRST_PTPK_REVIEW_DOC_TYPE, reviewId));
+			getManagedBean().setShowCauseLetters(getDocumentsByTypeAndId(DisciplinaryActionConst.SHOW_CAUSE_LETTER_DOC_TYPE, reviewId));
+			getManagedBean().setShowCauseResponseDocs(getDocumentsByTypeAndId(DisciplinaryActionConst.SHOW_CAUSE_RESP_DOC_TYPE, reviewId));
+			getManagedBean().setSecondPtpkDecisionDocs(getDocumentsByTypeAndId(DisciplinaryActionConst.SECOND_PTPK_REVIEW_DOC_TYPE, getSecondReview().getComplaintReviewId()));
 		}else if(statusId.longValue() == DisciplinaryActionConst.PREPARE_AC_LETTER.longValue()){
 			getManagedBean().setPtpkDecisionDocs(getDocumentsByTypeAndId(DisciplinaryActionConst.FIRST_PTPK_REVIEW_DOC_TYPE, getFirstReview().getComplaintReviewId()));
 			getManagedBean().setSecondPtpkDecisionDocs(getDocumentsByTypeAndId(DisciplinaryActionConst.SECOND_PTPK_REVIEW_DOC_TYPE, reviewId));
