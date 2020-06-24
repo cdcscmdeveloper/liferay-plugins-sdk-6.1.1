@@ -1457,12 +1457,14 @@ public class SPDetailBackingBean extends
 					if(finProposalChecklist != null){
 						reqDTO.setScQtProposalChecklist(finProposalChecklist);
 						// #26339 - Start
-						if (removeAttachment) {
+						// #28398 BUG - 26339 CR - Start
+						if (removeAttachment && null != finProposalChecklist.getScQtProposalChecklistAttachment()) {
 							List<ScQtProposalChecklistAttachment> removeAttachmentList = new ArrayList<>();
 							removeAttachmentList.add(finProposalChecklist.getScQtProposalChecklistAttachment());
 							reqDTO.setTobeRemovedProposalChecklistAttachments(removeAttachmentList);
 							finProposalChecklist.setScQtProposalChecklistAttachment(null);
 						}
+						// #28398 BUG - 26339 CR - End
 						// #26339 - End
 						ProposalResDTO resDto = proposalSO
 								.saveProposalDetails(reqDTO);
@@ -1920,19 +1922,24 @@ public class SPDetailBackingBean extends
 			boolean removeAttachment = false;
 			// #26339 - End
 			if (isCompleted && scQtPRPAssetLiability != null) {
-				if( ((scQtPRPAssetLiability.getCurrentAssets() == null)
-						&& (scQtPRPAssetLiability.getCurrentLiabilities() == null) 
-						&& (scQtPRPAssetLiability.getTotalCashInHand() == null)
-						&& (scQtPRPAssetLiability.getTotalAccountReceivable() == null))
-						
-						|| 
-						
-						( (null != scQtPRPAssetLiability.getCurrentAssets() && scQtPRPAssetLiability.getCurrentAssets().compareTo(BigDecimal.ZERO) == 0)
-						&& (null != scQtPRPAssetLiability.getCurrentLiabilities() && scQtPRPAssetLiability.getCurrentLiabilities().compareTo(BigDecimal.ZERO) == 0) 
-						&& (null != scQtPRPAssetLiability.getTotalCashInHand() && scQtPRPAssetLiability.getTotalCashInHand().compareTo(BigDecimal.ZERO) == 0)
-						&& (null != scQtPRPAssetLiability.getTotalAccountReceivable() && scQtPRPAssetLiability.getTotalAccountReceivable().compareTo(BigDecimal.ZERO) == 0)
-						&& (null != scQtPRPAssetLiability.getAcidRatio() && scQtPRPAssetLiability.getAcidRatio().compareTo(BigDecimal.ZERO) == 0 )
-						&& (null != scQtPRPAssetLiability.getCurrentRatio() && scQtPRPAssetLiability.getCurrentRatio().compareTo(BigDecimal.ZERO) == 0))) 
+				// #28398 BUG - 26339 CR - Start
+				BigDecimal totalVal = new BigDecimal(0.00);
+				if (null != scQtPRPAssetLiability.getCurrentAssets()) {
+					totalVal = totalVal.add(scQtPRPAssetLiability.getCurrentAssets());
+				}
+				if (null != scQtPRPAssetLiability.getCurrentLiabilities()) {
+					totalVal = totalVal.add(scQtPRPAssetLiability.getCurrentLiabilities());
+				}
+				if (null != scQtPRPAssetLiability.getTotalCashInHand()) {
+					totalVal = totalVal.add(scQtPRPAssetLiability.getTotalCashInHand());
+				}
+				if (null != scQtPRPAssetLiability.getTotalAccountReceivable()) {
+					totalVal = totalVal.add(scQtPRPAssetLiability.getTotalAccountReceivable());
+				}
+				
+				if( ((null != totalVal && totalVal.compareTo(BigDecimal.ZERO) == 0)
+								&& (null != scQtPRPAssetLiability.getAcidRatio() && scQtPRPAssetLiability.getAcidRatio().compareTo(BigDecimal.ZERO) == 0 )
+								&& (null != scQtPRPAssetLiability.getCurrentRatio() && scQtPRPAssetLiability.getCurrentRatio().compareTo(BigDecimal.ZERO) == 0))) 
 					 {
 					// #26339 - Start
 					//assetProposalChecklist.setScQtProposalChecklistAttachment(null);
@@ -1941,7 +1948,7 @@ public class SPDetailBackingBean extends
 					assetProposalChecklist.setSubmitted(true);
 					//this.getManagedBean().setReadOnly(true);
 					assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
-
+					// #28398 BUG - 26339 CR - End
 				}else{
 					if (assetProposalChecklist.isSubmitted()){
 						if (assetProposalChecklist.getScQtProposalChecklistAttachment() == null 
@@ -2040,12 +2047,14 @@ public class SPDetailBackingBean extends
 					if(assetProposalChecklist != null){
 						reqDTO.setScQtProposalChecklist(assetProposalChecklist);
 						// #26339 - Start
-						if (removeAttachment) {
+						// #28398 BUG - 26339 CR - Start
+						if (removeAttachment && null != assetProposalChecklist.getScQtProposalChecklistAttachment()) {
 							List<ScQtProposalChecklistAttachment> removeAttachmentList = new ArrayList<>();
 							removeAttachmentList.add(assetProposalChecklist.getScQtProposalChecklistAttachment());
 							reqDTO.setTobeRemovedProposalChecklistAttachments(removeAttachmentList);
 							assetProposalChecklist.setScQtProposalChecklistAttachment(null);
 						}
+						// #28398 BUG - 26339 CR - End
 						// #26339 - End
 						ProposalResDTO resDto = proposalSO
 								.saveProposalDetails(reqDTO);
