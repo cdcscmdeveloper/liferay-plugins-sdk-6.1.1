@@ -269,7 +269,12 @@ public class SupplierFinalizationBackingBean extends
 			 */
 			
 			loadInitialData(qtId);
-			if(StringUtils.isNotEmpty(this.getManagedBean().getTaskName()) && Arrays.asList(SCProcessNameConst.EVAL_COMM_FINALIZE_GROUP).contains(this.getManagedBean().getTaskName())){
+			if (StringUtils.isNotEmpty(this.getManagedBean().getTaskName())
+					&& Arrays.asList(
+							new String[] {
+									SCProcessNameConst.FINALISE_FC_SELECTION,
+									SCProcessNameConst.COORDINATE_FC_MEETING })
+							.contains(this.getManagedBean().getTaskName())) {
 				prepareUpdateCommitteeMember();//#25037
 			}
 			
