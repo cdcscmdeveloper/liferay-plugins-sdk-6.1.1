@@ -27,6 +27,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -510,6 +511,7 @@ public class GovtSellerRegistrationBackingBean extends
 				SmCommonUtil.getStateList(getManagedBean().getSelectedBranch()
 						.getSmAddress().getPmCountry().getCountryId()));
 		getManagedBean().setBranchCompanyDistricts(new ArrayList<SelectItem>());
+		getManagedBean().setBranchCompanyDivisions(new ArrayList<SelectItem>());//13320 
 		getManagedBean().setBranchCompanyCities(new ArrayList<SelectItem>());
 		getManagedBean().setSelectedBranch(br);
 		SmApplicationUtil.addNewBranchGst(getManagedBean().getSmGstSupplier(),
@@ -576,9 +578,10 @@ public class GovtSellerRegistrationBackingBean extends
 		.setPmDivision(
 				SmCommonUtil.getInstance().getDivisionById(
 						getManagedBean()
-								.getDivisionIds()));
+								.getSelectedBranch()
+								.getSmAddress().getPmDivision()
+								.getDivisionId()));
 		//13320-End
-		
 		getManagedBean()
 				.getSelectedBranch()
 				.getSmAddress()
@@ -776,7 +779,7 @@ public class GovtSellerRegistrationBackingBean extends
 			Long State=this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmState().getStateId();
 			PmState states = (SmCommonUtil.getInstance().getStateById(State));
 			if(states !=null && states.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
-				this.getManagedBean().setDivisionIds(null);
+				this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDivision().setDivisionId(null);
 				this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDistrict().setDistrictId(null);
 				this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmCity().setCityId(null);
 				
@@ -785,12 +788,15 @@ public class GovtSellerRegistrationBackingBean extends
 				
 				getManagedBean().setBusinessDistrictLs(new ArrayList<SelectItem>());
 				getManagedBean().setBusinessCityLs(null);
+				getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmState().setAdoptDivision(true);
+			}else{
+				getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmState().setAdoptDivision(false);
 			} 
 			if(states !=null && states.getAdoptDivision()) {
 				getManagedBean().setDivisionBox(false);	
 			}else {
 				getManagedBean().setDivisionBox(true);
-				List<SelectItem> districtLs = SmCommonUtil.getDistrictListByID(State);
+				List<SelectItem> districtLs = SmCommonUtil.getDistrictList(State);
 				getManagedBean().setBusinessDistrictLs(
 						districtLs);
 				getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
@@ -801,7 +807,7 @@ public class GovtSellerRegistrationBackingBean extends
 			Long State=getManagedBean().getSmPermenantAdd().getPmState().getStateId();
 			PmState states = (SmCommonUtil.getInstance().getStateById(State));
 			if (states != null && states.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
-				this.getManagedBean().setDivisionIds(null);
+				this.getManagedBean().getSmPermenantAdd().getPmDivision().setDivisionId(null);
 				this.getManagedBean().getSmPermenantAdd().getPmDistrict().setDistrictId(null);
 				this.getManagedBean().getSmPermenantAdd().getPmCity().setCityId(null);
 				
@@ -811,11 +817,16 @@ public class GovtSellerRegistrationBackingBean extends
 						new ArrayList<SelectItem>());
 				getManagedBean()
 						.setPermenantCityLs(null);
-			} if(states.getAdoptDivision()) {//13320
+				
+				getManagedBean().getSmPermenantAdd().getPmState().setAdoptDivision(true);
+			}else{
+				getManagedBean().getSmPermenantAdd().getPmState().setAdoptDivision(false);
+
+			} if(states !=null && states.getAdoptDivision()) {//13320
 				getManagedBean().setDivisionBox(false);	
 			}else {
 				getManagedBean().setDivisionBox(true);
-				List<SelectItem> districtLs = SmCommonUtil.getDistrictListByID(State);
+				List<SelectItem> districtLs = SmCommonUtil.getDistrictList(State);
 				getManagedBean().setPermenantDistrictLs(districtLs);
 				getManagedBean()
 						.setPermenantCityLs(new ArrayList<SelectItem>());
@@ -826,20 +837,24 @@ public class GovtSellerRegistrationBackingBean extends
 			Long State=getManagedBean().getSmResAdd().getPmState().getStateId();
 			PmState states = (SmCommonUtil.getInstance().getStateById(State));
 			if (states != null && states.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
-			 this.getManagedBean().setDivisionIds(null);
+			 this.getManagedBean().getSmResAdd().getPmDivision().setDivisionId(null);
 				this.getManagedBean().getSmResAdd().getPmDistrict().setDistrictId(null);
 				this.getManagedBean().getSmResAdd().getPmCity().setCityId(null);
 				
 				List<SelectItem> divisionLs = SmCommonUtil.getDivisionList(State);
 				this.getManagedBean().setResidentialDivisionLs(divisionLs);//13320-End
 				getManagedBean().setResidentialDistrictLs(new ArrayList<SelectItem>());
-				getManagedBean().setResidentialCityLs(
-						null);
-			}if(states.getAdoptDivision()) {//13320
+				getManagedBean().setResidentialCityLs(null);
+				
+				getManagedBean().getSmResAdd().getPmState().setAdoptDivision(true);
+			}else{
+				getManagedBean().getSmResAdd().getPmState().setAdoptDivision(false);
+
+			}if(states !=null && states.getAdoptDivision()) {//13320
 				getManagedBean().setDivisionBox(false);	
 			} else {
 				getManagedBean().setDivisionBox(true);
-				List<SelectItem> districtLs = SmCommonUtil.getDistrictListByID(State);
+				List<SelectItem> districtLs = SmCommonUtil.getDistrictList(State);
 				getManagedBean().setResidentialDistrictLs(
 						districtLs);
 				getManagedBean().setResidentialCityLs(
@@ -850,7 +865,8 @@ public class GovtSellerRegistrationBackingBean extends
 			Long State=getManagedBean().getSelectedBranch().getSmAddress().getPmState().getStateId();
 			PmState states = (SmCommonUtil.getInstance().getStateById(State));
 			if (states != null && states.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
-				this.getManagedBean().setDivisionIds(null);
+				this.getManagedBean().getSelectedBranch().getSmAddress().setPmDivision(new PmDivision());
+				this.getManagedBean().getSelectedBranch().getSmAddress().getPmDivision().setDivisionId(null);
 				this.getManagedBean().getSelectedBranch().getSmAddress().getPmDistrict().setDistrictId(null);
 				this.getManagedBean().getSelectedBranch().getSmAddress().getPmCity().setCityId(null);
 				
@@ -860,11 +876,15 @@ public class GovtSellerRegistrationBackingBean extends
 						new ArrayList<SelectItem>());
 				getManagedBean().setBranchCompanyCities(
 						null);
-			} if(states.getAdoptDivision()) {//13320
+				getManagedBean().getSelectedBranch().getSmAddress().getPmState().setAdoptDivision(true);
+			}else{
+				getManagedBean().getSelectedBranch().getSmAddress().getPmState().setAdoptDivision(false);
+
+			} if(states !=null && states.getAdoptDivision()) {//13320
 				getManagedBean().setDivisionBox(false);	
 			}else {
 				getManagedBean().setDivisionBox(true);
-				List<SelectItem> districtLs = SmCommonUtil.getDistrictListByID(State);
+				List<SelectItem> districtLs = SmCommonUtil.getDistrictList(State);
 				getManagedBean().setBranchCompanyDistricts(
 						districtLs);
 				getManagedBean().setBranchCompanyCities(
@@ -1172,8 +1192,8 @@ public class GovtSellerRegistrationBackingBean extends
 	 */
 	private void initBranchAddressSelectItems(SmAddress address) {
 		onChangeCountry(address.getPmCountry(), "BRANCH_ADDRESS");
-	//	onChangeState(address.getPmState(), "BRANCH_ADDRESS");
-	//	onChangeDistrict(address.getPmDistrict(), "BRANCH_ADDRESS");
+		onChangeState(address.getPmState(), "BRANCH_ADDRESS");
+		onChangeDistrict(address.getPmDistrict(), "BRANCH_ADDRESS");
 	}
 
 	/**
@@ -1253,13 +1273,13 @@ public class GovtSellerRegistrationBackingBean extends
 		compBasic.setSmCompanyAddresses(new ArrayList<SmCompanyAddress>());
 		compBasic.getSmCompanyAddresses().add(compAddr);
 		getManagedBean().setMyCountryId(SmCommonUtil.getMyCountryId());
-		initCompanyAddressSelectItems(addr);
-
 		compBasic.setSmAppl(appl);
 		appl.setSmCompanyBasic(compBasic);
 
 		getManagedBean().setSmSupp(sup);
 		getManagedBean().setSmAppl(appl);
+		initCompanyAddressSelectItems(addr);//change place(syazwan code)
+
 	}
 
 	/**
@@ -1310,8 +1330,8 @@ public class GovtSellerRegistrationBackingBean extends
 	private void initCompanyAddressSelectItems(SmAddress addr) {
 		getManagedBean().setCountryLs(SmCommonUtil.getCountryList());
 		onChangeCountry(addr.getPmCountry(), "COMPANY_ADDRESS");
-		//onChangeState(addr.getPmState(), "COMPANY_ADDRESS");
-		//onChangeDistrict(addr.getPmDistrict(), "COMPANY_ADDRESS");
+		onChangeState(addr.getPmState(), "COMPANY_ADDRESS");
+		onChangeDistrict(addr.getPmDistrict(), "COMPANY_ADDRESS");
 	}
 
 	/**
@@ -1322,8 +1342,8 @@ public class GovtSellerRegistrationBackingBean extends
 	 */
 	private void initUserPermanentAddressSelectItems(SmAddress addr) {
 		onChangeCountry(addr.getPmCountry(), "USER_PERMANENT_ADDRESS");
-		//onChangeState(addr.getPmState(), "USER_PERMANENT_ADDRESS");
-		//onChangeDistrict(addr.getPmDistrict(), "USER_PERMANENT_ADDRESS");
+		onChangeState(addr.getPmState(), "USER_PERMANENT_ADDRESS");
+		onChangeDistrict(addr.getPmDistrict(), "USER_PERMANENT_ADDRESS");
 	}
 
 	/**
@@ -1334,8 +1354,8 @@ public class GovtSellerRegistrationBackingBean extends
 	 */
 	private void initUserResidentialAddressSelectItems(SmAddress addr) {
 		onChangeCountry(addr.getPmCountry(), "USER_RESIDENTIAL_ADDRESS");
-		//onChangeState(addr.getPmState(), "USER_RESIDENTIAL_ADDRESS");
-		//onChangeDistrict(addr.getPmDistrict(), "USER_RESIDENTIAL_ADDRESS");
+		onChangeState(addr.getPmState(), "USER_RESIDENTIAL_ADDRESS");
+		onChangeDistrict(addr.getPmDistrict(), "USER_RESIDENTIAL_ADDRESS");
 	}
 
 	/**
@@ -1814,31 +1834,32 @@ public class GovtSellerRegistrationBackingBean extends
 	//END 17906
 	
 	
-	//13320
-	public void onChangeDivision(String addrType){
-		if((addrType.equals("COMPANY_ADDRESS"))){
-		
-		List<SelectItem> divisionLs = SmCommonUtil.getDistrictListByID(this.getManagedBean().getDivisionIds());
-		this.getManagedBean().setBusinessDistrictLs(divisionLs);
-		this.getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());	
-	}
-		if((addrType.equals("USER_RESIDENTIAL_ADDRESS"))){
-			
-			List<SelectItem> divisionLs = SmCommonUtil.getDistrictListByID(this.getManagedBean().getDivisionIds());
+	//13320-Start
+	public void onChangeDivision(String addrType) {
+		if ((addrType.equals("COMPANY_ADDRESS"))) {
+			List<SelectItem> divisionLs = SmCommonUtil.getDistrictListByID(this.getManagedBean().getSmAppl()
+					.getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDivision().getDivisionId());
+			this.getManagedBean().setBusinessDistrictLs(divisionLs);
+			this.getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
+		}
+		if ((addrType.equals("USER_RESIDENTIAL_ADDRESS"))) {
+			List<SelectItem> divisionLs = SmCommonUtil.getDistrictListByID(this.getManagedBean().getSmResAdd()
+					.getPmDivision().getDivisionId());
 			this.getManagedBean().setResidentialDistrictLs(divisionLs);
-			this.getManagedBean().setResidentialCityLs(new ArrayList<SelectItem>());	
+			this.getManagedBean().setResidentialCityLs(new ArrayList<SelectItem>());
 		}
-       if((addrType.equals("USER_PERMANENT_ADDRESS"))){
-			
-			List<SelectItem> divisionLs = SmCommonUtil.getDistrictListByID(this.getManagedBean().getDivisionIds());
+		if ((addrType.equals("USER_PERMANENT_ADDRESS"))) {
+			List<SelectItem> divisionLs = SmCommonUtil.getDistrictListByID(this.getManagedBean().getSmPermenantAdd()
+					.getPmDivision().getDivisionId());
 			this.getManagedBean().setPermenantDistrictLs(divisionLs);
-			this.getManagedBean().setPermenantCityLs(new ArrayList<SelectItem>());	
+			this.getManagedBean().setPermenantCityLs(new ArrayList<SelectItem>());
 		}
-       if((addrType.equals("BRANCH_ADDRESS"))){
-			
-			List<SelectItem> divisionLs = SmCommonUtil.getDistrictListByID(this.getManagedBean().getDivisionIds());
+		if ((addrType.equals("BRANCH_ADDRESS"))) {
+			List<SelectItem> divisionLs = SmCommonUtil.getDistrictListByID(this.getManagedBean().getSelectedBranch()
+					.getSmAddress().getPmDivision().getDivisionId());
 			this.getManagedBean().setBranchCompanyDistricts(divisionLs);
-			this.getManagedBean().setBranchCompanyCities(new ArrayList<SelectItem>());	
+			this.getManagedBean().setBranchCompanyCities(new ArrayList<SelectItem>());
 		}
-}
+	}
+	//13320-End
 }
