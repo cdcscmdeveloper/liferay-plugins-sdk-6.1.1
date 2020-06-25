@@ -1229,6 +1229,8 @@ public class SmApplicationUtil {
 				&& appl.getSmCompanyBasic().getSmCompanyAddresses().get(0)
 						.getSmAddress().getPmState() != null
 				&& appl.getSmCompanyBasic().getSmCompanyAddresses().get(0)
+						.getSmAddress().getPmDivision() != null //13320
+				&& appl.getSmCompanyBasic().getSmCompanyAddresses().get(0)
 						.getSmAddress().getPmDistrict() != null) {
 			PmState state = retrievePmStateById(appl.getSmCompanyBasic()
 					.getSmCompanyAddresses().get(0).getSmAddress().getPmState()
@@ -2857,6 +2859,7 @@ public class SmApplicationUtil {
 		addr.setPmCity(new PmCity());
 		addr.setPmCountry(cntry);
 		addr.setPmState(new PmState());
+		addr.setPmDivision(new PmDivision());//13320
 		addr.setPmDistrict(new PmDistrict());
 		SmCommonUtil.getInstance().setUserDetails(addr);
 		return addr;
@@ -2909,6 +2912,7 @@ public class SmApplicationUtil {
 		addr.setPmCountry(cntry);
 		addr.setPmState(new PmState());
 		addr.setPmDistrict(new PmDistrict());
+		addr.setPmDivision(new PmDivision());//13320
 		addr.setAddress1("");
 		addr.setAddress2("");
 		addr.setAddress3("");
@@ -2946,6 +2950,13 @@ public class SmApplicationUtil {
 		} else {
 			facAddr.setPmState(new PmState());
 		}
+		//13320-Start
+		if (baseOffAddr.getPmDivision() != null) {
+			facAddr.setPmDivision(baseOffAddr.getPmDivision());
+		} else {
+			facAddr.setPmState(new PmState());
+		}
+		//13320-End
 		if (baseOffAddr.getPmDistrict() != null) {
 			facAddr.setPmDistrict(baseOffAddr.getPmDistrict());
 		} else {
@@ -5044,7 +5055,18 @@ public class SmApplicationUtil {
 
 		return resDTO.getPmDistrict();
 	}
+	//13320-Start
+	public static PmDivision retrievePmDivsById(Long divnId) {
+		IDivisionSO reqSO = (IDivisionSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IDivisionSO.class);
+		DivisionReqDTO reqDTO = new DivisionReqDTO();
+		reqDTO.setDivisionId(divnId);
+		DivisionResDTO resDTO = reqSO.retrieveDivisionById(reqDTO);
 
+		return resDTO.getPmDivision();
+	}
+	//13320-End
 	/**
 	 * Retrive application by id.
 	 * 
@@ -9026,8 +9048,7 @@ public class SmApplicationUtil {
 				addr.setPmState(SmCommonUtil.getInstance()
 						.getStateById(stateId));
 			}
-			bean.setDivisionBox(true);	
-			addr.setDivisionId(null);
+			bean.setDivisionBox(true);
 			DistrictReqDTO reqDTO = new DistrictReqDTO();
 			reqDTO.setStateId(stateId);
 			IDistrictSO reqSO = (IDistrictSO) BusinessDelegate.getInstance()
@@ -9230,7 +9251,6 @@ public class SmApplicationUtil {
 			addr.setCityId(addr.getPmCity().getCityId());
 		}
 	}
-
 	public void setApplAddressTransientValue(SmAppl appl, boolean isSave) {
 		// company basic
 		if (appl.getSmCompanyBasic() != null
@@ -13719,10 +13739,5 @@ public class SmApplicationUtil {
 					e.printStackTrace();
 				}
 			}
-
-			
-		//13320-end
-			
-	
-			
+		//13320-end			
 }
