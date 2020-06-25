@@ -579,9 +579,9 @@
 									<td><p:outputPanel id="divisionDropdownPanelId">
 											<ui:fragment
 												rendered="#{!registrationBackingBean.managedBean.divisionBox}">
-												<td><p:selectOneMenu id="basicMailAddDivisionList"
+												<p:selectOneMenu id="basicMailAddDivisionList"
 														label="#{lbl['lbl.sm.division']}"
-														value="#{smPersonnelBackingBean.managedBean.divisionId}"
+														value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.pmDivision.divisionId}"
 														style="width: 207px;margin-bottom: 5px;">
 														<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 															itemValue="" />
@@ -589,7 +589,7 @@
 															value="#{smPersonnelBackingBean.managedBean.mailAddDivisionList}" />
 														<p:ajax event="change"
 															update="basicMailAddDistrictList,basicMailAddCityList" />
-													</p:selectOneMenu></td>
+													</p:selectOneMenu>
 													</ui:fragment>
 													</p:outputPanel>
 													</td>
