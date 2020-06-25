@@ -57,14 +57,14 @@
 						value="#{backingBean.managedBean.branchCompanyStates}" />
 					<p:ajax event="change" process="@this"
 						listener="#{backingBean.onChangeState(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
-						update="branchesState,divisionLabelBranchDtlsPanelId,divisionBranchDtlsDropdownPanelId,branchesDist,branchesCity" />
+						update="branchesState,divisionBrachDtlsLabelPanelId,divisionBrachDtlsDropdownPanelId,branchesDist,branchesCity" />
 				</p:selectOneMenu></td>
 		</tr>
 		<!-- 13320 -->
 		
 		<tr>
 			<td  class="tdTitle">
-				<p:outputPanel id="divisionLabelBranchDtlsPanelId" >
+				<p:outputPanel id="divisionBrachDtlsLabelPanelId" >
 					<ui:fragment rendered="#{!backingBean.managedBean.divisionBox}">
 						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
@@ -72,7 +72,7 @@
 					</p:outputPanel>
 					</td>
 					<td>
-				<p:outputPanel id="divisionBranchDtlsDropdownPanelId">
+				<p:outputPanel id="divisionBrachDtlsDropdownPanelId">
 				<ui:fragment rendered="#{!backingBean.managedBean.divisionBox}">
 			<td>
 			<p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
