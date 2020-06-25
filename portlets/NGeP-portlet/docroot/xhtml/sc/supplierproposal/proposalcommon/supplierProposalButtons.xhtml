@@ -24,7 +24,7 @@
 					rendered="#{!empty supplierProposalDetailBackingBean.managedBean.previousPageUrl}" />
 
 				<p:commandButton value="#{lbl['lbl.sc.print.proposal']}"
-					styleClass="BtnSpacing" ajax="false"
+					styleClass="BtnSpacing" ajax="false" rendered="#{empty supplierProposalDetailBackingBean.managedBean.previousPageUrl}"
 					action="#{supplierProposalDetailBackingBean.downloadProposalReport}" />
 
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"

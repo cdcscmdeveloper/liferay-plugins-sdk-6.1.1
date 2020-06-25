@@ -887,7 +887,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	public String editQuationTenderDetails(ScQt scQt, boolean editable, boolean fullPath, String backUrl) {
 		
 		debugLogger("start editQuationTenderDetails");
-		if(!isApprovalScreen()){
+		if(!isApprovalScreen() && !fullPath){ //#17376-153
 			renewQTSesionObject();
 		}
 		debugLogger("editQuationTenderDetails, @Managedbean = "+ this.getManagedBean());
@@ -4029,7 +4029,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * Reset.
 	 */
 	public void reset() {
-		this.getManagedBean().getQtnTenderSearchBean().setDocType(ParameterConst.DOCTYPE_QUOTATION);
+		//this.getManagedBean().getQtnTenderSearchBean().setDocType(ParameterConst.DOCTYPE_QUOTATION); //17376-153
 		this.getManagedBean().getQtnTenderSearchBean().setDocNo(null);
 		this.getManagedBean().getQtnTenderSearchBean().setQtTitle(null);
 		this.getManagedBean().getQtnTenderSearchBean().setQtNo(null);
