@@ -5153,6 +5153,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						|| ProcurementPlanConst.PPP_APPROVED.equals(ppPlan.getStatus().getStatusId())
 				) {
 			if (ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())) {
+				log.info("----------Before PpPlan save----------");
 				for (PpProcurementItem ppProcurementItem : ppPlan.getPpProcurementItems()) {
 					if (ppProcurementItem.getPpUpdateReasons()!= null && !ppProcurementItem.getPpUpdateReasons().isEmpty()) {
 						PpUpdateReason updateReason = ppProcurementItem.getPpUpdateReasons().get(0);
@@ -5161,6 +5162,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							updateReason.setDocId(ppProcurementItem.getProcurementItemId());
 							updateReason.setDocType(ParameterConst.DOCTYPE_PLAN_PROCUREMENT);
 							updateReasons.add(updateReason);
+							log.info("Current reason docId= "+updateReason.getDocId()+", " +
+									"reasonDesc= "+updateReason.getReasonDesc());
 						}
 					}
 				}
