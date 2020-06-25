@@ -403,9 +403,9 @@
 								               	<p:outputPanel id="divisionProfileDropdownPanelId">
 											     <ui:fragment
 												  rendered="#{!smPersonnelBackingBean.managedBean.divisionBox}">
-												    <td><p:selectOneMenu label="#{lbl['lbl.sm.division']}"
+												    <p:selectOneMenu label="#{lbl['lbl.sm.division']}"
 														id="updateMailAddDivisionList"
-														value="#{smPersonnelBackingBean.managedBean.divisionId}"
+														value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.smAddress.pmDivision.divisionId}"
 														style="width: 207px;margin-bottom: 5px;">
 														<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 															itemValue="" />
@@ -413,7 +413,7 @@
 															value="#{smPersonnelBackingBean.managedBean.mailAddDivisionList}" />
 														<p:ajax event="change"
 															update="updateMailAddDistrictList, updateMailAddCityList" />
-													</p:selectOneMenu></td>
+													</p:selectOneMenu>
 											</ui:fragment>
 										</p:outputPanel></td>
 								</tr>
