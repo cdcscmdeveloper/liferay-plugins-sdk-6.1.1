@@ -176,6 +176,14 @@ public class ViewSuppProfileBackingBean extends
 			getManagedBean().setMofSupplier(true);
 		}
 		
+		// 28342 : Disciplinary Action - start
+		if(getFacesScopes().hasRoleUser(RoleCode.UPS_SDO.value()) || getFacesScopes().hasRoleUser(RoleCode.UPS_PO.value()) 
+				|| getFacesScopes().hasRoleUser(RoleCode.UPS_PO.value()) || getFacesScopes().hasRoleUser(RoleCode.APPROVER.value()) 
+				|| getFacesScopes().hasRoleUser(RoleCode.UPS_SVC.value()) || getFacesScopes().hasRoleUser(RoleCode.UPS_SVO.value())){
+			getManagedBean().setDisableDownloadButtonDAHistory(true);
+		}
+		//	28342 : Disciplinary Action - end
+		
 		List<DisciplinaryActionVO> voList = getDisciplinaryActionVO(currSupp);
 		if(!EntityHelper.isCollectionEmpty(voList)
 				&& voList.size() > 0){
