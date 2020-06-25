@@ -1551,12 +1551,6 @@ public class RuleCatalogueBackingBean extends
 											new String[] {
 													ruleTypeDesc.getRuleDesc(),
 													value.getCategoryDisplayValue() });
-								}/* 27827 - START */
-								  else if (ruleTypeDesc.getRuleType().getRuleDataTypeId().getParameterCode().equalsIgnoreCase("pc")) {
-									throw new EpException(
-											MessageConst.ERROR_770233, new String[] {
-													ruleTypeDesc.getRuleDesc(), value.getRuleValue()});
-								/* 27827 - END */
 								} else {
 									throw new EpException(
 											MessageConst.ERROR_770110,
